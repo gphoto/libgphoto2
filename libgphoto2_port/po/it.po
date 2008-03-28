@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.3.0\n"
+"Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-20 09:41+0100\n"
-"PO-Revision-Date: 2007-01-12 12:36+0000\n"
+"POT-Creation-Date: 2008-03-28 20:37+0100\n"
+"PO-Revision-Date: 2007-08-09 17:42+0100\n"
 "Last-Translator: Marco Colombo <m.colombo@ed.ac.uk>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -342,93 +342,93 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Nessuna descrizione dell'errore disponibile"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Impossibile bloccare il dispositivo \"%s\""
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Il dispositivo \"%s\" è bloccato dal pid %d"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr ""
 "Non è stato possibile bloccare il dispositivo \"%s\" (dev_lock ha restituito "
 "%d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Non è stato possibile sbloccare il dispositivo \"%s\"."
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Non è stato possibile sbloccare il dispositivo \"%s\" perché bloccato dal "
 "pid %d."
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "Non è stato possibile sbloccare il dispositivo \"%s\" (dev_unlock ha "
 "restituito %d)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "Porta seriale %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Impossibile aprire \"%s\" (%m)."
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Impossibile chiudere \"%s\" (%m)."
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Impossibile scrivere alla porta (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "Errore di parità."
 
 # FIXME
-#: serial/unix.c:610
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Sequenza di risposta di parità 0xff 0x%02x inattesa."
 
-#: serial/unix.c:653
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Pin %i sconosciuto."
 
-#: serial/unix.c:675
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Impossibile ottenere il livello del pin %i (%m)."
 
-#: serial/unix.c:710
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Impossibile impostare il livello del pin %i a %i (%m)."
 
-#: serial/unix.c:735
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Impossibile svuotare \"%s\" (%m)."
 
-#: serial/unix.c:848
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Impossibile impostare il baudrate a %d"
@@ -472,10 +472,11 @@ msgstr ""
 msgid "Could not release interface %d (%m)."
 msgstr "Impossibile rilasciare l'interfaccia %d (%m)."
 
+# FIXME
 #: usb/libusb.c:300
-#, fuzzy, c-format
+#, c-format
 msgid "Could not reset USB port (%m)."
-msgstr "Impossibile chiudere la porta USB (%m)."
+msgstr "Impossibile reimpostare la porta USB (%m)."
 
 #: usb/libusb.c:306
 #, c-format
@@ -489,9 +490,9 @@ msgstr "Impossibile impostare la configurazione %d/%d (%m)"
 
 # FIXME
 #: usb/libusb.c:588
-#, fuzzy, c-format
+#, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
-msgstr "Impossibile impostare altsetting %d/%d (%m)"
+msgstr "Impossibile impostare altsetting da %d a %d (%m)"
 
 #: usb/libusb.c:680
 #, c-format
