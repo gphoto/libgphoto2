@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-20 09:41+0100\n"
+"POT-Creation-Date: 2008-03-28 20:37+0100\n"
 "PO-Revision-Date: 2007-08-09 00:11+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -335,88 +335,88 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Opis b³êdu niedostêpny"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Nie uda³o siê zablokowaæ urz±dzenia '%s'"
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Urz±dzenie '%s' jest zablokowane przez pid %d"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Urz±dzenie '%s' nie mo¿e zostaæ zablokowane (dev_lock zwróci³o %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane."
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane, bo jest zablokowane przez pid %"
 "d."
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Urz±dzenie '%s' nie mo¿e zostaæ odblokowane (dev_unlock zwróci³o %d)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "Port szeregowy %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Nie uda³o siê otworzyæ '%s' (%m)."
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Nie uda³o siê zamkn±æ '%s' (%m)."
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Nie uda³ siê zapis do portu (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "B³±d parzysto¶ci."
 
-#: serial/unix.c:610
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Nieoczekiwana sekwencja odpowiedzi parzysto¶ci 0xff 0x%02x."
 
-#: serial/unix.c:653
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Nieznany pin %i."
 
-#: serial/unix.c:675
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Nie uda³o siê pobraæ poziomu pinu %i (%m)."
 
-#: serial/unix.c:710
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Nie uda³o siê ustawiæ poziomu pinu %i na %i (%m)."
 
-#: serial/unix.c:735
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Nie uda³o siê przeczy¶ciæ '%s' (%m)."
 
-#: serial/unix.c:848
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Nie uda³o siê ustawiæ liczby bodów na %d"

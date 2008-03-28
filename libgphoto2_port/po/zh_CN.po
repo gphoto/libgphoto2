@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-20 09:41+0100\n"
+"POT-Creation-Date: 2008-03-28 20:37+0100\n"
 "PO-Revision-Date: 2002-11-21 13:11+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -333,86 +333,86 @@ msgstr "读消息"
 msgid "No error description available"
 msgstr "没有可用的错误描述"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "无法锁定设备‘%s’"
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "设备‘%s’已经被进行号为 %d 的进程锁定"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "无法锁定设备‘%s’(dev_lock 返回 %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "无法解锁设备‘%s’。"
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "由于设备‘%s’已被进程号为 %d 的进程锁定，所以无法锁定。"
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "无法解锁设备‘%s’(dev_unlock 返回 %d)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "串口 %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "打开‘%s’(%m)失败。"
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "无法关闭‘%s’(%m)。"
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "无法写端口 (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "奇偶错误。"
 
-#: serial/unix.c:610
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "意外的奇偶应答序列 0xff 0x%02x。"
 
-#: serial/unix.c:653
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "未知插脚 %i。"
 
-#: serial/unix.c:675
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "无法获取插脚 %i 的级别 (%m)。"
 
-#: serial/unix.c:710
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "无法将插脚 %i 的级别设置为 %i (%m)。"
 
-#: serial/unix.c:735
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "无法刷新‘%s’(%m)。"
 
-#: serial/unix.c:848
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "无法设置将波特率设置为 %d"

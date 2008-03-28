@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port HEAD\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-20 09:41+0100\n"
+"POT-Creation-Date: 2008-03-28 20:37+0100\n"
 "PO-Revision-Date: 2004-12-21 01:06+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
@@ -334,90 +334,90 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "有効なエラーメッセージがありません"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "デバイス '%s' をロックすることが出来ませんでした"
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "デバイス '%s' は他のプロセス (PID:%d) がロックしています"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "デバイス '%s' がロックできません (dev_lock の返り値 %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "デバイス '%s' のロックを解放することが出来ませんでした。"
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "デバイス '%s' が他のプロセス (PID:%d) がロックしているので解放することが出来"
 "ませんでした。"
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "デバイス '%s' のロックを解放することが出来ませんでした (dev_unlock の返り値 %"
 "d)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "シリアルポート %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "'%s' のオープンに失敗しました (%m)。"
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "'%s' を閉じることが出来ませんでした (%m)。"
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "ポートへ書き込めませんでした (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "パリティ・エラーです。"
 
-#: serial/unix.c:610
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "予期しないパリティ応答シーケンス 0xff 0x%02x です。"
 
-#: serial/unix.c:653
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "不明なピン %i"
 
-#: serial/unix.c:675
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "ピン %i のレベルを取得することが出来ませんでした (%m)。"
 
-#: serial/unix.c:710
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "ピン %i から %i のレベルを設定することが出来ませんでした (%m)。"
 
-#: serial/unix.c:735
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "フラッシュ '%s' できませんでした (%m)。"
 
-#: serial/unix.c:848
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "ボーレートを %d にセットできませんでした。"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port VERSION\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-20 09:41+0100\n"
+"POT-Creation-Date: 2008-03-28 20:37+0100\n"
 "PO-Revision-Date: 2003-07-12 15:08+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -334,86 +334,86 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Není k dispozici popis chyby"
 
-#: serial/unix.c:230
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Nemohu zamknout zařízení '%s'"
 
-#: serial/unix.c:240
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Zařízení '%s' je zamčeno pid %d"
 
-#: serial/unix.c:243
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Zařízení '%s' nemohlo být zamčeno (dev_lock vrátilo %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Zařízení '%s' nemohlo být odemčeno."
 
-#: serial/unix.c:289
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Zařízení '%s' nemohlo být odemčeno, protože je zamčeno pid %d."
 
-#: serial/unix.c:293
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Zařízení '%s' nemohlo být odemčeno (dev_unlock vrátilo %d)"
 
-#: serial/unix.c:371
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "Sériový port %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Nemohu otevřít '%s' (%m)."
 
-#: serial/unix.c:480
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Nemohu zavřít '%s' (%m)"
 
-#: serial/unix.c:534
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Nemohu zapisovat na port (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "Chyba parity."
 
-#: serial/unix.c:610
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Neočekávaná sekvence odpovědi na paritu 0xff 0x%02x."
 
-#: serial/unix.c:653
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Neznámý vývod %i."
 
-#: serial/unix.c:675
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Nemohu získat úroveň vývodu %i (%m)."
 
-#: serial/unix.c:710
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Nemohu nastavit úroveň vývodu %i na %i (%m)."
 
-#: serial/unix.c:735
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Nemohu vyprázdnit '%s' (%m)."
 
-#: serial/unix.c:848
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Nemohu nastavit rychlost přenosu na %d"
