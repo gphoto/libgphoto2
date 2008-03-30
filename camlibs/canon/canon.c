@@ -94,7 +94,7 @@
 #define KILOBYTE	(1024U)
 #define MEGABYTE	(1024U * KILOBYTE)
 #define SL_THUMB	( 100U * KILOBYTE)
-#define SL_THUMB_CR2    (1024U * KILOBYTE)
+#define SL_THUMB_CR2    (  10U * MEGABYTE) /* same as regular image */
 #define SL_PICTURE	(  10U * MEGABYTE)
 #define SL_MOVIE_SMALL	( 100U * MEGABYTE)
 #define SL_MOVIE_LARGE	(2048U * MEGABYTE)
