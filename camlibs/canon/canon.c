@@ -394,11 +394,11 @@ replace_filename_extension(const char *filename, const char __unused__ *newext)
          * name of the thumbnail file.
          */
         if (sizeof(buf) < strlen (filename) + 1) {
-                strncpy (buf, filename, sizeof (buf) - 1);
                 GP_DEBUG ("replace_filename_extension: Buffer too small in %s line %i.",
                           __FILE__, __LINE__);
                 return NULL;
         }
+        strncpy (buf, filename, sizeof (buf) - 1);
         if ((p = strrchr (buf, '.')) == NULL) {
                 GP_DEBUG ("replace_filename_extension: No '.' found in filename '%s' "
                           "in %s line %i.", filename, __FILE__, __LINE__);

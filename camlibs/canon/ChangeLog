@@ -3,6 +3,9 @@
 	* canon.c: SL_THUMB_CR2 should be as large as the CR2 image,
 	  because the thumbnail getter retrieves the whole image for some reason.
 
+	* canon.c: Moved a strncpy() out of a failure node, making
+	  replace_filename_extension() work again.
+
 2007-12-27  Daniel M German <dmg@uvic.ca>
 
 	* canon.h, library.c: More configuration values for some
