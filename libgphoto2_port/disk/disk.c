@@ -204,9 +204,8 @@ gp_port_library_list (GPPortInfoList *list)
 	FILE *mnt;
 	struct mntent *mntent;
 	char	path[1024];
+	char	*s;
 	struct stat stbuf;
-
-	info.type = GP_PORT_DISK;
 
 	mnt = setmntent ("/etc/fstab", "r");
 	if (mnt) {
@@ -233,10 +232,21 @@ gp_port_library_list (GPPortInfoList *list)
 				if (-1 == stat(path, &stbuf))
 					continue;
 			}
-			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
-			snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
-			if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+			s = malloc (strlen(_("Media '%s'"))+strlen(mntent->mnt_fsname)+1);
+			sprintf (s, _("Media '%s'"), mntent->mnt_fsname);
+			gp_port_info_new (&info);
+			gp_port_info_set_type (info, GP_PORT_DISK);
+			gp_port_info_set_name (info, s);
+			free (s);
+			
+			s = malloc (strlen("disk:")+strlen(mntent->mnt_dir)+1);
+			sprintf (s, "disk:%s", mntent->mnt_dir);
+			gp_port_info_set_path (info, s);
+			if (gp_port_info_list_lookup_path (list, s) >= GP_OK) {
+				free (s);
 				continue;
+			}
+			free(s);
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		endmntent(mnt);
@@ -273,11 +283,21 @@ gp_port_library_list (GPPortInfoList *list)
 			if (NULL != strstr(mntent->mnt_fsname, "automount")) {
 				continue;
 			}
-			info.type = GP_PORT_DISK;
-			snprintf (info.name, sizeof(info.name), _("Media '%s'"), mntent->mnt_fsname),
-			snprintf (info.path, sizeof(info.path), "disk:%s", mntent->mnt_dir);
-			if (gp_port_info_list_lookup_path (list, info.path) >= GP_OK)
+			gp_port_info_new (&info);
+			gp_port_info_set_type (info, GP_PORT_DISK);
+			s = malloc (strlen(_("Media '%s'"))+strlen(mntent->mnt_fsname)+1);
+			sprintf (s, _("Media '%s'"),  mntent->mnt_fsname);
+			gp_port_info_set_name (info, s);
+			free (s);
+			
+			s = malloc (strlen("disk:")+strlen(mntent->mnt_dir)+1);
+			sprintf (s, "disk:%s", mntent->mnt_dir);
+			gp_port_info_set_path (info, s);
+			if (gp_port_info_list_lookup_path (list, s) >= GP_OK) {
+				free (s);
 				continue;
+			}
+			free (s);
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		endmntent(mnt);
