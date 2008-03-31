@@ -149,6 +149,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPCanon_changes_entry	*entries = NULL;
 	int			nrofentries = 0;
 	unsigned char		startup9110[12];
+	PTPStorageIDs		sids;
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
@@ -191,25 +192,17 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_getstorageids(params);
+	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_getstorageinfo(params, 1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
-		return GP_ERROR;
-	}
-	ret = ptp_canon_eos_getstorageids(params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
-		return GP_ERROR;
-	}
-	ret = ptp_canon_eos_getstorageinfo(params, 1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
-		return GP_ERROR;
+	if (sids.n >= 1) {
+		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0]);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
+			return GP_ERROR;
+		}
 	}
 	/* just exchange the value to 4 */
 	startup9110[8] = 0x04; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;

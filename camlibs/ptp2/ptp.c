@@ -1849,18 +1849,19 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 
 
 uint16_t
-ptp_canon_eos_getstorageids (PTPParams* params)
+ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 {
-	PTPContainer ptp;
-	unsigned char	*data = NULL;
-	unsigned int	size = 0;
+	PTPContainer	ptp;
+	unsigned int	len = 0;
 	uint16_t	ret;
+	unsigned char*	sids=NULL;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code 	= PTP_OC_CANON_EOS_GetStorageIDs;
 	ptp.Nparam	= 0;
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
-	/* FIXME: do stuff with data */
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &sids, &len);
+	if (ret == PTP_RC_OK) ptp_unpack_SIDs(params, sids, storageids, len);
+	free(sids);
 	return ret;
 }
 

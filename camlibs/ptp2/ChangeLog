@@ -1,3 +1,8 @@
+2008-03-31  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c, ptp.h, config.c: Try to fix EOS capture preparation,
+	  by doing a real ptp_eos_getstorageids.
+
 2008-03-15  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Adjust for GPPortInfo change.
