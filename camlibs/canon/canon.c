@@ -94,7 +94,7 @@
 #define KILOBYTE	(1024U)
 #define MEGABYTE	(1024U * KILOBYTE)
 #define SL_THUMB	( 100U * KILOBYTE)
-#define SL_THUMB_CR2    (1024U * KILOBYTE)
+#define SL_THUMB_CR2    (  10U * MEGABYTE) /* same as regular image */
 #define SL_PICTURE	(  10U * MEGABYTE)
 #define SL_MOVIE_SMALL	( 100U * MEGABYTE)
 #define SL_MOVIE_LARGE	(2048U * MEGABYTE)
@@ -391,11 +391,11 @@ replace_filename_extension(const char *filename, const char __unused__ *newext)
          * name of the thumbnail file.
          */
         if (sizeof(buf) < strlen (filename) + 1) {
-                strncpy (buf, filename, sizeof (buf) - 1);
                 GP_DEBUG ("replace_filename_extension: Buffer too small in %s line %i.",
                           __FILE__, __LINE__);
                 return NULL;
         }
+        strncpy (buf, filename, sizeof (buf) - 1);
         if ((p = strrchr (buf, '.')) == NULL) {
                 GP_DEBUG ("replace_filename_extension: No '.' found in filename '%s' "
                           "in %s line %i.", filename, __FILE__, __LINE__);
@@ -432,11 +432,11 @@ filename_to_audio(const char *filename, const char __unused__ *newext)
         static char buf[1024];
 
         if (sizeof(buf) < strlen (filename) + 1) {
-                strncpy (buf, filename, sizeof (buf) - 1);
                 GP_DEBUG ("filename_to_audio: Buffer too small in %s line %i.",
                           __FILE__, __LINE__);
                 return NULL;
         }
+        strncpy (buf, filename, sizeof (buf) - 1);
         if ((p = strrchr (buf, '_')) == NULL) {
                 GP_DEBUG ("filename_to_audio: No '.' found in filename '%s' "
                           "in %s line %i.", filename, __FILE__, __LINE__);
