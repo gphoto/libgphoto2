@@ -3,6 +3,8 @@
 	* libgphoto2/gphoto2-abilities-list.c: Use qsort() instead
 	  of bubble sort. Saves 0.4 seconds on a 2Ghz machine.
 
+	  Found by Szigeti Janos.
+
 2008-02-26  Marcus Meissner  <meissner@suse.de>
 
 	* packaging/generic/print-camera-list.c:
