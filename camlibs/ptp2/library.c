@@ -234,6 +234,26 @@ translate_ptp_result (short result)
 	}
 }
 
+void
+fixup_cached_deviceinfo (Camera *camera) {
+	CameraAbilities a;
+
+        gp_camera_get_abilities(camera, &a);
+	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
+	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4a9)
+	)
+		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+
+	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
+	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4b0)
+	)
+		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+}
+
 static struct {
 	const char *model;
 	unsigned short usb_vendor;
@@ -2267,7 +2287,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 * the available properties in capture mode.
 	 */
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params, &pdi));
-
+	fixup_cached_deviceinfo(camera);
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
@@ -4275,19 +4295,7 @@ camera_init (Camera *camera, GPContext *context)
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));
 
-	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
-		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_vendor == 0x4a9)
-	)
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
-
-	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
-		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_vendor == 0x4b0)
-	)
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+	fixup_cached_deviceinfo (camera);
 
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
