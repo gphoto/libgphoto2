@@ -2147,11 +2147,16 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
 			n = snprintf (txt, spaceleft,_("Canon Capture\n"));
 		} else  {
-			if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-			     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture)) {
-				n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
-			} else {
-				n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
+			if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)) {
+				n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
+			} else  {
+				if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+				     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture)) {
+					n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+				} else {
+					n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
+				}
 			}
 		}
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
