@@ -583,28 +583,20 @@ gp_abilities_list_count (CameraAbilitiesList *list)
 	return (list->count);
 }
 
+static int
+cmp_abilities (const void *a, const void *b) {
+	const CameraAbilities *ca = a;
+	const CameraAbilities *cb = b;
+
+	return strcasecmp (ca->model, cb->model);
+}
 
 static int
 gp_abilities_list_sort (CameraAbilitiesList *list)
 {
-	CameraAbilities t;
-	int x, y;
-
 	CHECK_NULL (list);
 
-	for (x = 0; x < list->count - 1; x++)
-		for (y = x + 1; y < list->count; y++)
-			if (strcasecmp (list->abilities[x].model,
-					list->abilities[y].model) > 0) {
-				memcpy (&t, &list->abilities[x],
-					sizeof (CameraAbilities));
-				memcpy (&list->abilities[x],
-					&list->abilities[y],
-					sizeof (CameraAbilities));
-				memcpy (&list->abilities[y], &t,
-					sizeof (CameraAbilities));
-			}
-
+	qsort (list->abilities, list->count, sizeof(CameraAbilities), cmp_abilities);
 	return (GP_OK);
 }
 
