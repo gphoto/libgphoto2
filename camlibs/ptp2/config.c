@@ -85,12 +85,14 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+	fixup_cached_deviceinfo (camera);
 
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8x, ret %d\n",propval.u32, ret);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is 0x%8X, ret %d\n",propval.u32,ret);
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+	fixup_cached_deviceinfo (camera);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret %d\n",propval.u16,ret);
 
@@ -138,6 +140,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	}
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	fixup_cached_deviceinfo (camera);
 	gp_port_set_timeout (camera->port, oldtimeout);
 	return GP_OK;
 }
@@ -149,6 +152,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPCanon_changes_entry	*entries = NULL;
 	int			nrofentries = 0;
 	unsigned char		startup9110[12];
+	PTPStorageIDs		sids;
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
@@ -191,25 +195,18 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_getstorageids(params);
+	fixup_cached_deviceinfo (camera);
+	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_getstorageinfo(params, 1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
-		return GP_ERROR;
-	}
-	ret = ptp_canon_eos_getstorageids(params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
-		return GP_ERROR;
-	}
-	ret = ptp_canon_eos_getstorageinfo(params, 1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
-		return GP_ERROR;
+	if (sids.n >= 1) {
+		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0]);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
+			return GP_ERROR;
+		}
 	}
 	/* just exchange the value to 4 */
 	startup9110[8] = 0x04; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
@@ -275,6 +272,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	}
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	fixup_cached_deviceinfo (camera);
 	return GP_OK;
 }
 

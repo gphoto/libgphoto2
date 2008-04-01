@@ -1229,6 +1229,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		}
 		curdata += size;
 		i++;
+		if ((size == 8) && (type == 0))
+			break;
 	}
 
 	return entries;

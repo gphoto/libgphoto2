@@ -231,6 +231,26 @@ translate_ptp_result (short result)
 	}
 }
 
+void
+fixup_cached_deviceinfo (Camera *camera) {
+	CameraAbilities a;
+
+        gp_camera_get_abilities(camera, &a);
+	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
+	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4a9)
+	)
+		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+
+	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
+	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4b0)
+	)
+		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+}
+
 static struct {
 	const char *model;
 	unsigned short usb_vendor;
@@ -553,7 +573,7 @@ static struct {
 	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 	/* Pat Shanahan, http://sourceforge.net/tracker/index.php?func=detail&aid=1924511&group_id=8874&atid=358874 */
-	{"Nikon:D3 (PTP mode)",	          0x04b0, 0x041c, PTP_CAP},
+	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
@@ -731,6 +751,8 @@ static struct {
 	{"Canon:PowerShot A460 (PTP mode)",	0x04a9, 0x3149, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Tobias Blaser <tblaser@gmx.ch> */
 	{"Canon:Digital IXUS 950 IS (PTP mode)",0x04a9, 0x314b, PTPBUG_DELETE_SENDS_EVENT},
+	/* https://bugs.launchpad.net/bugs/206627 */
+	{"Canon:PowerShot SD850 (PTP mode)",	0x04a9, 0x314b, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A570 IS (PTP mode)",  0x04a9, 0x314c, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A560 (PTP mode)",  0x04a9, 0x314d, PTPBUG_DELETE_SENDS_EVENT},
 	/* mailreport from sec@dschroeder.info */
@@ -2389,7 +2411,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 * the available properties in capture mode.
 	 */
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params, &pdi));
-
+	fixup_cached_deviceinfo(camera);
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
@@ -4362,19 +4384,7 @@ camera_init (Camera *camera, GPContext *context)
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));
 
-	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
-		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_vendor == 0x4a9)
-	)
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
-
-	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
-		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_vendor == 0x4b0)
-	)
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+	fixup_cached_deviceinfo (camera);
 
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
