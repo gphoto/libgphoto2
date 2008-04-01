@@ -1,3 +1,20 @@
+libgphoto2 2.4.1.1
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+   * Camera abilities list sorting now uses qsort(),
+     bringing startup speedups. (0.4 seconds on 2GHz machine).
+
+PTP2 driver:
+   * EOS capture support made working with newer Canon EOS models.
+   * handle MTP -> Canon/Nikon transitions better.
+
+Canon driver:
+   * Fixed a CR2 thumbnail download problem.
+   * Fixed a THM download problem (for movies).
+
+
 libgphoto2 2.4.1
 
 This is a 2.4 release branch update.
