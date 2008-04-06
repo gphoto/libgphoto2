@@ -1121,7 +1121,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			break;
 		entries++;
 	}
-	*ce = malloc (sizeof(PTPCanon_changes_entry)*entries);
+	*ce = malloc (sizeof(PTPCanon_changes_entry)*(entries+1));
 	if (!*ce) return 0;
 
 	curdata = data;
