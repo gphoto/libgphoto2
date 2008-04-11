@@ -1,0 +1,114 @@
+Device info:
+Manufacturer: Canon Inc.
+  model: Canon EOS 450D
+  device version: 3-1.0.4
+  serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+Supported operations:
+  0x1014
+  0x1015
+  0x1016
+  0x1001
+  0x1002
+  0x1003
+  0x1006
+  0x1004
+  0x9101
+  0x1005
+  0x9102
+  0x1007
+  0x1008
+  0x9103
+  0x1009
+  0x9104
+  0x100a
+  0x101b
+  0x9107
+  0x100c
+  0x100d
+  0x100b
+  0x9105
+  0x100f
+  0x9106
+  0x9110
+  0x9127
+  0x910b
+  0x9108
+  0x9109
+  0x910c
+  0x910e
+  0x910f
+  0x9125
+  0x9126
+  0x9115
+  0x9114
+  0x9113
+  0x9116
+  0x9117
+  0x9120
+  0x91f0
+  0x9118
+  0x9121
+  0x91f1
+  0x911d
+  0x910a
+  0x911b
+  0x911c
+  0x911e
+  0x911a
+  0x9153
+  0x9154
+  0x9155
+  0x9157
+  0x9158
+  0x9159
+  0x911f
+  0x91fe
+  0x91ff
+  0x9801
+  0x9802
+  0x9803
+  0x9804
+  0x9805
+Events Supported:
+  0x4009
+  0x4004
+  0x4005
+  0x4003
+  0x4002
+  0x4007
+  0xc101
+Device Properties Supported:
+  0xd402
+  0xd407
+  0xd406
+Camera summary:
+Model: Canon EOS 450D
+  device version: 3-1.0.4
+  serial number:  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, Canon EOS Capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: SD
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 1020395520 (973 MB)
+	Free Space (Bytes): 955727872 (911 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS 450D'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
