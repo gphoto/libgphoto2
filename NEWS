@@ -1,4 +1,4 @@
-libgphoto2 2.4.1.1
+libgphoto2 2.4.1.2
 
 This is a 2.4 release branch update.
 
@@ -13,6 +13,9 @@ PTP2 driver:
 Canon driver:
    * Fixed a CR2 thumbnail download problem.
    * Fixed a THM download problem (for movies).
+
+Topfield driver:
+   * New driver for Topfield PVR5000 device(s).
 
 
 libgphoto2 2.4.1

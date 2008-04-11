@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.4.2 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.4.1.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.4.1.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -508,6 +508,7 @@ GP_CAMLIB([stv0674])dnl
 GP_CAMLIB([stv0680])dnl
 GP_CAMLIB([sx330z])dnl
 GP_CAMLIB([template], [obsolete])dnl
+GP_CAMLIB([topfield])dnl
 GP_CAMLIB([toshiba_pdrm11])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
