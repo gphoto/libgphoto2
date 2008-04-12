@@ -92,11 +92,11 @@ strdup_to_latin1 (const char *str) {
 
 	ndstlen = strlen(str)*2;
 	while (1) {
-		srclen = strlen(str); /* +1 ? */
+		srclen = strlen(str)+1;
 		src = (char*)str;
 		dstlen = ndstlen;
 		free (dest);
-		dst = dest = malloc (dstlen);
+		dst = dest = calloc (dstlen,1);
 		if (!dst) return NULL;
 		ret = iconv (cd_locale_to_latin1, &src, &srclen, &dst, &dstlen);
 		if ((ret == -1) && (errno == E2BIG)) {
