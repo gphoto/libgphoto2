@@ -337,7 +337,7 @@ dnl libusb
 dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
-		[usb.h],[usb_busses],[
+		[usb.h],[usb_open],[
 	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
 ],[],
 		[disable-explicitly],
