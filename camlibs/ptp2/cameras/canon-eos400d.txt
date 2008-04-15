@@ -61,3 +61,37 @@ Device Properties Supported:
   0xd045
   0xd049
   0xd04a
+
+Camera summary:
+Model: Canon EOS 400D DIGITAL
+  device version: 3-1.1.1
+  serial number:  000000000000000000000000xxxxxxxx
+Vendor extension ID: 0x0000000b
+Vendor extension description: (null)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: CF
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 4112781312 (3922 MB)
+	Free Space (Bytes): 3969277952 (3785 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS 400D DIGITAL'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+Model ID(0xd049):(read only) (type=0x6) 2147484214
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+
