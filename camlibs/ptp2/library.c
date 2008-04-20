@@ -482,6 +482,8 @@ static struct {
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
+	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -815,6 +817,8 @@ static struct {
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
 	/* Teppo Jalava <tjjalava@gmail.com> */
 	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
+	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1945259&group_id=8874 */
+	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
