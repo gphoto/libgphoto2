@@ -1,3 +1,7 @@
+2008-04-20   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: AHD Bayer and white_balance() in use.
+	* sonix.[c,h]:   white_balance() and related stuff added. 
+
 2008-03-24   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Previous change reverted. Bad idea.
 
