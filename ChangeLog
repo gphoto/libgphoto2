@@ -1,3 +1,11 @@
+2008-04-20  Theodore Kilgore <kilgota@auburn.edu> 
+
+	* libgphoto2/bayer.h: gp_ahd_interpolate() and gp_ahd_decode() added.
+	* libgphoto2/ahd_bayer.c: added.
+	* libgphoto2/Makefile.am: ahd_bayer.c hooked up. 
+	* libgphoto2/libgphoto2.sym: gp_ahd_decode and gp_ahd_interpolate listed.
+	
+	
 2008-03-31  Marcus Meissner  <meissner@suse.de>
 	
 	* libgphoto2/gphoto2-abilities-list.c: Use qsort() instead
