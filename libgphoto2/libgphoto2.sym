@@ -7,6 +7,8 @@ gp_abilities_list_load
 gp_abilities_list_lookup_model
 gp_abilities_list_new
 gp_abilities_list_reset
+gp_ahd_decode
+gp_ahd_interpolate
 gp_bayer_decode
 gp_bayer_expand
 gp_bayer_interpolate

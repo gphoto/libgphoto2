@@ -23,6 +23,7 @@ libgphoto2_la_LDFLAGS =	\
 
 libgphoto2_la_SOURCES = 	\
 	gphoto2-abilities-list.c\
+	ahd_bayer.c 		\
 	bayer.c bayer.h		\
 	gphoto2-camera.c	\
 	gphoto2-context.c	\

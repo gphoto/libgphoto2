@@ -45,7 +45,7 @@
 #include <math.h>
 #include <time.h>
 
-#include "ahd_bayer.h"
+#include "bayer.h"
 #include "gamma.h"
 
 #define MAX(x,y) ((x < y) ? (y) : (x))
@@ -55,17 +55,6 @@
 #define GREEN 	1
 #define BLUE 	2
 
-static int tile_colors[8][4] = {
-	{RED, GREEN, GREEN, BLUE}, /* The four standard tilings */
-	{GREEN, RED, BLUE, GREEN},
-	{BLUE, GREEN, GREEN, RED},
-	{GREEN, BLUE, RED, GREEN},
-	{RED, GREEN, GREEN, BLUE}, /* The four interlaced tilings */
-	{GREEN, RED, BLUE, GREEN},
-	{BLUE, GREEN, GREEN, RED},
-	{GREEN, BLUE, RED, GREEN}
-	};
-
 int dRGB(int i1, int i2, unsigned char *RGB);
 int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w, 
 					int h, int y, int *pos_code);
@@ -73,71 +62,6 @@ int do_green_ctr_row(unsigned char *image, unsigned char *image_h,
 		    unsigned char *image_v, int w, int h, int y, int *pos_code);
 int get_diffs_row2(unsigned char * hom_buffer_h, unsigned char *hom_buffer_v, 
 		    unsigned char * buffer_h, unsigned char *buffer_v, int w);
-/**
- * \brief Expand a bayer raster style image to a RGB raster.
- *
- * \param input the bayer CCD array as linear input
- * \param w width of the above array
- * \param h height of the above array
- * \param output RGB output array (linear, 3 bytes of R,G,B for every pixel)
- * \param tile how the 2x2 bayer array is laid out
- *
- * A regular CCD uses a raster of 2 green, 1 blue and 1 red components to
- * cover a 2x2 pixel area. The camera or the driver then interpolates a
- * 2x2 RGB pixel set out of this data.
- *
- * This function expands the bayer array to a 3 times larger bitmap with
- * RGB values copied as-is. Locations where no sensor data was there are 0.
- * The data is supposed to be processed further by gp_ahd_interpolate
- *
- * \return a gphoto error code
- */
-int
-gp_byr_expand (unsigned char *input, int w, int h, unsigned char *output,
-		 BayerTile tile)
-{
-	int x, y, i;
-	int color, bayer;
-	unsigned char *ptr = input;
-
-	switch (tile) {
-		case BAYER_TILE_RGGB:
-		case BAYER_TILE_GRBG:
-		case BAYER_TILE_BGGR:
-		case BAYER_TILE_GBRG:
-			for (y = 0; y < h; ++y)
-				for (x = 0; x < w; ++x, ++ptr) {
-					bayer = (x&1?0:1) + (y&1?0:2);
-
-					color = tile_colors[tile][bayer];
-
-					i = (y * w + x) * 3;
-
-					output[i+RED]    = 0;
-					output[i+GREEN]  = 0;
-					output[i+BLUE]   = 0;
-					output[i+color] = *ptr;
-				}
-			break;
-		case BAYER_TILE_RGGB_INTERLACED:
-		case BAYER_TILE_GRBG_INTERLACED:
-		case BAYER_TILE_BGGR_INTERLACED:
-		case BAYER_TILE_GBRG_INTERLACED:
-			for (y = 0; y < h; ++y, ptr+=w)
-				for (x = 0; x < w; ++x) {
-					bayer = (x&1?0:1) + (y&1?0:2);
-					color = tile_colors[tile][bayer];
-					i = (y * w + x) * 3;
-					output[i+RED]    = 0;
-					output[i+GREEN]  = 0;
-					output[i+BLUE]   = 0;
-					output[i+color] = (x&1)? ptr[x>>1]:ptr[(w>>1)+(x>>1)];
-				}
-			break;
-	}
-
-	return 0;
-}
 
 #define AD(x, y, w) ((y)*(w)*3+3*(x))
 /**
@@ -714,9 +638,10 @@ int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile)
  * 2x2 RGB pixel set out of this data.
  *
  * This function expands and interpolates the bayer array to 3 times larger
- * bitmap with RGB values interpolated. It is essentially the same as the 
- * corresponding function in libgphoto2/bayer.c
- *
+ * bitmap with RGB values interpolated. It does the same job as  
+ * gp_bayer_decode() but it calls gp_ahd_interpolate() instead of calling
+ * gp_bayer_interpolate(). Use this instead of gp_bayer_decode() if you 
+ * want to use or to test AHD interpolation in a camera library. 
  * \return a gphoto error code
  */
 
