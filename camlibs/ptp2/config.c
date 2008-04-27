@@ -184,7 +184,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	}
 	startup9110[0] = 0x0c; startup9110[1] = 0x00; startup9110[2] = 0x00; startup9110[3] = 0x00;
 	startup9110[4] = 0x1c; startup9110[5] = 0xd1; startup9110[6] = 0x00; startup9110[7] = 0x00;
-	startup9110[8] = 0x01; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
+	startup9110[8] = 0x04; startup9110[9] = 0x00; startup9110[10] = 0x00; startup9110[11] = 0x00;
 	ret = ptp_canon_eos_setdevicepropvalueex (params, startup9110, 12);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 1 failed!");
@@ -215,7 +215,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 4 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_pchddcapacity (params, 0x001dfc60, 0x1000, 0x1);
+	ret = ptp_canon_eos_pchddcapacity (params, 0x02222222, 0x1000, 0x1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911a to 0x001dfc60 failed!");
 		return GP_ERROR;
@@ -1070,14 +1070,14 @@ _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 static struct deviceproptableu8 canon_quality[] = {
 	{ N_("normal"),		0x02, 0 },
 	{ N_("fine"),		0x03, 0 },
-	{ N_("super fine"),	0x05, 0 },
+	{ N_("superfine"),	0x05, 0 },
 };
 GENERIC8TABLE(Canon_Quality,canon_quality)
 
 static struct deviceproptableu8 canon_shootmode[] = {
 	{ N_("Auto"),		0x01, 0 },
-	{ N_("Tv"),		0x02, 0 },
-	{ N_("Av"),		0x03, 0 },
+	{ N_("TV"),		0x02, 0 },
+	{ N_("AV"),		0x03, 0 },
 	{ N_("Manual"),		0x04, 0 },
 };
 GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
@@ -1649,8 +1649,8 @@ static struct deviceproptableu8 nikon_tonecompensation[] = {
 	{ N_("Auto"),		0x00, 0 },
 	{ N_("Normal"),		0x01, 0 },
 	{ N_("Low contrast"),	0x02, 0 },
-	{ N_("Medium low"),	0x03, 0 },
-	{ N_("Medium high"),	0x04, 0 },
+	{ N_("Medium Low"),	0x03, 0 },
+	{ N_("Medium High"),	0x04, 0 },
 	{ N_("High control"),	0x05, 0 },
 	{ N_("Custom"),		0x06, 0 },
 };
@@ -2497,12 +2497,12 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 
 static struct submenu create_wifi_profile_submenu[] = {
 	{ N_("Profile name"), "name", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
-	{ N_("Wifi essid"), "essid", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
+	{ N_("WIFI ESSID"), "essid", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("IP address (empty for DHCP)"), "ipaddr", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Network mask"), "netmask", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Default gateway"), "gw", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Access mode"), "accessmode", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_accessmode, _put_nikon_wifi_profile_accessmode },
-	{ N_("Wifi channel"), "channel", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_channel, _put_nikon_wifi_profile_channel },
+	{ N_("WIFI channel"), "channel", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_channel, _put_nikon_wifi_profile_channel },
 	{ N_("Encryption"), "encryption", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_encryption, _put_nikon_wifi_profile_encryption },
 	{ N_("Encryption key (hex)"), "key", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_prop, _put_nikon_wifi_profile_prop },
 	{ N_("Write"), "write", 0, PTP_VENDOR_NIKON, 0, _get_nikon_wifi_profile_write, _put_nikon_wifi_profile_write },
@@ -2627,9 +2627,9 @@ static struct submenu camera_settings_menu[] = {
 /* think of this as properties of the "film" */
 static struct submenu image_settings_menu[] = {
         { N_("Image Quality"), "imgquality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
-        { N_("Image Quality"), "imgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
+        { N_("Canon Image Quality"), "canonimgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
-        { N_("Image Size"), "imgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
+        { N_("Canon Image Size"), "canonimgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
         { N_("EOS ISO Speed"), "eos-iso", PTP_DPC_CANON_EOS_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
@@ -2654,7 +2654,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashMode, _put_Nikon_FlashMode},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
-        { N_("F Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+        { N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
         { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
         { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
@@ -2691,13 +2691,13 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	{ N_("Burst Number"), "burstnumber", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_BurstNumber, _put_BurstNumber},
-	{ N_("Auto Whitebalance Bias"), "autowhitebias", PTP_DPC_NIKON_WhiteBalanceAutoBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
-	{ N_("Tungsten Whitebalance Bias"), "tungstenwhitebias", PTP_DPC_NIKON_WhiteBalanceTungstenBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
-	{ N_("Fluorescent Whitebalance Bias"), "flourescentwhitebias", PTP_DPC_NIKON_WhiteBalanceFluorescentBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
-	{ N_("Daylight Whitebalance Bias"), "daylightwhitebias", PTP_DPC_NIKON_WhiteBalanceDaylightBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
-	{ N_("Flash Whitebalance Bias"), "flashwhitebias", PTP_DPC_NIKON_WhiteBalanceFlashBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
-	{ N_("Cloudy Whitebalance Bias"), "cloudywhitebias", PTP_DPC_NIKON_WhiteBalanceCloudyBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
-	{ N_("Shade Whitebalance Bias"), "shadewhitebias", PTP_DPC_NIKON_WhiteBalanceShadeBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Auto White Balance Bias"), "autowhitebias", PTP_DPC_NIKON_WhiteBalanceAutoBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Tungsten White Balance Bias"), "tungstenwhitebias", PTP_DPC_NIKON_WhiteBalanceTungstenBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Fluorescent White Balance Bias"), "flourescentwhitebias", PTP_DPC_NIKON_WhiteBalanceFluorescentBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Daylight White Balance Bias"), "daylightwhitebias", PTP_DPC_NIKON_WhiteBalanceDaylightBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Flash White Balance Bias"), "flashwhitebias", PTP_DPC_NIKON_WhiteBalanceFlashBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Cloudy White Balance Bias"), "cloudywhitebias", PTP_DPC_NIKON_WhiteBalanceCloudyBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("Shady White Balance Bias"), "shadewhitebias", PTP_DPC_NIKON_WhiteBalanceShadeBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
         { N_("Selftimer Delay"), "selftimerdelay", PTP_DPC_NIKON_SelfTimer, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_SelfTimerDelay, _put_Nikon_SelfTimerDelay },
         { N_("Center Weight Area"), "centerweightsize", PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CenterWeight, _put_Nikon_CenterWeight },
         { N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashShutterSpeed, _put_Nikon_FlashShutterSpeed },
@@ -2716,7 +2716,7 @@ static struct menu menus[] = {
 	{ N_("Camera Settings"), "settings", camera_settings_menu, NULL, NULL },
 	{ N_("Image Settings"), "imgsettings", image_settings_menu, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", capture_settings_menu, NULL, NULL },
-	{ N_("Wifi profiles"), "wifiprofiles", NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
+	{ N_("WIFI profiles"), "wifiprofiles", NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
 int

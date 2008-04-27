@@ -2,7 +2,7 @@
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
- * Copyright (C) 2006 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,7 @@
 #include <config.h>
 #include "ptp.h"
 #include "ptp-private.h"
+#include "ptp-bugs.h"
 
 #include <stdlib.h>
 #include <stdarg.h>
@@ -172,14 +173,22 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		written += res;
 		if (usecontext && (oldwritten/CONTEXT_BLOCK_SIZE < written/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progressid, written/CONTEXT_BLOCK_SIZE);
+#if 0 /* Does not work this way... Hmm. */
+		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			ret = ptp_usb_control_cancel_request (params,ptp->Transaction_ID);
+			if (ret == PTP_RC_OK)
+				ret = PTP_ERROR_CANCEL;
+			break;
+		}
+#endif
 	}
 	if (usecontext)
 		gp_context_progress_stop (context, progressid);
 	free (bytes);
 finalize:
-	if ((written % params->maxpacketsize) == 0)
+	if ((ret == PTP_RC_OK) && ((written % params->maxpacketsize) == 0))
 		gp_port_write (camera->port, "x", 0);
-	if (ret!=PTP_RC_OK)
+	if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL))
 		ret = PTP_ERROR_IO;
 	return ret;
 }
@@ -262,8 +271,21 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			break;
 		}
 		if (dtoh16(usbdata.code)!=ptp->Code) {
-			ret = dtoh16(usbdata.code);
-			break;
+			/* A creative Zen device breaks down here, by leaving out
+			 * Code and Transaction ID */
+			if (MTP_ZEN_BROKEN_HEADER(camera->pl)) {
+				gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x), compensating.",
+					dtoh16(usbdata.code), ptp->Code
+				);
+				usbdata.code = dtoh16(ptp->Code);
+				usbdata.trans_id = htod32(ptp->Transaction_ID);
+			} else {
+				gp_log (GP_LOG_ERROR, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x).",
+					dtoh16(usbdata.code), ptp->Code
+				);
+				ret = PTP_ERROR_IO;
+				break;
+			}
 		}
 		if (usbdata.length == 0xffffffffU) {
 			unsigned char	*data = malloc (PTP_USB_BULK_HS_MAX_PACKET_LEN_READ);
@@ -371,6 +393,10 @@ retry:
 			curread += res;
 			if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
 				gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
+			if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+				ret = PTP_ERROR_CANCEL;
+				break;
+			}
 			oldsize = curread;
 		}
 		free (data);
@@ -384,13 +410,13 @@ retry:
 				goto retry;
 		}
 
-		if (ret!=PTP_RC_OK) {
+		if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL)) {
 			ret = PTP_ERROR_IO;
 			break;
 		}
 	} while (0);
 
-	if (ret!=PTP_RC_OK) {
+	if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL)) {
 		gp_log (GP_LOG_DEBUG, "ptp2/usb_getdata",
 		"request code 0x%04x getting data error 0x%04x",
 			ptp->Code, ret);
@@ -401,9 +427,10 @@ retry:
 uint16_t
 ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 {
-	uint16_t ret;
-	unsigned long rlen;
-	PTPUSBBulkContainer usbresp;
+	uint16_t 		ret;
+	unsigned long		rlen;
+	Camera			*camera = ((PTPData *)params->data)->camera;
+	PTPUSBBulkContainer	usbresp;
 	/*GPContext		*context = ((PTPData *)params->data)->context;*/
 
 	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "reading response");
@@ -428,6 +455,16 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	resp->Code=dtoh16(usbresp.code);
 	resp->SessionID=params->session_id;
 	resp->Transaction_ID=dtoh32(usbresp.trans_id);
+	if (resp->Transaction_ID != params->transaction_id - 1) {
+		if (MTP_ZEN_BROKEN_HEADER(camera->pl)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "Read broken PTP header (transid is %08x vs %08x), compensating.",
+				resp->Transaction_ID, params->transaction_id - 1
+			);
+			resp->Transaction_ID=params->transaction_id-1;
+		}
+		/* else will be handled by ptp.c as error. */
+	}
+
 	resp->Param1=dtoh32(usbresp.payload.params.param1);
 	resp->Param2=dtoh32(usbresp.payload.params.param2);
 	resp->Param3=dtoh32(usbresp.payload.params.param3);
@@ -556,5 +593,19 @@ ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size) {
 		return PTP_ERROR_IO;
 	gp_log_data ("ptp2/get_device_status", buffer, ret);
 	*size = ret;
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_usb_control_cancel_request (PTPParams *params, uint32_t transactionid) {
+	Camera	*camera = ((PTPData *)params->data)->camera;
+	int	ret;
+	unsigned char	buffer[6];
+
+	htod16a(&buffer[0],PTP_EC_CancelTransaction);
+	htod32a(&buffer[2],transactionid);
+	ret = gp_port_usb_msg_class_write (camera->port, 0x64, 0x0000, 0x0000, (char*)buffer, sizeof (buffer));
+	if (ret < GP_OK)
+		return PTP_ERROR_IO;
 	return PTP_RC_OK;
 }

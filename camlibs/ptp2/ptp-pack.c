@@ -32,6 +32,15 @@ htod32ap (PTPParams *params, unsigned char *a, uint32_t val)
 		htobe32a(a,val);
 }
 
+static inline void
+htod64ap (PTPParams *params, unsigned char *a, uint64_t val)
+{
+	if (params->byteorder==PTP_DL_LE)
+		htole64a(a,val);
+	else 
+		htobe64a(a,val);
+}
+
 static inline uint16_t
 dtoh16p (PTPParams *params, uint16_t var)
 {
@@ -42,6 +51,12 @@ static inline uint32_t
 dtoh32p (PTPParams *params, uint32_t var)
 {
 	return ((params->byteorder==PTP_DL_LE)?le32toh(var):be32toh(var));
+}
+
+static inline uint64_t
+dtoh64p (PTPParams *params, uint64_t var)
+{
+	return ((params->byteorder==PTP_DL_LE)?le64toh(var):be64toh(var));
 }
 
 static inline uint16_t
@@ -59,24 +74,16 @@ dtoh32ap (PTPParams *params, unsigned char *a)
 static inline uint64_t
 dtoh64ap (PTPParams *params, unsigned char *a)
 {
-	uint64_t tmp = 0;
-	int i;
-
-	if (params->byteorder==PTP_DL_LE) {
-		for (i=0;i<8;i++)
-			tmp |= (((uint64_t)a[i]) << (8*i));
-	} else {
-		for (i=0;i<8;i++)
-			tmp |= (((uint64_t)a[i]) << (8*(7-i)));
-	}
-	return tmp;
+	return ((params->byteorder==PTP_DL_LE)?le64atoh(a):be64atoh(a));
 }
 
 #define htod8a(a,x)	*(uint8_t*)(a) = x
 #define htod16a(a,x)	htod16ap(params,a,x)
 #define htod32a(a,x)	htod32ap(params,a,x)
+#define htod64a(a,x)	htod64ap(params,a,x)
 #define htod16(x)	htod16p(params,x)
 #define htod32(x)	htod32p(params,x)
+#define htod64(x)	htod64p(params,x)
 
 #define dtoh8a(x)	(*(uint8_t*)(x))
 #define dtoh16a(a)	dtoh16ap(params,a)
@@ -84,6 +91,7 @@ dtoh64ap (PTPParams *params, unsigned char *a)
 #define dtoh64a(a)	dtoh64ap(params,a)
 #define dtoh16(x)	dtoh16p(params,x)
 #define dtoh32(x)	dtoh32p(params,x)
+#define dtoh64(x)	dtoh64p(params,x)
 
 
 static inline char*
@@ -182,8 +190,12 @@ ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size
 	uint8_t packed[PTP_MAXSTRLEN*2+3], len;
 	size_t plen;
 	unsigned char *retcopy = NULL;
-
-	ptp_pack_string(params, string, (unsigned char*) packed, 0, &len);
+  
+	if (string == NULL)
+	  ptp_pack_string(params, "", (unsigned char*) packed, 0, &len);
+	else
+	  ptp_pack_string(params, string, (unsigned char*) packed, 0, &len);
+  
 	/* returned length is in characters, then one byte for string length */
 	plen = len*2 + 1;
 	
@@ -587,17 +599,13 @@ ptp_unpack_DPV (
 	case PTP_DTC_UINT32:
 		CTVAL(value->u32,dtoh32a);
 		break;
-
-
-
-	case PTP_DTC_UINT64:
-		*offset += 8;
-		/*fprintf(stderr,"unhandled unpack of uint64\n");*/
-		break;
 	case PTP_DTC_INT64:
-		*offset += 8;
-		/*fprintf(stderr,"unhandled unpack of int64\n");*/
+		CTVAL(value->i64,dtoh64a);
 		break;
+	case PTP_DTC_UINT64:
+		CTVAL(value->u64,dtoh64a);
+		break;
+
 	case PTP_DTC_UINT128:
 		*offset += 16;
 		/*fprintf(stderr,"unhandled unpack of uint128n");*/
@@ -626,6 +634,12 @@ ptp_unpack_DPV (
 		break;
 	case PTP_DTC_AINT32:
 		RARR(value,i32,dtoh32a);
+		break;
+	case PTP_DTC_AUINT64:
+		RARR(value,u64,dtoh64a);
+		break;
+	case PTP_DTC_AINT64:
+		RARR(value,i64,dtoh64a);
 		break;
 	/* XXX: other int types are unimplemented */
 	/* XXX: other int arrays are unimplemented also */
@@ -830,47 +844,71 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 		dpv=malloc(size);
 		htod32a(dpv,value->u32);
 		break;
+	case PTP_DTC_INT64:
+		size=sizeof(int64_t);
+		dpv=malloc(size);
+		htod64a(dpv,value->i64);
+		break;
+	case PTP_DTC_UINT64:
+		size=sizeof(uint64_t);
+		dpv=malloc(size);
+		htod64a(dpv,value->u64);
+		break;
 	case PTP_DTC_AUINT8:
 		size=sizeof(uint32_t)+value->a.count*sizeof(uint8_t);
 		dpv=malloc(size);
 		htod32a(dpv,value->a.count);
 		for (i=0;i<value->a.count;i++)
-			htod8a(&dpv[4+i],value->a.v[i].u8);
+			htod8a(&dpv[sizeof(uint32_t)+i*sizeof(uint8_t)],value->a.v[i].u8);
 		break;
 	case PTP_DTC_AINT8:
 		size=sizeof(uint32_t)+value->a.count*sizeof(int8_t);
 		dpv=malloc(size);
 		htod32a(dpv,value->a.count);
 		for (i=0;i<value->a.count;i++)
-			htod8a(&dpv[4+i],value->a.v[i].i8);
+			htod8a(&dpv[sizeof(uint32_t)+i*sizeof(int8_t)],value->a.v[i].i8);
 		break;
 	case PTP_DTC_AUINT16:
 		size=sizeof(uint32_t)+value->a.count*sizeof(uint16_t);
 		dpv=malloc(size);
 		htod32a(dpv,value->a.count);
 		for (i=0;i<value->a.count;i++)
-			htod16a(&dpv[4+i],value->a.v[i].u16);
+			htod16a(&dpv[sizeof(uint32_t)+i*sizeof(uint16_t)],value->a.v[i].u16);
 		break;
 	case PTP_DTC_AINT16:
 		size=sizeof(uint32_t)+value->a.count*sizeof(int16_t);
 		dpv=malloc(size);
 		htod32a(dpv,value->a.count);
 		for (i=0;i<value->a.count;i++)
-			htod16a(&dpv[4+i],value->a.v[i].i16);
+			htod16a(&dpv[sizeof(uint32_t)+i*sizeof(int16_t)],value->a.v[i].i16);
 		break;
 	case PTP_DTC_AUINT32:
 		size=sizeof(uint32_t)+value->a.count*sizeof(uint32_t);
 		dpv=malloc(size);
 		htod32a(dpv,value->a.count);
 		for (i=0;i<value->a.count;i++)
-			htod32a(&dpv[4+i],value->a.v[i].u32);
+			htod32a(&dpv[sizeof(uint32_t)+i*sizeof(uint32_t)],value->a.v[i].u32);
 		break;
 	case PTP_DTC_AINT32:
 		size=sizeof(uint32_t)+value->a.count*sizeof(int32_t);
 		dpv=malloc(size);
 		htod32a(dpv,value->a.count);
 		for (i=0;i<value->a.count;i++)
-			htod32a(&dpv[4+i],value->a.v[i].i32);
+			htod32a(&dpv[sizeof(uint32_t)+i*sizeof(int32_t)],value->a.v[i].i32);
+		break;
+	case PTP_DTC_AUINT64:
+		size=sizeof(uint32_t)+value->a.count*sizeof(uint64_t);
+		dpv=malloc(size);
+		htod32a(dpv,value->a.count);
+		for (i=0;i<value->a.count;i++)
+			htod64a(&dpv[sizeof(uint32_t)+i*sizeof(uint64_t)],value->a.v[i].u64);
+		break;
+	case PTP_DTC_AINT64:
+		size=sizeof(uint32_t)+value->a.count*sizeof(int64_t);
+		dpv=malloc(size);
+		htod32a(dpv,value->a.count);
+		for (i=0;i<value->a.count;i++)
+			htod64a(&dpv[sizeof(uint32_t)+i*sizeof(int64_t)],value->a.v[i].i64);
 		break;
 	/* XXX: other int types are unimplemented */
 	case PTP_DTC_STR: {
@@ -884,10 +922,10 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 
 #define MAX_MTP_PROPS 127
 static inline uint32_t
-ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldataptr)
+ptp_pack_OPL (PTPParams *params, MTPProperties *props, int nrofprops, unsigned char** opldataptr)
 {
 	unsigned char* opldata;
-	MTPPropList *propitr;
+	MTPProperties *propitr;
 	unsigned char *packedprops[MAX_MTP_PROPS];
 	uint32_t packedpropslens[MAX_MTP_PROPS];
 	uint32_t packedobjecthandles[MAX_MTP_PROPS];
@@ -899,8 +937,8 @@ ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldatap
 	uint32_t i;
 
 	totalsize = sizeof(uint32_t); /* 4 bytes to store the number of elements */
-	propitr = proplist;
-	while (propitr != NULL && noitems < MAX_MTP_PROPS) {
+	propitr = props;
+	while (nrofprops-- && noitems < MAX_MTP_PROPS) {
 		/* Object Handle */
 		packedobjecthandles[noitems]=propitr->ObjectHandle;
 		totalsize += sizeof(uint32_t); /* Object ID */
@@ -914,7 +952,7 @@ ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldatap
 	        packedpropslens[noitems] = ptp_pack_DPV (params, &propitr->propval, &packedprops[noitems], propitr->datatype);
 		totalsize += packedpropslens[noitems];
 		noitems ++;
-		propitr = propitr->next;
+		propitr ++;
 	}
 
 	/* Allocate memory for the packed property list */
@@ -941,44 +979,48 @@ ptp_pack_OPL (PTPParams *params, MTPPropList *proplist, unsigned char** opldatap
 	return totalsize;
 }
 
+static int
+_compare_func(const void* x, const void *y) {
+	const MTPProperties *px = x;
+	const MTPProperties *py = y;
+
+	return px->ObjectHandle - py->ObjectHandle;
+}
+
 static inline int
-ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPPropList **proplist, unsigned int len)
+ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, unsigned int len)
 { 
 	uint32_t prop_count = dtoh32a(data);
-	MTPPropList *prop = NULL;
+	MTPProperties *props = NULL;
 	int offset = 0, i;
 
 	if (prop_count == 0) {
-		*proplist = NULL;
+		*pprops = NULL;
 		return 0;
 	}
 	data += sizeof(uint32_t);
-	*proplist = malloc(sizeof(MTPPropList));
-	prop = *proplist;
+	props = malloc(prop_count * sizeof(MTPProperties));
+	if (!props) return 0;
 	for (i = 0; i < prop_count; i++) {
-		prop->ObjectHandle = dtoh32a(data);
+		props[i].ObjectHandle = dtoh32a(data);
 		data += sizeof(uint32_t);
 		len -= sizeof(uint32_t);
 
-		prop->property = dtoh16a(data);
+		props[i].property = dtoh16a(data);
 		data += sizeof(uint16_t);
 		len -= sizeof(uint16_t);
 
-		prop->datatype = dtoh16a(data);
+		props[i].datatype = dtoh16a(data);
 		data += sizeof(uint16_t);
 		len -= sizeof(uint16_t);
 
 		offset = 0;
-		ptp_unpack_DPV(params, data, &offset, len, &prop->propval, prop->datatype);
+		ptp_unpack_DPV(params, data, &offset, len, &props[i].propval, props[i].datatype);
 		data += offset;
 		len -= offset;
-
-		if (i != prop_count - 1) {
-			prop->next = malloc(sizeof(MTPPropList));
-			prop = prop->next;
-		} else
-			prop->next = NULL;
 	}
+	qsort (props, prop_count, sizeof(MTPProperties),_compare_func);
+	*pprops = props;
 	return prop_count;
 }
 

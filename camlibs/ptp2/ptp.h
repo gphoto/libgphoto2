@@ -492,6 +492,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_ERROR_DATA_EXPECTED		0x02FE
 #define PTP_ERROR_RESP_EXPECTED		0x02FD
 #define PTP_ERROR_BADPARAM		0x02FC
+#define PTP_ERROR_CANCEL		0x02FB
 
 /* PTP Event Codes */
 
@@ -713,7 +714,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_vCalendar1			0xbe02
 #define PTP_OFC_MTP_vCalendar2			0xbe03
 #define PTP_OFC_MTP_UndefinedWindowsExecutable	0xbe80
-
+#define PTP_OFC_MTP_MediaCast			0xbe81
+#define PTP_OFC_MTP_Section			0xbe82
 
 /* PTP Association Types */
 #define PTP_AT_Undefined			0x0000
@@ -761,7 +763,9 @@ union _PTPPropertyValue {
 	int16_t		i16;
 	uint32_t	u32;
 	int32_t		i32;
-	/* XXXX: 64bit and 128 bit signed and unsigned missing */
+	uint64_t	u64;
+	int64_t		i64;
+	/* XXXX: 128 bit signed and unsigned missing */
 	struct array {
 		uint32_t	count;
 		union _PTPPropertyValue	*v;	/* malloced, count elements */
@@ -771,14 +775,13 @@ union _PTPPropertyValue {
 typedef union _PTPPropertyValue PTPPropertyValue;
 
 /* Metadata lists for MTP operations */
-struct _MTPPropList {
+struct _MTPProperties {
 	uint16_t 	 	property;
 	uint16_t 	 	datatype;
 	uint32_t 	 	ObjectHandle;
 	PTPPropertyValue 	propval;
-	struct _MTPPropList 	*next;
 };
-typedef struct _MTPPropList MTPPropList;
+typedef struct _MTPProperties MTPProperties;
 
 struct _PTPPropDescRangeForm {
 	PTPPropertyValue 	MinimumValue;
@@ -1063,6 +1066,8 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_CANON_FocalLengthWide	0xD027
 #define PTP_DPC_CANON_FocalLengthDenominator	0xD028
 #define PTP_DPC_CANON_CaptureTransferMode		0xD029
+#define CANON_TRANSFER_MEMORY	3
+#define CANON_TRANSFER_CARD	9
 #define PTP_DPC_CANON_Zoom		0xD02A
 #define PTP_DPC_CANON_NamePrefix	0xD02B
 #define PTP_DPC_CANON_SizeQualityMode	0xD02C
@@ -1321,7 +1326,7 @@ typedef struct _PTPCanon_Property {
 #define PTP_OPC_DisplayName				0xDCE0
 #define PTP_OPC_BodyText				0xDCE1
 #define PTP_OPC_Subject					0xDCE2
-#define PTP_OPC_Prority					0xDCE3
+#define PTP_OPC_Priority				0xDCE3
 #define PTP_OPC_GivenName				0xDD00
 #define PTP_OPC_MiddleNames				0xDD01
 #define PTP_OPC_FamilyName				0xDD02
@@ -1471,6 +1476,8 @@ typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
 	                                 PTPDataHandler *putter);
+typedef uint16_t (* PTPIOCancelReq)	(PTPParams* params, uint32_t transaction_id);
+
 /* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
 #if (__GNUC__ >= 3)
@@ -1495,6 +1502,7 @@ struct _PTPParams {
 	PTPIOGetData	getdata_func;
 	PTPIOGetResp	event_check;
 	PTPIOGetResp	event_wait;
+	PTPIOCancelReq	cancelreq_func;
 
 	/* Custom error and debug function */
 	PTPErrorFunc	error_func;
@@ -1512,7 +1520,8 @@ struct _PTPParams {
 	int		split_header_data;
 
 	/* PTP: MTP specific structure. */
-	MTPPropList	*proplist;
+	MTPProperties	*props;
+	int		nrofprops;
 
 	/* PTP: internal structures used by ptp driver */
 	PTPObjectHandles handles;
@@ -1559,6 +1568,7 @@ uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *size);
 uint16_t ptp_usb_control_device_reset_request (PTPParams *params);
 uint16_t ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size);
+uint16_t ptp_usb_control_cancel_request (PTPParams *params, uint32_t transid);
 
 
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
@@ -1634,10 +1644,10 @@ uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t o
 				PTPPropertyValue *value, uint16_t datatype);
 uint16_t ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen);
 uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen);
-uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPPropList **proplist);
+uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops);
 uint16_t ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
-				     uint16_t objecttype, uint64_t objectsize, MTPPropList *proplist);
-uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPPropList *proplist);
+				     uint16_t objecttype, uint64_t objectsize, MTPProperties *props, int nrofprops);
+uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprops);
 
 /* Eastman Kodak extensions */
 uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *size);
@@ -1747,6 +1757,12 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
+MTPProperties *ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops);
+void ptp_destroy_object_prop(MTPProperties *prop);
+void ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops);
+MTPProperties *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
+void ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
+uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);
 
 /* ptpip.c */
 void ptp_nikon_getptpipguid (unsigned char* guid);

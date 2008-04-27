@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2008 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
@@ -196,6 +196,7 @@ static struct {
 	{PTP_RC_EK_FilenameInvalid,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Invalid")},
 
 	{PTP_ERROR_IO,		  0, N_("PTP I/O error")},
+	{PTP_ERROR_CANCEL,	  0, N_("PTP Cancel request")},
 	{PTP_ERROR_BADPARAM,	  0, N_("PTP Error: bad parameter")},
 	{PTP_ERROR_DATA_EXPECTED, 0, N_("PTP Protocol error, data expected")},
 	{PTP_ERROR_RESP_EXPECTED, 0, N_("PTP Protocol error, response expected")},
@@ -222,6 +223,8 @@ translate_ptp_result (short result)
 		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_DeviceBusy:
 		return (GP_ERROR_CAMERA_BUSY);
+	case PTP_ERROR_CANCEL:
+		return (GP_ERROR_CANCEL);
 	case PTP_ERROR_BADPARAM:
 		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_OK:
@@ -479,6 +482,8 @@ static struct {
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
+	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -574,6 +579,8 @@ static struct {
 	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
 	/* Pat Shanahan, http://sourceforge.net/tracker/index.php?func=detail&aid=1924511&group_id=8874&atid=358874 */
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
+	/* irc reporter Benjamin Schindler */
+	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
 
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
@@ -668,7 +675,7 @@ static struct {
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
  	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
  	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT},
  	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
  	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
  	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
@@ -715,7 +722,7 @@ static struct {
 	{"Canon:PowerShot A420 (PTP mode)",     0x04a9, 0x310f, PTPBUG_DELETE_SENDS_EVENT},
 	/* Some Canon 400D do not have the infamous PTP bug, but some do.
 	 * see http://bugs.kde.org/show_bug.cgi?id=141577 -Marcus */
-	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTPBUG_DCIM_WRONG_PARENT|PTP_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
 	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, PTPBUG_DCIM_WRONG_PARENT},
@@ -744,8 +751,10 @@ static struct {
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
+	/* Deti Fliegl */
+	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP},
 	/* reported by Ferry Huberts */
-	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, 0}, /* user had it working without problem */
+	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP}, /* user had it working without problem */
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
 	/* AlannY <alanny@starlink.ru> */
 	{"Canon:PowerShot A460 (PTP mode)",	0x04a9, 0x3149, PTP_CAP|PTP_CAP_PREVIEW},
@@ -808,6 +817,8 @@ static struct {
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
 	/* Teppo Jalava <tjjalava@gmail.com> */
 	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
+	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1945259&group_id=8874 */
+	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -832,181 +843,18 @@ static struct {
 	/* from Mike Meyer <mwm@mired.org> */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
-	{"Pioneer:DVR-LX60D",                   0x08e4, 0x0142, 0},
+	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
+};
 
-	/************ Add MTP devices below this line ***********/
-	/* This camera speaks _only_ PictBridge, so it is too limited
-	 * for us. -Marcus
-	{"Motorola:K1 (PTP mode)",              0x22b8, 0x4811, 0},
-	*/
-	/* Hans-Joachim Baader <hjb@pro-linux.de> */
-	{"Motorola:A1200 (MTP mode)",           0x22b8, 0x60ca, 0},
-
-	/* from libmtp  */
-	{"iRiver:iFP-800",                      0x4102, 0x1008, PTP_MTP},
-	/* Jay MacDonald <jay@cheakamus.com> */
-	{"iRiver:T10 (alternate)",              0x4102, 0x1113, PTP_MTP},
-	/* Andreas Thienemann <andreas@bawue.de> */
-	{"iRiver:T20 FM",			0x4102, 0x1114, PTP_MTP},
-	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620359&group_id=8874 */
-	{"iRiver:T20 2",			0x4102, 0x1115, PTP_MTP},
-	/* Roger Pixley <skreech2@gmail.com> */
-	{"iRiver:U10",                          0x4102, 0x1116, PTP_MTP},
-	/* Freaky <freaky@bananateam.nl> */
-	{"iRiver:T10",                          0x4102, 0x1117, PTP_MTP},
-	/* Martin Senst <martin.senst@gmx.de> */
-	{"iRiver:T20",                          0x4102, 0x1118, PTP_MTP},
-	/* Bruno Parente Lima <brunoparente77@yahoo.com.br> */
-	{"iRiver:T30",                          0x4102, 0x1119, PTP_MTP},
-	/* reported by by David Wolpoff */
-	{"iRiver:T10 2GB",			0x4102, 0x1120, PTP_MTP},
-	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1620359&group_id=8874 */
-	{"iRiver:N12",				0x4102, 0x1122, PTP_MTP},
-	/* Reported by Philip Antoniades <philip@mysql.com> */
-	{"iRiver:Clix2",			0x4102, 0x1126, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Adam Torgerson */
-	{"iRiver:Clix",				0x4102, 0x112a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"iRiver:X20",				0x4102, 0x1132, PTP_MTP},
-	/* Scott Call <scott.call@gmail.com> */
-	{"iRiver:H10 20GB",                     0x4102, 0x2101, PTP_MTP},
-	/* Petr Spatka spatka@luzanky.cz */
-	{"iRiver:H10",                          0x4102, 0x2102, PTP_MTP},
-	{"iRiver:Portable Media Center",	0x1006, 0x4002, PTP_MTP},
-	{"iRiver:Portable Media Center 2",	0x1006, 0x4003, PTP_MTP},
-	{"Philips:HDD6320 2",			0x0471, 0x014b, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Philips:HDD6130/17",			0x0471, 0x014c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* from libmtp forum */
-	{"Philips:HDD085/00",			0x0471, 0x014d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* from XNJB forum */
-	{"Philips:GoGear SA9200",		0x0471, 0x014f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* From Gerhard Mekenkamp */
-	{"Philips:GoGear Audio",		0x0471, 0x0165, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* from npedrosa */
-	{"Philips:PSA610",			0x0471, 0x0181, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* From: thanosz@softhome.net */
-	{"Philips:HDD6320",			0x0471, 0x01eb, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* from XNJB user (libmtp) */
-	{"Philips:PSA235",			0x0471, 0x7e01, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Creative:Zen Vision",			0x041e, 0x411f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Creative:Portable Media Center",	0x041e, 0x4123, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Creative:Zen Xtra",			0x041e, 0x4128, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Second generation Dell DJ",		0x041e, 0x412f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Creative:Zen Micro",			0x041e, 0x4130, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Creative:Zen Touch",			0x041e, 0x4131, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Dell:Pocket DJ",			0x041e, 0x4132, PTP_MTP},
-	{"Creative:Zen Sleek",			0x041e, 0x4137, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Jennifer Scalf <oneferna@gmail.com> */
-	{"Creative:Zen MicroPhoto",             0x041e, 0x413c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Creative:Zen Sleek Photo",		0x041e, 0x413d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Creative:Zen Vision:M",		0x041e, 0x413e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by marazm@o2.pl */
-	{"Creative:Zen V",			0x041e, 0x4150, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by danielw@iinet.net.au */
-	{"Creative:Zen Vision M",		0x041e, 0x4151, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Darel on the XNJB forums */
-	{"Creative:Zen V plus",			0x041e, 0x4152, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* From Richard Low of the libmtp devteam */
-	{"Creative:Zen Vision W",		0x041e, 0x4153, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* The 2 below will not work out of the box, since the autoswitch
-	 * to USB Mass Storage once probed.
-	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1577793&group_id=8874
-	 */
-	{"Dunlop:MP3 player 1GB",		0x10d6, 0x2200, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"EGOMAN:MD223AFD",			0x10d6, 0x2200, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* IRC reporter */
-	{"Dell:DJ Itty",			0x413c, 0x4500, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Intel:Bandon Portable Media Center",	0x045e, 0x00c9, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* Marcoen Hirschberg <marcoen@users.sourceforge.net> */
-	{"Toshiba:Gigabeat MEGF-40",            0x0930, 0x0009, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Toshiba:Gigabeat",                    0x0930, 0x000c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Nicholas Tripp to libmtp */
-	{"Toshiba:Gigabeat P20",                0x0930, 0x000f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Toshiba:Gigabeat S",                  0x0930, 0x0010, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Rob Brown */
-	{"Toshiba:Gigabeat P10",                0x0930, 0x0011, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Archos:Gmini XS100",			0x0e79, 0x1207, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Archos:XS202 (MTP mode)",		0x0e79, 0x1208, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by gudul1@users.sourceforge.net */
-	{"Archos:104",				0x0e79, 0x120a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* reported to libmtp-devel by chauchot.etienne@free.fr */
-	{"Archos:504",				0x0e79, 0x1307, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* From Mark Veinot */
-	{"JVC:Alneo XA-HD500", 			0x04f1, 0x6105, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Samsung:YH-920",			0x04e8, 0x5022, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Contributed by aronvanammers on SourceForge (libmtp) */
-	{"Samsung:YH-925GS",			0x04e8, 0x5024, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Samsung:YH-820",			0x04e8, 0x502e, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Samsung:YH-925",			0x04e8, 0x502f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Samsung:YH-J70J",			0x04e8, 0x5033, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Samsung:YP-Z5",			0x04e8, 0x503c, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* From XNJB user */
-	{"Samsung:YP-Z5",			0x04e8, 0x5041, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1474056&group_id=8874&atid=108874 */
-	{"Samsung:YP-T7J", 			0x04e8, 0x5047, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by cstrickler@gmail.com */
-	{"Samsung:YP-U2J (YP-U2JXB/XAA)",	0x04e8, 0x5054, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Andrew Benson */
-	{"Samsung:YP-F2J",			0x04e8, 0x5057, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Patrick <skibler@gmail.com> */
-	{"Samsung:YP-K5",			0x04e8, 0x505a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* "m.eik michalke" <m@openmusiccontest.org> */
-	{"Samsung:YP-U3",			0x04e8, 0x507d, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Matthew Wilcox <matthew@wil.cx> */
-	{"Samsung:Yepp T9",			0x04e8, 0x507f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* paul <pclinch@gmail.com> */
-	{"Samsung:YP-K3",			0x04e8, 0x5081, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Samsung:YH-999 Portable Media Center",0x04e8, 0x5a0f, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* From Lionel Bouton */
-	{"Samsung:X830 Mobile Phone",		0x04e8, 0x6702, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Samsung:U600 Mobile Phone",		0x04e8, 0x6709, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* Reported by Brian Robison */
-	{"SanDisk:Sansa m240",			0x0781, 0x7400, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by tangent_@users.sourceforge.net */
-	{"SanDisk:Sansa c150",			0x0781, 0x7410, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1515815&group_id=8874&atid=358874 */
-	{"Sandisk:Sansa e200",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e250",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e260",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e270",			0x0781, 0x7420, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Sandisk:Sansa e280",			0x0781, 0x7421, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"SanDisk:Sansa c250",			0x0781, 0x7450, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* Reported by Troy Curtis Jr. */
-	{"SanDisk:Sansa Express",		0x0781, 0x7460, PTP_MTP},
-	/* Reported by XNJB user, and Miguel de Icaza <miguel@gnome.org> */
-	{"SanDisk:Sansa Connect",		0x0781, 0x7480, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* Reported by Farooq Zaman. NOTE: Can just list files currently and might have other problems! */
-	{"Microsoft:Zune",			0x045e, 0x0710, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* From Richard Low */
-	{"Sirius:Stiletto",			0x18f6, 0x0102, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Nokia:5300 Mobile Phone (MTP mode)",	0x0421, 0x04ba, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1659608&group_id=8874 */
-	{"Nokia:Mobile Phones",			0x0421, 0x04e1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"Nokia:N80 Internet Edition",		0x0421, 0x04f1, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Logik:LOG DAX MP3 and DAB Player",	0x13d1, 0x7002, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Thomson:Opal",			0x069b, 0x0777, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-	{"RCA:Lyra MC4002",			0x069b, 0x0777, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"FOMA:F903iX HIGH-SPEED",		0x04c5, 0x1140, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* Reported by Peter Gyongyosi <gyp@impulzus.com> to libmtp */
-	{"Palm:Handspring Pocket Tunes",	0x1703, 0x0001, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	/* Reported by Stefan Voss <svoss@web.de> to libmtp */
-	{"Trekstor:Vibez 8/12GB",		0x066f, 0x842a, PTP_MTP|PTP_MTP_PROPLIST_WORKS},
-
-	{"Disney:MixMax",			0x0aa6, 0x6021, PTP_MTP|PTP_MTP_PROPLIST_WORKS}
+#include "device-flags.h"
+static struct {
+	const char *vendor;
+	unsigned short usb_vendor;
+	const char *model;
+	unsigned short usb_product;
+	unsigned long flags;
+} mtp_models[] = {
+#include "music-players.h"
 };
 
 static struct {
@@ -1080,6 +928,7 @@ set_mimetype (Camera *camera, CameraFile *file, uint16_t vendorcode, uint16_t of
 			continue;
 		return gp_file_set_mime_type (file, object_formats[i].txt);
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2/setmimetype", "Failed to find mime type for %04x\n", ofc);
 	return gp_file_set_mime_type (file, "application/x-unknown");
 }
 
@@ -1096,6 +945,7 @@ strcpy_mime(char * dest, uint16_t vendor_code, uint16_t ofc) {
 			return;
 		}
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %04x\n", ofc);
 	strcpy(dest, "application/x-unknown");
 }
 
@@ -1113,6 +963,7 @@ get_mimetype (Camera *camera, CameraFile *file, uint16_t vendor_code)
 		if (!strcmp(mimetype,object_formats[i].txt))
 			return (object_formats[i].format_code);
 	}
+	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %s\n", mimetype);
 	return (PTP_OFC_Undefined);
 }
 
@@ -1147,28 +998,38 @@ camera_abilities (CameraAbilitiesList *list)
 	for (i = 0; i < sizeof(models)/sizeof(models[0]); i++) {
 		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
-		a.status = GP_DRIVER_STATUS_PRODUCTION;
-		a.port   = GP_PORT_USB;
-		a.speed[0] = 0;
-		a.usb_vendor = models[i].usb_vendor;
-		a.usb_product= models[i].usb_product;
-		if (models[i].known_bugs & PTP_MTP) {
-			a.operations        = GP_OPERATION_NONE;
-			a.device_type       = GP_DEVICE_AUDIO_PLAYER;
-			a.file_operations   = GP_FILE_OPERATION_DELETE;
-		} else {
-			a.device_type       = GP_DEVICE_STILL_CAMERA;
-			a.operations        = GP_OPERATION_NONE;
-			if (models[i].known_bugs & PTP_CAP)
-				a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
-			if (models[i].known_bugs & PTP_CAP_PREVIEW)
-				a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
-			a.file_operations   = GP_FILE_OPERATION_PREVIEW |
-						GP_FILE_OPERATION_DELETE;
-		}
-		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE |
-			GP_FOLDER_OPERATION_MAKE_DIR |
-			GP_FOLDER_OPERATION_REMOVE_DIR;
+		a.status		= GP_DRIVER_STATUS_PRODUCTION;
+		a.port			= GP_PORT_USB;
+		a.speed[0]		= 0;
+		a.usb_vendor		= models[i].usb_vendor;
+		a.usb_product		= models[i].usb_product;
+		a.device_type		= GP_DEVICE_STILL_CAMERA;
+		a.operations		= GP_OPERATION_NONE;
+		if (models[i].known_bugs & PTP_CAP)
+			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+		if (models[i].known_bugs & PTP_CAP_PREVIEW)
+			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
+		a.file_operations	= GP_FILE_OPERATION_PREVIEW |
+					GP_FILE_OPERATION_DELETE;
+		a.folder_operations	= GP_FOLDER_OPERATION_PUT_FILE |
+					GP_FOLDER_OPERATION_MAKE_DIR |
+					GP_FOLDER_OPERATION_REMOVE_DIR;
+		CR (gp_abilities_list_append (list, a));
+	}
+	for (i = 0; i < sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+		memset(&a, 0, sizeof(a));
+		sprintf (a.model, "%s:%s", mtp_models[i].vendor, mtp_models[i].model);
+		a.status		= GP_DRIVER_STATUS_PRODUCTION;
+		a.port			= GP_PORT_USB;
+		a.speed[0]		= 0;
+		a.usb_vendor		= mtp_models[i].usb_vendor;
+		a.usb_product		= mtp_models[i].usb_product;
+		a.operations		= GP_OPERATION_NONE;
+		a.device_type		= GP_DEVICE_AUDIO_PLAYER;
+		a.file_operations	= GP_FILE_OPERATION_DELETE;
+		a.folder_operations	= GP_FOLDER_OPERATION_PUT_FILE |
+					GP_FOLDER_OPERATION_MAKE_DIR |
+					GP_FOLDER_OPERATION_REMOVE_DIR;
 		CR (gp_abilities_list_append (list, a));
 	}
 
@@ -1266,8 +1127,8 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	 */
 	strncpy (text->text,
 	 _("PTP2 driver\n"
-	   "(c)2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-	   "(c)2003-2006 by Marcus Meissner <marcus@jet.franken.de>.\n"
+	   "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
+	   "(c) 2003-2007 by Marcus Meissner <marcus@jet.franken.de>.\n"
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
 	   "\n"
@@ -1573,7 +1434,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
-		gp_context_error (context, _("Canon EOS Capture failed: %d"), ret);
+		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
 	newobject = 0;
@@ -1581,7 +1442,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		int i;
 		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon EOS Get Changes failed: %d"), ret);
+			gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
 			return GP_ERROR;
 		}
 		if (!nrofentries) {
@@ -1591,6 +1452,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			continue;
 		}
 		for (i=0;i<nrofentries;i++) {
+			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entries[i].type);
 			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
@@ -1648,7 +1510,7 @@ static int
 camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	static int capcnt = 0;
+	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
 	int			i, ret, isevent;
 	PTPParams		*params = &camera->pl->params;
@@ -1658,6 +1520,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPContainer		event;
 	PTPUSBEventContainer	usbevent;
 	uint32_t		handle;
+	char 			buf[1024];
+	int			xmode = CANON_TRANSFER_CARD;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
@@ -1678,10 +1542,13 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
-		propval.u16=3; /* 3 */
+		if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
+			propval.u16 = xmode = CANON_TRANSFER_MEMORY;
+		else
+			propval.u16 = xmode = CANON_TRANSFER_CARD;
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %d\n", ret);
+			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x\n", ret);
 	}
 
 #if 0
@@ -1691,7 +1558,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 #endif
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
-		gp_context_error (context, _("Canon Capture failed: %d"), ret);
+		gp_context_error (context, _("Canon Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
 	/* Catch event */
@@ -1750,12 +1617,26 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	/* FIXME: handle multiple images (as in BurstMode) */
 	ret = ptp_getobjectinfo (params, newobject, &oi);
 	if (ret != PTP_RC_OK) return GP_ERROR_IO;
+
 	if (oi.ParentObject != 0) {
-		fprintf(stderr,"Parentobject is 0x%lx now?\n", (unsigned long)oi.ParentObject);
+		if (xmode != CANON_TRANSFER_CARD) {
+			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
+		}
+		add_object (camera, newobject, context);
+		strcpy  (path->name,  oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+		return GP_OK;
+	} else {
+		if (xmode == CANON_TRANSFER_CARD) {
+			fprintf (stderr,"parentobject is 0, but not in memory mode?\n");
+		}
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 	}
-	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
-	sprintf (path->name, "capt%04d.jpg", capcnt++);
-	return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 }
 
 static int
@@ -1782,9 +1663,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
 	) {
-		char buf[1024];
-		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
-			return camera_canon_capture (camera, type, path, context);
+		return camera_canon_capture (camera, type, path, context);
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
@@ -2296,11 +2175,16 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
 			n = snprintf (txt, spaceleft,_("Canon Capture\n"));
 		} else  {
-			if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-			     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture)) {
-				n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
-			} else {
-				n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
+			if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			    ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)) {
+				n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
+			} else  {
+				if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+				     ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_Capture)) {
+					n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+				} else {
+					n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
+				}
 			}
 		}
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
@@ -2741,23 +2625,32 @@ ptp_mtp_render_metadata (
 	uint32_t propcnt = 0;
 	int j;
 
-	if (params->proplist) { /* use the fast method, without device access since cached.*/
+	/* ... use little helper call to see if we missed anything in the global
+	 * retrieval. */
+	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
+	if (ret != PTP_RC_OK) return (GP_ERROR);
+	
+	if (params->props) { /* use the fast method, without device access since cached.*/
 		char			propname[256];
 		char			text[256];
-		int 			i, n;
-		MTPPropList		*xpl = params->proplist;
-	
-		while (xpl) {
-			if (xpl->ObjectHandle != object_id) {
-				xpl = xpl->next;
+		int 			i, j, n;
+
+		for (j=0;j<params->nrofprops;j++) {
+			MTPProperties		*xpl = &params->props[j];
+
+			if (xpl->ObjectHandle != object_id)
 				continue;
-			}
 			for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
 				if (uninteresting_props[i] == xpl->property)
 					break;
-			if (i != -1) {/* Is uninteresting. */
-				xpl = xpl->next;
+			if (i != -1) /* Is uninteresting. */
 				continue;
+			for(i=0;i<propcnt;i++) {
+				/* Mark handled property as 0 */
+				if (props[i] == xpl->property) {
+					props[i]=0;
+					break;
+				}
 			}
 
 			n = ptp_render_mtp_propname(xpl->property, sizeof(propname), propname);
@@ -2794,19 +2687,17 @@ ptp_mtp_render_metadata (
 			gp_file_append (file, "</", 2);
 			gp_file_append (file, propname, n);
 			gp_file_append (file, ">\n", 2);
-			xpl = xpl->next;
 		}
-		return (GP_OK);
+		/* fallthrough */
 	}
-
-	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
-	if (ret != PTP_RC_OK) return (GP_ERROR);
 
 	for (j=0;j<propcnt;j++) {
 		char			propname[256];
 		char			text[256];
 		PTPObjectPropDesc	opd;
 		int 			i, n;
+
+		if (!props[j]) continue; /* handle above */
 
 		for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
 			if (uninteresting_props[i] == props[j])
@@ -3137,7 +3028,7 @@ gpfile_getfunc (PTPParams *params, void *priv,
 	int ret;
 	size_t	gotlensize;
 
-	ret = gp_file_slurp (private->file, bytes, wantlen, &gotlensize);
+	ret = gp_file_slurp (private->file, (char*)bytes, wantlen, &gotlensize);
 	*gotlen = gotlensize;
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
@@ -3152,7 +3043,7 @@ gpfile_putfunc (PTPParams *params, void *priv,
 	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
 	int ret;
 	
-	ret = gp_file_append (private->file, bytes, sendlen);
+	ret = gp_file_append (private->file, (char*)bytes, sendlen);
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
 	*written = sendlen;
@@ -3310,12 +3201,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		size=oi->ObjectCompressedSize;
 		if (size) {
-			PTPDataHandler handler;
+			uint16_t	ret;
+			PTPDataHandler	handler;
+
 			ptp_init_camerafile_handler (&handler, file);
-			CPR (context, ptp_getobject_to_handler(params,
-			params->handles.Handler[object_id],
-			&handler));
+			ret = ptp_getobject_to_handler(params,
+				params->handles.Handler[object_id],
+				&handler
+			);
 			ptp_exit_camerafile_handler (&handler);
+			if (ret == PTP_ERROR_CANCEL)
+				return GP_ERROR_CANCEL;
+			CPR(context, ret);
 		} else {
 			unsigned char *ximage = NULL;
 			/* Do not download 0 sized files.
@@ -3443,12 +3340,17 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		CPR (context, ptp_ek_sendfileobject_from_handler (params, &handler, intsize));
 		ptp_exit_camerafile_handler (&handler);
 	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
+		uint16_t	ret;
 		PTPDataHandler handler;
+
 		CPR (context, ptp_sendobjectinfo (params, &storage,
 			&parent, &handle, &oi));
 		ptp_init_camerafile_handler (&handler, file);
-		CPR (context, ptp_sendobject_from_handler (params, &handler, intsize));
+		ret = ptp_sendobject_from_handler (params, &handler, intsize);
 		ptp_exit_camerafile_handler (&handler);
+		if (ret == PTP_ERROR_CANCEL)
+			return (GP_ERROR_CANCEL);
+		CPR (context, ret);
 	} else {
 		GP_DEBUG ("The device does not support uploading files!");
 		return GP_ERROR_NOT_SUPPORTED;
@@ -4011,23 +3913,23 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	    (camera->pl->bugs & PTP_MTP_PROPLIST_WORKS)
 	) {
 		PTPObjectInfo	*oinfos = NULL;	
-		int		cnt = 0,i;
+		int		cnt = 0, i, j, nrofprops = 0;
 		uint32_t	lasthandle = 0xffffffff;
-		MTPPropList 	*proplist = NULL, *xpl;
+		MTPProperties 	*props = NULL, *xpl;
 
-		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &proplist);
+		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &props, &nrofprops);
 		if (ret != PTP_RC_OK)
 			goto fallback;
-		params->proplist = proplist; /* cache it */
+		params->props = props; /* cache it */
+		params->nrofprops = nrofprops; /* cache it */
 
 		/* count the objects */
-		xpl = proplist;
-		while (xpl) {
+		for (i=0;i<nrofprops;i++) {
+			xpl = &props[i];
 			if (lasthandle != xpl->ObjectHandle) {
 				cnt++;
 				lasthandle = xpl->ObjectHandle;
 			}
-			xpl = xpl->next;
 		}
 		lasthandle = 0xffffffff;
 		oinfos = params->objectinfo = malloc (sizeof (PTPObjectInfo) * cnt);
@@ -4035,8 +3937,9 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		params->handles.Handler = malloc (sizeof (uint32_t) * cnt);
 		params->handles.n = cnt;
 
-		xpl = proplist; i = -1;
-		while (xpl) {
+		i = -1;
+		for (j=0;j<nrofprops;j++) {
+			xpl = &props[j];
 			if (lasthandle != xpl->ObjectHandle) {
 				if (i >= 0) {
 					if (!oinfos[i].Filename) {
@@ -4079,7 +3982,6 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "case %x type %x unhandled", xpl->property, xpl->datatype);
 				break;
 			}
-			xpl = xpl->next;
 		}
 		return PTP_RC_OK;
 	}
@@ -4254,7 +4156,7 @@ camera_init (Camera *camera, GPContext *context)
 	gp_port_get_settings (camera->port, &settings);
 	/* Make sure our port is either USB or PTP/IP. */
 	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
-		gp_context_error (context, _("PTP is only implemented for "
+		gp_context_error (context, _("Currently, PTP is only implemented for "
 			"USB and PTP/IP cameras currently, port type %x"), camera->port->type);
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
@@ -4298,16 +4200,17 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.getdata_func		= ptp_usb_getdata;
 		camera->pl->params.event_wait		= ptp_usb_event_wait;
 		camera->pl->params.event_check		= ptp_usb_event_check;
+		camera->pl->params.cancelreq_func	= ptp_usb_control_cancel_request;
 		break;
 	case GP_PORT_PTPIP: {
-		GPPortInfo	pinfo;
+		GPPortInfo	info;
 
-		ret = gp_port_get_info (camera->port, &pinfo);
+		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to get port info?\n");
 			return ret;
 		}
-		ret = ptp_ptpip_connect (&camera->pl->params, pinfo.path);
+		ret = ptp_ptpip_connect (&camera->pl->params, info.path);
 		if (ret != GP_OK) {
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to connect.\n");
 			return ret;
@@ -4339,6 +4242,20 @@ camera_init (Camera *camera, GPContext *context)
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
                 camera->pl->bugs = models[i].known_bugs;
+                break;
+            }
+        }
+	/* map the libmtp flags to ours. Currently its just 1 flag. */
+        for (i = 0; i<sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+            if ((a.usb_vendor == mtp_models[i].usb_vendor) &&
+                (a.usb_product == mtp_models[i].usb_product)){
+                	camera->pl->bugs = PTP_MTP;
+
+		/* some players really need it */
+		if (!(mtp_models[i].flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL))
+			camera->pl->bugs |= PTP_MTP_PROPLIST_WORKS;
+		if (mtp_models[i].flags & DEVICE_FLAG_IGNORE_HEADER_ERRORS)
+			camera->pl->bugs |= PTP_MTP_ZEN_BROKEN_HEADER;
                 break;
             }
         }
