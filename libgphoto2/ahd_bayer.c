@@ -45,8 +45,12 @@
 #include <math.h>
 #include <time.h>
 
+#include "config.h"
 #include "bayer.h"
-#include "gamma.h"
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-port-log.h>
+
+#define GP_MODULE "ahd_bayer"
 
 #define MAX(x,y) ((x < y) ? (y) : (x))
 #define MIN(x,y) ((x > y) ? (y) : (x))
@@ -206,7 +210,7 @@ int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w,
 			}
 		}
 	}
-return 0;
+	return GP_OK;
 }
 
 
@@ -302,7 +306,7 @@ int do_green_ctr_row(unsigned char *image, unsigned char *image_h,
 			
 		}
 	}
-	return 0;
+	return GP_OK;
 }
 
 /**
@@ -365,7 +369,7 @@ int get_diffs_row2(unsigned char * hom_buffer_h, unsigned char *hom_buffer_v,
 		hom_buffer_h[j+2*w]=Usize_h;
 		hom_buffer_v[j+2*w]=Usize_v;
 	}
-	return 0;
+	return GP_OK;
 }
 
 /**
@@ -414,42 +418,41 @@ int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 	unsigned char *homo_h, *homo_v;
 	unsigned char *homo_ch, *homo_cv;
 
-	fprintf(stderr, "Starting bayer AHD-interpolation\n");
 	window_h = calloc (w * 18, 1);
 	if (!window_h) {
 		free (window_h);
-		fprintf(stderr, "Out of memory\n");
-		return -1;
+		GP_DEBUG("Out of memory\n");
+		return GP_ERROR_NO_MEMORY;
 	}
 	window_v = calloc(w * 18, 1);
 	if (!window_v) {
 		free (window_v);
-		fprintf(stderr, "Out of memory\n");
-		return -1;
+		GP_DEBUG("Out of memory\n");
+		return GP_ERROR_NO_MEMORY;
 	}
 	homo_h = calloc(w*3, 1);
 	if (!homo_h) {
 		free (homo_h);
-		fprintf(stderr, "Out of memory\n");
-		return -1;
+		GP_DEBUG("Out of memory\n");
+		return GP_ERROR_NO_MEMORY;
 	}
 	homo_v = calloc(w*3, 1);
 	if (!homo_v) {
 		free (homo_v);
-		fprintf(stderr, "Out of memory\n");
-		return -1;
+		GP_DEBUG("Out of memory\n");
+		return GP_ERROR_NO_MEMORY;
 	}
 	homo_ch = calloc (w, 1);
 	if (!homo_ch) {
 		free (homo_ch);
-		fprintf(stderr, "Out of memory\n");
-		return -1;
+		GP_DEBUG("Out of memory\n");
+		return GP_ERROR_NO_MEMORY;
 	}
 	homo_cv = calloc (w, 1);
 	if (!homo_cv) {
 		free (homo_ch);
-		fprintf(stderr, "Out of memory\n");
-		return -1;
+		GP_DEBUG("Out of memory\n");
+		return GP_ERROR_NO_MEMORY;
 	}
 	switch (tile) {
 	default:
@@ -621,7 +624,7 @@ int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 	free(homo_v);
 	free(homo_ch);
 	free(homo_cv);
-	return 0;
+	return GP_OK;
 }
 
 /**
@@ -651,6 +654,5 @@ gp_ahd_decode (unsigned char *input, int w, int h, unsigned char *output,
 {
 	gp_bayer_expand (input, w, h, output, tile);
 	gp_ahd_interpolate (output, w, h, tile);
-
-	return 0;
+	return GP_OK;
 }
