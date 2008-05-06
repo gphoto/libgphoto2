@@ -4,6 +4,7 @@ PTP2 driver:
    * Fixed bugs in packing of PTP arrays, unpack / pack 64 bit entities.
    * Devices added:
      - Canon IXUS iZ
+     - Nikon Coolpix P5100
      - <fill in from diff>
 
 Topfield driver:
@@ -116,11 +117,11 @@ PTP2 driver:
 
  	Canon PowerShot SD1000, SD900, A450, A550, A560, A570, A420, SD40, SD750
  	Canon PowerShot S5 IS, SD1000
-	Canon Digitial IXUS 70, 75, 900Ti
+	Canon Digitial IXUS 70, 75, 900Ti, iZ
 	Canon MV750i
 	Nikon CoolPix S4, S6, P4, L10
 	Nikon DSC D40, 
-	Kodak EasyShare C433, C613, C653, C743, C875, V570, V610, V705, P880, V603
+	Kodak EasyShare C433, C613, C653, C743, C875, V570, V610, V705, P880, V603, Z712 IS
 	HP Photosmart R967
 	Minolta DiMAGE x21
 	Fuji FinePix F20, F40, S9500
