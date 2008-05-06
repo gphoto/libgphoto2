@@ -331,7 +331,7 @@ gp_port_library_list (GPPortInfoList *list)
 			continue;
 			
 		/* Device locked. Try to open the device. */
-		fd = open (path, O_RDONLY | O_NDELAY);
+		fd = open (path, O_RDONLY | O_NONBLOCK);
 		if (fd < 0) {
 			gp_port_serial_unlock (NULL, path);
 			continue;
