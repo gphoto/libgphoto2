@@ -355,7 +355,7 @@ gp_port_library_list (GPPortInfoList *list)
 		/* fall through to standard open if this failed */
 #endif
 		if (fd == -1)
-			fd = open (path, O_RDONLY | O_NDELAY);
+			fd = open (path, O_RDONLY | O_NONBLOCK);
 		if (fd < 0) {
 			gp_port_serial_unlock (NULL, path);
 			continue;
