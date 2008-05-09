@@ -783,6 +783,9 @@ static struct {
 	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
 	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Christian P. Schmidt" <schmidt@digadd.de> */
+	{"Canon:Digital IXUS 970 IS",		0x04a9, 0x3173, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 
