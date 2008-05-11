@@ -1,5 +1,5 @@
 2008-05-11   Theodore Kilgore <kilgota@auburn.edu>
-	
+	* README.913D: References to nonexistent README.digr8 corrected. 
 
 2008-04-22   Theodore Kilgore <kilgota@auburn.edu>  
 	* digi_postprocess.c: white_balance() added 
