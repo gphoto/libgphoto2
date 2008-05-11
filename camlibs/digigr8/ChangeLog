@@ -1,3 +1,6 @@
+2008-05-11   Theodore Kilgore <kilgota@auburn.edu>
+	
+
 2008-04-22   Theodore Kilgore <kilgota@auburn.edu>  
 	* digi_postprocess.c: white_balance() added 
 	* library.c: gp_ahd_interpolate() used instead of gp_bayer_interpolate()
