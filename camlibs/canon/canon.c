@@ -1783,6 +1783,13 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         GP_DEBUG ("canon_int_get_release_params: focus mode = 0x%02x", 
                   camera->pl->release_params[FOCUS_MODE_INDEX]);
 
+        GP_DEBUG ("canon_int_get_release_params: beep mode = 0x%02x", 
+                  camera->pl->release_params[BEEP_INDEX]);
+
+        GP_DEBUG ("canon_int_get_release_params: flash mode = 0x%02x", 
+                  camera->pl->release_params[FLASH_INDEX]);
+
+
         camera->pl->secondary_image = 0;
 	/* Based on the resolution settings in the release params, 
 	   determine whether we expect one or two images to be returned
@@ -1861,6 +1868,161 @@ canon_int_set_shutter_speed (Camera *camera, canonShutterSpeedState shutter_spee
         }
         
         GP_DEBUG ("canon_int_set_shutter_speed() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_beep
+ * @camera: camera to work with
+ * @beep_mode: beep mode - use one of the defines such as 
+ *                 BEEP_ON for turning on the beep when the camera sets the focus.
+ * @context: context for error reporting
+ *
+ * Sets the camera's beep mode. Only tested for A40 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_beep (Camera *camera, canonBeepMode beep_mode,
+                    GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_beep() called for beep 0x%02x",
+                  beep_mode);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+        /* Modify the beep mode */
+        
+        /* XXX must test for valid shutter speeds here */
+        camera->pl->release_params[BEEP_INDEX] = beep_mode;
+        
+        /* Upload the beep mode to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[BEEP_INDEX] != beep_mode) {
+                GP_DEBUG ("canon_int_set_beep: Could not set beep "
+                          "mode to 0x%02x (camera returned 0x%02x)", 
+                          beep_mode,
+                          camera->pl->release_params[BEEP_INDEX]);
+                return GP_ERROR_NOT_SUPPORTED;
+        } else {
+                GP_DEBUG ("canon_int_set_beep: beep mode change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_beep() finished successfully");
+
+        return GP_OK;        
+}
+
+/**
+ * canon_int_set_flash
+ * @camera: camera to work with
+ * @flash_mode: flash mode - use one of the defines such as 
+ *                 FLASH_MODE_OFF for turning off the flash.
+ * @context: context for error reporting
+ *
+ * Sets the camera's flash mode. Only tested for A40 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_flash (Camera *camera, canonFlashMode flash_mode,
+                     GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_flash() called for flash 0x%02x",
+                  flash_mode);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+        /* Modify the beep mode */
+        
+        /* XXX must test for valid flash mode here */
+        camera->pl->release_params[FLASH_INDEX] = flash_mode;
+        
+        /* Upload the flash mode to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[FLASH_INDEX] != flash_mode) {
+                GP_DEBUG ("canon_int_set_flash: Could not set flash "
+                          "mode to 0x%02x (camera returned 0x%02x)", 
+                          flash_mode,
+                          camera->pl->release_params[FLASH_INDEX]);
+                return GP_ERROR_NOT_SUPPORTED;
+        } else {
+                GP_DEBUG ("canon_int_set_flash: flash mode change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_flash() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_zoom
+ * @camera: camera to work with
+ * @zoom_level: zoom level to set - use one of the defines such as 
+ *                 ZOOM_0 for no zoom
+ * @context: context for error reporting
+ *
+ * Sets the camera's zoom. Only tested for A40 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_zoom (Camera *camera, canonZoomLevel zoom_level,
+                    GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_zoom() called for zoom 0x%02x",
+                  zoom_level);
+        
+        status = canon_int_do_control_command( camera, CANON_USB_CONTROL_SET_ZOOM_POS, 0x04, zoom_level );
+
+        if (status < 0)
+                return status;
+                
+        GP_DEBUG ("canon_int_set_zoom() finished successfully");
 
         return GP_OK;        
 }

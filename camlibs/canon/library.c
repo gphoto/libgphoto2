@@ -214,6 +214,33 @@ static const struct canonFocusModeStateStruct focusModeStateArray[] = {
 	{0, NULL},
 };
 
+static const struct canonBeepModeStateStruct beepModeStateArray[] = {
+	{BEEP_OFF, N_("Beep off")},
+	{BEEP_ON, N_("Beep on")},
+	{0, NULL},
+};
+
+static const struct canonFlashModeStateStruct flashModeStateArray[] = {
+	{FLASH_MODE_OFF, N_("Flash off")},
+	{FLASH_MODE_ON, N_("Flash on")},
+	{FLASH_MODE_AUTO, N_("Flash auto")},
+	{0, NULL},
+};
+
+static const struct canonZoomLevelStateStruct zoomLevelStateArray[] = {
+	{ZOOM_0, N_("No zoom")},
+	{ZOOM_1, N_("Zoom 1")},
+	{ZOOM_2, N_("Zoom 2")},
+	{ZOOM_3, N_("Zoom 3")},
+	{ZOOM_4, N_("Zoom 4")},
+	{ZOOM_5, N_("Zoom 5")},
+	{ZOOM_6, N_("Zoom 6")},
+	{ZOOM_7, N_("Zoom 7")},
+	{ZOOM_8, N_("Zoom 8")},
+	{ZOOM_9, N_("Zoom 9")},
+	{0, NULL},
+};
+
 static const struct canonResolutionStateStruct resolutionStateArray[] = {
 	{RESOLUTION_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
@@ -1469,7 +1496,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
 
-	int iso, shutter_speed, aperture, focus_mode;
+	int iso, shutter_speed, aperture, focus_mode, flash_mode, beep_mode;
 	int res_byte1, res_byte2, res_byte3;
 	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
@@ -1596,6 +1623,27 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 
 
+
+	/* Zoom level */
+	gp_widget_new (GP_WIDGET_MENU, _("Zoom"), &t);
+	gp_widget_set_name (t, "zoom");
+
+	i = 0;
+	while (zoomLevelStateArray[i].label) {
+		gp_widget_add_choice (t, _(zoomLevelStateArray[i].label));
+		i++;
+	}
+
+	
+	/* Set an unknown zoom level (at the moment we don't read the
+	 * zoom level */
+	gp_widget_add_choice (t, _("Unknown"));
+	gp_widget_set_value (t, _("Unknown"));
+
+	gp_widget_append (section, t);
+
+
+
 	/* Aperture */
 	gp_widget_new (GP_WIDGET_MENU, _("Aperture"), &t);
 	gp_widget_set_name (t, "aperture");
@@ -1701,6 +1749,75 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	};
 
 	gp_widget_append (section, t);
+
+
+	/* Flash mode */
+	gp_widget_new (GP_WIDGET_MENU, _("Flash mode"), &t);
+	gp_widget_set_name (t, "flashmode");
+
+	/* Get the camera's current flash mode setting */
+	flash_mode = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			flash_mode = camera->pl->release_params[FLASH_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (flashModeStateArray[i].label) {
+		gp_widget_add_choice (t, _(flashModeStateArray[i].label));
+		if (flash_mode == (int)flashModeStateArray[i].value) {
+			gp_widget_set_value (t, _(flashModeStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown shutter value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+
+	/* Beep */
+	gp_widget_new (GP_WIDGET_MENU, _("Beep"), &t);
+	gp_widget_set_name (t, "beep");
+
+	/* Get the camera's current beep setting */
+	beep_mode = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			beep_mode = camera->pl->release_params[FLASH_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (beepModeStateArray[i].label) {
+		gp_widget_add_choice (t, _(beepModeStateArray[i].label));
+		if (beep_mode == (int)beepModeStateArray[i].value) {
+			gp_widget_set_value (t, _(beepModeStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown shutter value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
 
 	/************************ end release params ************************/
 
