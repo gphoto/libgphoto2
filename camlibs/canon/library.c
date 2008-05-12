@@ -1794,7 +1794,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	if (camera->pl->cached_ready == 1) {
 		res = canon_int_get_release_params(camera, context);
 		if (res == GP_OK) 
-			beep_mode = camera->pl->release_params[FLASH_INDEX];
+			beep_mode = camera->pl->release_params[BEEP_INDEX];
 	}
 
 	/* Map it to the list of choices */
