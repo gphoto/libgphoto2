@@ -1,3 +1,7 @@
+2008-05-15  Marcus Meissner  <marcus@jet.franken.de>
+
+	* *.[ch]: u_char -> unsigned char
+
 2007-11-16  Marcus Meissner  <marcus@jet.franken.de>
 
 	* *.[ch]: Major cleanup, make it work.

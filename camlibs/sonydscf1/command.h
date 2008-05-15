@@ -2,13 +2,13 @@
 #define __COMMAND_H__
 
 int	F1ok (GPPort*);
-long	F1getdata (GPPort*,char *, u_char *);
+long	F1getdata (GPPort*,char *, unsigned char *);
 int	F1status (GPPort*);
 char	F1newstatus (GPPort *port, int, char *);
 int	F1howmany (GPPort *);
 int	F1fopen (GPPort *,char *);
-long	F1fread(GPPort *,u_char *data, long len);
-long	F1fwrite(GPPort *,u_char *data, long len, u_char b);
+long	F1fread(GPPort *,unsigned char *data, long len);
+long	F1fwrite(GPPort *,unsigned char *data, long len, unsigned char b);
 long	F1fseek (GPPort *,long, int);
 u_long	F1finfo (GPPort *,char *);
 int	F1fclose (GPPort *);

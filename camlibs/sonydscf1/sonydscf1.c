@@ -31,13 +31,13 @@
 #define PMF_MAXSIZ 3*1024
 
 #define MAX_PICTURE_NUM 200
-static u_char  picture_index[MAX_PICTURE_NUM];
+static unsigned char  picture_index[MAX_PICTURE_NUM];
 static u_short picture_thumbnail_index[MAX_PICTURE_NUM];
-static u_char  picture_protect[MAX_PICTURE_NUM];
-static u_char  picture_rotate[MAX_PICTURE_NUM];
+static unsigned char  picture_protect[MAX_PICTURE_NUM];
+static unsigned char  picture_rotate[MAX_PICTURE_NUM];
 
 static int
-make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
+make_jpeg_comment(unsigned char *buf, unsigned char *jpeg_comment)
 {
   int i, cur = 0;
   int reso, shutter;
@@ -137,8 +137,8 @@ make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
   }
 
   /* insert total jpeg comment length */
-  jpeg_comment[4] = (u_char)((cur - 4) >> 8);
-  jpeg_comment[5] = (u_char)(cur - 4);
+  jpeg_comment[4] = (unsigned char)((cur - 4) >> 8);
+  jpeg_comment[5] = (unsigned char)(cur - 4);
 
   return cur;
 }
@@ -146,7 +146,7 @@ make_jpeg_comment(u_char *buf, u_char *jpeg_comment)
 static int
 get_picture_information(GPPort *port,int *pmx_num, int outit)
 {
-  u_char buforg[PMF_MAXSIZ];
+  unsigned char buforg[PMF_MAXSIZ];
   char name[64];
   long len;
   int i, n;
@@ -217,8 +217,8 @@ get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *cont
   u_long filelen;
   u_long total = 0;
   long len,jpegcommentlen;
-  u_char buf[0x400];
-  u_char jpeg_comment[256];
+  unsigned char buf[0x400];
+  unsigned char jpeg_comment[256];
   int ret, id;
 
   F1ok(port);
@@ -270,8 +270,8 @@ get_thumbnail(GPPort *port,char *name, CameraFile *file, int format, int n)
   u_long total = 0;
   long len;
   int i;
-  u_char buf[0x1000];
-  u_char *p;
+  unsigned char buf[0x1000];
+  unsigned char *p;
 
   p = buf;
 
@@ -316,7 +316,7 @@ get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilename)
   int hour = 0;
   int minute = 0;
   int second = 0;
-  u_char buf[128];
+  unsigned char buf[128];
 
   F1ok(port);
   F1status(port);
