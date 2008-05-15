@@ -194,9 +194,12 @@ get_path (Camera *camera, const char *folder, const char *filename) {
 		free (xfolder);
 		return NULL;
 	}
-	sprintf (path, "%s/%s", xfolder, xfilename);
+	strcpy (path, xfolder);
+	strcat (path, "/");
+	backslash (path);
+	strcat (path, xfilename);
 	free (xfolder);
-	backslash(path);
+	free (xfilename);
 	return path;
 }
 
