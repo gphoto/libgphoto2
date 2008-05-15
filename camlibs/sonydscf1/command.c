@@ -3,81 +3,36 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
-#include <termios.h>
-#if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 
 #include <gphoto2/gphoto2.h>
 
 #include "command.h"
-#include "common.h"
 
-#ifdef DEBUG
-#define dprintf(x) printf x
-#else
-#define dprintf(x)
-#endif
-
-/* static int      F1fd = -1; */
-static u_char address = 0;
-static u_char sendaddr[8] = { 0x00, 0x22, 0x44, 0x66, 0x88, 0xaa, 0xcc, 0xee };
-static u_char recvaddr[8] = { 0x0e, 0x20, 0x42, 0x64, 0x86, 0xa8, 0xca, 0xec };
+static unsigned char address = 0;
+static const unsigned char sendaddr[8] = { 0x00, 0x22, 0x44, 0x66, 0x88, 0xaa, 0xcc, 0xee };
+static const unsigned char recvaddr[8] = { 0x0e, 0x20, 0x42, 0x64, 0x86, 0xa8, 0xca, 0xec };
 static int sw_mode = 0;
 static int pic_num = 0;
 static int pic_num2 = 0;
 static int year, month, date;
 static int hour, minutes;
 
-static void wbyte(GPPort *port,u_char c)
+static const unsigned char BOFRAME = 0xC0;
+static const unsigned char EOFRAME = 0xC1;
+#define CESCAPE 0x7D
+
+static int F1reset(GPPort *port);
+
+static int
+wbyte(GPPort *port,unsigned char c)
 {
-  char temp[2];
-  dprintf((stderr, "> %02x\n", c));
-  temp[0]=c;
-  temp[1]='\0';
-  /* if (writetty(F1fd, &c, 1) < 0) { */
-  if( gp_port_write(port, (char*)temp, 1) <0) {
-    perror("wbyte");
-    /* Exit(1); */
-  }
+  unsigned char temp = c;
+  return gp_port_write(port, (char*)&temp, 1);
 }
 
-static u_char rbyte(GPPort *port)
-{
-  u_char        c[2];
-  /* if (readtty(F1fd, &c, 1) < 0) { */
-  if (gp_port_read(port,c, 1) <0) {
-    perror("rbtyte");
-    /* Exit(1); */
-  }
-  dprintf((stderr, "< %02x\n", c));
-
-  return c[0];
-}
-
-static void
-wstr(GPPort *port,u_char *p, int len)
-{
-  dprintf((stderr, "> len=%d\n", len));
-  /* if (writetty(F1fd, p, len) < 0) { */
-  if( gp_port_write(port, p, len) <0) {
-    perror("wstr");
-    /* Exit(1); */
-  }
-}
-
-static void rstr(GPPort *port,u_char *p, int len)
-{
-
-  dprintf((stderr, "< len=%d\n", len));
-  /* if (readtty(F1fd, p, len) < 0) { */
-  if (gp_port_read(port,p, len) <0) {
-    perror("rstr");
-    /* Exit(1); */
-  }
-}
-
-u_char checksum(u_char addr, u_char *cp, int len)
+static unsigned char
+checksum(unsigned char addr, unsigned char *cp, int len)
 {
   int ret = addr;
   while(len --)
@@ -85,57 +40,54 @@ u_char checksum(u_char addr, u_char *cp, int len)
   return(0x100 -(ret & 0xff) );
 }
 
-static void sendcommand(GPPort *port,u_char *p, int len)
+static void
+sendcommand(GPPort *port,unsigned char *p, int len)
 {
   wbyte(port,BOFRAME);
   wbyte(port,sendaddr[address]);
-  wstr(port,p, len);
+  gp_port_write (port, (char*)p, len);
   wbyte(port,checksum(sendaddr[address], p, len));
   wbyte(port,EOFRAME);
   address ++;
   if(address >7 ) address = 0;
 }
 
-static void Abort(GPPort *port)
+static void
+Abort(GPPort *port)
 {
-  u_char buf[4];
+  unsigned char buf[4];
   buf[0] = BOFRAME;
   buf[1] = 0x85;
   buf[2] = 0x7B;
   buf[3] = EOFRAME;
-  wstr(port, buf, 4);
+  gp_port_write (port, (char*)buf, 4);
 }
 
-static int recvdata(GPPort *port, u_char *p, int len)
+static int recvdata(GPPort *port, unsigned char *p, int len)
 {
-  u_char s, t;
+  unsigned char s, t;
   int sum;
   int i;
 
-  s = rbyte(port);  /* BOFL */
-  t= rbyte(port);  /* recvaddr */
-#ifdef DEBUG
-  fprintf(stderr,"BOFL %02x ", s);
-  fprintf(stderr,"Raddr %02x %02x \n", t, recvaddr[address]);
-#endif
+  gp_log (GP_LOG_DEBUG, "recvdata", "reading %d bytes", len);
+  gp_port_read(port, &s, 1);  /* BOFL */
+  gp_port_read(port, &t, 1);  /* recvaddr */
 
   if(t != recvaddr[address]){
-    s = rbyte(port);  /* drain */
-    s = rbyte(port);  /* drain */
-    s = rbyte(port);  /* drain */
-#ifdef DEBUG
-    fprintf(stderr," abort \n");
-#endif
+    gp_log (GP_LOG_ERROR, "recvdata", "address %02x does not match %02x, draining 3 bytes", t, recvaddr[address]);
+    gp_port_read(port, &s, 1);  /* drain */
+    gp_port_read(port, &s, 1);  /* drain */
+    gp_port_read(port, &s, 1);  /* drain */
     Abort(port);
     return(-1);
   }
   i = len;
   sum = (int) t;
-  while ((s = rbyte(port)) != EOFRAME){
+  while ((GP_OK <= gp_port_read(port, &s, 1)) && (s != EOFRAME)) {
     sum = sum + s;
-    if(i > 0){
+    if(i > 0) {
       if(s == CESCAPE){
-        s = rbyte(port);
+        gp_port_read(port, &s, 1);
         if(0x20 & s)
           s = 0xDF & s;
         else
@@ -147,14 +99,10 @@ static int recvdata(GPPort *port, u_char *p, int len)
     }
     t = s;
   }
-#ifdef DEBUG
-  fprintf(stderr,"checksum %02x (%x)", t, sum );
-  fprintf(stderr,"EOFL %02x (%d) \n", s, len - i);
-#endif
+  gp_log (GP_LOG_DEBUG, "recvdata", "checksum expected %02x (have %02x)", t, sum );
+  gp_log (GP_LOG_DEBUG, "recvdata", "EOFL %02x (%d)", s, len - i);
   if(sum & 0xff){
-#ifdef DEBUG
-    fprintf(stderr,"check sum error.(%02x)\n", sum);
-#endif
+    gp_log (GP_LOG_ERROR, "recvdata" ,"Checksum error.(%02x)\n", sum);
     return(-1);
   }
   return(len - i);
@@ -165,7 +113,7 @@ static int recvdata(GPPort *port, u_char *p, int len)
 
 char F1newstatus(GPPort *port, int verbose, char *return_buf)
 {
-  u_char buf[34];
+  unsigned char buf[34];
   int i;
   char status_buf[1000]="";
   char tmp_buf[150]="";
@@ -219,10 +167,10 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
 }
 
 
-int F1status(GPPort *port, int verbose)
+int F1status(GPPort *port)
 {
 
-  u_char buf[34];
+  unsigned char buf[34];
   int i;
 
   buf[0] = 0x03;
@@ -245,7 +193,7 @@ int F1status(GPPort *port, int verbose)
   hour = (buf[13] >> 4 ) * 10 + (buf[13] & 0x0f);
   minutes = (buf[14] >> 4 ) * 10 + (buf[14] & 0x0f);
 
-  if(verbose){
+  if(0){
     fprintf(stdout, "FnDial: ");
     switch (sw_mode){
     case 1:
@@ -270,19 +218,19 @@ int F1status(GPPort *port, int verbose)
 
 int F1howmany(GPPort *port)
 {
-  F1status(port, 0);
+  F1status(port);
   return(pic_num);
 }
 
 int F1fopen(GPPort *port, char *name)
 {
-  u_char buf[64];
+  unsigned char buf[64];
   int len;
   buf[0] = 0x02;
   buf[1] = 0x0A;
   buf[2] = 0x00;
   buf[3] = 0x00;
-  snprintf(&buf[4], sizeof(name), "%s", name);
+  snprintf(&buf[4], sizeof(buf)-4, "%s", name);
   len = strlen(name) + 5;
   sendcommand(port,buf, len);
   recvdata(port, buf, 6);
@@ -297,7 +245,7 @@ int F1fopen(GPPort *port, char *name)
 
 int F1fclose(GPPort*port)
 {
-  u_char buf[4];
+  unsigned char buf[4];
 
   buf[0] = 0x02;
   buf[1] = 0x0B;
@@ -316,14 +264,14 @@ int F1fclose(GPPort*port)
   return (buf[2]);              /* ok == 0 */
 }
 
-long F1fread(GPPort *port, u_char *data, long len)
+long F1fread(GPPort *port, unsigned char *data, long len)
 {
 
   long len2;
   long i = 0;
-  u_char s;
+  unsigned char s;
 
-  u_char buf[10];
+  unsigned char buf[10];
 
   buf[0] = 0x02;
   buf[1] = 0x0C;
@@ -336,7 +284,7 @@ long F1fread(GPPort *port, u_char *data, long len)
   buf[6] = (len >> 8) & 0xff;
   buf[7] = 0xff & len;
   sendcommand(port,buf, 8);
-  rstr(port, buf, 9);
+  gp_port_read(port, buf, 9);
   if((buf[2] != 0x02) || (buf[3] != 0x0C) || (buf[4] != 0x00)){
     Abort(port);
     fprintf(stderr,"F1fread fail\n");
@@ -345,13 +293,13 @@ long F1fread(GPPort *port, u_char *data, long len)
 
   len2 = buf[7] * 0x100 + buf[8]; /* data size */
   if(len2 == 0) {
-    s = rbyte(port); /* last block checksum */
-    s = rbyte(port); /* last block EOFL */
+    gp_port_read(port, &s, 1); /* last block checksum */
+    gp_port_read(port, &s, 1); /* last block EOFL */
     return(0);
   }
-  while((s = rbyte(port)) != EOFRAME){
+  while((GP_OK <= gp_port_read(port, &s, 1)) && (s != EOFRAME)){
     if(s == CESCAPE){
-      s = rbyte(port);
+      gp_port_read(port, &s, 1);
       if(0x20 & s)
         s = 0xDF & s;
       else
@@ -368,7 +316,7 @@ long F1fread(GPPort *port, u_char *data, long len)
 
 long F1fseek(GPPort *port,long offset, int base)
 {
-  u_char buf[10];
+  unsigned char buf[10];
 
   buf[0] = 0x02;
   buf[1] = 0x0E;
@@ -393,13 +341,13 @@ long F1fseek(GPPort *port,long offset, int base)
   return(buf[2]);
 }
 
-long F1fwrite(GPPort *port,u_char *data, long len, u_char b) /* this function not work well */
+long F1fwrite(GPPort *port,unsigned char *data, long len, unsigned char b) /* this function not work well */
 {
 
   long i = 0;
-  u_char *p;
-  u_char s;
-  u_char buf[10];
+  unsigned char *p;
+  unsigned char s;
+  unsigned char buf[10];
 
   int checksum;
 
@@ -439,7 +387,7 @@ long F1fwrite(GPPort *port,u_char *data, long len, u_char b) /* this function no
   address ++;
   if(address >7 ) address = 0;
 
-  rstr(port, buf, 7);
+  gp_port_read(port, buf, 7);
   if((buf[2] != 0x02) || (buf[3] != 0x14) || (buf[4] != 0x00)){
     Abort(port);
     fprintf(stderr,"F1fwrite fail\n");
@@ -451,13 +399,13 @@ long F1fwrite(GPPort *port,u_char *data, long len, u_char b) /* this function no
 
 u_long F1finfo(GPPort *port,char *name)
 {
-  u_char buf[64];
+  unsigned char buf[64];
   int len;
   u_long flen;
 
   buf[0] = 0x02;
   buf[1] = 0x0F;
-  snprintf(&buf[2], sizeof(name), "%s", name);
+  snprintf(&buf[2], sizeof(buf)-2, "%s", name);
   len = strlen(name) + 3;
 
   sendcommand(port,buf, len);
@@ -485,14 +433,14 @@ u_long F1finfo(GPPort *port,char *name)
   return(flen);
 }
 
-long F1getdata(GPPort*port,char *name, u_char *data, int verbose)
+long F1getdata(GPPort*port,char *name, unsigned char *data)
 {
   long filelen;
   long total = 0;
   long len;
-  u_char *p;
+  unsigned char *p;
 
-  F1status(port,0);
+  F1status(port);
   p = data;
   filelen = F1finfo(port,name);
   if(filelen < 0)
@@ -508,21 +456,16 @@ long F1getdata(GPPort*port,char *name, u_char *data, int verbose)
     }
     p = p + len;
     total = total + len;
-    if(verbose){
-      fprintf(stderr, "%6ld/", total);
-      fprintf(stderr, "%6ld", filelen);
-      fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b");
-    }
   }
   F1fclose(port);
-  if(verbose)
-    fprintf(stderr, "\n");
   return(total);
 }
 
 int F1deletepicture(GPPort *port,int n)
 {
-  u_char buf[4];
+  unsigned char buf[4];
+
+  gp_log (GP_LOG_DEBUG, "F1deletepicture", "Deleting picture %d...", n);
   buf[0] = 0x02;
   buf[1] = 0x15;
   buf[2] = 0x00;
@@ -531,15 +474,17 @@ int F1deletepicture(GPPort *port,int n)
   recvdata(port, buf, 3);
   if((buf[0] != 0x02) || (buf[1] != 0x15) || (buf[2] != 0)){
     Abort(port);
-    return(-1);
+    return GP_ERROR;
   }
-  return(0);
+  return GP_OK;
 }
 
 int F1ok(GPPort*port)
 {
-  int retrycount = RETRY;
-  u_char buf[64];
+  int retrycount = 100;
+  unsigned char buf[64];
+
+  gp_log (GP_LOG_DEBUG, "F1ok", "Asking for OK...");
 
   buf[0] = 0x01;
   buf[1] = 0x01;
@@ -561,9 +506,11 @@ int F1ok(GPPort*port)
   return 0;                     /*ng*/
 }
 
-int F1reset(GPPort *port)
+static int
+F1reset(GPPort *port)
 {
-  u_char buf[3];
+  unsigned char buf[3];
+  gp_log (GP_LOG_DEBUG, "F1reset", "Resetting camera...");
  retryreset:
   buf[0] = 0x01;
   buf[1] = 0x02;
