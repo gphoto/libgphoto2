@@ -1,3 +1,11 @@
+2008-05-16  Moreno Marzolla  <moreno.marzolla@pd.infn.it>
+
+	* canon.c, library.c: Added beep and zoom configurations.
+
+	* canon.c, library.c: Enable remote mode once in a session and
+	  close it in camera_exit.
+
+
 2008-05-12  Moreno Marzolla  <moreno.marzolla@pd.infn.it>
 
 	* canon.c, canon.h, README.canon: Added some more configuration

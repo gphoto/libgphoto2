@@ -1167,11 +1167,13 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                  * Send a sequence of CONTROL_CAMERA commands.
                  */
 
-                gp_port_set_timeout (camera->port, 15000);
-
-                status = canon_int_start_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
+                if (!camera->pl->remote_control) {
+                        gp_port_set_timeout (camera->port, 15000);
+                        
+                        status = canon_int_start_remote_control (camera, context);
+                        if ( status < 0 )
+                                return status;
+                }
 
                 /*
                  * Set the captured image transfer mode.  We have four options
@@ -1278,11 +1280,6 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                         
                 }
                 
-                /* End release mode */
-                status = canon_int_end_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
-
                 break;
         case GP_PORT_SERIAL:
                 return GP_ERROR_NOT_SUPPORTED;
@@ -1510,9 +1507,11 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
                 gp_port_set_timeout (camera->port, 15000);
 
-                status = canon_int_start_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
+                if (!camera->pl->remote_control) {
+                        status = canon_int_start_remote_control (camera, context);
+                        if ( status < 0 )
+                                return status;
+                }
 
                 /*
                  * Set the captured image transfer mode.  We have four options
@@ -1619,11 +1618,6 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                 return GP_ERROR_OS_FAILURE;
 
                 }
-
-                /* End release mode */
-                status = canon_int_end_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
 
                 /* Now list all directories on the camera; this has
                    presumably added an image file. Find the difference

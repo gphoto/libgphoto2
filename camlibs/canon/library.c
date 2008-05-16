@@ -481,8 +481,19 @@ canon_int_switch_camera_off (Camera *camera, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-	if (camera->port->type == GP_PORT_USB)
+	int res = 0;
+
+	if (camera->port->type == GP_PORT_USB) 
 		canon_usb_unlock_keys (camera, context);
+	
+	/* Turn off remote control if enabled (remote control only
+	 * applies to USB cameras, but in case of serial connection
+	 * remote_control should never be seen set here) */
+	if (camera->pl->remote_control) {
+		res = canon_int_end_remote_control (camera, context);
+		if (res != GP_OK)
+			return -1;
+	}
 
 	if (camera->pl) {
 		canon_int_switch_camera_off (camera, context);
@@ -1809,7 +1820,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		i++;
 	}
 	
-	/* Set an unknown shutter value if the 
+	/* Set an unknown beep value if the 
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1885,12 +1896,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 
-	if (camera->pl->remote_control) {
-		res = canon_int_end_remote_control (camera, context);
-		if (res != GP_OK)   
-			return GP_ERROR;
-	};
-
 	return GP_OK;
 }
 
@@ -1902,7 +1907,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	char *wvalue;
 	int i, val;
 	int res;
-	unsigned char iso, shutter_speed, aperture, focus_mode;
+	unsigned char iso, shutter_speed, aperture, focus_mode, flash_mode, beep, zoom;
 	char str[16];
 
 	GP_DEBUG ("camera_set_config()");
@@ -1939,18 +1944,19 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	}
 
+        /* Enable remote control, if not already enabled */
+	if (!camera->pl->remote_control) {
+		res = canon_int_start_remote_control (camera, context);
+		if (res != GP_OK)
+			return -1;
+	}
+
 	gp_widget_get_child_by_label (window, _("ISO speed"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
 		} else {
-
-			if (!camera->pl->remote_control) {
-				res = canon_int_start_remote_control (camera, context);
-				if (res != GP_OK)
-					return -1;
-			}
 
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
@@ -1970,12 +1976,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				else
 					gp_context_status (context, _("Could not change ISO speed"));
 			}
-
-			res = canon_int_end_remote_control (camera, context);
-			if (res != GP_OK)   
-				return GP_ERROR;
-			camera->pl->remote_control = 0;
-
 		}
 	}
 
@@ -1985,12 +1985,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
 		} else {
-
-			if (!camera->pl->remote_control) {
-				res = canon_int_start_remote_control (camera, context);
-				if (res != GP_OK)
-					return -1;
-			}
 
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
@@ -2010,12 +2004,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				else
 					gp_context_status (context, _("Could not change shutter speed"));
 			}
-
-			res = canon_int_end_remote_control (camera, context);
-			if (res != GP_OK)   
-				return GP_ERROR;
-			camera->pl->remote_control = 0;
-		
 		}
 	}
 
@@ -2025,12 +2013,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
 		} else {
-
-			if (!camera->pl->remote_control) {
-				res = canon_int_start_remote_control (camera, context);
-				if (res != GP_OK)
-					return -1;
-			}
 
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
@@ -2050,12 +2032,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				else
 					gp_context_status (context, _("Could not change aperture"));
 			}
-
-			res = canon_int_end_remote_control (camera, context);
-			if (res != GP_OK)   
-				return GP_ERROR;
-			camera->pl->remote_control = 0;
-			
 		}
 	}
 
@@ -2065,12 +2041,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
 		} else {
-
-			if (!camera->pl->remote_control) {
-				res = canon_int_start_remote_control (camera, context);
-				if (res != GP_OK)
-					return -1;
-			}
 
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
@@ -2090,12 +2060,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				else
 					gp_context_status (context, _("Could not change resolution"));
 			}
-
-			res = canon_int_end_remote_control (camera, context);
-			if (res != GP_OK)   
-				return GP_ERROR;
-			camera->pl->remote_control = 0;
-			
 		}
 	}
 
@@ -2105,12 +2069,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
 		} else {
-
-			if (!camera->pl->remote_control) {
-				res = canon_int_start_remote_control (camera, context);
-				if (res != GP_OK)
-					return -1;
-			}
 
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
@@ -2130,14 +2088,126 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				else
 					gp_context_status (context, _("Could not change focus mode"));
 			}
-
-			res = canon_int_end_remote_control (camera, context);
-			if (res != GP_OK)   
-				return GP_ERROR;
-			camera->pl->remote_control = 0;
-			
 		}
 	}
+
+	/* Beep */
+	gp_widget_get_child_by_label (window, _("Beep"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+		if (!check_readiness (camera, context)) {
+			gp_context_status (context, _("Camera unavailable"));
+		} else {
+
+			/* Map the menu option setting to the camera binary value */
+			i = 0;
+			while (beepModeStateArray[i].label) {
+				if (strcmp (_(beepModeStateArray[i].label), wvalue) == 0) {
+					beep = beepModeStateArray[i].value;
+					break;
+				}
+				i++;
+			}
+
+			if (!beepModeStateArray[i].label) {
+				gp_context_status (context, _("Invalid beep mode setting"));
+			} else {
+				if (canon_int_set_beep (camera, beep, context) == GP_OK)
+					gp_context_status (context, _("Beep mode changed"));
+				else
+					gp_context_status (context, _("Could not change beep mode"));
+			}		
+		}
+	}
+
+
+	/* Zoom */
+	gp_widget_get_child_by_label (window, _("Zoom"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+		if (!check_readiness (camera, context)) {
+			gp_context_status (context, _("Camera unavailable"));
+		} else {
+
+			/* Map the menu option setting to the camera binary value */
+			i = 0;
+			while (zoomLevelStateArray[i].label) {
+				if (strcmp (_(zoomLevelStateArray[i].label), wvalue) == 0) {
+					zoom = zoomLevelStateArray[i].value;
+					break;
+				}
+				i++;
+			}
+
+			if (!zoomLevelStateArray[i].label) {
+				gp_context_status (context, _("Invalid zoom level"));
+			} else {
+				if (canon_int_set_zoom (camera, zoom, context) == GP_OK)
+					gp_context_status (context, _("Zoom level changed"));
+				else
+					gp_context_status (context, _("Could not change zoom level"));
+			}		
+		}
+	}
+
+	/* Aperture */
+	gp_widget_get_child_by_label (window, _("Aperture"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+		if (!check_readiness (camera, context)) {
+			gp_context_status (context, _("Camera unavailable"));
+		} else {
+
+			/* Map the menu option setting to the camera binary value */
+			i = 0;
+			while (apertureStateArray[i].label) {
+				if (strcmp (_(apertureStateArray[i].label), wvalue) == 0) {
+					aperture = apertureStateArray[i].value;
+					break;
+				}
+				i++;
+			}
+
+			if (!apertureStateArray[i].label) {
+				gp_context_status (context, _("Invalid aperture setting"));
+			} else {
+				if (canon_int_set_aperture (camera, aperture, context) == GP_OK)
+					gp_context_status (context, _("Aperture changed"));
+				else
+					gp_context_status (context, _("Could not change aperture"));
+			}
+		}
+	}
+
+	/* Flash mode */
+	gp_widget_get_child_by_label (window, _("Flash mode"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+		if (!check_readiness (camera, context)) {
+			gp_context_status (context, _("Camera unavailable"));
+		} else {
+
+			/* Map the menu option setting to the camera binary value */
+			i = 0;
+			while (flashModeStateArray[i].label) {
+				if (strcmp (_(flashModeStateArray[i].label), wvalue) == 0) {
+					flash_mode = flashModeStateArray[i].value;
+					break;
+				}
+				i++;
+			}
+
+			if (!flashModeStateArray[i].label) {
+				gp_context_status (context, _("Invalid flash mode setting"));
+			} else {
+				if (canon_int_set_flash (camera, flash_mode, context) == GP_OK)
+					gp_context_status (context, _("Flash mode changed"));
+				else
+					gp_context_status (context, _("Could not change flash mode"));
+			}		
+		}
+	}
+
 
 	gp_widget_get_child_by_label (window, _("Set camera date to PC date"), &w);
 	if (gp_widget_changed (w)) {
