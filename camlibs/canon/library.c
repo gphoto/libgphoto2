@@ -118,59 +118,59 @@ static const struct canonIsoStateStruct isoStateArray[] = {
 };
 
 static const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
-        {SHUTTER_SPEED_BULB, "Bulb"},
-        {SHUTTER_SPEED_30_SEC, "30 seconds"},
-        {SHUTTER_SPEED_25_SEC, "25 seconds"},
-        {SHUTTER_SPEED_20_SEC, "20 seconds"},
-        {SHUTTER_SPEED_15_SEC, "15 seconds"},
-        {SHUTTER_SPEED_13_SEC, "13 seconds"},
-        {SHUTTER_SPEED_10_SEC, "10 seconds"},
-        {SHUTTER_SPEED_8_SEC, "8 seconds"},
-        {SHUTTER_SPEED_6_SEC, "6 seconds"},
-        {SHUTTER_SPEED_5_SEC, "5 seconds"},
-        {SHUTTER_SPEED_4_SEC, "4 seconds"},
-        {SHUTTER_SPEED_3_2_SEC, "3.2 second"},
-        {SHUTTER_SPEED_2_5_SEC, "2.5 second"},
-        {SHUTTER_SPEED_2_SEC, "2 seconds"},
-        {SHUTTER_SPEED_1_6_SEC, "1.6 second"},
-        {SHUTTER_SPEED_1_3_SEC, "1.3 second"},
-        {SHUTTER_SPEED_1_SEC, "1 second"},
-        {SHUTTER_SPEED_0_8_SEC, "8/10 second"},
-        {SHUTTER_SPEED_0_6_SEC, "6/10 second"},
-        {SHUTTER_SPEED_0_5_SEC, "1/2 second"},
-        {SHUTTER_SPEED_0_4_SEC, "4/10 second"},
-        {SHUTTER_SPEED_0_3_SEC, "3/10 second"},
-        {SHUTTER_SPEED_1_4, "1/4 second"},
-        {SHUTTER_SPEED_1_5, "1/5 second"},
-        {SHUTTER_SPEED_1_6, "1/6 second"},
-        {SHUTTER_SPEED_1_8, "1/8 second"},
-        {SHUTTER_SPEED_1_10, "1/10 second"},
-        {SHUTTER_SPEED_1_13, "1/13 second"},
-        {SHUTTER_SPEED_1_15, "1/15 second"},
-        {SHUTTER_SPEED_1_20, "1/20 second"},
-        {SHUTTER_SPEED_1_25, "1/25 second"},
-        {SHUTTER_SPEED_1_30, "1/30 second"},
-        {SHUTTER_SPEED_1_40, "1/40 second"},
-        {SHUTTER_SPEED_1_50, "1/50 second"},
-        {SHUTTER_SPEED_1_60, "1/60 second"},
-        {SHUTTER_SPEED_1_80, "1/80 second"},
-        {SHUTTER_SPEED_1_100, "1/100 second"},
-        {SHUTTER_SPEED_1_125, "1/125 second"},
-        {SHUTTER_SPEED_1_160, "1/160 second"},
-        {SHUTTER_SPEED_1_200, "1/200 second"},
-        {SHUTTER_SPEED_1_250, "1/250 second"},
-        {SHUTTER_SPEED_1_320, "1/320 second"},
-        {SHUTTER_SPEED_1_400, "1/400 second"},
-        {SHUTTER_SPEED_1_500, "1/500 second"},
-        {SHUTTER_SPEED_1_640, "1/640 second"},
-        {SHUTTER_SPEED_1_800, "1/800 second"},
-        {SHUTTER_SPEED_1_1000, "1/1000 second"},
-        {SHUTTER_SPEED_1_1250, "1/1250 second"},
-        {SHUTTER_SPEED_1_1600, "1/1600 second"},
-        {SHUTTER_SPEED_1_2000, "1/2000 second"},
-        {SHUTTER_SPEED_1_2500, "1/2500 second"},
-        {SHUTTER_SPEED_1_3200, "1/3200 second"},
-        {SHUTTER_SPEED_1_4000, "1/4000 second"},
+        {SHUTTER_SPEED_BULB, N_("Bulb")},
+        {SHUTTER_SPEED_30_SEC, N_("30 seconds")},
+        {SHUTTER_SPEED_25_SEC, N_("25 seconds")},
+        {SHUTTER_SPEED_20_SEC, N_("20 seconds")},
+        {SHUTTER_SPEED_15_SEC, N_("15 seconds")},
+        {SHUTTER_SPEED_13_SEC, N_("13 seconds")},
+        {SHUTTER_SPEED_10_SEC, N_("10 seconds")},
+        {SHUTTER_SPEED_8_SEC, N_("8 seconds")},
+        {SHUTTER_SPEED_6_SEC, N_("6 seconds")},
+        {SHUTTER_SPEED_5_SEC, N_("5 seconds")},
+        {SHUTTER_SPEED_4_SEC, N_("4 seconds")},
+        {SHUTTER_SPEED_3_2_SEC, N_("3.2 second")},
+        {SHUTTER_SPEED_2_5_SEC, N_("2.5 second")},
+        {SHUTTER_SPEED_2_SEC, N_("2 seconds")},
+        {SHUTTER_SPEED_1_6_SEC, N_("1.6 second")},
+        {SHUTTER_SPEED_1_3_SEC, N_("1.3 second")},
+        {SHUTTER_SPEED_1_SEC, N_("1 second")},
+        {SHUTTER_SPEED_0_8_SEC, N_("8/10 second")},
+        {SHUTTER_SPEED_0_6_SEC, N_("6/10 second")},
+        {SHUTTER_SPEED_0_5_SEC, N_("1/2 second")},
+        {SHUTTER_SPEED_0_4_SEC, N_("4/10 second")},
+        {SHUTTER_SPEED_0_3_SEC, N_("3/10 second")},
+        {SHUTTER_SPEED_1_4, N_("1/4 second")},
+        {SHUTTER_SPEED_1_5, N_("1/5 second")},
+        {SHUTTER_SPEED_1_6, N_("1/6 second")},
+        {SHUTTER_SPEED_1_8, N_("1/8 second")},
+        {SHUTTER_SPEED_1_10, N_("1/10 second")},
+        {SHUTTER_SPEED_1_13, N_("1/13 second")},
+        {SHUTTER_SPEED_1_15, N_("1/15 second")},
+        {SHUTTER_SPEED_1_20, N_("1/20 second")},
+        {SHUTTER_SPEED_1_25, N_("1/25 second")},
+        {SHUTTER_SPEED_1_30, N_("1/30 second")},
+        {SHUTTER_SPEED_1_40, N_("1/40 second")},
+        {SHUTTER_SPEED_1_50, N_("1/50 second")},
+        {SHUTTER_SPEED_1_60, N_("1/60 second")},
+        {SHUTTER_SPEED_1_80, N_("1/80 second")},
+        {SHUTTER_SPEED_1_100, N_("1/100 second")},
+        {SHUTTER_SPEED_1_125, N_("1/125 second")},
+        {SHUTTER_SPEED_1_160, N_("1/160 second")},
+        {SHUTTER_SPEED_1_200, N_("1/200 second")},
+        {SHUTTER_SPEED_1_250, N_("1/250 second")},
+        {SHUTTER_SPEED_1_320, N_("1/320 second")},
+        {SHUTTER_SPEED_1_400, N_("1/400 second")},
+        {SHUTTER_SPEED_1_500, N_("1/500 second")},
+        {SHUTTER_SPEED_1_640, N_("1/640 second")},
+        {SHUTTER_SPEED_1_800, N_("1/800 second")},
+        {SHUTTER_SPEED_1_1000, N_("1/1000 second")},
+        {SHUTTER_SPEED_1_1250, N_("1/1250 second")},
+        {SHUTTER_SPEED_1_1600, N_("1/1600 second")},
+        {SHUTTER_SPEED_1_2000, N_("1/2000 second")},
+        {SHUTTER_SPEED_1_2500, N_("1/2500 second")},
+        {SHUTTER_SPEED_1_3200, N_("1/3200 second")},
+        {SHUTTER_SPEED_1_4000, N_("1/4000 second")},
 	{0, NULL},
 };
 
@@ -1582,9 +1582,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	i = 0;
 	menuval = -1;
 	while (isoStateArray[i].label) {
-		gp_widget_add_choice (t, _(isoStateArray[i].label));
+		gp_widget_add_choice (t, isoStateArray[i].label);
 		if (iso == (int)isoStateArray[i].value) {
-			gp_widget_set_value (t, _(isoStateArray[i].label));
+			gp_widget_set_value (t, isoStateArray[i].label);
 			menuval = i;
 		}
 		i++;
@@ -1989,7 +1989,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
 			while (shutterSpeedStateArray[i].label) {
-				if (strcmp (shutterSpeedStateArray[i].label, wvalue) == 0) {
+				if (strcmp (_(shutterSpeedStateArray[i].label), wvalue) == 0) {
 					shutter_speed = shutterSpeedStateArray[i].value;
 					break;
 				}
