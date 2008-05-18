@@ -1,6 +1,7 @@
 /*
 
   Copyright (C) 2004 Peter Urbanec <toppy at urbanec.net>
+  Copyright (C) 2008 Marcus Meissner
 
   This file is part of puppy.
 
@@ -139,6 +140,13 @@ strdup_to_locale (char *str) {
 			dest = NULL;
 		}
 		break;
+	}
+	src= dest;
+	while (1) {
+		src = strchr (src, '/');
+		if (!src) break;
+		*src='-';	/* FIXME: find better replacement char */
+		src++;
 	}
 	return dest;
 }
@@ -396,6 +404,56 @@ decode_dir(Camera *camera, struct tf_packet *p, int listdirs, CameraList *list)
     }
 }
 
+static void
+decode_and_get_info(Camera *camera, const char *folder, struct tf_packet *p, const char *fn,
+		CameraFileInfo *info, GPContext *context)
+{
+	unsigned short count = (get_u16(&p->length) - PACKET_HEAD_SIZE) / sizeof(struct typefile);
+	struct typefile *entries = (struct typefile *) p->data;
+	int i;
+	char *name;
+
+	for(i = 0; i < count; i++) {
+		switch (entries[i].filetype) {
+		case 1: break;/*dir*/
+		case 2:	/* file */
+			name = _convert_and_logname (camera, (char*)entries[i].name);
+			if (!strcmp (name, fn)) { /* the wanted current one */
+				memset (info, 0, sizeof (*info));
+				info->file.fields = GP_FILE_INFO_NAME|GP_FILE_INFO_SIZE|GP_FILE_INFO_MTIME;
+				if (strstr (name, ".rec")) {
+					info->file.fields |= GP_FILE_INFO_TYPE;
+					strcpy (info->file.type, GP_MIME_MPEG);
+				}
+				strcpy (info->file.name, name);
+				info->file.size = get_u64(&entries[i].size);
+				info->file.mtime = tfdt_to_time(&entries[i].stamp);
+			} else { /* cache the others to avoid further turnarounds */
+				CameraFileInfo	xinfo;
+
+				memset (&xinfo, 0, sizeof (xinfo));
+				xinfo.file.fields = GP_FILE_INFO_NAME|GP_FILE_INFO_TYPE|GP_FILE_INFO_SIZE|GP_FILE_INFO_MTIME;
+				strcpy (xinfo.file.type, GP_MIME_MPEG);
+				strcpy (xinfo.file.name, name);
+				xinfo.file.size = get_u64(&entries[i].size);
+				xinfo.file.mtime = tfdt_to_time(&entries[i].stamp);
+				gp_filesystem_set_info_noop (camera->fs, folder, xinfo, context);
+			}
+			break;
+		default:
+			break;
+	}
+#if 0
+        /* This makes the assumption that the timezone of the Toppy and the system
+         * that puppy runs on are the same. Given the limitations on the length of
+         * USB cables, this condition is likely to be satisfied. */
+        timestamp = tfdt_to_time(&entries[i].stamp);
+        printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
+               ctime(&timestamp), entries[i].name);
+#endif
+    }
+}
+
 static int
 do_hdd_rename(Camera *camera, char *srcPath, char *dstPath, GPContext *context)
 {
@@ -524,6 +582,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (type != GP_FILE_TYPE_NORMAL)
 		return GP_ERROR_NOT_SUPPORTED;
 
+	do_cmd_turbo (camera, "ON", context);
+
 	path = get_path(camera, folder, filename);
 	r = send_cmd_hdd_file_send(camera, GET, path, context);
 	free (path);
@@ -610,6 +670,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	if (pid) gp_context_progress_stop (context, pid);
 out:
+	do_cmd_turbo (camera, "OFF", context);
 	return result;
 }
 
@@ -819,18 +880,49 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 
 	return GP_OK;
 }
+#endif
 
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
-	/*Camera *camera = data;*/
+	Camera *camera = data;
+	int r;
+	struct tf_packet reply;
+	char *xfolder = strdup (folder);
 
+	backslash (xfolder);
+
+	r = send_cmd_hdd_dir(camera, xfolder, context);
+	free (xfolder);
+	if(r < GP_OK)
+		return r;
+
+	while(0 < get_tf_packet(camera, &reply, context)) {
+		switch (get_u32(&reply.cmd)) {
+		case DATA_HDD_DIR:
+			decode_and_get_info(camera, folder, &reply, filename, info, context);
+			send_success(camera,context);
+			break;
+		case DATA_HDD_DIR_END:
+			return GP_OK;
+			break;
+		case FAIL:
+			gp_log (GP_LOG_ERROR, "topfield", "ERROR: Device reports %s\n",
+				decode_error(&reply));
+			return GP_ERROR_IO;
+			break;
+		default:
+			gp_log (GP_LOG_ERROR, "topfield", "ERROR: Unhandled packet\n");
+			return GP_ERROR_IO;
+		}
+	}
 	return GP_OK;
 }
 
 
+#if 0
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
@@ -858,11 +950,11 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if(r < GP_OK)
 		return r;
 
-	while(0 < get_tf_packet(camera, &reply, context)) {
-		switch (get_u32(&reply.cmd)) {
+	while(0 < get_tf_packet (camera, &reply, context)) {
+		switch (get_u32 (&reply.cmd)) {
 		case DATA_HDD_DIR:
-			decode_dir(camera, &reply,1,list);
-			send_success(camera,context);
+			decode_dir (camera, &reply, 1, list);
+			send_success (camera,context);
 			break;
 		case DATA_HDD_DIR_END:
 			return GP_OK;
@@ -896,11 +988,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if(r < GP_OK)
 		return r;
 
-	while(0 < get_tf_packet(camera, &reply, context)) {
-		switch (get_u32(&reply.cmd)) {
+	while(0 < get_tf_packet (camera, &reply, context)) {
+		switch (get_u32 (&reply.cmd)) {
 		case DATA_HDD_DIR:
-			decode_dir(camera, &reply,0,list);
-			send_success(camera,context);
+			decode_dir (camera, &reply, 0, list);
+			send_success (camera,context);
 			break;
 		case DATA_HDD_DIR_END:
 			return GP_OK;
@@ -915,8 +1007,6 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			return GP_ERROR_IO;
 		}
 	}
-	return GP_OK;
-
 	return GP_OK;
 }
 
@@ -1040,8 +1130,8 @@ camera_abilities (CameraAbilitiesList *list)
 CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.folder_list_func = folder_list_func,
-#if 0
 	.get_info_func = get_info_func,
+#if 0
 	.set_info_func = set_info_func,
 #endif
 	.get_file_func = get_file_func,
