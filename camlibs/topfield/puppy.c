@@ -1,6 +1,7 @@
 /*
 
   Copyright (C) 2004 Peter Urbanec <toppy at urbanec.net>
+  Copyright (C) 2008 Marcus Meissner
 
   This file is part of puppy.
 
@@ -139,6 +140,13 @@ strdup_to_locale (char *str) {
 			dest = NULL;
 		}
 		break;
+	}
+	src= dest;
+	while (1) {
+		src = strchr (src, '/');
+		if (!src) break;
+		*src='-';	/* FIXME: find better replacement char */
+		src++;
 	}
 	return dest;
 }
@@ -574,6 +582,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (type != GP_FILE_TYPE_NORMAL)
 		return GP_ERROR_NOT_SUPPORTED;
 
+	do_cmd_turbo (camera, "ON", context);
+
 	path = get_path(camera, folder, filename);
 	r = send_cmd_hdd_file_send(camera, GET, path, context);
 	free (path);
@@ -660,6 +670,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	if (pid) gp_context_progress_stop (context, pid);
 out:
+	do_cmd_turbo (camera, "OFF", context);
 	return result;
 }
 
