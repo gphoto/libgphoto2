@@ -1,3 +1,7 @@
+2008-05-18  Marcus Meissner  <marcus@jet.franken.de>
+
+	* puppy.c: Implemented get_info_func.
+
 2008-03-12  Marcus Meissner  <marcus@jet.franken.de>
 
 	* puppy.c: Convert from ISO-8859-1 to current locale
