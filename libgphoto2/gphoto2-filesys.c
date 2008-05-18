@@ -2206,10 +2206,6 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	const char *filename;
 	int x, y, r;
 	time_t t;
-#ifdef HAVE_LIBEXIF
-	const char *data;
-	unsigned long int size;
-#endif
 
 	CHECK_NULL (fs && folder && file);
 	CC (context);
@@ -2298,17 +2294,20 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	 */
 #ifdef HAVE_LIBEXIF 
         if (!t && (type == GP_FILE_TYPE_NORMAL)) {
-		GP_DEBUG ("Searching data for mtime...");
-		CR (gp_file_get_data_and_size (file, &data, &size));
-		t = get_exif_mtime ((unsigned char*)data, size);
-	}
-#endif
+		unsigned long int size;
+		const char *data;
 
+		GP_DEBUG ("Searching data for mtime...");
+		CR (gp_file_get_data_and_size (file, NULL, &size));
+		if (size < 32*1024*1024) { /* just assume stuff above 32MB is not EXIF capable */
+			CR (gp_file_get_data_and_size (file, &data, &size));
+			t = get_exif_mtime ((unsigned char*)data, size);
+		}
+	}
 	/*
 	 * Still no mtime? Let's see if the camera offers us data of type
 	 * GP_FILE_TYPE_EXIF that includes information on the mtime.
 	 */
-#ifdef HAVE_LIBEXIF
 	if (!t) {
 		GP_DEBUG ("Trying EXIF information...");
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
