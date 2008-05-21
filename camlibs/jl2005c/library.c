@@ -57,10 +57,15 @@ struct {
    	unsigned short idProduct;
 } models[] = {
         {"Argus DC1512e", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
-        {"Amazing Spiderman",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
+        {"Amazing Spiderman",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+    							0x0979, 0x0227},
         {"Sakar no. 75379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
-        {"Sakar Kidz-Cam no. 88379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
-        {"Sakar clipshot no. 1169x",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
+        {"Sakar Kidz-Cam no. 88379",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x0979, 0x0227},
+        {"Sakar clipshot no. 1169x",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x0979, 0x0227},
+        {"Sakar Sticker Wizard no. 59379",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x0979, 0x0227},
 	{NULL,0,0,0}
 };
 
