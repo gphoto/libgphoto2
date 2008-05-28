@@ -387,7 +387,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			rawdata = frame_data;
 			gp_gamma_fill_table (gtable, .55); 
 		}
-		gp_bayer_decode (rawdata, w , h , ptr, this_cam_tile);
+		gp_ahd_decode (rawdata, w , h , ptr, this_cam_tile);
 		gp_gamma_correct_single (gtable, ptr, w * h); 
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
