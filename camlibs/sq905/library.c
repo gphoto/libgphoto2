@@ -396,12 +396,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
 		size = w*h/comp_ratio;
-		rawdata = malloc (size);
+		rawdata = malloc (size+16);
 		if (!rawdata) return GP_ERROR_NO_MEMORY;
 		memcpy (rawdata, frame_data, size);
+		memcpy (rawdata+size,camera->pl->catalog+16*entry,16);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, (char *)rawdata, size);  
+	        gp_file_set_data_and_size (file, (char *)rawdata, size+16);  
 	}
 	/* Reset camera when done, for more graceful exit. */
 	if ((!(is_in_clip)&&(entry +1 == camera->pl->nb_entries)) 

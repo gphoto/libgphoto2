@@ -1,3 +1,7 @@
+2008-05-29   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: raw files now each have the corresponding catalog entry
+		     added as a 16-byte footer. 
+
 2008-05-27   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: gp_bayer_decode() -> gp_ahd_decode().
 
