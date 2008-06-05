@@ -139,3 +139,11 @@
  * actually unknown.
  */
 #define DEVICE_FLAG_OGG_IS_UNKNOWN 0x000000200
+/**
+ * The Creative Zen is quite unstable in libmtp but seems to
+ * be better with later firmware versions. However, it still
+ * frequently crashes when setting album art dimensions. This
+ * flag disables setting the dimensions (which seems to make
+ * no difference to how the graphic is displayed).
+ */
+#define DEVICE_FLAG_BROKEN_SET_SAMPLE_DIMENSIONS 0x000000400
