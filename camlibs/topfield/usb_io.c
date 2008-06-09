@@ -174,7 +174,7 @@ ssize_t send_cmd_hdd_file_send(Camera *camera, unsigned char dir, char *path, GP
     unsigned short packetSize;
     int pathLen = strlen(path) + 1;
 
-    gp_log (GP_LOG_DEBUG, "topfield", __func__);
+    gp_log (GP_LOG_DEBUG, "topfield", "send_cmd_hdd_file_send(dir = %d, path = %s)", dir, path);
     if((PACKET_HEAD_SIZE + 1 + 2 + pathLen) >= MAXIMUM_PACKET_SIZE) {
         fprintf(stderr, "ERROR: Path is too long.\n");
         return -1;
