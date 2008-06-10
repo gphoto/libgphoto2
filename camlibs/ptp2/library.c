@@ -557,6 +557,8 @@ static struct {
 	{"Nikon:Coolpix L11 (PTP mode)",  0x04b0, 0x0309, 0},
 	/* From IRC reporter. */
 	{"Nikon:Coolpix L10 (PTP mode)",  0x04b0, 0x030b, 0},
+	/* Philippe ENTZMANN <philippe@phec.net> */
+	{"Nikon:Coolpix P60 (PTP mode)",  0x04b0, 0x0311, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
