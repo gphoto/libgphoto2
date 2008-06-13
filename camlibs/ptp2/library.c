@@ -59,6 +59,7 @@
 #define GP_MODULE "PTP2"
 
 #define USB_START_TIMEOUT 8000
+#define USB_CANON_START_TIMEOUT 500	/* 0.5 seconds */
 #define USB_NORMAL_TIMEOUT 20000
 #define USB_TIMEOUT_CAPTURE 20000
 
@@ -4273,7 +4274,14 @@ camera_init (Camera *camera, GPContext *context)
 	/* Choose a shorter timeout on inital setup to avoid
 	 * having the user wait too long.
 	 */
-	CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
+
+	if (a.usb_vendor == 0x4a9) { /* CANON */
+		/* our special canon friends get a shorter timeout, sinc ethey
+		 * occasionaly need 2 retries. */
+		CR (gp_port_set_timeout (camera->port, USB_CANON_START_TIMEOUT));
+	} else {
+		CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
+	}
 
 	/* Establish a connection to the camera */
 	SET_CONTEXT(camera, context);
