@@ -186,8 +186,10 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot A70",         CANON_CLASS_1,  0x04A9, 0x3073, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif
         {"Canon:PowerShot A60",         CANON_CLASS_1,  0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#if 0
         {"Canon:Digital IXUS 400",      CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S400",        CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
         /* End of shared ID's */
         {"Canon:PowerShot A300",        CANON_CLASS_1,  0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
