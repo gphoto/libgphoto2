@@ -28,6 +28,7 @@
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-setting.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -246,6 +247,12 @@ do_cmd_turbo(Camera *camera, char *state, GPContext *context)
 	int r;
 	int turbo_on = atoi(state);
 	struct tf_packet reply;
+	char buf[1024];
+
+	/* check if we want to use turbo mode. Default is YES */
+        if (GP_OK == gp_setting_get("topfield","turbo", buf))
+		if (!strcmp(buf,"no"))
+			return GP_OK;
 
 	if(0 == strcasecmp("ON", state))
 		turbo_on = 1;
@@ -524,10 +531,32 @@ static void finalStats(__u64 bytes, time_t startTime)
 static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
-	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
+        CameraWidget *section, *turbo;
+	char buf[1024];
+	int val;
 
-	/* Append your sections and widgets here. */
+        gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
+        gp_widget_set_name (*window, "config");
 
+        gp_widget_new (GP_WIDGET_SECTION, _("Driver Settings"), &section);
+	gp_widget_set_name (section, "driver");
+        gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_RADIO, _("Turbo mode"), &turbo);
+        gp_widget_set_name (turbo, "turbo");
+        gp_widget_add_choice (turbo,_("On"));
+        gp_widget_add_choice (turbo,_("Off"));
+        gp_widget_append (section, turbo);
+
+        if (GP_OK == gp_setting_get("topfield","turbo", buf)) {
+		if (!strcmp(buf,"no"))
+			val = 0;
+		else
+			val = 1;
+	} else {
+		val = 1; /* enabled by default */
+	}
+        gp_widget_set_value ( turbo, val?_("On"):_("Off"));
 	return GP_OK;
 }
 
@@ -535,10 +564,25 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 static int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
-	/*
-	 * Check if the widgets' values have changed. If yes, tell the camera.
-	 */
+	int ret;
+	CameraWidget *turbo;
 
+	ret = gp_widget_get_child_by_name (window, "turbo", &turbo);
+	if (ret != GP_OK) {
+		gp_log (GP_LOG_ERROR, "camera_config_set", "did not find turbo menu entry?\n");
+		return GP_OK;
+	}
+	if (gp_widget_changed (turbo)) {
+		const char* val;
+		int ival;
+
+		ret = gp_widget_get_value (turbo, &val);
+		if (ret == GP_OK) {
+			ival = !strcmp (val, _("On"));
+			gp_log (GP_LOG_DEBUG, "camera_config_set", "val %s, ival %d\n", val, ival);
+			gp_setting_set ("topfield", "turbo", ival?"yes":"no");
+		}
+	}
 	return GP_OK;
 }
 
@@ -1169,6 +1213,7 @@ camera_init (Camera *camera, GPContext *context)
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	gp_port_set_timeout (camera->port, TF_PROTOCOL_TIMEOUT);
+	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 
 	camera->pl = calloc (sizeof (CameraPrivateLibrary),1);
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
@@ -1179,5 +1224,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (!cd_latin1_to_locale) return GP_ERROR_NO_MEMORY;
 	cd_locale_to_latin1 = iconv_open("iso-8859-1", curloc);
 	if (!cd_locale_to_latin1) return GP_ERROR_NO_MEMORY;
+
+	do_cmd_ready (camera, context);
 	return GP_OK;
 }
