@@ -1,3 +1,10 @@
+2008-06-22  Marcus Meissner  <marcus@jet.franken.de>
+
+	* puppy.c: Make TURBO mode configurable.
+
+	* puppy.c: Send READY request to make communication
+	  startup a bit more stable.
+
 2008-05-18  Marcus Meissner  <marcus@jet.franken.de>
 
 	* puppy.c: Implemented get_info_func.
