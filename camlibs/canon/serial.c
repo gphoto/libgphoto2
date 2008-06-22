@@ -1462,7 +1462,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
 					  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
 		if (!canon_serial_wait_for_ack (camera)) {
 			gp_context_status (context,
-					   _("Error waiting for ACK during initialization retrying"));
+					   _("Error waiting for ACK during initialization, retrying"));
 		} else
 			break;
 	}

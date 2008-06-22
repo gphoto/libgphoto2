@@ -1,3 +1,37 @@
+2008-05-16  Moreno Marzolla  <moreno.marzolla@pd.infn.it>
+
+	* canon.c, library.c: Added beep and zoom configurations.
+
+	* canon.c, library.c: Enable remote mode once in a session and
+	  close it in camera_exit.
+
+
+2008-05-12  Moreno Marzolla  <moreno.marzolla@pd.infn.it>
+
+	* canon.c, canon.h, README.canon: Added some more configuration
+	  options.
+ 
+2008-03-30  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: SL_THUMB_CR2 should be as large as the CR2 image,
+	  because the thumbnail getter retrieves the whole image for some reason.
+
+	* canon.c: Moved strncpy() out of the failure node, making
+	  replace_filename_extension() and filename_to_audio() work again.
+
+2007-12-27  Daniel M German <dmg@uvic.ca>
+
+	* canon.h, library.c: More configuration values for some
+	  newer cameras / objectives.
+
+2007-11-06  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb.c: Bumped timeout to 175.
+
+2007-09-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* canon.c: Handle IXUS 30 also in ptp driver.
+
 2007-06-03  Paul Walmsley  <paul@booyaka.com>
 
 	* usb.c: remove one last CANON_EXPERIMENTAL_SECONDARY_IMAGE ifdef

@@ -351,6 +351,60 @@ struct canonFocusModeStateStruct {
 	char *label;
 };
 
+/**
+ * canonFlashMode:
+ * @FLASH_MODE_OFF: The flash does not fire
+ * @FLASH_MODE_ON: The flash does fire (compulsory)
+ * @FLASH_MODE_AUTO: The flash fires if necessary
+ */
+typedef enum {
+	FLASH_MODE_OFF = 0,
+	FLASH_MODE_ON,
+	FLASH_MODE_AUTO
+} canonFlashMode;
+
+struct canonFlashModeStateStruct {
+	canonFlashMode value;
+	char* label;
+};
+
+/**
+ * canonBeepMode:
+ * @BEEP_OFF: The camera does not beep after focusing the image
+ * @BEEP_ON: The camera emits an audible beep after focusing the image
+ */
+typedef enum {
+	BEEP_OFF = 0x00,
+	BEEP_ON = 0x01
+} canonBeepMode;
+
+struct canonBeepModeStateStruct {
+	canonBeepMode value;
+	char* label;
+};
+
+/*
+ * Controls che camera zoom. These values have been verified for the
+ * A40 only.
+ */
+typedef enum {
+	ZOOM_0 = 0x01, /* minimum (no zoom) */
+	ZOOM_1 = 0x02,
+	ZOOM_2 = 0x03,
+	ZOOM_3 = 0x04,
+	ZOOM_4 = 0x05,
+	ZOOM_5 = 0x06,
+	ZOOM_6 = 0x07,
+	ZOOM_7 = 0x08,
+	ZOOM_8 = 0x09,	
+	ZOOM_9 = 0x0a /* maximum zoom ?? */
+} canonZoomLevel;
+
+struct canonZoomLevelStateStruct {
+	canonZoomLevel value;
+	char* label;
+};
+
 /* Size of the release parameter block */
 #define RELEASE_PARAMS_LEN  0x2f
 
@@ -358,7 +412,10 @@ struct canonFocusModeStateStruct {
 #define RESOLUTION_1_INDEX  0x01
 #define RESOLUTION_2_INDEX  0x02
 #define RESOLUTION_3_INDEX  0x03
-#define BEEP_INDEX          0x07
+#define SELF_TIMER_1_INDEX  0x04 /* Currently not used */
+#define SELF_TIMER_2_INDEX  0x05 /* Currently not used */
+#define FLASH_INDEX         0x06
+#define BEEP_INDEX          0x07 
 #define FOCUS_MODE_INDEX    0x12
 #define ISO_INDEX           0x1a
 #define APERTURE_INDEX      0x1c
@@ -645,6 +702,9 @@ int canon_int_identify_camera(Camera *camera, GPContext *context);
 int canon_int_set_owner_name(Camera *camera, const char *name, GPContext *context);
 int canon_int_start_remote_control(Camera *camera, GPContext *context);
 int canon_int_end_remote_control(Camera *camera, GPContext *context);
+int canon_int_set_beep(Camera *camera, canonBeepMode beep_mode, GPContext *context);
+int canon_int_set_flash(Camera *camera, canonFlashMode flash_mode, GPContext *context);
+int canon_int_set_zoom(Camera *camera, canonZoomLevel zoom_level, GPContext *context);
 
 /*
  * introduced for capturing

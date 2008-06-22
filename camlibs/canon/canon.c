@@ -186,8 +186,10 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot A70",         CANON_CLASS_1,  0x04A9, 0x3073, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 #endif
         {"Canon:PowerShot A60",         CANON_CLASS_1,  0x04A9, 0x3074, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#if 0
         {"Canon:Digital IXUS 400",      CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S400",        CANON_CLASS_1,  0x04A9, 0x3075, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
         /* End of shared ID's */
         {"Canon:PowerShot A300",        CANON_CLASS_1,  0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
@@ -286,9 +288,12 @@ const struct canonCamModelData models[] = {
 
         /* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
         /* Another block of cameras that share the ID for PTP and Canon modes */
+#if 0 /* in ptp driver due to hangs :( */
         {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
+
         {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
@@ -1164,11 +1169,13 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                  * Send a sequence of CONTROL_CAMERA commands.
                  */
 
-                gp_port_set_timeout (camera->port, 15000);
-
-                status = canon_int_start_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
+                if (!camera->pl->remote_control) {
+                        gp_port_set_timeout (camera->port, 15000);
+                        
+                        status = canon_int_start_remote_control (camera, context);
+                        if ( status < 0 )
+                                return status;
+                }
 
                 /*
                  * Set the captured image transfer mode.  We have four options
@@ -1275,11 +1282,6 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                         
                 }
                 
-                /* End release mode */
-                status = canon_int_end_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
-
                 break;
         case GP_PORT_SERIAL:
                 return GP_ERROR_NOT_SUPPORTED;
@@ -1507,9 +1509,11 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
                 gp_port_set_timeout (camera->port, 15000);
 
-                status = canon_int_start_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
+                if (!camera->pl->remote_control) {
+                        status = canon_int_start_remote_control (camera, context);
+                        if ( status < 0 )
+                                return status;
+                }
 
                 /*
                  * Set the captured image transfer mode.  We have four options
@@ -1616,11 +1620,6 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                 return GP_ERROR_OS_FAILURE;
 
                 }
-
-                /* End release mode */
-                status = canon_int_end_remote_control (camera, context);
-                if ( status < 0 )
-                        return status;
 
                 /* Now list all directories on the camera; this has
                    presumably added an image file. Find the difference
@@ -1780,6 +1779,13 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         GP_DEBUG ("canon_int_get_release_params: focus mode = 0x%02x", 
                   camera->pl->release_params[FOCUS_MODE_INDEX]);
 
+        GP_DEBUG ("canon_int_get_release_params: beep mode = 0x%02x", 
+                  camera->pl->release_params[BEEP_INDEX]);
+
+        GP_DEBUG ("canon_int_get_release_params: flash mode = 0x%02x", 
+                  camera->pl->release_params[FLASH_INDEX]);
+
+
         camera->pl->secondary_image = 0;
 	/* Based on the resolution settings in the release params, 
 	   determine whether we expect one or two images to be returned
@@ -1858,6 +1864,161 @@ canon_int_set_shutter_speed (Camera *camera, canonShutterSpeedState shutter_spee
         }
         
         GP_DEBUG ("canon_int_set_shutter_speed() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_beep
+ * @camera: camera to work with
+ * @beep_mode: beep mode - use one of the defines such as 
+ *                 BEEP_ON for turning on the beep when the camera sets the focus.
+ * @context: context for error reporting
+ *
+ * Sets the camera's beep mode. Only tested for A40 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_beep (Camera *camera, canonBeepMode beep_mode,
+                    GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_beep() called for beep 0x%02x",
+                  beep_mode);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+        /* Modify the beep mode */
+        
+        /* XXX must test for valid shutter speeds here */
+        camera->pl->release_params[BEEP_INDEX] = beep_mode;
+        
+        /* Upload the beep mode to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[BEEP_INDEX] != beep_mode) {
+                GP_DEBUG ("canon_int_set_beep: Could not set beep "
+                          "mode to 0x%02x (camera returned 0x%02x)", 
+                          beep_mode,
+                          camera->pl->release_params[BEEP_INDEX]);
+                return GP_ERROR_NOT_SUPPORTED;
+        } else {
+                GP_DEBUG ("canon_int_set_beep: beep mode change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_beep() finished successfully");
+
+        return GP_OK;        
+}
+
+/**
+ * canon_int_set_flash
+ * @camera: camera to work with
+ * @flash_mode: flash mode - use one of the defines such as 
+ *                 FLASH_MODE_OFF for turning off the flash.
+ * @context: context for error reporting
+ *
+ * Sets the camera's flash mode. Only tested for A40 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_flash (Camera *camera, canonFlashMode flash_mode,
+                     GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_flash() called for flash 0x%02x",
+                  flash_mode);
+
+        /* Get the current camera settings */
+        
+        status = canon_int_get_release_params (camera, context);
+        
+        if (status < 0)
+                return status;
+
+        /* Modify the beep mode */
+        
+        /* XXX must test for valid flash mode here */
+        camera->pl->release_params[FLASH_INDEX] = flash_mode;
+        
+        /* Upload the flash mode to the camera */
+        status = canon_int_set_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        /* Make sure the camera changed it! */
+        
+        status = canon_int_get_release_params (camera, context);
+
+        if (status < 0)
+                return status;
+        
+        if (camera->pl->release_params[FLASH_INDEX] != flash_mode) {
+                GP_DEBUG ("canon_int_set_flash: Could not set flash "
+                          "mode to 0x%02x (camera returned 0x%02x)", 
+                          flash_mode,
+                          camera->pl->release_params[FLASH_INDEX]);
+                return GP_ERROR_NOT_SUPPORTED;
+        } else {
+                GP_DEBUG ("canon_int_set_flash: flash mode change verified");
+        }
+        
+        GP_DEBUG ("canon_int_set_flash() finished successfully");
+
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_zoom
+ * @camera: camera to work with
+ * @zoom_level: zoom level to set - use one of the defines such as 
+ *                 ZOOM_0 for no zoom
+ * @context: context for error reporting
+ *
+ * Sets the camera's zoom. Only tested for A40 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_zoom (Camera *camera, canonZoomLevel zoom_level,
+                    GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_zoom() called for zoom 0x%02x",
+                  zoom_level);
+        
+        status = canon_int_do_control_command( camera, CANON_USB_CONTROL_SET_ZOOM_POS, 0x04, zoom_level );
+
+        if (status < 0)
+                return status;
+                
+        GP_DEBUG ("canon_int_set_zoom() finished successfully");
 
         return GP_OK;        
 }
