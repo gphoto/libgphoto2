@@ -1,18 +1,26 @@
-libgphoto2 2.4.1.2
+libgphoto2 2.4.1.3
 
 This is a 2.4 release branch update.
+
 
 libgphoto2:
    * Camera abilities list sorting now uses qsort(),
      bringing startup speedups. (0.4 seconds on 2GHz machine).
 
+   * On large files, do not try to retrieve thumbnails.
+
+   * Updated translations.
+
 PTP2 driver:
    * EOS capture support made working with newer Canon EOS models.
    * handle MTP -> Canon/Nikon transitions better.
+   * Download cancellation support.
+   * Handle canon cameras with shorter timeouts on startup.
 
 Canon driver:
    * Fixed a CR2 thumbnail download problem.
    * Fixed a THM download problem (for movies).
+   * Moved some more cameras over to PTP2 driver.
 
 Topfield driver:
    * New driver for Topfield PVR5000 device(s).
