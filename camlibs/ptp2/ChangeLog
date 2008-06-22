@@ -1,3 +1,16 @@
+2008-06-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Change initial timeout magic 
+	  for Canon cameras to use 0.5 second timeouts.
+
+	  Lets hope all the Canons can do this.
+
+2008-06-05  Marcus Meissner  <marcus@jet.franken.de>
+	    Linus Walleij  <triad@df.lth.se>
+
+	* music-players.h, device-flags.h: Merged new music
+	  players from libmtp.
+
 2008-04-11  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, config.c: Added EOS 450D capture mode.

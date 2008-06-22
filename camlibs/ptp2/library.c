@@ -59,6 +59,7 @@
 #define GP_MODULE "PTP2"
 
 #define USB_START_TIMEOUT 8000
+#define USB_CANON_START_TIMEOUT 500	/* 0.5 seconds */
 #define USB_NORMAL_TIMEOUT 20000
 #define USB_TIMEOUT_CAPTURE 20000
 
@@ -539,6 +540,8 @@ static struct {
 	{"Nikon:Coolpix L12 (PTP mode)",  0x04b0, 0x015f, 0},
 	/* Marius Groeger <marius.groeger@web.de> */
 	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+  /* Submitted on IRC by kallepersson */
+	{"Nikon:Coolpix P5100 (PTP mode)", 0x04b0, 0x0163, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -555,6 +558,8 @@ static struct {
 	{"Nikon:Coolpix L11 (PTP mode)",  0x04b0, 0x0309, 0},
 	/* From IRC reporter. */
 	{"Nikon:Coolpix L10 (PTP mode)",  0x04b0, 0x030b, 0},
+	/* Philippe ENTZMANN <philippe@phec.net> */
+	{"Nikon:Coolpix P60 (PTP mode)",  0x04b0, 0x0311, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
@@ -646,6 +651,7 @@ static struct {
 	{"Canon:PowerShot A60 (PTP)",           0x04a9, 0x3074, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* IXUS 400 has the same PID in both modes, Till Kamppeter */
 	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot S400 (PTP mode)",	0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A300 (PTP mode)",     0x04a9, 0x3076, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT},
@@ -780,6 +786,9 @@ static struct {
 	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
 	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* Christian P. Schmidt" <schmidt@digadd.de> */
+	{"Canon:Digital IXUS 970 IS",		0x04a9, 0x3173, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
@@ -4203,14 +4212,16 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.cancelreq_func	= ptp_usb_control_cancel_request;
 		break;
 	case GP_PORT_PTPIP: {
-		GPPortInfo	info;
+		GPPortInfo	pinfo;
+		char		*path;
 
-		ret = gp_port_get_info (camera->port, &info);
+		ret = gp_port_get_info (camera->port, &pinfo);
 		if (ret != GP_OK) {
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to get port info?\n");
 			return ret;
 		}
-		ret = ptp_ptpip_connect (&camera->pl->params, info.path);
+		gp_port_info_get_path (pinfo, &path);
+		ret = ptp_ptpip_connect (&camera->pl->params, path);
 		if (ret != GP_OK) {
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to connect.\n");
 			return ret;
@@ -4263,7 +4274,14 @@ camera_init (Camera *camera, GPContext *context)
 	/* Choose a shorter timeout on inital setup to avoid
 	 * having the user wait too long.
 	 */
-	CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
+
+	if (a.usb_vendor == 0x4a9) { /* CANON */
+		/* our special canon friends get a shorter timeout, sinc ethey
+		 * occasionaly need 2 retries. */
+		CR (gp_port_set_timeout (camera->port, USB_CANON_START_TIMEOUT));
+	} else {
+		CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
+	}
 
 	/* Establish a connection to the camera */
 	SET_CONTEXT(camera, context);
