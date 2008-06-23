@@ -506,6 +506,7 @@ udev_camera_func (const func_params_t *params,
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
 	int usb_vendor = 0, usb_product = 0;
+	int has_valid_rule = 0;
 	udev_persistent_data_t *pdata = (udev_persistent_data_t *) data;
 	ASSERT(pdata != NULL);
 
@@ -546,42 +547,49 @@ udev_camera_func (const func_params_t *params,
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
 			printf("PROGRAM=\"check-ptp-camera %02d/%02d/%02d\", ", class, subclass, proto);
+			has_valid_rule = 1;
 		} else {
 			if (class == 666) {
 				printf("# not working yet: PROGRAM=\"check-mtp-device\", ");
+				has_valid_rule = 1;
 			} else {
 				fprintf(stderr, "unhandled interface match flags %x\n", flags);
 			}
 		}
 	} else {
-		if (flags & GP_USB_HOTPLUG_MATCH_VENDOR_ID)
+		if (flags & GP_USB_HOTPLUG_MATCH_VENDOR_ID) {
 			printf (pdata->usbcam_string, a->usb_vendor, a->usb_product);
-		else
+			has_valid_rule = 1;
+		} else {
 			fprintf (stderr, "Error: Trying to output device %d/%d with incorrect match flags.\n",
 				a->usb_vendor, a->usb_product
 			);
+		}
 	}
-	if (pdata->script != NULL) {
-		printf("RUN+=\"%s\"\n", pdata->script);
-	} else if (pdata->mode != NULL || pdata->owner != NULL || pdata->group != NULL) {
-		if (pdata->mode != NULL) {
-			printf("MODE=\"%s\"", pdata->mode);
-			if (pdata->owner != NULL || pdata->group != NULL) {
-				printf(", ");
+	if (has_valid_rule != 0) {
+		if (pdata->script != NULL) {
+			printf("RUN+=\"%s\"\n", pdata->script);
+		} else if (pdata->mode != NULL || pdata->owner != NULL || pdata->group != NULL) {
+			if (pdata->mode != NULL) {
+				printf("MODE=\"%s\"", pdata->mode);
+				if (pdata->owner != NULL || pdata->group != NULL) {
+					printf(", ");
+				}
 			}
-		}
-		if (pdata->owner != NULL) {
-			printf("OWNER=\"%s\"", pdata->owner);
+			if (pdata->owner != NULL) {
+				printf("OWNER=\"%s\"", pdata->owner);
+				if (pdata->group != NULL) {
+					printf(", ");
+				}
+			}
 			if (pdata->group != NULL) {
-				printf(", ");
+				printf("GROUP=\"%s\"", pdata->group);
 			}
+			printf("\n");
+		} else {
+			printf("\n");
+			FATAL("udev_camera_func(): illegal branch");
 		}
-		if (pdata->group != NULL) {
-			printf("GROUP=\"%s\"", pdata->group);
-		}
-		printf("\n");
-	} else {
-		FATAL("udev_camera_func(): illegal branch");
 	}
 	return 0;
 }
