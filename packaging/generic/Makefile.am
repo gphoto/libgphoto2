@@ -1,5 +1,7 @@
 utils_PROGRAMS = print-camera-list
+if HAVE_UDEV
 udevscript_SCRIPTS = check-ptp-camera
+endif
 EXTRA_DIST = check-ptp-camera
 
 print_camera_list_SOURCE = print-camera-list.c
