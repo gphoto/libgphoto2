@@ -2,10 +2,14 @@ EXTRA_DIST = usb-os2.c
 
 iolib_LTLIBRARIES = usb.la
 
+if HAVE_UDEV
 udevscript_PROGRAMS = check-mtp-device
 check_mtp_device_SOURCE = check-mtp-device.c
 check_mtp_device_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
 check_mtp_device_LDADD = $(LIBUSB_LIBS)
+else
+EXTRA_DIST = check-mtp-device.c
+endif
 
 usb_la_LDFLAGS = -module -no-undefined -avoid-version \
 	-export-dynamic \
