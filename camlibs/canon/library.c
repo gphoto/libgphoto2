@@ -964,7 +964,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	time_t camera_time, local_time, tmp_time;
 	struct tm *tm;
 	double time_diff;
-	char formatted_camera_time[20];
+	char formatted_camera_time[30];
 
 	GP_DEBUG ("camera_summary()");
 
@@ -1511,6 +1511,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	int res_byte1, res_byte2, res_byte3;
 	int pwr_status, pwr_source, res, i, menuval;
 	time_t camtime;
+	char formatted_camera_time[20];
 
 	GP_DEBUG ("camera_get_config()");
 
@@ -1837,7 +1838,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	if (camera->pl->cached_ready == 1) {
 		res = canon_int_get_time (camera, &camtime, context);
 		if (res == GP_OK) {
-			gp_widget_set_value (t, &camtime);
+			strftime (formatted_camera_time, sizeof (formatted_camera_time),
+                          "%Y-%m-%d %H:%M:%S", gmtime (&camtime));
+			gp_widget_set_value (t, formatted_camera_time);
 		} else {
 			gp_widget_set_value (t, _("Error"));
 		}
