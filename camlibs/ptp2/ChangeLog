@@ -1,3 +1,7 @@
+2008-07-03  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: allow capture=off
+
 2008-06-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Change initial timeout magic 

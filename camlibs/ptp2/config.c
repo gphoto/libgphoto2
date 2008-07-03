@@ -1971,7 +1971,7 @@ _get_Canon_CaptureMode(CONFIG_GET_ARGS) {
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	val = 0;
+	val = 2;	/* always changed, unless we can find out the state ... */
 	gp_widget_set_value  (*widget, &val);
 	return (GP_OK);
 }
