@@ -1,4 +1,4 @@
-# Dutch translations for libgphoto2_port.
+# Dutch translations for libgphoto2_port-2.4.1.
 # This file is distributed under the same license as the libgphoto2 package.
 #
 # Kurt De Bree <kdebree(AT)telenet(DOT)be>, 2006.
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2_port-2.4.1\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-03-28 20:37+0100\n"
-"PO-Revision-Date: 2008-04-16 00:31+0200\n"
+"PO-Revision-Date: 2008-07-08 21:53+0200\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -44,12 +44,12 @@ msgstr "Kan poortstuurprogrammalijst niet laden: '%s'."
 #: libgphoto2_port/gphoto2-port-info-list.c:252
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
-msgstr "'%s' ('%s') is geladen van '%s'."
+msgstr "'%s' ('%s') is geladen uit '%s'."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:284
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
-msgstr "Laden van invoer-/uitvoerstuurprogramma's van '%s' (met ltdl)..."
+msgstr "Laden (met ltdl) van invoer-/uitvoerstuurprogramma's uit '%s'..."
 
 #: libgphoto2_port/gphoto2-port-info-list.c:310
 #, c-format
@@ -314,7 +314,7 @@ msgstr "Leegmaken van poort..."
 
 #: libgphoto2_port/gphoto2-port.c:817
 msgid "Clear halt..."
-msgstr "Bezig met wissen van 'halt'-toestand..."
+msgstr "Wissen van 'halt'-toestand..."
 
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
@@ -430,12 +430,12 @@ msgstr "Camera is reeds in gebruik."
 #: usb/libusb.c:255
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr "Het apparaat heeft als stuurprogramma '%s' aangehecht; dit wordt nu losgemaakt."
+msgstr "Het apparaat heeft als stuurprogramma '%s' aangehecht; dit wordt nu onthecht."
 
 #: usb/libusb.c:258
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "Kan het kernelstuurprogramma '%s' van het camera-apparaat niet losmaken."
+msgstr "Kan het kernelstuurprogramma '%s' van het camera-apparaat niet onthechten."
 
 #: usb/libusb.c:261
 msgid "Could not query kernel driver of device."
@@ -474,22 +474,22 @@ msgstr "Kan 'alt'-instelling niet wijzigen van %d naar %d (%m)"
 #: usb/libusb.c:680
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Het opgegeven handelaars-ID of product-ID (0x%x,0x%x) is ongeldig."
+msgstr "Het opgegeven leveranciers- of product-ID (0x%x,0x%x) is ongeldig."
 
 #: usb/libusb.c:716
 #, c-format
 msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "Het USB-apparaat (handelaar 0x%x, product 0x%x) is een massa-opslagmedium en zal misschien niet werken met gphoto2.  Referentie: %s"
+msgstr "Het USB-apparaat (leverancier 0x%x, product 0x%x) is een massa-opslagmedium en zal misschien niet werken met gphoto2.  Referentie: %s"
 
 #: usb/libusb.c:758
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
-msgstr "Kan USB-apparaat (handelaar 0x%x, product 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
+msgstr "Kan USB-apparaat (leverancier 0x%x, product 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
 
 #: usb/libusb.c:988
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Kan USB-apparaat (klasse 0x%x, subklasse 0x%x, protocol 0x%x) niet vinden. Zorg ervoor dat het apparaat aan de computer aangesloten is."
+msgstr "Kan USB-apparaat (klasse 0x%x, subklasse 0x%x, protocol 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
 
 #: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
 #: disk/disk.c:323
