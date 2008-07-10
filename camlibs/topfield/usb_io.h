@@ -73,21 +73,21 @@
 /* Format of a Topfield protocol packet */
 struct tf_packet
 {
-    __u16 length;
-    __u16 crc;
-    __u32 cmd;
-    __u8 data[MAXIMUM_PACKET_SIZE - PACKET_HEAD_SIZE];
+    uint16_t length;
+    uint16_t crc;
+    uint32_t cmd;
+    uint8_t data[MAXIMUM_PACKET_SIZE - PACKET_HEAD_SIZE];
 } __attribute__ ((packed));
 
 /* Topfield file descriptor data structure. */
 struct typefile
 {
     struct tf_datetime stamp;
-    __u8 filetype;
-    __u64 size;
-    __u8 name[95];
-    __u8 unused;
-    __u32 attrib;
+    uint8_t filetype;
+    uint64_t size;
+    uint8_t name[95];
+    uint8_t unused;
+    uint32_t attrib;
 } __attribute__ ((packed));
 
 
@@ -98,7 +98,7 @@ ssize_t send_cmd_reset(Camera *camera, GPContext *context);
 ssize_t send_cmd_turbo(Camera *camera, int turbo_on, GPContext *context);
 ssize_t send_cmd_hdd_size(Camera *camera, GPContext *context);
 ssize_t send_cmd_hdd_dir(Camera *camera, char *path, GPContext *context);
-ssize_t send_cmd_hdd_file_send(Camera *camera, __u8 dir, char *path, GPContext *context);
+ssize_t send_cmd_hdd_file_send(Camera *camera, uint8_t dir, char *path, GPContext *context);
 ssize_t send_cmd_hdd_del(Camera *camera, char *path, GPContext *context);
 ssize_t send_cmd_hdd_rename(Camera *camera, char *src, char *dst, GPContext *context);
 ssize_t send_cmd_hdd_create_dir(Camera *camera, char *path, GPContext *context);

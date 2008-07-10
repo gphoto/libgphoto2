@@ -83,10 +83,10 @@ void put_u32(void *addr, unsigned int val)
     b[3] = (val & 0xFF);
 }
 
-__u64 get_u64(void *addr)
+uint64_t get_u64(void *addr)
 {
     unsigned char *b = addr;
-    __u64 r = b[0];
+    uint64_t r = b[0];
 
     r = (r << 8) | b[1];
     r = (r << 8) | b[2];
@@ -98,7 +98,7 @@ __u64 get_u64(void *addr)
     return r;
 }
 
-void put_u64(void *addr, __u64 val)
+void put_u64(void *addr, uint64_t val)
 {
     unsigned char *b = addr;
 

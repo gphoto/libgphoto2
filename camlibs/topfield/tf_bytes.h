@@ -23,16 +23,16 @@
 #ifndef _TF_BYTES_H
 #define _TF_BYTES_H 1
 
-#include <asm/types.h>
+#include <stdint.h>
 
 unsigned short get_u16(void *addr);
 unsigned short get_u16_raw(void *addr);
 unsigned int get_u32(void *addr);
 unsigned int get_u32_raw(void *addr);
-__u64 get_u64(void *addr);
+uint64_t get_u64(void *addr);
 
 void put_u16(void *addr, unsigned short val);
 void put_u32(void *addr, unsigned int val);
-void put_u64(void *addr, __u64 val);
+void put_u64(void *addr, uint64_t val);
 
 #endif /* _TF_BYTES_H */
