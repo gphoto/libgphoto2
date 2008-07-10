@@ -216,7 +216,7 @@ get_path (Camera *camera, const char *folder, const char *filename) {
 static char *
 decode_error(struct tf_packet *packet)
 {
-	__u32 ecode = get_u32(packet->data);
+	uint32_t ecode = get_u32(packet->data);
 	switch (ecode) {
 	case 1: return "CRC error";
 		break;
@@ -490,7 +490,7 @@ do_hdd_rename(Camera *camera, char *srcPath, char *dstPath, GPContext *context)
 	return GP_ERROR_IO;
 }
 
-static void progressStats(__u64 totalSize, __u64 bytes, time_t startTime)
+static void progressStats(uint64_t totalSize, uint64_t bytes, time_t startTime)
 {
     int delta = time(NULL) - startTime;
 
@@ -511,7 +511,7 @@ static void progressStats(__u64 totalSize, __u64 bytes, time_t startTime)
     }
 }
 
-static void finalStats(__u64 bytes, time_t startTime)
+static void finalStats(uint64_t bytes, time_t startTime)
 {
     int delta = time(NULL) - startTime;
 
@@ -618,7 +618,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		ABORT
 	} state;
 	int r, pid = 0, update = 0;
-	__u64 byteCount = 0;
+	uint64_t byteCount = 0;
 	struct utimbuf mod_utime_buf = { 0, 0 };
 	char *path;
 	struct tf_packet reply;
@@ -659,8 +659,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		case DATA_HDD_FILE_DATA:
 			if(state == DATA) {
-				__u64 offset = get_u64(reply.data);
-				__u16 dataLen = get_u16(&reply.length) - (PACKET_HEAD_SIZE + 8);
+				uint64_t offset = get_u64(reply.data);
+				uint16_t dataLen = get_u16(&reply.length) - (PACKET_HEAD_SIZE + 8);
 				int w;
 
 				if (!update) { /* avoid doing it too often */
