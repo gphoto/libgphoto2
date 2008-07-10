@@ -269,9 +269,11 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot S70 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30b1, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S60 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30b2, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot G6 (normal mode)",    CANON_CLASS_5,  0x04A9, 0x30b3, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#if 0 /* also confirmed problematic by Ubuntu users, see https://bugs.launchpad.net/ubuntu/+source/libgphoto2/+bug/158119  */
         {"Canon:Digital IXUS 500 (normal mode)",CANON_CLASS_5,  0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot S500 Digital ELPH (normal mode)",CANON_CLASS_5,       0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 500 (normal mode)", CANON_CLASS_5,  0x04A9, 0x30b4, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
         {"Canon:PowerShot A75",                 CANON_CLASS_1,  0x04A9, 0x30b5, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot SD110 Digital ELPH",  CANON_CLASS_1,  0x04A9, 0x30b6, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS IIs",              CANON_CLASS_1,  0x04A9, 0x30b6, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
