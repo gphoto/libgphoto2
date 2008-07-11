@@ -66,7 +66,9 @@ struct {
     								0x0979, 0x0227},
         {"Sakar Sticker Wizard no. 59379",     GP_DRIVER_STATUS_EXPERIMENTAL, 
     								0x0979, 0x0227},
-	{NULL,0,0,0}
+        {"Argus Bean Sprout",     GP_DRIVER_STATUS_EXPERIMENTAL, 
+    								0x0979, 0x0227},
+    	{NULL,0,0,0}
 };
 
 int
