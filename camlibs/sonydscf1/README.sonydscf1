@@ -1,8 +1,4 @@
-Remark about this camlib from 2001-11-17:
+Camera is freshly updated and new.
 
-> > There is a config.h checked in to CVS as camlibs/sonydscf1/config.h, which
-> > seems odd to me.  Also, I'm getting the error:
-> 
-> gphoto2/camlibs/sonydscf1 is horribly broken (global variables
-> everywhere, tons of compile warnings). I'd just ignore this library -
-> someone needs to completely rewrite it.
+- Image download works
+- --summary works
