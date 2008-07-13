@@ -2,6 +2,8 @@
 #ifndef __GPHOTO2_PORT_PORTABILITY_H__
 #define __GPHOTO2_PORT_PORTABILITY_H__
 
+#ifdef _GPHOTO2_INTERNAL_CODE
+
 #if defined(WIN32) && !defined(__WINESRC__)
 
 /************************************************************************
@@ -214,6 +216,7 @@ int		 gp_system_is_dir	(const char *dirname);
 /************************************************************************
  * End platform independent portability functions
  ************************************************************************/
+#endif /* _GPHOTO2_INTERNAL_CODE */
 
 #endif /* ifndef __GPHOTO2_PORT_PORTABILITY_H__ */
 /* end of file */
