@@ -151,6 +151,48 @@ CRW to something else.
 
 
 ========================================================================
+Remote capture on Canon Powershot A40
+=====================================
+
+The Canon Powershot A40 supports remote capture with gphoto. However,
+not all camera configuration parameters can be set via gphoto. Here
+we summarize the current status:
+
+- shutterspeed: can _NOT_ be set; This parameter can not be remotely set,
+  most likely due to a camera limitation rather than a gphoto issue. In fact
+  even Canon RemoteCapture version 2.7.4.23 for MacOSX does not allow
+  setting this parameter.
+
+- aperture: can NOT be set; even Canon RemoteCapture for MacOSX does not
+  allow setting this.
+
+- ISO: WORKS. Setting the ISO to one of the supported camera values works
+  with gphoto.
+
+- Resolution: WORKS.
+
+- flashmode: WORKS. gphoto2 is able to denable/disable the flash, or set
+  it to automatic.
+
+- beep: WORKS. gphoto2 is able to enable/disable the audible beep which
+  is emitted by the camera after fucosing the scene.
+
+- zoom: WORKS. gphoto2 can remotely set the zoom. The range of zoom values
+  needs to be checked; at the moment the range 1 (no zoom at all) to 9 
+  has been observed to work, but it is unclear whether higher values
+  work as well.
+
+- macro mode: can _NOT_ be set. Apparently, RemoteCapture 2.7.4.23 is able
+  to enable macro mode; however, macro mode should be automatically enabled
+  by the camera when necessary (need to be checked)
+
+- exposure compensation: can _NOT_ be set. Apparently, RemoteCapture
+  2.7.4.23 is able to set the exposure compensation, while gphoto2 is
+  not. Supporting this would probably require additional reverse engineering 
+  work on the Canon protocol to understand the commands to issue.
+
+
+========================================================================
 Known Bugs
 ==========
 
