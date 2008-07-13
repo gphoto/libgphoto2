@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-06-22 16:32+0200\n"
+"POT-Creation-Date: 2008-07-13 22:25+0200\n"
 "PO-Revision-Date: 2002-01-04 19:25+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -55,14 +55,14 @@ msgid ""
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
 
-#: camlibs/barbie/barbie.c:350
+#: camlibs/barbie/barbie.c:373
 #, c-format
 msgid ""
 "Number of pictures: %i\n"
 "Firmware Version: %s"
 msgstr ""
 
-#: camlibs/barbie/barbie.c:360
+#: camlibs/barbie/barbie.c:383
 msgid ""
 "Barbie/HotWheels/WWF\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -76,78 +76,78 @@ msgid ""
 "the web. Permission given by Vision."
 msgstr ""
 
-#: camlibs/canon/canon.c:652
+#: camlibs/canon/canon.c:654
 #, fuzzy, c-format
 msgid "Could not create directory %s."
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: camlibs/canon/canon.c:655
+#: camlibs/canon/canon.c:657
 #, fuzzy, c-format
 msgid "Could not remove directory %s."
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: camlibs/canon/canon.c:1218 camlibs/canon/canon.c:1597
+#: camlibs/canon/canon.c:1220 camlibs/canon/canon.c:1599
 #: camlibs/canon/usb.c:555
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:1314 camlibs/canon/canon.c:1315
+#: camlibs/canon/canon.c:1316 camlibs/canon/canon.c:1317
 msgid "*UNKNOWN*"
 msgstr ""
 
-#: camlibs/canon/canon.c:1498
+#: camlibs/canon/canon.c:1500
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %li"
 msgstr ""
 
-#: camlibs/canon/canon.c:1630
+#: camlibs/canon/canon.c:1632
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
 
-#: camlibs/canon/canon.c:2395
+#: camlibs/canon/canon.c:2397
 #, c-format
 msgid "Name '%s' (%li characters) too long, maximum 30 characters are allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:2813
+#: camlibs/canon/canon.c:2815
 #, c-format
 msgid "Lower case letters in %s not allowed."
 msgstr ""
 
-#: camlibs/canon/canon.c:2995
+#: camlibs/canon/canon.c:2997
 #, c-format
 msgid ""
 "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:3017
+#: camlibs/canon/canon.c:3019
 msgid ""
 "canon_int_list_directory: Reached end of packet while examining the first "
 "dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:3102
+#: camlibs/canon/canon.c:3104
 msgid "canon_int_list_directory: truncated directory entry encountered"
 msgstr ""
 
-#: camlibs/canon/canon.c:3466
+#: camlibs/canon/canon.c:3468
 msgid "File protected."
 msgstr ""
 
-#: camlibs/canon/canon.c:3558
+#: camlibs/canon/canon.c:3560
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 
-#: camlibs/canon/canon.c:3646
+#: camlibs/canon/canon.c:3648
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 
@@ -179,7 +179,7 @@ msgid ""
 "#########################\n"
 msgstr ""
 
-#: camlibs/canon/library.c:96 camlibs/canon/library.c:1555
+#: camlibs/canon/library.c:96 camlibs/canon/library.c:1556
 msgid "Compatibility mode"
 msgstr ""
 
@@ -616,20 +616,20 @@ msgid ""
 msgstr ""
 
 #: camlibs/canon/library.c:990 camlibs/canon/library.c:996
-#: camlibs/canon/library.c:1866 camlibs/canon/library.c:1872
+#: camlibs/canon/library.c:1869 camlibs/canon/library.c:1875
 msgid "AC adapter"
 msgstr ""
 
 #: camlibs/canon/library.c:990 camlibs/canon/library.c:996
-#: camlibs/canon/library.c:1866 camlibs/canon/library.c:1872
+#: camlibs/canon/library.c:1869 camlibs/canon/library.c:1875
 msgid "on battery"
 msgstr ""
 
-#: camlibs/canon/library.c:992 camlibs/canon/library.c:1868
+#: camlibs/canon/library.c:992 camlibs/canon/library.c:1871
 msgid "power OK"
 msgstr ""
 
-#: camlibs/canon/library.c:992 camlibs/canon/library.c:1868
+#: camlibs/canon/library.c:992 camlibs/canon/library.c:1871
 msgid "power bad"
 msgstr ""
 
@@ -704,52 +704,52 @@ msgstr ""
 msgid "Could not create destination directory."
 msgstr ""
 
-#: camlibs/canon/library.c:1520 camlibs/ptp2/config.c:2729
+#: camlibs/canon/library.c:1521 camlibs/ptp2/config.c:2729
 #: camlibs/ptp2/config.c:2789
 #, fuzzy
 msgid "Camera and Driver Configuration"
 msgstr "Nastaviteve fotoaparata"
 
-#: camlibs/canon/library.c:1523 camlibs/polaroid/pdc700.c:982
+#: camlibs/canon/library.c:1524 camlibs/polaroid/pdc700.c:982
 #, fuzzy
 msgid "Camera"
 msgstr "®iva slika!"
 
-#: camlibs/canon/library.c:1527
+#: camlibs/canon/library.c:1528
 #, fuzzy
 msgid "Camera Model (readonly)"
 msgstr "Model fotoaparata:"
 
-#: camlibs/canon/library.c:1532 camlibs/canon/library.c:1915
+#: camlibs/canon/library.c:1533 camlibs/canon/library.c:1918
 msgid "Owner name"
 msgstr ""
 
-#: camlibs/canon/library.c:1538 camlibs/canon/library.c:1928
+#: camlibs/canon/library.c:1539 camlibs/canon/library.c:1931
 msgid "Capture size class"
 msgstr ""
 
-#: camlibs/canon/library.c:1570 camlibs/canon/library.c:1954
+#: camlibs/canon/library.c:1571 camlibs/canon/library.c:1957
 msgid "ISO speed"
 msgstr ""
 
-#: camlibs/canon/library.c:1596 camlibs/canon/library.c:1597
-#: camlibs/canon/library.c:1630 camlibs/canon/library.c:1631
-#: camlibs/canon/library.c:1651 camlibs/canon/library.c:1652
-#: camlibs/canon/library.c:1685 camlibs/canon/library.c:1686
-#: camlibs/canon/library.c:1724 camlibs/canon/library.c:1725
-#: camlibs/canon/library.c:1758 camlibs/canon/library.c:1759
-#: camlibs/canon/library.c:1792 camlibs/canon/library.c:1793
-#: camlibs/canon/library.c:1826 camlibs/canon/library.c:1827
-#: camlibs/ptp2/library.c:1938 camlibs/ptp2/library.c:1940
+#: camlibs/canon/library.c:1597 camlibs/canon/library.c:1598
+#: camlibs/canon/library.c:1631 camlibs/canon/library.c:1632
+#: camlibs/canon/library.c:1652 camlibs/canon/library.c:1653
+#: camlibs/canon/library.c:1686 camlibs/canon/library.c:1687
+#: camlibs/canon/library.c:1725 camlibs/canon/library.c:1726
+#: camlibs/canon/library.c:1759 camlibs/canon/library.c:1760
+#: camlibs/canon/library.c:1793 camlibs/canon/library.c:1794
+#: camlibs/canon/library.c:1827 camlibs/canon/library.c:1828
+#: camlibs/ptp2/library.c:1940 camlibs/ptp2/library.c:1942
 #: camlibs/ptp2/ptp.c:3706
 msgid "Unknown"
 msgstr ""
 
-#: camlibs/canon/library.c:1604 camlibs/canon/library.c:1982
+#: camlibs/canon/library.c:1605 camlibs/canon/library.c:1985
 msgid "Shutter speed"
 msgstr ""
 
-#: camlibs/canon/library.c:1639 camlibs/canon/library.c:2125
+#: camlibs/canon/library.c:1640 camlibs/canon/library.c:2128
 #: camlibs/kodak/dc210/dc210.c:224 camlibs/kodak/dc210/dc210.c:383
 #: camlibs/konica/qm150.c:1033 camlibs/ptp2/config.c:2648
 #: camlibs/ptp2/ptp.c:3181 camlibs/ptp2/ptp.c:3207 camlibs/ricoh/library.c:501
@@ -757,15 +757,15 @@ msgstr ""
 msgid "Zoom"
 msgstr ""
 
-#: camlibs/canon/library.c:1659 camlibs/canon/library.c:2010
-#: camlibs/canon/library.c:2154 camlibs/ptp2/config.c:2671
+#: camlibs/canon/library.c:1660 camlibs/canon/library.c:2013
+#: camlibs/canon/library.c:2157 camlibs/ptp2/config.c:2671
 #: camlibs/ptp2/ptp.c:3195 camlibs/sierra/sierra.c:949
 #: camlibs/sierra/sierra.c:1270 camlibs/sierra/sierra.c:1485
 #: camlibs/sierra/sierra.c:1726
 msgid "Aperture"
 msgstr ""
 
-#: camlibs/canon/library.c:1693 camlibs/canon/library.c:2038
+#: camlibs/canon/library.c:1694 camlibs/canon/library.c:2041
 #: camlibs/konica/library.c:718 camlibs/konica/library.c:932
 #: camlibs/konica/qm150.c:771 camlibs/ricoh/library.c:497
 #: camlibs/sierra/sierra.c:909 camlibs/sierra/sierra.c:1241
@@ -773,211 +773,211 @@ msgstr ""
 msgid "Resolution"
 msgstr ""
 
-#: camlibs/canon/library.c:1732 camlibs/canon/library.c:2066
+#: camlibs/canon/library.c:1733 camlibs/canon/library.c:2069
 #, fuzzy
 msgid "Focus mode"
 msgstr "Barve"
 
-#: camlibs/canon/library.c:1766 camlibs/canon/library.c:2183
+#: camlibs/canon/library.c:1767 camlibs/canon/library.c:2186
 #, fuzzy
 msgid "Flash mode"
 msgstr "Nstavitev barv"
 
-#: camlibs/canon/library.c:1800 camlibs/canon/library.c:2095
+#: camlibs/canon/library.c:1801 camlibs/canon/library.c:2098
 #: camlibs/konica/library.c:681 camlibs/konica/library.c:895
 #: camlibs/ptp2/ptp.c:3177
 #, fuzzy
 msgid "Beep"
 msgstr "Obdr¾i"
 
-#: camlibs/canon/library.c:1835
+#: camlibs/canon/library.c:1836
 msgid "Date and Time (readonly)"
 msgstr ""
 
-#: camlibs/canon/library.c:1842
+#: camlibs/canon/library.c:1845
 msgid "Error"
 msgstr ""
 
-#: camlibs/canon/library.c:1845 camlibs/canon/library.c:1874
+#: camlibs/canon/library.c:1848 camlibs/canon/library.c:1877
 #, fuzzy
 msgid "Unavailable"
 msgstr "Ni na voljo"
 
-#: camlibs/canon/library.c:1849 camlibs/canon/library.c:2212
+#: camlibs/canon/library.c:1852 camlibs/canon/library.c:2215
 msgid "Set camera date to PC date"
 msgstr ""
 
-#: camlibs/canon/library.c:1853
+#: camlibs/canon/library.c:1856
 msgid "Firmware revision (readonly)"
 msgstr ""
 
-#: camlibs/canon/library.c:1878
+#: camlibs/canon/library.c:1881
 msgid "Power (readonly)"
 msgstr ""
 
-#: camlibs/canon/library.c:1883
+#: camlibs/canon/library.c:1886
 msgid "Driver"
 msgstr ""
 
-#: camlibs/canon/library.c:1887 camlibs/canon/library.c:2226
+#: camlibs/canon/library.c:1890 camlibs/canon/library.c:2229
 msgid "List all files"
 msgstr ""
 
-#: camlibs/canon/library.c:1893 camlibs/canon/library.c:2239
+#: camlibs/canon/library.c:1896 camlibs/canon/library.c:2242
 msgid "Keep filename on upload"
 msgstr ""
 
-#: camlibs/canon/library.c:1919 camlibs/canon/library.c:1958
-#: camlibs/canon/library.c:1986 camlibs/canon/library.c:2014
-#: camlibs/canon/library.c:2042 camlibs/canon/library.c:2070
-#: camlibs/canon/library.c:2099 camlibs/canon/library.c:2129
-#: camlibs/canon/library.c:2158 camlibs/canon/library.c:2187
-#: camlibs/canon/library.c:2216
+#: camlibs/canon/library.c:1922 camlibs/canon/library.c:1961
+#: camlibs/canon/library.c:1989 camlibs/canon/library.c:2017
+#: camlibs/canon/library.c:2045 camlibs/canon/library.c:2073
+#: camlibs/canon/library.c:2102 camlibs/canon/library.c:2132
+#: camlibs/canon/library.c:2161 camlibs/canon/library.c:2190
+#: camlibs/canon/library.c:2219
 msgid "Camera unavailable"
 msgstr ""
 
-#: camlibs/canon/library.c:1922
+#: camlibs/canon/library.c:1925
 msgid "Owner name changed"
 msgstr ""
 
-#: camlibs/canon/library.c:1924
+#: camlibs/canon/library.c:1927
 msgid "could not change owner name"
 msgstr ""
 
-#: camlibs/canon/library.c:1936
+#: camlibs/canon/library.c:1939
 msgid "Capture size class changed"
 msgstr ""
 
-#: camlibs/canon/library.c:1943
+#: camlibs/canon/library.c:1946
 msgid "Invalid capture size class setting"
 msgstr ""
 
-#: camlibs/canon/library.c:1972
+#: camlibs/canon/library.c:1975
 msgid "Invalid ISO speed setting"
 msgstr ""
 
-#: camlibs/canon/library.c:1975
+#: camlibs/canon/library.c:1978
 msgid "ISO speed changed"
 msgstr ""
 
-#: camlibs/canon/library.c:1977
+#: camlibs/canon/library.c:1980
 msgid "Could not change ISO speed"
 msgstr ""
 
-#: camlibs/canon/library.c:2000
+#: camlibs/canon/library.c:2003
 msgid "Invalid shutter speed setting"
 msgstr ""
 
-#: camlibs/canon/library.c:2003
+#: camlibs/canon/library.c:2006
 msgid "Shutter speed changed"
 msgstr ""
 
-#: camlibs/canon/library.c:2005
+#: camlibs/canon/library.c:2008
 #, fuzzy
 msgid "Could not change shutter speed"
 msgstr "Ne morem dobiti #%i"
 
-#: camlibs/canon/library.c:2028 camlibs/canon/library.c:2172
+#: camlibs/canon/library.c:2031 camlibs/canon/library.c:2175
 #, fuzzy
 msgid "Invalid aperture setting"
 msgstr "Nstavitev barv"
 
-#: camlibs/canon/library.c:2031 camlibs/canon/library.c:2175
+#: camlibs/canon/library.c:2034 camlibs/canon/library.c:2178
 #, fuzzy
 msgid "Aperture changed"
 msgstr "Nstavitev barv"
 
-#: camlibs/canon/library.c:2033 camlibs/canon/library.c:2177
+#: camlibs/canon/library.c:2036 camlibs/canon/library.c:2180
 #, fuzzy
 msgid "Could not change aperture"
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: camlibs/canon/library.c:2055
+#: camlibs/canon/library.c:2058
 msgid "Invalid resolution setting"
 msgstr ""
 
-#: camlibs/canon/library.c:2059
+#: camlibs/canon/library.c:2062
 msgid "Resolution changed"
 msgstr ""
 
-#: camlibs/canon/library.c:2061
+#: camlibs/canon/library.c:2064
 #, fuzzy
 msgid "Could not change resolution"
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: camlibs/canon/library.c:2084
+#: camlibs/canon/library.c:2087
 msgid "Invalid focus mode setting"
 msgstr ""
 
-#: camlibs/canon/library.c:2087
+#: camlibs/canon/library.c:2090
 #, fuzzy
 msgid "Focus mode changed"
 msgstr "Barve"
 
-#: camlibs/canon/library.c:2089
+#: camlibs/canon/library.c:2092
 #, fuzzy
 msgid "Could not change focus mode"
 msgstr "Ne morem dobiti vzorca"
 
-#: camlibs/canon/library.c:2113
+#: camlibs/canon/library.c:2116
 #, fuzzy
 msgid "Invalid beep mode setting"
 msgstr "Nstavitev barv"
 
-#: camlibs/canon/library.c:2116
+#: camlibs/canon/library.c:2119
 #, fuzzy
 msgid "Beep mode changed"
 msgstr "Barve"
 
-#: camlibs/canon/library.c:2118
+#: camlibs/canon/library.c:2121
 #, fuzzy
 msgid "Could not change beep mode"
 msgstr "Ne morem dobiti vzorca"
 
-#: camlibs/canon/library.c:2143
+#: camlibs/canon/library.c:2146
 msgid "Invalid zoom level"
 msgstr ""
 
-#: camlibs/canon/library.c:2146
+#: camlibs/canon/library.c:2149
 #, fuzzy
 msgid "Zoom level changed"
 msgstr "Barve"
 
-#: camlibs/canon/library.c:2148
+#: camlibs/canon/library.c:2151
 #, fuzzy
 msgid "Could not change zoom level"
 msgstr "Ne morem dobiti vzorca"
 
-#: camlibs/canon/library.c:2201
+#: camlibs/canon/library.c:2204
 #, fuzzy
 msgid "Invalid flash mode setting"
 msgstr "Nstavitev barv"
 
-#: camlibs/canon/library.c:2204
+#: camlibs/canon/library.c:2207
 #, fuzzy
 msgid "Flash mode changed"
 msgstr "Barve"
 
-#: camlibs/canon/library.c:2206
+#: camlibs/canon/library.c:2209
 #, fuzzy
 msgid "Could not change flash mode"
 msgstr "Ne morem dobiti vzorca"
 
-#: camlibs/canon/library.c:2219
+#: camlibs/canon/library.c:2222
 #, fuzzy
 msgid "time set"
 msgstr "Ponastavi"
 
-#: camlibs/canon/library.c:2221
+#: camlibs/canon/library.c:2224
 #, fuzzy
 msgid "could not set time"
 msgstr "Ne morem shraniti #%i"
 
-#: camlibs/canon/library.c:2454
+#: camlibs/canon/library.c:2457
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr ""
@@ -2232,7 +2232,7 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
 #: camlibs/ptp2/config.c:1644 camlibs/ptp2/config.c:2280
-#: camlibs/ptp2/library.c:2237 camlibs/ptp2/library.c:2241
+#: camlibs/ptp2/library.c:2239 camlibs/ptp2/library.c:2243
 #: camlibs/ptp2/ptp.c:3692 camlibs/ricoh/library.c:347
 #, fuzzy
 msgid "None"
@@ -4379,8 +4379,8 @@ msgstr ""
 msgid "Long distance"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1669 camlibs/ptp2/library.c:2246
-#: camlibs/ptp2/library.c:2260 camlibs/ptp2/ptp.c:3913
+#: camlibs/ptp2/config.c:1669 camlibs/ptp2/library.c:2248
+#: camlibs/ptp2/library.c:2262 camlibs/ptp2/ptp.c:3913
 msgid "Undefined"
 msgstr ""
 
@@ -5102,7 +5102,7 @@ msgstr ""
 msgid "PTP Protocol error, response expected"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1138
+#: camlibs/ptp2/library.c:1140
 msgid ""
 "PTP2 driver\n"
 "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -5116,79 +5116,79 @@ msgid ""
 "Enjoy!"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1215
+#: camlibs/ptp2/library.c:1217
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1221
+#: camlibs/ptp2/library.c:1223
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1227
+#: camlibs/ptp2/library.c:1229
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1238
+#: camlibs/ptp2/library.c:1240
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1354
+#: camlibs/ptp2/library.c:1356
 #, fuzzy
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1440
+#: camlibs/ptp2/library.c:1442
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1446
+#: camlibs/ptp2/library.c:1448
 #, fuzzy, c-format
 msgid "Canon EOS Capture failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1454
+#: camlibs/ptp2/library.c:1456
 #, fuzzy, c-format
 msgid "Canon EOS Get Changes failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1537
+#: camlibs/ptp2/library.c:1539
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1548
+#: camlibs/ptp2/library.c:1550
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1570
+#: camlibs/ptp2/library.c:1572
 #, fuzzy, c-format
 msgid "Canon Capture failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1686
+#: camlibs/ptp2/library.c:1688
 #, fuzzy
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1762
+#: camlibs/ptp2/library.c:1764
 #, c-format
 msgid "No event received, error %x."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1936
+#: camlibs/ptp2/library.c:1938
 msgid "read only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1937
+#: camlibs/ptp2/library.c:1939
 msgid "readwrite"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2071
+#: camlibs/ptp2/library.c:2073
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -5198,229 +5198,229 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2089
+#: camlibs/ptp2/library.c:2091
 #, c-format
 msgid ""
 "\n"
 "Capture Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2103
+#: camlibs/ptp2/library.c:2105
 #, c-format
 msgid "Display Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2119
+#: camlibs/ptp2/library.c:2121
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2135
+#: camlibs/ptp2/library.c:2137
 #, c-format
 msgid " PTP error %04x on query"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2152
+#: camlibs/ptp2/library.c:2154
 #, c-format
 msgid ""
 "\n"
 "Device Capabilities:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2156
+#: camlibs/ptp2/library.c:2158
 #, c-format
 msgid "\tFile Download, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2159
+#: camlibs/ptp2/library.c:2161
 #, c-format
 msgid "File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2161
+#: camlibs/ptp2/library.c:2163
 #, c-format
 msgid "No File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2165
+#: camlibs/ptp2/library.c:2167
 #, fuzzy, c-format
 msgid "File Upload\n"
 msgstr "Pomanj¹ujem sliko za 50%..."
 
-#: camlibs/ptp2/library.c:2167
+#: camlibs/ptp2/library.c:2169
 #, c-format
 msgid "No File Upload\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2172
+#: camlibs/ptp2/library.c:2174
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2174
+#: camlibs/ptp2/library.c:2176
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2177
+#: camlibs/ptp2/library.c:2179
 #, fuzzy, c-format
 msgid "Open Capture, "
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2179
+#: camlibs/ptp2/library.c:2181
 #, c-format
 msgid "No Open Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2185
+#: camlibs/ptp2/library.c:2187
 #, fuzzy, c-format
 msgid "Canon Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2189
+#: camlibs/ptp2/library.c:2191
 #, fuzzy, c-format
 msgid "Canon EOS Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2193
+#: camlibs/ptp2/library.c:2195
 #, fuzzy, c-format
 msgid "Nikon Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2195
+#: camlibs/ptp2/library.c:2197
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2204
+#: camlibs/ptp2/library.c:2206
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2210
+#: camlibs/ptp2/library.c:2212
 #, fuzzy, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:2221
+#: camlibs/ptp2/library.c:2223
 #, c-format
 msgid ""
 "\n"
 "Storage Devices Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2236
+#: camlibs/ptp2/library.c:2238
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2240
+#: camlibs/ptp2/library.c:2242
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2247
+#: camlibs/ptp2/library.c:2249
 msgid "Builtin ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2248
+#: camlibs/ptp2/library.c:2250
 msgid "Removable ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2249
+#: camlibs/ptp2/library.c:2251
 msgid "Builtin RAM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2250
+#: camlibs/ptp2/library.c:2252
 msgid "Removable RAM (memory card)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2252 camlibs/ptp2/library.c:2265
-#: camlibs/ptp2/library.c:2277
+#: camlibs/ptp2/library.c:2254 camlibs/ptp2/library.c:2267
+#: camlibs/ptp2/library.c:2279
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2256
+#: camlibs/ptp2/library.c:2258
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2261
+#: camlibs/ptp2/library.c:2263
 msgid "Generic Flat"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2262
+#: camlibs/ptp2/library.c:2264
 msgid "Generic Hierarchical"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2263
+#: camlibs/ptp2/library.c:2265
 msgid "Digital Camera Layout (DCIM)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2269
+#: camlibs/ptp2/library.c:2271
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2273
+#: camlibs/ptp2/library.c:2275
 msgid "Read-Write"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2274
+#: camlibs/ptp2/library.c:2276
 msgid "Read-Only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2275
+#: camlibs/ptp2/library.c:2277
 msgid "Read Only with Object deletion"
-msgstr ""
-
-#: camlibs/ptp2/library.c:2281
-#, c-format
-msgid "\tAccess Capability: %s\n"
 msgstr ""
 
 #: camlibs/ptp2/library.c:2283
 #, c-format
+msgid "\tAccess Capability: %s\n"
+msgstr ""
+
+#: camlibs/ptp2/library.c:2285
+#, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2288
+#: camlibs/ptp2/library.c:2290
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2293
+#: camlibs/ptp2/library.c:2295
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2301
+#: camlibs/ptp2/library.c:2303
 #, c-format
 msgid ""
 "\n"
 "Device Property Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2327
+#: camlibs/ptp2/library.c:2329
 #, c-format
 msgid " not read out.\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:3294 camlibs/ptp2/library.c:3298
+#: camlibs/ptp2/library.c:3296 camlibs/ptp2/library.c:3300
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3304
+#: camlibs/ptp2/library.c:3306
 msgid "Metadata only supported for MTP devices."
 msgstr ""
 
-#: camlibs/ptp2/library.c:4000
+#: camlibs/ptp2/library.c:4002
 msgid "Initializing Camera"
 msgstr ""
 
-#: camlibs/ptp2/library.c:4168
+#: camlibs/ptp2/library.c:4170
 #, c-format
 msgid ""
 "Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
