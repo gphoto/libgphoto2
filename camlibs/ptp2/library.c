@@ -828,6 +828,8 @@ static struct {
 	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1945259&group_id=8874 */
 	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2017171&group_id=8874&atid=358874 */
+	{"Fuji:FinePix S100fs",			0x04cb, 0x01db, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
