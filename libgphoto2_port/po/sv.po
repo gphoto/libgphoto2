@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-28 20:37+0100\n"
+"POT-Creation-Date: 2008-07-11 09:48+0200\n"
 "PO-Revision-Date: 2007-08-09 00:44+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
@@ -17,89 +17,89 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:211
+#: libgphoto2_port/gphoto2-port-info-list.c:213
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Frågade efter filnamnet \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:216
+#: libgphoto2_port/gphoto2-port-info-list.c:218
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kunde inte läsa in \"%s\": \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:224
+#: libgphoto2_port/gphoto2-port-info-list.c:226
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kunde inte hitta vissa funktioner i \"%s\": \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:236
+#: libgphoto2_port/gphoto2-port-info-list.c:238
 #, c-format
 msgid "'%s' already loaded"
 msgstr "\"%s\" redan inläst"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:245
+#: libgphoto2_port/gphoto2-port-info-list.c:247
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kunde inte läsa in lista av portdrivrutiner: \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:252
+#: libgphoto2_port/gphoto2-port-info-list.c:254
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Läste in \"%s\" (\"%s\") från \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:284
+#: libgphoto2_port/gphoto2-port-info-list.c:286
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Använder ltdl för att läsa in io-drivrutiner från \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:310
+#: libgphoto2_port/gphoto2-port-info-list.c:312
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Räknar poster (%i tillgängliga)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:319
+#: libgphoto2_port/gphoto2-port-info-list.c:321
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i vanliga poster tillgängliga."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:349
+#: libgphoto2_port/gphoto2-port-info-list.c:351
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Letar efter sökvägen \"%s\" (%i poster tillgängliga)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:361
+#: libgphoto2_port/gphoto2-port-info-list.c:363
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Startar sökning med reguljärt uttryck efter \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:371
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Provar \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:392
 msgid "regcomp failed"
 msgstr "regcomp misslyckades"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:401
+#: libgphoto2_port/gphoto2-port-info-list.c:403
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match misslyckades (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:411
 msgid "regexec failed"
 msgstr "regexec misslyckades"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:415
+#: libgphoto2_port/gphoto2-port-info-list.c:417
 msgid "Generic Port"
 msgstr "Allmän port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:441
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Slår upp posten \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:469
+#: libgphoto2_port/gphoto2-port-info-list.c:471
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Får information om posten %i (%i tillgängliga)..."
