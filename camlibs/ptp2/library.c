@@ -587,6 +587,7 @@ static struct {
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
 
+#if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
 	 * http://sourceforge.net/tracker/index.php?func=detail&aid=1847471&group_id=8874&atid=108874
@@ -596,10 +597,10 @@ static struct {
 	{"Panasonic:DMC-LZ2",             0x04da, 0x2372, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1405541&group_id=8874&atid=358874 */
 	{"Panasonic:DMC-LC1",             0x04da, 0x2372, 0},
+#endif
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
 	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
-
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1275100&group_id=8874&atid=358874 */
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
 
