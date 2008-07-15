@@ -1,39 +1,28 @@
-# translation of libgphoto2_2.1.6.8_libgphoto2-2.pot_template to Dutch
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Dutch translations for libgphoto2-2.4.1.
 # This file is distributed under the same license as the libgphoto2 package.
 #
-#    Translators, if you are not familiar with the PO format, gettext
-#    documentation is worth reading, especially sections dedicated to
-#    this format, e.g. by running:
-#         info -n '(gettext)PO Files'
-#         info -n '(gettext)Header Entry'
-#    Some information specific to po-debconf are available at
-#            /usr/share/doc/po-debconf/README-trans
-#         or http://www.debian.org/intl/l10n/po-debconf/README-trans#
-#    Developers do not need to manually edit POT or PO files.
-#
-# This is an unofficial translation
 # Kurt De Bree <kdebree(AT)telenet(DOT)be>, 2006.
-#
+# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: nl\n"
+"Project-Id-Version: libgphoto2-2.4.1\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-03-28 20:10+0100\n"
-"PO-Revision-Date: 2006-06-20 20:30+0100\n"
-"Last-Translator: Kurt De Bree <kdebree(AT)telenet(DOT)be>\n"
-"Language-Team: Dutch <debian-l10n-dutch@lists.debian.org>\n"
+"PO-Revision-Date: 2008-07-11 01:06+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.1\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: camlibs/adc65/adc65.c:243
 msgid ""
 "Adc65\n"
 "Benjamin Moos <benjamin@psnw.com>"
 msgstr ""
-"Adc65\n"
+"Adc65-stuurprogramma\n"
 "Benjamin Moos <benjamin@psnw.com>"
 
 #: camlibs/agfa-cl20/agfa_cl20.c:530
@@ -68,7 +57,7 @@ msgid ""
 "Number of hi-res PICs = %i\n"
 "Number of PICs = %i\n"
 msgstr ""
-"Uw USB camera heeft een Aox chipset.\n"
+"Uw USB-camera heeft een Aox-chipset.\n"
 "Aantal kleine afbeeldingen = %i\n"
 "Aantal grote afbeeldingen = %i\n"
 "Aantal afbeeldingen = %i\n"
@@ -78,7 +67,7 @@ msgid ""
 "Aox generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Generische aox stuurprogramma\n"
+"Generisch Aox-stuurprogramma\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/barbie/barbie.c:350
@@ -88,7 +77,7 @@ msgid ""
 "Firmware Version: %s"
 msgstr ""
 "Aantal afbeeldingen: %i\n"
-"Firmware versie: %s"
+"Firmware-versie: %s"
 
 #: camlibs/barbie/barbie.c:360
 msgid ""
@@ -112,44 +101,36 @@ msgstr ""
 "Jeff Laing <jeffl@SPATIALinfo.com>\n"
 "\n"
 "Geïmplementeerd met gebruik van documenten\n"
-"gevonden op het internet. Toelating gegeven door Vision."
+"gevonden op het internet.  Met permissie van Vision."
 
 #: camlibs/canon/canon.c:647
 #, c-format
 msgid "Could not create directory %s."
-msgstr "Kon de map %s niet aanmaken."
+msgstr "Kan map %s niet aanmaken."
 
 #: camlibs/canon/canon.c:650
 #, c-format
 msgid "Could not remove directory %s."
-msgstr "Kon de map %s niet verwijderen."
+msgstr "Kan map %s niet verwijderen."
 
 #: camlibs/canon/canon.c:1211 camlibs/canon/canon.c:1593
 #: camlibs/canon/usb.c:555
 msgid "lock keys failed."
-msgstr "kon de toetsen niet vergrendelen."
+msgstr "vergrendelen van toetsen is mislukt."
 
 #: camlibs/canon/canon.c:1312 camlibs/canon/canon.c:1313
 msgid "*UNKNOWN*"
 msgstr "*ONBEKEND*"
 
 #: camlibs/canon/canon.c:1496
-#, fuzzy, c-format
-msgid ""
-"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
-"status %li"
-msgstr ""
-"canon_int_capture_image: eerste canon_usb_list_all_dirs() mislukt met status "
-"%i"
+#, c-format
+msgid "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %li"
+msgstr "canon_int_capture_image: eerste canon_usb_list_all_dirs() is() is mislukt met status %li"
 
 #: camlibs/canon/canon.c:1631
 #, c-format
-msgid ""
-"canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
-"i"
-msgstr ""
-"canon_int_capture_image: laatste canon_usb_list_all_dirs() mislukt met "
-"status %i"
+msgid "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %i"
+msgstr "canon_int_capture_image: laatste canon_usb_list_all_dirs()() is mislukt met status %i"
 
 #: camlibs/canon/canon.c:2234
 #, c-format
@@ -163,18 +144,12 @@ msgstr "Kleine letters in %s niet toegestaan."
 
 #: camlibs/canon/canon.c:2834
 #, c-format
-msgid ""
-"canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
-msgstr ""
-"canon_int_list_directory: ERROR: eerste melding te kort (%i < minimum %i)"
+msgid "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
+msgstr "canon_int_list_directory: ERROR: eerste melding te kort (%i < minimum %i)"
 
 #: camlibs/canon/canon.c:2856
-msgid ""
-"canon_int_list_directory: Reached end of packet while examining the first "
-"dirent"
-msgstr ""
-"canon_int_list_directory: Einde van het pakket bereikt tijdens onderzoek van "
-"het eerste dirent."
+msgid "canon_int_list_directory: Reached end of packet while examining the first dirent"
+msgstr "canon_int_list_directory: Einde van het pakket bereikt tijdens onderzoek van het eerste dirent."
 
 #: camlibs/canon/canon.c:2941
 msgid "canon_int_list_directory: truncated directory entry encountered"
@@ -186,14 +161,11 @@ msgstr "Bestand beveiligd."
 
 #: camlibs/canon/canon.c:3397
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
-msgstr ""
-"Kon het JPEG-miniatuurvoorbeeld niet uit de data extraheren: Geen begin/einde"
+msgstr "Kon het JPEG-miniatuurvoorbeeld niet uit de data extraheren: Geen begin/einde"
 
 #: camlibs/canon/canon.c:3485
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
-msgstr ""
-"Kon het JPEG-miniatuurvoorbeeld niet uit de data extraheren: Data is geen "
-"JFIF"
+msgstr "Kon het JPEG-miniatuurvoorbeeld niet uit de data extraheren: Data is geen JFIF"
 
 #: camlibs/canon/canon.h:156 camlibs/canon/canon.h:170
 #, c-format
@@ -201,63 +173,52 @@ msgid "NULL parameter \"%s\" in %s line %i"
 msgstr "NULL parameter \"%s\" in %s regel %i"
 
 #: camlibs/canon/canon.h:576
-#, fuzzy, c-format
-msgid ""
-"Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
-msgstr "Kan het poorttype %i alias 0x%x in %s regel %i niet behandelen."
+#, c-format
+msgid "Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
+msgstr "Kan het poorttype %i (alias 0x%x) in %s regel %i niet behandelen."
 
 #: camlibs/canon/crc.c:234
 #, c-format
 msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
-msgstr "FATALE FOUTMELDING: initiële CRC-waarde voor lengte %d ongekend\n"
+msgstr "FATALE FOUT: initiële CRC-waarde voor lengte %d is onbekend\n"
 
 #: camlibs/canon/crc.c:247
 #, c-format
 msgid "unable to guess initial CRC value\n"
-msgstr "onmogelijk om de initiële CRC-waarde te raden\n"
+msgstr "kan de initiële CRC-waarde niet raden\n"
 
 #: camlibs/canon/crc.c:274
 #, c-format
-msgid ""
-"warning: CRC not checked (add len %d, value 0x%04x) "
-"#########################\n"
-msgstr ""
-"waarschuwing: CRC niet gecontroleerd (lengte %d, waarde 0x%04x) "
-"#########################\n"
+msgid "warning: CRC not checked (add len %d, value 0x%04x) #########################\n"
+msgstr "waarschuwing: CRC is niet gecontroleerd (lengte %d, waarde 0x%04x) #########################\n"
 
 #: camlibs/canon/library.c:96 camlibs/canon/library.c:1517
 msgid "Compatibility mode"
-msgstr ""
+msgstr "Compatibiliteitsmodus"
 
 #: camlibs/canon/library.c:97
-#, fuzzy
 msgid "Thumbnail"
-msgstr "Miniatuurvoorbeeld"
+msgstr "Miniatuur"
 
 #: camlibs/canon/library.c:98
-#, fuzzy
 msgid "Full Image"
-msgstr "Beeld"
+msgstr "Volledig beeld"
 
 #: camlibs/canon/library.c:210
-#, fuzzy
 msgid "Auto focus: one-shot"
-msgstr "Fout bij autofocus."
+msgstr "Autofocus: enkel shot"
 
 #: camlibs/canon/library.c:211
-#, fuzzy
 msgid "Auto focus: AI servo"
-msgstr "Fout bij autofocus."
+msgstr "Autofocus: AI-servo"
 
 #: camlibs/canon/library.c:212
-#, fuzzy
 msgid "Auto focus: AI focus"
-msgstr "Fout bij autofocus."
+msgstr "Autofocus: AI-focus"
 
 #: camlibs/canon/library.c:213
-#, fuzzy
 msgid "Manual focus"
-msgstr "Manuele focus"
+msgstr "Handmatige focus"
 
 #: camlibs/canon/library.c:218 camlibs/ptp2/ptp.c:3557
 msgid "RAW"
@@ -331,35 +292,33 @@ msgstr ""
 " en EOS Digital camera's in hun eigen (soms \"normaal\" genoemd) modus\n"
 " Het ondersteund ook een klein aantal Canon digital camcorders met de\n"
 " capaciteit voor stilstaande beelden.\n"
-"Het bevat code voor communicatie via een seriële poort of een USB-"
-"verbinding,\n"
+"Het bevat code voor communicatie via een seriële poort of een USB-verbinding,\n"
 " maar (nog) niet voor IEEE 1394 (Firewire).\n"
 "Het ondersteund meer dan 70 modellen, zowel oudere zoals de PowerShot A5\n"
 " en Pro70 uit 1998 en nieuwere zoals de PowerShot A510 en EOS 350D uit 2005\n"
 "Het is niet gecontroleerd voor de EOS 1D of EOS 1Ds.\n"
 "Bij de A50, kan het gebruik van 115200 bps effectief langzamer zijn dan het\n"
 " gebruik van 57600 bps\n"
-"Als u veel seriële transmissiefouten ervaart, probeer uw computer zo "
-"inactief\n"
+"Als u veel seriële transmissiefouten ervaart, probeer uw computer zo inactief\n"
 " mogelijk te houden (i.e. geen diskactiviteit)\n"
 
 #: camlibs/canon/library.c:413
 #, c-format
 msgid "Camera unavailable: %s"
-msgstr "Camera onbeschikbaar: %s"
+msgstr "Camera is onbeschikbaar: %s"
 
 #: camlibs/canon/library.c:433
 msgid "Switching Camera Off"
-msgstr "Camera uitschakelen"
+msgstr "Uitschakelen van camera"
 
 #: camlibs/canon/library.c:492 camlibs/canon/library.c:529
 msgid "Error capturing image"
-msgstr "Foutmelding bij de beeldopname"
+msgstr "Fout bij de beeldopname"
 
 #: camlibs/canon/library.c:585 camlibs/canon/library.c:1021
 #, c-format
 msgid "Could not get disk name: %s"
-msgstr "Kon de schijfnaam niet vinden: %s"
+msgstr "Kan de schijfnaam niet vinden: %s"
 
 #: camlibs/canon/library.c:586 camlibs/canon/library.c:1022
 msgid "No reason available"
@@ -368,23 +327,22 @@ msgstr "Geen reden voorhanden"
 #: camlibs/canon/library.c:593
 #, c-format
 msgid "Could not get disk info: %s"
-msgstr "Kon de schijfinformatie niet vinden: %s"
+msgstr "Kan de schijfinformatie niet vinden: %s"
 
 #: camlibs/canon/library.c:662
 #, c-format
 msgid "Internal error #1 in get_file_func() (%s line %i)"
-msgstr "Interne foutmelding #1 in get_file_func() (%s line %i)"
+msgstr "**Interne fout** #1 in get_file_func() (%s line %i)"
 
 #: camlibs/canon/library.c:685
 #, c-format
 msgid "No audio file could be found for %s"
-msgstr "Er kon geen geluidsbestand gevonden worden voor %s"
+msgstr "Er is geen geluidsbestand gevonden voor %s"
 
 #: camlibs/canon/library.c:733 camlibs/canon/library.c:771
 #, c-format
 msgid "%s is a file type for which no thumbnail is provided"
-msgstr ""
-"%s is een bestandstype waarvoor geen miniatuurvoorbeeld wordt verstrekt"
+msgstr "%s is een bestandstype waarvoor geen miniatuurvoorbeeld wordt verstrekt"
 
 #: camlibs/canon/library.c:944
 #, c-format
@@ -441,13 +399,13 @@ msgid ""
 "Time: %s\n"
 msgstr ""
 "\n"
-"Identificatie camera:\n"
+"Camera-identificatie:\n"
 "  Model: %s\n"
 "  Eigenaar: %s\n"
 "\n"
-"Status voeding: %s\n"
+"Status van voeding: %s\n"
 "\n"
-"Informatie Flash-disk:\n"
+"Informatie over flash-schijf:\n"
 "%s\n"
 "\n"
 "Tijd: %s\n"
@@ -464,52 +422,48 @@ msgid ""
 " Holger Klemm\n"
 " Stephen H. Westin"
 msgstr ""
-"Canon PowerShot series stuurprogramma door\n"
+"Canon PowerShot-stuurprogramma door:\n"
 " Wolfgang G. Reissnegger,\n"
 " Werner Almesberger,\n"
 " Edouard Lafargue,\n"
 " Philippe Marzouk,\n"
-"A5 toevoegingen door Ole W. Saastad\n"
-"Bijkomende verbeteringen door\n"
+"A5-toevoegingen door:\n"
+" Ole W. Saastad\n"
+"Verdere verbeteringen door:\n"
 " Holger Klemm\n"
 " Stephen H. Westin"
 
 #: camlibs/canon/library.c:1098
 msgid "Error deleting file"
-msgstr "Foutmelding bij het verwijderen van het bestand"
+msgstr "Fout bij verwijderen van bestand"
 
 #: camlibs/canon/library.c:1114
 msgid "Error deleting associated thumbnail file"
-msgstr ""
-"Foutmelding bij het verwijderen van het bijbehorende miniatuurvoorbeeld-"
-"bestand"
+msgstr "Fout bij verwijderen van bijbehorende miniatuurvoorbeeldbestand"
 
 #: camlibs/canon/library.c:1244 camlibs/canon/library.c:1377
-msgid ""
-"Speeds greater than 57600 are not supported for uploading to this camera"
-msgstr ""
-"Het uploaden naar deze camera met snelheden hoger dan 57600 wordt niet "
-"ondersteund"
+msgid "Speeds greater than 57600 are not supported for uploading to this camera"
+msgstr "Het uploaden naar deze camera met snelheden hoger dan 57600 wordt niet ondersteund"
 
 #: camlibs/canon/library.c:1261 camlibs/canon/library.c:1395
 msgid "Could not get flash drive letter"
-msgstr "Kon de flash-diskletter niet vinden"
+msgstr "Kan de flash-diskletter niet vinden"
 
 #: camlibs/canon/library.c:1305 camlibs/canon/library.c:1418
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
 msgstr ""
-"Kon niet uploaden, geen vrije mapnaam beschikbaar!\n"
-"999CANON mapnaam bestaat en bevat een AUT_9999.JPG afbeelding."
+"Kan niet uploaden, geen vrije mapnaam beschikbaar!\n"
+"Mapnaam 999CANON bestaat al en bevat een afbeelding AUT_9999.JPG."
 
 #: camlibs/canon/library.c:1327 camlibs/canon/library.c:1438
 msgid "Could not create \\DCIM directory."
-msgstr "Kon de \\DCIM-map niet aanmaken."
+msgstr "Kan de \\DCIM-map niet aanmaken."
 
 #: camlibs/canon/library.c:1333 camlibs/canon/library.c:1444
 msgid "Could not create destination directory."
-msgstr "Kon geen bestemmingsmap aanmaken."
+msgstr "Kan geen bestemmingsmap aanmaken."
 
 #: camlibs/canon/library.c:1482 camlibs/ptp2/config.c:2731
 #: camlibs/ptp2/config.c:2791
@@ -529,14 +483,12 @@ msgid "Owner name"
 msgstr "Naam van de eigenaar"
 
 #: camlibs/canon/library.c:1500 camlibs/canon/library.c:1806
-#, fuzzy
 msgid "Capture size class"
-msgstr "Vertraging voor-opname"
+msgstr "Afmetingsklasse van opname"
 
 #: camlibs/canon/library.c:1532 camlibs/canon/library.c:1825
-#, fuzzy
 msgid "ISO speed"
-msgstr "ISO snelheid"
+msgstr "ISO-snelheid"
 
 #: camlibs/canon/library.c:1558 camlibs/canon/library.c:1559
 #: camlibs/canon/library.c:1592 camlibs/canon/library.c:1593
@@ -546,10 +498,9 @@ msgstr "ISO snelheid"
 #: camlibs/ptp2/library.c:2028 camlibs/ptp2/library.c:2030
 #: camlibs/ptp2/ptp.c:3675
 msgid "Unknown"
-msgstr "Onbekend"
+msgstr "(onbekend)"
 
 #: camlibs/canon/library.c:1566 camlibs/canon/library.c:1865
-#, fuzzy
 msgid "Shutter speed"
 msgstr "Sluitersnelheid"
 
@@ -569,7 +520,6 @@ msgid "Resolution"
 msgstr "Resolutie"
 
 #: camlibs/canon/library.c:1673 camlibs/canon/library.c:1985
-#, fuzzy
 msgid "Focus mode"
 msgstr "Focusmodus"
 
@@ -579,7 +529,7 @@ msgstr "Datum en tijd (alleen lezen)"
 
 #: camlibs/canon/library.c:1714
 msgid "Error"
-msgstr "Foutmelding"
+msgstr "Fout"
 
 #: camlibs/canon/library.c:1717 camlibs/canon/library.c:1746
 msgid "Unavailable"
@@ -587,11 +537,11 @@ msgstr "Onbeschikbaar"
 
 #: camlibs/canon/library.c:1721 camlibs/canon/library.c:2025
 msgid "Set camera date to PC date"
-msgstr "Stel camera-datum in met PC-datum"
+msgstr "Camera-datum instellen aan hand van PC-datum"
 
 #: camlibs/canon/library.c:1725
 msgid "Firmware revision (readonly)"
-msgstr "Revisie basissoftware (alleen lezen)"
+msgstr "Firmware-revisie (alleen lezen)"
 
 #: camlibs/canon/library.c:1750
 msgid "Power (readonly)"
@@ -603,7 +553,7 @@ msgstr "Stuurprogramma"
 
 #: camlibs/canon/library.c:1759 camlibs/canon/library.c:2039
 msgid "List all files"
-msgstr "Toon alle bestanden"
+msgstr "Alle bestanden tonen"
 
 #: camlibs/canon/library.c:1765 camlibs/canon/library.c:2052
 msgid "Keep filename on upload"
@@ -614,184 +564,163 @@ msgstr "Bestandsnaam bij het uploaden behouden"
 #: camlibs/canon/library.c:1949 camlibs/canon/library.c:1989
 #: camlibs/canon/library.c:2029
 msgid "Camera unavailable"
-msgstr "Camera onbeschikbaar"
+msgstr "Camera is onbeschikbaar"
 
 #: camlibs/canon/library.c:1800
 msgid "Owner name changed"
-msgstr "Naam van de eigenaar gewijzigd"
+msgstr "Naam van de eigenaar is gewijzigd"
 
 #: camlibs/canon/library.c:1802
 msgid "could not change owner name"
-msgstr "kon de naam van de eigenaar niet wijzigen"
+msgstr "Kan de naam van de eigenaar niet wijzigen"
 
 #: camlibs/canon/library.c:1814
 msgid "Capture size class changed"
-msgstr ""
+msgstr "Afmetingsklasse van opname is gewijzigd"
 
 #: camlibs/canon/library.c:1821
 msgid "Invalid capture size class setting"
-msgstr ""
+msgstr "Ongeldige afmetingsklasse van opname"
 
 #: camlibs/canon/library.c:1849
 msgid "Invalid ISO speed setting"
-msgstr ""
+msgstr "Ongeldige ISO-snelheid"
 
 #: camlibs/canon/library.c:1852
-#, fuzzy
 msgid "ISO speed changed"
-msgstr "Naam van de eigenaar gewijzigd"
+msgstr "ISO-snelheid is gewijzigd"
 
 #: camlibs/canon/library.c:1854
-#, fuzzy
 msgid "Could not change ISO speed"
-msgstr "kon de naam van de eigenaar niet wijzigen"
+msgstr "Kan de ISO-snelheid niet wijzigen"
 
 #: camlibs/canon/library.c:1889
 msgid "Invalid shutter speed setting"
-msgstr ""
+msgstr "Ongeldige sluitersnelheid"
 
 #: camlibs/canon/library.c:1892
-#, fuzzy
 msgid "Shutter speed changed"
-msgstr "Sluitersnelheid"
+msgstr "Sluitersnelheid is gewijzigd"
 
 #: camlibs/canon/library.c:1894
-#, fuzzy
 msgid "Could not change shutter speed"
-msgstr "kon de naam van de eigenaar niet wijzigen"
+msgstr "Kan de sluitersnelheid niet wijzigen"
 
 #: camlibs/canon/library.c:1929
-#, fuzzy
 msgid "Invalid aperture setting"
-msgstr "Diafragma instelling"
+msgstr "Ongeldige diafragma-instelling"
 
 #: camlibs/canon/library.c:1932
-#, fuzzy
 msgid "Aperture changed"
-msgstr "Diafragma instelling"
+msgstr "Diafragma is gewijzigd"
 
 #: camlibs/canon/library.c:1934
-#, fuzzy
 msgid "Could not change aperture"
-msgstr "kon de naam van de eigenaar niet wijzigen"
+msgstr "Kan het diafragma niet wijzigen"
 
 #: camlibs/canon/library.c:1968
 msgid "Invalid resolution setting"
-msgstr ""
+msgstr "Ongeldige resolutie"
 
 #: camlibs/canon/library.c:1972
-#, fuzzy
 msgid "Resolution changed"
-msgstr "Resolutieomschakeling"
+msgstr "Resolutie is gewijzigd"
 
 #: camlibs/canon/library.c:1974
-#, fuzzy
 msgid "Could not change resolution"
-msgstr "Kon de map niet aanmaken."
+msgstr "Kan de resolutie niet wijzigen"
 
 #: camlibs/canon/library.c:2009
 msgid "Invalid focus mode setting"
-msgstr ""
+msgstr "Ongeldige focusmodus"
 
 #: camlibs/canon/library.c:2012
-#, fuzzy
 msgid "Focus mode changed"
-msgstr "Focusmodus"
+msgstr "Focusmodus is gewijzigd"
 
 #: camlibs/canon/library.c:2014
-#, fuzzy
 msgid "Could not change focus mode"
-msgstr "kon de naam van de eigenaar niet wijzigen"
+msgstr "Kan de focusmodus niet wijzigen"
 
 #: camlibs/canon/library.c:2032
 msgid "time set"
-msgstr "tijd ingesteld"
+msgstr "tijd is ingesteld"
 
 #: camlibs/canon/library.c:2034
 msgid "could not set time"
-msgstr "kon de tijd niet instellen"
+msgstr "kan de tijd niet instellen"
 
 #: camlibs/canon/library.c:2267
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
-msgstr ""
-"Niet-ondersteunde poorttype %i = 0x%x gegeven. Initialisatie onmogelijk."
+msgstr "Niet-ondersteund poorttype %i = 0x%x gegeven.  Initialisatie is onmogelijk."
 
 #: camlibs/canon/serial.c:706 camlibs/canon/serial.c:771
 msgid "Battery exhausted, camera off."
-msgstr "Batterij uitgeput, camera uit."
+msgstr "Batterij is leeg, camera uit."
 
 #: camlibs/canon/serial.c:709
 msgid "ERROR: unexpected message"
-msgstr "FOUTMELDING: onverwacht bericht"
+msgstr "FOUT: onverwacht bericht"
 
 #: camlibs/canon/serial.c:719
 msgid "ERROR: message overrun"
-msgstr "FOUTMELDING: berichtoverloop"
+msgstr "FOUT: berichtoverloop"
 
 #: camlibs/canon/serial.c:748
 msgid "ERROR: out of sequence."
-msgstr "FOUTMELDING: buiten het bereik"
+msgstr "FOUT: niet op volgorde."
 
 #: camlibs/canon/serial.c:753
 msgid "ERROR: unexpected packet type."
-msgstr "FOUTMELDING: onverwacht pakkettype."
+msgstr "FOUT: onverwacht pakkettype."
 
 #: camlibs/canon/serial.c:763
 msgid "ERROR: message format error."
-msgstr "FOUTMELDING: berichtformaat fout."
+msgstr "FOUT: onjuiste berichtopmaak."
 
 #: camlibs/canon/serial.c:775
 msgid "ERROR: unexpected message2."
-msgstr "FOUTMELDING: onverwacht bericht2."
+msgstr "FOUT: onverwacht bericht2."
 
 #: camlibs/canon/serial.c:990
 msgid "Uploading file..."
-msgstr "Bezig met uploaden van bestand..."
+msgstr "Uploaden van bestand..."
 
 #: camlibs/canon/serial.c:1061 camlibs/digita/digita.c:260
 msgid "Getting file..."
-msgstr "Bezig met bestand te halen..."
+msgstr "Ophalen van bestand..."
 
 #: camlibs/canon/serial.c:1131
-msgid ""
-"canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
-"entries"
-msgstr ""
-"canon_serial_get_dirents: canon_serial_dialogue mislukt om mapingang op te "
-"halen"
+msgid "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory entries"
+msgstr "canon_serial_get_dirents: Ophalen van mapitems door canon_serial_dialogue() is mislukt"
 
 #: camlibs/canon/serial.c:1139
 #, c-format
-msgid ""
-"canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
-msgstr ""
-"canon_serial_get_dirents: Initieel direntpakket te kort (maar %i bytes)"
+msgid "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
+msgstr "canon_serial_get_dirents: Eerste 'dirent'-pakket is te kort (slechts %i bytes)"
 
 #: camlibs/canon/serial.c:1159
 #, c-format
 msgid "canon_serial_get_dirents: Could not allocate %i bytes of memory"
-msgstr "canon_serial_get_dirents: Kon geen %i bytes van geheugen reserveren"
+msgstr "canon_serial_get_dirents: Kan geen %i bytes geheugen reserveren"
 
 #: camlibs/canon/serial.c:1179
 msgid "canon_serial_get_dirents: Failed to read another directory entry"
-msgstr "canon_serial_get_dirents: Mislukt om een andere mapingang te lezen"
+msgstr "canon_serial_get_dirents: Kan volgende mapitem niet lezen"
 
 #: camlibs/canon/serial.c:1197
 msgid "canon_serial_get_dirents: Truncated directory entry received"
-msgstr "canon_serial_get_dirents: Afgekapte mapingang ontvangen"
+msgstr "canon_serial_get_dirents: Afgekapt mapitem ontvangen"
 
 #: camlibs/canon/serial.c:1225
 msgid "canon_serial_get_dirents: Too many dirents, we must be looping."
-msgstr ""
-"canon_serial_get_dirents: Teveel dirents, er moet een lus gemaakt worden."
+msgstr "canon_serial_get_dirents: Te veel mapitems -- oneindige lus?"
 
 #: camlibs/canon/serial.c:1235
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
-msgstr ""
-"canon_serial_get_dirents: Kon de buffergrootte van het dirent niet naar %i "
-"bytes wijzigen"
+msgstr "canon_serial_get_dirents: Kan grootte van mapitemsbuffer niet naar %i bytes wijzigen"
 
 #: camlibs/canon/serial.c:1304
 msgid "Error changing speed."
@@ -799,20 +728,19 @@ msgstr "Fout bij wijzigen van snelheid."
 
 #: camlibs/canon/serial.c:1313
 msgid "Resetting protocol..."
-msgstr "Protocol opnieuw instellen..."
+msgstr "Opnieuw instellen van protocol..."
 
 #: camlibs/canon/serial.c:1322
-#, fuzzy
 msgid "Camera OK."
-msgstr "Camera OK.\n"
+msgstr "Camera is OK."
 
 #: camlibs/canon/serial.c:1335
 msgid "Looking for camera ..."
-msgstr "Zoek naar camera..."
+msgstr "Zoeken naar camera..."
 
 #: camlibs/canon/serial.c:1345
 msgid "Trying to contact camera..."
-msgstr "Probeer camera te verbinden..."
+msgstr "Verbinding maken met camera..."
 
 #: camlibs/canon/serial.c:1349
 msgid "Communication error 1"
@@ -839,7 +767,7 @@ msgstr "Onbekend model \"%s\""
 
 #: camlibs/canon/serial.c:1416
 msgid "Bad EOT"
-msgstr "Foute EOT"
+msgstr "Onjuiste EOT"
 
 #: camlibs/canon/serial.c:1422
 msgid "Communication error 2"
@@ -851,7 +779,7 @@ msgstr "Communicatiefout 3"
 
 #: camlibs/canon/serial.c:1449
 msgid "Changing speed... wait..."
-msgstr "Wijzig snelheid...even geduld..."
+msgstr "Wijzigen van snelheid... even geduld..."
 
 #: camlibs/canon/serial.c:1454
 msgid "Error changing speed"
@@ -867,20 +795,20 @@ msgstr "Fout bij wachten op ACK tijdens de initialisatie"
 
 #: camlibs/canon/serial.c:1475
 msgid "Connected to camera"
-msgstr "Met camera verbonden"
+msgstr "Verbonden met de camera"
 
 #: camlibs/canon/serial.c:1513
 msgid "ERROR: a fatal error condition was detected, can't continue "
-msgstr "FOUTMELDING: een fatale fout werd ontdekt, kan niet doorgaan "
+msgstr "FOUT: een fatale fouttoestand werd gevonden, kan niet verdergaan "
 
 #: camlibs/canon/serial.c:1529
 #, c-format
 msgid "ERROR: %d is too big"
-msgstr "FOUTMELDING: %d is te groot"
+msgstr "FOUT: %d is te groot"
 
 #: camlibs/canon/serial.c:1539
 msgid "Getting thumbnail..."
-msgstr "Miniatuurvoorbeeld ophalen..."
+msgstr "Ophalen van miniatuur..."
 
 #: camlibs/canon/usb.c:221
 msgid "NOT RECOGNIZED"
@@ -888,7 +816,7 @@ msgstr "NIET HERKEND"
 
 #: camlibs/canon/usb.c:236
 msgid "Could not establish initial contact with camera"
-msgstr "Kon geen eerste contact met camera maken"
+msgstr "Kan geen eerste contact met camera maken"
 
 #: camlibs/canon/usb.c:242
 msgid "Camera was already active"
@@ -905,136 +833,92 @@ msgstr "Onbekend (een of andere fout)"
 #: camlibs/canon/usb.c:251
 #, c-format
 msgid "Initial camera response '%c' unrecognized"
-msgstr "Eerste antwoord van camera '%c' onbekend"
+msgstr "Eerste antwoord van camera '%c' is onbekend"
 
 #: camlibs/canon/usb.c:266
-#, fuzzy, c-format
-msgid ""
-"Step #2 of initialization failed: (\"%s\" on read of %i) Camera not "
-"operational"
-msgstr ""
-"Stap 2 van initialisatie mislukt: \"%s\" gelezen van %i) Camera werkt niet"
+#, c-format
+msgid "Step #2 of initialization failed: (\"%s\" on read of %i) Camera not operational"
+msgstr "Stap 2 van initialisatie is mislukt: \"%s\" bij lezen van %i)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:272
 #, c-format
-msgid ""
-"Step #2 of initialization failed! (returned %i bytes, expected %i) Camera "
-"not operational"
-msgstr ""
-"Stap 2 van initialisatie mislukt! ( %i bytes ontvangen, %i verwacht) Camera "
-"werkt niet"
+msgid "Step #2 of initialization failed! (returned %i bytes, expected %i) Camera not operational"
+msgstr "Stap 2 van initialisatie is mislukt: ( %i bytes ontvangen, %i verwacht)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:291
 #, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
-msgstr ""
-"Stap 3 van initialisatie mislukt: \"%s\" gelezen van %i Camera werkt niet"
+msgid "Step #3 of initialization failed: \"%s\" on read of %i Camera not operational"
+msgstr "Stap 3 van initialisatie is mislukt: (\"%s\" bij lezen van %i)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:298 camlibs/canon/usb.c:325
 #, c-format
-msgid ""
-"Step #3 of initialization failed! (returned %i, expected %i) Camera not "
-"operational"
-msgstr ""
-"Stap 3 van initialisatie mislukt! ( %i bytes ontvangen, %i verwacht) "
-"Camerawerkt niet"
+msgid "Step #3 of initialization failed! (returned %i, expected %i) Camera not operational"
+msgstr "Stap 3 van initialisatie is mislukt: ( %i bytes ontvangen, %i verwacht)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:318
 #, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on write of %i Camera not "
-"operational"
-msgstr ""
-"Stap 3 van initialisatie mislukt: \"%s\" geschreven van %i camera werkt niet"
+msgid "Step #3 of initialization failed: \"%s\" on write of %i Camera not operational"
+msgstr "Stap 3 van initialisatie is mislukt: (\"%s\" bij schrijven van %i)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:356 camlibs/canon/usb.c:397
 #, c-format
 msgid "Step #4 failed: \"%s\" on read of %i. Camera not operational"
-msgstr "Stap #4 mslukt: \"%s\" gelezen of %i. Camera werkt niet"
+msgstr "Stap 4 is mislukt: (\"%s\" bij lezen van %i)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:363 camlibs/canon/usb.c:404
 #, c-format
 msgid "Step #4 failed! (returned %i, expected %i) Camera not operational"
-msgstr "Stap #4 mslukt! (%i ontvangen, %i verwacht). Camera werkt niet"
+msgstr "Stap 4 is mislukt: (%i ontvangen, %i verwacht)  Camera werkt niet"
 
 #: camlibs/canon/usb.c:508
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
-msgstr ""
-"Camera niet gereed, meerdere 'identificeer camera' aanvragen mislukt: %s"
+msgstr "Camera is niet gereed; meerdere 'identificeer camera'-aanvragen zijn mislukt: %s"
 
 #: camlibs/canon/usb.c:546 camlibs/canon/usb.c:562
 #, c-format
 msgid "Camera not ready, get_battery failed: %s"
-msgstr "Camera niet gereed, get_battery mislukt: %s"
+msgstr "Camera is niet gereed; get_battery() is mislukt: %s"
 
 #: camlibs/canon/usb.c:627
 #, c-format
-msgid ""
-"canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function "
-"(%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: Onverwachte lengte teruggekregen van \"lock keys\"-"
-"functie (%i bytes ontvangen, %i verwacht)"
+msgid "canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function (%i bytes, expected %i)"
+msgstr "canon_usb_lock_keys: Onverwachte lengte teruggekregen van \"lock keys\"-functie (%i bytes ontvangen, %i verwacht)"
 
 #: camlibs/canon/usb.c:649 camlibs/canon/usb.c:675 camlibs/canon/usb.c:715
 #, c-format
 msgid "canon_usb_lock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: Onverwachte lengte teruggekregen (%i bytes ontvangen, %"
-"i verwacht)"
+msgstr "canon_usb_lock_keys: Onverwachte lengte teruggekregen (%i bytes ontvangen, %i verwacht)"
 
 #: camlibs/canon/usb.c:758 camlibs/canon/usb.c:774
 #, c-format
-msgid ""
-"canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: Onverwachte lengte teruggekregen (%i bytes ontvangen, %"
-"i verwacht)"
+msgid "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
+msgstr "canon_usb_lock_keys: Onverwachte lengte teruggekregen (%i bytes ontvangen, %i verwacht)"
 
 #: camlibs/canon/usb.c:830 camlibs/canon/usb.c:849
 #, c-format
-msgid ""
-"canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %"
-"i)"
-msgstr ""
-"canon_usb_get_body_id: Onverwachte data-lengte teruggekregen (%i bytes "
-"ontvangen, %i verwacht)"
+msgid "canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %i)"
+msgstr "canon_usb_get_body_id: Onverwachte data-lengte teruggekregen (%i bytes ontvangen, %i verwacht)"
 
 #: camlibs/canon/usb.c:911
 #, c-format
-msgid ""
-"canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f "
-"sec \"%s\""
-msgstr ""
-"canon_usb_poll_interrupt_pipe: lezen van interrupt mislukt na %i pogingen, %"
-"6.3f sec \"%s\""
+msgid "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f sec \"%s\""
+msgstr "canon_usb_poll_interrupt_pipe: Lezen van interrupt is mislukt na %i pogingen, %6.3f sec \"%s\""
 
 #: camlibs/canon/usb.c:984
 #, c-format
-msgid ""
-"canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
-"\""
-msgstr ""
-"canon_usb_poll_interrupt_multiple: lezen van interrupt mislukt na %i "
-"pogingen, \"%s\""
+msgid "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s\""
+msgstr "canon_usb_poll_interrupt_multiple: Lezen van interrupt is mislukt na %i pogingen, \"%s\""
 
 #: camlibs/canon/usb.c:1114
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
-msgstr ""
-"canon_usb_capture_dialogue: Foute pakketlengte 0x%04x voor "
-"miniatuurvoorbeeldlengte"
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
+msgstr "canon_usb_capture_dialogue: Foute pakketlengte 0x%04x voor miniatuurvoorbeeldlengte"
 
 #: camlibs/canon/usb.c:1131
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
-msgstr ""
-"canon_usb_capture_dialogue: Foute pakketlengte 0x%04x voor volledige "
-"afbeeldingslengte"
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
+msgstr "canon_usb_capture_dialogue: Foute pakketlengte 0x%04x voor volledige afbeeldingslengte"
 
 #: camlibs/canon/usb.c:1150
 #, fuzzy
@@ -1051,26 +935,21 @@ msgstr "canon_usb_capture_dialogue: lezen van tweede interrupt buiten bereik"
 
 #: camlibs/canon/usb.c:1197
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
-msgstr ""
-"canon_usb_capture_dialogue: fotografische fout gesignaleerd, code = 0x%08x"
+msgid "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
+msgstr "canon_usb_capture_dialogue: fotografische fout gesignaleerd, code = 0x%08x"
 
 #: camlibs/canon/usb.c:1217
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: lezen van derde EOS interrupt buiten bereik"
+msgstr "canon_usb_capture_dialogue: lezen van derde EOS interrupt buiten bereik"
 
 #: camlibs/canon/usb.c:1253
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: lezen van vierde EOS interrupt buiten bereik"
+msgstr "canon_usb_capture_dialogue: lezen van vierde EOS interrupt buiten bereik"
 
 #: camlibs/canon/usb.c:1441
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
-msgstr ""
-"canon_usb_dialogue: actiegedeelte te groot, past niet in de buffer (%i > %i)"
+msgstr "canon_usb_dialogue: actiegedeelte te groot, past niet in de buffer (%i > %i)"
 
 #: camlibs/canon/usb.c:1548
 #, c-format
@@ -1092,12 +971,8 @@ msgstr "canon_usb_set_file_attributes: canon_usb_dialogue mislukt"
 
 #: camlibs/canon/usb.c:2169
 #, c-format
-msgid ""
-"Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error "
-"status 0x%08x from camera"
-msgstr ""
-"Waarschuwing in canon_usb_set_file_attributes: canon_usb_dialogue geeft "
-"foute status 0x%08x van camera"
+msgid "Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%08x from camera"
+msgstr "Waarschuwing in canon_usb_set_file_attributes: canon_usb_dialogue geeft foute status 0x%08x van camera"
 
 #: camlibs/canon/usb.c:2255
 #, c-format
@@ -1115,48 +990,28 @@ msgid "File upload failed."
 msgstr "Uploaden bestand mislukt."
 
 #: camlibs/canon/usb.c:2399
-msgid ""
-"File was too big. You may have to turn your camera off and back on before "
-"uploading more files."
-msgstr ""
-"Het bestand was te groot. gelieve uw camera uit en terug aan te schakelen "
-"vooraleer meer bestanden te uploaden."
+msgid "File was too big. You may have to turn your camera off and back on before uploading more files."
+msgstr "Het bestand was te groot. gelieve uw camera uit en terug aan te schakelen vooraleer meer bestanden te uploaden."
 
 #: camlibs/canon/usb.c:2446
 #, c-format
-msgid ""
-"canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
-"too long."
-msgstr ""
-"canon_usb_get_dirents: Actiegedeelte past niet in de buffer, "
-"'%.96s' (afgekapt) te lang"
+msgid "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
+msgstr "canon_usb_get_dirents: Actiegedeelte past niet in de buffer, '%.96s' (afgekapt) te lang"
 
 #: camlibs/canon/usb.c:2463
 #, c-format
-msgid ""
-"canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
-"returned %i"
-msgstr ""
-"canon_usb_get_dirents: canon_usb_long_dialogue mislukte bij het ophalen van "
-"lijstelementen, status %i"
+msgid "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, returned %i"
+msgstr "canon_usb_get_dirents: canon_usb_long_dialogue mislukte bij het ophalen van lijstelementen, status %i"
 
 #: camlibs/canon/usb.c:2514
 #, c-format
-msgid ""
-"canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
-"'%.96s' (truncated) too long."
-msgstr ""
-"canon_usb_list_all_dirs: Kon actiegedeelte niet in buffer laden, "
-"'%.96s' (afgekapt) te lang."
+msgid "canon_usb_list_all_dirs: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
+msgstr "canon_usb_list_all_dirs: Kon actiegedeelte niet in buffer laden, '%.96s' (afgekapt) te lang."
 
 #: camlibs/canon/usb.c:2533
 #, c-format
-msgid ""
-"canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
-"returned %i"
-msgstr ""
-"canon_usb_list_all_dirs: canon_usb_long_dialogue mislukte bij het ophalen "
-"van lijstelementen, status %i"
+msgid "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, returned %i"
+msgstr "canon_usb_list_all_dirs: canon_usb_long_dialogue mislukte bij het ophalen van lijstelementen, status %i"
 
 #: camlibs/canon/usb.c:2610
 #, c-format
@@ -1166,8 +1021,7 @@ msgstr "Herkende een '%s'."
 #: camlibs/canon/usb.c:2616
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
-msgstr ""
-"Benaming \"%s\" van de camera komt niet overeen met een gekend type camera"
+msgstr "Benaming \"%s\" van de camera komt niet overeen met een gekend type camera"
 
 #: camlibs/casio/casio-qv.c:151
 #, c-format
@@ -1182,8 +1036,7 @@ msgstr "Beeld %s is tegen verwijderen beschermd."
 #: camlibs/casio/casio-qv.c:189
 msgid ""
 "Driver framework written by Lutz Mueller <lutz@users.sf.net>.\n"
-"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-"
-"hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
+"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
 "Integration of QVplay by Michael Haardt <michael@moria.de>."
 msgstr ""
 
@@ -1314,11 +1167,8 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
-msgid ""
-"Only root folder is supported - you requested a file listing for folder '%s'."
-msgstr ""
-"Enkel de beheerdersmap wordt ondersteund - u vroeg een bestandslijst voor de "
-"map '%s'."
+msgid "Only root folder is supported - you requested a file listing for folder '%s'."
+msgstr "Enkel de beheerdersmap wordt ondersteund - u vroeg een bestandslijst voor de map '%s'."
 
 #: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:435
 msgid "Problem getting number of images"
@@ -1486,7 +1336,7 @@ msgstr "Problemen met lezen van het beeld van de Flash-kaart"
 #: camlibs/dimera/dimera3500.c:622 camlibs/dimera/dimera3500.c:788
 #: camlibs/dimera/dimera3500.c:938
 msgid "Out of memory"
-msgstr "Onvoldoende geheugen"
+msgstr "Onvoldoende geheugen beschikbaar"
 
 #: camlibs/dimera/dimera3500.c:639 camlibs/dimera/dimera3500.c:675
 #: camlibs/konica/qm150.c:257 camlibs/panasonic/coolshot/library.c:397
@@ -1573,8 +1423,7 @@ msgid "Could not open '%s'."
 msgstr "Kon '%s' niet openen."
 
 #: camlibs/directory/directory.c:541
-msgid ""
-"The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
 msgstr "De maplijst \"camera\" laat u de foto's op de harde schijf indexeren."
 
 #: camlibs/directory/directory.c:550
@@ -1587,14 +1436,8 @@ msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr "Kon het bestand '%s' in map '%s' niet verwijderen (foutcode %i: %m)."
 
 #: camlibs/enigma13/enigma13.c:70
-msgid ""
-"Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille."
-"com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy "
-"to port your driver on this cam! "
-msgstr ""
-"Download programma Digital Dream Enigma 1.3. door <olivier@aixmarseille."
-"com>, aangepast van het spca50x stuurprogramma. Bedankt, spca50x-team, het "
-"was eenvoudig om uw stuurprogramma op deze camera te poorten! "
+msgid "Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille.com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy to port your driver on this cam! "
+msgstr "Download programma Digital Dream Enigma 1.3. door <olivier@aixmarseille.com>, aangepast van het spca50x stuurprogramma. Bedankt, spca50x-team, het was eenvoudig om uw stuurprogramma op deze camera te poorten! "
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
@@ -1651,9 +1494,7 @@ msgstr "Bezig met downloaden..."
 #: camlibs/fuji/fuji.c:540
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the thumbnail."
-msgstr ""
-"Kon geen %i byte(s) voor het downloaden van het miniatuurvoorbeeld "
-"reserveren."
+msgstr "Kon geen %i byte(s) voor het downloaden van het miniatuurvoorbeeld reserveren."
 
 #: camlibs/fuji/fuji.c:574
 #, c-format
@@ -1726,8 +1567,7 @@ msgid ""
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Support for Mustek gSmart 300 digital cameras\n"
-"based on several other gphoto2 camlib modules and the specifications kindly "
-"provided by Mustek.\n"
+"based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
 "\n"
 msgstr ""
 "gsmart300 bibliotheek \n"
@@ -1741,9 +1581,7 @@ msgstr ""
 #: camlibs/gsmart300/library.c:207 camlibs/spca50x/library.c:573
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
-"Niet-odersteund poorttype: %d. Dit stuurprogramma werkt enkel met USB-"
-"camera's.\n"
+msgstr "Niet-odersteund poorttype: %d. Dit stuurprogramma werkt enkel met USB-camera's.\n"
 
 #: camlibs/gsmart300/library.c:224 camlibs/spca50x/library.c:631
 msgid "Could not reset camera.\n"
@@ -1751,12 +1589,8 @@ msgstr "Kon de camera niet terugzetten.\n"
 
 #: camlibs/gsmart300/library.c:343 camlibs/spca50x/library.c:511
 #, fuzzy, c-format
-msgid ""
-"Your camera only supports deleting the last file on the camera. In this "
-"case, this is file '%s'."
-msgstr ""
-"Deze camera kan enkel het laatste bestand verwijderen. In dit geval is dit "
-"het bestand '%s'."
+msgid "Your camera only supports deleting the last file on the camera. In this case, this is file '%s'."
+msgstr "Deze camera kan enkel het laatste bestand verwijderen. In dit geval is dit het bestand '%s'."
 
 #: camlibs/hp215/hp215.c:440
 #, c-format
@@ -1894,15 +1728,8 @@ msgid "CompactFlash Card"
 msgstr "CompactFlash-kaart"
 
 #: camlibs/kodak/dc120/dc120.c:367
-msgid ""
-"The Kodak DC120 camera uses the KDC file format for storing images. If you "
-"want to view the images you download from your camera, you will need to "
-"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
-"sourceforge.net"
-msgstr ""
-"De Kodak DC120 camera gebruikt het KDC-bestandsformaat om beelden op te "
-"slaan. Om de beelden te bekijken dient u het \"kdc2tiff\"-programma te "
-"downloaden. Het is beschikbaar op http://kdc2tiff.sourceforge.net"
+msgid "The Kodak DC120 camera uses the KDC file format for storing images. If you want to view the images you download from your camera, you will need to download the \"kdc2tiff\" program. It is available from http://kdc2tiff.sourceforge.net"
+msgstr "De Kodak DC120 camera gebruikt het KDC-bestandsformaat om beelden op te slaan. Om de beelden te bekijken dient u het \"kdc2tiff\"-programma te downloaden. Het is beschikbaar op http://kdc2tiff.sourceforge.net"
 
 #: camlibs/kodak/dc120/dc120.c:379
 msgid ""
@@ -1981,7 +1808,7 @@ msgstr "Opname"
 #: camlibs/ptp2/ptp.c:3150 camlibs/ptp2/ptp.c:3176 camlibs/ricoh/library.c:501
 #: camlibs/sierra/sierra.c:1147 camlibs/sierra/sierra.c:1407
 msgid "Zoom"
-msgstr "Zoom"
+msgstr "Zoomen"
 
 #: camlibs/kodak/dc210/dc210.c:231 camlibs/kodak/dc210/dc210.c:245
 #: camlibs/konica/qm150.c:1019 camlibs/ptp2/config.c:1372
@@ -2134,7 +1961,7 @@ msgstr "Uit"
 
 #: camlibs/kodak/dc210/dc210.c:284
 msgid "Other"
-msgstr "Andere"
+msgstr "Overige"
 
 #: camlibs/kodak/dc210/dc210.c:290
 msgid "Set clock in camera"
@@ -2209,126 +2036,126 @@ msgstr "Bestandstype"
 #: camlibs/kodak/dc210/dc210.c:516
 #, c-format
 msgid "Filetype: FlashPix ("
-msgstr ""
+msgstr "Bestandstype: FlashPix ("
 
 #: camlibs/kodak/dc210/dc210.c:522
-#, fuzzy, c-format
+#, c-format
 msgid "low compression, "
-msgstr "Bestandscompressie"
+msgstr "lage compressie, "
 
 #: camlibs/kodak/dc210/dc210.c:524
-#, fuzzy, c-format
+#, c-format
 msgid "medium compression, "
-msgstr "Bestandscompressie"
+msgstr "gemiddelde compressie, "
 
 #: camlibs/kodak/dc210/dc210.c:526
-#, fuzzy, c-format
+#, c-format
 msgid "high compression, "
-msgstr "Bestandscompressie"
+msgstr "hoge compressie, "
 
 #: camlibs/kodak/dc210/dc210.c:528
-#, fuzzy, c-format
+#, c-format
 msgid "unknown compression %d, "
-msgstr "Bestandscompressie"
+msgstr "onbekende compressie %d, "
 
 #: camlibs/kodak/dc210/dc210.c:538
 #, c-format
 msgid "unknown resolution %d)\n"
-msgstr ""
+msgstr "onbekende resolutie %d)\n"
 
 #: camlibs/kodak/dc210/dc210.c:551
-#, fuzzy, c-format
+#, c-format
 msgid "AC adapter is connected.\n"
-msgstr "Lens is niet aangesloten\n"
+msgstr "Netadapter is aangesloten.\n"
 
 #: camlibs/kodak/dc210/dc210.c:553
-#, fuzzy, c-format
+#, c-format
 msgid "AC adapter is not connected.\n"
-msgstr "Lens is niet aangesloten\n"
+msgstr "Netadapter is niet aangesloten.\n"
 
 #: camlibs/kodak/dc210/dc210.c:557
 msgid "Time: %a, %d %b %Y %T\n"
-msgstr ""
+msgstr "Tijd: %a, %d %b %Y %T\n"
 
 #: camlibs/kodak/dc210/dc210.c:563
 #, c-format
 msgid "Zoom: 58 mm\n"
-msgstr ""
+msgstr "Zoom: 58 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:565
 #, c-format
 msgid "Zoom: 51 mm\n"
-msgstr ""
+msgstr "Zoom: 51 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:567
 #, c-format
 msgid "Zoom: 41 mm\n"
-msgstr ""
+msgstr "Zoom: 41 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:569
 #, c-format
 msgid "Zoom: 34 mm\n"
-msgstr ""
+msgstr "Zoom: 34 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:571
 #, c-format
 msgid "Zoom: 29 mm\n"
-msgstr ""
+msgstr "Zoom: 29 mm\n"
 
 #: camlibs/kodak/dc210/dc210.c:573
 #, c-format
 msgid "Zoom: macro\n"
-msgstr ""
+msgstr "Zoom: macro\n"
 
 #: camlibs/kodak/dc210/dc210.c:575
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown zoom mode %d\n"
-msgstr "Onbekend model \"%s\""
+msgstr "Onbekende zoommodus %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:581
-#, fuzzy, c-format
+#, c-format
 msgid "Exposure compensation: %s\n"
-msgstr "Belichtingscompensatie"
+msgstr "Belichtingscompensatie: %s\n"
 
 #: camlibs/kodak/dc210/dc210.c:583
-#, fuzzy, c-format
+#, c-format
 msgid "Exposure compensation: %d\n"
-msgstr "Belichtingscompensatie"
+msgstr "Belichtingscompensatie: %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:588
-#, fuzzy, c-format
+#, c-format
 msgid "Flash mode: auto, "
-msgstr "Flitsmodus"
+msgstr "Flitsmodus: auto, "
 
 #: camlibs/kodak/dc210/dc210.c:590
-#, fuzzy, c-format
+#, c-format
 msgid "Flash mode: force, "
-msgstr "Flitsmodus"
+msgstr "Flitsmodus: afgedwongen, "
 
 #: camlibs/kodak/dc210/dc210.c:592
-#, fuzzy, c-format
+#, c-format
 msgid "Flash mode: off\n"
-msgstr "Flitsmodus"
+msgstr "Flitsmodus: uit\n"
 
 #: camlibs/kodak/dc210/dc210.c:594
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown flash mode %d, "
-msgstr "Onbekend model \"%s\""
+msgstr "Onbekende flitsmodus %d, "
 
 #: camlibs/kodak/dc210/dc210.c:602
-#, fuzzy, c-format
+#, c-format
 msgid "red eye flash on.\n"
-msgstr "Rode-ogen-flits"
+msgstr "rode-ogen-flits ingeschakeld.\n"
 
 #: camlibs/kodak/dc210/dc210.c:605
-#, fuzzy, c-format
+#, c-format
 msgid "red eye flash off.\n"
-msgstr "Rode-ogen-flits"
+msgstr "rode-ogen-flits uitgeschakeld.\n"
 
 #: camlibs/kodak/dc210/dc210.c:610
-#, fuzzy, c-format
+#, c-format
 msgid "No card in camera.\n"
-msgstr "Fout bij het openen van de camera.\n"
+msgstr "Er zit geen kaartje in de camera.\n"
 
 #: camlibs/kodak/dc210/dc210.c:612
 #, c-format
@@ -2336,18 +2163,12 @@ msgid ""
 "Card name: %s\n"
 "Free space on card: %d kB\n"
 msgstr ""
+"Kaartnaam: %s\n"
+"Vrije ruimte op de kaart: %d kB\n"
 
 #: camlibs/kodak/dc210/dc210.c:632
-msgid ""
-"This library has been tested with a Kodak DC 215 Zoom camera. It might work "
-"also with DC 200 and DC 210 cameras. If you happen to have such a camera, "
-"please send a message to koltan@gmx.de to let me know, if you have any "
-"troubles with this driver library or if everything is okay."
-msgstr ""
-"Deze bibliotheek is getest met een Kodak DC 215 Zoom camera. Het kan ook "
-"werken met DC 200 and DC 210 camera's. Indien u zo'n type camera bezit, "
-"gelieve een bericht naar mij te sturen (koltan@gmx.de) om me op de hoogte te "
-"houden als alles werkt of u enige problemen heeft met deze bibliotheek."
+msgid "This library has been tested with a Kodak DC 215 Zoom camera. It might work also with DC 200 and DC 210 cameras. If you happen to have such a camera, please send a message to koltan@gmx.de to let me know, if you have any troubles with this driver library or if everything is okay."
+msgstr "Deze bibliotheek is getest met een Kodak DC 215 Zoom camera. Het kan ook werken met DC 200 and DC 210 camera's. Indien u zo'n type camera bezit, gelieve een bericht naar mij te sturen (koltan@gmx.de) om me op de hoogte te houden als alles werkt of als u enige problemen heeft met deze bibliotheek."
 
 #: camlibs/kodak/dc210/dc210.c:644
 msgid ""
@@ -2386,7 +2207,7 @@ msgstr "Firmware versie: %d.%02d\n"
 #: camlibs/kodak/dc240/dc240.c:184
 #, c-format
 msgid "Battery status: %s, AC Adapter: %s\n"
-msgstr "Batterijstatus: %s, AC Adapter: %s\n"
+msgstr "Batterijstatus: %s, netadapter: %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:188
 #, c-format
@@ -2396,31 +2217,29 @@ msgstr "Aantal afbeeldingen: %d\n"
 #: camlibs/kodak/dc240/dc240.c:190
 #, c-format
 msgid "Space remaining: High: %d, Medium: %d, Low: %d\n"
-msgstr "Resterende opslagplaats: Hoog: %d, Gemiddeld: %d, Laag: %d\n"
+msgstr "Resterende opslagruimte: Hoog: %d, Gemiddeld: %d, Laag: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:194
 #, c-format
 msgid "Memory card status (%d): %s\n"
-msgstr "Geheugenkaart status (%d): %s\n"
+msgstr "Geheugenkaartstatus (%d): %s\n"
 
 #: camlibs/kodak/dc240/dc240.c:198
 #, c-format
 msgid "Total pictures captured: %d, Flashes fired: %d\n"
-msgstr "Totaal opgenomen afbeeldingen: %d, Flits gebruikt: %d\n"
+msgstr "Totaal opgenomen afbeeldingen: %d, aantal keren geflitst: %d\n"
 
 #: camlibs/kodak/dc240/dc240.c:212
 msgid ""
 "Kodak DC240 Camera Library\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Kodak DC240 Camerabibliotheek\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "Camerabibliotheek voor de Kodak DC240, DC280, DC3400 and DC5000 camera's.\n"
-"herschreven en geactualiseerd voor gPhoto2."
+"Herschreven en geactualiseerd voor gPhoto2."
 
 #: camlibs/kodak/dc240/library.c:573
 msgid "Weak"
@@ -2459,32 +2278,23 @@ msgid "No card"
 msgstr "Geen kaart aanwezig"
 
 #: camlibs/kodak/dc3200/dc3200.c:43
-msgid ""
-"There is currently an operation in progress. This camera only supports one "
-"operation at a time. Please wait until the current operation has finished."
-msgstr ""
-"Momenteel is er een proces aan de gang. Deze camera ondersteunt slechts één "
-"actief proces. Gelieve te wachten tot het actief proces afgelopen is."
+msgid "There is currently an operation in progress. This camera only supports one operation at a time. Please wait until the current operation has finished."
+msgstr "Momenteel is er een proces aan de gang. Deze camera ondersteunt slechts één actief proces. Gelieve te wachten tot het actieve proces afgelopen is."
 
 #: camlibs/kodak/dc3200/dc3200.c:146
 #, c-format
 msgid "camera inactive for > 9 seconds, re-initing.\n"
-msgstr "camera > 9 seconden inactief, initialiseer opnieuw.\n"
+msgstr "camera is langer dan 9 seconden inactief -- herinitialisatie.\n"
 
 #: camlibs/kodak/dc3200/dc3200.c:435
 msgid ""
 "Known problems:\n"
 "\n"
-"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
-"it will time out, and will have to be re-initialized. If you notice the "
-"camera does not respond, simply re-select the camera. This will cause it to "
-"reinitialize."
+"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, it will time out, and will have to be re-initialized. If you notice the camera does not respond, simply re-select the camera. This will cause it to reinitialize."
 msgstr ""
-"Gekende problemen:\n"
+"Bekende problemen:\n"
 "\n"
-"1. Als de Kodak DC3200 niet mintens om de 10 seconden een commando ontvangt, "
-"moet deze opnieuw geïnitialiseerd worden. Als de camera niet reageert, "
-"selecteer de opnieuw. Dit herinitialiseert de camera."
+"1. Als de Kodak DC3200 niet mintens om de 10 seconden een commando ontvangt, moet deze opnieuw geïnitialiseerd worden. Als de camera niet reageert, selecteer deze dan opnieuw.  Dit herinitialiseert de camera."
 
 #: camlibs/kodak/dc3200/dc3200.c:448
 msgid ""
@@ -2493,7 +2303,7 @@ msgid ""
 "\n"
 "Questions and comments appreciated."
 msgstr ""
-"Kodak DC3200 stuurprogrammar\n"
+"Kodak DC3200-stuurprogramma\n"
 "Donn Morrison <dmorriso@gulf.uvic.ca>\n"
 "\n"
 "Vragen en commentaren worden gewaardeerd."
@@ -2512,7 +2322,7 @@ msgid ""
 "Kodak EZ200 driver\n"
 "Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
 msgstr ""
-"Kodak EZ200 stuurprogramma\n"
+"Kodak EZ200-stuurprogramma\n"
 "Bucas Jean-Francois <jfbucas@tuxfamily.org>\n"
 
 #: camlibs/konica/konica.c:62
@@ -2529,7 +2339,7 @@ msgstr "Flitsfout."
 
 #: camlibs/konica/konica.c:71
 msgid "EEPROM checksum error."
-msgstr "EEPROM controlesomfout."
+msgstr "EEPROM-controlesomfout."
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
@@ -2549,11 +2359,11 @@ msgstr "Kaart wordt niet ondersteund."
 
 #: camlibs/konica/konica.c:86
 msgid "Card removed during access."
-msgstr "Kaart verwijderd tijdens de toegang."
+msgstr "Kaart werd verwijderd tijdens de toegang."
 
 #: camlibs/konica/konica.c:89
 msgid "Image number not valid."
-msgstr "Nummer van beeld niet geldig."
+msgstr "Nummer van beeld is niet geldig."
 
 #: camlibs/konica/konica.c:92
 msgid "Card can not be written."
@@ -2585,7 +2395,7 @@ msgstr "Systeemfout."
 
 #: camlibs/konica/konica.c:113
 msgid "Illegal parameter."
-msgstr "Illegale parameter."
+msgstr "Ongeldige parameter."
 
 #: camlibs/konica/konica.c:116
 msgid "Command can not be cancelled."
@@ -2593,11 +2403,11 @@ msgstr "Het commando kan niet afgebroken worden."
 
 #: camlibs/konica/konica.c:119
 msgid "Localization data too long."
-msgstr "Localisatiedata te lang."
+msgstr "Lokalisatiegegevens zijn te lang."
 
 #: camlibs/konica/konica.c:122
 msgid "Localization data corrupt."
-msgstr "Localisatiedata corrupt."
+msgstr "Lokalisatiegegevens zijn beschadigd."
 
 #: camlibs/konica/konica.c:125
 msgid "Unsupported command."
@@ -2605,7 +2415,7 @@ msgstr "Commando wordt niet ondersteund."
 
 #: camlibs/konica/konica.c:128
 msgid "Other command executing."
-msgstr "Ander commando in uitvoering."
+msgstr "Ander commando is in uitvoering."
 
 #: camlibs/konica/konica.c:131
 msgid "Command order error."
@@ -2617,40 +2427,29 @@ msgstr "Onbekende fout."
 
 #: camlibs/konica/konica.c:137
 #, c-format
-msgid ""
-"The camera has just sent an error that has not yet been discovered. Please "
-"report the following to %s with additional information how you got this "
-"error: (0x%x,0x%x). Thank you very much!"
-msgstr ""
-"De camera heeft zojuist een onbekende fout verstuurd. Wilt u het volgende "
-"rapporteren aan %s met als bijkomende informatie hoe de fout is ontstaan: (0x"
-"%x,0x%x). Hartelijk bedankt!"
+msgid "The camera has just sent an error that has not yet been discovered. Please report the following to %s with additional information how you got this error: (0x%x,0x%x). Thank you very much!"
+msgstr "De camera heeft zojuist een onbekende fout gemeld.  Wilt u het volgende rapporteren aan %s met als bijkomende informatie hoe de fout is ontstaan: (0x%x,0x%x).  Hartelijk bedankt!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:116
 msgid "Getting file list..."
-msgstr "Bezig met bestandslijst op te halen..."
+msgstr "Ophalen van bestandenlijst..."
 
 #: camlibs/konica/library.c:325
 msgid "Testing different speeds..."
-msgstr "Bezig met het testen van verschillende snelheden..."
+msgstr "Testen van verschillende snelheden..."
 
 #: camlibs/konica/library.c:340
-msgid ""
-"The camera could not be contacted. Please make sure it is connected to the "
-"computer and turned on."
-msgstr ""
-"De camera kon niet worden gecontacteerd. Gelieve u ervan te verzekeren dat "
-"de computer ingeschakled is."
+msgid "The camera could not be contacted. Please make sure it is connected to the computer and turned on."
+msgstr "Kan geen verbinding maken met de camera.  Verzeker u ervan dat de camera op de computer aangesloten is en ingeschakeld is."
 
 #: camlibs/konica/library.c:373
 msgid "Your camera does not support changing filenames."
-msgstr "Wijzigen van bestandsnamen wordt niet door deze camera ondersteund."
+msgstr "Wijzigen van bestandsnamen wordt door deze camera niet ondersteund."
 
 #: camlibs/konica/library.c:432
 #, c-format
 msgid "%i pictures could not be deleted because they are protected"
-msgstr ""
-"%i afbeeldingen konden niet worden verwijderd doordat ze beveiligd zijn"
+msgstr "%i afbeeldingen konden niet worden verwijderd omdat ze beveiligd zijn"
 
 #: camlibs/konica/library.c:533
 #, c-format
@@ -2665,9 +2464,9 @@ msgid ""
 msgstr ""
 "Model: %s\n"
 "Serienummer: %s,\n"
-"Hardware Versie: %i.%i\n"
-"Software Versie: %i.%i\n"
-"Testsoftware Versie: %i.%i\n"
+"Hardwareversie: %i.%i\n"
+"Softwareversie: %i.%i\n"
+"Testsoftwareversie: %i.%i\n"
 "Naam: %s,\n"
 "Fabrikant: %s\n"
 
@@ -2677,17 +2476,17 @@ msgid ""
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
 "Support for all Konica and several HP cameras."
 msgstr ""
-"Konica bibliotheek\n"
+"Konica-bibliotheek\n"
 "Lutz Mueller <lutz@users.sourceforge.net>\n"
 "Ondersteuning voor alle Konica en meerdere HP camera's."
 
 #: camlibs/konica/library.c:651
 msgid "Getting configuration..."
-msgstr "Bezig met ophalen configuratie..."
+msgstr "Ophalen van instellingen..."
 
 #: camlibs/konica/library.c:658 camlibs/konica/qm150.c:749
 msgid "Konica Configuration"
-msgstr "Konica Configuratie"
+msgstr "Konica-configuratie"
 
 #: camlibs/konica/library.c:663 camlibs/konica/library.c:874
 #: camlibs/konica/qm150.c:754
@@ -2703,11 +2502,11 @@ msgstr "Datum en tijd"
 #: camlibs/konica/library.c:681 camlibs/konica/library.c:895
 #: camlibs/ptp2/ptp.c:3146
 msgid "Beep"
-msgstr "Signaal"
+msgstr "Piep"
 
 #: camlibs/konica/library.c:693
 msgid "Shall the camera beep when taking a picture?"
-msgstr "Moet de camera een signaal geven als er een afbeelding genomen wordt?"
+msgstr "Moet de camera een piep geven als er een opname gemaakt wordt?"
 
 #: camlibs/konica/library.c:697 camlibs/konica/library.c:907
 msgid "Self Timer Time"
@@ -2716,11 +2515,11 @@ msgstr "Zelfontspannertijd"
 #: camlibs/konica/library.c:704 camlibs/konica/library.c:915
 #: camlibs/konica/qm150.c:763
 msgid "Auto Off Time"
-msgstr "Tijd voor automatisch uitschakelen"
+msgstr "Tijd tot automatische uitschakeling"
 
 #: camlibs/konica/library.c:711 camlibs/konica/library.c:923
 msgid "Slide Show Interval"
-msgstr "Diashow interval"
+msgstr "Diashowinterval"
 
 #: camlibs/konica/library.c:720 camlibs/konica/library.c:728
 #: camlibs/konica/library.c:937
@@ -2739,7 +2538,7 @@ msgstr "Hoog (1152 x 872)"
 #: camlibs/konica/library.c:738 camlibs/konica/library.c:948
 #: camlibs/konica/qm150.c:819
 msgid "Localization"
-msgstr "Localisatie"
+msgstr "Lokalisatie"
 
 #: camlibs/konica/library.c:744 camlibs/konica/library.c:951
 #: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:434
@@ -2755,7 +2554,7 @@ msgstr "Niets geselecteerd"
 
 #: camlibs/konica/library.c:755 camlibs/konica/library.c:977
 msgid "TV Output Format"
-msgstr "Formaat TV-uitgang"
+msgstr "TV-signaal"
 
 #: camlibs/konica/library.c:757 camlibs/konica/library.c:981
 msgid "NTSC"
@@ -2767,43 +2566,43 @@ msgstr "PAL"
 
 #: camlibs/konica/library.c:759 camlibs/konica/library.c:985
 msgid "Do not display TV menu"
-msgstr "Toon geen TV-menu"
+msgstr "Geen TV-menu tonen"
 
 #: camlibs/konica/library.c:763 camlibs/konica/library.c:995
 #: camlibs/konica/qm150.c:823
 msgid "Date Format"
-msgstr "Formaat datum"
+msgstr "Datumopmaak"
 
 #: camlibs/konica/library.c:765 camlibs/konica/library.c:999
 #: camlibs/konica/qm150.c:825 camlibs/konica/qm150.c:830
 msgid "Month/Day/Year"
-msgstr "Maand/Dag/Jaar"
+msgstr "maand/dag/jaar"
 
 #: camlibs/konica/library.c:766 camlibs/konica/library.c:1001
 #: camlibs/konica/qm150.c:826 camlibs/konica/qm150.c:833
 msgid "Day/Month/Year"
-msgstr "Dag/Maand/Jaar"
+msgstr "dag/maand/jaar"
 
 #: camlibs/konica/library.c:767 camlibs/konica/library.c:1003
 #: camlibs/konica/qm150.c:827 camlibs/konica/qm150.c:836
 msgid "Year/Month/Day"
-msgstr "Jaar/Maand/Dag"
+msgstr "jaar/maand/dag"
 
 #: camlibs/konica/library.c:773 camlibs/konica/library.c:1015
 #: camlibs/konica/qm150.c:843
 msgid "Session-persistent Settings"
-msgstr "Permanente sessie-instellingen"
+msgstr "Persistente instellingen"
 
 #: camlibs/konica/library.c:782 camlibs/konica/library.c:793
 #: camlibs/konica/library.c:1026 camlibs/konica/qm150.c:852
 #: camlibs/konica/qm150.c:862
 msgid "On, red-eye reduction"
-msgstr "Aan, rode-oog onderdrukking"
+msgstr "Aan, rode-ogenonderdrukking"
 
 #: camlibs/konica/library.c:784 camlibs/konica/library.c:796
 #: camlibs/konica/qm150.c:854 camlibs/konica/qm150.c:869
 msgid "Auto, red-eye reduction"
-msgstr "Auto, rode-oog onderdrukking"
+msgstr "Auto, rode-ogenonderdrukking"
 
 #: camlibs/konica/library.c:811 camlibs/konica/library.c:1045
 #: camlibs/konica/qm150.c:935
@@ -2829,7 +2628,7 @@ msgstr "Zelfontspanner"
 #: camlibs/konica/library.c:833 camlibs/konica/library.c:1063
 #: camlibs/konica/qm150.c:1091
 msgid "Self Timer (only next picture)"
-msgstr "Zelfontspanner (enkel volgende afbeelding)"
+msgstr "Zelfontspanner (alleen volgende opname)"
 
 #: camlibs/konica/library.c:834 camlibs/konica/library.c:841
 #: camlibs/konica/qm150.c:1092 camlibs/konica/qm150.c:1099
@@ -2852,16 +2651,16 @@ msgstr "Normaal"
 
 #: camlibs/konica/library.c:837 camlibs/konica/qm150.c:1095
 msgid "Self Timer (next picture only)"
-msgstr "Zelfontspanner (enkel volgende afbeelding)"
+msgstr "Zelfontspanner (alleen volgende opname)"
 
 #: camlibs/konica/library.c:1094
 #, c-format
 msgid "Could not find localization data at '%s'"
-msgstr "Kon de localisatiedata niet vinden in '%s'"
+msgstr "Kan de lokalisatiegegevens niet vinden in '%s'"
 
 #: camlibs/konica/library.c:1160
 msgid "Localization file too long!"
-msgstr "Localisatiebestand te lang!"
+msgstr "Lokalisatiebestand is te lang!"
 
 #: camlibs/konica/qm150.c:250
 msgid "This preview doesn't exist."
@@ -2869,7 +2668,7 @@ msgstr "Dit voorbeeld bestaat niet."
 
 #: camlibs/konica/qm150.c:282
 msgid "Data has been corrupted."
-msgstr "Data is beschadigd."
+msgstr "Gegevens zijn beschadigd."
 
 #: camlibs/konica/qm150.c:398
 #, c-format
@@ -2879,34 +2678,31 @@ msgstr "Beeldtype %d wordt door deze camera niet ondersteund!"
 #: camlibs/konica/qm150.c:454
 #, c-format
 msgid "Can't delete image %s."
-msgstr "Kan het beeld %s niet verwijderen."
+msgstr "Kan beeld %s niet verwijderen."
 
 #: camlibs/konica/qm150.c:485
 msgid "Can't delete all images."
-msgstr "Kan niet alle beelden versijderen."
+msgstr "Kan niet alle beelden verwijderen."
 
 #: camlibs/konica/qm150.c:517
 msgid "Uploading image..."
-msgstr "Beeld aan het uploaden..."
+msgstr "Uploaden van beeld..."
 
 #: camlibs/konica/qm150.c:527 camlibs/konica/qm150.c:592
-#, fuzzy
 msgid "Can't upload this image to the camera. An error has occurred."
-msgstr "Kan dit beeld niet uploaden naar de camera. Er is een fout opgetreden."
+msgstr "Kan dit beeld niet uploaden naar de camera.  Er is een fout opgetreden."
 
 #: camlibs/konica/qm150.c:634
 msgid "You must be in record mode to capture image."
-msgstr "U moet in opnamemodus staan om een beeld op te nemen."
+msgstr "U moet in opnamemodus zijn om een beeld op kunnen te nemen."
 
 #: camlibs/konica/qm150.c:637
 msgid "No space available to capture new image. You must delete some images."
-msgstr ""
-"Geen plaats beschikbaar om nieuw beeld op te vangen. U moet een aantal "
-"beelden verwijderen."
+msgstr "Geen ruimte beschikbaar om nieuw beeld op te slaan. U moet een aantal beelden verwijderen."
 
 #: camlibs/konica/qm150.c:641
 msgid "Can't capture new image. Unknown error"
-msgstr "Kan nieuw beeld niet opnemen. Onbekende fout"
+msgstr "Kan geen nieuw beeld opnemen.  Onbekende fout"
 
 #: camlibs/konica/qm150.c:653
 msgid "No answer from the camera."
@@ -2939,19 +2735,19 @@ msgstr "LCD"
 
 #: camlibs/konica/qm150.c:803
 msgid "Icons"
-msgstr "Icons"
+msgstr "Pictogrammen"
 
 #: camlibs/konica/qm150.c:937 camlibs/konica/qm150.c:946
 msgid "2.0m"
-msgstr "2.0m"
+msgstr "2,0m"
 
 #: camlibs/konica/qm150.c:938 camlibs/konica/qm150.c:949
 msgid "0.5m"
-msgstr "0.5m"
+msgstr "0,5m"
 
 #: camlibs/konica/qm150.c:939 camlibs/konica/qm150.c:952
 msgid "0.1m"
-msgstr "0.1m"
+msgstr "0,1m"
 
 #: camlibs/konica/qm150.c:957
 msgid "White balance"
@@ -3050,17 +2846,17 @@ msgstr "Opname"
 #: camlibs/konica/qm150.c:1151
 #, c-format
 msgid "DD/MM/YYYY"
-msgstr "DD/MM/YYYY"
+msgstr "DD/MM/JJJJ"
 
 #: camlibs/konica/qm150.c:1156
 #, c-format
 msgid "YYYY/MM/DD"
-msgstr "YYYY/MM/DD"
+msgstr "JJJJ/MM/DD"
 
 #: camlibs/konica/qm150.c:1160
 #, c-format
 msgid "MM/DD/YYYY"
-msgstr "MM/DD/YYYY"
+msgstr "MM/DD/JJJJ"
 
 #: camlibs/konica/qm150.c:1164
 #, c-format
@@ -3075,9 +2871,9 @@ msgid ""
 "Date and Time: %s\n"
 msgstr ""
 "Model: %s\n"
-"Capaciteit: %iMo\n"
+"Capaciteit: %i MB\n"
 "Voeding: %s\n"
-"Tijd auto-uitschakelen: %imin\n"
+"Tijd auto-uitschakelen: %i min\n"
 "Modus: %s\n"
 "Beelden: %i/%i\n"
 "Datumweergave: %s\n"
@@ -3092,14 +2888,14 @@ msgid ""
 "http://www.ap2c.com\n"
 "Support for the french Konica Q-M150."
 msgstr ""
-"Konica Q-M150 bibliotheek\n"
+"Konica Q-M150-bibliotheek\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Aurelien Croc (AP2C) <programming@ap2c.com>\n"
-"http://www.ap2c.com\n"
+"    http://www.ap2c.com\n"
 "Ondersteuning voor de Franse Konica Q-M150."
 
 #: camlibs/konica/qm150.c:1202
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "About Konica Q-M150:\n"
 "This camera does not allow any changes\n"
@@ -3118,8 +2914,8 @@ msgstr ""
 "worden wat er op de camera reeds ingesteld is,\n"
 "maar u kunt geen wijzigingen uitvoeren.\n"
 "\n"
-"Indien u problemen heeft met dit stuurprogramma,\n"
-"verstuur a.u.b. een e-mail naar de ontwikkelaars van\n"
+"Indien u problemen hebt met dit stuurprogramma,\n"
+"stuur dan een e-mail naar de ontwikkelaars van\n"
 "dit stuurprogramma.\n"
 "\n"
 "Hartelijk bedankt voor het gebruiken van GPhoto2\n"
@@ -3132,10 +2928,10 @@ msgid ""
 "\n"
 "Handles Largan Lmini camera.\n"
 msgstr ""
-"Largan stuurprogramma\n"
+"Largan-stuurprogramma\n"
 "Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "\n"
-"Bedrijft Largan Lmini camera.\n"
+"Bestuurt de Largan Lmini-camera.\n"
 
 #: camlibs/lg_gsm/library.c:102
 #, c-format
@@ -3144,15 +2940,20 @@ msgid ""
 "Firmware         = %s\n"
 "Firmware Version = %s\n"
 msgstr ""
+"Uw USB-camera schijnt een LG GSM te zijn.\n"
+"Firmware       = %s\n"
+"Firmwareversie = %s\n"
 
 #: camlibs/lg_gsm/library.c:114
 msgid ""
 "LG GSM generic driver\n"
 "Guillaume Bedot <littletux@zarb.org>\n"
 msgstr ""
+"LG GSM generisch stuurprogramma\n"
+"Guillaume Bedot <littletux@zarb.org>\n"
 
 #: camlibs/mars/library.c:123
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Mars MR97310 camera.\n"
 "There is %i photo in it.\n"
@@ -3160,11 +2961,11 @@ msgid_plural ""
 "Mars MR97310 camera.\n"
 "There are %i photos in it.\n"
 msgstr[0] ""
-"Mars MR97310 camera.\n"
-"Er zijn %i foto's op de camera. \n"
+"Mars MR97310-camera.\n"
+"Er staat %i foto op de camera. \n"
 msgstr[1] ""
-"Mars MR97310 camera.\n"
-"Er zijn %i foto's op de camera. \n"
+"Mars MR97310-camera.\n"
+"Er staan %i foto's op de camera. \n"
 
 #: camlibs/mars/library.c:134
 #, fuzzy
@@ -3196,7 +2997,7 @@ msgid ""
 "Mars MR97310 camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Mars MR97310 camera bibliotheek\n"
+"Mars MR97310-camerabibliotheek\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:265
@@ -3206,9 +3007,9 @@ msgid ""
 "Hardware Revision:\t%s\n"
 "Firmware Revision:\t%s\n"
 msgstr ""
-"Model:\t\t\tMinolta Dimage V (%s)\n"
-"Hardware Revisie:\t%s\n"
-"Firmware Revisie:\t%s\n"
+"Model:  Minolta Dimage V (%s)\n"
+"Hardwarerevisie:  %s\n"
+"Firmwarerevisie:  %s\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:280
 #, c-format
@@ -3276,7 +3077,7 @@ msgstr "Automatisch\n"
 #: camlibs/minolta/dimagev/dimagev.c:324
 #, c-format
 msgid "Force Flash\n"
-msgstr "Flits altijd\n"
+msgstr "Altijd flitsen\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:332
 #, c-format
@@ -3298,12 +3099,12 @@ msgid ""
 "Flash Charging:\t\t%s\n"
 "Lens Status:\t\t"
 msgstr ""
-"Status batterij:\t\t%s\n"
+"Batterijstatus:\t\t%s\n"
 "Aantal beelden:\t%d\n"
 "Minimum restcapaciteit:\t%d\n"
 "Bezig:\t\t\t%s\n"
 "Laden van flits:\t\t%s\n"
-"Satus lens:\t\t"
+"Lensstatus:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:360
 msgid "Not Full"
@@ -3349,12 +3150,12 @@ msgstr "Lens is niet aangesloten\n"
 #: camlibs/minolta/dimagev/dimagev.c:384
 #, c-format
 msgid "Bad value for lens status %d\n"
-msgstr "Valse waarde voor lensstatus %d\n"
+msgstr "Onjuiste waarde voor lensstatus %d\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:393
 #, c-format
 msgid "Card Status:\t\t"
-msgstr "Status kaart:\t\t"
+msgstr "Kaartstatus:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:406
 #, c-format
@@ -3367,9 +3168,9 @@ msgid "Unsuitable card"
 msgstr "Niet-passende kaart"
 
 #: camlibs/minolta/dimagev/dimagev.c:412
-#, fuzzy, c-format
+#, c-format
 msgid "Bad value for card status %d"
-msgstr "Valse waarde voor kaartstatus %d"
+msgstr "Onjuiste waarde voor kaartstatus %d"
 
 #: camlibs/minolta/dimagev/dimagev.c:431
 #, c-format
@@ -3379,14 +3180,14 @@ msgid ""
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Special thanks to Minolta for the spec."
 msgstr ""
-"Minolta Dimage V Camera bibliotheek\n"
+"Minolta Dimage V-camerabibliotheek\n"
 "%s\n"
 "Gus Hartmann <gphoto@gus-the-cat.org>\n"
 "Met bijzondere dank aan Minolta voor de specificaties."
 
 #: camlibs/mustek/core.c:575
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr "Flits: Auto (Rode-ogen onderdrukking)"
+msgstr "Flits: Auto (rode-ogenonderdrukking)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
@@ -3394,7 +3195,7 @@ msgstr "Flits: Auto"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr "Flits: Aan (Rode-ogen onderdrukking)"
+msgstr "Flits: Aan (rode-ogenonderdrukking)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
@@ -3406,7 +3207,7 @@ msgstr "Flits: Uit"
 
 #: camlibs/mustek/core.c:585
 msgid "FlashLight : undefined"
-msgstr "Flits: niet gedefinieerd"
+msgstr "Flits: ongedefinieerd"
 
 #: camlibs/mustek/mdc800.c:232
 msgid "Summary for Mustek MDC800:\n"
@@ -3418,7 +3219,7 @@ msgstr "geen status gerapporteerd."
 
 #: camlibs/mustek/mdc800.c:241
 msgid "Compact Flash Card detected\n"
-msgstr "CompactFlash-kaart gedetecteerd\n"
+msgstr "CompactFlash-kaart is gedetecteerd\n"
 
 #: camlibs/mustek/mdc800.c:243
 msgid "No Compact Flash Card detected\n"
@@ -3434,11 +3235,11 @@ msgstr "Huidige modus: Weergavemodus\n"
 
 #: camlibs/mustek/mdc800.c:258
 msgid "Batteries are ok."
-msgstr "Batterijen OK."
+msgstr "Batterijen zijn OK."
 
 #: camlibs/mustek/mdc800.c:260
 msgid "Batteries are low."
-msgstr "Batterijen bijna leeg."
+msgstr "Batterijen zijn bijna leeg."
 
 #: camlibs/mustek/mdc800.c:279
 msgid ""
@@ -3447,37 +3248,33 @@ msgid ""
 "Ported to gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
 "Supports Serial and USB Protocol."
 msgstr ""
-"Mustek MDC-800 gPhoto2 bibliotheek\n"
+"Mustek MDC-800 gPhoto2-bibliotheek\n"
 "Henning Zabel <henning@uni-paderborn.de>\n"
 "Ported naar gphoto2 by Marcus Meissner <marcus@jet.franken.de>\n"
-"Ondersteunt Serieel en USB Protocol."
+"Ondersteunt serieel en USB-protocol."
 
 #: camlibs/panasonic/coolshot/coolshot.c:264
 msgid "coolshot library v"
-msgstr "coolshot bibliotheek v"
+msgstr "coolshot-bibliotheek v"
 
 #: camlibs/panasonic/dc1000.c:369 camlibs/panasonic/dc1580.c:465
 msgid "Disconnecting camera."
-msgstr "Bezig met verbinding naar camera te sluiten."
+msgstr "Verbreken van verbinding met camera."
 
 #: camlibs/panasonic/dc1000.c:406
 #, c-format
 msgid "Downloading image %s."
-msgstr "Bezig met beeld %s te downloaden."
+msgstr "Downloaden van beeld %s."
 
 #: camlibs/panasonic/dc1000.c:447 camlibs/panasonic/dc1580.c:569
 #, c-format
 msgid "Uploading image: %s."
-msgstr "Bezig met beeld %s te uploaden."
+msgstr "Uploaden van beeld %s."
 
 #: camlibs/panasonic/dc1000.c:458 camlibs/panasonic/dc1580.c:580
 #, c-format
-msgid ""
-"File size is %ld bytes. The size of the largest file possible to upload is: %"
-"i bytes."
-msgstr ""
-"Bestandsgrootte is %ld bytes. De grootst mogelijke bestandsgrootte om te "
-"uploaden is: %i bytes."
+msgid "File size is %ld bytes. The size of the largest file possible to upload is: %i bytes."
+msgstr "Bestandsgrootte is %ld bytes.  De maximale bestandsgrootte die geüpload kan worden is: %i bytes."
 
 #: camlibs/panasonic/dc1000.c:471 camlibs/panasonic/dc1580.c:591
 #: camlibs/ricoh/ricoh.c:837
@@ -3487,7 +3284,7 @@ msgstr "Bezig met uploaden..."
 #: camlibs/panasonic/dc1000.c:498 camlibs/panasonic/dc1580.c:617
 #, c-format
 msgid "Deleting image %s."
-msgstr "Bezig met beeld %s te verwijderen."
+msgstr "Verwijderen van beeld %s."
 
 #: camlibs/panasonic/dc1000.c:511
 msgid ""
@@ -3498,17 +3295,17 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
-"Panasonic DC1000 gPhoto bibliotheek\n"
+"Panasonic DC1000 gPhoto-bibliotheek\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
 "\n"
-"gebaseerd op dc1000 programma geschreven\n"
-"door Fredrik Roubert <roubert@df.lth.se> en\n"
-"Galen Brooks <galen@nine.com>."
+"Gebaseerd op dc1000 programma geschreven\n"
+"door Fredrik Roubert <roubert@df.lth.se>\n"
+"en Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/dc1580.c:520
 #, c-format
 msgid "Downloading %s."
-msgstr "Bezig met downloaden van %s."
+msgstr "Downloaden van %s."
 
 #: camlibs/panasonic/dc1580.c:629
 msgid ""
@@ -3519,63 +3316,45 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
-"Panasonic DC1580 gPhoto bibliotheek\n"
+"Panasonic DC1580 gPhoto-bibliotheek\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
 "\n"
-"gebaseerd op dc1000 program geschreven\n"
-"door Fredrik Roubert <roubert@df.lth.se> en\n"
-"Galen Brooks <galen@nine.com>."
+"Gebaseerd op dc1000 program geschreven\n"
+"door Fredrik Roubert <roubert@df.lth.se>\n"
+"en Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/l859/l859.c:500
 #, c-format
 msgid "Downloading '%s'..."
-msgstr "Bezig met downloaden van %s..."
+msgstr "Downloaden van %s..."
 
 #: camlibs/panasonic/l859/l859.c:581
 #, fuzzy
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic introduced image capturing technology called PHOTOSHOT for the "
-"first time to this series of Palmcorders.  Images are stored in JPEG format "
-"on an internal flashcard and can be transferred to a computer through the "
-"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
-"320x240 and FINE is 640x480.  The CCD device which captures the images from "
-"the lens is only 300K and thus produces only low quality pictures."
+"Panasonic introduced image capturing technology called PHOTOSHOT for the first time to this series of Palmcorders.  Images are stored in JPEG format on an internal flashcard and can be transferred to a computer through the built-in serial port.  Images are saved in one of two resolutions; NORMAL is 320x240 and FINE is 640x480.  The CCD device which captures the images from the lens is only 300K and thus produces only low quality pictures."
 msgstr ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic heeft de beeldopnametechnologie PHOTOSHOT voor de eerste keerin "
-"deze series Palmcorders geïmplementeerd.  De beelden worden in JPEG-formaat "
-"op een interne Flash-kaart opgeslagen en kunnen via de seriële poort naar de "
-"computer getransfereerd worden. De beelden kunnen in de resoluties NORMAAL  "
-"(320x240) en FIJN (640x840) opgeslagen worden. De CCD, dat de beelden van de "
-"lens ophaalt, heeft slechts 300K pixels en produceert daardoor enkel beelden "
-"met lage kwaliteit."
+"Panasonic heeft de beeldopnametechnologie PHOTOSHOT voor de eerste keerin deze series Palmcorders geïmplementeerd.  De beelden worden in JPEG-formaat op een interne Flash-kaart opgeslagen en kunnen via de seriële poort naar de computer getransfereerd worden. De beelden kunnen in de resoluties NORMAAL  (320x240) en FIJN (640x840) opgeslagen worden. De CCD, dat de beelden van de lens ophaalt, heeft slechts 300K pixels en produceert daardoor enkel beelden met lage kwaliteit."
 
 #: camlibs/panasonic/l859/l859.c:599
 msgid ""
 "Known problems:\n"
 "\n"
-"If communications problems occur, reset the camera and restart the "
-"application.  The driver is not robust enough yet to recover from these "
-"situations, especially if a problem occurs and the camera is not properly "
-"shutdown at speeds faster than 9600."
+"If communications problems occur, reset the camera and restart the application.  The driver is not robust enough yet to recover from these situations, especially if a problem occurs and the camera is not properly shutdown at speeds faster than 9600."
 msgstr ""
-"Gekende problemen:\n"
+"Bekende problemen:\n"
 "\n"
-"Indien communicatieproblemen optreden, reset de camera en herstart het "
-"programma.  Het stuurprogramma is nog niet robuust genoeg om met deze "
-"situaties om te gaan, in het bijzonder bij problemen waarbij de "
-"transmissiesnelheid boven 9600 lag en de camera niet behoorlijk afgesloten "
-"werd."
+"Als er communicatieproblemen optreden, reset dan de camera en herstart het programma.  Het stuurprogramma is nog niet robuust genoeg om met deze situaties om te gaan, in het bijzonder bij problemen waarbij de transmissiesnelheid boven 9600 lag en de camera niet behoorlijk afgesloten werd."
 
 #: camlibs/panasonic/l859/l859.c:613
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 msgstr ""
-"Panasonic PV-L859-K/PV-L779-K Palmcorder stuurprogramma\n"
+"Panasonic PV-L859-K/PV-L779-K Palmcorder-stuurprogramma\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 
 #: camlibs/pccam300/library.c:234
@@ -3586,7 +3365,7 @@ msgid ""
 " Filecount: %d"
 msgstr ""
 " Totaal geheugen is %8d bytes.\n"
-" Vrij geheugen is  %8d bytes.\n"
+" Vrij geheugen is   %8d bytes.\n"
 " Aantal bestanden: %d"
 
 #: camlibs/pccam300/library.c:246
@@ -3598,14 +3377,14 @@ msgid ""
 " <mace@darksilence.net>"
 msgstr ""
 "Creative PC-CAM 300\n"
-" Authors: Till Adam\n"
-"<till@adam-lilienthal.de>\n"
-"and: Miah Gregory\n"
-" <mace@darksilence.net>"
+"Auteurs: Till Adam\n"
+"  <till@adam-lilienthal.de>\n"
+"en: Miah Gregory\n"
+"  <mace@darksilence.net>"
 
 #: camlibs/pccam600/library.c:192
 msgid "Downloading file..."
-msgstr "Bezig met downloaden van bestand..."
+msgstr "Downloaden van bestand..."
 
 #: camlibs/pccam600/library.c:254
 msgid ""
@@ -3620,41 +3399,33 @@ msgstr ""
 #: camlibs/pccam600/pccam600.c:128 camlibs/pccam600/pccam600.c:157
 #, c-format
 msgid "pccam600_init:Expected > %d blocks got %d"
-msgstr "pccam600_init:Verwachtte > %d blokken, ontving %d"
+msgstr "pccam600_init: Verwachtte > %d blokken, ontving %d"
 
 #: camlibs/pccam600/pccam600.c:141
 #, c-format
 msgid "pccam600_get_file:got index %d but expected index > %d"
-msgstr "pccam600_get_file:Ontving index %d maar verwachtte index > %d"
+msgstr "pccam600_get_file: Ontving index %d maar verwachtte index > %d"
 
 #: camlibs/pccam600/pccam600.c:183
 #, c-format
 msgid "pccam600_close:return value was %d instead of %d"
-msgstr "pccam600_close:teruggekregen waarde was %d i.p.v. %d"
+msgstr "pccam600_close: Teruggekregen waarde was %d i.p.v. %d"
 
 #: camlibs/pccam600/pccam600.c:217
 #, c-format
 msgid "pccam600_init:Expected %d blocks got %d"
-msgstr "pccam600_init:Verwachtte %d blokken, ontving %d"
+msgstr "pccam600_init: Verwachtte %d blokken, ontving %d"
 
 #: camlibs/pccam600/pccam600.c:228
 #, c-format
 msgid "pccam600 init:Unexpected error: gp_port_read returned %d instead of %d"
-msgstr "pccam600 init:Onverwachte fout: gp_port_read gaf %d i.p.v. %d"
+msgstr "pccam600_init: Onverwachte fout: gp_port_read gaf %d i.p.v. %d"
 
 #: camlibs/polaroid/pdc320.c:457
 msgid ""
-"Download program for several Polaroid cameras. Originally written by Peter "
-"Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
-"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
-"sf.net>.\n"
+"Download program for several Polaroid cameras. Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users.sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
-msgstr ""
-"Download programma voor verscheidene Polaroid camera's. origineel geschreven "
-"door Peter Desnoyers <pjd@fred.cambridge.ma.us>, en aangepast voor gphoto2 "
-"door Nathan Stenzel <nathanstenzel@users.sourceforge.net> en Lutz Mueller "
-"<lutz@users.sf.net>.\n"
-"Polaroid 640SE tests uitgevoerd door Michael Golden <naugrim@juno.com>."
+msgstr "Downloadprogramma voor verscheidene Polaroidcamera's.  Eerst geschreven door Peter Desnoyers <pjd@fred.cambridge.ma.us>, aangepast voor gphoto2 door Nathan Stenzel <nathanstenzel@users.sourceforge.net> en Lutz Mueller <lutz@users.sf.net>.  Polaroid 640SE-tests uitgevoerd door Michael Golden <naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:487
 #, c-format
@@ -3662,18 +3433,8 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Model: %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:903
-msgid ""
-"Download program for GrandTek 98x based cameras. Originally written by Chris "
-"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
-"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
-"JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
-"Meissner <marcus@jet.franken.de>."
-msgstr ""
-"Download programma voor op GrandTek 98x gebaseerde camera's. Origineel "
-"geschreven door Chris Byrne <adapt@ihug.co.nz>, an aangepast voor gphoto2 "
-"door Lutz Mueller <lutz@users.sf.net>. Verbetering van protocol en "
-"nabewerking voor Jenoptik JD350e by Michael Trawny <trawny99@users."
-"sourceforge.net>. Bugfixes door Marcus Meissner <marcus@jet.franken.de>."
+msgid "Download program for GrandTek 98x based cameras. Originally written by Chris Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus Meissner <marcus@jet.franken.de>."
+msgstr "Downloadprogramma voor op GrandTek 98x gebaseerde camera's.  Eerst geschreven door Chris Byrne <adapt@ihug.co.nz>, an aangepast voor gphoto2 door Lutz Mueller <lutz@users.sf.net>.  Verbetering van protocol en nabewerking voor Jenoptik JD350e by Michael Trawny <trawny99@users.sourceforge.net>.  Bugfixes door Marcus Meissner <marcus@jet.franken.de>."
 
 #: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2631
 #: camlibs/ptp2/config.c:2632 camlibs/ptp2/ptp.c:3141
@@ -3705,51 +3466,51 @@ msgstr "normaal"
 #: camlibs/sierra/sierra.c:1594 camlibs/sierra/sierra.c:1601
 #: camlibs/sierra/sierra.c:1806
 msgid "fine"
-msgstr "Fijn"
+msgstr "fijn"
 
 #: camlibs/polaroid/pdc700.c:167 camlibs/sierra/sierra.c:1595
 #: camlibs/sierra/sierra.c:1603 camlibs/sierra/sierra.c:1808
 msgid "superfine"
-msgstr "Superfijn"
+msgstr "superfijn"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/ptp2/config.c:1089
 #: camlibs/ptp2/config.c:1754 camlibs/sierra/epson-desc.c:116
 #: camlibs/sierra/sierra.c:1492 camlibs/sierra/sierra.c:1506
 #: camlibs/sierra/sierra.c:1741
 msgid "auto"
-msgstr "Auto"
+msgstr "auto"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 #: camlibs/ptp2/config.c:1090 camlibs/sierra/nikon-desc.c:565
 #: camlibs/sierra/nikon-desc.c:570
 msgid "on"
-msgstr "Aan"
+msgstr "aan"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
 #: camlibs/ptp2/config.c:1088 camlibs/sierra/nikon-desc.c:564
 #: camlibs/sierra/nikon-desc.c:569
 msgid "off"
-msgstr "Uit"
+msgstr "uit"
 
 #: camlibs/polaroid/pdc700.c:171
 msgid "play"
-msgstr "Weergave"
+msgstr "weergave"
 
 #: camlibs/polaroid/pdc700.c:171
 msgid "record"
-msgstr "Opname"
+msgstr "opname"
 
 #: camlibs/polaroid/pdc700.c:171
 msgid "menu"
-msgstr "Menu"
+msgstr "menu"
 
 #: camlibs/polaroid/pdc700.c:172
 msgid "battery"
-msgstr "Batterij"
+msgstr "batterij"
 
 #: camlibs/polaroid/pdc700.c:172
 msgid "a/c adaptor"
-msgstr "a/c adapter"
+msgstr "netadapter"
 
 #: camlibs/polaroid/pdc700.c:229
 #, c-format
@@ -3775,31 +3536,17 @@ msgstr "De camera verzond meer bytes dan verwacht (%i)"
 
 #: camlibs/polaroid/pdc700.c:451
 #, c-format
-msgid ""
-"Requested information about picture %i (= 0x%x), but got information about "
-"picture %i back"
-msgstr ""
-"Vroeg informatie over afbeelding %i (= 0x%x), maar kreeg informatie over "
-"afbeelding %i"
+msgid "Requested information about picture %i (= 0x%x), but got information about picture %i back"
+msgstr "Vroeg informatie over afbeelding %i (= 0x%x), maar kreeg informatie over afbeelding %i"
 
 #: camlibs/polaroid/pdc700.c:914
 #, c-format
-msgid ""
-"%i bytes of an unknown image format have been received. Please write to %s "
-"and ask for assistance."
-msgstr ""
-"Ontving %i bytes van een onbekend beeldformaat. Om assistentie te vragen, "
-"gelieve te schrijven naar %s ."
+msgid "%i bytes of an unknown image format have been received. Please write to %s and ask for assistance."
+msgstr "Ontving %i bytes van een onbekend beeldformaat. Om assistentie te vragen, gelieve te schrijven naar %s ."
 
 #: camlibs/polaroid/pdc700.c:939
-msgid ""
-"Download program for Polaroid DC700 camera. Originally written by Ryan "
-"Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
-"Mueller <lutz@users.sf.net>."
-msgstr ""
-"Download programma voor Polaroid DC700 camera. Origineel geschreven door "
-"Ryan Lantzer <rlantzer@umr.edu> voor gphoto-4.x. Aangepast voor gphoto2 door "
-"Lutz Mueller <lutz@users.sf.net>."
+msgid "Download program for Polaroid DC700 camera. Originally written by Ryan Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
+msgstr "Downloadprogramma voor Polaroid DC700-camera.  Origineel geschreven door Ryan Lantzer <rlantzer@umr.edu> voor gphoto-4.x.  Aangepast voor gphoto2 door Lutz Mueller <lutz@users.sf.net>."
 
 #: camlibs/polaroid/pdc700.c:995
 msgid "How long will it take until the camera powers off?"
@@ -3845,8 +3592,7 @@ msgstr ""
 #: camlibs/polaroid/pdc700.c:1233
 #, c-format
 msgid "The requested port type (%i) is not supported by this driver."
-msgstr ""
-"Het gevraagde poorttype (%i) wordt door dit stuurprogramma niet ondersteund."
+msgstr "Het gevraagde poorttype (%i) wordt door dit stuurprogramma niet ondersteund."
 
 #: camlibs/ptp2/config.c:258 camlibs/ptp2/config.c:346
 msgid "Sorry, your Canon camera does not support Canon capture"
@@ -3855,9 +3601,9 @@ msgstr "Deze camera ondersteunt geen beeldopname"
 #: camlibs/ptp2/config.c:480 camlibs/ptp2/config.c:507
 #: camlibs/ptp2/config.c:557 camlibs/ptp2/config.c:588
 #: camlibs/ptp2/config.c:616
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown value %04x"
-msgstr "Onbekend bestandstype %i."
+msgstr "Onbekende waarde %04x"
 
 #: camlibs/ptp2/config.c:645 camlibs/ptp2/config.c:662
 #: camlibs/ptp2/config.c:772
@@ -3893,7 +3639,7 @@ msgstr "Daglicht"
 #: camlibs/sierra/sierra.c:1073 camlibs/sierra/sierra.c:1082
 #: camlibs/sierra/sierra.c:1361
 msgid "Fluorescent"
-msgstr "Fluorescent - TL-licht"
+msgstr "TL-licht"
 
 #: camlibs/ptp2/config.c:787 camlibs/ptp2/config.c:1686
 #: camlibs/ptp2/config.c:1698 camlibs/sierra/olympus-desc.c:558
@@ -3901,7 +3647,7 @@ msgstr "Fluorescent - TL-licht"
 #: camlibs/sierra/olympus-desc.c:616 camlibs/sierra/sierra.c:1074
 #: camlibs/sierra/sierra.c:1084 camlibs/sierra/sierra.c:1363
 msgid "Tungsten"
-msgstr "Kunstlicht - Gloeilamp"
+msgstr "Gloeilamp"
 
 #: camlibs/ptp2/config.c:789 camlibs/ptp2/config.c:1685
 #: camlibs/ptp2/config.c:1697 camlibs/ptp2/ptp.c:3564
@@ -3943,23 +3689,20 @@ msgid "NEF (Raw)"
 msgstr "NEF (Raw)"
 
 #: camlibs/ptp2/config.c:803
-#, fuzzy
 msgid "NEF+Basic"
-msgstr "JPEG Basis"
+msgstr "NEF+Basis"
 
 #: camlibs/ptp2/config.c:804
-#, fuzzy
 msgid "NEF+Normal"
-msgstr "Normaal"
+msgstr "NEF+Normaal"
 
 #: camlibs/ptp2/config.c:805
-#, fuzzy
 msgid "NEF+Fine"
-msgstr "Fijn"
+msgstr "NEF+Fijn"
 
 #: camlibs/ptp2/config.c:1075
 msgid "super fine"
-msgstr "Superfijn"
+msgstr "superfijn"
 
 #: camlibs/ptp2/config.c:1081
 msgid "Tv"
@@ -3994,14 +3737,12 @@ msgid "spot"
 msgstr "Spot"
 
 #: camlibs/ptp2/config.c:1121
-#, fuzzy
 msgid "Evaluative metering"
-msgstr "Vluchtige instellingen"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1122
-#, fuzzy
 msgid "Partial metering"
-msgstr "Parameter 1"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1123
 #, fuzzy
@@ -4029,22 +3770,19 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:1133
 msgid "Monochrome"
-msgstr ""
+msgstr "Monochroom"
 
 #: camlibs/ptp2/config.c:1134
-#, fuzzy
 msgid "User defined 1"
-msgstr "PTP - Ongedefinieerde fout"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1135
-#, fuzzy
 msgid "User defined 2"
-msgstr "PTP - Ongedefinieerde fout"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1136
-#, fuzzy
 msgid "User defined 3"
-msgstr "PTP - Ongedefinieerde fout"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1200
 #, fuzzy
@@ -4053,24 +3791,23 @@ msgstr "Centraal"
 
 #: camlibs/ptp2/config.c:1207
 msgid "large"
-msgstr "Groot"
+msgstr "groot"
 
 #: camlibs/ptp2/config.c:1208
 msgid "medium 1"
-msgstr "Medium 1"
+msgstr "gemiddeld 1"
 
 #: camlibs/ptp2/config.c:1209
 msgid "medium 2"
-msgstr "Medium 2"
+msgstr "gemiddeld 2"
 
 #: camlibs/ptp2/config.c:1210
-#, fuzzy
 msgid "medium 3"
-msgstr "Medium 1"
+msgstr "gemiddeld 3"
 
 #: camlibs/ptp2/config.c:1211
 msgid "small"
-msgstr "Klein"
+msgstr "klein"
 
 #: camlibs/ptp2/config.c:1217 camlibs/ptp2/config.c:1707
 msgid "Factory Default"
@@ -4078,12 +3815,11 @@ msgstr "Fabrieksinstellingen"
 
 #: camlibs/ptp2/config.c:1366
 msgid "Creative"
-msgstr ""
+msgstr "Creatief"
 
 #: camlibs/ptp2/config.c:1367
-#, fuzzy
 msgid "Action"
-msgstr "Auto"
+msgstr "Actie"
 
 #: camlibs/ptp2/config.c:1373 camlibs/ptp2/ptp.c:3600
 msgid "Sports"
@@ -4102,14 +3838,12 @@ msgid "Single Shot"
 msgstr "Enkele opname"
 
 #: camlibs/ptp2/config.c:1382
-#, fuzzy
 msgid "Burst"
-msgstr "Best"
+msgstr "Reeks"
 
 #: camlibs/ptp2/config.c:1383
-#, fuzzy
 msgid "Timelapse"
-msgstr "Tijdspanne nummer"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1384 camlibs/ptp2/ptp.c:3605
 msgid "Continuous Low Speed"
@@ -4144,17 +3878,16 @@ msgid "Group Dynamic"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1403
-#, fuzzy
 msgid "sRGB (portrait)"
-msgstr "Staand"
+msgstr "sRGB (staand)"
 
 #: camlibs/ptp2/config.c:1404
 msgid "AdobeRGB"
-msgstr ""
+msgstr "AdobeRGB"
 
 #: camlibs/ptp2/config.c:1405
 msgid "sRGB (nature)"
-msgstr ""
+msgstr "sRGB (natuur)"
 
 #: camlibs/ptp2/config.c:1411 camlibs/ptp2/ptp.c:3641
 msgid "Centre"
@@ -4178,51 +3911,45 @@ msgstr "Rechts"
 
 #: camlibs/ptp2/config.c:1421
 msgid "Average"
-msgstr ""
+msgstr "Gemiddeld"
 
 #: camlibs/ptp2/config.c:1422 camlibs/ptp2/ptp.c:3589
 #: camlibs/sierra/olympus-desc.c:790
 msgid "Center Weighted"
-msgstr "Cetrumgerichte"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1423
 msgid "Multi Spot"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1424
-#, fuzzy
 msgid "Center Spot"
-msgstr "Cetrumgerichte"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1430
-#, fuzzy
 msgid "Automatic Flash"
-msgstr "Automatisch"
+msgstr "Automatische flits"
 
 #: camlibs/ptp2/config.c:1431
-#, fuzzy
 msgid "Flash off"
-msgstr "Flitsmodus"
+msgstr "Flits uit"
 
 #: camlibs/ptp2/config.c:1432
-#, fuzzy
 msgid "Fill flash"
-msgstr "Flits"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1433
 #, fuzzy
 msgid "Red-eye automatic"
-msgstr "Rode-ogen onderdrukking"
+msgstr "Rode-ogenonderdrukking"
 
 #: camlibs/ptp2/config.c:1434
-#, fuzzy
 msgid "Red-eye fill"
-msgstr "Rode-ogen-flits"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1435
-#, fuzzy
 msgid "External sync"
-msgstr "extern"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1436 camlibs/ptp2/ptp.c:3568
 msgid "Default"
@@ -4247,7 +3974,7 @@ msgstr "Rode-ogen onderdrukking + Slow Sync"
 #: camlibs/ptp2/config.c:1445 camlibs/ricoh/library.c:331
 #: camlibs/sierra/epson-desc.c:137
 msgid "Black & White"
-msgstr "Zwar-wit"
+msgstr "Zwart & wit"
 
 #: camlibs/ptp2/config.c:1560 camlibs/ptp2/ptp.c:3583
 #, fuzzy
@@ -4276,133 +4003,119 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:1570 camlibs/ptp2/config.c:1590
 msgid "10 seconds"
-msgstr ""
+msgstr "10 seconden"
 
 #: camlibs/ptp2/config.c:1571 camlibs/ptp2/config.c:1591
 msgid "20 seconds"
-msgstr ""
+msgstr "20 seconden"
 
 #: camlibs/ptp2/config.c:1572 camlibs/ptp2/config.c:1620
-#, fuzzy
 msgid "1 minute"
-msgstr "1 min"
+msgstr "1 minuut"
 
 #: camlibs/ptp2/config.c:1573 camlibs/ptp2/config.c:1621
-#, fuzzy
 msgid "5 minutes"
-msgstr "5 min"
+msgstr "5 minuten"
 
 #: camlibs/ptp2/config.c:1574 camlibs/ptp2/config.c:1622
-#, fuzzy
 msgid "10 minutes"
-msgstr "10 min"
+msgstr "10 minuten"
 
 #: camlibs/ptp2/config.c:1579
 msgid "4 seconds"
-msgstr ""
+msgstr "4 seconden"
 
 #: camlibs/ptp2/config.c:1580
 msgid "6 seconds"
-msgstr ""
+msgstr "6 seconden"
 
 #: camlibs/ptp2/config.c:1581
 msgid "8 seconds"
-msgstr ""
+msgstr "8 seconden"
 
 #: camlibs/ptp2/config.c:1582
 msgid "16 seconds"
-msgstr ""
+msgstr "16 seconden"
 
 #: camlibs/ptp2/config.c:1583
-#, fuzzy
 msgid "30 minutes"
-msgstr "10 min"
+msgstr "30 minuten"
 
 #: camlibs/ptp2/config.c:1588
 msgid "2 seconds"
-msgstr ""
+msgstr "2 seconden"
 
 #: camlibs/ptp2/config.c:1589
 msgid "5 seconds"
-msgstr ""
+msgstr "5 seconden"
 
 #: camlibs/ptp2/config.c:1596
-#, fuzzy
 msgid "6 mm"
-msgstr "29 mm"
+msgstr "6 mm"
 
 #: camlibs/ptp2/config.c:1597
-#, fuzzy
 msgid "8 mm"
-msgstr "58 mm"
+msgstr "8 mm"
 
 #: camlibs/ptp2/config.c:1598
-#, fuzzy
 msgid "10 mm"
-msgstr "51 mm"
+msgstr "10 mm"
 
 #: camlibs/ptp2/config.c:1599
-#, fuzzy
 msgid "20 mm"
-msgstr "29 mm"
+msgstr "20 mm"
 
 #: camlibs/ptp2/config.c:1604
 msgid "1/60"
-msgstr ""
+msgstr "1/60"
 
 #: camlibs/ptp2/config.c:1605
 msgid "1/30"
-msgstr ""
+msgstr "1/30"
 
 #: camlibs/ptp2/config.c:1606
 msgid "1/15"
-msgstr ""
+msgstr "1/15"
 
 #: camlibs/ptp2/config.c:1607
 msgid "1/8"
-msgstr ""
+msgstr "1/8"
 
 #: camlibs/ptp2/config.c:1608
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: camlibs/ptp2/config.c:1609
 msgid "1/2"
-msgstr ""
+msgstr "1/2"
 
 #: camlibs/ptp2/config.c:1610
-#, fuzzy
 msgid "1"
-msgstr "1x"
+msgstr "1"
 
 #: camlibs/ptp2/config.c:1611
-#, fuzzy
 msgid "2"
-msgstr "F2"
+msgstr "2"
 
 #: camlibs/ptp2/config.c:1612
-#, fuzzy
 msgid "4"
-msgstr "F4"
+msgstr "4"
 
 #: camlibs/ptp2/config.c:1613
-#, fuzzy
 msgid "8"
-msgstr "F8"
+msgstr "8"
 
 #: camlibs/ptp2/config.c:1614
-#, fuzzy
 msgid "15"
-msgstr "1.5"
+msgstr "15"
 
 #: camlibs/ptp2/config.c:1615
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: camlibs/ptp2/config.c:1623
-#, fuzzy
 msgid "15 minutes"
-msgstr "15 min"
+msgstr "15 minuten"
 
 #: camlibs/ptp2/config.c:1629 camlibs/ptp2/config.c:1744
 #: camlibs/ptp2/ptp.c:3647
@@ -4410,19 +4123,16 @@ msgid "Vivid"
 msgstr "Levendig"
 
 #: camlibs/ptp2/config.c:1630 camlibs/ptp2/ptp.c:3648
-#, fuzzy
 msgid "Sharper"
-msgstr "Scherp"
+msgstr "Scherper"
 
 #: camlibs/ptp2/config.c:1631 camlibs/ptp2/ptp.c:3649
-#, fuzzy
 msgid "Softer"
-msgstr "Zacht"
+msgstr "Zachter"
 
 #: camlibs/ptp2/config.c:1632 camlibs/ptp2/ptp.c:3650
-#, fuzzy
 msgid "Direct Print"
-msgstr "Map bestaat"
+msgstr "Direct afdrukken"
 
 #: camlibs/ptp2/config.c:1635 camlibs/ptp2/config.c:1657
 #: camlibs/ptp2/config.c:1689 camlibs/ptp2/config.c:1701
@@ -4444,9 +4154,8 @@ msgid "Medium high"
 msgstr "Gemiddeld"
 
 #: camlibs/ptp2/config.c:1653 camlibs/ptp2/ptp.c:3665
-#, fuzzy
 msgid "Low contrast"
-msgstr "Contrast"
+msgstr "Laag contrast"
 
 #: camlibs/ptp2/config.c:1654 camlibs/ptp2/ptp.c:3666
 #, fuzzy
@@ -4463,28 +4172,24 @@ msgstr "Verre afstand"
 
 #: camlibs/ptp2/config.c:1671 camlibs/ptp2/library.c:2331
 #: camlibs/ptp2/library.c:2345 camlibs/ptp2/ptp.c:3880
-#, fuzzy
 msgid "Undefined"
-msgstr "PTP - Ongedefinieerde fout"
+msgstr "Ongedefinieerd"
 
 #: camlibs/ptp2/config.c:1674
-#, fuzzy
 msgid "Automatic Macro"
-msgstr "Automatisch"
+msgstr "Automatische macro"
 
 #: camlibs/ptp2/config.c:1675
 msgid "AF-S"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1676
-#, fuzzy
 msgid "AF-C"
-msgstr "AC"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1677
-#, fuzzy
 msgid "AF-A"
-msgstr "AC"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1688
 msgid "Fluorescent H"
@@ -4499,19 +4204,16 @@ msgid "Black & white"
 msgstr "Zwart-wit"
 
 #: camlibs/ptp2/config.c:1788
-#, fuzzy
 msgid "AE & Flash"
-msgstr "GEEN flits"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1789
-#, fuzzy
 msgid "AE only"
-msgstr "alleen lezen"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1790
-#, fuzzy
 msgid "Flash only"
-msgstr "Flashgeheugen"
+msgstr ""
 
 #: camlibs/ptp2/config.c:1791
 #, fuzzy
@@ -4535,23 +4237,20 @@ msgid "Under > MTR"
 msgstr ""
 
 #: camlibs/ptp2/config.c:2078
-#, fuzzy
 msgid "Internal RAM"
-msgstr "intern"
+msgstr "Interne RAM"
 
 #: camlibs/ptp2/config.c:2079
-#, fuzzy
 msgid "Memory card"
-msgstr "Geen kaart aanwezig"
+msgstr "Geheugenkaart"
 
 #: camlibs/ptp2/config.c:2193
 msgid "ESSID"
-msgstr ""
+msgstr "ESSID"
 
 #: camlibs/ptp2/config.c:2198
-#, fuzzy
 msgid "Display"
-msgstr "Datumweergave"
+msgstr "Weergave"
 
 #: camlibs/ptp2/config.c:2208
 #, c-format
@@ -4559,9 +4258,8 @@ msgid "Creation date: %s, Last usage date: %s"
 msgstr ""
 
 #: camlibs/ptp2/config.c:2214
-#, fuzzy
 msgid "Delete"
-msgstr "Standaard"
+msgstr "Verwijderen"
 
 #: camlibs/ptp2/config.c:2283
 msgid "WEP 64-bit"
@@ -4572,18 +4270,16 @@ msgid "WEP 128-bit"
 msgstr ""
 
 #: camlibs/ptp2/config.c:2331
-#, fuzzy
 msgid "Managed"
-msgstr "Taal"
+msgstr ""
 
 #: camlibs/ptp2/config.c:2332
-#, fuzzy
 msgid "Ad-hoc"
-msgstr "AE-vergrendeling"
+msgstr ""
 
 #: camlibs/ptp2/config.c:2501
 msgid "Profile name"
-msgstr ""
+msgstr "Profielenaam"
 
 #: camlibs/ptp2/config.c:2502
 msgid "Wifi essid"
@@ -4591,21 +4287,19 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:2503
 msgid "IP address (empty for DHCP)"
-msgstr ""
+msgstr "IP-adres (leeg bij DHCP)"
 
 #: camlibs/ptp2/config.c:2504
 msgid "Network mask"
-msgstr ""
+msgstr "Netwerkmasker"
 
 #: camlibs/ptp2/config.c:2505
-#, fuzzy
 msgid "Default gateway"
-msgstr "Standaard"
+msgstr "Standaard doorgang"
 
 #: camlibs/ptp2/config.c:2506
-#, fuzzy
 msgid "Access mode"
-msgstr "Lensmodus"
+msgstr "Toegangsmodus"
 
 #: camlibs/ptp2/config.c:2507
 msgid "Wifi channel"
@@ -4613,21 +4307,19 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:2508
 msgid "Encryption"
-msgstr ""
+msgstr "Encryptie"
 
 #: camlibs/ptp2/config.c:2509
 msgid "Encryption key (hex)"
-msgstr ""
+msgstr "Encryptiesleutel (hex)"
 
 #: camlibs/ptp2/config.c:2510
-#, fuzzy
 msgid "Write"
-msgstr "Breedte"
+msgstr "Schrijven"
 
 #: camlibs/ptp2/config.c:2557
-#, fuzzy
 msgid "List Wifi profiles"
-msgstr "Toon alle bestanden"
+msgstr ""
 
 #: camlibs/ptp2/config.c:2558
 msgid "Create Wifi profile"
@@ -4635,16 +4327,15 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:2606 camlibs/ptp2/ptp.c:3185
 msgid "Camera Owner"
-msgstr "Eigenaar camera"
+msgstr "Camera-eigenaar"
 
 #: camlibs/ptp2/config.c:2607 camlibs/ptp2/ptp.c:3184
 msgid "Camera Model"
 msgstr "Cameramodel"
 
 #: camlibs/ptp2/config.c:2608 camlibs/ptp2/ptp.c:3183
-#, fuzzy
 msgid "Firmware Version"
-msgstr "Firmware revisie: %8s"
+msgstr "Firmwareversie"
 
 #: camlibs/ptp2/config.c:2609 camlibs/ptp2/config.c:2611
 #: camlibs/ptp2/config.c:2613
@@ -4658,7 +4349,7 @@ msgstr "Stel camera-datum in met PC-datum"
 
 #: camlibs/ptp2/config.c:2614 camlibs/ptp2/ptp.c:3125 camlibs/ptp2/ptp.c:3136
 msgid "Beep Mode"
-msgstr "Beep modus"
+msgstr "Piepmodus"
 
 #: camlibs/ptp2/config.c:2615
 msgid "Image Comment"
@@ -4694,21 +4385,19 @@ msgstr "Opname-instellingen"
 #: camlibs/ptp2/ptp.c:3163 camlibs/sierra/olympus-desc.c:881
 #: camlibs/sierra/olympus-desc.c:899
 msgid "ISO Speed"
-msgstr "ISO snelheid"
+msgstr "ISO-snelheid"
 
 #: camlibs/ptp2/config.c:2636
-#, fuzzy
 msgid "EOS ISO Speed"
-msgstr "ISO snelheid"
+msgstr "EOS ISO-snelheid"
 
 #: camlibs/ptp2/config.c:2637 camlibs/ptp2/config.c:2639
 msgid "WhiteBalance"
 msgstr "Witbalans"
 
 #: camlibs/ptp2/config.c:2638
-#, fuzzy
 msgid "EOS WhiteBalance"
-msgstr "Witbalans"
+msgstr "EOS-witbalans"
 
 #: camlibs/ptp2/config.c:2640 camlibs/ptp2/ptp.c:3198
 msgid "Photo Effect"
@@ -4728,14 +4417,12 @@ msgid "Long Exp Noise Reduction"
 msgstr "Lange belichting ruisonderdrukking"
 
 #: camlibs/ptp2/config.c:2648
-#, fuzzy
 msgid "Auto Focus Mode"
-msgstr "Focusmodus"
+msgstr "Autofocusmodus"
 
 #: camlibs/ptp2/config.c:2649
-#, fuzzy
 msgid "Auto Focus Mode 2"
-msgstr "Focusmodus"
+msgstr "Autofocusmodus 2"
 
 #: camlibs/ptp2/config.c:2651 camlibs/ptp2/config.c:2652
 #: camlibs/ptp2/ptp.c:3199
@@ -4749,9 +4436,8 @@ msgid "Exposure Compensation"
 msgstr "Belichtingscompensatie"
 
 #: camlibs/ptp2/config.c:2654
-#, fuzzy
 msgid "EOS Exposure Compensation"
-msgstr "Belichtingscompensatie"
+msgstr "EOS-belichtingscompensatie"
 
 #: camlibs/ptp2/config.c:2655 camlibs/ptp2/config.c:2656
 #: camlibs/ptp2/config.c:2672 camlibs/ptp2/ptp.c:3094 camlibs/ptp2/ptp.c:3145
@@ -4763,14 +4449,13 @@ msgstr "Flitsmodus"
 
 #: camlibs/ptp2/config.c:2657 camlibs/ptp2/ptp.c:3385
 msgid "AF Area Illumination"
-msgstr "AF zoneverlichting"
+msgstr "AF-zoneverlichting"
 
 #: camlibs/ptp2/config.c:2658 camlibs/ptp2/ptp.c:3373
 msgid "AF Beep Mode"
-msgstr "AF beepmodus"
+msgstr "AF-piepmodus"
 
 #: camlibs/ptp2/config.c:2659
-#, fuzzy
 msgid "F Number"
 msgstr "F-nummer"
 
@@ -4784,6 +4469,7 @@ msgid "Focus Mode"
 msgstr "Focusmodus"
 
 #: camlibs/ptp2/config.c:2663 camlibs/ptp2/ptp.c:3100
+#, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "Belichtingscompensatie"
 
@@ -4796,9 +4482,8 @@ msgid "Effect Mode"
 msgstr "Effectmodus"
 
 #: camlibs/ptp2/config.c:2666
-#, fuzzy
 msgid "Exposure Program"
-msgstr "Belichtingsprogrammamodus"
+msgstr "Belichtingsprogramma"
 
 #: camlibs/ptp2/config.c:2667 camlibs/ptp2/ptp.c:3103
 msgid "Still Capture Mode"
@@ -4836,23 +4521,20 @@ msgid "Shutter Speed"
 msgstr "Sluitersnelheid"
 
 #: camlibs/ptp2/config.c:2677
-#, fuzzy
 msgid "EOS Shutter Speed"
-msgstr "Sluitersnelheid"
+msgstr "EOS-sluitersnelheid"
 
 #: camlibs/ptp2/config.c:2678 camlibs/ptp2/ptp.c:3151
 msgid "Metering Mode"
 msgstr "Meetmethode"
 
 #: camlibs/ptp2/config.c:2679
-#, fuzzy
 msgid "EOS Metering Mode"
-msgstr "Meetmethode"
+msgstr "EOS-meetmethode"
 
 #: camlibs/ptp2/config.c:2680 camlibs/ptp2/ptp.c:3152
-#, fuzzy
 msgid "AF Distance"
-msgstr "Focusafstand"
+msgstr "Autofocusafstand"
 
 #: camlibs/ptp2/config.c:2681 camlibs/ptp2/ptp.c:3269
 #, fuzzy
@@ -4876,18 +4558,16 @@ msgid "Flash Sign"
 msgstr "Flitssignaal"
 
 #: camlibs/ptp2/config.c:2686
-#, fuzzy
 msgid "Viewfinder Grid"
-msgstr "Beeldzoekermodus"
+msgstr "Beeldzoekerraster"
 
 #: camlibs/ptp2/config.c:2687 camlibs/ptp2/ptp.c:3381
 msgid "Image Review"
 msgstr "Beeldoverzicht"
 
 #: camlibs/ptp2/config.c:2688
-#, fuzzy
 msgid "Image Rotation Flag"
-msgstr "Auto beeldrotatie"
+msgstr "Beeldrotatievlag"
 
 #: camlibs/ptp2/config.c:2689
 msgid "Release without CF card"
@@ -4899,13 +4579,12 @@ msgid "Flash Mode Manual Power"
 msgstr "Flitsvoeding"
 
 #: camlibs/ptp2/config.c:2691
-#, fuzzy
 msgid "Auto Focus Area"
-msgstr "Focus zone"
+msgstr "Autofocuszone"
 
 #: camlibs/ptp2/config.c:2692 camlibs/ptp2/ptp.c:3393
 msgid "Flash Exposure Compensation"
-msgstr "Flits belichtingscompensatie"
+msgstr "Flitsbelichtingscompensatie"
 
 #: camlibs/ptp2/config.c:2693 camlibs/ptp2/ptp.c:3319
 #, fuzzy
@@ -4967,6 +4646,7 @@ msgid "Center Weight Area"
 msgstr "Centrumgerichte meting"
 
 #: camlibs/ptp2/config.c:2705 camlibs/ptp2/ptp.c:3313
+#, fuzzy
 msgid "Flash Shutter Speed"
 msgstr "Flits sluitertijd"
 
@@ -4976,7 +4656,7 @@ msgstr "Timeout op afstand"
 
 #: camlibs/ptp2/config.c:2707 camlibs/ptp2/ptp.c:3367
 msgid "Optimize Image"
-msgstr ""
+msgstr "Beeldoptimalisatie"
 
 #: camlibs/ptp2/config.c:2708 camlibs/ptp2/ptp.c:3233
 msgid "Sharpening"
@@ -4987,17 +4667,16 @@ msgid "Tone Compensation"
 msgstr "Tooncompensatie"
 
 #: camlibs/ptp2/config.c:2710 camlibs/ptp2/ptp.c:3369
-#, fuzzy
 msgid "Saturation"
-msgstr "Configuratie"
+msgstr "Verzadiging"
 
 #: camlibs/ptp2/config.c:2711 camlibs/ptp2/ptp.c:3239
 msgid "Hue Adjustment"
-msgstr "Hue aanpassing"
+msgstr "Tintaanpassing"
 
 #: camlibs/ptp2/config.c:2713 camlibs/ptp2/ptp.c:3287
 msgid "Focus Lock"
-msgstr "Focus vergrendeling"
+msgstr "Focusvergrendeling"
 
 #: camlibs/ptp2/config.c:2718 camlibs/sierra/epson-desc.c:282
 #: camlibs/sierra/nikon-desc.c:662 camlibs/sierra/nikon-desc.c:673
@@ -5017,7 +4696,7 @@ msgstr "Opname-instellingen"
 
 #: camlibs/ptp2/config.c:2721
 msgid "Wifi profiles"
-msgstr ""
+msgstr "Wifiprofielen"
 
 #: camlibs/ptp2/library.c:117
 msgid "You need to specify a folder starting with /store_xxxxxxxxx/"
@@ -5191,8 +4870,7 @@ msgid ""
 "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 "Media Players that support the Media Transfer Protocol (MTP).\n"
 "\n"
-"This driver is not a 'Licensed Implementation' of the Media Transfer "
-"Protocol.\n"
+"This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
 "\n"
 "Enjoy!"
 msgstr ""
@@ -5504,8 +5182,7 @@ msgstr "Initialisatie camera"
 
 #: camlibs/ptp2/library.c:4235
 #, fuzzy, c-format
-msgid ""
-"PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
+msgid "PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
 msgstr "PTP is enkel voor USB-camera's geïmplementeerd."
 
 #: camlibs/ptp2/ptp.c:3021
@@ -7109,14 +6786,12 @@ msgstr "Verwacht %i, ontving %i. Gelieve deze fout te rapporteren aan %s."
 #: camlibs/ricoh/ricoh.c:75
 #, c-format
 msgid "Expected %i bytes, got %i. Please report this error to %s."
-msgstr ""
-"Verwacht %i bytes, ontving %i. Gelieve deze fout te rapporteren aan %s."
+msgstr "Verwacht %i bytes, ontving %i. Gelieve deze fout te rapporteren aan %s."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
 msgid "We expected 0x%x but received 0x%x. Please contact %s."
-msgstr ""
-"0x%x werd verwacht, maar 0x%x werd ontvangen. Gelieve %s te contacteren."
+msgstr "0x%x werd verwacht, maar 0x%x werd ontvangen. Gelieve %s te contacteren."
 
 #: camlibs/ricoh/ricoh.c:215
 #, c-format
@@ -7155,22 +6830,12 @@ msgstr "Er kwam een ongekende fout voor. Gelieve %s te contacteren."
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
-msgid ""
-"The filename's length must not exceed 12 characters ('%s' has %i characters)."
-msgstr ""
-"De bestandsnaam mag uit max 12 tekens bestaan ('%s' has %i characters)."
+msgid "The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgstr "De bestandsnaam mag uit max 12 tekens bestaan ('%s' has %i characters)."
 
 #: camlibs/samsung/samsung.c:243
-msgid ""
-"The Samsung digimax 800k driver has been written by James McKenzie "
-"<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
-"net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
-"enhanced the port."
-msgstr ""
-"Het 'Samsung digimax 800k'-stuurprogramma voor gphoto is geschreven door "
-"James McKenzie <james@fishsoup.dhs.org>. Ported naar gphoto2 door Lutz "
-"Mueller <lutz@users.sourceforge.net>. Marcus Meissner <marcus@jet.franken."
-"de> repareerde en verbeterde de port."
+msgid "The Samsung digimax 800k driver has been written by James McKenzie <james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge.net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and enhanced the port."
+msgstr "Het 'Samsung digimax 800k'-stuurprogramma voor gphoto is geschreven door James McKenzie <james@fishsoup.dhs.org>. Ported naar gphoto2 door Lutz Mueller <lutz@users.sourceforge.net>. Marcus Meissner <marcus@jet.franken.de> repareerde en verbeterde de port."
 
 #: camlibs/sierra/epson-desc.c:85 camlibs/sierra/nikon-desc.c:92
 #: camlibs/sierra/nikon-desc.c:126 camlibs/sierra/olympus-desc.c:106
@@ -7297,10 +6962,8 @@ msgstr "Kan de batterijcapaciteit niet opzoeken"
 
 #: camlibs/sierra/library.c:304
 #, c-format
-msgid ""
-"The battery level of the camera is too low (%d%%). The operation is aborted."
-msgstr ""
-"Het batterijniveau van de camera is te laag (%d%%). De actie is gestopt."
+msgid "The battery level of the camera is too low (%d%%). The operation is aborted."
+msgstr "Het batterijniveau van de camera is te laag (%d%%). De actie is gestopt."
 
 #: camlibs/sierra/library.c:328
 msgid "Cannot retrieve the available memory left"
@@ -7317,11 +6980,8 @@ msgstr "De eerste ontvangen byte (0x%x) is niet geldig."
 
 #: camlibs/sierra/library.c:719
 #, c-format
-msgid ""
-"Transmission of packet timed out even after %i retries. Please contact %s."
-msgstr ""
-"De transmissie van het pakket werd, zelfs na %i pogingen, onderbroken. "
-"Gelieve %s te contacteren."
+msgid "Transmission of packet timed out even after %i retries. Please contact %s."
+msgstr "De transmissie van het pakket werd, zelfs na %i pogingen, onderbroken. Gelieve %s te contacteren."
 
 #: camlibs/sierra/library.c:753 camlibs/sierra/library.c:777
 msgid "Could not transmit packet even after several retries."
@@ -7335,8 +6995,7 @@ msgstr "Het pakket werd door de camera verworpen. Gelieve %s te contacteren."
 #: camlibs/sierra/library.c:795
 #, c-format
 msgid "Could not transmit packet (error code %i). Please contact %s."
-msgstr ""
-"Kon het pakket niet overbrengen (foutcode %i). Gelieve %s te contacteren."
+msgstr "Kon het pakket niet overbrengen (foutcode %i). Gelieve %s te contacteren."
 
 #: camlibs/sierra/library.c:886
 msgid "Transmission timed out even after 2 retries. Giving up..."
@@ -7367,11 +7026,8 @@ msgstr "Bzeig met verzenden van data..."
 
 #: camlibs/sierra/library.c:1204
 #, c-format
-msgid ""
-"recursive calls are not supported by the sierra driver! Please contact %s."
-msgstr ""
-"Recursieve vragen worden niet ondersteund door het sierra stuurprogramma. "
-"Gelieve %s te contacteren."
+msgid "recursive calls are not supported by the sierra driver! Please contact %s."
+msgstr "Recursieve vragen worden niet ondersteund door het sierra stuurprogramma. Gelieve %s te contacteren."
 
 #: camlibs/sierra/library.c:1259
 #, c-format
@@ -7696,8 +7352,7 @@ msgstr ""
 "    in te schakelen, de klep van de geheugenkaartligplaats te\n"
 "    openen, de 'OK'-knop en de 'quickview'-knop beiden ingedrukt\n"
 "    houden tot het controlemenu van de camera verschijnt.\n"
-"    Plaats deze op beheermodus(2) Indien u de 'LCD-modus' naar 'Beeldscherm' "
-"of 'normaal\n"
+"    Plaats deze op beheermodus(2) Indien u de 'LCD-modus' naar 'Beeldscherm' of 'normaal\n"
 "    verandert, vergeet deze dan niet terug op 'UIT' te\n"
 "    plaatsen vooraleer de verbinding te verbreken. Anders kunt\n"
 "    u de cameraknoppen niet gebruiken. Indien u in deze toestand\n"
@@ -7834,12 +7489,8 @@ msgid "Auto Off (host) (in seconds)"
 msgstr "Auto uit (host) (in seconden)"
 
 #: camlibs/sierra/sierra.c:1181 camlibs/sierra/sierra.c:1643
-msgid ""
-"How long will it take until the camera powers off when connected to the "
-"computer?"
-msgstr ""
-"Hoe lang duurt het eer de camera uitschakelt als deze met de computer is "
-"verbonden?"
+msgid "How long will it take until the camera powers off when connected to the computer?"
+msgstr "Hoe lang duurt het eer de camera uitschakelt als deze met de computer is verbonden?"
 
 #: camlibs/sierra/sierra.c:1193 camlibs/sierra/sierra.c:1436
 #: camlibs/sierra/sierra.c:1655 camlibs/sierra/sierra.c:1843
@@ -7847,12 +7498,8 @@ msgid "Auto Off (field) (in seconds)"
 msgstr "Auto uit (field) (in seconden)"
 
 #: camlibs/sierra/sierra.c:1195 camlibs/sierra/sierra.c:1657
-msgid ""
-"How long will it take until the camera powers off when not connected to the "
-"computer?"
-msgstr ""
-"Hoe lang durt het eer de camera uitschakelt als deze met de computer is "
-"verbonden?"
+msgid "How long will it take until the camera powers off when not connected to the computer?"
+msgstr "Hoe lang durt het eer de camera uitschakelt als deze met de computer is verbonden?"
 
 #: camlibs/sierra/sierra.c:1217 camlibs/sierra/sierra.c:1455
 msgid "LCD Auto Off (in seconds)"
@@ -7915,8 +7562,7 @@ msgstr "Zwart-wit"
 
 #: camlibs/sierra/sierra.c:1926
 msgid "Note: no memory card present, some values may be invalid\n"
-msgstr ""
-"Merk op: geen geheugenkaart aanwezig, sommige waarden kunnen ongeldig zijn\n"
+msgstr "Merk op: geen geheugenkaart aanwezig, sommige waarden kunnen ongeldig zijn\n"
 
 #: camlibs/sierra/sierra.c:1934
 #, fuzzy, c-format
@@ -8085,8 +7731,7 @@ msgid ""
 msgstr ""
 "Smal Ultrapocket\n"
 "Lee Benfield <lee@benf.org>\n"
-"Stuurprogramma voor toegang tot de Smal Ultrapocket camera, en OEM-versies "
-"(slimshot)"
+"Stuurprogramma voor toegang tot de Smal Ultrapocket camera, en OEM-versies (slimshot)"
 
 #: camlibs/sonix/library.c:121
 #, fuzzy, c-format
@@ -8465,8 +8110,7 @@ msgid ""
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
 "(Traveler) SX330z Library (en andere Aldi-camera's).\n"
-"Zelfs andere handelaars zoals Jenoptik, Skanhex, Maginon zouden moeten "
-"werken.\n"
+"Zelfs andere handelaars zoals Jenoptik, Skanhex, Maginon zouden moeten werken.\n"
 "Bugrapporten en commentaren kunt u opsturen.\n"
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 
@@ -8532,9 +8176,7 @@ msgstr "Configuratie-opties worden door deze camera niet aangeboden."
 
 #: libgphoto2/gphoto2-camera.c:834
 msgid "This camera does not support setting configuration options."
-msgstr ""
-"Opties voor configuratie-instellingen worden door deze camera niet "
-"ondersteund."
+msgstr "Opties voor configuratie-instellingen worden door deze camera niet ondersteund."
 
 #: libgphoto2/gphoto2-camera.c:866
 msgid "This camera does not support summaries."
@@ -8583,12 +8225,8 @@ msgstr "Kon '%s' niet aan de map '%s' toevoegen want deze bestaat reeds."
 
 #: libgphoto2/gphoto2-filesys.c:1099
 #, c-format
-msgid ""
-"You have been trying to delete '%s' from folder '%s', but the filesystem "
-"does not support deletion of files."
-msgstr ""
-"U probeerde '%s' uit map '%s' te verwijderen, maar het bestandssyteem "
-"ondersteunt geen verwijdering van bestanden."
+msgid "You have been trying to delete '%s' from folder '%s', but the filesystem does not support deletion of files."
+msgstr "U probeerde '%s' uit map '%s' te verwijderen, maar het bestandssyteem ondersteunt geen verwijdering van bestanden."
 
 #: libgphoto2/gphoto2-filesys.c:1109
 #, fuzzy, c-format
@@ -8597,8 +8235,7 @@ msgstr "Bezig met downloaden van '%s' uit map '%s'..."
 
 #: libgphoto2/gphoto2-filesys.c:1228
 #, c-format
-msgid ""
-"There are still subfolders in folder '%s' that you are trying to remove."
+msgid "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "De map '%s' dat u probeert te verwijderen bevat nog submappen."
 
 #: libgphoto2/gphoto2-filesys.c:1235
@@ -8612,11 +8249,8 @@ msgstr "Het bestandssysteem ondersteunt niet het uploaden van bestanden."
 
 #: libgphoto2/gphoto2-filesys.c:1318
 #, c-format
-msgid ""
-"Folder '%s' does only contain %i files, but you requested a file with number "
-"%i."
-msgstr ""
-"Map '%s' bevat enkel %i-bestanden, maar u vroeg een bestand met nummer %i."
+msgid "Folder '%s' does only contain %i files, but you requested a file with number %i."
+msgstr "Map '%s' bevat enkel %i-bestanden, maar u vroeg een bestand met nummer %i."
 
 #: libgphoto2/gphoto2-filesys.c:1363
 #, c-format
@@ -8649,14 +8283,11 @@ msgstr "Het bestandssyteem ondersteunt niet het ophalen van bestadsinformatie"
 
 #: libgphoto2/gphoto2-filesys.c:2383
 msgid "The filesystem doesn't support setting file information"
-msgstr ""
-"Het bestandssysteem ondersteunt niet het instellen van bestandsinformatie"
+msgstr "Het bestandssysteem ondersteunt niet het instellen van bestandsinformatie"
 
 #: libgphoto2/gphoto2-filesys.c:2406
 msgid "Read-only file attributes like width and height can not be changed."
-msgstr ""
-"Alleen-lezen bestandsattributen zoals hoogte en breedte kunnen niet worden "
-"veranderd."
+msgstr "Alleen-lezen bestandsattributen zoals hoogte en breedte kunnen niet worden veranderd."
 
 #: libgphoto2/gphoto2-filesys.c:2475
 #, fuzzy
@@ -8665,11 +8296,11 @@ msgstr "Het bestandssyteem ondersteunt niet het ophalen van bestadsinformatie"
 
 #: libgphoto2/gphoto2-result.c:47
 msgid "Corrupted data"
-msgstr "Corrupte data"
+msgstr "Beschadigde gegevens"
 
 #: libgphoto2/gphoto2-result.c:48
 msgid "File exists"
-msgstr "Bestand bestaat"
+msgstr "Bestand bestaat al"
 
 #: libgphoto2/gphoto2-result.c:49
 msgid "Unknown model"
@@ -8784,24 +8415,16 @@ msgstr "Ongekende fout"
 #~ msgid ""
 #~ "\n"
 #~ "Till Adam <till@adam-lilienthal.de>\n"
-#~ "Support for digital cameras with a sunplus spca50x chip based on several "
-#~ "other gphoto2 camlib modules and the information kindly provided by "
-#~ "Mustek.\n"
+#~ "Support for digital cameras with a sunplus spca50x chip based on several other gphoto2 camlib modules and the information kindly provided by Mustek.\n"
 #~ "\n"
 #~ msgstr ""
 #~ "\n"
 #~ "Till Adam <till@adam-lilienthal.de>\n"
-#~ "Ondersteuning voor digitale camera's met een sunplus spca50x-chip "
-#~ "gebaseerd op verschillende andere gphoto2 camlibmodules en de informatie "
-#~ "geleverd door Mustek.\n"
+#~ "Ondersteuning voor digitale camera's met een sunplus spca50x-chip gebaseerd op verschillende andere gphoto2 camlibmodules en de informatie geleverd door Mustek.\n"
 #~ "\n"
 
-#~ msgid ""
-#~ "Download program for Casio QV cameras. Originally written for gphoto-0.4. "
-#~ "Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
-#~ msgstr ""
-#~ "Download programma voor Casio QV camera's. Origineel geschreven voor "
-#~ "gphoto-0.4. Aangepast voor gphoto2 door Lutz Mueller <lutz@users.sf.net>."
+#~ msgid "Download program for Casio QV cameras. Originally written for gphoto-0.4. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
+#~ msgstr "Download programma voor Casio QV camera's. Origineel geschreven voor gphoto-0.4. Aangepast voor gphoto2 door Lutz Mueller <lutz@users.sf.net>."
 
 #~ msgid "Could not follow the link '%s' (%m)."
 #~ msgstr "Kon de link '%s' niet volgen (%m)."
@@ -8816,9 +8439,7 @@ msgstr "Ongekende fout"
 #~ msgstr "Toon verborgen mappen"
 
 #~ msgid "Unsupported port type: %d. This driver only works with USBcameras.\n"
-#~ msgstr ""
-#~ "Niet-ondersteund poorttype: %d. Dit stuurprogramma werkt enkel met USB-"
-#~ "camera's.\n"
+#~ msgstr "Niet-ondersteund poorttype: %d. Dit stuurprogramma werkt enkel met USB-camera's.\n"
 
 #~ msgid "There is nothing to summarize for this camera."
 #~ msgstr "Voor deze camera is niets samen te vatten."
@@ -8910,16 +8531,11 @@ msgstr "Ongekende fout"
 #~ msgid "Could not append folder '%s' as this folder already exists."
 #~ msgstr "Kon de map '%s' niet toevoegen aangezien deze al bestaat."
 
-#~ msgid ""
-#~ "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
-#~ "filesystem is mounted."
-#~ msgstr ""
-#~ "Kon '/proc/meminfo' niet openen om te lezen ('%m'). Verzeker u ervan dat "
-#~ "het 'proc'-bestandssysteem gekoppeld is."
+#~ msgid "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc filesystem is mounted."
+#~ msgstr "Kon '/proc/meminfo' niet openen om te lezen ('%m'). Verzeker u ervan dat het 'proc'-bestandssysteem gekoppeld is."
 
 #~ msgid "An error occured while reading '/proc/meminfo' ('%m')."
-#~ msgstr ""
-#~ "Er deed zich een fout voor tijdens het lezen van '/proc/meminfo' ('%m')."
+#~ msgstr "Er deed zich een fout voor tijdens het lezen van '/proc/meminfo' ('%m')."
 
 #~ msgid "sysctl call failed ('%m')."
 #~ msgstr "sysctl call mislukte ('%m')."
