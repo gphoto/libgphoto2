@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-15 22:41+0100\n"
+"POT-Creation-Date: 2008-04-15 21:26+0200\n"
 "PO-Revision-Date: 2007-05-10 11:07+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -392,36 +392,36 @@ msgstr "Konnte »%s« nicht schließen (%m)."
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:588
+#: serial/unix.c:593
 msgid "Parity error."
 msgstr "Paritätsfehler."
 
-#: serial/unix.c:592
+#: serial/unix.c:597
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Unerwartete Paritätsantwort, Sequenz 0xff 0x%02x."
 
-#: serial/unix.c:635
+#: serial/unix.c:640
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:657
+#: serial/unix.c:662
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:692
+#: serial/unix.c:697
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:717
+#: serial/unix.c:722
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:830
+#: serial/unix.c:835
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
@@ -523,8 +523,8 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: disk/disk.c:180 disk/disk.c:181 disk/disk.c:231 disk/disk.c:268
-#: disk/disk.c:300 disk/disk.c:323
+#: disk/disk.c:180 disk/disk.c:181 disk/disk.c:235 disk/disk.c:236
+#: disk/disk.c:288 disk/disk.c:289 disk/disk.c:329 disk/disk.c:352
 #, c-format
 msgid "Media '%s'"
 msgstr "Medium »%s«"

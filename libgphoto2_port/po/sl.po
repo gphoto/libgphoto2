@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-03-15 22:41+0100\n"
+"POT-Creation-Date: 2008-04-15 21:26+0200\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -390,36 +390,36 @@ msgstr ""
 msgid "Could not write to port (%m)"
 msgstr "Ne morem dobiti #%i"
 
-#: serial/unix.c:588
+#: serial/unix.c:593
 msgid "Parity error."
 msgstr ""
 
-#: serial/unix.c:592
+#: serial/unix.c:597
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr ""
 
-#: serial/unix.c:635
+#: serial/unix.c:640
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:657
+#: serial/unix.c:662
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Ne morem dobiti #%i"
 
-#: serial/unix.c:692
+#: serial/unix.c:697
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:717
+#: serial/unix.c:722
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:830
+#: serial/unix.c:835
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Ne morem dobiti ¹tevila slik"
@@ -507,8 +507,8 @@ msgid ""
 "sure this device is connected to the computer."
 msgstr ""
 
-#: disk/disk.c:180 disk/disk.c:181 disk/disk.c:231 disk/disk.c:268
-#: disk/disk.c:300 disk/disk.c:323
+#: disk/disk.c:180 disk/disk.c:181 disk/disk.c:235 disk/disk.c:236
+#: disk/disk.c:288 disk/disk.c:289 disk/disk.c:329 disk/disk.c:352
 #, c-format
 msgid "Media '%s'"
 msgstr ""
