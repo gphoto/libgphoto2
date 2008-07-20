@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the libgphoto2 package.
 # Ngô Trần Thủy <ngotranthuy@gmail.com>, 2005.
 # Clytie Siddall <clytie@riverland.net.au>, 2008.
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.4.1\n"
+"Project-Id-Version: libgphoto2_port 2.4.2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-07-11 09:48+0200\n"
-"PO-Revision-Date: 2008-04-24 00:41+0930\n"
+"PO-Revision-Date: 2008-07-15 23:40+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -218,9 +218,7 @@ msgstr "Không thể nạp « %s » (« %s »)."
 #: libgphoto2_port/gphoto2-port.c:175
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr ""
-"Không tìm thấy « gp_port_library_operations » (các thao tác thư viện cổng "
-"gp) tại « %s » (« %s »)"
+msgstr "Không tìm thấy « gp_port_library_operations » (các thao tác thư viện cổng gp) tại « %s » (« %s »)"
 
 #: libgphoto2_port/gphoto2-port.c:255
 #, c-format
@@ -323,16 +321,12 @@ msgstr "Thoát khỏi trạng thái bị ngừng..."
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%"
-"x)..."
+msgstr "Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%"
-"x)..."
+msgstr "Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
@@ -355,8 +349,7 @@ msgstr "Thiết bị « %s » bị khoá bởi mã số tiến trình (PID) %d"
 #: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr ""
-"Không thể khóa thiết bị « %s » (dev_lock [khóa thiết bị] đã trả lại %d)"
+msgstr "Không thể khóa thiết bị « %s » (dev_lock [khóa thiết bị] đã trả lại %d)"
 
 #: serial/unix.c:280
 #, c-format
@@ -371,9 +364,7 @@ msgstr "Không thể mở khoá thiết bị « %s » vì nó được PID %d kh
 #: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
-"Không thể mở khoá thiết bị « %s » (dev_unlock [mở khoá thiết bị] đã trả lại %"
-"d)"
+msgstr "Không thể mở khoá thiết bị « %s » (dev_unlock [mở khoá thiết bị] đã trả lại %d)"
 
 #: serial/unix.c:374
 #, c-format
@@ -454,14 +445,8 @@ msgstr "Không thể truy vấn trình điều khiển hạt nhân của thiết
 
 #: usb/libusb.c:269
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Không thể quyền đòi giao diện %d (%m). Kiểm tra xem không có chương trình "
-"khác hoặc môđ-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền "
-"đọc từ và ghi vào thiết bị này."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Không thể quyền đòi giao diện %d (%m). Kiểm tra xem không có chương trình khác hoặc môđ-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền đọc từ và ghi vào thiết bị này."
 
 #: usb/libusb.c:287
 #, c-format
@@ -495,30 +480,18 @@ msgstr "Mã sản phẩm hay mã nhà sản xuất (0x%x, 0x%x) không phải h�
 
 #: usb/libusb.c:716
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một thiết bị lưu trữ hàng "
-"loạt, và có thể không hoạt động được với trình gphoto2. Tham khảo : %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một thiết bị lưu trữ hàng loạt, và có thể không hoạt động được với trình gphoto2. Tham khảo : %s"
 
 #: usb/libusb.c:758
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem "
-"thiết bị này được kết nối đến máy tính."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
 #: usb/libusb.c:988
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm "
-"tra xem thiết bị này được kết nối đến máy tính."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
 #: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
 #: disk/disk.c:323
