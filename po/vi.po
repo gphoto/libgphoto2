@@ -1,14 +1,14 @@
 # Vietnamese translation for LibGPhoto.
 # Copyright © 2008 Free Software Foundation, Inc.
-# This file is distributed under the same license as the libgphoto2-2.4.1 package.
+# This file is distributed under the same license as the libgphoto2 package.
 # Clytie Siddall <clytie@riverland.net.au>, 2007-2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2 2.4.1\n"
+"Project-Id-Version: libgphoto2 2.4.2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-07-13 22:25+0200\n"
-"PO-Revision-Date: 2008-04-15 22:45+0930\n"
+"PO-Revision-Date: 2008-07-16 00:16+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -126,21 +126,13 @@ msgstr "*KHÔNG RÕ*"
 
 #: camlibs/canon/canon.c:1500
 #, c-format
-msgid ""
-"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
-"status %li"
-msgstr ""
-"canon_int_capture_image: tiến trình canon_usb_list_all_dirs() (liêt kê mọi "
-"thư mục) đầu tiên đã thất bại với trạng thái %li"
+msgid "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %li"
+msgstr "canon_int_capture_image: tiến trình canon_usb_list_all_dirs() (liêt kê mọi thư mục) đầu tiên đã thất bại với trạng thái %li"
 
 #: camlibs/canon/canon.c:1632
 #, c-format
-msgid ""
-"canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
-"i"
-msgstr ""
-"canon_int_capture_image: tiến trình canon_usb_list_all_dirs() (liêt kê mọi "
-"thư mục) cuối cùng đã thất bại với trạng thái %i"
+msgid "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %i"
+msgstr "canon_int_capture_image: tiến trình canon_usb_list_all_dirs() (liêt kê mọi thư mục) cuối cùng đã thất bại với trạng thái %i"
 
 #: camlibs/canon/canon.c:2397
 #, c-format
@@ -154,19 +146,12 @@ msgstr "Không cho phép chữ thường trong %s."
 
 #: camlibs/canon/canon.c:2997
 #, c-format
-msgid ""
-"canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
-msgstr ""
-"canon_int_list_directory: LỖI: thông điệp đầu tiên quá ngắn (%i < tối thiểu %"
-"i)"
+msgid "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
+msgstr "canon_int_list_directory: LỖI: thông điệp đầu tiên quá ngắn (%i < tối thiểu %i)"
 
 #: camlibs/canon/canon.c:3019
-msgid ""
-"canon_int_list_directory: Reached end of packet while examining the first "
-"dirent"
-msgstr ""
-"canon_int_list_directory: Tới kết thúc gói trong khi kiểm tra mục nhập thư "
-"mục thứ nhất"
+msgid "canon_int_list_directory: Reached end of packet while examining the first dirent"
+msgstr "canon_int_list_directory: Tới kết thúc gói trong khi kiểm tra mục nhập thư mục thứ nhất"
 
 #: camlibs/canon/canon.c:3104
 msgid "canon_int_list_directory: truncated directory entry encountered"
@@ -191,11 +176,8 @@ msgstr "Tham số vô giá trị « %s » trong %s dòng %i"
 
 #: camlibs/canon/canon.h:633
 #, c-format
-msgid ""
-"Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
-msgstr ""
-"Tiến trình này không biết cách xử lý giá trị máy_ảnh->cổng->kiểu %i cũng "
-"được biết như là 0x%x trong %s dòng %i."
+msgid "Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
+msgstr "Tiến trình này không biết cách xử lý giá trị máy_ảnh->cổng->kiểu %i cũng được biết như là 0x%x trong %s dòng %i."
 
 #: camlibs/canon/crc.c:234
 #, c-format
@@ -209,12 +191,8 @@ msgstr "không thể đoán giá trị CRC đầu tiên\n"
 
 #: camlibs/canon/crc.c:274
 #, c-format
-msgid ""
-"warning: CRC not checked (add len %d, value 0x%04x) "
-"#########################\n"
-msgstr ""
-"cảnh báo : chưa kiểm CRC (thêm độ dài %d, giá trị 0x%04x) "
-"••••••••••••••••••••••••••••\n"
+msgid "warning: CRC not checked (add len %d, value 0x%04x) #########################\n"
+msgstr "cảnh báo : chưa kiểm CRC (thêm độ dài %d, giá trị 0x%04x) ••••••••••••••••••••••••••••\n"
 
 #: camlibs/canon/library.c:96 camlibs/canon/library.c:1556
 msgid "Compatibility mode"
@@ -230,17 +208,15 @@ msgstr "Ảnh đầy đủ"
 
 #: camlibs/canon/library.c:121
 msgid "Bulb"
-msgstr ""
+msgstr "Bóng đèn"
 
 #: camlibs/canon/library.c:122
-#, fuzzy
 msgid "30 seconds"
-msgstr "10 giây"
+msgstr "30 giây"
 
 #: camlibs/canon/library.c:123
-#, fuzzy
 msgid "25 seconds"
-msgstr "2 giây"
+msgstr "25 giây"
 
 #: camlibs/canon/library.c:124 camlibs/ptp2/config.c:1569
 #: camlibs/ptp2/config.c:1589
@@ -248,14 +224,12 @@ msgid "20 seconds"
 msgstr "20 giây"
 
 #: camlibs/canon/library.c:125
-#, fuzzy
 msgid "15 seconds"
-msgstr "5 giây"
+msgstr "15 giây"
 
 #: camlibs/canon/library.c:126
-#, fuzzy
 msgid "13 seconds"
-msgstr "10 giây"
+msgstr "13 giây"
 
 #: camlibs/canon/library.c:127 camlibs/ptp2/config.c:1568
 #: camlibs/ptp2/config.c:1588
@@ -279,213 +253,172 @@ msgid "4 seconds"
 msgstr "4 giây"
 
 #: camlibs/canon/library.c:132
-#, fuzzy
 msgid "3.2 second"
-msgstr "2 giây"
+msgstr "3,2 giây"
 
 #: camlibs/canon/library.c:133
-#, fuzzy
 msgid "2.5 second"
-msgstr "2 giây"
+msgstr "2,5 giây"
 
 #: camlibs/canon/library.c:134 camlibs/ptp2/config.c:1586
 msgid "2 seconds"
 msgstr "2 giây"
 
 #: camlibs/canon/library.c:135
-#, fuzzy
 msgid "1.6 second"
-msgstr "16 giây"
+msgstr "1,6 giây"
 
 #: camlibs/canon/library.c:136
-#, fuzzy
 msgid "1.3 second"
-msgstr "10 giây"
+msgstr "1,3 giây"
 
 #: camlibs/canon/library.c:137
-#, fuzzy
 msgid "1 second"
-msgstr "10 giây"
+msgstr "1 giây"
 
 #: camlibs/canon/library.c:138
-#, fuzzy
 msgid "8/10 second"
-msgstr "10 giây"
+msgstr "8/10 giây"
 
 #: camlibs/canon/library.c:139
-#, fuzzy
 msgid "6/10 second"
-msgstr "10 giây"
+msgstr "6/10 giây"
 
 #: camlibs/canon/library.c:140
-#, fuzzy
 msgid "1/2 second"
-msgstr "2 giây"
+msgstr "1/2 giây"
 
 #: camlibs/canon/library.c:141
-#, fuzzy
 msgid "4/10 second"
-msgstr "10 giây"
+msgstr "4/10 giây"
 
 #: camlibs/canon/library.c:142
-#, fuzzy
 msgid "3/10 second"
-msgstr "10 giây"
+msgstr "3/10 giây"
 
 #: camlibs/canon/library.c:143
-#, fuzzy
 msgid "1/4 second"
-msgstr "4 giây"
+msgstr "1/4 giây"
 
 #: camlibs/canon/library.c:144
-#, fuzzy
 msgid "1/5 second"
-msgstr "5 giây"
+msgstr "1/5 giây"
 
 #: camlibs/canon/library.c:145
-#, fuzzy
 msgid "1/6 second"
-msgstr "16 giây"
+msgstr "1/6 giây"
 
 #: camlibs/canon/library.c:146
-#, fuzzy
 msgid "1/8 second"
-msgstr "8 giây"
+msgstr "1/8 giây"
 
 #: camlibs/canon/library.c:147
-#, fuzzy
 msgid "1/10 second"
-msgstr "10 giây"
+msgstr "1/10 giây"
 
 #: camlibs/canon/library.c:148
-#, fuzzy
 msgid "1/13 second"
-msgstr "10 giây"
+msgstr "1/13 giây"
 
 #: camlibs/canon/library.c:149
-#, fuzzy
 msgid "1/15 second"
-msgstr "5 giây"
+msgstr "1/15 giây"
 
 #: camlibs/canon/library.c:150
-#, fuzzy
 msgid "1/20 second"
-msgstr "10 giây"
+msgstr "1/20 giây"
 
 #: camlibs/canon/library.c:151
-#, fuzzy
 msgid "1/25 second"
-msgstr "2 giây"
+msgstr "1/25 giây"
 
 #: camlibs/canon/library.c:152
-#, fuzzy
 msgid "1/30 second"
-msgstr "10 giây"
+msgstr "1/30 giây"
 
 #: camlibs/canon/library.c:153
-#, fuzzy
 msgid "1/40 second"
-msgstr "10 giây"
+msgstr "1/40 giây"
 
 #: camlibs/canon/library.c:154
-#, fuzzy
 msgid "1/50 second"
-msgstr "10 giây"
+msgstr "1/50 giây"
 
 #: camlibs/canon/library.c:155
-#, fuzzy
 msgid "1/60 second"
-msgstr "10 giây"
+msgstr "1/60 giây"
 
 #: camlibs/canon/library.c:156
-#, fuzzy
 msgid "1/80 second"
-msgstr "10 giây"
+msgstr "1/80 giây"
 
 #: camlibs/canon/library.c:157
-#, fuzzy
 msgid "1/100 second"
-msgstr "10 giây"
+msgstr "1/100 giây"
 
 #: camlibs/canon/library.c:158
-#, fuzzy
 msgid "1/125 second"
-msgstr "2 giây"
+msgstr "1/125 giây"
 
 #: camlibs/canon/library.c:159
-#, fuzzy
 msgid "1/160 second"
-msgstr "10 giây"
+msgstr "1/160 giây"
 
 #: camlibs/canon/library.c:160
-#, fuzzy
 msgid "1/200 second"
-msgstr "10 giây"
+msgstr "1/200 giây"
 
 #: camlibs/canon/library.c:161
-#, fuzzy
 msgid "1/250 second"
-msgstr "10 giây"
+msgstr "1/250 giây"
 
 #: camlibs/canon/library.c:162
-#, fuzzy
 msgid "1/320 second"
-msgstr "10 giây"
+msgstr "1/320 giây"
 
 #: camlibs/canon/library.c:163
-#, fuzzy
 msgid "1/400 second"
-msgstr "10 giây"
+msgstr "1/400 giây"
 
 #: camlibs/canon/library.c:164
-#, fuzzy
 msgid "1/500 second"
-msgstr "10 giây"
+msgstr "1/500 giây"
 
 #: camlibs/canon/library.c:165
-#, fuzzy
 msgid "1/640 second"
-msgstr "10 giây"
+msgstr "1/640 giây"
 
 #: camlibs/canon/library.c:166
-#, fuzzy
 msgid "1/800 second"
-msgstr "10 giây"
+msgstr "1/800 giây"
 
 #: camlibs/canon/library.c:167
-#, fuzzy
 msgid "1/1000 second"
-msgstr "10 giây"
+msgstr "1/1000 giây"
 
 #: camlibs/canon/library.c:168
-#, fuzzy
 msgid "1/1250 second"
-msgstr "10 giây"
+msgstr "1/1250 giây"
 
 #: camlibs/canon/library.c:169
-#, fuzzy
 msgid "1/1600 second"
-msgstr "10 giây"
+msgstr "1/1600 giây"
 
 #: camlibs/canon/library.c:170
-#, fuzzy
 msgid "1/2000 second"
-msgstr "10 giây"
+msgstr "1/2000 giây"
 
 #: camlibs/canon/library.c:171
-#, fuzzy
 msgid "1/2500 second"
-msgstr "10 giây"
+msgstr "1/2500 giây"
 
 #: camlibs/canon/library.c:172
-#, fuzzy
 msgid "1/3200 second"
-msgstr "10 giây"
+msgstr "1/3200 giây"
 
 #: camlibs/canon/library.c:173
-#, fuzzy
 msgid "1/4000 second"
-msgstr "10 giây"
+msgstr "1/4000 giây"
 
 #: camlibs/canon/library.c:210
 msgid "Auto focus: one-shot"
@@ -504,77 +437,64 @@ msgid "Manual focus"
 msgstr "Tiêu điểm thủ công"
 
 #: camlibs/canon/library.c:218
-#, fuzzy
 msgid "Beep off"
-msgstr "Chế độ bíp"
+msgstr "Bíp tắt"
 
 #: camlibs/canon/library.c:219
-#, fuzzy
 msgid "Beep on"
-msgstr "Chế độ bíp"
+msgstr "Bíp bật"
 
 #: camlibs/canon/library.c:224 camlibs/ptp2/config.c:1429
 msgid "Flash off"
-msgstr "Đèn nháy bị tắt"
+msgstr "Đèn nháy tắt"
 
 #: camlibs/canon/library.c:225
-#, fuzzy
 msgid "Flash on"
-msgstr "Chỉ nháy đèn"
+msgstr "Đèn nháy bật"
 
 #: camlibs/canon/library.c:226
-#, fuzzy
 msgid "Flash auto"
-msgstr "Đèn nháy bị tắt"
+msgstr "Đèn nháy tự động"
 
 #: camlibs/canon/library.c:231
 msgid "No zoom"
-msgstr ""
+msgstr "Không phóng to"
 
 #: camlibs/canon/library.c:232
-#, fuzzy
 msgid "Zoom 1"
-msgstr "Thu phóng"
+msgstr "Phóng to 1"
 
 #: camlibs/canon/library.c:233
-#, fuzzy
 msgid "Zoom 2"
-msgstr "Thu phóng"
+msgstr "Phóng to 2"
 
 #: camlibs/canon/library.c:234
-#, fuzzy
 msgid "Zoom 3"
-msgstr "Thu phóng"
+msgstr "Phóng to 3"
 
 #: camlibs/canon/library.c:235
-#, fuzzy
 msgid "Zoom 4"
-msgstr "Thu phóng"
+msgstr "Phóng to 4"
 
 #: camlibs/canon/library.c:236
-#, fuzzy
 msgid "Zoom 5"
-msgstr "Thu phóng"
+msgstr "Phóng to 5"
 
 #: camlibs/canon/library.c:237
-#, fuzzy
 msgid "Zoom 6"
-msgstr "Thu phóng"
+msgstr "Phóng to 6"
 
 #: camlibs/canon/library.c:238
-#, fuzzy
 msgid "Zoom 7"
-msgstr "Thu phóng"
+msgstr "Phóng to 7"
 
 #: camlibs/canon/library.c:239
-#, fuzzy
 msgid "Zoom 8"
-msgstr "Thu phóng"
+msgstr "Phóng to 8"
 
 #: camlibs/canon/library.c:240
-#, fuzzy
 msgid "Zoom 9"
-msgstr "Thu phóng"
+msgstr "Phóng to 9"
 
 #: camlibs/canon/library.c:245 camlibs/ptp2/ptp.c:3588
 msgid "RAW"
@@ -645,8 +565,7 @@ msgid ""
 " computer as idle as possible (i.e. no disk activity)\n"
 msgstr ""
 "Đây là trình điều khiển cho các máy ảnh Canon PowerShot, Digital IXUS,\n"
-"IXY Digital, và EOS Digital trong chế độ sở hữu (cũng được gọi là « chuẩn "
-"»).\n"
+"IXY Digital, và EOS Digital trong chế độ sở hữu (cũng được gọi là « chuẩn »).\n"
 "Nó cũng hỗ trợ vài máy thu-ghi hình điện số Canon có khả năng ảnh tĩnh.\n"
 "Nó chứa mã để liên lạc qua cổng nối tiếp hay kết nối USB, nhưng không\n"
 "phải (chưa) qua IEEE 1394 (Firewire).\n"
@@ -798,8 +717,7 @@ msgid "Error deleting associated thumbnail file"
 msgstr "Gặp lỗi khi xoá ảnh mẫu liên quan"
 
 #: camlibs/canon/library.c:1282 camlibs/canon/library.c:1415
-msgid ""
-"Speeds greater than 57600 are not supported for uploading to this camera"
+msgid "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr "Không hỗ trợ tốc độ hơn 57600 bps để tải lên máy ảnh"
 
 #: camlibs/canon/library.c:1299 camlibs/canon/library.c:1433
@@ -893,7 +811,6 @@ msgid "Focus mode"
 msgstr "Chế độ tiêu điểm"
 
 #: camlibs/canon/library.c:1767 camlibs/canon/library.c:2186
-#, fuzzy
 msgid "Flash mode"
 msgstr "Chế độ đèn nháy"
 
@@ -1025,48 +942,40 @@ msgid "Could not change focus mode"
 msgstr "Không thể thay đổi chế độ tiêu điểm"
 
 #: camlibs/canon/library.c:2116
-#, fuzzy
 msgid "Invalid beep mode setting"
-msgstr "Thiết lập chế độ tiêu điểm không hợp lệ"
+msgstr "Sai đặt chế độ bíp"
 
 #: camlibs/canon/library.c:2119
-#, fuzzy
 msgid "Beep mode changed"
-msgstr "Chế độ tiêu điểm bị thay đổi"
+msgstr "Chế độ bíp bị thay đổi"
 
 #: camlibs/canon/library.c:2121
-#, fuzzy
 msgid "Could not change beep mode"
-msgstr "Không thể thay đổi chế độ tiêu điểm"
+msgstr "Không thể thay đổi chế độ bíp"
 
 #: camlibs/canon/library.c:2146
 msgid "Invalid zoom level"
-msgstr ""
+msgstr "Sai đặt mức phóng to"
 
 #: camlibs/canon/library.c:2149
-#, fuzzy
 msgid "Zoom level changed"
-msgstr "Tốc độ ISO bị thay đổi"
+msgstr "Mức phóng to bị thay đổi"
 
 #: camlibs/canon/library.c:2151
-#, fuzzy
 msgid "Could not change zoom level"
-msgstr "Không thể thay đổi tốc độ ISO"
+msgstr "Không thể thay đổi mức phóng to"
 
 #: camlibs/canon/library.c:2204
-#, fuzzy
 msgid "Invalid flash mode setting"
-msgstr "Thiết lập chế độ tiêu điểm không hợp lệ"
+msgstr "Sai đặt chế độ đèn nháy"
 
 #: camlibs/canon/library.c:2207
-#, fuzzy
 msgid "Flash mode changed"
-msgstr "Chế độ tiêu điểm bị thay đổi"
+msgstr "Chế độ đèn nháy bị thay đổi"
 
 #: camlibs/canon/library.c:2209
-#, fuzzy
 msgid "Could not change flash mode"
-msgstr "Không thể thay đổi chế độ tiêu điểm"
+msgstr "Không thể thay đổi chế độ đèn nháy"
 
 #: camlibs/canon/library.c:2222
 msgid "time set"
@@ -1118,20 +1027,13 @@ msgid "Getting file..."
 msgstr "Đang lấy tập tin..."
 
 #: camlibs/canon/serial.c:1131
-msgid ""
-"canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
-"entries"
-msgstr ""
-"canon_serial_get_dirents: hộp nối tiếp canon_serial_dialogue không lấy được "
-"các mục nhập thư mục"
+msgid "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory entries"
+msgstr "canon_serial_get_dirents: hộp nối tiếp canon_serial_dialogue không lấy được các mục nhập thư mục"
 
 #: camlibs/canon/serial.c:1139
 #, c-format
-msgid ""
-"canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
-msgstr ""
-"canon_serial_get_dirents: gói tin mục nhập thư mục đầu tiên quá ngắn (chỉ %i "
-"byte)"
+msgid "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
+msgstr "canon_serial_get_dirents: gói tin mục nhập thư mục đầu tiên quá ngắn (chỉ %i byte)"
 
 #: camlibs/canon/serial.c:1159
 #, c-format
@@ -1153,9 +1055,7 @@ msgstr "canon_serial_get_dirents: quá nhiều mục nhập thư mục, chắc l
 #: camlibs/canon/serial.c:1235
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
-msgstr ""
-"canon_serial_get_dirents: không thể thay đổi kích cỡ của bộ đệm mục nhập thư "
-"mục thành %i byte"
+msgstr "canon_serial_get_dirents: không thể thay đổi kích cỡ của bộ đệm mục nhập thư mục thành %i byte"
 
 #: camlibs/canon/serial.c:1304
 msgid "Error changing speed."
@@ -1221,9 +1121,8 @@ msgid "Error changing speed"
 msgstr "Gặp lỗi khi thay đổi tốc độ"
 
 #: camlibs/canon/serial.c:1465
-#, fuzzy
 msgid "Error waiting for ACK during initialization, retrying"
-msgstr "Lỗi đợi xác nhận trong khi sở khởi, đang thử lai"
+msgstr "Lỗi đợi xác nhận trong khi sơ khởi, đang thử lai"
 
 #: camlibs/canon/serial.c:1471
 msgid "Error waiting ACK during initialization"
@@ -1272,42 +1171,29 @@ msgid "Initial camera response '%c' unrecognized"
 msgstr "Không nhận ra đáp ứng máy ảnh đầu tiên « %c »"
 
 #: camlibs/canon/usb.c:266
-#, fuzzy, c-format
-msgid ""
-"Step #2 of initialization failed: (\"%s\" on read of %i). Camera not "
-"operational"
-msgstr "Bước 2 sở khởi bị lỗi (« %s » khi đọc %i). Máy ảnh không hoạt động."
+#, c-format
+msgid "Step #2 of initialization failed: (\"%s\" on read of %i). Camera not operational"
+msgstr "Bước 2 sơ khởi bị lỗi (« %s » khi đọc %i). Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:272
-#, fuzzy, c-format
-msgid ""
-"Step #2 of initialization failed! (returned %i bytes, expected %i). Camera "
-"not operational"
-msgstr ""
-"Bước 2 sở khởi bị lỗi (trả lại %i byte, mong đợi %i byte). Máy ảnh không "
-"hoạt động."
+#, c-format
+msgid "Step #2 of initialization failed! (returned %i bytes, expected %i). Camera not operational"
+msgstr "Bước 2 sơ khởi bị lỗi (trả về %i byte, mong đợi %i byte). Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:291
-#, fuzzy, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on read of %i. Camera not "
-"operational"
-msgstr "Bước 3 sở khởi bị lỗi: « %s » khi đọc %i. Máy ảnh không hoạt động."
+#, c-format
+msgid "Step #3 of initialization failed: \"%s\" on read of %i. Camera not operational"
+msgstr "Bước 3 sơ khởi bị lỗi: « %s » khi đọc %i. Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:298 camlibs/canon/usb.c:325
-#, fuzzy, c-format
-msgid ""
-"Step #3 of initialization failed! (returned %i, expected %i). Camera not "
-"operational"
-msgstr ""
-"Bước 3 sở khởi bị lỗi (trả lại %i, mong đợi %i). Máy ảnh không hoạt động."
+#, c-format
+msgid "Step #3 of initialization failed! (returned %i, expected %i). Camera not operational"
+msgstr "Bước 3 sơ khởi bị lỗi (trả về %i, mong đợi %i). Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:318
-#, fuzzy, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on write of %i. Camera not "
-"operational"
-msgstr "Bước 3 sở khởi bị lỗi: « %s » khi ghi %i. Máy ảnh không hoạt động."
+#, c-format
+msgid "Step #3 of initialization failed: \"%s\" on write of %i. Camera not operational"
+msgstr "Bước 3 sơ khởi bị lỗi: « %s » khi ghi %i. Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:356 camlibs/canon/usb.c:397
 #, c-format
@@ -1315,10 +1201,9 @@ msgid "Step #4 failed: \"%s\" on read of %i. Camera not operational"
 msgstr "Bước 4 sở khởi bị lỗi: « %s » khi đọc %i. Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:363 camlibs/canon/usb.c:404
-#, fuzzy, c-format
+#, c-format
 msgid "Step #4 failed (returned %i, expected %i). Camera not operational"
-msgstr ""
-"Bước 4 sở khởi bị lỗi (trả lại %i, mong đợi %i). Máy ảnh không hoạt động."
+msgstr "Bước 4 sơ khởi bị lỗi (trả về %i, mong đợi %i). Máy ảnh không hoạt động."
 
 #: camlibs/canon/usb.c:508
 #, c-format
@@ -1332,101 +1217,68 @@ msgstr "Máy ảnh chưa sẵn sàng, hàm get_battery (lấy pin) bị lỗi: %
 
 #: camlibs/canon/usb.c:627
 #, c-format
-msgid ""
-"canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function "
-"(%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: độ dài bất thường được trả lại từ hàm « khoá các khoá "
-"» (%i byte, mong đợi %i)."
+msgid "canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function (%i bytes, expected %i)"
+msgstr "canon_usb_lock_keys: độ dài bất thường được trả lại từ hàm « khoá các khoá » (%i byte, mong đợi %i)."
 
 #: camlibs/canon/usb.c:649 camlibs/canon/usb.c:675 camlibs/canon/usb.c:715
 #, c-format
 msgid "canon_usb_lock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: độ dài bất thường được trả lại (%i byte, mong đợi %i)."
+msgstr "canon_usb_lock_keys: độ dài bất thường được trả lại (%i byte, mong đợi %i)."
 
 #: camlibs/canon/usb.c:758 camlibs/canon/usb.c:774
 #, c-format
-msgid ""
-"canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_unlock_keys: độ dài bất thường được trả lại (%i byte, mong đợi %i)."
+msgid "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
+msgstr "canon_usb_unlock_keys: độ dài bất thường được trả lại (%i byte, mong đợi %i)."
 
 #: camlibs/canon/usb.c:830 camlibs/canon/usb.c:849
 #, c-format
-msgid ""
-"canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %"
-"i)"
-msgstr ""
-"canon_usb_get_body_id: độ dài dữ liệu bất thường được trả lại (%i byte, mong "
-"đợi %i)."
+msgid "canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %i)"
+msgstr "canon_usb_get_body_id: độ dài dữ liệu bất thường được trả lại (%i byte, mong đợi %i)."
 
 #: camlibs/canon/usb.c:911
 #, c-format
-msgid ""
-"canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f "
-"sec \"%s\""
-msgstr ""
-"canon_usb_poll_interrupt_pipe: hàm ngắt tiến trình đọc đã thất bại sau %i "
-"lần thử, %6.3f giây « %s »."
+msgid "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f sec \"%s\""
+msgstr "canon_usb_poll_interrupt_pipe: hàm ngắt tiến trình đọc đã thất bại sau %i lần thử, %6.3f giây « %s »."
 
 #: camlibs/canon/usb.c:984
 #, c-format
-msgid ""
-"canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
-"\""
-msgstr ""
-"canon_usb_poll_interrupt_multiple: hàm ngắt tiến trình đọc đã thất bại sau %"
-"i lần thử, « %s »."
+msgid "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s\""
+msgstr "canon_usb_poll_interrupt_multiple: hàm ngắt tiến trình đọc đã thất bại sau %i lần thử, « %s »."
 
 #: camlibs/canon/usb.c:1114
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
-msgstr ""
-"canon_usb_capture_dialogue: độ dài giả 0x%04x cho gói tin kích cỡ ảnh mẫu."
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
+msgstr "canon_usb_capture_dialogue: độ dài giả 0x%04x cho gói tin kích cỡ ảnh mẫu."
 
 #: camlibs/canon/usb.c:1131
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
-msgstr ""
-"canon_usb_capture_dialogue: độ dài giả 0x%04x cho gói tin kích cỡ ảnh đầy đủ."
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
+msgstr "canon_usb_capture_dialogue: độ dài giả 0x%04x cho gói tin kích cỡ ảnh đầy đủ."
 
 #: camlibs/canon/usb.c:1150
-#, fuzzy
 msgid "canon_usb_capture_dialogue: secondary image descriptor received"
-msgstr "canon_usb_capture_dialogue: nhận bộ mô tả ảnh phụ."
+msgstr "canon_usb_capture_dialogue: nhận được bộ mô tả ảnh phụ."
 
 #: camlibs/canon/usb.c:1177
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: hàm thứ nhất ngắt tiến trình đọc không theo thứ "
-"tự đúng."
+msgstr "canon_usb_capture_dialogue: hàm thứ nhất ngắt tiến trình đọc không theo thứ tự đúng."
 
 #: camlibs/canon/usb.c:1186
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: hàm thứ hai ngắt tiến trình đọc không theo thứ "
-"tự đúng."
+msgstr "canon_usb_capture_dialogue: hàm thứ hai ngắt tiến trình đọc không theo thứ tự đúng."
 
 #: camlibs/canon/usb.c:1197
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
+msgid "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr "canon_usb_capture_dialogue: nhận tin hiệu về lỗi chụp ảnh, mã = 0x%08x"
 
 #: camlibs/canon/usb.c:1217
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: hàm thứ ba ngắt tiến trình đọc EOS không theo "
-"thứ tự đúng."
+msgstr "canon_usb_capture_dialogue: hàm thứ ba ngắt tiến trình đọc EOS không theo thứ tự đúng."
 
 #: camlibs/canon/usb.c:1253
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: hàm thứ tư ngắt tiến trình đọc EOS không theo "
-"thứ tự đúng."
+msgstr "canon_usb_capture_dialogue: hàm thứ tư ngắt tiến trình đọc EOS không theo thứ tự đúng."
 
 #: camlibs/canon/usb.c:1441
 #, c-format
@@ -1453,12 +1305,8 @@ msgstr "canon_usb_set_file_attributes: hộp thoại USB canon_usb_dialogue bị
 
 #: camlibs/canon/usb.c:2169
 #, c-format
-msgid ""
-"Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error "
-"status 0x%08x from camera"
-msgstr ""
-"Cảnh báo trong hàm đặt các thuộc tính tập tin canon_usb_set_file_attributes: "
-"hộp thoại canon_usb_dialogue đã trả lại trạng thái lỗi 0x%08x từ máy ảnh."
+msgid "Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%08x from camera"
+msgstr "Cảnh báo trong hàm đặt các thuộc tính tập tin canon_usb_set_file_attributes: hộp thoại canon_usb_dialogue đã trả lại trạng thái lỗi 0x%08x từ máy ảnh."
 
 #: camlibs/canon/usb.c:2255
 #, c-format
@@ -1476,48 +1324,28 @@ msgid "File upload failed."
 msgstr "Lỗi tải lên tập tin."
 
 #: camlibs/canon/usb.c:2399
-msgid ""
-"File was too big. You may have to turn your camera off and back on before "
-"uploading more files."
-msgstr ""
-"Tập tin quá lớn. Có lẽ bạn cần phải tắt máy ảnh, rồi mở lại trước khi tải "
-"lên tập tin thêm."
+msgid "File was too big. You may have to turn your camera off and back on before uploading more files."
+msgstr "Tập tin quá lớn. Có lẽ bạn cần phải tắt máy ảnh, rồi mở lại trước khi tải lên tập tin thêm."
 
 #: camlibs/canon/usb.c:2446
 #, c-format
-msgid ""
-"canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
-"too long."
-msgstr ""
-"canon_usb_get_dirents: không thể vừa trọng tải trong bộ đệm, « %.96s » (bị "
-"cắt ngắn) quá dài."
+msgid "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
+msgstr "canon_usb_get_dirents: không thể vừa trọng tải trong bộ đệm, « %.96s » (bị cắt ngắn) quá dài."
 
 #: camlibs/canon/usb.c:2463
 #, c-format
-msgid ""
-"canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
-"returned %i"
-msgstr ""
-"canon_usb_get_dirents: hộp thoại canon_usb_long_dialogue không lấy được các "
-"mục nhập thư mục, trả lại %i."
+msgid "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, returned %i"
+msgstr "canon_usb_get_dirents: hộp thoại canon_usb_long_dialogue không lấy được các mục nhập thư mục, trả lại %i."
 
 #: camlibs/canon/usb.c:2514
 #, c-format
-msgid ""
-"canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
-"'%.96s' (truncated) too long."
-msgstr ""
-"canon_usb_list_all_dirs: không thể vừa trọng tải trong bộ đệm, « %.96s » (bị "
-"cắt ngắn) quá dài."
+msgid "canon_usb_list_all_dirs: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
+msgstr "canon_usb_list_all_dirs: không thể vừa trọng tải trong bộ đệm, « %.96s » (bị cắt ngắn) quá dài."
 
 #: camlibs/canon/usb.c:2533
 #, c-format
-msgid ""
-"canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
-"returned %i"
-msgstr ""
-"canon_usb_list_all_dirs: hộp thoại canon_usb_long_dialogue không lấy được "
-"các mục nhập thư mục, trả lại %i."
+msgid "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, returned %i"
+msgstr "canon_usb_list_all_dirs: hộp thoại canon_usb_long_dialogue không lấy được các mục nhập thư mục, trả lại %i."
 
 #: camlibs/canon/usb.c:2610
 #, c-format
@@ -1542,13 +1370,11 @@ msgstr "Ảnh %s bị bảo vệ chống xoá."
 #: camlibs/casio/casio-qv.c:189
 msgid ""
 "Driver framework written by Lutz Mueller <lutz@users.sf.net>.\n"
-"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-"
-"hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
+"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
 "Integration of QVplay by Michael Haardt <michael@moria.de>."
 msgstr ""
 "Khuôn khổ trình điều khiển được tạo bởi Lutz Mueller <lutz@users.sf.net>.\n"
-"Phần mềm này chứa mã nguồn của QVplay mà được tạo bởi Ken-ichi HAYASHI <xg2k-"
-"hys@asahi-net.or.jp> và Jun-ichiro « itojun » Itoh <itojun@itojun.org>.\n"
+"Phần mềm này chứa mã nguồn của QVplay mà được tạo bởi Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> và Jun-ichiro « itojun » Itoh <itojun@itojun.org>.\n"
 "QVplay được Michael Haardt <michael@moria.de> hợp nhất."
 
 #: camlibs/casio/casio-qv.c:208
@@ -1717,11 +1543,8 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
-msgid ""
-"Only root folder is supported - you requested a file listing for folder '%s'."
-msgstr ""
-"Chỉ hỗ trợ thư mục gốc: bạn đã yêu cầu danh sách các tập tin của thư mục « %"
-"s »."
+msgid "Only root folder is supported - you requested a file listing for folder '%s'."
+msgstr "Chỉ hỗ trợ thư mục gốc: bạn đã yêu cầu danh sách các tập tin của thư mục « %s »."
 
 #: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:435
 msgid "Problem getting number of images"
@@ -1976,15 +1799,12 @@ msgid "Could not open '%s'."
 msgstr "Không thể mở « %s »."
 
 #: camlibs/directory/directory.c:541
-msgid ""
-"The Directory Browse \"camera\" lets you index photos on your hard drive."
-msgstr ""
-"« Máy ảnh » duyệt qua thư mục thì cho phép bạn phụ lục các ảnh trên đĩa cứng."
+msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgstr "« Máy ảnh » duyệt qua thư mục thì cho phép bạn phụ lục các ảnh trên đĩa cứng."
 
 #: camlibs/directory/directory.c:550
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
-msgstr ""
-"Chế độ Duyệt qua Thư mục — được tạo bởi Scott Fritzinger <scottf@unr.edu>."
+msgstr "Chế độ Duyệt qua Thư mục — được tạo bởi Scott Fritzinger <scottf@unr.edu>."
 
 #: camlibs/directory/directory.c:625
 #, c-format
@@ -1992,14 +1812,8 @@ msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr "Không thể xoá tập tin « %s » ra thư mục « %s ». (mã lỗi %i: %m)."
 
 #: camlibs/enigma13/enigma13.c:70
-msgid ""
-"Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille."
-"com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy "
-"to port your driver on this cam! "
-msgstr ""
-"Tải về chương trình cho Digital Dream Enigma 1.3. bởi <olivier@aixmarseille."
-"com>, được thích nghị từ trình điều khiển spca50x. Cám ơn nhóm spca50x vì dễ "
-"chuyển trình điều khiển sang máy ảnh này."
+msgid "Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille.com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy to port your driver on this cam! "
+msgstr "Tải về chương trình cho Digital Dream Enigma 1.3. bởi <olivier@aixmarseille.com>, được thích nghị từ trình điều khiển spca50x. Cám ơn nhóm spca50x vì dễ chuyển trình điều khiển sang máy ảnh này."
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
@@ -2130,8 +1944,7 @@ msgid ""
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Support for Mustek gSmart 300 digital cameras\n"
-"based on several other gphoto2 camlib modules and the specifications kindly "
-"provided by Mustek.\n"
+"based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
 "\n"
 msgstr ""
 "Thư viện gsmart300 \n"
@@ -2145,9 +1958,7 @@ msgstr ""
 #: camlibs/gsmart300/library.c:207 camlibs/spca50x/library.c:573
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
-"Không hỗ trợ kiểu cổng: %d. Trình điều khiển này chỉ chạy được với máy ảnh "
-"kiểu USB.\n"
+msgstr "Không hỗ trợ kiểu cổng: %d. Trình điều khiển này chỉ chạy được với máy ảnh kiểu USB.\n"
 
 #: camlibs/gsmart300/library.c:224 camlibs/spca50x/library.c:631
 msgid "Could not reset camera.\n"
@@ -2155,12 +1966,8 @@ msgstr "Không thể đặt lại máy ảnh.\n"
 
 #: camlibs/gsmart300/library.c:343 camlibs/spca50x/library.c:511
 #, c-format
-msgid ""
-"Your camera only supports deleting the last file on the camera. In this "
-"case, this is file '%s'."
-msgstr ""
-"Máy ảnh của bạn chỉ hỗ trợ khả năng xoá tập tin cuối cùng trên máy ảnh. "
-"Trong trường hợp này, đây là tập tin « %s »."
+msgid "Your camera only supports deleting the last file on the camera. In this case, this is file '%s'."
+msgstr "Máy ảnh của bạn chỉ hỗ trợ khả năng xoá tập tin cuối cùng trên máy ảnh. Trong trường hợp này, đây là tập tin « %s »."
 
 #: camlibs/hp215/hp215.c:440
 #, c-format
@@ -2307,16 +2114,8 @@ msgid "CompactFlash Card"
 msgstr "Bo mạch nhớ cực nhanh gọn (CF)"
 
 #: camlibs/kodak/dc120/dc120.c:367
-msgid ""
-"The Kodak DC120 camera uses the KDC file format for storing images. If you "
-"want to view the images you download from your camera, you will need to "
-"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
-"sourceforge.net"
-msgstr ""
-"Máy ảnh Kodak DC120 camera dùng định dạng tập tin KDC để cất giữ các ảnh. "
-"Muốn xem những ảnh được tải xuống máy ảnh thì bạn cũng cần phải tải xuống "
-"chương trình « kdc2tiff ». Có thể lấy nó ở « http://kdc2tiff.sourceforge.net "
-"»."
+msgid "The Kodak DC120 camera uses the KDC file format for storing images. If you want to view the images you download from your camera, you will need to download the \"kdc2tiff\" program. It is available from http://kdc2tiff.sourceforge.net"
+msgstr "Máy ảnh Kodak DC120 camera dùng định dạng tập tin KDC để cất giữ các ảnh. Muốn xem những ảnh được tải xuống máy ảnh thì bạn cũng cần phải tải xuống chương trình « kdc2tiff ». Có thể lấy nó ở « http://kdc2tiff.sourceforge.net »."
 
 #: camlibs/kodak/dc120/dc120.c:379
 msgid ""
@@ -2752,16 +2551,8 @@ msgstr ""
 "Chỗ rảnh trên bo mạch: %d kB\n"
 
 #: camlibs/kodak/dc210/dc210.c:632
-msgid ""
-"This library has been tested with a Kodak DC 215 Zoom camera. It might work "
-"also with DC 200 and DC 210 cameras. If you happen to have such a camera, "
-"please send a message to koltan@gmx.de to let me know, if you have any "
-"troubles with this driver library or if everything is okay."
-msgstr ""
-"Thư viện này đã được thử với máy ảnh Kodak DC 215 Zoom. Nó có lẽ hoạt động "
-"được với máy ảnh DC 200 và DC 210. Nếu bạn có máy ảnh kiểu này, xin hãy viết "
-"thư cho tôi ở địa chỉ <koltan@gmx.de> để cho tôi biết nếu thư viện trình "
-"điều khiển này chạy được không."
+msgid "This library has been tested with a Kodak DC 215 Zoom camera. It might work also with DC 200 and DC 210 cameras. If you happen to have such a camera, please send a message to koltan@gmx.de to let me know, if you have any troubles with this driver library or if everything is okay."
+msgstr "Thư viện này đã được thử với máy ảnh Kodak DC 215 Zoom. Nó có lẽ hoạt động được với máy ảnh DC 200 và DC 210. Nếu bạn có máy ảnh kiểu này, xin hãy viết thư cho tôi ở địa chỉ <koltan@gmx.de> để cho tôi biết nếu thư viện trình điều khiển này chạy được không."
 
 #: camlibs/kodak/dc210/dc210.c:644
 msgid ""
@@ -2825,14 +2616,12 @@ msgstr "Tổng ảnh chụp: %d, Lần nháy đèn: %d\n"
 #: camlibs/kodak/dc240/dc240.c:212
 msgid ""
 "Kodak DC240 Camera Library\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Thư viện máy ảnh Kodak DC240\n"
-"Scott Fritzinger <scottf@gphoto.net> và Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> và Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "Thư viện máy ảnh cho các máy ảnh Kodak DC240, DC280, DC3400 và DC5000.\n"
 "Được tạo lại và cập nhật cho gPhoto2."
 
@@ -2873,12 +2662,8 @@ msgid "No card"
 msgstr "Không có bo mạch"
 
 #: camlibs/kodak/dc3200/dc3200.c:43
-msgid ""
-"There is currently an operation in progress. This camera only supports one "
-"operation at a time. Please wait until the current operation has finished."
-msgstr ""
-"Một thao tác đang chạy. Máy ảnh này chỉ hỗ trợ chạy một thao tác mỗi lần. "
-"Hãy đợi kết thúc thao tác này."
+msgid "There is currently an operation in progress. This camera only supports one operation at a time. Please wait until the current operation has finished."
+msgstr "Một thao tác đang chạy. Máy ảnh này chỉ hỗ trợ chạy một thao tác mỗi lần. Hãy đợi kết thúc thao tác này."
 
 #: camlibs/kodak/dc3200/dc3200.c:146
 #, c-format
@@ -2889,16 +2674,11 @@ msgstr "máy ảnh đã nghỉ trong >9 giây nên sở khởi lại.\n"
 msgid ""
 "Known problems:\n"
 "\n"
-"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
-"it will time out, and will have to be re-initialized. If you notice the "
-"camera does not respond, simply re-select the camera. This will cause it to "
-"reinitialize."
+"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, it will time out, and will have to be re-initialized. If you notice the camera does not respond, simply re-select the camera. This will cause it to reinitialize."
 msgstr ""
 "Vấn đề đã biết:\n"
 "\n"
-"1. Nếu máy ảnh Kodak DC3200 không nhận lệnh trong vòng 10 giây, nó sẽ quá "
-"thời nên phải được sở khởi lại. Bạn thấy máy ảnh không đáp ứng thì đơn giản "
-"chọn nó lần nữa: hành động này sẽ gây ra nó sở khởi lại."
+"1. Nếu máy ảnh Kodak DC3200 không nhận lệnh trong vòng 10 giây, nó sẽ quá thời nên phải được sở khởi lại. Bạn thấy máy ảnh không đáp ứng thì đơn giản chọn nó lần nữa: hành động này sẽ gây ra nó sở khởi lại."
 
 #: camlibs/kodak/dc3200/dc3200.c:448
 msgid ""
@@ -3031,14 +2811,8 @@ msgstr "Lỗi lạ."
 
 #: camlibs/konica/konica.c:137
 #, c-format
-msgid ""
-"The camera has just sent an error that has not yet been discovered. Please "
-"report the following to %s with additional information how you got this "
-"error: (0x%x,0x%x). Thank you very much!"
-msgstr ""
-"Máy ảnh mới trả lại một lỗi chưa được phát hiện. Xin hãy thông báo cho %s "
-"thông tin này với thông tin thêm về cách tạo lỗi đó: (0x%x,0x%x). Cám ơn "
-"nhiều. :)"
+msgid "The camera has just sent an error that has not yet been discovered. Please report the following to %s with additional information how you got this error: (0x%x,0x%x). Thank you very much!"
+msgstr "Máy ảnh mới trả lại một lỗi chưa được phát hiện. Xin hãy thông báo cho %s thông tin này với thông tin thêm về cách tạo lỗi đó: (0x%x,0x%x). Cám ơn nhiều. :)"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:116
 msgid "Getting file list..."
@@ -3049,12 +2823,8 @@ msgid "Testing different speeds..."
 msgstr "Đang thử các tốc độ khác nhau..."
 
 #: camlibs/konica/library.c:340
-msgid ""
-"The camera could not be contacted. Please make sure it is connected to the "
-"computer and turned on."
-msgstr ""
-"Không thể liên lạc với máy ảnh. Hãy kiểm tra xem nó được kết nối đến máy "
-"ảnh, và được mở."
+msgid "The camera could not be contacted. Please make sure it is connected to the computer and turned on."
+msgstr "Không thể liên lạc với máy ảnh. Hãy kiểm tra xem nó được kết nối đến máy ảnh, và được mở."
 
 #: camlibs/konica/library.c:373
 msgid "Your camera does not support changing filenames."
@@ -3885,9 +3655,7 @@ msgstr "Đang tải lên ảnh %s."
 
 #: camlibs/panasonic/dc1000.c:458 camlibs/panasonic/dc1580.c:580
 #, c-format
-msgid ""
-"File size is %ld bytes. The size of the largest file possible to upload is: %"
-"i bytes."
+msgid "File size is %ld bytes. The size of the largest file possible to upload is: %i bytes."
 msgstr ""
 "Kích cỡ tập tin: %ld byte.\n"
 "Kích cỡ của tập tin lớn nhất có thể tải lên: %i byte."
@@ -3948,47 +3716,30 @@ msgstr "Đang tải về « %s »..."
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic introduced image capturing technology called PHOTOSHOT for the "
-"first time to this series of Palmcorders.  Images are stored in JPEG format "
-"on an internal flashcard and can be transferred to a computer through the "
-"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
-"320x240 and FINE is 640x480.  The CCD device which captures the images from "
-"the lens is only 300K and thus produces only low quality pictures."
+"Panasonic introduced image capturing technology called PHOTOSHOT for the first time to this series of Palmcorders.  Images are stored in JPEG format on an internal flashcard and can be transferred to a computer through the built-in serial port.  Images are saved in one of two resolutions; NORMAL is 320x240 and FINE is 640x480.  The CCD device which captures the images from the lens is only 300K and thus produces only low quality pictures."
 msgstr ""
 "Máy trên tay thu-ghi hình Panasonic PV-L859-K/PV-L779-K\n"
 "\n"
-"Công ty Panasonic đã giới hiệu kỹ thuật bắt ảnh tên PHOTOSHOT lần đầu tiên "
-"trong dãy máy trên tay thu-ghi hình (Palmcorder) này.\n"
+"Công ty Panasonic đã giới hiệu kỹ thuật bắt ảnh tên PHOTOSHOT lần đầu tiên trong dãy máy trên tay thu-ghi hình (Palmcorder) này.\n"
 "\n"
-"Các ảnh được cất giữ theo định dạng JPEG trên một bo mạch cực nhanh bên "
-"trong, và có thể được truyền sang máy tính qua cổng nối tiếp có sẵn. Các ảnh "
-"được lưu theo một của hai độ phân giải: CHUẨN (320×240) và CHÍNH XÁC "
-"(640×480).  Thiết bị CCD mà bắt ảnh từ ống kính chỉ có khả năng 300K thì tạo "
-"chỉ ảnh chất lượng thấp."
+"Các ảnh được cất giữ theo định dạng JPEG trên một bo mạch cực nhanh bên trong, và có thể được truyền sang máy tính qua cổng nối tiếp có sẵn. Các ảnh được lưu theo một của hai độ phân giải: CHUẨN (320×240) và CHÍNH XÁC (640×480).  Thiết bị CCD mà bắt ảnh từ ống kính chỉ có khả năng 300K thì tạo chỉ ảnh chất lượng thấp."
 
 #: camlibs/panasonic/l859/l859.c:599
 msgid ""
 "Known problems:\n"
 "\n"
-"If communications problems occur, reset the camera and restart the "
-"application.  The driver is not robust enough yet to recover from these "
-"situations, especially if a problem occurs and the camera is not properly "
-"shutdown at speeds faster than 9600."
+"If communications problems occur, reset the camera and restart the application.  The driver is not robust enough yet to recover from these situations, especially if a problem occurs and the camera is not properly shutdown at speeds faster than 9600."
 msgstr ""
 "Vấn đề đã biết:\n"
 "\n"
-"Gặp khó khăn liên lạc thì đặt lại máy ảnh và khởi chạy lại ứng dụng. Trình "
-"điều khiển chưa đủ mạnh để phục hồi sau trường hợp kiểu này, đặc biệt nếu "
-"gặp khó khăn và máy ảnh không được tắt đúng ở tốc độ truyền nhanh hơn 9600 "
-"bps."
+"Gặp khó khăn liên lạc thì đặt lại máy ảnh và khởi chạy lại ứng dụng. Trình điều khiển chưa đủ mạnh để phục hồi sau trường hợp kiểu này, đặc biệt nếu gặp khó khăn và máy ảnh không được tắt đúng ở tốc độ truyền nhanh hơn 9600 bps."
 
 #: camlibs/panasonic/l859/l859.c:613
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder Driver\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 msgstr ""
-"Trình điều khiển máy trên tay thu-ghi hình Panasonic PV-L859-K/PV-L779-K "
-"Palmcorder\n"
+"Trình điều khiển máy trên tay thu-ghi hình Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "Andrew Selkirk <aselkirk@mailandnews.com>"
 
 #: camlibs/pccam300/library.c:234
@@ -4057,17 +3808,13 @@ msgstr "pccam600 init:Unexpected error: gp_port_read returned %d instead of %d"
 
 #: camlibs/polaroid/pdc320.c:457
 msgid ""
-"Download program for several Polaroid cameras. Originally written by Peter "
-"Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
-"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
-"sf.net>.\n"
+"Download program for several Polaroid cameras. Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users.sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
 "Chương trình tải xuống cho vài máy ảnh kiểu Polaroid.\n"
 "\n"
 "Tạo gốc bởi Peter Desnoyers <pjd@fred.cambridge.ma.us>,\n"
-"thích nghi với gPhoto2 bởi Nathan Stenzel <nathanstenzel@users.sourceforge."
-"net> và Lutz Mueller <lutz@users.sf.net>.\n"
+"thích nghi với gPhoto2 bởi Nathan Stenzel <nathanstenzel@users.sourceforge.net> và Lutz Mueller <lutz@users.sf.net>.\n"
 "Polaroid 640SE được thử ra bởi Michael Golden <naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:487
@@ -4076,19 +3823,12 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Mô hình: %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:903
-msgid ""
-"Download program for GrandTek 98x based cameras. Originally written by Chris "
-"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
-"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
-"JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
-"Meissner <marcus@jet.franken.de>."
+msgid "Download program for GrandTek 98x based cameras. Originally written by Chris Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus Meissner <marcus@jet.franken.de>."
 msgstr ""
 "Chương trình tải xuống cho các máy ảnh dựa vào GrandTek 98x.\n"
 "\n"
-"Tạo gốc bởi Chris Byrne <adapt@ihug.co.nz>, và thích nghị với gPhoto2 bởi "
-"Lutz Mueller <lutz@users.sf.net>.\n"
-"Các cải tiến giao thức và xử lý sau cho máy Jenoptik JD350e bởi Michael "
-"Trawny <trawny99@users.sourceforge.net>.\n"
+"Tạo gốc bởi Chris Byrne <adapt@ihug.co.nz>, và thích nghị với gPhoto2 bởi Lutz Mueller <lutz@users.sf.net>.\n"
+"Các cải tiến giao thức và xử lý sau cho máy Jenoptik JD350e bởi Michael Trawny <trawny99@users.sourceforge.net>.\n"
 "Các lỗi được sửa chữa bởi Marcus Meissner <marcus@jet.franken.de>."
 
 #: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2629
@@ -4192,26 +3932,16 @@ msgstr "Máy ảnh đã gửi nhiều byte hơn số mong đợi (%i)"
 
 #: camlibs/polaroid/pdc700.c:451
 #, c-format
-msgid ""
-"Requested information about picture %i (= 0x%x), but got information about "
-"picture %i back"
-msgstr ""
-"Đã yêu cầu thông tin về ảnh %i (= 0x%x), còn nhận được thông tin về ảnh %i"
+msgid "Requested information about picture %i (= 0x%x), but got information about picture %i back"
+msgstr "Đã yêu cầu thông tin về ảnh %i (= 0x%x), còn nhận được thông tin về ảnh %i"
 
 #: camlibs/polaroid/pdc700.c:914
 #, c-format
-msgid ""
-"%i bytes of an unknown image format have been received. Please write to %s "
-"and ask for assistance."
-msgstr ""
-"Nhận được %i byte theo định dạng ảnh không rõ. Hãy gửi thư cho %s để yêu cầu "
-"sự giúp đỡ."
+msgid "%i bytes of an unknown image format have been received. Please write to %s and ask for assistance."
+msgstr "Nhận được %i byte theo định dạng ảnh không rõ. Hãy gửi thư cho %s để yêu cầu sự giúp đỡ."
 
 #: camlibs/polaroid/pdc700.c:939
-msgid ""
-"Download program for Polaroid DC700 camera. Originally written by Ryan "
-"Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
-"Mueller <lutz@users.sf.net>."
+msgid "Download program for Polaroid DC700 camera. Originally written by Ryan Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
 msgstr ""
 "Chương trình tải xuống cho máy ảnh Polaroid DC700.\n"
 "\n"
@@ -4372,11 +4102,11 @@ msgstr "NEF+Chính xác"
 
 #: camlibs/ptp2/config.c:1079
 msgid "TV"
-msgstr ""
+msgstr "TV"
 
 #: camlibs/ptp2/config.c:1080
 msgid "AV"
-msgstr ""
+msgstr "AV"
 
 #: camlibs/ptp2/config.c:1089
 msgid "fill in"
@@ -4787,7 +4517,6 @@ msgid "Low contrast"
 msgstr "Tương phản thấp"
 
 #: camlibs/ptp2/config.c:1653 camlibs/ptp2/ptp.c:3698
-#, fuzzy
 msgid "Medium High"
 msgstr "Vừa cao"
 
@@ -4910,9 +4639,8 @@ msgid "Profile name"
 msgstr "Tên hồ sơ"
 
 #: camlibs/ptp2/config.c:2500
-#, fuzzy
 msgid "WIFI ESSID"
-msgstr "ESSID"
+msgstr "WIFI ESSID"
 
 #: camlibs/ptp2/config.c:2501
 msgid "IP address (empty for DHCP)"
@@ -4931,9 +4659,8 @@ msgid "Access mode"
 msgstr "Chế độ truy cập"
 
 #: camlibs/ptp2/config.c:2505
-#, fuzzy
 msgid "WIFI channel"
-msgstr "Kênh WI-FI"
+msgstr "Kênh WIFI"
 
 #: camlibs/ptp2/config.c:2506
 msgid "Encryption"
@@ -5009,14 +4736,12 @@ msgid "Capture Target"
 msgstr "Đích bắt"
 
 #: camlibs/ptp2/config.c:2630
-#, fuzzy
 msgid "Canon Image Quality"
-msgstr "Chất lượng ảnh"
+msgstr "Chất lượng ảnh Canon"
 
 #: camlibs/ptp2/config.c:2632
-#, fuzzy
 msgid "Canon Image Size"
-msgstr "Cỡ ảnh"
+msgstr "Kích cỡ ảnh Canon"
 
 #: camlibs/ptp2/config.c:2633 camlibs/ptp2/config.c:2660
 #: camlibs/ptp2/ptp.c:3194 camlibs/sierra/olympus-desc.c:881
@@ -5313,7 +5038,6 @@ msgid "Capture Settings"
 msgstr "Thiết lập bắt"
 
 #: camlibs/ptp2/config.c:2719
-#, fuzzy
 msgid "WIFI profiles"
 msgstr "Hồ sơ WIFI"
 
@@ -5471,7 +5195,7 @@ msgstr "PTP: lỗi V/R"
 
 #: camlibs/ptp2/library.c:200
 msgid "PTP Cancel request"
-msgstr ""
+msgstr "PTP Thôi yêu cầu"
 
 #: camlibs/ptp2/library.c:201
 msgid "PTP Error: bad parameter"
@@ -5486,7 +5210,6 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP: lỗi giao thức: mong đợi đáp ứng"
 
 #: camlibs/ptp2/library.c:1140
-#, fuzzy
 msgid ""
 "PTP2 driver\n"
 "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -5494,30 +5217,26 @@ msgid ""
 "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 "Media Players that support the Media Transfer Protocol (MTP).\n"
 "\n"
-"This driver is not a 'Licensed Implementation' of the Media Transfer "
-"Protocol.\n"
+"This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
 "\n"
 "Enjoy!"
 msgstr ""
 "Trình điều khiển PTP2\n"
 "© 2001-2005 của Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-"© 2003-2006 của Marcus Meissner <marcus@jet.franken.de>.\n"
+"© 2003-2007 của Marcus Meissner <marcus@jet.franken.de>.\n"
 "\n"
 "Trình điều khiển này hỗ trợ các máy ảnh lần lượt hỗ trợ\n"
-"Giao thức Truyền Ảnh (PTP) hay PictBridge™, và các bộ phát ảnh;/nhạc\n"
+"Giao thức Truyền Ảnh (PTP) hay PictBridge™, và các bộ phát ảnh/nhạc\n"
 "mà hỗ trợ Giao thức Truyền Phương tiện (MTP).\n"
 "\n"
-"This driver is not a 'Licensed Implementation' of the Media Transfer "
-"Protocol.\n"
-"(Trình điều khiển này không phải là một bản thực hiện được phép\n"
+"This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
+"(Trình điều khiển này không phải là một bản thực hiện được cấp\n"
 "dưới điều kiện của giấy phép của Giao thức Truyền Phương tiện.)\n"
 "Chúc bạn vui vẻ. :)"
 
 #: camlibs/ptp2/library.c:1217
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
-msgstr ""
-"Tiếc là máy ảnh Canon của bạn không hỗ trợ chế độ Kính Ngắm Canon (Canon "
-"Viewfinder)."
+msgstr "Tiếc là máy ảnh Canon của bạn không hỗ trợ chế độ Kính Ngắm Canon (Canon Viewfinder)."
 
 #: camlibs/ptp2/library.c:1223
 #, c-format
@@ -5543,29 +5262,27 @@ msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Tiếc là máy ảnh Canon của bạn không hỗ trợ khả năng bắt EOS Canon."
 
 #: camlibs/ptp2/library.c:1448
-#, fuzzy, c-format
+#, c-format
 msgid "Canon EOS Capture failed: %x"
-msgstr "Canon EOS: lỗi bắt: %d"
+msgstr "Canon EOS Capture (bắt) bị lỗi: %x"
 
 #: camlibs/ptp2/library.c:1456
-#, fuzzy, c-format
+#, c-format
 msgid "Canon EOS Get Changes failed: %x"
-msgstr "Canon EOS: lỗi lấy các thay đổi: %d"
+msgstr "Canon EOS Get Changes (lấy các thay đổi) bị lỗi: %x"
 
 #: camlibs/ptp2/library.c:1539
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
-msgstr ""
-"Tiếc là máy ảnh Canon của bạn không hỗ trợ sở khởi khả năng bắt Canon (Canon "
-"Capture)."
+msgstr "Tiếc là máy ảnh Canon của bạn không hỗ trợ sở khởi khả năng bắt Canon (Canon Capture)."
 
 #: camlibs/ptp2/library.c:1550
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr "Tiếc là không thể sở khởi máy ảnh của bạn. Hãy thông báo."
 
 #: camlibs/ptp2/library.c:1572
-#, fuzzy, c-format
+#, c-format
 msgid "Canon Capture failed: %x"
-msgstr "Lỗi bắt Canon: %d"
+msgstr "Canon Capture (bắt) bị lỗi: %x"
 
 #: camlibs/ptp2/library.c:1688
 msgid "Sorry, your camera does not support generic capture"
@@ -5683,9 +5400,9 @@ msgid "Canon Capture\n"
 msgstr "Bắt Canon\n"
 
 #: camlibs/ptp2/library.c:2191
-#, fuzzy, c-format
+#, c-format
 msgid "Canon EOS Capture\n"
-msgstr "Bắt Canon\n"
+msgstr "Canon EOS Capture (bắt)\n"
 
 #: camlibs/ptp2/library.c:2195
 #, c-format
@@ -5830,13 +5547,9 @@ msgid "Initializing Camera"
 msgstr "Đang sở khởi máy ảnh"
 
 #: camlibs/ptp2/library.c:4170
-#, fuzzy, c-format
-msgid ""
-"Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
-"port type %x"
-msgstr ""
-"PTP hiện thời chỉ được thực hiện cho các máy ảnh kiểu USB và PTP/IP, kiểu "
-"cổng %x."
+#, c-format
+msgid "Currently, PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
+msgstr "PTP hiện thời chỉ được thực hiện cho các máy ảnh kiểu USB và PTP/IP, kiểu cổng %x."
 
 #: camlibs/ptp2/ptp.c:3052
 msgid "PTP: Undefined Error"
@@ -6089,9 +5802,8 @@ msgid "UI Language"
 msgstr "Ngôn ngữ Ui"
 
 #: camlibs/ptp2/ptp.c:3168
-#, fuzzy
 msgid "Battery Type"
-msgstr "Chế độ pin"
+msgstr "Kiểu pin"
 
 #: camlibs/ptp2/ptp.c:3169
 msgid "Battery Mode"
@@ -6506,7 +6218,6 @@ msgid "Synchronization Partner"
 msgstr "Bên khác đồng bộ hoá"
 
 #: camlibs/ptp2/ptp.c:3460
-#, fuzzy
 msgid "Friendly Device Name"
 msgstr "Tên thiết bị thân thiện"
 
@@ -6535,14 +6246,12 @@ msgid "Playback Position"
 msgstr "Vị trí phát lại"
 
 #: camlibs/ptp2/ptp.c:3468
-#, fuzzy
 msgid "Revocation Info"
 msgstr "Thông tin hủy bỏ"
 
 #: camlibs/ptp2/ptp.c:3469
-#, fuzzy
 msgid "PlaysForSure ID"
-msgstr "Mã hiệu chắc phát"
+msgstr "PlaysForSure ID"
 
 #: camlibs/ptp2/ptp.c:3569 camlibs/ptp2/ptp.c:3570 camlibs/ptp2/ptp.c:3571
 #, c-format
@@ -6617,12 +6326,10 @@ msgid "15 mins"
 msgstr "15 phút"
 
 #: camlibs/ptp2/ptp.c:3814
-#, fuzzy
 msgid "Media Card"
 msgstr "Bo mạch ảnh/nhạc"
 
 #: camlibs/ptp2/ptp.c:3815
-#, fuzzy
 msgid "Media Card Group"
 msgstr "Nhóm bo mạch ảnh/nhạc"
 
@@ -6631,9 +6338,8 @@ msgid "Encounter"
 msgstr "Encounter"
 
 #: camlibs/ptp2/ptp.c:3817
-#, fuzzy
 msgid "Encounter Box"
-msgstr "EncounterBox"
+msgstr "Encounter Box"
 
 #: camlibs/ptp2/ptp.c:3818
 msgid "M4A"
@@ -6644,7 +6350,6 @@ msgid "Firmware"
 msgstr "Phần vững"
 
 #: camlibs/ptp2/ptp.c:3820
-#, fuzzy
 msgid "Windows Image Format"
 msgstr "Định dạng ảnh Windows"
 
@@ -6729,12 +6434,10 @@ msgid "PLS Playlist"
 msgstr "Danh mục nhạc PLS"
 
 #: camlibs/ptp2/ptp.c:3849
-#, fuzzy
 msgid "Undefined Document"
 msgstr "Tài liệu chưa xác định"
 
 #: camlibs/ptp2/ptp.c:3850
-#, fuzzy
 msgid "Abstract Document"
 msgstr "Tài liệu Abstract"
 
@@ -6759,22 +6462,18 @@ msgid "Microsoft Powerpoint (.ppt)"
 msgstr "Trình diễn PowerPoint của Microsoft™ (.ppt)"
 
 #: camlibs/ptp2/ptp.c:3856
-#, fuzzy
 msgid "Undefined Message"
 msgstr "Tin nhắn chưa xác định"
 
 #: camlibs/ptp2/ptp.c:3857
-#, fuzzy
 msgid "Abstract Message"
 msgstr "Tin nhắn Abstract"
 
 #: camlibs/ptp2/ptp.c:3858
-#, fuzzy
 msgid "Undefined Contact"
 msgstr "Liên lạc chưa xác định"
 
 #: camlibs/ptp2/ptp.c:3859
-#, fuzzy
 msgid "Abstract Contact"
 msgstr "Liên lạc Abstract"
 
@@ -6787,12 +6486,10 @@ msgid "vCard3"
 msgstr "vCard3"
 
 #: camlibs/ptp2/ptp.c:3862
-#, fuzzy
 msgid "Undefined Calendar Item"
 msgstr "Mục lịch chưa xác định"
 
 #: camlibs/ptp2/ptp.c:3863
-#, fuzzy
 msgid "Abstract Calendar Item"
 msgstr "Mục lịch Abstract"
 
@@ -6809,14 +6506,12 @@ msgid "Undefined Windows Executable"
 msgstr "Tập tin có khả năng thực hiện Windows chưa xác định"
 
 #: camlibs/ptp2/ptp.c:3867
-#, fuzzy
 msgid "Media Cast"
-msgstr "Bo mạch ảnh/nhạc"
+msgstr "Quảng bá ảnh/nhạc"
 
 #: camlibs/ptp2/ptp.c:3868
-#, fuzzy
 msgid "Section"
-msgstr "Hành động"
+msgstr "Phần"
 
 #: camlibs/ptp2/ptp.c:3906
 #, c-format
@@ -7037,7 +6732,7 @@ msgstr "Thông báo các mục đã giành được"
 
 #: camlibs/ptp2/ptp.c:3977
 msgid "Get transferable playlist types"
-msgstr ""
+msgstr "Lấy các kiểu danh mục phát có thể truyền"
 
 #: camlibs/ptp2/ptp.c:3980
 msgid "Send WMDRM-PD Application Request"
@@ -7104,7 +6799,7 @@ msgid "Process WFC Object"
 msgstr "Xử lý đối tượng WFC"
 
 #: camlibs/ptp2/ptp.c:4023
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown (%04x)"
 msgstr "Không rõ (%04x)"
 
@@ -7416,20 +7111,13 @@ msgstr "Gặp lỗi không rõ. Hãy liên lạc với %s."
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
-msgid ""
-"The filename's length must not exceed 12 characters ('%s' has %i characters)."
-msgstr ""
-"Độ dài của tên tập tin không thể vượt quá 12 ký tự (« %s » có %i ký tự)."
+msgid "The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgstr "Độ dài của tên tập tin không thể vượt quá 12 ký tự (« %s » có %i ký tự)."
 
 #: camlibs/samsung/samsung.c:243
-msgid ""
-"The Samsung digimax 800k driver has been written by James McKenzie "
-"<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
-"net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
-"enhanced the port."
+msgid "The Samsung digimax 800k driver has been written by James McKenzie <james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge.net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and enhanced the port."
 msgstr ""
-"Trình điều khiển Samsung digimax 800k được tạo bởi James McKenzie "
-"<james@fishsoup.dhs.org> cho phần mềm gphoto.\n"
+"Trình điều khiển Samsung digimax 800k được tạo bởi James McKenzie <james@fishsoup.dhs.org> cho phần mềm gphoto.\n"
 "Lutz Mueller <lutz@users.sourceforge.net> đã chuyển nó sang gphoto2.\n"
 "Marcus Meissner <marcus@jet.franken.de> đã sửa chữa và tăng cường bản chuyển."
 
@@ -7562,8 +7250,7 @@ msgstr "Không thể lấy khả năng pin"
 
 #: camlibs/sierra/library.c:304
 #, c-format
-msgid ""
-"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgid "The battery level of the camera is too low (%d%%). The operation is aborted."
 msgstr "Máy ảnh có pin quá yếu (%d%%) nên thao tác bị hủy bỏ."
 
 #: camlibs/sierra/library.c:328
@@ -7581,11 +7268,8 @@ msgstr "Byte đầu tiên được nhận (0x%x) không phải hợp lệ."
 
 #: camlibs/sierra/library.c:719
 #, c-format
-msgid ""
-"Transmission of packet timed out even after %i retries. Please contact %s."
-msgstr ""
-"Việc truyền gói tin đã quá thời, ngay cả sau %i lần thử lại. Hãy liên lạc "
-"với %s."
+msgid "Transmission of packet timed out even after %i retries. Please contact %s."
+msgstr "Việc truyền gói tin đã quá thời, ngay cả sau %i lần thử lại. Hãy liên lạc với %s."
 
 #: camlibs/sierra/library.c:753 camlibs/sierra/library.c:777
 msgid "Could not transmit packet even after several retries."
@@ -7603,8 +7287,7 @@ msgstr "Không thể gửi gói tin (mã lỗi %i). Hãy liên lạc với %s."
 
 #: camlibs/sierra/library.c:886
 msgid "Transmission timed out even after 2 retries. Giving up..."
-msgstr ""
-"Tiến trình gửi đã quá thời, ngay cả sau hai lần thử lại, nên chịu thua..."
+msgstr "Tiến trình gửi đã quá thời, ngay cả sau hai lần thử lại, nên chịu thua..."
 
 #: camlibs/sierra/library.c:905
 #, c-format
@@ -7631,11 +7314,8 @@ msgstr "Đang gửi dữ liệu..."
 
 #: camlibs/sierra/library.c:1204
 #, c-format
-msgid ""
-"recursive calls are not supported by the sierra driver! Please contact %s."
-msgstr ""
-"hàm gọi đệ qui không phải được trình điều khiển sierra hỗ trợ. Hãy liên lạc "
-"với %s."
+msgid "recursive calls are not supported by the sierra driver! Please contact %s."
+msgstr "hàm gọi đệ qui không phải được trình điều khiển sierra hỗ trợ. Hãy liên lạc với %s."
 
 #: camlibs/sierra/library.c:1259
 #, c-format
@@ -8092,9 +7772,7 @@ msgid "Auto Off (host) (in seconds)"
 msgstr "Tự động tắt (máy chủ) theo giây"
 
 #: camlibs/sierra/sierra.c:1181 camlibs/sierra/sierra.c:1643
-msgid ""
-"How long will it take until the camera powers off when connected to the "
-"computer?"
+msgid "How long will it take until the camera powers off when connected to the computer?"
 msgstr "Bao lâu đến khi máy ảnh tự tắt khi được kết nối đến máy tính?"
 
 #: camlibs/sierra/sierra.c:1193 camlibs/sierra/sierra.c:1436
@@ -8103,9 +7781,7 @@ msgid "Auto Off (field) (in seconds)"
 msgstr "Tự động tắt (trường) theo giây"
 
 #: camlibs/sierra/sierra.c:1195 camlibs/sierra/sierra.c:1657
-msgid ""
-"How long will it take until the camera powers off when not connected to the "
-"computer?"
+msgid "How long will it take until the camera powers off when not connected to the computer?"
 msgstr "Bao lâu đến khi máy ảnh tự tắt khi không được kết nối đến máy tính?"
 
 #: camlibs/sierra/sierra.c:1217 camlibs/sierra/sierra.c:1455
@@ -8342,8 +8018,7 @@ msgid ""
 msgstr ""
 "Smal Ultrapocket\n"
 "Lee Benfield <lee@benf.org>\n"
-"Trình điều khiển để truy cập máy ảnh Smal Ultrapocket, và các phiên bản OEM "
-"(slimshot)."
+"Trình điều khiển để truy cập máy ảnh Smal Ultrapocket, và các phiên bản OEM (slimshot)."
 
 #: camlibs/sonix/library.c:121
 #, c-format
@@ -8755,9 +8430,7 @@ msgstr "Không thể nạp trình điều khiển máy ảnh cần thiết « %s
 #: libgphoto2/gphoto2-camera.c:748
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
-msgstr ""
-"Trình điều khiển máy ảnh « %s » còn thiếu chức năng sở khởi máy ảnh "
-"(camera_init)."
+msgstr "Trình điều khiển máy ảnh « %s » còn thiếu chức năng sở khởi máy ảnh (camera_init)."
 
 #: libgphoto2/gphoto2-camera.c:801
 msgid "This camera does not offer any configuration options."
@@ -8813,12 +8486,8 @@ msgstr "Không thể phụ thêm « %s » vào thư mục « %s » vì tập tin
 
 #: libgphoto2/gphoto2-filesys.c:1099
 #, c-format
-msgid ""
-"You have been trying to delete '%s' from folder '%s', but the filesystem "
-"does not support deletion of files."
-msgstr ""
-"Bạn đã thử xoá « %s » khỏi thư mục « %s », nhưng mà hệ thống tập tin không "
-"hỗ trợ khả năng xoá tập tin."
+msgid "You have been trying to delete '%s' from folder '%s', but the filesystem does not support deletion of files."
+msgstr "Bạn đã thử xoá « %s » khỏi thư mục « %s », nhưng mà hệ thống tập tin không hỗ trợ khả năng xoá tập tin."
 
 #: libgphoto2/gphoto2-filesys.c:1109
 #, c-format
@@ -8827,8 +8496,7 @@ msgstr "Đang xoá « %s » khỏi thư mục « %s »..."
 
 #: libgphoto2/gphoto2-filesys.c:1228
 #, c-format
-msgid ""
-"There are still subfolders in folder '%s' that you are trying to remove."
+msgid "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "Vẫn còn có các thư mục con trong thư mục « %s » bạn đang thử gỡ bỏ."
 
 #: libgphoto2/gphoto2-filesys.c:1235
@@ -8842,11 +8510,8 @@ msgstr "Hệ thống tập tin này không hỗ trợ khả năng tải lên t�
 
 #: libgphoto2/gphoto2-filesys.c:1318
 #, c-format
-msgid ""
-"Folder '%s' does only contain %i files, but you requested a file with number "
-"%i."
-msgstr ""
-"Tập tin « %s » chỉ chứa %i tập tin, còn bạn đã yêu cầu tập tin có số %i."
+msgid "Folder '%s' does only contain %i files, but you requested a file with number %i."
+msgstr "Tập tin « %s » chỉ chứa %i tập tin, còn bạn đã yêu cầu tập tin có số %i."
 
 #: libgphoto2/gphoto2-filesys.c:1363
 #, c-format
@@ -8940,99 +8605,3 @@ msgstr "Lỗi thư viện máy ảnh không rõ"
 #: libgphoto2/gphoto2-result.c:88
 msgid "Unknown error"
 msgstr "Lỗi không rõ"
-
-#~ msgid "super fine"
-#~ msgstr "siêu chính xác"
-
-#~ msgid "Tv"
-#~ msgstr "TV"
-
-#~ msgid "Av"
-#~ msgstr "Av"
-
-#~ msgid "Medium low"
-#~ msgstr "Vừa thấp"
-
-#~ msgid "Wifi essid"
-#~ msgstr "ESSID WIFI"
-
-#~ msgid "F Number"
-#~ msgstr "Số F"
-
-#~ msgid "Auto Whitebalance Bias"
-#~ msgstr "Khuynh hướng tự động cán cân trắng"
-
-#~ msgid "Tungsten Whitebalance Bias"
-#~ msgstr "Khuynh hướng cán cân trắng Vonfam"
-
-#~ msgid "Fluorescent Whitebalance Bias"
-#~ msgstr "Khuynh hướng cán cân trắng huỳnh quang"
-
-#~ msgid "Daylight Whitebalance Bias"
-#~ msgstr "Khuynh hướng cán cân trắng ánh nắng ban ngày"
-
-#~ msgid "Flash Whitebalance Bias"
-#~ msgstr "Khuynh hướng cán cân trắng đèn nháy"
-
-#~ msgid "Cloudy Whitebalance Bias"
-#~ msgstr "Khuynh hướng cán cân trắng dầy mây"
-
-#~ msgid "Shade Whitebalance Bias"
-#~ msgstr "Khuynh hướng cán cân trắng có bóng"
-
-#~ msgid "Date Time"
-#~ msgstr "Ngày và Giờ"
-
-#~ msgid "Battery Kind"
-#~ msgstr "Kiểu pin"
-
-#~ msgid "ShutterSpeed"
-#~ msgstr "Tốc độ cửa chập"
-
-#~ msgid "Focal Length of Tele"
-#~ msgstr "Tiêu cự kính viễn vọng"
-
-#~ msgid "Max. Shots"
-#~ msgstr "Số lần chụp tối đa"
-
-#~ msgid "Get type of playlists that are allowed to be transfered"
-#~ msgstr "Lấy các kiểu danh mục nhạc cho phép truyền"
-
-#~ msgid "Sorry, this function not implemented..."
-#~ msgstr "Tiếc là chưa thực hiện chức năng này..."
-
-#~ msgid "Sorry, nothing to configure..."
-#~ msgstr "Không có gì cần cấu hình..."
-
-#~ msgid "Sorry, taking pictures is not implemented..."
-#~ msgstr "Tiếc là chưa thực hiện chức năng chụp ảnh..."
-
-#~ msgid "Couldn't open camera.\n"
-#~ msgstr "Không thể mở máy ảnh.\n"
-
-#~ msgid "Error opening camera\n"
-#~ msgstr "Gặp lỗi khi mở máy ảnh\n"
-
-#~ msgid "Picture number is too large.\n"
-#~ msgstr "Số hiệu ảnh quá lớn.\n"
-
-#~ msgid ""
-#~ "Sony DSC-F1 Digital Camera Support\n"
-#~ "M. Adam Kendall <joker@penguinpub.com>\n"
-#~ "\n"
-#~ "Based on the chotplay CLI interface from\n"
-#~ "Ken-ichi Hayashi\n"
-#~ "\n"
-#~ "This lib may not work. YMMV\n"
-#~ msgstr ""
-#~ "Hỗ trợ máy ảnh điện số Sony DSC-F1\n"
-#~ "M. Adam Kendall <joker@penguinpub.com>\n"
-#~ "\n"
-#~ "Dựa vào diao diện dòng lệnh chotplay của\n"
-#~ "Ken-ichi Hayashi\n"
-#~ "\n"
-#~ "Có lẽ thư viện này không hoạt động được,\n"
-#~ "phụ thuộc vào trường riêng của bạn.\n"
-
-#~ msgid "Error opening camera.\n"
-#~ msgstr "Gặp lỗi khi mở máy ảnh.\n"
