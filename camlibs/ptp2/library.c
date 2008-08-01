@@ -566,7 +566,7 @@ static struct {
 	/* Philippe ENTZMANN <philippe@phec.net> */
 	{"Nikon:Coolpix P60 (PTP mode)",  0x04b0, 0x0311, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Stas Timokhin <st@ngs.ru> */
-	{"Nikon:Coolpix L16 (PTP mode)",  0x04b0, 0x0315, 0},
+	{"Nikon:Coolpix L16 (PTP mode)",  0x04b0, 0x0315, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
@@ -593,6 +593,8 @@ static struct {
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
+	/* Borrowed D700 by deckel / marcus */
+	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
