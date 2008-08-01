@@ -649,7 +649,7 @@ ptp_unpack_DPV (
 		value->str = ptp_unpack_string(params,data,*offset,&len);
 		*offset += len*2+1;
 		if (!value->str)
-			return 0;
+			return 1;
 		break;
 	}
 	default:
@@ -674,10 +674,13 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_DataType]);
 	dpd->GetSet=dtoh8a(&data[PTP_dpd_GetSet]);
+	dpd->FormFlag=PTP_DPFF_None;
 
 	offset = PTP_dpd_FactoryDefaultValue;
 	ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FactoryDefaultValue, dpd->DataType);
 	if (!ret) goto outofmemory;
+	if ((dpd->DataType == PTP_DTC_STR) && (offset == dpdlen))
+		return 1;
 	ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->CurrentValue, dpd->DataType);
 	if (!ret) goto outofmemory;
 
@@ -686,7 +689,6 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	   values). In both cases Form Flag should be set to 0x00 and FORM is
 	   not present. */
 
-	dpd->FormFlag=PTP_DPFF_None;
 	if (offset==PTP_dpd_FactoryDefaultValue)
 		return 1;
 
