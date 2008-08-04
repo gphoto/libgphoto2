@@ -129,7 +129,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"are saved here as a succession of still photos. The user can \n"
 	"animate them using (for example) ImageMagick's 'animate' function.\n"
 	"For more details on the camera's functions, please consult\n"
-	"libgphoto2/camlibs/README.\n"
+	"libgphoto2/camlibs/clicksmart310/README.clicksmart310.\n"
 	));
 
 	return (GP_OK);
