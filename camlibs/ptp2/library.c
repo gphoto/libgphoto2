@@ -606,17 +606,17 @@ static struct {
 	{"Panasonic:DMC-LZ2",             0x04da, 0x2372, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1405541&group_id=8874&atid=358874 */
 	{"Panasonic:DMC-LC1",             0x04da, 0x2372, 0},
-#endif
-
-	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
-	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1275100&group_id=8874&atid=358874 */
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
+#endif
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
 	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
+
+	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
+	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
 
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
