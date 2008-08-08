@@ -1221,12 +1221,15 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                         camera->pl->capture_step++;
                         /* Canon SDK unlocks the keys here for EOS cameras. */
                         if ( canon_usb_unlock_keys ( camera, context ) < 0 ) {
-                                GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture." );
-                                goto FAIL;
+                                GP_DEBUG ( "canon_usb_capture_dialogue: couldn't unlock keys after capture, ignoring." );
+                                /* goto FAIL; ... known to not work on EOS 10D and 20D. -Marcus */
                         }
 			camera->pl->transfer_mode &= ~(REMOTE_CAPTURE_THUMB_TO_DRIVE|REMOTE_CAPTURE_FULL_TO_DRIVE);
 			/* Special case for class 6 (newer protocol) and the EOS 300D */
-			if ( camera->pl->md->model == CANON_CLASS_6 || camera->pl->md->usb_product == 0x3084 ) {
+			if (	camera->pl->md->model == CANON_CLASS_6 ||
+				camera->pl->md->usb_product == 0x3083 ||/* EOS 10D */
+				camera->pl->md->usb_product == 0x3084 	/* EOS 300D */
+			) {
 				GP_DEBUG ( "canon_usb_capture_dialogue:"
 					   " final interrupt read at step %i", camera->pl->capture_step );
 				goto EXIT;
