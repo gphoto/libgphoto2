@@ -382,8 +382,10 @@ static struct {
 
 
 	/* HP PTP cameras */
-	/* found in random web forum */
-	{"HP:PhotoSmart M407 (PTP mode)", 0x03f0, 0x4002, 0},
+#if 0
+	/* 0x4002 seems to be the mass storage ID, which various forums suggest */
+	{"HP:PhotoSmart ... ", 		 0x03f0, 0x4002, 0},
+#endif
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, PTPBUG_DUPE_FILE},
 	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
