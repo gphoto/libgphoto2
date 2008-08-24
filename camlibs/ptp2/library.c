@@ -383,7 +383,7 @@ static struct {
 
 	/* HP PTP cameras */
 #if 0
-	/* 0x4002 seems to be the mass storage ID, which various forums suggest */
+	/* 0x4002 seems to be the mass storage ID, which various forums suggest. -Marcus */
 	{"HP:PhotoSmart ... ", 		 0x03f0, 0x4002, 0},
 #endif
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
