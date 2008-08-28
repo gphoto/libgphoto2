@@ -3945,8 +3945,26 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		int		cnt = 0, i, j, nrofprops = 0;
 		uint32_t	lasthandle = 0xffffffff;
 		MTPProperties 	*props = NULL, *xpl;
+                int             oldtimeout;
+
+                /* The follow request causes the device to generate
+                 * a list of very file on the device and return it
+                 * in a single response.
+                 *
+                 * Some slow device as well as devices with very
+                 * large file systems can easily take longer then
+                 * the standard timeout value before it is able
+                 * to return a response.
+                 *
+                 * Temporarly set timeout to allow working with
+                 * widest range of devices.
+                 */
+                gp_port_get_timeout (camera->port, &oldtimeout);
+                gp_port_set_timeout (camera->port, 60000);
 
 		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &props, &nrofprops);
+                gp_port_set_timeout (camera->port, oldtimeout);
+
 		if (ret != PTP_RC_OK)
 			goto fallback;
 		params->props = props; /* cache it */
