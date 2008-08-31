@@ -26,6 +26,10 @@
 #include <iconv.h>
 #include "gphoto2-endian.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* PTP datalayer byteorder */
 
 #define PTP_DL_BE			0xF0
@@ -1766,4 +1770,9 @@ uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);
 
 /* ptpip.c */
 void ptp_nikon_getptpipguid (unsigned char* guid);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #endif /* __PTP_H__ */
