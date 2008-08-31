@@ -685,7 +685,7 @@ ptp_getnumobjects (PTPParams* params, uint32_t storage,
 	int len;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_GetObjectHandles;
+	ptp.Code=PTP_OC_GetNumObjects;
 	ptp.Param1=storage;
 	ptp.Param2=objectformatcode;
 	ptp.Param3=associationOH;
