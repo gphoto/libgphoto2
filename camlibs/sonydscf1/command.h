@@ -10,7 +10,7 @@ int	F1fopen (GPPort *,char *);
 long	F1fread(GPPort *,unsigned char *data, long len);
 long	F1fwrite(GPPort *,unsigned char *data, long len, unsigned char b);
 long	F1fseek (GPPort *,long, int);
-u_long	F1finfo (GPPort *,char *);
+unsigned long	F1finfo (GPPort *,char *);
 int	F1fclose (GPPort *);
 int	F1deletepicture (GPPort*,int);
 #endif /* __COMMAND_H__ */
