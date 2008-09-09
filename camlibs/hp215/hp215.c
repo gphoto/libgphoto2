@@ -437,7 +437,7 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 	free (msg);
 
 
-	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\nFree card memory: %d\nImages on card: %d\nImages free on card: %d\nBattery level: %d %%"),
+	snprintf (txtbuffer, txtbuffersize, _("Current camera time:  %04d-%02d-%02d  %02d:%02d\nFree card memory: %d\nImages on card: %d\nFree space (Images): %d\nBattery level: %d %%."),
 		date.year, date.month, date.day, date.hour, date.min,
 		freespace, usedimages, freeimages, percent
 	);
