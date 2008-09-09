@@ -138,9 +138,7 @@ make_uw_request(uw4c_t *req,
 #define UW_PACKET_DATA ((uw4c_t){ 0x02, 0x00, 0xff, 0x9f })
 #define UW_PACKET_STAT ((uw4c_t){ 0x03, 0x00, 0xff, 0x9f })
 
-#ifdef __GNUC__
-# pragma pack(1)
-#endif
+#pragma pack(1)
 /*
  * The rest of the USB wrapper packet looks like this:
  */
@@ -207,6 +205,7 @@ typedef struct
       uw32_t sessionid;        /* A copy of whatever value the host made up */
       char   zero[5];  /* 00 00 00 00 00 */
 } uw_response_t;
+#pragma pack()
 
 /*
  * This routine is called after every UW_REQUEST_XXX to get an OK
