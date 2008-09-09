@@ -830,7 +830,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
         /* Self Timer */
         gp_widget_new (GP_WIDGET_RADIO, _("Self Timer"), &widget);
         gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Self Timer (only next picture)"));
+        gp_widget_add_choice (widget, _("Self Timer (next picture only)"));
         gp_widget_add_choice (widget, _("Normal"));
         switch (status.focus % 2) {
         case 1:
@@ -1060,7 +1060,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                 else
                         focus_self_timer = 0;
                 gp_widget_get_value (widget_self_timer, &c);
-                if (!strcmp (c, _("Self Timer (only next picture)")))
+                if (!strcmp (c, _("Self Timer (next picture only)")))
                         focus_self_timer++;
                 C(k_set_preference (camera->port, context,
                         K_PREFERENCE_FOCUS_SELF_TIMER, focus_self_timer));
