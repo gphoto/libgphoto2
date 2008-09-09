@@ -27,14 +27,15 @@
 #include <sys/types.h>
 
 /* Encapsulation of MJD date and h:m:s timestamp */
+#pragma pack(1)
 struct tf_datetime
 {
     unsigned short mjd;
     unsigned char hour;
     unsigned char minute;
     unsigned char second;
-} __attribute__ ((packed));
-
+};
+#pragma pack()
 
 time_t tfdt_to_time(struct tf_datetime *dt);
 void time_to_tfdt(time_t t, struct tf_datetime *dt);

@@ -71,15 +71,18 @@
 #define PACKET_HEAD_SIZE 8
 
 /* Format of a Topfield protocol packet */
+#pragma pack(1)
 struct tf_packet
 {
     uint16_t length;
     uint16_t crc;
     uint32_t cmd;
     uint8_t data[MAXIMUM_PACKET_SIZE - PACKET_HEAD_SIZE];
-} __attribute__ ((packed));
+};
+#pragma pack()
 
 /* Topfield file descriptor data structure. */
+#pragma pack(1)
 struct typefile
 {
     struct tf_datetime stamp;
@@ -88,7 +91,8 @@ struct typefile
     uint8_t name[95];
     uint8_t unused;
     uint32_t attrib;
-} __attribute__ ((packed));
+};
+#pragma pack()
 
 
 ssize_t send_success(Camera *camera, GPContext *context);
