@@ -1,3 +1,11 @@
+libgphoto2 2.4.2.1
+
+This is a 2.4 release branch update.
+
+PTP2 driver:
+   * Merged TRUNK camlib.
+   * Disable more Panasonic cameras.
+
 libgphoto2 2.4.2
 
 This is a 2.4 release branch update.
