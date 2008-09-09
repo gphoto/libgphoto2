@@ -397,11 +397,11 @@ long F1fwrite(GPPort *port,unsigned char *data, long len, unsigned char b) /* th
   return(i);
 }
 
-u_long F1finfo(GPPort *port,char *name)
+unsigned long F1finfo(GPPort *port,char *name)
 {
   unsigned char buf[64];
   int len;
-  u_long flen;
+  unsigned long flen;
 
   buf[0] = 0x02;
   buf[1] = 0x0F;

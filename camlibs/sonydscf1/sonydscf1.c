@@ -214,8 +214,8 @@ get_picture_information(GPPort *port,int *pmx_num, int outit)
 static int
 get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *context)
 {
-  u_long filelen;
-  u_long total = 0;
+  unsigned long filelen;
+  unsigned long total = 0;
   long len,jpegcommentlen;
   unsigned char buf[0x400];
   unsigned char jpeg_comment[256];
@@ -266,8 +266,8 @@ get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *cont
 static long
 get_thumbnail(GPPort *port,char *name, CameraFile *file, int format, int n)
 {
-  u_long filelen;
-  u_long total = 0;
+  unsigned long filelen;
+  unsigned long total = 0;
   long len;
   int i;
   unsigned char buf[0x1000];
