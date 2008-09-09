@@ -290,6 +290,11 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		if (usbdata.length == 0xffffffffU) {
 			unsigned char	*data = malloc (PTP_USB_BULK_HS_MAX_PACKET_LEN_READ);
 			if (!data) return PTP_RC_GeneralError;
+			/* Copy first part of data to 'data' */
+			handler->putfunc(
+				params, handler->private, rlen - PTP_USB_BULK_HDR_LEN, usbdata.payload.data,
+				&written
+			);
 			/* stuff data directly to passed data handler */
 			while (1) {
 				unsigned long written;

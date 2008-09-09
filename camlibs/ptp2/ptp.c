@@ -685,7 +685,7 @@ ptp_getnumobjects (PTPParams* params, uint32_t storage,
 	int len;
 
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_GetObjectHandles;
+	ptp.Code=PTP_OC_GetNumObjects;
 	ptp.Param1=storage;
 	ptp.Param2=objectformatcode;
 	ptp.Param3=associationOH;
@@ -875,13 +875,20 @@ uint16_t
 ptp_deleteobject (PTPParams* params, uint32_t handle, uint32_t ofc)
 {
 	PTPContainer ptp;
+	uint16_t ret;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_DeleteObject;
 	ptp.Param1=handle;
 	ptp.Param2=ofc;
 	ptp.Nparam=2;
-	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	if (ret != PTP_RC_OK) {
+		return ret;
+	}
+	/* If the object is cached and could be removed, cleanse cache. */
+	ptp_remove_object_from_cache(params, handle);
+	return PTP_RC_OK;
 }
 
 /**
@@ -3228,8 +3235,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_EZoomSizeOfTele,	N_("EZoom Size of Tele")},
 		{PTP_DPC_CANON_PhotoEffect,	N_("Photo Effect")},
 		{PTP_DPC_CANON_AssistLight,	N_("Assist Light")},
-		{PTP_DPC_CANON_FlashQuantityCount,	N_("Flash Quanity Count")},
-		{PTP_DPC_CANON_FlashQuantityCount,	N_("Flash Quanity Count")},
+		{PTP_DPC_CANON_FlashQuantityCount,	N_("Flash Quantity Count")},
 		{PTP_DPC_CANON_RotationAngle,	N_("Rotation Angle")},
 		{PTP_DPC_CANON_RotationScene,	N_("Rotation Scene")},
 		{PTP_DPC_CANON_EventEmulateMode,N_("Event Emulate Mode")},

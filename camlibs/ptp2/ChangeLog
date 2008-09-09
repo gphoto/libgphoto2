@@ -1,3 +1,26 @@
+2008-08-28  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Increase timeout for mtp proplist reading (from
+	  Chris Bagwell).
+
+	* ptp.c, music-players.h, device-flags.h: Merged updates from libmtp.
+
+2008-07-31  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Nikon Coolpix L16 , Nikon D700.
+
+	* ptp-unpack.c: Fixed a property handling issue
+	  with empty/non existant strings in the unpacker,
+	  triggered by the D700.
+
+	* README.ptp2: Added link to now official MTP 1.0 spec.
+
+2008-07-18  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added the Canon EOS 1D Mark III (reported by jholt)
+
+	* library.c: Disabled more 0x2372 panasonic mass storage ids.
+
 2008-07-03  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: allow capture=off

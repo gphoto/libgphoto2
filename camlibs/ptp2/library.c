@@ -315,6 +315,8 @@ static struct {
 	{"Kodak:DX7590", 0x040a, 0x057f, 0},
 	{"Kodak:Z730",   0x040a, 0x0580, 0},
 	{"Kodak:CX6445", 0x040a, 0x0584, 0},
+	/* Francesco Del Prete <italyanker@gmail.com> */
+	{"Kodak:M893 IS",0x040a, 0x0585, 0},
 	{"Kodak:CX7525", 0x040a, 0x0586, 0},
 	/* a sf bugreporter */
 	{"Kodak:Z700",   0x040a, 0x0587, 0},
@@ -375,10 +377,15 @@ static struct {
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 	/* https://bugs.launchpad.net/bugs/203402 */
 	{"Kodak:ZD710",	 0x040a, 0x05c0, 0},
+	/* Peter F Bradshaw <pfb@exadios.com> */
+	{"Kodak:C813",	 0x040a, 0x05c3, 0},
+
 
 	/* HP PTP cameras */
-	/* found in random web forum */
-	{"HP:PhotoSmart M407 (PTP mode)", 0x03f0, 0x4002, 0},
+#if 0
+	/* 0x4002 seems to be the mass storage ID, which various forums suggest. -Marcus */
+	{"HP:PhotoSmart ... ", 		 0x03f0, 0x4002, 0},
+#endif
 	{"HP:PhotoSmart 812 (PTP mode)", 0x03f0, 0x4202, 0},
 	{"HP:PhotoSmart 850 (PTP mode)", 0x03f0, 0x4302, PTPBUG_DUPE_FILE},
 	/* HP PhotoSmart 935: T. Kaproncai, 25 Jul 2003*/
@@ -560,6 +567,8 @@ static struct {
 	{"Nikon:Coolpix L10 (PTP mode)",  0x04b0, 0x030b, 0},
 	/* Philippe ENTZMANN <philippe@phec.net> */
 	{"Nikon:Coolpix P60 (PTP mode)",  0x04b0, 0x0311, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* Stas Timokhin <st@ngs.ru> */
+	{"Nikon:Coolpix L16 (PTP mode)",  0x04b0, 0x0315, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
@@ -586,9 +595,11 @@ static struct {
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
+	/* Borrowed D700 by deckel / marcus */
+	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP},
 
-	/* Thomas Luzat <thomas.luzat@gmx.net> */
 #if 0
+	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
 	 * http://sourceforge.net/tracker/index.php?func=detail&aid=1847471&group_id=8874&atid=108874
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
@@ -597,18 +608,19 @@ static struct {
 	{"Panasonic:DMC-LZ2",             0x04da, 0x2372, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1405541&group_id=8874&atid=358874 */
 	{"Panasonic:DMC-LC1",             0x04da, 0x2372, 0},
-
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1275100&group_id=8874&atid=358874 */
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
 #endif
-	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
-	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
-
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
 	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2070864&group_id=8874&atid=358874 */
+	{"Panasonic:DMC-TZ15",            0x04da, 0x2374, 0},
+
+	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
+	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
 
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
@@ -763,6 +775,10 @@ static struct {
 	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP},
 	/* reported by Ferry Huberts */
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP}, /* user had it working without problem */
+
+	/* reported by: gphoto@lunkwill.org */
+	{"Canon:EOS 1D Mark III (PTP mode)",	0x04a9, 0x3147, PTPBUG_DCIM_WRONG_PARENT|PTP_CAP},
+
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
 	/* AlannY <alanny@starlink.ru> */
 	{"Canon:PowerShot A460 (PTP mode)",	0x04a9, 0x3149, PTP_CAP|PTP_CAP_PREVIEW},
@@ -855,6 +871,8 @@ static struct {
 
 	/* from Mike Meyer <mwm@mired.org> */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
+	/* irc reporter */
+	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, PTPBUG_DCIM_WRONG_PARENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
 };
@@ -3929,8 +3947,26 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		int		cnt = 0, i, j, nrofprops = 0;
 		uint32_t	lasthandle = 0xffffffff;
 		MTPProperties 	*props = NULL, *xpl;
+                int             oldtimeout;
+
+                /* The follow request causes the device to generate
+                 * a list of very file on the device and return it
+                 * in a single response.
+                 *
+                 * Some slow device as well as devices with very
+                 * large file systems can easily take longer then
+                 * the standard timeout value before it is able
+                 * to return a response.
+                 *
+                 * Temporarly set timeout to allow working with
+                 * widest range of devices.
+                 */
+                gp_port_get_timeout (camera->port, &oldtimeout);
+                gp_port_set_timeout (camera->port, 60000);
 
 		ret = ptp_mtp_getobjectproplist (&camera->pl->params, 0xffffffff, &props, &nrofprops);
+                gp_port_set_timeout (camera->port, oldtimeout);
+
 		if (ret != PTP_RC_OK)
 			goto fallback;
 		params->props = props; /* cache it */
