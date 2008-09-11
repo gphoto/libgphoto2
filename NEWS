@@ -2,10 +2,33 @@ libgphoto2 2.4.2.1
 
 This is a 2.4 release branch update.
 
-PTP2 driver:
-   * Merged TRUNK camlib.
-   * Disable more Panasonic cameras.
+libgphoto2:
+   * Translation updates for various languages.
+   * libtool 2.x build fixes
+   * Various MacOS X compile fixes again.
+   * gp-byteorder.m4 fixes for newer glibcs.
 
+PTP2 driver:
+   * Merged camlib from TRUNK.
+   * Disable more Panasonic cameras (product id 0x2372 is always mass storage)
+   * Some MTP fixes, lots of new MTP devices.
+   * Fixed a ptp property packing issue exposed
+     by newer Nikons.
+
+   * Added:
+  	 Kodak M893 IS, C813
+	 Nikon CoolPix L16, DSC 700
+	 Canon EOS 1D Mark III
+	 Apple iPhone 3G
+
+Canon driver:
+   * Fixed some unlock keys problem for EOS cameras.
+ 
+jl2005a driver:
+   * Imported from TRUNK, for new small factor cameras.
+           American Idol Keychain Camera
+	   NogaNet TDC-15
+------------------------------------------------------------------------
 libgphoto2 2.4.2
 
 This is a 2.4 release branch update.
