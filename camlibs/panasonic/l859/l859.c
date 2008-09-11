@@ -581,7 +581,7 @@ static int camera_summary (Camera *camera, CameraText *summary,
 		_("Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 		  "\n"
 		  "Panasonic introduced image capturing technology "
-		  "called PHOTOSHOT for the first time to this series "
+		  "called PHOTOSHOT for the first time, in this series "
 		  "of Palmcorders.  Images are stored in JPEG format on "
 		  "an internal flashcard and can be transferred to a "
 		  "computer through the built-in serial port.  Images "
