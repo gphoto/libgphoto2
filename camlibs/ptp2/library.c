@@ -3428,14 +3428,16 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		params->handles.Handler[object_id],0));
 
 	/* Remove it from the internal structures. */
-	memcpy (params->handles.Handler+object_id,
-		params->handles.Handler+object_id+1,
-		(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
-	);
-	memcpy (params->objectinfo+object_id,
-		params->objectinfo+object_id+1,
-		(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
-	);
+	if (object_id < params->handles.n) { /* if not last ... */
+		memcpy (params->handles.Handler+object_id,
+			params->handles.Handler+object_id+1,
+			(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
+		);
+		memcpy (params->objectinfo+object_id,
+			params->objectinfo+object_id+1,
+			(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
+		);
+	}
 	params->handles.n--;
 
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
