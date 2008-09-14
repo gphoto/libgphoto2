@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-07-13 22:25+0200\n"
+"POT-Creation-Date: 2008-08-05 22:27+0200\n"
 "PO-Revision-Date: 2002-01-04 19:25+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -740,7 +740,7 @@ msgstr ""
 #: camlibs/canon/library.c:1759 camlibs/canon/library.c:1760
 #: camlibs/canon/library.c:1793 camlibs/canon/library.c:1794
 #: camlibs/canon/library.c:1827 camlibs/canon/library.c:1828
-#: camlibs/ptp2/library.c:1940 camlibs/ptp2/library.c:1942
+#: camlibs/ptp2/library.c:1941 camlibs/ptp2/library.c:1943
 #: camlibs/ptp2/ptp.c:3706
 msgid "Unknown"
 msgstr ""
@@ -2062,6 +2062,31 @@ msgstr ""
 msgid "Blue"
 msgstr ""
 
+#: camlibs/jl2005a/library.c:104
+#, c-format
+msgid ""
+"This camera contains a Jeilin JL2005A chipset.\n"
+"The number of photos in it is %i. \n"
+msgstr ""
+
+#: camlibs/jl2005a/library.c:114
+msgid ""
+"This driver supports cameras with Jeilin jl2005a chip \n"
+"These cameras do not support deletion of photos, nor uploading\n"
+"of data. \n"
+"Decoding of compressed photos may or may not work well\n"
+"and does not work equally well for all supported cameras.\n"
+"If present on the camera, video clip frames are downloaded \n"
+"as consecutive still photos.\n"
+"For further details please consult libgphoto2/camlibs/README.jl2005a\n"
+msgstr ""
+
+#: camlibs/jl2005a/library.c:131
+msgid ""
+"jl2005a camera library\n"
+"Theodore Kilgore <kilgota@auburn.edu>\n"
+msgstr ""
+
 #: camlibs/kodak/dc120/dc120.c:68 camlibs/kodak/dc120/dc120.c:144
 msgid "CompactFlash Card"
 msgstr ""
@@ -2232,7 +2257,7 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
 #: camlibs/ptp2/config.c:1644 camlibs/ptp2/config.c:2280
-#: camlibs/ptp2/library.c:2239 camlibs/ptp2/library.c:2243
+#: camlibs/ptp2/library.c:2240 camlibs/ptp2/library.c:2244
 #: camlibs/ptp2/ptp.c:3692 camlibs/ricoh/library.c:347
 #, fuzzy
 msgid "None"
@@ -4379,8 +4404,8 @@ msgstr ""
 msgid "Long distance"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1669 camlibs/ptp2/library.c:2248
-#: camlibs/ptp2/library.c:2262 camlibs/ptp2/ptp.c:3913
+#: camlibs/ptp2/config.c:1669 camlibs/ptp2/library.c:2249
+#: camlibs/ptp2/library.c:2263 camlibs/ptp2/ptp.c:3913
 msgid "Undefined"
 msgstr ""
 
@@ -5102,7 +5127,7 @@ msgstr ""
 msgid "PTP Protocol error, response expected"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1140
+#: camlibs/ptp2/library.c:1141
 msgid ""
 "PTP2 driver\n"
 "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -5116,79 +5141,79 @@ msgid ""
 "Enjoy!"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1217
+#: camlibs/ptp2/library.c:1218
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1223
+#: camlibs/ptp2/library.c:1224
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1229
+#: camlibs/ptp2/library.c:1230
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1240
+#: camlibs/ptp2/library.c:1241
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1356
+#: camlibs/ptp2/library.c:1357
 #, fuzzy
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1442
+#: camlibs/ptp2/library.c:1443
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1448
+#: camlibs/ptp2/library.c:1449
 #, fuzzy, c-format
 msgid "Canon EOS Capture failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1456
+#: camlibs/ptp2/library.c:1457
 #, fuzzy, c-format
 msgid "Canon EOS Get Changes failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1539
+#: camlibs/ptp2/library.c:1540
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1550
+#: camlibs/ptp2/library.c:1551
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1572
+#: camlibs/ptp2/library.c:1573
 #, fuzzy, c-format
 msgid "Canon Capture failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1688
+#: camlibs/ptp2/library.c:1689
 #, fuzzy
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1764
+#: camlibs/ptp2/library.c:1765
 #, c-format
 msgid "No event received, error %x."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1938
+#: camlibs/ptp2/library.c:1939
 msgid "read only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1939
+#: camlibs/ptp2/library.c:1940
 msgid "readwrite"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2073
+#: camlibs/ptp2/library.c:2074
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -5198,229 +5223,229 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2091
+#: camlibs/ptp2/library.c:2092
 #, c-format
 msgid ""
 "\n"
 "Capture Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2105
+#: camlibs/ptp2/library.c:2106
 #, c-format
 msgid "Display Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2121
+#: camlibs/ptp2/library.c:2122
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2137
+#: camlibs/ptp2/library.c:2138
 #, c-format
 msgid " PTP error %04x on query"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2154
+#: camlibs/ptp2/library.c:2155
 #, c-format
 msgid ""
 "\n"
 "Device Capabilities:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2158
+#: camlibs/ptp2/library.c:2159
 #, c-format
 msgid "\tFile Download, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2161
+#: camlibs/ptp2/library.c:2162
 #, c-format
 msgid "File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2163
+#: camlibs/ptp2/library.c:2164
 #, c-format
 msgid "No File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2167
+#: camlibs/ptp2/library.c:2168
 #, fuzzy, c-format
 msgid "File Upload\n"
 msgstr "Pomanj¹ujem sliko za 50%..."
 
-#: camlibs/ptp2/library.c:2169
+#: camlibs/ptp2/library.c:2170
 #, c-format
 msgid "No File Upload\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2174
+#: camlibs/ptp2/library.c:2175
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2176
+#: camlibs/ptp2/library.c:2177
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2179
+#: camlibs/ptp2/library.c:2180
 #, fuzzy, c-format
 msgid "Open Capture, "
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2181
+#: camlibs/ptp2/library.c:2182
 #, c-format
 msgid "No Open Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2187
+#: camlibs/ptp2/library.c:2188
 #, fuzzy, c-format
 msgid "Canon Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2191
+#: camlibs/ptp2/library.c:2192
 #, fuzzy, c-format
 msgid "Canon EOS Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2195
+#: camlibs/ptp2/library.c:2196
 #, fuzzy, c-format
 msgid "Nikon Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2197
+#: camlibs/ptp2/library.c:2198
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2206
+#: camlibs/ptp2/library.c:2207
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2212
+#: camlibs/ptp2/library.c:2213
 #, fuzzy, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:2223
+#: camlibs/ptp2/library.c:2224
 #, c-format
 msgid ""
 "\n"
 "Storage Devices Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2238
+#: camlibs/ptp2/library.c:2239
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2242
+#: camlibs/ptp2/library.c:2243
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2249
+#: camlibs/ptp2/library.c:2250
 msgid "Builtin ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2250
+#: camlibs/ptp2/library.c:2251
 msgid "Removable ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2251
+#: camlibs/ptp2/library.c:2252
 msgid "Builtin RAM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2252
+#: camlibs/ptp2/library.c:2253
 msgid "Removable RAM (memory card)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2254 camlibs/ptp2/library.c:2267
-#: camlibs/ptp2/library.c:2279
+#: camlibs/ptp2/library.c:2255 camlibs/ptp2/library.c:2268
+#: camlibs/ptp2/library.c:2280
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2258
+#: camlibs/ptp2/library.c:2259
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2263
+#: camlibs/ptp2/library.c:2264
 msgid "Generic Flat"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2264
+#: camlibs/ptp2/library.c:2265
 msgid "Generic Hierarchical"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2265
+#: camlibs/ptp2/library.c:2266
 msgid "Digital Camera Layout (DCIM)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2271
+#: camlibs/ptp2/library.c:2272
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2275
+#: camlibs/ptp2/library.c:2276
 msgid "Read-Write"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2276
+#: camlibs/ptp2/library.c:2277
 msgid "Read-Only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2277
+#: camlibs/ptp2/library.c:2278
 msgid "Read Only with Object deletion"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2283
+#: camlibs/ptp2/library.c:2284
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2285
+#: camlibs/ptp2/library.c:2286
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2290
+#: camlibs/ptp2/library.c:2291
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2295
+#: camlibs/ptp2/library.c:2296
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2303
+#: camlibs/ptp2/library.c:2304
 #, c-format
 msgid ""
 "\n"
 "Device Property Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2329
+#: camlibs/ptp2/library.c:2330
 #, c-format
 msgid " not read out.\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:3296 camlibs/ptp2/library.c:3300
+#: camlibs/ptp2/library.c:3297 camlibs/ptp2/library.c:3301
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3306
+#: camlibs/ptp2/library.c:3307
 msgid "Metadata only supported for MTP devices."
 msgstr ""
 
-#: camlibs/ptp2/library.c:4002
+#: camlibs/ptp2/library.c:4003
 msgid "Initializing Camera"
 msgstr ""
 
-#: camlibs/ptp2/library.c:4170
+#: camlibs/ptp2/library.c:4171
 #, c-format
 msgid ""
 "Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
