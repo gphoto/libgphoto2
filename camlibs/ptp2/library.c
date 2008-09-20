@@ -515,6 +515,8 @@ static struct {
 	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119, 0},
 	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
 	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2110825&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix 8700 (PTP mode)", 0x04b0, 0x011f, 0},
 	/* Nikon Coolpix 3200 */
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
@@ -1256,8 +1258,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		gp_file_set_name (file, "canon_preview.jpg");
 
 #if 0
-		/* Leave this out, otherwise we refocus all the time 
-		 * on newer canons */
+		/* Leave out, otherwise we refocus all the time */
 		ret = ptp_canon_viewfinderoff (params);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
