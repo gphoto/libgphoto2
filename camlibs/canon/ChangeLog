@@ -1,6 +1,7 @@
 2008-07-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.c: Also handle IXUS 500 in the ptp2 driver only.
+	* canon.c: Review all shared ids and handle them in the PTP driver.
 
 2008-05-16  Moreno Marzolla  <moreno.marzolla@pd.infn.it>
 
