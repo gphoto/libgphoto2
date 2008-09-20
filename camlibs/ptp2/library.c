@@ -515,6 +515,8 @@ static struct {
 	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119, 0},
 	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
 	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2110825&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix 8700 (PTP mode)", 0x04b0, 0x011f, 0},
 	/* Nikon Coolpix 3200 */
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
