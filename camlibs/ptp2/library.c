@@ -1257,12 +1257,15 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Add an arbitrary file name so caller won't crash */
 		gp_file_set_name (file, "canon_preview.jpg");
 
+#if 0
+		/* Leave out, otherwise we refocus all the time */
 		ret = ptp_canon_viewfinderoff (params);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
 			SET_CONTEXT_P(params, NULL);
 			return GP_ERROR;
 		}
+#endif
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
