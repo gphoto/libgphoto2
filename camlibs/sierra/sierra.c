@@ -1966,6 +1966,52 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 }
 
 static int
+storage_info_func (CameraFilesystem *fs,
+                CameraStorageInformation **sinfos,
+                int *nrofsinfos,
+                void *data, GPContext *c
+) {
+        Camera 			*camera = data;
+        CameraStorageInformation*sif;
+	int			v;
+	char			t[1024];
+
+	GP_DEBUG ("*** sierra storage_info");
+
+	CHECK (camera_start (camera, c));
+
+	sif = malloc(sizeof(CameraStorageInformation));
+	if (!sif)
+		return GP_ERROR_NO_MEMORY;
+	*sinfos = sif;
+	*nrofsinfos = 1;
+
+	sif->fields  = GP_STORAGEINFO_BASE;
+	strcpy (sif->basedir, "/");
+	sif->fields |= GP_STORAGEINFO_STORAGETYPE;
+	sif->type    = GP_STORAGEINFO_ST_REMOVABLE_RAM;
+	sif->fields |= GP_STORAGEINFO_ACCESS;
+	sif->access  = GP_STORAGEINFO_AC_READWRITE;
+	sif->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
+	sif->fstype  = GP_STORAGEINFO_FST_DCF;
+
+	if (sierra_get_string_register (camera, 25, 0, NULL, t, &v, c) >= 0) {
+		sif->fields |= GP_STORAGEINFO_LABEL;
+		strcpy (sif->label, t);
+	}
+
+	if (sierra_get_int_register(camera, 11, &v, c) >= 0) {
+		sif->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+		sif->freeimages = v;
+	}
+	if (sierra_get_int_register(camera, 28, &v, c) >= 0) {
+		sif->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
+		sif->freekbytes = v/1024;
+	}
+	return camera_stop (camera, c);
+}
+
+static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
 	GP_DEBUG ("*** sierra camera_manual");
@@ -2082,6 +2128,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.put_file_func = put_file_func,
 	.del_file_func = delete_file_func,
 	.delete_all_func = delete_all_func,
+	.storage_info_func = storage_info_func,
 };
 
 int
