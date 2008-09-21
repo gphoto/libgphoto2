@@ -117,7 +117,7 @@ static int stv0680_cmd(GPPort *port, unsigned char cmd,
 	return GP_OK;
 }
 
-static int stv0680_try_cmd(GPPort *port, unsigned char cmd,
+int stv0680_try_cmd(GPPort *port, unsigned char cmd,
 		unsigned short data,
 		unsigned char *response, unsigned char response_len
 ) {
