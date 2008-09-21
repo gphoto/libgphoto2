@@ -22,7 +22,7 @@ CLEANFILES = $(check_SCRIPTS)
 
 
 noinst_PROGRAMS += sample-autodetect
-sample_autodetect_SOURCES = sample-autodetect.c samples.h autodetect.c
+sample_autodetect_SOURCES = sample-autodetect.c samples.h autodetect.c context.c
 sample_autodetect_LDADD = \
 	$(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \

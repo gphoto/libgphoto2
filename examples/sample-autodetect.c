@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	const char	*name, *value;
 	GPContext	*context;
 
-	context = gp_context_new ();
+	context = sample_create_context ();
 
 	ret = gp_list_new (&list);
 	if (ret < GP_OK) return 1;
