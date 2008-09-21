@@ -611,6 +611,7 @@ camlibs/konica/localization/Makefile
 libgphoto2/Makefile
 libgphoto2.pc
 libgphoto2-uninstalled.pc
+examples/Makefile
 tests/Makefile
 tests/check-camera-list.sh
 tests/ddb/Makefile
