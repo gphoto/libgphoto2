@@ -628,6 +628,7 @@ camlibs/konica/localization/Makefile
 libgphoto2/Makefile
 libgphoto2.pc
 libgphoto2-uninstalled.pc
+examples/Makefile
 tests/Makefile
 tests/ddb/Makefile
 tests/ddb/check-ddb.sh
