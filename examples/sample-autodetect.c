@@ -48,8 +48,9 @@ out:
 
 static int
 sample_open_camera (Camera ** camera, const char *model, const char *port) {
-	int		ret, m;
+	int		ret, m, p;
 	CameraAbilities	a;
+	GPPortInfo	pi;
 
 	ret = gp_camera_new (camera);
 	if (ret < GP_OK) return ret;
@@ -62,25 +63,63 @@ sample_open_camera (Camera ** camera, const char *model, const char *port) {
         ret = gp_camera_set_abilities (*camera, a);
 	if (ret < GP_OK) return ret;
 
+	/* Then associate with a port */
+
+        p = gp_port_info_list_lookup_path (portinfolist, port);
+        if (ret < GP_OK) return ret;
+        switch (p) {
+        case GP_ERROR_UNKNOWN_PORT:
+                fprintf (stderr, "The port you specified "
+                        "('%s') can not be found. Please "
+                        "specify one of the ports found by "
+                        "'gphoto2 --list-ports' and make "
+                        "sure the spelling is correct "
+                        "(i.e. with prefix 'serial:' or 'usb:').",
+                                port);
+                break;
+        default:
+                break;
+        }
+        if (ret < GP_OK) return ret;
+        ret = gp_port_info_list_get_info (portinfolist, p, &pi);
+        if (ret < GP_OK) return ret;
+        ret = gp_camera_set_port_info (*camera, pi);
+        if (ret < GP_OK) return ret;
 	return GP_OK;
 }
 
 int main(int argc, char **argv) {
 	CameraList	*list;
 	Camera		**cams;
-	int		i, ret;
+	int		ret, i, count;
 	const char	*name, *value;
+	GPContext	*context;
+
+	context = gp_context_new ();
 
 	ret = gp_list_new (&list);
 	if (ret < GP_OK) return 1;
-	ret = sample_autodetect (list, NULL);
-	cams = calloc(sizeof(Camera*),ret);
-        for (i = 0; i < ret; i++) {
+	count = sample_autodetect (list, context);
+	printf("Number of cameras: %d\n", count);
+	cams = calloc (sizeof (Camera*),count);
+        for (i = 0; i < count; i++) {
                 gp_list_get_name  (list, i, &name);
                 gp_list_get_value (list, i, &value);
-                printf("%-30s %-16s\n", name, value);
 		ret = sample_open_camera (&cams[i], name, value);
 		if (ret < GP_OK) fprintf(stderr,"Camera %s on port %s failed to open\n", name, value);
         }
+	for (i = 0; i < count; i++) {
+		CameraText	text;
+	        ret = gp_camera_get_summary (cams[i], &text, context);
+		if (ret < GP_OK) {
+			fprintf (stderr, "Failed to get summary.\n");
+			continue;
+		}
+
+                gp_list_get_name  (list, i, &name);
+                gp_list_get_value (list, i, &value);
+                printf("%-30s %-16s\n", name, value);
+		printf("Summary:\n%s\n", text.text);
+	}
 	return 0;
 }
