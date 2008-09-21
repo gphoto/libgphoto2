@@ -165,4 +165,9 @@ struct stv680_user_info {
 #define STV0680_VGA_WIDTH	644
 #define STV0680_VGA_HEIGHT	484
 
+int stv0680_try_cmd(GPPort *port, unsigned char cmd,
+                unsigned short data,
+                unsigned char *response, unsigned char response_len);
+
+
 #endif

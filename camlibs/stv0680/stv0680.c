@@ -289,10 +289,63 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
 	return stv0680_delete_all(camera->port);
 }
 
+static int
+storage_info_func (CameraFilesystem *fs,
+                CameraStorageInformation **sinfos,
+                int *nrofsinfos,
+                void *data, GPContext *context
+) {
+    Camera *camera = (Camera*)data;
+    GPPort *port = camera->port;
+    struct stv680_camera_info caminfo;
+    struct stv680_image_info imginfo;
+    int ret;
+    CameraStorageInformation *sinfo;
+
+    /* Get Camera Information */
+    if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
+				0, (void*)&caminfo, sizeof(caminfo)) < 0))
+	return ret;
+
+    sinfo = malloc(sizeof(CameraStorageInformation));
+    if (!sinfo) return GP_ERROR_NO_MEMORY;
+
+    *sinfos = sinfo;
+    *nrofsinfos = 1;
+
+    sinfo->fields  = GP_STORAGEINFO_BASE;
+    strcpy(sinfo->basedir, "/");
+
+    sinfo->fields |= GP_STORAGEINFO_ACCESS;
+    sinfo->access  = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
+    sinfo->fields |= GP_STORAGEINFO_STORAGETYPE;
+    sinfo->type    = GP_STORAGEINFO_ST_FIXED_RAM;
+    sinfo->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
+    sinfo->fstype  = GP_STORAGEINFO_FST_GENERICFLAT;
+
+    sinfo->fields |= GP_STORAGEINFO_MAXCAPACITY;
+    if (caminfo.hardware_config & HWCONFIG_MEMSIZE_16MBIT)
+        sinfo->capacitykbytes = 16*1024/8;
+    else
+        sinfo->capacitykbytes = 64*1024/8;
+
+    if ((ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0,
+		    (void*)&imginfo, sizeof(imginfo))!=GP_OK))
+	return ret;
+
+    sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+    sinfo->freeimages =
+	    ((imginfo.maximages[0]<<8)|imginfo.maximages[1]) -
+	    ((imginfo.index[0]<<8)|imginfo.index[1]);
+    return GP_OK;
+}
+
+
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.get_file_func = get_file_func,
 	.delete_all_func = delete_all_func,
+	.storage_info_func = storage_info_func
 };
 
 int camera_init (Camera *camera, GPContext *context) 
