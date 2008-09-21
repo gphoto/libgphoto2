@@ -9,7 +9,10 @@ static GPPortInfoList		*portinfolist = NULL;
 static CameraAbilitiesList	*abilities = NULL;
 
 /*
- * This detects all currently attached cameras.
+ * This detects all currently attached cameras and returns
+ * them in a list. It avoids the generic usb: entry.
+ *
+ * This function does not open nor initialize the cameras yet.
  */
 int
 sample_autodetect (CameraList *list, GPContext *context) {
@@ -19,6 +22,7 @@ sample_autodetect (CameraList *list, GPContext *context) {
 	ret = gp_list_new (&xlist);
 	if (ret < GP_OK) goto out;
 	if (!portinfolist) {
+		/* Load all the port drivers we have... */
 		ret = gp_port_info_list_new (&portinfolist);
 		if (ret < GP_OK) goto out;
 		ret = gp_port_info_list_load (portinfolist);
@@ -26,13 +30,17 @@ sample_autodetect (CameraList *list, GPContext *context) {
 		ret = gp_port_info_list_count (portinfolist);
 		if (ret < 0) goto out;
 	}
+	/* Load all the camera drivers we have... */
 	ret = gp_abilities_list_new (&abilities);
 	if (ret < GP_OK) goto out;
 	ret = gp_abilities_list_load (abilities, context);
 	if (ret < GP_OK) goto out;
+
+	/* ... and autodetect the currently attached cameras. */
         ret = gp_abilities_list_detect (abilities, portinfolist, xlist, context);
 	if (ret < GP_OK) goto out;
 
+	/* Filter out the "usb:" entry */
         ret = gp_list_count (xlist);
 	if (ret < GP_OK) goto out;
 	for (i=0;i<ret;i++) {
@@ -48,6 +56,9 @@ out:
 	return gp_list_count(list);
 }
 
+/*
+ * This function opens a camera depending on the specified model and port.
+ */
 int
 sample_open_camera (Camera ** camera, const char *model, const char *port) {
 	int		ret, m, p;
@@ -57,7 +68,7 @@ sample_open_camera (Camera ** camera, const char *model, const char *port) {
 	ret = gp_camera_new (camera);
 	if (ret < GP_OK) return ret;
 
-	/* First the model / driver */
+	/* First lookup the model / driver */
         m = gp_abilities_list_lookup_model (abilities, model);
 	if (m < GP_OK) return ret;
         ret = gp_abilities_list_get_abilities (abilities, m, &a);
@@ -65,8 +76,7 @@ sample_open_camera (Camera ** camera, const char *model, const char *port) {
         ret = gp_camera_set_abilities (*camera, a);
 	if (ret < GP_OK) return ret;
 
-	/* Then associate with a port */
-
+	/* Then associate the camera with the specified port */
         p = gp_port_info_list_lookup_path (portinfolist, port);
         if (ret < GP_OK) return ret;
         switch (p) {
