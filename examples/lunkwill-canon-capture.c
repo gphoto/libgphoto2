@@ -60,6 +60,7 @@ static void enable_capture(Camera *canon, GPContext *canoncontext) {
 	retval = gp_widget_get_child_by_name(rootconfig, "capture", &child);
 	printf("  Retval: %d\n", retval);
 
+	capture = child;
 
 	gp_widget_get_name(capture, &widgetinfo);
 	printf("config name: %s\n", widgetinfo );
@@ -145,7 +146,7 @@ void set_capturetarget(Camera *canon, GPContext *canoncontext) {
 
 static void
 capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
-	int retval;
+	int fd, retval;
 	CameraFile *canonfile;
 	const char *filedata;
 	unsigned long int filesize;
@@ -162,7 +163,8 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 
 	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
 
-	retval = gp_file_new(&canonfile);
+	fd = open(fn, O_CREAT | O_WRONLY, 0644);
+	retval = gp_file_new_from_fd(&canonfile, fd);
 	printf("  Retval: %d\n", retval);
 	retval = gp_camera_file_get(canon, camera_file_path.folder, camera_file_path.name,
 		     GP_FILE_TYPE_NORMAL, canonfile, canoncontext);
@@ -171,9 +173,6 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 	retval = gp_file_get_data_and_size(canonfile, &filedata, &filesize);
 	printf("  Retval: %d\n", retval);
 
-	int fd = open(fn, O_CREAT | O_WRONLY, 0644);
-	write(fd, filedata, filesize);
-	close(fd);
 
 	printf("Deleting.\n");
 	retval = gp_camera_file_delete(canon, camera_file_path.folder, camera_file_path.name,
