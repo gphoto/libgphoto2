@@ -21,10 +21,12 @@ INSTALL_TESTS_ENVIRONMENT = env \
 CLEANFILES = $(check_SCRIPTS)
 
 
-noinst_PROGRAMS += sample-autodetect
+noinst_PROGRAMS += sample-autodetect lunkwill-canon-capture
 sample_autodetect_SOURCES = sample-autodetect.c samples.h autodetect.c context.c
-sample_autodetect_LDADD = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
+
+lunkwill_canon_capture_SOURCES = lunkwill-canon-capture.c
+
+LDADD = $(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
