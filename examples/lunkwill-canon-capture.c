@@ -148,11 +148,9 @@ static void
 capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 	int fd, retval;
 	CameraFile *canonfile;
-	const char *filedata;
-	unsigned long int filesize;
+	CameraFilePath camera_file_path;
 
 	printf("Capturing.\n");
-	CameraFilePath camera_file_path;
 
 	/* NOP: This gets overridden in the library to /capt0000.jpg */
 	strcpy(camera_file_path.folder, "/");
@@ -169,10 +167,6 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 	retval = gp_camera_file_get(canon, camera_file_path.folder, camera_file_path.name,
 		     GP_FILE_TYPE_NORMAL, canonfile, canoncontext);
 	printf("  Retval: %d\n", retval);
-
-	retval = gp_file_get_data_and_size(canonfile, &filedata, &filesize);
-	printf("  Retval: %d\n", retval);
-
 
 	printf("Deleting.\n");
 	retval = gp_camera_file_delete(canon, camera_file_path.folder, camera_file_path.name,
@@ -198,8 +192,10 @@ main(int argc, char **argv) {
 	 */
 	printf("Camera init.  Takes about 10 seconds.\n");
 	retval = gp_camera_init(canon, canoncontext);
-	printf("  Retval: %d\n", retval);
-
+	if (retval != GP_OK) {
+		printf("  Retval: %d\n", retval);
+		exit (1);
+	}
 	enable_capture(canon, canoncontext);
 	/*set_capturetarget(canon, canoncontext);*/
 	capture_to_file(canon, canoncontext, "foo.jpg");
