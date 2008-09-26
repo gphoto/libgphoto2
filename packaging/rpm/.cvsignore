@@ -1,9 +1,0 @@
-*~ .*~
-Makefile Makefile.in
-rpmmacros rpmrc
-package.spec
-BUILD
-RPMS
-SOURCES
-SPECS
-SRPMS
