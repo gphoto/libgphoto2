@@ -149,9 +149,9 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 	CameraFile *canonfile;
 	const char *filedata;
 	unsigned long int filesize;
+	CameraFilePath camera_file_path;
 
 	printf("Capturing.\n");
-	CameraFilePath camera_file_path;
 
 	/* NOP: This gets overridden in the library to /capt0000.jpg */
 	strcpy(camera_file_path.folder, "/");
