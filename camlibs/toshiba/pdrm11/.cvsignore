@@ -1,9 +1,0 @@
-*~ .*~
-*.la
-.*.swp
-*.lo
-.libs
-.deps
-Makefile
-Makefile.in
-*.patch

@@ -1,6 +1,0 @@
-*~ .*~
-*.lo
-.*.swp
-*.patch
-Makefile
-Makefile.in
