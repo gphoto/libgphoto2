@@ -1,7 +1,0 @@
-Makefile.in
-Makefile
-test-gphoto2
-test-filesys
-.libs
-.deps
-*.o
