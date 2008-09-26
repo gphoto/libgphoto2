@@ -1,6 +1,0 @@
-Makefile.in
-Makefile
-test-gp-port
-*.o
-.libs
-.deps
