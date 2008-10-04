@@ -1214,6 +1214,7 @@ GENERIC8TABLE(Canon_Size,canon_size)
 static struct deviceproptableu16 canon_isospeed[] = {
 	{ N_("Factory Default"),0xffff, 0 },
 	{ "50",			0x0040, 0 },
+	{ "80",			0x0045, 0 },
 	{ "100",		0x0048, 0 },
 	{ "200",		0x0050, 0 },
 	{ "400",		0x0058, 0 },
