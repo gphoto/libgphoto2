@@ -244,15 +244,19 @@ fixup_cached_deviceinfo (Camera *camera) {
 	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4a9)
-	)
+	) {
+		camera->pl->bugs |= PTP_MTP;
 		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+	}
 
 	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
 	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4b0)
-	)
+	) {
+		camera->pl->bugs |= PTP_MTP;
 		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+	}
 }
 
 static struct {
@@ -803,7 +807,7 @@ static struct {
 	/* Roger Lynn <roger@rilynn.demon.co.uk> */
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
 	/* Mats Petersson <mats.petersson@ltu.se> */
-	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW|PTP_MTP|PTP_MTP_PROPLIST_WORKS},
 	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
 	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -1020,6 +1024,16 @@ ptp_error_func (void *data, const char *format, va_list args)
 
 	vsnprintf (buf, sizeof (buf), format, args);
 	gp_context_error (ptp_data->context, "%s", buf);
+}
+
+static int
+is_mtp_capable(Camera *camera) {
+	PTPParams *params = &camera->pl->params;
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT)
+		return 1;
+	if (camera->pl->bugs & PTP_MTP)
+		return 1;
+	return 0;
 }
 
 int
@@ -2140,7 +2154,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	n = snprintf (txt, spaceleft,"\n");
 	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
-	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (is_mtp_capable (camera) &&
 	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 	) {
 		n = snprintf (txt, spaceleft,_("Supported MTP Object Properties:\n"));
@@ -3217,7 +3231,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	}
 	case	GP_FILE_TYPE_METADATA:
-		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		if (is_mtp_capable (camera) &&
 		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 		)
 			return ptp_mtp_render_metadata (params,params->handles.Handler[object_id],oi->ObjectFormat,file);
@@ -3231,7 +3245,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				oi->ThumbFormat == PTP_OFC_Undefined))
 			return (GP_ERROR_NOT_SUPPORTED);
 
-		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		if (is_mtp_capable (camera) &&
 		    (oi->ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
 			return mtp_get_playlist (camera, file, params->handles.Handler[object_id], context);
 
@@ -3304,7 +3318,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	}
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	if (type == GP_FILE_TYPE_METADATA) {
-		if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) &&
+		if (is_mtp_capable (camera) &&
 		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 		) {
 			uint32_t object_id;
@@ -3354,7 +3368,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	oi.ParentObject = parent;
 	gp_file_get_mtime(file, &oi.ModificationDate);
 
-	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (is_mtp_capable (camera) &&
 	    (	strstr(filename,".zpl") || strstr(filename, ".pla") )) {
 		char *object;
 		gp_file_get_data_and_size (file, (const char**)&object, &intsize);
@@ -3549,7 +3563,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* MTP playlists have their own size calculation */
-	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (is_mtp_capable (camera) &&
 	    (oi->ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist)) {
 		int ret, contentlen;
 		ret = mtp_get_playlist_string (camera, params->handles.Handler[object_id], NULL, &contentlen);
@@ -3946,7 +3960,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 #endif
 
 	/* Microsoft/MTP also has fast directory retrieval. */
-	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (is_mtp_capable (camera) &&
 	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjPropList) &&
 	    (camera->pl->bugs & PTP_MTP_PROPLIST_WORKS)
 	) {
@@ -4006,32 +4020,82 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				i++;
 				lasthandle = xpl->ObjectHandle;
 				params->handles.Handler[i] = xpl->ObjectHandle;
-				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "objectid %u", xpl->ObjectHandle);
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "objectid 0x%x", xpl->ObjectHandle);
 			}
 			switch (xpl->property) {
 			case PTP_OPC_ParentObject:
+				if (xpl->datatype != PTP_DTC_UINT32) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "parentobject has type 0x%x???", xpl->datatype);
+					break;
+				}
 				oinfos[i].ParentObject = xpl->propval.u32;
-				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "parent %u", xpl->propval.u32);
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "parent 0x%x", xpl->propval.u32);
 				break;
 			case PTP_OPC_ObjectFormat:
+				if (xpl->datatype != PTP_DTC_UINT16) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "objectformat has type 0x%x???", xpl->datatype);
+					break;
+				}
 				oinfos[i].ObjectFormat = xpl->propval.u16;
-				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "ofc %u", xpl->propval.u16);
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "ofc 0x%x", xpl->propval.u16);
 				break;
 			case PTP_OPC_ObjectSize:
-				oinfos[i].ObjectCompressedSize = xpl->propval.u32;
+				switch (xpl->datatype) {
+				case PTP_DTC_UINT32:
+					oinfos[i].ObjectCompressedSize = xpl->propval.u32;
+					break;
+				case PTP_DTC_UINT64:
+					oinfos[i].ObjectCompressedSize = xpl->propval.u64;
+					break;
+				default:
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "objectsize has type 0x%x???", xpl->datatype);
+					break;
+				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "objectsize %u", xpl->propval.u32);
 				break;
 			case PTP_OPC_StorageID:
+				if (xpl->datatype != PTP_DTC_UINT32) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "storageid has type 0x%x???", xpl->datatype);
+					break;
+				}
 				oinfos[i].StorageID = xpl->propval.u32;
-				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "storageid %u", xpl->propval.u32);
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "storageid 0x%x", xpl->propval.u32);
+				break;
+			case PTP_OPC_ProtectionStatus:/*UINT16*/
+				if (xpl->datatype != PTP_DTC_UINT16) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "protectionstatus has type 0x%x???", xpl->datatype);
+					break;
+				}
+				oinfos[i].ProtectionStatus = xpl->propval.u16;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "protection 0x%x", xpl->propval.u16);
 				break;
 			case PTP_OPC_ObjectFileName:
+				if (xpl->datatype != PTP_DTC_STR) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "filename has type 0x%x???", xpl->datatype);
+					break;
+				}
 				if (xpl->propval.str) {
 					gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "filename %s", xpl->propval.str);
 					oinfos[i].Filename = strdup(xpl->propval.str);
 				} else {
 					oinfos[i].Filename = NULL;
 				}
+				break;
+			case PTP_OPC_DateCreated:
+				if (xpl->datatype != PTP_DTC_STR) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "datecreated has type 0x%x???", xpl->datatype);
+					break;
+				}
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "capturedate %s", xpl->propval.str);
+				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				break;
+			case PTP_OPC_DateModified:
+				if (xpl->datatype != PTP_DTC_STR) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "datemodified has type 0x%x???", xpl->datatype);
+					break;
+				}
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "moddate %s", xpl->propval.str);
+				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (xpl->propval.str);
 				break;
 			default:
 				if ((xpl->property & 0xfff0) == 0xdc00)
