@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <gphoto2/gphoto2-camera.h>
 
@@ -7,46 +8,48 @@
 
 /* Sample autodetection program.
  *
- * This program can autodetect multiple cameras and then calls a
- * simple function in each of them (summary).
+ * This program can autodetect a single camera and then calls a
+ * simple function in it (summary).
  */
 
 int main(int argc, char **argv) {
-	CameraList	*list;
-	Camera		**cams;
-	int		ret, i, count;
-	const char	*name, *value;
+	Camera		*camera;
+	int		ret;
+	char		*owner;
 	GPContext	*context;
+	CameraText	text;
 
 	context = sample_create_context (); /* see context.c */
+	gp_camera_new (&camera);
 
-	/* Detect all the cameras that can be autodetected... */
-	ret = gp_list_new (&list);
-	if (ret < GP_OK) return 1;
-	count = sample_autodetect (list, context);
-
-	/* Now open all cameras we autodected for usage */
-	printf("Number of cameras: %d\n", count);
-	cams = calloc (sizeof (Camera*),count);
-        for (i = 0; i < count; i++) {
-                gp_list_get_name  (list, i, &name);
-                gp_list_get_value (list, i, &value);
-		ret = sample_open_camera (&cams[i], name, value);
-		if (ret < GP_OK) fprintf(stderr,"Camera %s on port %s failed to open\n", name, value);
-        }
-	/* Now call a simple function in each of those cameras. */
-	for (i = 0; i < count; i++) {
-		CameraText	text;
-	        ret = gp_camera_get_summary (cams[i], &text, context);
-		if (ret < GP_OK) {
-			fprintf (stderr, "Failed to get summary.\n");
-			continue;
-		}
-
-                gp_list_get_name  (list, i, &name);
-                gp_list_get_value (list, i, &value);
-                printf("%-30s %-16s\n", name, value);
-		printf("Summary:\n%s\n", text.text);
+	/* This call will autodetect cameras, take the
+	 * first one from the list and use it. It will ignore
+	 * any others... See the *multi* examples on how to
+	 * detect and use more than the first one.
+	 */
+	ret = gp_camera_init (camera, context);
+	if (ret < GP_OK) {
+		printf("No camera auto detected.\n");
+		gp_camera_free (camera);
+		return 0;
 	}
+
+	/* Simple query the camera summary text */
+	ret = gp_camera_get_summary (camera, &text, context);
+	if (ret < GP_OK) {
+		printf("Camera failed retrieving summary.\n");
+		gp_camera_free (camera);
+		return 0;
+	}
+	printf("Summary:\n%s\n", text.text);
+
+	/* Simple query of a string configuration variable. */
+	ret = get_config_value_string (camera, "owner", &owner, context);
+	if (ret >= GP_OK) {
+		printf("Owner: %s\n", owner);
+		free (owner);
+	}
+	gp_camera_exit (camera, context);
+	gp_camera_free (camera);
 	return 0;
 }

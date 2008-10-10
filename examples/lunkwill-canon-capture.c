@@ -20,67 +20,12 @@
 #include <string.h>
 #include <gphoto2/gphoto2.h>
 
+#include "samples.h"
+
 static void errordumper(GPLogLevel level, const char *domain, const char *format,
                  va_list args, void *data) {
-
-
   vfprintf(stdout, format, args);
   fprintf(stdout, "\n");
-}
-
-static void enable_capture(Camera *canon, GPContext *canoncontext) {
-	int retval;
-	CameraWidget *rootconfig; /* okay, not really */
-	CameraWidget *actualrootconfig;
-	CameraWidget *child;
-	CameraWidget *capture = child;
-	const char *widgetinfo;
-	const char *widgetlabel;
-	int widgetid;
-	CameraWidgetType widgettype;
-	const int one=1;
-
-	printf("Get root config.\n");
-
-	retval = gp_camera_get_config(canon, &rootconfig, canoncontext);
-	actualrootconfig = rootconfig;
-	printf("  Retval: %d\n", retval);
-
-	printf("Get main config.\n");
-	retval = gp_widget_get_child_by_name(rootconfig, "main", &child);
-	printf("  Retval: %d\n", retval);
-
-	printf("Get settings config.\n");
-	rootconfig = child;
-	retval = gp_widget_get_child_by_name(rootconfig, "settings", &child);
-	printf("  Retval: %d\n", retval);
-
-	printf("Get capture config.\n");
-	rootconfig = child;
-	retval = gp_widget_get_child_by_name(rootconfig, "capture", &child);
-	printf("  Retval: %d\n", retval);
-
-
-	gp_widget_get_name(capture, &widgetinfo);
-	printf("config name: %s\n", widgetinfo );
-
-	gp_widget_get_label(capture, &widgetlabel);
-	printf("config label: %s\n", widgetlabel);
-
-	gp_widget_get_id(capture, &widgetid);
-	printf("config id: %d\n", widgetid);
-
-	gp_widget_get_type(capture, &widgettype);
-	printf("config type: %d == %d \n", widgettype, GP_WIDGET_TOGGLE);
-
-	printf("Set value.\n");
-
-	retval = gp_widget_set_value(capture, &one);
-	printf("  Retval: %d\n", retval);
-
-	printf("Enabling capture.\n");
-	retval = gp_camera_set_config(canon, actualrootconfig, canoncontext);
-	printf("  Retval: %d\n", retval);
 }
 
 /* This seems to have no effect on where images go
@@ -145,10 +90,8 @@ void set_capturetarget(Camera *canon, GPContext *canoncontext) {
 
 static void
 capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
-	int retval;
+	int fd, retval;
 	CameraFile *canonfile;
-	const char *filedata;
-	unsigned long int filesize;
 	CameraFilePath camera_file_path;
 
 	printf("Capturing.\n");
@@ -162,18 +105,12 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 
 	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
 
-	retval = gp_file_new(&canonfile);
+	fd = open(fn, O_CREAT | O_WRONLY, 0644);
+	retval = gp_file_new_from_fd(&canonfile, fd);
 	printf("  Retval: %d\n", retval);
 	retval = gp_camera_file_get(canon, camera_file_path.folder, camera_file_path.name,
 		     GP_FILE_TYPE_NORMAL, canonfile, canoncontext);
 	printf("  Retval: %d\n", retval);
-
-	retval = gp_file_get_data_and_size(canonfile, &filedata, &filesize);
-	printf("  Retval: %d\n", retval);
-
-	int fd = open(fn, O_CREAT | O_WRONLY, 0644);
-	write(fd, filedata, filesize);
-	close(fd);
 
 	printf("Deleting.\n");
 	retval = gp_camera_file_delete(canon, camera_file_path.folder, camera_file_path.name,
@@ -185,11 +122,11 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 
 int
 main(int argc, char **argv) {
-	Camera *canon;
-	int retval;
+	Camera	*canon;
+	int	retval;
+	GPContext *canoncontext = sample_create_context();
 
 	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
-	GPContext *canoncontext = gp_context_new();
 	gp_camera_new(&canon);
 
 	/* When I set GP_LOG_DEBUG instead of GP_LOG_ERROR above, I noticed that the
@@ -199,9 +136,11 @@ main(int argc, char **argv) {
 	 */
 	printf("Camera init.  Takes about 10 seconds.\n");
 	retval = gp_camera_init(canon, canoncontext);
-	printf("  Retval: %d\n", retval);
-
-	enable_capture(canon, canoncontext);
+	if (retval != GP_OK) {
+		printf("  Retval: %d\n", retval);
+		exit (1);
+	}
+	canon_enable_capture(canon, TRUE, canoncontext);
 	/*set_capturetarget(canon, canoncontext);*/
 	capture_to_file(canon, canoncontext, "foo.jpg");
 	gp_camera_exit(canon, canoncontext);
