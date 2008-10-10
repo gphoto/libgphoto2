@@ -467,16 +467,50 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 	return (PTP_oi_Filename+filenamelen*2+(capturedatelen+1)*3);
 }
 
+static time_t
+ptp_unpack_PTPTIME (const char *str) {
+	char ptpdate[40];
+	char tmp[5];
+	int  ptpdatelen;
+	struct tm tm;
+
+	if (!str)
+		return 0;
+	ptpdatelen = strlen(str);
+	if (ptpdatelen >= sizeof (ptpdate))
+		return 0;
+	strcpy (ptpdate, str);
+	if (ptpdatelen<=15)
+		return 0;
+
+	memset(&tm,0,sizeof(tm));
+	strncpy (tmp, ptpdate, 4);
+	tmp[4] = 0;
+	tm.tm_year=atoi (tmp) - 1900;
+	strncpy (tmp, ptpdate + 4, 2);
+	tmp[2] = 0;
+	tm.tm_mon = atoi (tmp) - 1;
+	strncpy (tmp, ptpdate + 6, 2);
+	tmp[2] = 0;
+	tm.tm_mday = atoi (tmp);
+	strncpy (tmp, ptpdate + 9, 2);
+	tmp[2] = 0;
+	tm.tm_hour = atoi (tmp);
+	strncpy (tmp, ptpdate + 11, 2);
+	tmp[2] = 0;
+	tm.tm_min = atoi (tmp);
+	strncpy (tmp, ptpdate + 13, 2);
+	tmp[2] = 0;
+	tm.tm_sec = atoi (tmp);
+	return mktime (&tm);
+}
+
 static inline void
 ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsigned int len)
 {
 	uint8_t filenamelen;
 	uint8_t capturedatelen;
 	char *capture_date;
-	char tmp[16];
-	struct tm tm;
-
-	memset(&tm,0,sizeof(tm));
 
 	oi->StorageID=dtoh32a(&data[PTP_oi_StorageID]);
 	oi->ObjectFormat=dtoh16a(&data[PTP_oi_ObjectFormat]);
@@ -500,56 +534,14 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	/* subset of ISO 8601, without '.s' tenths of second and 
 	 * time zone
 	 */
-	if (capturedatelen>15)
-	{
-		strncpy (tmp, capture_date, 4);
-		tmp[4] = 0;
-		tm.tm_year=atoi (tmp) - 1900;
-		strncpy (tmp, capture_date + 4, 2);
-		tmp[2] = 0;
-		tm.tm_mon = atoi (tmp) - 1;
-		strncpy (tmp, capture_date + 6, 2);
-		tmp[2] = 0;
-		tm.tm_mday = atoi (tmp);
-		strncpy (tmp, capture_date + 9, 2);
-		tmp[2] = 0;
-		tm.tm_hour = atoi (tmp);
-		strncpy (tmp, capture_date + 11, 2);
-		tmp[2] = 0;
-		tm.tm_min = atoi (tmp);
-		strncpy (tmp, capture_date + 13, 2);
-		tmp[2] = 0;
-		tm.tm_sec = atoi (tmp);
-		oi->CaptureDate=mktime (&tm);
-	}
+	oi->CaptureDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 
-	/* now it's modification date ;) */
+	/* now the modification date ... */
 	capture_date = ptp_unpack_string(params, data,
 		PTP_oi_filenamelen+filenamelen*2
 		+capturedatelen*2+2,&capturedatelen);
-	if (capturedatelen>15)
-	{
-		strncpy (tmp, capture_date, 4);
-		tmp[4] = 0;
-		tm.tm_year=atoi (tmp) - 1900;
-		strncpy (tmp, capture_date + 4, 2);
-		tmp[2] = 0;
-		tm.tm_mon = atoi (tmp) - 1;
-		strncpy (tmp, capture_date + 6, 2);
-		tmp[2] = 0;
-		tm.tm_mday = atoi (tmp);
-		strncpy (tmp, capture_date + 9, 2);
-		tmp[2] = 0;
-		tm.tm_hour = atoi (tmp);
-		strncpy (tmp, capture_date + 11, 2);
-		tmp[2] = 0;
-		tm.tm_min = atoi (tmp);
-		strncpy (tmp, capture_date + 13, 2);
-		tmp[2] = 0;
-		tm.tm_sec = atoi (tmp);
-		oi->ModificationDate=mktime (&tm);
-	}
+	oi->ModificationDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 }
 
