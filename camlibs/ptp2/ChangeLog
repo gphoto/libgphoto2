@@ -1,3 +1,10 @@
+2008-10-09  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp-pack.c: factored out ptp time string parser
+	* library.c: also support MTP commands for cameras.
+	  (fast directory download)
+	  Using it for the Canon Digital IXUS SX100IS already.
+
 2008-09-20  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Do not disable viewfinder just after one preview.
