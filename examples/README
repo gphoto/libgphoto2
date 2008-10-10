@@ -3,9 +3,34 @@ Sample snippets for programmatic camera usage.
 This directory contains sample snippets for your C / C++ program accessing
 cameras for various purposes.
 
+Files with helper routines:
+	autodetect.c: Auto detecting multiple cameras and initializing
+	              specific cameras.
+
+	config.c: Querying and setting configuration values.
+
+	context.c: Handling of GPContext for error reporting and so on.
+
+	samples.h: Header file for above helper files.
+
+Files with samples:
+	sample-autodetect.c: Simple camera autodetection and simple API
+			     calls.
+
+	sample-multi-detect.c: Same as above, but autodetect and use all
+	                       cameras.
+
+	sample-owner.c:	Gets or Sets the Camera Owner. Demonstrates string
+			variable configuration handling.
+
+	lunkwill-canon-capture.c: A simple capture program that captures
+	                          a single image, retrieves it to disk,
+				  and removes it from the camera.
+
+
 If you find a common thing to do missing, please report them (or do them
 yourselves and send patches).
 
-Please do not keep it for yourself.
+Please do not keep good sample code for yourself.
 
 Marcus Meissner <marcus@jet.franken.de>
