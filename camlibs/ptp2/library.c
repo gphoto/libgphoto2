@@ -4324,13 +4324,15 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	info;
+		char 		*xpath;
 
 		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to get port info?\n");
 			return ret;
 		}
-		ret = ptp_ptpip_connect (&camera->pl->params, info.path);
+		gp_port_info_get_path (info, &xpath);
+		ret = ptp_ptpip_connect (&camera->pl->params, xpath);
 		if (ret != GP_OK) {
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to connect.\n");
 			return ret;
