@@ -32,6 +32,7 @@ camlibs/aox:
 
 camlibs/barbie:
 	Scott Fritzinger <scottf@unr.edu> 
+	Marcus Meissner <marcus@jet.franken.de>
 
 camlibs/benq:
 	Till Adam <till@adam-lilienthal.de>
@@ -51,6 +52,9 @@ camlibs/digita:
 camlibs/dimera:
 	Dan Fandrich <dan@coneharvesters.com>
 
+camlibs/enigma13:
+	Theodore Kilgore <kilgota@auburn.edu>
+
 camlibs/gsmart:
 	Till Adam <till@adam-lilienthal.de>
 
@@ -69,6 +73,9 @@ camlibs/jamcam:
 
 camlibs/jd11:
 	Marcus Meissner <marcus@jet.franken.de>
+
+camlibs/jl2005a:
+	Theodore Kilgore <kilgota@auburn.edu>
 
 camlibs/konica:
 	Lutz Müller <lutz@users.sf.net>
@@ -125,6 +132,7 @@ camlibs/samsung:
 camlibs/sierra:
 	Patrick Mansfield <patmans@users.sourceforge.net>
 	Scott Fritzinger <scottf@unr.edu>
+	Marcus Meissner <marcus@jet.franken.de>
 
 camlibs/sipix:
 	Marcus Meissner <marcus@jet.franken.de>
@@ -132,16 +140,23 @@ camlibs/sipix:
 camlibs/smal:
 	Lee Benfield <lee@benf.org>
 
+camlibs/sonix:
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/sonydscf1:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/sonydscf55:
+	Marcus Meissner <marcus@jet.franken.de>
 	Raymond Penners <raymond@dotsphinx.com>
 
 camlibs/soundvision:
 	Vince Weaver <vince@deater.net>
 
-camlibs/spca504_flash:
+camlibs/spca50x:
 	Till Adam <till@adam-lilienthal.de>
 
-camlibs/sq905
+camlibs/sq905:
 	Theodore Kilgore <kilgota@auburn.edu>
 
 camlibs/stv0674:
@@ -153,6 +168,9 @@ camlibs/stv0680:
 
 camlibs/sx330z:
 	Dominik Kuhlen <kinimod@users.sourceforge.net>
+
+camlibs/topfield:
+	Marcus Meissner <marcus@jet.franken.de>
 
 camlibs/toshiba/pdrm11
 	David Hogue <david@jawa.gotdns.org>
