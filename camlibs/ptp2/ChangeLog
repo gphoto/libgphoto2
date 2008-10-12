@@ -2,6 +2,15 @@
 
 	* library.c: Adjusted summary output a bit.
 
+	* library.c: Handle "wrong parent" or "no root parent"
+	  devices every time, so when we autodetect new ones
+	  we do not need to add them to the list.
+	  Should avoid releasing libgphoto2 for new iPhones etc.
+
+	* library.c: If a filename is empty or not set, replace it by
+	  the 8 char hexcode. (Should enable movie retrieval on
+	  Panasonics).
+
 2008-10-09  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp-pack.c: factored out ptp time string parser

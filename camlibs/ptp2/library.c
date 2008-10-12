@@ -331,7 +331,7 @@ static struct {
 	/* Giulio Salani <ilfunambolo@gmail.com> */
 	{"Kodak:C310",   0x040a, 0x058a, 0},
 	/* Brandon Sharitt */
-	{"Kodak:C330",   0x040a, 0x058c, PTPBUG_DCIM_WRONG_PARENT},
+	{"Kodak:C330",   0x040a, 0x058c, 0},
 	/* c340 Maurizio Daniele <hayabusa@portalis.it> */
 	{"Kodak:C340",   0x040a, 0x058d, 0},
 	{"Kodak:V530",   0x040a, 0x058e, 0},
@@ -678,9 +678,9 @@ static struct {
 	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:MVX3i (PTP mode)",              0x04a9, 0x308d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
-	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS 300D (PTP mode)",           0x04a9, 0x3099, 0},
+	{"Canon:EOS Digital Rebel (PTP mode)",  0x04a9, 0x3099, 0},
+	{"Canon:EOS Kiss Digital (PTP mode)",   0x04a9, 0x3099, 0},
 	{"Canon:PowerShot A80 (PTP)",           0x04a9, 0x309a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS i (PTP mode)",     0x04a9, 0x309b, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot S1 IS (PTP mode)",    0x04a9, 0x309c, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
@@ -706,16 +706,16 @@ static struct {
  	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
  	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, PTPBUG_DCIM_WRONG_PARENT},
- 	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
+ 	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, 0},
 	/* 30ef is the ID in explicit PTP mode.
 	 * 30ee is the ID with the camera in Canon mode, but the camera reacts to
 	 * PTP commands according to:
 	 * https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1394326&group_id=8874
 	 * They need to have different names.
 	 */
-	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:EOS 350D",                      0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, 0},
+	{"Canon:EOS 350D",                      0x04a9, 0x30ef, 0},
 	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot SD430 (PTP mode)",    0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS Wireless (PTP mode)",0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
@@ -741,18 +741,18 @@ static struct {
 	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
  	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
 	/* Jeff Mock <jeff@mock.com> */
- 	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, PTPBUG_DCIM_WRONG_PARENT},
+ 	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, 0},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1640547&group_id=8874&atid=358874 */
 	{"Canon:PowerShot A420 (PTP mode)",     0x04a9, 0x310f, PTPBUG_DELETE_SENDS_EVENT},
 	/* Some Canon 400D do not have the infamous PTP bug, but some do.
 	 * see http://bugs.kde.org/show_bug.cgi?id=141577 -Marcus */
-	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTPBUG_DCIM_WRONG_PARENT|PTP_CAP},
+	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTP_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
-	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, PTPBUG_DCIM_WRONG_PARENT},
-	{"Canon:PowerShot SD900 (PTP mode)",    0x04a9, 0x3115, PTPBUG_DCIM_WRONG_PARENT},
+	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, 0},
+	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, 0},
+	{"Canon:PowerShot SD900 (PTP mode)",    0x04a9, 0x3115, 0},
 	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A700 (PTP mode)",     0x04a9, 0x3117, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1498577&group_id=8874&atid=358874 */
@@ -783,7 +783,7 @@ static struct {
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP}, /* user had it working without problem */
 
 	/* reported by: gphoto@lunkwill.org */
-	{"Canon:EOS 1D Mark III (PTP mode)",	0x04a9, 0x3147, PTPBUG_DCIM_WRONG_PARENT|PTP_CAP},
+	{"Canon:EOS 1D Mark III (PTP mode)",	0x04a9, 0x3147, PTP_CAP},
 
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
 	/* AlannY <alanny@starlink.ru> */
@@ -876,9 +876,9 @@ static struct {
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
 	/* from Mike Meyer <mwm@mired.org> */
-	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTPBUG_DCIM_WRONG_PARENT},
+	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
 	/* irc reporter */
-	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, PTPBUG_DCIM_WRONG_PARENT},
+	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
 };
@@ -3800,7 +3800,7 @@ storage_info_func (CameraFilesystem *fs,
 static int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
-	int i,id,nroot;
+	int i, id, nroot = 0;
 	PTPParams *params = &camera->pl->params;
 	char buf[1024];
 	uint16_t ret;
@@ -3880,6 +3880,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				roothandle = curhandle;
 				params->handles.Handler[curhandle] = rootoid;
 				params->objectinfo[curhandle].ParentObject = 0;
+				nroot = 1;
 			} else {
 				if (roothandle == -1) { /* We must synthesize /DCIM... */
 					roothandle = curhandle;
@@ -4048,6 +4049,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				oinfos[i].ParentObject = xpl->propval.u32;
+				if (xpl->propval.u32 == 0)
+					nroot++;
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "parent 0x%x", xpl->propval.u32);
 				break;
 			case PTP_OPC_ObjectFormat:
@@ -4167,6 +4170,17 @@ fallback:
 		GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
 		}
 #endif
+		if (params->objectinfo[i].ParentObject == 0)
+			nroot++;
+
+                if (	!params->objectinfo[i].Filename ||
+			!strlen (params->objectinfo[i].Filename)
+		) {
+			params->objectinfo[i].Filename = malloc(8+1);
+			sprintf (params->objectinfo[i].Filename, "%08x", params->handles.Handler[i]);
+			gp_log (GP_LOG_ERROR, "ptp2/std_getobjectinfo", "Replaced empty dirname by '%08x'", params->handles.Handler[i]);
+		}
+
 		gp_context_progress_update (context, id,
 		10+(90*i)/params->handles.n);
 	}
@@ -4212,52 +4226,56 @@ fallback:
 		}
 	}
 
-        if (DCIM_WRONG_PARENT_BUG(camera->pl))
-        {
-            GP_DEBUG("PTPBUG_DCIM_WRONG_PARENT bug workaround");
-            /* Count number of root directory objects */
-            nroot = 0;
-            for (i = 0; i < params->handles.n; i++)
-		if (params->objectinfo[i].ParentObject == 0)
-                    nroot++;
+	/* If there are no root directory objects, look for "DCIM" directories.
+	 * This way, we can handle cameras that report the wrong ParentObject ID for
+	 * root.
+	 *
+	 * FIXME: If DCIM is there, it will not look for other root directories.
+         */
+	if (nroot == 0 && params->handles.n > 0) {
+		uint32_t	badroothandle;
 
-            GP_DEBUG("Found %d root directory objects", nroot);
+		GP_DEBUG("Bug workaround: Found no root directory objects, looking for some.");
+		for (i = 0; i < params->handles.n; i++) {
+			PTPObjectInfo *oi = &params->objectinfo[i];
 
-            /* If no root directory objects, look for "DCIM".  This way, we can
-             * handle cameras that report the wrong ParentObject ID for root
-             */
-            if (nroot == 0 && params->handles.n > 0) {
-		for (i = 0; i < params->handles.n; i++)
-		{
-                    PTPObjectInfo *oi = &params->objectinfo[i];
-
-                    if (strcmp(oi->Filename, "DCIM") == 0)
-                    {
-                        GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
-                                 oi->ParentObject);
-                        oi->ParentObject = 0;
-			nroot++;
-                    }
+			if (strcmp(oi->Filename, "DCIM") == 0) {
+				GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
+					 oi->ParentObject);
+				badroothandle = oi->ParentObject;
+				oi->ParentObject = 0;
+				nroot++;
+			}
 		}
-            }
-	    /* Some cameras do not have a directory at all, just files or unattached
-	     * directories. In this case associate all unattached to the 0 object.
-	     */
-            if (nroot == 0) {
-		/* look for entries with parentobjects that do not exist */
-		for (i = 0; i < params->handles.n; i++)
-		{
-		    int j;
-                    PTPObjectInfo *oi = &params->objectinfo[i];
-
-		    for (j = 0;j < params->handles.n; j++)
-			if (oi->ParentObject == params->handles.Handler[j])
-				break;
-		    if (j == params->handles.n)
-			oi->ParentObject = 0;
+		for (i = 0; i < params->handles.n; i++) {
+			PTPObjectInfo *oi = &params->objectinfo[i];
+			if (oi->ParentObject == badroothandle) {
+				GP_DEBUG("Changing %s ParentObject ID from 0x%x to 0",
+					oi->Filename, oi->ParentObject);
+				oi->ParentObject = 0;
+				nroot++;
+			}
 		}
-	    }
-        }
+		/* Some cameras do not have a directory at all, just files or unattached
+		 * directories. In this case associate all unattached to the 0 object.
+		 *
+		 * O(n^2) search. Be careful.
+		 */
+		if (nroot == 0) {
+			GP_DEBUG("Bug workaround: Found no root dir entries and no DCIM dir, looking for some.");
+			/* look for entries with parentobjects that do not exist */
+			for (i = 0; i < params->handles.n; i++) {
+				int j;
+				PTPObjectInfo *oi = &params->objectinfo[i];
+
+				for (j = 0;j < params->handles.n; j++)
+					if (oi->ParentObject == params->handles.Handler[j])
+						break;
+				if (j == params->handles.n)
+					oi->ParentObject = 0;
+			}
+		}
+	}
 #if 0
 	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
 	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
@@ -4453,11 +4471,14 @@ camera_init (Camera *camera, GPContext *context)
 
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
-	GP_DEBUG ("  model: %s", camera->pl->params.deviceinfo.Model);
+	GP_DEBUG ("  Model: %s", camera->pl->params.deviceinfo.Model);
 	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
 	GP_DEBUG ("  serial number: '%s'",camera->pl->params.deviceinfo.SerialNumber);
 	GP_DEBUG ("Vendor extension ID: 0x%08x",camera->pl->params.deviceinfo.VendorExtensionID);
+	GP_DEBUG ("Vendor extension version: %d",camera->pl->params.deviceinfo.VendorExtensionVersion);
 	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
+	GP_DEBUG ("Functional Mode: 0x%04x",camera->pl->params.deviceinfo.FunctionalMode);
+	GP_DEBUG ("PTP Standard Version: %d",camera->pl->params.deviceinfo.StandardVersion);
 	GP_DEBUG ("Supported operations:");
 	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++)
 		GP_DEBUG ("  0x%04x",
