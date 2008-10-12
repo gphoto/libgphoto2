@@ -2108,23 +2108,41 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	SET_CONTEXT(camera, context);
 
 	spaceleft = sizeof(summary->text);
-	n = snprintf (summary->text, sizeof (summary->text),
-		_("Model: %s\n"
-		"  device version: %s\n"
-		"  serial number:  %s\n"
-		"Vendor extension ID: 0x%08x\n"
-		"Vendor extension description: %s\n"
-	),
-		params->deviceinfo.Model,
-		params->deviceinfo.DeviceVersion,
-		params->deviceinfo.SerialNumber,
-		params->deviceinfo.VendorExtensionID,
-		params->deviceinfo.VendorExtensionDesc);
+	txt = summary->text;
 
-	if (n>=sizeof (summary->text))
-		return GP_OK;
-	spaceleft -= n;
-	txt = summary->text + strlen (summary->text);
+	n = snprintf (txt, spaceleft,_("Manufacturer: %s\n"),params->deviceinfo.Manufacturer);
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	n = snprintf (txt, spaceleft,_("Model: %s\n"),params->deviceinfo.Model);
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	n = snprintf (txt, spaceleft,_("  Version: %s\n"),params->deviceinfo.DeviceVersion);
+	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	if (params->deviceinfo.SerialNumber) {
+		n = snprintf (txt, spaceleft,_("  Serial Number: %s\n"),params->deviceinfo.SerialNumber);
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	}
+	if (params->deviceinfo.VendorExtensionID) {
+		n = snprintf (txt, spaceleft,_("Vendor Extension ID: 0x%x (%d.%d)\n"),
+			params->deviceinfo.VendorExtensionID,
+			params->deviceinfo.VendorExtensionVersion/100,
+			params->deviceinfo.VendorExtensionVersion%100
+		);
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		if (params->deviceinfo.VendorExtensionDesc) {
+			n = snprintf (txt, spaceleft,_("Vendor Extension Description: %s\n"),params->deviceinfo.VendorExtensionDesc);
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
+	}
+	if (params->deviceinfo.StandardVersion != 100) {
+		n = snprintf (txt, spaceleft,_("PTP Standard Version: %d.%d\n"),
+			params->deviceinfo.StandardVersion/100,
+			params->deviceinfo.StandardVersion%100
+		);
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	}
+	if (params->deviceinfo.FunctionalMode) {
+		n = snprintf (txt, spaceleft,_("Functional Mode: 0x%04x\n"),params->deviceinfo.FunctionalMode);
+		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	}
 
 /* Dump Formats */
 	n = snprintf (txt, spaceleft,_("\nCapture Formats: "));
@@ -2571,6 +2589,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	    /* HP Photosmart 850, the camera tends to duplicate filename in the list.
              * Original patch by clement.rezvoy@gmail.com */
 	    /* search backwards, likely gets hits faster. */
+	    /* FIXME Marcus: This is also O(n^2) ... bad for large directories. */
 	    if (GP_OK == gp_list_find_by_name(list, NULL, params->objectinfo[i].Filename)) {
 		gp_log (GP_LOG_ERROR, "ptp2/file_list_func",
 			"Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n",
