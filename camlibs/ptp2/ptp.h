@@ -479,7 +479,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_Invalid_ObjectReference	0xA804
 #define PTP_RC_MTP_Invalid_Dataset		0xA806
 #define PTP_RC_MTP_Specification_By_Group_Unsupported		0xA807
-#define PTP_RC_MTP_Specification_By_Depth_Unsupported		0xA807
+#define PTP_RC_MTP_Specification_By_Depth_Unsupported		0xA808
 #define PTP_RC_MTP_Object_Too_Large		0xA809
 #define PTP_RC_MTP_ObjectProp_Not_Supported	0xA80A
 
