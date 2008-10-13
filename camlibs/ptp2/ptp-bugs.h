@@ -23,7 +23,6 @@
 #define __PTP_BUGS_H_
 
 
-#define PTPBUG_DCIM_WRONG_PARENT	(1<<0)
 #define PTPBUG_DELETE_SENDS_EVENT	(1<<1)
 #define PTPBUG_DUPE_FILE		(1<<2)
 #define PTP_MTP				(1<<3)
@@ -33,8 +32,6 @@
 #define PTP_NIKON_BROKEN_CAP		(1<<7)
 #define PTP_MTP_ZEN_BROKEN_HEADER	(1<<8)
 
-#define DCIM_WRONG_PARENT_BUG(x) \
-  ((x)->bugs & PTPBUG_DCIM_WRONG_PARENT)
 #define DELETE_SENDS_EVENT(x) \
   ((x)->bugs & PTPBUG_DELETE_SENDS_EVENT)
 #define CAN_HAVE_DUPE_FILE(x) \
