@@ -777,8 +777,10 @@ static struct {
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
-	/* Deti Fliegl */
-	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP},
+	/* Deti Fliegl.
+	 * Marcus: supports MTP proplists, but these are 2 times slower than regular
+	 * data retrieval. */
+	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_MTP/*|PTP_MTP_PROPLIST_WORKS*/},
 	/* reported by Ferry Huberts */
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP}, /* user had it working without problem */
 
@@ -793,7 +795,7 @@ static struct {
 	/* https://bugs.launchpad.net/bugs/206627 */
 	{"Canon:PowerShot SD850 (PTP mode)",	0x04a9, 0x314b, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A570 IS (PTP mode)",  0x04a9, 0x314c, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A560 (PTP mode)",  0x04a9, 0x314d, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A560 (PTP mode)", 	0x04a9, 0x314d, PTPBUG_DELETE_SENDS_EVENT},
 	/* mailreport from sec@dschroeder.info */
 	{"Canon:Digital IXUS 75 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD750 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
@@ -813,6 +815,9 @@ static struct {
 
 	/* Christian P. Schmidt" <schmidt@digadd.de> */
 	{"Canon:Digital IXUS 970 IS",		0x04a9, 0x3173, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* Martin Lasarsch at SUSE. MTP_PROPLIST returns just 0 entries */
+	{"Canon:Digital IXUS 90 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP},
 
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
@@ -875,9 +880,9 @@ static struct {
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
-	/* from Mike Meyer <mwm@mired.org> */
+	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
-	/* irc reporter */
+	/* irc reporter. MTP based. */
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
