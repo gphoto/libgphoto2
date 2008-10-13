@@ -1,10 +1,13 @@
 Device info:
 Manufacturer: Canon Inc.
-  model: Canon EOS 450D
+  Model: Canon EOS 450D
   device version: 3-1.0.4
   serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 Vendor extension ID: 0x0000000b
+Vendor extension version: 2.00
 Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 1.00
 Supported operations:
   0x1014
   0x1015
@@ -83,32 +86,44 @@ Device Properties Supported:
   0xd402
   0xd407
   0xd406
-Camera summary:
+
+Kamerazusammenfassung:
+Hersteller: Canon Inc.
 Model: Canon EOS 450D
-  device version: 3-1.0.4
-  serial number:  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Vendor extension ID: 0x0000000b
-Vendor extension description: (null)
+  Version: 3-1.0.4
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0xb (2.0)
 
-Capture Formats: JPEG
-Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type
+Aufnahmeformate: JPEG
+Anzeigeformate: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type
+Unterstützte MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dc89/Duration de97/ScanDepth de9b/VideoFourCCCodec de9c/VideoBitRate de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth
+	CRW/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Unknown(bf02)/bf02: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth
 
-Device Capabilities:
-	File Download, File Deletion, File Upload
-	No Image Capture, No Open Capture, Canon EOS Capture
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Canon EOS Capture
 
-Storage Devices Summary:
+Informationen über Speichermedium:
 store_00020001:
-	StorageDescription: SD
-	VolumeLabel: None
-	Storage Type: Removable RAM (memory card)
-	Filesystemtype: Digital Camera Layout (DCIM)
-	Access Capability: Read-Write
-	Maximum Capability: 1020395520 (973 MB)
-	Free Space (Bytes): 955727872 (911 MB)
-	Free Space (Images): -1
+	Beschreibung des Speichergeräts: SD
+	Label des Speichergerätes: Keine
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Lesen und Schreiben
+	Maximale Kapazität: 2059010048 (1963 MB)
+	Freier Platz (Bytes): 1156874240 (1103 MB)
+	Freier Speicher (Bilder): -1
 
-Device Property Summary:
+Properties des Geräts:
 Property 0xd402:(read only) (type=0xffff) 'Canon EOS 450D'
 Property 0xd407:(read only) (type=0x6) 1
 Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
