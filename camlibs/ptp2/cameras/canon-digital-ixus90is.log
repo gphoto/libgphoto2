@@ -1,0 +1,192 @@
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon DIGITAL IXUS 90 IS
+  device version: 1-5.0.1.0
+  serial number: '3D5DD7A2381F48BCAF18940C4755D38E'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1014
+  0x1015
+  0x1016
+  0x1017
+  0x1001
+  0x1002
+  0x1003
+  0x9013
+  0x901f
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x101b
+  0x100c
+  0x100d
+  0x100b
+  0x100f
+  0x1012
+  0x9001
+  0x9021
+  0x901b
+  0x901e
+  0x9019
+  0x9006
+  0x901c
+  0x9002
+  0x904c
+  0x9024
+  0x9025
+  0x9038
+  0x9039
+  0x903a
+  0x903b
+  0x904b
+  0x900e
+  0x900f
+  0x9010
+  0x9011
+  0x9028
+  0x9023
+  0x9029
+  0x902a
+  0x902b
+  0x9034
+  0x9801
+  0x9802
+  0x9803
+  0x9804
+  0x9805
+  0x903f
+  0x9040
+  0x9041
+  0x904d
+  0x9044
+  0x9045
+  0x904e
+  0x904f
+  0x9054
+  0x9055
+  0x9056
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400b
+  0x400c
+  0x400e
+  0xc001
+  0xc005
+  0xc00a
+  0xc00f
+  0xc011
+  0xc013
+  0xc019
+  0xc01a
+Device Properties Supported:
+  0xd045
+  0xd04a
+  0xd02e
+  0xd02f
+  0xd002
+  0xd003
+  0xd034
+  0xd047
+  0xd046
+  0xd02d
+  0xd02c
+  0xd030
+  0xd049
+  0xd032
+  0xd033
+  0xd031
+  0xd050
+  0xd402
+  0xd406
+  0xd407
+
+Kamerazusammenfassung:
+Hersteller: Canon Inc.
+Model: Canon DIGITAL IXUS 90 IS
+  Version: 1-5.0.1.0
+  Serial Number: 3D5DD7A2381F48BCAF18940C4755D38E
+Vendor Extension ID: 0xb (1.0)
+
+Aufnahmeformate: JPEG
+Anzeigeformate: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Defined Type, CRW, Unknown(b103), Unknown(bf01)
+Unterstützte MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	CRW/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(bf01)/bf01: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Kein Vendor spezifischer Aufnahmemodus
+
+Informationen über Speichermedium:
+store_00010001:
+	Beschreibung des Speichergeräts: Keine
+	Label des Speichergerätes: Keine
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Lesen und Schreiben
+	Maximale Kapazität: 4066902016 (3878 MB)
+	Freier Platz (Bytes): 1830256640 (1745 MB)
+	Freier Speicher (Bilder): -1
+
+Properties des Geräts:
+Event Emulations Modus(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Datengröße beim Transfer von der Kamera(0xd02e):(read only) (type=0x6) 524288
+Datengröße beim Transfer zur Kamera(0xd02f):(read only) (type=0x6) 262144
+Batterietyp(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
+Batteriemodus(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+UNIX Zeit(0xd034):(readwrite) (type=0x6) 1223897234
+Art der Slideshow(0xd047):(read only) (type=0x4) 2
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Unterstützte Thumbnail Größe(0xd02d):(read only) (type=0x4006) a[4] 119,0,159,0
+Bildgröße und -qualität(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 2736,3648,1,0,0,0,
+	a[6] 2736,3648,6,0,0,0,
+	a[6] 2736,3648,11,0,0,0,
+	a[6] 2112,2816,2,0,0,0,
+	a[6] 2112,2816,7,0,0,0,
+	a[6] 2112,2816,12,0,0,0,
+	a[6] 1704,2272,3,0,0,0,
+	a[6] 1704,2272,8,0,0,0,
+	a[6] 1704,2272,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Kamera API Version(0xd030):(read only) (type=0x6) 256
+Modell ID(0xd049):(read only) (type=0x6) 37093376
+Kameramodell(0xd032):(read only) (type=0xffff) 'Canon DIGITAL IXUS 90 IS'
+Kamerabesitzer(0xd033):(readwrite) (type=0x4002) a[0] 
+Firmware Revision(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 1
+Property 0xd402:(read only) (type=0xffff) 'Canon DIGITAL IXUS 90 IS'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
