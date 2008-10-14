@@ -2,7 +2,7 @@ Device info:
 Manufacturer: Eastman Kodak Company
   Model: M753 Zoom Digital Camera
   device version: 1.4000
-  serial number: 'M753 001920938'
+  serial number: 'M753 nnnnnnnnn'
 Vendor extension ID: 0x00000001
 Vendor extension version: 400
 Vendor extension description: Eastman Kodak PTP Extensions SPD Specification Ver1.00
@@ -71,7 +71,7 @@ Camera summary:
 Manufacturer: Eastman Kodak Company
 Model: M753 Zoom Digital Camera
   Version: 1.4000
-  Serial Number: M753 001920938
+  Serial Number: M753 nnnnnnnnn
 Vendor Extension ID: 0x1 (4.0)
 Vendor Extension Description: Eastman Kodak PTP Extensions SPD Specification Ver1.00
 
