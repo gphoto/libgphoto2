@@ -144,3 +144,216 @@ Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 100, step 1] value: 1
 Focus Metering Mode(0x501c):(read only) (type=0x4) Enumeration [2,32784,32785] value: Single Area (32784)
 Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
 Property 0xd407:(read only) (type=0x6) 1
+/main/settings/time
+	Label: Camera Time
+	Type: DATE
+	Current: 1223979274
+	Printable: Tue Oct 14 12:14:34 2008
+/main/settings/battery
+	Label: Battery Level
+	Type: TEXT
+	Current: 100%
+/main/settings/fastfs
+/main/settings/capturetarget
+/main/imgsettings/imgquality
+	Label: Image Quality
+	Type: RADIO
+	Current: NEF+Basic
+	Choice: 0 JPEG Basic
+	Choice: 1 JPEG Normal
+	Choice: 2 JPEG Fine
+	Choice: 3 NEF (Raw)
+	Choice: 4 NEF+Basic
+	Choice: 5 NEF+Normal
+	Choice: 6 NEF+Fine
+	Choice: 7 TIFF (RGB)
+/main/imgsettings/imgsize
+	Label: Image Size
+	Type: RADIO
+	Current: 4288x2848
+	Choice: 0 4288x2848
+	Choice: 1 3216x2136
+	Choice: 2 2144x1424
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Automatic
+	Choice: 0 Automatic
+	Choice: 1 Daylight
+	Choice: 2 Fluorescent
+	Choice: 3 Tungsten
+	Choice: 4 Flash
+	Choice: 5 Cloudy
+	Choice: 6 Shade
+	Choice: 7 Color Temperature
+	Choice: 8 Preset
+/main/capturesettings/f-number
+	Label: F-Number
+	Type: RADIO
+	Current: f/6.3
+	Choice: 0 f/3.5
+	Choice: 1 f/4
+	Choice: 2 f/4.5
+	Choice: 3 f/5
+	Choice: 4 f/5.6
+	Choice: 5 f/6.3
+	Choice: 6 f/7.1
+	Choice: 7 f/8
+	Choice: 8 f/9
+	Choice: 9 f/10
+	Choice: 10 f/11
+	Choice: 11 f/13
+	Choice: 12 f/14
+	Choice: 13 f/16
+	Choice: 14 f/18
+	Choice: 15 f/20
+	Choice: 16 f/22
+/main/capturesettings/focallength
+	Label: Focal Length
+	Type: RANGE
+	Current: 18
+	Bottom: 18
+	Top: 200
+	Step: 0.01
+/main/capturesettings/focusmode
+	Label: Focus Mode
+	Type: RADIO
+	Current: AF-S
+	Choice: 0 Manual
+	Choice: 1 AF-S
+	Choice: 2 AF-C
+/main/capturesettings/iso
+	Label: ISO Speed
+	Type: RADIO
+	Current: 200
+	Choice: 0 100
+	Choice: 1 125
+	Choice: 2 160
+	Choice: 3 200
+	Choice: 4 250
+	Choice: 5 320
+	Choice: 6 400
+	Choice: 7 500
+	Choice: 8 640
+	Choice: 9 800
+	Choice: 10 1000
+	Choice: 11 1250
+	Choice: 12 1600
+	Choice: 13 2000
+	Choice: 14 2500
+	Choice: 15 3200
+	Choice: 16 4000
+	Choice: 17 5000
+	Choice: 18 6400
+/main/capturesettings/exposurebiascompensation
+	Label: Exposure Bias Compensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+/main/capturesettings/exptime
+	Label: Exposure Time
+	Type: RADIO
+	Current: 2.500
+	Choice: 0 0.001
+	Choice: 1 0.002
+	Choice: 2 0.003
+	Choice: 3 0.004
+	Choice: 4 0.005
+	Choice: 5 0.006
+	Choice: 6 0.008
+	Choice: 7 0.010
+	Choice: 8 0.012
+	Choice: 9 0.015
+	Choice: 10 0.020
+	Choice: 11 0.025
+	Choice: 12 0.031
+	Choice: 13 0.040
+	Choice: 14 0.050
+	Choice: 15 0.062
+	Choice: 16 0.080
+	Choice: 17 0.100
+	Choice: 18 0.125
+	Choice: 19 0.166
+	Choice: 20 2.500
+/main/capturesettings/expprogram
+	Label: Exposure Program
+	Type: RADIO
+	Current: A
+	Choice: 0 M
+	Choice: 1 P
+	Choice: 2 A
+	Choice: 3 S
+/main/capturesettings/capturemode
+	Label: Still Capture Mode
+	Type: RADIO
+	Current: Single Shot
+	Choice: 0 Single Shot
+	Choice: 1 Burst
+	Choice: 2 Continuous Low Speed
+	Choice: 3 Timer
+	Choice: 4 Mirror Up
+	Choice: 5 Remote
+/main/capturesettings/focusmetermode
+	Label: Focus Metering Mode
+	Type: RADIO
+	Current: Single Area
+	Choice: 0 Dynamic Area
+	Choice: 1 Single Area
+	Choice: 2 Closest Subject
+/main/capturesettings/exposuremetermode
+	Label: Exposure Metering Mode
+	Type: RADIO
+	Current: Multi Spot
+	Choice: 0 Center Weighted
+	Choice: 1 Multi Spot
+	Choice: 2 Center Spot
+/main/capturesettings/flashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: Default
+	Choice: 0 Red-eye automatic
+	Choice: 1 Default
+	Choice: 2 Slow Sync
+	Choice: 3 Rear Curtain Sync + Slow Sync
+	Choice: 4 Red-eye Reduction + Slow Sync
+/main/capturesettings/burstnumber
+	Label: Burst Number
+	Type: RANGE
+	Current: 1
+	Bottom: 1
+	Top: 100
+	Step: 1
+/main/wifiprofiles/new/name
+	Label: Profile name
+	Type: TEXT
+	Current: 
