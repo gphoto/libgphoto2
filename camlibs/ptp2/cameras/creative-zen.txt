@@ -1,0 +1,137 @@
+Device info:
+Manufacturer: Creative Technology Ltd
+  Model: Creative ZEN
+  device version: 1.21.01_0.03.01
+  serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0;microsoft.com/WMPPD: 10.0;microsoft.com/WMDRMPD: 10.1;audible.com: 1.0;
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1007
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x1006
+  0x1008
+  0x1009
+  0x100b
+  0x1010
+  0x1012
+  0x1016
+  0x1017
+  0x1019
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9804
+  0x9805
+  0x9806
+  0x9808
+  0x9807
+  0x9810
+  0x9811
+  0x9201
+  0x9101
+  0x9102
+  0x9103
+  0x9104
+  0x9105
+  0x9106
+  0x9107
+  0x9108
+  0x9109
+  0x910a
+  0x910b
+Events Supported:
+Device Properties Supported:
+  0x5001
+  0xd401
+  0xd402
+  0xd101
+  0xd102
+  0xd201
+
+Camera summary:
+Manufacturer: Creative Technology Ltd
+Model: Creative ZEN
+  Version: 1.21.01_0.03.01
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: microsoft.com: 1.0;microsoft.com/WMPPD: 10.0;microsoft.com/WMDRMPD: 10.1;audible.com: 1.0;
+
+Capture Formats: 
+Display Formats: MP3, WMA, MS Wave, Audible.com Codec, MP4, Abstract Audio Album, Abstract Audio Video Playlist, Abstract Multimedia Album, JPEG, MS AVI, ASF, WMV, vCard3, vCalendar2, Firmware, Undefined Type, Association/Directory
+Supported MTP Object Properties:
+	MP3/3009: de99/AudioWAVECodec de9a/AudioBitRate dc46/Artist dc89/Duration dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc91/UseCount dc8a/Rating d901/BuyFlag dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	WMA/b901: de99/AudioWAVECodec de9a/AudioBitRate dc46/Artist dc89/Duration dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc91/UseCount dc8a/Rating d901/BuyFlag dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	MS Wave/3008: dc46/Artist dc89/Duration dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc91/UseCount dc8a/Rating d901/BuyFlag dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Audible.com Codec/b904: da01/unknown(da01) da02/unknown(da02) da03/unknown(da03) dc46/Artist dc89/Duration dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc91/UseCount dc8a/Rating d901/BuyFlag dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	MP4/b982: de99/AudioWAVECodec de9a/AudioBitRate dc46/Artist dc89/Duration dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc91/UseCount dc8a/Rating d901/BuyFlag dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Abstract Audio Album/ba03: dc86/RepresentativeSampleData dc81/RepresentativeSampleFormat dc83/RepresentativeSampleHeight dc82/RepresentativeSampleSize dc84/RepresentativeSampleWidth dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Abstract Audio Video Playlist/ba05: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Abstract Multimedia Album/ba01: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	JPEG/3801: dc88/Height dc86/RepresentativeSampleData dc81/RepresentativeSampleFormat dc83/RepresentativeSampleHeight dc82/RepresentativeSampleSize dc84/RepresentativeSampleWidth dc87/Width dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	MS AVI/300a: de99/AudioWAVECodec de9a/AudioBitRate de9d/FramesPerThousandSeconds dc88/Height de91/TotalBitRate de9b/VideoFourCCCodec de9c/VideoBitRate dc87/Width dc86/RepresentativeSampleData dc81/RepresentativeSampleFormat dc83/RepresentativeSampleHeight dc82/RepresentativeSampleSize dc84/RepresentativeSampleWidth dc89/Duration de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	ASF/300c: de99/AudioWAVECodec de9a/AudioBitRate de9d/FramesPerThousandSeconds dc88/Height de91/TotalBitRate de9b/VideoFourCCCodec de9c/VideoBitRate dc87/Width dc86/RepresentativeSampleData dc81/RepresentativeSampleFormat dc83/RepresentativeSampleHeight dc82/RepresentativeSampleSize dc84/RepresentativeSampleWidth dc89/Duration de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	WMV/b981: de99/AudioWAVECodec de9a/AudioBitRate de9d/FramesPerThousandSeconds dc88/Height de91/TotalBitRate de9b/VideoFourCCCodec de9c/VideoBitRate dc87/Width dc86/RepresentativeSampleData dc81/RepresentativeSampleFormat dc83/RepresentativeSampleHeight dc82/RepresentativeSampleSize dc84/RepresentativeSampleWidth dc89/Duration de93/SampleRate de94/NumberOfChannels de95/AudioBitDepth dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	vCard3/bb83: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	vCalendar2/be03: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Firmware/b802: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc41/PersistantUniqueObjectIdentifier dc44/Name dc0b/ParentObject dc07/ObjectFileName dc4f/NonConsumable dc03/ProtectionStatus
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Storage Media
+	VolumeLabel: 3BF900009C5C07320002D8F517D14732
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 32137412608 (30648 MB)
+	Free Space (Bytes): 31980093440 (30498 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 255, step 1] value: 89
+Synchronization Partner(0xd401):(readwrite) (type=0xffff) (null) ('(null)')
+Friendly Device Name(0xd402):(readwrite) (type=0xffff) My Zen ('My Zen')
+Secure Time(0xd101):(read only) (type=0x4004) <DRMCLOCK type="status"><VALUE>#20071214 21:35:59Z#</VALUE><FLAG>DRM_CLK_NOT_SET</FLAG></DRMCLOCK (a[98] 60,68,82,77,67,76,79,67,75,32,116,121,112,101,61,34,115,116,97,116,117,115,34,62,60,86,65,76,85,69,62,35,50,48,48,55,49,50,49,52,32,50,49,58,51,53,58,53,57,90,35,60,47,86,65,76,85,69,62,60,70,76,65,71,62,68,82,77,95,67,76,75,95,78,79,84,95,83,69,84,60,47,70,76,65,71,62,60,47,68,82,77,67,76,79,67,75,62)
+Device Certificate(0xd102):(read only) (type=0x4004) ÿ<DEVCERT version="1.0"><CERTIFICATE type="DEVICE"><DATA><UNIQUEID private="1">AAD5OzIHXJz12AIAMkfRFwAAAAA=</UNIQUEID><PUBLICKEY private="1">zFbxuStpLI7BSAV/4llWXb3ygx8nscNz1sxKwMjaFYsyMtQ36Hx1PA==</PUBLICKEY><KEYDATA>TLbmwJbkpYarpXzVD3uHUBZo5pY=</KEYDATA></DATA><MSDRM_SIGNATURE_VALUE>F2BIM7e05U6JpMo6sHd4IBbAHjpTxNBUkZgnaYOzlgXKTyfKEf6JIQ==</MSDRM_SIGNATURE_VALUE><SYMSIGNATURE>umDPMOW0buWj5zGz1JHil+a3IwM=</SYMSIGNATURE></CERTIFICATE><FALLBACK><SECURITYVERSION>2.4.108.193</SECURITYVERSION><CERTIFICATE private="1">zFbxuStpLI7BSAV/4llWXb3ygx8nscNz1sxKwMjaFYsyMtQ36Hx1PAIEbME2WXq/WDhfVJiVLAHdf0ryMG0lgVx+82SCxKv/Dsr+Q/arW4V8NBRx</CERTIFICATE></FALLBACK><CERTIFICATE type="GROUP"><DATA><NAME>Creative ZEN</NAME>
+  <MANUFACTURER>CL Direct Pte Ltd.</MANUFACTURER>
+  <MODEL>DVP-FL0001</MODEL>
+  <SECURITYLEVEL>2000</SECURITYLEVEL>
+  <HARDWARE_VER_MAJOR>1</HARDWARE_VER_MAJOR>
+  <HARDWARE_VER_MINOR>0</HARDWARE_VER_MINOR>
+  <FIRMWARE_VER_MAJOR>1</FIRMWARE_VER_MAJOR>
+  <FIRMWARE_VER_MINOR>0</FIRMWARE_VER_MINOR>
+  <FEATURES>
+    <CLOCK>2</CLOCK>
+    <SECURECLOCK>
+      <URL>http://go.microsoft.com/fwlink/?LinkId=25817</URL>
+      <PUBLICKEY>!CNhvvz1WaNV1AFUmetxkvm9iD4UrE9cnGUi!qcqdxMiXmD1*ikYGA==</PUBLICKEY>
+    </SECURECLOCK>
+    <METERING>1</METERING>
+    <LICENSE_ACQ>0</LICENSE_ACQ>
+    <LICENSE_SYNC>1</LICENSE_SYNC>
+    <ENCRYPTION>0</ENCRYPTION>
+    <SYMMETRIC_OPT>1</SYMMETRIC_OPT>
+  </FEATURES>
+  <LIMITS>
+    <MAXCHAINDEPTH>2</MAXCHAINDEPTH>
+    <MAXLICENSESIZE>10240</MAXLICENSESIZE>
+    <MAXHEADERSIZE>5120</MAXHEADERSIZE>
+  </LIMITS><PUBLICKEY>01jSNo4LLYCkLWpnsvVOxk1wvxbm2krcn20LgpXL9Zf91opCNsMyAQ==</PUBLICKEY></DATA><MSDRM_SIGNATURE_VALUE>DrK/bNN2aO5ImZHdepevdhlT6UePVcdaxTWOMvw/8RYKeQFjSPwWUw==</MSDRM_SIGNATURE_VALUE></CERTIFICATE><CERTIFICATE type="AUTHORIZATION"><DATA><SECURITYLEVEL>2000</SECURITYLEVEL><AUTH_ID>2085</AUTH_ID><PUBLICKEY>U3xlv/ZHjD1bOwjB+VKpZuAf3UI+x+5XtTYc7TvHKdQeGpyFrOmOEw==</PUBLICKEY></DATA><MSDRM_SIGNATURE_VALUE>iBzmFZxhy/VC9d2REO5iicO+dguqv8zhB7QPZe0JOj7BNKAwmrQoew==</MSDRM_SIGNATURE_VALUE></CERTIFICATE><CERTIFICATE type="AUTHORIZATION_ROOT"><DATA><AUTH_ID>1</AUTH_ID><PUBLICKEY>a1t3hxrg!qbOgktnbYaEEi4teCse!gz6RvTPuC!zizKJlpU7xoduSw==</PUBLICKEY></DATA><MSDRM_SIGNATURE_VALUE>Ko25GwcWTT0R8xP4rS9+h4Z/EHX03y7Gb/281mD8U0nQGG3Rk9O+TA==</MSDRM_SIGNATURE_VALUE></CERTIFICATE></DEVCERT>
