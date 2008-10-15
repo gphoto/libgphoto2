@@ -593,10 +593,9 @@ static struct {
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
 	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
-	/* Andreas Jaeger <aj@suse.de> */
-	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP},
-	/* Sridharan Rengaswamy <sridhar@stsci.edu>, Coolpix L3 */
-	{"Nikon:Coolpix L3 (PTP mode)",   0x04b0, 0x041a, 0},
+	/* Andreas Jaeger <aj@suse.de>.
+	 * Marcus: MTP Proplist does not return objectsizes ... useless. */
+	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP|PTP_MTP},
 	/* Pat Shanahan, http://sourceforge.net/tracker/index.php?func=detail&aid=1924511&group_id=8874&atid=358874 */
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
 	/* irc reporter Benjamin Schindler */
@@ -775,7 +774,8 @@ static struct {
 	{"Canon:PowerShot SD40 (PTP mode)",	0x04a9, 0x3137, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1565043&group_id=8874&atid=358874 */
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	/* Thomas Roelz at SUSE, MTP proplist does not work (hangs) */
+	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW|PTP_MTP},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
 	/* Deti Fliegl.
 	 * Marcus: supports MTP proplists, but these are 2 times slower than regular
@@ -799,7 +799,8 @@ static struct {
 	/* mailreport from sec@dschroeder.info */
 	{"Canon:Digital IXUS 75 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD750 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:Digital IXUS 70 (PTP mode)",    0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT},
+	/* Marcus: MTP Proplist does not work at all here, it just hangs */
+	{"Canon:Digital IXUS 70 (PTP mode)",    0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP},
 	{"Canon:PowerShot SD1000 (PTP mode)",   0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A550 (PTP mode)",     0x04a9, 0x3150, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://launchpad.net/bugs/64146 */
