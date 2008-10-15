@@ -438,7 +438,7 @@
    * This is actually a camera, but it has a Microsoft device descriptor
    * and reports itself as supporting the MTP extension.
    */
-  { "Canon", 0x04a9, "PowerShot A640 (PTP/MTP mode)", 0x3139, DEVICE_FLAG_NONE },
+  { "Canon", 0x04a9, "PowerShot A640 (PTP/MTP mode)", 0x3139, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL},
 
   /*
    * Nokia
