@@ -208,3 +208,228 @@ Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot SX100 IS'
 Property 0xd406:(readwrite) (type=0xffff) 'Windows'
 Property 0xd407:(read only) (type=0x6) 1
 
+/main/settings/owner
+	Label: Camera Owner
+	Type: TEXT
+	Current: Marcus Meissner
+/main/settings/model
+	Label: Camera Model
+	Type: TEXT
+	Current: Canon PowerShot SX100 IS
+/main/settings/firmwareversion
+	Label: Firmware Version
+	Type: TEXT
+	Current: 1.0.0.0
+/main/settings/time
+	Label: Camera Time
+	Type: DATE
+	Current: 1224186182
+	Printable: Thu Oct 16 21:43:02 2008
+/main/settings/synctime
+	Label: Set camera time to PC time
+	Type: TOGGLE
+	Current: 0
+/main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Memory card
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/settings/capture
+	Label: Capture
+	Type: TOGGLE
+	Current: 2
+/main/imgsettings/canonimgquality
+	Label: Canon Image Quality
+	Type: RADIO
+	Current: fine
+	Choice: 0 superfine
+	Choice: 1 fine
+	Choice: 2 normal
+/main/imgsettings/canonimgsize
+	Label: Canon Image Size
+	Type: RADIO
+	Current: large
+	Choice: 0 large
+	Choice: 1 medium 1
+	Choice: 2 medium 2
+	Choice: 3 medium 3
+	Choice: 4 small
+/main/imgsettings/iso
+	Label: ISO Speed
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 80
+	Choice: 2 100
+	Choice: 3 200
+	Choice: 4 400
+	Choice: 5 800
+	Choice: 6 1600
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Daylight
+	Choice: 2 Cloudy
+	Choice: 3 Tungsten
+	Choice: 4 Fluorescent
+	Choice: 5 Fluorescent H
+	Choice: 6 Custom
+/main/capturesettings/zoom
+	Label: Zoom
+	Type: RANGE
+	Current: 0
+	Bottom: 0
+	Top: 28
+	Step: 1
+/main/capturesettings/assistlight
+	Label: Assist Light
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/exposurecompensation
+	Label: Exposure Compensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 +2
+	Choice: 1 +1 2/3
+	Choice: 2 +1 1/3
+	Choice: 3 +1
+	Choice: 4 +2/3
+	Choice: 5 +1/3
+	Choice: 6 0
+	Choice: 7 -1/3
+	Choice: 8 -2/3
+	Choice: 9 -1
+	Choice: 10 -1 1/3
+	Choice: 11 -1 2/3
+	Choice: 12 -2
+/main/capturesettings/canonflashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: (null)
+/main/capturesettings/shootingmode
+	Label: Canon Shooting Mode
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 TV
+	Choice: 2 AV
+	Choice: 3 Manual
+/main/capturesettings/aperture
+	Label: Aperture
+	Type: RADIO
+	Current: 4.0
+	Choice: 0 auto
+	Choice: 1 1.4
+	Choice: 2 1.6
+	Choice: 3 1.8
+	Choice: 4 2.0
+	Choice: 5 2.2
+	Choice: 6 2.5
+	Choice: 7 2.8
+	Choice: 8 3.2
+	Choice: 9 3.5
+	Choice: 10 4.0
+	Choice: 11 4.5
+	Choice: 12 5
+	Choice: 13 5.6
+	Choice: 14 6.3
+	Choice: 15 7.1
+	Choice: 16 8.0
+	Choice: 17 9.0
+	Choice: 18 10
+	Choice: 19 11
+	Choice: 20 13
+	Choice: 21 14
+	Choice: 22 16
+	Choice: 23 18
+	Choice: 24 20
+	Choice: 25 22
+	Choice: 26 25
+	Choice: 27 29
+	Choice: 28 32
+/main/capturesettings/focusingpoint
+	Label: Focusing Point
+	Type: RADIO
+	Current: Center
+	Choice: 0 Center
+	Choice: 1 Auto
+/main/capturesettings/shutterspeed
+	Label: Shutter Speed
+	Type: RADIO
+	Current: 1/125
+	Choice: 0 auto
+	Choice: 1 bulb
+	Choice: 2 30"
+	Choice: 3 25"
+	Choice: 4 20"
+	Choice: 5 15"
+	Choice: 6 13"
+	Choice: 7 10"
+	Choice: 8 8"
+	Choice: 9 6"
+	Choice: 10 5"
+	Choice: 11 4"
+	Choice: 12 3"2
+	Choice: 13 2"5
+	Choice: 14 2"
+	Choice: 15 1"6
+	Choice: 16 1"3
+	Choice: 17 1"
+	Choice: 18 0"8
+	Choice: 19 0"6
+	Choice: 20 0"5
+	Choice: 21 0"4
+	Choice: 22 0"3
+	Choice: 23 1/4
+	Choice: 24 1/5
+	Choice: 25 1/6
+	Choice: 26 1/8
+	Choice: 27 1/10
+	Choice: 28 1/13
+	Choice: 29 1/15
+	Choice: 30 1/20
+	Choice: 31 1/25
+	Choice: 32 1/30
+	Choice: 33 1/40
+	Choice: 34 1/50
+	Choice: 35 1/60
+	Choice: 36 1/80
+	Choice: 37 1/100
+	Choice: 38 1/125
+	Choice: 39 1/160
+	Choice: 40 1/200
+	Choice: 41 1/250
+	Choice: 42 1/320
+	Choice: 43 1/400
+	Choice: 44 1/500
+	Choice: 45 1/640
+	Choice: 46 1/800
+	Choice: 47 1/1000
+	Choice: 48 1/1250
+	Choice: 49 1/1600
+	Choice: 50 1/2000
+	Choice: 51 1/2500
+	Choice: 52 1/3200
+	Choice: 53 1/4000
+/main/capturesettings/meteringmode
+	Label: Metering Mode
+	Type: RADIO
+	Current: integral(?)
+	Choice: 0 integral(?)
+	Choice: 1 center weighted(?)
+	Choice: 2 spot
+/main/capturesettings/afdistance
+	Label: AF Distance
+	Type: RADIO
+	Current: Off
+	Choice: 0 Off
+	Choice: 1 Macro
+/main/capturesettings/focuslock
+	Label: Focus Lock
+	Type: TOGGLE
+	Current: 2
