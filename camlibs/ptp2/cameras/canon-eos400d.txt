@@ -95,3 +95,84 @@ Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
 Model ID(0xd049):(read only) (type=0x6) 2147484214
 Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
 
+
+# Marcus says: Needs capture=1 in the same gphoto2 session....
+$ gphoto2 --shell
+gphoto2> set-config capture=1
+gphoto2> list-config
+/main/settings/eos-time
+/main/settings/eos-synctime
+/main/settings/capturetarget
+/main/settings/capture
+/main/imgsettings/eos-iso
+/main/imgsettings/eos-whitebalance
+/main/capturesettings/eos-exposurecompensation
+/main/capturesettings/picturestyle
+/main/capturesettings/eos-meteringmode
+gphoto2> get-config eos-time
+	Label: Camera Time
+	Type: DATE
+	Current: 1224177403
+	Printable: Thu Oct 16 19:16:43 2008
+gphoto2> get-config eos-synctime
+	Label: Set camera time to PC time
+	Type: TOGGLE
+	Current: 0
+gphoto2> get-config eos-iso
+	Label: EOS ISO Speed
+	Type: RADIO
+	Current: 200
+	Choice: 0 100
+	Choice: 1 200
+	Choice: 2 400
+	Choice: 3 800
+	Choice: 4 1600
+gphoto2> get-config eos-whitebalance
+	Label: EOS WhiteBalance
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Daylight
+	Choice: 2 Shade
+	Choice: 3 Cloudy
+	Choice: 4 Tungsten
+	Choice: 5 Fluorescent
+	Choice: 6 Flash
+	Choice: 7 Custom
+gphoto2> get-config eos-exposurecompensation
+	Label: EOS Exposure Compensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 -2
+	Choice: 1 -1.6
+	Choice: 2 -1.3
+	Choice: 3 -1.0
+	Choice: 4 -0.6
+	Choice: 5 -0.3
+	Choice: 6 0
+	Choice: 7 0.3
+	Choice: 8 0.6
+	Choice: 9 1.0
+	Choice: 10 1.3
+	Choice: 11 1.6
+	Choice: 12 2
+gphoto2> get-config eos-picturestyle
+	Label: Picture Style
+	Type: RADIO
+	Current: Landscape
+	Choice: 0 Standard
+	Choice: 1 Portrait
+	Choice: 2 Landscape
+	Choice: 3 Neutral
+	Choice: 4 Faithful
+	Choice: 5 Monochrome
+	Choice: 6 User defined 1
+	Choice: 7 User defined 2
+	Choice: 8 User defined 3
+gphoto2> get-config eos-meteringmode
+	Label: EOS Metering Mode
+	Type: RADIO
+	Current: Center Weighted average metering
+	Choice: 0 Evaluative metering
+	Choice: 1 Partial metering
+	Choice: 2 Center Weighted average metering
