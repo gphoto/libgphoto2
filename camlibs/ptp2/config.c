@@ -1110,9 +1110,9 @@ static struct deviceproptableu8 flash_modemanualpower[] = {
 GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
 
 static struct deviceproptableu8 canon_meteringmode[] = {
-	{ "center weighted(?)",	0, 0 },
-	{ N_("spot"),		1, 0 },
-	{ "integral(?)",	3, 0 },
+	{ N_("center weighted average"),	0, 0 },
+	{ N_("spot"),				1, 0 },
+	{ N_("evaluative"),			3, 0 },
 };
 GENERIC8TABLE(Canon_MeteringMode,canon_meteringmode)
 
