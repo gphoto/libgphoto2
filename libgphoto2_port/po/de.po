@@ -362,8 +362,8 @@ msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
-"Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %"
-"d reserviert ist."
+"Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %d "
+"reserviert ist."
 
 #: serial/unix.c:296
 #, c-format
