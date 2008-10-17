@@ -1,0 +1,83 @@
+Device info:
+Manufacturer: Nokia
+  model: N73
+  device version: (null)
+  serial number: 'nnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000000
+Vendor extension description: (null)
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100c
+  0x100d
+  0x101b
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4007
+  0x4009
+Device Properties Supported:
+Camera summary:
+
+Model: N73
+  serial number:  nnnnnnnnnnnnnnn
+Vendor extension ID: 0x00000000
+Vendor extension description: (null)
+
+Capture Formats:
+Display Formats: JPEG, TIFF EP
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00000001:
+	StorageDescription: None
+	VolumeLabel: C
+	Storage Type: Builtin RAM
+	Filesystemtype: Undefined
+	Access Capability: Read-Write
+	Maximum Capability: 46498816 (44 MB)
+	Free Space (Bytes): 15239168 (14 MB)
+	Free Space (Images): -1
+store_00000002:
+	StorageDescription: None
+	VolumeLabel: D
+	Storage Type: Builtin RAM
+	Filesystemtype: Undefined
+	Access Capability: Read-Write
+	Maximum Capability: 16480256 (15 MB)
+	Free Space (Bytes): 16478208 (15 MB)
+	Free Space (Images): -1
+store_00000003:
+	StorageDescription: None
+	VolumeLabel: E
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Undefined
+	Access Capability: Read-Write
+	Maximum Capability: 2057437184 (1962 MB)
+	Free Space (Bytes): 485097472 (462 MB)
+	Free Space (Images): -1
+store_00000004:
+	StorageDescription: None
+	VolumeLabel: Z
+	Storage Type: Builtin RAM
+	Filesystemtype: Undefined
+	Access Capability: Read-Write
+	Maximum Capability: 0 (0 MB)
+	Free Space (Bytes): 0 (0 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
