@@ -887,6 +887,9 @@ static struct {
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
+
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1680029&group_id=8874&atid=108874 */
+	{"Nokia:N73",				0x0421, 0x0488, 0},
 };
 
 #include "device-flags.h"
@@ -1860,69 +1863,154 @@ static int
 camera_wait_for_event (Camera *camera, int timeout,
 		       CameraEventType *eventtype, void **eventdata,
 		       GPContext *context) {
-	PTPContainer event;
-	PTPParams *params = &camera->pl->params;
-	uint32_t newobject = 0x0;
-	CameraFilePath *path;
-        int i, oldtimeout;
-	uint16_t ret;
+	PTPContainer	event;
+	PTPParams	*params = &camera->pl->params;
+	uint32_t	newobject = 0x0;
+	CameraFilePath	*path;
+	static int 	capcnt = 0;
+	int		i, oldtimeout;
+	uint16_t	ret;
 
 	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
-	gp_port_get_timeout (camera->port, &oldtimeout);
-	gp_port_set_timeout (camera->port, timeout);
-	ret = params->event_wait(params,&event);
-	gp_port_set_timeout (camera->port, oldtimeout);
 
-	if (ret!=PTP_RC_OK) {
-		/* FIXME: Might be another error, but usually is a timeout */
-		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: received error 0x%04x", ret);
-		*eventtype = GP_EVENT_TIMEOUT;
-		return GP_OK;
-	}
-	gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: code=0x%04x, param1 0x%08x",
-		event.Code, event.Param1
-	);
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
+	) {
+		time_t                  event_start=time(NULL);
+		PTPCanon_changes_entry	*entries = NULL;
+		int			nrofentries = 0;
 
-	switch (event.Code) {
-	case PTP_EC_ObjectAdded:
-		path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-		if (!path)
-			return GP_ERROR_NO_MEMORY;
-		newobject = event.Param1;
-		add_object (camera, event.Param1, context);
-		path->name[0]='\0';
-		path->folder[0]='\0';
-
-		for (i = params->handles.n ; i--; ) {
-			PTPObjectInfo	*obinfo;
-
-			if (params->handles.Handler[i] != newobject)
+		while ((time(NULL) - event_start)<=timeout) {
+			int i;
+			ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
+				return GP_ERROR;
+			}
+			if (!nrofentries) {
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Empty list found?");
+				free (entries);
+				gp_context_idle (context);
 				continue;
-			obinfo = &camera->pl->params.objectinfo[i];
-			strcpy  (path->name,  obinfo->Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
-			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
-			CR (gp_filesystem_append (camera->fs, path->folder,
-						  path->name, context));
+			}
+			for (i=0;i<nrofentries;i++) {
+				char *x;
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
+				if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+					CameraFile	*file;
+					char		*ximage;
+
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+
+					newobject = entries[i].u.object.oid;
+
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					path->name[0]='\0';
+					strcpy (path->folder,"/");
+					ret = gp_file_new(&file);
+					if (ret!=GP_OK) return ret;
+					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					gp_file_set_name(file, path->name);
+					gp_file_set_mime_type (file, GP_MIME_JPEG);
+
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, &ximage));
+					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
+					ret = gp_file_set_data_and_size(file, (char*)ximage, entries[i].u.object.oi.ObjectCompressedSize);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					/* We have now handed over the file, disclaim responsibility by unref. */
+					gp_file_unref (file);
+					return GP_OK;
+				}
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "EOS event %04x", entries[i].u.object.oid);
+				*eventtype = GP_EVENT_UNKNOWN;
+				x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
+				if (x) {
+					sprintf (x, "PTP Event %04x", entries[i].u.object.oid);
+					*eventdata = x;
+				}
+				break;
+			}
+			free (entries);
+			if (newobject)
+				break;
+			gp_context_idle (context);
+		}
+	} else {
+		gp_port_get_timeout (camera->port, &oldtimeout);
+		gp_port_set_timeout (camera->port, timeout);
+		ret = params->event_wait(params,&event);
+		gp_port_set_timeout (camera->port, oldtimeout);
+
+		if (ret!=PTP_RC_OK) {
+			/* FIXME: Might be another error, but usually is a timeout */
+			gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: received error 0x%04x", ret);
+			*eventtype = GP_EVENT_TIMEOUT;
+			return GP_OK;
+		}
+		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: code=0x%04x, param1 0x%08x",
+			event.Code, event.Param1
+		);
+
+		switch (event.Code) {
+		case PTP_EC_ObjectAdded:
+			path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+			if (!path)
+				return GP_ERROR_NO_MEMORY;
+			newobject = event.Param1;
+			add_object (camera, event.Param1, context);
+			path->name[0]='\0';
+			path->folder[0]='\0';
+
+			for (i = params->handles.n ; i--; ) {
+				PTPObjectInfo	*obinfo;
+
+				if (params->handles.Handler[i] != newobject)
+					continue;
+				obinfo = &camera->pl->params.objectinfo[i];
+				strcpy  (path->name,  obinfo->Filename);
+				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+				get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+				/* delete last / or we get confused later. */
+				path->folder[ strlen(path->folder)-1 ] = '\0';
+				CR (gp_filesystem_append (camera->fs, path->folder,
+							  path->name, context));
+				break;
+			}
+			*eventtype = GP_EVENT_FILE_ADDED;
+			*eventdata = path;
+			break;
+		default: {
+			char *x;
+
+			*eventtype = GP_EVENT_UNKNOWN;
+			x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
+			if (x) {
+				sprintf (x, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+				*eventdata = x;
+			}
 			break;
 		}
-		*eventtype = GP_EVENT_FILE_ADDED;
-		*eventdata = path;
-		break;
-	default: {
-		char *x;
-
-		*eventtype = GP_EVENT_UNKNOWN;
-		x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
-		if (x) {
-			sprintf (x, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
-			*eventdata = x;
 		}
-		break;
-	}
 	}
 	return GP_OK;
 }
