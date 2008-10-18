@@ -72,7 +72,8 @@ static const struct {
 	                      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
 	{"iConcepts digital camera" ,
                           GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
-	{"Sakar Kidz Cam",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
+	{"Sakar Kidz Cam 86379",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 
+								    0x9120},
 	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"ViviCam5B",         GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"DC-N130t",          GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
@@ -386,7 +387,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			rawdata = frame_data;
 			gp_gamma_fill_table (gtable, .55); 
 		}
-		gp_bayer_decode (rawdata, w , h , ptr, this_cam_tile);
+		gp_ahd_decode (rawdata, w , h , ptr, this_cam_tile);
 		gp_gamma_correct_single (gtable, ptr, w * h); 
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
@@ -395,12 +396,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
 		size = w*h/comp_ratio;
-		rawdata = malloc (size);
+		rawdata = malloc (size+16);
 		if (!rawdata) return GP_ERROR_NO_MEMORY;
 		memcpy (rawdata, frame_data, size);
+		memcpy (rawdata+size,camera->pl->catalog+16*entry,16);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-	        gp_file_set_data_and_size (file, (char *)rawdata, size);  
+	        gp_file_set_data_and_size (file, (char *)rawdata, size+16);  
 	}
 	/* Reset camera when done, for more graceful exit. */
 	if ((!(is_in_clip)&&(entry +1 == camera->pl->nb_entries)) 
@@ -511,6 +513,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.get_info_func = get_info_func,
 	.delete_all_func = delete_all_func,
 };
+
 int
 camera_init(Camera *camera, GPContext *context)
 {
