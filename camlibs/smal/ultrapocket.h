@@ -30,15 +30,8 @@
 
 #define UP_FLAG_NEEDS_RESET 0x80
 
-/* The windows driver downloads a bunch of info from the camera the use of
- * which I can't see.  Unless you want it, don't get it.
- */
-#define COPY_WINDOWS_DRIVER 0
-/* The windows software does a _lot_ of touching up of the images.
- * For now, until I figure out what that involves, just do a bit of gamma 
- * correction
- */
-#define DO_GAMMA 0 
+#define DO_GAMMA 1
+#define GAMMA_NUMBER 0.5
 
 typedef enum ultrapocket_IMG_TYPE {
    TYPE_QVGA    = 0,
@@ -49,6 +42,7 @@ typedef enum ultrapocket_IMG_TYPE {
 
 int ultrapocket_getpicsoverview(Camera *camera, GPContext *context,int *numpics, CameraList *list);
 int ultrapocket_exit(GPPort *port, GPContext *context);
+int ultrapocket_getrawpicture(Camera *camera, GPContext *context, unsigned char **pdata, int *size, const char *filename);
 int ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata, int *size, const char *filename);
 int ultrapocket_deletefile(Camera *camera, const char *filename);
 int ultrapocket_deleteall(Camera *camera);

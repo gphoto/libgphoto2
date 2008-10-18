@@ -47,16 +47,25 @@
 #  define N_(String) (String)
 #endif
 
+static const char *BayerTileNames[8] = {
+    "RGGB",
+    "GRBG",
+    "BGGR",
+    "GBRG",
+    "RGGB_INTERLACED",
+    "GRBG_INTERLACED",
+    "BGGR_INTERLACED",
+    "GBRG_INTERLACED"
+};
+
 static int
 ultrapocket_command(GPPort *port, int iswrite, unsigned char *data, int datasize) {
     int ret;
     if (iswrite)
-	ret = gp_port_write(port,data,datasize);
+	ret = gp_port_write(port, data, datasize);
     else
-	ret = gp_port_read(port,data,datasize);
+        ret = gp_port_read(port, data, datasize);
 
-    if (ret>=GP_OK)
-	ret=GP_OK;
     return ret;
 }
 
@@ -77,9 +86,6 @@ getpicture_generic(Camera *camera, GPContext *context, unsigned char **rd,int *r
     int            width, height, imgstart;
     smal_img_type  styp;
     int            ptc,pc,id;
-#if DO_GAMMA
-    unsigned char  gtable[256];
-#endif
 
     memcpy(command+6, filename+3, 4); /* the id of the image to transfer */
 
@@ -157,9 +163,6 @@ getpicture_logitech_pd(Camera *camera, GPContext *context, unsigned char **rd, c
     unsigned char  retdata[0x8000];
     unsigned char *rawdata;
     int            ptc,pc,id;
-#if DO_GAMMA
-    unsigned char  gtable[256];
-#endif
 
     memcpy(command+3, filename, 11); /* the id of the image to transfer */
 
@@ -198,18 +201,100 @@ getpicture_logitech_pd(Camera *camera, GPContext *context, unsigned char **rd, c
  * use a different protocol - have to differetiate.
  */
 int
+ultrapocket_getrawpicture(Camera *camera, GPContext *context, 
+   unsigned char **pdata, int *size, const char *filename)
+{
+    char           *savelocale;
+    char           ppmheader[200];
+    unsigned char *rawdata,*outdata;
+    int            width, height, result;
+    size_t         outsize;
+    int            imgstart = 0;
+    int            pc, pmmhdr_len;
+    BayerTile      tile;
+
+    switch (camera->pl->up_type) {
+     case BADGE_CARDCAM:
+     case BADGE_FLATFOTO:
+     case BADGE_GENERIC:
+     case BADGE_ULTRAPOCKET:
+     case BADGE_AXIA:
+	CHECK_RESULT(getpicture_generic(camera, context, &rawdata, &width, &height, &imgstart, filename));
+	break;
+     case BADGE_LOGITECH_PD:
+	CHECK_RESULT(getpicture_logitech_pd(camera, context, &rawdata, filename));
+	width = 640;
+	height = 480;
+	imgstart = 0x29;
+	break;
+     default:
+	break;
+    }
+
+   tile = BAYER_TILE_BGGR;
+
+   savelocale = setlocale(LC_ALL, "C");
+   snprintf (ppmheader, sizeof(ppmheader), "P6\n"
+	    "# CREATOR: gphoto2, ultrapocket library, raw,"
+	    " assuming Bayer tile %s\n"
+	    "%d %d\n"
+	    "255\n", BayerTileNames[tile], width, height);
+   setlocale(LC_ALL, savelocale);
+
+   /* Allocate memory for Interpolated ppm image */
+   pmmhdr_len = strlen(ppmheader);
+   outsize = ((long)width + 4) * height * 3 + pmmhdr_len;
+   outdata = malloc(outsize);
+   if (!outdata)
+     return (GP_ERROR_NO_MEMORY);
+
+   /* Set header */
+   strcpy(outdata, ppmheader);
+
+   /* Expand the Bayer tiles */
+   result = gp_bayer_expand((rawdata+imgstart), width + 4, height,
+			    &outdata[pmmhdr_len], tile);
+
+   /* and chop the spare 4 pixels off the RHS */
+   for (pc = 1; pc < height; pc++) {
+      memmove(outdata + pmmhdr_len + ((long)width * pc * 3), 
+              outdata + pmmhdr_len + (((long)width + 4) * pc * 3), 
+              ((long)width) * 3);
+   }
+   /* modify outsize to reflect trim */
+   outsize = ((long)width) * height * 3 + pmmhdr_len;
+   
+   free(rawdata);
+   if (result < 0) {
+      free (outdata);
+      return (result);
+   }
+
+   *pdata = outdata;
+   *size  = outsize;
+   return GP_OK;
+}
+
+/* Different camera types (pocket digital/generic)
+ * use a different protocol - have to differetiate.
+ */
+int
 ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata, int *size, const char *filename)
 {
-    char           ppmheader[100];
+    char           *savelocale;
+    char           ppmheader[200];
     unsigned char *rawdata,*outdata;
-    int            width, height, outsize, result;
+    int            width, height, result;
+    size_t         outsize;
     int            imgstart = 0;
-    int            pc,pmmhdr_len;
+    int            pc, pmmhdr_len;
+    BayerTile      tile;
 #if DO_GAMMA
     unsigned char  gtable[256];
 #endif
 
     switch (camera->pl->up_type) {
+     case BADGE_CARDCAM:
      case BADGE_FLATFOTO:
      case BADGE_GENERIC:
      case BADGE_ULTRAPOCKET:
@@ -226,14 +311,26 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
 	return GP_ERROR;
     }
 
-   sprintf (ppmheader, "P6\n"
-	    "# CREATOR: gphoto2, ultrapocket library\n"
-	    "%d %d\n"
-	    "255\n", width, height);
+   tile = BAYER_TILE_BGGR;
+
+   savelocale = setlocale(LC_ALL, "C");
+   snprintf (ppmheader, sizeof(ppmheader), "P6\n"
+	    "# CREATOR: gphoto2, ultrapocket library,"
+	    " assuming Bayer tile %s, interpolated"
+#if DO_GAMMA
+	    ", gamma %.2f"
+#endif
+	    "\n%d %d\n"
+	    "255\n", BayerTileNames[tile], 
+#if DO_GAMMA
+	    GAMMA_NUMBER,
+#endif
+	    width, height);
+   setlocale(LC_ALL, savelocale);
 
    /* Allocate memory for Interpolated ppm image */
    pmmhdr_len = strlen(ppmheader);
-   outsize = (width+4) * height * 3 + pmmhdr_len + 1;
+   outsize = ((long)width + 4) * height * 3 + pmmhdr_len;
    outdata = malloc(outsize);
    if (!outdata) {
      free (rawdata);
@@ -243,16 +340,18 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
    /* Set header */
    strcpy(outdata, ppmheader);
 
-   /* Decode and interpolate the Bayer Mask */
+   /* Decode and interpolate the Bayer tiles */
    result = gp_bayer_decode((rawdata+imgstart), width+4, height,
-			    &outdata[pmmhdr_len], 2 );
+			    &outdata[pmmhdr_len], tile);
 
    /* and chop the spare 4 pixels off the RHS */
-   for (pc=1;pc<height;pc++) {
-      memmove(outdata + pmmhdr_len + (width * 3 * pc), outdata + pmmhdr_len + ((width+4) * 3 * pc), width*3);
+   for (pc = 1; pc < height; pc++) {
+      memmove(outdata + pmmhdr_len + ((long)width * pc * 3), 
+              outdata + pmmhdr_len + (((long)width + 4) * pc * 3), 
+              ((long)width) * 3);
    }
-   /* modify outsize to refect trim */
-   outsize = width * height * 3 + pmmhdr_len + 1;
+   /* modify outsize to reflect trim */
+   outsize = ((long)width) * height * 3 + pmmhdr_len;
 
    free(rawdata);
    if (result < 0) {
@@ -261,8 +360,8 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
    }
 
 #if DO_GAMMA
-   gp_gamma_fill_table( gtable, 0.5 );
-   gp_gamma_correct_single( gtable, &outdata[pmmhdr_len], height * width );
+   gp_gamma_fill_table(gtable, GAMMA_NUMBER);
+   gp_gamma_correct_single(gtable, &outdata[pmmhdr_len], height * width);
 #endif
 
    *pdata = outdata;
@@ -275,10 +374,12 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
  * the pocket digital never seems to need it.
  */
 static int
-ultrapocket_reset(GPPort **pport)
+ultrapocket_reset(Camera *camera)
 {
    GPPortInfo oldpi;
-   GPPort *port = *pport;
+   GPPort *port = camera->port;
+   CameraAbilities cab;
+   gp_camera_get_abilities(camera, &cab);
    unsigned char cmdbuf[0x10];
    GP_DEBUG ("First connect since camera was used - need to reset cam");
 
@@ -292,14 +393,79 @@ ultrapocket_reset(GPPort **pport)
    cmdbuf[1] = 0x01;
    CHECK_RESULT(ultrapocket_command(port, 1, cmdbuf, 0x10));
    /* -------------- */
-   sleep(2); /* This should do - _might_ need increasing */
+   sleep(4); /* This should do - _might_ need increasing */
    CHECK_RESULT(gp_port_get_info(port, &oldpi));
    CHECK_RESULT(gp_port_free(port));
    CHECK_RESULT(gp_port_new(&port));
    CHECK_RESULT(gp_port_set_info(port, oldpi));
-   CHECK_RESULT(gp_port_usb_find_device (port, USB_VENDOR_ID_SMAL, USB_DEVICE_ID_ULTRAPOCKET));
+   CHECK_RESULT(gp_port_usb_find_device(port, 
+      cab.usb_vendor, cab.usb_product));
    CHECK_RESULT(gp_port_open(port));
-   *pport = port;
+   camera->port = port;
+   return GP_OK;
+}
+
+static int
+ultrapocket_skip(GPPort *port, int npackets)
+{
+   int old_timeout = 200;
+   unsigned char retbuf[0x1000];
+
+   gp_port_get_timeout(port, &old_timeout);
+   gp_port_set_timeout(port, 100);
+   for (; (npackets > 0) && gp_port_read(port, retbuf, 0x1000); npackets--);
+   gp_port_set_timeout(port, old_timeout);
+   return GP_OK;
+}
+
+static int
+ultrapocket_sync(Camera *camera)
+{
+   GPPort *port = camera->port;
+   unsigned char command[0x10];
+
+   /* Who knows what's in all these packets? ... only SmAL! */
+
+   if (camera->pl->up_type == BADGE_CARDCAM) {
+#if 0
+       memset(command, 0, 16);
+       command[0] = 0x12;
+       CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+       ultrapocket_skip(port, 8);
+       /* -------------- */
+#endif
+       memset(command, 0, 16);
+       command[0] = 0x31;
+       command[1] = 0x01;
+       CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+       ultrapocket_skip(port, 8);
+       /* -------------- */
+       memset(command, 0, 16);
+       command[0] = 0x12;
+       CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+       ultrapocket_skip(port, 8);
+       /* -------------- */
+       memset(command, 0, 16);
+       command[0] = 0x31;
+       command[1] = 0x01;
+       CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+       ultrapocket_skip(port, 8);
+   }
+#if 0
+       /* -------------- */
+       memset(command, 0, 16);
+       command[0] = 0x30;
+       command[1] = 0x01;
+       CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+       ultrapocket_skip(port, 16);
+       /* -------------- */
+       memset(command, 0, 16);
+       command[0] = 0x29;
+       command[1] = 0x01;
+       CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+       ultrapocket_skip(port, 8);
+       /* -------------- */
+#endif
    return GP_OK;
 }
 
@@ -314,11 +480,13 @@ static int getpicsoverview_generic(
    GPPort *port = *pport;
    unsigned char command[0x10];
    unsigned char retbuf[0x1000];
-   int x,y;
+   int y;
    int np = 0;
-    char fn[20];
+   char fn[20];
    int picid;
    int reset_needed;
+   
+   CHECK_RESULT(ultrapocket_sync(camera));
 
    memset(command, 0, 16);
    command[0] = 0x12;
@@ -333,77 +501,22 @@ static int getpicsoverview_generic(
       gp_list_append(list, fn, NULL);
    }
    reset_needed = (*(retbuf + 2) & UP_FLAG_NEEDS_RESET);
-   for (x=0;x<7;x++) CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));
+   ultrapocket_skip(port, 7);
 
-    /* Who knows what's in all these packets? ... only SmAL! */
-    /* The windows driver gets all of this guff - since the camera functions just fine
-     * without them, I'm going to ignore it for now */
-#if COPY_WINDOWS_DRIVER
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x31;
-    command[1] = 0x01;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x12;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x31;
-    command[1] = 0x01;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x30;
-    command[1] = 0x01;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<16;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x29;
-    command[1] = 0x01;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
+#if 0
+   CHECK_RESULT(ultrapocket_sync(camera));
+#endif
+   if (reset_needed) {
+      CHECK_RESULT(ultrapocket_reset(camera));
+      port = *pport;
+   }
+#if 0
+   CHECK_RESULT(ultrapocket_sync(camera));
 #endif
 
-    if (reset_needed) {
-	CHECK_RESULT(ultrapocket_reset(pport));
-	port = *pport;
-    }
+   *numpics = np;
 
-#if COPY_WINDOWS_DRIVER
-    memset(command, 0, 16);
-    command[0] = 0x12;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x31;
-    command[1] = 0x01;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x12;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-   /* -------------- */
-    memset(command, 0, 16);
-    command[0] = 0x31;
-    command[1] = 0x01;
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
-    for (x=0;x<8;x++)  { CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));}
-    /* -------------- */
-#endif
-
-    *numpics = np;
-
-    return GP_OK;
+   return GP_OK;
 }
 
 static int getpicsoverview_logitech_pd(
@@ -446,6 +559,9 @@ static int getpicsoverview_logitech_pd(
  *
  * Fuji Slimshot + Axia etc
  * The camera responds with 8 * 0x1000 bytes
+ * 
+ * Creative CardCam
+ * The camera responds with 8 * 0x1000 bytes
  *
  * Logitech Digital Pocket
  * The camera responds with 2 * 0x8000 bytes
@@ -457,6 +573,7 @@ ultrapocket_getpicsoverview(
     int *numpics, CameraList *list
 ) {
     switch (camera->pl->up_type) {
+     case BADGE_CARDCAM:
      case BADGE_FLATFOTO:
      case BADGE_GENERIC:
      case BADGE_ULTRAPOCKET:
@@ -472,12 +589,14 @@ ultrapocket_getpicsoverview(
     return GP_ERROR;
 }
 
-static int deletefile_generic(GPPort *port, const char *filename)
+static int deletefile_generic(Camera *camera, const char *filename)
 {
     unsigned char command[0x10] = { 0x22, 0x01, 0x00, 0x49, 0x4d, 0x47, 0,0,0,0, 0x2e, 0x52, 0x41, 0x57, 0x00, 0x00 };
     memcpy(command+6, filename+3, 4); /* the id of the image to delete */
 
-    CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+    CHECK_RESULT(ultrapocket_command(camera->port, 1, command, 0x10));
+    ultrapocket_skip(camera->port, 8);
+
     return GP_OK;
 }
 
@@ -504,11 +623,12 @@ ultrapocket_deletefile(Camera *camera, const char *filename)
     GPPort *port = camera->port;
 
     switch (camera->pl->up_type) {
+     case BADGE_CARDCAM:
      case BADGE_FLATFOTO:
      case BADGE_GENERIC:
      case BADGE_ULTRAPOCKET:
      case BADGE_AXIA:
-	return deletefile_generic(port, filename);
+	return deletefile_generic(camera, filename);
 	break;
      case BADGE_LOGITECH_PD:
 	return deletefile_logitech_pd(port, filename);
@@ -546,12 +666,12 @@ int deleteall_logitech_pd(GPPort **pport)
 }
 
 static
-int deleteall_generic(GPPort **pport)
+int deleteall_generic(Camera *camera)
 {
     unsigned char command[0x10];
     unsigned char retbuf[0x1000];
-    int x,reset_needed = 0;
-    GPPort *port = *pport;
+    int reset_needed = 0;
+    GPPort *port = camera->port;
 
     memset(command, 0, 16);
     command[0] = 0x12;
@@ -560,17 +680,18 @@ int deleteall_generic(GPPort **pport)
 
     CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));
     reset_needed = (*(retbuf + 2) & UP_FLAG_NEEDS_RESET);
-    for (x=0;x<7;x++) CHECK_RESULT(ultrapocket_command(port, 0, retbuf, 0x1000));
+    ultrapocket_skip(camera->port, 7);
 
     if (reset_needed) {
-	CHECK_RESULT(ultrapocket_reset(pport));
-	port = *pport;
+	CHECK_RESULT(ultrapocket_reset(camera));
+	port = camera->port;
     }
 
     memset(command, 0, 0x10);
     command[0] = 0x18;
     command[1] = 0x01;
     CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
+    ultrapocket_skip(camera->port, 8);
 
     return GP_OK;
 }
@@ -581,11 +702,12 @@ ultrapocket_deleteall(Camera *camera)
     GPPort **pport = &camera->port;
 
     switch (camera->pl->up_type) {
+     case BADGE_CARDCAM:
      case BADGE_FLATFOTO:
      case BADGE_GENERIC:
      case BADGE_ULTRAPOCKET:
      case BADGE_AXIA:
-	return deleteall_generic(pport);
+	return deleteall_generic(camera);
 	break;
      case BADGE_LOGITECH_PD:
 	return deleteall_logitech_pd(pport);
@@ -595,4 +717,3 @@ ultrapocket_deleteall(Camera *camera)
     }
     return GP_ERROR;
 }
-
