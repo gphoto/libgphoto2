@@ -1,0 +1,191 @@
+Device info:
+Manufacturer: Nikon Corporation
+  Model: P2  
+  device version: COOLPIX P2v1.0
+  serial number: 'nnnnnnnnnnnn'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 1.00
+Vendor extension description: Nikon PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 1.00
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9001
+  0x9002
+  0x9003
+  0x9004
+  0x90c0
+  0x90c3
+  0x90c4
+  0x90c7
+  0x90c8
+  0x9006
+  0x9007
+  0x9008
+  0x9009
+  0x9010
+  0x9011
+  0x90e0
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc001
+  0xc101
+  0xc102
+  0xc103
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5004
+  0x5008
+  0x500a
+  0x500c
+  0x5011
+  0xd001
+  0xd002
+  0xd003
+  0xd005
+  0xd102
+  0xd161
+
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: P2  
+  Version: COOLPIX P2v1.0
+  Serial Number: nnnnnnnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: Nikon PTP Extensions
+
+Capture Formats: JPEG
+Display Formats: JPEG, TIFF, Association/Directory, DPOF, MS Wave, Apple Quicktime
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 125861888 (120 MB)
+	Free Space (Bytes): 111902720 (106 MB)
+	Free Space (Images): 85
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [25,50,65,80,100] value: 100% (100)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'640x480',
+	'1024x768',
+	'1280x960',
+	'1600x1200',
+	'2048x1536',
+	'2592x1944',
+	'3264x2448',
+	'3264x2176'
+	] value: '2592x1944'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [6,12,25] value: 12
+Focal Length(0x5008):(readwrite) (type=0x6) Enumeration [3500,3700,4000,4300,4600,5000,5400,5900,6400,7100,7800,8600,9400,10400,11500,12700,14100,15700,17500,19200,20900,22500,24000,25300,26700,27900,29100,30200,31400,32600,33800,35000] value: 36 mm (3600)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: 2
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Date & Time(0x5011):(readwrite) (type=0xffff) '20081018T170942'
+Property 0xd001:(read only) (type=0x6) Enumeration [0,1,2] value: 1
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4] value: 4
+Property 0xd003:(read only) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd005:(read only) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd102:(read only) (type=0x2) 0
+Autofocus Mode(0xd161):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+
+
+/main/settings/time
+	Label: Camera Time
+	Type: DATE
+	Current: 1224346266
+	Printable: Sat Oct 18 18:11:06 2008
+/main/settings/fastfs
+	Label: Fast Filesystem
+	Type: TOGGLE
+	Current: 1
+/main/settings/capturetarget
+Label: Capture Target
+	Type: RADIO
+	Current: Memory card
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/imgsettings/imgquality
+	# this is wrong ... checkthis - Marcus
+	Label: Image Quality
+	Type: RADIO
+	Current: Unknown value 000c
+	Choice: 0 NEF+Fine
+	Choice: 1 Unknown value 000c
+	Choice: 2 Unknown value 0019
+/main/imgsettings/imgsize
+	Label: Image Size
+	Type: RADIO
+	Current: 2592x1944
+	Choice: 0 640x480
+	Choice: 1 1024x768
+	Choice: 2 1280x960
+	Choice: 3 1600x1200
+	Choice: 4 2048x1536
+	Choice: 5 2592x1944
+	Choice: 6 3264x2448
+	Choice: 7 3264x2176
+/main/capturesettings/autofocusmode
+	Label: Auto Focus Mode
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/focallength
+	Label: Focal Length
+	Type: RANGE
+	Current: 36
+	Bottom: 35
+	Top: 350
+	Step: 1
+/main/capturesettings/focusmode
+	Label: Focus Mode
+	Type: RADIO
+	Current: Automatic
+	Choice: 0 Automatic
+	Choice: 1 Automatic Macro
+/main/capturesettings/flashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: Automatic Flash
+	Choice: 0 Automatic Flash
+	Choice: 1 Flash off
+	Choice: 2 Fill flash
+	Choice: 3 Red-eye automatic
