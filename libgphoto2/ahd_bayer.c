@@ -59,11 +59,15 @@
 #define GREEN 	1
 #define BLUE 	2
 
+static
 int dRGB(int i1, int i2, unsigned char *RGB);
+static
 int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w, 
 					int h, int y, int *pos_code);
+static
 int do_green_ctr_row(unsigned char *image, unsigned char *image_h, 
 		    unsigned char *image_v, int w, int h, int y, int *pos_code);
+static
 int get_diffs_row2(unsigned char * hom_buffer_h, unsigned char *hom_buffer_v, 
 		    unsigned char * buffer_h, unsigned char *buffer_v, int w);
 
@@ -74,6 +78,7 @@ int get_diffs_row2(unsigned char * hom_buffer_h, unsigned char *hom_buffer_v,
  * \param i2 location of another pixel
  * \param RGB some RGB data. 
  */
+static
 int dRGB(int i1, int i2, unsigned char *RGB) {
 	int dR,dG,dB;
 	dR=RGB[i1+RED]-RGB[i2+RED];
@@ -90,6 +95,7 @@ int dRGB(int i1, int i2, unsigned char *RGB) {
  * \param y row number from image which is under construction
  * \param pos_code position code related to Bayer tiling in use
  */
+static
 int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w, 
 					int h, int y, int *pos_code) 
 {
@@ -225,6 +231,7 @@ int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w,
  * \param pos_code position code related to Bayer tiling in use
  */
 
+static
 int do_green_ctr_row(unsigned char *image, unsigned char *image_h, 
 		    unsigned char *image_v, int w, int h, int y, int *pos_code)
 {
@@ -318,6 +325,7 @@ int do_green_ctr_row(unsigned char *image, unsigned char *image_h,
  * \param w pixel width of image and buffers
  */
 
+static
 int get_diffs_row2(unsigned char * hom_buffer_h, unsigned char *hom_buffer_v, 
 		    unsigned char * buffer_h, unsigned char *buffer_v, int w)
 {
