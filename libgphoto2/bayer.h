@@ -45,4 +45,17 @@ int gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 int gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 		     BayerTile tile);
 int gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile);
+/*
+ * The following two functions use an alternative procedure called Adaptive
+ * Homogeneity-directed demosaicing instead of the standard bilinear 
+ * interpolation with basic edge-detection method used in the previous two 
+ * functions. To use or test this method of Bayer interpolation, just use 
+ * gp_ahd_decode() in the same way and in the same place as gp_bayer_decode()
+ * is used.
+ */
+
+int gp_ahd_decode (unsigned char *input, int w, int h, unsigned char *output,
+		     BayerTile tile);
+int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile);
+
 #endif /* __BAYER_H__ */
