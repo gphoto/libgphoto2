@@ -470,7 +470,7 @@ int sonix_cols_reverse (unsigned char *imagedata, int width, int height)
  *	For each dot, increases color separation
  */
 
-int
+static int
 histogram (unsigned char *data, unsigned int size, int *htable_r, 
 						int *htable_g, int *htable_b)
 {
