@@ -28,13 +28,17 @@
 #define USB_VENDOR_ID_LOGITECH    0x046d
 #define USB_DEVICE_ID_POCKETDIGITAL 0x0950
 
+#define USB_VENDOR_ID_CREATIVE    0x041e
+#define USB_DEVICE_ID_CARDCAM 0x4016
+
 typedef enum ultrapocket_BADGE_TYPE {
     BADGE_UNKNOWN = 0,
     BADGE_GENERIC,    /* could be axia/ultrapocket */
     BADGE_ULTRAPOCKET,
     BADGE_AXIA,
     BADGE_FLATFOTO,
-    BADGE_LOGITECH_PD /* pocket digital */
+    BADGE_LOGITECH_PD, /* pocket digital */
+    BADGE_CARDCAM
 } up_badge_type;
 
 struct _CameraPrivateLibrary {

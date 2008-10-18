@@ -62,6 +62,7 @@ static const struct smal_cameras {
 	{ "Logitech:Pocket Digital", USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_POCKETDIGITAL },
 	{ "SMaL:Ultra-Pocket",       USB_VENDOR_ID_SMAL,     USB_DEVICE_ID_ULTRAPOCKET },
         { "Radioshack:Flatfoto",     USB_VENDOR_ID_SMAL,     USB_DEVICE_ID_FLATFOTO },
+	{ "Creative:CardCam",        USB_VENDOR_ID_CREATIVE, USB_DEVICE_ID_CARDCAM },
 	{ NULL, 0, 0 }
 };
 
@@ -118,12 +119,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
       gp_file_set_mime_type (file, GP_MIME_PPM);
       break;
     case GP_FILE_TYPE_RAW:
-#if 0      
-      return GP_ERROR;
-      result = ultrapocket_getpicture(camera->port,context,file);
-      gp_file_set_mime_type (file, GP_MIME_RAW);
+      result = ultrapocket_getrawpicture(camera, context, 
+		      &data, &size, filename);
+      gp_file_set_mime_type (file, GP_MIME_PPM);
       break;
-#endif      
     case GP_FILE_TYPE_PREVIEW:
     default:
       return (GP_ERROR_NOT_SUPPORTED);
@@ -206,6 +205,7 @@ camera_init (Camera *camera, GPContext *context)
     gp_camera_get_abilities(camera, &cab);
     switch (cab.usb_vendor) {
      case USB_VENDOR_ID_SMAL:
+     case USB_VENDOR_ID_CREATIVE:
 	switch (cab.usb_product) {
 	 case USB_DEVICE_ID_ULTRAPOCKET:
 	    /* could be an axia eyeplate or a slimshot 
@@ -216,6 +216,9 @@ camera_init (Camera *camera, GPContext *context)
 	    break;
 	 case USB_DEVICE_ID_FLATFOTO:
 	    badge = BADGE_FLATFOTO;
+	    break;
+	 case USB_DEVICE_ID_CARDCAM:
+	    badge = BADGE_CARDCAM;
 	    break;
 	 default:
 	    break;
