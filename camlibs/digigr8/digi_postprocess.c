@@ -320,7 +320,7 @@ digi_postprocess(int width, int height,
 
 	================================================================================== */
 
-int
+static int
 histogram (unsigned char *data, unsigned int size, int *htable_r, int *htable_g, int *htable_b)
 {
 	int x;

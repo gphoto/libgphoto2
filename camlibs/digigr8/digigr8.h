@@ -46,9 +46,6 @@ int digi_postprocess	(int width, int height, unsigned char* rgb);
 int digi_delete_all	(GPPort *, CameraPrivateLibrary *priv);
 
 int
-histogram (unsigned char *data, unsigned int size, int *htable_r, 
-						int *htable_g, int *htable_b);
-int
 white_balance (unsigned char *data, unsigned int size, float saturation);
 
 
