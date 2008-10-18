@@ -2,6 +2,9 @@
  *
  * Copyright (C) 2005 Theodore Kilgore <kilgota@auburn.edu>
  *
+ * A previous version of the white_balance() function intended for use in
+ * libgphoto2/camlibs/aox is copyright (c) 2008 Amauri Magagna.
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -28,6 +31,8 @@
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
+#include <gamma.h>
+
 
 #include "sonix.h"
 #define GP_MODULE "sonix" 
@@ -447,4 +452,184 @@ int sonix_cols_reverse (unsigned char *imagedata, int width, int height)
 		}
 	}
 	return GP_OK;
+}
+
+/*
+ *	=== White Balance / Color Enhance / Gamma adjust ===
+ *
+ *	Get histogram for each color plane
+ *	Expand to reach 0.5% of white dots in image
+ *
+ *	Get new histogram for each color plane
+ *	Expand to reach 0.5% of black dots in image
+ *
+ *	Get new histogram
+ *	Calculate and apply gamma correction
+ *
+ *	if not a dark image:
+ *	For each dot, increases color separation
+ */
+
+static int
+histogram (unsigned char *data, unsigned int size, int *htable_r, 
+						int *htable_g, int *htable_b)
+{
+	int x;
+	/* Initializations */
+	for (x = 0; x < 256; x++) { 
+		htable_r[x] = 0; 
+		htable_g[x] = 0; 
+		htable_b[x] = 0; 
+	}
+	/* Building the histograms */
+	for (x = 0; x < (size * 3); x += 3)
+	{
+		htable_r[data[x+0]]++;	/* red histogram */
+		htable_g[data[x+1]]++;	/* green histogram */
+		htable_b[data[x+2]]++;	/* blue histogram */
+	}
+	return 0;
+}
+
+
+int
+white_balance (unsigned char *data, unsigned int size, float saturation)
+{
+	int x, r, g, b, max, d;
+	double r_factor, g_factor, b_factor, max_factor, MAX_FACTOR=1.6;
+	int htable_r[256], htable_g[256], htable_b[256];
+	unsigned char gtable[256];
+	double new_gamma, gamma;
+
+	/* ------------------- GAMMA CORRECTION ------------------- */
+
+	histogram(data, size, htable_r, htable_g, htable_b);
+	x = 1;
+	for (r = 64; r < 192; r++)
+	{
+		x += htable_r[r]; 
+		x += htable_g[r];
+		x += htable_b[r];
+	}
+        gamma = sqrt((double) (x ) / (double) (size * 2));
+        GP_DEBUG("Provisional gamma correction = %1.2f\n", gamma);
+
+	if(gamma < .1) {
+		new_gamma = .50;
+		MAX_FACTOR=1.2;
+	}
+	else if (gamma < 0.60) 
+		new_gamma = 0.60;
+	else
+		new_gamma = gamma;
+        if (new_gamma > 1.2) new_gamma = 1.2;
+        GP_DEBUG("Gamma correction = %1.2f\n", new_gamma);
+	gp_gamma_fill_table(gtable, new_gamma);
+	gp_gamma_correct_single(gtable,data,size);
+
+	/* ---------------- BRIGHT DOTS ------------------- */
+	max = size / 200; 
+	histogram(data, size, htable_r, htable_g, htable_b);
+
+	for (r=254, x=0; (r > 64) && (x < max); r--)  
+		x += htable_r[r]; 
+	for (g=254, x=0; (g > 64) && (x < max); g--) 
+		x += htable_g[g];
+	for (b=254, x=0; (b > 64) && (x < max); b--) 
+		x += htable_b[b];
+
+	r_factor = (double) 254 / r;
+	g_factor = (double) 254 / g;
+	b_factor = (double) 254 / b;
+	max_factor = r_factor;
+	if (g_factor > max_factor) max_factor = g_factor;
+	if (b_factor > max_factor) max_factor = b_factor;
+
+	if (max_factor > MAX_FACTOR) {
+
+		r_factor = (r_factor / max_factor) * MAX_FACTOR;
+		g_factor = (g_factor / max_factor) * MAX_FACTOR;
+		b_factor = (b_factor / max_factor) * MAX_FACTOR;
+	}
+
+	GP_DEBUG("White balance (bright): r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n", r, g, b, r_factor, g_factor, b_factor);
+
+	for (x = 0; x < (size * 3); x += 3)
+	{
+		d = (int) data[x+0] * r_factor;
+		if (d > 255) { d = 255; }
+		data[x+0] = d;
+		d = (int) data[x+1] * g_factor;
+		if (d > 255) { d = 255; }
+		data[x+1] = d;
+		d = (int) data[x+2] * b_factor;
+		if (d > 255) { d = 255; }
+		data[x+2] = d;
+	}
+	/* ---------------- DARK DOTS ------------------- */
+
+
+	max = size / 200;  /*  1/200 = 0.5%  */
+
+	histogram(data, size, htable_r, htable_g, htable_b);
+
+	for (r=0, x=0; (r < 64) && (x < max); r++)  
+		x += htable_r[r]; 
+	for (g=0, x=0; (g < 64) && (x < max); g++) 
+		x += htable_g[g];
+	for (b=0, x=0; (b < 64) && (x < max); b++) 
+		x += htable_b[b];
+
+	r_factor = (double) 254 / (255-r);
+	g_factor = (double) 254 / (255-g);
+	b_factor = (double) 254 / (255-b);
+
+	GP_DEBUG("White balance (dark): r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n", r, g, b, r_factor, g_factor, b_factor);
+
+	for (x = 0; x < (size * 3); x += 3)
+	{
+		d = (int) 255-((255-data[x+0]) * r_factor);
+		if (d < 0) { d = 0; }
+		data[x+0] = d;
+		d = (int) 255-((255-data[x+1]) * g_factor);
+		if (d < 0) { d = 0; }
+		data[x+1] = d;
+		d = (int) 255-((255-data[x+2]) * b_factor);
+		if (d < 0) { d = 0; }
+		data[x+2] = d;
+	}
+
+	/* ------------------ COLOR ENHANCE ------------------ */
+
+
+	for (x = 0; x < (size * 3); x += 3)
+	{
+		r = data[x+0]; g = data[x+1]; b = data[x+2];
+		d = (int) (r + 2*g + b) / 4.;
+		if ( r > d )
+			r = r + (int) ((r - d) * (255-r)/(256-d) * saturation);
+		else 
+			r = r + (int) ((r - d) * (255-d)/(256-r) * saturation);
+		if (g > d)
+			g = g + (int) ((g - d) * (255-g)/(256-d) * saturation);
+		else 
+			g = g + (int) ((g - d) * (255-d)/(256-g) * saturation);
+		if (b > d)
+			b = b + (int) ((b - d) * (255-b)/(256-d) * saturation);
+		else 
+			b = b + (int) ((b - d) * (255-d)/(256-b) * saturation);
+
+		if (r < 0) { r = 0; }
+		if (r > 255) { r = 255; }
+		data[x+0] = r;
+		if (g < 0) { g = 0; }
+		if (g > 255) { g = 255; }
+		data[x+1] = g;
+		if (b < 0) { b = 0; }
+		if (b > 255) { b = 255; }
+		data[x+2] = b;
+	}
+
+	
+	return 0;
 }

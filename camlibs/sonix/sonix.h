@@ -53,4 +53,7 @@ int sonix_decode		(unsigned char * dst, unsigned char * src,
 int sonix_byte_reverse (unsigned char *imagedata, int datasize);
 int sonix_rows_reverse (unsigned char *imagedata, int width, int height);
 int sonix_cols_reverse (unsigned char *imagedata, int width, int height);
+int white_balance (unsigned char *data, unsigned int size, float saturation);
+
 #endif 
+

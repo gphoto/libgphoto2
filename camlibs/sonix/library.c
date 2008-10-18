@@ -25,7 +25,6 @@
 #include <string.h>
 
 #include <bayer.h>
-#include <gamma.h>
 
 #include <gphoto2/gphoto2.h>
 
@@ -194,7 +193,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *data = NULL; 
 	unsigned char  *ppm, *ptr, *avi=NULL, *frame_data = NULL;
 	unsigned char *p_data = NULL, *p_buf = NULL;
-	unsigned char gtable[256];
 	unsigned int numframes = 0;
 	unsigned int endpoint, bytes_used = 0;
 	unsigned int framestart[1024];
@@ -359,29 +357,28 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					sonix_decode (frame_data, 
 					data+offset+CAM_OFFSET, w, h); 
 					sonix_cols_reverse(frame_data, w, h);
-					gp_bayer_decode(frame_data, w, h, ptr+
-					    SAKAR_AVI_FRAME_HEADER_LENGTH, 
-							    BAYER_TILE_GBRG);
+                                        gp_ahd_decode(frame_data, w, h, ptr+
+                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
+                                                            BAYER_TILE_GBRG);
 					break;
 				case DECOMP:
 					sonix_decode (frame_data, 
 					data+offset+CAM_OFFSET, w, h); 
 					sonix_rows_reverse(frame_data, w, h);
-					gp_bayer_decode(frame_data, w, h, ptr+
-					    SAKAR_AVI_FRAME_HEADER_LENGTH, 
-							    BAYER_TILE_GRBG);
+                                        gp_ahd_decode(frame_data, w, h, ptr+
+                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
+                                                            BAYER_TILE_GRBG);
 					break;
 				default:
 					memcpy(frame_data, data + offset
 					    +CAM_OFFSET, frame_size);
 					sonix_rows_reverse(frame_data, w, h);
-					gp_bayer_decode(frame_data, w, h, ptr+
-					    SAKAR_AVI_FRAME_HEADER_LENGTH, 
-							    BAYER_TILE_GRBG);
+                                        gp_ahd_decode(frame_data, w, h, ptr+
+                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
+                                                            BAYER_TILE_GRBG);
 				}
-				gp_gamma_fill_table(gtable, .65);
-				gp_gamma_correct_single(gtable, ptr+
-				    SAKAR_AVI_FRAME_HEADER_LENGTH, w * h);
+				white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH, 
+						w * h, 1.2);
 				gp_file_append(file, (char *)ptr, 
 				    3*frame_size+ 
 						SAKAR_AVI_FRAME_HEADER_LENGTH);
@@ -424,31 +421,25 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			if (camera->pl->post&REVERSE) {
 			sonix_decode (p_data, data+CAM_OFFSET, w, h);
 			sonix_byte_reverse(p_data, w*h);
-			gp_bayer_decode (p_data, w, h, ptr, 
-						    BAYER_TILE_BGGR);
+                        gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_BGGR);
 			break;
 		case DECOMP:
 			sonix_decode (p_data, data+CAM_OFFSET, w, h);
-			gp_bayer_decode (p_data, w, h, ptr, 
-						    BAYER_TILE_RGGB);
+                        gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_RGGB);
 			break;
 		default:
 			memcpy (p_data, data+CAM_OFFSET, w*h);
-			gp_bayer_decode (p_data, w, h, ptr, BAYER_TILE_RGGB);
+                        gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_RGGB);
 		}
 		free (p_data);
-		gp_gamma_fill_table(gtable, .65);
-		gp_gamma_correct_single(gtable, ptr, w * h);
+		white_balance(ptr, w * h, 1.2);
+		GP_DEBUG("white_balance run on photo number %03d \n", k+1);
 		gp_file_set_mime_type (file, GP_MIME_PPM);
 		gp_file_set_name (file, filename); 
 		gp_file_set_data_and_size (file, (char *)ppm, size);
 		free (data);
 		return GP_OK;
 	case GP_FILE_TYPE_RAW: 
-#if 0 /* MARCUS: likely bad, comment out for now */
-				/* Save the fwversion code in the data */
-				data[endpoint-10]=camera->pl->fwversion[1];
-#endif
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
 		gp_file_append( file, (char *)data, rawsize);
