@@ -1,9 +1,11 @@
+2008-04-28  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: gp_ahd_decode() replaces gp_bayer_decode()
+
 2008-03-15  Theodore Kilgore <kilgota@auburn.edu>
 	* mars.[c,h]: mars_white_balance() postprocessing function, based 
 		      upon work with Amauri Magagna done for an Aox camera.
 	* library.c: Added line to use mars_white_balance()
 	* README.mars: Description of what mars_white_balance() does.
-
 
 2007-11-15  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Added Sakar no. 1638x Cyberpix

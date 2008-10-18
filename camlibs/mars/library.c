@@ -317,7 +317,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + strlen ((char *)ppm);	
 	size = strlen ((char *)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
+	gp_ahd_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
 	mars_white_balance (ptr, w*h, 1.4, gamma_factor);
