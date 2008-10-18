@@ -88,7 +88,7 @@ static const struct {
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "SQ905C chipset camera");
+    	strncpy (id->text, "SQ905C chipset camera",32);
         
     	return GP_OK;
 }
@@ -102,7 +102,7 @@ camera_abilities (CameraAbilitiesList *list)
 
     	for (i = 0; models[i].name; i++) {
         	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
+       		strncpy (a.model, models[i].name,32);
        		a.status = models[i].status;
        		a.port   = GP_PORT_USB;
        		a.speed[0] = 0;
@@ -126,10 +126,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	if(!camera->pl->init_done)
 		digi_init (camera->port, camera->pl);
-    	sprintf (summary->text,_("Your USB camera seems to have an SQ905C chipset.\n" 
-				"The total number of pictures in it is %i\n"
-				), 
-
+    	snprintf (summary->text, 100,
+    			("Your USB camera seems to have an SQ905C chipset.\n" 
+			"The total number of pictures in it is %i\n"), 
 				camera->pl->nb_entries);  
 
     	return GP_OK;
@@ -137,7 +136,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
 {
-	strcpy(manual->text, 
+	strncpy(manual->text, 
 	_(
 	"For cameras with insides from S&Q Technologies, which have the \n"
 	"USB Vendor ID 0x2770 and Product ID 0x905C, 0x9050, or 0x913D\n"
@@ -150,7 +149,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"File uploading and deletion of individual photos by use of a\n"
 	"software command are not supported by the hardware in these\n"
 	"cameras.\n"
-	)); 
+	), 700); 
 	return (GP_OK);
 }
 
@@ -158,8 +157,8 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, _("sq905C generic driver\n"
-			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
+	strncpy (about->text, _("sq905C generic driver\n"
+			    "Theodore Kilgore <kilgota@auburn.edu>\n"),64);
 
     	return GP_OK;
 }
@@ -192,6 +191,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int w, h, b; 
 	int k, next;
 	unsigned char comp_ratio;
+	unsigned char lighting;
 	unsigned char *data = NULL;
 	unsigned char *p_data = NULL; 
 	unsigned char *ppm;
@@ -232,6 +232,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case 320: h = 240; break;
 	default:  h = 288; break;
 	}
+	lighting = camera->pl->catalog[k*0x10+0x0b];
 	b = digi_get_data_size (camera->pl, k);
 	if (!b) {
 		GP_DEBUG("Photo number %i deleted?\n",k+1);
@@ -269,7 +270,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		status = GP_ERROR_NO_MEMORY; 
 		goto end;
 	}
-	sprintf ((char *)ppm,
+	snprintf ((char *)ppm, 64,
 			"P6\n"
 			"# CREATOR: gphoto2, SQ905C library\n"
 			"%d %d\n"
@@ -287,13 +288,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		digi_decompress (p_data, data, w, h);
 	} else
 		memcpy(p_data, data, w*h);
-	gp_bayer_decode (p_data, w , h , ptr, BAYER_TILE_BGGR);
+	gp_ahd_decode (p_data, w , h , ptr, BAYER_TILE_BGGR);
 	free(p_data);
-	if (!comp_ratio) {
+        digi_postprocess (w, h, ptr);
+        if (lighting < 0x40) {
+        GP_DEBUG(
+                "Low light condition. Using default gamma. No white balance.\n");
 		gp_gamma_fill_table (gtable, .65); 
-		gp_gamma_correct_single (gtable, ptr, w * h); 
-	}
-	digi_postprocess(camera->pl,w, h, ptr, k);
+                gp_gamma_correct_single(gtable,ptr,w*h);
+        } else
+                white_balance (ptr, w*h, 1.1);	
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);
@@ -325,6 +329,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	unsigned char *raw_data; 
 	unsigned char *frame_data; 
 	unsigned char *ppm, *ptr;
+	char lighting;
 	unsigned char gtable[256];
 	char filename[14] = "digi_cap.ppm";
 	int size;
@@ -336,6 +341,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
         gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);
         gp_port_read(camera->port, (char *)get_size, 0x50);
         GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
+	lighting = get_size[0x48];
         b = get_size[0x40]+(get_size[0x41]*0x100);
 	GP_DEBUG("b = 0x%x\n", b);
         raw_data = malloc(b);
@@ -354,7 +360,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	/* Now put the data into a PPM image file. */
 	ppm = malloc (w * h * 3 + 256); 
 	if (!ppm) { return GP_ERROR_NO_MEMORY; }
-	sprintf ((char *)ppm,
+	snprintf ((char *)ppm, 64,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905C library\n"
 		"%d %d\n"
@@ -362,11 +368,15 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	ptr = ppm + strlen ((char*)ppm);
 	size = strlen ((char*)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-	gp_bayer_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
+	gp_ahd_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
 	free(frame_data);
-	gp_gamma_fill_table (gtable, .65); 
-	gp_gamma_correct_single (gtable, ptr, w * h); 
-
+        if (lighting < 0x40) {
+        GP_DEBUG(
+                "Low light condition. Using default gamma. No white balance.\n");
+		gp_gamma_fill_table (gtable, .65); 
+                gp_gamma_correct_single(gtable,ptr,w*h);
+        } else
+                white_balance (ptr, w*h, 1.1);	
         gp_file_set_mime_type (file, GP_MIME_PPM);
         gp_file_set_name (file, filename);
         gp_file_set_data_and_size (file, (char *)ppm, size);

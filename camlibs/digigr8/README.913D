@@ -13,7 +13,7 @@ basic functions of this camera are the same as those of the 0x2770:0x905c
 cameras which are the main ones supported in libgphoto2/camlibs/digigr8, but
 there are some small differences. For a complete description and discussion
 of the 0x2770:0x913D camera, therefore, the reader should also read 
-README.digigr8. Only the basic features and differences with the 
+README.905C. Only the basic features and differences with the 
 previously-supported 0x2770:0x905C cameras are listed here:
 
 Features of the Suprema Digital Keychain Camera:
@@ -21,7 +21,7 @@ Features of the Suprema Digital Keychain Camera:
 	-- 640x480 and 320x240 resolution settings
 	-- supports gphoto2 --capture-preview option (presumed that the size
 		of the output image can be adjusted in code, default
-`		320x240; see README.digigr8 for details of that.
+`		320x240; see README.905C for details of that.
 	-- apparently does _not_ support multiframe AVI capability, or if so
 		it is not mentioned in the written manual. 
 	-- a setting does exist for shooting three frames with one shutter

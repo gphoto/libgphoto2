@@ -1,3 +1,11 @@
+2008-05-11   Theodore Kilgore <kilgota@auburn.edu>
+	* README.913D: References to nonexistent README.digr8 corrected. 
+
+2008-04-22   Theodore Kilgore <kilgota@auburn.edu>  
+	* digi_postprocess.c: white_balance() added 
+	* library.c: gp_ahd_interpolate() used instead of gp_bayer_interpolate()
+		     white_balance() hooked up. 
+		     
 2008-01-23   Theodore Kilgore <kilgota@auburn.edu>  
 	* library.c: camera_capture_preview() revised to be in line with recent
 	revisions of gphoto2. Also digi_init() is now not called unless needed,
