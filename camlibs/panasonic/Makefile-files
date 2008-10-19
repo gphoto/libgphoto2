@@ -1,5 +1,5 @@
 # SUBDIRS = coolshot l859
-EXTRA_DIST += panasonic/README.panasonic
+EXTRA_DIST += panasonic/README.panasonic panasonic/ChangeLog
 camlibdoc_DATA += panasonic/README.panasonic
 
 EXTRA_LTLIBRARIES += panasonic_dc1000.la

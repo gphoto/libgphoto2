@@ -1,4 +1,4 @@
-EXTRA_DIST += jamcam/README.jamcam
+EXTRA_DIST += jamcam/README.jamcam jamcam/ChangeLog
 camlibdoc_DATA += jamcam/README.jamcam
 
 EXTRA_LTLIBRARIES += jamcam.la

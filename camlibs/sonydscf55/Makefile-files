@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += sony_dscf55.la
+EXTRA_DIST += sonydscf55/ChangeLog sonydscf55/TODO
 
 sony_dscf55_la_SOURCES = \
 	sonydscf55/sony.c sonydscf55/sony.h \

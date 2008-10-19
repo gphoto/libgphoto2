@@ -1,4 +1,4 @@
-EXTRA_DIST += panasonic/l859/README.panasonic-l859
+EXTRA_DIST += panasonic/l859/README.panasonic-l859 panasonic/l859/ChangeLog panasonic/l859/TODO
 camlibdoc_DATA += panasonic/l859/README.panasonic-l859
 
 EXTRA_LTLIBRARIES += panasonic_l859.la

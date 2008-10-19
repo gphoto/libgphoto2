@@ -1,4 +1,4 @@
-EXTRA_DIST += smal/README.smal
+EXTRA_DIST += smal/README.smal smal/ChangeLog
 camlibdoc_DATA += smal/README.smal
 
 EXTRA_LTLIBRARIES += smal.la

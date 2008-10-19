@@ -1,4 +1,4 @@
-EXTRA_DIST += pccam600/README.pccam600
+EXTRA_DIST += pccam600/README.pccam600 pccam600/ChangeLog
 camlibdoc_DATA += pccam600/README.pccam600
 
 EXTRA_LTLIBRARIES += pccam600.la

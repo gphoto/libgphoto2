@@ -1,4 +1,4 @@
-EXTRA_DIST += spca50x/ChangeLog.benq spca50x/ChangeLog.gsmart spca50x/ChangeLog.spca504_flash spca50x/lsusb-v spca50x/README.spca50x
+EXTRA_DIST += spca50x/ChangeLog.benq spca50x/ChangeLog.gsmart spca50x/ChangeLog.spca504_flash spca50x/lsusb-v spca50x/README.spca50x spca50x/ChangeLog
 
 camlibdoc_DATA += spca50x/README.spca50x
 

@@ -1,4 +1,4 @@
-EXTRA_DIST += minolta/dimagev/README.minolta-dimagev
+EXTRA_DIST += minolta/dimagev/README.minolta-dimagev minolta/dimagev/COPYING 
 camlibdoc_DATA += minolta/dimagev/README.minolta-dimagev
 
 EXTRA_LTLIBRARIES += dimagev.la

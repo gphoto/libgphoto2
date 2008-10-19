@@ -1,4 +1,4 @@
-EXTRA_DIST += konica/EXPERTS konica/qm150.txt konica/README.konica
+EXTRA_DIST += konica/EXPERTS konica/qm150.txt konica/README.konica konica/ChangeLog konica/COPYING konica/TODO
 camlibdoc_DATA += konica/README.konica
 
 konica_defs = \

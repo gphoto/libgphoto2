@@ -1,5 +1,5 @@
 EXTRA_DIST += polaroid/jpeg.txt polaroid/jpeghead.h \
-	polaroid/pdc320.html polaroid/gt98x.html
+	polaroid/pdc320.html polaroid/gt98x.html polaroid/ChangeLog
 
 
 EXTRA_LTLIBRARIES += polaroid_pdc320.la
