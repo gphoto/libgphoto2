@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.4.2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-07-11 09:48+0200\n"
+"POT-Creation-Date: 2008-10-19 21:18+0200\n"
 "PO-Revision-Date: 2008-07-15 23:40+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
@@ -218,7 +218,9 @@ msgstr "Không thể nạp « %s » (« %s »)."
 #: libgphoto2_port/gphoto2-port.c:175
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr "Không tìm thấy « gp_port_library_operations » (các thao tác thư viện cổng gp) tại « %s » (« %s »)"
+msgstr ""
+"Không tìm thấy « gp_port_library_operations » (các thao tác thư viện cổng gp) "
+"tại « %s » (« %s »)"
 
 #: libgphoto2_port/gphoto2-port.c:255
 #, c-format
@@ -321,12 +323,16 @@ msgstr "Thoát khỏi trạng thái bị ngừng..."
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
+msgstr ""
+"Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%"
+"x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
+msgstr ""
+"Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%"
+"x)..."
 
 #: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
@@ -336,86 +342,88 @@ msgstr "msg_read (đọc thông điệp)"
 msgid "No error description available"
 msgstr "Không có sẵn mô tả lỗi"
 
-#: serial/unix.c:233
+#: serial/unix.c:238
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Không thể khoá thiết bị « %s »"
 
-#: serial/unix.c:243
+#: serial/unix.c:248
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Thiết bị « %s » bị khoá bởi mã số tiến trình (PID) %d"
 
-#: serial/unix.c:246
+#: serial/unix.c:251
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Không thể khóa thiết bị « %s » (dev_lock [khóa thiết bị] đã trả lại %d)"
 
-#: serial/unix.c:280
+#: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Không thể mở khóa thiết bị « %s »"
 
-#: serial/unix.c:292
+#: serial/unix.c:297
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Không thể mở khoá thiết bị « %s » vì nó được PID %d khoá."
 
-#: serial/unix.c:296
+#: serial/unix.c:301
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Không thể mở khoá thiết bị « %s » (dev_unlock [mở khoá thiết bị] đã trả lại %d)"
+msgstr ""
+"Không thể mở khoá thiết bị « %s » (dev_unlock [mở khoá thiết bị] đã trả lại %"
+"d)"
 
-#: serial/unix.c:374
+#: serial/unix.c:379
 #, c-format
 msgid "Serial Port %i"
 msgstr "Cổng nối tiếp %i"
 
-#: serial/unix.c:465
+#: serial/unix.c:470
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Lỗi mở « %s » (%m)."
 
-#: serial/unix.c:483
+#: serial/unix.c:488
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Không thể đóng « %s » (%m)."
 
-#: serial/unix.c:537
+#: serial/unix.c:542
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Không thể ghi vào cổng (%m)"
 
-#: serial/unix.c:614
+#: serial/unix.c:619
 msgid "Parity error."
 msgstr "Lỗi chẵn lẻ."
 
-#: serial/unix.c:618
+#: serial/unix.c:623
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Gặp dãy đáp ứng chẵn lẻ bất thường 0xff 0x%02x."
 
-#: serial/unix.c:661
+#: serial/unix.c:666
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Không rõ chạc %i."
 
-#: serial/unix.c:683
+#: serial/unix.c:688
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Không thể lấy được mức chạc %i (%m)."
 
-#: serial/unix.c:718
+#: serial/unix.c:723
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Không thể đặt mức chạc từ %i thành %i (%m)."
 
-#: serial/unix.c:743
+#: serial/unix.c:748
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Không thể tràn ngập « %s » (%m)."
 
-#: serial/unix.c:856
+#: serial/unix.c:861
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Không thể đặt tốc độ truyền thành %d"
@@ -445,8 +453,14 @@ msgstr "Không thể truy vấn trình điều khiển hạt nhân của thiết
 
 #: usb/libusb.c:269
 #, c-format
-msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Không thể quyền đòi giao diện %d (%m). Kiểm tra xem không có chương trình khác hoặc môđ-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền đọc từ và ghi vào thiết bị này."
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (such as %s) is using the device and you have read/write access to "
+"the device."
+msgstr ""
+"Không thể quyền đòi giao diện %d (%m). Kiểm tra xem không có chương trình "
+"khác hoặc môđ-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền "
+"đọc từ và ghi vào thiết bị này."
 
 #: usb/libusb.c:287
 #, c-format
@@ -480,18 +494,30 @@ msgstr "Mã sản phẩm hay mã nhà sản xuất (0x%x, 0x%x) không phải h�
 
 #: usb/libusb.c:716
 #, c-format
-msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một thiết bị lưu trữ hàng loạt, và có thể không hoạt động được với trình gphoto2. Tham khảo : %s"
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một thiết bị lưu trữ hàng "
+"loạt, và có thể không hoạt động được với trình gphoto2. Tham khảo : %s"
 
 #: usb/libusb.c:758
 #, c-format
-msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
-msgstr "Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem "
+"thiết bị này được kết nối đến máy tính."
 
 #: usb/libusb.c:988
 #, c-format
-msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm "
+"tra xem thiết bị này được kết nối đến máy tính."
 
 #: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
 #: disk/disk.c:323

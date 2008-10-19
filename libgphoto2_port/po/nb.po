@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-07-11 09:48+0200\n"
+"POT-Creation-Date: 2008-10-19 21:18+0200\n"
 "PO-Revision-Date: 2000-04-11 10:12+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -338,88 +338,88 @@ msgstr ""
 msgid "No error description available"
 msgstr ""
 
-#: serial/unix.c:233
+#: serial/unix.c:238
 #, fuzzy, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kunne ikke hente forhåndsvisning"
 
-#: serial/unix.c:243
+#: serial/unix.c:248
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr ""
 
-#: serial/unix.c:246
+#: serial/unix.c:251
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr ""
 
-#: serial/unix.c:280
+#: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr ""
 
-#: serial/unix.c:292
+#: serial/unix.c:297
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 
-#: serial/unix.c:296
+#: serial/unix.c:301
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:374
+#: serial/unix.c:379
 #, c-format
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:465
+#: serial/unix.c:470
 #, fuzzy, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Feil: kunne ikke åpne %s"
 
-#: serial/unix.c:483
+#: serial/unix.c:488
 #, fuzzy, c-format
 msgid "Could not close '%s' (%m)."
 msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: serial/unix.c:537
+#: serial/unix.c:542
 #, fuzzy, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunne ikke hente #%i"
 
-#: serial/unix.c:614
+#: serial/unix.c:619
 msgid "Parity error."
 msgstr ""
 
-#: serial/unix.c:618
+#: serial/unix.c:623
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr ""
 
-#: serial/unix.c:661
+#: serial/unix.c:666
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:683
+#: serial/unix.c:688
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunne ikke hente #%i"
 
-#: serial/unix.c:718
+#: serial/unix.c:723
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:743
+#: serial/unix.c:748
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:856
+#: serial/unix.c:861
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke hente antall bilder"
