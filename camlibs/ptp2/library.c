@@ -825,6 +825,8 @@ static struct {
 
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
+	/* irc reporter */
+	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
 
 
 	/* Konica-Minolta PTP cameras */
@@ -887,6 +889,9 @@ static struct {
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
+
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1680029&group_id=8874&atid=108874 */
+	{"Nokia:N73",				0x0421, 0x0488, 0},
 };
 
 #include "device-flags.h"
