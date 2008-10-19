@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += kodak_dc3200.la
+EXTRA_DIST += kodak/dc3200/ChangeLog
 
 kodak_dc3200_la_SOURCES = \
 	kodak/dc3200/dc3200.c kodak/dc3200/dc3200.h \

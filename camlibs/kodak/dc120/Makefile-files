@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += kodak_dc120.la
+EXTRA_DIST += kodak/dc120/ChangeLog
 
 kodak_dc120_la_SOURCES = \
 	kodak/dc120/dc120.c kodak/dc120/dc120.h \
