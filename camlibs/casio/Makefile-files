@@ -1,4 +1,4 @@
-EXTRA_DIST += casio/PROTOCOL.txt
+EXTRA_DIST += casio/PROTOCOL.txt casio/Changelog
 
 EXTRA_LTLIBRARIES += casio_qv.la
 
