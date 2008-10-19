@@ -107,6 +107,11 @@
 #define GP_PORT_SERIAL_PREFIX   "/dev/ttyS%i"
 #define GP_PORT_SERIAL_RANGE_LOW        0
 #define GP_PORT_SERIAL_RANGE_HIGH       32
+
+#ifndef IXANY
+#define IXANY  0004000
+#endif
+
 #endif
 
 /* FreeBSD */
