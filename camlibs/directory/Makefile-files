@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += directory.la
+EXTRA_DIST += directory/ChangeLog
 
 directory_la_SOURCES = directory/directory.c
 directory_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)

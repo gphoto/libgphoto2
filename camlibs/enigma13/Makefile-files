@@ -1,4 +1,4 @@
-EXTRA_DIST += enigma13/STATUS enigma13/protocol.txt enigma13/README.enigma13
+EXTRA_DIST += enigma13/STATUS enigma13/protocol.txt enigma13/README.enigma13 enigma13/ChangeLog
 camlibdoc_DATA += enigma13/README.enigma13
 
 EXTRA_LTLIBRARIES += enigma13.la
