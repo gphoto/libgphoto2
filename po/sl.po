@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-10-17 21:44+0200\n"
+"POT-Creation-Date: 2008-10-19 19:35+0200\n"
 "PO-Revision-Date: 2002-01-04 19:25+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -194,216 +194,6 @@ msgstr "Kazalo slik"
 
 #: camlibs/canon/library.c:121
 msgid "Bulb"
-msgstr ""
-
-#: camlibs/canon/library.c:122
-msgid "30 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:123
-msgid "25 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:124 camlibs/ptp2/config.c:1571
-#: camlibs/ptp2/config.c:1591
-msgid "20 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:125
-msgid "15 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:126
-msgid "13 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:127 camlibs/ptp2/config.c:1570
-#: camlibs/ptp2/config.c:1590
-msgid "10 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:128 camlibs/ptp2/config.c:1581
-msgid "8 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:129 camlibs/ptp2/config.c:1580
-msgid "6 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:130 camlibs/ptp2/config.c:1589
-msgid "5 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:131 camlibs/ptp2/config.c:1579
-msgid "4 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:132
-msgid "3.2 second"
-msgstr ""
-
-#: camlibs/canon/library.c:133
-msgid "2.5 second"
-msgstr ""
-
-#: camlibs/canon/library.c:134 camlibs/ptp2/config.c:1588
-msgid "2 seconds"
-msgstr ""
-
-#: camlibs/canon/library.c:135
-msgid "1.6 second"
-msgstr ""
-
-#: camlibs/canon/library.c:136
-msgid "1.3 second"
-msgstr ""
-
-#: camlibs/canon/library.c:137
-msgid "1 second"
-msgstr ""
-
-#: camlibs/canon/library.c:138
-msgid "8/10 second"
-msgstr ""
-
-#: camlibs/canon/library.c:139
-msgid "6/10 second"
-msgstr ""
-
-#: camlibs/canon/library.c:140
-msgid "1/2 second"
-msgstr ""
-
-#: camlibs/canon/library.c:141
-msgid "4/10 second"
-msgstr ""
-
-#: camlibs/canon/library.c:142
-msgid "3/10 second"
-msgstr ""
-
-#: camlibs/canon/library.c:143
-msgid "1/4 second"
-msgstr ""
-
-#: camlibs/canon/library.c:144
-msgid "1/5 second"
-msgstr ""
-
-#: camlibs/canon/library.c:145
-msgid "1/6 second"
-msgstr ""
-
-#: camlibs/canon/library.c:146
-msgid "1/8 second"
-msgstr ""
-
-#: camlibs/canon/library.c:147
-msgid "1/10 second"
-msgstr ""
-
-#: camlibs/canon/library.c:148
-msgid "1/13 second"
-msgstr ""
-
-#: camlibs/canon/library.c:149
-msgid "1/15 second"
-msgstr ""
-
-#: camlibs/canon/library.c:150
-msgid "1/20 second"
-msgstr ""
-
-#: camlibs/canon/library.c:151
-msgid "1/25 second"
-msgstr ""
-
-#: camlibs/canon/library.c:152
-msgid "1/30 second"
-msgstr ""
-
-#: camlibs/canon/library.c:153
-msgid "1/40 second"
-msgstr ""
-
-#: camlibs/canon/library.c:154
-msgid "1/50 second"
-msgstr ""
-
-#: camlibs/canon/library.c:155
-msgid "1/60 second"
-msgstr ""
-
-#: camlibs/canon/library.c:156
-msgid "1/80 second"
-msgstr ""
-
-#: camlibs/canon/library.c:157
-msgid "1/100 second"
-msgstr ""
-
-#: camlibs/canon/library.c:158
-msgid "1/125 second"
-msgstr ""
-
-#: camlibs/canon/library.c:159
-msgid "1/160 second"
-msgstr ""
-
-#: camlibs/canon/library.c:160
-msgid "1/200 second"
-msgstr ""
-
-#: camlibs/canon/library.c:161
-msgid "1/250 second"
-msgstr ""
-
-#: camlibs/canon/library.c:162
-msgid "1/320 second"
-msgstr ""
-
-#: camlibs/canon/library.c:163
-msgid "1/400 second"
-msgstr ""
-
-#: camlibs/canon/library.c:164
-msgid "1/500 second"
-msgstr ""
-
-#: camlibs/canon/library.c:165
-msgid "1/640 second"
-msgstr ""
-
-#: camlibs/canon/library.c:166
-msgid "1/800 second"
-msgstr ""
-
-#: camlibs/canon/library.c:167
-msgid "1/1000 second"
-msgstr ""
-
-#: camlibs/canon/library.c:168
-msgid "1/1250 second"
-msgstr ""
-
-#: camlibs/canon/library.c:169
-msgid "1/1600 second"
-msgstr ""
-
-#: camlibs/canon/library.c:170
-msgid "1/2000 second"
-msgstr ""
-
-#: camlibs/canon/library.c:171
-msgid "1/2500 second"
-msgstr ""
-
-#: camlibs/canon/library.c:172
-msgid "1/3200 second"
-msgstr ""
-
-#: camlibs/canon/library.c:173
-msgid "1/4000 second"
 msgstr ""
 
 #: camlibs/canon/library.c:210
@@ -740,7 +530,7 @@ msgstr ""
 #: camlibs/canon/library.c:1759 camlibs/canon/library.c:1760
 #: camlibs/canon/library.c:1793 camlibs/canon/library.c:1794
 #: camlibs/canon/library.c:1827 camlibs/canon/library.c:1828
-#: camlibs/ptp2/library.c:2070 camlibs/ptp2/library.c:2072
+#: camlibs/ptp2/library.c:2075 camlibs/ptp2/library.c:2077
 #: camlibs/ptp2/ptp.c:3712
 msgid "Unknown"
 msgstr ""
@@ -1485,14 +1275,7 @@ msgid ""
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
 
-#: camlibs/digigr8/library.c:129
-#, c-format
-msgid ""
-"Your USB camera seems to have an SQ905C chipset.\n"
-"The total number of pictures in it is %i\n"
-msgstr ""
-
-#: camlibs/digigr8/library.c:142
+#: camlibs/digigr8/library.c:141
 msgid ""
 "For cameras with insides from S&Q Technologies, which have the \n"
 "USB Vendor ID 0x2770 and Product ID 0x905C, 0x9050, or 0x913D\n"
@@ -1509,7 +1292,7 @@ msgid ""
 "cameras.\n"
 msgstr ""
 
-#: camlibs/digigr8/library.c:161
+#: camlibs/digigr8/library.c:160
 msgid ""
 "sq905C generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -1684,8 +1467,8 @@ msgstr ""
 #: camlibs/dimera/dimera3500.c:639 camlibs/dimera/dimera3500.c:675
 #: camlibs/konica/qm150.c:257 camlibs/panasonic/coolshot/library.c:397
 #: camlibs/ricoh/g3.c:356 camlibs/samsung/samsung.c:214
-#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
-#: camlibs/smal/ultrapocket.c:178
+#: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:133
+#: camlibs/smal/ultrapocket.c:181
 #, fuzzy
 msgid "Downloading image..."
 msgstr "Prena¹anje ustavljeno."
@@ -2257,7 +2040,7 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
 #: camlibs/ptp2/config.c:1646 camlibs/ptp2/config.c:2282
-#: camlibs/ptp2/library.c:2387 camlibs/ptp2/library.c:2391
+#: camlibs/ptp2/library.c:2392 camlibs/ptp2/library.c:2396
 #: camlibs/ptp2/ptp.c:3698 camlibs/ricoh/library.c:347
 #, fuzzy
 msgid "None"
@@ -4269,6 +4052,14 @@ msgstr ""
 msgid "Flash Level Lock"
 msgstr ""
 
+#: camlibs/ptp2/config.c:1570 camlibs/ptp2/config.c:1590
+msgid "10 seconds"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1571 camlibs/ptp2/config.c:1591
+msgid "20 seconds"
+msgstr ""
+
 #: camlibs/ptp2/config.c:1572 camlibs/ptp2/config.c:1620
 msgid "1 minute"
 msgstr ""
@@ -4281,12 +4072,32 @@ msgstr ""
 msgid "10 minutes"
 msgstr ""
 
+#: camlibs/ptp2/config.c:1579
+msgid "4 seconds"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1580
+msgid "6 seconds"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1581
+msgid "8 seconds"
+msgstr ""
+
 #: camlibs/ptp2/config.c:1582
 msgid "16 seconds"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1583
 msgid "30 minutes"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1588
+msgid "2 seconds"
+msgstr ""
+
+#: camlibs/ptp2/config.c:1589
+msgid "5 seconds"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1596
@@ -4407,8 +4218,8 @@ msgstr ""
 msgid "Long distance"
 msgstr ""
 
-#: camlibs/ptp2/config.c:1671 camlibs/ptp2/library.c:2396
-#: camlibs/ptp2/library.c:2410 camlibs/ptp2/ptp.c:3919
+#: camlibs/ptp2/config.c:1671 camlibs/ptp2/library.c:2401
+#: camlibs/ptp2/library.c:2415 camlibs/ptp2/ptp.c:3919
 msgid "Undefined"
 msgstr ""
 
@@ -5130,7 +4941,7 @@ msgstr ""
 msgid "PTP Protocol error, response expected"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1182
+#: camlibs/ptp2/library.c:1187
 msgid ""
 "PTP2 driver\n"
 "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -5144,341 +4955,341 @@ msgid ""
 "Enjoy!"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1259
+#: camlibs/ptp2/library.c:1264
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1265
+#: camlibs/ptp2/library.c:1270
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1271
+#: camlibs/ptp2/library.c:1276
 #, c-format
 msgid "Canon get viewfinder image failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1284
+#: camlibs/ptp2/library.c:1289
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1401
+#: camlibs/ptp2/library.c:1406
 #, fuzzy
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1487
+#: camlibs/ptp2/library.c:1492
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1493
+#: camlibs/ptp2/library.c:1498
 #, fuzzy, c-format
 msgid "Canon EOS Capture failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1501 camlibs/ptp2/library.c:1885
+#: camlibs/ptp2/library.c:1506 camlibs/ptp2/library.c:1890
 #, fuzzy, c-format
 msgid "Canon EOS Get Changes failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1584
+#: camlibs/ptp2/library.c:1589
 #, fuzzy
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1595
+#: camlibs/ptp2/library.c:1600
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr ""
 
-#: camlibs/ptp2/library.c:1617
+#: camlibs/ptp2/library.c:1622
 #, fuzzy, c-format
 msgid "Canon Capture failed: %x"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:1733
+#: camlibs/ptp2/library.c:1738
 #, fuzzy
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:1809
+#: camlibs/ptp2/library.c:1814
 #, c-format
 msgid "No event received, error %x."
 msgstr ""
 
-#: camlibs/ptp2/library.c:2068
+#: camlibs/ptp2/library.c:2073
 msgid "read only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2069
+#: camlibs/ptp2/library.c:2074
 msgid "readwrite"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2204 camlibs/sierra/sierra.c:1936
+#: camlibs/ptp2/library.c:2209 camlibs/sierra/sierra.c:1936
 #, c-format
 msgid "Manufacturer: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2206
+#: camlibs/ptp2/library.c:2211
 #, fuzzy, c-format
 msgid "Model: %s\n"
 msgstr "Model fotoaparata:"
 
-#: camlibs/ptp2/library.c:2208
+#: camlibs/ptp2/library.c:2213
 #, c-format
 msgid "  Version: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2211
+#: camlibs/ptp2/library.c:2216
 #, c-format
 msgid "  Serial Number: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2215
+#: camlibs/ptp2/library.c:2220
 #, c-format
 msgid "Vendor Extension ID: 0x%x (%d.%d)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2222
+#: camlibs/ptp2/library.c:2227
 #, c-format
 msgid "Vendor Extension Description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2227
+#: camlibs/ptp2/library.c:2232
 #, c-format
 msgid "PTP Standard Version: %d.%d\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2234
+#: camlibs/ptp2/library.c:2239
 #, fuzzy, c-format
 msgid "Functional Mode: 0x%04x\n"
 msgstr "Prena¹anje preklicano."
 
-#: camlibs/ptp2/library.c:2239
+#: camlibs/ptp2/library.c:2244
 #, c-format
 msgid ""
 "\n"
 "Capture Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2253
+#: camlibs/ptp2/library.c:2258
 #, c-format
 msgid "Display Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2269
+#: camlibs/ptp2/library.c:2274
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2285
+#: camlibs/ptp2/library.c:2290
 #, c-format
 msgid " PTP error %04x on query"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2302
+#: camlibs/ptp2/library.c:2307
 #, c-format
 msgid ""
 "\n"
 "Device Capabilities:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2306
+#: camlibs/ptp2/library.c:2311
 #, c-format
 msgid "\tFile Download, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2309
+#: camlibs/ptp2/library.c:2314
 #, c-format
 msgid "File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2311
+#: camlibs/ptp2/library.c:2316
 #, c-format
 msgid "No File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2315
+#: camlibs/ptp2/library.c:2320
 #, fuzzy, c-format
 msgid "File Upload\n"
 msgstr "Pomanj¹ujem sliko za 50%..."
 
-#: camlibs/ptp2/library.c:2317
+#: camlibs/ptp2/library.c:2322
 #, c-format
 msgid "No File Upload\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2322
+#: camlibs/ptp2/library.c:2327
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2324
+#: camlibs/ptp2/library.c:2329
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2327
+#: camlibs/ptp2/library.c:2332
 #, fuzzy, c-format
 msgid "Open Capture, "
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2329
+#: camlibs/ptp2/library.c:2334
 #, c-format
 msgid "No Open Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2335
+#: camlibs/ptp2/library.c:2340
 #, fuzzy, c-format
 msgid "Canon Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2339
+#: camlibs/ptp2/library.c:2344
 #, fuzzy, c-format
 msgid "Canon EOS Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2343
+#: camlibs/ptp2/library.c:2348
 #, fuzzy, c-format
 msgid "Nikon Capture\n"
 msgstr "Odpri sliko"
 
-#: camlibs/ptp2/library.c:2345
+#: camlibs/ptp2/library.c:2350
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2354
+#: camlibs/ptp2/library.c:2359
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2360
+#: camlibs/ptp2/library.c:2365
 #, fuzzy, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "Shranjevanje kazala ¹e ni podprto"
 
-#: camlibs/ptp2/library.c:2371
+#: camlibs/ptp2/library.c:2376
 #, c-format
 msgid ""
 "\n"
 "Storage Devices Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2386
+#: camlibs/ptp2/library.c:2391
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2390
+#: camlibs/ptp2/library.c:2395
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2397
+#: camlibs/ptp2/library.c:2402
 msgid "Builtin ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2398
+#: camlibs/ptp2/library.c:2403
 msgid "Removable ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2399
+#: camlibs/ptp2/library.c:2404
 msgid "Builtin RAM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2400
+#: camlibs/ptp2/library.c:2405
 msgid "Removable RAM (memory card)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2402 camlibs/ptp2/library.c:2415
-#: camlibs/ptp2/library.c:2427
+#: camlibs/ptp2/library.c:2407 camlibs/ptp2/library.c:2420
+#: camlibs/ptp2/library.c:2432
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2406
+#: camlibs/ptp2/library.c:2411
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2411
+#: camlibs/ptp2/library.c:2416
 msgid "Generic Flat"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2412
+#: camlibs/ptp2/library.c:2417
 msgid "Generic Hierarchical"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2413
+#: camlibs/ptp2/library.c:2418
 msgid "Digital Camera Layout (DCIM)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2419
+#: camlibs/ptp2/library.c:2424
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2423
+#: camlibs/ptp2/library.c:2428
 msgid "Read-Write"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2424
+#: camlibs/ptp2/library.c:2429
 msgid "Read-Only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2425
+#: camlibs/ptp2/library.c:2430
 msgid "Read Only with Object deletion"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2431
+#: camlibs/ptp2/library.c:2436
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2433
+#: camlibs/ptp2/library.c:2438
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2438
+#: camlibs/ptp2/library.c:2443
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2443
+#: camlibs/ptp2/library.c:2448
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2451
+#: camlibs/ptp2/library.c:2456
 #, c-format
 msgid ""
 "\n"
 "Device Property Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2477
+#: camlibs/ptp2/library.c:2482
 #, c-format
 msgid " not read out.\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:3445 camlibs/ptp2/library.c:3449
+#: camlibs/ptp2/library.c:3450 camlibs/ptp2/library.c:3454
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3455
+#: camlibs/ptp2/library.c:3460
 msgid "Metadata only supported for MTP devices."
 msgstr ""
 
-#: camlibs/ptp2/library.c:4224
+#: camlibs/ptp2/library.c:4229
 msgid "Initializing Camera"
 msgstr ""
 
-#: camlibs/ptp2/library.c:4407
+#: camlibs/ptp2/library.c:4412
 #, c-format
 msgid ""
 "Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
@@ -7919,14 +7730,14 @@ msgid ""
 "Driver for accessing the SiPix Web2 camera."
 msgstr ""
 
-#: camlibs/smal/smal.c:168
+#: camlibs/smal/smal.c:167
 msgid ""
 "Smal Ultrapocket\n"
 "Lee Benfield <lee@benf.org>\n"
 "Driver for accessing the Smal Ultrapocket camera, and OEM versions (slimshot)"
 msgstr ""
 
-#: camlibs/sonix/library.c:121
+#: camlibs/sonix/library.c:120
 #, c-format
 msgid ""
 "Sonix camera.\n"
@@ -7937,7 +7748,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: camlibs/sonix/library.c:132
+#: camlibs/sonix/library.c:131
 msgid ""
 "This driver supports some cameras that use the Sonix sn9c2028 chip.\n"
 "The following operations are supported:\n"
@@ -7952,7 +7763,7 @@ msgid ""
 "A single image cannot be deleted unless it is the last one.\n"
 msgstr ""
 
-#: camlibs/sonix/library.c:150
+#: camlibs/sonix/library.c:149
 msgid ""
 "Sonix camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
@@ -8017,7 +7828,7 @@ msgstr ""
 msgid "spca50x library v"
 msgstr ""
 
-#: camlibs/sq905/library.c:127
+#: camlibs/sq905/library.c:128
 #, c-format
 msgid ""
 "Your USB camera has a S&Q chipset.\n"
@@ -8026,7 +7837,7 @@ msgid ""
 "several frames\n"
 msgstr ""
 
-#: camlibs/sq905/library.c:141
+#: camlibs/sq905/library.c:142
 msgid ""
 "For cameras with S&Q Technologies chip.\n"
 "Should work with gtkam. Photos will be saved in PPM format.\n"
@@ -8048,7 +7859,7 @@ msgid ""
 "choose to save clip frames in separate directories. or not.\n"
 msgstr ""
 
-#: camlibs/sq905/library.c:169
+#: camlibs/sq905/library.c:170
 msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
