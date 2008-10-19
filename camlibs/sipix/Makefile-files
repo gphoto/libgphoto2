@@ -1,5 +1,5 @@
 EXTRA_DIST += sipix/web2.html sipix/blink.c sipix/blink.txt \
-	sipix/xjpeg.c sipix/blink2.txt
+	sipix/xjpeg.c sipix/blink2.txt sipix/ChangeLog
 
 # Seems to be obsolete
 EXTRA_LTLIBRARIES += sipix_blink.la

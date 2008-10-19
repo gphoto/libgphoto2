@@ -1,4 +1,4 @@
-EXTRA_DIST += iclick/README.iclick
+EXTRA_DIST += iclick/README.iclick iclick/ChangeLog
 camlibdoc_DATA += iclick/README.iclick
 
 EXTRA_LTLIBRARIES += iclick.la

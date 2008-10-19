@@ -1,4 +1,4 @@
-EXTRA_DIST += gsmart300/README.gsmart300
+EXTRA_DIST += gsmart300/README.gsmart300 gsmart300/ChangeLog
 camlibdoc_DATA += gsmart300/README.gsmart300
 
 EXTRA_LTLIBRARIES += gsmart300.la

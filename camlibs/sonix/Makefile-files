@@ -1,4 +1,4 @@
-EXTRA_DIST += sonix/README.sonix
+EXTRA_DIST += sonix/README.sonix sonix/ChangeLog
 camlibdoc_DATA += sonix/README.sonix
 
 EXTRA_LTLIBRARIES += sonix.la

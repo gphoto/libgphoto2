@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += hp215.la
+EXTRA_DIST += hp215/ChangeLog hp215/PROTOCOL
 
 hp215_la_SOURCES = hp215/hp215.c hp215/hp215.h hp215/crctab.h
 hp215_la_LDFLAGS = $(camlib_ldflags)

@@ -11,7 +11,7 @@
 # And as the last step, you need to add it to configure.ac:
 #   * GP_CAMLIB([foobar])dnl
 
-EXTRA_DIST += template/README.template
+EXTRA_DIST += template/README.template template/ChangeLog
 
 noinst_DATA += template/README.template
 noinst_LTLIBRARIES += template.la

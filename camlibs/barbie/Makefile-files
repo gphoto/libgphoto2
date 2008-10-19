@@ -1,4 +1,4 @@
-EXTRA_DIST += barbie/Protocol.txt
+EXTRA_DIST += barbie/Protocol.txt barbie/ChangeLog
 EXTRA_LTLIBRARIES += barbie.la
 
 barbie_la_SOURCES = barbie/barbie.c

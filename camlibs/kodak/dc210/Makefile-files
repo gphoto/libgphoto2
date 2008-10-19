@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += kodak_dc210.la
+EXTRA_DIST += kodak/dc210/ChangeLog kodak/dc210/TODO
 
 kodak_dc210_la_SOURCES = \
 	kodak/dc210/dc210.c kodak/dc210/dc210.h \

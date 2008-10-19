@@ -1,4 +1,4 @@
-EXTRA_DIST += fuji/PROTOCOL
+EXTRA_DIST += fuji/PROTOCOL fuji/ChangeLog
 
 EXTRA_LTLIBRARIES += fuji.la
 

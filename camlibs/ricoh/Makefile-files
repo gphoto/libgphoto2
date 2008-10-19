@@ -1,4 +1,4 @@
-EXTRA_DIST += ricoh/g3.txt
+EXTRA_DIST += ricoh/g3.txt ricoh/ChangeLog
 
 
 EXTRA_LTLIBRARIES += ricoh.la

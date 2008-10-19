@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += samsung.la
+EXTRA_DIST += samsung/ChangeLog
 
 samsung_la_SOURCES = samsung/samsung.c
 samsung_la_LDFLAGS = $(camlib_ldflags)

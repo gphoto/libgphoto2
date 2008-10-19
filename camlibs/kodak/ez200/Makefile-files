@@ -1,4 +1,4 @@
-EXTRA_DIST += kodak/ez200/Protocol.txt kodak/ez200/ez200-lsusb.txt
+EXTRA_DIST += kodak/ez200/Protocol.txt kodak/ez200/ez200-lsusb.txt kodak/ez200/ChangeLog
 
 EXTRA_LTLIBRARIES += kodak_ez200.la
 

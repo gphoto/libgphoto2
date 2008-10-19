@@ -2,7 +2,7 @@ EXTRA_LTLIBRARIES += canon.la
 
 camlibdoc_DATA += canon/README.canon
 
-EXTRA_DIST += canon/.indent.pro canon/ChangeLog canon/urb-interpret canon/README.canon
+EXTRA_DIST += canon/.indent.pro canon/ChangeLog canon/urb-interpret canon/README.canon canon/TODO
 
 # "ideal" version:
 # + only export the 3 symbols

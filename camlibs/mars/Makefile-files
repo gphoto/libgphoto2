@@ -1,4 +1,4 @@
-EXTRA_DIST += mars/protocol.txt mars/README.mars
+EXTRA_DIST += mars/protocol.txt mars/README.mars mars/ChangeLog
 camlibdoc_DATA += mars/README.mars
 
 EXTRA_LTLIBRARIES += mars.la

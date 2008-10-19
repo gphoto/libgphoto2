@@ -1,4 +1,5 @@
 EXTRA_LTLIBRARIES += kodak_dc240.la
+EXTRA_DIST += kodak/dc240/ChangeLog
 
 kodak_dc240_la_SOURCES = \
 	kodak/dc240/dc240.c kodak/dc240/dc240.h \
