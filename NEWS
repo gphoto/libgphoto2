@@ -1,28 +1,53 @@
-libgphoto2 2.4.2.1
+libgphoto2 2.4.3
 
 This is a 2.4 release branch update.
 
 libgphoto2:
+   * Adaptive Homogeneity-Directed Bayer array conversion added, used
+     in several camera lib drivers.
    * Translation updates for various languages.
    * libtool 2.x build fixes
    * Various MacOS X compile fixes again.
    * gp-byteorder.m4 fixes for newer glibcs.
 
+Example programs:
+   * Addes some basic library usage example programs and helpers.
+
 PTP2 driver:
    * Merged camlib from TRUNK.
+   * Tethered Capture support for Canon EOS 40D, 400D, 450D.
+   * Always handle "no directory linking to /" problem.
    * Disable more Panasonic cameras (product id 0x2372 is always mass storage)
    * Some MTP fixes, lots of new MTP devices.
+   * Fixed canon viewfinder issues on Canon PowerShot SX100IS.
    * Fixed a ptp property packing issue exposed
      by newer Nikons.
-
-   * Added:
+   * Added new devices:
   	 Kodak M893 IS, C813
-	 Nikon CoolPix L16, DSC 700
-	 Canon EOS 1D Mark III
+	 Nikon CoolPix L16, CoolPix 8700, DSC 700
+	 Canon EOS 1D Mark III, IXUS 90IS, EOS 50D
 	 Apple iPhone 3G
 
 Canon driver:
    * Fixed some unlock keys problem for EOS cameras.
+   * Moved over several PTP2 supported cameras to the PTP2 driver only.
+
+Sierra driver:
+   * Implemented basic Storage Information function.
+   * Fixes for big endian or 64bit architectures by fixing struct packing.
+
+smal driver:
+   * Added support for Creative CardCam.
+
+sq905 driver:
+   * Updated postprocessing, by using "AHD" bayering and new gamma methods.
+   * Bugfixes.
+
+stv0680:
+   * Storage information function.
+
+digigr8, mars, sonix drivers:
+   * Updated postprocessing, by using "AHD" bayering and new gamma methods.
  
 jl2005a driver:
    * Imported from TRUNK, for new small factor cameras.
