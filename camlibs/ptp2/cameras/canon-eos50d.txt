@@ -1,0 +1,40 @@
+Camera summary:
+Model: Canon EOS 50D
+  device version: 3-1.0.2
+  serial number:  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor extension ID: 0x6
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Unknown(b101), Unknown(b103), Unknown(bf02), Defined Type, Unknown(b104)
+Supported MTP Object Properties:
+        Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+        Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+        DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+        MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dc89/Duration de97/ScanDepth de9b/VideoFourCCCodec de9c/VideoBitRate de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels
+        MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels
+        JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth
+        Unknown(b101)/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+        Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+        Unknown(bf02)/bf02: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+        Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth
+        Unknown(b104)/b104: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dc89/Duration de97/ScanDepth de9b/VideoFourCCCodec de9c/VideoBitRate de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels
+
+Device Capabilities:
+        File Download, File Deletion, File Upload
+        No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+        StorageDescription: CF
+        VolumeLabel: None
+        Storage Type: Removable RAM (memory card)
+        Filesystemtype: Digital Camera Layout (DCIM)
+        Access Capability: Read-Write
+        Maximum Capability: 8193015808 (7813 MB)
+        Free Space (Bytes): 7394885632 (7052 MB)
+        Free Space (Images): -1
+
+Device Property Summary:
+Device Friendly Name(0xd402):(read only) (type=0xffff) Canon EOS 50D ('Canon EOS 50D')
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
