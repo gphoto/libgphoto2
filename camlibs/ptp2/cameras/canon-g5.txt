@@ -91,3 +91,41 @@ Device Properties Supported:
   0xd047
   0xd048
   0xd049
+
+/main/settings/owner
+/main/settings/model
+/main/settings/firmwareversion
+/main/settings/time
+/main/settings/beep
+/main/settings/capturetarget
+/main/settings/capture
+/main/imgsettings/imgquality
+/main/imgsettings/imgsize
+/main/imgsettings/iso
+/main/imgsettings/whitebalance
+/main/imgsettings/photoeffect
+/main/capturesettings/zoom
+/main/capturesettings/assistlight
+/main/capturesettings/exposurecompensation
+	Label: Exposure Compensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 +2
+	Choice: 1 +1 2/3
+	Choice: 2 +1 1/3
+	Choice: 3 +1
+	Choice: 4 +2/3
+	Choice: 5 +1/3
+	Choice: 6 0
+	Choice: 7 -1/3
+	Choice: 8 -2/3
+	Choice: 9 -1
+	Choice: 10 -1 1/3
+	Choice: 11 -1 2/3
+	Choice: 12 -2
+/main/capturesettings/canonflashmode
+/main/capturesettings/aperture
+/main/capturesettings/focusingpoint
+/main/capturesettings/shutterspeed
+/main/capturesettings/meteringmode
+/main/capturesettings/afdistance
