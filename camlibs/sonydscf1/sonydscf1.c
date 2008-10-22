@@ -32,7 +32,7 @@
 
 #define MAX_PICTURE_NUM 200
 static unsigned char  picture_index[MAX_PICTURE_NUM];
-static u_short picture_thumbnail_index[MAX_PICTURE_NUM];
+static unsigned short picture_thumbnail_index[MAX_PICTURE_NUM];
 static unsigned char  picture_protect[MAX_PICTURE_NUM];
 static unsigned char  picture_rotate[MAX_PICTURE_NUM];
 
