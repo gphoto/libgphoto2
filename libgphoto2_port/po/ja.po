@@ -2,12 +2,12 @@
 # Copyright 2001-2004 Free Software Foundation, Inc.
 # Takeshi Aihana <aihana@gnome.gr.jp>, 2001-2002, 2004.
 # AMANO Kazuhiro <haa13142@jnb.odn.ne.jp>, 2002.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port HEAD\n"
-"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-10-19 21:18+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-04-11 12:37-0400\n"
 "PO-Revision-Date: 2004-12-21 01:06+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
@@ -15,89 +15,122 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:213
+#: libgphoto2_port/gphoto2-port-info-list.c:176
 #, fuzzy, c-format
 msgid "Called for filename '%s'."
 msgstr "'%s' のオープンに失敗しました (%m)。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:218
+#: libgphoto2_port/gphoto2-port-info-list.c:181
 #, fuzzy, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "'%s' を閉じることが出来ませんでした (%m)。"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:189
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:238
+#: libgphoto2_port/gphoto2-port-info-list.c:201
+#: libgphoto2_port/gphoto2-port-info-list.c:327
 #, c-format
 msgid "'%s' already loaded"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:247
+#: libgphoto2_port/gphoto2-port-info-list.c:210
 #, fuzzy, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "デバイス '%s' をロックすることが出来ませんでした"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:254
+#: libgphoto2_port/gphoto2-port-info-list.c:217
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:286
+#: libgphoto2_port/gphoto2-port-info-list.c:258
 #, fuzzy, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "デバイス '%s' をロックすることが出来ませんでした"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:312
+#: libgphoto2_port/gphoto2-port-info-list.c:268
+#, c-format
+msgid "Loading io-drivers from '%s' without ltdl..."
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:273
+#, c-format
+msgid "Could not load any io-library because '%s' could not be opened (%m)"
+msgstr ""
+"'%s' を開くことができないのでいくつかの I/O ライブラリを読み込めませんでした "
+"(%m)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:305
+#, c-format
+msgid "'%s' is not a library (%s)"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:315
+#, fuzzy, c-format
+msgid "Could not find some functions in '%s' (%s)"
+msgstr "'%s' を閉じることが出来ませんでした (%m)。"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:335
+#, fuzzy, c-format
+msgid "Could not load list (%s)"
+msgstr "'%s' を閉じることが出来ませんでした (%m)。"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:343
+#, c-format
+msgid "Loaded '%s' (%s) from '%s'"
+msgstr ""
+
+#: libgphoto2_port/gphoto2-port-info-list.c:374
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:321
+#: libgphoto2_port/gphoto2-port-info-list.c:383
 #, c-format
 msgid "%i regular entries available."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:351
+#: libgphoto2_port/gphoto2-port-info-list.c:412
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:363
+#: libgphoto2_port/gphoto2-port-info-list.c:424
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:430
 #, c-format
 msgid "Trying '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:451
 msgid "regcomp failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:403
+#: libgphoto2_port/gphoto2-port-info-list.c:462
 #, c-format
 msgid "re_match failed (%i)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:411
+#: libgphoto2_port/gphoto2-port-info-list.c:470
 msgid "regexec failed"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:417
+#: libgphoto2_port/gphoto2-port-info-list.c:477
 msgid "Generic Port"
 msgstr "Generic ポート"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:441
+#: libgphoto2_port/gphoto2-port-info-list.c:501
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port-info-list.c:471
+#: libgphoto2_port/gphoto2-port-info-list.c:531
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr ""
@@ -123,330 +156,326 @@ msgid "Unsupported operation"
 msgstr "サポートしていない操作"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
-msgid "Fixed limit exceeded"
-msgstr ""
-
-#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
 msgstr "ポートからの読み込み/書き込みでタイムアウト"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Serial port not supported"
 msgstr "シリアルポートはサポートしていません"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "USB port not supported"
 msgstr "USB ポートはサポートしていません"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Unknown port"
 msgstr "不明なポート"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Out of memory"
 msgstr "メモリが足りません"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Error loading a library"
 msgstr "ライブラリの読み込みエラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Error initializing the port"
 msgstr "ポートの初期化エラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Error reading from the port"
 msgstr "ポートの読み込みエラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "Error writing to the port"
 msgstr "ポートへの書き込みエラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Error updating the port settings"
 msgstr "ポート設定の更新エラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:88
 msgid "Error setting the serial port speed"
 msgstr "シリアルポートのスピードの設定エラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:90
 msgid "Error clearing a halt condition on the USB port"
 msgstr "USB ポート上で Halt 状態のクリアエラー"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:92
 msgid "Could not find the requested device on the USB port"
 msgstr "USB ポート上に指定したデバイスが見つかりませんでした"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:94
 msgid "Could not claim the USB device"
 msgstr "USB デバイスと断定できませんでした"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:96
 msgid "Could not lock the device"
 msgstr "デバイスをロックすることが出来ませんでした"
 
-#: libgphoto2_port/gphoto2-port-result.c:100
-#, fuzzy
-msgid "libhal error"
-msgstr "エラーなし"
-
-#: libgphoto2_port/gphoto2-port-result.c:102
+#: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Unknown error"
 msgstr "不明なエラー"
 
-#: libgphoto2_port/gphoto2-port.c:55
+#: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "その操作 '%s' はこのデバイスではサポートしていません"
 
-#: libgphoto2_port/gphoto2-port.c:56
+#: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
 msgstr "ポートが未だ初期化されていません"
 
-#: libgphoto2_port/gphoto2-port.c:87
+#: libgphoto2_port/gphoto2-port.c:91
 msgid "Creating new device..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:165
+#: libgphoto2_port/gphoto2-port.c:171
 #, fuzzy, c-format
 msgid "Could not load '%s' ('%s')."
 msgstr "'%s' を閉じることが出来ませんでした (%m)。"
 
-#: libgphoto2_port/gphoto2-port.c:175
+#: libgphoto2_port/gphoto2-port.c:180
+#, fuzzy, c-format
+msgid "Could not load '%s' ('%s')"
+msgstr "'%s' を閉じることが出来ませんでした (%m)。"
+
+#: libgphoto2_port/gphoto2-port.c:195 libgphoto2_port/gphoto2-port.c:201
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:255
+#: libgphoto2_port/gphoto2-port.c:276
 #, c-format
 msgid "Opening %s port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:277
+#: libgphoto2_port/gphoto2-port.c:298
 msgid "Closing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:299
+#: libgphoto2_port/gphoto2-port.c:320
 msgid "Freeing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:346
+#: libgphoto2_port/gphoto2-port.c:369
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:359
+#: libgphoto2_port/gphoto2-port.c:382
 #, fuzzy, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "ポートへ書き込めませんでした (%m)"
 
-#: libgphoto2_port/gphoto2-port.c:382
+#: libgphoto2_port/gphoto2-port.c:403
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:393 libgphoto2_port/gphoto2-port.c:430
-#: libgphoto2_port/gphoto2-port.c:470 libgphoto2_port/gphoto2-port.c:895
+#: libgphoto2_port/gphoto2-port.c:414 libgphoto2_port/gphoto2-port.c:450
+#: libgphoto2_port/gphoto2-port.c:489 libgphoto2_port/gphoto2-port.c:811
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:419
+#: libgphoto2_port/gphoto2-port.c:439
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:480
+#: libgphoto2_port/gphoto2-port.c:499
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:505
+#: libgphoto2_port/gphoto2-port.c:524
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:541
+#: libgphoto2_port/gphoto2-port.c:560
 msgid "Getting timeout..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:545
+#: libgphoto2_port/gphoto2-port.c:564
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:567
+#: libgphoto2_port/gphoto2-port.c:586
 msgid "Setting settings..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:628
+#: libgphoto2_port/gphoto2-port.c:637
 #, fuzzy, c-format
 msgid "Getting level of pin %i..."
 msgstr "ピン %i のレベルを取得することが出来ませんでした (%m)。"
 
-#: libgphoto2_port/gphoto2-port.c:637
+#: libgphoto2_port/gphoto2-port.c:646
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:663
+#: libgphoto2_port/gphoto2-port.c:672
 msgid "low"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:664
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "high"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:690
+#: libgphoto2_port/gphoto2-port.c:688
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:717
+#: libgphoto2_port/gphoto2-port.c:705
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:743
+#: libgphoto2_port/gphoto2-port.c:720
 msgid "Flushing port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:817
+#: libgphoto2_port/gphoto2-port.c:761
 #, fuzzy
 msgid "Clear halt..."
 msgstr "clear_halt"
 
-#: libgphoto2_port/gphoto2-port.c:848
+#: libgphoto2_port/gphoto2-port.c:778
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:883
+#: libgphoto2_port/gphoto2-port.c:799
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:890
+#: libgphoto2_port/gphoto2-port.c:806
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1117
+#: libgphoto2_port/gphoto2-port.c:866
 msgid "No error description available"
 msgstr "有効なエラーメッセージがありません"
 
-#: serial/unix.c:238
+#: serial/unix.c:226
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "デバイス '%s' をロックすることが出来ませんでした"
 
-#: serial/unix.c:248
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "デバイス '%s' は他のプロセス (PID:%d) がロックしています"
 
-#: serial/unix.c:251
+#: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "デバイス '%s' がロックできません (dev_lock の返り値 %d)"
 
-#: serial/unix.c:285
+#: serial/unix.c:273
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "デバイス '%s' のロックを解放することが出来ませんでした。"
 
-#: serial/unix.c:297
+#: serial/unix.c:285
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "デバイス '%s' が他のプロセス (PID:%d) がロックしているので解放することが出来"
 "ませんでした。"
 
-#: serial/unix.c:301
+#: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "デバイス '%s' のロックを解放することが出来ませんでした (dev_unlock の返り値 %"
 "d)"
 
-#: serial/unix.c:379
+#: serial/unix.c:365
 #, c-format
 msgid "Serial Port %i"
 msgstr "シリアルポート %i"
 
-#: serial/unix.c:470
+#: serial/unix.c:456
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "'%s' のオープンに失敗しました (%m)。"
 
-#: serial/unix.c:488
+#: serial/unix.c:474
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "'%s' を閉じることが出来ませんでした (%m)。"
 
-#: serial/unix.c:542
+#: serial/unix.c:527
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "ポートへ書き込めませんでした (%m)"
 
-#: serial/unix.c:619
+#: serial/unix.c:599
 msgid "Parity error."
 msgstr "パリティ・エラーです。"
 
-#: serial/unix.c:623
+#: serial/unix.c:603
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "予期しないパリティ応答シーケンス 0xff 0x%02x です。"
 
-#: serial/unix.c:666
+#: serial/unix.c:646
 #, c-format
 msgid "Unknown pin %i."
 msgstr "不明なピン %i"
 
-#: serial/unix.c:688
+#: serial/unix.c:668
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "ピン %i のレベルを取得することが出来ませんでした (%m)。"
 
-#: serial/unix.c:723
+#: serial/unix.c:703
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "ピン %i から %i のレベルを設定することが出来ませんでした (%m)。"
 
-#: serial/unix.c:748
+#: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "フラッシュ '%s' できませんでした (%m)。"
 
-#: serial/unix.c:861
+#: serial/unix.c:841
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "ボーレートを %d にセットできませんでした。"
 
-#: usb/libusb.c:240
+#: usb/libusb.c:186
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "USB デバイスを開くことが出来ませんでした (%m)。"
 
-#: usb/libusb.c:250
+#: usb/libusb.c:196
 msgid "Camera is already in use."
 msgstr "既にカメラは使用中です。"
 
-#: usb/libusb.c:255
+#: usb/libusb.c:201
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "ドライバ '%s' がデバイスを使用しています。今すぐ解放します。"
 
-#: usb/libusb.c:258
+#: usb/libusb.c:204
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kernel ドライバ '%s' を解放できませんでした。"
 
-#: usb/libusb.c:261
+#: usb/libusb.c:206
 msgid "Could not query kernel driver of device."
 msgstr "Kernel のデバイス・ドライバを照会できませんでした。"
 
-#: usb/libusb.c:269
+#: usb/libusb.c:213
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -457,37 +486,32 @@ msgstr ""
 "が %s のような)  Kernel モジュールがこのデバイスを使用していないか確認して、"
 "そのデバイスの読み込み/書き込みをしてみて下さい。"
 
-#: usb/libusb.c:287
+#: usb/libusb.c:232
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "インタフェース %d を解放することが出来ませんでした (%m)。"
 
-#: usb/libusb.c:300
-#, fuzzy, c-format
-msgid "Could not reset USB port (%m)."
-msgstr "USB ポートを閉じることが出来ませんでした (%m)。"
-
-#: usb/libusb.c:306
+#: usb/libusb.c:239
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "USB ポートを閉じることが出来ませんでした (%m)。"
 
-#: usb/libusb.c:555
+#: usb/libusb.c:379
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
 
-#: usb/libusb.c:588
-#, fuzzy, c-format
-msgid "Could not set altsetting from %d to %d (%m)"
+#: usb/libusb.c:401
+#, c-format
+msgid "Could not set altsetting %d/%d (%m)"
 msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
 
-#: usb/libusb.c:680
+#: usb/libusb.c:493
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "提供ベンダーまたは製品 ID (0x%x,0x%x) は正しくありません。"
 
-#: usb/libusb.c:716
+#: usb/libusb.c:525
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -496,7 +520,7 @@ msgstr ""
 "USB デバイス (ベンダー:0x%x 製品: 0x%x) はマス・ストレージ用デバイスで、"
 "gphoto2 では取り扱えません。参考情報: %s"
 
-#: usb/libusb.c:758
+#: usb/libusb.c:558
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -505,7 +529,7 @@ msgstr ""
 "USB デバイス (ベンダー:0x%x 製品: 0x%x) が見つかりませんでした。このデバイス"
 "がコンピュータに接続されているか確認して下さい。"
 
-#: usb/libusb.c:988
+#: usb/libusb.c:689
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -513,33 +537,6 @@ msgid ""
 msgstr ""
 "USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりません"
 "でした。このデバイスがコンピュータに接続されているか確認して下さい。"
-
-#: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
-#: disk/disk.c:323
-#, c-format
-msgid "Media '%s'"
-msgstr ""
-
-#: disk/disk.c:178
-msgid "(unknown)"
-msgstr ""
-
-#~ msgid "Could not load any io-library because '%s' could not be opened (%m)"
-#~ msgstr ""
-#~ "'%s' を開くことができないのでいくつかの I/O ライブラリを読み込めませんでし"
-#~ "た (%m)"
-
-#, fuzzy
-#~ msgid "Could not find some functions in '%s' (%s)"
-#~ msgstr "'%s' を閉じることが出来ませんでした (%m)。"
-
-#, fuzzy
-#~ msgid "Could not load list (%s)"
-#~ msgstr "'%s' を閉じることが出来ませんでした (%m)。"
-
-#, fuzzy
-#~ msgid "Could not load '%s' ('%s')"
-#~ msgstr "'%s' を閉じることが出来ませんでした (%m)。"
 
 #~ msgid "Camera is supported by USB Storage driver."
 #~ msgstr "USB ストレージ・ドライバでサポートしているカメラです。"

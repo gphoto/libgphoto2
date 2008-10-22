@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port-2.4.2\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-10-19 21:18+0200\n"
+"POT-Creation-Date: 2008-07-11 09:48+0200\n"
 "PO-Revision-Date: 2008-07-25 23:06+0200\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
@@ -319,14 +319,12 @@ msgstr "Wissen van 'halt'-toestand..."
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Schrijven van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
+msgstr "Schrijven van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Lezen van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
+msgstr "Lezen van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
@@ -336,88 +334,86 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Geen foutbeschrijving beschikbaar"
 
-#: serial/unix.c:238
+#: serial/unix.c:233
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kan apparaat '%s' niet vergrendelen"
 
-#: serial/unix.c:248
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Apparaat '%s' is vergrendeld door PID %d"
 
-#: serial/unix.c:251
+#: serial/unix.c:246
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Apparaat '%s' kan niet worden vergrendeld (dev_lock gaf %d terug)"
 
-#: serial/unix.c:285
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Apparaat '%s' kan niet worden ontgrendeld."
 
-#: serial/unix.c:297
+#: serial/unix.c:292
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"Apparaat '%s' kan niet worden ontgrendeld aangezien het vergrendeld is door "
-"PID %d."
+msgstr "Apparaat '%s' kan niet worden ontgrendeld aangezien het vergrendeld is door PID %d."
 
-#: serial/unix.c:301
+#: serial/unix.c:296
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Apparaat '%s' kan niet worden ontgrendeld (dev_unlock gaf %d terug)"
 
-#: serial/unix.c:379
+#: serial/unix.c:374
 #, c-format
 msgid "Serial Port %i"
 msgstr "Seriële poort %i"
 
-#: serial/unix.c:470
+#: serial/unix.c:465
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Kan '%s' niet openen (%m)."
 
-#: serial/unix.c:488
+#: serial/unix.c:483
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kan '%s' niet sluiten (%m)."
 
-#: serial/unix.c:542
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kan niet naar poort schrijven (%m)"
 
-#: serial/unix.c:619
+#: serial/unix.c:614
 msgid "Parity error."
 msgstr "Pariteitsfout."
 
-#: serial/unix.c:623
+#: serial/unix.c:618
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Onverwachte pariteitsantwoordvolgorde  0xff 0x%02x."
 
-#: serial/unix.c:666
+#: serial/unix.c:661
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Onbekende pin %i."
 
-#: serial/unix.c:688
+#: serial/unix.c:683
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kan het niveau van pin %i niet bepalen (%m)."
 
-#: serial/unix.c:723
+#: serial/unix.c:718
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kan het niveau van pin %i niet op %i instellen (%m)."
 
-#: serial/unix.c:748
+#: serial/unix.c:743
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kan '%s' niet leegmaken (%m)."
 
-#: serial/unix.c:861
+#: serial/unix.c:856
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kan de baudrate niet instellen op %d"
@@ -434,14 +430,12 @@ msgstr "Camera is reeds in gebruik."
 #: usb/libusb.c:255
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr ""
-"Het apparaat heeft als stuurprogramma '%s' aangehecht; dit wordt nu onthecht."
+msgstr "Het apparaat heeft als stuurprogramma '%s' aangehecht; dit wordt nu onthecht."
 
 #: usb/libusb.c:258
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr ""
-"Kan het kernelstuurprogramma '%s' van het camera-apparaat niet onthechten."
+msgstr "Kan het kernelstuurprogramma '%s' van het camera-apparaat niet onthechten."
 
 #: usb/libusb.c:261
 msgid "Could not query kernel driver of device."
@@ -449,14 +443,8 @@ msgstr "Kan het kernelstuurprogramma van het apparaat niet ondervragen."
 
 #: usb/libusb.c:269
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Kan interface %d niet claimen (%m).  Zorg ervoor dat geen ander programma of "
-"kernelmodule (zoals %s) het apparaat gebruikt en dat u lees- en "
-"schrijfrechten voor dit apparaat hebt."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Kan interface %d niet claimen (%m).  Zorg ervoor dat geen ander programma of kernelmodule (zoals %s) het apparaat gebruikt en dat u lees- en schrijfrechten voor dit apparaat hebt."
 
 #: usb/libusb.c:287
 #, c-format
@@ -490,30 +478,18 @@ msgstr "Het opgegeven leveranciers- of product-ID (0x%x,0x%x) is ongeldig."
 
 #: usb/libusb.c:716
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"Het USB-apparaat (leverancier 0x%x, product 0x%x) is een massa-opslagmedium "
-"en zal misschien niet werken met gphoto2.  Referentie: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Het USB-apparaat (leverancier 0x%x, product 0x%x) is een massa-opslagmedium en zal misschien niet werken met gphoto2.  Referentie: %s"
 
 #: usb/libusb.c:758
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Kan USB-apparaat (leverancier 0x%x, product 0x%x) niet vinden.  Zorg ervoor "
-"dat het apparaat aan de computer aangesloten is."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Kan USB-apparaat (leverancier 0x%x, product 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
 
 #: usb/libusb.c:988
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Kan USB-apparaat (klasse 0x%x, subklasse 0x%x, protocol 0x%x) niet vinden.  "
-"Zorg ervoor dat het apparaat aan de computer aangesloten is."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Kan USB-apparaat (klasse 0x%x, subklasse 0x%x, protocol 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
 
 #: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
 #: disk/disk.c:323
