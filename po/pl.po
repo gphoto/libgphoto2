@@ -5,17 +5,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2 2.4.2\n"
+"Project-Id-Version: libgphoto2 2.4.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-10-19 19:35+0200\n"
-"PO-Revision-Date: 2008-07-15 18:22+0200\n"
+"PO-Revision-Date: 2008-10-20 17:58+0200\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: camlibs/adc65/adc65.c:243
 msgid ""
@@ -126,28 +125,18 @@ msgstr "*NIEZNANY*"
 
 #: camlibs/canon/canon.c:1488
 #, c-format
-msgid ""
-"canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
-"status %li"
-msgstr ""
-"canon_int_capture_image: pocz±tkowe canon_usb_list_all_dirs() nie powiod³o "
-"siê ze stanem %li"
+msgid "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with status %li"
+msgstr "canon_int_capture_image: pocz±tkowe canon_usb_list_all_dirs() nie powiod³o siê ze stanem %li"
 
 #: camlibs/canon/canon.c:1620
 #, c-format
-msgid ""
-"canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
-"i"
-msgstr ""
-"canon_int_capture_image: koñcowe canon_usb_list_all_dirs() nie powiod³o siê "
-"ze stanem %i"
+msgid "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %i"
+msgstr "canon_int_capture_image: koñcowe canon_usb_list_all_dirs() nie powiod³o siê ze stanem %i"
 
 #: camlibs/canon/canon.c:2385
 #, c-format
 msgid "Name '%s' (%li characters) too long, maximum 30 characters are allowed."
-msgstr ""
-"Nazwa '%s' (%li znaków) jest zbyt d³uga, dozwolone jest maksymalnie 30 "
-"znaków."
+msgstr "Nazwa '%s' (%li znaków) jest zbyt d³uga, dozwolone jest maksymalnie 30 znaków."
 
 #: camlibs/canon/canon.c:2803
 #, c-format
@@ -156,19 +145,12 @@ msgstr "Ma³e litery w %s nie s± dopuszczalne."
 
 #: camlibs/canon/canon.c:2985
 #, c-format
-msgid ""
-"canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
-msgstr ""
-"canon_int_list_directory: B£¡D: pocz±tkowy komunikat zbyt krótki (%i < "
-"minimum %i)"
+msgid "canon_int_list_directory: ERROR: initial message too short (%i < minimum %i)"
+msgstr "canon_int_list_directory: B£¡D: pocz±tkowy komunikat zbyt krótki (%i < minimum %i)"
 
 #: camlibs/canon/canon.c:3007
-msgid ""
-"canon_int_list_directory: Reached end of packet while examining the first "
-"dirent"
-msgstr ""
-"canon_int_list_directory: Osi±gniêto koniec pakietu przed sprawdzeniem "
-"pierwszego dirent"
+msgid "canon_int_list_directory: Reached end of packet while examining the first dirent"
+msgstr "canon_int_list_directory: Osi±gniêto koniec pakietu przed sprawdzeniem pierwszego dirent"
 
 #: camlibs/canon/canon.c:3092
 msgid "canon_int_list_directory: truncated directory entry encountered"
@@ -193,11 +175,8 @@ msgstr "Parametr NULL \"%s\" w %s w linii %i"
 
 #: camlibs/canon/canon.h:633
 #, c-format
-msgid ""
-"Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
-msgstr ""
-"Nie wiem jak obs³u¿yæ warto¶æ camera->port->type %i czyli 0x%x w %s w linii %"
-"i."
+msgid "Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
+msgstr "Nie wiem jak obs³u¿yæ warto¶æ camera->port->type %i czyli 0x%x w %s w linii %i."
 
 #: camlibs/canon/crc.c:234
 #, c-format
@@ -211,12 +190,8 @@ msgstr "nie uda³o siê odgadn±æ pocz±tkowej warto¶ci CRC\n"
 
 #: camlibs/canon/crc.c:274
 #, c-format
-msgid ""
-"warning: CRC not checked (add len %d, value 0x%04x) "
-"#########################\n"
-msgstr ""
-"uwaga: nie sprawdzono CRC (dodaæ d³ugo¶æ %d, warto¶æ 0x%04x) "
-"#########################\n"
+msgid "warning: CRC not checked (add len %d, value 0x%04x) #########################\n"
+msgstr "uwaga: nie sprawdzono CRC (dodaæ d³ugo¶æ %d, warto¶æ 0x%04x) #########################\n"
 
 #: camlibs/canon/library.c:96 camlibs/canon/library.c:1556
 msgid "Compatibility mode"
@@ -532,11 +507,8 @@ msgid "Error deleting associated thumbnail file"
 msgstr "B³±d podczas usuwania powi±zanego pliku miniaturki"
 
 #: camlibs/canon/library.c:1282 camlibs/canon/library.c:1415
-msgid ""
-"Speeds greater than 57600 are not supported for uploading to this camera"
-msgstr ""
-"Prêdko¶ci wiêksze ni¿ 57600 nie s± obs³ugiwane przy wczytywaniu danych do "
-"tego aparatu"
+msgid "Speeds greater than 57600 are not supported for uploading to this camera"
+msgstr "Prêdko¶ci wiêksze ni¿ 57600 nie s± obs³ugiwane przy wczytywaniu danych do tego aparatu"
 
 #: camlibs/canon/library.c:1299 camlibs/canon/library.c:1433
 msgid "Could not get flash drive letter"
@@ -806,8 +778,7 @@ msgstr "nie uda³o siê ustawiæ czasu"
 #: camlibs/canon/library.c:2457
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
-msgstr ""
-"Podano nieobs³ugiwany rodzaj portu %i = 0x%x. Inicjalizacja niemo¿liwa."
+msgstr "Podano nieobs³ugiwany rodzaj portu %i = 0x%x. Inicjalizacja niemo¿liwa."
 
 #: camlibs/canon/serial.c:706 camlibs/canon/serial.c:771
 msgid "Battery exhausted, camera off."
@@ -846,20 +817,13 @@ msgid "Getting file..."
 msgstr "Pobieranie pliku..."
 
 #: camlibs/canon/serial.c:1131
-msgid ""
-"canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory "
-"entries"
-msgstr ""
-"canon_serial_get_dirents: w canon_serial_dialogue nie uda³o siê pobraæ "
-"wpisów katalogu"
+msgid "canon_serial_get_dirents: canon_serial_dialogue failed to fetch directory entries"
+msgstr "canon_serial_get_dirents: w canon_serial_dialogue nie uda³o siê pobraæ wpisów katalogu"
 
 #: camlibs/canon/serial.c:1139
 #, c-format
-msgid ""
-"canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
-msgstr ""
-"canon_serial_get_dirents: Pocz±tkowy pakiet dirent zbyt krótki (tylko %i "
-"bajtów)"
+msgid "canon_serial_get_dirents: Initial dirent packet too short (only %i bytes)"
+msgstr "canon_serial_get_dirents: Pocz±tkowy pakiet dirent zbyt krótki (tylko %i bajtów)"
 
 #: camlibs/canon/serial.c:1159
 #, c-format
@@ -868,8 +832,7 @@ msgstr "canon_serial_get_dirents: Nie uda³o siê przydzieliæ %i bajtów pamiêci"
 
 #: camlibs/canon/serial.c:1179
 msgid "canon_serial_get_dirents: Failed to read another directory entry"
-msgstr ""
-"canon_serial_get_dirents: Nie uda³o siê odczytaæ kolejnego wpisu katalogu"
+msgstr "canon_serial_get_dirents: Nie uda³o siê odczytaæ kolejnego wpisu katalogu"
 
 #: camlibs/canon/serial.c:1197
 msgid "canon_serial_get_dirents: Truncated directory entry received"
@@ -882,9 +845,7 @@ msgstr "canon_serial_get_dirents: Zbyt du¿o wpisów dirent, musi byæ pêtla."
 #: camlibs/canon/serial.c:1235
 #, c-format
 msgid "canon_serial_get_dirents: Could not resize dirent buffer to %i bytes"
-msgstr ""
-"canon_serial_get_dirents: Nie uda³o siê zmieniæ rozmiaru bufora dirent na %i "
-"bajtów"
+msgstr "canon_serial_get_dirents: Nie uda³o siê zmieniæ rozmiaru bufora dirent na %i bajtów"
 
 #: camlibs/canon/serial.c:1304
 msgid "Error changing speed."
@@ -1001,66 +962,43 @@ msgstr "Nierozpoznana pocz±tkowa odpowied¼ aparatu '%c'"
 
 #: camlibs/canon/usb.c:266
 #, c-format
-msgid ""
-"Step #2 of initialization failed: (\"%s\" on read of %i). Camera not "
-"operational"
-msgstr ""
-"Krok #2 inicjalizacji nie powiód³ siê: (\"%s\" przy odczycie %i) Aparat "
-"niefunkcjonalny"
+msgid "Step #2 of initialization failed: (\"%s\" on read of %i). Camera not operational"
+msgstr "Krok #2 inicjalizacji nie powiód³ siê: (\"%s\" przy odczycie %i) Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:272
 #, c-format
-msgid ""
-"Step #2 of initialization failed! (returned %i bytes, expected %i). Camera "
-"not operational"
-msgstr ""
-"Krok #2 inicjalizacji nie powiód³ siê! (zwrócono %i bajtów, oczekiwano %i). "
-"Aparat niefunkcjonalny"
+msgid "Step #2 of initialization failed! (returned %i bytes, expected %i). Camera not operational"
+msgstr "Krok #2 inicjalizacji nie powiód³ siê! (zwrócono %i bajtów, oczekiwano %i). Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:291
 #, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on read of %i. Camera not "
-"operational"
-msgstr ""
-"Krok #3 inicjalizacji nie powiód³ siê: \"%s\" przy odczycie %i. Aparat "
-"niefunkcjonalny"
+msgid "Step #3 of initialization failed: \"%s\" on read of %i. Camera not operational"
+msgstr "Krok #3 inicjalizacji nie powiód³ siê: \"%s\" przy odczycie %i. Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:298 camlibs/canon/usb.c:325
 #, c-format
-msgid ""
-"Step #3 of initialization failed! (returned %i, expected %i). Camera not "
-"operational"
-msgstr ""
-"Krok #3 inicjalizacji nie powiód³ siê! (zwrócono %i, oczekiwano %i). Aparat "
-"niefunkcjonalny"
+msgid "Step #3 of initialization failed! (returned %i, expected %i). Camera not operational"
+msgstr "Krok #3 inicjalizacji nie powiód³ siê! (zwrócono %i, oczekiwano %i). Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:318
 #, c-format
-msgid ""
-"Step #3 of initialization failed: \"%s\" on write of %i. Camera not "
-"operational"
-msgstr ""
-"Krok #3 inicjalizacji nie powiód³ siê: \"%s\" przy zapisie %i. Aparat "
-"niefunkcjonalny"
+msgid "Step #3 of initialization failed: \"%s\" on write of %i. Camera not operational"
+msgstr "Krok #3 inicjalizacji nie powiód³ siê: \"%s\" przy zapisie %i. Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:356 camlibs/canon/usb.c:397
 #, c-format
 msgid "Step #4 failed: \"%s\" on read of %i. Camera not operational"
-msgstr ""
-"Krok #4 nie powiód³ siê: \"%s\" przy odczycie %i. Aparat niefunkcjonalny"
+msgstr "Krok #4 nie powiód³ siê: \"%s\" przy odczycie %i. Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:363 camlibs/canon/usb.c:404
 #, c-format
 msgid "Step #4 failed (returned %i, expected %i). Camera not operational"
-msgstr ""
-"Krok #4 nie powiód³ siê (zwrócono %i, oczekiwano %i). Aparat niefunkcjonalny"
+msgstr "Krok #4 nie powiód³ siê (zwrócono %i, oczekiwano %i). Aparat niefunkcjonalny"
 
 #: camlibs/canon/usb.c:508
 #, c-format
 msgid "Camera not ready, multiple 'Identify camera' requests failed: %s"
-msgstr ""
-"Aparat nie gotowy, wielokrotne ¿±dania 'Identify camera' nie powiod³y siê: %s"
+msgstr "Aparat nie gotowy, wielokrotne ¿±dania 'Identify camera' nie powiod³y siê: %s"
 
 #: camlibs/canon/usb.c:546 camlibs/canon/usb.c:562
 #, c-format
@@ -1069,70 +1007,43 @@ msgstr "Aparat nie gotowy, get_battery nie powiod³o siê: %s"
 
 #: camlibs/canon/usb.c:627
 #, c-format
-msgid ""
-"canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function "
-"(%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: Nieoczekiwana d³ugo¶æ zwrócona z funkcji \"lock keys"
-"\" (%i bajtów, oczekiwano %i)"
+msgid "canon_usb_lock_keys: Unexpected length returned from \"lock keys\" function (%i bytes, expected %i)"
+msgstr "canon_usb_lock_keys: Nieoczekiwana d³ugo¶æ zwrócona z funkcji \"lock keys\" (%i bajtów, oczekiwano %i)"
 
 #: camlibs/canon/usb.c:649 camlibs/canon/usb.c:675 camlibs/canon/usb.c:715
 #, c-format
 msgid "canon_usb_lock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_lock_keys: Zwrócona nieoczekiwana d³ugo¶æ (%i bajtów, oczekiwano %"
-"i)"
+msgstr "canon_usb_lock_keys: Zwrócona nieoczekiwana d³ugo¶æ (%i bajtów, oczekiwano %i)"
 
 #: camlibs/canon/usb.c:758 camlibs/canon/usb.c:774
 #, c-format
-msgid ""
-"canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
-msgstr ""
-"canon_usb_unlock_keys: Zwrócona nieoczekiwana d³ugo¶æ (%i bajtów, oczekiwano "
-"%i)"
+msgid "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)"
+msgstr "canon_usb_unlock_keys: Zwrócona nieoczekiwana d³ugo¶æ (%i bajtów, oczekiwano %i)"
 
 #: camlibs/canon/usb.c:830 camlibs/canon/usb.c:849
 #, c-format
-msgid ""
-"canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %"
-"i)"
-msgstr ""
-"canon_usb_get_body_id: Zwrócona nieoczekiwana d³ugo¶æ danych (%i bajtów, "
-"oczekiwano %i)"
+msgid "canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %i)"
+msgstr "canon_usb_get_body_id: Zwrócona nieoczekiwana d³ugo¶æ danych (%i bajtów, oczekiwano %i)"
 
 #: camlibs/canon/usb.c:911
 #, c-format
-msgid ""
-"canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f "
-"sec \"%s\""
-msgstr ""
-"canon_usb_poll_interrupt_pipe: odczyt z przerwania nie powiód³ siê po %i "
-"próbach, %6.3f sek \"%s\""
+msgid "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, %6.3f sec \"%s\""
+msgstr "canon_usb_poll_interrupt_pipe: odczyt z przerwania nie powiód³ siê po %i próbach, %6.3f sek \"%s\""
 
 #: camlibs/canon/usb.c:984
 #, c-format
-msgid ""
-"canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
-"\""
-msgstr ""
-"canon_usb_poll_interrupt_multiple: odczyt z przerwania nie powiód³ siê po %i "
-"próbach, \"%s\""
+msgid "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s\""
+msgstr "canon_usb_poll_interrupt_multiple: odczyt z przerwania nie powiód³ siê po %i próbach, \"%s\""
 
 #: camlibs/canon/usb.c:1114
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
-msgstr ""
-"canon_usb_capture_dialogue: b³êdna d³ugo¶æ 0x%04x dla pakietu rozmiaru "
-"miniaturki"
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
+msgstr "canon_usb_capture_dialogue: b³êdna d³ugo¶æ 0x%04x dla pakietu rozmiaru miniaturki"
 
 #: camlibs/canon/usb.c:1131
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
-msgstr ""
-"canon_usb_capture_dialogue: b³êdna d³ugo¶æ 0x%04x dla pakietu rozmiaru "
-"pe³nego obrazu"
+msgid "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
+msgstr "canon_usb_capture_dialogue: b³êdna d³ugo¶æ 0x%04x dla pakietu rozmiaru pe³nego obrazu"
 
 #: camlibs/canon/usb.c:1150
 msgid "canon_usb_capture_dialogue: secondary image descriptor received"
@@ -1140,8 +1051,7 @@ msgstr "canon_usb_capture_dialogue: odebrano deskryptor zdjêcia dodatkowego"
 
 #: camlibs/canon/usb.c:1177
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: pierwszy odczyt z przerwania spoza kolejno¶ci"
+msgstr "canon_usb_capture_dialogue: pierwszy odczyt z przerwania spoza kolejno¶ci"
 
 #: camlibs/canon/usb.c:1186
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
@@ -1149,25 +1059,21 @@ msgstr "canon_usb_capture_dialogue: drugi odczyt z przerwania spoza kolejno¶ci"
 
 #: camlibs/canon/usb.c:1197
 #, c-format
-msgid ""
-"canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
+msgid "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr "canon_usb_capture_dialogue: zg³oszono b³±d fotograficzny, kod = 0x%08x"
 
 #: camlibs/canon/usb.c:1217
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: trzeci odczyt z przerwania EOS spoza kolejno¶ci"
+msgstr "canon_usb_capture_dialogue: trzeci odczyt z przerwania EOS spoza kolejno¶ci"
 
 #: camlibs/canon/usb.c:1256
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
-msgstr ""
-"canon_usb_capture_dialogue: czwarty odczyt z przerwania EOS spoza kolejno¶ci"
+msgstr "canon_usb_capture_dialogue: czwarty odczyt z przerwania EOS spoza kolejno¶ci"
 
 #: camlibs/canon/usb.c:1444
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
-msgstr ""
-"canon_usb_dialogue: dane zbyt du¿e, nie zmieszcz± siê do bufora (%i > %i)"
+msgstr "canon_usb_dialogue: dane zbyt du¿e, nie zmieszcz± siê do bufora (%i > %i)"
 
 #: camlibs/canon/usb.c:1551
 #, c-format
@@ -1189,12 +1095,8 @@ msgstr "canon_usb_set_file_attributes: canon_usb_dialogue nie powiod³o siê"
 
 #: camlibs/canon/usb.c:2172
 #, c-format
-msgid ""
-"Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error "
-"status 0x%08x from camera"
-msgstr ""
-"Ostrze¿enie w canon_usb_set_file_attributes: canon_usb_dialogue zwróci³o "
-"status b³êdu 0x%08x z aparatu"
+msgid "Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%08x from camera"
+msgstr "Ostrze¿enie w canon_usb_set_file_attributes: canon_usb_dialogue zwróci³o status b³êdu 0x%08x z aparatu"
 
 #: camlibs/canon/usb.c:2258
 #, c-format
@@ -1212,48 +1114,28 @@ msgid "File upload failed."
 msgstr "Przes³anie pliku do aparatu nie powiod³o siê."
 
 #: camlibs/canon/usb.c:2402
-msgid ""
-"File was too big. You may have to turn your camera off and back on before "
-"uploading more files."
-msgstr ""
-"Plik by³ zbyt du¿y. Mo¿e zaj¶æ potrzeba wy³±czenia i w³±czenia aparatu przed "
-"przesy³aniem kolejnych plików."
+msgid "File was too big. You may have to turn your camera off and back on before uploading more files."
+msgstr "Plik by³ zbyt du¿y. Mo¿e zaj¶æ potrzeba wy³±czenia i w³±czenia aparatu przed przesy³aniem kolejnych plików."
 
 #: camlibs/canon/usb.c:2449
 #, c-format
-msgid ""
-"canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
-"too long."
-msgstr ""
-"canon_usb_get_dirents: Nie uda³o siê zmie¶ciæ danych do bufora, "
-"'%.96s' (obciête) zbyt d³ugie."
+msgid "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
+msgstr "canon_usb_get_dirents: Nie uda³o siê zmie¶ciæ danych do bufora, '%.96s' (obciête) zbyt d³ugie."
 
 #: camlibs/canon/usb.c:2466
 #, c-format
-msgid ""
-"canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
-"returned %i"
-msgstr ""
-"canon_usb_get_dirents: w canon_usb_long_dialogue nie powiod³o siê pobranie "
-"wpisów katalogu, zwrócono %i"
+msgid "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, returned %i"
+msgstr "canon_usb_get_dirents: w canon_usb_long_dialogue nie powiod³o siê pobranie wpisów katalogu, zwrócono %i"
 
 #: camlibs/canon/usb.c:2517
 #, c-format
-msgid ""
-"canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
-"'%.96s' (truncated) too long."
-msgstr ""
-"canon_usb_list_all_dirs: Nie uda³o siê zmie¶ciæ danych do bufora, "
-"'%.96s' (obciête) zbyt d³ugie."
+msgid "canon_usb_list_all_dirs: Couldn't fit payload into buffer, '%.96s' (truncated) too long."
+msgstr "canon_usb_list_all_dirs: Nie uda³o siê zmie¶ciæ danych do bufora, '%.96s' (obciête) zbyt d³ugie."
 
 #: camlibs/canon/usb.c:2536
 #, c-format
-msgid ""
-"canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
-"returned %i"
-msgstr ""
-"canon_usb_list_all_dirs: w canon_usb_long_dialogue nie powiod³o siê pobranie "
-"wpisów katalogu, zwrócono %i"
+msgid "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, returned %i"
+msgstr "canon_usb_list_all_dirs: w canon_usb_long_dialogue nie powiod³o siê pobranie wpisów katalogu, zwrócono %i"
 
 #: camlibs/canon/usb.c:2613
 #, c-format
@@ -1278,14 +1160,11 @@ msgstr "Obraz %s jest zabezpieczony przed usuniêciem."
 #: camlibs/casio/casio-qv.c:189
 msgid ""
 "Driver framework written by Lutz Mueller <lutz@users.sf.net>.\n"
-"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-"
-"hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
+"This software has QVplay's source code, written by Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> and Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
 "Integration of QVplay by Michael Haardt <michael@moria.de>."
 msgstr ""
 "Szkielet sterownika napisa³ Lutz Mueller <lutz@users.sf.net>.\n"
-"To oprogramowanie zawiera kod ¼ród³owy QVplaya, którego autorami s± Ken-ichi "
-"HAYASHI <xg2k-hys@asahi-net.or.jp> i Jun-ichiro \"itojun\" Itoh "
-"<itojun@itojun.org>.\n"
+"To oprogramowanie zawiera kod ¼ród³owy QVplaya, którego autorami s± Ken-ichi HAYASHI <xg2k-hys@asahi-net.or.jp> i Jun-ichiro \"itojun\" Itoh <itojun@itojun.org>.\n"
 "Integracji QVplaya dokona³ Michael Haardt <michael@moria.de>."
 
 #: camlibs/casio/casio-qv.c:208
@@ -1323,21 +1202,14 @@ msgid "OK"
 msgstr "OK"
 
 #: camlibs/clicksmart310/library.c:101
-#, fuzzy, c-format
+#, c-format
 msgid "Your Logitech Clicksmart 310 has %i picture in it.\n"
 msgid_plural "Your Logitech Clicksmart 310 has %i pictures in it.\n"
-msgstr[0] ""
-"Aparat Logitech Clicksmart 310\n"
-"zawiera %i zdjêæ.\n"
-msgstr[1] ""
-"Aparat Logitech Clicksmart 310\n"
-"zawiera %i zdjêæ.\n"
-msgstr[2] ""
-"Aparat Logitech Clicksmart 310\n"
-"zawiera %i zdjêæ.\n"
+msgstr[0] "Aparat Logitech Clicksmart 310 zawiera %i zdjêcie.\n"
+msgstr[1] "Aparat Logitech Clicksmart 310 zawiera %i zdjêcia.\n"
+msgstr[2] "Aparat Logitech Clicksmart 310 zawiera %i zdjêæ.\n"
 
 #: camlibs/clicksmart310/library.c:114
-#, fuzzy
 msgid ""
 "There are two resolution settings, 352x288 and 176x144. Photo data \n"
 "is in JPEG format when downloaded and thus has no predetermined\n"
@@ -1359,24 +1231,25 @@ msgid ""
 "For more details on the camera's functions, please consult\n"
 "libgphoto2/camlibs/clicksmart310/README.clicksmart310.\n"
 msgstr ""
-"Dwa ustawienia rozdzielczo¶ci: 352x288 i 176x144. Dane zdjêæ\n"
+"S± dwa ustawienia rozdzielczo¶ci: 352x288 i 176x144. Dane zdjêæ\n"
 "s± w formacie JPEG, przez co nie mo¿na wcze¶niej okre¶liæ ich\n"
 "rozmiaru. Przez to podawan± maksymaln± liczbê zdjêæ mieszczon±\n"
 "przez aparat nale¿y traktowaæ jako aproksymacjê.\n"
 "Bêd± dzia³aæ wszystkie opcje gphoto2 z wyj±tkiem tych, których\n"
 "nie obs³uguje sprzêt:\n"
-"\tUsuwania poszczególnych lub wybranych zdjêæ (gphoto2 -d)\n"
-"\tPobierania obrazu (gphoto2 --capture lub --capture-image)\n"
+"\t- usuwania poszczególnych lub wybranych zdjêæ (gphoto2 -d)\n"
+"\t- pobierania obrazu (gphoto2 --capture lub --capture-image)\n"
 "Jednak pobieranie obrazu jest mo¿liwe przy u¿yciu interfejsu webcam,\n"
 "obs³ugiwanego przez modu³ j±dra spca50x.\n"
 "Dostêp przez GUI przy u¿yciu gtkam zosta³ przetestowany i dzia³a.\n"
-"Jednak apara nie tworzy oddzielnych miniaturek. Poniewa¿ zdjêcia\n"
+"Jednak aparat nie tworzy oddzielnych miniaturek. Poniewa¿ zdjêcia\n"
 "zawsze i tak s± ma³e i w niskiej rozdzielczo¶ci, sterownik ¶ci±ga\n"
 "w³a¶ciwe zdjêcia i u¿ywa je jako miniaturki.\n"
-"Aparat potrafi robiæ zdjêcia w trybie 'video clip'. U¿ytkownik mo¿e\n"
-"animowaæ je przy u¿yciu np. funkcji 'animate' z pakietu ImageMagick.\n"
+"Aparat potrafi robiæ zdjêcia w trybie 'video clip'. Wynikowe klatki\n"
+"s± zapisywane jako ci±g nieruchomych zdjêæ. U¿ytkownik mo¿e animowaæ\n"
+"je przy u¿yciu np. funkcji 'animate' z pakietu ImageMagick.\n"
 "Wiêcej szczegó³ów o funkcjach aparatu mo¿na znale¼æ\n"
-"w libgphoto2/camlibs/README.\n"
+"w libgphoto2/camlibs/clicksmart310/README.clicksmart310.\n"
 
 #: camlibs/clicksmart310/library.c:141
 msgid ""
@@ -1443,10 +1316,8 @@ msgstr ""
 
 #: camlibs/dimera/dimera3500.c:161
 #, c-format
-msgid ""
-"Only root folder is supported - you requested a file listing for folder '%s'."
-msgstr ""
-"Tylko g³ówny folder jest obs³ugiwany - ¿±dano listy plików dla folderu '%s'."
+msgid "Only root folder is supported - you requested a file listing for folder '%s'."
+msgstr "Tylko g³ówny folder jest obs³ugiwany - ¿±dano listy plików dla folderu '%s'."
 
 #: camlibs/dimera/dimera3500.c:169 camlibs/dimera/dimera3500.c:435
 msgid "Problem getting number of images"
@@ -1700,15 +1571,12 @@ msgid "Could not open '%s'."
 msgstr "Nie uda³o siê otworzyæ '%s'."
 
 #: camlibs/directory/directory.c:541
-msgid ""
-"The Directory Browse \"camera\" lets you index photos on your hard drive."
-msgstr ""
-"Przegl±danie katalogu \"aparat\" pozwala indeksowaæ zdjêcia na twardym dysku."
+msgid "The Directory Browse \"camera\" lets you index photos on your hard drive."
+msgstr "Przegl±danie katalogu \"aparat\" pozwala indeksowaæ zdjêcia na twardym dysku."
 
 #: camlibs/directory/directory.c:550
 msgid "Directory Browse Mode - written by Scott Fritzinger <scottf@unr.edu>."
-msgstr ""
-"Tryb przegl±dania katalogu - napisa³ Scott Fritzinger <scottf@unr.edu>."
+msgstr "Tryb przegl±dania katalogu - napisa³ Scott Fritzinger <scottf@unr.edu>."
 
 #: camlibs/directory/directory.c:625
 #, c-format
@@ -1716,15 +1584,8 @@ msgid "Could not delete file '%s' in folder '%s' (error code %i: %m)."
 msgstr "Nie uda³o siê usun±æ pliku '%s' w folderze '%s' (kod b³êdu %i: %m)."
 
 #: camlibs/enigma13/enigma13.c:70
-msgid ""
-"Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille."
-"com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy "
-"to port your driver on this cam! "
-msgstr ""
-"Program do ¶ci±gania dla aparatów Digital Dream Enigma 1.3. napisany przez "
-"<olivier@aixmarseille.com> i zaadoptowany do sterownika spca50x. "
-"Podziêkowania dla za³ogi spca50x, ³atwo by³o sportowaæ wasz sterownik do "
-"tego aparatu! "
+msgid "Download program for Digital Dream Enigma 1.3. by <olivier@aixmarseille.com>, and adapted from spca50x driver.Thanks you, spca50x team, it was easy to port your driver on this cam! "
+msgstr "Program do ¶ci±gania dla aparatów Digital Dream Enigma 1.3. napisany przez <olivier@aixmarseille.com> i zaadoptowany do sterownika spca50x. Podziêkowania dla za³ogi spca50x, ³atwo by³o sportowaæ wasz sterownik do tego aparatu! "
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
@@ -1796,8 +1657,7 @@ msgstr "Aparat nie przyj±³ '%s' jako nazwy pliku."
 #: camlibs/fuji/fuji.c:677
 #, c-format
 msgid "Could not initialize upload (camera responded with 0x%02x)."
-msgstr ""
-"Nie uda³o siê rozpocz±æ przesy³ania do aparatu (aparat odpowiedzia³ 0x%02x)."
+msgstr "Nie uda³o siê rozpocz±æ przesy³ania do aparatu (aparat odpowiedzia³ 0x%02x)."
 
 #: camlibs/fuji/fuji.c:775
 #, c-format
@@ -1815,8 +1675,7 @@ msgid ""
 "Based on fujiplay by Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 msgstr ""
 "Matthew G. Martin\n"
-"Oparty o fujiplay, który napisa³ Thierry Bousch <bousch@topo.math.u-psud."
-"fr>\n"
+"Oparty o fujiplay, który napisa³ Thierry Bousch <bousch@topo.math.u-psud.fr>\n"
 
 #: camlibs/fuji/library.c:317
 #, c-format
@@ -1857,24 +1716,20 @@ msgid ""
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Support for Mustek gSmart 300 digital cameras\n"
-"based on several other gphoto2 camlib modules and the specifications kindly "
-"provided by Mustek.\n"
+"based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
 "\n"
 msgstr ""
 "biblioteka gsmart300 \n"
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jerome Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Obs³uga aparatów cyfrowych Mustek gSmart 300\n"
-"oparta na ró¿nych innych modu³ach camlib gphoto2 i specyfikacji "
-"udostêpnionej przez Musteka.\n"
+"oparta na ró¿nych innych modu³ach camlib gphoto2 i specyfikacji udostêpnionej przez Musteka.\n"
 "\n"
 
 #: camlibs/gsmart300/library.c:207 camlibs/spca50x/library.c:573
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr ""
-"Nieobs³ugiwany rodzaj portu: %d. Ten sterownik dzia³a tylko z aparatami "
-"USB.\n"
+msgstr "Nieobs³ugiwany rodzaj portu: %d. Ten sterownik dzia³a tylko z aparatami USB.\n"
 
 #: camlibs/gsmart300/library.c:224 camlibs/spca50x/library.c:631
 msgid "Could not reset camera.\n"
@@ -1882,15 +1737,11 @@ msgstr "Nie uda³o siê zresetowaæ aparatu.\n"
 
 #: camlibs/gsmart300/library.c:335 camlibs/spca50x/library.c:511
 #, c-format
-msgid ""
-"Your camera only supports deleting the last file on the camera. In this "
-"case, this is file '%s'."
-msgstr ""
-"Ten aparat obs³uguje tylko usuwanie ostatniego pliku z aparatu. W tym "
-"przypadku tym plikiem jest '%s'."
+msgid "Your camera only supports deleting the last file on the camera. In this case, this is file '%s'."
+msgstr "Ten aparat obs³uguje tylko usuwanie ostatniego pliku z aparatu. W tym przypadku tym plikiem jest '%s'."
 
 #: camlibs/hp215/hp215.c:440
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Current camera time:  %04d-%02d-%02d  %02d:%02d\n"
 "Free card memory: %d\n"
@@ -1902,7 +1753,7 @@ msgstr ""
 "Wolna pamiêæ na karcie: %d\n"
 "Obrazów na karcie: %d\n"
 "Wolnych obrazów na karcie: %d\n"
-"Poziom baterii: %d%%"
+"Poziom baterii: %d%%."
 
 #: camlibs/hp215/hp215.c:464
 msgid ""
@@ -2032,16 +1883,15 @@ msgid "Blue"
 msgstr "B³êkit"
 
 #: camlibs/jl2005a/library.c:104
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "This camera contains a Jeilin JL2005A chipset.\n"
 "The number of photos in it is %i. \n"
 msgstr ""
-"Ten aparat USB ma chipset SQ905C.\n"
+"Ten aparat ma chipset Jeilin JL2005A.\n"
 "Ca³kowita liczba zdjêæ w nim wynosi %i\n"
 
 #: camlibs/jl2005a/library.c:114
-#, fuzzy
 msgid ""
 "This driver supports cameras with Jeilin jl2005a chip \n"
 "These cameras do not support deletion of photos, nor uploading\n"
@@ -2052,25 +1902,21 @@ msgid ""
 "as consecutive still photos.\n"
 "For further details please consult libgphoto2/camlibs/README.jl2005a\n"
 msgstr ""
-"Ten sterownik obs³uguje aparaty z uk³adem Mars MR97310 (i bezpo¶rednie\n"
-"odpowiedniki ??Pixart PACx07??).\n"
+"Ten sterownik obs³uguje aparaty z uk³adem Jeilin jl2005a.\n"
 "Aparaty te nie obs³uguj± usuwania zdjêæ ani przesy³ania danych do\n"
 "aparatu.\n"
 "Dekodowanie skompresowanych zdjêæ mo¿e nie dzia³aæ dobrze i nie\n"
 "dzia³a tak samo dobrze dla wszystkich obs³ugiwanych aparatów.\n"
-"Przetwarzanie danych zdjêæ z aparatu Argus QuickClix NIE JEST\n"
-"OBS£UGIWANE.\n"
 "Je¶li zostan± znalezione w aparacie klatki filmów, s± ¶ci±gane\n"
 "jako kolejne nieruchome zdjêcia.\n"
-"Wiêcej szczegó³ów mo¿na znale¼æ w libgphoto2/camlibs/README.\n"
+"Wiêcej szczegó³ów mo¿na znale¼æ w libgphoto2/camlibs/README.jl2005a\n"
 
 #: camlibs/jl2005a/library.c:131
-#, fuzzy
 msgid ""
 "jl2005a camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Biblioteka dla aparatów Sonix\n"
+"Biblioteka dla aparatów jl2005a\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/kodak/dc120/dc120.c:68 camlibs/kodak/dc120/dc120.c:144
@@ -2078,15 +1924,8 @@ msgid "CompactFlash Card"
 msgstr "Karta CompactFlash"
 
 #: camlibs/kodak/dc120/dc120.c:367
-msgid ""
-"The Kodak DC120 camera uses the KDC file format for storing images. If you "
-"want to view the images you download from your camera, you will need to "
-"download the \"kdc2tiff\" program. It is available from http://kdc2tiff."
-"sourceforge.net"
-msgstr ""
-"Aparat Kodak DC120 u¿ywa formatu plików KDC do przechowywania obrazów. Aby "
-"ogl±daæ obrazy ¶ci±gniête z aparatu, potrzebny jest program \"kdc2tiff\". "
-"Jest on dostêpny pod http://kdc2tiff.sourceforge.net"
+msgid "The Kodak DC120 camera uses the KDC file format for storing images. If you want to view the images you download from your camera, you will need to download the \"kdc2tiff\" program. It is available from http://kdc2tiff.sourceforge.net"
+msgstr "Aparat Kodak DC120 u¿ywa formatu plików KDC do przechowywania obrazów. Aby ogl±daæ obrazy ¶ci±gniête z aparatu, potrzebny jest program \"kdc2tiff\". Jest on dostêpny pod http://kdc2tiff.sourceforge.net"
 
 #: camlibs/kodak/dc120/dc120.c:379
 msgid ""
@@ -2520,16 +2359,8 @@ msgstr ""
 "Wolne miejsce na karcie: %d kB\n"
 
 #: camlibs/kodak/dc210/dc210.c:632
-msgid ""
-"This library has been tested with a Kodak DC 215 Zoom camera. It might work "
-"also with DC 200 and DC 210 cameras. If you happen to have such a camera, "
-"please send a message to koltan@gmx.de to let me know, if you have any "
-"troubles with this driver library or if everything is okay."
-msgstr ""
-"Ta biblioteka by³a testowana z aparatem Kodak DC 215 Zoom. Mo¿e dzia³aæ "
-"tak¿e z aparatami DC 200 i DC 210. Je¶li masz taki aparat, wy¶lij wiadomo¶æ "
-"na adres koltan@gmx.de aby zawiadomiæ autora, czy by³y jakie¶ problemy z tym "
-"sterownikiem, czy wszystko by³o w porz±dku."
+msgid "This library has been tested with a Kodak DC 215 Zoom camera. It might work also with DC 200 and DC 210 cameras. If you happen to have such a camera, please send a message to koltan@gmx.de to let me know, if you have any troubles with this driver library or if everything is okay."
+msgstr "Ta biblioteka by³a testowana z aparatem Kodak DC 215 Zoom. Mo¿e dzia³aæ tak¿e z aparatami DC 200 i DC 210. Je¶li masz taki aparat, wy¶lij wiadomo¶æ na adres koltan@gmx.de aby zawiadomiæ autora, czy by³y jakie¶ problemy z tym sterownikiem, czy wszystko by³o w porz±dku."
 
 #: camlibs/kodak/dc210/dc210.c:644
 msgid ""
@@ -2593,14 +2424,12 @@ msgstr "W sumie wykonano zdjêæ: %d, flesza u¿yto razy: %d\n"
 #: camlibs/kodak/dc240/dc240.c:212
 msgid ""
 "Kodak DC240 Camera Library\n"
-"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
 "Rewritten and updated for gPhoto2."
 msgstr ""
 "Biblioteka dla aparatów Kodak DC240\n"
-"Scott Fritzinger <scottf@gphoto.net> i Hubert Figuiere <hfiguiere@teaser."
-"fr>\n"
+"Scott Fritzinger <scottf@gphoto.net> i Hubert Figuiere <hfiguiere@teaser.fr>\n"
 "Biblioteka dla aparatów Kodak DC240, DC280, DC3400 i DC5000.\n"
 "Przepisano i uaktualniono dla gPhoto2."
 
@@ -2641,12 +2470,8 @@ msgid "No card"
 msgstr "Brak karty"
 
 #: camlibs/kodak/dc3200/dc3200.c:43
-msgid ""
-"There is currently an operation in progress. This camera only supports one "
-"operation at a time. Please wait until the current operation has finished."
-msgstr ""
-"Aktualnie wykonuje siê jaka¶ operacja. Ten aparat obs³uguje tylko jedn± "
-"operacjê w danej chwili. Proszê poczekaæ na zakoñczenie bie¿±cej operacji."
+msgid "There is currently an operation in progress. This camera only supports one operation at a time. Please wait until the current operation has finished."
+msgstr "Aktualnie wykonuje siê jaka¶ operacja. Ten aparat obs³uguje tylko jedn± operacjê w danej chwili. Proszê poczekaæ na zakoñczenie bie¿±cej operacji."
 
 #: camlibs/kodak/dc3200/dc3200.c:146
 #, c-format
@@ -2657,17 +2482,11 @@ msgstr "aparat nieaktywny przez > 9 sekund, ponowna inicjalizacja.\n"
 msgid ""
 "Known problems:\n"
 "\n"
-"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, "
-"it will time out, and will have to be re-initialized. If you notice the "
-"camera does not respond, simply re-select the camera. This will cause it to "
-"reinitialize."
+"1. If the Kodak DC3200 does not receive a command at least every 10 seconds, it will time out, and will have to be re-initialized. If you notice the camera does not respond, simply re-select the camera. This will cause it to reinitialize."
 msgstr ""
 "Znane problemy:\n"
 "\n"
-"1. Je¶li Kodak DC3200 nie otrzyma polecenia przynajmniej co ka¿de 10 sekund, "
-"wyczerpie siê limit czasu i bêdzie musia³ byæ ponownie inicjalizowany. Je¶li "
-"aparat nie bêdzie odpowiada³, wystarczy ponownie wybraæ aparat - spowoduje "
-"to ponown± inicjalizacjê."
+"1. Je¶li Kodak DC3200 nie otrzyma polecenia przynajmniej co ka¿de 10 sekund, wyczerpie siê limit czasu i bêdzie musia³ byæ ponownie inicjalizowany. Je¶li aparat nie bêdzie odpowiada³, wystarczy ponownie wybraæ aparat - spowoduje to ponown± inicjalizacjê."
 
 #: camlibs/kodak/dc3200/dc3200.c:448
 msgid ""
@@ -2800,14 +2619,8 @@ msgstr "Nieznany b³±d."
 
 #: camlibs/konica/konica.c:137
 #, c-format
-msgid ""
-"The camera has just sent an error that has not yet been discovered. Please "
-"report the following to %s with additional information how you got this "
-"error: (0x%x,0x%x). Thank you very much!"
-msgstr ""
-"Aparat wys³a³ w³a¶nie b³±d, który nie zosta³ jeszcze odkryty. Proszê zg³osiæ "
-"nastêpuj±cy raport na adres %s z dodatkowymi informacjami jak uzyskano ten "
-"b³±d: (0x%x,0x%x). Z góry dziêkujê!"
+msgid "The camera has just sent an error that has not yet been discovered. Please report the following to %s with additional information how you got this error: (0x%x,0x%x). Thank you very much!"
+msgstr "Aparat wys³a³ w³a¶nie b³±d, który nie zosta³ jeszcze odkryty. Proszê zg³osiæ nastêpuj±cy raport na adres %s z dodatkowymi informacjami jak uzyskano ten b³±d: (0x%x,0x%x). Z góry dziêkujê!"
 
 #: camlibs/konica/library.c:158 camlibs/pccam300/library.c:116
 msgid "Getting file list..."
@@ -2818,12 +2631,8 @@ msgid "Testing different speeds..."
 msgstr "Testowanie ró¿nych prêdko¶ci..."
 
 #: camlibs/konica/library.c:340
-msgid ""
-"The camera could not be contacted. Please make sure it is connected to the "
-"computer and turned on."
-msgstr ""
-"Nie uda³o siê skontaktowaæ z aparatem. Proszê upewniæ siê, ¿e jest "
-"pod³±czony do komputera i w³±czony."
+msgid "The camera could not be contacted. Please make sure it is connected to the computer and turned on."
+msgstr "Nie uda³o siê skontaktowaæ z aparatem. Proszê upewniæ siê, ¿e jest pod³±czony do komputera i w³±czony."
 
 #: camlibs/konica/library.c:373
 msgid "Your camera does not support changing filenames."
@@ -3068,18 +2877,14 @@ msgid "Can't upload this image to the camera. An error has occurred."
 msgstr "Nie mo¿na przes³aæ tego obrazu do aparatu. Wyst±pi³ b³±d."
 
 #: camlibs/konica/qm150.c:634
-#, fuzzy
 msgid "You must be in record mode to capture images."
 msgstr "Do wykonywania zdjêæ musi byæ w³±czony tryb nagrywania."
 
 #: camlibs/konica/qm150.c:637
-#, fuzzy
 msgid "No space available to capture new images. You must delete some images."
-msgstr ""
-"Brak wolnego miejsca aby zrobiæ nowe zdjêcie. Trzeba usun±æ trochê obrazów."
+msgstr "Brak wolnego miejsca aby zrobiæ nowe zdjêcie. Trzeba usun±æ trochê obrazów."
 
 #: camlibs/konica/qm150.c:641
-#, fuzzy
 msgid "Can't capture new images. Unknown error"
 msgstr "Nie mo¿na zrobiæ zdjêcia. Nieznany b³±d"
 
@@ -3117,19 +2922,16 @@ msgid "Icons"
 msgstr "Ikony"
 
 #: camlibs/konica/qm150.c:937 camlibs/konica/qm150.c:946
-#, fuzzy
 msgid "2.0 m"
-msgstr "2.0m"
+msgstr "2.0 m"
 
 #: camlibs/konica/qm150.c:938 camlibs/konica/qm150.c:949
-#, fuzzy
 msgid "0.5 m"
-msgstr "0.5m"
+msgstr "0.5 m"
 
 #: camlibs/konica/qm150.c:939 camlibs/konica/qm150.c:952
-#, fuzzy
 msgid "0.1 m"
-msgstr "0.1m"
+msgstr "0.1 m"
 
 #: camlibs/konica/qm150.c:957
 msgid "White balance"
@@ -3245,7 +3047,7 @@ msgid "MM/DD/YYYY"
 msgstr "MM/DD/RRRR"
 
 #: camlibs/konica/qm150.c:1164
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Model: %s\n"
 "Capacity: %i Mb\n"
@@ -3257,7 +3059,7 @@ msgid ""
 "Date and Time: %s\n"
 msgstr ""
 "Model: %s\n"
-"Pojemno¶æ: %iMo\n"
+"Pojemno¶æ: %i Mb\n"
 "Zasilanie: %s\n"
 "Czas automatycznego wy³±czania: %i min\n"
 "Tryb: %s\n"
@@ -3281,7 +3083,7 @@ msgstr ""
 "Obs³uga francuskich aparatów Konica Q-M150."
 
 #: camlibs/konica/qm150.c:1202
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "About Konica Q-M150:\n"
 "This camera does not allow any changes\n"
@@ -3298,8 +3100,6 @@ msgstr ""
 "\n"
 "W przypadku problemów z tym sterownikiem proszê pisaæ\n"
 "na adres autorów tego sterownika.\n"
-"\n"
-"Podziêkowania za u¿ywanie GPhoto2 i systemów operacyjnych UNIX/Linux.\n"
 
 #: camlibs/largan/lmini/largan.c:228
 msgid ""
@@ -3656,12 +3456,8 @@ msgstr "Przesy³anie obrazu do aparatu: %s."
 
 #: camlibs/panasonic/dc1000.c:458 camlibs/panasonic/dc1580.c:580
 #, c-format
-msgid ""
-"File size is %ld bytes. The size of the largest file possible to upload is: %"
-"i bytes."
-msgstr ""
-"Rozmiar pliku to %ld bajtów. Rozmiar najwiêkszego mo¿liwego pliku, jaki da "
-"siê przes³aæ to %i bajtów."
+msgid "File size is %ld bytes. The size of the largest file possible to upload is: %i bytes."
+msgstr "Rozmiar pliku to %ld bajtów. Rozmiar najwiêkszego mo¿liwego pliku, jaki da siê przes³aæ to %i bajtów."
 
 #: camlibs/panasonic/dc1000.c:471 camlibs/panasonic/dc1580.c:591
 #: camlibs/ricoh/ricoh.c:837
@@ -3695,7 +3491,6 @@ msgid "Downloading %s."
 msgstr "¦ci±ganie %s."
 
 #: camlibs/panasonic/dc1580.c:629
-#, fuzzy
 msgid ""
 "Panasonic DC1580 gPhoto2 library\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
@@ -3717,41 +3512,24 @@ msgid "Downloading '%s'..."
 msgstr "¦ci±ganie '%s'..."
 
 #: camlibs/panasonic/l859/l859.c:581
-#, fuzzy
 msgid ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic introduced image capturing technology called PHOTOSHOT for the "
-"first time, in this series of Palmcorders.  Images are stored in JPEG format "
-"on an internal flashcard and can be transferred to a computer through the "
-"built-in serial port.  Images are saved in one of two resolutions; NORMAL is "
-"320x240 and FINE is 640x480.  The CCD device which captures the images from "
-"the lens is only 300K and thus produces only low quality pictures."
+"Panasonic introduced image capturing technology called PHOTOSHOT for the first time, in this series of Palmcorders.  Images are stored in JPEG format on an internal flashcard and can be transferred to a computer through the built-in serial port.  Images are saved in one of two resolutions; NORMAL is 320x240 and FINE is 640x480.  The CCD device which captures the images from the lens is only 300K and thus produces only low quality pictures."
 msgstr ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic przedstawi³ technologiê robienia zdjêæ PHOTOSHOT po raz pierwszy w "
-"tej serii Palmcorderów. Obrazy s± przechowywane w formacie JPEG na "
-"wewnêtrznej karcie flash i mog± byæ przesy³ane do komputera przez wbudowany "
-"port szeregowy. Obrazy s± zapisywane w jednej z dwóch rozdzielczo¶ci: NORMAL "
-"(320x240) i FINE (640x480). Urz±dzenie CCD odczytuj±ce obraz z obiektywu ma "
-"tylko 300K punktów i jest w stanie tworzyæ tylko zdjêcia niskiej jako¶ci."
+"Panasonic przedstawi³ technologiê robienia zdjêæ PHOTOSHOT po raz pierwszy w tej serii Palmcorderów. Obrazy s± przechowywane w formacie JPEG na wewnêtrznej karcie flash i mog± byæ przesy³ane do komputera przez wbudowany port szeregowy. Obrazy s± zapisywane w jednej z dwóch rozdzielczo¶ci: NORMAL (320x240) i FINE (640x480). Urz±dzenie CCD odczytuj±ce obraz z obiektywu ma tylko 300K punktów, wiêc jest w stanie tworzyæ tylko zdjêcia niskiej jako¶ci."
 
 #: camlibs/panasonic/l859/l859.c:599
 msgid ""
 "Known problems:\n"
 "\n"
-"If communications problems occur, reset the camera and restart the "
-"application.  The driver is not robust enough yet to recover from these "
-"situations, especially if a problem occurs and the camera is not properly "
-"shutdown at speeds faster than 9600."
+"If communications problems occur, reset the camera and restart the application.  The driver is not robust enough yet to recover from these situations, especially if a problem occurs and the camera is not properly shutdown at speeds faster than 9600."
 msgstr ""
 "Znane problemy:\n"
 "\n"
-"Je¶li wyst±pi± problemy z komunikacj±, nale¿y zresetowaæ aparat i "
-"zrestartowaæ aplikacjê. Sterownik nie potrafi jeszcze wyj¶æ z tych sytuacji, "
-"zw³aszcza je¶li wyst±pi problem, a aparat nie zostanie w³a¶ciwie wy³±czony "
-"przy prêdko¶ciach wiêkszych ni¿ 9600."
+"Je¶li wyst±pi± problemy z komunikacj±, nale¿y zresetowaæ aparat i zrestartowaæ aplikacjê. Sterownik nie potrafi jeszcze wyj¶æ z tych sytuacji, zw³aszcza je¶li wyst±pi problem, a aparat nie zostanie w³a¶ciwie wy³±czony przy prêdko¶ciach wiêkszych ni¿ 9600."
 
 #: camlibs/panasonic/l859/l859.c:613
 msgid ""
@@ -3791,14 +3569,12 @@ msgid "Downloading file..."
 msgstr "¦ci±ganie pliku..."
 
 #: camlibs/pccam600/library.c:254
-#, fuzzy
 msgid ""
 "Creative PC-CAM600\n"
 "Author: Peter Kajberg <pbk@odense.kollegienet.dk>\n"
 msgstr ""
 "Creative PC-CAM600\n"
-" Autor: Peter Kajberg\n"
-" e-mail: <pbk@odense.kollegienet.dk>\n"
+"Autor: Peter Kajberg <pbk@odense.kollegienet.dk>\n"
 
 #: camlibs/pccam600/pccam600.c:128 camlibs/pccam600/pccam600.c:157
 #, c-format
@@ -3827,16 +3603,10 @@ msgstr "pccam600 init: Nieoczekiwany b³±d: gp_port_read zwróci³o %d zamiast %d"
 
 #: camlibs/polaroid/pdc320.c:457
 msgid ""
-"Download program for several Polaroid cameras. Originally written by Peter "
-"Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan "
-"Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users."
-"sf.net>.\n"
+"Download program for several Polaroid cameras. Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>, and adapted for gphoto2 by Nathan Stenzel <nathanstenzel@users.sourceforge.net> and Lutz Mueller <lutz@users.sf.net>.\n"
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
-"Program do ¶ci±gania zdjêæ dla kilku aparatów Polaroid. Oryginalnie napisa³ "
-"go Peter Desnoyers <pjd@fred.cambridge.ma.us>, do gphoto2 zaadaptowali "
-"Nathan Stenzel <nathanstenzel@users.sourceforge.net> i Lutz Mueller "
-"<lutz@users.sf.net>.\n"
+"Program do ¶ci±gania zdjêæ dla kilku aparatów Polaroid. Oryginalnie napisa³ go Peter Desnoyers <pjd@fred.cambridge.ma.us>, do gphoto2 zaadaptowali Nathan Stenzel <nathanstenzel@users.sourceforge.net> i Lutz Mueller <lutz@users.sf.net>.\n"
 "Testowanie Polaroida 640SE wykona³ Michael Golden <naugrim@juno.com>."
 
 #: camlibs/polaroid/pdc320.c:487
@@ -3845,18 +3615,8 @@ msgid "Model: %x, %x, %x, %x"
 msgstr "Model: %x, %x, %x, %x"
 
 #: camlibs/polaroid/pdc640.c:903
-msgid ""
-"Download program for GrandTek 98x based cameras. Originally written by Chris "
-"Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
-"<lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik "
-"JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus "
-"Meissner <marcus@jet.franken.de>."
-msgstr ""
-"Program do ¶ci±gania zdjêæ dla aparatów opartych o GrandTek 98x. Oryginalnie "
-"napisa³ go Chris Byrne <adapt@ihug.co.nz>, do gphoto2 zaadaptowa³ Lutz "
-"Mueller <lutz@users.sf.net>. Rozszerzenia protoko³u i postprocessing dla "
-"aparatów Jenoptik JD350e napisa³ Michael Trawny <trawny99@users.sourceforge."
-"net>. Poprawek b³êdów dokona³ Marcus Meissner <marcus@jet.franken.de>."
+msgid "Download program for GrandTek 98x based cameras. Originally written by Chris Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>.Protocol enhancements and postprocessing  for Jenoptik JD350e by Michael Trawny <trawny99@users.sourceforge.net>.Bugfixes by Marcus Meissner <marcus@jet.franken.de>."
+msgstr "Program do ¶ci±gania zdjêæ dla aparatów opartych o GrandTek 98x. Oryginalnie napisa³ go Chris Byrne <adapt@ihug.co.nz>, do gphoto2 zaadaptowa³ Lutz Mueller <lutz@users.sf.net>. Rozszerzenia protoko³u i postprocessing dla aparatów Jenoptik JD350e napisa³ Michael Trawny <trawny99@users.sourceforge.net>. Poprawek b³êdów dokona³ Marcus Meissner <marcus@jet.franken.de>."
 
 #: camlibs/polaroid/pdc700.c:159 camlibs/ptp2/config.c:2631
 #: camlibs/ptp2/ptp.c:3179
@@ -3959,31 +3719,17 @@ msgstr "Aparat wys³a³ wiêcej bajtów ni¿ oczekiwano (%i)"
 
 #: camlibs/polaroid/pdc700.c:451
 #, c-format
-msgid ""
-"Requested information about picture %i (= 0x%x), but got information about "
-"picture %i back"
-msgstr ""
-"¯±dano informacji o zdjêciu %i (= 0x%x), ale otrzymano informacje o zdjêciu %"
-"i"
+msgid "Requested information about picture %i (= 0x%x), but got information about picture %i back"
+msgstr "¯±dano informacji o zdjêciu %i (= 0x%x), ale otrzymano informacje o zdjêciu %i"
 
 #: camlibs/polaroid/pdc700.c:914
 #, c-format
-msgid ""
-"%i bytes of an unknown image format have been received. Please write to %s "
-"and ask for assistance."
-msgstr ""
-"Odebrano %i bajtów w nieznanym formacie obrazu. Proszê napisaæ pod %s z "
-"pro¶b± o pomoc."
+msgid "%i bytes of an unknown image format have been received. Please write to %s and ask for assistance."
+msgstr "Odebrano %i bajtów w nieznanym formacie obrazu. Proszê napisaæ pod %s z pro¶b± o pomoc."
 
 #: camlibs/polaroid/pdc700.c:939
-msgid ""
-"Download program for Polaroid DC700 camera. Originally written by Ryan "
-"Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
-"Mueller <lutz@users.sf.net>."
-msgstr ""
-"Program do ¶ci±gania zdjêæ dla aparatów Polaroid DC700. Oryginalnie napisa³ "
-"go Ryan Lantzer <rlantzer@umr.edu> dla gphoto-4.x. Do gphoto2 zaadaptowa³ "
-"Lutz Mueller <lutz@users.sf.net>."
+msgid "Download program for Polaroid DC700 camera. Originally written by Ryan Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
+msgstr "Program do ¶ci±gania zdjêæ dla aparatów Polaroid DC700. Oryginalnie napisa³ go Ryan Lantzer <rlantzer@umr.edu> dla gphoto-4.x. Do gphoto2 zaadaptowa³ Lutz Mueller <lutz@users.sf.net>."
 
 #: camlibs/polaroid/pdc700.c:995
 msgid "How long will it take until the camera powers off?"
@@ -4132,7 +3878,7 @@ msgstr "NEF+Dobra"
 
 #: camlibs/ptp2/config.c:804
 msgid "TIFF (RGB)"
-msgstr ""
+msgstr "TIFF (RGB)"
 
 #: camlibs/ptp2/config.c:1080
 msgid "TV"
@@ -4163,18 +3909,16 @@ msgid "Commander"
 msgstr "Commander"
 
 #: camlibs/ptp2/config.c:1113
-#, fuzzy
 msgid "center weighted average"
-msgstr "Pomiar ¶redni centralnie wa¿ony"
+msgstr "¶rednia centralnie wa¿ona"
 
 #: camlibs/ptp2/config.c:1114
 msgid "spot"
 msgstr "punkt"
 
 #: camlibs/ptp2/config.c:1115
-#, fuzzy
 msgid "evaluative"
-msgstr "Twórczy"
+msgstr "szacowanie"
 
 #: camlibs/ptp2/config.c:1120
 msgid "Evaluative metering"
@@ -5288,8 +5032,7 @@ msgid ""
 "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 "Media Players that support the Media Transfer Protocol (MTP).\n"
 "\n"
-"This driver is not a 'Licensed Implementation' of the Media Transfer "
-"Protocol.\n"
+"This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
 "\n"
 "Enjoy!"
 msgstr ""
@@ -5377,39 +5120,39 @@ msgid "Manufacturer: %s\n"
 msgstr "Producent: %s\n"
 
 #: camlibs/ptp2/library.c:2211
-#, fuzzy, c-format
+#, c-format
 msgid "Model: %s\n"
-msgstr "Model: "
+msgstr "Model: %s\n"
 
 #: camlibs/ptp2/library.c:2213
-#, fuzzy, c-format
+#, c-format
 msgid "  Version: %s\n"
-msgstr "Wersja: %s\n"
+msgstr "  Wersja: %s\n"
 
 #: camlibs/ptp2/library.c:2216
-#, fuzzy, c-format
+#, c-format
 msgid "  Serial Number: %s\n"
-msgstr "Numer seryjny: %s\n"
+msgstr "  Numer seryjny: %s\n"
 
 #: camlibs/ptp2/library.c:2220
 #, c-format
 msgid "Vendor Extension ID: 0x%x (%d.%d)\n"
-msgstr ""
+msgstr "ID rozszerzenia producenta: 0x%x(%d.%d)\n"
 
 #: camlibs/ptp2/library.c:2227
-#, fuzzy, c-format
+#, c-format
 msgid "Vendor Extension Description: %s\n"
-msgstr "\tOpis urz±dzenia: %s\n"
+msgstr "Opis rozszerzenia producenta: %s\n"
 
 #: camlibs/ptp2/library.c:2232
-#, fuzzy, c-format
+#, c-format
 msgid "PTP Standard Version: %d.%d\n"
-msgstr "Wersja firmware'u: %d.%02d\n"
+msgstr "Wersja standardu PTP: %d.%d\n"
 
 #: camlibs/ptp2/library.c:2239
-#, fuzzy, c-format
+#, c-format
 msgid "Functional Mode: 0x%04x\n"
-msgstr "Tryb dzia³ania"
+msgstr "Tryb dzia³ania: 0x%04x\n"
 
 #: camlibs/ptp2/library.c:2244
 #, c-format
@@ -5643,12 +5386,8 @@ msgstr "Inicjalizacja aparatu"
 
 #: camlibs/ptp2/library.c:4412
 #, c-format
-msgid ""
-"Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
-"port type %x"
-msgstr ""
-"PTP jest obecnie zaimplementowane tylko dla aparatów USB i PTP/IP, rodzaj "
-"portu %x"
+msgid "Currently, PTP is only implemented for USB and PTP/IP cameras currently, port type %x"
+msgstr "PTP jest obecnie zaimplementowane tylko dla aparatów USB i PTP/IP, rodzaj portu %x"
 
 #: camlibs/ptp2/ptp.c:3059
 msgid "PTP: Undefined Error"
@@ -6061,7 +5800,6 @@ msgid "EZoom Size of Tele"
 msgstr "Rozmiar EZoom teleobiektywu"
 
 #: camlibs/ptp2/ptp.c:3238
-#, fuzzy
 msgid "Flash Quantity Count"
 msgstr "Liczba b³ysków flesza"
 
@@ -7161,8 +6899,7 @@ msgstr "Oczekiwano %i, otrzymano %i. Proszê zg³osiæ ten b³±d pod adres %s."
 #: camlibs/ricoh/ricoh.c:75
 #, c-format
 msgid "Expected %i bytes, got %i. Please report this error to %s."
-msgstr ""
-"Oczekiwano %i bajtów, otrzymano %i. Proszê zg³osiæ ten b³±d pod adres %s."
+msgstr "Oczekiwano %i bajtów, otrzymano %i. Proszê zg³osiæ ten b³±d pod adres %s."
 
 #: camlibs/ricoh/ricoh.c:172 camlibs/ricoh/ricoh.c:186
 #, c-format
@@ -7182,8 +6919,7 @@ msgstr "Aparat zajêty. Je¶li problem nie minie, proszê skontaktowaæ siê z %s."
 #: camlibs/ricoh/ricoh.c:291
 #, c-format
 msgid "Timeout even after 2 retries. Please contact %s."
-msgstr ""
-"Przekroczony limit czasu nawet po 2 próbach. Proszê skontaktowaæ siê z %s."
+msgstr "Przekroczony limit czasu nawet po 2 próbach. Proszê skontaktowaæ siê z %s."
 
 #: camlibs/ricoh/ricoh.c:307
 #, c-format
@@ -7207,22 +6943,12 @@ msgstr "Wyst±pi³ nieznany b³±d. Proszê skontaktowaæ siê z %s."
 
 #: camlibs/ricoh/ricoh.c:816
 #, c-format
-msgid ""
-"The filename's length must not exceed 12 characters ('%s' has %i characters)."
-msgstr ""
-"D³ugo¶æ nazwy pliku nie mo¿e przekraczaæ 12 znaków ('%s' ma %i znaków)."
+msgid "The filename's length must not exceed 12 characters ('%s' has %i characters)."
+msgstr "D³ugo¶æ nazwy pliku nie mo¿e przekraczaæ 12 znaków ('%s' ma %i znaków)."
 
 #: camlibs/samsung/samsung.c:243
-msgid ""
-"The Samsung digimax 800k driver has been written by James McKenzie "
-"<james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge."
-"net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and "
-"enhanced the port."
-msgstr ""
-"Sterownik Samsung digimax 800k napisa³ James McKenzie <james@fishsoup.dhs."
-"org> dla gphoto. Lutz Mueller <lutz@users.sourceforge.net> sportowa³ go do "
-"gphoto2. Marcus Meissner <marcus@jet.franken.de> poprawi³ i rozszerzy³ ten "
-"port."
+msgid "The Samsung digimax 800k driver has been written by James McKenzie <james@fishsoup.dhs.org> for gphoto. Lutz Mueller <lutz@users.sourceforge.net> ported it to gphoto2. Marcus Meissner <marcus@jet.franken.de> fixed and enhanced the port."
+msgstr "Sterownik Samsung digimax 800k napisa³ James McKenzie <james@fishsoup.dhs.org> dla gphoto. Lutz Mueller <lutz@users.sourceforge.net> sportowa³ go do gphoto2. Marcus Meissner <marcus@jet.franken.de> poprawi³ i rozszerzy³ ten port."
 
 #: camlibs/sierra/epson-desc.c:85 camlibs/sierra/nikon-desc.c:92
 #: camlibs/sierra/nikon-desc.c:126 camlibs/sierra/olympus-desc.c:106
@@ -7348,8 +7074,7 @@ msgstr "Nie mo¿na odczytaæ pojemno¶ci baterii"
 
 #: camlibs/sierra/library.c:304
 #, c-format
-msgid ""
-"The battery level of the camera is too low (%d%%). The operation is aborted."
+msgid "The battery level of the camera is too low (%d%%). The operation is aborted."
 msgstr "Poziom baterii aparatu jest zbyt niski (%d%%). Operacja przerwana."
 
 #: camlibs/sierra/library.c:328
@@ -7367,26 +7092,22 @@ msgstr "Pierwszy odebrany bajt (0x%x) jest nieprawid³owy."
 
 #: camlibs/sierra/library.c:719
 #, c-format
-msgid ""
-"Transmission of packet timed out even after %i retries. Please contact %s."
-msgstr ""
-"Up³yn±³ limit czasu przy transmisji pakietu po %i próbach. Proszê "
-"skontaktowaæ siê z %s."
+msgid "Transmission of packet timed out even after %i retries. Please contact %s."
+msgstr "Up³yn±³ limit czasu przy transmisji pakietu po %i próbach. Proszê skontaktowaæ siê z %s."
 
 #: camlibs/sierra/library.c:753 camlibs/sierra/library.c:777
 msgid "Could not transmit packet even after several retries."
 msgstr "Nie uda³o siê przes³aæ pakietu nawet po kilku próbach."
 
 #: camlibs/sierra/library.c:768
-#, fuzzy, c-format
+#, c-format
 msgid "Packet was rejected by camera. Please contact %s."
 msgstr "Pakiet odrzucony przez aparat. Proszê skontaktowaæ siê z %s."
 
 #: camlibs/sierra/library.c:795
 #, c-format
 msgid "Could not transmit packet (error code %i). Please contact %s."
-msgstr ""
-"Nie uda³o siê przes³aæ pakietu (kod b³êdu %i). Proszê skontaktowaæ siê z %s."
+msgstr "Nie uda³o siê przes³aæ pakietu (kod b³êdu %i). Proszê skontaktowaæ siê z %s."
 
 #: camlibs/sierra/library.c:886
 msgid "Transmission timed out even after 2 retries. Giving up..."
@@ -7417,17 +7138,13 @@ msgstr "Wysy³anie danych..."
 
 #: camlibs/sierra/library.c:1204
 #, c-format
-msgid ""
-"recursive calls are not supported by the sierra driver! Please contact %s."
-msgstr ""
-"wywo³ania rekurencyjne nie s± obs³ugiwane przez sterownik sierra! Proszê "
-"skontaktowaæ siê z %s."
+msgid "recursive calls are not supported by the sierra driver! Please contact %s."
+msgstr "wywo³ania rekurencyjne nie s± obs³ugiwane przez sterownik sierra! Proszê skontaktowaæ siê z %s."
 
 #: camlibs/sierra/library.c:1259
 #, c-format
 msgid "Could not get string register %i. Please contact %s."
-msgstr ""
-"Nie uda³o siê uzyskaæ rejestru ³añcuchowego %i. Proszê skontaktowaæ siê z %s."
+msgstr "Nie uda³o siê uzyskaæ rejestru ³añcuchowego %i. Proszê skontaktowaæ siê z %s."
 
 #: camlibs/sierra/library.c:1490
 #, c-format
@@ -7870,11 +7587,8 @@ msgid "Auto Off (host) (in seconds)"
 msgstr "Automatyczne wy³±czanie (host) (w sekundach)"
 
 #: camlibs/sierra/sierra.c:1181 camlibs/sierra/sierra.c:1643
-msgid ""
-"How long will it take until the camera powers off when connected to the "
-"computer?"
-msgstr ""
-"Po jakim czasie aparat ma siê wy³±czaæ kiedy jest pod³±czony do komputera?"
+msgid "How long will it take until the camera powers off when connected to the computer?"
+msgstr "Po jakim czasie aparat ma siê wy³±czaæ kiedy jest pod³±czony do komputera?"
 
 #: camlibs/sierra/sierra.c:1193 camlibs/sierra/sierra.c:1436
 #: camlibs/sierra/sierra.c:1655 camlibs/sierra/sierra.c:1843
@@ -7882,12 +7596,8 @@ msgid "Auto Off (field) (in seconds)"
 msgstr "Automatyczne wy³±czanie (pole) (w sekundach)"
 
 #: camlibs/sierra/sierra.c:1195 camlibs/sierra/sierra.c:1657
-msgid ""
-"How long will it take until the camera powers off when not connected to the "
-"computer?"
-msgstr ""
-"Po jakim czasie aparat ma siê wy³±czaæ kiedy nie jest pod³±czony do "
-"komputera?"
+msgid "How long will it take until the camera powers off when not connected to the computer?"
+msgstr "Po jakim czasie aparat ma siê wy³±czaæ kiedy nie jest pod³±czony do komputera?"
 
 #: camlibs/sierra/sierra.c:1217 camlibs/sierra/sierra.c:1455
 msgid "LCD Auto Off (in seconds)"
@@ -8152,8 +7862,7 @@ msgstr ""
 "   - robienie zdjêæ do aparatu (\t\tjw.\t\t)\n"
 "Je¶li zostan± znalezione w aparacie klatki filmów, s± ¶ci±gane jako\n"
 "kolejne nieruchome zdjêcia lub pliki AVI, zale¿nie od modelu.\n"
-"Miniaturki dla plików AVI to nieruchome zdjêcia zrobione z pierwszej "
-"klatki.\n"
+"Miniaturki dla plików AVI to nieruchome zdjêcia zrobione z pierwszej klatki.\n"
 "Nie mo¿na usuwaæ pojedynczych zdjêæ z wyj±tkiem ostatniego.\n"
 
 #: camlibs/sonix/library.c:149
@@ -8294,8 +8003,7 @@ msgstr ""
 "Gtkam ¶ci±gnie je oddzielnie. Kiedy filmy s± obecne w aparacie, przed\n"
 "nazw± aparatu jest ma³y trójk±t. Je¶li nie ma ¿adnych folderów na li¶cie,\n"
 "nale¿y klikn±æ na tym ma³ym trójk±cie, ¿eby siê pojawi³a. Nastêpnie\n"
-"mo¿na klikn±æ na folderze aby do niego wej¶æ i zobaczyæ lub ¶ci±gn±æ "
-"klatki.\n"
+"mo¿na klikn±æ na folderze aby do niego wej¶æ i zobaczyæ lub ¶ci±gn±æ klatki.\n"
 "Klatki bêd± ¶ci±gniête jako osobne zdjêcia ze specjalnymi nazwami\n"
 "okre¶laj±cymi z którego filmu pochodz±. W ten sposób mo¿na swobodnie\n"
 "wybraæ zapis klatek filmu do osobnych katalogów, lub nie.\n"
@@ -8325,7 +8033,6 @@ msgid "Bad exposure (not enough light probably)"
 msgstr "Z³a ekspozycja (prawdopodobnie za ma³o ¶wiat³a)"
 
 #: camlibs/stv0680/library.c:524
-#, fuzzy
 msgid "Information on STV0680-based camera:\n"
 msgstr "Informacje dla aparatu opartego o STV0680:\n"
 
@@ -8345,10 +8052,9 @@ msgid "Sensor ID: %d.%d\n"
 msgstr "ID sensora: %d.%d\n"
 
 #: camlibs/stv0680/library.c:543
-#, fuzzy, c-format
+#, c-format
 msgid "Camera is configured for lights flickering by %dHz.\n"
-msgstr ""
-"Aparat jest skonfigurowany dla ¶wiate³ migaj±cych z czêstotliwo¶ci± %dHz.\n"
+msgstr "Aparat jest skonfigurowany dla ¶wiate³ migaj±cych z czêstotliwo¶ci± %dHz.\n"
 
 #: camlibs/stv0680/library.c:546
 #, c-format
@@ -8454,8 +8160,7 @@ msgid ""
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
 "Biblioteka dla aparatów (Traveler) SX330z (i innych Aldi-cam).\n"
-"Aparaty innych producentów, jak Jenoptik, Skanhex, Maginon, powinny tak¿e "
-"dzia³aæ.\n"
+"Aparaty innych producentów, jak Jenoptik, Skanhex, Maginon, powinny tak¿e dzia³aæ.\n"
 "Proszê wysy³aæ raporty b³êdów i komentarze.\n"
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 
@@ -8564,17 +8269,12 @@ msgstr "Folder '%s' nie zawiera folderu '%s'."
 #: libgphoto2/gphoto2-filesys.c:702
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
-msgstr ""
-"Nie uda³o siê do³±czyæ '%s' do folderu '%s' poniewa¿ ten plik ju¿ istnieje."
+msgstr "Nie uda³o siê do³±czyæ '%s' do folderu '%s' poniewa¿ ten plik ju¿ istnieje."
 
 #: libgphoto2/gphoto2-filesys.c:1099
 #, c-format
-msgid ""
-"You have been trying to delete '%s' from folder '%s', but the filesystem "
-"does not support deletion of files."
-msgstr ""
-"Próbowano usun±æ '%s' z folderu '%s', ale system plików nie obs³uguje "
-"usuwania plików."
+msgid "You have been trying to delete '%s' from folder '%s', but the filesystem does not support deletion of files."
+msgstr "Próbowano usun±æ '%s' z folderu '%s', ale system plików nie obs³uguje usuwania plików."
 
 #: libgphoto2/gphoto2-filesys.c:1109
 #, c-format
@@ -8583,8 +8283,7 @@ msgstr "Usuwanie '%s' z folderu '%s'..."
 
 #: libgphoto2/gphoto2-filesys.c:1228
 #, c-format
-msgid ""
-"There are still subfolders in folder '%s' that you are trying to remove."
+msgid "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr "Nadal istniej± podkatalogi w folderze '%s', który próbowano usun±æ."
 
 #: libgphoto2/gphoto2-filesys.c:1235
@@ -8598,9 +8297,7 @@ msgstr "System plików nie obs³uguje przesy³ania plików do aparatu."
 
 #: libgphoto2/gphoto2-filesys.c:1318
 #, c-format
-msgid ""
-"Folder '%s' does only contain %i files, but you requested a file with number "
-"%i."
+msgid "Folder '%s' does only contain %i files, but you requested a file with number %i."
 msgstr "Folder '%s' zawiera tylko %i plików, a ¿±dano pliku o numerze %i."
 
 #: libgphoto2/gphoto2-filesys.c:1363
@@ -8638,8 +8335,7 @@ msgstr "System plików nie obs³uguje ustawiania informacji o plikach"
 
 #: libgphoto2/gphoto2-filesys.c:2406
 msgid "Read-only file attributes like width and height can not be changed."
-msgstr ""
-"Atrybutów tylko do odczytu, jak szeroko¶æ i wysoko¶æ, nie mo¿na zmieniæ."
+msgstr "Atrybutów tylko do odczytu, jak szeroko¶æ i wysoko¶æ, nie mo¿na zmieniæ."
 
 #: libgphoto2/gphoto2-filesys.c:2475
 msgid "The filesystem doesn't support getting storage information"
@@ -8696,164 +8392,3 @@ msgstr "Nieznany b³±d biblioteki aparatu"
 #: libgphoto2/gphoto2-result.c:88
 msgid "Unknown error"
 msgstr "Nieznany b³±d"
-
-#~ msgid ""
-#~ "Your USB camera seems to have an SQ905C chipset.\n"
-#~ "The total number of pictures in it is %i\n"
-#~ msgstr ""
-#~ "Ten aparat USB ma chipset SQ905C.\n"
-#~ "Ca³kowita liczba zdjêæ w nim wynosi %i\n"
-
-#~ msgid "30 seconds"
-#~ msgstr "30 sekund"
-
-#~ msgid "25 seconds"
-#~ msgstr "25 sekund"
-
-#~ msgid "15 seconds"
-#~ msgstr "15 sekund"
-
-#~ msgid "13 seconds"
-#~ msgstr "13 sekund"
-
-#~ msgid "3.2 second"
-#~ msgstr "3.2 sekundy"
-
-#~ msgid "2.5 second"
-#~ msgstr "2.5 sekundy"
-
-#~ msgid "1.6 second"
-#~ msgstr "1.6 sekundy"
-
-#~ msgid "1.3 second"
-#~ msgstr "1.3 sekundy"
-
-#~ msgid "1 second"
-#~ msgstr "1 sekunda"
-
-#~ msgid "8/10 second"
-#~ msgstr "8/10 sekundy"
-
-#~ msgid "6/10 second"
-#~ msgstr "6/10 sekundy"
-
-#~ msgid "1/2 second"
-#~ msgstr "1/2 sekundy"
-
-#~ msgid "4/10 second"
-#~ msgstr "4/10 sekundy"
-
-#~ msgid "3/10 second"
-#~ msgstr "3/10 sekundy"
-
-#~ msgid "1/4 second"
-#~ msgstr "1/4 sekundy"
-
-#~ msgid "1/5 second"
-#~ msgstr "1/5 sekundy"
-
-#~ msgid "1/6 second"
-#~ msgstr "1/6 sekundy"
-
-#~ msgid "1/8 second"
-#~ msgstr "1/8 sekundy"
-
-#~ msgid "1/10 second"
-#~ msgstr "1/10 sekundy"
-
-#~ msgid "1/13 second"
-#~ msgstr "1/13 sekundy"
-
-#~ msgid "1/15 second"
-#~ msgstr "1/15 sekundy"
-
-#~ msgid "1/20 second"
-#~ msgstr "1/20 sekundy"
-
-#~ msgid "1/25 second"
-#~ msgstr "1/25 sekundy"
-
-#~ msgid "1/30 second"
-#~ msgstr "1/30 sekundy"
-
-#~ msgid "1/40 second"
-#~ msgstr "1/40 sekundy"
-
-#~ msgid "1/50 second"
-#~ msgstr "1/50 sekundy"
-
-#~ msgid "1/60 second"
-#~ msgstr "1/60 sekundy"
-
-#~ msgid "1/80 second"
-#~ msgstr "1/80 sekundy"
-
-#~ msgid "1/100 second"
-#~ msgstr "1/100 sekundy"
-
-#~ msgid "1/125 second"
-#~ msgstr "1/125 sekundy"
-
-#~ msgid "1/160 second"
-#~ msgstr "1/160 sekundy"
-
-#~ msgid "1/200 second"
-#~ msgstr "1/200 sekundy"
-
-#~ msgid "1/250 second"
-#~ msgstr "1/250 sekundy"
-
-#~ msgid "1/320 second"
-#~ msgstr "1/320 sekundy"
-
-#~ msgid "1/400 second"
-#~ msgstr "1/400 sekundy"
-
-#~ msgid "1/500 second"
-#~ msgstr "1/500 sekundy"
-
-#~ msgid "1/640 second"
-#~ msgstr "1/640 sekundy"
-
-#~ msgid "1/800 second"
-#~ msgstr "1/800 sekundy"
-
-#~ msgid "1/1000 second"
-#~ msgstr "1/1000 sekundy"
-
-#~ msgid "1/1250 second"
-#~ msgstr "1/1250 sekundy"
-
-#~ msgid "1/1600 second"
-#~ msgstr "1/1600 sekundy"
-
-#~ msgid "1/2000 second"
-#~ msgstr "1/2000 sekundy"
-
-#~ msgid "1/2500 second"
-#~ msgstr "1/2500 sekundy"
-
-#~ msgid "1/3200 second"
-#~ msgstr "1/3200 sekundy"
-
-#~ msgid "1/4000 second"
-#~ msgstr "1/4000 sekundy"
-
-#~ msgid "Self Timer (only next picture)"
-#~ msgstr "Samowyzwalacz (tylko dla nastêpnego zdjêcia)"
-
-#~ msgid "Day-lt"
-#~ msgstr "¦wiat³o dzienne"
-
-#~ msgid ""
-#~ "Model: %s\n"
-#~ "  device version: %s\n"
-#~ "  serial number:  %s\n"
-#~ "Vendor extension ID: 0x%08x\n"
-#~ "Vendor extension description: %s\n"
-#~ msgstr ""
-#~ "Model: %s\n"
-#~ "  wersja urz±dzenia: %s\n"
-#~ "  numer seryjny:     %s\n"
-#~ "ID rozszerzenia producenta: 0x%08x\n"
-#~ "Opis rozszerzenia producenta: %s\n"
