@@ -204,7 +204,6 @@ int
 ultrapocket_getrawpicture(Camera *camera, GPContext *context, 
    unsigned char **pdata, int *size, const char *filename)
 {
-    char           *savelocale;
     char           ppmheader[200];
     unsigned char *rawdata,*outdata;
     int            width, height, result;
@@ -279,7 +278,6 @@ ultrapocket_getrawpicture(Camera *camera, GPContext *context,
 int
 ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata, int *size, const char *filename)
 {
-    char           *savelocale;
     char           ppmheader[200];
     unsigned char *rawdata,*outdata;
     int            width, height, result;
@@ -311,7 +309,6 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
 
    tile = BAYER_TILE_BGGR;
 
-   savelocale = setlocale(LC_ALL, "C");
    snprintf (ppmheader, sizeof(ppmheader), "P6\n"
 	    "# CREATOR: gphoto2, ultrapocket library,"
 	    " assuming Bayer tile %s, interpolated"
@@ -324,7 +321,6 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
 	    GAMMA_NUMBER,
 #endif
 	    width, height);
-   setlocale(LC_ALL, savelocale);
 
    /* Allocate memory for Interpolated ppm image */
    pmmhdr_len = strlen(ppmheader);
