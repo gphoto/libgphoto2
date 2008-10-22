@@ -233,13 +233,11 @@ ultrapocket_getrawpicture(Camera *camera, GPContext *context,
 
    tile = BAYER_TILE_BGGR;
 
-   savelocale = setlocale(LC_ALL, "C");
    snprintf (ppmheader, sizeof(ppmheader), "P6\n"
 	    "# CREATOR: gphoto2, ultrapocket library, raw,"
 	    " assuming Bayer tile %s\n"
 	    "%d %d\n"
 	    "255\n", BayerTileNames[tile], width, height);
-   setlocale(LC_ALL, savelocale);
 
    /* Allocate memory for Interpolated ppm image */
    pmmhdr_len = strlen(ppmheader);
