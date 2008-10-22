@@ -4330,7 +4330,7 @@ fallback:
 	 * FIXME: If DCIM is there, it will not look for other root directories.
          */
 	if (nroot == 0 && params->handles.n > 0) {
-		uint32_t	badroothandle;
+		uint32_t	badroothandle = 0xffffffff;
 
 		GP_DEBUG("Bug workaround: Found no root directory objects, looking for some.");
 		for (i = 0; i < params->handles.n; i++) {
