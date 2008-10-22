@@ -1,9 +1,5 @@
 Manufacturer: MATSUSHITA
-  model: (null)
   device version: 1.0
-  serial number: '(null)'
-Vendor extension ID: 0x00000000
-Vendor extension description: (null)
 Supported operations:
   0x1001
   0x1002
@@ -24,3 +20,27 @@ Events Supported:
   0x4008
   0x4009 
 Device Properties Supported:
+
+Camera summary:
+Manufacturer: MATSUSHITA
+  Version: 1.0
+
+Capture Formats: 
+Display Formats: Association/Directory, Script, DPOF, Apple Quicktime, JPEG, TIFF
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 1030225920 (982 MB)
+	Free Space (Bytes): 125698048 (119 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
