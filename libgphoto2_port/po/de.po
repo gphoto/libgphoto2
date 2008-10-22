@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-04-15 21:26+0200\n"
+"POT-Creation-Date: 2008-10-19 21:25+0200\n"
 "PO-Revision-Date: 2007-05-10 11:07+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -338,90 +338,90 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Keine Fehlerbeschreibung verfügbar."
 
-#: serial/unix.c:221
+#: serial/unix.c:226
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:231
+#: serial/unix.c:236
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:234
+#: serial/unix.c:239
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 
-#: serial/unix.c:263
+#: serial/unix.c:268
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:275
+#: serial/unix.c:280
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
-"Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %"
-"d reserviert ist."
+"Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %d "
+"reserviert ist."
 
-#: serial/unix.c:279
+#: serial/unix.c:284
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden (dev_unlock "
 "lieferte %d)"
 
-#: serial/unix.c:355
+#: serial/unix.c:360
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:444
+#: serial/unix.c:449
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:462
+#: serial/unix.c:467
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
 
-#: serial/unix.c:516
+#: serial/unix.c:521
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:593
+#: serial/unix.c:598
 msgid "Parity error."
 msgstr "Paritätsfehler."
 
-#: serial/unix.c:597
+#: serial/unix.c:602
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Unerwartete Paritätsantwort, Sequenz 0xff 0x%02x."
 
-#: serial/unix.c:640
+#: serial/unix.c:645
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:662
+#: serial/unix.c:667
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:697
+#: serial/unix.c:702
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:722
+#: serial/unix.c:727
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:835
+#: serial/unix.c:840
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
