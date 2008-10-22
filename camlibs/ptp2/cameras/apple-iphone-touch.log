@@ -1,0 +1,50 @@
+Device info:
+Manufacturer: Apple Inc.
+  Model: Apple iPhone
+  device version: 1.2.0
+  serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+Functional Mode: 0x0000
+PTP Standard Version: 1.00
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x1014
+  0x1015
+  0x101b
+Events Supported:
+  0x4006
+
+Kamerazusammenfassung:
+Hersteller: Apple Inc.
+Model: Apple iPhone
+  Version: 1.2.0
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+Aufnahmeformate: JPEG PNG TIFF
+Anzeigeformate: JPEG, PNG, TIFF
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, kein Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Kein Vendor spezifischer Aufnahmemodus
+
+Informationen über Speichermedium:
+store_00010002:
+	Beschreibung des Speichergeräts: Internal Storage
+	Label des Speichergerätes: Internal Storage
+	Speichertyp: Eingebauter Speicher
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Lesen und Schreiben
+	Maximale Kapazität: 5595395568 (5336 MB)
+	Freier Platz (Bytes): 5557014528 (5299 MB)
+	Freier Speicher (Bilder): 15877
+
+Properties des Geräts:
