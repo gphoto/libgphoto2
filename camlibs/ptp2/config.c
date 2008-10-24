@@ -873,71 +873,24 @@ _put_ExpCompensation(CONFIG_PUT_ARGS) {
 }
 
 
-static int
-_get_Canon_AssistLight(CONFIG_GET_ARGS) {
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	gp_widget_add_choice (*widget,_("On"));
-	gp_widget_add_choice (*widget,_("Off"));
-	gp_widget_set_value (*widget,(dpd->CurrentValue.u16?_("On"):_("Off")));
-	return (GP_OK);
-}
+static struct deviceproptableu16 canon_assistlight[] = {
+	{ N_("On"),	0x0000, PTP_VENDOR_CANON },
+	{ N_("Off"),	0x0001, PTP_VENDOR_CANON },
+};
+GENERIC16TABLE(Canon_AssistLight,canon_assistlight)
 
-static int
-_put_Canon_AssistLight(CONFIG_PUT_ARGS) {
-	char *value;
-	int ret;
+static struct deviceproptableu16 canon_autorotation[] = {
+	{ N_("On"),	0x0000, PTP_VENDOR_CANON },
+	{ N_("Off"),	0x0001, PTP_VENDOR_CANON },
+};
+GENERIC16TABLE(Canon_AutoRotation,canon_autorotation)
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	if (!strcmp (value, _("On"))) {
-		propval->u16 = 1;
-		return (GP_OK);
-	}
-	if (!strcmp (value, _("Off"))) {
-		propval->u16 = 0;
-		return (GP_OK);
-	}
-	return (GP_ERROR);
-}
+static struct deviceproptableu16 canon_beepmode[] = {
+	{ N_("On"),	0x00, PTP_VENDOR_CANON },
+	{ N_("Off"),	0x01, PTP_VENDOR_CANON },
+};
+GENERIC16TABLE(Canon_BeepMode,canon_beepmode)
 
-static int
-_get_Canon_BeepMode(CONFIG_GET_ARGS) {
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
-	gp_widget_add_choice (*widget,_("On"));
-	gp_widget_add_choice (*widget,_("Off"));
-	gp_widget_set_value (*widget,(dpd->CurrentValue.u8?_("On"):_("Off")));
-	return (GP_OK);
-}
-
-static int
-_put_Canon_BeepMode(CONFIG_PUT_ARGS) {
-	char *value;
-	int ret;
-
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	if (!strcmp (value, _("On"))) {
-		propval->u8 = 1;
-		return (GP_OK);
-	}
-	if (!strcmp (value, _("Off"))) {
-		propval->u8 = 0;
-		return (GP_OK);
-	}
-	return (GP_ERROR);
-}
 
 static int
 _get_Canon_ZoomRange(CONFIG_GET_ARGS) {
@@ -2649,6 +2602,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Auto Focus Mode 2"), "autofocusmode2", PTP_DPC_NIKON_A4AFActivation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
+	{ N_("Rotation Flag"), "autorotation", PTP_DPC_CANON_RotationScene, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AutoRotation, _put_Canon_AutoRotation},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_NIKON_AFAssist, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("EOS Exposure Compensation"), "eos-exposurecompensation", PTP_DPC_CANON_EOS_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
