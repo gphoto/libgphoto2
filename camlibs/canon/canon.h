@@ -306,7 +306,10 @@ typedef enum {
 	SHUTTER_SPEED_1_2000 = 0x90,
 	SHUTTER_SPEED_1_2500 = 0x93,
 	SHUTTER_SPEED_1_3200 = 0x95,
-	SHUTTER_SPEED_1_4000 = 0x98
+	SHUTTER_SPEED_1_4000 = 0x98,
+	SHUTTER_SPEED_1_5000 = 0x9a,
+	SHUTTER_SPEED_1_6400 = 0x9d,
+	SHUTTER_SPEED_1_8000 = 0xA0
 } canonShutterSpeedState;
 
 struct canonShutterSpeedStateStruct {

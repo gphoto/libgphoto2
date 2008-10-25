@@ -171,6 +171,9 @@ static const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
         {SHUTTER_SPEED_1_2500,"1/2500"},
         {SHUTTER_SPEED_1_3200,"1/3200"},
         {SHUTTER_SPEED_1_4000,"1/4000"},
+        {SHUTTER_SPEED_1_5000,"1/5000"},
+        {SHUTTER_SPEED_1_6400,"1/6400"},
+        {SHUTTER_SPEED_1_8000,"1/8000"},
 	{0, NULL},
 };
 
