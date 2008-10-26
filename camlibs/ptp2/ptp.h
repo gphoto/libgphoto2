@@ -155,6 +155,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Operation Codes */
 
+/* PTP v1.0 operation codes */
 #define PTP_OC_Undefined                0x1000
 #define PTP_OC_GetDeviceInfo            0x1001
 #define PTP_OC_OpenSession              0x1002
@@ -184,6 +185,16 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CopyObject               0x101A
 #define PTP_OC_GetPartialObject         0x101B
 #define PTP_OC_InitiateOpenCapture      0x101C
+/* PTP v1.1 operation codes */
+#define PTP_OC_StartEnumHandles		0x101D
+#define PTP_OC_EnumHandles		0x101E
+#define PTP_OC_StopEnumHandles		0x101F
+#define PTP_OC_GetVendorExtensionMaps	0x1020
+#define PTP_OC_GetVendorDeviceInfo	0x1021
+#define PTP_OC_GetResizedImageObject	0x1022
+#define PTP_OC_GetFilesystemManifest	0x1023
+#define PTP_OC_GetStreamInfo		0x1024
+#define PTP_OC_GetStream		0x1025
 
 /* Eastman Kodak extension Operation Codes */
 #define PTP_OC_EK_GetSerial		0x9003
@@ -429,6 +440,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Response Codes */
 
+/* PTP v1.0 response codes */
 #define PTP_RC_Undefined                0x2000
 #define PTP_RC_OK                       0x2001
 #define PTP_RC_GeneralError             0x2002
@@ -462,6 +474,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_SessionAlreadyOpened     0x201E
 #define PTP_RC_TransactionCanceled      0x201F
 #define PTP_RC_SpecificationOfDestinationUnsupported            0x2020
+/* PTP v1.1 response codes */
+#define PTP_RC_InvalidEnumHandle	0x2021
+#define PTP_RC_NoStreamEnabled		0x2022
+#define PTP_RC_InvalidDataSet		0x2023
 
 /* Eastman Kodak extension Response Codes */
 #define PTP_RC_EK_FilenameRequired	0xA001
@@ -987,6 +1003,7 @@ typedef struct _PTPCanon_Property {
 
 /* Device Properties Codes */
 
+/* PTP v1.0 property codes */
 #define PTP_DPC_Undefined		0x5000
 #define PTP_DPC_BatteryLevel		0x5001
 #define PTP_DPC_FunctionalMode		0x5002
@@ -1019,6 +1036,20 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_UploadURL		0x501D
 #define PTP_DPC_Artist			0x501E
 #define PTP_DPC_CopyrightInfo		0x501F
+/* PTP v1.1 property codes */
+#define PTP_DPC_SupportedStreams	0x5020
+#define PTP_DPC_EnabledStreams		0x5021
+#define PTP_DPC_VideoFormat		0x5022
+#define PTP_DPC_VideoResolution		0x5023
+#define PTP_DPC_VideoQuality		0x5024
+#define PTP_DPC_VideoFrameRate		0x5025
+#define PTP_DPC_VideoContrast		0x5026
+#define PTP_DPC_VideoBrightness		0x5027
+#define PTP_DPC_AudioFormat		0x5028
+#define PTP_DPC_AudioBitrate		0x5029
+#define PTP_DPC_AudioSamplingRate	0x502A
+#define PTP_DPC_AudioBitPerSample	0x502B
+#define PTP_DPC_AudioVolume		0x502C
 
 /* Proprietary vendor extension device property mask */
 #define PTP_DPC_EXTENSION_MASK		0xF000
