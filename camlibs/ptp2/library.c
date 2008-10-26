@@ -940,7 +940,8 @@ static struct {
 	{PTP_OFC_TIFF,			0, GP_MIME_TIFF},
 	{PTP_OFC_TIFF_IT,		0, "image/x-tiffit"},
 	{PTP_OFC_JP2,			0, "image/x-jpeg2000bff"},
-	{PTP_OFC_JPX,			0, "image/x-adobe-dng"},
+	{PTP_OFC_JPX,			0, "image/x-jpeg2000eff"},
+	{PTP_OFC_DNG,			0, "image/x-adobe-dng"},
 
 	{PTP_OFC_MTP_OGG,		PTP_VENDOR_MICROSOFT, "application/ogg"},
 	{PTP_OFC_MTP_FLAC,		PTP_VENDOR_MICROSOFT, "audio/x-flac"},
