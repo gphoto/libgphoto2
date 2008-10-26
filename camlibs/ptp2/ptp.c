@@ -3811,6 +3811,7 @@ struct {
 	{PTP_OFC_TIFF_IT,"TIFF_IT"},
 	{PTP_OFC_JP2,"JP2"},
 	{PTP_OFC_JPX,"JPX"},
+	{PTP_OFC_DNG,"DNG"},
 };
 
 struct {

@@ -666,6 +666,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_TIFF_IT				0x380E
 #define PTP_OFC_JP2				0x380F
 #define PTP_OFC_JPX				0x3810
+/* ptp v1.1 has only DNG new */
+#define PTP_OFC_DNG				0x3811
 /* Eastman Kodak extension ancillary format */
 #define PTP_OFC_EK_M3U				0xb002
 /* Canon extension */

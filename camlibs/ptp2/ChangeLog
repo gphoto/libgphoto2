@@ -1,3 +1,7 @@
+2008-10-26  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.h,ptp.c: Started adding PTP v1.1 defines.
+
 2008-10-12  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Adjusted summary output a bit.
