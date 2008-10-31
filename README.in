@@ -66,13 +66,16 @@ will be cameras labeled as "PictBridge", which is a extension to PTP.
 
 Here is a short incomplete list of camera that use this protocol:
 
- * HP PhotoSmart 318, 612, 715
+ * Canon PowerShot, IXUS and EOS series
+ * Nikon Coolpix and DSC series
+ * HP PhotoSmart (all from the last 5+ years)
  * Kodak DC-4800, DX-3215, DX-3500, DX-3600, DX-3700, DX-3900, MC3 and all the
    camera that use Kodak Easy Share(tm) system.
  * Sony DSC-P5, DSC-F707, DSC-P30, DSC-P50, DSC-S75, DSC-S85, MVC-CD300
    (all need user configuration of the camera)
+ * Panasonic DMZ
 
-PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
+A PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
 will work as-is without any changes.
 MTP (Microsoft Transfer Protocol) players will also be accessible,
 since MTP is based on PTP.
