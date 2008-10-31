@@ -183,3 +183,10 @@
  * to be stored, per playlist.
  */
 #define DEVICE_FLAG_PLAYLIST_SPL_V2 0x00002000
+/**
+ * The Sansa E250 is know to have this problem which is actually
+ * that the device claims that property PTP_OPC_DateModified
+ * is read/write but will still fail to update it. It can only
+ * be set properly the first time a file is sent.
+ */
+#define DEVICE_FLAG_CANNOT_HANDLE_DATEMODIFIED 0x00004000
