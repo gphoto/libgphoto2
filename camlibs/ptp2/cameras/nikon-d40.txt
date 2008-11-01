@@ -131,3 +131,54 @@ Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 60, step 1] value: 1
 Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [2,32784,32785] value: 2
 Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
 Property 0xd407:(read only) (type=0x6) 1
+
+Unlisted, but seen in USB snoop traces:
+
+0xd10b	uint8	1	(only a single set seen)
+	(Marcus: unlock special commands perhaps?)
+
+0xd017	uint8	0
+0xd018	uint8	2
+0xd019	uint8	0
+0xd01a	uint8	0
+0xd01b	uint8	0
+0xd01c	uint8	0
+0xd01d	uint8	0
+0xd02a	uint8	5
+0xd02b	uint8	6
+0xd02c	uint8	2
+0xd02d	uint8	0
+0xd054	uint8	0	(changed, might be Auto ISO)
+0xd062	uint8	1
+0xd064	uint8	1
+0xd066	uint8	1
+0xd06b	uint8	0
+0xd091	uint8	1
+0xd092	uint8	0
+0xd0e0	uint8	0x7a	(read)
+0xd0e1	uint8	0x01	(read)
+0xd0e2	uint8	0x0f	(read)
+0xd0e3	uint32	0x00000708
+0xd0e4	uint32	0x00004e20 / 20000
+0xd0e5	uint16	0x15e	/ 350
+0xd0e6	uint16	0x276	/ 630
+0xd100		... image sizes and quality array ...
+0xd101	uint8	0 	(read)
+0xd102	uint8	0 	(read)
+0xd103	uint8	3
+0xd105	uint8	0
+0xd108	uint8	0
+0xd109	uint16	0x21e	(read)
+0xd10e	uint8	0
+0xd120	uint8	0
+0xd124	uint8	0
+0xd126	uint8	0
+0xd140	uint8	2
+0xd142	uint8	3
+0xd161	uint8	4
+0xd16a	uint8	1
+0xd1b0	uint8	0	(read)
+0xd1b1	uint8	0xc4	(read)
+0xd1b2	uint8	0
+0xd1c0	uint8	0
+0xd1e1	uint8	0
