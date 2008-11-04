@@ -148,7 +148,7 @@ Unlisted, but seen in USB snoop traces:
 0xd02b	uint8	6
 0xd02c	uint8	2
 0xd02d	uint8	0
-0xd054	uint8	0	(changed, might be Auto ISO)
+0xd054	uint8	0	(Auto ISO! - known)
 0xd062	uint8	1
 0xd064	uint8	1
 0xd066	uint8	1

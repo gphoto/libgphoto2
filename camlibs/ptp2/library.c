@@ -235,27 +235,54 @@ translate_ptp_result (short result)
 	}
 }
 
+const static uint16_t nikon_extra_props[] = {
+0xd10b,
+0xd017, 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d,
+0xd02a, 0xd02b, 0xd02c, 0xd02d,
+0xd054,
+0xd062, 0xd064, 0xd066, 0xd06b,
+0xd091, 0xd092,
+0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
+0xd100, 0xd101, 0xd102, 0xd103, 0xd105, 0xd108, 0xd109, 0xd10e,
+0xd120, 0xd124, 0xd126,
+0xd140, 0xd142,
+0xd161, 0xd16a,
+0xd1b0, 0xd1b1, 0xd1b2,
+0xd1c0, 0xd1e1
+};
+
 void
 fixup_cached_deviceinfo (Camera *camera) {
 	CameraAbilities a;
+	PTPDeviceInfo	*di;
 
+	di = &camera->pl->params.deviceinfo;
         gp_camera_get_abilities(camera, &a);
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4a9)
 	) {
 		camera->pl->bugs |= PTP_MTP;
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+		di->VendorExtensionID = PTP_VENDOR_CANON;
 	}
 
 	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4b0)
 	) {
 		camera->pl->bugs |= PTP_MTP;
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+		di->VendorExtensionID = PTP_VENDOR_NIKON;
+	}
+	if (	(di->VendorExtensionID == PTP_VENDOR_NIKON) &&
+		(camera->pl->bugs & PTP_NIKON_SUPPRESSED_PROPS)
+	) {
+		int i;
+		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0])));
+		for (i=0;i<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);i++)
+			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[i];
+		di->DevicePropertiesSupported_len += sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);
 	}
 }
 
@@ -590,7 +617,7 @@ static struct {
 	/* Christian Deckelmann @ SUSE */
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
 	/* Huy Hoang <hoang027@umn.edu> */
-	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
+	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP/*|PTP_NIKON_SUPPRESSED_PROPS*/},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
 	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
 	/* Andreas Jaeger <aj@suse.de>.
