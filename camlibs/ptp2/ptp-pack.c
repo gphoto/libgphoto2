@@ -2,6 +2,9 @@
 
 #include <iconv.h>
 
+extern void
+ptp_debug (PTPParams *params, const char *format, ...);
+
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
 {
@@ -992,10 +995,20 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 		*pprops = NULL;
 		return 0;
 	}
+	ptp_debug (params ,"Unpacking MTP OPL, size %d (prop_count %d)", len, prop_count);
 	data += sizeof(uint32_t);
+	len -= sizeof(uint32_t);
 	props = malloc(prop_count * sizeof(MTPProperties));
 	if (!props) return 0;
 	for (i = 0; i < prop_count; i++) {
+		if (len <= 0) {
+			ptp_debug (params ,"short MTP Object Property List at property %d (of %d)", i, prop_count);
+			ptp_debug (params ,"device probably needs DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL", i);
+			ptp_debug (params ,"or even DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST", i);
+			qsort (props, i, sizeof(MTPProperties),_compare_func);
+			*pprops = props;
+			return i;
+		}
 		props[i].ObjectHandle = dtoh32a(data);
 		data += sizeof(uint32_t);
 		len -= sizeof(uint32_t);
@@ -1097,9 +1110,6 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 #define PTP_ece_OI_OFC		0x0c	/* only for objectinfos */
 #define PTP_ece_OI_Size		0x14	/* only for objectinfos */
 #define PTP_ece_OI_Name		0x1c	/* only for objectinfos */
-
-extern void
-ptp_debug (PTPParams *params, const char *format, ...);
 
 static inline int
 ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **ce)
