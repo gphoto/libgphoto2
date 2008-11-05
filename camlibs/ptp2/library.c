@@ -119,6 +119,7 @@
 			return (GP_ERROR);			\
 		}						\
 }
+static int init_ptp_fs (Camera *camera, GPContext *context);
 
 typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
 typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
@@ -1217,11 +1218,9 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	strncpy (text->text,
 	 _("PTP2 driver\n"
 	   "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-	   "(c) 2003-2007 by Marcus Meissner <marcus@jet.franken.de>.\n"
+	   "(c) 2003-2008 by Marcus Meissner <marcus@jet.franken.de>.\n"
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
-	   "\n"
-	   "This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
 	   "\n"
 	   "Enjoy!"), sizeof (text->text));
 	return (GP_OK);
@@ -1745,6 +1744,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	SET_CONTEXT_P(params, context);
+	init_ptp_fs (camera, context);
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
 	){
@@ -1906,6 +1907,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
+	init_ptp_fs (camera, context);
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
@@ -1951,7 +1953,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
-					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, &ximage));
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
 					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entries[i].u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
@@ -2678,6 +2680,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     SET_CONTEXT_P(params, context);
 
     gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
+    init_ptp_fs (camera, context);
 
     /* There should be NO files in root folder */
     if (!strcmp(folder, "/"))
@@ -2739,6 +2742,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
+	init_ptp_fs ((Camera*)data, context);
 
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
@@ -3305,6 +3309,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
 
+	init_ptp_fs (camera, context);
+
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3450,6 +3456,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	SET_CONTEXT_P(params, context);
 
+	init_ptp_fs (camera, context);
+
 	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
 	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
@@ -3573,6 +3581,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
 
+	init_ptp_fs (camera, context);
 	/* virtual file created by Nikon special capture */
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)   ) &&
@@ -3639,6 +3648,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
 
+	init_ptp_fs (camera, context);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3678,6 +3688,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS); /* for now */
 
+	init_ptp_fs (camera, context);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3770,6 +3781,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	SET_CONTEXT_P(params, context);
+
+	init_ptp_fs (camera, context);
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
 	/* compute storage ID value from folder patch */
@@ -3933,6 +3946,9 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	uint16_t ret;
 
 	SET_CONTEXT_P(params, context);
+	if (camera->pl->fs_loaded) return PTP_RC_OK;
+	camera->pl->fs_loaded = 1;
+
 	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 
 	/* Nikon supports a fast filesystem retrieval.
@@ -4621,7 +4637,7 @@ camera_init (Camera *camera, GPContext *context)
 			camera->pl->params.deviceinfo.DevicePropertiesSupported[i]);
 
 	/* init internal ptp objectfiles (required for fs implementation) */
-	init_ptp_fs (camera, context);
+	/*init_ptp_fs (camera, context);*/
 
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:

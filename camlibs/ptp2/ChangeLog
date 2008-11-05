@@ -1,3 +1,13 @@
+2008-11-05  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp-private.h, library.c: Move init_ptp_fs
+	  out of initialization and into the routines
+	  that need it.
+
+	  This avoids loading the whole PTP fs for:
+	  - configuration
+	  - summary
+
 2008-10-26  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.h,ptp.c: Started adding PTP v1.1 defines.
