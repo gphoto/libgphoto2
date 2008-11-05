@@ -995,15 +995,18 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 		*pprops = NULL;
 		return 0;
 	}
+	ptp_debug (params ,"Unpacking MTP OPL, size %d (prop_count %d)", len, prop_count);
 	data += sizeof(uint32_t);
 	len -= sizeof(uint32_t);
 	props = malloc(prop_count * sizeof(MTPProperties));
 	if (!props) return 0;
 	for (i = 0; i < prop_count; i++) {
 		if (len <= 0) {
-			ptp_debug (params ,"short MTP Object Property List at property %d", i);
+			ptp_debug (params ,"short MTP Object Property List at property %d (of %d)", i, prop_count);
 			ptp_debug (params ,"device probably needs DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL", i);
 			ptp_debug (params ,"or even DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST", i);
+			qsort (props, i, sizeof(MTPProperties),_compare_func);
+			*pprops = props;
 			return i;
 		}
 		props[i].ObjectHandle = dtoh32a(data);
