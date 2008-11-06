@@ -3722,8 +3722,9 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_CANON_BeepMode,PTP_VENDOR_CANON),
 
 		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 0, "0'"},
-		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 3, "270'"},
 		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 1, "90'"},
+		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 2, "180'"},
+		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 3, "270'"},
 
 		{PTP_DPC_CANON_BatteryKind, PTP_VENDOR_CANON, 0, N_("Unknown")},
 		{PTP_DPC_CANON_BatteryKind, PTP_VENDOR_CANON, 1, N_("AC")},
