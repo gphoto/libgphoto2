@@ -345,7 +345,9 @@ gp_port_library_list (GPPortInfoList *list)
 		 * there is no need to try locking. */
 		if ((stat (path, &s) == -1) && ((errno == ENOENT) || (errno == ENODEV)))
 			continue;
-
+		/* Just let it fail later on open, lock&open for just enumerating is taking too long. */
+		/* This is a significant part of the "empty" startup time. */
+#if 0
 		/* First of all, try to lock the device */
 		if (gp_port_serial_lock (NULL, path) < 0)
 			continue;
@@ -372,6 +374,7 @@ gp_port_library_list (GPPortInfoList *list)
 		 */
 		close (fd);
 		gp_port_serial_unlock (NULL, path);
+#endif
 		info.type = GP_PORT_SERIAL;
 		strncpy (info.path, "serial:", sizeof (info.path));
 		strncat (info.path, path, sizeof (info.path) - strlen (info.path) - 1);
