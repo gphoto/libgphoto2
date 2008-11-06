@@ -331,6 +331,7 @@ gp_port_library_list (GPPortInfoList *list)
 		if ((stat (path, &s) == -1) && ((errno == ENOENT) || (errno == ENODEV)))
 			continue;
 
+#if 0
 		/* First of all, try to lock the device */
 		if (gp_port_serial_lock (NULL, path) < 0)
 			continue;
@@ -347,8 +348,8 @@ gp_port_library_list (GPPortInfoList *list)
 		 * it to the list.
 		 */
 		close (fd);
-
 		gp_port_serial_unlock (NULL, path);
+#endif
 		gp_port_info_new (&info);
 		gp_port_info_set_type (info, GP_PORT_SERIAL);
 		xname = malloc (strlen("serial:")+strlen(path)+1);
