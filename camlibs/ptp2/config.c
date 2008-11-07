@@ -874,8 +874,8 @@ _put_ExpCompensation(CONFIG_PUT_ARGS) {
 
 
 static struct deviceproptableu16 canon_assistlight[] = {
-	{ N_("On"),	0x0000, PTP_VENDOR_CANON },
-	{ N_("Off"),	0x0001, PTP_VENDOR_CANON },
+	{ N_("Off"),	0x0000, PTP_VENDOR_CANON },
+	{ N_("On"),	0x0001, PTP_VENDOR_CANON },
 };
 GENERIC16TABLE(Canon_AssistLight,canon_assistlight)
 
@@ -886,11 +886,10 @@ static struct deviceproptableu16 canon_autorotation[] = {
 GENERIC16TABLE(Canon_AutoRotation,canon_autorotation)
 
 static struct deviceproptableu16 canon_beepmode[] = {
-	{ N_("On"),	0x00, PTP_VENDOR_CANON },
-	{ N_("Off"),	0x01, PTP_VENDOR_CANON },
+	{ N_("Off"),	0x00, PTP_VENDOR_CANON },
+	{ N_("On"),	0x01, PTP_VENDOR_CANON },
 };
 GENERIC16TABLE(Canon_BeepMode,canon_beepmode)
-
 
 static int
 _get_Canon_ZoomRange(CONFIG_GET_ARGS) {
@@ -1022,27 +1021,43 @@ _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 
 
 static struct deviceproptableu8 canon_quality[] = {
+	{ N_("undefined"),	0x00, 0 },
+	{ N_("economy"),	0x01, 0 },
 	{ N_("normal"),		0x02, 0 },
 	{ N_("fine"),		0x03, 0 },
+	{ N_("lossless"),	0x04, 0 },
 	{ N_("superfine"),	0x05, 0 },
 };
 GENERIC8TABLE(Canon_Quality,canon_quality)
+
+static struct deviceproptableu8 canon_fullview_fileformat[] = {
+	{ N_("Undefined"),	0x00, 0 },
+	{ N_("JPEG"),		0x01, 0 },
+	{ N_("CRW"),		0x02, 0 },
+};
+GENERIC8TABLE(Canon_Capture_Format,canon_fullview_fileformat)
 
 static struct deviceproptableu8 canon_shootmode[] = {
 	{ N_("Auto"),		0x01, 0 },
 	{ N_("TV"),		0x02, 0 },
 	{ N_("AV"),		0x03, 0 },
 	{ N_("Manual"),		0x04, 0 },
+	{ N_("A_DEP"),		0x05, 0 },
+	{ N_("M_DEP"),		0x06, 0 },
+	{ N_("Bulb"),		0x07, 0 },
+	/* Marcus: The SDK has more listed, but I have never seen them 
+	 * enumerated by the cameras. Lets leave them out for now. */
 };
 GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
 
 static struct deviceproptableu8 canon_flash[] = {
-	{ N_("off"),	0, 0 },
-	{ N_("auto"),	1, 0 },
-	{ N_("on"),	2, 0 },
-	{ N_("fill in"), 4, 0 },
-	{ N_("auto red eye"), 5, 0 },
-	{ N_("on red eye"), 6, 0 },
+	{ N_("off"),				0, 0 },
+	{ N_("auto"),				1, 0 },
+	{ N_("on"),				2, 0 },
+	{ N_("red eye suppression"),		3, 0 },
+	{ N_("fill in"), 			4, 0 },
+	{ N_("auto + red eye suppression"),	5, 0 },
+	{ N_("on + red eye suppression"),	6, 0 },
 };
 GENERIC8TABLE(Canon_FlashMode,canon_flash)
 
@@ -1063,18 +1078,16 @@ static struct deviceproptableu8 flash_modemanualpower[] = {
 GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
 
 static struct deviceproptableu8 canon_meteringmode[] = {
-	{ N_("center weighted average"),	0, 0 },
+	{ N_("center-weighted"),		0, 0 },
 	{ N_("spot"),				1, 0 },
+	{ N_("average"),			2, 0 },
 	{ N_("evaluative"),			3, 0 },
+	{ N_("partial"),			4, 0 },
+	{ N_("center-weighted average"),	5, 0 },
+	{ N_("spot metering interlocked with AF frame"),	6, 0 },
+	{ N_("multi spot metering"),		7, 0 },
 };
 GENERIC8TABLE(Canon_MeteringMode,canon_meteringmode)
-
-static struct deviceproptableu8 canon_eos_meteringmode[] = {
-	{ N_("Evaluative metering"),			3, 0 },
-	{ N_("Partial metering"),			4, 0 },
-	{ N_("Center Weighted average metering"),	5, 0 },
-};
-GENERIC8TABLE(Canon_EOS_MeteringMode,canon_eos_meteringmode)
 
 static struct deviceproptableu8 canon_eos_picturestyle[] = {
 	{ N_("Standard"),	0x81, 0 },
@@ -1090,70 +1103,91 @@ static struct deviceproptableu8 canon_eos_picturestyle[] = {
 GENERIC8TABLE(Canon_EOS_PictureStyle,canon_eos_picturestyle)
 
 static struct deviceproptableu16 canon_shutterspeed[] = {
-      {  "auto",0x0000,0 },
-      {  "bulb",0x0004,0 },
-      {  "30\"",0x0010,0 },
-      {  "25\"",0x0013,0 },
-      {  "20\"",0x0015,0 },
-      {  "15\"",0x0018,0 },
-      {  "13\"",0x001b,0 },
-      {  "10\"",0x001d,0 },
-      {  "8\"",0x0020,0 },
-      {  "6\"",0x0023,0 },
-      {  "5\"",0x0025,0 },
-      {  "4\"",0x0028,0 },
-      {  "3\"2",0x002b,0 },
-      {  "2\"5",0x002d,0 },
-      {  "2\"",0x0030,0 },
-      {  "1\"6",0x0033,0 },
-      {  "1\"3",0x0035,0 },
-      {  "1\"",0x0038,0 },
-      {  "0\"8",0x003b,0 },
-      {  "0\"6",0x003d,0 },
-      {  "0\"5",0x0040,0 },
-      {  "0\"4",0x0043,0 },
-      {  "0\"3",0x0045,0 },
-      {  "1/4",0x0048,0 },
-      {  "1/5",0x004b,0 },
-      {  "1/6",0x004d,0 },
-      {  "1/8",0x0050,0 },
-      {  "1/10",0x0053,0 },
-      {  "1/13",0x0055,0 },
-      {  "1/15",0x0058,0 },
-      {  "1/20",0x005b,0 },
-      {  "1/25",0x005d,0 },
-      {  "1/30",0x0060,0 },
-      {  "1/40",0x0063,0 },
-      {  "1/50",0x0065,0 },
-      {  "1/60",0x0068,0 },
-      {  "1/80",0x006b,0 },
-      {  "1/100",0x006d,0 },
-      {  "1/125",0x0070,0 },
-      {  "1/160",0x0073,0 },
-      {  "1/200",0x0075,0 },
-      {  "1/250",0x0078,0 },
-      {  "1/320",0x007b,0 },
-      {  "1/400",0x007d,0 },
-      {  "1/500",0x0080,0 },
-      {  "1/640",0x0083,0 },
-      {  "1/800",0x0085,0 },
-      {  "1/1000",0x0088,0 },
-      {  "1/1250",0x008b,0 },
-      {  "1/1600",0x008d,0 },
-      {  "1/2000",0x0090,0 },
-      {  "1/2500",0x0093,0 },
-      {  "1/3200",0x0095,0 },
-      {  "1/4000",0x0098,0 },
+      {  "auto",	0x0000,0 },
+      {  "bulb",	0x0004,0 },
+      {  "30\"",	0x0010,0 },
+      {  "25\"",	0x0013,0 },
+      {  "20\" (1/3)",	0x0014,0 },
+      {  "20\"",	0x0015,0 },
+      {  "15\"",	0x0018,0 },
+      {  "13\"",	0x001b,0 },
+      {  "10\"",	0x001c,0 },
+      {  "10\" (1/3)",	0x001d,0 },
+      {  "8\"",		0x0020,0 },
+      {  "6\" (1/3)",	0x0023,0 },
+      {  "6\"",		0x0024,0 },
+      {  "5\"",		0x0025,0 },
+      {  "4\"",		0x0028,0 },
+      {  "3\"2",	0x002b,0 },
+      {  "3\"",		0x002c,0 },
+      {  "2\"5",	0x002d,0 },
+      {  "2\"",		0x0030,0 },
+      {  "1\"6",	0x0033,0 },
+      {  "1\"5",	0x0034,0 },
+      {  "1\"3",	0x0035,0 },
+      {  "1\"",		0x0038,0 },
+      {  "0\"8",	0x003b,0 },
+      {  "0\"7",	0x003c,0 },
+      {  "0\"6",	0x003d,0 },
+      {  "0\"5",	0x0040,0 },
+      {  "0\"4",	0x0043,0 },
+      {  "0\"3",	0x0044,0 },
+      {  "0\"3 (1/3)",	0x0045,0 },
+      {  "1/4",		0x0048,0 },
+      {  "1/5",		0x004b,0 },
+      {  "1/6",		0x004c,0 },
+      {  "1/6 (1/3)",	0x004d,0 },
+      {  "1/8",		0x0050,0 },
+      {  "1/10 (1/3)",	0x0053,0 },
+      {  "1/10",	0x0054,0 },
+      {  "1/13",	0x0055,0 },
+      {  "1/15",	0x0058,0 },
+      {  "1/20 (1/3)",	0x005b,0 },
+      {  "1/20",	0x005c,0 },
+      {  "1/25",	0x005d,0 },
+      {  "1/30",	0x0060,0 },
+      {  "1/40",	0x0063,0 },
+      {  "1/45",	0x0064,0 },
+      {  "1/50",	0x0065,0 },
+      {  "1/60",	0x0068,0 },
+      {  "1/80",	0x006b,0 },
+      {  "1/90",	0x006c,0 },
+      {  "1/100",	0x006d,0 },
+      {  "1/125",	0x0070,0 },
+      {  "1/160",	0x0073,0 },
+      {  "1/180",	0x0074,0 },
+      {  "1/200",	0x0075,0 },
+      {  "1/250",	0x0078,0 },
+      {  "1/320",	0x007b,0 },
+      {  "1/350",	0x007c,0 },
+      {  "1/400",	0x007d,0 },
+      {  "1/500",	0x0080,0 },
+      {  "1/640",	0x0083,0 },
+      {  "1/750",	0x0084,0 },
+      {  "1/800",	0x0085,0 },
+      {  "1/1000",	0x0088,0 },
+      {  "1/1250",	0x008b,0 },
+      {  "1/1500",	0x008c,0 },
+      {  "1/1600",	0x008d,0 },
+      {  "1/2000",	0x0090,0 },
+      {  "1/2500",	0x0093,0 },
+      {  "1/3000",	0x0094,0 },
+      {  "1/3200",	0x0095,0 },
+      {  "1/4000",	0x0098,0 },
 };
 GENERIC16TABLE(Canon_ShutterSpeed,canon_shutterspeed)
 
 
 static struct deviceproptableu16 canon_focuspoints[] = {
-	{ N_("Center"),	0x3003, 0 },
-	{ N_("Auto"),	0x3001, 0 },
+	{ N_("Focusing Point on Center Only, Manual"),	0x1000, 0 },
+	{ N_("Focusing Point on Center Only, Auto"),	0x1001, 0 },
+	{ N_("Multiple Focusing Points (No Specification), Manual"),	0x3000, 0 },
+	{ N_("Multiple Focusing Points, Auto"),		0x3001, 0 },
+	{ N_("Multiple Focusing Points (Right)"),	0x3002, 0 },
+	{ N_("Multiple Focusing Points (Center)"),	0x3003, 0 },
+	{ N_("Multiple Focusing Points (Left)"),	0x3004, 0 },
 };
 GENERIC16TABLE(Canon_FocusingPoint,canon_focuspoints)
-
 
 static struct deviceproptableu8 canon_size[] = {
 	{ N_("large"),		0x00, 0 },
@@ -1164,10 +1198,29 @@ static struct deviceproptableu8 canon_size[] = {
 };
 GENERIC8TABLE(Canon_Size,canon_size)
 
+/* actually in 1/10s of a second, but only 3 values in use */
+static struct deviceproptableu16 canon_selftimer[] = {
+	{ N_("Not used"),	0,	0 },
+	{ N_("10 seconds"),	100,	0 },
+	{ N_("2 seconds"), 	20,	0 },
+};
+GENERIC16TABLE(Canon_SelfTimer,canon_selftimer)
+
+static struct deviceproptableu8 canon_cameraoutput[] = {
+	{ N_("Undefined"),	0, 0 },
+	{ N_("LCD"),		1, 0 },
+	{ N_("Video OUT"), 	2, 0 },
+	{ N_("Off"), 		3, 0 },
+};
+GENERIC8TABLE(Canon_CameraOutput,canon_cameraoutput)
 
 static struct deviceproptableu16 canon_isospeed[] = {
 	{ N_("Factory Default"),0xffff, 0 },
+	{ "6",			0x0028, 0 },
+	{ "12",			0x0030, 0 },
+	{ "25",			0x0038, 0 },
 	{ "50",			0x0040, 0 },
+	{ "64",			0x0043, 0 },
 	{ "80",			0x0045, 0 },
 	{ "100",		0x0048, 0 },
 	{ "200",		0x0050, 0 },
@@ -1175,6 +1228,7 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "800",		0x0060, 0 },
 	{ "1600",		0x0068, 0 },
 	{ "3200",		0x0070, 0 },
+	{ "6400",		0x0078, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
@@ -1612,9 +1666,18 @@ static struct deviceproptableu8 nikon_tonecompensation[] = {
 GENERIC8TABLE(Nikon_ToneCompensation,nikon_tonecompensation)
 
 static struct deviceproptableu8 canon_afdistance[] = {
-	{ N_("Off"),		0x01, 0 },
-	{ N_("Macro"),		0x03, 0 },
-	{ N_("Long distance"),	0x07, 0 }, /* Unchecked. */
+	{ N_("Manual"),			0x00, 0 },
+	{ N_("Auto"),			0x01, 0 },
+	{ N_("Unknown"),		0x02, 0 },
+	{ N_("Zone Focus (Close-up)"),	0x03, 0 },
+	{ N_("Zone Focus (Very Close)"),0x04, 0 },
+	{ N_("Zone Focus (Close)"),	0x05, 0 },
+	{ N_("Zone Focus (Medium)"),	0x06, 0 },
+	{ N_("Zone Focus (Far)"),	0x07, 0 },
+	{ N_("Zone Focus (Reserved 1)"),0x08, 0 },
+	{ N_("Zone Focus (Reserved 2)"),0x09, 0 },
+	{ N_("Zone Focus (Reserved 3)"),0x0a, 0 },
+	{ N_("Zone Focus (Reserved 4)"),0x0b, 0 },
 };
 GENERIC8TABLE(Canon_AFDistance,canon_afdistance)
 
@@ -1633,13 +1696,19 @@ GENERIC16TABLE(FocusMode,focusmodes)
 
 
 static struct deviceproptableu8 canon_whitebalance[] = {
-      { N_("Auto"),		0, 0 },
-      { N_("Daylight"),		1, 0 },
-      { N_("Cloudy"),		2, 0 },
-      { N_("Tungsten"),		3, 0 },
-      { N_("Fluorescent"),	4, 0 },
-      { N_("Fluorescent H"),	7, 0 },
-      { N_("Custom"),		6, 0 },
+      { N_("Auto"),			0, 0 },
+      { N_("Daylight"),			1, 0 },
+      { N_("Cloudy"),			2, 0 },
+      { N_("Tungsten"),			3, 0 },
+      { N_("Fluorescent"),		4, 0 },
+      { N_("Custom"),			6, 0 },
+      { N_("Fluorescent H"),		7, 0 },
+      { N_("Color Temperature"),	9, 0 },
+      { N_("Custom Whitebalance PC-1"),	10, 0 },
+      { N_("Custom Whitebalance PC-2"),	11, 0 },
+      { N_("Custom Whitebalance PC-3"),	12, 0 },
+      { N_("Missing Number"),		13, 0 },
+      /*{ N_("Flourescent H"),		14, 0 }, ... dup? */
 };
 GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
 
@@ -1658,19 +1727,31 @@ GENERIC8TABLE(Canon_EOS_WhiteBalance,canon_eos_whitebalance)
 
 static struct deviceproptableu8 canon_expcompensation[] = {
       { N_("Factory Default"),	0xff, 0 },
+      { "+3",			0x00, 0 },
+      { "+2 2/3",		0x03, 0 },
+      { "+2 1/2",		0x04, 0 },
+      { "+2 1/3",		0x05, 0 },
       { "+2",			0x08, 0 },
       { "+1 2/3",		0x0b, 0 },
+      { "+1 1/2",		0x0c, 0 },
       { "+1 1/3",		0x0d, 0 },
       { "+1",			0x10, 0 },
       { "+2/3",			0x13, 0 },
+      { "+1/2",			0x14, 0 },
       { "+1/3",			0x15, 0 },
       { "0",			0x18, 0 },
       { "-1/3",			0x1b, 0 },
+      { "-1/2",			0x1c, 0 },
       { "-2/3",			0x1d, 0 },
       { "-1",			0x20, 0 },
       { "-1 1/3",		0x23, 0 },
+      { "-1 1/2",		0x24, 0 },
       { "-1 2/3",		0x25, 0 },
       { "-2",			0x28, 0 },
+      { "-2 1/3",		0x2b, 0 },
+      { "-2 1/2",		0x2c, 0 },
+      { "-2 2/3",		0x2d, 0 },
+      { "-3",			0x30, 0 },
 };
 GENERIC8TABLE(Canon_ExpCompensation,canon_expcompensation)
 
@@ -1705,34 +1786,58 @@ GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
 static struct deviceproptableu16 canon_aperture[] = {
       { N_("auto"),	0xffff, 0 },
+      { "1.0",		0x0008, 0 },
+      { "1.1",		0x000b, 0 },
+      { "1.2",		0x000c, 0 },
+      { "1.2 (1/3)",	0x000d, 0 },
       { "1.4",		0x0010, 0 },
       { "1.6",		0x0013, 0 },
-      { "1.8",		0x0015, 0 },
+      { "1.8",		0x0014, 0 },
+      { "1.8 (1/3)",	0x0015, 0 },
       { "2.0",		0x0018, 0 },
       { "2.2",		0x001b, 0 },
-      { "2.5",		0x001d, 0 },
+      { "2.5",		0x001c, 0 },
+      { "2.5 (1/3)",	0x001d, 0 },
       { "2.8",		0x0020, 0 },
       { "3.2",		0x0023, 0 },
-      { "3.5",		0x0025, 0 },
+      { "3.5",		0x0024, 0 },
+      { "3.5 (1/3)",	0x0025, 0 },
       { "4.0",		0x0028, 0 },
-      { "4.5",		0x002b, 0 },
-      { "5",		0x002d, 0 },
+      { "4.5 (1/3)",	0x002b, 0 },
+      { "4.5",		0x002c, 0 },
+      { "5.6 (1/3)",	0x002d, 0 },
       { "5.6",		0x0030, 0 },
       { "6.3",		0x0033, 0 },
       { "7.1",		0x0035, 0 },
       { "8.0",		0x0038, 0 },
       { "9.0",		0x003b, 0 },
+      { "9.5",		0x003c, 0 },
       { "10",		0x003d, 0 },
       { "11",		0x0040, 0 },
-      { "13",		0x0043, 0 },
+      { "13 (1/3)",	0x0043, 0 },
+      { "13",		0x0044, 0 },
       { "14",		0x0045, 0 },
       { "16",		0x0048, 0 },
       { "18",		0x004b, 0 },
+      { "19",		0x004c, 0 },
       { "20",		0x004d, 0 },
       { "22",		0x0050, 0 },
       { "25",		0x0053, 0 },
+      { "27",		0x0054, 0 },
       { "29",		0x0055, 0 },
       { "32",		0x0058, 0 },
+      { "36",		0x005b, 0 },
+      { "38",		0x005c, 0 },
+      { "40",		0x005d, 0 },
+      { "45",		0x0060, 0 },
+      { "51",		0x0063, 0 },
+      { "54",		0x0064, 0 },
+      { "57",		0x0065, 0 },
+      { "64",		0x0068, 0 },
+      { "72",		0x006b, 0 },
+      { "76",		0x006c, 0 },
+      { "81",		0x006d, 0 },
+      { "91",		0x0070, 0 },
 };
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
 
@@ -2570,6 +2675,7 @@ static struct submenu camera_settings_menu[] = {
         { N_("Meter Off Time"), "meterofftime", PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MeterOffTime, _put_Nikon_MeterOffTime },
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
         { N_("Battery Level"), "battery", PTP_DPC_BatteryLevel, 0, PTP_DTC_UINT8, _get_BatteryLevel, _put_None },
+        { N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
@@ -2583,9 +2689,11 @@ static struct submenu camera_settings_menu[] = {
 static struct submenu image_settings_menu[] = {
         { N_("Image Quality"), "imgquality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
         { N_("Canon Image Quality"), "canonimgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
+        { N_("Canon Image Format"), "canonimgformat", PTP_DPC_CANON_FullViewFileFormat, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Capture_Format, _put_Canon_Capture_Format},
         { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
         { N_("Canon Image Size"), "canonimgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
+        { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("EOS ISO Speed"), "eos-iso", PTP_DPC_CANON_EOS_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("EOS WhiteBalance"), "eos-whitebalance", PTP_DPC_CANON_EOS_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_WhiteBalance, _put_Canon_EOS_WhiteBalance},
@@ -2603,8 +2711,11 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
 	{ N_("Rotation Flag"), "autorotation", PTP_DPC_CANON_RotationScene, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AutoRotation, _put_Canon_AutoRotation},
+	{ N_("Self Timer"), "selftimer", PTP_DPC_CANON_SelfTime, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_SelfTimer, _put_Canon_SelfTimer},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_NIKON_AFAssist, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
+	{ N_("Flash Compensation"), "flashcompensation", PTP_DPC_CANON_FlashCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
+	{ N_("AEB Exposure Compensation"), "aebexpcompensation", PTP_DPC_CANON_AEBExposureCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("EOS Exposure Compensation"), "eos-exposurecompensation", PTP_DPC_CANON_EOS_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
 	{ N_("Flash Mode"), "canonflashmode", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
 	{ N_("Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashMode, _put_Nikon_FlashMode},
@@ -2613,7 +2724,6 @@ static struct submenu capture_settings_menu[] = {
         { N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
         { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
         { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
-        { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
         { N_("Exposure Bias Compensation"), "exposurebiascompensation", PTP_DPC_ExposureBiasCompensation, 0, PTP_DTC_INT16, _get_ExpCompensation, _put_ExpCompensation},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
         { N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
@@ -2625,12 +2735,13 @@ static struct submenu capture_settings_menu[] = {
         { N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
         { N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
+	{ N_("AV Open"), "avopen", PTP_DPC_CANON_AvOpen, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
+	{ N_("AV Max"), "avmax", PTP_DPC_CANON_AvMax, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("EOS Aperture"), "eos-aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("EOS Shutter Speed"), "eos-shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
-	{ N_("EOS Metering Mode"), "eos-meteringmode", PTP_DPC_CANON_EOS_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_MeteringMode, _put_Canon_EOS_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Lock"), "exposurelock", PTP_DPC_NIKON_AELockMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
