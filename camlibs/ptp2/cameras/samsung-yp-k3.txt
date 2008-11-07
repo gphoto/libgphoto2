@@ -1,0 +1,39 @@
+Camera summary:
+Model: Samsung YP-K3
+  device version: VER 3.09 WA JN
+  serial number:  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor extension ID: 0x00000006
+Vendor extension description: microsoft.com/WMDRMPD: 10.1;audible.com: 1.0;
+
+Capture Formats: 
+Display Formats: MP3, WMA, JPEG, Association/Directory, Abstract Audio Video Playlist, Undefined Type, Firmware, Abstract Audio Album
+Supported MTP Object Properties:
+	MP3/3009: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus dc8b/Track de9a/AudioBitRate dc46/Artist dc8c/Genre de93/SampleRate de94/NumberOfChannels dc9a/AlbumName dc89/Duration de99/AudioWAVECodec dc99/OriginalReleaseDate
+	WMA/b901: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus dc8b/Track de9a/AudioBitRate dc46/Artist dc8c/Genre de93/SampleRate de94/NumberOfChannels dc9a/AlbumName dc89/Duration de99/AudioWAVECodec dc99/OriginalReleaseDate
+	JPEG/3801: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus
+	Association/Directory/3001: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus
+	Abstract Audio Video Playlist/ba05: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus
+	Undefined Type/3000: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus
+	Firmware/b802: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus
+	Abstract Audio Album/ba03: dc97/EffectiveRating dc8a/Rating dc44/Name dc01/StorageID dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc4f/NonConsumable dc02/ObjectFormat dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc03/ProtectionStatus dc46/Artist dc8c/Genre
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Internal Storage
+	VolumeLabel: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 4037017600 (3850 MB)
+	Free Space (Bytes): 3921702912 (3740 MB)
+	Free Space (Images): 17476
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 10] value: 100
+Synchronization Partner(0xd401):(readwrite) (type=0xffff) Longhorn Sync Engine ('Longhorn Sync Engine')
+Device Friendly Name(0xd402):(readwrite) (type=0xffff) Samsung YP-K3 ('Samsung YP-K3')
+Secure Time(0xd101):(read only) (type=0x4004) <DRMCLOCK type="status"><VALUE>#20060311 13:33:10Z#</VALUE><FLAG>DRM_CLK_NEEDS_REFRESH</FLAG></DRMCLOCK>AG></DRMCLOCK>
