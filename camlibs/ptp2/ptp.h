@@ -1727,7 +1727,10 @@ uint16_t ptp_canon_endshootingmode (PTPParams* params);
 uint16_t ptp_canon_viewfinderon (PTPParams* params);
 uint16_t ptp_canon_viewfinderoff (PTPParams* params);
 
-uint16_t ptp_canon_aeafawb (PTPParams* params, uint32_t p1);
+#define PTP_CANON_RESET_AE	0x1
+#define PTP_CANON_RESET_AF	0x2
+#define PTP_CANON_RESET_AWB	0x4
+uint16_t ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags);
 uint16_t ptp_canon_checkevent (PTPParams* params, 
 				PTPUSBEventContainer* event, int* isevent);
 uint16_t ptp_canon_focuslock (PTPParams* params);

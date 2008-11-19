@@ -1614,24 +1614,25 @@ ptp_canon_viewfinderoff (PTPParams* params)
 }
 
 /**
- * ptp_canon_aeafawb:
+ * ptp_canon_reset_aeafawb:
  * params:	PTPParams*
- * 		uint32_t p1 	- Yet unknown parameter,
- * 				  value 7 works
+ * 		uint32_t flags 	- what shall be reset.
+ *			1 - autoexposure
+ *			2 - autofocus
+ * 			4 - autowhitebalance
  * 
- * Called AeAfAwb (auto exposure, focus, white balance)
+ * Called "Reset AeAfAwb" (auto exposure, focus, white balance)
  *
  * Return values: Some PTP_RC_* code.
- *
  **/
 uint16_t
-ptp_canon_aeafawb (PTPParams* params, uint32_t p1)
+ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags)
 {
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_DoAeAfAwb;
-	ptp.Param1=p1;
+	ptp.Param1=flags;
 	ptp.Nparam=1;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
