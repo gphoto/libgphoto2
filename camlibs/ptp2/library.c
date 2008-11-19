@@ -119,6 +119,7 @@
 			return (GP_ERROR);			\
 		}						\
 }
+static int init_ptp_fs (Camera *camera, GPContext *context);
 
 typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
 typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
@@ -235,27 +236,54 @@ translate_ptp_result (short result)
 	}
 }
 
+const static uint16_t nikon_extra_props[] = {
+0xd10b,
+0xd017, 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d,
+0xd02a, 0xd02b, 0xd02c, 0xd02d,
+0xd054,
+0xd062, 0xd064, 0xd066, 0xd06b,
+0xd091, 0xd092,
+0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
+0xd100, 0xd101, 0xd102, 0xd103, 0xd105, 0xd108, 0xd109, 0xd10e,
+0xd120, 0xd124, 0xd126,
+0xd140, 0xd142,
+0xd161, 0xd16a,
+0xd1b0, 0xd1b1, 0xd1b2,
+0xd1c0, 0xd1e1
+};
+
 void
 fixup_cached_deviceinfo (Camera *camera) {
 	CameraAbilities a;
+	PTPDeviceInfo	*di;
 
+	di = &camera->pl->params.deviceinfo;
         gp_camera_get_abilities(camera, &a);
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4a9)
 	) {
 		camera->pl->bugs |= PTP_MTP;
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_CANON;
+		di->VendorExtensionID = PTP_VENDOR_CANON;
 	}
 
 	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
-	if (	(camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4b0)
 	) {
 		camera->pl->bugs |= PTP_MTP;
-		camera->pl->params.deviceinfo.VendorExtensionID = PTP_VENDOR_NIKON;
+		di->VendorExtensionID = PTP_VENDOR_NIKON;
+	}
+	if (	(di->VendorExtensionID == PTP_VENDOR_NIKON) &&
+		(camera->pl->bugs & PTP_NIKON_SUPPRESSED_PROPS)
+	) {
+		int i;
+		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0])));
+		for (i=0;i<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);i++)
+			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[i];
+		di->DevicePropertiesSupported_len += sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);
 	}
 }
 
@@ -590,7 +618,7 @@ static struct {
 	/* Christian Deckelmann @ SUSE */
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
 	/* Huy Hoang <hoang027@umn.edu> */
-	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
+	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP/*|PTP_NIKON_SUPPRESSED_PROPS*/},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
 	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
 	/* Andreas Jaeger <aj@suse.de>.
@@ -825,8 +853,6 @@ static struct {
 
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
-	/* irc reporter */
-	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
 
 
 	/* Konica-Minolta PTP cameras */
@@ -862,6 +888,8 @@ static struct {
 	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2017171&group_id=8874&atid=358874 */
 	{"Fuji:FinePix S100fs",			0x04cb, 0x01db, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2203316&group_id=8874&atid=358874 */
+	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -887,6 +915,9 @@ static struct {
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
 	/* irc reporter. MTP based. */
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
+	/* Marco Michna at SUSE */
+	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, 0},
+
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
 
@@ -940,6 +971,7 @@ static struct {
 	{PTP_OFC_TIFF_IT,		0, "image/x-tiffit"},
 	{PTP_OFC_JP2,			0, "image/x-jpeg2000bff"},
 	{PTP_OFC_JPX,			0, "image/x-jpeg2000eff"},
+	{PTP_OFC_DNG,			0, "image/x-adobe-dng"},
 
 	{PTP_OFC_MTP_OGG,		PTP_VENDOR_MICROSOFT, "application/ogg"},
 	{PTP_OFC_MTP_FLAC,		PTP_VENDOR_MICROSOFT, "audio/x-flac"},
@@ -1654,9 +1686,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
-
-
-			ret = ptp_canon_aeafawb(params,7);
+			ret = ptp_canon_reset_aeafawb(params,7);
 			break;
 		}
 	}
@@ -2647,6 +2677,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     SET_CONTEXT_P(params, context);
 
     gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
+    init_ptp_fs (camera, context);
 
     /* There should be NO files in root folder */
     if (!strcmp(folder, "/"))
@@ -2708,6 +2739,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
+        init_ptp_fs ((Camera*)data, context);
 
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
@@ -3274,6 +3306,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
 
+        init_ptp_fs (camera, context);
+
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3419,6 +3453,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	SET_CONTEXT_P(params, context);
 
+        init_ptp_fs (camera, context);
+
 	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
 	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
@@ -3542,6 +3578,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
 
+        init_ptp_fs (camera, context);
 	/* virtual file created by Nikon special capture */
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)   ) &&
@@ -3608,6 +3645,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
 
+        init_ptp_fs (camera, context);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3647,6 +3685,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS); /* for now */
 
+        init_ptp_fs (camera, context);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3739,6 +3778,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	SET_CONTEXT_P(params, context);
+
+        init_ptp_fs (camera, context);
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
 	/* compute storage ID value from folder patch */
@@ -3902,6 +3943,9 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	uint16_t ret;
 
 	SET_CONTEXT_P(params, context);
+        if (camera->pl->fs_loaded) return PTP_RC_OK;
+        camera->pl->fs_loaded = 1;
+
 	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 
 	/* Nikon supports a fast filesystem retrieval.
@@ -4329,7 +4373,7 @@ fallback:
 	 * FIXME: If DCIM is there, it will not look for other root directories.
          */
 	if (nroot == 0 && params->handles.n > 0) {
-		uint32_t	badroothandle;
+		uint32_t	badroothandle = 0xffffffff;
 
 		GP_DEBUG("Bug workaround: Found no root directory objects, looking for some.");
 		for (i = 0; i < params->handles.n; i++) {
@@ -4588,7 +4632,7 @@ camera_init (Camera *camera, GPContext *context)
 			camera->pl->params.deviceinfo.DevicePropertiesSupported[i]);
 
 	/* init internal ptp objectfiles (required for fs implementation) */
-	init_ptp_fs (camera, context);
+	/*init_ptp_fs (camera, context);*/
 
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:

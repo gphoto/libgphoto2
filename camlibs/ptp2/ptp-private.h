@@ -35,6 +35,7 @@ void fixup_cached_deviceinfo (Camera *camera);
 struct _CameraPrivateLibrary {
 	PTPParams params;
 	unsigned long bugs;
+	int	fs_loaded;
 };
 
 struct _PTPData {

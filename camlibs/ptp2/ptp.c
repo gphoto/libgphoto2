@@ -1614,24 +1614,25 @@ ptp_canon_viewfinderoff (PTPParams* params)
 }
 
 /**
- * ptp_canon_aeafawb:
+ * ptp_canon_reset_aeafawb:
  * params:	PTPParams*
- * 		uint32_t p1 	- Yet unknown parameter,
- * 				  value 7 works
+ * 		uint32_t flags 	- what shall be reset.
+ *			1 - autoexposure
+ *			2 - autofocus
+ * 			4 - autowhitebalance
  * 
- * Called AeAfAwb (auto exposure, focus, white balance)
+ * Called "Reset AeAfAwb" (auto exposure, focus, white balance)
  *
  * Return values: Some PTP_RC_* code.
- *
  **/
 uint16_t
-ptp_canon_aeafawb (PTPParams* params, uint32_t p1)
+ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags)
 {
 	PTPContainer ptp;
 	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_DoAeAfAwb;
-	ptp.Param1=p1;
+	ptp.Param1=flags;
 	ptp.Nparam=1;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
@@ -3720,11 +3721,11 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_CANON_AssistLight,PTP_VENDOR_CANON),
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_CANON_RotationScene,PTP_VENDOR_CANON),
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_CANON_BeepMode,PTP_VENDOR_CANON),
+		PTP_VENDOR_VAL_BOOL(PTP_DPC_CANON_Beep,PTP_VENDOR_CANON),
 
 		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 0, "0'"},
-		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 1, "90'"},
-		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 2, "180'"},
 		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 3, "270'"},
+		{PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, 1, "90'"},
 
 		{PTP_DPC_CANON_BatteryKind, PTP_VENDOR_CANON, 0, N_("Unknown")},
 		{PTP_DPC_CANON_BatteryKind, PTP_VENDOR_CANON, 1, N_("AC")},
@@ -3738,6 +3739,62 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_CANON_BatteryStatus, PTP_VENDOR_CANON, 2, N_("Warning Level 1")},
 		{PTP_DPC_CANON_BatteryStatus, PTP_VENDOR_CANON, 3, N_("Emergency")},
 		{PTP_DPC_CANON_BatteryStatus, PTP_VENDOR_CANON, 4, N_("Warning Level 0")},
+
+		{PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, 0, N_("Undefined")},
+		{PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, 1, N_("Economy")},
+		{PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, 2, N_("Normal")},
+		{PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, 3, N_("Fine")},
+		{PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, 4, N_("Lossless")},
+		{PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, 5, N_("SuperFine")},
+
+		{PTP_DPC_CANON_FullViewFileFormat, PTP_VENDOR_CANON, 0, N_("Undefined")},
+		{PTP_DPC_CANON_FullViewFileFormat, PTP_VENDOR_CANON, 1, N_("JPEG")},
+		{PTP_DPC_CANON_FullViewFileFormat, PTP_VENDOR_CANON, 2, N_("CRW")},
+
+		{PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, 0, N_("Large")},
+		{PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, 1, N_("Medium 1")},
+		{PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, 2, N_("Small")},
+		{PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, 3, N_("Medium 2")},
+		{PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, 7, N_("Medium 3")},
+
+		{PTP_DPC_CANON_SelfTime, PTP_VENDOR_CANON, 0,   N_("Not used")},
+		{PTP_DPC_CANON_SelfTime, PTP_VENDOR_CANON, 100, N_("10 seconds")},
+		{PTP_DPC_CANON_SelfTime, PTP_VENDOR_CANON, 20,  N_("2 seconds")},
+
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 0,  N_("Off")},
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 1,  N_("Auto")},
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 2,  N_("On")},
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 3,  N_("Red Eye Suppression")},
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 4,  N_("Low Speed Synchronization")},
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 5,  N_("Auto + Red Eye Suppression")},
+		{PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, 6,  N_("On + Red Eye Suppression")},
+
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 0,  N_("Auto")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 1,  N_("P")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 2,  N_("Tv")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 3,  N_("Av")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 4,  N_("M")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 5,  N_("A_DEP")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 6,  N_("M_DEP")},
+		{PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, 7,  N_("Bulb")},
+		/* more actually */
+
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 0,  N_("Auto")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 1,  N_("Manual")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 2,  N_("Distant View")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 3,  N_("High-Speed Shutter")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 4,  N_("Low-Speed Shutter")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 5,  N_("Night View")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 6,  N_("Grayscale")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 7,  N_("Sepia")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 8,  N_("Portrait")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 9,  N_("Sports")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 10,  N_("Macro")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 11,  N_("Monochrome")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 12,  N_("Pan Focus")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 13,  N_("Neutral")},
+		{PTP_DPC_CANON_ImageMode, PTP_VENDOR_CANON, 14,  N_("Soft")},
+
 		{0, 0, 0, NULL}
 	};
 	for (i=0; ptp_value_trans[i].dpc!=0; i++) {

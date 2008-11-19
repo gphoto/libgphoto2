@@ -66,7 +66,7 @@ typedef struct _PTPContainer PTPContainer;
  * and fixed the bugs that made this necessary and it can be 512 again.
  */
 #define PTP_USB_BULK_HS_MAX_PACKET_LEN_WRITE	512
-#define PTP_USB_BULK_HS_MAX_PACKET_LEN_READ   4096
+#define PTP_USB_BULK_HS_MAX_PACKET_LEN_READ   512
 #define PTP_USB_BULK_HDR_LEN		(2*sizeof(uint32_t)+2*sizeof(uint16_t))
 #define PTP_USB_BULK_PAYLOAD_LEN_WRITE	(PTP_USB_BULK_HS_MAX_PACKET_LEN_WRITE-PTP_USB_BULK_HDR_LEN)
 #define PTP_USB_BULK_PAYLOAD_LEN_READ	(PTP_USB_BULK_HS_MAX_PACKET_LEN_READ-PTP_USB_BULK_HDR_LEN)
@@ -1110,8 +1110,13 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_CANON_FocalLengthWide	0xD027
 #define PTP_DPC_CANON_FocalLengthDenominator	0xD028
 #define PTP_DPC_CANON_CaptureTransferMode	0xD029
-#define CANON_TRANSFER_MEMORY	3
-#define CANON_TRANSFER_CARD	15
+#define CANON_TRANSFER_ENTIRE_IMAGE_TO_PC	0x0002
+#define CANON_TRANSFER_SAVE_THUMBNAIL_TO_DEVICE	0x0004
+#define CANON_TRANSFER_SAVE_IMAGE_TO_DEVICE	0x0008
+/* we use those values: */
+#define CANON_TRANSFER_MEMORY		3
+#define CANON_TRANSFER_CARD		15
+
 #define PTP_DPC_CANON_Zoom		0xD02A
 #define PTP_DPC_CANON_NamePrefix	0xD02B
 #define PTP_DPC_CANON_SizeQualityMode	0xD02C
@@ -1722,7 +1727,10 @@ uint16_t ptp_canon_endshootingmode (PTPParams* params);
 uint16_t ptp_canon_viewfinderon (PTPParams* params);
 uint16_t ptp_canon_viewfinderoff (PTPParams* params);
 
-uint16_t ptp_canon_aeafawb (PTPParams* params, uint32_t p1);
+#define PTP_CANON_RESET_AE	0x1
+#define PTP_CANON_RESET_AF	0x2
+#define PTP_CANON_RESET_AWB	0x4
+uint16_t ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags);
 uint16_t ptp_canon_checkevent (PTPParams* params, 
 				PTPUSBEventContainer* event, int* isevent);
 uint16_t ptp_canon_focuslock (PTPParams* params);

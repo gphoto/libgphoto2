@@ -874,8 +874,8 @@ _put_ExpCompensation(CONFIG_PUT_ARGS) {
 
 
 static struct deviceproptableu16 canon_assistlight[] = {
-	{ N_("On"),	0x0000, PTP_VENDOR_CANON },
-	{ N_("Off"),	0x0001, PTP_VENDOR_CANON },
+	{ N_("Off"),	0x0000, PTP_VENDOR_CANON },
+	{ N_("On"),	0x0001, PTP_VENDOR_CANON },
 };
 GENERIC16TABLE(Canon_AssistLight,canon_assistlight)
 
