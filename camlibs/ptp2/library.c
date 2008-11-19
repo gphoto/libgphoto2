@@ -1686,7 +1686,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			}
 
 
-			ret = ptp_canon_aeafawb(params,7);
+			ret = ptp_canon_reset_aeafawb(params,7);
 			break;
 		}
 	}
