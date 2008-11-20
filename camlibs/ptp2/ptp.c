@@ -3833,6 +3833,51 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, 0x3003,  N_("Multiple Focusing Points (Center)")},
 		{PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, 0x3004,  N_("Multiple Focusing Points (Left)")},
 
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 0,  N_("Auto")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 1,  N_("Daylight")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 2,  N_("Cloudy")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 3,  N_("Tungsten")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 4,  N_("Fluorescent")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 6,  N_("Preset")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 7,  N_("Fluorescent H")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 9,  N_("Color Temperature")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 10,  N_("Custom Whitebalance PC-1")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 11,  N_("Custom Whitebalance PC-2")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 12,  N_("Custom Whitebalance PC-3")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 13,  N_("Missing Number")},
+		{PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, 14,  N_("Fluorescent H")}, /* dup? */
+
+		{PTP_DPC_CANON_SlowShutterSetting, PTP_VENDOR_CANON, 0,  N_("Off")},
+		{PTP_DPC_CANON_SlowShutterSetting, PTP_VENDOR_CANON, 1,  N_("Night View")},
+		{PTP_DPC_CANON_SlowShutterSetting, PTP_VENDOR_CANON, 2,  N_("On")},
+		{PTP_DPC_CANON_SlowShutterSetting, PTP_VENDOR_CANON, 3,  N_("Low-speed shutter function not available")},
+
+		{PTP_DPC_CANON_AFMode, PTP_VENDOR_CANON, 0,  N_("Single Shot")},
+		{PTP_DPC_CANON_AFMode, PTP_VENDOR_CANON, 1,  N_("AI Servo")},
+		{PTP_DPC_CANON_AFMode, PTP_VENDOR_CANON, 2,  N_("AI Focus")},
+		{PTP_DPC_CANON_AFMode, PTP_VENDOR_CANON, 3,  N_("Manual")},
+		{PTP_DPC_CANON_AFMode, PTP_VENDOR_CANON, 4,  N_("Continuous")},
+
+		PTP_VENDOR_VAL_BOOL(PTP_DPC_CANON_ImageStabilization,PTP_VENDOR_CANON),
+
+		{PTP_DPC_CANON_Contrast, PTP_VENDOR_CANON, -2,  N_("Low 2")},
+		{PTP_DPC_CANON_Contrast, PTP_VENDOR_CANON, -1,  N_("Low")},
+		{PTP_DPC_CANON_Contrast, PTP_VENDOR_CANON, 0,  N_("Standard")},
+		{PTP_DPC_CANON_Contrast, PTP_VENDOR_CANON, 1,  N_("High")},
+		{PTP_DPC_CANON_Contrast, PTP_VENDOR_CANON, 2,  N_("High 2")},
+
+		{PTP_DPC_CANON_ColorGain, PTP_VENDOR_CANON, -2,  N_("Low 2")},
+		{PTP_DPC_CANON_ColorGain, PTP_VENDOR_CANON, -1,  N_("Low")},
+		{PTP_DPC_CANON_ColorGain, PTP_VENDOR_CANON, 0,  N_("Standard")},
+		{PTP_DPC_CANON_ColorGain, PTP_VENDOR_CANON, 1,  N_("High")},
+		{PTP_DPC_CANON_ColorGain, PTP_VENDOR_CANON, 2,  N_("High 2")},
+
+		{PTP_DPC_CANON_Sharpness, PTP_VENDOR_CANON, -2,  N_("Low 2")},
+		{PTP_DPC_CANON_Sharpness, PTP_VENDOR_CANON, -1,  N_("Low")},
+		{PTP_DPC_CANON_Sharpness, PTP_VENDOR_CANON, 0,  N_("Standard")},
+		{PTP_DPC_CANON_Sharpness, PTP_VENDOR_CANON, 1,  N_("High")},
+		{PTP_DPC_CANON_Sharpness, PTP_VENDOR_CANON, 2,  N_("High 2")},
+
 		{0, 0, 0, NULL}
 	};
 	for (i=0; ptp_value_trans[i].dpc!=0; i++) {
