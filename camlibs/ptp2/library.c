@@ -276,14 +276,24 @@ fixup_cached_deviceinfo (Camera *camera) {
 		camera->pl->bugs |= PTP_MTP;
 		di->VendorExtensionID = PTP_VENDOR_NIKON;
 	}
+
 	if (	(di->VendorExtensionID == PTP_VENDOR_NIKON) &&
 		(camera->pl->bugs & PTP_NIKON_SUPPRESSED_PROPS)
 	) {
 		int i;
+#if 1
 		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0])));
 		for (i=0;i<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);i++)
 			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[i];
 		di->DevicePropertiesSupported_len += sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);
+#endif
+#if 0
+		/* hardcore hack ... just query d000 -> d1ff */
+		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
+		for (i=0;i<2*256;i++)
+			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 | i;
+		di->DevicePropertiesSupported_len += 2*256;
+#endif
 	}
 }
 
