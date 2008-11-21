@@ -345,7 +345,7 @@ gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 }
 
 static int
-gp_port_usb_write (GPPort *port, const void *bytes, int size)
+gp_port_usb_write (GPPort *port, const char *bytes, int size)
 {
         int ret;
 
@@ -353,7 +353,7 @@ gp_port_usb_write (GPPort *port, const void *bytes, int size)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	ret = usb_bulk_write (port->pl->dh, port->settings.usb.outep,
-                           (char*)bytes, size, port->timeout);
+                           (char *) bytes, size, port->timeout);
         if (ret < 0)
 		return (GP_ERROR_IO_WRITE);
 
@@ -361,7 +361,7 @@ gp_port_usb_write (GPPort *port, const void *bytes, int size)
 }
 
 static int
-gp_port_usb_read(GPPort *port, void *bytes, int size)
+gp_port_usb_read(GPPort *port, char *bytes, int size)
 {
 	int ret;
 
@@ -369,7 +369,7 @@ gp_port_usb_read(GPPort *port, void *bytes, int size)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	ret = usb_bulk_read(port->pl->dh, port->settings.usb.inep,
-			     (char*)bytes, size, port->timeout);
+			     bytes, size, port->timeout);
         if (ret < 0)
 		return GP_ERROR_IO_READ;
 
@@ -377,7 +377,7 @@ gp_port_usb_read(GPPort *port, void *bytes, int size)
 }
 
 static int
-gp_port_usb_check_int (GPPort *port, void *bytes, int size, int timeout)
+gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int ret;
 
@@ -396,19 +396,19 @@ gp_port_usb_check_int (GPPort *port, void *bytes, int size, int timeout)
 
 static int
 gp_port_usb_msg_write_lib(GPPort *port, int request, int value, int index,
-	const void *bytes, int size)
+	char *bytes, int size)
 {
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	return usb_control_msg(port->pl->dh,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE,
-		request, value, index, (char*)bytes, size, port->timeout);
+		request, value, index, bytes, size, port->timeout);
 }
 
 static int
 gp_port_usb_msg_read_lib(GPPort *port, int request, int value, int index,
-	void *bytes, int size)
+	char *bytes, int size)
 {
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -424,20 +424,20 @@ gp_port_usb_msg_read_lib(GPPort *port, int request, int value, int index,
 
 static int
 gp_port_usb_msg_interface_write_lib(GPPort *port, int request, 
-	int value, int index, const void *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	return usb_control_msg(port->pl->dh, 
 		USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
-		request, value, index, (char*)bytes, size, port->timeout);
+		request, value, index, bytes, size, port->timeout);
 }
 
 
 static int
 gp_port_usb_msg_interface_read_lib(GPPort *port, int request, 
-	int value, int index, void *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -454,20 +454,20 @@ gp_port_usb_msg_interface_read_lib(GPPort *port, int request,
 
 static int
 gp_port_usb_msg_class_write_lib(GPPort *port, int request, 
-	int value, int index, const void *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	return usb_control_msg(port->pl->dh, 
 		USB_TYPE_CLASS | USB_RECIP_INTERFACE,
-		request, value, index, (char*)bytes, size, port->timeout);
+		request, value, index, bytes, size, port->timeout);
 }
 
 
 static int
 gp_port_usb_msg_class_read_lib(GPPort *port, int request, 
-	int value, int index, void *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -775,8 +775,8 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 static int
 gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfaceno, int *altsettingno)
 {
-	char buf[1000];
-	int cmd,ret,i,i1,i2;
+	char buf[1000], cmd;
+	int ret,i,i1,i2;
 	usb_dev_handle *devh;
 
 	/* All of them are "vendor specific" device class */
