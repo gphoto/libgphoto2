@@ -253,11 +253,9 @@ const static uint16_t nikon_extra_props[] = {
 };
 
 void
-fixup_cached_deviceinfo (Camera *camera) {
+fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	CameraAbilities a;
-	PTPDeviceInfo	*di;
 
-	di = &camera->pl->params.deviceinfo;
         gp_camera_get_abilities(camera, &a);
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
@@ -281,18 +279,16 @@ fixup_cached_deviceinfo (Camera *camera) {
 		(camera->pl->bugs & PTP_NIKON_SUPPRESSED_PROPS)
 	) {
 		int i;
-#if 1
 		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0])));
 		for (i=0;i<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);i++)
 			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[i];
 		di->DevicePropertiesSupported_len += sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);
-#endif
 #if 0
-		/* hardcore hack ... just query d000 -> d1ff */
-		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
-		for (i=0;i<2*256;i++)
-			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 | i;
-		di->DevicePropertiesSupported_len += 2*256;
+               /* hardcore hack ... just query d000 -> d1ff */
+               di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
+               for (i=0;i<2*256;i++)
+                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 | i;
+               di->DevicePropertiesSupported_len += 2*256;
 #endif
 	}
 }
@@ -626,7 +622,7 @@ static struct {
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
 	/* Christian Deckelmann @ SUSE */
-	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
+	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Huy Hoang <hoang027@umn.edu> */
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP/*|PTP_NIKON_SUPPRESSED_PROPS*/},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
@@ -2524,7 +2520,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 * the available properties in capture mode.
 	 */
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params, &pdi));
-	fixup_cached_deviceinfo(camera);
+	fixup_cached_deviceinfo(camera,&pdi);
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
@@ -4640,7 +4636,7 @@ camera_init (Camera *camera, GPContext *context)
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));
 
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera,&camera->pl->params.deviceinfo);
 
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);

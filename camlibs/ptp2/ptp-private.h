@@ -30,7 +30,7 @@ int camera_unprepare_capture (Camera *camera, GPContext *context);
 /* library.c */
 void report_result (GPContext *context, short result, short vendor);
 int translate_ptp_result (short result);
-void fixup_cached_deviceinfo (Camera *camera);
+void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 struct _CameraPrivateLibrary {
 	PTPParams params;
