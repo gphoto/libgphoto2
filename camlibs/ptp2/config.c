@@ -85,14 +85,14 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8x, ret %d\n",propval.u32, ret);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is 0x%8X, ret %d\n",propval.u32,ret);
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret %d\n",propval.u16,ret);
 
@@ -140,7 +140,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	}
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
 	gp_port_set_timeout (camera->port, oldtimeout);
 	return GP_OK;
 }
@@ -195,7 +195,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
 		return GP_ERROR;
 	}
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
 	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
@@ -272,7 +272,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	}
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
 	return GP_OK;
 }
 
@@ -1579,6 +1579,7 @@ static struct deviceproptableu8 nikon_lcdofftime[] = {
 	{ N_("1 minute"),	0x02, 0 },
 	{ N_("5 minutes"),	0x03, 0 },
 	{ N_("10 minutes"),	0x04, 0 },
+	{ N_("5 seconds"),	0x05, 0 },	/* d80 observed */
 };
 GENERIC8TABLE(Nikon_LCDOffTime,nikon_lcdofftime)
 
@@ -1588,6 +1589,7 @@ static struct deviceproptableu8 nikon_meterofftime[] = {
 	{ N_("8 seconds"),	0x02, 0 },
 	{ N_("16 seconds"),	0x03, 0 },
 	{ N_("30 minutes"),	0x04, 0 },
+	{ N_("30 seconds"),	0x05, 0 },	/* d80 observed */
 };
 GENERIC8TABLE(Nikon_MeterOffTime,nikon_meterofftime)
 

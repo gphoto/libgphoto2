@@ -253,11 +253,9 @@ const static uint16_t nikon_extra_props[] = {
 };
 
 void
-fixup_cached_deviceinfo (Camera *camera) {
+fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	CameraAbilities a;
-	PTPDeviceInfo	*di;
 
-	di = &camera->pl->params.deviceinfo;
         gp_camera_get_abilities(camera, &a);
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
@@ -276,6 +274,7 @@ fixup_cached_deviceinfo (Camera *camera) {
 		camera->pl->bugs |= PTP_MTP;
 		di->VendorExtensionID = PTP_VENDOR_NIKON;
 	}
+
 	if (	(di->VendorExtensionID == PTP_VENDOR_NIKON) &&
 		(camera->pl->bugs & PTP_NIKON_SUPPRESSED_PROPS)
 	) {
@@ -284,6 +283,13 @@ fixup_cached_deviceinfo (Camera *camera) {
 		for (i=0;i<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);i++)
 			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[i];
 		di->DevicePropertiesSupported_len += sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);
+#if 0
+               /* hardcore hack ... just query d000 -> d1ff */
+               di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
+               for (i=0;i<2*256;i++)
+                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 | i;
+               di->DevicePropertiesSupported_len += 2*256;
+#endif
 	}
 }
 
@@ -616,7 +622,7 @@ static struct {
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
 	/* Christian Deckelmann @ SUSE */
-	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
+	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Huy Hoang <hoang027@umn.edu> */
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP/*|PTP_NIKON_SUPPRESSED_PROPS*/},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
@@ -1436,6 +1442,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
                	_("Sorry, your camera does not support Nikon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+	init_ptp_fs (camera, context);
 	if (	ptp_property_issupported(params, PTP_DPC_StillCaptureMode)	&&
 		(PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_StillCaptureMode, &propdesc)) &&
 		(propdesc.DataType == PTP_DTC_UINT16)				&&
@@ -1682,8 +1689,6 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
-
-
 			ret = ptp_canon_reset_aeafawb(params,7);
 			break;
 		}
@@ -1906,6 +1911,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
+
 	init_ptp_fs (camera, context);
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
@@ -1952,7 +1958,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
-					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, &ximage));
 					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entries[i].u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
@@ -2517,7 +2523,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 * the available properties in capture mode.
 	 */
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params, &pdi));
-	fixup_cached_deviceinfo(camera);
+	fixup_cached_deviceinfo(camera,&pdi);
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
@@ -4635,7 +4641,7 @@ camera_init (Camera *camera, GPContext *context)
 	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
 	&camera->pl->params.deviceinfo));
 
-	fixup_cached_deviceinfo (camera);
+	fixup_cached_deviceinfo (camera,&camera->pl->params.deviceinfo);
 
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
