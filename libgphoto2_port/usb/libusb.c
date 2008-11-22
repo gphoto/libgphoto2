@@ -780,6 +780,8 @@ gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfac
 #endif
 
 	devh = usb_open (dev);
+	if (!devh)
+		return 0;
 	/* get string descriptor at 0xEE */
 	ret = usb_get_descriptor (devh, 0x03, 0xee, buf, sizeof(buf));
 	if (ret > 0) gp_log_data("get_MS_OSD",buf, ret);
