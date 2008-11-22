@@ -1,3 +1,8 @@
+2008-11-22   Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: Added another version of the disney pix micro, reported
+	  by Adam Piggs.
+
 2008-05-11   Theodore Kilgore <kilgota@auburn.edu>
 	* README.913D: References to nonexistent README.digr8 corrected. 
 
