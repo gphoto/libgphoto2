@@ -644,22 +644,22 @@ static struct {
 	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP},
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
-	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
+	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Christian Deckelmann @ SUSE */
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Huy Hoang <hoang027@umn.edu> */
-	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP/*|PTP_NIKON_SUPPRESSED_PROPS*/},
+	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
-	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
+	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Andreas Jaeger <aj@suse.de>.
 	 * Marcus: MTP Proplist does not return objectsizes ... useless. */
-	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP|PTP_MTP},
+	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP|PTP_MTP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Pat Shanahan, http://sourceforge.net/tracker/index.php?func=detail&aid=1924511&group_id=8874&atid=358874 */
-	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
+	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* irc reporter Benjamin Schindler */
-	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
+	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Borrowed D700 by deckel / marcus */
-	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP},
+	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
