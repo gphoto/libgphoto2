@@ -1114,8 +1114,8 @@ typedef struct _PTPCanon_Property {
 #define CANON_TRANSFER_SAVE_THUMBNAIL_TO_DEVICE	0x0004
 #define CANON_TRANSFER_SAVE_IMAGE_TO_DEVICE	0x0008
 /* we use those values: */
-#define CANON_TRANSFER_MEMORY		3
-#define CANON_TRANSFER_CARD		15
+#define CANON_TRANSFER_MEMORY		(2|1)
+#define CANON_TRANSFER_CARD		(8|4|1)
 
 #define PTP_DPC_CANON_Zoom		0xD02A
 #define PTP_DPC_CANON_NamePrefix	0xD02B

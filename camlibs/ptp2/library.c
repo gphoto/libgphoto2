@@ -2282,7 +2282,7 @@ nikon_curve_put (CameraFilesystem *fs, const char *folder, CameraFile *file,
 static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
-	int n, i, j;
+	int n, i, j, ret;
 	int spaceleft;
 	char *txt;
 	PTPParams *params = &(camera->pl->params);
@@ -2574,69 +2574,73 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		}
 
 		memset (&dpd, 0, sizeof (dpd));
-		ptp_getdevicepropdesc (params, dpc, &dpd);
-
-		n = snprintf (txt, spaceleft, "(%s) ",_get_getset(dpd.GetSet));
-		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-		n = snprintf (txt, spaceleft, "(type=0x%x) ",dpd.DataType);
-		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-		switch (dpd.FormFlag) {
-		case PTP_DPFF_None:	break;
-		case PTP_DPFF_Range: {
-			n = snprintf (txt, spaceleft, "Range [");
+		ret = ptp_getdevicepropdesc (params, dpc, &dpd);
+		if (ret == PTP_RC_OK) {
+			n = snprintf (txt, spaceleft, "(%s) ",_get_getset(dpd.GetSet));
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = _value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt, spaceleft);
+			n = snprintf (txt, spaceleft, "(type=0x%x) ",dpd.DataType);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft, " - ");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n= _value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt, spaceleft);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft, ", step ");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n= _value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt, spaceleft);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft, "] value: ");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			break;
-		}
-		case PTP_DPFF_Enumeration:
-			n = snprintf (txt, spaceleft, "Enumeration [");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-				n = snprintf (txt, spaceleft, "\n\t");
+			switch (dpd.FormFlag) {
+			case PTP_DPFF_None:	break;
+			case PTP_DPFF_Range: {
+				n = snprintf (txt, spaceleft, "Range [");
 				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n = _value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt, spaceleft);
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n = snprintf (txt, spaceleft, " - ");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n= _value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt, spaceleft);
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n = snprintf (txt, spaceleft, ", step ");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n= _value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt, spaceleft);
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n = snprintf (txt, spaceleft, "] value: ");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				break;
 			}
-			for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
-				n = _value_to_str(dpd.FORM.Enum.SupportedValue+j,dpd.DataType,txt, spaceleft);
+			case PTP_DPFF_Enumeration:
+				n = snprintf (txt, spaceleft, "Enumeration [");
 				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				if (j != dpd.FORM.Enum.NumberOfValues-1) {
-					n = snprintf (txt, spaceleft, ",");
+				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
+					n = snprintf (txt, spaceleft, "\n\t");
 					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-					if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-						n = snprintf (txt, spaceleft, "\n\t");
+				}
+				for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
+					n = _value_to_str(dpd.FORM.Enum.SupportedValue+j,dpd.DataType,txt, spaceleft);
+					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+					if (j != dpd.FORM.Enum.NumberOfValues-1) {
+						n = snprintf (txt, spaceleft, ",");
 						if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+						if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
+							n = snprintf (txt, spaceleft, "\n\t");
+							if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+						}
 					}
 				}
+				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
+					n = snprintf (txt, spaceleft, "\n\t");
+					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				}
+				n = snprintf (txt, spaceleft, "] value: ");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				break;
 			}
-			if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-				n = snprintf (txt, spaceleft, "\n\t");
+			n = ptp_render_property_value(params, dpc, &dpd, sizeof(summary->text) - strlen(summary->text) - 1, txt);
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			if (n) {
+				n = snprintf(txt, spaceleft, " (");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				n = snprintf(txt, spaceleft, ")");
+				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			} else {
+				n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
 				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			}
-			n = snprintf (txt, spaceleft, "] value: ");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			break;
-		}
-		n = ptp_render_property_value(params, dpc, &dpd, sizeof(summary->text) - strlen(summary->text) - 1, txt);
-		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-		if (n) {
-			n = snprintf(txt, spaceleft, " (");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf(txt, spaceleft, ")");
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 		} else {
-			n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
+			n = snprintf (txt, spaceleft, _(" error %x on query."), ret);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 		}
 		n = snprintf(txt, spaceleft, "\n");
