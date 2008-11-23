@@ -236,20 +236,36 @@ translate_ptp_result (short result)
 	}
 }
 
-const static uint16_t nikon_extra_props[] = {
-0xd10b,
-0xd017, 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d,
-0xd02a, 0xd02b, 0xd02c, 0xd02d,
-0xd054,
-0xd062, 0xd064, 0xd066, 0xd06b,
-0xd091, 0xd092,
+/* Observed on Nikon D80, just probing 0xd000 - 0xd1ff. See #if 0'ed code
+ * below. -Marcus */
+const static uint16_t nikon_d80_extra_props[] = {
+0xd017, 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
+0xd025, 0xd026, 0xd02a, 0xd02b, 0xd02c, 0xd02d,
+0xd045, 0xd04f,
+0xd052, 0xd054, 0xd056, 0xd058, 0xd059, 0xd05e, 0xd05f,
+0xd062, 0xd063, 0xd064, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
+0xd070, 0xd075, 0xd077, 0xd078, 0xd07a,
+0xd084, 0xd086, 0xd08a,
+0xd090, 0xd091, 0xd092,
+0xd0c0, 0xd0c1, 0xd0c2, 0xd0c3, 0xd0c4, 0xd0c5,
 0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
-0xd100, 0xd101, 0xd102, 0xd103, 0xd105, 0xd108, 0xd109, 0xd10e,
-0xd120, 0xd124, 0xd126,
-0xd140, 0xd142,
-0xd161, 0xd16a,
-0xd1b0, 0xd1b1, 0xd1b2,
-0xd1c0, 0xd1e1
+0xd100, 0xd101, 0xd102, 0xd103, 0xd104, 0xd105, 0xd106, 0xd108, 0xd109, 0xd10b, 0xd10d, 0xd10e,
+0xd120, 0xd121, 0xd122, 0xd124, 0xd125, 0xd126,
+0xd140, 0xd142, 0xd143, 0xd144, 0xd145, 0xd146,
+0xd160, 0xd161, 0xd163, 0xd164, 0xd165, 0xd166, 0xd167, 0xd169, 0xd16a, 0xd16b, 0xd16c, 0xd16d, 0xd16f,
+0xd181, 0xd182, 0xd183,
+0xd1b0, 0xd1b1,
+0xd1c0, 0xd1c1,
+0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7, 0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc
+};
+
+static const struct {
+	uint16_t	productid;
+	const uint16_t	*extraprops;
+	int		nrextraprops;
+} nikon_extra_props[] = {
+	/* D80 - confirmed by Marcus */
+	{ 0x412, nikon_d80_extra_props, sizeof(nikon_d80_extra_props)/sizeof(nikon_d80_extra_props[0]) }
 };
 
 void
@@ -278,13 +294,21 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	if (	(di->VendorExtensionID == PTP_VENDOR_NIKON) &&
 		(camera->pl->bugs & PTP_NIKON_SUPPRESSED_PROPS)
 	) {
-		int i;
-		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0])));
-		for (i=0;i<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);i++)
-			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[i];
-		di->DevicePropertiesSupported_len += sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);
+		int i,j;
+
+		for (j=0;j<sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]);j++) {
+			if (nikon_extra_props[j].productid == a.usb_product)
+				break;
+		}
+		if (j==sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]))
+			j=0; /* just use the first one as default */
+
+		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + nikon_extra_props[j].nrextraprops));
+		for (i=0;i<nikon_extra_props[j].nrextraprops;i++)
+			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[j].extraprops[i];
+		di->DevicePropertiesSupported_len += nikon_extra_props[j].nrextraprops;
 #if 0
-               /* hardcore hack ... just query d000 -> d1ff */
+               /* hardcore hack ... just query d000 -> d1ff ...  */
                di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
                for (i=0;i<2*256;i++)
                        di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 | i;
@@ -1224,11 +1248,9 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	strncpy (text->text,
 	 _("PTP2 driver\n"
 	   "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-	   "(c) 2003-2007 by Marcus Meissner <marcus@jet.franken.de>.\n"
+	   "(c) 2003-2008 by Marcus Meissner <marcus@jet.franken.de>.\n"
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
-	   "\n"
-	   "This driver is not a 'Licensed Implementation' of the Media Transfer Protocol.\n"
 	   "\n"
 	   "Enjoy!"), sizeof (text->text));
 	return (GP_OK);
@@ -1444,6 +1466,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
                	_("Sorry, your camera does not support Nikon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+	init_ptp_fs (camera, context);
 	if (	ptp_property_issupported(params, PTP_DPC_StillCaptureMode)	&&
 		(PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_StillCaptureMode, &propdesc)) &&
 		(propdesc.DataType == PTP_DTC_UINT16)				&&
@@ -1748,7 +1771,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	SET_CONTEXT_P(params, context);
-	init_ptp_fs(camera, context);
+	init_ptp_fs (camera, context);
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
 	){
@@ -2777,7 +2801,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
-        init_ptp_fs ((Camera*)data, context);
+	init_ptp_fs ((Camera*)data, context);
 
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
@@ -3344,7 +3368,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
 
-        init_ptp_fs (camera, context);
+	init_ptp_fs (camera, context);
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
@@ -3491,7 +3515,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	SET_CONTEXT_P(params, context);
 
-        init_ptp_fs (camera, context);
+	init_ptp_fs (camera, context);
 
 	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
@@ -3616,7 +3640,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
 
-        init_ptp_fs (camera, context);
+	init_ptp_fs (camera, context);
 	/* virtual file created by Nikon special capture */
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)   ) &&
@@ -3683,7 +3707,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
 
-        init_ptp_fs (camera, context);
+	init_ptp_fs (camera, context);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3723,7 +3747,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS); /* for now */
 
-        init_ptp_fs (camera, context);
+	init_ptp_fs (camera, context);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -3817,7 +3841,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 
 	SET_CONTEXT_P(params, context);
 
-        init_ptp_fs (camera, context);
+	init_ptp_fs (camera, context);
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 
 	/* compute storage ID value from folder patch */
@@ -3981,8 +4005,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	uint16_t ret;
 
 	SET_CONTEXT_P(params, context);
-        if (camera->pl->fs_loaded) return PTP_RC_OK;
-        camera->pl->fs_loaded = 1;
+	if (camera->pl->fs_loaded) return PTP_RC_OK;
+	camera->pl->fs_loaded = 1;
 
 	memset (&params->handles, 0, sizeof(PTPObjectHandles));
 
