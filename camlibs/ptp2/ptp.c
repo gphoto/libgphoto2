@@ -3418,6 +3418,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Active AF Sensor")},
 		{PTP_DPC_NIKON_LightMeter,			/* 0xD10a */
 		 N_("Exposure Meter")},
+		{PTP_DPC_NIKON_CameraOrientation,		/* 0xD10e */
+		 N_("Camera Orientation")},
 		{PTP_DPC_NIKON_ExposureApertureLock,		/* 0xD111 */
 		 N_("Exposure Aperture Lock")},
 		{PTP_DPC_NIKON_MaximumShots,			/* 0xD103 */
@@ -3739,6 +3741,10 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_LowLight,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_CSMMenu,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_NIKON_BeepOff,PTP_VENDOR_NIKON),
+
+		{PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, 0, "0'"},
+		{PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, 1, "270'"},
+		{PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, 2, "90'"},
 
 		/* Canon stuff */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_CANON_AssistLight,PTP_VENDOR_CANON),
