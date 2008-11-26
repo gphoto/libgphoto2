@@ -1494,6 +1494,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPParams		*params = &camera->pl->params;
 	PTPDevicePropDesc	propdesc;
 	int			i, ret, hasc101 = 0, burstnumber = 1;
+	uint32_t		newobject;
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1519,13 +1520,20 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		gp_log (GP_LOG_DEBUG, "ptp2", "burstnumber %d", burstnumber);
 	}
 
-	do {
-		ret = ptp_nikon_capture(params, 0xffffffff);
-	} while (ret == PTP_RC_DeviceBusy);
+	if (ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+		do {
+			ret = ptp_nikon_capture_sdram(params);
+		} while (ret == PTP_RC_DeviceBusy);
+	} else {
+		do {
+			ret = ptp_nikon_capture(params, 0xffffffff);
+		} while (ret == PTP_RC_DeviceBusy);
+	}
 	CPR (context, ret);
 
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
 
+	newobject = 0xffff0001;
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
 		int i, evtcnt;
 		PTPUSBEventContainer *nevent = NULL;
@@ -1536,8 +1544,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK)
 			break;
 		for (i=0;i<evtcnt;i++) {
-			/*fprintf(stderr,"1:nevent.Code is %x / param %lx\n", nevent[i].code, (unsigned long)nevent[i].param1);*/
-			if (nevent[i].code == 0xc101) hasc101=1;
+			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx\n", i, nevent[i].code, (unsigned long)nevent[i].param1);
+			if (nevent[i].code == 0xc101) {
+				hasc101=1;
+				newobject = nevent[i].param1;
+			}
 		}
 		free (nevent);
 	}
@@ -1545,10 +1556,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	for (i=0;i<burstnumber;i++) {
 		/* In Burst mode, the image is always 0xffff0001.
 		 * The firmware just gives us one after the other for the same ID
+		 * Not so for the D700 :/
 		 */
-		ret = ptp_getobjectinfo (params, 0xffff0001, &oi);
+		ret = ptp_getobjectinfo (params, newobject, &oi);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", 0xffff0001, ret);
+			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", newobject, ret);
 			return GP_ERROR_IO;
 		}
 		if (oi.ParentObject != 0)
@@ -1558,7 +1570,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			oi.StorageID = 0x00010001;
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		ret = add_objectid_to_gphotofs(camera, path, context, 0xffff0001, &oi);
+		ret = add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 		if (ret != GP_OK) {
 			fprintf (stderr, "failed to add object\n");
 			return ret;

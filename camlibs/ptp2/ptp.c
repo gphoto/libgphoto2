@@ -2371,6 +2371,27 @@ ptp_nikon_capture (PTPParams* params, uint32_t x)
 }
 
 /**
+ * ptp_nikon_capture_sdram:
+ *
+ * This command captures a picture on the Nikon.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_capture_sdram (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_AfCaptureSDRAM;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
  * ptp_nikon_check_event:
  *
  * This command checks the event queue on the Nikon.
