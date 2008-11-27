@@ -259,13 +259,51 @@ const static uint16_t nikon_d80_extra_props[] = {
 0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7, 0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc
 };
 
+const static uint16_t nikon_d700_extra_props[] = {
+0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
+0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
+0xd020, 0xd021, 0xd022, 0xd023, 0xd024, 0xd025, 0xd026, 0xd027,
+0xd028, 0xd029, 0xd02e, 0xd02f,
+0xd030, 0xd031, 0xd032, 0xd033,
+0xd040, 0xd041, 0xd042, 0xd043, 0xd044, 0xd045, 0xd048, 0xd049, 0xd04b, 0xd04f,
+0xd050, 0xd051, 0xd053, 0xd054, 0xd055, 0xd056, 0xd057,
+0xd058, 0xd059, 0xd05a, 0xd05b, 0xd05c, 0xd05e, 0xd05f,
+0xd062, 0xd063, 0xd065, 0xd067,
+0xd068, 0xd069, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
+0xd070, 0xd071, 0xd072, 0xd073, 0xd074, 0xd075, 0xd077,
+0xd078, 0xd079, 0xd07a,
+0xd080, 0xd081, 0xd082, 0xd083, 0xd084, 0xd085, 0xd086, 0xd087,
+0xd088, 0xd089, 0xd08a, 0xd08b, 0xd08c, 0xd08d,
+0xd090, 0xd091, 0xd092, 0xd093, 0xd094, 0xd095, 0xd096, 0xd097,
+0xd098, 0xd099, 0xd09a, 0xd09b,
+0xd0c0, 0xd0c1, 0xd0c2, 0xd0c3, 0xd0c4, 0xd0c5,
+0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
+0xd0f2, 0xd0f3, 0xd0f4, 0xd0f7,
+0xd100, 0xd101, 0xd102, 0xd103, 0xd104, 0xd105, 0xd106,
+0xd108, 0xd109, 0xd10b, 0xd10c, 0xd10d, 0xd10e,
+0xd110, 0xd111, 0xd112, 0xd113, 0xd114,
+0xd120, 0xd121, 0xd122, 0xd123, 0xd124, 0xd125, 0xd126,
+0xd149, 0xd14e, 0xd14f,
+0xd150, 0xd151, 0xd152, 0xd153, 0xd154, 0xd155,
+0xd160, 0xd163, 0xd164, 0xd166, 0xd167, 0xd16c, 0xd16d,
+0xd182, 0xd183, 0xd184, 0xd187, 0xd189, 0xd18a, 0xd18b, 0xd18d, 0xd18e,
+0xd1a0, 0xd1a1, 0xd1a2, 0xd1a3, 0xd1a4,
+0xd1b0, 0xd1b1, 0xd1b2, 0xd1b3,
+0xd1c0, 0xd1c1,
+0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7,
+0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc,
+0xd200, 0xd201
+};
+
 static const struct {
 	uint16_t	productid;
 	const uint16_t	*extraprops;
 	int		nrextraprops;
 } nikon_extra_props[] = {
 	/* D80 - confirmed by Marcus */
-	{ 0x412, nikon_d80_extra_props, sizeof(nikon_d80_extra_props)/sizeof(nikon_d80_extra_props[0]) }
+	{ 0x412, nikon_d80_extra_props, sizeof(nikon_d80_extra_props)/sizeof(nikon_d80_extra_props[0]) },
+	/* D700 - confirmed by Marcus */
+	{ 0x422, nikon_d700_extra_props, sizeof(nikon_d700_extra_props)/sizeof(nikon_d700_extra_props[0]) }
 };
 
 void
@@ -303,15 +341,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (j==sizeof(nikon_extra_props)/sizeof(nikon_extra_props[0]))
 			j=0; /* just use the first one as default */
 
+#if 1
 		di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + nikon_extra_props[j].nrextraprops));
 		for (i=0;i<nikon_extra_props[j].nrextraprops;i++)
 			di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = nikon_extra_props[j].extraprops[i];
 		di->DevicePropertiesSupported_len += nikon_extra_props[j].nrextraprops;
+#endif
 #if 0
                /* hardcore hack ... just query d000 -> d1ff ...  */
                di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
                for (i=0;i<2*256;i++)
-                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 | i;
+                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 + i;
                di->DevicePropertiesSupported_len += 2*256;
 #endif
 	}
@@ -1454,6 +1494,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPParams		*params = &camera->pl->params;
 	PTPDevicePropDesc	propdesc;
 	int			i, ret, hasc101 = 0, burstnumber = 1;
+	uint32_t		newobject;
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1479,13 +1520,20 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		gp_log (GP_LOG_DEBUG, "ptp2", "burstnumber %d", burstnumber);
 	}
 
-	do {
-		ret = ptp_nikon_capture(params, 0xffffffff);
-	} while (ret == PTP_RC_DeviceBusy);
+	if (ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+		do {
+			ret = ptp_nikon_capture_sdram(params);
+		} while (ret == PTP_RC_DeviceBusy);
+	} else {
+		do {
+			ret = ptp_nikon_capture(params, 0xffffffff);
+		} while (ret == PTP_RC_DeviceBusy);
+	}
 	CPR (context, ret);
 
 	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
 
+	newobject = 0xffff0001;
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
 		int i, evtcnt;
 		PTPUSBEventContainer *nevent = NULL;
@@ -1496,8 +1544,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK)
 			break;
 		for (i=0;i<evtcnt;i++) {
-			/*fprintf(stderr,"1:nevent.Code is %x / param %lx\n", nevent[i].code, (unsigned long)nevent[i].param1);*/
-			if (nevent[i].code == 0xc101) hasc101=1;
+			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx\n", i, nevent[i].code, (unsigned long)nevent[i].param1);
+			if (nevent[i].code == 0xc101) {
+				hasc101=1;
+				newobject = nevent[i].param1;
+			}
 		}
 		free (nevent);
 	}
@@ -1505,10 +1556,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	for (i=0;i<burstnumber;i++) {
 		/* In Burst mode, the image is always 0xffff0001.
 		 * The firmware just gives us one after the other for the same ID
+		 * Not so for the D700 :/
 		 */
-		ret = ptp_getobjectinfo (params, 0xffff0001, &oi);
+		ret = ptp_getobjectinfo (params, newobject, &oi);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", 0xffff0001, ret);
+			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", newobject, ret);
 			return GP_ERROR_IO;
 		}
 		if (oi.ParentObject != 0)
@@ -1518,7 +1570,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			oi.StorageID = 0x00010001;
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		ret = add_objectid_to_gphotofs(camera, path, context, 0xffff0001, &oi);
+		ret = add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
 		if (ret != GP_OK) {
 			fprintf (stderr, "failed to add object\n");
 			return ret;

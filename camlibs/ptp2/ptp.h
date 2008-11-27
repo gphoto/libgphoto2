@@ -345,12 +345,17 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_SetProfileData	0x9009
 #define PTP_OC_NIKON_AdvancedTransfer	0x9010
 #define PTP_OC_NIKON_GetFileInfoInBlock	0x9011
-#define PTP_OC_NIKON_Capture		0x90C0
-#define PTP_OC_NIKON_SetControlMode	0x90C2
-#define PTP_OC_NIKON_CurveDownload	0x90C5
-#define PTP_OC_NIKON_CurveUpload	0x90C6
-#define PTP_OC_NIKON_CheckEvent		0x90C7
-#define PTP_OC_NIKON_DeviceReady	0x90C8
+#define PTP_OC_NIKON_Capture		0x90C0	/* 1 param,   no data */
+#define PTP_OC_NIKON_AfDrive		0x90C1	/* no params, no data */
+#define PTP_OC_NIKON_SetControlMode	0x90C2	/* 1 param,   no data */
+#define PTP_OC_NIKON_DelImageSDRAM	0x90C3	/* no params, no data */
+#define PTP_OC_NIKON_CurveDownload	0x90C5	/* 1 param,   data in */
+#define PTP_OC_NIKON_CurveUpload	0x90C6	/* 1 param,   data out */
+#define PTP_OC_NIKON_CheckEvent		0x90C7	/* no params, data in */
+#define PTP_OC_NIKON_DeviceReady	0x90C8	/* no params, no data */
+#define PTP_OC_NIKON_SetPreWBData	0x90C9	/* 3 params,  data out */
+					/* 0x90CA */
+#define PTP_OC_NIKON_AfCaptureSDRAM	0x90CB	/* no params, no data */
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
 /* Microsoft / MTP extension codes */
@@ -1780,6 +1785,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 uint16_t ptp_nikon_deletewifiprofile (PTPParams* params, uint32_t profilenr);
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
+uint16_t ptp_nikon_capture_sdram (PTPParams* params);
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
