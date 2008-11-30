@@ -118,7 +118,7 @@ dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
 GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
-ALL_LINGUAS="cs da de fr es eu it ja nl nb pl pt_BR ru sl sv uk vi zh_CN zh_TW"
+ALL_LINGUAS="cs da de fr es eu it ja nl nb pl pt_BR ru sk sl sv uk vi zh_CN zh_TW"
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
 AM_PO_SUBDIRS()
@@ -163,14 +163,23 @@ AC_CHECK_HEADER([regex.h],
 ])
 ])
 
+dnl ---------------------------------------------------------------------------
 dnl Apple Bonjour / mDNSResponder multicast DNS queries.
+dnl ---------------------------------------------------------------------------
+with_bonjour=no
+AC_ARG_WITH([bonjour],
+	AS_HELP_STRING([--without-bonjour], [whether to exclude Bonjour PTP/IP autodetection]),
+	,with_bonjour=yes)
+
 MDNS_LIBS=
-AC_CHECK_HEADER([dns_sd.h],[
+if test "x$with_bonjour" = "xyes"; then
+	AC_CHECK_HEADER([dns_sd.h],[
 		AC_CHECK_LIB(dns_sd,DNSServiceResolve,[
 			MDNS_LIBS="-ldns_sd"
 			AC_DEFINE(HAVE_MDNS_BONJOUR,1,[Define if you have Bonjour/mDNSResponder.])
 		])
-])
+	])
+fi
 AC_SUBST(MDNS_LIBS)
 
 AC_MSG_CHECKING([for asm .symver support])
@@ -368,18 +377,38 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 dnl ---------------------------------------------------------------------------
 dnl disk - hal and various stuff
 dnl ---------------------------------------------------------------------------
-PKG_CHECK_MODULES(HAL, [dbus-1 >= 0.31 hal >= 0.5.0], 
+AC_ARG_WITH([hal],
+	AS_HELP_STRING([--without-hal], [wether to enable HAL disk autodetection]),
+	,with_hal=yes)
+
+if test "x$with_hal" = "xyes"; then
+	have_hal=true
+	PKG_CHECK_MODULES(HAL, [dbus-1 >= 0.31 hal >= 0.5.0], 
 		       [have_hal=true], 
 		       [have_hal=false])
-if test "x$have_hal" = "xtrue"; then
-   AC_SUBST(HAL_CFLAGS)
-   AC_SUBST(HAL_LIBS)
-   AC_DEFINE(HAVE_HAL,1,[defined if HAL is available])
+	if test "x$have_hal" = "xtrue"; then
+		AC_SUBST(HAL_CFLAGS)
+		AC_SUBST(HAL_LIBS)
+		AC_DEFINE(HAVE_HAL,1,[defined if HAL is available])
+	fi
 fi
-IOLIB_LIST="$IOLIB_LIST disk"
 
+AC_ARG_ENABLE([disk],
+	AS_HELP_STRING([--disable-disk], [enable the 'disk' port driver]),
+	,enable_disk=yes)
+
+dnl disk port also work everywhere, but its not really necessary
+if test "x$enable_disk" = "xyes"; then
+	IOLIB_LIST="$IOLIB_LIST disk"
+fi
+
+AC_ARG_ENABLE([ptpip],
+	AS_HELP_STRING([--disable-ptpip], [enable the 'ptpip' port driver for TCP/IP connected PTP cameras]),
+	,enable_ptpip=yes)
 dnl ptpip - works 'everywhere' with TCP/IP stack.
-IOLIB_LIST="$IOLIB_LIST ptpip"
+if test "x$enable_ptpip" = "xyes"; then
+	IOLIB_LIST="$IOLIB_LIST ptpip"
+fi
 
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
