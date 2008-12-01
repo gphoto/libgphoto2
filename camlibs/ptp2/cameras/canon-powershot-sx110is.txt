@@ -1,0 +1,75 @@
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot SX110 IS
+  Version: 1-5.2.1.0
+  Serial Number: 654CC68E371842BA862B05DD8E51A16F
+Vendor Extension ID: 0x6 (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Defined Type, Unknown(b101), Unknown(b103), Unknown(b104), Unknown(bf01)
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b101)/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b104)/b104: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Unknown(bf01)/bf01: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 31080448 (29 MB)
+	Free Space (Bytes): 28819456 (27 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Property 0xd02e:(read only) (type=0x6) 524288
+Property 0xd02f:(read only) (type=0x6) 524288
+Property 0xd002:(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
+Property 0xd003:(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+Property 0xd034:(readwrite) (type=0x6) 1202259357
+Property 0xd047:(read only) (type=0x4) 0
+Property 0xd046:(read only) (type=0x4) 257
+Property 0xd02d:(read only) (type=0x4006) a[4] 119,0,159,0
+Property 0xd048:(read only) (type=0x4006) a[19] 3981312,2785280,2050048,0,254976,2357248,1658880,1142784,0,153600,1126400,798720,569344,0,86016,0,1026048,571392,284672
+Property 0xd02c:(read only) (type=0x4006) Enumeration [
+	a[6] 2592,3456,1,0,0,0,
+	a[6] 2592,3456,6,0,0,0,
+	a[6] 2592,3456,11,0,0,0,
+	a[6] 2112,2816,2,0,0,0,
+	a[6] 2112,2816,7,0,0,0,
+	a[6] 2112,2816,12,0,0,0,
+	a[6] 1704,2272,3,0,0,0,
+	a[6] 1704,2272,8,0,0,0,
+	a[6] 1704,2272,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Property 0xd030:(read only) (type=0x6) 256
+Property 0xd049:(read only) (type=0x6) 38928384
+Property 0xd032:(read only) (type=0xffff) 'Canon PowerShot SX110 IS'
+Property 0xd033:(readwrite) (type=0x4002) a[0] 
+Property 0xd031:(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 1
+Friendly Device Name(0xd402):(read only) (type=0xffff) Canon PowerShot SX110 IS ('Canon PowerShot SX110 IS')
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
