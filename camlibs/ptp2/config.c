@@ -583,9 +583,9 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 			}
 			if (!isset) {
 				char buf[200];
-				sprintf(buf, _("Unknown value %04x"), dpd->FORM.Range.MaximumValue.u8);
+				sprintf(buf, _("Unknown value %04x"), i);
 				gp_widget_add_choice (*widget, buf);
-				if (dpd->FORM.Range.MaximumValue.u8 == dpd->CurrentValue.u8)
+				if (i == dpd->CurrentValue.u8)
 					gp_widget_set_value (*widget, buf);
 			}
 		}
@@ -1606,6 +1606,7 @@ static struct deviceproptableu8 nikon_centerweight[] = {
 	{ N_("8 mm"),	0x01, 0 },
 	{ N_("10 mm"),	0x02, 0 },
 	{ N_("20 mm"),	0x03, 0 },
+	{ N_("Average"),0x04, 0 },
 };
 GENERIC8TABLE(Nikon_CenterWeight,nikon_centerweight)
 
