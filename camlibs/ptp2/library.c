@@ -295,6 +295,42 @@ const static uint16_t nikon_d700_extra_props[] = {
 0xd200, 0xd201
 };
 
+const static uint16_t nikon_d300_extra_props[] = {
+0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
+0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
+0xd020, 0xd021, 0xd022, 0xd023, 0xd024, 0xd025, 0xd026, 0xd027,
+0xd028, 0xd029, 0xd02e, 0xd02f,
+0xd031, 0xd032,
+0xd040, 0xd041, 0xd042, 0xd043, 0xd044, 0xd045,
+0xd048, 0xd049, 0xd04b, 0xd04f,
+0xd050, 0xd051, 0xd053, 0xd054, 0xd055, 0xd056, 0xd057,
+0xd058, 0xd059, 0xd05a, 0xd05b, 0xd05c, 0xd05e, 0xd05f,
+0xd062, 0xd063, 0xd064,
+0xd068, 0xd069, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
+0xd070, 0xd072, 0xd073, 0xd074, 0xd075, 0xd077,
+0xd078, 0xd079, 0xd07a,
+0xd080, 0xd081, 0xd082, 0xd083, 0xd084, 0xd085, 0xd086, 0xd087,
+0xd088, 0xd089, 0xd08a, 0xd08b, 0xd08c, 0xd08d,
+0xd090, 0xd091, 0xd092, 0xd093, 0xd094, 0xd095, 0xd096, 0xd097,
+0xd098, 0xd099, 0xd09a, 0xd09b,
+0xd0c0, 0xd0c1, 0xd0c2, 0xd0c3, 0xd0c4, 0xd0c5,
+0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
+0xd100, 0xd101, 0xd102, 0xd103, 0xd104, 0xd105, 0xd106,
+0xd108, 0xd109, 0xd10b, 0xd10c, 0xd10d, 0xd10e,
+0xd110, 0xd111,
+0xd120, 0xd121, 0xd122, 0xd123, 0xd124, 0xd125, 0xd126,
+0xd149, 0xd14e, 0xd14f,
+0xd150, 0xd151, 0xd152, 0xd153, 0xd154, 0xd155,
+0xd160, 0xd163, 0xd164, 0xd166, 0xd167, 0xd16c, 0xd16d,
+0xd181, 0xd182, 0xd183, 0xd184, 0xd187, 0xd189, 0xd18a, 0xd18b, 0xd18d, 0xd18e,
+0xd1a0, 0xd1a1, 0xd1a2, 0xd1a3, 0xd1a4,
+0xd1b0, 0xd1b1, 0xd1b2, 0xd1b3,
+0xd1c0, 0xd1c1,
+0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7,
+0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc,
+0xd200, 0xd201
+};
+
 static const struct {
 	uint16_t	productid;
 	const uint16_t	*extraprops;
@@ -303,7 +339,9 @@ static const struct {
 	/* D80 - confirmed by Marcus */
 	{ 0x412, nikon_d80_extra_props, sizeof(nikon_d80_extra_props)/sizeof(nikon_d80_extra_props[0]) },
 	/* D700 - confirmed by Marcus */
-	{ 0x422, nikon_d700_extra_props, sizeof(nikon_d700_extra_props)/sizeof(nikon_d700_extra_props[0]) }
+	{ 0x422, nikon_d700_extra_props, sizeof(nikon_d700_extra_props)/sizeof(nikon_d700_extra_props[0]) },
+	/* D300 - confirmed by Marcus */
+	{ 0x41a, nikon_d300_extra_props, sizeof(nikon_d300_extra_props)/sizeof(nikon_d300_extra_props[0]) }
 };
 
 void
@@ -351,7 +389,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
                /* hardcore hack ... just query d000 -> d1ff ...  */
                di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
                for (i=0;i<2*256;i++)
-                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 + i;
+                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD200 + i;
                di->DevicePropertiesSupported_len += 2*256;
 #endif
 	}
@@ -903,7 +941,7 @@ static struct {
 	{"Canon:PowerShot A550 (PTP mode)",     0x04a9, 0x3150, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://launchpad.net/bugs/64146 */
 	{"Canon:PowerShot A450 (PTP mode)",     0x04a9, 0x3155, PTPBUG_DELETE_SENDS_EVENT},
-	/* Harald Dunkel <harald.dunkel@t-online.de> */
+	/* Harald Dunkel <harald.dunkel@t-online.de> */                                                        
 	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT},
 	/* Roger Lynn <roger@rilynn.demon.co.uk> */
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
@@ -1688,7 +1726,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			i, ret, isevent;
+	int			found, ret, isevent, timeout;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
@@ -1698,6 +1736,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	uint32_t		handle;
 	char 			buf[1024];
 	int			xmode = CANON_TRANSFER_CARD;
+	time_t			event_start;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
@@ -1746,7 +1785,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	} /* else no event yet ... try later. */
 
 	/* checking events in stack. */
-	for (i=0;i<100;i++) {
+	gp_port_get_timeout (camera->port, &timeout);
+	event_start = time(NULL);
+	found = FALSE;
+	while ((time(NULL) - event_start)<=timeout) {
 		gp_context_idle (context);
 		ret = ptp_canon_checkevent (params,&usbevent,&isevent);
 		if (ret!=PTP_RC_OK)
@@ -1768,6 +1810,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
 			ret = ptp_canon_reset_aeafawb(params,7);
+			found = TRUE;
 			break;
 		}
 	}
@@ -1775,13 +1818,13 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
 			if (event.Code==PTP_EC_CaptureComplete)
-				printf("Event: capture complete. \n");
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete(2). \n");
 			else
-				printf("Event: 0x%X\n", event.Code);
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X (2)\n", event.Code);
 		} else
-			printf("No expected capture complete event\n");
+			gp_log (GP_LOG_DEBUG, "ptp", "No expected capture complete event\n");
 	}
-	if (i==100) {
+	if (!found) {
 	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");
 	    return GP_ERROR_TIMEOUT;
 	}
@@ -4213,7 +4256,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 
 #if 0
 	/* CANON also has fast directory retrieval. And it is mostly complete, so we can use it as full replacement */
-	/* Unfortunately this fails on the PowerShot A430.
+	/* Unfortunately this fails on the PowerShot A430. 
 	 * And I don't want to whitelist everyone, because I just don't own all of them.
 	 * *sigh* -Marcus */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
