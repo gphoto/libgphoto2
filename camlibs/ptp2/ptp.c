@@ -3272,6 +3272,18 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		uint16_t dpc;
 		const char *txt;
 	} ptp_device_properties_Nikon[] = {
+		{PTP_DPC_NIKON_ShootingBank, 			/* 0xD010 */
+		 N_("Shooting Bank")},
+		{PTP_DPC_NIKON_ShootingBankNameA,		/* 0xD011 */
+		 N_("Shooting Bank Name A")},
+		{PTP_DPC_NIKON_ShootingBankNameB,		/* 0xD012 */
+		 N_("Shooting Bank Name B")},
+		{PTP_DPC_NIKON_ShootingBankNameC,		/* 0xD013 */
+		 N_("Shooting Bank Name C")},
+		{PTP_DPC_NIKON_ShootingBankNameD,		/* 0xD014 */
+		 N_("Shooting Bank Name D")},
+		{PTP_DPC_NIKON_RawCompression,			/* 0xD016 */
+		 N_("Raw Compression")},
 		{PTP_DPC_NIKON_WhiteBalanceAutoBias,		/* 0xD017 */
 		 N_("Auto White Balance Bias")},
 		{PTP_DPC_NIKON_WhiteBalanceTungstenBias,	/* 0xD018 */
@@ -3382,6 +3394,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Bracket Order")},
 		{PTP_DPC_NIKON_E8AutoBracketSelection,		/* 0xD07b */
 		 N_("Auto Bracket Selection")},
+		{PTP_DPC_NIKON_BracketingSet, N_("NIKON Auto Bracketing Set")},	/* 0xD07C */
 		{PTP_DPC_NIKON_F1CenterButtonShootingMode,	/* 0xD080 */
 		 N_("Center Button Shooting Mode")},
 		{PTP_DPC_NIKON_CenterButtonPlaybackMode,	/* 0xD081 */
@@ -3404,6 +3417,10 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Buttons and Dials")},
 		{PTP_DPC_NIKON_NoCFCard,			/* 0xD08a */
 		 N_("No CF Card Release")},
+		{PTP_DPC_NIKON_ImageCommentString,		/* 0xD090 */
+		 N_("Image Comment String")},
+		{PTP_DPC_NIKON_ImageCommentAttach,		/* 0xD091 */
+		 N_("Image Comment Attach")},
 		{PTP_DPC_NIKON_ImageRotation,			/* 0xD092 */
 		 N_("Image Rotation")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0c0 */
@@ -3412,6 +3429,27 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Bracketing Distance")},
 		{PTP_DPC_NIKON_BracketingProgram,		/* 0xD0c2 */
 		 N_("Exposure Bracketing Number")},
+		{PTP_DPC_NIKON_WhiteBalanceBracketStep, N_("NIKON White Balance Bracket Step")}, /* 0xD0C4 */
+		{PTP_DPC_NIKON_LensID,				/* 0xD0E0 */
+		 N_("Lens ID")},
+		{PTP_DPC_NIKON_FocalLengthMin,			/* 0xD0E3 */
+		 N_("Min. Focal Length")},
+		{PTP_DPC_NIKON_FocalLengthMax,			/* 0xD0E4 */
+		 N_("Max. Focal Length")},
+		{PTP_DPC_NIKON_MaxApAtMinFocalLength,		/* 0xD0E5 */
+		 N_("Max. Aperture at Min. Focal Length")},
+		{PTP_DPC_NIKON_MaxApAtMaxFocalLength,		/* 0xD0E6 */
+		 N_("Max. Aperture at Max. Focal Length")},
+		{PTP_DPC_NIKON_ExposureTime,			/* 0xD100 */
+		 N_("Nikon Exposure Time")},
+		{PTP_DPC_NIKON_ACPower, N_("AC Power")},	/* 0xD101 */
+		{PTP_DPC_NIKON_MaximumShots,			/* 0xD103 */
+		 N_("Maximum Shots")},
+		{PTP_DPC_NIKON_AFLLock, N_("NIKON AF-L Locked")},/* 0xD104 */
+		{PTP_DPC_NIKON_AutoExposureLock,		/* 0xD105 */
+		 N_("Auto Exposure Lock")},
+		{PTP_DPC_NIKON_AutoFocusLock,			/* 0xD106 */
+		 N_("Auto Focus Lock")},
 		{PTP_DPC_NIKON_AutofocusLCDTopMode2,		/* 0xD107 */
 		 N_("AF LCD Top Mode 2")},
 		{PTP_DPC_NIKON_AutofocusArea,			/* 0xD108 */
@@ -3422,60 +3460,48 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Camera Orientation")},
 		{PTP_DPC_NIKON_ExposureApertureLock,		/* 0xD111 */
 		 N_("Exposure Aperture Lock")},
-		{PTP_DPC_NIKON_MaximumShots,			/* 0xD103 */
-		 N_("Maximum Shots")},
+		{PTP_DPC_NIKON_FlashExposureCompensation,	/* 0xD126 */
+		 N_("Flash Exposure Compensation")},
 		{PTP_DPC_NIKON_OptimizeImage,			/* 0xD140 */
 		 N_("Optimize Image")},
 		{PTP_DPC_NIKON_Saturation,			/* 0xD142 */
 		 N_("Saturation")},
+		{PTP_DPC_NIKON_BeepOff,				/* 0xD160 */
+		 N_("AF Beep Mode")},
+		{PTP_DPC_NIKON_AutofocusMode,			/* 0xD161 */
+		 N_("Autofocus Mode")},
+		{PTP_DPC_NIKON_AFAssist,			/* 0xD163 */
+		 N_("AF Assist Lamp")},
+		{PTP_DPC_NIKON_PADVPMode,			/* 0xD164 */
+		 N_("Auto ISO P/A/DVP Setting")},
+		{PTP_DPC_NIKON_ImageReview,			/* 0xD165 */
+		 N_("Image Review")},
+		{PTP_DPC_NIKON_AFAreaIllumination,		/* 0xD166 */
+		 N_("AF Area Illumination")},
+		{PTP_DPC_NIKON_FlashMode,			/* 0xD167 */
+		 N_("Flash Mode")},
+		{PTP_DPC_NIKON_FlashCommanderMode,	 	/* 0xD168 */
+		 N_("Flash Commander Mode")},
+		{PTP_DPC_NIKON_FlashSign,			/* 0xD169 */
+		 N_("Flash Sign")},
+		{PTP_DPC_NIKON_RemoteTimeout,			/* 0xD16B */
+		 N_("Remote Timeout")},
+		{PTP_DPC_NIKON_GridDisplay,			/* 0xD16C */
+		 N_("Viewfinder Grid Display")},
+		{PTP_DPC_NIKON_FlashModeManualPower,		/* 0xD16D */
+		 N_("Flash Mode Manual Power")},
+		{PTP_DPC_NIKON_FlashModeCommanderPower,		/* 0xD16E */
+		 N_("Flash Mode Commander Power")},
 		{PTP_DPC_NIKON_CSMMenu,				/* 0xD180 */
 		 N_("CSM Menu")},
-		{PTP_DPC_NIKON_BeepOff,
-		 N_("AF Beep Mode")},
-		{PTP_DPC_NIKON_AutofocusMode,
-		 N_("Autofocus Mode")},
-		{PTP_DPC_NIKON_AFAssist,
-		 N_("AF Assist Lamp")},
-		{PTP_DPC_NIKON_PADVPMode,
-		 N_("Auto ISO P/A/DVP Setting")},
-		{PTP_DPC_NIKON_ImageReview,
-		 N_("Image Review")},
-		{PTP_DPC_NIKON_GridDisplay,
-		 N_("Viewfinder Grid Display")},
-		{PTP_DPC_NIKON_AFAreaIllumination,
-		 N_("AF Area Illumination")},
-		{PTP_DPC_NIKON_FlashMode,
-		 N_("Flash Mode")},
-		{PTP_DPC_NIKON_FlashModeManualPower,
-		 N_("Flash Mode Manual Power")},
-		{PTP_DPC_NIKON_FlashSign,
-		 N_("Flash Sign")},
-		{PTP_DPC_NIKON_FlashExposureCompensation,
-		 N_("Flash Exposure Compensation")},
-		{PTP_DPC_NIKON_RemoteTimeout,
-		 N_("Remote Timeout")},
-		{PTP_DPC_NIKON_ImageCommentString,
-		 N_("Image Comment String")},
-		{PTP_DPC_NIKON_FlashOpen,
-		 N_("Flash Open")},
-		{PTP_DPC_NIKON_FlashCharged,
-		 N_("Flash Charged")},
-		{PTP_DPC_NIKON_LensID,
-		 N_("Lens ID")},
-		{PTP_DPC_NIKON_FocalLengthMin,
-		 N_("Min. Focal Length")},
-		{PTP_DPC_NIKON_FocalLengthMax,
-		 N_("Max. Focal Length")},
-		{PTP_DPC_NIKON_MaxApAtMinFocalLength,
-		 N_("Max. Aperture at Min. Focal Length")},
-		{PTP_DPC_NIKON_MaxApAtMaxFocalLength,
-		 N_("Max. Aperture at Max. Focal Length")},
-		{PTP_DPC_NIKON_LowLight,
+		{PTP_DPC_NIKON_BracketingFramesAndSteps,	/* 0xD190 */
+		 N_("Bracketing Frames and Steps")},
+		{PTP_DPC_NIKON_LowLight,			/* 0xD1B0 */
 		 N_("Low Light")},
-		{PTP_DPC_NIKON_ACPower, N_("AC Power")},
-		{PTP_DPC_NIKON_BracketingSet, N_("NIKON Auto Bracketing Set")},
-		{PTP_DPC_NIKON_WhiteBalanceBracketStep, N_("NIKON White Balance Bracket Step")},
-		{PTP_DPC_NIKON_AFLLock, N_("NIKON AF-L Locked")},
+		{PTP_DPC_NIKON_FlashOpen,			/* 0xD1C0 */
+		 N_("Flash Open")},
+		{PTP_DPC_NIKON_FlashCharged,			/* 0xD1C1 */
+		 N_("Flash Charged")},
 		{0,NULL}
 	};
         struct {
