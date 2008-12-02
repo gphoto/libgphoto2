@@ -1,3 +1,23 @@
+2008-11-27  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Got the data for the D700, included.
+	  Changed nikon capture code to work with the D700 and other
+	  newer Nikon DSLRs.
+
+	* ptp.[ch]: Decode the Nikon DSLR current rotation flag.
+	* ptp.h: Mark up the operation codes for Nikons.
+
+2008-11-23  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Newer Nikon DSLRs "hide" the Nikon
+	  vendor device properties, re-add them when we
+	  find them missing. Reviewed with a D80 already.
+
+	* ptp.h: Fixed Canon Capture to Card mode bug.
+
+	* ptp.c,ptp.h: Dumper for lots of Canon properties
+	  for --summary.
+
 2008-11-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp-private.h, library.c: Move init_ptp_fs
