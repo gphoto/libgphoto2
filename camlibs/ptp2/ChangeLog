@@ -1,6 +1,6 @@
 2008-11-27  Marcus Meissner  <marcus@jet.franken.de>
 
-	* library.c: Got the data for the D700, included.
+	* library.c: Got the data for the D700 and D300, included.
 	  Changed nikon capture code to work with the D700 and other
 	  newer Nikon DSLRs.
 
