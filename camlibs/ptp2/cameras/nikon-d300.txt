@@ -336,8 +336,8 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 /main/settings/time
 	Label: Camera Time
 	Type: DATE
-	Current: 1228212627
-	Printable: Tue Dec  2 11:10:27 2008
+	Current: 1228213910
+	Printable: Tue Dec  2 11:31:50 2008
 /main/settings/imgcomment
 	Label: Image Comment
 	Type: TEXT
@@ -361,9 +361,9 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 3 16 seconds
 	Choice: 4 30 minutes
 	Choice: 5 30 seconds
-	Choice: 6 Unknown value 0009
-	Choice: 7 Unknown value 0009
-	Choice: 8 Unknown value 0009
+	Choice: 6 Unknown value 0006
+	Choice: 7 Unknown value 0007
+	Choice: 8 Unknown value 0008
 	Choice: 9 Unknown value 0009
 /main/settings/battery
 	Label: Battery Level
@@ -552,7 +552,7 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 /main/capturesettings/exptime
 	Label: Exposure Time
 	Type: RADIO
-	Current: 20
+	Current: 16
 	Choice: 0 0.001
 	Choice: 1 0.002
 	Choice: 2 0.003
@@ -573,7 +573,7 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 17 0.100
 	Choice: 18 0.125
 	Choice: 19 0.166
-	Choice: 20 20
+	Choice: 20 16
 /main/capturesettings/expprogram
 	Label: Exposure Program
 	Type: RADIO
@@ -637,13 +637,13 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 3 AF Lock Hold
 	Choice: 4 AF On
 	Choice: 5 Flash Level Lock
-	Choice: 6 Unknown value 000d
-	Choice: 7 Unknown value 000d
-	Choice: 8 Unknown value 000d
-	Choice: 9 Unknown value 000d
-	Choice: 10 Unknown value 000d
-	Choice: 11 Unknown value 000d
-	Choice: 12 Unknown value 000d
+	Choice: 6 Unknown value 0006
+	Choice: 7 Unknown value 0007
+	Choice: 8 Unknown value 0008
+	Choice: 9 Unknown value 0009
+	Choice: 10 Unknown value 000a
+	Choice: 11 Unknown value 000b
+	Choice: 12 Unknown value 000c
 	Choice: 13 Unknown value 000d
 /main/capturesettings/filenrsequencing
 	Label: File Number Sequencing
@@ -678,22 +678,22 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 2 1/4
 	Choice: 3 1/8
 	Choice: 4 1/16
-	Choice: 5 Unknown value 0015
-	Choice: 6 Unknown value 0015
-	Choice: 7 Unknown value 0015
-	Choice: 8 Unknown value 0015
-	Choice: 9 Unknown value 0015
-	Choice: 10 Unknown value 0015
-	Choice: 11 Unknown value 0015
-	Choice: 12 Unknown value 0015
-	Choice: 13 Unknown value 0015
-	Choice: 14 Unknown value 0015
-	Choice: 15 Unknown value 0015
-	Choice: 16 Unknown value 0015
-	Choice: 17 Unknown value 0015
-	Choice: 18 Unknown value 0015
-	Choice: 19 Unknown value 0015
-	Choice: 20 Unknown value 0015
+	Choice: 5 Unknown value 0005
+	Choice: 6 Unknown value 0006
+	Choice: 7 Unknown value 0007
+	Choice: 8 Unknown value 0008
+	Choice: 9 Unknown value 0009
+	Choice: 10 Unknown value 000a
+	Choice: 11 Unknown value 000b
+	Choice: 12 Unknown value 000c
+	Choice: 13 Unknown value 000d
+	Choice: 14 Unknown value 000e
+	Choice: 15 Unknown value 000f
+	Choice: 16 Unknown value 0010
+	Choice: 17 Unknown value 0011
+	Choice: 18 Unknown value 0012
+	Choice: 19 Unknown value 0013
+	Choice: 20 Unknown value 0014
 	Choice: 21 Unknown value 0015
 /main/capturesettings/autofocusarea
 	Label: Auto Focus Area
@@ -704,52 +704,52 @@ Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 2 Bottom
 	Choice: 3 Left
 	Choice: 4 Right
-	Choice: 5 Unknown value 0033
-	Choice: 6 Unknown value 0033
-	Choice: 7 Unknown value 0033
-	Choice: 8 Unknown value 0033
-	Choice: 9 Unknown value 0033
-	Choice: 10 Unknown value 0033
-	Choice: 11 Unknown value 0033
-	Choice: 12 Unknown value 0033
-	Choice: 13 Unknown value 0033
-	Choice: 14 Unknown value 0033
-	Choice: 15 Unknown value 0033
-	Choice: 16 Unknown value 0033
-	Choice: 17 Unknown value 0033
-	Choice: 18 Unknown value 0033
-	Choice: 19 Unknown value 0033
-	Choice: 20 Unknown value 0033
-	Choice: 21 Unknown value 0033
-	Choice: 22 Unknown value 0033
-	Choice: 23 Unknown value 0033
-	Choice: 24 Unknown value 0033
-	Choice: 25 Unknown value 0033
-	Choice: 26 Unknown value 0033
-	Choice: 27 Unknown value 0033
-	Choice: 28 Unknown value 0033
-	Choice: 29 Unknown value 0033
-	Choice: 30 Unknown value 0033
-	Choice: 31 Unknown value 0033
-	Choice: 32 Unknown value 0033
-	Choice: 33 Unknown value 0033
-	Choice: 34 Unknown value 0033
-	Choice: 35 Unknown value 0033
-	Choice: 36 Unknown value 0033
-	Choice: 37 Unknown value 0033
-	Choice: 38 Unknown value 0033
-	Choice: 39 Unknown value 0033
-	Choice: 40 Unknown value 0033
-	Choice: 41 Unknown value 0033
-	Choice: 42 Unknown value 0033
-	Choice: 43 Unknown value 0033
-	Choice: 44 Unknown value 0033
-	Choice: 45 Unknown value 0033
-	Choice: 46 Unknown value 0033
-	Choice: 47 Unknown value 0033
-	Choice: 48 Unknown value 0033
-	Choice: 49 Unknown value 0033
-	Choice: 50 Unknown value 0033
+	Choice: 5 Unknown value 0005
+	Choice: 6 Unknown value 0006
+	Choice: 7 Unknown value 0007
+	Choice: 8 Unknown value 0008
+	Choice: 9 Unknown value 0009
+	Choice: 10 Unknown value 000a
+	Choice: 11 Unknown value 000b
+	Choice: 12 Unknown value 000c
+	Choice: 13 Unknown value 000d
+	Choice: 14 Unknown value 000e
+	Choice: 15 Unknown value 000f
+	Choice: 16 Unknown value 0010
+	Choice: 17 Unknown value 0011
+	Choice: 18 Unknown value 0012
+	Choice: 19 Unknown value 0013
+	Choice: 20 Unknown value 0014
+	Choice: 21 Unknown value 0015
+	Choice: 22 Unknown value 0016
+	Choice: 23 Unknown value 0017
+	Choice: 24 Unknown value 0018
+	Choice: 25 Unknown value 0019
+	Choice: 26 Unknown value 001a
+	Choice: 27 Unknown value 001b
+	Choice: 28 Unknown value 001c
+	Choice: 29 Unknown value 001d
+	Choice: 30 Unknown value 001e
+	Choice: 31 Unknown value 001f
+	Choice: 32 Unknown value 0020
+	Choice: 33 Unknown value 0021
+	Choice: 34 Unknown value 0022
+	Choice: 35 Unknown value 0023
+	Choice: 36 Unknown value 0024
+	Choice: 37 Unknown value 0025
+	Choice: 38 Unknown value 0026
+	Choice: 39 Unknown value 0027
+	Choice: 40 Unknown value 0028
+	Choice: 41 Unknown value 0029
+	Choice: 42 Unknown value 002a
+	Choice: 43 Unknown value 002b
+	Choice: 44 Unknown value 002c
+	Choice: 45 Unknown value 002d
+	Choice: 46 Unknown value 002e
+	Choice: 47 Unknown value 002f
+	Choice: 48 Unknown value 0030
+	Choice: 49 Unknown value 0031
+	Choice: 50 Unknown value 0032
 	Choice: 51 Unknown value 0033
 /main/capturesettings/flashexposurecompensation
 	Label: Flash Exposure Compensation
