@@ -87,74 +87,298 @@ Device Properties Supported:
   0x501c
   0xd406
   0xd407
-Camera summary:
+
+Kamerazusammenfassung:
 Manufacturer: Nikon Corporation
 Model: D300
-  Version: V1.03
+  Version: V1.10
   Serial Number: nnnnnnn
 Vendor Extension ID: 0xa (1.0)
 Vendor Extension Description: microsoft.com: 1.0
 
-Capture Formats: JPEG Undefined Type TIFF
-Display Formats: JPEG, Undefined Type, Association/Directory, TIFF, DPOF, Script
-Supported MTP Object Properties:
+Aufnahmeformate: JPEG Undefined Type TIFF
+Anzeigeformate: JPEG, Undefined Type, Association/Directory, TIFF, DPOF, Script
+Unterstützte MTP Object Properties:
 	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData
 	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
 	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
 	TIFF/380d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData
 	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
-	Script/3002: PTP error a802 on query
+	Script/3002:PTP Fehler a802 beim Abfragen
 
-Device Capabilities:
-	File Download, File Deletion, File Upload
-	Generic Image Capture, No Open Capture, Nikon Capture
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Generische Bild Aufnahme, keine Offene Aufnahme, Nikon Aufnahme
 
-Storage Devices Summary:
+Informationen über Speichermedium:
 store_00010001:
-	StorageDescription: None
-	VolumeLabel: NIKON D300
-	Storage Type: Removable RAM (memory card)
-	Filesystemtype: Digital Camera Layout (DCIM)
-	Access Capability: Read Only with Object deletion
-	Maximum Capability: 2147483647 (2047 MB)
-	Free Space (Bytes): 2147483647 (2047 MB)
-	Free Space (Images): 195
+	Beschreibung des Speichergeräts: Keine
+	Label des Speichergerätes: NIKON D300
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Nur Lesen und Löschen
+	Maximale Kapazität: 4094656512 (3904 MB)
+	Freier Platz (Bytes): 3947233280 (3764 MB)
+	Freier Speicher (Bilder): 189
 
-Device Property Summary:
-Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
-Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+Properties des Geräts:
+Batterie Ladezustand(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 20% (20)
+Bildgröße(0x5003):(readwrite) (type=0xffff) Enumeration [
 	'4288x2848',
 	'3216x2136',
 	'2144x1424'
 	] value: '4288x2848'
-Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,7] value: RAW (4)
-White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787] value: Auto (2)
-F-Number(0x5007):(readwrite) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/6.3 (630)
-Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 20000, step 1] value: 18 mm (1800)
-Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: AF-S (32784)
-Exposure Metering Mode(0x500b):(read only) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
-Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
-Exposure Time(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,500] value: 0.005 sec (500)
-Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: A (3)
-Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400] value: ISO 200 (200)
-Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
-Date & Time(0x5011):(readwrite) (type=0xffff) '20081014T110036'
-Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [1,2,32784,32785,32786,32787] value: Single Shot (1)
-Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 100, step 1] value: 1
-Focus Metering Mode(0x501c):(read only) (type=0x4) Enumeration [2,32784,32785] value: Single Area (32784)
+Kompressions Parameter(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,7] value: RAW (4)
+Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787] value: Automatic (2)
+F-Nummer(0x5007):(readwrite) (type=0x4) Enumeration [280,320,350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3,5 (350)
+Fokus Tiefe(0x5008):(read only) (type=0x6) Range [2400 - 7000, step 1] value: 50 mm (5000)
+Fokusmodus(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: AF-S (32784)
+Belichtungsmessmodus(0x500b):(read only) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
+Blitzmodus(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
+Belichtungszeit(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,20000] value: 0,2 sec (20000)
+Belichtungs Programm Modus(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: A (3)
+Belichtungs Index (nach ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400] value: ISO 200 (200)
+Belichtungskompensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0,0 stops (0)
+Datum und Zeit(0x5011):(readwrite) (type=0xffff) '20081202T110150'
+Bildaufnahme Modus(0x5013):(read only) (type=0x4) Enumeration [1,2,32784,32785,32786,32787] value: Single Shot (1)
+Bildzahl im Burstmodus(0x5018):(readwrite) (type=0x4) Range [1 - 100, step 1] value: 1
+Entfernungs Messungs Modus(0x501c):(read only) (type=0x4) Enumeration [2,32784,32785] value: Single Area (32784)
+Künstler(0x501e):(read only) (type=0xffff) 'Joe Example User'
+Copyright Information(0x501f):(read only) (type=0xffff) '(null)'
 Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
 Property 0xd407:(read only) (type=0x6) 1
+Property 0xd010:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 3
+Property 0xd011:(readwrite) (type=0xffff) '                    '
+Property 0xd012:(readwrite) (type=0xffff) 'NEF 12 Bit          '
+Property 0xd013:(readwrite) (type=0xffff) '                    '
+Property 0xd014:(readwrite) (type=0xffff) 'High ISO            '
+Property 0xd015:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd016:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Automatische Weißabgleich Abweichung(0xd017):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Tungsten Weißabgleich Abweichung(0xd018):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Floureszierend Weißabgleich Abweichung(0xd019):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Tageslicht Weißabgleich Abweichung(0xd01a):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Blitz Weißabgleich Abweichung(0xd01b):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Wolkig Weißabgleich Abweichung(0xd01c):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Schattig Weißabgleich Abweichung(0xd01d):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Weißabgleich Farbtemperatur(0xd01e):(readwrite) (type=0x4) Range [0 - 30, step 1] value: 20
+Property 0xd01f:(readwrite) (type=0x2) Range [0 - 4, step 1] value: 0
+Property 0xd020:(readwrite) (type=0xffff) '                                    '
+Property 0xd021:(readwrite) (type=0xffff) '                                    '
+Property 0xd022:(readwrite) (type=0xffff) '                                    '
+Property 0xd023:(readwrite) (type=0xffff) '                                    '
+Property 0xd024:(readwrite) (type=0xffff) '                                    '
+Property 0xd025:(read only) (type=0x6) 12911311
+Property 0xd026:(read only) (type=0x6) 26214735
+Property 0xd027:(read only) (type=0x6) 26214735
+Property 0xd028:(read only) (type=0x6) 26214735
+Property 0xd029:(read only) (type=0x6) 26214735
+Fokus Tiefe der Linse (Nicht CPU)(0xd02e):(readwrite) (type=0x2) Range [0 - 40, step 1] value: 14
+Maximale Blende der Linse (Nicht CPU)(0xd02f):(readwrite) (type=0x2) Range [0 - 22, step 1] value: 9
+Property 0xd031:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd032:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+PTP_DPC_NIKON_CSMMenuBankSelect(0xd040):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+PTP_DPC_NIKON_MenuBankNameA(0xd041):(readwrite) (type=0xffff) '                    '
+PTP_DPC_NIKON_MenuBankNameB(0xd042):(readwrite) (type=0xffff) '                    '
+PTP_DPC_NIKON_MenuBankNameC(0xd043):(readwrite) (type=0xffff) '                    '
+PTP_DPC_NIKON_MenuBankNameD(0xd044):(readwrite) (type=0xffff) '                    '
+Property 0xd045:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+PTP_DPC_NIKON_A1AFCModePriority(0xd048):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+PTP_DPC_NIKON_A2AFSModePriority(0xd049):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+PTP_DPC_NIKON_A4AFActivation(0xd04b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Fokus Bereich Wraparound(0xd04f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Vertikaler Autofokus An(0xd050):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 0
+Property 0xd051:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1
+Property 0xd053:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Auto ISO(0xd054):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+ISO-Schritt(0xd055):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Belichtungszeitschritt(0xd056):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Belichtungskompensation (EV)(0xd057):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Belichtungskompensation(0xd058):(readwrite) (type=0x2) Range [0 - 2, step 1] value: Off (0)
+Mittelpunkt/Gewichtet Bereich(0xd059):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 8 mm (1)
+Property 0xd05a:(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Property 0xd05b:(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Property 0xd05c:(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Belichtungs Lock(0xd05e):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Fokus Lock(0xd05f):(readwrite) (type=0x2) Range [0 - 13, step 1] value: AF Lock Hold (3)
+Zeit für automatische Sensor Abschaltung(0xd062):(readwrite) (type=0x2) Range [0 - 9, step 1] value: 1
+Selbstauslöserzeit(0xd063):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+Zeit für automatische Abschaltung des LCD(0xd064):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 0
+Abstand bei Mehrfachbelichtung(0xd068):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 4
+Maximale Bildanzahl(0xd069):(readwrite) (type=0x2) Range [1 - 100, step 1] value: 100
+PTP_DPC_NIKON_D3ExpDelayMode(0xd06a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Langzeitbelichtungsrauschkompensation(0xd06b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Bildnummer Zählung(0xd06c):(readwrite) (type=0x2) Range [0 - 2, step 1] value: On (1)
+PTP_DPC_NIKON_D7Illumination(0xd06f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd070:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+Property 0xd072:(readwrite) (type=0xffff) 'Joe Example User'
+Property 0xd073:(readwrite) (type=0xffff) '(null)'
+Blitzsynchronisations Geschwindigkeit(0xd074):(readwrite) (type=0x2) Range [0 - 8, step 1] value: 2
+Blitz Belichtungszeit(0xd075):(readwrite) (type=0x2) Range [0 - 11, step 1] value: 0
+Modellierblitz(0xd077):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Abstufungsbereich(0xd078):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Manueller Abstufungsmodus(0xd079):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Abstufungsrichtung(0xd07a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Mittlerer Button Aufnahme Modus(0xd080):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 1
+Mittlerer Button Playback Modus(0xd081):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+Multiselektor(0xd082):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Photo Info. Playback(0xd083):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Weise Func. Button zu(0xd084):(readwrite) (type=0x2) Range [0 - 12, step 1] value: 0
+Passe Kommando Dials an(0xd085):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Umgedrehtes Kommando Rad(0xd086):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Blendeneinstellung(0xd087):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Menüs und Abspielen(0xd088):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Knöpfe und Räder(0xd089):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Auslösen ohne CF Karte(0xd08a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+Property 0xd08b:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 2
+Property 0xd08c:(readwrite) (type=0x2) Enumeration [0,2,5,6,7] value: 5
+Property 0xd08d:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Bild Kommentar(0xd090):(readwrite) (type=0xffff) 'Joe Example User'
+Property 0xd091:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Bildrotationsflag(0xd092):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+Property 0xd093:(readwrite) (type=0x2) Range [0 - 8, step 1] value: 0
+Property 0xd094:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd095:(readwrite) (type=0x1) Range [-20 - 20, step 1] value: 0
+Property 0xd096:(readwrite) (type=0x1) Range [-20 - 21, step 1] value: 21
+Property 0xd097:(readwrite) (type=0x1) Range [0 - 19, step 1] value: 0
+Property 0xd098:(readwrite) (type=0x1) Range [0 - 100, step 1] value: 0
+Property 0xd099:(read only) (type=0x1) Range [0 - 20, step 1] value: 0
+Property 0xd09a:(read only) (type=0x1) Range [0 - 20, step 1] value: 20
+Property 0xd09b:(read only) (type=0x1) Range [0 - 1, step 1] value: 0
+Belichtungs Abstufung(0xd0c0):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Belichtungsabstufungsschritt(0xd0c1):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 3
+Belichtungsabstufungs Anzahl(0xd0c2):(readwrite) (type=0x2) Range [0 - 7, step 1] value: 3
+Property 0xd0c3:(read only) (type=0x2) Range [1 - 9, step 1] value: 1
+NIKON Automatische Weißabgleich Abweichung(0xd0c4):(read only) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd0c5:(read only) (type=0x2) Range [0 - 7, step 1] value: 3
+Objektiv Kennung(0xd0e0):(read only) (type=0x2) AF-S Nikkor 24-70mm 1:2.8G ED DX (147)
+Property 0xd0e1:(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd0e2:(read only) (type=0x2) 3
+Minimale Brennweite(0xd0e3):(read only) (type=0x6) 24 mm (2400)
+Maximale Brennweite(0xd0e4):(read only) (type=0x6) 70 mm (7000)
+Maximale Blende bei Minimaler Brennweite(0xd0e5):(read only) (type=0x4) f/2,8 (280)
+Maximale Blende bei maximaler Brennweite(0xd0e6):(read only) (type=0x4) f/2,8 (280)
+Property 0xd100:(read only) (type=0x6) Enumeration [73536,71936,70536,69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,131073] value: 131073
+Netzanschluss(0xd101):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd102:(read only) (type=0x2) 0
+Maximale Bildanzahl(0xd103):(read only) (type=0x2) Range [0 - 42, step 1] value: 16
+NIKON AF-L Feststellung(0xd104):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd105:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd106:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Aktiver AF Sensor(0xd108):(readwrite) (type=0x2) Range [0 - 51, step 1] value: Top (1)
+Property 0xd109:(readwrite) (type=0x1) Range [-30 - 30, step 2] value: 0
+Property 0xd10b:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd10c:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd10d:(read only) (type=0xffff) ' .I                 '
+Camera Orientation(0xd10e):(read only) (type=0x2) Range [0 - 3, step 1] value: 90' (2)
+Property 0xd110:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Belichtung Blende Lock(0xd111):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd120:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd121:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd122:(read only) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd123:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd124:(read only) (type=0x1) Range [-18 - 18, step 1] value: 0
+Property 0xd125:(read only) (type=0x2) Range [0 - 7, step 1] value: 0
+Blitz Belichtungskompensation(0xd126):(readwrite) (type=0x1) Range [-18 - 6, step 2] value: 0,0 stops (0)
+Property 0xd149:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd14e:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 3
+Property 0xd14f:(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
+Property 0xd150:(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Property 0xd151:(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Property 0xd152:(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Property 0xd153:(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Property 0xd154:(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+Property 0xd155:(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
+AF Signalton Modus(0xd160):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 2
+Autofokus Hilfslicht(0xd163):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+Auto ISO P/A/DVP Einstellung(0xd164):(readwrite) (type=0x2) Range [0 - 26, step 1] value: 18
+AF Bereich Aufhellung(0xd166):(readwrite) (type=0x2) Range [0 - 2, step 1] value: Auto (0)
+Blitzmodus(0xd167):(readwrite) (type=0x2) Range [0 - 3, step 1] value: iTTL (0)
+Gitterlinien im Sucher(0xd16c):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+Blitzmodus mit manuelle Energie(0xd16d):(readwrite) (type=0x2) Range [0 - 21, step 1] value: Full (0)
+Property 0xd181:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd182:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd183:(readwrite) (type=0x2) Range [0 - 4, step 1] value: 3
+Property 0xd184:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1
+Property 0xd187:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd189:(readwrite) (type=0x2) Range [0 - 12, step 1] value: 1
+Property 0xd18a:(readwrite) (type=0x2) Enumeration [0,2,5,6,7] value: 0
+Property 0xd18b:(readwrite) (type=0x2) Enumeration [0,5,6,7] value: 0
+Property 0xd18d:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd18e:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd1a0:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd1a1:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd1a2:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd1a3:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd1a4:(read only) (type=0x6) 1
+Wenig Licht(0xd1b0):(read only) (type=0x2) Range [0 - 8, step 1] value: Yes (1)
+Property 0xd1b1:(read only) (type=0x1) Range [-60 - 60, step 1] value: 0
+Property 0xd1b2:(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd1b3:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Blitz offen(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Blitz geladen(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Property 0xd1d0:(readwrite) (type=0x2) Range [0 - 5, step 1] value: 3
+Property 0xd1d1:(readwrite) (type=0x2) Range [0 - 9, step 1] value: 8
+Property 0xd1d2:(readwrite) (type=0x2) Range [0 - 13, step 1] value: 9
+Property 0xd1d3:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+Property 0xd1d4:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 1
+Property 0xd1d5:(readwrite) (type=0x2) Range [0 - 18, step 1] value: 9
+Property 0xd1d6:(readwrite) (type=0x2) Range [0 - 21, step 1] value: 0
+Property 0xd1d7:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd1d8:(readwrite) (type=0x2) Range [0 - 18, step 1] value: 9
+Property 0xd1d9:(readwrite) (type=0x2) Range [0 - 21, step 1] value: 0
+Property 0xd1da:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd1db:(readwrite) (type=0x2) Range [0 - 18, step 1] value: 9
+Property 0xd1dc:(readwrite) (type=0x2) Range [0 - 21, step 1] value: 0
+Property 0xd200:(readwrite) (type=0x4) Enumeration [1,2,3,4,101,102,103,104,201,202,203,204,205,206,207,208,209] value: 1
+Property 0xd201:(read only) (type=0x4) Enumeration [] value: 0
+
 /main/settings/time
 	Label: Camera Time
 	Type: DATE
-	Current: 1223979274
-	Printable: Tue Oct 14 12:14:34 2008
+	Current: 1228212627
+	Printable: Tue Dec  2 11:10:27 2008
+/main/settings/imgcomment
+	Label: Image Comment
+	Type: TEXT
+	Current: (C) 2008 by Joe Example User
+/main/settings/lcdofftime
+	Label: LCD Off Time
+	Type: RADIO
+	Current: 10 seconds
+	Choice: 0 10 seconds
+	Choice: 1 20 seconds
+	Choice: 2 1 minute
+	Choice: 3 5 minutes
+	Choice: 4 10 minutes
+/main/settings/meterofftime
+	Label: Meter Off Time
+	Type: RADIO
+	Current: 6 seconds
+	Choice: 0 4 seconds
+	Choice: 1 6 seconds
+	Choice: 2 8 seconds
+	Choice: 3 16 seconds
+	Choice: 4 30 minutes
+	Choice: 5 30 seconds
+	Choice: 6 Unknown value 0009
+	Choice: 7 Unknown value 0009
+	Choice: 8 Unknown value 0009
+	Choice: 9 Unknown value 0009
 /main/settings/battery
 	Label: Battery Level
 	Type: TEXT
-	Current: 100%
+	Current: 20%
 /main/settings/fastfs
+	Label: Fast Filesystem
+	Type: TOGGLE
+	Current: 1
 /main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Internal RAM
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
 /main/imgsettings/imgquality
 	Label: Image Quality
 	Type: RADIO
@@ -174,55 +398,7 @@ Property 0xd407:(read only) (type=0x6) 1
 	Choice: 0 4288x2848
 	Choice: 1 3216x2136
 	Choice: 2 2144x1424
-/main/imgsettings/whitebalance
-	Label: WhiteBalance
-	Type: RADIO
-	Current: Automatic
-	Choice: 0 Automatic
-	Choice: 1 Daylight
-	Choice: 2 Fluorescent
-	Choice: 3 Tungsten
-	Choice: 4 Flash
-	Choice: 5 Cloudy
-	Choice: 6 Shade
-	Choice: 7 Color Temperature
-	Choice: 8 Preset
-/main/capturesettings/f-number
-	Label: F-Number
-	Type: RADIO
-	Current: f/6.3
-	Choice: 0 f/3.5
-	Choice: 1 f/4
-	Choice: 2 f/4.5
-	Choice: 3 f/5
-	Choice: 4 f/5.6
-	Choice: 5 f/6.3
-	Choice: 6 f/7.1
-	Choice: 7 f/8
-	Choice: 8 f/9
-	Choice: 9 f/10
-	Choice: 10 f/11
-	Choice: 11 f/13
-	Choice: 12 f/14
-	Choice: 13 f/16
-	Choice: 14 f/18
-	Choice: 15 f/20
-	Choice: 16 f/22
-/main/capturesettings/focallength
-	Label: Focal Length
-	Type: RANGE
-	Current: 18
-	Bottom: 18
-	Top: 200
-	Step: 0.01
-/main/capturesettings/focusmode
-	Label: Focus Mode
-	Type: RADIO
-	Current: AF-S
-	Choice: 0 Manual
-	Choice: 1 AF-S
-	Choice: 2 AF-C
-/main/capturesettings/iso
+/main/imgsettings/iso
 	Label: ISO Speed
 	Type: RADIO
 	Current: 200
@@ -245,6 +421,99 @@ Property 0xd407:(read only) (type=0x6) 1
 	Choice: 16 4000
 	Choice: 17 5000
 	Choice: 18 6400
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Automatic
+	Choice: 0 Automatic
+	Choice: 1 Daylight
+	Choice: 2 Fluorescent
+	Choice: 3 Tungsten
+	Choice: 4 Flash
+	Choice: 5 Cloudy
+	Choice: 6 Shade
+	Choice: 7 Color Temperature
+	Choice: 8 Preset
+/main/imgsettings/autoiso
+	Label: Auto ISO
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/longexpnr
+	Label: Long Exp Noise Reduction
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/autofocusmode2
+	Label: Auto Focus Mode 2
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/assistlight
+	Label: Assist Light
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/nikonflashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: iTTL
+	Choice: 0 iTTL
+	Choice: 1 Manual
+	Choice: 2 Commander
+	Choice: 3 Unknown value 0003
+/main/capturesettings/af-area-illumination
+	Label: AF Area Illumination
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Off
+	Choice: 2 On
+/main/capturesettings/afbeep
+	Label: AF Beep Mode
+	Type: TOGGLE
+	Current: 0
+/main/capturesettings/f-number
+	Label: F-Number
+	Type: RADIO
+	Current: f/3.5
+	Choice: 0 f/2.8
+	Choice: 1 f/3.2
+	Choice: 2 f/3.5
+	Choice: 3 f/4
+	Choice: 4 f/4.5
+	Choice: 5 f/5
+	Choice: 6 f/5.6
+	Choice: 7 f/6.3
+	Choice: 8 f/7.1
+	Choice: 9 f/8
+	Choice: 10 f/9
+	Choice: 11 f/10
+	Choice: 12 f/11
+	Choice: 13 f/13
+	Choice: 14 f/14
+	Choice: 15 f/16
+	Choice: 16 f/18
+	Choice: 17 f/20
+	Choice: 18 f/22
+/main/capturesettings/focallength
+	Label: Focal Length
+	Type: RANGE
+	Current: 50
+	Bottom: 24
+	Top: 70
+	Step: 0.01
+/main/capturesettings/focusmode
+	Label: Focus Mode
+	Type: RADIO
+	Current: AF-S
+	Choice: 0 Manual
+	Choice: 1 AF-S
+	Choice: 2 AF-C
 /main/capturesettings/exposurebiascompensation
 	Label: Exposure Bias Compensation
 	Type: RADIO
@@ -283,7 +552,7 @@ Property 0xd407:(read only) (type=0x6) 1
 /main/capturesettings/exptime
 	Label: Exposure Time
 	Type: RADIO
-	Current: 2.500
+	Current: 20
 	Choice: 0 0.001
 	Choice: 1 0.002
 	Choice: 2 0.003
@@ -304,7 +573,7 @@ Property 0xd407:(read only) (type=0x6) 1
 	Choice: 17 0.100
 	Choice: 18 0.125
 	Choice: 19 0.166
-	Choice: 20 2.500
+	Choice: 20 20
 /main/capturesettings/expprogram
 	Label: Exposure Program
 	Type: RADIO
@@ -346,6 +615,163 @@ Property 0xd407:(read only) (type=0x6) 1
 	Choice: 2 Slow Sync
 	Choice: 3 Rear Curtain Sync + Slow Sync
 	Choice: 4 Red-eye Reduction + Slow Sync
+/main/capturesettings/focusareawrap
+	Label: Focus Area Wrap
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/exposurelock
+	Label: Exposure Lock
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/aelaflmode
+	Label: AE-L/AF-L Mode
+	Type: RADIO
+	Current: AF Lock Hold
+	Choice: 0 AE/AF Lock
+	Choice: 1 AE Lock only
+	Choice: 2 AF Lock Only
+	Choice: 3 AF Lock Hold
+	Choice: 4 AF On
+	Choice: 5 Flash Level Lock
+	Choice: 6 Unknown value 000d
+	Choice: 7 Unknown value 000d
+	Choice: 8 Unknown value 000d
+	Choice: 9 Unknown value 000d
+	Choice: 10 Unknown value 000d
+	Choice: 11 Unknown value 000d
+	Choice: 12 Unknown value 000d
+	Choice: 13 Unknown value 000d
+/main/capturesettings/filenrsequencing
+	Label: File Number Sequencing
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/viewfindergrid
+	Label: Viewfinder Grid
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/imagerotationflag
+	Label: Image Rotation Flag
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/nocfcardrelease
+	Label: Release without CF card
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/flashmodemanualpower
+	Label: Flash Mode Manual Power
+	Type: RADIO
+	Current: Full
+	Choice: 0 Full
+	Choice: 1 1/2
+	Choice: 2 1/4
+	Choice: 3 1/8
+	Choice: 4 1/16
+	Choice: 5 Unknown value 0015
+	Choice: 6 Unknown value 0015
+	Choice: 7 Unknown value 0015
+	Choice: 8 Unknown value 0015
+	Choice: 9 Unknown value 0015
+	Choice: 10 Unknown value 0015
+	Choice: 11 Unknown value 0015
+	Choice: 12 Unknown value 0015
+	Choice: 13 Unknown value 0015
+	Choice: 14 Unknown value 0015
+	Choice: 15 Unknown value 0015
+	Choice: 16 Unknown value 0015
+	Choice: 17 Unknown value 0015
+	Choice: 18 Unknown value 0015
+	Choice: 19 Unknown value 0015
+	Choice: 20 Unknown value 0015
+	Choice: 21 Unknown value 0015
+/main/capturesettings/autofocusarea
+	Label: Auto Focus Area
+	Type: RADIO
+	Current: Top
+	Choice: 0 Centre
+	Choice: 1 Top
+	Choice: 2 Bottom
+	Choice: 3 Left
+	Choice: 4 Right
+	Choice: 5 Unknown value 0033
+	Choice: 6 Unknown value 0033
+	Choice: 7 Unknown value 0033
+	Choice: 8 Unknown value 0033
+	Choice: 9 Unknown value 0033
+	Choice: 10 Unknown value 0033
+	Choice: 11 Unknown value 0033
+	Choice: 12 Unknown value 0033
+	Choice: 13 Unknown value 0033
+	Choice: 14 Unknown value 0033
+	Choice: 15 Unknown value 0033
+	Choice: 16 Unknown value 0033
+	Choice: 17 Unknown value 0033
+	Choice: 18 Unknown value 0033
+	Choice: 19 Unknown value 0033
+	Choice: 20 Unknown value 0033
+	Choice: 21 Unknown value 0033
+	Choice: 22 Unknown value 0033
+	Choice: 23 Unknown value 0033
+	Choice: 24 Unknown value 0033
+	Choice: 25 Unknown value 0033
+	Choice: 26 Unknown value 0033
+	Choice: 27 Unknown value 0033
+	Choice: 28 Unknown value 0033
+	Choice: 29 Unknown value 0033
+	Choice: 30 Unknown value 0033
+	Choice: 31 Unknown value 0033
+	Choice: 32 Unknown value 0033
+	Choice: 33 Unknown value 0033
+	Choice: 34 Unknown value 0033
+	Choice: 35 Unknown value 0033
+	Choice: 36 Unknown value 0033
+	Choice: 37 Unknown value 0033
+	Choice: 38 Unknown value 0033
+	Choice: 39 Unknown value 0033
+	Choice: 40 Unknown value 0033
+	Choice: 41 Unknown value 0033
+	Choice: 42 Unknown value 0033
+	Choice: 43 Unknown value 0033
+	Choice: 44 Unknown value 0033
+	Choice: 45 Unknown value 0033
+	Choice: 46 Unknown value 0033
+	Choice: 47 Unknown value 0033
+	Choice: 48 Unknown value 0033
+	Choice: 49 Unknown value 0033
+	Choice: 50 Unknown value 0033
+	Choice: 51 Unknown value 0033
+/main/capturesettings/flashexposurecompensation
+	Label: Flash Exposure Compensation
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 1
+	Step: 0.333333
+/main/capturesettings/bracketset
+	Label: Bracket Set
+	Type: RADIO
+	Current: AE & Flash
+	Choice: 0 AE & Flash
+	Choice: 1 AE only
+	Choice: 2 Flash only
+	Choice: 3 WB bracketing
+/main/capturesettings/bracketorder
+	Label: Bracket Order
+	Type: RADIO
+	Current: MTR > Under
+	Choice: 0 MTR > Under
+	Choice: 1 Under > MTR
 /main/capturesettings/burstnumber
 	Label: Burst Number
 	Type: RANGE
@@ -353,7 +779,36 @@ Property 0xd407:(read only) (type=0x6) 1
 	Bottom: 1
 	Top: 100
 	Step: 1
-/main/wifiprofiles/new/name
-	Label: Profile name
-	Type: TEXT
-	Current: 
+/main/capturesettings/selftimerdelay
+	Label: Selftimer Delay
+	Type: RADIO
+	Current: 10 seconds
+	Choice: 0 2 seconds
+	Choice: 1 5 seconds
+	Choice: 2 10 seconds
+	Choice: 3 20 seconds
+/main/capturesettings/centerweightsize
+	Label: Center Weight Area
+	Type: RADIO
+	Current: 8 mm
+	Choice: 0 6 mm
+	Choice: 1 8 mm
+	Choice: 2 10 mm
+	Choice: 3 20 mm
+	Choice: 4 Unknown value 0004
+/main/capturesettings/flashshutterspeed
+	Label: Flash Shutter Speed
+	Type: RADIO
+	Current: 1/60
+	Choice: 0 1/60
+	Choice: 1 1/30
+	Choice: 2 1/15
+	Choice: 3 1/8
+	Choice: 4 1/4
+	Choice: 5 1/2
+	Choice: 6 1
+	Choice: 7 2
+	Choice: 8 4
+	Choice: 9 8
+	Choice: 10 15
+	Choice: 11 30
