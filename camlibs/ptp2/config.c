@@ -1606,6 +1606,7 @@ static struct deviceproptableu8 nikon_centerweight[] = {
 	{ N_("8 mm"),	0x01, 0 },
 	{ N_("10 mm"),	0x02, 0 },
 	{ N_("20 mm"),	0x03, 0 },
+	{ N_("Average"),0x04, 0 },
 };
 GENERIC8TABLE(Nikon_CenterWeight,nikon_centerweight)
 
