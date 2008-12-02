@@ -722,20 +722,20 @@ static struct {
 	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP},
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
-	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
+	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Christian Deckelmann @ SUSE */
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Huy Hoang <hoang027@umn.edu> */
-	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP/*|PTP_NIKON_SUPPRESSED_PROPS*/},
+	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
-	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
+	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Andreas Jaeger <aj@suse.de>.
 	 * Marcus: MTP Proplist does not return objectsizes ... useless. */
 	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP|PTP_MTP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Pat Shanahan, http://sourceforge.net/tracker/index.php?func=detail&aid=1924511&group_id=8874&atid=358874 */
-	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
+	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* irc reporter Benjamin Schindler */
-	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
+	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Borrowed D700 by deckel / marcus */
 	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 
@@ -962,6 +962,8 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Chris Rodley <chris@takeabreak.co.nz> */
+	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1724,7 +1726,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			i, ret, isevent;
+	int			found, ret, isevent, timeout;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
@@ -1734,6 +1736,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	uint32_t		handle;
 	char 			buf[1024];
 	int			xmode = CANON_TRANSFER_CARD;
+	time_t			event_start;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
@@ -1782,7 +1785,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	} /* else no event yet ... try later. */
 
 	/* checking events in stack. */
-	for (i=0;i<100;i++) {
+	gp_port_get_timeout (camera->port, &timeout);
+	event_start = time(NULL);
+	found = FALSE;
+	while ((time(NULL) - event_start)<=timeout) {
 		gp_context_idle (context);
 		ret = ptp_canon_checkevent (params,&usbevent,&isevent);
 		if (ret!=PTP_RC_OK)
@@ -1804,6 +1810,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
 			ret = ptp_canon_reset_aeafawb(params,7);
+			found = TRUE;
 			break;
 		}
 	}
@@ -1811,13 +1818,13 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
 			if (event.Code==PTP_EC_CaptureComplete)
-				printf("Event: capture complete. \n");
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete(2). \n");
 			else
-				printf("Event: 0x%X\n", event.Code);
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X (2)\n", event.Code);
 		} else
-			printf("No expected capture complete event\n");
+			gp_log (GP_LOG_DEBUG, "ptp", "No expected capture complete event\n");
 	}
-	if (i==100) {
+	if (!found) {
 	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");
 	    return GP_ERROR_TIMEOUT;
 	}
