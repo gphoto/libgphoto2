@@ -317,6 +317,12 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 				       (ret_data[1] == 0x00))
 			break;
 
+		/* Check if the camera reported success, 2nd version. */
+		if ((*ret_len == 3) && (ret_data[0] == 0x00) &&
+				       (ret_data[1] == 0x06) &&
+				       (ret_data[2] == 0xff))
+			break;
+
 		/* If camera is busy, try again (but at most 4 times). */
 		if ((*ret_len == 3) && (ret_data[0] == 0x00) &&
 				       (ret_data[1] == 0x04) &&
