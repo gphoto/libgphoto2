@@ -3762,8 +3762,17 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, 83, "AF Nikkor 80-200mm 1:2.8 D ED"},
 		{PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, 118, "AF Nikkor 50mm 1:1.8 D"},
 		{PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, 127, "AF-S Nikkor 18-70mm 1:3.5-4.5G ED DX"},
+		{PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, 139, "AF-S Nikkor 18-200mm 1:3.5-5.6 GED DX VR"},
 		{PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, 147, "AF-S Nikkor 24-70mm 1:2.8G ED DX"},
 		{PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, 154, "AF-S Nikkor 18-55mm 1:3.5-F5.6G DX VR"},
+
+		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 0, N_("10 seconds")},
+		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 1, N_("20 seconds")},
+		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 2, N_("1 minute")},
+		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 3, N_("5 minutes")},
+		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 4, N_("10 minutes")},
+		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 5, N_("5 seconds")}, /* d80 observed */
+
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_LowLight,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_CSMMenu,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_NIKON_BeepOff,PTP_VENDOR_NIKON),
