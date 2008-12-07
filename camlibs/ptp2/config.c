@@ -1555,6 +1555,29 @@ _put_Nikon_FlashExposureCompensation(CONFIG_PUT_ARGS) {
 
 }
 
+static int
+_get_Nikon_LowLight(CONFIG_GET_ARGS) {
+	float value_float;
+
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+
+	gp_widget_set_range (*widget,
+		dpd->FORM.Range.MinimumValue.u8,
+		dpd->FORM.Range.MaximumValue.u8,
+		dpd->FORM.Range.StepSize.u8
+	);
+	value_float = dpd->CurrentValue.u8;
+	gp_widget_set_value (*widget, &value_float);
+	return (GP_OK);
+}
+
 static struct deviceproptableu8 nikon_afareaillum[] = {
       { N_("Auto"),		0, 0 },
       { N_("Off"),		1, 0 },
@@ -2777,6 +2800,9 @@ static struct submenu capture_settings_menu[] = {
         { N_("Tone Compensation"), "tonecompensation", PTP_DPC_NIKON_ToneCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ToneCompensation, _put_Nikon_ToneCompensation },
         { N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
         { N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
+
+        { N_("Low Light"), "lowlight", PTP_DPC_NIKON_LowLight, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LowLight, _put_None },
+
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ N_("Focus Lock"), "focuslock", 0, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
 	{ 0,0,0,0,0,0,0 },
