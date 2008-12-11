@@ -1590,6 +1590,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			if (nevent[i].code == 0xc101) {
 				hasc101=1;
 				newobject = nevent[i].param1;
+				if (!newobject) newobject = 0xffff0001;
 			}
 		}
 		free (nevent);

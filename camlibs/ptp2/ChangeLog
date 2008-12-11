@@ -2,7 +2,8 @@
 
 	* library.c: Got the data for the D700 and D300, included.
 	  Changed nikon capture code to work with the D700 and other
-	  newer Nikon DSLRs.
+	  newer Nikon DSLRs. And some adjustments to work with
+	  older ones too.
 
 	* ptp.[ch]: Decode the Nikon DSLR current rotation flag.
 	* ptp.h: Mark up the operation codes for Nikons.
