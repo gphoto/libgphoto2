@@ -1,0 +1,39 @@
+2008-07-11  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Listing for Argus Bean Sprout added, found
+		     by T.K.
+
+2008-05-20  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Listing for Sakar Sticker Wizard no. 59379 added, found
+		     by Niklas Peinecke <n.peinecke@web.de>
+
+2008-05-12  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Listing for Sakar clipshot no. 1169x added.
+
+2008-01-06  Theodore Kilgore <kilgota@auburn.edu>
+	* *.[c,h]:   The camera of Patrick Simmons is determined to be a 
+		     JL2005D. Support is introduced for distinguishing the 
+		     B, C, and D versions in the places where that is needed. 
+		     Support is added for downloading an arbitrary photo from
+		     the list of photos in the camera. 
+		     NOTE: All these cameras use compression, and how to 
+		     decompress is still unknown. Thus, raw files only. 
+
+
+2007-12-28  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Added support for "Amazing Spiderman" reported by 
+		     Victor Hodge <vhodge@sympatico.ca> and for 
+		     Sakar no. 75379 reported by 
+		     Patrick Simmons <linuxrocks123@netscape.net> and for
+		     Sakar Kidz-Cam no. 88379 reported by 
+		     Martin Laberge <mlsoft@videotron.ca>. 
+	* *.[c,h]:   Introduced changes to give unified support to both 
+		     JL2005C and JL2005B in the same functions. 
+		     NOTE: All these cameras use compression, and how to 
+		     decompress is still unknown. 
+
+2007-09-04  Theodore Kilgore <kilgota@auburn.edu>
+
+	* *.[c,h]: First check-in of experimental driver code. Nothing 
+		   much works exactly right. Driver will download data 
+		   without freezing the camera, and that's about it. 
+
