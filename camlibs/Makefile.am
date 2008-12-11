@@ -75,6 +75,7 @@ include iclick/Makefile-files
 include jamcam/Makefile-files
 include jd11/Makefile-files
 include jl2005a/Makefile-files
+include jl2005c/Makefile-files
 include kodak/dc120/Makefile-files
 include kodak/dc210/Makefile-files
 include kodak/dc240/Makefile-files
