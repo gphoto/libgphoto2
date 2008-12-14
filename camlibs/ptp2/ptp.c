@@ -3419,16 +3419,16 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("No CF Card Release")},
 		{PTP_DPC_NIKON_ImageCommentString,		/* 0xD090 */
 		 N_("Image Comment String")},
-		{PTP_DPC_NIKON_ImageCommentAttach,		/* 0xD091 */
-		 N_("Image Comment Attach")},
+		{PTP_DPC_NIKON_ImageCommentEnable,		/* 0xD091 */
+		 N_("Image Comment Enable")},
 		{PTP_DPC_NIKON_ImageRotation,			/* 0xD092 */
 		 N_("Image Rotation")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0c0 */
 		 N_("Exposure Bracketing")},
-		{PTP_DPC_NIKON_ExposureBracketingIntervalDist,	/* 0xD0c1 */
-		 N_("Exposure Bracketing Distance")},
-		{PTP_DPC_NIKON_BracketingProgram,		/* 0xD0c2 */
-		 N_("Exposure Bracketing Number")},
+		{PTP_DPC_NIKON_AutoExposureBracketStep,		/* 0xD0c1 */
+		 N_("Exposure Bracketing Step")},
+		{PTP_DPC_NIKON_AutoExposureBracketProgram,	/* 0xD0c2 */
+		 N_("Exposure Bracketing Program")},
 		{PTP_DPC_NIKON_WhiteBalanceBracketStep, N_("NIKON White Balance Bracket Step")}, /* 0xD0C4 */
 		{PTP_DPC_NIKON_LensID,				/* 0xD0E0 */
 		 N_("Lens ID")},
@@ -3445,11 +3445,9 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_ACPower, N_("AC Power")},	/* 0xD101 */
 		{PTP_DPC_NIKON_MaximumShots,			/* 0xD103 */
 		 N_("Maximum Shots")},
-		{PTP_DPC_NIKON_AFLLock, N_("NIKON AF-L Locked")},/* 0xD104 */
-		{PTP_DPC_NIKON_AutoExposureLock,		/* 0xD105 */
-		 N_("Auto Exposure Lock")},
-		{PTP_DPC_NIKON_AutoFocusLock,			/* 0xD106 */
-		 N_("Auto Focus Lock")},
+		{PTP_DPC_NIKON_AFLock, N_("AF Locked")},/* 0xD104 */
+		{PTP_DPC_NIKON_AFLock, N_("AE Locked")},/* 0xD105 */
+		{PTP_DPC_NIKON_AFLock, N_("FV Locked")},/* 0xD106 */
 		{PTP_DPC_NIKON_AutofocusLCDTopMode2,		/* 0xD107 */
 		 N_("AF LCD Top Mode 2")},
 		{PTP_DPC_NIKON_AutofocusArea,			/* 0xD108 */
