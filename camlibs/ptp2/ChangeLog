@@ -1,14 +1,15 @@
+2008-12-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.h: Found some Nikon property ids.
+
 2008-11-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Got the data for the D700 and D300, included.
 	  Changed nikon capture code to work with the D700 and other
-	  newer Nikon DSLRs. And some adjustments to work with
-	  older ones too.
+	  newer Nikon DSLRs.
 
 	* ptp.[ch]: Decode the Nikon DSLR current rotation flag.
 	* ptp.h: Mark up the operation codes for Nikons.
-
-	* config.c: Nikon low light indicator query.
 
 2008-11-23  Marcus Meissner  <marcus@jet.franken.de>
 
