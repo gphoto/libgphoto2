@@ -3300,6 +3300,12 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Shady White Balance Bias")},
 		{PTP_DPC_NIKON_WhiteBalanceColorTemperature,	/* 0xD01e */
 		 N_("White Balance Colour Temperature")},
+		{PTP_DPC_NIKON_WhiteBalancePresetNo,		/* 0xD01f */
+		 N_("White Balance Present Number")},
+		{PTP_DPC_NIKON_WhiteBalancePresetVal0,		/* 0xD025 */
+		 N_("White Balance Present Value 0")},
+		{PTP_DPC_NIKON_WhiteBalancePresetVal1,		/* 0xD026 */
+		 N_("White Balance Present Value 1")},
 		{PTP_DPC_NIKON_ImageSharpening,			/* 0xD02a */
 		 N_("Sharpening")},
 		{PTP_DPC_NIKON_ToneCompensation,		/* 0xD02b */
@@ -3315,13 +3321,15 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_CSMMenuBankSelect,		/* 0xD040 */
 		 "PTP_DPC_NIKON_CSMMenuBankSelect"},
 		{PTP_DPC_NIKON_MenuBankNameA,			/* 0xD041 */
-		 "PTP_DPC_NIKON_MenuBankNameA"},
+		 N_("Menu Bank Name A")},
 		{PTP_DPC_NIKON_MenuBankNameB,			/* 0xD042 */
-		 "PTP_DPC_NIKON_MenuBankNameB"},
+		 N_("Menu Bank Name B")},
 		{PTP_DPC_NIKON_MenuBankNameC,			/* 0xD043 */
-		 "PTP_DPC_NIKON_MenuBankNameC"},
+		 N_("Menu Bank Name C")},
 		{PTP_DPC_NIKON_MenuBankNameD,			/* 0xD044 */
-		 "PTP_DPC_NIKON_MenuBankNameD"},
+		 N_("Menu Bank Name D")},
+		{PTP_DPC_NIKON_ResetBank,			/* 0xD045 */
+		 N_("Reset Menu Bank")},
 		{PTP_DPC_NIKON_A1AFCModePriority,		/* 0xD048 */
 		 "PTP_DPC_NIKON_A1AFCModePriority"},
 		{PTP_DPC_NIKON_A2AFSModePriority,		/* 0xD049 */
@@ -3429,9 +3437,16 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Bracketing Step")},
 		{PTP_DPC_NIKON_AutoExposureBracketProgram,	/* 0xD0c2 */
 		 N_("Exposure Bracketing Program")},
-		{PTP_DPC_NIKON_WhiteBalanceBracketStep, N_("NIKON White Balance Bracket Step")}, /* 0xD0C4 */
+		{PTP_DPC_NIKON_AutoExposureBracketCount,	/* 0xD0c3 */
+		 N_("Auto Exposure Bracket Count")},
+		{PTP_DPC_NIKON_WhiteBalanceBracketStep, N_("White Balance Bracket Step")}, /* 0xD0C4 */
+		{PTP_DPC_NIKON_WhiteBalanceBracketProgram, N_("White Balance Bracket Program")}, /* 0xD0C5 */
 		{PTP_DPC_NIKON_LensID,				/* 0xD0E0 */
 		 N_("Lens ID")},
+		{PTP_DPC_NIKON_LensSort,			/* 0xD0E1 */
+		 N_("Lens Sort")},
+		{PTP_DPC_NIKON_LensType,			/* 0xD0E2 */
+		 N_("Lens Type")},
 		{PTP_DPC_NIKON_FocalLengthMin,			/* 0xD0E3 */
 		 N_("Min. Focal Length")},
 		{PTP_DPC_NIKON_FocalLengthMax,			/* 0xD0E4 */
@@ -3443,21 +3458,34 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_ExposureTime,			/* 0xD100 */
 		 N_("Nikon Exposure Time")},
 		{PTP_DPC_NIKON_ACPower, N_("AC Power")},	/* 0xD101 */
+		{PTP_DPC_NIKON_WarningStatus, N_("Warning Status")},/* 0xD102 */
 		{PTP_DPC_NIKON_MaximumShots,			/* 0xD103 */
 		 N_("Maximum Shots")},
-		{PTP_DPC_NIKON_AFLock, N_("AF Locked")},/* 0xD104 */
-		{PTP_DPC_NIKON_AFLock, N_("AE Locked")},/* 0xD105 */
-		{PTP_DPC_NIKON_AFLock, N_("FV Locked")},/* 0xD106 */
+		{PTP_DPC_NIKON_AFLockStatus, N_("AF Locked")},/* 0xD104 */
+		{PTP_DPC_NIKON_AELockStatus, N_("AE Locked")},/* 0xD105 */
+		{PTP_DPC_NIKON_FVLockStatus, N_("FV Locked")},/* 0xD106 */
 		{PTP_DPC_NIKON_AutofocusLCDTopMode2,		/* 0xD107 */
 		 N_("AF LCD Top Mode 2")},
 		{PTP_DPC_NIKON_AutofocusArea,			/* 0xD108 */
 		 N_("Active AF Sensor")},
+		{PTP_DPC_NIKON_FlexibleProgram,			/* 0xD109 */
+		 N_("Flexible Program")},
 		{PTP_DPC_NIKON_LightMeter,			/* 0xD10a */
 		 N_("Exposure Meter")},
 		{PTP_DPC_NIKON_CameraOrientation,		/* 0xD10e */
 		 N_("Camera Orientation")},
 		{PTP_DPC_NIKON_ExposureApertureLock,		/* 0xD111 */
 		 N_("Exposure Aperture Lock")},
+		{PTP_DPC_NIKON_ExternalFlashAttached,		/* 0xD120 */
+		 N_("External Flash Attached")},
+		{PTP_DPC_NIKON_ExternalFlashStatus,		/* 0xD121 */
+		 N_("External Flash Status")},
+		{PTP_DPC_NIKON_ExternalFlashSort,		/* 0xD122 */
+		 N_("External Flash Sort")},
+		{PTP_DPC_NIKON_ExternalFlashCompensation,	/* 0xD124 */
+		 N_("External Flash Compensation")},
+		{PTP_DPC_NIKON_NewExternalFlashMode,		/* 0xD125 */
+		 N_("External Flash Mode")},
 		{PTP_DPC_NIKON_FlashExposureCompensation,	/* 0xD126 */
 		 N_("Flash Exposure Compensation")},
 		{PTP_DPC_NIKON_OptimizeImage,			/* 0xD140 */
