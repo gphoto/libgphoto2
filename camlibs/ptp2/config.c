@@ -1068,6 +1068,13 @@ static struct deviceproptableu8 nikon_flashmode[] = {
 };
 GENERIC8TABLE(Nikon_FlashMode,nikon_flashmode)
 
+static struct deviceproptableu8 nikon_afmode[] = {
+	{ N_("AF-S"),		0, 0 },
+	{ N_("AF-C"),		1, 0 },
+	/* more for newer */
+};
+GENERIC8TABLE(Nikon_AFMode,nikon_afmode)
+
 static struct deviceproptableu8 flash_modemanualpower[] = {
 	{ N_("Full"),	0x00, 0 },
 	{ "1/2",	0x01, 0 },
@@ -2732,7 +2739,7 @@ static struct submenu image_settings_menu[] = {
 
 static struct submenu capture_settings_menu[] = {
         { N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
-        { N_("Auto Focus Mode"), "autofocusmode", PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+        { N_("Auto Focus Mode"), "autofocusmode", PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFMode, _put_Nikon_AFMode},
 	{ N_("Auto Focus Mode 2"), "autofocusmode2", PTP_DPC_NIKON_A4AFActivation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
