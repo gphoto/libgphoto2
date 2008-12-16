@@ -498,6 +498,7 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 		CHECK_MEM (new = realloc (fs->folder[x].file,
 					sizeof (CameraFilesystemFile) *
 						(fs->folder[x].count + 1)));
+	/* BAD BAD BAD BAD: The LRU lists point into the file array :( -Marcus */
 	fs->folder[x].file = new;
 	fs->folder[x].count++;
 	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
@@ -1998,7 +1999,7 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 		fs->lru_first->lru_prev = fs->lru_first;
 	else
 		fs->lru_last = NULL;
-
+	ptr->lru_next = ptr->lru_prev = NULL;
 	/* Free its content. */
 	if (ptr->normal) {
 		CR( gp_file_get_data_and_size (ptr->normal, NULL, &size));
@@ -2018,7 +2019,6 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 		gp_file_unref (ptr->audio);
 		ptr->audio = NULL;
 	}
-	ptr->lru_next = ptr->lru_prev = NULL;
 	return (GP_OK);
 }
 
