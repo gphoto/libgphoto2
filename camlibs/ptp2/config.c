@@ -1420,6 +1420,38 @@ static struct deviceproptableu8 nikon_colormodel[] = {
 };
 GENERIC8TABLE(Nikon_ColorModel,nikon_colormodel)
 
+static struct deviceproptableu8 nikon_padvpvalue[] = {
+	{ "1/125",		0x00, 0 },
+	{ "1/60",		0x01, 0 },
+	{ "1/30",		0x02, 0 },
+	{ "1/15",		0x03, 0 },
+	{ "1/8",		0x04, 0 },
+	{ "1/4",		0x05, 0 },
+	{ "1/2",		0x06, 0 },
+	{ "1",			0x07, 0 },
+	{ "2",			0x08, 0 },
+	{ "4",			0x09, 0 },
+	{ "8",			0x0a, 0 },
+	{ "15",			0x0b, 0 },
+	{ "30",			0x0c, 0 },
+};
+GENERIC8TABLE(Nikon_PADVPValue,nikon_padvpvalue)
+
+static struct deviceproptableu8 nikon_orientation[] = {
+	{ "0'",		0, 0 },
+	{ "270'",	1, 0 },
+	{ "90'",	2, 0 },
+	{ "180'",	3, 0 },
+};
+GENERIC8TABLE(Nikon_CameraOrientation,nikon_orientation)
+
+static struct deviceproptableu16 canon_orientation[] = {
+	{ "0'",		0, 0 },
+	{ "90'",	1, 0 },
+	{ "180'",	2, 0 },	/* guessed */
+	{ "270'",	3, 0 },
+};
+GENERIC16TABLE(Canon_CameraOrientation,canon_orientation)
 
 static struct deviceproptableu8 nikon_afsensor[] = {
 	{ N_("Centre"),	0x00, 0 },
@@ -2709,6 +2741,10 @@ static struct submenu camera_settings_menu[] = {
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
         { N_("Battery Level"), "battery", PTP_DPC_BatteryLevel, 0, PTP_DTC_UINT8, _get_BatteryLevel, _put_None },
         { N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
+        { N_("Camera Orientation"), "orientation", PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CameraOrientation, _put_Nikon_CameraOrientation },
+        { N_("Camera Orientation"), "orientation", PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_CameraOrientation, _put_Canon_CameraOrientation },
+
+	
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
@@ -2734,6 +2770,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
 	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
 	{ N_("Auto ISO"), "autoiso", PTP_DPC_NIKON_ISOAuto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_PADVPValue, _put_Nikon_PADVPValue},
         { 0,0,0,0,0,0,0 },
 };
 
