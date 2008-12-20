@@ -1596,6 +1596,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 		free (nevent);
 	}
+	if (!newobject) newobject = 0xffff0001;
 
 	for (i=0;i<burstnumber;i++) {
 		/* In Burst mode, the image is always 0xffff0001.
@@ -1688,13 +1689,19 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "object has OFC 0x%x", oi.ObjectFormat);
 
 	strcpy  (path->folder,"/");
-	sprintf (path->name, "capt%04d.jpg", capcnt++);
+	sprintf (path->name, "capt%04d.", capcnt++);
+	if (oi.ObjectFormat == PTP_OFC_CANON_CRW) {
+		strcat(path->name, "cr2");
+		gp_file_set_mime_type (file, GP_MIME_CRW);
+	} else {
+		strcat(path->name, "jpg");
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
+	}
 
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
 	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 	gp_file_set_name(file, path->name);
-	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 	CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
@@ -2078,9 +2085,15 @@ camera_wait_for_event (Camera *camera, int timeout,
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
 					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					sprintf (path->name, "capt%04d.", capcnt++);
+					if (entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) {
+						strcat(path->name, "cr2");
+						gp_file_set_mime_type (file, GP_MIME_CRW);
+					} else {
+						strcat(path->name, "jpg");
+						gp_file_set_mime_type (file, GP_MIME_JPEG);
+					}
 					gp_file_set_name(file, path->name);
-					gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
 					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, &ximage));
