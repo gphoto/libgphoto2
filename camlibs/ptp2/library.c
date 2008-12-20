@@ -520,7 +520,7 @@ static struct {
 	/* Peter F Bradshaw <pfb@exadios.com> */
 	{"Kodak:C813",	 0x040a, 0x05c3, 0},
 	/* reported by Christian Le Corre <lecorrec@gmail.com> */
-	{"Kodak:C913",	 0x040a, 0x05c6, 0},
+	{"Kodak:C913",   0x040a, 0x05c6, 0},
 
 	/* HP PTP cameras */
 #if 0
