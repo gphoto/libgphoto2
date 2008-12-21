@@ -52,6 +52,12 @@
 #include "ptp-bugs.h"
 #include "ptp-private.h"
 
+#ifdef __GNUC__
+# define __unused__ __attribute__((unused))
+#else
+# define __unused__
+#endif
+
 #define GP_MODULE "PTP2"
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
@@ -519,7 +525,7 @@ _get_##name(CONFIG_GET_ARGS) {				\
 	);						\
 }							\
 							\
-static int						\
+static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Generic16Table(CONFIG_PUT_NAMES,	\
 		tbl,sizeof(tbl)/sizeof(tbl[0])		\
@@ -625,7 +631,7 @@ _get_##name(CONFIG_GET_ARGS) {				\
 	);						\
 }							\
 							\
-static int						\
+static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Generic8Table(CONFIG_PUT_NAMES,	\
 		tbl,sizeof(tbl)/sizeof(tbl[0])		\
@@ -950,6 +956,50 @@ _put_Nikon_WBBias(CONFIG_PUT_ARGS)
 	ret = gp_widget_get_value (widget,&f);
 	if (ret != GP_OK) return ret;
 	propval->i8 = (signed char)f;
+	return (GP_OK);
+}
+
+static int
+_get_Nikon_WBBiasPresetVal(CONFIG_GET_ARGS) {
+	char buf[20];
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	sprintf (buf, "%d", dpd->CurrentValue.u32);
+	gp_widget_set_value (*widget, buf);
+	return (GP_OK);
+}
+static int
+_get_Nikon_WBBiasPreset(CONFIG_GET_ARGS) {
+	char buf[20];
+	int i;
+
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	for (i = dpd->FORM.Range.MinimumValue.u8; i < dpd->FORM.Range.MaximumValue.u8; i++) {
+		sprintf (buf, "%d", i);
+		gp_widget_add_choice (*widget, buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8)
+			gp_widget_set_value (*widget, buf);
+	}
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_WBBiasPreset(CONFIG_PUT_ARGS) {
+	int	ret;
+	char	*x;
+
+	ret = gp_widget_get_value (widget,&x);
+	if (ret != GP_OK) return ret;
+	sscanf (x, "%u", &ret);
+	propval->u8 = ret;
 	return (GP_OK);
 }
 
@@ -1562,6 +1612,46 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Nikon_FocalLength(CONFIG_GET_ARGS) {
+	char	len[20];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+	sprintf (len, "%.0f mm", dpd->CurrentValue.u32 * 0.01);
+	gp_widget_set_value (*widget, len);
+	return (GP_OK);
+}
+
+static int
+_get_Nikon_ApertureAtFocalLength(CONFIG_GET_ARGS) {
+	char	len[20];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	sprintf (len, "%.0f mm", dpd->CurrentValue.u16 * 0.01);
+	gp_widget_set_value (*widget, len);
+	return (GP_OK);
+}
+
+static int
+_get_Nikon_LightMeter(CONFIG_GET_ARGS) {
+	char	meter[20];
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (dpd->DataType != PTP_DTC_INT8)
+		return (GP_ERROR);
+	sprintf (meter, "%.1f", dpd->CurrentValue.i8 * 0.08333);
+	gp_widget_set_value (*widget, meter);
+	return (GP_OK);
+}
+
+
+static int
 _get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
 	float value_float;
 
@@ -1667,8 +1757,8 @@ static struct deviceproptableu8 nikon_centerweight[] = {
 	{ N_("6 mm"),	0x00, 0 },
 	{ N_("8 mm"),	0x01, 0 },
 	{ N_("10 mm"),	0x02, 0 },
-	{ N_("20 mm"),	0x03, 0 },
-	{ N_("Average"),0x04, 0 },
+	{ N_("12 mm"),	0x03, 0 },
+	{ N_("Average"),0x04, 0 },	/* ? */
 };
 GENERIC8TABLE(Nikon_CenterWeight,nikon_centerweight)
 
@@ -1928,6 +2018,19 @@ static struct deviceproptableu8 nikon_bracketorder[] = {
       { N_("Under > MTR"),	1, 0 },
 };
 GENERIC8TABLE(Nikon_BracketOrder,nikon_bracketorder)
+
+/* There is a table for it in the internet */
+static struct deviceproptableu8 nikon_lensid[] = {
+	{N_("Unknown"),	0, 0},
+	{"Sigma 70-300mm 1:4-5.6 D APO Macro",		38, 0},
+	{"AF Nikkor 80-200mm 1:2.8 D ED",		83, 0},
+	{"AF Nikkor 50mm 1:1.8 D",			118, 0},
+	{"AF-S Nikkor 18-70mm 1:3.5-4.5G ED DX",	127, 0},
+	{"AF-S Nikkor 18-200mm 1:3.5-5.6 GED DX VR",	139, 0},
+	{"AF-S Nikkor 24-70mm 1:2.8G ED DX",		147, 0},
+	{"AF-S Nikkor 18-55mm 1:3.5-F5.6G DX VR",	154, 0},
+};
+GENERIC8TABLE(Nikon_LensID,nikon_lensid)
 
 static int
 _get_BurstNumber(CONFIG_GET_ARGS) {
@@ -2736,13 +2839,20 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode,     PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
         { N_("Image Comment"), "imgcomment", PTP_DPC_NIKON_ImageCommentString, PTP_VENDOR_NIKON, PTP_DTC_STR, _get_STR, _put_STR },
+        { N_("Enable Image Comment"), "imgcommentenable", PTP_DPC_NIKON_ImageCommentEnable, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
         { N_("LCD Off Time"), "lcdofftime", PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LCDOffTime, _put_Nikon_LCDOffTime },
         { N_("Meter Off Time"), "meterofftime", PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MeterOffTime, _put_Nikon_MeterOffTime },
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
+	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
         { N_("Battery Level"), "battery", PTP_DPC_BatteryLevel, 0, PTP_DTC_UINT8, _get_BatteryLevel, _put_None },
         { N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
         { N_("Camera Orientation"), "orientation", PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CameraOrientation, _put_None },
         { N_("Camera Orientation"), "orientation", PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_CameraOrientation, _put_None },
+        { N_("AC Power"), "acpower", PTP_DPC_NIKON_ACPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
+        { N_("External Flash"), "externalflash", PTP_DPC_NIKON_ExternalFlashAttached, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
+        { N_("Flash Open"), "flashopen", PTP_DPC_NIKON_FlashOpen, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
+        { N_("Flash Charged"), "flashcharged", PTP_DPC_NIKON_FlashCharged, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
+        { N_("Lens ID"), "lensid", PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LensID, _put_None },
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
@@ -2782,6 +2892,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Self Timer"), "selftimer", PTP_DPC_CANON_SelfTime, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_SelfTimer, _put_Canon_SelfTimer},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_NIKON_AFAssist, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
+	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_NIKON_ExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Flash Compensation"), "flashcompensation", PTP_DPC_CANON_FlashCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("AEB Exposure Compensation"), "aebexpcompensation", PTP_DPC_CANON_AEBExposureCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("EOS Exposure Compensation"), "eos-exposurecompensation", PTP_DPC_CANON_EOS_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
@@ -2791,6 +2902,10 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
         { N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
         { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
+        { N_("Focal Length Minimum"), "minfocallength", PTP_DPC_NIKON_FocalLengthMin, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_FocalLength, _put_None},
+        { N_("Focal Length Maximum"), "maxfocallength", PTP_DPC_NIKON_FocalLengthMax, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_FocalLength, _put_None},
+        { N_("Maximum Aperture at Focal Length Minimum"), "apertureatminfocallength", PTP_DPC_NIKON_MaxApAtMinFocalLength, PTP_VENDOR_NIKON, PTP_DTC_UINT16, _get_Nikon_ApertureAtFocalLength, _put_None},
+        { N_("Maximum Aperture at Focal Length Maximum"), "apertureatmaxfocallength", PTP_DPC_NIKON_MaxApAtMaxFocalLength, PTP_VENDOR_NIKON, PTP_DTC_UINT16, _get_Nikon_ApertureAtFocalLength, _put_None},
         { N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
         { N_("Exposure Bias Compensation"), "exposurebiascompensation", PTP_DPC_ExposureBiasCompensation, 0, PTP_DTC_INT16, _get_ExpCompensation, _put_ExpCompensation},
         { N_("Exposure Time"), "exptime", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
@@ -2823,6 +2938,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Mode Manual Power"), "flashmodemanualpower", PTP_DPC_NIKON_FlashModeManualPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashModeManualPower, _put_Nikon_FlashModeManualPower},
 	{ N_("Auto Focus Area"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
 	{ N_("Flash Exposure Compensation"), "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation},
+	{ N_("Bracketing"), "bracketing", PTP_DPC_NIKON_Bracketing, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	{ N_("Burst Number"), "burstnumber", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_BurstNumber, _put_BurstNumber},
@@ -2833,6 +2949,12 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash White Balance Bias"), "flashwhitebias", PTP_DPC_NIKON_WhiteBalanceFlashBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
 	{ N_("Cloudy White Balance Bias"), "cloudywhitebias", PTP_DPC_NIKON_WhiteBalanceCloudyBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
 	{ N_("Shady White Balance Bias"), "shadewhitebias", PTP_DPC_NIKON_WhiteBalanceShadeBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+	{ N_("White Balance Bias Preset Nr"), "whitebiaspresetno", PTP_DPC_NIKON_WhiteBalancePresetNo, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_WBBiasPreset, _put_Nikon_WBBiasPreset},
+	{ N_("White Balance Bias Preset 0"), "whitebiaspreset0", PTP_DPC_NIKON_WhiteBalancePresetVal0, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
+	{ N_("White Balance Bias Preset 1"), "whitebiaspreset1", PTP_DPC_NIKON_WhiteBalancePresetVal1, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
+	{ N_("White Balance Bias Preset 2"), "whitebiaspreset2", PTP_DPC_NIKON_WhiteBalancePresetVal2, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
+	{ N_("White Balance Bias Preset 3"), "whitebiaspreset3", PTP_DPC_NIKON_WhiteBalancePresetVal3, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
+	{ N_("White Balance Bias Preset 4"), "whitebiaspreset4", PTP_DPC_NIKON_WhiteBalancePresetVal4, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
         { N_("Selftimer Delay"), "selftimerdelay", PTP_DPC_NIKON_SelfTimer, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_SelfTimerDelay, _put_Nikon_SelfTimerDelay },
         { N_("Center Weight Area"), "centerweightsize", PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CenterWeight, _put_Nikon_CenterWeight },
         { N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashShutterSpeed, _put_Nikon_FlashShutterSpeed },
@@ -2843,7 +2965,11 @@ static struct submenu capture_settings_menu[] = {
         { N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
         { N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 
-        { N_("Low Light"), "lowlight", PTP_DPC_NIKON_LowLight, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LowLight, _put_None },
+        { N_("Low Light"), "lowlight", PTP_DPC_NIKON_LowLight, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LowLight, _put_None },
+        { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LightMeter, _put_None },
+        { N_("AF Locked"), "aflocked", PTP_DPC_NIKON_AFLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
+        { N_("AE Locked"), "aelocked", PTP_DPC_NIKON_AELockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
+        { N_("FV Locked"), "fvlocked", PTP_DPC_NIKON_FVLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
 
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ N_("Focus Lock"), "focuslock", 0, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
@@ -2963,7 +3089,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 					memset(&dpd,0,sizeof(dpd));
 					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
-					ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					if (dpd.GetSet == PTP_DPGS_GetSet) {
+						ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					} else {
+						gp_context_error (context, _("Sorry, the property '%s' is currently ready-only."), _(cursub->label));
+						ret = GP_ERROR_NOT_SUPPORTED;
+					}
 					if (ret == GP_OK)
 						ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
 					ptp_free_devicepropvalue (cursub->type, &propval);
