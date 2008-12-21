@@ -3301,11 +3301,17 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_WhiteBalanceColorTemperature,	/* 0xD01e */
 		 N_("White Balance Colour Temperature")},
 		{PTP_DPC_NIKON_WhiteBalancePresetNo,		/* 0xD01f */
-		 N_("White Balance Present Number")},
+		 N_("White Balance Preset Number")},
 		{PTP_DPC_NIKON_WhiteBalancePresetVal0,		/* 0xD025 */
-		 N_("White Balance Present Value 0")},
+		 N_("White Balance Preset Value 0")},
 		{PTP_DPC_NIKON_WhiteBalancePresetVal1,		/* 0xD026 */
-		 N_("White Balance Present Value 1")},
+		 N_("White Balance Preset Value 1")},
+		{PTP_DPC_NIKON_WhiteBalancePresetVal2,		/* 0xD027 */
+		 N_("White Balance Preset Value 2")},
+		{PTP_DPC_NIKON_WhiteBalancePresetVal3,		/* 0xD028 */
+		 N_("White Balance Preset Value 3")},
+		{PTP_DPC_NIKON_WhiteBalancePresetVal4,		/* 0xD029 */
+		 N_("White Balance Preset Value 4")},
 		{PTP_DPC_NIKON_ImageSharpening,			/* 0xD02a */
 		 N_("Sharpening")},
 		{PTP_DPC_NIKON_ToneCompensation,		/* 0xD02b */
@@ -3676,11 +3682,11 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32785, N_("Shade")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32786, N_("Color Temperature")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32787, N_("Preset")},
-		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32784, N_("Default")},
 		{PTP_DPC_FlashMode, 0, 4, N_("Red-eye Reduction")},
-		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32787, N_("Red-eye Reduction + Slow Sync")},
+		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32784, N_("Default")},
 		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32785, N_("Slow Sync")},
-		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32785, N_("Rear Curtain Sync + Slow Sync")},
+		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32786, N_("Rear Curtain Sync + Slow Sync")},
+		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32787, N_("Red-eye Reduction + Slow Sync")},
 		{PTP_DPC_FocusMeteringMode, 0, 2, N_("Dynamic Area")},
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32784, N_("Single Area")},
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32785, N_("Closest Subject")},
@@ -3750,6 +3756,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_NIKON_NoCFCard,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_NIKON_ImageRotation,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_Bracketing,PTP_VENDOR_NIKON),
+		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_ImageCommentEnable,PTP_VENDOR_NIKON),
 		{PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, 0, N_("Centre")},
 		{PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, 1, N_("Top")},
 		{PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, 2, N_("Bottom")},
@@ -3826,6 +3833,26 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, 1, "270'"},
 		{PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, 2, "90'"},
 		{PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, 3, "180'"},
+
+		{PTP_DPC_NIKON_SelfTimer, PTP_VENDOR_NIKON, 0, N_("2 seconds")},
+		{PTP_DPC_NIKON_SelfTimer, PTP_VENDOR_NIKON, 1, N_("5 seconds")},
+		{PTP_DPC_NIKON_SelfTimer, PTP_VENDOR_NIKON, 2, N_("10 seconds")},
+		{PTP_DPC_NIKON_SelfTimer, PTP_VENDOR_NIKON, 3, N_("20 seconds")},
+
+		{PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, 0, N_("4 seconds")},
+		{PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, 1, N_("6 seconds")},
+		{PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, 2, N_("8 seconds")},
+		{PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, 3, N_("16 seconds")},
+		{PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, 4, N_("30 minutes")},
+		{PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, 5, N_("30 seconds")},
+
+		{PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, 0, N_("AE & Flash")},
+		{PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, 1, N_("AE only")},
+		{PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, 2, N_("Flash only")},
+		{PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, 3, N_("WB bracketing")},
+
+		{PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, 0, N_("MTR > Under")},
+		{PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, 1, N_("Under > MTR")},
 
 		/* Canon stuff */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_CANON_AssistLight,PTP_VENDOR_CANON),

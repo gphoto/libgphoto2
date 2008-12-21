@@ -1191,6 +1191,9 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_WhiteBalancePresetNo		0xD01F
 #define PTP_DPC_NIKON_WhiteBalancePresetVal0		0xD025
 #define PTP_DPC_NIKON_WhiteBalancePresetVal1		0xD026
+#define PTP_DPC_NIKON_WhiteBalancePresetVal2		0xD027
+#define PTP_DPC_NIKON_WhiteBalancePresetVal3		0xD028
+#define PTP_DPC_NIKON_WhiteBalancePresetVal4		0xD029
 #define PTP_DPC_NIKON_ImageSharpening			0xD02A
 #define PTP_DPC_NIKON_ToneCompensation			0xD02B
 #define PTP_DPC_NIKON_ColorModel			0xD02C
