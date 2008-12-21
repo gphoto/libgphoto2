@@ -4897,7 +4897,7 @@ msgstr "F-Nummer"
 
 #: camlibs/ptp2/config.c:2660 camlibs/ptp2/ptp.c:3128 camlibs/ptp2/ptp.c:3209
 msgid "Focal Length"
-msgstr "Fokus Tiefe"
+msgstr "Brennweite"
 
 #: camlibs/ptp2/config.c:2661 camlibs/ptp2/ptp.c:3130
 #: camlibs/sierra/nikon-desc.c:331 camlibs/sierra/olympus-desc.c:644
@@ -4997,7 +4997,7 @@ msgstr "Gitterlinien im Sucher"
 
 #: camlibs/ptp2/config.c:2687 camlibs/ptp2/ptp.c:3418
 msgid "Image Review"
-msgstr "BIldvorschau"
+msgstr "Bildvorschau"
 
 #: camlibs/ptp2/config.c:2688
 msgid "Image Rotation Flag"
@@ -5009,7 +5009,7 @@ msgstr "Auslösen ohne CF Karte"
 
 #: camlibs/ptp2/config.c:2690 camlibs/ptp2/ptp.c:3426
 msgid "Flash Mode Manual Power"
-msgstr "Blitzmodus mit manuelle Energie"
+msgstr "Blitzmodus mit manueller Energie"
 
 #: camlibs/ptp2/config.c:2691
 msgid "Auto Focus Area"
@@ -5021,11 +5021,11 @@ msgstr "Blitz Belichtungskompensation"
 
 #: camlibs/ptp2/config.c:2693 camlibs/ptp2/ptp.c:3356
 msgid "Bracket Set"
-msgstr "Abstufungsbereich"
+msgstr "Belichtungsreihe"
 
 #: camlibs/ptp2/config.c:2694 camlibs/ptp2/ptp.c:3360
 msgid "Bracket Order"
-msgstr "Abstufungsrichtung"
+msgstr "Richtung der Belichtungsreihe"
 
 #: camlibs/ptp2/config.c:2695 camlibs/ptp2/ptp.c:3146
 msgid "Burst Number"
@@ -5990,15 +5990,15 @@ msgstr "Av Max"
 
 #: camlibs/ptp2/ptp.c:3210 camlibs/ptp2/ptp.c:3234
 msgid "Focal Length Tele"
-msgstr "Fokus Tiefe Tele"
+msgstr "Brennweite Tele"
 
 #: camlibs/ptp2/ptp.c:3211
 msgid "Focal Length Wide"
-msgstr "Fokus Tiefe Weit"
+msgstr "Brennweite Weit"
 
 #: camlibs/ptp2/ptp.c:3212
 msgid "Focal Length Denominator"
-msgstr "Fokus Tiefe Nenner"
+msgstr "Brennweite Nenner"
 
 #: camlibs/ptp2/ptp.c:3213
 msgid "Capture Transfer Mode"
@@ -6110,7 +6110,7 @@ msgstr "Weißabgleich Farbtemperatur"
 
 #: camlibs/ptp2/ptp.c:3278
 msgid "Lens Focal Length (Non CPU)"
-msgstr "Fokus Tiefe der Linse (Nicht CPU)"
+msgstr "Brennweite der Linse (Nicht CPU)"
 
 #: camlibs/ptp2/ptp.c:3280
 msgid "Lens Max. Aperture (Non CPU)"
@@ -6166,11 +6166,11 @@ msgstr "Modellierblitz"
 
 #: camlibs/ptp2/ptp.c:3358
 msgid "Manual Mode Bracketing"
-msgstr "Manueller Abstufungsmodus"
+msgstr "Manueller Modus der Belichtungsreihe"
 
 #: camlibs/ptp2/ptp.c:3362
 msgid "Auto Bracket Selection"
-msgstr "Automatischer Abstufungsselektion"
+msgstr "Automatische Selektion der Belichtungsreihe"
 
 # Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/ptp2/ptp.c:3364
@@ -6223,15 +6223,15 @@ msgstr "Bildrotationsflag"
 
 #: camlibs/ptp2/ptp.c:3388
 msgid "Exposure Bracketing"
-msgstr "Belichtungs Abstufung"
+msgstr "Belichtungsreihe"
 
 #: camlibs/ptp2/ptp.c:3390
 msgid "Exposure Bracketing Distance"
-msgstr "Belichtungsabstufungsschritt"
+msgstr "Abstand in der Belichtungsreihe"
 
 #: camlibs/ptp2/ptp.c:3392
 msgid "Exposure Bracketing Number"
-msgstr "Belichtungsabstufungs Anzahl"
+msgstr "Anzahl der Bilder der Belichtungsreihe"
 
 #: camlibs/ptp2/ptp.c:3394
 msgid "AF LCD Top Mode 2"
@@ -6307,11 +6307,11 @@ msgstr "Netzanschluss"
 
 #: camlibs/ptp2/ptp.c:3452
 msgid "NIKON Auto Bracketing Set"
-msgstr "NIKON Automatischer Abstufungsselektion"
+msgstr "NIKON Automatische Belichtungsreihe"
 
 #: camlibs/ptp2/ptp.c:3453
 msgid "NIKON White Balance Bracket Step"
-msgstr "NIKON Automatische Weißabgleich Abweichung"
+msgstr "NIKON Automatische Schritt der Belichtungsreihe"
 
 #: camlibs/ptp2/ptp.c:3454
 msgid "NIKON AF-L Locked"
@@ -6319,7 +6319,7 @@ msgstr "NIKON AF-L Feststellung"
 
 #: camlibs/ptp2/ptp.c:3461
 msgid "Secure Time"
-msgstr "SIchere Zeit"
+msgstr "Sichere Zeit"
 
 #: camlibs/ptp2/ptp.c:3462
 msgid "Device Certificate"
