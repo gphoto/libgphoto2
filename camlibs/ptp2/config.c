@@ -1118,6 +1118,25 @@ static struct deviceproptableu8 nikon_flashmode[] = {
 };
 GENERIC8TABLE(Nikon_FlashMode,nikon_flashmode)
 
+static struct deviceproptableu8 nikon_flashcommandermode[] = {
+	{ N_("TTL"),		0, 0 },
+	{ N_("Auto Aperture"),	1, 0 },
+	{ N_("Full Manual"),	2, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommanderMode,nikon_flashcommandermode)
+
+static struct deviceproptableu8 nikon_flashcommanderpower[] = {
+	{ N_("Full"),		0, 0 },
+	{ "1/2",		1, 0 },
+	{ "1/4",		2, 0 },
+	{ "1/8",		3, 0 },
+	{ "1/16",		4, 0 },
+	{ "1/32",		5, 0 },
+	{ "1/64",		6, 0 },
+	{ "1/128",		7, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommanderPower,nikon_flashcommanderpower)
+
 static struct deviceproptableu8 nikon_afmode[] = {
 	{ N_("AF-S"),		0, 0 },
 	{ N_("AF-C"),		1, 0 },
@@ -2898,6 +2917,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("EOS Exposure Compensation"), "eos-exposurecompensation", PTP_DPC_CANON_EOS_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
 	{ N_("Flash Mode"), "canonflashmode", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
 	{ N_("Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashMode, _put_Nikon_FlashMode},
+	{ N_("Flash Commander Mode"), "nikonflashcommandermode", PTP_DPC_NIKON_FlashCommanderMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderMode, _put_Nikon_FlashCommanderMode},
+	{ N_("Flash Commander Power"), "nikonflashcommanderpower", PTP_DPC_NIKON_FlashModeCommanderPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderPower, _put_Nikon_FlashCommanderPower},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
         { N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
