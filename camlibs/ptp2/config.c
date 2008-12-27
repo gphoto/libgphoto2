@@ -985,7 +985,7 @@ _get_Nikon_WBBiasPreset(CONFIG_GET_ARGS) {
 	for (i = dpd->FORM.Range.MinimumValue.u8; i < dpd->FORM.Range.MaximumValue.u8; i++) {
 		sprintf (buf, "%d", i);
 		gp_widget_add_choice (*widget, buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8)
+		if (i == dpd->CurrentValue.u8)
 			gp_widget_set_value (*widget, buf);
 	}
 	return (GP_OK);
@@ -1505,6 +1505,12 @@ static struct deviceproptableu8 nikon_padvpvalue[] = {
 	{ "30",			0x0c, 0 },
 };
 GENERIC8TABLE(Nikon_PADVPValue,nikon_padvpvalue)
+
+static struct deviceproptableu8 nikon_evstep[] = {
+	{ "1/3",	0, 0 },
+	{ "1/2",	1, 0 },
+};
+GENERIC8TABLE(Nikon_EVStep,nikon_evstep)
 
 static struct deviceproptableu8 nikon_orientation[] = {
 	{ "0'",		0, 0 },
@@ -2960,6 +2966,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Auto Focus Area"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
 	{ N_("Flash Exposure Compensation"), "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation},
 	{ N_("Bracketing"), "bracketing", PTP_DPC_NIKON_Bracketing, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("EV Step"), "evstep", PTP_DPC_NIKON_EVStep, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_EVStep, _put_Nikon_EVStep},
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	{ N_("Burst Number"), "burstnumber", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_BurstNumber, _put_BurstNumber},
