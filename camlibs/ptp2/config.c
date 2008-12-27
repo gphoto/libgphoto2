@@ -985,7 +985,7 @@ _get_Nikon_WBBiasPreset(CONFIG_GET_ARGS) {
 	for (i = dpd->FORM.Range.MinimumValue.u8; i < dpd->FORM.Range.MaximumValue.u8; i++) {
 		sprintf (buf, "%d", i);
 		gp_widget_add_choice (*widget, buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8)
+		if (i == dpd->CurrentValue.u8)
 			gp_widget_set_value (*widget, buf);
 	}
 	return (GP_OK);
