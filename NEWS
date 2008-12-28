@@ -1,3 +1,24 @@
+libgphoto2 2.4.3.1
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+
+PTP2 driver:
+   * Only retrieve and initialize the ptp filesystem if needed
+     (this will give speed ups for config operations, basic
+      init and summary)
+   * Export the "hidden" vendor properties of the current Nikon DSLRs.
+   * Lots of new Nikon DSLR and Canon Powershot properties implemented,
+     both printed in summary and available for config functions.
+   * New cameras added:
+   * Bugfixes.
+
+jl2005c: 
+   * Experimental driver for jl2005c based cameras added.
+     Can only retrieve raw images currently, no viewable images yet.
+
+------------------------------------------------------------------------
 libgphoto2 2.4.3
 
 This is a 2.4 release branch update.
