@@ -358,6 +358,20 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_SetPreWBData	0x90C9	/* 3 params,  data out */
 					/* 0x90CA */
 #define PTP_OC_NIKON_AfCaptureSDRAM	0x90CB	/* no params, no data */
+#define PTP_OC_NIKON_GetPictCtrlData	0x90CC
+#define PTP_OC_NIKON_SetPictCtrlData	0x90CD
+#define PTP_OC_NIKON_DelCstPicCtrl	0x90CE
+#define PTP_OC_NIKON_GetQuickParam	0x90CF
+
+/* Nikon Liveview stuff */
+#define PTP_OC_NIKON_GetPreviewImg	0x9200
+#define PTP_OC_NIKON_StartLiveView	0x9201
+#define PTP_OC_NIKON_EndLiveView	0x9202
+#define PTP_OC_NIKON_GetLiveViewImg	0x9203
+#define PTP_OC_NIKON_MfDrive		0x9204
+#define PTP_OC_NIKON_ChangeAfDrive	0x9205
+#define PTP_OC_NIKON_AfDriveCancel	0x9206
+
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
 /* Microsoft / MTP extension codes */
