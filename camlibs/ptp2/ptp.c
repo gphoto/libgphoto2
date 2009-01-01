@@ -1,8 +1,8 @@
 /* ptp.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
- * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2006-2008 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2007 Tero Saarni <tero.saarni@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -3438,7 +3438,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_ImageRotation,			/* 0xD092 */
 		 N_("Image Rotation")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0c0 */
-		 N_("Exposure Bracketing")},
+		 N_("Bracketing Enable")},
 		{PTP_DPC_NIKON_AutoExposureBracketStep,		/* 0xD0c1 */
 		 N_("Exposure Bracketing Step")},
 		{PTP_DPC_NIKON_AutoExposureBracketProgram,	/* 0xD0c2 */
