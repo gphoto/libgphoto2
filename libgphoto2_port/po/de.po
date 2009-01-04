@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-10-19 21:18+0200\n"
+"POT-Creation-Date: 2008-12-08 09:21+0100\n"
 "PO-Revision-Date: 2007-05-10 11:07+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <de@li.org>\n"
@@ -372,56 +372,56 @@ msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden (dev_unlock "
 "lieferte %d)"
 
-#: serial/unix.c:379
+#: serial/unix.c:382
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:470
+#: serial/unix.c:473
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:488
+#: serial/unix.c:491
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
 
-#: serial/unix.c:542
+#: serial/unix.c:545
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:619
+#: serial/unix.c:622
 msgid "Parity error."
 msgstr "Paritätsfehler."
 
-#: serial/unix.c:623
+#: serial/unix.c:626
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Unerwartete Paritätsantwort, Sequenz 0xff 0x%02x."
 
-#: serial/unix.c:666
+#: serial/unix.c:669
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:688
+#: serial/unix.c:691
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:723
+#: serial/unix.c:726
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:748
+#: serial/unix.c:751
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:861
+#: serial/unix.c:864
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
@@ -512,7 +512,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:988
+#: usb/libusb.c:990
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "

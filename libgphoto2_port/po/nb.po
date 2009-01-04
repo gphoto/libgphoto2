@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-10-19 21:18+0200\n"
+"POT-Creation-Date: 2008-12-08 09:21+0100\n"
 "PO-Revision-Date: 2000-04-11 10:12+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -368,58 +368,58 @@ msgstr ""
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:379
+#: serial/unix.c:382
 #, c-format
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:470
+#: serial/unix.c:473
 #, fuzzy, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Feil: kunne ikke åpne %s"
 
-#: serial/unix.c:488
+#: serial/unix.c:491
 #, fuzzy, c-format
 msgid "Could not close '%s' (%m)."
 msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: serial/unix.c:542
+#: serial/unix.c:545
 #, fuzzy, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunne ikke hente #%i"
 
-#: serial/unix.c:619
+#: serial/unix.c:622
 msgid "Parity error."
 msgstr ""
 
-#: serial/unix.c:623
+#: serial/unix.c:626
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr ""
 
-#: serial/unix.c:666
+#: serial/unix.c:669
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:688
+#: serial/unix.c:691
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunne ikke hente #%i"
 
-#: serial/unix.c:723
+#: serial/unix.c:726
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:748
+#: serial/unix.c:751
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:861
+#: serial/unix.c:864
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke hente antall bilder"
@@ -500,7 +500,7 @@ msgid ""
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:988
+#: usb/libusb.c:990
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
