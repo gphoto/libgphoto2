@@ -1859,7 +1859,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
-			ret = ptp_canon_reset_aeafawb(params,7);
+			/* Marcus: Not sure if we really needs this.
+			   ret = ptp_canon_reset_aeafawb(params,7);
+			 */
 			found = TRUE;
 			break;
 		}
