@@ -1195,7 +1195,7 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_ShootingBankNameB			0xD012
 #define PTP_DPC_NIKON_ShootingBankNameC			0xD013
 #define PTP_DPC_NIKON_ShootingBankNameD			0xD014
-#define PTP_DPC_NIKON_ResetBank				0xD015
+#define PTP_DPC_NIKON_ResetBank0			0xD015
 #define PTP_DPC_NIKON_RawCompression			0xD016
 #define PTP_DPC_NIKON_WhiteBalanceAutoBias		0xD017
 #define PTP_DPC_NIKON_WhiteBalanceTungstenBias		0xD018
