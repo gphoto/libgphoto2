@@ -4665,14 +4665,18 @@ ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
 	for (i = 0; i < params->handles.n; i++) {
 		if (params->handles.Handler[i] == handle) {
 			ptp_free_objectinfo(&params->objectinfo[i]);
-			memmove(params->handles.Handler+i, params->handles.Handler+i+1,
-				(params->handles.n-i-1)*sizeof(uint32_t));
-			memmove(params->objectinfo+i, params->objectinfo+i+1,
-				(params->handles.n-i-1)*sizeof(PTPObjectInfo));
+
+			if (i < params->handles.n-1) {
+				memmove(params->handles.Handler+i, params->handles.Handler+i+1,
+					(params->handles.n-i-1)*sizeof(uint32_t));
+				memmove(params->objectinfo+i, params->objectinfo+i+1,
+					(params->handles.n-i-1)*sizeof(PTPObjectInfo));
+			}
 			params->handles.n--;
 			/* We use less memory than before so this shouldn't fail */
 			params->handles.Handler = realloc(params->handles.Handler, sizeof(uint32_t)*params->handles.n);
 			params->objectinfo = realloc(params->objectinfo, sizeof(PTPObjectInfo)*params->handles.n);
+			break;
 		}
 	}
 	
