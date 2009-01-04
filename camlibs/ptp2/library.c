@@ -3813,19 +3813,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CPR (context, ptp_deleteobject(params,
 		params->handles.Handler[object_id],0));
 
-	/* Remove it from the internal structures. */
-	if (object_id < params->handles.n) { /* if not last ... */
-		memcpy (params->handles.Handler+object_id,
-			params->handles.Handler+object_id+1,
-			(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
-		);
-		memcpy (params->objectinfo+object_id,
-			params->objectinfo+object_id+1,
-			(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
-		);
-	}
-	params->handles.n--;
-
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
          * not on 350D.
