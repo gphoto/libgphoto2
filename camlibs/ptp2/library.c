@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2008 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
@@ -295,6 +295,36 @@ const static uint16_t nikon_d700_extra_props[] = {
 0xd200, 0xd201
 };
 
+/* not yet fully verified. -Marcus */
+const static uint16_t nikon_d200_extra_props[] = {
+0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
+0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
+0xd020, 0xd021, 0xd022, 0xd023, 0xd024, 0xd025, 0xd026, 0xd027,
+0xd028, 0xd029, 0xd02a, 0xd02b, 0xd02c, 0xd02d, 0xd02e, 0xd02f,
+0xd031, 0xd032,
+0xd040, 0xd041, 0xd042, 0xd043, 0xd044, 0xd045,
+0xd048, 0xd049, 0xd04a, 0xd04b, 0xd04f,
+0xd050, 0xd051, 0xd052, 0xd054, 0xd055, 0xd056, 0xd057,
+0xd058, 0xd059, 0xd05a, 0xd05b, 0xd05c, 0xd05e, 0xd05f,
+0xd062, 0xd063, 0xd064,
+0xd068, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
+0xd070, 0xd074, 0xd075, 0xd077,
+0xd078, 0xd079, 0xd07a, 0xd07b,
+0xd080, 0xd081, 0xd082, 0xd083, 0xd084, 0xd085, 0xd086, 0xd087,
+0xd088, 0xd089, 0xd08a, 0xd08b,
+0xd090, 0xd091, 0xd092,
+0xd0c0, 0xd0c1, 0xd0c2, 0xd0c3, 0xd0c4, 0xd0c5,
+0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
+0xd100, 0xd101, 0xd102, 0xd103, 0xd104, 0xd105, 0xd106,
+0xd108, 0xd109, 0xd10a, 0xd10b, 0xd10c, 0xd10e, 0xd10f,
+0xd120, 0xd121, 0xd122, 0xd124, 0xd125, 0xd126,
+0xd142,
+0xd160, 0xd163, 0xd164, 0xd166, 0xd167, 0xd16c, 0xd16d,
+0xd181, 0xd182, 0xd183,
+0xd1c0, 0xd1c1,
+0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7,
+0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc
+};
 const static uint16_t nikon_d300_extra_props[] = {
 0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
@@ -341,7 +371,9 @@ static const struct {
 	/* D700 - confirmed by Marcus */
 	{ 0x422, nikon_d700_extra_props, sizeof(nikon_d700_extra_props)/sizeof(nikon_d700_extra_props[0]) },
 	/* D300 - confirmed by Marcus */
-	{ 0x41a, nikon_d300_extra_props, sizeof(nikon_d300_extra_props)/sizeof(nikon_d300_extra_props[0]) }
+	{ 0x41a, nikon_d300_extra_props, sizeof(nikon_d300_extra_props)/sizeof(nikon_d300_extra_props[0]) },
+	/* D200 - guessed by Marcus */
+	{ 0x410, nikon_d200_extra_props, sizeof(nikon_d200_extra_props)/sizeof(nikon_d200_extra_props[0]) }
 };
 
 void
@@ -948,6 +980,8 @@ static struct {
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
 	/* Mats Petersson <mats.petersson@ltu.se> */
 	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW|PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	/* "[AvataR]" <public.avatar@gmail.com> */
+	{"Canon:Digital IXUS 960 IS (PTP mode)",0x04a9, 0x315f, PTPBUG_DELETE_SENDS_EVENT},
 	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
 	{"Canon:Digital IXUS 860 IS",		0x04a9, 0x3160, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -960,10 +994,15 @@ static struct {
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Michael Plucik <michaelplucik@googlemail.com> */
+	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP},
+
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2391422&group_id=8874&atid=358874 */
 	{"Canon:Powershot SD1100 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
+	/* Hubert Mercier <hubert.mercier@unilim.fr> */
+	{"Canon:PowerShot SX10 IS",		0x04a9, 0x318d, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Chris Rodley <chris@takeabreak.co.nz> */
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP|PTP_CAP|PTP_CAP_PREVIEW},
@@ -1820,7 +1859,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
-			ret = ptp_canon_reset_aeafawb(params,7);
+			/* Marcus: Not sure if we really needs this.
+			   ret = ptp_canon_reset_aeafawb(params,7);
+			 */
 			found = TRUE;
 			break;
 		}
@@ -3773,19 +3814,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	CPR (context, ptp_deleteobject(params,
 		params->handles.Handler[object_id],0));
-
-	/* Remove it from the internal structures. */
-	if (object_id < params->handles.n) { /* if not last ... */
-		memcpy (params->handles.Handler+object_id,
-			params->handles.Handler+object_id+1,
-			(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
-		);
-		memcpy (params->objectinfo+object_id,
-			params->objectinfo+object_id+1,
-			(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
-		);
-	}
-	params->handles.n--;
 
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But

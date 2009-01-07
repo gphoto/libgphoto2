@@ -1,8 +1,8 @@
 /* ptp.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
- * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2006-2008 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2007 Tero Saarni <tero.saarni@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -3438,7 +3438,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_ImageRotation,			/* 0xD092 */
 		 N_("Image Rotation")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0c0 */
-		 N_("Exposure Bracketing")},
+		 N_("Bracketing Enable")},
 		{PTP_DPC_NIKON_AutoExposureBracketStep,		/* 0xD0c1 */
 		 N_("Exposure Bracketing Step")},
 		{PTP_DPC_NIKON_AutoExposureBracketProgram,	/* 0xD0c2 */
@@ -3881,6 +3881,9 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, 10, "8"},
 		{PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, 11, "15"},
 		{PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, 12, "30"},
+
+		{PTP_DPC_NIKON_EVStep, PTP_VENDOR_NIKON, 0, "1/3"},
+		{PTP_DPC_NIKON_EVStep, PTP_VENDOR_NIKON, 1, "1/2"},
 
 		/* Canon stuff */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_CANON_AssistLight,PTP_VENDOR_CANON),
@@ -4662,14 +4665,18 @@ ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
 	for (i = 0; i < params->handles.n; i++) {
 		if (params->handles.Handler[i] == handle) {
 			ptp_free_objectinfo(&params->objectinfo[i]);
-			memmove(params->handles.Handler+i, params->handles.Handler+i+1,
-				(params->handles.n-i-1)*sizeof(uint32_t));
-			memmove(params->objectinfo+i, params->objectinfo+i+1,
-				(params->handles.n-i-1)*sizeof(PTPObjectInfo));
+
+			if (i < params->handles.n-1) {
+				memmove(params->handles.Handler+i, params->handles.Handler+i+1,
+					(params->handles.n-i-1)*sizeof(uint32_t));
+				memmove(params->objectinfo+i, params->objectinfo+i+1,
+					(params->handles.n-i-1)*sizeof(PTPObjectInfo));
+			}
 			params->handles.n--;
 			/* We use less memory than before so this shouldn't fail */
 			params->handles.Handler = realloc(params->handles.Handler, sizeof(uint32_t)*params->handles.n);
 			params->objectinfo = realloc(params->objectinfo, sizeof(PTPObjectInfo)*params->handles.n);
+			break;
 		}
 	}
 	
