@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2008 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  *
  * This library is free software; you can redistribute it and/or
@@ -3884,7 +3884,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	PTPObjectInfo *oi;
-	uint32_t object_id;
+	uint32_t object_id, n;
 	uint32_t storage;
 	PTPParams *params = &camera->pl->params;
 
@@ -3900,10 +3900,10 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get file number omiting storage pseudofolder */
 	find_folder_handle(folder, storage, object_id, data);
 	object_id = find_child(filename, storage, object_id, camera);
-	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
+	if ((n=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	oi=&params->objectinfo[object_id];
+	oi=&params->objectinfo[n];
 
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
 		uint16_t	ret, newprot;
@@ -3917,12 +3917,12 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				gp_context_error (context, _("Device does not support setting object protection."));
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
-			ret = ptp_setobjectprotection (params, newprot);
+			ret = ptp_setobjectprotection (params, object_id, newprot);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Device failed to set object protection to %d, error 0x%04x."), newprot, ret);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
-			oi->ProtectionStatus = newprot; /* should actually reread objectinfo, but lets skip this */
+			oi->ProtectionStatus = newprot; /* should actually reread objectinfo to be sure, but lets not. */
 		}
 		info.file.fields &= ~GP_FILE_INFO_PERMISSIONS;
 		/* fall through */
@@ -3995,12 +3995,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (oi->ProtectionStatus) {
 	case PTP_PS_NoProtection:
-		info->file.fields |= GP_FILE_INFO_PERMISSIONS;
-		info->file.permissions = GP_FILE_PERM_READ|GP_FILE_PERM_DELETE;
+		info->file.fields	|= GP_FILE_INFO_PERMISSIONS;
+		info->file.permissions	 = GP_FILE_PERM_READ|GP_FILE_PERM_DELETE;
 		break;
 	case PTP_PS_ReadOnly:
-		info->file.fields |= GP_FILE_INFO_PERMISSIONS;
-		info->file.permissions = GP_FILE_PERM_READ;
+		info->file.fields	|= GP_FILE_INFO_PERMISSIONS;
+		info->file.permissions	 = GP_FILE_PERM_READ;
 		break;
 	default:
 		gp_log (GP_LOG_ERROR, "ptp2/get_info_func", "mapping protection to gp perm failed, prot is %x", oi->ProtectionStatus);

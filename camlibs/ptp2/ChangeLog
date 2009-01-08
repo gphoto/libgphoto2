@@ -1,3 +1,14 @@
+2009-01-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added set_info_func, to set/reset Object Protection
+	  flags. Added queries for it to get_info_func. (Used by digikam
+	  already).
+	* library.c: Added Canon Digital IXUS 960 IS, EOS 1000D, PowerShot
+	  SX10 IS, Fuji FinePix A920, S2000HD.
+	* library.c: Added Nikon D200 hidden properties.
+	* config.c: Added more Nikon properties (almost of D70s properties
+	  now added).
+
 2008-12-22  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c,ptp.c,ptp.h: Added more Nikon properties.

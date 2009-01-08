@@ -945,14 +945,15 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
  *
  */
 uint16_t
-ptp_setobjectprotection (PTPParams* params, uint16_t newprot)
+ptp_setobjectprotection (PTPParams* params, uint32_t oid, uint16_t newprot)
 {
 	PTPContainer ptp;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code = PTP_OC_SetObjectProtection;
-	ptp.Param1 = newprot;
-	ptp.Nparam = 1;
+	ptp.Param1 = oid;
+	ptp.Param2 = newprot;
+	ptp.Nparam = 2;
 	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
