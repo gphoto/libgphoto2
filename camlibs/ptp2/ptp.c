@@ -935,6 +935,30 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
 }
 
 /**
+ * ptp_setobjectprotection:
+ * params:	PTPParams*
+ *		uint16_t newprot	- object protection flag
+ *		
+ * Set protection of object.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_setobjectprotection (PTPParams* params, uint32_t oid, uint16_t newprot)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_SetObjectProtection;
+	ptp.Param1 = oid;
+	ptp.Param2 = newprot;
+	ptp.Nparam = 2;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+
+/**
  * ptp_sendobject:
  * params:	PTPParams*
  *		char*	object		- contains the object that is to be sent

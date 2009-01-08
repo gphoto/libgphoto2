@@ -995,7 +995,7 @@ static struct {
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Michael Plucik <michaelplucik@googlemail.com> */
-	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP},
+	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
@@ -1034,6 +1034,8 @@ static struct {
 	{"Fuji:FinePix A820",			0x04cb, 0x01c6, 0},
 	/* g4@catking.net */
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
+	/* Gerhard Schmidt <gerd@dg4fac.de> */
+	{"Fuji:FinePix A920",			0x04cb, 0x01d3, 0},
 	/* Teppo Jalava <tjjalava@gmail.com> */
 	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1945259&group_id=8874 */
@@ -1042,6 +1044,8 @@ static struct {
 	{"Fuji:FinePix S100fs",			0x04cb, 0x01db, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2203316&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
+	/* Gerhard Schmidt <gerd@dg4fac.de> */
+	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -3875,6 +3879,68 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo info, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	PTPObjectInfo *oi;
+	uint32_t object_id, n;
+	uint32_t storage;
+	PTPParams *params = &camera->pl->params;
+
+	SET_CONTEXT_P(params, context);
+
+	fprintf (stderr, "set_info_func(%s / %s)\n", folder, filename);
+	if (!strcmp (folder, "/special"))
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	init_ptp_fs (camera, context);
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
+	/* Get file number omiting storage pseudofolder */
+	find_folder_handle(folder, storage, object_id, data);
+	object_id = find_child(filename, storage, object_id, camera);
+	if ((n=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	oi=&params->objectinfo[n];
+
+	if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
+		uint16_t	ret, newprot;
+
+		if ((info.file.permissions & GP_FILE_PERM_DELETE) != GP_FILE_PERM_DELETE)
+			newprot = PTP_PS_ReadOnly;
+		else
+			newprot = PTP_PS_NoProtection;
+		fprintf (stderr, "	permissions set  to %d, prot is %d vs %d\n", info.file.permissions,
+			oi->ProtectionStatus, newprot
+		);
+		if (oi->ProtectionStatus != newprot) {
+			if (!ptp_operation_issupported(params, PTP_OC_SetObjectProtection)) {
+				gp_context_error (context, _("Device does not support setting object protection."));
+				fprintf (stderr, "Device does not support setting object protection.\n");
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			ret = ptp_setobjectprotection (params, object_id, newprot);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Device failed to set object protection to %d, error 0x%04x."), newprot, ret);
+				fprintf (stderr, "Device failed to set object protection to %d, error 0x%04x.\n", newprot, ret);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			oi->ProtectionStatus = newprot; /* should actually reread objectinfo, but lets skip this */
+			fprintf (stderr, "Object protection set to %d.\n", newprot);
+		} else {
+			fprintf (stderr, "Object protection unchanged.\n");
+		}
+		info.file.fields &= ~GP_FILE_INFO_PERMISSIONS;
+		/* fall through */
+	}
+	/* ... no more cases implemented yet */
+	return (GP_OK);
+}
+
+static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
@@ -3934,6 +4000,20 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->file.mtime = oi->ModificationDate;
 	} else {
 		info->file.mtime = oi->CaptureDate;
+	}
+
+	switch (oi->ProtectionStatus) {
+	case PTP_PS_NoProtection:
+		info->file.fields	|= GP_FILE_INFO_PERMISSIONS;
+		info->file.permissions	 = GP_FILE_PERM_READ|GP_FILE_PERM_DELETE;
+		break;
+	case PTP_PS_ReadOnly:
+		info->file.fields	|= GP_FILE_INFO_PERMISSIONS;
+		info->file.permissions	 = GP_FILE_PERM_READ;
+		break;
+	default:
+		gp_log (GP_LOG_ERROR, "ptp2/get_info_func", "mapping protection to gp perm failed, prot is %x", oi->ProtectionStatus);
+		break;
 	}
 
 	/* if object is an image */
@@ -4637,6 +4717,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func		= file_list_func,
 	.folder_list_func	= folder_list_func,
 	.get_info_func		= get_info_func,
+	.set_info_func		= set_info_func,
 	.get_file_func		= get_file_func,
 	.del_file_func		= delete_file_func,
 	.put_file_func		= put_file_func,
