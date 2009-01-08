@@ -1034,6 +1034,8 @@ static struct {
 	{"Fuji:FinePix A820",			0x04cb, 0x01c6, 0},
 	/* g4@catking.net */
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
+	/* Gerhard Schmidt <gerd@dg4fac.de> */
+	{"Fuji:FinePix A920",			0x04cb, 0x01d3, 0},
 	/* Teppo Jalava <tjjalava@gmail.com> */
 	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1945259&group_id=8874 */
@@ -1042,6 +1044,8 @@ static struct {
 	{"Fuji:FinePix S100fs",			0x04cb, 0x01db, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2203316&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
+	/* Gerhard Schmidt <gerd@dg4fac.de> */
+	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
