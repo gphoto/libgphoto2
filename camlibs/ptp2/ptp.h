@@ -1832,6 +1832,7 @@ uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				uint32_t handle, 
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
+uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, unsigned char**di, unsigned long *len );
 uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid);
 uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
 uint16_t ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t flags);

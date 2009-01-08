@@ -415,6 +415,22 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 	return ret;
 }
 
+uint16_t
+ptp_canon_eos_getdeviceinfo (PTPParams* params, unsigned char**di, unsigned long *len )
+{
+	uint16_t 	ret;
+	PTPContainer	ptp;
+	PTPDataHandler	handler;
+
+	ptp_init_recv_memory_handler (&handler);
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_EOS_GetDeviceInfoEx;
+	ptp.Nparam=0;
+	*len=0;
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_recv_memory_handler (&handler, di, len);
+	return ret;
+}
 
 /**
  * ptp_opensession:
