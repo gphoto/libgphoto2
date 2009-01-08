@@ -3120,11 +3120,16 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
 					} else {
-						gp_context_error (context, _("Sorry, the property '%s' is currently ready-only."), _(cursub->label));
+						gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently ready-only."), _(cursub->label), cursub->propid);
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
-					if (ret == GP_OK)
-						ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+					if (ret == GP_OK) {
+						ret = ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+						if (ret != PTP_RC_OK) {
+							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret);
+							ret = GP_ERROR;
+						}
+					}
 					ptp_free_devicepropvalue (cursub->type, &propval);
 					ptp_free_devicepropdesc(&dpd);
 				} else {
