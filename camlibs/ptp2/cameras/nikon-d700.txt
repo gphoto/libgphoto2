@@ -346,12 +346,15 @@ Copyright Info(0x501f):(read only) (type=0xffff) 'Joe Example User'
 Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
 Property 0xd407:(read only) (type=0x6) 1
 Property 0xd010:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1
-Property 0xd011:(readwrite) (type=0xffff) 'Fixed ISO           '
-Property 0xd012:(readwrite) (type=0xffff) 'Auto ISO            '
-Property 0xd013:(readwrite) (type=0xffff) '                    '
-Property 0xd014:(readwrite) (type=0xffff) '                    '
+
+Property 0xd011:(readwrite) (type=0xffff) 'Fixed ISO           '		shooting menu bank A
+Property 0xd012:(readwrite) (type=0xffff) 'Auto ISO            '		shooting menu bank B
+Property 0xd013:(readwrite) (type=0xffff) '                    '		shooting menu bank C
+Property 0xd014:(readwrite) (type=0xffff) '                    '		shooting menu bank D
+
 Property 0xd015:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 Property 0xd016:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+
 Auto White Balance Bias(0xd017):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 Tungsten White Balance Bias(0xd018):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 Fluorescent White Balance Bias(0xd019):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
@@ -361,27 +364,34 @@ Cloudy White Balance Bias(0xd01c):(readwrite) (type=0x2) Range [0 - 168, step 1]
 Shady White Balance Bias(0xd01d):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 White Balance Colour Temperature(0xd01e):(readwrite) (type=0x4) Range [0 - 30, step 1] value: 21
 Property 0xd01f:(readwrite) (type=0x2) Range [0 - 4, step 1] value: 0
+
 Property 0xd020:(readwrite) (type=0xffff) '                                    '
 Property 0xd021:(readwrite) (type=0xffff) '                                    '
 Property 0xd022:(readwrite) (type=0xffff) '                                    '
 Property 0xd023:(readwrite) (type=0xffff) '                                    '
 Property 0xd024:(readwrite) (type=0xffff) '                                    '
+
 Property 0xd025:(read only) (type=0x6) 47448263
 Property 0xd026:(read only) (type=0x6) 30474587
 Property 0xd027:(read only) (type=0x6) 30474587
 Property 0xd028:(read only) (type=0x6) 30474587
 Property 0xd029:(read only) (type=0x6) 30474587
+
 Lens Focal Length (Non CPU)(0xd02e):(readwrite) (type=0x2) Range [0 - 40, step 1] value: 0
 Lens Max. Aperture (Non CPU)(0xd02f):(readwrite) (type=0x2) Range [0 - 22, step 1] value: 0
+
 Property 0xd030:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 Property 0xd031:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
 Property 0xd032:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 Property 0xd033:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+
 PTP_DPC_NIKON_CSMMenuBankSelect(0xd040):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
-PTP_DPC_NIKON_MenuBankNameA(0xd041):(readwrite) (type=0xffff) 'Standard            '
-PTP_DPC_NIKON_MenuBankNameB(0xd042):(readwrite) (type=0xffff) '                    '
-PTP_DPC_NIKON_MenuBankNameC(0xd043):(readwrite) (type=0xffff) '                    '
-PTP_DPC_NIKON_MenuBankNameD(0xd044):(readwrite) (type=0xffff) '                    '
+
+PTP_DPC_NIKON_MenuBankNameA(0xd041):(readwrite) (type=0xffff) 'Standard            '	custom setting bank A
+PTP_DPC_NIKON_MenuBankNameB(0xd042):(readwrite) (type=0xffff) '                    '	custom setting bank B
+PTP_DPC_NIKON_MenuBankNameC(0xd043):(readwrite) (type=0xffff) '                    '	custom setting bank C
+PTP_DPC_NIKON_MenuBankNameD(0xd044):(readwrite) (type=0xffff) '                    '	custom setting bank D
+
 Property 0xd045:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 PTP_DPC_NIKON_A1AFCModePriority(0xd048):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 2
 PTP_DPC_NIKON_A2AFSModePriority(0xd049):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
