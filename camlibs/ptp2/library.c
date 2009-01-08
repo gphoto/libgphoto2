@@ -995,7 +995,7 @@ static struct {
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Michael Plucik <michaelplucik@googlemail.com> */
-	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTP_CAP},
+	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
