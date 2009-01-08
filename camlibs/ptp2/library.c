@@ -3890,7 +3890,6 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	SET_CONTEXT_P(params, context);
 
-	fprintf (stderr, "set_info_func(%s / %s)\n", folder, filename);
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS);
 
@@ -3913,25 +3912,17 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			newprot = PTP_PS_ReadOnly;
 		else
 			newprot = PTP_PS_NoProtection;
-		fprintf (stderr, "	permissions set  to %d, prot is %d vs %d\n", info.file.permissions,
-			oi->ProtectionStatus, newprot
-		);
 		if (oi->ProtectionStatus != newprot) {
 			if (!ptp_operation_issupported(params, PTP_OC_SetObjectProtection)) {
 				gp_context_error (context, _("Device does not support setting object protection."));
-				fprintf (stderr, "Device does not support setting object protection.\n");
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
 			ret = ptp_setobjectprotection (params, object_id, newprot);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Device failed to set object protection to %d, error 0x%04x."), newprot, ret);
-				fprintf (stderr, "Device failed to set object protection to %d, error 0x%04x.\n", newprot, ret);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
-			oi->ProtectionStatus = newprot; /* should actually reread objectinfo, but lets skip this */
-			fprintf (stderr, "Object protection set to %d.\n", newprot);
-		} else {
-			fprintf (stderr, "Object protection unchanged.\n");
+			oi->ProtectionStatus = newprot; /* should actually reread objectinfo to be sure, but lets not. */
 		}
 		info.file.fields &= ~GP_FILE_INFO_PERMISSIONS;
 		/* fall through */
