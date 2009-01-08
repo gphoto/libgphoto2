@@ -3879,6 +3879,59 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
+set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileInfo info, void *data, GPContext *context)
+{
+	Camera *camera = data;
+	PTPObjectInfo *oi;
+	uint32_t object_id;
+	uint32_t storage;
+	PTPParams *params = &camera->pl->params;
+
+	SET_CONTEXT_P(params, context);
+
+	if (!strcmp (folder, "/special"))
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	init_ptp_fs (camera, context);
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+
+	/* Get file number omiting storage pseudofolder */
+	find_folder_handle(folder, storage, object_id, data);
+	object_id = find_child(filename, storage, object_id, camera);
+	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	oi=&params->objectinfo[object_id];
+
+	if (info.file.fields & GP_FILE_INFO_PERMISSIONS) {
+		uint16_t	ret, newprot;
+
+		if ((info.file.permissions & GP_FILE_PERM_DELETE) != GP_FILE_PERM_DELETE)
+			newprot = PTP_PS_ReadOnly;
+		else
+			newprot = PTP_PS_NoProtection;
+		if (oi->ProtectionStatus != newprot) {
+			if (!ptp_operation_issupported(params, PTP_OC_SetObjectProtection)) {
+				gp_context_error (context, _("Device does not support setting object protection."));
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			ret = ptp_setobjectprotection (params, newprot);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Device failed to set object protection to %d, error 0x%04x."), newprot, ret);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			oi->ProtectionStatus = newprot; /* should actually reread objectinfo, but lets skip this */
+		}
+		info.file.fields &= ~GP_FILE_INFO_PERMISSIONS;
+		/* fall through */
+	}
+	/* ... no more cases implemented yet */
+	return (GP_OK);
+}
+
+static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
@@ -3938,6 +3991,20 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->file.mtime = oi->ModificationDate;
 	} else {
 		info->file.mtime = oi->CaptureDate;
+	}
+
+	switch (oi->ProtectionStatus) {
+	case PTP_PS_NoProtection:
+		info->file.fields |= GP_FILE_INFO_PERMISSIONS;
+		info->file.permissions = GP_FILE_PERM_READ|GP_FILE_PERM_DELETE;
+		break;
+	case PTP_PS_ReadOnly:
+		info->file.fields |= GP_FILE_INFO_PERMISSIONS;
+		info->file.permissions = GP_FILE_PERM_READ;
+		break;
+	default:
+		gp_log (GP_LOG_ERROR, "ptp2/get_info_func", "mapping protection to gp perm failed, prot is %x", oi->ProtectionStatus);
+		break;
 	}
 
 	/* if object is an image */
@@ -4641,6 +4708,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func		= file_list_func,
 	.folder_list_func	= folder_list_func,
 	.get_info_func		= get_info_func,
+	.set_info_func		= set_info_func,
 	.get_file_func		= get_file_func,
 	.del_file_func		= delete_file_func,
 	.put_file_func		= put_file_func,
