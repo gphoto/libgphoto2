@@ -1748,6 +1748,7 @@ uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
+uint16_t ptp_setobjectprotection (PTPParams* params, uint16_t newprot);
 uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
 				 uint32_t size);
 uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint32_t size);
