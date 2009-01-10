@@ -350,11 +350,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	info->audio.fields   = GP_FILE_INFO_NONE;
 	info->file.permissions = GP_FILE_PERM_READ;
 
-	/* Name of image */
-	strncpy (info->file.name, filename, sizeof (info->file.name) - 1);
-	info->file.name[sizeof (info->file.name) - 1] = '\0';
-	info->file.fields |= GP_FILE_INFO_NAME;
-
 	/*
 	 * Get information about this image. Don't make this fatal as
 	 * at least the "Agfa ePhoto307" doesn't support this command.
