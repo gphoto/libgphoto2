@@ -430,11 +430,10 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	if (ret != GP_OK) return ret;
 
 	/* we also get the fs info for free, so just set it */
-	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | 
+	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
 			GP_FILE_INFO_SIZE;
 	strcpy(info.file.type,GP_MIME_PNM);
-	strcpy(info.file.name,fn);
 	info.file.width		= 640;
 	info.file.height	= 480;
 	info.file.size		= 640*480*3+strlen(IMGHEADER);
