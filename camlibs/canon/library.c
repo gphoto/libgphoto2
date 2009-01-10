@@ -2269,7 +2269,7 @@ get_info_func (CameraFilesystem __unused__ *fs, const char *folder,
 	strcpy (info->preview.type, GP_MIME_JPEG);
 
 	/* FIXME GP_FILE_INFO_PERMISSIONS to add */
-	info->file.fields = GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE;
+	info->file.fields = GP_FILE_INFO_TYPE;
 	/* | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_SIZE; */
 	/* info->file.fields.permissions =  */
 
@@ -2280,11 +2280,7 @@ get_info_func (CameraFilesystem __unused__ *fs, const char *folder,
 	else if (is_audio (filename))
 		strcpy (info->file.type, GP_MIME_WAV);
 	else
-		/* May not be correct behaviour ... */
-		strcpy (info->file.type, "unknown");
-
-	strcpy (info->file.name, filename);
-
+		strcpy (info->file.type, GP_MIME_UNKNOWN);
 	return GP_OK;
 }
 

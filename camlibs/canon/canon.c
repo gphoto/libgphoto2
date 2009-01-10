@@ -2876,8 +2876,6 @@ debug_fileinfo (CameraFileInfo * info)
 {
         GP_DEBUG ("<CameraFileInfo>");
         GP_DEBUG ("  <CameraFileInfoFile>");
-        if ((info->file.fields & GP_FILE_INFO_NAME) != 0)
-                GP_DEBUG ("    Name:   %s", info->file.name);
         if ((info->file.fields & GP_FILE_INFO_TYPE) != 0)
                 GP_DEBUG ("    Type:   %s", info->file.type);
         if ((info->file.fields & GP_FILE_INFO_SIZE) != 0)
@@ -3145,9 +3143,6 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
                                 /* we start with nothing and continously add stuff */
                                 info.file.fields = GP_FILE_INFO_NONE;
-
-                                strncpy (info.file.name, (char *)dirent_name, sizeof (info.file.name));
-                                info.file.fields |= GP_FILE_INFO_NAME;
 
                                 info.file.mtime = dirent_time;
                                 if (info.file.mtime != 0)
