@@ -703,13 +703,13 @@ static struct {
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	/* 4600: Roberto Costa <roberto.costa@ensta.org>, 22 Oct 2006 */
-	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131, 0},
+	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131,PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1846012&group_id=8874&atid=358874 */
 	{"Nikon:Coolpix 7900 (PTP mode)", 0x04b0, 0x0137, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Marcus Meissner */
-	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NIKON_BROKEN_CAP2},
 	/* Richard SCHNEIDER <Richard.SCHNEIDER@tilak.at> */
 	{"Nikon:Coolpix S4 (PTP mode)",   0x04b0, 0x0144, 0},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
@@ -1405,6 +1405,8 @@ storage_handle_to_n (uint32_t storage, uint32_t handle, Camera *camera)
 	return (PTP_HANDLER_SPECIAL);
 }
 
+static void debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi);
+
 /* add new object to internal driver structures. issued when creating
 folder, uploading objects, or captured images. */
 static int
@@ -1428,6 +1430,7 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 	params->handles.Handler[n-1]=handle;
 	/* get new obectinfo */
 	CPR (context, ptp_getobjectinfo(params, handle, &params->objectinfo[n-1]));
+	debug_objectinfo (params, handle, &params->objectinfo[n-1]);
 	return (GP_OK);
 }
 
@@ -1538,11 +1541,10 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	gp_file_unref (file);
 
 	/* we also get the fs info for free, so just set it */
-	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
+	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
 	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
-	strcpy(info.file.name,path->name);
 	info.file.width		= oi->ImagePixWidth;
 	info.file.height	= oi->ImagePixHeight;
 	info.file.size		= oi->ObjectCompressedSize;
@@ -2035,6 +2037,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			/* add newly created object to internal structures */
 			add_object (camera, event.Param1, context);
 			newobject = event.Param1;
+			if (NIKON_BROKEN_CAP2(camera->pl))
+				done=1;
 			break;
 		}
 		case PTP_EC_CaptureComplete:
@@ -2960,8 +2964,6 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
-	init_ptp_fs ((Camera*)data, context);
-
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
 		PTPStorageIDs storageids;
@@ -2999,6 +3001,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		/* no folders in here */
 		return (GP_OK);
 	}
+
+	init_ptp_fs ((Camera*)data, context);
 
 	/* compute storage ID value from folder path */
 	folder_to_storage(folder,storage);
@@ -3862,19 +3866,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	object_id = find_child(foldername, storage, object_id, camera);
 	if ((object_id=handle_to_n(object_id, camera))==PTP_HANDLER_SPECIAL)
 		return (GP_ERROR_BAD_PARAMETERS);
-
 	CPR (context, ptp_deleteobject(params, params->handles.Handler[object_id],0));
-
-	/* Remove it from the internal structures. */
-	memcpy (params->handles.Handler+object_id,
-		params->handles.Handler+object_id+1,
-		(params->handles.n-object_id-1)*sizeof(params->handles.Handler[0])
-	);
-	memcpy (params->objectinfo+object_id,
-		params->objectinfo+object_id+1,
-		(params->handles.n-object_id-1)*sizeof(params->objectinfo[0])
-	);
-	params->handles.n--;
 	return (GP_OK);
 }
 
@@ -3959,14 +3951,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	oi=&params->objectinfo[object_id];
 
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
-
-	/* Avoid buffer overflows on long filenames, just don't copy it
-	 * if it is too long.
-	 */
-	if (oi->Filename && (strlen(oi->Filename)+1 < sizeof(info->file.name))) {
-		strcpy(info->file.name, oi->Filename);
-		info->file.fields |= GP_FILE_INFO_NAME;
-	}
 	info->file.size   = oi->ObjectCompressedSize;
 
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) && params->canon_flags) {
@@ -4209,6 +4193,27 @@ storage_info_func (CameraFilesystem *fs,
 	return (GP_OK);
 }
 
+static void
+debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
+	GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
+	GP_DEBUG ("  Object ID: 0x%08x", oid);
+	GP_DEBUG ("  StorageID: 0x%08x", oi->StorageID);
+	GP_DEBUG ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
+	GP_DEBUG ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
+	GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
+	GP_DEBUG ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
+	GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
+	GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
+	GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
+	GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
+	GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
+	GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
+	GP_DEBUG ("  ParentObject: 0x%08x", oi->ParentObject);
+	GP_DEBUG ("  AssociationType: 0x%04x", oi->AssociationType);
+	GP_DEBUG ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
+	GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
+}
+
 static int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
@@ -4229,14 +4234,13 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	 * So if you need to get access to _all_ files on the ptp fs,
 	 * you can change the setting to "false" (gphoto2 --config or
 	 * edit ~/.gphoto2/settings directly).
-	 * A normal user does only download the images ... so the default
-	 * is "fast".
+ 	 * Since the fast fs mode irritates capture, I changed it to default off.
 	 */
 
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 	    (ptp_operation_issupported(params, PTP_OC_NIKON_GetFileInfoInBlock)) &&
 	    (camera->port->type == GP_PORT_USB) &&
-	    ((GP_OK != gp_setting_get("ptp2","nikon.fastfilesystem",buf)) || atoi(buf))
+	    ((GP_OK == gp_setting_get("ptp2","nikon.fastfilesystem",buf)) && atoi(buf))
         )
 	{
 		unsigned char	*data,*curptr;
@@ -4559,31 +4563,7 @@ fallback:
 			params->handles.Handler[i],
 			&params->objectinfo[i]));
 #if 1
-		{
-		PTPObjectInfo *oi;
-
-		oi=&params->objectinfo[i];
-		GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
-		GP_DEBUG ("  Object ID: 0x%08x",
-			params->handles.Handler[i]);
-		GP_DEBUG ("  StorageID: 0x%08x", oi->StorageID);
-		GP_DEBUG ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
-		GP_DEBUG ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
-		GP_DEBUG ("  ObjectCompressedSize: %d",
-			oi->ObjectCompressedSize);
-		GP_DEBUG ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
-		GP_DEBUG ("  ThumbCompressedSize: %d",
-			oi->ThumbCompressedSize);
-		GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
-		GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
-		GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
-		GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
-		GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
-		GP_DEBUG ("  ParentObject: 0x%08x", oi->ParentObject);
-		GP_DEBUG ("  AssociationType: 0x%04x", oi->AssociationType);
-		GP_DEBUG ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
-		GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
-		}
+		debug_objectinfo(params, params->handles.Handler[i], &params->objectinfo[i]);
 #endif
 		if (params->objectinfo[i].ParentObject == 0)
 			nroot++;
