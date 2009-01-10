@@ -202,7 +202,7 @@ k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
 
 	/* Image information */
 	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE
-		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_NAME
+		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT
 		| GP_FILE_INFO_PERMISSIONS;
 	strcpy (info->file.type, GP_MIME_JPEG);
 	info->file.size = ((buf[IMAGE_SIZE_PTR] << 24) |
@@ -210,8 +210,6 @@ k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
 		| buf[IMAGE_SIZE_PTR+3]);
 	info->file.width = IMAGE_WIDTH;
 	info->file.height = IMAGE_HEIGHT;
-	snprintf (info->file.name, sizeof (info->file.name),(char *) FILENAME,
-		image_no);
 	if (buf[IMAGE_PROTECTION_FLAG] == IMAGE_PROTECTED)
 		info->file.permissions = GP_FILE_PERM_READ;
 	else

@@ -98,6 +98,7 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
 	unsigned int buffer_size, exif_size;
 	unsigned char *buffer = NULL;
 	int protected, r;
+	char fn[40];
 
 	/*
 	 * Remove the timeout, get the information and restart the
@@ -117,18 +118,17 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
 	strcpy (info->preview.type, GP_MIME_JPEG);
 
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
-			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+			    GP_FILE_INFO_TYPE;
 	info->file.size = exif_size * 1000;
 	info->file.permissions = GP_FILE_PERM_READ;
 	if (!protected)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
 	strcpy (info->file.type, GP_MIME_JPEG);
-	snprintf (info->file.name, sizeof (info->file.name),
-		  "%06i.jpeg", (int) image_id);
+	sprintf (fn, "%06i.jpeg", (int) image_id);
 
 	if (file) {
 		gp_file_set_type (file, GP_FILE_TYPE_EXIF);
-		gp_file_set_name (file, info->file.name);
+		gp_file_set_name (file, fn);
 		gp_file_set_data_and_size (file, buffer, buffer_size);
 	} else
 		free (buffer);
