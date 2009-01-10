@@ -497,12 +497,11 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
         CHECK (index = gp_filesystem_number(camera->fs, folder, filename, context));
         index++;
 
-	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | GP_FILE_INFO_SIZE;
+	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE;
 	strcpy(info->file.type, GP_MIME_JPEG);
-        sprintf(info->file.name, DSC_FILENAMEFMT, index);
         info->file.size = dsc2_selectimage(camera, index, DSC_FULLIMAGE);
 
-	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME | GP_FILE_INFO_SIZE;
+	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE;
 	strcpy(info->preview.type, GP_MIME_JPEG);
         info->preview.size = dsc2_selectimage(camera, index, DSC_THUMBNAIL);
 
