@@ -401,9 +401,10 @@ lookup_folder (
 			if (ret == GP_OK) {
 				ret = gp_filesystem_list_folders (fs, copy, list, context);
 				gp_list_free (list);
+				gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Done making folder %s clean...", copy);
+			} else {
+				gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Making folder %s clean failed: %d", copy, ret);
 			}
-			/* ignore return code. it will just be dirty. */
-			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Done making folder %s clean...", copy);
 			free (copy);
 		}
 		f = folder->folders;
