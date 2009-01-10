@@ -427,23 +427,22 @@ decode_and_get_info(Camera *camera, const char *folder, struct tf_packet *p, con
 			name = _convert_and_logname (camera, (char*)entries[i].name);
 			if (!strcmp (name, fn)) { /* the wanted current one */
 				memset (info, 0, sizeof (*info));
-				info->file.fields = GP_FILE_INFO_NAME|GP_FILE_INFO_SIZE|GP_FILE_INFO_MTIME;
+				info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_MTIME;
 				if (strstr (name, ".rec")) {
 					info->file.fields |= GP_FILE_INFO_TYPE;
 					strcpy (info->file.type, GP_MIME_MPEG);
 				}
-				strcpy (info->file.name, name);
 				info->file.size = get_u64(&entries[i].size);
 				info->file.mtime = tfdt_to_time(&entries[i].stamp);
 			} else { /* cache the others to avoid further turnarounds */
 				CameraFileInfo	xinfo;
 
 				memset (&xinfo, 0, sizeof (xinfo));
-				xinfo.file.fields = GP_FILE_INFO_NAME|GP_FILE_INFO_TYPE|GP_FILE_INFO_SIZE|GP_FILE_INFO_MTIME;
+				xinfo.file.fields = GP_FILE_INFO_TYPE|GP_FILE_INFO_SIZE|GP_FILE_INFO_MTIME;
 				strcpy (xinfo.file.type, GP_MIME_MPEG);
-				strcpy (xinfo.file.name, name);
 				xinfo.file.size = get_u64(&entries[i].size);
 				xinfo.file.mtime = tfdt_to_time(&entries[i].stamp);
+				gp_filesystem_append (camera->fs, folder, name, context); /* FIXME: might fail if exist? */
 				gp_filesystem_set_info_noop (camera->fs, folder, xinfo, context);
 			}
 			break;
