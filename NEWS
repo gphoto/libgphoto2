@@ -21,6 +21,9 @@ libgphoto2 API:
 
    * Adjusted to new GPPortInfo handling.
 
+   * Rewrote gphoto2-filesys.c to be directory based (in a tree structure).
+     Change should not be visibile outside of gphoto2-filesys.c.
+
 libgphoto2_port API:
    * GPPortInfo is now abstracted and internal.
      
