@@ -438,9 +438,6 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	if (n < flash_file_count) {
 		CHECK (spca50x_flash_get_file_name(camera->pl,
 					n, name));
-		strncpy (info->file.name, name,
-				sizeof (info->file.name));
-
 		CHECK (spca50x_flash_get_file_dimensions(
 					camera->pl, n, &w, &h));
 		strcpy (info->file.type, GP_MIME_JPEG);
@@ -452,7 +449,6 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	if (cam_has_sdram (camera->pl) && n >= flash_file_count ){
 		CHECK (spca50x_sdram_get_file_info (camera->pl,
 					n-flash_file_count, &file));
-		strncpy (info->file.name, filename, sizeof (info->file.name));
 		if (file->mime_type == SPCA50X_FILE_TYPE_IMAGE) {
 			strcpy (info->file.type, GP_MIME_JPEG);
 			info->preview.width = 160;
@@ -467,7 +463,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 
 	}
 	info->file.fields =
-		GP_FILE_INFO_NAME | GP_FILE_INFO_TYPE
+		GP_FILE_INFO_TYPE
 		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
 
 	info->file.mtime = 0;

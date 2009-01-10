@@ -468,10 +468,6 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	info->preview.fields = GP_FILE_INFO_NONE;
 	info->audio.fields = GP_FILE_INFO_NONE;
 
-	/* Name */
-	info->file.fields |= GP_FILE_INFO_NAME;
-	strncpy (info->file.name, filename, sizeof (info->file.name));
-
 	/* We need file numbers starting with 1 */
 	CR (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	n++;

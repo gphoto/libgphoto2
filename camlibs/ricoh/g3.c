@@ -628,10 +628,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	struct tm xtm;
 	char *cmd = NULL, *reply = NULL;
 
-	info->file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
+	info->file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	strcpy(info->file.type,GP_MIME_UNKNOWN);
-	strcpy(info->file.name, filename);
 
 	if (!strcmp(filename+9,"JPG") || !strcmp(filename+9,"jpg"))
 		strcpy(info->file.type,GP_MIME_JPEG);
@@ -811,14 +810,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 				/* we also get parts of fs info for free, so just set it */
 				info.file.fields =
-						GP_FILE_INFO_NAME |
 						GP_FILE_INFO_SIZE |
 						GP_FILE_INFO_MTIME;
 				info.file.size =(ubuf[n*32+28]<<24)|
 						(ubuf[n*32+29]<<16)|
 						(ubuf[n*32+30]<< 8)|
 						(ubuf[n*32+31]    );
-				strcpy(info.file.name,xfn);
 				if (!strcmp(xfn+9,"JPG") || !strcmp(xfn+9,"jpg")) {
 					strcpy(info.file.type,GP_MIME_JPEG);
 					info.file.fields |= GP_FILE_INFO_TYPE;

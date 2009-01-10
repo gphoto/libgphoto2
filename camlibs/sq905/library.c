@@ -223,18 +223,8 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		      CameraFileInfo *info, void *data, GPContext *context)
 {
-	char path[1024];
-
-	if (strlen (folder) == 1)
-		snprintf (path, sizeof (path), "/%s", file);
-	else
-		snprintf (path, sizeof (path), "%s/%s", folder, file);
-
-        info->preview.fields = GP_FILE_INFO_NONE;
-        info->file.fields = GP_FILE_INFO_NAME; 
-
-        strcpy (info->file.name, file);
-
+	memset (info, 0, sizeof(CameraFileInfo));
+	/* FIXME: fill in some stuff? */
         return (GP_OK);
 }
 

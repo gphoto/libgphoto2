@@ -109,6 +109,7 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 	CameraFileInfo info;
 	unsigned char *buffer = NULL;
 	int ret, n_img=0, n_avi=0, n_wav=0;
+	char fn[100];
 
 	CHECK (pccam300_get_filecount (camera->port, &filecount));
 
@@ -129,28 +130,21 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		info.audio.fields = GP_FILE_INFO_NONE;
 		info.preview.fields = GP_FILE_INFO_NONE;
 
-		info.file.fields = GP_FILE_INFO_SIZE |
-			GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+		info.file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 		info.file.size = size;
 
 		switch (type) {
 			case PCCAM300_MIME_JPEG:
 				strcpy (info.file.type, GP_MIME_JPEG);
-				snprintf (info.file.name, 
-				          sizeof (info.file.name),
-				          "Image%03i.jpeg", n_img++);
+				sprintf (fn, "Image%03i.jpeg", n_img++);
 				break;
 			case PCCAM300_MIME_AVI:
 				strcpy (info.file.type, GP_MIME_AVI);
-				snprintf (info.file.name, 
-				          sizeof (info.file.name),
-				          "Movie%03i.UNUSABLE", n_avi++);
+				sprintf (fn, "Movie%03i.UNUSABLE", n_avi++);
 				break;
 			case PCCAM300_MIME_WAV:
 				strcpy (info.file.type, GP_MIME_WAV);
-				snprintf (info.file.name, 
-				          sizeof (info.file.name),
-				          "Audio%03i.UNUSABLE", n_wav++);
+				sprintf (fn, "Audio%03i.UNUSABLE", n_wav++);
 				break;
 			default:
 				break;
@@ -158,7 +152,7 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 
 		if (file) {
 			gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-			gp_file_set_name (file, info.file.name);
+			gp_file_set_name (file, fn);
 			gp_file_set_data_and_size (file, buffer, size);
 		} else
 			free (buffer);

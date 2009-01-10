@@ -149,11 +149,10 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	info->preview.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT; 
 	
 	CR (ricoh_get_pic_name (camera, context, n, &name));
-	strcpy (info->file.name, name);
 	CR (ricoh_get_pic_date (camera, context, n, &info->file.mtime));
 	CR (ricoh_get_pic_size (camera, context, n, &info->file.size));
 	strcpy (info->file.type, GP_MIME_EXIF);
-	info->file.fields = GP_FILE_INFO_NAME | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME
+	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME
 		| GP_FILE_INFO_TYPE;
 	
 	return (GP_OK);

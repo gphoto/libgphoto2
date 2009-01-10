@@ -161,14 +161,13 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 		  strcpy(info.file.type, GP_MIME_RAW);
 		}
-	      strcpy(info.file.name,file_entry->name);
-	      gp_filesystem_append(fs,folder,info.file.name,context);
+	      gp_filesystem_append(fs,folder,file_entry->name,context);
 	      info.preview.fields = 0;
 	      info.file.size = (file_entry->size[1]*256+
 				file_entry->size[0]) * 256;
 	      info.file.permissions = GP_FILE_PERM_READ | GP_FILE_PERM_DELETE;
 	      info.file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS 
-		|GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME ;
+		|GP_FILE_INFO_TYPE;
 	      ret = gp_filesystem_set_info_noop(fs, folder, info, context);
 	    }
 	}

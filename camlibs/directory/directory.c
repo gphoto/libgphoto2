@@ -383,7 +383,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	}
 
         info->preview.fields = GP_FILE_INFO_NONE;
-        info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_NAME |
+        info->file.fields = GP_FILE_INFO_SIZE | 
                             GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
 			    GP_FILE_INFO_MTIME;
 
@@ -432,6 +432,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		}
 	}
 
+#if 0 /* implement this using new api -Marcus */
 	if (info.file.fields & GP_FILE_INFO_NAME) {
         	if (!strcasecmp (info.file.name, file))
         	        return (GP_OK);
@@ -468,6 +469,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	                }
 	        }
 	}
+#endif
 
         return (GP_OK);
 }
