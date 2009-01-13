@@ -1468,7 +1468,8 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Timer"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Mirror Up"),		0x8012, PTP_VENDOR_NIKON},
 	{ N_("Remote"),			0x8013, PTP_VENDOR_NIKON},
-	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON},
+	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON}, /* others nikons */
+	{ N_("Timer + Remote 2"),	0x8015, PTP_VENDOR_NIKON}, /* d90 */
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
 
@@ -2027,6 +2028,7 @@ static struct deviceproptableu8 nikon_bracketset[] = {
       { N_("AE only"),		1, 0 },
       { N_("Flash only"),	2, 0 },
       { N_("WB bracketing"),	3, 0 },
+      { N_("ADL bracketing"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_BracketSet,nikon_bracketset)
 
