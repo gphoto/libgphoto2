@@ -223,12 +223,19 @@ Property 0xd407:(read only) (type=0x6) 1
 /main/settings/time
 	Label: Camera Time
 	Type: DATE
-	Current: 1224186182
-	Printable: Thu Oct 16 21:43:02 2008
+	Current: 1231972274
+	Printable: Wed Jan 14 23:31:14 2009
 /main/settings/synctime
 	Label: Set camera time to PC time
 	Type: TOGGLE
 	Current: 0
+/main/settings/output
+	Label: Camera Output
+	Type: RADIO
+	Current: Off
+	Choice: 0 LCD
+	Choice: 1 Video OUT
+	Choice: 2 Off
 /main/settings/capturetarget
 	Label: Capture Target
 	Type: RADIO
@@ -246,6 +253,10 @@ Property 0xd407:(read only) (type=0x6) 1
 	Choice: 0 superfine
 	Choice: 1 fine
 	Choice: 2 normal
+/main/imgsettings/canonimgformat
+	Label: Canon Image Format
+	Type: RADIO
+	Current: (null)
 /main/imgsettings/canonimgsize
 	Label: Canon Image Size
 	Type: RADIO
@@ -290,8 +301,31 @@ Property 0xd407:(read only) (type=0x6) 1
 	Current: On
 	Choice: 0 On
 	Choice: 1 Off
+/main/capturesettings/autorotation
+	Label: Rotation Flag
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
 /main/capturesettings/exposurecompensation
 	Label: Exposure Compensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 +2
+	Choice: 1 +1 2/3
+	Choice: 2 +1 1/3
+	Choice: 3 +1
+	Choice: 4 +2/3
+	Choice: 5 +1/3
+	Choice: 6 0
+	Choice: 7 -1/3
+	Choice: 8 -2/3
+	Choice: 9 -1
+	Choice: 10 -1 1/3
+	Choice: 11 -1 2/3
+	Choice: 12 -2
+/main/capturesettings/flashcompensation
+	Label: Flash Compensation
 	Type: RADIO
 	Current: 0
 	Choice: 0 +2
@@ -324,40 +358,69 @@ Property 0xd407:(read only) (type=0x6) 1
 	Type: RADIO
 	Current: 4.0
 	Choice: 0 auto
-	Choice: 1 1.4
-	Choice: 2 1.6
-	Choice: 3 1.8
-	Choice: 4 2.0
-	Choice: 5 2.2
-	Choice: 6 2.5
-	Choice: 7 2.8
-	Choice: 8 3.2
-	Choice: 9 3.5
-	Choice: 10 4.0
-	Choice: 11 4.5
-	Choice: 12 5
-	Choice: 13 5.6
-	Choice: 14 6.3
-	Choice: 15 7.1
-	Choice: 16 8.0
-	Choice: 17 9.0
-	Choice: 18 10
-	Choice: 19 11
-	Choice: 20 13
-	Choice: 21 14
-	Choice: 22 16
-	Choice: 23 18
-	Choice: 24 20
-	Choice: 25 22
-	Choice: 26 25
-	Choice: 27 29
-	Choice: 28 32
+	Choice: 1 1.0
+	Choice: 2 1.1
+	Choice: 3 1.2
+	Choice: 4 1.2 (1/3)
+	Choice: 5 1.4
+	Choice: 6 1.6
+	Choice: 7 1.8
+	Choice: 8 1.8 (1/3)
+	Choice: 9 2.0
+	Choice: 10 2.2
+	Choice: 11 2.5
+	Choice: 12 2.5 (1/3)
+	Choice: 13 2.8
+	Choice: 14 3.2
+	Choice: 15 3.5
+	Choice: 16 3.5 (1/3)
+	Choice: 17 4.0
+	Choice: 18 4.5 (1/3)
+	Choice: 19 4.5
+	Choice: 20 5.6 (1/3)
+	Choice: 21 5.6
+	Choice: 22 6.3
+	Choice: 23 7.1
+	Choice: 24 8.0
+	Choice: 25 9.0
+	Choice: 26 9.5
+	Choice: 27 10
+	Choice: 28 11
+	Choice: 29 13 (1/3)
+	Choice: 30 13
+	Choice: 31 14
+	Choice: 32 16
+	Choice: 33 18
+	Choice: 34 19
+	Choice: 35 20
+	Choice: 36 22
+	Choice: 37 25
+	Choice: 38 27
+	Choice: 39 29
+	Choice: 40 32
+	Choice: 41 36
+	Choice: 42 38
+	Choice: 43 40
+	Choice: 44 45
+	Choice: 45 51
+	Choice: 46 54
+	Choice: 47 57
+	Choice: 48 64
+	Choice: 49 72
+	Choice: 50 76
+	Choice: 51 81
+	Choice: 52 91
 /main/capturesettings/focusingpoint
 	Label: Focusing Point
 	Type: RADIO
-	Current: Center
-	Choice: 0 Center
-	Choice: 1 Auto
+	Current: Multiple Focusing Points (Center)
+	Choice: 0 Focusing Point on Center Only, Manual
+	Choice: 1 Focusing Point on Center Only, Auto
+	Choice: 2 Multiple Focusing Points (No Specification), Manual
+	Choice: 3 Multiple Focusing Points, Auto
+	Choice: 4 Multiple Focusing Points (Right)
+	Choice: 5 Multiple Focusing Points (Center)
+	Choice: 6 Multiple Focusing Points (Left)
 /main/capturesettings/shutterspeed
 	Label: Shutter Speed
 	Type: RADIO
@@ -366,69 +429,86 @@ Property 0xd407:(read only) (type=0x6) 1
 	Choice: 1 bulb
 	Choice: 2 30"
 	Choice: 3 25"
-	Choice: 4 20"
-	Choice: 5 15"
-	Choice: 6 13"
-	Choice: 7 10"
-	Choice: 8 8"
-	Choice: 9 6"
-	Choice: 10 5"
-	Choice: 11 4"
-	Choice: 12 3"2
-	Choice: 13 2"5
-	Choice: 14 2"
-	Choice: 15 1"6
-	Choice: 16 1"3
-	Choice: 17 1"
-	Choice: 18 0"8
-	Choice: 19 0"6
-	Choice: 20 0"5
-	Choice: 21 0"4
-	Choice: 22 0"3
-	Choice: 23 1/4
-	Choice: 24 1/5
-	Choice: 25 1/6
-	Choice: 26 1/8
-	Choice: 27 1/10
-	Choice: 28 1/13
-	Choice: 29 1/15
-	Choice: 30 1/20
-	Choice: 31 1/25
-	Choice: 32 1/30
-	Choice: 33 1/40
-	Choice: 34 1/50
-	Choice: 35 1/60
-	Choice: 36 1/80
-	Choice: 37 1/100
-	Choice: 38 1/125
-	Choice: 39 1/160
-	Choice: 40 1/200
-	Choice: 41 1/250
-	Choice: 42 1/320
-	Choice: 43 1/400
-	Choice: 44 1/500
-	Choice: 45 1/640
-	Choice: 46 1/800
-	Choice: 47 1/1000
-	Choice: 48 1/1250
-	Choice: 49 1/1600
-	Choice: 50 1/2000
-	Choice: 51 1/2500
-	Choice: 52 1/3200
-	Choice: 53 1/4000
+	Choice: 4 20" (1/3)
+	Choice: 5 20"
+	Choice: 6 15"
+	Choice: 7 13"
+	Choice: 8 10"
+	Choice: 9 10" (1/3)
+	Choice: 10 8"
+	Choice: 11 6" (1/3)
+	Choice: 12 6"
+	Choice: 13 5"
+	Choice: 14 4"
+	Choice: 15 3"2
+	Choice: 16 3"
+	Choice: 17 2"5
+	Choice: 18 2"
+	Choice: 19 1"6
+	Choice: 20 1"5
+	Choice: 21 1"3
+	Choice: 22 1"
+	Choice: 23 0"8
+	Choice: 24 0"7
+	Choice: 25 0"6
+	Choice: 26 0"5
+	Choice: 27 0"4
+	Choice: 28 0"3
+	Choice: 29 0"3 (1/3)
+	Choice: 30 1/4
+	Choice: 31 1/5
+	Choice: 32 1/6
+	Choice: 33 1/6 (1/3)
+	Choice: 34 1/8
+	Choice: 35 1/10 (1/3)
+	Choice: 36 1/10
+	Choice: 37 1/13
+	Choice: 38 1/15
+	Choice: 39 1/20 (1/3)
+	Choice: 40 1/20
+	Choice: 41 1/25
+	Choice: 42 1/30
+	Choice: 43 1/40
+	Choice: 44 1/45
+	Choice: 45 1/50
+	Choice: 46 1/60
+	Choice: 47 1/80
+	Choice: 48 1/90
+	Choice: 49 1/100
+	Choice: 50 1/125
+	Choice: 51 1/160
+	Choice: 52 1/180
+	Choice: 53 1/200
+	Choice: 54 1/250
+	Choice: 55 1/320
+	Choice: 56 1/350
+	Choice: 57 1/400
+	Choice: 58 1/500
+	Choice: 59 1/640
+	Choice: 60 1/750
+	Choice: 61 1/800
+	Choice: 62 1/1000
+	Choice: 63 1/1250
+	Choice: 64 1/1500
+	Choice: 65 1/1600
+	Choice: 66 1/2000
+	Choice: 67 1/2500
+	Choice: 68 1/3000
+	Choice: 69 1/3200
+	Choice: 70 1/4000
 /main/capturesettings/meteringmode
 	Label: Metering Mode
 	Type: RADIO
-	Current: integral(?)
-	Choice: 0 integral(?)
-	Choice: 1 center weighted(?)
+	Current: evaluative
+	Choice: 0 evaluative
+	Choice: 1 center-weighted
 	Choice: 2 spot
 /main/capturesettings/afdistance
 	Label: AF Distance
 	Type: RADIO
-	Current: Off
-	Choice: 0 Off
-	Choice: 1 Macro
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Zone Focus (Close-up)
 /main/capturesettings/focuslock
 	Label: Focus Lock
 	Type: TOGGLE
