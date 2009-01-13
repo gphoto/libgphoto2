@@ -1,3 +1,7 @@
+2009-01-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Nikon D90.
+
 2009-01-08  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added set_info_func, to set/reset Object Protection
