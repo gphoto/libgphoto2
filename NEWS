@@ -5,18 +5,30 @@ This is a 2.4 release branch update.
 libgphoto2:
 
 PTP2 driver:
+   * Developed in parallel with TRUNK.
    * Only retrieve and initialize the ptp filesystem if needed
      (this will give speed ups for config operations, basic
       init and summary)
-   * Export the "hidden" vendor properties of the current Nikon DSLRs.
+   * Export the hidden vendor specific properties of the current Nikon DSLRs.
+     (over a hundred with all camera configuration details...)
    * Lots of new Nikon DSLR and Canon Powershot properties implemented,
      both printed in summary and available for config functions.
+   * Query and Set image protection flags (actually used by digiKam).
+   * Bugfixes and changes in Canon and Nikon specific capture routines.
+   * Some defines for PTP 1.1 added. Will have to wait for implementation until
+     a device gets available.
    * New cameras added:
-   * Bugfixes.
+   * Synced MTP device list from libmtp (0.3.5 level).
+   * Lots of bugfixes.
 
 jl2005c: 
    * Experimental driver for jl2005c based cameras added.
      Can only retrieve raw images currently, no viewable images yet.
+
+libgphoto2_port:
+
+   * Serial driver: do not lock device during probe to reduce startup
+     time.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.3
