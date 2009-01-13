@@ -259,6 +259,39 @@ const static uint16_t nikon_d80_extra_props[] = {
 0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7, 0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc
 };
 
+/* From Will Stephenson's D90, extracted by Marcus */
+const static uint16_t nikon_d90_extra_props[] = {
+0xd017, 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
+0xd020, 0xd021, 0xd022, 0xd023, 0xd024, 0xd025, 0xd026, 0xd027, 0xd028, 0xd029,
+0xd032,
+0xd045, 0xd04f,
+0xd050, 0xd052, 0xd054, 0xd056,
+0xd058, 0xd059, 0xd05a, 0xd05b, 0xd05c, 0xd05d, 0xd05e, 0xd05f,
+0xd062, 0xd063, 0xd065, 0xd068, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
+0xd070, 0xd071, 0xd075, 0xd077, 0xd078, 0xd07a,
+0xd080, 0xd084, 0xd085, 0xd086, 0xd088, 0xd08a,
+0xd090, 0xd091, 0xd092,
+0xd0a0, 0xd0a1,
+0xd0c0, 0xd0c1, 0xd0c2, 0xd0c3, 0xd0c4, 0xd0c5,
+0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
+0xd0f0, 0xd0f2, 0xd0f3, 0xd0f4, 0xd0f5,
+0xd100, 0xd101, 0xd102, 0xd103, 0xd104, 0xd105, 0xd106,
+0xd108, 0xd109, 0xd10b, 0xd10c, 0xd10d, 0xd10e,
+0xd114,
+0xd120, 0xd121, 0xd122, 0xd124, 0xd125, 0xd126,
+0xd14e, 0xd14f,
+0xd150, 0xd151, 0xd152, 0xd153, 0xd154, 0xd155,
+0xd160, 0xd161, 0xd163, 0xd164, 0xd166, 0xd167,
+0xd169, 0xd16a, 0xd16b, 0xd16c, 0xd16d, 0xd16f,
+0xd181, 0xd182, 0xd183, 0xd187, 0xd18d,
+0xd1a2, 0xd1a3, 0xd1a4,
+0xd1b0, 0xd1b1, 0xd1b2, 0xd1b3,
+0xd1c0, 0xd1c1,
+0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7,
+0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc,
+0xd200, 0xd201,
+};
+/* From Stefan Hundhammers D700, extracted by Marcus */
 const static uint16_t nikon_d700_extra_props[] = {
 0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
@@ -325,6 +358,8 @@ const static uint16_t nikon_d200_extra_props[] = {
 0xd1d0, 0xd1d1, 0xd1d2, 0xd1d3, 0xd1d4, 0xd1d5, 0xd1d6, 0xd1d7,
 0xd1d8, 0xd1d9, 0xd1da, 0xd1db, 0xd1dc
 };
+
+/* From Andreas Jaegers D300, extracted by Marcus. */
 const static uint16_t nikon_d300_extra_props[] = {
 0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
@@ -372,6 +407,8 @@ static const struct {
 	{ 0x422, nikon_d700_extra_props, sizeof(nikon_d700_extra_props)/sizeof(nikon_d700_extra_props[0]) },
 	/* D300 - confirmed by Marcus */
 	{ 0x41a, nikon_d300_extra_props, sizeof(nikon_d300_extra_props)/sizeof(nikon_d300_extra_props[0]) },
+	/* D90 - confirmed by Marcus */
+	{ 0x421, nikon_d90_extra_props, sizeof(nikon_d90_extra_props)/sizeof(nikon_d90_extra_props[0]) },
 	/* D200 - guessed by Marcus */
 	{ 0x410, nikon_d200_extra_props, sizeof(nikon_d200_extra_props)/sizeof(nikon_d200_extra_props[0]) }
 };
@@ -421,7 +458,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
                /* hardcore hack ... just query d000 -> d1ff ...  */
                di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2*256));
                for (i=0;i<2*256;i++)
-                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD200 + i;
+                       di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xD000 + i;
                di->DevicePropertiesSupported_len += 2*256;
 #endif
 	}
@@ -769,6 +806,8 @@ static struct {
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
+	/* Will Stephenson at SUSE and wstephenson@flickr */
+	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 	/* Borrowed D700 by deckel / marcus */
 	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
 
@@ -1521,16 +1560,20 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	gp_file_set_name(file, path->name);
 	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
+
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "setting size");
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectCompressedSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "append to fs");
 	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
         if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "adding filedata to fs");
 	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
         if (ret != GP_OK) {
 		gp_file_free (file);
@@ -1541,10 +1584,11 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	gp_file_unref (file);
 
 	/* we also get the fs info for free, so just set it */
-	info.file.fields = GP_FILE_INFO_TYPE |
+	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
 	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
+	strcpy(info.file.name,path->name);
 	info.file.width		= oi->ImagePixWidth;
 	info.file.height	= oi->ImagePixHeight;
 	info.file.size		= oi->ObjectCompressedSize;
@@ -1555,6 +1599,7 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	info.preview.width	= oi->ThumbPixWidth;
 	info.preview.height	= oi->ThumbPixHeight;
 	info.preview.size	= oi->ThumbCompressedSize;
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "setting fileinfo in fs");
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, info, context);
 }
 
@@ -4899,6 +4944,14 @@ camera_init (Camera *camera, GPContext *context)
 			add_special_file("operation.wav",	canon_theme_get, canon_theme_put);
 			add_special_file("shutterrelease.wav",	canon_theme_get, canon_theme_put);
 			add_special_file("selftimer.wav",	canon_theme_get, canon_theme_put);
+		}
+#endif
+#if 0
+		{
+			unsigned char *x;
+			unsigned long l;
+			if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetDeviceInfoEx))
+				ptp_canon_eos_getdeviceinfo (&camera->pl->params, &x, &l);
 		}
 #endif
 		break;
