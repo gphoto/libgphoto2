@@ -2027,6 +2027,7 @@ static struct deviceproptableu8 nikon_bracketset[] = {
       { N_("AE only"),		1, 0 },
       { N_("Flash only"),	2, 0 },
       { N_("WB bracketing"),	3, 0 },
+      { N_("ADL bracketing"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_BracketSet,nikon_bracketset)
 
