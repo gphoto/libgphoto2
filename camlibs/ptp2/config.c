@@ -134,6 +134,12 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 				event.length,event.type,event.code,event.trans_id,
 				event.param1, event.param2, event.param3);
 	}
+	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
+		ret = ptp_canon_viewfinderon (params);
+		if (ret != PTP_RC_OK)
+			gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
+		/* ignore errors here */
+	}
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &evc)) {
@@ -196,12 +202,12 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 1 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
 		return GP_ERROR;
 	}
-	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
+	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
@@ -270,15 +276,22 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 static int
 camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	uint16_t	ret;
+	PTPParams		*params = &camera->pl->params;
 
-	ret = ptp_canon_endshootingmode (&camera->pl->params);
+	ret = ptp_canon_endshootingmode (params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d\n", ret);
 		return GP_ERROR;
 	}
+	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
+		ret = ptp_canon_viewfinderoff (params);
+		if (ret != PTP_RC_OK)
+			gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
+		/* ignore errors here */
+	}
 	/* Reget device info, they change on the Canons. */
-	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
+	ptp_getdeviceinfo(params, &params->deviceinfo);
+	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	return GP_OK;
 }
 
