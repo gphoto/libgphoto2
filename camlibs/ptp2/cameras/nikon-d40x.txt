@@ -285,8 +285,8 @@ Property 0xd1e1:(readwrite) (type=0x2) Range [0 - 8, step 1] value: 0
 /main/settings/time
 	Label: Camera Time
 	Type: DATE
-	Current: 1232012506
-	Printable: Thu Jan 15 10:41:46 2009
+	Current: 1232013328
+	Printable: Thu Jan 15 10:55:28 2009
 /main/settings/imgcomment
 	Label: Image Comment
 	Type: TEXT
@@ -432,12 +432,12 @@ Property 0xd1e1:(readwrite) (type=0x2) Range [0 - 8, step 1] value: 0
 /main/capturesettings/autofocusmode
 	Label: Auto Focus Mode
 	Type: RADIO
-	Current: Unknown value 0002
+	Current: AF-A
 	Choice: 0 AF-S
 	Choice: 1 AF-C
-	Choice: 2 Unknown value 0002
-	Choice: 3 Unknown value 0003
-	Choice: 4 Unknown value 0004
+	Choice: 2 AF-A
+	Choice: 3 AF Mode 3? report.
+	Choice: 4 Manual
 /main/capturesettings/assistlight
 	Label: Assist Light
 	Type: RADIO
@@ -549,7 +549,7 @@ Property 0xd1e1:(readwrite) (type=0x2) Range [0 - 8, step 1] value: 0
 /main/capturesettings/exptime
 	Label: Exposure Time
 	Type: RADIO
-	Current: 0.400
+	Current: 0.333
 	Choice: 0 0.002
 	Choice: 1 0.003
 	Choice: 2 0.004
@@ -611,10 +611,10 @@ Property 0xd1e1:(readwrite) (type=0x2) Range [0 - 8, step 1] value: 0
 	Choice: 2 A
 	Choice: 3 S
 	Choice: 4 Auto
-	Choice: 5 Unknown value 8018
+	Choice: 5 Automatic (No Flash)
 	Choice: 6 Portrait
 	Choice: 7 Landscape
-	Choice: 8 Unknown value 8017
+	Choice: 8 Children
 	Choice: 9 Sports
 	Choice: 10 Macro
 	Choice: 11 Night Portrait
