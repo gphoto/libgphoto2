@@ -2074,6 +2074,7 @@ static struct deviceproptableu8 nikon_lensid[] = {
 	{"AF-S Nikkor 18-200mm 1:3.5-5.6 GED DX VR",	139, 0},
 	{"AF-S Nikkor 24-70mm 1:2.8G ED DX",		147, 0},
 	{"AF-S Nikkor 18-55mm 1:3.5-F5.6G DX VR",	154, 0},
+	{"Sigma EX 30mm 1:1.4 DC HSM",			248, 0}, /* from eckermann */
 };
 GENERIC8TABLE(Nikon_LensID,nikon_lensid)
 
