@@ -1472,6 +1472,8 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Sports"),		0x8014, PTP_VENDOR_NIKON},
 	{ N_("Night Portrait"),	0x8015, PTP_VENDOR_NIKON},
 	{ N_("Night Landscape"),0x8016, PTP_VENDOR_NIKON},
+	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
+	{ N_("Automatic (No Flash)"),	0x8018, PTP_VENDOR_NIKON},
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
