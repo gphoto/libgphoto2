@@ -432,7 +432,7 @@ static const struct {
 	/* D90 - confirmed by Marcus */
 	{ 0x421, nikon_d90_extra_props, sizeof(nikon_d90_extra_props)/sizeof(nikon_d90_extra_props[0]) },
 	/* D200 - guessed by Marcus */
-	{ 0x410, nikon_d200_extra_props, sizeof(nikon_d200_extra_props)/sizeof(nikon_d200_extra_props[0]) }
+	{ 0x410, nikon_d200_extra_props, sizeof(nikon_d200_extra_props)/sizeof(nikon_d200_extra_props[0]) },
 	/* D40x - confirmed by Marcus */
 	{ 0x418, nikon_d40x_extra_props, sizeof(nikon_d40x_extra_props)/sizeof(nikon_d40x_extra_props[0]) }
 };
