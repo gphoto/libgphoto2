@@ -2172,6 +2172,27 @@ _put_Canon_SyncTime(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Nikon_AFDrive(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_AfDrive)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	ret = ptp_nikon_afdrive (&camera->pl->params);
+	if (ret == PTP_RC_OK)
+		return (GP_OK);
+	gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
+	return (GP_ERROR);
+}
+
+static int
 _get_STR_as_time(CONFIG_GET_ARGS) {
 	time_t		camtime;
 	struct tm	tm;
@@ -2880,6 +2901,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Firmware Version"), "firmwareversion", PTP_DPC_CANON_FirmwareVersion, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_CANON_FirmwareVersion, _put_None },
 	{ N_("Camera Time"),  "time", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Set camera time to PC time"),  "synctime", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
+	{ N_("Drive Nikon DSLR Autofocus"),  "autofocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
 	{ N_("Camera Time"),  "eos-time", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Set camera time to PC time"),  "eos-synctime", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
