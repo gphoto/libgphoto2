@@ -228,3 +228,574 @@ Low Light(0xd1b0):(read only) (type=0x2) Range [0 - 4, step 1] value: No (0)
 Flash Open(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
 Flash Charged(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: Yes (1)
 
+/main/settings/time
+	Label: Camera Time
+	Type: DATE
+	Current: 1232107152
+	Printable: Fri Jan 16 12:59:12 2009
+/main/settings/imgcomment
+	Label: Image Comment
+	Type: TEXT
+	Current:                                     
+/main/settings/imgcommentenable
+	Label: Enable Image Comment
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/lcdofftime
+	Label: LCD Off Time
+	Type: RADIO
+	Current: 20 seconds
+	Choice: 0 10 seconds
+	Choice: 1 20 seconds
+	Choice: 2 1 minute
+	Choice: 3 5 minutes
+	Choice: 4 10 minutes
+/main/settings/meterofftime
+	Label: Meter Off Time
+	Type: RADIO
+	Current: 6 seconds
+	Choice: 0 4 seconds
+	Choice: 1 6 seconds
+	Choice: 2 8 seconds
+	Choice: 3 16 seconds
+/main/settings/csmmenu
+	Label: CSM Menu
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/battery
+	Label: Battery Level
+	Type: TEXT
+	Current: 75%
+/main/settings/orientation
+	Label: Camera Orientation
+	Type: RADIO
+	Current: 0'
+	Choice: 0 0'
+	Choice: 1 270'
+	Choice: 2 90'
+/main/settings/acpower
+	Label: AC Power
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/externalflash
+	Label: External Flash
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/flashopen
+	Label: Flash Open
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/flashcharged
+	Label: Flash Charged
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/fastfs
+	Label: Fast Filesystem
+	Type: TOGGLE
+	Current: 1
+/main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Memory card
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/imgsettings/imgquality
+	Label: Image Quality
+	Type: RADIO
+	Current: JPEG Fine
+	Choice: 0 JPEG Basic
+	Choice: 1 JPEG Normal
+	Choice: 2 JPEG Fine
+	Choice: 3 NEF+Basic
+	Choice: 4 NEF+Normal
+/main/imgsettings/imgsize
+	Label: Image Size
+	Type: RADIO
+	Current: 3008x2000
+	Choice: 0 3008x2000
+	Choice: 1 2256x1496
+	Choice: 2 1504x1000
+/main/imgsettings/iso
+	Label: ISO Speed
+	Type: RADIO
+	Current: 400
+	Choice: 0 200
+	Choice: 1 400
+	Choice: 2 800
+	Choice: 3 1600
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Automatic
+	Choice: 0 Automatic
+	Choice: 1 Daylight
+	Choice: 2 Fluorescent
+	Choice: 3 Tungsten
+	Choice: 4 Flash
+	Choice: 5 Cloudy
+	Choice: 6 Shade
+	Choice: 7 Preset
+/main/imgsettings/colormodel
+	Label: Color Model
+	Type: RADIO
+	Current: sRGB (portrait)
+	Choice: 0 sRGB (portrait)
+	Choice: 1 AdobeRGB
+	Choice: 2 sRGB (nature)
+/main/imgsettings/autoiso
+	Label: Auto ISO
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/imgsettings/autoisopadv
+	Label: Auto ISO PADV Time
+	Type: RADIO
+	Current: 1/30
+	Choice: 0 1/125
+	Choice: 1 1/60
+	Choice: 2 1/30
+	Choice: 3 1/15
+	Choice: 4 1/8
+	Choice: 5 1/4
+	Choice: 6 1/2
+	Choice: 7 1
+/main/capturesettings/longexpnr
+	Label: Long Exp Noise Reduction
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/autofocusmode
+	Label: Auto Focus Mode
+	Type: RADIO
+	Current: AF-A
+	Choice: 0 AF-S
+	Choice: 1 AF-C
+	Choice: 2 AF-A
+/main/capturesettings/assistlight
+	Label: Assist Light
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/nikonflashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: iTTL
+	Choice: 0 iTTL
+	Choice: 1 Manual
+/main/capturesettings/af-area-illumination
+	Label: AF Area Illumination
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Off
+	Choice: 2 On
+/main/capturesettings/afbeep
+	Label: AF Beep Mode
+	Type: TOGGLE
+	Current: 1
+/main/capturesettings/f-number
+	Label: F-Number
+	Type: RADIO
+	Current: f/5.6
+	Choice: 0 f/5.6
+	Choice: 1 f/6.3
+	Choice: 2 f/7.1
+	Choice: 3 f/8
+	Choice: 4 f/9
+	Choice: 5 f/10
+	Choice: 6 f/11
+	Choice: 7 f/13
+	Choice: 8 f/14
+	Choice: 9 f/16
+	Choice: 10 f/18
+	Choice: 11 f/20
+	Choice: 12 f/22
+	Choice: 13 f/25
+	Choice: 14 f/29
+	Choice: 15 f/32
+	Choice: 16 f/36
+/main/capturesettings/focallength
+	Label: Focal Length
+	Type: RANGE
+	Current: 55
+	Bottom: 18
+	Top: 55
+	Step: 0.01
+/main/capturesettings/minfocallength
+	Label: Focal Length Minimum
+	Type: TEXT
+	Current: 18 mm
+/main/capturesettings/maxfocallength
+	Label: Focal Length Maximum
+	Type: TEXT
+	Current: 55 mm
+/main/capturesettings/apertureatminfocallength
+	Label: Maximum Aperture at Focal Length Minimum
+	Type: TEXT
+	Current: 4 mm
+/main/capturesettings/apertureatmaxfocallength
+	Label: Maximum Aperture at Focal Length Maximum
+	Type: TEXT
+	Current: 6 mm
+/main/capturesettings/focusmode
+	Label: Focus Mode
+	Type: RADIO
+	Current: AF-A
+	Choice: 0 Manual
+	Choice: 1 AF-S
+	Choice: 2 AF-C
+	Choice: 3 AF-A
+/main/capturesettings/exposurebiascompensation
+	Label: Exposure Bias Compensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+/main/capturesettings/exptime
+	Label: Exposure Time
+	Type: RADIO
+	Current: 0.125
+	Choice: 0 0.002
+	Choice: 1 0.003
+	Choice: 2 0.004
+	Choice: 3 0.005
+	Choice: 4 0.006
+	Choice: 5 0.008
+	Choice: 6 0.010
+	Choice: 7 0.012
+	Choice: 8 0.015
+	Choice: 9 0.020
+	Choice: 10 0.025
+	Choice: 11 0.031
+	Choice: 12 0.040
+	Choice: 13 0.050
+	Choice: 14 0.062
+	Choice: 15 0.080
+	Choice: 16 0.100
+	Choice: 17 0.125
+	Choice: 18 0.166
+	Choice: 19 0.200
+	Choice: 20 0.250
+	Choice: 21 0.333
+/main/capturesettings/expprogram
+	Label: Exposure Program
+	Type: RADIO
+	Current: Auto
+	Choice: 0 M
+	Choice: 1 P
+	Choice: 2 A
+	Choice: 3 S
+	Choice: 4 Auto
+	Choice: 5 Portrait
+	Choice: 6 Landscape
+	Choice: 7 Macro
+	Choice: 8 Sports
+	Choice: 9 Night Portrait
+	Choice: 10 Children
+/main/capturesettings/capturemode
+	Label: Still Capture Mode
+	Type: RADIO
+	Current: Burst
+	Choice: 0 Single Shot
+	Choice: 1 Burst
+	Choice: 2 Timer
+	Choice: 3 Remote
+	Choice: 4 Timer + Remote
+/main/capturesettings/focusmetermode
+	Label: Focus Metering Mode
+	Type: RADIO
+	Current: Closest Subject
+	Choice: 0 Dynamic Area
+	Choice: 1 Single Area
+	Choice: 2 Closest Subject
+/main/capturesettings/exposuremetermode
+	Label: Exposure Metering Mode
+	Type: RADIO
+	Current: Multi Spot
+	Choice: 0 Center Weighted
+	Choice: 1 Multi Spot
+	Choice: 2 Center Spot
+/main/capturesettings/flashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: Default
+	Choice: 0 Flash off
+	Choice: 1 Red-eye automatic
+	Choice: 2 Default
+/main/capturesettings/exposurelock
+	Label: Exposure Lock
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/aelaflmode
+	Label: AE-L/AF-L Mode
+	Type: RADIO
+	Current: AE/AF Lock
+	Choice: 0 AE/AF Lock
+	Choice: 1 AE Lock only
+	Choice: 2 AF Lock Only
+	Choice: 3 AF Lock Hold
+	Choice: 4 AF On
+	Choice: 5 Flash Level Lock
+/main/capturesettings/filenrsequencing
+	Label: File Number Sequencing
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/imagereview
+	Label: Image Review
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/imagerotationflag
+	Label: Image Rotation Flag
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/nocfcardrelease
+	Label: Release without CF card
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/flashmodemanualpower
+	Label: Flash Mode Manual Power
+	Type: RADIO
+	Current: Full
+	Choice: 0 Full
+	Choice: 1 1/2
+	Choice: 2 1/4
+	Choice: 3 1/8
+	Choice: 4 1/16
+/main/capturesettings/autofocusarea
+	Label: Auto Focus Area
+	Type: RADIO
+	Current: Centre
+	Choice: 0 Centre
+	Choice: 1 Top
+	Choice: 2 Bottom
+	Choice: 3 Left
+	Choice: 4 Right
+/main/capturesettings/flashexposurecompensation
+	Label: Flash Exposure Compensation
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 1
+	Step: 0.333333
+/main/capturesettings/evstep
+	Label: EV Step
+	Type: RADIO
+	Current: 1/3
+	Choice: 0 1/3
+	Choice: 1 1/2
+	Choice: 2 Unknown value 0002
+/main/capturesettings/burstnumber
+	Label: Burst Number
+	Type: RANGE
+	Current: 1
+	Bottom: 1
+	Top: 49
+	Step: 1
+/main/capturesettings/whitebiaspresetno
+	Label: White Balance Bias Preset Nr
+	Type: RADIO
+	Current: 0
+	Choice: 0 0
+/main/capturesettings/whitebiaspreset0
+	Label: White Balance Bias Preset 0
+	Type: TEXT
+	Current: 33685926
+/main/capturesettings/whitebiaspreset1
+	Label: White Balance Bias Preset 1
+	Type: TEXT
+	Current: 33685926
+/main/capturesettings/selftimerdelay
+	Label: Selftimer Delay
+	Type: RADIO
+	Current: 10 seconds
+	Choice: 0 2 seconds
+	Choice: 1 5 seconds
+	Choice: 2 10 seconds
+	Choice: 3 20 seconds
+/main/capturesettings/remotetimeout
+	Label: Remote Timeout
+	Type: RADIO
+	Current: 1 minute
+	Choice: 0 1 minute
+	Choice: 1 5 minutes
+	Choice: 2 10 minutes
+	Choice: 3 15 minutes
+/main/capturesettings/optimizeimage
+	Label: Optimize Image
+	Type: RADIO
+	Current: Normal
+	Choice: 0 Normal
+	Choice: 1 Vivid
+	Choice: 2 Sharper
+	Choice: 3 Softer
+	Choice: 4 Direct Print
+	Choice: 5 Portrait
+	Choice: 6 Landscape
+	Choice: 7 Custom
+/main/capturesettings/sharpening
+	Label: Sharpening
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Normal
+	Choice: 2 Low
+	Choice: 3 Medium Low
+	Choice: 4 Medium high
+	Choice: 5 High
+	Choice: 6 None
+/main/capturesettings/tonecompensation
+	Label: Tone Compensation
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Normal
+	Choice: 2 Low contrast
+	Choice: 3 Medium Low
+	Choice: 4 Medium High
+	Choice: 5 High control
+	Choice: 6 Custom
+/main/capturesettings/saturation
+	Label: Saturation
+	Type: RADIO
+	Current: Normal
+	Choice: 0 Normal
+	Choice: 1 Moderate
+	Choice: 2 Enhanced
+/main/capturesettings/hueadjustment
+	Label: Hue Adjustment
+	Type: RANGE
+	Current: 0
+	Bottom: -9
+	Top: 9
+	Step: 3
+/main/capturesettings/lowlight
+	Label: Low Light
+	Type: RANGE
+	Current: 0
+	Bottom: 0
+	Top: 4
+	Step: 1
+/main/capturesettings/lightmeter
+	Label: Light Meter
+	Type: TEXT
+	Current: 0.0
+/main/capturesettings/aflocked
+	Label: AF Locked
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/aelocked
+	Label: AE Locked
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/fvlocked
+	Label: FV Locked
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/wifiprofiles/new/name
+	Label: Profile name
+	Type: TEXT
+	Current: 
+/main/wifiprofiles/new/essid
+	Label: WIFI ESSID
+	Type: TEXT
+	Current: 
+/main/wifiprofiles/new/ipaddr
+	Label: IP address (empty for DHCP)
+	Type: TEXT
+	Current: 
+/main/wifiprofiles/new/netmask
+	Label: Network mask
+	Type: TEXT
+	Current: 
+/main/wifiprofiles/new/gw
+	Label: Default gateway
+	Type: TEXT
+	Current: 
+/main/wifiprofiles/new/accessmode
+	Label: Access mode
+	Type: RADIO
+	Current: Managed
+	Choice: 0 Managed
+	Choice: 1 Ad-hoc
+/main/wifiprofiles/new/channel
+	Label: WIFI channel
+	Type: RANGE
+	Current: 1
+	Bottom: 1
+	Top: 11
+	Step: 1
+/main/wifiprofiles/new/encryption
+	Label: Encryption
+	Type: RADIO
+	Current: None
+	Choice: 0 None
+	Choice: 1 WEP 64-bit
+	Choice: 2 WEP 128-bit
+/main/wifiprofiles/new/key
+	Label: Encryption key (hex)
+	Type: TEXT
+	Current: 
+/main/wifiprofiles/new/write
+	Label: Write
+	Type: TOGGLE
+	Current: 0
