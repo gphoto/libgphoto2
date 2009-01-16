@@ -134,6 +134,12 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 				event.length,event.type,event.code,event.trans_id,
 				event.param1, event.param2, event.param3);
 	}
+	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
+		ret = ptp_canon_viewfinderon (params);
+		if (ret != PTP_RC_OK)
+			gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
+		/* ignore errors here */
+	}
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &evc)) {
@@ -196,12 +202,12 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9110 of d11c to 1 failed!");
 		return GP_ERROR;
 	}
-	ret = ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
+	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
 		return GP_ERROR;
 	}
-	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
+	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
@@ -270,15 +276,22 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 static int
 camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	uint16_t	ret;
+	PTPParams		*params = &camera->pl->params;
 
-	ret = ptp_canon_endshootingmode (&camera->pl->params);
+	ret = ptp_canon_endshootingmode (params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d\n", ret);
 		return GP_ERROR;
 	}
+	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
+		ret = ptp_canon_viewfinderoff (params);
+		if (ret != PTP_RC_OK)
+			gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
+		/* ignore errors here */
+	}
 	/* Reget device info, they change on the Canons. */
-	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
+	ptp_getdeviceinfo(params, &params->deviceinfo);
+	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	return GP_OK;
 }
 
@@ -1140,6 +1153,9 @@ GENERIC8TABLE(Nikon_FlashCommanderPower,nikon_flashcommanderpower)
 static struct deviceproptableu8 nikon_afmode[] = {
 	{ N_("AF-S"),		0, 0 },
 	{ N_("AF-C"),		1, 0 },
+	{ N_("AF-A"),		2, 0 },
+	{ "AF Mode 3? report.",	3, 0 },
+	{ N_("Manual"),		4, 0 },
 	/* more for newer */
 };
 GENERIC8TABLE(Nikon_AFMode,nikon_afmode)
@@ -1456,6 +1472,8 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Sports"),		0x8014, PTP_VENDOR_NIKON},
 	{ N_("Night Portrait"),	0x8015, PTP_VENDOR_NIKON},
 	{ N_("Night Landscape"),0x8016, PTP_VENDOR_NIKON},
+	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
+	{ N_("Automatic (No Flash)"),	0x8018, PTP_VENDOR_NIKON},
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
@@ -1468,7 +1486,8 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Timer"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Mirror Up"),		0x8012, PTP_VENDOR_NIKON},
 	{ N_("Remote"),			0x8013, PTP_VENDOR_NIKON},
-	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON},
+	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON}, /* others nikons */
+	{ N_("Timer + Remote 2"),	0x8015, PTP_VENDOR_NIKON}, /* d90 */
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
 
@@ -2055,6 +2074,7 @@ static struct deviceproptableu8 nikon_lensid[] = {
 	{"AF-S Nikkor 18-200mm 1:3.5-5.6 GED DX VR",	139, 0},
 	{"AF-S Nikkor 24-70mm 1:2.8G ED DX",		147, 0},
 	{"AF-S Nikkor 18-55mm 1:3.5-F5.6G DX VR",	154, 0},
+	{"Sigma EX 30mm 1:1.4 DC HSM",			248, 0}, /* from eckermann */
 };
 GENERIC8TABLE(Nikon_LensID,nikon_lensid)
 
