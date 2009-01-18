@@ -32,7 +32,7 @@
 #define PTP_NIKON_BROKEN_CAP		(1<<7)
 #define PTP_MTP_ZEN_BROKEN_HEADER	(1<<8)
 #define PTP_NIKON_SUPPRESSED_PROPS	(1<<9)
-#define PTP_NIKON_BROKEN_CAP2		(1<<10)
+#define PTP_NO_CAPTURE_COMPLETE		(1<<10)
 
 #define DELETE_SENDS_EVENT(x) \
   ((x)->bugs & PTPBUG_DELETE_SENDS_EVENT)
@@ -40,8 +40,8 @@
   ((x)->bugs & (PTPBUG_DUPE_FILE | PTP_MTP))
 #define NIKON_BROKEN_CAP(x) \
   ((x)->bugs & (PTP_NIKON_BROKEN_CAP))
-#define NIKON_BROKEN_CAP2(x) \
-  ((x)->bugs & (PTP_NIKON_BROKEN_CAP2))
+#define NO_CAPTURE_COMPLETE(x) \
+  ((x)->bugs & (PTP_NO_CAPTURE_COMPLETE))
 #define MTP_ZEN_BROKEN_HEADER(x) \
   ((x)->bugs & (PTP_MTP_ZEN_BROKEN_HEADER))
 

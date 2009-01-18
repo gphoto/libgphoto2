@@ -764,13 +764,13 @@ static struct {
 	/* 4600: Martin Klaffenboeck <martin.klaffenboeck@gmx.at> */
 	{"Nikon:Coolpix 4600 (PTP mode)", 0x04b0, 0x0130, 0},
 	/* 4600: Roberto Costa <roberto.costa@ensta.org>, 22 Oct 2006 */
-	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131,PTP_CAP|PTP_NIKON_BROKEN_CAP2},
+	{"Nikon:Coolpix 4600a (PTP mode)", 0x04b0, 0x0131,PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1846012&group_id=8874&atid=358874 */
 	{"Nikon:Coolpix 7900 (PTP mode)", 0x04b0, 0x0137, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Marcus Meissner */
-	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NIKON_BROKEN_CAP2},
+	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* Richard SCHNEIDER <Richard.SCHNEIDER@tilak.at> */
 	{"Nikon:Coolpix S4 (PTP mode)",   0x04b0, 0x0144, 0},
 	/* Lowe, John Michael <jomlowe@iupui.edu> */
@@ -2091,9 +2091,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	/* the standard defined way ... wait for some capture related events. */
 	done = 0;
 	while (!done) {
-		short ret = params->event_wait(params,&event);
+		uint16_t ret = params->event_wait(params,&event);
 		CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
 		if (ret!=PTP_RC_OK) {
+			if ((ret == PTP_ERROR_IO) && newobject) {
+				gp_log (GP_LOG_ERROR, "ptp/capture", "Did not receive capture complete event. Going on, but please report and try adding PTP_NO_CAPTURE_COMPLETE flag.");
+				break;
+			}
 			gp_context_error (context,_("No event received, error %x."), ret);
 			/* we're not setting *path on error! */
 			return GP_ERROR;
@@ -2106,7 +2110,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			/* add newly created object to internal structures */
 			add_object (camera, event.Param1, context);
 			newobject = event.Param1;
-			if (NIKON_BROKEN_CAP2(camera->pl))
+			if (NO_CAPTURE_COMPLETE(camera->pl))
 				done=1;
 			break;
 		}
