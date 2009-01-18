@@ -1493,7 +1493,8 @@ GENERIC16TABLE(CaptureMode,capture_mode)
 
 
 static struct deviceproptableu16 focus_metering[] = {
-	{ N_("Dynamic Area"),	0x0002, 0 },
+	{ N_("Centre-spot"),	0x0001, 0 },
+	{ N_("Multi-spot"),	0x0002, 0 },
 	{ N_("Single Area"),	0x8010, PTP_VENDOR_NIKON},
 	{ N_("Closest Subject"),0x8011, PTP_VENDOR_NIKON},
 	{ N_("Group Dynamic"),  0x8012, PTP_VENDOR_NIKON},
