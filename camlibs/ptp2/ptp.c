@@ -2388,6 +2388,26 @@ ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode)
 }
 
 /**
+ * ptp_nikon_afdrive:
+ *
+ * This command runs (drives) the lens autofocus.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_afdrive (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_AfDrive;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+/**
  * ptp_nikon_capture:
  *
  * This command captures a picture on the Nikon.
@@ -3723,7 +3743,13 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32785, N_("Shade")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32786, N_("Color Temperature")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32787, N_("Preset")},
-		{PTP_DPC_FlashMode, 0, 4, N_("Red-eye Reduction")},
+		{PTP_DPC_FlashMode, 0, 0, N_("Undefined")},
+		{PTP_DPC_FlashMode, 0, 1, N_("Automatic flash")},
+		{PTP_DPC_FlashMode, 0, 2, N_("Flash off")},
+		{PTP_DPC_FlashMode, 0, 3, N_("Fill flash")},
+		{PTP_DPC_FlashMode, 0, 4, N_("Automatic Red-eye Reduction")},
+		{PTP_DPC_FlashMode, 0, 5, N_("Red-eye fill flash")},
+		{PTP_DPC_FlashMode, 0, 6, N_("External sync")},
 		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32784, N_("Default")},
 		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32785, N_("Slow Sync")},
 		{PTP_DPC_FlashMode, PTP_VENDOR_NIKON, 32786, N_("Rear Curtain Sync + Slow Sync")},
@@ -3733,6 +3759,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32785, N_("Closest Subject")},
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32786, N_("Group Dynamic")},
 		{PTP_DPC_FocusMode, 0, 1, N_("Manual Focus")},
+		{PTP_DPC_FocusMode, 0, 2, N_("Automatic")},
+		{PTP_DPC_FocusMode, 0, 3, N_("Automatic Macro (close-up)")},
 		{PTP_DPC_FocusMode, PTP_VENDOR_NIKON, 32784, "AF-S"},
 		{PTP_DPC_FocusMode, PTP_VENDOR_NIKON, 32785, "AF-C"},
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_ISOAuto,PTP_VENDOR_NIKON),
