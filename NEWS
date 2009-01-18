@@ -1,31 +1,42 @@
-libgphoto2 2.4.3.2
+libgphoto2 2.4.3.3
 
 This is a 2.4 release branch update.
 
 libgphoto2:
+   * Updated translations from translationproject.org
 
 PTP2 driver:
    * Developed in parallel with TRUNK.
    * Only retrieve and initialize the ptp filesystem if needed
      (this will give speed ups for config operations, basic
-      init and summary)
+      init and summary.)
    * Export the hidden vendor specific properties of the current Nikon DSLRs.
      (over a hundred with all camera configuration details...)
+     (D80, D90, D300, D700, D40x got, D200 guessed)
    * Lots of new Nikon DSLR and Canon Powershot properties implemented,
-     both printed in summary and available for config functions.
-   * Query and Set image protection flags (actually used by digiKam).
-   * Bugfixes and changes in Canon and Nikon specific capture routines.
+     both printed in summary and available for config functions querying
+     and/or setting.
+   * Query and Set image protection flags (actually used by digikam).
+   * Lots of bugfixes and changes in Canon and Nikon specific capture routines.
    * Some defines for PTP 1.1 added. Will have to wait for implementation until
      a device gets available.
    * New cameras added:
+	Kodak C913
+	Nikon D90
+	Canon Digital IXUS 960IS, EOS 1000D, SD1100 IS, SX10 IS, SX110 IS
+	Fuji FinePix A920, F100fd, S200HD
+	Apple iPod Touch (just saved screenshots and uploaded images)
+   * PTP v1.1 defines added (implementation will start once devices are available)
    * Synced MTP device list from libmtp (0.3.5 level).
    * Lots of bugfixes.
 
 jl2005c: 
    * Experimental driver for jl2005c based cameras added.
      Can only retrieve raw images currently, no viewable images yet.
+     Not builtin by default. ./configure --with-drivers=all,jl2005c
 
 libgphoto2_port:
+   * Updated translations from translationproject.org
 
    * Serial driver: do not lock device during probe to reduce startup
      time.
