@@ -508,6 +508,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Nikon specific response codes */
 #define PTP_RC_NIKON_AdvancedTransferCancel 0xA022
 
+/* Canon specific response codes */
+#define PTP_RC_CANON_A009		0xA009
+
 /* Microsoft/MTP specific codes */
 #define PTP_RC_MTP_Undefined			0xA800
 #define PTP_RC_MTP_Invalid_ObjectPropCode	0xA801
