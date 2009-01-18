@@ -1,3 +1,11 @@
+2009-01-18  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Fixed stupid bug in "canon capture to card" mode.
+
+	* ptp.c,ptp.h,config.c:  PTP Nikon AfDrive (Nikon DSLR). (not doing much)
+
+	* ptp.c, config.c: Various additions of missing config values.
+
 2009-01-15  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Enable viewfinder in enable capture for Powershots,
