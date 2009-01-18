@@ -1570,7 +1570,7 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 }
 
 static int
-add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *context,
+add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *context,
 	uint32_t newobject, PTPObjectInfo *oi) {
 	int			ret;
 	PTPParams		*params = &camera->pl->params;
@@ -1585,19 +1585,19 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
 
-	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "setting size");
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "setting size");
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectCompressedSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
-	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "append to fs");
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "append to fs");
 	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
         if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
-	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "adding filedata to fs");
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "adding filedata to fs");
 	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
         if (ret != GP_OK) {
 		gp_file_free (file);
@@ -1623,7 +1623,7 @@ add_objectid_to_gphotofs(Camera *camera, CameraFilePath *path, GPContext *contex
 	info.preview.width	= oi->ThumbPixWidth;
 	info.preview.height	= oi->ThumbPixHeight;
 	info.preview.size	= oi->ThumbCompressedSize;
-	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_to_gphotofs", "setting fileinfo in fs");
+	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "setting fileinfo in fs");
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, info, context);
 }
 
@@ -1729,7 +1729,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			oi.StorageID = 0x00010001;
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		ret = add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
+		ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
 		if (ret != GP_OK) {
 			fprintf (stderr, "failed to add object\n");
 			return ret;
@@ -1970,14 +1970,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
-		return GP_OK;
+		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 	} else {
 		if (xmode == CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0, but not in memory mode?\n");
 		}
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		return add_objectid_to_gphotofs(camera, path, context, newobject, &oi);
+		return add_objectid_and_upload (camera, path, context, newobject, &oi);
 	}
 }
 
@@ -1999,7 +1999,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
-	){
+	) {
 		char buf[1024];
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			return camera_nikon_capture (camera, type, path, context);
@@ -2142,8 +2142,7 @@ out:
 			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
 			/* delete last / or we get confused later. */
 			path->folder[ strlen(path->folder)-1 ] = '\0';
-			CR (gp_filesystem_append (camera->fs, path->folder,
-				path->name, context));
+			CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
 			break;
 		}
 	}
