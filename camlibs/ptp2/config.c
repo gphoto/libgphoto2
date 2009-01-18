@@ -1656,6 +1656,81 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_FocusDistance(CONFIG_GET_ARGS) {
+	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration)))
+		return (GP_ERROR);
+
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		int i, valset = 0;
+		char buf[200];
+
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
+
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+
+			if (dpd->FORM.Enum.SupportedValue[i].u16 == 0xFFFF)
+				strcpy (buf, _("infinite"));
+			else
+				sprintf (buf, _("%d mm"), dpd->FORM.Enum.SupportedValue[i].u16);
+                	gp_widget_add_choice (*widget,buf);
+			if (dpd->CurrentValue.u16 == dpd->FORM.Enum.SupportedValue[i].u16) {
+				gp_widget_set_value (*widget, buf);
+				valset = 1;
+			}
+		}
+		if (!valset) {
+			sprintf (buf, _("%d mm"), dpd->CurrentValue.u16);
+			gp_widget_set_value (*widget, buf);
+		}
+	}
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		float value_float , start=0.0, end=0.0, step=0.0;
+
+		gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
+
+		start = dpd->FORM.Range.MinimumValue.u16/100.0;
+		end = dpd->FORM.Range.MaximumValue.u16/100.0;
+		step = dpd->FORM.Range.StepSize.u16/100.0;
+		gp_widget_set_range (*widget, start, end, step);
+		value_float = dpd->CurrentValue.u16/100.0;
+		gp_widget_set_value (*widget, &value_float);
+	}
+	return GP_OK;
+}
+
+static int
+_put_FocusDistance(CONFIG_PUT_ARGS) {
+	int ret, val;
+	const char *value_str;
+
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		float value_float;
+
+		ret = gp_widget_get_value (widget, &value_float);
+		if (ret != GP_OK)
+			return ret;
+		propval->u16 = value_float;
+		return GP_OK;
+	}
+	/* else ENUMeration */
+	gp_widget_get_value (widget, &value_str);
+	if (!strcmp (value_str, _("infinite"))) {
+		propval->u16 = 0xFFFF;
+		return GP_OK;
+	}
+	if (!sscanf(value_str, _("%d mm"), &val))
+		return GP_ERROR_BAD_PARAMETERS;
+	propval->u16 = val;
+	return GP_OK;
+}
+
+
+static int
 _get_Nikon_FocalLength(CONFIG_GET_ARGS) {
 	char	len[20];
 
@@ -2971,6 +3046,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
         { N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+        { N_("Focus Distance"), "focusdistance", PTP_DPC_FocusDistance, 0, PTP_DTC_UINT16, _get_FocusDistance, _put_FocusDistance},
         { N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
         { N_("Focal Length Minimum"), "minfocallength", PTP_DPC_NIKON_FocalLengthMin, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_FocalLength, _put_None},
         { N_("Focal Length Maximum"), "maxfocallength", PTP_DPC_NIKON_FocalLengthMax, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_FocalLength, _put_None},
