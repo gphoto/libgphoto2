@@ -482,6 +482,36 @@ append_folder (CameraFilesystem *fs, const char *folder, GPContext *context)
         return (GP_OK);
 }
 
+#define X(x)											\
+	if (((x - old) >= 0) && ((x - old) < prevcount)) {					\
+		x = new + (x - old);								\
+	}
+
+
+/* When we realloc the files[] array, we need to fix up the
+ * lru pointers. 
+ * in libgphoto2 2.5 we will use normal linked lists instead of
+ * this hack.
+ */
+static void
+fixup_lru_chain (CameraFilesystem *fs, CameraFilesystemFile *old,
+	CameraFilesystemFile *new, int prevcount) {
+	CameraFilesystemFile	*x;
+
+	if (!fs->lru_first) return;
+	if (new == old) return;
+
+	X(fs->lru_first);
+	X(fs->lru_last);
+
+	x = fs->lru_first;
+	do {
+		X (x->lru_next);
+		X (x->lru_prev);
+		x = x->lru_next;
+	} while (x && (x != fs->lru_last));
+}
+
 static int
 append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 {
@@ -498,7 +528,7 @@ append_file (CameraFilesystem *fs, int x, CameraFile *file, GPContext *context)
 		CHECK_MEM (new = realloc (fs->folder[x].file,
 					sizeof (CameraFilesystemFile) *
 						(fs->folder[x].count + 1)));
-	/* BAD BAD BAD BAD: The LRU lists point into the file array :( -Marcus */
+	fixup_lru_chain (fs, fs->folder[x].file, new, fs->folder[x].count);
 	fs->folder[x].file = new;
 	fs->folder[x].count++;
 	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
@@ -712,6 +742,7 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 		CHECK_MEM (new = realloc (fs->folder[x].file,
 					sizeof (CameraFilesystemFile) *
 					(fs->folder[x].count + 1)));
+	fixup_lru_chain (fs, fs->folder[x].file, new, fs->folder[x].count);
 	fs->folder[x].file = new;
 	fs->folder[x].count++;
 	memset (&(fs->folder[x].file[fs->folder[x].count - 1]), 0,
@@ -793,6 +824,7 @@ delete_file (CameraFilesystem *fs, int x, int y)
 	/* Get rid of the last one */
 	new_fip = realloc (fs->folder[x].file,
 		sizeof (CameraFilesystemFile) * (fs->folder[x].count));
+	fixup_lru_chain (fs, fs->folder[x].file, new_fip, fs->folder[x].count);
 	if (!fs->folder[x].count || (fs->folder[x].count && new_fip))
 		fs->folder[x].file = new_fip;
 
