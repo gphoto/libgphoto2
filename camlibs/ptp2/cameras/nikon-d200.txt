@@ -67,50 +67,875 @@ Device Properties Supported:
   0x5018
   0x501c
 
-Camera summary:
-Model: D200
-  device version: V1.00
-  serial number:  0000000
-Vendor extension ID: 0x0000000a
-Vendor extension description: Nikon PTP Extensions
+Kamerazusammenfassung:
+Hersteller: Nikon Corporation
+Modell: D200
+  Version: V2.00
+  Seriennummer: 0000000
+Vendor Extension ID: 0xa (1.0)
+Beschreibung der Vendor Extension: Nikon PTP Extensions
 
-Capture Formats: JPEG Undefined Type
-Display Formats: Undefined Type, Association/Directory, TIFF, JPEG, JFIF, DPOF, Script
+Aufnahmeformate: JPEG Undefined Type
+Anzeigeformate: Undefined Type, Association/Directory, TIFF, JPEG, JFIF, DPOF, Script
 
-Device Capabilities:
-	File Download, File Deletion, File Upload
-	Generic Image Capture, No Open Capture, Nikon Capture
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Generische Bild Aufnahme, keine Offene Aufnahme, Nikon Aufnahme
 
-Storage Devices Summary:
+Informationen über Speichermedium:
 store_00010001:
-	StorageDescription: None
-	VolumeLabel: NIKON D100
-	Storage Type: Removable RAM (memory card)
-	Filesystemtype: Digital Camera Layout (DCIM)
-	Access Capability: Read Only with Object deletion
-	Maximum Capability: 520429568 (496 MB)
-	Free Space (Bytes): 479625216 (457 MB)
-	Free Space (Images): 155
+	Beschreibung des Speichergeräts: Keine
+	Label des Speichergerätes: NIKON D200
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Nur Lesen und Löschen
+	Maximale Kapazität: 2047541248 (1952 MB)
+	Freier Platz (Bytes): 1983053824 (1891 MB)
+	Freier Speicher (Bilder): 116
 
-Device Property Summary:
-Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
-Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+Properties des Geräts:
+Batterie Ladezustand(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 30% (30)
+Bildgröße(0x5003):(readwrite) (type=0xffff) Enumeration [
 	'3872x2592',
 	'2896x1944',
 	'1936x1296'
 	] value: '3872x2592'
-Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6] value: JPEG Norm (1)
-White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787] value: Auto (2)
-F-Number(0x5007):(readwrite) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3.5 (350)
-Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 7000, step 1] value: 18 mm (1800)
-Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: Manual Focus (1)
-Exposure Metering Mode(0x500b):(read only) (type=0x4) Enumeration [2,3,4] value: Matrix (3)
-Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
-Exposure Time(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0.02 sec (2000)
-Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: A (3)
-Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200] value: ISO 500 (500)
-Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
-Date Time(0x5011):(readwrite) (type=0xffff) '20060404T115322'
-Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [1,2,32784,32785,32786] value: Single Shot (1)
-Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 25, step 1] value: 1
-Focus Metering Mode(0x501c):(read only) (type=0x4) Enumeration [2,32784,32785,32786] value: Single Area (32784)
+Kompressions Parameter(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6] value: 3
+Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787] value: Automatic (2)
+F-Nummer(0x5007):(readwrite) (type=0x4) Enumeration [280] value: f/2.8 (280)
+Fokus Tiefe(0x5008):(read only) (type=0x6) Range [0 - 0, step 1] value: 0 mm (0)
+Fokusmodus(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785] value: Manual Focus (1)
+Belichtungsmessmodus(0x500b):(read only) (type=0x4) Enumeration [2,3,4] value: Multi-spot (3)
+Blitzmodus(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32785,32786,32787] value: Default (32784)
+Belichtungszeit(0x500d):(read only) (type=0x6) Enumeration [1,2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0.033 sec (3333)
+Belichtungs Programm Modus(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: A (3)
+Belichtungs Index (nach ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200] value: ISO 200 (200)
+Belichtungskompensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: -0.3 stops (-333)
+Datum und Zeit(0x5011):(readwrite) (type=0xffff) '20090120T134930'
+Bildaufnahme Modus(0x5013):(read only) (type=0x4) Enumeration [1,2,32784,32785,32786] value: Single Shot (1)
+Bildzahl im Burstmodus(0x5018):(readwrite) (type=0x4) Range [1 - 25, step 1] value: 1
+Entfernungs Messungs Modus(0x501c):(read only) (type=0x4) Enumeration [2,32784,32785,32786] value: Single Area (32784)
+Shooting Bank(0xd010):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Shooting Bank Name A(0xd011):(readwrite) (type=0xffff) '                    '
+Shooting Bank Name B(0xd012):(readwrite) (type=0xffff) 'Ok                  '
+Shooting Bank Name C(0xd013):(readwrite) (type=0xffff) '                    '
+Shooting Bank Name D(0xd014):(readwrite) (type=0xffff) '                    '
+Property 0xd015:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Raw Compression(0xd016):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Automatische Weißabgleich Abweichung(0xd017):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Tungsten Weißabgleich Abweichung(0xd018):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Floureszierend Weißabgleich Abweichung(0xd019):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Tageslicht Weißabgleich Abweichung(0xd01a):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Blitz Weißabgleich Abweichung(0xd01b):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Wolkig Weißabgleich Abweichung(0xd01c):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Schattig Weißabgleich Abweichung(0xd01d):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Weißabgleich Farbtemperatur(0xd01e):(readwrite) (type=0x4) Range [0 - 30, step 1] value: 20
+White Balance Preset Number(0xd01f):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 0
+Property 0xd020:(readwrite) (type=0xffff) '                                    '
+Property 0xd021:(readwrite) (type=0xffff) '                                    '
+Property 0xd022:(readwrite) (type=0xffff) '                                    '
+Property 0xd023:(readwrite) (type=0xffff) '                                    '
+Property 0xd024:(readwrite) (type=0xffff) '                                    '
+White Balance Preset Value 0(0xd025):(read only) (type=0x6) 53215334
+White Balance Preset Value 1(0xd026):(read only) (type=0x6) 30212454
+White Balance Preset Value 2(0xd027):(read only) (type=0x6) 30212454
+White Balance Preset Value 3(0xd028):(read only) (type=0x6) 30212454
+White Balance Preset Value 4(0xd029):(read only) (type=0x6) 30212454
+Schärfen(0xd02a):(readwrite) (type=0x2) Range [0 - 6, step 1] value: Auto (0)
+Ton Anpassung(0xd02b):(readwrite) (type=0x2) Range [0 - 4, step 1] value: Auto (0)
+Farbmodell(0xd02c):(readwrite) (type=0x2) Range [0 - 2, step 1] value: sRGB (0)
+Farbton Anpassung(0xd02d):(readwrite) (type=0x1) Range [-9 - 9, step 3] value: 0
+Fokus Tiefe der Linse (Nicht CPU)(0xd02e):(readwrite) (type=0x2) Range [0 - 40, step 1] value: 14
+Maximale Blende der Linse (Nicht CPU)(0xd02f):(readwrite) (type=0x2) Range [0 - 22, step 1] value: 6
+Property 0xd031:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd032:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+PTP_DPC_NIKON_CSMMenuBankSelect(0xd040):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Menu Bank Name A(0xd041):(readwrite) (type=0xffff) '                    '
+Menu Bank Name B(0xd042):(readwrite) (type=0xffff) '                    '
+Menu Bank Name C(0xd043):(readwrite) (type=0xffff) '                    '
+Menu Bank Name D(0xd044):(readwrite) (type=0xffff) '                    '
+Reset Menu Bank(0xd045):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+PTP_DPC_NIKON_A1AFCModePriority(0xd048):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+PTP_DPC_NIKON_A2AFSModePriority(0xd049):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+PTP_DPC_NIKON_A3GroupDynamicAF(0xd04a):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+PTP_DPC_NIKON_A4AFActivation(0xd04b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Fokus Bereich Wraparound(0xd04f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Vertikaler Autofokus An(0xd050):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 0
+Property 0xd051:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1
+Property 0xd052:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Auto ISO(0xd054):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+ISO-Schritt(0xd055):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Belichtungszeitschritt(0xd056):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 1/3 (0)
+Belichtungskompensation (EV)(0xd057):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Belichtungskompensation(0xd058):(readwrite) (type=0x2) Range [0 - 2, step 1] value: Off (0)
+Mittelpunkt/Gewichtet Bereich(0xd059):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 8 mm (1)
+Property 0xd05a:(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Property 0xd05b:(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Property 0xd05c:(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Belichtungs Lock(0xd05e):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Fokus Lock(0xd05f):(readwrite) (type=0x2) Range [0 - 4, step 1] value: AE/AF Lock (0)
+Zeit für automatische Sensor Abschaltung(0xd062):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 6 seconds (1)
+Selbstauslöserzeit(0xd063):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 10 seconds (2)
+Zeit für automatische Abschaltung des LCD(0xd064):(readwrite) (type=0x2) Range [0 - 4, step 1] value: 10 seconds (0)
+Abstand bei Mehrfachbelichtung(0xd068):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1
+PTP_DPC_NIKON_D3ExpDelayMode(0xd06a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Langzeitbelichtungsrauschkompensation(0xd06b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Bildnummer Zählung(0xd06c):(readwrite) (type=0x2) Range [0 - 2, step 1] value: On (1)
+PTP_DPC_NIKON_D7Illumination(0xd06f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd070:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 2
+Blitzsynchronisations Geschwindigkeit(0xd074):(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Blitz Belichtungszeit(0xd075):(readwrite) (type=0x2) Range [0 - 11, step 1] value: 0
+Modellierblitz(0xd077):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Abstufungsbereich(0xd078):(readwrite) (type=0x2) Range [0 - 3, step 1] value: Flash only (2)
+Manueller Abstufungsmodus(0xd079):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Abstufungsrichtung(0xd07a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: MTR > Under (0)
+Automatischer Abstufungsselektion(0xd07b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Mittlerer Button Aufnahme Modus(0xd080):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Mittlerer Button Playback Modus(0xd081):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Multiselektor(0xd082):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Photo Info. Playback(0xd083):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Weise Func. Button zu(0xd084):(readwrite) (type=0x2) Range [0 - 9, step 1] value: 0
+Passe Kommando Dials an(0xd085):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Umgedrehtes Kommando Rad(0xd086):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Blendeneinstellung(0xd087):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Menüs und Abspielen(0xd088):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Knöpfe und Räder(0xd089):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Auslösen ohne CF Karte(0xd08a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+Property 0xd08b:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Bild Kommentar(0xd090):(readwrite) (type=0xffff) '                                    '
+Image Comment Enable(0xd091):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Bildrotationsflag(0xd092):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+Bracketing Enable(0xd0c0):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Exposure Bracketing Step(0xd0c1):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 3
+Exposure Bracketing Program(0xd0c2):(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Auto Exposure Bracket Count(0xd0c3):(read only) (type=0x2) Range [1 - 9, step 1] value: 1
+White Balance Bracket Step(0xd0c4):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+White Balance Bracket Program(0xd0c5):(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Objektiv Kennung(0xd0e0):(read only) (type=0x2) Unknown (0)
+Lens Sort(0xd0e1):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Lens Type(0xd0e2):(read only) (type=0x2) 0
+Minimale Brennweite(0xd0e3):(read only) (type=0x6) 0 mm (0)
+Maximale Brennweite(0xd0e4):(read only) (type=0x6) 0 mm (0)
+Maximale Blende bei Minimaler Brennweite(0xd0e5):(read only) (type=0x4) f/0 (0)
+Maximale Blende bei maximaler Brennweite(0xd0e6):(read only) (type=0x4) f/0 (0)
+Nikon Exposure Time(0xd100):(read only) (type=0x6) Enumeration [73536,71936,70536,69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,65538,655376,655373,65537,851978,1048586,131073,1638410,196609,262145,327681,393217,524289,655361,851969,983041,1310721,1638401,1966081] value: 65539
+Netzanschluss(0xd101):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Warning Status(0xd102):(read only) (type=0x2) 0
+Maximale Bildanzahl(0xd103):(read only) (type=0x2) Range [1 - 25, step 1] value: 21
+AF Locked(0xd104):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+AE Locked(0xd105):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+FV Locked(0xd106):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Aktiver AF Sensor(0xd108):(readwrite) (type=0x2) Range [0 - 10, step 1] value: 6
+Flexible Program(0xd109):(readwrite) (type=0x1) Range [-30 - 30, step 2] value: 0
+Belichtungsmesser(0xd10a):(read only) (type=0x1) Range [-128 - 127, step 1] value: 0.0 stops (0)
+Property 0xd10b:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd10c:(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd10d:(read only) (type=0xffff) '                    '
+Camera Orientation(0xd10e):(read only) (type=0x2) Range [0 - 2, step 1] value: 0' (0)
+Property 0xd10f:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+External Flash Attached(0xd120):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+External Flash Status(0xd121):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+External Flash Sort(0xd122):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+External Flash Compensation(0xd124):(read only) (type=0x1) Range [-18 - 18, step 1] value: 0 (0)
+External Flash Mode(0xd125):(read only) (type=0x2) Range [0 - 7, step 1] value: 0
+Blitz Belichtungskompensation(0xd126):(readwrite) (type=0x1) Range [-18 - 6, step 2] value: 0.0 stops (0)
+Bild Optimierung(0xd140):(readwrite) (type=0x2) Range [0 - 6, step 1] value: Normal (0)
+Sättigung(0xd142):(readwrite) (type=0x2) Range [0 - 3, step 1] value: Moderate (1)
+AF Signalton Modus(0xd160):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 2
+Autofokus Hilfslicht(0xd163):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+Auto ISO P/A/DVP Einstellung(0xd164):(readwrite) (type=0x2) Range [0 - 13, step 1] value: 2 (8)
+AF Bereich Aufhellung(0xd166):(readwrite) (type=0x2) Range [0 - 2, step 1] value: Auto (0)
+Blitzmodus(0xd167):(readwrite) (type=0x2) Range [0 - 3, step 1] value: iTTL (0)
+Gitterlinien im Sucher(0xd16c):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+Blitzmodus mit manuelle Energie(0xd16d):(readwrite) (type=0x2) Range [0 - 7, step 1] value: Full (0)
+Property 0xd181:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd182:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd183:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 3
+Blitz offen(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Blitz geladen(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Property 0xd1d0:(readwrite) (type=0x2) Range [0 - 5, step 1] value: 3
+Property 0xd1d1:(readwrite) (type=0x2) Range [0 - 13, step 1] value: 8
+Property 0xd1d2:(readwrite) (type=0x2) Range [0 - 13, step 1] value: 9
+Property 0xd1d3:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd1d4:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd1d5:(readwrite) (type=0x2) Range [0 - 18, step 1] value: 9
+Property 0xd1d6:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Property 0xd1d7:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd1d8:(readwrite) (type=0x2) Range [0 - 18, step 1] value: 9
+Property 0xd1d9:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Property 0xd1da:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd1db:(readwrite) (type=0x2) Range [0 - 18, step 1] value: 9
+Property 0xd1dc:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+
+/main/settings/autofocusdrive
+	Label: Drive Nikon DSLR Autofocus
+	Type: TOGGLE
+	Current: 0
+/main/settings/time
+	Label: Camera Time
+	Type: DATE
+	Current: 1232455777
+	Printable: Tue Jan 20 13:49:37 2009
+/main/settings/imgcomment
+	Label: Image Comment
+	Type: TEXT
+	Current:                                     
+/main/settings/imgcommentenable
+	Label: Enable Image Comment
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/lcdofftime
+	Label: LCD Off Time
+	Type: RADIO
+	Current: 10 seconds
+	Choice: 0 10 seconds
+	Choice: 1 20 seconds
+	Choice: 2 1 minute
+	Choice: 3 5 minutes
+	Choice: 4 10 minutes
+/main/settings/meterofftime
+	Label: Meter Off Time
+	Type: RADIO
+	Current: 6 seconds
+	Choice: 0 4 seconds
+	Choice: 1 6 seconds
+	Choice: 2 8 seconds
+	Choice: 3 16 seconds
+	Choice: 4 30 minutes
+/main/settings/reversedial
+	Label: Reverse Command Dial
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/battery
+	Label: Battery Level
+	Type: TEXT
+	Current: 30%
+/main/settings/orientation
+	Label: Camera Orientation
+	Type: RADIO
+	Current: 0'
+	Choice: 0 0'
+	Choice: 1 270'
+	Choice: 2 90'
+/main/settings/acpower
+	Label: AC Power
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/externalflash
+	Label: External Flash
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/flashopen
+	Label: Flash Open
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/flashcharged
+	Label: Flash Charged
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/settings/fastfs
+	Label: Fast Filesystem
+	Type: TOGGLE
+	Current: 1
+/main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Memory card
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/imgsettings/imgquality
+	Label: Image Quality
+	Type: RADIO
+	Current: NEF (Raw)
+	Choice: 0 JPEG Basic
+	Choice: 1 JPEG Normal
+	Choice: 2 JPEG Fine
+	Choice: 3 NEF (Raw)
+	Choice: 4 NEF+Basic
+	Choice: 5 NEF+Normal
+	Choice: 6 NEF+Fine
+/main/imgsettings/imgsize
+	Label: Image Size
+	Type: RADIO
+	Current: 3872x2592
+	Choice: 0 3872x2592
+	Choice: 1 2896x1944
+	Choice: 2 1936x1296
+/main/imgsettings/iso
+	Label: ISO Speed
+	Type: RADIO
+	Current: 200
+	Choice: 0 100
+	Choice: 1 125
+	Choice: 2 160
+	Choice: 3 200
+	Choice: 4 250
+	Choice: 5 320
+	Choice: 6 400
+	Choice: 7 500
+	Choice: 8 640
+	Choice: 9 800
+	Choice: 10 1000
+	Choice: 11 1250
+	Choice: 12 1600
+	Choice: 13 2000
+	Choice: 14 2500
+	Choice: 15 3200
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Automatic
+	Choice: 0 Automatic
+	Choice: 1 Daylight
+	Choice: 2 Fluorescent
+	Choice: 3 Tungsten
+	Choice: 4 Flash
+	Choice: 5 Cloudy
+	Choice: 6 Shade
+	Choice: 7 Color Temperature
+	Choice: 8 Preset
+/main/imgsettings/colormodel
+	Label: Color Model
+	Type: RADIO
+	Current: sRGB (portrait)
+	Choice: 0 sRGB (portrait)
+	Choice: 1 AdobeRGB
+	Choice: 2 sRGB (nature)
+/main/imgsettings/autoiso
+	Label: Auto ISO
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/imgsettings/autoisopadv
+	Label: Auto ISO PADV Time
+	Type: RADIO
+	Current: 2
+	Choice: 0 1/125
+	Choice: 1 1/60
+	Choice: 2 1/30
+	Choice: 3 1/15
+	Choice: 4 1/8
+	Choice: 5 1/4
+	Choice: 6 1/2
+	Choice: 7 1
+	Choice: 8 2
+	Choice: 9 4
+	Choice: 10 8
+	Choice: 11 15
+	Choice: 12 30
+	Choice: 13 Unknown value 000d
+/main/capturesettings/longexpnr
+	Label: Long Exp Noise Reduction
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/autofocusmode2
+	Label: Auto Focus Mode 2
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/assistlight
+	Label: Assist Light
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/exposurecompensation
+	Label: Exposure Compensation
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/nikonflashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: iTTL
+	Choice: 0 iTTL
+	Choice: 1 Manual
+	Choice: 2 Commander
+	Choice: 3 Unknown value 0003
+/main/capturesettings/af-area-illumination
+	Label: AF Area Illumination
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Off
+	Choice: 2 On
+/main/capturesettings/afbeep
+	Label: AF Beep Mode
+	Type: TOGGLE
+	Current: 0
+/main/capturesettings/f-number
+	Label: F-Number
+	Type: RADIO
+	Current: f/2.8
+	Choice: 0 f/2.8
+/main/capturesettings/focallength
+	Label: Focal Length
+	Type: RANGE
+	Current: 0
+	Bottom: 0
+	Top: 0
+	Step: 0.01
+/main/capturesettings/minfocallength
+	Label: Focal Length Minimum
+	Type: TEXT
+	Current: 0 mm
+/main/capturesettings/maxfocallength
+	Label: Focal Length Maximum
+	Type: TEXT
+	Current: 0 mm
+/main/capturesettings/apertureatminfocallength
+	Label: Maximum Aperture at Focal Length Minimum
+	Type: TEXT
+	Current: 0 mm
+/main/capturesettings/apertureatmaxfocallength
+	Label: Maximum Aperture at Focal Length Maximum
+	Type: TEXT
+	Current: 0 mm
+/main/capturesettings/focusmode
+	Label: Focus Mode
+	Type: RADIO
+	Current: Manual
+	Choice: 0 Manual
+	Choice: 1 AF-S
+	Choice: 2 AF-C
+/main/capturesettings/exposurebiascompensation
+	Label: Exposure Bias Compensation
+	Type: RADIO
+	Current: -333
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+/main/capturesettings/exptime
+	Label: Exposure Time
+	Type: RADIO
+	Current: 3.333
+	Choice: 0 0.001
+	Choice: 1 0.002
+	Choice: 2 0.003
+	Choice: 3 0.004
+	Choice: 4 0.005
+	Choice: 5 0.006
+	Choice: 6 0.008
+	Choice: 7 0.010
+	Choice: 8 0.012
+	Choice: 9 0.015
+	Choice: 10 0.020
+	Choice: 11 0.025
+	Choice: 12 0.031
+	Choice: 13 0.040
+	Choice: 14 0.050
+	Choice: 15 0.062
+	Choice: 16 0.080
+	Choice: 17 0.100
+	Choice: 18 0.125
+	Choice: 19 0.166
+	Choice: 20 0.200
+	Choice: 21 0.250
+	Choice: 22 0.333
+	Choice: 23 0.400
+	Choice: 24 0.500
+	Choice: 25 0.666
+	Choice: 26 0.769
+	Choice: 27 1
+	Choice: 28 1.250
+	Choice: 29 1.666
+	Choice: 30 2
+	Choice: 31 2.500
+	Choice: 32 3.333
+	Choice: 33 4
+	Choice: 34 5
+	Choice: 35 6.250
+	Choice: 36 7.692
+	Choice: 37 10
+	Choice: 38 13
+	Choice: 39 16
+	Choice: 40 20
+	Choice: 41 25
+	Choice: 42 30
+	Choice: 43 40
+	Choice: 44 50
+	Choice: 45 60
+	Choice: 46 80
+	Choice: 47 100
+	Choice: 48 130
+	Choice: 49 150
+	Choice: 50 200
+	Choice: 51 250
+	Choice: 52 300
+/main/capturesettings/expprogram
+	Label: Exposure Program
+	Type: RADIO
+	Current: A
+	Choice: 0 M
+	Choice: 1 P
+	Choice: 2 A
+	Choice: 3 S
+/main/capturesettings/capturemode
+	Label: Still Capture Mode
+	Type: RADIO
+	Current: Single Shot
+	Choice: 0 Single Shot
+	Choice: 1 Burst
+	Choice: 2 Continuous Low Speed
+	Choice: 3 Timer
+	Choice: 4 Mirror Up
+/main/capturesettings/focusmetermode
+	Label: Focus Metering Mode
+	Type: RADIO
+	Current: Single Area
+	Choice: 0 Multi-spot
+	Choice: 1 Single Area
+	Choice: 2 Closest Subject
+	Choice: 3 Group Dynamic
+/main/capturesettings/exposuremetermode
+	Label: Exposure Metering Mode
+	Type: RADIO
+	Current: Multi Spot
+	Choice: 0 Center Weighted
+	Choice: 1 Multi Spot
+	Choice: 2 Center Spot
+/main/capturesettings/flashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: Default
+	Choice: 0 Red-eye automatic
+	Choice: 1 Default
+	Choice: 2 Slow Sync
+	Choice: 3 Rear Curtain Sync + Slow Sync
+	Choice: 4 Red-eye Reduction + Slow Sync
+/main/capturesettings/focusareawrap
+	Label: Focus Area Wrap
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/exposurelock
+	Label: Exposure Lock
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/aelaflmode
+	Label: AE-L/AF-L Mode
+	Type: RADIO
+	Current: AE/AF Lock
+	Choice: 0 AE/AF Lock
+	Choice: 1 AE Lock only
+	Choice: 2 AF Lock Only
+	Choice: 3 AF Lock Hold
+	Choice: 4 AF On
+/main/capturesettings/filenrsequencing
+	Label: File Number Sequencing
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/viewfindergrid
+	Label: Viewfinder Grid
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/imagerotationflag
+	Label: Image Rotation Flag
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/nocfcardrelease
+	Label: Release without CF card
+	Type: RADIO
+	Current: On
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/flashmodemanualpower
+	Label: Flash Mode Manual Power
+	Type: RADIO
+	Current: Full
+	Choice: 0 Full
+	Choice: 1 1/2
+	Choice: 2 1/4
+	Choice: 3 1/8
+	Choice: 4 1/16
+	Choice: 5 Unknown value 0005
+	Choice: 6 Unknown value 0006
+	Choice: 7 Unknown value 0007
+/main/capturesettings/autofocusarea
+	Label: Auto Focus Area
+	Type: RADIO
+	Current: Unknown value 0006
+	Choice: 0 Centre
+	Choice: 1 Top
+	Choice: 2 Bottom
+	Choice: 3 Left
+	Choice: 4 Right
+	Choice: 5 Unknown value 0005
+	Choice: 6 Unknown value 0006
+	Choice: 7 Unknown value 0007
+	Choice: 8 Unknown value 0008
+	Choice: 9 Unknown value 0009
+	Choice: 10 Unknown value 000a
+/main/capturesettings/flashexposurecompensation
+	Label: Flash Exposure Compensation
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 1
+	Step: 0.333333
+/main/capturesettings/bracketing
+	Label: Bracketing
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/evstep
+	Label: EV Step
+	Type: RADIO
+	Current: 1/3
+	Choice: 0 1/3
+	Choice: 1 1/2
+	Choice: 2 Unknown value 0002
+/main/capturesettings/bracketset
+	Label: Bracket Set
+	Type: RADIO
+	Current: Flash only
+	Choice: 0 AE & Flash
+	Choice: 1 AE only
+	Choice: 2 Flash only
+	Choice: 3 WB bracketing
+/main/capturesettings/bracketorder
+	Label: Bracket Order
+	Type: RADIO
+	Current: MTR > Under
+	Choice: 0 MTR > Under
+	Choice: 1 Under > MTR
+/main/capturesettings/burstnumber
+	Label: Burst Number
+	Type: RANGE
+	Current: 1
+	Bottom: 1
+	Top: 25
+	Step: 1
+/main/capturesettings/autowhitebias
+	Label: Auto White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/tungstenwhitebias
+	Label: Tungsten White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/flourescentwhitebias
+	Label: Fluorescent White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/daylightwhitebias
+	Label: Daylight White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/flashwhitebias
+	Label: Flash White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/cloudywhitebias
+	Label: Cloudy White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/shadewhitebias
+	Label: Shady White Balance Bias
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+/main/capturesettings/whitebiaspresetno
+	Label: White Balance Bias Preset Nr
+	Type: RADIO
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+/main/capturesettings/whitebiaspreset0
+	Label: White Balance Bias Preset 0
+	Type: TEXT
+	Current: 53215334
+/main/capturesettings/whitebiaspreset1
+	Label: White Balance Bias Preset 1
+	Type: TEXT
+	Current: 30212454
+/main/capturesettings/whitebiaspreset2
+	Label: White Balance Bias Preset 2
+	Type: TEXT
+	Current: 30212454
+/main/capturesettings/whitebiaspreset3
+	Label: White Balance Bias Preset 3
+	Type: TEXT
+	Current: 30212454
+/main/capturesettings/whitebiaspreset4
+	Label: White Balance Bias Preset 4
+	Type: TEXT
+	Current: 30212454
+/main/capturesettings/selftimerdelay
+	Label: Selftimer Delay
+	Type: RADIO
+	Current: 10 seconds
+	Choice: 0 2 seconds
+	Choice: 1 5 seconds
+	Choice: 2 10 seconds
+	Choice: 3 20 seconds
+/main/capturesettings/centerweightsize
+	Label: Center Weight Area
+	Type: RADIO
+	Current: 8 mm
+	Choice: 0 6 mm
+	Choice: 1 8 mm
+	Choice: 2 10 mm
+	Choice: 3 12 mm
+	Choice: 4 Average
+/main/capturesettings/flashshutterspeed
+	Label: Flash Shutter Speed
+	Type: RADIO
+	Current: 1/60
+	Choice: 0 1/60
+	Choice: 1 1/30
+	Choice: 2 1/15
+	Choice: 3 1/8
+	Choice: 4 1/4
+	Choice: 5 1/2
+	Choice: 6 1
+	Choice: 7 2
+	Choice: 8 4
+	Choice: 9 8
+	Choice: 10 15
+	Choice: 11 30
+/main/capturesettings/optimizeimage
+	Label: Optimize Image
+	Type: RADIO
+	Current: Normal
+	Choice: 0 Normal
+	Choice: 1 Vivid
+	Choice: 2 Sharper
+	Choice: 3 Softer
+	Choice: 4 Direct Print
+	Choice: 5 Portrait
+	Choice: 6 Landscape
+/main/capturesettings/sharpening
+	Label: Sharpening
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Normal
+	Choice: 2 Low
+	Choice: 3 Medium Low
+	Choice: 4 Medium high
+	Choice: 5 High
+	Choice: 6 None
+/main/capturesettings/tonecompensation
+	Label: Tone Compensation
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Normal
+	Choice: 2 Low contrast
+	Choice: 3 Medium Low
+	Choice: 4 Medium High
+/main/capturesettings/saturation
+	Label: Saturation
+	Type: RADIO
+	Current: Moderate
+	Choice: 0 Normal
+	Choice: 1 Moderate
+	Choice: 2 Enhanced
+	Choice: 3 Unknown value 0003
+/main/capturesettings/hueadjustment
+	Label: Hue Adjustment
+	Type: RANGE
+	Current: 0
+	Bottom: -9
+	Top: 9
+	Step: 3
+/main/capturesettings/lightmeter
+	Label: Light Meter
+	Type: TEXT
+	Current: 0.0
+/main/capturesettings/aflocked
+	Label: AF Locked
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/aelocked
+	Label: AE Locked
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
+/main/capturesettings/fvlocked
+	Label: FV Locked
+	Type: RADIO
+	Current: Off
+	Choice: 0 On
+	Choice: 1 Off
