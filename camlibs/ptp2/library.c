@@ -1434,14 +1434,14 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	/* Note that we are not a so called 'Licensed Implementation' of MTP
 	 * ... (for a LI you need express approval from Microsoft etc.)
 	 */
-	strncpy (text->text,
+	snprintf (text->text, sizeof(text->text),
 	 _("PTP2 driver\n"
 	   "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-	   "(c) 2003-2008 by Marcus Meissner <marcus@jet.franken.de>.\n"
+	   "(c) 2003-%d by Marcus Meissner <marcus@jet.franken.de>.\n"
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
 	   "\n"
-	   "Enjoy!"), sizeof (text->text));
+	   "Enjoy!"), 2009);
 	return (GP_OK);
 }
 
