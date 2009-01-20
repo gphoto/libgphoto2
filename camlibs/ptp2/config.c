@@ -1128,6 +1128,7 @@ static struct deviceproptableu8 nikon_flashmode[] = {
 	{ N_("iTTL"),		0, 0 },
 	{ N_("Manual"),		1, 0 },
 	{ N_("Commander"),	2, 0 },
+	{ N_("Repeating"),	3, 0 }, /* stroboskop */
 };
 GENERIC8TABLE(Nikon_FlashMode,nikon_flashmode)
 
