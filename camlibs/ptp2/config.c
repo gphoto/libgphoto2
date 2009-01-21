@@ -1128,6 +1128,7 @@ static struct deviceproptableu8 nikon_flashmode[] = {
 	{ N_("iTTL"),		0, 0 },
 	{ N_("Manual"),		1, 0 },
 	{ N_("Commander"),	2, 0 },
+	{ N_("Repeating"),	3, 0 }, /* stroboskop */
 };
 GENERIC8TABLE(Nikon_FlashMode,nikon_flashmode)
 
@@ -2936,11 +2937,15 @@ _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 	CameraWidget *subwidget;
 	int submenuno;
 
+	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
+		return (GP_ERROR_NOT_SUPPORTED);
+
+        if (!ptp_operation_issupported (&camera->pl->params, PTP_OC_NIKON_GetProfileAllData))
+		return (GP_ERROR_NOT_SUPPORTED);
+
 	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
-		return (GP_ERROR_NOT_SUPPORTED);
 
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = wifi_profiles_menu+submenuno;
@@ -3143,8 +3148,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
 		if (!menus[menuno].submenus) { /* Custom menu */
 			struct menu *cur = menus+menuno;
-			cur->getfunc(camera, &section, cur);
-			gp_widget_append(*window, section);
+			ret = cur->getfunc(camera, &section, cur);
+			if (ret == GP_OK)
+				gp_widget_append(*window, section);
 			continue;
 		}
 		
@@ -3207,8 +3213,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			continue;
 
 		if (!menus[menuno].submenus) { /* Custom menu */
-			struct menu *cur = menus+menuno;
-			cur->putfunc(camera, section);
+			menus[menuno].putfunc(camera, section);
 			continue;
 		}
 		

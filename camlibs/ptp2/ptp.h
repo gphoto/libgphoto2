@@ -563,6 +563,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_ObjectInfoChanged		0xC008
 #define PTP_EC_CANON_RequestObjectTransfer	0xC009
 #define PTP_EC_CANON_CameraModeChanged		0xC00C
+#define PTP_EC_CANON_ShutterButtonPressed	0xC00E
 
 #define PTP_EC_CANON_StartDirectTransfer	0xC011
 #define PTP_EC_CANON_StopDirectTransfer		0xC013

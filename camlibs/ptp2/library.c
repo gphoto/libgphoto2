@@ -328,7 +328,7 @@ const static uint16_t nikon_d700_extra_props[] = {
 0xd200, 0xd201
 };
 
-/* not yet fully verified. -Marcus */
+/* from Jana Jaegers D200, extracted by Marcus */
 const static uint16_t nikon_d200_extra_props[] = {
 0xd010, 0xd011, 0xd012, 0xd013, 0xd014, 0xd015, 0xd016, 0xd017,
 0xd018, 0xd019, 0xd01a, 0xd01b, 0xd01c, 0xd01d, 0xd01e, 0xd01f,
@@ -339,19 +339,17 @@ const static uint16_t nikon_d200_extra_props[] = {
 0xd048, 0xd049, 0xd04a, 0xd04b, 0xd04f,
 0xd050, 0xd051, 0xd052, 0xd054, 0xd055, 0xd056, 0xd057,
 0xd058, 0xd059, 0xd05a, 0xd05b, 0xd05c, 0xd05e, 0xd05f,
-0xd062, 0xd063, 0xd064,
-0xd068, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
-0xd070, 0xd074, 0xd075, 0xd077,
-0xd078, 0xd079, 0xd07a, 0xd07b,
+0xd062, 0xd063, 0xd064, 0xd068, 0xd06a, 0xd06b, 0xd06c, 0xd06f,
+0xd070, 0xd074, 0xd075, 0xd077, 0xd078, 0xd079, 0xd07a, 0xd07b,
 0xd080, 0xd081, 0xd082, 0xd083, 0xd084, 0xd085, 0xd086, 0xd087,
 0xd088, 0xd089, 0xd08a, 0xd08b,
 0xd090, 0xd091, 0xd092,
 0xd0c0, 0xd0c1, 0xd0c2, 0xd0c3, 0xd0c4, 0xd0c5,
 0xd0e0, 0xd0e1, 0xd0e2, 0xd0e3, 0xd0e4, 0xd0e5, 0xd0e6,
 0xd100, 0xd101, 0xd102, 0xd103, 0xd104, 0xd105, 0xd106,
-0xd108, 0xd109, 0xd10a, 0xd10b, 0xd10c, 0xd10e, 0xd10f,
+0xd108, 0xd109, 0xd10a, 0xd10b, 0xd10c, 0xd10d, 0xd10e, 0xd10f,
 0xd120, 0xd121, 0xd122, 0xd124, 0xd125, 0xd126,
-0xd142,
+0xd140, 0xd142,
 0xd160, 0xd163, 0xd164, 0xd166, 0xd167, 0xd16c, 0xd16d,
 0xd181, 0xd182, 0xd183,
 0xd1c0, 0xd1c1,
@@ -431,7 +429,7 @@ static const struct {
 	{ 0x41a, nikon_d300_extra_props, sizeof(nikon_d300_extra_props)/sizeof(nikon_d300_extra_props[0]) },
 	/* D90 - confirmed by Marcus */
 	{ 0x421, nikon_d90_extra_props, sizeof(nikon_d90_extra_props)/sizeof(nikon_d90_extra_props[0]) },
-	/* D200 - guessed by Marcus */
+	/* D200 - confirmed by Marcus */
 	{ 0x410, nikon_d200_extra_props, sizeof(nikon_d200_extra_props)/sizeof(nikon_d200_extra_props[0]) },
 	/* D40x - confirmed by Marcus */
 	{ 0x418, nikon_d40x_extra_props, sizeof(nikon_d40x_extra_props)/sizeof(nikon_d40x_extra_props[0]) }
@@ -813,7 +811,7 @@ static struct {
 	/* Justin Case <justin_case@gmx.net> */
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, PTP_CAP},
 	/* Niclas Gustafsson (nulleman @ sf) */
-	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP},
+	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP}, /* no hidden props */
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP|PTP_NIKON_SUPPRESSED_PROPS},
@@ -887,13 +885,13 @@ static struct {
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* 0x306c is S45 in normal (canon) mode */
-	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* 0x306e is G3 in normal (canon) mode */
-	{"Canon:PowerShot S230 (PTP mode)",     0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S230 (PTP mode)",     0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* 0x3070 is S230 in normal (canon) mode */
-	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS v3 (PTP mode)",    0x04a9, 0x3071, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* it's the same as S230 */
 
 	{"Canon:Digital IXUS II (PTP mode)",    0x04a9, 0x3072, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
@@ -904,8 +902,8 @@ static struct {
 	{"Canon:Digital IXUS 400 (PTP mode)",   0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot S400 (PTP mode)",	0x04a9, 0x3075, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A300 (PTP mode)",     0x04a9, 0x3076, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S50 (PTP mode)",      0x04a9, 0x3077, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot G5 (PTP mode)",       0x04a9, 0x3085, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Elura 50 (PTP mode)",           0x04a9, 0x3087, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:MVX3i (PTP mode)",              0x04a9, 0x308d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x3084 is the EOS 300D/Digital Rebel in normal (canon) mode */
@@ -927,16 +925,16 @@ static struct {
 	{"Canon:PowerShot SD110 (PTP mode)",    0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS IIs (PTP mode)",   0x04a9, 0x30b6, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A400 (PTP mode)",     0x04a9, 0x30b7, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
  	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
  	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT},
- 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
- 	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
+ 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+ 	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
  	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, 0},
 	/* 30ef is the ID in explicit PTP mode.
@@ -948,10 +946,10 @@ static struct {
 	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ee, 0},
 	{"Canon:EOS 350D",                      0x04a9, 0x30ef, 0},
 	{"Canon:PowerShot S2 IS (PTP mode)",    0x04a9, 0x30f0, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-	{"Canon:PowerShot SD430 (PTP mode)",    0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
-	{"Canon:Digital IXUS Wireless (PTP mode)",0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot SD430 (PTP mode)",    0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS Wireless (PTP mode)",0x04a9, 0x30f1, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD500 (PTP mode)",    0x04a9, 0x30f2, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* reported by Gilles Dartiguelongue <dartigug@esiee.fr> */
 	{"Canon:Digital IXUS iZ (PTP mode)",    0x04a9, 0x30f4, PTPBUG_DELETE_SENDS_EVENT},
 	/* A340, Andreas Stempfhuber <andi@afulinux.de> */
@@ -997,7 +995,7 @@ static struct {
 	{"Canon:Digital IXUS 60 (PTP mode)",    0x04a9, 0x311c, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD600 (PTP mode)",    0x04a9, 0x311c, PTPBUG_DELETE_SENDS_EVENT},
 	/* Harald Dunkel <harald.dunkel@t-online.de> */
-	{"Canon:PowerShot G7 (PTP mode)",	0x04a9, 0x3125, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot G7 (PTP mode)",	0x04a9, 0x3125, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* Ales Kozumplik <kozumplik@gmail.com> */
 	{"Canon:PowerShot A530 (PTP mode)",     0x04a9, 0x3126, PTPBUG_DELETE_SENDS_EVENT},
 	/* Jerome Vizcaino <vizcaino_jerome@yahoo.fr> */
@@ -1038,7 +1036,7 @@ static struct {
 	/* https://launchpad.net/bugs/64146 */
 	{"Canon:PowerShot A450 (PTP mode)",     0x04a9, 0x3155, PTPBUG_DELETE_SENDS_EVENT},
 	/* Harald Dunkel <harald.dunkel@t-online.de> */                                                        
-	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roger Lynn <roger@rilynn.demon.co.uk> */
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
 	/* Mats Petersson <mats.petersson@ltu.se> */
