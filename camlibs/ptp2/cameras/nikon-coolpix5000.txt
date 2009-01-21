@@ -45,3 +45,31 @@ Device Properties Supported:
   0x500e
   0x500f
   0x5013
+Camera summary:
+Model: E5000
+  device version: E5000v1.8
+  serial number:  nnnnnnnnnnnn
+Vendor extension ID: 0x0000000a
+Vendor extension description: Nikon PTP Extensions
+
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+        '640x480',
+        '1024x768',
+        '1280x960',
+        '1600x1200',
+        '2560x1920',
+        '2560x1704'
+        ] value: '2560x1920'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [6,12,25,100,127] value: 25
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,5,32769,3,7] value: Auto (2)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [280,310,350,400,440,500,560,630,710,800] value: f/0 (0)
+Focal Length(0x5008):(readwrite) (type=0x6) Enumeration [2800,3000,3300,3500,3800,4100,4500,4900,5400,5900,6400,6900,7400,7900,8500] value: 28 mm (2800)
+Focus Distance(0x5009):(readwrite) (type=0x4) Enumeration [65535,10000,7000,5000,4000,3000,2500,2000,1700,1500,1300,1200,1100,1000,900,800,700,600,500,450,400,350,320,300,280,260,250,240,230,220,210,200,190,180,170,160,150,140,130,120,110,100,90,80,70,60,50,40,30,20] value: 20
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,0,3,1] value: 0
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,4,2,3] value: 1
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4,32769] value: 1
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [80000,40000,20000,10000,5000,2500,1250,662,333,167,80,40,20,10,5,2] value: 0.2 sec (20000)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [65535,100,200,400,800] value: ISO 65535 (65535)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1] value: Single Shot (1)
+Property 0xd001:(read only) (type=0x0) Undefined
