@@ -613,3 +613,179 @@ DWORD: Filter effect (None:0 Yellow:1 Orange:2 Red:3 Green:4)
 DWORD: Toning effect (None:0 Sepia:1 Blue:2 Purple:3 Green:4)
 
 ================
+
+Das steht am Bildschirm bei 1600ISO - brauchst du noch ein Logfile? Noch
+was: Wenn keine Speicherkarte in der Kamera ist, dann gibt's ein Segfault.
+
+ value on, t 1
+unknown EOS property type c18e
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d103, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d103, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type c18e
+unknown EOS property type c18e
+unknown EOS property type c18e
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d103, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d103, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d103, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d103, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type c18e
+unknown EOS property type c18e
+unknown EOS property type c18e
+Adding EOS property d102, datasize is 4
+Adding EOS property d101, datasize is 4
+Adding EOS property d103, datasize is 4
+Adding EOS property d106, datasize is 4
+Adding EOS property d108, datasize is 4
+Adding EOS property d107, datasize is 4
+Adding EOS property d109, datasize is 4
+Adding EOS property d105, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d104, datasize is 4
+Adding EOS property d112, datasize is 4
+Adding EOS property d111, datasize is 4
+Adding EOS property d10c, datasize is 4
+Adding EOS property d10b, datasize is 4
+Adding EOS property d10d, datasize is 4
+Adding EOS property d10e, datasize is 4
+Adding EOS property d10f, datasize is 4
+Adding EOS property d114, datasize is 4
+Adding EOS property d11a, datasize is 4
+Adding EOS property d115, datasize is 28
+Adding EOS property d119, datasize is 4
+Adding EOS property d116, datasize is 4
+Adding EOS property d11d, datasize is 4
+Adding EOS property d180, datasize is 5
+Adding EOS property d181, datasize is 5
+Adding EOS property d182, datasize is 5
+Adding EOS property d183, datasize is 5
+Adding EOS property d184, datasize is 5
+Adding EOS property d185, datasize is 5
+Adding EOS property d186, datasize is 5
+Adding EOS property d187, datasize is 5
+Adding EOS property d188, datasize is 5
+Adding EOS property d189, datasize is 5
+Adding EOS property d18a, datasize is 5
+Adding EOS property d110, datasize is 4
+Adding EOS property d150, datasize is 28
+Adding EOS property d151, datasize is 28
+Adding EOS property d152, datasize is 28
+Adding EOS property d153, datasize is 28
+Adding EOS property d154, datasize is 28
+Adding EOS property d155, datasize is 28
+Adding EOS property d160, datasize is 32
+Adding EOS property d161, datasize is 32
+Adding EOS property d162, datasize is 32
+Adding EOS property d170, datasize is 8
+Adding EOS property d171, datasize is 8
+Adding EOS property d172, datasize is 8
+Adding EOS property d113, datasize is 4
+Adding EOS property d11c, datasize is 4
+Adding EOS property d120, datasize is 20
+Adding EOS property d107, datasize is 20
+Adding EOS property d108, datasize is 20
+Adding EOS property d109, datasize is 40
+Adding EOS property d103, datasize is 28
+Adding EOS property d102, datasize is 8
+Adding EOS property d101, datasize is 8
+Adding EOS property d10b, datasize is 84
+Adding EOS property d10c, datasize is 84
+Adding EOS property d104, datasize is 60
+Adding EOS property d10f, datasize is 16
+Adding EOS property d110, datasize is 44
+Adding EOS property d11c, datasize is 20
+Adding EOS property d120, datasize is 184
+Adding EOS property d106, datasize is 8
+Adding EOS property d105, datasize is 8
+Adding EOS property d10d, datasize is 8
+Adding EOS property d10e, datasize is 8
+Adding EOS property d11b, datasize is 8
+Adding EOS property d114, datasize is 8
+Adding EOS property d116, datasize is 8
+Adding EOS property d119, datasize is 8
+Adding EOS property d11a, datasize is 8 
+Adding EOS property d112, datasize is 8 
+Adding EOS property d111, datasize is 8 
+Adding EOS property d11d, datasize is 8
+Adding EOS property d115, datasize is 8
+Adding EOS property d180, datasize is 8
+Adding EOS property d181, datasize is 8
+Adding EOS property d182, datasize is 8
+Adding EOS property d183, datasize is 8 
+Adding EOS property d184, datasize is 8 
+Adding EOS property d185, datasize is 8 
+Adding EOS property d186, datasize is 8 
+Adding EOS property d187, datasize is 8
+Adding EOS property d188, datasize is 8
+Adding EOS property d189, datasize is 8
+Adding EOS property d18a, datasize is 8 
+Adding EOS property d150, datasize is 8 
+Adding EOS property d151, datasize is 8 
+Adding EOS property d152, datasize is 8 
+Adding EOS property d153, datasize is 8 
+Adding EOS property d154, datasize is 8 
+Adding EOS property d155, datasize is 8  
+Adding EOS property d160, datasize is 8
+Adding EOS property d161, datasize is 8
+Adding EOS property d162, datasize is 8
+Adding EOS property d170, datasize is 8
+Adding EOS property d171, datasize is 8
+Adding EOS property d172, datasize is 8
+Adding EOS property d113, datasize is 8
+unknown EOS property type 0000
+unknown EOS property type 0000
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11b, datasize is 4
+Adding EOS property d11c, datasize is 4
+Adding EOS property d11b, datasize is 4
+unknown EOS property type 0000
+unknown EOS property type 0000
+currentvalue is 3
+currentvalue is 3
+currentvalue is 3
+currentvalue is 3
+/main/settings/capturetarget
+/main/settings/capture
+/main/imgsettings/iso
+/main/capturesettings/exposurecompensation
+/main/capturesettings/aperture
+/main/capturesettings/shutterspeed
+/main/capturesettings/focuslock
+currentvalue is 3
+currentvalue is 3
+currentvalue is 3
+currentvalue is 3
+Label: ISO Speed
+Type: RADIO
+Current: (null)
+Choice: 0 Factory Default
+Choice: 1 50
+Choice: 2 100
+Choice: 3 200
+Choice: 4 400
+Choice: 5 800
+Choice: 6 1600
+Choice: 7 Auto
