@@ -3,6 +3,7 @@
 	* library.c: Adjusted flags for Canon Powershots to match capture
 	  abilities on the SDK page.
 	* config.c: Do not list WiFi stuff on non-WiFi Nikons in config.
+	* library.c: Added Nikon D200 hidden properties.
 
 2009-01-18  Marcus Meissner  <marcus@jet.franken.de>
 
