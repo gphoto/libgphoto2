@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-01-18 21:01+0100\n"
+"POT-Creation-Date: 2009-01-19 23:27+0100\n"
 "PO-Revision-Date: 2000-04-11 10:12+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
@@ -533,7 +533,7 @@ msgstr ""
 #: camlibs/canon/library.c:1793 camlibs/canon/library.c:1794
 #: camlibs/canon/library.c:1827 camlibs/canon/library.c:1828
 #: camlibs/ptp2/config.c:1946 camlibs/ptp2/config.c:2145
-#: camlibs/ptp2/library.c:2399 camlibs/ptp2/library.c:2401
+#: camlibs/ptp2/library.c:2398 camlibs/ptp2/library.c:2400
 #: camlibs/ptp2/ptp.c:3866 camlibs/ptp2/ptp.c:3969 camlibs/ptp2/ptp.c:4059
 msgid "Unknown"
 msgstr ""
@@ -1882,7 +1882,7 @@ msgstr ""
 
 #: camlibs/jl2005c/library.c:124
 msgid ""
-"This driver supports cameras with Jeilin jl3005c chip \n"
+"This driver supports cameras with Jeilin jl2005c chip \n"
 "These cameras do not support deletion of photos, nor uploading\n"
 "of data. \n"
 "Decoding of compressed photos may or may not work well\n"
@@ -2071,7 +2071,7 @@ msgstr ""
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:269
 #: camlibs/ptp2/config.c:1928 camlibs/ptp2/config.c:2651
-#: camlibs/ptp2/library.c:2716 camlibs/ptp2/library.c:2720
+#: camlibs/ptp2/library.c:2715 camlibs/ptp2/library.c:2719
 #: camlibs/ptp2/ptp.c:3852 camlibs/ricoh/library.c:347
 #, fuzzy
 msgid "None"
@@ -3816,8 +3816,8 @@ msgid "lossless"
 msgstr "Fargeinnstillinger"
 
 #: camlibs/ptp2/config.c:1097 camlibs/ptp2/config.c:1302
-#: camlibs/ptp2/config.c:1962 camlibs/ptp2/library.c:2725
-#: camlibs/ptp2/library.c:2739 camlibs/ptp2/ptp.c:3746 camlibs/ptp2/ptp.c:3976
+#: camlibs/ptp2/config.c:1962 camlibs/ptp2/library.c:2724
+#: camlibs/ptp2/library.c:2738 camlibs/ptp2/ptp.c:3746 camlibs/ptp2/ptp.c:3976
 #: camlibs/ptp2/ptp.c:3982 camlibs/ptp2/ptp.c:3989 camlibs/ptp2/ptp.c:4151
 #: camlibs/ptp2/ptp.c:4359
 msgid "Undefined"
@@ -5348,10 +5348,11 @@ msgid "PTP Protocol error, response expected"
 msgstr ""
 
 #: camlibs/ptp2/library.c:1438
+#, c-format
 msgid ""
 "PTP2 driver\n"
 "(c) 2001-2005 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
-"(c) 2003-2008 by Marcus Meissner <marcus@jet.franken.de>.\n"
+"(c) 2003-%d by Marcus Meissner <marcus@jet.franken.de>.\n"
 "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 "Media Players that support the Media Transfer Protocol (MTP).\n"
 "\n"
@@ -5383,7 +5384,7 @@ msgstr "Lagring av indeks er ikke støttet ennå"
 msgid "Canon EOS Capture failed: %x"
 msgstr "Åpne bilde"
 
-#: camlibs/ptp2/library.c:1778 camlibs/ptp2/library.c:2182
+#: camlibs/ptp2/library.c:1778 camlibs/ptp2/library.c:2181
 #, fuzzy, c-format
 msgid "Canon EOS Get Changes failed: %x"
 msgstr "Åpne bilde"
@@ -5412,292 +5413,292 @@ msgstr "Lagring av indeks er ikke støttet ennå"
 msgid "No event received, error %x."
 msgstr ""
 
-#: camlibs/ptp2/library.c:2397
+#: camlibs/ptp2/library.c:2396
 msgid "read only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2398
+#: camlibs/ptp2/library.c:2397
 msgid "readwrite"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2533 camlibs/sierra/sierra.c:1936
+#: camlibs/ptp2/library.c:2532 camlibs/sierra/sierra.c:1936
 #, c-format
 msgid "Manufacturer: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2535
+#: camlibs/ptp2/library.c:2534
 #, fuzzy, c-format
 msgid "Model: %s\n"
 msgstr "Kamera modell:"
 
-#: camlibs/ptp2/library.c:2537
+#: camlibs/ptp2/library.c:2536
 #, c-format
 msgid "  Version: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2540
+#: camlibs/ptp2/library.c:2539
 #, c-format
 msgid "  Serial Number: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2544
+#: camlibs/ptp2/library.c:2543
 #, c-format
 msgid "Vendor Extension ID: 0x%x (%d.%d)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2551
+#: camlibs/ptp2/library.c:2550
 #, c-format
 msgid "Vendor Extension Description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2556
+#: camlibs/ptp2/library.c:2555
 #, c-format
 msgid "PTP Standard Version: %d.%d\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2563
+#: camlibs/ptp2/library.c:2562
 #, fuzzy, c-format
 msgid "Functional Mode: 0x%04x\n"
 msgstr "Nedlasting abrutt."
 
-#: camlibs/ptp2/library.c:2568
+#: camlibs/ptp2/library.c:2567
 #, c-format
 msgid ""
 "\n"
 "Capture Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2582
+#: camlibs/ptp2/library.c:2581
 #, c-format
 msgid "Display Formats: "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2598
+#: camlibs/ptp2/library.c:2597
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2614
+#: camlibs/ptp2/library.c:2613
 #, c-format
 msgid " PTP error %04x on query"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2631
+#: camlibs/ptp2/library.c:2630
 #, c-format
 msgid ""
 "\n"
 "Device Capabilities:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2635
+#: camlibs/ptp2/library.c:2634
 #, c-format
 msgid "\tFile Download, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2638
+#: camlibs/ptp2/library.c:2637
 #, c-format
 msgid "File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2640
+#: camlibs/ptp2/library.c:2639
 #, c-format
 msgid "No File Deletion, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2644
+#: camlibs/ptp2/library.c:2643
 #, fuzzy, c-format
 msgid "File Upload\n"
 msgstr "Skalerer bilde med 50%..."
 
-#: camlibs/ptp2/library.c:2646
+#: camlibs/ptp2/library.c:2645
 #, c-format
 msgid "No File Upload\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2651
+#: camlibs/ptp2/library.c:2650
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2653
+#: camlibs/ptp2/library.c:2652
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2656
+#: camlibs/ptp2/library.c:2655
 #, fuzzy, c-format
 msgid "Open Capture, "
 msgstr "Åpne bilde"
 
-#: camlibs/ptp2/library.c:2658
+#: camlibs/ptp2/library.c:2657
 #, c-format
 msgid "No Open Capture, "
 msgstr ""
 
-#: camlibs/ptp2/library.c:2664
+#: camlibs/ptp2/library.c:2663
 #, fuzzy, c-format
 msgid "Canon Capture\n"
 msgstr "Åpne bilde"
 
-#: camlibs/ptp2/library.c:2668
+#: camlibs/ptp2/library.c:2667
 #, fuzzy, c-format
 msgid "Canon EOS Capture\n"
 msgstr "Åpne bilde"
 
-#: camlibs/ptp2/library.c:2672
+#: camlibs/ptp2/library.c:2671
 #, fuzzy, c-format
 msgid "Nikon Capture\n"
 msgstr "Åpne bilde"
 
-#: camlibs/ptp2/library.c:2674
+#: camlibs/ptp2/library.c:2673
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2683
+#: camlibs/ptp2/library.c:2682
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2689
+#: camlibs/ptp2/library.c:2688
 #, fuzzy, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "Lagring av indeks er ikke støttet ennå"
 
-#: camlibs/ptp2/library.c:2700
+#: camlibs/ptp2/library.c:2699
 #, c-format
 msgid ""
 "\n"
 "Storage Devices Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2715
+#: camlibs/ptp2/library.c:2714
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2719
+#: camlibs/ptp2/library.c:2718
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2726
+#: camlibs/ptp2/library.c:2725
 msgid "Builtin ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2727
+#: camlibs/ptp2/library.c:2726
 msgid "Removable ROM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2728
+#: camlibs/ptp2/library.c:2727
 msgid "Builtin RAM"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2729
+#: camlibs/ptp2/library.c:2728
 msgid "Removable RAM (memory card)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2731 camlibs/ptp2/library.c:2744
-#: camlibs/ptp2/library.c:2756
+#: camlibs/ptp2/library.c:2730 camlibs/ptp2/library.c:2743
+#: camlibs/ptp2/library.c:2755
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2735
+#: camlibs/ptp2/library.c:2734
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2740
+#: camlibs/ptp2/library.c:2739
 msgid "Generic Flat"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2741
+#: camlibs/ptp2/library.c:2740
 msgid "Generic Hierarchical"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2742
+#: camlibs/ptp2/library.c:2741
 msgid "Digital Camera Layout (DCIM)"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2748
+#: camlibs/ptp2/library.c:2747
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2752
+#: camlibs/ptp2/library.c:2751
 msgid "Read-Write"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2753
+#: camlibs/ptp2/library.c:2752
 msgid "Read-Only"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2754
+#: camlibs/ptp2/library.c:2753
 msgid "Read Only with Object deletion"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2760
+#: camlibs/ptp2/library.c:2759
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2762
+#: camlibs/ptp2/library.c:2761
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2767
+#: camlibs/ptp2/library.c:2766
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2772
+#: camlibs/ptp2/library.c:2771
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2780
+#: camlibs/ptp2/library.c:2779
 #, c-format
 msgid ""
 "\n"
 "Device Property Summary:\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2806
+#: camlibs/ptp2/library.c:2805
 #, c-format
 msgid " not read out.\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:2879
+#: camlibs/ptp2/library.c:2878
 #, c-format
 msgid " error %x on query."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3784 camlibs/ptp2/library.c:3788
+#: camlibs/ptp2/library.c:3783 camlibs/ptp2/library.c:3787
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3794
+#: camlibs/ptp2/library.c:3793
 msgid "Metadata only supported for MTP devices."
 msgstr ""
 
-#: camlibs/ptp2/library.c:3982
+#: camlibs/ptp2/library.c:3981
 #, fuzzy
 msgid "Device does not support setting object protection."
 msgstr "Lagring av indeks er ikke støttet ennå"
 
-#: camlibs/ptp2/library.c:3987
+#: camlibs/ptp2/library.c:3986
 #, c-format
 msgid "Device failed to set object protection to %d, error 0x%04x."
 msgstr ""
 
-#: camlibs/ptp2/library.c:4625
+#: camlibs/ptp2/library.c:4624
 msgid "Initializing Camera"
 msgstr ""
 
-#: camlibs/ptp2/library.c:4785
+#: camlibs/ptp2/library.c:4784
 #, c-format
 msgid ""
 "Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
@@ -8843,101 +8844,101 @@ msgstr "Lagring av indeks er ikke støttet ennå"
 msgid "The path '%s' is not absolute."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:622
+#: libgphoto2/gphoto2-filesys.c:652
 #, fuzzy, c-format
 msgid "Could not find folder '%s'."
 msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:639
+#: libgphoto2/gphoto2-filesys.c:669
 #, fuzzy, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:703
+#: libgphoto2/gphoto2-filesys.c:733
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1100
+#: libgphoto2/gphoto2-filesys.c:1132
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
 "does not support deletion of files."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1110
+#: libgphoto2/gphoto2-filesys.c:1142
 #, fuzzy, c-format
 msgid "Deleting '%s' from folder '%s'..."
 msgstr "Nedlasting stoppet."
 
-#: libgphoto2/gphoto2-filesys.c:1229
+#: libgphoto2/gphoto2-filesys.c:1261
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1236
+#: libgphoto2/gphoto2-filesys.c:1268
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1278
+#: libgphoto2/gphoto2-filesys.c:1310
 msgid "The filesystem does not support upload of files."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1319
+#: libgphoto2/gphoto2-filesys.c:1351
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
 "%i."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1364
+#: libgphoto2/gphoto2-filesys.c:1396
 #, fuzzy, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:1454
+#: libgphoto2/gphoto2-filesys.c:1486
 #, fuzzy, c-format
 msgid "Could not find file '%s'."
 msgstr ""
 "Kunne ikke åpne:\n"
 "%s"
 
-#: libgphoto2/gphoto2-filesys.c:1579
+#: libgphoto2/gphoto2-filesys.c:1611
 msgid "The filesystem doesn't support getting files"
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1619 libgphoto2/gphoto2-filesys.c:2117
-#: libgphoto2/gphoto2-filesys.c:2278
+#: libgphoto2/gphoto2-filesys.c:1651 libgphoto2/gphoto2-filesys.c:2149
+#: libgphoto2/gphoto2-filesys.c:2310
 #, c-format
 msgid "Unknown file type %i."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:1623
+#: libgphoto2/gphoto2-filesys.c:1655
 #, fuzzy, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "Nedlasting stoppet."
 
-#: libgphoto2/gphoto2-filesys.c:1874
+#: libgphoto2/gphoto2-filesys.c:1906
 msgid "The filesystem doesn't support getting file information"
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:2383
+#: libgphoto2/gphoto2-filesys.c:2415
 msgid "The filesystem doesn't support setting file information"
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:2406
+#: libgphoto2/gphoto2-filesys.c:2438
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr ""
 
-#: libgphoto2/gphoto2-filesys.c:2475
+#: libgphoto2/gphoto2-filesys.c:2507
 msgid "The filesystem doesn't support getting storage information"
 msgstr ""
 
