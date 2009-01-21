@@ -323,7 +323,8 @@ msgstr "Lösche Halt..."
 #: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
+msgstr ""
+"Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:883
 #, c-format
@@ -489,7 +490,8 @@ msgstr "Konnte Alternativ-Setting %d nicht auf %d setzen (%m)"
 #: usb/libusb.c:680
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr ""
+"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:716
 #, c-format
@@ -531,4 +533,3 @@ msgstr "Medium »%s«"
 #: disk/disk.c:178
 msgid "(unknown)"
 msgstr "(unbekannt)"
-
