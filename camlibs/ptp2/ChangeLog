@@ -1,3 +1,9 @@
+2009-01-21  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Adjusted flags for Canon Powershots to match capture
+	  abilities on the SDK page.
+	* config.c: Do not list WiFi stuff on non-WiFi Nikons in config.
+
 2009-01-18  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Fixed stupid bug in "canon capture to card" mode.
