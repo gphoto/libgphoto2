@@ -68,7 +68,6 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
     Camera *camera = data;
     
     return dc210_get_filenames(camera, list, context);
-    
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
@@ -108,21 +107,18 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	if (dc210_get_picture_info_by_name(camera, &picinfo, file) == GP_ERROR)
 		return GP_ERROR;
 
+	info->preview.fields  = 0;
 	info->preview.fields |= GP_FILE_INFO_TYPE;
-	info->preview.fields |= GP_FILE_INFO_NAME;
 	info->preview.fields |= GP_FILE_INFO_SIZE;
 	info->preview.fields |= GP_FILE_INFO_WIDTH;
 	info->preview.fields |= GP_FILE_INFO_HEIGHT;
-
 	strcpy(info->preview.type, GP_MIME_PPM);
 	info->preview.width = 96;
 	info->preview.height = 72;
 	info->preview.size = picinfo.preview_size;
-	strncpy(info->file.name, picinfo.image_name, 9);
-	strncpy(info->file.name + 9, "PPM\0", 4);
 
+	info->file.fields  = 0;
 	info->file.fields |= GP_FILE_INFO_TYPE;
-	info->file.fields |= GP_FILE_INFO_NAME;
 	info->file.fields |= GP_FILE_INFO_SIZE;
 	info->file.fields |= GP_FILE_INFO_WIDTH;
 	info->file.fields |= GP_FILE_INFO_HEIGHT;
@@ -145,14 +141,9 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 		info->file.height = 864;
 		break;
 	};
-	strncpy(info->file.name, picinfo.image_name, 13);
 	info->file.mtime = picinfo.picture_time;
-
-	info->audio.fields |= GP_FILE_INFO_NONE;
-
 	return GP_OK;
-
-};
+}
 
 
 static int
