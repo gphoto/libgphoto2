@@ -1443,7 +1443,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 gp_log (GP_LOG_VERBOSE, "canon/usb.c",
                         _("canon_usb_dialogue:"
 			  " payload too big, won't fit into buffer (%i > %i)"),
-                        (payload_length + 0x50), sizeof (packet));
+                        (payload_length + 0x50), (int)sizeof (packet));
                 return NULL;
         }
 
@@ -2206,7 +2206,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
 #ifndef CANON_EXPERIMENTAL_UPLOAD
 int
 canon_usb_put_file (Camera __unused__ *camera, CameraFile __unused__ *file,
-		    char __unused__ *destname, char __unused__ *destpath,
+		    const char __unused__ *filename, const char __unused__ *destname, const char __unused__ *destpath,
                     GPContext __unused__ *context)
 {
         return GP_ERROR_NOT_SUPPORTED;
@@ -2216,7 +2216,7 @@ canon_usb_put_file (Camera __unused__ *camera, CameraFile __unused__ *file,
 
 int
 canon_usb_put_file (Camera *camera, CameraFile *file, 
-		    char *destname, char *destpath,
+		    const char *xfilename, const char *destname, const char *destpath,
                     GPContext *context)
 {
         long int packet_size = USB_BULK_WRITE_SIZE;

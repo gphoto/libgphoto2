@@ -54,7 +54,6 @@ extern "C" {
 typedef enum {
 	GP_FILE_INFO_NONE            = 0,	/**< \brief No fields set. */
 	GP_FILE_INFO_TYPE            = 1 << 0,	/**< \brief The MIME type is set. */
-	GP_FILE_INFO_NAME            = 1 << 1,	/**< \brief The name is set. */
 	GP_FILE_INFO_SIZE            = 1 << 2,	/**< \brief The filesize is set. */
 	GP_FILE_INFO_WIDTH           = 1 << 3,	/**< \brief The width is set. */
 	GP_FILE_INFO_HEIGHT          = 1 << 4,	/**< \brief The height is set. */
@@ -99,7 +98,6 @@ typedef struct _CameraFileInfoFile {
 	char type[64];			/**< \brief MIME type of the file. */
 	uint32_t width;			/**< \brief Height of the file. */
 	uint32_t height;		/**< \brief Width of the file. */
-	char name[64];			/**< \brief Filename of the file. */
 	CameraFilePermissions permissions;/**< \brief Permissions of the file. */
 	time_t mtime;			/**< \brief Modification time of the file. */
 } CameraFileInfoFile;
@@ -240,9 +238,11 @@ int gp_filesystem_free	 (CameraFilesystem *fs);
 /* Manual editing */
 int gp_filesystem_append           (CameraFilesystem *fs, const char *folder,
 			            const char *filename, GPContext *context);
-int gp_filesystem_set_info_noop    (CameraFilesystem *fs, const char *folder,
+int gp_filesystem_set_info_noop    (CameraFilesystem *fs,
+				    const char *folder, const char *filename,
 				    CameraFileInfo info, GPContext *context);
-int gp_filesystem_set_file_noop    (CameraFilesystem *fs, const char *folder,
+int gp_filesystem_set_file_noop    (CameraFilesystem *fs,
+				    const char *folder, const char *filename,
 				    CameraFile *file, GPContext *context);
 int gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
 				    const char *filename, GPContext *context);
@@ -318,6 +318,7 @@ int gp_filesystem_delete_file    (CameraFilesystem *fs, const char *folder,
 /* Folders */
 typedef int (*CameraFilesystemPutFileFunc)   (CameraFilesystem *fs,
 					      const char *folder,
+					      const char *filename,
 					      CameraFile *file, void *data,
 					      GPContext *context);
 typedef int (*CameraFilesystemDeleteAllFunc) (CameraFilesystem *fs,
@@ -365,7 +366,7 @@ struct _CameraFilesystemFuncs {
 int gp_filesystem_set_funcs	(CameraFilesystem *fs,
 				 CameraFilesystemFuncs *funcs,
 				 void *data);
-int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder,
+int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder, const char *filename,
 			      CameraFile *file, GPContext *context);
 int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 			      GPContext *context);

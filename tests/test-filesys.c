@@ -75,9 +75,7 @@ get_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 	printf ("  -> The camera will get the file info here.\n");
 
 	info->preview.fields = GP_FILE_INFO_NONE;
-	info->file.fields    = GP_FILE_INFO_NAME;
-	strcpy (info->file.name, file);
-
+	info->file.fields    = GP_FILE_INFO_NONE;
 	return (GP_OK);
 }
 

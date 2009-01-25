@@ -253,7 +253,7 @@ struct canon_usb_status {
 
 int canon_usb_init (Camera *camera, GPContext *context);
 int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time, GPContext *context);
-int canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, 
+int canon_usb_put_file (Camera *camera, CameraFile *file, const char *filename, const char *destname, const char *destpath, 
 	        GPContext *context);
 unsigned char *canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *photo_status, GPContext *context );
 unsigned char *canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct,

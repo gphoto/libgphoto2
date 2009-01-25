@@ -268,17 +268,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  * This function is a CameraFilesystem method.
  */
 int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-	       void *data, GPContext *context);
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
+	       CameraFile *file, void *data, GPContext *context);
 int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-	       void *data, GPContext *context)
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
+	       CameraFile *file, void *data, GPContext *context)
 {
 	/*Camera *camera = data;*/
 
 	/*
-	 * Upload the file to the camera. Use gp_file_get_data_and_size,
-	 * gp_file_get_name, etc.
+	 * Upload the file to the camera. Use gp_file_get_data_and_size, etc
 	 */
 
 	return GP_OK;

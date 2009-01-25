@@ -553,18 +553,16 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
         return GP_OK;
 }
 
-static int put_file_func (CameraFilesystem *fs, const char *folder,
+static int put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			  CameraFile *file, void *user_data,
 			  GPContext *context) {
         
 	Camera *camera = user_data;
         int             blocks, blocksize, i, result;
-	const char      *name;
 	const char      *data;
 	long int        size;
 	unsigned int id;
 
-	gp_file_get_name(file, &name);
         gp_context_status(context, _("Uploading image: %s."), name);
 
 /*      We can not figure out file type, at least by now.

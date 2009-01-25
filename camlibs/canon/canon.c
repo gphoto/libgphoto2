@@ -2876,8 +2876,6 @@ debug_fileinfo (CameraFileInfo * info)
 {
         GP_DEBUG ("<CameraFileInfo>");
         GP_DEBUG ("  <CameraFileInfoFile>");
-        if ((info->file.fields & GP_FILE_INFO_NAME) != 0)
-                GP_DEBUG ("    Name:   %s", info->file.name);
         if ((info->file.fields & GP_FILE_INFO_TYPE) != 0)
                 GP_DEBUG ("    Type:   %s", info->file.type);
         if ((info->file.fields & GP_FILE_INFO_SIZE) != 0)
@@ -3138,6 +3136,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                         /* OK, this directory entry has a name in it. */
 
                         if ((list_folders && is_dir) || (list_files && is_file)) {
+				const char *filename = (char *)dirent_name;
 
                                 /* we're going to fill out the info structure
                                    in this block */
@@ -3145,9 +3144,6 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
                                 /* we start with nothing and continously add stuff */
                                 info.file.fields = GP_FILE_INFO_NONE;
-
-                                strncpy (info.file.name, (char *)dirent_name, sizeof (info.file.name));
-                                info.file.fields |= GP_FILE_INFO_NAME;
 
                                 info.file.mtime = dirent_time;
                                 if (info.file.mtime != 0)
@@ -3159,7 +3155,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                          */
 
                                         strncpy (info.file.type,
-                                                 filename2mimetype (info.file.name),
+                                                 filename2mimetype (filename),
                                                  sizeof (info.file.type));
                                         info.file.fields |= GP_FILE_INFO_TYPE;
 
@@ -3196,33 +3192,33 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                          * because we have additional information.
                                          */
                                         if (!camera->pl->list_all_files
-                                            && !is_image (info.file.name)
-                                            && !is_movie (info.file.name)
-                                            && !is_audio (info.file.name)) {
+                                            && !is_image (filename)
+                                            && !is_movie (filename)
+                                            && !is_audio (filename)) {
                                                 /* FIXME: Find associated main file and add it there */
                                                 /* do nothing */
                                                 GP_DEBUG ("Ignored %s/%s", folder,
-                                                          info.file.name);
+                                                          filename);
                                         } else {
                                                 const char *thumbname;
 
                                                 res = gp_filesystem_append (camera->fs, folder,
-                                                                      info.file.name, context);
+                                                                      filename, context);
                                                 if (res != GP_OK) {
                                                         GP_DEBUG ("Could not gp_filesystem_append "
                                                                   "%s in folder %s: %s",
-                                                                  info.file.name, folder, gp_result_as_string (res));
+                                                                  filename, folder, gp_result_as_string (res));
                                                 } else {
                                                         GP_DEBUG ("Added file %s/%s", folder,
-                                                                  info.file.name);
+                                                                  filename);
 
                                                         thumbname =
                                                                 canon_int_filename2thumbname (camera,
-                                                                                              info.file.name);
+                                                                                              filename);
                                                         if (thumbname == NULL) {
                                                                 /* no thumbnail */
                                                         } else {
-                                                                if ( is_cr2 ( info.file.name ) ) {
+                                                                if ( is_cr2 ( filename ) ) {
                                                                         /* We get the first part of the raw file as the thumbnail;
                                                                            this is (almost) a valid EXIF file. */
                                                                         info.preview.fields =
@@ -3242,24 +3238,24 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                                         }
 
                                                         res = gp_filesystem_set_info_noop (camera->fs,
-                                                                                     folder, info,
+                                                                                     folder, filename, info,
                                                                                      context);
                                                         if (res != GP_OK) {
                                                                 GP_DEBUG ("Could not gp_filesystem_set_info_noop() "
                                                                           "%s in folder %s: %s",
-                                                                          info.file.name, folder, gp_result_as_string (res));
+                                                                          filename, folder, gp_result_as_string (res));
                                                         }
                                                 }
                                                 GP_DEBUG ( "file \"%s\" has preview of MIME type \"%s\"",
-                                                           info.file.name, info.preview.type );
+                                                           filename, info.preview.type );
                                         }
                                 }
                                 /* Some cameras have ".." explicitly
                                  * at the end of each directory. We
                                  * will silently omit this from the
                                  * directory returned. */
-                                if ( is_dir && strcmp ( "..", info.file.name ) ) {
-                                        res = gp_list_append (list, info.file.name, NULL);
+                                if ( is_dir && strcmp ( "..", filename ) ) {
+                                        res = gp_list_append (list, filename, NULL);
                                         if (res != GP_OK)
                                                 GP_DEBUG ("Could not gp_list_append "
                                                           "folder %s: %s",
@@ -3477,16 +3473,16 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
  *
  */
 int
-canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath,
-                    GPContext *context)
+canon_int_put_file (Camera *camera, CameraFile *file, const char *filename,
+		    const char *destname, const char *destpath, GPContext *context)
 {
         switch (camera->port->type) {
                 case GP_PORT_USB:
-                        return canon_usb_put_file (camera, file, destname, destpath,
+                        return canon_usb_put_file (camera, file, filename, destname, destpath,
                                                       context);
                         break;
                 case GP_PORT_SERIAL:
-                        return canon_serial_put_file (camera, file, destname, destpath,
+                        return canon_serial_put_file (camera, file, filename, destname, destpath,
                                                       context);
                         break;
                 GP_PORT_DEFAULT

@@ -386,21 +386,16 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 
-static int put_file_func (CameraFilesystem *fs, const char *folder, 
+static int put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			  CameraFile *file, void *data, GPContext *context) {
    
     Camera *camera=data;
-    const char *filename;
     const char *data_file;
     long data_size;
    
-           /*
-	    * Upload the file to the camera. Use gp_file_get_data_and_size,
-	    * gp_file_get_name, etc.
-	    */
-
-    gp_file_get_name(file, &filename);
-   
+    /*
+     * Upload the file to the camera. Use gp_file_get_data_and_size, etc.
+    */
     GP_DEBUG ("*** put_file_func");
     GP_DEBUG ("*** folder: %s", folder);
     GP_DEBUG ("*** filename: %s", filename);

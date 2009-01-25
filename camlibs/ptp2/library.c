@@ -1599,7 +1599,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 		return ret;
 	}
 	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "adding filedata to fs");
-	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, file, context);
         if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -1624,7 +1624,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	info.preview.height	= oi->ThumbPixHeight;
 	info.preview.size	= oi->ThumbCompressedSize;
 	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "setting fileinfo in fs");
-	return gp_filesystem_set_info_noop(camera->fs, path->folder, info, context);
+	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
 
 /**
@@ -1830,7 +1830,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_file_free (file);
 		return ret;
 	}
-	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, file, context);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -2229,7 +2229,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						gp_file_free (file);
 						return ret;
 					}
-					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, file, context);
 					if (ret != GP_OK) {
 						gp_file_free (file);
 						return ret;
@@ -3735,12 +3735,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-		void *data, GPContext *context)
+put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+		CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	PTPObjectInfo oi;
-	const char *filename;
 	uint32_t parent;
 	uint32_t storage;
 	uint32_t handle;
@@ -3752,7 +3751,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 
 	init_ptp_fs (camera, context);
 
-	gp_file_get_name (file, &filename);
 	gp_file_get_type (file, &type);
 	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
 

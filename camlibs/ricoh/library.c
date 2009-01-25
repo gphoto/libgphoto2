@@ -277,19 +277,15 @@ camera_capture (Camera *camera, CameraCaptureType type,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
-	       void *user_data, GPContext *context)
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
+	       CameraFile *file, void *user_data, GPContext *context)
 {
-	const char *data, *name;
+	const char *data;
 	unsigned long int size;
 	Camera *camera = user_data;
 
 	CR (gp_file_get_data_and_size (file, &data, &size));
-	CR (gp_file_get_name (file, &name));
-
-	CR (ricoh_put_file (camera, context, name, data, size));
-
-	return (GP_OK);
+	return ricoh_put_file (camera, context, name, data, size);
 }
 
 #undef N_ELEMENTS

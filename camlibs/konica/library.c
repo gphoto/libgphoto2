@@ -92,13 +92,12 @@ timeout_func (Camera *camera, GPContext *context)
 
 static int
 get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
-	  CameraFile *file, GPContext *context)
+	  char *fn, CameraFile *file, GPContext *context)
 {
 	unsigned long image_id;
 	unsigned int buffer_size, exif_size;
 	unsigned char *buffer = NULL;
 	int protected, r;
-	char fn[40];
 
 	/*
 	 * Remove the timeout, get the information and restart the
@@ -157,10 +156,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	id = gp_context_progress_start (context, status.pictures,
 					_("Getting file list..."));
         for (i = 0; i < status.pictures; i++) {
-
+		char fn[40];
                 /* Get information */
 		gp_file_new (&file);
-		result = get_info (camera, i + 1, &info, file, context);
+		result = get_info (camera, i + 1, &info, fn, file, context);
 		if (result < 0) {
 			gp_file_unref (file);
 			return (result);
@@ -170,10 +169,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		 * Append directly to the filesystem instead of to the list,
 		 * because we have additional information.
 		 */
-		gp_filesystem_append (camera->fs, folder, info.file.name,
-				      context);
-		gp_filesystem_set_info_noop (camera->fs, folder, info, context);
-		gp_filesystem_set_file_noop (camera->fs, folder, file, context);
+		gp_filesystem_append (camera->fs, folder, fn, context);
+		gp_filesystem_set_info_noop (camera->fs, folder, fn, info, context);
+		gp_filesystem_set_file_noop (camera->fs, folder, fn, file, context);
 		gp_file_unref (file);
 
 		gp_context_idle (context);
@@ -367,14 +365,6 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
                 C(k_set_protect_status (camera->port, context,
 			camera->pl->image_id_long, image_id, protected));
         }
-
-	/* Name? */
-	if (info.file.fields & GP_FILE_INFO_NAME) {
-		gp_context_error (context, _("Your camera does not support "
-			"changing filenames."));
-		return (GP_ERROR_NOT_SUPPORTED);
-	}
-
         return (GP_OK);
 }
 
@@ -385,6 +375,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
         Camera *camera = data;
 	CameraFile *file;
         int n, result;
+	char fn[40];
 
 	/* We need image numbers starting with 1 */
 	n = gp_filesystem_number (camera->fs, folder, filename, context);
@@ -393,14 +384,13 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	n++;
 
 	gp_file_new (&file);
-	result = get_info (camera, n, info, file, context);
+	result = get_info (camera, n, info, fn, file, context);
 	if (result < 0) {
 		gp_file_unref (file);
 		return (result);
 	}
-	gp_filesystem_set_file_noop (fs, folder, file, context);
+	gp_filesystem_set_file_noop (fs, folder, filename, file, context);
 	gp_file_unref (file);
-
         return (GP_OK);
 }
 
@@ -570,6 +560,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 	int protected, r;
 	CameraFile *file = NULL;
 	CameraFileInfo info;
+	char fn[40];
 
 	C_NULL (camera && path);
 
@@ -595,22 +586,21 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 	strcpy (info.preview.type, GP_MIME_JPEG);
 
 	info.file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS |
-			    GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME;
+			    GP_FILE_INFO_TYPE;
 	info.file.size = exif_size;
 	info.file.permissions = GP_FILE_PERM_READ;
 	if (!protected)
 		info.file.permissions |= GP_FILE_PERM_DELETE;
 	strcpy (info.file.type, GP_MIME_JPEG);
-	snprintf (info.file.name, sizeof (info.file.name),
-		  "%06i.jpeg", (int) image_id);
-	gp_filesystem_set_info_noop (camera->fs, path->folder, info, context);
+	sprintf (fn, "%06i.jpeg", (int) image_id);
+	gp_filesystem_set_info_noop (camera->fs, path->folder, fn, info, context);
 
 	gp_file_new (&file);
-	gp_file_set_name (file, info.file.name);
+	gp_file_set_name (file, fn);
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 	gp_file_set_type (file, GP_FILE_TYPE_EXIF);
 	gp_file_set_data_and_size (file, buffer, buffer_size);
-	gp_filesystem_set_file_noop (camera->fs, path->folder, file, context);
+	gp_filesystem_set_file_noop (camera->fs, path->folder, fn, file, context);
 	gp_file_unref (file);
 
         return (GP_OK);

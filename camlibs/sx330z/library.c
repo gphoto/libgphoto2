@@ -141,6 +141,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	for (pcnt = 0; pcnt < tpages; pcnt++) {
 		CR (sx330z_get_toc_page (camera, context, &toc, pcnt));
 		for (ecnt = 0; ecnt < toc.numEntries; ecnt++) {
+			char fn[20];
 
 			info.audio.fields = GP_FILE_INFO_NONE;
 			info.preview.fields = GP_FILE_INFO_TYPE;
@@ -152,16 +153,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			info.file.permissions = GP_FILE_PERM_READ |
 						GP_FILE_PERM_DELETE;
 			strcpy (info.file.type,GP_MIME_JPEG); 
-			sprintf (info.file.name, "%.12s",
-				 toc.entries[ecnt].name);
+			sprintf (fn, "%.12s", toc.entries[ecnt].name);
 
 			/*
 			 * Append directly to the filesystem instead of to
 			 * the list, because we have additional information.
 			 */
-			gp_filesystem_append (camera->fs, folder,
-					      info.file.name, context);
-			gp_filesystem_set_info_noop (camera->fs, folder,
+			gp_filesystem_append (camera->fs, folder, fn, context);
+			gp_filesystem_set_info_noop (camera->fs, folder, fn,
 						     info, context);
 		}
 		gp_context_progress_update (context, id, pcnt);

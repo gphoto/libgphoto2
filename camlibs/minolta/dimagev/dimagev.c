@@ -214,7 +214,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	return GP_OK;
 }
 
-static int put_file_func (CameraFilesystem *fs, const char *folder, 
+static int put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			  CameraFile *file, void *data, GPContext *context) 
 {
 	Camera *camera = data;

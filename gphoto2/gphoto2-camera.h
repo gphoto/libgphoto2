@@ -335,7 +335,8 @@ int gp_camera_folder_list_folders (Camera *camera, const char *folder,
 				   CameraList *list, GPContext *context);
 int gp_camera_folder_delete_all   (Camera *camera, const char *folder,
 				   GPContext *context);
-int gp_camera_folder_put_file     (Camera *camera, const char *folder,
+int gp_camera_folder_put_file     (Camera *camera,
+				   const char *folder, const char *filename,
 				   CameraFile *file, GPContext *context);
 int gp_camera_folder_make_dir     (Camera *camera, const char *folder,
 				   const char *name, GPContext *context);

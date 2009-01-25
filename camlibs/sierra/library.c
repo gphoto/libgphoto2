@@ -1230,8 +1230,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	CHECK (sierra_write_packet (camera, p, context));
 
 	if (file && total > min_progress_bytes) {
-		CHECK (gp_file_get_name(file, &file_name));
-		id = gp_context_progress_start (context, total, "%s", file_name);
+		id = gp_context_progress_start (context, total, _("Downloading data..."));
 	}
 
 	/* Read all the data packets */

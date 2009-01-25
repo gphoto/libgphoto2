@@ -393,13 +393,11 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		info->file.permissions |= GP_FILE_PERM_READ;
 	if (st.st_mode & S_IWUSR)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
-        strcpy (info->file.name, file);
         info->file.size = st.st_size;
 	mime_type = get_mime_type (file);
 	if (!mime_type)
 		mime_type = "application/octet-stream";
 	strcpy (info->file.type, mime_type);
-
         return (GP_OK);
 }
 
@@ -638,18 +636,15 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder,
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	       CameraFile *file, void *data, GPContext *context)
 {
 	char path[2048];
-	const char *name;
 	int result;
 #ifdef DEBUG
 	unsigned int i, id;
 #endif
 	Camera *camera = (Camera*)data;
-
-	gp_file_get_name (file, &name);
 
 	result = _get_path (camera->port, folder, name, path, sizeof(path));
 	if (result < GP_OK)

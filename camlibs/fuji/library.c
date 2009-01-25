@@ -224,19 +224,16 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder,
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	       CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	const char *d, *name;
+	const char *d;
 	unsigned long int d_len;
 
 	CR (gp_file_get_data_and_size (file, &d, &d_len));
-	CR (gp_file_get_name (file, &name));
 	CR (fuji_upload_init (camera, name, context));
-	CR (fuji_upload (camera, d, d_len, context));
-
-	return (GP_OK);
+	return fuji_upload (camera, d, d_len, context);
 }
 
 static int

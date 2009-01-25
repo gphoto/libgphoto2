@@ -426,7 +426,7 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 		gp_file_free (file);
 		return ret;
 	}
-	ret = gp_filesystem_set_file_noop(fs, "/", file, context);
+	ret = gp_filesystem_set_file_noop(fs, "/", fn, file, context);
 	if (ret != GP_OK) return ret;
 
 	/* we also get the fs info for free, so just set it */
@@ -444,7 +444,7 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	info.preview.width	= 64;
 	info.preview.height	= 48;
 	info.preview.size	= 64*48+strlen(THUMBHEADER);
-	ret = gp_filesystem_set_info_noop(fs, "/", info, context);
+	ret = gp_filesystem_set_info_noop(fs, "/", fn, info, context);
     }
     free(indexbuf);
     return GP_OK;

@@ -1,23 +1,18 @@
 libgphoto2 2.4.99.1 development state
 
-PTP2 driver:
-   * Fixed bugs in packing of PTP arrays, unpack / pack 64 bit entities.
-   * Devices added:
-     - Canon IXUS iZ
-     - Nikon Coolpix P5100
-     - <fill in from diff>
-
-Topfield driver:
-   * New driver to access Topfield PVRs (harddisc recorders).
-
-Sony DSC-F1 driver:
-   * Did not work, now does work. Also cleaned up the code.
-
-Directory driver:
-   * Use GPPortInfo instead of settings to pass basepath in.
-   * Abstracted common functionality.
-
 libgphoto2 API:
+   * CameraFileInfoFile: removed "name" structmember and GP_FILE_INFO_NAME
+     flags.
+     Use direct passing in of the filename to the API functions.
+
+   * gp_file_set_name() passing in is no longer needed and the API will
+     go away.
+
+   * gp_filesystem_set_info_noop(), gp_filesystem_set_file_noop(),
+     gp_filesystem_put_file(), gp_camera_folder_put_file():
+
+     Added "filename" argument to pass in the filename. The one
+     from CameraFileInfoFile and CameraFile are no longer used.
 
    * Adjusted to new GPPortInfo handling.
 
@@ -38,8 +33,12 @@ libgphoto2_port API:
    * Disk Settings have been removed from the Settings union. Should
      not affect frontends at all.
 
-
    * Started using symbol versions.
+
+Directory driver:
+   * Use GPPortInfo instead of settings to pass basepath in.
+   * Abstracted common functionality.
+
 
 Build:
    * Removed dummy README file from SVN.
@@ -55,6 +54,190 @@ Documentation:
 Test cases:
    * Test camlib loading of both uninstalled and installed camlibs.
 
+
+------------------------------------------------------------------------
+libgphoto2 2.4.4
+
+libgphoto2:
+   * Updated translations from translationproject.org
+
+PTP2 driver:
+   * Developed in parallel with TRUNK.
+   * Only retrieve and initialize the ptp filesystem if needed
+     (this will give speed ups for config operations, basic
+      init and summary.)
+   * Export the hidden vendor specific properties of the current Nikon DSLRs.
+     (over a hundred with all camera configuration details...)
+     (D80, D90, D300, D700, D40x got, D200 guessed)
+   * Lots of new Nikon DSLR and Canon Powershot properties implemented,
+     both printed in summary and available for config functions querying
+     and/or setting.
+   * Query and Set image protection flags (actually used by digikam).
+   * Lots of bugfixes and changes in Canon and Nikon specific capture routines.
+   * Some defines for PTP 1.1 added. Will have to wait for implementation until
+     a device gets available.
+   * New cameras added:
+	Kodak C913
+	Nikon D90
+	Canon Digital IXUS 960IS, EOS 1000D, SD1100 IS, SX10 IS, SX110 IS
+	Fuji FinePix A920, F100fd, S200HD
+	Apple iPod Touch (just saved screenshots and uploaded images)
+   * PTP v1.1 defines added (implementation will start once devices are available)
+   * Synced MTP device list from libmtp (0.3.5 level).
+   * Lots of bugfixes.
+
+jl2005c: 
+   * Experimental driver for jl2005c based cameras added.
+     Can only retrieve raw images currently, no viewable images yet.
+     Not builtin by default. ./configure --with-drivers=all,jl2005c
+
+libgphoto2_port:
+   * Updated translations from translationproject.org
+
+   * Serial driver: do not lock device during probe to reduce startup
+     time.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.3
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+   * Adaptive Homogeneity-Directed Bayer array conversion added, used
+     in several camera lib drivers.
+   * Translation updates for various languages.
+   * libtool 2.x build fixes
+   * Various MacOS X compile fixes again.
+   * gp-byteorder.m4 fixes for newer glibcs.
+
+Example programs:
+   * Addes some basic library usage example programs and helpers.
+
+PTP2 driver:
+   * Merged camlib from TRUNK.
+   * Tethered Capture support for Canon EOS 40D, 400D, 450D.
+   * Always handle "no directory linking to /" problem.
+   * Disable more Panasonic cameras (product id 0x2372 is always mass storage)
+   * Some MTP fixes, lots of new MTP devices.
+   * Fixed canon viewfinder issues on Canon PowerShot SX100IS.
+   * Fixed a ptp property packing issue exposed
+     by newer Nikons.
+   * Added new devices:
+  	 Kodak M893 IS, C813
+	 Nikon CoolPix L16, CoolPix 8700, DSC 700
+	 Canon EOS 1D Mark III, IXUS 90IS, EOS 50D
+	 Apple iPhone 3G
+
+Canon driver:
+   * Fixed some unlock keys problem for EOS cameras.
+   * Moved over several PTP2 supported cameras to the PTP2 driver only.
+
+Sierra driver:
+   * Implemented basic Storage Information function.
+   * Fixes for big endian or 64bit architectures by fixing struct packing.
+
+smal driver:
+   * Added support for Creative CardCam.
+
+sq905 driver:
+   * Updated postprocessing, by using "AHD" bayering and new gamma methods.
+   * Bugfixes.
+
+stv0680:
+   * Storage information function.
+
+digigr8, mars, sonix drivers:
+   * Updated postprocessing, by using "AHD" bayering and new gamma methods.
+ 
+jl2005a driver:
+   * Imported from TRUNK, for new small factor cameras.
+           American Idol Keychain Camera
+	   NogaNet TDC-15
+------------------------------------------------------------------------
+libgphoto2 2.4.2
+
+This is a 2.4 release branch update.
+
+
+libgphoto2:
+   * Camera abilities list sorting now uses qsort(),
+     bringing startup speedups by seconds. (0.4 seconds on 2GHz machine).
+
+   * On large files, do not try to retrieve thumbnails.
+
+   * Updated lots of translations.
+
+PTP2 driver:
+   * Full merge of TRUNK ptp2 camlib.
+
+   * Lots of new IDs added. Also changed MTP id handling to share devices
+     with current libmtp.
+   * Canon now can capture to both CF/SD Card and internal memory
+     with extract/retracting the lens. "capturetarget" config option
+     determines which ones used.
+
+   * EOS capture support made working with newer Canon EOS models,
+     now reported working for EOS 400D, 450D, 40D.
+
+   * Handle MTP -> Canon/Nikon vendor id transitions better.
+   * Download cancellation support.
+   * Handle canon cameras with shorter timeouts on startup (hopefully
+     does not break) to avoid very long second startup delays.
+
+   * Lots of bugfixes.
+
+Canon driver:
+   * Configuration of Flash, Beep and Zoom added.
+   * Enable/disable remote mode only once per session (on demand)
+   * Fixed a CR2 thumbnail download problem.
+   * Fixed a THM download problem (for movies).
+   * Moved some more cameras over to PTP2 driver.
+
+Topfield driver:
+   * New driver for Topfield PVR5000 device(s).
+
+* Sony DSC F1 (old serial) driver:
+   * Merged from TRUNK, working now.
+
+libgphoto2 2.4.1
+
+This is a 2.4 release branch update.
+
+Package / System integration:
+   * HAL FDI files now use "info.subsystem" instead of "info.bus", required
+     by hal after March 2008.
+
+   * Suppress another Olympus camera in FDI file that is better of done
+     using Mass Storage only.
+
+libgphoto2_port:
+   * Suppress more known network filesystems in "disk" autodetection
+   * disabled usb_reset for Canon cameras in "usb", broke EOS cameras.
+
+PTP2 driver:
+   * Merged all new Camera IDs from TRUNK.
+   * Configuration bugfix for multiple options with the same name.
+   * Capture bugfix for Nikon Coolpix
+   * Various small bugfixes.
+
+Canon driver:
+   * Increased the event timeout, so operations work again.
+   * Fixed a bug in interval capture
+   * some additional configuration values for newer cameras
+
+Mars driver:
+   * Synced with SVN TRUNK (1:1 copy).
+	   * Better whitebalance postprocessing
+	   * Camera ids added
+	   * Decompression fixes
+
+Digigr8 driver:
+   * Synced with SVN TRUNK (1:1 copy).
+	   * bugfixes
+
+Sonix driver:
+   * Synced with SVN TRUNK (1:1 copy).
+	   * bugfixes
 ------------------------------------------------------------------------
 libgphoto2 2.4.0 release
 

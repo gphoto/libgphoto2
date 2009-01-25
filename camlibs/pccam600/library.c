@@ -168,7 +168,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	      info.file.permissions = GP_FILE_PERM_READ | GP_FILE_PERM_DELETE;
 	      info.file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS 
 		|GP_FILE_INFO_TYPE;
-	      ret = gp_filesystem_set_info_noop(fs, folder, info, context);
+	      ret = gp_filesystem_set_info_noop(fs, folder, file_entry->name, info, context);
 	    }
 	}
 	offset = 0;

@@ -728,18 +728,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 }
 
 static int
-put_file_func (CameraFilesystem * fs, const char *folder, CameraFile * file, void *data, GPContext *context)
+put_file_func (CameraFilesystem * fs, const char *folder, const char *filename, CameraFile * file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	char *picture_folder;
 	int ret;
 	const char *data_file;
 	long data_size;
-	const char *filename;
 	int available_memory;
-
-	gp_file_get_name(file, &filename);
-	
 
 	GP_DEBUG ("*** put_file_func");
 	GP_DEBUG ("*** folder: %s", folder);

@@ -161,10 +161,8 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		 * Append directly to the filesystem instead of to the list,
 		 * because we have additional information. 
 		 * */
-		gp_filesystem_append (camera->fs, folder, info.file.name,
-		                      context);
-		gp_filesystem_set_info_noop (camera->fs, folder, info,
-		                             context);
+		gp_filesystem_append (camera->fs, folder, fn, context);
+		gp_filesystem_set_info_noop (camera->fs, folder, fn, info, context);
 		/* FIXME: This is disabled for now, due to it seeming to
 		 *        cause corruption within libgphoto itself.
 		 *        A side effect of this is that file caching does

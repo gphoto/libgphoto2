@@ -1263,7 +1263,7 @@ convert_filename_to_8_3(const char* filename, char* dest)
 
 /* XXX This function should be merged with the other one of the same name */
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
+put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFile *file, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
@@ -1317,9 +1317,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		sprintf (destpath, "%s\\%s", dcf_root_dir, dir);
 	} else {
 		if(camera->pl->upload_keep_filename) {
-		    const char* filename;
 		    char filename2[300];
-		    CHECK_RESULT (gp_file_get_name (file, &filename));
 		    if(!filename)
 			return GP_ERROR;
 		    convert_filename_to_8_3(filename, filename2);
@@ -1381,13 +1379,13 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	clear_readiness (camera);
 
-	return canon_int_put_file (camera, file, destname, destpath, context);
+	return canon_int_put_file (camera, file, filename, destname, destpath, context);
 }
 
 #else /* not CANON_EXPERIMENTAL_UPLOAD */
 
 static int
-put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
+put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, const char *filename,
 	       CameraFile *file, void *data,
 	       GPContext *context)
 {
@@ -1493,7 +1491,7 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 
 	clear_readiness (camera);
 
-	return canon_int_put_file (camera, file, destname, destpath, context);
+	return canon_int_put_file (camera, file, filename, destname, destpath, context);
 }
 
 #endif /* CANON_EXPERIMENTAL_UPLOAD */

@@ -493,7 +493,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
  * Upload an image to the camera
  */
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, 
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name, CameraFile *file, 
 		void *data, GPContext *context)
 {
 	Camera *camera = data;

@@ -20,7 +20,7 @@ void canon_serial_error_type(Camera *camera);
 unsigned char * canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype, unsigned char dir, unsigned int *len, ...);
 
 unsigned char *canon_serial_get_file (Camera *camera, const char *name, unsigned int *length, GPContext *context);
-int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
+int canon_serial_put_file (Camera *camera, CameraFile *file, const char *filename, const char *destname, const char *destpath, GPContext *context);
 int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data, unsigned int *dirents_length, const char *path, GPContext *context);
 
 

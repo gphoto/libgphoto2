@@ -347,9 +347,8 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	info->preview.width = 64;
 	info->preview.height = 48;
 
-	info->file.fields = GP_FILE_INFO_ALL;
+	info->file.fields = GP_FILE_INFO_TYPE|GP_FILE_INFO_PERMISSIONS|GP_FILE_INFO_WIDTH|GP_FILE_INFO_HEIGHT|GP_FILE_INFO_SIZE;
 	strcpy(info->file.type, GP_MIME_PPM);
-	strcpy(info->file.name, filename);
 	info->file.permissions = GP_FILE_PERM_READ;
 
 	if (std_res) {
@@ -398,9 +397,7 @@ static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *c
         data = Dimera_Preview( &size, camera, context);
         if (!data)
                 return GP_ERROR;
-	gp_file_set_data_and_size (file, data, size);
-
-        return GP_OK;
+	return gp_file_set_data_and_size (file, data, size);
 }
 
 static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) {

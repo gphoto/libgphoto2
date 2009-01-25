@@ -1145,7 +1145,8 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder,
  *
  **/
 int
-gp_camera_folder_put_file (Camera *camera, const char *folder,
+gp_camera_folder_put_file (Camera *camera,
+			   const char *folder, const char *filename,
 			   CameraFile *file, GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Uploading file into '%s'...",
@@ -1155,7 +1156,7 @@ gp_camera_folder_put_file (Camera *camera, const char *folder,
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
-					folder, file, context), context);
+					folder, filename, file, context), context);
 
 	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
@@ -1223,11 +1224,6 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 			 sizeof (info->preview.type));
 	}
 	gp_file_unref (cfile);
-
-	/* We don't trust the camera libraries */
-	info->file.fields |= GP_FILE_INFO_NAME;
-	strncpy (info->file.name, file, sizeof (info->file.name));
-	info->preview.fields &= ~GP_FILE_INFO_NAME;
 
 	CAMERA_UNUSED (camera, context);
 	return (GP_OK);

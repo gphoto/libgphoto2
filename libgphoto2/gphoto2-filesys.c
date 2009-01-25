@@ -570,14 +570,12 @@ append_folder (CameraFilesystem *fs,
 }
 
 static int
-append_file (CameraFilesystem *fs, CameraFilesystemFolder *folder, CameraFile *file, GPContext *context)
+append_file (CameraFilesystem *fs, CameraFilesystemFolder *folder, const char *name, CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFile *new;
-	const char *name;
 
 	CHECK_NULL (fs && file);
 
-	CR (gp_file_get_name (file, &name));
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Appending file %s...", name);
 
 	new = folder->files;
@@ -1228,7 +1226,8 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
  * \return a gphoto2 error code.
  **/
 int
-gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
+gp_filesystem_put_file (CameraFilesystem *fs,
+			const char *folder, const char *filename,
 			CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFolder	*f;
@@ -1249,9 +1248,9 @@ gp_filesystem_put_file (CameraFilesystem *fs, const char *folder,
 	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	/* Upload the file */
-	CR (fs->put_file_func (fs, folder, file, fs->folder_data, context));
+	CR (fs->put_file_func (fs, folder, filename, file, fs->folder_data, context));
 	/* And upload it to internal structure too */
-	return append_file (fs, f, file, context);
+	return append_file (fs, f, filename, file, context);
 }
 
 /**
@@ -1631,7 +1630,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	CR (gp_file_set_name (file, filename));
 
 	/* Cache this file */
-	CR (gp_filesystem_set_file_noop (fs, folder, file, context));
+	CR (gp_filesystem_set_file_noop (fs, folder, filename, file, context));
 
 	/*
 	 * Often, thumbnails are of a different mime type than the normal
@@ -1719,7 +1718,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		CR (gp_file_set_type (file, GP_FILE_TYPE_PREVIEW));
 		CR (gp_file_set_name (file, filename));
 		CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
-		CR (gp_filesystem_set_file_noop (fs, folder, file, context));
+		CR (gp_filesystem_set_file_noop (fs, folder, filename, file, context));
 		CR (gp_file_adjust_name_for_mime_type (file));
 #else
 		GP_DEBUG ("Getting previews is not supported and "
@@ -1758,7 +1757,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		CR (gp_file_set_type (file, GP_FILE_TYPE_EXIF));
 		CR (gp_file_set_name (file, filename));
 		CR (gp_file_set_mime_type (file, GP_MIME_EXIF));
-		CR (gp_filesystem_set_file_noop (fs, folder, file, context));
+		CR (gp_filesystem_set_file_noop (fs, folder, filename, file, context));
 		CR (gp_file_adjust_name_for_mime_type (file));
 #else
 		GP_DEBUG ("Getting EXIF data is not supported and libgphoto2 "
@@ -2039,21 +2038,20 @@ gp_filesystem_lru_count (CameraFilesystem *fs)
 }
 
 static int
-gp_filesystem_lru_update (CameraFilesystem *fs, const char *folder,
+gp_filesystem_lru_update (CameraFilesystem *fs,
+			  const char *folder, const char *filename,
 			  CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
 	CameraFileType type;
 	CameraFile *oldfile = NULL;
-	const char *filename;
 	unsigned long int size;
 	int x;
 	char cached_images[1024];
 
 	CHECK_NULL (fs && folder && file);
 
-	CR (gp_file_get_name (file, &filename));
 	CR (gp_file_get_type (file, &type));
 	CR (gp_file_get_data_and_size (file, NULL, &size));
 
@@ -2199,14 +2197,14 @@ gp_filesystem_lru_check (CameraFilesystem *fs)
  * \return a gphoto2 error code.
  **/
 int
-gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
+gp_filesystem_set_file_noop (CameraFilesystem *fs,
+			     const char *folder, const char *filename,
 			     CameraFile *file, GPContext *context)
 {
 	CameraFileType type;
 	CameraFileInfo info;
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
-	const char *filename;
 	int r;
 	time_t t;
 
@@ -2214,7 +2212,6 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	CR (gp_file_get_name (file, &filename));
 	CR (gp_file_get_type (file, &type));
 	GP_DEBUG ("Adding file '%s' to folder '%s' (type %i)...",
 		  filename, folder, type);
@@ -2230,7 +2227,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 	 */
 	if ((type == GP_FILE_TYPE_RAW) || (type == GP_FILE_TYPE_NORMAL) ||
 	    (type == GP_FILE_TYPE_AUDIO))
-		CR (gp_filesystem_lru_update (fs, folder, file, context));
+		CR (gp_filesystem_lru_update (fs, folder, filename, file, context));
 
 	/* Redundant sanity check. */
 	CR (gp_filesystem_lru_check (fs));
@@ -2337,7 +2334,8 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
  * \return a gphoto2 error code
  **/
 int
-gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
+gp_filesystem_set_info_noop (CameraFilesystem *fs,
+			     const char *folder, const char *filename,
 			     CameraFileInfo info, GPContext *context)
 {
 	CameraFilesystemFolder	*f;
@@ -2348,7 +2346,7 @@ gp_filesystem_set_info_noop (CameraFilesystem *fs, const char *folder,
 	CA (folder, context);
 
 	/* Search folder and file */
-	CR (lookup_folder_file (fs, folder, info.file.name, &f, &xfile, context));
+	CR (lookup_folder_file (fs, folder, filename, &f, &xfile, context));
 
 	memcpy (&xfile->info, &info, sizeof (CameraFileInfo));
 	xfile->info_dirty = 0;
@@ -2372,7 +2370,7 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 			const char *filename, CameraFileInfo info,
 			GPContext *context)
 {
-	int result, name, e;
+	int result;
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
 
@@ -2412,11 +2410,7 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	/*
 	 * Set the info. If anything goes wrong, mark info as dirty,
 	 * because the operation could have been partially successful.
-	 *
-	 * Handle name changes in a separate round.
 	 */
-	name = (info.file.fields & GP_FILE_INFO_NAME);
-	info.file.fields &= ~GP_FILE_INFO_NAME;
 	result = fs->set_info_func (fs, folder, filename, info, fs->info_data,
 				    context);
 	if (result < 0) {
@@ -2425,28 +2419,6 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	}
 	if (info.file.fields & GP_FILE_INFO_PERMISSIONS)
 		xfile->info.file.permissions = info.file.permissions;
-
-	/* Handle name change */
-	if (name) {
-		char *xname;
-		/* Make sure the file does not exist */
-		e = gp_filesystem_number (fs, folder, info.file.name, context);
-		if (e != GP_ERROR_FILE_NOT_FOUND)
-			return (e);
-
-		info.preview.fields = GP_FILE_INFO_NONE;
-		info.file.fields = GP_FILE_INFO_NAME;
-		info.audio.fields = GP_FILE_INFO_NONE;
-		CR (fs->set_info_func (fs, folder, filename, info,
-				       fs->info_data, context));
-		strncpy (xfile->info.file.name, info.file.name,
-			 sizeof (xfile->info.file.name));
-		xname = strdup(info.file.name);
-		if (xname) {
-			free (xfile->name);
-			xfile->name = xname;
-		}
-	}
 
 	return (GP_OK);
 }

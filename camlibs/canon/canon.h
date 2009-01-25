@@ -689,7 +689,7 @@ int canon_int_list_directory (Camera *camera, const char *folder, CameraList *li
 
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
 int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, unsigned int *length, GPContext *context);
-int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath, GPContext *context);
+int canon_int_put_file(Camera *camera, CameraFile *file, const char *filename, const char *destname, const char *destpath, GPContext *context);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, canonDirentAttributeBits attrs, GPContext *context);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
 int canon_int_set_shutter_speed(Camera *camera, canonShutterSpeedState shutter_speed, GPContext *context);

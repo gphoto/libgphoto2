@@ -539,11 +539,8 @@ camera_exit (Camera *camera, GPContext *context)
 
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
-	.folder_list_func = NULL,
-	.get_info_func = NULL,
 	.get_file_func = get_file_func,
 	.del_file_func = delete_file_func,
-	.put_file_func = NULL, 
 	.delete_all_func = delete_all_func,
 };
 

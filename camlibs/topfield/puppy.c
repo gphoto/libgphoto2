@@ -443,7 +443,7 @@ decode_and_get_info(Camera *camera, const char *folder, struct tf_packet *p, con
 				xinfo.file.size = get_u64(&entries[i].size);
 				xinfo.file.mtime = tfdt_to_time(&entries[i].stamp);
 				gp_filesystem_append (camera->fs, folder, name, context); /* FIXME: might fail if exist? */
-				gp_filesystem_set_info_noop (camera->fs, folder, xinfo, context);
+				gp_filesystem_set_info_noop (camera->fs, folder, name, xinfo, context);
 			}
 			break;
 		default:
@@ -719,14 +719,13 @@ out:
 
 #if 0
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
+put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFile *file,
 	       void *data, GPContext *context)
 {
 	Camera *camera = data;
 
 	/*
-	 * Upload the file to the camera. Use gp_file_get_data_and_size,
-	 * gp_file_get_name, etc.
+	 * Upload the file to the camera. Use gp_file_get_data_and_size etc.
 	 */
 	int result = -EPROTO;
 	time_t startTime = time(NULL);
@@ -745,10 +744,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	const char *filename;
 	char *path;
 	struct tf_packet reply;
-
-	r = gp_file_get_name (file, &filename);
-	if (r < GP_OK)
-		return r;
 
 	if(0 != fstat(src, &srcStat))
 	{
