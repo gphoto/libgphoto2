@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.0 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.4.99.0], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.4.99.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -225,7 +225,7 @@ dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 
-ALL_LINGUAS="da de es eu fr hu it ja nb nl pl ru sl sv uk vi zh_CN"
+ALL_LINGUAS="da de es eu fr hu it ja nl pl ru sv uk vi zh_CN"
 GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
