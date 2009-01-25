@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-10-19 21:25+0200\n"
+"POT-Creation-Date: 2009-01-21 23:11+0100\n"
 "PO-Revision-Date: 2002-01-04 19:28+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -368,58 +368,58 @@ msgstr ""
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 
-#: serial/unix.c:360
+#: serial/unix.c:361
 #, c-format
 msgid "Serial Port %i"
 msgstr ""
 
-#: serial/unix.c:449
+#: serial/unix.c:450
 #, fuzzy, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Napaka: nisem uspel odpreti %s"
 
-#: serial/unix.c:467
+#: serial/unix.c:468
 #, fuzzy, c-format
 msgid "Could not close '%s' (%m)."
 msgstr ""
 "Ne morem odpreti:\n"
 " %s"
 
-#: serial/unix.c:521
+#: serial/unix.c:522
 #, fuzzy, c-format
 msgid "Could not write to port (%m)"
 msgstr "Ne morem dobiti #%i"
 
-#: serial/unix.c:598
+#: serial/unix.c:599
 msgid "Parity error."
 msgstr ""
 
-#: serial/unix.c:602
+#: serial/unix.c:603
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr ""
 
-#: serial/unix.c:645
+#: serial/unix.c:646
 #, c-format
 msgid "Unknown pin %i."
 msgstr ""
 
-#: serial/unix.c:667
+#: serial/unix.c:668
 #, fuzzy, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Ne morem dobiti #%i"
 
-#: serial/unix.c:702
+#: serial/unix.c:703
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr ""
 
-#: serial/unix.c:727
+#: serial/unix.c:728
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr ""
 
-#: serial/unix.c:840
+#: serial/unix.c:841
 #, fuzzy, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Ne morem dobiti ¹tevila slik"
@@ -500,7 +500,7 @@ msgid ""
 "is connected to the computer."
 msgstr ""
 
-#: usb/libusb.c:994
+#: usb/libusb.c:996
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
