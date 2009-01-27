@@ -775,7 +775,7 @@ static struct {
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
 	/* Ole Aamot <ole@gnome.org> */
-	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP},/* mm: sends capture complete */
 	/* Peter Pregler <Peter_Pregler@email.com> */
 	{"Nikon:Coolpix S500 (PTP mode)", 0x04b0, 0x015d, 0},
 	{"Nikon:Coolpix L12 (PTP mode)",  0x04b0, 0x015f, 0},
