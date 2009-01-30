@@ -458,12 +458,13 @@ static int
 _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize) {
 	int i, j;
 
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	if (!dpd->FORM.Enum.NumberOfValues) {
 		/* fill in with all values we have in the table. */
 		for (j=0;j<tblsize;j++) {
@@ -549,11 +550,11 @@ static int
 _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) {
 	int i, j;
 
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 		if (dpd->DataType != PTP_DTC_UINT8)
 			return (GP_ERROR);
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 			int isset = FALSE;
 
@@ -582,6 +583,8 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 	if (dpd->FormFlag & PTP_DPFF_Range) {
 		if (dpd->DataType != PTP_DTC_UINT8)
 			return (GP_ERROR);
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
 		for (	i = dpd->FORM.Range.MinimumValue.u8;
 			i <= dpd->FORM.Range.MaximumValue.u8;
 			i+= dpd->FORM.Range.StepSize.u8
@@ -748,12 +751,12 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 
 static int
 _get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name ( *widget, menu->name);
 	if (dpd->FormFlag != PTP_DPFF_Range)
                 return (GP_ERROR_NOT_SUPPORTED);
         if (dpd->DataType != PTP_DTC_UINT8)
                 return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
 	gp_widget_add_choice (*widget,_("On"));
 	gp_widget_add_choice (*widget,_("Off"));
 	gp_widget_set_value ( *widget, (dpd->CurrentValue.u8?_("On"):_("Off")));
@@ -829,12 +832,12 @@ static int
 _get_ImageSize(CONFIG_GET_ARGS) {
         int j;
 
-        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-        gp_widget_set_name (*widget, menu->name);
         if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
                 return(GP_ERROR);
         if (dpd->DataType != PTP_DTC_STR)
                 return(GP_ERROR);
+        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+        gp_widget_set_name (*widget, menu->name);
         for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
                 gp_widget_add_choice (*widget,dpd->FORM.Enum.SupportedValue[j].str);
         }
@@ -862,12 +865,12 @@ _get_ExpCompensation(CONFIG_GET_ARGS) {
         int j;
 	char buf[10];
 
-        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-        gp_widget_set_name (*widget, menu->name);
         if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
                 return(GP_ERROR);
         if (dpd->DataType != PTP_DTC_INT16)
                 return(GP_ERROR);
+        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+        gp_widget_set_name (*widget, menu->name);
         for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
 		sprintf(buf, "%d", dpd->FORM.Enum.SupportedValue[j].i16);
                 gp_widget_add_choice (*widget,buf);
@@ -914,11 +917,11 @@ static int
 _get_Canon_ZoomRange(CONFIG_GET_ARGS) {
 	float	f, t, b, s;
 
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	f = (float)dpd->CurrentValue.u16;
-	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
 	b = (float)dpd->FORM.Range.MinimumValue.u16;
 	t = (float)dpd->FORM.Range.MaximumValue.u16;
 	s = (float)dpd->FORM.Range.StepSize.u16;
@@ -1330,13 +1333,13 @@ static int
 _get_ISO(CONFIG_GET_ARGS) {
 	int i;
 
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
 
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
         for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		char	buf[20];
 
@@ -1370,13 +1373,12 @@ static int
 _get_FNumber(CONFIG_GET_ARGS) {
 	int i;
 
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
-
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
         for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		char	buf[20];
 
@@ -1410,13 +1412,13 @@ static int
 _get_ExpTime(CONFIG_GET_ARGS) {
 	int i;
 
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return (GP_ERROR);
 
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
         for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		char	buf[20];
 
@@ -1595,15 +1597,12 @@ _get_FocalLength(CONFIG_GET_ARGS) {
 	float value_float , start=0.0, end=0.0, step=0.0;
 	int i;
 
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-
 	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration)))
 		return (GP_ERROR);
-
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return (GP_ERROR);
-
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 		/* Find the range we need. */
 		start = 10000.0;
@@ -1736,10 +1735,10 @@ static int
 _get_Nikon_FocalLength(CONFIG_GET_ARGS) {
 	char	len[20];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	sprintf (len, "%.0f mm", dpd->CurrentValue.u32 * 0.01);
 	gp_widget_set_value (*widget, len);
 	return (GP_OK);
@@ -1749,10 +1748,10 @@ static int
 _get_Nikon_ApertureAtFocalLength(CONFIG_GET_ARGS) {
 	char	len[20];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	sprintf (len, "%.0f mm", dpd->CurrentValue.u16 * 0.01);
 	gp_widget_set_value (*widget, len);
 	return (GP_OK);
@@ -1762,10 +1761,10 @@ static int
 _get_Nikon_LightMeter(CONFIG_GET_ARGS) {
 	char	meter[20];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (dpd->DataType != PTP_DTC_INT8)
 		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	sprintf (meter, "%.1f", dpd->CurrentValue.i8 * 0.08333);
 	gp_widget_set_value (*widget, meter);
 	return (GP_OK);
@@ -1776,12 +1775,12 @@ static int
 _get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
 	float value_float;
 
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_INT8)
 		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_range (*widget,
 		dpd->FORM.Range.MinimumValue.i8/6.0,
 		dpd->FORM.Range.MaximumValue.i8/6.0,
@@ -1809,15 +1808,12 @@ static int
 _get_Nikon_LowLight(CONFIG_GET_ARGS) {
 	float value_float;
 
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
 		return (GP_ERROR);
-
 	if (dpd->DataType != PTP_DTC_UINT8)
 		return (GP_ERROR);
-
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_range (*widget,
 		dpd->FORM.Range.MinimumValue.u8,
 		dpd->FORM.Range.MaximumValue.u8,
@@ -2159,15 +2155,12 @@ static int
 _get_BurstNumber(CONFIG_GET_ARGS) {
 	float value_float , start=0.0, end=0.0, step=0.0;
 
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
 		return (GP_ERROR);
-
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
-
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	start = dpd->FORM.Range.MinimumValue.u16;
 	end = dpd->FORM.Range.MaximumValue.u16;
 	step = dpd->FORM.Range.StepSize.u16;
@@ -2194,13 +2187,12 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	unsigned char value_float , start, end;
 	char	buffer[20];
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT8)
 		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	start = dpd->FORM.Range.MinimumValue.u8;
 	end = dpd->FORM.Range.MaximumValue.u8;
 	value_float = dpd->CurrentValue.u8;
@@ -2277,10 +2269,10 @@ _get_STR_as_time(CONFIG_GET_ARGS) {
 
 	/* strptime() is not widely accepted enough to use yet */
 	memset(&tm,0,sizeof(tm));
-	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 	if (!dpd->CurrentValue.str)
 		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	strncpy(capture_date,dpd->CurrentValue.str,sizeof(capture_date));
 	strncpy (tmp, capture_date, 4);
 	tmp[4] = 0;
@@ -2529,8 +2521,6 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 	int i;
 	PTPParams *params = &(camera->pl->params);
 
-	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
 
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -2542,6 +2532,8 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 	if (ret != PTP_RC_OK)
 		return (GP_ERROR_NOT_SUPPORTED);
 
+	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
 	gp_widget_new (GP_WIDGET_TEXT, "Version", &child);
 	snprintf(buffer, 4096, "%d", params->wifi_profiles_version);
 	gp_widget_set_value(child, buffer);
@@ -2945,7 +2937,6 @@ _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 
 	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-
 
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = wifi_profiles_menu+submenuno;
