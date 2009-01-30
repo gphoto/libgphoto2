@@ -338,9 +338,9 @@ gp_widget_get_label (CameraWidget *widget, const char **label)
  * @return a gphoto2 error code.
  *
  * Please pass
- * (char*) for GP_WIDGET_MENU, GP_WIDGET_TEXT,
+ * (char*) for GP_WIDGET_MENU, GP_WIDGET_TEXT, GP_WIDGET_RADIO,
  * (float) for GP_WIDGET_RANGE,
- * (int)   for GP_WIDGET_DATE, GP_WIDGET_TOGGLE, GP_WIDGET_RADIO, and
+ * (int)   for GP_WIDGET_DATE, GP_WIDGET_TOGGLE, and
  * (CameraWidgetCallback) for GP_WIDGET_BUTTON.
  *
  **/
