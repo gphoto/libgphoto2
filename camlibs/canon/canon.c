@@ -1775,6 +1775,9 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         GP_DEBUG ("canon_int_get_release_params: flash mode = 0x%02x", 
                   camera->pl->release_params[FLASH_INDEX]);
 
+        GP_DEBUG ("canon_int_get_release_params: exposurebias = 0x%02x", 
+                  camera->pl->release_params[EXPOSUREBIAS_INDEX]);
+
 
         camera->pl->secondary_image = 0;
 	/* Based on the resolution settings in the release params, 
@@ -2204,6 +2207,52 @@ canon_int_set_aperture (Camera *camera, canonApertureState aperture,
         
         GP_DEBUG ("canon_int_set_aperture() finished successfully");
 
+        return GP_OK;        
+}
+
+
+/**
+ * canon_int_set_exposurebias
+ * @camera: camera to work with
+ * @aperture: use the unsigned char 8bit value in the array
+ * @context: context for error reporting
+ *
+ * Sets the camera's exposure bias.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_exposurebias (Camera *camera, unsigned char expbias,
+                             GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_exposurebias() called for aperture 0x%02x", expbias);
+        /* Get the current camera settings */
+        status = canon_int_get_release_params (camera, context);
+        if (status < 0)
+                return status;
+        /* Modify the aperture */
+        camera->pl->release_params[EXPOSUREBIAS_INDEX] = expbias;
+        /* Upload the aperture to the camera */
+        status = canon_int_set_release_params (camera, context);
+        if (status < 0)
+                return status;
+        /* Make sure the camera changed it! */
+        status = canon_int_get_release_params (camera, context);
+        if (status < 0)
+                return status;
+        if (camera->pl->release_params[EXPOSUREBIAS_INDEX] != expbias) {
+                GP_DEBUG ("canon_int_set_exposurebias: Could not set exposure bias "
+                          "to 0x%02x (camera returned 0x%02x)", 
+                          expbias, 
+                          camera->pl->release_params[EXPOSUREBIAS_INDEX]);
+                return GP_ERROR_CORRUPTED_DATA;
+        } else {
+                GP_DEBUG ("canon_int_set_exposurebias: expbias change verified");
+        }
+        GP_DEBUG ("canon_int_set_exposurebias() finished successfully");
         return GP_OK;        
 }
 

@@ -408,6 +408,12 @@ struct canonZoomLevelStateStruct {
 	char* label;
 };
 
+struct canonExposureBiasStateStruct {
+	unsigned char value;
+	char* label;
+};
+
+
 /* Size of the release parameter block */
 #define RELEASE_PARAMS_LEN  0x2f
 
@@ -696,6 +702,7 @@ int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPC
 int canon_int_set_shutter_speed(Camera *camera, canonShutterSpeedState shutter_speed, GPContext *context);
 int canon_int_set_iso(Camera *camera, canonIsoState iso, GPContext *context);
 int canon_int_set_aperture(Camera *camera, canonApertureState aperture, GPContext *context);
+int canon_int_set_exposurebias(Camera *camera, unsigned char expbias, GPContext *context);
 int canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode, GPContext *context);
 int canon_int_set_resolution (Camera *camera, unsigned char res_byte1, unsigned char res_byte2, unsigned char res_byte3, GPContext *context);
 int canon_serial_off(Camera *camera);

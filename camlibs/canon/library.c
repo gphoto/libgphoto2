@@ -244,6 +244,27 @@ static const struct canonZoomLevelStateStruct zoomLevelStateArray[] = {
 	{0, NULL},
 };
 
+static const struct canonExposureBiasStateStruct exposureBiasStateArray[] = {
+	{0x10,"+2"},
+	{0x0d,"+1 2/3"},
+	{0x0c,"+1 1/2"},
+	{0x0b,"+1 1/3"},
+	{0x08,"+1"},
+	{0x05,"+2/3"},
+	{0x04,"+1/2"},
+	{0x03,"+1/3"},
+	{0x00,"0"},
+	{0xfd,"-1/3"},
+	{0xfc,"-1/2"},
+	{0xfb,"-2/3"},
+	{0xf8,"-1"},
+	{0xf5,"-1 1/3"},
+	{0xf3,"-1 2/3"},
+	{0xf0,"-2"},
+	{0, NULL},
+};
+
+
 static const struct canonResolutionStateStruct resolutionStateArray[] = {
 	{RESOLUTION_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
@@ -1511,6 +1532,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	int iso, shutter_speed, aperture, focus_mode, flash_mode, beep_mode;
 	int res_byte1, res_byte2, res_byte3;
 	int pwr_status, pwr_source, res, i, menuval;
+	unsigned int expbias;
 	time_t camtime;
 	char formatted_camera_time[30];
 
@@ -1688,6 +1710,38 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_set_value (t, _("Unknown"));
 	};
 
+	gp_widget_append (section, t);
+
+	/* Exposure Bias */
+	gp_widget_new (GP_WIDGET_MENU, _("Exposure Bias"), &t);
+	gp_widget_set_name (t, "exposurebias");
+
+	/* Get the camera's current exposure bias setting */
+	expbias = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK) 
+			expbias = camera->pl->release_params[EXPOSUREBIAS_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (exposureBiasStateArray[i].label) {
+		gp_widget_add_choice (t, _(exposureBiasStateArray[i].label));
+		if (expbias == exposureBiasStateArray[i].value) {
+			gp_widget_set_value (t, _(exposureBiasStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+	
+	/* Set an unknown exp bias value if the 
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
 	gp_widget_append (section, t);
 
 
@@ -2035,6 +2089,34 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					gp_context_status (context, _("Aperture changed"));
 				else
 					gp_context_status (context, _("Could not change aperture"));
+			}
+		}
+	}
+	gp_widget_get_child_by_label (window, _("Exposure Bias"), &w);
+	if (gp_widget_changed (w)) {
+		unsigned char expbias;
+		gp_widget_get_value (w, &wvalue);
+		if (!check_readiness (camera, context)) {
+			gp_context_status (context, _("Camera unavailable"));
+		} else {
+
+			/* Map the menu option setting to the camera binary value */
+			i = 0;
+			while (exposureBiasStateArray[i].label) {
+				if (strcmp (exposureBiasStateArray[i].label, wvalue) == 0) {
+					expbias = exposureBiasStateArray[i].value;
+					break;
+				}
+				i++;
+			}
+
+			if (!exposureBiasStateArray[i].label) {
+				gp_context_status (context, _("Invalid exposure bias setting"));
+			} else {
+				if (canon_int_set_exposurebias (camera, expbias, context) == GP_OK)
+					gp_context_status (context, _("Exposure bias changed"));
+				else
+					gp_context_status (context, _("Could not change exposure bias"));
 			}
 		}
 	}
