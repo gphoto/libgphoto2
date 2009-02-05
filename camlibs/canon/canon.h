@@ -423,6 +423,7 @@ struct canonZoomLevelStateStruct {
 #define ISO_INDEX           0x1a
 #define APERTURE_INDEX      0x1c
 #define SHUTTERSPEED_INDEX  0x1e
+#define EXPOSUREBIAS_INDEX  0x20
 
 /**
  * canonCaptureSizeClass:
