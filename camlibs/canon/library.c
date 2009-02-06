@@ -259,6 +259,7 @@ static const struct canonExposureBiasStateStruct exposureBiasStateArray[] = {
 	{0xfb,"-2/3"},
 	{0xf8,"-1"},
 	{0xf5,"-1 1/3"},
+	{0xf4,"-1 1/2"},
 	{0xf3,"-1 2/3"},
 	{0xf0,"-2"},
 	{0, NULL},
