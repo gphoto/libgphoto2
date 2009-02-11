@@ -783,6 +783,8 @@ static struct {
 	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP|PTP_NIKON_BROKEN_CAP},
   /* Submitted on IRC by kallepersson */
 	{"Nikon:Coolpix P5100 (PTP mode)", 0x04b0, 0x0163, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2589245&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
