@@ -59,14 +59,13 @@ static struct jamcam_file jamcam_files[1024];
 static int jamcam_count = 0;
 static int jamcam_mmc_card_size = 0;
 
-static int jamcam_read_packet (Camera *camera, char *packet, int length);
-static int jamcam_write_packet (Camera *camera, char *packet, int length);
+static int jamcam_read_packet (Camera *camera, unsigned char *packet, int length);
+static int jamcam_write_packet (Camera *camera, unsigned char *packet, int length);
 static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
-		char *data, int start, int length, GPContext *context);
+		unsigned char *data, int start, int length, GPContext *context);
 static int jamcam_query_mmc_card (Camera *camera);
 
 static int jamcam_set_int_at_pos( unsigned char *buf, int pos, int value ) {
-	
 	buf[pos + 0] = ( value       ) & 0xff;
 	buf[pos + 1] = ( value >>  8 ) & 0xff;
 	buf[pos + 2] = ( value >> 16 ) & 0xff;
@@ -111,7 +110,7 @@ static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 
 /* get the number of images on the mmc card */
 static int jamcam_mmc_card_file_count (Camera *camera) {
-	char buf[16];
+	unsigned char buf[16];
 	unsigned char reply[512];
 	unsigned int position = 0x40000000;
 	int data_incr;
@@ -125,13 +124,13 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 	switch( camera->port->type ) {
 		default:
 		case GP_PORT_SERIAL:
-			strcpy( buf, "KB00" );
+			memcpy( buf, "KB00", 4 );
 			jamcam_set_int_at_pos( buf, 4, position );
 			jamcam_write_packet( camera, buf, 8 );
 
 			jamcam_read_packet( camera, reply, 16 );
 
-			while( strncmp( reply, "KB", 2 ) == 0 ) {
+			while( memcmp( reply, "KB", 2 ) == 0 ) {
 				width  = (reply[5] * 256) + reply[4];
 				height = (reply[7] * 256) + reply[6];
 
@@ -162,14 +161,14 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 
 			jamcam_set_usb_mem_pointer( camera, position );
 
-			CHECK( gp_port_read (camera->port, reply, 0x10 ));
+			CHECK( gp_port_read (camera->port, (char*)reply, 0x10 ));
 
 			width  = (reply[13] * 256) + reply[12];
 			height = (reply[15] * 256) + reply[14];
 
 			jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-			CHECK( gp_port_read (camera->port, reply, 512 ));
+			CHECK( gp_port_read (camera->port, (char*)reply, 512 ));
 
 			gp_port_usb_msg_write( camera->port,
 				0xa5,
@@ -177,10 +176,10 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 				0x0000,
 				NULL, 0 );
 
-			while(((unsigned char)reply[0] != 0xff ) &&
-			      ((unsigned char)reply[0] != 0xaa ) &&
-				  (((unsigned char)reply[0] != 0x00 ) ||
-				   ((unsigned char)reply[1] != 0x00 ))) {
+			while((reply[0] != 0xff ) &&
+			      (reply[0] != 0xaa ) &&
+				  ((reply[0] != 0x00 ) ||
+				   (reply[1] != 0x00 ))) {
 				data_incr = jamcam_get_int_at_pos( reply, 0 );
 
 				jamcam_files[jamcam_count].position = position;
@@ -199,14 +198,14 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 
 				jamcam_set_usb_mem_pointer( camera, position );
 
-				CHECK( gp_port_read (camera->port, reply, 0x10 ));
+				CHECK( gp_port_read (camera->port, (char*)reply, 0x10 ));
 
 				width  = (reply[13] * 256) + reply[12];
 				height = (reply[15] * 256) + reply[14];
 
 				jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-				CHECK( gp_port_read (camera->port, reply, 512 ));
+				CHECK( gp_port_read (camera->port, (char*)reply, 512 ));
 
 				gp_port_usb_msg_write( camera->port,
 					0xa5,
@@ -222,7 +221,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 }
 
 int jamcam_file_count (Camera *camera) {
-	char buf[16];
+	unsigned char buf[16];
 	unsigned char reply[16];
 	int position = 0;
 	int data_incr;
@@ -239,7 +238,7 @@ int jamcam_file_count (Camera *camera) {
 	switch( camera->port->type ) {
 		default:
 		case GP_PORT_SERIAL:
-			strcpy( buf, "KB00" );
+			memcpy( buf, "KB00", 4 );
 			jamcam_set_int_at_pos( buf, 4, position );
 			jamcam_write_packet( camera, buf, 8 );
 
@@ -277,16 +276,16 @@ int jamcam_file_count (Camera *camera) {
 		case GP_PORT_USB:
 			jamcam_set_usb_mem_pointer( camera, position );
 
-			CHECK( gp_port_read (camera->port, reply, 0x10 ));
+			CHECK( gp_port_read (camera->port, (char*)reply, 0x10 ));
 
 			width  = (reply[13] * 256) + reply[12];
 			height = (reply[15] * 256) + reply[14];
 
 			jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-			CHECK( gp_port_read (camera->port, reply, 0x10 ));
+			CHECK( gp_port_read (camera->port, (char*)reply, 0x10 ));
 
-			while((unsigned char)reply[0] != 0xff ) {
+			while(reply[0] != 0xff ) {
 				data_incr = jamcam_get_int_at_pos( reply, 0 );
 
 				jamcam_files[jamcam_count].position = position;
@@ -299,14 +298,14 @@ int jamcam_file_count (Camera *camera) {
 
 				jamcam_set_usb_mem_pointer( camera, position );
 
-				CHECK( gp_port_read (camera->port, reply, 0x10 ));
+				CHECK( gp_port_read (camera->port, (char*)reply, 0x10 ));
 
 				width  = (reply[13] * 256) + reply[12];
 				height = (reply[15] * 256) + reply[14];
 
 				jamcam_set_usb_mem_pointer( camera, position + 8 );
 
-				CHECK( gp_port_read (camera->port, reply, 0x10 ));
+				CHECK( gp_port_read (camera->port, (char*)reply, 0x10 ));
 			}
 			break;
 	}
@@ -320,9 +319,9 @@ int jamcam_file_count (Camera *camera) {
 }
 
 static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
-		char *data, int start, int length, GPContext *context) {
-	char tmp_buf[16];
-	char packet[16];
+		unsigned char *data, int start, int length, GPContext *context) {
+	unsigned char tmp_buf[16];
+	unsigned char packet[16];
 	int new_start;
 	int new_end;
 	int bytes_read = 0;
@@ -349,7 +348,7 @@ static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 					bytes_left > SER_PKT_SIZE ? SER_PKT_SIZE : bytes_left;
 
 				memset( packet, 0, sizeof( packet ));
-				strcpy( packet, "KB01" );
+				memcpy( packet, "KB01", 4 );
 
 				new_start = start + bytes_read;
 				new_end   = start + bytes_read + bytes_to_read - 1;
@@ -370,11 +369,11 @@ static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 				/* in the images, we are only reading the first 16 bytes of  */
 				/* data twice by doing this, so I don't know why it works    */
 				jamcam_set_usb_mem_pointer( camera, start + bytes_read );
-				CHECK( gp_port_read (camera->port, tmp_buf, 16 ));
+				CHECK( gp_port_read (camera->port, (char*)tmp_buf, 16 ));
 
 
 				jamcam_set_usb_mem_pointer( camera, start + bytes_read );
-				CHECK( gp_port_read (camera->port, data + bytes_read, bytes_to_read ));
+				CHECK( gp_port_read (camera->port, (char*)data + bytes_read, bytes_to_read ));
 
 
 				break;
@@ -407,7 +406,7 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 		char *buf, int *len, int number, GPContext *context ) {
 	int position;
 	int result;
-	char *tmp_buf;
+	unsigned char *tmp_buf;
 
 	GP_DEBUG ("* jamcam_request_image");
 	tmp_buf = malloc(640*480*3);
@@ -456,7 +455,7 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number)
 
 int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 		char *buf, int *len, int number, GPContext *context ) {
-	char line[2048];
+	unsigned char line[2048];
 	char packet[16];
 	int position;
 	int x, y;
@@ -543,13 +542,13 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 	return( res );
 }
 
-static int jamcam_write_packet (Camera *camera, char *packet, int length) {
+static int jamcam_write_packet (Camera *camera, unsigned char *packet, int length) {
 	int ret, r;
 
 	GP_DEBUG ("* jamcam_write_packet");
 
 	for (r = 0; r < RETRIES; r++) {
-		ret = gp_port_write (camera->port, packet, length);
+		ret = gp_port_write (camera->port, (char*)packet, length);
 		if (ret == GP_ERROR_TIMEOUT)
 			continue;
 
@@ -559,7 +558,7 @@ static int jamcam_write_packet (Camera *camera, char *packet, int length) {
 	return (GP_ERROR_TIMEOUT);
 }
 
-static int jamcam_read_packet (Camera *camera, char *packet, int length) {
+static int jamcam_read_packet (Camera *camera, unsigned char *packet, int length) {
 	int r = 0;
 	int bytes_read;
 
@@ -568,7 +567,7 @@ static int jamcam_read_packet (Camera *camera, char *packet, int length) {
 		length, length);
 
 	for (r = 0; r < RETRIES; r++) {
-		bytes_read = gp_port_read (camera->port, packet, length);
+		bytes_read = gp_port_read (camera->port, (char*)packet, length);
 		if (bytes_read == GP_ERROR_TIMEOUT)
 			continue;
 		if (bytes_read < 0)
@@ -596,21 +595,21 @@ int jamcam_enq (Camera *camera)
 		default:
 		case GP_PORT_SERIAL:
 			for (r = 0; r < RETRIES; r++) {
-				strcpy((char *)buf, "KB99" );
+				memcpy (buf, "KB99", 4 );
 
-				ret = jamcam_write_packet (camera, (char *)buf, 4);
+				ret = jamcam_write_packet (camera, buf, 4);
 				if (ret == GP_ERROR_TIMEOUT)
 					continue;
 				if (ret != GP_OK)
 					return (ret);
 
-				ret = jamcam_read_packet (camera, (char *)buf, 4);
+				ret = jamcam_read_packet (camera, buf, 4);
 				if (ret == GP_ERROR_TIMEOUT)
 					continue;
 				if (ret != GP_OK)
 					return (ret);
 
-				if ( !strncmp( (char *)buf, "KIDB", 4 )) {
+				if ( !memcmp( buf, "KIDB", 4 )) {
 					return (GP_OK);
 				}
 			}
@@ -628,7 +627,7 @@ int jamcam_enq (Camera *camera)
 
 				CHECK( gp_port_read( camera->port, (char *)buf, 0x0c ));
 
-				if (( !strncmp( (char *)buf, "KB00", 4 )) ||
+				if (( !memcmp( buf, "KB00", 4 )) ||
 					(( buf[0] == 0xff ) && ( buf[1] == 0xff ) &&
 					 ( buf[2] == 0xff ) && ( buf[3] == 0xff ) &&
 					 ( buf[4] == 0xff ) && ( buf[5] == 0xff ) &&
@@ -644,7 +643,7 @@ int jamcam_enq (Camera *camera)
 					}
 
 					return (GP_OK);
-				} else if ( !strncmp( (char *)buf + 8, "KB00", 4 )) {
+				} else if ( !memcmp( buf + 8, "KB00", 4 )) {
 					/* found a JamCam v2 camera */
 					/* JamCam v2 doesn't support MMC card so no need to check */
 					return (GP_OK);
@@ -664,7 +663,7 @@ int jamcam_enq (Camera *camera)
 static int jamcam_query_mmc_card (Camera *camera)
 {
 	int ret, r = 0;
-	char buf[16];
+	unsigned char buf[16];
 
 	GP_DEBUG ("* jamcam_query_mmc_card");
 
@@ -673,7 +672,7 @@ static int jamcam_query_mmc_card (Camera *camera)
 		return( GP_OK );
 	}
 
-	strcpy( buf, "KB04" );
+	memcpy( buf, "KB04", 4 );
 
 	for (r = 0; r < RETRIES; r++) {
 
