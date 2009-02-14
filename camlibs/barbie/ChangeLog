@@ -1,3 +1,8 @@
+2009-02-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* barbie.c: made even more clean, split reader
+	  code in CameraFile* and char * generator.
+
 2007-05-23  Marcus Meissner  <marcus@jet.franken.de>
 
 	* main.c: Removed.
