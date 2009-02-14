@@ -47,10 +47,10 @@ static int
 adc65_exchange (Camera *camera, const unsigned char *cmd, int cmd_size, unsigned char *resp, int resp_size) {
 	int ret;
 
-	ret = gp_port_write (camera->port, cmd, cmd_size);
+	ret = gp_port_write (camera->port, (char*)cmd, cmd_size);
 	if (ret < 0)
 		return ret;
-	return gp_port_read (camera->port, resp, resp_size);
+	return gp_port_read (camera->port, (char*)resp, resp_size);
 }
 
 static int
@@ -107,14 +107,14 @@ adc65_read_data (Camera *camera, unsigned char *cmd, int cmd_size, int data_type
 			us = malloc (65536);
 			if (!us)
 				return NULL;
-			if (gp_port_read (camera->port, us, 65536) < 0) {
+			if (gp_port_read (camera->port, (char*)us, 65536) < 0) {
 				free(us);
 				return NULL;
 			}
 
 			/* Turn right-side-up and invert*/
 			for (x=0; x<32768; x++) {
-			    temp = us[x];
+				temp = us[x];
 				us[x] = 255 - us[65535-x];
 				us[65535-x] = 255 - temp;
 			}
