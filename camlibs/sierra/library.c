@@ -1338,7 +1338,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 {
 	int n, len = 0, r;
 	char filename[128];
-	const char *folder;
+	char *folder;
 	int timeout;
 
 	GP_DEBUG ("* sierra_capture");
