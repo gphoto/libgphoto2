@@ -120,19 +120,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, const char *name, CameraFile *file,
-	       void *data, GPContext *context)
-{
-/* Camera *camera;*/
-
-	/*
-	 * Upload the file to the camera. Use gp_file_get_data_and_size,etc
-	 */
-
-	return (GP_OK);
-}
-
-static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
 		  const char *filename, void *data, GPContext *context)
 {
@@ -322,7 +309,6 @@ static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.folder_list_func = folder_list_func,
 	.get_file_func = get_file_func,
-	.put_file_func = put_file_func,
 	.get_info_func = get_info_func,
 	.del_file_func = delete_file_func,
 	.delete_all_func = delete_all_func
