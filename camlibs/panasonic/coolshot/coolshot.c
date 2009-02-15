@@ -187,7 +187,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = user_data;
 	char data[128000];
-	char ppm_filename[128];
 	int size, n;
 
 	GP_DEBUG ("* camera_file_get");
@@ -215,18 +214,11 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		CHECK (coolshot_request_thumbnail (camera, file, data, &size, n, context));
 		CHECK (coolshot_build_thumbnail (data, &size));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_PPM));
-
-		strcpy( ppm_filename, filename );
-		ppm_filename[strlen(ppm_filename)-3] = 'p';
-		ppm_filename[strlen(ppm_filename)-2] = 'p';
-		ppm_filename[strlen(ppm_filename)-1] = 'm';
-		CHECK (gp_file_set_name (file, ppm_filename));
 		break;
 
 	case GP_FILE_TYPE_NORMAL:
 		CHECK (coolshot_request_image (camera, file, data, &size, n, context));
 		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
-		CHECK (gp_file_set_name (file, filename));
 		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
