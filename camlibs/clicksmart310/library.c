@@ -176,14 +176,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get the entry number of the photo on the camera */
     	k = gp_filesystem_number (camera->fs, "/", filename, context);
     	
-	if (GP_FILE_TYPE_EXIF ==type) return GP_ERROR_FILE_EXISTS;
+	if (GP_FILE_TYPE_EXIF==type) return GP_ERROR_FILE_EXISTS;
 
-	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL
-				    !=type && GP_FILE_TYPE_PREVIEW!=type) {
-
+	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL !=type && GP_FILE_TYPE_PREVIEW!=type)
 		return GP_ERROR_NOT_SUPPORTED;
-	}
-	
+
 	res = clicksmart_get_res_setting (camera->pl, k);
 
     	switch (res) {
@@ -210,7 +207,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
 		gp_file_set_mime_type (file, GP_MIME_RAW);
-		gp_file_set_name (file, filename);
 	        gp_file_set_data_and_size (file, (char *)data, b);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->num_pics) {
@@ -237,7 +233,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		    b, &file_size, 0, 0);
 
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-	gp_file_set_name (file, filename);
 	gp_file_set_data_and_size (file, (char *)jpeg_out, file_size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->num_pics) {
