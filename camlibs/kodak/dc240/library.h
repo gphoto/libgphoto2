@@ -33,9 +33,9 @@ typedef struct {
     uint8_t videoFormat; /* 12 */
     uint8_t quickViewMode; /* 13 DC280 */
     uint16_t numPict; /* 14-15 BigEndian */
-    uint8_t volumeID[11]; /* 16-26 */
+    char volumeID[11]; /* 16-26 */
     uint8_t powerSave; /* 27 DC280 */
-    uint8_t cameraID[32]; /* 28-59 */
+    char cameraID[32]; /* 28-59 */
     uint16_t remPictLow; /* 60-61 BE */
     uint16_t remPictMed; /* 62-63 BE */
     uint16_t remPictHigh; /* 64-65 BE */
@@ -74,7 +74,7 @@ typedef struct {
     uint16_t fValue; /* 136-137 BE */
     uint8_t imageEffect; /* 138 */
     uint8_t dateTimeStamp; /* 139 */
-    uint8_t borderFileName [11]; /* 140-151 */
+    char borderFileName [11]; /* 140-151 */
     uint8_t exposureLock; /* 152 */
     uint8_t isoMode; /* 153 DC280 */
 } DC240StatusTable;
