@@ -309,8 +309,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         num = gp_filesystem_number (camera->fs, "/", filename, context);
 	if (num < GP_OK)
 		return num;
-        gp_file_set_name (file, filename);
-        gp_file_set_mime_type (file, "image/ppm");
+        gp_file_set_mime_type (file, GP_MIME_PPM);
         switch (type) {
         case GP_FILE_TYPE_NORMAL:
                 return barbie_read_picture (camera->port, num, 0, file);
