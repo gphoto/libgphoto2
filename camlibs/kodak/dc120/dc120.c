@@ -234,17 +234,12 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 		return picnum;
 	
 	
-	if (action == DC120_ACTION_PREVIEW) {
+	if (action == DC120_ACTION_PREVIEW) { /* FIXME: marcus, fix type */
 		dot = strrchr(filename, '.');
 		if( dot && strlen( dot )>3 ) {
 	    strcpy( dot+1, "ppm");
 		}
 	}
-	
-	if( file ) {
-		gp_file_set_name (file, filename);
-	}
-	
 	return (dc120_file_action(camera, action, from_card, folder_nr, picnum+1, file, context));
 	/* yes, after that it is to handle failures. */
  fail:
