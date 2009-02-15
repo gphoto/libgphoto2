@@ -227,7 +227,6 @@ get_file_func (	CameraFilesystem *fs, const char *folder,
         int size, num;
 	char *data;
 
-        gp_file_set_name (file, filename);
         gp_file_set_mime_type (file, GP_MIME_PPM);
         num = gp_filesystem_number (fs, folder, filename, context);
 	if (num < 0)
