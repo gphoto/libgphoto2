@@ -128,7 +128,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	if(image_no < 0)
 		return image_no;
 
-	gp_file_set_name (file, filename);
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -183,12 +182,8 @@ static int camera_capture_preview (Camera *camera, CameraFile *file, GPContext *
 	result = stv0674_capture_preview (camera->port, &data, &size);
 	if (result < 0)
 		return result;
-
-	gp_file_set_name (file, "capture.jpg");
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-	gp_file_set_data_and_size (file, data, size);
-
-	return (GP_OK);
+	return gp_file_set_data_and_size (file, data, size);
 }
 
 static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
