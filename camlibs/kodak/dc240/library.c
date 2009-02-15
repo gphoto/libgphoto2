@@ -820,11 +820,8 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
     free(cmd_packet);
     free(path_packet);
 
-    if ((filename) && (file)) {
-	gp_file_set_name (file, filename);
+    if (file)
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-    }
-
     return (retval);
 }
 
