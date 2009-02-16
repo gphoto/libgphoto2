@@ -234,7 +234,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			size = size - app1len + 24;
 
 			gp_file_set_mime_type(file, GP_MIME_JPEG);
-			gp_file_set_name(file, filename);
 			gp_file_append(file, (char*)result, size);
 
 			free(result);
@@ -330,7 +329,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			size = offset;
 
 			gp_file_set_mime_type(file, GP_MIME_PPM);
-			gp_file_set_name(file, filename);
 			gp_file_append(file, (char*)result, size);
 
 			free( result );
@@ -367,7 +365,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = size * 0x100;
 
 		gp_file_set_mime_type(file, GP_MIME_RAW);
-		gp_file_set_name(file, filename);
 		gp_file_append(file, (char*)result, size);
 
 		free( result );
@@ -432,7 +429,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = size - app1len + 24;
 
 		gp_file_set_mime_type(file, GP_MIME_JPEG);
-		gp_file_set_name(file, filename);
 		gp_file_append(file, (char*)result, size);
 
 		free(result);
