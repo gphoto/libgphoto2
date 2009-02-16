@@ -1539,9 +1539,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		gp_file_set_data_and_size ( file, (char*)data, size );
 		gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-		/* Add an arbitrary file name so caller won't crash */
-		gp_file_set_name (file, "canon_preview.jpg");
-
 #if 0
 		/* Leave out, otherwise we refocus all the time */
 		ret = ptp_canon_viewfinderoff (params);
@@ -1588,8 +1585,6 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
-	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-	gp_file_set_name(file, path->name);
 	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
 
@@ -1606,7 +1601,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 		return ret;
 	}
 	gp_log (GP_LOG_DEBUG, "ptp/add_objectid_and_upload", "adding filedata to fs");
-	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, file, context);
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
         if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -1821,8 +1816,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
-	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-	gp_file_set_name(file, path->name);
 
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 	CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
@@ -1837,7 +1830,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_file_free (file);
 		return ret;
 	}
-	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, file, context);
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -2212,7 +2205,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 					strcpy (path->folder,"/");
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
-					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 					sprintf (path->name, "capt%04d.", capcnt++);
 					if (entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) {
 						strcat(path->name, "cr2");
@@ -2221,7 +2213,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 						strcat(path->name, "jpg");
 						gp_file_set_mime_type (file, GP_MIME_JPEG);
 					}
-					gp_file_set_name(file, path->name);
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
 					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, &ximage));
@@ -2236,7 +2227,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						gp_file_free (file);
 						return ret;
 					}
-					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, file, context);
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
 					if (ret != GP_OK) {
 						gp_file_free (file);
 						return ret;
@@ -3743,7 +3734,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-		CameraFile *file, void *data, GPContext *context)
+		CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	PTPObjectInfo oi;
@@ -3752,13 +3743,11 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	uint32_t handle;
 	unsigned long intsize;
 	PTPParams* params=&camera->pl->params;
-	CameraFileType	type;
 
 	SET_CONTEXT_P(params, context);
 
 	init_ptp_fs (camera, context);
 
-	gp_file_get_type (file, &type);
 	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
 
 	if (!strcmp (folder, "/special")) {
@@ -3798,6 +3787,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_context_error (context, _("Metadata only supported for MTP devices."));
 		return GP_ERROR;
 	}
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_BAD_PARAMETERS;
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 

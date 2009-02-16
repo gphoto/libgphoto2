@@ -413,7 +413,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 	case GP_FILE_TYPE_RAW:
 		CR (gp_file_set_data_and_size (file, data, size));
-		CR (gp_file_set_name (file, filename));
 		CR (gp_file_set_mime_type (file, GP_MIME_RAW));
 		break;
 	case GP_FILE_TYPE_NORMAL:

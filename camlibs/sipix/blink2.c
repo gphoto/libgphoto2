@@ -182,7 +182,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(addrs);
                 return image_no;
 	}
-        gp_file_set_name (file, filename);
         switch (type) {
         case GP_FILE_TYPE_NORMAL:
 #ifdef HAVE_LIBJPEG

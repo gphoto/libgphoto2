@@ -269,10 +269,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  */
 int
 put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       CameraFile *file, void *data, GPContext *context);
+	       CameraFileType type, CameraFile *file, void *data, GPContext *context);
 int
 put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       CameraFile *file, void *data, GPContext *context)
+	       CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
 	/*Camera *camera = data;*/
 

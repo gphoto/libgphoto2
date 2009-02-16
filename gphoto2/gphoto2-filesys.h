@@ -2,6 +2,7 @@
  * \brief Filesystem related operations and declarations.
  *
  * \author Copyright 2000 Scott Fritzinger
+ * \author Copyright 2008-2009 Marcus Meissner
  *
  * \note
  * Contributions:
@@ -243,6 +244,7 @@ int gp_filesystem_set_info_noop    (CameraFilesystem *fs,
 				    CameraFileInfo info, GPContext *context);
 int gp_filesystem_set_file_noop    (CameraFilesystem *fs,
 				    const char *folder, const char *filename,
+				    CameraFileType type,
 				    CameraFile *file, GPContext *context);
 int gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
 				    const char *filename, GPContext *context);
@@ -319,7 +321,9 @@ int gp_filesystem_delete_file    (CameraFilesystem *fs, const char *folder,
 typedef int (*CameraFilesystemPutFileFunc)   (CameraFilesystem *fs,
 					      const char *folder,
 					      const char *filename,
-					      CameraFile *file, void *data,
+					      CameraFileType type,
+					      CameraFile *file,
+					      void *data,
 					      GPContext *context);
 typedef int (*CameraFilesystemDeleteAllFunc) (CameraFilesystem *fs,
 					      const char *folder, void *data,
@@ -357,7 +361,6 @@ struct _CameraFilesystemFuncs {
 	CameraFilesystemDirFunc		remove_dir_func;
 	CameraFilesystemGetFileFunc	get_file_func;
 	CameraFilesystemDeleteFileFunc	del_file_func;
-
 	CameraFilesystemStorageInfoFunc	storage_info_func;
 
 	/* for later use. Remove one if you add a new function */
@@ -367,7 +370,7 @@ int gp_filesystem_set_funcs	(CameraFilesystem *fs,
 				 CameraFilesystemFuncs *funcs,
 				 void *data);
 int gp_filesystem_put_file   (CameraFilesystem *fs, const char *folder, const char *filename,
-			      CameraFile *file, GPContext *context);
+			      CameraFileType type, CameraFile *file, GPContext *context);
 int gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 			      GPContext *context);
 int gp_filesystem_make_dir   (CameraFilesystem *fs, const char *folder,

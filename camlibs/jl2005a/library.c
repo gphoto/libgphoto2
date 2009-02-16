@@ -200,7 +200,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_RAW == type) {
 		gp_file_set_mime_type(file, GP_MIME_RAW);
-		gp_file_set_name(file, filename);
 		gp_file_set_data_and_size(file, (char *)data , b+14 );
 		return GP_OK;
 	}
@@ -258,7 +257,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_gamma_fill_table (gtable, .65); 
 	gp_gamma_correct_single (gtable, ptr, w * h); 
 	gp_file_set_mime_type (file, GP_MIME_PPM);
-	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	end:
 	free(data);

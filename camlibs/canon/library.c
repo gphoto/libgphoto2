@@ -557,9 +557,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	}
 	gp_file_set_data_and_size ( file, (char *)data, size );
 	gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
-	/* Add an arbitrary file name so caller won't crash */
-	gp_file_set_name (file, "canon_preview.jpg");
-
 	return GP_OK;
 }
 
@@ -875,7 +872,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* do different things with the data fetched above */
-	/* FIXME: For which file type(s) should we gp_file_set_name(file,filename) ? */
 	switch (type) {
 		case GP_FILE_TYPE_PREVIEW:
 			/* Either this camera model does not support EXIF,
@@ -904,19 +900,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 			gp_file_set_data_and_size (file, (char *)data, datalen);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
-			gp_file_set_name (file, filename);
 			break;
 
 		case GP_FILE_TYPE_AUDIO:
 			gp_file_set_mime_type (file, GP_MIME_WAV);
 			gp_file_set_data_and_size (file, (char *)data, datalen);
-			gp_file_set_name (file, filename);
 			break;
 
 		case GP_FILE_TYPE_NORMAL:
 			gp_file_set_mime_type (file, filename2mimetype (filename));
 			gp_file_set_data_and_size (file, (char *)data, datalen);
-			gp_file_set_name (file, filename);
 			break;
 #ifdef HAVE_LIBEXIF
 		case GP_FILE_TYPE_EXIF:
@@ -1285,7 +1278,8 @@ convert_filename_to_8_3(const char* filename, char* dest)
 
 /* XXX This function should be merged with the other one of the same name */
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFile *file, void *data,
+put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
@@ -1295,6 +1289,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 	CameraAbilities a;
 
 	GP_DEBUG ("camera_folder_put_file()");
+
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_BAD_PARAMETERS;
 
 	if (!check_readiness (camera, context))
 		return GP_ERROR;
@@ -1408,7 +1405,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 
 static int
 put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, const char *filename,
-	       CameraFile *file, void *data,
+	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
@@ -1419,6 +1416,8 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, c
 	CameraAbilities a;
 
 	GP_DEBUG ("camera_folder_put_file()");
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_BAD_PARAMETERS;
 
 	if (camera->port->type == GP_PORT_USB) {
 		gp_context_error (context,

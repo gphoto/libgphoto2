@@ -637,7 +637,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       CameraFile *file, void *data, GPContext *context)
+	       CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
 	char path[2048];
 	int result;

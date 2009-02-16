@@ -2,6 +2,7 @@
  * \brief Abstracted gphoto2 file operations.
  *
  * \author Copyright 2000 Scott Fritzinger
+ * \author Copyright 2008-2009 Marcus Meissner
  *
  * \note
  * This library is free software; you can redistribute it and/or
@@ -132,14 +133,12 @@ int gp_file_get_name       (CameraFile *file, const char **name);
 int gp_file_set_mime_type  (CameraFile *file, const char  *mime_type);
 int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
 
-int gp_file_set_type       (CameraFile *file, CameraFileType  type);
-int gp_file_get_type       (CameraFile *file, CameraFileType *type);
-
 int gp_file_set_mtime   (CameraFile *file, time_t  mtime);
 int gp_file_get_mtime   (CameraFile *file, time_t *mtime);
 
 int gp_file_detect_mime_type          (CameraFile *file);
 int gp_file_adjust_name_for_mime_type (CameraFile *file);
+int gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType type, char **newname);
 
 int gp_file_append            (CameraFile*, const char *data,
 			       unsigned long int size);

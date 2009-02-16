@@ -344,19 +344,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
         int image_no, result;
 	//int	i, ret, numpics;
-
-
 	char* img_data=NULL;
         int   img_size=-1;
 
         image_no = gp_filesystem_number(fs, folder, filename, context);
-        gp_file_set_name (file, filename);
-
         gp_log(GP_LOG_DEBUG, "enigma13","Index of image %d is %s",image_no, filename);
-
-
         switch (type) {
-
         case GP_FILE_TYPE_NORMAL:
         {
                 gp_log(GP_LOG_DEBUG, "enigma13","Downloading raw image");
@@ -366,13 +359,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  
 		break;
 	}
-
-
 	default:
                 result = GP_ERROR_NOT_SUPPORTED;
 		break;
         }
-
         if (result < 0)
                 return result;
         return (GP_OK);

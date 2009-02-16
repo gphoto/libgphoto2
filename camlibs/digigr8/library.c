@@ -251,7 +251,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
 		size = b; 
 		gp_file_set_mime_type (file, GP_MIME_RAW);
-		gp_file_set_name (file, filename);
 		gp_file_append(file, (char *)data, size);
 		/* Save photo's catalog entry as a footer for the raw file */
 		gp_file_append(file, (char *)camera->pl->catalog + k*0x10, 0x10);
@@ -301,7 +300,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         } else
                 white_balance (ptr, w*h, 1.1);	
 	gp_file_set_mime_type (file, GP_MIME_PPM);
-	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->nb_entries) {
@@ -380,7 +378,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
         } else
                 white_balance (ptr, w*h, 1.1);	
         gp_file_set_mime_type (file, GP_MIME_PPM);
-        gp_file_set_name (file, filename);
         gp_file_set_data_and_size (file, (char *)ppm, size);
 	digi_reset(camera->port);
 	return (GP_OK);

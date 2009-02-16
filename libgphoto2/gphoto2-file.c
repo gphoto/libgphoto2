@@ -56,7 +56,6 @@
  * \internal
  */
 struct _CameraFile {
-        CameraFileType	type;
         char		mime_type [64];
         char		name [MAX_PATH];
         int		ref_count;
@@ -89,7 +88,6 @@ gp_file_new (CameraFile **file)
 		return (GP_ERROR_NO_MEMORY);
 	memset (*file, 0, sizeof (CameraFile));
 
-	(*file)->type = GP_FILE_TYPE_NORMAL;
 	strcpy ((*file)->mime_type, "unknown/unknown");
 	(*file)->ref_count = 1;
 	(*file)->accesstype = GP_FILE_ACCESSTYPE_MEMORY;
@@ -113,7 +111,6 @@ gp_file_new_from_fd (CameraFile **file, int fd)
 		return (GP_ERROR_NO_MEMORY);
 	memset (*file, 0, sizeof (CameraFile));
 
-	(*file)->type = GP_FILE_TYPE_NORMAL;
 	strcpy ((*file)->mime_type, "unknown/unknown");
 	(*file)->ref_count = 1;
 	(*file)->accesstype = GP_FILE_ACCESSTYPE_FD;
@@ -504,6 +501,29 @@ gp_file_save (CameraFile *file, const char *filename)
 }
 
 
+/*
+ * mime types that cannot be determined by the filename
+ * extension. Better hack would be to use library that examine
+ * file content instead, like gnome-vfs mime handling, or
+ * gnome-mime, whatever.
+ * See also the GP_MIME_* definitions.
+ */
+static const char *mime_table[] = {
+    "bmp",  GP_MIME_BMP,
+    "jpg",  GP_MIME_JPEG,
+    "tif",  GP_MIME_TIFF,
+    "ppm",  GP_MIME_PPM,
+    "pgm",  GP_MIME_PGM,
+    "pnm",  GP_MIME_PNM,
+    "png",  GP_MIME_PNG,
+    "wav",  GP_MIME_WAV,
+    "avi",  GP_MIME_AVI,
+    "mp3",  GP_MIME_MP3,
+    "wma",  GP_MIME_WMA,
+    "asf",  GP_MIME_ASF,
+    "ogg",  GP_MIME_OGG,
+    "mpg",  GP_MIME_MPEG,
+    NULL};
 /**
  * @param file a #CameraFile
  * @param filename
@@ -519,29 +539,6 @@ gp_file_open (CameraFile *file, const char *filename)
         int  i;
 	struct stat s;
 
-        /*
-         * mime types that cannot be determined by the filename
-         * extension. Better hack would be to use library that examine
-         * file content instead, like gnome-vfs mime handling, or
-         * gnome-mime, whatever.
-         * See also the GP_MIME_* definitions.
-         */
-        static char *mime_table[] = {
-            "bmp",  GP_MIME_BMP,
-            "jpg",  GP_MIME_JPEG,
-            "tif",  GP_MIME_TIFF,
-            "ppm",  GP_MIME_PPM,
-            "pgm",  GP_MIME_PGM,
-            "pnm",  GP_MIME_PNM,
-            "png",  GP_MIME_PNG,
-            "wav",  GP_MIME_WAV,
-            "avi",  GP_MIME_AVI,
-            "mp3",  GP_MIME_MP3,
-            "wma",  GP_MIME_WMA,
-            "asf",  GP_MIME_ASF,
-            "ogg",  GP_MIME_OGG,
-            "mpg",  GP_MIME_MPEG,
-            NULL};
 
 	CHECK_NULL (file && filename);
 
@@ -669,7 +666,6 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 	/* struct members we can just copy. All generic ones, but not refcount. */
 	memcpy (destination->name, source->name, sizeof (source->name));
 	memcpy (destination->mime_type, source->mime_type, sizeof (source->mime_type));
-	destination->type = source->type;
 	destination->mtime = source->mtime;
 
 	if ((destination->accesstype == GP_FILE_ACCESSTYPE_MEMORY) &&
@@ -797,6 +793,73 @@ gp_file_get_name (CameraFile *file, const char **name)
 
 	*name = file->name;
 
+	return (GP_OK);
+}
+
+/**
+ * @param file a #CameraFile
+ * @param basename the basename of the file
+ * @param type the gphoto type of the file
+ * @param newname the new name generated
+ * @return a gphoto2 error code.
+ *
+ * This function takes the basename and generates a filename out of
+ * it depending on the gphoto filetype and the mime type in the file.
+ * The gphoto filetype will be converted to a prefix, like
+ * thumb_ or raw_, the mimetype will replace the current suffix by
+ * a different one (if necessary).
+ *
+ * This can be used so that saving thumbnails or metadata will not
+ * overwrite the normal files.
+ **/
+int
+gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType type, char **newname)
+{
+	char *prefix = NULL, *s, *new;
+	const char *suffix = NULL;
+	int i;
+
+	CHECK_NULL (file && basename && newname);
+	*newname = NULL;
+
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:	prefix = "";	break;
+	case GP_FILE_TYPE_RAW:		prefix = "raw_";break;
+	case GP_FILE_TYPE_EXIF:		prefix = "exif_";break;
+	case GP_FILE_TYPE_PREVIEW:	prefix = "thumb_";break;
+	case GP_FILE_TYPE_METADATA:	prefix = "meta_";break;
+	case GP_FILE_TYPE_AUDIO:	prefix = "audio_";break;
+	default:			prefix = ""; break;
+	}
+	for (i=0;mime_table[i];i+=2) {
+		if (!strcmp (mime_table[i+1],file->mime_type)) {
+			suffix = mime_table[i];
+			break;
+		}
+	}
+	s = strrchr(basename,'.');
+	if (s) {
+		if (!suffix)
+			suffix = s+1;
+		new = malloc (strlen(prefix) + (s-basename+1) + strlen (suffix) + 1);
+		if (!new)
+			return GP_ERROR_NO_MEMORY;
+		strcpy (new, prefix);
+		memcpy (new+strlen(new), basename, s-basename+1);
+		strcat(new+strlen(new)+(s-basename+1),suffix);
+	} else { /* no dot in basename? */
+		if (!suffix) suffix = "";
+		new = malloc (strlen(prefix) + strlen(basename) + 1 + strlen (suffix) + 1);
+		if (!new)
+			return GP_ERROR_NO_MEMORY;
+		strcpy (new, prefix);
+		strcat (new, basename);
+		if (strlen(suffix)) {
+			strcat (new, ".");
+			strcat (new, suffix);
+		}
+	}
+	*newname = new;
 	return (GP_OK);
 }
 
@@ -950,40 +1013,6 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Name adjusted to '%s'.",
 		file->name);
 	
-	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param type a #CameraFileType
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_set_type (CameraFile *file, CameraFileType type)
-{
-	CHECK_NULL (file);
-
-	file->type = type;
-
-	return (GP_OK);
-}
-
-
-/**
- * @param file a #CameraFile
- * @param type a #CameraFileType
- * @return a gphoto2 error code.
- *
- **/
-int
-gp_file_get_type (CameraFile *file, CameraFileType *type)
-{
-	CHECK_NULL (file && type);
-
-	*type = file->type;
-
 	return (GP_OK);
 }
 

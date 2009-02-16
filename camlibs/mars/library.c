@@ -268,7 +268,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		p_data[43] = ((raw_size)>>24)&0xff;		
 		memcpy (p_data+44, data, raw_size);
 		gp_file_set_mime_type(file, GP_MIME_WAV);
-		gp_file_set_name(file, filename);
 		gp_file_set_data_and_size(file, (char *)p_data , raw_size+44);
 		return GP_OK;
 	}
@@ -286,7 +285,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (!audio) 
 			data[6] = (data[6] | res_code);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
-		gp_file_set_name(file, filename);
 		gp_file_set_data_and_size(file, (char *)data , raw_size );
 		return GP_OK;
 	}
@@ -322,7 +320,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_gamma_correct_single (gtable, ptr, w * h);
 	mars_white_balance (ptr, w*h, 1.4, gamma_factor);
         gp_file_set_mime_type (file, GP_MIME_PPM);
-        gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	free (p_data);
 

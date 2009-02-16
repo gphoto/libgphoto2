@@ -1228,6 +1228,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 int
 gp_filesystem_put_file (CameraFilesystem *fs,
 			const char *folder, const char *filename,
+			CameraFileType type,
 			CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFolder	*f;
@@ -1248,7 +1249,7 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	/* Upload the file */
-	CR (fs->put_file_func (fs, folder, filename, file, fs->folder_data, context));
+	CR (fs->put_file_func (fs, folder, filename, type, file, fs->folder_data, context));
 	/* And upload it to internal structure too */
 	return append_file (fs, f, filename, file, context);
 }
@@ -1578,7 +1579,6 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	GP_DEBUG ("Getting file '%s' from folder '%s' (type %i)...",
 		  filename, folder, type);
 
-	CR (gp_file_set_type (file, type));
 	CR (gp_file_set_name (file, filename));
 
 	if (!fs->get_file_func) {
@@ -1626,11 +1626,10 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 			       fs->file_data, context));
 
 	/* We don't trust the camera drivers */
-	CR (gp_file_set_type (file, type));
 	CR (gp_file_set_name (file, filename));
 
 	/* Cache this file */
-	CR (gp_filesystem_set_file_noop (fs, folder, filename, file, context));
+	CR (gp_filesystem_set_file_noop (fs, folder, filename, type, file, context));
 
 	/*
 	 * Often, thumbnails are of a different mime type than the normal
@@ -1715,10 +1714,9 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		ed->data = NULL;
 		ed->size = 0;
 		exif_data_unref (ed);
-		CR (gp_file_set_type (file, GP_FILE_TYPE_PREVIEW));
 		CR (gp_file_set_name (file, filename));
 		CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
-		CR (gp_filesystem_set_file_noop (fs, folder, filename, file, context));
+		CR (gp_filesystem_set_file_noop (fs, folder, filename, GP_FILE_TYPE_PREVIEW, file, context));
 		CR (gp_file_adjust_name_for_mime_type (file));
 #else
 		GP_DEBUG ("Getting previews is not supported and "
@@ -1754,10 +1752,9 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 			free (buf);
 			return (r);
 		}
-		CR (gp_file_set_type (file, GP_FILE_TYPE_EXIF));
 		CR (gp_file_set_name (file, filename));
 		CR (gp_file_set_mime_type (file, GP_MIME_EXIF));
-		CR (gp_filesystem_set_file_noop (fs, folder, filename, file, context));
+		CR (gp_filesystem_set_file_noop (fs, folder, filename, GP_FILE_TYPE_EXIF, file, context));
 		CR (gp_file_adjust_name_for_mime_type (file));
 #else
 		GP_DEBUG ("Getting EXIF data is not supported and libgphoto2 "
@@ -2040,11 +2037,11 @@ gp_filesystem_lru_count (CameraFilesystem *fs)
 static int
 gp_filesystem_lru_update (CameraFilesystem *fs,
 			  const char *folder, const char *filename,
+			  CameraFileType type,
 			  CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
-	CameraFileType type;
 	CameraFile *oldfile = NULL;
 	unsigned long int size;
 	int x;
@@ -2052,7 +2049,6 @@ gp_filesystem_lru_update (CameraFilesystem *fs,
 
 	CHECK_NULL (fs && folder && file);
 
-	CR (gp_file_get_type (file, &type));
 	CR (gp_file_get_data_and_size (file, NULL, &size));
 
 	/*
@@ -2199,9 +2195,9 @@ gp_filesystem_lru_check (CameraFilesystem *fs)
 int
 gp_filesystem_set_file_noop (CameraFilesystem *fs,
 			     const char *folder, const char *filename,
+			     CameraFileType type,
 			     CameraFile *file, GPContext *context)
 {
-	CameraFileType type;
 	CameraFileInfo info;
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
@@ -2212,7 +2208,6 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 	CC (context);
 	CA (folder, context);
 
-	CR (gp_file_get_type (file, &type));
 	GP_DEBUG ("Adding file '%s' to folder '%s' (type %i)...",
 		  filename, folder, type);
 
@@ -2227,7 +2222,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 	 */
 	if ((type == GP_FILE_TYPE_RAW) || (type == GP_FILE_TYPE_NORMAL) ||
 	    (type == GP_FILE_TYPE_AUDIO))
-		CR (gp_filesystem_lru_update (fs, folder, filename, file, context));
+		CR (gp_filesystem_lru_update (fs, folder, filename, type, file, context));
 
 	/* Redundant sanity check. */
 	CR (gp_filesystem_lru_check (fs));

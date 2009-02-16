@@ -179,7 +179,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = user_data;
 	char *raw, *ppm;
-	char tmp_filename[128];
 	unsigned char gtable[256];
 	char *ptr;
 	int size = 0, n = 0;
@@ -224,7 +223,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		gp_gamma_correct_single( gtable, ptr, height * width );
 
 		CHECK_free (gp_file_set_mime_type (file, GP_MIME_PPM));
-		CHECK_free (gp_file_set_name (file, filename));
 		CHECK_free (gp_file_append (file, ppm, size));
 		break;
 
@@ -249,18 +247,12 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		gp_gamma_correct_single( gtable, ptr, jc_file->width * jc_file->height );
 
 		CHECK_free (gp_file_set_mime_type (file, GP_MIME_PPM));
-		CHECK_free (gp_file_set_name (file, filename));
 		CHECK_free (gp_file_append (file, ppm, size));
 		break;
 
 	case GP_FILE_TYPE_RAW:
 		CHECK_free (jamcam_request_image (camera, file, raw, &size, n, context));
 		CHECK_free (gp_file_set_mime_type (file, GP_MIME_RAW));
-		strcpy( tmp_filename, filename );
-		tmp_filename[strlen(tmp_filename)-3] = 'r';
-		tmp_filename[strlen(tmp_filename)-2] = 'a';
-		tmp_filename[strlen(tmp_filename)-1] = 'w';
-		CHECK_free (gp_file_set_name (file, tmp_filename));
 		CHECK_free (gp_file_append (file, raw, size));
 		break;
 	default:

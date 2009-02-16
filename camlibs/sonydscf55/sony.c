@@ -722,7 +722,6 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 		 * overwrites it with the correct one.
 		 */
 		sprintf(buffer, SONY_FILE_NAME_FMT, imageid);
-		gp_file_set_name (file, buffer);
 
 		sony_baud_set(camera, baud_rate);
 

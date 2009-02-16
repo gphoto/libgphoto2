@@ -285,7 +285,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
     gp_file_set_data_and_size (file, data, size);
        /* Maybe skip below if EXIF data present? */
-    gp_file_set_name (file, filename);
    
        /* As far as I know we only support JPG and MOV */
        /* Maybe some have MP3???                       */
@@ -387,7 +386,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 
 
 static int put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-			  CameraFile *file, void *data, GPContext *context) {
+			  CameraFileType type, CameraFile *file, void *data, GPContext *context) {
    
     Camera *camera=data;
     const char *data_file;

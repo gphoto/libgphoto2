@@ -312,12 +312,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_RAW == type) {
 		gp_file_set_mime_type(file, GP_MIME_RAW);
-		gp_file_set_name(file, filename);
 		gp_file_set_data_and_size(file, (char *)pic_buffer , b+16 );
 		return GP_OK;
 	} else return GP_ERROR_NOT_SUPPORTED;
-	
-	
 
         return GP_OK;
 }

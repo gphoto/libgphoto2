@@ -1,18 +1,36 @@
-libgphoto2 2.4.99.1 development state
+libgphoto2 2.4.99.2 development state
 
 libgphoto2 API:
    * CameraFileInfoFile: removed "name" structmember and GP_FILE_INFO_NAME
      flags.
      Use direct passing in of the filename to the API functions.
 
-   * gp_file_set_name() passing in is no longer needed and the API will
-     go away.
+   * New: gp_camera_autodetect(CameraList *list, GPContext*);
+
+     Simple autodetection function returning all current detected cameras.
+
+   * (not yet New: gp_camera_open (Camera *camera, const char *name, const char *port, GPContext *context);
+
+     Simple open function without needing to involve libgphoto2_port.
+     )
+   * gp_file_set_name() and _get_name() passing in is no longer needed
+     and the API will go away.
+
+   * New gp_file_get_name_by_type() will convert a regular filename ("normal")
+     into one depending on type (e.g. "raw_" prefix) and adjusted suffix
+     (like ".ppm" turning into ".pgm" for grayscale previews).
+
+   * gp_file_set_type() and gp_file_get_type() are gone, these functions
+     are now implicit passed via arguments to the the put_file and
+     set_file_noop() functions.
 
    * gp_filesystem_set_info_noop(), gp_filesystem_set_file_noop(),
      gp_filesystem_put_file(), gp_camera_folder_put_file():
 
      Added "filename" argument to pass in the filename. The one
      from CameraFileInfoFile and CameraFile are no longer used.
+
+     Added "type" argument to pass in the filetype (GP_FILE_TYPE_*).
 
    * Adjusted to new GPPortInfo handling.
 

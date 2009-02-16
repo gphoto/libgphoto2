@@ -340,8 +340,6 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 	if (!data)
 		return GP_ERROR;
 
-	gp_file_set_name(file, filename);
-
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		gp_file_set_data_and_size(file, (char*)data, buflen);

@@ -381,7 +381,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_gamma_correct_single (gtable, ptr, w * h); 
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
-    		gp_file_set_name (file, filename); 
 		gp_file_set_data_and_size (file, (char *)ppm, size);
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
@@ -391,7 +390,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy (rawdata, frame_data, size);
 		memcpy (rawdata+size,camera->pl->catalog+16*entry,16);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
-		gp_file_set_name (file, filename);
 	        gp_file_set_data_and_size (file, (char *)rawdata, size+16);  
 	}
 	/* Reset camera when done, for more graceful exit. */
@@ -422,7 +420,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	unsigned char *frame_data; 
 	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
-	char filename[12] = "sq_cap.ppm";
 	int size;
 	int w = 320;
 	int h = 240;
@@ -468,7 +465,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	gp_gamma_fill_table (gtable, .5); 
 	gp_gamma_correct_single (gtable, ptr, w * h); 
 	gp_file_set_mime_type (file, GP_MIME_PPM);
-	gp_file_set_name (file, filename); 
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 
 	sq_reset(camera->port);

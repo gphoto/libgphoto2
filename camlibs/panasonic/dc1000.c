@@ -413,8 +413,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	if ((size = dsc1_selectimage(camera, index + 1)) < 0)
 		return (GP_ERROR);
 	
-	gp_file_set_name (file, filename);
-	gp_file_set_mime_type (file, "image/jpeg");
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	id = gp_context_progress_start (context, size, _("Getting data..."));
 	for (i = 0, s = 0; s < size; i++) {
@@ -432,14 +431,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-			  CameraFile *file, void *user_data,
+			  CameraFileType type, CameraFile *file, void *user_data,
 			  GPContext *context) 
 {
 	Camera *camera = user_data;
 	int	blocks, blocksize, i;
 	int	result;
 	const char *data;
-	long int size;
+	unsigned long int size;
 	unsigned int id;
 	
 	gp_context_status(context, _("Uploading image: %s."), name);	

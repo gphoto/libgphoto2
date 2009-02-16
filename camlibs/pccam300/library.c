@@ -150,11 +150,9 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 				break;
 		}
 
-		if (file) {
-			gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-			gp_file_set_name (file, fn);
+		if (file)
 			gp_file_set_data_and_size (file, buffer, size);
-		} else
+		else
 			free (buffer);
 		
 		/*
@@ -163,16 +161,8 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		 * */
 		gp_filesystem_append (camera->fs, folder, fn, context);
 		gp_filesystem_set_info_noop (camera->fs, folder, fn, info, context);
-		/* FIXME: This is disabled for now, due to it seeming to
-		 *        cause corruption within libgphoto itself.
-		 *        A side effect of this is that file caching does
-		 *        not happen, so files must be downloaded twice if
-		 *        they are to be saved to disk.
-		 *        NWG: Sun 19th January 2003.
-		 *
-		 * gp_filesystem_set_file_noop (camera->fs, folder, file,
-		 *                              context);
-		 */
+		gp_filesystem_set_file_noop (camera->fs, folder, fn, GP_FILE_TYPE_NORMAL,
+					file, context);
 		gp_file_unref (file);
 
 		gp_context_idle (context);
@@ -206,9 +196,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 		default:
 			return GP_ERROR_NOT_SUPPORTED;
 	}
-	gp_file_set_data_and_size (file, data, size);
-	gp_file_set_name (file, filename);
-	return GP_OK;
+	return gp_file_set_data_and_size (file, data, size);
 }
 
 static int

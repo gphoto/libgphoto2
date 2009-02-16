@@ -728,7 +728,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 }
 
 static int
-put_file_func (CameraFilesystem * fs, const char *folder, const char *filename, CameraFile * file, void *data, GPContext *context)
+put_file_func (CameraFilesystem * fs, const char *folder, const char *filename,
+	CameraFileType type, CameraFile * file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	char *picture_folder;
@@ -740,6 +741,9 @@ put_file_func (CameraFilesystem * fs, const char *folder, const char *filename, 
 	GP_DEBUG ("*** put_file_func");
 	GP_DEBUG ("*** folder: %s", folder);
 	GP_DEBUG ("*** filename: %s", filename);
+
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_BAD_PARAMETERS;
 	
 	/* Check the size */
 	CHECK (gp_file_get_data_and_size (file, &data_file, &data_size));

@@ -279,7 +279,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (num < 0)
 		return num;
 
-	gp_file_set_name (file, filename);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		data = Dimera_Get_Full_Image (num, &size,
@@ -391,7 +390,6 @@ static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *c
         long size;
 	uint8_t *data;
 
-	gp_file_set_name (file, RAM_IMAGE_TEMPLATE);
 	gp_file_set_mime_type (file, GP_MIME_PGM);
 
         data = Dimera_Preview( &size, camera, context);

@@ -223,12 +223,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		rc = GP_ERROR_NOT_SUPPORTED;
 	}
-
-
-	if (rc == GP_OK) {
-		gp_file_set_name (file, filename);
-	}
-
 	return rc;
 }
 

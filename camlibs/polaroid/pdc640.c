@@ -208,7 +208,7 @@ static struct {
 };
 
 static int
-pdc640_read_packet (GPPort *port, char *buf, int buf_size)
+pdc640_read_packet (GPPort *port, unsigned char *buf, int buf_size)
 {
 	int i;
 	char checksum, c;
@@ -218,7 +218,7 @@ pdc640_read_packet (GPPort *port, char *buf, int buf_size)
 		buf[i] = 0;
 
 	/* Read the packet */
-	CHECK_RESULT (gp_port_read (port, buf, buf_size));
+	CHECK_RESULT (gp_port_read (port, (char*)buf, buf_size));
 
 	/* Calculate the checksum */
 	for (i = 0, checksum = 0; i < buf_size; i++)
@@ -234,8 +234,8 @@ pdc640_read_packet (GPPort *port, char *buf, int buf_size)
 }
 
 static int
-pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
-				   char *buf, int buf_size)
+pdc640_transmit (GPPort *port, unsigned char *cmd, int cmd_size,
+				   unsigned char *buf, int buf_size)
 {
 	int r, tries;
 
@@ -250,7 +250,7 @@ pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 		xcmd[3] = checksum & 0xff;
 
 		/* Wait until we get back the echo of the command. */
-		r = gp_port_usb_msg_read( port, 0x10, xcmd[0]|(xcmd[1]<<8),xcmd[2]|(xcmd[3]<<8),xbuf,sizeof(xbuf));
+		r = gp_port_usb_msg_read( port, 0x10, xcmd[0]|(xcmd[1]<<8),xcmd[2]|(xcmd[3]<<8),(char*)xbuf,sizeof(xbuf));
 			/* Sometimes we want to read here, sometimes not.
 		if (r < GP_OK)
 			return r;
@@ -261,7 +261,7 @@ pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 			 */
 			int curr = 0, readsize = (buf_size + 63) & ~63;
 			while (curr < readsize) {
-				r = gp_port_read( port, buf + curr, readsize - curr);
+				r = gp_port_read( port, (char*)buf + curr, readsize - curr);
 				if (r < GP_OK) break;
 				curr += r;
 			}
@@ -276,7 +276,7 @@ pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 			 * The first byte returned is always the same as the first byte
 			 * of the command.
 			 */
-			CHECK_RESULT (gp_port_write (port, cmd, cmd_size));
+			CHECK_RESULT (gp_port_write (port, (char*)cmd, cmd_size));
 			r = gp_port_read (port, &c, 1);
 			if ((r < 0) || (c != cmd[0]))
 				continue;
@@ -296,10 +296,10 @@ pdc640_transmit (GPPort *port, char *cmd, int cmd_size,
 
 static int
 pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
-		     char *buf, int buf_size)
+		     unsigned char *buf, int buf_size)
 {
-	char cmd1[] = {0x61, 0x00};
-	char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x00};
+	unsigned char cmd1[] = {0x61, 0x00};
+	unsigned char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x00};
 
 	/* First send the command ... */
 	cmd1[1] = cmd;
@@ -311,7 +311,7 @@ pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
 		return pdc640_transmit (port, cmd2, 4, buf, buf_size);
 	} else {
 		int i, packet_size, result, size, ofs;
-		char *data;
+		unsigned char *data;
 
 		/* Set how many scanlines worth of data to get at once */
 		cmd2[4] = 0x06;
@@ -351,20 +351,20 @@ pdc640_transmit_pic (GPPort *port, char cmd, int width, int thumbnail,
 }
 
 static int
-pdc640_transmit_packet (GPPort *port, char cmd, char *buf, int buf_size) {
-	char cmd1[] = {0x61, 0x00};
+pdc640_transmit_packet (GPPort *port, char cmd, unsigned char *buf, int buf_size) {
+	unsigned char cmd1[] = {0x61, 0x00};
 	/* Send the command and get the packet */
 	cmd1[1] = cmd;
 	CHECK_RESULT (pdc640_transmit (port, cmd1, 2, NULL, 0));
 
 	if (port->type == GP_PORT_USB) {
-		char cmd2[] = {0x15, 0x00, 0x00, 0x00};
+		unsigned char cmd2[] = {0x15, 0x00, 0x00, 0x00};
 
 		cmd2[1] = ((buf_size+63)/64) & 0xff;
 		cmd2[2] = (((buf_size+63)/64) >> 8) & 0xff;
 		return pdc640_transmit (port, cmd2, 4, buf, buf_size);
 	} else {
-		char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x01};
+		unsigned char cmd2[] = {0x15, 0x00, 0x00, 0x00, 0x01};
 
 		return pdc640_transmit (port, cmd2, 5, buf, buf_size);
 	}
@@ -374,7 +374,7 @@ pdc640_transmit_packet (GPPort *port, char cmd, char *buf, int buf_size) {
 static int
 pdc640_ping_low (GPPort *port)
 {
-	char cmd[] = {0x01};
+	unsigned char cmd[] = {0x01};
 
 	CHECK_RESULT (pdc640_transmit (port, cmd, 1, NULL, 0));
 
@@ -396,7 +396,7 @@ pdc640_push_button (GPPort *port)
 static int
 pdc640_ping_high (GPPort *port)
 {
-	char cmd[] = {0x41};
+	unsigned char cmd[] = {0x41};
 
 	CHECK_RESULT (pdc640_transmit (port, cmd, 1, NULL, 0));
 
@@ -406,7 +406,7 @@ pdc640_ping_high (GPPort *port)
 static int
 pdc640_speed (GPPort *port, int speed)
 {
-	char cmd[] = {0x69, 0x00};
+	unsigned char cmd[] = {0x69, 0x00};
 
 	cmd[1] = (speed / 9600) - 1;
 	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
@@ -435,7 +435,7 @@ pdc640_unknown5 (GPPort *port)
 static int
 pdc640_unknown20 (GPPort* port)
 {
-	char buf[128];
+	unsigned char buf[128];
 
 	CHECK_RESULT (pdc640_transmit_packet (port, 0x20, buf, 128));
 
@@ -446,7 +446,7 @@ pdc640_unknown20 (GPPort* port)
 static int
 pdc640_caminfo (GPPort *port, int *numpic)
 {
-	char buf[1280];
+	unsigned char buf[1280];
 
 	CHECK_RESULT (pdc640_transmit_packet (port, 0x40, buf, 1280));
 	*numpic = buf[2]; /* thats the only useful info :( */
@@ -456,14 +456,14 @@ pdc640_caminfo (GPPort *port, int *numpic)
 static int
 pdc640_setpic (GPPort *port, char n)
 {
-	char cmd[2] = {0xf6, 0x00};
+	unsigned char cmd[2] = {0xf6, 0x00};
 
 	cmd[1] = n;
 	if (port->type == GP_PORT_USB) {
 		/* USB does not like a bulkread afterwards */
 		return pdc640_transmit (port, cmd, 2, NULL, 0);
 	} else {
-		char buf[8];
+		unsigned char buf[8];
 
 		return pdc640_transmit (port, cmd, 2, buf, 7);
 	}
@@ -506,8 +506,8 @@ pdc640_picinfo (GPPort *port, char n,
 }
 
 static int
-pdc640_processtn (int width, int height, char **data, int size) {
-	char *newdata;
+pdc640_processtn (int width, int height, unsigned char **data, int size) {
+	unsigned char *newdata;
 	int y;
 
 	/* Sanity checks */
@@ -533,7 +533,7 @@ pdc640_processtn (int width, int height, char **data, int size) {
 }
 
 static int
-pdc640_getbit (char *data, int *ofs, int size, int *bit) {
+pdc640_getbit (unsigned char *data, int *ofs, int size, int *bit) {
 	static char c;
 	int b;
 
@@ -558,10 +558,10 @@ pdc640_getbit (char *data, int *ofs, int size, int *bit) {
 }
 
 static int
-pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
+pdc640_deltadecode (int width, int height, unsigned char **rawdata, int *rawsize)
 {
 	char col1, col2;
-	char *data;
+	unsigned char *data;
 	int rawofs, x, y, ofs, bit, ones;
 	int size;
 	int e, d, o, val;
@@ -636,14 +636,14 @@ pdc640_deltadecode (int width, int height, char **rawdata, int *rawsize)
 
 static int
 pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
-		char **data, int *size)
+		unsigned char **data, int *size)
 {
 	char cmd, ppmheader[100];
 	int size_pic, width_pic, height_pic;
 	int size_thumb, width_thumb, height_thumb;
 	int height, width, outsize, result, pmmhdr_len;
 	int compression_type;
-	char *outdata;
+	unsigned char *outdata;
 
 	/* Get the size of the picture */
 	CHECK_RESULT (pdc640_picinfo (camera->port, n,
@@ -755,7 +755,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 static int
 pdc640_delpic (GPPort *port)
 {
-	char cmd[2] = {0x59, 0x01};
+	unsigned char cmd[2] = {0x59, 0x01};
 
 	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
 
@@ -765,7 +765,7 @@ pdc640_delpic (GPPort *port)
 static int
 pdc640_takepic (GPPort *port)
 {
-	char cmd[2] = {0x2D, 0x00};
+	unsigned char cmd[2] = {0x2D, 0x00};
 
 	CHECK_RESULT (pdc640_transmit (port, cmd, 2, NULL, 0));
 
@@ -817,7 +817,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = user_data;
 	int n, size;
-	char *data, *p;
+	unsigned char *data;
 
 	/*
 	 * Get the number of the picture from the filesystem and increment
@@ -826,8 +826,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
 						context));
 	n++;
-
-	CHECK_RESULT (gp_file_set_name (file, filename));
 
 	/* Get the picture */
 	switch (type) {
@@ -838,18 +836,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_RAW:
 		CHECK_RESULT (pdc640_getpic (camera, n, 0, 1, &data, &size));
 		CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
-
-		/* Change extension to raw */
-		n = strlen(filename);
-		p = malloc (n + 1);
-		if (p) {
-			strcpy (p, filename);
-			p[n-3] = 'r';
-			p[n-2] = 'a';
-			p[n-1] = 'w';
-			CHECK_RESULT (gp_file_set_name (file, p));
-			free (p);
-		}
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		CHECK_RESULT (pdc640_getpic (camera, n, 1, 0, &data, &size));
@@ -859,7 +845,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	CHECK_RESULT (gp_file_set_data_and_size (file, data, size));
+	CHECK_RESULT (gp_file_set_data_and_size (file, (char*)data, size));
 
 	return (GP_OK);
 }
@@ -869,7 +855,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
 	Camera *camera = data;
-	char cmd[2] = {0x59, 0x00};
+	unsigned char cmd[2] = {0x59, 0x00};
 
 	CHECK_RESULT (pdc640_transmit (camera->port, cmd, 2, NULL, 0));
 

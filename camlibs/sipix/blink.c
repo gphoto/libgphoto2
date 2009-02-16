@@ -782,7 +782,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_file_append(file, xdata, picsize);
 	free(xdata);
 	gp_file_set_mime_type (file, GP_MIME_UNKNOWN);
-	gp_file_set_name (file, filename);
 	return (GP_OK);
 }
 

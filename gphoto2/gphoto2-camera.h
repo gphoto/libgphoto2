@@ -289,10 +289,12 @@ int gp_camera_get_port_speed    (Camera *camera);
 /** \name Initialization 
  * @{ 
  */
+int gp_camera_autodetect 	 (CameraList *list, GPContext *context);
 int gp_camera_init               (Camera *camera, GPContext *context);
 int gp_camera_exit               (Camera *camera, GPContext *context);
 
 /**@}*/
+ 
 
 
 /** \name Operations on cameras 
@@ -337,6 +339,7 @@ int gp_camera_folder_delete_all   (Camera *camera, const char *folder,
 				   GPContext *context);
 int gp_camera_folder_put_file     (Camera *camera,
 				   const char *folder, const char *filename,
+				   CameraFileType type,
 				   CameraFile *file, GPContext *context);
 int gp_camera_folder_make_dir     (Camera *camera, const char *folder,
 				   const char *name, GPContext *context);

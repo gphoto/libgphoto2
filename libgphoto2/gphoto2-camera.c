@@ -625,6 +625,69 @@ gp_camera_free (Camera *camera)
 	return (GP_OK);
 }
 
+/**
+ * Autodetect all detectable camera
+ *
+ * @param list a #CameraList that receives the autodetected cameras
+ * @param context a #GPContext
+ * @return a gphoto2 error code
+ *
+ * This camera will autodetected all cameras that can be autodetected.
+ * This will for instance detect all USB cameras.
+ *
+ *   CameraList *list;
+ *   gp_list_new (&list);
+ *   gp_camera_autodetect (list, context);
+ *   ... done! ...
+ */
+int
+gp_camera_autodetect (CameraList *list, GPContext *context)
+{
+	CameraAbilitiesList	*al;
+	GPPortInfoList		*il;
+	int			ret, i;
+	CameraList		*xlist = NULL;
+
+	ret = gp_list_new (&xlist);
+	if (ret < GP_OK) goto out;
+	if (!il) {
+		/* Load all the port drivers we have... */
+		ret = gp_port_info_list_new (&il);
+		if (ret < GP_OK) goto out;
+		ret = gp_port_info_list_load (il);
+		if (ret < 0) goto out;
+		ret = gp_port_info_list_count (il);
+		if (ret < 0) goto out;
+	}
+	/* Load all the camera drivers we have... */
+	ret = gp_abilities_list_new (&al);
+	if (ret < GP_OK) goto out;
+	ret = gp_abilities_list_load (al, context);
+	if (ret < GP_OK) goto out;
+
+	/* ... and autodetect the currently attached cameras. */
+        ret = gp_abilities_list_detect (al, il, xlist, context);
+	if (ret < GP_OK) goto out;
+
+	/* Filter out the "usb:" entry */
+        ret = gp_list_count (xlist);
+	if (ret < GP_OK) goto out;
+	for (i=0;i<ret;i++) {
+		const char *name, *value;
+
+		gp_list_get_name (xlist, i, &name);
+		gp_list_get_value (xlist, i, &value);
+		if (!strcmp ("usb:",value)) continue;
+		gp_list_append (list, name, value);
+	}
+out:
+	if (il) gp_port_info_list_free (il);
+	if (al) gp_abilities_list_free (al);
+	gp_list_free (xlist);
+	if (ret < GP_OK)
+		return ret;
+	return gp_list_count(list);
+}
 
 /**
  * Initiate a connection to the \c camera. 
@@ -991,6 +1054,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 int
 gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
+	char *xname;
 	CHECK_NULL (camera && file);
 	CHECK_INIT (camera, context);
 
@@ -1005,6 +1069,10 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture_preview (
 					camera, file, context), context);
+	gp_file_get_name_by_type (file, "capture_preview", GP_FILE_TYPE_NORMAL, &xname);
+	/* FIXME: Marcus ... will go away, just keep compatible now. */
+	gp_file_set_name (file, xname);
+	free (xname);
 
 	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
@@ -1147,6 +1215,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder,
 int
 gp_camera_folder_put_file (Camera *camera,
 			   const char *folder, const char *filename,
+			   CameraFileType type,
 			   CameraFile *file, GPContext *context)
 {
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Uploading file into '%s'...",
@@ -1156,7 +1225,7 @@ gp_camera_folder_put_file (Camera *camera,
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
-					folder, filename, file, context), context);
+					folder, filename, type, file, context), context);
 
 	CAMERA_UNUSED (camera, context);
 	return (GP_OK);

@@ -12,6 +12,7 @@ gp_ahd_interpolate
 gp_bayer_decode
 gp_bayer_expand
 gp_bayer_interpolate
+gp_camera_autodetect
 gp_camera_capture
 gp_camera_capture_preview
 gp_camera_exit
@@ -76,7 +77,7 @@ gp_file_get_data_and_size
 gp_file_get_mime_type
 gp_file_get_mtime
 gp_file_get_name
-gp_file_get_type
+gp_file_get_name_by_type
 gp_file_new
 gp_file_new_from_fd
 gp_file_open
@@ -86,7 +87,6 @@ gp_file_set_data_and_size
 gp_file_set_mime_type
 gp_file_set_mtime
 gp_file_set_name
-gp_file_set_type
 gp_filesystem_append
 gp_filesystem_count
 gp_filesystem_delete_all

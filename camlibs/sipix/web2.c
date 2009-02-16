@@ -555,8 +555,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	fprintf(stderr,"\n");
 	*/
 
-	gp_file_set_mime_type (file, "image/jpeg");
-	gp_file_set_name (file, filename);
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:

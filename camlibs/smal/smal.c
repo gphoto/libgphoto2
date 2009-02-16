@@ -111,8 +111,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
    if (image_no < GP_OK)
      return image_no;
 
-   gp_file_set_name (file, filename);
-
    switch (type) {
     case GP_FILE_TYPE_NORMAL:
       result = ultrapocket_getpicture(camera,context,&data,&size,filename);

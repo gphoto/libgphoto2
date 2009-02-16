@@ -186,7 +186,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
-	gp_file_set_data_and_size (file, data, size);
+	gp_file_set_data_and_size (file, (char*)data, size);
 
 	return (GP_OK);
 }
@@ -278,12 +278,14 @@ camera_capture (Camera *camera, CameraCaptureType type,
 
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-	       CameraFile *file, void *user_data, GPContext *context)
+	       CameraFileType type, CameraFile *file, void *user_data, GPContext *context)
 {
 	const char *data;
 	unsigned long int size;
 	Camera *camera = user_data;
 
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_BAD_PARAMETERS;
 	CR (gp_file_get_data_and_size (file, &data, &size));
 	return ricoh_put_file (camera, context, name, data, size);
 }

@@ -197,7 +197,6 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	if(image_no < 0)
 		return image_no;
 
-	gp_file_set_name (file, filename);
 	gp_file_set_mime_type (file, GP_MIME_PNM); 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
@@ -253,10 +252,8 @@ static int camera_capture_preview (Camera *camera, CameraFile *file, GPContext *
 	if (result < 0)
 		return result;
 
-	gp_file_set_name (file, "capture.pnm");
 	gp_file_set_mime_type (file, GP_MIME_PNM); 
 	gp_file_set_data_and_size (file, data, size);
-	
 	return (GP_OK);
 }
 

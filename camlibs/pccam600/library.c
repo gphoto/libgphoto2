@@ -228,9 +228,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
     default:
       return GP_ERROR_NOT_SUPPORTED;
     }
-  gp_file_set_data_and_size(file, data, size);
-  gp_file_set_name (file, filename);
-  return GP_OK;
+  return gp_file_set_data_and_size(file, data, size);
 }
 
 static int camera_summary(Camera *camera, CameraText *summary, GPContext *context)
