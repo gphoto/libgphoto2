@@ -297,22 +297,22 @@ gp_port_library_list (GPPortInfoList *list)
 {
 	GPPortInfo info;
 	char path[1024], prefix[1024];
-        int x, fd;
-        struct stat s;
+	int x, fd;
+	struct stat s;
 #ifdef OS2
-        int r, fh, option;
+	int r, fh, option;
 #endif
 
-        /* Copy in the serial port prefix */
-        strcpy (prefix, GP_PORT_SERIAL_PREFIX);
+	/* Copy in the serial port prefix */
+	strcpy (prefix, GP_PORT_SERIAL_PREFIX);
 
 	/* On Linux systems, check for devfs */
 #ifdef __linux
-        if (!stat ("/dev/tts", &s))
+	if (!stat ("/dev/tts", &s))
 		strcpy (prefix, "/dev/tts/%i");
 #endif
 
-        for (x=GP_PORT_SERIAL_RANGE_LOW; x<=GP_PORT_SERIAL_RANGE_HIGH; x++) {
+	for (x=GP_PORT_SERIAL_RANGE_LOW; x<=GP_PORT_SERIAL_RANGE_HIGH; x++) {
 		char *xname;
 
 		sprintf (path, prefix, x);
@@ -362,7 +362,7 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_info_set_name (info, xname);
 		free (xname);
 		CHECK (gp_port_info_list_append (list, info));
-        }
+	}
 
 	/*
 	 * Generic support. Append it to the list without checking for
@@ -370,7 +370,7 @@ gp_port_library_list (GPPortInfoList *list)
 	 */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_SERIAL);
-	gp_port_info_set_path (info, "^serial");
+	gp_port_info_set_path (info, "^serial:");
 	gp_port_info_set_name (info, "");
 	gp_port_info_list_append (list, info);
 	return GP_OK;
@@ -390,7 +390,7 @@ gp_port_serial_init (GPPort *dev)
 	/* There is no default speed. */
 	dev->pl->baudrate = -1;
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -404,7 +404,7 @@ gp_port_serial_exit (GPPort *dev)
 		dev->pl = NULL;
 	}
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -415,9 +415,16 @@ gp_port_serial_open (GPPort *dev)
 	int fd;
 #endif
 	char *port;
+	GPPortInfo	info;
+
+	result = gp_port_get_info (dev, &info);
+	if (result < GP_OK) return result;
+	result = gp_port_info_get_path (info, &port);
+	if (result < GP_OK) return result;
+	gp_log (GP_LOG_DEBUG, "gp_port_serial_open", "opening %s", port);
 
 	/* Ports are named "serial:/dev/whatever/port" */
-	port = strchr (dev->settings.serial.port, ':');
+	port = strchr (port, ':');
 	if (!port)
 		return GP_ERROR_UNKNOWN_PORT;
 	port++;
@@ -437,22 +444,22 @@ gp_port_serial_open (GPPort *dev)
 	dev->pl->fd = -1;
 
 #if defined(__FreeBSD__) || defined(__APPLE__) || defined(__DragonFly__)
-        dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
+	dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
-        fd = open (port, O_RDWR | O_BINARY);
+	fd = open (port, O_RDWR | O_BINARY);
 	dev->pl->fd = open (port, O_RDWR | O_BINARY);
-        close(fd);
+	close(fd);
 #else
 	if (dev->pl->fd == -1)
 		dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
-        if (dev->pl->fd == -1) {
+	if (dev->pl->fd == -1) {
 		gp_port_set_error (dev, _("Failed to open '%s' (%m)."), port);
 		dev->pl->fd = 0;
 		return GP_ERROR_IO;
-        }
+	}
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -486,13 +493,13 @@ gp_port_serial_close (GPPort *dev)
 	dev->pl->baudrate = 0;
 #endif
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
 gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 {
-        int len, ret;
+	int len, ret;
 
 	if (!dev)
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -504,7 +511,7 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 	/* Make sure we are operating at the specified speed */
 	CHECK (gp_port_serial_check_speed (dev));
 
-        len = 0;
+	len = 0;
         while (len < size) {
 		
 		/*
@@ -512,10 +519,10 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 		 * the harmless errors
 		 */
 		ret = write (dev->pl->fd, bytes, size - len);
-                if (ret == -1) {
+		if (ret == -1) {
                         switch (errno) {
-                        case EAGAIN:
-                        case EINTR:
+			case EAGAIN:
+			case EINTR:
                                 ret = 0;
                                 break;
                         default:
