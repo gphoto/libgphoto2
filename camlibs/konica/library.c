@@ -449,8 +449,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	image_id = atol (image_id_string);
 
 	/* Get information about the image */
-	C(gp_filesystem_get_info (camera->fs, folder,
-					filename, &info, context));
+	if (type == GP_FILE_TYPE_NORMAL)
+		C(gp_filesystem_get_info (camera->fs, folder,
+						filename, &info, context));
 
 	/*
 	 * Remove the timeout, get the image and start the timeout
