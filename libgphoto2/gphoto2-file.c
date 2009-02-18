@@ -842,13 +842,16 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	default:			prefix = ""; break;
 	}
 	if (s) {
+		int xlen;
 		if (!suffix)
 			suffix = s+1;
 		new = malloc (strlen(prefix) + (s-basename+1) + strlen (suffix) + 1);
 		if (!new)
 			return GP_ERROR_NO_MEMORY;
 		strcpy (new, prefix);
-		memcpy (new+strlen(new), basename, (s-basename)+1);
+		xlen = strlen (new);
+		memcpy (new+xlen, basename, s-basename+1);
+		new[xlen+(s-basename)+1]='\0';
 		strcat (new, suffix);
 	} else { /* no dot in basename? */
 		if (!suffix) suffix = "";
