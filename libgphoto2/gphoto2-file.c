@@ -822,15 +822,6 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	CHECK_NULL (file && basename && newname);
 	*newname = NULL;
 
-	switch (type) {
-	case GP_FILE_TYPE_NORMAL:	prefix = "";	break;
-	case GP_FILE_TYPE_RAW:		prefix = "raw_";break;
-	case GP_FILE_TYPE_EXIF:		prefix = "exif_";break;
-	case GP_FILE_TYPE_PREVIEW:	prefix = "thumb_";break;
-	case GP_FILE_TYPE_METADATA:	prefix = "meta_";break;
-	case GP_FILE_TYPE_AUDIO:	prefix = "audio_";break;
-	default:			prefix = ""; break;
-	}
 	for (i=0;mime_table[i];i+=2) {
 		if (!strcmp (mime_table[i+1],file->mime_type)) {
 			suffix = mime_table[i];
@@ -838,6 +829,18 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 		}
 	}
 	s = strrchr(basename,'.');
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:	
+		prefix = "";
+		if (s) suffix = s+1; /* use original suffix */
+		break;
+	case GP_FILE_TYPE_RAW:		prefix = "raw_";break;
+	case GP_FILE_TYPE_EXIF:		prefix = "exif_";break;
+	case GP_FILE_TYPE_PREVIEW:	prefix = "thumb_";break;
+	case GP_FILE_TYPE_METADATA:	prefix = "meta_";break;
+	case GP_FILE_TYPE_AUDIO:	prefix = "audio_";break;
+	default:			prefix = ""; break;
+	}
 	if (s) {
 		if (!suffix)
 			suffix = s+1;
@@ -845,8 +848,8 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 		if (!new)
 			return GP_ERROR_NO_MEMORY;
 		strcpy (new, prefix);
-		memcpy (new+strlen(new), basename, s-basename+1);
-		strcat(new+strlen(new)+(s-basename+1),suffix);
+		memcpy (new+strlen(new), basename, (s-basename)+1);
+		strcat (new, suffix);
 	} else { /* no dot in basename? */
 		if (!suffix) suffix = "";
 		new = malloc (strlen(prefix) + strlen(basename) + 1 + strlen (suffix) + 1);
