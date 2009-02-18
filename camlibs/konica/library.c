@@ -126,7 +126,7 @@ get_info (Camera *camera, unsigned int n, CameraFileInfo *info,
 	sprintf (fn, "%06i.jpeg", (int) image_id);
 
 	if (file)
-		gp_file_set_data_and_size (file, buffer, buffer_size);
+		gp_file_set_data_and_size (file, (char*)buffer, buffer_size);
 	else
 		free (buffer);
 
@@ -463,14 +463,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = 2048;
 		r = k_get_image (camera->port, context,
 			camera->pl->image_id_long,
-			image_id, K_THUMBNAIL, (unsigned char **) &fdata,
+			image_id, K_THUMBNAIL, &fdata,
 			&size);
                 break;
         case GP_FILE_TYPE_NORMAL:
 		size = info.file.size;
 		r = k_get_image (camera->port, context,
 			camera->pl->image_id_long,
-			image_id, K_IMAGE_EXIF, (unsigned char **) &fdata,
+			image_id, K_IMAGE_EXIF, &fdata,
 			&size);
                 break;
         default:
@@ -480,7 +480,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 						       timeout_func);
 	C(r);
 
-        C(gp_file_set_data_and_size (file, fdata, size));
+        C(gp_file_set_data_and_size (file, (char*)fdata, size));
         C(gp_file_set_mime_type (file, GP_MIME_JPEG));
 
         return (GP_OK);
@@ -542,7 +542,7 @@ camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context)
         unsigned int size = 0;
 
         C(k_get_preview (camera->port, context, TRUE, &data, &size));
-        C(gp_file_set_data_and_size (file, data, size));
+        C(gp_file_set_data_and_size (file, (char*)data, size));
         C(gp_file_set_mime_type (file, GP_MIME_JPEG));
 
         return (GP_OK);
@@ -553,7 +553,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 		GPContext *context)
 {
         unsigned long image_id;
-	int exif_size;
+	unsigned int exif_size;
 	unsigned char *buffer = NULL;
 	unsigned int buffer_size;
 	int protected, r;
@@ -596,7 +596,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 
 	gp_file_new (&file);
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
-	gp_file_set_data_and_size (file, buffer, buffer_size);
+	gp_file_set_data_and_size (file, (char*)buffer, buffer_size);
 	gp_filesystem_set_file_noop (camera->fs, path->folder, fn, GP_FILE_TYPE_EXIF, file, context);
 	gp_file_unref (file);
 
