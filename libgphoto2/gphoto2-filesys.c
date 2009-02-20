@@ -572,29 +572,25 @@ append_folder (CameraFilesystem *fs,
 static int
 append_file (CameraFilesystem *fs, CameraFilesystemFolder *folder, const char *name, CameraFile *file, GPContext *context)
 {
-	CameraFilesystemFile *new;
+	CameraFilesystemFile **new;
 
 	CHECK_NULL (fs && file);
-
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Appending file %s...", name);
 
-	new = folder->files;
-	while (new) {
-		if (!strcmp(new->name, name)) {
+	new = &folder->files;
+	while (*new) {
+		if (!strcmp((*new)->name, name)) {
 			gp_log (GP_LOG_ERROR, "gphoto2-filesystem", "File %s already exists!", name);
 			return (GP_ERROR);
 		}
-		new = new->next;
+		new = &((*new)->next);
 	}
-
-	CHECK_MEM (new = calloc (sizeof (CameraFilesystemFile), 1));
-	/* hook into folder chain */
-	new->next = folder->files;
-	folder->files = new;
-	new->name = strdup (name);
-
-	new->info_dirty = 1;
-	new->normal = file;
+	/* new now points to the location of the last ->next pointer,
+	 * if we write to it, we set last->next */
+	CHECK_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1));
+	(*new)->name = strdup (name);
+	(*new)->info_dirty = 1;
+	(*new)->normal = file;
 	gp_file_ref (file);
 	return (GP_OK);
 }
