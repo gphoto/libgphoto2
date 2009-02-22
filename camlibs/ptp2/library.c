@@ -59,7 +59,7 @@
 #define GP_MODULE "PTP2"
 
 #define USB_START_TIMEOUT 8000
-#define USB_CANON_START_TIMEOUT 500	/* 0.5 seconds */
+#define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
 #define USB_TIMEOUT_CAPTURE 20000
 
