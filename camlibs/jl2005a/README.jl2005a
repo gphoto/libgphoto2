@@ -99,6 +99,9 @@ which I have on hand the results do not look too bad most of the time. However,
 the user is advised that occasional raggedness is inevitable from data which 
 has been thus truncated. 
 
+Another camera which seems to be functionally similar to the TDC-15 is the 
+Cobra DC-125, reported by Tim Johnson <tim@johnsons-web.com>. 
+
 
 WARRANTY?
 
@@ -107,4 +110,4 @@ this driver for my own edification and in the sincere hope that it might help
 you to use of your camera. Please see also the warranty clauses 
 in the LGPL license. 
 
-Updated 12/02/2007
+Updated 12/02/2007, 02/21/2009
