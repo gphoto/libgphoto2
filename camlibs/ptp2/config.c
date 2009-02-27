@@ -134,12 +134,14 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 				event.length,event.type,event.code,event.trans_id,
 				event.param1, event.param2, event.param3);
 	}
+	gp_port_set_timeout (camera->port, oldtimeout);
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 		ret = ptp_canon_viewfinderon (params);
 		if (ret != PTP_RC_OK)
 			gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
 		/* ignore errors here */
 	}
+	gp_port_set_timeout (camera->port, 1000);
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &evc)) {
