@@ -43,30 +43,31 @@
    * some of the folders will start to disappear when getting all objects
    * and properties.
    */
-  { "Creative", 0x041e, "ZEN Vision", 0x411f, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "Portable Media Center", 0x4123, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Xtra (MTP mode)", 0x4128, DEVICE_FLAG_NONE },
-  { "Dell", 0x041e, "DJ (2nd generation)", 0x412f, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Micro (MTP mode)", 0x4130, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Touch (MTP mode)", 0x4131, DEVICE_FLAG_NONE },
-  { "Dell", 0x041e, "Dell Pocket DJ (MTP mode)", 0x4132, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Sleek (MTP mode)", 0x4137, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN MicroPhoto", 0x413c, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Sleek Photo", 0x413d, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Vision:M", 0x413e, DEVICE_FLAG_NONE },
+  { "Creative", 0x041e, "ZEN Vision", 0x411f, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "Portable Media Center", 0x4123, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Xtra (MTP mode)", 0x4128, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Dell", 0x041e, "DJ (2nd generation)", 0x412f, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Micro (MTP mode)", 0x4130, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Touch (MTP mode)", 0x4131, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Dell", 0x041e, "Dell Pocket DJ (MTP mode)", 0x4132, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Sleek (MTP mode)", 0x4137, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN MicroPhoto", 0x413c, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Sleek Photo", 0x413d, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Vision:M", 0x413e, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by marazm@o2.pl
-  { "Creative", 0x041e, "ZEN V", 0x4150, DEVICE_FLAG_NONE },
+  { "Creative", 0x041e, "ZEN V", 0x4150, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by danielw@iinet.net.au
   // This version of the Vision:M needs the no release interface flag,
   // unclear whether the other version above need it too or not.
   { "Creative", 0x041e, "ZEN Vision:M (DVP-HD0004)", 0x4151, 
-      DEVICE_FLAG_NO_RELEASE_INTERFACE },
+      DEVICE_FLAG_NO_RELEASE_INTERFACE | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL},
   // Reported by Darel on the XNJB forums
-  { "Creative", 0x041e, "ZEN V Plus", 0x4152, DEVICE_FLAG_NONE },
-  { "Creative", 0x041e, "ZEN Vision W", 0x4153, DEVICE_FLAG_NONE },
+  { "Creative", 0x041e, "ZEN V Plus", 0x4152, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN Vision W", 0x4153, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Don't add 0x4155: this is a Zen Stone device which is not MTP
   // Reported by Paul Kurczaba <paul@kurczaba.com>
-  { "Creative", 0x041e, "ZEN", 0x4157, DEVICE_FLAG_IGNORE_HEADER_ERRORS | DEVICE_FLAG_BROKEN_SET_SAMPLE_DIMENSIONS | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Creative", 0x041e, "ZEN", 0x4157, DEVICE_FLAG_IGNORE_HEADER_ERRORS |
+    DEVICE_FLAG_BROKEN_SET_SAMPLE_DIMENSIONS | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by Ringofan <mcroman@users.sourceforge.net>
   { "Creative", 0x041e, "ZEN V 2GB", 0x4158, DEVICE_FLAG_NONE },
   // Reported by j norment <stormzen@gmail.com>
@@ -125,9 +126,12 @@
   { "Samsung", 0x04e8, "YP-T9", 0x507f, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL | DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // From Paul Clinch
   // Just guessing but looks like .spl v1 http://www.anythingbutipod.com/forum/showthread.php?t=14160
+  // Some versions of the firmware reportedly support OGG, reportedly only the
+  // UMS versions, so MTP+OGG is not possible on this device.
   { "Samsung", 0x04e8, "YP-K3", 0x5081, DEVICE_FLAG_NONE | DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // From XNJB user
   // From Alistair Boyle, .spl v2 required for playlists
+  // According to the device log it properly supports OGG
   { "Samsung", 0x04e8, "YP-P2", 0x5083, DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_PLAYLIST_SPL_V2 },
   // From Paul Clinch
   // Guessing on .spl flag
@@ -139,6 +143,10 @@
   // From Ludovic Danigo
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-S3", 0x5091, DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  // From Adrian Levi <adrian.levi@gmail.com>
+  // Guessing on .spl flag
+  // This one supports OGG properly through the correct MTP type.
+  { "Samsung", 0x04e8, "YP-U4", 0x5093, DEVICE_FLAG_NONE },
   // From Anonymous SourceForge user, NOT VERIFIED TO BE MTP
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-Q1", 0x5115, DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_PLAYLIST_SPL_V1 },
@@ -391,29 +399,43 @@
   
   /*
    * Toshiba
+   * Tentatively flagged all Toshiba devices with
+   * DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST after one of them
+   * showed erroneous behaviour.
    */
-  { "Toshiba", 0x0930, "Gigabeat MEGF-40", 0x0009, DEVICE_FLAG_NONE },
-  { "Toshiba", 0x0930, "Gigabeat", 0x000c, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat MEGF-40", 0x0009,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
+  { "Toshiba", 0x0930, "Gigabeat", 0x000c,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by Nicholas Tripp
-  { "Toshiba", 0x0930, "Gigabeat P20", 0x000f, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat P20", 0x000f,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // From libgphoto2
-  { "Toshiba", 0x0930, "Gigabeat S", 0x0010, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Toshiba", 0x0930, "Gigabeat S", 0x0010, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+      DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by Rob Brown
-  { "Toshiba", 0x0930, "Gigabeat P10", 0x0011, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat P10", 0x0011,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by solanum@users.sourceforge.net
-  { "Toshiba", 0x0930, "Gigabeat V30", 0x0014, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat V30", 0x0014,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by Michael Davis <slithy@yahoo.com>
-  { "Toshiba", 0x0930, "Gigabeat U", 0x0016, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat U", 0x0016,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by Devon Jacobs <devo@godevo.com>
-  { "Toshiba", 0x0930, "Gigabeat MEU202", 0x0018, DEVICE_FLAG_NO_RELEASE_INTERFACE },
+  { "Toshiba", 0x0930, "Gigabeat MEU202", 0x0018,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by Rolf <japan (at) dl3lar.de>
-  { "Toshiba", 0x0930, "Gigabeat T", 0x0019, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat T", 0x0019,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by Phil Ingram <ukpbert@users.sourceforge.net>
   // Tentatively added - no real reports of this device ID being MTP,
   // reports as USB Mass Storage currently.
-  { "Toshiba", 0x0930, "Gigabeat MEU201", 0x001a, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat MEU201", 0x001a,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
   // Reported by anonymous SourceForge user
-  { "Toshiba", 0x0930, "Gigabeat MET401", 0x001d, DEVICE_FLAG_NONE },
+  { "Toshiba", 0x0930, "Gigabeat MET401", 0x001d,
+    DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
 
   
   /*
@@ -510,10 +532,15 @@
   { "Nokia", 0x0421, "N82 Mobile Phone", 0x0074, DEVICE_FLAG_NONE },
   // From Martijn van de Streek <martijn@vandestreek.net>
   { "Nokia", 0x0421, "N78 Mobile Phone", 0x0079, DEVICE_FLAG_NONE },
+  // From William Pettersson <the_enigma@users.sourceforge.net>
+  { "Nokia", 0x0421, "6220 Classic", 0x008d, DEVICE_FLAG_NONE },
   // From: danielw
   { "Nokia", 0x0421, "E71", 0x00e4, DEVICE_FLAG_NONE },
   // From: Laurent Bigonville <bigon@users.sourceforge.net>
   { "Nokia", 0x0421, "E66", 0x00e5, DEVICE_FLAG_NONE },
+  // From: Willy Gardiol (web) <willy@gardiol.org>
+  // Spurious errors for getting all objects, lead me to believe this flag atleast is needed
+  { "Nokia", 0x0421, "5800 XpressMusic", 0x0155, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // From an anonymous SourceForge user
   // Not verified to be MTP
   { "Nokia", 0x0421, "E63", 0x0179, DEVICE_FLAG_NONE },
@@ -610,16 +637,20 @@
    * The iAudio audiophile devices don't encourage the use of MTP.
    */
   // Reported by Patrik Johansson <Patrik.Johansson@qivalue.com>
-  { "Cowon", 0x0e21, "iAudio U3 (MTP mode)", 0x0701, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Cowon", 0x0e21, "iAudio U3 (MTP mode)", 0x0701,
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Kevin Michael Smith <hai-etlik@users.sourceforge.net>
-  { "Cowon", 0x0e21, "iAudio 6 (MTP mode)", 0x0711, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Cowon", 0x0e21, "iAudio 6 (MTP mode)", 0x0711,
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Roberth Karman
-  { "Cowon", 0x0e21, "iAudio 7 (MTP mode)", 0x0751, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Cowon", 0x0e21, "iAudio 7 (MTP mode)", 0x0751,
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by an anonymous SourceForge user
-  { "Cowon", 0x0e21, "iAudio U5 (MTP mode)", 0x0761, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Cowon", 0x0e21, "iAudio U5 (MTP mode)", 0x0761,
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by TJ Something <tjbk_tjb@users.sourceforge.net>
   { "Cowon", 0x0e21, "iAudio D2 (MTP mode)", 0x0801, 
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
   /*
    * Insignia, dual-mode.
