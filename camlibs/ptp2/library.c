@@ -59,7 +59,7 @@
 #define GP_MODULE "PTP2"
 
 #define USB_START_TIMEOUT 8000
-#define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too short) */
+#define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
 #define USB_TIMEOUT_CAPTURE 20000
 
@@ -783,6 +783,8 @@ static struct {
 	{"Nikon:Coolpix S200 (PTP mode)", 0x04b0, 0x0161, PTP_CAP|PTP_NIKON_BROKEN_CAP},
   /* Submitted on IRC by kallepersson */
 	{"Nikon:Coolpix P5100 (PTP mode)", 0x04b0, 0x0163, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2589245&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -1055,6 +1057,8 @@ static struct {
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2602638&group_id=8874&atid=108874 */
+	{"Canon:PowerShot A740",		0x04a9, 0x317a, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
 	/* Michael Plucik <michaelplucik@googlemail.com> */
 	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
 
@@ -1065,8 +1069,14 @@ static struct {
 	/* Hubert Mercier <hubert.mercier@unilim.fr> */
 	{"Canon:PowerShot SX10 IS",		0x04a9, 0x318d, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Paul Tinsley */
+	{"Canon:PowerShot G10",			0x04a9, 0x318f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Chris Rodley <chris@takeabreak.co.nz> */
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP|PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* IRC Reporter */
+	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
