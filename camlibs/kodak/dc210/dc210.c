@@ -438,8 +438,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 }
 
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
-
-
 	if (type && type != GP_CAPTURE_IMAGE){
 		DC210_DEBUG("Unsupported action 0x%.2X\n", type);
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -448,15 +446,10 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	if (dc210_capture(camera, path, context) == GP_ERROR) 
 		return GP_ERROR;
 
-	if (gp_filesystem_append (camera->fs, path->folder, path->name, context) == GP_ERROR)
-		return GP_ERROR;;
-
-        return (GP_OK);
-
+	return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 }
 
 static int camera_capture_preview (Camera* camera, CameraFile* file, GPContext *context){
-
         /* this function is to slow; don't export it */
 	int fatal_error = 0;
 
