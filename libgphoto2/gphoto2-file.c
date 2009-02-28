@@ -822,6 +822,14 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	CHECK_NULL (file && basename && newname);
 	*newname = NULL;
 
+	/* the easy case, always map 1:1 */
+	if (type == GP_FILE_TYPE_NORMAL) {
+		*newname = strdup (basename);
+		if (!*newname)
+			return GP_ERROR_NO_MEMORY;
+		return GP_OK;
+	}
+
 	for (i=0;mime_table[i];i+=2) {
 		if (!strcmp (mime_table[i+1],file->mime_type)) {
 			suffix = mime_table[i];
@@ -830,10 +838,6 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	}
 	s = strrchr(basename,'.');
 	switch (type) {
-	case GP_FILE_TYPE_NORMAL:	
-		prefix = "";
-		if (s) suffix = s+1; /* use original suffix */
-		break;
 	case GP_FILE_TYPE_RAW:		prefix = "raw_";break;
 	case GP_FILE_TYPE_EXIF:		prefix = "exif_";break;
 	case GP_FILE_TYPE_PREVIEW:	prefix = "thumb_";break;
