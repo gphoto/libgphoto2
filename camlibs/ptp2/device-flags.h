@@ -190,3 +190,12 @@
  * be set properly the first time a file is sent.
  */
 #define DEVICE_FLAG_CANNOT_HANDLE_DATEMODIFIED 0x00004000
+/**
+ * This avoids use of the send object proplist which
+ * is used when creating new objects (not just updating)
+ * The DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST is related
+ * but only concerns the case where the object proplist
+ * is sent in to update an existing object. The Toshiba
+ * Gigabeat MEU202 for example has this problem.
+ */
+#define DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST 0x00008000
