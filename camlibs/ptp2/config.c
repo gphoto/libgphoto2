@@ -1272,6 +1272,10 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "1/3000",	0x0094,0 },
       {  "1/3200",	0x0095,0 },
       {  "1/4000",	0x0098,0 },
+      {  "1/5000",	0x009b,0 },
+      {  "1/6000",	0x009c,0 },
+      {  "1/6400",	0x009d,0 },
+      {  "1/8000",	0x00a0,0 },
 };
 GENERIC16TABLE(Canon_ShutterSpeed,canon_shutterspeed)
 
