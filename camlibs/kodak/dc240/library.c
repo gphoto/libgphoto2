@@ -42,17 +42,17 @@
 
 /* legacy from dc240.h */
 /*
-  #define COMM1	(unsigned char)0x00
-  #define READY	(unsigned char)0x10
-  #define ACK	(unsigned char)0xd1
-  #define PACK1	(unsigned char)0xd2
+  #define COMM1	0x00
+  #define READY	0x10
+  #define ACK	0xd1
+  #define PACK1	0xd2
 */
 /* nice. errors all have upper nibble of 'e' */
 /*
-  #define	NAK	(unsigned char)0xe1
-  #define	COMM0	(unsigned char)0xe2
-  #define PACK0	(unsigned char)0xe3
-  #define CANCL	(unsigned char)0xe4
+  #define NAK	0xe1
+  #define COMM0	0xe2
+  #define PACK0	0xe3
+  #define CANCL	0xe4
 */
 
 /* system codes */
@@ -252,15 +252,13 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	    /* in busy state, GP_ERROR_IO_READ can happend */
 	    break;
 	default:
-	    if (*p != (char)DC240_SC_BUSY) {
+	    if (*p != DC240_SC_BUSY) {
 		done = 1;
 	    }
 	}
     }
-
     if (x == BUSY_RETRIES)
 	return (GP_ERROR);
-
     return retval;
 }
 
@@ -294,16 +292,14 @@ read_data_write_again:
     /* Write command/path packets */
     if (cmd_packet) {
 	retval = dc240_packet_write(camera, cmd_packet, 8, 1);
-        if (retval < GP_OK) {
+        if (retval < GP_OK)
             return retval;
-	}
     }
 
     if (path_packet) {
 	retval = dc240_packet_write(camera, path_packet, 60, 1);
-        if (retval < GP_OK) {
+        if (retval < GP_OK)
             return retval;
-	}
     }
 
     id = gp_context_progress_start (context, num_packets, _("Getting data..."));
@@ -314,9 +310,8 @@ read_data_read_again:
         /* Read the response/data */
         retval = dc240_packet_read(camera, packet, block_size+2);
 
-	if (retval == GP_ERROR_NOT_SUPPORTED) {
+	if (retval == GP_ERROR_NOT_SUPPORTED)
 	    return retval;
-	}
 
         if ((retval == GP_ERROR) || (retval == GP_ERROR_TIMEOUT)) {
             /* ERROR reading response/data */
@@ -383,10 +378,8 @@ read_data_read_again:
         retries = 0;
     }
     gp_context_progress_stop (context, id);
-
     /* Read in command completed */
     dc240_wait_for_completion(camera);
-
     return (GP_OK);
 }
 
@@ -471,35 +464,35 @@ int dc240_set_speed (Camera *camera, int speed)
 
     switch (speed) {
     case 9600:
-        p[2] = (unsigned char)0x96;
-        p[3] = (unsigned char)0x00;
+        p[2] = 0x96;
+        p[3] = 0x00;
         settings.serial.speed = 9600;
         break;
     case 19200:
-        p[2] = (unsigned char)0x19;
-        p[3] = (unsigned char)0x20;
+        p[2] = 0x19;
+        p[3] = 0x20;
         settings.serial.speed = 19200;
         break;
     case 38400:
-        p[2] = (unsigned char)0x38;
-        p[3] = (unsigned char)0x40;
+        p[2] = 0x38;
+        p[3] = 0x40;
         settings.serial.speed = 38400;
         break;
     case 57600:
-        p[2] = (unsigned char)0x57;
-        p[3] = (unsigned char)0x60;
+        p[2] = 0x57;
+        p[3] = 0x60;
         settings.serial.speed = 57600;
         break;
     case 0: /* Default */
     case 115200:
-        p[2] = (unsigned char)0x11;
-        p[3] = (unsigned char)0x52;
+        p[2] = 0x11;
+        p[3] = 0x52;
         settings.serial.speed = 115200;
         break;
     /* how well supported is 230.4?
     case 230400:
-         p[2] = (unsigned char)0x23;
-         p[3] = (unsigned char)0x04;
+         p[2] = 0x23;
+         p[3] = 0x04;
          settings.serial.speed = 230400;
          break;
     */
@@ -508,20 +501,17 @@ int dc240_set_speed (Camera *camera, int speed)
     }
 
     retval = dc240_packet_write(camera, p, 8, 1);
-    if (retval != GP_OK) {
+    if (retval != GP_OK)
 	goto fail;
-    }
 
     retval = gp_port_set_settings (camera->port, settings);
-    if (retval != GP_OK) {
+    if (retval != GP_OK)
         goto fail;
-    }
 
     GP_SYSTEM_SLEEP(300);
     retval = dc240_wait_for_completion(camera);
-    if (retval != GP_OK) {
+    if (retval != GP_OK)
 	goto fail;
-    }
     /* Speed change went OK. */
  fail:
     free (p);
@@ -547,9 +537,8 @@ const char *dc240_convert_type_to_camera (uint16_t type)
     int i = 0;
 
     while (type_to_camera[i].status_type != 0) {
-	if (type_to_camera[i].status_type == type) {
+	if (type_to_camera[i].status_type == type)
 	    return type_to_camera[i].name;
-	}
 	i++;
     }
     /* not found */
@@ -594,20 +583,13 @@ const char * dc240_get_memcard_status_str(uint8_t status)
 {
     if (status & 0x80) {
 	if ((status & 0x10) == 0) {
-	    if (status & 0x08) {
+	    if (status & 0x08)
 		return _("Card is open");
-	    }
-	    else {
-		return _("Card is not open");
-	    }
+	    return _("Card is not open");
 	}
-	else {
-	    return _("Card is not formatted");
-	}
+	return _("Card is not formatted");
     }
-    else {
-	return _("No card");
-    }
+    return _("No card");
 }
 
 
@@ -616,9 +598,8 @@ const char * dc240_get_memcard_status_str(uint8_t status)
  */
 static int dc240_load_status_data_to_table (const unsigned char *fdata, DC240StatusTable *table)
 {
-    if (fdata [0] != 0x01) {
+    if (fdata [0] != 0x01)
 	return GP_ERROR;
-    }
     GP_DEBUG ("Camera Type = %d, %s\n", fdata[1], dc240_convert_type_to_camera (fdata[1]));
     table->cameraType = fdata[1];
     table->fwVersInt = fdata[2];
@@ -712,7 +693,7 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *contex
     return (retval);
 }
 
-static int dc240_get_directory_list (Camera *camera, CameraList *list, const char *folder,
+int dc240_get_directory_list (Camera *camera, CameraList *list, const char *folder,
                              unsigned char attrib, GPContext *context) {
 
     CameraFile *file;
@@ -728,9 +709,8 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
 
     gp_file_new(&file);
     ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256, context);
-    if (ret < 0) {
+    if (ret < 0)
         return ret;
-    }
     free(p1);
     free(p2);
 
@@ -763,22 +743,8 @@ static int dc240_get_directory_list (Camera *camera, CameraList *list, const cha
             y++;
         }
     }
-
     gp_file_free(file);
-
     return (GP_OK);
-}
-
-int dc240_get_folders (Camera *camera, CameraList *list, const char *folder,
-		       GPContext *context) {
-
-    return (dc240_get_directory_list(camera, list, folder, 0x10, context));
-}
-
-int dc240_get_filenames (Camera *camera, CameraList *list, const char *folder,
-			 GPContext *context) {
-
-    return (dc240_get_directory_list(camera, list, folder, 0x00, context));
 }
 
 int dc240_file_action (Camera *camera, int action, CameraFile *file,

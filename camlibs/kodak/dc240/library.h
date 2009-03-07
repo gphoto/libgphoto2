@@ -88,10 +88,9 @@ int   dc240_set_speed    (Camera *camera, int speed);
 int   dc240_get_status (Camera *camera, DC240StatusTable *table,
 			GPContext *context);
 
-int   dc240_get_folders  (Camera *camera, CameraList *list, const char *folder,
-			  GPContext *context);
-int   dc240_get_filenames(Camera *camera, CameraList *list, const char *folder,
-			  GPContext *context);
+int   dc240_get_directory_list (Camera *camera, CameraList *list, const char *folder,
+     unsigned char attrib, GPContext *context);
+
 
 int   dc240_file_action	 (Camera *camera, int action, CameraFile *file,
                           const char *folder, const char *filename,
