@@ -270,7 +270,7 @@ static int dc240_packet_exchange (Camera *camera, CameraFile *file,
                            int *size, int block_size, GPContext *context)
 {
     /* Reads in multi-packet data, appending it to the "file". */
-    char check_sum;
+    unsigned char check_sum;
     int i;
     int num_packets=1, num_bytes, retval = GP_OK;
     int x=0, retries=0;
@@ -346,13 +346,13 @@ read_data_read_again:
 	}
 
         /* Check for error in command/path */
-        if ((unsigned char)packet[0] > DC240_SC_FIRST_ERROR) {
+        if (packet[0] > DC240_SC_FIRST_ERROR) {
 	    gp_context_progress_stop (context, id);
             return GP_ERROR;
 	}
 
         /* Check for end of data */
-        if ((unsigned char)packet[0] == DC240_SC_COMPLETE) {
+        if (packet[0] == DC240_SC_COMPLETE) {
 	    gp_context_progress_stop (context, id);
             return GP_OK;
 	}
@@ -362,9 +362,9 @@ read_data_read_again:
             goto read_data_read_again;
 
         /* Set size for folder/file list command from 1st packet */
-        if (((unsigned char)cmd_packet[0]==0x99)&&(x==0)) {
-            *size = ((unsigned char)packet[1] * 256 +
-                     (unsigned char)packet[2])* 20 + 2;
+        if ((cmd_packet[0]==0x99)&&(x==0)) {
+            *size = (packet[1] * 256 +
+                     packet[2])* 20 + 2;
             t = (float)*size / (float)(block_size);
             num_packets = (int)t;
             if (t - (float)num_packets > 0)
