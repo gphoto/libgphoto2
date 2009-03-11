@@ -1882,10 +1882,26 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
+		PTPStorageIDs storageids;
 		if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
 			propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 		else
 			propval.u16 = xmode = CANON_TRANSFER_CARD;
+
+		if (xmode == CANON_TRANSFER_CARD) {
+			ret = ptp_getstorageids(params, &storageids);
+			if (ret == PTP_RC_OK) {
+				if (	(storageids.n == 1) &&
+					((storageids.Storage[0] == 0x80000001) ||
+					 (storageids.Storage[0] == 0x00010000)
+					)
+				) {
+					gp_log (GP_LOG_DEBUG, "ptp", "Assuming no CF card present - switching to MEMORY Transfer.\n");
+					propval.u16 = xmode = CANON_TRANSFER_MEMORY;
+				}
+				free (storageids.Storage);
+			}
+		}
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
 			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x\n", ret);
