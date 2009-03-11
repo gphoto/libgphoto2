@@ -440,6 +440,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	CameraAbilities a;
 
         gp_camera_get_abilities(camera, &a);
+
+	/* for USB class matches on unknown cameras... */
+	if (!a.usb_vendor && di->Manufacturer) {
+		if (strstr (di->Manufacturer,"Canon"))
+			a.usb_vendor = 0x4a9;
+		if (strstr (di->Manufacturer,"Nikon"))
+			a.usb_vendor = 0x4b0;
+	}
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
@@ -4824,10 +4832,6 @@ camera_init (Camera *camera, GPContext *context)
 	else
 		camloc = "UCS-2BE";
 
-	camera->pl->params.maxpacketsize = settings.usb.maxpacketsize;
-	gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
-	if (!camera->pl->params.maxpacketsize)
-		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
 
 	switch (camera->port->type) {
 	case GP_PORT_USB:
@@ -4838,6 +4842,8 @@ camera_init (Camera *camera, GPContext *context)
 		camera->pl->params.event_wait		= ptp_usb_event_wait;
 		camera->pl->params.event_check		= ptp_usb_event_check;
 		camera->pl->params.cancelreq_func	= ptp_usb_control_cancel_request;
+		camera->pl->params.maxpacketsize 	= settings.usb.maxpacketsize;
+		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	info;
@@ -4865,6 +4871,8 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+	if (!camera->pl->params.maxpacketsize)
+		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
 
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
@@ -4932,6 +4940,7 @@ camera_init (Camera *camera, GPContext *context)
 				retried++;
 				continue;
 			}
+			/* FIXME: deviceinfo is not read yet ... */
 			report_result(context, ret, camera->pl->params.deviceinfo.VendorExtensionID);
 			return (translate_ptp_result(ret));
 		}
