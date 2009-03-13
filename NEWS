@@ -1,4 +1,4 @@
-libgphoto2 2.4.4.2
+libgphoto2 2.4.4.3
 
 This is a 2.4 release branch update.
 
@@ -8,6 +8,10 @@ PTP2 driver:
      for some Canons.
    * Various new IDs.
    * Various bugfixes.
+
+libgphoto2:
+   * rewrote gphoto2-filesys.c to be dynamic and fix LRU problems.
+     (backport from TRUNK)
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.4
