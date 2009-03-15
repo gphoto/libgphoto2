@@ -785,6 +785,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 
 #define PTP_PS_NoProtection			0x0000
 #define PTP_PS_ReadOnly				0x0001
+#define PTP_PS_MTP_ReadOnlyData			0x8002
+#define PTP_PS_MTP_NonTransferableData		0x8003
 
 /* PTP Storage Types */
 
@@ -1867,6 +1869,10 @@ uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_afdrive (PTPParams* params);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_capture_sdram (PTPParams* params);
+uint16_t ptp_nikon_start_liveview (PTPParams* params);
+uint16_t ptp_nikon_get_liveview_image (PTPParams* params, unsigned char**,unsigned int*);
+uint16_t ptp_nikon_get_preview_image (PTPParams* params, unsigned char**, unsigned int*, uint32_t*);
+uint16_t ptp_nikon_end_liveview (PTPParams* params);
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
