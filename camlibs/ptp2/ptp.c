@@ -2452,6 +2452,97 @@ ptp_nikon_capture_sdram (PTPParams* params)
 }
 
 /**
+ * ptp_nikon_start_liveview:
+ *
+ * This command starts LiveView mode of newer Nikons DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_start_liveview (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_StartLiveView;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_nikon_end_liveview:
+ *
+ * This command ends LiveView mode of newer Nikons DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_end_liveview (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_EndLiveView;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_nikon_get_liveview_image:
+ *
+ * This command gets a LiveView image from newer Nikons DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_get_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_GetLiveViewImg;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+/**
+ * ptp_nikon_get_preview_image:
+ *
+ * This command gets a Preview image from newer Nikons DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_get_preview_image (PTPParams* params, unsigned char **xdata, unsigned int *xsize,
+	uint32_t *handle)
+{
+        PTPContainer	ptp;
+	uint16_t	ret;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_NIKON_GetPreviewImg;
+        ptp.Nparam=0;
+        ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, xdata, xsize);
+	if (ret == PTP_RC_OK) {
+		if (ptp.Nparam > 0)
+			*handle = ptp.Param1;
+	}
+	return ret;
+}
+
+/**
  * ptp_nikon_check_event:
  *
  * This command checks the event queue on the Nikon.
