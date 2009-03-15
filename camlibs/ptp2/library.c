@@ -3638,6 +3638,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	oi=&params->objectinfo[object_id];
 
+	if (oi->ModificationDate != 0) {
+		gp_file_set_mtime (file, oi->ModificationDate);
+	} else {
+		gp_file_set_mtime (file, oi->CaptureDate);
+	}
+
 	GP_DEBUG ("Getting file.");
 	switch (type) {
 

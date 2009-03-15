@@ -785,6 +785,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 
 #define PTP_PS_NoProtection			0x0000
 #define PTP_PS_ReadOnly				0x0001
+#define PTP_PS_MTP_ReadOnlyData			0x8002
+#define PTP_PS_MTP_NonTransferableData		0x8003
 
 /* PTP Storage Types */
 
