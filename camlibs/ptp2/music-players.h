@@ -296,7 +296,12 @@
     DEVICE_FLAG_NO_RELEASE_INTERFACE | DEVICE_FLAG_CANNOT_HANDLE_DATEMODIFIED },
   // Reported by Patrick <skibler@gmail.com>
   // There are apparently problems with this device.
-  { "SanDisk", 0x0781, "Sansa Fuze", 0x74c0, 
+  { "SanDisk", 0x0781, "Sansa Fuze", 0x74c0,
+    DEVICE_FLAG_UNLOAD_DRIVER |  DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+    DEVICE_FLAG_NO_RELEASE_INTERFACE | DEVICE_FLAG_ALWAYS_PROBE_DESCRIPTOR |
+    DEVICE_FLAG_CANNOT_HANDLE_DATEMODIFIED },
+  // Harry Phillips <tuxcomputers@users.sourceforge.net>
+  { "SanDisk", 0x0781, "Sansa Fuze v2", 0x74c2,
     DEVICE_FLAG_UNLOAD_DRIVER |  DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
     DEVICE_FLAG_NO_RELEASE_INTERFACE | DEVICE_FLAG_ALWAYS_PROBE_DESCRIPTOR |
     DEVICE_FLAG_CANNOT_HANDLE_DATEMODIFIED },
@@ -534,6 +539,8 @@
   { "Nokia", 0x0421, "N78 Mobile Phone", 0x0079, DEVICE_FLAG_NONE },
   // From William Pettersson <the_enigma@users.sourceforge.net>
   { "Nokia", 0x0421, "6220 Classic", 0x008d, DEVICE_FLAG_NONE },
+  // From kellerkev@gmail.com
+  { "Nokia", 0x0421, "N85 Mobile Phone", 0x0092, DEVICE_FLAG_NONE },
   // From: danielw
   { "Nokia", 0x0421, "E71", 0x00e4, DEVICE_FLAG_NONE },
   // From: Laurent Bigonville <bigon@users.sourceforge.net>
@@ -583,6 +590,7 @@
   // From kiki <omkiki@users.sourceforge.net>
   { "Thomson", 0x069b, "EM28 Series", 0x0774, DEVICE_FLAG_NONE },
   { "Thomson / RCA", 0x069b, "Opal / Lyra MC4002", 0x0777, DEVICE_FLAG_NONE },
+  { "Thomson", 0x069b, "Lyra MC5104B (M51 Series)", 0x077c, DEVICE_FLAG_NONE },
   { "Thomson", 0x069b, "RCA H106", 0x301a, DEVICE_FLAG_UNLOAD_DRIVER },
   // From Svenna <svenna@svenna.de>
   // Not confirmed to be MTP.
@@ -695,6 +703,8 @@
   { "Sony", 0x054c, "Walkman NWZ-B135", 0x036e, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by <tiagoboldt@users.sourceforge.net>
   { "Sony", 0x054c, "Walkman NWZ-E436F", 0x0385, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Ondrej Sury <ondrej@sury.org>
+  { "Sony", 0x054c, "Walkman NWZ-S739F", 0x038c, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Marco Filipe Nunes Soares Abrantes Pereira <marcopereira@ua.pt>
   { "Sony", 0x054c, "Walkman NWZ-S638F", 0x038e, DEVICE_FLAG_UNLOAD_DRIVER },
 
@@ -781,6 +791,15 @@
    */
   // Reported by Dan Allen <dan.j.allen@gmail.com>
   { "Pioneer", 0x08e4, "XMP3", 0x0148, DEVICE_FLAG_NONE },
+
+  /*
+   * Slacker Inc.
+   * Put in all evilness flags because it looks fragile.
+   */
+  // Reported by Pug Fantus <pugfantus@users.sourceforge.net>
+  { "Slacker Inc.", 0x1bdc, "Slacker Portable Media Player", 0xfabf,
+    DEVICE_FLAG_BROKEN_BATTERY_LEVEL | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+    DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST | DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
 
   /*
    * Other strange stuff.
