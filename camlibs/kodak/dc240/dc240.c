@@ -104,7 +104,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 
-	return (dc240_get_folders (camera, list, folder, context));
+	return dc240_get_directory_list(camera, list, folder, 0x10, context);
 }
 
 static int
@@ -113,7 +113,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 
-	return (dc240_get_filenames (camera, list, folder, context));
+	return dc240_get_directory_list(camera, list, folder, 0x00, context);
 }
 
 static int
