@@ -1986,15 +1986,20 @@ static struct deviceproptableu8 canon_whitebalance[] = {
 };
 GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
 
+/* confirmed against EOS 450D - Marcus */
 static struct deviceproptableu8 canon_eos_whitebalance[] = {
       { N_("Auto"),		0, 0 },
-      { N_("Daylight"),		1, 0 },
-      { N_("Shade"),		2, 0 },
-      { N_("Cloudy"),		3, 0 },
-      { N_("Tungsten"),		4, 0 },
-      { N_("Fluorescent"),	5, 0 },
-      { N_("Flash"),		6, 0 },
-      { N_("Custom"),		8, 0 },
+      { N_("Daylight n1"),		1, 0 },
+      { N_("Cloudy n2"),		2, 0 },
+      { N_("Tungsten n3"),		3, 0 },
+      { N_("Fluorescent n4"),	4, 0 },
+      { N_("Flash n5"),		5, 0 },
+      { N_("Manual"),		6, 0 },
+      {"Unknown 7",		7, 0 },
+      { N_("Shadow"),		8, 0 },
+      { N_("Color Temperature"),9, 0 }, /* from eos 40d dump */
+      { "Unknown 10",		10, 0 },
+      { "Unknown 11",		11, 0 },
 };
 GENERIC8TABLE(Canon_EOS_WhiteBalance,canon_eos_whitebalance)
 
