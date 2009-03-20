@@ -460,10 +460,14 @@ static int
 _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize) {
 	int i, j;
 
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration)) {
+		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no enumeration in 16bit table code");
 		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
+	}
+	if (dpd->DataType != PTP_DTC_UINT16) {
+		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no uint16 prop in 16bit table code");
 		return (GP_ERROR);
+	}
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -1272,6 +1276,10 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
       {  "1/3000",	0x0094,0 },
       {  "1/3200",	0x0095,0 },
       {  "1/4000",	0x0098,0 },
+      {  "1/5000",	0x009b,0 },
+      {  "1/6000",	0x009c,0 },
+      {  "1/6400",	0x009d,0 },
+      {  "1/8000",	0x00a0,0 },
 };
 GENERIC16TABLE(Canon_ShutterSpeed,canon_shutterspeed)
 
@@ -1321,9 +1329,17 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "64",			0x0043, 0 },
 	{ "80",			0x0045, 0 },
 	{ "100",		0x0048, 0 },
+	{ "125",		0x004b, 0 },
+	{ "160",		0x004d, 0 },
 	{ "200",		0x0050, 0 },
+	{ "250",		0x0053, 0 },
+	{ "320",		0x0055, 0 },
 	{ "400",		0x0058, 0 },
+	{ "500",		0x005b, 0 },
+	{ "640",		0x005d, 0 },
 	{ "800",		0x0060, 0 },
+	{ "1000",		0x0063, 0 },
+	{ "1250",		0x0065, 0 },
 	{ "1600",		0x0068, 0 },
 	{ "3200",		0x0070, 0 },
 	{ "6400",		0x0078, 0 },
@@ -1548,10 +1564,30 @@ GENERIC8TABLE(Nikon_CameraOrientation,nikon_orientation)
 static struct deviceproptableu16 canon_orientation[] = {
 	{ "0'",		0, 0 },
 	{ "90'",	1, 0 },
-	{ "180'",	2, 0 },	/* guessed */
+	{ "180'",	2, 0 },
 	{ "270'",	3, 0 },
 };
-GENERIC16TABLE(Canon_CameraOrientation,canon_orientation)
+
+static int
+_get_Canon_CameraOrientation(CONFIG_GET_ARGS) {
+	char	orient[20];
+	int	i;
+
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<sizeof(canon_orientation)/sizeof(canon_orientation[0]);i++) {
+		if (canon_orientation[i].value != dpd->CurrentValue.u16)
+			continue;
+		gp_widget_set_value (*widget, canon_orientation[i].label);
+		return GP_OK;
+	}
+	sprintf (orient, _("Unknown value 0x%04x"), dpd->CurrentValue.u16);
+	gp_widget_set_value (*widget, orient);
+	return GP_OK;
+}
+
 
 static struct deviceproptableu8 nikon_afsensor[] = {
 	{ N_("Centre"),	0x00, 0 },
@@ -3172,8 +3208,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				} else {
 					ret = cursub->getfunc (camera, &widget, cursub, NULL);
 				}
-				if (ret != GP_OK)
+				if (ret != GP_OK) {
+					gp_log (GP_LOG_DEBUG, "camera_get_config", "Unable to set Property %04x (%s), ret %d", cursub->propid, cursub->label, ret);
 					continue;
+				}
 				gp_widget_append (section, widget);
 				continue;
 			}

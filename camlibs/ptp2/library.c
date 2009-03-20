@@ -738,7 +738,7 @@ static struct {
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, PTP_CAP},
 	/* Nikon Coolpix 4500: T. Kaproncai, 22 Aug 2003 */
-	{"Nikon Coolpix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
+	{"Nikon:Coolpix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
 	{"Nikon:Coolpix 4300 (PTP mode)", 0x04b0, 0x010f, 0},
 	/* Nikon Coolpix 3500: M. Meissner, 07 May 2003 */
@@ -760,7 +760,7 @@ static struct {
 	/* Nikon Coolpix 3200 */
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
-	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122, 0},
+	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Nikon Coolpix 4800 */
 	{"Nikon:Coolpix 4800 (PTP mode)", 0x04b0, 0x0129, 0},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
@@ -783,7 +783,7 @@ static struct {
 	{"Nikon:Coolpix S2 (PTP mode)",   0x04b0, 0x014e, 0},
 	{"Nikon:Coolpix S6 (PTP mode)",   0x04b0, 0x014e, 0},
 	/* Ole Aamot <ole@gnome.org> */
-	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP},/* mm: sends capture complete */
+	{"Nikon:Coolpix P5000 (PTP mode)",0x04b0, 0x015b, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Peter Pregler <Peter_Pregler@email.com> */
 	{"Nikon:Coolpix S500 (PTP mode)", 0x04b0, 0x015d, 0},
 	{"Nikon:Coolpix L12 (PTP mode)",  0x04b0, 0x015f, 0},
@@ -3863,6 +3863,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		gp_context_error (context, _("Metadata only supported for MTP devices."));
 		return GP_ERROR;
 	}
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_BAD_PARAMETERS;
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
