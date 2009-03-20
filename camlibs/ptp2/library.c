@@ -1559,6 +1559,40 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
+	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+		unsigned char	*xdata;
+		unsigned int	xsize;
+		uint32_t	xhandle;
+		SET_CONTEXT_P(params, context);
+		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
+			gp_context_error (context,
+				_("Sorry, your Nikon camera does not support LiveView mode"));
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+		ret = ptp_nikon_start_liveview (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+			SET_CONTEXT_P(params, NULL);
+			//return GP_ERROR;
+		}
+
+		ret = ptp_nikon_get_preview_image (params, &xdata, &xsize, &xhandle);
+		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
+		if (ret == PTP_RC_OK) {
+			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
+			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+			/* Add an arbitrary file name so caller won't crash */
+			gp_file_set_name (file, "preview.jpg");
+		}
+		ret = ptp_nikon_end_liveview (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Nikon disable liveview failed: %x"), ret);
+			SET_CONTEXT_P(params, NULL);
+			//return GP_ERROR;
+		}
+		SET_CONTEXT_P(params, NULL);
+		return GP_OK;
+	}
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
@@ -3599,7 +3633,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * If you do not like that, feel free to clean up the datatypes.
 	 * (TODO for Marcus and 2.2 ;)
 	 */
-	unsigned char * image=NULL;
 	uint32_t object_id;
 	uint32_t size;
 	uint32_t storage;
@@ -3646,7 +3679,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	GP_DEBUG ("Getting file.");
 	switch (type) {
-
 	case	GP_FILE_TYPE_EXIF: {
 		uint32_t offset;
 		uint32_t maxbytes;
@@ -3670,11 +3702,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			0, 10, &ximage));
 
 		if (!((ximage[0] == 0xff) && (ximage[1] == 0xd8))) {	/* SOI */
-			free (image);
+			free (ximage);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		if (!((ximage[2] == 0xff) && (ximage[3] == 0xe1))) {	/* App0 */
-			free (image);
+			free (ximage);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		if (0 != memcmp(ximage+6, "Exif", 4)) {
