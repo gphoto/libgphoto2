@@ -149,7 +149,9 @@
  * to unknown when storing Ogg files, even though they're not
  * actually unknown. Later iRivers seem to need this flag since
  * they do not report to support OGG even though they actually
- * do.
+ * do. Often the device supports OGG in USB mass storage mode,
+ * then the firmware simply miss to declare metadata support
+ * for OGG properly.
  */
 #define DEVICE_FLAG_OGG_IS_UNKNOWN 0x00000200
 /**
@@ -199,3 +201,8 @@
  * Gigabeat MEU202 for example has this problem.
  */
 #define DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST 0x00008000
+/**
+ * Devices that cannot support reading out battery
+ * level.
+ */
+#define DEVICE_FLAG_BROKEN_BATTERY_LEVEL 0x00010000
