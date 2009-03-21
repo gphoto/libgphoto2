@@ -2254,7 +2254,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				continue;
 			}
 			for (i=0;i<nrofentries;i++) {
-				char *x;
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
 				if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
 					CameraFile	*file;
@@ -2283,7 +2282,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_name(file, path->name);
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
-					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, &ximage));
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (char**)&ximage));
 					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entries[i].u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
@@ -2306,20 +2305,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_unref (file);
 					return GP_OK;
 				}
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "EOS event %04x", entries[i].u.object.oid);
-				*eventtype = GP_EVENT_UNKNOWN;
-				x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
-				if (x) {
-					sprintf (x, "PTP Event %04x", entries[i].u.object.oid);
-					*eventdata = x;
-				}
-				break;
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entries[i].type);
 			}
 			free (entries);
 			if (newobject)
 				break;
 			gp_context_idle (context);
 		}
+		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
