@@ -183,10 +183,16 @@ digikam (http://digikam.sourceforge.net):
 	KDE frontend
 	Renchi Raju <renchi@green.tam.uiuc.edu>
 
-kamera:
-	KDE integration (konqueror)
+f-spot:	http://f-spot.org/Main_Page
+
+gthumb: The GNOME Team.
+
+kamera: KDE integration (konqueror)
 	Marcus Meissner <marcus@jet.franken.de>
 	Ilya Konstantinov <future@shiny.co.il>
+
+flphoto:
+	fltk based photo importer (unmaintained)
 
 gtkam (http://www.topfrose.de):
 	Simple GTK front-end.
@@ -206,6 +212,7 @@ SANE (?):
 
 Wine (TWAIN):
 	Marcus Meissner <marcus@jet.franken.de>
+
 
 --------------------------------------------------------------------------------
 				    SUPPORT
