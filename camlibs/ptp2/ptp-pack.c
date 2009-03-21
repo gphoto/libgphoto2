@@ -1155,7 +1155,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			int		j;
 			PTPDevicePropDesc	*dpd;
 
-			ptp_debug (params, "event %d: EOS prop %04x desc record, datasize %d", i, proptype, size-PTP_ece_Prop_Desc_Data);
+			ptp_debug (params, "event %d: EOS prop %04x desc record, datasize %d, propxtype %d", i, proptype, size-PTP_ece_Prop_Desc_Data, propxtype);
 			for (j=0;j<params->nrofcanon_props;j++)
 				if (params->canon_props[j].proptype == proptype)
 					break;
@@ -1164,6 +1164,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 			}
 			dpd = &params->canon_props[j].dpd;
+			/* 1 - uint16 ? 
+			 * 3 - uint16
+			 * 7 - string?
+			 */
 			if (propxtype != 3) {
 				ptp_debug (params, "event %d: propxtype is %x for %04x, unhandled.", i, propxtype, proptype);
 				for (j=0;j<size-PTP_ece_Prop_Desc_Data;j++)
@@ -1237,16 +1241,47 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_Aperture:
 				case PTP_DPC_CANON_EOS_ShutterSpeed:
 				case PTP_DPC_CANON_EOS_ISOSpeed:
+				case PTP_DPC_CANON_EOS_Focus:
+				case PTP_DPC_CANON_EOS_CameraMode:
+				case PTP_DPC_CANON_EOS_ColorSpace:
+				case PTP_DPC_CANON_EOS_TransferOption:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
 				case PTP_DPC_CANON_EOS_WhiteBalance:
 				case PTP_DPC_CANON_EOS_MeteringMode:
-				case PTP_DPC_CANON_EOS_ExpCompensation:
+				case PTP_DPC_CANON_EOS_ExpCompensation: /* actually int8 if you calculate */
 					dpd->DataType = PTP_DTC_UINT8;
 					break;
 				case PTP_DPC_CANON_EOS_Owner:
 					dpd->DataType = PTP_DTC_STR;
+					break;
+				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustA:
+				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustB:
+					dpd->DataType = PTP_DTC_INT16;
+					break;
+				/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
+				case 0xd106:
+				case 0xd10e:
+				case 0xd112:
+				case 0xd114:
+				case 0xd119:
+				case 0xd11a:
+				case 0xd11b:
+				case 0xd11c:
+				case 0xd11d:
+				case 0xd180:
+				case 0xd181:
+				case 0xd182:
+				case 0xd183:
+				case 0xd184:
+				case 0xd185:
+				case 0xd186:
+				case 0xd187:
+				case 0xd188:
+				case 0xd189:
+				case 0xd18a:
+					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				default:
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d", i ,proptype, size-PTP_ece_Prop_Val_Data);
