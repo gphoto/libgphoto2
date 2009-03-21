@@ -6,9 +6,10 @@ PTP2 driver:
    * Increased timeout for Canon Viewfinder enable.
    * Fixed intial Canon timeout (0.5 -> 1.5 seconds), was too small
      for some Canons.
+   * Canon EOS capture mode and tethered mode fixes.
    * Various new IDs.
    * Merged new IDs from libmtp.
-   * Various bugfixes, in capture (EOS/Nikon) modes.
+   * Lots of bugfixes.
 
 KODAK DC240:
    * Made driver work again.
