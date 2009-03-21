@@ -1823,7 +1823,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			return GP_ERROR;
 		}
 		if (!nrofentries) {
-			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Empty list found?");
 			free (entries);
 			gp_context_idle (context);
 			continue;
@@ -2240,7 +2239,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				return GP_ERROR;
 			}
 			if (!nrofentries) {
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Empty list found?");
 				free (entries);
 				gp_context_idle (context);
 				continue;
