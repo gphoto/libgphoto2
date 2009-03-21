@@ -1829,7 +1829,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			return GP_ERROR;
 		}
 		if (!nrofentries) {
-			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Empty list found?");
 			free (entries);
 			gp_context_idle (context);
 			continue;
@@ -2248,7 +2247,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				return GP_ERROR;
 			}
 			if (!nrofentries) {
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Empty list found?");
 				free (entries);
 				gp_context_idle (context);
 				continue;
@@ -2282,7 +2280,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_name(file, path->name);
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
-					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (char**)&ximage));
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
 					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entries[i].u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
