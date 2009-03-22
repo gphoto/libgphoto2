@@ -1715,7 +1715,7 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 {
         unsigned char *response = NULL;
         unsigned int len = 0x8c;
-        int status;
+        int i, status;
 
         GP_DEBUG ("canon_int_get_release_params()");
 
@@ -1756,6 +1756,10 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
          */
         memcpy(camera->pl->release_params, response + 0x5c, 
                sizeof(camera->pl->release_params));
+
+	for (i=0;i<sizeof(camera->pl->release_params);i++) {
+		GP_DEBUG("canon_int_get_release_params: [%d] = 0x%02x", i, camera->pl->release_params[i]);
+	}
 
         GP_DEBUG ("canon_int_get_release_params: shutter speed = 0x%02x", 
                   camera->pl->release_params[SHUTTERSPEED_INDEX]);
