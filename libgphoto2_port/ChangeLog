@@ -1,3 +1,10 @@
+2008-03-22  Marcus Meissner  <marcus@jet.franken.de>
+
+	* --enable-serial, --enable-ptpip, --enable-disk, --enable-usb options
+	  (and --disable-* equivs) added.
+	* --with-hal / --without-hal for HAL support selection.
+	* --with-bonjour / --without-bonjour for MDNS/Bonjour support for ptpip selection.
+
 2007-06-09  Marcus Meissner  <marcus@jet.franken.de>
 
 	* usb/libusb.c: Reset the USB port before close.
