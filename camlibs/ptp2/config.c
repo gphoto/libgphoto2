@@ -2023,6 +2023,7 @@ static struct deviceproptableu8 canon_whitebalance[] = {
 GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
 
 /* confirmed against EOS 450D - Marcus */
+/* I suspect every EOS uses a different table :( */
 static struct deviceproptableu8 canon_eos_whitebalance[] = {
       { N_("Auto"),		0, 0 },
       { N_("Daylight n1"),		1, 0 },
