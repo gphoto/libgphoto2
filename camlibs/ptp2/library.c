@@ -2221,6 +2221,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 	uint16_t	ret;
 	time_t		event_start;
 
+static	PTPCanon_changes_entry	*backlogentries = NULL;
+static	int			nrofbacklogentries = 0;
+
 	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
 
@@ -2231,14 +2234,25 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		PTPCanon_changes_entry	*entries = NULL;
 		int			nrofentries = 0;
+		int			finish = 0;
 
 		event_start=time(NULL);
+		*eventtype = GP_EVENT_TIMEOUT;
 		while ((time(NULL) - event_start)<=timeout) {
 			int i;
-			ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
-				return GP_ERROR;
+
+			if (backlogentries) {
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Using %d backlog entries", nrofbacklogentries);
+				entries = backlogentries;
+				nrofentries = nrofbacklogentries;
+				backlogentries = NULL;
+				nrofbacklogentries = 0;
+			} else {
+				ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+				if (ret != PTP_RC_OK) {
+					gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
+					return GP_ERROR;
+				}
 			}
 			if (!nrofentries) {
 				free (entries);
@@ -2251,7 +2265,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					CameraFile	*file;
 					char		*ximage;
 
-					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 
 					newobject = entries[i].u.object.oid;
 
@@ -2293,16 +2307,24 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventdata = path;
 					/* We have now handed over the file, disclaim responsibility by unref. */
 					gp_file_unref (file);
-					return GP_OK;
+					finish = 1;
+					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entries[i].type);
 			}
-			free (entries);
-			if (newobject)
+			if (finish) {
+				if (nrofentries-i > 1) {
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Backlogging %d events", nrofentries-i);
+					backlogentries = malloc (sizeof (PTPCanon_changes_entry) * (nrofentries-i));
+					nrofbacklogentries = (nrofentries-i-1);
+					memcpy (backlogentries, entries+i+1, sizeof (PTPCanon_changes_entry) * (nrofentries-i-1));
+				}
+				free (entries);
 				break;
+			}
+			free (entries);
 			gp_context_idle (context);
 		}
-		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
