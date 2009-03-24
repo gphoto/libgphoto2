@@ -1180,6 +1180,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
 				for (j=0;j<propxcnt;j++) {
 					switch (dpd->DataType) {
+					case PTP_DTC_INT16:
+						dpd->FORM.Enum.SupportedValue[j].i16	= dtoh16a(data);
+						ptp_debug (params, "event %d: suppval[%d] of %x is %x.", i, j, proptype, dtoh16a(data));
+						break;
 					case PTP_DTC_UINT16:
 						dpd->FORM.Enum.SupportedValue[j].u16	= dtoh16a(data);
 						ptp_debug (params, "event %d: suppval[%d] of %x is %x.", i, j, proptype, dtoh16a(data));
