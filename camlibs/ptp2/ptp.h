@@ -356,7 +356,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_CheckEvent		0x90C7	/* no params, data in */
 #define PTP_OC_NIKON_DeviceReady	0x90C8	/* no params, no data */
 #define PTP_OC_NIKON_SetPreWBData	0x90C9	/* 3 params,  data out */
-					/* 0x90CA */
+#define PTP_OC_NIKON_GetVendorPropCodes	0x90CA	/* 0 params, data in */
 #define PTP_OC_NIKON_AfCaptureSDRAM	0x90CB	/* no params, no data */
 #define PTP_OC_NIKON_GetPictCtrlData	0x90CC
 #define PTP_OC_NIKON_SetPictCtrlData	0x90CD
