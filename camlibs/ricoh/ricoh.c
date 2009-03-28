@@ -81,6 +81,11 @@
 	}						\
 }
 
+#ifndef HAVE_TM_GMTOFF
+/* required for time conversions in canon_int_set_time() */
+extern long int timezone;
+#endif
+
 static int
 ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	    unsigned char number,
@@ -666,7 +671,11 @@ ricoh_set_date (Camera *camera, GPContext *context, time_t time)
 
 	/* Call localtime() to get 'extern long timezone' */
 	t = localtime (&time);
+#ifdef HAVE_TM_GMTOFF
+	time += t->tm_gmtoff;
+#else  
 	time += timezone;
+#endif 
 	t = localtime (&time);
 	GP_DEBUG ("ricoh_set_date: converted time to localtime %s "
 		  "(timezone is %ld)", asctime (t), timezone);
