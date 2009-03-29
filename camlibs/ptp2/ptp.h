@@ -356,7 +356,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_CheckEvent		0x90C7	/* no params, data in */
 #define PTP_OC_NIKON_DeviceReady	0x90C8	/* no params, no data */
 #define PTP_OC_NIKON_SetPreWBData	0x90C9	/* 3 params,  data out */
-					/* 0x90CA */
+#define PTP_OC_NIKON_GetVendorPropCodes	0x90CA	/* 0 params, data in */
 #define PTP_OC_NIKON_AfCaptureSDRAM	0x90CB	/* no params, no data */
 #define PTP_OC_NIKON_GetPictCtrlData	0x90CC
 #define PTP_OC_NIKON_SetPictCtrlData	0x90CD
@@ -1318,6 +1318,7 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_AutofocusArea			0xD108
 #define PTP_DPC_NIKON_FlexibleProgram			0xD109
 #define PTP_DPC_NIKON_LightMeter			0xD10A	/* Exposure Status */
+#define PTP_DPC_NIKON_RecordingMedia			0xD10B	/* Card or SDRAM */
 #define PTP_DPC_NIKON_USBSpeed				0xD10C
 #define PTP_DPC_NIKON_CameraOrientation			0xD10E
 #define PTP_DPC_NIKON_GroupPtnType			0xD10F
@@ -1858,7 +1859,7 @@ uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
-
+uint16_t ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
