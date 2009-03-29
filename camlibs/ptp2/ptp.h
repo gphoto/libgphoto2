@@ -1318,6 +1318,7 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_AutofocusArea			0xD108
 #define PTP_DPC_NIKON_FlexibleProgram			0xD109
 #define PTP_DPC_NIKON_LightMeter			0xD10A	/* Exposure Status */
+#define PTP_DPC_NIKON_RecordingMedia			0xD10B	/* Card or SDRAM */
 #define PTP_DPC_NIKON_USBSpeed				0xD10C
 #define PTP_DPC_NIKON_CameraOrientation			0xD10E
 #define PTP_DPC_NIKON_GroupPtnType			0xD10F

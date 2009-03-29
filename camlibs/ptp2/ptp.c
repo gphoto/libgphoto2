@@ -3659,6 +3659,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Flexible Program")},
 		{PTP_DPC_NIKON_LightMeter,			/* 0xD10a */
 		 N_("Exposure Meter")},
+		{PTP_DPC_NIKON_RecordingMedia,			/* 0xD10b */
+		 N_("Recording Media")},
 		{PTP_DPC_NIKON_CameraOrientation,		/* 0xD10e */
 		 N_("Camera Orientation")},
 		{PTP_DPC_NIKON_ExposureApertureLock,		/* 0xD111 */
