@@ -3661,6 +3661,10 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Meter")},
 		{PTP_DPC_NIKON_RecordingMedia,			/* 0xD10b */
 		 N_("Recording Media")},
+		{PTP_DPC_NIKON_USBSpeed,			/* 0xD10c */
+		 N_("USB Speed")},
+		{PTP_DPC_NIKON_CCDNumber,			/* 0xD10d */
+		 N_("CCD Serial Number")},
 		{PTP_DPC_NIKON_CameraOrientation,		/* 0xD10e */
 		 N_("Camera Orientation")},
 		{PTP_DPC_NIKON_ExposureApertureLock,		/* 0xD111 */
@@ -3711,12 +3715,22 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("CSM Menu")},
 		{PTP_DPC_NIKON_BracketingFramesAndSteps,	/* 0xD190 */
 		 N_("Bracketing Frames and Steps")},
+		{PTP_DPC_NIKON_LiveViewStatus,			/* 0xD1A2 */
+		 N_("Live View Status")},
+		{PTP_DPC_NIKON_LiveViewImageZoomRatio,		/* 0xD1A3 */
+		 N_("Live View Image Zoom Ratio")},
+		{PTP_DPC_NIKON_LiveViewProhibitCondition,	/* 0xD1A4 */
+		 N_("Live View Prohibit Condition")},
 		{PTP_DPC_NIKON_LowLight,			/* 0xD1B0 */
 		 N_("Low Light")},
 		{PTP_DPC_NIKON_FlashOpen,			/* 0xD1C0 */
 		 N_("Flash Open")},
 		{PTP_DPC_NIKON_FlashCharged,			/* 0xD1C1 */
 		 N_("Flash Charged")},
+		{PTP_DPC_NIKON_ActivePicCtrlItem,		/* 0xD200 */
+		 N_("Active Pic Ctrl Item")},
+		{PTP_DPC_NIKON_ChangePicCtrlItem,		/* 0xD201 */
+		 N_("Change Pic Ctrl Item")},
 		{0,NULL}
 	};
         struct {
@@ -3731,6 +3745,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Friendly Device Name")},
 		{PTP_DPC_MTP_VolumeLevel,       N_("Volume Level")},
 		{PTP_DPC_MTP_DeviceIcon,        N_("Device Icon")},
+		{PTP_DPC_MTP_SessionInitiatorInfo,	N_("Session Initiator Info")},
+		{PTP_DPC_MTP_PerceivedDeviceType,	N_("Perceived Device Type")},
 		{PTP_DPC_MTP_PlaybackRate,      N_("Playback Rate")},
 		{PTP_DPC_MTP_PlaybackObject,    N_("Playback Object")},
 		{PTP_DPC_MTP_PlaybackContainerIndex,

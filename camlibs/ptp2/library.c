@@ -1371,6 +1371,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			SET_CONTEXT_P(params, NULL);
 			//return GP_ERROR;
 		}
+		while (ptp_nikon_device_ready(params) != PTP_RC_OK) {
+			/* empty */
+		}
 
 		ret = ptp_nikon_get_preview_image (params, &xdata, &xsize, &xhandle);
 		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
