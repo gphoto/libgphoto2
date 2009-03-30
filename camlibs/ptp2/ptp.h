@@ -570,9 +570,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Nikon extension Event Codes */
 #define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
-#define PTP_EC_Nikon_CaptureOverflow		0xC102
+#define PTP_EC_Nikon_CaptureCompleteRecInSdram	0xC102
 /* Gets 1 parameter, objectid pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
+#define PTP_EC_Nikon_PreviewImageAdded		0xC104
 
 /* MTP Event codes */
 #define PTP_EC_MTP_ObjectPropChanged		0xC801

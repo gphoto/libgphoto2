@@ -2017,6 +2017,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 	int		i, oldtimeout;
 	uint16_t	ret;
 	time_t		event_start;
+	CameraFile	*file;
+	char		*ximage;
+	int		finish = 0;
 
 static	PTPCanon_changes_entry	*backlogentries = NULL;
 static	int			nrofbacklogentries = 0;
@@ -2031,7 +2034,6 @@ static	int			nrofbacklogentries = 0;
 	) {
 		PTPCanon_changes_entry	*entries = NULL;
 		int			nrofentries = 0;
-		int			finish = 0;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
@@ -2059,8 +2061,6 @@ static	int			nrofbacklogentries = 0;
 			for (i=0;i<nrofentries;i++) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
 				if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
-					CameraFile	*file;
-					char		*ximage;
 
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 
@@ -2159,20 +2159,88 @@ static	int			nrofbacklogentries = 0;
 		*eventtype = GP_EVENT_TIMEOUT;
 		while ((time(NULL) - event_start)<=timeout) {
 			int i, evtcnt;
-			PTPUSBEventContainer *nevent = NULL;
+			PTPUSBEventContainer	*nevent = NULL;
 
 			ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
 			if (ret != PTP_RC_OK)
 				continue;
 			for (i=0;i<evtcnt;i++) {
 				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].code, (unsigned long)nevent[i].param1);
+				if (nevent[i].code == PTP_EC_ObjectAdded) {
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					newobject = nevent[i].param1;
+					add_object (camera, newobject, context);
+					path->name[0]='\0';
+					path->folder[0]='\0';
+
+					for (i = params->handles.n ; i--; ) {
+						PTPObjectInfo	*obinfo;
+
+						if (params->handles.Handler[i] != newobject)
+							continue;
+						obinfo = &camera->pl->params.objectinfo[i];
+						strcpy  (path->name,  obinfo->Filename);
+						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+						get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+						/* delete last / or we get confused later. */
+						path->folder[ strlen(path->folder)-1 ] = '\0';
+						CR (gp_filesystem_append (camera->fs, path->folder,
+									  path->name, context));
+						break;
+					}
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					finish = 1;
+					break;
+				}
 				if (nevent[i].code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
+					PTPObjectInfo		oi;
+
 					hasc101=1;
 					newobject = nevent[i].param1;
 					if (!newobject) newobject = 0xffff0001;
+					ret = ptp_getobjectinfo (params, newobject, &oi);
+					if (ret != PTP_RC_OK)
+						continue;
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					path->name[0]='\0';
+					strcpy (path->folder,"/");
+					ret = gp_file_new(&file);
+					if (ret!=GP_OK) return ret;
+					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					gp_file_set_mime_type (file, GP_MIME_JPEG);
+
+					gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+					CPR (context, ptp_getobject (params, newobject, &ximage));
+					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					/* We have now handed over the file, disclaim responsibility by unref. */
+					gp_file_unref (file);
+					finish = 1;
+					break;
 				}
 			}
 			free (nevent);
+			if (finish) return GP_OK;
 		}
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
