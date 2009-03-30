@@ -1164,8 +1164,8 @@ static struct deviceproptableu8 nikon_afmode[] = {
 	{ N_("AF-S"),		0, 0 },
 	{ N_("AF-C"),		1, 0 },
 	{ N_("AF-A"),		2, 0 },
-	{ "AF Mode 3? report.",	3, 0 },
-	{ N_("Manual"),		4, 0 },
+	{ N_("MF (fixed)"),	3, 0 },
+	{ N_("MF (selection)"),	4, 0 },
 	/* more for newer */
 };
 GENERIC8TABLE(Nikon_AFMode,nikon_afmode)
