@@ -3721,8 +3721,14 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Live View Image Zoom Ratio")},
 		{PTP_DPC_NIKON_LiveViewProhibitCondition,	/* 0xD1A4 */
 		 N_("Live View Prohibit Condition")},
-		{PTP_DPC_NIKON_LowLight,			/* 0xD1B0 */
-		 N_("Low Light")},
+		{PTP_DPC_NIKON_ExposureDisplayStatus,		/* 0xD1B0 */
+		 N_("Exposure Display Status")},
+		{PTP_DPC_NIKON_ExposureDisplayStatus,		/* 0xD1B0 */
+		 N_("Exposure Display Status")},
+		{PTP_DPC_NIKON_ExposureIndicateStatus,		/* 0xD1B1 */
+		 N_("Exposure Indicate Status")},
+		{PTP_DPC_NIKON_ExposureIndicateLightup,		/* 0xD1B2 */
+		 N_("Exposure Indicate Lightup")},
 		{PTP_DPC_NIKON_FlashOpen,			/* 0xD1C0 */
 		 N_("Flash Open")},
 		{PTP_DPC_NIKON_FlashCharged,			/* 0xD1C1 */
@@ -4021,7 +4027,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 4, N_("10 minutes")},
 		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 5, N_("5 seconds")}, /* d80 observed */
 
-		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_LowLight,PTP_VENDOR_NIKON),
+		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_ExposureDisplayStatus,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_AFLockStatus,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_AELockStatus,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_FVLockStatus,PTP_VENDOR_NIKON),

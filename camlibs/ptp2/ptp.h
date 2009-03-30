@@ -1359,8 +1359,9 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_LiveViewStatus			0xD1A2
 #define PTP_DPC_NIKON_LiveViewImageZoomRatio		0xD1A3
 #define PTP_DPC_NIKON_LiveViewProhibitCondition		0xD1A4
-#define PTP_DPC_NIKON_LowLight				0xD1B0	/* exp disp status */
-#define PTP_DPC_NIKON_ExposureIndicateStatus		0xD1B1	/* exp indicate status */
+#define PTP_DPC_NIKON_ExposureDisplayStatus		0xD1B0
+#define PTP_DPC_NIKON_ExposureIndicateStatus		0xD1B1
+#define PTP_DPC_NIKON_ExposureIndicateLightup		0xD1B3
 #define PTP_DPC_NIKON_FlashOpen				0xD1C0
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1
 #define PTP_DPC_NIKON_FlashMRepeatValue			0xD1D0
