@@ -570,9 +570,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Nikon extension Event Codes */
 #define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
-#define PTP_EC_Nikon_CaptureOverflow		0xC102
+#define PTP_EC_Nikon_CaptureCompleteRecInSdram	0xC102
 /* Gets 1 parameter, objectid pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
+#define PTP_EC_Nikon_PreviewImageAdded		0xC104
 
 /* MTP Event codes */
 #define PTP_EC_MTP_ObjectPropChanged		0xC801
@@ -1320,6 +1321,7 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_LightMeter			0xD10A	/* Exposure Status */
 #define PTP_DPC_NIKON_RecordingMedia			0xD10B	/* Card or SDRAM */
 #define PTP_DPC_NIKON_USBSpeed				0xD10C
+#define PTP_DPC_NIKON_CCDNumber				0xD10D
 #define PTP_DPC_NIKON_CameraOrientation			0xD10E
 #define PTP_DPC_NIKON_GroupPtnType			0xD10F
 #define PTP_DPC_NIKON_ExposureApertureLock		0xD111
@@ -1355,8 +1357,12 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_BatteryCellKind			0xD182
 #define PTP_DPC_NIKON_ISOAutoHiLimit			0xD183
 #define PTP_DPC_NIKON_BracketingFramesAndSteps		0xD190
-#define PTP_DPC_NIKON_LowLight				0xD1B0	/* exp disp status */
-#define PTP_DPC_NIKON_ExposureIndicateStatus		0xD1B1	/* exp indicate status */
+#define PTP_DPC_NIKON_LiveViewStatus			0xD1A2
+#define PTP_DPC_NIKON_LiveViewImageZoomRatio		0xD1A3
+#define PTP_DPC_NIKON_LiveViewProhibitCondition		0xD1A4
+#define PTP_DPC_NIKON_ExposureDisplayStatus		0xD1B0
+#define PTP_DPC_NIKON_ExposureIndicateStatus		0xD1B1
+#define PTP_DPC_NIKON_ExposureIndicateLightup		0xD1B3
 #define PTP_DPC_NIKON_FlashOpen				0xD1C0
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1
 #define PTP_DPC_NIKON_FlashMRepeatValue			0xD1D0
@@ -1372,15 +1378,19 @@ typedef struct _PTPCanon_Property {
 #define PTP_DPC_NIKON_FlashCommandBMode			0xD1DA
 #define PTP_DPC_NIKON_FlashCommandBCompensation		0xD1DB
 #define PTP_DPC_NIKON_FlashCommandBValue		0xD1DC
+#define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
+#define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
 
 /* Microsoft/MTP specific */
-#define PTP_DPC_MTP_SecureTime                          0xD101
-#define PTP_DPC_MTP_DeviceCertificate                   0xD102
-#define PTP_DPC_MTP_RevocationInfo                      0xD103
-#define PTP_DPC_MTP_SynchronizationPartner              0xD401
-#define PTP_DPC_MTP_DeviceFriendlyName                  0xD402
-#define PTP_DPC_MTP_VolumeLevel                         0xD403
-#define PTP_DPC_MTP_DeviceIcon                          0xD405
+#define PTP_DPC_MTP_SecureTime				0xD101
+#define PTP_DPC_MTP_DeviceCertificate			0xD102
+#define PTP_DPC_MTP_RevocationInfo			0xD103
+#define PTP_DPC_MTP_SynchronizationPartner		0xD401
+#define PTP_DPC_MTP_DeviceFriendlyName			0xD402
+#define PTP_DPC_MTP_VolumeLevel				0xD403
+#define PTP_DPC_MTP_DeviceIcon				0xD405
+#define PTP_DPC_MTP_SessionInitiatorInfo		0xD406
+#define PTP_DPC_MTP_PerceivedDeviceType			0xD407
 #define PTP_DPC_MTP_PlaybackRate                        0xD410
 #define PTP_DPC_MTP_PlaybackObject                      0xD411
 #define PTP_DPC_MTP_PlaybackContainerIndex              0xD412

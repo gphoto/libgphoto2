@@ -858,6 +858,9 @@ static struct {
 	/* Martin Lasarsch at SUSE. MTP_PROPLIST returns just 0 entries */
 	{"Canon:Digital IXUS 90 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP},
 
+	/* https://sourceforge.net/tracker/?func=detail&aid=2722422&group_id=8874&atid=358874 */
+	{"Canon:Digital IXUS 85 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -1039,7 +1042,7 @@ set_mimetype (Camera *camera, CameraFile *file, uint16_t vendorcode, uint16_t of
 			continue;
 		return gp_file_set_mime_type (file, object_formats[i].txt);
 	}
-	gp_log (GP_LOG_DEBUG, "ptp2/setmimetype", "Failed to find mime type for %04x\n", ofc);
+	gp_log (GP_LOG_DEBUG, "ptp2/setmimetype", "Failed to find mime type for %04x", ofc);
 	return gp_file_set_mime_type (file, "application/x-unknown");
 }
 
@@ -1056,7 +1059,7 @@ strcpy_mime(char * dest, uint16_t vendor_code, uint16_t ofc) {
 			return;
 		}
 	}
-	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %04x\n", ofc);
+	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %04x", ofc);
 	strcpy(dest, "application/x-unknown");
 }
 
@@ -1074,7 +1077,7 @@ get_mimetype (Camera *camera, CameraFile *file, uint16_t vendor_code)
 		if (!strcmp(mimetype,object_formats[i].txt))
 			return (object_formats[i].format_code);
 	}
-	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %s\n", mimetype);
+	gp_log (GP_LOG_DEBUG, "ptp2/strcpymimetype", "Failed to find mime type for %s", mimetype);
 	return (PTP_OFC_Undefined);
 }
 
@@ -1550,8 +1553,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK)
 			break;
 		for (i=0;i<evtcnt;i++) {
-			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx\n", i, nevent[i].code, (unsigned long)nevent[i].param1);
-			if (nevent[i].code == 0xc101) {
+			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].code, (unsigned long)nevent[i].param1);
+			if (nevent[i].code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
 				hasc101=1;
 				newobject = nevent[i].param1;
 				if (!newobject) newobject = 0xffff0001;
@@ -1744,7 +1747,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 					 (storageids.Storage[0] == 0x00010000)
 					)
 				) {
-					gp_log (GP_LOG_DEBUG, "ptp", "Assuming no CF card present - switching to MEMORY Transfer.\n");
+					gp_log (GP_LOG_DEBUG, "ptp", "Assuming no CF card present - switching to MEMORY Transfer.");
 					propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 				}
 				free (storageids.Storage);
@@ -1752,7 +1755,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x\n", ret);
+			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x", ret);
 	}
 
 #if 0
@@ -1768,9 +1771,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	/* Catch event */
 	if (PTP_RC_OK == (val16 = params->event_wait (params, &event))) {
 		if (event.Code == PTP_EC_CaptureComplete)
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete. \n");
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete.");
 		else
-			gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X\n", event.Code);
+			gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X", event.Code);
 	} /* else no event yet ... try later. */
 
 	/* checking events in stack. */
@@ -1783,7 +1786,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret!=PTP_RC_OK)
 			continue;
 		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 		if (	isevent  &&
 			(usbevent.type==PTP_USB_CONTAINER_EVENT) &&
 			(usbevent.code==PTP_EC_CANON_RequestObjectTransfer)
@@ -1791,12 +1794,12 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			int j;
 
 			handle=usbevent.param1;
-			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X. \n",usbevent.param1);
+			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",usbevent.param1);
 			newobject = usbevent.param1;
 			for (j=0;j<2;j++) {
 				ret=ptp_canon_checkevent(params,&usbevent,&isevent);
 				if ((ret==PTP_RC_OK) && isevent)
-					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 			}
 			/* Marcus: Not sure if we really needs this.
 			   ret = ptp_canon_reset_aeafawb(params,7);
@@ -1809,14 +1812,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
 			if (event.Code==PTP_EC_CaptureComplete)
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete(2). \n");
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete(2).");
 			else
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X (2)\n", event.Code);
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X (2)", event.Code);
 		} else
-			gp_log (GP_LOG_DEBUG, "ptp", "No expected capture complete event\n");
+			gp_log (GP_LOG_DEBUG, "ptp", "No expected capture complete event");
 	}
 	if (!found) {
-	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!\n");
+	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!");
 	    return GP_ERROR_TIMEOUT;
 	}
 
@@ -2025,6 +2028,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 	int		i, oldtimeout;
 	uint16_t	ret;
 	time_t		event_start;
+	CameraFile	*file;
+	char		*ximage;
+	int		finish = 0;
 
 static	PTPCanon_changes_entry	*backlogentries = NULL;
 static	int			nrofbacklogentries = 0;
@@ -2039,7 +2045,6 @@ static	int			nrofbacklogentries = 0;
 	) {
 		PTPCanon_changes_entry	*entries = NULL;
 		int			nrofentries = 0;
-		int			finish = 0;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
@@ -2067,8 +2072,6 @@ static	int			nrofbacklogentries = 0;
 			for (i=0;i<nrofentries;i++) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
 				if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
-					CameraFile	*file;
-					char		*ximage;
 
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 
@@ -2148,7 +2151,7 @@ static	int			nrofbacklogentries = 0;
 			if (ret!=PTP_RC_OK)
 				continue;
 			if (isevent) {
-				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
 				*eventtype = GP_EVENT_UNKNOWN;
 				x = malloc(strlen("PTP Canon Event 0123, Param1 01234567")+1);
 				if (x) {
@@ -2158,6 +2161,103 @@ static	int			nrofbacklogentries = 0;
 				}
 			}
 		}
+		return GP_OK;
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
+	) {
+		uint32_t	newobject, hasc101;
+
+		event_start=time(NULL);
+		*eventtype = GP_EVENT_TIMEOUT;
+		while ((time(NULL) - event_start)<=timeout) {
+			int i, evtcnt;
+			PTPUSBEventContainer	*nevent = NULL;
+
+			ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
+			if (ret != PTP_RC_OK)
+				continue;
+			for (i=0;i<evtcnt;i++) {
+				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].code, (unsigned long)nevent[i].param1);
+				if (nevent[i].code == PTP_EC_ObjectAdded) {
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					newobject = nevent[i].param1;
+					add_object (camera, newobject, context);
+					path->name[0]='\0';
+					path->folder[0]='\0';
+
+					for (i = params->handles.n ; i--; ) {
+						PTPObjectInfo	*obinfo;
+
+						if (params->handles.Handler[i] != newobject)
+							continue;
+						obinfo = &camera->pl->params.objectinfo[i];
+						strcpy  (path->name,  obinfo->Filename);
+						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+						get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+						/* delete last / or we get confused later. */
+						path->folder[ strlen(path->folder)-1 ] = '\0';
+						CR (gp_filesystem_append (camera->fs, path->folder,
+									  path->name, context));
+						break;
+					}
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					finish = 1;
+					break;
+				}
+				if (nevent[i].code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
+					PTPObjectInfo		oi;
+
+					hasc101=1;
+					newobject = nevent[i].param1;
+					if (!newobject) newobject = 0xffff0001;
+					ret = ptp_getobjectinfo (params, newobject, &oi);
+					if (ret != PTP_RC_OK)
+						continue;
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					path->name[0]='\0';
+					strcpy (path->folder,"/");
+					ret = gp_file_new(&file);
+					if (ret!=GP_OK) return ret;
+					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					gp_file_set_mime_type (file, GP_MIME_JPEG);
+					gp_file_set_name (file, path->name);
+					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+
+					gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+					CPR (context, ptp_getobject (params, newobject, &ximage));
+					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, file, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					/* We have now handed over the file, disclaim responsibility by unref. */
+					gp_file_unref (file);
+					finish = 1;
+					break;
+				}
+			}
+			free (nevent);
+			if (finish) return GP_OK;
+		}
+		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 	gp_port_get_timeout (camera->port, &oldtimeout);
@@ -4742,7 +4842,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->params.cd_locale_to_ucs2 = iconv_open(camloc, curloc);
 	if ((camera->pl->params.cd_ucs2_to_locale == (iconv_t) -1) ||
 	    (camera->pl->params.cd_locale_to_ucs2 == (iconv_t) -1)) {
-		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.\n");
+		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
 		return (GP_ERROR_OS_FAILURE);
 	}
 	

@@ -1164,8 +1164,8 @@ static struct deviceproptableu8 nikon_afmode[] = {
 	{ N_("AF-S"),		0, 0 },
 	{ N_("AF-C"),		1, 0 },
 	{ N_("AF-A"),		2, 0 },
-	{ "AF Mode 3? report.",	3, 0 },
-	{ N_("Manual"),		4, 0 },
+	{ N_("MF (fixed)"),	3, 0 },
+	{ N_("MF (selection)"),	4, 0 },
 	/* more for newer */
 };
 GENERIC8TABLE(Nikon_AFMode,nikon_afmode)
@@ -1889,6 +1889,12 @@ static struct deviceproptableu8 nikon_lcdofftime[] = {
 	{ N_("5 seconds"),	0x05, 0 },	/* d80 observed */
 };
 GENERIC8TABLE(Nikon_LCDOffTime,nikon_lcdofftime)
+
+static struct deviceproptableu8 nikon_recordingmedia[] = {
+	{ N_("Card"),		0x00, 0 },
+	{ N_("SDRAM"),		0x01, 0 },
+};
+GENERIC8TABLE(Nikon_RecordingMedia,nikon_recordingmedia)
 
 static struct deviceproptableu8 nikon_meterofftime[] = {
 	{ N_("4 seconds"),	0x00, 0 },
@@ -3025,6 +3031,7 @@ static struct submenu camera_settings_menu[] = {
         { N_("Image Comment"), "imgcomment", PTP_DPC_NIKON_ImageCommentString, PTP_VENDOR_NIKON, PTP_DTC_STR, _get_STR, _put_STR },
         { N_("Enable Image Comment"), "imgcommentenable", PTP_DPC_NIKON_ImageCommentEnable, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
         { N_("LCD Off Time"), "lcdofftime", PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LCDOffTime, _put_Nikon_LCDOffTime },
+        { N_("Recording Media"), "recordingmedia", PTP_DPC_NIKON_RecordingMedia, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RecordingMedia, _put_Nikon_RecordingMedia },
         { N_("Meter Off Time"), "meterofftime", PTP_DPC_NIKON_MeterOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MeterOffTime, _put_Nikon_MeterOffTime },
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
@@ -3153,7 +3160,7 @@ static struct submenu capture_settings_menu[] = {
         { N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
         { N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 
-        { N_("Low Light"), "lowlight", PTP_DPC_NIKON_LowLight, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LowLight, _put_None },
+        { N_("Low Light"), "lowlight", PTP_DPC_NIKON_ExposureDisplayStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LowLight, _put_None },
         { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LightMeter, _put_None },
         { N_("AF Locked"), "aflocked", PTP_DPC_NIKON_AFLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("AE Locked"), "aelocked", PTP_DPC_NIKON_AELockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },

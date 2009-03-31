@@ -2564,7 +2564,7 @@ ptp_nikon_get_preview_image (PTPParams* params, unsigned char **xdata, unsigned 
         PTP_CNT_INIT(ptp);
         ptp.Code=PTP_OC_NIKON_GetPreviewImg;
         ptp.Nparam=0;
-        ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, xdata, xsize);
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, xdata, xsize);
 	if (ret == PTP_RC_OK) {
 		if (ptp.Nparam > 0)
 			*handle = ptp.Param1;
@@ -3661,6 +3661,10 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Meter")},
 		{PTP_DPC_NIKON_RecordingMedia,			/* 0xD10b */
 		 N_("Recording Media")},
+		{PTP_DPC_NIKON_USBSpeed,			/* 0xD10c */
+		 N_("USB Speed")},
+		{PTP_DPC_NIKON_CCDNumber,			/* 0xD10d */
+		 N_("CCD Serial Number")},
 		{PTP_DPC_NIKON_CameraOrientation,		/* 0xD10e */
 		 N_("Camera Orientation")},
 		{PTP_DPC_NIKON_ExposureApertureLock,		/* 0xD111 */
@@ -3711,12 +3715,28 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("CSM Menu")},
 		{PTP_DPC_NIKON_BracketingFramesAndSteps,	/* 0xD190 */
 		 N_("Bracketing Frames and Steps")},
-		{PTP_DPC_NIKON_LowLight,			/* 0xD1B0 */
-		 N_("Low Light")},
+		{PTP_DPC_NIKON_LiveViewStatus,			/* 0xD1A2 */
+		 N_("Live View Status")},
+		{PTP_DPC_NIKON_LiveViewImageZoomRatio,		/* 0xD1A3 */
+		 N_("Live View Image Zoom Ratio")},
+		{PTP_DPC_NIKON_LiveViewProhibitCondition,	/* 0xD1A4 */
+		 N_("Live View Prohibit Condition")},
+		{PTP_DPC_NIKON_ExposureDisplayStatus,		/* 0xD1B0 */
+		 N_("Exposure Display Status")},
+		{PTP_DPC_NIKON_ExposureDisplayStatus,		/* 0xD1B0 */
+		 N_("Exposure Display Status")},
+		{PTP_DPC_NIKON_ExposureIndicateStatus,		/* 0xD1B1 */
+		 N_("Exposure Indicate Status")},
+		{PTP_DPC_NIKON_ExposureIndicateLightup,		/* 0xD1B2 */
+		 N_("Exposure Indicate Lightup")},
 		{PTP_DPC_NIKON_FlashOpen,			/* 0xD1C0 */
 		 N_("Flash Open")},
 		{PTP_DPC_NIKON_FlashCharged,			/* 0xD1C1 */
 		 N_("Flash Charged")},
+		{PTP_DPC_NIKON_ActivePicCtrlItem,		/* 0xD200 */
+		 N_("Active Pic Ctrl Item")},
+		{PTP_DPC_NIKON_ChangePicCtrlItem,		/* 0xD201 */
+		 N_("Change Pic Ctrl Item")},
 		{0,NULL}
 	};
         struct {
@@ -3731,6 +3751,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Friendly Device Name")},
 		{PTP_DPC_MTP_VolumeLevel,       N_("Volume Level")},
 		{PTP_DPC_MTP_DeviceIcon,        N_("Device Icon")},
+		{PTP_DPC_MTP_SessionInitiatorInfo,	N_("Session Initiator Info")},
+		{PTP_DPC_MTP_PerceivedDeviceType,	N_("Perceived Device Type")},
 		{PTP_DPC_MTP_PlaybackRate,      N_("Playback Rate")},
 		{PTP_DPC_MTP_PlaybackObject,    N_("Playback Object")},
 		{PTP_DPC_MTP_PlaybackContainerIndex,
@@ -3924,6 +3946,9 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_GridDisplay,PTP_VENDOR_NIKON),
 		{PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, 0, N_("AF-S")},
 		{PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, 1, N_("AF-C")},
+		{PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, 2, N_("AF-A")},
+		{PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, 3, N_("MF (fixed)")},
+		{PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, 4, N_("MF (selection)")},
 		{PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, 0, N_("Auto")},
 		{PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, 1, N_("Off")},
 		{PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, 2, N_("On")},
@@ -4002,7 +4027,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 4, N_("10 minutes")},
 		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 5, N_("5 seconds")}, /* d80 observed */
 
-		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_LowLight,PTP_VENDOR_NIKON),
+		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_ExposureDisplayStatus,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_AFLockStatus,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_AELockStatus,PTP_VENDOR_NIKON),
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_FVLockStatus,PTP_VENDOR_NIKON),
