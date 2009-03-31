@@ -2048,7 +2048,7 @@ static	int			nrofbacklogentries = 0;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
-		while ((time(NULL) - event_start)<=timeout) {
+		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
 			int i;
 
 			if (backlogentries) {
@@ -2145,7 +2145,7 @@ static	int			nrofbacklogentries = 0;
 		char *x;
 
 		event_start=time(NULL);
-		while ((time(NULL) - event_start)<=timeout) {
+		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
 			gp_context_idle (context);
 			ret = ptp_canon_checkevent (params,&usbevent,&isevent);
 			if (ret!=PTP_RC_OK)
@@ -2170,7 +2170,7 @@ static	int			nrofbacklogentries = 0;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
-		while ((time(NULL) - event_start)<=timeout) {
+		while ((time(NULL) - event_start)<= (timeout/1000 + 1)) {
 			int i, evtcnt;
 			PTPUSBEventContainer	*nevent = NULL;
 
