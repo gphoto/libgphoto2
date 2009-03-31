@@ -3,6 +3,30 @@
 	* library.c, ptp.c, ptp.h: use Nikon Get Vendor Extension Codes
 	  call instead of fixed lists. Removed static lists.
 
+	* library.c: In wait_event, handle Nikon cameras with Check Event
+	  to also allow tethered capture via SDRAM. (cut and paste code needs
+	  to be cleaned up sometime).
+
+	* library.c: If a MTP device has vendor name Canon or Nikon, mark it as Nikon
+	  or Canon.
+
+	* library.c: Canon capture: Automatically fallback to SDRAM if
+	  no CF/SD Card inserted.
+	* library.c: Canon EOS Capture: download all images on tethered capture.
+
+	* config.c: longer timeout for Canon ViewFinder On command
+	* config.c: some more error reporting on the table driven config engine
+	* config.c: some new values added
+
+	* music-players.h, device-flags.h: imported from latest libmtp.
+
+	* library.c: Added:
+		Nikon CoolPix P50, S60
+		Canon Digital IXUS 85
+		Canon PowerShot A740, G10, 
+		Canon EOS 5D Mark II
+	
+
 2009-01-21  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Adjusted flags for Canon Powershots to match capture
