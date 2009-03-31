@@ -659,7 +659,10 @@
   { "Cowon", 0x0e21, "iAudio U5 (MTP mode)", 0x0761,
    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by TJ Something <tjbk_tjb@users.sourceforge.net>
-  { "Cowon", 0x0e21, "iAudio D2 (MTP mode)", 0x0801, 
+  { "Cowon", 0x0e21, "iAudio D2 (MTP mode)", 0x0801,
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by <twkonefal@users.sourceforge.net>
+  { "Cowon", 0x0e21, "iAudio S9 (MTP mode)", 0x0901,
    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
   /*
@@ -733,6 +736,8 @@
   { "SonyEricsson", 0x0fce, "W980", 0x00da, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Mattias Evensson <mevensson@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "W902", 0x00f5, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by Stéphane Pontier <shadow_walker@users.sourceforge.net>
+  { "SonyEricsson", 0x0fce, "W715", 0x0105, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
   /*
    * Motorola
