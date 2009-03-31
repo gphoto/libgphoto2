@@ -7,7 +7,11 @@ PTP2 driver:
    * Fixed intial Canon timeout (0.5 -> 1.5 seconds), was too small
      for some Canons.
    * Canon EOS capture mode and tethered mode fixes.
-   * Various new IDs.
+   * New cameras listed:
+                Nikon CoolPix P50, S60
+                Canon Digital IXUS 85
+                Canon PowerShot A740, G10,
+                Canon EOS 5D Mark II
    * Merged new IDs from libmtp.
    * Lots of bugfixes.
 
@@ -18,6 +22,12 @@ KODAK DC240:
 libgphoto2:
    * rewrote gphoto2-filesys.c to be dynamic and fix LRU problems.
      (backport from TRUNK)
+
+libgphoto2_port:
+   * added --enable/--disable configure options for: disk, serial, ptpip
+   * added --with/--without configure options for: bonjour, hal
+   * backported Gentoo "if just canon driver selected, auto-select ptp2 driver"
+     usability fix.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.4
