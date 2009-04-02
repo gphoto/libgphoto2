@@ -7,6 +7,8 @@
 	  to also allow tethered capture via SDRAM. (cut and paste code needs
 	  to be cleaned up sometime).
 
+	* library.c: Nikon LiveView support for --capture-preview.
+
 	* library.c: If a MTP device has vendor name Canon or Nikon, mark it as Nikon
 	  or Canon.
 
