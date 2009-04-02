@@ -507,7 +507,20 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_EK_FilenameInvalid	0xA003
 
 /* Nikon specific response codes */
-#define PTP_RC_NIKON_AdvancedTransferCancel 0xA022
+#define PTP_RC_NIKON_HardwareError		0xA001
+#define PTP_RC_NIKON_OutOfFocus			0xA002
+#define PTP_RC_NIKON_ChangeCameraModeFailed	0xA003
+#define PTP_RC_NIKON_InvalidStatus		0xA004
+#define PTP_RC_NIKON_SetPropertyNotSupported	0xA005
+#define PTP_RC_NIKON_WbResetError		0xA006
+#define PTP_RC_NIKON_DustReferenceError		0xA007
+#define PTP_RC_NIKON_ShutterSpeedBulb		0xA008
+#define PTP_RC_NIKON_MirrorUpSequence		0xA009
+#define PTP_RC_NIKON_CameraModeNotAdjustFNumber	0xA00A
+#define PTP_RC_NIKON_NotLiveView		0xA00B
+#define PTP_RC_NIKON_MfDriveStepEnd		0xA00C
+#define PTP_RC_NIKON_MfDriveStepInsufficiency	0xA00E
+#define PTP_RC_NIKON_AdvancedTransferCancel	0xA022
 
 /* Canon specific response codes */
 #define PTP_RC_CANON_A009		0xA009
@@ -1879,6 +1892,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 uint16_t ptp_nikon_deletewifiprofile (PTPParams* params, uint32_t profilenr);
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_afdrive (PTPParams* params);
+uint16_t ptp_nikon_mfdrive (PTPParams* params, uint32_t flag, uint16_t amount);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_capture_sdram (PTPParams* params);
 uint16_t ptp_nikon_start_liveview (PTPParams* params);

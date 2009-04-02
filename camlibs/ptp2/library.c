@@ -1346,6 +1346,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		gp_file_set_data_and_size ( file, (char*)data, size );
 		gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+		gp_file_set_mtime (file, time(NULL));
+
 #if 0
 		/* Leave out, otherwise we refocus all the time */
 		ret = ptp_canon_viewfinderoff (params);
@@ -1374,6 +1376,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			value.u8 = 0;
 
 		if (!value.u8) {
+			value.u8 = 1;
+			ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
+			if (ret != PTP_RC_OK)
+				gp_log (GP_LOG_DEBUG, "ptp2/nikon_preview", "set recordingmedia to 1 failed with 0x%04x", ret);
 			ret = ptp_nikon_start_liveview (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
@@ -1391,6 +1397,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "preview.jpg");
 			gp_file_set_mtime (file, time(NULL));
+		} else {
+			SET_CONTEXT_P(params, NULL);
+			return GP_ERROR;
 		}
 #if 0
 		ret = ptp_nikon_end_liveview (params);
