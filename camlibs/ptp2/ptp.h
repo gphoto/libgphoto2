@@ -1879,6 +1879,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 uint16_t ptp_nikon_deletewifiprofile (PTPParams* params, uint32_t profilenr);
 uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
 uint16_t ptp_nikon_afdrive (PTPParams* params);
+uint16_t ptp_nikon_mfdrive (PTPParams* params, uint32_t flag, uint16_t amount);
 uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
 uint16_t ptp_nikon_capture_sdram (PTPParams* params);
 uint16_t ptp_nikon_start_liveview (PTPParams* params);

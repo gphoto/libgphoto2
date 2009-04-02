@@ -2305,10 +2305,47 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	ret = ptp_nikon_afdrive (&camera->pl->params);
-	if (ret == PTP_RC_OK)
-		return (GP_OK);
-	gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
-	return (GP_ERROR);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
+		return GP_ERROR;
+	}
+	while (ptp_nikon_device_ready(&camera->pl->params) != PTP_RC_OK) /* empty */;
+	return GP_OK;
+}
+
+static int
+_get_Nikon_MFDrive(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	gp_widget_set_range(*widget, -32767.0, 32767.0, 1.0);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+	float		val;
+	unsigned int	xval, flag;
+
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_MfDrive)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_get_value(widget, &val);
+
+	if (val<0) {
+		xval = -val;
+		flag = 0x1;
+	} else {
+		xval = val;
+		flag = 0x2;
+	}
+	ret = ptp_nikon_mfdrive (&camera->pl->params, flag, xval);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/nikon_mfdrive", "Nikon manual focus drive failed: 0x%x", ret);
+		return GP_ERROR;
+	}
+	while (ptp_nikon_device_ready(&camera->pl->params) != PTP_RC_OK) /* empty */;
+	return GP_OK;
 }
 
 static int
@@ -3024,6 +3061,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Time"),  "time", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Set camera time to PC time"),  "synctime", PTP_DPC_CANON_UnixTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Drive Nikon DSLR Autofocus"),  "autofocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
+	{ N_("Drive Nikon DSLR Manual focus"),  "manualfocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
 	{ N_("Camera Time"),  "eos-time", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Set camera time to PC time"),  "eos-synctime", PTP_DPC_CANON_EOS_CameraTime,     PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Camera Time"),  "time", PTP_DPC_DateTime,           0,                PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },

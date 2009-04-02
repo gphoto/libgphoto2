@@ -1378,6 +1378,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			value.u8 = 0;
 
 		if (!value.u8) {
+			value.u8 = 1;
+			ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
+			if (ret != PTP_RC_OK)
+				gp_log (GP_LOG_DEBUG, "ptp2/nikon_preview", "set recordingmedia to 1 failed with 0x%04x", ret);
 			ret = ptp_nikon_start_liveview (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
