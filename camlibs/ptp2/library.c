@@ -1362,39 +1362,47 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		return GP_OK;
 	}
 	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
-		unsigned char	*xdata;
-		unsigned int	xsize;
-		uint32_t	xhandle;
-		SET_CONTEXT_P(params, context);
+		unsigned char		*xdata;
+		unsigned int		xsize;
+		PTPPropertyValue	value;
+
 		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
 			gp_context_error (context,
 				_("Sorry, your Nikon camera does not support LiveView mode"));
 			return GP_ERROR_NOT_SUPPORTED;
 		}
-		ret = ptp_nikon_start_liveview (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
-			SET_CONTEXT_P(params, NULL);
-			//return GP_ERROR;
-		}
-		while (ptp_nikon_device_ready(params) != PTP_RC_OK) {
-			/* empty */
+		SET_CONTEXT_P(params, context);
+		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
+		if (ret != PTP_RC_OK)
+			value.u8 = 0;
+
+		if (!value.u8) {
+			ret = ptp_nikon_start_liveview (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
+			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
 
-		ret = ptp_nikon_get_preview_image (params, &xdata, &xsize, &xhandle);
 		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
 		if (ret == PTP_RC_OK) {
-			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
+			gp_file_append (file, (char*)xdata + 0x80, xsize - 0x80);
+			free (xdata); /* FIXME: perhaps handle the 128 byte header data too. */
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "preview.jpg");
+			gp_file_set_mtime (file, time(NULL));
 		}
+#if 0
 		ret = ptp_nikon_end_liveview (params);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Nikon disable liveview failed: %x"), ret);
 			SET_CONTEXT_P(params, NULL);
 			//return GP_ERROR;
 		}
+#endif
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
