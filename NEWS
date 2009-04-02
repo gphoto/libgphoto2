@@ -1,4 +1,4 @@
-libgphoto2 2.4.4.4
+libgphoto2 2.4.5
 
 This is a 2.4 release branch update.
 
@@ -6,13 +6,15 @@ PTP2 driver:
    * Increased timeout for Canon Viewfinder enable.
    * Fixed intial Canon timeout (0.5 -> 1.5 seconds), was too small
      for some Canons.
-   * Canon EOS capture mode and tethered mode fixes.
+   * Canon EOS capture mode and tethered mode bugfixes.
+   * Nikon DSLR LiveView support, with Autofocus and ManualFocus Drive possibility.
+   * Nikon tethered capture fixes.
    * New cameras listed:
                 Nikon CoolPix P50, S60
                 Canon Digital IXUS 85
                 Canon PowerShot A740, G10,
                 Canon EOS 5D Mark II
-   * Merged new IDs from libmtp.
+   * Merged new IDs of Music Players from libmtp.
    * Lots of bugfixes.
 
 KODAK DC240:
