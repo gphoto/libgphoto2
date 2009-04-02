@@ -2309,7 +2309,7 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
 		return GP_ERROR;
 	}
-	while (ptp_nikon_device_ready(&camera->pl->params) != PTP_RC_OK) /* empty */;
+	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
 }
 
@@ -2339,12 +2339,13 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 		xval = val;
 		flag = 0x2;
 	}
+	if (!xval) xval = 1;
 	ret = ptp_nikon_mfdrive (&camera->pl->params, flag, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_mfdrive", "Nikon manual focus drive failed: 0x%x", ret);
 		return GP_ERROR;
 	}
-	while (ptp_nikon_device_ready(&camera->pl->params) != PTP_RC_OK) /* empty */;
+	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
 }
 
