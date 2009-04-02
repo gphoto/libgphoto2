@@ -24,12 +24,14 @@ KODAK DC240:
 libgphoto2:
    * rewrote gphoto2-filesys.c to be dynamic and fix LRU problems.
      (backport from TRUNK)
+   * Translation updates.
 
 libgphoto2_port:
    * added --enable/--disable configure options for: disk, serial, ptpip
    * added --with/--without configure options for: bonjour, hal
    * backported Gentoo "if just canon driver selected, auto-select ptp2 driver"
      usability fix.
+   * Translation updates.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.4
