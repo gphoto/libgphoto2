@@ -1441,7 +1441,8 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
 	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-	gp_file_set_name(file, path->name);
+	gp_file_set_name (file, path->name);
+	gp_file_set_mtime (file, time(NULL));
 	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
 
@@ -1470,12 +1471,14 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_NAME |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-			GP_FILE_INFO_SIZE;
+			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
 	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	strcpy(info.file.name,path->name);
 	info.file.width		= oi->ImagePixWidth;
 	info.file.height	= oi->ImagePixHeight;
 	info.file.size		= oi->ObjectCompressedSize;
+	info.file.mtime		= time(NULL);
+
 	info.preview.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
@@ -1674,7 +1677,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
 	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
-	gp_file_set_name(file, path->name);
+	gp_file_set_name (file, path->name);
+	gp_file_set_mtime (file, time(NULL));
 
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 	CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
@@ -2101,7 +2105,8 @@ static	int			nrofbacklogentries = 0;
 						strcat(path->name, "jpg");
 						gp_file_set_mime_type (file, GP_MIME_JPEG);
 					}
-					gp_file_set_name(file, path->name);
+					gp_file_set_name (file, path->name);
+					gp_file_set_mtime (file, time(NULL));
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
 					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
@@ -2236,6 +2241,7 @@ static	int			nrofbacklogentries = 0;
 					gp_file_set_mime_type (file, GP_MIME_JPEG);
 					gp_file_set_name (file, path->name);
 					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+					gp_file_set_mtime (file, time(NULL));
 
 					gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 					CPR (context, ptp_getobject (params, newobject, &ximage));
