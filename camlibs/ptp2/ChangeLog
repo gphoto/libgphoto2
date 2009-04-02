@@ -8,6 +8,8 @@
 	  to be cleaned up sometime).
 
 	* library.c: Nikon LiveView support for --capture-preview.
+	* library.c: Nikon DSLR: AutoFocus Drive (always possible)
+	  and Manual Focus Drive (only during LiveView) added.
 
 	* library.c: If a MTP device has vendor name Canon or Nikon, mark it as Nikon
 	  or Canon.
