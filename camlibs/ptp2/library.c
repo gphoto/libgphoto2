@@ -1348,6 +1348,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 		/* Add an arbitrary file name so caller won't crash */
 		gp_file_set_name (file, "canon_preview.jpg");
+		gp_file_set_mtime (file, time(NULL));
 
 #if 0
 		/* Leave out, otherwise we refocus all the time */
@@ -1394,6 +1395,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "preview.jpg");
 			gp_file_set_mtime (file, time(NULL));
+		} else {
+			SET_CONTEXT_P(params, NULL);
+			return GP_ERROR;
 		}
 #if 0
 		ret = ptp_nikon_end_liveview (params);
