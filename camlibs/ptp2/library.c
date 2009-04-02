@@ -1359,39 +1359,47 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		return GP_OK;
 	}
 	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
-		unsigned char	*xdata;
-		unsigned int	xsize;
-		uint32_t	xhandle;
-		SET_CONTEXT_P(params, context);
+		unsigned char		*xdata;
+		unsigned int		xsize;
+		PTPPropertyValue	value;
+
 		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
 			gp_context_error (context,
 				_("Sorry, your Nikon camera does not support LiveView mode"));
 			return GP_ERROR_NOT_SUPPORTED;
 		}
-		ret = ptp_nikon_start_liveview (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
-			SET_CONTEXT_P(params, NULL);
-			//return GP_ERROR;
-		}
-		while (ptp_nikon_device_ready(params) != PTP_RC_OK) {
-			/* empty */
+		SET_CONTEXT_P(params, context);
+		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
+		if (ret != PTP_RC_OK)
+			value.u8 = 0;
+
+		if (!value.u8) {
+			ret = ptp_nikon_start_liveview (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
+			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
 
-		ret = ptp_nikon_get_preview_image (params, &xdata, &xsize, &xhandle);
 		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
 		if (ret == PTP_RC_OK) {
-			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
+			gp_file_append (file, (char*)xdata + 0x80, xsize - 0x80);
+			free (xdata); /* FIXME: perhaps handle the 128 byte header data too. */
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "preview.jpg");
+			gp_file_set_mtime (file, time(NULL));
 		}
+#if 0
 		ret = ptp_nikon_end_liveview (params);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Nikon disable liveview failed: %x"), ret);
 			SET_CONTEXT_P(params, NULL);
 			//return GP_ERROR;
 		}
+#endif
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
@@ -1429,6 +1437,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
+	gp_file_set_mtime (file, time(NULL));
 	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	CPR (context, ptp_getobject(params, newobject, &ximage));
 
@@ -1457,11 +1466,13 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-			GP_FILE_INFO_SIZE;
+			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
 	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	info.file.width		= oi->ImagePixWidth;
 	info.file.height	= oi->ImagePixHeight;
 	info.file.size		= oi->ObjectCompressedSize;
+	info.file.mtime		= time(NULL);
+
 	info.preview.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
@@ -1659,6 +1670,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
+	gp_file_set_mtime (file, time(NULL));
 
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 	CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
@@ -2040,7 +2052,7 @@ static	int			nrofbacklogentries = 0;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
-		while ((time(NULL) - event_start)<=timeout) {
+		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
 			int i;
 
 			if (backlogentries) {
@@ -2084,9 +2096,10 @@ static	int			nrofbacklogentries = 0;
 						strcat(path->name, "jpg");
 						gp_file_set_mime_type (file, GP_MIME_JPEG);
 					}
+					gp_file_set_mtime (file, time(NULL));
 
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entries[i].u.object.oi.ObjectCompressedSize);
-					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (char**)&ximage));
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entries[i].u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
 					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entries[i].u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
@@ -2135,7 +2148,7 @@ static	int			nrofbacklogentries = 0;
 		char *x;
 
 		event_start=time(NULL);
-		while ((time(NULL) - event_start)<=timeout) {
+		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
 			gp_context_idle (context);
 			ret = ptp_canon_checkevent (params,&usbevent,&isevent);
 			if (ret!=PTP_RC_OK)
@@ -2160,7 +2173,7 @@ static	int			nrofbacklogentries = 0;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
-		while ((time(NULL) - event_start)<=timeout) {
+		while ((time(NULL) - event_start)<= (timeout/1000 + 1)) {
 			int i, evtcnt;
 			PTPUSBEventContainer	*nevent = NULL;
 
@@ -2216,6 +2229,7 @@ static	int			nrofbacklogentries = 0;
 					if (ret!=GP_OK) return ret;
 					sprintf (path->name, "capt%04d.jpg", capcnt++);
 					gp_file_set_mime_type (file, GP_MIME_JPEG);
+					gp_file_set_mtime (file, time(NULL));
 
 					gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 					CPR (context, ptp_getobject (params, newobject, &ximage));

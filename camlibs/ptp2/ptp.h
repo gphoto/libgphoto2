@@ -351,6 +351,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_AfDrive		0x90C1	/* no params, no data */
 #define PTP_OC_NIKON_SetControlMode	0x90C2	/* 1 param,   no data */
 #define PTP_OC_NIKON_DelImageSDRAM	0x90C3	/* no params, no data */
+#define PTP_OC_NIKON_GetLargeThumb	0x90C4
 #define PTP_OC_NIKON_CurveDownload	0x90C5	/* 1 param,   data in */
 #define PTP_OC_NIKON_CurveUpload	0x90C6	/* 1 param,   data out */
 #define PTP_OC_NIKON_CheckEvent		0x90C7	/* no params, data in */
@@ -361,7 +362,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetPictCtrlData	0x90CC
 #define PTP_OC_NIKON_SetPictCtrlData	0x90CD
 #define PTP_OC_NIKON_DelCstPicCtrl	0x90CE
-#define PTP_OC_NIKON_GetQuickParam	0x90CF
+#define PTP_OC_NIKON_GetPicCtrlCapability	0x90CF
 
 /* Nikon Liveview stuff */
 #define PTP_OC_NIKON_GetPreviewImg	0x9200
@@ -369,7 +370,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_EndLiveView	0x9202
 #define PTP_OC_NIKON_GetLiveViewImg	0x9203
 #define PTP_OC_NIKON_MfDrive		0x9204
-#define PTP_OC_NIKON_ChangeAfDrive	0x9205
+#define PTP_OC_NIKON_ChangeAfArea	0x9205
 #define PTP_OC_NIKON_AfDriveCancel	0x9206
 
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
