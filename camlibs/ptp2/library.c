@@ -883,7 +883,9 @@ static struct {
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP|PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* IRC Reporter */
-	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP},
+	/* mitch <debianuser@mll.dissimulo.com> */
+	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
