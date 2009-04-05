@@ -1,3 +1,11 @@
+libgphoto2 2.4.5.1
+
+This is a 2.4 release branch update.
+
+PTP2 driver:
+   * Fixed Nikon DSLR capture in LiveView mode (like gtkam uses).
+
+------------------------------------------------------------------------
 libgphoto2 2.4.5
 
 This is a 2.4 release branch update.
