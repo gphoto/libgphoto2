@@ -1518,7 +1518,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPObjectInfo		oi;
 	PTPParams		*params = &camera->pl->params;
 	PTPDevicePropDesc	propdesc;
-	int			i, ret, hasc101 = 0, burstnumber = 1;
+	PTPPropertyValue	propval;
+	int			inliveview, i, ret, hasc101 = 0, burstnumber = 1;
 	uint32_t		newobject;
 
 	if (type != GP_CAPTURE_IMAGE)
@@ -1545,7 +1546,15 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		gp_log (GP_LOG_DEBUG, "ptp2", "burstnumber %d", burstnumber);
 	}
 
-	if (ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+	/* if in liveview mode, we have to run non-af capture */
+	inliveview = 0;
+	if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
+		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
+		if (ret == PTP_RC_OK)
+			inliveview = propval.u8;
+	}
+
+	if (!inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
 		do {
 			ret = ptp_nikon_capture_sdram(params);
 		} while (ret == PTP_RC_DeviceBusy);
