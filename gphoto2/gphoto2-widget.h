@@ -26,10 +26,24 @@
 
 #include <gphoto2/gphoto2-context.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /** \brief internal structure please use the accessors. */
 typedef struct _CameraWidget CameraWidget;
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+
+
 #include <gphoto2/gphoto2-camera.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /**
  * \brief Type of the widget to be created.
@@ -108,5 +122,9 @@ int	gp_widget_get_choice     (CameraWidget *widget, int choice_number,
 
 int	gp_widget_changed        (CameraWidget *widget);
 int     gp_widget_set_changed    (CameraWidget *widget, int changed);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_WIDGET_H__ */

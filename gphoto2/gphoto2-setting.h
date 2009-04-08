@@ -24,7 +24,15 @@
 #ifndef __GPHOTO2_SETTING_H__
 #define __GPHOTO2_SETTING_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 int gp_setting_set (char *id, char *key, char *value);
 int gp_setting_get (char *id, char *key, char *value);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_SETTING_H__ */
