@@ -47,6 +47,10 @@ typedef struct _Camera Camera;
 #include <gphoto2/gphoto2-filesys.h>
 #include <gphoto2/gphoto2-result.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /** 
  * \brief CameraText structure used in various functions.
  *
@@ -382,5 +386,8 @@ int          gp_camera_start_timeout     (Camera *camera, unsigned int timeout,
 void         gp_camera_stop_timeout      (Camera *camera, unsigned int id);
 
 /**@}*/
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_CAMERA_H__ */
