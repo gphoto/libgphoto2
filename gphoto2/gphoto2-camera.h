@@ -105,7 +105,8 @@ typedef enum {
 	GP_EVENT_UNKNOWN,	/**< unknown and unhandled event */
 	GP_EVENT_TIMEOUT,	/**< timeout, no arguments */
 	GP_EVENT_FILE_ADDED,	/**< CameraFilePath* = file path on camfs */
-	GP_EVENT_FOLDER_ADDED	/**< CameraFilePath* = folder on camfs */
+	GP_EVENT_FOLDER_ADDED,	/**< CameraFilePath* = folder on camfs */
+	GP_EVENT_CAPTURE_COMPLETE	/**< last capture is complete */
 } CameraEventType;
 
 /**
@@ -173,6 +174,7 @@ typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget,
 				    GPContext *context);
 typedef int (*CameraCaptureFunc)   (Camera *camera, CameraCaptureType type,
 				    CameraFilePath *path, GPContext *context);
+typedef int (*CameraTriggerCaptureFunc)   (Camera *camera, GPContext *context);
 typedef int (*CameraCapturePreviewFunc) (Camera *camera, CameraFile *file,
 					 GPContext *context);
 typedef int (*CameraSummaryFunc)   (Camera *camera, CameraText *text,
@@ -227,6 +229,7 @@ typedef struct _CameraFunctions {
 
 	/* Capturing */
 	CameraCaptureFunc        capture;	/**< \brief Remote control the camera to capture */
+	CameraTriggerCaptureFunc trigger_capture;/**< \brief Remote control the camera to trigger capture */
 	CameraCapturePreviewFunc capture_preview;/**< \brief Preview viewfinder content. */
 
 	/* Textual information */
@@ -236,7 +239,6 @@ typedef struct _CameraFunctions {
 
 	/* Event Interface */
 	CameraWaitForEvent wait_for_event;	/**< \brief Wait for a specific event from the camera */
-
 	/* Reserved space to use in the future without changing the struct size */
 	void *reserved1;			/**< \brief reserved for future use */
 	void *reserved2;			/**< \brief reserved for future use */
@@ -245,11 +247,8 @@ typedef struct _CameraFunctions {
 	void *reserved5;			/**< \brief reserved for future use */
 	void *reserved6;			/**< \brief reserved for future use */
 	void *reserved7;			/**< \brief reserved for future use */
+	void *reserved8;			/**< \brief reserved for future use */
 } CameraFunctions;
-
-/* Those are DEPRECATED */
-typedef GPPort     CameraPort;
-typedef GPPortInfo CameraPortInfo;
 
 typedef struct _CameraPrivateLibrary  CameraPrivateLibrary;
 typedef struct _CameraPrivateCore     CameraPrivateCore;
@@ -327,6 +326,7 @@ int gp_camera_get_about		 (Camera *camera, CameraText *about,
 				  GPContext *context);
 int gp_camera_capture 		 (Camera *camera, CameraCaptureType type,
 				  CameraFilePath *path, GPContext *context);
+int gp_camera_trigger_capture 	 (Camera *camera, GPContext *context);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
 				  GPContext *context);
 int gp_camera_wait_for_event     (Camera *camera, int timeout,

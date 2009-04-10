@@ -1039,6 +1039,34 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 }
 
 /**
+ * Triggers capture of one or more images.
+ *
+ * @param camera a #Camera
+ * @param context a #GPContext
+ * @return a gphoto2 error code
+ *
+ * This functions just remotely causes the shutter release and returns
+ * immediately. You will want to run #gp_camera_wait_event until a image
+ * is added which can be downloaded using #gp_camera_file_get.
+ **/
+int
+gp_camera_trigger_capture (Camera *camera, GPContext *context)
+{
+	CHECK_NULL (camera);
+	CHECK_INIT (camera, context);
+
+	if (!camera->functions->trigger_capture) {
+		gp_context_error (context, _("This camera can not trigger capture."));
+		CAMERA_UNUSED (camera, context);
+                return (GP_ERROR_NOT_SUPPORTED);
+	}
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->trigger_capture (camera,
+						context), context);
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
+/**
  * Captures a preview that won't be stored on the camera but returned in 
  * supplied file. 
  *
