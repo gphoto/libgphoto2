@@ -2887,49 +2887,6 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	return (GP_OK);
 }
 
-/* following functions are used for fs testing only */
-#if 0
-static void
-add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *foldername)
-{
-	int n;
-	n=camera->pl->params.handles.n++;
-	camera->pl->params.objectinfo = (PTPObjectInfo*)
-		realloc(camera->pl->params.objectinfo,
-		sizeof(PTPObjectInfo)*(n+1));
-	camera->pl->params.handles.handler[n]=handle;
-
-	camera->pl->params.objectinfo[n].Filename=malloc(strlen(foldername)+1);
-	strcpy(camera->pl->params.objectinfo[n].Filename, foldername);
-	camera->pl->params.objectinfo[n].ObjectFormat=PTP_OFC_Association;
-	camera->pl->params.objectinfo[n].AssociationType=PTP_AT_GenericFolder;
-	
-	camera->pl->params.objectinfo[n].ParentObject=parent;
-}
-#endif
-
-#if 0
-static void
-move_object_by_handle (Camera *camera, uint32_t parent, uint32_t handle)
-{
-	int n;
-
-	for (n=0; n<camera->pl->params.handles.n; n++)
-		if (camera->pl->params.handles.handler[n]==handle) break;
-	if (n==camera->pl->params.handles.n) return;
-	camera->pl->params.objectinfo[n].ParentObject=parent;
-}
-#endif
-
-#if 0
-static void
-move_object_by_number (Camera *camera, uint32_t parent, int n)
-{
-	if (n>=camera->pl->params.handles.n) return;
-	camera->pl->params.objectinfo[n].ParentObject=parent;
-}
-#endif
-
 static uint32_t
 find_child (const char *file, uint32_t storage, uint32_t handle, Camera *camera)
 {
@@ -4746,16 +4703,6 @@ fallback:
 			}
 		}
 	}
-#if 0
-	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
-	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
-	add_dir (camera, 0xff000000, 0xff000002, "subDIR1");
-	add_dir (camera, 0xff000002, 0xff000003, "subsubDIR1");
-	move_object_by_number (camera, 0xff000002, 2);
-	move_object_by_number (camera, 0xff000001, 3);
-	move_object_by_number (camera, 0xff000002, 4);
-	/* Used for testing with my camera, which does not support subdirs */
-#endif
 	return (GP_OK);
 }
 
