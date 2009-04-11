@@ -66,8 +66,7 @@
 
 static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
-	PTPUSBEventContainer	event;
-	PTPContainer		evc;
+	PTPContainer		event;
 	PTPPropertyValue	propval;
 	uint16_t		val16;
 	int 			i, ret, isevent;
@@ -114,11 +113,11 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	gp_port_set_timeout (camera->port, 1000);
 
 	/* Catch event */
-	if (PTP_RC_OK==(val16=params->event_wait (params, &evc))) {
-		if (evc.Code==PTP_EC_StorageInfoChanged)
+	if (PTP_RC_OK==(val16=params->event_wait (params, &event))) {
+		if (event.Code==PTP_EC_StorageInfoChanged)
 			gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode. \n");
 		else 
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X\n", evc.Code);
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X\n", event.Code);
 	} else {
 		printf("No event yet, we'll try later.\n");
 	}
@@ -130,9 +129,9 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 			gp_log (GP_LOG_DEBUG, "ptp", "error during check event: %d\n", ret);
 		}
 		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n",
-				event.length,event.type,event.code,event.trans_id,
-				event.param1, event.param2, event.param3);
+			gp_log (GP_LOG_DEBUG, "ptp", "evdata: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n",
+				event.Nparam,event.Code,event.Transaction_ID,
+				event.Param1, event.Param2, event.Param3);
 	}
 	gp_port_set_timeout (camera->port, oldtimeout);
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
@@ -144,11 +143,11 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	gp_port_set_timeout (camera->port, 1000);
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
-		if (PTP_RC_OK==params->event_wait (params, &evc)) {
-			if (evc.Code == PTP_EC_StorageInfoChanged)
+		if (PTP_RC_OK==params->event_wait (params, &event)) {
+			if (event.Code == PTP_EC_StorageInfoChanged)
 				gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.\n");
 			else
-				gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%X\n", evc.Code);
+				gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%X\n", event.Code);
 		} else
 			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.\n");
 	}

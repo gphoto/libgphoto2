@@ -1045,27 +1045,36 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 #define PTP_ec_Param3		20
 
 static inline void
-ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPUSBEventContainer *ec, unsigned int len)
+ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPContainer *ec, unsigned int len)
 {
+	int	length;
+	int	type;
+
 	if (data==NULL)
 		return;
-	ec->length=dtoh32a(&data[PTP_ec_Length]);
-	ec->type=dtoh16a(&data[PTP_ec_Type]);
-	ec->code=dtoh16a(&data[PTP_ec_Code]);
-	ec->trans_id=dtoh32a(&data[PTP_ec_TransId]);
+	memset(&ec,0,sizeof(ec));
+	length=dtoh32a(&data[PTP_ec_Length]);
+	type = dtoh16a(&data[PTP_ec_Type]);
 
-	if (ec->length>=(PTP_ec_Param1+4))
-		ec->param1=dtoh32a(&data[PTP_ec_Param1]);
-	else
-		ec->param1=0;
-	if (ec->length>=(PTP_ec_Param2+4))
-		ec->param2=dtoh32a(&data[PTP_ec_Param2]);
-	else
-		ec->param2=0;
-	if (ec->length>=(PTP_ec_Param3+4))
-		ec->param3=dtoh32a(&data[PTP_ec_Param3]);
-	else
-		ec->param3=0;
+	ec->Code=dtoh16a(&data[PTP_ec_Code]);
+	ec->Transaction_ID=dtoh32a(&data[PTP_ec_TransId]);
+
+	if (type!=PTP_USB_CONTAINER_EVENT) {
+		ptp_debug (params, "Unknown canon event type %d (code=%x,tid=%x), please report!",type,ec->Code,ec->Transaction_ID);
+		return;
+	}
+	if (length>=(PTP_ec_Param1+4)) {
+		ec->Param1=dtoh32a(&data[PTP_ec_Param1]);
+		ec->Nparam=1;
+	}
+	if (length>=(PTP_ec_Param2+4)) {
+		ec->Param2=dtoh32a(&data[PTP_ec_Param2]);
+		ec->Nparam=2;
+	}
+	if (length>=(PTP_ec_Param3+4)) {
+		ec->Param3=dtoh32a(&data[PTP_ec_Param3]);
+		ec->Nparam=3;
+	}
 }
 
 /*
@@ -1349,7 +1358,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 #define PTP_nikon_ec_Param1		4
 #define PTP_nikon_ec_Size		6
 static inline void
-ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, PTPUSBEventContainer **ec, int *cnt)
+ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, PTPContainer **ec, int *cnt)
 {
 	int i;
 
@@ -1361,12 +1370,13 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	*cnt = dtoh16a(&data[PTP_nikon_ec_Length]);
 	if (*cnt > (len-PTP_nikon_ec_Code)/PTP_nikon_ec_Size) /* broken cnt? */
 		return;
-	*ec = malloc(sizeof(PTPUSBEventContainer)*(*cnt));
+	*ec = malloc(sizeof(PTPContainer)*(*cnt));
 	
 	for (i=0;i<*cnt;i++) {
-		memset(&(*ec)[i],0,sizeof(PTPUSBEventContainer));
-		(*ec)[i].code	= dtoh16a(&data[PTP_nikon_ec_Code+PTP_nikon_ec_Size*i]);
-		(*ec)[i].param1	= dtoh32a(&data[PTP_nikon_ec_Param1+PTP_nikon_ec_Size*i]);
+		memset(&(*ec)[i],0,sizeof(PTPContainer));
+		(*ec)[i].Code	= dtoh16a(&data[PTP_nikon_ec_Code+PTP_nikon_ec_Size*i]);
+		(*ec)[i].Param1	= dtoh32a(&data[PTP_nikon_ec_Param1+PTP_nikon_ec_Size*i]);
+		(*ec)[i].Nparam	= 1;
 	}
 }
 

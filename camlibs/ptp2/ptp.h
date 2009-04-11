@@ -1687,10 +1687,18 @@ struct _PTPParams {
 	PTPObjectInfo	*objectinfo;
 	PTPDeviceInfo	deviceinfo;
 
+	/* PTP: the current event queue */
+	PTPContainer	*events;
+	int		nrofevents;
+
 	/* PTP: Canon specific flags list */
-	uint32_t	*canon_flags; /* size(handles.n) */
+	uint32_t		*canon_flags; /* size(handles.n) */
 	PTPCanon_Property	*canon_props;
 	int			nrofcanon_props;
+
+	/* PTP: Canon EOS event queue */
+	PTPCanon_changes_entry	*backlogentries;
+	int			nrofbacklogentries;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;
@@ -1795,6 +1803,10 @@ uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 
+
+void ptp_check_event (PTPParams *params);
+int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
+
 /* Microsoft MTP extensions */
 uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,
 				PTPObjectPropDesc *objectpropertydesc);
@@ -1843,7 +1855,7 @@ uint16_t ptp_canon_viewfinderoff (PTPParams* params);
 #define PTP_CANON_RESET_AWB	0x4
 uint16_t ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags);
 uint16_t ptp_canon_checkevent (PTPParams* params, 
-				PTPUSBEventContainer* event, int* isevent);
+				PTPContainer* event, int* isevent);
 uint16_t ptp_canon_focuslock (PTPParams* params);
 uint16_t ptp_canon_focusunlock (PTPParams* params);
 uint16_t ptp_canon_keepdeviceon (PTPParams* params);
@@ -1899,7 +1911,7 @@ uint16_t ptp_nikon_start_liveview (PTPParams* params);
 uint16_t ptp_nikon_get_liveview_image (PTPParams* params, unsigned char**,unsigned int*);
 uint16_t ptp_nikon_get_preview_image (PTPParams* params, unsigned char**, unsigned int*, uint32_t*);
 uint16_t ptp_nikon_end_liveview (PTPParams* params);
-uint16_t ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer **evt, int *evtcnt);
+uint16_t ptp_nikon_check_event (PTPParams* params, PTPContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_device_ready (PTPParams* params);
