@@ -1,6 +1,11 @@
 libgphoto2 2.4.99.2 development state
 
 libgphoto2 API:
+   TODO:
+
+	- file <-> handler function
+	- metadata via lists and special API
+
    * CameraFileInfoFile: removed "name" structmember and GP_FILE_INFO_NAME
      flags.
      Use direct passing in of the filename to the API functions.
@@ -9,7 +14,7 @@ libgphoto2 API:
 
      Simple autodetection function returning all current detected cameras.
 
-   * (not yet New: gp_camera_open (Camera *camera, const char *name, const char *port, GPContext *context);
+   * (TODO: not yet New: gp_camera_open (Camera *camera, const char *name, const char *port, GPContext *context);
 
      Simple open function without needing to involve libgphoto2_port.
      )
