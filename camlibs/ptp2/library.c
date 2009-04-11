@@ -1757,13 +1757,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
-		PTPStorageIDs storageids;
 		if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
 			propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 		else
 			propval.u16 = xmode = CANON_TRANSFER_CARD;
 
 		if (xmode == CANON_TRANSFER_CARD) {
+			PTPStorageIDs storageids;
+
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
 				if (	(storageids.n == 1) &&
