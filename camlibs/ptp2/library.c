@@ -2928,11 +2928,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     Camera *camera = (Camera *)data;
     PTPParams *params = &camera->pl->params;
     uint32_t parent, storage=0x0000000;
-    int i;
+    int i,hasgetstorageids;
     SET_CONTEXT_P(params, context);
 
     gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
-    init_ptp_fs (camera, context);
 
     /* There should be NO files in root folder */
     if (!strcmp(folder, "/"))
@@ -2944,20 +2943,23 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
     }
 
+    init_ptp_fs (camera, context);
+
     /* compute storage ID value from folder patch */
     folder_to_storage(folder,storage);
 
     /* Get (parent) folder handle omiting storage pseudofolder */
     find_folder_handle(folder,storage,parent,data);
 
+    hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
     for (i = 0; i < params->handles.n; i++) {
 	/* not our parent -> next */
 	if (params->objectinfo[i].ParentObject!=parent)
 		continue;
 
 	/* not on our storage devices -> next */
-	if ((ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
-            && (params->objectinfo[i].StorageID != storage)))
+	if (	(hasgetstorageids &&
+		(params->objectinfo[i].StorageID != storage)))
 		continue;
 
 	/* Is a directory -> next */
@@ -2989,41 +2991,37 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	int i;
+	int i, hasgetstorageids;
 	uint32_t handler,storage;
 
 	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
-		PTPStorageIDs storageids;
-
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
-			CPR (context, ptp_getstorageids(params,
-				&storageids));
+			PTPStorageIDs storageids;
+
+			CPR (context, ptp_getstorageids(params, &storageids));
 			for (i=0; i<storageids.n; i++) {
 				char fname[PTP_MAXSTRLEN];
 
 				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
-				snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
+				snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
 					storageids.Storage[i]);
 				CR (gp_list_append (list, fname, NULL));
 			}
+			free (storageids.Storage);
 		} else {
 			char fname[PTP_MAXSTRLEN];
-			snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
+			snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
 					0xdeadbeef
 			);
 			gp_list_append (list, fname, NULL);
 		}
-
 		if (nrofspecial_files)
 			CR (gp_list_append (list, "special", NULL));
-
-		if (storageids.Storage[0] != 0xdeadbeef)
-			free (storageids.Storage);
 		return (GP_OK);
 	}
 
@@ -3043,11 +3041,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* Look for objects we can present as directories.
 	 * Currently we specify *any* PTP association as directory.
 	 */
+	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
 	for (i = 0; i < params->handles.n; i++) {
-		if (	(params->objectinfo[i].ParentObject==handler)		&&
-			((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) ||
-			 (params->objectinfo[i].StorageID == storage)
-			)							&&
+		if (	(params->objectinfo[i].ParentObject==handler)	 &&
+			((!hasgetstorageids) || (params->objectinfo[i].StorageID == storage)) &&
 			(params->objectinfo[i].ObjectFormat==PTP_OFC_Association)
 		)
 			CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
