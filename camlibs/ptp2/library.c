@@ -1132,7 +1132,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
 		if (models[i].known_bugs & PTP_CAP)
-			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_TRIGGER_CAPTURE | GP_OPERATION_CONFIG;
 		if (models[i].known_bugs & PTP_CAP_PREVIEW)
 			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
 		a.file_operations	= GP_FILE_OPERATION_PREVIEW |
@@ -1167,7 +1167,8 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_class = 6;
 	a.usb_subclass = 1;
 	a.usb_protocol = 1;
-	a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+	a.operations =	GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_TRIGGER_CAPTURE |
+			GP_OPERATION_CONFIG;
 	a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 				GP_FILE_OPERATION_DELETE;
 	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
@@ -2038,6 +2039,43 @@ out:
 			break;
 		}
 	}
+	return GP_OK;
+}
+
+static int
+camera_trigger_capture (Camera *camera, GPContext *context)
+{
+	PTPParams *params = &camera->pl->params;
+
+	SET_CONTEXT_P(params, context);
+	init_ptp_fs (camera, context);
+
+#if 0
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
+	) {
+		char buf[1024];
+		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
+			return camera_nikon_capture (camera, type, path, context);
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
+	) {
+		return camera_canon_capture (camera, type, path, context);
+	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
+	) {
+		return camera_canon_eos_capture (camera, type, path, context);
+	}
+#endif
+	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
+		gp_context_error(context,
+               	_("Sorry, your camera does not support generic capture"));
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	CPR(context,ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	return GP_OK;
 }
 
@@ -4735,6 +4773,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	camera->functions->about = camera_about;
 	camera->functions->exit = camera_exit;
+	camera->functions->trigger_capture = camera_trigger_capture;
 	camera->functions->capture = camera_capture;
 	camera->functions->capture_preview = camera_capture_preview;
 	camera->functions->summary = camera_summary;
