@@ -5,6 +5,10 @@ This is a 2.4 release branch update.
 PTP2 driver:
    * Fixed Nikon DSLR capture in LiveView mode (like gtkam uses).
 
+libgphoto2:
+   * Fixed a problem during file retrieval which causes Canon Normal 
+     --capture-image-and-download errors.
+
 ------------------------------------------------------------------------
 libgphoto2 2.4.5
 
