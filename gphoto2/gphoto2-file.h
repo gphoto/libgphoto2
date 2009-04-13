@@ -27,6 +27,7 @@
 #define __GPHOTO2_FILE_H__
 
 #include <time.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -81,8 +82,18 @@ typedef enum {
  */
 typedef enum {
 	GP_FILE_ACCESSTYPE_MEMORY,	/**< File is in system memory. */
-	GP_FILE_ACCESSTYPE_FD		/**< File is associated with a UNIX filedescriptor. */
+	GP_FILE_ACCESSTYPE_FD,		/**< File is associated with a UNIX filedescriptor. */
+	GP_FILE_ACCESSTYPE_HANDLER	/**< File is associated with a programmatic handler. */
 } CameraFileAccessType;
+
+/* FIXME: api might be unstable. function return gphoto results codes. */
+typedef struct _CameraFileHandler {
+	int (*size) (void*priv, uint64_t *size); /* only for read? */
+	int (*read) (void*priv, unsigned char *data, uint64_t *len);
+	int (*write) (void*priv, unsigned char *data, uint64_t *len);
+	/* FIXME: should we have both read/write methods? */
+	/* FIXME: how to finish method, due to LRU it might be longlived. */
+} CameraFileHandler;
 
 /*! \struct CameraFile
  * \brief File structure.
@@ -94,6 +105,7 @@ typedef struct _CameraFile CameraFile;
 
 int gp_file_new            (CameraFile **file);
 int gp_file_new_from_fd    (CameraFile **file, int fd);
+int gp_file_new_from_handler (CameraFile **file, CameraFileHandler *handler, void*priv);
 int gp_file_ref            (CameraFile *file);
 int gp_file_unref          (CameraFile *file);
 int gp_file_free           (CameraFile *file);
