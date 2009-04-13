@@ -66,6 +66,8 @@ struct _GPPortPrivateLibrary {
 	int config;
 	int interface;
 	int altsetting;
+
+	int detached;
 };
 
 GPPortType
@@ -262,6 +264,8 @@ gp_port_usb_open (GPPort *port)
 		ret = usb_detach_kernel_driver_np (port->pl->dh, port->settings.usb.interface);
 		if (ret < 0)
 			gp_port_set_error (port, _("Could not detach kernel driver '%s' of camera device."),name);
+		else
+			port->pl->detached = 1;
 	} else {
 		if (errno != ENODATA) /* ENODATA - just no driver there */
 			gp_port_set_error (port, _("Could not query kernel driver of device."));
@@ -308,6 +312,27 @@ gp_port_usb_close (GPPort *port)
 		}
 	}
 #endif
+#if defined(LIBUSB_HAS_GET_DRIVER_NP) && defined(LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP) && defined(USBDEVFS_CONNECT)
+	if (port->pl->detached) {
+		char filename[PATH_MAX + 1];
+		int fd;
+
+		/* FIXME shouldn't be a fixed path to usb root */
+		snprintf(filename, sizeof(filename) - 1, "%s/%s/%s", "/dev/bus/usb", port->pl->d->bus->dirname, port->pl->d->filename);
+		fd = open(filename, O_RDWR);
+
+		if (fd >= 0) {
+			struct usbdevfs_ioctl command;
+			command.ifno = 0;
+			command.ioctl_code = USBDEVFS_CONNECT;
+			command.data = NULL;
+			if (ioctl(fd, USBDEVFS_IOCTL, &command))
+				gp_log (GP_LOG_DEBUG,"libusb","reattach kernel driver failed");
+			close(fd);
+		}
+	}
+#endif
+
 	if (usb_close (port->pl->dh) < 0) {
 		gp_port_set_error (port, _("Could not close USB port (%m)."));
 		return (GP_ERROR_IO);
