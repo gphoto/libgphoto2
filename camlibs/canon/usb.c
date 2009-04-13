@@ -72,7 +72,7 @@
 
 /* CANON_FAST_TIMEOUT: how long (in milliseconds) we should wait for
  * an URB to come back on an interrupt endpoint */
-#define CANON_FAST_TIMEOUT 175
+#define CANON_FAST_TIMEOUT 500
 
 /* WARNING: This destroys reentrancy of the code. Better to put this
  * in the camera descriptor somewhere. */

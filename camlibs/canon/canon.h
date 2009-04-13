@@ -306,7 +306,10 @@ typedef enum {
 	SHUTTER_SPEED_1_2000 = 0x90,
 	SHUTTER_SPEED_1_2500 = 0x93,
 	SHUTTER_SPEED_1_3200 = 0x95,
-	SHUTTER_SPEED_1_4000 = 0x98
+	SHUTTER_SPEED_1_4000 = 0x98,
+	SHUTTER_SPEED_1_5000 = 0x9a,
+	SHUTTER_SPEED_1_6400 = 0x9d,
+	SHUTTER_SPEED_1_8000 = 0xA0
 } canonShutterSpeedState;
 
 struct canonShutterSpeedStateStruct {
@@ -405,6 +408,12 @@ struct canonZoomLevelStateStruct {
 	char* label;
 };
 
+struct canonExposureBiasStateStruct {
+	unsigned char value;
+	char* label;
+};
+
+
 /* Size of the release parameter block */
 #define RELEASE_PARAMS_LEN  0x2f
 
@@ -420,6 +429,7 @@ struct canonZoomLevelStateStruct {
 #define ISO_INDEX           0x1a
 #define APERTURE_INDEX      0x1c
 #define SHUTTERSPEED_INDEX  0x1e
+#define EXPOSUREBIAS_INDEX  0x20
 
 /**
  * canonCaptureSizeClass:
@@ -692,6 +702,7 @@ int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPC
 int canon_int_set_shutter_speed(Camera *camera, canonShutterSpeedState shutter_speed, GPContext *context);
 int canon_int_set_iso(Camera *camera, canonIsoState iso, GPContext *context);
 int canon_int_set_aperture(Camera *camera, canonApertureState aperture, GPContext *context);
+int canon_int_set_exposurebias(Camera *camera, unsigned char expbias, GPContext *context);
 int canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode, GPContext *context);
 int canon_int_set_resolution (Camera *camera, unsigned char res_byte1, unsigned char res_byte2, unsigned char res_byte3, GPContext *context);
 int canon_serial_off(Camera *camera);
