@@ -442,6 +442,25 @@ lookup_folder_file (
 	xf = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!xf) return GP_ERROR_DIRECTORY_NOT_FOUND;
 
+	/* Check if we need to load the filelist of the folder ... */
+	if (xf->files_dirty) {
+		CameraList	*list;
+		int		ret;
+		/*
+		 * The folder is dirty. List the files in it to make it clean.
+		 */
+		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Folder %s is dirty. "
+			"Listing files in there to make folder clean...", folder);
+		ret = gp_list_new (&list);
+		if (ret == GP_OK) {
+			ret = gp_filesystem_list_files (fs, folder, list, context);
+			gp_list_free (list);
+			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Done making folder %s clean...", folder);
+		}
+		if (ret != GP_OK)
+			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Making folder %s clean failed: %d", folder, ret);
+	}
+
 	f = xf->files;
 	while (f) {
 		if (!strcmp (f->name, filename)) {
