@@ -70,6 +70,10 @@ struct _CameraFile {
 
 	/* for GP_FILE_ACCESSTYPE_FD files */
 	int		fd;
+
+	/* for GP_FILE_ACCESSTYPE_HANDLER files */
+	CameraFileHandler*handler;
+	void		*private;
 };
 
 
@@ -117,6 +121,32 @@ gp_file_new_from_fd (CameraFile **file, int fd)
 	(*file)->fd = fd;
 	return (GP_OK);
 }
+
+/*! Create new #CameraFile object using a programmatic handler.
+ *
+ * \param file a pointer to a #CameraFile
+ * \param handler a #CameraFileHandler
+ * \param private a private pointer for frontend use
+ * \return a gphoto2 error code.
+ */
+int
+gp_file_new_from_handler (CameraFile **file, CameraFileHandler* handler, void*private)
+{
+	CHECK_NULL (file);
+
+	*file = malloc (sizeof (CameraFile));
+	if (!*file)
+		return (GP_ERROR_NO_MEMORY);
+	memset (*file, 0, sizeof (CameraFile));
+
+	strcpy ((*file)->mime_type, "unknown/unknown");
+	(*file)->ref_count = 1;
+	(*file)->accesstype = GP_FILE_ACCESSTYPE_HANDLER;
+	(*file)->handler = handler;
+	(*file)->private = private;
+	return (GP_OK);
+}
+
 
 
 /*! \brief descruct a #CameraFile object.
@@ -218,6 +248,15 @@ gp_file_append (CameraFile *file, const char *data,
 		}
 		break;
 	}
+	case GP_FILE_ACCESSTYPE_HANDLER: {
+		uint64_t	xsize = size;
+		/* FIXME: assume we write one blob */
+		if (!file->handler->write) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "write handler is NULL");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		return file->handler->write (file->private, (unsigned char*)data, &xsize);
+	}
 	default:
 		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
@@ -264,6 +303,20 @@ gp_file_slurp (CameraFile *file, char *data,
 				*readlen = curread;
 		}
 		break;
+	}
+	case GP_FILE_ACCESSTYPE_HANDLER: {
+		uint64_t	xsize = size;
+		int		ret;
+
+		if (!file->handler->read) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "read handler is NULL");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		ret = file->handler->read (file->private, (unsigned char*)data, &xsize);
+		*readlen = xsize;
+		if (ret != GP_OK)
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "File handler read returned %d", ret);
+		return ret;
 	}
 	default:
 		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
@@ -323,6 +376,26 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		 */
 		free (data);
 		break;
+	}
+	case GP_FILE_ACCESSTYPE_HANDLER: {
+		uint64_t	xsize = size;
+		int		ret;
+
+		if (!file->handler->write) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "write handler is NULL");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		/* FIXME: handle multiple blob writes */
+		ret = file->handler->write (file->private, (unsigned char*)data, &xsize);
+		if (ret != GP_OK) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "Handler data() returned %d", ret);
+			return ret;
+		}
+		/* This function takes over the responsibility for "data", aka
+		 * it has to free it. So we do.
+		 */
+		free (data);
+		return GP_OK;
 	}
 	default:
 		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
@@ -399,6 +472,33 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 			curread += res;
 		}
 		break;
+	}
+	case GP_FILE_ACCESSTYPE_HANDLER: {
+		uint64_t	xsize = 0;
+		int		ret;
+
+		if (!file->handler->read) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "read handler is NULL");
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		ret = file->handler->size (file->private, &xsize);
+		if (ret != GP_OK) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d querying size().", ret);
+			return ret;
+		}
+		if (size) *size = xsize;
+		if (!data) /* just the size... */
+			return GP_OK;
+		*data = malloc (xsize);
+		if (!*data)
+			return GP_ERROR_NO_MEMORY;
+		ret = file->handler->read (file->private, (unsigned char*)*data, &xsize);
+		if (ret != GP_OK) {
+			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d getting data().", ret);
+			free ((char*)*data);
+			*data = NULL;
+		}
+		return ret;
 	}
 	default:
 		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
@@ -773,6 +873,25 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			if (!res) /* no progress? */
 				return GP_ERROR_IO_WRITE;
 			curwritten += res;
+		}
+		return GP_OK;
+	}
+	if (	(destination->accesstype == GP_FILE_ACCESSTYPE_HANDLER) &&
+		(source->accesstype == GP_FILE_ACCESSTYPE_MEMORY)
+	) {
+		uint64_t	xsize = source->size;
+		unsigned long curwritten = 0;
+
+		destination->handler->size (destination->private, &xsize);
+		while (curwritten < source->size) {
+			uint64_t	tmpsize = source->size - curwritten;
+			int res = destination->handler->write (destination->private, source->data+curwritten, &tmpsize);
+
+			if (res < GP_OK)
+				return res;
+			if (!tmpsize) /* no progress? */
+				return GP_ERROR_IO_WRITE;
+			curwritten += tmpsize;
 		}
 		return GP_OK;
 	}
