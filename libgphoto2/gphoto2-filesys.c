@@ -441,6 +441,24 @@ lookup_folder_file (
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Lookup folder %s file %s", folder, filename);
 	xf = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!xf) return GP_ERROR_DIRECTORY_NOT_FOUND;
+	/* Check if we need to load the filelist of the folder ... */
+	if (xf->files_dirty) {
+		CameraList	*list;
+		int		ret;
+		/*
+                 * The folder is dirty. List the files in it to make it clean.
+		 */
+		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Folder %s is dirty. "
+			"Listing files in there to make folder clean...", folder);
+		ret = gp_list_new (&list);
+		if (ret == GP_OK) {
+			ret = gp_filesystem_list_files (fs, folder, list, context);
+			gp_list_free (list);
+			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Done making folder %s clean...", folder);
+		}
+		if (ret != GP_OK)
+			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Making folder %s clean failed: %d", folder, ret);
+	}
 
 	f = xf->files;
 	while (f) {
@@ -1565,6 +1583,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 {
 	CameraFilesystemFolder	*xfolder;
 	CameraFilesystemFile	*xfile;
+	int			ret;
 
 	CHECK_NULL (fs && folder && file && filename);
 	CC (context);
@@ -1584,34 +1603,39 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	/* Search folder and file */
 	CR( lookup_folder_file (fs, folder, filename, &xfolder, &xfile, context));
 
+	ret = GP_ERROR;
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 		if (xfile->preview)
-			return (gp_file_copy (file, xfile->preview));
+			ret = gp_file_copy (file, xfile->preview);
 		break;
 	case GP_FILE_TYPE_NORMAL:
 		if (xfile->normal)
-			return (gp_file_copy (file, xfile->normal));
+			ret = gp_file_copy (file, xfile->normal);
 		break;
 	case GP_FILE_TYPE_RAW:
 		if (xfile->raw)
-			return (gp_file_copy (file, xfile->raw));
+			ret = gp_file_copy (file, xfile->raw);
 		break;
 	case GP_FILE_TYPE_AUDIO:
 		if (xfile->audio)
-			return (gp_file_copy (file, xfile->audio));
+			ret = gp_file_copy (file, xfile->audio);
 		break;
 	case GP_FILE_TYPE_EXIF:
 		if (xfile->exif)
-			return (gp_file_copy (file, xfile->exif));
+			ret = gp_file_copy (file, xfile->exif);
 		break;
 	case GP_FILE_TYPE_METADATA:
 		if (xfile->metadata)
-			return (gp_file_copy (file, xfile->metadata));
+			ret = gp_file_copy (file, xfile->metadata);
 		break;
 	default:
 		gp_context_error (context, _("Unknown file type %i."), type);
 		return (GP_ERROR);
+	}
+	if (ret == GP_OK) {
+		gp_log (GP_LOG_DEBUG, "lru", "LRU cache used for type %d!", type);
+		return GP_OK;
 	}
 
 	gp_context_status (context, _("Downloading '%s' from folder '%s'..."),
@@ -1622,8 +1646,11 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	/* We don't trust the camera drivers */
 	CR (gp_file_set_name (file, filename));
 
+#if 0
+	/* this disables LRU completely. */
 	/* Cache this file */
 	CR (gp_filesystem_set_file_noop (fs, folder, filename, type, file, context));
+#endif
 
 	/*
 	 * Often, thumbnails are of a different mime type than the normal
