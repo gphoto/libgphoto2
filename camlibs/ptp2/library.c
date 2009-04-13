@@ -1575,9 +1575,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
-		ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
-		if (ret != PTP_RC_OK)
-			break;
+		CPR (context, ptp_nikon_check_event(params, &nevent, &evtcnt));
 		for (i=0;i<evtcnt;i++) {
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
 			if (nevent[i].Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
@@ -2044,18 +2042,40 @@ static int
 camera_trigger_capture (Camera *camera, GPContext *context)
 {
 	PTPParams *params = &camera->pl->params;
+	uint16_t	ret;
 
 	SET_CONTEXT_P(params, context);
 	init_ptp_fs (camera, context);
 
-#if 0
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
 	) {
-		char buf[1024];
-		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
-			return camera_nikon_capture (camera, type, path, context);
+		/* If in liveview mode, we have to run non-af capture */
+		int inliveview = 0;
+		PTPPropertyValue propval;
+
+		CPR (context, ptp_check_event (params));
+
+		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
+			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
+			if (ret == PTP_RC_OK)
+				inliveview = propval.u8;
+		}
+
+		if (!inliveview && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+			do {
+				ret = ptp_nikon_capture_sdram (params);
+			} while (ret == PTP_RC_DeviceBusy);
+		} else {
+			do {
+				ret = ptp_nikon_capture (params, 0xffffffff);
+			} while (ret == PTP_RC_DeviceBusy);
+		}
+		CPR (context, ret);
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		return GP_OK;
 	}
+#if 0
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
 	) {
@@ -2073,7 +2093,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
                	_("Sorry, your camera does not support generic capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	CPR(context,ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	CPR (context,ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	return GP_OK;
 }
 
@@ -2202,7 +2222,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		event_start=time(NULL);
 		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
-			ptp_check_event (params);
+			CPR (context, ptp_check_event (params));
 			gp_context_idle (context);
 			if (!ptp_get_one_event(params, &event))
 				continue;
@@ -2225,7 +2245,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
 		while ((time(NULL) - event_start)<= (timeout/1000 + 1)) {
-			ptp_check_event (params);
+			CPR (context, ptp_check_event (params));
 			gp_context_idle (context);
 			if (!ptp_get_one_event (params, &event))
 				continue;
@@ -2321,7 +2341,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
-	ptp_check_event(params);
+	CPR (context, ptp_check_event(params));
 	if (!ptp_get_one_event (params, &event)) {
 		/* FIXME: Might be another error, but usually is a timeout */
 		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: no events received.");
