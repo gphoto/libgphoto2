@@ -1721,7 +1721,7 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 	return ret;
 }
 
-void
+uint16_t
 ptp_check_event (PTPParams *params) {
 	PTPContainer		event;
 	uint16_t		ret;
@@ -1734,7 +1734,7 @@ ptp_check_event (PTPParams *params) {
 
 		ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
 		if (ret != PTP_RC_OK)
-			return;
+			return ret;
 
 		if (evtcnt) {
 			if (params->nrofevents)
@@ -1745,7 +1745,7 @@ ptp_check_event (PTPParams *params) {
 			params->nrofevents += evtcnt;
 			free (xevent);
 		}
-		return;
+		return PTP_RC_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
@@ -1754,10 +1754,9 @@ ptp_check_event (PTPParams *params) {
 
 		ret = ptp_canon_checkevent (params,&event,&isevent);
 		if (ret!=PTP_RC_OK)
-			return;
-		if (isevent) {
+			return ret;
+		if (isevent)
 			goto store_event;
-		}
 		/* FIXME: fallthrough or return? */
 	}
 	ret = params->event_check(params,&event);
@@ -1772,6 +1771,7 @@ store_event:
 		memcpy (&params->events[params->nrofevents],&event,1*sizeof(PTPContainer));
 		params->nrofevents += 1;
 	}
+	return ret;
 }
 
 int
