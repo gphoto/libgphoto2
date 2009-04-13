@@ -1,10 +1,12 @@
-libgphoto2 2.4.99.2 development state
+libgphoto2 2.4.99.3 development state
 
 libgphoto2 API:
    TODO:
-
-	- file <-> handler function
 	- metadata via lists and special API
+
+   * gp_file_new_from_handler(): Allow passing data in and out via
+     handler functions (to allow streaming). See also CameraFileHandler
+     function pointers.
 
    * CameraFileInfoFile: removed "name" structmember and GP_FILE_INFO_NAME
      flags.
