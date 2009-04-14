@@ -1031,6 +1031,8 @@ static struct {
 	{PTP_OFC_MTP_vCard3,		PTP_VENDOR_MICROSOFT, "text/directory"},
 	{PTP_OFC_MTP_vCalendar1,	PTP_VENDOR_MICROSOFT, "text/calendar"},
 	{PTP_OFC_MTP_vCalendar2,	PTP_VENDOR_MICROSOFT, "text/calendar"},
+	{PTP_OFC_CANON_CRW,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
+	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{0,				0, NULL}
 };
 
@@ -1682,7 +1684,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	strcpy  (path->folder,"/");
 	sprintf (path->name, "capt%04d.", capcnt++);
-	if (oi.ObjectFormat == PTP_OFC_CANON_CRW) {
+	if (oi.ObjectFormat == PTP_OFC_CANON_CRW || oi.ObjectFormat == PTP_OFC_CANON_CRW3) {
 		strcat(path->name, "cr2");
 		gp_file_set_mime_type (file, GP_MIME_CRW);
 	} else {
@@ -2166,7 +2168,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
 					sprintf (path->name, "capt%04d.", capcnt++);
-					if (entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) {
+					if ((entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
 						strcat(path->name, "cr2");
 						gp_file_set_mime_type (file, GP_MIME_CRW);
 					} else {

@@ -748,6 +748,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_EK_M3U				0xb002
 /* Canon extension */
 #define PTP_OFC_CANON_CRW			0xb101
+#define PTP_OFC_CANON_CRW3			0xb103
 /* MTP extensions */
 #define PTP_OFC_MTP_MediaCard			0xb211
 #define PTP_OFC_MTP_MediaCardGroup		0xb212
