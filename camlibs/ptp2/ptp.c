@@ -2109,6 +2109,7 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	return ret;
 }
 
+/* inHDD = %d, inLength =%d, inReset = %d */
 uint16_t
 ptp_canon_eos_pchddcapacity (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 {
