@@ -340,6 +340,26 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_KeepDeviceOn		0x911D
 #define PTP_OC_CANON_EOS_SetNullPacketMode	0x911E
 
+#define PTP_OC_CANON_EOS_SetWftProfile		0x9122
+#define PTP_OC_CANON_EOS_GetWftProfile		0x9122
+#define PTP_OC_CANON_EOS_SetProfileToWft	0x9124
+#define PTP_OC_CANON_EOS_BulbStart		0x9125
+#define PTP_OC_CANON_EOS_BulbEnd		0x9126
+#define PTP_OC_CANON_EOS_RequestDevicePropValue	0x9127
+#define PTP_OC_CANON_EOS_RemoteReleaseOn	0x9128
+#define PTP_OC_CANON_EOS_RemoteReleaseOff	0x9129
+#define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151
+#define PTP_OC_CANON_EOS_TerminateViewfinder	0x9152
+#define PTP_OC_CANON_EOS_GetViewFinderData	0x9153
+#define PTP_OC_CANON_EOS_DoAf			0x9154
+#define PTP_OC_CANON_EOS_DriveLens		0x9155
+#define PTP_OC_CANON_EOS_DepthOfFieldPreview	0x9156
+#define PTP_OC_CANON_EOS_ClickWB		0x9157
+#define PTP_OC_CANON_EOS_Zoom			0x9158
+#define PTP_OC_CANON_EOS_ZoomPosition		0x9159
+#define PTP_OC_CANON_EOS_SetLiveAfFrame		0x915a
+#define PTP_OC_CANON_EOS_AfCancel		0x9160
+
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
 #define PTP_OC_NIKON_SendProfileData	0x9007
