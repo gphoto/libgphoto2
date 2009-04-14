@@ -43,6 +43,7 @@ extern "C" {
 #define GP_MIME_QUICKTIME "video/quicktime"
 #define GP_MIME_AVI       "video/x-msvideo"
 #define GP_MIME_CRW       "image/x-canon-raw"
+#define GP_MIME_CR2       "image/x-canon-cr2"
 #define GP_MIME_UNKNOWN   "application/octet-stream"
 #define GP_MIME_EXIF      "application/x-exif"
 #define GP_MIME_MP3       "audio/mpeg"
