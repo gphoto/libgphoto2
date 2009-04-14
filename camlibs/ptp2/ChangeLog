@@ -1,3 +1,12 @@
+2009-04-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,ptp.h,ptp-pack.c: make nikon check event return a
+	  generic PTPContainer, make canon check event also return
+	  a generic PTPContainer.
+
+	* ptp.c,ptp.h: Added 2 PTP event queue, generic events and Canon EOS.
+
+
 2009-03-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c, ptp.c, ptp.h: use Nikon Get Vendor Extension Codes

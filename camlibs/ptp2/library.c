@@ -1028,6 +1028,8 @@ static struct {
 	{PTP_OFC_MTP_vCard3,		PTP_VENDOR_MICROSOFT, "text/directory"},
 	{PTP_OFC_MTP_vCalendar1,	PTP_VENDOR_MICROSOFT, "text/calendar"},
 	{PTP_OFC_MTP_vCalendar2,	PTP_VENDOR_MICROSOFT, "text/calendar"},
+	{PTP_OFC_CANON_CRW,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
+	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{0,				0, NULL}
 };
 
@@ -1416,6 +1418,40 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
+	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+		unsigned char	*xdata;
+		unsigned int	xsize;
+		uint32_t	xhandle;
+		SET_CONTEXT_P(params, context);
+		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
+			gp_context_error (context,
+				_("Sorry, your Nikon camera does not support LiveView mode"));
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+		ret = ptp_nikon_start_liveview (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+			SET_CONTEXT_P(params, NULL);
+			//return GP_ERROR;
+		}
+
+		ret = ptp_nikon_get_preview_image (params, &xdata, &xsize, &xhandle);
+		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
+		if (ret == PTP_RC_OK) {
+			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
+			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+			/* Add an arbitrary file name so caller won't crash */
+			gp_file_set_name (file, "preview.jpg");
+		}
+		ret = ptp_nikon_end_liveview (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Nikon disable liveview failed: %x"), ret);
+			SET_CONTEXT_P(params, NULL);
+			//return GP_ERROR;
+		}
+		SET_CONTEXT_P(params, NULL);
+		return GP_OK;
+	}
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
@@ -1685,7 +1721,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	strcpy  (path->folder,"/");
 	sprintf (path->name, "capt%04d.", capcnt++);
-	if (oi.ObjectFormat == PTP_OFC_CANON_CRW) {
+	if (oi.ObjectFormat == PTP_OFC_CANON_CRW || oi.ObjectFormat == PTP_OFC_CANON_CRW3) {
 		strcat(path->name, "cr2");
 		gp_file_set_mime_type (file, GP_MIME_CRW);
 	} else {
@@ -2117,7 +2153,7 @@ static	int			nrofbacklogentries = 0;
 					if (ret!=GP_OK) return ret;
 					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 					sprintf (path->name, "capt%04d.", capcnt++);
-					if (entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) {
+					if ((entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (entries[i].u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
 						strcat(path->name, "cr2");
 						gp_file_set_mime_type (file, GP_MIME_CRW);
 					} else {
@@ -3648,35 +3684,112 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return (GP_ERROR_NOT_SUPPORTED);
 
 		/* We only support JPEG / EXIF format ... others might hang. */
-		if (oi->ObjectFormat != PTP_OFC_EXIF_JPEG)
-			return (GP_ERROR_NOT_SUPPORTED);
+		switch (oi->ObjectFormat) {
+		/* tiff style tags ... */
+		case PTP_OFC_Undefined: /* 3800 ... used by Nikon NEF */
+		case PTP_OFC_TIFF_EP:
+		case PTP_OFC_DNG:
+		case PTP_OFC_CANON_CRW:
+		{
+			/* MORE MAGIC */
+			
 
-		/* Note: Could also use Canon partial downloads */
-		CPR (context, ptp_getpartialobject (params,
-			params->handles.Handler[object_id],
-			0, 10, &ximage));
+			unsigned int ifd0offset, dircount, nextifdoff, nextoff, i;
+			/* Note: Could also use Canon partial downloads */
+			CPR (context, ptp_getpartialobject (params,
+				params->handles.Handler[object_id],
+				0, 8, &ximage));
+			/* FIXME: handle other endianness too */
+			if ((ximage[0] != 'M') || (ximage[1] != 'M')) {
+				free (ximage);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			if ((ximage[2] != 0) || (ximage[3] != 42)) {
+				free (ximage);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			ifd0offset =	 ximage[7] +        (ximage[6] <<  8) +
+					(ximage[5] << 16) + (ximage[4] << 24);
+			free (ximage);
+			/* Read dir count of IFD */
+			CPR (context, ptp_getpartialobject (params,
+				params->handles.Handler[object_id],
+				ifd0offset, 2, &ximage));
+			dircount = ximage[1] + (ximage[0] << 8);
+			free (ximage);
+			gp_log (GP_LOG_DEBUG, "ptp2/exif-tiff-reader", "dircount is %d", dircount);
+			CPR (context, ptp_getpartialobject (params,
+				params->handles.Handler[object_id],
+				ifd0offset+2, dircount*12+4 , &ximage));
+			nextoff = 0;
+			for (i=0;i<dircount;i++) {
+				unsigned int size = 0;
+				unsigned int off = ximage[i*12+11]+
+						(ximage[i*12+10] <<8)+
+						(ximage[i*12+9] <<16)+
+						(ximage[i*12+8] <<24);
+				unsigned int cnt = ximage[i*12+7]+
+						(ximage[i*12+6] <<8)+
+						(ximage[i*12+5] <<16)+
+						(ximage[i*12+4] <<24);
+				unsigned int type = ximage[i*12+3]+
+						(ximage[i*12+2] <<8);
+				unsigned int id = ximage[i*12+1]+
+						(ximage[i*12+0] <<8);
+				gp_log (GP_LOG_DEBUG, "ptp2/exif-tiff-reader", "entry %d, id 0x%04x, off 0x%x, cnt %d, type %d", i, id, off, cnt, type);
+				switch (type) {
+				case 1: case 2: case 6: case 7: size = 1; break;
+				case 3: case 8: size = 2; break;
+				case 4: case 9: case 11: size = 4; break;
+				case 5: case 10: case 12: size = 8; break;
+				default: /*FIXME */ break;
+				}
+				if (size * cnt > 4)
+					off += cnt*size;
+				else
+					off  = 0;
+				if (off > nextoff)
+					nextoff = off;
 
-		if (!((ximage[0] == 0xff) && (ximage[1] == 0xd8))) {	/* SOI */
+			}
+			nextifdoff = ximage[dircount*12+3] + (ximage[dircount*12+2] << 8) +
+			            (ximage[dircount*12+1] << 16) + (ximage[dircount*12+0] << 24);
+			gp_log (GP_LOG_DEBUG, "ptp2/exif-tiff-reader", "TIFF IFD0 is at off %d, next off is %d", ifd0offset, nextoff);
 			free (ximage);
 			return (GP_ERROR_NOT_SUPPORTED);
+			break;
 		}
-		if (!((ximage[2] == 0xff) && (ximage[3] == 0xe1))) {	/* App0 */
+		case PTP_OFC_EXIF_JPEG: {
+			/* Note: Could also use Canon partial downloads */
+			CPR (context, ptp_getpartialobject (params,
+				params->handles.Handler[object_id],
+				0, 10, &ximage));
+
+			if (!((ximage[0] == 0xff) && (ximage[1] == 0xd8))) {	/* SOI */
+				free (ximage);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			if (!((ximage[2] == 0xff) && (ximage[3] == 0xe1))) {	/* App0 */
+				free (ximage);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			if (0 != memcmp(ximage+6, "Exif", 4)) {
+				free (ximage);
+				return (GP_ERROR_NOT_SUPPORTED);
+			}
+			offset = 2;
+			maxbytes = (ximage[4] << 8 ) + ximage[5];
 			free (ximage);
+			ximage = NULL;
+			CPR (context, ptp_getpartialobject (params,
+				params->handles.Handler[object_id],
+				offset, maxbytes, &ximage));
+			CR (gp_file_set_data_and_size (file, (char*)ximage, maxbytes));
+			break;
+		}
+		default:
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
-		if (0 != memcmp(ximage+6, "Exif", 4)) {
-			free (ximage);
-			return (GP_ERROR_NOT_SUPPORTED);
-		}
-		offset = 2;
-		maxbytes = (ximage[4] << 8 ) + ximage[5];
-		free (ximage);
-		ximage = NULL;
-		CPR (context, ptp_getpartialobject (params,
-			params->handles.Handler[object_id],
-			offset, maxbytes, &ximage));
-		CR (gp_file_set_data_and_size (file, (char*)ximage, maxbytes));
-		break;
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
 		unsigned char *ximage = NULL;
