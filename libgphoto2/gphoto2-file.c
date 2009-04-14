@@ -1119,6 +1119,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_WAV,  "wav",
 		GP_MIME_BMP,  "bmp",
 		GP_MIME_AVI,  "avi",
+		GP_MIME_CRW,  "crw",
+		GP_MIME_CR2,  "cr2",
 		NULL};
 
 	CHECK_NULL (file);
