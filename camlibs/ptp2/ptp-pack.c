@@ -1296,6 +1296,28 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case 0xd18a:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
+				/* yet unknown 32bit props */
+				case 0xd10a:
+				case 0xd10d:
+				case 0xd116:
+				case 0xd11e:
+				case 0xd11f:
+				case 0xd1a3:
+				case 0xd1a8:
+				case 0xd1a9:
+				case 0xd1aa:
+				case 0xd1ab:
+				case 0xd1ac:
+				case 0xd1ae:
+				case 0xd1b0:
+				case 0xd1b1:
+				case 0xd1b2:
+				case 0xd1b3:
+				case 0xd1b4:
+				case 0xd1b5:
+				case 0xd1b6:
+					dpd->DataType = PTP_DTC_UINT32;
+					break;
 				default:
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d", i ,proptype, size-PTP_ece_Prop_Val_Data);
 					for (j=0;j<size-PTP_ece_Prop_Val_Data;j++)
