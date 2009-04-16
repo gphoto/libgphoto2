@@ -1146,7 +1146,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
 
 		switch (type) {
-		case  0xc186: {	/* objectinfo from capture */
+		case  PTP_EC_CANON_EOS_RequestObjectTransfer:
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
 			(*ce)[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
 			(*ce)[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OI_OFC]);
@@ -1155,8 +1155,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 
 			ptp_debug (params, "event %d: objectinfo oid %08lx, ofc %04x, size %d, filename %s", i, (*ce)[i].u.object.oid, (*ce)[i].u.object.oi.ObjectFormat, (*ce)[i].u.object.oi.ObjectCompressedSize, (*ce)[i].u.object.oi.Filename);
 			break;
-		}
-		case  0xc18a: {	/* property desc */
+		case  PTP_EC_CANON_EOS_AvailListChanged: {	/* property desc */
 			uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
 			uint32_t	propxtype = dtoh32a(&curdata[PTP_ece_Prop_Desc_Type]);
 			uint32_t	propxcnt = dtoh32a(&curdata[PTP_ece_Prop_Desc_Count]);
@@ -1214,7 +1213,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			}
 			break;
 		}
-		case  0xc189:	/* property value */
+		case PTP_EC_CANON_EOS_PropValueChanged:
 			if (size >= 0xc) {	/* property info */
 				int j;
 				uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
@@ -1254,10 +1253,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_Aperture:
 				case PTP_DPC_CANON_EOS_ShutterSpeed:
 				case PTP_DPC_CANON_EOS_ISOSpeed:
-				case PTP_DPC_CANON_EOS_Focus:
-				case PTP_DPC_CANON_EOS_CameraMode:
+				case PTP_DPC_CANON_EOS_FocusMode:
+				case PTP_DPC_CANON_EOS_AutoExposureMode:
 				case PTP_DPC_CANON_EOS_ColorSpace:
-				case PTP_DPC_CANON_EOS_TransferOption:
+				case PTP_DPC_CANON_EOS_BatteryPower:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
@@ -1281,7 +1280,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case 0xd119:
 				case 0xd11a:
 				case 0xd11b:
-				case 0xd11c:
+				case PTP_DPC_CANON_EOS_CaptureDestination:
 				case 0xd11d:
 				case 0xd180:
 				case 0xd181:
@@ -1297,19 +1296,19 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				/* yet unknown 32bit props */
-				case 0xd10a:
-				case 0xd10d:
-				case 0xd116:
-				case 0xd11e:
-				case 0xd11f:
-				case 0xd1a3:
-				case 0xd1a8:
-				case 0xd1a9:
-				case 0xd1aa:
-				case 0xd1ab:
-				case 0xd1ac:
-				case 0xd1ae:
-				case 0xd1b0:
+				case PTP_DPC_CANON_EOS_ColorTemperature:
+				case PTP_DPC_CANON_EOS_WhiteBalanceXA:
+				case PTP_DPC_CANON_EOS_ModelID:
+				case PTP_DPC_CANON_EOS_CurrentStorage:
+				case PTP_DPC_CANON_EOS_CurrentFolder:
+				case PTP_DPC_CANON_EOS_WftStatus:
+				case PTP_DPC_CANON_EOS_LensStatus:
+				case PTP_DPC_CANON_EOS_QuickReviewTime:
+				case PTP_DPC_CANON_EOS_CardExtension:
+				case PTP_DPC_CANON_EOS_TempStatus:
+				case PTP_DPC_CANON_EOS_ShutterCounter:
+				case PTP_DPC_CANON_EOS_PhotoStudioMode:
+				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case 0xd1b1:
 				case 0xd1b2:
 				case 0xd1b3:

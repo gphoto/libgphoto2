@@ -211,13 +211,13 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9101 failed!");
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageids failed!");
 		return GP_ERROR;
 	}
 	if (sids.n >= 1) {
 		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0]);
 		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "9102 failed!");
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageinfo failed!");
 			return GP_ERROR;
 		}
 	}
