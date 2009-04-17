@@ -1273,27 +1273,30 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_INT16;
 					break;
 				/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
-				case 0xd106:
-				case 0xd10e:
-				case 0xd112:
+				case PTP_DPC_CANON_EOS_DriveMode:
+				case PTP_DPC_CANON_EOS_WhiteBalanceXB:
+				case PTP_DPC_CANON_EOS_BatterySelect:
 				case 0xd114:
-				case 0xd119:
-				case 0xd11a:
-				case 0xd11b:
+				case PTP_DPC_CANON_EOS_PTPExtensionVersion:
+				case PTP_DPC_CANON_EOS_DPOFVersion:
+				case PTP_DPC_CANON_EOS_AvailableShots:
 				case PTP_DPC_CANON_EOS_CaptureDestination:
-				case 0xd11d:
-				case 0xd180:
-				case 0xd181:
-				case 0xd182:
-				case 0xd183:
-				case 0xd184:
-				case 0xd185:
-				case 0xd186:
-				case 0xd187:
-				case 0xd188:
-				case 0xd189:
-				case 0xd18a:
+				case PTP_DPC_CANON_EOS_BracketMode:
+				case PTP_DPC_CANON_EOS_CustomFunc1:
+				case PTP_DPC_CANON_EOS_CustomFunc2:
+				case PTP_DPC_CANON_EOS_CustomFunc3:
+				case PTP_DPC_CANON_EOS_CustomFunc4:
+				case PTP_DPC_CANON_EOS_CustomFunc5:
+				case PTP_DPC_CANON_EOS_CustomFunc6:
+				case PTP_DPC_CANON_EOS_CustomFunc7:
+				case PTP_DPC_CANON_EOS_CustomFunc8:
+				case PTP_DPC_CANON_EOS_CustomFunc9:
+				case PTP_DPC_CANON_EOS_CustomFunc10:
+				case PTP_DPC_CANON_EOS_CustomFunc11:
 					dpd->DataType = PTP_DTC_UINT16;
+					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint16", i ,proptype, size-PTP_ece_Prop_Val_Data);
+					for (j=0;j<size-PTP_ece_Prop_Val_Data;j++)
+						ptp_debug (params, "    %d: %02x", j, data[j]);
 					break;
 				/* yet unknown 32bit props */
 				case PTP_DPC_CANON_EOS_ColorTemperature:
@@ -1309,13 +1312,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_ShutterCounter:
 				case PTP_DPC_CANON_EOS_PhotoStudioMode:
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
-				case 0xd1b1:
-				case 0xd1b2:
-				case 0xd1b3:
-				case 0xd1b4:
-				case 0xd1b5:
-				case 0xd1b6:
+				case PTP_DPC_CANON_EOS_EVFMode:
+				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
+				case PTP_DPC_CANON_EOS_EVFSharpness:
+				case PTP_DPC_CANON_EOS_EVFWBMode:
+				case PTP_DPC_CANON_EOS_EVFClickWBCoeffs:
+				case PTP_DPC_CANON_EOS_EVFColorTemp:
 					dpd->DataType = PTP_DTC_UINT32;
+					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint32", i ,proptype, size-PTP_ece_Prop_Val_Data);
+					for (j=0;j<size-PTP_ece_Prop_Val_Data;j++)
+						ptp_debug (params, "    %d: %02x", j, data[j]);
 					break;
 				default:
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d", i ,proptype, size-PTP_ece_Prop_Val_Data);
