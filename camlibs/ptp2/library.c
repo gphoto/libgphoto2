@@ -927,6 +927,8 @@ static struct {
 	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2017171&group_id=8874&atid=358874 */
 	{"Fuji:FinePix S100fs",			0x04cb, 0x01db, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2772199&group_id=8874&atid=358874 */
+	{"Fuji:FinePix S1000fd",		0x04cb, 0x01dd, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2203316&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
