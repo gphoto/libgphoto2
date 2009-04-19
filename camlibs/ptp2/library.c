@@ -894,6 +894,8 @@ static struct {
 	/* mitch <debianuser@mll.dissimulo.com> */
 	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
 
+	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTP_CAP},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
