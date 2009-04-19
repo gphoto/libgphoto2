@@ -441,13 +441,12 @@ lookup_folder_file (
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Lookup folder %s file %s", folder, filename);
 	xf = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!xf) return GP_ERROR_DIRECTORY_NOT_FOUND;
-
 	/* Check if we need to load the filelist of the folder ... */
 	if (xf->files_dirty) {
 		CameraList	*list;
 		int		ret;
 		/*
-		 * The folder is dirty. List the files in it to make it clean.
+                 * The folder is dirty. List the files in it to make it clean.
 		 */
 		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Folder %s is dirty. "
 			"Listing files in there to make folder clean...", folder);
@@ -716,7 +715,7 @@ int
 gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 		      const char *filename, GPContext *context)
 {
-	CameraFilesystemFile *new;
+	CameraFilesystemFile **new;
 	CameraFilesystemFolder *f;
 
 	CHECK_NULL (fs && folder);
@@ -729,28 +728,26 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	if (!f)
 		CR (append_folder (fs, folder, &f, context));
 
-	new = f->files;
-	while (new) {
-		if (!strcmp(new->name, filename)) break;
-		new = new->next;
+	new = &f->files;
+	while (*new) {
+		if (!strcmp((*new)->name, filename)) break;
+		new = &((*new)->next);
 	}
-	if (new) {
+	if (*new) {
 		gp_context_error (context,
 			_("Could not append '%s' to folder '%s' because "
 			  "this file already exists."), filename, folder);
 		return (GP_ERROR_FILE_EXISTS);
 	}
 
-	CHECK_MEM (new = calloc (sizeof (CameraFilesystemFile), 1))
-	new->name = strdup (filename);
-	if (!new->name) {
-		free (new);
+	CHECK_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1))
+	(*new)->name = strdup (filename);
+	if (!(*new)->name) {
+		free (*new);
+		*new = NULL;
 		return (GP_ERROR_NO_MEMORY);
 	}
-	new->info_dirty = 1;
-
-	new->next = f->files;
-	f->files = new;
+	(*new)->info_dirty = 1;
 	f->files_dirty = 0;
 	return (GP_OK);
 }
