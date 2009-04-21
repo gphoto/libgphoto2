@@ -1068,6 +1068,17 @@ typedef struct _PTPCanon_Property {
 	PTPDevicePropDesc	dpd;
 } PTPCanon_Property;
 
+typedef struct _PTPCanonEOSDeviceInfo {
+	/* length */
+	uint32_t EventsSupported_len;
+	uint32_t *EventsSupported;
+
+	uint32_t DevicePropertiesSupported_len;
+	uint32_t *DevicePropertiesSupported;
+
+	uint32_t unk_len;
+	uint32_t *unk;
+} PTPCanonEOSDeviceInfo;
 
 /* DataType Codes */
 
@@ -2031,7 +2042,7 @@ uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				uint32_t handle, 
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
-uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, unsigned char**di, unsigned long *len );
+uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di);
 uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid);
 uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
 uint16_t ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t flags);

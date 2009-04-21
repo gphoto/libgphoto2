@@ -266,7 +266,7 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 {
 	uint8_t len;
 	unsigned int totallen;
-	
+
 	di->StandardVersion = dtoh16a(&data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =
 		dtoh32a(&data[PTP_di_VendorExtensionID]);
@@ -328,6 +328,33 @@ ptp_free_DI (PTPDeviceInfo *di) {
 	if (di->OperationsSupported) free (di->OperationsSupported);
 	if (di->EventsSupported) free (di->EventsSupported);
 	if (di->DevicePropertiesSupported) free (di->DevicePropertiesSupported);
+}
+
+/* EOS Device Info unpack */
+static inline void
+ptp_unpack_EOS_DI (PTPParams *params, unsigned char* data, PTPCanonEOSDeviceInfo *di, unsigned int datalen)
+{
+	int totallen = 4;
+	if (datalen < 8) return;
+
+	/* uint32_t struct len - ignore */
+	di->EventsSupported_len = ptp_unpack_uint32_t_array(params, data,
+		totallen, &di->EventsSupported);
+	if (!di->EventsSupported) return;
+	totallen += di->EventsSupported_len*sizeof(uint32_t)+4;
+	if (totallen >= datalen) return;
+
+	di->DevicePropertiesSupported_len = ptp_unpack_uint32_t_array(params, data,
+		totallen, &di->DevicePropertiesSupported);
+	if (!di->DevicePropertiesSupported) return;
+	totallen += di->DevicePropertiesSupported_len*sizeof(uint32_t)+4;
+	if (totallen >= datalen) return;
+
+	di->unk_len = ptp_unpack_uint32_t_array(params, data,
+		totallen, &di->unk);
+	if (!di->unk) return;
+	totallen += di->unk_len*sizeof(uint32_t)+4;
+	return;
 }
 	
 /* ObjectHandles array pack/unpack */
