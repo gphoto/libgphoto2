@@ -906,7 +906,9 @@ static struct {
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP|PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Kurt Garloff at SUSE */
-	{"Canon:Digital IXUS 980 IS",		0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Digital IXUS 980 IS",		0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD990",		0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:IXY 3000 IS",			0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2750875&group_id=8874&atid=358874 */
 	{"Canon:PowerShot SD880 IS",		0x04a9, 0x3196, PTPBUG_DELETE_SENDS_EVENT},
