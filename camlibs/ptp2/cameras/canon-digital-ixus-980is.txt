@@ -1,0 +1,75 @@
+Kamerazusammenfassung:
+Hersteller: Canon Inc.
+Modell: Canon DIGITAL IXUS 980 IS
+  Version: 1-5.0.1.0
+  Seriennummer: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Aufnahmeformate: JPEG
+Anzeigeformate: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Defined Type, CRW, Unknown(b103), Unknown(b104), Unknown(bf01)
+Unterstützte MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	CRW/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b104)/b104: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Unknown(bf01)/bf01: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Kein Vendor spezifischer Aufnahmemodus
+
+Informationen über Speichermedium:
+store_00010001:
+	Beschreibung des Speichergeräts: Keine
+	Label des Speichergerätes: Keine
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Lesen und Schreiben
+	Maximale Kapazität: 1085538304 (1035 MB)
+	Freier Platz (Bytes): 1085079552 (1034 MB)
+	Freier Speicher (Bilder): -1
+
+Properties des Geräts:
+Event Emulations Modus(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Datengröße beim Transfer von der Kamera(0xd02e):(read only) (type=0x6) 524288
+Datengröße beim Transfer zur Kamera(0xd02f):(read only) (type=0x6) 524288
+Batterietyp(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Batteriemodus(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+UNIX Zeit(0xd034):(readwrite) (type=0x6) 1240325649
+Art der Slideshow(0xd047):(read only) (type=0x4) 2
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Unterstützte Thumbnail Größe(0xd02d):(read only) (type=0x4006) a[4] 119,0,159,0
+Bildgröße und -qualität(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 3312,4416,1,0,0,0,
+	a[6] 3312,4416,6,0,0,0,
+	a[6] 3312,4416,11,0,0,0,
+	a[6] 2592,3456,2,0,0,0,
+	a[6] 2592,3456,7,0,0,0,
+	a[6] 2592,3456,12,0,0,0,
+	a[6] 1944,2592,3,0,0,0,
+	a[6] 1944,2592,8,0,0,0,
+	a[6] 1944,2592,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Kamera API Version(0xd030):(read only) (type=0x6) 256
+Modell ID(0xd049):(read only) (type=0x6) 38993920
+Kameramodell(0xd032):(read only) (type=0xffff) 'Canon DIGITAL IXUS 980 IS'
+Kamerabesitzer(0xd033):(readwrite) (type=0x4002) a[13] 75,117,114,116,32,71,97,114,108,111,102,102,0
+Firmware Revision(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 1
+Property 0xd402:(read only) (type=0xffff) 'Canon DIGITAL IXUS 980 IS'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+
