@@ -1866,6 +1866,7 @@ struct _PTPParams {
 	/* PTP: Canon EOS event queue */
 	PTPCanon_changes_entry	*backlogentries;
 	int			nrofbacklogentries;
+	int			eos_captureenabled;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;

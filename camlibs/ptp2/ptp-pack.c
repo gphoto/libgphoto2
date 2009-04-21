@@ -1388,10 +1388,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		case 0: /* end marker */
 			if (size == 8) /* no output */
 				break;
-			ptp_debug (params, "event %d: EOS property type 0, but size %d", i, size);
+			ptp_debug (params, "event %d: EOS event 0, but size %d", i, size);
 			break;
 		default:
-			ptp_debug (params, "event %d: unknown EOS property type %04x", i, type);
+			ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
+			if (size >= 0x8) {	/* event info */
+				int j;
+				for (j=8;j<size;j++) {
+					ptp_debug (params, "    %d: %02x", j, data[j]);
+				}			
+			}
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			break;
 		}
