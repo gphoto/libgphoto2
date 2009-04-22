@@ -138,6 +138,8 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 		uint16_t flags, unsigned int sendlen,
 		PTPDataHandler *handler
 ) {
+	int tries;
+
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
 
@@ -181,14 +183,21 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 	default:
 		return PTP_ERROR_BADPARAM;
 	}
-	/* get response */
-	CHECK_PTP_RC(params->getresp_func(params, ptp));
-	if (ptp->Transaction_ID != params->transaction_id-1) {
-		ptp_error (params,
-			"PTP: Sequence number mismatch %d vs expected %d.",
-			ptp->Transaction_ID, params->transaction_id-1
-		);
-		return PTP_ERROR_BADPARAM;
+	tries = 3;
+	while (1) {
+		/* get response */
+		CHECK_PTP_RC(params->getresp_func(params, ptp));
+		if (ptp->Transaction_ID != params->transaction_id-1) {
+			/* try to clean up potential left overs from previous session */
+			if ((ptp->Code == PTP_OC_OpenSession) && tries--)
+				continue;
+			ptp_error (params,
+				"PTP: Sequence number mismatch %d vs expected %d.",
+				ptp->Transaction_ID, params->transaction_id-1
+			);
+			return PTP_ERROR_BADPARAM;
+		}
+		break;
 	}
 	return ptp->Code;
 }
