@@ -3728,9 +3728,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (context, ptp_getthumb(params,
 			params->handles.Handler[object_id],
 			&ximage));
+		set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
 		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
-		/* XXX does gp_file_set_data_and_size free() image ptr upon
-		   failure?? */
 		break;
 	}
 	case	GP_FILE_TYPE_METADATA:
