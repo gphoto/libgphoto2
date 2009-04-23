@@ -2677,6 +2677,115 @@ ptp_nikon_get_preview_image (PTPParams* params, unsigned char **xdata, unsigned 
 }
 
 /**
+ * ptp_canon_eos_setuilock:
+ *
+ * This command sets UI lock
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_setuilock (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_CANON_EOS_SetUILock;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
+ * ptp_canon_eos_resetuilock:
+ *
+ * This command sets UI lock
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_resetuilock (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_CANON_EOS_ResetUILock;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+
+/**
+ * ptp_canon_eos_start_viewfinder:
+ *
+ * This command starts Viewfinder mode of newer Canon DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_start_viewfinder (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_CANON_EOS_InitiateViewfinder;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+
+/**
+ * ptp_canon_eos_end_viewfinder:
+ *
+ * This command ends Viewfinder mode of newer Canon DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_end_viewfinder (PTPParams* params)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_CANON_EOS_TerminateViewfinder;
+        ptp.Nparam=0;
+        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+
+/**
+ * ptp_canon_eos_get_viewfinder_image:
+ *
+ * This command gets a Viewfinder image from newer Nikons DSLRs.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_CANON_EOS_GetViewFinderData;
+        ptp.Nparam=1;
+        ptp.Param1=0x00100000; /* from trace */
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+/**
  * ptp_nikon_check_event:
  *
  * This command checks the event queue on the Nikon.
