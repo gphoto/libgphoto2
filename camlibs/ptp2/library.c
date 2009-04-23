@@ -1364,12 +1364,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			SET_CONTEXT_P(params, context);
 
+#if 1
 			ret = ptp_canon_eos_start_viewfinder (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
 				//SET_CONTEXT_P(params, NULL);
 				//return GP_ERROR;
 			}
+#endif
 			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
 			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
 			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
@@ -1381,20 +1383,28 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				return GP_ERROR;
 			}
 
-
 			ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 			if (ret == PTP_RC_OK) {
-				gp_file_set_data_and_size ( file, (char*)data, size );
+				uint32_t	len = dtoh32a(data);
+
+				/* 4 byte len of jpeg data, 4 byte unknown */
+				/* JPEG blob */
+				/* stuff */
+
+				if (len > size) len = size;
+				gp_file_set_data_and_size ( file, (char*)data+8, len );
 				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 				/* Add an arbitrary file name so caller won't crash */
 				gp_file_set_name (file, "preview.jpg");
 			}
+#if 1
 			ret = ptp_canon_eos_end_viewfinder (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
 				//SET_CONTEXT_P(params, NULL);
 				//return GP_ERROR;
 			}
+#endif
 			SET_CONTEXT_P(params, NULL);
 			return GP_OK;
 		}
