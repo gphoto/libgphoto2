@@ -245,8 +245,10 @@ gp_port_usb_open (GPPort *port)
 	ret = usb_get_driver_np (port->pl->dh, port->settings.usb.interface,
 		name, sizeof(name)
 	);
-	if (strstr(name,"usbfs")) {
-		/* other gphoto instance most likely */
+	if (strstr(name,"usbfs") || strstr(name,"storage")) {
+		/* other gphoto instance most likely
+		 * Also let mass storage be served by regular means.
+		 */
 		gp_port_set_error (port, _("Camera is already in use."));
 		return GP_ERROR_IO_LOCK;
 	}
