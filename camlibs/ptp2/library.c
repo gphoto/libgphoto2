@@ -1324,51 +1324,77 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	int ret;
 	PTPParams *params = &camera->pl->params;
 
-	/* Currently disabled, since we must make sure for Canons
-	 * that prepare capture was called.
-	 * Enable: remote 0 &&, run
-	 * 	gphoto2 --set-config capture=on --capture-preview
-	 */
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
-			gp_context_error (context,
-			_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		SET_CONTEXT_P(params, context);
-		ret = ptp_canon_viewfinderon (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
-			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
-		}
-		ret = ptp_canon_getviewfinderimage (params, &data, &size);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
-			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
-		}
-		gp_file_set_data_and_size ( file, (char*)data, size );
-		gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-		/* Add an arbitrary file name so caller won't crash */
-		gp_file_set_name (file, "canon_preview.jpg");
-		gp_file_set_mtime (file, time(NULL));
-
+	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
+	case PTP_VENDOR_CANON:
+		/* Canon PowerShot / IXUS preview mode */
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
+			SET_CONTEXT_P(params, context);
+			ret = ptp_canon_viewfinderon (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
+			ret = ptp_canon_getviewfinderimage (params, &data, &size);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
+			gp_file_set_data_and_size ( file, (char*)data, size );
+			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+			/* Add an arbitrary file name so caller won't crash */
+			gp_file_set_name (file, "canon_preview.jpg");
+			gp_file_set_mtime (file, time(NULL));
 #if 0
-		/* Leave out, otherwise we refocus all the time */
-		ret = ptp_canon_viewfinderoff (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
-			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
-		}
+			/* Leave out, otherwise we refocus all the time */
+			ret = ptp_canon_viewfinderoff (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
 #endif
-		SET_CONTEXT_P(params, NULL);
-		return GP_OK;
-	}
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
-		unsigned char		*xdata;
-		unsigned int		xsize;
+			SET_CONTEXT_P(params, NULL);
+			return GP_OK;
+		}
+		/* Canon EOS DSLR preview mode */
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+			SET_CONTEXT_P(params, context);
+			ret = ptp_canon_eos_setuilock (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon SET UI Lock failed: %x"), ret);
+				//SET_CONTEXT_P(params, NULL);
+				//return GP_ERROR;
+			}
+
+			ret = ptp_canon_eos_start_viewfinder (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
+				//SET_CONTEXT_P(params, NULL);
+				//return GP_ERROR;
+			}
+
+			ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
+			if (ret == PTP_RC_OK) {
+				gp_file_set_data_and_size ( file, (char*)data, size );
+				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+				/* Add an arbitrary file name so caller won't crash */
+				gp_file_set_name (file, "preview.jpg");
+			}
+			ret = ptp_canon_eos_end_viewfinder (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
+				//SET_CONTEXT_P(params, NULL);
+				//return GP_ERROR;
+			}
+			SET_CONTEXT_P(params, NULL);
+			return GP_OK;
+		}
+		gp_context_error (context,
+		_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
+		return GP_ERROR_NOT_SUPPORTED;
+	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
 
 		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
@@ -1395,10 +1421,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
 
-		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
+		ret = ptp_nikon_get_liveview_image (params , &data, &size);
 		if (ret == PTP_RC_OK) {
-			gp_file_append (file, (char*)xdata + 0x80, xsize - 0x80);
-			free (xdata); /* FIXME: perhaps handle the 128 byte header data too. */
+			gp_file_append (file, (char*)data + 0x80, size - 0x80);
+			free (data); /* FIXME: perhaps handle the 128 byte header data too. */
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "preview.jpg");
@@ -1418,72 +1444,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
-		unsigned char	*xdata;
-		unsigned int	xsize;
-		uint32_t	xhandle;
-		SET_CONTEXT_P(params, context);
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
-			gp_context_error (context,
-				_("Sorry, your Nikon camera does not support LiveView mode"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		ret = ptp_nikon_start_liveview (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
-			SET_CONTEXT_P(params, NULL);
-			//return GP_ERROR;
-		}
-
-		ret = ptp_nikon_get_preview_image (params, &xdata, &xsize, &xhandle);
-		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
-		if (ret == PTP_RC_OK) {
-			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
-			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-			/* Add an arbitrary file name so caller won't crash */
-			gp_file_set_name (file, "preview.jpg");
-		}
-		ret = ptp_nikon_end_liveview (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Nikon disable liveview failed: %x"), ret);
-			SET_CONTEXT_P(params, NULL);
-			//return GP_ERROR;
-		}
-		SET_CONTEXT_P(params, NULL);
-		return GP_OK;
-	}
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
-		unsigned char	*xdata;
-		unsigned int	xsize;
-
-		SET_CONTEXT_P(params, context);
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
-			gp_context_error (context,
-				_("Sorry, your Canon camera does not support LiveView mode"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		ret = ptp_canon_eos_start_viewfinder (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
-			SET_CONTEXT_P(params, NULL);
-			//return GP_ERROR;
-		}
-
-		ret = ptp_canon_eos_get_viewfinder_image (params , &xdata, &xsize);
-		if (ret == PTP_RC_OK) {
-			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
-			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-			/* Add an arbitrary file name so caller won't crash */
-			gp_file_set_name (file, "preview.jpg");
-		}
-		ret = ptp_canon_eos_end_viewfinder (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
-			SET_CONTEXT_P(params, NULL);
-			//return GP_ERROR;
-		}
-		SET_CONTEXT_P(params, NULL);
-		return GP_OK;
+	default:
+		break;
 	}
 	return GP_ERROR_NOT_SUPPORTED;
 }

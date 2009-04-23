@@ -2044,6 +2044,8 @@ uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di);
+uint16_t ptp_canon_eos_setuilock (PTPParams* params);
+uint16_t ptp_canon_eos_resetuilock (PTPParams* params);
 uint16_t ptp_canon_eos_start_viewfinder (PTPParams* params);
 uint16_t ptp_canon_eos_end_viewfinder (PTPParams* params);
 uint16_t ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, unsigned int *size);
