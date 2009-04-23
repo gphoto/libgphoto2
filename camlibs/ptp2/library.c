@@ -1392,10 +1392,11 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				/* stuff */
 
 				if (len > size) len = size;
-				gp_file_set_data_and_size ( file, (char*)data+8, len );
+				gp_file_append ( file, (char*)data+8, len );
 				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 				/* Add an arbitrary file name so caller won't crash */
 				gp_file_set_name (file, "preview.jpg");
+				free (data);
 			}
 #if 1
 			ret = ptp_canon_eos_end_viewfinder (params);
