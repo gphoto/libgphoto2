@@ -138,6 +138,8 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 		uint16_t flags, unsigned int sendlen,
 		PTPDataHandler *handler
 ) {
+	int tries;
+
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
 
@@ -181,14 +183,21 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 	default:
 		return PTP_ERROR_BADPARAM;
 	}
-	/* get response */
-	CHECK_PTP_RC(params->getresp_func(params, ptp));
-	if (ptp->Transaction_ID != params->transaction_id-1) {
-		ptp_error (params,
-			"PTP: Sequence number mismatch %d vs expected %d.",
-			ptp->Transaction_ID, params->transaction_id-1
-		);
-		return PTP_ERROR_BADPARAM;
+	tries = 3;
+	while (1) {
+		/* get response */
+		CHECK_PTP_RC(params->getresp_func(params, ptp));
+		if (ptp->Transaction_ID != params->transaction_id-1) {
+			/* try to clean up potential left overs from previous session */
+			if ((ptp->Code == PTP_OC_OpenSession) && tries--)
+				continue;
+			ptp_error (params,
+				"PTP: Sequence number mismatch %d vs expected %d.",
+				ptp->Transaction_ID, params->transaction_id-1
+			);
+			return PTP_ERROR_BADPARAM;
+		}
+		break;
 	}
 	return ptp->Code;
 }
@@ -416,19 +425,24 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 }
 
 uint16_t
-ptp_canon_eos_getdeviceinfo (PTPParams* params, unsigned char**di, unsigned long *len )
+ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 {
 	uint16_t 	ret;
 	PTPContainer	ptp;
 	PTPDataHandler	handler;
+	unsigned long	len;
+	unsigned char	*data;
 
 	ptp_init_recv_memory_handler (&handler);
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_CANON_EOS_GetDeviceInfoEx;
 	ptp.Nparam=0;
-	*len=0;
+	len=0;
+	data=NULL;
 	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
-	ptp_exit_recv_memory_handler (&handler, di, len);
+	ptp_exit_recv_memory_handler (&handler, &data, &len);
+	if (ret == PTP_RC_OK) ptp_unpack_EOS_DI(params, data, di, len);
+	free (data);
 	return ret;
 }
 
@@ -1698,7 +1712,7 @@ ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags)
  *						  or 0 otherwise
  **/
 uint16_t
-ptp_canon_checkevent (PTPParams* params, PTPUSBEventContainer* event, int* isevent)
+ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 {
 	uint16_t ret;
 	PTPContainer ptp;
@@ -1719,6 +1733,70 @@ ptp_canon_checkevent (PTPParams* params, PTPUSBEventContainer* event, int* iseve
 		free(evdata);
 	}
 	return ret;
+}
+
+uint16_t
+ptp_check_event (PTPParams *params) {
+	PTPContainer		event;
+	uint16_t		ret;
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
+	) {
+		int evtcnt;
+		PTPContainer	*xevent = NULL;
+
+		ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
+		if (ret != PTP_RC_OK)
+			return ret;
+
+		if (evtcnt) {
+			if (params->nrofevents)
+				params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
+			else
+				params->events = malloc(sizeof(PTPContainer)*evtcnt);
+			memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
+			params->nrofevents += evtcnt;
+			free (xevent);
+		}
+		return PTP_RC_OK;
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
+	) {
+		int isevent;
+
+		ret = ptp_canon_checkevent (params,&event,&isevent);
+		if (ret!=PTP_RC_OK)
+			return ret;
+		if (isevent)
+			goto store_event;
+		/* FIXME: fallthrough or return? */
+	}
+	ret = params->event_check(params,&event);
+
+store_event:
+	if (ret == PTP_RC_OK) {
+		ptp_debug (params, "event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		if (params->nrofevents)
+			params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
+		else
+			params->events = malloc(sizeof(PTPContainer)*1);
+		memcpy (&params->events[params->nrofevents],&event,1*sizeof(PTPContainer));
+		params->nrofevents += 1;
+	}
+	return ret;
+}
+
+int
+ptp_get_one_event(PTPParams *params, PTPContainer *event) {
+	if (!params->nrofevents)
+		return 0;
+	memcpy (event, params->events, sizeof(PTPContainer));
+	memmove (params->events, params->events+1, sizeof(PTPContainer)*(params->nrofevents-1));
+	/* do not realloc on shrink. */
+	params->nrofevents--;
+	return 1;
 }
 
 
@@ -2045,6 +2123,7 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	return ret;
 }
 
+/* inHDD = %d, inLength =%d, inReset = %d */
 uint16_t
 ptp_canon_eos_pchddcapacity (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 {
@@ -2610,7 +2689,7 @@ ptp_nikon_get_preview_image (PTPParams* params, unsigned char **xdata, unsigned 
  *
  **/
 uint16_t
-ptp_nikon_check_event (PTPParams* params, PTPUSBEventContainer** event, int* evtcnt)
+ptp_nikon_check_event (PTPParams* params, PTPContainer** event, int* evtcnt)
 {
         PTPContainer ptp;
 	uint16_t ret;

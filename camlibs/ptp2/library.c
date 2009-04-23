@@ -1611,7 +1611,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	newobject = 0xffff0001;
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
 		int i, evtcnt;
-		PTPUSBEventContainer *nevent = NULL;
+		PTPContainer *nevent = NULL;
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
@@ -1619,10 +1619,10 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK)
 			break;
 		for (i=0;i<evtcnt;i++) {
-			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].code, (unsigned long)nevent[i].param1);
-			if (nevent[i].code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
+			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
+			if (nevent[i].Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
 				hasc101=1;
-				newobject = nevent[i].param1;
+				newobject = nevent[i].Param1;
 				if (!newobject) newobject = 0xffff0001;
 			}
 		}
@@ -1775,7 +1775,6 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPPropertyValue	propval;
 	uint16_t		val16;
 	PTPContainer		event;
-	PTPUSBEventContainer	usbevent;
 	uint32_t		handle;
 	char 			buf[1024];
 	int			xmode = CANON_TRANSFER_CARD;
@@ -1849,24 +1848,21 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	found = FALSE;
 	while ((time(NULL) - event_start)<=timeout) {
 		gp_context_idle (context);
-		ret = ptp_canon_checkevent (params,&usbevent,&isevent);
+		ret = ptp_canon_checkevent (params,&event,&isevent);
 		if (ret!=PTP_RC_OK)
 			continue;
 		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
-		if (	isevent  &&
-			(usbevent.type==PTP_USB_CONTAINER_EVENT) &&
-			(usbevent.code==PTP_EC_CANON_RequestObjectTransfer)
-		) {
+			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		if (	isevent  && (event.Code==PTP_EC_CANON_RequestObjectTransfer)) {
 			int j;
 
-			handle=usbevent.param1;
-			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",usbevent.param1);
-			newobject = usbevent.param1;
+			handle=event.Param1;
+			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",event.Param1);
+			newobject = event.Param1;
 			for (j=0;j<2;j++) {
-				ret=ptp_canon_checkevent(params,&usbevent,&isevent);
+				ret=ptp_canon_checkevent(params,&event,&isevent);
 				if ((ret==PTP_RC_OK) && isevent)
-					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 			}
 			/* Marcus: Not sure if we really needs this.
 			   ret = ptp_canon_reset_aeafawb(params,7);
@@ -2208,22 +2204,21 @@ static	int			nrofbacklogentries = 0;
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
-		PTPUSBEventContainer	usbevent;
 		int isevent;
 		char *x;
 
 		event_start=time(NULL);
 		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
 			gp_context_idle (context);
-			ret = ptp_canon_checkevent (params,&usbevent,&isevent);
+			ret = ptp_canon_checkevent (params,&event,&isevent);
 			if (ret!=PTP_RC_OK)
 				continue;
 			if (isevent) {
-				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, T=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", usbevent.length,usbevent.type,usbevent.code,usbevent.trans_id, usbevent.param1, usbevent.param2, usbevent.param3);
+				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 				*eventtype = GP_EVENT_UNKNOWN;
 				x = malloc(strlen("PTP Canon Event 0123, Param1 01234567")+1);
 				if (x) {
-					sprintf (x, "PTP Canon Event %04x, Param1 %08x", usbevent.code, usbevent.param1);
+					sprintf (x, "PTP Canon Event %04x, Param1 %08x", event.Code, event.Param1);
 					*eventdata = x;
 					break;
 				}
@@ -2240,18 +2235,18 @@ static	int			nrofbacklogentries = 0;
 		*eventtype = GP_EVENT_TIMEOUT;
 		while ((time(NULL) - event_start)<= (timeout/1000 + 1)) {
 			int i, evtcnt;
-			PTPUSBEventContainer	*nevent = NULL;
+			PTPContainer	*nevent = NULL;
 
 			ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
 			if (ret != PTP_RC_OK)
 				continue;
 			for (i=0;i<evtcnt;i++) {
-				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].code, (unsigned long)nevent[i].param1);
-				if (nevent[i].code == PTP_EC_ObjectAdded) {
+				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
+				if (nevent[i].Code == PTP_EC_ObjectAdded) {
 					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 					if (!path)
 						return GP_ERROR_NO_MEMORY;
-					newobject = nevent[i].param1;
+					newobject = nevent[i].Param1;
 					add_object (camera, newobject, context);
 					path->name[0]='\0';
 					path->folder[0]='\0';
@@ -2276,11 +2271,11 @@ static	int			nrofbacklogentries = 0;
 					finish = 1;
 					break;
 				}
-				if (nevent[i].code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
+				if (nevent[i].Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
 					PTPObjectInfo		oi;
 
 					hasc101=1;
-					newobject = nevent[i].param1;
+					newobject = nevent[i].Param1;
 					if (!newobject) newobject = 0xffff0001;
 					ret = ptp_getobjectinfo (params, newobject, &oi);
 					if (ret != PTP_RC_OK)
