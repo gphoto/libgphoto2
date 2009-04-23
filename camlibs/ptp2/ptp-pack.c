@@ -1219,6 +1219,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 						dpd->FORM.Enum.SupportedValue[j].i16	= dtoh16a(data);
 						ptp_debug (params, "event %d: suppval[%d] of %x is %x.", i, j, proptype, dtoh16a(data));
 						break;
+					case PTP_DTC_UINT32:
+						dpd->FORM.Enum.SupportedValue[j].u32	= dtoh32a(data);
+						ptp_debug (params, "event %d: suppval[%d] of %x is %x.", i, j, proptype, dtoh32a(data));
+						break;
 					case PTP_DTC_UINT16:
 						dpd->FORM.Enum.SupportedValue[j].u16	= dtoh16a(data);
 						ptp_debug (params, "event %d: suppval[%d] of %x is %x.", i, j, proptype, dtoh16a(data));
@@ -1275,6 +1279,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				dpd = &params->canon_props[j].dpd;
 				switch (proptype) {
 				case PTP_DPC_CANON_EOS_CameraTime:
+				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				case PTP_DPC_CANON_EOS_Aperture:
@@ -1338,7 +1343,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_TempStatus:
 				case PTP_DPC_CANON_EOS_ShutterCounter:
 				case PTP_DPC_CANON_EOS_PhotoStudioMode:
-				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case PTP_DPC_CANON_EOS_EVFMode:
 				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
 				case PTP_DPC_CANON_EOS_EVFSharpness:
