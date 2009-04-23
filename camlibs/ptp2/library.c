@@ -1452,6 +1452,39 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
+	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
+		unsigned char	*xdata;
+		unsigned int	xsize;
+
+		SET_CONTEXT_P(params, context);
+		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+			gp_context_error (context,
+				_("Sorry, your Canon camera does not support LiveView mode"));
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+		ret = ptp_canon_eos_start_viewfinder (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
+			SET_CONTEXT_P(params, NULL);
+			//return GP_ERROR;
+		}
+
+		ret = ptp_canon_eos_get_viewfinder_image (params , &xdata, &xsize);
+		if (ret == PTP_RC_OK) {
+			gp_file_set_data_and_size ( file, (char*)xdata, xsize );
+			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+			/* Add an arbitrary file name so caller won't crash */
+			gp_file_set_name (file, "preview.jpg");
+		}
+		ret = ptp_canon_eos_end_viewfinder (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
+			SET_CONTEXT_P(params, NULL);
+			//return GP_ERROR;
+		}
+		SET_CONTEXT_P(params, NULL);
+		return GP_OK;
+	}
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
