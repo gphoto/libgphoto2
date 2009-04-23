@@ -1360,13 +1360,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+		        unsigned char           evfoutputmode[12];
+
 			SET_CONTEXT_P(params, context);
-			ret = ptp_canon_eos_setuilock (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon SET UI Lock failed: %x"), ret);
-				//SET_CONTEXT_P(params, NULL);
-				//return GP_ERROR;
-			}
 
 			ret = ptp_canon_eos_start_viewfinder (params);
 			if (ret != PTP_RC_OK) {
@@ -1374,6 +1370,17 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				//SET_CONTEXT_P(params, NULL);
 				//return GP_ERROR;
 			}
+			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
+			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
+			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
+			/* 2 means PC, 1 means TFT */
+
+			ret = ptp_canon_eos_setdevicepropvalueex (params, evfoutputmode, 12);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setval of evf outputmode to 2 failed!");
+				return GP_ERROR;
+			}
+
 
 			ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 			if (ret == PTP_RC_OK) {
