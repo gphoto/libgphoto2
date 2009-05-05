@@ -425,6 +425,8 @@ static struct {
 	{"Kodak:Z812 IS",0x040a, 0x05b5, 0},
 	/* */
 	{"Kodak:C613",   0x040a, 0x05b7, 0},
+	/* msp@debian.org https://bugs.kde.org/show_bug.cgi?id=190795 */
+	{"Kodak:V803",   0x040a, 0x05b8, 0},
 	/* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 	/* https://bugs.launchpad.net/bugs/203402 */
