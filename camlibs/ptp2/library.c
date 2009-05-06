@@ -1362,49 +1362,99 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	int ret;
 	PTPParams *params = &camera->pl->params;
 
-	/* Currently disabled, since we must make sure for Canons
-	 * that prepare capture was called.
-	 * Enable: remote 0 &&, run
-	 * 	gphoto2 --set-config capture=on --capture-preview
-	 */
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
-		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
-			gp_context_error (context,
-			_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-		SET_CONTEXT_P(params, context);
-		ret = ptp_canon_viewfinderon (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
-			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
-		}
-		ret = ptp_canon_getviewfinderimage (params, &data, &size);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
-			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
-		}
-		gp_file_set_data_and_size ( file, (char*)data, size );
-		gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-		gp_file_set_mtime (file, time(NULL));
-
+	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
+	case PTP_VENDOR_CANON:
+		/* Canon PowerShot / IXUS preview mode */
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
+			SET_CONTEXT_P(params, context);
+			ret = ptp_canon_viewfinderon (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
+			ret = ptp_canon_getviewfinderimage (params, &data, &size);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
+			gp_file_set_data_and_size ( file, (char*)data, size );
+			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+			/* Add an arbitrary file name so caller won't crash */
+			gp_file_set_name (file, "canon_preview.jpg");
+			gp_file_set_mtime (file, time(NULL));
 #if 0
-		/* Leave out, otherwise we refocus all the time */
-		ret = ptp_canon_viewfinderoff (params);
-		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
-			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
-		}
+			/* Leave out, otherwise we refocus all the time */
+			ret = ptp_canon_viewfinderoff (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+			}
 #endif
-		SET_CONTEXT_P(params, NULL);
-		return GP_OK;
-	}
-	if (camera->pl->params.deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
-		unsigned char		*xdata;
-		unsigned int		xsize;
+			SET_CONTEXT_P(params, NULL);
+			return GP_OK;
+		}
+		/* Canon EOS DSLR preview mode */
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+		        unsigned char           evfoutputmode[12];
+
+			SET_CONTEXT_P(params, context);
+
+#if 1 /* might not be needed */
+			ret = ptp_canon_eos_start_viewfinder (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
+				/*
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+				*/
+			}
+#endif
+			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
+			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
+			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
+			/* 2 means PC, 1 means TFT */
+
+			ret = ptp_canon_eos_setdevicepropvalueex (params, evfoutputmode, 12);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setval of evf outputmode to 2 failed!");
+				return GP_ERROR;
+			}
+
+			ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
+			if (ret == PTP_RC_OK) {
+				uint32_t	len = dtoh32a(data);
+
+				/* 4 byte len of jpeg data, 4 byte unknown */
+				/* JPEG blob */
+				/* stuff */
+
+				if (len > size) len = size;
+				gp_file_append ( file, (char*)data+8, len );
+				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+				/* Add an arbitrary file name so caller won't crash */
+				gp_file_set_name (file, "preview.jpg");
+				free (data);
+			}
+#if 1 /* might not be needed */
+			ret = ptp_canon_eos_end_viewfinder (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
+				/*
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+				*/
+			}
+#endif
+			SET_CONTEXT_P(params, NULL);
+			return GP_OK;
+		}
+		gp_context_error (context,
+		_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
+		return GP_ERROR_NOT_SUPPORTED;
+	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
 
 		if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)) {
@@ -1431,10 +1481,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
 
-		ret = ptp_nikon_get_liveview_image (params , &xdata, &xsize);
+		ret = ptp_nikon_get_liveview_image (params , &data, &size);
 		if (ret == PTP_RC_OK) {
-			gp_file_append (file, (char*)xdata + 0x80, xsize - 0x80);
-			free (xdata); /* FIXME: perhaps handle the 128 byte header data too. */
+			gp_file_append (file, (char*)data + 0x80, size - 0x80);
+			free (data); /* FIXME: perhaps handle the 128 byte header data too. */
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "preview.jpg");
@@ -1453,6 +1503,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 #endif
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
+	}
+	default:
+		break;
 	}
 	return GP_ERROR_NOT_SUPPORTED;
 }
