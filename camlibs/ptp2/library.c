@@ -119,7 +119,7 @@
 			return (GP_ERROR);			\
 		}						\
 }
-static int init_ptp_fs (Camera *camera, GPContext *context);
+int init_ptp_fs (Camera *camera, GPContext *context);
 
 typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
 typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
@@ -4437,9 +4437,11 @@ debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
 	GP_DEBUG ("  AssociationType: 0x%04x", oi->AssociationType);
 	GP_DEBUG ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
 	GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
+	GP_DEBUG ("  ModificationDate: 0x%08x", (unsigned int)oi->ModificationDate);
+	GP_DEBUG ("  CaptureDate: 0x%08x", (unsigned int)oi->CaptureDate);
 }
 
-static int
+int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
 	int i, id, nroot = 0;
@@ -4753,7 +4755,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "capturedate %s", xpl->propval.str);
-				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (params, xpl->propval.str);
 				break;
 			case PTP_OPC_DateModified:
 				if (xpl->datatype != PTP_DTC_STR) {
@@ -4761,7 +4763,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "moddate %s", xpl->propval.str);
-				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (params, xpl->propval.str);
 				break;
 			default:
 				if ((xpl->property & 0xfff0) == 0xdc00)
