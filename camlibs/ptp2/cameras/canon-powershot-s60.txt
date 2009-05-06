@@ -149,6 +149,8 @@ Device Properties Supported:
   0xd04b
 
 
+Capture --summary:
+
 Camera summary:                                                                
 Manufacturer: Canon Inc.
 Model: Canon PowerShot S60
@@ -250,6 +252,71 @@ Flash Quantity Count(0xd042):(readwrite) (type=0x4) Enumeration [] value: 65535
 Rotation Angle(0xd043):(read only) (type=0x4) 0' (0)
 Rotation Scene(0xd044):(readwrite) (type=0x4) Enumeration [0,1] value: On (0)
 Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 4
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Type of Slideshow(0xd047):(read only) (type=0x4) 2
+Average Filesizes(0xd048):(read only) (type=0x4006) a[19] 2563072,1640448,1026048,0,254976,1428480,914432,571392,0,153600,711680,455680,284672,0,86016,4405248,0,0,0
+Model ID(0xd049):(read only) (type=0x6) 20512768
+Property 0xd04b:(read only) (type=0x2) 0
+
+=========================================================================================
+
+Non-Capture --summary:
+
+Camera summary:                                                                
+Manufacturer: Canon Inc.
+Model: Canon PowerShot S60
+  Version: 1-1.0.0.0
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG CRW
+Display Formats: Association/Directory, JPEG, MS AVI, MS Wave, CRW, Script
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Canon Capture
+
+Storage Devices Summary:
+store_80000001:
+	StorageDescription: None
+	VolumeLabel: V
+	Storage Type: Builtin RAM
+	Filesystemtype: Unknown: 0x8001
+
+	Access Capability: Read-Write
+	Maximum Capability: 0 (0 MB)
+	Free Space (Bytes): 0 (0 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Beep Mode(0xd001):(readwrite) (type=0x2) Enumeration [0,1] value: On (0)
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Lithium Ion (2)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 1944,2592,1,0,0,0,
+	a[6] 1944,2592,6,0,0,0,
+	a[6] 1944,2592,11,0,0,0,
+	a[6] 1536,2048,2,0,0,0,
+	a[6] 1536,2048,7,0,0,0,
+	a[6] 1536,2048,12,0,0,0,
+	a[6] 1200,1600,3,0,0,0,
+	a[6] 1200,1600,8,0,0,0,
+	a[6] 1200,1600,13,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0,
+	a[6] 1944,2592,16,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Supported Thumb Size(0xd02d):(read only) (type=0x4006) Enumeration [
+	a[4] 119,0,159,0
+	] value: a[4] 119,0,159,0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 20480
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 5120
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot S60'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0] 
+UNIX Time(0xd034):(readwrite) (type=0x6) 315532813
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 1
 DPOF Version(0xd046):(read only) (type=0x4) 257
 Type of Slideshow(0xd047):(read only) (type=0x4) 2
 Average Filesizes(0xd048):(read only) (type=0x4006) a[19] 2563072,1640448,1026048,0,254976,1428480,914432,571392,0,153600,711680,455680,284672,0,86016,4405248,0,0,0
