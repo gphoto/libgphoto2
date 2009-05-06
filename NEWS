@@ -1,16 +1,23 @@
-libgphoto2 2.4.5.2
+libgphoto2 2.4.5.3
 
 This is a 2.4 release branch update.
 
 PTP2 driver:
    * Fixed Nikon DSLR capture in LiveView mode (like gtkam uses).
-   * Added some new ids.
+   * More EOS stuff decoded, added "capturetarget" support for EOS.
+   * EOS LiveView support (experimental, reported for EOS 1000D).
+   * Added some new USB ids.
+   * Retrieve filedates again from PTP objects.
    * speedup: Do not list files on / (there aren't any).
-   * Some small bugfixes.
+   * Some bugfixes.
+
+Canon driver:
+   * Support Exposure Bias setting.
+   * More shutterspeeds.
 
 libgphoto2:
    * Fixed a problem during file retrieval which causes Canon Normal 
-     --capture-image-and-download errors.
+     --capture-image-and-download errors, handle CR2 and CRW mimetypes.
    * Fixed ordering of filelists again that broke the digigr8 driver.
 
 ------------------------------------------------------------------------
