@@ -1665,9 +1665,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
-		ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
-		if (ret != PTP_RC_OK)
-			break;
+		CPR (context, ptp_nikon_check_event(params, &nevent, &evtcnt));
 		for (i=0;i<evtcnt;i++) {
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
 			if (nevent[i].Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
@@ -1732,21 +1730,23 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		_("Sorry, your Canon camera does not support Canon EOS Capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-
-        /* Get the initial bulk set of 0x9116 property data, otherwise
+	if (!params->eos_captureenabled)
+		camera_prepare_capture (camera, context);
+     
+	/* Get the initial bulk set of 0x9116 property data, otherwise
 	 * capture might return busy. */
-        while (1) {
-                ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-                if (ret != PTP_RC_OK) {
-                        gp_log (GP_LOG_ERROR,"camera_canon_eos_capture", "getevent failed!");
-                        return GP_ERROR;
-                }
-                if (nrofentries == 0)
-                        break;
-                free (entries);
-                nrofentries = 0;
-                entries = NULL;
-        }
+	while (1) {
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"camera_canon_eos_capture", "getevent failed!");
+			return GP_ERROR;
+		}
+		if (nrofentries == 0)
+			break;
+		free (entries);
+		nrofentries = 0;
+		entries = NULL;
+	}
 
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
@@ -1864,13 +1864,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
-		PTPStorageIDs storageids;
 		if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
 			propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 		else
 			propval.u16 = xmode = CANON_TRANSFER_CARD;
 
 		if (xmode == CANON_TRANSFER_CARD) {
+			PTPStorageIDs storageids;
+
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
 				if (	(storageids.n == 1) &&
@@ -1917,12 +1918,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret!=PTP_RC_OK)
 			continue;
 		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-		if (	isevent  && (event.Code==PTP_EC_CANON_RequestObjectTransfer)) {
+			gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		if (	isevent  &&
+			(event.Code==PTP_EC_CANON_RequestObjectTransfer)
+		) {
 			int j;
 
 			handle=event.Param1;
-			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",event.Param1);
+			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",handle);
 			newobject = event.Param1;
 			for (j=0;j<2;j++) {
 				ret=ptp_canon_checkevent(params,&event,&isevent);
@@ -2990,49 +2993,6 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	return (GP_OK);
 }
 
-/* following functions are used for fs testing only */
-#if 0
-static void
-add_dir (Camera *camera, uint32_t parent, uint32_t handle, const char *foldername)
-{
-	int n;
-	n=camera->pl->params.handles.n++;
-	camera->pl->params.objectinfo = (PTPObjectInfo*)
-		realloc(camera->pl->params.objectinfo,
-		sizeof(PTPObjectInfo)*(n+1));
-	camera->pl->params.handles.handler[n]=handle;
-
-	camera->pl->params.objectinfo[n].Filename=malloc(strlen(foldername)+1);
-	strcpy(camera->pl->params.objectinfo[n].Filename, foldername);
-	camera->pl->params.objectinfo[n].ObjectFormat=PTP_OFC_Association;
-	camera->pl->params.objectinfo[n].AssociationType=PTP_AT_GenericFolder;
-	
-	camera->pl->params.objectinfo[n].ParentObject=parent;
-}
-#endif
-
-#if 0
-static void
-move_object_by_handle (Camera *camera, uint32_t parent, uint32_t handle)
-{
-	int n;
-
-	for (n=0; n<camera->pl->params.handles.n; n++)
-		if (camera->pl->params.handles.handler[n]==handle) break;
-	if (n==camera->pl->params.handles.n) return;
-	camera->pl->params.objectinfo[n].ParentObject=parent;
-}
-#endif
-
-#if 0
-static void
-move_object_by_number (Camera *camera, uint32_t parent, int n)
-{
-	if (n>=camera->pl->params.handles.n) return;
-	camera->pl->params.objectinfo[n].ParentObject=parent;
-}
-#endif
-
 static uint32_t
 find_child (const char *file, uint32_t storage, uint32_t handle, Camera *camera)
 {
@@ -3074,11 +3034,10 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     Camera *camera = (Camera *)data;
     PTPParams *params = &camera->pl->params;
     uint32_t parent, storage=0x0000000;
-    int i;
+    int i,hasgetstorageids;
     SET_CONTEXT_P(params, context);
 
     gp_log (GP_LOG_DEBUG, "ptp2", "file_list_func(%s)", folder);
-    init_ptp_fs (camera, context);
 
     /* There should be NO files in root folder */
     if (!strcmp(folder, "/"))
@@ -3090,20 +3049,23 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return (GP_OK);
     }
 
+    init_ptp_fs (camera, context);
+
     /* compute storage ID value from folder patch */
     folder_to_storage(folder,storage);
 
     /* Get (parent) folder handle omiting storage pseudofolder */
     find_folder_handle(folder,storage,parent,data);
 
+    hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
     for (i = 0; i < params->handles.n; i++) {
 	/* not our parent -> next */
 	if (params->objectinfo[i].ParentObject!=parent)
 		continue;
 
 	/* not on our storage devices -> next */
-	if ((ptp_operation_issupported(params,PTP_OC_GetStorageIDs)
-            && (params->objectinfo[i].StorageID != storage)))
+	if (	(hasgetstorageids &&
+		(params->objectinfo[i].StorageID != storage)))
 		continue;
 
 	/* Is a directory -> next */
@@ -3135,41 +3097,37 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	int i;
+	int i, hasgetstorageids;
 	uint32_t handler,storage;
 
 	SET_CONTEXT_P(params, context);
 	gp_log (GP_LOG_DEBUG, "ptp2", "folder_list_func(%s)", folder);
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
-		PTPStorageIDs storageids;
-
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
-			CPR (context, ptp_getstorageids(params,
-				&storageids));
+			PTPStorageIDs storageids;
+
+			CPR (context, ptp_getstorageids(params, &storageids));
 			for (i=0; i<storageids.n; i++) {
 				char fname[PTP_MAXSTRLEN];
 
 				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
-				snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
+				snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
 					storageids.Storage[i]);
 				CR (gp_list_append (list, fname, NULL));
 			}
+			free (storageids.Storage);
 		} else {
 			char fname[PTP_MAXSTRLEN];
-			snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9,
+			snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
 					0xdeadbeef
 			);
 			gp_list_append (list, fname, NULL);
 		}
-
 		if (nrofspecial_files)
 			CR (gp_list_append (list, "special", NULL));
-
-		if (storageids.Storage[0] != 0xdeadbeef)
-			free (storageids.Storage);
 		return (GP_OK);
 	}
 
@@ -3189,11 +3147,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* Look for objects we can present as directories.
 	 * Currently we specify *any* PTP association as directory.
 	 */
+	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
 	for (i = 0; i < params->handles.n; i++) {
-		if (	(params->objectinfo[i].ParentObject==handler)		&&
-			((!ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) ||
-			 (params->objectinfo[i].StorageID == storage)
-			)							&&
+		if (	(params->objectinfo[i].ParentObject==handler)	 &&
+			((!hasgetstorageids) || (params->objectinfo[i].StorageID == storage)) &&
 			(params->objectinfo[i].ObjectFormat==PTP_OFC_Association)
 		)
 			CR (gp_list_append (list, params->objectinfo[i].Filename, NULL));
@@ -3856,9 +3813,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CPR (context, ptp_getthumb(params,
 			params->handles.Handler[object_id],
 			&ximage));
+		set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
 		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
-		/* XXX does gp_file_set_data_and_size free() image ptr upon
-		   failure?? */
 		break;
 	}
 	case	GP_FILE_TYPE_METADATA:
@@ -4932,16 +4888,6 @@ fallback:
 			}
 		}
 	}
-#if 0
-	add_dir (camera, 0x00000000, 0xff000000, "DIR1");
-	add_dir (camera, 0x00000000, 0xff000001, "DIR20");
-	add_dir (camera, 0xff000000, 0xff000002, "subDIR1");
-	add_dir (camera, 0xff000002, 0xff000003, "subsubDIR1");
-	move_object_by_number (camera, 0xff000002, 2);
-	move_object_by_number (camera, 0xff000001, 3);
-	move_object_by_number (camera, 0xff000002, 4);
-	/* Used for testing with my camera, which does not support subdirs */
-#endif
 	return (GP_OK);
 }
 
