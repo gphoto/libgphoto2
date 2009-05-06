@@ -76,34 +76,34 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	propval.u16 = 0;
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045\n");
+		gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045");
 		return GP_ERROR;
 	}
-	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4X\n",propval.u16);
+	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x",propval.u16);
 
 	propval.u16=1;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8X, ret 0x%x\n",propval.u32, ret);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8x, ret 0x%x",propval.u32, ret);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is 0x%8X, ret 0x%x\n",propval.u32, ret);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is 0x%8x, ret 0x%x",propval.u32, ret);
 
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8x, ret 0x%x\n",propval.u32, ret);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8x, ret 0x%x",propval.u32, ret);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is 0x%8X, ret x0%x\n",propval.u32,ret);
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is 0x%8X, ret x0%x",propval.u32,ret);
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
-	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret 0x%x\n",propval.u16,ret);
+	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret 0x%x",propval.u16,ret);
 
-	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.\n");
+	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.");
 
-	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. EventEmulateMode to 4\n");
+	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. EventEmulateMode to 4");
 	propval.u16=4;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 
@@ -115,24 +115,25 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	/* Catch event */
 	if (PTP_RC_OK==(val16=params->event_wait (params, &event))) {
 		if (event.Code==PTP_EC_StorageInfoChanged)
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode. \n");
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode.");
 		else 
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X\n", event.Code);
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%x", event.Code);
 	} else {
-		printf("No event yet, we'll try later.\n");
+		printf("No event yet, we'll try later.");
 	}
 
 	/* Emptying event stack */
 	for (i=0;i<2;i++) {
 		ret = ptp_canon_checkevent (params,&event,&isevent);
 		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_DEBUG, "ptp", "error during check event: %d\n", ret);
+			gp_log (GP_LOG_DEBUG, "ptp", "error during check event: %d", ret);
 		}
 		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp", "evdata: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X\n",
+			gp_log (GP_LOG_DEBUG, "ptp", "evdata: nparam=0x%x, C=0x%x, trans_id=0x%x, p1=0x%x, p2=0x%x, p3=0x%x",
 				event.Nparam,event.Code,event.Transaction_ID,
 				event.Param1, event.Param2, event.Param3);
 	}
+#if 0
 	gp_port_set_timeout (camera->port, oldtimeout);
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 		ret = ptp_canon_viewfinderon (params);
@@ -141,15 +142,16 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		/* ignore errors here */
 	}
 	gp_port_set_timeout (camera->port, 1000);
+#endif
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
 			if (event.Code == PTP_EC_StorageInfoChanged)
-				gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.\n");
+				gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.");
 			else
-				gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%X\n", event.Code);
+				gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%x", event.Code);
 		} else
-			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.\n");
+			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.");
 	}
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
@@ -287,7 +289,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 {
 	PTPParams		*params = &camera->pl->params;
 	
-	gp_log (GP_LOG_DEBUG, "ptp", "prepare_capture\n");
+	gp_log (GP_LOG_DEBUG, "ptp", "prepare_capture");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(params, PTP_OC_CANON_InitiateReleaseControl))
@@ -311,7 +313,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 
 	ret = ptp_canon_endshootingmode (params);
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d\n", ret);
+		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d", ret);
 		return GP_ERROR;
 	}
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
@@ -382,7 +384,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 int
 camera_unprepare_capture (Camera *camera, GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capture\n");
+	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capturen");
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_TerminateReleaseControl))
