@@ -755,8 +755,16 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 static void
 recursive_fs_dump (CameraFilesystemFolder *folder, int depth) {
 	CameraFilesystemFolder	*f;
+	CameraFilesystemFile	*xfile;
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesys", "%*sFolder %s", depth, " ", folder->name);
+
+	xfile = folder->files;
+	while (xfile) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-filesys", "%*s    %s", depth, " ", xfile->name);
+		xfile = xfile->next;
+	}
+	
 	f = folder->folders;
 	while (f) {
 		recursive_fs_dump (f, depth+4);
