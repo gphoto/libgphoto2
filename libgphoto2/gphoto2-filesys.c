@@ -2324,6 +2324,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs, const char *folder,
 		GP_DEBUG ("Searching data for mtime...");
 		CR (gp_file_get_data_and_size (file, NULL, &size));
 		if (size < 32*1024*1024) { /* just assume stuff above 32MB is not EXIF capable */
+			/* FIXME: Will leak on "fd" retrieval */
 			CR (gp_file_get_data_and_size (file, &data, &size));
 			t = get_exif_mtime ((unsigned char*)data, size);
 		}
