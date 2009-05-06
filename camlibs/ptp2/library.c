@@ -2160,9 +2160,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 	char		*ximage;
 	int		finish = 0;
 
-static	PTPCanon_changes_entry	*backlogentries = NULL;
-static	int			nrofbacklogentries = 0;
-
 	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
 
@@ -2179,12 +2176,12 @@ static	int			nrofbacklogentries = 0;
 		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
 			int i;
 
-			if (backlogentries) {
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Using %d backlog entries", nrofbacklogentries);
-				entries = backlogentries;
-				nrofentries = nrofbacklogentries;
-				backlogentries = NULL;
-				nrofbacklogentries = 0;
+			if (params->backlogentries) {
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Using %d backlog entries", params->nrofbacklogentries);
+				entries = params->backlogentries;
+				nrofentries = params->nrofbacklogentries;
+				params->backlogentries = NULL;
+				params->nrofbacklogentries = 0;
 			} else {
 				ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 				if (ret != PTP_RC_OK) {
@@ -2254,9 +2251,9 @@ static	int			nrofbacklogentries = 0;
 			if (finish) {
 				if (nrofentries-i > 1) {
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Backlogging %d events", nrofentries-i);
-					backlogentries = malloc (sizeof (PTPCanon_changes_entry) * (nrofentries-i));
-					nrofbacklogentries = (nrofentries-i-1);
-					memcpy (backlogentries, entries+i+1, sizeof (PTPCanon_changes_entry) * (nrofentries-i-1));
+					params->backlogentries = malloc (sizeof (PTPCanon_changes_entry) * (nrofentries-i));
+					params->nrofbacklogentries = (nrofentries-i-1);
+					memcpy (params->backlogentries, entries+i+1, sizeof (PTPCanon_changes_entry) * (nrofentries-i-1));
 				}
 				free (entries);
 				break;
