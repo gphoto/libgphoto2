@@ -1696,6 +1696,21 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
+        /* Get the initial bulk set of 0x9116 property data, otherwise
+	 * capture might return busy. */
+        while (1) {
+                ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+                if (ret != PTP_RC_OK) {
+                        gp_log (GP_LOG_ERROR,"camera_canon_eos_capture", "getevent failed!");
+                        return GP_ERROR;
+                }
+                if (nrofentries == 0)
+                        break;
+                free (entries);
+                nrofentries = 0;
+                entries = NULL;
+        }
+
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
