@@ -4656,7 +4656,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "capturedate %s", xpl->propval.str);
-				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (params, xpl->propval.str);
 				break;
 			case PTP_OPC_DateModified:
 				if (xpl->datatype != PTP_DTC_STR) {
@@ -4664,7 +4664,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "moddate %s", xpl->propval.str);
-				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (params, xpl->propval.str);
 				break;
 			default:
 				if ((xpl->property & 0xfff0) == 0xdc00)
