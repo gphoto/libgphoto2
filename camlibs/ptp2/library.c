@@ -406,6 +406,8 @@ static struct {
 	{"Kodak:Z812 IS",0x040a, 0x05b5, 0},
 	/* */
 	{"Kodak:C613",   0x040a, 0x05b7, 0},
+	/* msp@debian.org https://bugs.kde.org/show_bug.cgi?id=190795 */
+	{"Kodak:V803",   0x040a, 0x05b8, 0},
 	/* via IRC */
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 	/* https://bugs.launchpad.net/bugs/203402 */
@@ -414,6 +416,8 @@ static struct {
 	{"Kodak:C813",	 0x040a, 0x05c3, 0},
 	/* reported by Christian Le Corre <lecorrec@gmail.com> */
 	{"Kodak:C913",   0x040a, 0x05c6, 0},
+	/* reported by Jim Nelson <jim@yorba.org> */
+	{"Kodak:M1063",  0x040a, 0x05ce, 0},
 
 	/* HP PTP cameras */
 #if 0
@@ -843,6 +847,8 @@ static struct {
 	{"Canon:PowerShot A450 (PTP mode)",     0x04a9, 0x3155, PTPBUG_DELETE_SENDS_EVENT},
 	/* Harald Dunkel <harald.dunkel@t-online.de> */                                                        
 	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	/* Barrie Stott <zen146410@zen.co.uk> */
+	{"Canon:PowerShot A650IS (PTP mode)",   0x04a9, 0x315b, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roger Lynn <roger@rilynn.demon.co.uk> */
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
 	/* Mats Petersson <mats.petersson@ltu.se> */
@@ -882,10 +888,20 @@ static struct {
 	/* Chris Rodley <chris@takeabreak.co.nz> */
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP|PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Kurt Garloff at SUSE */
+	{"Canon:Digital IXUS 980 IS",		0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD990",		0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:IXY 3000 IS",			0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2750875&group_id=8874&atid=358874 */
+	{"Canon:PowerShot SD880 IS",		0x04a9, 0x3196, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* IRC Reporter */
 	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP},
 	/* mitch <debianuser@mll.dissimulo.com> */
 	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
+
+	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTP_CAP},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -922,6 +938,8 @@ static struct {
 	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2017171&group_id=8874&atid=358874 */
 	{"Fuji:FinePix S100fs",			0x04cb, 0x01db, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2772199&group_id=8874&atid=358874 */
+	{"Fuji:FinePix S1000fd",		0x04cb, 0x01dd, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2203316&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
@@ -1169,7 +1187,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_class = 6;
 	a.usb_subclass = 1;
 	a.usb_protocol = 1;
-	a.operations        = GP_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+	a.operations =	GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 	a.file_operations   = GP_FILE_OPERATION_PREVIEW|
 				GP_FILE_OPERATION_DELETE;
 	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE
