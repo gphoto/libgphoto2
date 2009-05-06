@@ -1079,7 +1079,7 @@ ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPContainer *ec, unsigne
 
 	if (data==NULL)
 		return;
-	memset(&ec,0,sizeof(ec));
+	memset(ec,0,sizeof(*ec));
 	length=dtoh32a(&data[PTP_ec_Length]);
 	type = dtoh16a(&data[PTP_ec_Type]);
 
