@@ -1994,7 +1994,7 @@ uint16_t ptp_ek_9007 (PTPParams* params, unsigned char **serial, unsigned int *s
 uint16_t ptp_ek_9009 (PTPParams* params, uint32_t*, uint32_t*);
 uint16_t ptp_ek_900c (PTPParams* params, unsigned char **serial, unsigned int *size);
 uint16_t ptp_ek_getserial (PTPParams* params, unsigned char **serial, unsigned int *size);
-uint16_t ptp_ek_setserial (PTPParams* params, unsigned char *serial, uint32_t size);
+uint16_t ptp_ek_setserial (PTPParams* params, unsigned char *serial, unsigned int size);
 uint16_t ptp_ek_settext (PTPParams* params, PTPEKTextParams *text);
 uint16_t ptp_ek_sendfileobjectinfo (PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
