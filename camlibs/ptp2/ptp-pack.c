@@ -498,7 +498,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 }
 
 static time_t
-ptp_unpack_PTPTIME (PTPParams *params, const char *str) {
+ptp_unpack_PTPTIME (const char *str) {
 	char ptpdate[40];
 	char tmp[5];
 	int  ptpdatelen;
@@ -508,12 +508,12 @@ ptp_unpack_PTPTIME (PTPParams *params, const char *str) {
 		return 0;
 	ptpdatelen = strlen(str);
 	if (ptpdatelen >= sizeof (ptpdate)) {
-		ptp_debug (params ,"datelen is larger then size of buffer", ptpdatelen, (int)sizeof(ptpdate));
+		/*ptp_debug (params ,"datelen is larger then size of buffer", ptpdatelen, (int)sizeof(ptpdate));*/
 		return 0;
 	}
 	strcpy (ptpdate, str);
 	if (ptpdatelen<15) {
-		ptp_debug (params ,"datelen is less than 15 (%d)", ptpdatelen);
+		/*ptp_debug (params ,"datelen is less than 15 (%d)", ptpdatelen);*/
 		return 0;
 	}
 
@@ -536,7 +536,6 @@ ptp_unpack_PTPTIME (PTPParams *params, const char *str) {
 	strncpy (tmp, ptpdate + 13, 2);
 	tmp[2] = 0;
 	tm.tm_sec = atoi (tmp);
-	ptp_debug (params ,"mktime gets %d", mktime(&tm));
 	return mktime (&tm);
 }
 
@@ -569,14 +568,14 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	/* subset of ISO 8601, without '.s' tenths of second and 
 	 * time zone
 	 */
-	oi->CaptureDate = ptp_unpack_PTPTIME(params,capture_date);
+	oi->CaptureDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 
 	/* now the modification date ... */
 	capture_date = ptp_unpack_string(params, data,
 		PTP_oi_filenamelen+filenamelen*2
 		+capturedatelen*2+2,&capturedatelen);
-	oi->ModificationDate = ptp_unpack_PTPTIME(params,capture_date);
+	oi->ModificationDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 }
 
