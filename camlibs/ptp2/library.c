@@ -1262,9 +1262,11 @@ camera_exit (Camera *camera, GPContext *context)
 	if (camera->pl!=NULL) {
 		PTPParams *params = &camera->pl->params;
 		SET_CONTEXT_P(params, context);
+#ifdef HAVE_ICONV
 		/* close iconv converters */
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
+#endif
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
@@ -4971,6 +4973,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (!camera->pl->params.maxpacketsize)
 		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
 
+#ifdef HAVE_ICONV
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
 	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, camloc);
@@ -4980,7 +4983,7 @@ camera_init (Camera *camera, GPContext *context)
 		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
 		return (GP_ERROR_OS_FAILURE);
 	}
-	
+#endif
         gp_camera_get_abilities(camera, &a);
         for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
