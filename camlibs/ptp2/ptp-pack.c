@@ -1,6 +1,8 @@
 /* currently this file is included into ptp.c */
 
+#ifdef HAVE_ICONV
 #include <iconv.h>
+#endif
 
 extern void
 ptp_debug (PTPParams *params, const char *format, ...);
@@ -122,8 +124,11 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8
 	srclen = length * sizeof(string[0]);
 	dest = loclstr;
 	destlen = sizeof(loclstr)-1;
+	nconv = (size_t)-1;
+#ifdef HAVE_ICONV
 	nconv = iconv(params->cd_ucs2_to_locale, &src, &srclen, 
 			&dest, &destlen);
+#endif
 	if (nconv == (size_t) -1) { /* do it the hard way */
 		int i;
 		/* try the old way, in case iconv is broken */
@@ -157,17 +162,30 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	int packedlen;
 	uint16_t ucs2str[PTP_MAXSTRLEN+1];
 	char *ucs2strp = (char *) ucs2str;
-	char *stringp = string;
-	size_t nconv;
 	size_t convlen = strlen(string);
-	size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
 
 	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
 	memset(ucs2strp, 0, sizeof(ucs2str));  /* XXX: necessary? */
-	nconv = iconv(params->cd_locale_to_ucs2, &stringp, &convlen,
-		&ucs2strp, &convmax);
-	if (nconv == (size_t) -1)
-		ucs2str[0] = 0x0000U;
+#ifdef HAVE_ICONV
+	{ 
+		size_t nconv;
+		size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
+		char *stringp = string;
+
+		nconv = iconv(params->cd_locale_to_ucs2, &stringp, &convlen,
+			&ucs2strp, &convmax);
+		if (nconv == (size_t) -1)
+			ucs2str[0] = 0x0000U;
+	}
+#else
+	{
+		int i;
+		for (i=0;i<convlen;i++) {
+			ucs2str[i] = string[i];
+		}
+		ucs2str[convlen] = 0;
+	}
+#endif
 	/*
 	 * XXX: isn't packedlen just ( (uint16_t *)ucs2strp - ucs2str )?
 	 *      why do we need ucs2strlen()?
@@ -498,7 +516,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 }
 
 static time_t
-ptp_unpack_PTPTIME (PTPParams *params, const char *str) {
+ptp_unpack_PTPTIME (const char *str) {
 	char ptpdate[40];
 	char tmp[5];
 	int  ptpdatelen;
@@ -508,12 +526,12 @@ ptp_unpack_PTPTIME (PTPParams *params, const char *str) {
 		return 0;
 	ptpdatelen = strlen(str);
 	if (ptpdatelen >= sizeof (ptpdate)) {
-		ptp_debug (params ,"datelen is larger then size of buffer", ptpdatelen, (int)sizeof(ptpdate));
+		/*ptp_debug (params ,"datelen is larger then size of buffer", ptpdatelen, (int)sizeof(ptpdate));*/
 		return 0;
 	}
 	strcpy (ptpdate, str);
 	if (ptpdatelen<15) {
-		ptp_debug (params ,"datelen is less than 15 (%d)", ptpdatelen);
+		/*ptp_debug (params ,"datelen is less than 15 (%d)", ptpdatelen);*/
 		return 0;
 	}
 
@@ -536,7 +554,6 @@ ptp_unpack_PTPTIME (PTPParams *params, const char *str) {
 	strncpy (tmp, ptpdate + 13, 2);
 	tmp[2] = 0;
 	tm.tm_sec = atoi (tmp);
-	ptp_debug (params ,"mktime gets %d", mktime(&tm));
 	return mktime (&tm);
 }
 
@@ -569,14 +586,14 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	/* subset of ISO 8601, without '.s' tenths of second and 
 	 * time zone
 	 */
-	oi->CaptureDate = ptp_unpack_PTPTIME(params,capture_date);
+	oi->CaptureDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 
 	/* now the modification date ... */
 	capture_date = ptp_unpack_string(params, data,
 		PTP_oi_filenamelen+filenamelen*2
 		+capturedatelen*2+2,&capturedatelen);
-	oi->ModificationDate = ptp_unpack_PTPTIME(params,capture_date);
+	oi->ModificationDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 }
 

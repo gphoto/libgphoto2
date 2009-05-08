@@ -1261,9 +1261,11 @@ camera_exit (Camera *camera, GPContext *context)
 	if (camera->pl!=NULL) {
 		PTPParams *params = &camera->pl->params;
 		SET_CONTEXT_P(params, context);
+#ifdef HAVE_ICONV
 		/* close iconv converters */
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
+#endif
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
@@ -4745,7 +4747,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "capturedate %s", xpl->propval.str);
-				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (params, xpl->propval.str);
+				oinfos[i].CaptureDate = ptp_unpack_PTPTIME (xpl->propval.str);
 				break;
 			case PTP_OPC_DateModified:
 				if (xpl->datatype != PTP_DTC_STR) {
@@ -4753,7 +4755,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					break;
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "moddate %s", xpl->propval.str);
-				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (params, xpl->propval.str);
+				oinfos[i].ModificationDate = ptp_unpack_PTPTIME (xpl->propval.str);
 				break;
 			default:
 				if ((xpl->property & 0xfff0) == 0xdc00)
@@ -4986,7 +4988,7 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	if (!camera->pl->params.maxpacketsize)
 		camera->pl->params.maxpacketsize = 64; /* assume USB 1.0 */
-
+#ifdef HAVE_ICONV
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
 	camera->pl->params.cd_ucs2_to_locale = iconv_open(curloc, camloc);
@@ -4996,7 +4998,7 @@ camera_init (Camera *camera, GPContext *context)
 		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
 		return (GP_ERROR_OS_FAILURE);
 	}
-	
+#endif
         gp_camera_get_abilities(camera, &a);
         for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
