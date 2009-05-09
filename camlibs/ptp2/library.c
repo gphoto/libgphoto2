@@ -916,11 +916,14 @@ static struct {
 	{"Canon:PowerShot SD880 IS",		0x04a9, 0x3196, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* IRC Reporter */
-	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP},
+	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* mitch <debianuser@mll.dissimulo.com> */
-	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
+	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
 
-	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTP_CAP},
+	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
+	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, 0},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
