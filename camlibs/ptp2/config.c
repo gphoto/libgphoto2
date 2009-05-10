@@ -133,7 +133,6 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 				event.Nparam,event.Code,event.Transaction_ID,
 				event.Param1, event.Param2, event.Param3);
 	}
-#if 0
 	gp_port_set_timeout (camera->port, oldtimeout);
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 		ret = ptp_canon_viewfinderon (params);
@@ -142,7 +141,6 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		/* ignore errors here */
 	}
 	gp_port_set_timeout (camera->port, 1000);
-#endif
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
