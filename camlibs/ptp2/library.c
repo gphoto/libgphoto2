@@ -1749,22 +1749,12 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		nrofentries = 0;
 		entries = NULL;
 	}
-	ret = ptp_canon_eos_setuilock(params);
-        if (ret != PTP_RC_OK) {
-                gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "set uilock failed!");
-                return GP_ERROR;
-        }
 
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_setuilock(params);
-        if (ret != PTP_RC_OK) {
-                gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "reset uilock failed!");
-                return GP_ERROR;
-        }
 
 	newobject = 0;
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
