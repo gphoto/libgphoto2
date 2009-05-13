@@ -1441,7 +1441,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			if (size >= 0x8) {	/* event info */
 				int j;
 				for (j=8;j<size;j++) {
-					ptp_debug (params, "    %d: %02x", j, data[j]);
+					ptp_debug (params, "    %d: %02x", j, curdata[j]);
 				}			
 			}
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
