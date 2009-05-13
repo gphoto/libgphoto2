@@ -1418,7 +1418,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			ret = ptp_canon_eos_setdevicepropvalueex (params, evfoutputmode, 12);
 			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setval of evf outputmode to 2 failed!");
+				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
 				return GP_ERROR;
 			}
 
@@ -1749,12 +1749,23 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		nrofentries = 0;
 		entries = NULL;
 	}
+	ret = ptp_canon_eos_setremotemode(params, 1);
+        if (ret != PTP_RC_OK) {
+                gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "set remotemode 1 failed!");
+                return GP_ERROR;
+        }
 
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
+	ret = ptp_canon_eos_setremotemode(params, 0);
+        if (ret != PTP_RC_OK) {
+                gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "set remotemode 1 failed!");
+                return GP_ERROR;
+        }
+
 	newobject = 0;
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
 		int i;
