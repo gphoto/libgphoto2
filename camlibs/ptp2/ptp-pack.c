@@ -1438,12 +1438,34 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "event %d: EOS event 0, but size %d", i, size);
 			break;
 		default:
+			switch (type) {
+#define XX(x)		case PTP_EC_CANON_EOS_##x: ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", size);break;
+			XX(RequestGetEvent)
+			XX(ObjectRemoved)
+			XX(RequestGetObjectInfoEx)
+			XX(StorageStatusChanged)
+			XX(StorageInfoChanged)
+			XX(ObjectInfoChangedEx)
+			XX(ObjectContentChanged)
+			XX(CameraStatusChanged)
+			XX(WillSoonShutdown)
+			XX(ShutdownTimerUpdated)
+			XX(RequestCancelTransfer)
+			XX(RequestObjectTransferDT)
+			XX(RequestCancelTransferDT)
+			XX(StoreAdded)
+			XX(StoreRemoved)
+			XX(BulbExposureTime)
+			XX(RecordingTime)
+			XX(RequestObjectTransferTS)
+			XX(AfResult)
+#undef XX
+			}
 			ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
 			if (size >= 0x8) {	/* event info */
 				int j;
-				for (j=8;j<size;j++) {
+				for (j=8;j<size;j++)
 					ptp_debug (params, "    %d: %02x", j, curdata[j]);
-				}			
 			}
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			break;
