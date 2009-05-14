@@ -1443,7 +1443,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 gp_log (GP_LOG_VERBOSE, "canon/usb.c",
                         _("canon_usb_dialogue:"
 			  " payload too big, won't fit into buffer (%i > %i)"),
-                        (payload_length + 0x50), sizeof (packet));
+                        (payload_length + 0x50), (int)sizeof (packet));
                 return NULL;
         }
 
@@ -2499,6 +2499,9 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
         int res;
 
         *dirent_data = NULL;
+
+	if (!disk_name) /* should only happen on IO error */
+		return GP_ERROR_IO;
 
         /* build payload :
          *
