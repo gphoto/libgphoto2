@@ -1439,7 +1439,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			break;
 		default:
 			switch (type) {
-#define XX(x)		case PTP_EC_CANON_EOS_##x: ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", size);break;
+#define XX(x)		case PTP_EC_CANON_EOS_##x: ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", i, size);break;
 			XX(RequestGetEvent)
 			XX(ObjectRemoved)
 			XX(RequestGetObjectInfoEx)
