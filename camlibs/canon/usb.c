@@ -2500,6 +2500,9 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
 
         *dirent_data = NULL;
 
+	if (!disk_name) /* should only happen on IO error */
+		return GP_ERROR_IO;
+
         /* build payload :
          *
          * 0x0f dirname 0x00 0x00 0x00
