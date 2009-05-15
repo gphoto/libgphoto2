@@ -1,0 +1,160 @@
+0.355787 PTP2/ptp2/library.c(2): Device info:
+0.355808 PTP2/ptp2/library.c(2): Manufacturer: Nikon Corporation
+0.355825 PTP2/ptp2/library.c(2):   Model: E3700
+0.355842 PTP2/ptp2/library.c(2):   device version: E3700v1.2
+0.355859 PTP2/ptp2/library.c(2):   serial number: '000004653842'
+0.355876 PTP2/ptp2/library.c(2): Vendor extension ID: 0x0000000a
+0.355893 PTP2/ptp2/library.c(2): Vendor extension version: 100
+0.355915 PTP2/ptp2/library.c(2): Vendor extension description: Nikon PTP Extensions
+0.355928 PTP2/ptp2/library.c(2): Functional Mode: 0x0000
+0.355939 PTP2/ptp2/library.c(2): PTP Standard Version: 100
+0.355950 PTP2/ptp2/library.c(2): Supported operations:
+0.355960 PTP2/ptp2/library.c(2):   0x1001
+0.355970 PTP2/ptp2/library.c(2):   0x1002
+0.355981 PTP2/ptp2/library.c(2):   0x1003
+0.355991 PTP2/ptp2/library.c(2):   0x1004
+0.356001 PTP2/ptp2/library.c(2):   0x1005
+0.356012 PTP2/ptp2/library.c(2):   0x1006
+0.356022 PTP2/ptp2/library.c(2):   0x1007
+0.356032 PTP2/ptp2/library.c(2):   0x1008
+0.356043 PTP2/ptp2/library.c(2):   0x1009
+0.356053 PTP2/ptp2/library.c(2):   0x100a
+0.356063 PTP2/ptp2/library.c(2):   0x100b
+0.356074 PTP2/ptp2/library.c(2):   0x100c
+0.356084 PTP2/ptp2/library.c(2):   0x100d
+0.356094 PTP2/ptp2/library.c(2):   0x100e
+0.356104 PTP2/ptp2/library.c(2):   0x1014
+0.356115 PTP2/ptp2/library.c(2):   0x1015
+0.356125 PTP2/ptp2/library.c(2):   0x1016
+0.356136 PTP2/ptp2/library.c(2):   0x101b
+0.356160 PTP2/ptp2/library.c(2):   0x9001
+0.356171 PTP2/ptp2/library.c(2):   0x9002
+0.356181 PTP2/ptp2/library.c(2):   0x9003
+0.356191 PTP2/ptp2/library.c(2): Events Supported:
+0.356201 PTP2/ptp2/library.c(2):   0x4001
+0.356211 PTP2/ptp2/library.c(2):   0x4002
+0.356222 PTP2/ptp2/library.c(2):   0x4003
+0.356232 PTP2/ptp2/library.c(2):   0x4004
+0.356242 PTP2/ptp2/library.c(2):   0x4005
+0.356253 PTP2/ptp2/library.c(2):   0x4006
+0.356263 PTP2/ptp2/library.c(2):   0x4007
+0.356273 PTP2/ptp2/library.c(2):   0x4008
+0.356284 PTP2/ptp2/library.c(2):   0x4009
+0.356294 PTP2/ptp2/library.c(2):   0x400a
+0.356305 PTP2/ptp2/library.c(2):   0x400c
+0.356315 PTP2/ptp2/library.c(2):   0x400d
+0.356325 PTP2/ptp2/library.c(2):   0xc001
+0.356336 PTP2/ptp2/library.c(2): Device Properties Supported:
+0.356346 PTP2/ptp2/library.c(2):   0x5001
+0.356356 PTP2/ptp2/library.c(2):   0x5003
+0.356367 PTP2/ptp2/library.c(2):   0x5004
+0.356377 PTP2/ptp2/library.c(2):   0x5008
+0.356387 PTP2/ptp2/library.c(2):   0x500a
+0.356398 PTP2/ptp2/library.c(2):   0x500c
+0.356408 PTP2/ptp2/library.c(2):   0x5011
+0.356418 PTP2/ptp2/library.c(2):   0xd001
+0.356429 PTP2/ptp2/library.c(2):   0xd002
+
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: E3700
+  Version: E3700v1.2
+  Serial Number: 000004653842
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: Nikon PTP Extensions
+
+Capture Formats: JPEG
+Display Formats: JPEG, TIFF, Association/Directory, DPOF, MS Wave, Apple Quicktime
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 252837888 (241 MB)
+	Free Space (Bytes): 252755968 (241 MB)
+	Free Space (Images): 308
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 65% (65)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'640x480',
+	'1024x768',
+	'1600x1200',
+	'2048x1536'
+	] value: '2048x1536'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [12,25] value: 12
+Focal Length(0x5008):(readwrite) (type=0x6) Enumeration [3500,3650,3780,4040,4440,4840,5300,5700,6160,6560,6960,7360,7750,8220,8620,9010,9410,9870,10270,10500] value: 35 mm (3500)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Automatic flash (1)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20090515T095927'
+Property 0xd001: error 200a on query.
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5] value: 4
+
+/main/settings/autofocusdrive
+	Label: Drive Nikon DSLR Autofocus
+	Type: TOGGLE
+	Current: 0
+/main/settings/manualfocusdrive
+	Label: Drive Nikon DSLR Manual focus
+	Type: RANGE
+	Current: 0
+	Bottom: -32767
+	Top: 32767
+	Step: 1
+/main/settings/time
+	Label: Camera Time
+	Type: DATE
+	Current: 1242378018
+	Printable: Fri May 15 11:00:18 2009
+/main/settings/fastfs
+	Label: Fast Filesystem
+	Type: TOGGLE
+	Current: 1
+/main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Memory card
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/imgsettings/imgquality
+	Label: Image Quality
+	Type: RADIO
+	Current: Unknown value 000c
+	Choice: 0 Unknown value 000c
+	Choice: 1 Unknown value 0019
+/main/imgsettings/imgsize
+	Label: Image Size
+	Type: RADIO
+	Current: 2048x1536
+	Choice: 0 640x480
+	Choice: 1 1024x768
+	Choice: 2 1600x1200
+	Choice: 3 2048x1536
+/main/capturesettings/focallength
+	Label: Focal Length
+	Type: RANGE
+	Current: 35
+	Bottom: 35
+	Top: 105
+	Step: 1
+/main/capturesettings/focusmode
+	Label: Focus Mode
+	Type: RADIO
+	Current: Automatic
+	Choice: 0 Automatic
+	Choice: 1 Automatic Macro
+/main/capturesettings/flashmode
+	Label: Flash Mode
+	Type: RADIO
+	Current: Automatic Flash
+	Choice: 0 Automatic Flash
+	Choice: 1 Flash off
+	Choice: 2 Fill flash
+	Choice: 3 Red-eye automatic
