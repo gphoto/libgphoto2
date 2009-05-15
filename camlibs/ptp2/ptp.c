@@ -1868,6 +1868,27 @@ ptp_canon_keepdeviceon (PTPParams* params)
 }
 
 /**
+ * ptp_canon_eos_keepdeviceon:
+ *
+ * This operation sends a "ping" style message to the camera.
+ * 
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_keepdeviceon (PTPParams* params)
+{
+	PTPContainer ptp;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_EOS_KeepDeviceOn;
+	ptp.Nparam=0;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
  * ptp_canon_initiatecaptureinmemory:
  * 
  * This operation starts the image capture according to the current camera

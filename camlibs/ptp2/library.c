@@ -1781,6 +1781,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		free (entries);
 		if (newobject)
 			break;
+		CPR (context, ptp_canon_keepdeviceon (params));
 		gp_context_idle (context);
 	}
 	if (newobject == 0)
