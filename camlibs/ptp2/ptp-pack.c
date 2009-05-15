@@ -1460,8 +1460,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			XX(RequestObjectTransferTS)
 			XX(AfResult)
 #undef XX
+			default:
+				ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
+				break;
 			}
-			ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
 			if (size >= 0x8) {	/* event info */
 				int j;
 				for (j=8;j<size;j++)
