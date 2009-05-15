@@ -1323,6 +1323,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				switch (proptype) {
 				case PTP_DPC_CANON_EOS_CameraTime:
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
+				case PTP_DPC_CANON_EOS_AvailableShots:
+				case PTP_DPC_CANON_EOS_DriveMode:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				case PTP_DPC_CANON_EOS_Aperture:
@@ -1348,13 +1350,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_INT16;
 					break;
 				/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
-				case PTP_DPC_CANON_EOS_DriveMode:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXB:
 				case PTP_DPC_CANON_EOS_BatterySelect:
 				case 0xd114:
 				case PTP_DPC_CANON_EOS_PTPExtensionVersion:
 				case PTP_DPC_CANON_EOS_DPOFVersion:
-				case PTP_DPC_CANON_EOS_AvailableShots:
 				case PTP_DPC_CANON_EOS_CaptureDestination:
 				case PTP_DPC_CANON_EOS_BracketMode:
 				case PTP_DPC_CANON_EOS_CustomFunc1:
