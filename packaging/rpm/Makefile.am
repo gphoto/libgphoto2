@@ -15,15 +15,6 @@ clean-local:
 	cp $< $@
 
 rpm: Makefile package.spec
-if RPM_LIBUSB_DEVEL
-	@echo "Building libgphoto2 RPM with USB support and dependency on the libusb RPM package."
-else
-	@echo "#############################################################################"
-	@echo "# Building libgphoto2 RPM packages ***WITHOUT*** USB support.               #"
-	@echo "# Install both the libusb and the libusb-devel RPM package for USB support. #"
-	@echo "#############################################################################"
-	@sleep 3
-endif
 	$(MAKE) clean
 	mkdir -p BUILD SPECS SOURCES SRPMS
 	for arch in i386 i486 i586 i686 alpha noarch; do \

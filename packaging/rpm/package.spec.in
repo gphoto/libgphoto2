@@ -34,8 +34,8 @@ BuildRequires: findutils perl
 
 # the following requirements are optional
 @ENABLE_GTK_DOC_TRUE@BuildRequires: gtk-doc
-@RPM_LIBUSB_DEVEL_TRUE@Requires: libusb >= 0.1.8
-@RPM_LIBUSB_DEVEL_TRUE@BuildRequires: libusb-devel >= 0.1.8
+Requires: libusb >= 0.1.8
+BuildRequires: libusb-devel >= 0.1.8
 
 ####################################
 %description
