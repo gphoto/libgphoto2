@@ -916,11 +916,14 @@ static struct {
 	{"Canon:PowerShot SD880 IS",		0x04a9, 0x3196, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* IRC Reporter */
-	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP},
+	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* mitch <debianuser@mll.dissimulo.com> */
-	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP},
+	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
 
-	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTP_CAP},
+	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
+	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, 0},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1403,12 +1406,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			SET_CONTEXT_P(params, context);
 
-#if 1
+#if 1 /* might not be needed */
 			ret = ptp_canon_eos_start_viewfinder (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
-				//SET_CONTEXT_P(params, NULL);
-				//return GP_ERROR;
+				/*
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+				*/
 			}
 #endif
 			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
@@ -1437,12 +1442,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				gp_file_set_name (file, "preview.jpg");
 				free (data);
 			}
-#if 1
+#if 1 /* might not be needed */
 			ret = ptp_canon_eos_end_viewfinder (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
-				//SET_CONTEXT_P(params, NULL);
-				//return GP_ERROR;
+				/*
+				SET_CONTEXT_P(params, NULL);
+				return GP_ERROR;
+				*/
 			}
 #endif
 			SET_CONTEXT_P(params, NULL);
@@ -2409,7 +2416,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 	);
 
 	switch (event.Code) {
-	case PTP_EC_ObjectAdded:
+	case PTP_EC_ObjectAdded: {
+		PTPObjectInfo	*obinfo;
+
 		path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 		if (!path)
 			return GP_ERROR_NO_MEMORY;
@@ -2418,24 +2427,27 @@ camera_wait_for_event (Camera *camera, int timeout,
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
-		for (i = params->handles.n ; i--; ) {
-			PTPObjectInfo	*obinfo;
-
-			if (params->handles.Handler[i] != newobject)
-				continue;
-			obinfo = &camera->pl->params.objectinfo[i];
-			strcpy  (path->name,  obinfo->Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
-			get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
+		i = handle_to_n (newobject, camera);
+		if (i == PTP_HANDLER_SPECIAL)
+			return GP_ERROR;
+		obinfo = &camera->pl->params.objectinfo[i];
+		strcpy  (path->name,  obinfo->Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+		get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+		if (obinfo->ObjectFormat == PTP_OFC_Association) { /* new folder! */
+			*eventtype = GP_EVENT_FOLDER_ADDED;
+			*eventdata = path;
+			gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
+		} else {
 			CR (gp_filesystem_append (camera->fs, path->folder,
 						  path->name, context));
-			break;
+			*eventtype = GP_EVENT_FILE_ADDED;
+			*eventdata = path;
 		}
-		*eventtype = GP_EVENT_FILE_ADDED;
-		*eventdata = path;
 		break;
+	}
 	default: {
 		char *x;
 
