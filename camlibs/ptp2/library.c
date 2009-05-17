@@ -571,7 +571,7 @@ static struct {
 	/* Nikon Coolpix 5400: T. Kaproncai, 25 Jul 2003 */
 	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119, 0},
 	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
-	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d, 0},
+	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2110825&group_id=8874&atid=108874 */
 	{"Nikon:Coolpix 8700 (PTP mode)", 0x04b0, 0x011f, 0},
 	/* Nikon Coolpix 3200 */
@@ -844,7 +844,7 @@ static struct {
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP}, /* user had it working without problem */
 
 	/* reported by: gphoto@lunkwill.org */
-	{"Canon:EOS 1D Mark III (PTP mode)",	0x04a9, 0x3147, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 1D Mark III (PTP mode)",	0x04a9, 0x3147, PTP_CAP},
 
 	{"Canon:PowerShot S5 IS (PTP mode)",    0x04a9, 0x3148, PTP_CAP|PTP_CAP_PREVIEW},
 	/* AlannY <alanny@starlink.ru> */
@@ -1424,7 +1424,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			ret = ptp_canon_eos_setdevicepropvalueex (params, evfoutputmode, 12);
 			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setval of evf outputmode to 2 failed!");
+				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
 				return GP_ERROR;
 			}
 
@@ -1760,6 +1760,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
+
 	newobject = 0;
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
 		int i;
@@ -1785,6 +1786,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		free (entries);
 		if (newobject)
 			break;
+		CPR (context, ptp_canon_eos_keepdeviceon (params));
 		gp_context_idle (context);
 	}
 	if (newobject == 0)
@@ -2220,7 +2222,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	uint32_t	newobject = 0x0;
 	CameraFilePath	*path;
 	static int 	capcnt = 0;
-	int		i;
+	int		i, oldtimeout;
 	uint16_t	ret;
 	time_t		event_start;
 	CameraFile	*file;
@@ -4413,9 +4415,11 @@ debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
 	GP_DEBUG ("  AssociationType: 0x%04x", oi->AssociationType);
 	GP_DEBUG ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
 	GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
+	GP_DEBUG ("  ModificationDate: 0x%08x", (unsigned int)oi->ModificationDate);
+	GP_DEBUG ("  CaptureDate: 0x%08x", (unsigned int)oi->CaptureDate);
 }
 
-static int
+int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
 	int i, id, nroot = 0;
