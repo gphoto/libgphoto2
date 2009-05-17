@@ -1,11 +1,20 @@
-2009-04-10  Marcus Meissner  <marcus@jet.franken.de>
+2009-05-17  Marcus Meissner  <marcus@jet.franken.de>
 
-	* ptp.c,ptp.h,ptp-pack.c: make nikon check event return a
-	  generic PTPContainer, make canon check event also return
-	  a generic PTPContainer.
+	* ptp-pack.c,ptp.c,ptp.h: Enhanced EOS event decoding.
+	* ptp.c: Handle wrong sequence number on startup.
+	* config.c: EOS camera capturetarget support (card capture not
+	  yet working)
 
-	* ptp.c,ptp.h: Added 2 PTP event queue, generic events and Canon EOS.
-
+	* library.c: Added new ids for:
+		- Kodak V803, M1063
+		- Canon PowerShot A650IS, SD990 (aka IXUS 980IS), SD880IS, A480
+		- Canon EOS 50D
+		- Fuji FinePix S1000fd
+	* library.c: Enable EOS capture mode automatically on --capture-image.
+	* library.c: Implemented basic EOS LiveView support.
+	* library.c: Handle new raw Canon images.
+	* library.c: MIME Type of previews might be different than of main image.
+	* music-players.h: Merged from libmtp.
 
 2009-03-27  Marcus Meissner  <marcus@jet.franken.de>
 
