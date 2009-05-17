@@ -7,7 +7,11 @@ PTP2 driver:
    * More EOS stuff decoded, added experimental "capturetarget" support
      for EOS.
    * EOS LiveView support (experimental, reported for EOS 1000D).
-   * Added some new USB ids.
+   * Added new USB ids:
+	- Kodak V803, M1063
+	- Canon PowerShot A650IS, SD990 (aka IXUS 980IS), SD880IS, A480
+	- Canon EOS 50D
+	- Fuji FinePix S1000fd
    * Retrieve filedates again from PTP objects.
    * speedup: Do not list files on / (there aren't any).
    * Some bugfixes.
