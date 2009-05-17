@@ -1,12 +1,12 @@
-libgphoto2 2.4.5.4
+libgphoto2 2.4.6
 
 This is a 2.4 release branch update.
 
 PTP2 driver:
    * Fixed Nikon DSLR capture in LiveView mode (like gtkam uses).
-   * More EOS stuff decoded, added experimental "capturetarget" support
+   * More Canon EOS stuff decoded, added experimental "capturetarget" support
      for EOS.
-   * EOS LiveView support (experimental, reported for EOS 1000D).
+   * Canon EOS LiveView support (experimental, reported working for EOS 1000D).
    * Added new USB ids:
 	- Kodak V803, M1063
 	- Canon PowerShot A650IS, SD990 (aka IXUS 980IS), SD880IS, A480
@@ -14,7 +14,7 @@ PTP2 driver:
 	- Fuji FinePix S1000fd
    * Retrieve filedates again from PTP objects.
    * speedup: Do not list files on / (there aren't any).
-   * Some bugfixes.
+   * Bugfixes.
 
 Canon driver:
    * Support Exposure Bias setting.
