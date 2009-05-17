@@ -1,3 +1,7 @@
+2009-02-21  Theodore Kilgore <kilgota@auburn.edu>
+	library,c: Cobra DC-125 added, reported by 
+	Tim Johnson <tim@johnsons-web.com>.
+
 2008-01-03  Theodore Kilgore <kilgota@auburn.edu>
 	jl2005a.c: Improvements in jl2005a_read_picture_data().
 
