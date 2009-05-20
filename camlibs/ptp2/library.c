@@ -1401,21 +1401,11 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			return GP_OK;
 		}
 		/* Canon EOS DSLR preview mode */
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 		        unsigned char           evfoutputmode[12];
 
 			SET_CONTEXT_P(params, context);
 
-#if 1 /* might not be needed */
-			ret = ptp_canon_eos_start_viewfinder (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
-				/*
-				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
-				*/
-			}
-#endif
 			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
 			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
 			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
@@ -1442,16 +1432,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				gp_file_set_name (file, "preview.jpg");
 				free (data);
 			}
-#if 1 /* might not be needed */
-			ret = ptp_canon_eos_end_viewfinder (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
-				/*
-				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
-				*/
-			}
-#endif
 			SET_CONTEXT_P(params, NULL);
 			return GP_OK;
 		}
