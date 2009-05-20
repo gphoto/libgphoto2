@@ -1779,7 +1779,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				/* delete last / or we get confused later. */
 				path->folder[ strlen(path->folder)-1 ] = '\0';
 				gp_filesystem_append (camera->fs, path->folder, path->name, context);
-				break;
+				continue; /* for RAW+JPG mode capture, we just return the last image for now. */
 			}
 		}
 		free (entries);
