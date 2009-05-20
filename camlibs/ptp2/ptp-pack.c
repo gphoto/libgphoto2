@@ -1218,6 +1218,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		case  PTP_EC_CANON_EOS_RequestObjectTransfer:
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER;
 			(*ce)[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
+			(*ce)[i].u.object.oi.StorageID 		= 0; /* use as marker */
 			(*ce)[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OI_OFC]);
 			(*ce)[i].u.object.oi.ParentObject	= 0; /* check, but use as marker */
 			(*ce)[i].u.object.oi.ObjectCompressedSize = dtoh32a(&curdata[PTP_ece_OI_Size]);
