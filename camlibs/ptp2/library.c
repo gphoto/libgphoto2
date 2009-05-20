@@ -2210,8 +2210,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			for (i=0;i<nrofentries;i++) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
-				if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
-
+				switch (entries[i].type) {
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 
 					newobject = entries[i].u.object.oid;
@@ -2259,8 +2259,26 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_unref (file);
 					finish = 1;
 					break;
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
+					/* just add it to the filesystem, and return in CameraPath */
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+					newobject = entries[i].u.object.oid;
+					add_object (camera, newobject, context);
+					strcpy  (path->name,  entries[i].u.object.oi.Filename);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entries[i].u.object.oi.StorageID);
+					get_folder_from_handle (camera, entries[i].u.object.oi.StorageID, entries[i].u.object.oi.ParentObject, path->folder);
+					/* delete last / or we get confused later. */
+					path->folder[ strlen(path->folder)-1 ] = '\0';
+					gp_filesystem_append (camera->fs, path->folder, path->name, context);
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					finish = 1;
+					break;
+				default:
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entries[i].type);
+					break;
 				}
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entries[i].type);
+				if (finish) break;
 			}
 			if (finish) {
 				if (nrofentries-i > 1) {
