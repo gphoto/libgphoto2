@@ -1,3 +1,12 @@
+libgphoto2 2.4.6.1
+
+This is a 2.4 release branch update.
+
+PTP2 driver:
+   * Several Canon EOS fixes for card capture and for LiveView, debugged
+     with a EOS 5D Mark II.
+
+------------------------------------------------------------------------
 libgphoto2 2.4.6
 
 This is a 2.4 release branch update.
