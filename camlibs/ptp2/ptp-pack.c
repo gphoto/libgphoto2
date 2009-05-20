@@ -1174,9 +1174,9 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 #define PTP_ece_OA_ObjectID	8
 #define PTP_ece_OA_StorageID	0x0c
 #define PTP_ece_OA_OFC		0x10
-#define PTP_ece_OA_Size		0x28
-#define PTP_ece_OA_Parent	0x32
-#define PTP_ece_OA_Name		0x40
+#define PTP_ece_OA_Size		0x1c
+#define PTP_ece_OA_Parent	0x20
+#define PTP_ece_OA_Name		0x28
 
 static inline int
 ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **ce)
