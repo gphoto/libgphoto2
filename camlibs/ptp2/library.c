@@ -1070,6 +1070,7 @@ static struct {
 	{PTP_OFC_MTP_vCalendar2,	PTP_VENDOR_MICROSOFT, "text/calendar"},
 	{PTP_OFC_CANON_CRW,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
+	{PTP_OFC_CANON_MOV,		PTP_VENDOR_CANON, "video/quicktime"},
 	{0,				0, NULL}
 };
 
