@@ -1216,7 +1216,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "event %d: objectinfo added oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, (*ce)[i].u.object.oid, (*ce)[i].u.object.oi.ParentObject, (*ce)[i].u.object.oi.ObjectFormat, (*ce)[i].u.object.oi.ObjectCompressedSize, (*ce)[i].u.object.oi.Filename);
 			break;
 		case  PTP_EC_CANON_EOS_RequestObjectTransfer:
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
+			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER;
 			(*ce)[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
 			(*ce)[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OI_OFC]);
 			(*ce)[i].u.object.oi.ParentObject	= 0; /* check, but use as marker */

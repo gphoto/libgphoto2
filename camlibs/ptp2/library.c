@@ -1761,10 +1761,24 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		}
 		for (i=0;i<nrofentries;i++) {
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entries[i].type);
-			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
 				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
+				break;
+			}
+			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+				/* just add it to the filesystem, and return in CameraPath */
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+				newobject = entries[i].u.object.oid;
+				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
+				add_object (camera, newobject, context);
+				strcpy  (path->name,  oi.Filename);
+				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+				get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+				/* delete last / or we get confused later. */
+				path->folder[ strlen(path->folder)-1 ] = '\0';
+				gp_filesystem_append (camera->fs, path->folder, path->name, context);
 				break;
 			}
 		}
@@ -1778,6 +1792,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		return GP_ERROR;
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "object has OFC 0x%x", oi.ObjectFormat);
 
+	if (oi.StorageID) /* all done above */
+		return GP_OK;
+
 	strcpy  (path->folder,"/");
 	sprintf (path->name, "capt%04d.", capcnt++);
 	if (oi.ObjectFormat == PTP_OFC_CANON_CRW || oi.ObjectFormat == PTP_OFC_CANON_CRW3) {
@@ -1787,7 +1804,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		strcat(path->name, "jpg");
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
 	}
-
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
 	gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
