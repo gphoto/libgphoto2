@@ -1406,6 +1406,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			SET_CONTEXT_P(params, context);
 
+			if (!params->eos_captureenabled)
+				camera_prepare_capture (camera, context);
+
 			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
 			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
 			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
