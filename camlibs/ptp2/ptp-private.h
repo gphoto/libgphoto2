@@ -32,8 +32,6 @@ void report_result (GPContext *context, short result, short vendor);
 int translate_ptp_result (short result);
 void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
-int init_ptp_fs (Camera *camera, GPContext *context);
-
 struct _CameraPrivateLibrary {
 	PTPParams params;
 	unsigned long bugs;
