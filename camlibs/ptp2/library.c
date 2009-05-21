@@ -2264,6 +2264,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 					newobject = entries[i].u.object.oid;
 					add_object (camera, newobject, context);
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
 					strcpy  (path->name,  entries[i].u.object.oi.Filename);
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entries[i].u.object.oi.StorageID);
 					get_folder_from_handle (camera, entries[i].u.object.oi.StorageID, entries[i].u.object.oi.ParentObject, path->folder);
@@ -2844,8 +2847,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			char tmpname[20], *s;
 
 			PTPStorageInfo storageinfo;
+#if 0 /* EOS testing */
 			if ((storageids.Storage[i]&0x0000ffff)==0)
 				continue;
+#endif
 			
 			n = snprintf (txt, spaceleft,"store_%08x:\n",(unsigned int)storageids.Storage[i]);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
@@ -3145,7 +3150,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			for (i=0; i<storageids.n; i++) {
 				char fname[PTP_MAXSTRLEN];
 
+#if 0 /* EOS has 2 entries, one with 0 in minor ... lets check */
 				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
+#endif
 				snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
 					storageids.Storage[i]);
