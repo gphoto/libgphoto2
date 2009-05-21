@@ -44,9 +44,9 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 	int i,j=0;
 	unsigned char *catalog = calloc(0x4010,1);
 	unsigned char *catalog_tmp;
+
 	if (!catalog) return GP_ERROR_NO_MEMORY;
 
-	
 	SQWRITE (port, 0x0c, 0x14f4, 0x0, NULL, 0);
 	SQREAD (port, 0x0c, 0xf5, 0x00, c, 0x14);
 	SQWRITE (port, 0x0c, 0x1440, 0x110f, NULL, 0);
@@ -170,7 +170,7 @@ digi_reset (GPPort *port)
 	/* Release current register */
 	SQWRITE (port, 0x0c, 0xa0, 0x00, NULL, 0);
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 
@@ -182,24 +182,24 @@ digi_read_picture_data (GPPort *port, unsigned char *data, int size, int n )
 	int remainder = size % 0x8000;
 	int offset = 0;
 	if (!n) {
-    		SQWRITE (port, 0x0c, 0x30, 0x00, NULL, 0); 
+		SQWRITE (port, 0x0c, 0x30, 0x00, NULL, 0); 
 	}	
 	while ((offset + 0x8000 < size)) {
 		gp_port_read (port, (char *)data + offset, 0x8000);
 			offset = offset + 0x8000;
 	}
- 	gp_port_read (port, (char *)data + offset, remainder);
+	gp_port_read (port, (char *)data + offset, remainder);
 
-    	return GP_OK;
+	return GP_OK;
 } 
 
 int digi_delete_all     (GPPort *port, CameraPrivateLibrary *priv) 
 {
-	int i;
 	int size;
 	int num_pics;
 	unsigned char *get_size;
 	unsigned char *junk=NULL;
+
 	get_size=malloc(0x50);
 	if(!get_size) 
 		return GP_ERROR_NO_MEMORY;
@@ -210,30 +210,31 @@ int digi_delete_all     (GPPort *port, CameraPrivateLibrary *priv)
 	if(!num_pics) {
 		GP_DEBUG("Camera is already empty!\n");
 		return GP_OK;
-	}	
-	SQWRITE (port, 0x0c, 0x1440, 0x110f, NULL, 0);
-	i=0;
-    	while (i < 19) {
-		gp_port_read(port, (char *)get_size, 0x50);
-		GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);	
-		size = get_size[0x40]+(get_size[0x41]*0x100);
-		GP_DEBUG("size = 0x%x\n", size);
-		if(size <= 0xff) {
-			free(get_size);
-			GP_DEBUG("Size not read. Downloading to clear camera not needed.\n");
-			digi_reset(port);
-			return GP_OK;
-		}
-		junk = malloc(size);
-		if(! junk) {
-			GP_DEBUG("allocation of junk space failed\n");
-			return GP_ERROR_NO_MEMORY;	
-		}
-		gp_port_read(port, (char *)junk, size);
-		free(junk); 
-		i ++;
 	}
+	SQWRITE (port, 0x0c, 0x1440, 0x110f, NULL, 0);
+	if ((gp_port_read(port, (char *)get_size, 0x50)!=0x50)) {
+		GP_DEBUG("Error in reading data\n");
+		return GP_ERROR;
+	}
+	GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
+	size = get_size[0x40]|(get_size[0x41]<<8)|(get_size[0x42]<<16)|
+						(get_size[0x43]<<24);
+	GP_DEBUG("size = 0x%x\n", size);
+	if(size <= 0xff) {
+		free(get_size);
+		GP_DEBUG("No size to read. This will not work.\n");
+		digi_reset(port);
+		return GP_OK;
+	}
+	junk = malloc(size);
+	if(! junk) {
+		GP_DEBUG("allocation of junk space failed\n");
+		return GP_ERROR_NO_MEMORY;
+	}
+	gp_port_read(port, (char *)junk, size);
+	free(junk); 
 	digi_reset (port);
+
 	return GP_OK;
 }
 
