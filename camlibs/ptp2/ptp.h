@@ -785,6 +785,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 /* Canon extension */
 #define PTP_OFC_CANON_CRW			0xb101
 #define PTP_OFC_CANON_CRW3			0xb103
+#define PTP_OFC_CANON_MOV			0xb104
 /* MTP extensions */
 #define PTP_OFC_MTP_MediaCard			0xb211
 #define PTP_OFC_MTP_MediaCardGroup		0xb212
@@ -1044,8 +1045,9 @@ struct _PTPNIKONWifiProfile {
 
 typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 
-#define PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN	0
-#define PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO	1
+#define PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN		0
+#define PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO		1
+#define PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER	2
 
 struct _PTPCanon_New_Object {
 	uint32_t		oid;

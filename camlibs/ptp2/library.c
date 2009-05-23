@@ -1070,6 +1070,7 @@ static struct {
 	{PTP_OFC_MTP_vCalendar2,	PTP_VENDOR_MICROSOFT, "text/calendar"},
 	{PTP_OFC_CANON_CRW,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
+	{PTP_OFC_CANON_MOV,		PTP_VENDOR_CANON, "video/quicktime"},
 	{0,				0, NULL}
 };
 
@@ -1402,21 +1403,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			return GP_OK;
 		}
 		/* Canon EOS DSLR preview mode */
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 		        unsigned char           evfoutputmode[12];
 
 			SET_CONTEXT_P(params, context);
 
-#if 1 /* might not be needed */
-			ret = ptp_canon_eos_start_viewfinder (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon enable liveview failed: %x"), ret);
-				/*
-				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
-				*/
-			}
-#endif
+			if (!params->eos_captureenabled)
+				camera_prepare_capture (camera, context);
+
 			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
 			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
 			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
@@ -1443,16 +1437,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				gp_file_set_name (file, "preview.jpg");
 				free (data);
 			}
-#if 1 /* might not be needed */
-			ret = ptp_canon_eos_end_viewfinder (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon disable liveview failed: %x"), ret);
-				/*
-				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
-				*/
-			}
-#endif
 			SET_CONTEXT_P(params, NULL);
 			return GP_OK;
 		}
@@ -1776,11 +1760,25 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		}
 		for (i=0;i<nrofentries;i++) {
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entries[i].type);
-			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
 				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
 				break;
+			}
+			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+				/* just add it to the filesystem, and return in CameraPath */
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+				newobject = entries[i].u.object.oid;
+				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
+				add_object (camera, newobject, context);
+				strcpy  (path->name,  oi.Filename);
+				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+				get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+				/* delete last / or we get confused later. */
+				path->folder[ strlen(path->folder)-1 ] = '\0';
+				gp_filesystem_append (camera->fs, path->folder, path->name, context);
+				continue; /* for RAW+JPG mode capture, we just return the last image for now. */
 			}
 		}
 		free (entries);
@@ -1792,6 +1790,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	if (newobject == 0)
 		return GP_ERROR;
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "object has OFC 0x%x", oi.ObjectFormat);
+
+	if (oi.StorageID) /* all done above */
+		return GP_OK;
 
 	strcpy  (path->folder,"/");
 	sprintf (path->name, "capt%04d.", capcnt++);
@@ -2265,8 +2266,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			for (i=0;i<nrofentries;i++) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
-				if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
-
+				switch (entries[i].type) {
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 
 					newobject = entries[i].u.object.oid;
@@ -2312,8 +2313,29 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_unref (file);
 					finish = 1;
 					break;
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
+					/* just add it to the filesystem, and return in CameraPath */
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+					newobject = entries[i].u.object.oid;
+					add_object (camera, newobject, context);
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					strcpy  (path->name,  entries[i].u.object.oi.Filename);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entries[i].u.object.oi.StorageID);
+					get_folder_from_handle (camera, entries[i].u.object.oi.StorageID, entries[i].u.object.oi.ParentObject, path->folder);
+					/* delete last / or we get confused later. */
+					path->folder[ strlen(path->folder)-1 ] = '\0';
+					gp_filesystem_append (camera->fs, path->folder, path->name, context);
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					finish = 1;
+					break;
+				default:
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entries[i].type);
+					break;
 				}
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entries[i].type);
+				if (finish) break;
 			}
 			if (finish) {
 				if (nrofentries-i > 1) {
@@ -2879,8 +2901,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			char tmpname[20], *s;
 
 			PTPStorageInfo storageinfo;
+#if 0 /* EOS testing */
 			if ((storageids.Storage[i]&0x0000ffff)==0)
 				continue;
+#endif
 			
 			n = snprintf (txt, spaceleft,"store_%08x:\n",(unsigned int)storageids.Storage[i]);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
