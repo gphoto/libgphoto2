@@ -419,6 +419,7 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 	len=0;
 	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
 	ptp_exit_recv_memory_handler (&handler, &di, &len);
+	if (!di) ret = PTP_RC_GeneralError;
 	if (ret == PTP_RC_OK) ptp_unpack_DI(params, di, deviceinfo, len);
 	free(di);
 	return ret;
