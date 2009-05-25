@@ -5,13 +5,13 @@ if I send 0xff as described in whatever/file.c), those are the guys to ask.
 libgphoto2_port:
 	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
 	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
-	Hubert Figuiere <hfiguiere@teaser.fr>
+	Hubert Figuiere <hfiguiere@teaser.fr>	(old maintainer)
 	Marcus Meissner <marcus@jet.franken.de>
 
 libgphoto2:
 	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
 	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
-	Hubert Figuiere <hfiguiere@teaser.fr>
+	Hubert Figuiere <hfiguiere@teaser.fr>	(old maintainer)
 	Marcus Meissner <marcus@jet.franken.de>
 
 --------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ camlibs/aox:
 	Theodore Kilgore <kilgota@auburn.edu>
 
 camlibs/barbie:
-	Scott Fritzinger <scottf@unr.edu> 
+	Scott Fritzinger <scottf@unr.edu>
 	Marcus Meissner <marcus@jet.franken.de>
 
 camlibs/benq:
@@ -75,6 +75,9 @@ camlibs/jd11:
 	Marcus Meissner <marcus@jet.franken.de>
 
 camlibs/jl2005a:
+	Theodore Kilgore <kilgota@auburn.edu>
+
+camlibs/jl2005c:
 	Theodore Kilgore <kilgota@auburn.edu>
 
 camlibs/konica:
