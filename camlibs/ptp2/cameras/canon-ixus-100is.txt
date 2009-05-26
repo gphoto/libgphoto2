@@ -1,0 +1,75 @@
+gphoto2 --summary 
+Camera summary: 
+
+Model: Canon DIGITAL IXUS 100 IS
+device version: 1-6.0.1.0
+serial number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor extension ID: 0x00000006
+Vendor extension description: (null)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Defined Type, Unknown(b101), Unknown(b103), Unknown(b104), Unknown(bf01)
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified Unknown(b101)/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b104)/b104: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Unknown(bf01)/bf01: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 3956801536 (3773 MB)
+	Free Space (Bytes): 3845881856 (3667 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd045:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Property 0xd02e:(read only) (type=0x6) 524288
+Property 0xd02f:(read only) (type=0x6) 524288
+Property 0xd002:(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: 0
+Property 0xd003:(read only) (type=0x6) Enumeration [0,1,2,3] value: 1
+Property 0xd034:(readwrite) (type=0x6) 1239922898
+Property 0xd047:(read only) (type=0x4) 2
+Property 0xd046:(read only) (type=0x4) 257
+Property 0xd02d:(read only) (type=0x4006) a[4] 119,0,159,0
+Property 0xd02c:(read only) (type=0x4006) Enumeration [
+	a[6] 3000,4000,1,0,0,0,
+	a[6] 3000,4000,6,0,0,0,
+	a[6] 3000,4000,11,0,0,0,
+	a[6] 2448,3264,2,0,0,0,
+	a[6] 2448,3264,7,0,0,0,
+	a[6] 2448,3264,12,0,0,0,
+	a[6] 1944,2592,3,0,0,0,
+	a[6] 1944,2592,8,0,0,0,
+	a[6] 1944,2592,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Property 0xd030:(read only) (type=0x6) 256
+Property 0xd049:(read only) (type=0x6) 39976960
+Property 0xd032:(read only) (type=0xffff) 'Canon DIGITAL IXUS 100 IS'
+Property 0xd033:(readwrite) (type=0x4002) a[0] 
+Property 0xd031:(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 1
+Friendly Device Name(0xd402):(read only) (type=0xffff) Canon DIGITAL IXUS 100 IS ('Canon DIGITAL IXUS 100 IS')
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
