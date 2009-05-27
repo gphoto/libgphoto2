@@ -3845,6 +3845,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		default:
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
+		break;
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
 		unsigned char *ximage = NULL;
