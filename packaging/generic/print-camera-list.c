@@ -414,7 +414,7 @@ udev_parse_params (const func_params_t *params, void **data)
 		/* UDEV_0_98 */
 		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\"",
 		/* UDEV_136 */
-		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{GPHOTO2_DRIVER}=\"proprietary\""
+		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\""
 	};
 	udev_persistent_data_t *pdata;
 	pdata = calloc(1, sizeof(udev_persistent_data_t));
@@ -497,18 +497,6 @@ udev_begin_func (const func_params_t *params, void **data)
 static int
 udev_end_func (const func_params_t *params, void *data)
 {
-	udev_persistent_data_t *pdata = (udev_persistent_data_t *) data;
-	ASSERT(pdata != NULL);
-
-	/* if the user did not specify any owner/script, use automatic ACLs */
-	if (pdata->version >= UDEV_136
-	    && pdata->mode == NULL 
-	    && pdata->group == NULL 
-	    && pdata->owner == NULL 
-	    && pdata->script == NULL)
-		printf ("\n# mark for automatic ACL management\n");
-		printf ("ENV{GPHOTO2_DRIVER}==\"?*\", ENV{ACL_MANAGE}=\"1\"\n");
-
 	if (data != NULL) {
 		free(data);
 	}
@@ -570,7 +558,7 @@ udev_camera_func (const func_params_t *params,
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
 			if (pdata->version == UDEV_136) {
-				printf("ENV{ID_USB_INTERFACES}==\"*:%02d%02d%02d:*\", ENV{GPHOTO2_DRIVER}=\"PTP\"", class, subclass, proto);
+				printf("ENV{ID_USB_INTERFACES}==\"*:%02d%02d%02d:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\"", class, subclass, proto);
 			} else {
 				printf("PROGRAM=\"check-ptp-camera %02d/%02d/%02d\"", class, subclass, proto);
 			}
