@@ -366,12 +366,14 @@ idlist_camera_func (const func_params_t *params,
 
 typedef enum {
 		UDEV_PRE_0_98 = 0,
-		UDEV_0_98 = 1
+		UDEV_0_98 = 1,
+		UDEV_136 = 2
 } udev_version_t;
 
 static const StringFlagItem udev_version_t_map[] = {
 	{ "pre-0.98", UDEV_PRE_0_98 },
 	{ "0.98", UDEV_0_98 },
+	{ "136", UDEV_136 },
 	{ NULL, 0 }
 };
 
@@ -399,13 +401,20 @@ udev_parse_params (const func_params_t *params, void **data)
 		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n",
 		/* UDEV_0_98 */
 		"SUBSYSTEM!=\"usb|usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n",
+		/* UDEV_136 */
+		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ENV{DEVTYPE}!=\"usb_device\", GOTO=\"libgphoto2_rules_end\"\n"
 		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n\n"
+		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{program}=\"usb_id --export %%p\"\n\n"
 	};
 	static const char * const usbcam_strings[] = {
 		/* UDEV_PRE_0_98 */
-		"SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\", ",
+		"SYSFS{idVendor}==\"%04x\", SYSFS{idProduct}==\"%04x\"",
 		/* UDEV_0_98 */
-		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ",
+		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\"",
+		/* UDEV_136 */
+		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{GPHOTO2_DRIVER}=\"proprietary\""
 	};
 	udev_persistent_data_t *pdata;
 	pdata = calloc(1, sizeof(udev_persistent_data_t));
@@ -444,7 +453,8 @@ udev_parse_params (const func_params_t *params, void **data)
 	    && pdata->mode == NULL 
 	    && pdata->group == NULL 
 	    && pdata->owner == NULL 
-	    && pdata->script == NULL) {
+	    && pdata->script == NULL
+	    && pdata->version <= UDEV_0_98) {
 		FATAL("Either <script> or <mode,group,owner> parameters must be given.");
 	}
 	if ((pdata->script != NULL) && (pdata->mode != NULL 
@@ -487,6 +497,18 @@ udev_begin_func (const func_params_t *params, void **data)
 static int
 udev_end_func (const func_params_t *params, void *data)
 {
+	udev_persistent_data_t *pdata = (udev_persistent_data_t *) data;
+	ASSERT(pdata != NULL);
+
+	/* if the user did not specify any owner/script, use automatic ACLs */
+	if (pdata->version >= UDEV_136
+	    && pdata->mode == NULL 
+	    && pdata->group == NULL 
+	    && pdata->owner == NULL 
+	    && pdata->script == NULL)
+		printf ("\n# mark for automatic ACL management\n");
+		printf ("ENV{GPHOTO2_DRIVER}==\"?*\", ENV{ACL_MANAGE}=\"1\"\n");
+
 	if (data != NULL) {
 		free(data);
 	}
@@ -547,7 +569,11 @@ udev_camera_func (const func_params_t *params,
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
-			printf("PROGRAM=\"check-ptp-camera %02d/%02d/%02d\", ", class, subclass, proto);
+			if (pdata->version == UDEV_136) {
+				printf("ENV{ID_USB_INTERFACES}==\"*:%02d%02d%02d:*\", ENV{GPHOTO2_DRIVER}=\"PTP\"", class, subclass, proto);
+			} else {
+				printf("PROGRAM=\"check-ptp-camera %02d/%02d/%02d\"", class, subclass, proto);
+			}
 			has_valid_rule = 1;
 		} else {
 			if (class == 666) {
@@ -568,6 +594,9 @@ udev_camera_func (const func_params_t *params,
 		}
 	}
 	if (has_valid_rule != 0) {
+		if (pdata->script != NULL || pdata->mode != NULL || pdata->owner != NULL || pdata->group != NULL)
+			printf(", ");
+
 		if (pdata->script != NULL) {
 			printf("RUN+=\"%s\"\n", pdata->script);
 		} else if (pdata->mode != NULL || pdata->owner != NULL || pdata->group != NULL) {
@@ -589,7 +618,8 @@ udev_camera_func (const func_params_t *params,
 			printf("\n");
 		} else {
 			printf("\n");
-			FATAL("udev_camera_func(): illegal branch");
+			if (pdata->version < UDEV_136)
+				FATAL("udev_camera_func(): illegal branch");
 		}
 	}
 	return 0;
@@ -1118,12 +1148,16 @@ static const output_format_t formats[] = {
 	 fdi_device_end_func
 	},
 	{"udev-rules",
-	 "udev rules file either for pre-0.98 or 0.98 and later",
-	 "Put it into /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
+	 "udev rules file",
+	 "For modes \"pre-0.98\" and \"0.98\" (and later), put it into\n"
+	 "        /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
 	 "        or add script to run. This rule files also uses the\n"
 	 "        check-ptp-camera script included in libgphoto2 source. Either put it to\n"
 	 "        /lib/udev/check-ptp-camera or adjust the path in the generated rules file.\n"
-	 "        If you give a script parameter, the mode, owner, group parameters will be ignored.",
+	 "        If you give a script parameter, the mode, owner, group parameters will be ignored.\n"
+	 "        For mode \"136\" put it into /lib/udev/rules.d/40-libgphoto2.rules;\n"
+	 "        you can still use mode/owner/group, but the preferred mode of operation\n"
+	 "        is to use udev-extras for dynamic access permissions.\n",
 	 "[script <PATH_TO_SCRIPT>|version <version>|mode <mode>|owner <owner>|group <group>]*",
 	 udev_begin_func, 
 	 udev_camera_func,
