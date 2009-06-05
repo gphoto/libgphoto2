@@ -4954,6 +4954,7 @@ camera_init (Camera *camera, GPContext *context)
 	PTPParams *params;
 	char *curloc, *camloc;
 	GPPortSettings	settings;
+	uint32_t	sessionid;
 
 	gp_port_get_settings (camera->port, &settings);
 	/* Make sure our port is either USB or PTP/IP. */
@@ -5078,11 +5079,17 @@ camera_init (Camera *camera, GPContext *context)
 	SET_CONTEXT(camera, context);
 
 	retried = 0;
+	sessionid = 1;
 	while (1) {
-		ret=ptp_opensession (&camera->pl->params, 1);
-		while (ret==PTP_RC_InvalidTransactionID) {
-			camera->pl->params.transaction_id+=10;
-			ret=ptp_opensession (&camera->pl->params, 1);
+		ret = ptp_opensession (&camera->pl->params, sessionid);
+		if (ret == PTP_RC_InvalidTransactionID) {
+			sessionid++;
+			if (retried < 5) { /* try again */
+				retried++;
+				continue;
+			}
+			report_result(context, ret, 0);
+			return translate_ptp_result(ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/camera_init", "ptp_opensession returns %x", ret);
@@ -5095,8 +5102,7 @@ camera_init (Camera *camera, GPContext *context)
 				retried++;
 				continue;
 			}
-			/* FIXME: deviceinfo is not read yet ... */
-			report_result(context, ret, camera->pl->params.deviceinfo.VendorExtensionID);
+			report_result(context, ret, 0);
 			return (translate_ptp_result(ret));
 		}
 		break;
