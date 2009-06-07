@@ -922,6 +922,8 @@ static struct {
 
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* IRC reporter */
+	{"Canon:PowerShot SX200 IS",		0x04a9, 0x31c0, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, 0},
 
