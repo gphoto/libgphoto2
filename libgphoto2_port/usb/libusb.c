@@ -757,9 +757,11 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		}
 	}
 
+#if 0
 	gp_port_set_error (port, _("Could not find USB device "
 		"(vendor 0x%x, product 0x%x). Make sure this device "
 		"is connected to the computer."), idvendor, idproduct);
+#endif
 	return GP_ERROR_IO_USB_FIND;
 }
 
@@ -988,10 +990,11 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 			return GP_OK;
 		}
 	}
-
+#if 0
 	gp_port_set_error (port, _("Could not find USB device "
 		"(class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device "
 		"is connected to the computer."), class, subclass, protocol);
+#endif
 	return GP_ERROR_IO_USB_FIND;
 }
 
