@@ -1,0 +1,75 @@
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot SX200 IS
+  Version: 1-6.0.1.0
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Defined Type, CRW, Unknown(b103), Unknown(b104), Unknown(bf01)
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	CRW/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b104)/b104: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Unknown(bf01)/bf01: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 2017067008 (1923 MB)
+	Free Space (Bytes): 1919778816 (1830 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 524288
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 524288
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+UNIX Time(0xd034):(readwrite) (type=0x6) 1247038357
+Type of Slideshow(0xd047):(read only) (type=0x4) 2
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Supported Thumb Size(0xd02d):(read only) (type=0x4006) a[4] 119,0,159,0
+Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 3000,4000,1,0,0,0,
+	a[6] 3000,4000,6,0,0,0,
+	a[6] 3000,4000,11,0,0,0,
+	a[6] 2448,3264,2,0,0,0,
+	a[6] 2448,3264,7,0,0,0,
+	a[6] 2448,3264,12,0,0,0,
+	a[6] 1944,2592,3,0,0,0,
+	a[6] 1944,2592,8,0,0,0,
+	a[6] 1944,2592,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Model ID(0xd049):(read only) (type=0x6) 39845888
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot SX200 IS'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0] 
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 1
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot SX200 IS'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+
