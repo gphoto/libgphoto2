@@ -990,11 +990,11 @@ static struct {
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
 	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
-	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
+	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTP_MATCH_IFACE_DIRECTLY},
 	/* irc reporter. MTP based. */
-	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
+	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, PTP_MATCH_IFACE_DIRECTLY},
 	/* Marco Michna at SUSE */
-	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, 0},
+	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, PTP_MATCH_IFACE_DIRECTLY},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
@@ -1174,6 +1174,12 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[0]		= 0;
 		a.usb_vendor		= models[i].usb_vendor;
 		a.usb_product		= models[i].usb_product;
+		if (models[i].known_bugs & PTP_MATCH_IFACE_DIRECTLY) {
+			/* only for iphones/ipod touch */
+			a.usb_class = 6;
+			a.usb_subclass = 1;
+			a.usb_protocol = 1;
+		}
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
 		if (models[i].known_bugs & PTP_CAP)
