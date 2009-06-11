@@ -859,9 +859,14 @@ fdi_camera_func (const func_params_t *params,
 		if (a->usb_vendor) { /* usb product id might be 0! */
 			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
+			if ((a->usb_class) && (a->usb_class != 666)) { /* additional match */
+				printf("     <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
+				printf("      <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
+				printf("       <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
+			}
 			if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
 				printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
-				printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
+				printf("     <addset key=\"info.capabilities\" type=\"strlist\">portable_audio_player</addset>\n");
 				printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">user</merge>\n");
 				printf("     <merge key=\"portable_audio_player.type\" type=\"string\">mtp</merge>\n");
 				
@@ -869,8 +874,8 @@ fdi_camera_func (const func_params_t *params,
 				printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
 			} else {
 				printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
-				
+				printf("     <addset key=\"info.capabilities\" type=\"strlist\">camera</addset>\n");
+
 				/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
 				if (NULL!=strstr(a->library,"ptp"))
 					printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
@@ -880,6 +885,11 @@ fdi_camera_func (const func_params_t *params,
 			/* leave them here even for audio players */
 			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
+			if ((a->usb_class) && (a->usb_class != 666)) { /* additional match */
+				printf("       </match>\n");
+				printf("      </match>\n");
+				printf("     </match>\n");
+			}
 			printf("    </match>\n");
 			printf("   </match>\n");
 			
@@ -888,7 +898,7 @@ fdi_camera_func (const func_params_t *params,
 			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
 			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
 			printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("      <addset key=\"info.capabilities\" type=\"strlist\">camera</addset>\n");
 			if (a->usb_class == 6) {
 				printf("      <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
 			} else {
