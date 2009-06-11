@@ -991,10 +991,12 @@ static struct {
 
 	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTP_MATCH_IFACE_DIRECTLY},
+	/* IRC reporter adjusted info */
+	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1291, PTP_MATCH_IFACE_DIRECTLY},
 	/* irc reporter. MTP based. */
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, PTP_MATCH_IFACE_DIRECTLY},
 	/* Marco Michna at SUSE */
-	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, PTP_MATCH_IFACE_DIRECTLY},
+	{"Apple:iPod Touch 2G (PTP mode)",	0x05ac, 0x1293, PTP_MATCH_IFACE_DIRECTLY},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
