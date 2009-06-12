@@ -994,11 +994,11 @@ static struct {
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
 	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
-	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, PTP_MATCH_IFACE_DIRECTLY},
+	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
 	/* irc reporter. MTP based. */
-	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, PTP_MATCH_IFACE_DIRECTLY},
+	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* Marco Michna at SUSE */
-	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, PTP_MATCH_IFACE_DIRECTLY},
+	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, 0},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
@@ -1180,12 +1180,6 @@ camera_abilities (CameraAbilitiesList *list)
 		a.speed[0]		= 0;
 		a.usb_vendor		= models[i].usb_vendor;
 		a.usb_product		= models[i].usb_product;
-		if (models[i].device_flags & PTP_MATCH_IFACE_DIRECTLY) {
-			/* only for iphones/ipod touch */
-			a.usb_class = 6;
-			a.usb_subclass = 1;
-			a.usb_protocol = 1;
-		}
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
 		if (models[i].device_flags & PTP_CAP)
@@ -1482,6 +1476,7 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 	PTPObject	*ob;
 	PTPParams 	*params = &camera->pl->params;
 
+	gp_log (GP_LOG_DEBUG, "ptp/get_folder_from_handle", "(%x,%x,%s)", storage, handle, folder);
 	if (handle == PTP_HANDLER_ROOT)
 		return GP_OK;
 
@@ -1489,6 +1484,8 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 	ret = get_folder_from_handle (camera, storage, ob->oi.ParentObject, folder);
 	if (ret != GP_OK)
 		return ret;
+	/* now ob could be invalid, since we might have reallocated params->objects */
+	ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 	strcat (folder, ob->oi.Filename);
 	strcat (folder, "/");
 	return (GP_OK);
