@@ -1,4 +1,4 @@
-libgphoto2 2.4.99.3 development state
+libgphoto2 2.4.99.4 development state
 
 libgphoto2 API:
    TODO:
@@ -59,6 +59,10 @@ libgphoto2_port API:
      not affect frontends at all.
 
    * Started using symbol versions.
+
+PTP2 driver:
+   * Lots of improvements.
+   * PTP Object management rewritten, able to do "on demand" loading.
 
 Directory driver:
    * Use GPPortInfo instead of settings to pass basepath in.
