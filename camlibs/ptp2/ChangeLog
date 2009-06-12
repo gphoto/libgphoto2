@@ -1,3 +1,10 @@
+2009-05-26  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.c,ptp.h,library.c.usb.c:: Unify and abstract ptp object handling.
+	  Add "on demand" loading throughout library.c.
+
+	  (Larger rewrite ... might still be a bit buggy.)
+
 2009-04-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c,ptp.h,ptp-pack.c: make nikon check event return a

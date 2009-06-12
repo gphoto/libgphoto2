@@ -157,6 +157,10 @@
   { "Samsung", 0x04e8, "YP-P3", 0x511a,
      DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
      DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  // From Marco Pizzocaro <mpizzocaro@users.sourceforge.net>
+  // Guessing on .spl flag
+  { "Samsung", 0x04e8, "YP-U5", 0x5121,
+     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // From a rouge .INF file,
   // this device ID seems to have been recycled for:
   // the Samsung SGH-A707 Cingular cellphone
@@ -656,6 +660,9 @@
   // Reported by Cristi Magherusan <majeru@gentoo.ro>
   { "TrekStor", 0x0402, "i.Beat Sweez FM", 0x0611, 
     DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Anonymous SourceForge user
+  {"TrekStor", 0x1e68, "i.Beat Organix 2.0", 0x0002,
+    DEVICE_FLAG_UNLOAD_DRIVER },
   
   /*
    * Disney/Tevion/MyMusix
@@ -779,9 +786,11 @@
   { "SonyEricsson", 0x0fce, "C702", 0x00d9, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Christian Zuckschwerdt <christian@zuckschwerdt.org>
   { "SonyEricsson", 0x0fce, "W980", 0x00da, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by David Taylor <davidt-libmtp@yadt.co.uk>
+  { "SonyEricsson", 0x0fce, "C905", 0x00ef, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by David House <dmhouse@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "W595", 0x00f3,
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL | DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // Reported by Mattias Evensson <mevensson@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "W902", 0x00f5, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Stéphane Pontier <shadow_walker@users.sourceforge.net>

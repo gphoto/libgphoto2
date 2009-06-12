@@ -273,7 +273,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		if (dtoh16(usbdata.code)!=ptp->Code) {
 			/* A creative Zen device breaks down here, by leaving out
 			 * Code and Transaction ID */
-			if (MTP_ZEN_BROKEN_HEADER(camera->pl)) {
+			if (MTP_ZEN_BROKEN_HEADER(params)) {
 				gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x), compensating.",
 					dtoh16(usbdata.code), ptp->Code
 				);
@@ -434,7 +434,6 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 {
 	uint16_t 		ret;
 	unsigned long		rlen;
-	Camera			*camera = ((PTPData *)params->data)->camera;
 	PTPUSBBulkContainer	usbresp;
 	/*GPContext		*context = ((PTPData *)params->data)->context;*/
 
@@ -461,7 +460,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	resp->SessionID=params->session_id;
 	resp->Transaction_ID=dtoh32(usbresp.trans_id);
 	if (resp->Transaction_ID != params->transaction_id - 1) {
-		if (MTP_ZEN_BROKEN_HEADER(camera->pl)) {
+		if (MTP_ZEN_BROKEN_HEADER(params)) {
 			gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "Read broken PTP header (transid is %08x vs %08x), compensating.",
 				resp->Transaction_ID, params->transaction_id - 1
 			);

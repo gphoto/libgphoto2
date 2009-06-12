@@ -206,3 +206,37 @@
  * level.
  */
 #define DEVICE_FLAG_BROKEN_BATTERY_LEVEL 0x00010000
+
+/**
+ * Devices that send "ObjectDeleted" events after deletion
+ * of images. (libgphoto2) 
+ */ 
+#define DEVICE_FLAG_DELETE_SENDS_EVENT	0x00020000
+
+/**
+ * Cameras that can capture images. (libgphoto2)
+ */ 
+#define DEVICE_FLAG_CAPTURE		0x00040000
+
+/**
+ * Cameras that can capture images. (libgphoto2)
+ */ 
+#define DEVICE_FLAG_CAPTURE_PREVIEW	0x00080000
+
+/**
+ * Nikon broken capture support without proper ObjectAdded events.
+ * (libgphoto2)
+ */ 
+#define DEVICE_FLAG_NIKON_BROKEN_CAPTURE	0x00100000
+
+/**
+ * Broken capture support where cameras do not send CaptureComplete events.
+ * (libgphoto2)
+ */ 
+#define DEVICE_FLAG_NO_CAPTURE_COMPLETE		0x00400000
+
+/**
+ * Direct PTP match required.
+ * (libgphoto2)
+ */ 
+#define DEVICE_FLAG_MATCH_PTP_INTERFACE		0x00800000

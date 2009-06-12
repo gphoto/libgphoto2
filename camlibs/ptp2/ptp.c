@@ -22,7 +22,7 @@
  */
 
 #define _BSD_SOURCE
-#include <config.h>
+#include "config.h"
 #include "ptp.h"
 
 #include <stdlib.h>
@@ -475,7 +475,6 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	/* no split headers */
 	params->split_header_data = 0;
 
-	
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_OpenSession;
 	ptp.Param1=session;
@@ -525,20 +524,11 @@ void
 ptp_free_params (PTPParams *params) {
 	int i;
 
-	for (i=0;i<params->nrofprops;i++) {
-		MTPProperties	*xpl = &params->props[i];
-
-		if ((xpl->datatype == PTP_DTC_STR) && (xpl->propval.str))
-			free (xpl->propval.str);
-	}
-	if (params->props) free (params->props);
-	if (params->canon_flags) free (params->canon_flags);
 	if (params->cameraname) free (params->cameraname);
 	if (params->wifi_profiles) free (params->wifi_profiles);
-	free (params->handles.Handler);
-	for (i=0;i<params->handles.n;i++)
-		ptp_free_objectinfo (&params->objectinfo[i]);
-	free (params->objectinfo);
+	for (i=0;i<params->nrofobjects;i++)
+		ptp_free_object (&params->objects[i]);
+	free (params->objects);
 	ptp_free_DI (&params->deviceinfo);
 }
 
@@ -3485,6 +3475,18 @@ ptp_free_objectinfo (PTPObjectInfo *oi)
         free (oi->Keywords); oi->Keywords = NULL;
 }
 
+void
+ptp_free_object (PTPObject *ob)
+{
+	int i;
+	if (!ob) return;
+
+	ptp_free_objectinfo (&ob->oi);
+	for (i=0;i<ob->nrofmtpprops;i++)
+		ptp_destroy_object_prop(&ob->mtpprops[i]);
+	ob->flags = 0;
+}
+
 void 
 ptp_perror(PTPParams* params, uint16_t error) {
 
@@ -5096,16 +5098,19 @@ ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops)
 MTPProperties *
 ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id)
 {
-	int i;
-	MTPProperties *prop = params->props;
-	
-	if (!prop)
+	int	i;
+	MTPProperties	*prop;
+	PTPObject	*ob;
+	uint16_t	ret;
+
+	ret = ptp_object_find (params, handle, &ob);
+	if (ret != PTP_RC_OK)
 		return NULL;
-	
-	for (i=0;i<params->nrofprops;i++) {
-		if (handle == prop->ObjectHandle && attribute_id == prop->property)
+	prop = ob->mtpprops;
+	for (i=0;i<ob->nrofmtpprops;i++) {
+		if (attribute_id == prop->property)
 			return prop;
-		prop ++;
+		prop++;
 	}
 	return NULL;
 }
@@ -5114,108 +5119,263 @@ void
 ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
 {
 	int i;
+	PTPObject	*ob;
+	uint16_t	ret;
 
+	ret = ptp_object_find (params, handle, &ob);
+	if (ret != PTP_RC_OK)
+		return;
+	i = ob-params->objects;
 	/* remove object from object info cache */
-	for (i = 0; i < params->handles.n; i++) {
-		if (params->handles.Handler[i] == handle) {
-			ptp_free_objectinfo(&params->objectinfo[i]);
+	ptp_free_object (ob);
 
-			if (i < params->handles.n-1) {
-				memmove(params->handles.Handler+i, params->handles.Handler+i+1,
-					(params->handles.n-i-1)*sizeof(uint32_t));
-				memmove(params->objectinfo+i, params->objectinfo+i+1,
-					(params->handles.n-i-1)*sizeof(PTPObjectInfo));
-			}
-			params->handles.n--;
-			/* We use less memory than before so this shouldn't fail */
-			params->handles.Handler = realloc(params->handles.Handler, sizeof(uint32_t)*params->handles.n);
-			params->objectinfo = realloc(params->objectinfo, sizeof(PTPObjectInfo)*params->handles.n);
-			break;
-		}
-	}
-	
-	/* delete cached object properties if metadata cache exists */
-	if (params->props != NULL) {
-		int nrofoldprops = 0;
-		int firstoldprop = 0;
-		
-		for (i=0; i<params->nrofprops; i++) {
-			MTPProperties *prop = &params->props[i];
-			if (prop->ObjectHandle == handle)
-				{
-					nrofoldprops++;
-					if (nrofoldprops == 1) {
-						firstoldprop = i;
-					}
-				}
-		}
-		for (i=firstoldprop;i<(firstoldprop+nrofoldprops);i++) {
-			ptp_destroy_object_prop(&params->props[i]);
-		}
-		memmove(&params->props[firstoldprop], 
-			&params->props[firstoldprop+nrofoldprops], 
-			(params->nrofprops-firstoldprop-nrofoldprops)*sizeof(MTPProperties));
-		/* We use less memory than before so this shouldn't fail */
-		params->props = realloc(params->props, 
-					(params->nrofprops - nrofoldprops)*sizeof(MTPProperties));
-		params->nrofprops -= nrofoldprops;
-	}
+	if (i < params->nrofobjects-1)
+		memmove (ob,ob+1,(params->nrofobjects-1)*sizeof(PTPObject));
+	params->nrofobjects--;
+	/* We use less memory than before so this shouldn't fail */
+	params->objects = realloc(params->objects, sizeof(PTPObject)*params->nrofobjects);
 }
+
+static int _cmp_ob (const void *a, const void *b) {
+	PTPObject *oa = (PTPObject*)a;
+	PTPObject *ob = (PTPObject*)b;
+
+	return oa->oid - ob->oid;
+}
+	
+void
+ptp_objects_sort (PTPParams *params) {
+	qsort (params->objects, params->nrofobjects, sizeof(PTPObject), _cmp_ob);
+}
+
+/* Binary search in objects. Needs "objects" to be a sorted by objectid list!  */
+uint16_t
+ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob) {
+	PTPObject	tmpob;
+
+	tmpob.oid = handle;
+	*retob = bsearch (&tmpob, params->objects, params->nrofobjects, sizeof(tmpob), _cmp_ob);
+	if (!*retob)
+		return PTP_RC_GeneralError;
+	return PTP_RC_OK;
+}
+
+/* Binary search in objects + insert of not found. Needs "objects" to be a sorted by objectid list!  */
+uint16_t
+ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob) {
+	int 		begin, end, cursor;
+	int		insertat;
+	PTPObject	*newobs;
+
+	if (!handle) return PTP_RC_GeneralError;
+	*retob = NULL;
+	if (!params->nrofobjects) {
+		params->objects = calloc(1,sizeof(PTPObject));
+		params->nrofobjects = 1;
+		params->objects[0].oid = handle;
+		*retob = &params->objects[0];
+		return PTP_RC_OK;
+	}
+	begin = 0;
+	end = params->nrofobjects-1;
+	/*ptp_debug (params, "searching %08x, total=%d\n", handle, params->nrofobjects);*/
+	while (1) {
+		cursor = (end-begin)/2+begin;
+		/*ptp_debug (params, "ob %d: %08x [%d-%d]\n", cursor, params->objects[cursor].oid, begin, end);*/
+		if (params->objects[cursor].oid == handle) {
+			*retob = &params->objects[cursor];
+			return PTP_RC_OK;
+		}
+		if (params->objects[cursor].oid < handle)
+			begin = cursor;
+		else
+			end = cursor;
+		if ((end - begin) <= 1)
+			break;
+	}
+	if (params->objects[begin].oid == handle) {
+		*retob = &params->objects[begin];
+		return PTP_RC_OK;
+	}
+	if (params->objects[end].oid == handle) {
+		*retob = &params->objects[end];
+		return PTP_RC_OK;
+	}
+	if ((begin == 0) && (handle < params->objects[0].oid))
+		insertat=begin;
+	else
+		insertat=begin+1;
+	/*ptp_debug (params, "inserting oid %x at [%x,%x]\n", handle, params->objects[begin].oid, params->objects[end].oid);*/
+	newobs = realloc (params->objects, sizeof(PTPObject)*(params->nrofobjects+1));
+	if (!newobs) return PTP_RC_GeneralError;
+	params->objects = newobs;
+	if (insertat<=params->nrofobjects)
+		memmove (&params->objects[insertat+1],&params->objects[insertat],(params->nrofobjects-insertat)*sizeof(PTPObject));
+	memset(&params->objects[insertat],0,sizeof(PTPObject));
+	params->objects[insertat].oid = handle;
+	*retob = &params->objects[insertat];
+	params->nrofobjects++;
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob) {
+	uint16_t	ret;
+	PTPObject	*ob;
+	//Camera 		*camera = ((PTPData *)params->data)->camera;
+
+	*retob = NULL;
+	if (!handle) {
+		ptp_debug (params, "ptp_object_want: querying handle 0?\n");
+		return PTP_RC_GeneralError;
+	}
+	ret = ptp_object_find_or_insert (params, handle, &ob);
+	if (ret != PTP_RC_OK)
+		return PTP_RC_GeneralError;
+	*retob = ob;
+	/* Do we have all of it already? */
+	if ((ob->flags & want) == want)
+		return PTP_RC_OK;
+
+	if (	(want & PTPOBJECT_OBJECTINFO_LOADED) &&
+		(!(ob->flags & PTPOBJECT_OBJECTINFO_LOADED))
+	) {
+		ret = ptp_getobjectinfo (params, handle, &ob->oi);
+		if (ret != PTP_RC_OK)
+			return ret;
+		//debug_objectinfo(params, handle, &params->objects[i].oi);
+		ob->flags |= PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED;
+	}
+	if (	(want & PTPOBJECT_MTPPROPLIST_LOADED) &&
+		(!(ob->flags & PTPOBJECT_MTPPROPLIST_LOADED))
+	) {
+		int		nrofprops = 0;
+		MTPProperties 	*props = NULL;
+
+		if (params->device_flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST) {
+			want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
+			goto fallback;
+		}
+		/* Microsoft/MTP has fast directory retrieval. */
+		if (!ptp_operation_issupported(params,PTP_OC_MTP_GetObjPropList)) {
+			want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
+			goto fallback;
+		}
+
+		ptp_debug (params, "ptp2/mtpfast: reading mtp proplist of %08x", handle);
+		ret = ptp_mtp_getobjectproplist (params, handle, &props, &nrofprops);
+		if (ret != PTP_RC_OK)
+			goto fallback;
+		ob->mtpprops = props;
+		ob->nrofmtpprops = nrofprops;
+
+#if 0
+		MTPProperties 	*xpl;
+		int j;
+		PTPObjectInfo	oinfo;	
+
+		memset (&oinfo,0,sizeof(oinfo));
+		/* hmm, not necessary ... only if we would use it */
+		for (j=0;j<nrofprops;j++) {
+			xpl = &props[j];
+			switch (xpl->property) {
+			case PTP_OPC_ParentObject:
+				if (xpl->datatype != PTP_DTC_UINT32) {
+					ptp_debug (params, "ptp2/mtpfast: parentobject has type 0x%x???", xpl->datatype);
+					break;
+				}
+				oinfo.ParentObject = xpl->propval.u32;
+				ptp_debug (params, "ptp2/mtpfast: parent 0x%x", xpl->propval.u32);
+				break;
+			case PTP_OPC_ObjectFormat:
+				if (xpl->datatype != PTP_DTC_UINT16) {
+					ptp_debug (params, "ptp2/mtpfast: objectformat has type 0x%x???", xpl->datatype);
+					break;
+				}
+				oinfo.ObjectFormat = xpl->propval.u16;
+				ptp_debug (params, "ptp2/mtpfast: ofc 0x%x", xpl->propval.u16);
+				break;
+			case PTP_OPC_ObjectSize:
+				switch (xpl->datatype) {
+				case PTP_DTC_UINT32:
+					oinfo.ObjectCompressedSize = xpl->propval.u32;
+					break;
+				case PTP_DTC_UINT64:
+					oinfo.ObjectCompressedSize = xpl->propval.u64;
+					break;
+				default:
+					ptp_debug (params, "ptp2/mtpfast: objectsize has type 0x%x???", xpl->datatype);
+					break;
+				}
+				ptp_debug (params, "ptp2/mtpfast: objectsize %u", xpl->propval.u32);
+				break;
+			case PTP_OPC_StorageID:
+				if (xpl->datatype != PTP_DTC_UINT32) {
+					ptp_debug (params, "ptp2/mtpfast: storageid has type 0x%x???", xpl->datatype);
+					break;
+				}
+				oinfo.StorageID = xpl->propval.u32;
+				ptp_debug (params, "ptp2/mtpfast: storageid 0x%x", xpl->propval.u32);
+				break;
+			case PTP_OPC_ProtectionStatus:/*UINT16*/
+				if (xpl->datatype != PTP_DTC_UINT16) {
+					ptp_debug (params, "ptp2/mtpfast: protectionstatus has type 0x%x???", xpl->datatype);
+					break;
+				}
+				oinfo.ProtectionStatus = xpl->propval.u16;
+				ptp_debug (params, "ptp2/mtpfast: protection 0x%x", xpl->propval.u16);
+				break;
+			case PTP_OPC_ObjectFileName:
+				if (xpl->datatype != PTP_DTC_STR) {
+					ptp_debug (params, "ptp2/mtpfast: filename has type 0x%x???", xpl->datatype);
+					break;
+				}
+				if (xpl->propval.str) {
+					ptp_debug (params, "ptp2/mtpfast: filename %s", xpl->propval.str);
+					oinfo.Filename = strdup(xpl->propval.str);
+				} else {
+					oinfo.Filename = NULL;
+				}
+				break;
+			case PTP_OPC_DateCreated:
+				if (xpl->datatype != PTP_DTC_STR) {
+					ptp_debug (params, "ptp2/mtpfast: datecreated has type 0x%x???", xpl->datatype);
+					break;
+				}
+				ptp_debug (params, "ptp2/mtpfast: capturedate %s", xpl->propval.str);
+				oinfo.CaptureDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				break;
+			case PTP_OPC_DateModified:
+				if (xpl->datatype != PTP_DTC_STR) {
+					ptp_debug (params, "ptp2/mtpfast: datemodified has type 0x%x???", xpl->datatype);
+					break;
+				}
+				ptp_debug (params, "ptp2/mtpfast: moddate %s", xpl->propval.str);
+				oinfo.ModificationDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				break;
+			default:
+				if ((xpl->property & 0xfff0) == 0xdc00)
+					ptp_debug (params, "ptp2/mtpfast:case %x type %x unhandled", xpl->property, xpl->datatype);
+				break;
+			}
+		}
+		if (!oinfo.Filename)
+			/* i have one such file on my Creative */
+			oinfo.Filename = strdup("<null>");
+#endif
+		ob->flags |= PTPOBJECT_MTPPROPLIST_LOADED;
+fallback:	;
+	}
+	if ((ob->flags & want) == want)
+		return PTP_RC_OK;
+	ptp_debug (params, "ptp_object_want: oid 0x%08x, want flags %x, have only %x?", handle, want, ob->flags);
+	return PTP_RC_GeneralError;
+}
+
 
 uint16_t
 ptp_add_object_to_cache(PTPParams *params, uint32_t handle)
 {
-	uint32_t n;
-	uint32_t *xhandler;
-	PTPObjectInfo *xoi;
-	
-	/* We have a new handle */
-	params->handles.n++;
-	n = params->handles.n;
-	
-	/* Insert the new handle */
-	xhandler = (uint32_t*) realloc(params->handles.Handler,
-				       sizeof(uint32_t)*n);
-	if (!xhandler) {
-		/* Well, out of memory is no I/O error really... */
-		return PTP_ERROR_IO;
-	}
-	params->handles.Handler = xhandler;
-	params->handles.Handler[n-1] = handle;
-	
-	/* Insert a new object info struct and populate it */
-	xoi = (PTPObjectInfo*)realloc(params->objectinfo,
-				      sizeof(PTPObjectInfo)*n);
-	if (!xoi) {
-		/* Well, out of memory is no I/O error really... */
-		return PTP_ERROR_IO;
-	}
-	params->objectinfo = xoi;
-	memset(&params->objectinfo[n-1], 0, sizeof(PTPObjectInfo));
-	ptp_getobjectinfo(params, handle, &params->objectinfo[n-1]);
-
-	/* Update proplist if we use cached props */
-	if (params->props != NULL) {
-		MTPProperties *props = NULL;
-		MTPProperties *xprops;
-		int no_new_props = 0;
-		uint16_t ret;
-		
-		ret = ptp_mtp_getobjectproplist(params, handle, &props, &no_new_props);
-		if (ret != PTP_RC_OK) {
-			return ret;
-		}
-		xprops = realloc(params->props, (params->nrofprops+no_new_props)*sizeof(MTPProperties));
-		if (!xprops) {
-			free(props);
-			/* Well, out of memory is no I/O error really... */
-			return PTP_ERROR_IO;
-		}
-		params->props = xprops;
-		memcpy(&params->props[params->nrofprops],&props[0],no_new_props*sizeof(MTPProperties));
-		/* do not free the sub strings, we copied them above! Only free the array. */
-		free(props);
-		params->nrofprops += no_new_props;
-	}
-	return PTP_RC_OK;
+	PTPObject *ob;
+	return ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_MTPPROPLIST_LOADED, &ob);
 }
