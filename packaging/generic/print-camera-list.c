@@ -859,7 +859,7 @@ fdi_camera_func (const func_params_t *params,
 		if (a->usb_vendor) { /* usb product id might be 0! */
 			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
-			if ((a->usb_class) && (a->usb_class != 666)) { /* additional match */
+			if (a->usb_vendor == 0x05ac) { /* Apple iPhone */
 				printf("     <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
 				printf("      <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
 				printf("       <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
@@ -885,7 +885,7 @@ fdi_camera_func (const func_params_t *params,
 			/* leave them here even for audio players */
 			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
-			if ((a->usb_class) && (a->usb_class != 666)) { /* additional match */
+			if (a->usb_vendor == 0x05ac) { /* Apple iPhone */
 				printf("       </match>\n");
 				printf("      </match>\n");
 				printf("     </match>\n");
