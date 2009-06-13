@@ -5130,7 +5130,7 @@ ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
 	ptp_free_object (ob);
 
 	if (i < params->nrofobjects-1)
-		memmove (ob,ob+1,(params->nrofobjects-1)*sizeof(PTPObject));
+		memmove (ob,ob+1,(params->nrofobjects-1-i)*sizeof(PTPObject));
 	params->nrofobjects--;
 	/* We use less memory than before so this shouldn't fail */
 	params->objects = realloc(params->objects, sizeof(PTPObject)*params->nrofobjects);
