@@ -756,17 +756,16 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	return (GP_OK);
 }
 
-#if 0
 static int
 _get_Range_INT8(CONFIG_GET_ARGS) {
 	float CurrentValue;
 	
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name ( *widget, menu->name);
 	if (dpd->FormFlag != PTP_DPFF_Range)
 		return (GP_ERROR_NOT_SUPPORTED);
 	if (dpd->DataType != PTP_DTC_INT8)
 		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
 	CurrentValue = (float) dpd->CurrentValue.i8;
 	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinimumValue.i8, (float) dpd->FORM.Range.MaximumValue.i8, (float) dpd->FORM.Range.StepSize.i8);
 	gp_widget_set_value ( *widget, &CurrentValue);
@@ -784,7 +783,6 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 	propval->i8 = (int) f;
 	return (GP_OK);
 }
-#endif
 
 static int
 _get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
@@ -3232,6 +3230,7 @@ static struct submenu capture_settings_menu[] = {
 
         { N_("Low Light"), "lowlight", PTP_DPC_NIKON_ExposureDisplayStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LowLight, _put_None },
         { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LightMeter, _put_None },
+        { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_ExposureIndicateStatus, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Range_INT8, _put_None },
         { N_("AF Locked"), "aflocked", PTP_DPC_NIKON_AFLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("AE Locked"), "aelocked", PTP_DPC_NIKON_AELockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("FV Locked"), "fvlocked", PTP_DPC_NIKON_FVLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
