@@ -859,10 +859,10 @@ fdi_camera_func (const func_params_t *params,
 		if (a->usb_vendor) { /* usb product id might be 0! */
 			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
-			if (a->usb_vendor == 0x05ac) { /* Apple iPhone */
-				printf("     <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
-				printf("      <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
-				printf("       <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
+			if (a->usb_vendor == 0x05ac) { /* Apple iPhone, PTP user. */
+				printf("     <match key=\"usb.interface.class\" int=\"6\">\n");
+				printf("      <match key=\"usb.interface.subclass\" int=\"1\">\n");
+				printf("       <match key=\"usb.interface.protocol\" int=\"1\">\n");
 			}
 			if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
 				printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
