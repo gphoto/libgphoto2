@@ -1470,12 +1470,12 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 		char	buf[20];
 
 		if (dpd->FORM.Enum.SupportedValue[i].u32%1000)
-			sprintf (buf,"%d.%03d",
+			sprintf (buf,_("%d.%03ds"),
 				dpd->FORM.Enum.SupportedValue[i].u32/1000,
 				dpd->FORM.Enum.SupportedValue[i].u32%1000
 			);
 		else
-			sprintf (buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32/1000);
+			sprintf (buf,_("%ds"),dpd->FORM.Enum.SupportedValue[i].u32/1000);
                 gp_widget_add_choice (*widget,buf);
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
                 	gp_widget_set_value (*widget,buf);
@@ -1496,12 +1496,12 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	if (strchr(value,'.')) {
 		int val2;
 
-		if (!sscanf(value,"%d.%d",&val,&val2))
+		if (!sscanf(value,_("%d.%ds"),&val,&val2))
 			return (GP_ERROR);
 		propval->u32 = val*1000+val2;
 		return (GP_OK);
 	}
-	if (!sscanf(value,"%d",&val))
+	if (!sscanf(value,_("%ds"),&val))
 		return (GP_ERROR);
 	propval->u32 = val*1000;
 	return (GP_OK);
