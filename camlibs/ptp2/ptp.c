@@ -3762,23 +3762,23 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 "PTP_DPC_NIKON_A3GroupDynamicAF"},
 		{PTP_DPC_NIKON_A4AFActivation,			/* 0xD04b */
 		 "PTP_DPC_NIKON_A4AFActivation"},
-		{PTP_DPC_NIKON_A5FocusAreaIllumManualFocus,	/* 0xD04c */
-		 "PTP_DPC_NIKON_A5FocusAreaIllumManualFocus"},
+		{PTP_DPC_NIKON_FocusAreaIllumManualFocus,	/* 0xD04c */
+		 "PTP_DPC_NIKON_FocusAreaIllumManualFocus"},
 		{PTP_DPC_NIKON_FocusAreaIllumContinuous,	/* 0xD04d */
 		 "PTP_DPC_NIKON_FocusAreaIllumContinuous"},
 		{PTP_DPC_NIKON_FocusAreaIllumWhenSelected,	/* 0xD04e */
 		 "PTP_DPC_NIKON_FocusAreaIllumWhenSelected"},
 		{PTP_DPC_NIKON_FocusAreaWrap,			/* 0xD04f */
 		 N_("Focus Area Wrap")},
-		{PTP_DPC_NIKON_A7VerticalAFON,			/* 0xD050 */
+		{PTP_DPC_NIKON_VerticalAFON,			/* 0xD050 */
 		 N_("Vertical AF On")},
 		{PTP_DPC_NIKON_ISOAuto,				/* 0xD054 */
 		 N_("Auto ISO")},
-		{PTP_DPC_NIKON_B2ISOStep,			/* 0xD055 */
-		 N_("ISO Step")},
+		{PTP_DPC_NIKON_EVISOStep,			/* 0xD055 */
+		 N_("Exposure ISO Step")},
 		{PTP_DPC_NIKON_EVStep,				/* 0xD056 */
 		 N_("Exposure Step")},
-		{PTP_DPC_NIKON_B4ExposureCompEv,		/* 0xD057 */
+		{PTP_DPC_NIKON_EVStepExposureComp,		/* 0xD057 */
 		 N_("Exposure Compensation (EV)")},
 		{PTP_DPC_NIKON_ExposureCompensation,		/* 0xD058 */
 		 N_("Exposure Compensation")},
@@ -3804,13 +3804,13 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Long Exposure Noise Reduction")},
 		{PTP_DPC_NIKON_FileNumberSequence,		/* 0xD06c */
 		 N_("File Number Sequencing")},
-		{PTP_DPC_NIKON_D6ControlPanelFinderRearControl,	/* 0xD06d */
-		 "PTP_DPC_NIKON_D6ControlPanelFinderRearControl"},
+		{PTP_DPC_NIKON_ControlPanelFinderRearControl,	/* 0xD06d */
+		 "PTP_DPC_NIKON_ControlPanelFinderRearControl"},
 		{PTP_DPC_NIKON_ControlPanelFinderViewfinder,	/* 0xD06e */
 		 "PTP_DPC_NIKON_ControlPanelFinderViewfinder"},
 		{PTP_DPC_NIKON_D7Illumination,			/* 0xD06f */
 		 "PTP_DPC_NIKON_D7Illumination"},
-		{PTP_DPC_NIKON_E1FlashSyncSpeed,		/* 0xD074 */
+		{PTP_DPC_NIKON_FlashSyncSpeed,			/* 0xD074 */
 		 N_("Flash Sync. Speed")},
 		{PTP_DPC_NIKON_FlashShutterSpeed,		/* 0xD075 */
 		 N_("Flash Shutter Speed")},
