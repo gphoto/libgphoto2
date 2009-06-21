@@ -1412,10 +1412,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ToneCompensation			0xD02B
 #define PTP_DPC_NIKON_ColorModel			0xD02C
 #define PTP_DPC_NIKON_HueAdjustment			0xD02D
-#define PTP_DPC_NIKON_NonCPULensDataFocalLength		0xD02E
-#define PTP_DPC_NIKON_NonCPULensDataMaximumAperture	0xD02F
+#define PTP_DPC_NIKON_NonCPULensDataFocalLength		0xD02E	/* Set FMM Manual */
+#define PTP_DPC_NIKON_NonCPULensDataMaximumAperture	0xD02F	/* Set F0 Manual */
+#define PTP_DPC_NIKON_ShootingMode			0xD030
 #define PTP_DPC_NIKON_JPEG_Compression_Policy		0xD031
 #define PTP_DPC_NIKON_ColorSpace			0xD032
+#define PTP_DPC_NIKON_AutoDXCrop			0xD033
 #define PTP_DPC_NIKON_CSMMenuBankSelect			0xD040
 #define PTP_DPC_NIKON_MenuBankNameA			0xD041
 #define PTP_DPC_NIKON_MenuBankNameB			0xD042
@@ -1426,37 +1428,44 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_A2AFSModePriority			0xD049
 #define PTP_DPC_NIKON_A3GroupDynamicAF			0xD04A
 #define PTP_DPC_NIKON_A4AFActivation			0xD04B
-#define PTP_DPC_NIKON_A5FocusAreaIllumManualFocus	0xD04C
+#define PTP_DPC_NIKON_FocusAreaIllumManualFocus		0xD04C
 #define PTP_DPC_NIKON_FocusAreaIllumContinuous		0xD04D
 #define PTP_DPC_NIKON_FocusAreaIllumWhenSelected 	0xD04E
-#define PTP_DPC_NIKON_FocusAreaWrap			0xD04F
-#define PTP_DPC_NIKON_A7VerticalAFON			0xD050
+#define PTP_DPC_NIKON_FocusAreaWrap			0xD04F /* area sel */
+#define PTP_DPC_NIKON_VerticalAFON			0xD050
 #define PTP_DPC_NIKON_AFLockOn				0xD051
 #define PTP_DPC_NIKON_FocusAreaZone			0xD052
+#define PTP_DPC_NIKON_EnableCopyright			0xD053
 #define PTP_DPC_NIKON_ISOAuto				0xD054
-#define PTP_DPC_NIKON_B2ISOStep				0xD055 /* EV Step ISO */
+#define PTP_DPC_NIKON_EVISOStep				0xD055
 #define PTP_DPC_NIKON_EVStep				0xD056 /* EV Step SS FN */
-#define PTP_DPC_NIKON_B4ExposureCompEv			0xD057 /* EV Step Exposure Compensation */
+#define PTP_DPC_NIKON_EVStepExposureComp		0xD057
 #define PTP_DPC_NIKON_ExposureCompensation		0xD058
 #define PTP_DPC_NIKON_CenterWeightArea			0xD059
 #define PTP_DPC_NIKON_ExposureBaseMatrix		0xD05A
 #define PTP_DPC_NIKON_ExposureBaseCenter		0xD05B
 #define PTP_DPC_NIKON_ExposureBaseSpot			0xD05C
+#define PTP_DPC_NIKON_LiveViewAF			0xD05D
 #define PTP_DPC_NIKON_AELockMode			0xD05E
 #define PTP_DPC_NIKON_AELAFLMode			0xD05F
 #define PTP_DPC_NIKON_MeterOff				0xD062
 #define PTP_DPC_NIKON_SelfTimer				0xD063
 #define PTP_DPC_NIKON_MonitorOff			0xD064
-#define PTP_DPC_NIKON_D1ShootingSpeed			0xD068
+#define PTP_DPC_NIKON_ImgConfTime			0xD065
+#define PTP_DPC_NIKON_AngleLevel			0xD067
+#define PTP_DPC_NIKON_D1ShootingSpeed			0xD068 /* continous speed low */
 #define PTP_DPC_NIKON_D2MaximumShots			0xD069
 #define PTP_DPC_NIKON_D3ExpDelayMode			0xD06A
 #define PTP_DPC_NIKON_LongExposureNoiseReduction	0xD06B
 #define PTP_DPC_NIKON_FileNumberSequence		0xD06C
-#define PTP_DPC_NIKON_D6ControlPanelFinderRearControl	0xD06D
+#define PTP_DPC_NIKON_ControlPanelFinderRearControl	0xD06D
 #define PTP_DPC_NIKON_ControlPanelFinderViewfinder	0xD06E
 #define PTP_DPC_NIKON_D7Illumination			0xD06F
 #define PTP_DPC_NIKON_NrHighISO				0xD070
-#define PTP_DPC_NIKON_E1FlashSyncSpeed			0xD074
+#define PTP_DPC_NIKON_SHSET_CH_GUID_DISP		0xD071
+#define PTP_DPC_NIKON_ArtistName			0xD072
+#define PTP_DPC_NIKON_CopyrightInfo			0xD073
+#define PTP_DPC_NIKON_FlashSyncSpeed			0xD074
 #define PTP_DPC_NIKON_FlashShutterSpeed			0xD075	/* SB Low Limit */
 #define PTP_DPC_NIKON_E3AAFlashMode			0xD076
 #define PTP_DPC_NIKON_E4ModelingFlash			0xD077
@@ -1473,13 +1482,19 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_F5CustomizeCommDials		0xD085  /* CMD Dial Change */
 #define PTP_DPC_NIKON_ReverseCommandDial		0xD086  /* CMD Dial FN Set */
 #define PTP_DPC_NIKON_ApertureSetting			0xD087  /* CMD Dial Active */
-#define PTP_DPC_NIKON_MenusAndPlayback			0xD088  /* Universal Mode */
-#define PTP_DPC_NIKON_F6ButtonsAndDials			0xD089  /* Enable Shutter */
-#define PTP_DPC_NIKON_NoCFCard				0xD08A
+#define PTP_DPC_NIKON_MenusAndPlayback			0xD088  /* CMD Dial Active */
+#define PTP_DPC_NIKON_F6ButtonsAndDials			0xD089  /* Universal Mode? */
+#define PTP_DPC_NIKON_NoCFCard				0xD08A	/* Enable Shutter? */
 #define PTP_DPC_NIKON_CenterButtonZoomRatio		0xD08B
+#define PTP_DPC_NIKON_FunctionButton2			0xD08C
+#define PTP_DPC_NIKON_AFAreaPoint			0xD08D
+#define PTP_DPC_NIKON_NormalAFOn			0xD08E
 #define PTP_DPC_NIKON_ImageCommentString		0xD090
 #define PTP_DPC_NIKON_ImageCommentEnable		0xD091
 #define PTP_DPC_NIKON_ImageRotation			0xD092
+#define PTP_DPC_NIKON_ManualSetLensNo			0xD093
+#define PTP_DPC_NIKON_MovScreenSize			0xD0A0
+#define PTP_DPC_NIKON_MovVoice				0xD0A1
 #define PTP_DPC_NIKON_Bracketing			0xD0C0
 #define PTP_DPC_NIKON_AutoExposureBracketStep		0xD0C1
 #define PTP_DPC_NIKON_AutoExposureBracketProgram	0xD0C2
@@ -1493,7 +1508,13 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_FocalLengthMax			0xD0E4
 #define PTP_DPC_NIKON_MaxApAtMinFocalLength		0xD0E5
 #define PTP_DPC_NIKON_MaxApAtMaxFocalLength		0xD0E6
-#define PTP_DPC_NIKON_ExposureTime			0xD100
+#define PTP_DPC_NIKON_FinderISODisp			0xD0F0
+#define PTP_DPC_NIKON_AutoOffPhoto			0xD0F2
+#define PTP_DPC_NIKON_AutoOffMenu			0xD0F3
+#define PTP_DPC_NIKON_AutoOffInfo			0xD0F4
+#define PTP_DPC_NIKON_SelfTimerShootNum			0xD0F5
+#define PTP_DPC_NIKON_VignetteCtrl			0xD0F7
+#define PTP_DPC_NIKON_ExposureTime			0xD100	/* Shutter Speed */
 #define PTP_DPC_NIKON_ACPower				0xD101
 #define PTP_DPC_NIKON_WarningStatus			0xD102
 #define PTP_DPC_NIKON_MaximumShots			0xD103 /* remain shots (in RAM buffer?) */
@@ -1509,10 +1530,16 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_CCDNumber				0xD10D
 #define PTP_DPC_NIKON_CameraOrientation			0xD10E
 #define PTP_DPC_NIKON_GroupPtnType			0xD10F
-#define PTP_DPC_NIKON_ExposureApertureLock		0xD111
+#define PTP_DPC_NIKON_FNumberLock			0xD110
+#define PTP_DPC_NIKON_ExposureApertureLock		0xD111	/* shutterspeed lock*/
+#define PTP_DPC_NIKON_TVLockSetting			0xD112
+#define PTP_DPC_NIKON_AVLockSetting			0xD113
+#define PTP_DPC_NIKON_IllumSetting			0xD114
+#define PTP_DPC_NIKON_FocusPointBright			0xD115
 #define PTP_DPC_NIKON_ExternalFlashAttached		0xD120
 #define PTP_DPC_NIKON_ExternalFlashStatus		0xD121
 #define PTP_DPC_NIKON_ExternalFlashSort			0xD122
+#define PTP_DPC_NIKON_ExternalFlashMode			0xD123
 #define PTP_DPC_NIKON_ExternalFlashCompensation		0xD124
 #define PTP_DPC_NIKON_NewExternalFlashMode		0xD125
 #define PTP_DPC_NIKON_FlashExposureCompensation		0xD126
@@ -1522,6 +1549,16 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_BW_Sharpness			0xD144
 #define PTP_DPC_NIKON_BW_Contrast			0xD145
 #define PTP_DPC_NIKON_BW_Setting_Type			0xD146
+#define PTP_DPC_NIKON_Slot2SaveMode			0xD148
+#define PTP_DPC_NIKON_RawBitMode			0xD149
+#define PTP_DPC_NIKON_ISOAutoTime			0xD14E
+#define PTP_DPC_NIKON_FlourescentType			0xD14F
+#define PTP_DPC_NIKON_TuneColourTemperature		0xD150
+#define PTP_DPC_NIKON_TunePreset0			0xD151
+#define PTP_DPC_NIKON_TunePreset1			0xD152
+#define PTP_DPC_NIKON_TunePreset2			0xD153
+#define PTP_DPC_NIKON_TunePreset3			0xD154
+#define PTP_DPC_NIKON_TunePreset4			0xD155
 #define PTP_DPC_NIKON_BeepOff				0xD160
 #define PTP_DPC_NIKON_AutofocusMode			0xD161
 #define PTP_DPC_NIKON_AFAssist				0xD163
@@ -1541,12 +1578,23 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_WarningDisplay			0xD181
 #define PTP_DPC_NIKON_BatteryCellKind			0xD182
 #define PTP_DPC_NIKON_ISOAutoHiLimit			0xD183
+#define PTP_DPC_NIKON_DynamicAFArea			0xD184
+#define PTP_DPC_NIKON_ContinuousSpeedHigh		0xD186
+#define PTP_DPC_NIKON_InfoDispSetting			0xD187
+#define PTP_DPC_NIKON_PreviewButton			0xD189
+#define PTP_DPC_NIKON_PreviewButton2			0xD18A
+#define PTP_DPC_NIKON_AEAFLockButton2			0xD18B
+#define PTP_DPC_NIKON_IndicatorDisp			0xD18D
+#define PTP_DPC_NIKON_CellKindPriority			0xD18E
 #define PTP_DPC_NIKON_BracketingFramesAndSteps		0xD190
+#define PTP_DPC_NIKON_LiveViewMode			0xD1A0
+#define PTP_DPC_NIKON_LiveViewDriveMode			0xD1A1
 #define PTP_DPC_NIKON_LiveViewStatus			0xD1A2
 #define PTP_DPC_NIKON_LiveViewImageZoomRatio		0xD1A3
 #define PTP_DPC_NIKON_LiveViewProhibitCondition		0xD1A4
 #define PTP_DPC_NIKON_ExposureDisplayStatus		0xD1B0
 #define PTP_DPC_NIKON_ExposureIndicateStatus		0xD1B1
+#define PTP_DPC_NIKON_InfoDispErrStatus			0xD1B2
 #define PTP_DPC_NIKON_ExposureIndicateLightup		0xD1B3
 #define PTP_DPC_NIKON_FlashOpen				0xD1C0
 #define PTP_DPC_NIKON_FlashCharged			0xD1C1

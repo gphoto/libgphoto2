@@ -756,17 +756,16 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	return (GP_OK);
 }
 
-#if 0
 static int
 _get_Range_INT8(CONFIG_GET_ARGS) {
 	float CurrentValue;
 	
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name ( *widget, menu->name);
 	if (dpd->FormFlag != PTP_DPFF_Range)
 		return (GP_ERROR_NOT_SUPPORTED);
 	if (dpd->DataType != PTP_DTC_INT8)
 		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
 	CurrentValue = (float) dpd->CurrentValue.i8;
 	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinimumValue.i8, (float) dpd->FORM.Range.MaximumValue.i8, (float) dpd->FORM.Range.StepSize.i8);
 	gp_widget_set_value ( *widget, &CurrentValue);
@@ -784,7 +783,6 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 	propval->i8 = (int) f;
 	return (GP_OK);
 }
-#endif
 
 static int
 _get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
@@ -1472,12 +1470,12 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 		char	buf[20];
 
 		if (dpd->FORM.Enum.SupportedValue[i].u32%1000)
-			sprintf (buf,"%d.%03d",
+			sprintf (buf,_("%d.%03ds"),
 				dpd->FORM.Enum.SupportedValue[i].u32/1000,
 				dpd->FORM.Enum.SupportedValue[i].u32%1000
 			);
 		else
-			sprintf (buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32/1000);
+			sprintf (buf,_("%ds"),dpd->FORM.Enum.SupportedValue[i].u32/1000);
                 gp_widget_add_choice (*widget,buf);
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
                 	gp_widget_set_value (*widget,buf);
@@ -1498,12 +1496,12 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	if (strchr(value,'.')) {
 		int val2;
 
-		if (!sscanf(value,"%d.%d",&val,&val2))
+		if (!sscanf(value,_("%d.%ds"),&val,&val2))
 			return (GP_ERROR);
 		propval->u32 = val*1000+val2;
 		return (GP_OK);
 	}
-	if (!sscanf(value,"%d",&val))
+	if (!sscanf(value,_("%ds"),&val))
 		return (GP_ERROR);
 	propval->u32 = val*1000;
 	return (GP_OK);
@@ -1932,8 +1930,11 @@ static struct deviceproptableu8 nikon_meterofftime[] = {
 	{ N_("6 seconds"),	0x01, 0 },
 	{ N_("8 seconds"),	0x02, 0 },
 	{ N_("16 seconds"),	0x03, 0 },
-	{ N_("30 minutes"),	0x04, 0 },
-	{ N_("30 seconds"),	0x05, 0 },	/* d80 observed */
+	{ N_("30 seconds"),	0x04, 0 },
+	{ N_("1 minute"),	0x05, 0 },
+	{ N_("5 minutes"),	0x06, 0 },
+	{ N_("10 minutes"),	0x07, 0 },
+	{ N_("30 minutes"),	0x08, 0 },
 };
 GENERIC8TABLE(Nikon_MeterOffTime,nikon_meterofftime)
 
@@ -3232,6 +3233,7 @@ static struct submenu capture_settings_menu[] = {
 
         { N_("Low Light"), "lowlight", PTP_DPC_NIKON_ExposureDisplayStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LowLight, _put_None },
         { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LightMeter, _put_None },
+        { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_ExposureIndicateStatus, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Range_INT8, _put_None },
         { N_("AF Locked"), "aflocked", PTP_DPC_NIKON_AFLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("AE Locked"), "aelocked", PTP_DPC_NIKON_AELockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("FV Locked"), "fvlocked", PTP_DPC_NIKON_FVLockStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
