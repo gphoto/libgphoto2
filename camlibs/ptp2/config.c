@@ -1930,8 +1930,11 @@ static struct deviceproptableu8 nikon_meterofftime[] = {
 	{ N_("6 seconds"),	0x01, 0 },
 	{ N_("8 seconds"),	0x02, 0 },
 	{ N_("16 seconds"),	0x03, 0 },
-	{ N_("30 minutes"),	0x04, 0 },
-	{ N_("30 seconds"),	0x05, 0 },	/* d80 observed */
+	{ N_("30 seconds"),	0x04, 0 },
+	{ N_("1 minute"),	0x05, 0 },
+	{ N_("5 minutes"),	0x06, 0 },
+	{ N_("10 minutes"),	0x07, 0 },
+	{ N_("30 minutes"),	0x08, 0 },
 };
 GENERIC8TABLE(Nikon_MeterOffTime,nikon_meterofftime)
 

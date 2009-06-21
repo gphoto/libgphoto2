@@ -924,6 +924,8 @@ static struct {
 
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* IRC Reporter */
+	{"Canon:PowerShot SX200 IS",		0x04a9, 0x31c0, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
@@ -997,10 +999,12 @@ static struct {
 
 	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
+	/* IRC reporter adjusted info */
+	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1291, 0},
 	/* irc reporter. MTP based. */
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* Marco Michna at SUSE */
-	{"Apple:iPod Touch (PTP mode)",		0x05ac, 0x1293, 0},
+	{"Apple:iPod Touch 2G (PTP mode)",	0x05ac, 0x1293, 0},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
