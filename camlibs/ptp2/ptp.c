@@ -4302,6 +4302,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_FocusMode, 0, 3, N_("Automatic Macro (close-up)")},
 		{PTP_DPC_FocusMode, PTP_VENDOR_NIKON, 32784, "AF-S"},
 		{PTP_DPC_FocusMode, PTP_VENDOR_NIKON, 32785, "AF-C"},
+		{PTP_DPC_FocusMode, PTP_VENDOR_NIKON, 32786, "AF-A"},
 		{PTP_DPC_ExposureMeteringMode, 0, 1, N_("Average")},	/* 500B */
 		{PTP_DPC_ExposureMeteringMode, 0, 2, N_("Center Weighted Average")},
 		{PTP_DPC_ExposureMeteringMode, 0, 3, N_("Multi-spot")},
@@ -4365,6 +4366,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, 2, "sRGB"},
 
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_AutoDXCrop,PTP_VENDOR_NIKON),	   	/* D033 */
+
+		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_FocusAreaWrap,PTP_VENDOR_NIKON),   	/* D04F */
 
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_EnableCopyright,PTP_VENDOR_NIKON),   	/* D053 */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_ISOAuto,PTP_VENDOR_NIKON),	   	/* D054 */
