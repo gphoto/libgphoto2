@@ -3881,7 +3881,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
 		if (oi->ObjectFormat == PTP_OFC_Association ||
 			(oi->ObjectFormat == PTP_OFC_Undefined &&
-				oi->ThumbFormat == PTP_OFC_Undefined))
+				((oi->ThumbFormat == PTP_OFC_Undefined) ||
+				 (oi->ThumbFormat == 0)
+			)
+			)
+		)
 			return (GP_ERROR_NOT_SUPPORTED);
 
 		if (is_mtp_capable (camera) &&
