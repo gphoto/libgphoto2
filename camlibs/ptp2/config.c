@@ -1801,6 +1801,8 @@ static int
 _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 	int i, valset = 0;
 	char buf[200];
+	int x,y;
+
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return (GP_ERROR);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
@@ -1810,10 +1812,13 @@ _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-		sprintf (buf, "%d/%d",
-			dpd->FORM.Enum.SupportedValue[i].u32>>16,
-			dpd->FORM.Enum.SupportedValue[i].u32&0xffff
-		);
+		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
+		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
+		if (y == 1) { /* x/1 */
+			sprintf (buf, "%d", x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
 		gp_widget_add_choice (*widget,buf);
 		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
 			gp_widget_set_value (*widget, buf);
@@ -1821,10 +1826,13 @@ _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 		}
 	}
 	if (!valset) {
-		sprintf (buf, "%d/%d",
-			dpd->CurrentValue.u32>>16,
-			dpd->CurrentValue.u32&0xffff
-		);
+		x = dpd->CurrentValue.u32>>16;
+		y = dpd->CurrentValue.u32&0xffff;
+		if (y == 1) {
+			sprintf (buf, "%d",x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
 		gp_widget_set_value (*widget, buf);
 	}
 	return GP_OK;
@@ -1836,8 +1844,14 @@ _put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
 	const char *value_str;
 
 	gp_widget_get_value (widget, &value_str);
-	if (2 != sscanf (value_str, "%d/%d", &x, &y))
-		return GP_ERROR;
+	if (strchr(value_str, '/')) {
+		if (2 != sscanf (value_str, "%d/%d", &x, &y))
+			return GP_ERROR;
+	} else {
+		if (!sscanf (value_str, "%d", &x))
+			return GP_ERROR;
+		y = 1;
+	}
 	propval->u32 = (x<<16) | y;
 	return GP_OK;
 }
