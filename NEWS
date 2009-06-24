@@ -1,10 +1,13 @@
-libgphoto2 2.4.6.1
+libgphoto2 2.4.6.2
 
 This is a 2.4 release branch update.
 
 PTP2 driver:
    * Several Canon EOS fixes for card capture and for LiveView, debugged
      with a EOS 5D Mark II.
+   * Nikon shutterspeed setting for times < 1/1000
+   * Decode more Nikon properties (for D90 now nearly complete).
+   * Various bugfixes.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.6
