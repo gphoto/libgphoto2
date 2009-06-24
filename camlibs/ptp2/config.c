@@ -1797,6 +1797,51 @@ _put_FocusDistance(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
+	int i, valset = 0;
+	char buf[200];
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		sprintf (buf, "%d/%d",
+			dpd->FORM.Enum.SupportedValue[i].u32>>16,
+			dpd->FORM.Enum.SupportedValue[i].u32&0xffff
+		);
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
+			gp_widget_set_value (*widget, buf);
+			valset = 1;
+		}
+	}
+	if (!valset) {
+		sprintf (buf, "%d/%d",
+			dpd->CurrentValue.u32>>16,
+			dpd->CurrentValue.u32&0xffff
+		);
+		gp_widget_set_value (*widget, buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
+	int x,y;
+	const char *value_str;
+
+	gp_widget_get_value (widget, &value_str);
+	if (2 != sscanf (value_str, "%d/%d", &x, &y))
+		return GP_ERROR;
+	propval->u32 = (x<<16) | y;
+	return GP_OK;
+}
+
 
 static int
 _get_Nikon_FocalLength(CONFIG_GET_ARGS) {
@@ -3188,6 +3233,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("EOS Aperture"), "eos-aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
+	{ N_("Nikon Shutter Speed"), "nikon-shutterspeed", PTP_DPC_NIKON_ExposureTime, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_ShutterSpeed, _put_Nikon_ShutterSpeed},
 	{ N_("EOS Shutter Speed"), "eos-shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
