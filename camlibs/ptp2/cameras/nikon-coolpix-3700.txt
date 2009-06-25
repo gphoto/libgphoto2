@@ -1,65 +1,65 @@
-0.355787 PTP2/ptp2/library.c(2): Device info:
-0.355808 PTP2/ptp2/library.c(2): Manufacturer: Nikon Corporation
-0.355825 PTP2/ptp2/library.c(2):   Model: E3700
-0.355842 PTP2/ptp2/library.c(2):   device version: E3700v1.2
-0.355859 PTP2/ptp2/library.c(2):   serial number: '000004653842'
-0.355876 PTP2/ptp2/library.c(2): Vendor extension ID: 0x0000000a
-0.355893 PTP2/ptp2/library.c(2): Vendor extension version: 100
-0.355915 PTP2/ptp2/library.c(2): Vendor extension description: Nikon PTP Extensions
-0.355928 PTP2/ptp2/library.c(2): Functional Mode: 0x0000
-0.355939 PTP2/ptp2/library.c(2): PTP Standard Version: 100
-0.355950 PTP2/ptp2/library.c(2): Supported operations:
-0.355960 PTP2/ptp2/library.c(2):   0x1001
-0.355970 PTP2/ptp2/library.c(2):   0x1002
-0.355981 PTP2/ptp2/library.c(2):   0x1003
-0.355991 PTP2/ptp2/library.c(2):   0x1004
-0.356001 PTP2/ptp2/library.c(2):   0x1005
-0.356012 PTP2/ptp2/library.c(2):   0x1006
-0.356022 PTP2/ptp2/library.c(2):   0x1007
-0.356032 PTP2/ptp2/library.c(2):   0x1008
-0.356043 PTP2/ptp2/library.c(2):   0x1009
-0.356053 PTP2/ptp2/library.c(2):   0x100a
-0.356063 PTP2/ptp2/library.c(2):   0x100b
-0.356074 PTP2/ptp2/library.c(2):   0x100c
-0.356084 PTP2/ptp2/library.c(2):   0x100d
-0.356094 PTP2/ptp2/library.c(2):   0x100e
-0.356104 PTP2/ptp2/library.c(2):   0x1014
-0.356115 PTP2/ptp2/library.c(2):   0x1015
-0.356125 PTP2/ptp2/library.c(2):   0x1016
-0.356136 PTP2/ptp2/library.c(2):   0x101b
-0.356160 PTP2/ptp2/library.c(2):   0x9001
-0.356171 PTP2/ptp2/library.c(2):   0x9002
-0.356181 PTP2/ptp2/library.c(2):   0x9003
-0.356191 PTP2/ptp2/library.c(2): Events Supported:
-0.356201 PTP2/ptp2/library.c(2):   0x4001
-0.356211 PTP2/ptp2/library.c(2):   0x4002
-0.356222 PTP2/ptp2/library.c(2):   0x4003
-0.356232 PTP2/ptp2/library.c(2):   0x4004
-0.356242 PTP2/ptp2/library.c(2):   0x4005
-0.356253 PTP2/ptp2/library.c(2):   0x4006
-0.356263 PTP2/ptp2/library.c(2):   0x4007
-0.356273 PTP2/ptp2/library.c(2):   0x4008
-0.356284 PTP2/ptp2/library.c(2):   0x4009
-0.356294 PTP2/ptp2/library.c(2):   0x400a
-0.356305 PTP2/ptp2/library.c(2):   0x400c
-0.356315 PTP2/ptp2/library.c(2):   0x400d
-0.356325 PTP2/ptp2/library.c(2):   0xc001
-0.356336 PTP2/ptp2/library.c(2): Device Properties Supported:
-0.356346 PTP2/ptp2/library.c(2):   0x5001
-0.356356 PTP2/ptp2/library.c(2):   0x5003
-0.356367 PTP2/ptp2/library.c(2):   0x5004
-0.356377 PTP2/ptp2/library.c(2):   0x5008
-0.356387 PTP2/ptp2/library.c(2):   0x500a
-0.356398 PTP2/ptp2/library.c(2):   0x500c
-0.356408 PTP2/ptp2/library.c(2):   0x5011
-0.356418 PTP2/ptp2/library.c(2):   0xd001
-0.356429 PTP2/ptp2/library.c(2):   0xd002
+Device info:
+Manufacturer: Nikon Corporation
+  Model: E3700
+  device version: E3700v1.2
+  serial number: 'nnnnnnnnnnnn'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 100
+Vendor extension description: Nikon PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9001
+  0x9002
+  0x9003
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc001
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5004
+  0x5008
+  0x500a
+  0x500c
+  0x5011
+  0xd001
+  0xd002
 
 Camera summary:
 Manufacturer: Nikon Corporation
 Model: E3700
   Version: E3700v1.2
-  Serial Number: 000004653842
+  Serial Number: nnnnnnnnnnnn
 Vendor Extension ID: 0xa (1.0)
 Vendor Extension Description: Nikon PTP Extensions
 
