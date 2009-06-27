@@ -3359,7 +3359,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
 	int menuno, submenuno, ret;
+	uint16_t	*setprops = NULL;
+	int		i, nrofsetprops = 0;
+	PTPParams	*params = &camera->pl->params;
 	SET_CONTEXT(camera, context);
+
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -3386,9 +3390,15 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					PTPDevicePropDesc	dpd;
 
 					memset(&dpd,0,sizeof(dpd));
-					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					ptp_free_devicepropdesc(&dpd);
+					if (nrofsetprops)
+						setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
+					else
+						setprops = malloc(sizeof(setprops[0]));
+					if (setprops) /* handle oom */
+						setprops[nrofsetprops++] = cursub->propid;
 				} else {
 					ret = cursub->getfunc (camera, &widget, cursub, NULL);
 				}
@@ -3404,7 +3414,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 				gp_log (GP_LOG_DEBUG, "camera_get_config", "Found and adding EOS Property %04x (%s)", cursub->propid, cursub->label);
 				memset(&dpd,0,sizeof(dpd));
-				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
+				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
 				if (ret != GP_OK)
@@ -3413,6 +3423,124 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				continue;
 			}
 		}
+	}
+	/* Last menu is "Other", a generic fallback window. */
+	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len)
+		return GP_OK;
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
+	gp_widget_set_name (section, "other");
+	gp_widget_append (*window, section);
+
+	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
+		int			j;
+		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
+		CameraWidget		*widget;
+		char			buf[20], *label;
+		PTPDevicePropDesc	dpd;
+		CameraWidgetType	type;
+
+		for (j=0;j<nrofsetprops;j++)
+			if (setprops[j] == propid)
+				break;
+		if (j<nrofsetprops) continue;
+		memset (&dpd,0,sizeof(dpd));
+		ret = ptp_getdevicepropdesc (params,propid,&dpd);
+		if (ret != PTP_RC_OK)
+			continue;
+
+		label = (char*)ptp_get_property_description(params, propid);
+		if (!label) {
+			sprintf (buf, N_("PTP Property 0x%04x"), propid);
+			label = buf;
+		}
+		switch (dpd.FormFlag) {
+		case PTP_DPFF_None:
+			type = GP_WIDGET_TEXT;
+			break;
+		case PTP_DPFF_Range:
+			type = GP_WIDGET_RANGE;
+			break;
+		case PTP_DPFF_Enumeration:
+			type = GP_WIDGET_MENU;
+			break;
+		}
+		gp_widget_new (type, _(label), &widget);
+		sprintf(buf,"%04x", propid); gp_widget_set_name (widget, buf);
+		switch (dpd.FormFlag) {
+		case PTP_DPFF_None: break;
+		case PTP_DPFF_Range:
+			switch (dpd.DataType) {
+#define X(dtc,val) 							\
+			case dtc: 					\
+				gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
+				break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+			default:break;
+			}
+			break;
+		case PTP_DPFF_Enumeration:
+			switch (dpd.DataType) {
+#define X(dtc,val) 									\
+			case dtc: { 							\
+				int k;							\
+				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++) {		\
+					sprintf (buf, "%d", dpd.FORM.Enum.SupportedValue[k].val); \
+					gp_widget_add_choice (widget, buf);		\
+				}							\
+				break;							\
+			}
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+			case PTP_DTC_STR: {
+				int k;
+				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++)
+					gp_widget_add_choice (widget, dpd.FORM.Enum.SupportedValue[k].str);
+				break;
+			}
+			default:break;
+			}
+			break;
+		}
+		switch (dpd.DataType) {
+#define X(dtc,val) 							\
+		case dtc:						\
+			if (type == GP_WIDGET_RANGE) {			\
+				float f = dpd.CurrentValue.val;		\
+				gp_widget_set_value (widget, &f);	\
+			} else {					\
+				sprintf (buf, "%d", dpd.CurrentValue.val);	\
+				gp_widget_set_value (widget, buf);	\
+			}\
+			break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+		case PTP_DTC_STR:
+			gp_widget_set_value (widget, dpd.CurrentValue.str);
+			break;
+		default:
+			break;
+		}
+		gp_widget_append (section, widget);
 	}
 	return GP_OK;
 }
