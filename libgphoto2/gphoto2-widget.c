@@ -60,7 +60,7 @@ struct _CameraWidget {
 	float   increment;
 
 	/* Child info */
-	CameraWidget *children [64];
+	CameraWidget *children [256];
 	int           children_count;
 
 	/* Widget was changed */
