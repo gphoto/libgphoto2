@@ -147,7 +147,7 @@ AC_C_INLINE([])
 AC_C_CONST([])
 
 AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
-	sys/param.h termios.h sgetty.h ttold.h ioctl-types.h		\
+	sys/param.h sys/select.h termios.h sgetty.h ttold.h ioctl-types.h	\
 	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h	\
 	endian.h byteswap.h asm/io.h mntent.h sys/mntent.h sys/mnttab.h)
 	
