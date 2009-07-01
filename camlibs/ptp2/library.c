@@ -1733,6 +1733,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		if (!nrofentries) {
 			free (entries);
 			gp_context_idle (context);
+			usleep(100*1000); /* 100 ms */
 			continue;
 		}
 		for (i=0;i<nrofentries;i++) {
@@ -1763,6 +1764,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			break;
 		CPR (context, ptp_canon_eos_keepdeviceon (params));
 		gp_context_idle (context);
+		usleep(100*1000); /* 100 ms */
 	}
 	if (newobject == 0)
 		return GP_ERROR;
@@ -2223,6 +2225,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			if (!nrofentries) {
 				free (entries);
 				gp_context_idle (context);
+				usleep(100*1000); /* 100 ms */
 				continue;
 			}
 			for (i=0;i<nrofentries;i++) {
@@ -2310,6 +2313,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			free (entries);
 			gp_context_idle (context);
+			usleep(100*1000); /* 100 ms */
 		}
 		return GP_OK;
 	}
