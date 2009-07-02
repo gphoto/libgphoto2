@@ -5453,10 +5453,10 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 	}
 	begin = 0;
 	end = params->nrofobjects-1;
-	/*ptp_debug (params, "searching %08x, total=%d\n", handle, params->nrofobjects);*/
+	/*ptp_debug (params, "searching %08x, total=%d", handle, params->nrofobjects);*/
 	while (1) {
 		cursor = (end-begin)/2+begin;
-		/*ptp_debug (params, "ob %d: %08x [%d-%d]\n", cursor, params->objects[cursor].oid, begin, end);*/
+		/*ptp_debug (params, "ob %d: %08x [%d-%d]", cursor, params->objects[cursor].oid, begin, end);*/
 		if (params->objects[cursor].oid == handle) {
 			*retob = &params->objects[cursor];
 			return PTP_RC_OK;
@@ -5476,11 +5476,15 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 		*retob = &params->objects[end];
 		return PTP_RC_OK;
 	}
-	if ((begin == 0) && (handle < params->objects[0].oid))
+	if ((begin == 0) && (handle < params->objects[0].oid)) {
 		insertat=begin;
-	else
-		insertat=begin+1;
-	/*ptp_debug (params, "inserting oid %x at [%x,%x]\n", handle, params->objects[begin].oid, params->objects[end].oid);*/
+	} else {
+		if ((end == params->nrofobjects-1) && (handle > params->objects[end].oid))
+			insertat=end+1;
+		else
+			insertat=begin+1;
+	}
+	/*ptp_debug (params, "inserting oid %x at [%x,%x], begin=%d, end=%d, insertat=%d\n", handle, params->objects[begin].oid, params->objects[end].oid, begin, end, insertat);*/
 	newobs = realloc (params->objects, sizeof(PTPObject)*(params->nrofobjects+1));
 	if (!newobs) return PTP_RC_GeneralError;
 	params->objects = newobs;
