@@ -298,6 +298,8 @@ int sierra_check_battery_capacity (Camera *camera, GPContext *context)
 				     _("Cannot retrieve the battery capacity"));
 		return ret;
 	}
+	if (!capacity) /* 0% is unlikely */
+		return GP_OK;
 
 	if (capacity < 5) {
 		gp_context_error (context,
