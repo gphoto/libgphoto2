@@ -2186,7 +2186,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 		       GPContext *context) {
 	PTPContainer	event;
 	PTPParams	*params = &camera->pl->params;
-	uint32_t	newobject = 0x0;
 	CameraFilePath	*path;
 	static int 	capcnt = 0;
 	uint16_t	ret;
@@ -2203,6 +2202,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		PTPCanon_changes_entry	*entries = NULL;
 		int			nrofentries = 0;
+		uint32_t	newobject;
 
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
@@ -2343,42 +2343,48 @@ camera_wait_for_event (Camera *camera, int timeout,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
 	) {
-		uint32_t	newobject;
-
 		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
 		while ((time(NULL) - event_start)<= (timeout/1000 + 1)) {
 			CPR (context, ptp_check_event (params));
-			gp_context_idle (context);
-			if (!ptp_get_one_event (params, &event))
+			if (!ptp_get_one_event (params, &event)) {
+				gp_context_idle (context);
 				continue;
+			}
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_ObjectAdded: {
 				PTPObject	*ob;
+				uint16_t	ofc;
 
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 				if (!path)
 					return GP_ERROR_NO_MEMORY;
-				newobject = event.Param1;
-				add_object (camera, newobject, context);
 				path->name[0]='\0';
 				path->folder[0]='\0';
-
-				CPR (context, ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+				CPR (context, ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 				strcpy  (path->name,  ob->oi.Filename);
 				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+				ofc = ob->oi.ObjectFormat;
 				get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+				/* ob pointer can be invalid now! */
 				/* delete last / or we get confused later. */
 				path->folder[ strlen(path->folder)-1 ] = '\0';
-				CR (gp_filesystem_append (camera->fs, path->folder,
-							  path->name, context));
-				*eventtype = GP_EVENT_FILE_ADDED;
-				*eventdata = path;
+				if (ofc == PTP_OFC_Association) { /* new folder! */
+					*eventtype = GP_EVENT_FOLDER_ADDED;
+					*eventdata = path;
+					gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
+				} else {
+					CR (gp_filesystem_append (camera->fs, path->folder,
+								  path->name, context));
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+				}
 				break;
 			}
 			case PTP_EC_Nikon_ObjectAddedInSDRAM: {
-				PTPObjectInfo		oi;
+				uint32_t	newobject;
+				PTPObjectInfo	oi;
 
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
@@ -2454,22 +2460,23 @@ camera_wait_for_event (Camera *camera, int timeout,
 	switch (event.Code) {
 	case PTP_EC_ObjectAdded: {
 		PTPObject	*ob;
+		uint16_t	ofc;
 
 		path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 		if (!path)
 			return GP_ERROR_NO_MEMORY;
-		newobject = event.Param1;
-		add_object (camera, event.Param1, context);
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
-		ptp_object_find (params, newobject, &ob);
+		CPR (context, ptp_object_find (params, event.Param1, &ob));
 		strcpy  (path->name,  ob->oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+		ofc = ob->oi.ObjectFormat;
 		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* ob could be invalid now, reload it or dont use it... */
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
-		if (ob->oi.ObjectFormat == PTP_OFC_Association) { /* new folder! */
+		if (ofc == PTP_OFC_Association) { /* new folder! */
 			*eventtype = GP_EVENT_FOLDER_ADDED;
 			*eventdata = path;
 			gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
@@ -3243,6 +3250,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		CPR (context, ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 		if (ob->oi.ObjectFormat!=PTP_OFC_Association)
 			continue;
+        	gp_log (GP_LOG_DEBUG, "folder_list_func", "adding 0x%x to folder", ob->oid);
 		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
 			char	*buf;
 			gp_log (GP_LOG_ERROR, "ptp2/folder_list_func",
