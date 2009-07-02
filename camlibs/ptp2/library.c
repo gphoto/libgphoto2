@@ -2354,6 +2354,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 			for (i=0;i<evtcnt;i++) {
 				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
 				if (nevent[i].Code == PTP_EC_ObjectAdded) {
+					int j;
+					PTPObjectInfo	*obinfo;
+
 					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 					if (!path)
 						return GP_ERROR_NO_MEMORY;
@@ -2362,24 +2365,33 @@ camera_wait_for_event (Camera *camera, int timeout,
 					path->name[0]='\0';
 					path->folder[0]='\0';
 
-					for (i = params->handles.n ; i--; ) {
-						PTPObjectInfo	*obinfo;
+					j = handle_to_n (newobject, camera);
+					if (j == PTP_HANDLER_SPECIAL) continue;
 
-						if (params->handles.Handler[i] != newobject)
-							continue;
-						obinfo = &camera->pl->params.objectinfo[i];
-						strcpy  (path->name,  obinfo->Filename);
-						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
-						get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
-						/* delete last / or we get confused later. */
-						path->folder[ strlen(path->folder)-1 ] = '\0';
+					obinfo = &camera->pl->params.objectinfo[j];
+					strcpy  (path->name,  obinfo->Filename);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)obinfo->StorageID);
+					get_folder_from_handle (camera, obinfo->StorageID, obinfo->ParentObject, path->folder);
+					/* delete last / or we get confused later. */
+					path->folder[ strlen(path->folder)-1 ] = '\0';
+					if (obinfo->ObjectFormat == PTP_OFC_Association) { /* new folder! */
+						*eventtype = GP_EVENT_FOLDER_ADDED;
+						*eventdata = path;
+						gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
+						/* if this was the last current event ... stop and return the folder add */
+						if (i == evtcnt-1) {
+							finish = 1;
+							break;
+						}
+						/* continue looking for object added ... */
+					} else {
 						CR (gp_filesystem_append (camera->fs, path->folder,
 									  path->name, context));
+						*eventtype = GP_EVENT_FILE_ADDED;
+						*eventdata = path;
+						finish = 1;
 						break;
 					}
-					*eventtype = GP_EVENT_FILE_ADDED;
-					*eventdata = path;
-					finish = 1;
 					break;
 				}
 				if (nevent[i].Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
