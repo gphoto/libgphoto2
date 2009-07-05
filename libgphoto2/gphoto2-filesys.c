@@ -1244,6 +1244,7 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 			CameraFile *file, GPContext *context)
 {
 	CameraFilesystemFolder	*f;
+	int ret;
 
 	CHECK_NULL (fs && folder && file);
 	CC (context);
@@ -1263,7 +1264,10 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	/* Upload the file */
 	CR (fs->put_file_func (fs, folder, filename, type, file, fs->folder_data, context));
 	/* And upload it to internal structure too */
-	return append_file (fs, f, filename, file, context);
+	ret = append_file (fs, f, filename, file, context);
+	if (type != GP_FILE_TYPE_NORMAL) /* FIXME perhaps check before append_file? */
+		return GP_OK;
+	return ret;
 }
 
 /**
