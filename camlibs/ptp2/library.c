@@ -3962,7 +3962,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
 	/* We don't really want a file to exist with the same name twice. */
-	handle = folder_to_handle (params, filename, storage, parent, NULL);
+	handle = find_child (params, filename, storage, parent, NULL);
 	if (handle != PTP_HANDLER_SPECIAL) {
 		gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "%s/%s exists.", folder, filename);
 		return GP_ERROR_FILE_EXISTS;
