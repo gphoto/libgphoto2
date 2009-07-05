@@ -431,6 +431,8 @@ static struct {
 	{"Kodak:C633",   0x040a, 0x05ba, 0},
 	/* https://bugs.launchpad.net/bugs/203402 */
 	{"Kodak:ZD710",	 0x040a, 0x05c0, 0},
+	/* https://bugs.launchpad.net/ubuntu/+source/libgphoto2/+bug/385432 */
+	{"Kodak:M863",	 0x040a, 0x05c1, 0},
 	/* Peter F Bradshaw <pfb@exadios.com> */
 	{"Kodak:C813",	 0x040a, 0x05c3, 0},
 	/* reported by Christian Le Corre <lecorrec@gmail.com> */
@@ -918,7 +920,7 @@ static struct {
 	/* IRC Reporter */
 	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* mitch <debianuser@mll.dissimulo.com> */
-	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
