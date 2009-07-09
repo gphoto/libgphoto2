@@ -1448,6 +1448,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				gp_file_set_name (file, "preview.jpg");
 				free (data);
 			}
+			else
+				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
 			SET_CONTEXT_P(params, NULL);
 			return GP_OK;
 		}
@@ -1776,14 +1778,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		for (i=0;i<nrofentries;i++) {
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entries[i].type);
 			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
-				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
 				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
 				break;
 			}
 			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
 				/* just add it to the filesystem, and return in CameraPath */
-				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
 				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
 				add_object (camera, newobject, context);
@@ -2276,7 +2278,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					break;
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
 					/* just add it to the filesystem, and return in CameraPath */
-					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID %ux, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 					newobject = entries[i].u.object.oid;
 					add_object (camera, newobject, context);
 					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
@@ -2419,7 +2421,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_mtime (file, time(NULL));
 
 					gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
-					CPR (context, ptp_getobject (params, newobject, &ximage));
+					CPR (context, ptp_getobject (params, newobject, (unsigned char**)&ximage));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
 						gp_file_free (file);

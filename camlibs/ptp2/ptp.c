@@ -4979,7 +4979,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 	if (!(ofc & 0x8000)) {
 		for (i=0;i<sizeof(ptp_ofc_trans)/sizeof(ptp_ofc_trans[0]);i++)
 			if (ofc == ptp_ofc_trans[i].ofc)
-				return snprintf(txt, spaceleft,_(ptp_ofc_trans[i].format));
+				return snprintf(txt, spaceleft, "%s", _(ptp_ofc_trans[i].format));
 	} else {
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_EASTMAN_KODAK:
@@ -5001,7 +5001,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 		case PTP_VENDOR_MICROSOFT:
 			for (i=0;i<sizeof(ptp_ofc_mtp_trans)/sizeof(ptp_ofc_mtp_trans[0]);i++)
 				if (ofc == ptp_ofc_mtp_trans[i].ofc)
-					return snprintf(txt, spaceleft,_(ptp_ofc_mtp_trans[i].format));
+					return snprintf(txt, spaceleft, "%s", _(ptp_ofc_mtp_trans[i].format));
 			break;
 		default:break;
 		}
@@ -5112,13 +5112,13 @@ ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt)
 	if (!(opcode & 0x8000)) {
 		for (i=0;i<sizeof(ptp_opcode_trans)/sizeof(ptp_opcode_trans[0]);i++)
 			if (opcode == ptp_opcode_trans[i].opcode)
-				return snprintf(txt, spaceleft,_(ptp_opcode_trans[i].name));
+				return snprintf(txt, spaceleft, "%s", _(ptp_opcode_trans[i].name));
 	} else {
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_MICROSOFT:
 			for (i=0;i<sizeof(ptp_opcode_mtp_trans)/sizeof(ptp_opcode_mtp_trans[0]);i++)
 				if (opcode == ptp_opcode_mtp_trans[i].opcode)
-					return snprintf(txt, spaceleft,_(ptp_opcode_mtp_trans[i].name));
+					return snprintf(txt, spaceleft, "%s", _(ptp_opcode_mtp_trans[i].name));
 			break;
 		default:break;
 		}
@@ -5306,7 +5306,7 @@ ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt) {
 	int i;
 	for (i=0;i<sizeof(ptp_opc_trans)/sizeof(ptp_opc_trans[0]);i++)
 		if (propid == ptp_opc_trans[i].id)
-			return snprintf(txt, spaceleft,ptp_opc_trans[i].name);
+			return snprintf(txt, spaceleft, "%s", ptp_opc_trans[i].name);
 	return snprintf (txt, spaceleft,"unknown(%04x)", propid);
 }
 
