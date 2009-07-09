@@ -3,6 +3,7 @@
 	* ptp.h: EOS_RemoteRelease doc comments.
 	* config.c: More Canon ISO and FStop values for the Canon 5D Mark II.
 	* ptp-pack.c,library.c: More EOS debugging output.
+	* config.c: Added AEB and DriveMode configuration.
 
 2009-05-26  Marcus Meissner  <marcus@jet.franken.de>
 
