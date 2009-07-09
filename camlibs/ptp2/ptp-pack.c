@@ -1322,11 +1322,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_CameraTime:
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case PTP_DPC_CANON_EOS_AvailableShots:
-				case PTP_DPC_CANON_EOS_DriveMode:
 				case PTP_DPC_CANON_EOS_CaptureDestination:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXA:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXB:
-				case PTP_DPC_CANON_EOS_AEB:
 				case PTP_DPC_CANON_EOS_QuickReviewTime:
 				case PTP_DPC_CANON_EOS_CurrentStorage:
 				case PTP_DPC_CANON_EOS_CurrentFolder:
@@ -1344,6 +1342,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_ColorSpace:
 				case PTP_DPC_CANON_EOS_BatteryPower:
 				case PTP_DPC_CANON_EOS_PTPExtensionVersion:
+				case PTP_DPC_CANON_EOS_DriveMode:
+				case PTP_DPC_CANON_EOS_AEB:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:

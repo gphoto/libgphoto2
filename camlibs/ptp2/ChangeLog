@@ -1,8 +1,9 @@
 009-07-09  Axel Waggershauser <awagger@web.de>                                                                                    
-        * ptp.c: Some sprintf format adjustments.
-        * ptp.h: EOS_RemoteRelease doc comments.
-        * config.c: More Canon ISO and FStop values for the Canon 5D Mark II.
-        * ptp-pack.c,library.c: More EOS debugging output.
+	* ptp.c: Some sprintf format adjustments.
+	* ptp.h: EOS_RemoteRelease doc comments.
+	* config.c: More Canon ISO and FStop values for the Canon 5D Mark II.
+	* ptp-pack.c,library.c: More EOS debugging output.
+	* config.c: Added AEB and DriveMode configuration.
 
 2009-05-17  Marcus Meissner  <marcus@jet.franken.de>
 

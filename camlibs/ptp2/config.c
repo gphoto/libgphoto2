@@ -1382,6 +1382,28 @@ static struct deviceproptableu16 canon_isospeed[] = {
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
 
+static struct deviceproptableu16 canon_eos_aeb[] = {
+	{ N_("off"),		0x0000, 0 },
+	{ "+/- 1/3",		0x0003, 0 },
+	{ "+/- 1/2",		0x0004, 0 },
+	{ "+/- 2/3",		0x0005, 0 },
+	{ "+/- 1",		0x0008, 0 },
+	{ "+/- 1 1/3",		0x000b, 0 },
+	{ "+/- 1 1/2",		0x000c, 0 },
+	{ "+/- 1 2/3",		0x000d, 0 },
+	{ "+/- 2",		0x0010, 0 },
+	{ "+/- 3",		0x0018, 0 },
+};
+GENERIC16TABLE(Canon_EOS_AEB,canon_eos_aeb)
+
+static struct deviceproptableu16 canon_eos_drive_mode[] = {
+	{ N_("Single"),		0x0000, 0 },
+	{ N_("Continuous"),	0x0001, 0 },
+	{ N_("Timer 2 sec"),	0x0010, 0 },
+	{ N_("Timer 10 sec"),	0x0011, 0 },
+};
+GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
+
 static int
 _get_ISO(CONFIG_GET_ARGS) {
 	int i;
@@ -3283,6 +3305,8 @@ static struct submenu capture_settings_menu[] = {
         { N_("Tone Compensation"), "tonecompensation", PTP_DPC_NIKON_ToneCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ToneCompensation, _put_Nikon_ToneCompensation },
         { N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
         { N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
+	{ N_("Auto Exposure Bracketing"), "aeb", PTP_DPC_CANON_EOS_AEB, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_AEB, _put_Canon_EOS_AEB},
+	{ N_("Drive Mode"), "drivemode", PTP_DPC_CANON_EOS_DriveMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_DriveMode, _put_Canon_EOS_DriveMode},
 
         { N_("Low Light"), "lowlight", PTP_DPC_NIKON_ExposureDisplayStatus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LowLight, _put_None },
         { N_("Light Meter"), "lightmeter", PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LightMeter, _put_None },
