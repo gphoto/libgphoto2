@@ -1318,6 +1318,44 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					params->nrofcanon_props = j+1;
 				}
 				dpd = &params->canon_props[j].dpd;
+
+				/* fix GetSet value */
+				switch (proptype) {
+#define XX(x) case PTP_DPC_CANON_##x:
+					XX(EOS_FocusMode)
+					XX(EOS_BatteryPower)
+					XX(EOS_BatterySelect)
+					XX(EOS_ModelID)
+					XX(EOS_PTPExtensionVersion)
+					XX(EOS_DPOFVersion)
+					XX(EOS_AvailableShots)
+					XX(EOS_CurrentStorage)
+					XX(EOS_CurrentFolder)
+					XX(EOS_MyMenu)
+					XX(EOS_MyMenuList)
+					XX(EOS_HDDirectoryStructure)
+					XX(EOS_BatteryInfo)
+					XX(EOS_AdapterInfo)
+					XX(EOS_LensStatus)
+					XX(EOS_CardExtension)
+					XX(EOS_TempStatus)
+					XX(EOS_ShutterCounter)
+					XX(EOS_SerialNumber)
+					XX(EOS_DepthOfFieldPreview)
+					XX(EOS_EVFRecordStatus)
+					XX(EOS_LvAfSystem)
+					XX(EOS_FocusInfoEx)
+					XX(EOS_DepthOfField)
+					XX(EOS_Brightness)
+					XX(EOS_EFComp)
+					XX(EOS_LensName)
+					XX(EOS_LensID)
+#undef XX
+						dpd->GetSet = PTP_DPGS_Get;
+						break;
+				}
+
+				/* set DataType */
 				switch (proptype) {
 				case PTP_DPC_CANON_EOS_CameraTime:
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
@@ -1353,6 +1391,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_UINT8;
 					break;
 				case PTP_DPC_CANON_EOS_Owner:
+				case PTP_DPC_CANON_EOS_Artist:
+				case PTP_DPC_CANON_EOS_Copyright:
+				case PTP_DPC_CANON_EOS_SerialNumber:
+				case PTP_DPC_CANON_EOS_LensName:
 					dpd->DataType = PTP_DTC_STR;
 					break;
 				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustA:
@@ -1441,9 +1483,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					ptp_debug (params,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u8);
 					break;
 				case PTP_DTC_STR: {
+#if 0 /* 5D MII and 400D aktually store plain ASCII in their string properties */
 					uint8_t len = 0;
 					dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
 					dpd->CurrentValue.str		= ptp_unpack_string(params, data, 0, &len);
+#else
+					dpd->FactoryDefaultValue.str	= strdup( (char*)data );
+					dpd->CurrentValue.str		= strdup( (char*)data );
+#endif
 					ptp_debug (params,"event %d: currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
 					break;
 				}
