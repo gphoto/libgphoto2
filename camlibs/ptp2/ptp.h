@@ -354,8 +354,12 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_BulbStart		0x9125
 #define PTP_OC_CANON_EOS_BulbEnd		0x9126
 #define PTP_OC_CANON_EOS_RequestDevicePropValue	0x9127
+
+/* 0x9128 args (0x1/0x2, 0x0), no data, no resp args */
 #define PTP_OC_CANON_EOS_RemoteReleaseOn	0x9128
+/* 0x9129 args (0x1/0x2), no data, no resp args */
 #define PTP_OC_CANON_EOS_RemoteReleaseOff	0x9129
+
 #define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151
 #define PTP_OC_CANON_EOS_TerminateViewfinder	0x9152
 #define PTP_OC_CANON_EOS_GetViewFinderData	0x9153
