@@ -4982,7 +4982,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 	if (!(ofc & 0x8000)) {
 		for (i=0;i<sizeof(ptp_ofc_trans)/sizeof(ptp_ofc_trans[0]);i++)
 			if (ofc == ptp_ofc_trans[i].ofc)
-				return snprintf(txt, spaceleft,_(ptp_ofc_trans[i].format));
+				return snprintf(txt, spaceleft, "%s", _(ptp_ofc_trans[i].format));
 	} else {
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_EASTMAN_KODAK:
@@ -5004,7 +5004,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 		case PTP_VENDOR_MICROSOFT:
 			for (i=0;i<sizeof(ptp_ofc_mtp_trans)/sizeof(ptp_ofc_mtp_trans[0]);i++)
 				if (ofc == ptp_ofc_mtp_trans[i].ofc)
-					return snprintf(txt, spaceleft,_(ptp_ofc_mtp_trans[i].format));
+					return snprintf(txt, spaceleft, "%s", _(ptp_ofc_mtp_trans[i].format));
 			break;
 		default:break;
 		}
@@ -5115,13 +5115,13 @@ ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt)
 	if (!(opcode & 0x8000)) {
 		for (i=0;i<sizeof(ptp_opcode_trans)/sizeof(ptp_opcode_trans[0]);i++)
 			if (opcode == ptp_opcode_trans[i].opcode)
-				return snprintf(txt, spaceleft,_(ptp_opcode_trans[i].name));
+				return snprintf(txt, spaceleft, "%s", _(ptp_opcode_trans[i].name));
 	} else {
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_MICROSOFT:
 			for (i=0;i<sizeof(ptp_opcode_mtp_trans)/sizeof(ptp_opcode_mtp_trans[0]);i++)
 				if (opcode == ptp_opcode_mtp_trans[i].opcode)
-					return snprintf(txt, spaceleft,_(ptp_opcode_mtp_trans[i].name));
+					return snprintf(txt, spaceleft, "%s", _(ptp_opcode_mtp_trans[i].name));
 			break;
 		default:break;
 		}
@@ -5309,7 +5309,7 @@ ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt) {
 	int i;
 	for (i=0;i<sizeof(ptp_opc_trans)/sizeof(ptp_opc_trans[0]);i++)
 		if (propid == ptp_opc_trans[i].id)
-			return snprintf(txt, spaceleft,ptp_opc_trans[i].name);
+			return snprintf(txt, spaceleft, "%s", ptp_opc_trans[i].name);
 	return snprintf (txt, spaceleft,"unknown(%04x)", propid);
 }
 
@@ -5516,15 +5516,16 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 	if ((ob->flags & want) == want)
 		return PTP_RC_OK;
 
-	if (	(want & PTPOBJECT_OBJECTINFO_LOADED) &&
-		(!(ob->flags & PTPOBJECT_OBJECTINFO_LOADED))
-	) {
+#define X (PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED)
+	if ((want & X) && ((ob->flags & X) != X)) {
 		ret = ptp_getobjectinfo (params, handle, &ob->oi);
 		if (ret != PTP_RC_OK)
 			return ret;
 		//debug_objectinfo(params, handle, &params->objects[i].oi);
-		ob->flags |= PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED;
+		if (!ob->oi.Filename) ob->oi.Filename=strdup("<none>");
+		ob->flags |= X;
 	}
+#undef X
 	if (	(want & PTPOBJECT_MTPPROPLIST_LOADED) &&
 		(!(ob->flags & PTPOBJECT_MTPPROPLIST_LOADED))
 	) {
