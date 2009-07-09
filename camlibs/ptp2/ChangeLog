@@ -4,6 +4,11 @@
 	* config.c: More Canon ISO and FStop values for the Canon 5D Mark II.
 	* ptp-pack.c,library.c: More EOS debugging output.
 	* config.c: Added AEB and DriveMode configuration.
+	* ptp.c,ptp.h: Added ptp_canon_eos_requestdevicepropvalue()
+	* config.c: request some string types, handle owner, artist,
+	  copyright, lensname, serialnr, shuttercount, availableshots
+	* ptp.c: decode EOS strings better
+	* ptp-pack.c: dpd.GetSet adjustments.
 
 2009-05-26  Marcus Meissner  <marcus@jet.franken.de>
 

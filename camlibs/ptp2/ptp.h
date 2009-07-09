@@ -2104,6 +2104,7 @@ uint16_t ptp_canon_focusunlock (PTPParams* params);
 uint16_t ptp_canon_keepdeviceon (PTPParams* params);
 uint16_t ptp_canon_eos_keepdeviceon (PTPParams* params);
 uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
+uint16_t ptp_canon_eos_requestdevicepropvalue (PTPParams* params, uint16_t prop);
 uint16_t ptp_canon_eos_capture (PTPParams* params);
 uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 

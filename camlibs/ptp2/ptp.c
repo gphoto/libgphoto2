@@ -1880,6 +1880,28 @@ ptp_canon_eos_keepdeviceon (PTPParams* params)
 }
 
 /**
+ * ptp_canon_eos_requestdevicepropvalue:
+ *
+ * This operation sends a "ping" style message to the camera.
+ * 
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_requestdevicepropvalue (PTPParams* params, uint16_t prop)
+{
+	PTPContainer ptp;
+	
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_EOS_RequestDevicePropValue;
+	ptp.Nparam=1;
+	ptp.Param1=prop;
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
  * ptp_canon_initiatecaptureinmemory:
  * 
  * This operation starts the image capture according to the current camera
@@ -1980,8 +2002,12 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 			params->canon_props[i].dpd.FORM.Enum.SupportedValue,
 			sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues
 		);
-		/* FIXME: duplicate strings if type is STR. */
 	}
+	if (dpd->DataType == PTP_DTC_STR) {
+		dpd->FactoryDefaultValue.str = strdup( params->canon_props[i].dpd.FactoryDefaultValue.str );
+		dpd->CurrentValue.str = strdup( params->canon_props[i].dpd.CurrentValue.str );
+	}
+
 	return PTP_RC_OK;
 }
 
@@ -2108,8 +2134,8 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		data = calloc(sizeof(uint32_t),3);
 		size = sizeof(uint32_t)*3;
 	} else {
-		 /* FIXME! */
-		return PTP_RC_Undefined;
+		size = strlen(value->str) + 1 + 8;
+		data = calloc(sizeof(char),size);
 	}
 	htod32a(&data[0], size);
 	htod32a(&data[4], propcode);
@@ -2128,6 +2154,11 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		/*fprintf (stderr, "%x -> %d\n", propcode, value->u32);*/
 		htod32a(&data[8], value->u32);
 		params->canon_props[i].dpd.CurrentValue.u32 = value->u32;
+		break;
+	case PTP_DTC_STR:
+		strcpy((char*)data + 8, value->str);
+		free (params->canon_props[i].dpd.CurrentValue.str);
+		params->canon_props[i].dpd.CurrentValue.str = strdup(value->str);
 		break;
 	}
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);

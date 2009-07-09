@@ -179,6 +179,22 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "seteventmode 1 failed!");
 		return GP_ERROR;
 	}
+
+	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)) {
+		/* request additional properties */
+		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Owner);
+		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Artist);
+		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Copyright);
+		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_SerialNumber);
+
+/*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_DPOFVersion); */
+/*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_MyMenuList); */
+/*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_LensAdjustParams); */
+
+		if (ret != PTP_RC_OK)
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "requesting additional properties (owner/artist/etc.) failed");
+	}
+
 	/* Get the initial bulk set of event data */
 	while (1) {
 		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
@@ -781,6 +797,28 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 	if (ret != GP_OK) 
 		return ret;
 	propval->i8 = (int) f;
+	return (GP_OK);
+}
+
+/* generic int getter */
+static int
+_get_INT(CONFIG_GET_ARGS) {
+	char value[64];
+
+	switch (dpd->DataType) {
+	case PTP_DTC_UINT32:
+		sprintf (value, "%u", dpd->CurrentValue.u32 );
+		break;
+	case PTP_DTC_UINT16:
+		sprintf (value, "%u", dpd->CurrentValue.u16 );
+		break;
+	default:
+		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
+		return GP_ERROR;
+	}
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget,value);
 	return (GP_OK);
 }
 
@@ -3235,6 +3273,13 @@ static struct submenu camera_settings_menu[] = {
         { N_("Flash Open"), "flashopen", PTP_DPC_NIKON_FlashOpen, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("Flash Charged"), "flashcharged", PTP_DPC_NIKON_FlashCharged, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
         { N_("Lens ID"), "lensid", PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LensID, _put_None },
+	{ N_("Owner"), "owner", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
+	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
+	{ N_("Copyright"), "copyright", PTP_DPC_CANON_EOS_Copyright, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
+	{ N_("Lens Name"), "lensname", PTP_DPC_CANON_EOS_LensName, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None},
+	{ N_("Serial Number"), "serialnumber", PTP_DPC_CANON_EOS_SerialNumber, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None},
+	{ N_("Shutter Counter"), "shuttercounter", PTP_DPC_CANON_EOS_ShutterCounter, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
+	{ N_("Available Shots"), "availableshots", PTP_DPC_CANON_EOS_AvailableShots, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
