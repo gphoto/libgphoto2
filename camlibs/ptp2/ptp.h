@@ -2109,32 +2109,173 @@ uint16_t ptp_ek_sendfileobject_from_handler	(PTPParams* params, PTPDataHandler*,
 				uint32_t size);
 
 /* Canon PTP extensions */
-uint16_t ptp_canon_9012 (PTPParams* params);
+#define ptp_canon_9012(params) ptp_generic_no_data(params,0x9012,0)
 uint16_t ptp_canon_gettreeinfo (PTPParams* params, uint32_t* out);
 uint16_t ptp_canon_gettreesize (PTPParams* params, PTPCanon_directtransfer_entry**, unsigned int*cnt);
 uint16_t ptp_canon_getpartialobjectinfo (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
 
 uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
-uint16_t ptp_canon_startshootingmode (PTPParams* params);
-uint16_t ptp_canon_endshootingmode (PTPParams* params);
-
-uint16_t ptp_canon_viewfinderon (PTPParams* params);
-uint16_t ptp_canon_viewfinderoff (PTPParams* params);
-
+/**
+ * ptp_canon_startshootingmode:
+ * params:      PTPParams*
+ * 
+ * Starts shooting session. It emits a StorageInfoChanged
+ * event via the interrupt pipe and pushes the StorageInfoChanged
+ * and CANON_CameraModeChange events onto the event stack
+ * (see operation PTP_OC_CANON_CheckEvent).
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_startshootingmode(params) ptp_generic_no_data(params,PTP_OC_CANON_InitiateReleaseControl,0)
+/**
+ * ptp_canon_endshootingmode:
+ * params:      PTPParams*
+ * 
+ * This operation is observed after pressing the Disconnect 
+ * button on the Remote Capture app. It emits a StorageInfoChanged 
+ * event via the interrupt pipe and pushes the StorageInfoChanged
+ * and CANON_CameraModeChange events onto the event stack
+ * (see operation PTP_OC_CANON_CheckEvent).
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_endshootingmode(params) ptp_generic_no_data(params,PTP_OC_CANON_TerminateReleaseControl,0)
+/**
+ * ptp_canon_viewfinderon:
+ * params:      PTPParams*
+ * 
+ * Prior to start reading viewfinder images, one  must call this operation.
+ * Supposedly, this operation affects the value of the CANON_ViewfinderMode
+ * property.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_viewfinderon(params) ptp_generic_no_data(params,PTP_OC_CANON_ViewfinderOn,0)
+/**
+ * ptp_canon_viewfinderoff:
+ * params:      PTPParams*
+ * 
+ * Before changing the shooting mode, or when one doesn't need to read
+ * viewfinder images any more, one must call this operation.
+ * Supposedly, this operation affects the value of the CANON_ViewfinderMode
+ * property.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_viewfinderoff(params) ptp_generic_no_data(params,PTP_OC_CANON_ViewfinderOff,0)
+/**
+ * ptp_canon_reset_aeafawb:
+ * params:      PTPParams*
+ *              uint32_t flags  - what shall be reset.
+ *                      1 - autoexposure
+ *                      2 - autofocus
+ *                      4 - autowhitebalance
+ * 
+ * Called "Reset AeAfAwb" (auto exposure, focus, white balance)
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
 #define PTP_CANON_RESET_AE	0x1
 #define PTP_CANON_RESET_AF	0x2
 #define PTP_CANON_RESET_AWB	0x4
-uint16_t ptp_canon_reset_aeafawb (PTPParams* params, uint32_t flags);
+#define ptp_canon_reset_aeafawb(params,flags) ptp_generic_no_data(params,PTP_OC_CANON_DoAeAfAwb,1,flags)
 uint16_t ptp_canon_checkevent (PTPParams* params, 
 				PTPContainer* event, int* isevent);
-uint16_t ptp_canon_focuslock (PTPParams* params);
-uint16_t ptp_canon_focusunlock (PTPParams* params);
-uint16_t ptp_canon_keepdeviceon (PTPParams* params);
-uint16_t ptp_canon_eos_keepdeviceon (PTPParams* params);
-uint16_t ptp_canon_initiatecaptureinmemory (PTPParams* params);
-uint16_t ptp_canon_eos_requestdevicepropvalue (PTPParams* params, uint16_t prop);
-uint16_t ptp_canon_eos_capture (PTPParams* params);
+/**
+ * ptp_canon_focuslock:
+ *
+ * This operation locks the focus. It is followed by the CANON_GetChanges(?)
+ * operation in the log. 
+ * It affects the CANON_MacroMode property. 
+ *
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_focuslock(params) ptp_generic_no_data(params,PTP_OC_CANON_FocusLock,0)
+/**
+ * ptp_canon_focusunlock:
+ *
+ * This operation unlocks the focus. It is followed by the CANON_GetChanges(?)
+ * operation in the log. 
+ * It sets the CANON_MacroMode property value to 1 (where it occurs in the log).
+ * 
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_focusunlock(params) ptp_generic_no_data(params,PTP_OC_CANON_FocusUnlock,0)
+/**
+ * ptp_canon_keepdeviceon:
+ *
+ * This operation sends a "ping" style message to the camera.
+ * 
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_keepdeviceon(params) ptp_generic_no_data(params,PTP_OC_CANON_KeepDeviceOn,0)
+/**
+ * ptp_canon_eos_keepdeviceon:
+ *
+ * This operation sends a "ping" style message to the camera.
+ * 
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_keepdeviceon(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_KeepDeviceOn,0)
+/**
+ * ptp_canon_initiatecaptureinmemory:
+ * 
+ * This operation starts the image capture according to the current camera
+ * settings. When the capture has happened, the camera emits a CaptureComplete
+ * event via the interrupt pipe and pushes the CANON_RequestObjectTransfer,
+ * CANON_DeviceInfoChanged and CaptureComplete events onto the event stack
+ * (see operation CANON_CheckEvent). From the CANON_RequestObjectTransfer
+ * event's parameter one can learn the just captured image's ObjectHandle.
+ * The image is stored in the camera's own RAM.
+ * On the next capture the image will be overwritten!
+ *
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_initiatecaptureinmemory(params) ptp_generic_no_data(params,PTP_OC_CANON_InitiateCaptureInMemory,0)
+/**
+ * ptp_canon_eos_requestdevicepropvalue:
+ *
+ * This operation sends a "ping" style message to the camera.
+ * 
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_requestdevicepropvalue(params,prop) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RequestDevicePropValue,1,prop)
+/**
+ * ptp_canon_eos_capture:
+ * 
+ * This starts a EOS400D style capture. You have to use the
+ * 0x9116 command to poll for its completion.
+ * The image is saved on the CF Card currently.
+ *
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_capture(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteRelease,0)
 uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
 				uint32_t offset, uint32_t size,
@@ -2150,14 +2291,64 @@ uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di);
-uint16_t ptp_canon_eos_setuilock (PTPParams* params);
-uint16_t ptp_canon_eos_resetuilock (PTPParams* params);
-uint16_t ptp_canon_eos_start_viewfinder (PTPParams* params);
-uint16_t ptp_canon_eos_end_viewfinder (PTPParams* params);
+/**
+ * ptp_canon_eos_setuilock:
+ *
+ * This command sets UI lock
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_setuilock(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetUILock,0)
+/**
+ * ptp_canon_eos_resetuilock:
+ *
+ * This command sets UI lock
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_resetuilock(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_ResetUILock,0)
+/**
+ * ptp_canon_eos_start_viewfinder:
+ *
+ * This command starts Viewfinder mode of newer Canon DSLRs.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_start_viewfinder(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_InitiateViewfinder,0)
+/**
+ * ptp_canon_eos_end_viewfinder:
+ *
+ * This command ends Viewfinder mode of newer Canon DSLRs.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_end_viewfinder(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TerminateViewfinder,0)
 uint16_t ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid);
 uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
-uint16_t ptp_canon_setobjectarchive (PTPParams* params, uint32_t oid, uint32_t flags);
+/**
+ * ptp_canon_setobjectarchive:
+ *
+ * params:      PTPParams*
+ *              uint32_t        objectid
+ *              uint32_t        flags
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_setobjectarchive(params,oid,flags) ptp_generic_no_data(params,PTP_OC_CANON_SetObjectArchive,2,oid,flags)
 uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char**, unsigned int*);
@@ -2166,10 +2357,22 @@ uint16_t ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storagei
 uint16_t ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1);
 uint16_t ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
 uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size);
-uint16_t ptp_canon_eos_setremotemode (PTPParams* params, uint32_t p1);
-uint16_t ptp_canon_eos_seteventmode (PTPParams* params, uint32_t p1);
-uint16_t ptp_canon_eos_transfercomplete (PTPParams* params, uint32_t oid);
-uint16_t ptp_canon_eos_pchddcapacity (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
+#define ptp_canon_eos_setremotemode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRemoteMode,1,p1)
+#define ptp_canon_eos_seteventmode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetEventMode,1,p1)
+/**
+ * ptp_canon_eos_transfercomplete:
+ * 
+ * This ends a direct object transfer from an EOS camera.
+ *
+ * params:      PTPParams*
+ *              oid             Object ID
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+#define ptp_canon_eos_transfercomplete(params,oid) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TransferComplete,1,oid)
+/* inHDD = %d, inLength =%d, inReset = %d */
+#define ptp_canon_eos_pchddcapacity(params,p1,p2,p3) ptp_generic_no_data(params,PTP_OC_CANON_EOS_PCHDDCapacity,3,p1,p2,p3)
 uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
@@ -2180,16 +2383,101 @@ uint16_t ptp_nikon_curve_download (PTPParams* params,
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
 uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);
-uint16_t ptp_nikon_deletewifiprofile (PTPParams* params, uint32_t profilenr);
-uint16_t ptp_nikon_setcontrolmode (PTPParams* params, uint32_t mode);
-uint16_t ptp_nikon_afdrive (PTPParams* params);
-uint16_t ptp_nikon_mfdrive (PTPParams* params, uint32_t flag, uint16_t amount);
-uint16_t ptp_nikon_capture (PTPParams* params, uint32_t x);
-uint16_t ptp_nikon_capture_sdram (PTPParams* params);
-uint16_t ptp_nikon_start_liveview (PTPParams* params);
+/**
+ * ptp_nikon_deletewifiprofile:
+ *
+ * This command deletes a wifi profile.
+ *  
+ * params:      PTPParams*
+ *      unsigned int profilenr  - profile number
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_deletewifiprofile(params,profilenr) ptp_generic_no_data(params,PTP_OC_NIKON_DeleteProfile,1,profilenr)
+/**
+ * ptp_nikon_setcontrolmode:
+ *
+ * This command can switch the camera to full PC control mode.
+ *  
+ * params:      PTPParams*
+ *      uint32_t mode - mode
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_setcontrolmode(params,mode) ptp_generic_no_data(params,PTP_OC_NIKON_SetControlMode,1,mode)
+/**
+ * ptp_nikon_afdrive:
+ *
+ * This command runs (drives) the lens autofocus.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_afdrive(params) ptp_generic_no_data(params,PTP_OC_NIKON_AfDrive,0)
+/**
+ * ptp_nikon_mfdrive:
+ *
+ * This command runs (drives) the lens autofocus.
+ *  
+ * params:      PTPParams*
+ * flag:        0x1 for (no limit - closest), 0x2 for (closest - no limit)
+ * amount:      amount of steps
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_mfdrive(params,flag,amount) ptp_generic_no_data(params,PTP_OC_NIKON_MfDrive,2,flag,amount)
+/**
+ * ptp_nikon_capture:
+ *
+ * This command captures a picture on the Nikon.
+ *  
+ * params:      PTPParams*
+ *      uint32_t x - unknown parameter. seen to be -1.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_capture(params,x) ptp_generic_no_data(params,PTP_OC_NIKON_Capture,1,x)
+/**
+ * ptp_nikon_capture_sdram:
+ *
+ * This command captures a picture on the Nikon.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_capture_sdram(params) ptp_generic_no_data(params,PTP_OC_NIKON_AfCaptureSDRAM,0)
+/**
+ * ptp_nikon_start_liveview:
+ *
+ * This command starts LiveView mode of newer Nikons DSLRs.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_start_liveview(params) ptp_generic_no_data(params,PTP_OC_NIKON_StartLiveView,0)
 uint16_t ptp_nikon_get_liveview_image (PTPParams* params, unsigned char**,unsigned int*);
 uint16_t ptp_nikon_get_preview_image (PTPParams* params, unsigned char**, unsigned int*, uint32_t*);
-uint16_t ptp_nikon_end_liveview (PTPParams* params);
+/**
+ * ptp_nikon_end_liveview:
+ *
+ * This command ends LiveView mode of newer Nikons DSLRs.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_end_liveview(params) ptp_generic_no_data(params,PTP_OC_NIKON_EndLiveView,0)
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
