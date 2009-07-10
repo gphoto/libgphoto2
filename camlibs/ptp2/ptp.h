@@ -1993,14 +1993,43 @@ uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 
 uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 
-uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
-uint16_t ptp_closesession	(PTPParams *params);
+uint16_t ptp_generic_no_data	(PTPParams* params, uint16_t opcode, unsigned int cnt, ...);
 
-uint16_t ptp_resetdevice	(PTPParams* params);
+uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
+
+/**
+ * ptp_closesession:
+ * params:      PTPParams*
+ *
+ * Closes session.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+#define ptp_closesession(params) ptp_generic_no_data(params,PTP_OC_CloseSession,0)
+/**
+ * ptp_resetdevice:
+ * params:      PTPParams*
+ *              
+ * Uses the built-in function to reset the device
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+#define ptp_resetdevice(params) ptp_generic_no_data(params,PTP_OC_ResetDevice,0)
+
 uint16_t ptp_getstorageids	(PTPParams* params, PTPStorageIDs* storageids);
 uint16_t ptp_getstorageinfo 	(PTPParams* params, uint32_t storageid,
 				PTPStorageInfo* storageinfo);
-uint16_t ptp_formatstore        (PTPParams* params, uint32_t storageid);
+/**
+ * ptp_formatstore:
+ * params:      PTPParams*
+ *              storageid               - StorageID
+ *
+ * Formats the storage on the device.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+#define ptp_formatstore(params,storageid) ptp_generic_no_data(params,PTP_OC_FormatStore,1,storageid)
 
 uint16_t ptp_getobjecthandles 	(PTPParams* params, uint32_t storage,
 				uint32_t objectformatcode,
