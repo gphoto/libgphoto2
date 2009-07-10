@@ -1693,6 +1693,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	unsigned char		*ximage = NULL;
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
+	int			sleepcnt = 1;
 	time_t                  capture_start=time(NULL);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
@@ -1734,10 +1735,15 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		}
 		if (!nrofentries) {
 			free (entries);
-			gp_context_idle (context);
-			usleep(100*1000); /* 100 ms */
+			for (i=sleepcnt;i--;) {
+				gp_context_idle (context);
+				usleep(20*1000); /* 20 ms */
+			}
+			sleepcnt++; /* incremental back off */
+			if (sleepcnt>10) sleepcnt=10;
 			continue;
 		}
+		sleepcnt = 1;
 		for (i=0;i<nrofentries;i++) {
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entries[i].type);
 			if (entries[i].type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
@@ -1765,8 +1771,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		if (newobject)
 			break;
 		CPR (context, ptp_canon_eos_keepdeviceon (params));
-		gp_context_idle (context);
-		usleep(100*1000); /* 100 ms */
 	}
 	if (newobject == 0)
 		return GP_ERROR;
@@ -2195,6 +2199,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	CameraFile	*file;
 	char		*ximage;
 	int		finish = 0;
+	int		sleepcnt = 1;
 
 	SET_CONTEXT(camera, context);
 	memset (&event, 0, sizeof(event));
@@ -2226,10 +2231,15 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			if (!nrofentries) {
 				free (entries);
-				gp_context_idle (context);
-				usleep(100*1000); /* 100 ms */
+				for (i=sleepcnt;i--;) {
+					gp_context_idle (context);
+					usleep(20*1000); /* 20 ms */
+				}
+				sleepcnt++; /* incremental back off */
+				if (sleepcnt>10) sleepcnt=10;
 				continue;
 			}
+			sleepcnt = 1;
 			for (i=0;i<nrofentries;i++) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entries[i].type);
 				switch (entries[i].type) {
@@ -2315,7 +2325,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			free (entries);
 			gp_context_idle (context);
-			usleep(100*1000); /* 100 ms */
 		}
 		return GP_OK;
 	}
