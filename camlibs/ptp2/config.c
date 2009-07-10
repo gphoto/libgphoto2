@@ -1420,6 +1420,38 @@ static struct deviceproptableu16 canon_isospeed[] = {
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
 
+/* see ptp-pack.c:ptp_unpack_EOS_ImageFormat */
+static struct deviceproptableu16 canon_eos_image_format[] = {
+	{ N_("RAW"),			0x0400, 0 },
+	{ N_("sRAW1"),			0x1400, 0 },
+	{ N_("sRAW2"),			0x2400, 0 },
+	{ N_("L/Fine"),			0x0300, 0 },
+	{ N_("L/Normal"),		0x0200, 0 },
+	{ N_("M/Fine"),			0x1300, 0 },
+	{ N_("M/Normal"),		0x1200, 0 },
+	{ N_("S/Fine"),			0x2300, 0 },
+	{ N_("S/Normal"),		0x2200, 0 },
+	{ N_("RAW + L/Fine"),		0x0403, 0 },
+	{ N_("sRAW1 + L/Fine"),		0x1403, 0 },
+	{ N_("sRAW2 + L/Fine"),		0x2403, 0 },
+	{ N_("RAW + M/Fine"),		0x0413, 0 },
+	{ N_("sRAW1 + M/Fine"),		0x1413, 0 },
+	{ N_("sRAW2 + M/Fine"),		0x2413, 0 },
+	{ N_("RAW + S/Fine"),		0x0423, 0 },
+	{ N_("sRAW1 + S/Fine"),		0x1423, 0 },
+	{ N_("sRAW2 + S/Fine"),		0x2423, 0 },
+	{ N_("RAW + L/Normal"),		0x0402, 0 },
+	{ N_("sRAW1 + L/Normal"),	0x1402, 0 },
+	{ N_("sRAW2 + L/Normal"),	0x2402, 0 },
+	{ N_("RAW + M/Normal"),		0x0412, 0 },
+	{ N_("sRAW1 + M/Normal"),	0x1412, 0 },
+	{ N_("sRAW2 + M/Normal"),	0x2412, 0 },
+	{ N_("RAW + S/Normal"),		0x0422, 0 },
+	{ N_("sRAW1 + S/Normal"),	0x1422, 0 },
+	{ N_("sRAW2 + S/Normal"),	0x2422, 0 },
+};
+GENERIC16TABLE(Canon_EOS_ImageFormat,canon_eos_image_format)
+
 static struct deviceproptableu16 canon_eos_aeb[] = {
 	{ N_("off"),		0x0000, 0 },
 	{ "+/- 1/3",		0x0003, 0 },
@@ -3248,7 +3280,8 @@ static struct submenu image_settings_menu[] = {
         { N_("Image Quality"), "imgquality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
         { N_("Canon Image Quality"), "canonimgquality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
         { N_("Canon Image Format"), "canonimgformat", PTP_DPC_CANON_FullViewFileFormat, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Capture_Format, _put_Canon_Capture_Format},
-        { N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
+	{ N_("EOS Image Format"), "imgformat", PTP_DPC_CANON_EOS_ImageFormat, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
+	{ N_("Image Size"), "imgsize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
         { N_("Canon Image Size"), "canonimgsize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
         { N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
         { N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
