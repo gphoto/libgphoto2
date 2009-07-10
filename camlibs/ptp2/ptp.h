@@ -2193,7 +2193,18 @@ uint16_t ptp_nikon_end_liveview (PTPParams* params);
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPContainer **evt, int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
-uint16_t ptp_nikon_device_ready (PTPParams* params);
+/**
+ * ptp_nikon_device_ready:
+ *
+ * This command checks if the device is ready. Used after
+ * a capture.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_device_ready(params) ptp_generic_no_data (params, PTP_OC_NIKON_DeviceReady, 0)
 uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint32_t *propnum, uint16_t **props);
 
 /* Non PTP protocol functions */

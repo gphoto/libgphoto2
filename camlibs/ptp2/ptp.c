@@ -2840,28 +2840,6 @@ ptp_nikon_check_event (PTPParams* params, PTPContainer** event, int* evtcnt)
 }
 
 /**
- * ptp_nikon_device_ready:
- *
- * This command checks if the device is ready. Used after
- * a capture.
- *  
- * params:	PTPParams*
- *
- * Return values: Some PTP_RC_* code.
- *
- **/
-uint16_t
-ptp_nikon_device_ready (PTPParams* params)
-{
-        PTPContainer ptp;
-        
-        PTP_CNT_INIT(ptp);
-        ptp.Code=PTP_OC_NIKON_DeviceReady;
-        ptp.Nparam=0;
-        return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
-}
-
-/**
  * ptp_nikon_getptpipinfo:
  *
  * This command gets the ptpip info data.
