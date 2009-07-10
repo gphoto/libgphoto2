@@ -2059,14 +2059,36 @@ uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
-uint16_t ptp_setobjectprotection (PTPParams* params, uint32_t oid, uint16_t newprot);
+/**
+ * ptp_setobjectprotection:
+ * params:      PTPParams*
+ *              uint16_t newprot        - object protection flag
+ *              
+ * Set protection of object.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+#define ptp_setobjectprotection(params,oid,newprot) ptp_generic_no_data(params,PTP_OC_SetObjectProtection,2,oid,newprot)
 uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
 				 uint32_t size);
 uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint32_t size);
 uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint32_t size);
-
-uint16_t ptp_initiatecapture	(PTPParams* params, uint32_t storageid,
-				uint32_t ofc);
+/**
+ * ptp_initiatecapture:
+ * params:      PTPParams*
+ *              storageid               - destination StorageID on Responder
+ *              ofc                     - object format code
+ * 
+ * Causes device to initiate the capture of one or more new data objects
+ * according to its current device properties, storing the data into store
+ * indicated by storageid. If storageid is 0x00000000, the object(s) will
+ * be stored in a store that is determined by the capturing device.
+ * The capturing of new data objects is an asynchronous operation.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+#define ptp_initiatecapture(params,storageid,ofc) ptp_generic_no_data(params,PTP_OC_InitiateCapture,2,storageid,ofc)
 
 uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);

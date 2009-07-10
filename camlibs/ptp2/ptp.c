@@ -919,30 +919,6 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
 }
 
 /**
- * ptp_setobjectprotection:
- * params:	PTPParams*
- *		uint16_t newprot	- object protection flag
- *		
- * Set protection of object.
- *
- * Return values: Some PTP_RC_* code.
- *
- */
-uint16_t
-ptp_setobjectprotection (PTPParams* params, uint32_t oid, uint16_t newprot)
-{
-	PTPContainer ptp;
-
-	PTP_CNT_INIT(ptp);
-	ptp.Code = PTP_OC_SetObjectProtection;
-	ptp.Param1 = oid;
-	ptp.Param2 = newprot;
-	ptp.Nparam = 2;
-	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
-}
-
-
-/**
  * ptp_sendobject:
  * params:	PTPParams*
  *		char*	object		- contains the object that is to be sent
@@ -1015,35 +991,6 @@ ptp_sendobject_fromfd (PTPParams* params, int fd, uint32_t size)
 	return ret;
 }
 
-
-/**
- * ptp_initiatecapture:
- * params:	PTPParams*
- *		storageid		- destination StorageID on Responder
- *		ofc			- object format code
- * 
- * Causes device to initiate the capture of one or more new data objects
- * according to its current device properties, storing the data into store
- * indicated by storageid. If storageid is 0x00000000, the object(s) will
- * be stored in a store that is determined by the capturing device.
- * The capturing of new data objects is an asynchronous operation.
- *
- * Return values: Some PTP_RC_* code.
- **/
-
-uint16_t
-ptp_initiatecapture (PTPParams* params, uint32_t storageid,
-			uint32_t ofc)
-{
-	PTPContainer ptp;
-
-	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_InitiateCapture;
-	ptp.Param1=storageid;
-	ptp.Param2=ofc;
-	ptp.Nparam=2;
-	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
-}
 
 uint16_t
 ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode, 
