@@ -9,6 +9,7 @@
 	  copyright, lensname, serialnr, shuttercount, availableshots
 	* ptp.c: decode EOS strings better
 	* ptp-pack.c: dpd.GetSet adjustments.
+	* ptp-pack.c,config.c,ptp.c: Implemented EOS ImageSize and ImageFormat handling.
 
 2009-05-26  Marcus Meissner  <marcus@jet.franken.de>
 

@@ -65,19 +65,19 @@ dtoh64p (PTPParams *params, uint64_t var)
 }
 
 static inline uint16_t
-dtoh16ap (PTPParams *params, unsigned char *a)
+dtoh16ap (PTPParams *params, const unsigned char *a)
 {
 	return ((params->byteorder==PTP_DL_LE)?le16atoh(a):be16atoh(a));
 }
 
 static inline uint32_t
-dtoh32ap (PTPParams *params, unsigned char *a)
+dtoh32ap (PTPParams *params, const unsigned char *a)
 {
 	return ((params->byteorder==PTP_DL_LE)?le32atoh(a):be32atoh(a));
 }
 
 static inline uint64_t
-dtoh64ap (PTPParams *params, unsigned char *a)
+dtoh64ap (PTPParams *params, const unsigned char *a)
 {
 	return ((params->byteorder==PTP_DL_LE)?le64atoh(a):be64atoh(a));
 }
@@ -1154,6 +1154,92 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 		fe->Filename[i]=(char)dtoh8a(&data[PTP_cfe_Filename+i]);
 }
 
+static inline uint16_t
+ptp_unpack_EOS_ImageFormat (PTPParams* params, unsigned char** data )
+{
+	/*
+	  EOS ImageFormat entries (of at least the 5DMII and the 400D ) look like this:
+		uint32: number of entries / generated files (1 or 2)
+		uint32: size of this entry in bytes (most likely allways 0x10)
+		uint32: image type (1 == JPG, 6 == RAW)
+		uint32: image size (0 == Large, 1 == Medium, 2 == Small)
+		uint32: image compression (2 == Standard/JPG, 3 == Fine/JPG, 4 == Lossles/RAW)
+	  If number of entries is 2 the last uint32 repeat.
+
+	  example:
+		0: 0x       1
+		1: 0x      10
+		2: 0x       6
+		3: 0x       1
+		4: 0x       4
+
+	  The idea is to simply 'condense' these values to just one uint16 to be able to conveniontly
+	  use the available enumeration facilities (look-up table). The image size and compression
+	  values fully describe the image format. Hence we generate a uint16 with the four nibles set
+	  as follows: entry 1 size | entry 1 compression | entry 2 size | entry 2 compression.
+	  The above example would result in the value 0x1400.
+	  */
+
+	const unsigned char* d = *data;
+	uint32_t n = dtoh32a( d );
+	uint32_t l, s1, c1, s2 = 0, c2 = 0;
+
+	if (n != 1 && n !=2) {
+		ptp_debug (params, "parsing EOS ImageFormat property failed (n != 1 && n != 2: %d)", n);
+		return 0;
+	}
+
+	l = dtoh32a( d+=4 );
+	if (l != 0x10) {
+		ptp_debug (params, "parsing EOS ImageFormat property failed (l != 0x10: 0x%x)", l);
+		return 0;
+	}
+
+	d+=4; /* skip type */
+	s1 = dtoh32a( d+=4 );
+	c1 = dtoh32a( d+=4 );
+
+	if (n == 2) {
+		l = dtoh32a( d+=4 );
+		if (l != 0x10) {
+			ptp_debug (params, "parsing EOS ImageFormat property failed (l != 0x10: 0x%x)", l);
+			return 0;
+		}
+		d+=4; /* skip type */
+		s2 = dtoh32a( d+=4 );
+		c2 = dtoh32a( d+=4 );
+	}
+
+	*data = (unsigned char*) d+4;
+
+	return ((s1 & 0xF) << 12) | ((c1 & 0xF) << 8) | ((s2 & 0xF) << 4) | ((c2 & 0xF) << 0);
+}
+
+static inline uint32_t
+ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value)
+{
+	uint32_t n = (value & 0xFF) ? 2 : 1;
+	uint32_t s = 4 + 0x10 * n;
+
+	if( !data )
+		return s;
+
+	htod32a(data+=0, n);
+	htod32a(data+=4, 0x10);
+	htod32a(data+=4, ((value >> 8) & 0xF) == 4 ? 6 : 1);
+	htod32a(data+=4, (value >> 12) & 0xF);
+	htod32a(data+=4, (value >> 8) & 0xF);
+
+	if (n==2) {
+		htod32a(data+=4, 0x10);
+		htod32a(data+=4, ((value >> 0) & 0xF) == 4 ? 6 : 1);
+		htod32a(data+=4, (value >> 4) & 0xF);
+		htod32a(data+=4, (value >> 0) & 0xF);
+	}
+
+	return s;
+}
+
 /*
     PTP EOS Changes Entry unpack
 */
@@ -1255,22 +1341,38 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					ptp_debug (params, "    %d: %02x", j, data[j]);
 				break;
 			}
-			if (propxcnt) {
-				ptp_debug (params, "event %d: propxtype is %x, prop is 0x%04x, data type is 0x%04x, propxcnt is %d.",
-					   i, propxtype, proptype, dpd->DataType, propxcnt);
-				dpd->FormFlag = PTP_DPFF_Enumeration;
-				dpd->FORM.Enum.NumberOfValues = propxcnt;
-				dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
+			if (! propxcnt)
+				break;
 
+			ptp_debug (params, "event %d: propxtype is %x, prop is 0x%04x, data type is 0x%04x, propxcnt is %d.",
+				   i, propxtype, proptype, dpd->DataType, propxcnt);
+			dpd->FormFlag = PTP_DPFF_Enumeration;
+			dpd->FORM.Enum.NumberOfValues = propxcnt;
+			dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
 
+			switch (proptype) {
+			case PTP_DPC_CANON_EOS_ImageFormat:
+			case PTP_DPC_CANON_EOS_ImageFormatCF:
+			case PTP_DPC_CANON_EOS_ImageFormatSD:
+			case PTP_DPC_CANON_EOS_ImageFormatExtHD:
+				/* special handling of ImageFormat properties */
+				for (j=0;j<propxcnt;j++) {
+					dpd->FORM.Enum.SupportedValue[j].u16 =
+							dtoh16( ptp_unpack_EOS_ImageFormat( params, &data ) );
+					ptp_debug (params, "event %d: suppval[%d] of %x is 0x%x.", i, j, proptype, dpd->FORM.Enum.SupportedValue[j].u16);
+				}
+				break;
+			default:
+				/* 'normal' enumerated types */
 				switch (dpd->DataType) {
 #define XX( TYPE, CONV )\
-				for (j=0;j<propxcnt;j++) { \
-					dpd->FORM.Enum.SupportedValue[j].TYPE = CONV(data); \
-					ptp_debug (params, "event %d: suppval[%d] of %x is 0x%x.", i, j, proptype, CONV(data)); \
-					data += 4; /* might only be for propxtype 3 */ \
-				} \
-				break;
+					for (j=0;j<propxcnt;j++) { \
+						dpd->FORM.Enum.SupportedValue[j].TYPE = CONV(data); \
+						ptp_debug (params, "event %d: suppval[%d] of %x is 0x%x.", i, j, proptype, CONV(data)); \
+						data += 4; /* might only be for propxtype 3 */ \
+					} \
+					break;
+
 				case PTP_DTC_INT16:	XX( i16, dtoh16a );
 				case PTP_DTC_UINT32:	XX( u32, dtoh32a );
 				case PTP_DTC_UINT16:	XX( u16, dtoh16a );
@@ -1498,6 +1600,20 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					/* debug is printed in switch above this one */
 					break;
 				}
+
+				/* ImageFormat special handling */
+				switch (proptype) {
+				case PTP_DPC_CANON_EOS_ImageFormat:
+				case PTP_DPC_CANON_EOS_ImageFormatCF:
+				case PTP_DPC_CANON_EOS_ImageFormatSD:
+				case PTP_DPC_CANON_EOS_ImageFormatExtHD:
+					dpd->DataType = PTP_DTC_UINT16;
+					dpd->FactoryDefaultValue.u16	= ptp_unpack_EOS_ImageFormat( params, &data );
+					dpd->CurrentValue.u16		= dpd->FactoryDefaultValue.u16;
+					ptp_debug (params,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u8);
+					break;
+				}
+
 				break;
 		}
 		case 0: /* end marker */

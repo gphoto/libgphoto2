@@ -2130,37 +2130,53 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 			break;
 	if (params->nrofcanon_props == i)
 		return PTP_RC_Undefined;
-	if (datatype != PTP_DTC_STR) {
-		data = calloc(sizeof(uint32_t),3);
-		size = sizeof(uint32_t)*3;
-	} else {
-		size = strlen(value->str) + 1 + 8;
-		data = calloc(sizeof(char),size);
+
+	switch (propcode) {
+	case PTP_DPC_CANON_EOS_ImageFormat:
+	case PTP_DPC_CANON_EOS_ImageFormatCF:
+	case PTP_DPC_CANON_EOS_ImageFormatSD:
+	case PTP_DPC_CANON_EOS_ImageFormatExtHD:
+		/* special handling of ImageFormat properties */
+		size = 8 + ptp_pack_EOS_ImageFormat( params, NULL, value->u16 );
+		data = malloc( size );
+		params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
+		ptp_pack_EOS_ImageFormat( params, data + 8, value->u16 );
+		break;
+	default:
+		if (datatype != PTP_DTC_STR) {
+			data = calloc(sizeof(uint32_t),3);
+			size = sizeof(uint32_t)*3;
+		} else {
+			size = strlen(value->str) + 1 + 8;
+			data = calloc(sizeof(char),size);
+		}
+		switch (datatype) {
+		case PTP_DTC_UINT8:
+			/*fprintf (stderr, "%x -> %d\n", propcode, value->u8);*/
+			htod8a(&data[8], value->u8);
+			params->canon_props[i].dpd.CurrentValue.u8 = value->u8;
+			break;
+		case PTP_DTC_UINT16:
+			/*fprintf (stderr, "%x -> %d\n", propcode, value->u16);*/
+			htod16a(&data[8], value->u16);
+			params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
+			break;
+		case PTP_DTC_UINT32:
+			/*fprintf (stderr, "%x -> %d\n", propcode, value->u32);*/
+			htod32a(&data[8], value->u32);
+			params->canon_props[i].dpd.CurrentValue.u32 = value->u32;
+			break;
+		case PTP_DTC_STR:
+			strcpy((char*)data + 8, value->str);
+			free (params->canon_props[i].dpd.CurrentValue.str);
+			params->canon_props[i].dpd.CurrentValue.str = strdup(value->str);
+			break;
+		}
 	}
+
 	htod32a(&data[0], size);
 	htod32a(&data[4], propcode);
-	switch (datatype) {
-	case PTP_DTC_UINT8:
-		/*fprintf (stderr, "%x -> %d\n", propcode, value->u8);*/
-		htod8a(&data[8], value->u8);
-		params->canon_props[i].dpd.CurrentValue.u8 = value->u8;
-		break;
-	case PTP_DTC_UINT16:
-		/*fprintf (stderr, "%x -> %d\n", propcode, value->u16);*/
-		htod16a(&data[8], value->u16);
-		params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
-		break;
-	case PTP_DTC_UINT32:
-		/*fprintf (stderr, "%x -> %d\n", propcode, value->u32);*/
-		htod32a(&data[8], value->u32);
-		params->canon_props[i].dpd.CurrentValue.u32 = value->u32;
-		break;
-	case PTP_DTC_STR:
-		strcpy((char*)data + 8, value->str);
-		free (params->canon_props[i].dpd.CurrentValue.str);
-		params->canon_props[i].dpd.CurrentValue.str = strdup(value->str);
-		break;
-	}
+
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 	free (data);
 	return ret;
