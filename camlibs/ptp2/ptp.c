@@ -448,6 +448,39 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 }
 
 /**
+ * ptp_generic_no_data:
+ * params:	PTPParams*
+ * 		code	PTP OP Code
+ * 		n_param	count of parameters
+ *		... variable argument list ...
+ *
+ * Emits a generic PTP command without any data transfer.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_generic_no_data (PTPParams* params, uint16_t code, unsigned int n_param, ...)
+{
+	PTPContainer ptp;
+	va_list args;
+	int i;
+
+	if( n_param > 5 )
+		return PTP_RC_InvalidParameter;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=code;
+	ptp.Nparam=n_param;
+
+	va_start(args, n_param);
+	for( i=0; i<n_param; ++i )
+		(&ptp.Param1)[i] = va_arg(args, uint32_t);
+	va_end(args);
+
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
  * ptp_opensession:
  * params:	PTPParams*
  * 		session			- session number 
@@ -486,33 +519,6 @@ ptp_opensession (PTPParams* params, uint32_t session)
 }
 
 /**
- * ptp_closesession:
- * params:	PTPParams*
- *
- * Closes session.
- *
- * Return values: Some PTP_RC_* code.
- **/
-uint16_t
-ptp_closesession (PTPParams* params)
-{
-	PTPContainer ptp;
-
-	ptp_debug(params,"PTP: Closing session");
-
-	/* free any dangling response packet */
-	if (params->response_packet_size > 0) {
-		free(params->response_packet);
-		params->response_packet = NULL;
-		params->response_packet_size = 0;
-	}
-	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_CloseSession;
-	ptp.Nparam=0;
-	return ptp_transaction_new(params, &ptp, PTP_DP_NODATA, 0, NULL);
-}
-
-/**
  * ptp_free_params:
  * params:	PTPParams*
  *
@@ -539,27 +545,6 @@ ptp_free_params (PTPParams *params) {
 		ptp_free_objectinfo (&params->objectinfo[i]);
 	free (params->objectinfo);
 	ptp_free_DI (&params->deviceinfo);
-}
-
-/**
- * ptp_resetdevice:
- * params:	PTPParams*
- *		
- * Uses the built-in function to reset the device
- *
- * Return values: Some PTP_RC_* code.
- *
- */
-uint16_t
-ptp_resetdevice (PTPParams* params)
-{
-	PTPContainer ptp;
-
-	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_ResetDevice;
-	ptp.Nparam=0;
-
-	return ptp_transaction_new(params, &ptp, PTP_DP_NODATA, 0, NULL);
 }
 
 /**
@@ -616,28 +601,6 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 	if (ret == PTP_RC_OK) ptp_unpack_SI(params, si, storageinfo, len);
 	free(si);
 	return ret;
-}
-
-/**
- * ptp_formatstore:
- * params:	PTPParams*
- *              storageid		- StorageID
- *
- * Formats the storage on the device.
- *
- * Return values: Some PTP_RC_* code.
- **/
-uint16_t
-ptp_formatstore (PTPParams* params, uint32_t storageid)
-{
-	PTPContainer ptp;
-
-	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_FormatStore;
-	ptp.Param1=storageid;
-	ptp.Param2=PTP_FST_Undefined;
-	ptp.Nparam=2;
-	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 /**
