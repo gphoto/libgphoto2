@@ -1469,8 +1469,8 @@ GENERIC16TABLE(Canon_EOS_AEB,canon_eos_aeb)
 static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Single"),		0x0000, 0 },
 	{ N_("Continuous"),	0x0001, 0 },
-	{ N_("Timer 2 sec"),	0x0010, 0 },
-	{ N_("Timer 10 sec"),	0x0011, 0 },
+	{ N_("Timer 10 sec"),	0x0010, 0 },
+	{ N_("Timer 2 sec"),	0x0011, 0 },
 };
 GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
 
