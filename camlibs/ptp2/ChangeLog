@@ -2,7 +2,7 @@
 
 	* ptp.c,ptp.h: Generic PTP wrapper function (no data, no output)
 	  to avoid coding all generic functions as seperate functions.
-	  Started converting functions to macros.
+	  Converted all convertable functions to macros.
 
 2009-07-09  Axel Waggershauser <awagger@web.de>                                                                                    
 	* ptp.c: Some sprintf format adjustments.
