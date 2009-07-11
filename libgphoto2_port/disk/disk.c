@@ -107,7 +107,7 @@ gp_port_library_list (GPPortInfoList *list)
         if (!ctx) {
 		gp_log(GP_LOG_DEBUG, "gphoto2-port/disk", 
 		       "failed to initialize HAL!\n");
-                return GP_ERROR_HAL;
+                goto generic;
         }
         dbus_error_init (&error);
 
@@ -119,7 +119,7 @@ gp_port_library_list (GPPortInfoList *list)
 			error.message);
 		dbus_error_free (&error);
 		libhal_ctx_free(ctx);
-                return GP_ERROR_HAL;
+                goto generic;
         }
 
         libhal_ctx_set_dbus_connection (ctx, dbus_connection);
@@ -134,7 +134,7 @@ gp_port_library_list (GPPortInfoList *list)
 				error.message);
 			dbus_error_free (&error);
 		}
-                return GP_ERROR_HAL;
+                goto generic;
         }
 
 	gp_log(GP_LOG_DEBUG, "gphoto2-port/disk", "found %d volumes", 
@@ -360,6 +360,7 @@ gp_port_library_list (GPPortInfoList *list)
 #  endif
 # endif
 #endif
+generic:
 	/* generic disk:/xxx/ matcher */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_DISK);
