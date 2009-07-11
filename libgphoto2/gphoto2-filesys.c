@@ -308,7 +308,7 @@ delete_all_files (CameraFilesystem *fs, CameraFilesystemFolder *folder)
 	CameraFilesystemFile	*file;
 
 	CHECK_NULL (folder);
-	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Delete all files in folder %p", folder);
+	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Delete all files in folder %p/%s", folder, folder->name);
 
 	file = folder->files;
 	while (file) {
@@ -354,7 +354,7 @@ delete_folder (CameraFilesystem *fs, CameraFilesystemFolder **folder)
 	CameraFilesystemFolder *next;
 	CHECK_NULL (folder);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Delete one folder %p", *folder);
+	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Delete one folder %p/%s", *folder, (*folder)->name);
 	next = (*folder)->next;
 	delete_all_files (fs, *folder);
 	free ((*folder)->name);
@@ -477,7 +477,7 @@ static int
 recurse_delete_folder (CameraFilesystem *fs, CameraFilesystemFolder *folder) {
 	CameraFilesystemFolder  **f;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Recurse delete folder %p", folder);
+	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Recurse delete folder %p/%s", folder, folder->name);
 	f = &folder->folders;
 	while (*f) {
 		recurse_delete_folder (fs, *f);
@@ -534,7 +534,7 @@ append_to_folder (CameraFilesystemFolder *folder,
 	CameraFilesystemFolder	*f;
 	char	*s;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Append to folder %p - %s", folder, foldername);
+	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Append to folder %p/%s - %s", folder, folder->name, foldername);
 	/* Handle multiple slashes, and slashes at the end */
 	while (foldername[0]=='/')
 		foldername++;
@@ -1199,6 +1199,23 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	 */
 	f = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	/* Check if we need to load the folder ... */
+	if (f->folders_dirty) {
+		CameraList	*list;
+		int		ret;
+		/*
+		 * The owning folder is dirty. List the folders in it 
+		 * to make it clean.
+		 */
+		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Folder %s is dirty. "
+			"Listing folders in there to make folder clean...", folder);
+		ret = gp_list_new (&list);
+		if (ret == GP_OK) {
+			ret = gp_filesystem_list_folders (fs, folder, list, context);
+			gp_list_free (list);
+			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Done making folder %s clean...", folder);
+		}
+	}
 	prev = &(f->folders);
 	while (*prev) {
 		if (!strcmp (name, (*prev)->name))
