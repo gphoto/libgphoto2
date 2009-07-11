@@ -51,7 +51,7 @@ struct _CameraWidget {
 	float   value_float;
 
 	/* For Radio and Menu */
-	char    choice [200] [64];
+	char    choice [100] [64];
 	int     choice_count;
 
 	/* For Range */
@@ -60,7 +60,7 @@ struct _CameraWidget {
 	float   increment;
 
 	/* Child info */
-	CameraWidget *children [64];
+	CameraWidget *children [256];
 	int           children_count;
 
 	/* Widget was changed */
