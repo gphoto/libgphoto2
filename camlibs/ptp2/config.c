@@ -571,7 +571,6 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
 		) {
 			propval->u16 = tbl[i].value;
-			gp_log (GP_LOG_DEBUG, "ptp2/config:g16tbl", "returning %d for %s", propval->u16, value);
 			return GP_OK;
 		}
 	}
@@ -580,7 +579,6 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 		return (GP_ERROR);
 	}
 	propval->u16 = intval;
-	gp_log (GP_LOG_DEBUG, "ptp2/config:g16tbl", "returning %d for %s", propval->u16, value);
 	return GP_OK;
 }
 
@@ -2473,6 +2471,22 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	return (GP_OK);
 }
 
+static int
+_get_Canon_EOS_BatteryLevel(CONFIG_GET_ARGS) {
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	switch (dpd->CurrentValue.u16) {
+	case 0: gp_widget_set_value(*widget, _("Low")); break;
+	case 1: gp_widget_set_value(*widget, _("50%")); break;
+	case 2: gp_widget_set_value(*widget, _("100%")); break;
+	case 4: gp_widget_set_value(*widget, _("75%")); break;
+	case 5: gp_widget_set_value(*widget, _("25%")); break;
+	default: gp_widget_set_value(*widget, _("Unknown value")); break;
+	}
+	return (GP_OK);
+}
 
 static int
 _get_UINT32_as_time(CONFIG_GET_ARGS) {
@@ -3297,7 +3311,8 @@ static struct submenu camera_settings_menu[] = {
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
         { N_("Battery Level"), "battery", PTP_DPC_BatteryLevel, 0, PTP_DTC_UINT8, _get_BatteryLevel, _put_None },
-        { N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
+	{ N_("Battery Level"), "battery", PTP_DPC_CANON_EOS_BatteryPower, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel, _put_None},
+	{ N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
         { N_("Camera Orientation"), "orientation", PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CameraOrientation, _put_None },
         { N_("Camera Orientation"), "orientation", PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_CameraOrientation, _put_None },
         { N_("AC Power"), "acpower", PTP_DPC_NIKON_ACPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
@@ -3684,16 +3699,15 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (ret != GP_OK)
 				continue;
 
-			gp_log (GP_LOG_DEBUG, "camera_set_config", "Checking Property %04x (%s)", cursub->propid, cursub->label);
 			if (!gp_widget_changed (widget))
 				continue;
 
 			/* restore the "changed flag" */
 			gp_widget_set_changed (widget, TRUE);
 
-			gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
 				gp_widget_changed (widget); /* clear flag */
+				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
 				if (cursub->propid) {
 					PTPDevicePropDesc dpd;
 
