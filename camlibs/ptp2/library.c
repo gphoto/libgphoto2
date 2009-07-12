@@ -974,6 +974,8 @@ static struct {
 	{"Fuji:FinePix S1000fd",		0x04cb, 0x01dd, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2203316&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
+	/*https://sourceforge.net/tracker/index.php?func=detail&aid=2820380&group_id=8874&atid=358874 */
+	{"Fuji:FinePix F200 EXR",		0x04cb, 0x01e4, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
 	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
 
