@@ -1,10 +1,16 @@
+2009-07-09  Axel Waggershauser  <awagger@web.de>
+
+	* config.c: some unnecessary debuglines removed.
+	* config.c: Decode EOS battery charge value.
+
 2009-07-10  Marcus Meissner  <marcus@jet.franken.de>
 
         * ptp.c,ptp.h: Generic PTP wrapper function (no data, no output)
           to avoid coding all generic functions as seperate functions.
           Started converting functions to macros.
 
-2009-07-09  Axel Waggershauser <awagger@web.de>                                                                                    
+2009-07-09  Axel Waggershauser  <awagger@web.de>
+
 	* ptp.c: Some sprintf format adjustments.
 	* ptp.h: EOS_RemoteRelease doc comments.
 	* config.c: More Canon ISO and FStop values for the Canon 5D Mark II.
