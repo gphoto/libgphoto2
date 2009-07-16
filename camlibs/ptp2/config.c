@@ -62,6 +62,7 @@
 #define GP_MODULE "PTP2"
 
 #define CPR(context,result) {short r=(result); if (r!=PTP_RC_OK) {report_result ((context), r, params->deviceinfo.VendorExtensionID); return (translate_ptp_result (r));}}
+#define CR(result) {int r=(result);if(r<0) return (r);}
 
 #define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 
@@ -159,15 +160,43 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	return GP_OK;
 }
 
+int
+camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value) {
+	PTPParams		*params = &camera->pl->params;
+	uint16_t		ret;
+	char			buf[200];
+	PTPPropertyValue	ct_val;
+
+	 /* -1 == use setting from config-file, 1 == card, 4 == ram*/
+	ct_val.u32 = (value == -1)
+		     ? (GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram") ? 1 : 4
+		     : value;
+
+	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
+		return GP_ERROR;
+	}
+	if (ct_val.u32 == 4) {
+		/* if we want to download the image from the device, we need to tell the camera
+		 * that we have enough space left. */
+		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "ptp_canon_eos_pchddcapacity failed!");
+			return GP_ERROR;
+		}
+	}
+
+	return GP_OK;
+}
+
 static int
 camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 	uint16_t		ret;
 	PTPCanon_changes_entry	*entries = NULL;
 	int			nrofentries = 0;
-	unsigned char		devvalblob[12];
 	PTPStorageIDs		sids;
-	char			buf[200];
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
@@ -208,36 +237,9 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		nrofentries = 0;
 		entries = NULL;
 	}
-	ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911A failed!");
-		return GP_ERROR;
-	}
-	/* uint32t size, propid, value */
-	devvalblob[0] = 0x0c; devvalblob[1] = 0x00; devvalblob[2] = 0x00; devvalblob[3] = 0x00;
 
-	devvalblob[4] = PTP_DPC_CANON_EOS_CaptureDestination&0xff;
-	devvalblob[5] = PTP_DPC_CANON_EOS_CaptureDestination>>8;
-	devvalblob[6] = 0x00;
-	devvalblob[7] = 0x00;
+	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
 
-	/* default is -> SDRAM, otherwise ->CARD */
-	if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram")) {
-		devvalblob[8]  = 0x01;
-		devvalblob[9]  = 0x00;
-		devvalblob[10] = 0x00;
-		devvalblob[11] = 0x00;
-	} else {
-		devvalblob[8]  = 0x04;
-		devvalblob[9]  = 0x00;
-		devvalblob[10] = 0x00;
-		devvalblob[11] = 0x00;
-	}
-	ret = ptp_canon_eos_setdevicepropvalueex (params, devvalblob, 12);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setdevpropval of capturetarget to %d failed!",devvalblob[8] );
-		return GP_ERROR;
-	}
 	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
@@ -255,29 +257,6 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageinfo failed!");
 			return GP_ERROR;
 		}
-	}
-	/* just exchange the value to 4 */
-	/* default is -> SDRAM, otherwise ->CARD */
-	if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram")) {
-		devvalblob[8]  = 0x01;
-		devvalblob[9]  = 0x00;
-		devvalblob[10] = 0x00;
-		devvalblob[11] = 0x00;
-	} else {
-		devvalblob[8]  = 0x04;
-		devvalblob[9]  = 0x00;
-		devvalblob[10] = 0x00;
-		devvalblob[11] = 0x00;
-	}
-	ret = ptp_canon_eos_setdevicepropvalueex (params, devvalblob, 12);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setdevval of capturetarget to %d failed!", devvalblob[8]);
-		return GP_ERROR;
-	}
-	ret = ptp_canon_eos_pchddcapacity (params, 0x02222222, 0x1000, 0x1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "911a to 0x001dfc60 failed!");
-		return GP_ERROR;
 	}
 
 	/* FIXME: 9114 call missing here! */
@@ -349,24 +328,10 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	uint16_t		ret;
 	PTPCanon_changes_entry	*entries = NULL;
 	int			nrofentries = 0;
-	unsigned char		devvalblob[12];
-
-	ret = ptp_canon_eos_pchddcapacity(params, 0xffffef40, 0x00001000, 0x00000001);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "911A to 0xffffef40 failed!");
-		return GP_ERROR;
-	}
 
 	/* then emits 911b and 911c ... not done yet ... */
 
-	devvalblob[0] = 0x0c; devvalblob[1] = 0x00; devvalblob[2] = 0x00; devvalblob[3] = 0x00;
-	devvalblob[4] = 0x1c; devvalblob[5] = 0xd1; devvalblob[6] = 0x00; devvalblob[7] = 0x00;
-	devvalblob[8] = 0x01; devvalblob[9] = 0x00; devvalblob[10] = 0x00; devvalblob[11] = 0x00;
-	ret = ptp_canon_eos_setdevicepropvalueex (params, devvalblob, 12);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "setdevval of capturetarget to 1 failed!");
-		return GP_ERROR;
-	}
+	CR( camera_canon_eos_update_capture_target(camera, context, 1) );
 
 	/* Drain the rest set of the event data */
 	while (1) {

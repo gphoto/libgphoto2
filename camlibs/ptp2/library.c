@@ -1742,7 +1742,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	}
 	if (!params->eos_captureenabled)
 		camera_prepare_capture (camera, context);
-     
+	else
+		CR( camera_canon_eos_update_capture_target(camera, context, -1));
+
 	/* Get the initial bulk set of 0x9116 property data, otherwise
 	 * capture might return busy. */
 	while (1) {
