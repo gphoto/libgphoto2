@@ -1,0 +1,89 @@
+Device info:
+Manufacturer: CASIO COMPUTER CO.,LTD.
+  model: EX-F1
+  device version: 1.00
+  serial number: 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension description: (null)
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x101b
+  0x9000
+  0x9001
+  0x9002
+  0x9003
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4002
+  0x4003
+  0x4007
+  0x4009
+  0x400c
+Device Properties Supported:
+  0xd405
+  0xd407
+
+Camera summary:
+Model: EX-F1
+  device version: 1.00
+  serial number:  nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+Vendor extension ID: 0x00000006
+Vendor extension description: (null)
+
+Capture Formats: JPEG MS Wave Apple Quicktime MS AVI Undefined Type
+Display Formats: JPEG, MS Wave, MS AVI, Apple Quicktime, Association/Directory, Undefined Type
+Supported MTP Object Properties:
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc89/Duration de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Only
+	Maximum Capability: 18446744073709551615 (4294967295 MB)
+	Free Space (Bytes): 133120 (0 MB)
+	Free Space (Images): -1
+store_00020001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Builtin RAM
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 4075290624 (3886 MB)
+	Free Space (Bytes): 3099557888 (2955 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Device Icon(0xd405):(read only) (type=0x0) Undefined
+Property 0xd407:(read only) (type=0x6) 1
+
+
