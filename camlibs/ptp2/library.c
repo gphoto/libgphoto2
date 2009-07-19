@@ -5212,9 +5212,12 @@ camera_init (Camera *camera, GPContext *context)
 				ptp_canon_eos_getdeviceinfo (&camera->pl->params, &x, &l);
 		}
 #endif
+		/* automatically enable capture mode on EOS cameras to populate property list */
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+			camera_prepare_capture(camera,context);  
 		break;
 	case PTP_VENDOR_NIKON:
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CurveDownload))
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))
 			add_special_file("curve.ntc", nikon_curve_get, nikon_curve_put);
 		break;
 	default:
