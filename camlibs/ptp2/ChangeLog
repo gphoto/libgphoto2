@@ -1,6 +1,7 @@
 2009-07-19  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: New subsection "status" for all read-only values.
+	* config.c: New subsection "action" for simple camera actions.
 
 2009-07-15  Axel Waggershauser  <awagger@web.de>
 
