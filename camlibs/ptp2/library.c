@@ -2418,7 +2418,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				gp_file_set_mtime (file, time(NULL));
 
 				gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
-				CPR (context, ptp_getobject (params, newobject, &ximage));
+				CPR (context, ptp_getobject (params, newobject, (unsigned char**)&ximage));
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 				if (ret != GP_OK) {
 					gp_file_free (file);
@@ -4967,7 +4967,7 @@ camera_init (Camera *camera, GPContext *context)
 	retried = 0;
 	sessionid = 1;
 	while (1) {
-		ret=ptp_opensession (&camera->pl->params, sessionid);
+		ret=ptp_opensession (params, sessionid);
 		while (ret==PTP_RC_InvalidTransactionID) {
 			sessionid++;
 			if (retried < 10) {
@@ -4975,7 +4975,7 @@ camera_init (Camera *camera, GPContext *context)
 				continue;
 			}
 			/* FIXME: deviceinfo is not read yet ... */
-			report_result(context, ret, camera->pl->params.deviceinfo.VendorExtensionID);
+			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result(ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
@@ -4983,14 +4983,14 @@ camera_init (Camera *camera, GPContext *context)
 			if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO)) {
 				/* Try whacking PTP device */
 				if (camera->port->type == GP_PORT_USB)
-					ptp_usb_control_device_reset_request (&camera->pl->params);
+					ptp_usb_control_device_reset_request (params);
 			}
 			if (retried < 2) { /* try again */
 				retried++;
 				continue;
 			}
 			/* FIXME: deviceinfo is not read yet ... */
-			report_result(context, ret, camera->pl->params.deviceinfo.VendorExtensionID);
+			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return (translate_ptp_result(ret));
 		}
 		break;
@@ -5002,39 +5002,35 @@ camera_init (Camera *camera, GPContext *context)
 	/* Seems HP does not like getdevinfo outside of session
 	   although it's legal to do so */
 	/* get device info */
-	CPR(context, ptp_getdeviceinfo(&camera->pl->params,
-	&camera->pl->params.deviceinfo));
+	CPR(context, ptp_getdeviceinfo(params, &params->deviceinfo));
 
-	fixup_cached_deviceinfo (camera,&camera->pl->params.deviceinfo);
+	fixup_cached_deviceinfo (camera,&params->deviceinfo);
 
 	GP_DEBUG ("Device info:");
-	GP_DEBUG ("Manufacturer: %s",camera->pl->params.deviceinfo.Manufacturer);
-	GP_DEBUG ("  Model: %s", camera->pl->params.deviceinfo.Model);
-	GP_DEBUG ("  device version: %s", camera->pl->params.deviceinfo.DeviceVersion);
-	GP_DEBUG ("  serial number: '%s'",camera->pl->params.deviceinfo.SerialNumber);
-	GP_DEBUG ("Vendor extension ID: 0x%08x",camera->pl->params.deviceinfo.VendorExtensionID);
-	GP_DEBUG ("Vendor extension version: %d",camera->pl->params.deviceinfo.VendorExtensionVersion);
-	GP_DEBUG ("Vendor extension description: %s",camera->pl->params.deviceinfo.VendorExtensionDesc);
-	GP_DEBUG ("Functional Mode: 0x%04x",camera->pl->params.deviceinfo.FunctionalMode);
-	GP_DEBUG ("PTP Standard Version: %d",camera->pl->params.deviceinfo.StandardVersion);
+	GP_DEBUG ("Manufacturer: %s",params->deviceinfo.Manufacturer);
+	GP_DEBUG ("  Model: %s", params->deviceinfo.Model);
+	GP_DEBUG ("  device version: %s", params->deviceinfo.DeviceVersion);
+	GP_DEBUG ("  serial number: '%s'",params->deviceinfo.SerialNumber);
+	GP_DEBUG ("Vendor extension ID: 0x%08x",params->deviceinfo.VendorExtensionID);
+	GP_DEBUG ("Vendor extension version: %d",params->deviceinfo.VendorExtensionVersion);
+	GP_DEBUG ("Vendor extension description: %s",params->deviceinfo.VendorExtensionDesc);
+	GP_DEBUG ("Functional Mode: 0x%04x",params->deviceinfo.FunctionalMode);
+	GP_DEBUG ("PTP Standard Version: %d",params->deviceinfo.StandardVersion);
 	GP_DEBUG ("Supported operations:");
-	for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++)
-		GP_DEBUG ("  0x%04x",
-			camera->pl->params.deviceinfo.OperationsSupported[i]);
+	for (i=0; i<params->deviceinfo.OperationsSupported_len; i++)
+		GP_DEBUG ("  0x%04x", params->deviceinfo.OperationsSupported[i]);
 	GP_DEBUG ("Events Supported:");
-	for (i=0; i<camera->pl->params.deviceinfo.EventsSupported_len; i++)
-		GP_DEBUG ("  0x%04x",
-			camera->pl->params.deviceinfo.EventsSupported[i]);
+	for (i=0; i<params->deviceinfo.EventsSupported_len; i++)
+		GP_DEBUG ("  0x%04x", params->deviceinfo.EventsSupported[i]);
 	GP_DEBUG ("Device Properties Supported:");
-	for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len;
+	for (i=0; i<params->deviceinfo.DevicePropertiesSupported_len;
 		i++)
-		GP_DEBUG ("  0x%04x",
-			camera->pl->params.deviceinfo.DevicePropertiesSupported[i]);
+		GP_DEBUG ("  0x%04x", params->deviceinfo.DevicePropertiesSupported[i]);
 
-	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
+	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 #if 0
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ThemeDownload)) {
+		if (ptp_operation_issupported(params, PTP_OC_CANON_ThemeDownload)) {
 			add_special_file("startimage.jpg",	canon_theme_get, canon_theme_put);
 			add_special_file("startsound.wav",	canon_theme_get, canon_theme_put);
 			add_special_file("operation.wav",	canon_theme_get, canon_theme_put);
@@ -5046,13 +5042,16 @@ camera_init (Camera *camera, GPContext *context)
 		{
 			unsigned char *x;
 			unsigned long l;
-			if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetDeviceInfoEx))
-				ptp_canon_eos_getdeviceinfo (&camera->pl->params, &x, &l);
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx))
+				ptp_canon_eos_getdeviceinfo (params, &x, &l);
 		}
 #endif
+		/* automatically enable capture mode on EOS to populate property list */
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+			camera_prepare_capture(camera,context);
 		break;
 	case PTP_VENDOR_NIKON:
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CurveDownload))
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))
 			add_special_file("curve.ntc", nikon_curve_get, nikon_curve_put);
 		break;
 	default:
