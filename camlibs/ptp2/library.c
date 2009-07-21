@@ -4787,7 +4787,11 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			params->objects[params->nrofobjects].flags = 0;
 			if (handle != PTP_HANDLER_SPECIAL) {
 				gp_log (GP_LOG_DEBUG, "ptp_list_folder", "  parenthandle 0x%08x", handle);
-				params->objects[params->nrofobjects].oi.ParentObject = handle;
+				if (handles.Handler[i] == handle) { /* EOS bug where oid == parent(oid) */
+					params->objects[params->nrofobjects].oi.ParentObject = 0;
+				} else {
+					params->objects[params->nrofobjects].oi.ParentObject = handle;
+				}
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
 			}
 			if (storage != PTP_HANDLER_SPECIAL) {
