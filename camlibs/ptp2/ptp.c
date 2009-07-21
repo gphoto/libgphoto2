@@ -4811,15 +4811,21 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 
 #define X (PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED)
 	if ((want & X) && ((ob->flags & X) != X)) {
+		uint32_t	saveparent;
+		
+		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
+			saveparent = ob->oi.ParentObject;
+
 		ret = ptp_getobjectinfo (params, handle, &ob->oi);
 		if (ret != PTP_RC_OK)
 			return ret;
 		//debug_objectinfo(params, handle, &params->objects[i].oi);
 		if (!ob->oi.Filename) ob->oi.Filename=strdup("<none>");
+		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
+			ob->oi.ParentObject = saveparent;
 		ob->flags |= X;
 
 		/* EOS bug, DCIM links back to itself. */
-		if (ob->oi.ParentObject == handle) ob->oi.ParentObject = 0;
 	}
 #undef X
 	if (	(want & PTPOBJECT_MTPPROPLIST_LOADED) &&
