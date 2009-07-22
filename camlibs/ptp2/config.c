@@ -2627,6 +2627,36 @@ _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 
 
 static int
+_get_Canon_EOS_Bulb(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val, ret;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val)
+		ret = ptp_canon_eos_bulbstart (params);
+	else
+		ret = ptp_canon_eos_bulbend (params);
+	if (ret == PTP_RC_OK)
+		return (GP_OK);
+	return (GP_ERROR);
+}
+
+
+static int
 _get_Nikon_BeepMode(CONFIG_GET_ARGS) {
 	int val;
 
@@ -3213,6 +3243,7 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ N_("Focus Lock"),                    "focuslock", 0, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
+	{ N_("Bulb Mode"),                     "bulb", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_Bulb, _put_Canon_EOS_Bulb},
 	{ N_("Set camera time to PC time"),    "synctime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Set camera time to PC time"),    "synctime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Drive Nikon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_AFDrive, _put_Nikon_AFDrive },

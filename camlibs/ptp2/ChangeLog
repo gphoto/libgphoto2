@@ -4,6 +4,12 @@
 	* config.c: New subsection "action" for simple camera actions.
 	* library.c: Enable event mode on EOS Cameras on connect.
 
+	* config.c: Added new "bulb" action for newer Canon EOS cameras,.
+
+		--set-config bulb=1   to put it in Bulb mode
+		--set-config bulb=0   to put it out of Bulb mode
+		(--wait-event for looking where the image went or so)
+
 2009-07-15  Axel Waggershauser  <awagger@web.de>
 
 	* config.c: some unnecessary debuglines removed.
