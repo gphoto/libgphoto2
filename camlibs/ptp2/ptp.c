@@ -4813,16 +4813,20 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 	if ((want & X) && ((ob->flags & X) != X)) {
 		uint32_t	saveparent;
 		
+		/* One EOS issue, where getobjecthandles(root) returns obs without root flag. */
 		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
 			saveparent = ob->oi.ParentObject;
 
 		ret = ptp_getobjectinfo (params, handle, &ob->oi);
 		if (ret != PTP_RC_OK)
 			return ret;
-		//debug_objectinfo(params, handle, &params->objects[i].oi);
 		if (!ob->oi.Filename) ob->oi.Filename=strdup("<none>");
 		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
 			ob->oi.ParentObject = saveparent;
+
+		/* Second EOS issue, 0x20000000 has 0x20000000 as parent */
+		if (ob->oi.ParentObject == handle)
+			ob->oi.ParentObject = 0;
 		ob->flags |= X;
 
 		/* EOS bug, DCIM links back to itself. */

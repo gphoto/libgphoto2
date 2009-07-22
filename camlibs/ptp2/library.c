@@ -5063,6 +5063,8 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
+	ptp_list_folder (params, PTP_HANDLER_SPECIAL, 0);
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	SET_CONTEXT(camera, NULL);
 	return (GP_OK);
