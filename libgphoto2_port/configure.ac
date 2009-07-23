@@ -273,10 +273,9 @@ if $have_serial; then
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
-dnl  (1) resmgr support
-dnl  (2) baudboy.h
-dnl  (3) ttylock.h
-dnl  (4) lockdev.h
+dnl  (1) baudboy.h
+dnl  (2) ttylock.h
+dnl  (3) lockdev.h
 dnl -----------------------------------------
 AC_DEFUN([GP_SERLOCK],[dnl
 # $0([$1])
@@ -292,19 +291,6 @@ AC_ARG_ENABLE([$1],
 GP_SERLOCK([baudboy])dnl
 GP_SERLOCK([ttylock])dnl
 GP_SERLOCK([lockdev])dnl
-GP_SERLOCK([resmgr])dnl
-
-resmgr_msg=no
-if $try_resmgr; then
-	AC_CHECK_HEADER(resmgr.h,[
-		AC_CHECK_LIB(resmgr, rsm_lock_device,[
-			resmgr_msg=yes
-			SERIAL_LIBS="-lresmgr"
-			AC_DEFINE(HAVE_RESMGR,1,[Define if we have the resmgr library.])
-		])
-	])
-fi
-GP_CONFIG_MSG([resmgr locking],[${resmgr_msg}])
 
 baudboy_msg=no
 if $try_baudboy; then
@@ -327,7 +313,8 @@ if $try_ttylock; then
 			AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
 			ttylock_msg=yes
 			try_lockdev=false,
-			LDFLAGS="$LDFLAGS -llockdev"
+			save_LIBS="$LIBS"
+			LIBS="$LIBS -llockdev"
 			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
 				lockdev_result="yes"
 				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
@@ -335,6 +322,7 @@ if $try_ttylock; then
 				try_lockdev=false
 				SERIAL_LIBS=-llockdev
 			])
+			LIBS="$save_LIBS"
 		])
 		AC_MSG_CHECKING([if ttylock needs lockdev])
 		AC_MSG_RESULT([${lockdev_result}])
