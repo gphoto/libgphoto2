@@ -51,7 +51,7 @@ struct _CameraWidget {
 	float   value_float;
 
 	/* For Radio and Menu */
-	char    choice [100] [64];
+	char    **choice;
 	int     choice_count;
 
 	/* For Range */
@@ -60,7 +60,7 @@ struct _CameraWidget {
 	float   increment;
 
 	/* Child info */
-	CameraWidget *children [256];
+	CameraWidget **children;
 	int           children_count;
 
 	/* Widget was changed */
@@ -92,7 +92,6 @@ int
 gp_widget_new (CameraWidgetType type, const char *label, 
 		   CameraWidget **widget) 
 {
-	int x;
 	static int i = 0;
 
 	CHECK_NULL (label && widget);
@@ -110,15 +109,13 @@ gp_widget_new (CameraWidgetType type, const char *label,
 
         (*widget)->ref_count    	= 1;
 	(*widget)->choice_count 	= 0;
+	(*widget)->choice 		= NULL;
 	(*widget)->id			= i++;
 
         /* Clear all children pointers */
-	memset ((*widget)->children, 0, sizeof((*widget)->children));
+	free ((*widget)->children);
+	(*widget)->children = NULL;
 	(*widget)->children_count = 0;
-
-	/* Clear out the choices */
-	for (x = 0; x < sizeof((*widget)->choice)/sizeof((*widget)->choice[0]); x++)
-		strcpy ((*widget)->choice[x], "");
 
 	return (GP_OK);
 }
@@ -134,20 +131,22 @@ int
 gp_widget_free (CameraWidget *widget)
 {
 	CHECK_NULL (widget);
+	int x;
 
 	/* Free children recursively */
 	if ((widget->type == GP_WIDGET_WINDOW) ||
 	    (widget->type == GP_WIDGET_SECTION)) {
-	    	int x;
-
 	    	for (x = 0; x < gp_widget_count_children (widget); x++)
 			gp_widget_free (widget->children[x]);
+		free (widget->children);
 	}
+	for (x = 0; x < widget->choice_count; x++)
+		free (widget->choice[x]);
+	free (widget->choice);
 	    	
         if (widget->value_string)
 		free (widget->value_string);
 	free (widget);
-
 	return (GP_OK);
 }
 
@@ -434,12 +433,19 @@ int
 gp_widget_append (CameraWidget *widget, CameraWidget *child) 
 {
 	CHECK_NULL (widget && child);
+	CameraWidget **newlist;
 
 	/* Return if they can't have any children */
         if ((widget->type != GP_WIDGET_WINDOW) && 
 	    (widget->type != GP_WIDGET_SECTION))
 		return (GP_ERROR_BAD_PARAMETERS);
 
+	if (widget->children_count)
+		newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1));
+	else
+		newlist = malloc(sizeof(CameraWidget*));
+	if (!newlist) return (GP_ERROR_NO_MEMORY);
+	widget->children = newlist;
 	widget->children[widget->children_count] = child;
 	widget->children_count += 1;
 	child->parent = widget;
@@ -460,6 +466,7 @@ int
 gp_widget_prepend (CameraWidget *widget, CameraWidget *child) 
 {
 	int x;
+	CameraWidget**	newlist;
 
 	CHECK_NULL (widget && child);
 
@@ -467,6 +474,13 @@ gp_widget_prepend (CameraWidget *widget, CameraWidget *child)
 	if ((widget->type != GP_WIDGET_WINDOW) && 
 	    (widget->type != GP_WIDGET_SECTION))
 		return (GP_ERROR_BAD_PARAMETERS);
+
+	if (widget->children_count)
+		newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1));
+	else
+		newlist = malloc(sizeof(CameraWidget*));
+	if (!newlist) return (GP_ERROR_NO_MEMORY);
+	widget->children = newlist;
 
 	/* Shift down 1 */
 	for (x = widget->children_count; x > 0; x--)
@@ -727,18 +741,22 @@ gp_widget_get_range (CameraWidget *range, float *min, float *max,
 int
 gp_widget_add_choice (CameraWidget *widget, const char *choice) 
 {
+	char **choices;
 	CHECK_NULL (widget && choice);
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	/* static list of choices is full */
-	if (widget->choice_count >= sizeof(widget->choice)/sizeof(widget->choice[0]))
-		return (GP_ERROR);
+	if (widget->choice_count) {
+		choices = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1));
+	} else {
+		choices = malloc (sizeof(char*));
+	}
+	if (!choices) return (GP_ERROR_NO_MEMORY);
 
-	strncpy (widget->choice[widget->choice_count], choice, sizeof(widget->choice[0]));
+	widget->choice = choices;
+	widget->choice[widget->choice_count] = strdup(choice);
 	widget->choice_count += 1;
-
 	return (GP_OK);
 }
 
@@ -807,4 +825,3 @@ gp_widget_changed (CameraWidget *widget)
 
         return (val);
 }
-
