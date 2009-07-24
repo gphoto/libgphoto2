@@ -1012,6 +1012,38 @@ _put_Nikon_WBBias(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Nikon_UWBBias(CONFIG_GET_ARGS) {
+	float	f, t, b, s;
+
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	f = (float)dpd->CurrentValue.u8;
+	b = (float)dpd->FORM.Range.MinimumValue.u8;
+	t = (float)dpd->FORM.Range.MaximumValue.u8;
+	s = (float)dpd->FORM.Range.StepSize.u8;
+	gp_widget_set_range (*widget, b, t, s);
+	gp_widget_set_value (*widget, &f);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_UWBBias(CONFIG_PUT_ARGS)
+{
+	float	f;
+	int	ret;
+
+	f = 0.0;
+	ret = gp_widget_get_value (widget,&f);
+	if (ret != GP_OK) return ret;
+	propval->u8 = (unsigned char)f;
+	return (GP_OK);
+}
+
+static int
 _get_Nikon_WBBiasPresetVal(CONFIG_GET_ARGS) {
 	char buf[20];
 
@@ -1862,6 +1894,8 @@ static int
 _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 	int i, valset = 0;
 	char buf[200];
+	int x,y;
+
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return (GP_ERROR);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
@@ -1871,10 +1905,13 @@ _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-		sprintf (buf, "%d/%d",
-			dpd->FORM.Enum.SupportedValue[i].u32>>16,
-			dpd->FORM.Enum.SupportedValue[i].u32&0xffff
-		);
+		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
+		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
+		if (y == 1) { /* x/1 */
+			sprintf (buf, "%d", x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
 		gp_widget_add_choice (*widget,buf);
 		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
 			gp_widget_set_value (*widget, buf);
@@ -1882,10 +1919,13 @@ _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 		}
 	}
 	if (!valset) {
-		sprintf (buf, "%d/%d",
-			dpd->CurrentValue.u32>>16,
-			dpd->CurrentValue.u32&0xffff
-		);
+		x = dpd->CurrentValue.u32>>16;
+		y = dpd->CurrentValue.u32&0xffff;
+		if (y == 1) {
+			sprintf (buf, "%d",x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
 		gp_widget_set_value (*widget, buf);
 	}
 	return GP_OK;
@@ -1897,8 +1937,14 @@ _put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
 	const char *value_str;
 
 	gp_widget_get_value (widget, &value_str);
-	if (2 != sscanf (value_str, "%d/%d", &x, &y))
-		return GP_ERROR;
+	if (strchr(value_str, '/')) {
+		if (2 != sscanf (value_str, "%d/%d", &x, &y))
+			return GP_ERROR;
+	} else {
+		if (!sscanf (value_str, "%d", &x))
+			return GP_ERROR;
+		y = 1;
+	}
 	propval->u32 = (x<<16) | y;
 	return GP_OK;
 }
@@ -3388,6 +3434,17 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	{ N_("Burst Number"), "burstnumber", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_BurstNumber, _put_BurstNumber},
+
+	/* Newer Nikons have UINT8 ranges */
+	{ N_("Auto White Balance Bias"), "autowhitebias", PTP_DPC_NIKON_WhiteBalanceAutoBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+	{ N_("Tungsten White Balance Bias"), "tungstenwhitebias", PTP_DPC_NIKON_WhiteBalanceTungstenBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+	{ N_("Fluorescent White Balance Bias"), "flourescentwhitebias", PTP_DPC_NIKON_WhiteBalanceFluorescentBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+	{ N_("Daylight White Balance Bias"), "daylightwhitebias", PTP_DPC_NIKON_WhiteBalanceDaylightBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+	{ N_("Flash White Balance Bias"), "flashwhitebias", PTP_DPC_NIKON_WhiteBalanceFlashBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+	{ N_("Cloudy White Balance Bias"), "cloudywhitebias", PTP_DPC_NIKON_WhiteBalanceCloudyBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+	{ N_("Shady White Balance Bias"), "shadewhitebias", PTP_DPC_NIKON_WhiteBalanceShadeBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
+
+	/* older Nikons have INT8 ranges */
 	{ N_("Auto White Balance Bias"), "autowhitebias", PTP_DPC_NIKON_WhiteBalanceAutoBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
 	{ N_("Tungsten White Balance Bias"), "tungstenwhitebias", PTP_DPC_NIKON_WhiteBalanceTungstenBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
 	{ N_("Fluorescent White Balance Bias"), "flourescentwhitebias", PTP_DPC_NIKON_WhiteBalanceFluorescentBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
@@ -3395,6 +3452,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash White Balance Bias"), "flashwhitebias", PTP_DPC_NIKON_WhiteBalanceFlashBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
 	{ N_("Cloudy White Balance Bias"), "cloudywhitebias", PTP_DPC_NIKON_WhiteBalanceCloudyBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
 	{ N_("Shady White Balance Bias"), "shadewhitebias", PTP_DPC_NIKON_WhiteBalanceShadeBias, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_WBBias, _put_Nikon_WBBias},
+
 	{ N_("White Balance Bias Preset Nr"), "whitebiaspresetno", PTP_DPC_NIKON_WhiteBalancePresetNo, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_WBBiasPreset, _put_Nikon_WBBiasPreset},
 	{ N_("White Balance Bias Preset 0"), "whitebiaspreset0", PTP_DPC_NIKON_WhiteBalancePresetVal0, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
 	{ N_("White Balance Bias Preset 1"), "whitebiaspreset1", PTP_DPC_NIKON_WhiteBalancePresetVal1, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_WBBiasPresetVal, _put_None},
@@ -3430,7 +3488,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *section, *widget;
 	int menuno, submenuno, ret;
+	uint16_t	*setprops = NULL;
+	int		i, nrofsetprops = 0;
+	PTPParams	*params = &camera->pl->params;
 	SET_CONTEXT(camera, context);
+
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -3457,9 +3519,15 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					PTPDevicePropDesc	dpd;
 
 					memset(&dpd,0,sizeof(dpd));
-					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					ptp_free_devicepropdesc(&dpd);
+					if (nrofsetprops)
+						setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
+					else
+						setprops = malloc(sizeof(setprops[0]));
+					if (setprops) /* handle oom */
+						setprops[nrofsetprops++] = cursub->propid;
 				} else {
 					ret = cursub->getfunc (camera, &widget, cursub, NULL);
 				}
@@ -3475,7 +3543,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 				gp_log (GP_LOG_DEBUG, "camera_get_config", "Found and adding EOS Property %04x (%s)", cursub->propid, cursub->label);
 				memset(&dpd,0,sizeof(dpd));
-				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
+				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
 				if (ret != GP_OK)
@@ -3485,14 +3553,167 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			}
 		}
 	}
+	/* Last menu is "Other", a generic fallback window. */
+	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len)
+		return GP_OK;
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
+	gp_widget_set_name (section, "other");
+	gp_widget_append (*window, section);
+
+	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
+		int			j;
+		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
+		CameraWidget		*widget;
+		char			buf[20], *label;
+		PTPDevicePropDesc	dpd;
+		CameraWidgetType	type;
+
+#if 0 /* expose the whole thing to the user instead for now... */
+		for (j=0;j<nrofsetprops;j++)
+			if (setprops[j] == propid)
+				break;
+		if (j<nrofsetprops) continue;
+		memset (&dpd,0,sizeof(dpd));
+#endif
+		ret = ptp_getdevicepropdesc (params,propid,&dpd);
+		if (ret != PTP_RC_OK)
+			continue;
+
+		label = (char*)ptp_get_property_description(params, propid);
+		if (!label) {
+			sprintf (buf, N_("PTP Property 0x%04x"), propid);
+			label = buf;
+		}
+		switch (dpd.FormFlag) {
+		case PTP_DPFF_None:
+			type = GP_WIDGET_TEXT;
+			break;
+		case PTP_DPFF_Range:
+			type = GP_WIDGET_RANGE;
+			switch (dpd.DataType) {
+			/* simple ranges might just be enumerations */
+#define X(dtc,val) 							\
+			case dtc: 					\
+				if (	((dpd.FORM.Range.MaximumValue.val - dpd.FORM.Range.MinimumValue.val) < 128) &&	\
+					(dpd.FORM.Range.StepSize.val == 1)) {						\
+					type = GP_WIDGET_MENU;								\
+				} \
+				break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+			default:break;
+			}
+			break;
+		case PTP_DPFF_Enumeration:
+			type = GP_WIDGET_MENU;
+			break;
+		default:
+			type = GP_WIDGET_TEXT;
+			break;
+		}
+		gp_widget_new (type, _(label), &widget);
+		sprintf(buf,"%04x", propid); gp_widget_set_name (widget, buf);
+		switch (dpd.FormFlag) {
+		case PTP_DPFF_None: break;
+		case PTP_DPFF_Range:
+			switch (dpd.DataType) {
+#define X(dtc,val) 										\
+			case dtc: 								\
+				if (type == GP_WIDGET_RANGE) {					\
+					gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
+				} else {							\
+					int k;							\
+					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
+						sprintf (buf, "%d", k); 			\
+						gp_widget_add_choice (widget, buf);		\
+					}							\
+				} 								\
+				break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+			default:break;
+			}
+			break;
+		case PTP_DPFF_Enumeration:
+			switch (dpd.DataType) {
+#define X(dtc,val) 									\
+			case dtc: { 							\
+				int k;							\
+				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++) {		\
+					sprintf (buf, "%d", dpd.FORM.Enum.SupportedValue[k].val); \
+					gp_widget_add_choice (widget, buf);		\
+				}							\
+				break;							\
+			}
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+			case PTP_DTC_STR: {
+				int k;
+				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++)
+					gp_widget_add_choice (widget, dpd.FORM.Enum.SupportedValue[k].str);
+				break;
+			}
+			default:break;
+			}
+			break;
+		}
+		switch (dpd.DataType) {
+#define X(dtc,val) 							\
+		case dtc:						\
+			if (type == GP_WIDGET_RANGE) {			\
+				float f = dpd.CurrentValue.val;		\
+				gp_widget_set_value (widget, &f);	\
+			} else {					\
+				sprintf (buf, "%d", dpd.CurrentValue.val);	\
+				gp_widget_set_value (widget, buf);	\
+			}\
+			break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+		case PTP_DTC_STR:
+			gp_widget_set_value (widget, dpd.CurrentValue.str);
+			break;
+		default:
+			break;
+		}
+		gp_widget_append (section, widget);
+	}
 	return GP_OK;
 }
 
 int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
-	CameraWidget *section, *widget, *subwindow;
-	int menuno, submenuno, ret;
+	CameraWidget		*section, *widget, *subwindow;
+	int			menuno, submenuno, ret;
+	PTPParams		*params = &camera->pl->params;
+	PTPPropertyValue	propval;
+	int			i;
 	SET_CONTEXT(camera, context);
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
@@ -3511,8 +3732,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		/* Standard menu with submenus */
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
-			PTPPropertyValue	propval;
-
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
 			if (ret != GP_OK)
@@ -3531,7 +3750,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
-					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
 					} else {
@@ -3539,7 +3758,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
-						ret = ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+						ret = ptp_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
 						if (ret != PTP_RC_OK) {
 							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret);
 							ret = GP_ERROR;
@@ -3557,13 +3776,80 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting EOS Property %04x (%s)", cursub->propid, cursub->label);
 				memset(&dpd,0,sizeof(dpd));
-				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
+				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);
 				if (ret == GP_OK)
-					ptp_canon_eos_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+					ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
 				ptp_free_devicepropdesc(&dpd);
 				ptp_free_devicepropvalue(cursub->type, &propval);
 			}
+		}
+	}
+
+	/* Generic property setter */
+	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
+		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
+		CameraWidget		*widget;
+		CameraWidgetType	type;
+		char			buf[20], *label;
+		PTPDevicePropDesc	dpd;
+
+		label = (char*)ptp_get_property_description(params, propid);
+		if (!label) {
+			sprintf (buf, N_("PTP Property 0x%04x"), propid);
+			label = buf;
+		}
+		ret = gp_widget_get_child_by_label (section, _(label), &widget);
+		if (ret != GP_OK)
+			continue;
+		if (!gp_widget_changed (widget))
+			continue;
+
+		gp_widget_get_type (widget, &type);
+
+		memset (&dpd,0,sizeof(dpd));
+		memset (&propval,0,sizeof(propval));
+		ret = ptp_getdevicepropdesc (params,propid,&dpd);
+		if (ret != PTP_RC_OK)
+			continue;
+		if (dpd.GetSet != PTP_DPGS_GetSet) {
+			gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently ready-only."), _(label), propid);
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+
+		switch (dpd.DataType) {
+#define X(dtc,val) 							\
+		case dtc:						\
+			if (type == GP_WIDGET_RANGE) {			\
+				float f;				\
+				gp_widget_get_value (widget, &f);	\
+				propval.val = f;			\
+			} else {					\
+				long x;					\
+				gp_widget_get_value (widget, buf);	\
+				sscanf (buf, "%ld", &x);		\
+				propval.val = x;			\
+			}\
+			break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+		case PTP_DTC_STR:
+			gp_widget_get_value (widget, buf);
+			propval.str = strdup(buf);
+			break;
+		default:
+			break;
+		}
+		ret = ptp_setdevicepropvalue (params, propid, &propval, dpd.DataType);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(label), propid, ret);
+			ret = GP_ERROR;
 		}
 	}
 	return GP_OK;
