@@ -3569,11 +3569,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
 
+#if 0 /* expose the whole thing to the user instead for now... */
 		for (j=0;j<nrofsetprops;j++)
 			if (setprops[j] == propid)
 				break;
 		if (j<nrofsetprops) continue;
 		memset (&dpd,0,sizeof(dpd));
+#endif
 		ret = ptp_getdevicepropdesc (params,propid,&dpd);
 		if (ret != PTP_RC_OK)
 			continue;
@@ -3589,9 +3591,31 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			break;
 		case PTP_DPFF_Range:
 			type = GP_WIDGET_RANGE;
+			switch (dpd.DataType) {
+			/* simple ranges might just be enumerations */
+#define X(dtc,val) 							\
+			case dtc: 					\
+				if (	((dpd.FORM.Range.MaximumValue.val - dpd.FORM.Range.MinimumValue.val) < 128) &&	\
+					(dpd.FORM.Range.StepSize.val == 1)) {						\
+					type = GP_WIDGET_MENU;								\
+				} \
+				break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+			default:break;
+			}
 			break;
 		case PTP_DPFF_Enumeration:
 			type = GP_WIDGET_MENU;
+			break;
+		default:
+			type = GP_WIDGET_TEXT;
 			break;
 		}
 		gp_widget_new (type, _(label), &widget);
@@ -3600,9 +3624,17 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		case PTP_DPFF_None: break;
 		case PTP_DPFF_Range:
 			switch (dpd.DataType) {
-#define X(dtc,val) 							\
-			case dtc: 					\
-				gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
+#define X(dtc,val) 										\
+			case dtc: 								\
+				if (type == GP_WIDGET_RANGE) {					\
+					gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
+				} else {							\
+					int k;							\
+					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
+						sprintf (buf, "%d", k); 			\
+						gp_widget_add_choice (widget, buf);		\
+					}							\
+				} 								\
 				break;
 
 		X(PTP_DTC_INT8,i8)
@@ -3677,8 +3709,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
-	CameraWidget *section, *widget, *subwindow;
-	int menuno, submenuno, ret;
+	CameraWidget		*section, *widget, *subwindow;
+	int			menuno, submenuno, ret;
+	PTPParams		*params = &camera->pl->params;
+	PTPPropertyValue	propval;
+	int			i;
 	SET_CONTEXT(camera, context);
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
@@ -3697,8 +3732,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		/* Standard menu with submenus */
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
-			PTPPropertyValue	propval;
-
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
 			if (ret != GP_OK)
@@ -3717,7 +3750,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
-					ptp_getdevicepropdesc(&camera->pl->params,cursub->propid,&dpd);
+					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
 					} else {
@@ -3725,7 +3758,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
-						ret = ptp_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+						ret = ptp_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
 						if (ret != PTP_RC_OK) {
 							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret);
 							ret = GP_ERROR;
@@ -3743,13 +3776,80 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting EOS Property %04x (%s)", cursub->propid, cursub->label);
 				memset(&dpd,0,sizeof(dpd));
-				ptp_canon_eos_getdevicepropdesc (&camera->pl->params,cursub->propid, &dpd);
+				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);
 				if (ret == GP_OK)
-					ptp_canon_eos_setdevicepropvalue (&camera->pl->params, cursub->propid, &propval, cursub->type);
+					ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
 				ptp_free_devicepropdesc(&dpd);
 				ptp_free_devicepropvalue(cursub->type, &propval);
 			}
+		}
+	}
+
+	/* Generic property setter */
+	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
+		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
+		CameraWidget		*widget;
+		CameraWidgetType	type;
+		char			buf[20], *label;
+		PTPDevicePropDesc	dpd;
+
+		label = (char*)ptp_get_property_description(params, propid);
+		if (!label) {
+			sprintf (buf, N_("PTP Property 0x%04x"), propid);
+			label = buf;
+		}
+		ret = gp_widget_get_child_by_label (section, _(label), &widget);
+		if (ret != GP_OK)
+			continue;
+		if (!gp_widget_changed (widget))
+			continue;
+
+		gp_widget_get_type (widget, &type);
+
+		memset (&dpd,0,sizeof(dpd));
+		memset (&propval,0,sizeof(propval));
+		ret = ptp_getdevicepropdesc (params,propid,&dpd);
+		if (ret != PTP_RC_OK)
+			continue;
+		if (dpd.GetSet != PTP_DPGS_GetSet) {
+			gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently ready-only."), _(label), propid);
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+
+		switch (dpd.DataType) {
+#define X(dtc,val) 							\
+		case dtc:						\
+			if (type == GP_WIDGET_RANGE) {			\
+				float f;				\
+				gp_widget_get_value (widget, &f);	\
+				propval.val = f;			\
+			} else {					\
+				long x;					\
+				gp_widget_get_value (widget, buf);	\
+				sscanf (buf, "%ld", &x);		\
+				propval.val = x;			\
+			}\
+			break;
+
+		X(PTP_DTC_INT8,i8)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT32,u32)
+#undef X
+		case PTP_DTC_STR:
+			gp_widget_get_value (widget, buf);
+			propval.str = strdup(buf);
+			break;
+		default:
+			break;
+		}
+		ret = ptp_setdevicepropvalue (params, propid, &propval, dpd.DataType);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(label), propid, ret);
+			ret = GP_ERROR;
 		}
 	}
 	return GP_OK;
