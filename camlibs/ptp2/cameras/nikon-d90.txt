@@ -299,8 +299,8 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 /main/settings/time
 	Label: Camera Time
 	Type: DATE
-	Current: 1248469765
-	Printable: Fri Jul 24 23:09:25 2009
+	Current: 1248472434
+	Printable: Fri Jul 24 23:53:54 2009
 /main/settings/imgcomment
 	Label: Image Comment
 	Type: TEXT
@@ -689,9 +689,9 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 /main/capturesettings/nikon-shutterspeed
 	Label: Nikon Shutter Speed
 	Type: RADIO
-	Current: 3
+	Current: 4
 	Choice: 0 1/4000
-	Choice: 1 3
+	Choice: 1 4
 /main/capturesettings/focusareawrap
 	Label: Focus Area Wrap
 	Type: RADIO
@@ -943,6 +943,395 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 1 5 minutes
 	Choice: 2 10 minutes
 	Choice: 3 15 minutes
+/main/other/5001
+	Label: Battery Level
+	Type: MENU
+	Current: 40
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
+	Choice: 22 22
+	Choice: 23 23
+	Choice: 24 24
+	Choice: 25 25
+	Choice: 26 26
+	Choice: 27 27
+	Choice: 28 28
+	Choice: 29 29
+	Choice: 30 30
+	Choice: 31 31
+	Choice: 32 32
+	Choice: 33 33
+	Choice: 34 34
+	Choice: 35 35
+	Choice: 36 36
+	Choice: 37 37
+	Choice: 38 38
+	Choice: 39 39
+	Choice: 40 40
+	Choice: 41 41
+	Choice: 42 42
+	Choice: 43 43
+	Choice: 44 44
+	Choice: 45 45
+	Choice: 46 46
+	Choice: 47 47
+	Choice: 48 48
+	Choice: 49 49
+	Choice: 50 50
+	Choice: 51 51
+	Choice: 52 52
+	Choice: 53 53
+	Choice: 54 54
+	Choice: 55 55
+	Choice: 56 56
+	Choice: 57 57
+	Choice: 58 58
+	Choice: 59 59
+	Choice: 60 60
+	Choice: 61 61
+	Choice: 62 62
+	Choice: 63 63
+	Choice: 64 64
+	Choice: 65 65
+	Choice: 66 66
+	Choice: 67 67
+	Choice: 68 68
+	Choice: 69 69
+	Choice: 70 70
+	Choice: 71 71
+	Choice: 72 72
+	Choice: 73 73
+	Choice: 74 74
+	Choice: 75 75
+	Choice: 76 76
+	Choice: 77 77
+	Choice: 78 78
+	Choice: 79 79
+	Choice: 80 80
+	Choice: 81 81
+	Choice: 82 82
+	Choice: 83 83
+	Choice: 84 84
+	Choice: 85 85
+	Choice: 86 86
+	Choice: 87 87
+	Choice: 88 88
+	Choice: 89 89
+	Choice: 90 90
+	Choice: 91 91
+	Choice: 92 92
+	Choice: 93 93
+	Choice: 94 94
+	Choice: 95 95
+	Choice: 96 96
+	Choice: 97 97
+	Choice: 98 98
+	Choice: 99 99
+	Choice: 100 100
+/main/other/5003
+	Label: Image Size
+	Type: MENU
+	Current: 4288x2848
+	Choice: 0 4288x2848
+	Choice: 1 3216x2136
+	Choice: 2 2144x1424
+/main/other/5004
+	Label: Compression Setting
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 4
+	Choice: 4 5
+	Choice: 5 6
+	Choice: 6 7
+/main/other/5005
+	Label: White Balance
+	Type: MENU
+	Current: 2
+	Choice: 0 2
+	Choice: 1 4
+	Choice: 2 5
+	Choice: 3 6
+	Choice: 4 7
+	Choice: 5 32784
+	Choice: 6 32785
+	Choice: 7 32786
+	Choice: 8 32787
+/main/other/5007
+	Label: F-Number
+	Type: MENU
+	Current: 350
+	Choice: 0 350
+	Choice: 1 400
+	Choice: 2 450
+	Choice: 3 500
+	Choice: 4 560
+	Choice: 5 630
+	Choice: 6 710
+	Choice: 7 800
+	Choice: 8 900
+	Choice: 9 1000
+	Choice: 10 1100
+	Choice: 11 1300
+	Choice: 12 1400
+	Choice: 13 1600
+	Choice: 14 1800
+	Choice: 15 2000
+	Choice: 16 2200
+/main/other/5008
+	Label: Focal Length
+	Type: RANGE
+	Current: 1800
+	Bottom: 1800
+	Top: 20000
+	Step: 1
+/main/other/500a
+	Label: Focus Mode
+	Type: MENU
+	Current: 32786
+	Choice: 0 1
+	Choice: 1 32784
+	Choice: 2 32785
+	Choice: 3 32786
+/main/other/500b
+	Label: Exposure Metering Mode
+	Type: MENU
+	Current: 3
+	Choice: 0 2
+	Choice: 1 3
+	Choice: 2 4
+/main/other/500c
+	Label: Flash Mode
+	Type: MENU
+	Current: 2
+	Choice: 0 2
+/main/other/500d
+	Label: Exposure Time
+	Type: MENU
+	Current: 30000
+	Choice: 0 2
+	Choice: 1 30000
+/main/other/500e
+	Label: Exposure Program Mode
+	Type: MENU
+	Current: 32790
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+	Choice: 3 4
+	Choice: 4 32784
+	Choice: 5 32785
+	Choice: 6 32786
+	Choice: 7 32787
+	Choice: 8 32788
+	Choice: 9 32789
+	Choice: 10 32790
+/main/other/500f
+	Label: Exposure Index (film speed ISO)
+	Type: MENU
+	Current: 800
+	Choice: 0 100
+	Choice: 1 125
+	Choice: 2 160
+	Choice: 3 200
+	Choice: 4 250
+	Choice: 5 320
+	Choice: 6 400
+	Choice: 7 500
+	Choice: 8 640
+	Choice: 9 800
+	Choice: 10 1000
+	Choice: 11 1250
+	Choice: 12 1600
+	Choice: 13 2000
+	Choice: 14 2500
+	Choice: 15 3200
+	Choice: 16 4000
+	Choice: 17 5000
+	Choice: 18 6400
+/main/other/5010
+	Label: Exposure Bias Compensation
+	Type: MENU
+	Current: 0
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+/main/other/5011
+	Label: Date & Time
+	Type: TEXT
+	Current: 20090724T225424
+/main/other/5013
+	Label: Still Capture Mode
+	Type: MENU
+	Current: 32784
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 32784
+	Choice: 3 32785
+	Choice: 4 32788
+	Choice: 5 32789
+/main/other/5018
+	Label: Burst Number
+	Type: MENU
+	Current: 1
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+	Choice: 3 4
+	Choice: 4 5
+	Choice: 5 6
+	Choice: 6 7
+	Choice: 7 8
+	Choice: 8 9
+	Choice: 9 10
+	Choice: 10 11
+	Choice: 11 12
+	Choice: 12 13
+	Choice: 13 14
+	Choice: 14 15
+	Choice: 15 16
+	Choice: 16 17
+	Choice: 17 18
+	Choice: 18 19
+	Choice: 19 20
+	Choice: 20 21
+	Choice: 21 22
+	Choice: 22 23
+	Choice: 23 24
+	Choice: 24 25
+	Choice: 25 26
+	Choice: 26 27
+	Choice: 27 28
+	Choice: 28 29
+	Choice: 29 30
+	Choice: 30 31
+	Choice: 31 32
+	Choice: 32 33
+	Choice: 33 34
+	Choice: 34 35
+	Choice: 35 36
+	Choice: 36 37
+	Choice: 37 38
+	Choice: 38 39
+	Choice: 39 40
+	Choice: 40 41
+	Choice: 41 42
+	Choice: 42 43
+	Choice: 43 44
+	Choice: 44 45
+	Choice: 45 46
+	Choice: 46 47
+	Choice: 47 48
+	Choice: 48 49
+	Choice: 49 50
+	Choice: 50 51
+	Choice: 51 52
+	Choice: 52 53
+	Choice: 53 54
+	Choice: 54 55
+	Choice: 55 56
+	Choice: 56 57
+	Choice: 57 58
+	Choice: 58 59
+	Choice: 59 60
+	Choice: 60 61
+	Choice: 61 62
+	Choice: 62 63
+	Choice: 63 64
+	Choice: 64 65
+	Choice: 65 66
+	Choice: 66 67
+	Choice: 67 68
+	Choice: 68 69
+	Choice: 69 70
+	Choice: 70 71
+	Choice: 71 72
+	Choice: 72 73
+	Choice: 73 74
+	Choice: 74 75
+	Choice: 75 76
+	Choice: 76 77
+	Choice: 77 78
+	Choice: 78 79
+	Choice: 79 80
+	Choice: 80 81
+	Choice: 81 82
+	Choice: 82 83
+	Choice: 83 84
+	Choice: 84 85
+	Choice: 85 86
+	Choice: 86 87
+	Choice: 87 88
+	Choice: 88 89
+	Choice: 89 90
+	Choice: 90 91
+	Choice: 91 92
+	Choice: 92 93
+	Choice: 93 94
+	Choice: 94 95
+	Choice: 95 96
+	Choice: 96 97
+	Choice: 97 98
+	Choice: 98 99
+	Choice: 99 100
+/main/other/501c
+	Label: Focus Metering Mode
+	Type: MENU
+	Current: 32785
+	Choice: 0 2
+	Choice: 1 32784
+	Choice: 2 32785
+	Choice: 3 32786
 /main/other/d406
 	Label: PTP Property 0xd406
 	Type: TEXT
@@ -951,13 +1340,99 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 	Label: PTP Property 0xd407
 	Type: TEXT
 	Current: 1
+/main/other/d017
+	Label: Auto White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
+/main/other/d018
+	Label: Tungsten White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
+/main/other/d019
+	Label: Fluorescent White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
+/main/other/d01a
+	Label: Daylight White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
+/main/other/d01b
+	Label: Flash White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
+/main/other/d01c
+	Label: Cloudy White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
+/main/other/d01d
+	Label: Shady White Balance Bias
+	Type: RANGE
+	Current: 84
+	Bottom: 0
+	Top: 168
+	Step: 1
 /main/other/d01e
 	Label: White Balance Colour Temperature
-	Type: RANGE
+	Type: MENU
 	Current: 20
-	Bottom: 0
-	Top: 30
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
+	Choice: 22 22
+	Choice: 23 23
+	Choice: 24 24
+	Choice: 25 25
+	Choice: 26 26
+	Choice: 27 27
+	Choice: 28 28
+	Choice: 29 29
+	Choice: 30 30
+/main/other/d01f
+	Label: White Balance Preset Number
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
 /main/other/d020
 	Label: White Balance Preset Name 0
 	Type: TEXT
@@ -978,245 +1453,634 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 	Label: White Balance Preset Name 4
 	Type: TEXT
 	Current:                                     
+/main/other/d025
+	Label: White Balance Preset Value 0
+	Type: TEXT
+	Current: 30212431
+/main/other/d026
+	Label: White Balance Preset Value 1
+	Type: TEXT
+	Current: 30212431
+/main/other/d027
+	Label: White Balance Preset Value 2
+	Type: TEXT
+	Current: 30212431
+/main/other/d028
+	Label: White Balance Preset Value 3
+	Type: TEXT
+	Current: 30212431
+/main/other/d029
+	Label: White Balance Preset Value 4
+	Type: TEXT
+	Current: 30212431
 /main/other/d032
 	Label: Color Space
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d045
 	Label: Reset Menu Bank
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d04f
+	Label: Focus Area Wrap
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d050
 	Label: Vertical AF On
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 10
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
 /main/other/d052
 	Label: Focus Area Zone
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d054
+	Label: Auto ISO
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d056
+	Label: Exposure Step
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+/main/other/d058
+	Label: Exposure Compensation
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d059
+	Label: Centre Weight Area
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d05a
 	Label: Exposure Base Matrix
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: -6
-	Top: 6
-	Step: 1
+	Choice: 0 -6
+	Choice: 1 -5
+	Choice: 2 -4
+	Choice: 3 -3
+	Choice: 4 -2
+	Choice: 5 -1
+	Choice: 6 0
+	Choice: 7 1
+	Choice: 8 2
+	Choice: 9 3
+	Choice: 10 4
+	Choice: 11 5
+	Choice: 12 6
 /main/other/d05b
 	Label: Exposure Base Center
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: -6
-	Top: 6
-	Step: 1
+	Choice: 0 -6
+	Choice: 1 -5
+	Choice: 2 -4
+	Choice: 3 -3
+	Choice: 4 -2
+	Choice: 5 -1
+	Choice: 6 0
+	Choice: 7 1
+	Choice: 8 2
+	Choice: 9 3
+	Choice: 10 4
+	Choice: 11 5
+	Choice: 12 6
 /main/other/d05c
 	Label: Exposure Base Spot
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: -6
-	Top: 6
-	Step: 1
+	Choice: 0 -6
+	Choice: 1 -5
+	Choice: 2 -4
+	Choice: 3 -3
+	Choice: 4 -2
+	Choice: 5 -1
+	Choice: 6 0
+	Choice: 7 1
+	Choice: 8 2
+	Choice: 9 3
+	Choice: 10 4
+	Choice: 11 5
+	Choice: 12 6
 /main/other/d05d
 	Label: Live View AF
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+/main/other/d05e
+	Label: Exposure Lock
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d05f
+	Label: Focus Lock
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+/main/other/d062
+	Label: Auto Meter Off Time
+	Type: MENU
+	Current: 2
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+/main/other/d063
+	Label: Self Timer Delay
+	Type: MENU
+	Current: 2
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d065
 	Label: Img Conf Time
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d068
 	Label: Shooting Speed
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d06a
 	Label: Exposure delay mode
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d06b
+	Label: Long Exposure Noise Reduction
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d06c
+	Label: File Number Sequencing
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d06f
 	Label: LCD Illumination
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d070
 	Label: High ISO noise reduction
-	Type: RANGE
+	Type: MENU
 	Current: 2
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d071
 	Label: On screen tips
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d075
+	Label: Flash Shutter Speed
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
 /main/other/d077
 	Label: Modeling Flash
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d078
+	Label: Bracket Set
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+/main/other/d07a
+	Label: Bracket Order
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d080
 	Label: Center Button Shooting Mode
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d084
 	Label: Assign Func. Button
-	Type: RANGE
+	Type: MENU
 	Current: 3
-	Bottom: 0
-	Top: 9
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
 /main/other/d085
 	Label: Customise Command Dials
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d086
+	Label: Reverse Command Dial
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d088
 	Label: Menus and Playback
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+/main/other/d08a
+	Label: No CF Card Release
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d090
+	Label: Image Comment String
+	Type: TEXT
+	Current:                                     
+/main/other/d091
+	Label: Image Comment Enable
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d092
+	Label: Image Rotation
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d0a0
 	Label: Movie Screen Size
-	Type: RANGE
+	Type: MENU
 	Current: 2
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d0a1
 	Label: Movie Voice
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d0c0
+	Label: Bracketing Enable
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d0c1
 	Label: Exposure Bracketing Step
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 7
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
 /main/other/d0c2
 	Label: Exposure Bracketing Program
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d0c3
 	Label: Auto Exposure Bracket Count
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 1
-	Top: 3
-	Step: 1
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
 /main/other/d0c4
 	Label: White Balance Bracket Step
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d0c5
 	Label: White Balance Bracket Program
-	Type: RANGE
+	Type: MENU
 	Current: 2
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+/main/other/d0e0
+	Label: Lens ID
+	Type: TEXT
+	Current: 139
 /main/other/d0e1
 	Label: Lens Sort
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d0e2
 	Label: Lens Type
 	Type: TEXT
 	Current: 15
+/main/other/d0e3
+	Label: Min. Focal Length
+	Type: TEXT
+	Current: 1800
+/main/other/d0e4
+	Label: Max. Focal Length
+	Type: TEXT
+	Current: 20000
+/main/other/d0e5
+	Label: Max. Aperture at Min. Focal Length
+	Type: TEXT
+	Current: 350
+/main/other/d0e6
+	Label: Max. Aperture at Max. Focal Length
+	Type: TEXT
+	Current: 560
 /main/other/d0f0
 	Label: Finder ISO Display
-	Type: RANGE
+	Type: MENU
 	Current: 2
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d0f2
 	Label: Auto Off Photo
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d0f3
 	Label: Auto Off Menu
-	Type: RANGE
+	Type: MENU
 	Current: 2
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d0f4
 	Label: Auto Off Info
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d0f5
 	Label: Self Timer Shot Number
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 8
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+/main/other/d100
+	Label: Nikon Exposure Time
+	Type: MENU
+	Current: 262145
+	Choice: 0 69536
+	Choice: 1 262145
+/main/other/d101
+	Label: AC Power
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d102
 	Label: Warning Status
 	Type: TEXT
 	Current: 0
 /main/other/d103
 	Label: Maximum Shots
-	Type: RANGE
+	Type: MENU
 	Current: 20
-	Bottom: 0
-	Top: 99
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
+	Choice: 22 22
+	Choice: 23 23
+	Choice: 24 24
+	Choice: 25 25
+	Choice: 26 26
+	Choice: 27 27
+	Choice: 28 28
+	Choice: 29 29
+	Choice: 30 30
+	Choice: 31 31
+	Choice: 32 32
+	Choice: 33 33
+	Choice: 34 34
+	Choice: 35 35
+	Choice: 36 36
+	Choice: 37 37
+	Choice: 38 38
+	Choice: 39 39
+	Choice: 40 40
+	Choice: 41 41
+	Choice: 42 42
+	Choice: 43 43
+	Choice: 44 44
+	Choice: 45 45
+	Choice: 46 46
+	Choice: 47 47
+	Choice: 48 48
+	Choice: 49 49
+	Choice: 50 50
+	Choice: 51 51
+	Choice: 52 52
+	Choice: 53 53
+	Choice: 54 54
+	Choice: 55 55
+	Choice: 56 56
+	Choice: 57 57
+	Choice: 58 58
+	Choice: 59 59
+	Choice: 60 60
+	Choice: 61 61
+	Choice: 62 62
+	Choice: 63 63
+	Choice: 64 64
+	Choice: 65 65
+	Choice: 66 66
+	Choice: 67 67
+	Choice: 68 68
+	Choice: 69 69
+	Choice: 70 70
+	Choice: 71 71
+	Choice: 72 72
+	Choice: 73 73
+	Choice: 74 74
+	Choice: 75 75
+	Choice: 76 76
+	Choice: 77 77
+	Choice: 78 78
+	Choice: 79 79
+	Choice: 80 80
+	Choice: 81 81
+	Choice: 82 82
+	Choice: 83 83
+	Choice: 84 84
+	Choice: 85 85
+	Choice: 86 86
+	Choice: 87 87
+	Choice: 88 88
+	Choice: 89 89
+	Choice: 90 90
+	Choice: 91 91
+	Choice: 92 92
+	Choice: 93 93
+	Choice: 94 94
+	Choice: 95 95
+	Choice: 96 96
+	Choice: 97 97
+	Choice: 98 98
+	Choice: 99 99
+/main/other/d104
+	Label: AF Locked
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d105
+	Label: AE Locked
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d106
+	Label: FV Locked
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d108
+	Label: Active AF Sensor
+	Type: MENU
+	Current: 1
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+	Choice: 3 4
+	Choice: 4 5
+	Choice: 5 6
+	Choice: 6 7
+	Choice: 7 8
+	Choice: 8 9
+	Choice: 9 10
+	Choice: 10 11
 /main/other/d109
 	Label: Flexible Program
 	Type: RANGE
@@ -1224,66 +2088,137 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 	Bottom: -30
 	Top: 30
 	Step: 2
+/main/other/d10b
+	Label: Recording Media
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d10c
 	Label: USB Speed
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d10d
 	Label: CCD Serial Number
 	Type: TEXT
 	Current: 1399081             
+/main/other/d10e
+	Label: Camera Orientation
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d114
 	Label: Illum Setting
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d120
+	Label: External Flash Attached
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d121
 	Label: External Flash Status
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d122
 	Label: External Flash Sort
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d124
 	Label: External Flash Compensation
+	Type: MENU
+	Current: 0
+	Choice: 0 -18
+	Choice: 1 -17
+	Choice: 2 -16
+	Choice: 3 -15
+	Choice: 4 -14
+	Choice: 5 -13
+	Choice: 6 -12
+	Choice: 7 -11
+	Choice: 8 -10
+	Choice: 9 -9
+	Choice: 10 -8
+	Choice: 11 -7
+	Choice: 12 -6
+	Choice: 13 -5
+	Choice: 14 -4
+	Choice: 15 -3
+	Choice: 16 -2
+	Choice: 17 -1
+	Choice: 18 0
+	Choice: 19 1
+	Choice: 20 2
+	Choice: 21 3
+	Choice: 22 4
+	Choice: 23 5
+	Choice: 24 6
+	Choice: 25 7
+	Choice: 26 8
+	Choice: 27 9
+	Choice: 28 10
+	Choice: 29 11
+	Choice: 30 12
+	Choice: 31 13
+	Choice: 32 14
+	Choice: 33 15
+	Choice: 34 16
+	Choice: 35 17
+	Choice: 36 18
+/main/other/d125
+	Label: External Flash Mode
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+/main/other/d126
+	Label: Flash Exposure Compensation
 	Type: RANGE
 	Current: 0
 	Bottom: -18
-	Top: 18
-	Step: 1
-/main/other/d125
-	Label: External Flash Mode
-	Type: RANGE
-	Current: 0
-	Bottom: 0
-	Top: 7
-	Step: 1
+	Top: 6
+	Step: 2
 /main/other/d14e
 	Label: ISO Auto Time
-	Type: RANGE
+	Type: MENU
 	Current: 5
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d14f
 	Label: Flourescent Type
-	Type: RANGE
+	Type: MENU
 	Current: 3
-	Bottom: 0
-	Top: 6
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
 /main/other/d150
 	Label: Tune Colour Temperature
 	Type: RANGE
@@ -1326,178 +2261,566 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 	Bottom: 0
 	Top: 168
 	Step: 1
+/main/other/d160
+	Label: AF Beep Mode
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d161
+	Label: Autofocus Mode
+	Type: MENU
+	Current: 2
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+/main/other/d163
+	Label: AF Assist Lamp
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d164
+	Label: Auto ISO P/A/DVP Setting
+	Type: MENU
+	Current: 18
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
+	Choice: 22 22
+	Choice: 23 23
+/main/other/d166
+	Label: AF Area Illumination
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+/main/other/d167
+	Label: Flash Mode
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+/main/other/d169
+	Label: Flash Sign
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d16a
 	Label: PTP Property 0xd16a
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d16b
+	Label: Remote Timeout
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+/main/other/d16c
+	Label: Viewfinder Grid Display
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d16d
+	Label: Flash Mode Manual Power
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
 /main/other/d16f
 	Label: Auto FP
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d181
 	Label: Warning Display
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d182
 	Label: Battery Cell Kind
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d183
 	Label: ISO Auto High Limit
-	Type: RANGE
+	Type: MENU
 	Current: 2
-	Bottom: 0
-	Top: 4
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
 /main/other/d187
 	Label: Info Disp Setting
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d18d
 	Label: Indicator Display
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d1a2
 	Label: Live View Status
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d1a3
 	Label: Live View Image Zoom Ratio
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d1a4
 	Label: Live View Prohibit Condition
 	Type: TEXT
 	Current: 1
+/main/other/d1b0
+	Label: Exposure Display Status
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+/main/other/d1b1
+	Label: Exposure Indicate Status
+	Type: MENU
+	Current: 0
+	Choice: 0 -60
+	Choice: 1 -59
+	Choice: 2 -58
+	Choice: 3 -57
+	Choice: 4 -56
+	Choice: 5 -55
+	Choice: 6 -54
+	Choice: 7 -53
+	Choice: 8 -52
+	Choice: 9 -51
+	Choice: 10 -50
+	Choice: 11 -49
+	Choice: 12 -48
+	Choice: 13 -47
+	Choice: 14 -46
+	Choice: 15 -45
+	Choice: 16 -44
+	Choice: 17 -43
+	Choice: 18 -42
+	Choice: 19 -41
+	Choice: 20 -40
+	Choice: 21 -39
+	Choice: 22 -38
+	Choice: 23 -37
+	Choice: 24 -36
+	Choice: 25 -35
+	Choice: 26 -34
+	Choice: 27 -33
+	Choice: 28 -32
+	Choice: 29 -31
+	Choice: 30 -30
+	Choice: 31 -29
+	Choice: 32 -28
+	Choice: 33 -27
+	Choice: 34 -26
+	Choice: 35 -25
+	Choice: 36 -24
+	Choice: 37 -23
+	Choice: 38 -22
+	Choice: 39 -21
+	Choice: 40 -20
+	Choice: 41 -19
+	Choice: 42 -18
+	Choice: 43 -17
+	Choice: 44 -16
+	Choice: 45 -15
+	Choice: 46 -14
+	Choice: 47 -13
+	Choice: 48 -12
+	Choice: 49 -11
+	Choice: 50 -10
+	Choice: 51 -9
+	Choice: 52 -8
+	Choice: 53 -7
+	Choice: 54 -6
+	Choice: 55 -5
+	Choice: 56 -4
+	Choice: 57 -3
+	Choice: 58 -2
+	Choice: 59 -1
+	Choice: 60 0
+	Choice: 61 1
+	Choice: 62 2
+	Choice: 63 3
+	Choice: 64 4
+	Choice: 65 5
+	Choice: 66 6
+	Choice: 67 7
+	Choice: 68 8
+	Choice: 69 9
+	Choice: 70 10
+	Choice: 71 11
+	Choice: 72 12
+	Choice: 73 13
+	Choice: 74 14
+	Choice: 75 15
+	Choice: 76 16
+	Choice: 77 17
+	Choice: 78 18
+	Choice: 79 19
+	Choice: 80 20
+	Choice: 81 21
+	Choice: 82 22
+	Choice: 83 23
+	Choice: 84 24
+	Choice: 85 25
+	Choice: 86 26
+	Choice: 87 27
+	Choice: 88 28
+	Choice: 89 29
+	Choice: 90 30
+	Choice: 91 31
+	Choice: 92 32
+	Choice: 93 33
+	Choice: 94 34
+	Choice: 95 35
+	Choice: 96 36
+	Choice: 97 37
+	Choice: 98 38
+	Choice: 99 39
+	Choice: 100 40
+	Choice: 101 41
+	Choice: 102 42
+	Choice: 103 43
+	Choice: 104 44
+	Choice: 105 45
+	Choice: 106 46
+	Choice: 107 47
+	Choice: 108 48
+	Choice: 109 49
+	Choice: 110 50
+	Choice: 111 51
+	Choice: 112 52
+	Choice: 113 53
+	Choice: 114 54
+	Choice: 115 55
+	Choice: 116 56
+	Choice: 117 57
+	Choice: 118 58
+	Choice: 119 59
+	Choice: 120 60
 /main/other/d1b2
 	Label: PTP Property 0xd1b2
-	Type: RANGE
+	Type: MENU
 	Current: 1
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d1b3
 	Label: Exposure Indicate Lightup
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 1
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d1c0
+	Label: Flash Open
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+/main/other/d1c1
+	Label: Flash Charged
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
 /main/other/d1d0
 	Label: Flash MRepeat Value
-	Type: RANGE
+	Type: MENU
 	Current: 3
-	Bottom: 0
-	Top: 5
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
 /main/other/d1d1
 	Label: Flash MRepeat Count
-	Type: RANGE
+	Type: MENU
 	Current: 8
-	Bottom: 0
-	Top: 9
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
 /main/other/d1d2
 	Label: Flash MRepeat Interval
-	Type: RANGE
+	Type: MENU
 	Current: 9
-	Bottom: 0
-	Top: 13
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
 /main/other/d1d3
 	Label: Flash Command Channel
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d1d4
 	Label: Flash Command Self Mode
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 2
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
 /main/other/d1d5
 	Label: Flash Command Self Compensation
-	Type: RANGE
+	Type: MENU
 	Current: 9
-	Bottom: 0
-	Top: 18
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
 /main/other/d1d6
 	Label: Flash Command Self Value
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 21
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
 /main/other/d1d7
 	Label: Flash Command A Mode
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d1d8
 	Label: Flash Command A Compensation
-	Type: RANGE
+	Type: MENU
 	Current: 9
-	Bottom: 0
-	Top: 18
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
 /main/other/d1d9
 	Label: Flash Command A Value
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 21
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
 /main/other/d1da
 	Label: Flash Command B Mode
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 3
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
 /main/other/d1db
 	Label: Flash Command B Compensation
-	Type: RANGE
+	Type: MENU
 	Current: 9
-	Bottom: 0
-	Top: 18
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
 /main/other/d1dc
 	Label: Flash Command B Value
-	Type: RANGE
+	Type: MENU
 	Current: 0
-	Bottom: 0
-	Top: 21
-	Step: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
 /main/other/d200
 	Label: Active Pic Ctrl Item
 	Type: MENU
