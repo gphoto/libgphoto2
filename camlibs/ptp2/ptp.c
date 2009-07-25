@@ -1546,6 +1546,8 @@ store_event:
 		memcpy (&params->events[params->nrofevents],&event,1*sizeof(PTPContainer));
 		params->nrofevents += 1;
 	}
+	if (ret == PTP_ERROR_TIMEOUT) /* ok, just new events */
+		ret = PTP_RC_OK;
 	return ret;
 }
 

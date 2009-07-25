@@ -202,6 +202,7 @@ static struct {
 	{PTP_ERROR_BADPARAM,	  0, N_("PTP Error: bad parameter")},
 	{PTP_ERROR_DATA_EXPECTED, 0, N_("PTP Protocol error, data expected")},
 	{PTP_ERROR_RESP_EXPECTED, 0, N_("PTP Protocol error, response expected")},
+	{PTP_ERROR_TIMEOUT,       0, N_("PTP Timeout")},
 	{0, 0, NULL}
 };
 
@@ -225,6 +226,8 @@ translate_ptp_result (short result)
 		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_DeviceBusy:
 		return (GP_ERROR_CAMERA_BUSY);
+	case PTP_ERROR_TIMEOUT:
+		return (GP_ERROR_TIMEOUT);
 	case PTP_ERROR_CANCEL:
 		return (GP_ERROR_CANCEL);
 	case PTP_ERROR_BADPARAM:
@@ -1867,11 +1870,13 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
-				if (	(storageids.n == 1) &&
-					((storageids.Storage[0] == 0x80000001) ||
-					 (storageids.Storage[0] == 0x00010000)
-					)
-				) {
+				int k, stgcnt= 0;
+				for (k=0;k<storageids.n;k++) {
+					if (!(storageids.Storage[k] & 0xffff)) continue;
+					if (storageids.Storage[k] == 0x80000001) continue;
+					stgcnt++;
+				}
+				if (stgcnt) {
 					gp_log (GP_LOG_DEBUG, "ptp", "Assuming no CF card present - switching to MEMORY Transfer.");
 					propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 				}
