@@ -48,7 +48,7 @@
 #define setmntent(f,m) fopen(f,m)
 #endif
 #ifndef HAVE_ENDMNTENT
-#define endmntent(f) close(f)
+#define endmntent(f) fclose(f)
 #endif
 
 #ifdef HAVE_HAL

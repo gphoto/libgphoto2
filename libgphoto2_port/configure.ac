@@ -205,7 +205,7 @@ AC_MSG_RESULT(no)
 AC_SUBST(MDNS_LIBS)
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS(strerror snprintf vsnprintf)
+AC_CHECK_FUNCS(setmntent endmntent strerror snprintf vsnprintf)
 
 dnl Check if TIOCM_RTS is included in one of several possible files
 AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
