@@ -1,6 +1,8 @@
 2009-07-24  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Add a generic PTP property setter.
+	* library.c,config.c: Enable Viewfinder on demand only, not for
+	  regular capture. Should fix camera-switching-off issues.
 
 2009-07-19  Marcus Meissner  <marcus@jet.franken.de>
 

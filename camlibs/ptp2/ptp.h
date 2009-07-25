@@ -1918,6 +1918,7 @@ struct _PTPParams {
 	uint32_t		*canon_flags; /* size(handles.n) */
 	PTPCanon_Property	*canon_props;
 	int			nrofcanon_props;
+	int			canon_viewfinder_on;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanon_changes_entry	*backlogentries;
