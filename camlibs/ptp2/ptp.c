@@ -4811,7 +4811,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 
 #define X (PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED)
 	if ((want & X) && ((ob->flags & X) != X)) {
-		uint32_t	saveparent;
+		uint32_t	saveparent = 0;
 		
 		/* One EOS issue, where getobjecthandles(root) returns obs without root flag. */
 		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
