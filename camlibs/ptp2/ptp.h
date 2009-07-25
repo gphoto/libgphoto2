@@ -1935,6 +1935,7 @@ struct _PTPParams {
 	/* PTP: Canon specific flags list */
 	PTPCanon_Property	*canon_props;
 	int			nrofcanon_props;
+	int			canon_viewfinder_on;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanon_changes_entry	*backlogentries;

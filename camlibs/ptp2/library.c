@@ -1354,11 +1354,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon PowerShot / IXUS preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_ViewfinderOn)) {
 			SET_CONTEXT_P(params, context);
-			ret = ptp_canon_viewfinderon (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
-				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
+			if (!params->canon_viewfinder_on) { /* enable on demand, but just once */
+				ret = ptp_canon_viewfinderon (params);
+				if (ret != PTP_RC_OK) {
+					gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
+					SET_CONTEXT_P(params, NULL);
+					return GP_ERROR;
+				}
+				params->canon_viewfinder_on = 1;
 			}
 			ret = ptp_canon_getviewfinderimage (params, &data, &size);
 			if (ret != PTP_RC_OK) {
@@ -1371,15 +1374,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "canon_preview.jpg");
 			gp_file_set_mtime (file, time(NULL));
-#if 0
-			/* Leave out, otherwise we refocus all the time */
-			ret = ptp_canon_viewfinderoff (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
-				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
-			}
-#endif
 			SET_CONTEXT_P(params, NULL);
 			return GP_OK;
 		}

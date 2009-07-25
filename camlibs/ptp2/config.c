@@ -135,6 +135,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 				event.Nparam,event.Code,event.Transaction_ID,
 				event.Param1, event.Param2, event.Param3);
 	}
+#if 0
 	gp_port_set_timeout (camera->port, oldtimeout);
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 		ret = ptp_canon_viewfinderon (params);
@@ -143,6 +144,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		/* ignore errors here */
 	}
 	gp_port_set_timeout (camera->port, 1000);
+#endif
 	/* Catch event, attempt  2 */
 	if (val16!=PTP_RC_OK) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
@@ -311,10 +313,13 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		return GP_ERROR;
 	}
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
-		ret = ptp_canon_viewfinderoff (params);
-		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
-		/* ignore errors here */
+		if (params->canon_viewfinder_on) {
+			params->canon_viewfinder_on = 0;
+			ret = ptp_canon_viewfinderoff (params);
+			if (ret != PTP_RC_OK)
+				gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
+			/* ignore errors here */
+		}
 	}
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(params, &params->deviceinfo);
@@ -752,6 +757,7 @@ _get_Range_INT8(CONFIG_GET_ARGS) {
 }
 
 
+#if 0 /* not used right now */
 static int
 _put_Range_INT8(CONFIG_PUT_ARGS) {
 	int ret;
@@ -762,6 +768,7 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 	propval->i8 = (int) f;
 	return (GP_OK);
 }
+#endif
 
 /* generic int getter */
 static int
@@ -1374,6 +1381,7 @@ static struct deviceproptableu16 canon_selftimer[] = {
 };
 GENERIC16TABLE(Canon_SelfTimer,canon_selftimer)
 
+#if 0 /* reimplement with viewfinder on/off below */
 static struct deviceproptableu8 canon_cameraoutput[] = {
 	{ N_("Undefined"),	0, 0 },
 	{ N_("LCD"),		1, 0 },
@@ -1381,6 +1389,85 @@ static struct deviceproptableu8 canon_cameraoutput[] = {
 	{ N_("Off"), 		3, 0 },
 };
 GENERIC8TABLE(Canon_CameraOutput,canon_cameraoutput)
+#endif
+
+static int
+_get_Canon_CameraOutput(CONFIG_GET_ARGS) {
+	int i,isset=0;
+	char buf[30];
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+        for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char *x;
+
+		switch (dpd->FORM.Enum.SupportedValue[i].u8) {
+		default:sprintf(buf,_("Unknown %d"),dpd->FORM.Enum.SupportedValue[i].u8);
+			x=buf;
+			break;
+		case 1: x=_("LCD");break;
+		case 2: x=_("Video OUT");break;
+		case 3: x=_("Off");break;
+		}
+                gp_widget_add_choice (*widget,x);
+		if (dpd->FORM.Enum.SupportedValue[i].u8 == dpd->CurrentValue.u8) {
+                	gp_widget_set_value (*widget,x);
+			isset = 1;
+		}
+        }
+	if (!isset) {
+		sprintf(buf,_("Unknown %d"),dpd->CurrentValue.u8);
+               	gp_widget_set_value (*widget,buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
+	int	ret, u, i;
+	char	*value;
+	PTPParams *params = &camera->pl->params;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	u = -1;
+	if (!strcmp(value,_("LCD"))) { u = 1; }
+	if (!strcmp(value,_("Video OUT"))) { u = 2; }
+	if (!strcmp(value,_("Off"))) { u = 3; }
+	if (sscanf(value,_("Unknown %d"),&i)) { u = i; }
+	if (u==-1) return GP_ERROR_BAD_PARAMETERS;
+
+	if ((u==1) || (u==2)) {
+		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
+			if (!params->canon_viewfinder_on)  {
+				ret = ptp_canon_viewfinderon (params);
+				if (ret != PTP_RC_OK)
+					gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
+				else
+					params->canon_viewfinder_on=1;
+			}
+		}
+	}
+	if (u==3) {
+		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
+			if (params->canon_viewfinder_on)  {
+				ret = ptp_canon_viewfinderoff (params);
+				if (ret != PTP_RC_OK)
+					gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
+				else
+					params->canon_viewfinder_on=0;
+			}
+		}
+	}
+	return GP_OK;
+}
+
 
 static struct deviceproptableu16 canon_isospeed[] = {
 	{ N_("Factory Default"),0xffff, 0 },
@@ -3386,7 +3473,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Compensation"), "exposurecompensation", PTP_DPC_NIKON_ExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Flash Compensation"), "flashcompensation", PTP_DPC_CANON_FlashCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("AEB Exposure Compensation"), "aebexpcompensation", PTP_DPC_CANON_AEBExposureCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
-	{ N_("EOS Exposure Compensation"), "eos-exposurecompensation", PTP_DPC_CANON_EOS_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
+	{ N_("EOS Exposure Compensation"), "exposurecompensation", PTP_DPC_CANON_EOS_ExpCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation2, _put_Canon_ExpCompensation2},
 	{ N_("Flash Mode"), "canonflashmode", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
 	{ N_("Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashMode, _put_Nikon_FlashMode},
 	{ N_("Flash Commander Mode"), "nikonflashcommandermode", PTP_DPC_NIKON_FlashCommanderMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderMode, _put_Nikon_FlashCommanderMode},
@@ -3410,11 +3497,11 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("AV Open"), "avopen", PTP_DPC_CANON_AvOpen, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("AV Max"), "avmax", PTP_DPC_CANON_AvMax, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
-	{ N_("EOS Aperture"), "eos-aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
+	{ N_("EOS Aperture"), "aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Nikon Shutter Speed"), "nikon-shutterspeed", PTP_DPC_NIKON_ExposureTime, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_ShutterSpeed, _put_Nikon_ShutterSpeed},
-	{ N_("EOS Shutter Speed"), "eos-shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
+	{ N_("EOS Shutter Speed"), "shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
         { N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
@@ -3562,7 +3649,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (*window, section);
 
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
-		int			j;
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
 		CameraWidget		*widget;
 		char			buf[20], *label;
@@ -3570,6 +3656,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		CameraWidgetType	type;
 
 #if 0 /* expose the whole thing to the user instead for now... */
+		int			j
+
 		for (j=0;j<nrofsetprops;j++)
 			if (setprops[j] == propid)
 				break;
