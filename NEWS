@@ -1,4 +1,4 @@
-libgphoto2 2.4.6.3
+libgphoto2 2.4.6.4
 
 This is a 2.4 release branch update.
 
@@ -6,6 +6,8 @@ PTP2 driver:
    * *Lots* of Canon EOS improvements, for card capture and for LiveView,
      and for property setting.
    * Nikon shutterspeed setting for times < 1/1000
+   * Enable Viewfinder on demand for Canon Powershot, not for all capture things.
+   * Generic PTP Property Get/Set in the configuration handling.
    * Decode more Nikon properties (for D90 now nearly complete).
    * Turned several PTP generic commands to macros to reduce nr of functions.
    * Various bugfixes.
