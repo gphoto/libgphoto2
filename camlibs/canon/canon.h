@@ -318,24 +318,24 @@ struct canonShutterSpeedStateStruct {
 };
 
 typedef enum {
-	RESOLUTION_RAW                        = 0,
-	RESOLUTION_RAW_AND_LARGE_FINE_JPEG, 
-	RESOLUTION_RAW_AND_LARGE_NORMAL_JPEG, 
-	RESOLUTION_RAW_AND_MEDIUM_FINE_JPEG, 
-	RESOLUTION_RAW_AND_MEDIUM_NORMAL_JPEG,
-	RESOLUTION_RAW_AND_SMALL_FINE_JPEG,
-	RESOLUTION_RAW_AND_SMALL_NORMAL_JPEG,
-	RESOLUTION_LARGE_FINE_JPEG,
-	RESOLUTION_LARGE_NORMAL_JPEG,
-	RESOLUTION_MEDIUM_FINE_JPEG,
-	RESOLUTION_MEDIUM_NORMAL_JPEG,
-	RESOLUTION_SMALL_FINE_JPEG,
-	RESOLUTION_SMALL_NORMAL_JPEG
-} canonResolutionState;
+	IMAGE_FORMAT_RAW                        = 0,
+	IMAGE_FORMAT_RAW_AND_LARGE_FINE_JPEG,
+	IMAGE_FORMAT_RAW_AND_LARGE_NORMAL_JPEG,
+	IMAGE_FORMAT_RAW_AND_MEDIUM_FINE_JPEG,
+	IMAGE_FORMAT_RAW_AND_MEDIUM_NORMAL_JPEG,
+	IMAGE_FORMAT_RAW_AND_SMALL_FINE_JPEG,
+	IMAGE_FORMAT_RAW_AND_SMALL_NORMAL_JPEG,
+	IMAGE_FORMAT_LARGE_FINE_JPEG,
+	IMAGE_FORMAT_LARGE_NORMAL_JPEG,
+	IMAGE_FORMAT_MEDIUM_FINE_JPEG,
+	IMAGE_FORMAT_MEDIUM_NORMAL_JPEG,
+	IMAGE_FORMAT_SMALL_FINE_JPEG,
+	IMAGE_FORMAT_SMALL_NORMAL_JPEG
+} canonImageFormatState;
 
 
-struct canonResolutionStateStruct {
-	canonResolutionState value;
+struct canonImageFormatStateStruct {
+	canonImageFormatState value;
 	char *label;
 	unsigned char res_byte1;
 	unsigned char res_byte2;
@@ -418,9 +418,9 @@ struct canonExposureBiasStateStruct {
 #define RELEASE_PARAMS_LEN  0x2f
 
 /* These indexes are byte offsets into the release parameter data */
-#define RESOLUTION_1_INDEX  0x01
-#define RESOLUTION_2_INDEX  0x02
-#define RESOLUTION_3_INDEX  0x03
+#define IMAGE_FORMAT_1_INDEX  0x01
+#define IMAGE_FORMAT_2_INDEX  0x02
+#define IMAGE_FORMAT_3_INDEX  0x03
 #define SELF_TIMER_1_INDEX  0x04 /* Currently not used */
 #define SELF_TIMER_2_INDEX  0x05 /* Currently not used */
 #define FLASH_INDEX         0x06
@@ -704,7 +704,7 @@ int canon_int_set_iso(Camera *camera, canonIsoState iso, GPContext *context);
 int canon_int_set_aperture(Camera *camera, canonApertureState aperture, GPContext *context);
 int canon_int_set_exposurebias(Camera *camera, unsigned char expbias, GPContext *context);
 int canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode, GPContext *context);
-int canon_int_set_resolution (Camera *camera, unsigned char res_byte1, unsigned char res_byte2, unsigned char res_byte3, GPContext *context);
+int canon_int_set_image_format (Camera *camera, unsigned char res_byte1, unsigned char res_byte2, unsigned char res_byte3, GPContext *context);
 int canon_serial_off(Camera *camera);
 int canon_int_get_time(Camera *camera, time_t *camera_time, GPContext *context);
 int canon_int_set_time(Camera *camera, time_t date, GPContext *context);

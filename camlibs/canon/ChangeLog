@@ -1,3 +1,9 @@
+2009-07-28  Axel Waggershauser  <awagger@web.de>
+
+	* canon.c,canon.h,library.c,usb.c: Unified all configuration
+	  names and values. Added /actions and /status sub configuration
+ 	  for actions and read-only variables.
+
 2008-07-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* canon.c: Also handle IXUS 500 in the ptp2 driver only.

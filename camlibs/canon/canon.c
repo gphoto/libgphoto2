@@ -1784,7 +1784,7 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 
 
         camera->pl->secondary_image = 0;
-	/* Based on the resolution settings in the release params, 
+	/* Based on the image format settings in the release params,
 	   determine whether we expect one or two images to be returned
 	   by the camera. 
            I am not sure if this will work correctly for non-EOS 5D 
@@ -1796,7 +1796,7 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
            only save the primary image to disk.
            Thanks - <paul@booyaka.com>
         */
-	if (camera->pl->release_params[RESOLUTION_2_INDEX] & 0xf0) 
+	if (camera->pl->release_params[IMAGE_FORMAT_2_INDEX] & 0xf0)
 		camera->pl->secondary_image = 1;
 
         return GP_OK;
@@ -2022,27 +2022,27 @@ canon_int_set_zoom (Camera *camera, canonZoomLevel zoom_level,
 
 
 /**
- * canon_int_set_resolution
+ * canon_int_set_image_format
  * @camera: camera to work with
- * @res_byte1: byte 1 of the 3-byte resolution code
- * @res_byte2: byte 2 of the 3-byte resolution code
- * @res_byte3: byte 3 of the 3-byte resolution code
- *                
+ * @res_byte1: byte 1 of the 3-byte image format code
+ * @res_byte2: byte 2 of the 3-byte image format code
+ * @res_byte3: byte 3 of the 3-byte image format code
+ *
  * @context: context for error reporting
  *
- * Sets the camera's output image resolution.  Only tested for EOS 5D via USB.
+ * Sets the camera's output image format.  Only tested for EOS 5D via USB.
  *
  * Returns: gphoto2 error code
  *
  */
 int
-canon_int_set_resolution (Camera *camera, unsigned char res_byte1, 
+canon_int_set_image_format (Camera *camera, unsigned char res_byte1,
                           unsigned char res_byte2, unsigned char res_byte3,  
                           GPContext *context)
 {
         int status;
 
-        GP_DEBUG ("canon_int_set_resolution() called");
+        GP_DEBUG ("canon_int_set_image_format() called");
 
         /* Get the current camera settings */
         
@@ -2051,14 +2051,14 @@ canon_int_set_resolution (Camera *camera, unsigned char res_byte1,
         if (status < 0)
                 return status;
         
-        /* Modify the resolution */
+        /* Modify the image format */
 
-        camera->pl->release_params[RESOLUTION_1_INDEX] = res_byte1;
-        camera->pl->release_params[RESOLUTION_2_INDEX] = res_byte2;
-        camera->pl->release_params[RESOLUTION_3_INDEX] = res_byte3;
+        camera->pl->release_params[IMAGE_FORMAT_1_INDEX] = res_byte1;
+        camera->pl->release_params[IMAGE_FORMAT_2_INDEX] = res_byte2;
+        camera->pl->release_params[IMAGE_FORMAT_3_INDEX] = res_byte3;
 
         
-        /* Upload the resolution to the camera */
+		/* Upload the image_format to the camera */
         status = canon_int_set_release_params (camera, context);
         
         if (status < 0)
@@ -2078,21 +2078,21 @@ canon_int_set_resolution (Camera *camera, unsigned char res_byte1,
         if (status < 0)
                 return status;
                 
-        if (camera->pl->release_params[RESOLUTION_1_INDEX] != res_byte1 ||
-            camera->pl->release_params[RESOLUTION_2_INDEX] != res_byte2 || 
-            camera->pl->release_params[RESOLUTION_3_INDEX] != res_byte3) {
-                GP_DEBUG ("canon_int_set_resolution: Could not set resolution "
+        if (camera->pl->release_params[IMAGE_FORMAT_1_INDEX] != res_byte1 ||
+            camera->pl->release_params[IMAGE_FORMAT_2_INDEX] != res_byte2 ||
+            camera->pl->release_params[IMAGE_FORMAT_3_INDEX] != res_byte3) {
+            GP_DEBUG ("canon_int_set_image_format: Could not set image format "
                           "to 0x%02x 0x%02x 0x%02x (camera returned 0x%02x 0x%02x 0x%02x)", 
                           res_byte1, res_byte2, res_byte3, 
-                          camera->pl->release_params[RESOLUTION_1_INDEX],
-                          camera->pl->release_params[RESOLUTION_2_INDEX],
-                          camera->pl->release_params[RESOLUTION_3_INDEX]);
-                return GP_ERROR_CORRUPTED_DATA;
+                          camera->pl->release_params[IMAGE_FORMAT_1_INDEX],
+                          camera->pl->release_params[IMAGE_FORMAT_2_INDEX],
+                          camera->pl->release_params[IMAGE_FORMAT_3_INDEX]);
+            return GP_ERROR_CORRUPTED_DATA;
         } else {
-                GP_DEBUG ("canon_int_set_resolution: resolution change verified");
+            GP_DEBUG ("canon_int_set_image_format: image_format change verified");
         }
         
-        GP_DEBUG ("canon_int_set_resolution() finished successfully");
+        GP_DEBUG ("canon_int_set_image_format() finished successfully");
 
         return GP_OK;        
 }
@@ -2339,7 +2339,7 @@ static int
 canon_int_set_release_params (Camera *camera, GPContext *context)
 {
         unsigned char payload[0x4c];
-        unsigned char *msg, *trash_handle;
+        unsigned char *msg = NULL, *trash_handle;
         unsigned int len, payloadlen, trash_int;
         int status;
 
