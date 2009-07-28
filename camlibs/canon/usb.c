@@ -1984,7 +1984,7 @@ canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **dat
  * camera. This function must be called soon after an image capture,
  * and needs the image key returned by canon_usb_capture_dialogue().
  * This function is only used for "secondary images," e.g., the JPEGs 
- * downloaded when the camera's capture resolution mode is set to "RAW + JPEG"
+ * downloaded when the camera's capture image format mode is set to "RAW + JPEG"
  *
  * Returns: gphoto2 error code, length in @length, and image data in @data.
  *
