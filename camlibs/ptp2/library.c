@@ -1868,7 +1868,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			found, ret, isevent, timeout, sawcapturecomplete = 0;
+	int			found, ret, isevent, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
@@ -1907,7 +1907,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
-				int k, stgcnt= 0;
+				int k, stgcnt = 0;
 				for (k=0;k<storageids.n;k++) {
 					if (!(storageids.Storage[k] & 0xffff)) continue;
 					if (storageids.Storage[k] == 0x80000001) continue;
@@ -1923,6 +1923,17 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
 			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x", ret);
+	}
+
+	if (params->canon_viewfinder_on) { /* disable during capture ... reenable later on. */
+		ret = ptp_canon_viewfinderoff (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
+			return GP_ERROR;
+		}
+		viewfinderwason = 1;
+		params->canon_viewfinder_on = 0;
 	}
 
 #if 0
@@ -1989,6 +2000,16 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (!found) {
 	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!");
 	    return GP_ERROR_TIMEOUT;
+	}
+	if (viewfinderwason) { /* disable during capture ... reenable later on. */
+		viewfinderwason = 0;
+		ret = ptp_canon_viewfinderon (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
+			return GP_ERROR;
+		}
+		params->canon_viewfinder_on = 1;
 	}
 
 	/* FIXME: handle multiple images (as in BurstMode) */
