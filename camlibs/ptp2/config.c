@@ -1649,13 +1649,7 @@ _get_ExpTime(CONFIG_GET_ARGS) {
         for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		char	buf[20];
 
-		if (dpd->FORM.Enum.SupportedValue[i].u32%1000)
-			sprintf (buf,_("%d.%03ds"),
-				dpd->FORM.Enum.SupportedValue[i].u32/1000,
-				dpd->FORM.Enum.SupportedValue[i].u32%1000
-			);
-		else
-			sprintf (buf,_("%ds"),dpd->FORM.Enum.SupportedValue[i].u32/1000);
+		sprintf (buf,_("%0.4fs"), (1.0*dpd->FORM.Enum.SupportedValue[i].u32)/10000.0);
                 gp_widget_add_choice (*widget,buf);
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
                 	gp_widget_set_value (*widget,buf);
@@ -1666,24 +1660,28 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 static int
 _put_ExpTime(CONFIG_PUT_ARGS)
 {
-	int	ret, val;
+	int	ret, i, delta, xval;
+	float	val;
 	char	*value;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
 		return ret;
 
-	if (strchr(value,'.')) {
-		int val2;
-
-		if (!sscanf(value,_("%d.%ds"),&val,&val2))
-			return (GP_ERROR);
-		propval->u32 = val*1000+val2;
-		return (GP_OK);
-	}
-	if (!sscanf(value,_("%ds"),&val))
+	if (!sscanf(value,_("%fs"),&val))
 		return (GP_ERROR);
-	propval->u32 = val*1000;
+	val = val*10000.0;
+	delta = 1000000;
+	xval = val;
+	/* match the closest value */
+        for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		if (abs(val - dpd->FORM.Enum.SupportedValue[i].u32)<delta) {
+			xval = dpd->FORM.Enum.SupportedValue[i].u32;
+			delta = abs(val - dpd->FORM.Enum.SupportedValue[i].u32);
+		}
+	}
+	gp_log (GP_LOG_DEBUG,"ptp2/_put_ExpTime","value %s is %f, closest match was %d",value,val,xval);
+	propval->u32 = xval;
 	return (GP_OK);
 }
 
