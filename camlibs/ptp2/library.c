@@ -1833,11 +1833,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			found, ret, isevent, timeout;
+	int			found, ret, isevent, timeout, sawcapturecomplete = 0, viewfinderwason=0;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
-	uint16_t		val16;
 	PTPContainer		event;
 	uint32_t		handle;
 	char 			buf[1024];
@@ -1873,13 +1872,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
-				int k, stgcnt= 0;
+				int k, stgcnt=0;
 				for (k=0;k<storageids.n;k++) {
 					if (!(storageids.Storage[k] & 0xffff)) continue;
 					if (storageids.Storage[k] == 0x80000001) continue;
+					gp_log (GP_LOG_DEBUG, "ptp", "valid storageid %x?", storageids.Storage[k]);
 					stgcnt++;
 				}
-				if (stgcnt) {
+				if (!stgcnt) {
 					gp_log (GP_LOG_DEBUG, "ptp", "Assuming no CF card present - switching to MEMORY Transfer.");
 					propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 				}
@@ -1889,6 +1889,17 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
 		if (ret != PTP_RC_OK)
 			gp_log (GP_LOG_DEBUG, "ptp", "setdevicepropvalue CaptureTransferMode failed, %x", ret);
+	}
+
+	if (params->canon_viewfinder_on) { /* disable during capture ... reenable later on. */
+		ret = ptp_canon_viewfinderoff (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
+			return GP_ERROR;
+		}
+		viewfinderwason = 1;
+		params->canon_viewfinder_on = 0;
 	}
 
 #if 0
@@ -1901,23 +1912,25 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		gp_context_error (context, _("Canon Capture failed: %x"), ret);
 		return GP_ERROR;
 	}
-	/* Catch event */
-	if (PTP_RC_OK == (val16 = params->event_wait (params, &event))) {
-		if (event.Code == PTP_EC_CaptureComplete)
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete.");
-		else
-			gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X", event.Code);
-	} /* else no event yet ... try later. */
-
-	/* checking events in stack. */
+	sawcapturecomplete = 0;
+	/* Checking events in stack. */
 	gp_port_get_timeout (camera->port, &timeout);
 	event_start = time(NULL);
 	found = FALSE;
 	while ((time(NULL) - event_start)<=timeout) {
 		gp_context_idle (context);
-		ret = ptp_canon_checkevent (params,&event,&isevent);
-		if (ret!=PTP_RC_OK)
-			continue;
+		if (PTP_RC_OK == params->event_check (params, &event)) {
+			if (event.Code == PTP_EC_CaptureComplete) {
+				sawcapturecomplete = 1;
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete.");
+			} else
+				gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X", event.Code);
+			isevent = 1;
+		} else {
+			ret = ptp_canon_checkevent (params,&event,&isevent);
+			if (ret!=PTP_RC_OK)
+				continue;
+		}
 		if (isevent)
 			gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		if (	isevent  &&
@@ -1933,7 +1946,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 			}
-			/* Marcus: Not sure if we really needs this.
+			/* Marcus: Not sure if we really needs this. This refocuses the camera.
 			   ret = ptp_canon_reset_aeafawb(params,7);
 			 */
 			found = TRUE;
@@ -1941,7 +1954,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 	}
 	/* Catch event, attempt  2 */
-	if (val16!=PTP_RC_OK) {
+	if (!sawcapturecomplete) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
 			if (event.Code==PTP_EC_CaptureComplete)
 				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete(2).");
@@ -1953,6 +1966,16 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (!found) {
 	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!");
 	    return GP_ERROR_TIMEOUT;
+	}
+	if (viewfinderwason) { /* disable during capture ... reenable later on. */
+		viewfinderwason = 0;
+		ret = ptp_canon_viewfinderon (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
+			SET_CONTEXT_P(params, NULL);
+			return GP_ERROR;
+		}
+		params->canon_viewfinder_on = 1;
 	}
 
 	/* FIXME: handle multiple images (as in BurstMode) */
