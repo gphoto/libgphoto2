@@ -1833,7 +1833,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			found, ret, isevent, timeout, sawcapturecomplete = 0, viewfinderwason=0;
+	int			found, ret, isevent, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
@@ -1872,11 +1872,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
-				int k, stgcnt=0;
+				int k, stgcnt = 0;
 				for (k=0;k<storageids.n;k++) {
 					if (!(storageids.Storage[k] & 0xffff)) continue;
 					if (storageids.Storage[k] == 0x80000001) continue;
-					gp_log (GP_LOG_DEBUG, "ptp", "valid storageid %x?", storageids.Storage[k]);
 					stgcnt++;
 				}
 				if (!stgcnt) {
