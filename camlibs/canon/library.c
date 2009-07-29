@@ -1098,9 +1098,9 @@ storage_info_func (
 		strcpy ((*sinfos)->basedir, camera->pl->cached_drive);
 	}
 	(*sinfos)->fields |= GP_STORAGEINFO_MAXCAPACITY;
-	(*sinfos)->capacitykbytes = camera->pl->cached_capacity / 1024;
+	(*sinfos)->capacitykbytes = camera->pl->cached_capacity;
 	(*sinfos)->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
-	(*sinfos)->freekbytes = camera->pl->cached_available / 1024;
+	(*sinfos)->freekbytes = camera->pl->cached_available;
 	return GP_OK;
 }
 	

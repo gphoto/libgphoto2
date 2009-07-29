@@ -2762,16 +2762,16 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
                                 /* These newer cameras report sizes in
                                  * K instead of bytes, so max capacity
                                  * is 4TB rather than 4GB. */
-                                cap = le32atoh (msg + 4) * 1024;
-                                ava = le32atoh (msg + 8) * 1024;
+                                cap = le32atoh (msg + 4);
+                                ava = le32atoh (msg + 8);
                         }
                         else {
                                 msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
                                                           (unsigned char *)name, strlen (name) + 1);
 				if ( msg == NULL )
 					return GP_ERROR_OS_FAILURE;
-                                cap = le32atoh (msg + 4);
-                                ava = le32atoh (msg + 8);
+                                cap = le32atoh (msg + 4) / 1024;
+                                ava = le32atoh (msg + 8) / 1024;
                         }
                         break;
                 case GP_PORT_SERIAL:
@@ -2801,8 +2801,8 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
                         *available = ava;
                         GP_DEBUG ("canon_int_get_disk_name_info: "
                                 "capacity %i kb, available %i kb",
-                                cap > 0 ? (cap / 1024) : 0,
-                                ava > 0 ? (ava / 1024) : 0);
+                                cap > 0 ? cap : 0,
+                                ava > 0 ? ava : 0);
                         break;
                 GP_PORT_DEFAULT
         }
