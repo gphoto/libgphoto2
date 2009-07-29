@@ -3,6 +3,7 @@
 	* canon.c,canon.h,library.c,usb.c: Unified all configuration
 	  names and values. Added /actions and /status sub configuration
  	  for actions and read-only variables.
+	* canon.c,library.c: Fixed integer overflow in storage size detection.
 
 2008-07-10  Marcus Meissner  <marcus@jet.franken.de>
 
