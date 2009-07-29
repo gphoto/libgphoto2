@@ -96,10 +96,6 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 
 	printf("Capturing.\n");
 
-	/* NOP: This gets overridden in the library to /capt0000.jpg */
-	strcpy(camera_file_path.folder, "/");
-	strcpy(camera_file_path.name, "foo.jpg");
-
 	retval = gp_camera_capture(canon, GP_CAPTURE_IMAGE, &camera_file_path, canoncontext);
 	printf("  Retval: %d\n", retval);
 
@@ -165,6 +161,8 @@ main(int argc, char **argv) {
 			exit(1);
 		}
 		gp_file_unref(file);
+		sprintf(output_file, "image-%03d.jpg", i);
+	        capture_to_file(canon, canoncontext, output_file);
 	}
 	gp_camera_exit(canon, canoncontext);
 	return 0;
