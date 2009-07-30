@@ -30,7 +30,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/time.h>
+#ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
+#endif
 #include <dirent.h>
 #include <string.h>
 #ifdef HAVE_MNTENT_H
