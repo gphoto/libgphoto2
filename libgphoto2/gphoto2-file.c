@@ -936,11 +936,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
                 if (!strcmp (file->mime_type, table[x])) {
 
 			/* Search the current suffix and erase it */
-#ifdef HAVE_STRCHR
 			suffix = strrchr (file->name, '.');
-#else
-			suffix = rindex (file->name, '.');
-#endif
 			if (suffix++)
 				*suffix = '\0';
 			strcat (file->name, table[x + 1]);
