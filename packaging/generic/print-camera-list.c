@@ -315,7 +315,7 @@ human_end_func (const func_params_t *params, void *data)
 
 /** C equivalent of basename(1) */
 static const char *
-basename (const char *pathname)
+path_basename (const char *pathname)
 {
 	char *result, *tmp;
 	/* remove path part from camlib name */
@@ -337,7 +337,7 @@ human_camera_func (const func_params_t *params,
 		   void *data)
 {
 	const char *camlib_basename;
-	camlib_basename = basename(a->library);
+	camlib_basename = path_basename(a->library);
 	printf("%3d|%-20s|%-20s|%s\n",
 	       i+1, 
 	       camlib_basename,
@@ -435,7 +435,8 @@ udev_parse_params (const func_params_t *params, void **data)
 			} else if (strcmp("group", key)==0) {
 				pdata->group = val;
 			} else if (strcmp("version", key)==0) {
-				if (gpi_string_to_enum(val, &(pdata->version),
+				unsigned int ver = pdata->version;
+				if (gpi_string_to_enum(val, &ver,
 						       udev_version_t_map)) {
 					FATAL("Unrecognized udev version: \"%s\"", val);
 				}
@@ -724,7 +725,7 @@ ddb_camera_func (const func_params_t *params,
 		 const CameraAbilities *a,
 		 void *data)
 {
-	const char *camlib_basename = basename(a->library);
+	const char *camlib_basename = path_basename(a->library);
 	int head_printed = 0;
 #define DELAYED_HEAD() \
 	do { \
