@@ -61,7 +61,6 @@
 	}							\
 }
 
-typedef enum _SierraAction SierraAction;
 enum _SierraAction {
 	SIERRA_ACTION_DELETE_LAST_PIC = 0x00,
 	SIERRA_ACTION_DELETE_ALL = 0x01,
@@ -75,6 +74,7 @@ enum _SierraAction {
 	SIERRA_ACTION_UPLOAD     = 0x0b,
 	SIERRA_ACTION_LCD_TEST   = 0x0c,
 };
+typedef enum _SierraAction SierraAction;
 
 typedef enum {
 	SIERRA_LOCKED_NO  = 0x00,
@@ -97,7 +97,6 @@ int sierra_set_locked (Camera *camera, unsigned int n, SierraLocked locked,
 		       GPContext *context);
 
 /* Communications functions */
-typedef enum _SierraSpeed SierraSpeed;
 enum _SierraSpeed {
 	SIERRA_SPEED_9600   = 1,
 	SIERRA_SPEED_19200  = 2,
@@ -105,6 +104,7 @@ enum _SierraSpeed {
 	SIERRA_SPEED_57600  = 4,
 	SIERRA_SPEED_115200 = 5
 };
+typedef enum _SierraSpeed SierraSpeed;
 int sierra_set_speed		  (Camera *camera, SierraSpeed speed,
 				   GPContext *context);
 int sierra_end_session		  (Camera *camera, GPContext *context);

@@ -308,16 +308,29 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	char c[16];
 	char start[2] = {0x19, 0x51};
 	char do_something[2]; 
-	/* See protocol.txt for my theories about what these mean. */
-	char address1[2] = {0x19, info[8*n+1]};
-	char address2[2] = {0x19, info[8*n+2]};
-	char address3[2] = {0x19, info[8*n+3]};
-	char address4[2] = {0x19, info[8*n+4]};
-	char address5[2] = {0x19, info[8*n+5]};
-	char address6[2] = {0x19, info[8*n+6]};
+	char address1[2];
+	char address2[2];
+	char address3[2];
+	char address4[2];
+	char address5[2];
+	char address6[2];
 
 	do_something[0]= 0x19; 
 	do_something[1]=param;
+
+	/* See protocol.txt for my theories about what these mean. */
+	address1[0] = 0x19;
+	address1[1] = info[8*n+1];
+	address2[0] = 0x19;
+	address2[1] = info[8*n+2];
+	address3[0] = 0x19;
+	address3[1] = info[8*n+3];
+	address4[0] = 0x19;
+	address4[1] = info[8*n+4];
+	address5[0] = 0x19;
+	address5[1] = info[8*n+5];
+	address6[0] = 0x19;
+	address6[1] = info[8*n+6];
 
 
 	memset(c,0,sizeof(c));

@@ -26,7 +26,6 @@
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-context.h>
 
-typedef enum _RicohSpeed RicohSpeed;
 enum _RicohSpeed {
 	RICOH_SPEED_2400   = 0x00,
 	RICOH_SPEED_4800   = 0x01,
@@ -36,11 +35,11 @@ enum _RicohSpeed {
 	RICOH_SPEED_57600  = 0x05,
 	RICOH_SPEED_115200 = 0x07
 };
+typedef enum _RicohSpeed RicohSpeed;
 
 int ricoh_set_speed (Camera *camera, GPContext *context, RicohSpeed speed);
 
 /* We don't know the numbers for the models marked as 'dummy'. */
-typedef enum _RicohModel RicohModel;
 enum _RicohModel {
 	RICOH_MODEL_1        = 0x001, /* dummy */
 	RICOH_MODEL_2        = 0x002, /* dummy */
@@ -58,15 +57,16 @@ enum _RicohModel {
 	RICOH_MODEL_ESP80    = 0x010, /* dummy */
 	RICOH_MODEL_ESP80SXG = 0x400
 };
+typedef enum _RicohModel RicohModel;
 
 int ricoh_connect    (Camera *camera, GPContext *context, RicohModel *model);
 int ricoh_disconnect (Camera *camera, GPContext *context);
 
-typedef enum _RicohMode RicohMode;
 enum _RicohMode {
 	RICOH_MODE_PLAY   = 0x00,
 	RICOH_MODE_RECORD = 0x01
 };
+typedef enum _RicohMode RicohMode;
 
 int ricoh_get_mode  (Camera *camera, GPContext *context, RicohMode *mode);
 int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
@@ -79,11 +79,11 @@ int ricoh_get_pic_name  (Camera *, GPContext *, unsigned int, const char **);
 int ricoh_get_pic_memo  (Camera *, GPContext *, unsigned int, const char **);
 int ricoh_del_pic       (Camera *, GPContext *, unsigned int);
 
-typedef enum _RicohFileType RicohFileType;
 enum _RicohFileType {
 	RICOH_FILE_TYPE_NORMAL  = 0xa0,
 	RICOH_FILE_TYPE_PREVIEW = 0xa4
 };
+typedef enum _RicohFileType RicohFileType;
 int ricoh_get_pic   (Camera *camera, GPContext *context, unsigned int n,
 		     RicohFileType type,
 		     unsigned char **data, unsigned int *size);
@@ -103,16 +103,15 @@ int ricoh_get_copyright (Camera *camera, GPContext *context,
 int ricoh_set_copyright (Camera *camera, GPContext *context,
 			 const char *copyright);
 
-typedef enum _RicohResolution RicohResolution;
 enum _RicohResolution {
 	RICOH_RESOLUTION_640_480  = 0x01,
 	RICOH_RESOLUTION_1280_960 = 0x04
 };
+typedef enum _RicohResolution RicohResolution;
 
 int ricoh_get_resolution (Camera *, GPContext *, RicohResolution *);
 int ricoh_set_resolution (Camera *, GPContext *, RicohResolution);
 
-typedef enum _RicohExposure RicohExposure;
 enum _RicohExposure {
 	RICOH_EXPOSURE_M20  = 0x01, /* -2.0 */
 	RICOH_EXPOSURE_M15  = 0x02,
@@ -125,11 +124,11 @@ enum _RicohExposure {
 	RICOH_EXPOSURE_20   = 0x09, /* +2.0 */
 	RICOH_EXPOSURE_AUTO = 0xff
 };
+typedef enum _RicohExposure RicohExposure;
 
 int ricoh_get_exposure (Camera *, GPContext *, RicohExposure *);
 int ricoh_set_exposure (Camera *, GPContext *, RicohExposure);
 
-typedef enum _RicohWhiteLevel RicohWhiteLevel;
 enum _RicohWhiteLevel {
 	RICOH_WHITE_LEVEL_AUTO		= 0x00,
 	RICOH_WHITE_LEVEL_OUTDOOR	= 0x01,
@@ -138,20 +137,20 @@ enum _RicohWhiteLevel {
 	RICOH_WHITE_LEVEL_BLACK_WHITE	= 0x04,
 	RICOH_WHITE_LEVEL_SEPIA		= 0x05
 };
+typedef enum _RicohWhiteLevel RicohWhiteLevel;
 
 int ricoh_get_white_level (Camera *, GPContext *, RicohWhiteLevel *);
 int ricoh_set_white_level (Camera *, GPContext *, RicohWhiteLevel);
 
-typedef enum _RicohMacro RicohMacro;
 enum _RicohMacro {
 	RICOH_MACRO_OFF = 0x00,
 	RICOH_MACRO_ON  = 0x01
 };
+typedef enum _RicohMacro RicohMacro;
 
 int ricoh_get_macro (Camera *, GPContext *, RicohMacro *);
 int ricoh_set_macro (Camera *, GPContext *, RicohMacro);
 
-typedef enum _RicohZoom RicohZoom;
 enum _RicohZoom {
 	RICOH_ZOOM_OFF = 0x00,
 	RICOH_ZOOM_1   = 0x01,
@@ -163,21 +162,21 @@ enum _RicohZoom {
 	RICOH_ZOOM_7   = 0x07,
 	RICOH_ZOOM_8   = 0x08
 };
+typedef enum _RicohZoom RicohZoom;
 
 int ricoh_get_zoom (Camera *, GPContext *, RicohZoom *);
 int ricoh_set_zoom (Camera *, GPContext *, RicohZoom);
 
-typedef enum _RicohFlash RicohFlash;
 enum _RicohFlash {
 	RICOH_FLASH_AUTO = 0x00,
 	RICOH_FLASH_OFF  = 0x01,
 	RICOH_FLASH_ON   = 0x02
 };
+typedef enum _RicohFlash RicohFlash;
 
 int ricoh_get_flash (Camera *, GPContext *, RicohFlash *);
 int ricoh_set_flash (Camera *, GPContext *, RicohFlash);
 
-typedef enum _RicohRecMode RicohRecMode;
 enum _RicohRecMode {
 	RICOH_REC_MODE_IMAGE           = 0x00,
 	RICOH_REC_MODE_CHARACTER       = 0x01,
@@ -185,17 +184,18 @@ enum _RicohRecMode {
 	RICOH_REC_MODE_IMAGE_SOUND     = 0x04,
 	RICOH_REC_MODE_CHARACTER_SOUND = 0x06
 };
+typedef enum _RicohRecMode RicohRecMode;
 
 int ricoh_get_rec_mode (Camera *, GPContext *, RicohRecMode *);
 int ricoh_set_rec_mode (Camera *, GPContext *, RicohRecMode);
 
-typedef enum _RicohCompression RicohCompression;
 enum _RicohCompression {
 	RICOH_COMPRESSION_NONE = 0x00,
 	RICOH_COMPRESSION_MAX  = 0x01,
 	RICOH_COMPRESSION_NORM = 0x02,
 	RICOH_COMPRESSION_MIN  = 0x03
 };
+typedef enum _RicohCompression RicohCompression;
 
 int ricoh_get_compression (Camera *, GPContext *, RicohCompression *);
 int ricoh_set_compression (Camera *, GPContext *, RicohCompression);

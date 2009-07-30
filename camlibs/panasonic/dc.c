@@ -27,7 +27,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
+#ifdef HAVE_MEMORY_H
 #include <memory.h>
+#endif
 #include "dc.h"
 #include "dc1000.h"
 

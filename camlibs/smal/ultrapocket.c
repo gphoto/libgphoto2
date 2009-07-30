@@ -377,8 +377,8 @@ ultrapocket_reset(Camera *camera)
    GPPortInfo oldpi;
    GPPort *port = camera->port;
    CameraAbilities cab;
-   gp_camera_get_abilities(camera, &cab);
    unsigned char cmdbuf[0x10];
+   gp_camera_get_abilities(camera, &cab);
    GP_DEBUG ("First connect since camera was used - need to reset cam");
 
    /*

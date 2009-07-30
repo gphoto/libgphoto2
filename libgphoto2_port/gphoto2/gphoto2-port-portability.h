@@ -171,7 +171,9 @@ typedef struct {
 # include <strings.h>
 # include <sys/types.h>
 # include <dirent.h>
+#ifdef HAVE_SYS_PARAM_H
 # include <sys/param.h>
+#endif
 # include <sys/stat.h>
 # include <unistd.h>
 

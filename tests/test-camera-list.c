@@ -97,7 +97,7 @@ print_hline (void)
 
 /** C equivalent of basename(1) */
 static const char *
-basename (const char *pathname)
+path_basename (const char *pathname)
 {
 	char *result, *tmp;
 	/* remove path part from camlib name */
@@ -166,7 +166,7 @@ parse_command_line (const int argc, char *argv[])
 		} else if (strcmp(argv[i], "--format=camlibs") == 0) {
 			format = FMT_FLAT_CAMLIBS;
 		} else {
-			const char * const bn = basename(argv[0]);
+			const char * const bn = path_basename(argv[0]);
 			printf("Unknown command line parameter %d: \"%s\"\n",
 			       i, argv[i]);
 			printf("Sorry, no more help to give but the "
@@ -255,7 +255,7 @@ main (int argc, char *argv[])
 		CameraAbilities abilities;
 		const char *camlib_basename;
 		CHECK (gp_abilities_list_get_abilities (al, i, &abilities));
-		camlib_basename = basename(abilities.library);
+		camlib_basename = path_basename(abilities.library);
 
 		switch (format) {
 		case FMT_HEADED_TEXT:

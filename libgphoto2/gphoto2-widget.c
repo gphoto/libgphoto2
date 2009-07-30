@@ -130,8 +130,8 @@ gp_widget_new (CameraWidgetType type, const char *label,
 int
 gp_widget_free (CameraWidget *widget)
 {
-	CHECK_NULL (widget);
 	int x;
+	CHECK_NULL (widget);
 
 	/* Free children recursively */
 	if ((widget->type == GP_WIDGET_WINDOW) ||
@@ -432,8 +432,8 @@ gp_widget_get_value (CameraWidget *widget, void *value)
 int
 gp_widget_append (CameraWidget *widget, CameraWidget *child) 
 {
-	CHECK_NULL (widget && child);
 	CameraWidget **newlist;
+	CHECK_NULL (widget && child);
 
 	/* Return if they can't have any children */
         if ((widget->type != GP_WIDGET_WINDOW) && 
