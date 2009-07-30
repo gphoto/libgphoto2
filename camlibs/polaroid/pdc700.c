@@ -61,14 +61,13 @@
 
 #define RETRIES 5
 
-typedef enum _PDCStatus PDCStatus;
 enum _PDCStatus {
 	PDC_STATUS_FAIL = 0x00,
 	PDC_STATUS_DONE = 0x01,
 	PDC_STATUS_LAST = 0x02
 };
+typedef enum _PDCStatus PDCStatus;
 
-typedef enum _PDCConf PDCConf;
 enum _PDCConf {
 	PDC_CONF_FLASH    = 0x00,
 	PDC_CONF_TIMER    = 0x01,
@@ -80,8 +79,8 @@ enum _PDCConf {
 	PDC_CONF_SIZE     = 0x07
 	/* I think we have them all... 8 and 9 return failure */
 };
+typedef enum _PDCConf PDCConf;
 
-typedef enum _PDCBaud PDCBaud;
 enum _PDCBaud {
 	PDC_BAUD_9600   = 0x00,
 	PDC_BAUD_19200  = 0x01,
@@ -89,12 +88,13 @@ enum _PDCBaud {
 	PDC_BAUD_57600  = 0x03,
 	PDC_BAUD_115200 = 0x04
 };
+typedef enum _PDCBaud PDCBaud;
 
-typedef enum _PDCBool PDCBool;
 enum _PDCBool {
 	PDC_BOOL_OFF = 0,
 	PDC_BOOL_ON  = 1
 };
+typedef enum _PDCBool PDCBool;
 
 typedef struct _PDCDate PDCDate;
 struct _PDCDate {
@@ -107,32 +107,32 @@ struct _PDCDate {
 	unsigned char hour, minute, second;
 };
 
-typedef enum _PDCMode PDCMode;
 enum _PDCMode {
 	PDC_MODE_PLAY   = 0,
 	PDC_MODE_RECORD = 1,
 	PDC_MODE_MENU   = 2
 };
+typedef enum _PDCMode PDCMode;
 
-typedef enum _PDCQuality PDCQuality;
 enum _PDCQuality {
 	PDC_QUALITY_NORMAL    = 0,
 	PDC_QUALITY_FINE      = 1,
 	PDC_QUALITY_SUPERFINE = 2
 };
+typedef enum _PDCQuality PDCQuality;
 
-typedef enum _PDCSize PDCSize;
 enum _PDCSize {
 	PDC_SIZE_VGA = 0,
 	PDC_SIZE_XGA = 1,
 };
+typedef enum _PDCSize PDCSize;
 
-typedef enum _PDCFlash PDCFlash;
 enum _PDCFlash {
 	PDC_FLASH_AUTO = 0,
 	PDC_FLASH_ON   = 1,
 	PDC_FLASH_OFF  = 2
 };
+typedef enum _PDCFlash PDCFlash;
 
 typedef struct _PDCInfo PDCInfo;
 struct _PDCInfo {

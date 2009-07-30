@@ -52,7 +52,6 @@
 #  define N_(String) (String)
 #endif
 
-typedef enum _SierraPacket SierraPacket;
 enum _SierraPacket {
 	NUL				= 0x00,
 	SIERRA_PACKET_DATA		= 0x02,
@@ -66,6 +65,7 @@ enum _SierraPacket {
 	SIERRA_PACKET_SESSION_ERROR	= 0xfc,
 	SIERRA_PACKET_SESSION_END	= 0xff
 };
+typedef enum _SierraPacket SierraPacket;
 
 /* Size of requested packet */
 #define SIERRA_PACKET_SIZE		32774

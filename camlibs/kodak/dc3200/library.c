@@ -138,11 +138,14 @@ int dc3200_setup(Camera *camera)
 	 *
 	 */
 
-	unsigned char cmd1[5] = {0x01, dc3200_calc_seqnum(camera), 0x01, 0x00, 0x0F};
-	unsigned char cmd2[8] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x01, 0x81, 0x00, 0x03};
+	unsigned char cmd1[5] = {0x01, 0, 0x01, 0x00, 0x0F};
+	unsigned char cmd2[8] = {0x01, 0, 0x80, 0x00, 0x01, 0x81, 0x00, 0x03};
 
 	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
+
+	cmd1[1] = dc3200_calc_seqnum(camera);
+	cmd2[1] = dc3200_calc_seqnum(camera);
 
 	if(dc3200_send_command(camera, cmd1, sizeof(cmd1), ack, &ack_len) == GP_ERROR)
 		return GP_ERROR;
@@ -472,13 +475,17 @@ int dc3200_get_data(Camera *camera, unsigned char **data, unsigned long *data_le
  */
 int dc3200_cancel_get_data(Camera *camera)
 {
-	unsigned char pkt[20] = {0x01, dc3200_calc_seqnum(camera), 0x80, 0x00, 0x20, 0x03, 0x0d, 0xc1, 0x50, 0xc0,
-		0x00, 0x00, 0x00, 0x06, 0x04, 0x01, 0x00, 0x01, (camera->pl->cmd_seqnum >> 8) & 0xff, camera->pl->cmd_seqnum & 0xff};
+	unsigned char pkt[20] = {0x01, 0, 0x80, 0x00, 0x20, 0x03, 0x0d, 0xc1, 0x50, 0xc0,
+		0x00, 0x00, 0x00, 0x06, 0x04, 0x01, 0x00, 0x01, 0, 0};
 	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
 	struct timeval timeout;
 	timeout.tv_sec = 0;
 	timeout.tv_usec = 1000;
+
+	pkt[1] = dc3200_calc_seqnum(camera);
+	pkt[18] = (camera->pl->cmd_seqnum >> 8) & 0xff;
+	pkt[19] = camera->pl->cmd_seqnum & 0xff;
 
 	/* wait a bit ... */
 	select(0, 0, 0, 0, &timeout);

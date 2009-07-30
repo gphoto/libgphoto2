@@ -59,8 +59,10 @@ int
 jl2005a_get_pic_data_size (GPPort *port, int n)
 {
 	unsigned int size = 0;
-	char command[2] = {0xa1, (char)(n&0xff)};
+	char command[2];
 	char response=0;
+	command[0] = 0xa1;
+	command[1] = (char)(n&0xff);
 	GP_DEBUG("Getting photo data size\n");
 	gp_port_write (port, "\xab\x00", 2);
 	gp_port_write (port, command, 2);
@@ -172,7 +174,9 @@ jl2005a_reset (Camera *camera, GPPort *port)
 int jl2005a_read_info_byte(GPPort *port, int n) 
 {
 	char response;
-	char command[2] = {0xa1, (char)(n&0xff)};
+	char command[2];
+	command[0] = 0xa1;
+	command[1] = (char)(n&0xff);
 	gp_port_write (port, "\xab\x00", 2);
 	gp_port_write (port, command , 2);
 	gp_port_write (port, "\xab\x00", 2);
@@ -189,7 +193,9 @@ int jl2005a_read_info_byte(GPPort *port, int n)
 int jl2005a_shortquery(GPPort *port, int n)
 {
 	char response;
-	char command[2] = {0xa2, (char)(n&0xff)};
+	char command[2];
+	command[0] = 0xa2;
+	command[1] = (char)(n&0xff);
 	gp_port_write (port, "\xab\x00", 2);
 	gp_port_write (port, command, 2);
 	gp_port_write (port, "\xab\x00", 2);

@@ -132,18 +132,18 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int num_lo_pics = aox_get_num_lo_pics (camera->pl->info);
 	int num_hi_pics = aox_get_num_hi_pics (camera->pl->info);
 	int n = num_hi_pics + num_lo_pics;
-	char name[n];
+	char name[20];
 	int i;	
 	/* Low-resolution pictures are always downloaded first. We do not know 
 	 * yet how to process them, so they will remain in RAW format. */
 	
 	for (i=0; i< num_lo_pics; i++){
-		sprintf( name, "aox_pic%03i.raw", i+1 );
+		snprintf( name, sizeof(name), "aox_pic%03i.raw", i+1 );
 		gp_list_append(list, name, NULL);	
 	}
 
 	for (i = num_lo_pics; i < n; i++){
-		sprintf( name, "aox_pic%03i.ppm", i+1 );		
+		snprintf( name, sizeof(name), "aox_pic%03i.ppm", i+1 );		
 		gp_list_append(list, name, NULL);	
 	}
     	return GP_OK;

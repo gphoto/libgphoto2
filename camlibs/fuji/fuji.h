@@ -24,7 +24,6 @@
 #include <gphoto2/gphoto2-context.h>
 #include <gphoto2/gphoto2-camera.h>
 
-typedef enum _FujiCmd FujiCmd;
 enum _FujiCmd {
 	FUJI_CMD_PIC_GET	= 0x02,
 	FUJI_CMD_PIC_GET_THUMB  = 0x00,
@@ -74,6 +73,7 @@ enum _FujiCmd {
 
 	FUJI_CMD_UNKNOWN8	= 0xc0  /* Figure this out! */
 };
+typedef enum _FujiCmd FujiCmd;
 
 int fuji_get_cmds  (Camera *camera, unsigned char *cmds, GPContext *context);
 
@@ -114,7 +114,6 @@ int fuji_pic_get       (Camera *camera, unsigned int i, unsigned char **data,
 int fuji_pic_get_thumb (Camera *camera, unsigned int i, unsigned char **data,
 			unsigned int *size, GPContext *context);
 
-typedef enum _FujiSpeed FujiSpeed;
 enum _FujiSpeed {
 	FUJI_SPEED_9600		= 0,
 	FUJI_SPEED_19200	= 5,
@@ -122,6 +121,7 @@ enum _FujiSpeed {
 	FUJI_SPEED_57600	= 7,
 	FUJI_SPEED_115200	= 8
 };
+typedef enum _FujiSpeed FujiSpeed;
 
 int fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context);
 
