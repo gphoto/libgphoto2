@@ -179,28 +179,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		GP_DEBUG(" * REQUEST FOR A PREVIEW");
 
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x0008,NULL,0x0);
-		gp_port_read(camera->port, indata, 0x100);
+		gp_port_read(camera->port, (char*)indata, 0x100);
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
 		
 		resolution = (unsigned char)indata[ 17 ];
 		if (resolution == 1) {
+			char dummy;
 
-			result = (unsigned char *)calloc(size, 0x100);
+			result = calloc(size, 0x100);
 			ptr = result;
 				
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 			gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000A,NULL,0x0);
 			
 			for (j = 0; j < size; j++) {
-		   		gp_port_read(camera->port, ptr, 0x100);
+		   		gp_port_read(camera->port, (char*)ptr, 0x100);
 				ptr += 0x100;
 			}
 
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 			size = size * 0x100;
 
@@ -234,7 +235,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 			gp_file_set_mime_type(file, GP_MIME_JPEG);
 			gp_file_set_name(file, filename);
-			gp_file_append(file, result, size);
+			gp_file_append(file, (char*)result, size);
 
 			free(result);
 
@@ -244,9 +245,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			unsigned char * data;
 			unsigned char * ptr;
 			unsigned char * result = NULL;
+			char dummy;
 
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 			data = (unsigned char *)calloc(size, 0x100);
 			ptr = data;
@@ -254,18 +256,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000B,NULL,0x0);
 			if (size < 100) {
 				for (j = 0; j < size; j++) {
-			   		gp_port_read(camera->port, ptr, 0x100);
+			   		gp_port_read(camera->port, (char*)ptr, 0x100);
 					ptr += 0x100;
 				}
 			} else {
 				for (j = 0; j < 100; j++) {
-			  	 	gp_port_read(camera->port, ptr, 0x100);
+			  	 	gp_port_read(camera->port, (char*)ptr, 0x100);
 					ptr += 0x100;
 				}
 			}
 
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 			size = size * 0x100;
 
@@ -277,9 +279,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				unsigned int pixel_count = 0;
 				unsigned int offset = 0;
 
-				result = (unsigned char *)calloc(1, 128 * 96 * 4 * 4 + 100 );
+				result = calloc(1, 128 * 96 * 4 * 4 + 100 );
 				
-				strcpy(result, "P3\n128 96\n255\n");
+				memcpy(result, "P3\n128 96\n255\n", 14);
 				offset = offset + 14;
 
 				temp1 = data[ thumb_start + pixel_count ];
@@ -306,7 +308,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					if (B > 255) B = 255;
 					if (B < 0) B = 0;
 
-					sprintf(result + offset , "%03d %03d %03d\n", R, G, B);
+					sprintf((char*)(result + offset), "%03d %03d %03d\n", R, G, B);
 					offset = offset + 4 + 4 + 4;
 
 					Y = temp2 + 128;
@@ -321,7 +323,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					if (B > 255) B = 255;
 					if (B < 0) B = 0;
 
-					sprintf(result + offset, "%03d %03d %03d\n", R,G,B);
+					sprintf((char*)(result + offset), "%03d %03d %03d\n", R,G,B);
 					offset = offset + 4 + 4 + 4;
 			}
 
@@ -329,7 +331,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 			gp_file_set_mime_type(file, GP_MIME_PPM);
 			gp_file_set_name(file, filename);
-			gp_file_append(file, result, size);
+			gp_file_append(file, (char*)result, size);
 
 			free( result );
 			free( data );
@@ -338,70 +340,71 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 		}
 		
-	case GP_FILE_TYPE_RAW:
+	case GP_FILE_TYPE_RAW: {
+		char dummy;
 		GP_DEBUG(" * REQUEST FOR RAW IMAGE");
-
 		
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x0008,NULL,0x0);
-		gp_port_read(camera->port, indata, 0x100);
+		gp_port_read(camera->port, (char*)indata, 0x100);
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
-		result = (unsigned char *)calloc(size, 0x100);
+		result = calloc(size, 0x100);
 		ptr = result;
 		
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000A,NULL,0x0);
 		for (j = 0; j < size; j++) {
-		   gp_port_read(camera->port, ptr, 0x100);
+		   gp_port_read(camera->port, (char*)ptr, 0x100);
 		   ptr += 100;
 		}
 		GP_DEBUG(" *DONE READING IMAGE!");
 
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 		size = size * 0x100;
 
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_name(file, filename);
-		gp_file_append(file, result, size);
+		gp_file_append(file, (char*)result, size);
 
 		free( result );
 
 		break;
-		
-	case GP_FILE_TYPE_NORMAL:
+	}
+	case GP_FILE_TYPE_NORMAL: {
+		char dummy;
 		GP_DEBUG(" * REQUEST FOR NORMAL IMAGE");
 
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x0008,NULL,0x0);
-		gp_port_read(camera->port, indata, 0x100);
+		gp_port_read(camera->port, (char*)indata, 0x100);
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
 		
-		result = (unsigned char *)calloc(size, 0x100);
+		result = calloc(size, 0x100);
 		ptr = result;
 				
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000A,NULL,0x0);
 			
 		for (j = 0; j < size; j++) {
-	   		gp_port_read(camera->port, ptr, 0x100);
+	   		gp_port_read(camera->port, (char*)ptr, 0x100);
 			ptr += 0x100;
 		}
 
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&lb,0x0001);
-		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&lb,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
+		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 		size = size * 0x100;
 
-		lb = (unsigned char)*(result + 0x05);
-		hb = (unsigned char)*(result + 0x04);
+		lb = *(result + 0x05);
+		hb = *(result + 0x04);
 		app1len = (unsigned int)(hb * 256) + (unsigned int)(lb);
 
 		result[3] = 0xe0;
@@ -430,11 +433,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		gp_file_set_mime_type(file, GP_MIME_JPEG);
 		gp_file_set_name(file, filename);
-		gp_file_append(file, result, size);
+		gp_file_append(file, (char*)result, size);
 
 		free(result);
 
 		break;
+	}
 	default:
 		GP_DEBUG(" * NOT SUPPORTED");
 		return GP_ERROR_NOT_SUPPORTED;
@@ -516,9 +520,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	gp_port_usb_msg_write(camera->port,0x0A, 0x0000, 0x0000, NULL, 0x0000 );
 	gp_port_usb_msg_write(camera->port,0x02, 0x0000, 0x0007, NULL, 0x0000 );
 	gp_port_usb_msg_write(camera->port,0x0A, 0x0000, 0x0001, NULL, 0x0000 );
-	gp_port_read( camera->port, indata, 0x100 );
+	gp_port_read( camera->port, (char*)indata, 0x100 );
 
-	count = from_camera( (unsigned short)(indata[22] + (indata[23]*0x100)) );
+	count = from_camera( indata[22] + (indata[23]*0x100) );
 	if (count > 0) {
 		count--;
 		has_compact_flash = 1;
@@ -553,7 +557,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	int n;
 	unsigned char resolution;
-	unsigned char sbr;
+	char sbr;
 	unsigned char indata[ 0x100 ];
 
 	GP_DEBUG(" * get_info_func()");
@@ -566,9 +570,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	strcpy( info->file.type, GP_MIME_JPEG );
 
 	gp_port_usb_msg_write(camera->port,0x0A, to_camera( n ) ,0x0008,NULL,0x0);
-	gp_port_read(camera->port, indata, 0x100);
+	gp_port_read(camera->port, (char*)indata, 0x100);
 
-	resolution = (unsigned char)indata[ 17 ];
+	resolution = indata[ 17 ];
 	gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&sbr,1);
 	gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&sbr,1);
 
@@ -626,15 +630,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	gp_port_usb_msg_write(camera->port,0x0A, 0x0000, 0x0000, NULL, 0x0000 );
 	gp_port_usb_msg_write(camera->port,0x02, 0x0000, 0x0007, NULL, 0x0000 );
 	gp_port_usb_msg_write(camera->port,0x0A, 0x0000, 0x0001, NULL, 0x0000 );
-	gp_port_read( camera->port, indata, 0x100 );
+	gp_port_read( camera->port, (char*)indata, 0x100 );
 
-	count = from_camera( (unsigned short)(indata[22] + (indata[23]*0x100)) );
+	count = from_camera( indata[22] + (indata[23]*0x100) );
 	if (count > 0)
 		count--;
-	
-	gp_list_populate( list, "pic_%04i.jpg", count);
-
-	return (GP_OK);
+	return gp_list_populate( list, "pic_%04i.jpg", count);
 }
 
 static CameraFilesystemFuncs fsfuncs = {
