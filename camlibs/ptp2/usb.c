@@ -513,6 +513,8 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	if (result < 0) {
 		gp_log (GP_LOG_DEBUG, "ptp2/usb_event", "reading event an error %d occurred", result);
+		if (result == GP_ERROR_TIMEOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	rlen = result;

@@ -202,6 +202,7 @@ static struct {
 	{PTP_ERROR_BADPARAM,	  0, N_("PTP Error: bad parameter")},
 	{PTP_ERROR_DATA_EXPECTED, 0, N_("PTP Protocol error, data expected")},
 	{PTP_ERROR_RESP_EXPECTED, 0, N_("PTP Protocol error, response expected")},
+	{PTP_ERROR_TIMEOUT,       0, N_("PTP Timeout")},
 	{0, 0, NULL}
 };
 
@@ -225,6 +226,8 @@ translate_ptp_result (short result)
 		return (GP_ERROR_BAD_PARAMETERS);
 	case PTP_RC_DeviceBusy:
 		return (GP_ERROR_CAMERA_BUSY);
+	case PTP_ERROR_TIMEOUT:
+		return (GP_ERROR_TIMEOUT);
 	case PTP_ERROR_CANCEL:
 		return (GP_ERROR_CANCEL);
 	case PTP_ERROR_BADPARAM:
