@@ -1374,15 +1374,26 @@ gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 }
 
 /**
- * Gets information on the camera attached storage.
+ * \brief Gets information on the camera attached storage.
  *
- * @param camera a #Camera
- * @param folder the folder from which to remove the directory
- * @param name the name of the directory to be removed
- * @param context a #GPContext
- * @return a gphoto2 error code
+ * \param camera a #Camera
+ * \param sifs Pointer to receive a pointer to/array of storage info items
+ * \param nrofsifs Pointer to receive number of array entries
+ * \param context a #GPContext
+ * \return a gphoto2 error code
  *
- */
+ * Retrieves the storage information, like maximum and free space, for
+ * the specified filesystem, if supported by the device. The storage
+ * information is returned in an newly allocated array of
+ * #CameraStorageInformation objects, to which the pointer pointed to
+ * by #sifs will be set.
+ *
+ * The variable pointed to by #nrofsifs will be set to the number of
+ * elements in that array.
+ *
+ * It is the caller's responsibility to free the memory of the array.
+ *
+ **/
 int
 gp_camera_get_storageinfo (
 	Camera *camera, CameraStorageInformation **sifs,

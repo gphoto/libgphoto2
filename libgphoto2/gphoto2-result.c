@@ -64,7 +64,7 @@ static struct {
  *
  * Translates a gphoto2 error code into a human readable string. If the 
  * error occurred in combination with a camera,
- * #gp_camera_get_result_as_string should be used instead.
+ * gp_camera_get_result_as_string() should be used instead.
  *
  * \return A string representation of a gphoto2 error code
  **/

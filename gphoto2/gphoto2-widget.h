@@ -26,8 +26,18 @@
 
 #include <gphoto2/gphoto2-context.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /** \brief internal structure please use the accessors. */
 typedef struct _CameraWidget CameraWidget;
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+
 
 #include <gphoto2/gphoto2-camera.h>
 
