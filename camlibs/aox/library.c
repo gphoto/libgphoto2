@@ -231,8 +231,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				p_data[4*i + 1] = p_data[4*i+2];
 				p_data[4*i+2] = temp;
 			}
-			GP_DEBUG("size of data = %i\n", sizeof(data));
-			GP_DEBUG("size of p_data = %i\n", sizeof(p_data));
 			/* And now create a ppm file, with our own header */
 			header_len = snprintf(header, 127, 
 				"P6\n" 
