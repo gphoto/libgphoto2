@@ -23,7 +23,6 @@ INSTALL_TESTS = $(check_SCRIPTS)
 BUILT_SOURCES = $(flexbison_BUILT_SOURCES_)
 CLEANFILES = $(check_SCRIPTS) $(BUILT_SOURCES) $(flexbison_CLEANFILES_) gp2ddb.txt
 
-#if HAVE_FLEX_BISON
 test_ddb_SOURCES = $(flexbison_BUILT_SOURCES_) test-ddb.c ddb-common.c ddb-common.h
 test_ddb_LDADD = \
 	-lfl \
@@ -39,12 +38,11 @@ ddb-txt.yy.c: ddb-txt.l ddb-txt.tab.h
 ddb-txt.tab.h: ddb-txt.tab.c
 ddb-txt.tab.c ddb-txt.tab.h: ddb-txt.y
 	$(BISON) -v $<
-#endif
+
+check-ddb.sh: check-ddb.sh.in $(top_builddir)/packaging/generic/print-camera-list test-ddb
 
 clean-local:
 	rm -f *.s *.i
-
-check-ddb.sh: check-ddb.sh.in $(top_builddir)/packaging/generic/print-camera-list test-ddb
 
 $(top_builddir)/packaging/generic/print-camera-list:
 	cd $(top_builddir)/packaging/generic && $(MAKE) print-camera-list
