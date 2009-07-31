@@ -12,8 +12,8 @@
  * owner to the string passed on the cmdline.
  *
  * Same as:
- *	gphoto2 --get-config owner
- *	gphoto2 --set-config owner="Owner Name"
+ *	gphoto2 --get-config ownername
+ *	gphoto2 --set-config ownername="Owner Name"
  */
 
 int main(int argc, char **argv) {
