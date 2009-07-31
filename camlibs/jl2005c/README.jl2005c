@@ -1,6 +1,6 @@
 JEILIN STILLCAM DRIVER
 Copyright Theodore Kilgore <kilgota@auburn.edu> September 4, 2007. Most recent
-update is Janyary 6, 2008.
+update is April 16, 2009.
 
 (Everything in libgphoto2/camlibs/jeilin is LGPL-licensed, including this 
 README. See any of the source files for a more complete statement of the 
@@ -13,47 +13,54 @@ Jeilin Technologies and also the similar cameras which have in them the
 JL2005B or the JL2005D. The interface is proprietary, and these cameras are 
 supported commercially only in Windows. Jeilin Technologies also manufactures
 chips which go into mass storage cameras. Those cameras, not to be confused 
-with these, can be accessed directly using mass storage support. 
+with these, can be accessed directly using mass storage support. The company 
+also makes another camera controller chip with proprietary interface, the 
+JL2005A. Cameras with that chip are supported in libgphoto2/camlibs/jl2005a. 
+Those cameras are much better supported than are the JL2005B/C/D cameras. But 
+if you want to read about one of those JL2005A cameras, please look in 
+camlibs/jl2005a, not here. 
 
 THIS IS EXPERIMENTAL CODE
 
-This code in this directory does not get compiled and installed by default. 
-To install it, you need the current SVN tree of libgphoto2. To get said 
-code, go to <gphoto.sourceforge.net> and click on download, then on Code, then 
-on SVN, and follow instructions to get a copy of the source tree. If you are a 
-developer with commit privileges, then PLEASE MAKE ANOTHER COPY of your 
-libgphoto2 source tree, so that you do not cause any accident!
+This code in this directory is included in the source release of libgphoto2, 
+from version 2.4.4 onward. However, the code in this directory does not get 
+compiled and installed by default. There is a reason for that:
 
-After you get the libgphoto2 source tree from SVN, you have to follow the 
-instructions in INSTALL to compile and install it. If you have never done 
-this procedure, then perhaps you would be very well advised to try to do this
-first without attempting to install support for JL2005C cameras. The code in 
-libgphoto2/camlibs/jl2005c does not compile by default if you do the things 
-above, as I said, so do not expect it to compile if you did not do anything to 
-make it compile. 
+THIS IS EXPERIMENTAL CODE
+
+With the libgphoto2 source tree in hand, you have to follow the instructions 
+in INSTALL to compile and install it. If you have never done this procedure, 
+then perhaps you would be very well advised to try to do this first without 
+attempting to install support for JL2005C cameras. The code in 
+libgphoto2/camlibs/jl2005c does not compile by default if you follow only the 
+standard procedures, as I said, so do not expect it to be compiled if you did 
+not do anything special. 
 
 If you really want to compile and install the support for the JL2005C cameras, 
 then there are at least two methods:
 
-1. At the ./configure step, the option 
+1. At the ./configure step during the compilation of the main libgphoto2 tree, 
+the option 
 
 ./configure --with-camlibs=all,jl2005c 
 
-is supposed to "turn on" the camlib. Then you can proceed as normally by doing
-make, then make install, and it will be made and installed with all the rest.
+should to "turn on" the camlib (note that "all" repeats the default option, 
+which explicitly excludes the jl2005c so you must explicitly add it here). 
+Then you can proceed as normally by doing make, then make install, and the 
+JL2005C support will be made and installed with all the rest.
 
-An alternative is 
+An alternative to the above is 
 
-2. When you have installed the entire libgphoto2 (except for the jl2005c library)
-you can go into libgphoto2/camlibs and from in there do 
+2. If you have already installed the entire libgphoto2 (except for the jl2005c 
+library) you can go into libgphoto2/camlibs and (as root or su) from there do 
 
-make CAMLIBS="jeilin.la" install-camlibs
+make CAMLIBS="jl2005c.la" install-camlibs
 
-I am told that this will work, too. 
+Then, this subdirectory will be compiled and installed with the others.
 
-At any rate, once you have installed support for the jl2005c you should be 
-ready to try out the camera and to help me to figure out a decent decompression 
-algorithm. 
+Once you have installed support for the jl2005c you should be ready to try out 
+the camera and to help me to figure out a decent decompression algorithm. For, 
+the camera uses data compression, and the method of the compression is unknown.
 
 Oh, if you are not experienced in libgphoto2 type things, you will notice that 
 at this point you can only use this camera as root. To solve that problem, 
@@ -66,6 +73,11 @@ are still using a 2.4.x Linux kernel). You can either set up a group called
 hooked to my home system, because "all users" pretty much consists of me, 
 myself, and I. 
 
+As an alternative to what is in the previous paragraph, you can just go to the 
+directory /etc/udev/rules.d and edit the existing rules file for libgphoto by 
+adding a line for the new camera. To do this, just copy a line which relates to
+some other camera, and change the USB vendor and product numbers to match. 
+
 
 WHAT DOES THIS CAMERA LIBRARY CURRENTLY DO?
 
@@ -73,8 +85,10 @@ It will hook up the camera, and you ought to be able to download a dump of any
 photo data in it using the command gphoto2 --get-all-raw-data. The main reason 
 you might want to do this right now is to participate in the development of 
 support for these cameras by experimenting with the still-unknown decompression 
-algorithm which they use. Also, some other infrastructural work has been done.
-The cameras will run gphoto --shell and even ought to honor a sequence such as 
+algorithm which they use. Help is welcome. That is why this library is made 
+public. Some other infrastructural work has been done, too. The code supports 
+the functioning of these cameras sufficiently well, that you ought to be able 
+to run gphoto --shell and it even ought to be possible to run a sequence like 
 
 get-raw jl_026.ppm
 
@@ -83,6 +97,7 @@ followed by the next gphoto2 shell command
 get-raw jl_001.ppm
 
 without corruption of data. 
+
 
 I _think_ that I got the data size for the photos all correct, but I am not 
 sure about that, for the obvious reason that I cannot do finished photos. 
@@ -128,7 +143,7 @@ fakery which fools the hardware. Suppose, for example, that there are ten
 photos in the camera. Then what the camera will do is:
 	-- report the number of photos (ten)
 	-- tell how much data needs to be downloaded in all (depends on how 
-	much room was taken up by the raw data for the photos)
+	much room was taken up by the raw data for all the photos)
 	-- provide a table with one line for each photo, giving its size, start
 	location, output height and width, and some kind of code for the 
 	compression method used on it. 
