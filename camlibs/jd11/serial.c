@@ -83,8 +83,8 @@ dwrite(GPPort*port, caddr_t buf, int xsize) {
 }
 #endif
 
-#define READ gp_port_read
-#define WRITE gp_port_write
+#define READ(port,buf,len) gp_port_read(port,(char*)(buf),len)
+#define WRITE(port,buf,len) gp_port_write(port,(char*)(buf),len)
 
 static int _send_cmd(GPPort *port,unsigned short cmd) {
     unsigned char buf[2];
@@ -358,7 +358,7 @@ jd11_erase_all(GPPort *port) {
 int
 jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
     int		i, id, count, xsize, curread=0, ret=0;
-    char	*indexbuf;
+    unsigned char	*indexbuf;
 
     ret = jd11_select_index(port);
     if (ret != GP_OK)
@@ -394,7 +394,8 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
     gp_context_progress_stop (context, id);
     for (i=0;i<count;i++) {
 	CameraFile	*file;
-	char		*src, fn[20];
+	char		fn[20];
+	unsigned char *src;
 	unsigned char thumb[64*48];
 	int y;
 	CameraFileInfo	info;
@@ -415,7 +416,7 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	    for (x=0;x<64;x++)
 		thumb[47*64-off+(63-x)] = src[off+x];
 	}
-	ret = gp_file_append(file,thumb,sizeof(thumb));
+	ret = gp_file_append(file,(char*)thumb,sizeof(thumb));
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -498,7 +499,7 @@ jd11_get_image_full(
 ) {
     unsigned char	*s,*uncomp[3],**imagebufs;
     int			ret,sizes[3];
-    char		*data;
+    unsigned char	*data;
     int 		h;
 
     ret = serial_image_reader(camera,file,nr,&imagebufs,sizes, context);
@@ -552,7 +553,7 @@ jd11_get_image_full(
     }
     free(uncomp[0]);free(uncomp[1]);free(uncomp[2]);
     free(imagebufs[0]);free(imagebufs[1]);free(imagebufs[2]);free(imagebufs);
-    gp_file_append(file, data, 640*480*3);
+    gp_file_append(file, (char*)data, 640*480*3);
     free(data);
     return GP_OK;
 }
