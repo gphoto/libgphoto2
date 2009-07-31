@@ -73,12 +73,12 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 				temp2 = temp2 | input_byte;
 				temp1 = (temp1 <<1)&0xFF;
 				bit_counter ++ ;
-    				cycles ++ ;
-        			if (cycles > 9) {
+				cycles ++ ;
+				if (cycles > 9) {
 					GP_DEBUG ("Too many cycles?\n");
 					return GP_ERROR; 
-    				}
-        			lookup = temp2 & 0xff;        
+				}
+				lookup = temp2 & 0xff;        
 			}
 			temp2 = 0;
 			for (i=0; i < 17; i++ ) {
@@ -91,15 +91,15 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 					return GP_ERROR;
 				}	
 			}		
-        		cycles = 0;
-        		parity ++ ;
-        	} 
-            	output[bytes_done] = (nibble_to_keep[0]<<4)|nibble_to_keep[1];
-            	bytes_done ++ ;
-        	parity = 0; 
-        }
+			cycles = 0;
+			parity ++ ;
+		} 
+		output[bytes_done] = (nibble_to_keep[0]<<4)|nibble_to_keep[1];
+		bytes_done ++ ;
+		parity = 0; 
+	}
 	GP_DEBUG ("bytes_used = 0x%x = %i\n", bytes_used, bytes_used);        
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -131,7 +131,7 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 		return GP_ERROR;
 	}	
 	for(i=0; i < width; i++){
-	    templine_green[i] = 0x80;
+		templine_green[i] = 0x80;
 	}
 	templine_blue = malloc(width);	
 	if (!templine_blue) {
@@ -139,14 +139,14 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 		return GP_ERROR;
 	}	
 	for(i=0; i < width; i++){
-	    templine_blue[i] = 0x80;
+		templine_blue[i] = 0x80;
 	}
 	GP_DEBUG ("Running second_decompress.\n");
 	for (m=0; m < height/2; m++) {
 		/* First we do an even-numbered line */
 		for (i=0; i< width/2; i++) {
 			parity = i&1;
-	    		delta_right = in[input_counter] &0x0f;
+			delta_right = in[input_counter] &0x0f;
 			delta_left = (in[input_counter]>>4)&0xff;
 			input_counter ++;
 			/* left pixel (red) */
