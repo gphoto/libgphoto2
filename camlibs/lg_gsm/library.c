@@ -100,8 +100,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 
 	sprintf (summary->text,_("Your USB camera seems to be a LG GSM.\n"
-			"Firmware         = %s\n"
-			"Firmware Version = %s\n"
+			"Firmware: %s\n"
+			"Firmware Version: %s\n"
 			), firmware, firmware_version);
 
 	return GP_OK;
