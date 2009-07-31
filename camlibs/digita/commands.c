@@ -162,8 +162,8 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 
 	tbuf = malloc(GFD_BUFSIZE + sizeof(*gfdr));
 	if (!tbuf) {
-		GP_DEBUG("digita_get_file_data: unable to allocate %d bytes",
-			GFD_BUFSIZE + sizeof(*gfdr));
+		GP_DEBUG("digita_get_file_data: unable to allocate %ud bytes",
+			(unsigned int)(GFD_BUFSIZE + sizeof(*gfdr)));
 
 		return -1;
 	}
