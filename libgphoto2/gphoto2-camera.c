@@ -433,8 +433,8 @@ gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 int
 gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
-	CHECK_NULL (camera);
 	char	*name, *path;
+	CHECK_NULL (camera);
 
 	/*
 	 * If the camera is currently initialized, terminate that connection.
