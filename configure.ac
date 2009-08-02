@@ -276,7 +276,7 @@ AC_HEADER_DIRENT
 # before _HEADER_STDC
 AC_HEADER_STDC
 # after _HEADER_STDC
-AC_CHECK_HEADERS([sys/param.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h])
+AC_CHECK_HEADERS([sys/param.h sys/select.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h])
 AC_C_INLINE([])
 AC_C_CONST([])
 dnl FIXME: AC_STRUCT_TIMEZONE
@@ -420,7 +420,7 @@ if test "x${utilsdir}" = "x"; then utilsdir="\${libdir}/\${PACKAGE_TARNAME}"; fi
 AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
 AC_SUBST([utilsdir])
 
-GP_UDEV
+GP_UDEV([true])
 
 
 dnl ---------------------------------------------------------------------------
