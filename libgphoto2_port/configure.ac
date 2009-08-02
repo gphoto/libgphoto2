@@ -93,9 +93,6 @@ AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
 AM_CPPFLAGS="$CPPFLAGS"
 AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
 
-GP_UDEV
-
-
 # ----------------------------------------------------------------------
 # References to external resources (web sites, mailing listes, etc.)
 # ----------------------------------------------------------------------
@@ -356,11 +353,14 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[http://libusb.sourceforge.net/]
 )
 
+dnl depends on libusb's availability
+GP_UDEV([test "x$have_LIBUSB" = xyes])
+
 dnl ---------------------------------------------------------------------------
 dnl disk - hal and various stuff
 dnl ---------------------------------------------------------------------------
 AC_ARG_WITH([hal],
-	AS_HELP_STRING([--with-hal], [wether to enable HAL disk autodetection [default=yes]]),
+	AS_HELP_STRING([--with-hal], [whether to enable HAL disk autodetection [default=yes]]),
 	,with_hal=yes)
 
 if test "x$with_hal" = "xyes"; then
