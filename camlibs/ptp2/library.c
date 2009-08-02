@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <langinfo.h>
+#include <sys/time.h>
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -2219,27 +2220,32 @@ camera_wait_for_event (Camera *camera, int timeout,
 	static int 	capcnt = 0;
 	int		i, oldtimeout;
 	uint16_t	ret;
-	time_t		event_start;
+	struct timeval  event_start, curtime;
 	CameraFile	*file;
 	char		*ximage;
 	int		finish = 0;
 	int		sleepcnt = 1;
 
 	SET_CONTEXT(camera, context);
+	gp_log (GP_LOG_DEBUG, "ptp2/wait_for_event", "waiting for events timeout %d ms", timeout);
 	memset (&event, 0, sizeof(event));
 
 	init_ptp_fs (camera, context);
 
+	gettimeofday (&event_start,NULL);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
 		PTPCanon_changes_entry	*entries = NULL;
 		int			nrofentries = 0;
 
-		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
-		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
+		while (1) {
 			int i;
+
+			gettimeofday (&curtime, 0);
+			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+				break;
 
 			if (params->backlogentries) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Using %d backlog entries", params->nrofbacklogentries);
@@ -2257,7 +2263,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 			if (!nrofentries) {
 				free (entries);
 				for (i=sleepcnt;i--;) {
+					int resttime;
+
 					gp_context_idle (context);
+					gettimeofday (&curtime, 0);
+					resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
+					if (resttime < 20)
+						break;
 					usleep(20*1000); /* 20 ms */
 				}
 				sleepcnt++; /* incremental back off */
@@ -2361,8 +2373,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 		int isevent;
 		char *x;
 
-		event_start=time(NULL);
-		while ((time(NULL) - event_start)<=(timeout/1000 + 1)) {
+		while (1) {
+			gettimeofday (&curtime, 0);
+			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+				break;
+
 			gp_context_idle (context);
 			ret = ptp_canon_checkevent (params,&event,&isevent);
 			if (ret!=PTP_RC_OK)
@@ -2385,11 +2400,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		uint32_t	newobject, hasc101;
 
-		event_start=time(NULL);
 		*eventtype = GP_EVENT_TIMEOUT;
-		while ((time(NULL) - event_start)<= (timeout/1000 + 1)) {
+		while (1) {
 			int i, evtcnt;
 			PTPContainer	*nevent = NULL;
+
+			gettimeofday (&curtime, 0);
+			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+				break;
 
 			ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
 			if (ret != PTP_RC_OK)
