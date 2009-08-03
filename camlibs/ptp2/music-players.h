@@ -608,13 +608,15 @@
   { "Nokia", 0x0421, "E66", 0x00e5, DEVICE_FLAG_NONE },
   // From: Pier <pierlucalino@users.sourceforge.net>
   { "Nokia", 0x0421, "5320 XpressMusic", 0x00ea, DEVICE_FLAG_NONE },
+  // From: Gausie <innerdreams@users.sourceforge.net>
+  { "Nokia", 0x0421, "5800 XpressMusic", 0x0154, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // From: Willy Gardiol (web) <willy@gardiol.org>
   // Spurious errors for getting all objects, lead me to believe this flag atleast is needed
-  { "Nokia", 0x0421, "5800 XpressMusic", 0x0155, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Nokia", 0x0421, "5800 XpressMusic v2", 0x0155, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // From an anonymous SourceForge user
   // Not verified to be MTP
   { "Nokia", 0x0421, "E63", 0x0179, DEVICE_FLAG_NONE },
-  // http://sourceforge.net/tracker/?func=detail&atid=809061&aid=2826544&group_id=158745
+  // From: FunkyPenguin <awafaa@users.sourceforge.net>
   { "Nokia", 0x0421, "N97", 0x01f5, DEVICE_FLAG_NONE },
   // https://sourceforge.net/tracker/index.php?func=detail&aid=2692473&group_id=8874&atid=358874
   { "Nokia", 0x0421, "5200", 0x0421, DEVICE_FLAG_NONE },
@@ -842,7 +844,7 @@
   // Reported by Mattias Evensson <mevensson@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "W902", 0x00f5, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Stéphane Pontier <shadow_walker@users.sourceforge.net>
-  { "SonyEricsson", 0x0fce, "W715", 0x0105, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  { "SonyEricsson", 0x0fce, "W705/W715", 0x0105, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Håkan Kvist
   { "SonyEricsson", 0x0fce, "W995", 0x0112, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
