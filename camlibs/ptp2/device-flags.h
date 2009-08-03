@@ -240,3 +240,8 @@
  * (libgphoto2)
  */ 
 #define DEVICE_FLAG_MATCH_PTP_INTERFACE		0x00800000
+/**
+ * This flag is like DEVICE_FLAG_OGG_IS_UNKNOWN but for FLAC
+ * files instead. Using the unknown filetype for FLAC files.
+ */
+#define DEVICE_FLAG_FLAC_IS_UNKNOWN 0x01000000
