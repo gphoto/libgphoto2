@@ -442,3 +442,1957 @@ Property 0xd190:(readwrite) (type=0x2) Range [0 - 12, step 2] value: 6
 	Low Light(0xd1b0):(read only) (type=0x2) Range [0 - 4, step 1] value: No (0)
 	Flash Open(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
 	Flash Charged(0xd1c1):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+
+
+
+autofocusdrive
+	Label: Fonction autofocus du Nikon DSLR
+	Type: TOGGLE
+	Current: 0
+manualfocusdrive
+	Label: Function manuel focus de Nikon DSLR 
+	Type: RANGE
+	Current: 0
+	Bottom: -32767
+	Top: 32767
+	Step: 1
+datetime
+	Label: Camera Date and Time
+	Type: DATE
+	Current: 1249549384
+	Printable: jeu 06 aoû 2009 11:03:04 CEST
+imagecomment
+	Label: Commentaire de l'image
+	Type: TEXT
+	Current:                                     
+imagecommentenable
+	Label: Permettre les commentaires d'image
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+lcdofftime
+	Label: Temps de l'extinction de l'écran LCD
+	Type: RADIO
+	Current: 10 secondes
+	Choice: 0 10 secondes
+	Choice: 1 20 seconds
+	Choice: 2 1 minute
+	Choice: 3 5 minutes
+	Choice: 4 10 minutes
+recordingmedia
+	Label: Média d'enregistrement
+	Type: RADIO
+	Current: Carte
+	Choice: 0 Carte
+	Choice: 1 SDRAM
+meterofftime
+	Label: Temp de mesure expiré
+	Type: RADIO
+	Current: 4 secondes
+	Choice: 0 4 secondes
+	Choice: 1 6 secondes
+	Choice: 2 8 secondes
+	Choice: 3 16 secondes
+	Choice: 4 30 secondes
+csmmenu
+	Label: Menu CSM
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+reversedial
+	Label: Inverser les bonttons de commande
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+fastfs
+	Label: Système de fichiers rapide
+	Type: TOGGLE
+	Current: 1
+capturetarget
+	Label: Fichier cible Type: RADIO
+	Current: Mémoire interne
+	Choice: 0 Mémoire interne
+	Choice: 1 Carte mémoire
+acpower
+	Label: Prise d'alimentation
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+externalflash
+	Label: Flash externe
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+batterylevel
+	Label: Niveau de batterie
+	Type: TEXT
+	Current: 100%
+orientation
+	Label: orientation de la l'appareil
+	Type: RADIO
+	Current: 0'
+	Choice: 0 0'
+	Choice: 1 270'
+	Choice: 2 90'
+flashopen
+	Label: Flash activé
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+flashcharged
+	Label: Flash Chargé
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+minfocallength
+	Label: Distance focale minimum
+	Type: TEXT
+	Current: 18 mm
+maxfocallength
+	Label: Distance focale maximum
+	Type: TEXT
+	Current: 70 mm
+apertureatminfocallength
+	Label: L'ouverture maximum est la distance focale minimum
+	Type: TEXT
+	Current: 4 mm
+apertureatmaxfocallength
+	Label: L'ouverture minimum est la distance focale maximum
+	Type: TEXT
+	Current: 4 mm
+lowlight
+	Label: Lumière faible
+	Type: RANGE
+	Current: 0
+	Bottom: 0
+	Top: 4
+	Step: 1
+lightmeter
+	Label: Posemètre
+	Type: TEXT
+	Current: 0,0
+aflocked
+	Label: AF vérrouillé
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+aelocked
+	Label: AE vérrouillé
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+fvlocked
+	Label: FV vérrouillé
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+imagequality
+	Label: Qualité de l'image
+	Type: RADIO
+	Current: JPEG Basic
+	Choice: 0 JPEG Basic
+	Choice: 1 JPEG Normal
+	Choice: 2 JPEG Fine
+	Choice: 3 NEF+Basic
+	Choice: 4 NEF+Normal
+imagesize
+	Label: Taille de l'image
+	Type: RADIO
+	Current: 1504x1000
+	Choice: 0 3008x2000
+	Choice: 1 2240x1488
+	Choice: 2 1504x1000
+iso
+	Label: Vitesse ISO
+	Type: RADIO
+	Current: 1600
+	Choice: 0 200
+	Choice: 1 250
+	Choice: 2 320
+	Choice: 3 400
+	Choice: 4 500
+	Choice: 5 640
+	Choice: 6 800
+	Choice: 7 1000
+	Choice: 8 1250
+	Choice: 9 1600
+whitebalance
+	Label: Balance des blancs
+	Type: RADIO
+	Current: Lumière naturelle
+	Choice: 0 Automatique
+	Choice: 1 Lumière naturelle
+	Choice: 2 Fluorescent
+	Choice: 3 Tungstène
+	Choice: 4 Flash
+	Choice: 5 Nuageux
+	Choice: 6 Ombre
+	Choice: 7 Pré-configuré
+colormodel
+	Label: Mode couleur
+	Type: RADIO
+	Current: AdobeRGB
+	Choice: 0 sRGB (portrait)
+	Choice: 1 AdobeRGB
+	Choice: 2 sRGB (nature)
+autoiso
+	Label: Automatique ISO
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+autoisopadv
+	Label: Heure d'extinction automatique
+	Type: RADIO
+	Current: 1/60
+	Choice: 0 1/125
+	Choice: 1 1/60
+	Choice: 2 1/30
+	Choice: 3 1/15
+	Choice: 4 1/8
+	Choice: 5 1/4
+	Choice: 6 1/2
+	Choice: 7 1
+	Choice: 8 2
+	Choice: 9 4
+	Choice: 10 8
+	Choice: 11 15
+	Choice: 12 30
+longexpnr
+	Label: Réduction du bruit pour l'exposition longue
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+autofocusmode
+	Label: Mode focus automatique
+	Type: RADIO
+	Current: AF-C
+	Choice: 0 AF-S
+	Choice: 1 AF-C
+assistlight
+	Label: illuminateur d'assistance
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+exposurecompensation
+	Label: Correction d'exposition
+	Type: RADIO
+	Current: 1666
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+exposurecompensation
+	Label: Correction d'exposition
+	Type: RADIO
+	Current: 1666
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+flashmode
+	Label: Mode flash
+	Type: RADIO
+	Current: iTTL
+	Choice: 0 iTTL
+	Choice: 1 Manuel
+	Choice: 2 Commander
+flashcommandermode
+	Label: Mode Commander flash
+	Type: RADIO
+	Current: TTL
+	Choice: 0 TTL
+	Choice: 1 Ouverture du diaphragme automatique
+	Choice: 2 Manuel
+flashcommanderpower
+	Label: Energie Flash Commander 
+	Type: RADIO
+	Current: Pleine
+	Choice: 0 Pleine
+	Choice: 1 1/2
+	Choice: 2 1/4
+	Choice: 3 1/8
+	Choice: 4 1/16
+	Choice: 5 1/32
+	Choice: 6 1/64
+	Choice: 7 1/128
+af-area-illumination
+	Label: Illumation de la zone d'autofocus
+	Type: RADIO
+	Current: Automatique
+	Choice: 0 Automatique
+	Choice: 1 Désactivé
+	Choice: 2 Activé
+afbeep
+	Label: Mode sonore pour autofocus
+	Type: TOGGLE
+	Current: 0
+f-number
+	Label: Valeur d'ouverture du diaphragme
+	Type: RADIO
+	Current: f/3,5
+	Choice: 0 f/3,5
+	Choice: 1 f/4
+	Choice: 2 f/4,5
+	Choice: 3 f/5
+	Choice: 4 f/5,6
+	Choice: 5 f/6,3
+	Choice: 6 f/7,1
+	Choice: 7 f/8
+	Choice: 8 f/9
+	Choice: 9 f/10
+	Choice: 10 f/11
+	Choice: 11 f/13
+	Choice: 12 f/14
+	Choice: 13 f/16
+	Choice: 14 f/18
+	Choice: 15 f/20
+	Choice: 16 f/22
+focallength
+	Label: Distance focale
+	Type: RANGE
+	Current: 18
+	Bottom: 18
+	Top: 70
+	Step: 0,01
+focusmode
+	Label: Mode focus
+	Type: RADIO
+	Current: AF-C
+	Choice: 0 Manuel
+	Choice: 1 AF-S
+	Choice: 2 AF-C
+expprogram
+	Label: Programme d'exposition
+	Type: RADIO
+	Current: A
+	Choice: 0 M
+	Choice: 1 P
+	Choice: 2 A
+	Choice: 3 S
+	Choice: 4 Automatique
+	Choice: 5 Portrait
+	Choice: 6 Paysage
+	Choice: 7 Macro
+	Choice: 8 Sports
+	Choice: 9 Portrait de nuit
+	Choice: 10 Paysage de nuit
+capturemode
+	Label: Toujours en mode capture
+	Type: RADIO
+	Current: Rafale
+	Choice: 0 Un seul coup
+	Choice: 1 Rafale
+	Choice: 2 Retardateur
+	Choice: 3 Distante
+	Choice: 4 retardateur avec télécommande
+focusmetermode
+	Label: Mode de mesure du focus
+	Type: RADIO
+	Current: Sujet le plus proche
+	Choice: 0 Multi-spot
+	Choice: 1 Simple Zone
+	Choice: 2 Sujet le plus proche
+exposuremetermode
+	Label: Mode Mesure de l'exposition
+	Type: RADIO
+	Current: Multi Spot
+	Choice: 0 Pondérée centré
+	Choice: 1 Multi Spot
+	Choice: 2 Point centré 
+flashmode
+	Label: Mode flash
+	Type: RADIO
+	Current: iTTL
+	Choice: 0 iTTL
+	Choice: 1 Manuel
+	Choice: 2 Commander
+shutterspeed
+	Label: Vitesse de l'obturateur 
+	Type: RADIO
+	Current: 0,0166s
+	Choice: 0 0,0001s
+	Choice: 1 0,0002s
+	Choice: 2 0,0003s
+	Choice: 3 0,0004s
+	Choice: 4 0,0005s
+	Choice: 5 0,0006s
+	Choice: 6 0,0008s
+	Choice: 7 0,0010s
+	Choice: 8 0,0012s
+	Choice: 9 0,0015s
+	Choice: 10 0,0020s
+	Choice: 11 0,0025s
+	Choice: 12 0,0031s
+	Choice: 13 0,0040s
+	Choice: 14 0,0050s
+	Choice: 15 0,0062s
+	Choice: 16 0,0080s
+	Choice: 17 0,0100s
+	Choice: 18 0,0125s
+	Choice: 19 0,0166s
+	Choice: 20 0,0200s
+	Choice: 21 0,0250s
+	Choice: 22 0,0333s
+	Choice: 23 0,0400s
+	Choice: 24 0,0500s
+	Choice: 25 0,0666s
+	Choice: 26 0,0769s
+	Choice: 27 0,1000s
+	Choice: 28 0,1250s
+	Choice: 29 0,1666s
+	Choice: 30 0,2000s
+	Choice: 31 0,2500s
+	Choice: 32 0,3333s
+	Choice: 33 0,4000s
+	Choice: 34 0,5000s
+	Choice: 35 0,6250s
+	Choice: 36 0,7692s
+	Choice: 37 1,0000s
+	Choice: 38 1,3000s
+	Choice: 39 1,6000s
+	Choice: 40 2,0000s
+	Choice: 41 2,5000s
+	Choice: 42 3,0000s
+	Choice: 43 4,0000s
+	Choice: 44 5,0000s
+	Choice: 45 6,0000s
+	Choice: 46 8,0000s
+	Choice: 47 10,0000s
+	Choice: 48 13,0000s
+	Choice: 49 15,0000s
+	Choice: 50 20,0000s
+	Choice: 51 25,0000s
+	Choice: 52 30,0000s
+shutterspeed2
+	Label: Vitesse de l'obturateur 
+	Type: RADIO
+	Current: 1/80
+	Choice: 0 1/8000
+	Choice: 1 1/6400
+	Choice: 2 1/5000
+	Choice: 3 1/4000
+	Choice: 4 1/3200
+	Choice: 5 1/2500
+	Choice: 6 1/2000
+	Choice: 7 1/1600
+	Choice: 8 1/1250
+	Choice: 9 1/1000
+	Choice: 10 1/800
+	Choice: 11 1/640
+	Choice: 12 1/500
+	Choice: 13 1/400
+	Choice: 14 1/320
+	Choice: 15 1/250
+	Choice: 16 1/200
+	Choice: 17 1/160
+	Choice: 18 1/125
+	Choice: 19 1/100
+	Choice: 20 1/80
+	Choice: 21 1/60
+	Choice: 22 1/50
+	Choice: 23 1/40
+	Choice: 24 1/30
+	Choice: 25 1/25
+	Choice: 26 1/20
+	Choice: 27 1/15
+	Choice: 28 1/13
+	Choice: 29 1/10
+	Choice: 30 1/8
+	Choice: 31 1/6
+	Choice: 32 1/5
+	Choice: 33 1/4
+	Choice: 34 1/3
+	Choice: 35 10/25
+	Choice: 36 1/2
+	Choice: 37 10/16
+	Choice: 38 10/13
+	Choice: 39 1
+	Choice: 40 13/10
+	Choice: 41 16/10
+	Choice: 42 2
+	Choice: 43 25/10
+	Choice: 44 3
+	Choice: 45 4
+	Choice: 46 5
+	Choice: 47 6
+	Choice: 48 8
+	Choice: 49 10
+	Choice: 50 13
+	Choice: 51 15
+	Choice: 52 20
+	Choice: 53 25
+	Choice: 54 30
+focusareawrap
+	Label: Zone de focus couvert
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+exposurelock
+	Label: Exposition vérouillé
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+aelaflmode
+	Label: Mode AE-L/AF-L
+	Type: RADIO
+	Current: AE/AF vérrouillé
+	Choice: 0 AE/AF vérrouillé
+	Choice: 1 Exposition automatique seulement vérouillé
+	Choice: 2 Autofocus seulement vérouillé
+	Choice: 3 Autofocus vérouillé et en attente
+	Choice: 4 Autofocus activé
+	Choice: 5 Niveau du flash vérouillé
+filenrsequencing 
+	Label: Numéro de fichier séquencé
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+flashsign 
+	Label: Authentifier le flash
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+viewfindergrid   
+	Label: Grille Viewfinder
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+imagereview 
+	Label: Vision de l'image
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+imagerotationflag 
+	Label: Drapeau de rotation de l'image
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+nocfcardrelease 
+	Label: Débloquer sans la carte CompactFlash
+	Type: RADIO
+	Current: Activé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+flashmodemanualpower 
+	Label: Mode manuel pour la puissance du flash
+	Type: RADIO
+	Current: Pleine
+	Choice: 0 Pleine
+	Choice: 1 1/2
+	Choice: 2 1/4
+	Choice: 3 1/8
+	Choice: 4 1/16
+autofocusarea 
+	Label: Auto Focus de la zone
+	Type: RADIO
+	Current: Centre
+	Choice: 0 Centre
+	Choice: 1 Haut
+	Choice: 2 Bas
+	Choice: 3 Gauche
+	Choice: 4 Droite
+flashexposurecompensation 
+	Label: Correction d'exposition par le flash
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 1
+	Step: 0,333333
+bracketing 
+	Label: Bracketing
+	Type: RADIO
+	Current: Désactivé
+	Choice: 0 Activé
+	Choice: 1 Désactivé
+evstep 
+	Label: Palier EV
+	Type: RADIO
+	Current: 1/3
+	Choice: 0 1/3
+	Choice: 1 1/2
+	Choice: 2 Valeur inconnue 0002
+bracketset 
+	Label: bracket réglée
+	Type: RADIO
+	Current: Exposition automatique uniquement
+	Choice: 0 Exposition automatique & Flash
+	Choice: 1 Exposition automatique uniquement
+	Choice: 2 Flash uniquement
+	Choice: 3 Balance des blancs du bracketing
+bracketorder 
+	Label: Ordre de bracket
+	Type: RADIO
+	Current: Au-dessous > MTR
+	Choice: 0 MTR > au-dessous
+	Choice: 1 Au-dessous > MTR
+burstnumber 
+	Label: Nombre d'image par rafale
+	Type: RANGE
+	Current: 1
+	Bottom: 1
+	Top: 49
+	Step: 1
+autowhitebias 
+	Label: Balance des blancs automatique
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+tungstenwhitebias 
+	Label: Balance des blancs tungstène
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+flourescentwhitebias 
+	Label: Balance des blancs fluorescent
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+daylightwhitebias 
+	Label: Balance des blancs ensoleillé
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+flashwhitebias 
+	Label: Balance des blancs flash
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+cloudywhitebias 
+	Label: Balance des blancs nuageux
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 3
+	Step: 1
+shadewhitebias 
+	Label: Balance des blancs ombre
+	Type: RANGE
+	Current: 0
+	Bottom: -3
+	Top: 4
+	Step: 1
+whitebiaspresetno 
+	Label: Nombre de Balance des blancs pré-configuré
+	Type: RADIO
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+whitebiaspreset0 
+	Label: Balance des blancs pré-configuré 0
+	Type: TEXT
+	Current: 23069381
+whitebiaspreset1 
+	Label: Balance des blancs pré-configuré 1
+	Type: TEXT
+	Current: 33685926
+selftimerdelay 
+	Label: Délai du retardateur
+	Type: RADIO
+	Current: 2 secondes
+	Choice: 0 2 secondes
+	Choice: 1 5 secondes
+	Choice: 2 10 secondes
+	Choice: 3 20 seconds
+centerweightsize 
+	Label: Zone pondérée centrale
+	Type: RADIO
+	Current: 6 mm
+	Choice: 0 6 mm
+	Choice: 1 8 mm
+	Choice: 2 10 mm
+	Choice: 3 12 mm
+flashshutterspeed 
+	Label: Vitesse de l'obturateur
+	Type: RADIO
+	Current: 1/60
+	Choice: 0 1/60
+	Choice: 1 1/30
+	Choice: 2 1/15
+	Choice: 3 1/8
+	Choice: 4 1/4
+	Choice: 5 1/2
+	Choice: 6 1
+	Choice: 7 2
+	Choice: 8 4
+	Choice: 9 8
+	Choice: 10 15
+	Choice: 11 30
+remotetimeout 
+	Label: Temporisation
+	Type: RADIO
+	Current: 15 minutes
+	Choice: 0 1 minute
+	Choice: 1 5 minutes
+	Choice: 2 10 minutes
+	Choice: 3 15 minutes
+optimizeimage 
+	Label: Optimiser l'image
+	Type: RADIO
+	Current: Normal
+	Choice: 0 Normal
+	Choice: 1 Vivid
+	Choice: 2 Plus nette
+	Choice: 3 Plus Doux
+	Choice: 4 Directement pour l'impression
+	Choice: 5 Portrait
+	Choice: 6 Paysage
+	Choice: 7 Personnalisé
+sharpening 
+	Label: Netteté
+	Type: RADIO
+	Current: Moyenne élevé
+	Choice: 0 Automatique
+	Choice: 1 Normal
+	Choice: 2 Faible
+	Choice: 3 Moyenne bas
+	Choice: 4 Moyenne élevé
+	Choice: 5 Haute
+	Choice: 6 Aucune
+tonecompensation 
+	Label: Compensation des tons
+	Type: RADIO
+	Current: Automatique
+	Choice: 0 Automatique
+	Choice: 1 Normal
+	Choice: 2 Faible contraste
+	Choice: 3 Moyenne bas
+	Choice: 4 Moyenne élevé
+	Choice: 5 Contrôler
+	Choice: 6 Personnalisé
+saturation 
+	Label: Saturation
+	Type: RADIO
+	Current: Modéré
+	Choice: 0 Normal
+	Choice: 1 Modéré
+	Choice: 2 Renforcé
+hueadjustment 
+	Label: Ajustement de le nuance
+	Type: RANGE
+	Current: 0
+	Bottom: -9
+	Top: 9
+	Step: 3
+5001 
+	Label: Niveau de batterie
+	Type: MENU
+	Current: 100
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
+	Choice: 22 22
+	Choice: 23 23
+	Choice: 24 24
+	Choice: 25 25
+	Choice: 26 26
+	Choice: 27 27
+	Choice: 28 28
+	Choice: 29 29
+	Choice: 30 30
+	Choice: 31 31
+	Choice: 32 32
+	Choice: 33 33
+	Choice: 34 34
+	Choice: 35 35
+	Choice: 36 36
+	Choice: 37 37
+	Choice: 38 38
+	Choice: 39 39
+	Choice: 40 40
+	Choice: 41 41
+	Choice: 42 42
+	Choice: 43 43
+	Choice: 44 44
+	Choice: 45 45
+	Choice: 46 46
+	Choice: 47 47
+	Choice: 48 48
+	Choice: 49 49
+	Choice: 50 50
+	Choice: 51 51
+	Choice: 52 52
+	Choice: 53 53
+	Choice: 54 54
+	Choice: 55 55
+	Choice: 56 56
+	Choice: 57 57
+	Choice: 58 58
+	Choice: 59 59
+	Choice: 60 60
+	Choice: 61 61
+	Choice: 62 62
+	Choice: 63 63
+	Choice: 64 64
+	Choice: 65 65
+	Choice: 66 66
+	Choice: 67 67
+	Choice: 68 68
+	Choice: 69 69
+	Choice: 70 70
+	Choice: 71 71
+	Choice: 72 72
+	Choice: 73 73
+	Choice: 74 74
+	Choice: 75 75
+	Choice: 76 76
+	Choice: 77 77
+	Choice: 78 78
+	Choice: 79 79
+	Choice: 80 80
+	Choice: 81 81
+	Choice: 82 82
+	Choice: 83 83
+	Choice: 84 84
+	Choice: 85 85
+	Choice: 86 86
+	Choice: 87 87
+	Choice: 88 88
+	Choice: 89 89
+	Choice: 90 90
+	Choice: 91 91
+	Choice: 92 92
+	Choice: 93 93
+	Choice: 94 94
+	Choice: 95 95
+	Choice: 96 96
+	Choice: 97 97
+	Choice: 98 98
+	Choice: 99 99
+	Choice: 100 100
+5003 
+	Label: Taille de l'image
+	Type: MENU
+	Current: 1504x1000
+	Choice: 0 3008x2000
+	Choice: 1 2240x1488
+	Choice: 2 1504x1000
+5004 
+	Label: paramètre de compression
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 4
+	Choice: 4 5
+5005 
+	Label: Balance des blancs
+	Type: MENU
+	Current: 4
+	Choice: 0 2
+	Choice: 1 4
+	Choice: 2 5
+	Choice: 3 6
+	Choice: 4 7
+	Choice: 5 32784
+	Choice: 6 32785
+	Choice: 7 32787
+5007 
+	Label: Valeur d'ouverture du diaphragme
+	Type: MENU
+	Current: 350
+	Choice: 0 350
+	Choice: 1 400
+	Choice: 2 450
+	Choice: 3 500
+	Choice: 4 560
+	Choice: 5 630
+	Choice: 6 710
+	Choice: 7 800
+	Choice: 8 900
+	Choice: 9 1000
+	Choice: 10 1100
+	Choice: 11 1300
+	Choice: 12 1400
+	Choice: 13 1600
+	Choice: 14 1800
+	Choice: 15 2000
+	Choice: 16 2200
+5008 
+	Label: Distance focale
+	Type: RANGE
+	Current: 1800
+	Bottom: 1800
+	Top: 7000
+	Step: 1
+500a 
+	Label: Mode focus
+	Type: MENU
+	Current: 32785
+	Choice: 0 1
+	Choice: 1 32784
+	Choice: 2 32785
+500b 
+	Label: Mode Mesure de l'exposition
+	Type: MENU
+	Current: 3
+	Choice: 0 2
+	Choice: 1 3
+	Choice: 2 4
+500c 
+	Label: Mode flash
+	Type: MENU
+	Current: 32784
+	Choice: 0 4
+	Choice: 1 32784
+	Choice: 2 32785
+	Choice: 3 32786
+	Choice: 4 32787
+500d 
+	Label: Temp de pose
+	Type: MENU
+	Current: 125
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+	Choice: 3 4
+	Choice: 4 5
+	Choice: 5 6
+	Choice: 6 8
+	Choice: 7 10
+	Choice: 8 12
+	Choice: 9 15
+	Choice: 10 20
+	Choice: 11 25
+	Choice: 12 31
+	Choice: 13 40
+	Choice: 14 50
+	Choice: 15 62
+	Choice: 16 80
+	Choice: 17 100
+	Choice: 18 125
+	Choice: 19 166
+	Choice: 20 200
+	Choice: 21 250
+	Choice: 22 333
+	Choice: 23 400
+	Choice: 24 500
+	Choice: 25 666
+	Choice: 26 769
+	Choice: 27 1000
+	Choice: 28 1250
+	Choice: 29 1666
+	Choice: 30 2000
+	Choice: 31 2500
+	Choice: 32 3333
+	Choice: 33 4000
+	Choice: 34 5000
+	Choice: 35 6250
+	Choice: 36 7692
+	Choice: 37 10000
+	Choice: 38 13000
+	Choice: 39 16000
+	Choice: 40 20000
+	Choice: 41 25000
+	Choice: 42 30000
+	Choice: 43 40000
+	Choice: 44 50000
+	Choice: 45 60000
+	Choice: 46 80000
+	Choice: 47 100000
+	Choice: 48 130000
+	Choice: 49 150000
+	Choice: 50 200000
+	Choice: 51 250000
+	Choice: 52 300000
+500e 
+	Label: Mode d'exposition programmé 
+	Type: MENU
+	Current: 3
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+	Choice: 3 4
+	Choice: 4 32784
+	Choice: 5 32785
+	Choice: 6 32786
+	Choice: 7 32787
+	Choice: 8 32788
+	Choice: 9 32789
+	Choice: 10 32790
+500f 
+	Label: Index d'exposition  (film de vitesse ISO)
+	Type: MENU
+	Current: 1600
+	Choice: 0 200
+	Choice: 1 250
+	Choice: 2 320
+	Choice: 3 400
+	Choice: 4 500
+	Choice: 5 640
+	Choice: 6 800
+	Choice: 7 1000
+	Choice: 8 1250
+	Choice: 9 1600
+5010 
+	Label: Compensation de l'exposition 
+	Type: MENU
+	Current: 1666
+	Choice: 0 -5000
+	Choice: 1 -4666
+	Choice: 2 -4333
+	Choice: 3 -4000
+	Choice: 4 -3666
+	Choice: 5 -3333
+	Choice: 6 -3000
+	Choice: 7 -2666
+	Choice: 8 -2333
+	Choice: 9 -2000
+	Choice: 10 -1666
+	Choice: 11 -1333
+	Choice: 12 -1000
+	Choice: 13 -666
+	Choice: 14 -333
+	Choice: 15 0
+	Choice: 16 333
+	Choice: 17 666
+	Choice: 18 1000
+	Choice: 19 1333
+	Choice: 20 1666
+	Choice: 21 2000
+	Choice: 22 2333
+	Choice: 23 2666
+	Choice: 24 3000
+	Choice: 25 3333
+	Choice: 26 3666
+	Choice: 27 4000
+	Choice: 28 4333
+	Choice: 29 4666
+	Choice: 30 5000
+5011 
+	Label: Date & heure
+	Type: TEXT
+	Current: 20090806T100539
+5013 
+	Label: Toujours en mode capture
+	Type: MENU
+	Current: 2
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 32785
+	Choice: 3 32787
+	Choice: 4 32788
+5018 
+	Label: Nombre d'image par rafale
+	Type: MENU
+	Current: 1
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+	Choice: 3 4
+	Choice: 4 5
+	Choice: 5 6
+	Choice: 6 7
+	Choice: 7 8
+	Choice: 8 9
+	Choice: 9 10
+	Choice: 10 11
+	Choice: 11 12
+	Choice: 12 13
+	Choice: 13 14
+	Choice: 14 15
+	Choice: 15 16
+	Choice: 16 17
+	Choice: 17 18
+	Choice: 18 19
+	Choice: 19 20
+	Choice: 20 21
+	Choice: 21 22
+	Choice: 22 23
+	Choice: 23 24
+	Choice: 24 25
+	Choice: 25 26
+	Choice: 26 27
+	Choice: 27 28
+	Choice: 28 29
+	Choice: 29 30
+	Choice: 30 31
+	Choice: 31 32
+	Choice: 32 33
+	Choice: 33 34
+	Choice: 34 35
+	Choice: 35 36
+	Choice: 36 37
+	Choice: 37 38
+	Choice: 38 39
+	Choice: 39 40
+	Choice: 40 41
+	Choice: 41 42
+	Choice: 42 43
+	Choice: 43 44
+	Choice: 44 45
+	Choice: 45 46
+	Choice: 46 47
+	Choice: 47 48
+	Choice: 48 49
+501c 
+	Label: Mode de mesure du focus
+	Type: MENU
+	Current: 32785
+	Choice: 0 2
+	Choice: 1 32784
+	Choice: 2 32785
+d017 
+	Label: Balance des blancs automatique
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+d018 
+	Label: Balance des blancs tungstène
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+d019 
+	Label: Balance des blancs fluorescent
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+d01a 
+	Label: Balance des blancs ensoleillé
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+d01b 
+	Label: Balance des blancs flash
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+d01c 
+	Label: Balance des blancs nuageux
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+d01d 
+	Label: Balance des blancs ombre
+	Type: MENU
+	Current: 0
+	Choice: 0 -3
+	Choice: 1 -2
+	Choice: 2 -1
+	Choice: 3 0
+	Choice: 4 1
+	Choice: 5 2
+	Choice: 6 3
+	Choice: 7 4
+d01f 
+	Label: Nombre de balance des blancs Pré-configuré
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d025 
+	Label: Valeur de balance des blancs pré-configuré 0
+	Type: TEXT
+	Current: 23069381
+d026 
+	Label: Valeur de balance des blancs pré-configuré 1
+	Type: TEXT
+	Current: 33685926
+d02a 
+	Label: Netteté
+	Type: MENU
+	Current: 4
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+d02b 
+	Label: Compensation des tons
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+d02c 
+	Label: Mode couleur
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d02d 
+	Label: Ajustement de le nuance
+	Type: RANGE
+	Current: 0
+	Bottom: -9
+	Top: 9
+	Step: 3
+d045 
+	Label: Réinitilise le menu 
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d04f 
+	Label: Zone de focus couvert
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d054 
+	Label: Automatique ISO
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d056 
+	Label: Palier d'exposition
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d058 
+	Label: Correction d'exposition
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d059 
+	Label: Zone pondérée centrale
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+d05e 
+	Label: Exposition vérouillé
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d05f 
+	Label: Focus vérrouillé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+d062 
+	Label: Extinction de la mesure automatique
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+d063 
+	Label: Délai du retardateur
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+d064 
+	Label: Temps de l'extinction de l'écran LCD
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+d06b 
+	Label: Réduction du bruit pour le longue exposition
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d06c 
+	Label: Numéro de fichier séquencé
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d075 
+	Label: Vitesse de l'obturateur
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+d078 
+	Label: bracket réglée
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+d07a 
+	Label: Ordre de bracket
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d086 
+	Label: Inverser les bonttons de commande
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d08a 
+	Label: Pas de carte CompactFlash libérée
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d090 
+	Label: Commentaire des images
+	Type: TEXT
+	Current:                                     
+d091 
+	Label: Commentaire des images autorisé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d092 
+	Label: Rotation de l'image
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d0c0 
+	Label: Bracketing activé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d0c2 
+	Label: Programme d'exposition du bracketing
+	Type: MENU
+	Current: 2
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d0c3 
+	Label: Mesure de l'exposition automatique compté par le bracket
+	Type: MENU
+	Current: 1
+	Choice: 0 1
+	Choice: 1 2
+	Choice: 2 3
+d0c4 
+	Label: Palier des Balance des blancs du bracket
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d0c5 
+	Label: Programme de Balance des blancs du bracket
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d0e0 
+	Label: Identifient de la lentille
+	Type: TEXT
+	Current: 127
+d0e1 
+	Label: Genre d'objectif
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d0e2 
+	Label: Type d'objectif
+	Type: TEXT
+	Current: 3
+d0e3 
+	Label: Distance focale minimum
+	Type: TEXT
+	Current: 1800
+d0e4 
+	Label: Distance focale maximum
+	Type: TEXT
+	Current: 7000
+d0e5 
+	Label: l'Ouverture maximale se situe à la distance focale minimum
+	Type: TEXT
+	Current: 350
+d0e6 
+	Label: l'Ouverture minimal se situe à la distance focale maximum
+	Type: TEXT
+	Current: 450
+d100 
+	Label: Temp de pose du Nikon
+	Type: MENU
+	Current: 65616
+	Choice: 0 73536
+	Choice: 1 71936
+	Choice: 2 70536
+	Choice: 3 69536
+	Choice: 4 68736
+	Choice: 5 68036
+	Choice: 6 67536
+	Choice: 7 67136
+	Choice: 8 66786
+	Choice: 9 66536
+	Choice: 10 66336
+	Choice: 11 66176
+	Choice: 12 66036
+	Choice: 13 65936
+	Choice: 14 65856
+	Choice: 15 65786
+	Choice: 16 65736
+	Choice: 17 65696
+	Choice: 18 65661
+	Choice: 19 65636
+	Choice: 20 65616
+	Choice: 21 65596
+	Choice: 22 65586
+	Choice: 23 65576
+	Choice: 24 65566
+	Choice: 25 65561
+	Choice: 26 65556
+	Choice: 27 65551
+	Choice: 28 65549
+	Choice: 29 65546
+	Choice: 30 65544
+	Choice: 31 65542
+	Choice: 32 65541
+	Choice: 33 65540
+	Choice: 34 65539
+	Choice: 35 655385
+	Choice: 36 65538
+	Choice: 37 655376
+	Choice: 38 655373
+	Choice: 39 65537
+	Choice: 40 851978
+	Choice: 41 1048586
+	Choice: 42 131073
+	Choice: 43 1638410
+	Choice: 44 196609
+	Choice: 45 262145
+	Choice: 46 327681
+	Choice: 47 393217
+	Choice: 48 524289
+	Choice: 49 655361
+	Choice: 50 851969
+	Choice: 51 983041
+	Choice: 52 1310721
+	Choice: 53 1638401
+	Choice: 54 1966081
+d101 
+	Label: Prise d'alimentation
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d102 
+	Label: État d'alerte
+	Type: TEXT
+	Current: 0
+d103 
+	Label: Prise de vue maximum 
+	Type: MENU
+	Current: 49
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 15
+	Choice: 16 16
+	Choice: 17 17
+	Choice: 18 18
+	Choice: 19 19
+	Choice: 20 20
+	Choice: 21 21
+	Choice: 22 22
+	Choice: 23 23
+	Choice: 24 24
+	Choice: 25 25
+	Choice: 26 26
+	Choice: 27 27
+	Choice: 28 28
+	Choice: 29 29
+	Choice: 30 30
+	Choice: 31 31
+	Choice: 32 32
+	Choice: 33 33
+	Choice: 34 34
+	Choice: 35 35
+	Choice: 36 36
+	Choice: 37 37
+	Choice: 38 38
+	Choice: 39 39
+	Choice: 40 40
+	Choice: 41 41
+	Choice: 42 42
+	Choice: 43 43
+	Choice: 44 44
+	Choice: 45 45
+	Choice: 46 46
+	Choice: 47 47
+	Choice: 48 48
+	Choice: 49 49
+d104 
+	Label: AF vérrouillé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d105 
+	Label: AE vérrouillé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d106 
+	Label: FV vérrouillé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d108 
+	Label: Capteur d'autofocus activé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+d109 
+	Label: Programme flexible
+	Type: RANGE
+	Current: 0
+	Bottom: -30
+	Top: 30
+	Step: 2
+d10a 
+	Label: Mesure de l'exposition
+	Type: RANGE
+	Current: 0
+	Bottom: -128
+	Top: 127
+	Step: 1
+d10d 
+	Label: Numéro de série du CCD
+	Type: TEXT
+	Current: NO= 300173b7        
+d10e 
+	Label: orientation de la l'appareil
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d10b 
+	Label: Média d'enregistrement
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d120 
+	Label: Flash externe connecté
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d121 
+	Label: État du flash externe
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d122 
+	Label: Spécification du flash externe
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d124 
+	Label: Compensation de l'exposition par le flash externe
+	Type: MENU
+	Current: 0
+	Choice: 0 -18
+	Choice: 1 -17
+	Choice: 2 -16
+	Choice: 3 -15
+	Choice: 4 -14
+	Choice: 5 -13
+	Choice: 6 -12
+	Choice: 7 -11
+	Choice: 8 -10
+	Choice: 9 -9
+	Choice: 10 -8
+	Choice: 11 -7
+	Choice: 12 -6
+	Choice: 13 -5
+	Choice: 14 -4
+	Choice: 15 -3
+	Choice: 16 -2
+	Choice: 17 -1
+	Choice: 18 0
+	Choice: 19 1
+	Choice: 20 2
+	Choice: 21 3
+	Choice: 22 4
+	Choice: 23 5
+	Choice: 24 6
+	Choice: 25 7
+	Choice: 26 8
+	Choice: 27 9
+	Choice: 28 10
+	Choice: 29 11
+	Choice: 30 12
+	Choice: 31 13
+	Choice: 32 14
+	Choice: 33 15
+	Choice: 34 16
+	Choice: 35 17
+	Choice: 36 18
+d125 
+	Label: Mode flash externe
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+d126 
+	Label: Correction d'exposition par le flash
+	Type: RANGE
+	Current: 0
+	Bottom: -18
+	Top: 6
+	Step: 2
+d140 
+	Label: Optimiser l'image
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+d142 
+	Label: Saturation
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d160 
+	Label: Mode sonore pour autofocus
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d161 
+	Label: Mode autofocus
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d163 
+	Label: Illuminateur d'assistance AF
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d164 
+	Label: Paramètre Auto ISO P/A/DVP
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+	Choice: 8 8
+	Choice: 9 9
+	Choice: 10 10
+	Choice: 11 11
+	Choice: 12 12
+d165 
+	Label: Vision de l'image
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d166 
+	Label: Illumation de la zone d'autofocus
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d167 
+	Label: Mode flash
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d168 
+	Label: Mode Commander flash
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d169 
+	Label: Authentifier le flash
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d16b 
+	Label: Temporisation
+	Type: MENU
+	Current: 3
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+d16c 
+	Label: Afficher la grille Viewfinder
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+d16d 
+	Label: Mode manuel pour la puissance du flash
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+d16e 
+	Label: Mode flash à energie commander
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+	Choice: 5 5
+	Choice: 6 6
+	Choice: 7 7
+d180 
+	Label: Menu CSM
+	Type: MENU
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+d190 
+	Label: Images et paliers du bracketing
+	Type: RANGE
+	Current: 2
+	Bottom: 0
+	Top: 12
+	Step: 2
+d1b0 
+	Label: Affichage de l'état d'exposition
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+	Choice: 2 2
+	Choice: 3 3
+	Choice: 4 4
+d1c0 
+	Label: Flash activé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
+d1c1
+	Label: Flash Chargé
+	Type: MENU
+	Current: 0
+	Choice: 0 0
+	Choice: 1 1
