@@ -845,7 +845,7 @@ static struct {
 	/* Deti Fliegl.
 	 * Marcus: supports MTP proplists, but these are 2 times slower than regular
 	 * data retrieval. */
-	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_MTP/*|PTP_MTP_PROPLIST_WORKS*/},
+	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_CAP_PREVIEW},
 	/* reported by Ferry Huberts */
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP}, /* user had it working without problem */
 
@@ -1719,9 +1719,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 /* 60 seconds timeout ... (for long cycles) */
 #define EOS_CAPTURE_TIMEOUT 60
 
-/* This is currently the capture method used by the EOS 400D
- * ... in development.
- */
+/* This is the capture method used by the Canon EOS series */
 static int
 camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
