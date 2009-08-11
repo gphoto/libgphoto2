@@ -435,8 +435,8 @@ udev_parse_params (const func_params_t *params, void **data)
 			} else if (strcmp("group", key)==0) {
 				pdata->group = val;
 			} else if (strcmp("version", key)==0) {
-				unsigned int ver = pdata->version;
-				if (gpi_string_to_enum(val, &ver,
+				unsigned int *ver = &pdata->version;
+				if (gpi_string_to_enum(val, ver,
 						       udev_version_t_map)) {
 					FATAL("Unrecognized udev version: \"%s\"", val);
 				}
@@ -451,11 +451,11 @@ udev_parse_params (const func_params_t *params, void **data)
 		}
 	}
 	if ((0==0)
-	    && pdata->mode == NULL 
-	    && pdata->group == NULL 
-	    && pdata->owner == NULL 
-	    && pdata->script == NULL
-	    && pdata->version <= UDEV_0_98) {
+	    && (pdata->mode == NULL)
+	    && (pdata->group == NULL)
+	    && (pdata->owner == NULL)
+	    && (pdata->script == NULL)
+	    && (pdata->version <= UDEV_0_98)) {
 		FATAL("Either <script> or <mode,group,owner> parameters must be given.");
 	}
 	if ((pdata->script != NULL) && (pdata->mode != NULL 
