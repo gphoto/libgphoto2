@@ -860,7 +860,7 @@ fdi_camera_func (const func_params_t *params,
 		if (a->usb_vendor) { /* usb product id might be 0! */
 			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
 			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
-			if (a->usb_vendor == 0x05ac) { /* Apple iPhone */
+			if (a->usb_vendor == 0x05ac) { /* Apple iPhone, PTP user. */
 				printf("     <match key=\"usb.interface.class\" int=\"6\">\n");
 				printf("      <match key=\"usb.interface.subclass\" int=\"1\">\n");
 				printf("       <match key=\"usb.interface.protocol\" int=\"1\">\n");
