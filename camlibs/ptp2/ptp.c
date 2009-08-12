@@ -3464,7 +3464,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		if (ptp_device_properties[i].dpc==dpc)
 			return (ptp_device_properties[i].txt);
 
-	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT)
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP)
 		for (i=0; ptp_device_properties_MTP[i].txt!=NULL; i++)
 			if (ptp_device_properties_MTP[i].dpc==dpc)
 				return (ptp_device_properties_MTP[i].txt);
@@ -4141,7 +4142,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 			return snprintf(out, length, "%s", _(ptp_value_list[i].value));
 		}
 	}
-	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) {
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP) {
 		switch (dpc) {
 		case PTP_DPC_MTP_SynchronizationPartner:
 		case PTP_DPC_MTP_DeviceFriendlyName:
@@ -4294,6 +4296,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 			}
 			break;
 		case PTP_VENDOR_MICROSOFT:
+		case PTP_VENDOR_MTP:		  
 			for (i=0;i<sizeof(ptp_ofc_mtp_trans)/sizeof(ptp_ofc_mtp_trans[0]);i++)
 				if (ofc == ptp_ofc_mtp_trans[i].ofc)
 					return snprintf(txt, spaceleft, "%s", _(ptp_ofc_mtp_trans[i].format));
@@ -4411,6 +4414,7 @@ ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt)
 	} else {
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_MICROSOFT:
+		case PTP_VENDOR_MTP:
 			for (i=0;i<sizeof(ptp_opcode_mtp_trans)/sizeof(ptp_opcode_mtp_trans[0]);i++)
 				if (opcode == ptp_opcode_mtp_trans[i].opcode)
 					return snprintf(txt, spaceleft, "%s", _(ptp_opcode_mtp_trans[i].name));

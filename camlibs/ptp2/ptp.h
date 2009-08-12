@@ -156,6 +156,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_VENDOR_STMICROELECTRONICS	0x00000009
 #define PTP_VENDOR_NIKON		0x0000000A
 #define PTP_VENDOR_CANON		0x0000000B
+  
+/* Vendor extension ID used for MTP */
+#define PTP_VENDOR_MTP			0xffffffff  
 
 /* Operation Codes */
 
