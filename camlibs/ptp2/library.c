@@ -1452,9 +1452,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				/* Add an arbitrary file name so caller won't crash */
 				gp_file_set_name (file, "preview.jpg");
 				free (data);
-			}
-			else
+			} else {
 				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
+				return GP_ERROR;
+			}
 			SET_CONTEXT_P(params, NULL);
 			return GP_OK;
 		}
