@@ -1276,6 +1276,7 @@ GENERIC8TABLE(Canon_EOS_PictureStyle,canon_eos_picturestyle)
 static struct deviceproptableu16 canon_shutterspeed[] = {
 	{ "auto",	0x0000,0 },
 	{ "bulb",	0x0004,0 },
+	{ "bulb",	0x000c,0 },
 	{ "30",		0x0010,0 },
 	{ "25",		0x0013,0 },
 	{ "20",		0x0014,0 }, /* + 1/3 */
