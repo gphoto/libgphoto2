@@ -3819,7 +3819,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		}
 		
 		/* Standard menu with submenus */
-
 		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
@@ -3872,6 +3871,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				ptp_free_devicepropdesc(&dpd);
 				ptp_free_devicepropvalue(cursub->type, &propval);
 			}
+			if (ret != GP_OK)
+				return ret;
 		}
 	}
 
