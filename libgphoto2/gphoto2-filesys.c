@@ -1672,7 +1672,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 #if 0
 	/* this disables LRU completely. */
 	/* Cache this file */
-	CR (gp_filesystem_set_file_noop (fs, folder, filename, type, file, context));
+	CR (gp_filesystem_set_file_noop (fs, folder, file, context));
 #endif
 
 	/*
