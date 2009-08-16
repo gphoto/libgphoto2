@@ -5255,9 +5255,12 @@ camera_init (Camera *camera, GPContext *context)
 				ptp_canon_eos_getdeviceinfo (&camera->pl->params, &x, &l);
 		}
 #endif
+#if 0
+		/* Marcus: this hides all files on the EOS 450D when triggered */
 		/* automatically enable capture mode on EOS cameras to populate property list */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
 			camera_prepare_capture(camera,context);  
+#endif
 		break;
 	case PTP_VENDOR_NIKON:
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))
