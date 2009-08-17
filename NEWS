@@ -1,6 +1,22 @@
-libgphoto2 2.4.6.5
+libgphoto2 2.4.7
 
 This is a 2.4 release branch update.
+
+libgphoto2:
+   * Translation updates from translationproject.org.
+   * Widget and choice lists now dynamic, to be able to create longer ones.
+   * 3rd generation UDEV rules emission, now able to emit "post HAL"
+     UDEV rules.
+
+     print-camera-list udev-rules version 136 > /lib/udev/rules.d/40-libgphoto2.rules
+  
+   * Disabled LRU of images. Not really useful in times of USB 2.0,
+     also disabled by at least Debian und Ubuntu already.
+
+libgphoto2_port / USB:
+   * If we detached a USB driver, reattach it on close.
+     This allows using e.g. cheap camera as both webcam with in-kernel
+     driver and still camera with libgphoto2.
 
 PTP2 driver:
    * Renamed various configuration options and changed values to
@@ -9,14 +25,30 @@ PTP2 driver:
           exptime->shutterspeed
           eos-* -> non-eos prefixed variants
           etc.
-     You will need to review configuration setting code.
-   * Lots of Canon EOS capture improvements, for card capture and for LiveView,
-     and for property setting.
-   * Nikon shutterspeed setting for times < 1/1000
+     You will need to review configuration setting code if you have any.
+
+   * Create config submenus /actions for action triggers and /status for
+     read-only values, moved stuff there.
+
+   * New IDs:
+   	Kodak M863
+	Canon Digital IXUS 110IS, IXUS 100IS, Powershot SX200IS, SD780 IS, A1100IS
+	Canon EOS 500D
+	Fuji Finepix F200 EXR
+	Apple iPod Touch first generation
+
+
+   * Lots of Canon EOS capture improvements, for card capture, for LiveView,
+     and for property setting. More properties are now possible.
+   * Canon EOS Bulb mode support (available in newer canons).
+     --set-config bulb=(0|1)
+
+   * Fixed Nikon DSC shutterspeed setting (also for times < 1/1000)
    * Enable Viewfinder on demand for Canon Powershot, not for all capture things.
    * Generic PTP Property Get/Set in the configuration handling.
-   * Decode more Nikon properties (for D90 now nearly complete).
+   * Decode more Nikon DSC properties (for D90 now nearly complete).
    * Turned several PTP generic commands to macros to reduce number of functions.
+   * MTP player list synced with libmtp 1.0.
    * Lots of bugfixes.
 
 Canon driver:
