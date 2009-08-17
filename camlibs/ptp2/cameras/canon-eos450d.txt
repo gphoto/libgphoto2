@@ -127,3 +127,199 @@ Properties des Geräts:
 Property 0xd402:(read only) (type=0xffff) 'Canon EOS 450D'
 Property 0xd407:(read only) (type=0x6) 1
 Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+
+/main/actions/focuslock
+	Label: Focus Lock
+	Type: TOGGLE
+	Current: 2
+/main/actions/bulb
+	Label: Bulb Mode
+	Type: TOGGLE
+	Current: 2
+/main/actions/syncdatetime
+	Label: Synchronize camera date and time with PC
+	Type: TOGGLE
+	Current: 0
+/main/settings/datetime
+	Label: Camera Date and Time
+	Type: DATE
+	Current: 1250090349
+	Printable: Wed Aug 12 17:19:09 2009
+/main/settings/ownername
+	Label: Owner Name
+	Type: TEXT
+	Current: 
+/main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Memory card
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/settings/capture
+	Label: Capture
+	Type: TOGGLE
+	Current: 2
+/main/status/batterylevel
+	Label: Battery Level
+	Type: TEXT
+	Current: 50%
+/main/status/serialnumber
+	Label: Serial Number
+	Type: TEXT
+	Current: 680233724
+/main/status/shuttercounter
+	Label: Shutter Counter
+	Type: TEXT
+	Current: 769
+/main/status/availableshots
+	Label: Available Shots
+	Type: TEXT
+	Current: 0
+/main/imgsettings/imageformat
+	Label: Image Format
+	Type: RADIO
+	Current: RAW
+	Choice: 0 Large Fine JPEG
+	Choice: 1 Large Normal JPEG
+	Choice: 2 Medium Fine JPEG
+	Choice: 3 Medium Normal JPEG
+	Choice: 4 Small Fine JPEG
+	Choice: 5 Small Normal JPEG
+	Choice: 6 RAW + Large Fine JPEG
+	Choice: 7 RAW
+/main/imgsettings/iso
+	Label: ISO Speed
+	Type: RADIO
+	Current: 100
+	Choice: 0 Auto
+	Choice: 1 100
+	Choice: 2 200
+	Choice: 3 400
+	Choice: 4 800
+	Choice: 5 1600
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Daylight
+	Choice: 2 Shadow
+	Choice: 3 Cloudy
+	Choice: 4 Tungsten
+	Choice: 5 Fluorescent
+	Choice: 6 Flash
+	Choice: 7 Manual
+/main/capturesettings/drivemode
+	Label: Drive Mode
+	Type: RADIO
+	Current: Continuous
+	Choice: 0 Single
+	Choice: 1 Continuous
+	Choice: 2 Timer 10 sec
+	Choice: 3 Timer 2 sec
+	Choice: 4 Unknown value 0007
+/main/capturesettings/picturestyle
+	Label: Picture Style
+	Type: RADIO
+	Current: Standard
+	Choice: 0 Standard
+	Choice: 1 Portrait
+	Choice: 2 Landscape
+	Choice: 3 Neutral
+	Choice: 4 Faithful
+	Choice: 5 Monochrome
+	Choice: 6 User defined 1
+	Choice: 7 User defined 2
+	Choice: 8 User defined 3
+/main/capturesettings/aperture
+	Label: Aperture
+	Type: RADIO
+	Current: 4
+	Choice: 0 2.8
+	Choice: 1 3.2
+	Choice: 2 3.5
+	Choice: 3 4
+	Choice: 4 4.5
+	Choice: 5 5
+	Choice: 6 5.6
+	Choice: 7 6.3
+	Choice: 8 7.1
+	Choice: 9 8
+	Choice: 10 9
+	Choice: 11 10
+	Choice: 12 11
+	Choice: 13 13
+	Choice: 14 14
+	Choice: 15 16
+	Choice: 16 18
+	Choice: 17 20
+	Choice: 18 22
+/main/capturesettings/shutterspeed
+	Label: Shutter Speed
+	Type: RADIO
+	Current: 1/125
+	Choice: 0 Unknown value 000c
+	Choice: 1 30
+	Choice: 2 25
+	Choice: 3 20
+	Choice: 4 15
+	Choice: 5 13
+	Choice: 6 10
+	Choice: 7 8
+	Choice: 8 6
+	Choice: 9 5
+	Choice: 10 4
+	Choice: 11 3.2
+	Choice: 12 2.5
+	Choice: 13 2
+	Choice: 14 1.6
+	Choice: 15 1.3
+	Choice: 16 1
+	Choice: 17 0.8
+	Choice: 18 0.6
+	Choice: 19 0.5
+	Choice: 20 0.4
+	Choice: 21 0.3
+	Choice: 22 1/4
+	Choice: 23 1/5
+	Choice: 24 1/6
+	Choice: 25 1/8
+	Choice: 26 1/10
+	Choice: 27 1/13
+	Choice: 28 1/15
+	Choice: 29 1/20
+	Choice: 30 1/25
+	Choice: 31 1/30
+	Choice: 32 1/40
+	Choice: 33 1/50
+	Choice: 34 1/60
+	Choice: 35 1/80
+	Choice: 36 1/100
+	Choice: 37 1/125
+	Choice: 38 1/160
+	Choice: 39 1/200
+	Choice: 40 1/250
+	Choice: 41 1/320
+	Choice: 42 1/400
+	Choice: 43 1/500
+	Choice: 44 1/640
+	Choice: 45 1/800
+	Choice: 46 1/1000
+	Choice: 47 1/1250
+	Choice: 48 1/1600
+	Choice: 49 1/2000
+	Choice: 50 1/2500
+	Choice: 51 1/3200
+	Choice: 52 1/4000
+/main/other/d402
+	Label: PTP Property 0xd402
+	Type: TEXT
+	Current: Canon EOS 450D
+/main/other/d407
+	Label: PTP Property 0xd407
+	Type: TEXT
+	Current: 1
+/main/other/d406
+	Label: PTP Property 0xd406
+	Type: TEXT
+	Current: Unknown Initiator
