@@ -249,7 +249,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		} else {
 			type	= PTPIP_END_DATA_PACKET;
 		}
-		ret = handler->getfunc (params, handler->private, towrite, &xdata[ptpip_data_payload+8], &xtowrite);
+		ret = handler->getfunc (params, handler->priv, towrite, &xdata[ptpip_data_payload+8], &xtowrite);
 		if (ret == -1) {
 			perror ("getfunc in senddata failed");
 			free (xdata);
@@ -313,7 +313,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				);
 				break;
 			}
-			xret = handler->putfunc (params, handler->private,
+			xret = handler->putfunc (params, handler->priv,
 				datalen, xdata+ptpip_data_payload, &written
 			);
 			if (xret == -1) {
@@ -335,7 +335,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				);
 				break;
 			}
-			xret = handler->putfunc (params, handler->private,
+			xret = handler->putfunc (params, handler->priv,
 				datalen, xdata+ptpip_data_payload, &written
 			);
 			if (xret == -1) {

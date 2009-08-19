@@ -40,6 +40,11 @@ extern "C" {
 #define PTP_DL_BE			0xF0
 #define	PTP_DL_LE			0x0F
 
+/* USB interface class */
+#ifndef USB_CLASS_PTP
+#define USB_CLASS_PTP			6
+#endif
+
 /* PTP request/response/event general PTP container (transport independent) */
 
 struct _PTPContainer {
@@ -1839,17 +1844,17 @@ typedef struct _PTPCanonEOSDeviceInfo {
 typedef struct _PTPParams PTPParams;
 
 
-typedef uint16_t (* PTPDataGetFunc)	(PTPParams* params, void* private,
+typedef uint16_t (* PTPDataGetFunc)	(PTPParams* params, void*priv,
 					unsigned long wantlen,
 	                                unsigned char *data, unsigned long *gotlen);
 
-typedef uint16_t (* PTPDataPutFunc)	(PTPParams* params, void* private,
+typedef uint16_t (* PTPDataPutFunc)	(PTPParams* params, void*priv,
 					unsigned long sendlen,
 	                                unsigned char *data, unsigned long *putlen);
 typedef struct _PTPDataHandler {
 	PTPDataGetFunc		getfunc;
 	PTPDataPutFunc		putfunc;
-	void			*private;
+	void			*priv;
 } PTPDataHandler;
 
 /*

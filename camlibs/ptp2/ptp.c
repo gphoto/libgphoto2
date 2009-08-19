@@ -246,7 +246,7 @@ static uint16_t
 ptp_init_recv_memory_handler(PTPDataHandler *handler) {
 	PTPMemHandlerPrivate* priv;
 	priv = malloc (sizeof(PTPMemHandlerPrivate));
-	handler->private = priv;
+	handler->priv = priv;
 	handler->getfunc = memory_getfunc;
 	handler->putfunc = memory_putfunc;
 	priv->data = NULL;
@@ -266,7 +266,7 @@ ptp_init_send_memory_handler(PTPDataHandler *handler,
 	priv = malloc (sizeof(PTPMemHandlerPrivate));
 	if (!priv)
 		return PTP_RC_GeneralError;
-	handler->private = priv;
+	handler->priv = priv;
 	handler->getfunc = memory_getfunc;
 	handler->putfunc = memory_putfunc;
 	priv->data = data;
@@ -278,7 +278,7 @@ ptp_init_send_memory_handler(PTPDataHandler *handler,
 /* free private struct + data */
 static uint16_t
 ptp_exit_send_memory_handler (PTPDataHandler *handler) {
-	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)handler->private;
+	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)handler->priv;
 	/* data is owned by caller */
 	free (priv);
 	return PTP_RC_OK;
@@ -289,7 +289,7 @@ static uint16_t
 ptp_exit_recv_memory_handler (PTPDataHandler *handler,
 	unsigned char **data, unsigned long *size
 ) {
-	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)handler->private;
+	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)handler->priv;
 	*data = priv->data;
 	*size = priv->size;
 	free (priv);
@@ -337,7 +337,7 @@ static uint16_t
 ptp_init_fd_handler(PTPDataHandler *handler, int fd) {
 	PTPFDHandlerPrivate* priv;
 	priv = malloc (sizeof(PTPFDHandlerPrivate));
-	handler->private = priv;
+	handler->priv = priv;
 	handler->getfunc = fd_getfunc;
 	handler->putfunc = fd_putfunc;
 	priv->fd = fd;
@@ -346,7 +346,7 @@ ptp_init_fd_handler(PTPDataHandler *handler, int fd) {
 
 static uint16_t
 ptp_exit_fd_handler (PTPDataHandler *handler) {
-	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)handler->private;
+	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)handler->priv;
 	free (priv);
 	return PTP_RC_OK;
 }

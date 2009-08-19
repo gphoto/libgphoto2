@@ -128,7 +128,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		/* For all camera devices. */
 		datawlen = (size<PTP_USB_BULK_PAYLOAD_LEN_WRITE)?size:PTP_USB_BULK_PAYLOAD_LEN_WRITE;
 		wlen = PTP_USB_BULK_HDR_LEN + datawlen;
-		ret = handler->getfunc(params, handler->private, datawlen, usbdata.payload.data, &gotlen);
+		ret = handler->getfunc(params, handler->priv, datawlen, usbdata.payload.data, &gotlen);
 		if (ret != PTP_RC_OK)
 			return ret;
 		if (gotlen != datawlen)
@@ -161,7 +161,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		toread = 4096;
 		if (toread > bytes_left_to_transfer)
 			toread = bytes_left_to_transfer;
-		ret = handler->getfunc (params, handler->private, toread, bytes, &readlen);
+		ret = handler->getfunc (params, handler->priv, toread, bytes, &readlen);
 		if (ret != PTP_RC_OK)
 			break;
 		res = gp_port_write (camera->port, (char*)bytes, readlen);
@@ -292,7 +292,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			if (!data) return PTP_RC_GeneralError;
 			/* Copy first part of data to 'data' */
 			handler->putfunc(
-				params, handler->private, rlen - PTP_USB_BULK_HDR_LEN, usbdata.payload.data,
+				params, handler->priv, rlen - PTP_USB_BULK_HDR_LEN, usbdata.payload.data,
 				&written
 			);
 			/* stuff data directly to passed data handler */
@@ -303,7 +303,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 					free (data);
 					return PTP_ERROR_IO;
 				}
-				handler->putfunc (params, handler->private, result, data, &written);
+				handler->putfunc (params, handler->priv, result, data, &written);
 				if (result < PTP_USB_BULK_HS_MAX_PACKET_LEN_READ) 
 					break;
 			}
@@ -351,7 +351,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 
 		/* Copy first part of data to 'data' */
 		handler->putfunc(
-			params, handler->private, rlen - PTP_USB_BULK_HDR_LEN, usbdata.payload.data,
+			params, handler->priv, rlen - PTP_USB_BULK_HDR_LEN, usbdata.payload.data,
 			&written
 		);
 		/* Is that all of data? */
@@ -385,7 +385,7 @@ retry:
 				ret = PTP_ERROR_IO;
 				break;
 			}
-			ret = handler->putfunc (params, handler->private,
+			ret = handler->putfunc (params, handler->priv,
 				res, data, &written
 			);
 			if (ret != PTP_RC_OK)

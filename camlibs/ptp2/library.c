@@ -3779,7 +3779,7 @@ static uint16_t
 ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
 	PTPCFHandlerPrivate* private = malloc (sizeof(PTPCFHandlerPrivate));
 	if (!private) return PTP_RC_GeneralError;
-	handler->private = private;
+	handler->priv = private;
 	handler->getfunc = gpfile_getfunc;
 	handler->putfunc = gpfile_putfunc;
 	private->file = file;
@@ -3788,7 +3788,7 @@ ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
 
 static uint16_t
 ptp_exit_camerafile_handler (PTPDataHandler *handler) {
-	free (handler->private);
+	free (handler->priv);
 	return PTP_RC_OK;
 }
 
