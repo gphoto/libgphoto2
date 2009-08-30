@@ -892,6 +892,9 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&aid=2722422&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 85 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Theodore Kilgore <kilgota@banach.math.auburn.edu> */
+	{"Canon:PowerShot SD770 IS",		0x04a9, 0x3175, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
 	
