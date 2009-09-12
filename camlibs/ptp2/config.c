@@ -1661,7 +1661,8 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 static int
 _put_ExpTime(CONFIG_PUT_ARGS)
 {
-	int	ret, i, delta, xval;
+	int	ret;
+	unsigned int i,delta,xval;
 	float	val;
 	char	*value;
 
@@ -1676,6 +1677,7 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	xval = val;
 	/* match the closest value */
         for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		/*gp_log (GP_LOG_DEBUG,"ptp2/_put_ExpTime","delta is currently %d, val is %f, supval is %u, abs is %u",delta,val,dpd->FORM.Enum.SupportedValue[i].u32,abs(val - dpd->FORM.Enum.SupportedValue[i].u32));*/
 		if (abs(val - dpd->FORM.Enum.SupportedValue[i].u32)<delta) {
 			xval = dpd->FORM.Enum.SupportedValue[i].u32;
 			delta = abs(val - dpd->FORM.Enum.SupportedValue[i].u32);
