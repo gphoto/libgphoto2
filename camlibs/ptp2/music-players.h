@@ -36,7 +36,7 @@
  */
 
   /*
-   * Creative Technology
+   * Creative Technology and ZiiLABS
    * Initially the Creative devices was all we supported so these are
    * the most thoroughly tested devices. Presumably only the devices
    * with older firmware (the ones that have 32bit object size) will
@@ -82,6 +82,9 @@
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by Aaron F. Gonzalez <sub_tex@users.sourceforge.net>
   { "Creative", 0x041e, "ZEN X-Fi", 0x4162,
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  // Reported by Todor Gyumyushev <yodor1@users.sourceforge.net>
+  { "ZiiLABS", 0x041e, "Zii EGG", 0x6000,
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
 
   /*
@@ -209,6 +212,9 @@
   // Added by Greg Fitzgerald <netzdamon@gmail.com>
   { "Samsung", 0x04e8, "SAMSUNG Trance", 0x6763, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  // From anonymous Sourceforge user
+  { "Samsung", 0x04e8, "GT-S5230", 0xe20c, DEVICE_FLAG_NONE },
+
 
 
   /*
@@ -262,6 +268,9 @@
     DEVICE_FLAG_UNLOAD_DRIVER },
   // From Elie De Brauwer <elie@de-brauwer.be>
   { "Philips", 0x0471, "GoGear ViBE SA1VBE08", 0x207b,
+    DEVICE_FLAG_UNLOAD_DRIVER },
+  // From josmtx <josmtx@users.sourceforge.net>
+  { "Philips", 0x0471, "GoGear Aria", 0x207c,
     DEVICE_FLAG_UNLOAD_DRIVER },
   // from XNJB user
   { "Philips", 0x0471, "PSA235", 0x7e01, DEVICE_FLAG_NONE },
@@ -618,6 +627,8 @@
   { "Nokia", 0x0421, "E63", 0x0179, DEVICE_FLAG_NONE },
   // From: FunkyPenguin <awafaa@users.sourceforge.net>
   { "Nokia", 0x0421, "N97", 0x01f5, DEVICE_FLAG_NONE },
+  // From: Alexander Kojevnikov <alex-kay@users.sourceforge.net>
+  { "Nokia", 0x0421, "6600i", 0x0297, DEVICE_FLAG_NONE },
   // https://sourceforge.net/tracker/index.php?func=detail&aid=2692473&group_id=8874&atid=358874
   { "Nokia", 0x0421, "5200", 0x0421, DEVICE_FLAG_NONE },
   // From: http://nds2.nokia.com/files/support/global/phones/software/Nokia_3250_WMP10_driver.inf
@@ -642,6 +653,8 @@
   { "Nokia", 0x0421, "N95 Mobile Phone", 0x04ef, DEVICE_FLAG_NONE },
   // From: Pat Nicholls <pat@patandannie.co.uk>
   { "Nokia", 0x0421, "N80 Internet Edition (Media Player)", 0x04f1, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Richard Wall <richard@the-moon.net>
+  { "Nokia", 0x05c6, "5530 Xpressmusic", 0x0229, DEVICE_FLAG_NONE },
   // Reported by anonymous SourceForge user
   // One thing stated by reporter (Nokia model) another by the detect log...
   { "Nokia/Verizon", 0x05c6, "6205 Balboa/Verizon Music Phone", 0x3196, DEVICE_FLAG_NONE },
@@ -687,7 +700,7 @@
    */
   // Reported by Stefan Voss <svoss@web.de>
   // This is a Sigmatel SoC with a hard disk.
-  { "TrekStor", 0x066f, "Vibez 8/12GB", 0x842a, 
+  { "TrekStor", 0x066f, "Vibez 8/12GB", 0x842a,
     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by anonymous SourceForge user.
   // This one done for Medion, whatever that is. Error reported so assume
@@ -701,12 +714,15 @@
   { "Maxfield", 0x066f, "G-Flash NG 1GB", 0x846c,
     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Cristi Magherusan <majeru@gentoo.ro>
-  { "TrekStor", 0x0402, "i.Beat Sweez FM", 0x0611, 
+  { "TrekStor", 0x0402, "i.Beat Sweez FM", 0x0611,
+    DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Fox-ino <fox-ino@users.sourceforge.net>
+  { "ALi Corp.", 0x0402, "MPMAN 2GB", 0x5668,
     DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Anonymous SourceForge user
   {"TrekStor", 0x1e68, "i.Beat Organix 2.0", 0x0002,
     DEVICE_FLAG_UNLOAD_DRIVER },
-  
+
   /*
    * Disney/Tevion/MyMusix
    */
@@ -787,33 +803,50 @@
    * reported to see a pattern here.
    */
   // Reported by Alessandro Radaelli <alessandro.radaelli@aruba.it>
-  { "Sony", 0x054c, "Walkman NWZ-A815/NWZ-A818", 0x0325, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-A815/NWZ-A818", 0x0325,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by anonymous Sourceforge user.
-  { "Sony", 0x054c, "Walkman NWZ-S516", 0x0326, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-S516", 0x0326, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Endre Oma <endre.88.oma@gmail.com>
-  { "Sony", 0x054c, "Walkman NWZ-S615F/NWZ-S616F/NWZ-S618F", 0x0327, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-S615F/NWZ-S616F/NWZ-S618F", 0x0327,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Jean-Marc Bourguet <jm@bourguet.org>
-  { "Sony", 0x054c, "Walkman NWZ-S716F", 0x035a, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-S716F", 0x035a, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Anon SF User / Anthon van der Neut <avanderneut@avid.com>
-  { "Sony", 0x054c, "Walkman NWZ-A826/NWZ-A828/NWZ-A829", 0x035b, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-A826/NWZ-A828/NWZ-A829", 0x035b,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Niek Klaverstijn <niekez@users.sourceforge.net>
-  { "Sony", 0x054c, "Walkman NWZ-A726/NWZ-A728/NWZ-A768", 0x035c, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-A726/NWZ-A728/NWZ-A768", 0x035c,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Mehdi AMINI <mehdi.amini - at - ulp.u-strasbg.fr>
-  { "Sony", 0x054c, "Walkman NWZ-B135", 0x036e, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-B135", 0x036e, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by <tiagoboldt@users.sourceforge.net>
-  { "Sony", 0x054c, "Walkman NWZ-E436F", 0x0385, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-E436F", 0x0385, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Michael Wilkinson
-  { "Sony", 0x054c, "Walkman NWZ-W202", 0x0388, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-W202", 0x0388, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Ondrej Sury <ondrej@sury.org>
-  { "Sony", 0x054c, "Walkman NWZ-S739F", 0x038c, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-S739F", 0x038c, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Marco Filipe Nunes Soares Abrantes Pereira <marcopereira@ua.pt>
-  { "Sony", 0x054c, "Walkman NWZ-S638F", 0x038e, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-S638F", 0x038e, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Elliot <orwells@users.sourceforge.net>
   { "Sony", 0x054c, "Walkman NWZ-X1050B/NWZ-X1060B",
-    0x0397, DEVICE_FLAG_UNLOAD_DRIVER },
+    0x0397, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Silvio J. Gutierrez <silviogutierrez@users.sourceforge.net>
-  { "Sony", 0x054c, "Walkman NWZ-X1051/NWZ-X1061",
-    0x0398, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Sony", 0x054c, "Walkman NWZ-X1051/NWZ-X1061", 0x0398,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
 
   /*
@@ -822,6 +855,8 @@
    * of the firmware seem to have broken it, so all are flagged as broken
    * for now.
    */
+  // Reported by Thomas Schweitzer <thomas_-_s@users.sourceforge.net>
+  { "SonyEricsson", 0x0fce, "K550i", 0xe000, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Øyvind Stegard <stegaro@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "K850i", 0x0075, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Michael Eriksson
@@ -843,6 +878,9 @@
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL | DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // Reported by Mattias Evensson <mevensson@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "W902", 0x00f5, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by Sarunas <sarunas@users.sourceforge.net>
+  // Doesn't need any flags according to reporter
+  { "SonyEricsson", 0x0fce, "T700", 0x00fb, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // Reported by Stéphane Pontier <shadow_walker@users.sourceforge.net>
   { "SonyEricsson", 0x0fce, "W705/W715", 0x0105, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Håkan Kvist
@@ -921,6 +959,8 @@
   // Reported by Demadridsur <demadridsur@gmail.com>
   { "O2 Sistemas", 0x1e53, "ZoltarTV", 0x0006, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
+  // Reported by Sense Hofstede <qense@users.sourceforge.net>
+  { "Perception Digital, Ltd", 0x0aa6, "Gigaware GX400", 0x9702, DEVICE_FLAG_NONE },
   /*
    * Other strange stuff.
    */
