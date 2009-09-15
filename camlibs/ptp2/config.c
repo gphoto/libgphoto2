@@ -3475,7 +3475,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Drive Nikon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
 	{ N_("Drive Canon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
-	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
+	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
 	{ 0,0,0,0,0,0,0 },
 };
 
