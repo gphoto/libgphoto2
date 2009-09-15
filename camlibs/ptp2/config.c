@@ -2603,6 +2603,45 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_EOS_AFDrive(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DoAf)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	ret = ptp_canon_eos_afdrive (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_afdrive", "Canon autofocus drive failed: 0x%x", ret);
+		return GP_ERROR;
+	}
+	/* Get the next set of event data */
+	while (1) {
+		int nrofentries = 0;
+		PTPCanon_changes_entry	*entries = NULL;
+
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
+			return GP_ERROR;
+		}
+		if (nrofentries == 0)
+			break;
+		free (entries);
+		nrofentries = 0;
+		entries = NULL;
+	}
+	return GP_OK;
+}
+
+static int
 _get_Nikon_MFDrive(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -2637,6 +2676,59 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
 }
+
+static int
+_get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	gp_widget_set_range(*widget, -32767.0, 32767.0, 1.0);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+	float		val;
+	unsigned int	xval, flag;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DriveLens)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_get_value(widget, &val);
+
+	if (val<0) {
+		xval = -val;
+		flag = 0x1;
+	} else {
+		xval = val;
+		flag = 0x2;
+	}
+	if (!xval) xval = 1;
+	ret = ptp_canon_eos_drivelens (params, flag, xval);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive failed: 0x%x", ret);
+		return GP_ERROR;
+	}
+	/* Get the next set of event data */
+	while (1) {
+		int nrofentries = 0;
+		PTPCanon_changes_entry	*entries = NULL;
+
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
+			return GP_ERROR;
+		}
+		if (nrofentries == 0)
+			break;
+		free (entries);
+		nrofentries = 0;
+		entries = NULL;
+	}
+	return GP_OK;
+}
+
 
 static int
 _get_STR_as_time(CONFIG_GET_ARGS) {
@@ -3381,7 +3473,9 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC"),    "syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),    "syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Drive Nikon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
+	{ N_("Drive Canon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
+	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
 	{ 0,0,0,0,0,0,0 },
 };
 
