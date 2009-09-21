@@ -233,6 +233,8 @@ memory_putfunc(PTPParams* params, void* private,
 
 	if (priv->curoff + sendlen > priv->size) {
 		priv->data = realloc (priv->data, priv->curoff+sendlen);
+		if (!priv->data)
+			return PTP_RC_GeneralError;
 		priv->size = priv->curoff + sendlen;
 	}
 	memcpy (priv->data + priv->curoff, data, sendlen);
@@ -246,6 +248,8 @@ static uint16_t
 ptp_init_recv_memory_handler(PTPDataHandler *handler) {
 	PTPMemHandlerPrivate* priv;
 	priv = malloc (sizeof(PTPMemHandlerPrivate));
+	if (!priv)
+		return PTP_RC_GeneralError;
 	handler->priv = priv;
 	handler->getfunc = memory_getfunc;
 	handler->putfunc = memory_putfunc;
@@ -337,6 +341,8 @@ static uint16_t
 ptp_init_fd_handler(PTPDataHandler *handler, int fd) {
 	PTPFDHandlerPrivate* priv;
 	priv = malloc (sizeof(PTPFDHandlerPrivate));
+	if (!priv)
+		return PTP_RC_GeneralError;
 	handler->priv = priv;
 	handler->getfunc = fd_getfunc;
 	handler->putfunc = fd_putfunc;
@@ -1442,6 +1448,10 @@ ptp_canon_gettreesize (PTPParams* params,
 		return ret;
 	*cnt = dtoh32a(out);
 	*entries = malloc(sizeof(PTPCanon_directtransfer_entry)*(*cnt));
+	if (!*entries) {
+		free (out);
+		return PTP_RC_GeneralError;
+	}
 	cur = out+4;
 	for (i=0;i<*cnt;i++) {
 		unsigned char len;
