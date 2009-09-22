@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.4.5\n"
+"Project-Id-Version: libgphoto2_port 2.4.7\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2008-12-08 09:21+0100\n"
-"PO-Revision-Date: 2009-05-13 23:27+0930\n"
+"POT-Creation-Date: 2009-08-02 21:11+0200\n"
+"PO-Revision-Date: 2009-09-18 23:08+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -336,169 +336,169 @@ msgstr "msg_read (đọc thông điệp)"
 msgid "No error description available"
 msgstr "Không có sẵn mô tả lỗi"
 
-#: serial/unix.c:238
+#: serial/unix.c:241
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Không thể khoá thiết bị « %s »"
 
-#: serial/unix.c:248
+#: serial/unix.c:251
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Thiết bị « %s » bị khoá bởi mã số tiến trình (PID) %d"
 
-#: serial/unix.c:251
+#: serial/unix.c:254
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Không thể khóa thiết bị « %s » (dev_lock [khóa thiết bị] đã trả lại %d)"
 
-#: serial/unix.c:285
+#: serial/unix.c:288
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Không thể mở khóa thiết bị « %s »"
 
-#: serial/unix.c:297
+#: serial/unix.c:300
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Không thể mở khoá thiết bị « %s » vì nó được PID %d khoá."
 
-#: serial/unix.c:301
+#: serial/unix.c:304
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Không thể mở khoá thiết bị « %s » (dev_unlock [mở khoá thiết bị] đã trả lại %d)"
 
-#: serial/unix.c:382
+#: serial/unix.c:385
 #, c-format
 msgid "Serial Port %i"
 msgstr "Cổng nối tiếp %i"
 
-#: serial/unix.c:473
+#: serial/unix.c:476
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Lỗi mở « %s » (%m)."
 
-#: serial/unix.c:491
+#: serial/unix.c:494
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Không thể đóng « %s » (%m)."
 
-#: serial/unix.c:545
+#: serial/unix.c:548
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Không thể ghi vào cổng (%m)"
 
-#: serial/unix.c:622
+#: serial/unix.c:625
 msgid "Parity error."
 msgstr "Lỗi chẵn lẻ."
 
-#: serial/unix.c:626
+#: serial/unix.c:629
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Gặp dãy đáp ứng chẵn lẻ bất thường 0xff 0x%02x."
 
-#: serial/unix.c:669
+#: serial/unix.c:672
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Không rõ chạc %i."
 
-#: serial/unix.c:691
+#: serial/unix.c:694
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Không thể lấy được mức chạc %i (%m)."
 
-#: serial/unix.c:726
+#: serial/unix.c:729
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Không thể đặt mức chạc từ %i thành %i (%m)."
 
-#: serial/unix.c:751
+#: serial/unix.c:754
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Không thể tràn ngập « %s » (%m)."
 
-#: serial/unix.c:864
+#: serial/unix.c:867
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Không thể đặt tốc độ truyền thành %d"
 
-#: usb/libusb.c:240
+#: usb/libusb.c:242
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Không thể mở thiết bị USB (%m)."
 
-#: usb/libusb.c:250
+#: usb/libusb.c:254
 msgid "Camera is already in use."
 msgstr "Máy ảnh đang được dùng."
 
-#: usb/libusb.c:255
+#: usb/libusb.c:259
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Thiết bị đính kèm trình điều khiển « %s » nên gỡ ra ngay bây giờ."
 
-#: usb/libusb.c:258
+#: usb/libusb.c:262
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Không thể gỡ ra trình điều khiển hạt nhân « %s » của thiết bị máy ảnh."
 
-#: usb/libusb.c:261
+#: usb/libusb.c:267
 msgid "Could not query kernel driver of device."
 msgstr "Không thể truy vấn trình điều khiển hạt nhân của thiết bị."
 
-#: usb/libusb.c:269
+#: usb/libusb.c:275
 #, c-format
 msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Không thể quyền đòi giao diện %d (%m). Kiểm tra xem không có chương trình khác hoặc môđ-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền đọc từ và ghi vào thiết bị này."
 
-#: usb/libusb.c:287
+#: usb/libusb.c:293
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Không thể nhả giao diện %d (%m)."
 
-#: usb/libusb.c:300
+#: usb/libusb.c:306
 #, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Không thể đặt lại cổng USB (%m)."
 
-#: usb/libusb.c:306
+#: usb/libusb.c:333
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Không thể đóng cổng USB (%m)."
 
-#: usb/libusb.c:555
+#: usb/libusb.c:582
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Không thể đặt cấu hình %d/%d (%m)"
 
-#: usb/libusb.c:588
+#: usb/libusb.c:615
 #, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Không thể đặt altsetting (thiết lập xen kẽ) từ %d thành %d (%m)"
 
-#: usb/libusb.c:680
+#: usb/libusb.c:707
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Mã sản phẩm hay mã nhà sản xuất (0x%x, 0x%x) không phải hợp lệ."
 
-#: usb/libusb.c:716
+#: usb/libusb.c:743
 #, c-format
 msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
 msgstr "Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một thiết bị lưu trữ hàng loạt, và có thể không hoạt động được với trình gphoto2. Tham khảo : %s"
 
-#: usb/libusb.c:758
+#: usb/libusb.c:786
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: usb/libusb.c:990
+#: usb/libusb.c:1019
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
-#: disk/disk.c:323
+#: disk/disk.c:179 disk/disk.c:229 disk/disk.c:270 disk/disk.c:302
+#: disk/disk.c:325
 #, c-format
 msgid "Media '%s'"
 msgstr "Vật chứa « %s »"
 
-#: disk/disk.c:178
+#: disk/disk.c:180
 msgid "(unknown)"
 msgstr "(không rõ)"
