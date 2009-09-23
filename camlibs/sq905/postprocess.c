@@ -145,7 +145,6 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 	unsigned char *temp_line;	
 	temp_line = malloc(panelwidth);
 
-
 	if (!temp_line)
 		return -1;
 
@@ -182,6 +181,7 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 				temp_line[2*i+1] = panel_out[m*panelwidth + 2*i+1];
 			}
 		}
+		free (temp_line);
 		return 0;
 	} else {	/* greens */
 		for (m=0; m < height/2; m++) {
@@ -247,6 +247,7 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 				temp_line[2*i+1] = tempval;
 			}
 		}
+		free (temp_line);
 		return GP_OK;
 	}	
 }
