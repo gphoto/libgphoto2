@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-05-05 12:04+0200\n"
+"POT-Creation-Date: 2009-09-15 00:06+0200\n"
 "PO-Revision-Date: 2009-01-18 23:25+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: Deutsch <German <translation-team-de@lists.sourceforge.net>>\n"
@@ -339,118 +339,118 @@ msgstr "msg_read"
 msgid "No error description available"
 msgstr "Keine Fehlerbeschreibung verfügbar."
 
-#: serial/unix.c:238
+#: serial/unix.c:241
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:248
+#: serial/unix.c:251
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:251
+#: serial/unix.c:254
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 
-#: serial/unix.c:285
+#: serial/unix.c:288
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:297
+#: serial/unix.c:300
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %d "
 "reserviert ist."
 
-#: serial/unix.c:301
+#: serial/unix.c:304
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden (dev_unlock "
 "lieferte %d)"
 
-#: serial/unix.c:382
+#: serial/unix.c:385
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:473
+#: serial/unix.c:476
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:491
+#: serial/unix.c:494
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
 
-#: serial/unix.c:545
+#: serial/unix.c:548
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Konnte nicht auf Port schreiben (%m)"
 
-#: serial/unix.c:622
+#: serial/unix.c:625
 msgid "Parity error."
 msgstr "Paritätsfehler."
 
-#: serial/unix.c:626
+#: serial/unix.c:629
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Unerwartete Paritätsantwort, Sequenz 0xff 0x%02x."
 
-#: serial/unix.c:669
+#: serial/unix.c:672
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Unbekannter Pin %i."
 
-#: serial/unix.c:691
+#: serial/unix.c:694
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Konnte Level von Pin %i nicht holen (%m)."
 
-#: serial/unix.c:726
+#: serial/unix.c:729
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Konnte Level von Pin %i nicht auf %i setzen (%m)."
 
-#: serial/unix.c:751
+#: serial/unix.c:754
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Konnte »%s« nicht leeren (%m)."
 
-#: serial/unix.c:864
+#: serial/unix.c:867
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
 
-#: usb/libusb.c:240
+#: usb/libusb.c:242
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Konnte USB-Gerät nicht öffnen (%m)."
 
-#: usb/libusb.c:252
+#: usb/libusb.c:254
 msgid "Camera is already in use."
 msgstr "Kamera ist bereits in Benutzung."
 
-#: usb/libusb.c:257
+#: usb/libusb.c:259
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Gerät hat Kerneltreiber '%s' zugewiesen, löse Treiber jetzt."
 
-#: usb/libusb.c:260
+#: usb/libusb.c:262
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Konnte Kerneltreiber '%s' nicht vom Kamera Device lösen."
 
-#: usb/libusb.c:263
+#: usb/libusb.c:267
 msgid "Could not query kernel driver of device."
 msgstr "Konnte den Kerneltreiber des Gerätes nicht abfragen."
 
-#: usb/libusb.c:271
+#: usb/libusb.c:275
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -462,38 +462,38 @@ msgstr ""
 "anderes Programm oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
-#: usb/libusb.c:289
+#: usb/libusb.c:293
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Konnte Schnittstelle %d nicht freigeben (%m)."
 
-#: usb/libusb.c:302
+#: usb/libusb.c:306
 #, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Konnte USB-Port nicht resetten (%m)."
 
-#: usb/libusb.c:308
+#: usb/libusb.c:333
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Konnte USB-Port nicht schließen (%m)."
 
-#: usb/libusb.c:557
+#: usb/libusb.c:582
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:590
+#: usb/libusb.c:615
 #, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Konnte Alternativ-Setting %d nicht auf %d setzen (%m)"
 
-#: usb/libusb.c:682
+#: usb/libusb.c:707
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
-#: usb/libusb.c:718
+#: usb/libusb.c:743
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -503,7 +503,7 @@ msgstr ""
 "und wird von System direkt unterstützt (und deshalb nicht von gphoto2). "
 "Lesen Sie hierzu bitte %s"
 
-#: usb/libusb.c:760
+#: usb/libusb.c:786
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -513,7 +513,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:992
+#: usb/libusb.c:1019
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -524,12 +524,12 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: disk/disk.c:177 disk/disk.c:227 disk/disk.c:268 disk/disk.c:300
-#: disk/disk.c:323
+#: disk/disk.c:179 disk/disk.c:229 disk/disk.c:270 disk/disk.c:302
+#: disk/disk.c:325
 #, c-format
 msgid "Media '%s'"
 msgstr "Medium »%s«"
 
-#: disk/disk.c:178
+#: disk/disk.c:180
 msgid "(unknown)"
 msgstr "(unbekannt)"
