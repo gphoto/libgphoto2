@@ -4,6 +4,7 @@
  * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2008 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2007 Tero Saarni <tero.saarni@gmail.com>
+ * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -184,12 +185,29 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 		return PTP_ERROR_BADPARAM;
 	}
 	tries = 3;
-	while (1) {
+	while (tries--) {
+		uint16_t ret;
 		/* get response */
-		CHECK_PTP_RC(params->getresp_func(params, ptp));
+		ret = params->getresp_func(params, ptp);
+		if (ret == PTP_ERROR_RESP_EXPECTED) {
+			ptp_debug (params,"PTP: response expected but not got, retrying.");
+			tries++;
+			continue;
+		}
+		if (ret != PTP_RC_OK)
+			return ret;
+		
+		if (ptp->Transaction_ID < params->transaction_id-1) {
+			tries++;
+			ptp_debug (params,
+				"PTP: Sequence number mismatch %d vs expected %d, suspecting old reply.",
+				ptp->Transaction_ID, params->transaction_id-1
+			);
+			continue;
+		}
 		if (ptp->Transaction_ID != params->transaction_id-1) {
 			/* try to clean up potential left overs from previous session */
-			if ((ptp->Code == PTP_OC_OpenSession) && tries--)
+			if ((ptp->Code == PTP_OC_OpenSession) && tries)
 				continue;
 			ptp_error (params,
 				"PTP: Sequence number mismatch %d vs expected %d.",
