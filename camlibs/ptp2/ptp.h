@@ -1301,6 +1301,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PTPExtensionVersion	0xD119
 #define PTP_DPC_CANON_EOS_DPOFVersion		0xD11A
 #define PTP_DPC_CANON_EOS_AvailableShots	0xD11B
+#define PTP_CANON_EOS_CAPTUREDEST_HD		4
 #define PTP_DPC_CANON_EOS_CaptureDestination	0xD11C
 #define PTP_DPC_CANON_EOS_BracketMode		0xD11D
 #define PTP_DPC_CANON_EOS_CurrentStorage	0xD11E
