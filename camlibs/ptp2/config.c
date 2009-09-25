@@ -168,10 +168,31 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	uint16_t		ret;
 	char			buf[200];
 	PTPPropertyValue	ct_val;
+	PTPDevicePropDesc	dpd;
+	int			cardval = 1;
 
-	 /* -1 == use setting from config-file, 1 == card, 4 == ram*/
+	memset(&dpd,0,sizeof(dpd));
+	ret = ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","did not get capture destination propdesc?");
+		return GP_ERROR;
+	}
+	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
+		int			i;
+		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
+			if (dpd.FORM.Enum.SupportedValue[i].u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
+				cardval = dpd.FORM.Enum.SupportedValue[i].u32;
+				break;
+			}
+		}
+		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","Card value is %d",cardval);
+	}
+	if (value == 1)
+		value = cardval;
+
+	/* -1 == use setting from config-file, 1 == card, 4 == ram*/
 	ct_val.u32 = (value == -1)
-		     ? (GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram") ? 1 : 4
+		     ? (GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram") ? cardval : PTP_CANON_EOS_CAPTUREDEST_HD
 		     : value;
 
 	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
@@ -179,7 +200,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
 		return GP_ERROR;
 	}
-	if (ct_val.u32 == 4) {
+	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
 		 * that we have enough space left. */
 		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
