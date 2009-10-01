@@ -1094,6 +1094,8 @@ storage_info_func (
 	(*sinfos)->capacitykbytes = camera->pl->cached_capacity;
 	(*sinfos)->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
 	(*sinfos)->freekbytes = camera->pl->cached_available;
+	(*sinfos)->fields |= GP_STORAGEINFO_ACCESS;
+	(*sinfos)->access = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
 	return GP_OK;
 }
 	
