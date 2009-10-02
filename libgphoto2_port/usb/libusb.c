@@ -111,7 +111,8 @@ gp_port_library_list (GPPortInfoList *list)
 			if (	(dev->descriptor.bDeviceClass == USB_CLASS_HUB)		||
 				(dev->descriptor.bDeviceClass == USB_CLASS_HID)		||
 				(dev->descriptor.bDeviceClass == USB_CLASS_PRINTER)	||
-				(dev->descriptor.bDeviceClass == USB_CLASS_COMM)
+				(dev->descriptor.bDeviceClass == USB_CLASS_COMM)	||
+				(dev->descriptor.bDeviceClass == 0xe0)	/* wireless / bluetooth */
 			)
 				continue;
 			/* excepts HUBs, usually the interfaces have the classes, not
@@ -127,7 +128,9 @@ gp_port_library_list (GPPortInfoList *list)
 						struct usb_interface_descriptor *intf = &dev->config[i].interface[i1].altsetting[i2]; 
 						if (	(intf->bInterfaceClass == USB_CLASS_HID)	||
 							(intf->bInterfaceClass == USB_CLASS_PRINTER)	||
-							(intf->bInterfaceClass == USB_CLASS_COMM))
+							(intf->bInterfaceClass == USB_CLASS_COMM)	||
+							(intf->bInterfaceClass == 0xe0)	/* wireless/bluetooth*/
+						)
 							continue;
 						unknownint++;
 					}
