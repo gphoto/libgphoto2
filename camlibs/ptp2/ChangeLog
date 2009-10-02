@@ -1,3 +1,7 @@
+2009-10-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c,ptp.c,ptp-pack.c: Added more EOS configuration values.
+
 2009-09-25  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Handle different Canon EOS card target values.

@@ -1766,16 +1766,19 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 			data = calloc(sizeof(char),size);
 		}
 		switch (datatype) {
+		case PTP_DTC_INT8:
 		case PTP_DTC_UINT8:
 			/*fprintf (stderr, "%x -> %d\n", propcode, value->u8);*/
 			htod8a(&data[8], value->u8);
 			params->canon_props[i].dpd.CurrentValue.u8 = value->u8;
 			break;
 		case PTP_DTC_UINT16:
+		case PTP_DTC_INT16:
 			/*fprintf (stderr, "%x -> %d\n", propcode, value->u16);*/
 			htod16a(&data[8], value->u16);
 			params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
 			break;
+		case PTP_DTC_INT32:
 		case PTP_DTC_UINT32:
 			/*fprintf (stderr, "%x -> %d\n", propcode, value->u32);*/
 			htod32a(&data[8], value->u32);

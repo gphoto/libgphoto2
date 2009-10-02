@@ -5106,14 +5106,6 @@ camera_init (Camera *camera, GPContext *context)
 			add_special_file("selftimer.wav",	canon_theme_get, canon_theme_put);
 		}
 #endif
-#if 0
-		{
-			unsigned char *x;
-			unsigned long l;
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx))
-				ptp_canon_eos_getdeviceinfo (params, &x, &l);
-		}
-#endif
 		/* automatically enable capture mode on EOS to populate property list */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
 			camera_prepare_capture(camera,context);

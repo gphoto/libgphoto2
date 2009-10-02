@@ -1465,7 +1465,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_CaptureDestination:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXA:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXB:
-				case PTP_DPC_CANON_EOS_QuickReviewTime:
 				case PTP_DPC_CANON_EOS_CurrentStorage:
 				case PTP_DPC_CANON_EOS_CurrentFolder:
 				case PTP_DPC_CANON_EOS_ShutterCounter:
@@ -1481,9 +1480,12 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_AutoExposureMode:
 				case PTP_DPC_CANON_EOS_ColorSpace:
 				case PTP_DPC_CANON_EOS_BatteryPower:
+				case PTP_DPC_CANON_EOS_BatterySelect:
 				case PTP_DPC_CANON_EOS_PTPExtensionVersion:
 				case PTP_DPC_CANON_EOS_DriveMode:
 				case PTP_DPC_CANON_EOS_AEB:
+				case PTP_DPC_CANON_EOS_BracketMode:
+				case PTP_DPC_CANON_EOS_QuickReviewTime:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
@@ -1504,10 +1506,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_INT16;
 					break;
 				/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
-				case PTP_DPC_CANON_EOS_BatterySelect:
 				case 0xd114:
 				case PTP_DPC_CANON_EOS_DPOFVersion:
-				case PTP_DPC_CANON_EOS_BracketMode:
 					dpd->DataType = PTP_DTC_UINT16;
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint16", i ,proptype, size-PTP_ece_Prop_Val_Data);
 					for (j=0;j<size-PTP_ece_Prop_Val_Data;j++)
