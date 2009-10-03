@@ -1407,19 +1407,15 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
-		        unsigned char           evfoutputmode[12];
+			PTPPropertyValue	val;
 
 			SET_CONTEXT_P(params, context);
 
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
-
-			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
-			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
-			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
 			/* 2 means PC, 1 means TFT */
-
-			ret = ptp_canon_eos_setdevicepropvalueex (params, evfoutputmode, 12);
+			val.u32 = 2;
+			ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
 			if (ret != PTP_RC_OK) {
 				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
 				return GP_ERROR;
