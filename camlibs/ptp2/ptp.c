@@ -1754,16 +1754,19 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		/* special handling of ImageFormat properties */
 		size = 8 + ptp_pack_EOS_ImageFormat( params, NULL, value->u16 );
 		data = malloc( size );
+		if (!data) return PTP_RC_GeneralError;
 		params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
 		ptp_pack_EOS_ImageFormat( params, data + 8, value->u16 );
 		break;
 	default:
 		if (datatype != PTP_DTC_STR) {
 			data = calloc(sizeof(uint32_t),3);
+			if (!data) return PTP_RC_GeneralError;
 			size = sizeof(uint32_t)*3;
 		} else {
 			size = strlen(value->str) + 1 + 8;
 			data = calloc(sizeof(char),size);
+			if (!data) return PTP_RC_GeneralError;
 		}
 		switch (datatype) {
 		case PTP_DTC_INT8:
