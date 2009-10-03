@@ -4,6 +4,8 @@ LIBGPHOTO2_5_0 {
 	gp_log_add_func;
 	gp_log_data;
 	gp_log_remove_func;
+	gp_log_simple_add_func;
+	gp_log_simple_remove_func;
 	gp_logv;
 	gp_port_check_int;
 	gp_port_check_int_fast;

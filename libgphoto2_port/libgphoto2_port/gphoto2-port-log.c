@@ -58,9 +58,18 @@ typedef struct {
 	GPLogFunc    func;	/**< Internal function pointer to call */
 	void        *data;	/**< Private data supplied by caller */
 } LogFunc;
+typedef struct {
+	unsigned int id;	/**< Internal id */
+	GPLogLevel   level;	/**< Internal loglevel */
+	GPLogSimpleFunc    func;	/**< Internal function pointer to call */
+	void        *data;	/**< Private data supplied by caller */
+} LogSimpleFunc;
 
 static LogFunc *log_funcs = NULL;
 static unsigned int log_funcs_count = 0;
+
+static LogSimpleFunc *log_simple_funcs = NULL;
+static unsigned int log_simple_funcs_count = 0;
 
 /**
  * \brief Add a function to get logging information
@@ -119,6 +128,67 @@ gp_log_remove_func (int id)
 
 	memmove (log_funcs + id - 1, log_funcs + id, log_funcs_count - id);
 	log_funcs_count--;
+
+	return (GP_OK);
+}
+
+/**
+ * \brief Add a function to get logging information
+ *
+ * \param level the maximum level of logging it will get, up to and including the passed value
+ * \param func a #GPLogSimpleFunc
+ * \param data data
+ *
+ * Adds a log function that will be called for each log message that is flagged
+ * with a log level that appears in given log level. This function returns
+ * an id that you can use for removing the log function again (using
+ * #gp_log_remove_func).
+ *
+ * \return an id or a gphoto2 error code
+ **/
+int
+gp_log_simple_add_func (GPLogLevel level, GPLogSimpleFunc func, void *data)
+{
+	LogSimpleFunc *new_log_funcs;
+
+	if (!func)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	if (!log_simple_funcs)
+		new_log_funcs = malloc (sizeof (LogSimpleFunc));
+	else
+		new_log_funcs = realloc (log_simple_funcs, sizeof (LogSimpleFunc) * 
+					 (log_simple_funcs_count + 1));
+	if (!new_log_funcs)
+		return (GP_ERROR_NO_MEMORY);
+
+	log_simple_funcs = new_log_funcs;
+	log_simple_funcs_count++;
+
+	log_simple_funcs[log_simple_funcs_count - 1].id = log_simple_funcs_count;
+	log_simple_funcs[log_simple_funcs_count - 1].level = level;
+	log_simple_funcs[log_simple_funcs_count - 1].func = func;
+	log_simple_funcs[log_simple_funcs_count - 1].data = data;
+
+	return (log_simple_funcs_count);
+}
+
+/**
+ * \brief Remove a logging receiving function
+ * \param id an id (return value of #gp_log_add_func)
+ *
+ * Removes the log function with given id.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_log_simple_remove_func (int id)
+{
+	if (id < 1 || id > log_simple_funcs_count)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	memmove (log_simple_funcs + id - 1, log_simple_funcs + id, log_simple_funcs_count - id);
+	log_simple_funcs_count--;
 
 	return (GP_OK);
 }
@@ -276,6 +346,34 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 					   log_funcs[i].data);
 #endif
 		}
+	}
+
+	if (log_simple_funcs_count) {
+#ifdef HAVE_VA_COPY
+		va_list xargs;
+#endif
+		int strsize = 1000;
+		char *str = malloc(strsize);
+		int n;
+
+		if (!str) return;
+#ifdef HAVE_VA_COPY
+		va_copy (xargs, args);
+#endif
+		n = vsnprintf (str, strsize, format, xargs);
+		if (n+1>strsize) {
+			free (str);
+			str = malloc(n+1);
+			if (!str) return;
+			strsize = n+1;
+#ifdef HAVE_VA_COPY
+			va_copy (xargs, args);
+#endif
+			n = vsnprintf (str, strsize, format, xargs);
+		}
+		for (i = 0; i < log_simple_funcs_count; i++)
+			if (log_simple_funcs[i].level >= level)
+				log_simple_funcs[i].func (level, domain, str, log_simple_funcs[i].data);
 	}
 }
 

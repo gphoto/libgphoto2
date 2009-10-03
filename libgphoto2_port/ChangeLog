@@ -1,3 +1,9 @@
+2009-10-03  Marcus Meissner  <meissner@suse.de>
+
+	* gphoto2/gphoto2-port-log.h, libgphoto2_port/gphoto2-port-log.c:
+	  Add gp_log_simple_add_func, gp_log_simple_remove_func that
+	  get passed simple strings to print.
+
 2009-07-23  Marcus Meissner  <meissner@suse.de>
 
 	* configure.ac: resmgr is no longer existing.

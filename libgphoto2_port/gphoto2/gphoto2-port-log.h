@@ -65,11 +65,15 @@ typedef void (* GPLogFunc) (GPLogLevel level, const char *domain,
 	__attribute__((__format__(printf,3,0)))
 #endif
 ;
+typedef void (* GPLogSimpleFunc) (GPLogLevel level, const char *domain, const char *str, void *data);
 
 #ifndef DISABLE_DEBUGGING
 
 int  gp_log_add_func    (GPLogLevel level, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
+
+int  gp_log_simple_add_func    (GPLogLevel level, GPLogSimpleFunc func, void *data);
+int  gp_log_simple_remove_func (int id);
 
 /* Logging */
 void gp_log      (GPLogLevel level, const char *domain,
