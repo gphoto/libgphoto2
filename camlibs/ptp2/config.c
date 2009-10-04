@@ -449,13 +449,25 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 	if (!prop && (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
 		return 1;
 
-	for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
-		if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
-			continue;
-		if ((prop & 0xf000) == 0x5000) /* generic property */
-			return 1;
-		if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
-			return 1;
+	if ((prop & 0x7000) == 0x5000) { /* properties */
+		for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
+			if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
+				continue;
+			if ((prop & 0xf000) == 0x5000) /* generic property */
+				return 1;
+			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
+				return 1;
+		}
+	}
+	if ((prop & 0x7000) == 0x1000) { /* commands */
+		for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
+			if (prop != camera->pl->params.deviceinfo.OperationsSupported[i])
+				continue;
+			if ((prop & 0xf000) == 0x1000) /* generic property */
+				return 1;
+			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
+				return 1;
+		}
 	}
 	return 0;
 }
@@ -3584,14 +3596,14 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 
 static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
-	{ N_("Focus Lock"),                    "focuslock", 0, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
-	{ N_("Bulb Mode"),                     "bulb", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_Bulb, _put_Canon_EOS_Bulb},
+	{ N_("Focus Lock"),                    "focuslock", PTP_OC_CANON_FocusLock, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
+	{ N_("Bulb Mode"),                     "bulb", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_BulbStart, _get_Canon_EOS_Bulb, _put_Canon_EOS_Bulb},
 	{ N_("Synchronize camera date and time with PC"),    "syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),    "syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
-	{ N_("Drive Nikon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
-	{ N_("Drive Canon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
-	{ N_("Drive Nikon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
-	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_CANON, 0, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
+	{ N_("Drive Nikon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_AfDrive, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
+	{ N_("Drive Canon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DoAf, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
+	{ N_("Drive Nikon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_MfDrive, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
+	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DriveLens, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
 	{ 0,0,0,0,0,0,0 },
 };
 

@@ -1408,6 +1408,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 			PTPPropertyValue	val;
+			int tries = 20;
 
 			SET_CONTEXT_P(params, context);
 
@@ -1420,29 +1421,55 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
 				return GP_ERROR;
 			}
+			while (tries--) {
+				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
+				if (ret == PTP_RC_OK) {
+					uint32_t	len = dtoh32a(data);
 
-			ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
-			if (ret == PTP_RC_OK) {
-				uint32_t	len = dtoh32a(data);
+					/* 4 byte len of jpeg data, 4 byte unknown */
+					/* JPEG blob */
+					/* stuff */
 
-				/* 4 byte len of jpeg data, 4 byte unknown */
-				/* JPEG blob */
-				/* stuff */
+					if (len > size) len = size;
+					gp_file_append ( file, (char*)data+8, len );
+					gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+					/* Add an arbitrary file name so caller won't crash */
+					gp_file_set_name (file, "preview.jpg");
+					free (data);
+					SET_CONTEXT_P(params, NULL);
+					return GP_OK;
+				} else {
+					if (ret == 0xa102) { /* means "not there yet" ... so wait */
+						PTPCanon_changes_entry	*entries = NULL;
+						int			nrofentries = 0;
 
-				if (len > size) len = size;
-				gp_file_append ( file, (char*)data+8, len );
-				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-				/* Add an arbitrary file name so caller won't crash */
-				gp_file_set_name (file, "preview.jpg");
-				free (data);
+						gp_context_idle (context);
+						usleep (50*1000);
+						/* Poll for camera events */
+						while (1) {
+							ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+							if (ret != PTP_RC_OK) {
+								gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "getevent failed!");
+								return GP_ERROR;
+							}
+							if (nrofentries == 0)
+								break;
+							free (entries);
+							nrofentries = 0;
+							entries = NULL;
+						}
+						continue;
+					}
+					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
+					SET_CONTEXT_P(params, NULL);
+					return GP_ERROR;
+				}
 			}
-			else
-				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
+			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after 20 tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_OK;
+			return GP_ERROR;
 		}
-		gp_context_error (context,
-		_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
+		gp_context_error (context, _("Sorry, your Canon camera does not support Canon Viewfinder mode"));
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
