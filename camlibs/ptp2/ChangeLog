@@ -1,6 +1,8 @@
 2009-10-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c,ptp.c,ptp-pack.c: Added more EOS configuration values.
+	* library.c: Made EOS preview capturing more stable.
+	* config.c: Hide action commands if command is not present.
 
 2009-09-25  Marcus Meissner  <marcus@jet.franken.de>
 
