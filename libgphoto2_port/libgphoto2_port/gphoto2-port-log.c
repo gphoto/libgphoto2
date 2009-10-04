@@ -374,6 +374,7 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 		for (i = 0; i < log_simple_funcs_count; i++)
 			if (log_simple_funcs[i].level >= level)
 				log_simple_funcs[i].func (level, domain, str, log_simple_funcs[i].data);
+		free (str);
 	}
 }
 
