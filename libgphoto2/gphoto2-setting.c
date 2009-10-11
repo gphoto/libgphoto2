@@ -142,7 +142,8 @@ verify_settings (char *settings_file)
 	rewind(f);
 	while (!feof(f)) {
 		strcpy(buf, "");
-		fgets(buf, 1023, f);
+		if (!fgets(buf, 1023, f))
+			break;
 		buf[strlen(buf)] = 0;
 		if (strlen(buf)>2) {
 			equals = 0;
@@ -200,7 +201,8 @@ load_settings (void)
 	rewind(f);
 	while (!feof(f)) {
 		strcpy(buf, "");
-		fgets(buf, 1023, f);
+		if (!fgets(buf, 1023, f))
+			break;
 		if (strlen(buf)>2) {
 		     buf[strlen(buf)-1] = '\0';
 		     id = strtok(buf, "=");
