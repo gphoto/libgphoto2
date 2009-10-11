@@ -832,7 +832,8 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		char *data;
 
 		lseek (destination->fd, 0, SEEK_SET);
-		ftruncate (destination->fd, 0);
+		if (-1 == ftruncate (destination->fd, 0))
+			perror("ftruncate");
 		lseek (source->fd, 0, SEEK_SET);
 		data = malloc (65536);
 		while (1) {
