@@ -583,6 +583,9 @@ udev_camera_func (const func_params_t *params,
 		}
 	}
 	if (has_valid_rule != 0) {
+		if (a->device_type & GP_DEVICE_AUDIO_PLAYER)
+			printf(", ENV{ID_MEDIA_PLAYER}=\"1\"");
+
 		if (pdata->script != NULL || pdata->mode != NULL || pdata->owner != NULL || pdata->group != NULL)
 			printf(", ");
 
