@@ -829,7 +829,7 @@ static struct {
 	 * see http://bugs.kde.org/show_bug.cgi?id=141577 -Marcus */
 	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTP_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
-	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, 0},
+	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTP_CAP},
 	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, 0},
 	{"Canon:PowerShot SD900 (PTP mode)",    0x04a9, 0x3115, 0},
 	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
