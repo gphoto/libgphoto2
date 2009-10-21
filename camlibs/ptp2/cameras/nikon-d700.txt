@@ -1021,3 +1021,13 @@ Choice: 8 4
 Choice: 9 8
 Choice: 10 15
 Choice: 11 30
+
+13:36 < HuHa> -Angle Level(0xd067):(read only) (type=0x5) 23591825
+13:36 < HuHa> +Angle Level(0xd067):(read only) (type=0x5) 21273878
+13:36 < HuHa> das erste ist gerade (liegt auf dem Tisch)
+13:37 < HuHa> -Angle Level(0xd067):(read only) (type=0x5) 23591825
+13:37 < HuHa> +Angle Level(0xd067):(read only) (type=0x5) 17693401
+13:37 < HuHa> von 0° auf rechts 90°
+13:39 < HuHa> links 90°: +Angle Level(0xd067):(read only) (type=0x5) 6095704
+13:39 < HuHa> jetzt musst du nur noch die Einheit entschlüsseln ;-)
+13:42 < HuHa> _Marcus_: wenn die Kamera nach oben schaut, ist es -1
