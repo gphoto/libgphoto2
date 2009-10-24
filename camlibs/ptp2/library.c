@@ -987,7 +987,7 @@ static struct {
 	/* launchpad 67532 */
 	{"Fuji:FinePix F31fd",			0x04cb, 0x01c1, 0},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=2881948&group_id=8874 */
-	{"Fuji:S5 Pro",			        0x04cb, 0x01c3, 0},
+	{"Fuji:S5 Pro",			        0x04cb, 0x01c3, PTP_CAP},
 	{"Fuji:FinePix S5700",			0x04cb, 0x01c4, 0},
 	{"Fuji:FinePix F40fd",			0x04cb, 0x01c5, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1800289&group_id=8874&atid=358874 */
