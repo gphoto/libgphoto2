@@ -287,6 +287,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_NIKON;
 	}
 
+	/* Fuji S5 Pro mostly */
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4cb) &&
+		strstr(di->VendorExtensionDesc,"fujifilm.co.jp: 1.0;")
+	) {
+		/*camera->pl->bugs |= PTP_MTP;*/
+		di->VendorExtensionID = PTP_VENDOR_FUJI;
+	}
+
+
 	if (di->VendorExtensionID == PTP_VENDOR_NIKON) {
 		int i;
 
@@ -832,7 +843,7 @@ static struct {
 	 * see http://bugs.kde.org/show_bug.cgi?id=141577 -Marcus */
 	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTP_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
-	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, 0},
+	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTP_CAP},
 	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, 0},
 	{"Canon:PowerShot SD900 (PTP mode)",    0x04a9, 0x3115, 0},
 	{"Canon:Digital IXUS 750 (PTP mode)",   0x04a9, 0x3116, PTPBUG_DELETE_SENDS_EVENT},
@@ -905,14 +916,17 @@ static struct {
 	{"Canon:Digital IXUS 970 IS",		0x04a9, 0x3173, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Martin Lasarsch at SUSE. MTP_PROPLIST returns just 0 entries */
-	{"Canon:Digital IXUS 90 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP},
+	{"Canon:Digital IXUS 90 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/?func=detail&aid=2722422&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 85 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Theodore Kilgore <kilgota@banach.math.auburn.edu> */
+	{"Canon:PowerShot SD770 IS",		0x04a9, 0x3175, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Olaf Hering at SUSE */
 	{"Canon:PowerShot A590 IS",		0x04a9, 0x3176, PTPBUG_DELETE_SENDS_EVENT},
-
+	
 	/* Dmitriy Khanzhin <jinn@altlinux.org> */
 	{"Canon:PowerShot A580",		0x04a9, 0x3177, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -932,7 +946,7 @@ static struct {
 	{"Canon:PowerShot G10",			0x04a9, 0x318f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Chris Rodley <chris@takeabreak.co.nz> */
-	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Kurt Garloff at SUSE */
 	{"Canon:Digital IXUS 980 IS",		0x04a9, 0x3193, PTPBUG_DELETE_SENDS_EVENT},
@@ -952,18 +966,18 @@ static struct {
 
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
-	/* IRC reporter */
+	/* IRC Reporter */
 	{"Canon:PowerShot SX200 IS",		0x04a9, 0x31c0, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
-	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, 0},
+	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
-	{"Canon:Digital IXUS 100 IS",		0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 100 IS",           0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
 	{"Canon:PowerShot SD780 IS",		0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* Matthew Vernon <matthew@sel.cam.ac.uk> */
 	{"Canon:PowerShot A1100 IS",		0x04a9, 0x31c3, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2796275&group_id=8874&atid=358874 */
-	{"Canon:EOS 500D",                      0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 500D",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -986,6 +1000,8 @@ static struct {
 	{"Fuji:FinePix F20",			0x04cb, 0x01c0, 0},
 	/* launchpad 67532 */
 	{"Fuji:FinePix F31fd",			0x04cb, 0x01c1, 0},
+	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=2881948&group_id=8874 */
+	{"Fuji:S5 Pro",			        0x04cb, 0x01c3, 0},
 	{"Fuji:FinePix S5700",			0x04cb, 0x01c4, 0},
 	{"Fuji:FinePix F40fd",			0x04cb, 0x01c5, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1800289&group_id=8874&atid=358874 */
