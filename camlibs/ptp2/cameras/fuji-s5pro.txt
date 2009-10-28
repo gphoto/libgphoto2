@@ -213,39 +213,218 @@ Device Properties Supported:
   0xd406
   0xd407
 
+
 Camera summary:
 Manufacturer: FUJIFILM
 Model: FinePix S5Pro
   Version: 1.18
   Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-Vendor Extension ID: 0x6 (1.0)
+Vendor Extension ID: 0xe (1.0)
 Vendor Extension Description: fujifilm.co.jp: 1.0; 
 
-Capture Formats: 
-Display Formats: JPEG, JFIF
-Supported MTP Object Properties:
-	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
-	JFIF/3808: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+Capture Formats: Defined Type JPEG Unknown(b103)
+Display Formats: Defined Type, JPEG, Unknown(b103)
 
 Device Capabilities:
-	File Download, File Deletion, File Upload
-	No Image Capture, No Open Capture, No vendor specific capture
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
 
 Storage Devices Summary:
 store_10000001:
-	StorageDescription: External Memory
-	VolumeLabel: 000000000000000000000000000000000000000000000000
-	Storage Type: Removable RAM (memory card)
-	Filesystemtype: Digital Camera Layout (DCIM)
+	StorageDescription: Still
+	VolumeLabel: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
 	Access Capability: Read Only with Object deletion
-	Maximum Capability: 3858317312 (3679 MB)
-	Free Space (Bytes): 5468848128 (5215 MB)
+	Maximum Capability: 18446744073709551615 (4294967295 MB)
+	Free Space (Bytes): 18446744073709551615 (4294967295 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (4294967295 MB)
+	Free Space (Bytes): 18446744073709551615 (4294967295 MB)
 	Free Space (Images): -1
 
 Device Property Summary:
-Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
-Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Battery Level(0x5001):(read only) (type=0x4) Range [0 - 100, step 1] value: 39% (39)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'2304x1536',
+	'3024x2016',
+	'4256x2848'
+	] value: '4256x2848'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,6,32769,32770,32771,32772,32773,4,7,32774,32775,32776,32777,32778,32779,32780] value: Automatic (2)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32769,32770] value: 32769
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [3,4,32769] value: Multi-spot (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [32769,32770,32771,32772,32773,32774] value: 32769
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,5] value: A (3)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200] value: ISO 320 (320)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20091028T234500'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [20000,10000,5000,2000] value: 2000
+Sharpness(0x5015):(readwrite) (type=0x3) Range [-2 - 2, step 1] value: 0
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 20, step 1] value: 1
+Burst Interval(0x5019):(readwrite) (type=0x4) Enumeration [500,1000] value: 500
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771,32772] value: 32769
+Property 0xd001:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6] value: 1
+Property 0xd002:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
+Property 0xd003:(readwrite) (type=0x3) Range [-2 - 2, step 1] value: 0
+Property 0xd004:(readwrite) (type=0x3) Range [-2 - 2, step 1] value: 0
+Property 0xd005:(readwrite) (type=0x3) Range [-2 - 2, step 1] value: 0
+Property 0xd007:(readwrite) (type=0x4) Enumeration [65535,100,130,170,230,300,400] value: 65535
+Property 0xd008:(readwrite) (type=0x3) Range [-3 - 2, step 1] value: 0
+Property 0xd009:(readwrite) (type=0x3) Range [-2 - 2, step 1] value: 0
+Property 0xd00a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd00b:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd00c:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd00d:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd00e:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd00f:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd010:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd011:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd012:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd013:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd014:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd015:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd016:(readwrite) (type=0x3) Range [-3 - 3, step 1] value: 0
+Property 0xd017:(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 5600
+Property 0xd018:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 4
+Property 0xd019:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd01a:(readwrite) (type=0x4) Range [1 - 27, step 0] value: 0
+Property 0xd01b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd01c:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd100:(readwrite) (type=0xffff) ''
+Property 0xd101:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 4
+Property 0xd102:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd103:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 4
+Property 0xd104:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd105:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd106:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd107:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd108:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd109:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10a:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd10b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10c:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10d:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd10e:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 2
+Property 0xd10f:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd110:(readwrite) (type=0x4) Enumeration [1,2,3] value: 3
+Property 0xd111:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd112:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd113:(readwrite) (type=0x4) Enumeration [1,2,3] value: 3
+Property 0xd114:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd115:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd116:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 2
+Property 0xd117:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14] value: 7
+Property 0xd118:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd119:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd11a:(readwrite) (type=0x4) Enumeration [1,2,3] value: 3
+Property 0xd11b:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 4
+Property 0xd11c:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13] value: 7
+Property 0xd11d:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13] value: 7
+Property 0xd11e:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13] value: 7
+Property 0xd11f:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 1
+Property 0xd120:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+Property 0xd121:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd122:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6] value: 1
+Property 0xd123:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6] value: 4
+Property 0xd124:(readwrite) (type=0x4) Enumeration [2,3,4,5,6,7,8,9,10,15,20,25,30,35] value: 10
+Property 0xd125:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,20,30,40,50] value: 10
+Property 0xd126:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd127:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] value: 10
+Property 0xd128:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd129:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] value: 10
+Property 0xd12a:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd12b:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] value: 10
+Property 0xd12c:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd12d:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd12e:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd12f:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd130:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd131:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd132:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 4
+Property 0xd133:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd134:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd135:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10] value: 1
+Property 0xd136:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd137:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd138:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd139:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd13a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd13b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd13c:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd13d:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd13e:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd13f:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd140:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd141:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd142:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd143:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd144:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd145:(readwrite) (type=0xffff) '0000'
+Property 0xd146:(readwrite) (type=0xffff) '0'
+Property 0xd147:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd148:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd149:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd14a:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd14b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd14c:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41] value: 30
+Property 0xd14d:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23] value: 16
+Property 0xd14e:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd14f:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6] value: 1
+Property 0xd150:(read only) (type=0x6) 12
+Property 0xd151:(read only) (type=0x4) Range [0 - 4, step 1] value: 2
+Property 0xd152:(read only) (type=0x4) 259
+Property 0xd153:(read only) (type=0x4) 274
+Property 0xd154:(read only) (type=0x6) 1660
+Property 0xd155:(read only) (type=0x6) 0
+Property 0xd157:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd158:(readwrite) (type=0x3) Range [-23 - 23, step 1] value: 0
+Property 0xd159:(readwrite) (type=0x4) Enumeration [3840,7680,11520] value: 0
+Property 0xd15a:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8] value: 5
+Property 0xd15b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd15c:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd15d:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd15e:(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd15f:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd160:(readwrite) (type=0x4) Range [36 - 3000, step 1] value: 72
+Property 0xd161:(readwrite) (type=0x4) Enumeration [1,2,3] value: 2
+Property 0xd200:(readwrite) (type=0x3) Range [-18 - 6, step 1] value: 0
+Property 0xd201:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
+Property 0xd202:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd203:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 4
+Property 0xd204:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 4
+Property 0xd205:(readwrite) (type=0x3) Range [-30 - 30, step 1] value: 0
+Property 0xd206:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
+Property 0xd207:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd208:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 0
+Property 0xd209:(read only) (type=0x4) Enumeration [1,2,3] value: 3
+Property 0xd20a:(read only) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd20b:(readwrite) (type=0xffff) ''
+Property 0xd20c:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd20d:(read only) (type=0x4) Range [0 - 65535, step 0] value: 165
+Property 0xd20e:(read only) (type=0x4) Range [0 - 20, step 1] value: 6
+Property 0xd20f:(read only) (type=0x6) 0
+Property 0xd210:(read only) (type=0x4) 274
+Property 0xd211:(read only) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 1
+Property 0xd212:(read only) (type=0x0) Undefined
+Property 0xd213:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd214:(Unknown) (type=0xc000) a[0] 
+Property 0xd215:(readwrite) (type=0xffff) ''
+Property 0xd216:(readwrite) (type=0xffff) ''
+Property 0xd217:(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd218:(readwrite) (type=0x4) Range [22 - 54, step 1] value: 22
+Property 0xd219:(readwrite) (type=0x3) Range [-31 - 78, step 3] value: -39
+Property 0xd21a:(readwrite) (type=0x3) Range [-30 - 30, step 1] value: 0
+Property 0xd21b:(read only) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd407:(read only) (type=0x6) 1
 
+
+ 	  	 
 
 
 

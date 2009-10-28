@@ -286,6 +286,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_NIKON;
 	}
 
+	/* Fuji S5 Pro mostly */
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x4cb) &&
+		strstr(di->VendorExtensionDesc,"fujifilm.co.jp: 1.0;")
+	) {
+		/*camera->pl->bugs |= PTP_MTP;*/
+		di->VendorExtensionID = PTP_VENDOR_FUJI;
+	}
+
+
 	if (di->VendorExtensionID == PTP_VENDOR_NIKON) {
 		int i;
 
