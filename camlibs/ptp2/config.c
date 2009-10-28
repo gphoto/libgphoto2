@@ -917,6 +917,18 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
 	{ N_("Color Temperature"),	0x8012, PTP_VENDOR_NIKON },
 	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
+	{ N_("Fluorescent Lamp 1"),	0x8001, PTP_VENDOR_FUJI },
+	{ N_("Fluorescent Lamp 2"),	0x8002, PTP_VENDOR_FUJI },
+	{ N_("Fluorescent Lamp 3"),	0x8003, PTP_VENDOR_FUJI },
+	{ N_("Fluorescent Lamp 4"),	0x8004, PTP_VENDOR_FUJI },
+	{ N_("Fluorescent Lamp 5"),	0x8005, PTP_VENDOR_FUJI },
+	{ N_("Shade"),			0x8006, PTP_VENDOR_FUJI },
+	{ N_("Choose Color Temperature"),0x8007, PTP_VENDOR_FUJI },
+	{ N_("Preset Custom 1"),	0x8008, PTP_VENDOR_FUJI },
+	{ N_("Preset Custom 2"),	0x8009, PTP_VENDOR_FUJI },
+	{ N_("Preset Custom 3"),	0x800a, PTP_VENDOR_FUJI },
+	{ N_("Preset Custom 4"),	0x800b, PTP_VENDOR_FUJI },
+	{ N_("Preset Custom 5"),	0x800c, PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(WhiteBalance,whitebalance)
 
@@ -1793,6 +1805,10 @@ static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Single Area"),	0x8010, PTP_VENDOR_NIKON},
 	{ N_("Closest Subject"),0x8011, PTP_VENDOR_NIKON},
 	{ N_("Group Dynamic"),  0x8012, PTP_VENDOR_NIKON},
+	{ N_("Single-area AF"),	0x8001, PTP_VENDOR_FUJI},
+	{ N_("Dynamic-area AF"),0x8002, PTP_VENDOR_FUJI},
+	{ N_("Group-dyamic AF"),0x8003, PTP_VENDOR_FUJI},
+	{ N_("Dynamic-area AF with closest subject priority"),0x8004, PTP_VENDOR_FUJI},
 };
 GENERIC16TABLE(FocusMetering,focus_metering)
 
@@ -1884,6 +1900,7 @@ static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("Center Weighted"),0x0002, 0 },
 	{ N_("Multi Spot"),	0x0003, 0 },
 	{ N_("Center Spot"),	0x0004, 0 },
+	{ N_("Spot"),		0x8001, PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(ExposureMetering,exposure_metering)
 
@@ -1899,6 +1916,11 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Slow Sync"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Rear Curtain Sync + Slow Sync"),	0x8012, PTP_VENDOR_NIKON},
 	{ N_("Red-eye Reduction + Slow Sync"),	0x8013, PTP_VENDOR_NIKON},
+	{ N_("Front-curtain sync"),			0x8001, PTP_VENDOR_FUJI},
+	{ N_("Red-eye reduction"),			0x8002, PTP_VENDOR_FUJI},
+	{ N_("Red-eye reduction with slow sync"),	0x8003, PTP_VENDOR_FUJI},
+	{ N_("Slow sync"),				0x8004, PTP_VENDOR_FUJI},
+	{ N_("Rear-curtain sync"),			0x8006, PTP_VENDOR_FUJI},
 };
 GENERIC16TABLE(FlashMode,flash_mode)
 
@@ -2391,6 +2413,8 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("AF-S"),		0x8010, PTP_VENDOR_NIKON },
 	{ N_("AF-C"),		0x8011, PTP_VENDOR_NIKON },
 	{ N_("AF-A"),		0x8012, PTP_VENDOR_NIKON },
+	{ N_("Single-Servo AF"),0x8001, PTP_VENDOR_FUJI },
+	{ N_("Continuous-Servo AF"),0x8002, PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 

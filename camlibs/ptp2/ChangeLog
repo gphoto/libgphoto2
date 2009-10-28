@@ -1,3 +1,9 @@
+2009-10-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Fuji Pro S5 support. Detect FUJI vendor.
+	* ptp.h: More vendor codes from i3a.org.
+	* config.c: Hook up lots of PTP codes from Fuji S5 Pro.
+
 2009-10-02  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c,ptp.c,ptp-pack.c: Added more EOS configuration values.
