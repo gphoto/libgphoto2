@@ -946,6 +946,23 @@ static struct deviceproptableu8 compression[] = {
 };
 GENERIC8TABLE(Compression,compression)
 
+static struct deviceproptableu16 fuji_imageformat[] = {
+	{ N_("RAW Only"),		1,	PTP_VENDOR_FUJI },
+	{ N_("JPG Only Fine"),		2,	PTP_VENDOR_FUJI },
+	{ N_("JPG Only Normal"),	3,	PTP_VENDOR_FUJI },
+	{ N_("RAW + JPG Fine"),		4,	PTP_VENDOR_FUJI },
+	{ N_("RAW + JPG Normal"),	5,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_ImageFormat,fuji_imageformat)
+
+static struct deviceproptableu16 fuji_releasemode[] = {
+	{ N_("Single frame"),		1,	PTP_VENDOR_FUJI },
+	{ N_("Continuous low speed"),	2,	PTP_VENDOR_FUJI },
+	{ N_("Continuous high speed"),	3,	PTP_VENDOR_FUJI },
+	{ N_("Self-timer"),		4,	PTP_VENDOR_FUJI },
+	{ N_("Mup Mirror up"),		5,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_ReleaseMode,fuji_releasemode)
 
 static int
 _get_ImageSize(CONFIG_GET_ARGS) {
@@ -3921,6 +3938,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"), "imageformat", PTP_DPC_CANON_EOS_ImageFormat, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
 	{ N_("Image Format SD"), "imageformatsd", PTP_DPC_CANON_EOS_ImageFormatSD, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
 	{ N_("Image Format CF"), "imageformatcf", PTP_DPC_CANON_EOS_ImageFormatCF, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
+	{ N_("Image Format"), "imageformat", PTP_DPC_FUJI_Quality, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ImageFormat, _put_Fuji_ImageFormat},
 	{ N_("Image Format Ext HD"), "imageformatexthd", PTP_DPC_CANON_EOS_ImageFormatExtHD, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
 	{ N_("Image Size"), "imagesize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
 	{ N_("Image Size"), "imagesize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
@@ -3973,6 +3991,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
+	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_FUJI_ReleaseMode, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ReleaseMode, _put_Fuji_ReleaseMode},
 	{ N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ShootMode, _put_Canon_ShootMode},
 	{ N_("Drive Mode"), "drivemode", PTP_DPC_CANON_EOS_DriveMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_DriveMode, _put_Canon_EOS_DriveMode},
 	{ N_("Picture Style"), "picturestyle", PTP_DPC_CANON_EOS_PictureStyle, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_PictureStyle, _put_Canon_EOS_PictureStyle},
