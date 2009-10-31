@@ -1,6 +1,23 @@
+2009-10-31  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Implemented Sharpness, Capture Delay and Burst
+	  Interval standard PTP properties.
+
+2009-10-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Fuji Pro S5 support. Detect FUJI vendor.
+	* ptp.h: More vendor codes from i3a.org.
+	* config.c: Hook up lots of PTP codes from Fuji S5 Pro.
+
+2009-10-02  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c,ptp.c,ptp-pack.c: Added more EOS configuration values.
+	* library.c: Made EOS preview capturing more stable.
+	* config.c: Hide action commands if command is not present.
+
 2009-09-25  Marcus Meissner  <marcus@jet.franken.de>
 
-        * config.c: Handle different Canon EOS card target values.
+	* config.c: Handle different Canon EOS card target values.
 
 2009-08-02  Marcus Meissner  <marcus@jet.franken.de>
 
