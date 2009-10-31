@@ -1674,7 +1674,7 @@ _put_ISO(CONFIG_PUT_ARGS)
 }
 
 static int
-_get_CaptureDelay(CONFIG_GET_ARGS) {
+_get_Milliseconds(CONFIG_GET_ARGS) {
 	unsigned int i, min, max;
 
 	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration)))
@@ -1733,7 +1733,7 @@ _get_CaptureDelay(CONFIG_GET_ARGS) {
 }
 
 static int
-_put_CaptureDelay(CONFIG_PUT_ARGS)
+_put_Milliseconds(CONFIG_PUT_ARGS)
 {
 	int ret;
 	char *value;
@@ -3985,7 +3985,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Sharpness"), "sharpness", PTP_DPC_Sharpness, 0, PTP_DTC_UINT8, _get_Sharpness, _put_Sharpness},
-	{ N_("Capture Delay"), "capturedelay", PTP_DPC_CaptureDelay, 0, PTP_DTC_UINT32, _get_CaptureDelay, _put_CaptureDelay},
+	{ N_("Capture Delay"), "capturedelay", PTP_DPC_CaptureDelay, 0, PTP_DTC_UINT32, _get_Milliseconds, _put_Milliseconds},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
@@ -4012,6 +4012,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	{ N_("Burst Number"), "burstnumber", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_BurstNumber, _put_BurstNumber},
+	{ N_("Burst Interval"), "burstinterval", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_Milliseconds, _put_Milliseconds},
 
 	/* Newer Nikons have UINT8 ranges */
 	{ N_("Auto White Balance Bias"), "autowhitebias", PTP_DPC_NIKON_WhiteBalanceAutoBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},

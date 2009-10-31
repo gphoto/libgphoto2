@@ -1,6 +1,7 @@
 2009-10-31  Marcus Meissner  <marcus@jet.franken.de>
 
-	* config.c: Implemented Sharpness and Capture Delay.
+	* config.c: Implemented Sharpness, Capture Delay and Burst
+	  Interval standard PTP properties.
 
 2009-10-29  Marcus Meissner  <marcus@jet.franken.de>
 
