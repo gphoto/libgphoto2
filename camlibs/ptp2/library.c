@@ -693,6 +693,8 @@ static struct {
 	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP},
 	/* Borrowed D700 by deckel / marcus */
 	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP},
+	/* IRC reporter */
+	{"Nikon:DSC D3000 (PTP mode)",    0x04b0, 0x0424, PTP_CAP},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
