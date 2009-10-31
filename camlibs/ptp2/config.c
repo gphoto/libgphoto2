@@ -1764,6 +1764,149 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	return (GP_OK);
 }
 
+static int
+_get_Sharpness(CONFIG_GET_ARGS) {
+	int i, min, max, t;
+
+	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range)))
+		return (GP_ERROR);
+	if ((dpd->DataType != PTP_DTC_UINT8) && (dpd->DataType != PTP_DTC_INT8))
+		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		int s;
+
+		if (dpd->DataType == PTP_DTC_UINT8) {
+			min = dpd->FORM.Range.MinimumValue.u8;
+			max = dpd->FORM.Range.MaximumValue.u8;
+			s = dpd->FORM.Range.StepSize.u8;
+		} else {
+			min = dpd->FORM.Range.MinimumValue.i8;
+			max = dpd->FORM.Range.MaximumValue.i8;
+			s = dpd->FORM.Range.StepSize.i8;
+		}
+		for (i=min;i<=max; i+=s) {
+			char buf[20];
+
+			sprintf (buf, "%d%%", (i-min)*100/(max-min));
+			gp_widget_add_choice (*widget, buf);
+			if (	((dpd->DataType == PTP_DTC_UINT8) && (dpd->CurrentValue.u8 == i)) ||
+				((dpd->DataType == PTP_DTC_INT8)  && (dpd->CurrentValue.i8 == i))
+			)
+				gp_widget_set_value (*widget, buf);
+		}
+	}
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		min = 256;
+		max = -256;
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			if (dpd->DataType == PTP_DTC_UINT8) {
+				if (dpd->FORM.Enum.SupportedValue[i].u8 < min)
+					min = dpd->FORM.Enum.SupportedValue[i].u8;
+				if (dpd->FORM.Enum.SupportedValue[i].u8 > max)
+					max = dpd->FORM.Enum.SupportedValue[i].u8;
+			} else {
+				if (dpd->FORM.Enum.SupportedValue[i].i8 < min)
+					min = dpd->FORM.Enum.SupportedValue[i].i8;
+				if (dpd->FORM.Enum.SupportedValue[i].i8 > max)
+					max = dpd->FORM.Enum.SupportedValue[i].i8;
+			}
+		}
+		if (dpd->DataType == PTP_DTC_UINT8)
+			t = dpd->CurrentValue.u8;
+		else
+			t = dpd->CurrentValue.i8;
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			char buf[20];
+			int x;
+
+			if (dpd->DataType == PTP_DTC_UINT8)
+				x = dpd->FORM.Enum.SupportedValue[i].u8;
+			else
+				x = dpd->FORM.Enum.SupportedValue[i].i8;
+
+			sprintf (buf, "%d%%", (x-min)*100/(max-min));
+			gp_widget_add_choice (*widget, buf);
+			if (t == x)
+				gp_widget_set_value (*widget, buf);
+		}
+	}
+	return (GP_OK);
+}
+
+static int
+_put_Sharpness(CONFIG_PUT_ARGS) {
+	const char *val;
+	int i, min, max, x;
+
+	gp_widget_get_value (widget, &val);
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		min = 256;
+		max = -256;
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			if (dpd->DataType == PTP_DTC_UINT8) {
+				if (dpd->FORM.Enum.SupportedValue[i].u8 < min)
+					min = dpd->FORM.Enum.SupportedValue[i].u8;
+				if (dpd->FORM.Enum.SupportedValue[i].u8 > max)
+					max = dpd->FORM.Enum.SupportedValue[i].u8;
+			} else {
+				if (dpd->FORM.Enum.SupportedValue[i].i8 < min)
+					min = dpd->FORM.Enum.SupportedValue[i].i8;
+				if (dpd->FORM.Enum.SupportedValue[i].i8 > max)
+					max = dpd->FORM.Enum.SupportedValue[i].i8;
+			}
+		}
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			char buf[20];
+
+			if (dpd->DataType == PTP_DTC_UINT8)
+				x = dpd->FORM.Enum.SupportedValue[i].u8;
+			else
+				x = dpd->FORM.Enum.SupportedValue[i].i8;
+
+			sprintf (buf, "%d%%", (x-min)*100/(max-min));
+			if (!strcmp(buf, val)) {
+				if (dpd->DataType == PTP_DTC_UINT8)
+					propval->u8 = x;
+				else
+					propval->i8 = x;
+				return GP_OK;
+			}
+		}
+	}
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		int s;
+
+		if (dpd->DataType == PTP_DTC_UINT8) {
+			min = dpd->FORM.Range.MinimumValue.u8;
+			max = dpd->FORM.Range.MaximumValue.u8;
+			s = dpd->FORM.Range.StepSize.u8;
+		} else {
+			min = dpd->FORM.Range.MinimumValue.i8;
+			max = dpd->FORM.Range.MaximumValue.i8;
+			s = dpd->FORM.Range.StepSize.i8;
+		}
+		for (i=min; i<=max; i+=s) {
+			char buf[20];
+
+			sprintf (buf, "%d%%", (i-min)*100/(max-min));
+			if (strcmp (buf, val))
+				continue;
+			if (dpd->DataType == PTP_DTC_UINT8)
+				propval->u8 = i;
+			else
+				propval->i8 = i;
+			return GP_OK;
+		}
+	}
+	return GP_ERROR;
+}
+
+
 static struct deviceproptableu16 exposure_program_modes[] = {
 	{ "M",			0x0001, 0 },
 	{ "P",			0x0002, 0 },
@@ -3761,6 +3904,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AV Max"), "avmax", PTP_DPC_CANON_AvMax, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
+	{ N_("Sharpness"), "sharpness", PTP_DPC_Sharpness, 0, PTP_DTC_UINT8, _get_Sharpness, _put_Sharpness},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
