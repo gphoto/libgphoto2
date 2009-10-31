@@ -1674,6 +1674,86 @@ _put_ISO(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_CaptureDelay(CONFIG_GET_ARGS) {
+	unsigned int i, min, max;
+
+	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration)))
+		return (GP_ERROR);
+	if ((dpd->DataType != PTP_DTC_UINT32) && (dpd->DataType != PTP_DTC_UINT16))
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		unsigned int t;
+
+		if (dpd->DataType == PTP_DTC_UINT32)
+			t = dpd->CurrentValue.u32;
+		else
+			t = dpd->CurrentValue.u16;
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			char	buf[20];
+			unsigned int x;
+
+			if (dpd->DataType == PTP_DTC_UINT32)
+				x = dpd->FORM.Enum.SupportedValue[i].u32;
+			else
+				x = dpd->FORM.Enum.SupportedValue[i].u16;
+
+			sprintf(buf,"%0.3fs",x/1000.0);
+			gp_widget_add_choice (*widget,buf);
+			if (x == t)
+				gp_widget_set_value (*widget,buf);
+		}
+	}
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		unsigned int s;
+
+		if (dpd->DataType == PTP_DTC_UINT32) {
+			min = dpd->FORM.Range.MinimumValue.u32;
+			max = dpd->FORM.Range.MaximumValue.u32;
+			s = dpd->FORM.Range.StepSize.u32;
+		} else {
+			min = dpd->FORM.Range.MinimumValue.u16;
+			max = dpd->FORM.Range.MaximumValue.u16;
+			s = dpd->FORM.Range.StepSize.u16;
+		}
+		for (i=min; i<=max; i+=s) {
+			char buf[20];
+
+			sprintf (buf, "%0.3fs", i/1000.0);
+			gp_widget_add_choice (*widget, buf);
+			if (	((dpd->DataType == PTP_DTC_UINT32) && (dpd->CurrentValue.u32 == i)) ||
+				((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
+			)
+				gp_widget_set_value (*widget, buf);
+		}
+
+	}
+	return GP_OK;
+}
+
+static int
+_put_CaptureDelay(CONFIG_PUT_ARGS)
+{
+	int ret;
+	char *value;
+	float	f;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+
+	if (sscanf(value, "%f", &f)) {
+		if (dpd->DataType == PTP_DTC_UINT32)
+			propval->u32 = f*1000;
+		else
+			propval->u16 = f*1000;
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+
+static int
 _get_FNumber(CONFIG_GET_ARGS) {
 	int i;
 
@@ -3905,6 +3985,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Focusing Point"), "focusingpoint", PTP_DPC_CANON_FocusingPoint, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_FocusingPoint, _put_Canon_FocusingPoint},
 	{ N_("Sharpness"), "sharpness", PTP_DPC_Sharpness, 0, PTP_DTC_UINT8, _get_Sharpness, _put_Sharpness},
+	{ N_("Capture Delay"), "capturedelay", PTP_DPC_CaptureDelay, 0, PTP_DTC_UINT32, _get_CaptureDelay, _put_CaptureDelay},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_ExposureTime, 0, PTP_DTC_UINT32, _get_ExpTime, _put_ExpTime},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
