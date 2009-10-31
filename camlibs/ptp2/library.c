@@ -469,6 +469,8 @@ static struct {
 	{"Kodak:C913",   0x040a, 0x05c6, 0},
 	/* reported by Jim Nelson <jim@yorba.org> */
 	{"Kodak:M1063",  0x040a, 0x05ce, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2889451&group_id=8874&atid=358874 */
+	{"Kodak:Z915",   0x040a, 0x05cf, 0},
 
 	/* HP PTP cameras */
 #if 0
