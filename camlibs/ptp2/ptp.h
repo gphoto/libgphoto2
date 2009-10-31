@@ -1631,6 +1631,15 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
 #define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
 
+/* Fuji specific */
+#define PTP_DPC_FUJI_ColorTemperature			0xD017
+#define PTP_DPC_FUJI_Quality				0xD018
+#define PTP_DPC_FUJI_ReleaseMode			0xD201
+#define PTP_DPC_FUJI_FocusAreas				0xD206
+#define PTP_DPC_FUJI_AELock				0xD213
+#define PTP_DPC_FUJI_ApertureValue			0xD218
+#define PTP_DPC_FUJI_ShutterSpeed			0xD219 /* ? */
+
 /* Microsoft/MTP specific */
 #define PTP_DPC_MTP_SecureTime				0xD101
 #define PTP_DPC_MTP_DeviceCertificate			0xD102
