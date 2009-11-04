@@ -1,9 +1,14 @@
-libgphoto2 2.4.7.1
+libgphoto2 2.4.7.3
 
 This is a 2.4 release branch update.
 
 ptp2:
    * Bugfixes.
+   * Lots of Fuji S5 Pro support.
+
+libgphoto2_port/usb:
+   * Check for MTP devices by string descriptor first, 
+     and by OSD later.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.7
