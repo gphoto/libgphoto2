@@ -67,6 +67,7 @@ main(int argc, char **arvg)
 	struct usb_bus *bus;
 	char	*devpath;
 	unsigned int xbus, xdev;
+	int i;
 
 	devpath = getenv("DEVPATH");
 	if (!devpath) {
@@ -111,6 +112,36 @@ found:
 	}
 
 	devh = usb_open (dev);
+
+	/*
+	 * Loop over the device configurations and interfaces. Nokia MTP-capable 
+	 * handsets (possibly others) typically have the string "MTP" in their 
+	 * MTP interface descriptions, that's how they can be detected, before
+	 * we try the more esoteric "OS descriptors" (below).
+	 */
+	for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
+		unsigned int j;
+		for (j = 0; j < dev->config[i].bNumInterfaces; j++) {
+			int k;
+			for (k = 0; k < dev->config[i].interface[j].num_altsetting; k++) {
+				buf[0] = '\0';
+				ret = usb_get_string_simple(devh, 
+					dev->config[i].interface[j].altsetting[k].iInterface, 
+					(char *) buf, 
+					1024);
+				if (ret < 3)
+					continue;
+				if (strcmp((char *) buf, "MTP") == 0) {
+					fprintf(stderr, "Configuration %d, interface %d, altsetting %d:\n", i, j, k);
+					fprintf(stderr, "   Interface description contains the string \"MTP\"\n");
+					fprintf(stderr, "   Device recognized as MTP, no further probing.\n");
+					usb_close(devh);
+					return 0;
+				}
+			}
+		}
+	}
+
 	/* get string descriptor at 0xEE */
 	ret = usb_get_descriptor (devh, 0x03, 0xee, buf, sizeof(buf));
 	/*if (ret > 0) gp_log_data("get_MS_OSD",buf, ret);*/
