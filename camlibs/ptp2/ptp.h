@@ -1637,8 +1637,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
 #define PTP_DPC_FUJI_FocusAreas				0xD206
 #define PTP_DPC_FUJI_AELock				0xD213
-#define PTP_DPC_FUJI_ApertureValue			0xD218
-#define PTP_DPC_FUJI_ShutterSpeed			0xD219 /* ? */
+#define PTP_DPC_FUJI_Aperture				0xD218
+#define PTP_DPC_FUJI_ShutterSpeed			0xD219
 
 /* Microsoft/MTP specific */
 #define PTP_DPC_MTP_SecureTime				0xD101

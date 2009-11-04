@@ -533,6 +533,12 @@ struct deviceproptableu16 {
 	uint16_t	vendor_id;
 };
 
+struct deviceproptablei16 {
+	char		*label;
+	int16_t		value;
+	uint16_t	vendor_id;
+};
+
 /* Generic helper function for:
  *
  * ENUM UINT16 propertiess, with potential vendor specific variables.
@@ -541,8 +547,8 @@ static int
 _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize) {
 	int i, j;
 
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration)) {
-		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no enumeration in 16bit table code");
+	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range))) {
+		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no enumeration/range in 16bit table code");
 		return (GP_ERROR);
 	}
 	if (dpd->DataType != PTP_DTC_UINT16) {
@@ -552,40 +558,70 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	if (!dpd->FORM.Enum.NumberOfValues) {
-		/* fill in with all values we have in the table. */
-		for (j=0;j<tblsize;j++) {
-			if ((tbl[j].vendor_id == 0) ||
-		     	    (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)
-			) {
-				gp_widget_add_choice (*widget, _(tbl[j].label));
-				if (tbl[j].value == dpd->CurrentValue.u16)
-					gp_widget_set_value (*widget, _(tbl[j].label));
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		if (!dpd->FORM.Enum.NumberOfValues) {
+			/* fill in with all values we have in the table. */
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].vendor_id == 0) ||
+				    (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (tbl[j].value == dpd->CurrentValue.u16)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+				}
 			}
+			return GP_OK;
 		}
-		return GP_OK;
-	}
-	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-		int isset = FALSE;
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			int isset = FALSE;
 
-		for (j=0;j<tblsize;j++) {
-			if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u16) &&
-			    ((tbl[j].vendor_id == 0) ||
-			     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
-			) {
-				gp_widget_add_choice (*widget, _(tbl[j].label));
-				if (tbl[j].value == dpd->CurrentValue.u16)
-					gp_widget_set_value (*widget, _(tbl[j].label));
-				isset = TRUE;
-				break;
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u16) &&
+				    ((tbl[j].vendor_id == 0) ||
+				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (tbl[j].value == dpd->CurrentValue.u16)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+					isset = TRUE;
+					break;
+				}
+			}
+			if (!isset) {
+				char buf[200];
+				sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].u16);
+				gp_widget_add_choice (*widget, buf);
+				if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
+					gp_widget_set_value (*widget, buf);
 			}
 		}
-		if (!isset) {
-			char buf[200];
-			sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].u16);
-			gp_widget_add_choice (*widget, buf);
-			if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
-				gp_widget_set_value (*widget, buf);
+	}
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		for (	i = dpd->FORM.Range.MinimumValue.u16;
+			i<=dpd->FORM.Range.MaximumValue.u16;
+			i+= dpd->FORM.Range.StepSize.u16
+		) {
+			int isset = FALSE;
+
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].value == i) &&
+				    ((tbl[j].vendor_id == 0) ||
+				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (i == dpd->CurrentValue.u16)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+					isset = TRUE;
+					break;
+				}
+			}
+			if (!isset) {
+				char buf[200];
+				sprintf(buf, _("Unknown value %04d"), i);
+				gp_widget_add_choice (*widget, buf);
+				if (i == dpd->CurrentValue.u16)
+					gp_widget_set_value (*widget, buf);
+			}
 		}
 	}
 	return (GP_OK);
@@ -627,6 +663,127 @@ _get_##name(CONFIG_GET_ARGS) {				\
 static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Generic16Table(CONFIG_PUT_NAMES,	\
+		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+	);						\
+}
+
+static int
+_get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsize) {
+	int i, j;
+
+	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration))) {
+		gp_log (GP_LOG_DEBUG, "ptp/get_generici16", "no enumeration/range in 16bit table code");
+		return (GP_ERROR);
+	}
+	if (dpd->DataType != PTP_DTC_INT16) {
+		gp_log (GP_LOG_DEBUG, "ptp/get_generici16", "no int16 prop in 16bit table code");
+		return (GP_ERROR);
+	}
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		if (!dpd->FORM.Enum.NumberOfValues) {
+			/* fill in with all values we have in the table. */
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].vendor_id == 0) ||
+				    (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (tbl[j].value == dpd->CurrentValue.i16)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+				}
+			}
+			return GP_OK;
+		}
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			int isset = FALSE;
+
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].i16) &&
+				    ((tbl[j].vendor_id == 0) ||
+				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (tbl[j].value == dpd->CurrentValue.i16)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+					isset = TRUE;
+					break;
+				}
+			}
+			if (!isset) {
+				char buf[200];
+				sprintf(buf, _("Unknown value %04x"), dpd->FORM.Enum.SupportedValue[i].i16);
+				gp_widget_add_choice (*widget, buf);
+				if (dpd->FORM.Enum.SupportedValue[i].i16 == dpd->CurrentValue.i16)
+					gp_widget_set_value (*widget, buf);
+			}
+		}
+	}
+	if (dpd->FormFlag & PTP_DPFF_Range) {
+		for (i = dpd->FORM.Range.MinimumValue.i16; i<=dpd->FORM.Range.MaximumValue.i16; i+= dpd->FORM.Range.StepSize.i16) {
+			int isset = FALSE;
+
+			for (j=0;j<tblsize;j++) {
+				if ((tbl[j].value == i) &&
+				    ((tbl[j].vendor_id == 0) ||
+				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+				) {
+					gp_widget_add_choice (*widget, _(tbl[j].label));
+					if (i == dpd->CurrentValue.i16)
+						gp_widget_set_value (*widget, _(tbl[j].label));
+					isset = TRUE;
+					break;
+				}
+			}
+			if (!isset) {
+				char buf[200];
+				sprintf(buf, _("Unknown value %04d"), i);
+				gp_widget_add_choice (*widget, buf);
+				if (i == dpd->CurrentValue.i16)
+					gp_widget_set_value (*widget, buf);
+			}
+		}
+	}
+	return (GP_OK);
+}
+
+
+static int
+_put_GenericI16Table(CONFIG_PUT_ARGS, struct deviceproptablei16* tbl, int tblsize) {
+	char *value;
+	int i, ret, intval;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	for (i=0;i<tblsize;i++) {
+		if (!strcmp(_(tbl[i].label),value) &&
+		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
+		) {
+			propval->i16 = tbl[i].value;
+			return GP_OK;
+		}
+	}
+	if (!sscanf(value, _("Unknown value %04d"), &intval)) {
+		gp_log (GP_LOG_ERROR, "ptp2/config", "failed to find value %s in list", value);
+		return (GP_ERROR);
+	}
+	propval->i16 = intval;
+	return GP_OK;
+}
+
+#define GENERICI16TABLE(name,tbl) 			\
+static int						\
+_get_##name(CONFIG_GET_ARGS) {				\
+	return _get_GenericI16Table(CONFIG_GET_NAMES,	\
+		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+	);						\
+}							\
+							\
+static int __unused__					\
+_put_##name(CONFIG_PUT_ARGS) {				\
+	return _put_GenericI16Table(CONFIG_PUT_NAMES,	\
 		tbl,sizeof(tbl)/sizeof(tbl[0])		\
 	);						\
 }
@@ -738,6 +895,7 @@ _put_##name(CONFIG_PUT_ARGS) {				\
 		tbl,sizeof(tbl)/sizeof(tbl[0])		\
 	);						\
 }
+
 
 static int
 _get_AUINT8_as_CHAR_ARRAY(CONFIG_GET_ARGS) {
@@ -2160,6 +2318,7 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Red-eye reduction"),			0x8002, PTP_VENDOR_FUJI},
 	{ N_("Red-eye reduction with slow sync"),	0x8003, PTP_VENDOR_FUJI},
 	{ N_("Slow sync"),				0x8004, PTP_VENDOR_FUJI},
+	{ N_("Rear-curtain with slow sync"),		0x8005, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain sync"),			0x8006, PTP_VENDOR_FUJI},
 };
 GENERIC16TABLE(FlashMode,flash_mode)
@@ -2585,6 +2744,67 @@ static struct deviceproptableu8 nikon_flashshutterspeed[] = {
 };
 GENERIC8TABLE(Nikon_FlashShutterSpeed,nikon_flashshutterspeed)
 
+static struct deviceproptablei16 fuji_shutterspeed[] = {
+	{ N_("bulb"),	-31, 0 },
+	{ N_("30s"),	-30, 0 },
+	{ N_("25s"),	-28, 0 },
+	{ N_("20s"),	-26, 0 },
+	{ N_("15s"),	-24, 0 },
+	{ N_("13s"),	-22, 0 },
+	{ N_("10s"),	-20, 0 },
+	{ N_("8s"),	-18, 0 },
+	{ N_("6s"),	-16, 0 },
+	{ N_("5s"),	-14, 0 },
+	{ N_("4s"),	-12, 0 },
+	{ N_("3s"),	-10, 0 },
+	{ N_("2.5s"),	-8, 0 },
+	{ N_("2s"),	-6, 0 },
+	{ N_("1.6s"),	-4, 0 },
+	{ N_("1.3s"),	-2, 0 },
+	{ N_("1s"),	0, 0 },
+	{ N_("1/1.3s"),	2, 0 },
+	{ N_("1/1.6s"),	4, 0 },
+	{ N_("1/2s"),	6, 0 },
+	{ N_("1/2.5s"),	8, 0 },
+	{ N_("1/3s"),	10, 0 },
+	{ N_("1/4s"),	12, 0 },
+	{ N_("1/5s"),	14, 0 },
+	{ N_("1/6s"),	16, 0 },
+	{ N_("1/8s"),	18, 0 },
+	{ N_("1/10s"),	20, 0 },
+	{ N_("1/13s"),	22, 0 },
+	{ N_("1/15s"),	24, 0 },
+	{ N_("1/20s"),	26, 0 },
+	{ N_("1/25s"),	28, 0 },
+	{ N_("1/30s"),	30, 0 },
+	{ N_("1/40s"),	32, 0 },
+	{ N_("1/50s"),	34, 0 },
+	{ N_("1/60s"),	36, 0 },
+	{ N_("1/80s"),	38, 0 },
+	{ N_("1/100s"),	40, 0 },
+	{ N_("1/125s"),	42, 0 },
+	{ N_("1/160s"),	44, 0 },
+	{ N_("1/200s"),	46, 0 },
+	{ N_("1/250s"),	48, 0 },
+	{ N_("1/320s"),	50, 0 },
+	{ N_("1/400s"),	52, 0 },
+	{ N_("1/500s"),	54, 0 },
+	{ N_("1/640s"),	56, 0 },
+	{ N_("1/800s"),	58, 0 },
+	{ N_("1/1000s"),60, 0 },
+	{ N_("1/1250s"),62, 0 },
+	{ N_("1/1250s"),62, 0 },
+	{ N_("1/1600s"),64, 0 },
+	{ N_("1/2000s"),66, 0 },
+	{ N_("1/2500s"),68, 0 },
+	{ N_("1/3200s"),70, 0 },
+	{ N_("1/4000s"),72, 0 },
+	{ N_("1/5000s"),74, 0 },
+	{ N_("1/6400s"),76, 0 },
+	{ N_("1/8000s"),78, 0 },
+};
+GENERICI16TABLE(Fuji_ShutterSpeed,fuji_shutterspeed)
+
 static struct deviceproptableu8 nikon_remotetimeout[] = {
 	{ N_("1 minute"),	0x00, 0 },
 	{ N_("5 minutes"),	0x01, 0 },
@@ -2827,6 +3047,38 @@ static struct deviceproptableu16 canon_aperture[] = {
 	{ "91",		0x0070, 0 },
 };
 GENERIC16TABLE(Canon_Aperture,canon_aperture)
+
+static struct deviceproptableu16 fuji_aperture[] = {
+	{ "1.8",	10, 0 },
+	{ "2",		12, 0 },
+	{ "2.2",	14, 0 },
+	{ "2.5",	16, 0 },
+	{ "2.8",	18, 0 },
+	{ "3.2",	20, 0 },
+	{ "3.5",	22, 0 },
+	{ "4",		24, 0 },
+	{ "4.5",	26, 0 },
+	{ "5",		28, 0 },
+	{ "5.6",	30, 0 },
+	{ "6.3",	32, 0 },
+	{ "7.1",	34, 0 },
+	{ "8",		36, 0 },
+	{ "9",		38, 0 },
+	{ "10",		40, 0 },
+	{ "11",		42, 0 },
+	{ "13",		44, 0 },
+	{ "14",		46, 0 },
+	{ "16",		48, 0 },
+	{ "18",		50, 0 },
+	{ "20",		52, 0 },
+	{ "22",		54, 0 },
+	{ "25",		56, 0 },
+	{ "29",		58, 0 },
+	{ "32",		60, 0 },
+	{ "36",		62, 0 },
+};
+GENERIC16TABLE(Fuji_Aperture,fuji_aperture)
+
 
 
 static struct deviceproptableu8 nikon_bracketset[] = {
@@ -3999,6 +4251,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
 	{ N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
+	{ N_("Aperture"), "aperture", PTP_DPC_FUJI_Aperture, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_Aperture, _put_Fuji_Aperture},
 	{ N_("AV Open"), "avopen", PTP_DPC_CANON_AvOpen, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("AV Max"), "avmax", PTP_DPC_CANON_AvMax, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_EOS_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
@@ -4010,6 +4263,7 @@ static struct submenu capture_settings_menu[] = {
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
 	{ N_("Shutter Speed 2"), "shutterspeed2", PTP_DPC_NIKON_ExposureTime, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_ShutterSpeed, _put_Nikon_ShutterSpeed},
 	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_CANON_EOS_ShutterSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ShutterSpeed, _put_Canon_ShutterSpeed},
+	{ N_("Shutter Speed"), "shutterspeed", PTP_DPC_FUJI_ShutterSpeed, PTP_VENDOR_FUJI, PTP_DTC_INT16, _get_Fuji_ShutterSpeed, _put_Fuji_ShutterSpeed},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_EOS_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
 	{ N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
