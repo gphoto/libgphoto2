@@ -2193,6 +2193,7 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Remote"),			0x8013, PTP_VENDOR_NIKON},
 	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON}, /* others nikons */
 	{ N_("Timer + Remote 2"),	0x8015, PTP_VENDOR_NIKON}, /* d90 */
+	{ N_("Quiet Release"),		0x8016, PTP_VENDOR_NIKON}, /* d5000 */
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
 
