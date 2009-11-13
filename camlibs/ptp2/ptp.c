@@ -3496,6 +3496,19 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_MTP_PlaysForSureID,    N_("PlaysForSure ID")},		/* D131 (?) */
 		{0,NULL}
         };
+        struct {
+		uint16_t dpc;
+		const char *txt;
+        } ptp_device_properties_FUJI[] = {
+		{PTP_DPC_FUJI_ColorTemperature, N_("Color Temperature")},	/* 0xD017 */
+		{PTP_DPC_FUJI_Quality, N_("Quality")},				/* 0xD018 */
+		{PTP_DPC_FUJI_Quality, N_("Release Mode")},			/* 0xD201 */
+		{PTP_DPC_FUJI_Quality, N_("Focus Areas")},			/* 0xD206 */
+		{PTP_DPC_FUJI_Quality, N_("AE Lock")},				/* 0xD213 */
+		{PTP_DPC_FUJI_Quality, N_("Aperture")},				/* 0xD218 */
+		{PTP_DPC_FUJI_Quality, N_("Shutter Speed")},			/* 0xD219 */
+		{0,NULL}
+        };
 
 	for (i=0; ptp_device_properties[i].txt!=NULL; i++)
 		if (ptp_device_properties[i].dpc==dpc)
@@ -3521,6 +3534,11 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		for (i=0; ptp_device_properties_Nikon[i].txt!=NULL; i++)
 			if (ptp_device_properties_Nikon[i].dpc==dpc)
 				return (ptp_device_properties_Nikon[i].txt);
+
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_FUJI)
+		for (i=0; ptp_device_properties_FUJI[i].txt!=NULL; i++)
+			if (ptp_device_properties_FUJI[i].dpc==dpc)
+				return (ptp_device_properties_FUJI[i].txt);
 
 	return NULL;
 }
@@ -3590,7 +3608,9 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_ExposureTime, 0, 0.00001, 0.0, "%.2g sec"},	/* 500D */
 		{PTP_DPC_ExposureIndex, 0, 1.0, 0.0, "ISO %.0f"},	/* 500F */
 		{PTP_DPC_ExposureBiasCompensation, 0, 0.001, 0.0, N_("%.1f stops")},/* 5010 */
+		{PTP_DPC_CaptureDelay, 0, 0.001, 0.0, "%.1fs"},		/* 5012 */
 		{PTP_DPC_DigitalZoom, 0, 0.1, 0.0, "%.1f"},		/* 5016 */
+		{PTP_DPC_BurstInterval, 0, 0.001, 0.0, "%.1fs"},	/* 5019 */
 
 		/* Nikon device properties */
 		{PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, 0.08333, 0.0, N_("%.1f stops")},/* D10A */
