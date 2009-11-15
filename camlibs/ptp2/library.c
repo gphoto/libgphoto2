@@ -646,6 +646,9 @@ static struct {
 	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
 	/*   http://bugs.debian.org/520752 */
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
+	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
+	{"Nikon:Coolpix S220 (PTP mode)", 0x04b0, 0x0177, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
