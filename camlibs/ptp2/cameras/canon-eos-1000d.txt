@@ -12862,3 +12862,303 @@ event 125: EOS prop d17f desc record, datasize 0, propxtype 1
 event 125: propxtype is 1 for d17f, unhandled.
 event 126: EOS prop d1b7 desc record, datasize 0, propxtype 1
 event 126: propxtype is 1 for d1b7, unhandled.
+
+
+/main/actions/bulb
+	Label: Bulb Mode
+	Type: TOGGLE
+	Current: 2
+/main/actions/syncdatetime
+	Label: Synchronize camera date and time with PC
+	Type: TOGGLE
+	Current: 0
+/main/actions/autofocusdrive
+	Label: Drive Canon DSLR Autofocus
+	Type: TOGGLE
+	Current: 0
+/main/actions/manualfocusdrive
+	Label: Drive Canon DSLR Manual focus
+	Type: RANGE
+	Current: 0
+	Bottom: -32767
+	Top: 32767
+	Step: 1
+/main/settings/datetime
+	Label: Camera Date and Time
+	Type: DATE
+	Current: 1259185752
+	Printable: Wed Nov 25 22:49:12 2009
+/main/settings/reviewtime
+	Label: Quick Review Time
+	Type: RADIO
+	Current: 2 seconds
+	Choice: 0 None
+	Choice: 1 2 seconds
+	Choice: 2 4 seconds
+	Choice: 3 8 seconds
+	Choice: 4 Hold
+/main/settings/ownername
+	Label: Owner Name
+	Type: TEXT
+	Current: 
+/main/settings/capturetarget
+	Label: Capture Target
+	Type: RADIO
+	Current: Internal RAM
+	Choice: 0 Internal RAM
+	Choice: 1 Memory card
+/main/settings/capture
+	Label: Capture
+	Type: TOGGLE
+	Current: 2
+/main/status/model
+	Label: Camera Model
+	Type: TEXT
+	Current: 2147484244
+/main/status/ptpversion
+	Label: PTP Version
+	Type: TEXT
+	Current: 256
+/main/status/dpofversion
+	Label: DPOF Version
+	Type: TEXT
+	Current: 257
+/main/status/batterylevel
+	Label: Battery Level
+	Type: TEXT
+	Current: Low
+/main/status/serialnumber
+	Label: Serial Number
+	Type: TEXT
+	Current: 1780314346
+/main/status/shuttercounter
+	Label: Shutter Counter
+	Type: TEXT
+	Current: 30
+/main/status/availableshots
+	Label: Available Shots
+	Type: TEXT
+	Current: 1789567
+/main/imgsettings/imageformat
+	Label: Image Format
+	Type: RADIO
+	Current: Large Fine JPEG
+	Choice: 0 Large Fine JPEG
+	Choice: 1 Large Normal JPEG
+	Choice: 2 Medium Fine JPEG
+	Choice: 3 Medium Normal JPEG
+	Choice: 4 Small Fine JPEG
+	Choice: 5 Small Normal JPEG
+	Choice: 6 RAW + Large Fine JPEG
+	Choice: 7 RAW
+/main/imgsettings/imageformatsd
+	Label: Image Format SD
+	Type: RADIO
+	Current: Large Fine JPEG
+	Choice: 0 Large Fine JPEG
+	Choice: 1 Large Normal JPEG
+	Choice: 2 Medium Fine JPEG
+	Choice: 3 Medium Normal JPEG
+	Choice: 4 Small Fine JPEG
+	Choice: 5 Small Normal JPEG
+	Choice: 6 RAW + Large Fine JPEG
+	Choice: 7 RAW
+/main/imgsettings/iso
+	Label: ISO Speed
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 100
+	Choice: 2 200
+	Choice: 3 400
+	Choice: 4 800
+	Choice: 5 1600
+/main/imgsettings/whitebalance
+	Label: WhiteBalance
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Daylight
+	Choice: 2 Shadow
+	Choice: 3 Cloudy
+	Choice: 4 Tungsten
+	Choice: 5 Fluorescent
+	Choice: 6 Flash
+	Choice: 7 Manual
+/main/imgsettings/whitebalanceadjusta
+	Label: WhiteBalance Adjust A
+	Type: RADIO
+	Current: 0
+	Choice: 0 -9
+	Choice: 1 -8
+	Choice: 2 -7
+	Choice: 3 -6
+	Choice: 4 -5
+	Choice: 5 -4
+	Choice: 6 -3
+	Choice: 7 -2
+	Choice: 8 -1
+	Choice: 9 0
+	Choice: 10 1
+	Choice: 11 2
+	Choice: 12 3
+	Choice: 13 4
+	Choice: 14 5
+	Choice: 15 6
+	Choice: 16 7
+	Choice: 17 8
+	Choice: 18 9
+/main/imgsettings/whitebalanceadjustb
+	Label: WhiteBalance Adjust B
+	Type: RADIO
+	Current: 0
+	Choice: 0 -9
+	Choice: 1 -8
+	Choice: 2 -7
+	Choice: 3 -6
+	Choice: 4 -5
+	Choice: 5 -4
+	Choice: 6 -3
+	Choice: 7 -2
+	Choice: 8 -1
+	Choice: 9 0
+	Choice: 10 1
+	Choice: 11 2
+	Choice: 12 3
+	Choice: 13 4
+	Choice: 14 5
+	Choice: 15 6
+	Choice: 16 7
+	Choice: 17 8
+	Choice: 18 9
+/main/imgsettings/whitebalancexa
+	Label: WhiteBalance X A
+	Type: TEXT
+	Current: 0
+/main/imgsettings/whitebalancexb
+	Label: WhiteBalance X B
+	Type: TEXT
+	Current: 0
+/main/capturesettings/drivemode
+	Label: Drive Mode
+	Type: RADIO
+	Current: Continuous
+	Choice: 0 Single
+	Choice: 1 Continuous
+	Choice: 2 Timer 10 sec
+	Choice: 3 Timer 2 sec
+	Choice: 4 Unknown value 0007
+/main/capturesettings/picturestyle
+	Label: Picture Style
+	Type: RADIO
+	Current: Standard
+	Choice: 0 Standard
+	Choice: 1 Portrait
+	Choice: 2 Landscape
+	Choice: 3 Neutral
+	Choice: 4 Faithful
+	Choice: 5 Monochrome
+	Choice: 6 User defined 1
+	Choice: 7 User defined 2
+	Choice: 8 User defined 3
+/main/capturesettings/aperture
+	Label: Aperture
+	Type: RADIO
+	Current: 5.6
+	Choice: 0 5
+	Choice: 1 5.6
+	Choice: 2 6.3
+	Choice: 3 7.1
+	Choice: 4 8
+	Choice: 5 9
+	Choice: 6 10
+	Choice: 7 11
+	Choice: 8 13
+	Choice: 9 14
+	Choice: 10 16
+	Choice: 11 18
+	Choice: 12 20
+	Choice: 13 22
+	Choice: 14 25
+	Choice: 15 29
+	Choice: 16 32
+/main/capturesettings/shutterspeed
+	Label: Shutter Speed
+	Type: RADIO
+	Current: 1/15
+	Choice: 0 bulb
+	Choice: 1 30
+	Choice: 2 25
+	Choice: 3 20
+	Choice: 4 15
+	Choice: 5 13
+	Choice: 6 10
+	Choice: 7 8
+	Choice: 8 6
+	Choice: 9 5
+	Choice: 10 4
+	Choice: 11 3.2
+	Choice: 12 2.5
+	Choice: 13 2
+	Choice: 14 1.6
+	Choice: 15 1.3
+	Choice: 16 1
+	Choice: 17 0.8
+	Choice: 18 0.6
+	Choice: 19 0.5
+	Choice: 20 0.4
+	Choice: 21 0.3
+	Choice: 22 1/4
+	Choice: 23 1/5
+	Choice: 24 1/6
+	Choice: 25 1/8
+	Choice: 26 1/10
+	Choice: 27 1/13
+	Choice: 28 1/15
+	Choice: 29 1/20
+	Choice: 30 1/25
+	Choice: 31 1/30
+	Choice: 32 1/40
+	Choice: 33 1/50
+	Choice: 34 1/60
+	Choice: 35 1/80
+	Choice: 36 1/100
+	Choice: 37 1/125
+	Choice: 38 1/160
+	Choice: 39 1/200
+	Choice: 40 1/250
+	Choice: 41 1/320
+	Choice: 42 1/400
+	Choice: 43 1/500
+	Choice: 44 1/640
+	Choice: 45 1/800
+	Choice: 46 1/1000
+	Choice: 47 1/1250
+	Choice: 48 1/1600
+	Choice: 49 1/2000
+	Choice: 50 1/2500
+	Choice: 51 1/3200
+	Choice: 52 1/4000
+/main/capturesettings/meteringmode
+	Label: Metering Mode
+	Type: RADIO
+	Current: evaluative
+	Choice: 0 evaluative
+	Choice: 1 partial
+	Choice: 2 center-weighted average
+/main/capturesettings/bracketmode
+	Label: Bracket Mode
+	Type: TEXT
+	Current: 0
+/main/other/d402
+	Label: PTP Property 0xd402
+	Type: TEXT
+	Current: Canon EOS 1000D
+/main/other/d407
+	Label: PTP Property 0xd407
+	Type: TEXT
+	Current: 1
+/main/other/d406
+	Label: PTP Property 0xd406
+	Type: TEXT
+	Current: Unknown Initiator
