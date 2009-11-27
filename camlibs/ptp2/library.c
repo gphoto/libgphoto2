@@ -977,9 +977,10 @@ static struct {
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
-	{"Canon:Digital IXUS 100 IS",           0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	/* Do not confuse with PowerShot SX100IS */
+	{"Canon:Digital IXUS 100 IS",           0x04a9, 0x31c2, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
-	{"Canon:PowerShot SD780 IS",		0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD780 IS",		0x04a9, 0x31c2, PTPBUG_DELETE_SENDS_EVENT},
 	/* Matthew Vernon <matthew@sel.cam.ac.uk> */
 	{"Canon:PowerShot A1100 IS",		0x04a9, 0x31c3, PTPBUG_DELETE_SENDS_EVENT},
 	/* Joshua Hoke <jdh@people.homeip.net> */
