@@ -643,8 +643,8 @@ gp_camera_free (Camera *camera)
 int
 gp_camera_autodetect (CameraList *list, GPContext *context)
 {
-	CameraAbilitiesList	*al;
-	GPPortInfoList		*il;
+	CameraAbilitiesList	*al = NULL;
+	GPPortInfoList		*il = NULL;
 	int			ret, i;
 	CameraList		*xlist = NULL;
 
