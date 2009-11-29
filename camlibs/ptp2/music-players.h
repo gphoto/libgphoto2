@@ -192,6 +192,10 @@
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-U5", 0x5121,
      DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  // From Leonardo Accorsi <laccorsi@users.sourceforge.net>
+  // Guessing on .spl flag
+  { "Samsung", 0x04e8, "YP-R0", 0x5125,
+     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // From a rouge .INF file,
   // this device ID seems to have been recycled for:
   // the Samsung SGH-A707 Cingular cellphone
@@ -523,7 +527,6 @@
   { "Toshiba", 0x0930, "Gigabeat MET401", 0x001d,
     DEVICE_FLAG_NO_RELEASE_INTERFACE |  DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST },
 
-  
   /*
    * Archos
    * These devices have some dual-mode interfaces which will really
@@ -536,18 +539,39 @@
   { "Archos", 0x0e79, "XS202 (MTP mode)", 0x1208, DEVICE_FLAG_NONE },
   // Reported by gudul1@users.sourceforge.net
   { "Archos", 0x0e79, "104 (MTP mode)", 0x120a, DEVICE_FLAG_NONE },
+  // Reported by Archos
+  { "Archos", 0x0e79, "204 (MTP mode)", 0x120c, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by anonymous Sourceforge user.
   { "Archos", 0x0e79, "404 (MTP mode)", 0x1301, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Archos
+  { "Archos", 0x0e79, "404CAM (MTP mode)", 0x1303, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Etienne Chauchot <chauchot.etienne@free.fr>
   { "Archos", 0x0e79, "504 (MTP mode)", 0x1307, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Archos
+  { "Archos", 0x0e79, "604 (MTP mode)", 0x1309, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "604WIFI (MTP mode)", 0x130b, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Kay McCormick <kaym@modsystems.com>
   { "Archos", 0x0e79, "704 mobile dvr", 0x130d, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Archos
+  { "Archos", 0x0e79, "704TV (MTP mode)", 0x130f, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "405 (MTP mode)", 0x1311, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Joe Rabinoff
   { "Archos", 0x0e79, "605 (MTP mode)", 0x1313, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Archos
+  { "Archos", 0x0e79, "605F (MTP mode)", 0x1315, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "705 (MTP mode)", 0x1319, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "TV+ (MTP mode)", 0x131b, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "105 (MTP mode)", 0x131d, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "405HDD (MTP mode)", 0x1321, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Jim Krehl <jimmuhk@users.sourceforge.net>
   { "Archos", 0x0e79, "5 (MTP mode)", 0x1331, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Adrien Guichard <tmor@users.sourceforge.net>
   { "Archos", 0x0e79, "5 (MTP mode)", 0x1333, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Archos
+  { "Archos", 0x0e79, "7 (MTP mode)", 0x1335, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "SPOD (MTP mode)", 0x1341, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "5S IT (MTP mode)", 0x1351, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "5H IT (MTP mode)", 0x1357, DEVICE_FLAG_UNLOAD_DRIVER },
 
   /*
    * Dunlop (OEM of EGOMAN ltd?) reported by Nanomad
@@ -670,10 +694,16 @@
 
 
   /*
-   * LOGIK
-   * Sold in the UK, seem to be manufactured by CCTech in China.
+   * Vendor ID 0x13d1 is some offshoring company in China,
+   * in one source named "A-Max Technology Macao Commercial
+   * Offshore Co. Ltd." sometime "CCTech".
    */
+  // Logik brand
   { "Logik", 0x13d1, "LOG DAX MP3 and DAB Player", 0x7002, DEVICE_FLAG_UNLOAD_DRIVER },
+  // Technika brand
+  // Reported by <Ooblick@users.sourceforge.net>
+  { "Technika", 0x13d1, "MP-709", 0x7017, DEVICE_FLAG_UNLOAD_DRIVER },
+
 
   /*
    * RCA / Thomson
@@ -688,7 +718,7 @@
   { "Thomson", 0x069b, "scenium E308", 0x3028, DEVICE_FLAG_NONE },
   // From XNJB user
   { "Thomson / RCA", 0x069b, "Lyra HC308A", 0x3035, DEVICE_FLAG_NONE },
-  
+
   /*
    * NTT DoCoMo
    */
@@ -793,6 +823,10 @@
   /*
    * LG Electronics
    */
+  // From anonymous SourceForge user
+  // Uncertain if this is really the MTP mode device ID...
+  { "LG Electronics Inc.", 0x043e, "T54", 0x7040,
+      DEVICE_FLAG_UNLOAD_DRIVER },
   // Not verified - anonymous submission
   { "LG Electronics Inc.", 0x043e, "UP3", 0x70b1, DEVICE_FLAG_NONE },
   // Reported by Joseph Nahmias <joe@nahimas.net>
@@ -876,6 +910,11 @@
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_UNIQUE_FILENAMES },
+  // Reported by Gregory Boddin <gregory@siwhine.net>
+  { "Sony", 0x054c, "Walkman NWZ-B142F", 0x03d8,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      DEVICE_FLAG_UNIQUE_FILENAMES  },
 
 
   /*
