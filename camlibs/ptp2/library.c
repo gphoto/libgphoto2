@@ -987,6 +987,8 @@ static struct {
 	{"Canon:Powershot SD1200 IS",           0x04a9, 0x31c4, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2796275&group_id=8874&atid=358874 */
 	{"Canon:EOS 500D",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
+	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
+	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
