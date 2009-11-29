@@ -244,4 +244,14 @@
  * This flag is like DEVICE_FLAG_OGG_IS_UNKNOWN but for FLAC
  * files instead. Using the unknown filetype for FLAC files.
  */
-#define DEVICE_FLAG_FLAC_IS_UNKNOWN 0x01000000
+#define DEVICE_FLAG_FLAC_IS_UNKNOWN		0x01000000
+/**
+ * Device needs unique filenames, no two files can be
+ * named the same string.
+ */
+#define DEVICE_FLAG_UNIQUE_FILENAMES		0x02000000
+/**
+ * This flag performs some random magic on the BlackBerry
+ * device to switch from USB mass storage to MTP mode we think.
+ */
+#define DEVICE_FLAG_SWITCH_MODE_BLACKBERRY	0x04000000
