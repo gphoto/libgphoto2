@@ -1453,13 +1453,13 @@ static struct deviceproptableu8 canon_flash[] = {
 };
 GENERIC8TABLE(Canon_FlashMode,canon_flash)
 
-static struct deviceproptableu8 nikon_flashmode[] = {
+static struct deviceproptableu8 nikon_internalflashmode[] = {
 	{ N_("iTTL"),		0, 0 },
 	{ N_("Manual"),		1, 0 },
 	{ N_("Commander"),	2, 0 },
 	{ N_("Repeating"),	3, 0 }, /* stroboskop */
 };
-GENERIC8TABLE(Nikon_FlashMode,nikon_flashmode)
+GENERIC8TABLE(Nikon_InternalFlashMode,nikon_internalflashmode)
 
 static struct deviceproptableu8 nikon_flashcommandermode[] = {
 	{ N_("TTL"),		0, 0 },
@@ -2196,8 +2196,8 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Timer"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Mirror Up"),		0x8012, PTP_VENDOR_NIKON},
 	{ N_("Remote"),			0x8013, PTP_VENDOR_NIKON},
-	{ N_("Timer + Remote"),		0x8014, PTP_VENDOR_NIKON}, /* others nikons */
-	{ N_("Timer + Remote 2"),	0x8015, PTP_VENDOR_NIKON}, /* d90 */
+	{ N_("Quick Response Remote"),	0x8014, PTP_VENDOR_NIKON}, /* others nikons */
+	{ N_("Delayed Remote"),		0x8015, PTP_VENDOR_NIKON}, /* d90 */
 	{ N_("Quiet Release"),		0x8016, PTP_VENDOR_NIKON}, /* d5000 */
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
@@ -4234,7 +4234,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Compensation"), "flashcompensation", PTP_DPC_CANON_FlashCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("AEB Exposure Compensation"), "aebexpcompensation", PTP_DPC_CANON_AEBExposureCompensation, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ExpCompensation, _put_Canon_ExpCompensation},
 	{ N_("Flash Mode"), "flashmode", PTP_DPC_CANON_FlashMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_FlashMode, _put_Canon_FlashMode},
-	{ N_("Flash Mode"), "flashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashMode, _put_Nikon_FlashMode},
+	{ N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
+	{ N_("Nikon Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_InternalFlashMode, _put_Nikon_InternalFlashMode},
 	{ N_("Flash Commander Mode"), "flashcommandermode", PTP_DPC_NIKON_FlashCommanderMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderMode, _put_Nikon_FlashCommanderMode},
 	{ N_("Flash Commander Power"), "flashcommanderpower", PTP_DPC_NIKON_FlashModeCommanderPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderPower, _put_Nikon_FlashCommanderPower},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
@@ -4255,7 +4256,6 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Picture Style"), "picturestyle", PTP_DPC_CANON_EOS_PictureStyle, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_PictureStyle, _put_Canon_EOS_PictureStyle},
 	{ N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
 	{ N_("Exposure Metering Mode"), "exposuremetermode", PTP_DPC_ExposureMeteringMode, 0, PTP_DTC_UINT16, _get_ExposureMetering, _put_ExposureMetering},
-	{ N_("Flash Mode"), "flashmode", PTP_DPC_FlashMode, 0, PTP_DTC_UINT16, _get_FlashMode, _put_FlashMode},
 	{ N_("Aperture"), "aperture", PTP_DPC_CANON_Aperture, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
 	{ N_("Aperture"), "aperture", PTP_DPC_FUJI_Aperture, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_Aperture, _put_Fuji_Aperture},
 	{ N_("AV Open"), "avopen", PTP_DPC_CANON_AvOpen, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_Aperture, _put_Canon_Aperture},
