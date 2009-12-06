@@ -695,9 +695,9 @@ static struct {
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
 	/* Will Stephenson at SUSE and wstephenson@flickr */
-	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP},
+	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Borrowed D700 by deckel / marcus at SUSE */
-	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP},
+	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Stephan Barth at SUSE */
 	{"Nikon:DSC D5000 (PTP mode)",    0x04b0, 0x0423, PTP_CAP|PTP_CAP_PREVIEW},
 	/* IRC reporter */
@@ -1559,7 +1559,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
 				return GP_ERROR;
 			}
-			gp_log (GP_LOG_DEBUG," ptp2/nikon_live", "size of preview %d\n", jpgEndPtr-jpgStartPtr);
 			gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
 			free (data); /* FIXME: perhaps handle the 128 byte header data too. */
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
