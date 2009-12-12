@@ -2939,9 +2939,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			} else {
 				for (j=0;j<propcnt;j++) {
 					n = snprintf (txt, spaceleft," %04x/",props[j]);
-					if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+					if (n >= spaceleft) { free (props); return GP_OK;}  spaceleft -= n; txt += n;
 					n = ptp_render_mtp_propname(props[j],spaceleft,txt);
-					if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+					if (n >= spaceleft) { free (props); return GP_OK;} spaceleft -= n; txt += n;
 				}
 				free(props);
 			}
