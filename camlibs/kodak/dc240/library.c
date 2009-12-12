@@ -357,7 +357,7 @@ read_data_read_again:
             goto read_data_read_again;
 
         /* Set size for folder/file list command from 1st packet */
-        if ((cmd_packet[0]==0x99)&&(x==0)) {
+        if (cmd_packet && (cmd_packet[0]==0x99) && (x==0)) {
             *size = (packet[1] * 256 +
                      packet[2])* 20 + 2;
             t = (float)*size / (float)(block_size);
