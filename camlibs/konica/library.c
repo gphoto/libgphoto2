@@ -474,16 +474,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			&size);
                 break;
         default:
-		r = GP_ERROR_NOT_SUPPORTED;
+		return (GP_ERROR_NOT_SUPPORTED);
         }
 	camera->pl->timeout = gp_camera_start_timeout (camera, PING_TIMEOUT,
 						       timeout_func);
-	C(r);
 
         C(gp_file_set_data_and_size (file, (char*)fdata, size));
-        C(gp_file_set_mime_type (file, GP_MIME_JPEG));
-
-        return (GP_OK);
+        return gp_file_set_mime_type (file, GP_MIME_JPEG);
 }
 
 static int
