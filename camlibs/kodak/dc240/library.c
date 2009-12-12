@@ -497,7 +497,8 @@ int dc240_set_speed (Camera *camera, int speed)
          break;
     */
     default:
-        return (GP_ERROR);
+        retval = GP_ERROR;
+	goto fail;
     }
 
     retval = dc240_packet_write(camera, p, 8, 1);
