@@ -476,6 +476,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         default:
 		return (GP_ERROR_NOT_SUPPORTED);
         }
+	C(r);
 	camera->pl->timeout = gp_camera_start_timeout (camera, PING_TIMEOUT,
 						       timeout_func);
 
