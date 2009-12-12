@@ -703,7 +703,7 @@ static struct {
 	/* IRC reporter */
 	{"Nikon:DSC D3000 (PTP mode)",    0x04b0, 0x0424, PTP_CAP},
 	/* Andreas Dielacher <andreas.dielacher@gmail.com> */
-	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP},
+	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP|PTP_CAP_PREVIEW},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
