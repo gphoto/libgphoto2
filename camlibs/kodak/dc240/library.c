@@ -710,8 +710,10 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
 
     gp_file_new(&file);
     ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256, context);
-    if (ret < 0)
+    if (ret < 0) {
+	gp_file_free (file);
         return ret;
+    }
     free(p1);
     free(p2);
 
