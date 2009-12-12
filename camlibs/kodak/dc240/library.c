@@ -774,6 +774,8 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
         retval = dc240_packet_exchange(camera, file, cmd_packet, path_packet, &size, -1, context);
         break;
     default:
+        free(cmd_packet);
+        free(path_packet);
         return (GP_ERROR);
     }
 
