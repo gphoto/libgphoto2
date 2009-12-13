@@ -1,3 +1,7 @@
+2009-12-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* config.c: Mark readonly widgets as readonly
+
 2009-12-06  Laurent Calmes <lcalmes@users.sourceforge.net>
 
 	* library.c: Fixed Nikon Preview code for Nikon D300,
