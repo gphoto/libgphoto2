@@ -66,6 +66,9 @@ struct _CameraWidget {
 	/* Widget was changed */
 	int     changed;
 
+	/* Widget is read only */
+	int	readonly;
+
 	/* Reference count */
 	int     ref_count;
 
@@ -110,6 +113,7 @@ gp_widget_new (CameraWidgetType type, const char *label,
         (*widget)->ref_count    	= 1;
 	(*widget)->choice_count 	= 0;
 	(*widget)->choice 		= NULL;
+	(*widget)->readonly 		= 0;
 	(*widget)->id			= i++;
 
         /* Clear all children pointers */
@@ -143,7 +147,7 @@ gp_widget_free (CameraWidget *widget)
 	for (x = 0; x < widget->choice_count; x++)
 		free (widget->choice[x]);
 	free (widget->choice);
-	    	
+
         if (widget->value_string)
 		free (widget->value_string);
 	free (widget);
@@ -292,6 +296,44 @@ gp_widget_set_changed (CameraWidget *widget, int changed)
 	CHECK_NULL (widget);
 
 	widget->changed = changed;
+	return (GP_OK);
+}
+
+/**
+ * \brief Tells that the widget is readonly
+ *
+ * @param widget a #CameraWidget
+ * @param changed a boolean whether we are readonly or not
+ * @return a gphoto2 error code
+ *
+ * Sets the readonly of the CameraWidget depending on 
+ * the changed parameter.
+ *
+ * Only useful when called from the camera driver.
+ **/
+int
+gp_widget_set_readonly (CameraWidget *widget, int readonly)
+{
+	CHECK_NULL (widget);
+
+	widget->readonly = readonly;
+	return (GP_OK);
+}
+
+/**
+ * \brief Retrieves the readonly state of the #CameraWidget
+ *
+ * @param widget a #CameraWidget
+ * @param readonly
+ * @return a gphoto2 error code.
+ *
+ **/
+int
+gp_widget_get_readonly (CameraWidget *widget, int *readonly) 
+{
+	CHECK_NULL (widget && readonly);
+
+	*readonly = widget->readonly;
 	return (GP_OK);
 }
 
