@@ -1,3 +1,8 @@
+2009-12-13  Marcus Meissner  <marcus@jet.franken.de>
+
+	* gphoto2/gphoto2-widget.h, libgphoto2/gphoto2-widget.c:
+	  added set_ and get_ readonly for Widgets.
+
 2009-07-30  Dan Fandrich <dan@coneharvesters.com>
 
 	* Fixed a bunch of C89 and SUS portability issues.
