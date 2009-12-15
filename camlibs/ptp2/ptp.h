@@ -1855,17 +1855,17 @@ typedef struct _PTPCanonEOSDeviceInfo {
 typedef struct _PTPParams PTPParams;
 
 
-typedef uint16_t (* PTPDataGetFunc)	(PTPParams* params, void* private,
+typedef uint16_t (* PTPDataGetFunc)	(PTPParams* params, void*priv,
 					unsigned long wantlen,
 	                                unsigned char *data, unsigned long *gotlen);
 
-typedef uint16_t (* PTPDataPutFunc)	(PTPParams* params, void* private,
+typedef uint16_t (* PTPDataPutFunc)	(PTPParams* params, void*priv,
 					unsigned long sendlen,
 	                                unsigned char *data, unsigned long *putlen);
 typedef struct _PTPDataHandler {
 	PTPDataGetFunc		getfunc;
 	PTPDataPutFunc		putfunc;
-	void			*private;
+	void			*priv;
 } PTPDataHandler;
 
 /*

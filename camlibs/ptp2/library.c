@@ -647,6 +647,9 @@ static struct {
 	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
 	/*   http://bugs.debian.org/520752 */
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
+	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
+	{"Nikon:Coolpix S220 (PTP mode)", 0x04b0, 0x0177, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -687,17 +690,21 @@ static struct {
 	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
 	/* Andreas Jaeger <aj@suse.de>.
 	 * Marcus: MTP Proplist does not return objectsizes ... useless. */
-	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP|PTP_MTP},
+	{"Nikon:DSC D300 (PTP mode)",	  0x04b0, 0x041a, PTP_CAP},
 	/* Pat Shanahan, http://sourceforge.net/tracker/index.php?func=detail&aid=1924511&group_id=8874&atid=358874 */
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
 	/* Will Stephenson at SUSE and wstephenson@flickr */
-	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP},
-	/* Borrowed D700 by deckel / marcus */
-	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP},
+	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Borrowed D700 by deckel / marcus at SUSE */
+	{"Nikon:DSC D700 (PTP mode)",	  0x04b0, 0x0422, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Stephan Barth at SUSE */
+	{"Nikon:DSC D5000 (PTP mode)",    0x04b0, 0x0423, PTP_CAP|PTP_CAP_PREVIEW},
 	/* IRC reporter */
-	{"Nikon:DSC D3000 (PTP mode)",	  0x04b0, 0x0424, PTP_CAP},
+	{"Nikon:DSC D3000 (PTP mode)",    0x04b0, 0x0424, PTP_CAP},
+	/* Andreas Dielacher <andreas.dielacher@gmail.com> */
+	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP|PTP_CAP_PREVIEW},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
@@ -871,14 +878,14 @@ static struct {
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1565043&group_id=8874&atid=358874 */
 	{"Canon:PowerShot A710 IS (PTP mode)",  0x04a9, 0x3138, PTPBUG_DELETE_SENDS_EVENT},
 	/* Thomas Roelz at SUSE, MTP proplist does not work (hangs) */
-	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW|PTP_MTP},
+	{"Canon:PowerShot A640 (PTP mode)",     0x04a9, 0x3139, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A630 (PTP mode)",     0x04a9, 0x313a, PTPBUG_DELETE_SENDS_EVENT},
 	/* Deti Fliegl.
 	 * Marcus: supports MTP proplists, but these are 2 times slower than regular
 	 * data retrieval. */
-	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* reported by Ferry Huberts */
-	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* reported by: gphoto@lunkwill.org */
 	{"Canon:EOS 1D Mark III (PTP mode)",	0x04a9, 0x3147, PTP_CAP},
@@ -896,7 +903,7 @@ static struct {
 	{"Canon:Digital IXUS 75 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD750 (PTP mode)",    0x04a9, 0x314e, PTPBUG_DELETE_SENDS_EVENT},
 	/* Marcus: MTP Proplist does not work at all here, it just hangs */
-	{"Canon:Digital IXUS 70 (PTP mode)",    0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT|PTP_MTP},
+	{"Canon:Digital IXUS 70 (PTP mode)",    0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD1000 (PTP mode)",   0x04a9, 0x314f, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A550 (PTP mode)",     0x04a9, 0x3150, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://launchpad.net/bugs/64146 */
@@ -908,7 +915,7 @@ static struct {
 	/* Roger Lynn <roger@rilynn.demon.co.uk> */
 	{"Canon:PowerShot A720 IS (PTP mode)",	0x04a9, 0x315d, PTPBUG_DELETE_SENDS_EVENT},
 	/* Mats Petersson <mats.petersson@ltu.se> */
-	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW|PTP_MTP|PTP_MTP_PROPLIST_WORKS},
+	{"Canon:Powershot SX100 IS (PTP mode)",	0x04a9, 0x315e, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* "[AvataR]" <public.avatar@gmail.com> */
 	{"Canon:Digital IXUS 960 IS (PTP mode)",0x04a9, 0x315f, PTPBUG_DELETE_SENDS_EVENT},
 	/* Ruben Vandamme <vandamme.ruben@belgacom.net> */
@@ -960,6 +967,8 @@ static struct {
 
 	/* IRC Reporter */
 	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	/* Thomas Tanner <thomas@tannerlab.com> */
+	{"Canon:EOS 7D",			0x04a9, 0x319a, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* mitch <debianuser@mll.dissimulo.com> */
 	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
@@ -973,13 +982,18 @@ static struct {
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
-	{"Canon:Digital IXUS 100 IS",           0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	/* Do not confuse with PowerShot SX100IS */
+	{"Canon:Digital IXUS 100 IS",           0x04a9, 0x31c2, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
-	{"Canon:PowerShot SD780 IS",		0x04a9, 0x31c2, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD780 IS",		0x04a9, 0x31c2, PTPBUG_DELETE_SENDS_EVENT},
 	/* Matthew Vernon <matthew@sel.cam.ac.uk> */
 	{"Canon:PowerShot A1100 IS",		0x04a9, 0x31c3, PTPBUG_DELETE_SENDS_EVENT},
+	/* Joshua Hoke <jdh@people.homeip.net> */
+	{"Canon:Powershot SD1200 IS",           0x04a9, 0x31c4, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2796275&group_id=8874&atid=358874 */
 	{"Canon:EOS 500D",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
+	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
+	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -3803,18 +3817,18 @@ gpfile_putfunc (PTPParams *params, void *priv,
 
 static uint16_t
 ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
-	PTPCFHandlerPrivate* private = malloc (sizeof(PTPCFHandlerPrivate));
-	if (!private) return PTP_RC_GeneralError;
-	handler->private = private;
+	PTPCFHandlerPrivate* priv = malloc (sizeof(PTPCFHandlerPrivate));
+	if (!priv) return PTP_RC_GeneralError;
+	handler->priv = priv;
 	handler->getfunc = gpfile_getfunc;
 	handler->putfunc = gpfile_putfunc;
-	private->file = file;
+	priv->file = file;
 	return PTP_RC_OK;
 }
 
 static uint16_t
 ptp_exit_camerafile_handler (PTPDataHandler *handler) {
-	free (handler->private);
+	free (handler->priv);
 	return PTP_RC_OK;
 }
 
