@@ -138,7 +138,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 			return PTP_RC_GeneralError;
 		}
 		gp_log_data ( "ptpip/generic_read", (char*)xhdr+curread, ret);
-		curread += len;
+		curread += ret;
 		if (ret == 0) {
 			gp_log (GP_LOG_ERROR, "ptpip", "End of stream after reading %d bytes of ptpipheader", ret);
 			return PTP_RC_GeneralError;
