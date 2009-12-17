@@ -1048,6 +1048,8 @@ static struct {
 	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
 	/* Arthur Butler <arthurbutler@otters.ndo.co.uk> */
 	{"Ricoh:Caplio RR750 (PTP mode)",	0x05ca, 0x033d, 0},
+	/* Gerald Pfeifer at SUSE */
+	{"Sea & Sea:2G (PTP mode)",		0x05ca, 0x0353, 0},
 
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
