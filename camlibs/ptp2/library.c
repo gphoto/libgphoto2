@@ -3,6 +3,7 @@
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
+ * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1930,6 +1931,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	return GP_OK;
 }
 
+static int
+_timeout_passed(struct timeval *start, int timeout) {
+	struct timeval curtime;
+
+	gettimeofday (&curtime, NULL);
+	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
+}
+
 /* To use:
  *	gphoto2 --set-config capture=on --config --capture-image
  *	gphoto2  -f /store_80000001 -p 1
@@ -1949,7 +1958,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	uint32_t		handle;
 	char 			buf[1024];
 	int			xmode = CANON_TRANSFER_CARD;
-	time_t			event_start;
+	struct timeval		event_start;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
@@ -2022,9 +2031,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	sawcapturecomplete = 0;
 	/* Checking events in stack. */
 	gp_port_get_timeout (camera->port, &timeout);
-	event_start = time(NULL);
+	gettimeofday (&event_start, NULL);
 	found = FALSE;
-	while ((time(NULL) - event_start)<=timeout) {
+	
+	while (!_timeout_passed(&event_start, timeout)) {
 		gp_context_idle (context);
 		if (PTP_RC_OK == params->event_check (params, &event)) {
 			if (event.Code == PTP_EC_CaptureComplete) {
@@ -2333,7 +2343,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	CameraFilePath	*path;
 	static int 	capcnt = 0;
 	uint16_t	ret;
-	struct timeval	event_start, curtime;
+	struct timeval	event_start;
 	CameraFile	*file;
 	char		*ximage;
 	int		finish = 0;
@@ -2344,7 +2354,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 	memset (&event, 0, sizeof(event));
 
 	gettimeofday (&event_start,NULL);
-
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
@@ -2356,8 +2365,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		while (1) {
 			int i;
 
-			gettimeofday (&curtime, 0);
-			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+			if (_timeout_passed (&event_start, timeout))
 				break;
 
 			if (params->backlogentries) {
@@ -2377,6 +2385,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				free (entries);
 				for (i=sleepcnt;i--;) {
 					int resttime;
+					struct timeval curtime;
 
 					gp_context_idle (context);
 					gettimeofday (&curtime, 0);
@@ -2485,8 +2494,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		char *x;
 
 		while (1) {
-			gettimeofday (&curtime, 0);
-			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+			if (_timeout_passed (&event_start, timeout))
 				break;
 			CPR (context, ptp_check_event (params));
 			gp_context_idle (context);
@@ -2508,8 +2516,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
-			gettimeofday (&curtime, 0);
-			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout)
+			if (_timeout_passed (&event_start, timeout))
 				break;
 			CPR (context, ptp_check_event (params));
 			if (!ptp_get_one_event (params, &event)) {
