@@ -1,0 +1,129 @@
+Device info:
+Manufacturer: Nikon Corporation
+  Model: S225 
+  device version: COOLPIX S225V1.0
+  serial number: 'XXXXXXXXXXX'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0; Nikon PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100e
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+Device Properties Supported:
+  0x5011
+  0xd005
+  0xd407
+
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: S225 
+  Version: COOLPIX S225V1.0
+  Serial Number: XXXXXXXXXXX
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0; Nikon PTP Extensions
+
+Capture Formats: JPEG
+Display Formats: JPEG, Association/Directory, DPOF, MS Wave, Apple Quicktime, MS AVI, Defined Type
+Supported MTP Object Properties:
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 3955228672 (3772 MB)
+	Free Space (Bytes): 3610804224 (3443 MB)
+	Free Space (Images): 1412
+
+Device Property Summary:
+Date & Time(0x5011):(readwrite) (type=0xffff) '20091223T183642'
+
+/main/actions/autofocusdrive
+      Label: Drive Nikon DSLR Autofocus
+      Type: TOGGLE
+      Current: 0
+/main/actions/manualfocusdrive
+      Label: Drive Nikon DSLR Manual focus
+      Type: RANGE
+      Current: 0
+      Bottom: -32767
+      Top: 32767
+      Step: 1
+/main/settings/datetime
+      Label: Camera Date and Time
+      Type: DATE
+      Current: 1261589802
+      Printable: Wed Dec 23 18:36:42 2009
+/main/settings/fastfs
+      Label: Fast Filesystem
+      Type: TOGGLE
+      Current: 1
+/main/settings/capturetarget
+      Label: Capture Target
+      Type: RADIO
+      Current: Internal RAM
+      Choice: 0 Internal RAM
+      Choice: 1 Memory card
+/main/other/5011
+      Label: Date & Time
+      Type: TEXT
+      Current: 20091223T183643
+/main/other/d005
+      Label: PTP Property 0xd005
+      Type: MENU
+      Current: 2
+      Choice: 0 1
+      Choice: 1 2
+/main/other/d407
+      Label: PTP Property 0xd407
+      Type: TEXT
+      Current: 1
