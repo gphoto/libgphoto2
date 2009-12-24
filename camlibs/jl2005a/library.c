@@ -51,49 +51,49 @@
 #define GP_MODULE "jl2005a"
 
 struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"American Idol Keychain Camera", GP_DRIVER_STATUS_TESTING, 
-    							    0x0979, 0x0224},
-        {"NogaNet TDC-15", GP_DRIVER_STATUS_TESTING, 0x0979, 0x0224},
-        {"Cobra DC-125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
+	{"American Idol Keychain Camera", GP_DRIVER_STATUS_TESTING,
+							    0x0979, 0x0224},
+	{"NogaNet TDC-15", GP_DRIVER_STATUS_TESTING, 0x0979, 0x0224},
+	{"Cobra DC-125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
 	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "JL2005A camera");
-    	return GP_OK;
+	strcpy (id->text, "JL2005A camera");
+	return GP_OK;
 }
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;    
-    	CameraAbilities a;
+	int i;
+	CameraAbilities a;
 
-    	for (i = 0; models[i].name; i++) {
-        	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
-       		a.status = models[i].status;
-       		a.port   = GP_PORT_USB;
-       		a.speed[0] = 0;
-       		a.usb_vendor = models[i].idVendor;
-       		a.usb_product= models[i].idProduct;
-       		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
+	for (i = 0; models[i].name; i++) {
+		memset (&a, 0, sizeof(a));
+		strcpy (a.model, models[i].name);
+		a.status = models[i].status;
+		a.port   = GP_PORT_USB;
+		a.speed[0] = 0;
+		a.usb_vendor = models[i].idVendor;
+		a.usb_product= models[i].idProduct;
+		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-       		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
-					+ GP_FILE_OPERATION_RAW; 
-       		gp_abilities_list_append (list, a);
-    	}
-    	return GP_OK;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW
+					+ GP_FILE_OPERATION_RAW;
+		gp_abilities_list_append (list, a);
+	}
+	return GP_OK;
 }
 
 static int
@@ -102,9 +102,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	int num_pics;
 	num_pics = camera->pl->nb_entries;
 	GP_DEBUG("camera->pl->nb_entries = %i\n",camera->pl->nb_entries);
-    	sprintf (summary->text,_("This camera contains a Jeilin JL2005A chipset.\n" 
-			"The number of photos in it is %i. \n"), num_pics);  
-    	return GP_OK;
+	sprintf (summary->text,_("This camera contains a Jeilin JL2005A chipset.\n"
+			"The number of photos in it is %i. \n"), num_pics); 
+	return GP_OK;
 }
 
 
@@ -115,7 +115,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
         "This driver supports cameras with Jeilin jl2005a chip \n"
 	"These cameras do not support deletion of photos, nor uploading\n"
 	"of data. \n"
-	"Decoding of compressed photos may or may not work well\n" 
+	"Decoding of compressed photos may or may not work well\n"
 	"and does not work equally well for all supported cameras.\n"
 	"If present on the camera, video clip frames are downloaded \n"
 	"as consecutive still photos.\n"
@@ -129,9 +129,9 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("jl2005a camera library\n"
+	strcpy (about->text, _("jl2005a camera library\n"
 			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
-    	return GP_OK;
+	return GP_OK;
 }
 
 /*************** File and Downloading Functions *******************/
@@ -143,13 +143,13 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         Camera *camera = data; 
 	int n;
 	n = camera->pl->nb_entries;
-    	gp_list_populate (list, "jl_%02i.ppm", n);
-    	return GP_OK;
+	gp_list_populate (list, "jl_%03i.ppm", n);
+	return GP_OK;
 }
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileInfo *info, void *data, GPContext *context)
+		CameraFileInfo *info, void *data, GPContext *context)
 {
 	info->file.fields = GP_FILE_INFO_TYPE;
 	strcpy (info->file.type, GP_MIME_PPM);
@@ -162,28 +162,28 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data; 
+	Camera *camera = user_data; 
 	int status = GP_OK;
-  	int w, h = 0, k;
-  	int i,j;
+	int w, h = 0, k;
+	int i,j;
 	int b = 0;
 	int compressed = 0;
 	unsigned char header[5] = "\xff\xff\xff\xff\x55";
 	unsigned int size;
-    	unsigned char *data;
+	unsigned char *data;
 	unsigned char *image_start;
-    	unsigned char *p_data=NULL;
-    	unsigned char *ppm=NULL, *ptr=NULL;
+	unsigned char *p_data=NULL;
+	unsigned char *ppm=NULL, *ptr=NULL;
         unsigned char gtable[256];
 	unsigned char temp;
 
-    	GP_DEBUG ("Downloading pictures!\n");
+	GP_DEBUG ("Downloading pictures!\n");
 
 	/* These are cheap cameras. There ain't no EXIF data. So kill this. */
 	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
-    	/* Get the number of the photo on the camera */
+	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
-    	GP_DEBUG ("Filesystem number is %i\n",k);
+	GP_DEBUG ("Filesystem number is %i\n",k);
 	b = jl2005a_get_pic_data_size(camera->port, k);
 	GP_DEBUG("b = %i = 0x%x bytes\n", b,b);
 	w = jl2005a_get_pic_width(camera->port);
@@ -252,19 +252,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + size;
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);				
-	gp_bayer_decode (p_data, w , h, ptr, BAYER_TILE_BGGR);
+	gp_ahd_decode (p_data, w , h, ptr, BAYER_TILE_BGGR);
 
 	free(p_data);
-	gp_gamma_fill_table (gtable, .65); 
+	gp_gamma_fill_table (gtable, .65);
 	gp_gamma_correct_single (gtable, ptr, w * h); 
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	end:
 	free(data);
-	return status;	
-	
-
-        return GP_OK;
+	return status;
 }
 
 
