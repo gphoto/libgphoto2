@@ -997,6 +997,10 @@ static struct {
 	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
 	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2918540&group_id=8874&atid=358874 */
+	{"Canon:IXY 220 IS",			0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD940 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
