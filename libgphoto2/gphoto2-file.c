@@ -942,8 +942,8 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	CHECK_NULL (file && basename && newname);
 	*newname = NULL;
 
-	/* the easy case, always map 1:1 */
-	if (type == GP_FILE_TYPE_NORMAL) {
+	/* the easy case, always map 1:1, if it has a suffix already. */
+	if ((type == GP_FILE_TYPE_NORMAL) && strchr(basename,'.')) {
 		*newname = strdup (basename);
 		if (!*newname)
 			return GP_ERROR_NO_MEMORY;
