@@ -8,7 +8,7 @@ check_mtp_device_SOURCE = check-mtp-device.c
 check_mtp_device_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
 check_mtp_device_LDADD = $(LIBUSB_LIBS)
 else
-EXTRA_DIST = check-mtp-device.c
+EXTRA_DIST += check-mtp-device.c
 endif
 
 usb_la_LDFLAGS = -module -no-undefined -avoid-version \
