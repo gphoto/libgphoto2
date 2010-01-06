@@ -10,7 +10,7 @@ check_mtp_device_SOURCES = usb/check-mtp-device.c
 check_mtp_device_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
 check_mtp_device_LDADD = $(LIBUSB_LIBS)
 else
-EXTRA_DIST = usb/check-mtp-device.c
+EXTRA_DIST += usb/check-mtp-device.c
 endif
 
 usb_la_LDFLAGS = $(iolib_ldflags)
