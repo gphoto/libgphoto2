@@ -1,3 +1,7 @@
+2010-01-09  Daniel P. Berrange <dan@berrange.com>
+
+	* config.c: Added several new Nikon flash configurations.
+
 2009-12-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* config.c: Mark readonly widgets as readonly
