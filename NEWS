@@ -1,9 +1,12 @@
-libgphoto2 2.4.7.3
+libgphoto2 2.4.7.4
 
 This is a 2.4 release branch update.
 
 ptp2:
-   * Bugfixes.
+   * Bugfixes in Canon EOS preview code.
+   * Fixed NIKON DSLR shutterspeed not able to set bug.
+   * Canon EOS configuration additions.
+   * Several new USB ids for new cameras.
    * Lots of Fuji S5 Pro support.
 
 libgphoto2_port/usb:
