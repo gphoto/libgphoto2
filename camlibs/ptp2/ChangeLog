@@ -1,3 +1,9 @@
+2010-01-13  Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: Rewrote the timeout code.
+	* library.c: New ids.
+	* library.c: Backported loop-on-error EOS preview taking.
+
 2009-12-06  Laurent Calmes <lcalmes@users.sourceforge.net>
 
 	* library.c: Fixed Nikon Preview code for Nikon D300,

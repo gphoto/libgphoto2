@@ -649,6 +649,8 @@ static struct {
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
 	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
 	{"Nikon:Coolpix S220 (PTP mode)", 0x04b0, 0x0177, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* */
+	{"Nikon:Coolpix S225 (PTP mode)", 0x04b0, 0x0178, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
@@ -989,11 +991,17 @@ static struct {
 	/* Matthew Vernon <matthew@sel.cam.ac.uk> */
 	{"Canon:PowerShot A1100 IS",		0x04a9, 0x31c3, PTPBUG_DELETE_SENDS_EVENT},
 	/* Joshua Hoke <jdh@people.homeip.net> */
-	{"Canon:Powershot SD1200 IS",           0x04a9, 0x31c4, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Powershot SD1200 IS",		0x04a9, 0x31c4, PTPBUG_DELETE_SENDS_EVENT},
+	/* RalfGesellensetter <rgx@gmx.de> */
+	{"Canon:Digital IXUS 95 IS",		0x04a9, 0x31c4, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2796275&group_id=8874&atid=358874 */
 	{"Canon:EOS 500D",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
 	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
 	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
+
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2918540&group_id=8874&atid=358874 */
+	{"Canon:IXY 220 IS",			0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD940 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1049,6 +1057,8 @@ static struct {
 	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
 	/* Arthur Butler <arthurbutler@otters.ndo.co.uk> */
 	{"Ricoh:Caplio RR750 (PTP mode)",	0x05ca, 0x033d, 0},
+	/* Gerald Pfeifer at SUSE */
+	{"Sea & Sea:2G (PTP mode)",		0x05ca, 0x0353, 0},
 
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
@@ -1473,47 +1483,69 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
-		        unsigned char           evfoutputmode[12];
+			PTPPropertyValue	val;
+			int tries = 100;
 
 			SET_CONTEXT_P(params, context);
 
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
-
-			evfoutputmode[0]=0x12; evfoutputmode[1]=0x00; evfoutputmode[2]=0; evfoutputmode[3]=0;
-			evfoutputmode[4]=0xb0; evfoutputmode[5]=0xd1; evfoutputmode[6]=0; evfoutputmode[7]=0;
-			evfoutputmode[8]=2; evfoutputmode[9]=0; evfoutputmode[10]=0; evfoutputmode[11]=0;
 			/* 2 means PC, 1 means TFT */
-
-			ret = ptp_canon_eos_setdevicepropvalueex (params, evfoutputmode, 12);
+			val.u32 = 2;
+			ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
 			if (ret != PTP_RC_OK) {
 				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
 				return GP_ERROR;
 			}
+			while (tries--) {
+				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
+				if (ret == PTP_RC_OK) {
+					uint32_t	len = dtoh32a(data);
 
-			ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
-			if (ret == PTP_RC_OK) {
-				uint32_t	len = dtoh32a(data);
+					/* 4 byte len of jpeg data, 4 byte unknown */
+					/* JPEG blob */
+					/* stuff */
 
-				/* 4 byte len of jpeg data, 4 byte unknown */
-				/* JPEG blob */
-				/* stuff */
+					if (len > size) len = size;
+					gp_file_append ( file, (char*)data+8, len );
+					gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+					/* Add an arbitrary file name so caller won't crash */
+					gp_file_set_name (file, "preview.jpg");
+					free (data);
+					SET_CONTEXT_P(params, NULL);
+					return GP_OK;
+				} else {
+					if (ret == 0xa102) { /* means "not there yet" ... so wait */
+						PTPCanon_changes_entry	*entries = NULL;
+						int			nrofentries = 0;
 
-				if (len > size) len = size;
-				gp_file_append ( file, (char*)data+8, len );
-				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-				/* Add an arbitrary file name so caller won't crash */
-				gp_file_set_name (file, "preview.jpg");
-				free (data);
-			} else {
-				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
-				return GP_ERROR;
+						gp_context_idle (context);
+						usleep (50*1000);
+						/* Poll for camera events */
+						while (1) {
+							ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+							if (ret != PTP_RC_OK) {
+								gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "getevent failed!");
+								return GP_ERROR;
+							}
+							if (nrofentries == 0)
+								break;
+							free (entries);
+							nrofentries = 0;
+							entries = NULL;
+						}
+						continue;
+					}
+					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
+					SET_CONTEXT_P(params, NULL);
+					return GP_ERROR;
+				}
 			}
+			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after 20 tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_OK;
+			return GP_ERROR;
 		}
-		gp_context_error (context,
-		_("Sorry, your Canon camera does not support Canon Viewfinder mode"));
+		gp_context_error (context, _("Sorry, your Canon camera does not support Canon Viewfinder mode"));
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
@@ -1551,7 +1583,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					break;
 				} else { /* go on looking (starting at next byte) */
 					jpgStartPtr++;
-					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, '\xff', data + size - jpgStartPtr);
+					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
 				}
 			}
 			if(!jpgStartPtr) { /* no SOI -> no JPEG */
@@ -1567,7 +1599,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					break;
 				} else { /* go on looking (starting at next byte) */
 					jpgEndPtr++;
-					jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, '\xff', data + size - jpgEndPtr);
+					jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, data + size - jpgEndPtr);
 				}
 			}
 			if(!jpgEndPtr) { /* no EOI -> no JPEG */
@@ -1943,6 +1975,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	return GP_OK;
 }
 
+static int
+_timeout_passed(struct timeval *start, int timeout) {
+	struct timeval curtime;
+
+	gettimeofday (&curtime, NULL);
+	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
+}
+
 /* To use:
  *	gphoto2 --set-config capture=on --config --capture-image
  *	gphoto2  -f /store_80000001 -p 1
@@ -1962,7 +2002,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	uint32_t		handle;
 	char 			buf[1024];
 	int			xmode = CANON_TRANSFER_CARD;
-	time_t			event_start;
+	struct timeval		event_start;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context,
@@ -2035,9 +2075,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	sawcapturecomplete = 0;
 	/* Checking events in stack. */
 	gp_port_get_timeout (camera->port, &timeout);
-	event_start = time(NULL);
+	gettimeofday (&event_start, NULL);
 	found = FALSE;
-	while ((time(NULL) - event_start)<=timeout) {
+	
+	while (!_timeout_passed(&event_start, timeout)) {
 		gp_context_idle (context);
 		if (PTP_RC_OK == params->event_check (params, &event)) {
 			if (event.Code == PTP_EC_CaptureComplete) {
@@ -2193,16 +2234,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 */
 
 	/* The Nikon way: Does not send AddObject event ... so try else */
-	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) &&
-		NIKON_BROKEN_CAP(camera->pl)
-	) {
+	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(camera->pl)) {
 		PTPObjectHandles	handles;
 		int tries = 5;
 
             	GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
 		while (tries--) {
 			int i;
-			uint16_t ret = ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &handles);
+			uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
 			if (ret != PTP_RC_OK)
 				break;
 
@@ -2302,7 +2341,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	static int 	capcnt = 0;
 	int		i, oldtimeout;
 	uint16_t	ret;
-	struct timeval  event_start, curtime;
+	struct timeval	event_start;
 	CameraFile	*file;
 	char		*ximage;
 	int		finish = 0;
@@ -2320,13 +2359,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		PTPCanon_changes_entry	*entries = NULL;
 		int			nrofentries = 0;
+		uint32_t		newobject;
 
 		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
 			int i;
 
-			gettimeofday (&curtime, 0);
-			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+			if (_timeout_passed (&event_start, timeout))
 				break;
 
 			if (params->backlogentries) {
@@ -2346,6 +2385,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				free (entries);
 				for (i=sleepcnt;i--;) {
 					int resttime;
+					struct timeval curtime;
 
 					gp_context_idle (context);
 					gettimeofday (&curtime, 0);
@@ -2456,8 +2496,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		char *x;
 
 		while (1) {
-			gettimeofday (&curtime, 0);
-			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+			if (_timeout_passed(&event_start, timeout))
 				break;
 
 			gp_context_idle (context);
@@ -2487,8 +2526,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			int i, evtcnt;
 			PTPContainer	*nevent = NULL;
 
-			gettimeofday (&curtime, 0);
-			if (((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000) >= timeout) 
+			if (_timeout_passed(&event_start, timeout))
 				break;
 
 			ret = ptp_nikon_check_event(params, &nevent, &evtcnt);
