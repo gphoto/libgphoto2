@@ -161,8 +161,10 @@ main(int argc, char **argv) {
 			exit(1);
 		}
 		gp_file_unref(file);
+/* if you want to capture right afterwards 
 		sprintf(output_file, "image-%03d.jpg", i);
 	        capture_to_file(canon, canoncontext, output_file);
+*/
 	}
 	gp_camera_exit(canon, canoncontext);
 	return 0;
