@@ -16,7 +16,7 @@ AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news])
 
 # Use the silent-rules feature when possible.
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
-AM_SILENT_RULES([yes])
+AM_SILENT_RULES([no])
 
 dnl ---------------------------------------------------------------------------
 dnl Advanced information about versioning:
