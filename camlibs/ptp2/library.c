@@ -1776,19 +1776,24 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		 */
 		ret = ptp_getobjectinfo (params, newobject, &oi);
 		if (ret != PTP_RC_OK) {
-			fprintf (stderr,"getobjectinfo(%x) failed: %d\n", newobject, ret);
+			gp_log (GP_LOG_ERROR,"nikon_capture","getobjectinfo(%x) failed: %d", newobject, ret);
 			return GP_ERROR_IO;
 		}
 		if (oi.ParentObject != 0)
-			fprintf(stderr,"Parentobject is 0x%lx now?\n", (unsigned long)oi.ParentObject);
+			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
 		/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
 		if (oi.StorageID == 0)
 			oi.StorageID = 0x00010001;
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
-		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+			gp_log (GP_LOG_DEBUG,"nikon_capture", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+			sprintf (path->name, "capt%04d.nef", capcnt++);
+		} else {
+			sprintf (path->name, "capt%04d.jpg", capcnt++);
+		}
 		ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
 		if (ret != GP_OK) {
-			fprintf (stderr, "failed to add object\n");
+			gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
 			return ret;
 		}
 	}
