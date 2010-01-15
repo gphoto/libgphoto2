@@ -2583,11 +2583,17 @@ camera_wait_for_event (Camera *camera, int timeout,
 				strcpy (path->folder,"/");
 				ret = gp_file_new(&file);
 				if (ret!=GP_OK) return ret;
-				sprintf (path->name, "capt%04d.jpg", capcnt++);
-				gp_file_set_mime_type (file, GP_MIME_JPEG);
+				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+					gp_log (GP_LOG_DEBUG,"nikon_wait_event", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+					sprintf (path->name, "capt%04d.nef", capcnt++);
+					gp_file_set_mime_type (file, "image/x-nikon-nef"); /* FIXME */
+				} else {
+					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					gp_file_set_mime_type (file, GP_MIME_JPEG);
+				}
 				gp_file_set_mtime (file, time(NULL));
 
-				gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+				gp_log (GP_LOG_DEBUG, "ptp2/nikon_wait_event", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 				CPR (context, ptp_getobject (params, newobject, (unsigned char**)&ximage));
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 				if (ret != GP_OK) {
@@ -2610,6 +2616,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				gp_file_unref (file);
 				break;
 			}
+			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
 			case PTP_EC_CaptureComplete:
 				*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 				*eventdata = NULL;
