@@ -146,6 +146,7 @@ extern const CameraDescType oly3000z_cam_desc;
 extern const CameraDescType cp880_cam_desc;
 extern const CameraDescType cp995_cam_desc;
 extern const CameraDescType cp2500_cam_desc;
+extern const CameraDescType cp4300_cam_desc;
 
 /*
  * epson-desc.c:
