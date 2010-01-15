@@ -2596,8 +2596,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 					strcpy (path->folder,"/");
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
-					sprintf (path->name, "capt%04d.jpg", capcnt++);
-					gp_file_set_mime_type (file, GP_MIME_JPEG);
+					if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+						gp_log (GP_LOG_DEBUG,"nikon_wait_event", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+						sprintf (path->name, "capt%04d.nef", capcnt++);
+						gp_file_set_mime_type (file, "image/x-nikon-nef"); /* FIXME */
+					} else {
+						sprintf (path->name, "capt%04d.jpg", capcnt++);
+						gp_file_set_mime_type (file, GP_MIME_JPEG);
+					}
 					gp_file_set_name (file, path->name);
 					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 					gp_file_set_mtime (file, time(NULL));
