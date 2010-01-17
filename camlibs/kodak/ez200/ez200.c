@@ -155,7 +155,7 @@ struct _CameraPrivateLibrary {
 	Info info[2];
 };
 
-static struct {
+static const struct {
    	char *name;
 	CameraDriverStatus status;
    	unsigned short idVendor;
