@@ -3613,6 +3613,9 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 		ret = ptp_canon_eos_bulbend (params);
 	if (ret == PTP_RC_OK)
 		return (GP_OK);
+	if (val && (ret == PTP_RC_GeneralError))
+		gp_context_error (((PTPData *) camera->pl->params.data)->context,
+		_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
 	return (GP_ERROR);
 }
 
