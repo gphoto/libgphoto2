@@ -117,7 +117,7 @@ static struct {
 
 	{"Nikon", "CoolPix 4300 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x010e,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
-							&cp880_cam_desc},
+							&cp4300_cam_desc},
 	{"Nikon", "CoolPix 3500 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0110,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
 							&cp880_cam_desc},
