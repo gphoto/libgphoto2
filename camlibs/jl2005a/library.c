@@ -143,7 +143,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         Camera *camera = data; 
 	int n;
 	n = camera->pl->nb_entries;
-    	gp_list_populate (list, "jl_%02i.ppm", n);
+    	gp_list_populate (list, "jl_%03i.ppm", n);
     	return GP_OK;
 }
 
@@ -253,7 +253,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + size;
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);				
-	gp_bayer_decode (p_data, w , h, ptr, BAYER_TILE_BGGR);
+	gp_ahd_decode (p_data, w , h, ptr, BAYER_TILE_BGGR);
 
 	free(p_data);
 	gp_gamma_fill_table (gtable, .65); 
