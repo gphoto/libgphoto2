@@ -1105,11 +1105,11 @@ static struct deviceproptableu8 compression[] = {
 GENERIC8TABLE(Compression,compression)
 
 static struct deviceproptableu16 fuji_imageformat[] = {
-	{ N_("RAW Only"),		1,	PTP_VENDOR_FUJI },
-	{ N_("JPG Only Fine"),		2,	PTP_VENDOR_FUJI },
-	{ N_("JPG Only Normal"),	3,	PTP_VENDOR_FUJI },
-	{ N_("RAW + JPG Fine"),		4,	PTP_VENDOR_FUJI },
-	{ N_("RAW + JPG Normal"),	5,	PTP_VENDOR_FUJI },
+	{ N_("RAW"),			1,	PTP_VENDOR_FUJI },
+	{ N_("JPEG Fine"),		2,	PTP_VENDOR_FUJI },
+	{ N_("JPEG Normal"),		3,	PTP_VENDOR_FUJI },
+	{ N_("RAW + JPEG Fine"),	4,	PTP_VENDOR_FUJI },
+	{ N_("RAW + JPEG Normal"),	5,	PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(Fuji_ImageFormat,fuji_imageformat)
 
