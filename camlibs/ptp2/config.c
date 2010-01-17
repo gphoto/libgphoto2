@@ -1480,6 +1480,85 @@ static struct deviceproptableu8 nikon_flashcommanderpower[] = {
 };
 GENERIC8TABLE(Nikon_FlashCommanderPower,nikon_flashcommanderpower)
 
+/* 0xd1d3 */
+static struct deviceproptableu8 nikon_flashcommandchannel[] = {
+	{ "1",		0, 0 },
+	{ "2",		1, 0 },
+	{ "3",		2, 0 },
+	{ "4",		3, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommandChannel,nikon_flashcommandchannel)
+
+/* 0xd1d4 */
+static struct deviceproptableu8 nikon_flashcommandselfmode[] = {
+        { N_("TTL"),		0, 0 },
+        { N_("Manual"),		1, 0 },
+        { N_("Off"),		2, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommandSelfMode,nikon_flashcommandselfmode)
+
+/* 0xd1d5, 0xd1d8, 0xd1da */
+static struct deviceproptableu8 nikon_flashcommandXcompensation[] = {
+        { "-3.0",		0, 0 },
+        { "-2.7",		1, 0 },
+        { "-2.3",		2, 0 },
+        { "-2.0",		3, 0 },
+        { "-1.7",		4, 0 },
+        { "-1.3",		5, 0 },
+        { "-1.0",		6, 0 },
+        { "-0.7",		7, 0 },
+        { "-0.3",		8, 0 },
+        { "0.0",		9, 0 },
+        { "0.3",		10, 0 },
+        { "0.7",		11, 0 },
+        { "1.0",		12, 0 },
+        { "1.3",		13, 0 },
+        { "1.7",		14, 0 },
+        { "2.0",		15, 0 },
+        { "2.3",		16, 0 },
+        { "2.7",		17, 0 },
+        { "3.0",		18, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommandXCompensation,nikon_flashcommandXcompensation)
+
+/* 0xd1d5, 0xd1d9, 0xd1dc */
+static struct deviceproptableu8 nikon_flashcommandXvalue[] = {
+        { N_("Full"),		0, 0 },
+        { "1/1.3",		1, 0 },
+        { "1/1.7",		2, 0 },
+        { "1/2",		3, 0 },
+        { "1/2.5",		4, 0 },
+        { "1/3.2",		5, 0 },
+        { "1/4",		6, 0 },
+        { "1/5",		7, 0 },
+        { "1/6.4",		8, 0 },
+        { "1/8",		9, 0 },
+        { "1/10",		10, 0 },
+        { "1/13",		11, 0 },
+        { "1/16",		12, 0 },
+        { "1/20",		13, 0 },
+        { "1/25",		14, 0 },
+        { "1/32",		15, 0 },
+        { "1/40",		16, 0 },
+        { "1/50",		17, 0 },
+        { "1/64",		18, 0 },
+        { "1/80",		19, 0 },
+        { "1/100",		20, 0 },
+        { "1/128",		21, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommandXValue,nikon_flashcommandXvalue)
+
+
+/* 0xd1d7, 0xd1da */
+static struct deviceproptableu8 nikon_flashcommandXmode[] = {
+        { N_("TTL"),		0, 0 },
+        { N_("Auto Aperture"),	1, 0 },
+        { N_("Manual"),		2, 0 },
+        { N_("Off"),		3, 0 },
+};
+GENERIC8TABLE(Nikon_FlashCommandXMode,nikon_flashcommandXmode)
+
+
 static struct deviceproptableu8 nikon_afmode[] = {
 	{ N_("AF-S"),		0, 0 },
 	{ N_("AF-C"),		1, 0 },
@@ -2223,6 +2302,12 @@ static struct deviceproptableu8 nikon_colormodel[] = {
 	{ N_("sRGB (nature)"),   0x02, 0 },
 };
 GENERIC8TABLE(Nikon_ColorModel,nikon_colormodel)
+
+static struct deviceproptableu8 nikon_colorspace[] = {
+	{ N_("sRGB"),            0x00, 0 },
+	{ N_("AdobeRGB"),        0x01, 0 },
+};
+GENERIC8TABLE(Nikon_ColorSpace,nikon_colorspace)
 
 static struct deviceproptableu8 canon_eos_colorspace[] = {
 	{ N_("sRGB"), 		0x01, 0 },
@@ -4212,6 +4297,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("WhiteBalance X B") , "whitebalancexb", PTP_DPC_CANON_EOS_WhiteBalanceXA, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
 	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
+	{ N_("Color Space"), "colorspace", PTP_DPC_NIKON_ColorSpace, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorSpace, _put_Nikon_ColorSpace},
 	{ N_("Color Space"), "colorspace", PTP_DPC_CANON_EOS_ColorSpace, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_ColorSpace, _put_Canon_EOS_ColorSpace},
 	{ N_("Auto ISO"), "autoiso", PTP_DPC_NIKON_ISOAuto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_PADVPValue, _put_Nikon_PADVPValue},
@@ -4238,6 +4324,16 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Nikon Flash Mode"), "nikonflashmode", PTP_DPC_NIKON_FlashMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_InternalFlashMode, _put_Nikon_InternalFlashMode},
 	{ N_("Flash Commander Mode"), "flashcommandermode", PTP_DPC_NIKON_FlashCommanderMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderMode, _put_Nikon_FlashCommanderMode},
 	{ N_("Flash Commander Power"), "flashcommanderpower", PTP_DPC_NIKON_FlashModeCommanderPower, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommanderPower, _put_Nikon_FlashCommanderPower},
+	{ N_("Flash Command Channel"), "flashcommandchannel", PTP_DPC_NIKON_FlashCommandChannel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandChannel, _put_Nikon_FlashCommandChannel},
+	{ N_("Flash Command Self Mode"), "flashcommandselfmode", PTP_DPC_NIKON_FlashCommandSelfMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandSelfMode, _put_Nikon_FlashCommandSelfMode},
+	{ N_("Flash Command Self Compensation"), "flashcommandselfcompensation", PTP_DPC_NIKON_FlashCommandSelfCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXCompensation, _put_Nikon_FlashCommandXCompensation},
+	{ N_("Flash Command Self Value"), "flashcommandselfvalue", PTP_DPC_NIKON_FlashCommandSelfValue, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXValue, _put_Nikon_FlashCommandXValue},
+	{ N_("Flash Command A Mode"), "flashcommandamode", PTP_DPC_NIKON_FlashCommandAMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXMode, _put_Nikon_FlashCommandXMode},
+	{ N_("Flash Command A Compensation"), "flashcommandacompensation", PTP_DPC_NIKON_FlashCommandACompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXCompensation, _put_Nikon_FlashCommandXCompensation},
+	{ N_("Flash Command A Value"), "flashcommandavalue", PTP_DPC_NIKON_FlashCommandAValue, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXValue, _put_Nikon_FlashCommandXValue},
+	{ N_("Flash Command B Mode"), "flashcommandbmode", PTP_DPC_NIKON_FlashCommandBMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXMode, _put_Nikon_FlashCommandXMode},
+	{ N_("Flash Command B Compensation"), "flashcommandbcompensation", PTP_DPC_NIKON_FlashCommandBCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXCompensation, _put_Nikon_FlashCommandXCompensation},
+	{ N_("Flash Command B Value"), "flashcommandbvalue", PTP_DPC_NIKON_FlashCommandBValue, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXValue, _put_Nikon_FlashCommandXValue},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BeepMode, _put_Nikon_BeepMode},
 	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
@@ -4383,6 +4479,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					memset(&dpd,0,sizeof(dpd));
 					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
+					if (dpd.GetSet == PTP_DPGS_Get)
+						gp_widget_set_readonly (widget, 1);
 					ptp_free_devicepropdesc(&dpd);
 					if (nrofsetprops)
 						setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
@@ -4564,6 +4662,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		default:
 			break;
 		}
+		if (dpd.GetSet == PTP_DPGS_Get)
+			gp_widget_set_readonly (widget, 1);
 		gp_widget_append (section, widget);
 		ptp_free_devicepropdesc(&dpd);
 	}
