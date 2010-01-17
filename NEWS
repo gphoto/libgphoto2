@@ -2,14 +2,25 @@ libgphoto2 2.4.7.4
 
 This is a 2.4 release branch update.
 
+libgphoto2:
+   * Updated translations.
+   * Added read-only flag for Widgets. gp_widget_set_readonly / gp_widget_get_readonly.
+   * GP_EVENT_CAPTURE_COMPLETE event added from trunk.
+
 ptp2:
+   * Fuji S5 Pro support.
    * Bugfixes in Canon EOS preview code.
    * Fixed NIKON DSLR shutterspeed not able to set bug.
-   * Canon EOS configuration additions.
+   * Nikon error decoding.
+   * Several Canon EOS configuration and capture additions and fixes.
    * Several new USB ids for new cameras.
-   * Lots of Fuji S5 Pro support.
+   * Some PTP protocol stability improvements.
+
+directory:
+   * Merged from TRUNK to gain the good stuff.
 
 libgphoto2_port/usb:
+   * Updated translations.
    * Check for MTP devices by string descriptor first, 
      and by OSD later.
 
