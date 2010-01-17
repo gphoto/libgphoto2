@@ -26,6 +26,7 @@ Files with samples:
 	lunkwill-canon-capture.c: A simple capture program that captures
 	                          a single image, retrieves it to disk,
 				  and removes it from the camera.
+	preview.c: Get 100 preview images in a row and save them to disk.
 
 
 If you find a common thing to do missing, please report them (or do them
