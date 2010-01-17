@@ -209,6 +209,12 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
 	if (!fs)
 		return 0;
 
+	/* This is only useful for JPEGs. Avoid querying it for other types. */
+	if (	!strstr(filename,"jpg")  && !strstr(filename,"JPG") &&
+		!strstr(filename,"jpeg") && !strstr(filename,"JPEG")
+	)
+		return 0;
+
 	gp_file_new (&file);
 	if (gp_filesystem_get_file (fs, folder, filename,
 				GP_FILE_TYPE_EXIF, file, NULL) != GP_OK) {
