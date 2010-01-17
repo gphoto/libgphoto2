@@ -1105,11 +1105,11 @@ static struct deviceproptableu8 compression[] = {
 GENERIC8TABLE(Compression,compression)
 
 static struct deviceproptableu16 fuji_imageformat[] = {
-	{ N_("RAW Only"),		1,	PTP_VENDOR_FUJI },
-	{ N_("JPG Only Fine"),		2,	PTP_VENDOR_FUJI },
-	{ N_("JPG Only Normal"),	3,	PTP_VENDOR_FUJI },
-	{ N_("RAW + JPG Fine"),		4,	PTP_VENDOR_FUJI },
-	{ N_("RAW + JPG Normal"),	5,	PTP_VENDOR_FUJI },
+	{ N_("RAW"),			1,	PTP_VENDOR_FUJI },
+	{ N_("JPEG Fine"),		2,	PTP_VENDOR_FUJI },
+	{ N_("JPEG Normal"),		3,	PTP_VENDOR_FUJI },
+	{ N_("RAW + JPEG Fine"),	4,	PTP_VENDOR_FUJI },
+	{ N_("RAW + JPEG Normal"),	5,	PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(Fuji_ImageFormat,fuji_imageformat)
 
@@ -3613,6 +3613,9 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 		ret = ptp_canon_eos_bulbend (params);
 	if (ret == PTP_RC_OK)
 		return (GP_OK);
+	if (val && (ret == PTP_RC_GeneralError))
+		gp_context_error (((PTPData *) camera->pl->params.data)->context,
+		_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
 	return (GP_ERROR);
 }
 
