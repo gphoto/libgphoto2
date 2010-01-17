@@ -26,6 +26,10 @@
 #ifndef __GPHOTO2_CAMERA_H__
 #define __GPHOTO2_CAMERA_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /**
  * \brief Object representing a camera attached to the system.
  *
@@ -38,6 +42,9 @@
  * The details of the Camera object are internal.
  */
 typedef struct _Camera Camera;
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 
 #include <gphoto2/gphoto2-abilities-list.h>
@@ -98,7 +105,8 @@ typedef enum {
 	GP_EVENT_UNKNOWN,	/**< unknown and unhandled event */
 	GP_EVENT_TIMEOUT,	/**< timeout, no arguments */
 	GP_EVENT_FILE_ADDED,	/**< CameraFilePath* = file path on camfs */
-	GP_EVENT_FOLDER_ADDED	/**< CameraFilePath* = folder on camfs */
+	GP_EVENT_FOLDER_ADDED,	/**< CameraFilePath* = folder on camfs */
+	GP_EVENT_CAPTURE_COMPLETE	/**< last capture is complete */
 } CameraEventType;
 
 /**
@@ -297,6 +305,7 @@ int gp_camera_init               (Camera *camera, GPContext *context);
 int gp_camera_exit               (Camera *camera, GPContext *context);
 
 /**@}*/
+ 
 
 
 /** \name Operations on cameras 

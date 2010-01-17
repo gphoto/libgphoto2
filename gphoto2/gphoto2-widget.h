@@ -123,6 +123,9 @@ int	gp_widget_get_choice     (CameraWidget *widget, int choice_number,
 int	gp_widget_changed        (CameraWidget *widget);
 int     gp_widget_set_changed    (CameraWidget *widget, int changed);
 
+int     gp_widget_set_readonly   (CameraWidget *widget, int readonly);
+int     gp_widget_get_readonly   (CameraWidget *widget, int *readonly);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

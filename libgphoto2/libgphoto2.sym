@@ -168,6 +168,7 @@ gp_widget_get_label
 gp_widget_get_name
 gp_widget_get_parent
 gp_widget_get_range
+gp_widget_get_readonly
 gp_widget_get_root
 gp_widget_get_type
 gp_widget_get_value
@@ -178,5 +179,6 @@ gp_widget_set_changed
 gp_widget_set_info
 gp_widget_set_name
 gp_widget_set_range
+gp_widget_set_readonly
 gp_widget_set_value
 gp_widget_unref
