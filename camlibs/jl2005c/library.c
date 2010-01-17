@@ -121,7 +121,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text, 
 	_(
-        "This driver supports cameras with Jeilin jl3005c chip \n"
+        "This driver supports cameras with Jeilin jl2005c chip \n"
 	"These cameras do not support deletion of photos, nor uploading\n"
 	"of data. \n"
 	"Decoding of compressed photos may or may not work well\n" 
