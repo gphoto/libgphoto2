@@ -2632,6 +2632,31 @@ camera_wait_for_event (Camera *camera, int timeout,
 					finish = 1;
 					break;
 				}
+				if ((nevent[i].Code == PTP_EC_Nikon_CaptureCompleteRecInSdram) ||
+				    (nevent[i].Code == PTP_EC_CaptureComplete)
+				) {
+					*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+					*eventdata = NULL;
+					finish = 1;
+					break;
+				}
+
+				/* as we can read multiple events we should retrieve a good one if possible
+				 * and not a random one.*/
+				/* default: */
+				if  (i==evtcnt-1) {
+					char *x;
+					*eventtype = GP_EVENT_UNKNOWN;
+					x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
+					if (x) {
+						sprintf (x, "PTP Event %04x, Param1 %08x", nevent[i].Code, nevent[i].Param1);
+						*eventdata = x;
+						finish = 1;
+						break;
+					}
+				} else {
+					gp_log (GP_LOG_DEBUG, "ptp2/nikon_wait_event", "silently ignoring event 0x%04x param1=0x%08x", nevent[i].Code, nevent[i].Param1);
+				}
 			}
 			free (nevent);
 			if (finish) return GP_OK;
