@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-09-15 00:06+0200\n"
+"POT-Creation-Date: 2009-11-04 23:06+0100\n"
 "PO-Revision-Date: 2009-01-18 23:25+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: Deutsch <German <translation-team-de@lists.sourceforge.net>>\n"
@@ -513,7 +513,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Ger‰t ordnungsgem‰ﬂ an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:1019
+#: usb/libusb.c:1050
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
