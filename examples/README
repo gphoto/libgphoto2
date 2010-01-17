@@ -27,6 +27,9 @@ Files with samples:
 	                          a single image, retrieves it to disk,
 				  and removes it from the camera.
 
+	preview.c: A sample preview loop, it will get 100 previews in
+			1 row as fast as possible. 
+
 
 If you find a common thing to do missing, please report them (or do them
 yourselves and send patches).
