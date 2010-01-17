@@ -357,7 +357,7 @@ read_data_read_again:
             goto read_data_read_again;
 
         /* Set size for folder/file list command from 1st packet */
-        if ((cmd_packet[0]==0x99)&&(x==0)) {
+        if (cmd_packet && (cmd_packet[0]==0x99) && (x==0)) {
             *size = (packet[1] * 256 +
                      packet[2])* 20 + 2;
             t = (float)*size / (float)(block_size);
@@ -497,7 +497,8 @@ int dc240_set_speed (Camera *camera, int speed)
          break;
     */
     default:
-        return (GP_ERROR);
+        retval = GP_ERROR;
+	goto fail;
     }
 
     retval = dc240_packet_write(camera, p, 8, 1);
@@ -709,8 +710,10 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
 
     gp_file_new(&file);
     ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256, context);
-    if (ret < 0)
+    if (ret < 0) {
+	gp_file_free (file);
         return ret;
+    }
     free(p1);
     free(p2);
 
@@ -773,6 +776,8 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
         retval = dc240_packet_exchange(camera, file, cmd_packet, path_packet, &size, -1, context);
         break;
     default:
+        free(cmd_packet);
+        free(path_packet);
         return (GP_ERROR);
     }
 
