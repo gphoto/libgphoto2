@@ -3,7 +3,7 @@
  * Implement Camera object representing a camera attached to the system.
  *
  * \author Copyright 2000 Scott Fritzinger
- * \author Copyright 2001-2002 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001-2002 Lutz MÃ¼ller <lutz@users.sf.net>
  *
  * \note
  * This library is free software; you can redistribute it and/or
