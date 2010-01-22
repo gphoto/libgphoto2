@@ -140,11 +140,12 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 		PTPDataHandler *handler
 ) {
 	int 		tries;
-	uint16_t	cmd = ptp->Code;
+	uint16_t	cmd;
 
 	if ((params==NULL) || (ptp==NULL)) 
 		return PTP_ERROR_BADPARAM;
 
+	cmd = ptp->Code;
 	ptp->Transaction_ID=params->transaction_id++;
 	ptp->SessionID=params->session_id;
 	/* send request */
