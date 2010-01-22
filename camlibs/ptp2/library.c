@@ -3090,11 +3090,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			char tmpname[20], *s;
 
 			PTPStorageInfo storageinfo;
-#if 0 /* EOS testing */
+			/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
 			if ((storageids.Storage[i]&0x0000ffff)==0)
 				continue;
-#endif
-			
+
 			n = snprintf (txt, spaceleft,"store_%08x:\n",(unsigned int)storageids.Storage[i]);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 
@@ -3393,9 +3392,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			for (i=0; i<storageids.n; i++) {
 				char fname[PTP_MAXSTRLEN];
 
-#if 0 /* EOS has 2 entries, one with 0 in minor ... lets check */
+				/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
 				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
-#endif
 				snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
 					storageids.Storage[i]);
