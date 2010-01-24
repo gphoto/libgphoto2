@@ -3417,7 +3417,7 @@ _get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 
-	gp_widget_set_range(*widget, -32767.0, 32767.0, 1.0);
+	gp_widget_set_range(*widget, -3, 3, 1.0);
 	return (GP_OK);
 }
 
@@ -3425,7 +3425,7 @@ static int
 _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	uint16_t	ret;
 	float		val;
-	unsigned int	xval, flag;
+	unsigned int	xval;
 	PTPParams *params = &(camera->pl->params);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DriveLens)) 
@@ -3433,16 +3433,15 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	gp_widget_get_value(widget, &val);
 
 	if (val<0) {
-		xval = -val;
-		flag = 0x1;
+		xval = 0x8000|((int)-val);
 	} else {
 		xval = val;
-		flag = 0x2;
 	}
-	if (!xval) xval = 1;
-	ret = ptp_canon_eos_drivelens (params, flag, xval);
+	if (!xval) /* nothing to do */
+		return GP_OK;
+	ret = ptp_canon_eos_drivelens (params, xval);
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive failed: 0x%x", ret);
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive 0x%x failed: 0x%x", xval, ret);
 		return GP_ERROR;
 	}
 	/* Get the next set of event data */

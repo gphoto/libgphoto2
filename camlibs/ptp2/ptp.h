@@ -2473,7 +2473,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 #define ptp_nikon_mfdrive(params,flag,amount) ptp_generic_no_data(params,PTP_OC_NIKON_MfDrive,2,flag,amount)
 
 /* FIXME: unclear if correct */
-#define ptp_canon_eos_drivelens(params,flag,amount) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DriveLens,2,flag,amount)
+#define ptp_canon_eos_drivelens(params,amount) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DriveLens,1,amount)
 /**
  * ptp_nikon_capture:
  *
