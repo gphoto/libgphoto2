@@ -4482,7 +4482,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					memset(&dpd,0,sizeof(dpd));
 					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
-					if (dpd.GetSet == PTP_DPGS_Get)
+					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
 					ptp_free_devicepropdesc(&dpd);
 					if (nrofsetprops)
