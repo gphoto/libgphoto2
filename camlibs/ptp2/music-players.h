@@ -280,6 +280,9 @@
   // From Elie De Brauwer <elie@de-brauwer.be>
   { "Philips", 0x0471, "GoGear ViBE SA1VBE04", 0x2075,
     DEVICE_FLAG_UNLOAD_DRIVER },
+  // From Anonymous SourceForge user
+  { "Philips", 0x0471, "GoGear Muse", 0x2077,
+      DEVICE_FLAG_UNLOAD_DRIVER },
   // From Elie De Brauwer <elie@de-brauwer.be>
   { "Philips", 0x0471, "GoGear ViBE SA1VBE08", 0x207b,
     DEVICE_FLAG_UNLOAD_DRIVER },
@@ -588,9 +591,10 @@
   // Reported by Steven Black <stevenblack1956@users.sourceforge.net>
   // Obviously this company goes by many names.
   // This device is USB 2.0 only. Broken pipe on closing.
-  { "Memorex", 0x10d6, "MMP 8585/8586", 0x2300, DEVICE_FLAG_UNLOAD_DRIVER | 
+  // A later report indicates that this is also used by the iRiver E200
+  { "Memorex or iRiver", 0x10d6, "MMP 8585/8586 or iRiver E200", 0x2300, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_NO_RELEASE_INTERFACE},
- 
+
   /*
    * Sirius
    */
@@ -607,6 +611,9 @@
      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Canon", 0x04a9, "PowerShot A640 (PTP/MTP mode)", 0x3139,
      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  // From Peter <pjeremy@users.sourceforge.net>
+  { "Canon", 0x04a9, "PowerShot SX20IS (PTP/MTP mode)", 0x31e4,
+     DEVICE_FLAG_NONE },
 
   /*
    * Nokia
@@ -661,8 +668,12 @@
   // From an anonymous SourceForge user
   // Not verified to be MTP
   { "Nokia", 0x0421, "E63", 0x0179, DEVICE_FLAG_NONE },
+  // From: AxeL <axel__17@users.sourceforge.net>
+  { "Nokia", 0x0421, "N97-1", 0x01f4, DEVICE_FLAG_NONE },
   // From: FunkyPenguin <awafaa@users.sourceforge.net>
   { "Nokia", 0x0421, "N97", 0x01f5, DEVICE_FLAG_NONE },
+  // From: Anonymous SourceForge user
+  { "Nokia", 0x0421, "5130 XpressMusic", 0x0209, DEVICE_FLAG_NONE },
   // From: Alexander Kojevnikov <alex-kay@users.sourceforge.net>
   { "Nokia", 0x0421, "6600i", 0x0297, DEVICE_FLAG_NONE },
   // https://sourceforge.net/tracker/index.php?func=detail&aid=2692473&group_id=8874&atid=358874
@@ -841,6 +852,9 @@
   // Reported by Cyrille Potereau <cyrille.potereau@wanadoo.fr>
   { "LG Electronics Inc.", 0x1004, "KC910 Renoir Mobile Phone", 0x608f,
       DEVICE_FLAG_UNLOAD_DRIVER },
+  // Reported by Aaron Slunt <tongle@users.sourceforge.net>
+  { "LG Electronics Inc.", 0x1004, "GR-500 Music Player", 0x611b,
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_ALWAYS_PROBE_DESCRIPTOR },
   // Reported by anonymous sourceforge user
   { "LG Electronics Inc.", 0x1004, "KM900", 0x6132,
       DEVICE_FLAG_UNLOAD_DRIVER },
@@ -918,6 +932,11 @@
       DEVICE_FLAG_UNIQUE_FILENAMES },
   // Reported by Gregory Boddin <gregory@siwhine.net>
   { "Sony", 0x054c, "Walkman NWZ-B142F", 0x03d8,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      DEVICE_FLAG_UNIQUE_FILENAMES  },
+  // Reported by Anonymous SourceForge user
+  { "Sony", 0x054c, "Walkman NWZ-S545", 0x03fe,
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_UNIQUE_FILENAMES  },
@@ -1037,11 +1056,16 @@
   { "Perception Digital, Ltd", 0x0aa6, "Gigaware GX400", 0x9702, DEVICE_FLAG_NONE },
 
   /*
-   * RIM's BlackBerry 
+   * RIM's BlackBerry
    */
   // Reported by Nicolas VIVIEN <nicolas@vivien.fr>
   { "RIM", 0x0fca, "BlackBerry Storm", 0x8007, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_SWITCH_MODE_BLACKBERRY | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+
+  /*
+   * Nextar
+   */
+  { "Nextar", 0x0402, "MA715A-8R", 0x5668 },
 
   /*
    * Other strange stuff.
