@@ -1,4 +1,4 @@
-libgphoto2 2.4.7.4
+libgphoto2 2.4.8
 
 This is a 2.4 release branch update.
 
@@ -6,23 +6,35 @@ libgphoto2:
    * Updated translations.
    * Added read-only flag for Widgets. gp_widget_set_readonly / gp_widget_get_readonly.
    * GP_EVENT_CAPTURE_COMPLETE event added from trunk.
+   * Some bugfixes.
 
 ptp2:
-   * Fuji S5 Pro support.
+   * New USB IDs for cameras:
+	Kodak Z915
+	Nikon CoolPix S220, S225,
+	Nikon DSLR D5000, D3000, D300s
+	Canon PowerShot SD770 IS, A580, SD1200, IXUS 95 IS, G11, IXY 220IS, SD940IS
+	Canon EOS 7D
+	Fuji S5 Pro
+	Sea & Sea 2G
+   	Also merged new libmtp deviceids.
+   * Fuji S5 Pro capture support.
    * Bugfixes in Canon EOS preview code.
    * Fixed NIKON DSLR shutterspeed not able to set bug.
    * Nikon error decoding.
-   * Several Canon EOS configuration and capture additions and fixes.
-   * Several new USB ids for new cameras.
-   * Some PTP protocol stability improvements.
+   * Several Canon EOS configuration and capture additions and fixes, focus pulling.
+   * PTP protocol stability improvements.
+   * Lots of bugfixes.
+
+sierra:
+   * restrict list of choices for Nikon Coolpix 4300
 
 directory:
    * Merged from TRUNK to gain the good stuff.
 
 libgphoto2_port/usb:
    * Updated translations.
-   * Check for MTP devices by string descriptor first, 
-     and by OSD later.
+   * Check for MTP devices by string descriptor first and by OSD later.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.7
