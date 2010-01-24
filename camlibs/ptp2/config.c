@@ -3447,7 +3447,7 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Could not parse %s", val);
 			return GP_ERROR;
 		} else {
-			xval = (-xval) | 0x8000;
+			xval = xval | 0x8000;
 		}
 	}
 	ret = ptp_canon_eos_drivelens (params, xval);
