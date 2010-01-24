@@ -3414,35 +3414,45 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 
 static int
 _get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 
-	gp_widget_set_range(*widget, -32767.0, 32767.0, 1.0);
+	gp_widget_add_choice (*widget, _("Near 1"));
+	gp_widget_add_choice (*widget, _("Near 2"));
+	gp_widget_add_choice (*widget, _("Near 3"));
+	gp_widget_add_choice (*widget, _("None"));
+	gp_widget_add_choice (*widget, _("Far 1"));
+	gp_widget_add_choice (*widget, _("Far 2"));
+	gp_widget_add_choice (*widget, _("Far 3"));
+
+	gp_widget_set_value (*widget, _("None"));
 	return (GP_OK);
 }
 
 static int
 _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	uint16_t	ret;
-	float		val;
-	unsigned int	xval, flag;
+	const char*	val;
+	unsigned int	xval;
 	PTPParams *params = &(camera->pl->params);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DriveLens)) 
 		return (GP_ERROR_NOT_SUPPORTED);
 	gp_widget_get_value(widget, &val);
 
-	if (val<0) {
-		xval = -val;
-		flag = 0x1;
-	} else {
-		xval = val;
-		flag = 0x2;
+	if (!strcmp (val, _("None"))) return GP_OK;
+
+	if (!sscanf (val, _("Near %d"), &xval)) {
+		if (!sscanf (val, _("Far %d"), &xval)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Could not parse %s", val);
+			return GP_ERROR;
+		} else {
+			xval = (-xval) | 0x8000;
+		}
 	}
-	if (!xval) xval = 1;
-	ret = ptp_canon_eos_drivelens (params, flag, xval);
+	ret = ptp_canon_eos_drivelens (params, xval);
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive failed: 0x%x", ret);
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive 0x%x failed: 0x%x", xval, ret);
 		return GP_ERROR;
 	}
 	/* Get the next set of event data */

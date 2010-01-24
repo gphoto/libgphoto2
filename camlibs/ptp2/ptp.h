@@ -2478,7 +2478,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 /**
  * ptp_nikon_mfdrive:
  *
- * This command runs (drives) the lens autofocus.
+ * This command runs (drives) the lens focus manually.
  *  
  * params:      PTPParams*
  * flag:        0x1 for (no limit - closest), 0x2 for (closest - no limit)
@@ -2489,8 +2489,18 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  **/
 #define ptp_nikon_mfdrive(params,flag,amount) ptp_generic_no_data(params,PTP_OC_NIKON_MfDrive,2,flag,amount)
 
-/* FIXME: unclear if correct */
-#define ptp_canon_eos_drivelens(params,flag,amount) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DriveLens,2,flag,amount)
+/**
+ * ptp_canon_eos_drivelens:
+ *
+ * This command runs (drives) the lens focus manually.
+ *  
+ * params:      PTPParams*
+ * amount:      0x1-0x3 for near range, 0x8001-0x8003 for far range.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_drivelens(params,amount) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DriveLens,1,amount)
 /**
  * ptp_nikon_capture:
  *
