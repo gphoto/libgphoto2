@@ -613,6 +613,8 @@ static struct {
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
 	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* Harry Reisenleiter <harrylr@earthlink.net> */
+	{"Nikon:Coolpix 8800 (PTP mode)", 0x04b0, 0x0127, PTP_CAP},
 	/* Nikon Coolpix 4800 */
 	{"Nikon:Coolpix 4800 (PTP mode)", 0x04b0, 0x0129, 0},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
