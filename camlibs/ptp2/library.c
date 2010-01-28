@@ -1484,20 +1484,41 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 			PTPPropertyValue	val;
-			int tries = 100;
+			int 			tries = 100;
+			PTPDevicePropDesc       dpd;
 
 			SET_CONTEXT_P(params, context);
 
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
-			/* 2 means PC, 1 means TFT */
-			val.u32 = 2;
-			ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
-				return GP_ERROR;
+			/* do not set it everytime, it will cause delays */
+			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
+			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
+				/* 2 means PC, 1 means TFT */
+				val.u32 = 2;
+				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
+				if (ret != PTP_RC_OK) {
+					gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
+					return GP_ERROR;
+				}
 			}
 			while (tries--) {
+				PTPCanon_changes_entry	*entries = NULL;
+				int			nrofentries = 0;
+
+				/* Poll for camera events */
+				while (1) {
+					ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+					if (ret != PTP_RC_OK) {
+						gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "getevent failed!");
+						return GP_ERROR;
+					}
+					if (nrofentries == 0)
+						break;
+					free (entries);
+					nrofentries = 0;
+					entries = NULL;
+				}
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
 					uint32_t	len = dtoh32a(data);
@@ -1516,24 +1537,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_OK;
 				} else {
 					if (ret == 0xa102) { /* means "not there yet" ... so wait */
-						PTPCanon_changes_entry	*entries = NULL;
-						int			nrofentries = 0;
-
 						gp_context_idle (context);
-						usleep (50*1000);
-						/* Poll for camera events */
-						while (1) {
-							ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-							if (ret != PTP_RC_OK) {
-								gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "getevent failed!");
-								return GP_ERROR;
-							}
-							if (nrofentries == 0)
-								break;
-							free (entries);
-							nrofentries = 0;
-							entries = NULL;
-						}
 						continue;
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
