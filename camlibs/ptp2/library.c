@@ -1454,19 +1454,25 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 			PTPPropertyValue	val;
-			int tries = 20;
+			int 			tries = 20;
+			PTPDevicePropDesc       dpd;
 
 			SET_CONTEXT_P(params, context);
 
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
-			/* 2 means PC, 1 means TFT */
-			val.u32 = 2;
-			ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
-				return GP_ERROR;
+			/* do not set it everytime, it will cause delays */
+			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
+			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
+				/* 2 means PC, 1 means TFT */
+				val.u32 = 2;
+				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
+				if (ret != PTP_RC_OK) {
+					gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
+					return GP_ERROR;
+				}
 			}
+
 			while (tries--) {
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
