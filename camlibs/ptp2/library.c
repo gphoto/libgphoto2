@@ -1474,6 +1474,22 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			}
 
 			while (tries--) {
+				PTPCanon_changes_entry	*entries = NULL;
+				int			nrofentries = 0;
+
+				/* Poll for camera events */
+				while (1) {
+					ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+					if (ret != PTP_RC_OK) {
+						gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "getevent failed!");
+						return GP_ERROR;
+					}
+					if (nrofentries == 0)
+						break;
+					free (entries);
+					nrofentries = 0;
+					entries = NULL;
+				}
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
 					uint32_t	len = dtoh32a(data);
@@ -1492,24 +1508,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_OK;
 				} else {
 					if (ret == 0xa102) { /* means "not there yet" ... so wait */
-						PTPCanon_changes_entry	*entries = NULL;
-						int			nrofentries = 0;
-
 						gp_context_idle (context);
 						usleep (50*1000);
-						/* Poll for camera events */
-						while (1) {
-							ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-							if (ret != PTP_RC_OK) {
-								gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "getevent failed!");
-								return GP_ERROR;
-							}
-							if (nrofentries == 0)
-								break;
-							free (entries);
-							nrofentries = 0;
-							entries = NULL;
-						}
 						continue;
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
