@@ -47,3 +47,181 @@ Property 0xd003:(read only) (type=0x4) Enumeration [1,2] value: 1
 Warning Status(0xd102):(read only) (type=0x2) 0
 Property 0xd005:(read only) (type=0x4) Enumeration [1,2] value: 2
 Autofocus Mode(0xd161):(readwrite) (type=0x2) Range [0 - 1, step 1] value: AF-S (0)
+
+
+/main/actions/autofocusdrive
+   Label: Drive Nikon DSLR Autofocus
+   Type: TOGGLE
+   Current: 0
+/main/actions/manualfocusdrive
+   Label: Drive Nikon DSLR Manual focus
+   Type: RANGE
+   Current: 0
+   Bottom: -32767
+   Top: 32767
+   Step: 1
+/main/settings/datetime
+   Label: Camera Date and Time
+   Type: DATE
+   Current: 1264814294
+   Printable: Fri Jan 29 19:18:14 2010
+/main/settings/fastfs
+   Label: Fast Filesystem
+   Type: TOGGLE
+   Current: 1
+/main/settings/capturetarget
+   Label: Capture Target
+   Type: RADIO
+   Current: Internal RAM
+   Choice: 0 Internal RAM
+   Choice: 1 Memory card
+/main/imgsettings/imagequality
+   Label: Image Quality
+   Type: RADIO
+   Current: Unknown value 000c
+   Choice: 0 NEF+Fine
+   Choice: 1 Unknown value 000c
+   Choice: 2 Unknown value 0019
+/main/imgsettings/imagesize
+   Label: Image Size
+   Type: RADIO
+   Current: 3264x2448
+   Choice: 0 640x480
+   Choice: 1 1024x768
+   Choice: 2 1280x960
+   Choice: 3 1600x1200
+   Choice: 4 2048x1536
+   Choice: 5 2592x1944
+   Choice: 6 3264x2448
+   Choice: 7 3264x2176
+/main/capturesettings/flashmode
+   Label: Flash Mode
+   Type: RADIO
+   Current: Automatic Flash
+   Choice: 0 Automatic Flash
+   Choice: 1 Flash off
+   Choice: 2 Fill flash
+   Choice: 3 Red-eye automatic
+/main/capturesettings/focallength
+   Label: Focal Length
+   Type: RANGE
+   Current: 86
+   Bottom: 35
+   Top: 350
+   Step: 1
+/main/capturesettings/focusmode
+   Label: Focus Mode
+   Type: RADIO
+   Current: Automatic
+   Choice: 0 Automatic
+   Choice: 1 Automatic Macro
+/main/capturesettings/focusmode2
+   Label: Focus Mode 2
+   Type: RADIO
+   Current: AF-S
+   Choice: 0 AF-S
+   Choice: 1 AF-C
+/main/other/5001
+   Label: Battery Level
+   Type: MENU
+   Current: 100
+   Choice: 0 25
+   Choice: 1 50
+   Choice: 2 65
+   Choice: 3 80
+   Choice: 4 100
+/main/other/5003
+   Label: Image Size
+   Type: MENU
+   Current: 3264x2448
+   Choice: 0 640x480
+   Choice: 1 1024x768
+   Choice: 2 1280x960
+   Choice: 3 1600x1200
+   Choice: 4 2048x1536
+   Choice: 5 2592x1944
+   Choice: 6 3264x2448
+   Choice: 7 3264x2176
+/main/other/5004
+   Label: Compression Setting
+   Type: MENU
+   Current: 12
+   Choice: 0 6
+   Choice: 1 12
+   Choice: 2 25
+/main/other/5008
+   Label: Focal Length
+   Type: MENU
+   Current: 8600
+   Choice: 0 3500
+   Choice: 1 3700
+   Choice: 2 4000
+   Choice: 3 4300
+   Choice: 4 4600
+   Choice: 5 5000
+   Choice: 6 5400
+   Choice: 7 5900
+   Choice: 8 6400
+   Choice: 9 7100
+   Choice: 10 7800
+   Choice: 11 8600
+   Choice: 12 9400
+   Choice: 13 10400
+   Choice: 14 11500
+   Choice: 15 12700
+   Choice: 16 14100
+   Choice: 17 15700
+   Choice: 18 17500
+   Choice: 19 19200
+   Choice: 20 20900
+   Choice: 21 22500
+   Choice: 22 24000
+   Choice: 23 25300
+   Choice: 24 26700
+   Choice: 25 27900
+   Choice: 26 29100
+   Choice: 27 30200
+   Choice: 28 31400
+   Choice: 29 32600
+   Choice: 30 33800
+   Choice: 31 35000
+/main/other/500a
+   Label: Focus Mode
+   Type: MENU
+   Current: 2
+   Choice: 0 2
+   Choice: 1 3
+/main/other/500c
+   Label: Flash Mode
+   Type: MENU
+   Current: 1
+   Choice: 0 1
+   Choice: 1 2
+   Choice: 2 3
+   Choice: 3 4
+/main/other/5011
+   Label: Date & Time
+   Type: TEXT
+   Current: 20100129T191959
+/main/other/d003
+   Label: PTP Property 0xd003
+   Type: MENU
+   Current: 1
+   Choice: 0 1
+   Choice: 1 2
+/main/other/d102
+   Label: Warning Status
+   Type: TEXT
+   Current: 0
+/main/other/d005
+   Label: PTP Property 0xd005
+   Type: MENU
+   Current: 2
+   Choice: 0 1
+   Choice: 1 2
+/main/other/d161
+   Label: Autofocus Mode
+   Type: MENU
+   Current: 0
+   Choice: 0 0
+   Choice: 1 1
