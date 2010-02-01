@@ -6,7 +6,7 @@
 # or  make usb.la
 #
 # If you only want to install a single camlib or two, run
-#     make DRIVERS="usb.la ptpip.la" install-iolibLTLIBRARIES
+#     make IOLIB_LTLIST="usb.la ptpip.la" install-iolibLTLIBRARIES
 ########################################################################
 
 
