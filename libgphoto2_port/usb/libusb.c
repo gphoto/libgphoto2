@@ -248,7 +248,9 @@ gp_port_usb_open (GPPort *port)
 	 */
 	port->pl->dh = usb_open (port->pl->d);
 	if (!port->pl->dh) {
-		gp_port_set_error (port, _("Could not open USB device (%m)."));
+		int saved_errno = errno;
+		gp_port_set_error (port, _("Could not open USB device (%s)."),
+				   strerror(saved_errno));
 		return GP_ERROR_IO;
 	}
 #if defined(LIBUSB_HAS_GET_DRIVER_NP) && defined(LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP)
@@ -279,11 +281,15 @@ gp_port_usb_open (GPPort *port)
 	ret = usb_claim_interface (port->pl->dh,
 				   port->settings.usb.interface);
 	if (ret < 0) {
-		gp_port_set_error (port, _("Could not claim "
-			"interface %d (%m). Make sure no other program "
-			"or kernel module (such as %s) is using the device "
-			"and you have read/write access to the device."),
-			port->settings.usb.interface, "sdc2xx, stv680, spca50x");
+		int saved_errno = errno;
+		gp_port_set_error (port, _("Could not claim interface %d (%s). "
+					   "Make sure no other program "
+					   "or kernel module (such as %s) "
+					   "is using the device and you have "
+					   "read/write access to the device."),
+				   port->settings.usb.interface,
+				   strerror(saved_errno),
+				   "sdc2xx, stv680, spca50x");
 		return GP_ERROR_IO_USB_CLAIM;
 	}
 	return GP_OK;
@@ -297,9 +303,11 @@ gp_port_usb_close (GPPort *port)
 
 	if (usb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
-		gp_port_set_error (port, _("Could not "
-			"release interface %d (%m)."),
-			port->settings.usb.interface);
+		int saved_errno = errno;
+		gp_port_set_error (port, _("Could not release "
+					   "interface %d (%s)."),
+				   port->settings.usb.interface,
+				   strerror(saved_errno));
 		return (GP_ERROR_IO);
 	}
 
@@ -310,7 +318,10 @@ gp_port_usb_close (GPPort *port)
 	 */
 	if (port->pl->d->descriptor.idVendor == 0x04a9) {
 		if (usb_reset (port->pl->dh) < 0) {
-			gp_port_set_error (port, _("Could not reset USB port (%m)."));
+			int saved_errno = errno;
+			gp_port_set_error (port, _("Could not reset "
+						   "USB port (%s)."),
+					   strerror(saved_errno));
 			return (GP_ERROR_IO);
 		}
 	}
@@ -337,7 +348,9 @@ gp_port_usb_close (GPPort *port)
 #endif
 
 	if (usb_close (port->pl->dh) < 0) {
-		gp_port_set_error (port, _("Could not close USB port (%m)."));
+		int saved_errno = errno;
+		gp_port_set_error (port, _("Could not close USB port (%s)."),
+				   strerror(saved_errno));
 		return (GP_ERROR_IO);
 	}
 
@@ -585,10 +598,12 @@ gp_port_usb_update (GPPort *port)
 				     port->settings.usb.config);
 		if (ret < 0) {
 #if 0 /* setting the configuration failure is not fatal */
+			int saved_errno = errno;
 			gp_port_set_error (port,
-				_("Could not set config %d/%d (%m)"),
-				port->settings.usb.interface,
-				port->settings.usb.config);
+					   _("Could not set config %d/%d (%s)"),
+					   port->settings.usb.interface,
+					   port->settings.usb.config,
+					   strerror(saved_errno));
 			return GP_ERROR_IO_UPDATE;	
 #endif
 			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration from %d to %d failed with ret = %d, but continue...", port->pl->config, port->settings.usb.config, ret);
@@ -618,11 +633,13 @@ gp_port_usb_update (GPPort *port)
 	if (port->settings.usb.altsetting != port->pl->altsetting) {
 		ret = usb_set_altinterface(port->pl->dh, port->settings.usb.altsetting);
 		if (ret < 0) {
-			gp_port_set_error (port, 
-				_("Could not set altsetting from %d "
-				"to %d (%m)"),
-				port->pl->altsetting,
-				port->settings.usb.altsetting);
+			int saved_errno = errno;
+			gp_port_set_error (port,
+					   _("Could not set altsetting from %d "
+					     "to %d (%s)"),
+					   port->pl->altsetting,
+					   port->settings.usb.altsetting,
+					   strerror(saved_errno));
 			return GP_ERROR_IO_UPDATE;
 		}
 

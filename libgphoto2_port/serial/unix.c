@@ -457,7 +457,9 @@ gp_port_serial_open (GPPort *dev)
 		dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
 #endif
 	if (dev->pl->fd == -1) {
-		gp_port_set_error (dev, _("Failed to open '%s' (%m)."), port);
+		int saved_errno = errno;
+		gp_port_set_error (dev, _("Failed to open '%s' (%s)."),
+				   port, strerror(saved_errno));
 		dev->pl->fd = 0;
 		return GP_ERROR_IO;
 	}
@@ -475,8 +477,11 @@ gp_port_serial_close (GPPort *dev)
 
 	if (dev->pl->fd) {
 		if (close (dev->pl->fd) == -1) {
+			int saved_errno = errno;
 			gp_port_set_error (dev, _("Could not close "
-				"'%s' (%m)."), dev->settings.serial.port);
+						  "'%s' (%s)."),
+					   dev->settings.serial.port,
+					   strerror(saved_errno));
 	                return GP_ERROR_IO;
 	        }
 		dev->pl->fd = 0;
@@ -523,14 +528,16 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 		 */
 		ret = write (dev->pl->fd, bytes, size - len);
 		if (ret == -1) {
-                        switch (errno) {
+			int saved_errno = errno;
+			switch (saved_errno) {
 			case EAGAIN:
 			case EINTR:
                                 ret = 0;
                                 break;
                         default:
 				gp_port_set_error (dev, _("Could not write "
-					"to port (%m)"));
+							  "to port (%s)"),
+						   strerror(saved_errno));
                                 return GP_ERROR_IO_WRITE;
                         }
 		}
@@ -675,8 +682,10 @@ gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
 #ifdef HAVE_TERMIOS_H
 	CHECK (get_termios_bit (dev, pin, &bit));
         if (ioctl (dev->pl->fd, TIOCMGET, &j) < 0) {
+		int saved_errno = errno;
 		gp_port_set_error (dev, _("Could not get level of pin %i "
-				   "(%m)."), pin);
+					  "(%s)."),
+				   pin, strerror(saved_errno));
                 return GP_ERROR_IO;
         }
         *level = j & bit;
@@ -710,8 +719,10 @@ gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
 		break;
         }
         if (ioctl (dev->pl->fd, request, &bit) < 0) {
+		int saved_errno = errno;
 		gp_port_set_error (dev, _("Could not set level of pin %i to "
-				   "%i (%m)."), pin, level);
+					  "%i (%s)."),
+				   pin, level, strerror(saved_errno));
 		return GP_ERROR_IO;
 	}
 #else
@@ -735,8 +746,10 @@ gp_port_serial_flush (GPPort *dev, int direction)
 
 #ifdef HAVE_TERMIOS_H
 	if (tcflush (dev->pl->fd, direction ? TCOFLUSH : TCIFLUSH) < 0) {
-		gp_port_set_error (dev, _("Could not flush '%s' (%m)."),
-			dev->settings.serial.port);
+		int saved_errno = errno;
+		gp_port_set_error (dev, _("Could not flush '%s' (%s)."),
+				   dev->settings.serial.port,
+				   strerror(saved_errno));
 		return (GP_ERROR_IO);
 	}
 #else

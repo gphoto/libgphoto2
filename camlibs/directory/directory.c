@@ -347,8 +347,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			
 			/* lstat ... do not follow symlinks */
 			if (lstat (buf, &st) != 0) {
+				int saved_errno = errno;
 				gp_context_error (context, _("Could not get information "
-																		 "about '%s' (%m)."), buf);
+							     "about '%s' (%s)."),
+						  buf, strerror(saved_errno));
 				return GP_ERROR;
 			}
 			if (S_ISDIR (st.st_mode)) {
@@ -377,8 +379,10 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		return result;
 
 	if (lstat (path, &st) != 0) {
+		int saved_errno = errno;
 		gp_context_error (context, _("Could not get information "
-			"about '%s' in '%s' (%m)."), file, folder);
+					     "about '%s' in '%s' (%s)."),
+				  file, folder, strerror(saved_errno));
 		return (GP_ERROR);
 	}
 
@@ -423,9 +427,10 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		utimbuf.actime  = info.file.mtime;
 		utimbuf.modtime = info.file.mtime;
 		if (utime (path, &utimbuf) != 0) {
+			int saved_errno = errno;
 			gp_context_error (context, _("Could not change "
-				"time of file '%s' in '%s' (%m)."),
-				file, folder);
+						     "time of file '%s' in '%s' (%s)."),
+					  file, folder, strerror(saved_errno));
 			return (GP_ERROR);
 		}
 	}
@@ -626,9 +631,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return result;
 	result = unlink (path);
 	if (result) {
+		int saved_errno = errno;
 		gp_context_error (context, _("Could not delete file '%s' "
-			"in folder '%s' (error code %i: %m)."),
-			file, folder, result);
+					     "in folder '%s' (error code %i: %s)."),
+				  file, folder, result, strerror(saved_errno));
 		return (GP_ERROR);
 	}
 
