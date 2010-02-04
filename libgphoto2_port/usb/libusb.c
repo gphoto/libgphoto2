@@ -533,6 +533,9 @@ gp_port_usb_update (GPPort *port)
 {
 	int ret, ifacereleased = FALSE;
 
+	if (!port)
+		return GP_ERROR_BAD_PARAMETERS;
+
 	gp_log (GP_LOG_DEBUG, "libusb", "gp_port_usb_update(old int=%d, conf=%d, alt=%d), (new int=%d, conf=%d, alt=%d)",
 		port->settings.usb.interface,
 		port->settings.usb.config,
@@ -541,8 +544,6 @@ gp_port_usb_update (GPPort *port)
 		port->settings_pending.usb.config,
 		port->settings_pending.usb.altsetting
 	);
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
 
 	if (port->pl->interface == -1) port->pl->interface = port->settings.usb.interface;
 	if (port->pl->config == -1) port->pl->config = port->settings.usb.config;
