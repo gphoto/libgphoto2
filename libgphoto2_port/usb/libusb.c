@@ -567,14 +567,14 @@ gp_port_usb_update (GPPort *port)
 		);
 		if (usb_release_interface (port->pl->dh,
 					   port->pl->interface) < 0) {
-			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","releasing the iface for config failed.");
+			gp_log (GP_LOG_DEBUG, "libusb","releasing the iface for config failed.");
 			/* Not a hard error for now. -Marcus */
 		} else {
 			gp_log (GP_LOG_DEBUG,"libusb","claiming interface %d", port->settings.usb.interface);
 			ret = usb_claim_interface (port->pl->dh,
 						   port->settings.usb.interface);
 			if (ret < 0) {
-				gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","reclaiming the iface for config failed.");
+				gp_log (GP_LOG_DEBUG, "libusb","reclaiming the iface for config failed.");
 				return GP_ERROR_IO_UPDATE;
 			}
 			port->pl->interface = port->settings.usb.interface;
@@ -590,7 +590,7 @@ gp_port_usb_update (GPPort *port)
 		 */
 		if (usb_release_interface (port->pl->dh,
 					   port->settings.usb.interface) < 0) {
-			gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","releasing the iface for config failed.");
+			gp_log (GP_LOG_DEBUG, "libusb","releasing the iface for config failed.");
 			ifacereleased = FALSE;
 		} else {
 			ifacereleased = TRUE;
@@ -610,7 +610,7 @@ gp_port_usb_update (GPPort *port)
 			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration from %d to %d failed with ret = %d, but continue...", port->pl->config, port->settings.usb.config, ret);
 		}
 
-		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
+		gp_log (GP_LOG_DEBUG, "libusb",
 			"Changed usb.config from %d to %d",
 			port->pl->config,
 			port->settings.usb.config);
@@ -620,7 +620,7 @@ gp_port_usb_update (GPPort *port)
 			ret = usb_claim_interface (port->pl->dh,
 						   port->settings.usb.interface);
 			if (ret < 0) {
-				gp_log (GP_LOG_DEBUG, "gphoto2-port-usb","reclaiming the iface for config failed.");
+				gp_log (GP_LOG_DEBUG, "libusb","reclaiming the iface for config failed.");
 			}
 		}
 		/*
@@ -644,7 +644,7 @@ gp_port_usb_update (GPPort *port)
 			return GP_ERROR_IO_UPDATE;
 		}
 
-		gp_log (GP_LOG_DEBUG, "gphoto2-port-usb",
+		gp_log (GP_LOG_DEBUG, "libusb",
 			"Changed usb.altsetting from %d to %d",
 			port->pl->altsetting,
 			port->settings.usb.altsetting);
@@ -779,7 +779,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 					port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
 
 					port->settings.usb.maxpacketsize = 0;
-					gp_log (GP_LOG_DEBUG, "gphoto2-port-usb", "inep to look for is %02x", port->settings.usb.inep);
+					gp_log (GP_LOG_DEBUG, "libusb", "inep to look for is %02x", port->settings.usb.inep);
 					for (i=0;i<dev->config[config].interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
 						if (port->settings.usb.inep == dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
 							port->settings.usb.maxpacketsize = dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;
@@ -1045,7 +1045,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 				port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
 				port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
 				port->settings.usb.maxpacketsize = 0;
-				gp_log (GP_LOG_DEBUG, "gphoto2-port-usb", "inep to look for is %02x", port->settings.usb.inep);
+				gp_log (GP_LOG_DEBUG, "libusb", "inep to look for is %02x", port->settings.usb.inep);
 				for (i=0;i<dev->config[config].interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
 					if (port->settings.usb.inep == dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
 						port->settings.usb.maxpacketsize = dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;
