@@ -607,7 +607,7 @@ gp_port_usb_update (GPPort *port)
 					   strerror(saved_errno));
 			return GP_ERROR_IO_UPDATE;	
 #endif
-			gp_log (GP_LOG_ERROR, "gphoto2-port-usb","setting configuration from %d to %d failed with ret = %d, but continue...", port->pl->config, port->settings.usb.config, ret);
+			gp_log (GP_LOG_ERROR, "libusb","setting configuration from %d to %d failed with ret = %d, but continue...", port->pl->config, port->settings.usb.config, ret);
 		}
 
 		gp_log (GP_LOG_DEBUG, "libusb",
@@ -750,7 +750,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				port->pl->d = dev;
 
-				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+				gp_log (GP_LOG_VERBOSE, "libusb",
 					"Looking for USB device "
 					"(vendor 0x%x, product 0x%x)... found.", 
 					idvendor, idproduct);
@@ -764,7 +764,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 					if (dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass
 					    == USB_CLASS_MASS_STORAGE) {
-						gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+						gp_log (GP_LOG_VERBOSE, "libusb",
 							_("USB device (vendor 0x%x, product 0x%x) is a mass"
 							  " storage device, and might not function with gphoto2."
 							  " Reference: %s"),
@@ -786,7 +786,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 							break;
 						}
 					}
-					gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+					gp_log (GP_LOG_VERBOSE, "libusb",
 						"Detected defaults: config %d, "
 						"interface %d, altsetting %d, "
 						"inep %02x, outep %02x, intep %02x, "
@@ -1029,7 +1029,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 				continue;
 
 			port->pl->d = dev;
-			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+			gp_log (GP_LOG_VERBOSE, "libusb",
 				"Looking for USB device "
 				"(class 0x%x, subclass, 0x%x, protocol 0x%x)... found.", 
 				class, subclass, protocol);
@@ -1052,7 +1052,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 						break;
 					}
 				}
-				gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+				gp_log (GP_LOG_VERBOSE, "libusb",
 					"Detected defaults: config %d, "
 					"interface %d, altsetting %d, "
 					"idVendor ID %04x, idProduct %04x, "
