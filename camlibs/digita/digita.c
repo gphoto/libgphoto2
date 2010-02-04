@@ -138,7 +138,7 @@ static int folder_list_func(CameraFilesystem *fs, const char *folder,
 	/* Walk through all of the pictures building a list of folders */
 	for (i = 0; i < camera->pl->num_pictures; i++) {
 		int found;
-		char *path;
+		char *path,*newfolder;
 
 		/* Check to make sure the path matches the folder we're */
 		/*  looking through */
@@ -158,19 +158,22 @@ static int folder_list_func(CameraFilesystem *fs, const char *folder,
 		if (strchr(path, '/') != path + strlen(path) - 1)
 			continue;
 
+		newfolder = strdup(path);
+		*strchr(newfolder,'/') = 0;
 		found = 0;
 		for (i1 = 0; i1 < gp_list_count(list); i1++) {
 			const char *name;
 
 			gp_list_get_name(list, i1, &name);
-			if (!strcmp(name, path)) {
+			if (!strcmp(name, newfolder)) {
 				found = 1;
 				break;
 			}
 		}
 
 		if (!found)
-			gp_list_append(list, path, NULL);
+			gp_list_append(list, newfolder, NULL);
+		free (newfolder);
 	}
 
 	return GP_OK;
