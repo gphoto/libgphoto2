@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -59,7 +59,7 @@ struct {
 	{"American Idol Keychain Camera", GP_DRIVER_STATUS_TESTING,
 							    0x0979, 0x0224},
 	{"NogaNet TDC-15", GP_DRIVER_STATUS_TESTING, 0x0979, 0x0224},
-	{"Cobra DC-125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
+	{"Cobra DC125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
 	{NULL,0,0,0}
 };
 
@@ -103,14 +103,14 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	num_pics = camera->pl->nb_entries;
 	GP_DEBUG("camera->pl->nb_entries = %i\n",camera->pl->nb_entries);
 	sprintf (summary->text,_("This camera contains a Jeilin JL2005A chipset.\n"
-			"The number of photos in it is %i. \n"), num_pics); 
+			"The number of photos in it is %i. \n"), num_pics);
 	return GP_OK;
 }
 
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy(manual->text, 
+	strcpy(manual->text,
 	_(
         "This driver supports cameras with Jeilin jl2005a chip \n"
 	"These cameras do not support deletion of photos, nor uploading\n"
@@ -120,7 +120,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"If present on the camera, video clip frames are downloaded \n"
 	"as consecutive still photos.\n"
 	"For further details please consult libgphoto2/camlibs/README.jl2005a\n"
-	)); 
+	));
 
 	return (GP_OK);
 }
@@ -140,7 +140,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data; 
+	Camera *camera = data;
 	int n;
 	n = camera->pl->nb_entries;
 	gp_list_populate (list, "jl_%03i.ppm", n);
@@ -162,7 +162,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-	Camera *camera = user_data; 
+	Camera *camera = user_data;
 	int status = GP_OK;
 	int w, h = 0, k;
 	int i,j;
@@ -174,7 +174,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *image_start;
 	unsigned char *p_data=NULL;
 	unsigned char *ppm=NULL, *ptr=NULL;
-        unsigned char gtable[256];
+	unsigned char gtable[256];
 	unsigned char temp;
 
 	GP_DEBUG ("Downloading pictures!\n");
@@ -182,21 +182,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* These are cheap cameras. There ain't no EXIF data. So kill this. */
 	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
 	/* Get the number of the photo on the camera */
-	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+	k = gp_filesystem_number (camera->fs, "/", filename, context);
 	GP_DEBUG ("Filesystem number is %i\n",k);
 	b = jl2005a_get_pic_data_size(camera->port, k);
 	GP_DEBUG("b = %i = 0x%x bytes\n", b,b);
 	w = jl2005a_get_pic_width(camera->port);
-	GP_DEBUG ("width is %i\n", w); 
+	GP_DEBUG ("width is %i\n", w);
 	h = jl2005a_get_pic_height(camera->port);
-	GP_DEBUG ("height is %i\n", h); 
+	GP_DEBUG ("height is %i\n", h);
 	/* Image data to be downloaded contains header and footer bytes */
 	data = malloc (b+14);
 	if (!data) return GP_ERROR_NO_MEMORY;
 
 	jl2005a_read_picture_data (camera, camera->port, data, b+14);
 	if (memcmp(header,data,5) != 0)
-		/* Image data is corrupted! Repeat the operation. */	
+		/* Image data is corrupted! Repeat the operation. */
 		jl2005a_read_picture_data (camera, camera->port, data, b+14);
 
 	if (GP_FILE_TYPE_RAW == type) {
@@ -210,7 +210,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
 		goto end;
-	} 
+	}
 	image_start=data+5;
 	if (w == 176) {
 		for (i=1; i < h; i +=4){
@@ -224,7 +224,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			compressed = 1;
 			h = 144;
 		}
-	} else 
+	} else
 		if (h == 144) {
 			compressed = 1;
 			h = 288;
@@ -233,40 +233,36 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
 		goto end;
-	} 
+	}
 	if (compressed)
 		jl2005a_decompress (image_start, p_data, w, h);
-	else 
+	else
 		memcpy(p_data, image_start, w*h);
 	ppm = malloc (w * h * 3 + 256); /* room for data and header */
-	if (!ppm) { 
-		status = GP_ERROR_NO_MEMORY; 
+	if (!ppm) {
+		status = GP_ERROR_NO_MEMORY;
 		goto end;
 	}
 	sprintf ((char *)ppm,
 			"P6\n"
-			"# CREATOR: gphoto2, SQ905C library\n"
+			"# CREATOR: gphoto2, JL2005A library\n"
 			"%d %d\n"
 			"255\n", w, h);
 	size = strlen ((char *)ppm);
 	ptr = ppm + size;
 	size = size + (w * h * 3);
-	GP_DEBUG ("size = %i\n", size);				
+	GP_DEBUG ("size = %i\n", size);
 	gp_ahd_decode (p_data, w , h, ptr, BAYER_TILE_BGGR);
 
 	free(p_data);
 	gp_gamma_fill_table (gtable, .65);
-	gp_gamma_correct_single (gtable, ptr, w * h); 
+	gp_gamma_correct_single (gtable, ptr, w * h);
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	end:
 	free(data);
 	return status;
 }
-
-
-
-
 
 
 /*************** Exit and Initialization Functions ******************/
@@ -297,14 +293,14 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
-        camera->functions->manual	= camera_manual;
-	camera->functions->summary      = camera_summary;
-	camera->functions->about        = camera_about;
-	camera->functions->exit	    = camera_exit;
-   
+	camera->functions->manual	= camera_manual;
+	camera->functions->summary	= camera_summary;
+	camera->functions->about	= camera_about;
+	camera->functions->exit		= camera_exit;
+
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
@@ -322,13 +318,13 @@ camera_init(Camera *camera, GPContext *context)
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	GP_DEBUG("interface = %i\n", settings.usb.interface);
-	GP_DEBUG("inep = %x\n", settings.usb.inep);	
+	GP_DEBUG("inep = %x\n", settings.usb.inep);
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
