@@ -1,15 +1,15 @@
 # Vietnamese translation for Lib GPhoto Port.
-# Copyright © 2009 Free Software Foundation, Inc.
+# Copyright © 2010 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgphoto2 package.
 # Ngô Trần Thủy <ngotranthuy@gmail.com>, 2005.
-# Clytie Siddall <clytie@riverland.net.au>, 2008, 2009.
+# Clytie Siddall <clytie@riverland.net.au>, 2008, 2009, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.4.7\n"
+"Project-Id-Version: libgphoto2_port 2.4.8\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-08-02 21:11+0200\n"
-"PO-Revision-Date: 2009-09-18 23:08+0930\n"
+"POT-Creation-Date: 2009-11-04 23:06+0100\n"
+"PO-Revision-Date: 2010-02-09 23:02+1030\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -488,7 +488,7 @@ msgstr "Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một t
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: usb/libusb.c:1019
+#: usb/libusb.c:1050
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
