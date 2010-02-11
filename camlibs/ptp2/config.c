@@ -3768,7 +3768,6 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 	int i;
 	PTPParams *params = &(camera->pl->params);
 
-
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
 
@@ -4123,7 +4122,7 @@ static struct submenu create_wifi_profile_submenu[] = {
 static int
 _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 {
-	int submenuno;
+	int submenuno, ret;
 	CameraWidget *subwidget;
 	
 	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
@@ -4132,8 +4131,9 @@ _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 	for (submenuno = 0; create_wifi_profile_submenu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = create_wifi_profile_submenu+submenuno;
 
-		cursub->getfunc (camera, &subwidget, cursub, NULL);
-		gp_widget_append (*widget, subwidget);
+		ret = cursub->getfunc (camera, &subwidget, cursub, NULL);
+		if (ret == GP_OK)
+			gp_widget_append (*widget, subwidget);
 	}
 	
 	return GP_OK;
@@ -4174,7 +4174,7 @@ static int
 _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 {
 	CameraWidget *subwidget;
-	int submenuno;
+	int submenuno, ret;
 
 	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -4188,8 +4188,9 @@ _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = wifi_profiles_menu+submenuno;
 
-		cursub->getfunc (camera, &subwidget, cursub, NULL);
-		gp_widget_append (*widget, subwidget);
+		ret = cursub->getfunc (camera, &subwidget, cursub, NULL);
+		if (ret == GP_OK)
+			gp_widget_append (*widget, subwidget);
 	}
 
 	return GP_OK;
