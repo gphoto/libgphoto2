@@ -2085,8 +2085,17 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	if (ret != GP_OK)
 		return ret;
 
-	if (!sscanf(value,_("%fs"),&val))
-		return (GP_ERROR);
+	if (!sscanf(value,_("%fs"),&val)) {
+		int ival1, ival2, ival3;
+
+		if (sscanf(value,_("%d/%d"),&ival1,&ival2) == 2) {
+			val = (float)ival1/(float)ival2;
+		} else if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
+			val = ((float)ival1) + ((float)ival2/(float)ival3);
+		} else if (!sscanf(value,"%f",&val)) {
+			return (GP_ERROR);
+		}
+	}
 	val = val*10000.0;
 	delta = 1000000;
 	xval = val;
