@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-01-24 17:09+0100\n"
+"POT-Creation-Date: 2010-01-31 18:24+0100\n"
 "PO-Revision-Date: 2010-01-17 17:45+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -601,7 +601,7 @@ msgstr "ISO-Geschwindigkeit"
 #: camlibs/canon/library.c:1851 camlibs/canon/library.c:1852
 #: camlibs/canon/library.c:1885 camlibs/canon/library.c:1886
 #: camlibs/ptp2/config.c:2944 camlibs/ptp2/config.c:3200
-#: camlibs/ptp2/library.c:2785 camlibs/ptp2/library.c:2787
+#: camlibs/ptp2/library.c:2789 camlibs/ptp2/library.c:2791
 #: camlibs/ptp2/ptp.c:3819 camlibs/ptp2/ptp.c:3978 camlibs/ptp2/ptp.c:4068
 msgid "Unknown"
 msgstr "Unbekannt"
@@ -901,7 +901,7 @@ msgstr "Fehler: unerwartete Meldung2."
 msgid "Uploading file..."
 msgstr "Lade Bild hoch..."
 
-#: camlibs/canon/serial.c:1061 camlibs/digita/digita.c:256
+#: camlibs/canon/serial.c:1061 camlibs/digita/digita.c:259
 #: camlibs/directory/directory.c:535
 msgid "Getting file..."
 msgstr "Hole Datei..."
@@ -1476,16 +1476,16 @@ msgstr ""
 "Generischer sq905C Treiber\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
-#: camlibs/digita/digita.c:332 camlibs/dimera/dimera3500.c:322
+#: camlibs/digita/digita.c:335 camlibs/dimera/dimera3500.c:322
 msgid "Image type is not supported"
 msgstr "Bildtyp nicht unterstützt"
 
-#: camlibs/digita/digita.c:390
+#: camlibs/digita/digita.c:393
 #, c-format
 msgid "Number of pictures: %d"
 msgstr "Anzahl der Bilder: %d"
 
-#: camlibs/digita/digita.c:397
+#: camlibs/digita/digita.c:400
 msgid ""
 "Digita\n"
 "Johannes Erdfelt <johannes@erdfelt.com>"
@@ -2333,7 +2333,7 @@ msgstr "Immer"
 #: camlibs/ptp2/config.c:2926 camlibs/ptp2/config.c:2980
 #: camlibs/ptp2/config.c:3423 camlibs/ptp2/config.c:3428
 #: camlibs/ptp2/config.c:3443 camlibs/ptp2/config.c:3891
-#: camlibs/ptp2/library.c:3103 camlibs/ptp2/library.c:3107
+#: camlibs/ptp2/library.c:3107 camlibs/ptp2/library.c:3111
 #: camlibs/ptp2/ptp.c:3703 camlibs/ricoh/library.c:347
 msgid "None"
 msgstr "Keine"
@@ -4126,7 +4126,7 @@ msgstr ""
 "Der angeforderte Port-Typ (%i) wird von diesem Treiber nicht unterstützt."
 
 #: camlibs/ptp2/config.c:143 camlibs/ptp2/config.c:1782
-#: camlibs/ptp2/library.c:1464 camlibs/ptp2/library.c:2140
+#: camlibs/ptp2/library.c:1464 camlibs/ptp2/library.c:2144
 #, c-format
 msgid "Canon enable viewfinder failed: %d"
 msgstr "Anschalten des Viewfinder fehlgeschlagen: %d"
@@ -4136,7 +4136,7 @@ msgid "Sorry, your Canon camera does not support Canon capture"
 msgstr "Diese Canon Kamera unterstützt nicht den Canon Aufnahme Modus"
 
 #: camlibs/ptp2/config.c:372 camlibs/ptp2/config.c:1793
-#: camlibs/ptp2/library.c:2062
+#: camlibs/ptp2/library.c:2066
 #, c-format
 msgid "Canon disable viewfinder failed: %d"
 msgstr "Abschalten des Viewfinders fehlgeschlagen: %d"
@@ -4340,8 +4340,8 @@ msgid "lossless"
 msgstr "verlustlos"
 
 #: camlibs/ptp2/config.c:1426 camlibs/ptp2/config.c:1717
-#: camlibs/ptp2/config.c:2960 camlibs/ptp2/library.c:3112
-#: camlibs/ptp2/library.c:3126 camlibs/ptp2/ptp.c:3659 camlibs/ptp2/ptp.c:3985
+#: camlibs/ptp2/config.c:2960 camlibs/ptp2/library.c:3116
+#: camlibs/ptp2/library.c:3130 camlibs/ptp2/ptp.c:3659 camlibs/ptp2/ptp.c:3985
 #: camlibs/ptp2/ptp.c:3991 camlibs/ptp2/ptp.c:3998 camlibs/ptp2/ptp.c:4160
 #: camlibs/ptp2/ptp.c:4370
 msgid "Undefined"
@@ -6453,123 +6453,123 @@ msgstr ""
 msgid "Canon get viewfinder image failed: %d"
 msgstr "Holen des Viewfinder Bildes fehlgeschlagen: %d"
 
-#: camlibs/ptp2/library.c:1548
+#: camlibs/ptp2/library.c:1552
 msgid "Sorry, your Canon camera does not support Canon Viewfinder mode"
 msgstr "Diese Kamera unterstützt nicht den Canon Viewfinder Modus"
 
-#: camlibs/ptp2/library.c:1555
+#: camlibs/ptp2/library.c:1559
 msgid "Sorry, your Nikon camera does not support LiveView mode"
 msgstr "Diese Nikon Kamera unterstützt nicht den LiveView Modus"
 
-#: camlibs/ptp2/library.c:1570
+#: camlibs/ptp2/library.c:1574
 #, c-format
 msgid "Nikon enable liveview failed: %x"
 msgstr "Anschalten der LiveView fehlgeschlagen: %x"
 
-#: camlibs/ptp2/library.c:1590 camlibs/ptp2/library.c:1606
+#: camlibs/ptp2/library.c:1594 camlibs/ptp2/library.c:1610
 msgid ""
 "Sorry, your Nikon camera does not seem to return a JPEG image in LiveView "
 "mode"
 msgstr "Diese Nikon Kamera liefert kein JPEG im LiveView Modus zurück"
 
-#: camlibs/ptp2/library.c:1622
+#: camlibs/ptp2/library.c:1626
 #, c-format
 msgid "Nikon disable liveview failed: %x"
 msgstr "Abschalten der LiveView fehlgeschlagen: %x"
 
-#: camlibs/ptp2/library.c:1752
+#: camlibs/ptp2/library.c:1756
 msgid "Sorry, your camera does not support Nikon capture"
 msgstr "Diese Kamera unterstützt keine Nikon spezifische Aufnahme von Bildern"
 
-#: camlibs/ptp2/library.c:1862
+#: camlibs/ptp2/library.c:1866
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
 msgstr "Diese Canon Kamera unterstützt nicht den Canon EOS Aufnahme Modus"
 
-#: camlibs/ptp2/library.c:1887
+#: camlibs/ptp2/library.c:1891
 #, c-format
 msgid "Canon EOS Capture failed: %x"
 msgstr "Canon EOS Aufnahme fehlgeschlagen: %x"
 
-#: camlibs/ptp2/library.c:1896 camlibs/ptp2/library.c:2385
+#: camlibs/ptp2/library.c:1900 camlibs/ptp2/library.c:2389
 #, c-format
 msgid "Canon EOS Get Changes failed: %x"
 msgstr "Canon EOS Abfrage fehlgeschlagen: %x"
 
-#: camlibs/ptp2/library.c:2014
+#: camlibs/ptp2/library.c:2018
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
 msgstr ""
 "Diese Kamera versteht leider den Canon-Befehl zum Beginn von Aufnahmen per "
 "Fernauslöser nicht"
 
-#: camlibs/ptp2/library.c:2025
+#: camlibs/ptp2/library.c:2029
 msgid "Sorry, initializing your camera did not work. Please report this."
 msgstr ""
 "Das Initialisieren Ihrer Kamera hat nicht funktioniert. Bitte reporten Sie "
 "dies."
 
-#: camlibs/ptp2/library.c:2077
+#: camlibs/ptp2/library.c:2081
 #, c-format
 msgid "Canon Capture failed: %x"
 msgstr "Canon Aufnahme fehlgeschlagen: %x"
 
-#: camlibs/ptp2/library.c:2209
+#: camlibs/ptp2/library.c:2213
 msgid "Sorry, your camera does not support generic capture"
 msgstr "Diese Kamera unterstützt keine Aufnahme von Bildern"
 
-#: camlibs/ptp2/library.c:2287
+#: camlibs/ptp2/library.c:2291
 #, c-format
 msgid "No event received, error %x."
 msgstr "Kein Event empfangen, Fehler %x."
 
-#: camlibs/ptp2/library.c:2783
+#: camlibs/ptp2/library.c:2787
 msgid "read only"
 msgstr "schreibgeschützt"
 
-#: camlibs/ptp2/library.c:2784
+#: camlibs/ptp2/library.c:2788
 msgid "readwrite"
 msgstr "schreibbar"
 
-#: camlibs/ptp2/library.c:2919 camlibs/sierra/sierra.c:1936
+#: camlibs/ptp2/library.c:2923 camlibs/sierra/sierra.c:1936
 #, c-format
 msgid "Manufacturer: %s\n"
 msgstr "Hersteller: %s\n"
 
-#: camlibs/ptp2/library.c:2921
+#: camlibs/ptp2/library.c:2925
 #, c-format
 msgid "Model: %s\n"
 msgstr "Modell: %s\n"
 
-#: camlibs/ptp2/library.c:2923
+#: camlibs/ptp2/library.c:2927
 #, c-format
 msgid "  Version: %s\n"
 msgstr "  Version: %s\n"
 
-#: camlibs/ptp2/library.c:2926
+#: camlibs/ptp2/library.c:2930
 #, c-format
 msgid "  Serial Number: %s\n"
 msgstr "  Seriennummer: %s\n"
 
-#: camlibs/ptp2/library.c:2930
+#: camlibs/ptp2/library.c:2934
 #, c-format
 msgid "Vendor Extension ID: 0x%x (%d.%d)\n"
 msgstr "Vendor Extension ID: 0x%x (%d.%d)\n"
 
-#: camlibs/ptp2/library.c:2937
+#: camlibs/ptp2/library.c:2941
 #, c-format
 msgid "Vendor Extension Description: %s\n"
 msgstr "Beschreibung der Vendor Extension: %s\n"
 
-#: camlibs/ptp2/library.c:2942
+#: camlibs/ptp2/library.c:2946
 #, c-format
 msgid "PTP Standard Version: %d.%d\n"
 msgstr "Version des PTP Standards: %d.%d\n"
 
-#: camlibs/ptp2/library.c:2949
+#: camlibs/ptp2/library.c:2953
 #, c-format
 msgid "Functional Mode: 0x%04x\n"
 msgstr "Funktionsmodus: 0x%04x\n"
 
-#: camlibs/ptp2/library.c:2954
+#: camlibs/ptp2/library.c:2958
 #, c-format
 msgid ""
 "\n"
@@ -6578,22 +6578,22 @@ msgstr ""
 "\n"
 "Aufnahmeformate: "
 
-#: camlibs/ptp2/library.c:2968
+#: camlibs/ptp2/library.c:2972
 #, c-format
 msgid "Display Formats: "
 msgstr "Anzeigeformate: "
 
-#: camlibs/ptp2/library.c:2984
+#: camlibs/ptp2/library.c:2988
 #, c-format
 msgid "Supported MTP Object Properties:\n"
 msgstr "Unterstützte MTP Object Properties:\n"
 
-#: camlibs/ptp2/library.c:3000
+#: camlibs/ptp2/library.c:3004
 #, c-format
 msgid " PTP error %04x on query"
 msgstr "PTP Fehler %04x beim Abfragen"
 
-#: camlibs/ptp2/library.c:3017
+#: camlibs/ptp2/library.c:3021
 #, c-format
 msgid ""
 "\n"
@@ -6602,82 +6602,82 @@ msgstr ""
 "\n"
 "Fähigkeiten des Geräts:\n"
 
-#: camlibs/ptp2/library.c:3021
+#: camlibs/ptp2/library.c:3025
 #, c-format
 msgid "\tFile Download, "
 msgstr "\tDateien Download, "
 
-#: camlibs/ptp2/library.c:3024
+#: camlibs/ptp2/library.c:3028
 #, c-format
 msgid "File Deletion, "
 msgstr "Löschen von Dateien, "
 
-#: camlibs/ptp2/library.c:3026
+#: camlibs/ptp2/library.c:3030
 #, c-format
 msgid "No File Deletion, "
 msgstr "kein Löschen von Dateien, "
 
-#: camlibs/ptp2/library.c:3030
+#: camlibs/ptp2/library.c:3034
 #, c-format
 msgid "File Upload\n"
 msgstr "Hochladen von Dateien\n"
 
-#: camlibs/ptp2/library.c:3032
+#: camlibs/ptp2/library.c:3036
 #, c-format
 msgid "No File Upload\n"
 msgstr "kein Hochladen von Dateien\n"
 
-#: camlibs/ptp2/library.c:3037
+#: camlibs/ptp2/library.c:3041
 #, c-format
 msgid "\tGeneric Image Capture, "
 msgstr "\tGenerische Bild Aufnahme, "
 
-#: camlibs/ptp2/library.c:3039
+#: camlibs/ptp2/library.c:3043
 #, c-format
 msgid "\tNo Image Capture, "
 msgstr "\tKeine Aufnahme von Bildern, "
 
-#: camlibs/ptp2/library.c:3042
+#: camlibs/ptp2/library.c:3046
 #, c-format
 msgid "Open Capture, "
 msgstr "Offene Aufnahme, "
 
-#: camlibs/ptp2/library.c:3044
+#: camlibs/ptp2/library.c:3048
 #, c-format
 msgid "No Open Capture, "
 msgstr "keine Offene Aufnahme, "
 
-#: camlibs/ptp2/library.c:3050
+#: camlibs/ptp2/library.c:3054
 #, c-format
 msgid "Canon Capture\n"
 msgstr "Canon Aufnahme\n"
 
-#: camlibs/ptp2/library.c:3054
+#: camlibs/ptp2/library.c:3058
 #, c-format
 msgid "Canon EOS Capture\n"
 msgstr "Canon EOS Aufnahme\n"
 
-#: camlibs/ptp2/library.c:3058
+#: camlibs/ptp2/library.c:3062
 #, c-format
 msgid "Nikon Capture\n"
 msgstr "Nikon Aufnahme\n"
 
-#: camlibs/ptp2/library.c:3060
+#: camlibs/ptp2/library.c:3064
 #, c-format
 msgid "No vendor specific capture\n"
 msgstr "Kein Vendor spezifischer Aufnahmemodus\n"
 
-#: camlibs/ptp2/library.c:3069
+#: camlibs/ptp2/library.c:3073
 #, c-format
 msgid "\tNikon Wifi support\n"
 msgstr "\tNikon WiFi Unterstützung\n"
 
-#: camlibs/ptp2/library.c:3075
+#: camlibs/ptp2/library.c:3079
 #, c-format
 msgid "\tCanon Wifi support\n"
 msgstr "\tCanon WiFI Unterstützung\n"
 
-#: camlibs/ptp2/library.c:3086
+#: camlibs/ptp2/library.c:3090
 #, c-format
 msgid ""
 "\n"
@@ -6686,93 +6686,93 @@ msgstr ""
 "\n"
 "Informationen über Speichermedium:\n"
 
-#: camlibs/ptp2/library.c:3102
+#: camlibs/ptp2/library.c:3106
 #, c-format
 msgid "\tStorageDescription: %s\n"
 msgstr "\tBeschreibung des Speichergeräts: %s\n"
 
-#: camlibs/ptp2/library.c:3106
+#: camlibs/ptp2/library.c:3110
 #, c-format
 msgid "\tVolumeLabel: %s\n"
 msgstr "\tLabel des Speichergerätes: %s\n"
 
-#: camlibs/ptp2/library.c:3113
+#: camlibs/ptp2/library.c:3117
 msgid "Builtin ROM"
 msgstr "Eingebautes ROM"
 
-#: camlibs/ptp2/library.c:3114
+#: camlibs/ptp2/library.c:3118
 msgid "Removable ROM"
 msgstr "Entfernbares ROM"
 
-#: camlibs/ptp2/library.c:3115
+#: camlibs/ptp2/library.c:3119
 msgid "Builtin RAM"
 msgstr "Eingebauter Speicher"
 
-#: camlibs/ptp2/library.c:3116
+#: camlibs/ptp2/library.c:3120
 msgid "Removable RAM (memory card)"
 msgstr "Entfernbarer Speicher (Karte)"
 
-#: camlibs/ptp2/library.c:3118 camlibs/ptp2/library.c:3131
-#: camlibs/ptp2/library.c:3143
+#: camlibs/ptp2/library.c:3122 camlibs/ptp2/library.c:3135
+#: camlibs/ptp2/library.c:3147
 #, c-format
 msgid "Unknown: 0x%04x\n"
 msgstr "Unbekannt: 0x%04x\n"
 
-#: camlibs/ptp2/library.c:3122
+#: camlibs/ptp2/library.c:3126
 #, c-format
 msgid "\tStorage Type: %s\n"
 msgstr "\tSpeichertyp: %s\n"
 
-#: camlibs/ptp2/library.c:3127
+#: camlibs/ptp2/library.c:3131
 msgid "Generic Flat"
 msgstr "Generisch flacher Modus"
 
-#: camlibs/ptp2/library.c:3128
+#: camlibs/ptp2/library.c:3132
 msgid "Generic Hierarchical"
 msgstr "Generisch hierarchischer Modus"
 
-#: camlibs/ptp2/library.c:3129
+#: camlibs/ptp2/library.c:3133
 msgid "Digital Camera Layout (DCIM)"
 msgstr "Standard Digital Kamera Layout (DCIM)"
 
-#: camlibs/ptp2/library.c:3135
+#: camlibs/ptp2/library.c:3139
 #, c-format
 msgid "\tFilesystemtype: %s\n"
 msgstr "\tTyp des Dateisystems: %s\n"
 
-#: camlibs/ptp2/library.c:3139
+#: camlibs/ptp2/library.c:3143
 msgid "Read-Write"
 msgstr "Lesen und Schreiben"
 
-#: camlibs/ptp2/library.c:3140
+#: camlibs/ptp2/library.c:3144
 msgid "Read-Only"
 msgstr "nur Lesen"
 
-#: camlibs/ptp2/library.c:3141
+#: camlibs/ptp2/library.c:3145
 msgid "Read Only with Object deletion"
 msgstr "Nur Lesen und Löschen"
 
-#: camlibs/ptp2/library.c:3147
+#: camlibs/ptp2/library.c:3151
 #, c-format
 msgid "\tAccess Capability: %s\n"
 msgstr "\tZugriffsmöglichkeiten: %s\n"
 
-#: camlibs/ptp2/library.c:3149
+#: camlibs/ptp2/library.c:3153
 #, c-format
 msgid "\tMaximum Capability: %llu (%lu MB)\n"
 msgstr "\tMaximale Kapazität: %llu (%lu MB)\n"
 
-#: camlibs/ptp2/library.c:3154
+#: camlibs/ptp2/library.c:3158
 #, c-format
 msgid "\tFree Space (Bytes): %llu (%lu MB)\n"
 msgstr "\tFreier Platz (Bytes): %llu (%lu MB)\n"
 
-#: camlibs/ptp2/library.c:3159
+#: camlibs/ptp2/library.c:3163
 #, c-format
 msgid "\tFree Space (Images): %d\n"
 msgstr "\tFreier Speicher (Bilder): %d\n"
 
-#: camlibs/ptp2/library.c:3167
+#: camlibs/ptp2/library.c:3171
 #, c-format
 msgid ""
 "\n"
@@ -6781,40 +6781,40 @@ msgstr ""
 "\n"
 "Properties des Geräts:\n"
 
-#: camlibs/ptp2/library.c:3193
+#: camlibs/ptp2/library.c:3197
 #, c-format
 msgid " not read out.\n"
 msgstr " nicht ausgelesen.\n"
 
-#: camlibs/ptp2/library.c:3266
+#: camlibs/ptp2/library.c:3270
 #, c-format
 msgid " error %x on query."
 msgstr "PTP Fehler %x beim Abfragen"
 
-#: camlibs/ptp2/library.c:4211 camlibs/ptp2/library.c:4215
+#: camlibs/ptp2/library.c:4215 camlibs/ptp2/library.c:4219
 #, c-format
 msgid "File '%s/%s' does not exist."
 msgstr "Datei »%s/%s« existiert nicht"
 
-#: camlibs/ptp2/library.c:4221
+#: camlibs/ptp2/library.c:4225
 msgid "Metadata only supported for MTP devices."
 msgstr "Der Metadaten Dateityp ist nur für MTP Geräte unterstützt."
 
-#: camlibs/ptp2/library.c:4411
+#: camlibs/ptp2/library.c:4415
 msgid "Device does not support setting object protection."
 msgstr "Diese Kamera unterstützt kein Setzen von Bildschutz."
 
-#: camlibs/ptp2/library.c:4416
+#: camlibs/ptp2/library.c:4420
 #, c-format
 msgid "Device failed to set object protection to %d, error 0x%04x."
 msgstr ""
 "Das Gerät konnte Object Protection nicht auf %d setzsen, Fehler 0x%04x."
 
-#: camlibs/ptp2/library.c:5056
+#: camlibs/ptp2/library.c:5060
 msgid "Initializing Camera"
 msgstr "Initialisiere Kamera"
 
-#: camlibs/ptp2/library.c:5207
+#: camlibs/ptp2/library.c:5211
 #, c-format
 msgid ""
 "Currently, PTP is only implemented for USB and PTP/IP cameras currently, "
