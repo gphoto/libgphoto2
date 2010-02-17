@@ -647,6 +647,8 @@ static struct {
 	{"Nikon:Coolpix P5100 (PTP mode)", 0x04b0, 0x0163, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2589245&group_id=8874&atid=108874 */
 	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2951663&group_id=8874&atid=358874 */
+	{"Nikon:Coolpix P6000 (PTP mode)",0x04b0, 0x016f, 0},
 	/*   http://bugs.debian.org/520752 */
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
 	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
