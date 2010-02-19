@@ -4486,7 +4486,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			widget = NULL;
 
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
-				if (cursub->propid) {
+				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc	dpd;
 
 					memset(&dpd,0,sizeof(dpd));
@@ -4728,7 +4728,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
 				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
-				if (cursub->propid) {
+				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
