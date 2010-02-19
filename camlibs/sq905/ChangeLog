@@ -1,4 +1,8 @@
 2008-05-29   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: New camera. Global Point Splash Mini added.
+
+
+2008-05-29   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: raw files now each have the corresponding catalog entry
 		     added as a 16-byte footer. 
 
