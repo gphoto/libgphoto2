@@ -1,3 +1,12 @@
+libgphoto2 2.4.8.1
+
+This is a 2.4 release branch update.
+
+ptp2:
+   * Fixed EOS viewfinder capture speed (2 images/s -> 20 i/s)
+   * Fixed Canon configuration bug that caused hangs.
+
+------------------------------------------------------------------------
 libgphoto2 2.4.8
 
 This is a 2.4 release branch update.
