@@ -2089,12 +2089,17 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 		int ival1, ival2, ival3;
 
 		if (sscanf(value,_("%d/%d"),&ival1,&ival2) == 2) {
+			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d/%d case", ival1, ival2);
 			val = (float)ival1/(float)ival2;
 		} else if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
+			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d %d/%d case", ival1, ival2, ival3);
 			val = ((float)ival1) + ((float)ival2/(float)ival3);
 		} else if (!sscanf(value,"%f",&val)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%f case", val);
 			return (GP_ERROR);
 		}
+	} else {
+		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%fs case", val);
 	}
 	val = val*10000.0;
 	delta = 1000000;
@@ -4496,7 +4501,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			widget = NULL;
 
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
-				if (cursub->propid) {
+				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc	dpd;
 
 					memset(&dpd,0,sizeof(dpd));
@@ -4738,7 +4743,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
 				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
-				if (cursub->propid) {
+				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
