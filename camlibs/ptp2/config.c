@@ -2085,8 +2085,22 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	if (ret != GP_OK)
 		return ret;
 
-	if (!sscanf(value,_("%fs"),&val))
-		return (GP_ERROR);
+	if (!sscanf(value,_("%fs"),&val)) {
+		int ival1, ival2, ival3;
+
+		if (sscanf(value,_("%d/%d"),&ival1,&ival2) == 2) {
+			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d/%d case", ival1, ival2);
+			val = (float)ival1/(float)ival2;
+		} else if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
+			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d %d/%d case", ival1, ival2, ival3);
+			val = ((float)ival1) + ((float)ival2/(float)ival3);
+		} else if (!sscanf(value,"%f",&val)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%f case", val);
+			return (GP_ERROR);
+		}
+	} else {
+		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%fs case", val);
+	}
 	val = val*10000.0;
 	delta = 1000000;
 	xval = val;
@@ -3447,7 +3461,7 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Could not parse %s", val);
 			return GP_ERROR;
 		} else {
-			xval = xval | 0x8000;
+			xval = (-xval) | 0x8000;
 		}
 	}
 	ret = ptp_canon_eos_drivelens (params, xval);
@@ -3767,7 +3781,6 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 	char buffer[4096];
 	int i;
 	PTPParams *params = &(camera->pl->params);
-
 
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -4123,7 +4136,7 @@ static struct submenu create_wifi_profile_submenu[] = {
 static int
 _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 {
-	int submenuno;
+	int submenuno, ret;
 	CameraWidget *subwidget;
 	
 	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
@@ -4132,8 +4145,9 @@ _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 	for (submenuno = 0; create_wifi_profile_submenu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = create_wifi_profile_submenu+submenuno;
 
-		cursub->getfunc (camera, &subwidget, cursub, NULL);
-		gp_widget_append (*widget, subwidget);
+		ret = cursub->getfunc (camera, &subwidget, cursub, NULL);
+		if (ret == GP_OK)
+			gp_widget_append (*widget, subwidget);
 	}
 	
 	return GP_OK;
@@ -4174,7 +4188,7 @@ static int
 _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 {
 	CameraWidget *subwidget;
-	int submenuno;
+	int submenuno, ret;
 
 	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -4188,8 +4202,9 @@ _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = wifi_profiles_menu+submenuno;
 
-		cursub->getfunc (camera, &subwidget, cursub, NULL);
-		gp_widget_append (*widget, subwidget);
+		ret = cursub->getfunc (camera, &subwidget, cursub, NULL);
+		if (ret == GP_OK)
+			gp_widget_append (*widget, subwidget);
 	}
 
 	return GP_OK;
