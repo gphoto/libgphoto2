@@ -16,7 +16,7 @@ static CameraAbilitiesList	*abilities = NULL;
  */
 int
 sample_autodetect (CameraList *list, GPContext *context) {
-	gp_list_reset (&list);
+	gp_list_reset (list);
         return gp_camera_autodetect (list, context);
 }
 
