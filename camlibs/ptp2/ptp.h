@@ -2530,11 +2530,12 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  * This command deletes the current SDRAM image
  *  
  * params:      PTPParams*
+ * uint32_t	oid
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
-#define ptp_nikon_delete_sdram_image(params) ptp_generic_no_data(params,PTP_OC_NIKON_DelImageSDRAM,0)
+#define ptp_nikon_delete_sdram_image(params,oid) ptp_generic_no_data(params,PTP_OC_NIKON_DelImageSDRAM,1,oid)
 /**
  * ptp_nikon_start_liveview:
  *

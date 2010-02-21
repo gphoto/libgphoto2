@@ -1374,12 +1374,18 @@ camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl!=NULL) {
 		PTPParams *params = &camera->pl->params;
+		PTPContainer event;
 		SET_CONTEXT_P(params, context);
 #ifdef HAVE_ICONV
 		/* close iconv converters */
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 #endif
+#if 0 /* ... perhaps not a good idea on all cameras */
+		ptp_check_event (params);
+#endif
+		while (ptp_get_one_event (params, &event))
+			gp_log (GP_LOG_DEBUG, "camera_exit", "missed ptp event 0x%x (param1=%x)", event.Code,event.Param1);
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
@@ -1778,21 +1784,20 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	newobject = 0xffff0001;
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
-		int i, evtcnt;
-		PTPContainer *nevent = NULL;
+		PTPContainer event;
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
-		CPR (context, ptp_nikon_check_event(params, &nevent, &evtcnt));
-		for (i=0;i<evtcnt;i++) {
-			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
-			if (nevent[i].Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
+		gp_context_idle (context);
+		CPR (context, ptp_check_event (params));
+		while (ptp_get_one_event(params, &event)) {
+			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "nevent.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
+			if (event.Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
 				hasc101=1;
-				newobject = nevent[i].Param1;
+				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 			}
 		}
-		free (nevent);
 	}
 	if (!newobject) newobject = 0xffff0001;
 
@@ -1823,11 +1828,15 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
 			return ret;
 		}
-		ret = ptp_nikon_delete_sdram_image (params);
+/* this does result in 0x2009 (invalid object id) with the D90 ... curiuos
+		ret = ptp_nikon_delete_sdram_image (params, newobject);
+ */
+		ret = ptp_deleteobject (params, newobject, 0);
 		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon_capture","deletesdramimage() failed: %d", ret);
+			gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
 		}
 	}
+	ptp_check_event (params);
 	return GP_OK;
 }
 
