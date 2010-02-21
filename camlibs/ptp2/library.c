@@ -1823,6 +1823,10 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
 			return ret;
 		}
+		ret = ptp_nikon_delete_sdram_image (params);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon_capture","deletesdramimage() failed: %d", ret);
+		}
 	}
 	return GP_OK;
 }

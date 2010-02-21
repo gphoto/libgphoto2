@@ -2525,6 +2525,17 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  **/
 #define ptp_nikon_capture_sdram(params) ptp_generic_no_data(params,PTP_OC_NIKON_AfCaptureSDRAM,0)
 /**
+ * ptp_nikon_delete_sdram_image:
+ *
+ * This command deletes the current SDRAM image
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_delete_sdram_image(params) ptp_generic_no_data(params,PTP_OC_NIKON_DelImageSDRAM,0)
+/**
  * ptp_nikon_start_liveview:
  *
  * This command starts LiveView mode of newer Nikons DSLRs.
