@@ -2077,7 +2077,7 @@ static int
 _put_ExpTime(CONFIG_PUT_ARGS)
 {
 	int	ret;
-	unsigned int i,delta,xval;
+	unsigned int i, delta, xval, ival1, ival2, ival3;
 	float	val;
 	char	*value;
 
@@ -2085,22 +2085,17 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	if (ret != GP_OK)
 		return ret;
 
-	if (!sscanf(value,_("%fs"),&val)) {
-		int ival1, ival2, ival3;
-
-		if (sscanf(value,_("%d/%d"),&ival1,&ival2) == 2) {
-			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d/%d case", ival1, ival2);
-			val = (float)ival1/(float)ival2;
-		} else if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
-			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d %d/%d case", ival1, ival2, ival3);
-			val = ((float)ival1) + ((float)ival2/(float)ival3);
-		} else if (!sscanf(value,"%f",&val)) {
-			gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%f case", val);
-			return (GP_ERROR);
-		}
-	} else {
+	if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
+		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d %d/%d case", ival1, ival2, ival3);
+		val = ((float)ival1) + ((float)ival2/(float)ival3);
+	} else if (sscanf(value,_("%d/%d"),&ival1,&ival2) == 2) {
+		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d/%d case", ival1, ival2);
+		val = (float)ival1/(float)ival2;
+	} else if (!sscanf(value,_("%f"),&val)) {
+		gp_log (GP_LOG_ERROR, "ptp2/_put_ExpTime", "failed to parse: %s", value);
+		return (GP_ERROR);
+	} else
 		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%fs case", val);
-	}
 	val = val*10000.0;
 	delta = 1000000;
 	xval = val;
