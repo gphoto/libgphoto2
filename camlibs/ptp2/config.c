@@ -3632,7 +3632,7 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 	if (ret != GP_OK)
 		return ret;
 	if (val)
-		ret = ptp_canon_eos_bulbstart (params);
+		ret = ptp_canon_eos_bulbstart (params, 1);
 	else
 		ret = ptp_canon_eos_bulbend (params);
 	if (ret == PTP_RC_OK)
