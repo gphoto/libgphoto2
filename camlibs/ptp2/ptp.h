@@ -2401,7 +2401,7 @@ uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* d
 /* inHDD = %d, inLength =%d, inReset = %d */
 #define ptp_canon_eos_pchddcapacity(params,p1,p2,p3) ptp_generic_no_data(params,PTP_OC_CANON_EOS_PCHDDCapacity,3,p1,p2,p3)
 uint16_t ptp_canon_eos_bulbstart (PTPParams* params, uint16_t val);
-#define ptp_canon_eos_bulbend(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_BulbEnd,1,1)
+uint16_t ptp_canon_eos_bulbend (PTPParams* params, uint16_t val);
 uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
