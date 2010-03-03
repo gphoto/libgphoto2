@@ -3622,20 +3622,27 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val, ret;
+	GPContext *context = ((PTPData *) params->data)->context;
 
 	ret = gp_widget_get_value (widget, &val);
 	if (ret != GP_OK)
 		return ret;
-	if (val)
+	if (val) {
+		ret = ptp_canon_eos_setuilock (params);
+		CPR(context, ret);
 		ret = ptp_canon_eos_bulbstart (params);
-	else
+		if (ret == PTP_RC_GeneralError) {
+			gp_context_error (((PTPData *) camera->pl->params.data)->context,
+			_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
+			return (GP_ERROR);
+		}
+	} else {
 		ret = ptp_canon_eos_bulbend (params);
-	if (ret == PTP_RC_OK)
-		return (GP_OK);
-	if (val && (ret == PTP_RC_GeneralError))
-		gp_context_error (((PTPData *) camera->pl->params.data)->context,
-		_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
-	return (GP_ERROR);
+		CPR(context, ret);
+		ret = ptp_canon_eos_resetuilock (params);
+	}
+	CPR(context, ret);
+	return GP_OK;
 }
 
 
