@@ -728,8 +728,7 @@ ptp_canon_eos_bulbstart (PTPParams* params, uint16_t val)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_CANON_EOS_BulbStart;
-	ptp.Nparam = 1;
-	ptp.Param1 = val;
+	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 	if ((ret == PTP_RC_OK) && (ptp.Nparam >= 1) && ((ptp.Param1 & 0x7000) == 0x2000))
 		ret = ptp.Param1;
@@ -753,8 +752,7 @@ ptp_canon_eos_bulbend (PTPParams* params, uint16_t val)
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_CANON_EOS_BulbEnd;
-	ptp.Nparam = 1;
-	ptp.Param1 = val;
+	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 	if ((ret == PTP_RC_OK) && (ptp.Nparam >= 1) && ((ptp.Param1 & 0x7000) == 0x2000))
 		ret = ptp.Param1;
