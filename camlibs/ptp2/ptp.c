@@ -714,14 +714,13 @@ ptp_getnumobjects (PTPParams* params, uint32_t storage,
 /**
  * ptp_eos_bulbstart:
  * params:	PTPParams*
- *              val			- uint16_t unknown argument (1)
  *
  * Starts EOS Bulb capture.
  *
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_canon_eos_bulbstart (PTPParams* params, uint16_t val)
+ptp_canon_eos_bulbstart (PTPParams* params)
 {
 	uint16_t ret;
 	PTPContainer ptp;
@@ -738,14 +737,13 @@ ptp_canon_eos_bulbstart (PTPParams* params, uint16_t val)
 /**
  * ptp_canon_eos_bulbend:
  * params:	PTPParams*
- *              val			- uint16_t unknown argument (1)
  *
  * Starts EOS Bulb capture.
  *
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_canon_eos_bulbend (PTPParams* params, uint16_t val)
+ptp_canon_eos_bulbend (PTPParams* params)
 {
 	uint16_t ret;
 	PTPContainer ptp;
