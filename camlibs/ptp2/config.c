@@ -3628,8 +3628,6 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 	if (ret != GP_OK)
 		return ret;
 	if (val) {
-		ret = ptp_canon_eos_setuilock (params);
-		CPR(context, ret);
 		ret = ptp_canon_eos_bulbstart (params);
 		if (ret == PTP_RC_GeneralError) {
 			gp_context_error (((PTPData *) camera->pl->params.data)->context,
@@ -3638,8 +3636,6 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 		}
 	} else {
 		ret = ptp_canon_eos_bulbend (params);
-		CPR(context, ret);
-		ret = ptp_canon_eos_resetuilock (params);
 	}
 	CPR(context, ret);
 	return GP_OK;
