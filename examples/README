@@ -23,9 +23,13 @@ Files with samples:
 	sample-owner.c:	Gets or Sets the Camera Owner. Demonstrates string
 			variable configuration handling.
 
+	sample-capture.c: Minimalistic remote capture sample.
+
 	lunkwill-canon-capture.c: A simple capture program that captures
 	                          a single image, retrieves it to disk,
 				  and removes it from the camera.
+				  (Despite the Canon comments this likely
+				   works on all capture cameras.)
 
 	preview.c: A sample preview loop, it will get 100 previews in
 			1 row as fast as possible. 
