@@ -757,6 +757,11 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1272944&group_id=8874 */
 	{"Olympus:IR-300",                0x07b4, 0x0114, 0},
 
+	/* Marcus */
+	{"Olympus:FE4000",                0x07b4, 0x0116, 0},
+	{"Olympus:X920",                  0x07b4, 0x0116, 0},
+	{"Olympus:X925",                  0x07b4, 0x0116, 0},
+
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
 	/* Andrej Semen (at suse) */
