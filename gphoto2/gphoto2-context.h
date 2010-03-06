@@ -59,41 +59,17 @@ typedef enum _GPContextFeedback {
 
 /* Functions */
 typedef void (* GPContextIdleFunc)     (GPContext *context, void *data);
-typedef void (* GPContextErrorFunc)    (GPContext *context, const char *format,
-					va_list args, void *data)
-#if (__GNUC__ >= 3)
-	__attribute__((__format__(printf,2,0)))
-#endif
-;
-typedef void (* GPContextStatusFunc)   (GPContext *context, const char *format,
-					va_list args, void *data)
-#if (__GNUC__ >= 3)
-	__attribute__((__format__(printf,2,0)))
-#endif
-;
-typedef void (* GPContextMessageFunc)  (GPContext *context, const char *format,
-					va_list args, void *data)
-#if (__GNUC__ >= 3)
-	__attribute__((__format__(printf,2,0)))
-#endif
-;
+typedef void (* GPContextErrorFunc)    (GPContext *context, const char *text, void *data);
+typedef void (* GPContextStatusFunc)   (GPContext *context, const char *text, void *data);
+typedef void (* GPContextMessageFunc)  (GPContext *context, const char *text, void *data);
 typedef GPContextFeedback (* GPContextQuestionFunc) (GPContext *context,
-						     const char *format,
-						     va_list args, void *data)
-#if (__GNUC__ >= 3)
-	__attribute__((__format__(printf,2,0)))
-#endif
-;
+						     const char *text, void *data);
 typedef GPContextFeedback (* GPContextCancelFunc)   (GPContext *context,
 						     void *data);
 typedef unsigned int (* GPContextProgressStartFunc)  (GPContext *context,
 						      float target,
-						      const char *format,
-						      va_list args, void *data)
-#if (__GNUC__ >= 3)
-	__attribute__((__format__(printf,3,0)))
-#endif
-;
+						      const char *text,
+						      void *data);
 typedef void         (* GPContextProgressUpdateFunc) (GPContext *context,
 						      unsigned int id,
 						      float current,

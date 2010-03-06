@@ -2,20 +2,16 @@
 #include "samples.h"
 
 static void
-ctx_error_func (GPContext *context, const char *format, va_list args, void *data)
+ctx_error_func (GPContext *context, const char *str, void *data)
 {
-        fprintf  (stderr, "\n");
-        fprintf  (stderr, "*** Contexterror ***              \n");
-        vfprintf (stderr, format, args);
-        fprintf  (stderr, "\n");
+        fprintf  (stderr, "\n*** Contexterror ***              \n%s\n",str);
         fflush   (stderr);
 }
 
 static void
-ctx_status_func (GPContext *context, const char *format, va_list args, void *data)
+ctx_status_func (GPContext *context, const char *str, void *data)
 {
-        vfprintf (stderr, format, args);
-        fprintf  (stderr, "\n");
+        fprintf  (stderr, "%s\n", str);
         fflush   (stderr);
 }
 

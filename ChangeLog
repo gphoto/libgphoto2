@@ -1,3 +1,11 @@
+2010-03-06  Marcus Meissner  <marcus@jet.franken.de>
+
+	* gphoto2/gphoto2-context.h, libgphoto2/gphoto2-context.c:
+	  Make context functions not use varargs anymore to pass
+	  strings out to frontends. The backends still pass in varargs
+	  strings.
+	  This will ease binding implementations.
+
 2009-12-13  Marcus Meissner  <marcus@jet.franken.de>
 
 	* gphoto2/gphoto2-widget.h, libgphoto2/gphoto2-widget.c:

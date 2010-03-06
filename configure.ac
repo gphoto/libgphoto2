@@ -129,6 +129,9 @@ AC_SUBST([AM_CXXFLAGS])
 # LDFLAGS: Linker flags
 AC_SUBST([AM_LDFLAGS])
 
+# Check for va_copy()
+GP_VA_COPY
+
 # Define compiler flags for later compile tests
 # Note: Do NOT add specific libraries and stuff to the generic _FLAGS.
 #       Put these into LIBFOO_CFLAGS and LIBFOO_LIBS instead.

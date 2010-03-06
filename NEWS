@@ -4,6 +4,9 @@ libgphoto2 API:
    TODO:
 	- metadata via lists and special API
 
+   * gp_context* functions no longer get varargs, but preprocessed
+     strings. This makes hooking them into bindings easier.
+
    * gp_file_new_from_handler(): Allow passing data in and out via
      handler functions (to allow streaming). See also CameraFileHandler
      function pointers.
