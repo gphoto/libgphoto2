@@ -1473,11 +1473,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_StroboFiring:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
+				/* enumeration for AEM is never provided, but is available to set */
+				case PTP_DPC_CANON_EOS_AutoExposureMode:
+					dpd->DataType = PTP_DTC_UINT16;
+					dpd->FormFlag = PTP_DPFF_Enumeration;
+					dpd->FORM.Enum.NumberOfValues = 0;
+					break;
 				case PTP_DPC_CANON_EOS_Aperture:
 				case PTP_DPC_CANON_EOS_ShutterSpeed:
 				case PTP_DPC_CANON_EOS_ISOSpeed:
 				case PTP_DPC_CANON_EOS_FocusMode:
-				case PTP_DPC_CANON_EOS_AutoExposureMode:
 				case PTP_DPC_CANON_EOS_ColorSpace:
 				case PTP_DPC_CANON_EOS_BatteryPower:
 				case PTP_DPC_CANON_EOS_BatterySelect:
@@ -1531,6 +1536,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					/* custom func entries look like this on the 400D: '5 0 0 0 ?' = 4 bytes size + 1 byte data */
 					data += 4;
 					break;
+				/* ImageFormat special handling */
+				case PTP_DPC_CANON_EOS_ImageFormat:
+				case PTP_DPC_CANON_EOS_ImageFormatCF:
+				case PTP_DPC_CANON_EOS_ImageFormatSD:
+				case PTP_DPC_CANON_EOS_ImageFormatExtHD:
+					dpd->DataType = PTP_DTC_UINT16;
+					dpd->FactoryDefaultValue.u16	= ptp_unpack_EOS_ImageFormat( params, &data );
+					dpd->CurrentValue.u16		= dpd->FactoryDefaultValue.u16;
+					ptp_debug (params,"event %d: decoded imageformat, currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u16);
+					break;
 				/* yet unknown 32bit props */
 				case PTP_DPC_CANON_EOS_ColorTemperature:
 				case PTP_DPC_CANON_EOS_WftStatus:
@@ -1550,12 +1565,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_MovSize:
 				case PTP_DPC_CANON_EOS_DepthOfField:
 				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
-				case PTP_DPC_CANON_EOS_ImageFormat:
-				case PTP_DPC_CANON_EOS_ImageFormatCF:
-				case PTP_DPC_CANON_EOS_ImageFormatSD:
-				case PTP_DPC_CANON_EOS_ImageFormatExtHD:
 				case PTP_DPC_CANON_EOS_CustomFuncEx:
-//					dpd->DataType = PTP_DTC_UINT32;
+					dpd->DataType = PTP_DTC_UINT32;
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint32", i ,proptype, size-PTP_ece_Prop_Val_Data);
 					if ((size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) != 0)
 						ptp_debug (params, "event %d: Warning: datasize modulo sizeof(uint32) is not 0: ", i, (size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) );
@@ -1598,19 +1609,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				}
 				default:
 					/* debug is printed in switch above this one */
-					break;
-				}
-
-				/* ImageFormat special handling */
-				switch (proptype) {
-				case PTP_DPC_CANON_EOS_ImageFormat:
-				case PTP_DPC_CANON_EOS_ImageFormatCF:
-				case PTP_DPC_CANON_EOS_ImageFormatSD:
-				case PTP_DPC_CANON_EOS_ImageFormatExtHD:
-					dpd->DataType = PTP_DTC_UINT16;
-					dpd->FactoryDefaultValue.u16	= ptp_unpack_EOS_ImageFormat( params, &data );
-					dpd->CurrentValue.u16		= dpd->FactoryDefaultValue.u16;
-					ptp_debug (params,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u8);
 					break;
 				}
 

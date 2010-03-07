@@ -1442,6 +1442,26 @@ static struct deviceproptableu8 canon_shootmode[] = {
 };
 GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
 
+static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
+	{ N_("P"),		0x0000, 0 },
+	{ N_("TV"),		0x0001, 0 },
+	{ N_("AV"),		0x0002, 0 },
+	{ N_("Manual"),		0x0003, 0 },
+	{ N_("Bulb"),		0x0004, 0 },
+	{ N_("A_DEP"),		0x0005, 0 },
+	{ N_("DEP"),		0x0006, 0 },
+	{ N_("Custom"),		0x0007, 0 },
+	{ N_("Lock"),		0x0008, 0 },
+	{ N_("Green"),		0x0009, 0 },
+	{ N_("Night Portrait"),	0x000a, 0 },
+	{ N_("Sports"),		0x000b, 0 },
+	{ N_("Portrait"),	0x000c, 0 },
+	{ N_("Landscape"),	0x000d, 0 },
+	{ N_("Closeup"),	0x000e, 0 },
+	{ N_("Flash Off"),	0x000f, 0 },
+};
+GENERIC16TABLE(Canon_EOS_AutoExposureMode,canon_eos_autoexposuremode)
+
 static struct deviceproptableu8 canon_flash[] = {
 	{ N_("off"),				0, 0 },
 	{ N_("auto"),				1, 0 },
@@ -4374,6 +4394,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_FUJI_ReleaseMode, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ReleaseMode, _put_Fuji_ReleaseMode},
 	{ N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ShootMode, _put_Canon_ShootMode},
+	{ N_("Canon Auto Exposure Mode"), "autoexposuremode", PTP_DPC_CANON_EOS_AutoExposureMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode, _put_Canon_EOS_AutoExposureMode},
 	{ N_("Drive Mode"), "drivemode", PTP_DPC_CANON_EOS_DriveMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_DriveMode, _put_Canon_EOS_DriveMode},
 	{ N_("Picture Style"), "picturestyle", PTP_DPC_CANON_EOS_PictureStyle, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_PictureStyle, _put_Canon_EOS_PictureStyle},
 	{ N_("Focus Metering Mode"), "focusmetermode", PTP_DPC_FocusMeteringMode, 0, PTP_DTC_UINT16, _get_FocusMetering, _put_FocusMetering},
