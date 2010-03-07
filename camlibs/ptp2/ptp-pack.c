@@ -1473,11 +1473,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_StroboFiring:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
+				/* enumeration for AEM is never provided, but is available to set */
+				case PTP_DPC_CANON_EOS_AutoExposureMode:
+					dpd->DataType = PTP_DTC_UINT16;
+					dpd->FormFlag = PTP_DPFF_Enumeration;
+					dpd->FORM.Enum.NumberOfValues = 0;
+					break;
 				case PTP_DPC_CANON_EOS_Aperture:
 				case PTP_DPC_CANON_EOS_ShutterSpeed:
 				case PTP_DPC_CANON_EOS_ISOSpeed:
 				case PTP_DPC_CANON_EOS_FocusMode:
-				case PTP_DPC_CANON_EOS_AutoExposureMode:
 				case PTP_DPC_CANON_EOS_ColorSpace:
 				case PTP_DPC_CANON_EOS_BatteryPower:
 				case PTP_DPC_CANON_EOS_BatterySelect:
