@@ -994,6 +994,10 @@ static struct {
 	/* Carsten Grohmann <carstengrohmann@gmx.de> */
 	{"Canon:Digital IXUS 110 IS",		0x04a9, 0x31bd, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Willy Tarreau <w@1wt.eu> */
+	{"Canon:PowerShot A2100 IS",		0x04a9, 0x31be, PTPBUG_DELETE_SENDS_EVENT},
+
+
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* IRC Reporter */
