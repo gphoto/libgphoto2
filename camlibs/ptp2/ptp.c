@@ -723,22 +723,20 @@ ptp_getnumobjects (PTPParams* params, uint32_t storage,
 /**
  * ptp_eos_bulbstart:
  * params:	PTPParams*
- *              val			- uint16_t unknown argument (1)
  *
  * Starts EOS Bulb capture.
  *
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_canon_eos_bulbstart (PTPParams* params, uint16_t val)
+ptp_canon_eos_bulbstart (PTPParams* params)
 {
 	uint16_t ret;
 	PTPContainer ptp;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_CANON_EOS_BulbStart;
-	ptp.Nparam = 1;
-	ptp.Param1 = val;
+	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 	if ((ret == PTP_RC_OK) && (ptp.Nparam >= 1) && ((ptp.Param1 & 0x7000) == 0x2000))
 		ret = ptp.Param1;
@@ -748,22 +746,20 @@ ptp_canon_eos_bulbstart (PTPParams* params, uint16_t val)
 /**
  * ptp_canon_eos_bulbend:
  * params:	PTPParams*
- *              val			- uint16_t unknown argument (1)
  *
  * Starts EOS Bulb capture.
  *
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_canon_eos_bulbend (PTPParams* params, uint16_t val)
+ptp_canon_eos_bulbend (PTPParams* params)
 {
 	uint16_t ret;
 	PTPContainer ptp;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_CANON_EOS_BulbEnd;
-	ptp.Nparam = 1;
-	ptp.Param1 = val;
+	ptp.Nparam = 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 	if ((ret == PTP_RC_OK) && (ptp.Nparam >= 1) && ((ptp.Param1 & 0x7000) == 0x2000))
 		ret = ptp.Param1;
