@@ -3661,6 +3661,35 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 	return GP_OK;
 }
 
+static int
+_get_Canon_EOS_UILock(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val, ret;
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val)
+		ret = ptp_canon_eos_setuilock (params);
+	else
+		ret = ptp_canon_eos_resetuilock (params);
+	CPR(context, ret);
+	return GP_OK;
+}
+
 
 static int
 _get_Nikon_BeepMode(CONFIG_GET_ARGS) {
@@ -4249,8 +4278,9 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 
 static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
-	{ N_("Focus Lock"),                    "focuslock", PTP_OC_CANON_FocusLock, PTP_VENDOR_CANON, 0, _get_Canon_FocusLock, _put_Canon_FocusLock},
+	{ N_("Focus Lock"),                    "focuslock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_FocusLock, _get_Canon_FocusLock, _put_Canon_FocusLock},
 	{ N_("Bulb Mode"),                     "bulb", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_BulbStart, _get_Canon_EOS_Bulb, _put_Canon_EOS_Bulb},
+	{ N_("UI Lock"),                       "uilock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_SetUILock, _get_Canon_EOS_UILock, _put_Canon_EOS_UILock},
 	{ N_("Synchronize camera date and time with PC"),    "syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),    "syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Drive Nikon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_AfDrive, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
