@@ -80,6 +80,7 @@ camlibs/sonydscf55/camera.c
 camlibs/soundvision/soundvision.c
 camlibs/spca50x/library.c
 camlibs/sq905/library.c
+camlibs/st2205/library.c
 camlibs/stv0674/stv0674.c
 camlibs/stv0680/library.c
 camlibs/stv0680/stv0680.c
