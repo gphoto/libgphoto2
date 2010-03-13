@@ -22,10 +22,9 @@
 
 #include "samples.h"
 
-static void errordumper(GPLogLevel level, const char *domain, const char *format,
-                 va_list args, void *data) {
-  vfprintf(stdout, format, args);
-  fprintf(stdout, "\n");
+static void errordumper(GPLogLevel level, const char *domain, const char *str,
+                 void *data) {
+  printf("%s\n", str);
 }
 
 /* This seems to have no effect on where images go
