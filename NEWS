@@ -71,6 +71,8 @@ Directory driver:
    * Use GPPortInfo instead of settings to pass basepath in.
    * Abstracted common functionality.
 
+ST2205 Driver:
+   * New Pictureframe driver, working on top of usb storage.
 
 Build:
    * Removed dummy README file from SVN.
