@@ -295,12 +295,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		"Low light condition. Using default gamma. No white balance.\n");
 		gp_gamma_fill_table (gtable, .65); 
 		gp_gamma_correct_single(gtable,ptr,w*h);
-        } else
+	} else
 		white_balance (ptr, w*h, 1.1);
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	/* Reset camera when done, for more graceful exit. */
-	if (k +1 == camera->pl->nb_entries) {
+	if (k + 1 == camera->pl->nb_entries) {
 		digi_rewind (camera->port, camera->pl);
 	}
  end:
