@@ -71,6 +71,9 @@ typedef struct _GPPortOperations {
                                 int value, int index, char *bytes, int size);
         int (*msg_class_read) (GPPort * dev, int request, 
                                 int value, int index, char *bytes, int size);
+
+	/* For USB disk direct IO devices */
+	int (*seek) (GPPort * dev, int offset, int whence);
 } GPPortOperations;
 
 typedef GPPortType (* GPPortLibraryType) (void);

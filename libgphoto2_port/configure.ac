@@ -357,7 +357,7 @@ dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
-	IOLIB_LIST="$IOLIB_LIST usb"
+	IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect"
 ],[],
 		[disable-explicitly],
 		[http://libusb.sourceforge.net/]

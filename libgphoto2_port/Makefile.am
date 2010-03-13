@@ -50,6 +50,7 @@ include disk/Makefile-files
 include ptpip/Makefile-files
 include serial/Makefile-files
 include usb/Makefile-files
+include usbdiskdirect/Makefile-files
 
 
 ########################################################################
