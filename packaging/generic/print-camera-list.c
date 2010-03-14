@@ -224,7 +224,7 @@ hotplug_camera_func (const func_params_t *params,
 		?((*params->argv)[0])
 		:(GP_USB_HOTPLUG_SCRIPT);
 
-	if (a->port & GP_PORT_USB) {
+	if (a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT)) {
 		if (a->usb_vendor) { /* usb product id may be zero! */
 			class = 0;
 			subclass = 0;
@@ -522,7 +522,7 @@ udev_camera_func (const func_params_t *params,
 	udev_persistent_data_t *pdata = (udev_persistent_data_t *) data;
 	ASSERT(pdata != NULL);
 
-	if (!(a->port & GP_PORT_USB))
+	if (!(a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT)))
 		return 0;
 
 	if (a->usb_vendor) { /* usb product id may be zero! */
@@ -757,7 +757,7 @@ ddb_camera_func (const func_params_t *params,
 		printf("    };\n");
 	}
 
-	if ((a->port & GP_PORT_USB)) {
+	if ((a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT))) {
 		if (a->usb_vendor) { 
 			/* usb product id may have the legal value zero! */
 			DELAYED_HEAD();
@@ -835,7 +835,7 @@ fdi_camera_func (const func_params_t *params,
 {
 	char	*s, *d, model[256];
 
-	if (!(a->port & GP_PORT_USB))
+	if (!(a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT)))
 		return 0;
 
 	s = (char *) a->model;
@@ -851,7 +851,7 @@ fdi_camera_func (const func_params_t *params,
 	}
 	*d = '\0';
 
-	if ((a->port & GP_PORT_USB)) {
+	if ((a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT))) {
 		if (a->usb_vendor == 0x07b4 && (a->usb_product == 0x105 || a->usb_product == 0x109) ) {
 			/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
 			 * Some HAL using software gets deeply confused by this being here
@@ -964,7 +964,7 @@ fdi_device_camera_func (const func_params_t *params,
 {
 	char	*s, *d, model[256];
 
-	if (!(a->port & GP_PORT_USB))
+	if (!(a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT)))
 		return 0;
 
 	s = (char *) a->model;
@@ -980,7 +980,7 @@ fdi_device_camera_func (const func_params_t *params,
 	}
 	*d = '\0';
 
-	if ((a->port & GP_PORT_USB)) {
+	if ((a->port & (GP_PORT_USB|GP_PORT_USB_DISK_DIRECT))) {
 
 		if (a->usb_vendor == 0x07b4 && (a->usb_product == 0x105 || a->usb_product == 0x109)) {
 			/* Marcus says: The Olympus Sierra/Storage dual mode camera firmware.
@@ -1036,17 +1036,15 @@ fdi_device_end_func (const func_params_t *params, void *data)
 struct timeval glob_tv_zero = { 0, 0 };
 
 static void
-debug_func (GPLogLevel level, const char *domain, const char *format,
-	    va_list args, void *data)
+debug_func (GPLogLevel level, const char *domain, const char *str,
+	    void *data)
 {
 	struct timeval tv;
 	gettimeofday (&tv,NULL);
-	fprintf (stderr, "%li.%06li %s(%i): ", 
+	fprintf (stderr, "%li.%06li %s(%i): %s\n", 
 		 tv.tv_sec - glob_tv_zero.tv_sec, 
 		 (1000000 + tv.tv_usec - glob_tv_zero.tv_usec) % 1000000,
-		 domain, level);
-	vfprintf (stderr, format, args);
-	fprintf (stderr, "\n");
+		 domain, level, str);
 }
 
 
