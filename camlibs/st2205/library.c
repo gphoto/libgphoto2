@@ -138,7 +138,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gdImagePtr im;
 	int ret, idx, size;
 	void *gdpng;
-	char *png;
 
 	idx = get_file_idx(camera->pl, folder, filename);
 	if (idx < 0)
@@ -159,25 +158,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (gdpng == NULL)
 		return GP_ERROR_NO_MEMORY;
 
-	/* Ugh gd uses its own memory management */
-	png = malloc(size);
-	if (png == NULL) {
-		gdFree(gdpng);
-		return GP_ERROR_NO_MEMORY;
-	}
-	memcpy(png, gdpng, size);
-	gdFree(gdpng);
-
 	ret = gp_file_set_mime_type (file, GP_MIME_PNG);
-	if (ret < 0) { free (png); return ret; }
+	if (ret < 0) { gdFree (gdpng); return ret; }
 
 	ret = gp_file_set_name (file, filename); 
-	if (ret < 0) { free (png); return ret; }
+	if (ret < 0) { gdFree (gdpng); return ret; }
 
-	ret = gp_file_set_data_and_size (file, png, size);
-	if (ret < 0) { free (png); return ret; }
-
-	return GP_OK;
+	ret = gp_file_append (file, gdpng, size);
+	gdFree (gdpng);
+	return ret;
 #else
 	return GP_ERROR_NOT_SUPPORTED;
 #endif
