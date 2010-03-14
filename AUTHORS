@@ -50,8 +50,9 @@ Raymond Penners <raymond@dotsphinx.com>
 gPhoto2 port of the Sony DSC-F55 library
 
 Marcus Meissner <marcus@jet.franken.de>
-Jenoptik JD11 and SiPix Web2 library, cleanups in the stv680 library,
-ptp2 driver maintainership.
+Jenoptik JD11 and SiPix Web2 library,
+cleanups in the stv680 and other libraries,
+PTP 2 driver maintainer.
 
 Lutz Müller <lutz@users.sourceforge.net>
 Konica driver, various clean-up all over the place
@@ -80,3 +81,5 @@ Archive, <http://www.archive.org/>, for funding the development
 of this code.  This code is used in the Internet Archive's book 
 scanner.
 
+Hans de Goede <hdegoede@redhat.com>
+ST2205 Picture Frame support (and usbdiskdirect port driver).

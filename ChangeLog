@@ -1,3 +1,11 @@
+2010-03-12  Hans de Goede <hdegoede@redhat.com>
+
+	* camlibs/st2205: New camera driver for ST2205 based picture frames.
+	* libgphoto2_port/usbdiskdirect: USB Disk direct acccess driver
+	  (for ST2205 based picture frames.)
+	* New dependency for "libgd" for image conversion for above driver.
+	* configure.ac, camlibs/Makefile.am: hooked up new camlib, new gd check.
+
 2010-03-06  Marcus Meissner  <marcus@jet.franken.de>
 
 	* gphoto2/gphoto2-context.h, libgphoto2/gphoto2-context.c:
