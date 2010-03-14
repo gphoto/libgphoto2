@@ -39,11 +39,10 @@
 
 static void
 log_func (GPLogLevel level, const char *domain __unused__,
-	  const char *format, va_list args, void *data __unused__)
+	  const char *str, void *data __unused__)
 {
 	if (level <= GP_LOG_ERROR) {
-		vfprintf (stdout, format, args);
-		fprintf (stdout, "\n");
+		fprintf (stdout, "%s\n", str);
 		fflush (stdout);
 	}
 }
