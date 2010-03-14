@@ -27,6 +27,7 @@ gp_port_new
 gp_port_open
 gp_port_read
 gp_port_result_as_string
+gp_port_seek
 gp_port_send_break
 gp_port_set_error
 gp_port_set_info

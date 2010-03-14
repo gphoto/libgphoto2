@@ -339,7 +339,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 	for (i = 0; i < count; i++) {
 		int v, p, c, s;
 
-		if (!(list->abilities[i].port & GP_PORT_USB))
+		if (!(list->abilities[i].port & port->type))
 			continue;
 
 		v = list->abilities[i].usb_vendor;
@@ -435,7 +435,8 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		CHECK_RESULT (gp_port_info_list_get_info (info_list, i, &info));
 		CHECK_RESULT (gp_port_set_info (port, info));
 		switch (info.type) {
-		case GP_PORT_USB: {
+		case GP_PORT_USB:
+		case GP_PORT_USB_DISK_DIRECT: {
 			int ability;
 			res = gp_abilities_list_detect_usb (list, &ability, port);
 			if (res == GP_OK) {

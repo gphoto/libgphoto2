@@ -99,6 +99,13 @@ typedef struct _GPPortSettingsDisk {
 } GPPortSettingsDisk;
 
 /**
+ * \brief Port settings for USB mass storage direct IO ports.
+ */
+typedef struct _GPPortSettingsUsbDiskDirect {
+	char path[128];		/**< /brief The ports device node path (/dev/sdX)*/
+} GPPortSettingsUsbDiskDirect;
+
+/**
  * \brief Union of port settings.
  *
  * This contains a shared union of possible settings for ports needing
@@ -108,6 +115,7 @@ typedef union _GPPortSettings {
 	GPPortSettingsSerial serial;	/**< \brief Serial specific settings */
 	GPPortSettingsUSB usb;		/**< \brief USB specific settings */
 	GPPortSettingsDisk disk;	/**< \brief Disk port specific settings */
+	GPPortSettingsUsbDiskDirect usbdiskdirect; /**< \brief usb disk direct port specific settings */
 } GPPortSettings;
 
 enum {
@@ -211,6 +219,8 @@ int gp_port_usb_msg_class_write    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
 int gp_port_usb_msg_class_read    (GPPort *port, int request, 
 			    int value, int index, char *bytes, int size);
+
+int gp_port_seek (GPPort *port, int offset, int whence);
 
 /* Error reporting */
 int         gp_port_set_error (GPPort *port, const char *format, ...)

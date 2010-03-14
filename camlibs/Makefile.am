@@ -107,6 +107,7 @@ include sonydscf55/Makefile-files
 include soundvision/Makefile-files
 include spca50x/Makefile-files
 include sq905/Makefile-files
+include st2205/Makefile-files
 include stv0674/Makefile-files
 include stv0680/Makefile-files
 include sx330z/Makefile-files

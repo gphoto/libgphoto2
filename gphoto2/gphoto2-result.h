@@ -124,6 +124,13 @@ extern "C" {
  */
 #define GP_ERROR_OS_FAILURE	     -114
 
+/**
+ * \brief Not enough space
+ *
+ * There was not enough free space when uploading a file.
+ */
+#define GP_ERROR_NO_SPACE	     -115
+
 
 const char *gp_result_as_string      (int result);
 

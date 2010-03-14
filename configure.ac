@@ -268,6 +268,20 @@ AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
 ])
 GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
 
+dnl ---------------------------------------------------------------------------
+dnl check for libgd
+dnl ---------------------------------------------------------------------------
+LIBGD=""
+libgd_msg="no"
+AC_SUBST(LIBGD)
+AC_CHECK_LIB(gd,gdImageCreateTrueColor,[
+	AC_CHECK_HEADER(gd.h,[
+		AC_DEFINE(HAVE_GD,1,[define if we have LIBGD and its headers])
+		LIBGD="-lgd"
+		libgd_msg="yes"
+	])
+])
+GP_CONFIG_MSG([GD conversion support],[${libgd_msg}])
 
 dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
@@ -507,6 +521,7 @@ GP_CAMLIB([sony_dscf55])dnl
 GP_CAMLIB([soundvision])dnl
 GP_CAMLIB([spca50x])dnl
 GP_CAMLIB([sq905])dnl
+GP_CAMLIB([st2205])dnl
 GP_CAMLIB([stv0674])dnl
 GP_CAMLIB([stv0680])dnl
 GP_CAMLIB([sx330z])dnl

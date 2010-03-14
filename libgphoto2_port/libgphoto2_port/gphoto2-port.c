@@ -209,6 +209,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 			strchr(info.path, ':') + 1, 
 			sizeof(port->settings.disk.mountpoint));
 		break;
+	case GP_PORT_USB_DISK_DIRECT:
+		snprintf(port->settings.usbdiskdirect.path,
+			 sizeof(port->settings.usbdiskdirect.path), "%s",
+			 strchr(info.path, ':') + 1);
+		break;
 	default:
 		/* Nothing in here */
 		break;
@@ -1066,6 +1071,35 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
         return (retval);
 }
 
+/**
+ * \brief Seek on a port (for usb disk direct ports)
+ *
+ * \param port a #GPPort
+ * \param offset offset to seek to
+ * \param whence the underlying lseek call whence parameter
+ *
+ * Seeks to a specific offset on the usb disk
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_seek (GPPort *port, int offset, int whence)
+{
+	int retval;
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Seeking to: %d whence: %d",
+		offset, whence);
+
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	CHECK_SUPP (port, "seek", port->pc->ops->seek);
+	retval = port->pc->ops->seek (port, offset, whence);
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Seek result: %d", retval);
+
+	return retval;
+}
 
 /**
  * \brief Set verbose port error message

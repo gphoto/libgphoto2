@@ -55,6 +55,7 @@ static struct {
 	{GP_ERROR_CANCEL,              N_("Operation cancelled")},
 	{GP_ERROR_CAMERA_ERROR,        N_("Camera could not complete operation")},
 	{GP_ERROR_OS_FAILURE,          N_("OS error in camera communication")},
+	{GP_ERROR_NO_SPACE,            N_("Not enough free space")},
 	{0, NULL}
 };
 
