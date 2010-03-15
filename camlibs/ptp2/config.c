@@ -203,7 +203,11 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
 		 * that we have enough space left. */
+		/* this might be a trigger value for "no space" -Marcus
 		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
+		 */
+
+		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "ptp_canon_eos_pchddcapacity failed!");
 			return GP_ERROR;
