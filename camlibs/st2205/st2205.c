@@ -827,8 +827,8 @@ st2205_open_device(Camera *camera)
 	if (gp_port_read (camera->port, camera->pl->buf, 512) != 512)
 		return GP_ERROR_IO_READ;
 
-	camera->pl->width  = be16atoh (camera->pl->buf);
-	camera->pl->height = be16atoh (camera->pl->buf + 2);
+	camera->pl->width  = be16atoh ((uint8_t *)camera->pl->buf);
+	camera->pl->height = be16atoh ((uint8_t *)camera->pl->buf + 2);
 
 	GP_DEBUG ("Sitronix picframe of %dx%d detected.",
 		  camera->pl->width, camera->pl->height);
