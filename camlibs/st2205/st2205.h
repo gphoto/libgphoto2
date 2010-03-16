@@ -38,7 +38,11 @@
 #define ST2205_BLOCK_SIZE 32768
 #define ST2205_ERASE_BLOCK_SIZE 65536
 #define ST2205_COUNT_OFFSET 0x6
-#define ST2205_LOOKUP_OFFSET 0x8477
+#define ST2205_LOOKUP_SIZE (0x8000 - 0x0477)
+#define ST2205_V1_LOOKUP_OFFSET 0x8477
+#define ST2205_V2_LOOKUP_OFFSET 0xd8477
+#define ST2205_V1_FIRMWARE_SIZE 65536
+#define ST2205_V2_FIRMWARE_SIZE 131072
 #define ST2205_LOOKUP_CHECKSUM 0x0016206f
 #define ST2205_SHUFFLE_SIZE (128 * 160 / 64)
 #define ST2205_HEADER_MARKER 0xf5
@@ -77,10 +81,11 @@ struct _CameraPrivateLibrary {
 	char *mem;
 	char *buf; /* 512 bytes aligned buffer (for sending / reading cmds) */
 	int mem_size;
+	int firmware_size;
 	int block_is_present[2097152 / ST2205_BLOCK_SIZE];
 	int block_dirty[2097152 / ST2205_BLOCK_SIZE];
 	st2205_lookup_row lookup[3][256];
-	struct st2205_coord shuffle[7][ST2205_SHUFFLE_SIZE];
+	struct st2205_coord shuffle[8][ST2205_SHUFFLE_SIZE];
 	int no_shuffles;
 	unsigned char unknown3[8];
 	unsigned int rand_seed;
