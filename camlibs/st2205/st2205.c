@@ -185,8 +185,8 @@ st2205_check_block_present(Camera *camera, int block)
 {
 	int ret;
 
-	if (block * ST2205_BLOCK_SIZE > camera->pl->mem_size) {
-		gp_log (GP_LOG_ERROR, "st2205", "access beyond end of memory");
+	if ((block + 1) * ST2205_BLOCK_SIZE > camera->pl->mem_size) {
+		gp_log (GP_LOG_ERROR, "st2205", "read beyond end of memory");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
@@ -231,10 +231,6 @@ st2205_detect_mem_size(Camera *camera)
 
 	camera->pl->mem_size = 524288 << i;	
 	GP_DEBUG ("Detect %d bytes of flash memory", camera->pl->mem_size);
-	/* Remove firmware space */
-	camera->pl->mem_size -= 65536;
-	GP_DEBUG ("Of which %d bytes is usable for photo storage",
-		  camera->pl->mem_size);
 
 	st2205_free_page_aligned(buf0, ST2205_BLOCK_SIZE);
 	st2205_free_page_aligned(buf1, ST2205_BLOCK_SIZE);
@@ -269,6 +265,13 @@ st2205_write_mem(Camera *camera, int offset,
 	void *buf, int len)
 {
 	int to_copy, block = offset / ST2205_BLOCK_SIZE;
+
+	/* Don't allow writing to the firmware space */
+	if ((offset + len) >
+	    (camera->pl->mem_size - camera->pl->firmware_size)) {
+		gp_log (GP_LOG_ERROR, "st2205", "write beyond end of memory");
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	while (len) {
 		CHECK (st2205_check_block_present (camera, block))
@@ -528,10 +531,11 @@ st2205_real_write_file(Camera *camera,
 
 	/* Try to find a large enough "hole" in the memory */
 	for (i = 0; i <= count; i++) {
-		/* Fake a present entry at the end of mem */
+		/* Fake a present entry at the end of picture mem */
 		if (i == count) {
 			entry.present = 1;
-			start = camera->pl->mem_size;
+			start = camera->pl->mem_size -
+				camera->pl->firmware_size;
 			/* If the last entry in the "FAT" was present, we need
 			   to set hole_start to the end of the last picture */
 			if (!hole_start) {
@@ -655,7 +659,8 @@ int
 st2205_commit(Camera *camera)
 {
 	int i, j;
-	int mem_block_size = camera->pl->mem_size / ST2205_BLOCK_SIZE;
+	int mem_block_size = (camera->pl->mem_size - camera->pl->firmware_size)
+				/ ST2205_BLOCK_SIZE;
 	int erase_block_size = ST2205_ERASE_BLOCK_SIZE / ST2205_BLOCK_SIZE;
 
 	for (i = 0; i < mem_block_size; i += erase_block_size) {
@@ -684,22 +689,29 @@ st2205_init(Camera *camera)
 {
 	uint16_t *lookup_src, *dest;
 	uint8_t *shuffle_src;
-	int x, y, i, j, shuffle_size, checksum = 0;
-	struct {
+	int x, y, i, j, shuffle_size;
+	const struct {
 		int width, height, no_tables;
 		unsigned char unknown3[8];
 	} shuffle_info[] = {
 		{ 128, 160, 8,
-		  /* FIXME unknown3 needs to be verified */
-		  { 0x01, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01 } },
+		  { 0xff, 0xff, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02 } },
 		{ 128, 128, 7,
-		  { 0x01, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 } },
+		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 } },
 		{ 120, 160, 7,
 		  /* FIXME unknown3 needs to be verified */
-		  { 0x01, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 } },
+		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 } },
 		{ 96, 64, 7,
-		  { 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 } },
+		  { 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 } },
 		{ 0, 0, 0 }
+	};
+	const struct {
+		int lookup_offset;
+		int firmware_size;
+	} version_info[] = {
+		{ ST2205_V1_LOOKUP_OFFSET, ST2205_V1_FIRMWARE_SIZE },
+		{ ST2205_V2_LOOKUP_OFFSET, ST2205_V2_FIRMWARE_SIZE },
+		{ }
 	};
 
 	GP_DEBUG ("st2205_init called");
@@ -724,24 +736,37 @@ st2205_init(Camera *camera)
 		return GP_ERROR_NO_MEMORY;
 
 	/* Get the lookup tables from the device */
-	CHECK (st2205_check_block_present(camera, 1))
+	for (i = 0; version_info[i].lookup_offset; i++) {
+		int lookup_offset = version_info[i].lookup_offset;
+		int checksum = 0;
 
-	lookup_src = (uint16_t *)(camera->pl->mem + ST2205_LOOKUP_OFFSET);
-	dest = (uint16_t *)(&camera->pl->lookup[0][0][0]);
-	for (i = 0; i < 3 * 256 * 8; i++) {
-		*dest++ = le16toh(*lookup_src++);
-		checksum += (uint8_t)
-			(camera->pl->mem + ST2205_LOOKUP_OFFSET)[i * 2];
-		checksum += (uint8_t)
-			(camera->pl->mem + ST2205_LOOKUP_OFFSET)[i * 2 + 1];
+		if ((lookup_offset + ST2205_LOOKUP_SIZE) >
+		    camera->pl->mem_size)
+			continue;
+
+		CHECK (st2205_check_block_present(camera,
+					lookup_offset / ST2205_BLOCK_SIZE))
+
+		lookup_src = (uint16_t *)(camera->pl->mem + lookup_offset);
+		dest = (uint16_t *)(&camera->pl->lookup[0][0][0]);
+		for (j = 0; j < 3 * 256 * 8; j++) {
+			*dest++ = le16toh(*lookup_src++);
+			checksum += (uint8_t)
+				(camera->pl->mem + lookup_offset)[j * 2];
+			checksum += (uint8_t)
+				(camera->pl->mem + lookup_offset)[j * 2 + 1];
+		}
+
+		if (checksum == ST2205_LOOKUP_CHECKSUM)
+			break;
 	}
 
-	if (checksum != ST2205_LOOKUP_CHECKSUM)	{
-		gp_log (GP_LOG_ERROR, "st2205",
-			"lookup table checksum does not match (%x != %x)",
-			checksum, ST2205_LOOKUP_CHECKSUM);
-		return GP_ERROR_CORRUPTED_DATA;
+	if (!version_info[i].lookup_offset) {
+		gp_log (GP_LOG_ERROR, "st2205", "lookup tables not found");
+		return GP_ERROR_MODEL_NOT_FOUND;
 	}
+
+	camera->pl->firmware_size = version_info[i].firmware_size;
 
 	/* Generate shuffle tables 0 and 1 */
 	for (y = 0, i = 0; y < camera->pl->height; y += 8)
@@ -773,7 +798,7 @@ st2205_init(Camera *camera)
 		gp_log (GP_LOG_ERROR, "st2205",
 			"unknown display resolution: %dx%d",
 			camera->pl->width, camera->pl->height);
-		return GP_ERROR_IO;
+		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
 	memcpy (camera->pl->unknown3, shuffle_info[i].unknown3,
@@ -867,6 +892,5 @@ void st2205_close(Camera *camera)
 int
 st2205_get_mem_size(Camera *camera)
 {
-	/* Re-add the 65536 bytes of firmware */
-	return camera->pl->mem_size + 65536;
+	return camera->pl->mem_size;
 }
