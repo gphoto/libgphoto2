@@ -37,12 +37,17 @@
    program cycle */
 #define ST2205_BLOCK_SIZE 32768
 #define ST2205_ERASE_BLOCK_SIZE 65536
+#define ST2205_FAT_SIZE 8192
 #define ST2205_COUNT_OFFSET 0x6
+/* 16 bytes info per file + a 16 bytes header */
+#define ST2205_FILE_OFFSET(x) (((x) + 1) * 16)
 #define ST2205_LOOKUP_SIZE (0x8000 - 0x0477)
 #define ST2205_V1_LOOKUP_OFFSET 0x8477
 #define ST2205_V2_LOOKUP_OFFSET 0xd8477
 #define ST2205_V1_FIRMWARE_SIZE 65536
 #define ST2205_V2_FIRMWARE_SIZE 131072
+#define ST2205_V1_PICTURE_START 65536
+#define ST2205_V2_PICTURE_START 8192
 #define ST2205_LOOKUP_CHECKSUM 0x0016206f
 #define ST2205_SHUFFLE_SIZE (128 * 160 / 64)
 #define ST2205_HEADER_MARKER 0xf5
@@ -82,6 +87,8 @@ struct _CameraPrivateLibrary {
 	char *buf; /* 512 bytes aligned buffer (for sending / reading cmds) */
 	int mem_size;
 	int firmware_size;
+	int picture_start;
+	int no_fats;
 	int block_is_present[2097152 / ST2205_BLOCK_SIZE];
 	int block_dirty[2097152 / ST2205_BLOCK_SIZE];
 	st2205_lookup_row lookup[3][256];
