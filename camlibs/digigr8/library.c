@@ -1,16 +1,16 @@
 /* library.c for libgphoto2/camlibs/digigr8
  *
- * Copyright (C) 2005 Theodore Kilgore <kilgota@auburn.edu>
+ * Copyright (C) 2005 - 2010 Theodore Kilgore <kilgota@auburn.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -51,10 +51,10 @@
 #define GP_MODULE "digigr8"
 
 static const struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
 	{"Digigr8",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Che-Ez Snap SNAP-U",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
@@ -78,27 +78,26 @@ static const struct {
 								0x2770, 0x913d},
 	{"Sakar 28290 and 28292  Digital Concepts Styleshot",
 						GP_DRIVER_STATUS_EXPERIMENTAL,
-								0x2770, 0x913d},
-	{"Sakar 23070  Crayola Digital Camera",    GP_DRIVER_STATUS_EXPERIMENTAL,
-								0x2770, 0x913d},
+							0x2770, 0x913d},
+	{"Sakar 23070  Crayola Digital Camera", GP_DRIVER_STATUS_EXPERIMENTAL,
+							0x2770, 0x913d},
 	{"Sakar 92045  Spiderman",    GP_DRIVER_STATUS_EXPERIMENTAL,
-								0x2770, 0x913d},
+							0x2770, 0x913d},
 	{NULL,0,0,0}
 };
 
 int
-camera_id (CameraText *id)
+camera_id(CameraText *id)
 {
 	strncpy (id->text, "SQ905C chipset camera",32);
-
 	return GP_OK;
 }
 
 
 int
-camera_abilities (CameraAbilitiesList *list)
+camera_abilities(CameraAbilitiesList *list)
 {
-	int i;    
+	int i;
 	CameraAbilities a;
 
 	for (i = 0; models[i].name; i++) {
@@ -114,30 +113,29 @@ camera_abilities (CameraAbilitiesList *list)
 		else
 			a.operations = GP_OPERATION_CAPTURE_PREVIEW;
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW
 					+ GP_FILE_OPERATION_RAW;
 		gp_abilities_list_append (list, a);
 	}
-
 	return GP_OK;
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary, GPContext *context)
+camera_summary(Camera *camera, CameraText *summary, GPContext *context)
 {
-	if(!camera->pl->init_done)
+	if (!camera->pl->init_done)
 		digi_init (camera->port, camera->pl);
 	snprintf (summary->text, 100,
-			("Your USB camera seems to have an SQ905C chipset.\n" 
-			"The total number of pictures in it is %i\n"), 
-				camera->pl->nb_entries);  
-
+			("Your USB camera seems to have an SQ905C chipset.\n"
+			"The total number of pictures in it is %i\n"),
+				camera->pl->nb_entries);
 	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual(Camera *camera, CameraText *manual,
+							GPContext *context)
 {
-	strncpy(manual->text, 
+	strncpy(manual->text,
 	_(
 	"For cameras with insides from S&Q Technologies, which have the \n"
 	"USB Vendor ID 0x2770 and Product ID 0x905C, 0x9050, 0x9052,\n"
@@ -156,11 +154,10 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context)
+camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
 	strncpy (about->text, _("sq905C generic driver\n"
 			    "Theodore Kilgore <kilgota@auburn.edu>\n"),64);
-
 	return GP_OK;
 }
 
@@ -168,52 +165,51 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 
 
 static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
+file_list_func(CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-	Camera *camera = data; 
+	Camera *camera = data;
 	int n;
 	if(!camera->pl->init_done)
 		digi_init (camera->port, camera->pl);
 	GP_DEBUG ("List files in %s\n", folder);
-	n = camera->pl->nb_entries;	
+	n = camera->pl->nb_entries;
 	gp_list_populate(list, "pict%03i.ppm", n);
 	return GP_OK;
 }
 
 
 static int
-get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data,
-	       GPContext *context)
+get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
+		CameraFileType type, CameraFile *file, void *user_data,
+							GPContext *context)
 {
 	int status = GP_OK;
-	Camera *camera = user_data; 
-	int w, h, b; 
+	Camera *camera = user_data;
+	int w, h, b;
 	int k, next;
 	unsigned char comp_ratio;
 	unsigned char lighting;
 	unsigned char *data = NULL;
-	unsigned char *p_data = NULL; 
+	unsigned char *p_data = NULL;
 	unsigned char *ppm;
 	unsigned char *ptr;
 	unsigned char gtable[256];
 	int size;
 
-	if(!camera->pl->init_done)
+	if (!camera->pl->init_done)
 		digi_init (camera->port, camera->pl);
 
-
 	/* Get the entry number of the photo on the camera */
-	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+	k = gp_filesystem_number (camera->fs, "/", filename, context);
 
 	if (GP_FILE_TYPE_EXIF ==type) return GP_ERROR_FILE_EXISTS;
 
 	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL
-				    !=type && GP_FILE_TYPE_PREVIEW!=type) {
+				    != type && GP_FILE_TYPE_PREVIEW != type) {
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	
+
 	next = camera->pl->last_fetched_entry +1;
 	while (next < k) {
 		b = digi_get_data_size (camera->pl, next);
@@ -238,7 +234,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		GP_DEBUG("Photo number %i deleted?\n",k+1);
 		camera->pl->last_fetched_entry = k;
 		return GP_OK;
-	}	
+	}
 	data = malloc (w*h);
 	if(!data) return GP_ERROR_NO_MEMORY;
 
@@ -247,26 +243,27 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	camera->pl->last_fetched_entry = k;
 
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
-		size = b; 
+		size = b;
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_append(file, (char *)data, size);
 		/* Save photo's catalog entry as a footer for the raw file */
-		gp_file_append(file, (char *)camera->pl->catalog + k*0x10, 0x10);
+		gp_file_append(file, (char *)camera->pl->catalog
+						+ k * 0x10, 0x10);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->nb_entries) {
-			digi_rewind (camera->port, camera->pl);	
+			digi_rewind (camera->port, camera->pl);
 		}
 		free(data);
 		return(GP_OK);
 	}
 
 	/*
-	 * Now put the data into a PPM image file. 
+	 * Now put the data into a PPM image file.
 	 */
 
 	ppm = malloc (w * h * 3 + 256); /* room for data + header */
-	if (!ppm) { 
-		status = GP_ERROR_NO_MEMORY; 
+	if (!ppm) {
+		status = GP_ERROR_NO_MEMORY;
 		goto end;
 	}
 	snprintf ((char *)ppm, 64,
@@ -278,7 +275,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + size;
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-	p_data = malloc( w*h );
+	p_data = malloc(w * h);
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
 		goto end;
@@ -286,14 +283,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if(comp_ratio) {
 		digi_decompress (p_data, data, w, h);
 	} else
-		memcpy(p_data, data, w*h);
-	gp_ahd_decode (p_data, w , h , ptr, BAYER_TILE_BGGR);
+		memcpy(p_data, data, w * h);
+	gp_ahd_decode(p_data, w , h , ptr, BAYER_TILE_BGGR);
 	free(p_data);
-	digi_postprocess (w, h, ptr);
+	digi_postprocess(w, h, ptr);
 	if (lighting < 0x40) {
 	GP_DEBUG(
-		"Low light condition. Using default gamma. No white balance.\n");
-		gp_gamma_fill_table (gtable, .65); 
+		"Low light condition. Using default gamma. \
+						No white balance.\n");
+		gp_gamma_fill_table (gtable, .65);
 		gp_gamma_correct_single(gtable,ptr,w*h);
 	} else
 		white_balance (ptr, w*h, 1.1);
@@ -309,52 +307,51 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data, 
-		GPContext *context) 
+delete_all_func(CameraFilesystem *fs, const char *folder, void *data,
+						GPContext *context)
 {
 	Camera *camera = data;
-	if(!camera->pl->delete_all)
+	if (!camera->pl->delete_all)
 		return GP_ERROR_NOT_SUPPORTED;
-	if(!camera->pl->init_done)
-		digi_init (camera->port, camera->pl);
-	digi_delete_all (camera->port, camera->pl);
+	if (!camera->pl->init_done)
+		digi_init(camera->port, camera->pl);
+	digi_delete_all(camera->port, camera->pl);
 	return GP_OK;
 }
 
 static int
-camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context)
 
 {
 	unsigned char get_size[0x50];
-	unsigned char *raw_data; 
-	unsigned char *frame_data; 
+	unsigned char *raw_data;
+	unsigned char *frame_data;
 	unsigned char *ppm, *ptr;
 	char lighting;
 	unsigned char gtable[256];
-	char filename[14] = "digi_cap.ppm";
 	int size;
 	int w = 320;
 	int h = 240;
 	int b;
 
-        digi_reset (camera->port);
-        gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);
-        gp_port_read(camera->port, (char *)get_size, 0x50);
-        GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
+	digi_reset (camera->port);
+	gp_port_usb_msg_write (camera->port, 0x0c, 0x1440, 0x110f, NULL, 0);
+	gp_port_read(camera->port, (char *)get_size, 0x50);
+	GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
 	lighting = get_size[0x48];
-        b = get_size[0x40]|(get_size[0x41]<<8)|(get_size[0x42]<<16)
-						|(get_size[0x43]<<24);
+        b = get_size[0x40] | get_size[0x41] << 8 | get_size[0x42] << 16
+						| get_size[0x43]<<24;
 	GP_DEBUG("b = 0x%x\n", b);
-        raw_data = malloc(b);
-        if(!raw_data) { 
-		free(raw_data); 
+	raw_data = malloc(b);
+	if(!raw_data) {
+		free(raw_data);
 		return GP_ERROR_NO_MEMORY;
 	}
 	if (!((gp_port_read(camera->port, (char *)raw_data, b)==b))) {
 		GP_DEBUG("Error in reading data\n");
 		return GP_ERROR;
 	}
-	frame_data = malloc(w*h);
+	frame_data = malloc(w * h);
 	if (!frame_data) {
 		free(frame_data);
 		return GP_ERROR_NO_MEMORY;
@@ -362,8 +359,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	digi_decompress (frame_data, raw_data, w, h);
 	free(raw_data);
 	/* Now put the data into a PPM image file. */
-	ppm = malloc (w * h * 3 + 256); 
-	if (!ppm) { return GP_ERROR_NO_MEMORY; }
+	ppm = malloc (w * h * 3 + 256);
+	if (!ppm)
+		return GP_ERROR_NO_MEMORY;
 	snprintf ((char *)ppm, 64,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905C library\n"
@@ -375,16 +373,16 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	gp_ahd_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
 	free(frame_data);
         if (lighting < 0x40) {
-        GP_DEBUG(
-                "Low light condition. Using default gamma. No white balance.\n");
+		GP_DEBUG(
+		"Low light condition. Default gamma. No white balance.\n");
 		gp_gamma_fill_table (gtable, .65);
-                gp_gamma_correct_single(gtable,ptr,w*h);
-        } else
-		white_balance (ptr, w*h, 1.1);
-	gp_file_set_mime_type (file, GP_MIME_PPM);
-	gp_file_set_data_and_size (file, (char *)ppm, size);
+		gp_gamma_correct_single(gtable,ptr,w*h);
+	} else
+		white_balance(ptr, w * h, 1.1);
+	gp_file_set_mime_type(file, GP_MIME_PPM);
+	gp_file_set_data_and_size(file, (char *)ppm, size);
 	digi_reset(camera->port);
-	return (GP_OK);
+	return(GP_OK);
 }
 
 /*************** Exit and Initialization Functions ******************/
@@ -392,8 +390,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-	GP_DEBUG ("SQ camera_exit");
-	digi_reset (camera->port);
+	GP_DEBUG("SQ camera_exit");
+	digi_reset(camera->port);
 
 	if (camera->pl) {
 		free (camera->pl->catalog);
@@ -417,38 +415,40 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	ret = gp_camera_get_abilities(camera,&abilities);
-	if (ret < 0) return ret;	
+	if (ret < 0) return ret;
 	GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
 
 	/* Now, set up all the function pointers */
-	camera->functions->summary      = camera_summary;
+	camera->functions->summary	= camera_summary;
         camera->functions->manual	= camera_manual;
-	camera->functions->about        = camera_about;
-	camera->functions->capture_preview	
+	camera->functions->about	= camera_about;
+	camera->functions->capture_preview
 					= camera_capture_preview;
-	camera->functions->exit	    	= camera_exit;
+	camera->functions->exit		= camera_exit;
 
 	GP_DEBUG ("Initializing the camera\n");
 
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
- 
+	if (ret < 0)
+		return ret;
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0)
+		return ret;
 
-        /* Tell the CameraFilesystem where to get lists from */
-        gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl) return GP_ERROR_NO_MEMORY;
+	/* Tell the CameraFilesystem where to get lists from */
+	gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera);
+	camera->pl = malloc(sizeof (CameraPrivateLibrary));
+	if (!camera->pl) 
+		return GP_ERROR_NO_MEMORY;
 	camera->pl->catalog = NULL;
 	camera->pl->nb_entries = 0;
 	switch (abilities.usb_product) {
-		case 0x9050:
-		case 0x9052:
-			camera->pl->delete_all = 1;
-			break; 
-		default:
-			camera->pl->delete_all = 0;
+	case 0x9050:
+	case 0x9052:
+		camera->pl->delete_all = 1;
+		break;
+	default:
+		camera->pl->delete_all = 0;
 	}
 	camera->pl->init_done=0;
 

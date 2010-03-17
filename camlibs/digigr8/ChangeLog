@@ -1,3 +1,7 @@
+2010-03-16   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: attempt to name output file abandoned 
+	in camera_capture_preview()
+
 2010-03-12   Theodore Kilgore <kilgota@auburn.edu>
 	* digi_postprocess.c: improvements in digi_first_decompress()
 
