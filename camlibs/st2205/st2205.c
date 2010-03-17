@@ -321,7 +321,7 @@ st2205_get_checksum(Camera *camera)
 	/* Calculate the "FAT" checksum, note that the present bits are skipped
 	   (as is the checksum location itself). The picframe itself does not
 	   care about this, but the windows software does! */
-	for (i = 2; i < 0x2000; i++)
+	for (i = 2; i < ST2205_FAT_SIZE; i++)
 		if (i % 16)
 			checksum += (uint8_t)camera->pl->mem[i];
 
@@ -349,7 +349,7 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 	entry.present = 1;
 	entry.address = htole32(start);
 	snprintf(entry.name, sizeof(entry.name), "%s", filename);
-	CHECK (st2205_write_mem (camera, (idx + 1) * 16,
+	CHECK (st2205_write_mem (camera, ST2205_FILE_OFFSET (idx),
 				 &entry, sizeof(entry)))
 
 	if (idx == count) {
@@ -363,7 +363,7 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 		   so lets do it too. */
 		memset (&entry, 0, sizeof(entry));
 		entry.address = htole32 (start + size + sizeof(header));
-		CHECK (st2205_write_mem (camera, (count + 1) * 16,
+		CHECK (st2205_write_mem (camera, ST2205_FILE_OFFSET (count),
 					 &entry, sizeof(entry)))
 	}
 
@@ -373,13 +373,17 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 	/* Update the checksum */
 	camera->pl->mem[0] = checksum & 0xff;
 	camera->pl->mem[1] = (checksum >> 8) & 0xff;
-
-	/* The "FAT" repeats itself 4 times, copy it over */
-	for (i = 0x2000; i < 0x8000; i += 0x2000)
-		memcpy(camera->pl->mem + i, camera->pl->mem, 0x2000);
-
 	/* Mark the memory block we've directly manipulated dirty. */
 	camera->pl->block_dirty[0] = 1;
+
+	/* The "FAT" repeats itself on some frames, copy it over */
+	for (i = 1; i < camera->pl->no_fats; i++) {
+		memcpy (camera->pl->mem + i * ST2205_FAT_SIZE, camera->pl->mem,
+			ST2205_FAT_SIZE);
+		/* Mark the memory block we've directly manipulated dirty. */
+		camera->pl->block_dirty[i * ST2205_FAT_SIZE /
+					ST2205_BLOCK_SIZE] = 1;
+	}
 
 	memset(&header, 0, sizeof(header));
 	header.marker = ST2205_HEADER_MARKER;
@@ -417,7 +421,7 @@ st2205_get_filenames(Camera *camera, st2205_filename *names)
 	}
 
 	for (i = 0; i < count; i++) {
-		CHECK (st2205_read_mem (camera, (i + 1) * 16,
+		CHECK (st2205_read_mem (camera, ST2205_FILE_OFFSET (i),
 					&entry, sizeof(entry)))
 
 		if (!entry.present)
@@ -453,8 +457,7 @@ st2205_read_file(Camera *camera, int idx, int **rgb24)
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	/* idx + 1 to skip the 16 byte "FAT" header */
-	CHECK (st2205_read_mem (camera, (idx + 1) * 16,
+	CHECK (st2205_read_mem (camera, ST2205_FILE_OFFSET (idx),
 				&entry, sizeof(entry)))
 
 	/* This should never happen */
@@ -520,7 +523,7 @@ st2205_real_write_file(Camera *camera,
 	int size, count;
 	struct image_table_entry entry;
 	struct image_header header;
-	int i, start, end = 0x10000, hole_start = 0, hole_idx = 0;
+	int i, start, end, hole_start = 0, hole_idx = 0;
 
 	size = st2205_code_image (camera->pl, rgb24, buf, shuffle,
 				  allow_uv_corr);
@@ -530,6 +533,7 @@ st2205_real_write_file(Camera *camera,
 	if (count < 0) return count;
 
 	/* Try to find a large enough "hole" in the memory */
+	end = camera->pl->picture_start;
 	for (i = 0; i <= count; i++) {
 		/* Fake a present entry at the end of picture mem */
 		if (i == count) {
@@ -543,7 +547,7 @@ st2205_real_write_file(Camera *camera,
 				hole_idx = i;
 			}
 		} else {
-			CHECK (st2205_read_mem (camera, (i + 1) * 16,
+			CHECK (st2205_read_mem (camera, ST2205_FILE_OFFSET (i),
 						(unsigned char *)&entry,
 						sizeof(entry)))
 
@@ -621,10 +625,13 @@ st2205_delete_file(Camera *camera, int idx)
 {
 	uint8_t c = 0;
 	int i;
-	
-	/* The "FAT" repeats itself 4 times over */
-	for (i = 0x0000; i < 0x8000; i += 0x2000)
-		CHECK (st2205_write_mem (camera, i + (idx + 1) * 16, &c, 1))
+
+	/* The "FAT" repeats itself on some frames */
+	for (i = 0; i < camera->pl->no_fats; i++)
+		CHECK (st2205_write_mem (camera,
+					 i * ST2205_FAT_SIZE +
+					         ST2205_FILE_OFFSET (idx),
+					 &c, 1))
 
 	return GP_OK;
 }
@@ -636,7 +643,8 @@ st2205_delete_all(Camera *camera)
 
 	CHECK (st2205_check_block_present(camera, 0))
 
-	memset(camera->pl->mem + 16, 0, 0x2000 - 16);
+	memset (camera->pl->mem + ST2205_FILE_OFFSET (0), 0,
+                ST2205_FAT_SIZE - ST2205_FILE_OFFSET (0));
 
 	/* Update the checksum */
 	checksum = st2205_get_checksum(camera);
@@ -644,13 +652,17 @@ st2205_delete_all(Camera *camera)
 
 	camera->pl->mem[0] = checksum & 0xff;
 	camera->pl->mem[1] = (checksum >> 8) & 0xff;
-
-	/* The "FAT" repeats itself 4 times, copy it over */
-	for (i = 0x2000; i < 0x8000; i += 0x2000)
-		memcpy(camera->pl->mem + i, camera->pl->mem, 0x2000);
-
 	/* Mark the memory block we've directly manipulated dirty. */
 	camera->pl->block_dirty[0] = 1;
+
+	/* The "FAT" repeats itself on some frames, copy it over */
+	for (i = 1; i < camera->pl->no_fats; i++) {
+		memcpy (camera->pl->mem + i * ST2205_FAT_SIZE, camera->pl->mem,
+			ST2205_FAT_SIZE);
+		/* Mark the memory block we've directly manipulated dirty. */
+		camera->pl->block_dirty[i * ST2205_FAT_SIZE /
+					ST2205_BLOCK_SIZE] = 1;
+	}
 
 	return GP_OK;
 }
@@ -708,9 +720,13 @@ st2205_init(Camera *camera)
 	const struct {
 		int lookup_offset;
 		int firmware_size;
+		int picture_start;
+		int no_fats;
 	} version_info[] = {
-		{ ST2205_V1_LOOKUP_OFFSET, ST2205_V1_FIRMWARE_SIZE },
-		{ ST2205_V2_LOOKUP_OFFSET, ST2205_V2_FIRMWARE_SIZE },
+		{ ST2205_V1_LOOKUP_OFFSET, ST2205_V1_FIRMWARE_SIZE,
+		  ST2205_V1_PICTURE_START, 4 },
+		{ ST2205_V2_LOOKUP_OFFSET, ST2205_V2_FIRMWARE_SIZE,
+		  ST2205_V2_PICTURE_START, 1 },
 		{ }
 	};
 
@@ -767,6 +783,8 @@ st2205_init(Camera *camera)
 	}
 
 	camera->pl->firmware_size = version_info[i].firmware_size;
+	camera->pl->picture_start = version_info[i].picture_start;
+	camera->pl->no_fats	  = version_info[i].no_fats;
 
 	/* Generate shuffle tables 0 and 1 */
 	for (y = 0, i = 0; y < camera->pl->height; y += 8)
