@@ -263,7 +263,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			      im_out->sx, im_out->sy,
 			      im_in->sx, im_in->sy);
 
-	gdImageSharpen(im_out, 100);
+	if (im_in->sx != im_out->sx ||
+	    im_in->sy != im_out->sy)
+		gdImageSharpen(im_out, 100);
 
 	ret = st2205_write_file (camera, out_name, im_out->tpixels);
 	if (ret >= 0) {
