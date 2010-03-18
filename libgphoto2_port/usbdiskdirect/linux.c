@@ -200,7 +200,6 @@ gp_port_library_list (GPPortInfoList *list)
 	GPPortInfo info;
 	unsigned short vendor_id, product_id;
 
-	gp_port_info_new (&info);
 	dir = opendir ("/sys/block");
 	if (dir == NULL)
 		return GP_OK;
@@ -217,6 +216,7 @@ gp_port_library_list (GPPortInfoList *list)
 				&vendor_id, &product_id) != GP_OK)
 			continue; /* Not a usb device */
 
+		gp_port_info_new (&info);
 		gp_port_info_set_type (info, GP_PORT_USB_DISK_DIRECT);
 		snprintf (path, sizeof (path),
 			  "usbdiskdirect:/dev/%s",
