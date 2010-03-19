@@ -373,6 +373,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary = camera_summary;
 	camera->functions->manual  = camera_manual;
 	camera->functions->about   = camera_about;
+	/* FIXME add gp_camera_get_storageinfo support */
 
 	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

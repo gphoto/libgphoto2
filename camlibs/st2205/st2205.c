@@ -341,9 +341,35 @@ st2205_check_fat_checksum(Camera *camera)
 
 	if (checksum != expected_checksum) {
 		gp_log (GP_LOG_ERROR, "st2205",
-		        "image table checksum mismatch");
+			"image table checksum mismatch");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
+
+	return GP_OK;
+}
+
+static int
+st2205_update_fat_checksum(Camera *camera)
+{
+	int checksum;
+	uint8_t buf[2];
+
+	checksum = st2205_calc_fat_checksum(camera);
+	if (checksum < 0) return checksum;
+
+	htole16a(buf, checksum);
+	return st2205_write_mem (camera, 0, buf, 2);
+}
+
+static int st2205_copy_fat(Camera *camera)
+{
+	int i;
+
+	/* The "FAT" repeats itself on some frames, copy it over */
+	CHECK (st2205_check_block_present (camera, 0))
+	for (i = 1; i < camera->pl->no_fats; i++)
+		CHECK (st2205_write_mem (camera, i * ST2205_FAT_SIZE,
+					 camera->pl->mem, ST2205_FAT_SIZE))
 
 	return GP_OK;
 }
@@ -352,7 +378,7 @@ static int
 st2205_add_picture(Camera *camera, int idx, const char *filename,
 	int start, int shuffle, unsigned char *buf, int size)
 {
-	int i, count, checksum;
+	int count;
 	struct image_table_entry entry;
 	struct image_header header;
 
@@ -387,23 +413,8 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 					 &entry, sizeof(entry)))
 	}
 
-	checksum = st2205_calc_fat_checksum(camera);
-	if (checksum < 0) return checksum;
-
-	/* Update the checksum */
-	camera->pl->mem[0] = checksum & 0xff;
-	camera->pl->mem[1] = (checksum >> 8) & 0xff;
-	/* Mark the memory block we've directly manipulated dirty. */
-	camera->pl->block_dirty[0] = 1;
-
-	/* The "FAT" repeats itself on some frames, copy it over */
-	for (i = 1; i < camera->pl->no_fats; i++) {
-		memcpy (camera->pl->mem + i * ST2205_FAT_SIZE, camera->pl->mem,
-			ST2205_FAT_SIZE);
-		/* Mark the memory block we've directly manipulated dirty. */
-		camera->pl->block_dirty[i * ST2205_FAT_SIZE /
-					ST2205_BLOCK_SIZE] = 1;
-	}
+	CHECK (st2205_update_fat_checksum (camera))
+	CHECK (st2205_copy_fat (camera))
 
 	memset(&header, 0, sizeof(header));
 	header.marker = ST2205_HEADER_MARKER;
@@ -420,6 +431,16 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 
 	/* Let the caller know at which index we stored the table entry */
 	return idx;
+}
+
+static int st2205_file_present(Camera *camera, int idx)
+{
+	struct image_table_entry entry;
+
+	CHECK (st2205_read_mem (camera, ST2205_FILE_OFFSET (idx),
+				&entry, sizeof(entry)))
+
+	return entry.present;
 }
 
 /***************** Begin "public" functions *****************/
@@ -644,14 +665,32 @@ int
 st2205_delete_file(Camera *camera, int idx)
 {
 	uint8_t c = 0;
-	int i;
+	int i, present, count, new_count = 0;
 
-	/* The "FAT" repeats itself on some frames */
-	for (i = 0; i < camera->pl->no_fats; i++)
-		CHECK (st2205_write_mem (camera,
-					 i * ST2205_FAT_SIZE +
-					         ST2205_FILE_OFFSET (idx),
-					 &c, 1))
+	count = st2205_read_file_count(camera);
+	if (count < 0) return count;
+
+	if (idx >= count) {
+		gp_log (GP_LOG_ERROR, "st2205",
+			"delete file beyond end of FAT");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	/* Calculate new file count after the delete operation */
+	for (i = 0; i < count; i++) {
+		if (i == idx)
+			continue;
+
+		present = st2205_file_present (camera, i);
+		if (present < 0) return present;
+		if (present)
+			new_count = i + 1;
+	}
+
+	CHECK (st2205_write_mem (camera, ST2205_FILE_OFFSET (idx), &c, 1))
+	CHECK (st2205_write_file_count (camera, new_count))
+	CHECK (st2205_update_fat_checksum (camera))
+	CHECK (st2205_copy_fat (camera))
 
 	return GP_OK;
 }
@@ -659,30 +698,14 @@ st2205_delete_file(Camera *camera, int idx)
 int
 st2205_delete_all(Camera *camera)
 {
-	int i, checksum;
-
 	CHECK (st2205_check_block_present(camera, 0))
-
 	memset (camera->pl->mem + ST2205_FILE_OFFSET (0), 0,
-                ST2205_FAT_SIZE - ST2205_FILE_OFFSET (0));
-
-	/* Update the checksum */
-	checksum = st2205_calc_fat_checksum(camera);
-	if (checksum < 0) return checksum;
-
-	camera->pl->mem[0] = checksum & 0xff;
-	camera->pl->mem[1] = (checksum >> 8) & 0xff;
+		ST2205_FAT_SIZE - ST2205_FILE_OFFSET (0));
 	/* Mark the memory block we've directly manipulated dirty. */
 	camera->pl->block_dirty[0] = 1;
 
-	/* The "FAT" repeats itself on some frames, copy it over */
-	for (i = 1; i < camera->pl->no_fats; i++) {
-		memcpy (camera->pl->mem + i * ST2205_FAT_SIZE, camera->pl->mem,
-			ST2205_FAT_SIZE);
-		/* Mark the memory block we've directly manipulated dirty. */
-		camera->pl->block_dirty[i * ST2205_FAT_SIZE /
-					ST2205_BLOCK_SIZE] = 1;
-	}
+	CHECK (st2205_update_fat_checksum (camera))
+	CHECK (st2205_copy_fat (camera))
 
 	return GP_OK;
 }
@@ -863,9 +886,9 @@ st2205_init(Camera *camera)
 			checksum += camera->pl->shuffle[j][i].y;
 		}
 
-        if (checksum != expected_checksum) {
+	if (checksum != expected_checksum) {
 		gp_log (GP_LOG_ERROR, "st2205",
-		        "shuffle table checksum mismatch");
+			"shuffle table checksum mismatch");
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
