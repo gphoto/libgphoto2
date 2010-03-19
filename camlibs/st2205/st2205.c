@@ -701,20 +701,25 @@ st2205_init(Camera *camera)
 {
 	uint16_t *lookup_src, *dest;
 	uint8_t *shuffle_src;
-	int x, y, i, j, shuffle_size;
+	int x, y, i, j, shuffle_size, checksum, expected_checksum;
 	const struct {
 		int width, height, no_tables;
 		unsigned char unknown3[8];
+		int checksum;
 	} shuffle_info[] = {
 		{ 128, 160, 8,
-		  { 0xff, 0xff, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02 } },
+		  { 0xff, 0xff, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02 },
+		  0x0003fc00 },
 		{ 128, 128, 7,
-		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 } },
+		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 },
+		  0x00025800 },
 		{ 120, 160, 7,
 		  /* FIXME unknown3 needs to be verified */
-		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 } },
+		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 },
+		  0x00030570 },
 		{ 96, 64, 7,
-		  { 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 } },
+		  { 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 },
+		  0x00008700 },
 		{ 0, 0, 0 }
 	};
 	const struct {
@@ -754,7 +759,7 @@ st2205_init(Camera *camera)
 	/* Get the lookup tables from the device */
 	for (i = 0; version_info[i].lookup_offset; i++) {
 		int lookup_offset = version_info[i].lookup_offset;
-		int checksum = 0;
+		checksum = 0;
 
 		if ((lookup_offset + ST2205_LOOKUP_SIZE) >
 		    camera->pl->mem_size)
@@ -822,6 +827,8 @@ st2205_init(Camera *camera)
 	memcpy (camera->pl->unknown3, shuffle_info[i].unknown3,
 		sizeof(camera->pl->unknown3));
 	camera->pl->no_shuffles = shuffle_info[i].no_tables;
+	expected_checksum = shuffle_info[i].checksum;
+	checksum = 0;
 	for (j = 2; j < camera->pl->no_shuffles; j++)
 		for (i = 0; i < shuffle_size; i++) {
 			camera->pl->shuffle[j][i].x = *shuffle_src++;
@@ -832,7 +839,15 @@ st2205_init(Camera *camera)
 				      "shuffle table coordinate out of range");
 				return GP_ERROR_CORRUPTED_DATA;
 			}
+			checksum += camera->pl->shuffle[j][i].x;
+			checksum += camera->pl->shuffle[j][i].y;
 		}
+
+        if (checksum != expected_checksum) {
+		gp_log (GP_LOG_ERROR, "st2205",
+		        "shuffle table checksum mismatch");
+		return GP_ERROR_MODEL_NOT_FOUND;
+	}
 
 	camera->pl->rand_seed = time(NULL);
 
