@@ -178,7 +178,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 {
 #ifdef HAVE_GD
 	Camera *camera = data;
-	char *in_name, *out_name, *filedata = NULL;
+	char *c, *in_name, *out_name, *filedata = NULL;
 	int ret;
 	size_t inc, outc;
 #ifdef HAVE_ICONV
@@ -212,11 +212,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 		return GP_ERROR_OS_FAILURE;
 	}
 	outc = out - out_name;
-	if (outc > ST2205_FILENAME_LENGTH)
-		outc = ST2205_FILENAME_LENGTH;
 	out_name[outc] = 0;
 #else
-	for (i = 0; in_name[i] && i < ST2205_FILENAME_LENGTH; i++) {
+	for (i = 0; i < inc; i++) {
 		if ((uint8_t)in_name[i] < 0x20 || (uint8_t)in_name[i] > 0x7E)
 			out_name[i] = '?';
 		else
@@ -225,6 +223,13 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	out_name[i] = 0;
 #endif
 	free (in_name);
+
+	/* Remove file extension, and if necessary truncate the name */
+	c = strrchr (out_name, '.');
+	if (c)
+		*c = 0;
+	if (outc > ST2205_FILENAME_LENGTH)
+	        out_name[ST2205_FILENAME_LENGTH] = 0;
 
 	ret = gp_file_get_data_and_size (file, (const char **)&filedata,
 					 &filesize);
