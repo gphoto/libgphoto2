@@ -312,7 +312,7 @@ st2205_write_file_count(Camera *camera, int count)
 }
 
 static int
-st2205_get_checksum(Camera *camera)
+st2205_calc_fat_checksum(Camera *camera)
 {
 	int i, checksum = 0;
 
@@ -326,6 +326,26 @@ st2205_get_checksum(Camera *camera)
 			checksum += (uint8_t)camera->pl->mem[i];
 
 	return checksum & 0xffff;
+}
+
+static int
+st2205_check_fat_checksum(Camera *camera)
+{
+	int checksum, expected_checksum;
+
+	CHECK (st2205_check_block_present (camera, 0))
+	checksum = le16atoh ((uint8_t *)camera->pl->mem);
+
+	expected_checksum = st2205_calc_fat_checksum (camera);
+	if (expected_checksum < 0) return expected_checksum;
+
+	if (checksum != expected_checksum) {
+		gp_log (GP_LOG_ERROR, "st2205",
+		        "image table checksum mismatch");
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
+	return GP_OK;
 }
 
 static int
@@ -367,7 +387,7 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 					 &entry, sizeof(entry)))
 	}
 
-	checksum = st2205_get_checksum(camera);
+	checksum = st2205_calc_fat_checksum(camera);
 	if (checksum < 0) return checksum;
 
 	/* Update the checksum */
@@ -647,7 +667,7 @@ st2205_delete_all(Camera *camera)
                 ST2205_FAT_SIZE - ST2205_FILE_OFFSET (0));
 
 	/* Update the checksum */
-	checksum = st2205_get_checksum(camera);
+	checksum = st2205_calc_fat_checksum(camera);
 	if (checksum < 0) return checksum;
 
 	camera->pl->mem[0] = checksum & 0xff;
@@ -848,6 +868,8 @@ st2205_init(Camera *camera)
 		        "shuffle table checksum mismatch");
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
+
+	CHECK (st2205_check_fat_checksum (camera))
 
 	camera->pl->rand_seed = time(NULL);
 
