@@ -1736,6 +1736,22 @@ static struct deviceproptableu16 canon_selftimer[] = {
 };
 GENERIC16TABLE(Canon_SelfTimer,canon_selftimer)
 
+/* actually it is a flag value, 1 = TFT, 2 = PC */
+static struct deviceproptableu16 canon_eos_cameraoutput[] = {
+	{ N_("Undefined"),	0, 0 },
+	{ N_("TFT"),		1, 0 },
+	{ N_("PC"), 		2, 0 },
+	{ N_("TFT + PC"), 	3, 0 },
+};
+GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
+
+/* values currently unknown */
+static struct deviceproptableu16 canon_eos_evfmode[] = {
+	{ "0",	0, 0 },
+	{ "1",	1, 0 },
+};
+GENERIC16TABLE(Canon_EOS_EVFMode,canon_eos_evfmode)
+
 #if 0 /* reimplement with viewfinder on/off below */
 static struct deviceproptableu8 canon_cameraoutput[] = {
 	{ N_("Undefined"),	0, 0 },
@@ -4340,6 +4356,8 @@ static struct submenu camera_settings_menu[] = {
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
+        { N_("Camera Output"), "output", PTP_DPC_CANON_EOS_EVFOutputDevice, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_CameraOutput, _put_Canon_EOS_CameraOutput },
+        { N_("EVF Mode"), "evfmode", PTP_DPC_CANON_EOS_EVFMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFMode, _put_Canon_EOS_EVFMode },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},

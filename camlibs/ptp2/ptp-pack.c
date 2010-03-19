@@ -1460,7 +1460,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* set DataType */
 				switch (proptype) {
 				case PTP_DPC_CANON_EOS_CameraTime:
-				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case PTP_DPC_CANON_EOS_AvailableShots:
 				case PTP_DPC_CANON_EOS_CaptureDestination:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXA:
@@ -1491,6 +1490,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_AEB:
 				case PTP_DPC_CANON_EOS_BracketMode:
 				case PTP_DPC_CANON_EOS_QuickReviewTime:
+				case PTP_DPC_CANON_EOS_EVFMode:
+				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
@@ -1553,7 +1554,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_CardExtension:
 				case PTP_DPC_CANON_EOS_TempStatus:
 				case PTP_DPC_CANON_EOS_PhotoStudioMode:
-				case PTP_DPC_CANON_EOS_EVFMode:
 				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
 				case PTP_DPC_CANON_EOS_EVFSharpness:
 				case PTP_DPC_CANON_EOS_EVFWBMode:
