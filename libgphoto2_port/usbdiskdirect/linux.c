@@ -225,6 +225,7 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_info_set_name (info, _("USB Mass Storage direct IO"));
 		CHECK (gp_port_info_list_append (list, info))
 	}
+	closedir (dir);
 	return GP_OK;
 }
 
