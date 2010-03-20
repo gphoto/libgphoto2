@@ -312,6 +312,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				for (i=0;i<xsize;i++)
 					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
 				di->DevicePropertiesSupported_len += xsize;
+				free (xprops);
 			} else {
 				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_nikon_get_vendorpropcodes() failed with 0x%04x", ret);
 			}
