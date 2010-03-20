@@ -508,7 +508,7 @@ udev_begin_func (const func_params_t *params, void **data)
 
 
 static int
-udev_middle_func (const func_params_t *params, void *data)
+udev_middle_func (const func_params_t *params, void **data)
 {
 	printf ("\nLABEL=\"libgphoto2_usb_end\"\n\n");
 	return 0;
