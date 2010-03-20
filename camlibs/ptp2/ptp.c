@@ -561,6 +561,7 @@ ptp_free_params (PTPParams *params) {
 	for (i=0;i<params->nrofobjects;i++)
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
+	free (params->events);
 	ptp_free_DI (&params->deviceinfo);
 }
 
@@ -2126,8 +2127,10 @@ ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int
 	ptp.Code	= PTP_OC_NIKON_GetVendorPropCodes;
 	ptp.Nparam	= 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize); 
-	if (ret == PTP_RC_OK)
+	if (ret == PTP_RC_OK) {
         	*size = ptp_unpack_uint16_t_array(params,xdata,0,props);
+		free (xdata);
+	}
 	return ret;
 }
 
