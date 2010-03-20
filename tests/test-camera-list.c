@@ -56,11 +56,8 @@ struct timeval glob_tv_zero = { 0, 0 };
 
 
 static void
-#ifdef __GNUC__
-		__attribute__((__format__(printf,3,0)))
-#endif
-debug_func (GPLogLevel level, const char *domain, const char *format,
-	    va_list args, void __unused__ *data)
+debug_func (GPLogLevel level, const char *domain, const char *str,
+	    void __unused__ *data)
 {
 	struct timeval tv;
 	long sec, usec;
@@ -69,9 +66,7 @@ debug_func (GPLogLevel level, const char *domain, const char *format,
 	sec = tv.tv_sec  - glob_tv_zero.tv_sec;
 	usec = tv.tv_usec - glob_tv_zero.tv_usec;
 	if (usec < 0) {sec--; usec += 1000000L;}
-	fprintf (stderr, "%li.%06li %s(%i): ", sec, usec, domain, level);
-	vfprintf (stderr, format, args);
-	fputc ('\n', stderr);
+	fprintf (stderr, "%li.%06li %s(%i): %s\n", sec, usec, domain, level, str);
 }
 
 
