@@ -1,6 +1,6 @@
 Sample snippets for programmatic camera usage.
 
-This directory contains sample snippets for your C / C++ program accessing
+This directory contains sample snippets for your C/C++ program accessing
 cameras for various purposes.
 
 Files with helper routines:
