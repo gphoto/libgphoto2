@@ -5042,6 +5042,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			}
 		}
 	}
+	free (handles.Handler);
 	if (changed) ptp_objects_sort (params);
 	return PTP_RC_OK;
 }
