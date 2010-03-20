@@ -1760,15 +1760,20 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	if (	ptp_property_issupported(params, PTP_DPC_StillCaptureMode)	&&
-		(PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_StillCaptureMode, &propdesc)) &&
-		(propdesc.DataType == PTP_DTC_UINT16)				&&
-		(propdesc.CurrentValue.u16 == 2) /* Burst Mode */		&&
-		ptp_property_issupported(params, PTP_DPC_BurstNumber)		&&
-		(PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_BurstNumber, &propdesc)) &&
-		(propdesc.DataType == PTP_DTC_UINT16)
-	) {
-		burstnumber = propdesc.CurrentValue.u16;
-		gp_log (GP_LOG_DEBUG, "ptp2", "burstnumber %d", burstnumber);
+		(PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_StillCaptureMode, &propdesc))) {
+		PTPDevicePropDesc       burstdesc;
+
+		if ((propdesc.DataType == PTP_DTC_UINT16)			&&
+		    (propdesc.CurrentValue.u16 == 2) /* Burst Mode */		&&
+		    ptp_property_issupported(params, PTP_DPC_BurstNumber)	&&
+		    (PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_BurstNumber, &burstdesc))) {
+			if (burstdesc.DataType == PTP_DTC_UINT16) {
+				burstnumber = burstdesc.CurrentValue.u16;
+				gp_log (GP_LOG_DEBUG, "ptp2", "burstnumber %d", burstnumber);
+			}
+			ptp_free_devicepropdesc (&burstdesc);
+		    }
+		ptp_free_devicepropdesc (&propdesc);
 	}
 
 	/* if in liveview mode, we have to run non-af capture */
