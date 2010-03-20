@@ -147,9 +147,12 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 
 	CHECK_NULL (port);
 
+	if (port->pc->info.name) free (port->pc->info.name);
 	port->pc->info.name = strdup (info->name);
+	if (port->pc->info.path) free (port->pc->info.path);
 	port->pc->info.path = strdup (info->path);
 	port->pc->info.type = info->type;
+	if (port->pc->info.library_filename) free (port->pc->info.library_filename);
 	port->pc->info.library_filename = strdup (info->library_filename);
 
 	port->type = info->type;
@@ -319,6 +322,10 @@ gp_port_free (GPPort *port)
 			lt_dlexit ();
 			port->pc->lh = NULL;
 		}
+
+		if (port->pc->info.name) free (port->pc->info.name);
+		if (port->pc->info.path) free (port->pc->info.path);
+		if (port->pc->info.library_filename) free (port->pc->info.library_filename);
 
 		free (port->pc);
 		port->pc = NULL;
