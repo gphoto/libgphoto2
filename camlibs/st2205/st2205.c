@@ -746,21 +746,21 @@ st2205_init(Camera *camera)
 	uint8_t *shuffle_src;
 	int x, y, i, j, shuffle_size, checksum, expected_checksum;
 	const struct {
-		int width, height, no_tables;
+		int width, height, no_tables, usable_tables;
 		unsigned char unknown3[8];
 		int checksum;
 	} shuffle_info[] = {
-		{ 128, 160, 8,
+		{ 128, 160, 8, 7, /* Last shuffle table does not work ?? */
 		  { 0xff, 0xff, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02 },
 		  0x0003fc00 },
-		{ 128, 128, 7,
+		{ 128, 128, 7, 7,
 		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 },
 		  0x00025800 },
-		{ 120, 160, 7,
+		{ 120, 160, 7, 7,
 		  /* FIXME unknown3 needs to be verified */
 		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 },
 		  0x00030570 },
-		{ 96, 64, 7,
+		{ 96, 64, 7, 7,
 		  { 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 },
 		  0x00008700 },
 		{ 0, 0, 0 }
@@ -869,7 +869,7 @@ st2205_init(Camera *camera)
 
 	memcpy (camera->pl->unknown3, shuffle_info[i].unknown3,
 		sizeof(camera->pl->unknown3));
-	camera->pl->no_shuffles = shuffle_info[i].no_tables;
+	camera->pl->no_shuffles = shuffle_info[i].usable_tables;
 	expected_checksum = shuffle_info[i].checksum;
 	checksum = 0;
 	for (j = 2; j < camera->pl->no_shuffles; j++)
