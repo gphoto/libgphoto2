@@ -1636,6 +1636,10 @@ ptp_get_one_event(PTPParams *params, PTPContainer *event) {
 	memmove (params->events, params->events+1, sizeof(PTPContainer)*(params->nrofevents-1));
 	/* do not realloc on shrink. */
 	params->nrofevents--;
+	if (!params->nrofevents) {
+		free (params->events);
+		params->events = NULL;
+	}
 	return 1;
 }
 
