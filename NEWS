@@ -72,7 +72,7 @@ Directory driver:
    * Abstracted common functionality.
 
 ST2205 Driver:
-   * New Pictureframe driver from Hans de Goede, working on top of
+   * New pictureframe driver from Hans de Goede, working on top of
      usb storage with a FAT16 pseudo driver.
 
 Build:
