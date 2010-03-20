@@ -103,6 +103,7 @@ run_test ()
 		case GP_PORT_NONE:   port_type_str = "NONE"; break;
 		case GP_PORT_SERIAL: port_type_str = "SERIAL"; break;
 		case GP_PORT_USB:    port_type_str = "USB"; break;
+		case GP_PORT_USB_DISK_DIRECT:    port_type_str = "USBDISKDIRECT"; break;
 		case GP_PORT_DISK:   port_type_str = "DISK"; break;
 		case GP_PORT_PTPIP:  port_type_str = "PTPIP"; break;
 		default:             port_type_str = "UNKNOWN"; return 3; break;

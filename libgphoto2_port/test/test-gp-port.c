@@ -30,10 +30,9 @@
 
 static void
 log_func (GPLogLevel level, const char *domain,
-	  const char *format, va_list args, void *data)
+	  const char *str, void *data)
 {
-	vfprintf (stdout, format, args);
-	fprintf (stdout, "\n");
+	fprintf (stdout, "%s\n", str);
 }
 
 int
