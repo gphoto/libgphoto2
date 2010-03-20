@@ -4613,8 +4613,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 	}
 	/* Last menu is "Other", a generic fallback window. */
-	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len)
+	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len) {
+		free (setprops);
 		return GP_OK;
+	}
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
 	gp_widget_set_name (section, "other");
@@ -4766,6 +4768,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_append (section, widget);
 		ptp_free_devicepropdesc(&dpd);
 	}
+	free (setprops);
 	return GP_OK;
 }
 
