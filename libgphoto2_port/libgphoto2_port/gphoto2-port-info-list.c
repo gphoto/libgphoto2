@@ -138,6 +138,16 @@ gp_port_info_list_free (GPPortInfoList *list)
 	CHECK_NULL (list);
 
 	if (list->info) {
+		int i;
+
+		for (i=0;i<list->count;i++) {
+			free (list->info[i]->name);
+			list->info[i]->name = NULL;
+			free (list->info[i]->path);
+			list->info[i]->path = NULL;
+			free (list->info[i]->library_filename);
+			list->info[i]->library_filename = NULL;
+		}
 		free (list->info);
 		list->info = NULL;
 	}
