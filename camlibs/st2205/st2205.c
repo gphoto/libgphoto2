@@ -727,6 +727,11 @@ st2205_commit(Camera *camera)
 		if (j == erase_block_size)
 			continue;
 
+		/* Make sure all data blocks in this erase block have been
+		   read before erasing the block! */
+		for (j = 0; j < erase_block_size; j++)
+			CHECK (st2205_check_block_present (camera, i + j))
+
 		/* Re-write all the data blocks in this erase block! */
 		for (j = 0; j < erase_block_size; j++) {
 			CHECK (st2205_write_block (camera, i + j,
