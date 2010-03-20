@@ -1667,6 +1667,7 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	if (ret != PTP_RC_OK) return ret;
         *nrofentries = ptp_unpack_CANON_changes(params,data,size,entries);
+	free (data);
 	return PTP_RC_OK;
 }
 
@@ -2118,7 +2119,7 @@ uint16_t
 ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size) {
 	PTPContainer	ptp;
 	uint16_t	ret;
-	unsigned char	*xdata;
+	unsigned char	*xdata = NULL;
 	unsigned int 	xsize;
 
 	*props = NULL;
@@ -2127,10 +2128,9 @@ ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int
 	ptp.Code	= PTP_OC_NIKON_GetVendorPropCodes;
 	ptp.Nparam	= 0;
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize); 
-	if (ret == PTP_RC_OK) {
+	if (ret == PTP_RC_OK)
         	*size = ptp_unpack_uint16_t_array(params,xdata,0,props);
-		free (xdata);
-	}
+	free (xdata);
 	return ret;
 }
 
