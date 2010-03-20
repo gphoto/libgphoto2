@@ -1683,6 +1683,9 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	*cnt = dtoh16a(&data[PTP_nikon_ec_Length]);
 	if (*cnt > (len-PTP_nikon_ec_Code)/PTP_nikon_ec_Size) /* broken cnt? */
 		return;
+	if (!*cnt)
+		return;
+
 	*ec = malloc(sizeof(PTPContainer)*(*cnt));
 	
 	for (i=0;i<*cnt;i++) {
