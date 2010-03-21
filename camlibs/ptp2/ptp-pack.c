@@ -376,6 +376,14 @@ ptp_unpack_EOS_DI (PTPParams *params, unsigned char* data, PTPCanonEOSDeviceInfo
 	totallen += di->unk_len*sizeof(uint32_t)+4;
 	return;
 }
+
+static inline void
+ptp_free_EOS_DI (PTPCanonEOSDeviceInfo *di)
+{
+	free (di->EventsSupported);
+	free (di->DevicePropertiesSupported);
+	free (di->unk);
+}
 	
 /* ObjectHandles array pack/unpack */
 
