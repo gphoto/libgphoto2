@@ -1356,6 +1356,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				   i, propxtype, proptype, dpd->DataType, propxcnt);
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = propxcnt;
+			if (dpd->FORM.Enum.SupportedValue) free (dpd->FORM.Enum.SupportedValue);
 			dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
 
 			switch (proptype) {
@@ -1609,7 +1610,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
 					dpd->CurrentValue.str		= ptp_unpack_string(params, data, 0, &len);
 #else
+					if (dpd->FactoryDefaultValue.str) free (dpd->FactoryDefaultValue.str);
 					dpd->FactoryDefaultValue.str	= strdup( (char*)data );
+
+					if (dpd->CurrentValue.str) free (dpd->CurrentValue.str);
 					dpd->CurrentValue.str		= strdup( (char*)data );
 #endif
 					ptp_debug (params,"event %d: currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
