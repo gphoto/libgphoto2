@@ -1494,6 +1494,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
+			memset (&dpd,0,sizeof(dpd));
 			/* do not set it everytime, it will cause delays */
 			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
 			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
@@ -1505,6 +1506,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_ERROR;
 				}
 			}
+			ptp_free_devicepropdesc (&dpd);
 
 			while (tries--) {
 				PTPCanon_changes_entry	*entries = NULL;
