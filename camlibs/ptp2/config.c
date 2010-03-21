@@ -52,6 +52,7 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
+#include "ptp-pack.c"
 
 #ifdef __GNUC__
 # define __unused__ __attribute__((unused))
@@ -187,6 +188,8 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		}
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","Card value is %d",cardval);
 	}
+	ptp_free_devicepropdesc (&dpd);
+
 	if (value == 1)
 		value = cardval;
 
@@ -277,9 +280,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
 			for (i=0;i<x.unk_len;i++)
 				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
-			free (x.EventsSupported);
-			free (x.DevicePropertiesSupported);
-			free (x.unk);
+			ptp_free_EOS_DI (&x);
 		}
 	}
 	/* Get the second bulk set of event data */
@@ -299,6 +300,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
 
+	ptp_free_DI (&params->deviceinfo);
 	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
@@ -311,12 +313,16 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		return GP_ERROR;
 	}
 	if (sids.n >= 1) {
-		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0]);
+		unsigned char *sdata;
+		unsigned int slen;
+		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0], &sdata, &slen );
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageinfo failed!");
 			return GP_ERROR;
 		}
+		free (sdata);
 	}
+	free (sids.Storage);
 
 	/* FIXME: 9114 call missing here! */
 

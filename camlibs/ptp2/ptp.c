@@ -562,6 +562,12 @@ ptp_free_params (PTPParams *params) {
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
 	free (params->events);
+	for (i=0;i<params->nrofcanon_props;i++) {
+		free (params->canon_props[i].data);
+		ptp_free_devicepropdesc (&params->canon_props[i].dpd);
+	}
+	free (params->canon_props);
+	free (params->backlogentries);
 	ptp_free_DI (&params->deviceinfo);
 }
 
@@ -1722,18 +1728,18 @@ ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 }
 
 uint16_t
-ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1)
+ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1, unsigned char **data, unsigned int *size)
 {
 	PTPContainer ptp;
-	unsigned char	*data = NULL;
-	unsigned int	size = 0;
 	uint16_t	ret;
 	
+	*size = 0;
+	*data = NULL;
 	PTP_CNT_INIT(ptp);
 	ptp.Code 	= PTP_OC_CANON_EOS_GetStorageInfo;
 	ptp.Nparam	= 1;
 	ptp.Param1	= p1;
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 	/* FIXME: do stuff with data */
 	return ret;
 }
