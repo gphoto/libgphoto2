@@ -1667,7 +1667,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		if ((size == 8) && (type == 0))
 			break;
 	}
-
+	if (!entries) {
+		free (*ce);
+		*ce = NULL;
+	}
 	return entries;
 }
 
