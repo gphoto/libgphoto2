@@ -2472,6 +2472,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				switch (entries[i].type) {
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+					free (entries[i].u.object.oi.Filename);
 
 					newobject = entries[i].u.object.oid;
 
@@ -2525,6 +2526,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if (!path)
 						return GP_ERROR_NO_MEMORY;
 					strcpy  (path->name,  entries[i].u.object.oi.Filename);
+					free (entries[i].u.object.oi.Filename);
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entries[i].u.object.oi.StorageID);
 					get_folder_from_handle (camera, entries[i].u.object.oi.StorageID, entries[i].u.object.oi.ParentObject, path->folder);
 					/* delete last / or we get confused later. */
