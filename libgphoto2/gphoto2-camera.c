@@ -765,8 +765,8 @@ gp_camera_init (Camera *camera, GPContext *context)
 		CRSL (camera, gp_list_get_value (list, 0, &port), context, list);
 		p = gp_port_info_list_lookup_path (il, port);
 		gp_port_info_list_get_info (il, p, &info);
-		gp_port_info_list_free (il);
 		CRSL (camera, gp_camera_set_port_info (camera, info), context, list);
+		gp_port_info_list_free (il);
 		gp_list_free (list);
 	}
 
