@@ -229,7 +229,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	if (c)
 		*c = 0;
 	if (outc > ST2205_FILENAME_LENGTH)
-	        out_name[ST2205_FILENAME_LENGTH] = 0;
+		out_name[ST2205_FILENAME_LENGTH] = 0;
 
 	ret = gp_file_get_data_and_size (file, (const char **)&filedata,
 					 &filesize);
@@ -254,7 +254,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			"Unrecognized file format for file: %s%s",
 			folder, name);
 		free (out_name);
-		return GP_ERROR_OS_FAILURE;
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	im_out = gdImageCreateTrueColor(camera->pl->width, camera->pl->height);
@@ -389,6 +389,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (camera->pl->cd == (iconv_t) -1) {
 		gp_log (GP_LOG_ERROR, "iconv",
 			"Failed to create iconv converter");
+		camera_exit (camera, context);
 		return GP_ERROR_OS_FAILURE;
 	}
 #endif
@@ -400,15 +401,14 @@ camera_init (Camera *camera, GPContext *context)
 				"/home/hans/st2205tool/memdump.bin", 128, 128);
 #endif
 	if (ret != GP_OK) {
-		st2205_close (camera);
-		free(camera->pl);
+		camera_exit (camera, context);
 		return ret;
 	}
 
 	/* Get the filenames from the picframe */
 	ret = st2205_get_filenames (camera, camera->pl->filenames);
 	if (ret != GP_OK) {
-		free (camera->pl);
+		camera_exit (camera, context);
 		return ret;
 	}
 

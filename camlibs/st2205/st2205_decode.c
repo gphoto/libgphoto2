@@ -333,7 +333,7 @@ st2205_code_image(CameraPrivateLibrary *pl, int **src,
 
 	if (shuffle_pattern >= pl->no_shuffles) {
 		gp_log (GP_LOG_ERROR, "st2205", "invalid shuffle pattern");
-		return GP_ERROR_CORRUPTED_DATA;
+		return GP_ERROR_BAD_PARAMETERS;
 	}
 
 	shuffle_table = pl->shuffle[shuffle_pattern];
