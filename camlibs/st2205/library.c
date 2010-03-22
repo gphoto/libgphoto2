@@ -180,8 +180,9 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	Camera *camera = data;
 	char *c, *in_name, *out_name, *filedata = NULL;
 	const char *name;
-	int ret;
+	int ret, in_width, in_height, in_x, in_y;
 	size_t inc, outc;
+	double aspect_in, aspect_out;
 #ifdef HAVE_ICONV
 	char *in, *out;
 #endif
@@ -267,9 +268,26 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	gdImageCopyResampled (im_out, im_in, 0, 0, 0, 0,
+	/* Keep aspect */
+	aspect_in  = (double)im_in->sx / im_in->sy;
+	aspect_out = (double)im_out->sx / im_out->sy;
+	if (aspect_in > aspect_out) {
+		/* Reduce in width (crop left and right) */
+		in_width = (im_in->sx / aspect_in) * aspect_out;
+		in_x = (im_in->sx - in_width) / 2;
+		in_height = im_in->sy;
+		in_y = 0;
+	} else {
+		/* Reduce in height (crop top and bottom) */
+		in_width = im_in->sx;
+		in_x = 0;
+		in_height = (im_in->sy * aspect_in) / aspect_out;
+		in_y = (im_in->sy - in_height) / 2;
+	}
+
+	gdImageCopyResampled (im_out, im_in, 0, 0, in_x, in_y,
 			      im_out->sx, im_out->sy,
-			      im_in->sx, im_in->sy);
+			      in_width, in_height);
 
 	if (im_in->sx != im_out->sx ||
 	    im_in->sy != im_out->sy)
