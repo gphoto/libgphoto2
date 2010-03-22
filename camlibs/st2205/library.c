@@ -283,7 +283,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	gdImageDestroy (im_in);
 	gdImageDestroy (im_out);
 	free (out_name);
-	return GP_OK;
+	return ret;
 #else
 	return GP_ERROR_NOT_SUPPORTED;
 #endif
