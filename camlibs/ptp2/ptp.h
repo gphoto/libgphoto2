@@ -1472,7 +1472,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_AngleLevel			0xD067
 #define PTP_DPC_NIKON_D1ShootingSpeed			0xD068 /* continous speed low */
 #define PTP_DPC_NIKON_D2MaximumShots			0xD069
-#define PTP_DPC_NIKON_D3ExpDelayMode			0xD06A
+#define PTP_DPC_NIKON_ExposureDelayMode			0xD06A
 #define PTP_DPC_NIKON_LongExposureNoiseReduction	0xD06B
 #define PTP_DPC_NIKON_FileNumberSequence		0xD06C
 #define PTP_DPC_NIKON_ControlPanelFinderRearControl	0xD06D

@@ -3226,7 +3226,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Shooting Speed")},
 		{PTP_DPC_NIKON_D2MaximumShots,			/* 0xD069 */
 		 N_("Maximum Shots")},
-		{PTP_DPC_NIKON_D3ExpDelayMode,			/* 0xD06A */
+		{PTP_DPC_NIKON_ExposureDelayMode,		/* 0xD06A */
 		 N_("Exposure delay mode")},
 		{PTP_DPC_NIKON_LongExposureNoiseReduction,	/* 0xD06B */
 		 N_("Long Exposure Noise Reduction")},
@@ -3830,7 +3830,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 4, N_("10 minutes")},
 		{PTP_DPC_NIKON_MonitorOff, PTP_VENDOR_NIKON, 5, N_("5 seconds")}, /* d80 observed */
 
-		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_D3ExpDelayMode,PTP_VENDOR_NIKON),	/* D06A */
+		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_ExposureDelayMode,PTP_VENDOR_NIKON),	/* D06A */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_LongExposureNoiseReduction,PTP_VENDOR_NIKON),	/* D06B */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_FileNumberSequence,PTP_VENDOR_NIKON),	/* D06C */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_D7Illumination,PTP_VENDOR_NIKON),	/* D06F */
