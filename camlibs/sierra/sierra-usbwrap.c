@@ -222,7 +222,7 @@ usb_wrap_OK (GPPort *dev, uw_header_t *hdr, unsigned int type)
 
    if ((ret = gp_port_read(dev, (char*)&rsp, sizeof(rsp))) != sizeof(rsp))
    {
-      GP_DEBUG( "gp_port_read *** FAILED" );
+      gp_log (GP_LOG_DEBUG, GP_MODULE, "gp_port_read *** FAILED (%d vs %d bytes)", (int)sizeof(rsp), ret );
       if (ret < GP_OK)
 	return ret;
       return GP_ERROR;
@@ -245,7 +245,7 @@ usb_wrap_OK (GPPort *dev, uw_header_t *hdr, unsigned int type)
        rsp.zero[3] != 0 ||
        rsp.zero[4] != 0)
       {
-        GP_DEBUG( "error: ****  usb_wrap_OK failed" );
+        GP_DEBUG( "error: ****  usb_wrap_OK failed - not all expected zero bytes are 0" );
         return GP_ERROR;
       }
    return GP_OK;
@@ -360,7 +360,7 @@ usb_wrap_CMND(gp_port* dev, unsigned int type, char* sierra_msg, int sierra_len)
    msg->packet_type = UW_PACKET_DATA;
    memcpy((char*)msg + sizeof(*msg), sierra_msg, sierra_len);
    GP_DEBUG( "usb_wrap_CMND writing %i + %i",
-                   sizeof(hdr), msg_len);
+                   (int)sizeof(hdr), msg_len);
    
    if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
        (ret=gp_port_write(dev, (char*)msg, msg_len)) < GP_OK)
