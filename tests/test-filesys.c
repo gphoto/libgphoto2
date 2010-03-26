@@ -42,18 +42,15 @@
 
 static void
 log_func (GPLogLevel __unused__ level, const char __unused__ *domain,
-	  const char *format, va_list args, void __unused__ *data)
+	  const char *str, void __unused__ *data)
 {
-	vprintf (format, args);
-	printf ("\n");
+	printf ("%s\n", str);
 }
 
 static void
-error_func (GPContext __unused__ *context, const char *format, va_list args, void __unused__ *data)
+error_func (GPContext __unused__ *context, const char *str, void __unused__ *data)
 {
-	printf ("### ");
-	vprintf (format, args);
-	printf ("\n");
+	printf ("### %s\n", str);
 }
 
 static int
@@ -133,6 +130,13 @@ delete_file_func (CameraFilesystem __unused__ *fs, const char *folder,
 	return (GP_OK);
 }
 
+static CameraFilesystemFuncs fsfuncs = {
+	.get_info_func = get_info_func,
+	.set_info_func = set_info_func,
+	.del_file_func = delete_file_func,
+	.file_list_func = file_list_func,
+	.folder_list_func = folder_list_func,
+};
 int
 main ()
 {
@@ -157,10 +161,7 @@ main ()
 	CHECK (gp_filesystem_new (&fs));
 
 	printf ("*** Setting the callbacks...\n");
-	CHECK (gp_filesystem_set_info_funcs (fs, get_info_func, set_info_func,
-					     NULL));
-	CHECK (gp_filesystem_set_file_funcs (fs, NULL, delete_file_func,
-					     NULL));
+	CHECK (gp_filesystem_set_funcs (fs, &fsfuncs, NULL));
 
 	printf ("*** Adding a file...\n");
 	CHECK (gp_filesystem_append (fs, "/", "my.file", context));
@@ -245,10 +246,6 @@ main ()
 
 	printf ("*** Resetting the filesystem...\n");
 	CHECK (gp_filesystem_reset (fs));
-
-	printf ("*** Setting the listing callbacks...\n");
-	CHECK (gp_filesystem_set_list_funcs (fs, file_list_func,
-					     folder_list_func, NULL));
 
 	gp_filesystem_dump (fs);
 
