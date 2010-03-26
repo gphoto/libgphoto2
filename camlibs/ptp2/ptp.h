@@ -2071,7 +2071,8 @@ uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
 uint16_t ptp_getobject_tofd     (PTPParams* params, uint32_t handle, int fd);
 uint16_t ptp_getobject_to_handler (PTPParams* params, uint32_t handle, PTPDataHandler*);
 uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offset,
-				uint32_t maxbytes, unsigned char** object);
+				uint32_t maxbytes, unsigned char** object,
+				uint32_t *len);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
 				unsigned char** object);
 

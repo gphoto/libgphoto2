@@ -3987,6 +3987,100 @@ ptp_exit_camerafile_handler (PTPDataHandler *handler) {
 
 
 static int
+read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	        CameraFileType type,
+		uint64_t offset64, char *buf, uint64_t *size64,
+		void *data, GPContext *context)
+{
+	Camera *camera = data;
+	PTPParams *params = &camera->pl->params;
+	/* Note that "image" points to unsigned chars whereas all the other
+	 * functions which set image return pointers to chars.
+	 * However, we calculate a number of unsigned values in this function,
+	 * so we cannot make it signed either.
+	 * Therefore, sometimes a "ximage" char* helper, since wild casts of pointers
+	 * confuse the compilers aliasing mechanisms.
+	 * If you do not like that, feel free to clean up the datatypes.
+	 * (TODO for Marcus and 2.2 ;)
+	 */
+	uint32_t oid;
+	uint32_t storage;
+	uint32_t xsize;
+	uint32_t offset = offset64, size = *size64;
+	PTPObject *ob;
+
+	SET_CONTEXT_P(params, context);
+	if (offset64 + *size64 >= 0x100000000) {
+		gp_log (GP_LOG_ERROR, "ptp2/read_file_func", "offset + size exceeds 32bit");
+		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+	}
+
+	if (!strcmp (folder, "/special"))
+		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+
+	if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject))
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* compute storage ID value from folder patch */
+	folder_to_storage(folder,storage);
+	/* Get file number omiting storage pseudofolder */
+	find_folder_handle(params, folder, storage, oid);
+	oid = find_child(params, filename, storage, oid, &ob);
+	if (oid == PTP_HANDLER_SPECIAL) {
+		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	GP_DEBUG ("Reading file off=%u size=%u", offset, size);
+	switch (type) {
+	default:
+		return (GP_ERROR_NOT_SUPPORTED);
+	case GP_FILE_TYPE_NORMAL: {
+		uint16_t	ret;
+		unsigned char	*xdata;
+
+		/* We do not allow downloading unknown type files as in most
+		cases they are special file (like firmware or control) which
+		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
+		if (ob->oi.ObjectFormat == PTP_OFC_Association ||
+			(ob->oi.ObjectFormat == PTP_OFC_Undefined &&
+				((ob->oi.ThumbFormat == PTP_OFC_Undefined) ||
+				 (ob->oi.ThumbFormat == 0)
+			)
+			)
+		)
+			return (GP_ERROR_NOT_SUPPORTED);
+
+		if (is_mtp_capable (camera) &&
+		    (ob->oi.ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
+			return (GP_ERROR_NOT_SUPPORTED);
+
+		xsize=ob->oi.ObjectCompressedSize;
+		if (!xsize)
+			return (GP_ERROR_NOT_SUPPORTED);
+
+		ret = ptp_getpartialobject(params, oid, offset, size, &xdata, &size);
+		if (ret == PTP_ERROR_CANCEL)
+			return GP_ERROR_CANCEL;
+		CPR(context, ret);
+		*size64 = size;
+		memcpy (data, xdata, size);
+		free (xdata);
+		/* clear the "new" flag on Canons */
+		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			(ob->canon_flags & 0x2000) &&
+			ptp_operation_issupported(params,PTP_OC_CANON_SetObjectArchive)
+		) {
+			/* seems just a byte (0x20 - new) */
+			ptp_canon_setobjectarchive (params, oid, (ob->canon_flags &~0x2000)>>8);
+			ob->canon_flags &= ~0x2000;
+		}
+		}
+		break;
+	}
+	return GP_OK;
+}
+
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
@@ -4043,8 +4137,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("Getting file.");
 	switch (type) {
 	case	GP_FILE_TYPE_EXIF: {
-		uint32_t offset;
-		uint32_t maxbytes;
+		uint32_t offset, xlen, maxbytes;
 		unsigned char 	*ximage = NULL;
 
 		/* Check if we have partial downloads. Otherwise we can just hope
@@ -4061,7 +4154,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		/* Note: Could also use Canon partial downloads */
 		CPR (context, ptp_getpartialobject (params,
-			oid, 0, 10, &ximage));
+			oid, 0, 10, &ximage, &xlen));
 
 		if (!((ximage[0] == 0xff) && (ximage[1] == 0xd8))) {	/* SOI */
 			free (ximage);
@@ -4080,8 +4173,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free (ximage);
 		ximage = NULL;
 		CPR (context, ptp_getpartialobject (params,
-			oid, offset, maxbytes, &ximage));
-		CR (gp_file_set_data_and_size (file, (char*)ximage, maxbytes));
+			oid, offset, maxbytes, &ximage, &xlen));
+		CR (gp_file_set_data_and_size (file, (char*)ximage, xlen));
 		break;
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
@@ -5063,6 +5156,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.get_info_func		= get_info_func,
 	.set_info_func		= set_info_func,
 	.get_file_func		= get_file_func,
+	.read_file_func		= read_file_func,
 	.del_file_func		= delete_file_func,
 	.put_file_func		= put_file_func,
 	.make_dir_func		= make_dir_func,

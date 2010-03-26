@@ -877,6 +877,7 @@ ptp_getobject_tofd (PTPParams* params, uint32_t handle, int fd)
  *		offset			- Offset into object
  *		maxbytes		- Maximum of bytes to read
  *		object			- pointer to data area
+ *		len			- pointer to returned length
  *
  * Get object 'handle' from device and store the data in newly
  * allocated 'object'. Start from offset and read at most maxbytes.
@@ -885,10 +886,10 @@ ptp_getobject_tofd (PTPParams* params, uint32_t handle, int fd)
  **/
 uint16_t
 ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
-			uint32_t maxbytes, unsigned char** object)
+			uint32_t maxbytes, unsigned char** object,
+			uint32_t *len)
 {
 	PTPContainer ptp;
-	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetPartialObject;
@@ -896,8 +897,8 @@ ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
 	ptp.Param2=offset;
 	ptp.Param3=maxbytes;
 	ptp.Nparam=3;
-	len=0;
-	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, &len);
+	*len=0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, len);
 }
 
 /**
