@@ -111,6 +111,10 @@ static int pictures_to_keep = -1;
 
 static int gp_filesystem_lru_clear (CameraFilesystem *fs);
 static int gp_filesystem_lru_remove_one (CameraFilesystem *fs, CameraFilesystemFile *item);
+static int gp_filesystem_lru_update (CameraFilesystem *fs,
+			  const char *folder, const char *filename,
+			  CameraFileType type,
+			  CameraFile *file, GPContext *context);
 
 #ifdef HAVE_LIBEXIF
 
@@ -247,23 +251,18 @@ struct _CameraFilesystem {
 
 	CameraFilesystemGetInfoFunc get_info_func;
 	CameraFilesystemSetInfoFunc set_info_func;
-	void *info_data;
-
 	CameraFilesystemListFunc file_list_func;
 	CameraFilesystemListFunc folder_list_func;
-	void *list_data;
-
 	CameraFilesystemGetFileFunc get_file_func;
+	CameraFilesystemReadFileFunc read_file_func;
 	CameraFilesystemDeleteFileFunc delete_file_func;
-	void *file_data;
-
 	CameraFilesystemPutFileFunc put_file_func;
 	CameraFilesystemDeleteAllFunc delete_all_func;
 	CameraFilesystemDirFunc make_dir_func;
 	CameraFilesystemDirFunc remove_dir_func;
-	void *folder_data;
-
 	CameraFilesystemStorageInfoFunc	storage_info_func;
+
+	void *data;
 };
 
 #undef  MIN
@@ -886,7 +885,7 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 	 * First try to use the delete_all function. If that fails,
 	 * fall back to deletion one-by-one.
 	 */
-	r = fs->delete_all_func (fs, folder, fs->folder_data, context);
+	r = fs->delete_all_func (fs, folder, fs->data, context);
 	if (r < 0) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
 			"delete_all failed (%s). Falling back to "
@@ -946,7 +945,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 			"Querying folder %s...", folder);
 		CR (delete_all_files (fs, f));
 		CR (fs->file_list_func (fs, folder, list,
-					fs->list_data, context));
+					fs->data, context));
 
 		CR (count = gp_list_count (list));
 		for (y = 0; y < count; y++) {
@@ -1010,7 +1009,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	if (f->folders_dirty && fs->folder_list_func) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "... is dirty, getting from camera");
 		CR (fs->folder_list_func (fs, folder, list,
-					  fs->list_data, context));
+					  fs->data, context));
 		CR (delete_all_folders (fs, folder, context));
 
 		CR (count = gp_list_count (list));
@@ -1107,7 +1106,7 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 			   filename, folder);
 	/* Delete the file */
 	CR (fs->delete_file_func (fs, folder, filename,
-				  fs->file_data, context));
+				  fs->data, context));
 	CR (delete_file (fs, f, file));
 	return (GP_OK);
 }
@@ -1169,7 +1168,7 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	/* Create the directory */
-	CR (fs->make_dir_func (fs, folder, name, fs->folder_data, context));
+	CR (fs->make_dir_func (fs, folder, name, fs->data, context));
 	/* and append to internal fs */
 	return append_folder_one (f, name, NULL);
 }
@@ -1242,7 +1241,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	}
 
 	/* Remove the directory */
-	CR (fs->remove_dir_func (fs, folder, name, fs->folder_data, context));
+	CR (fs->remove_dir_func (fs, folder, name, fs->data, context));
 	CR (delete_folder (fs, prev));
 	return (GP_OK);
 }
@@ -1285,7 +1284,7 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	/* Upload the file */
-	CR (fs->put_file_func (fs, folder, filename, type, file, fs->folder_data, context));
+	CR (fs->put_file_func (fs, folder, filename, type, file, fs->data, context));
 	/* And upload it to internal structure too */
 	ret = append_file (fs, f, filename, file, context);
 	if (type != GP_FILE_TYPE_NORMAL) /* FIXME perhaps check before append_file? */
@@ -1501,108 +1500,6 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 	return (GP_ERROR_FILE_NOT_FOUND);
 }
 
-/**
- * \brief Set the functions to list folders and files
- * \param fs a #CameraFilesystem
- * \param file_list_func the function that will return listings of files
- * \param folder_list_func the function that will return listings of folders
- * \param data private data structure
- *
- * Tells the fs which functions to use to retrieve listings of folders
- * and/or files. Typically, a camera driver would call this function
- * on initialization. Each function can be NULL indicating that this
- * functionality is not supported. For example, many cameras don't support
- * folders. In this case, you would supply NULL for folder_list_func. Then,
- * the fs assumes that there is only a root folder.
- *
- * \return a gphoto2 error code.
- **/
-int
-gp_filesystem_set_list_funcs (CameraFilesystem *fs,
-			      CameraFilesystemListFunc file_list_func,
-			      CameraFilesystemListFunc folder_list_func,
-			      void *data)
-{
-	CHECK_NULL (fs);
-
-	fs->file_list_func = file_list_func;
-	fs->folder_list_func = folder_list_func;
-	fs->list_data = data;
-
-	return (GP_OK);
-}
-
-/**
- * \brief Set camera filesystem file related functions
- * \param fs a #CameraFilesystem
- * \param get_file_func the function downloading files
- * \param del_file_func the function deleting files
- * \param data private data structure
- *
- * Tells the fs which functions to use for file download or file deletion.
- * Typically, a camera driver would call this function on initialization.
- * A function can be NULL indicating that this functionality is not supported.
- * For example, if a camera does not support file deletion, you would supply
- * NULL for del_file_func.
- *
- * \return a gphoto2 error code.
- **/
-int
-gp_filesystem_set_file_funcs (CameraFilesystem *fs,
-			      CameraFilesystemGetFileFunc get_file_func,
-			      CameraFilesystemDeleteFileFunc del_file_func,
-			      void *data)
-{
-	CHECK_NULL (fs);
-
-	fs->delete_file_func = del_file_func;
-	fs->get_file_func = get_file_func;
-	fs->file_data = data;
-
-	return (GP_OK);
-}
-
-/**
- * \brief Set folder related functions of the filesystem
- * \param fs a #CameraFilesystem
- * \param put_file_func function used to upload files
- * \param delete_all_func function used to delete all files in a folder
- * \param make_dir_func function used to create a new directory
- * \param remove_dir_func function used to remove an existing directory
- * \param data a data object that will passed to all called functions
- *
- * Tells the filesystem which functions to call for file upload, deletion
- * of all files in a given folder, creation or removal of a folder.
- * Typically, a camera driver would call this function on initialization.
- * If one functionality is not supported, NULL can be supplied.
- * If you don't call this function, the fs will assume that neither
- * of these features is supported.
- *
- * The fs will try to compensate missing delete_all_func
- * functionality with the delete_file_func if such a function has been
- * supplied.
- *
- * \return a gphoto2 error code.
- **/
-int
-gp_filesystem_set_folder_funcs (CameraFilesystem *fs,
-				CameraFilesystemPutFileFunc put_file_func,
-				CameraFilesystemDeleteAllFunc delete_all_func,
-				CameraFilesystemDirFunc make_dir_func,
-				CameraFilesystemDirFunc remove_dir_func,
-				void *data)
-{
-	CHECK_NULL (fs);
-
-	fs->put_file_func = put_file_func;
-	fs->delete_all_func = delete_all_func;
-	fs->make_dir_func = make_dir_func;
-	fs->remove_dir_func = remove_dir_func;
-	fs->folder_data = data;
-
-	return (GP_OK);
-}
-
 static int
 gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 			     const char *filename, CameraFileType type,
@@ -1668,7 +1565,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	gp_context_status (context, _("Downloading '%s' from folder '%s'..."),
 			   filename, folder);
 	CR (fs->get_file_func (fs, folder, filename, type, file,
-			       fs->file_data, context));
+			       fs->data, context));
 
 	/* We don't trust the camera drivers */
 	CR (gp_file_set_name (file, filename));
@@ -1820,33 +1717,70 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * \brief Set file information functions
+ * \brief Get partial file data from the filesystem
  * \param fs a #CameraFilesystem
- * \param get_info_func the function to retrieve file information
- * \param set_info_func the function to set file information
- * \param data private data
+ * \param folder the folder in which the file can be found
+ * \param filename the name of the file to download
+ * \param type the type of the file
+ * \param offset the offset where the data starts
+ * \param buf the targetbuffer where the data will be put
+ * \param size the size to read and that was read into the buffer 
+ * \param context a #GPContext
  *
- * Tells the filesystem which functions to call when file information
- * about a file should be retrieved or set. Typically, this function will
- * get called by the camera driver on initialization.
- *
+ * Downloads the file called filename from the folder using the
+ * read_file_func if such a function has been previously supplied. If the
+ * file has been previously downloaded, the file is retrieved from cache.
+ * 
+ * The file is read partially into the passed buffer. The read starts
+ * at offset on the device and goes for at most size bytes.
+ * Reading over the end of the file might give errors, so get the maximum
+ * file size via an info function before.
+ * 
  * \return a gphoto2 error code.
  **/
 int
-gp_filesystem_set_info_funcs (CameraFilesystem *fs,
-			      CameraFilesystemGetInfoFunc get_info_func,
-			      CameraFilesystemSetInfoFunc set_info_func,
-			      void *data)
+gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
+			const char *filename, CameraFileType type,
+			uint64_t offset, char *buf, uint64_t *size,
+			GPContext *context)
 {
-	CHECK_NULL (fs);
+	int r;
+	const char	*xdata;
+	unsigned long	xsize;
+	CameraFile	*file;
 
-	fs->get_info_func = get_info_func;
-	fs->set_info_func = set_info_func;
-	fs->info_data = data;
+	CHECK_NULL (fs && folder && filename && buf && size);
+	CC (context);
+	CA (folder, context);
 
-	return (GP_OK);
+	if (fs->read_file_func) {
+		r = fs->read_file_func (fs, folder, filename, type,
+			offset, buf, size, fs->data, context);
+		if (r == GP_OK)
+			return r;
+	}
+	/* fallback code */
+	CR (gp_file_new (&file));
+	CR (gp_filesystem_get_file (fs, folder, filename, type,
+				    file, context));
+	CR (gp_file_get_data_and_size (file, &xdata, &xsize));
+	if (offset > *size) { /* EOF */
+		gp_file_unref (file);
+		*size = 0;
+		return GP_OK;
+	}
+	if ((offset != 0) || (offset + *size != xsize)) {
+		/* Cache this file in the LRU, but only if the user just
+		 * hasn't read all of it at once.
+		 */
+		CR (gp_filesystem_set_file_noop (fs, folder, filename, type, file, context));
+	}
+	if (offset + (*size) > xsize)
+		*size = xsize-offset;
+	memcpy (buf, xdata+offset, *size);
+	gp_file_unref (file);
+	return GP_OK;
 }
-
 /**
  * \brief Set all filesystem related function pointers
  * \param fs a #CameraFilesystem
@@ -1867,23 +1801,17 @@ gp_filesystem_set_funcs	(CameraFilesystem *fs,
 
 	fs->get_info_func	= funcs->get_info_func;
 	fs->set_info_func	= funcs->set_info_func;
-	fs->info_data = data;
-
 	fs->put_file_func	= funcs->put_file_func;
 	fs->delete_all_func	= funcs->delete_all_func;
 	fs->make_dir_func	= funcs->make_dir_func;
 	fs->remove_dir_func	= funcs->remove_dir_func;
-	fs->folder_data = data;
-
 	fs->file_list_func	= funcs->file_list_func;
 	fs->folder_list_func	= funcs->folder_list_func;
-	fs->list_data = data;
-
 	fs->delete_file_func	= funcs->del_file_func;
 	fs->get_file_func	= funcs->get_file_func;
-	fs->file_data = data;
-
+	fs->read_file_func	= funcs->read_file_func;
 	fs->storage_info_func	= funcs->storage_info_func;
+	fs->data = data;
 	return (GP_OK);
 }
 
@@ -1928,7 +1856,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	if (file->info_dirty) {
 		CR (fs->get_info_func (fs, folder, filename,
 						&file->info,
-						fs->info_data, context));
+						fs->data, context));
 		file->info_dirty = 0;
 	}
 
@@ -2454,7 +2382,7 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	 * Set the info. If anything goes wrong, mark info as dirty,
 	 * because the operation could have been partially successful.
 	 */
-	result = fs->set_info_func (fs, folder, filename, info, fs->info_data,
+	result = fs->set_info_func (fs, folder, filename, info, fs->data,
 				    context);
 	if (result < 0) {
 		xfile->info_dirty = 1;
@@ -2508,5 +2436,5 @@ gp_filesystem_get_storageinfo (
 	}
 	return fs->storage_info_func (fs,
 		storageinfo, nrofstorageinfos,
-		fs->info_data, context);
+		fs->data, context);
 }

@@ -371,6 +371,10 @@ int gp_camera_file_set_info 	(Camera *camera, const char *folder,
 int gp_camera_file_get		(Camera *camera, const char *folder, 
 				 const char *file, CameraFileType type,
 				 CameraFile *camera_file, GPContext *context);
+int gp_camera_file_read		(Camera *camera, const char *folder, const char *file,
+		    		 CameraFileType type, 
+		    		 uint64_t offset, char *buf, uint64_t *size,
+		    		 GPContext *context);
 int gp_camera_file_delete     	(Camera *camera, const char *folder, 
 				 const char *file, GPContext *context);
 /**@}*/

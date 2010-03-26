@@ -1395,6 +1395,49 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 }
 
 /**
+ * Reads a file partially from the #Camera.
+ *
+ * @param camera a #Camera
+ * @param folder a folder
+ * @param file the name of a file
+ * @param type the #CameraFileType
+ * @param offset the offset into the camera file
+ * @param data the buffer receiving the data
+ * @param size the size to be read and that was read
+ * @param context a #GPContext
+ * @return a gphoto2 error code
+ *
+ **/
+int
+gp_camera_file_read (Camera *camera, const char *folder, const char *file,
+		    CameraFileType type,
+		    uint64_t offset, char *buf, uint64_t *size,
+		    GPContext *context)
+{
+	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file '%s' in "
+		"folder '%s'...", file, folder);
+
+	CHECK_NULL (camera && folder && file && buf && size);
+	CHECK_INIT (camera, context);
+
+	/* Did we get reasonable foldername/filename? */
+	if (strlen (folder) == 0) {
+		CAMERA_UNUSED (camera, context);
+		return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	}
+	if (strlen (file) == 0) {
+		CAMERA_UNUSED (camera, context);
+		return (GP_ERROR_FILE_NOT_FOUND);
+	}
+  
+	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_read_file (camera->fs,
+			folder, file, type, offset, buf, size, context), context);
+
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
+/**
  * Deletes the file from \c folder.
  *
  * \param camera a #Camera
