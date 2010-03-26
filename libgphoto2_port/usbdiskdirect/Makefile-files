@@ -1,5 +1,6 @@
 ## Compile the IO library into a libtool module shared library
-iolib_LTLIBRARIES = usbdiskdirect.la
+EXTRA_LTLIBRARIES += usbdiskdirect.la
+
 
 usbdiskdirect_la_LDFLAGS = -module -no-undefined -avoid-version \
 	-export-dynamic \
