@@ -1,10 +1,17 @@
-libgphoto2 2.4.8.1
+libgphoto2 2.4.8.2
 
 This is a 2.4 release branch update.
 
 ptp2:
    * Fixed EOS viewfinder capture speed (2 images/s -> 20 i/s)
    * Fixed Canon configuration bug that caused hangs.
+   * Lots of EOS fixes, as usual.
+   * New Ids added.
+
+ST2205 Driver:
+   * New Pictureframe driver from Hans de Goede, working on top of
+     usb storage with a FAT16 pseudo driver.
+     Also included "usbdiskdirect" port driver.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.8
