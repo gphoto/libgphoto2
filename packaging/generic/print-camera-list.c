@@ -645,12 +645,21 @@ udev_camera_func2 (const func_params_t *params,
 		   const CameraAbilities *a,
 		   void *data)
 {
+	int has_valid_rule = 0;
 	udev_persistent_data_t *pdata = (udev_persistent_data_t *) data;
 	ASSERT(pdata != NULL);
 
 	if (a->port & GP_PORT_USB_DISK_DIRECT) {
 		printf (pdata->usbdisk_string, "sd[a-z]*",
 			a->usb_vendor, a->usb_product);
+		has_valid_rule = 1;
+	}
+	if (a->port & GP_PORT_USB_SCSI) {
+		printf (pdata->usbdisk_string, "sg[0-9]*",
+			a->usb_vendor, a->usb_product);
+		has_valid_rule = 1;
+	}
+	if (has_valid_rule != 0) {
 		if (pdata->script != NULL || pdata->mode != NULL || pdata->owner != NULL || pdata->group != NULL)
 			printf(", ");
 

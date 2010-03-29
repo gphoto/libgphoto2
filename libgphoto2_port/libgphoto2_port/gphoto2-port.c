@@ -216,6 +216,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 			 sizeof(port->settings.usbdiskdirect.path), "%s",
 			 strchr(info->path, ':') + 1);
 		break;
+	case GP_PORT_USB_SCSI:
+		snprintf(port->settings.usbscsi.path,
+			 sizeof(port->settings.usbscsi.path), "%s",
+			 strchr(info.path, ':') + 1);
+		break;
 	default:
 		/* Nothing in here */
 		break;
@@ -1102,6 +1107,55 @@ gp_port_seek (GPPort *port, int offset, int whence)
 	retval = port->pc->ops->seek (port, offset, whence);
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Seek result: %d", retval);
+
+	return retval;
+}
+
+/**
+ * \brief Send a SCSI command to a port (for usb scsi ports)
+ *
+ * \param port a #GPPort
+ * \param to_dev data direction, set to 1 for a scsi cmd which sends
+ *        data to the device, set to 0 for cmds which read data from the dev.
+ * \param cmd buffer holding the command to send
+ * \param cmd_size sizeof cmd buffer
+ * \param sense buffer for returning scsi sense information
+ * \param sense_size sizeof sense buffer
+ * \param data buffer containing informatino to write to the device
+ *        (to_dev is 1), or to store data read from the device (to_dev 0).
+ *
+ * Send a SCSI command to a usb scsi port attached device.
+ *
+ * \return a gphoto2 error code
+ **/
+int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
+				char *cmd, int cmd_size,
+				char *sense, int sense_size,
+				char *data, int data_size)
+{
+	int retval;
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "Sending scsi cmd:");
+	gp_log_data ("gphoto2-port", cmd, cmd_size);
+	if (to_dev && data_size) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", "scsi cmd data:");
+		gp_log_data ("gphoto2-port", data, data_size);
+	}
+
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	CHECK_SUPP (port, "send_scsi_cmd", port->pc->ops->send_scsi_cmd);
+	retval = port->pc->ops->send_scsi_cmd (port, to_dev, cmd, cmd_size,
+					sense, sense_size, data, data_size);
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "scsi cmd result: %d, sense:",
+		retval);
+	gp_log_data ("gphoto2-port", sense, sense_size);
+	if (!to_dev && data_size) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", "scsi cmd data:");
+		gp_log_data ("gphoto2-port", data, data_size);
+	}
 
 	return retval;
 }

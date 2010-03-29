@@ -34,6 +34,7 @@ LIBGPHOTO2_5_0 {
 	gp_port_result_as_string;
 	gp_port_seek;
 	gp_port_send_break;
+	gp_port_send_scsi_cmd;
 	gp_port_set_error;
 	gp_port_set_info;
 	gp_port_set_pin;

@@ -442,6 +442,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 			continue;
 		switch (type) {
 		case GP_PORT_USB:
+		case GP_PORT_USB_SCSI:
 		case GP_PORT_USB_DISK_DIRECT: {
 			int ability;
 			
