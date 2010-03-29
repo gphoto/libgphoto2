@@ -16,6 +16,18 @@ ST2205 Driver:
      certain magic offsets. Also included is a "usbdiskdirect" port driver,
      which allows the direct sector access the camlib for these devices needs.
 
+AX203 Driver: 
+   * New Pictureframe driver from Hans de Goede. ax203 based frames present 
+     themselves as a usb mass storage cdrom, which contains the windows
+     software. Communication with the device happens by issuing special
+     (custom) scsi commands. Also included is a "usbscsi" port driver,      
+     which allows sending the custom scsi commands.
+
+     Note that if your ax203 frame has a usb-id of 1908:1315, you need to
+     tell Linux not to touch the HID device this version also presents
+     in its USB descriptor. To do this add the following on the linux kernel
+     cmdline: "usbhid.quirks=0x1908:0x1315:0x4"
+
 ------------------------------------------------------------------------
 libgphoto2 2.4.8
 
