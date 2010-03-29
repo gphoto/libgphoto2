@@ -202,19 +202,21 @@ gp_port_library_list (GPPortInfoList *list)
 		return GP_OK;
 
 	while ((dirent = readdir (dir))) {
+		char path[4096];
 		if (gp_port_usbscsi_get_usb_id (dirent->d_name,
 				&vendor_id, &product_id) != GP_OK)
 			continue; /* Not a usb device */
 
-		info.type = GP_PORT_USB_SCSI;
-		snprintf (info.path, sizeof (info.path),
+		gp_port_info_new (&info);
+		gp_port_info_set_type (info, GP_PORT_USB_SCSI);
+		snprintf (path, sizeof (path),
 			  "usbscsi:/dev/%s",
 			  dirent->d_name);
-		snprintf (info.name, sizeof (info.name),
-			  _("USB Mass Storage raw SCSI"));
+		gp_port_info_set_path (info, path);
+		gp_port_info_set_name (info, _("USB Mass Storage raw SCSI"));
 		CHECK (gp_port_info_list_append (list, info))
 	}
-
+	closedir (dir);
 	return GP_OK;
 }
 
