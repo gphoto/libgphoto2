@@ -1,3 +1,6 @@
+EXTRA_DIST += st2205/README.st2205-compression
+camlibdoc_DATA += st2205/README.st2205-compression
+
 EXTRA_LTLIBRARIES += st2205.la
 
 st2205_la_SOURCES = st2205/library.c st2205/st2205.c st2205/st2205.h st2205/st2205_decode.c
