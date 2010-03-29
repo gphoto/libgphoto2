@@ -72,8 +72,12 @@ Directory driver:
    * Abstracted common functionality.
 
 ST2205 Driver:
-   * New pictureframe driver from Hans de Goede, working on top of
-     usb storage with a FAT16 pseudo driver.
+   * New Pictureframe driver from Hans de Goede. st2205 based frames present
+     themselves as a regular usb mass storage device, but cannot be used
+     as a normal disk! Communication with the device happens by a special
+     protocol which consist of reading / writing sectors of the disk at
+     certain magic offsets. Also included is a "usbdiskdirect" port driver,
+     which allows the direct sector access the camlib for these devices needs.
 
 Build:
    * Removed dummy README file from SVN.
