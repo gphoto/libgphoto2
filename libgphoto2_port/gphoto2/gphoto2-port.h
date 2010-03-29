@@ -106,6 +106,13 @@ typedef struct _GPPortSettingsUsbDiskDirect {
 } GPPortSettingsUsbDiskDirect;
 
 /**
+ * \brief Port settings for USB Mass Storage raw SCSI ports.
+ */
+typedef struct _GPPortSettingsUsbScsi {
+	char path[128];		/**< /brief The ports device node path (/dev/sg#)*/
+} GPPortSettingsUsbScsi;
+
+/**
  * \brief Union of port settings.
  *
  * This contains a shared union of possible settings for ports needing
@@ -116,6 +123,7 @@ typedef union _GPPortSettings {
 	GPPortSettingsUSB usb;		/**< \brief USB specific settings */
 	GPPortSettingsDisk disk;	/**< \brief Disk port specific settings */
 	GPPortSettingsUsbDiskDirect usbdiskdirect; /**< \brief usb disk direct port specific settings */
+	GPPortSettingsUsbScsi usbscsi;	/**< \brief usb scsi port specific settings */
 } GPPortSettings;
 
 enum {
@@ -221,6 +229,11 @@ int gp_port_usb_msg_class_read    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
 
 int gp_port_seek (GPPort *port, int offset, int whence);
+
+int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
+				char *cmd, int cmd_size,
+				char *sense, int sense_size,
+				char *data, int data_size);
 
 /* Error reporting */
 int         gp_port_set_error (GPPort *port, const char *format, ...)

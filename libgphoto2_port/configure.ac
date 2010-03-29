@@ -347,7 +347,7 @@ dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb usbdiskdirect"
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb usbdiskdirect usbscsi"
 ],[],
 		[disable-explicitly],
 		[http://libusb.sourceforge.net/]
@@ -486,6 +486,7 @@ libgphoto2_port-uninstalled.pc
 serial/Makefile
 usb/Makefile
 usbdiskdirect/Makefile
+usbscsi/Makefile
 disk/Makefile
 ptpip/Makefile
 gphoto2-port-config

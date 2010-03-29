@@ -468,6 +468,7 @@ dnl * Please add new camlibs in alphabetical order.
 GP_CAMLIB([adc65])dnl
 GP_CAMLIB([agfa_cl20])dnl
 GP_CAMLIB([aox])dnl
+GP_CAMLIB([ax203])dnl
 GP_CAMLIB([barbie])dnl
 GP_CAMLIB([canon])dnl
 GP_CAMLIB([casio_qv])dnl
