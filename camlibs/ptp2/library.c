@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2009 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2010 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
@@ -312,6 +312,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				for (i=0;i<xsize;i++)
 					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
 				di->DevicePropertiesSupported_len += xsize;
+				free (xprops);
 			} else {
 				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_nikon_get_vendorpropcodes() failed with 0x%04x", ret);
 			}
@@ -613,6 +614,8 @@ static struct {
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
 	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* Harry Reisenleiter <harrylr@earthlink.net> */
+	{"Nikon:Coolpix 8800 (PTP mode)", 0x04b0, 0x0127, PTP_CAP},
 	/* Nikon Coolpix 4800 */
 	{"Nikon:Coolpix 4800 (PTP mode)", 0x04b0, 0x0129, 0},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
@@ -645,6 +648,8 @@ static struct {
 	{"Nikon:Coolpix P5100 (PTP mode)", 0x04b0, 0x0163, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2589245&group_id=8874&atid=108874 */
 	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2951663&group_id=8874&atid=358874 */
+	{"Nikon:Coolpix P6000 (PTP mode)",0x04b0, 0x016f, 0},
 	/*   http://bugs.debian.org/520752 */
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
 	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
@@ -672,6 +677,10 @@ static struct {
 	{"Nikon:Coolpix P60 (PTP mode)",  0x04b0, 0x0311, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Stas Timokhin <st@ngs.ru> */
 	{"Nikon:Coolpix L16 (PTP mode)",  0x04b0, 0x0315, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2977303&group_id=8874&atid=358874 */
+	{"Nikon:Coolpix L20 (PTP mode)",  0x04b0, 0x0317, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2947644&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix L19 (PTP mode)",  0x04b0, 0x0318, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
@@ -727,7 +736,9 @@ static struct {
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
 	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2070864&group_id=8874&atid=358874 */
-	{"Panasonic:DMC-TZ15",            0x04da, 0x2374, 0},
+	{"Panasonic:DMC-TZ15",		  0x04da, 0x2374, 0},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=2950529&group_id=8874 */
+	{"Panasonic:DMC-FS62",		  0x04da, 0x2374, 0},
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
 	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
@@ -748,6 +759,11 @@ static struct {
 
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1272944&group_id=8874 */
 	{"Olympus:IR-300",                0x07b4, 0x0114, 0},
+
+	/* Marcus */
+	{"Olympus:FE4000",                0x07b4, 0x0116, 0},
+	{"Olympus:X920",                  0x07b4, 0x0116, 0},
+	{"Olympus:X925",                  0x07b4, 0x0116, 0},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
@@ -853,6 +869,8 @@ static struct {
 	/* Some Canon 400D do not have the infamous PTP bug, but some do.
 	 * see http://bugs.kde.org/show_bug.cgi?id=141577 -Marcus */
 	{"Canon:EOS 400D (PTP mode)",           0x04a9, 0x3110, PTP_CAP},
+	{"Canon:EOS Digital Rebel XTi (PTP mode)", 0x04a9, 0x3110, PTP_CAP},
+	{"Canon:EOS Kiss Digital X (PTP mode)", 0x04a9, 0x3110, PTP_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1456391&group_id=8874 */
 	{"Canon:EOS 30D (PTP mode)",            0x04a9, 0x3113, PTP_CAP},
 	{"Canon:Digital IXUS 900Ti (PTP mode)", 0x04a9, 0x3115, 0},
@@ -886,6 +904,8 @@ static struct {
 	 * Marcus: supports MTP proplists, but these are 2 times slower than regular
 	 * data retrieval. */
 	{"Canon:EOS 450D (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:EOS Rebel XSi (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:EOS Kiss X2 (PTP mode)",    	0x04a9, 0x3145, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* reported by Ferry Huberts */
 	{"Canon:EOS 40D (PTP mode)",    	0x04a9, 0x3146, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
@@ -977,12 +997,18 @@ static struct {
 	/* Carsten Grohmann <carstengrohmann@gmx.de> */
 	{"Canon:Digital IXUS 110 IS",		0x04a9, 0x31bd, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Willy Tarreau <w@1wt.eu> */
+	{"Canon:PowerShot A2100 IS",		0x04a9, 0x31be, PTPBUG_DELETE_SENDS_EVENT},
+
+
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* IRC Reporter */
 	{"Canon:PowerShot SX200 IS",		0x04a9, 0x31c0, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2789326&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 990 IS",		0x04a9, 0x31c1, PTPBUG_DELETE_SENDS_EVENT},
+	/* Michael Ole Olsen <gnu@gmx.net> */
+	{"Canon:PowerShot SD970 IS",		0x04a9, 0x31c1, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/?func=detail&aid=2769511&group_id=8874&atid=208874 */
 	/* Do not confuse with PowerShot SX100IS */
 	{"Canon:Digital IXUS 100 IS",           0x04a9, 0x31c2, PTPBUG_DELETE_SENDS_EVENT},
@@ -996,11 +1022,16 @@ static struct {
 	{"Canon:Digital IXUS 95 IS",		0x04a9, 0x31c4, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2796275&group_id=8874&atid=358874 */
 	{"Canon:EOS 500D",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS Rebel T1i",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS Kiss X3",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
 	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
 	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
+	/* via libmtp */
+	{"Canon:PowerShot SX20 IS",		0x04a9, 0x31e4, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2918540&group_id=8874&atid=358874 */
 	{"Canon:IXY 220 IS",			0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 120 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD940 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
@@ -1048,6 +1079,8 @@ static struct {
 	{"Fuji:FinePix F200 EXR",		0x04cb, 0x01e4, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
 	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
+	/* Luke Symes <allsymes@gmail.com> */
+	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -1484,13 +1517,14 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 			PTPPropertyValue	val;
-			int 			tries = 100;
+			int 			tries = 20;
 			PTPDevicePropDesc       dpd;
 
 			SET_CONTEXT_P(params, context);
 
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
+			memset (&dpd,0,sizeof(dpd));
 			/* do not set it everytime, it will cause delays */
 			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
 			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
@@ -1502,6 +1536,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_ERROR;
 				}
 			}
+			ptp_free_devicepropdesc (&dpd);
+
 			while (tries--) {
 				PTPCanon_changes_entry	*entries = NULL;
 				int			nrofentries = 0;
@@ -1538,6 +1574,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				} else {
 					if (ret == 0xa102) { /* means "not there yet" ... so wait */
 						gp_context_idle (context);
+						usleep (50*1000);
 						continue;
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
@@ -1837,6 +1874,13 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
 			return ret;
 		}
+/* this does result in 0x2009 (invalid object id) with the D90 ... curiuos
+		ret = ptp_nikon_delete_sdram_image (params, newobject);
+ */
+		ret = ptp_deleteobject (params, newobject, 0);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
+		}
 	}
 	return GP_OK;
 }
@@ -1844,7 +1888,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 /* 60 seconds timeout ... (for long cycles) */
 #define EOS_CAPTURE_TIMEOUT 60
 
-/* This is the capture method used by the Canon EOS series */
+/* This is currently the capture method used by the EOS 400D
+ * ... in development.
+ */
 static int
 camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
@@ -2413,6 +2459,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				switch (entries[i].type) {
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
+					free (entries[i].u.object.oi.Filename);
 
 					newobject = entries[i].u.object.oid;
 
@@ -2468,6 +2515,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if (!path)
 						return GP_ERROR_NO_MEMORY;
 					strcpy  (path->name,  entries[i].u.object.oi.Filename);
+					free (entries[i].u.object.oi.Filename);
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entries[i].u.object.oi.StorageID);
 					get_folder_from_handle (camera, entries[i].u.object.oi.StorageID, entries[i].u.object.oi.ParentObject, path->folder);
 					/* delete last / or we get confused later. */
@@ -3992,13 +4040,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		case PTP_OFC_CANON_CRW:
 		{
 			/* MORE MAGIC */
-			
-
-			unsigned int ifd0offset, dircount, nextifdoff, nextoff, i;
+			unsigned int ifd0offset, dircount, nextifdoff, nextoff, i, xlen;
 			/* Note: Could also use Canon partial downloads */
 			CPR (context, ptp_getpartialobject (params,
 				params->handles.Handler[object_id],
-				0, 8, &ximage));
+				0, 8, &ximage, &xlen));
 			/* FIXME: handle other endianness too */
 			if ((ximage[0] != 'M') || (ximage[1] != 'M')) {
 				free (ximage);
@@ -4014,13 +4060,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			/* Read dir count of IFD */
 			CPR (context, ptp_getpartialobject (params,
 				params->handles.Handler[object_id],
-				ifd0offset, 2, &ximage));
+				ifd0offset, 2, &ximage, &xlen));
 			dircount = ximage[1] + (ximage[0] << 8);
 			free (ximage);
 			gp_log (GP_LOG_DEBUG, "ptp2/exif-tiff-reader", "dircount is %d", dircount);
 			CPR (context, ptp_getpartialobject (params,
 				params->handles.Handler[object_id],
-				ifd0offset+2, dircount*12+4 , &ximage));
+				ifd0offset+2, dircount*12+4 , &ximage, &xlen));
 			nextoff = 0;
 			for (i=0;i<dircount;i++) {
 				unsigned int size = 0;
@@ -4060,10 +4106,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		}
 		case PTP_OFC_EXIF_JPEG: {
+			uint32_t xlen = 0;
 			/* Note: Could also use Canon partial downloads */
 			CPR (context, ptp_getpartialobject (params,
 				params->handles.Handler[object_id],
-				0, 10, &ximage));
+				0, 10, &ximage, &xlen));
 
 			if (!((ximage[0] == 0xff) && (ximage[1] == 0xd8))) {	/* SOI */
 				free (ximage);
@@ -4083,8 +4130,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			ximage = NULL;
 			CPR (context, ptp_getpartialobject (params,
 				params->handles.Handler[object_id],
-				offset, maxbytes, &ximage));
-			CR (gp_file_set_data_and_size (file, (char*)ximage, maxbytes));
+				offset, maxbytes, &ximage, &xlen));
+			CR (gp_file_set_data_and_size (file, (char*)ximage, xlen));
 			break;
 		}
 		default:

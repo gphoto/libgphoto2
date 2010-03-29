@@ -52,6 +52,7 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
+#include "ptp-pack.c"
 
 #ifdef __GNUC__
 # define __unused__ __attribute__((unused))
@@ -187,6 +188,8 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		}
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","Card value is %d",cardval);
 	}
+	ptp_free_devicepropdesc (&dpd);
+
 	if (value == 1)
 		value = cardval;
 
@@ -268,17 +271,16 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		PTPCanonEOSDeviceInfo x;
 		int i;
 
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx))
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
 			ptp_canon_eos_getdeviceinfo (params, &x);
 
-		for (i=0;i<x.EventsSupported_len;i++) {
-			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
-		}
-		for (i=0;i<x.DevicePropertiesSupported_len;i++) {
-			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
-		}
-		for (i=0;i<x.unk_len;i++) {
-			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
+			for (i=0;i<x.EventsSupported_len;i++)
+				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
+			for (i=0;i<x.DevicePropertiesSupported_len;i++)
+				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
+			for (i=0;i<x.unk_len;i++)
+				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
+			ptp_free_EOS_DI (&x);
 		}
 	}
 	/* Get the second bulk set of event data */
@@ -298,6 +300,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
 
+	ptp_free_DI (&params->deviceinfo);
 	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
@@ -310,12 +313,16 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		return GP_ERROR;
 	}
 	if (sids.n >= 1) {
-		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0]);
+		unsigned char *sdata;
+		unsigned int slen;
+		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0], &sdata, &slen );
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageinfo failed!");
 			return GP_ERROR;
 		}
+		free (sdata);
 	}
+	free (sids.Storage);
 
 	/* FIXME: 9114 call missing here! */
 
@@ -1735,6 +1742,22 @@ static struct deviceproptableu16 canon_selftimer[] = {
 	{ N_("2 seconds"), 	20,	0 },
 };
 GENERIC16TABLE(Canon_SelfTimer,canon_selftimer)
+
+/* actually it is a flag value, 1 = TFT, 2 = PC */
+static struct deviceproptableu16 canon_eos_cameraoutput[] = {
+	{ N_("Undefined"),	0, 0 },
+	{ N_("TFT"),		1, 0 },
+	{ N_("PC"), 		2, 0 },
+	{ N_("TFT + PC"), 	3, 0 },
+};
+GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
+
+/* values currently unknown */
+static struct deviceproptableu16 canon_eos_evfmode[] = {
+	{ "0",	0, 0 },
+	{ "1",	1, 0 },
+};
+GENERIC16TABLE(Canon_EOS_EVFMode,canon_eos_evfmode)
 
 #if 0 /* reimplement with viewfinder on/off below */
 static struct deviceproptableu8 canon_cameraoutput[] = {
@@ -4340,6 +4363,8 @@ static struct submenu camera_settings_menu[] = {
         { N_("CSM Menu"), "csmmenu", PTP_DPC_NIKON_CSMMenu, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
+        { N_("Camera Output"), "output", PTP_DPC_CANON_EOS_EVFOutputDevice, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_CameraOutput, _put_Canon_EOS_CameraOutput },
+        { N_("EVF Mode"), "evfmode", PTP_DPC_CANON_EOS_EVFMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFMode, _put_Canon_EOS_EVFMode },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
@@ -4451,6 +4476,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Metering Mode"), "meteringmode", PTP_DPC_CANON_EOS_MeteringMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_MeteringMode, _put_Canon_MeteringMode},
 	{ N_("AF Distance"), "afdistance", PTP_DPC_CANON_AFDistance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_AFDistance, _put_Canon_AFDistance},
 	{ N_("Focus Area Wrap"), "focusareawrap", PTP_DPC_NIKON_FocusAreaWrap, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("Exposure Delay Mode"), "exposuredelaymode", PTP_DPC_NIKON_ExposureDelayMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Lock"), "exposurelock", PTP_DPC_NIKON_AELockMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("AE-L/AF-L Mode"), "aelaflmode", PTP_DPC_NIKON_AELAFLMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AELAFLMode, _put_Nikon_AELAFLMode},
 	{ N_("File Number Sequencing"), "filenrsequencing", PTP_DPC_NIKON_FileNumberSequence, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
@@ -4595,8 +4621,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 	}
 	/* Last menu is "Other", a generic fallback window. */
-	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len)
+	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len) {
+		free (setprops);
 		return GP_OK;
+	}
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
 	gp_widget_set_name (section, "other");
@@ -4748,6 +4776,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_append (section, widget);
 		ptp_free_devicepropdesc(&dpd);
 	}
+	free (setprops);
 	return GP_OK;
 }
 

@@ -1471,7 +1471,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_AngleLevel			0xD067
 #define PTP_DPC_NIKON_D1ShootingSpeed			0xD068 /* continous speed low */
 #define PTP_DPC_NIKON_D2MaximumShots			0xD069
-#define PTP_DPC_NIKON_D3ExpDelayMode			0xD06A
+#define PTP_DPC_NIKON_ExposureDelayMode			0xD06A
 #define PTP_DPC_NIKON_LongExposureNoiseReduction	0xD06B
 #define PTP_DPC_NIKON_FileNumberSequence		0xD06C
 #define PTP_DPC_NIKON_ControlPanelFinderRearControl	0xD06D
@@ -2054,7 +2054,8 @@ uint16_t ptp_getobject		(PTPParams *params, uint32_t handle,
 uint16_t ptp_getobject_tofd     (PTPParams* params, uint32_t handle, int fd);
 uint16_t ptp_getobject_to_handler (PTPParams* params, uint32_t handle, PTPDataHandler*);
 uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offset,
-				uint32_t maxbytes, unsigned char** object);
+				uint32_t maxbytes, unsigned char** object,
+				uint32_t *len);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
 				unsigned char** object);
 
@@ -2381,7 +2382,7 @@ uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char**, unsigned int*);
 
 uint16_t ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
-uint16_t ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1);
+uint16_t ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1, unsigned char**, unsigned int*);
 uint16_t ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
 uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size);
 #define ptp_canon_eos_setremotemode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRemoteMode,1,p1)
@@ -2461,7 +2462,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 /**
  * ptp_nikon_mfdrive:
  *
- * This command runs (drives) the lens autofocus.
+ * This command runs (drives) the lens focus manually.
  *  
  * params:      PTPParams*
  * flag:        0x1 for (no limit - closest), 0x2 for (closest - no limit)
@@ -2472,7 +2473,17 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  **/
 #define ptp_nikon_mfdrive(params,flag,amount) ptp_generic_no_data(params,PTP_OC_NIKON_MfDrive,2,flag,amount)
 
-/* FIXME: unclear if correct */
+/**
+ * ptp_canon_eos_drivelens:
+ *
+ * This command runs (drives) the lens focus manually.
+ *  
+ * params:      PTPParams*
+ * amount:      0x1-0x3 for near range, 0x8001-0x8003 for far range.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
 #define ptp_canon_eos_drivelens(params,amount) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DriveLens,1,amount)
 /**
  * ptp_nikon_capture:
@@ -2497,6 +2508,18 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  *
  **/
 #define ptp_nikon_capture_sdram(params) ptp_generic_no_data(params,PTP_OC_NIKON_AfCaptureSDRAM,0)
+/**
+ * ptp_nikon_delete_sdram_image:
+ *
+ * This command deletes the current SDRAM image
+ *  
+ * params:      PTPParams*
+ * uint32_t	oid
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_delete_sdram_image(params,oid) ptp_generic_no_data(params,PTP_OC_NIKON_DelImageSDRAM,1,oid)
 /**
  * ptp_nikon_start_liveview:
  *
