@@ -219,7 +219,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	case GP_PORT_USB_SCSI:
 		snprintf(port->settings.usbscsi.path,
 			 sizeof(port->settings.usbscsi.path), "%s",
-			 strchr(info.path, ':') + 1);
+			 strchr(info->path, ':') + 1);
 		break;
 	default:
 		/* Nothing in here */
