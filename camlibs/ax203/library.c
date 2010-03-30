@@ -46,9 +46,7 @@
 static const struct ax203_devinfo ax203_devinfo[] = {
 	{ 0x1908, 0x1315, AX203_FIRMWARE_3_3_x, AX203_COMPRESSION_YUV },
 	{ 0x1908, 0x1320, AX203_FIRMWARE_3_4_x, AX203_COMPRESSION_YUV_DELTA },
-#if 0 /* Unknown compression */
-	{ 0x1908, 0x0102, AX203_FIRMWARE_3_5_x, AX203_COMPRESSION_UNKNOWN },
-#endif
+	{ 0x1908, 0x0102, AX203_FIRMWARE_3_5_x, AX203_COMPRESSION_JPEG },
 	{}
 };
 

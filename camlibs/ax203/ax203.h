@@ -25,6 +25,8 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2-endian.h>
 
+#include "tinyjpeg.h"
+
 #define GP_MODULE "ax203"
 
 #define AX203_ABFS_MAGIC		"ABFS"
@@ -33,6 +35,13 @@
 #define AX203_ABFS_FILE_OFFSET(idx)     (0x20 + 2 * (idx))
 #define AX203_ABFS_SIZE			0x2000
 #define AX203_PICTURE_START		0x52000
+
+/* Firmware v3.5.x frames are ax206 based, so use AX206 as prefix for
+   there ABFS related defines (where different from the older firmware) */
+#define AX206_ABFS_START		0x70000
+#define AX206_ABFS_FILE_OFFSET(idx)     (0x10 + 8 * (idx))
+#define AX206_ABFS_SIZE			0x1000
+#define AX206_PICTURE_START		0x71000
 
 #define AX203_TO_DEV		0xCB
 #define AX203_FROM_DEV		0xCD
@@ -56,19 +65,20 @@
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
 enum ax203_firmware {
-        AX203_FIRMWARE_3_3_x,
-        AX203_FIRMWARE_3_4_x,
-        AX203_FIRMWARE_3_5_x,
+	AX203_FIRMWARE_3_3_x,
+	AX203_FIRMWARE_3_4_x,
+	AX203_FIRMWARE_3_5_x,
 };
 
 enum ax203_compression {
-        AX203_COMPRESSION_YUV,
-        AX203_COMPRESSION_YUV_DELTA,
-        AX203_COMPRESSION_UNKNOWN,
+	AX203_COMPRESSION_YUV,
+	AX203_COMPRESSION_YUV_DELTA,
+	AX203_COMPRESSION_JPEG,
 };
 
 struct _CameraPrivateLibrary {
 	FILE *mem_dump;
+	struct jdec_private *jdec;
 	char *mem;
 	int sector_is_present[2097152 / SPI_EEPROM_SECTOR_SIZE];
 	int sector_dirty[2097152 / SPI_EEPROM_SECTOR_SIZE];
@@ -77,8 +87,8 @@ struct _CameraPrivateLibrary {
 	int width;
 	int height;
 	/* USB "bridge" / firmware attributes */
-        enum ax203_firmware firmware_version;
-        enum ax203_compression compression_version;
+	enum ax203_firmware firmware_version;
+	enum ax203_compression compression_version;
 	/* EEPROM attributes */
 	int mem_size;
 	int has_4k_sectors;
@@ -87,15 +97,22 @@ struct _CameraPrivateLibrary {
 struct ax203_devinfo {
 	unsigned short vendor_id;
 	unsigned short product_id;
-        int firmware_version;
-        int compression_version;
+	int firmware_version;
+	int compression_version;
 };
 
 struct ax203_fileinfo {
-        int address;
-        int present;
-        int size;
+	int address;
+	int present;
+	int size;
 };
+
+struct ax203_v3_5_x_raw_fileinfo {
+	uint8_t present;
+	uint32_t address;
+	uint16_t size;
+	uint8_t pad;
+} __attribute__((packed));
 
 /* functions in ax203.c */
 int
@@ -143,5 +160,9 @@ ax203_decode_yuv_delta(char *src, int **dest, int width, int height);
 
 void
 ax203_encode_yuv_delta(int **src, char *dest, int width, int height);
+
+int
+ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
+	int width, int height);
 
 #endif

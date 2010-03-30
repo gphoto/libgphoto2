@@ -28,6 +28,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <gd.h>
 
 #include <gphoto2/gphoto2-result.h>
 #include "ax203.h"
@@ -508,13 +509,24 @@ static int ax203_detect_lcd_size(Camera *camera)
 static int ax203_check_fs_signature(Camera *camera)
 {
 	char buf[4];
-	
-	CHECK (ax203_read_mem (camera, camera->pl->fs_start, buf, 4))
+	int fs_start;
+
+	switch (camera->pl->firmware_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+		fs_start = AX203_ABFS_START;
+		break;
+	case AX203_FIRMWARE_3_5_x:
+		fs_start = AX206_ABFS_START;
+		break;
+	}
+
+	CHECK (ax203_read_mem (camera, fs_start, buf, 4))
 	if (memcmp (buf, AX203_ABFS_MAGIC, 4)) {
 		gp_log (GP_LOG_ERROR, "ax203", "ABFS magic missing");
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
-	
+
 	return GP_OK;
 }
 
@@ -563,6 +575,25 @@ ax203_write_v3_3_x_v3_4_x_filecount(Camera *camera, int count)
 	return GP_OK;
 }
 
+static int
+ax203_read_v3_5_x_filecount(Camera *camera)
+{
+	/* The v3.5.x firmware "FAT" does not keep a separate file count,
+	   so always return the maximum number of entries it can contain
+	   (and rely on fileinfo.present to figure out how many files there
+	    actually are). */
+	return (AX206_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
+		sizeof(struct ax203_v3_5_x_raw_fileinfo);
+}
+
+static int
+ax203_write_v3_5_x_filecount(Camera *camera, int count)
+{
+	/* This is a no-op as the v3.5.x firmware "FAT" does not keep a
+	   separate file count */
+	return GP_OK;
+}
+
 static
 int ax203_read_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
@@ -584,7 +615,7 @@ int ax203_read_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 	case AX203_COMPRESSION_YUV_DELTA:
 		fileinfo->size = camera->pl->width * camera->pl->height * 3/4;
 		break;
-	case AX203_COMPRESSION_UNKNOWN:
+	case AX203_COMPRESSION_JPEG:
 		gp_log (GP_LOG_ERROR, "ax203",
 			"Compression: %d not support with firmware ver: %d",
 			camera->pl->compression_version,
@@ -593,13 +624,6 @@ int ax203_read_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 	}
 
 	return GP_OK;
-}
-
-static
-int ax203_read_v3_5_x_fileinfo(Camera *camera, int idx,
-	struct ax203_fileinfo *fileinfo)
-{
-	return GP_ERROR_NOT_SUPPORTED;	
 }
 
 static
@@ -623,7 +647,7 @@ int ax203_write_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 		size_ok = (fileinfo->size ==
 			   camera->pl->width * camera->pl->height * 3 / 4);
 		break;
-	case AX203_COMPRESSION_UNKNOWN:
+	case AX203_COMPRESSION_JPEG:
 		gp_log (GP_LOG_ERROR, "ax203",
 			"Compression: %d not support with firmware ver: %d",
 			camera->pl->compression_version,
@@ -647,10 +671,37 @@ int ax203_write_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 }
 
 static
+int ax203_read_v3_5_x_fileinfo(Camera *camera, int idx,
+	struct ax203_fileinfo *fileinfo)
+{
+	struct ax203_v3_5_x_raw_fileinfo raw;
+
+	CHECK (ax203_read_mem (camera,
+			       AX206_ABFS_START + AX206_ABFS_FILE_OFFSET (idx),
+			       &raw, sizeof(raw)))
+
+	fileinfo->present = raw.present == 0x01;
+	fileinfo->address = le32toh (raw.address);
+	fileinfo->size    = le16toh (raw.size);
+
+	return GP_OK;	
+}
+
+static
 int ax203_write_v3_5_x_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
 {
-	return GP_ERROR_NOT_SUPPORTED;
+	struct ax203_v3_5_x_raw_fileinfo raw;
+
+	raw.present = fileinfo->present;
+	raw.address = htole32(fileinfo->address);
+	raw.size    = htole16(fileinfo->size);
+
+	CHECK (ax203_write_mem (camera,
+			       AX206_ABFS_START + AX206_ABFS_FILE_OFFSET (idx),
+			       &raw, sizeof(raw)))
+
+	return GP_OK;
 }
 
 /***************** Begin "public" functions *****************/
@@ -663,7 +714,7 @@ ax203_read_filecount(Camera *camera)
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_read_v3_3_x_v3_4_x_filecount (camera);
 	case AX203_FIRMWARE_3_5_x:
-		return GP_ERROR_NOT_SUPPORTED;
+		return ax203_read_v3_5_x_filecount (camera);;
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;
@@ -677,7 +728,7 @@ ax203_write_filecount(Camera *camera, int count)
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_write_v3_3_x_v3_4_x_filecount (camera, count);
 	case AX203_FIRMWARE_3_5_x:
-		return GP_ERROR_NOT_SUPPORTED;
+		return ax203_write_v3_5_x_filecount (camera, count);
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;
@@ -728,6 +779,10 @@ ax203_file_present(Camera *camera, int idx)
 static int
 ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 {
+	int ret;
+	unsigned int x, y, width, height;
+	unsigned char *components[3];
+
 	switch (camera->pl->compression_version) {
 	case AX203_COMPRESSION_YUV:
 		ax203_decode_yuv (src, dest, camera->pl->width,
@@ -737,14 +792,49 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		ax203_decode_yuv_delta (src, dest, camera->pl->width,
 					camera->pl->height);
 		return GP_OK;
-	case AX203_COMPRESSION_UNKNOWN:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"Compression: %d not supported yet",
-			camera->pl->compression_version);
-		return GP_ERROR_NOT_SUPPORTED;
+	case AX203_COMPRESSION_JPEG:
+		if (!camera->pl->jdec) {
+			camera->pl->jdec = tinyjpeg_init ();
+			if (!camera->pl->jdec)
+				return GP_ERROR_NO_MEMORY;
+		}
+		ret = tinyjpeg_parse_header (camera->pl->jdec,
+					     (unsigned char *)src, src_size);
+		if (ret) {
+			gp_log (GP_LOG_ERROR, "ax203",
+				"Error parsing header: %s",
+				tinyjpeg_get_errorstring (camera->pl->jdec));
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		tinyjpeg_get_size (camera->pl->jdec, &width, &height);
+		if ((int)width  != camera->pl->width ||
+		    (int)height != camera->pl->height) {
+			gp_log (GP_LOG_ERROR, "ax203",
+				"Hdr dimensions %ux%u don't match lcd %dx%d",
+				width, height,
+				camera->pl->width, camera->pl->height);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		ret = tinyjpeg_decode (camera->pl->jdec);
+		if (ret) {
+			gp_log (GP_LOG_ERROR, "ax203",
+				"Error decoding JPEG data: %s",
+				tinyjpeg_get_errorstring (camera->pl->jdec));
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		tinyjpeg_get_components (camera->pl->jdec, components);
+		for (y = 0; y < height; y++) {
+			for (x = 0; x < width; x++) {
+				dest[y][x] = gdTrueColor (components[0][0],
+							  components[0][1],
+							  components[0][2]);
+				components[0] += 3;
+			}
+		}
+		return GP_OK;
 	}
 	/* Never reached */
-	return GP_ERROR_NOT_SUPPORTED;	
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 /* Returns the number of bytes of dest used or a negative error code */
@@ -768,11 +858,10 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 		ax203_encode_yuv_delta (src, dest, camera->pl->width,
 					camera->pl->height);
 		return size;
-	case AX203_COMPRESSION_UNKNOWN:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"Compression: %d not supported yet",
-			camera->pl->compression_version);
-		return GP_ERROR_NOT_SUPPORTED;
+	case AX203_COMPRESSION_JPEG:
+		return ax203_compress_jpeg (src, (uint8_t *)dest, dest_size,
+					    camera->pl->width,
+					    camera->pl->height);
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;	
@@ -793,7 +882,9 @@ ax203_read_file(Camera *camera, int idx, int **rgb24)
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	src = malloc(fileinfo.size);
+	/* Allocate 1 extra byte as tinyjpeg's huffman decoding sometimes
+	   reads a few bits more then it needs */
+	src = malloc(fileinfo.size + 1);
 	if (!src) {
 		gp_log (GP_LOG_ERROR, "ax203", "allocating memory");
 		return GP_ERROR_NO_MEMORY;
@@ -802,7 +893,7 @@ ax203_read_file(Camera *camera, int idx, int **rgb24)
 	ret = ax203_read_mem (camera, fileinfo.address, src, fileinfo.size);
 	if (ret < 0) { free(src); return ret; }
 
-	ret = ax203_decode_image (camera, src, fileinfo.size, rgb24);
+	ret = ax203_decode_image (camera, src, fileinfo.size + 1, rgb24);
 	free(src);
 
 	return ret;
@@ -811,7 +902,7 @@ ax203_read_file(Camera *camera, int idx, int **rgb24)
 int
 ax203_write_file(Camera *camera, int **rgb24)
 {
-	int i, count, size, start, end, hole_start = 0, hole_idx = 0;
+	int i, count, size, start, end = 0, hole_start = 0, hole_idx = 0;
 	struct ax203_fileinfo fileinfo;
 	const int buf_size = camera->pl->width * camera->pl->height;
 	char buf[buf_size];
@@ -823,7 +914,15 @@ ax203_write_file(Camera *camera, int **rgb24)
 	if (count < 0) return count;
 
 	/* Try to find a large enough "hole" in the memory */
-	end = AX203_PICTURE_START;
+	switch (camera->pl->firmware_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+		end = AX203_PICTURE_START;
+		break;
+	case AX203_FIRMWARE_3_5_x:
+		end = AX206_PICTURE_START;
+		break;
+	}
 	for (i = 0; i <= count; i++) {
 		/* Fake a present fileinfo at the end of picture mem */
 		if (i == count) {
@@ -936,9 +1035,13 @@ ax203_delete_all(Camera *camera)
 				AX203_ABFS_SIZE - AX203_ABFS_FILE_OFFSET (0)))
 		break;
 	case AX203_FIRMWARE_3_5_x:
-		return GP_ERROR_NOT_SUPPORTED;
+		memset(buf, 0, AX206_ABFS_SIZE);
+		CHECK (ax203_write_mem (camera,
+				AX206_ABFS_START + AX206_ABFS_FILE_OFFSET (0),
+				buf,
+				AX206_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)))
 	}
-		
+
 	CHECK (ax203_write_filecount (camera, 0))
 
 	return GP_OK;
@@ -1041,15 +1144,7 @@ ax203_init(Camera *camera)
 		return GP_ERROR_IO;
 	}
 
-	switch (camera->pl->firmware_version) {
-	case AX203_FIRMWARE_3_4_x:
-	case AX203_FIRMWARE_3_3_x:
-		camera->pl->fs_start = AX203_ABFS_START;
-		CHECK ( ax203_check_fs_signature (camera))
-		break;
-	case AX203_FIRMWARE_3_5_x:
-		return GP_ERROR_NOT_SUPPORTED;
-	}
+	CHECK ( ax203_check_fs_signature (camera))
 
 	return GP_OK;
 }
@@ -1057,7 +1152,11 @@ ax203_init(Camera *camera)
 static void
 ax203_exit(Camera *camera)
 {
-	free(camera->pl->mem);
+	if (camera->pl->jdec) {
+		tinyjpeg_free (camera->pl->jdec);
+		camera->pl->jdec = NULL;
+	}
+	free (camera->pl->mem);
 	camera->pl->mem = NULL;
 }
 
