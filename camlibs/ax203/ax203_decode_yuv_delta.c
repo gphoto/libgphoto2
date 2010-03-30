@@ -194,15 +194,15 @@ ax203_encode_signed_component_values(int8_t *src, char *dest)
 
 	/* Select a correction table */
 	for (i = 3; i > 0; i--) {
-        	base = src[0] & ~0x07;
+		base = src[0] & ~0x07;
 		for (j = 1; j < 4; j++) {
 			if ((base + corr_tables[i][3] + 4) < src[j] ||
 			    (base + corr_tables[i][4] - 4) > src[j])
 				break;
-                        corr = ax203_find_closest_correction_signed
-                                                        (base, src[j], i);
-        		/* Calculate the base value for the next pixel */
-	        	base = base + corr_tables[i][corr];
+			corr = ax203_find_closest_correction_signed
+							(base, src[j], i);
+			/* Calculate the base value for the next pixel */
+			base = base + corr_tables[i][corr];
 		}
 		/* If we did not break out the above loop the min / max
 		   correction in the current table is enough */
@@ -244,15 +244,15 @@ ax203_encode_unsigned_component_values(uint8_t *src, char *dest)
 
 	/* Select a correction table */
 	for (i = 3; i > 0; i--) {
-        	base = src[0] & ~0x07;
+		base = src[0] & ~0x07;
 		for (j = 1; j < 4; j++) {
 			if ((base + corr_tables[i][3] + 4) < src[j] ||
 			    (base + corr_tables[i][4] - 4) > src[j])
 				break;
-                        corr = ax203_find_closest_correction_unsigned
-                                                        (base, src[j], i);
-        		/* Calculate the base value for the next pixel */
-	        	base = base + corr_tables[i][corr];
+			corr = ax203_find_closest_correction_unsigned
+							(base, src[j], i);
+			/* Calculate the base value for the next pixel */
+			base = base + corr_tables[i][corr];
 		}
 		/* If we did not break out the above loop the min / max
 		   correction in the current table is enough */
