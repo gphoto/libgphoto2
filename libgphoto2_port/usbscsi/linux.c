@@ -214,7 +214,7 @@ gp_port_library_list (GPPortInfoList *list)
 			  _("USB Mass Storage raw SCSI"));
 		CHECK (gp_port_info_list_append (list, info))
 	}
-
+	closedir (dir);
 	return GP_OK;
 }
 
