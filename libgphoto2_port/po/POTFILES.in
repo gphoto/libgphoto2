@@ -4,3 +4,5 @@ libgphoto2_port/gphoto2-port.c
 serial/unix.c
 usb/libusb.c
 disk/disk.c
+usbdiskdirect/linux.c
+usbscsi/linux.c
