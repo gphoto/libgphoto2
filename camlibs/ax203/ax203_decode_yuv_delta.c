@@ -31,7 +31,9 @@
 
 #include "config.h"
 
+#ifdef HAVE_GD
 #include <gd.h>
+#endif
 #include <stdlib.h>
 
 #include "ax203.h"
@@ -50,6 +52,7 @@ static const int corr_tables[4][8] = {
 	{ 0,  4,  8, 12, -16, -12,  -8, -4 },
 };
 
+#ifdef HAVE_GD
 /* With in a compressed 4x4 block, the data is stored 4 component values at a
    time, compressed into 2 bytes, the first 5 bits are a starting value,
    then 2 bits encoding which correction/delta table to use and
@@ -433,4 +436,5 @@ exit:
 	return ret;
 }
 
+#endif
 #endif

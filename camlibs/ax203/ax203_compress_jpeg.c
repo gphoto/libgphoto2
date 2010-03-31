@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifdef HAVE_GD
 #include <gd.h>
 
 #include "ax203.h"
@@ -381,3 +382,4 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 
 	return outc;
 }
+#endif

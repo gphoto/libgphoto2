@@ -31,7 +31,9 @@
 
 #include "config.h"
 
+#ifdef HAVE_GD
 #include <gd.h>
+#endif
 
 #include "ax203.h"
 
@@ -40,6 +42,7 @@
 #define CLAMP_U8(x) (((x) > 255) ? 255 : (((x) < 0) ? 0 : (x)))
 #define CLAMP_S8(x) (((x) > 127) ? 127 : (((x) < -128) ? -128 : (x)))
 
+#ifdef HAVE_GD
 static void
 ax203_decode_block_yuv(char *src, int **dest, int dest_x, int dest_y)
 {
@@ -142,6 +145,7 @@ ax203_encode_yuv(int **src, char *dest, int width, int height)
 		}
 	}
 }
+#endif
 
 #ifdef STANDALONE_MAIN
 

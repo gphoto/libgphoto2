@@ -6,4 +6,4 @@ EXTRA_LTLIBRARIES += ax203.la
 ax203_la_SOURCES = ax203/library.c ax203/ax203.c ax203/ax203.h ax203/ax203_decode_yuv.c ax203/ax203_decode_yuv_delta.c ax203/ax203_compress_jpeg.c ax203/jpeg_memsrcdest.h ax203/jpeg_memsrcdest.c ax203/tinyjpeg.c ax203/tinyjpeg.h ax203/tinyjpeg-internal.h ax203/jidctflt.c
 ax203_la_LDFLAGS = $(camlib_ldflags)
 ax203_la_DEPENDENCIES = $(camlib_dependencies)
-ax203_la_LIBADD = $(camlib_libadd) -lgd -ljpeg
+ax203_la_LIBADD = $(camlib_libadd) @LIBGD@ @LIBJPEG@

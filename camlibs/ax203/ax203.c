@@ -28,7 +28,9 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef HAVE_GD
 #include <gd.h>
+#endif
 
 #include <gphoto2/gphoto2-result.h>
 #include "ax203.h"
@@ -779,6 +781,7 @@ ax203_file_present(Camera *camera, int idx)
 static int
 ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 {
+#ifdef HAVE_GD
 	int ret;
 	unsigned int x, y, width, height;
 	unsigned char *components[3];
@@ -833,6 +836,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		}
 		return GP_OK;
 	}
+#endif
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;
 }
@@ -841,6 +845,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 static int
 ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 {
+#ifdef HAVE_GD
 	int size;
 
 	switch (camera->pl->compression_version) {
@@ -864,6 +869,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 					    camera->pl->height);
 	}
 	/* Never reached */
+#endif
 	return GP_ERROR_NOT_SUPPORTED;	
 }
 
