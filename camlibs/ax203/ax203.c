@@ -41,46 +41,51 @@ static const struct eeprom_info {
 	int mem_size;
 	int has_4k_sectors;
 } ax203_eeprom_info[] = {
-	{ "AMIC A25L040", 0x00133037, 524288, -1 },
-	{ "AMIC A25L080", 0x00143037, 1048576, -1 },
-	{ "AMIC A25L40P", 0x1320377f, 524288, 0 },
+	{ "AMIC A25L040", 0x00133037,  524288, 1 },
+	{ "AMIC A25L080", 0x00143037, 1048576, 1 },
+	{ "AMIC A25L40P", 0x1320377f,  524288, 0 },
 	{ "AMIC A25L80P", 0x1420377f, 1048576, 0 },
 	{ "AMIC A25L16P", 0x1520377f, 2097152, 0 },
 
-	{ "ATmel AT26DF041", 0x0000441f, 524288, -1 },
-	{ "ATmel AT26DF081", 0x0001451f, 1048576, -1 },
-	{ "ATmel AT26DF081_00", 0x0000451f, 1048576, -1 },
-	{ "ATmel AT26DF161", 0x0001461f, 2097152, -1 },
-	{ "ATmel AT26DF161_00", 0x0000461f, 2097152, -1 },
+	/* Note the ATmel AT26DF041 id:0x0000441f is fsck-ed up. It doesn't
+	   support ERASE_64K, (only 4K) and SPI_EEPROM_PP is 0x11 rather then
+	   0x02 (0x02 only programs a single byte). */
+	/* I cannot find a datasheet for the ATmel AT26DF081 id:0x0000451f */
+	{ "ATmel AT26DF161",  0x0000461f, 2097152, 1 },
+	{ "ATmel AT26DF081A", 0x0001451f, 1048576, 1 },
+	{ "ATmel AT26DF161A", 0x0001461f, 2097152, 1 },
+	{ "ATmel AT25DF081",  0x0002451f, 1048576, 1 },
+	{ "ATmel AT25DF161",  0x0002461f, 2097152, 1 },
 
-	{ "EON EN25B16", 0x1c15201c, 2097152, -1 },
-	{ "EON EN25B32", 0x1c16201c, 4194304, -1 },
-	{ "EON F08", 0x1c14311c, 1048576, -1 },
-	{ "EON F16", 0x1c15311c, 2097152, -1 },
+	{ "EON EN25B16", 0x1c15201c, 2097152, 0 },
+	{ "EON EN25B32", 0x1c16201c, 4194304, 0 },
+	{ "EON EN25F80", 0x1c14311c, 1048576, 1 },
+	{ "EON EN25F16", 0x1c15311c, 2097152, 1 },
 
-	{ "ESI ES25P80", 0x0014204a, 1048576, -1 },
-	{ "ESI ES25P16", 0x0015204a, 2097152, -1 },
+	{ "ESI ES25P80", 0x0014204a, 1048576, 0 },
+	{ "ESI ES25P16", 0x0015204a, 2097152, 0 },
 
-	{ "JTK25L008", 0x8c14208c, 1048576, -1 },
+	{ "ESMT F25L008 (top)",    0x8c14208c, 1048576, 1 },
+	{ "ESMT F25L008 (bottom)", 0x8c14218c, 1048576, 1 },
 
-	{ "KH25L8005M2C-15M", 0x001420c2, 1048576, -1 },
-
-	{ "MXIC MX25L4005A", 0xc21320c2, 524288, 1 },
+	{ "MXIC MX25L4005A", 0xc21320c2,  524288, 1 },
 	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1 },
 	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1 },
 
-	{ "Pm25LV040", 0x007e9d7f,  524288, -1 },
+	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 0 },
 
-	{ "Spansion S25FL004A", 0x00120201, 524288, -1 },
-	{ "Spansion S25FL008A", 0x00130201, 1048576, -1 },
-	{ "Spansion S25FL016A", 0x00140201, 2097152, -1 },
+	{ "Spansion S25FL004A", 0x00120201,  524288, 0 },
+	{ "Spansion S25FL008A", 0x00130201, 1048576, 0 },
+	{ "Spansion S25FL016A", 0x00140201, 2097152, 0 },
 
-	{ "SST25VF080", 0xbf8e25bf, 1048576, -1 },
-	{ "SST25F160",  0xbf4125bf, 2097152, -1 },
+	/* The SST25VF080 and SST25VF016 (id:0xbf8e25bf & 0xbf4125bf) PP
+	   instruction can only program a single byte at a time. Thus they
+	   are not supported */
 
-	{ "WIN25P80", 0x001420ef, 1048576, -1 },
+	{ "Winbond W25P80", 0x001420ef, 1048576, 0 },
+	{ "Winbond W25P16", 0x001420ef, 2097152, 0 },
 
-	{ "Winbond W25X40", 0x001330ef, 524288, 1 },
+	{ "Winbond W25X40", 0x001330ef,  524288, 1 },
 	{ "Winbond W25X80", 0x001430ef, 1048576, 1 },
 	{ "Winbond W25X16", 0x001530ef, 2097152, 1 },
 	{ "Winbond W25X32", 0x001630ef, 4194304, 1 },
