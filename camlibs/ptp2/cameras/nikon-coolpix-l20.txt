@@ -1,0 +1,43 @@
+Camera summary:                                                           
+    
+Manufacturer: Nikon Corporation
+Model: L20
+  Version: COOLPIX L20 V1.0
+  Serial Number: ............
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0;
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Defined Type, JPEG, DPOF, MS AVI, Apple Quicktime
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc87/Width dc88/Height dcd3/ImageBitDepth
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc87/Width dc88/Height dc89/Duration de97/ScanDepth de9b/VideoFourCCCodec de9c/VideoBitRate de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: L20
+	VolumeLabel: None
+	Storage Type: Builtin RAM
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 21692416 (20 MB)
+	Free Space (Bytes): 18841600 (17 MB)
+	Free Space (Images): 15
+
+Device Property Summary:
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5,6,7] value: 4
+Date & Time(0x5011):(readwrite) (type=0xffff) '20090101T000000'
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Flash off (2)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Focal Length(0x5008):(read only) (type=0x6) Enumeration [3500,4600,5300,6100,7300,8600,10500] value: 46 mm (4600)
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
