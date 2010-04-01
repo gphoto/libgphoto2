@@ -25,6 +25,8 @@ Files with samples:
 
 	sample-capture.c: Minimalistic remote capture sample.
 
+	sample-trigger-capture.c: New capture trigger and then loop example.
+
 	lunkwill-canon-capture.c: A simple capture program that captures
 	                          a single image, retrieves it to disk,
 				  and removes it from the camera.
