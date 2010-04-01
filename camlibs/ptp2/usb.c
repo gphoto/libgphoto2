@@ -452,7 +452,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 		ret = dtoh16(usbresp.code);
 	}
 	if (ret!=PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR, "ptp2/usb_getresp","request code 0x%04x getting resp error 0x%04x", resp->Code, ret);
+		gp_log (GP_LOG_DEBUG, "ptp2/usb_getresp","request code 0x%04x getting resp error 0x%04x", resp->Code, ret);
 		return ret;
 	}
 	/* build an appropriate PTPContainer */
