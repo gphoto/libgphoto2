@@ -1112,6 +1112,8 @@ static struct {
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* Marco Michna at SUSE */
 	{"Apple:iPod Touch 2G (PTP mode)",	0x05ac, 0x1293, 0},
+	/* Mark Lehrer <mark@knm.org> */
+	{"Apple:iPhone 3GS (PTP mode)",		0x05ac, 0x1294, 0},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
