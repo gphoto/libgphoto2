@@ -7,9 +7,8 @@ disk_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(INTL_CFLAGS) \
 	$(LIBUSB_CFLAGS) \
-	$(HAL_CFLAGS) \
 	$(CPPFLAGS)
 disk_la_DEPENDENCIES = $(iolib_dependencies)
 disk_la_LIBADD = $(iolib_libadd)
-disk_la_LIBADD += $(INTLLIBS) $(HAL_LIBS)
+disk_la_LIBADD += $(INTLLIBS)
 disk_la_SOURCES = disk/disk.c

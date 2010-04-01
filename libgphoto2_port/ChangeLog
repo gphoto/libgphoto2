@@ -1,3 +1,8 @@
+2010-04-01  Marcus Meissner  <meissner@suse.de>
+
+	* disk driver: Get rid of HAL, upstream unmaintained
+	  and the team strongly recommends we do not use it anymore.
+
 2009-10-03  Marcus Meissner  <meissner@suse.de>
 
 	* gphoto2/gphoto2-port-log.h, libgphoto2_port/gphoto2-port-log.c:

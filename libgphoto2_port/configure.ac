@@ -367,25 +367,6 @@ dnl depends on libusb's availability
 GP_UDEV([test "x$have_LIBUSB" = xyes])
 
 
-dnl ---------------------------------------------------------------------------
-dnl disk - hal and various stuff
-dnl ---------------------------------------------------------------------------
-AC_ARG_WITH([hal],
-	AS_HELP_STRING([--without-hal], [whether to enable HAL disk autodetection]),
-	,with_hal=yes)
-
-if test "x$with_hal" = "xyes"; then
-	have_hal=true
-	PKG_CHECK_MODULES(HAL, [dbus-1 >= 0.31 hal >= 0.5.0], 
-		       [have_hal=true], 
-		       [have_hal=false])
-	if test "x$have_hal" = "xtrue"; then
-		AC_SUBST(HAL_CFLAGS)
-		AC_SUBST(HAL_LIBS)
-		AC_DEFINE(HAVE_HAL,1,[defined if HAL is available])
-	fi
-fi
-
 AC_ARG_ENABLE([disk],
 	AS_HELP_STRING([--disable-disk], [enable the 'disk' port driver]),
 	,enable_disk=yes)

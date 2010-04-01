@@ -53,10 +53,6 @@
 #define endmntent(f) fclose(f)
 #endif
 
-#ifdef HAVE_HAL
-#include <hal/libhal.h>
-#endif
-
 #include <gphoto2/gphoto2-port.h>
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -96,112 +92,6 @@ int
 gp_port_library_list (GPPortInfoList *list)
 {
 	GPPortInfo info;
-#ifdef HAVE_HAL
-        LibHalContext *ctx;
-        DBusError error;
-        DBusConnection *dbus_connection;
-        int i;
-        int num_volumes;
-        char **volumes;
-        char *udi;
-
-        ctx = libhal_ctx_new ();
-        if (!ctx) {
-		gp_log(GP_LOG_DEBUG, "gphoto2-port/disk", 
-		       "failed to initialize HAL!\n");
-                goto generic;
-        }
-        dbus_error_init (&error);
-
-        dbus_connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
-
-        if (dbus_error_is_set (&error)) {
-		gp_log (GP_LOG_DEBUG, "gphoto2-port/disk", 
-			"hal_initialize failed: %s", 
-			error.message);
-		dbus_error_free (&error);
-		libhal_ctx_free(ctx);
-                goto generic;
-        }
-
-        libhal_ctx_set_dbus_connection (ctx, dbus_connection);
-
-        dbus_error_init (&error);
-        volumes = libhal_find_device_by_capability (ctx, "volume",
-                                                    &num_volumes, &error);
-        if (volumes == NULL) {
-		if (dbus_error_is_set (&error)) {
-			gp_log (GP_LOG_DEBUG, "gphoto2-port/disk", 
-				"libhal: %s", 
-				error.message);
-			dbus_error_free (&error);
-		}
-                goto generic;
-        }
-
-	gp_log(GP_LOG_DEBUG, "gphoto2-port/disk", "found %d volumes", 
-	       num_volumes); 
-        for (i = 0; i < num_volumes; i++) {
-                udi = volumes [i];
-		
-                /* don't attempt to mount already mounted volumes */
-                if (!libhal_device_property_exists (ctx, udi,
-                                                    "volume.is_mounted",
-                                                    NULL) ||
-                    libhal_device_get_property_bool (ctx, udi,
-                                                     "volume.is_mounted",
-                                                     NULL)) 
-		{
-			char *mountpoint = NULL;
-			char *mediainfo = NULL;
-			char *s;
-
-			if (!libhal_device_property_exists (ctx, udi,
-							   "volume.mount_point",
-							    NULL)) {
-				continue;
-			}
- 			mountpoint = libhal_device_get_property_string(ctx, udi,
-								       "volume.mount_point",
-								       &error);
-			if (mountpoint == NULL) {
-				if (dbus_error_is_set (&error)) {
-					gp_log (GP_LOG_DEBUG, 
-						"gphoto2-port/disk",
-						"libhal: %s", error.message);
-					dbus_error_free (&error);
-				}
-				continue;
-			}
-			mediainfo = libhal_device_get_property_string(ctx, udi,
-								       "info.product",
-								       &error);
-			gp_port_info_new (&info);
-			gp_port_info_set_type (info, GP_PORT_DISK);
-
-			s = malloc (strlen(_("Media '%s'"))+strlen(mediainfo?mediainfo:_("(unknown)"))+1);
-			sprintf (s, _("Media '%s'"), (mediainfo?mediainfo:_("(unknown)")));
-			gp_port_info_set_name (info, s);
-			free (s);
-
-			s = malloc (strlen("disk:")+strlen(mountpoint)+1);
-			sprintf (s, "disk:%s", mountpoint);
-			gp_port_info_set_path (info, s);
-			free (s);
-
-			CHECK (gp_port_info_list_append (list, info));
-			libhal_free_string(mountpoint);
-			if (mediainfo) {
-				libhal_free_string(mediainfo);
-			}
-		}
-		
-        }
-
-	libhal_free_string_array (volumes);
-	libhal_ctx_free (ctx);
-	dbus_connection_unref (dbus_connection);
-#else
 # ifdef HAVE_MNTENT_H
 	FILE *mnt;
 	struct mntent *mntent;
@@ -361,7 +251,6 @@ gp_port_library_list (GPPortInfoList *list)
 	}
 #  endif
 # endif
-#endif
 generic:
 	/* generic disk:/xxx/ matcher */
 	gp_port_info_new (&info);
