@@ -79,6 +79,9 @@ struct _CameraPrivateLibrary {
 #endif
 	st2205_filename filenames[ST2205_MAX_NO_FILES];
 
+	/* Driver configuration settings */
+	int syncdatetime;
+
 	/* Used by st2205.c / st2205_decode.c */
 	int width;
 	int height;
@@ -113,6 +116,9 @@ st2205_get_filenames(Camera *camera, st2205_filename *names);
 
 int
 st2205_read_file(Camera *camera, int idx, int **rgb24);
+
+int
+st2205_set_time_and_date(Camera *camera, struct tm *t);
 
 /* This function returns the index used to save the file at on success */
 int

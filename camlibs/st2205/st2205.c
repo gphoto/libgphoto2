@@ -711,6 +711,37 @@ st2205_delete_all(Camera *camera)
 }
 
 int
+st2205_set_time_and_date(Camera *camera, struct tm *t)
+{
+	uint8_t *buf = (uint8_t *)camera->pl->buf;
+
+	memset(buf, 0, 512);
+	buf[0] = 6; /* cmd 6 set time */
+	htobe16a (buf + 1, t->tm_year + 1900);
+	buf[3] = t->tm_mon + 1;
+	buf[4] = t->tm_mday;
+	buf[5] = t->tm_hour;
+	buf[6] = t->tm_min;
+	/* The st2205 does not allow one to set seconds, instead the
+	   seconds end up being whatever they were when the set time
+	   command is send :( */
+
+	if (gp_port_seek (camera->port, ST2205_CMD_OFFSET, SEEK_SET)
+			!= ST2205_CMD_OFFSET)
+		return GP_ERROR_IO;
+
+	if (gp_port_write (camera->port, camera->pl->buf, 512) != 512)
+		return GP_ERROR_IO_WRITE;
+
+	/* HACK, the st2205 does not like it if this is the last command
+	   send to it, so force re-reading of block 0 */
+	camera->pl->block_is_present[0] = 0;
+	CHECK (st2205_check_block_present(camera, 0))
+
+	return GP_OK;
+}
+
+int
 st2205_commit(Camera *camera)
 {
 	int i, j;
