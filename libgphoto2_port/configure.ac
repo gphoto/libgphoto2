@@ -354,6 +354,12 @@ AC_SUBST([SERIAL_LIBS])
 dnl ---------------------------------------------------------------------------
 dnl libusb
 dnl ---------------------------------------------------------------------------
+
+dnl libpthread is dynamically linked by libusb, which is dynamically loaded
+dnl but newer Linux systems need it on startup, not later. So link libgphoto2_port
+dnl against libpthread
+AC_CHECK_LIB(pthread, pthread_create)
+
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
