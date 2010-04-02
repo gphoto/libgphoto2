@@ -369,7 +369,6 @@ static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget *child;
-	CameraWidget *section;
 
 	GP_DEBUG ("*** camera_get_config");
 
