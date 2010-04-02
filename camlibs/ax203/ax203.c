@@ -177,6 +177,37 @@ ax203_get_lcd_size(Camera *camera)
 }
 #endif
 
+int
+ax203_set_time_and_date(Camera *camera, struct tm *t)
+{
+	char cmd_buffer[16];
+
+	memset (cmd_buffer, 0, sizeof (cmd_buffer));
+	
+	cmd_buffer[0] = AX203_SET_TIME;
+	
+	cmd_buffer[5] = t->tm_year % 100;
+
+	switch (camera->pl->firmware_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+		cmd_buffer[6] = t->tm_mon + 1;
+		cmd_buffer[7] = t->tm_wday;
+		break;
+	case AX203_FIRMWARE_3_5_x:
+		cmd_buffer[6] = 19 + t->tm_year / 100;
+		cmd_buffer[7] = t->tm_mon + 1;
+		break;
+	}
+	cmd_buffer[8]  = t->tm_mday;
+	cmd_buffer[9]  = t->tm_hour;
+	cmd_buffer[10] = t->tm_min;
+	cmd_buffer[11] = t->tm_sec;
+
+	return ax203_send_cmd (camera, 0, cmd_buffer, sizeof(cmd_buffer),
+			       NULL, 0);
+}
+
 static int
 ax203_eeprom_device_identification(Camera *camera, char *buf)
 {

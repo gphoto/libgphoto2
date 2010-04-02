@@ -43,6 +43,7 @@
 #define AX206_ABFS_SIZE			0x1000
 #define AX206_PICTURE_START		0x71000
 
+#define AX203_SET_TIME		0xCA
 #define AX203_TO_DEV		0xCB
 #define AX203_FROM_DEV		0xCD
 #define AX203_EEPROM_CMD	0x00
@@ -92,6 +93,8 @@ struct _CameraPrivateLibrary {
 	/* EEPROM attributes */
 	int mem_size;
 	int has_4k_sectors;
+	/* Driver configuration settings */
+	int syncdatetime;
 };
 
 struct ax203_devinfo {
@@ -146,6 +149,9 @@ ax203_commit(Camera *camera);
 
 int
 ax203_get_mem_size(Camera *camera);
+
+int
+ax203_set_time_and_date(Camera *camera, struct tm *t);
 
 /* functions in ax203_decode_*.c */
 

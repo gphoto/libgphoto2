@@ -27,6 +27,7 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-setting.h>
 #include "ax203.h"
 
 #ifdef ENABLE_NLS
@@ -365,9 +366,49 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 static int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	CameraWidget *child;
+	CameraWidget *section;
+
+	GP_DEBUG ("*** camera_get_config");
+
+	gp_widget_new (GP_WIDGET_WINDOW,
+			_("Picture Frame Configuration"), window);
+
+	gp_widget_new (GP_WIDGET_TOGGLE,
+			_("Synchronize frame data and time with PC"), &child);
+	gp_widget_set_value (child, &camera->pl->syncdatetime);
+	gp_widget_append (*window, child);
+
+	return GP_OK;
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	CameraWidget *child;
+	int ret;
+
+	GP_DEBUG ("*** camera_set_config");
+
+	ret = gp_widget_get_child_by_label (window,
+			_("Synchronize frame data and time with PC"), &child);
+	if (ret == GP_OK)
+		gp_widget_get_value (child, &camera->pl->syncdatetime);
+
+	return GP_OK;
+}
+
+static int
 camera_exit (Camera *camera, GPContext *context) 
 {
+	char buf[2];
+
 	if (camera->pl != NULL) {
+		buf[0] = '0' + camera->pl->syncdatetime;
+		buf[1] = 0;
+		gp_setting_set("ax203", "syncdatetime", buf);
 		ax203_close (camera);
 		free (camera->pl);
 		camera->pl = NULL;
@@ -380,13 +421,15 @@ camera_init (Camera *camera, GPContext *context)
 {
     	CameraAbilities a;
     	int i, ret;
-    	char *dump;
+    	char *dump, buf[256];
 
 	/* First, set up all the function pointers */
 	camera->functions->exit    = camera_exit;
 	camera->functions->summary = camera_summary;
 	camera->functions->manual  = camera_manual;
 	camera->functions->about   = camera_about;
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
 
 	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
@@ -421,6 +464,26 @@ camera_init (Camera *camera, GPContext *context)
 	if (ret != GP_OK) {
 		camera_exit (camera, context);
 		return ret;
+	}
+
+	ret = gp_setting_get("ax203", "syncdatetime", buf);
+	if (ret == GP_OK)
+		camera->pl->syncdatetime = buf[0] == '1';
+	else
+		camera->pl->syncdatetime = 1;
+
+	if (camera->pl->syncdatetime) {
+		struct tm tm;
+		time_t t;
+
+		t = time (NULL);
+		if (localtime_r (&t , &tm)) {
+			ret = ax203_set_time_and_date (camera, &tm);
+			if (ret != GP_OK) {
+				camera_exit (camera, context);
+				return ret;
+			}
+		}
 	}
 
 	return GP_OK;
