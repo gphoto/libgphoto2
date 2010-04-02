@@ -4068,7 +4068,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return GP_ERROR_CANCEL;
 		CPR(context, ret);
 		*size64 = size;
-		memcpy (data, xdata, size);
+		memcpy (buf, xdata, size);
 		free (xdata);
 		/* clear the "new" flag on Canons */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
