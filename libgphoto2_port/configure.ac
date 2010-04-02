@@ -344,6 +344,11 @@ AC_SUBST([SERIAL_LIBS])
 dnl ---------------------------------------------------------------------------
 dnl libusb
 dnl ---------------------------------------------------------------------------
+
+dnl libusb 1 links against libpthread, but is loaded too late.
+dnl we need to load libpthread directly.
+AC_CHECK_LIB(pthread, pthread_create)
+
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
