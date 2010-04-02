@@ -30,6 +30,7 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-setting.h>
 #include "st2205.h"
 
 #ifdef ENABLE_NLS
@@ -366,9 +367,48 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 static int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	CameraWidget *child;
+
+	GP_DEBUG ("*** camera_get_config");
+
+	gp_widget_new (GP_WIDGET_WINDOW,
+			_("Picture Frame Configuration"), window);
+
+	gp_widget_new (GP_WIDGET_TOGGLE,
+			_("Synchronize frame data and time with PC"), &child);
+	gp_widget_set_value (child, &camera->pl->syncdatetime);
+	gp_widget_append (*window, child);
+
+	return GP_OK;
+}
+
+static int
+camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	CameraWidget *child;
+	int ret;
+
+	GP_DEBUG ("*** camera_set_config");
+
+	ret = gp_widget_get_child_by_label (window,
+			_("Synchronize frame data and time with PC"), &child);
+	if (ret == GP_OK)
+		gp_widget_get_value (child, &camera->pl->syncdatetime);
+
+	return GP_OK;
+}
+
+static int
 camera_exit (Camera *camera, GPContext *context) 
 {
+	char buf[2];
+
 	if (camera->pl != NULL) {
+		buf[0] = '0' + camera->pl->syncdatetime;
+		buf[1] = 0;
+		gp_setting_set("st2205", "syncdatetime", buf);
 #ifdef HAVE_ICONV
 		if (camera->pl->cd != (iconv_t) -1)
 			iconv_close (camera->pl->cd);
@@ -387,6 +427,7 @@ camera_init (Camera *camera, GPContext *context)
 #ifdef HAVE_ICONV
 	char *curloc;
 #endif
+	char buf[256];
 	st2205_filename clean_name;
 
 	/* First, set up all the function pointers */
@@ -394,6 +435,8 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary = camera_summary;
 	camera->functions->manual  = camera_manual;
 	camera->functions->about   = camera_about;
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
 	/* FIXME add gp_camera_get_storageinfo support */
 
 	/* Tell the CameraFilesystem where to get lists from */
@@ -450,6 +493,27 @@ camera_init (Camera *camera, GPContext *context)
 		clean_name[j] = 0;
 
 		ST2205_SET_FILENAME(camera->pl->filenames[i], clean_name, i);
+	}
+
+	/* Sync time if requested */
+	ret = gp_setting_get("st2205", "syncdatetime", buf);
+	if (ret == GP_OK)
+		camera->pl->syncdatetime = buf[0] == '1';
+	else
+		camera->pl->syncdatetime = 1;
+
+	if (camera->pl->syncdatetime) {
+		struct tm tm;
+		time_t t;
+
+		t = time (NULL);
+		if (localtime_r (&t , &tm)) {
+			ret = st2205_set_time_and_date (camera, &tm);
+			if (ret != GP_OK) {
+				camera_exit (camera, context);
+				return ret;
+			}
+		}
 	}
 
 	return GP_OK;
