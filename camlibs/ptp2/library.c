@@ -1079,6 +1079,7 @@ static struct {
 	{"Fuji:FinePix F200 EXR",		0x04cb, 0x01e4, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
 	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
+	{"Fuji:FinePix S1500",			0x04cb, 0x01ef, 0},
 	/* Luke Symes <allsymes@gmail.com> */
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 
