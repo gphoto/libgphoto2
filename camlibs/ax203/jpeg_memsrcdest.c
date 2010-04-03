@@ -21,6 +21,9 @@
 #include <jerror.h>
 #include "jpeg_memsrcdest.h"
 
+/* libjpeg8 and later come with their own (API compatible) memory source
+   and dest */
+#if JPEG_LIB_VERSION < 80
 
 /* Expanded data source object for memory input */
 
@@ -137,7 +140,8 @@ term_source (j_decompress_ptr cinfo)
 */
 
 GLOBAL(void)
-jpeg_mem_src (j_decompress_ptr cinfo, const JOCTET * buffer, size_t bufsize)
+jpeg_mem_src (j_decompress_ptr cinfo, unsigned char * buffer,
+	unsigned long bufsize)
 {
 	my_src_ptr src;
 
@@ -179,8 +183,8 @@ jpeg_mem_src (j_decompress_ptr cinfo, const JOCTET * buffer, size_t bufsize)
 typedef struct {
 	struct jpeg_destination_mgr pub; /* public fields */
 
-	JOCTET * buffer;              /* start of buffer */
-	int buf_size, final_image_size;
+	JOCTET **buffer;              /* start of buffer */
+	unsigned long buf_size, *outsize;
 } my_destination_mgr;
 
 typedef my_destination_mgr * my_dest_ptr;
@@ -196,17 +200,10 @@ typedef my_destination_mgr * my_dest_ptr;
 METHODDEF(void)
 init_destination (j_compress_ptr cinfo)
 {
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
-
-	if (!dest->buffer) {
-		dest->buffer = malloc (OUTPUT_BUF_SIZE);
-		if (!dest->buffer)
-			ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 0);
-		dest->buf_size = OUTPUT_BUF_SIZE;
-	}
-
-	dest->pub.next_output_byte = dest->buffer;
-	dest->pub.free_in_buffer = dest->buf_size;
+	/* No work, since jpeg_mem_dest set up the buffer pointer and count.
+	* Indeed, if we want to write multiple JPEG images to one buffer,
+	* this *must* not do anything to the pointer.
+	*/
 }
 
 /*
@@ -237,11 +234,11 @@ empty_output_buffer (j_compress_ptr cinfo)
 {
 	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
 
-	dest->buffer = realloc (dest->buffer, dest->buf_size + OUTPUT_BUF_SIZE);
-	if (!dest->buffer)
+	*dest->buffer = realloc (*dest->buffer, dest->buf_size + OUTPUT_BUF_SIZE);
+	if (!*dest->buffer)
 		ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 0);
 
-	dest->pub.next_output_byte = dest->buffer + dest->buf_size;
+	dest->pub.next_output_byte = *dest->buffer + dest->buf_size;
 	dest->pub.free_in_buffer = OUTPUT_BUF_SIZE;
 	dest->buf_size += OUTPUT_BUF_SIZE;
 
@@ -262,11 +259,12 @@ term_destination (j_compress_ptr cinfo)
 {
 	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
 
-	dest->final_image_size = dest->buf_size - dest->pub.free_in_buffer;
+	*dest->outsize = dest->buf_size - dest->pub.free_in_buffer;
 }
 
 GLOBAL(void)
-jpeg_mem_dest (j_compress_ptr cinfo)
+jpeg_mem_dest (j_compress_ptr cinfo, unsigned char ** outbuffer,
+	unsigned long * outsize)
 {
 	my_dest_ptr dest;
 
@@ -287,32 +285,20 @@ jpeg_mem_dest (j_compress_ptr cinfo)
 	dest->pub.init_destination = init_destination;
 	dest->pub.empty_output_buffer = empty_output_buffer;
 	dest->pub.term_destination = term_destination;
-	dest->buffer = NULL;
-	dest->buf_size = 0;
+	dest->buffer = outbuffer;
+	dest->buf_size = *outsize;
+	dest->outsize = outsize;
+
+	if (*dest->buffer == NULL || dest->buf_size == 0) {
+		/* Allocate initial buffer */
+		*dest->buffer = malloc(OUTPUT_BUF_SIZE);
+		if (*dest->buffer == NULL)
+			ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, 10);
+		dest->buf_size = OUTPUT_BUF_SIZE;
+	}
+
+	dest->pub.next_output_byte = *dest->buffer;
+	dest->pub.free_in_buffer = dest->buf_size;
 }
 
-GLOBAL(int)
-jpeg_mem_dest_get_final_image_size (j_compress_ptr cinfo)
-{
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
-
-	return dest->final_image_size;
-}
-
-GLOBAL(JOCTET *)
-jpeg_mem_dest_get_buffer (j_compress_ptr cinfo)
-{
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
-
-	return dest->buffer;
-}
-
-GLOBAL(void)
-jpeg_mem_dest_free_buffer (j_compress_ptr cinfo)
-{
-	my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
-
-	free (dest->buffer);
-	dest->buffer = NULL;
-	dest->buf_size = 0;
-}
+#endif
