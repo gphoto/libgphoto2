@@ -115,9 +115,10 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 	struct jpeg_decompress_struct dinfo;
 	struct jpeg_error_mgr jcerr, jderr;
 	JSAMPROW row_pointer[1];
-	JOCTET *buf, *regular_jpeg = NULL;
+	JOCTET *buf = NULL, *regular_jpeg = NULL;
 	jvirt_barray_ptr *in_coefficients;
-	int i, x, y, stop, regular_jpeg_size, buf_size, size, ret, outc;
+	int i, x, y, stop, size, ret, outc;
+	unsigned long regular_jpeg_size = 0, buf_size = 0;
 	int last_dc_val[3] = { 0, 0, 0 };
 	/* Compression configuration settings */
 	int uv_subsample = 2;
@@ -140,7 +141,7 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 	   creating the ax203 JPEG-ish format */
 	cinfo.err = jpeg_std_error (&jcerr);
 	jpeg_create_compress (&cinfo);
-	jpeg_mem_dest (&cinfo);
+	jpeg_mem_dest (&cinfo, &regular_jpeg, &regular_jpeg_size);
 	cinfo.image_width = width;
 	cinfo.image_height = height;
 	cinfo.input_components = 3;
@@ -163,11 +164,6 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 		jpeg_write_scanlines (&cinfo, row_pointer, 1);
 	}
 	jpeg_finish_compress (&cinfo);
-	regular_jpeg = jpeg_mem_dest_get_buffer (&cinfo);
-	regular_jpeg_size = jpeg_mem_dest_get_final_image_size (&cinfo);
-	/* Note we do not call jpeg_mem_dest_free_buffer() here as one would
-	   do normally, as we want to keep the buffer around (we free it
-	   later ourselves) */
 	jpeg_destroy_compress (&cinfo);
 
 	/* Write image header to outbuf */
@@ -231,7 +227,6 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 	/* Create a JPEG compression object for our mini JPEGs */
 	cinfo.err = jpeg_std_error (&jcerr);
 	jpeg_create_compress (&cinfo);
-	jpeg_mem_dest (&cinfo);
 	cinfo.image_width = 8 * uv_subsample;
 	cinfo.image_height = 8 * uv_subsample;
 	cinfo.input_components = 3;
@@ -279,6 +274,10 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 							   uv_subsample, 0);
 
 		for (x = 0; x < width / (8 * uv_subsample); x++) {
+		        /* (Re)init our destination buffer */
+		        jpeg_mem_dest (&cinfo, &buf, &buf_size);
+
+		        /* Add MCU info block to output */
 			add_mcu_info (outbuf,
 				      y * width / (8 * uv_subsample) + x,
 				      last_dc_val[2], last_dc_val[0],
@@ -349,8 +348,6 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 
 			jpeg_finish_compress (&cinfo);
 
-			buf = jpeg_mem_dest_get_buffer (&cinfo);
-			buf_size = jpeg_mem_dest_get_final_image_size (&cinfo);
 			stop = 0;
 			for (i = 2; i < buf_size && !stop; i += size) {
 				stop = buf[i] == 0xff && buf[i + 1] == 0xda;
@@ -370,15 +367,19 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 				return GP_ERROR_FIXED_LIMIT_EXCEEDED;	
 			}
 			outc += copy_huffman(outbuf + outc, buf + i, size);
+
+			/* Cleanup our memory dest */
+			free (buf);
+			buf = NULL;
+			buf_size = 0;
 		}
 	}
 
 	/* We're done with the jpeg decompress (input) and
 	   compress (output) objs */
 	jpeg_destroy_decompress (&dinfo);
-	free(regular_jpeg);
-	jpeg_mem_dest_free_buffer(&cinfo);
 	jpeg_destroy_compress (&cinfo);
+	free(regular_jpeg);
 
 	return outc;
 }
