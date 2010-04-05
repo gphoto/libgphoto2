@@ -5,7 +5,8 @@ libgphoto2 API:
 	- metadata via lists and special API
 
    * gp_context* functions no longer get varargs, but preprocessed
-     strings. This makes hooking them into bindings easier.
+     strings. This makes hooking them into other language bindings
+     easier.
 
    * gp_file_new_from_handler(): Allow passing data in and out via
      handler functions (to allow streaming). See also CameraFileHandler
@@ -23,6 +24,7 @@ libgphoto2 API:
 
      Simple open function without needing to involve libgphoto2_port.
      )
+
    * gp_file_set_name() and _get_name() passing in is no longer needed
      and the API will go away.
 
@@ -104,8 +106,6 @@ Documentation:
 
 Test cases:
    * Test camlib loading of both uninstalled and installed camlibs.
-
-
 ------------------------------------------------------------------------
 libgphoto2 2.4.4
 
