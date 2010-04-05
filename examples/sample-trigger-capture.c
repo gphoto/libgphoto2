@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -16,71 +17,6 @@
 static void
 errordumper(GPLogLevel level, const char *domain, const char *str, void *data) {
 	fprintf(stderr, "%s\n", str);
-}
-
-static void
-capture_to_memory(Camera *camera, GPContext *context, const char **ptr, unsigned long int *size) {
-	int retval;
-	CameraFile *file;
-	CameraFilePath camera_file_path;
-
-	printf("Capturing.\n");
-
-	/* NOP: This gets overridden in the library to /capt0000.jpg */
-	strcpy(camera_file_path.folder, "/");
-	strcpy(camera_file_path.name, "foo.jpg");
-
-	retval = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
-	printf("  Retval: %d\n", retval);
-
-	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
-
-	retval = gp_file_new(&file);
-	printf("  Retval: %d\n", retval);
-	retval = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name,
-		     GP_FILE_TYPE_NORMAL, file, context);
-	printf("  Retval: %d\n", retval);
-
-	gp_file_get_data_and_size (file, ptr, size);
-
-	printf("Deleting.\n");
-	retval = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name,
-			context);
-	printf("  Retval: %d\n", retval);
-
-	gp_file_free(file);
-}
-
-static void
-capture_to_file(Camera *camera, GPContext *context, char *fn) {
-	int fd, retval;
-	CameraFile *file;
-	CameraFilePath camera_file_path;
-
-	printf("Capturing.\n");
-
-	/* NOP: This gets overridden in the library to /capt0000.jpg */
-	strcpy(camera_file_path.folder, "/");
-	strcpy(camera_file_path.name, "foo.jpg");
-
-	retval = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
-	printf("  Retval: %d\n", retval);
-
-	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
-
-	fd = open(fn, O_CREAT | O_WRONLY, 0644);
-	retval = gp_file_new_from_fd(&file, fd);
-	printf("  Retval: %d\n", retval);
-	retval = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name,
-		     GP_FILE_TYPE_NORMAL, file, context);
-	printf("  Retval: %d\n", retval);
-
-	printf("Deleting.\n");
-	retval = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name,
-			context);
-	printf("  Retval: %d\n", retval);
-
-	gp_file_free(file);
 }
 
 static struct queue_entry {
@@ -141,7 +77,9 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		struct stat	stbuf;
 
 		if (queue[0].offset == 0)
-			fprintf(stderr,"starting download %d\n", ++nrdownloads);
+			fprintf(stderr,"starting download %d (queuelength = %d)\n", ++nrdownloads,
+				nrofqueue
+			);
 		fprintf(stderr,"camera readfile of %s / %s at offset %d\n",
 			queue[0].path.folder,
 			queue[0].path.name,
@@ -156,7 +94,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			&size,
 			context
 		);
-		fprintf(stderr,"done camera readfile size was %d\n", size);
+		/*fprintf(stderr,"done camera readfile size was %d\n", size);*/
 		if (retval != GP_OK) {
 			fprintf (stderr,"gp_camera_file_read failed: %d\n", retval);
 			return retval;
@@ -191,39 +129,39 @@ main(int argc, char **argv) {
 	Camera		*camera;
 	int		retval, nrcapture = 0;
 	time_t		lastsec;
+	struct timeval	tval;
 	GPContext 	*context = sample_create_context();
 
 	buffer = malloc(buffersize);
 	if (!buffer) exit(1);
 
 	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
-	//gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
+	/*gp_log_add_func(GP_LOG_DATA, errordumper, NULL); */
 	gp_camera_new(&camera);
 
-	lastsec = time(NULL);
-
-	/* When I set GP_LOG_DEBUG instead of GP_LOG_ERROR above, I noticed that the
-	 * init function seems to traverse the entire filesystem on the camera.  This
-	 * is partly why it takes so long.
-	 * (Marcus: the ptp2 driver does this by default currently.)
-	 */
+	lastsec = time(NULL)-3;
 	retval = gp_camera_init(camera, context);
 	if (retval != GP_OK) {
 		printf("gp_camera_init: %d\n", retval);
 		exit (1);
 	}
 	while (1) {
-		if (lastsec + 3 <= time(NULL))  {
-			lastsec = time(NULL);
-			//fprintf(stderr,"triggering capture %d\n", ++nrcapture);
+		if ((time(NULL) & 1) == 1)  {
+			fprintf(stderr,"triggering capture %d\n", ++nrcapture);
 			retval = gp_camera_trigger_capture (camera, context);
-			if (retval != GP_OK)
+			if ((retval != GP_OK) && (retval != GP_ERROR) && (retval != GP_ERROR_CAMERA_BUSY)) {
+				fprintf(stderr,"triggering capture had error %d\n", retval);
 				break;
-			//fprintf (stderr, "done triggering\n");
+			}
+			fprintf (stderr, "done triggering\n");
 		}
-		//fprintf(stderr,"waiting for events\n");
-		wait_event_and_download(camera, 100, context);
-		//fprintf(stderr,"end waiting for events\n");
+		/*fprintf(stderr,"waiting for events\n");*/
+		retval = wait_event_and_download(camera, 100, context);
+		if (retval != GP_OK)
+			break;
+		/*fprintf(stderr,"end waiting for events\n");*/
+		gettimeofday (&tval, NULL);
+		fprintf(stderr,"loop is at %d.%06d\n", (int)tval.tv_sec,(int)tval.tv_usec);
 	}
 	gp_camera_exit(camera, context);
 	return 0;
