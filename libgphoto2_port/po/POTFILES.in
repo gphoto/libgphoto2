@@ -1,6 +1,8 @@
 libgphoto2_port/gphoto2-port-info-list.c
 libgphoto2_port/gphoto2-port-result.c
 libgphoto2_port/gphoto2-port.c
-serial/unix.c
-usb/libusb.c
 disk/disk.c
+serial/unix.c
+usbdiskdirect/linux.c
+usb/libusb.c
+usbscsi/linux.c
