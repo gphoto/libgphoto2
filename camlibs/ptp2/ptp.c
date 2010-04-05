@@ -4942,8 +4942,11 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 			saveparent = ob->oi.ParentObject;
 
 		ret = ptp_getobjectinfo (params, handle, &ob->oi);
-		if (ret != PTP_RC_OK)
+		if (ret != PTP_RC_OK) {
+			/* kill it from the internal list ... */
+			ptp_remove_object_from_cache(params, handle);
 			return ret;
+		}
 		if (!ob->oi.Filename) ob->oi.Filename=strdup("<none>");
 		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
 			ob->oi.ParentObject = saveparent;
