@@ -1456,7 +1456,8 @@ folder, uploading objects, or captured images. */
 static int
 add_object (Camera *camera, uint32_t handle, GPContext *context)
 {
-	int n;
+	int 		n;
+	uint16_t	ret;
 	PTPParams *params = &camera->pl->params;
 
 	/* increase number of objects */
@@ -1473,7 +1474,11 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 	memset(&params->objectinfo[n-1],0,sizeof(PTPObjectInfo));
 	params->handles.Handler[n-1]=handle;
 	/* get new obectinfo */
-	CPR (context, ptp_getobjectinfo(params, handle, &params->objectinfo[n-1]));
+	ret = ptp_getobjectinfo(params, handle, &params->objectinfo[n-1]);
+	if (ret != PTP_RC_OK) {
+		params->handles.n--;
+		return translate_ptp_result (ret);
+	}
 	debug_objectinfo (params, handle, &params->objectinfo[n-1]);
 	return (GP_OK);
 }
@@ -1970,7 +1975,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entries[i].u.object.oid, entries[i].u.object.oi.Filename);
 				newobject = entries[i].u.object.oid;
 				memcpy (&oi, &entries[i].u.object.oi, sizeof(oi));
-				add_object (camera, newobject, context);
+				ret = add_object (camera, newobject, context);
+				if (ret != GP_OK)
+					continue;
 				strcpy  (path->name,  oi.Filename);
 				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 				get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
@@ -2202,7 +2209,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (xmode != CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
 		}
-		add_object (camera, newobject, context);
+		ret = add_object (camera, newobject, context);
+		if (ret != GP_OK)
+			return ret;
 		strcpy  (path->name,  oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
@@ -2328,6 +2337,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	done = 0;
 	while (!done) {
 		uint16_t ret = params->event_wait(params,&event);
+		int res;
+
 		CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
 		if (ret!=PTP_RC_OK) {
 			if ((ret == PTP_ERROR_IO) && newobject) {
@@ -2344,7 +2355,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			break;
 		case PTP_EC_ObjectAdded: {
 			/* add newly created object to internal structures */
-			add_object (camera, event.Param1, context);
+			res = add_object (camera, event.Param1, context);
+			if (res != GP_OK)
+				break;
 			newobject = event.Param1;
 			if (NO_CAPTURE_COMPLETE(camera->pl))
 				done=1;
@@ -2418,8 +2431,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
-			int i;
-
 			if (_timeout_passed (&event_start, timeout))
 				break;
 
@@ -2580,7 +2591,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
-			int i, evtcnt;
+			int evtcnt;
 			PTPContainer	*nevent = NULL;
 
 			if (_timeout_passed(&event_start, timeout))
@@ -2592,14 +2603,16 @@ camera_wait_for_event (Camera *camera, int timeout,
 			for (i=0;i<evtcnt;i++) {
 				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
 				if (nevent[i].Code == PTP_EC_ObjectAdded) {
-					int j;
+					int j, res;
 					PTPObjectInfo	*obinfo;
 
 					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 					if (!path)
 						return GP_ERROR_NO_MEMORY;
 					newobject = nevent[i].Param1;
-					add_object (camera, newobject, context);
+					res = add_object (camera, newobject, context);
+					if (res != GP_OK) /* might have been deleted previously */
+						continue;
 					path->name[0]='\0';
 					path->folder[0]='\0';
 
@@ -3883,7 +3896,7 @@ mtp_put_playlist(
 	ret = ptp_mtp_setobjectreferences (&camera->pl->params, playlistid, oids, nrofoids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed setobjectreferences.");
-		return GP_ERROR;
+		return translate_ptp_result (ret);;
 	}
 	/* update internal structures */
 	add_object(camera, playlistid, context);
