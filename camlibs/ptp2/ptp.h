@@ -817,6 +817,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_MTP_AAC				0xb903
 #define PTP_OFC_MTP_AudibleCodec		0xb904
 #define PTP_OFC_MTP_FLAC			0xb906
+#define PTP_OFC_MTP_SamsungPlaylist		0xb909
 #define PTP_OFC_MTP_UndefinedVideo		0xb980
 #define PTP_OFC_MTP_WMV				0xb981
 #define PTP_OFC_MTP_MP4				0xb982
