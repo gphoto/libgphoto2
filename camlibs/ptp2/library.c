@@ -1449,8 +1449,7 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 	PTPObject *ob;
 	PTPParams *params = &camera->pl->params;
 
-	CPR (context, ptp_object_want (params, handle, 0, &ob));
-	return GP_OK;
+	return translate_ptp_result (ptp_object_want (params, handle, 0, &ob));
 }
 
 static int
@@ -2317,7 +2316,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			break;
 		case PTP_EC_ObjectAdded: {
 			/* add newly created object to internal structures */
-			add_object (camera, event.Param1, context);
+			ret = add_object (camera, event.Param1, context);
+			if (ret != GP_OK)
+				break;
 			newobject = event.Param1;
 			if (NO_CAPTURE_COMPLETE(params))
 				done=1;
@@ -2356,11 +2357,16 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 {
 	PTPParams *params = &camera->pl->params;
 	uint16_t	ret;
+	char buf[1024];
 
 	SET_CONTEXT_P(params, context);
 
+	strcpy (buf, "UNKNOWN");
+	gp_setting_get("ptp2","capturetarget",buf);
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
+		ptp_operation_issupported(params, PTP_OC_NIKON_Capture) &&
+		!strcmp (buf, "sdram")
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
@@ -2374,16 +2380,12 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				inliveview = propval.u8;
 		}
 
-		if (!inliveview && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM)) {
-			do {
-				ret = ptp_nikon_capture_sdram (params);
-			} while (ret == PTP_RC_DeviceBusy);
-		} else {
-			do {
-				ret = ptp_nikon_capture (params, 0xffffffff);
-			} while (ret == PTP_RC_DeviceBusy);
-		}
-		CPR (context, ret);
+		if (!inliveview && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM))
+			ret = ptp_nikon_capture_sdram (params);
+		else
+			ret = ptp_nikon_capture (params, 0xffffffff);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
 		return GP_OK;
 	}
@@ -2602,17 +2604,40 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
+			case PTP_EC_Nikon_ObjectAddedInSDRAM:
 			case PTP_EC_ObjectAdded: {
 				PTPObject	*ob;
 				uint16_t	ofc;
+				uint32_t	newobject;
+				PTPObjectInfo	oi;
+
+				if (!event.Param1 || event.Param1 == 0xffff0001)
+					goto downloadnow;
 
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 				if (!path)
 					return GP_ERROR_NO_MEMORY;
 				path->name[0]='\0';
 				path->folder[0]='\0';
-				CPR (context, ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-				strcpy  (path->name,  ob->oi.Filename);
+				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+				if (ret != PTP_RC_OK) {
+					*eventtype = GP_EVENT_UNKNOWN;
+					*eventdata = strdup ("object added not found (already deleted)");
+					break;
+				}
+				if (ob->oi.StorageID == 0) {
+					/* We would always get the same filename, 
+					 * which will confuse the frontends */
+					if (strstr(ob->oi.Filename,".NEF")) {
+						sprintf (path->name, "capt%04d.nef", capcnt++);
+					} else {
+						sprintf (path->name, "capt%04d.jpg", capcnt++);
+					}
+					free (ob->oi.Filename);
+					ob->oi.Filename = strdup (path->name);
+				} else {
+					strcpy  (path->name,  ob->oi.Filename);
+				}
 				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 				ofc = ob->oi.ObjectFormat;
 				get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
@@ -2630,16 +2655,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventdata = path;
 				}
 				break;
-			}
-			case PTP_EC_Nikon_ObjectAddedInSDRAM: {
-				uint32_t	newobject;
-				PTPObjectInfo	oi;
-
+downloadnow:
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				ret = ptp_getobjectinfo (params, newobject, &oi);
 				if (ret != PTP_RC_OK)
 					continue;
+				debug_objectinfo(params, newobject, &oi);
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 				if (!path)
 					return GP_ERROR_NO_MEMORY;
@@ -3920,8 +3942,7 @@ mtp_put_playlist(
 		return GP_ERROR;
 	}
 	/* update internal structures */
-	add_object(camera, playlistid, context);
-	return GP_OK;
+	return add_object(camera, playlistid, context);
 }
 
 static int
@@ -4063,6 +4084,8 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (!xsize)
 			return (GP_ERROR_NOT_SUPPORTED);
 
+		if (size+offset > xsize) 
+			size = xsize - offset;
 		ret = ptp_getpartialobject(params, oid, offset, size, &xdata, &size);
 		if (ret == PTP_ERROR_CANCEL)
 			return GP_ERROR_CANCEL;
@@ -4360,8 +4383,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
-	add_object(camera, handle, context);
-	return (GP_OK);
+	return add_object(camera, handle, context);
 }
 
 static int
@@ -4635,8 +4657,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
-	add_object(camera, handle, context);
-	return (GP_OK);
+	return add_object(camera, handle, context);
 }
 
 static int
