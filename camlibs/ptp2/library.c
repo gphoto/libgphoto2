@@ -1389,6 +1389,11 @@ camera_exit (Camera *camera, GPContext *context)
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 #endif
+		/* Disable EOS capture now, also end viewfinder mode. */
+		if (params->eos_captureenabled) {
+			ptp_canon_eos_end_viewfinder (params);
+			camera_unprepare_capture(camera, context);
+		}
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
