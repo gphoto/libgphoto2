@@ -484,9 +484,9 @@ static int ax203_detect_lcd_size(Camera *camera)
 	const uint8_t expect_33x[8] = {
 		0x13, 0x15, 0, 0, 0x02, 0x01, 0x02, 0x01 };
 	const uint8_t expect_34x[8] = {
-		0x13, 0x15, 0, 0, 0, 0, 0x03, 0x01 };
+		0x13, 0x15, 0, 0, 0, 0, 0, 0x01 };
 	const uint8_t expect_35x[8] = {
-		0x00, 0x00, 0x007, 0, 0, 0, 0, 0xd8 };
+		0x00, 0x00, 0x07, 0, 0, 0, 0, 0xd8 };
 
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
@@ -516,6 +516,9 @@ static int ax203_detect_lcd_size(Camera *camera)
 		expect[resolution_offset + 1] = camera->pl->height;
 		break;
 	case AX203_FIRMWARE_3_4_x:
+	        /* Byte 6 of the parameter block is not constant */
+	        buf[6] = 0;
+	        /* Fall through */
 	case AX203_FIRMWARE_3_5_x:
 		camera->pl->width  = le16atoh (buf + resolution_offset);
 		camera->pl->height = le16atoh (buf + resolution_offset + 2);
