@@ -2574,8 +2574,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 		char *x;
 
 		while (1) {
-			if (_timeout_passed(&event_start, timeout))
+			if (_timeout_passed(&event_start, timeout)) {
+				*eventtype = GP_EVENT_TIMEOUT;
 				break;
+			}
 
 			gp_context_idle (context);
 			ret = ptp_canon_checkevent (params,&event,&isevent);
