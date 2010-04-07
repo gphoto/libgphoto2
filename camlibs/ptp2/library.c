@@ -1475,6 +1475,8 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 	params->handles.Handler= (uint32_t *)
 		realloc(params->handles.Handler,
 			sizeof(uint32_t)*n);
+	if (params->canon_flags)
+		params->canon_flags = realloc(params->canon_flags,sizeof(params->canon_flags[0])*n);
 	/* clear objectinfo entry for new object and assign new handler */
 	memset(&params->objectinfo[n-1],0,sizeof(PTPObjectInfo));
 	params->handles.Handler[n-1]=handle;
