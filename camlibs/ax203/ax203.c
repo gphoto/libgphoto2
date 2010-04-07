@@ -516,9 +516,9 @@ static int ax203_detect_lcd_size(Camera *camera)
 		expect[resolution_offset + 1] = camera->pl->height;
 		break;
 	case AX203_FIRMWARE_3_4_x:
-	        /* Byte 6 of the parameter block is not constant */
-	        buf[6] = 0;
-	        /* Fall through */
+		/* Byte 6 of the parameter block is not constant */
+		buf[6] = 0;
+		/* Fall through */
 	case AX203_FIRMWARE_3_5_x:
 		camera->pl->width  = le16atoh (buf + resolution_offset);
 		camera->pl->height = le16atoh (buf + resolution_offset + 2);
@@ -547,24 +547,25 @@ static int ax203_detect_lcd_size(Camera *camera)
 	return GP_OK;
 }
 
-static int ax203_check_fs_signature(Camera *camera)
+static int ax203_find_abfs(Camera *camera)
 {
+	/* The location of the "ABFS" differs from frame to frame, we simply
+	   check all known locations until we've found the magic marker. */
+	const int start_address[] = { 0x50000, 0x60000, 0x70000, 0 };
 	char buf[4];
-	int fs_start;
+	int i;
 
-	switch (camera->pl->firmware_version) {
-	case AX203_FIRMWARE_3_3_x:
-	case AX203_FIRMWARE_3_4_x:
-		fs_start = AX203_ABFS_START;
-		break;
-	case AX203_FIRMWARE_3_5_x:
-		fs_start = AX206_ABFS_START;
-		break;
+	camera->pl->fs_start = 0;
+	for (i = 0; start_address[i]; i++) {
+		CHECK (ax203_read_mem (camera, start_address[i], buf, 4))
+		if (!memcmp (buf, AX203_ABFS_MAGIC, 4)) {
+			camera->pl->fs_start = start_address[i];
+			break;
+		}
 	}
 
-	CHECK (ax203_read_mem (camera, fs_start, buf, 4))
-	if (memcmp (buf, AX203_ABFS_MAGIC, 4)) {
-		gp_log (GP_LOG_ERROR, "ax203", "ABFS magic missing");
+	if (!camera->pl->fs_start) {
+		gp_log (GP_LOG_ERROR, "ax203", "Cannot find ABFS start");
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
@@ -600,7 +601,7 @@ ax203_read_v3_3_x_v3_4_x_filecount(Camera *camera)
 	uint8_t count;
 
 	CHECK (ax203_read_mem (camera,
-			       AX203_ABFS_START + AX203_ABFS_COUNT_OFFSET,
+			       camera->pl->fs_start + AX203_ABFS_COUNT_OFFSET,
 			       &count, 1))
 	return count;
 }
@@ -611,7 +612,7 @@ ax203_write_v3_3_x_v3_4_x_filecount(Camera *camera, int count)
 	uint8_t c = count;
 
 	CHECK (ax203_write_mem (camera,
-				AX203_ABFS_START + AX203_ABFS_COUNT_OFFSET,
+				camera->pl->fs_start + AX203_ABFS_COUNT_OFFSET,
 				&c, 1))
 	return GP_OK;
 }
@@ -623,7 +624,7 @@ ax203_read_v3_5_x_filecount(Camera *camera)
 	   so always return the maximum number of entries it can contain
 	   (and rely on fileinfo.present to figure out how many files there
 	    actually are). */
-	return (AX206_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
+	return (AX203_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
 		sizeof(struct ax203_v3_5_x_raw_fileinfo);
 }
 
@@ -643,7 +644,8 @@ int ax203_read_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 
 	CHECK (ax203_check_file_index (camera, idx))
 	CHECK (ax203_read_mem (camera,
-			       AX203_ABFS_START + AX203_ABFS_FILE_OFFSET (idx),
+			       camera->pl->fs_start +
+					AX203_ABFS_FILE_OFFSET (idx),
 			       buf, 2))
 
 	fileinfo->address = le16atoh (buf) << 8;
@@ -705,8 +707,9 @@ int ax203_write_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 
 	htole16a(buf, fileinfo->address >> 8);
 	CHECK (ax203_write_mem (camera,
-			       AX203_ABFS_START + AX203_ABFS_FILE_OFFSET (idx),
-			       buf, 2))
+				camera->pl->fs_start +
+					AX203_ABFS_FILE_OFFSET (idx),
+				buf, 2))
 
 	return GP_OK;
 }
@@ -718,7 +721,8 @@ int ax203_read_v3_5_x_fileinfo(Camera *camera, int idx,
 	struct ax203_v3_5_x_raw_fileinfo raw;
 
 	CHECK (ax203_read_mem (camera,
-			       AX206_ABFS_START + AX206_ABFS_FILE_OFFSET (idx),
+			       camera->pl->fs_start +
+					AX206_ABFS_FILE_OFFSET (idx),
 			       &raw, sizeof(raw)))
 
 	fileinfo->present = raw.present == 0x01;
@@ -739,8 +743,9 @@ int ax203_write_v3_5_x_fileinfo(Camera *camera, int idx,
 	raw.size    = htole16(fileinfo->size);
 
 	CHECK (ax203_write_mem (camera,
-			       AX206_ABFS_START + AX206_ABFS_FILE_OFFSET (idx),
-			       &raw, sizeof(raw)))
+				camera->pl->fs_start +
+					AX206_ABFS_FILE_OFFSET (idx),
+				&raw, sizeof(raw)))
 
 	return GP_OK;
 }
@@ -962,10 +967,10 @@ ax203_write_file(Camera *camera, int **rgb24)
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
-		end = AX203_PICTURE_START;
+		end = camera->pl->fs_start + AX203_PICTURE_OFFSET;
 		break;
 	case AX203_FIRMWARE_3_5_x:
-		end = AX206_PICTURE_START;
+		end = camera->pl->fs_start + AX206_PICTURE_OFFSET;
 		break;
 	}
 	for (i = 0; i <= count; i++) {
@@ -1069,24 +1074,22 @@ int
 ax203_delete_all(Camera *camera)
 {
 	char buf[AX203_ABFS_SIZE];
+	int size, file0_offset;
 
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
-		memset(buf, 0, AX203_ABFS_SIZE);
-		CHECK (ax203_write_mem (camera,
-				AX203_ABFS_START + AX203_ABFS_FILE_OFFSET (0),
-				buf,
-				AX203_ABFS_SIZE - AX203_ABFS_FILE_OFFSET (0)))
+		file0_offset = AX203_ABFS_FILE_OFFSET (0);
 		break;
 	case AX203_FIRMWARE_3_5_x:
-		memset(buf, 0, AX206_ABFS_SIZE);
-		CHECK (ax203_write_mem (camera,
-				AX206_ABFS_START + AX206_ABFS_FILE_OFFSET (0),
-				buf,
-				AX206_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)))
+		file0_offset = AX206_ABFS_FILE_OFFSET (0);
+		break;
 	}
 
+	size = AX203_ABFS_SIZE - file0_offset;
+	memset(buf, 0, size);
+	CHECK (ax203_write_mem (camera, camera->pl->fs_start + file0_offset,
+				buf, size))
 	CHECK (ax203_write_filecount (camera, 0))
 
 	return GP_OK;
@@ -1189,7 +1192,7 @@ ax203_init(Camera *camera)
 		return GP_ERROR_IO;
 	}
 
-	CHECK ( ax203_check_fs_signature (camera))
+	CHECK ( ax203_find_abfs (camera))
 
 	return GP_OK;
 }
