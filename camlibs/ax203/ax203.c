@@ -466,11 +466,11 @@ ax203_write_mem(Camera *camera, int offset,
    read the parameter block at the beginning of the eeprom. This function
    also checks some hopefully constant bytes before and after the
    lcd size to make sure it is not reading garbage */
-static int ax203_detect_lcd_size(Camera *camera)
+static int ax203_read_parameter_block(Camera *camera)
 {
 	uint8_t buf[8];
 	uint8_t expect[8];
-	int i, param_offset, resolution_offset;
+	int i, param_offset, resolution_offset, compression_offset;
 	const int valid_resolutions[][2] = {
 		{ 120, 160 },
 		{ 128, 128 },
@@ -482,26 +482,29 @@ static int ax203_detect_lcd_size(Camera *camera)
 		{ }
 	};
 	const uint8_t expect_33x[8] = {
-		0x13, 0x15, 0, 0, 0x02, 0x01, 0x02, 0x01 };
+		0x13, 0x15, 0, 0, 0, 0x01, 0x02, 0x01 };
 	const uint8_t expect_34x[8] = {
 		0x13, 0x15, 0, 0, 0, 0, 0, 0x01 };
 	const uint8_t expect_35x[8] = {
-		0x00, 0x00, 0x07, 0, 0, 0, 0, 0xd8 };
+		0x00, 0x00, 0, 0, 0, 0, 0, 0xd8 };
 
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 		param_offset = 0x50;
-		resolution_offset = 2;
+		resolution_offset  = 2;
+		compression_offset = 4;
 		memcpy (expect, expect_33x, 8);
 		break;
 	case AX203_FIRMWARE_3_4_x:
 		param_offset = 0x50;
-		resolution_offset = 2;
+		resolution_offset  = 2;
+		compression_offset = 6;
 		memcpy (expect, expect_34x, 8);
 		break;
 	case AX203_FIRMWARE_3_5_x:
 		param_offset = 0x20;
-		resolution_offset = 3;
+		compression_offset = 2;
+		resolution_offset  = 3;
 		memcpy (expect, expect_35x, 8);
 		break;
 	}
@@ -516,9 +519,6 @@ static int ax203_detect_lcd_size(Camera *camera)
 		expect[resolution_offset + 1] = camera->pl->height;
 		break;
 	case AX203_FIRMWARE_3_4_x:
-		/* Byte 6 of the parameter block is not constant */
-		buf[6] = 0;
-		/* Fall through */
 	case AX203_FIRMWARE_3_5_x:
 		camera->pl->width  = le16atoh (buf + resolution_offset);
 		camera->pl->height = le16atoh (buf + resolution_offset + 2);
@@ -526,6 +526,29 @@ static int ax203_detect_lcd_size(Camera *camera)
 		htole16a(expect + resolution_offset + 2, camera->pl->height);
 		break;
 	}
+
+	i = buf[compression_offset];
+	switch (i) {
+	case 2:
+		camera->pl->compression_version = AX203_COMPRESSION_YUV;
+		break;
+	case 3:
+		camera->pl->compression_version = AX203_COMPRESSION_YUV_DELTA;
+		break;
+	case 6:
+	case 7:
+		/* Not sure what the difference between version 6 and 7 is
+		   our code is fully tested with version 7 claiming frames,
+		   I've only been able to test decompression with version 6
+		   frames so far. */
+		camera->pl->compression_version = AX203_COMPRESSION_JPEG;
+		break;
+	default:
+		gp_log (GP_LOG_ERROR, "ax203",
+			"unknown compression version: %d", i);
+		return GP_ERROR_MODEL_NOT_FOUND;
+	}
+	expect[compression_offset] = i;
 
 	if (memcmp (buf, expect, 8)) {
 		gp_log (GP_LOG_ERROR, "ax203",
@@ -543,6 +566,10 @@ static int ax203_detect_lcd_size(Camera *camera)
 			camera->pl->width, camera->pl->height);
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
+
+	GP_DEBUG ("lcd size %dx%d, compression ver: %d",
+		  camera->pl->width, camera->pl->height,
+		  camera->pl->compression_version);
 
 	return GP_OK;
 }
@@ -1074,7 +1101,7 @@ int
 ax203_delete_all(Camera *camera)
 {
 	char buf[AX203_ABFS_SIZE];
-	int size, file0_offset;
+	int size, file0_offset = 0;
 
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
@@ -1182,9 +1209,7 @@ ax203_init(Camera *camera)
 	if (!camera->pl->mem)
 		return GP_ERROR_NO_MEMORY;
 
-	CHECK (ax203_detect_lcd_size (camera))
-	GP_DEBUG ("Appotech ax203 picframe of %dx%d detected.",
-		  camera->pl->width, camera->pl->height);
+	CHECK (ax203_read_parameter_block (camera))
 
 	if ((camera->pl->width % 4) || (camera->pl->height % 4)) {
 		gp_log (GP_LOG_ERROR, "ax203",

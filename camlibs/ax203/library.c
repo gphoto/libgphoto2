@@ -45,9 +45,9 @@
 #endif
 
 static const struct ax203_devinfo ax203_devinfo[] = {
-	{ 0x1908, 0x1315, AX203_FIRMWARE_3_3_x, AX203_COMPRESSION_YUV },
-	{ 0x1908, 0x1320, AX203_FIRMWARE_3_4_x, AX203_COMPRESSION_YUV_DELTA },
-	{ 0x1908, 0x0102, AX203_FIRMWARE_3_5_x, AX203_COMPRESSION_JPEG },
+	{ 0x1908, 0x1315, AX203_FIRMWARE_3_3_x },
+	{ 0x1908, 0x1320, AX203_FIRMWARE_3_4_x },
+	{ 0x1908, 0x0102, AX203_FIRMWARE_3_5_x },
 	{}
 };
 
@@ -442,8 +442,6 @@ camera_init (Camera *camera, GPContext *context)
 		    (a.usb_product == ax203_devinfo[i].product_id)) {
 			camera->pl->firmware_version =
 					ax203_devinfo[i].firmware_version;
-			camera->pl->compression_version =
-					ax203_devinfo[i].compression_version;
 			break;
 		}
 	}
