@@ -15,10 +15,22 @@ issuing special (custom) scsi commands. This driver uses the special
 
 Note that if your ax203 frame has a usb-id of 1908:1315, you need to tell
 Linux not to touch the HID device this version also presents in its USB
-descriptor. To do this add the following on the linux kernel cmdline:
-usbhid.quirks=0x1908:0x1315:0x4
+descriptor, otherwise the frame gets confused and resets.
+Here is a kernel patch for this:
+http://marc.info/?l=linux-usb&m=126985692106903
 
-A patch for this has been send upstream (30th March 2010).
+Alternative one could add the following on the linux kernel cmdline:
+usbhid.quirks=0x1908:0x1315:0x4
+But that does not help as it triggers this bug:
+http://www.spinics.net/lists/linux-input/msg07870.html
+
+Also if you have a 1908:1315 or 1908:1320 frame, these will work better
+(faster, no reset errors in dmesg), if you do the following as root, before
+plugging them in:
+modprobe usb-storage
+echo 1908:1315:b,1908:1320:b > /sys/module/usb_storage/parameters/quirks
+
+A patch for this is on its way upstream (7th april 2010).
 
 
 About the ax203 access protocol
@@ -49,5 +61,16 @@ The ax203 family of picframe controllers actually comes with 3 different
 flavors of compression, see README.ax203-compression.
 
 
+Random ax203 notes
+==================
+
+Firmware versions 3.3.x and 3.4.x frames have a 2nd Parameter block at
+ABFS start + 0x1000, about which the following is known:
+bytes 4-5: 16 bit rgb 5-6-5 color value for menu background, big endian
+bytes 6-7: 16 bit rgb 5-6-5 color value for menu text, big endian
+byte 0xffe: 0x55  this byte and the next one are a magic marker to
+byte 0xfff: 0xaa  indicate the parameter block is valid
+
+
 Hans de Goede <hdegoede@redhat.com>
-30 March 2010
+7 April 2010
