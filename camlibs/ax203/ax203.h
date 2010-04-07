@@ -98,7 +98,6 @@ struct ax203_devinfo {
 	unsigned short vendor_id;
 	unsigned short product_id;
 	int firmware_version;
-	int compression_version;
 };
 
 struct ax203_fileinfo {
