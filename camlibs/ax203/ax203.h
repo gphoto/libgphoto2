@@ -30,18 +30,15 @@
 #define GP_MODULE "ax203"
 
 #define AX203_ABFS_MAGIC		"ABFS"
-#define AX203_ABFS_START		0x50000
 #define AX203_ABFS_COUNT_OFFSET		0x05
 #define AX203_ABFS_FILE_OFFSET(idx)     (0x20 + 2 * (idx))
-#define AX203_ABFS_SIZE			0x2000
-#define AX203_PICTURE_START		0x52000
+#define AX203_ABFS_SIZE			0x1000
+#define AX203_PICTURE_OFFSET		0x2000 /* offset from ABFS start */
 
 /* Firmware v3.5.x frames are ax206 based, so use AX206 as prefix for
    there ABFS related defines (where different from the older firmware) */
-#define AX206_ABFS_START		0x70000
 #define AX206_ABFS_FILE_OFFSET(idx)     (0x10 + 8 * (idx))
-#define AX206_ABFS_SIZE			0x1000
-#define AX206_PICTURE_START		0x71000
+#define AX206_PICTURE_OFFSET		0x1000 /* offset from ABFS start */
 
 #define AX203_SET_TIME		0xCA
 #define AX203_TO_DEV		0xCB
