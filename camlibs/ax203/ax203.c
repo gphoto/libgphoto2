@@ -462,15 +462,19 @@ ax203_write_mem(Camera *camera, int offset,
 	return GP_OK;
 }
 
-/* <sigh> the get_lcd_size command does not seem to be reliable, so instead
-   read the parameter block at the beginning of the eeprom. This function
-   also checks some hopefully constant bytes before and after the
-   lcd size to make sure it is not reading garbage */
+/* This function reads the parameter block from the eeprom and:
+   1) checks some hopefully constant bytes to make sure it is not reading
+      garbage
+   2) Gets the lcd size from the paramter block (ax203_get_lcd_size seems
+      to result in all frames being detected as being 128x128 pixels).
+   3) Determines the compression type for v3.4.x frames
+   4) Determines the start of the ABFS
+*/
 static int ax203_read_parameter_block(Camera *camera)
 {
-	uint8_t buf[8];
-	uint8_t expect[8];
-	int i, param_offset, resolution_offset, compression_offset;
+	uint8_t buf[32], expect[32];
+	int i, param_offset, resolution_offset, compression_offset = -1;
+	int abfs_start_offset, expect_size;
 	const int valid_resolutions[][2] = {
 		{ 120, 160 },
 		{ 128, 128 },
@@ -481,38 +485,50 @@ static int ax203_read_parameter_block(Camera *camera)
 		{ 320, 240 },
 		{ }
 	};
-	const uint8_t expect_33x[8] = {
-		0x13, 0x15, 0, 0, 0, 0x01, 0x02, 0x01 };
-	const uint8_t expect_34x[8] = {
-		0x13, 0x15, 0, 0, 0, 0, 0, 0x01 };
-	const uint8_t expect_35x[8] = {
+	const uint8_t expect_33x[] = {
+		0x13, 0x15, 0, 0, 0x02, 0x01, 0x02, 0x01,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	const uint8_t expect_34x[] = {
+		0x13, 0x15, 0, 0, 0, 0, 0, 0x01,
+		0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+	const uint8_t expect_35x[] = {
 		0x00, 0x00, 0, 0, 0, 0, 0, 0xd8 };
 
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 		param_offset = 0x50;
 		resolution_offset  = 2;
-		compression_offset = 4;
-		memcpy (expect, expect_33x, 8);
+		abfs_start_offset  = 16;
+		memcpy (expect, expect_33x, sizeof(expect_33x));
+		expect_size = sizeof(expect_33x);
+		/* Byte 4 of the parameter block probably is the compression
+		   type like with v3.4.x, but this needs confirmation. */
+		camera->pl->compression_version = AX203_COMPRESSION_YUV;
 		break;
 	case AX203_FIRMWARE_3_4_x:
 		param_offset = 0x50;
 		resolution_offset  = 2;
 		compression_offset = 6;
-		memcpy (expect, expect_34x, 8);
+		abfs_start_offset  = 16;
+		memcpy (expect, expect_34x, sizeof(expect_34x));
+		expect_size = sizeof(expect_34x);
 		break;
 	case AX203_FIRMWARE_3_5_x:
 		param_offset = 0x20;
-		compression_offset = 2;
+		abfs_start_offset  = 2;
 		resolution_offset  = 3;
-		memcpy (expect, expect_35x, 8);
+		memcpy (expect, expect_35x, sizeof(expect_35x));
+		expect_size = sizeof(expect_35x);
+		/* 3.5.x firmware has a fixed compression type */
+		camera->pl->compression_version = AX203_COMPRESSION_JPEG;
 		break;
 	}
 
-	CHECK (ax203_read_mem (camera, param_offset, buf, 8))
+	CHECK (ax203_read_mem (camera, param_offset, buf, sizeof(buf)))
 
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
+		/* 1 byte width / height */
 		camera->pl->width  = buf[resolution_offset    ];
 		camera->pl->height = buf[resolution_offset + 1];
 		expect[resolution_offset    ] = camera->pl->width;
@@ -520,6 +536,7 @@ static int ax203_read_parameter_block(Camera *camera)
 		break;
 	case AX203_FIRMWARE_3_4_x:
 	case AX203_FIRMWARE_3_5_x:
+		/* 2 byte little endian width / height */
 		camera->pl->width  = le16atoh (buf + resolution_offset);
 		camera->pl->height = le16atoh (buf + resolution_offset + 2);
 		htole16a(expect + resolution_offset    , camera->pl->width);
@@ -527,30 +544,30 @@ static int ax203_read_parameter_block(Camera *camera)
 		break;
 	}
 
-	i = buf[compression_offset];
-	switch (i) {
-	case 2:
-		camera->pl->compression_version = AX203_COMPRESSION_YUV;
-		break;
-	case 3:
-		camera->pl->compression_version = AX203_COMPRESSION_YUV_DELTA;
-		break;
-	case 6:
-	case 7:
-		/* Not sure what the difference between version 6 and 7 is
-		   our code is fully tested with version 7 claiming frames,
-		   I've only been able to test decompression with version 6
-		   frames so far. */
-		camera->pl->compression_version = AX203_COMPRESSION_JPEG;
-		break;
-	default:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"unknown compression version: %d", i);
-		return GP_ERROR_MODEL_NOT_FOUND;
+	if (compression_offset != -1) {
+		i = buf[compression_offset];
+		switch (i) {
+		case 2:
+			camera->pl->compression_version =
+				AX203_COMPRESSION_YUV;
+			break;
+		case 3:
+			camera->pl->compression_version =
+				AX203_COMPRESSION_YUV_DELTA;
+			break;
+		default:
+			gp_log (GP_LOG_ERROR, "ax203",
+				"unknown compression version: %d", i);
+			return GP_ERROR_MODEL_NOT_FOUND;
+		}
+		expect[compression_offset] = i;
 	}
-	expect[compression_offset] = i;
 
-	if (memcmp (buf, expect, 8)) {
+	i = buf[abfs_start_offset];
+	camera->pl->fs_start = i * 0x10000;
+	expect[abfs_start_offset] = i;
+
+	if (memcmp (buf, expect, expect_size)) {
 		gp_log (GP_LOG_ERROR, "ax203",
 			"unexpected contents of parameter block");
 		return GP_ERROR_MODEL_NOT_FOUND;
@@ -567,34 +584,16 @@ static int ax203_read_parameter_block(Camera *camera)
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
-	GP_DEBUG ("lcd size %dx%d, compression ver: %d",
-		  camera->pl->width, camera->pl->height,
-		  camera->pl->compression_version);
-
-	return GP_OK;
-}
-
-static int ax203_find_abfs(Camera *camera)
-{
-	/* The location of the "ABFS" differs from frame to frame, we simply
-	   check all known locations until we've found the magic marker. */
-	const int start_address[] = { 0x50000, 0x60000, 0x70000, 0 };
-	char buf[4];
-	int i;
-
-	camera->pl->fs_start = 0;
-	for (i = 0; start_address[i]; i++) {
-		CHECK (ax203_read_mem (camera, start_address[i], buf, 4))
-		if (!memcmp (buf, AX203_ABFS_MAGIC, 4)) {
-			camera->pl->fs_start = start_address[i];
-			break;
-		}
-	}
-
-	if (!camera->pl->fs_start) {
-		gp_log (GP_LOG_ERROR, "ax203", "Cannot find ABFS start");
+	CHECK (ax203_read_mem (camera, camera->pl->fs_start, buf, 4))
+	if (memcmp (buf, AX203_ABFS_MAGIC, 4)) {
+		gp_log (GP_LOG_ERROR, "ax203", "ABFS magic not found at: %x",
+			camera->pl->fs_start);
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
+
+	GP_DEBUG ("lcd size %dx%d, compression ver: %d, fs-start: %x",
+		  camera->pl->width, camera->pl->height,
+		  camera->pl->compression_version, camera->pl->fs_start);
 
 	return GP_OK;
 }
@@ -1232,8 +1231,6 @@ ax203_init(Camera *camera)
 			"lcd width and height must be a multiple of 4");
 		return GP_ERROR_IO;
 	}
-
-	CHECK ( ax203_find_abfs (camera))
 
 	return GP_OK;
 }
