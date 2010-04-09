@@ -1399,6 +1399,8 @@ camera_exit (Camera *camera, GPContext *context)
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 #endif
+		if (params->eos_captureenabled)
+			camera_unprepare_capture (camera, context);
 #if 0 /* ... perhaps not a good idea on all cameras */
 		ptp_check_event (params);
 #endif
@@ -2573,8 +2575,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
-		char *x;
-
 		while (1) {
 			if (_timeout_passed (&event_start, timeout))
 				break;
@@ -2583,13 +2583,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			if (!ptp_get_one_event(params, &event))
 				continue;
 			gp_log (GP_LOG_DEBUG, "ptp","evdata: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-			*eventtype = GP_EVENT_UNKNOWN;
-			x = malloc(strlen("PTP Canon Event 0123, Param1 01234567")+1);
-			if (x) {
-				sprintf (x, "PTP Canon Event %04x, Param1 %08x", event.Code, event.Param1);
-				*eventdata = x;
-				break;
-			}
+			goto handlegeneric;
 		}
 		return GP_OK;
 	}
@@ -2737,8 +2731,12 @@ downloadnow:
 	gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: code=0x%04x, param1 0x%08x",
 		event.Code, event.Param1
 	);
-
+handlegeneric:
 	switch (event.Code) {
+	case PTP_EC_CaptureComplete:
+		*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+		*eventdata = NULL;
+		break;
 	case PTP_EC_ObjectAdded: {
 		PTPObject	*ob;
 		uint16_t	ofc;
