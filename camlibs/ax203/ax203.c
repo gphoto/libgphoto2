@@ -595,6 +595,15 @@ static int ax203_read_parameter_block(Camera *camera)
 		  camera->pl->width, camera->pl->height,
 		  camera->pl->compression_version, camera->pl->fs_start);
 
+	/* Set JPEG compression parameters based on the found resolution */
+	camera->pl->jpeg_optimize = 1;
+	if (camera->pl->width % 16 || camera->pl->height % 16) {
+		gp_log (GP_LOG_DEBUG, "ax203", "height or width not a "
+			"multiple of 16, forcing 1x subsampling");
+		camera->pl->jpeg_uv_subsample = 1;
+	} else
+		camera->pl->jpeg_uv_subsample = 2;
+
 	return GP_OK;
 }
 
@@ -958,7 +967,8 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 					camera->pl->height);
 		return size;
 	case AX203_COMPRESSION_JPEG:
-		return ax203_compress_jpeg (src, (uint8_t *)dest, dest_size,
+		return ax203_compress_jpeg (camera, src,
+					    (uint8_t *)dest, dest_size,
 					    camera->pl->width,
 					    camera->pl->height);
 	}

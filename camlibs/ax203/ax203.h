@@ -90,6 +90,9 @@ struct _CameraPrivateLibrary {
 	/* EEPROM attributes */
 	int mem_size;
 	int has_4k_sectors;
+	/* Compression configuration settings */
+	int jpeg_uv_subsample;
+	int jpeg_optimize;
 	/* Driver configuration settings */
 	int syncdatetime;
 };
@@ -164,7 +167,7 @@ void
 ax203_encode_yuv_delta(int **src, char *dest, int width, int height);
 
 int
-ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
+ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int width, int height);
 
 #endif
