@@ -445,6 +445,12 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl = calloc (1, sizeof(CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 
+	ret = gp_setting_get("st2205", "syncdatetime", buf);
+	if (ret == GP_OK)
+		camera->pl->syncdatetime = buf[0] == '1';
+	else
+		camera->pl->syncdatetime = 1;
+
 #ifdef HAVE_ICONV
 	curloc = nl_langinfo (CODESET);
 	if (!curloc)
@@ -496,12 +502,6 @@ camera_init (Camera *camera, GPContext *context)
 	}
 
 	/* Sync time if requested */
-	ret = gp_setting_get("st2205", "syncdatetime", buf);
-	if (ret == GP_OK)
-		camera->pl->syncdatetime = buf[0] == '1';
-	else
-		camera->pl->syncdatetime = 1;
-
 	if (camera->pl->syncdatetime) {
 		struct tm tm;
 		time_t t;
