@@ -1048,6 +1048,20 @@ ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
 	count = ax203_read_filecount (camera);
 	if (count < 0) return count;
 
+	/* The beginning of the memory is used by the CD image and stuff */
+	fileinfo.address = 0;
+	switch (camera->pl->firmware_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+		fileinfo.size = camera->pl->fs_start + AX203_PICTURE_OFFSET;
+		break;
+	case AX203_FIRMWARE_3_5_x:
+		fileinfo.size = camera->pl->fs_start + AX206_PICTURE_OFFSET;
+		break;
+	}
+	fileinfo.present = 1;
+	table[found++] = fileinfo;
+
 	for (i = 0; i < count; i++) {
 		CHECK (ax203_read_fileinfo (camera, i, &fileinfo))
 		if (!fileinfo.present)
@@ -1056,6 +1070,13 @@ ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
 	}
 	qsort (table, found, sizeof(struct ax203_fileinfo),
 	       ax203_fileinfo_cmp);
+
+	/* Add a last memory used region which starts at the end of memory
+	   the size does not matter as this is the last entry. */
+	fileinfo.address = camera->pl->mem_size;
+	fileinfo.size    = 0;
+	fileinfo.present = 1;
+	table[found++] = fileinfo;
 
 	return found;
 }
@@ -1097,24 +1118,9 @@ ax203_write_file(Camera *camera, int **rgb24)
 	if (used_mem_count < 0) return used_mem_count;
 
 	/* Try to find a large enough "hole" in the memory */
-	switch (camera->pl->firmware_version) {
-	case AX203_FIRMWARE_3_3_x:
-	case AX203_FIRMWARE_3_4_x:
-		prev_end = camera->pl->fs_start + AX203_PICTURE_OFFSET;
-		break;
-	case AX203_FIRMWARE_3_5_x:
-		prev_end = camera->pl->fs_start + AX206_PICTURE_OFFSET;
-		break;
-	}
-	for (i = 0; i <= used_mem_count; i++) {
-		/* Fake a present fileinfo at the end of picture mem */
-		if (i == used_mem_count) {
-			fileinfo.address = camera->pl->mem_size;
-		} else {
-			fileinfo = used_mem[i];
-		}
-
-		hole_size = fileinfo.address - prev_end;
+	for (i = 1; i < used_mem_count; i++) {
+		prev_end = used_mem[i - 1].address + used_mem[i - 1].size;
+		hole_size = used_mem[i].address - prev_end;
 		if (hole_size)
 			GP_DEBUG ("found a hole at: %08x, of %d bytes "
 				  "(need %d)\n", prev_end, hole_size, size);
@@ -1130,8 +1136,6 @@ ax203_write_file(Camera *camera, int **rgb24)
 						buf, size))
 			return GP_OK;
 		}
-		/* Set previous picture end for next iteration */
-		prev_end = fileinfo.address + fileinfo.size;
 	}
 
 	gp_log (GP_LOG_ERROR, "ax203", "not enough freespace to add file");
