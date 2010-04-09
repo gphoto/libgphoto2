@@ -598,7 +598,6 @@ static int ax203_read_parameter_block(Camera *camera)
 	return GP_OK;
 }
 
-/* Note this funtions returns the file count on success */
 static int ax203_check_file_index(Camera *camera, int idx)
 {
 	int count;
@@ -614,22 +613,36 @@ static int ax203_check_file_index(Camera *camera, int idx)
 
 	if (idx >= count) {
 		gp_log (GP_LOG_ERROR, "ax203",
-			"file index beyond end of FAT");
+			"file index beyond end of ABFS");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	return count;
+	return GP_OK;
+}
+
+static int
+ax203_max_filecount(Camera *camera)
+{
+	switch (camera->pl->firmware_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+		return (AX203_ABFS_SIZE - AX203_ABFS_FILE_OFFSET (0)) / 2;
+	case AX203_FIRMWARE_3_5_x:
+		return (AX203_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
+			sizeof(struct ax203_v3_5_x_raw_fileinfo);
+	}
 }
 
 static int
 ax203_read_v3_3_x_v3_4_x_filecount(Camera *camera)
 {
-	uint8_t count;
-
-	CHECK (ax203_read_mem (camera,
-			       camera->pl->fs_start + AX203_ABFS_COUNT_OFFSET,
-			       &count, 1))
-	return count;
+	/* The v3.3.x and v3.4.x firmware ABFS keeps a single byte file count
+	   at (camera->pl->fs_start + AX203_ABFS_COUNT_OFFSET) However the
+	   frame does not seem to care about this.
+	   So always return the maximum number of entries the ABFS can contain
+	   (and rely on fileinfo.present to figure out how many files there
+	    actually are). */
+	return ax203_max_filecount (camera);
 }
 
 static int
@@ -637,6 +650,8 @@ ax203_write_v3_3_x_v3_4_x_filecount(Camera *camera, int count)
 {
 	uint8_t c = count;
 
+	/* Despite the frame not caring, we do write the filecount just
+	   like windows does. */
 	CHECK (ax203_write_mem (camera,
 				camera->pl->fs_start + AX203_ABFS_COUNT_OFFSET,
 				&c, 1))
@@ -646,18 +661,17 @@ ax203_write_v3_3_x_v3_4_x_filecount(Camera *camera, int count)
 static int
 ax203_read_v3_5_x_filecount(Camera *camera)
 {
-	/* The v3.5.x firmware "FAT" does not keep a separate file count,
+	/* The v3.5.x firmware ABFS does not contain a separate file count,
 	   so always return the maximum number of entries it can contain
 	   (and rely on fileinfo.present to figure out how many files there
 	    actually are). */
-	return (AX203_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
-		sizeof(struct ax203_v3_5_x_raw_fileinfo);
+	return ax203_max_filecount (camera);
 }
 
 static int
 ax203_write_v3_5_x_filecount(Camera *camera, int count)
 {
-	/* This is a no-op as the v3.5.x firmware "FAT" does not keep a
+	/* This is a no-op as the v3.5.x firmware ABFS does not contain a
 	   separate file count */
 	return GP_OK;
 }
@@ -668,7 +682,6 @@ int ax203_read_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 {
 	uint8_t buf[2];
 
-	CHECK (ax203_check_file_index (camera, idx))
 	CHECK (ax203_read_mem (camera,
 			       camera->pl->fs_start +
 					AX203_ABFS_FILE_OFFSET (idx),
@@ -793,8 +806,17 @@ ax203_read_filecount(Camera *camera)
 }
 
 static int
-ax203_write_filecount(Camera *camera, int count)
+ax203_update_filecount(Camera *camera)
 {
+	int i, max, count = 0;
+
+	/* "Calculate" the real file count */
+	max = ax203_max_filecount (camera);
+	for (i = 0; i < max; i++) {
+		if (ax203_file_present (camera, i))
+			count = i + 1;
+	}
+
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
@@ -810,6 +832,8 @@ static
 int ax203_read_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
 {
+	CHECK (ax203_check_file_index (camera, idx))
+
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
@@ -975,92 +999,115 @@ ax203_read_file(Camera *camera, int idx, int **rgb24)
 	return ret;
 }
 
+/* ax203_write_file() helper functions */
+
+/* The picture table in ABFS does not necessarily lists the pictures
+   in the order they are stored in memory, but when looking for a hole
+   in memory to store a new picture we need a list of used memory blocks
+   in memory order. So we build one here. */
+static int
+ax203_fileinfo_cmp(const void *p1, const void *p2)
+{
+	const struct ax203_fileinfo *f1 = p1;
+	const struct ax203_fileinfo *f2 = p2;
+	return f1->address - f2->address;
+}
+
+static int
+ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
+{
+	int i, count, found = 0;
+       	struct ax203_fileinfo fileinfo;
+
+	count = ax203_read_filecount (camera);
+	if (count < 0) return count;
+
+	for (i = 0; i < count; i++) {
+		CHECK (ax203_read_fileinfo (camera, i, &fileinfo))
+		if (!fileinfo.present)
+			continue;
+		table[found++] = fileinfo;
+	}
+	qsort (table, found, sizeof(struct ax203_fileinfo),
+	       ax203_fileinfo_cmp);
+
+	return found;
+}
+
+/* Find a free slot in the ABFS table to store the fileinfo */
+static int
+ax203_find_free_abfs_slot(Camera *camera)
+{
+	int i, max;
+	struct ax203_fileinfo fileinfo;
+
+	max = ax203_max_filecount (camera);
+	for (i = 0; i < max; i++) {
+		CHECK (ax203_read_fileinfo (camera, i, &fileinfo))
+		if (!fileinfo.present)
+			return i;
+	}
+
+	gp_log (GP_LOG_ERROR, "ax203", "no free slot in ABFS ??");
+	return GP_ERROR_NO_SPACE;
+}
+
 int
 ax203_write_file(Camera *camera, int **rgb24)
 {
-	int i, count, size, start, end = 0, hole_start = 0, hole_idx = 0;
 	struct ax203_fileinfo fileinfo;
+	struct ax203_fileinfo used_mem[AX203_ABFS_SIZE / 2];
+	int i, abfs_slot, size, hole_size, used_mem_count, prev_end;
 	const int buf_size = camera->pl->width * camera->pl->height;
 	char buf[buf_size];
+
+	abfs_slot = ax203_find_free_abfs_slot (camera);
+	if (abfs_slot < 0) return abfs_slot;
 
 	size = ax203_encode_image (camera, rgb24, buf, buf_size);
 	if (size < 0) return size;
 
-	count = ax203_read_filecount (camera);
-	if (count < 0) return count;
+	used_mem_count = ax203_build_used_mem_table (camera, used_mem);
+	if (used_mem_count < 0) return used_mem_count;
 
 	/* Try to find a large enough "hole" in the memory */
 	switch (camera->pl->firmware_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
-		end = camera->pl->fs_start + AX203_PICTURE_OFFSET;
+		prev_end = camera->pl->fs_start + AX203_PICTURE_OFFSET;
 		break;
 	case AX203_FIRMWARE_3_5_x:
-		end = camera->pl->fs_start + AX206_PICTURE_OFFSET;
+		prev_end = camera->pl->fs_start + AX206_PICTURE_OFFSET;
 		break;
 	}
-	for (i = 0; i <= count; i++) {
+	for (i = 0; i <= used_mem_count; i++) {
 		/* Fake a present fileinfo at the end of picture mem */
-		if (i == count) {
+		if (i == used_mem_count) {
+			fileinfo.address = camera->pl->mem_size;
+		} else {
+			fileinfo = used_mem[i];
+		}
+
+		hole_size = fileinfo.address - prev_end;
+		if (hole_size)
+			GP_DEBUG ("found a hole at: %08x, of %d bytes "
+				  "(need %d)\n", prev_end, hole_size, size);
+		if (hole_size >= size) {
+			/* bingo we have a large enough hole */
+			fileinfo.address = prev_end;
+			fileinfo.size    = size;
 			fileinfo.present = 1;
-			start = camera->pl->mem_size;
-			/* If the last fileinfo in the "FAT" was present, we
-			   set hole_start to the end of the last picture */
-			if (!hole_start) {
-				hole_start = end;
-				hole_idx = i;
-			}
-		} else {
-			CHECK (ax203_read_fileinfo (camera, i, &fileinfo))
-			start = fileinfo.address;
-			if (fileinfo.present)
-				end = fileinfo.address + fileinfo.size;
+			CHECK (ax203_write_fileinfo (camera, abfs_slot,
+						     &fileinfo))
+			CHECK (ax203_update_filecount (camera))
+			CHECK (ax203_write_mem (camera, fileinfo.address,
+						buf, size))
+			return GP_OK;
 		}
-
-		/* If we have a hole start address look for present entries (so
-		   a hole end address), else look for non present entries */
-		if (hole_start) {
-			if (fileinfo.present) {
-				int hole_size = start - hole_start;
-				GP_DEBUG ("found a hole at: %08x, of %d bytes "
-					  "(need %d)\n", hole_start, hole_size,
-					  size);
-				if (hole_size < size) {
-					/* Too small, start searching
-					   for the next hole */
-					hole_start = 0;
-					continue;
-				}
-
-				/* bingo we have a large enough hole */
-				fileinfo.address = hole_start;
-				fileinfo.size    = size;
-				fileinfo.present = 1;
-				CHECK (ax203_write_fileinfo (camera, hole_idx,
-							     &fileinfo))
-				if (hole_idx == count) {
-					/* update picture count */
-					count++;
-					CHECK (ax203_write_filecount (camera,
-								       count))
-				}
-				CHECK (ax203_write_mem (camera, hole_start,
-							buf, size))
-				return GP_OK;
-			}
-		} else {
-			if (!fileinfo.present) {
-				/* We have a hole starting at the end of the
-				   *previous* picture, note that end at this
-				   moment points to the end of the last present
-				   picture, as we don't set end for non present
-				   pictures, which is exactly what we want. */
-				hole_start = end;
-				hole_idx = i;
-			}
-		}
+		/* Set previous picture end for next iteration */
+		prev_end = fileinfo.address + fileinfo.size;
 	}
-	
+
 	gp_log (GP_LOG_ERROR, "ax203", "not enough freespace to add file");
 	return GP_ERROR_NO_SPACE;
 }
@@ -1068,11 +1115,7 @@ ax203_write_file(Camera *camera, int **rgb24)
 int
 ax203_delete_file(Camera *camera, int idx)
 {
-	int count, new_count = 0;
 	struct ax203_fileinfo fileinfo;
-
-	count = ax203_check_file_index (camera, idx);
-	if (count < 0) return count;
 
 	CHECK (ax203_read_fileinfo (camera, idx, &fileinfo))
 
@@ -1084,14 +1127,7 @@ ax203_delete_file(Camera *camera, int idx)
 
 	fileinfo.present = 0;
 	CHECK (ax203_write_fileinfo (camera, idx, &fileinfo))
-
-	/* "Recalculate" the file count */
-	for (idx = 0; idx < count; idx++) {
-		if (ax203_file_present (camera, idx))
-			new_count = idx + 1;
-	}
-
-	CHECK (ax203_write_filecount (camera, new_count))
+	CHECK (ax203_update_filecount (camera))
 
 	return GP_OK;
 }
@@ -1116,7 +1152,7 @@ ax203_delete_all(Camera *camera)
 	memset(buf, 0, size);
 	CHECK (ax203_write_mem (camera, camera->pl->fs_start + file0_offset,
 				buf, size))
-	CHECK (ax203_write_filecount (camera, 0))
+	CHECK (ax203_update_filecount (camera))
 
 	return GP_OK;
 }
