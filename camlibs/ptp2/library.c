@@ -2571,27 +2571,19 @@ camera_wait_for_event (Camera *camera, int timeout,
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
 		int isevent;
-		char *x;
 
 		while (1) {
 			if (_timeout_passed(&event_start, timeout)) {
 				*eventtype = GP_EVENT_TIMEOUT;
 				break;
 			}
-
 			gp_context_idle (context);
 			ret = ptp_canon_checkevent (params,&event,&isevent);
 			if (ret!=PTP_RC_OK)
 				continue;
 			if (isevent) {
-				gp_log (GP_LOG_DEBUG, "ptp","evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-				*eventtype = GP_EVENT_UNKNOWN;
-				x = malloc(strlen("PTP Canon Event 0123, Param1 01234567")+1);
-				if (x) {
-					sprintf (x, "PTP Canon Event %04x, Param1 %08x", event.Code, event.Param1);
-					*eventdata = x;
-					break;
-				}
+				gp_log (GP_LOG_DEBUG, "ptp","canon event: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+				goto handleregular;
 			}
 		}
 		return GP_OK;
@@ -2756,6 +2748,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		event.Code, event.Param1
 	);
 
+handleregular:
 	switch (event.Code) {
 	case PTP_EC_ObjectAdded: {
 		PTPObjectInfo	*obinfo;
@@ -2789,6 +2782,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 		}
 		break;
 	}
+	case PTP_EC_CaptureComplete:
+		*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+		*eventdata = NULL;
+		break;
 	default: {
 		char *x;
 
