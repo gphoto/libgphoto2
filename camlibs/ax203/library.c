@@ -433,6 +433,12 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl = calloc (1, sizeof(CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 
+	ret = gp_setting_get("ax203", "syncdatetime", buf);
+	if (ret == GP_OK)
+		camera->pl->syncdatetime = buf[0] == '1';
+	else
+		camera->pl->syncdatetime = 1;
+
 	CHECK (gp_camera_get_abilities(camera, &a))
 	for (i = 0; ax203_devinfo[i].vendor_id; i++) {
 		if ((a.usb_vendor == ax203_devinfo[i].vendor_id) &&
@@ -459,12 +465,6 @@ camera_init (Camera *camera, GPContext *context)
 		camera_exit (camera, context);
 		return ret;
 	}
-
-	ret = gp_setting_get("ax203", "syncdatetime", buf);
-	if (ret == GP_OK)
-		camera->pl->syncdatetime = buf[0] == '1';
-	else
-		camera->pl->syncdatetime = 1;
 
 	if (camera->pl->syncdatetime) {
 		struct tm tm;
