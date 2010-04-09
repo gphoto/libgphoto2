@@ -1034,6 +1034,9 @@ static struct {
 	{"Canon:Digital IXUS 120 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD940 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* IRC reporter */
+	{"Canon:EOS 550D",			0x04a9, 0x31ea, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
