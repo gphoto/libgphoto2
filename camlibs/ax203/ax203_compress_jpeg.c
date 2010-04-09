@@ -110,7 +110,7 @@ add_mcu_info(uint8_t *outbuf, int block_nr, int last_Y, int last_Cb,
 }
 
 int
-ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
+ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int width, int height)
 {
 	struct jpeg_compress_struct cinfo;
@@ -123,19 +123,14 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 	unsigned long regular_jpeg_size = 0, buf_size = 0;
 	int last_dc_val[3] = { 0, 0, 0 };
 	/* Compression configuration settings */
-	int uv_subsample = 2;
-	int optimize = TRUE;
+	int uv_subsample = camera->pl->jpeg_uv_subsample;
+	int optimize = camera->pl->jpeg_optimize;
 
-	if (width % 8 || height % 8) {
+	i = 8 * uv_subsample;
+	if (width % i || height % i) {
 		gp_log (GP_LOG_ERROR, "ax203",
-			"height and width must be a multiple of 8");
+			"height and width must be a multiple of %d", i);
 		return GP_ERROR_BAD_PARAMETERS;
-	}
-
-	if (width % 16 || height % 16) {
-		gp_log (GP_LOG_DEBUG, "ax203", "height or width not a "
-			"multiple of 8, forcing 1x subsampling");
-		uv_subsample = 1;
 	}
 
 	/* We have a rgb24bit image in the desired dimensions, first we
@@ -276,10 +271,10 @@ ax203_compress_jpeg(int **in, uint8_t *outbuf, int out_size,
 							   uv_subsample, 0);
 
 		for (x = 0; x < width / (8 * uv_subsample); x++) {
-		        /* (Re)init our destination buffer */
-		        jpeg_mem_dest (&cinfo, &buf, &buf_size);
+			/* (Re)init our destination buffer */
+			jpeg_mem_dest (&cinfo, &buf, &buf_size);
 
-		        /* Add MCU info block to output */
+			/* Add MCU info block to output */
 			add_mcu_info (outbuf,
 				      y * width / (8 * uv_subsample) + x,
 				      last_dc_val[2], last_dc_val[0],
