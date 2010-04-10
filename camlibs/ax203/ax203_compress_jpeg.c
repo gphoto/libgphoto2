@@ -24,10 +24,12 @@
 #include <string.h>
 #ifdef HAVE_GD
 #include <gd.h>
+#endif
 
 #include "ax203.h"
 #include "jpeg_memsrcdest.h"
 
+#ifdef HAVE_GD
 static int
 locate_tables_n_write(JOCTET *jpeg, int jpeg_size, JOCTET table_type,
 	uint8_t *outbuf, int *outc)

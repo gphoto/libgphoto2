@@ -367,6 +367,8 @@ ax203_encode_yuv_delta(int **src, char *dest, int width, int height)
 	}
 }
 
+#endif
+
 #ifdef STANDALONE_MAIN
 
 int
@@ -436,5 +438,4 @@ exit:
 	return ret;
 }
 
-#endif
 #endif
