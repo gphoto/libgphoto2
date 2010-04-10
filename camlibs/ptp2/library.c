@@ -1034,6 +1034,9 @@ static struct {
 	{"Canon:Digital IXUS 120 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SD940 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* IRC reporter */
+	{"Canon:EOS 550D",			0x04a9, 0x31ea, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
@@ -1079,6 +1082,7 @@ static struct {
 	{"Fuji:FinePix F200 EXR",		0x04cb, 0x01e4, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
 	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
+	{"Fuji:FinePix S1500",			0x04cb, 0x01ef, 0},
 	/* Luke Symes <allsymes@gmail.com> */
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 
@@ -1112,6 +1116,8 @@ static struct {
 	{"Apple:iPhone 3G (PTP mode)",		0x05ac, 0x1292, 0},
 	/* Marco Michna at SUSE */
 	{"Apple:iPod Touch 2G (PTP mode)",	0x05ac, 0x1293, 0},
+	/* Mark Lehrer <mark@knm.org> */
+	{"Apple:iPhone 3GS (PTP mode)",		0x05ac, 0x1294, 0},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
