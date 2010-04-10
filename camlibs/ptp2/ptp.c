@@ -564,6 +564,15 @@ ptp_free_params (PTPParams *params) {
 	}
 	if (params->props) free (params->props);
 	if (params->canon_flags) free (params->canon_flags);
+
+	if (params->canon_props) {
+		for (i=0;i<params->nrofcanon_props;i++) {
+			free (params->canon_props[i].data);
+			ptp_free_devicepropdesc (&params->canon_props[i].dpd);
+		}
+		free (params->canon_props);
+	}
+
 	if (params->cameraname) free (params->cameraname);
 	if (params->wifi_profiles) free (params->wifi_profiles);
 	free (params->handles.Handler);
