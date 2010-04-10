@@ -352,6 +352,48 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return GP_OK;
 }
 
+static int
+storage_info_func (CameraFilesystem *fs,
+                CameraStorageInformation **sinfos,
+                int *nrofsinfos,
+                void *data, GPContext *context)
+{
+	Camera *camera = (Camera*)data;
+	CameraStorageInformation *sinfo;
+	int free, imagesize;
+
+	free = ax203_get_free_mem_size (camera);
+	if (free < 0) return free;
+
+	sinfo = malloc(sizeof(CameraStorageInformation));
+	if (!sinfo) return GP_ERROR_NO_MEMORY;
+
+	*sinfos = sinfo;
+	*nrofsinfos = 1;
+
+	sinfo->fields  = GP_STORAGEINFO_BASE;
+	strcpy(sinfo->basedir, "/");
+
+	sinfo->fields |= GP_STORAGEINFO_ACCESS;
+	sinfo->access  = GP_STORAGEINFO_AC_READWRITE;
+	sinfo->fields |= GP_STORAGEINFO_STORAGETYPE;
+	sinfo->type    = GP_STORAGEINFO_ST_FIXED_RAM;
+	sinfo->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
+	sinfo->fstype  = GP_STORAGEINFO_FST_GENERICFLAT;
+	sinfo->fields |= GP_STORAGEINFO_MAXCAPACITY;
+	sinfo->capacitykbytes = ax203_get_mem_size (camera) / 1024;
+	sinfo->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
+	sinfo->freekbytes = free / 1024;
+
+	imagesize = ax203_filesize (camera);
+	if (imagesize) {
+        	sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+        	sinfo->freeimages = free / imagesize;
+	}
+
+	return GP_OK;
+}
+
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.folder_list_func = folder_list_func,
@@ -360,6 +402,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func = delete_file_func,
 	.put_file_func = put_file_func,
 	.delete_all_func = delete_all_func,
+	.storage_info_func = storage_info_func
 };
 
 static int
