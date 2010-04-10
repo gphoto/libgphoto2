@@ -468,7 +468,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	GP_DEBUG ("ax203 memory size: %d, free: %d",
 		  ax203_get_mem_size (camera),
-		  ax202_get_free_mem_size (camera));
+		  ax203_get_free_mem_size (camera));
 
 	if (camera->pl->syncdatetime) {
 		struct tm tm;
