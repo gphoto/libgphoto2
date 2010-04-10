@@ -1334,7 +1334,7 @@ ax203_get_mem_size(Camera *camera)
 }
 
 int
-ax202_get_free_mem_size(Camera *camera)
+ax203_get_free_mem_size(Camera *camera)
 {
 	struct ax203_fileinfo used_mem[AX203_ABFS_SIZE / 2];
 	int i, used_mem_count, prev_end, free = 0;
