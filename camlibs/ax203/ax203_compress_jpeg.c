@@ -124,7 +124,6 @@ ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int last_dc_val[3] = { 0, 0, 0 };
 	/* Compression configuration settings */
 	int uv_subsample = camera->pl->jpeg_uv_subsample;
-	int optimize = camera->pl->jpeg_optimize;
 
 	i = 8 * uv_subsample;
 	if (width % i || height % i) {
@@ -144,7 +143,6 @@ ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	cinfo.input_components = 3;
 	cinfo.in_color_space = JCS_RGB;
 	jpeg_set_defaults (&cinfo);
-	cinfo.optimize_coding = optimize;
 	cinfo.comp_info[0].h_samp_factor = uv_subsample;
 	cinfo.comp_info[0].v_samp_factor = uv_subsample;
 
@@ -241,15 +239,6 @@ ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	cinfo.comp_info[2].quant_tbl_no = 0;
 	cinfo.comp_info[2].dc_tbl_no = 0;
 	cinfo.comp_info[2].ac_tbl_no = 0;
-	/* Copy over our optimized huffman tables */
-	memcpy (cinfo.dc_huff_tbl_ptrs[0], dinfo.dc_huff_tbl_ptrs[0],
-		sizeof(JHUFF_TBL));
-	memcpy (cinfo.dc_huff_tbl_ptrs[1], dinfo.dc_huff_tbl_ptrs[1],
-		sizeof(JHUFF_TBL));
-	memcpy (cinfo.ac_huff_tbl_ptrs[0], dinfo.ac_huff_tbl_ptrs[0],
-		sizeof(JHUFF_TBL));
-	memcpy (cinfo.ac_huff_tbl_ptrs[1], dinfo.ac_huff_tbl_ptrs[1],
-		sizeof(JHUFF_TBL));
 
 	/* And create a mini JPEG for each MCU with the shuffled component order
 	   and extract its huffman data. This fixes our component order problem and
