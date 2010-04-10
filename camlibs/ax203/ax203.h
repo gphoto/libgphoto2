@@ -92,7 +92,6 @@ struct _CameraPrivateLibrary {
 	int has_4k_sectors;
 	/* Compression configuration settings */
 	int jpeg_uv_subsample;
-	int jpeg_optimize;
 	/* Driver configuration settings */
 	int syncdatetime;
 };

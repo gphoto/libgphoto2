@@ -596,7 +596,6 @@ static int ax203_read_parameter_block(Camera *camera)
 		  camera->pl->compression_version, camera->pl->fs_start);
 
 	/* Set JPEG compression parameters based on the found resolution */
-	camera->pl->jpeg_optimize = 1;
 	if (camera->pl->width % 16 || camera->pl->height % 16) {
 		gp_log (GP_LOG_DEBUG, "ax203", "height or width not a "
 			"multiple of 16, forcing 1x subsampling");
