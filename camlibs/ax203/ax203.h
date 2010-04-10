@@ -149,6 +149,9 @@ int
 ax203_get_mem_size(Camera *camera);
 
 int
+ax202_get_free_mem_size(Camera *camera);
+
+int
 ax203_set_time_and_date(Camera *camera, struct tm *t);
 
 /* functions in ax203_decode_*.c */

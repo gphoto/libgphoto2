@@ -637,8 +637,8 @@ ax203_filesize(Camera *camera)
 	case AX203_COMPRESSION_YUV_DELTA:
 		return camera->pl->width * camera->pl->height * 3 / 4;
 	case AX203_COMPRESSION_JPEG:
-	        /* Variable size */
-	        return 0;
+		/* Variable size */
+		return 0;
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;	
@@ -1331,4 +1331,22 @@ int
 ax203_get_mem_size(Camera *camera)
 {
 	return camera->pl->mem_size;
+}
+
+int
+ax202_get_free_mem_size(Camera *camera)
+{
+	struct ax203_fileinfo used_mem[AX203_ABFS_SIZE / 2];
+	int i, used_mem_count, prev_end, free = 0;
+
+	used_mem_count = ax203_build_used_mem_table (camera, used_mem);
+	if (used_mem_count < 0) return used_mem_count;
+
+	/* Add the size of all holes in memory together */
+	for (i = 1; i < used_mem_count; i++) {
+		prev_end = used_mem[i - 1].address + used_mem[i - 1].size;
+		free += used_mem[i].address - prev_end;
+	}
+
+	return free;
 }
