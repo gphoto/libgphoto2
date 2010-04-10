@@ -1,23 +1,24 @@
 History of the reverse engineering of the ax203 compression
 -----------------------------------------------------------
 
-There are 3 (known) different firmware versions each with their own
-compression:
+There are 3 (known) different compression algorithms:
 
-Version 3.3.x. This version uses a simple YUV format, with the UV members
+YUV	       This algorithm uses a simple YUV format, with the UV members
 	       subsampled at a 2x2 resolution. It uses 5 bits for the Y
 	       values and 6 bits for the U and V values, cramming 4 pixels
-	       into 4 bytes (frames with usb id 1908:1315)
+	       into 4 bytes. This is used with firmware v3.3.x (usb-id
+	       1908:1315) and v3.4.x frames (usb-id 1908:1320)
 
-Version 3.4.x. This version uses a less simple YUV format, it still
+YUV-DELTA      This version uses a less simple YUV format, it still
 	       subsamples UV at a 2x2 resolution. It then further uses a
 	       delta compression to store 4 values into 2 bytes. Data is
 	       stored in to 4x4 pixels block, Using 6 x 2 bytes, 4 x 4 Y
-	       pixels + 4 U and 4 V pixels (frames with usb id 1908:1320)
+	       pixels + 4 U and 4 V pixels. This is used with firmware v3.3.x
+	       (usb-id 1908:1315) and v3.4.x frames (usb-id 1908:1320)
 
-Version 3.5.x  Uses a JPEG derived format reverse engineering this one
-	       was a challenge, see below for the full story.
-	       (frames with usb id 1908:0102)
+JPEG	       Uses a JPEG derived format reverse engineering this one
+	       was a challenge, see below for the full story. This is used with
+	       v3.5.x frames (usb-id 1908:0102)
 
 After some failed attempts by me (Hans de Goede), I asked help
 from Bertrik Sikken with reverse engineering the JPEG compression.
