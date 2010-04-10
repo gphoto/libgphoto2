@@ -630,6 +630,22 @@ static int ax203_check_file_index(Camera *camera, int idx)
 }
 
 static int
+ax203_filesize(Camera *camera)
+{
+	switch (camera->pl->compression_version) {
+	case AX203_COMPRESSION_YUV:
+		return camera->pl->width * camera->pl->height;
+	case AX203_COMPRESSION_YUV_DELTA:
+		return camera->pl->width * camera->pl->height * 3 / 4;
+	case AX203_COMPRESSION_JPEG:
+	        /* Variable size */
+	        return 0;
+	}
+	/* Never reached */
+	return GP_ERROR_NOT_SUPPORTED;	
+}
+
+static int
 ax203_max_filecount(Camera *camera)
 {
 	switch (camera->pl->firmware_version) {
@@ -640,6 +656,8 @@ ax203_max_filecount(Camera *camera)
 		return (AX203_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
 			sizeof(struct ax203_v3_5_x_raw_fileinfo);
 	}
+	/* Never reached */
+	return GP_ERROR_NOT_SUPPORTED;	
 }
 
 static int
@@ -697,22 +715,8 @@ int ax203_read_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 			       buf, 2))
 
 	fileinfo->address = le16atoh (buf) << 8;
+	fileinfo->size    = ax203_filesize (camera);
 	fileinfo->present = fileinfo->address? 1 : 0;
-
-	switch (camera->pl->compression_version) {
-	case AX203_COMPRESSION_YUV:
-		fileinfo->size = camera->pl->width * camera->pl->height;
-		break;
-	case AX203_COMPRESSION_YUV_DELTA:
-		fileinfo->size = camera->pl->width * camera->pl->height * 3/4;
-		break;
-	case AX203_COMPRESSION_JPEG:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"Compression: %d not support with firmware ver: %d",
-			camera->pl->compression_version,
-			camera->pl->firmware_version);
-		return GP_ERROR_BAD_PARAMETERS;
-	}
 
 	return GP_OK;
 }
@@ -722,31 +726,9 @@ int ax203_write_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
 {
 	uint8_t buf[2];
-	int size_ok = 0;
 
 	if (fileinfo->address & 0xff) {
 		gp_log (GP_LOG_ERROR, "ax203", "LSB of address is not 0");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-
-	switch (camera->pl->compression_version) {
-	case AX203_COMPRESSION_YUV:
-		size_ok = (fileinfo->size == 
-			   camera->pl->width * camera->pl->height);
-		break;
-	case AX203_COMPRESSION_YUV_DELTA:
-		size_ok = (fileinfo->size ==
-			   camera->pl->width * camera->pl->height * 3 / 4);
-		break;
-	case AX203_COMPRESSION_JPEG:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"Compression: %d not support with firmware ver: %d",
-			camera->pl->compression_version,
-			camera->pl->firmware_version);
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-	if (!size_ok) {
-		gp_log (GP_LOG_ERROR, "ax203", "invalid picture size");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
@@ -949,20 +931,17 @@ static int
 ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 {
 #ifdef HAVE_GD
-	int size;
+	int size = ax203_filesize (camera);
+
+	if (dest_size < size)
+		return GP_ERROR_BAD_PARAMETERS;
 
 	switch (camera->pl->compression_version) {
 	case AX203_COMPRESSION_YUV:
-		size = camera->pl->width * camera->pl->height;
-		if (dest_size < size)
-			return GP_ERROR_BAD_PARAMETERS;
 		ax203_encode_yuv (src, dest, camera->pl->width,
 				  camera->pl->height);
 		return size;
 	case AX203_COMPRESSION_YUV_DELTA:
-		size = camera->pl->width * camera->pl->height * 3 / 4;
-		if (dest_size < size)
-			return GP_ERROR_BAD_PARAMETERS;
 		ax203_encode_yuv_delta (src, dest, camera->pl->width,
 					camera->pl->height);
 		return size;
@@ -974,7 +953,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 	}
 	/* Never reached */
 #endif
-	return GP_ERROR_NOT_SUPPORTED;	
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int
