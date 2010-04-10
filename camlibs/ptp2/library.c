@@ -2445,6 +2445,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 		int			nrofentries = 0;
 		uint32_t		newobject;
 
+		if (!params->eos_captureenabled)
+			camera_prepare_capture (camera, context);
 		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
 			if (_timeout_passed (&event_start, timeout))
