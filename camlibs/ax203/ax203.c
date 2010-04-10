@@ -884,12 +884,12 @@ ax203_file_present(Camera *camera, int idx)
 static int
 ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 {
+#ifdef HAVE_GD
 	int ret;
 	unsigned int x, y, width, height;
 	unsigned char *components[3];
 
 	switch (camera->pl->compression_version) {
-#ifdef HAVE_GD
 	case AX203_COMPRESSION_YUV:
 		ax203_decode_yuv (src, dest, camera->pl->width,
 				  camera->pl->height);
@@ -938,16 +938,8 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 			}
 		}
 		return GP_OK;
-#else
-	case AX203_COMPRESSION_YUV:
-	case AX203_COMPRESSION_YUV_DELTA:
-	case AX203_COMPRESSION_JPEG:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"Compression: %d not supported without libgd",
-			camera->pl->compression_version);
-		return GP_ERROR_NOT_SUPPORTED;
-#endif
 	}
+#endif
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;
 }
@@ -956,10 +948,10 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 static int
 ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 {
+#ifdef HAVE_GD
 	int size;
 
 	switch (camera->pl->compression_version) {
-#ifdef HAVE_GD
 	case AX203_COMPRESSION_YUV:
 		size = camera->pl->width * camera->pl->height;
 		if (dest_size < size)
@@ -979,17 +971,9 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 					    (uint8_t *)dest, dest_size,
 					    camera->pl->width,
 					    camera->pl->height);
-#else
-	case AX203_COMPRESSION_YUV:
-	case AX203_COMPRESSION_YUV_DELTA:
-	case AX203_COMPRESSION_JPEG:
-		gp_log (GP_LOG_ERROR, "ax203",
-			"Compression: %d not supported without libgd",
-			camera->pl->compression_version);
-		return GP_ERROR_NOT_SUPPORTED;
-#endif
 	}
 	/* Never reached */
+#endif
 	return GP_ERROR_NOT_SUPPORTED;	
 }
 
