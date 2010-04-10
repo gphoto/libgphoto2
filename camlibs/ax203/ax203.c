@@ -628,7 +628,7 @@ static int ax203_check_file_index(Camera *camera, int idx)
 	return GP_OK;
 }
 
-static int
+int
 ax203_filesize(Camera *camera)
 {
 	switch (camera->pl->compression_version) {
