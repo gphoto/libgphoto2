@@ -1,0 +1,42 @@
+Testplan
+
+Canon Powershot series (currently: Powershot SX100IS)
+
+	--capture-image-and-download
+	--capture-image-and-download -F 3 -I 5
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
+		- Card configured, but not inserted (capturetarget=1)	PASS
+
+	--capture-preview						PASS
+	gtkam repeated preview						PASS
+
+	--capture-preview --capture-image-and-download --capture-preview --capture-image-and-download
+									PASS
+	--list-config							PASS
+
+
+Canon EOS series (currently: EOS 1000D)
+	--capture-image-and-download
+		- via SDRAM (capturetarget=0)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- via Card (SD) (capturetarget=1)
+			- JPEG						xxxx
+			- JPEG + RAW					xxxx
+		- no SD card inserted
+			- JPEG						FAIL/IGNORE
+			- JPEG + RAW 					FAIL/IGNORE
+
+        --capture-image-and-download -F 3 -I 5
+		- via SDRAM (capturetarget=0)
+			- JPEG						PASS
+			- JPEG + RAW					FAIL (not downloading second image)
+		- via Card (capturetarget=1)
+		- no SD card insert					FAIL
+			- JPEG						FAIL/IGNORE
+			- JPEG + RAW 					FAIL/IGNORE
+
+	--wait-event-and-download
+		- JPEG							PASS
+		- JPEG + RAW						PASS
