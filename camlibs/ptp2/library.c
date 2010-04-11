@@ -1908,7 +1908,7 @@ int
 _ptp_check_eos_events (PTPParams *params) {
 	uint16_t		ret;
 	PTPCanon_changes_entry	*entries = NULL, *nentries;
-	int			i, nrofentries = 0;
+	int			nrofentries = 0;
 
 	ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 	if (ret != PTP_RC_OK)
@@ -2621,7 +2621,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			if (ret != PTP_RC_OK)
 				continue;
 			for (i=0;i<evtcnt;i++) {
-				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
+				gp_log (GP_LOG_DEBUG , "ptp/wait_nikon_event", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
 				if (nevent[i].Code == PTP_EC_ObjectAdded) {
 					int j, res;
 					PTPObjectInfo	*obinfo;
@@ -2693,7 +2693,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
 					gp_file_set_mtime (file, time(NULL));
 
-					gp_log (GP_LOG_DEBUG, "ptp2/nikon_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_nikon_event", "trying to get object size=0x%x", oi.ObjectCompressedSize);
 					CPR (context, ptp_getobject (params, newobject, (unsigned char**)&ximage));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
