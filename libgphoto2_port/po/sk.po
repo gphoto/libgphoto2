@@ -6,7 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.4.0\n"
-"POT-Creation-Date: 2007-07-29 19:38-0400\n"
+"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2010-04-11 14:39+0200\n"
 "PO-Revision-Date: 2008-04-04 14:32+0100\n"
 "Last-Translator: Ivan Masár <helix84@centrum.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -14,89 +15,89 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:211
+#: libgphoto2_port/gphoto2-port-info-list.c:213
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Bol požadovaný názov súboru „%s“."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:216
+#: libgphoto2_port/gphoto2-port-info-list.c:218
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Nebolo možné načítať „%s“: „%s“."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:224
+#: libgphoto2_port/gphoto2-port-info-list.c:226
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Nebolo možné nájsť niektoré funkcie v „%s“: „%s“."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:236
+#: libgphoto2_port/gphoto2-port-info-list.c:238
 #, c-format
 msgid "'%s' already loaded"
 msgstr "„%s“ je už načítané"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:245
+#: libgphoto2_port/gphoto2-port-info-list.c:247
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Nebolo možné načítať zoznam ovládačov portov: „%s“."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:252
+#: libgphoto2_port/gphoto2-port-info-list.c:254
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Bol načítaný „%s“ („%s“) z „%s“."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:284
+#: libgphoto2_port/gphoto2-port-info-list.c:286
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Na načítanie io-drivers „%s“ sa používa ltdl..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:310
+#: libgphoto2_port/gphoto2-port-info-list.c:312
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Počítajú sa položky (%i dostupných)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:319
+#: libgphoto2_port/gphoto2-port-info-list.c:321
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i dostupných obyčajných položiek."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:349
+#: libgphoto2_port/gphoto2-port-info-list.c:351
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Hľadá sa cesta „%s“ (%i dostupných položiek)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:361
+#: libgphoto2_port/gphoto2-port-info-list.c:363
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Začína sa hľadanie regulárneho výrazu „%s“..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:369
+#: libgphoto2_port/gphoto2-port-info-list.c:371
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Skúša sa „%s“..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:390
+#: libgphoto2_port/gphoto2-port-info-list.c:392
 msgid "regcomp failed"
 msgstr "regcomp zlyhal"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:401
+#: libgphoto2_port/gphoto2-port-info-list.c:403
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match zlyhal (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:411
 msgid "regexec failed"
 msgstr "regexec zlyhal"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:415
+#: libgphoto2_port/gphoto2-port-info-list.c:417
 msgid "Generic Port"
 msgstr "Všeobecný port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:439
+#: libgphoto2_port/gphoto2-port-info-list.c:441
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Vyhľadáva sa položka „%s“..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:469
+#: libgphoto2_port/gphoto2-port-info-list.c:471
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Získavajú sa informácie o položke %i (%i dostupných)..."
@@ -127,7 +128,8 @@ msgstr "Pevný limit bol prekročený"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
-msgstr "Vyhradený časový interval vypšal počas čítania alebo zapisovania do portu"
+msgstr ""
+"Vyhradený časový interval vypšal počas čítania alebo zapisovania do portu"
 
 #: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Serial port not supported"
@@ -216,291 +218,337 @@ msgstr "Nebolo možné načítať „%s“ („%s“)."
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Nebolo možné nájsť 'gp_port_library_operations' v „%s“ („%s“)"
 
-#: libgphoto2_port/gphoto2-port.c:255
+#: libgphoto2_port/gphoto2-port.c:265
 #, c-format
 msgid "Opening %s port..."
 msgstr "Otvára sa port %s..."
 
-#: libgphoto2_port/gphoto2-port.c:277
+#: libgphoto2_port/gphoto2-port.c:287
 msgid "Closing port..."
 msgstr "Zatvára sa port..."
 
-#: libgphoto2_port/gphoto2-port.c:299
+#: libgphoto2_port/gphoto2-port.c:309
 msgid "Freeing port..."
 msgstr "Uvoľnuje sa port..."
 
-#: libgphoto2_port/gphoto2-port.c:346
+#: libgphoto2_port/gphoto2-port.c:356
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr "Zapisuje sa %i=0x%x bajt(ov) do portu..."
 
-#: libgphoto2_port/gphoto2-port.c:359
+#: libgphoto2_port/gphoto2-port.c:369
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Bolo možné zapísať iba %i z %i bajtov"
 
-#: libgphoto2_port/gphoto2-port.c:382
+#: libgphoto2_port/gphoto2-port.c:392
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr "Číta sa %i=0x%x bajtov z portu..."
 
-#: libgphoto2_port/gphoto2-port.c:393
-#: libgphoto2_port/gphoto2-port.c:430
-#: libgphoto2_port/gphoto2-port.c:470
-#: libgphoto2_port/gphoto2-port.c:895
+#: libgphoto2_port/gphoto2-port.c:403 libgphoto2_port/gphoto2-port.c:440
+#: libgphoto2_port/gphoto2-port.c:480 libgphoto2_port/gphoto2-port.c:905
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr "Bolo možné prečítať iba %i z %i bajtov"
 
-#: libgphoto2_port/gphoto2-port.c:419
+#: libgphoto2_port/gphoto2-port.c:429
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr "Číta sa %i=0x%x bajtov z konca prerušenia..."
 
-#: libgphoto2_port/gphoto2-port.c:480
+#: libgphoto2_port/gphoto2-port.c:490
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr "Číta sa %i=0x%x bajtov z konca prerušenia (rýchlo)..."
 
-#: libgphoto2_port/gphoto2-port.c:505
+#: libgphoto2_port/gphoto2-port.c:515
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "Nastavuje sa interval expirácie na %i millisekúnd..."
 
-#: libgphoto2_port/gphoto2-port.c:541
+#: libgphoto2_port/gphoto2-port.c:551
 msgid "Getting timeout..."
 msgstr "Zisťuje sa interval expirácie..."
 
-#: libgphoto2_port/gphoto2-port.c:545
+#: libgphoto2_port/gphoto2-port.c:555
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Aktuálny interval expirácie: %i millisekúnd"
 
-#: libgphoto2_port/gphoto2-port.c:567
+#: libgphoto2_port/gphoto2-port.c:577
 msgid "Setting settings..."
 msgstr "Nastavuje sa..."
 
-#: libgphoto2_port/gphoto2-port.c:628
+#: libgphoto2_port/gphoto2-port.c:638
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Zisťuje sa úroveň kolíka %i..."
 
-#: libgphoto2_port/gphoto2-port.c:637
+#: libgphoto2_port/gphoto2-port.c:647
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Úroveň kolíka %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:663
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "low"
 msgstr "nízka"
 
-#: libgphoto2_port/gphoto2-port.c:664
+#: libgphoto2_port/gphoto2-port.c:674
 msgid "high"
 msgstr "vysoká"
 
-#: libgphoto2_port/gphoto2-port.c:690
+#: libgphoto2_port/gphoto2-port.c:700
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Nastavuje sa kolík %i (%s: „%s“) na „%s“..."
 
-#: libgphoto2_port/gphoto2-port.c:717
+#: libgphoto2_port/gphoto2-port.c:727
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr "Posiela sa prerušenie (%i millisekúnd)..."
 
-#: libgphoto2_port/gphoto2-port.c:743
+#: libgphoto2_port/gphoto2-port.c:753
 msgid "Flushing port..."
 msgstr "Čistí sa port..."
 
-#: libgphoto2_port/gphoto2-port.c:817
+#: libgphoto2_port/gphoto2-port.c:827
 msgid "Clear halt..."
 msgstr "Čistí sa blokovanie..."
 
-#: libgphoto2_port/gphoto2-port.c:848
+#: libgphoto2_port/gphoto2-port.c:858
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Zapisuje sa správa (požiadavka=0x%x hodnota=0x%x index=0x%x veľkosť=%i=0x%x)..."
+msgstr ""
+"Zapisuje sa správa (požiadavka=0x%x hodnota=0x%x index=0x%x veľkosť=%i=0x%"
+"x)..."
 
-#: libgphoto2_port/gphoto2-port.c:883
+#: libgphoto2_port/gphoto2-port.c:893
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Číta sa správa (požiadavka=0x%x hodnota=0x%x index=0x%x veľkosť=%i=0x%x)..."
+msgstr ""
+"Číta sa správa (požiadavka=0x%x hodnota=0x%x index=0x%x veľkosť=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:890
+#: libgphoto2_port/gphoto2-port.c:900
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1117
+#: libgphoto2_port/gphoto2-port.c:1205
 msgid "No error description available"
 msgstr "Nie je dostupný popis chyby"
 
-#: serial/unix.c:230
+#: serial/unix.c:241
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Nebolo možné zamknúť zariadenie „%s“"
 
-#: serial/unix.c:240
+#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:84
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Zariadenie „%s“ zamkol proces s PID %d"
 
-#: serial/unix.c:243
+#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:87
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Zariadenie „%s“ nebolo možné zamknúť (dev_lock returned %d)"
 
-#: serial/unix.c:277
+#: serial/unix.c:288
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Zariadenie „%s“ nebolo možné odomknúť."
 
-#: serial/unix.c:289
+#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:116
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Zariadenie „%s“ nebolo možné odomknúť, pretože ho zamkol proces s PID %d."
+msgstr ""
+"Zariadenie „%s“ nebolo možné odomknúť, pretože ho zamkol proces s PID %d."
 
-#: serial/unix.c:293
+#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:120
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Zariadenie „%s“ nebolo možné odomknúť (dev_unlock vrátil %d)."
 
-#: serial/unix.c:371
+#: serial/unix.c:385
 #, c-format
 msgid "Serial Port %i"
 msgstr "Sériový port %i"
 
-#: serial/unix.c:462
+#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:269
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Nepodarilo sa otvoriť „%s“ (%m)."
 
-#: serial/unix.c:480
+#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:283
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Nebolo možné zatvoriť „%s“ (%m)."
 
-#: serial/unix.c:534
+#: serial/unix.c:548
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Nebolo možné zapísať do portu (%m)"
 
-#: serial/unix.c:606
+#: serial/unix.c:625
 msgid "Parity error."
 msgstr "Chyba parity."
 
-#: serial/unix.c:610
+#: serial/unix.c:629
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Neočakávaná odpoveď parity 0xff 0x%02x."
 
-#: serial/unix.c:653
+#: serial/unix.c:672
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Neznámy kolík %i."
 
-#: serial/unix.c:675
+#: serial/unix.c:694
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Nebolo možné zistiť úrovaň kolíka %i (%m)."
 
-#: serial/unix.c:710
+#: serial/unix.c:729
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Nebolo možné nastaviť úroveň kolíka %i na %i (%m)."
 
-#: serial/unix.c:735
+#: serial/unix.c:754
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "nebolo možné vyčistiť „%s“ (%m)."
 
-#: serial/unix.c:848
+#: serial/unix.c:867
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Nebolo možné nastaviť rýchlosť na %d"
 
-#: usb/libusb.c:240
+#: usb/libusb.c:242
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Nebolo možné otvoriť zariadenie USB (%m)."
 
-#: usb/libusb.c:250
+#: usb/libusb.c:254
 msgid "Camera is already in use."
 msgstr "Kamera sa už používa."
 
-#: usb/libusb.c:255
+#: usb/libusb.c:259
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Zariadenie má pripojený ovládač „%s“, teraz sa odpája."
 
-#: usb/libusb.c:258
+#: usb/libusb.c:262
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Nebolo možné odpojiť ovládač zariadenia fotoaparátu „%s“."
 
-#: usb/libusb.c:261
+#: usb/libusb.c:267
 msgid "Could not query kernel driver of device."
 msgstr "Nepodarilo sa spojiť s ovládačom zariadenia v jadre."
 
-#: usb/libusb.c:269
+#: usb/libusb.c:275
 #, c-format
-msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "nepodarilo sa prevziať kontrolu nad rozhraním %d (%m). Uistite sa, že žiadny iný program alebo modul jadra (ako %s) nepoužíva zariadenie a že k zariadeniu máte prístup na čítanie aj zápis."
+msgid ""
+"Could not claim interface %d (%m). Make sure no other program or kernel "
+"module (such as %s) is using the device and you have read/write access to "
+"the device."
+msgstr ""
+"nepodarilo sa prevziať kontrolu nad rozhraním %d (%m). Uistite sa, že žiadny "
+"iný program alebo modul jadra (ako %s) nepoužíva zariadenie a že k "
+"zariadeniu máte prístup na čítanie aj zápis."
 
-#: usb/libusb.c:287
+#: usb/libusb.c:293
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Nebolo možné uvoľniť rozhranie %d (%m)."
 
-#: usb/libusb.c:298
+#: usb/libusb.c:306
 #, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Nebolo možné reštartovať port USB (%m)."
 
-#: usb/libusb.c:304
+#: usb/libusb.c:333
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Nebolo možné zatvoriť port USB (%m)."
 
-#: usb/libusb.c:553
+#: usb/libusb.c:582
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Nebolo možné nastaviť konfiguráciu %d/%d (%m)"
 
-#: usb/libusb.c:586
+#: usb/libusb.c:615
 #, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Nebolo možné nastaviť alternatívne nastavenie z %d na %d (%m)"
 
-#: usb/libusb.c:678
+#: usb/libusb.c:707
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Zadaný ID dodávateľa alebo produktu (0x%x,0x%x) nie je platný."
 
-#: usb/libusb.c:714
+#: usb/libusb.c:743
 #, c-format
-msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "Zariadenie USB (dodávateľ 0x%x, produkt 0x%x) je hromadné úložné zariadenie a nemusí s gphoto2 fungovať. Odkaz: %s"
+msgid ""
+"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
+"not function with gphoto2. Reference: %s"
+msgstr ""
+"Zariadenie USB (dodávateľ 0x%x, produkt 0x%x) je hromadné úložné zariadenie "
+"a nemusí s gphoto2 fungovať. Odkaz: %s"
 
-#: usb/libusb.c:756
+#: usb/libusb.c:786
 #, c-format
-msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
-msgstr "Nebolo možné nájsť USB zariadenie (dodávateľ 0x%x, produkt 0x%x). Uistite sa, že je toto zariadenie pripojené k počítaču."
+msgid ""
+"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
+"is connected to the computer."
+msgstr ""
+"Nebolo možné nájsť USB zariadenie (dodávateľ 0x%x, produkt 0x%x). Uistite "
+"sa, že je toto zariadenie pripojené k počítaču."
 
-#: usb/libusb.c:986
+#: usb/libusb.c:1050
 #, c-format
-msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Nebolo možné nájsť USB zariadenie (trieda 0x%x, podtrieda 0x%x, protocol 0x%x). Uistite sa, že je toto zariadenie pripojené k počítaču."
+msgid ""
+"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
+"sure this device is connected to the computer."
+msgstr ""
+"Nebolo možné nájsť USB zariadenie (trieda 0x%x, podtrieda 0x%x, protocol 0x%"
+"x). Uistite sa, že je toto zariadenie pripojené k počítaču."
 
-#: disk/disk.c:177
-#: disk/disk.c:221
-#: disk/disk.c:257
-#: disk/disk.c:289
-#: disk/disk.c:312
+#: disk/disk.c:179 disk/disk.c:229 disk/disk.c:270 disk/disk.c:302
+#: disk/disk.c:325
 #, c-format
 msgid "Media '%s'"
 msgstr "Nosič „%s“"
 
-#: disk/disk.c:178
+#: disk/disk.c:180
 msgid "(unknown)"
 msgstr "(neznámy)"
 
+#: usbdiskdirect/linux.c:223
+#, c-format
+msgid "USB Mass Storage direct IO"
+msgstr ""
+
+#: usbdiskdirect/linux.c:317
+#, fuzzy, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "Nebolo možné zatvoriť „%s“ (%m)."
+
+#: usbdiskdirect/linux.c:340
+#, fuzzy, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "Nebolo možné zapísať do portu (%m)"
+
+#: usbdiskdirect/linux.c:362
+#, fuzzy, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "Nebolo možné zatvoriť „%s“ (%m)."
+
+#: usbscsi/linux.c:214
+#, c-format
+msgid "USB Mass Storage raw SCSI"
+msgstr ""
+
+#: usbscsi/linux.c:323
+#, fuzzy, c-format
+msgid "Could not send scsi command to: '%s' (%m)."
+msgstr "Nebolo možné nastaviť alternatívne nastavenie z %d na %d (%m)"
