@@ -79,7 +79,8 @@ camera_abilities (CameraAbilitiesList *list)
 		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE | 
 				      GP_FOLDER_OPERATION_DELETE_ALL;
 		/* FIXME add support for downloading RAW images */
-		a.file_operations   = GP_FILE_OPERATION_DELETE;
+		a.file_operations   = GP_FILE_OPERATION_DELETE |
+				      GP_FILE_OPERATION_RAW;
 		gp_abilities_list_append (list, a);
 	}
 
@@ -159,15 +160,33 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
-#ifdef HAVE_GD
 	Camera *camera = data;
-	gdImagePtr im;
 	int ret, idx, size;
+#ifdef HAVE_GD
+	gdImagePtr im;
 	void *gdpng;
+#endif
 
 	idx = get_file_idx(camera, folder, filename);
 	if (idx < 0)
 		return idx;
+
+	if (type == GP_FILE_TYPE_RAW) {
+		char *raw;
+
+		size = ax203_read_raw_file (camera, idx, &raw);
+		if (size < 0) return size;
+
+		gp_file_set_mime_type (file, GP_MIME_RAW);
+		gp_file_set_name (file, filename);
+		gp_file_set_data_and_size (file, raw, size);
+
+		return GP_OK;
+	}
+
+#ifdef HAVE_GD
+	if (type != GP_FILE_TYPE_NORMAL)
+		return GP_ERROR_NOT_SUPPORTED;
 
 	im = gdImageCreateTrueColor(camera->pl->width, camera->pl->height);
 	if (im == NULL)
