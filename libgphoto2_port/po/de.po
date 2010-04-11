@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2009-11-04 23:06+0100\n"
+"POT-Creation-Date: 2010-04-11 14:39+0200\n"
 "PO-Revision-Date: 2009-01-18 23:25+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: Deutsch <German <translation-team-de@lists.sourceforge.net>>\n"
@@ -222,120 +222,120 @@ msgstr "Konnte »%s« nicht laden (%s)."
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Konnte 'gp_port_library_operations' in '%s' nicht finden ('%s')"
 
-#: libgphoto2_port/gphoto2-port.c:255
+#: libgphoto2_port/gphoto2-port.c:265
 #, c-format
 msgid "Opening %s port..."
 msgstr "Öffne Port %s..."
 
-#: libgphoto2_port/gphoto2-port.c:277
+#: libgphoto2_port/gphoto2-port.c:287
 msgid "Closing port..."
 msgstr "Schließe Port..."
 
-#: libgphoto2_port/gphoto2-port.c:299
+#: libgphoto2_port/gphoto2-port.c:309
 msgid "Freeing port..."
 msgstr "Lösche Port..."
 
-#: libgphoto2_port/gphoto2-port.c:346
+#: libgphoto2_port/gphoto2-port.c:356
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr "Schreibe %i=0x%x Byte(s) auf den Port..."
 
-#: libgphoto2_port/gphoto2-port.c:359
+#: libgphoto2_port/gphoto2-port.c:369
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Konnte nur %i von %i Byte(s) schreiben"
 
-#: libgphoto2_port/gphoto2-port.c:382
+#: libgphoto2_port/gphoto2-port.c:392
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr "Lese %i=0x%x byte(s) vom Port..."
 
-#: libgphoto2_port/gphoto2-port.c:393 libgphoto2_port/gphoto2-port.c:430
-#: libgphoto2_port/gphoto2-port.c:470 libgphoto2_port/gphoto2-port.c:895
+#: libgphoto2_port/gphoto2-port.c:403 libgphoto2_port/gphoto2-port.c:440
+#: libgphoto2_port/gphoto2-port.c:480 libgphoto2_port/gphoto2-port.c:905
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr "Konnte nur %i von %i Byte(s) lesen"
 
-#: libgphoto2_port/gphoto2-port.c:419
+#: libgphoto2_port/gphoto2-port.c:429
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr "Lese %i=0x%x Byte(s) vom Interrupt Endpoint"
 
-#: libgphoto2_port/gphoto2-port.c:480
+#: libgphoto2_port/gphoto2-port.c:490
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr "Lese %i=0x%x Byte(s) vom Interrupt Endpoint (schnell)..."
 
-#: libgphoto2_port/gphoto2-port.c:505
+#: libgphoto2_port/gphoto2-port.c:515
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "Setze Timeout auf %i Millisekunden..."
 
-#: libgphoto2_port/gphoto2-port.c:541
+#: libgphoto2_port/gphoto2-port.c:551
 msgid "Getting timeout..."
 msgstr "Hole Timeout..."
 
-#: libgphoto2_port/gphoto2-port.c:545
+#: libgphoto2_port/gphoto2-port.c:555
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Derzeitiger Timeout: %i Millisekunden"
 
-#: libgphoto2_port/gphoto2-port.c:567
+#: libgphoto2_port/gphoto2-port.c:577
 msgid "Setting settings..."
 msgstr "Setze Einstellungen..."
 
-#: libgphoto2_port/gphoto2-port.c:628
+#: libgphoto2_port/gphoto2-port.c:638
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Hole Level von Pin %i..."
 
-#: libgphoto2_port/gphoto2-port.c:637
+#: libgphoto2_port/gphoto2-port.c:647
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Level von Pin %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:663
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "low"
 msgstr "niedrig"
 
-#: libgphoto2_port/gphoto2-port.c:664
+#: libgphoto2_port/gphoto2-port.c:674
 msgid "high"
 msgstr "hoch"
 
-#: libgphoto2_port/gphoto2-port.c:690
+#: libgphoto2_port/gphoto2-port.c:700
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Setze Pin %i (%s: '%s') auf '%s'..."
 
-#: libgphoto2_port/gphoto2-port.c:717
+#: libgphoto2_port/gphoto2-port.c:727
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr "Sende Break (%i Millisekunden)..."
 
-#: libgphoto2_port/gphoto2-port.c:743
+#: libgphoto2_port/gphoto2-port.c:753
 msgid "Flushing port..."
 msgstr "Leere Port..."
 
-#: libgphoto2_port/gphoto2-port.c:817
+#: libgphoto2_port/gphoto2-port.c:827
 msgid "Clear halt..."
 msgstr "Lösche Halt..."
 
-#: libgphoto2_port/gphoto2-port.c:848
+#: libgphoto2_port/gphoto2-port.c:858
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr ""
 "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:883
+#: libgphoto2_port/gphoto2-port.c:893
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr "Lese Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:890
+#: libgphoto2_port/gphoto2-port.c:900
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1117
+#: libgphoto2_port/gphoto2-port.c:1205
 msgid "No error description available"
 msgstr "Keine Fehlerbeschreibung verfügbar."
 
@@ -344,12 +344,12 @@ msgstr "Keine Fehlerbeschreibung verfügbar."
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:251
+#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:84
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:254
+#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:87
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
@@ -359,14 +359,14 @@ msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:300
+#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:116
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %d "
 "reserviert ist."
 
-#: serial/unix.c:304
+#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:120
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
@@ -378,12 +378,12 @@ msgstr ""
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:476
+#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:269
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:494
+#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:283
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
@@ -533,3 +533,33 @@ msgstr "Medium »%s«"
 #: disk/disk.c:180
 msgid "(unknown)"
 msgstr "(unbekannt)"
+
+#: usbdiskdirect/linux.c:223
+#, c-format
+msgid "USB Mass Storage direct IO"
+msgstr ""
+
+#: usbdiskdirect/linux.c:317
+#, fuzzy, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "Konnte »%s« nicht schließen (%m)."
+
+#: usbdiskdirect/linux.c:340
+#, fuzzy, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "Konnte nicht auf Port schreiben (%m)"
+
+#: usbdiskdirect/linux.c:362
+#, fuzzy, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "Konnte »%s« nicht schließen (%m)."
+
+#: usbscsi/linux.c:214
+#, c-format
+msgid "USB Mass Storage raw SCSI"
+msgstr ""
+
+#: usbscsi/linux.c:323
+#, fuzzy, c-format
+msgid "Could not send scsi command to: '%s' (%m)."
+msgstr "Konnte Alternativ-Setting %d nicht auf %d setzen (%m)"
