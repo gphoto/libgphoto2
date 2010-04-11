@@ -27,8 +27,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/param.h>
-#include <sys/ioctl.h>
-#include <scsi/sg.h>
+#ifdef HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
+#ifdef HAVE_SCSI_SG_H
+# include <scsi/sg.h>
+#endif
 #ifdef HAVE_LOCKDEV
 #  include <lockdev.h>
 #endif
@@ -295,6 +299,7 @@ gp_port_usbscsi_close (GPPort *port)
 static int gp_port_usbscsi_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
 	int cmd_size, char *sense, int sense_size, char *data, int data_size)
 {
+#ifdef HAVE_SCSI_SG_H
 	sg_io_hdr_t io_hdr;
 
 	if (!port)
@@ -326,6 +331,9 @@ static int gp_port_usbscsi_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
 	}
 
 	return GP_OK;
+#else
+	return GP_ERROR_NOT_SUPPORTED;
+#endif
 }
 
 static int
