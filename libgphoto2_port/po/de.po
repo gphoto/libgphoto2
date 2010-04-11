@@ -1,4 +1,4 @@
-# translation of de.po to Deutsch
+# translation of de.po to German
 # translation of de.po to
 # German Translation.
 # Copyright © 2000-2002 Scott Fritzinger <scottf@unr.edu> et al.
@@ -6,15 +6,15 @@
 # [Please leave these here: öäüßÖÄÜ]
 #
 # Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
-# Marcus Meissner <marcus@jet.franken.de>, 2003, 2005, 2009.
+# Marcus Meissner <marcus@jet.franken.de>, 2003, 2005, 2009, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2010-04-11 14:39+0200\n"
-"PO-Revision-Date: 2009-01-18 23:25+0100\n"
+"PO-Revision-Date: 2010-04-11 15:14+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
-"Language-Team: Deutsch <German <translation-team-de@lists.sourceforge.net>>\n"
+"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -323,8 +323,7 @@ msgstr "Lösche Halt..."
 #: libgphoto2_port/gphoto2-port.c:858
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
+msgstr "Schreibe Nachricht (request=0x%x, Wert=0x%x, Index=0x%x, Größe=%i=0x%x)..."
 
 #: libgphoto2_port/gphoto2-port.c:893
 #, c-format
@@ -490,8 +489,7 @@ msgstr "Konnte Alternativ-Setting %d nicht auf %d setzen (%m)"
 #: usb/libusb.c:707
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
+msgstr "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
 #: usb/libusb.c:743
 #, c-format
@@ -537,29 +535,30 @@ msgstr "(unbekannt)"
 #: usbdiskdirect/linux.c:223
 #, c-format
 msgid "USB Mass Storage direct IO"
-msgstr ""
+msgstr "USB Mass Storage direkt I/O"
 
 #: usbdiskdirect/linux.c:317
-#, fuzzy, c-format
+#, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte nicht an Offset %x seeken auf »%s« (%m)."
 
 #: usbdiskdirect/linux.c:340
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write to '%s' (%m)."
-msgstr "Konnte nicht auf Port schreiben (%m)"
+msgstr "Konnte nicht auf »%s« schreiben (%m)."
 
 #: usbdiskdirect/linux.c:362
-#, fuzzy, c-format
+#, c-format
 msgid "Could not read from '%s' (%m)."
-msgstr "Konnte »%s« nicht schließen (%m)."
+msgstr "Konnte  nicht von »%s« lesen (%m)."
 
 #: usbscsi/linux.c:214
 #, c-format
 msgid "USB Mass Storage raw SCSI"
-msgstr ""
+msgstr "USB Mass Storage raw SCSI"
 
 #: usbscsi/linux.c:323
-#, fuzzy, c-format
+#, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
-msgstr "Konnte Alternativ-Setting %d nicht auf %d setzen (%m)"
+msgstr "Konnte kein SCSI Kommando an %s senden (%m)."
+
