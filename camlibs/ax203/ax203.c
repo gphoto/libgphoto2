@@ -955,6 +955,63 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
+static int
+ax203_defrag_memory(Camera *camera)
+{
+	char **raw_pictures;
+       	struct ax203_fileinfo *fileinfo;
+	int i, count, ret = GP_OK;
+
+	count = ax203_read_filecount (camera);
+	if (count < 0) return count;
+
+	raw_pictures = calloc (count, sizeof (char *));
+	fileinfo     = calloc (count, sizeof (struct ax203_fileinfo));
+	if (!raw_pictures || !fileinfo) {
+		free (raw_pictures); free (fileinfo);
+		gp_log (GP_LOG_ERROR, "ax203", "allocating memory");
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	/* First read all pictures in raw format */
+	for (i = 0; i < count; i++) {
+		ret = ax203_read_fileinfo (camera, i, &fileinfo[i]);
+		if (ret < 0) goto cleanup;
+
+		if (!fileinfo[i].present)
+			continue;
+
+		ret = ax203_read_raw_file(camera, i, &raw_pictures[i]);
+		if (ret < 0) goto cleanup;
+	}
+
+	/* Delete all pictures from the frame */
+	ret = ax203_delete_all (camera);
+	if (ret < 0) goto cleanup;
+	
+	/* An last write them back (in one contineous block) */
+	for (i = 0; i < count; i++) {
+		if (!fileinfo[i].present)
+			continue;
+
+		ret = ax203_write_raw_file (camera, i, raw_pictures[i],
+					    fileinfo[i].size);
+		if (ret < 0) {
+			gp_log (GP_LOG_ERROR, "ax203",
+				"AAI error writing back images during "
+				"defragmentation some images will be lost!");
+			break;
+		}
+	}
+cleanup:
+	for (i = 0; i < count; i++)
+		free (raw_pictures[i]);
+	free (raw_pictures);
+	free (fileinfo);
+
+	return ret;
+}
+
 int
 ax203_read_raw_file(Camera *camera, int idx, char **raw)
 {
@@ -1079,20 +1136,18 @@ ax203_find_free_abfs_slot(Camera *camera)
 }
 
 int
-ax203_write_raw_file(Camera *camera, char *buf, int size)
+ax203_write_raw_file(Camera *camera, int idx, char *buf, int size)
 {
 	struct ax203_fileinfo fileinfo;
 	struct ax203_fileinfo used_mem[AX203_ABFS_SIZE / 2];
-	int i, abfs_slot, hole_size, used_mem_count, prev_end;
+	int i, hole_size, used_mem_count, prev_end, free;
 
-	abfs_slot = ax203_find_free_abfs_slot (camera);
-	if (abfs_slot < 0) return abfs_slot;
-
+retry:
 	used_mem_count = ax203_build_used_mem_table (camera, used_mem);
 	if (used_mem_count < 0) return used_mem_count;
 
 	/* Try to find a large enough "hole" in the memory */
-	for (i = 1; i < used_mem_count; i++) {
+	for (i = 1, free = 0; i < used_mem_count; i++, free += hole_size) {
 		prev_end = used_mem[i - 1].address + used_mem[i - 1].size;
 		hole_size = used_mem[i].address - prev_end;
 		if (hole_size)
@@ -1103,13 +1158,21 @@ ax203_write_raw_file(Camera *camera, char *buf, int size)
 			fileinfo.address = prev_end;
 			fileinfo.size    = size;
 			fileinfo.present = 1;
-			CHECK (ax203_write_fileinfo (camera, abfs_slot,
+			CHECK (ax203_write_fileinfo (camera, idx,
 						     &fileinfo))
 			CHECK (ax203_update_filecount (camera))
 			CHECK (ax203_write_mem (camera, fileinfo.address,
 						buf, size))
 			return GP_OK;
 		}
+	}
+
+	if (free >= size) {
+		gp_log (GP_LOG_DEBUG, "ax203",
+			"not enough contineous freespace to add file, "
+			"defragmenting memory");
+		CHECK (ax203_defrag_memory (camera))
+		goto retry;
 	}
 
 	gp_log (GP_LOG_ERROR, "ax203", "not enough freespace to add file");
@@ -1121,12 +1184,15 @@ ax203_write_file(Camera *camera, int **rgb24)
 {
 	const int buf_size = camera->pl->width * camera->pl->height;
 	char buf[buf_size];
-	int size;
+	int size, abfs_slot;
 
 	size = ax203_encode_image (camera, rgb24, buf, buf_size);
 	if (size < 0) return size;
 
-	CHECK (ax203_write_raw_file (camera, buf, size))
+	abfs_slot = ax203_find_free_abfs_slot (camera);
+	if (abfs_slot < 0) return abfs_slot;
+
+	CHECK (ax203_write_raw_file (camera, abfs_slot, buf, size))
 
 	return GP_OK;
 }
