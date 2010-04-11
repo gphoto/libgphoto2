@@ -1,12 +1,26 @@
-libgphoto2 2.4.8.2
+libgphoto2 2.4.9
 
 This is a 2.4 release branch update.
 
 ptp2:
    * Fixed EOS viewfinder capture speed (2 images/s -> 20 i/s)
-   * Fixed Canon configuration bug that caused hangs.
-   * Lots of EOS fixes, as usual.
-   * New Ids added.
+   * EOS event handling cleaned up, so that we can also have
+     dual image capture (RAW+JPEG).
+   * New Canon EOS properties: autoexposuremode, cameraoutput, evfmode, uilock.
+   * New Nikon property: exposuredelaymode
+   * Fixed a Canon Powershot configuration bug that caused hangs.
+   * Fixed a Nikon Coolpix configuration bug that caused hangs.
+   * Fixed shutterspeed setting to be more generic.
+   * New IDs added:
+	Nikon Coolpix 8800, P6000, L20, L19
+	Panasonic FS62
+	Olympus FE4000/X920/X925, 
+	Canon EOS 550D
+	Canon Powershot A2100IS, SD970IS, SX20IS, IXUS 120IS
+	Fuji FinePix S1500, Z35, S2500HD
+	Apple iPhone 3GS
+   * Some bugs fixed, some memory leaks closed.
+   * music-players.h merged from libmtp, bringing new MTP devices.
 
 ST2205 Driver:
    * New Pictureframe driver from Hans de Goede. st2205 based frames present
@@ -27,6 +41,9 @@ AX203 Driver:
      tell Linux not to touch the HID device this version also presents
      in its USB descriptor. To do this add the following on the linux kernel
      cmdline: "usbhid.quirks=0x1908:0x1315:0x4"
+
+digita:
+   Made to work again hopefully after breakage due to filesystem changes.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.8
