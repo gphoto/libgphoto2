@@ -146,7 +146,7 @@ int
 ax203_read_raw_file(Camera *camera, int idx, char **raw);
 
 int
-ax203_write_raw_file(Camera *camera, char *buf, int size);
+ax203_write_raw_file(Camera *camera, int idx, char *buf, int size);
 
 int
 ax203_commit(Camera *camera);
