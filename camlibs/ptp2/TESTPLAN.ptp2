@@ -1,4 +1,4 @@
-Testplan
+Testplan ptp2 driver
 
 Canon Powershot series (currently: Powershot SX100IS)
 
@@ -8,15 +8,15 @@ Canon Powershot series (currently: Powershot SX100IS)
 		- via Card (capturetarget=1):				PASS
 		- Card configured, but not inserted (capturetarget=1)	PASS
 
-	--capture-preview						PASS
-	gtkam repeated preview						PASS
+	--capture-preview
+		commandline tool					PASS
+		gtkam							PASS
+		mixed with --capture-image-and-download			PASS
 
-	--capture-preview --capture-image-and-download --capture-preview --capture-image-and-download
-									PASS
 	--list-config							PASS
 
 
-Canon EOS series (currently: EOS 1000D)
+Canon EOS series (currently: Canon EOS 1000D)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
 			- JPEG						PASS
@@ -25,18 +25,69 @@ Canon EOS series (currently: EOS 1000D)
 			- JPEG						xxxx
 			- JPEG + RAW					xxxx
 		- no SD card inserted
-			- JPEG						FAIL/IGNORE
-			- JPEG + RAW 					FAIL/IGNORE
+			- JPEG						FAIL/IGNORE (hangs without error)
+			- JPEG + RAW 					FAIL/IGNORE (hangs without error)
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
 			- JPEG						PASS
-			- JPEG + RAW					FAIL (not downloading second image)
+			- JPEG + RAW					PASS
 		- via Card (capturetarget=1)
-		- no SD card insert					FAIL
-			- JPEG						FAIL/IGNORE
-			- JPEG + RAW 					FAIL/IGNORE
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- no SD card insert
+			- JPEG						FAIL/IGNORE (hangs without error)
+			- JPEG + RAW 					FAIL/IGNORE (hangs without error)
+
+	--capture-preview
+		commandline tool					PASS
+		gtkam							PASS
+		mixed with --capture-image-and-download			PASS
 
 	--wait-event-and-download
 		- JPEG							PASS
 		- JPEG + RAW						PASS
+
+	--list-config							PASS
+	--get-config somevalue						PASS
+	--set-config somevalue=value					PASS
+
+
+Nikon DSLR series (currently: Nikon D90)
+	--capture-image-and-download
+		- via SDRAM (capturetarget=0)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- via Card (SD) (capturetarget=1)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- no SD card inserted
+			- JPEG						PASS reports error
+			- JPEG + RAW 					PASS reports error
+
+        --capture-image-and-download -F 3 -I 5
+		- via SDRAM (capturetarget=0)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- via Card (capturetarget=1)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- no SD card insert
+			- JPEG						PASS reports error
+			- JPEG + RAW 					PASS reports error
+
+	--capture-preview
+		commandline tool					PASS
+		gtkam							PASS
+		mixed with --capture-image-and-download	
+			- SDRAM mode					PASS
+			- Card mode					FAIL/IGNORE (returns PTP Device Busy)
+
+	--wait-event-and-download
+		- JPEG							PASS
+		- JPEG + RAW						FAIL (deleting NEF also deletes JPG I think)
+
+
+	--list-config							PASS
+	--get-config somevalue						PASS
+	--set-config somevalue=value					PASS
