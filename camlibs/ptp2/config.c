@@ -224,8 +224,6 @@ static int
 camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 	uint16_t		ret;
-	PTPCanon_changes_entry	*entries = NULL;
-	int			nrofentries = 0;
 	PTPStorageIDs		sids;
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
@@ -240,17 +238,10 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	}
 
 	/* Get the initial bulk set of event data */
-	while (1) {
-		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-			return GP_ERROR;
-		}
-		if (nrofentries == 0)
-			break;
-		free (entries);
-		nrofentries = 0;
-		entries = NULL;
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
+		return translate_ptp_result (ret);
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)) {
@@ -284,19 +275,11 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		}
 	}
 	/* Get the second bulk set of event data */
-	while (1) {
-		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-			return GP_ERROR;
-		}
-		if (nrofentries == 0)
-			break;
-		free (entries);
-		nrofentries = 0;
-		entries = NULL;
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
+		return translate_ptp_result (ret);
 	}
-
 
 	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
 
@@ -327,18 +310,12 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* FIXME: 9114 call missing here! */
 
 	/* Get the second bulk set of 0x9116 property data */
-	while (1) {
-		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-			return GP_ERROR;
-		}
-		if (nrofentries == 0)
-			break;
-		free (entries);
-		nrofentries = 0;
-		entries = NULL;
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
+		return translate_ptp_result (ret);
 	}
+
 	params->eos_captureenabled = 1;
 	return GP_OK;
 }
@@ -394,25 +371,15 @@ static int
 camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 	uint16_t		ret;
-	PTPCanon_changes_entry	*entries = NULL;
-	int			nrofentries = 0;
 
 	/* then emits 911b and 911c ... not done yet ... */
-
 	CR( camera_canon_eos_update_capture_target(camera, context, 1) );
 
 	/* Drain the rest set of the event data */
-	while (1) {
-		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "getevent failed!");
-			return GP_ERROR;
-		}
-		if (nrofentries == 0)
-			break;
-		free (entries);
-		nrofentries = 0;
-		entries = NULL;
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "getevent failed!");
+		return translate_ptp_result (ret);
 	}
 
 	ret = ptp_canon_eos_setremotemode(params, 0);
@@ -3414,20 +3381,10 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 		return GP_ERROR;
 	}
 	/* Get the next set of event data */
-	while (1) {
-		int nrofentries = 0;
-		PTPCanon_changes_entry	*entries = NULL;
-
-		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2/canon_eos_afdrive", "getevent failed!");
-			return GP_ERROR;
-		}
-		if (nrofentries == 0)
-			break;
-		free (entries);
-		nrofentries = 0;
-		entries = NULL;
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_afdrive", "getevent failed!");
+		return translate_ptp_result (ret);
 	}
 	return GP_OK;
 }
@@ -3512,20 +3469,10 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 		return GP_ERROR;
 	}
 	/* Get the next set of event data */
-	while (1) {
-		int nrofentries = 0;
-		PTPCanon_changes_entry	*entries = NULL;
-
-		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2/canon_eos_mfdrive", "getevent failed!");
-			return GP_ERROR;
-		}
-		if (nrofentries == 0)
-			break;
-		free (entries);
-		nrofentries = 0;
-		entries = NULL;
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_mfdrive", "getevent failed!");
+		return translate_ptp_result (ret);
 	}
 	return GP_OK;
 }

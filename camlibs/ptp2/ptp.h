@@ -2124,6 +2124,9 @@ uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 
 uint16_t ptp_check_event (PTPParams *params);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
+uint16_t ptp_check_eos_events (PTPParams *params);
+int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
+
 
 /* Microsoft MTP extensions */
 uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,

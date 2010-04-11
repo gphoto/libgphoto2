@@ -1683,6 +1683,51 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 }
 
 uint16_t
+ptp_check_eos_events (PTPParams *params) {
+	uint16_t		ret;
+	PTPCanon_changes_entry	*entries = NULL, *nentries;
+	int			nrofentries = 0;
+
+	ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+	if (ret != PTP_RC_OK)
+		return ret;
+	if (!nrofentries)
+		return PTP_RC_OK;
+
+	if (params->nrofbacklogentries) {
+		nentries = realloc(params->backlogentries,sizeof(entries[0])*(params->nrofbacklogentries+nrofentries));
+		if (!nentries)
+			return PTP_RC_GeneralError;
+		params->backlogentries = nentries;
+		memcpy (nentries+params->nrofbacklogentries, entries, nrofentries*sizeof(entries[0]));
+		params->nrofbacklogentries += nrofentries;
+		free (entries);
+	} else {
+		params->backlogentries = entries;
+		params->nrofbacklogentries = nrofentries;
+	}
+	return PTP_RC_OK;
+}
+
+int
+ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry) {
+	if (!params->nrofbacklogentries)
+		return 0;
+	memcpy (entry, params->backlogentries, sizeof(*entry));
+	if (params->nrofbacklogentries > 1) {
+		memmove (params->backlogentries,params->backlogentries+1,sizeof(*entry)*(params->nrofbacklogentries-1));
+		params->nrofbacklogentries--;
+	} else {
+		free (params->backlogentries);
+		params->backlogentries = NULL;
+		params->nrofbacklogentries = 0;
+	}
+	return 1;
+}
+
+
+
+uint16_t
 ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTPDevicePropDesc *dpd)
 {
