@@ -956,11 +956,12 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 }
 
 int
-ax203_read_file(Camera *camera, int idx, int **rgb24)
+ax203_read_raw_file(Camera *camera, int idx, char **raw)
 {
-	char *src;
 	struct ax203_fileinfo fileinfo;
 	int ret;
+
+	*raw = NULL;
 
 	CHECK (ax203_read_fileinfo (camera, idx, &fileinfo))
 
@@ -972,16 +973,32 @@ ax203_read_file(Camera *camera, int idx, int **rgb24)
 
 	/* Allocate 1 extra byte as tinyjpeg's huffman decoding sometimes
 	   reads a few bits more then it needs */
-	src = malloc(fileinfo.size + 1);
-	if (!src) {
+	*raw = malloc (fileinfo.size + 1);
+	if (!*raw) {
 		gp_log (GP_LOG_ERROR, "ax203", "allocating memory");
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	ret = ax203_read_mem (camera, fileinfo.address, src, fileinfo.size);
-	if (ret < 0) { free(src); return ret; }
+	ret = ax203_read_mem (camera, fileinfo.address, *raw, fileinfo.size);
+	if (ret < 0) {
+		free (*raw);
+		*raw = NULL;
+		return ret;
+	}
 
-	ret = ax203_decode_image (camera, src, fileinfo.size + 1, rgb24);
+	return fileinfo.size;
+}
+
+int
+ax203_read_file(Camera *camera, int idx, int **rgb24)
+{
+	int ret;
+	char *src;
+
+	ret = ax203_read_raw_file (camera, idx, &src);
+	if (ret < 0) return ret;
+
+	ret = ax203_decode_image (camera, src, ret + 1, rgb24);
 	free(src);
 
 	return ret;
@@ -1062,19 +1079,14 @@ ax203_find_free_abfs_slot(Camera *camera)
 }
 
 int
-ax203_write_file(Camera *camera, int **rgb24)
+ax203_write_raw_file(Camera *camera, char *buf, int size)
 {
 	struct ax203_fileinfo fileinfo;
 	struct ax203_fileinfo used_mem[AX203_ABFS_SIZE / 2];
-	int i, abfs_slot, size, hole_size, used_mem_count, prev_end;
-	const int buf_size = camera->pl->width * camera->pl->height;
-	char buf[buf_size];
+	int i, abfs_slot, hole_size, used_mem_count, prev_end;
 
 	abfs_slot = ax203_find_free_abfs_slot (camera);
 	if (abfs_slot < 0) return abfs_slot;
-
-	size = ax203_encode_image (camera, rgb24, buf, buf_size);
-	if (size < 0) return size;
 
 	used_mem_count = ax203_build_used_mem_table (camera, used_mem);
 	if (used_mem_count < 0) return used_mem_count;
@@ -1102,6 +1114,21 @@ ax203_write_file(Camera *camera, int **rgb24)
 
 	gp_log (GP_LOG_ERROR, "ax203", "not enough freespace to add file");
 	return GP_ERROR_NO_SPACE;
+}
+
+int
+ax203_write_file(Camera *camera, int **rgb24)
+{
+	const int buf_size = camera->pl->width * camera->pl->height;
+	char buf[buf_size];
+	int size;
+
+	size = ax203_encode_image (camera, rgb24, buf, buf_size);
+	if (size < 0) return size;
+
+	CHECK (ax203_write_raw_file (camera, buf, size))
+
+	return GP_OK;
 }
 
 int
