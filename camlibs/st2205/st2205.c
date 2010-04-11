@@ -482,12 +482,13 @@ st2205_get_filenames(Camera *camera, st2205_filename *names)
 }
 
 int
-st2205_read_file(Camera *camera, int idx, int **rgb24)
+st2205_read_raw_file(Camera *camera, int idx, unsigned char **raw)
 {
-	unsigned char *src;
 	struct image_table_entry entry;
 	struct image_header header;
-	int ret, count;
+	int ret, count, size;
+
+	*raw = NULL;
 
 	count = st2205_read_file_count(camera);
 	if (count < 0) return count;
@@ -539,18 +540,37 @@ st2205_read_file(Camera *camera, int idx, int **rgb24)
 	GP_DEBUG ("file: %d header read, size: %dx%d, length: %d bytes\n",
 		  idx, header.width, header.height, header.length);
 
-	src = malloc(header.length);
-	if (!src) {
+	size = header.length + sizeof (header);
+	*raw = malloc (size);
+	if (!*raw) {
 		gp_log (GP_LOG_ERROR, "st2205", "allocating memory");
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	ret = st2205_read_mem (camera, entry.address + sizeof(header), src,
-			       header.length);
-	if (ret < 0) { free(src); return ret; }
+	ret = st2205_read_mem (camera, entry.address, *raw, size);
+	if (ret < 0) {
+		free (*raw);
+		*raw = NULL;
+		return ret;
+	}
 
-	ret = st2205_decode_image (camera->pl, src, header.length, rgb24,
-				   header.shuffle_table);
+	return size;
+}
+
+int
+st2205_read_file(Camera *camera, int idx, int **rgb24)
+{
+	int ret;
+	unsigned char *src;
+	struct image_header *header;
+
+	CHECK (st2205_read_raw_file (camera, idx, &src))
+
+	header = (struct image_header *) src;
+	ret = st2205_decode_image (camera->pl,
+				   src + sizeof (struct image_header),
+				   be16toh (header->length), rgb24,
+				   header->shuffle_table);
 	free(src);
 
 	return ret;

@@ -118,6 +118,9 @@ int
 st2205_read_file(Camera *camera, int idx, int **rgb24);
 
 int
+st2205_read_raw_file(Camera *camera, int idx, unsigned char **raw);
+
+int
 st2205_set_time_and_date(Camera *camera, struct tm *t);
 
 /* This function returns the index used to save the file at on success */
