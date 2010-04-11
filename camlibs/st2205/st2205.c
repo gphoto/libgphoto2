@@ -724,6 +724,7 @@ st2205_delete_all(Camera *camera)
 	/* Mark the memory block we've directly manipulated dirty. */
 	camera->pl->block_dirty[0] = 1;
 
+	CHECK (st2205_write_file_count (camera, 0))
 	CHECK (st2205_update_fat_checksum (camera))
 	CHECK (st2205_copy_fat (camera))
 

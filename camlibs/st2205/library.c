@@ -68,8 +68,8 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_vendor = 0x1403;
 	a.usb_product= 0x0001;
 	a.operations = GP_OPERATION_NONE;
-	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
-	/* FIXME add support for delete all */
+	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE | 
+			      GP_FOLDER_OPERATION_DELETE_ALL;
 	a.file_operations   = GP_FILE_OPERATION_DELETE | GP_FILE_OPERATION_RAW;
 	return gp_abilities_list_append (list, a);
 }
@@ -346,6 +346,17 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		 GPContext *context)
+{
+	Camera *camera = data;
+
+	CHECK (st2205_delete_all (camera))
+
+	return st2205_commit (camera);
+}
+
+static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo *info, void *data, GPContext *context)
 {
@@ -378,6 +389,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.get_file_func = get_file_func,
 	.del_file_func = delete_file_func,
 	.put_file_func = put_file_func,
+	.delete_all_func = delete_all_func,
 };
 
 static int
