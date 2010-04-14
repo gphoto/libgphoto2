@@ -230,7 +230,6 @@ st2205_detect_mem_size(Camera *camera)
 	}
 
 	camera->pl->mem_size = 524288 << i;	
-	GP_DEBUG ("Detect %d bytes of flash memory", camera->pl->mem_size);
 
 	st2205_free_page_aligned(buf0, ST2205_BLOCK_SIZE);
 	st2205_free_page_aligned(buf1, ST2205_BLOCK_SIZE);
@@ -1028,4 +1027,57 @@ int
 st2205_get_mem_size(Camera *camera)
 {
 	return camera->pl->mem_size;
+}
+
+int
+st2205_get_free_mem_size(Camera *camera)
+{
+	struct image_table_entry entry;
+	struct image_header header;
+	int i, count, start, end, hole_start = 0, free = 0;
+
+	count = st2205_read_file_count (camera);
+	if (count < 0) return count;
+
+	/* Find all holes in the memory and add their sizes together */
+	end = camera->pl->picture_start;
+	for (i = 0; i <= count; i++) {
+		/* Fake a present entry at the end of picture mem */
+		if (i == count) {
+			entry.present = 1;
+			start = camera->pl->mem_size -
+				camera->pl->firmware_size;
+			/* If the last entry in the "FAT" was present, we need
+			   to set hole_start to the end of the last picture */
+			if (!hole_start)
+				hole_start = end;
+		} else {
+			CHECK (st2205_read_mem (camera, ST2205_FILE_OFFSET (i),
+						&entry, sizeof(entry)))
+
+			start = entry.address;
+			if (entry.present) {
+				CHECK (st2205_read_mem (camera, start,
+							&header,
+							sizeof(header)))
+
+				BE16TOH(header.length);
+				end = start + sizeof(header) + header.length;
+			}
+		}
+
+		/* If we have a hole start address look for present entries (so
+		   a hole end address), else look for non present entries */
+		if (hole_start) {
+			if (entry.present) {
+				free += start - hole_start;
+				hole_start = 0;
+			}
+		} else {
+			if (!entry.present)
+				hole_start = end;
+		}
+	}
+
+	return free;
 }
