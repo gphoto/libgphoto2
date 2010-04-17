@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-04-11 14:39+0200\n"
+"POT-Creation-Date: 2010-04-11 20:37+0200\n"
 "PO-Revision-Date: 2010-04-11 15:14+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -344,12 +344,12 @@ msgstr "Keine Fehlerbeschreibung verfügbar."
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:84
+#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:88
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:87
+#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:91
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
@@ -359,14 +359,14 @@ msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:116
+#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:120
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %d "
 "reserviert ist."
 
-#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:120
+#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:124
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
@@ -378,12 +378,12 @@ msgstr ""
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:269
+#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:273
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:283
+#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:287
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
@@ -554,12 +554,12 @@ msgstr "Konnte nicht auf »%s« schreiben (%m)."
 msgid "Could not read from '%s' (%m)."
 msgstr "Konnte  nicht von »%s« lesen (%m)."
 
-#: usbscsi/linux.c:214
+#: usbscsi/linux.c:218
 #, c-format
 msgid "USB Mass Storage raw SCSI"
 msgstr "USB Mass Storage raw SCSI"
 
-#: usbscsi/linux.c:323
+#: usbscsi/linux.c:328
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Konnte kein SCSI Kommando an %s senden (%m)."
