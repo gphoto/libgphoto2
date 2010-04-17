@@ -2466,6 +2466,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 	init_ptp_fs (camera, context);
 
+	*eventtype = GP_EVENT_TIMEOUT;
+	*eventdata = NULL;
 	gettimeofday (&event_start,NULL);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
