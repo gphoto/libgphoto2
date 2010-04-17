@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.4.7\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-04-11 14:39+0200\n"
+"POT-Creation-Date: 2009-08-02 21:11+0200\n"
 "PO-Revision-Date: 2009-09-23 04:04+0900\n"
 "Last-Translator: Tadashi Jokagi <elf2000@users.sourceforge.net>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -219,123 +219,119 @@ msgstr "'%s' ('%s')を読み込むことができませんでした。"
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "'%s' ('%s') で 'gp_port_library_operations' を見つけることができません"
 
-#: libgphoto2_port/gphoto2-port.c:265
+#: libgphoto2_port/gphoto2-port.c:255
 #, c-format
 msgid "Opening %s port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:287
+#: libgphoto2_port/gphoto2-port.c:277
 msgid "Closing port..."
 msgstr "ポートを閉じています..."
 
-#: libgphoto2_port/gphoto2-port.c:309
+#: libgphoto2_port/gphoto2-port.c:299
 msgid "Freeing port..."
 msgstr "ポートを開放しています..."
 
-#: libgphoto2_port/gphoto2-port.c:356
+#: libgphoto2_port/gphoto2-port.c:346
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:369
+#: libgphoto2_port/gphoto2-port.c:359
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:392
+#: libgphoto2_port/gphoto2-port.c:382
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:403 libgphoto2_port/gphoto2-port.c:440
-#: libgphoto2_port/gphoto2-port.c:480 libgphoto2_port/gphoto2-port.c:905
+#: libgphoto2_port/gphoto2-port.c:393 libgphoto2_port/gphoto2-port.c:430
+#: libgphoto2_port/gphoto2-port.c:470 libgphoto2_port/gphoto2-port.c:895
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:429
+#: libgphoto2_port/gphoto2-port.c:419
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:490
+#: libgphoto2_port/gphoto2-port.c:480
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:515
+#: libgphoto2_port/gphoto2-port.c:505
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "タイムアウトを %i ミリ秒に設定しています..."
 
-#: libgphoto2_port/gphoto2-port.c:551
+#: libgphoto2_port/gphoto2-port.c:541
 msgid "Getting timeout..."
 msgstr "タイムアウトを取得しています..."
 
-#: libgphoto2_port/gphoto2-port.c:555
+#: libgphoto2_port/gphoto2-port.c:545
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "現在のタイムアウト: %i ミリ秒"
 
-#: libgphoto2_port/gphoto2-port.c:577
+#: libgphoto2_port/gphoto2-port.c:567
 msgid "Setting settings..."
 msgstr "設定のセッティングをしています..."
 
-#: libgphoto2_port/gphoto2-port.c:638
+#: libgphoto2_port/gphoto2-port.c:628
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "ピン %i のレベルを取得しています..."
 
-#: libgphoto2_port/gphoto2-port.c:647
+#: libgphoto2_port/gphoto2-port.c:637
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "ピン %i のレベル: %i"
 
-#: libgphoto2_port/gphoto2-port.c:673
+#: libgphoto2_port/gphoto2-port.c:663
 msgid "low"
 msgstr "低"
 
-#: libgphoto2_port/gphoto2-port.c:674
+#: libgphoto2_port/gphoto2-port.c:664
 msgid "high"
 msgstr "高"
 
-#: libgphoto2_port/gphoto2-port.c:700
+#: libgphoto2_port/gphoto2-port.c:690
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "ピン %i (%s: 「%s」) を「%s」に設定しています..."
 
-#: libgphoto2_port/gphoto2-port.c:727
+#: libgphoto2_port/gphoto2-port.c:717
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:753
+#: libgphoto2_port/gphoto2-port.c:743
 msgid "Flushing port..."
 msgstr "ポートをフラッシュしています..."
 
-#: libgphoto2_port/gphoto2-port.c:827
+#: libgphoto2_port/gphoto2-port.c:817
 msgid "Clear halt..."
 msgstr ""
 
-#: libgphoto2_port/gphoto2-port.c:858
+#: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"メッセージを書き込んでいます (リクエスト=0x%x 値=0x%x インデックス=0x%x サイ"
-"ズ=%i=0x%x)..."
+msgstr "メッセージを書き込んでいます (リクエスト=0x%x 値=0x%x インデックス=0x%x サイズ=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:893
+#: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"メッセージを読み込んでいます (リクエスト=0x%x 値=0x%x インデックス=0x%x サイ"
-"ズ=%i=0x%x)..."
+msgstr "メッセージを読み込んでいます (リクエスト=0x%x 値=0x%x インデックス=0x%x サイズ=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:900
+#: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1205
+#: libgphoto2_port/gphoto2-port.c:1117
 msgid "No error description available"
 msgstr "有効なエラーメッセージがありません"
 
@@ -344,12 +340,12 @@ msgstr "有効なエラーメッセージがありません"
 msgid "Could not lock device '%s'"
 msgstr "デバイス '%s' をロックすることが出来ませんでした"
 
-#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:84
+#: serial/unix.c:251
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "デバイス '%s' は他のプロセス (PID:%d) がロックしています"
 
-#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:87
+#: serial/unix.c:254
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "デバイス '%s' がロックできません (dev_lock の返り値 %d)"
@@ -359,31 +355,27 @@ msgstr "デバイス '%s' がロックできません (dev_lock の返り値 %d)
 msgid "Device '%s' could not be unlocked."
 msgstr "デバイス '%s' のロックを解放することが出来ませんでした。"
 
-#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:116
+#: serial/unix.c:300
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr ""
-"デバイス '%s' が他のプロセス (PID:%d) がロックしているので解放することが出来"
-"ませんでした。"
+msgstr "デバイス '%s' が他のプロセス (PID:%d) がロックしているので解放することが出来ませんでした。"
 
-#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:120
+#: serial/unix.c:304
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr ""
-"デバイス '%s' のロックを解放することが出来ませんでした (dev_unlock の返り値 %"
-"d)"
+msgstr "デバイス '%s' のロックを解放することが出来ませんでした (dev_unlock の返り値 %d)"
 
 #: serial/unix.c:385
 #, c-format
 msgid "Serial Port %i"
 msgstr "シリアルポート %i"
 
-#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:269
+#: serial/unix.c:476
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "'%s' のオープンに失敗しました (%m)。"
 
-#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:283
+#: serial/unix.c:494
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "'%s' を閉じることが出来ませんでした (%m)。"
@@ -452,14 +444,8 @@ msgstr "Kernel のデバイス・ドライバを照会できませんでした�
 
 #: usb/libusb.c:275
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"インタフェース %d (%m) と断定できませんでした。他のプログラムまたは (接頭子"
-"が %s のような)  Kernel モジュールがこのデバイスを使用していないか確認して、"
-"そのデバイスの読み込み/書き込みをしてみて下さい。"
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "インタフェース %d (%m) と断定できませんでした。他のプログラムまたは (接頭子が %s のような)  Kernel モジュールがこのデバイスを使用していないか確認して、そのデバイスの読み込み/書き込みをしてみて下さい。"
 
 #: usb/libusb.c:293
 #, c-format
@@ -493,30 +479,18 @@ msgstr "提供ベンダーまたは製品 ID (0x%x,0x%x) は正しくありま�
 
 #: usb/libusb.c:743
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"USB デバイス (ベンダー:0x%x 製品: 0x%x) はマス・ストレージ用デバイスで、"
-"gphoto2 では取り扱えません。参考情報: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "USB デバイス (ベンダー:0x%x 製品: 0x%x) はマス・ストレージ用デバイスで、gphoto2 では取り扱えません。参考情報: %s"
 
 #: usb/libusb.c:786
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"USB デバイス (ベンダー:0x%x 製品: 0x%x) が見つかりませんでした。このデバイス"
-"がコンピュータに接続されているか確認して下さい。"
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "USB デバイス (ベンダー:0x%x 製品: 0x%x) が見つかりませんでした。このデバイスがコンピュータに接続されているか確認して下さい。"
 
-#: usb/libusb.c:1050
+#: usb/libusb.c:1019
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりません"
-"でした。このデバイスがコンピュータに接続されているか確認して下さい。"
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "USB デバイス (Class: 0x%x, SubClass: 0x%x, プロトコル: 0x%x) が見つかりませんでした。このデバイスがコンピュータに接続されているか確認して下さい。"
 
 #: disk/disk.c:179 disk/disk.c:229 disk/disk.c:270 disk/disk.c:302
 #: disk/disk.c:325
@@ -528,40 +502,8 @@ msgstr "メディア「%s」"
 msgid "(unknown)"
 msgstr "(不明)"
 
-#: usbdiskdirect/linux.c:223
-#, c-format
-msgid "USB Mass Storage direct IO"
-msgstr ""
-
-#: usbdiskdirect/linux.c:317
-#, fuzzy, c-format
-msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "'%s' を閉じることが出来ませんでした (%m)。"
-
-#: usbdiskdirect/linux.c:340
-#, fuzzy, c-format
-msgid "Could not write to '%s' (%m)."
-msgstr "ポートへ書き込めませんでした (%m)"
-
-#: usbdiskdirect/linux.c:362
-#, fuzzy, c-format
-msgid "Could not read from '%s' (%m)."
-msgstr "'%s' を閉じることが出来ませんでした (%m)。"
-
-#: usbscsi/linux.c:214
-#, c-format
-msgid "USB Mass Storage raw SCSI"
-msgstr ""
-
-#: usbscsi/linux.c:323
-#, fuzzy, c-format
-msgid "Could not send scsi command to: '%s' (%m)."
-msgstr "設定 %d/%d を反映することが出来ませんでした (%m)。"
-
 #~ msgid "Could not load any io-library because '%s' could not be opened (%m)"
-#~ msgstr ""
-#~ "'%s' を開くことができないのでいくつかの I/O ライブラリを読み込めませんでし"
-#~ "た (%m)"
+#~ msgstr "'%s' を開くことができないのでいくつかの I/O ライブラリを読み込めませんでした (%m)"
 
 #, fuzzy
 #~ msgid "Could not find some functions in '%s' (%s)"

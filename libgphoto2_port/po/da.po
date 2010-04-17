@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.4.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-04-11 14:39+0200\n"
+"POT-Creation-Date: 2007-07-29 19:38-0400\n"
 "PO-Revision-Date: 2007-08-15 12:45+0200\n"
 "Last-Translator: Mogens Jaeger <mogens@jaeger.tf>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -15,89 +15,89 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:213
+#: libgphoto2_port/gphoto2-port-info-list.c:211
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Kaldte filnavnet '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:218
+#: libgphoto2_port/gphoto2-port-info-list.c:216
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kunne ikke indlæse '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:224
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kunne ikke finde visse funktioner i '%s': '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:238
+#: libgphoto2_port/gphoto2-port-info-list.c:236
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' allerede indlæst"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:247
+#: libgphoto2_port/gphoto2-port-info-list.c:245
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kunne ikke indlæse portdriverliste: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:254
+#: libgphoto2_port/gphoto2-port-info-list.c:252
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "Indlæste '%s' ('%s') fra '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:286
+#: libgphoto2_port/gphoto2-port-info-list.c:284
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Bruger ltdl til at indlæse io-drivere fra '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:312
+#: libgphoto2_port/gphoto2-port-info-list.c:310
 #, c-format
 msgid "Counting entries (%i available)..."
 msgstr "Tæller indgange (%i til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:321
+#: libgphoto2_port/gphoto2-port-info-list.c:319
 #, c-format
 msgid "%i regular entries available."
 msgstr "%i regulære indgange til rådighed."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:351
+#: libgphoto2_port/gphoto2-port-info-list.c:349
 #, c-format
 msgid "Looking for path '%s' (%i entries available)..."
 msgstr "Ser efter sti '%s' (%i indgange til rådighed)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:363
+#: libgphoto2_port/gphoto2-port-info-list.c:361
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Starter regex-søgning efter '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:369
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Prøver '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:390
 msgid "regcomp failed"
 msgstr "regcomp fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:403
+#: libgphoto2_port/gphoto2-port-info-list.c:401
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match fejlede (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:411
+#: libgphoto2_port/gphoto2-port-info-list.c:409
 msgid "regexec failed"
 msgstr "regexec fejlede"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:417
+#: libgphoto2_port/gphoto2-port-info-list.c:415
 msgid "Generic Port"
 msgstr "Almindelig port"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:441
+#: libgphoto2_port/gphoto2-port-info-list.c:439
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Ser efter indgang '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:471
+#: libgphoto2_port/gphoto2-port-info-list.c:469
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Henter information om indgang %i (%i til rådighed)..."
@@ -217,337 +217,285 @@ msgstr "Kunne ikke indlæse '%s' ('%s')."
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Kunne ikke finde 'gp_port_library_operations' i '%s' ('%s')"
 
-#: libgphoto2_port/gphoto2-port.c:265
+#: libgphoto2_port/gphoto2-port.c:255
 #, c-format
 msgid "Opening %s port..."
 msgstr "Åbner %s port..."
 
-#: libgphoto2_port/gphoto2-port.c:287
+#: libgphoto2_port/gphoto2-port.c:277
 msgid "Closing port..."
 msgstr "Lukker port..."
 
-#: libgphoto2_port/gphoto2-port.c:309
+#: libgphoto2_port/gphoto2-port.c:299
 msgid "Freeing port..."
 msgstr "Frigør port..."
 
-#: libgphoto2_port/gphoto2-port.c:356
+#: libgphoto2_port/gphoto2-port.c:346
 #, c-format
 msgid "Writing %i=0x%x byte(s) to port..."
 msgstr "Skriver %i=0x%x byte til port..."
 
-#: libgphoto2_port/gphoto2-port.c:369
+#: libgphoto2_port/gphoto2-port.c:359
 #, c-format
 msgid "Could only write %i out of %i byte(s)"
 msgstr "Kunne kun skrive %i ud af %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:392
+#: libgphoto2_port/gphoto2-port.c:382
 #, c-format
 msgid "Reading %i=0x%x bytes from port..."
 msgstr "Læser %i=0x%x byte fra port..."
 
-#: libgphoto2_port/gphoto2-port.c:403 libgphoto2_port/gphoto2-port.c:440
-#: libgphoto2_port/gphoto2-port.c:480 libgphoto2_port/gphoto2-port.c:905
+#: libgphoto2_port/gphoto2-port.c:393 libgphoto2_port/gphoto2-port.c:430
+#: libgphoto2_port/gphoto2-port.c:470 libgphoto2_port/gphoto2-port.c:895
 #, c-format
 msgid "Could only read %i out of %i byte(s)"
 msgstr "Kunne kun læse %i ud af %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:429
+#: libgphoto2_port/gphoto2-port.c:419
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr "Læser %i=0x%x byte fra afbrudt-endepunkt..."
 
-#: libgphoto2_port/gphoto2-port.c:490
+#: libgphoto2_port/gphoto2-port.c:480
 #, c-format
 msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr "Læser %i=0x%x byte fra afbrudt-endepunkt (hurtig)..."
 
-#: libgphoto2_port/gphoto2-port.c:515
+#: libgphoto2_port/gphoto2-port.c:505
 #, c-format
 msgid "Setting timeout to %i millisecond(s)..."
 msgstr "Sætter tidsudløb til %i millisekunder..."
 
-#: libgphoto2_port/gphoto2-port.c:551
+#: libgphoto2_port/gphoto2-port.c:541
 msgid "Getting timeout..."
 msgstr "Henter tidsudløb..."
 
-#: libgphoto2_port/gphoto2-port.c:555
+#: libgphoto2_port/gphoto2-port.c:545
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Nuværende tidsudløb: %i millisekunder"
 
-#: libgphoto2_port/gphoto2-port.c:577
+#: libgphoto2_port/gphoto2-port.c:567
 msgid "Setting settings..."
 msgstr "Sætter indstillinger..."
 
-#: libgphoto2_port/gphoto2-port.c:638
+#: libgphoto2_port/gphoto2-port.c:628
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Henter niveau for pin %i..."
 
-#: libgphoto2_port/gphoto2-port.c:647
+#: libgphoto2_port/gphoto2-port.c:637
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Niveau for pin %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:673
+#: libgphoto2_port/gphoto2-port.c:663
 msgid "low"
 msgstr "lav"
 
-#: libgphoto2_port/gphoto2-port.c:674
+#: libgphoto2_port/gphoto2-port.c:664
 msgid "high"
 msgstr "høj"
 
-#: libgphoto2_port/gphoto2-port.c:700
+#: libgphoto2_port/gphoto2-port.c:690
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Sætter pin %i (%s: '%s') til '%s'..."
 
-#: libgphoto2_port/gphoto2-port.c:727
+#: libgphoto2_port/gphoto2-port.c:717
 #, c-format
 msgid "Sending break (%i milliseconds)..."
 msgstr "Sender skift (%i millisekunder)..."
 
-#: libgphoto2_port/gphoto2-port.c:753
+#: libgphoto2_port/gphoto2-port.c:743
 msgid "Flushing port..."
 msgstr "Tømmer port..."
 
-#: libgphoto2_port/gphoto2-port.c:827
+#: libgphoto2_port/gphoto2-port.c:817
 msgid "Clear halt..."
 msgstr "Ryd stop..."
 
-#: libgphoto2_port/gphoto2-port.c:858
+#: libgphoto2_port/gphoto2-port.c:848
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%"
-"x)..."
+msgstr "Skriver besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:893
+#: libgphoto2_port/gphoto2-port.c:883
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr ""
-"Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
+msgstr "Læser besked (forespørgsel=0x%x værdi=0x%x indeks=0x%x størrelse=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:900
+#: libgphoto2_port/gphoto2-port.c:890
 msgid "msg_read"
 msgstr "msg_read"
 
-#: libgphoto2_port/gphoto2-port.c:1205
+#: libgphoto2_port/gphoto2-port.c:1117
 msgid "No error description available"
 msgstr "Ingen fejlbeskrivelse tilgængelig"
 
-#: serial/unix.c:241
+#: serial/unix.c:230
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kunne ikke låse enhed '%s'"
 
-#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:84
+#: serial/unix.c:240
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Enheden '%s' er låst af pid %d"
 
-#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:87
+#: serial/unix.c:243
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Enheden '%s' kunne ikke låses (dev_lock returnerede %d)"
 
-#: serial/unix.c:288
+#: serial/unix.c:277
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Enheden '%s' kunne ikke låses op."
 
-#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:116
+#: serial/unix.c:289
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Enheden '%s' kunne ikke låses op da den er låst af pid %d."
 
-#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:120
+#: serial/unix.c:293
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Enheden '%s' kunne ikke låses op (dev_unlock returnerede %d)"
 
-#: serial/unix.c:385
+#: serial/unix.c:371
 #, c-format
 msgid "Serial Port %i"
 msgstr "Seriel-port %i"
 
-#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:269
+#: serial/unix.c:462
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Åbning af '%s' (%m) fejlede."
 
-#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:283
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Kunne ikke lukke '%s' (%m)."
 
-#: serial/unix.c:548
+#: serial/unix.c:534
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Kunne ikke skrive til port (%m)"
 
-#: serial/unix.c:625
+#: serial/unix.c:606
 msgid "Parity error."
 msgstr "Paritetsfejl."
 
-#: serial/unix.c:629
+#: serial/unix.c:610
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Uventet paritetssvar-sekvens 0xff 0x%02x."
 
-#: serial/unix.c:672
+#: serial/unix.c:653
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Ukendt pin %i."
 
-#: serial/unix.c:694
+#: serial/unix.c:675
 #, c-format
 msgid "Could not get level of pin %i (%m)."
 msgstr "Kunne ikke hente niveau af pin %i (%m)."
 
-#: serial/unix.c:729
+#: serial/unix.c:710
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
 msgstr "Kunne ikke sætte niveau af pin %i til %i (%m)."
 
-#: serial/unix.c:754
+#: serial/unix.c:735
 #, c-format
 msgid "Could not flush '%s' (%m)."
 msgstr "Kunne ikke tømme '%s' (%m)."
 
-#: serial/unix.c:867
+#: serial/unix.c:848
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunne ikke sætte baudrate til %d"
 
-#: usb/libusb.c:242
+#: usb/libusb.c:240
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Kunne ikke åbne USB enheden (%m)."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:250
 msgid "Camera is already in use."
 msgstr "Kameraet er allerede i brug."
 
-#: usb/libusb.c:259
+#: usb/libusb.c:255
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Enheden har driver '%s' tilknyttet, frigør det nu."
 
-#: usb/libusb.c:262
+#: usb/libusb.c:258
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kunne ikke frigøre kerneldriver '%s' fra kameraenheden."
 
-#: usb/libusb.c:267
+#: usb/libusb.c:261
 msgid "Could not query kernel driver of device."
 msgstr "Kunne ikke forespørge kerneldriver fra enheden."
 
-#: usb/libusb.c:275
+#: usb/libusb.c:269
 #, c-format
-msgid ""
-"Could not claim interface %d (%m). Make sure no other program or kernel "
-"module (such as %s) is using the device and you have read/write access to "
-"the device."
-msgstr ""
-"Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andre programmer "
-"eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive "
-"rettigheder til enheden."
+msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Kunne ikke kræve grænseflade %d (%m). Sikr dig at ingen andre programmer eller kerneldrivere (som f.eks. %s) bruger enheden, og at du har læse/skrive rettigheder til enheden."
 
-#: usb/libusb.c:293
+#: usb/libusb.c:287
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Kunne ikke frigøre grænseflade %d (%m)."
 
-#: usb/libusb.c:306
+#: usb/libusb.c:298
 #, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Kunne ikke resette USB-port (%m)."
 
-#: usb/libusb.c:333
+#: usb/libusb.c:304
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Kunne ikke lukke USB-port (%m)."
 
-#: usb/libusb.c:582
+#: usb/libusb.c:553
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Kunne ikke sætte konfiguration %d/%d (%m)"
 
-#: usb/libusb.c:615
+#: usb/libusb.c:586
 #, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Kunne ikke sætte alt-indstillinger %d til /%d (%m)"
 
-#: usb/libusb.c:707
+#: usb/libusb.c:678
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr ""
-"Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
+msgstr "Det leverede fremstiller- eller produkt-id (0x%x,0x%x) er ikke gyldigt."
 
-#: usb/libusb.c:743
+#: usb/libusb.c:714
 #, c-format
-msgid ""
-"USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
-"not function with gphoto2. Reference: %s"
-msgstr ""
-"USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og "
-"virker måske ikke med gphoto2. Reference: %s"
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "USB-enheden (fremstiller 0x%x, produkt 0x%x) er en masselagerenhed, og virker måske ikke med gphoto2. Reference: %s"
 
-#: usb/libusb.c:786
+#: usb/libusb.c:756
 #, c-format
-msgid ""
-"Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
-"is connected to the computer."
-msgstr ""
-"Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at "
-"enheden er tilsluttet computeren."
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Kunne ikke finde USB-enheden (fremstiller 0x%x, produkt 0x%x). Sikr dig at enheden er tilsluttet computeren."
 
-#: usb/libusb.c:1050
+#: usb/libusb.c:986
 #, c-format
-msgid ""
-"Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
-"sure this device is connected to the computer."
-msgstr ""
-"Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr "
-"dig at enheden er tilsluttet computeren."
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Kunne ikke finde USB-enheden (class 0x%x, subclass 0x%x, protokol0x%x). Sikr dig at enheden er tilsluttet computeren."
 
-#: disk/disk.c:179 disk/disk.c:229 disk/disk.c:270 disk/disk.c:302
-#: disk/disk.c:325
+#: disk/disk.c:177 disk/disk.c:221 disk/disk.c:257 disk/disk.c:289
+#: disk/disk.c:312
 #, c-format
 msgid "Media '%s'"
 msgstr "Medie '%s'"
 
-#: disk/disk.c:180
+#: disk/disk.c:178
 msgid "(unknown)"
 msgstr "(ukendt)"
-
-#: usbdiskdirect/linux.c:223
-#, c-format
-msgid "USB Mass Storage direct IO"
-msgstr ""
-
-#: usbdiskdirect/linux.c:317
-#, fuzzy, c-format
-msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "Kunne ikke lukke '%s' (%m)."
-
-#: usbdiskdirect/linux.c:340
-#, fuzzy, c-format
-msgid "Could not write to '%s' (%m)."
-msgstr "Kunne ikke skrive til port (%m)"
-
-#: usbdiskdirect/linux.c:362
-#, fuzzy, c-format
-msgid "Could not read from '%s' (%m)."
-msgstr "Kunne ikke lukke '%s' (%m)."
-
-#: usbscsi/linux.c:214
-#, c-format
-msgid "USB Mass Storage raw SCSI"
-msgstr ""
-
-#: usbscsi/linux.c:323
-#, fuzzy, c-format
-msgid "Could not send scsi command to: '%s' (%m)."
-msgstr "Kunne ikke sætte alt-indstillinger %d til /%d (%m)"
