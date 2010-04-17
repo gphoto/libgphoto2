@@ -1,3 +1,18 @@
+libgphoto2 2.4.9.1
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+    * Translation updates (polish, vietnamese).
+
+st2205:
+    * Link iconv (MacOS build fix)
+    * delete all files implemented.
+
+libgphoto2_port/usbscsi:
+    * Check for scsi/sg.h and use it only if present (MacOS build fix)
+
+------------------------------------------------------------------------
 libgphoto2 2.4.9
 
 This is a 2.4 release branch update.
