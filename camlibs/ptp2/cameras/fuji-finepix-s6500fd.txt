@@ -1,0 +1,34 @@
+Device info:
+Manufacturer: FUJIFILM
+  Model: FinePix S6500fd
+  device version: 1.0
+  serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor extension ID: 0x0000000e
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x101b
+  0x900c
+  0x900d
+Events Supported:
+  0x4002
+  0x4003
+  0x4009
+Device Properties Supported:
+  (none)
