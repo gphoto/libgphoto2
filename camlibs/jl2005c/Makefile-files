@@ -1,11 +1,15 @@
-EXTRA_DIST += jl2005c/README.jl2005c
-camlibdoc_DATA += jl2005c/README.jl2005c
+EXTRA_DIST += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression
+camlibdoc_DATA += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression
 
 EXTRA_LTLIBRARIES += jl2005c.la
 
 jl2005c_la_SOURCES = jl2005c/library.c\
 		    jl2005c/jl2005c.c\
-		    jl2005c/jl2005c.h
+		    jl2005c/jl2005bcd_decompress.c\
+		    jl2005c/jl2005bcd_decompress.h\
+		    jl2005c/jl2005c.h\
+		    jl2005c/img_enhance.c\
+		    jl2005c/img_enhance.h
 jl2005c_la_LDFLAGS = $(camlib_ldflags)
 jl2005c_la_DEPENDENCIES = $(camlib_dependencies)
 jl2005c_la_LIBADD = $(camlib_libadd)
