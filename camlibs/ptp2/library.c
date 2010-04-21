@@ -581,6 +581,8 @@ static struct {
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
+	/* "Riccardo (C10uD)" <c10ud.dev@gmail.com> */
+	{"Sony:DSC-S730 (PTP mode)",  0x054c, 0x0296, 0},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
