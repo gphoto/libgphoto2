@@ -24,6 +24,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#ifdef HAVE_LIMITS_H
+# include <limits.h>
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/param.h>
