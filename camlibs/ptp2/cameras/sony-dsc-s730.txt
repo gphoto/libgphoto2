@@ -1,0 +1,57 @@
+Device info:
+Manufacturer: Sony Corporation
+  Model: Sony Digital Still Camera
+  device version: (null)
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension version: 0
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100c
+  0x100d
+  0x101b
+  0x1012
+  0x9005
+  0x9006
+  0x0030
+Events Supported:
+  0x4009
+Device Properties Supported:
+
+Camera summary:
+Manufacturer: Sony Corporation
+Model: Sony Digital Still Camera
+  Version: (null)
+
+Capture Formats: JPEG TIFF EP MS Wave MS AVI
+Display Formats: JPEG, TIFF EP, FlashPix, BMP, CIFF, Unknown(3806), GIF
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Removable storage
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 2014773248 (1921 MB)
+	Free Space (Bytes): 2014674944 (1921 MB)
+	Free Space (Images): 1499
+
+Device Property Summary:
+
