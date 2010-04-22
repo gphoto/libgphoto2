@@ -1,0 +1,196 @@
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot S90
+  Version: 1-7.0.1.0
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Defined Type, CRW, Unknown(b103), Unknown(b104), Unknown(bf01)
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	CRW/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth dc08/DateCreated dc09/DateModified
+	Unknown(b104)/b104: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc08/DateCreated dc09/DateModified dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Unknown(bf01)/bf01: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc09/DateModified
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 1975287808 (1883 MB)
+	Free Space (Bytes): 1899888640 (1811 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 524288
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 524288
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Warning Level 0 (4)
+UNIX Time(0xd034):(readwrite) (type=0x6) 1270736143
+Type of Slideshow(0xd047):(read only) (type=0x4) 2
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Supported Thumb Size(0xd02d):(read only) (type=0x4006) a[4] 119,0,159,0
+Size Quality Mode(0xd02c):(read only) (type=0x4006) Enumeration [
+	a[6] 2736,3648,1,0,0,0,
+	a[6] 2736,3648,6,0,0,0,
+	a[6] 2736,3648,11,0,0,0,
+	a[6] 2112,2816,2,0,0,0,
+	a[6] 2112,2816,7,0,0,0,
+	a[6] 2112,2816,12,0,0,0,
+	a[6] 1704,2272,3,0,0,0,
+	a[6] 1704,2272,8,0,0,0,
+	a[6] 1704,2272,13,0,0,0,
+	a[6] 1200,1600,17,0,0,0,
+	a[6] 1200,1600,18,0,0,0,
+	a[6] 1200,1600,19,0,0,0,
+	a[6] 480,640,5,0,0,0,
+	a[6] 480,640,10,0,0,0,
+	a[6] 480,640,15,0,0,0
+	] value: a[6] 0,0,0,0,0,0
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Model ID(0xd049):(read only) (type=0x6) 41025536
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot S90'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0] 
+Firmware Version(0xd031):(read only) (type=0x6) 16777472
+Property 0xd050:(read only) (type=0x2) 1
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot S90'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+
+  Label: Bulb Mode
+  Type: TOGGLE
+  Current: 2
+  Label: Synchronize camera date and time with PC
+  Type: TOGGLE
+  Current: 0
+  Label: Drive Canon DSLR Autofocus
+  Type: TOGGLE
+  Current: 0
+  Label: Drive Canon DSLR Manual focus
+  Type: RADIO
+  Current: None
+  Choice: 0 Near 1
+  Choice: 1 Near 2
+  Choice: 2 Near 3
+  Choice: 3 None
+  Choice: 4 Far 1
+  Choice: 5 Far 2
+  Choice: 6 Far 3
+  Label: Camera Date and Time
+  Type: DATE
+  Current: 1270736222
+  Printable: Thu Apr  8 07:17:02 2010
+  Label: Owner Name
+  Type: TEXT
+  Current: 
+  Label: Capture Target
+  Type: RADIO
+  Current: Internal RAM
+  Choice: 0 Internal RAM
+  Choice: 1 Memory card
+  Label: Capture
+  Type: TOGGLE
+  Current: 2
+  Label: Camera Model
+  Type: TEXT
+  Current: Canon PowerShot S90
+  Label: Firmware Version
+  Type: TEXT
+  Current: 1.0.1.0
+  Label: Event Emulate Mode
+  Type: MENU
+  Current: 2
+  Choice: 0 1
+  Choice: 1 2
+  Choice: 2 3
+  Choice: 3 4
+  Choice: 4 5
+  Choice: 5 6
+  Choice: 6 7
+  Label: PTP Property 0xd04a
+  Type: MENU
+  Current: 0
+  Choice: 0 0
+  Choice: 1 1
+  Choice: 2 2
+  Choice: 3 3
+  Label: Size of Output Data from Camera
+  Type: TEXT
+  Current: 524288
+  Label: Size of Input Data to Camera
+  Type: TEXT
+  Current: 524288
+  Label: Battery Type
+  Type: MENU
+  Current: 0
+  Choice: 0 0
+  Choice: 1 1
+  Choice: 2 2
+  Choice: 3 3
+  Choice: 4 4
+  Choice: 5 5
+  Label: Battery Mode
+  Type: MENU
+  Current: 4
+  Choice: 0 0
+  Choice: 1 1
+  Choice: 2 2
+  Choice: 3 3
+  Label: UNIX Time
+  Type: TEXT
+  Current: 1270736223
+  Label: Type of Slideshow
+  Type: TEXT
+  Current: 2
+  Label: DPOF Version
+  Type: TEXT
+  Current: 257
+  Label: Supported Thumb Size
+  Type: TEXT
+  Current: (null)
+  Label: Size Quality Mode
+  Type: MENU
+  Current: (null)
+  Label: Remote API Version
+  Type: TEXT
+  Current: 256
+  Label: Model ID
+  Type: TEXT
+  Current: 41025536
+  Label: Camera Model
+  Type: TEXT
+  Current: Canon PowerShot S90
+  Label: Camera Owner
+  Type: TEXT
+  Current: (null)
+  Label: Firmware Version
+  Type: TEXT
+  Current: 16777472
+  Label: PTP Property 0xd050
+  Type: TEXT
+  Current: 1
+  Label: PTP Property 0xd402
+  Type: TEXT
+  Current: Canon PowerShot S90
+  Label: PTP Property 0xd406
+  Type: TEXT
+  Current: Windows
+  Label: PTP Property 0xd407
+  Type: TEXT
+  Current: 1
