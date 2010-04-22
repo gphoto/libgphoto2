@@ -1,0 +1,117 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: E7600
+  Version: E7600v1.0
+  Serial Number: nnnnnnnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: Nikon PTP Extensions
+
+Capture Formats: JPEG
+Display Formats: JPEG, TIFF, Association/Directory, DPOF, MS Wave, Apple Quicktime
+
+Device Capabilities:
+    File Download, File Deletion, File Upload
+    Generic Image Capture, No Open Capture, Nikon Capture
+
+Storage Devices Summary:
+store_00010001:
+    StorageDescription: None
+    VolumeLabel: None
+    Storage Type: Removable RAM (memory card)
+    Filesystemtype: Digital Camera Layout (DCIM)
+    Access Capability: Read-Write
+    Maximum Capability: 1005696 (0 MB)
+    Free Space (Bytes): 1017413632 (970 MB)
+    Free Space (Images): 287
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration
+[2,5,25,50,65,80,100] value: 100% (100)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+    '640x480',
+    '1024x768',
+    '2048x1536',
+    '2592x1944',
+    '3072x2304'
+    ] value: '3072x2304'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [12,25] value: 25
+Focal Length(0x5008):(readwrite) (type=0x6) Enumeration [3400,3500,3600,3800,4200,4600,5000,5400,5800,6300,6600,7000,7400,7800,8200,8600,9000,9400,9900,10200] value: 38 mm (3800)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Flash off (2)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20100422T172159'
+Property 0xd001: error 200a on query.
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5,6] value: 6
+Property 0xd003:(read only) (type=0x4) Enumeration [1,2] value: 1
+Warning Status(0xd102):(read only) (type=0x2) 0
+Property 0xd005:(read only) (type=0x4) Enumeration [1,2] value: 1
+Autofocus Mode(0xd161):(readwrite) (type=0x2) Range [0 - 1, step 1] value: AF-S (0)
+----------------------------------------------------------------------------------------
+/main/settings/autofocusdrive
+  Label: Drive Nikon DSLR Autofocus
+  Type: TOGGLE
+  Current: 0
+/main/settings/manualfocusdrive
+  Label: Drive Nikon DSLR Manual focus
+  Type: RANGE
+  Current: 0
+  Bottom: -32767
+  Top: 32767
+  Step: 1
+/main/settings/time
+  Label: Camera Time
+  Type: DATE
+  Current: 1271953456
+  Printable: Thu Apr 22 18:24:16 2010
+/main/settings/fastfs
+  Label: Fast Filesystem
+  Type: TOGGLE
+  Current: 1
+/main/settings/capturetarget
+  Label: Capture Target
+  Type: RADIO
+  Current: Internal RAM
+  Choice: 0 Internal RAM
+  Choice: 1 Memory card
+/main/imgsettings/imgquality
+  Label: Image Quality
+  Type: RADIO
+  Current: Unknown value 0019
+  Choice: 0 Unknown value 000c
+  Choice: 1 Unknown value 0019
+/main/imgsettings/imgsize
+  Label: Image Size
+  Type: RADIO
+  Current: 3072x2304
+  Choice: 0 640x480
+  Choice: 1 1024x768
+  Choice: 2 2048x1536
+  Choice: 3 2592x1944
+  Choice: 4 3072x2304
+/main/capturesettings/autofocusmode
+  Label: Auto Focus Mode
+  Type: RADIO
+  Current: AF-S
+  Choice: 0 AF-S
+  Choice: 1 AF-C
+/main/capturesettings/focallength
+  Label: Focal Length
+  Type: RANGE
+  Current: 38
+  Bottom: 34
+  Top: 102
+  Step: 1
+/main/capturesettings/focusmode
+  Label: Focus Mode
+  Type: RADIO
+  Current: Automatic
+  Choice: 0 Automatic
+  Choice: 1 Automatic Macro
+/main/capturesettings/flashmode
+  Label: Flash Mode
+  Type: RADIO
+  Current: Flash off
+  Choice: 0 Automatic Flash
+  Choice: 1 Flash off
+  Choice: 2 Fill flash
+  Choice: 3 Red-eye automatic
+-----------------------------------------------------------------------------------------
