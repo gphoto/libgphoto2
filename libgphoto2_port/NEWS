@@ -1,4 +1,4 @@
-libgphoto2_port 0.9.0
+libgphoto2_port 0.10.0
 
 API:
    * GPPortInfo is now abstract, and a pointer in the background.
