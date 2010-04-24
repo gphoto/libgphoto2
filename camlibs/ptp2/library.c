@@ -999,6 +999,9 @@ static struct {
 	/* mitch <debianuser@mll.dissimulo.com> */
 	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
+	/* https://bugs.launchpad.net/ubuntu/+source/libgphoto2/+bug/569419 */
+	{"Canon:PowerShot D10",			0x04a9, 0x31bc, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Carsten Grohmann <carstengrohmann@gmx.de> */
 	{"Canon:Digital IXUS 110 IS",		0x04a9, 0x31bd, PTPBUG_DELETE_SENDS_EVENT},
 
