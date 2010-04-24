@@ -1,3 +1,6 @@
+2010-04-24  Theodore Kilgore <kilgota@auburn.edu>
+	* jl2005bcd_decompress.c: GP_DEBUG() replaces printf()
+
 2010-04-19  Theodore Kilgore <kilgota@auburn.edu>
 	* README.jl2005c: revised.
 	* README.jl2005bcd-compression: added.

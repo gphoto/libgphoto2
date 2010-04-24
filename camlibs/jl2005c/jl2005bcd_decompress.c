@@ -53,8 +53,8 @@ find_eoi (uint8_t *jpeg_data, int jpeg_data_idx, int jpeg_data_size)
 			break;
 
 	if (i >= (jpeg_data_size - 1)) {
-		printf("AAI\n");
-		return -1;
+		GP_DEBUG("AAI\n");
+		return GP_ERROR;
 	}
 
 	return i + 2; /* + 2 -> Point to after EOI marker */
@@ -87,8 +87,8 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	q = header[3] & 0x7f;
 	height = header[4] * 8;
 	width = header[5] * 8;
-	printf("quality is %d\n", q);
-	printf("size: %dx%d\n", width, height);
+	GP_DEBUG("quality is %d\n", q);
+	GP_DEBUG("size: %dx%d\n", width, height);
 	switch (header[9] & 0xf0) {
 	case 0xf0:
 		thumbnail_width = 128;
@@ -221,7 +221,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 
 		size = eoi - jpeg_data_idx;
 		if ((JPEG_HEADER_SIZE + size) > sizeof(jpeg_stripe)) {
-			printf("AAAIIIIII\n");
+			GP_DEBUG("AAAIIIIII\n");
 			return 1;
 		}
 		memcpy (jpeg_stripe + JPEG_HEADER_SIZE,
@@ -262,7 +262,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 
 	ret = gp_ahd_interpolate(out, width, height, BAYER_TILE_BGGR);
 	if (ret < 0) {
-		printf("HEUH?\n");
+		GP_DEBUG("HEUH?\n");
 		return ret;
 	}
 	white_balance (out, width*height, 1.6);
