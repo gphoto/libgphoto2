@@ -1,4 +1,10 @@
 2010-04-24  Theodore Kilgore <kilgota@auburn.edu>
+	* jl2005.[c,h]: "info" replaced by photo table, for clarity
+	* library.c: references to "info" replaced by "table".
+		thumbnails fetched even when "thumbnail" is empty as
+		happens sometimes when a clip is downloaded.
+
+2010-04-24  Theodore Kilgore <kilgota@auburn.edu>
 	* jl2005bcd_decompress.c: GP_DEBUG() replaces printf()
 
 2010-04-19  Theodore Kilgore <kilgota@auburn.edu>

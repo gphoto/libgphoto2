@@ -24,6 +24,8 @@
 #include <unistd.h>
 #include <gphoto2/gphoto2-port.h>
 
+#define MAX_DLSIZE 0xfa00
+
 typedef unsigned char Info;
 
 struct _CameraPrivateLibrary {
@@ -37,7 +39,7 @@ struct _CameraPrivateLibrary {
 	unsigned char *data_cache;
 	unsigned long bytes_read_from_camera;
 	unsigned long bytes_put_away;
-	Info info[0xe000];
+	Info table[0x4000];
 };
 
 
@@ -45,11 +47,11 @@ int jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv);
 int jl2005c_reset (Camera *camera, GPPort *port);
 int jl2005c_get_num_pics      (Info *info);
 
-int jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *info, int n);
+int jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *table, int n);
 unsigned long jl2005c_get_start_of_photo (CameraPrivateLibrary *priv,
-						Info *info, unsigned int n);
+						Info *table, unsigned int n);
 int set_usb_in_endpoint       (Camera *camera, int inep);
-int jl2005c_get_picture_data  (GPPort *port, char *data, int size);
+int jl2005c_read_data  (GPPort *port, char *data, int size);
 
 #endif
 
