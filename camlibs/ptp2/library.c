@@ -744,6 +744,8 @@ static struct {
 	{"Panasonic:DMC-TZ15",		  0x04da, 0x2374, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=2950529&group_id=8874 */
 	{"Panasonic:DMC-FS62",		  0x04da, 0x2374, 0},
+	/* Constantin B <klochto@gmail.com> */
+	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
 	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
