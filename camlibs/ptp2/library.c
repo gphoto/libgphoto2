@@ -1115,6 +1115,8 @@ static struct {
 
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
+	/* Stephan Barth at SUSE */
+	{"Pentax:Optio W90",                    0x0a17, 0x00f7, 0},
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
@@ -1311,8 +1313,15 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_product		= models[i].usb_product;
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
-		if (models[i].device_flags & PTP_CAP)
-			a.operations |= GP_OPERATION_CAPTURE_IMAGE | /*GP_OPERATION_TRIGGER_CAPTURE |*/ GP_OPERATION_CONFIG;
+		if (models[i].device_flags & PTP_CAP) {
+			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+
+			/* Only Nikon *D* cameras for now -Marcus */
+			if (	(models[i].usb_vendor == 0x4b0) &&
+				strchr(models[i].model,'D')
+			)
+				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+		}
 		if (models[i].device_flags & PTP_CAP_PREVIEW)
 			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
 		a.file_operations	= GP_FILE_OPERATION_PREVIEW |
@@ -5169,9 +5178,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	camera->functions->about = camera_about;
 	camera->functions->exit = camera_exit;
-#if 0
 	camera->functions->trigger_capture = camera_trigger_capture;
-#endif
 	camera->functions->capture = camera_capture;
 	camera->functions->capture_preview = camera_capture_preview;
 	camera->functions->summary = camera_summary;
