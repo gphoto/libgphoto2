@@ -140,6 +140,9 @@ st2205_commit(Camera *camera);
 int
 st2205_get_mem_size(Camera *camera);
 
+int
+st2205_get_free_mem_size(Camera *camera);
+
 /* functions in st2205_decode.c */
 int
 st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src,

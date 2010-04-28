@@ -383,6 +383,42 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return GP_OK;
 }
 
+static int
+storage_info_func (CameraFilesystem *fs,
+		CameraStorageInformation **sinfos,
+		int *nrofsinfos,
+		void *data, GPContext *context)
+{
+	Camera *camera = (Camera*)data;
+	CameraStorageInformation *sinfo;
+	int free;
+
+	free = st2205_get_free_mem_size (camera);
+	if (free < 0) return free;
+
+	sinfo = malloc(sizeof(CameraStorageInformation));
+	if (!sinfo) return GP_ERROR_NO_MEMORY;
+
+	*sinfos = sinfo;
+	*nrofsinfos = 1;
+
+	sinfo->fields  = GP_STORAGEINFO_BASE;
+	strcpy(sinfo->basedir, "/");
+
+	sinfo->fields |= GP_STORAGEINFO_ACCESS;
+	sinfo->access  = GP_STORAGEINFO_AC_READWRITE;
+	sinfo->fields |= GP_STORAGEINFO_STORAGETYPE;
+	sinfo->type    = GP_STORAGEINFO_ST_FIXED_RAM;
+	sinfo->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
+	sinfo->fstype  = GP_STORAGEINFO_FST_GENERICFLAT;
+	sinfo->fields |= GP_STORAGEINFO_MAXCAPACITY;
+	sinfo->capacitykbytes = st2205_get_mem_size (camera) / 1024;
+	sinfo->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
+	sinfo->freekbytes = free / 1024;
+
+	return GP_OK;
+}
+
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.get_info_func = get_info_func,
@@ -390,6 +426,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func = delete_file_func,
 	.put_file_func = put_file_func,
 	.delete_all_func = delete_all_func,
+	.storage_info_func = storage_info_func
 };
 
 static int
@@ -500,6 +537,10 @@ camera_init (Camera *camera, GPContext *context)
 		camera_exit (camera, context);
 		return ret;
 	}
+
+	GP_DEBUG ("st2205 memory size: %d, free: %d",
+		  st2205_get_mem_size (camera),
+		  st2205_get_free_mem_size (camera));
 
 	/* Get the filenames from the picframe */
 	ret = st2205_get_filenames (camera, camera->pl->filenames);
