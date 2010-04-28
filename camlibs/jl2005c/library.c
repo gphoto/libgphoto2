@@ -54,8 +54,10 @@ struct {
 	unsigned short idVendor;
 	unsigned short idProduct;
 } models[] = {
+	{" JL2005B/C/D camera", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Argus DC1512e",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Amazing Spiderman",   GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
+	{"Aries ATC-0017",      GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar no. 75379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar no. 81890",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar no. 91379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
@@ -85,7 +87,7 @@ struct {
 int
 camera_id (CameraText *id)
 {
-	strcpy (id->text, "Argus DC1512e");
+	strcpy (id->text, "JL2005B/C/D camera");
 	return GP_OK;
 }
 
@@ -107,7 +109,7 @@ camera_abilities (CameraAbilitiesList *list)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW
 					+ GP_FILE_OPERATION_RAW;
 		gp_abilities_list_append (list, a);
@@ -191,6 +193,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int filled = 0;
 
 	GP_DEBUG ("Downloading pictures!\n");
+	if(!camera->pl->data_reg_opened)
+	jl2005c_open_data_reg (camera, camera->port);
 	/* These are cheap cameras. There ain't no EXIF data. */
 	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
 
@@ -375,6 +379,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return GP_OK;
 }
 
+static int
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+                 GPContext *context)
+{
+        Camera *camera = data;
+        
+        GP_DEBUG(" * delete_all_func()");
+        jl2005c_delete_all(camera, camera->port);
+
+        return (GP_OK);
+}
+
+
 
 /*************** Exit and Initialization Functions ******************/
 
@@ -394,7 +411,8 @@ camera_exit (Camera *camera, GPContext *context)
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.get_file_func = get_file_func,
-	.get_info_func = get_info_func
+	.get_info_func = get_info_func,
+	.delete_all_func = delete_all_func
 };
 
 int
@@ -445,6 +463,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl->total_data_in_camera=0;
 	camera->pl->data_to_read = 0;
 	camera->pl->bytes_put_away = 0;
+	camera->pl->data_reg_opened = 0;
 	camera->pl->data_cache = NULL;
 	camera->pl->init_done = 0;
 	jl2005c_init (camera, camera->port, camera->pl);

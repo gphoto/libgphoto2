@@ -101,16 +101,16 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		x += htable_b[r];
 	}
 	new_gamma = sqrt((double) (x * 1.5) / (double) (size * 3));
-	printf("Provisional gamma correction = %1.2f\n", new_gamma);
+	GP_DEBUG("Provisional gamma correction = %1.2f\n", new_gamma);
 	/* Recalculate saturation factor for later use. */
 	saturation = saturation * new_gamma * new_gamma;
-	printf("saturation = %1.2f\n", saturation);
+	GP_DEBUG("saturation = %1.2f\n", saturation);
 	gamma = new_gamma;
 	if (new_gamma < .70)
 		gamma = 0.70;
 	if (new_gamma > 1.2)
 		gamma = 1.2;
-	printf("Gamma correction = %1.2f\n", gamma);
+	GP_DEBUG("Gamma correction = %1.2f\n", gamma);
 	gp_gamma_fill_table(gtable, gamma);
 	gp_gamma_correct_single(gtable, data, size);
 	if (saturation < .5 ) /* If so, exit now. */
@@ -151,8 +151,8 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 
 	if (max_factor > 1.5)
 		saturation = 0;
-	printf("White balance (bright): ");
-	printf("r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n",
+	GP_DEBUG("White balance (bright): ");
+	GP_DEBUG("r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n",
 			r, g, b, r_factor, g_factor, b_factor);
 	if (max_factor <= 1.4) {
 		for (x = 0; x < (size * 3); x += 3)
@@ -189,8 +189,8 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 	g_factor = (double) 0xfe / (0xff - g);
 	b_factor = (double) 0xfe / (0xff - b);
 
-	printf("White balance (dark): ");
-	printf("r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n",
+	GP_DEBUG("White balance (dark): ");
+	GP_DEBUG("r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n",
 			r, g, b, r_factor, g_factor, b_factor);
 
 	for (x = 0; x < (size * 3); x += 3)

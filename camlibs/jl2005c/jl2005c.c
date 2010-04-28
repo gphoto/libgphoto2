@@ -118,6 +118,7 @@ restart:
 		attempts++;
 		if (attempts == 3) {
 			GP_DEBUG("Third try. Giving up\n");
+			gp_port_write(port, "\x07\x00", 2);
 			return GP_ERROR;
 		}
 		goto restart;
@@ -143,7 +144,8 @@ restart:
 		gp_port_read(port, (char *)info + 0x200,
 						alloc_table_size - 0x200);
 	memmove(priv->table, info + 0x30, alloc_table_size - 0x30);
-	priv->model=info[6];
+	priv->model = info[6];
+	GP_DEBUG("Model is %c\n", priv->model);
 	switch (priv->model) {
 	case 0x43:
 	case 0x44:
@@ -171,12 +173,19 @@ restart:
 	priv->can_do_capture = 0;
 	if (info[7] & 0x04)
 		priv->can_do_capture = 1;
-	gp_port_write (port, "\x0b\x00",2);
-	usleep (10000);
 	priv->bytes_read_from_camera = 0;
 	priv->bytes_put_away = 0;
 	priv->init_done = 1;
 	GP_DEBUG("Leaving jl2005c_init\n");
+	return GP_OK;
+}
+
+int jl2005c_open_data_reg (Camera *camera, GPPort *port)
+{
+	gp_port_write (port, "\x0b\x00",2);
+	usleep (10000);
+	GP_DEBUG("Opening data register.\n");
+	camera->pl->data_reg_opened = 1;
 	return GP_OK;
 }
 
@@ -208,7 +217,7 @@ set_usb_in_endpoint	(Camera *camera, int inep)
 {
 	GPPortSettings settings;
 	gp_port_get_settings ( camera ->port, &settings);
-	if(settings.usb.inep!=inep)
+	if(settings.usb.inep != inep)
 		settings.usb.inep = inep;
 	GP_DEBUG("inep reset to %02X\n", inep);
 	return gp_port_set_settings ( camera->port, settings);
@@ -224,28 +233,38 @@ jl2005c_read_data (GPPort *port, char *data, int size)
 	return GP_OK;
 }
 
-int
-jl2005c_reset (Camera *camera, GPPort *port)
+int jl2005c_reset (Camera *camera, GPPort *port)
 {
 	int downloadsize = MAX_DLSIZE;
-	/* These cameras want all data to be dumped. If that is not yet done,
-	 * then do it now, before exiting! */
-	while (camera->pl->bytes_read_from_camera <
+	/* If any data has been downloaded, these cameras want all data to be
+	 * dumped before exit. If that is not yet done, then do it now! */
+	if(camera->pl->data_reg_opened) {
+		while (camera->pl->bytes_read_from_camera <
 				    camera->pl->total_data_in_camera ) {
-		if (!camera->pl->data_cache )
-			camera->pl->data_cache = malloc (MAX_DLSIZE);
-		downloadsize = MAX_DLSIZE;
-		if (camera->pl->bytes_read_from_camera + MAX_DLSIZE >=
+			if (!camera->pl->data_cache )
+				camera->pl->data_cache = malloc (MAX_DLSIZE);
+			downloadsize = MAX_DLSIZE;
+			if (camera->pl->bytes_read_from_camera + MAX_DLSIZE >=
 				    camera->pl->total_data_in_camera )
-			downloadsize = camera->pl->total_data_in_camera -
+				downloadsize = camera->pl->total_data_in_camera -
 					camera->pl->bytes_read_from_camera;
-		if (downloadsize)
-			jl2005c_read_data (camera->port,
+			if (downloadsize)
+				jl2005c_read_data (camera->port,
 					    (char *) camera->pl->data_cache,
 					    downloadsize);
-		camera->pl->bytes_read_from_camera += downloadsize;
+			camera->pl->bytes_read_from_camera += downloadsize;
+		}
 	}
 	gp_port_write(port, "\x07\x00", 2);
+	camera->pl->data_reg_opened = 0;
 	return GP_OK;
 }
 
+int jl2005c_delete_all (Camera *camera, GPPort *port)
+{
+	char response;
+	gp_port_write(port, "\x09\x00", 2);
+	usleep(10000);
+	gp_port_write(port, "\x07\x00", 2);
+	return GP_OK;
+}

@@ -34,6 +34,7 @@ struct _CameraPrivateLibrary {
 	int can_do_capture;
 	int blocksize;
 	int nb_entries;
+	int data_reg_opened;
 	unsigned long total_data_in_camera;
 	unsigned long data_to_read;
 	unsigned char *data_cache;
@@ -44,14 +45,18 @@ struct _CameraPrivateLibrary {
 
 
 int jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv);
-int jl2005c_reset (Camera *camera, GPPort *port);
-int jl2005c_get_num_pics      (Info *info);
-
+int jl2005c_open_data_reg (Camera *camera, GPPort *port);
 int jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *table, int n);
 unsigned long jl2005c_get_start_of_photo (CameraPrivateLibrary *priv,
 						Info *table, unsigned int n);
+
 int set_usb_in_endpoint       (Camera *camera, int inep);
 int jl2005c_read_data  (GPPort *port, char *data, int size);
+int jl2005c_reset (Camera *camera, GPPort *port);
+int jl2005c_delete_all (Camera *camera, GPPort *port);
+
+
+
 
 #endif
 

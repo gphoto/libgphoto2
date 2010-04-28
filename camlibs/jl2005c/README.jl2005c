@@ -1,7 +1,7 @@
 JEILIN STILLCAM DRIVER
 
 Copyright Theodore Kilgore <kilgota@auburn.edu> September 4, 2007. Most recent
-update is April 19, 2010.
+update is April 28, 2010.
 
 (Everything in libgphoto2/camlibs/jeilin is LGPL-licensed, including this
 README. See any of the source files for a more complete statement of the
@@ -62,8 +62,9 @@ tasks of initializing the camera and providing a graceful exit, downloading
 the raw data, and also conversion of raw data into decompressed output files.
 Cameras which support or do not support thumbnails seem to be reliably
 detected, and the raw data appears to be reliably decompressed. If present,
-thumbnails can also be processed into a finished form. In short, things
-appear basically to work.
+thumbnails can also be processed into a finished form. Deletion of all photos
+also is supported, by the option gphoto2 -D. In short, things appear basically
+to work.
 
 HARDWARE CONSTRAINTS:
 
@@ -120,13 +121,8 @@ not work properly with that frontend program.
 TO DO
 
 There are some parts of the camera command structure which are not completely
-known at this time. For example, the only way known to delete photos on these
-cameras is to use combinations of button pushes on the camera, or to remove
-the batteries (the cameras run on volatile SDRAM, like many other cheap 
-cameras). It could be that some of the cameras might possibly support the
-command gphoto2 -D (delete all) to be implemented. It appears unlikely, but
-but the possibility is not completely investigated. Also, some kind of capture
-function could conceivably be made to work. Right now, this is also unknown.
+known. For example, some kind of capture function could conceivably be made
+to work.
 
 One known functionality of the camera is not completely supported, though. The
 cameras all support a "continuous shooting" mode, in which the camera shoots

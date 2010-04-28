@@ -85,32 +85,44 @@ preserved inside the file, and it is also copied here:
 Below is a dump of:
 <http://sourceforge.net/apps/mediawiki/gphoto/index.php?title=ImageEncoding
 Jeilin2005CD>
-Made on 10 April 2010.
+Made on 28 April 2010.
 
-mageEncodingJeilin2005CD
+ImageEncodingJeilin2005CD
 From gphoto
 Jump to: navigation, search
 Contents
 
     * 1 Introduction
-    * 2 Image format
-          o 2.1 Image header
-          o 2.2 Thumbnail image
-          o 2.3 Entropy coded data
-                + 2.3.1 Huffman table
-                + 2.3.2 Quantisation table
+    * 2 Photo Allocation Table
+    * 3 Image format
+          o 3.1 Image header
+          o 3.2 Thumbnail image
+          o 3.3 Entropy coded data
+                + 3.3.1 Huffman table
+                + 3.3.2 Quantisation table
 
 Introduction
 
-This page describes the image format used in cameras with the Jeilin 2005
-B/C/D chip.
+This page describes the image format used in cameras with the Jeilin JL2005B / JL2005C / JL2005D chip.
 
-This chip stores images in a non-standard JPEG-like format. To understand
-the information on this page, it is recommended to have a basic
-understanding of JPEG compression.
+This chip stores images in a non-standard JPEG-like format. To understand the information on this page, it is recommended to have a basic understanding of JPEG compression.
+Photo Allocation Table
+
+At the start of the camera's accessible RAM is the PAT (photo allocation table), 0x30 bytes of data (not included in image headers), immediately followed by the 16-byte image headers for all the photos in consecutive order.
+
+A few bytes of the data at the start of the PAT table are of interest. All word values are big-endian.
+
+    * 0x00-0x06 -- "JL2005B" or "JL2005C" or "JL2005D", whichever chip this camera has.
+    * 0x07 -- bit flags; apparently bit 2 is set if this camera supports thumbnails, and cleared if it doesn't; sometimes bits 0 and/or 1 are set, purposes unknown; all other bits always observed as zero so far
+    * 0x08-0x09 -- first writeable block in camera's RAM (see "Image Header" below for block sizes)
+    * 0x0a-0x0b -- first unused block after image data (where next photo taken would start)
+    * 0x0c-0x0d -- word containing number of images in the camera, counting each frame within a clip as one. This many 16-byte image headers should be read from the PAT table starting at offset 0x30; any headers beyond this should be ignored.
+    * 0x0e-0x0f -- number of free blocks remaining in camera's RAM 
+
+Other bytes may be added as discovered.
 Image format
 
-The image file seems to consist of the following parts:
+The raw image file seems to consist of the following parts:
 
     * a 16-byte image header
     * some kind of thumbnail of the actual image
@@ -119,56 +131,62 @@ The image file seems to consist of the following parts:
 These parts are described in the following paragraphs.
 Image header
 
-The 16-byte image header is the very first thing in an raw image file
-(copied directly from the PAT) and contains basic image meta-data. All words
-are stored big-endian, and block size is 0x80 bytes for the JL2005B and
-0x200 bytes for the JL2005C and JL2005D chips. "Something happens" means
-that I don't know yet what, if any, the effects are. Additions and
-corrections to this section are welcome!
-Byte 	Meaning
-0x00 	Always observed as zero so far, but something happens if it's 0x01
-or 0x21, and something else happens if it's 0x11.
-0x01 	Camera ID or attributes? If bit 4 is set, gamma correction is
-enabled. If a value elsewhere is set, then if bit 7 is set, then bits 2 and
-3 do something.
-0x02 	Bit 4: 0 = lower compression ratio, 1 = higher compression ratio
+The 16-byte image header is the very first thing in a raw image file (copied directly from the PAT, except where specifically noted) and contains basic image meta-data. All words are stored big-endian, and block size is 0x80 bytes for the JL2005B and 0x200 bytes for the JL2005C and JL2005D chips. "Significant" means that the value of the bit, byte, or word indicates or is used for something, but I don't (yet) know what that is, and what the effects of it are, if any. I suspect some of those values may not affect anything.
 
-Bits 0-1: resolution of photo (camera-dependent), 00 = CIF or VGA, 01 = QCIF
-or QVGA, 02 = SVGA if supported
+Definitions, as I understand them (corrections welcome!):
+
+    * Still mode - Camera takes one photo when shutter button is pressed
+    * Burst mode - Camera takes a sequence (a constant small number, usually 3) of still photos when shutter button is pressed once, meant to be viewed as separate images
+    * Continuous mode - Camera continues rapidly (several fps) taking photos until told to stop (or memory is full); result is meant to be viewed as a video clip, e.g. AVI format. The camera may temporarily use a lower resolution and different compression ratio during this. 
+
+
+Byte(s) Meaning
+0x00 0x00: standard still image
+
+0x01: intermediate photo from continuous mode
+
+0x02: photo taken in burst mode
+
+0x11: first image from continuous mode
+
+0x21: last image from continuous mode
+
+Anything else: unknown
+
+The OEM driver processes 0x11 as a special case, 0x01 and 0x21 as if they were 0x01, and anything else (including 0x02) as if it were 0x00.
+0x01 Attributes: If bit 4 is set, gamma correction is enabled. All other bits are unknown, although usually some are set. Bits 2-3 and 7 are significant.
+0x02 
+
+Bits 0-1: resolution of this photo (camera-dependent), 00 = CIF or VGA, 01 = QCIF or QVGA. If supported, 02 = SVGA, 03 = even larger than SVGA
+
+Bits 4-5: 00 = lower compression ratio, 01 = higher compression ratio, 10 = compression for continuous mode
 
 All other bits have always been observed as zero so far.
-0x03 	Bits 0-6 = image quality factor (100% is best quality), specifics
-below under "Quantization Table"
+0x03 Bits 0-6: image quality factor (0x64 = 100% is best quality), specifics below under "Quantization Table"
 
-Bit 7: if set, read the raw file into memory but do not decode it
-0x04 	Image height, in units of 8 pixels
-0x05 	Image width, in units of 8 pixels
-0x06-0x07 	Total size of image data in blocks, including thumbnail if
-any
-0x08 	When writing the raw file, if byte 0x03 bit 7 is set (decode image)
-and byte 0x02 bit 4 is set (higher compression), then a workspace area of (
-width * (photo height in pixels - this byte) / 2 ) bytes is allocated,
-instead of width * height.
+Bit 7: if set, read the raw file into memory but do not decode it. (For manufacturer or developer testing?)
+0x04 Image height, in units of 8 pixels
+0x05 Image width, in units of 8 pixels
+0x06-0x07 Total size of image data in blocks, including thumbnail if any
+0x08 When writing the raw file, if byte 0x03 bit 7 is set (don't decode image) and byte 0x02 bit 4 is set (higher compression ratio), then a workspace area of ( width * (photo height in pixels - this byte) / 2 ) bytes is temporarily allocated, instead of width * height.
 
-When reading in the raw file, if byte 0x03 bit 7 is clear and byte 0x02 bit
-4 is clear, the value used later on for image height in pixels follows the
-same equation.
+When reading in the raw file, if byte 0x03 bit 7 is set and byte 0x02 bit 4 is set, the value used by the OEM driver for image height in pixels follows the same equation.
 
-I don't (yet) know why either of these are done.
-0x09 	If there's a thumbnail image (as detailed below), the thumbnail's
-length in blocks is this byte divided by four. So far, 0x60 or 0xf0 for this
-byte means a thumbnail (resolution 96x64 or 128x120 pixels respectively).
-The significance of any other value is not known.
-0x0a 	Another camera ID or attributes? Bits 0-1 do something.
-0x0b 	Unknown -- always observed as zero so far
-0x0c-0x0d 	Starting address of photo in storage medium, in blocks.
-0x0e-0x0f 	Word, function unknown.
+I don't (yet) know why either of these are done. (For manufacturer or developer testing?)
+0x09 Bits 0-1: see description of header byte 0x0b, below.
+
+Bits 2-7: If the camera supports thumbnail images (PAT+07 bit 2 set), the thumbnail's length in blocks is this 6-bit value. So far, a 6-bit value of 0x18 or 0x3c (i.e. byte value 0x6n or 0xfn where n <= 3) in these bits means a thumbnail (resolution 96x64 or 128x120 pixels respectively), and 0x00 means no thumbnail. The meaning of any other value is not certain, but probably means "no thumbnail". Thumbnail encoding is described below.
+0x0a Attributes, apparently constant for any particular camera. Bits 0-1 are significant.
+0x0b Zero if still mode or burst mode. For continuous mode (indicated by byte 0x00 of header), the first image has the total number of images in this video clip in this byte, and successive images in this clip are numbered consecutively in this byte, from 1 to (# images - 1). This is actually a ten-bit value; bits 0 and 1 of header byte 0x09 are bits 8 and 9 of it respectively. That gives it a maximum value of 0x3ff (1023 decimal). That's the latest conjecture, anyway.
+
+Note: Some cameras (including all using the JL2005B) that have a continuous mode do NOT use this byte and leave it at zero. The start and end of clips can still be detected by header byte 0x00.
+0x0c-0x0d Starting address of this image in camera's RAM, in blocks.
+0x0e-0x0f Word value, big-endian, significant, function unknown so far. Could be data, a pointer, or a checksum of some sort.
 
 (part of this table was derived from the jl2005c code already in gphoto)
 Thumbnail image
 
-Directly following the image header, sometimes, is a thumbnail image. See
-"Image Header" byte 0x09, above, to detect whether one is present.
+Directly following the image header, sometimes, is a thumbnail image. See "Image Header" byte 0x09, above, to detect whether one is present.
 
 From observation:
 
@@ -176,134 +194,84 @@ From observation:
     * JL2005C -- some have thumbnails; if so, 96x64 pixels
     * JL2005D -- many have thumbnails; if so, 128x120 pixels 
 
-Note that the aspect ratio of the thumbnails is not necessarily the same as
-that of the picture.
+Note that the aspect ratio of the thumbnails is not necessarily the same as that of the picture.
 
-Pixels in the thumbnail are encoded left-to-right, top-to-bottom. Each pixel
-of the thumbnail image is represented by a 16-bit word, big endian encoded,
-with bits assigned to R, G and B components as follows (a.k.a. RGB565):
+Pixels in the thumbnail are encoded left-to-right, top-to-bottom. Each pixel of the thumbnail image is represented by a 16-bit word, big endian encoded, with bits assigned to R, G and B components as follows (a.k.a. RGB565):
 
     * bit 15-11: red
     * bit 10- 5: green
     * bit 4 - 0: blue 
 
+All of these are the most significant 5 or 6 bits for that color, with the unused low-order bits set to zero.
 Entropy coded data
 
-Following the thumbnail image (if present), is the entropy coded data. This
-data looks a bit like the entropy coded data used in JPEG images.
-
+Following the thumbnail image (if present), is the entropy coded data. This data looks a bit like the entropy coded data used in JPEG images.
 
 The image is sub-divided as follows:
 
-    * The image is divided in vertical strips of 16 pixels wide and height
-      pixels high, so the whole image consists of width/16 strips, encoded
-      from left-to-right.
-    * Each strip is subdivided in MCUs (minimum coded unit) of 16x16 pixels,
-      encoded from top-to-bottom.
-    * Each MCU consists of 4 blocks of 8x8 pixels each, containing pixels
-from the Bayer mosaicing pattern. They appear in the following order:
+    * The image is divided in vertical strips of 16 pixels wide and height pixels high, so the whole image consists of width/16 strips, encoded from left-to-right.
+    * Each strip is subdivided in MCUs (minimum coded unit) of 16x16 pixels, encoded from top to bottom.
+    * Each MCU consists of 4 blocks of 8x8 pixels each, containing pixels from the Bayer mosaicing pattern. They appear in the following order:
           o First the green pixels of the top half of the 16x16 pixel MCU
           o Then the green pixels of the bottom half of the 16x16 pixel MCU
           o Then the red pixels for the entire MCU
           o Finally the blue pixels for the entire MCU 
-    * The order of the red, green and blue pixels in the Bayer pattern is as
-      follows: RG/GB. This means the first line of a MCU starts with a red
-      pixel, then a green pixel from the first green line from the first
-      green block. The second line starts with a green pixel from the second
-      green line from the first green block, then a blue pixel. 
-
+    * The order of the red, green and blue pixels in the Bayer pattern is as follows: RG/GB. This means the first line of a MCU starts with a red pixel, then a green pixel from the first green line from the first green block. The second line starts with a green pixel from the second green line from the first green block, then a blue pixel. 
 
 With respect to the encoding:
 
-    * MCUs in a strip are encoded like a JPEG MCU. There are only two
-      huffman tables (one for the DC and for the AC coefficients) and there
-      is only one quantisation table.
-    * The blue and red 8x8 blocks inside an MCU each have a DC coefficient
-      that is differential to the DC coefficient of the same block in the
-      previous MCU, like in standard JPEG.
-    * The two green 8x8 blocks inside an MCU share a single DC coefficient,
-      so the DC coefficient of the first green block is differential to the
-      one from the second block and vice versa.
-    * The DC coefficients in the first MCU in a strip are not differential,
-      but contain the absolute value.
-    * 0xFF bytes in the entropy coded data are followed by 0x00 stuff-bytes,
-just like they are in JPEG.
-    * A strip is encoded as a bunch of MCUs, followed by 0xFFD9 (this is the
-End-Of-Image marker in JPEG) and padded with 0x00 until the next 16-byte
-      aligned address. The start of the entropy coded stream is considered
-to be address 0 in this case.
-    * An image is encoded as a bunch of strips, followed by bogus data until
-the end of the total image data (which is a multiple of 0x80 or 0x200). 
+    * MCUs in a strip are encoded like a JPEG MCU. There are only two Huffman tables (one for the DC and one for the AC coefficients) and there is only one quantisation table.
+    * The blue and red 8x8 blocks inside an MCU each have a DC coefficient that is differential to the DC coefficient of the same block in the previous MCU, like a standard JPEG.
+    * The two green 8x8 blocks inside an MCU share a single DC coefficient, so the DC coefficient of the first green block is differential to the one from the second block and vice versa.
+    * The DC coefficients in the first MCU in a strip are not differential, but contain the absolute value.
+    * 0xFF bytes in the entropy coded data are followed by 0x00 stuff-bytes, just like JPEG.
+    * A strip is encoded as a bunch of MCUs, followed by 0xFFD9 (this is the End-Of-Image marker in JPEG) and padded with 0x00 until the next 16-byte aligned address. The start of the entropy coded stream is considered to be address 0 in this case.
+    * An image is encoded as a bunch of strips, followed by bogus data until the end of the total image data (which is a multiple of the block size, 0x80 or 0x200 bytes). 
 
 Huffman table
 
-The Huffman table used is the recommended table for the luminance component
-from the JPEG specification. In C, encoded as a JPEG DHT table, this looks
-like:
+The Huffman table used is the recommended table for the luminance component from the JPEG specification. In C, encoded as a JPEG DHT table, this looks like:
 
 static const unsigned char dht_table[] = {
-	0xFF, 0xC4,
-	0x00, 0xD2
+0xFF, 0xC4,
+0x00, 0xD2
 
-	// luma DC
-	0x00,
-	0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
-0x0B,
+// luma DC
+0x00,
+0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B,
 
-	// luma AC
-	0x10,
-	0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04,
-0x04, 0x00, 0x00, 0x01, 0x7D,
-	0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41,
-0x06, 0x13, 0x51, 0x61, 0x07,
-	0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08, 0x23, 0x42, 0xB1,
-0xC1, 0x15, 0x52, 0xD1, 0xF0,
-	0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16, 0x17, 0x18, 0x19,
-0x1A, 0x25, 0x26, 0x27, 0x28,
-	0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44,
-0x45, 0x46, 0x47, 0x48, 0x49,
-	0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64,
-0x65, 0x66, 0x67, 0x68, 0x69,
-	0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x83, 0x84,
-0x85, 0x86, 0x87, 0x88, 0x89,
-	0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0xA2,
-0xA3, 0xA4, 0xA5, 0xA6, 0xA7,
-	0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9,
-0xBA, 0xC2, 0xC3, 0xC4, 0xC5,
-	0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7,
-0xD8, 0xD9, 0xDA, 0xE1, 0xE2,
-	0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xF1, 0xF2, 0xF3,
-0xF4, 0xF5, 0xF6, 0xF7, 0xF8,
-	0xF9, 0xFA
+// luma AC
+0x10,
+0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7D,
+0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07,
+0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08, 0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52, 0xD1, 0xF0,
+0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x25, 0x26, 0x27, 0x28,
+0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49,
+0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69,
+0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
+0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7,
+0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5,
+0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2,
+0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8,
+0xF9, 0xFA
 };
 
 Quantisation table
 
-The magnitude of the elements in the quantisation table in JPEG-like
-encoding basically determines the compromise between image quality and image
-size. A quantisation table with small values results in a high quality but
-large image and a quantisation table with big values results in a low
-quality but small image.
+The magnitude of the elements in the quantisation table in JPEG-like encoding basically determines the compromise between image quality and image size. A quantisation table with small values results in a high quality but large image and a quantisation table with large values results in a low quality but small image.
 
-The quantisation table used in the Jeilin encoding is a scaled version of a
-base quantisation table. This base quantisation table is very similar
-(within a few percent) to the one given in the JPEG specification.
+The quantisation table used in the Jeilin encoding is a scaled version of a base quantisation table. This base quantisation table is very similar (within a few percent) to the one given in the JPEG specification.
 
-The scale factor (in percents) is calculated from the quality value from the
-header (call it q) in the following way:
+The scale factor (in percent) is calculated from the quality value from the header (call it q) in the following way:
 
     * q = 0: scale factor = 5000
     * 0 < q <= 50: scale factor = 5000 / q
     * 50 < q <= 100: scale factor = 2 * (100 - q)
     * q > 100: assume q = 100 
 
-Scaling is done by multiplying each element of the table by the scale
-factor, dividing by 100 and rounding to the nearest integer value. The
-minimum value of an element after scaling is 1 and the maximum value is 255.
-Retrieved from
-"http://sourceforge.net/apps/mediawiki/gphoto/index.php?title=ImageEncodingJeilin2005CD"
+Scaling is done by multiplying each element of the table by the scale factor, dividing by 100 and rounding to the nearest integer value. The minimum value of an element after scaling is 1 and the maximum value is 255.
+Retrieved from "http://sourceforge.net/apps/mediawiki/gphoto/index.php?title=ImageEncodingJeilin2005CD"
 Views
 
     * Page
@@ -334,8 +302,8 @@ Toolbox
 
 Powered by MediaWiki
 
-    * This page was last modified on 7 April 2010, at 00:05.
-    * This page has been accessed 167 times.
+    * This page was last modified on 25 April 2010, at 18:30.
+    * This page has been accessed 223 times.
 
 
 © 2010 Geeknet, Inc. Terms of Use Privacy Policy
