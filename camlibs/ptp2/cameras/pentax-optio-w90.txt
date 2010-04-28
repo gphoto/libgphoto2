@@ -1,0 +1,90 @@
+Device info:
+Manufacturer: PENTAX
+  Model: Optio W90
+  device version: Ver 1.00
+  serial number: 'nnnnnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x400a
+  0x400c
+Device Properties Supported:
+  0x5001
+  0x5011
+  0xd407
+  0xd406
+  0xd303
+Camera summary:
+Manufacturer: PENTAX
+Model: Optio W90
+  Version: Ver 1.00
+  Serial Number: nnnnnnnnnnnn
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: microsoft.com: 1.0; 
+
+Capture Formats: 
+Display Formats: Undefined Type, JPEG, Association/Directory, DPOF, MS Wave, MS AVI
+Supported MTP Object Properties:
+	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 7939817472 (7572 MB)
+	Free Space (Bytes): 7938670592 (7570 MB)
+	Free Space (Images): 3364
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20100428T110011'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Property 0xd303:(read only) (type=0x2) 1
+
