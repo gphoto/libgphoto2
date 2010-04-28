@@ -219,7 +219,7 @@ st2205_detect_mem_size(Camera *camera)
 	if (ret)
 		return ret;
 
-	for (i = 0; i < 2; i++) {
+	for (i = 0; i < 3; i++) {
 		ret = st2205_read_block(camera,
 					(524288 / ST2205_BLOCK_SIZE) << i,
 					buf1);
@@ -801,6 +801,7 @@ st2205_init(Camera *camera)
 	uint16_t *lookup_src, *dest;
 	uint8_t *shuffle_src;
 	int x, y, i, j, shuffle_size, checksum, expected_checksum;
+	int is240x320 = 0;
 	const struct {
 		int width, height, no_tables, usable_tables;
 		unsigned char unknown3[8];
@@ -813,8 +814,7 @@ st2205_init(Camera *camera)
 		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 },
 		  0x00025800 },
 		{ 120, 160, 7, 7,
-		  /* FIXME unknown3 needs to be verified */
-		  { 0xff, 0xff, 0x01, 0x01, 0x01, 0x01, 0x01 },
+		  { 0xff, 0xff, 0x04, 0x04, 0x04, 0x04, 0x04 },
 		  0x00030570 },
 		{ 96, 64, 7, 7,
 		  { 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 },
@@ -843,6 +843,9 @@ st2205_init(Camera *camera)
 			"lcd width and height must be a multiple of 8");
 		return GP_ERROR_IO;
 	}
+
+	if (camera->pl->width == 240 && camera->pl->height == 320)
+		is240x320 = 1;
 
 	shuffle_size = (camera->pl->width / 8) * (camera->pl->height / 8);
 	if (shuffle_size > ST2205_SHUFFLE_SIZE) {
@@ -912,6 +915,9 @@ st2205_init(Camera *camera)
 		if (camera->pl->width	== shuffle_info[i].width &&
 				camera->pl->height == shuffle_info[i].height)
 			break;
+		if (is240x320 && shuffle_info[i].width == 120 &&
+				shuffle_info[i].height == 160)
+			break;
 		shuffle_src += (shuffle_info[i].width *
 				shuffle_info[i].height * 2 / 64) *
 			       (shuffle_info[i].no_tables - 2);
@@ -940,6 +946,23 @@ st2205_init(Camera *camera)
 			}
 			checksum += camera->pl->shuffle[j][i].x;
 			checksum += camera->pl->shuffle[j][i].y;
+			if (is240x320) {
+				camera->pl->shuffle[j][i].x *= 2;
+				camera->pl->shuffle[j][i].y *= 2;
+				camera->pl->shuffle[j][i + 1].x =
+					camera->pl->shuffle[j][i].x + 8;
+				camera->pl->shuffle[j][i + 1].y =
+					camera->pl->shuffle[j][i].y;
+				camera->pl->shuffle[j][i + 2].x =
+					camera->pl->shuffle[j][i].x;
+				camera->pl->shuffle[j][i + 2].y =
+					camera->pl->shuffle[j][i].y + 8;
+				camera->pl->shuffle[j][i + 3].x =
+					camera->pl->shuffle[j][i].x + 8;
+				camera->pl->shuffle[j][i + 3].y =
+					camera->pl->shuffle[j][i].y + 8;
+				i += 3;
+			}
 		}
 
 	if (checksum != expected_checksum) {

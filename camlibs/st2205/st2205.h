@@ -49,11 +49,17 @@
 #define ST2205_V1_PICTURE_START 65536
 #define ST2205_V2_PICTURE_START 8192
 #define ST2205_LOOKUP_CHECKSUM 0x0016206f
-#define ST2205_SHUFFLE_SIZE (128 * 160 / 64)
+#define ST2205_SHUFFLE_SIZE (240 * 320 / 64)
 #define ST2205_HEADER_MARKER 0xf5
 /* The "FAT" cannot contain more then 510 entries */
 #define ST2205_MAX_NO_FILES 510
 #define ST2205_FILENAME_LENGTH 10
+
+enum {
+	ORIENTATION_AUTO,
+	ORIENTATION_LANDSCAPE,
+	ORIENTATION_PORTRAIT,
+};
 
 /* We prefix all names with there idx in the FAT table, to make sure they are
    all unique and don't change when files with the same name (after converting
@@ -62,8 +68,8 @@
 	snprintf(dest, sizeof(st2205_filename), "%04d-%s.png", (idx) + 1, name)
 
 struct st2205_coord {
-	uint8_t x;
-	uint8_t y;
+	uint16_t x;
+	uint16_t y;
 };
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
@@ -81,6 +87,7 @@ struct _CameraPrivateLibrary {
 
 	/* Driver configuration settings */
 	int syncdatetime;
+	int orientation;
 
 	/* Used by st2205.c / st2205_decode.c */
 	int width;
