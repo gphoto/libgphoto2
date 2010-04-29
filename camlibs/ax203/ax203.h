@@ -35,8 +35,6 @@
 #define AX203_ABFS_SIZE			0x1000
 #define AX203_PICTURE_OFFSET		0x2000 /* offset from ABFS start */
 
-/* Firmware v3.5.x frames are ax206 based, so use AX206 as prefix for
-   there ABFS related defines (where different from the older firmware) */
 #define AX206_ABFS_FILE_OFFSET(idx)     (0x10 + 8 * (idx))
 #define AX206_PICTURE_OFFSET		0x1000 /* offset from ABFS start */
 
@@ -62,16 +60,18 @@
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
-enum ax203_firmware {
+enum ax203_version {
 	AX203_FIRMWARE_3_3_x,
 	AX203_FIRMWARE_3_4_x,
-	AX203_FIRMWARE_3_5_x,
+	AX206_FIRMWARE_3_5_x,
+	AX3003_FIRMWARE_3_5_x,
 };
 
 enum ax203_compression {
 	AX203_COMPRESSION_YUV,
 	AX203_COMPRESSION_YUV_DELTA,
-	AX203_COMPRESSION_JPEG,
+	AX206_COMPRESSION_JPEG,
+	AX3003_COMPRESSION_JPEG,
 };
 
 struct _CameraPrivateLibrary {
@@ -85,7 +85,7 @@ struct _CameraPrivateLibrary {
 	int width;
 	int height;
 	/* USB "bridge" / firmware attributes */
-	enum ax203_firmware firmware_version;
+	enum ax203_version frame_version;
 	enum ax203_compression compression_version;
 	/* EEPROM attributes */
 	int mem_size;
@@ -99,7 +99,7 @@ struct _CameraPrivateLibrary {
 struct ax203_devinfo {
 	unsigned short vendor_id;
 	unsigned short product_id;
-	int firmware_version;
+	int frame_version;
 };
 
 struct ax203_fileinfo {
@@ -178,7 +178,7 @@ void
 ax203_encode_yuv_delta(int **src, char *dest, int width, int height);
 
 int
-ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
+ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int width, int height);
 
 #endif
