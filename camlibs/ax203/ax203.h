@@ -38,6 +38,11 @@
 #define AX206_ABFS_FILE_OFFSET(idx)     (0x10 + 8 * (idx))
 #define AX206_PICTURE_OFFSET		0x1000 /* offset from ABFS start */
 
+#define AX3003_ABFS_FILE_OFFSET(idx)	(0x20 + 4 * (idx))
+#define AX3003_PICTURE_OFFSET		0x1000 /* offset from ABFS start */
+#define AX3003_BL_SIZE			0x10000 /* Space used by the bootloader
+						   at the end of the memory */
+
 #define AX203_SET_TIME		0xCA
 #define AX203_TO_DEV		0xCB
 #define AX203_FROM_DEV		0xCD
@@ -45,10 +50,16 @@
 #define AX203_GET_VERSION	0x01
 #define AX203_GET_LCD_SIZE	0x02
 
+#define AX3003_FRAME_CMD	0xCA
+#define AX3003_SET_TIME		0x01
+#define AX3003_GET_FRAME_ID	0x02
+#define AX3003_GET_ABFS_START	0x03
+
 /* Note not all SPI EEPROM's actually have 4k sectors, some have
    64k sectors, ax203_commit() takes care if this. */
 #define SPI_EEPROM_SECTOR_SIZE	4096
 #define SPI_EEPROM_BLOCK_SIZE	65536
+#define SPI_EEPROM_WRSR		0x01 /* WRite Status Register */
 #define SPI_EEPROM_PP		0x02
 #define SPI_EEPROM_READ		0x03
 #define SPI_EEPROM_RDSR		0x05 /* ReaD Status Register */
@@ -108,11 +119,16 @@ struct ax203_fileinfo {
 	int size;
 };
 
-struct ax203_v3_5_x_raw_fileinfo {
+struct ax206_v3_5_x_raw_fileinfo {
 	uint8_t present;
 	uint32_t address;
 	uint16_t size;
 	uint8_t pad;
+} __attribute__((packed));
+
+struct ax3003_v3_5_x_raw_fileinfo {
+	uint16_t address; /* In blocks of 256 bytes */
+	uint16_t size;    /* In blocks of 256 bytes */
 } __attribute__((packed));
 
 /* functions in ax203.c */

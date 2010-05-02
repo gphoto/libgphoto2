@@ -34,6 +34,7 @@
 
 #include <gphoto2/gphoto2-result.h>
 #include "ax203.h"
+#include "jpeg_memsrcdest.h"
 
 static const struct eeprom_info {
 	const char *name;
@@ -177,6 +178,44 @@ ax203_get_lcd_size(Camera *camera)
 }
 #endif
 
+static int
+ax3003_get_frame_id(Camera *camera)
+{
+	int ret;
+	char cmd_buffer[16];
+	uint8_t id;
+
+	memset (cmd_buffer, 0, sizeof (cmd_buffer));
+
+	cmd_buffer[0] = AX3003_FRAME_CMD;
+	cmd_buffer[1] = AX3003_GET_FRAME_ID;
+
+	ret = ax203_send_cmd (camera, 0, cmd_buffer, sizeof(cmd_buffer),
+			      (char *)&id, 1);
+	if (ret < 0) return ret;
+
+	return id;
+}
+
+static int
+ax3003_get_abfs_start(Camera *camera)
+{
+	int ret;
+	char cmd_buffer[16];
+	uint8_t buf[2];
+
+	memset (cmd_buffer, 0, sizeof (cmd_buffer));
+
+	cmd_buffer[0] = AX3003_FRAME_CMD;
+	cmd_buffer[1] = AX3003_GET_ABFS_START;
+
+	ret = ax203_send_cmd (camera, 0, cmd_buffer, sizeof(cmd_buffer),
+			      (char *)buf, 2);
+	if (ret < 0) return ret;
+
+	return be16atoh(buf) * 0x100;
+}
+
 int
 ax203_set_time_and_date(Camera *camera, struct tm *t)
 {
@@ -189,6 +228,12 @@ ax203_set_time_and_date(Camera *camera, struct tm *t)
 	cmd_buffer[5] = t->tm_year % 100;
 
 	switch (camera->pl->frame_version) {
+	case AX3003_FIRMWARE_3_5_x:
+		/* Note this is what the windows software does, with the
+		   one AX3003 frame I have this does not do anything */
+		cmd_buffer[0] = AX3003_FRAME_CMD;
+		cmd_buffer[1] = AX3003_SET_TIME;
+		/* fall through */
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		cmd_buffer[6] = t->tm_mon + 1;
@@ -261,6 +306,17 @@ ax203_eeprom_write_enable(Camera *camera)
 }
 
 static int
+ax203_eeprom_clear_block_protection(Camera *camera)
+{
+	char cmd[2];
+
+	cmd[0] = SPI_EEPROM_WRSR;
+	cmd[1] = 0;
+
+	return ax203_send_eeprom_cmd (camera, 1, cmd, sizeof(cmd), NULL, 0);
+}
+
+static int
 ax203_eeprom_erase_4k_sector(Camera *camera, int address)
 {
 	char cmd[4];
@@ -290,12 +346,28 @@ static int
 ax203_eeprom_wait_ready(Camera *camera)
 {
 	char cmd = SPI_EEPROM_RDSR; /* Read status */
-	char buf[64]; /* Do as windows does, read the status word 64 times,
-			 then check */
+	char buf[64];
+	int count = 0;
+
+	switch (camera->pl->frame_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+	case AX206_FIRMWARE_3_5_x:
+		/* Do as windows does, read the status word 64 times,
+		   then check */
+		count = 64;
+		break;
+	case AX3003_FIRMWARE_3_5_x:
+		/* On the ax3003 contineously reading the status word
+		   does not work. */
+		count = 1;
+		break;
+	}
+
 	while (1) {
-		CHECK (ax203_send_eeprom_cmd (camera, 0, &cmd, 1, buf, 64))
+		CHECK (ax203_send_eeprom_cmd (camera, 0, &cmd, 1, buf, count))
 		/* We only need to check the last read */
-		if (!(buf[63] & 0x01)) /* Check write in progress bit */
+		if (!(buf[count - 1] & 0x01)) /* Check write in progress bit */
 			break; /* No write in progress, done waiting */
 	}
 	return GP_OK;
@@ -473,8 +545,8 @@ ax203_write_mem(Camera *camera, int offset,
 static int ax203_read_parameter_block(Camera *camera)
 {
 	uint8_t buf[32], expect[32];
-	int i, param_offset, resolution_offset, compression_offset = -1;
-	int abfs_start_offset, expect_size;
+	int i, param_offset = 0, resolution_offset = 0;
+	int compression_offset = -1, abfs_start_offset = 0, expect_size = 0;
 	const int valid_resolutions[][2] = {
 		{ 120, 160 },
 		{ 128, 128 },
@@ -522,6 +594,27 @@ static int ax203_read_parameter_block(Camera *camera)
 		/* ax206 + 3.5.x firmware has a fixed compression type */
 		camera->pl->compression_version = AX206_COMPRESSION_JPEG;
 		break;
+	case AX3003_FIRMWARE_3_5_x:
+		i = ax3003_get_frame_id (camera);
+		if (i < 0) return i;
+		switch (i) {
+		case 0:
+			camera->pl->width  = 320;
+			camera->pl->height = 240;
+			break;
+		default:
+			gp_log (GP_LOG_ERROR, "ax203",
+				"unknown ax3003 frame id: %d", i);
+			return GP_ERROR_MODEL_NOT_FOUND;
+		}
+
+		i = ax3003_get_abfs_start (camera);
+		if (i < 0) return i;
+		camera->pl->fs_start = i;
+
+		camera->pl->compression_version = AX3003_COMPRESSION_JPEG;
+
+		goto verify_parameters;
 	}
 
 	CHECK (ax203_read_mem (camera, param_offset, buf, sizeof(buf)))
@@ -541,6 +634,9 @@ static int ax203_read_parameter_block(Camera *camera)
 		camera->pl->height = le16atoh (buf + resolution_offset + 2);
 		htole16a(expect + resolution_offset    , camera->pl->width);
 		htole16a(expect + resolution_offset + 2, camera->pl->height);
+		break;
+	case AX3003_FIRMWARE_3_5_x:
+		/* Never reached, here to silence a compiler warning */
 		break;
 	}
 
@@ -573,6 +669,7 @@ static int ax203_read_parameter_block(Camera *camera)
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
+verify_parameters:
 	for (i = 0; valid_resolutions[i][0]; i++)
 		if (valid_resolutions[i][0] == camera->pl->width &&
 		    valid_resolutions[i][1] == camera->pl->height)
@@ -596,7 +693,8 @@ static int ax203_read_parameter_block(Camera *camera)
 		  camera->pl->compression_version, camera->pl->fs_start);
 
 	/* Set JPEG compression parameters based on the found resolution */
-	if (camera->pl->width % 16 || camera->pl->height % 16) {
+	if (camera->pl->compression_version == AX206_COMPRESSION_JPEG &&
+	    (camera->pl->width % 16 || camera->pl->height % 16)) {
 		gp_log (GP_LOG_DEBUG, "ax203", "height or width not a "
 			"multiple of 16, forcing 1x subsampling");
 		camera->pl->jpeg_uv_subsample = 1;
@@ -637,6 +735,7 @@ ax203_filesize(Camera *camera)
 	case AX203_COMPRESSION_YUV_DELTA:
 		return camera->pl->width * camera->pl->height * 3 / 4;
 	case AX206_COMPRESSION_JPEG:
+	case AX3003_COMPRESSION_JPEG:
 		/* Variable size */
 		return 0;
 	}
@@ -653,7 +752,10 @@ ax203_max_filecount(Camera *camera)
 		return (AX203_ABFS_SIZE - AX203_ABFS_FILE_OFFSET (0)) / 2;
 	case AX206_FIRMWARE_3_5_x:
 		return (AX203_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
-			sizeof(struct ax203_v3_5_x_raw_fileinfo);
+			sizeof(struct ax206_v3_5_x_raw_fileinfo);
+	case AX3003_FIRMWARE_3_5_x:
+		return (AX203_ABFS_SIZE - AX3003_ABFS_FILE_OFFSET (0)) /
+			sizeof(struct ax3003_v3_5_x_raw_fileinfo);
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;	
@@ -744,10 +846,10 @@ int ax203_write_v3_3_x_v3_4_x_fileinfo(Camera *camera, int idx,
 }
 
 static
-int ax203_read_v3_5_x_fileinfo(Camera *camera, int idx,
+int ax206_read_v3_5_x_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
 {
-	struct ax203_v3_5_x_raw_fileinfo raw;
+	struct ax206_v3_5_x_raw_fileinfo raw;
 
 	CHECK (ax203_read_mem (camera,
 			       camera->pl->fs_start +
@@ -762,10 +864,10 @@ int ax203_read_v3_5_x_fileinfo(Camera *camera, int idx,
 }
 
 static
-int ax203_write_v3_5_x_fileinfo(Camera *camera, int idx,
+int ax206_write_v3_5_x_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
 {
-	struct ax203_v3_5_x_raw_fileinfo raw;
+	struct ax206_v3_5_x_raw_fileinfo raw;
 
 	raw.present = fileinfo->present;
 	raw.address = htole32(fileinfo->address);
@@ -774,6 +876,56 @@ int ax203_write_v3_5_x_fileinfo(Camera *camera, int idx,
 	CHECK (ax203_write_mem (camera,
 				camera->pl->fs_start +
 					AX206_ABFS_FILE_OFFSET (idx),
+				&raw, sizeof(raw)))
+
+	return GP_OK;
+}
+
+static
+int ax3003_read_v3_5_x_fileinfo(Camera *camera, int idx,
+	struct ax203_fileinfo *fileinfo)
+{
+	struct ax3003_v3_5_x_raw_fileinfo raw;
+
+	CHECK (ax203_read_mem (camera,
+			       camera->pl->fs_start +
+					AX3003_ABFS_FILE_OFFSET (idx),
+			       &raw, sizeof(raw)))
+
+	fileinfo->present = raw.address && raw.size;
+	fileinfo->address = be16toh (raw.address) * 0x100;
+	fileinfo->size    = be16toh (raw.size) * 0x100;
+
+	return GP_OK;
+}
+
+static
+int ax3003_write_v3_5_x_fileinfo(Camera *camera, int idx,
+	struct ax203_fileinfo *fileinfo)
+{
+	struct ax3003_v3_5_x_raw_fileinfo raw;
+
+	if (fileinfo->address & 0xff) {
+		gp_log (GP_LOG_ERROR, "ax203", "LSB of address is not 0");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	if (fileinfo->size & 0xff) {
+		gp_log (GP_LOG_ERROR, "ax203", "LSB of size is not 0");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	if (fileinfo->present) {
+		raw.address = htobe16(fileinfo->address / 0x100);
+		raw.size    = htobe16(fileinfo->size / 0x100);
+	} else {
+		raw.address = 0;
+		raw.size    = 0;
+	}
+
+	CHECK (ax203_write_mem (camera,
+				camera->pl->fs_start +
+					AX3003_ABFS_FILE_OFFSET (idx),
 				&raw, sizeof(raw)))
 
 	return GP_OK;
@@ -789,6 +941,7 @@ ax203_read_filecount(Camera *camera)
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_read_v3_3_x_v3_4_x_filecount (camera);
 	case AX206_FIRMWARE_3_5_x:
+	case AX3003_FIRMWARE_3_5_x:
 		return ax203_read_v3_5_x_filecount (camera);;
 	}
 	/* Never reached */
@@ -812,6 +965,7 @@ ax203_update_filecount(Camera *camera)
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_write_v3_3_x_v3_4_x_filecount (camera, count);
 	case AX206_FIRMWARE_3_5_x:
+	case AX3003_FIRMWARE_3_5_x:
 		return ax203_write_v3_5_x_filecount (camera, count);
 	}
 	/* Never reached */
@@ -830,7 +984,9 @@ int ax203_read_fileinfo(Camera *camera, int idx,
 		return ax203_read_v3_3_x_v3_4_x_fileinfo (camera, idx,
 							  fileinfo);
 	case AX206_FIRMWARE_3_5_x:
-		return ax203_read_v3_5_x_fileinfo (camera, idx, fileinfo);
+		return ax206_read_v3_5_x_fileinfo (camera, idx, fileinfo);
+	case AX3003_FIRMWARE_3_5_x:
+		return ax3003_read_v3_5_x_fileinfo (camera, idx, fileinfo);
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;	
@@ -846,7 +1002,9 @@ int ax203_write_fileinfo(Camera *camera, int idx,
 		return ax203_write_v3_3_x_v3_4_x_fileinfo (camera, idx,
 							   fileinfo);
 	case AX206_FIRMWARE_3_5_x:
-		return ax203_write_v3_5_x_fileinfo (camera, idx, fileinfo);
+		return ax206_write_v3_5_x_fileinfo (camera, idx, fileinfo);
+	case AX3003_FIRMWARE_3_5_x:
+		return ax3003_write_v3_5_x_fileinfo (camera, idx, fileinfo);
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;	
@@ -869,6 +1027,10 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 	int ret;
 	unsigned int x, y, width, height;
 	unsigned char *components[3];
+	struct jpeg_decompress_struct dinfo;
+	struct jpeg_error_mgr jderr;
+	JSAMPLE row[camera->pl->width * 3];
+	JSAMPROW row_pointer[1] = { row };
 
 	switch (camera->pl->compression_version) {
 	case AX203_COMPRESSION_YUV:
@@ -922,6 +1084,36 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 			}
 		}
 		return GP_OK;
+	case AX3003_COMPRESSION_JPEG:
+		dinfo.err = jpeg_std_error (&jderr);
+		jpeg_create_decompress (&dinfo);
+		jpeg_mem_src (&dinfo, (unsigned char *)src, src_size);
+		jpeg_read_header (&dinfo, TRUE);
+		jpeg_start_decompress (&dinfo);
+		if (dinfo.output_width  != camera->pl->width ||
+		    dinfo.output_height != camera->pl->height ||
+		    dinfo.output_components != 3 ||
+		    dinfo.out_color_space != JCS_RGB) {
+			gp_log (GP_LOG_ERROR, "ax203",
+				"Wrong JPEG header parameters: %dx%d, "
+				"%d components, colorspace: %d",
+				dinfo.output_width, dinfo.output_height,
+				dinfo.output_components,
+				dinfo.out_color_space);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+
+		for (y = 0; y < dinfo.output_height; y++) {
+			jpeg_read_scanlines (&dinfo, row_pointer, 1);
+			for (x = 0; x < dinfo.output_width; x++) {
+				dest[y][x] = gdTrueColor (row[x * 3 + 0],
+							  row[x * 3 + 1],
+							  row[x * 3 + 2]);
+			}
+		}
+		jpeg_finish_decompress (&dinfo);
+		jpeg_destroy_decompress (&dinfo);
+		return GP_OK;
 	}
 #endif
 	/* Never reached */
@@ -933,10 +1125,16 @@ static int
 ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 {
 #ifdef HAVE_GD
-	int size = ax203_filesize (camera);
+	int x, y, size = ax203_filesize (camera);
+	struct jpeg_compress_struct cinfo;
+	struct jpeg_error_mgr jcerr;
+	JOCTET *jpeg_dest = NULL;
+	unsigned long jpeg_size = 0;
+	JSAMPLE row[camera->pl->width * 3];
+	JSAMPROW row_pointer[1] = { row };
 
 	if (dest_size < size)
-		return GP_ERROR_BAD_PARAMETERS;
+		return GP_ERROR_FIXED_LIMIT_EXCEEDED;
 
 	switch (camera->pl->compression_version) {
 	case AX203_COMPRESSION_YUV:
@@ -952,6 +1150,39 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 					    (uint8_t *)dest, dest_size,
 					    camera->pl->width,
 					    camera->pl->height);
+	case AX3003_COMPRESSION_JPEG:
+		cinfo.err = jpeg_std_error (&jcerr);
+		jpeg_create_compress (&cinfo);
+		jpeg_mem_dest (&cinfo, &jpeg_dest, &jpeg_size);
+		cinfo.image_width = camera->pl->width;
+		cinfo.image_height = camera->pl->height;
+		cinfo.input_components = 3;
+		cinfo.in_color_space = JCS_RGB;
+		jpeg_set_defaults (&cinfo);
+		jpeg_start_compress (&cinfo, TRUE);
+		for (y = 0; y < cinfo.image_height; y++) {
+			for (x = 0; x < cinfo.image_width; x++) {
+				int p = src[y][x];
+				row[x * 3 + 0] = gdTrueColorGetRed(p);
+				row[x * 3 + 1] = gdTrueColorGetGreen(p);
+				row[x * 3 + 2] = gdTrueColorGetBlue(p);
+			}
+			jpeg_write_scanlines (&cinfo, row_pointer, 1);
+		}
+		jpeg_finish_compress (&cinfo);
+		jpeg_destroy_compress (&cinfo);
+
+		if (jpeg_size > dest_size) {
+			free (jpeg_dest);
+			gp_log (GP_LOG_ERROR, "ax203",
+				"JPEG is bigger then buffer");
+			return GP_ERROR_FIXED_LIMIT_EXCEEDED;
+		}
+		memcpy (dest, jpeg_dest, jpeg_size);
+		free (jpeg_dest);
+		/* Round size up to a multiple of 256 because of ax3003
+		   abfs size granularity. */
+                return (jpeg_size + 0xff) & ~0xff;
 	}
 	/* Never reached */
 #endif
@@ -1097,6 +1328,9 @@ ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
 	case AX206_FIRMWARE_3_5_x:
 		fileinfo.size = camera->pl->fs_start + AX206_PICTURE_OFFSET;
 		break;
+	case AX3003_FIRMWARE_3_5_x:
+		fileinfo.size = camera->pl->fs_start + AX3003_PICTURE_OFFSET;
+		break;
 	}
 	fileinfo.present = 1;
 	table[found++] = fileinfo;
@@ -1112,7 +1346,17 @@ ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
 
 	/* Add a last memory used region which starts at the end of memory
 	   the size does not matter as this is the last entry. */
-	fileinfo.address = camera->pl->mem_size;
+	switch (camera->pl->frame_version) {
+	case AX203_FIRMWARE_3_3_x:
+	case AX203_FIRMWARE_3_4_x:
+	case AX206_FIRMWARE_3_5_x:
+		fileinfo.address = camera->pl->mem_size;
+		break;
+	case AX3003_FIRMWARE_3_5_x:
+		fileinfo.address = camera->pl->mem_size - AX3003_BL_SIZE;
+		break;
+	}
+
 	fileinfo.size    = 0;
 	fileinfo.present = 1;
 	table[found++] = fileinfo;
@@ -1234,6 +1478,9 @@ ax203_delete_all(Camera *camera)
 	case AX206_FIRMWARE_3_5_x:
 		file0_offset = AX206_ABFS_FILE_OFFSET (0);
 		break;
+	case AX3003_FIRMWARE_3_5_x:
+		file0_offset = AX3003_ABFS_FILE_OFFSET (0);
+		break;
 	}
 
 	size = AX203_ABFS_SIZE - file0_offset;
@@ -1297,6 +1544,12 @@ ax203_commit(Camera *camera)
 	int mem_sector_size = camera->pl->mem_size / SPI_EEPROM_SECTOR_SIZE;
 	int block_sector_size = SPI_EEPROM_BLOCK_SIZE / SPI_EEPROM_SECTOR_SIZE;
 	int dirty_sectors;
+
+	if (camera->pl->frame_version == AX3003_FIRMWARE_3_5_x) {
+		CHECK (ax203_eeprom_write_enable (camera))
+		CHECK (ax203_eeprom_clear_block_protection (camera))
+		CHECK (ax203_eeprom_wait_ready (camera))
+	}
 
 	/* We first check each 64k block for dirty sectors. If the block
 	   contains dirty sectors, decide wether to use 4k sector erase
