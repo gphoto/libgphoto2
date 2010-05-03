@@ -48,6 +48,7 @@ static const struct ax203_devinfo ax203_devinfo[] = {
 	{ 0x1908, 0x1315, AX203_FIRMWARE_3_3_x },
 	{ 0x1908, 0x1320, AX203_FIRMWARE_3_4_x },
 	{ 0x1908, 0x0102, AX206_FIRMWARE_3_5_x },
+	{ 0x1908, 0x3335, AX3003_FIRMWARE_3_5_x },
 	{}
 };
 
