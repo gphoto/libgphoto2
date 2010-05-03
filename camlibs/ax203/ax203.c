@@ -1537,6 +1537,40 @@ ax203_commit_block_64k(Camera *camera, int bss)
 	return GP_OK;
 }
 
+static int
+ax203_commit_block_ax3003(Camera *camera, int bss)
+{
+	int block_sector_size = SPI_EEPROM_BLOCK_SIZE / SPI_EEPROM_SECTOR_SIZE;
+	int i, address = bss * SPI_EEPROM_SECTOR_SIZE;
+
+	/* Make sure we have read the entire block before erasing it !! */
+	for (i = 0; i < block_sector_size; i++)
+		CHECK (ax203_check_sector_present (camera, bss + i))
+
+	if (!camera->pl->block_protection_removed) {
+		CHECK (ax203_eeprom_write_enable (camera))
+		CHECK (ax203_eeprom_clear_block_protection (camera))
+		CHECK (ax203_eeprom_wait_ready (camera))
+		camera->pl->block_protection_removed = 1;
+	}
+
+	/* Erase the block */
+	CHECK (ax203_erase64k_sector (camera, bss))
+
+	/* And program the block in one large 64k page write, the ax3003
+	   probably emulates this in firmware, to avoid usb bus overhead. */
+	CHECK (ax203_eeprom_write_enable (camera))
+	CHECK (ax203_eeprom_program_page (camera, address,
+					  camera->pl->mem + address,
+					  SPI_EEPROM_BLOCK_SIZE))
+	CHECK (ax203_eeprom_wait_ready (camera))
+
+	for (i = 0; i < block_sector_size; i++)
+		camera->pl->sector_dirty[bss + i] = 0;
+
+	return GP_OK;
+}
+
 int
 ax203_commit(Camera *camera)
 {
@@ -1544,12 +1578,6 @@ ax203_commit(Camera *camera)
 	int mem_sector_size = camera->pl->mem_size / SPI_EEPROM_SECTOR_SIZE;
 	int block_sector_size = SPI_EEPROM_BLOCK_SIZE / SPI_EEPROM_SECTOR_SIZE;
 	int dirty_sectors;
-
-	if (camera->pl->frame_version == AX3003_FIRMWARE_3_5_x) {
-		CHECK (ax203_eeprom_write_enable (camera))
-		CHECK (ax203_eeprom_clear_block_protection (camera))
-		CHECK (ax203_eeprom_wait_ready (camera))
-	}
 
 	/* We first check each 64k block for dirty sectors. If the block
 	   contains dirty sectors, decide wether to use 4k sector erase
@@ -1565,10 +1593,12 @@ ax203_commit(Camera *camera)
 		if (!dirty_sectors)
 			continue;
 
+		if (camera->pl->frame_version == AX3003_FIRMWARE_3_5_x)
+			CHECK (ax203_commit_block_ax3003 (camera, i))
 		/* There are 16 4k sectors per 64k block, when we need to
 		   program 12 or more sectors, programming the entire block
 		   becomes faster */
-		if (dirty_sectors < 12 && camera->pl->has_4k_sectors)
+		else if (dirty_sectors < 12 && camera->pl->has_4k_sectors)
 			CHECK (ax203_commit_block_4k (camera, i))
 		else
 			CHECK (ax203_commit_block_64k (camera, i))

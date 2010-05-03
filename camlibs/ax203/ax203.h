@@ -101,6 +101,7 @@ struct _CameraPrivateLibrary {
 	/* EEPROM attributes */
 	int mem_size;
 	int has_4k_sectors;
+	int block_protection_removed;
 	/* Compression configuration settings */
 	int jpeg_uv_subsample;
 	/* Driver configuration settings */
