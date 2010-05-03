@@ -89,8 +89,8 @@ struct _CameraPrivateLibrary {
 	FILE *mem_dump;
 	struct jdec_private *jdec;
 	char *mem;
-	int sector_is_present[2097152 / SPI_EEPROM_SECTOR_SIZE];
-	int sector_dirty[2097152 / SPI_EEPROM_SECTOR_SIZE];
+	int sector_is_present[4194304 / SPI_EEPROM_SECTOR_SIZE];
+	int sector_dirty[4194304 / SPI_EEPROM_SECTOR_SIZE];
 	int fs_start;
 	/* LCD display attributes */
 	int width;
