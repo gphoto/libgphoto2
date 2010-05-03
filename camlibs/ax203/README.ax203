@@ -3,10 +3,11 @@ About this driver
 
 This driver allows you to upload / download and delete pictures from
 appotech ax203 and ax206 based picture frames. This are small, cheap
-picture frames with a 1.1, 1.5, 1.8 or 2.4 inch display and a USB id of:
+picture frames with a 1.1, 1.5, 1.8, 2.4 or 3.5 inch display and an USB id of:
 1908:0102
 1908:1315
 1908:1320
+1908:3335
 
 ax203 based frames present themselves as a usb mass storage cdrom, which
 contains the windows software. Communication with the device happens by
@@ -57,7 +58,7 @@ the log file.
 About the ax203 image compression
 ==================================
 
-The ax203 family of picframe controllers actually comes with 3 different
+The ax203 family of picframe controllers actually comes with 4 different
 flavors of compression, see README.ax203-compression.
 
 
@@ -71,6 +72,47 @@ bytes 6-7: 16 bit rgb 5-6-5 color value for menu text, big endian
 byte 0xffe: 0x55  this byte and the next one are a magic marker to
 byte 0xfff: 0xaa  indicate the parameter block is valid
 
+ax3003 based frames contain 2 blocks with images, 1 with the images to be shown
+and one with images used inside the menus. The memory map for my ax3003 frame
+looks like this:
+ 407cc		Menu images file table, 2 bytes per file 16 bit big endian
+		start address / 256.
+ 70000		bootsplash
+ 79000		No pictures picture
+ 7f400		Pinguin picture, use unknown
+ 86900		Sync with PC picture
+ 8d200		?? Not JPEG data
+ 99200		Clock hands
+ a4600		Font + strings + clock hands for calendar display (English)
+ b0400		Font for digital clock
+ b7000		Font + strings + clock hands for calendar display (German)
+ c5000		Font + strings + clock hands for calendar display (French)
+ d2f00		Setup screen (English)
+ db300		Setup screen scrolled (English)
+ e3500		Setup screen (French)
+ eda00		Setup screen scrolled (French)
+ f5f00		Setup screen (German)
+ ff200		Setup screen scrolled (German)
+107a00		Setup screen bars
+10cb00		Calendar screen (English)
+114100		Clock screen
+11b800		Calendar screen (French)
+124900		Calendar screen (German)
+12d500		Wav file
+12e400		Wav file
+12ed00		Wav file
+136f00		Wav file
+14e700		ISO start
+180000		ABFS
+181000		Picture start
+1f0000		Picture end, boot loader ?
+1f8020		Something
+1f9000		Unused
+As you can see the jpeg data for the menu screens is rather large this is
+because it contains a ton of JPEG metadata from photoshop, if this were
+to be removed, a lot more of the memory could be used to actually store
+pictures.
+
 
 Hans de Goede <hdegoede@redhat.com>
-7 April 2010
+3 May 2010
