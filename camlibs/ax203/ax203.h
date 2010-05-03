@@ -55,6 +55,10 @@
 #define AX3003_GET_FRAME_ID	0x02
 #define AX3003_GET_ABFS_START	0x03
 
+/* Note not all SPI EEPROM's actually have 4k sectors, some have
+   64k sectors, ax203_commit() takes care if this. */
+#define SPI_EEPROM_SECTOR_SIZE	4096
+#define SPI_EEPROM_BLOCK_SIZE	65536
 #define SPI_EEPROM_WRSR		0x01 /* WRite Status Register */
 #define SPI_EEPROM_PP		0x02
 #define SPI_EEPROM_READ		0x03
@@ -85,9 +89,8 @@ struct _CameraPrivateLibrary {
 	FILE *mem_dump;
 	struct jdec_private *jdec;
 	char *mem;
-	/* Max eeprom size is 4194304, min sector size 4096 */
-	int sector_is_present[4194304 / 4096];
-	int sector_dirty[4194304 / 4096];
+	int sector_is_present[2097152 / SPI_EEPROM_SECTOR_SIZE];
+	int sector_dirty[2097152 / SPI_EEPROM_SECTOR_SIZE];
 	int fs_start;
 	/* LCD display attributes */
 	int width;
@@ -97,7 +100,7 @@ struct _CameraPrivateLibrary {
 	enum ax203_compression compression_version;
 	/* EEPROM attributes */
 	int mem_size;
-	int sector_size;
+	int has_4k_sectors;
 	/* Compression configuration settings */
 	int jpeg_uv_subsample;
 	/* Driver configuration settings */
