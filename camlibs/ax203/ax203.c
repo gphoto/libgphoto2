@@ -40,57 +40,57 @@ static const struct eeprom_info {
 	const char *name;
 	uint32_t id;
 	int mem_size;
-	int has_4k_sectors;
+	int sector_size;
 } ax203_eeprom_info[] = {
-	{ "AMIC A25L040", 0x00133037,  524288, 1 },
-	{ "AMIC A25L080", 0x00143037, 1048576, 1 },
-	{ "AMIC A25L40P", 0x1320377f,  524288, 0 },
-	{ "AMIC A25L80P", 0x1420377f, 1048576, 0 },
-	{ "AMIC A25L16P", 0x1520377f, 2097152, 0 },
+	{ "AMIC A25L040", 0x00133037,  524288, 4096 },
+	{ "AMIC A25L080", 0x00143037, 1048576, 4096 },
+	{ "AMIC A25L40P", 0x1320377f,  524288, 65536 },
+	{ "AMIC A25L80P", 0x1420377f, 1048576, 65536 },
+	{ "AMIC A25L16P", 0x1520377f, 2097152, 65536 },
 
 	/* Note the ATmel AT26DF041 id:0x0000441f is fsck-ed up. It doesn't
 	   support ERASE_64K, (only 4K) and SPI_EEPROM_PP is 0x11 rather then
 	   0x02 (0x02 only programs a single byte). */
 	/* I cannot find a datasheet for the ATmel AT26DF081 id:0x0000451f */
-	{ "ATmel AT26DF161",  0x0000461f, 2097152, 1 },
-	{ "ATmel AT26DF081A", 0x0001451f, 1048576, 1 },
-	{ "ATmel AT26DF161A", 0x0001461f, 2097152, 1 },
-	{ "ATmel AT25DF081",  0x0002451f, 1048576, 1 },
-	{ "ATmel AT25DF161",  0x0002461f, 2097152, 1 },
+	{ "ATmel AT26DF161",  0x0000461f, 2097152, 4096 },
+	{ "ATmel AT26DF081A", 0x0001451f, 1048576, 4096 },
+	{ "ATmel AT26DF161A", 0x0001461f, 2097152, 4096 },
+	{ "ATmel AT25DF081",  0x0002451f, 1048576, 4096 },
+	{ "ATmel AT25DF161",  0x0002461f, 2097152, 4096 },
 
-	{ "EON EN25B16", 0x1c15201c, 2097152, 0 },
-	{ "EON EN25B32", 0x1c16201c, 4194304, 0 },
-	{ "EON EN25F80", 0x1c14311c, 1048576, 1 },
-	{ "EON EN25F16", 0x1c15311c, 2097152, 1 },
+	{ "EON EN25B16", 0x1c15201c, 2097152, 65536 },
+	{ "EON EN25B32", 0x1c16201c, 4194304, 65536 },
+	{ "EON EN25F80", 0x1c14311c, 1048576, 4096 },
+	{ "EON EN25F16", 0x1c15311c, 2097152, 4096 },
 
-	{ "ESI ES25P80", 0x0014204a, 1048576, 0 },
-	{ "ESI ES25P16", 0x0015204a, 2097152, 0 },
+	{ "ESI ES25P80", 0x0014204a, 1048576, 65536 },
+	{ "ESI ES25P16", 0x0015204a, 2097152, 65536 },
 
-	{ "ESMT F25L008 (top)",    0x8c14208c, 1048576, 1 },
-	{ "ESMT F25L008 (bottom)", 0x8c14218c, 1048576, 1 },
+	{ "ESMT F25L008 (top)",    0x8c14208c, 1048576, 4096 },
+	{ "ESMT F25L008 (bottom)", 0x8c14218c, 1048576, 4096 },
 
-	{ "MXIC MX25L4005A", 0xc21320c2,  524288, 1 },
-	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1 },
-	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1 },
+	{ "MXIC MX25L4005A", 0xc21320c2,  524288, 4096 },
+	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 4096 },
+	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 4096 },
 
-	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 0 },
+	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 65536 },
 
-	{ "Spansion S25FL004A", 0x00120201,  524288, 0 },
-	{ "Spansion S25FL008A", 0x00130201, 1048576, 0 },
-	{ "Spansion S25FL016A", 0x00140201, 2097152, 0 },
+	{ "Spansion S25FL004A", 0x00120201,  524288, 65536 },
+	{ "Spansion S25FL008A", 0x00130201, 1048576, 65536 },
+	{ "Spansion S25FL016A", 0x00140201, 2097152, 65536 },
 
 	/* The SST25VF080 and SST25VF016 (id:0xbf8e25bf & 0xbf4125bf) PP
 	   instruction can only program a single byte at a time. Thus they
 	   are not supported */
 
-	{ "Winbond W25P80", 0x001420ef, 1048576, 0 },
-	{ "Winbond W25P16", 0x001420ef, 2097152, 0 },
+	{ "Winbond W25P80", 0x001420ef, 1048576, 65536 },
+	{ "Winbond W25P16", 0x001420ef, 2097152, 65536 },
 
-	{ "Winbond W25X40", 0x001330ef,  524288, 1 },
-	{ "Winbond W25X80", 0x001430ef, 1048576, 1 },
-	{ "Winbond W25X16", 0x001530ef, 2097152, 1 },
-	{ "Winbond W25X32", 0x001630ef, 4194304, 1 },
-	{ "Winbond W25X64", 0x001730ef, 8388608, 1 },
+	{ "Winbond W25X40", 0x001330ef,  524288, 4096 },
+	{ "Winbond W25X80", 0x001430ef, 1048576, 4096 },
+	{ "Winbond W25X16", 0x001530ef, 2097152, 4096 },
+	{ "Winbond W25X32", 0x001630ef, 4194304, 4096 },
+	{ "Winbond W25X64", 0x001730ef, 8388608, 4096 },
 
 	{ }
 };
@@ -379,15 +379,15 @@ ax203_read_sector(Camera *camera, int sector, char *buf)
 	int ret;
 	if (camera->pl->mem_dump) {
 		ret = fseek (camera->pl->mem_dump,
-			     sector * SPI_EEPROM_SECTOR_SIZE, SEEK_SET);
+			     sector * camera->pl->sector_size, SEEK_SET);
 		if (ret) {
 			gp_log (GP_LOG_ERROR, "ax203",
 				"seeking in memdump: %s", strerror(errno));
 			return GP_ERROR_IO_READ;
 		}
-		ret = fread (buf, 1, SPI_EEPROM_SECTOR_SIZE,
+		ret = fread (buf, 1, camera->pl->sector_size,
 			     camera->pl->mem_dump);
-		if (ret != SPI_EEPROM_SECTOR_SIZE) {
+		if (ret != camera->pl->sector_size) {
 			if (ret < 0)
 				gp_log (GP_LOG_ERROR, "ax203",
 					"reading memdump: %s",
@@ -399,8 +399,8 @@ ax203_read_sector(Camera *camera, int sector, char *buf)
 		}
 	} else {
 		CHECK (ax203_eeprom_read (camera,
-					  sector * SPI_EEPROM_SECTOR_SIZE,
-					  buf, SPI_EEPROM_SECTOR_SIZE))
+					  sector * camera->pl->sector_size,
+					  buf, camera->pl->sector_size))
 	}
 	return GP_OK;
 }
@@ -411,23 +411,23 @@ ax203_write_sector(Camera *camera, int sector, char *buf)
 	int ret;
 	if (camera->pl->mem_dump) {
 		ret = fseek (camera->pl->mem_dump,
-			     sector * SPI_EEPROM_SECTOR_SIZE, SEEK_SET);
+			     sector * camera->pl->sector_size, SEEK_SET);
 		if (ret) {
 			gp_log (GP_LOG_ERROR, "ax203",
 				"seeking in memdump: %s", strerror(errno));
 			return GP_ERROR_IO_WRITE;
 		}
-		ret = fwrite (buf, 1, SPI_EEPROM_SECTOR_SIZE,
+		ret = fwrite (buf, 1, camera->pl->sector_size,
 			      camera->pl->mem_dump);
-		if (ret != SPI_EEPROM_SECTOR_SIZE) {
+		if (ret != camera->pl->sector_size) {
 			gp_log (GP_LOG_ERROR, "ax203",
 				"writing memdump: %s", strerror(errno));
 			return GP_ERROR_IO_WRITE;
 		}
 	} else {
-		int i, base = sector * SPI_EEPROM_SECTOR_SIZE;
+		int i, base = sector * camera->pl->sector_size;
 
-		for (i = 0; i < SPI_EEPROM_SECTOR_SIZE; i += 256) {
+		for (i = 0; i < camera->pl->sector_size; i += 256) {
 			CHECK (ax203_eeprom_write_enable (camera))
 			CHECK (ax203_eeprom_program_page (camera, base + i,
 							  buf + i, 256))
@@ -445,7 +445,7 @@ ax203_erase4k_sector(Camera *camera, int sector)
 
 	CHECK (ax203_eeprom_write_enable (camera))
 	CHECK (ax203_eeprom_erase_4k_sector (camera,
-					     sector * SPI_EEPROM_SECTOR_SIZE))
+					     sector * camera->pl->sector_size))
 	CHECK (ax203_eeprom_wait_ready (camera))
 
 	return GP_OK;
@@ -459,7 +459,7 @@ ax203_erase64k_sector(Camera *camera, int sector)
 
 	CHECK (ax203_eeprom_write_enable (camera))
 	CHECK (ax203_eeprom_erase_64k_sector (camera,
-					     sector * SPI_EEPROM_SECTOR_SIZE))
+					     sector * camera->pl->sector_size))
 	CHECK (ax203_eeprom_wait_ready (camera))
 
 	return GP_OK;
@@ -470,7 +470,7 @@ ax203_check_sector_present(Camera *camera, int sector)
 {
 	int ret;
 
-	if ((sector + 1) * SPI_EEPROM_SECTOR_SIZE > camera->pl->mem_size) {
+	if ((sector + 1) * camera->pl->sector_size > camera->pl->mem_size) {
 		gp_log (GP_LOG_ERROR, "ax203", "access beyond end of memory");
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -479,7 +479,7 @@ ax203_check_sector_present(Camera *camera, int sector)
 		return GP_OK;
 
 	ret = ax203_read_sector(camera, sector, camera->pl->mem +
-				sector * SPI_EEPROM_SECTOR_SIZE);
+				sector * camera->pl->sector_size);
 	if (ret == 0)
 		camera->pl->sector_is_present[sector] = 1;
 
@@ -490,13 +490,13 @@ static int
 ax203_read_mem(Camera *camera, int offset,
 	void *buf, int len)
 {
-	int to_copy, sector = offset / SPI_EEPROM_SECTOR_SIZE;
+	int to_copy, sector = offset / camera->pl->sector_size;
 
 	while (len) {
 		CHECK (ax203_check_sector_present (camera, sector))
 
-		to_copy = SPI_EEPROM_SECTOR_SIZE -
-			  (offset % SPI_EEPROM_SECTOR_SIZE);
+		to_copy = camera->pl->sector_size -
+			  (offset % camera->pl->sector_size);
 		if (to_copy > len)
 			to_copy = len;
 
@@ -513,13 +513,13 @@ static int
 ax203_write_mem(Camera *camera, int offset,
 	void *buf, int len)
 {
-	int to_copy, sector = offset / SPI_EEPROM_SECTOR_SIZE;
+	int to_copy, sector = offset / camera->pl->sector_size;
 
 	while (len) {
 		CHECK (ax203_check_sector_present (camera, sector))
 
-		to_copy = SPI_EEPROM_SECTOR_SIZE -
-			  (offset % SPI_EEPROM_SECTOR_SIZE);
+		to_copy = camera->pl->sector_size -
+			  (offset % camera->pl->sector_size);
 		if (to_copy > len)
 			to_copy = len;
 
@@ -1496,7 +1496,9 @@ ax203_delete_all(Camera *camera)
 static int
 ax203_commit_block_4k(Camera *camera, int bss)
 {
-	int block_sector_size = SPI_EEPROM_BLOCK_SIZE / SPI_EEPROM_SECTOR_SIZE;
+	/* Note sector_size should always be 4096 when this function
+	   gets called */
+	int block_sector_size = 65536 / camera->pl->sector_size;
 	int i;
 
 	for (i = 0; i < block_sector_size; i++) {
@@ -1507,7 +1509,7 @@ ax203_commit_block_4k(Camera *camera, int bss)
 		CHECK (ax203_write_sector (camera, bss + i,
 					   camera->pl->mem +
 					   (bss + i) *
-					   SPI_EEPROM_SECTOR_SIZE))
+					   camera->pl->sector_size))
 		camera->pl->sector_dirty[bss + i] = 0;
 	}
 	return GP_OK;
@@ -1516,7 +1518,10 @@ ax203_commit_block_4k(Camera *camera, int bss)
 static int
 ax203_commit_block_64k(Camera *camera, int bss)
 {
-	int block_sector_size = SPI_EEPROM_BLOCK_SIZE / SPI_EEPROM_SECTOR_SIZE;
+	/* Note we can get called for either 64k or 4k sector devices,
+	   as sometimes erasing an entire 64k block is faster on 4k sector
+	   devices */
+	int block_sector_size = 65536 / camera->pl->sector_size;
 	int i;
 
 	/* Make sure we have read the entire block before erasing it !! */
@@ -1531,7 +1536,7 @@ ax203_commit_block_64k(Camera *camera, int bss)
 		CHECK (ax203_write_sector (camera, bss + i,
 					   camera->pl->mem +
 					   (bss + i) *
-					   SPI_EEPROM_SECTOR_SIZE))
+					   camera->pl->sector_size))
 		camera->pl->sector_dirty[bss + i] = 0;
 	}
 	return GP_OK;
@@ -1541,8 +1546,8 @@ int
 ax203_commit(Camera *camera)
 {
 	int i, j;
-	int mem_sector_size = camera->pl->mem_size / SPI_EEPROM_SECTOR_SIZE;
-	int block_sector_size = SPI_EEPROM_BLOCK_SIZE / SPI_EEPROM_SECTOR_SIZE;
+	int mem_sector_size = camera->pl->mem_size / camera->pl->sector_size;
+	int block_sector_size = 65536 / camera->pl->sector_size;
 	int dirty_sectors;
 
 	if (camera->pl->frame_version == AX3003_FIRMWARE_3_5_x) {
@@ -1568,7 +1573,7 @@ ax203_commit(Camera *camera)
 		/* There are 16 4k sectors per 64k block, when we need to
 		   program 12 or more sectors, programming the entire block
 		   becomes faster */
-		if (dirty_sectors < 12 && camera->pl->has_4k_sectors)
+		if (dirty_sectors < 12 && camera->pl->sector_size == 4096)
 			CHECK (ax203_commit_block_4k (camera, i))
 		else
 			CHECK (ax203_commit_block_64k (camera, i))
@@ -1631,17 +1636,11 @@ ax203_open_device(Camera *camera)
 		return GP_ERROR_MODEL_NOT_FOUND;
 	}
 
-	camera->pl->mem_size       = ax203_eeprom_info[i].mem_size;
-	camera->pl->has_4k_sectors = ax203_eeprom_info[i].has_4k_sectors;
-	GP_DEBUG ("%s EEPROM found, capacity: %d, has 4k sectors: %d",
+	camera->pl->mem_size	= ax203_eeprom_info[i].mem_size;
+	camera->pl->sector_size	= ax203_eeprom_info[i].sector_size;
+	GP_DEBUG ("%s EEPROM found, capacity: %d, sectorsize: %d",
 		  ax203_eeprom_info[i].name, camera->pl->mem_size,
-		  camera->pl->has_4k_sectors);
-
-	if (camera->pl->has_4k_sectors == -1) {
-		gp_log (GP_LOG_ERROR, "ax203", "%s has an unknown sector size",
-			ax203_eeprom_info[i].name);
-		return GP_ERROR_NOT_SUPPORTED;
-	}
+		  camera->pl->sector_size);
 
 	return ax203_init (camera);
 }
@@ -1662,7 +1661,7 @@ ax203_open_dump(Camera *camera, const char *dump)
 		return GP_ERROR_IO_INIT;
 	}
 	camera->pl->mem_size = ftell (camera->pl->mem_dump);
-	camera->pl->has_4k_sectors = 1;
+	camera->pl->sector_size = 65536;
 
 	return ax203_init (camera);
 }
