@@ -110,7 +110,7 @@ add_mcu_info(uint8_t *outbuf, int block_nr, int last_Y, int last_Cb,
 }
 
 int
-ax203_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
+ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int width, int height)
 {
 	struct jpeg_compress_struct cinfo;

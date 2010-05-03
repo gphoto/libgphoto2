@@ -188,13 +188,13 @@ ax203_set_time_and_date(Camera *camera, struct tm *t)
 	
 	cmd_buffer[5] = t->tm_year % 100;
 
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		cmd_buffer[6] = t->tm_mon + 1;
 		cmd_buffer[7] = t->tm_wday;
 		break;
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		cmd_buffer[6] = 19 + t->tm_year / 100;
 		cmd_buffer[7] = t->tm_mon + 1;
 		break;
@@ -494,7 +494,7 @@ static int ax203_read_parameter_block(Camera *camera)
 	const uint8_t expect_35x[] = {
 		0x00, 0x00, 0, 0, 0, 0, 0, 0xd8 };
 
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 		param_offset = 0x50;
 		resolution_offset  = 2;
@@ -513,20 +513,20 @@ static int ax203_read_parameter_block(Camera *camera)
 		memcpy (expect, expect_34x, sizeof(expect_34x));
 		expect_size = sizeof(expect_34x);
 		break;
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		param_offset = 0x20;
 		abfs_start_offset  = 2;
 		resolution_offset  = 3;
 		memcpy (expect, expect_35x, sizeof(expect_35x));
 		expect_size = sizeof(expect_35x);
-		/* 3.5.x firmware has a fixed compression type */
-		camera->pl->compression_version = AX203_COMPRESSION_JPEG;
+		/* ax206 + 3.5.x firmware has a fixed compression type */
+		camera->pl->compression_version = AX206_COMPRESSION_JPEG;
 		break;
 	}
 
 	CHECK (ax203_read_mem (camera, param_offset, buf, sizeof(buf)))
 
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 		/* 1 byte width / height */
 		camera->pl->width  = buf[resolution_offset    ];
@@ -535,7 +535,7 @@ static int ax203_read_parameter_block(Camera *camera)
 		expect[resolution_offset + 1] = camera->pl->height;
 		break;
 	case AX203_FIRMWARE_3_4_x:
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		/* 2 byte little endian width / height */
 		camera->pl->width  = le16atoh (buf + resolution_offset);
 		camera->pl->height = le16atoh (buf + resolution_offset + 2);
@@ -636,7 +636,7 @@ ax203_filesize(Camera *camera)
 		return camera->pl->width * camera->pl->height;
 	case AX203_COMPRESSION_YUV_DELTA:
 		return camera->pl->width * camera->pl->height * 3 / 4;
-	case AX203_COMPRESSION_JPEG:
+	case AX206_COMPRESSION_JPEG:
 		/* Variable size */
 		return 0;
 	}
@@ -647,11 +647,11 @@ ax203_filesize(Camera *camera)
 static int
 ax203_max_filecount(Camera *camera)
 {
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		return (AX203_ABFS_SIZE - AX203_ABFS_FILE_OFFSET (0)) / 2;
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		return (AX203_ABFS_SIZE - AX206_ABFS_FILE_OFFSET (0)) /
 			sizeof(struct ax203_v3_5_x_raw_fileinfo);
 	}
@@ -784,11 +784,11 @@ int ax203_write_v3_5_x_fileinfo(Camera *camera, int idx,
 int
 ax203_read_filecount(Camera *camera)
 {
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_read_v3_3_x_v3_4_x_filecount (camera);
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		return ax203_read_v3_5_x_filecount (camera);;
 	}
 	/* Never reached */
@@ -807,11 +807,11 @@ ax203_update_filecount(Camera *camera)
 			count = i + 1;
 	}
 
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_write_v3_3_x_v3_4_x_filecount (camera, count);
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		return ax203_write_v3_5_x_filecount (camera, count);
 	}
 	/* Never reached */
@@ -824,12 +824,12 @@ int ax203_read_fileinfo(Camera *camera, int idx,
 {
 	CHECK (ax203_check_file_index (camera, idx))
 
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_read_v3_3_x_v3_4_x_fileinfo (camera, idx,
 							  fileinfo);
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		return ax203_read_v3_5_x_fileinfo (camera, idx, fileinfo);
 	}
 	/* Never reached */
@@ -840,12 +840,12 @@ static
 int ax203_write_fileinfo(Camera *camera, int idx,
 	struct ax203_fileinfo *fileinfo)
 {
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		return ax203_write_v3_3_x_v3_4_x_fileinfo (camera, idx,
 							   fileinfo);
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		return ax203_write_v3_5_x_fileinfo (camera, idx, fileinfo);
 	}
 	/* Never reached */
@@ -879,7 +879,10 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		ax203_decode_yuv_delta (src, dest, camera->pl->width,
 					camera->pl->height);
 		return GP_OK;
-	case AX203_COMPRESSION_JPEG:
+	case AX206_COMPRESSION_JPEG:
+		/* Note this uses a modified tinyjpeg which was modified to
+		   handle the AX206' custom JPEG format (the AX3003 uses
+		   normal JPEG compression). */
 		if (!camera->pl->jdec) {
 			camera->pl->jdec = tinyjpeg_init ();
 			if (!camera->pl->jdec)
@@ -944,8 +947,8 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 		ax203_encode_yuv_delta (src, dest, camera->pl->width,
 					camera->pl->height);
 		return size;
-	case AX203_COMPRESSION_JPEG:
-		return ax203_compress_jpeg (camera, src,
+	case AX206_COMPRESSION_JPEG:
+		return ax206_compress_jpeg (camera, src,
 					    (uint8_t *)dest, dest_size,
 					    camera->pl->width,
 					    camera->pl->height);
@@ -1086,12 +1089,12 @@ ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
 
 	/* The beginning of the memory is used by the CD image and stuff */
 	fileinfo.address = 0;
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		fileinfo.size = camera->pl->fs_start + AX203_PICTURE_OFFSET;
 		break;
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		fileinfo.size = camera->pl->fs_start + AX206_PICTURE_OFFSET;
 		break;
 	}
@@ -1223,12 +1226,12 @@ ax203_delete_all(Camera *camera)
 	char buf[AX203_ABFS_SIZE];
 	int size, file0_offset = 0;
 
-	switch (camera->pl->firmware_version) {
+	switch (camera->pl->frame_version) {
 	case AX203_FIRMWARE_3_3_x:
 	case AX203_FIRMWARE_3_4_x:
 		file0_offset = AX203_ABFS_FILE_OFFSET (0);
 		break;
-	case AX203_FIRMWARE_3_5_x:
+	case AX206_FIRMWARE_3_5_x:
 		file0_offset = AX206_ABFS_FILE_OFFSET (0);
 		break;
 	}
