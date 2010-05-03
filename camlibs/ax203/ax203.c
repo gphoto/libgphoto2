@@ -1667,12 +1667,6 @@ ax203_open_device(Camera *camera)
 		  ax203_eeprom_info[i].name, camera->pl->mem_size,
 		  camera->pl->has_4k_sectors);
 
-	if (camera->pl->has_4k_sectors == -1) {
-		gp_log (GP_LOG_ERROR, "ax203", "%s has an unknown sector size",
-			ax203_eeprom_info[i].name);
-		return GP_ERROR_NOT_SUPPORTED;
-	}
-
 	return ax203_init (camera);
 }
 
