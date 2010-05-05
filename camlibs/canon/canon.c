@@ -1782,6 +1782,9 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         GP_DEBUG ("canon_int_get_release_params: exposurebias = 0x%02x", 
                   camera->pl->release_params[EXPOSUREBIAS_INDEX]);
 
+        GP_DEBUG ("canon_int_get_release_params: shooting mode = 0x%02x",
+                  camera->pl->release_params[SHOOTING_MODE_INDEX]);
+
 
         camera->pl->secondary_image = 0;
 	/* Based on the image format settings in the release params,
@@ -1992,17 +1995,16 @@ canon_int_set_flash (Camera *camera, canonFlashMode flash_mode,
 /**
  * canon_int_set_zoom
  * @camera: camera to work with
- * @zoom_level: zoom level to set - use one of the defines such as 
- *                 ZOOM_0 for no zoom
+ * @zoom_level: zoom level to set - A40: 1..10; G1: 0..40 (pMaxOpticalZoomPos*4)
  * @context: context for error reporting
  *
- * Sets the camera's zoom. Only tested for A40 via USB.
+ * Sets the camera's zoom. Only tested for A40 and G1 via USB.
  *
  * Returns: gphoto2 error code
  *
  */
 int
-canon_int_set_zoom (Camera *camera, canonZoomLevel zoom_level,
+canon_int_set_zoom (Camera *camera, unsigned char zoom_level,
                     GPContext *context)
 {
         int status;
@@ -2154,6 +2156,53 @@ canon_int_set_iso (Camera *camera, canonIsoState iso,
 
         return GP_OK;        
 }
+
+
+/**
+ * canon_int_set_shooting_mode
+ * @camera: camera to work with
+ * @shooting_mode: use the unsigned char 8bit value in the array
+ * @context: context for error reporting
+ *
+ * Sets the camera's shooting mode.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_set_shooting_mode (Camera *camera, unsigned char shooting_mode,
+                             GPContext *context)
+{
+        int status;
+
+        GP_DEBUG ("canon_int_set_shooting_mode() called for shooting_mode 0x%02x", shooting_mode);
+        /* Get the current camera settings */
+        status = canon_int_get_release_params (camera, context);
+        if (status < 0)
+                return status;
+        /* Modify the aperture */
+        camera->pl->release_params[SHOOTING_MODE_INDEX] = shooting_mode;
+        /* Upload the aperture to the camera */
+        status = canon_int_set_release_params (camera, context);
+        if (status < 0)
+                return status;
+        /* Make sure the camera changed it! */
+        status = canon_int_get_release_params (camera, context);
+        if (status < 0)
+                return status;
+        if (camera->pl->release_params[SHOOTING_MODE_INDEX] != shooting_mode) {
+                GP_DEBUG ("canon_int_set_shooting_mode: Could not set shooting mode "
+                          "to 0x%02x (camera returned 0x%02x)",
+                          shooting_mode,
+                          camera->pl->release_params[SHOOTING_MODE_INDEX]);
+                return GP_ERROR_CORRUPTED_DATA;
+        } else {
+                GP_DEBUG ("canon_int_set_shooting_mode: shooting_mode change verified");
+        }
+        GP_DEBUG ("canon_int_set_shooting_mode() finished successfully");
+        return GP_OK;
+}
+
 
 /**
  * canon_int_set_aperture
