@@ -192,10 +192,11 @@ typedef enum {
 
 
 /**
- * These ISO, shutter speed, aperture, etc. settings are correct for the 
- * EOS 5D; unsure about other cameras.
+ * These ISO, shutter speed, aperture, etc. settings are correct for the
+ * EOS 5D and some for the G1; unsure about other cameras.
  */
 typedef enum {
+	ISO_50 = 0x40,
 	ISO_100 = 0x48,
 	ISO_125 = 0x4b,
 	ISO_160 = 0x4d,
@@ -214,6 +215,11 @@ typedef enum {
 
 struct canonIsoStateStruct {
 	canonIsoState value;
+	char *label;
+};
+
+struct canonShootingModeStateStruct {
+	unsigned char value;
 	char *label;
 };
 
@@ -386,25 +392,8 @@ struct canonBeepModeStateStruct {
 	char* label;
 };
 
-/*
- * Controls che camera zoom. These values have been verified for the
- * A40 only.
- */
-typedef enum {
-	ZOOM_0 = 0x01, /* minimum (no zoom) */
-	ZOOM_1 = 0x02,
-	ZOOM_2 = 0x03,
-	ZOOM_3 = 0x04,
-	ZOOM_4 = 0x05,
-	ZOOM_5 = 0x06,
-	ZOOM_6 = 0x07,
-	ZOOM_7 = 0x08,
-	ZOOM_8 = 0x09,	
-	ZOOM_9 = 0x0a /* maximum zoom ?? */
-} canonZoomLevel;
-
 struct canonZoomLevelStateStruct {
-	canonZoomLevel value;
+	unsigned char value;
 	char* label;
 };
 
@@ -430,6 +419,7 @@ struct canonExposureBiasStateStruct {
 #define APERTURE_INDEX      0x1c
 #define SHUTTERSPEED_INDEX  0x1e
 #define EXPOSUREBIAS_INDEX  0x20
+#define SHOOTING_MODE_INDEX 0x08
 
 /**
  * canonCaptureSizeClass:
@@ -701,6 +691,7 @@ int canon_int_set_file_attributes(Camera *camera, const char *file, const char *
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir, GPContext *context);
 int canon_int_set_shutter_speed(Camera *camera, canonShutterSpeedState shutter_speed, GPContext *context);
 int canon_int_set_iso(Camera *camera, canonIsoState iso, GPContext *context);
+int canon_int_set_shooting_mode (Camera *camera, unsigned char shooting_mode, GPContext *context);
 int canon_int_set_aperture(Camera *camera, canonApertureState aperture, GPContext *context);
 int canon_int_set_exposurebias(Camera *camera, unsigned char expbias, GPContext *context);
 int canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode, GPContext *context);
@@ -715,7 +706,7 @@ int canon_int_start_remote_control(Camera *camera, GPContext *context);
 int canon_int_end_remote_control(Camera *camera, GPContext *context);
 int canon_int_set_beep(Camera *camera, canonBeepMode beep_mode, GPContext *context);
 int canon_int_set_flash(Camera *camera, canonFlashMode flash_mode, GPContext *context);
-int canon_int_set_zoom(Camera *camera, canonZoomLevel zoom_level, GPContext *context);
+int canon_int_set_zoom(Camera *camera, unsigned char zoom_level, GPContext *context);
 
 /*
  * introduced for capturing

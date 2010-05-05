@@ -100,6 +100,7 @@ static const struct canonCaptureSizeClassStruct captureSizeArray[] = {
 };
 
 static const struct canonIsoStateStruct isoStateArray[] = {
+	{ISO_50, "50"},
 	{ISO_100, "100"},
 	{ISO_125, "125"},
 	{ISO_160, "160"},
@@ -230,20 +231,6 @@ static const struct canonFlashModeStateStruct flashModeStateArray[] = {
 	{0, NULL},
 };
 
-static const struct canonZoomLevelStateStruct zoomLevelStateArray[] = {
-	{ZOOM_0, N_("No zoom")},
-	{ZOOM_1, N_("Zoom 1")},
-	{ZOOM_2, N_("Zoom 2")},
-	{ZOOM_3, N_("Zoom 3")},
-	{ZOOM_4, N_("Zoom 4")},
-	{ZOOM_5, N_("Zoom 5")},
-	{ZOOM_6, N_("Zoom 6")},
-	{ZOOM_7, N_("Zoom 7")},
-	{ZOOM_8, N_("Zoom 8")},
-	{ZOOM_9, N_("Zoom 9")},
-	{0, NULL},
-};
-
 static const struct canonExposureBiasStateStruct exposureBiasStateArray[] = {
 	{0x10,"+2"},
 	{0x0d,"+1 2/3"},
@@ -263,6 +250,47 @@ static const struct canonExposureBiasStateStruct exposureBiasStateArray[] = {
 	{0xf3,"-1 2/3"},
 	{0xf0,"-2"},
 	{0, NULL},
+};
+
+
+static const struct canonShootingModeStateStruct shootingModeStateArray[] = {
+	{0x00,N_("AUTO")},
+	{0x01,N_("P")},
+	{0x02,N_("Tv")},
+	{0x03,N_("Av")},
+	{0x04,N_("M")},
+	{0x05,N_("A-DEP")},
+	{0x06,N_("M-DEP")},
+	{0x07,N_("Bulb")},
+	{0x65,N_("Manual 2")},
+	{0x66,N_("Far scene")},
+	{0x67,N_("Fast shutter")},
+	{0x68,N_("Slow shutter")},
+	{0x69,N_("Night scene")},
+	{0x6a,N_("Gray scale")},
+	{0x6b,N_("Sepia")},
+	{0x6c,N_("Portrait")},
+	{0x6d,N_("Spot")},
+	{0x6e,N_("Macro")},
+	{0x6f,N_("BW")},
+	{0x70,N_("PanFocus")},
+	{0x71,N_("Vivid")},
+	{0x72,N_("Neutral")},
+	{0x73,N_("Flash off")},
+	{0x74,N_("Long shutter")},
+	{0x75,N_("Super macro")},
+	{0x76,N_("Foilage")},
+	{0x77,N_("Indoor")},
+	{0x78,N_("Fireworks")},
+	{0x79,N_("Beach")},
+	{0x7a,N_("Underwater")},
+	{0x7b,N_("Snow")},
+	{0x7c,N_("Kids and pets")},
+	{0x7d,N_("Night snapshot")},
+	{0x7e,N_("Digital macro")},
+	{0x7f,N_("MyColors")},
+	{0x80,N_("Photo in movie")},
+	{0, NULL}
 };
 
 
@@ -1531,7 +1559,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
 
-	int iso, shutter_speed, aperture, focus_mode, flash_mode, beep_mode;
+	int iso, shutter_speed, aperture, focus_mode, flash_mode, beep_mode, shooting_mode;
 	int res_byte1, res_byte2, res_byte3;
 	int pwr_status, pwr_source, res, i, menuval;
 	unsigned int expbias;
@@ -1621,6 +1649,40 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 
 
+	/* Shooting mode */
+	gp_widget_new (GP_WIDGET_MENU, _("Shooting mode"), &t);
+	gp_widget_set_name (t, "shootingmode");
+
+	/* Get the camera's current shooting mode setting */
+	shooting_mode = -1;
+	if (camera->pl->cached_ready == 1) {
+		res = canon_int_get_release_params(camera, context);
+		if (res == GP_OK)
+			iso = camera->pl->release_params[SHOOTING_MODE_INDEX];
+	}
+
+	/* Map it to the list of choices */
+	i = 0;
+	menuval = -1;
+	while (shootingModeStateArray[i].label) {
+		gp_widget_add_choice (t, _(shootingModeStateArray[i].label));
+		if (shooting_mode == (int)shootingModeStateArray[i].value) {
+			gp_widget_set_value (t, _(shootingModeStateArray[i].label));
+			menuval = i;
+		}
+		i++;
+	}
+
+	/* Set an unknown shooting mode value if the
+	 * camera is set to something weird */
+	if (menuval == -1) {
+		gp_widget_add_choice (t, _("Unknown"));
+		gp_widget_set_value (t, _("Unknown"));
+	};
+
+	gp_widget_append (section, t);
+
+
 	/* Shutter speed */
 	gp_widget_new (GP_WIDGET_MENU, _("Shutter Speed"), &t);
 	gp_widget_set_name (t, "shutterspeed");
@@ -1657,21 +1719,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 
 	/* Zoom level */
-	gp_widget_new (GP_WIDGET_MENU, _("Zoom"), &t);
+	gp_widget_new (GP_WIDGET_RANGE, _("Zoom"), &t);
 	gp_widget_set_name (t, "zoom");
-
-	i = 0;
-	while (zoomLevelStateArray[i].label) {
-		gp_widget_add_choice (t, _(zoomLevelStateArray[i].label));
-		i++;
-	}
-
-	
+	gp_widget_set_range (t, 0, 255, 1);
 	/* Set an unknown zoom level (at the moment we don't read the
 	 * zoom level */
-	gp_widget_add_choice (t, _("Unknown"));
-	gp_widget_set_value (t, _("Unknown"));
-
+	float zoom = -1;
+	gp_widget_set_value (t, &zoom);
 	gp_widget_append (section, t);
 
 
@@ -1983,7 +2037,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	char *wvalue;
 	int i, val;
 	int res;
-	unsigned char iso, shutter_speed, aperture, focus_mode, flash_mode, beep, zoom;
+	unsigned char iso, shutter_speed, aperture, focus_mode, flash_mode, beep, shooting_mode;
 	char str[16];
 
 	GP_DEBUG ("camera_set_config()");
@@ -2054,6 +2108,36 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			}
 		}
 	}
+
+
+	gp_widget_get_child_by_label (window, _("Shooting mode"), &w);
+	if (gp_widget_changed (w)) {
+		gp_widget_get_value (w, &wvalue);
+		if (!check_readiness (camera, context)) {
+			gp_context_status (context, _("Camera unavailable"));
+		} else {
+
+			/* Map the menu option setting to the camera binary value */
+			i = 0;
+			while (shootingModeStateArray[i].label) {
+				if (strcmp (shootingModeStateArray[i].label, wvalue) == 0) {
+					shooting_mode = shootingModeStateArray[i].value;
+					break;
+				}
+				i++;
+			}
+
+			if (!shootingModeStateArray[i].label) {
+				gp_context_status (context, _("Invalid shooting mode setting"));
+			} else {
+				if (canon_int_set_shooting_mode (camera, shooting_mode, context) == GP_OK)
+					gp_context_status (context, _("Shooting mode changed"));
+				else
+					gp_context_status (context, _("Could not change shooting mode"));
+			}
+		}
+	}
+
 
 	gp_widget_get_child_by_label (window, _("Shutter Speed"), &w);
 	if (gp_widget_changed (w)) {
@@ -2228,31 +2312,18 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Zoom */
 	gp_widget_get_child_by_label (window, _("Zoom"), &w);
 	if (gp_widget_changed (w)) {
-		gp_widget_get_value (w, &wvalue);
+		float zoom;
+		gp_widget_get_value (w, &zoom);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
 		} else {
-
-			/* Map the menu option setting to the camera binary value */
-			i = 0;
-			while (zoomLevelStateArray[i].label) {
-				if (strcmp (_(zoomLevelStateArray[i].label), wvalue) == 0) {
-					zoom = zoomLevelStateArray[i].value;
-					break;
-				}
-				i++;
-			}
-
-			if (!zoomLevelStateArray[i].label) {
-				gp_context_status (context, _("Invalid zoom level"));
-			} else {
 				if (canon_int_set_zoom (camera, zoom, context) == GP_OK)
 					gp_context_status (context, _("Zoom level changed"));
 				else
 					gp_context_status (context, _("Could not change zoom level"));
 			}		
 		}
-	}
+
 
 	/* Aperture */
 	gp_widget_get_child_by_label (window, _("Aperture"), &w);
