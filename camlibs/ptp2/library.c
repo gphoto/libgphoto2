@@ -1422,9 +1422,8 @@ camera_exit (Camera *camera, GPContext *context)
 #endif
 		if (params->eos_captureenabled)
 			camera_unprepare_capture (camera, context);
-#if 0 /* ... perhaps not a good idea on all cameras */
-		ptp_check_event (params);
-#endif
+		if (camera->pl->checkevents)
+			ptp_check_event (params);
 		while (ptp_get_one_event (params, &event))
 			gp_log (GP_LOG_DEBUG, "camera_exit", "missed ptp event 0x%x (param1=%x)", event.Code,event.Param1);
 		/* close ptp session */
@@ -1486,6 +1485,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	int ret;
 	PTPParams *params = &camera->pl->params;
 
+	camera->pl->checkevents = TRUE;
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 		/* Canon PowerShot / IXUS preview mode */
@@ -2204,6 +2204,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	SET_CONTEXT_P(params, context);
+	camera->pl->checkevents = TRUE;
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
@@ -4256,6 +4257,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPParams* params=&camera->pl->params;
 
 	SET_CONTEXT_P(params, context);
+	camera->pl->checkevents = TRUE;
 
 	gp_log ( GP_LOG_DEBUG, "ptp2/put_file_func", "folder=%s, filename=%s", folder, filename);
 
@@ -4380,6 +4382,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	)
 		return GP_OK;
 
+	camera->pl->checkevents = TRUE;
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 	/* Get file number omiting storage pseudofolder */
@@ -4421,6 +4424,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 
 	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
 		return GP_ERROR_NOT_SUPPORTED;
+	camera->pl->checkevents = TRUE;
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 	/* Get file number omiting storage pseudofolder */
@@ -4447,6 +4451,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp (folder, "/special"))
 		return (GP_ERROR_BAD_PARAMETERS);
 
+	camera->pl->checkevents = TRUE;
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 	/* Get file number omiting storage pseudofolder */
@@ -4590,6 +4595,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return GP_ERROR_NOT_SUPPORTED;
 
 	SET_CONTEXT_P(params, context);
+	camera->pl->checkevents = TRUE;
 
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	/* compute storage ID value from folder patch */

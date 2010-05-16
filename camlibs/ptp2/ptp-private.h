@@ -35,6 +35,7 @@ void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 struct _CameraPrivateLibrary {
 	PTPParams params;
+	int checkevents;
 };
 
 struct _PTPData {
