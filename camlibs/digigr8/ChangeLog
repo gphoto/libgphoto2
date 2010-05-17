@@ -1,3 +1,7 @@
+2010-05-16   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Stop & Shop, camera, UPC product code 87096, added.
+	Reported by Adam Rubin, Adam <adam707@verizon.net>
+
 2010-03-16   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: attempt to name output file abandoned 
 	in camera_capture_preview()

@@ -70,6 +70,8 @@ static const struct {
 							    0x2770, 0x905c},
 	{"Sakar Micro Digital 2428x",		GP_DRIVER_STATUS_EXPERIMENTAL,
 							    0x2770, 0x905c},
+	{"Stop & Shop 87096",		GP_DRIVER_STATUS_EXPERIMENTAL,
+							    0x2770, 0x905c},
 	{"Jazz JDC9",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Disney pix micro",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050},
 	/* from IRC reporter, adam@piggz.co.uk */
