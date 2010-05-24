@@ -2481,6 +2481,19 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  **/
 #define ptp_canon_eos_afdrive(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DoAf,0)
 /**
+ * ptp_canon_eos_zoom:
+ *
+ * This command runs (drives) the lens autofocus.
+ *  
+ * params:      PTPParams*
+ * params:      arg1 unknown
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_zoom(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_Zoom,1,x)
+#define ptp_canon_eos_zoomposition(params,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_ZoomPosition,2,x,y)
+/**
  * ptp_nikon_mfdrive:
  *
  * This command runs (drives) the lens focus manually.
