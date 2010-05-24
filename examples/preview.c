@@ -138,7 +138,7 @@ main(int argc, char **argv) {
 	canon_enable_capture(canon, TRUE, canoncontext);
 	/*set_capturetarget(canon, canoncontext);*/
 	printf("Taking 100 previews and saving them to snapshot-XXX.jpg ...\n");
-	for (i=0;i<99;i++) {
+	for (i=0;i<100;i++) {
 		CameraFile *file;
 		char output_file[32];
 
@@ -148,6 +148,15 @@ main(int argc, char **argv) {
 			fprintf(stderr,"gp_file_new: %d\n", retval);
 			exit(1);
 		}
+#if 0 /* testcase for EOS zooming */
+		{
+			char buf[20];
+			if (i<10) set_config_value_string (canon, "eoszoom", "5", canoncontext);
+			sprintf(buf,"%d,%d",(i&0x1f)*64,(i>>5)*64);
+			fprintf(stderr, "%d - %s\n", i, buf);
+			set_config_value_string (canon, "eoszoomposition", buf, canoncontext);
+		}
+#endif
 		retval = gp_camera_capture_preview(canon, file, canoncontext);
 		if (retval != GP_OK) {
 			fprintf(stderr,"gp_camera_capture_preview(%d): %d\n", i, retval);
