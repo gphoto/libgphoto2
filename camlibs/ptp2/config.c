@@ -3479,6 +3479,86 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 
 
 static int
+_get_Canon_EOS_Zoom(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	gp_widget_set_value (*widget, "0");
+	return (GP_OK);
+}
+
+/* Only 1 and 5 seem to work on the EOS 1000D */
+static int
+_put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+	const char*	val;
+	unsigned int	xval;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_Zoom)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	gp_widget_get_value(widget, &val);
+	if (!sscanf (val, "%d", &xval)) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Could not parse %s", val);
+		return GP_ERROR;
+	}
+	ret = ptp_canon_eos_zoom (params, xval);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Canon zoom 0x%x failed: 0x%x", xval, ret);
+		return GP_ERROR;
+	}
+	/* Get the next set of event data */
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoom", "getevent failed!");
+		return translate_ptp_result (ret);
+	}
+	return GP_OK;
+}
+
+/* EOS Zoom. Works in approx 64 pixel steps on the EOS 1000D, but just accept
+ * all kind of pairs */
+static int
+_get_Canon_EOS_ZoomPosition(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	gp_widget_set_value (*widget, "0,0");
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+	const char*	val;
+	unsigned int	x,y;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_ZoomPosition)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	gp_widget_get_value(widget, &val);
+	if (2!=sscanf (val, "%d,%d", &x,&y)) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Could not parse %s (expected 'x,y')", val);
+		return GP_ERROR;
+	}
+	ret = ptp_canon_eos_zoomposition (params, x,y);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Canon zoom position %d,%d failed: 0x%x", x, y, ret);
+		return GP_ERROR;
+	}
+	/* Get the next set of event data */
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoomposition", "getevent failed!");
+		return translate_ptp_result (ret);
+	}
+	return GP_OK;
+}
+
+
+static int
 _get_STR_as_time(CONFIG_GET_ARGS) {
 	time_t		camtime;
 	struct tm	tm;
@@ -4261,6 +4341,8 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Drive Canon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DoAf, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_MfDrive, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
 	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DriveLens, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
+	{ N_("Canon EOS Zoom "),               "eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
+	{ N_("Canon EOS Zoom Position"),       "eoszoomposition",  0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_ZoomPosition, _get_Canon_EOS_ZoomPosition, _put_Canon_EOS_ZoomPosition},
 	{ 0,0,0,0,0,0,0 },
 };
 
