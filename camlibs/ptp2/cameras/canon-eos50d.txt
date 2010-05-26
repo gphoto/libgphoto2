@@ -171,3 +171,452 @@ Device Property Summary:
 Device Friendly Name(0xd402):(read only) (type=0xffff) Canon EOS 50D ('Canon EOS 50D')
 Property 0xd407:(read only) (type=0x6) 1
 Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+main/actions/manualfocusdrive
+	Label: Fahre Canon DSLR Manueller Fokus
+	Type: RADIO
+	Current: Keine
+	Choice: 0 Nah 1
+	Choice: 1 Nah 2
+	Choice: 2 Nah 3
+	Choice: 3 Keine
+	Choice: 4 Fern 1
+	Choice: 5 Fern 2
+	Choice: 6 Fern 3
+main/actions/focuslock
+	Label: Fokus Lock
+	Type: TOGGLE
+	Current: 2
+main/actions/bulb
+	Label: Kunstlicht Modus
+	Type: TOGGLE
+	Current: 2
+main/actions/autofocusdrive
+	Label: Fahre Canon DSLR Autofokus
+	Type: TOGGLE
+	Current: 0
+main/actions/uilock
+	Label: UI Lock
+	Type: TOGGLE
+	Current: 2
+main/status/availableshots
+	Label: Verfügbare Aufnahmen
+	Type: TEXT
+	Current: 62977
+main/status/batterylevel
+	Label: Batterie Ladezustand
+	Type: TEXT
+	Current: 100%
+main/status/model
+	Label: Kameramodell
+	Type: TEXT
+	Current: 2147484257
+main/status/ptpversion
+	Label: PTP Version
+	Type: TEXT
+	Current: 256
+main/status/lensname
+	Label: Objektivname
+	Type: TEXT
+	Current: EF-S17-85mm f/4-5.6 IS USM
+main/other/d407
+	Label: PTP Property 0xd407
+	Type: TEXT
+	Current: 1
+main/other/d402
+	Label: PTP Property 0xd402
+	Type: TEXT
+	Current: Canon EOS 50D
+main/other/d406
+	Label: PTP Property 0xd406
+	Type: TEXT
+	Current: Unknown Initiator
+main/settings/evfmode
+	Label: EVF Modus
+	Type: RADIO
+	Current: 1
+	Choice: 0 0
+	Choice: 1 1
+main/settings/reviewtime
+	Label: Schnellvorschau Zeit
+	Type: RADIO
+	Current: 4 Sekunden
+	Choice: 0 Keine
+	Choice: 1 2 Sekunden
+	Choice: 2 4 Sekunden
+	Choice: 3 8 Sekunden
+	Choice: 4 Halten
+main/settings/artist
+	Label: Künstler
+	Type: TEXT
+	Current: Photographer:Andreas Hoppe
+main/settings/copyright
+	Label: Copyright
+	Type: TEXT
+	Current: Copyright:Andreas Hoppe
+main/settings/capturetarget
+	Label: Aufnahmeziel
+	Type: RADIO
+	Current: interner Speicher
+	Choice: 0 interner Speicher
+	Choice: 1 Speicherkarte
+main/settings/capture
+	Label: Aufnahme
+	Type: TOGGLE
+	Current: 2
+main/settings/ownername
+	Label: Eigentümername
+	Type: TEXT
+	Current: Andreas Hoppe
+main/settings/datetime
+	Label: Datum und Zeit
+	Type: DATE
+	Current: 1274819056
+	Printable: Di 25 Mai 2010 22:24:16 CEST
+main/settings/output
+	Label: Kamera Output
+	Type: RADIO
+	Current: (null)
+	Choice: 0 TFT
+	Choice: 1 PC
+main/capturesettings/picturestyle
+	Label: Bild Style
+	Type: RADIO
+	Current: Standard
+	Choice: 0 Standard
+	Choice: 1 Portrait
+	Choice: 2 Landschaft
+	Choice: 3 Neutral
+	Choice: 4 Treu
+	Choice: 5 Einfarbig
+	Choice: 6 Benutzerdefiniert 1
+	Choice: 7 Benutzerdefiniert 2
+	Choice: 8 Benutzerdefiniet 3
+main/capturesettings/autoexposuremode
+	Label: Canon Automatische Belichtungsmodus
+	Type: RADIO
+	Current: P
+	Choice: 0 P
+	Choice: 1 TV
+	Choice: 2 AV
+	Choice: 3 Manuell
+	Choice: 4 Lampe
+	Choice: 5 A_DEP
+	Choice: 6 DEP
+	Choice: 7 Benutzerdefiniert
+	Choice: 8 Lock
+	Choice: 9 Grün
+	Choice: 10 Nachtportrait
+	Choice: 11 Sport
+	Choice: 12 Portrait
+	Choice: 13 Landschaft
+	Choice: 14 Nah
+	Choice: 15 Blitz aus
+main/capturesettings/aperture
+	Label: Blende                                                                  
+	Type: RADIO
+	Current: 9
+	Choice: 0 4
+	Choice: 1 4.5
+	Choice: 2 5
+	Choice: 3 5.6
+	Choice: 4 6.3
+	Choice: 5 7.1
+	Choice: 6 8
+	Choice: 7 9
+	Choice: 8 10
+	Choice: 9 11
+	Choice: 10 13
+	Choice: 11 14
+	Choice: 12 16
+	Choice: 13 18
+	Choice: 14 20
+	Choice: 15 22
+main/capturesettings/drivemode
+	Label: Auslöse Modus
+	Type: RADIO
+	Current: Einzelbild
+	Choice: 0 Einzelbild
+	Choice: 1 Kontinuierliche hohe Geschwindigkeit
+	Choice: 2 Kontinuierliche langsame Geschwindigkeit
+	Choice: 3 Selbstauslöser 2 Sekunden
+	Choice: 4 Selbstauslöser 10 Sekunden
+main/capturesettings/bracketmode
+	Label: Abstufungsmodus
+	Type: TEXT
+	Current: 1
+main/capturesettings/aeb
+	Label: Automatische Belichtungs Abstufung Anzahl
+	Type: RADIO
+	Current: +/- 1
+	Choice: 0 aus
+	Choice: 1 +/- 1/3
+	Choice: 2 +/- 2/3
+	Choice: 3 +/- 1
+	Choice: 4 +/- 1 1/3
+	Choice: 5 +/- 1 2/3
+	Choice: 6 +/- 2
+main/capturesettings/meteringmode
+	Label: Spotmessung
+	Type: RADIO
+	Current: Berechnend
+	Choice: 0 Berechnend
+	Choice: 1 Partiell
+	Choice: 2 Punkt
+	Choice: 3 Mittelpunkt/Gewichtete Messung
+main/capturesettings/exposurecompensation
+	Label: Belichtungskompensation
+	Type: RADIO
+	Current: 0
+	Choice: 0 -2
+	Choice: 1 -1.6
+	Choice: 2 -1.3
+	Choice: 3 -1.0
+	Choice: 4 -0.6
+	Choice: 5 -0.3
+	Choice: 6 0
+	Choice: 7 0.3
+	Choice: 8 0.6
+	Choice: 9 1.0
+	Choice: 10 1.3
+	Choice: 11 1.6
+	Choice: 12 2
+main/capturesettings/shutterspeed
+	Label: Belichtungszeit                                                         
+	Type: RADIO
+	Current: 1/320
+	Choice: 0 30
+	Choice: 1 25
+	Choice: 2 20
+	Choice: 3 15
+	Choice: 4 13
+	Choice: 5 10
+	Choice: 6 8
+	Choice: 7 6
+	Choice: 8 5
+	Choice: 9 4
+	Choice: 10 3.2
+	Choice: 11 2.5
+	Choice: 12 2
+	Choice: 13 1.6
+	Choice: 14 1.3
+	Choice: 15 1
+	Choice: 16 0.8
+	Choice: 17 0.6
+	Choice: 18 0.5
+	Choice: 19 0.4
+	Choice: 20 0.3
+	Choice: 21 1/4
+	Choice: 22 1/5
+	Choice: 23 1/6
+	Choice: 24 1/8
+	Choice: 25 1/10
+	Choice: 26 1/13
+	Choice: 27 1/15
+	Choice: 28 1/20
+	Choice: 29 1/25
+	Choice: 30 1/30
+	Choice: 31 1/40
+	Choice: 32 1/50
+	Choice: 33 1/60
+	Choice: 34 1/80
+	Choice: 35 1/100
+	Choice: 36 1/125
+	Choice: 37 1/160
+	Choice: 38 1/200
+	Choice: 39 1/250
+	Choice: 40 1/320
+	Choice: 41 1/400
+	Choice: 42 1/500
+	Choice: 43 1/640
+	Choice: 44 1/800
+	Choice: 45 1/1000
+	Choice: 46 1/1250
+	Choice: 47 1/1600
+	Choice: 48 1/2000
+	Choice: 49 1/2500
+	Choice: 50 1/3200
+	Choice: 51 1/4000
+	Choice: 52 1/5000
+	Choice: 53 1/6400
+	Choice: 54 1/8000
+main/imgsettings/whitebalancexa
+	Label: Weißabgleich X A
+	Type: TEXT
+	Current: 0
+main/imgsettings/imageformatexthd
+	Label: Bildformat Externe HD
+	Type: RADIO
+	Current: (null)
+	Choice: 0 Large Fine JPEG
+	Choice: 1 Large Normal JPEG
+	Choice: 2 Medium Fine JPEG
+	Choice: 3 Medium Normal JPEG
+	Choice: 4 Small Fine JPEG
+	Choice: 5 Small Normal JPEG
+	Choice: 6 RAW + Large Fine JPEG
+	Choice: 7 RAW + Large Normal JPEG
+	Choice: 8 RAW + Medium Fine JPEG
+	Choice: 9 RAW + Medium Normal JPEG
+	Choice: 10 RAW + Small Fine JPEG
+	Choice: 11 RAW + Small Normal JPEG
+	Choice: 12 sRAW1 + Large Fine JPEG
+	Choice: 13 sRAW1 + Large Normal JPEG
+	Choice: 14 sRAW1 + Medium Fine JPEG
+	Choice: 15 sRAW1 + Medium Normal JPEG
+	Choice: 16 sRAW1 + Small Fine JPEG
+	Choice: 17 sRAW1 + Small Normal JPEG
+	Choice: 18 sRAW2 + Large Fine JPEG
+	Choice: 19 sRAW2 + Large Normal JPEG
+	Choice: 20 sRAW2 + Medium Fine JPEG
+	Choice: 21 sRAW2 + Medium Normal JPEG
+	Choice: 22 sRAW2 + Small Fine JPEG
+	Choice: 23 sRAW2 + Small Normal JPEG
+	Choice: 24 RAW
+	Choice: 25 sRAW1
+	Choice: 26 sRAW2
+main/imgsettings/imageformat
+	Label: Bildformat
+	Type: RADIO
+	Current: (null)
+	Choice: 0 Large Fine JPEG
+	Choice: 1 Large Normal JPEG
+	Choice: 2 Medium Fine JPEG
+	Choice: 3 Medium Normal JPEG
+	Choice: 4 Small Fine JPEG
+	Choice: 5 Small Normal JPEG
+	Choice: 6 RAW + Large Fine JPEG
+	Choice: 7 RAW + Large Normal JPEG
+	Choice: 8 RAW + Medium Fine JPEG
+	Choice: 9 RAW + Medium Normal JPEG
+	Choice: 10 RAW + Small Fine JPEG
+	Choice: 11 RAW + Small Normal JPEG
+	Choice: 12 sRAW1 + Large Fine JPEG
+	Choice: 13 sRAW1 + Large Normal JPEG
+	Choice: 14 sRAW1 + Medium Fine JPEG
+	Choice: 15 sRAW1 + Medium Normal JPEG
+	Choice: 16 sRAW1 + Small Fine JPEG
+	Choice: 17 sRAW1 + Small Normal JPEG
+	Choice: 18 sRAW2 + Large Fine JPEG
+	Choice: 19 sRAW2 + Large Normal JPEG
+	Choice: 20 sRAW2 + Medium Fine JPEG
+	Choice: 21 sRAW2 + Medium Normal JPEG
+	Choice: 22 sRAW2 + Small Fine JPEG
+	Choice: 23 sRAW2 + Small Normal JPEG
+	Choice: 24 RAW
+	Choice: 25 sRAW1
+	Choice: 26 sRAW2
+main/imgsettings/whitebalancexb
+	Label: Weißabgleich X B
+	Type: TEXT
+	Current: 0
+main/imgsettings/whitebalanceadjusta
+	Label: Weißabgleich Adjust A
+	Type: RADIO
+	Current: 0
+	Choice: 0 -9
+	Choice: 1 -8
+	Choice: 2 -7
+	Choice: 3 -6
+	Choice: 4 -5
+	Choice: 5 -4
+	Choice: 6 -3
+	Choice: 7 -2
+	Choice: 8 -1
+	Choice: 9 0
+	Choice: 10 1
+	Choice: 11 2
+	Choice: 12 3
+	Choice: 13 4
+	Choice: 14 5
+	Choice: 15 6
+	Choice: 16 7
+	Choice: 17 8
+	Choice: 18 9
+main/imgsettings/whitebalance
+	Label: Weißabgleich
+	Type: RADIO
+	Current: Tageslicht
+	Choice: 0 Auto
+	Choice: 1 Tageslicht
+	Choice: 2 Schatten
+	Choice: 3 Wolkig
+	Choice: 4 Kunstlicht - Glühlampe
+	Choice: 5 Kunstlicht - Fluoreszenzlampe
+	Choice: 6 Blitz
+	Choice: 7 Manuell
+	Choice: 8 Farbtemperatur
+main/imgsettings/iso
+	Label: ISO-Geschwindigkeit
+	Type: RADIO
+	Current: 100
+	Choice: 0 Auto
+	Choice: 1 100
+	Choice: 2 125
+	Choice: 3 160
+	Choice: 4 200
+	Choice: 5 250
+	Choice: 6 320
+	Choice: 7 400
+	Choice: 8 500
+	Choice: 9 640
+	Choice: 10 800
+	Choice: 11 1000
+	Choice: 12 1250
+	Choice: 13 1600
+	Choice: 14 2000
+	Choice: 15 2500
+	Choice: 16 3200
+main/imgsettings/whitebalanceadjustb
+	Label: Weißabgleich Adjust B
+	Type: RADIO
+	Current: 0
+	Choice: 0 -9
+	Choice: 1 -8
+	Choice: 2 -7
+	Choice: 3 -6
+	Choice: 4 -5
+	Choice: 5 -4
+	Choice: 6 -3
+	Choice: 7 -2
+	Choice: 8 -1
+	Choice: 9 0
+	Choice: 10 1
+	Choice: 11 2
+	Choice: 12 3
+	Choice: 13 4
+	Choice: 14 5
+	Choice: 15 6
+	Choice: 16 7
+	Choice: 17 8
+	Choice: 18 9
+main/imgsettings/imageformatcf
+	Label: Bildformat CF
+	Type: RADIO
+	Current: (null)
+	Choice: 0 Large Fine JPEG
+	Choice: 1 Large Normal JPEG
+	Choice: 2 Medium Fine JPEG
+	Choice: 3 Medium Normal JPEG
+	Choice: 4 Small Fine JPEG
+	Choice: 5 Small Normal JPEG
+	Choice: 6 RAW + Large Fine JPEG
+	Choice: 7 RAW + Large Normal JPEG
+	Choice: 8 RAW + Medium Fine JPEG
+	Choice: 9 RAW + Medium Normal JPEG
+	Choice: 10 RAW + Small Fine JPEG
+	Choice: 11 RAW + Small Normal JPEG
+	Choice: 12 sRAW1 + Large Fine JPEG
+	Choice: 13 sRAW1 + Large Normal JPEG
+	Choice: 14 sRAW1 + Medium Fine JPEG
+	Choice: 15 sRAW1 + Medium Normal JPEG
+	Choice: 16 sRAW1 + Small Fine JPEG
+	Choice: 17 sRAW1 + Small Normal JPEG
+	Choice: 18 sRAW2 + Large Fine JPEG
+	Choice: 19 sRAW2 + Large Normal JPEG
+	Choice: 20 sRAW2 + Medium Fine JPEG
+	Choice: 21 sRAW2 + Medium Normal JPEG
+	Choice: 22 sRAW2 + Small Fine JPEG
+	Choice: 23 sRAW2 + Small Normal JPEG
+	Choice: 24 RAW
+	Choice: 25 sRAW1
+	Choice: 26 sRAW2
