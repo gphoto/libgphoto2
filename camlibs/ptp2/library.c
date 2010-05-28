@@ -1095,6 +1095,8 @@ static struct {
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
 	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
 	{"Fuji:FinePix S1500",			0x04cb, 0x01ef, 0},
+	/* NoOp <glgxg@sbcglobal.net> */
+	{"Fuji:FinePix S1800",			0x04cb, 0x0200, 0},
 	/* Luke Symes <allsymes@gmail.com> */
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 
