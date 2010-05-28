@@ -4,5 +4,5 @@ EXTRA_LTLIBRARIES += usbdiskdirect.la
 usbdiskdirect_la_LDFLAGS = $(iolib_ldflags)
 usbdiskdirect_la_CPPFLAGS = $(AM_CPPFLAGS) $(INTL_CFLAGS) $(CPPFLAGS)
 usbdiskdirect_la_DEPENDENCIES = $(iolib_dependencies)
-usbdiskdirect_la_LIBADD =  $(iolib_libadd)
+usbdiskdirect_la_LIBADD =  $(iolib_libadd) $(INTLLIBS)
 usbdiskdirect_la_SOURCES = usbdiskdirect/linux.c

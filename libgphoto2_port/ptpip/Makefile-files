@@ -8,6 +8,5 @@ ptpip_la_CPPFLAGS = \
 	$(INTL_CFLAGS) \
 	$(CPPFLAGS) 
 ptpip_la_DEPENDENCIES = $(iolib_dependencies)
-ptpip_la_LIBADD = $(iolib_libadd)
-ptpip_la_LIBADD += @MDNS_LIBS@
+ptpip_la_LIBADD = $(iolib_libadd) @MDNS_LIBS@ $(INTLLIBS)
 ptpip_la_SOURCES = ptpip/ptpip.c
