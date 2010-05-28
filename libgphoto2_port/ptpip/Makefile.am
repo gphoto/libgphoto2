@@ -10,5 +10,5 @@ ptpip_la_CPPFLAGS = \
 	$(INTL_CFLAGS) \
 	$(CPPFLAGS) 
 ptpip_la_DEPENDENCIES = $(top_srcdir)/iolib.sym
-ptpip_la_LIBADD = $(top_builddir)/libgphoto2_port/libgphoto2_port.la @MDNS_LIBS@
+ptpip_la_LIBADD = $(top_builddir)/libgphoto2_port/libgphoto2_port.la @MDNS_LIBS@ $(INTLLIBS)
 ptpip_la_SOURCES = ptpip.c
