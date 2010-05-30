@@ -1134,8 +1134,6 @@ gp_camera_wait_for_event (Camera *camera, int timeout,
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->wait_for_event) {
-		gp_context_error (context, _("This camera does "
-			"not support event handling."));
 		CAMERA_UNUSED (camera, context);
                 return (GP_ERROR_NOT_SUPPORTED);
 	}
