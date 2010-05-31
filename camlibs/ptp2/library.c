@@ -783,7 +783,7 @@ static struct {
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x306c is S45 in normal (canon) mode */
 	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* 0x306e is G3 in normal (canon) mode */
@@ -1550,6 +1550,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					/* 4 byte len of jpeg data, 4 byte unknown */
 					/* JPEG blob */
 					/* stuff */
+					gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "get_viewfinder_image unknown bytes: 0x%02x 0x%02x 0x%02x 0x%02x", data[4],data[5],data[6],data[7]);
 
 					if (len > size) len = size;
 					gp_file_append ( file, (char*)data+8, len );
