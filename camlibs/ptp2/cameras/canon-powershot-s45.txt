@@ -1,0 +1,53 @@
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon PowerShot S45
+  device version: 01.0001
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension version: 0
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+Device Properties Supported:
+
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot S45
+  Version: 01.0001
+
+Capture Formats:
+Display Formats: Association/Directory, JPEG, MS AVI, MS Wave, Unknown(b101)
+
+Device Capabilities:
+      File Download, File Deletion, No File Upload
+      No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+      StorageDescription: None
+      VolumeLabel: None
+      Storage Type: Removable RAM (memory card)
+      Filesystemtype: Digital Camera Layout (DCIM)
+      Access Capability: Read-Write
+      Maximum Capability: 510402560 (486 MB)
+      Free Space (Bytes): 463667200 (442 MB)
+      Free Space (Images): -1
+
+Device Property Summary:
+
