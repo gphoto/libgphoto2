@@ -506,6 +506,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		gp_port_get_timeout (camera->port, &timeout);
 		gp_port_set_timeout (camera->port, PTP2_FAST_TIMEOUT);
 		result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
+		if (result <= 0) result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
 		gp_port_set_timeout (camera->port, timeout);
 		break;
 	default:
