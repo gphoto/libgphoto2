@@ -2430,6 +2430,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	gp_log (GP_LOG_DEBUG, "ptp2/wait_for_event", "waiting for events timeout %d ms", timeout);
 	memset (&event, 0, sizeof(event));
 	*eventtype = GP_EVENT_TIMEOUT;
+	*eventdata = NULL;
 
 	gettimeofday (&event_start,NULL);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
