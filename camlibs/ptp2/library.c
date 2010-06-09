@@ -2476,7 +2476,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
-		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
 			PTPCanon_changes_entry	entry;
 
@@ -2591,10 +2590,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 		int isevent;
 
 		while (1) {
-			if (_timeout_passed(&event_start, timeout)) {
-				*eventtype = GP_EVENT_TIMEOUT;
+			if (_timeout_passed(&event_start, timeout))
 				break;
-			}
 			gp_context_idle (context);
 			ret = ptp_canon_checkevent (params,&event,&isevent);
 			if (ret!=PTP_RC_OK)
@@ -2611,7 +2608,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		uint32_t	newobject, hasc101;
 
-		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
 			int evtcnt;
 			PTPContainer	*nevent = NULL;
