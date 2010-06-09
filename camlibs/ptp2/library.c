@@ -2429,6 +2429,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	SET_CONTEXT(camera, context);
 	gp_log (GP_LOG_DEBUG, "ptp2/wait_for_event", "waiting for events timeout %d ms", timeout);
 	memset (&event, 0, sizeof(event));
+	*eventtype = GP_EVENT_TIMEOUT;
 
 	gettimeofday (&event_start,NULL);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
@@ -2436,7 +2437,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		uint32_t		newobject;
 
-		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
 			int i;
 			PTPCanon_changes_entry	entry;
@@ -2563,7 +2563,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
 	) {
-		*eventtype = GP_EVENT_TIMEOUT;
 		while (1) {
 			if (_timeout_passed (&event_start, timeout))
 				break;
