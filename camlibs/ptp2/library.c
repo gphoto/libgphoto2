@@ -1212,6 +1212,7 @@ static struct {
 	{PTP_OFC_CANON_CRW,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_MOV,		PTP_VENDOR_CANON, "video/quicktime"},
+	{PTP_OFC_CANON_CHDK_CRW,	PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{0,				0, NULL}
 };
 
