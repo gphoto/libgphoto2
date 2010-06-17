@@ -548,6 +548,7 @@ static int ax203_read_parameter_block(Camera *camera)
 	int i, param_offset = 0, resolution_offset = 0;
 	int compression_offset = -1, abfs_start_offset = 0, expect_size = 0;
 	const int valid_resolutions[][2] = {
+		{  96,  64 },
 		{ 120, 160 },
 		{ 128, 128 },
 		{ 128, 160 },
