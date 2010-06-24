@@ -222,9 +222,9 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 
 static int
 camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
-	PTPParams		*params = &camera->pl->params;
-	uint16_t		ret;
-	PTPStorageIDs		sids;
+	PTPParams	*params = &camera->pl->params;
+	int		ret;
+	PTPStorageIDs	sids;
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
@@ -239,9 +239,9 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Get the initial bulk set of event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)) {
@@ -276,9 +276,9 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	}
 	/* Get the second bulk set of event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 
 	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
@@ -311,9 +311,9 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Get the second bulk set of 0x9116 property data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 
 	params->eos_captureenabled = 1;
@@ -377,9 +377,9 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Drain the rest set of the event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 
 	ret = ptp_canon_eos_setremotemode(params, 0);
@@ -3419,9 +3419,9 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_afdrive", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 	return GP_OK;
 }
@@ -3507,9 +3507,9 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_mfdrive", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 	return GP_OK;
 }
@@ -3547,9 +3547,9 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoom", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 	return GP_OK;
 }
@@ -3587,9 +3587,9 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != GP_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoomposition", "getevent failed!");
-		return translate_ptp_result (ret);
+		return ret;
 	}
 	return GP_OK;
 }
