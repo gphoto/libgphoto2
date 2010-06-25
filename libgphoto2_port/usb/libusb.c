@@ -84,13 +84,6 @@ gp_port_library_list (GPPortInfoList *list)
 	struct usb_device *dev;
 	int nrofdevices = 0, i, i1, i2, unknownint;
 
-	/* default port first */
-	gp_port_info_new (&info);
-	gp_port_info_set_type (info, GP_PORT_USB);
-	gp_port_info_set_name (info, "Universal Serial Bus");
-	gp_port_info_set_path (info, "usb:");
-	CHECK (gp_port_info_list_append (list, info));
-
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB);
@@ -146,11 +139,15 @@ gp_port_library_list (GPPortInfoList *list)
 		bus = bus->next;
 	}
 
+#if 0
 	/* If we already added usb:, and have 0 or 1 devices we have nothing to do.
 	 * This should be the standard use case.
 	 */
+	/* We never want to return just "usb:" ... also return "usb:XXX,YYY", and
+	 * let upper layers filter out the usb: */
 	if (nrofdevices <= 1) 
 		return (GP_OK);
+#endif
 
 	/* Redo the same bus/device walk, but now add the ports with usb:x,y notation,
 	 * so we can address all USB devices.
@@ -201,6 +198,15 @@ gp_port_library_list (GPPortInfoList *list)
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		bus = bus->next;
+	}
+	/* This will only be added if no other device was ever added.
+	 * Users doing "usb:" usage will enter the regular expression matcher case. */
+	if (nrofdevices == 0) {
+		gp_port_info_new (&info);
+		gp_port_info_set_type (info, GP_PORT_USB);
+		gp_port_info_set_name (info, "Universal Serial Bus");
+		gp_port_info_set_path (info, "usb:");
+		CHECK (gp_port_info_list_append (list, info));
 	}
 	return (GP_OK);
 }
