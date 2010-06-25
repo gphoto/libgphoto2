@@ -142,11 +142,14 @@ gp_port_library_list (GPPortInfoList *list)
 		bus = bus->next;
 	}
 
+#if 0
+	/* Do not filter out usb:XXX,YYY, we want it for consistency... */
 	/* If we already added usb:, and have 0 or 1 devices we have nothing to do.
 	 * This should be the standard use case.
 	 */
 	if (nrofdevices <= 1) 
 		return (GP_OK);
+#endif
 
 	/* Redo the same bus/device walk, but now add the ports with usb:x,y notation,
 	 * so we can address all USB devices.
