@@ -591,7 +591,8 @@ static struct {
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
-	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, PTP_CAP},
+	/* no capture complete: https://sourceforge.net/tracker/index.php?func=detail&aid=3018517&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* Nikon Coolpix 4500: T. Kaproncai, 22 Aug 2003 */
 	{"Nikon:Coolpix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
