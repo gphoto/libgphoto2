@@ -1042,6 +1042,8 @@ static struct {
 	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
 	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
+	/* The Wanderer <wanderer@fastmail.fm> */
+	{"Canon:PowerShot SX120 IS",		0x04a9, 0x31e0, PTPBUG_DELETE_SENDS_EVENT},
 	/* via libmtp */
 	{"Canon:PowerShot SX20 IS",		0x04a9, 0x31e4, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2918540&group_id=8874&atid=358874 */
