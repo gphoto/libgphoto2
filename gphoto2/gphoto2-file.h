@@ -111,6 +111,23 @@ int gp_file_ref            (CameraFile *file);
 int gp_file_unref          (CameraFile *file);
 int gp_file_free           (CameraFile *file);
 
+int gp_file_set_name       (CameraFile *file, const char  *name);
+int gp_file_get_name       (CameraFile *file, const char **name);
+
+int gp_file_set_mime_type  (CameraFile *file, const char  *mime_type);
+int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
+
+int gp_file_set_mtime   (CameraFile *file, time_t  mtime);
+int gp_file_get_mtime   (CameraFile *file, time_t *mtime);
+
+int gp_file_detect_mime_type          (CameraFile *file);
+int gp_file_adjust_name_for_mime_type (CameraFile *file);
+int gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType type, char **newname);
+
+int gp_file_set_data_and_size (CameraFile*,       char *data,
+			       unsigned long int size);
+int gp_file_get_data_and_size (CameraFile*, const char **data,
+			       unsigned long int *size);
 /* "Do not use those"
  *
  * These functions probably were originally intended for internal use only.
@@ -140,27 +157,12 @@ int gp_file_save           (CameraFile *file, const char *filename);
 int gp_file_clean          (CameraFile *file);
 int gp_file_copy           (CameraFile *destination, CameraFile *source);
 
-int gp_file_set_name       (CameraFile *file, const char  *name);
-int gp_file_get_name       (CameraFile *file, const char **name);
 
-int gp_file_set_mime_type  (CameraFile *file, const char  *mime_type);
-int gp_file_get_mime_type  (CameraFile *file, const char **mime_type);
-
-int gp_file_set_mtime   (CameraFile *file, time_t  mtime);
-int gp_file_get_mtime   (CameraFile *file, time_t *mtime);
-
-int gp_file_detect_mime_type          (CameraFile *file);
-int gp_file_adjust_name_for_mime_type (CameraFile *file);
-int gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType type, char **newname);
-
+/* These are for use by camera drivers only */
 int gp_file_append            (CameraFile*, const char *data,
 			       unsigned long int size);
 int gp_file_slurp             (CameraFile*, char *data,
 			       size_t size, size_t *readlen);
-int gp_file_set_data_and_size (CameraFile*,       char *data,
-			       unsigned long int size);
-int gp_file_get_data_and_size (CameraFile*, const char **data,
-			       unsigned long int *size);
 
 #ifdef __cplusplus
 }
