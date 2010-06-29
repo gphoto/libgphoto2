@@ -4849,6 +4849,7 @@ int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget		*section, *widget, *subwindow;
+	uint16_t		ret2;
 	int			menuno, submenuno, ret;
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
@@ -4904,10 +4905,10 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
-						ret = ptp_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
-						if (ret != PTP_RC_OK) {
-							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret);
-							ret = GP_ERROR;
+						ret2 = ptp_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
+						if (ret2 != PTP_RC_OK) {
+							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret2);
+							ret = translate_ptp_result (ret2);
 						}
 					}
 					ptp_free_devicepropvalue (cursub->type, &propval);
@@ -4925,9 +4926,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);
 				if (ret == GP_OK) {
-					int ret2 = ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
-					if (ret2 != PTP_RC_OK)
+					ret2 = ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
+					if (ret2 != PTP_RC_OK) {
 						gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret2);
+						ret = translate_ptp_result (ret2);
+					}
 				} else
 					gp_context_error (context, _("Setting EOS Property %04x (%s) failed with %d!"), cursub->propid, _(cursub->label), ret);
 				ptp_free_devicepropdesc(&dpd);
