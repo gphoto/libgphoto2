@@ -1508,7 +1508,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				if (ret != PTP_RC_OK) {
 					gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
 					SET_CONTEXT_P(params, NULL);
-					return GP_ERROR;
+					return translate_ptp_result (ret);
 				}
 				params->canon_viewfinder_on = 1;
 			}
@@ -1516,7 +1516,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
 				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
+				return translate_ptp_result (ret);
 			}
 			gp_file_set_data_and_size ( file, (char*)data, size );
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
@@ -1545,13 +1545,13 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
 				if (ret != PTP_RC_OK) {
 					gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
-					return GP_ERROR;
+					return translate_ptp_result (ret);
 				}
 			}
 			ptp_free_devicepropdesc (&dpd);
 
 			while (tries--) {
-				/* Poll for camera events */
+				/* Poll for camera events (should perhaps handle them?) */
 				ptp_check_eos_events (params);
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
@@ -1578,7 +1578,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
 					SET_CONTEXT_P(params, NULL);
-					return GP_ERROR;
+					return translate_ptp_result (ret);
 				}
 			}
 			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after 20 tries with ret: 0x%x\n", ret);
@@ -1609,7 +1609,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
 				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
+				return translate_ptp_result (ret);
 			}
 			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
@@ -1855,7 +1855,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		ret = ptp_getobjectinfo (params, newobject, &oi);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"nikon_capture","getobjectinfo(%x) failed: %d", newobject, ret);
-			return GP_ERROR_IO;
+			return translate_ptp_result (ret);
 		}
 		if (oi.ParentObject != 0)
 			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
@@ -1924,7 +1924,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	ret = ptp_canon_eos_capture (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 
 	newobject = 0;
@@ -2463,7 +2463,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			ret = ptp_check_eos_events (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
-				return GP_ERROR;
+				return translate_ptp_result (ret);
 			}
 			if (!ptp_get_one_eos_event (params, &entry)) {
 				for (i=sleepcnt;i--;) {
