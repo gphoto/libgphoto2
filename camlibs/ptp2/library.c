@@ -1935,18 +1935,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
 			return translate_ptp_result (ret);
 		}
-		if (!ptp_get_one_eos_event (params, &entry)) {
-			for (i=sleepcnt;i--;) {
-				gp_context_idle (context);
-				usleep(20*1000); /* 20 ms */
-			}
-			sleepcnt++; /* incremental back off */
-			if (sleepcnt>10) sleepcnt=10;
-			continue;
-		}
-		sleepcnt = 1;
+		while (ptp_get_one_eos_event (params, &entry)) {
+			sleepcnt = 1;
 
-		do { /* process all events before checking again */
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entry.type);
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
@@ -1970,10 +1961,20 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			}
 			if (newobject)
 				break;
-			CPR (context, ptp_canon_eos_keepdeviceon (params));
-		} while (ptp_get_one_eos_event (params, &entry));
+		}
 		if (newobject)
 			break;
+		/* Nothing done ... do wait backoff ... if we poll too fast, the camera will spend
+		 * all time serving the polling. */
+		for (i=sleepcnt;i--;) {
+			gp_context_idle (context);
+			usleep(20*1000); /* 20 ms */
+		}
+		sleepcnt++; /* incremental back off */
+		if (sleepcnt>10) sleepcnt=10;
+
+		/* not really proven to help keep it on */
+		CPR (context, ptp_canon_eos_keepdeviceon (params));
 	}
 	if (newobject == 0)
 		return GP_ERROR;
@@ -2459,30 +2460,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 			if (_timeout_passed (&event_start, timeout))
 				break;
-
 			ret = ptp_check_eos_events (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
 				return translate_ptp_result (ret);
 			}
-			if (!ptp_get_one_eos_event (params, &entry)) {
-				for (i=sleepcnt;i--;) {
-					int resttime;
-					struct timeval curtime;
-
-					gp_context_idle (context);
-					gettimeofday (&curtime, 0);
-					resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
-					if (resttime < 20)
-						break;
-					usleep(20*1000); /* 20 ms */
-				}
-				sleepcnt++; /* incremental back off */
-				if (sleepcnt>10) sleepcnt=10;
-				continue;
-			}
-			sleepcnt = 1;
-			do {
+			while (ptp_get_one_eos_event (params, &entry)) {
+				sleepcnt = 1;
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entry.type);
 				switch (entry.type) {
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
@@ -2557,10 +2541,23 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				if (finish)
 					break;
-			} while (ptp_get_one_eos_event (params, &entry));
+			}
 			if (finish)
 				break;
-			gp_context_idle (context);
+			/* incremental backoff of polling ... but only if we do not pass the wait time */
+			for (i=sleepcnt;i--;) {
+				int resttime;
+				struct timeval curtime;
+
+				gp_context_idle (context);
+				gettimeofday (&curtime, 0);
+				resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
+				if (resttime < 20)
+					break;
+				usleep(20*1000); /* 20 ms */
+			}
+			sleepcnt++; /* incremental back off */
+			if (sleepcnt>10) sleepcnt=10;
 		}
 		return GP_OK;
 	}
