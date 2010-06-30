@@ -1931,9 +1931,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
 		int i;
 
-		if (PTP_RC_OK != ptp_check_eos_events (params)) {
+		if (PTP_RC_OK != (ret = ptp_check_eos_events (params))) {
 			gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		if (!ptp_get_one_eos_event (params, &entry)) {
 			for (i=sleepcnt;i--;) {
@@ -1945,30 +1945,35 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			continue;
 		}
 		sleepcnt = 1;
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entry.type);
-		if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
-			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-			newobject = entry.u.object.oid;
-			memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-			break;
-		}
-		if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
-			/* just add it to the filesystem, and return in CameraPath */
-			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-			newobject = entry.u.object.oid;
-			memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-			add_object (camera, newobject, context);
-			strcpy  (path->name,  oi.Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
-			get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
-			gp_filesystem_append (camera->fs, path->folder, path->name, context);
-			break; /* for RAW+JPG mode capture, we just return the first image for now. */
-		}
+
+		do { /* process all events before checking again */
+			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entry.type);
+			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
+				newobject = entry.u.object.oid;
+				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
+				break;
+			}
+			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+				/* just add it to the filesystem, and return in CameraPath */
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
+				newobject = entry.u.object.oid;
+				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
+				add_object (camera, newobject, context);
+				strcpy  (path->name,  oi.Filename);
+				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+				get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+				/* delete last / or we get confused later. */
+				path->folder[ strlen(path->folder)-1 ] = '\0';
+				gp_filesystem_append (camera->fs, path->folder, path->name, context);
+				break; /* for RAW+JPG mode capture, we just return the first image for now. */
+			}
+			if (newobject)
+				break;
+			CPR (context, ptp_canon_eos_keepdeviceon (params));
+		} while (ptp_get_one_eos_event (params, &entry));
 		if (newobject)
 			break;
-		CPR (context, ptp_canon_eos_keepdeviceon (params));
 	}
 	if (newobject == 0)
 		return GP_ERROR;
@@ -2477,78 +2482,82 @@ camera_wait_for_event (Camera *camera, int timeout,
 				continue;
 			}
 			sleepcnt = 1;
-			gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entry.type);
-			switch (entry.type) {
-			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				free (entry.u.object.oi.Filename);
+			do {
+				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entry.type);
+				switch (entry.type) {
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
+					free (entry.u.object.oi.Filename);
 
-				newobject = entry.u.object.oid;
+					newobject = entry.u.object.oid;
 
-				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-				if (!path)
-					return GP_ERROR_NO_MEMORY;
-				path->name[0]='\0';
-				strcpy (path->folder,"/");
-				ret = gp_file_new(&file);
-				if (ret!=GP_OK) return ret;
-				sprintf (path->name, "capt%04d.", capcnt++);
-				if ((entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
-					strcat(path->name, "cr2");
-					gp_file_set_mime_type (file, GP_MIME_CRW);
-				} else {
-					strcat(path->name, "jpg");
-					gp_file_set_mime_type (file, GP_MIME_JPEG);
-				}
-				gp_file_set_mtime (file, time(NULL));
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					path->name[0]='\0';
+					strcpy (path->folder,"/");
+					ret = gp_file_new(&file);
+					if (ret!=GP_OK) return ret;
+					sprintf (path->name, "capt%04d.", capcnt++);
+					if ((entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
+						strcat(path->name, "cr2");
+						gp_file_set_mime_type (file, GP_MIME_CRW);
+					} else {
+						strcat(path->name, "jpg");
+						gp_file_set_mime_type (file, GP_MIME_JPEG);
+					}
+					gp_file_set_mtime (file, time(NULL));
 
-				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entry.u.object.oi.ObjectCompressedSize);
-				CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entry.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
-				CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
-				ret = gp_file_set_data_and_size(file, (char*)ximage, entry.u.object.oi.ObjectCompressedSize);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entry.u.object.oi.ObjectCompressedSize);
+					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entry.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
+					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
+					ret = gp_file_set_data_and_size(file, (char*)ximage, entry.u.object.oi.ObjectCompressedSize);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					/* We have now handed over the file, disclaim responsibility by unref. */
+					gp_file_unref (file);
+					finish = 1;
+					break;
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
+					/* just add it to the filesystem, and return in CameraPath */
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
+					newobject = entry.u.object.oid;
+					add_object (camera, newobject, context);
+					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+					if (!path)
+						return GP_ERROR_NO_MEMORY;
+					strcpy  (path->name,  entry.u.object.oi.Filename);
+					free (entry.u.object.oi.Filename);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entry.u.object.oi.StorageID);
+					get_folder_from_handle (camera, entry.u.object.oi.StorageID, entry.u.object.oi.ParentObject, path->folder);
+					/* delete last / or we get confused later. */
+					path->folder[ strlen(path->folder)-1 ] = '\0';
+					gp_filesystem_append (camera->fs, path->folder, path->name, context);
+					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventdata = path;
+					finish = 1;
+					break;
+				default:
+					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entry.type);
+					break;
 				}
-				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				*eventtype = GP_EVENT_FILE_ADDED;
-				*eventdata = path;
-				/* We have now handed over the file, disclaim responsibility by unref. */
-				gp_file_unref (file);
-				finish = 1;
-				break;
-			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
-				/* just add it to the filesystem, and return in CameraPath */
-				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new objectinfo! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				newobject = entry.u.object.oid;
-				add_object (camera, newobject, context);
-				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-				if (!path)
-					return GP_ERROR_NO_MEMORY;
-				strcpy  (path->name,  entry.u.object.oi.Filename);
-				free (entry.u.object.oi.Filename);
-				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entry.u.object.oi.StorageID);
-				get_folder_from_handle (camera, entry.u.object.oi.StorageID, entry.u.object.oi.ParentObject, path->folder);
-				/* delete last / or we get confused later. */
-				path->folder[ strlen(path->folder)-1 ] = '\0';
-				gp_filesystem_append (camera->fs, path->folder, path->name, context);
-				*eventtype = GP_EVENT_FILE_ADDED;
-				*eventdata = path;
-				finish = 1;
-				break;
-			default:
-				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entry.type);
-				break;
-			}
+				if (finish)
+					break;
+			} while (ptp_get_one_eos_event (params, &entry));
 			if (finish)
 				break;
 			gp_context_idle (context);
