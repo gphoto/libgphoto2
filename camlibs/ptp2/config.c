@@ -4653,6 +4653,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc	dpd;
 
+					gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
 					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
@@ -4669,7 +4670,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					ret = cursub->getfunc (camera, &widget, cursub, NULL);
 				}
 				if (ret != GP_OK) {
-					gp_log (GP_LOG_DEBUG, "camera_get_config", "Unable to set Property %04x (%s), ret %d", cursub->propid, cursub->label, ret);
+					gp_log (GP_LOG_DEBUG, "camera_get_config", "Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -4678,13 +4679,15 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
-				gp_log (GP_LOG_DEBUG, "camera_get_config", "Found and adding EOS Property %04x (%s)", cursub->propid, cursub->label);
+				gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
-				if (ret != GP_OK)
+				if (ret != GP_OK) {
+					gp_log (GP_LOG_DEBUG, "camera_get_config", "Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
 					continue;
+				}
 				gp_widget_append (section, widget);
 				continue;
 			}
@@ -4894,7 +4897,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
 				gp_widget_changed (widget); /* clear flag */
-				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting Property %04x (%s)", cursub->propid, cursub->label);
+				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc dpd;
 					uint16_t	ret2;
@@ -4924,7 +4927,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				PTPDevicePropDesc	dpd;
 
 				gp_widget_changed (widget); /* clear flag */
-				gp_log (GP_LOG_DEBUG, "camera_set_config", "Found and setting EOS Property %04x (%s)", cursub->propid, cursub->label);
+				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid);
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);
@@ -4935,7 +4938,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret = translate_ptp_result (ret2);
 					}
 				} else
-					gp_context_error (context, _("Setting EOS Property %04x (%s) failed with %d!"), cursub->propid, _(cursub->label), ret);
+					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d!"), _(cursub->label), cursub->propid, ret);
 				ptp_free_devicepropdesc(&dpd);
 				ptp_free_devicepropvalue(cursub->type, &propval);
 			}
