@@ -4624,10 +4624,12 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	SET_CONTEXT(camera, context);
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease) &&
-        	(!params->eos_captureenabled)
-	)
-                camera_prepare_capture (camera, context);
+		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
+	) {
+        	if (!params->eos_captureenabled)
+			camera_prepare_capture (camera, context);
+		_ptp_check_eos_events (params);
+	}
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -4864,10 +4866,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	SET_CONTEXT(camera, context);
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease) &&
-        	(!params->eos_captureenabled)
-	)
-                camera_prepare_capture (camera, context);
+		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
+	) {
+        	if (!params->eos_captureenabled)
+			camera_prepare_capture (camera, context);
+		_ptp_check_eos_events (params);
+	}
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
 	if (ret != GP_OK)
