@@ -1688,23 +1688,25 @@ ptp_check_eos_events (PTPParams *params) {
 	PTPCanon_changes_entry	*entries = NULL, *nentries;
 	int			nrofentries = 0;
 
-	ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
-	if (ret != PTP_RC_OK)
-		return ret;
-	if (!nrofentries)
-		return PTP_RC_OK;
+	while (1) { /* call it repeatedly until the camera does not report any */
+		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
+		if (ret != PTP_RC_OK)
+			return ret;
+		if (!nrofentries)
+			return PTP_RC_OK;
 
-	if (params->nrofbacklogentries) {
-		nentries = realloc(params->backlogentries,sizeof(entries[0])*(params->nrofbacklogentries+nrofentries));
-		if (!nentries)
-			return PTP_RC_GeneralError;
-		params->backlogentries = nentries;
-		memcpy (nentries+params->nrofbacklogentries, entries, nrofentries*sizeof(entries[0]));
-		params->nrofbacklogentries += nrofentries;
-		free (entries);
-	} else {
-		params->backlogentries = entries;
-		params->nrofbacklogentries = nrofentries;
+		if (params->nrofbacklogentries) {
+			nentries = realloc(params->backlogentries,sizeof(entries[0])*(params->nrofbacklogentries+nrofentries));
+			if (!nentries)
+				return PTP_RC_GeneralError;
+			params->backlogentries = nentries;
+			memcpy (nentries+params->nrofbacklogentries, entries, nrofentries*sizeof(entries[0]));
+			params->nrofbacklogentries += nrofentries;
+			free (entries);
+		} else {
+			params->backlogentries = entries;
+			params->nrofbacklogentries = nrofentries;
+		}
 	}
 	return PTP_RC_OK;
 }
