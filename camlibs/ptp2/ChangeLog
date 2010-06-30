@@ -1,3 +1,15 @@
+2010-06-30  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: restructured eos event handling loops
+	  to be less USB intensive after report by Axel.
+	* config.c,library.c: various ptp errors passed up.
+
+2010-06-30  Axel Waggershauser  <awagger@web.de>
+
+	* ptp-pack.c: Fixed EOS imageformat unpacking regression.
+	* config.c: fixed shadowed variable usage making set_config 
+          leave too early.
+
 2010-01-09  Daniel P. Berrange <dan@berrange.com>
 
 	* config.c: Added several new Nikon flash configurations.
