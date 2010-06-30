@@ -397,9 +397,9 @@ gp_widget_set_value (CameraWidget *widget, const void *value)
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:
         case GP_WIDGET_TEXT:
-		gp_log (GP_LOG_DEBUG, "gphoto2-widget", "Setting value to "
-			"'%s'...", (char*) value);
-	        if (widget->value_string) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-widget", "Setting value of widget "
+			"'%s' to '%s'...", widget->label, (char*) value);
+			if (widget->value_string) {
                 	if (strcmp (widget->value_string, (char*) value))
                     		widget->changed = 1;
                 	free (widget->value_string);
