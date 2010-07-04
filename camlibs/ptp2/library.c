@@ -4674,7 +4674,7 @@ storage_info_func (CameraFilesystem *fs,
 	PTPParams *params 	= &camera->pl->params;
 	PTPStorageInfo		si;
 	PTPStorageIDs		sids;
-	int			i;
+	int			i,n;
 	uint16_t		ret;
 	CameraStorageInformation*sif;
 
@@ -4685,11 +4685,15 @@ storage_info_func (CameraFilesystem *fs,
 	ret = ptp_getstorageids (params, &sids);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	*nrofsinfos = sids.n;
+	n = 0;
 	*sinfos = (CameraStorageInformation*)
 		calloc (sizeof (CameraStorageInformation),sids.n);
 	for (i = 0; i<sids.n; i++) {
-		sif = (*sinfos)+i;
+		sif = (*sinfos)+n;
+
+		/* Invalid storage, storageinfo might cause hangs on it (Nikon D300s e.g.) */
+		if ((sids.Storage[i]&0x0000ffff)==0) continue;
+
 		ret = ptp_getstorageinfo (params, sids.Storage[i], &si);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/storage_info_func", "ptp getstorageinfo failed: 0x%x", ret);
@@ -4770,8 +4774,11 @@ storage_info_func (CameraFilesystem *fs,
 		}
 		if (si.StorageDescription) free (si.StorageDescription);
 		if (si.VolumeLabel) free (si.VolumeLabel);
+
+		n++;
 	}
 	free (sids.Storage);
+	*nrofsinfos = n;
 	return (GP_OK);
 }
 
