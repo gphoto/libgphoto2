@@ -1300,6 +1300,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
 
 		(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+		(*ce)[i].u.info = NULL;
 		switch (type) {
 		case  PTP_EC_CANON_EOS_ObjectAddedEx:
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
@@ -1642,7 +1643,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			break;
 		default:
 			switch (type) {
-#define XX(x)		case PTP_EC_CANON_EOS_##x: ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", i, size);break;
+#define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
+				ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", i, size); 	\
+				(*ce)[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 123456789)"));	\
+				sprintf ((*ce)[i].u.info, "unhandled EOS event "#x" (size %d)",  size);		\
+				break;
 			XX(RequestGetEvent)
 			XX(ObjectRemoved)
 			XX(RequestGetObjectInfoEx)
@@ -1650,7 +1655,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			XX(StorageInfoChanged)
 			XX(ObjectInfoChangedEx)
 			XX(ObjectContentChanged)
-			XX(CameraStatusChanged)
 			XX(WillSoonShutdown)
 			XX(ShutdownTimerUpdated)
 			XX(RequestCancelTransfer)
@@ -1663,6 +1667,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			XX(RequestObjectTransferTS)
 			XX(AfResult)
 #undef XX
+			case PTP_EC_CANON_EOS_CameraStatusChanged:
+				ptp_debug (params, "event %d: unhandled EOS event CameraStatusChanged (size %d)", i, size);
+				(*ce)[i].u.info = malloc(strlen("CameraStatusChanged 1234567890123456789"));
+				sprintf ((*ce)[i].u.info, "CameraStatusChanged %d",  dtoh32a(curdata+8));
+				break;
 			default:
 				ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
 				break;

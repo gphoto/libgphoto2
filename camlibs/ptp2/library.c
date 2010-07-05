@@ -2553,6 +2553,15 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventtype = GP_EVENT_FILE_ADDED;
 					*eventdata = path;
 					return GP_OK;
+				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
+					/* only return if interesting stuff happened */
+					if (entry.u.info) {
+						*eventtype = GP_EVENT_UNKNOWN;
+						*eventdata = entry.u.info; /* take over the allocated string allocation ownership */
+						return GP_OK;
+					}
+					/* continue otherwise */
+					break;
 				default: {
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entry.type);
 					break;

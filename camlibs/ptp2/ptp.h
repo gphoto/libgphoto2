@@ -1066,7 +1066,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER	2
 
 struct _PTPCanon_New_Object {
-	uint32_t		oid;
+	uint32_t	oid;
 	PTPObjectInfo	oi;
 };
 
@@ -1074,6 +1074,7 @@ struct _PTPCanon_changes_entry {
 	int	type;
 	union {
 		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
+		char				*info;
 	} u;
 };
 typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
