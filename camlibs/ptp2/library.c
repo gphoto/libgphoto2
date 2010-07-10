@@ -2794,6 +2794,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 handleregular:
 	switch (event.Code) {
+	case PTP_EC_CaptureComplete:
+		*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+		*eventdata = NULL;
+		break;
 	case PTP_EC_ObjectAdded: {
 		PTPObjectInfo	*obinfo;
 
@@ -2826,10 +2830,6 @@ handleregular:
 		}
 		break;
 	}
-	case PTP_EC_CaptureComplete:
-		*eventtype = GP_EVENT_CAPTURE_COMPLETE;
-		*eventdata = NULL;
-		break;
 	default: {
 		char *x;
 

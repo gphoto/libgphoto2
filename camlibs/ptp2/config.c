@@ -3711,9 +3711,7 @@ _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 		ret = ptp_canon_focuslock (params);
 	else
 		ret = ptp_canon_focusunlock (params);
-	if (ret == PTP_RC_OK)
-		return (GP_OK);
-	return (GP_ERROR);
+	return translate_ptp_result (ret);
 }
 
 
@@ -3743,7 +3741,7 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 		if (ret == PTP_RC_GeneralError) {
 			gp_context_error (((PTPData *) camera->pl->params.data)->context,
 			_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
-			return (GP_ERROR);
+			return translate_ptp_result (ret);
 		}
 	} else {
 		ret = ptp_canon_eos_bulbend (params);
