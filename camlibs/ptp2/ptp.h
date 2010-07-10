@@ -1966,6 +1966,7 @@ struct _PTPParams {
 	PTPCanon_changes_entry	*backlogentries;
 	int			nrofbacklogentries;
 	int			eos_captureenabled;
+	int			eos_viewfinderenabled;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;

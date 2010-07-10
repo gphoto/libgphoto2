@@ -1436,8 +1436,11 @@ camera_exit (Camera *camera, GPContext *context)
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 #endif
-		if (params->eos_captureenabled)
+		if (params->eos_captureenabled) {
+			if (params->eos_viewfinderenabled)
+				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture (camera, context);
+		}
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
 		while (ptp_get_one_event (params, &event))
@@ -1553,7 +1556,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				}
 			}
 			ptp_free_devicepropdesc (&dpd);
-
+			params->eos_viewfinderenabled = 1;
 			while (tries--) {
 				/* Poll for camera events (should perhaps handle them?) */
 				ptp_check_eos_events (params);
