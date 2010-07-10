@@ -3391,7 +3391,7 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_nikon_afdrive (&camera->pl->params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
@@ -3415,7 +3415,7 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_afdrive (params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_afdrive", "Canon autofocus drive failed: 0x%x", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = _ptp_check_eos_events (params);
@@ -3456,7 +3456,7 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_nikon_mfdrive (&camera->pl->params, flag, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_mfdrive", "Nikon manual focus drive failed: 0x%x", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
@@ -3503,7 +3503,7 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_drivelens (params, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive 0x%x failed: 0x%x", xval, ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = _ptp_check_eos_events (params);
@@ -3543,7 +3543,7 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_zoom (params, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Canon zoom 0x%x failed: 0x%x", xval, ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = _ptp_check_eos_events (params);
@@ -3583,7 +3583,7 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_zoomposition (params, x,y);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Canon zoom position %d,%d failed: 0x%x", x, y, ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = _ptp_check_eos_events (params);
