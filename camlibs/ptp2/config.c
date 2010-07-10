@@ -186,7 +186,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 				break;
 			}
 		}
-		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","Card value is %d",cardval);
+		gp_log (GP_LOG_DEBUG,"camera_canon_eos_update_capture_target","Card value is %d",cardval);
 	}
 	ptp_free_devicepropdesc (&dpd);
 
@@ -399,7 +399,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 int
 camera_unprepare_capture (Camera *camera, GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capturen");
+	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capture");
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_TerminateReleaseControl))
