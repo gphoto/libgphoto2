@@ -255,7 +255,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 /*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_LensAdjustParams); */
 
 		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "requesting additional properties (oWNer/artist/etc.) failed");
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "requesting additional properties (owner/artist/etc.) failed");
 	}
 	{
 		PTPCanonEOSDeviceInfo x;
