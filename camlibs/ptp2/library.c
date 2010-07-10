@@ -1426,7 +1426,8 @@ camera_exit (Camera *camera, GPContext *context)
 #endif
 		/* Disable EOS capture now, also end viewfinder mode. */
 		if (params->eos_captureenabled) {
-			ptp_canon_eos_end_viewfinder (params);
+			if (params->eos_viewfinderenabled)
+				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture(camera, context);
 		}
 		/* close ptp session */
@@ -1587,7 +1588,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				}
 			}
 			ptp_free_devicepropdesc (&dpd);
-
+			params->eos_viewfinderenabled = 1;
 			while (tries--) {
 				/* Poll for camera events, but just call
 				 * it once and do not drain the queue now */
