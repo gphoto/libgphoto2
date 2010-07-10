@@ -80,7 +80,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x",propval.u16);
 
@@ -176,7 +176,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	ret = ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","did not get capture destination propdesc?");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
 		int			i;
@@ -201,7 +201,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
@@ -213,7 +213,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "ptp_canon_eos_pchddcapacity failed!");
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 	}
 
@@ -348,7 +348,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	ret = ptp_canon_endshootingmode (params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 		if (params->canon_viewfinder_on) {
@@ -383,12 +383,12 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	ret = ptp_canon_eos_setremotemode(params, 0);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "setremotemode failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_canon_eos_seteventmode(params, 0);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "seteventmode failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	params->eos_captureenabled = 0;
 	return GP_OK;
@@ -3389,7 +3389,7 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_nikon_afdrive (&camera->pl->params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
@@ -3413,7 +3413,7 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_afdrive (params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_afdrive", "Canon autofocus drive failed: 0x%x", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
@@ -3454,7 +3454,7 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_nikon_mfdrive (&camera->pl->params, flag, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_mfdrive", "Nikon manual focus drive failed: 0x%x", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
 	return GP_OK;
@@ -3501,7 +3501,7 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_drivelens (params, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive 0x%x failed: 0x%x", xval, ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
@@ -3541,7 +3541,7 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_zoom (params, xval);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Canon zoom 0x%x failed: 0x%x", xval, ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
@@ -3581,7 +3581,7 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 	ret = ptp_canon_eos_zoomposition (params, x,y);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Canon zoom position %d,%d failed: 0x%x", x, y, ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
 	ret = ptp_check_eos_events (params);
@@ -3709,9 +3709,7 @@ _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 		ret = ptp_canon_focuslock (params);
 	else
 		ret = ptp_canon_focusunlock (params);
-	if (ret == PTP_RC_OK)
-		return (GP_OK);
-	return (GP_ERROR);
+	return translate_ptp_result (ret);
 }
 
 
@@ -3741,7 +3739,7 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 		if (ret == PTP_RC_GeneralError) {
 			gp_context_error (((PTPData *) camera->pl->params.data)->context,
 			_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
-			return (GP_ERROR);
+			return translate_ptp_result (ret);
 		}
 	} else {
 		ret = ptp_canon_eos_bulbend (params);
