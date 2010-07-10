@@ -46,6 +46,9 @@
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-setting.h>
 
+#include "ptp.h"
+#include "ptp-private.h"
+
 #define PTPIP_VERSION_MAJOR 0x0001
 #define PTPIP_VERSION_MINOR 0x0000
 
