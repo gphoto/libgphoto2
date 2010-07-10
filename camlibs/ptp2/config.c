@@ -1612,14 +1612,14 @@ static struct deviceproptableu8 flash_modemanualpower[] = {
 GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
 
 static struct deviceproptableu8 canon_meteringmode[] = {
-	{ N_("center-weighted"),		0, 0 },
-	{ N_("spot"),				1, 0 },
-	{ N_("average"),			2, 0 },
-	{ N_("evaluative"),			3, 0 },
-	{ N_("partial"),			4, 0 },
-	{ N_("center-weighted average"),	5, 0 },
-	{ N_("spot metering interlocked with AF frame"),	6, 0 },
-	{ N_("multi spot metering"),		7, 0 },
+	{ N_("Center-weighted"),		0, 0 },
+	{ N_("Spot"),				1, 0 },
+	{ N_("Average"),			2, 0 },
+	{ N_("Evaluative"),			3, 0 },
+	{ N_("Partial"),			4, 0 },
+	{ N_("Center-weighted average"),	5, 0 },
+	{ N_("Spot metering interlocked with AF frame"),	6, 0 },
+	{ N_("Multi spot"),			7, 0 },
 };
 GENERIC8TABLE(Canon_MeteringMode,canon_meteringmode)
 
@@ -1729,11 +1729,11 @@ static struct deviceproptableu16 canon_focuspoints[] = {
 GENERIC16TABLE(Canon_FocusingPoint,canon_focuspoints)
 
 static struct deviceproptableu8 canon_size[] = {
-	{ N_("large"),		0x00, 0 },
-	{ N_("medium 1"),	0x01, 0 },
-	{ N_("medium 2"),	0x03, 0 },
-	{ N_("medium 3"),	0x07, 0 },
-	{ N_("small"),		0x02, 0 },
+	{ N_("Large"),		0x00, 0 },
+	{ N_("Medium 1"),	0x01, 0 },
+	{ N_("Medium 2"),	0x03, 0 },
+	{ N_("Medium 3"),	0x07, 0 },
+	{ N_("Small"),		0x02, 0 },
 };
 GENERIC8TABLE(Canon_Size,canon_size)
 
