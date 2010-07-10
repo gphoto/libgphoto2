@@ -4857,6 +4857,7 @@ int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget		*section, *widget, *subwindow;
+	uint16_t		ret2;
 	int			menuno, submenuno, ret;
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
@@ -4902,7 +4903,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc dpd;
-					uint16_t	ret2;
 
 					memset(&dpd,0,sizeof(dpd));
 					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
@@ -4934,7 +4934,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);
 				if (ret == GP_OK) {
-					uint16_t ret2 = ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
+					ret2 = ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
 					if (ret2 != PTP_RC_OK) {
 						gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret2);
 						ret = translate_ptp_result (ret2);
