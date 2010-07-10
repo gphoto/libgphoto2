@@ -80,7 +80,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x",propval.u16);
 
@@ -176,7 +176,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	ret = ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","did not get capture destination propdesc?");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
 		int			i;
@@ -201,7 +201,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
@@ -213,7 +213,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "ptp_canon_eos_pchddcapacity failed!");
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 	}
 
@@ -229,12 +229,12 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "set remotemode 1 failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_canon_eos_seteventmode(params, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "seteventmode 1 failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 
 	/* Get the initial bulk set of event data */
@@ -287,13 +287,13 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_canon_eos_getstorageids(params, &sids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageids failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (sids.n >= 1) {
 		unsigned char *sdata;
@@ -301,7 +301,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0], &sdata, &slen );
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageinfo failed!");
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		free (sdata);
 	}
@@ -350,7 +350,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	ret = ptp_canon_endshootingmode (params);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d", ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 		if (params->canon_viewfinder_on) {
@@ -385,12 +385,12 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	ret = ptp_canon_eos_setremotemode(params, 0);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "setremotemode failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_canon_eos_seteventmode(params, 0);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "seteventmode failed!");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	params->eos_captureenabled = 0;
 	return GP_OK;

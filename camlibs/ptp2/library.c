@@ -581,6 +581,8 @@ static struct {
 	{"Sony:MVC-CD300 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:MVC-CD500 (PTP mode)", 0x054c, 0x004e, 0},
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
+	/* "Riccardo (C10uD)" <c10ud.dev@gmail.com> */
+	{"Sony:DSC-S730 (PTP mode)",  0x054c, 0x0296, 0},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
@@ -589,7 +591,8 @@ static struct {
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
-	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, PTP_CAP},
+	/* no capture complete: https://sourceforge.net/tracker/index.php?func=detail&aid=3018517&group_id=8874&atid=108874 */
+	{"Nikon:Coolpix 5700 (PTP mode)", 0x04b0, 0x010d, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* Nikon Coolpix 4500: T. Kaproncai, 22 Aug 2003 */
 	{"Nikon:Coolpix 4500 (PTP mode)", 0x04b0, 0x010b, 0},
 	/* Nikon Coolpix 4300: Marco Rodriguez, 10 dic 2002 */
@@ -629,6 +632,9 @@ static struct {
 	{"Nikon:Coolpix 5900 (PTP mode)", 0x04b0, 0x0135, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1846012&group_id=8874&atid=358874 */
 	{"Nikon:Coolpix 7900 (PTP mode)", 0x04b0, 0x0137, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	/* Egil Kvaleberg: USB says "NIKON DSC E7600-PTP" */
+	{"Nikon:Coolpix 7600 (PTP mode)", 0x04b0, 0x0139, PTP_CAP},
+
 	{"Nikon:Coolpix P1 (PTP mode)",   0x04b0, 0x0140, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Marcus Meissner */
 	{"Nikon:Coolpix P2 (PTP mode)",   0x04b0, 0x0142, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
@@ -656,6 +662,10 @@ static struct {
 	{"Nikon:Coolpix S220 (PTP mode)", 0x04b0, 0x0177, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* */
 	{"Nikon:Coolpix S225 (PTP mode)", 0x04b0, 0x0178, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3019787&group_id=8874&atid=358874 */
+	/* probably no need for nikon_broken_Cap as it worked without this flag for the user */
+	{"Nikon:Coolpix L110 (PTP mode)", 0x04b0, 0x017e, PTP_CAP},
 
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
@@ -732,6 +742,7 @@ static struct {
 #endif
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
+	{"Panasonic:DMC-FZ38",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
 	{"Panasonic:DMC-LS3",             0x04da, 0x2374, 0},
@@ -739,6 +750,8 @@ static struct {
 	{"Panasonic:DMC-TZ15",		  0x04da, 0x2374, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=2950529&group_id=8874 */
 	{"Panasonic:DMC-FS62",		  0x04da, 0x2374, 0},
+	/* Constantin B <klochto@gmail.com> */
+	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
 	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
@@ -776,7 +789,7 @@ static struct {
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot S45 (PTP mode)",      0x04a9, 0x306d, PTPBUG_DELETE_SENDS_EVENT},
 		/* 0x306c is S45 in normal (canon) mode */
 	{"Canon:PowerShot G3 (PTP mode)",       0x04a9, 0x306f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 		/* 0x306e is G3 in normal (canon) mode */
@@ -994,6 +1007,9 @@ static struct {
 	/* mitch <debianuser@mll.dissimulo.com> */
 	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
+	/* https://bugs.launchpad.net/ubuntu/+source/libgphoto2/+bug/569419 */
+	{"Canon:PowerShot D10",			0x04a9, 0x31bc, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Carsten Grohmann <carstengrohmann@gmx.de> */
 	{"Canon:Digital IXUS 110 IS",		0x04a9, 0x31bd, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -1027,6 +1043,8 @@ static struct {
 	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
 	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
+	/* The Wanderer <wanderer@fastmail.fm> */
+	{"Canon:PowerShot SX120 IS",		0x04a9, 0x31e0, PTPBUG_DELETE_SENDS_EVENT},
 	/* via libmtp */
 	{"Canon:PowerShot SX20 IS",		0x04a9, 0x31e4, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2918540&group_id=8874&atid=358874 */
@@ -1080,9 +1098,15 @@ static struct {
 	{"Fuji:FinePix F100fd",			0x04cb, 0x01e0, 0},
 	/*https://sourceforge.net/tracker/index.php?func=detail&aid=2820380&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F200 EXR",		0x04cb, 0x01e4, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2993118&group_id=8874&atid=358874  */
+	{"Fuji:FinePix F60fd",			0x04cb, 0x01e6, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
 	{"Fuji:FinePix S2000HD",		0x04cb, 0x01e8, 0},
 	{"Fuji:FinePix S1500",			0x04cb, 0x01ef, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3018889&group_id=8874&atid=358874 */
+	{"Fuji:FinePix F70 EXR",		0x04cb, 0x01fa, 0},
+	/* NoOp <glgxg@sbcglobal.net> */
+	{"Fuji:FinePix S1800",			0x04cb, 0x0200, 0},
 	/* Luke Symes <allsymes@gmail.com> */
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 	/* "Steven A. McIntosh" <mcintosh@cotterochan.co.uk> */
@@ -1107,6 +1131,8 @@ static struct {
 
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
+	/* Stephan Barth at SUSE */
+	{"Pentax:Optio W90",                    0x0a17, 0x00f7, 0},
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
@@ -1198,6 +1224,7 @@ static struct {
 	{PTP_OFC_CANON_CRW,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_MOV,		PTP_VENDOR_CANON, "video/quicktime"},
+	{PTP_OFC_CANON_CHDK_CRW,	PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{0,				0, NULL}
 };
 
@@ -1519,7 +1546,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				if (ret != PTP_RC_OK) {
 					gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
 					SET_CONTEXT_P(params, NULL);
-					return GP_ERROR;
+					return translate_ptp_result (ret);
 				}
 				params->canon_viewfinder_on = 1;
 			}
@@ -1527,7 +1554,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon get viewfinder image failed: %d"), ret);
 				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
+				return translate_ptp_result (ret);
 			}
 			gp_file_set_data_and_size ( file, (char*)data, size );
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
@@ -1575,6 +1602,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					/* 4 byte len of jpeg data, 4 byte unknown */
 					/* JPEG blob */
 					/* stuff */
+					gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "get_viewfinder_image unknown bytes: 0x%02x 0x%02x 0x%02x 0x%02x", data[4],data[5],data[6],data[7]);
 
 					if (len > size) len = size;
 					gp_file_append ( file, (char*)data+8, len );
@@ -1626,7 +1654,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
 				SET_CONTEXT_P(params, NULL);
-				return GP_ERROR;
+				return translate_ptp_result (ret);
 			}
 			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
@@ -1871,7 +1899,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		ret = ptp_getobjectinfo (params, newobject, &oi);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR,"nikon_capture","getobjectinfo(%x) failed: %d", newobject, ret);
-			return GP_ERROR_IO;
+			return translate_ptp_result (ret);
 		}
 		if (oi.ParentObject != 0)
 			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
@@ -3092,9 +3120,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			} else {
 				for (j=0;j<propcnt;j++) {
 					n = snprintf (txt, spaceleft," %04x/",props[j]);
-					if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+					if (n >= spaceleft) { free (props); return GP_OK;}  spaceleft -= n; txt += n;
 					n = ptp_render_mtp_propname(props[j],spaceleft,txt);
-					if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+					if (n >= spaceleft) { free (props); return GP_OK;} spaceleft -= n; txt += n;
 				}
 				free(props);
 			}
@@ -5422,14 +5450,15 @@ camera_init (Camera *camera, GPContext *context)
 	retried = 0;
 	sessionid = 1;
 	while (1) {
-		ret = ptp_opensession (&camera->pl->params, sessionid);
-		if (ret == PTP_RC_InvalidTransactionID) {
+		ret=ptp_opensession (params, sessionid);
+		while (ret==PTP_RC_InvalidTransactionID) {
 			sessionid++;
-			if (retried < 5) { /* try again */
+			if (retried < 10) {
 				retried++;
 				continue;
 			}
-			report_result(context, ret, 0);
+			/* FIXME: deviceinfo is not read yet ... */
+			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result(ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
