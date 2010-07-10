@@ -651,10 +651,10 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	}
 	ret = ptp_ptpip_init_command_request (params);
 	if (ret != PTP_RC_OK)
-		return GP_ERROR_IO;
+		return translate_ptp_result (ret);
 	ret = ptp_ptpip_init_command_ack (params);
 	if (ret != PTP_RC_OK)
-		return GP_ERROR_IO;
+		return translate_ptp_result (ret);
 	if (-1 == connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
 		perror ("connect evt");
 		close (params->cmdfd);
@@ -663,10 +663,10 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	}
 	ret = ptp_ptpip_init_event_request (params);
 	if (ret != PTP_RC_OK)
-		return GP_ERROR_IO;
+		return translate_ptp_result (ret);
 	ret = ptp_ptpip_init_event_ack (params);
 	if (ret != PTP_RC_OK)
-		return GP_ERROR_IO;
+		return translate_ptp_result (ret);
 	gp_log (GP_LOG_DEBUG, "ptpip/connect", "ptpip connected!");
 	return GP_OK;
 }

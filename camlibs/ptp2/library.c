@@ -1583,7 +1583,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32);
 				if (ret != PTP_RC_OK) {
 					gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_preview", "setval of evf outputmode to 2 failed!");
-					return GP_ERROR;
+					return translate_ptp_result (ret);
 				}
 			}
 			ptp_free_devicepropdesc (&dpd);
@@ -1623,12 +1623,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
 					SET_CONTEXT_P(params, NULL);
-					return GP_ERROR;
+					return translate_ptp_result (ret);
 				}
 			}
 			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after 20 tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		gp_context_error (context, _("Sorry, your Canon camera does not support Canon Viewfinder mode"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1699,7 +1699,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			gp_file_set_mtime (file, time(NULL));
 		} else {
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 #if 0
 		ret = ptp_nikon_end_liveview (params);
@@ -2189,7 +2189,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		viewfinderwason = 1;
 		params->canon_viewfinder_on = 0;
@@ -2203,7 +2203,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon Capture failed: %x"), ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	sawcapturecomplete = 0;
 	/* Checking events in stack. */
@@ -2267,14 +2267,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		params->canon_viewfinder_on = 1;
 	}
 
 	/* FIXME: handle multiple images (as in BurstMode) */
 	ret = ptp_getobjectinfo (params, newobject, &oi);
-	if (ret != PTP_RC_OK) return GP_ERROR_IO;
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	if (oi.ParentObject != 0) {
 		if (xmode != CANON_TRANSFER_CARD) {
@@ -2418,7 +2418,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			}
 			gp_context_error (context,_("No event received, error %x."), ret);
 			/* we're not setting *path on error! */
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		switch (event.Code) {
 		case PTP_EC_ObjectRemoved:
@@ -3583,7 +3583,7 @@ ptp_mtp_render_metadata (
 	/* ... use little helper call to see if we missed anything in the global
 	 * retrieval. */
 	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
-	if (ret != PTP_RC_OK) return (GP_ERROR);
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 	
 	if (params->props) { /* use the fast method, without device access since cached.*/
 		char			propname[256];
@@ -3746,7 +3746,7 @@ ptp_mtp_parse_metadata (
 		return (GP_ERROR);
 
 	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
-	if (ret != PTP_RC_OK) return (GP_ERROR);
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	for (j=0;j<propcnt;j++) {
 		char			propname[256],propname2[256];
@@ -3939,12 +3939,12 @@ mtp_put_playlist(
 	ret = ptp_sendobjectinfo(&camera->pl->params, &storage, &oi->ParentObject, &playlistid, oi);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed sendobjectinfo of playlist.");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_sendobject(&camera->pl->params, (unsigned char*)data, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed dummy sendobject of playlist.");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_mtp_setobjectreferences (&camera->pl->params, playlistid, oids, nrofoids);
 	if (ret != PTP_RC_OK) {
@@ -4734,7 +4734,7 @@ storage_info_func (CameraFilesystem *fs,
 		ret = ptp_getstorageinfo (params, sids.Storage[i], &si);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/storage_info_func", "ptp getstorageinfo failed: 0x%x", ret);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		sif->fields |= GP_STORAGEINFO_BASE;
 		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", sids.Storage[i]);
