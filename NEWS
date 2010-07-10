@@ -1,4 +1,4 @@
-libgphoto2 2.4.9.2
+libgphoto2 2.4.9.4
 
 This is a 2.4 release branch update.
 
@@ -7,7 +7,11 @@ libgphoto2:
 
 st2205:
     * Link iconv (MacOS build fix)
-    * delete all files implemented.
+    * "delete all files" implemented.
+
+ptp2:
+    * Fixed EOS capture to card waiting 1 minute bug
+    * EOS Viewfinder Zoom Level and Position added
 
 libgphoto2_port/usbscsi:
     * Check for scsi/sg.h and use it only if present (MacOS build fix)
