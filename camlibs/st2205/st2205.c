@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <stdint.h>
+#include <_stdint.h>
 #include <stdlib.h>
 #include <time.h>
 #include <fcntl.h>

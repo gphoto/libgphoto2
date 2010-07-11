@@ -71,7 +71,7 @@
  * we use floating point arithmetic.
  */
 
-#include <stdint.h>
+#include <_stdint.h>
 #include "tinyjpeg-internal.h"
 
 #define FAST_FLOAT float

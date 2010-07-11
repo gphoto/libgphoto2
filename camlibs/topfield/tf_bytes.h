@@ -23,7 +23,7 @@
 #ifndef _TF_BYTES_H
 #define _TF_BYTES_H 1
 
-#include <stdint.h>
+#include <_stdint.h>
 
 unsigned short get_u16(void *addr);
 unsigned short get_u16_raw(void *addr);
