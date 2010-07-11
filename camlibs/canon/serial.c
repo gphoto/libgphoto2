@@ -131,6 +131,7 @@ canon_serial_change_speed (GPPort *gdev, int speed)
  *          0 on CTS low.
  *
  */
+#if 0
 static int
 canon_serial_get_cts (GPPort *gdev)
 {
@@ -139,6 +140,7 @@ canon_serial_get_cts (GPPort *gdev)
 	gp_port_get_pin (gdev, PIN_CTS, &level);
 	return (level);
 }
+#endif
 
 /**
  * canon_serial_init
@@ -892,6 +894,7 @@ canon_serial_dialogue (Camera *camera, GPContext *context, unsigned char mtype,
  * Returns: %GP_OK
  *
  */
+#if 0
 static int
 canon_serial_end (Camera *camera)
 {
@@ -899,6 +902,7 @@ canon_serial_end (Camera *camera)
 	canon_serial_send (camera, (unsigned char *)"\xC0\x00\x04\x01\x00\x00\x00\x24\xC6\xC1", 8, USLEEP2);
 	return GP_OK;
 }
+#endif
 
 /**
  * canon_serial_off:

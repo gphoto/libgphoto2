@@ -297,7 +297,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			info->file.width	= 1024;
 			info->file.height	= 768;
 			strcpy(info->file.type,GP_MIME_JPEG);
-			sscanf(buffer+12,"%ld",&info->file.size);
+			sscanf(buffer+12,"%lld",&info->file.size);
 			return GP_OK;
 	        }
 		/* We are at the first item again */

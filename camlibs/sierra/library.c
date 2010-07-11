@@ -1195,7 +1195,6 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	int retries, r;
 	unsigned int min_progress_bytes;
 	static int in_function = 0;
-	const char *file_name;
 	unsigned int id = 0;
 
 	GP_DEBUG ("sierra_get_string_register:  reg %i, file number %i, "

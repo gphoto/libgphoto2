@@ -1,6 +1,8 @@
 2010-07-10  Dan Fandrich <dan@coneharvesters.com>
 
 	* Fixed some C89 portability issues.
+	* Eliminated some compiler warnings, fixing a couple of small
+	  bugs in the process.
 
 2010-03-12  Hans de Goede <hdegoede@redhat.com>
 

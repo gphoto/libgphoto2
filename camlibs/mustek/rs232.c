@@ -116,12 +116,12 @@ int mdc800_rs232_sendCommand(GPPort *port,unsigned char* command, unsigned char*
 
 /*
  * waits for the Commit value
- * The function expexts the commandid auf the corresponding command
- * to determiante, wether a long timeout is needed or not. (Take Photo)
+ * The function expects the commandid of the corresponding command
+ * to determine whether a long timeout is needed or not. (Take Photo)
  */
 int mdc800_rs232_waitForCommit (GPPort *port,char commandid)
 {
-	char ch[1];
+	unsigned char ch[1];
 	int ret;
 
 	gp_port_set_timeout(port,mdc800_io_getCommandTimeout(commandid));

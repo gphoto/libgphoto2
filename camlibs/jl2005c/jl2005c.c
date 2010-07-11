@@ -262,7 +262,6 @@ int jl2005c_reset (Camera *camera, GPPort *port)
 
 int jl2005c_delete_all (Camera *camera, GPPort *port)
 {
-	char response;
 	gp_port_write(port, "\x09\x00", 2);
 	usleep(10000);
 	gp_port_write(port, "\x07\x00", 2);

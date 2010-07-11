@@ -261,7 +261,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!data) return GP_ERROR_NO_MEMORY;
 
 	data_start = data + (HEADER_SIZE - DATA_HEADER_SIZE);
-	GP_DEBUG("data - data_start : %p %p : %lx",data, data_start, data_start - data);
+	GP_DEBUG("data - data_start : %p %p : %lx",data, data_start, (long) (data_start - data));
 
     	ez200_read_picture_data   (camera->port, data_start, len, n);
 	ez200_read_picture_header (camera->port, data);

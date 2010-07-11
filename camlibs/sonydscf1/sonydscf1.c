@@ -306,6 +306,7 @@ get_thumbnail(GPPort *port,char *name, CameraFile *file, int format, int n)
   return gp_file_append (file, &buf[256], filelen);
 }
 
+#if 0
 static void
 get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilename)
 {
@@ -388,6 +389,7 @@ get_date_info(GPPort *port, char *name, char *outfilename ,char *newfilename)
   *q = 0;
 
 }
+#endif
 
 static int
 get_picture(GPPort *port, int n, CameraFile *file, int format, int ignore, int all_pic_num,
