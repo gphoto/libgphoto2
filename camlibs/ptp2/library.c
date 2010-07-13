@@ -2058,11 +2058,11 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		/* backoff waiting so the camera just does not do polling. */
 		for (i=sleepcnt;i--;) {
 			gp_context_idle (context);
-			CPR (context, ptp_canon_eos_keepdeviceon (params));
 			usleep(20*1000); /* 20 ms */
 		}
 		sleepcnt++; /* incremental back off */
 		if (sleepcnt>10) sleepcnt=10;
+		CPR (context, ptp_canon_eos_keepdeviceon (params));
 	}
 	if (newobject == 0)
 		return GP_ERROR;
