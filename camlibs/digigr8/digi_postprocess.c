@@ -34,6 +34,13 @@
 
 #define GP_MODULE "digigr8" 
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 static int
 digi_first_decompress (unsigned char *output, unsigned char *input,
 					    unsigned int outputsize)

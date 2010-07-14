@@ -80,6 +80,14 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	int outputsize = 0;
 	unsigned long jpeg_header_size = 0;
 	int i, x, y, x1, y1, jpeg_data_size, jpeg_data_idx, eoi, size, ret;
+	JSAMPLE green[8 * 16];
+	JSAMPLE red[8 * 8];
+	JSAMPLE blue[8 * 8];
+	JSAMPROW green_row_pointer[16];
+	JSAMPROW red_row_pointer[8];
+	JSAMPROW blue_row_pointer[8];
+	JSAMPARRAY samp_image[3];
+
 
 
 	GP_DEBUG("Running jl2005bcd_decompress() function.\n");
@@ -180,13 +188,6 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	jpeg_finish_compress (&cinfo);
 	jpeg_destroy_compress (&cinfo);
 
-	JSAMPLE green[8 * 16];
-	JSAMPLE red[8 * 8];
-	JSAMPLE blue[8 * 8];
-	JSAMPROW green_row_pointer[16];
-	JSAMPROW red_row_pointer[8];
-	JSAMPROW blue_row_pointer[8];
-
 	for (i = 0; i < 16; i++)
 		green_row_pointer[i] = green + i * 8;
 
@@ -195,9 +196,9 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 		blue_row_pointer[i] = blue + i * 8;
 	}
 
-	JSAMPARRAY samp_image[3] = { green_row_pointer,
-				     red_row_pointer,
-				     blue_row_pointer };
+	samp_image[0] = green_row_pointer;
+	samp_image[1] = red_row_pointer;
+	samp_image[2] = blue_row_pointer;
 
 	memcpy(jpeg_stripe, jpeg_header, JPEG_HEADER_SIZE);
 	jpeg_stripe[JPEG_HEIGHT_OFFSET    ] = height >> 8;

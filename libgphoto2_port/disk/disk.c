@@ -251,7 +251,7 @@ gp_port_library_list (GPPortInfoList *list)
 	}
 #  endif
 # endif
-generic:
+
 	/* generic disk:/xxx/ matcher */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_DISK);

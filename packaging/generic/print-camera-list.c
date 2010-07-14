@@ -1117,8 +1117,8 @@ debug_func (GPLogLevel level, const char *domain, const char *str,
 	struct timeval tv;
 	gettimeofday (&tv,NULL);
 	fprintf (stderr, "%li.%06li %s(%i): %s\n", 
-		 tv.tv_sec - glob_tv_zero.tv_sec, 
-		 (1000000 + tv.tv_usec - glob_tv_zero.tv_usec) % 1000000,
+		 (long) (tv.tv_sec - glob_tv_zero.tv_sec), 
+		 (1000000L + tv.tv_usec - glob_tv_zero.tv_usec) % 1000000L,
 		 domain, level, str);
 }
 
