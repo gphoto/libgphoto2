@@ -263,6 +263,8 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 	int i;
 #ifdef HAVE_VA_COPY
 	va_list xargs;
+#else
+#define xargs args
 #endif
 	int strsize = 1000;
 	char *str;
@@ -277,16 +279,26 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 	va_copy (xargs, args);
 #endif
 	n = vsnprintf (str, strsize, format, xargs);
+#ifdef HAVE_VA_COPY
+	va_end(xargs);
+#endif
 	if (n+1>strsize) {
 		free (str);
 		str = malloc(n+1);
-		if (!str) return;
+		if (!str) {
+			va_end(args);
+			return;
+		}
 		strsize = n+1;
 #ifdef HAVE_VA_COPY
 		va_copy (xargs, args);
 #endif
 		n = vsnprintf (str, strsize, format, xargs);
+#ifdef HAVE_VA_COPY
+		va_end(xargs);
+#endif
 	}
+	va_end(args);
 	for (i = 0; i < log_funcs_count; i++)
 		if (log_funcs[i].level >= level)
 			log_funcs[i].func (level, domain, str, log_funcs[i].data);
