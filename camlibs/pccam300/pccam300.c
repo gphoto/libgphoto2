@@ -150,7 +150,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
                    unsigned char **data, unsigned int *size,
                    unsigned int *type)
 {
-	int data_size;
+	unsigned int data_size;
 	uint8_t *buf = NULL;
 
 	/* This is somewhat strange, but works, and the win driver does the
