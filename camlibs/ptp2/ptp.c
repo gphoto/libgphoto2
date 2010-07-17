@@ -4343,6 +4343,7 @@ struct {
 	{PTP_OFC_MTP_AAC,"AAC"},
 	{PTP_OFC_MTP_AudibleCodec,N_("Audible.com Codec")},
 	{PTP_OFC_MTP_FLAC,"FLAC"},
+	{PTP_OFC_MTP_SamsungPlaylist,N_("Samsung Playlist")},
 	{PTP_OFC_MTP_UndefinedVideo,N_("Undefined Video")},
 	{PTP_OFC_MTP_WMV,"WMV"},
 	{PTP_OFC_MTP_MP4,"MP4"},
