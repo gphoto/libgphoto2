@@ -270,6 +270,16 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (strstr (di->Manufacturer,"Nikon"))
 			a.usb_vendor = 0x4b0;
 	}
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		di->Manufacturer
+	) {
+		camera->pl->bugs |= PTP_MTP;
+		if (strstr (di->Manufacturer,"Canon"))
+			di->VendorExtensionID = PTP_VENDOR_CANON;
+		if (strstr (di->Manufacturer,"Nikon"))
+			di->VendorExtensionID = PTP_VENDOR_NIKON;
+	}
+
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
@@ -297,7 +307,6 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		/*camera->pl->bugs |= PTP_MTP;*/
 		di->VendorExtensionID = PTP_VENDOR_FUJI;
 	}
-
 
 	if (di->VendorExtensionID == PTP_VENDOR_NIKON) {
 		int i;
