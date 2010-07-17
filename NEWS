@@ -13,6 +13,9 @@ ptp2:
     * Fixed EOS capture to card waiting 1 minute bug
     * EOS Viewfinder Zoom Level and Position added
 
+jl2005c: 
+    * Decompression decoded and driver now working.
+
 libgphoto2_port/usbscsi:
     * Check for scsi/sg.h and use it only if present (MacOS build fix)
 
