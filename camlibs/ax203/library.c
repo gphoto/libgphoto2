@@ -162,8 +162,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	int ret, idx, size;
+	int idx, size;
 #ifdef HAVE_GD
+	int ret;
 	gdImagePtr im;
 	void *gdpng;
 #endif
