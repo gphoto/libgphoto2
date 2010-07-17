@@ -409,7 +409,12 @@ udev_parse_params (const func_params_t *params, void **data)
 		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
 		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_usb_end\"\n"
 		"ENV{DEVTYPE}!=\"usb_device\", GOTO=\"libgphoto2_usb_end\"\n\n"
-		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{program}=\"usb_id --export %%p\"\n\n"
+		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{program}=\"usb_id --export %%p\"\n"
+		/* ignore mass storage class having devices in mark-up */
+		"ENV{ID_USB_INTERFACES}==\"*:08*:*\", GOTO=\"libgphoto2_usb_end\"\n"
+		/* shortcut the most common camera driver, ptp class, so we avoid parsing 1000
+		 * more rules */
+		"ENV{ID_USB_INTERFACES}==\"*:060101:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\", GOTO=\"libgphoto2_usb_end\"\n\n"
 	};
 	static const char * const usbcam_strings[] = {
 		/* UDEV_PRE_0_98 */
@@ -508,7 +513,7 @@ udev_begin_func (const func_params_t *params, void **data)
 
 
 static int
-udev_middle_func (const func_params_t *params, void *data)
+udev_middle_func (const func_params_t *params, void **data)
 {
 	printf ("\nLABEL=\"libgphoto2_usb_end\"\n\n");
 	return 0;
