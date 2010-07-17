@@ -104,7 +104,7 @@ uint16_t
 ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		  unsigned long size, PTPDataHandler *handler
 ) {
-	uint16_t ret;
+	uint16_t ret = PTP_RC_OK;
 	int res, wlen, datawlen;
 	PTPUSBBulkContainer usbdata;
 	unsigned long bytes_left_to_transfer, written;
