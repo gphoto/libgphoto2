@@ -1,6 +1,7 @@
 JEILIN STILLCAM DRIVER
+
 Copyright Theodore Kilgore <kilgota@auburn.edu> September 4, 2007. Most recent
-update is April 16, 2009.
+update is April 28, 2010.
 
 (Everything in libgphoto2/camlibs/jeilin is LGPL-licensed, including this 
 README. See any of the source files for a more complete statement of the 
@@ -8,180 +9,127 @@ license.)
 
 INTRODUCTION
 
-This driver is intended to support cameras containing the JL2005C chip from 
-Jeilin Technologies and also the similar cameras which have in them the 
-JL2005B or the JL2005D. The interface is proprietary, and these cameras are 
-supported commercially only in Windows. Jeilin Technologies also manufactures
-chips which go into mass storage cameras. Those cameras, not to be confused 
+This driver is intended to support the cameras with the USB Vendor:Product
+number 0x0979:0x0227. These cameras all have a controller chip from Jeilin
+Technologies, either the JL2005B or the JL2005C or the JL2005D. Both the
+control interface and the compressed data format of these cameras are
+proprietary, and these cameras are supported commercially only in Windows.
+In spite of some features in common, these cameras also show a very large
+variation. Some of them are very rudimentary, with a maximum resolution
+of 352x288, and there are also more expensive models with a maximum resolution
+of 1280x1024. Some of them have viewing screens on the rear and some
+do not. Some of the cameras also produce separate thumbnails, which, when
+present, are downloaded as part of the raw data for the image. Accommodation
+of this very wide range of features has been a special challenge in writing
+this support library, especially when it seems that not all of the OEM
+software available for a given supported camera will work for all the others.
+
+Jeilin Technologies also manufactures chips which go into mass storage cameras. Those cameras, not to be confused
 with these, can be accessed directly using mass storage support. The company 
 also makes another camera controller chip with proprietary interface, the 
 JL2005A. Cameras with that chip are supported in libgphoto2/camlibs/jl2005a. 
-Those cameras are much better supported than are the JL2005B/C/D cameras. But 
-if you want to read about one of those JL2005A cameras, please look in 
+If you want to read about one of those JL2005A cameras, please look in
 camlibs/jl2005a, not here. 
 
-THIS IS EXPERIMENTAL CODE
+The JL2005C camera library has been included in the release versions of
+libgphoto2 ever since libgphoto2-2.4.4, but it was so configured as not
+to compile by default. The reason for that was that the cameras use a nasty
+data compression algorithm which was very difficult to figure out. So long
+as the data coming out of the camera could not be decompressed, it was not
+of any use to support these cameras except for experimental purposes. This
+situation has recently changed. A task force was set up to deal with the
+problem, and success has been achieved. As of April 2010, it seems to be
+possible reliably to get the photos out of these cameras in usable form.
+For details concerning the solution of the decompression problem, please
+see the file README.jl2005bcd-compression which is supposed to be included
+with the documentation for libgphoto2/camlibs/jl2005c. If for any reason
+you do not have this file, it can be found at <gphoto.svn.sourceforge.net>
+in the directory trunk/libgphoto2/camlibs/jl2005c. My thanks to the other
+members of the team who worked together to solve the longstanding problem.
+Thanks to Adam Rubin and Bertrik Sikken for doing the research needed to 
+gather the information found at
 
-This code in this directory is included in the source release of libgphoto2, 
-from version 2.4.4 onward. However, the code in this directory does not get 
-compiled and installed by default. There is a reason for that:
+<http://sourceforge.net/apps/mediawiki/gphoto/index.php?title=ImageEncoding
+Jeilin2005CD>
 
-THIS IS EXPERIMENTAL CODE
-
-With the libgphoto2 source tree in hand, you have to follow the instructions 
-in INSTALL to compile and install it. If you have never done this procedure, 
-then perhaps you would be very well advised to try to do this first without 
-attempting to install support for JL2005C cameras. The code in 
-libgphoto2/camlibs/jl2005c does not compile by default if you follow only the 
-standard procedures, as I said, so do not expect it to be compiled if you did 
-not do anything special. 
-
-If you really want to compile and install the support for the JL2005C cameras, 
-then there are at least two methods:
-
-1. At the ./configure step during the compilation of the main libgphoto2 tree, 
-the option 
-
-./configure --with-camlibs=all,jl2005c 
-
-should to "turn on" the camlib (note that "all" repeats the default option, 
-which explicitly excludes the jl2005c so you must explicitly add it here). 
-Then you can proceed as normally by doing make, then make install, and the 
-JL2005C support will be made and installed with all the rest.
-
-An alternative to the above is 
-
-2. If you have already installed the entire libgphoto2 (except for the jl2005c 
-library) you can go into libgphoto2/camlibs and (as root or su) from there do 
-
-make CAMLIBS="jl2005c.la" install-camlibs
-
-Then, this subdirectory will be compiled and installed with the others.
-
-Once you have installed support for the jl2005c you should be ready to try out 
-the camera and to help me to figure out a decent decompression algorithm. For, 
-the camera uses data compression, and the method of the compression is unknown.
-
-Oh, if you are not experienced in libgphoto2 type things, you will notice that 
-at this point you can only use this camera as root. To solve that problem, 
-follow the instructions in libgphoto2/packaging/generic if you are using udev
-(usually associated with using a recent 2.6.x Linux kernel), or if you know 
-you are using hotplugging then follow the instructions in 
-libgphoto2/packaging/linux-hotplug (probably you use hotplugging only if you 
-are still using a 2.4.x Linux kernel). You can either set up a group called 
-"camera" or let all users use the camera. Me, I let all users use all cameras
-hooked to my home system, because "all users" pretty much consists of me, 
-myself, and I. 
-
-As an alternative to what is in the previous paragraph, you can just go to the 
-directory /etc/udev/rules.d and edit the existing rules file for libgphoto by 
-adding a line for the new camera. To do this, just copy a line which relates to
-some other camera, and change the USB vendor and product numbers to match. 
-
+And thanks to Hans de Goede for writing the decompression algorithm.
 
 WHAT DOES THIS CAMERA LIBRARY CURRENTLY DO?
 
-It will hook up the camera, and you ought to be able to download a dump of any 
-photo data in it using the command gphoto2 --get-all-raw-data. The main reason 
-you might want to do this right now is to participate in the development of 
-support for these cameras by experimenting with the still-unknown decompression 
-algorithm which they use. Help is welcome. That is why this library is made 
-public. Some other infrastructural work has been done, too. The code supports 
-the functioning of these cameras sufficiently well, that you ought to be able 
-to run gphoto --shell and it even ought to be possible to run a sequence like 
+This library appears to support the basic functionality of all the various
+cameras which are available for testing. It seems to perform reliably at the
+tasks of initializing the camera and providing a graceful exit, downloading
+the raw data, and also conversion of raw data into decompressed output files.
+Cameras which support or do not support thumbnails seem to be reliably
+detected, and the raw data appears to be reliably decompressed. If present,
+thumbnails can also be processed into a finished form. Deletion of all photos
+also is supported, by the option gphoto2 -D. In short, things appear basically
+to work.
 
-get-raw jl_026.ppm
+HARDWARE CONSTRAINTS:
 
-followed by the next gphoto2 shell command 
-
-get-raw jl_001.ppm
-
-without corruption of data. 
-
-
-I _think_ that I got the data size for the photos all correct, but I am not 
-sure about that, for the obvious reason that I cannot do finished photos. 
-(Update 01/05/08: It has been verified for the JL2005D, the raw image data 
-obtained by the OEM driver is the same as what this code is providing. I have 
-been unable to verify this for a JL2005B camera, also unable to verify for a 
-JL2005C). The camera does download without glitches all the photos in it, even 
-if it is full, and will save them as raw files. I have taken the trouble to 
-make each raw file slightly longer by adding the 16-byte line related to it 
-which is found in the photo allocation table, the first block of data to be 
-downloaded from the camera. 
-
-
-The reason why one cannot make finished photos right now is that these 
-cameras use a proprietary compression algorithm which Jeilin Technologies is 
-currently not interested in sharing with us. Thus, the main purpose of 
-posting this driver is to publish the code so that further experimentation and
-development can more easily take place. 
-
-
-!!!!!!!!!!!!!!! A SPECIAL WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-How to compute the size and location of a photo's raw data to be downloaded, 
-is probably correct now for all of these cameras. However, the basis for this 
-computation remains in the realm of guesswork. Be on the lookout for the 
-camera taking an inordinate amount of time to do some simple task such as to 
-count the number of photos in it using gphoto2 -n. That is probably a sign of 
-something previously gone wrong, which has jammed the camera. It may be needed
-to replug it in order to clear the jam. 
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-ADDITIONAL REMARKS:
-
-These cameras use a proprietary compression algorithm, as already said. As a 
-result, progress in the development of this driver will inevitably be slow. 
-
-Another challenge is that these cameras use an extremely primitive command 
-structure. The only thing that the camera knows how to do is to prepare to 
-download all data on it, download all data on it, and to reset prior to being 
-disconnected. Therefore, any other functionality has to be based on software 
-fakery which fools the hardware. Suppose, for example, that there are ten 
-photos in the camera. Then what the camera will do is:
+These cameras use an extremely primitive command structure. The only thing
+that the camera really does know how to do is to prepare to download all data
+on it, then to download all data on it, and then to reset prior to being
+disconnected. Judging by what it does, the OEM software is almost certainly
+built on the assumption that the camera will be initialized, have its data 
+dumped exactly once, and then disconnected. Everything else is done on the
+computer with the big blob of data which has been downloaded. Therefore,
+any other functionality has to be based on software fakery which fools the
+hardware into emulating said functionality. Suppose, for example, that there
+are ten photos in the camera. Then what the camera will do is:
 	-- report the number of photos (ten)
 	-- tell how much data needs to be downloaded in all (depends on how 
 	much room was taken up by the raw data for all the photos)
 	-- provide a table with one line for each photo, giving its size, start
 	location, output height and width, and some kind of code for the 
 	compression method used on it. 
-In the next step, one must request all the image data to be downloaded, in 
-increments of which there is a maximum size. This does not need to be done 
-all at once, so it is possible to download some initial block of the data and 
-operate on whatever photos are already obtained, and then download another block. 
-However, ALL of the data has to be downloaded before the driver program exits. 
-One consequence of this is that the only way a command such as 
+In the next step, one must request all the image data for all the ten photos
+to be downloaded. This happens in increments of 64000 bytes, with only the last
+increment permitted to be "short." This does not need to be done all at once;
+it is possible to download some initial block of the data and operate on
+whatever photos are already obtained, keeping anything left over until the next
+block is downloaded. However, ALL of the data must downloaded before the driver
+ program exits. One consequence of this is that the only way commands such as
 
-gphoto2 --get-raw-data 3 
+gphoto2 --get-raw-data 3 or gphoto2 -p 3
 
 can work is to download photos number 1 and 2 and throw away the data before
-downloading the desired number 3 which is to be kept as a raw file, 
-and then downloading any data in the camera which comes after photo number 3 
-after that, as a standard part of the exit routine. Another consequence is 
-that the sequence of downloading number 10, say, followed by number 1 is even 
-more complicated. The actual steps required are:
+downloading the desired number 3 which is to be kept, then downloading any
+data in the camera which comes after photo number 3, as part of the exit
+routine. The sequence of downloading number 10, say, followed by number 1 is
+even more complicated. The actual steps required are:
 	-- initialize the camera
 	-- download enough data to get photo number 10, throwing away all data 
 	which is not part of photo number 10 but precedes it
 	-- download the data required for photo number 10
-	-- download the rest of the data
+	-- download the rest of the data, if any
 	-- send a reset sequence to the camera
 	-- close and reopen the camera's port
-	-- run a "rewind" function consisting of a fake repetition of the 
-	initialization sequence, including downloading again the allocation table
+	-- repeat the initialization sequence
 	-- download enough data to process photo number 1
 	-- download all the rest of the data and throw it away. 
 	-- send the reset sequence again, and, finally, disconnect
 
-Finally, if and when the decompression problem is resolved, then it ought to 
-become possible to use other programs with this camera, such as a GUI frontend 
-for libgphoto2. Any such program used with this camera must be willing to call 
-and actually to use the camera_exit() function which is contained in this 
-library, else, given the above constraints, it is obvious that the camera would
+In addition to the awkwardness caused by this kind of primitive behavior, it
+puts certain requirements on any program used to handle the camera. Most
+particularly, any program which uses libgphoto2 must be willing to call and
+actually to use the camera_exit() function which is contained in this library.
+Otherwise, given the above constraints, it is obvious that the camera would
 not work properly with that frontend program. 
 
+TO DO
+
+There are some parts of the camera command structure which are not completely
+known. For example, some kind of capture function could conceivably be made
+to work.
+
+One known functionality of the camera is not completely supported, though. The
+cameras all support a "continuous shooting" mode, in which the camera shoots
+frames until it it is stopped by a button press or runs out of memory. The OEM
+driver software saves the result as an AVI file. Here, the individual frames
+are merely downloaded and saved as individual photos. The intention is to
+support this feature completely, in the future.
 
 WARRANTY?
 

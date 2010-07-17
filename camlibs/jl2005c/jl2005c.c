@@ -1,6 +1,6 @@
 /* jl2005c.c
  *
- * Copyright (C) 2006 Theodore Kilgore <kilgota@auburn.edu>
+ * Copyright (C) 2006-2010 Theodore Kilgore <kilgota@auburn.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,296 +37,177 @@
 int 
 jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv) 
 {
-	unsigned char command[2];
 	char response;
-	char model_string[4];
-	unsigned char info[0xe000];
-	int info_block_size = 0;
+	int model_string = 0;
+	/* Needs to be big enough to hold (0xfff + 3) * 0x10 */
+	unsigned char info[0x4020];
+	const char camera_id[] = {0x4a, 0x4c, 0x32, 0x30, 0x30, 0x35};
+	int alloc_table_size;
+	int attempts = 0;
+restart:
+	alloc_table_size = 0;
 	memset(info,0, sizeof(info)); 
-	memset(command,0,sizeof(command));
 	GP_DEBUG("Running jl2005c_init\n");
+	if (priv->init_done) {
+		gp_port_close(port);
+		usleep (100000);
+		gp_port_open(port);
+	}
+
 	set_usb_in_endpoint	(camera, 0x84); 
 	gp_port_write (port, "\x08\x00", 2); 
 	usleep (10000);
 	gp_port_write (port, "\x95\x60", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	model_string[0]=response;
-	usleep (10000);
+	jl2005c_read_data (port, &response, 1);
+	model_string = response;
 	gp_port_write (port, "\x95\x61", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	model_string[1]=response;
-	usleep (10000);
+	jl2005c_read_data (port, &response, 1);
+	model_string += (response & 0xff) << 8;
 	gp_port_write (port, "\x95\x62", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	model_string[2]=response;
-	usleep (10000);
+	jl2005c_read_data (port, &response, 1);
+	model_string += (response & 0xff) << 16;
 	gp_port_write (port,"\x95\x63" , 2); 
-	usleep (10000);
-gp_port_read (port, &response, 1);
-	model_string[3]=response;
-	GP_DEBUG("Model string is %02x%02x%02x%02x\n",model_string[0], model_string[1],
-			    model_string[2], model_string[3]);
-	usleep (10000);
+	jl2005c_read_data (port, &response, 1);
+	model_string += (response & 0xff) << 24;
+	GP_DEBUG("Model string is %08x\n", model_string);
 	gp_port_write (port, "\x95\x64", 2); 
-	usleep (10000);	
-	gp_port_read (port, &response, 1);
-
-	usleep (10000);	
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x65", 2);
-	usleep (10000);
-	gp_port_read (port, &response, 1); /* Number of pix returned here */
-	priv->nb_entries = (unsigned)response;
-	GP_DEBUG("%d entries in the camera\n", response);
-	GP_DEBUG("%d entries in the camera\n", priv->nb_entries);
-	info_block_size = ((unsigned)response * 0x10) + 2;
-	if (info_block_size%0x200) 
-		info_block_size += 0x200 - (info_block_size%0x200);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
+	/* Number of pix returned here, but not reliably reported */
+	priv->nb_entries = response & 0xff;
+	GP_DEBUG("%d frames in the camera (unreliable!)\n", priv->nb_entries);
 	gp_port_write (port, "\x95\x66", 2);
-	usleep (10000);
-	gp_port_read (port, &response, 1); 
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x67", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x68", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x69", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x6a", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x6b", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x95\x6c", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-
+	jl2005c_read_data (port, &response, 1);
 	priv->data_to_read = (response &0xff)*0x100;
-
 	gp_port_write (port, "\x95\x6d", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
+	jl2005c_read_data (port, &response, 1);
 	priv->data_to_read += (response&0xff);
-	priv->data_to_read *= 0x200;
 	priv->total_data_in_camera = priv->data_to_read;
-	GP_DEBUG ("data_to_read = 0x%lx = %lu\n", priv->data_to_read, 
+	GP_DEBUG ("blocks_to_read = 0x%lx = %lu\n", priv->data_to_read,
 							priv->data_to_read);
-	GP_DEBUG ("total_data_in_camera = 0x%lx = %lu\n", priv->data_to_read, 
-							priv->data_to_read);
-
 	gp_port_write (port, "\x95\x6e", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-
-	usleep (10000);
+	jl2005c_read_data (port, &response, 1);
+	alloc_table_size = (response & 0xff) * 0x200;
+	GP_DEBUG("alloc_table_size = 0x%02x * 0x200 = 0x%x\n",
+				response & 0xff, (response & 0xff) * 0x200);
 	gp_port_write (port, "\x95\x6f", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-
-	usleep (10000);
+	jl2005c_read_data (port, &response, 1);
 	gp_port_write (port, "\x0a\x00", 2);
-
 	usleep (10000);
 	/* Switch the inep over to 0x82. It stays there ever after. */ 
 	set_usb_in_endpoint	(camera, 0x82); 
-	usleep (10000);
-	gp_port_read(port, (char *)info, info_block_size);
-	usleep (10000);
-	gp_port_write (port, "\x0b\x00",2);
-	usleep (10000);
-	memmove(priv->info, info, info_block_size);
-	priv->model=info[6];
 
+	/* Read the first block of the allocation table. */
+	jl2005c_read_data (port, (char *)info, 0x200);
+	if (strncmp(camera_id, (char*)info, 6)) {
+		GP_DEBUG("Error downloading alloc table\n");
+		GP_DEBUG("Init attempted %d times\n", attempts + 1);
+		attempts++;
+		if (attempts == 3) {
+			GP_DEBUG("Third try. Giving up\n");
+			gp_port_write(port, "\x07\x00", 2);
+			return GP_ERROR;
+		}
+		goto restart;
+	}
+
+	/* Now check the number of photos. That is found in byte 13 of line 0
+	 * of the allocation table.
+	 */
+	priv->nb_entries = (info[12] & 0xff) * 0x100 | (info[13] & 0xff);
+	GP_DEBUG("Number of entries is recalculated as %d\n",
+						priv->nb_entries);
+
+	/* Just in case there was a problem, we now recalculate the total
+	 * alloc_table_size. */
+	alloc_table_size = priv->nb_entries * 0x10 + 0x30;
+	if (alloc_table_size%0x200)
+		alloc_table_size += 0x200 - (alloc_table_size%0x200);
+	/* However, we have already just now downloaded 0x200 bytes, so
+	 * when downloading the rest of the table we correct for that and
+	 * just download whatever remains of the information block.
+	 */
+	if (alloc_table_size > 0x200)
+		gp_port_read(port, (char *)info + 0x200,
+						alloc_table_size - 0x200);
+	memmove(priv->table, info + 0x30, alloc_table_size - 0x30);
+	priv->model = info[6];
+	GP_DEBUG("Model is %c\n", priv->model);
+	switch (priv->model) {
+	case 0x43:
+	case 0x44:
+		priv->blocksize = 0x200;
+		break;
+	case 0x42:
+		priv->blocksize = 0x80;
+		break;
+	default:
+		GP_DEBUG("Unknown model, unknown blocksize\n");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	GP_DEBUG("camera's blocksize = 0x%x = %d\n", priv->blocksize,
+						     priv->blocksize);
+	/* Now a more responsible calculation of the amount of data in the
+	 * camera, based upon the allocation table. */
+	priv->data_to_read = info[10] * 0x100 | info[11];
+	priv->data_to_read -= info[8] * 0x100 | info[9];
+	priv->data_to_read *= priv->blocksize;
+	priv->total_data_in_camera = priv->data_to_read;
+	GP_DEBUG ("data_to_read = 0x%lx = %lu\n", priv->data_to_read,
+							priv->data_to_read);
+	GP_DEBUG ("total_data_in_camera = 0x%lx = %lu\n", priv->data_to_read,
+							  priv->data_to_read);
+	priv->can_do_capture = 0;
+	if (info[7] & 0x04)
+		priv->can_do_capture = 1;
+	priv->bytes_read_from_camera = 0;
+	priv->bytes_put_away = 0;
+	priv->init_done = 1;
 	GP_DEBUG("Leaving jl2005c_init\n");
         return GP_OK;
 }
 
-
-int 
-jl2005c_rewind (Camera *camera, GPPort *port) 
+int jl2005c_open_data_reg (Camera *camera, GPPort *port)
 {
-//	gp_port_write (port, "\x0b\x00",2);
-	unsigned char command[2];
-	char response;
-	unsigned char info[0xe000];
-	int info_block_size = 0;
-	int junk_to_read = 0;
-	memset(info,0, sizeof(info)); 
-	memset(command,0,sizeof(command));
-	GP_DEBUG("Running jl2005c_rewind\n");
-	gp_port_close(port);
-	usleep (100000);
-	gp_port_open(port);
-
-	set_usb_in_endpoint	(camera, 0x84); 
-	gp_port_write (port, "\x08\x00", 2); 
-
-	usleep (10000);
-	gp_port_write (port, "\x95\x60", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-	gp_port_write (port, "\x95\x61", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-	gp_port_write (port, "\x95\x62", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-	gp_port_write (port,"\x95\x63" , 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-	gp_port_write (port, "\x95\x64", 2); 
-	usleep (10000);	
-	gp_port_read (port, &response, 1);
-
-	usleep (10000);	
-	gp_port_write (port, "\x95\x65", 2);
-	usleep (10000);
-	gp_port_read (port, &response, 1); 
-	info_block_size = ((unsigned)response * 0x10) + 2;
-	if (info_block_size%0x200) 
-		info_block_size += 0x200 - (info_block_size%0x200);
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x66", 2);
-	usleep (10000);
-	gp_port_read (port, &response, 1); 
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x67", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x68", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x69", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x6a", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x6b", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
-	gp_port_write (port, "\x95\x6c", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-
-	junk_to_read = (response &0xff)*0x100;
-
-	gp_port_write (port, "\x95\x6d", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-
-	junk_to_read += (response&0xff);
-	junk_to_read *= 0x200;
-	gp_port_write (port, "\x95\x6e", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-	gp_port_write (port, "\x95\x6f", 2); 
-	usleep (10000);
-	gp_port_read (port, &response, 1);
-	usleep (10000);
-	gp_port_write (port, "\x0a\x00", 2);
-
-	usleep (10000);
-
-	/* Switch the inep over to 0x82. It stays there ever after. */ 
-	set_usb_in_endpoint	(camera, 0x82); 
-	usleep (10000);
-	gp_port_read(port, (char *)info, info_block_size);
-
-	usleep (10000);
 	gp_port_write (port, "\x0b\x00",2);
 	usleep (10000);
-
-	GP_DEBUG("Completing jl2005c_rewind\n");
-
+	GP_DEBUG("Opening data register.\n");
+	camera->pl->data_reg_opened = 1;
         return GP_OK;
 }
 
-
 int
-jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *info, int n)
+jl2005c_get_pic_data_size (CameraPrivateLibrary *priv, Info *table, int n)
 {
 	int size;
-	unsigned char model=priv->model;
-	GP_DEBUG("info[48+16*n+7] = %02X\n", info[48+16*n+7]);
-	size = info[0x30+0x10*n+6]*0x100+info[0x30+0x10*n+7];
-	switch (model) {
-	case 0x43:
-	case 0x44:
-		size *= 0x200;
-		break;
-	case 0x42:
-		size *= 0x80;
-		break;
-	default:
-		GP_DEBUG("Unknown model, unknown size\n");
-		return GP_ERROR_NOT_SUPPORTED;
-	}
+	GP_DEBUG("table[16 * n + 7] = %02X\n", table[16 * n + 7]);
+	size = table[0x10 * n + 6] * 0x100 | table[0x10 * n + 7];
+	size *= priv->blocksize;
 	GP_DEBUG("size = 0x%x = %d\n", size, size);
 	return (size);
 }
 
 unsigned long
-jl2005c_get_start_of_photo(CameraPrivateLibrary *priv, Info *info, 
+jl2005c_get_start_of_photo(CameraPrivateLibrary *priv, Info *table,
 							unsigned int n)
 {
 	unsigned long start;
-	unsigned char model = priv->model;
-	start = info[0x30+0x10*n+0x0c]*0x100+
-			info[0x30+0x10*n+0x0d];
-	start -= info[0x30+0x0c]*0x100+
-			info[0x30+0x0d];
-	switch (model) {
-	case 0x43:
-	case 0x44:
-		start *= 0x200;
-		break;
-	case 0x42:
-		start *= 0x80;
-		break;
-	default:
-		GP_DEBUG("Unknown model\n");
-		return GP_ERROR_NOT_SUPPORTED;
-	}
+	start = table[0x10 * n + 0x0c] * 0x100 | table[0x10 * n + 0x0d];
+	start -= table[0x0c] * 0x100 | table[0x0d];
+	start *= priv->blocksize;
 	return start;
 }
 
@@ -342,50 +223,47 @@ set_usb_in_endpoint	(Camera *camera, int inep)
 	return gp_port_set_settings ( camera->port, settings);
 }	
 
-
 int 
-jl2005c_get_picture_data (GPPort *port, 
-					char *data, int size) 
-
+jl2005c_read_data (GPPort *port, char *data, int size)
 {
-	/* inep has been reset to 0x82 already and does not get set back  */
-	/* We have to send 0b 00, presumably to access the data register, 
-	 * when starting to download the first photo only 
-	 */
+	/* These cameras tend to be slow. */
 	usleep (10000);
-	/*Data transfer begins*/
 	gp_port_read (port, data, size); 
 	usleep (10000);
 	return GP_OK;
 } 
 
-int
-jl2005c_reset (Camera *camera, GPPort *port)
+int jl2005c_reset (Camera *camera, GPPort *port)
 {
-	int blocksize = 0xfa00;
-	/* These cameras want all data to be dumped. If that is not yet done,
-	 * then do it now, before exiting! */
+	int downloadsize = MAX_DLSIZE;
+	/* If any data has been downloaded, these cameras want all data to be
+	 * dumped before exit. If that is not yet done, then do it now! */
+	if(camera->pl->data_reg_opened) {
 	while (camera->pl->bytes_read_from_camera < 
 				    camera->pl->total_data_in_camera ) {
 		if (! camera->pl->data_cache )
-			camera->pl->data_cache = malloc (0xfa00);
-		blocksize=0xfa00;
-		if (camera->pl->bytes_read_from_camera +0xfa00 >=
+				camera->pl->data_cache = malloc (MAX_DLSIZE);
+			downloadsize = MAX_DLSIZE;
+			if (camera->pl->bytes_read_from_camera + MAX_DLSIZE >=
 				    camera->pl->total_data_in_camera ) 
-			blocksize = camera->pl->total_data_in_camera -
+				downloadsize = camera->pl->total_data_in_camera -
 					camera->pl->bytes_read_from_camera;
-		if(blocksize) 
-			jl2005c_get_picture_data (
-					    camera->port, 
+			if (downloadsize)
+				jl2005c_read_data (camera->port,
 					    (char *) camera->pl->data_cache, 
-					    blocksize);
-		camera->pl->bytes_read_from_camera 
-						+= blocksize;
-		
+					    downloadsize);
+			camera->pl->bytes_read_from_camera += downloadsize;
+		}
 	}
-
-
 	gp_port_write(port, "\x07\x00", 2);
+	camera->pl->data_reg_opened = 0;
 	return GP_OK;
 }
 
+int jl2005c_delete_all (Camera *camera, GPPort *port)
+{
+	gp_port_write(port, "\x09\x00", 2);
+	usleep(10000);
+	gp_port_write(port, "\x07\x00", 2);
+	return GP_OK;
+}

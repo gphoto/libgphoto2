@@ -1,3 +1,32 @@
+2010-04-28  Theodore Kilgore <kilgota@auburn.edu>
+	* README.jl2005c: updated.
+	* README.jl2005bcd-compression: updated, new copy of wiki page.
+	* jl2005c.[c,h]: jl2005c_delete_all() added.
+	* library.c: delete_all_func() added.
+
+2010-04-24  Theodore Kilgore <kilgota@auburn.edu>
+	* jl2005bcd_decompress.c: GP_DEBUG() replaces printf()
+
+2010-04-19  Theodore Kilgore <kilgota@auburn.edu>
+	* README.jl2005c: revised.
+	* README.jl2005bcd-compression: added.
+	* img_enhance.[c,h]: added.
+	* jl2005bcd_decompress.[c,h]: added. Decompresses data, autodetects
+		thumbnails if present in raw data, can also process the
+		thumbnails.
+	* jpeg_memsrcdest.[c,h]: added (helper files for decompression).
+		NOTE: Decompression algorithm is completely solved. Camlib
+		should be added as "standard" part of libgphoto2.
+
+2010-04-18  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Yet another camera found.
+
+2010-04-14  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Yet another camera found.
+
+2010-04-13  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Lots of cameras added to the camera list.
+
 2009-04-16  Theodore Kilgore <kilgota@auburn.edu>
 	* README.jl2005c: Updated. 
 
