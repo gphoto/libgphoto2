@@ -264,6 +264,8 @@ gp_port_usb_open (GPPort *port)
 	ret = usb_get_driver_np (port->pl->dh, port->settings.usb.interface,
 		name, sizeof(name)
 	);
+	if (name[0] != 0)
+		gp_log (GP_LOG_DEBUG,"libusb",_("Device has driver '%s' attached."), name);
 	if (strstr(name,"usbfs") || strstr(name,"storage")) {
 		/* other gphoto instance most likely */
 		gp_port_set_error (port, _("Camera is already in use."));
