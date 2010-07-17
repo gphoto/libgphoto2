@@ -270,8 +270,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (strstr (di->Manufacturer,"Nikon"))
 			a.usb_vendor = 0x4b0;
 	}
-	if (	(camera->port->type == GP_PORT_PTPIP) &&
-		(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		di->Manufacturer
 	) {
 		camera->pl->bugs |= PTP_MTP;
