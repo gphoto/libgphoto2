@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <time.h>
 #include <langinfo.h>
 #include <sys/time.h>
@@ -469,6 +470,8 @@ static struct {
 	{"Kodak:C813",	 0x040a, 0x05c3, 0},
 	/* reported by Christian Le Corre <lecorrec@gmail.com> */
 	{"Kodak:C913",   0x040a, 0x05c6, 0},
+	/* IRC reporter */
+	{"Kodak:Z950",   0x040a, 0x05cd, 0},
 	/* reported by Jim Nelson <jim@yorba.org> */
 	{"Kodak:M1063",  0x040a, 0x05ce, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2889451&group_id=8874&atid=358874 */
