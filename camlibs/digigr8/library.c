@@ -1,6 +1,6 @@
 /* library.c for libgphoto2/camlibs/digigr8
  *
- * Copyright (C) 2005 Theodore Kilgore <kilgota@auburn.edu>
+ * Copyright (C) 2005 - 2010 Theodore Kilgore <kilgota@auburn.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -70,6 +70,8 @@ static const struct {
 							    0x2770, 0x905c},
 	{"Sakar Micro Digital 2428x",		GP_DRIVER_STATUS_EXPERIMENTAL,
 							    0x2770, 0x905c},
+	{"Stop & Shop 87096",		GP_DRIVER_STATUS_EXPERIMENTAL,
+							    0x2770, 0x905c},
 	{"Jazz JDC9",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Disney pix micro",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050},
 	/* from IRC reporter, adam@piggz.co.uk */
@@ -90,7 +92,6 @@ int
 camera_id (CameraText *id)
 {
 	strncpy (id->text, "SQ905C chipset camera",32);
-
 	return GP_OK;
 }
 
@@ -118,7 +119,6 @@ camera_abilities (CameraAbilitiesList *list)
 					+ GP_FILE_OPERATION_RAW;
 		gp_abilities_list_append (list, a);
 	}
-
 	return GP_OK;
 }
 
@@ -131,11 +131,11 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 			("Your USB camera seems to have an SQ905C chipset.\n" 
 			"The total number of pictures in it is %i\n"), 
 				camera->pl->nb_entries);  
-
 	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual(Camera *camera, CameraText *manual,
+							GPContext *context)
 {
 	strncpy(manual->text, 
 	_(
@@ -160,7 +160,6 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strncpy (about->text, _("sq905C generic driver\n"
 			    "Theodore Kilgore <kilgota@auburn.edu>\n"),64);
-
 	return GP_OK;
 }
 
@@ -202,7 +201,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if(!camera->pl->init_done)
 		digi_init (camera->port, camera->pl);
-
 
 	/* Get the entry number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context); 
@@ -293,7 +291,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	digi_postprocess (w, h, ptr);
 	if (lighting < 0x40) {
 	GP_DEBUG(
-		"Low light condition. Using default gamma. No white balance.\n");
+		"Low light condition. Using default gamma. \
+						No white balance.\n");
 		gp_gamma_fill_table (gtable, .65); 
 		gp_gamma_correct_single(gtable,ptr,w*h);
         } else
@@ -344,8 +343,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
         gp_port_read(camera->port, (char *)get_size, 0x50);
         GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
 	lighting = get_size[0x48];
-        b = get_size[0x40]|(get_size[0x41]<<8)|(get_size[0x42]<<16)
-						|(get_size[0x43]<<24);
+        b = get_size[0x40] | get_size[0x41] << 8 | get_size[0x42] << 16
+						| get_size[0x43]<<24;
 	GP_DEBUG("b = 0x%x\n", b);
         raw_data = malloc(b);
         if(!raw_data) { 
@@ -365,7 +364,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	free(raw_data);
 	/* Now put the data into a PPM image file. */
 	ppm = malloc (w * h * 3 + 256); 
-	if (!ppm) { return GP_ERROR_NO_MEMORY; }
+	if (!ppm)
+		return GP_ERROR_NO_MEMORY;
 	snprintf ((char *)ppm, 64,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905C library\n"
@@ -378,7 +378,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	free(frame_data);
         if (lighting < 0x40) {
         GP_DEBUG(
-                "Low light condition. Using default gamma. No white balance.\n");
+		"Low light condition. Default gamma. No white balance.\n");
 		gp_gamma_fill_table (gtable, .65);
                 gp_gamma_correct_single(gtable,ptr,w*h);
         } else
@@ -434,15 +434,17 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG ("Initializing the camera\n");
 
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
- 
+	if (ret < 0)
+		return ret;
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0)
+		return ret;
 
         /* Tell the CameraFilesystem where to get lists from */
         gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl) return GP_ERROR_NO_MEMORY;
+	if (!camera->pl) 
+		return GP_ERROR_NO_MEMORY;
 	camera->pl->catalog = NULL;
 	camera->pl->nb_entries = 0;
 	switch (abilities.usb_product) {

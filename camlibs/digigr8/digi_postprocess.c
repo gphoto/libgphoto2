@@ -34,6 +34,13 @@
 
 #define GP_MODULE "digigr8" 
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 static int
 digi_first_decompress (unsigned char *output, unsigned char *input,
 					    unsigned int outputsize)
@@ -52,7 +59,8 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 	unsigned char lookup_table[16]
 		     ={0, 2, 6, 0x0e, 0xf0, 0xf1, 0xf2, 0xf3, 0xf4,
 		           0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb};
-	unsigned char translator[16] = {8,7,9,6,10,11,12,13,14,15,5,4,3,2,1,0};
+	unsigned char translator[16] = 
+		    {8, 7, 9, 6, 10, 11, 12, 13, 14, 15, 5, 4, 3, 2, 1, 0};
 
 	GP_DEBUG ("Running first_decompress.\n");
 	nibble_to_keep[0] = 0;
@@ -74,7 +82,7 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 				temp1 = (temp1 <<1)&0xFF;
 				bit_counter ++ ;
 				cycles ++ ;
-				if (cycles > 9) {
+				if (cycles > 8) {
 					GP_DEBUG ("Too many cycles?\n");
 					return GP_ERROR; 
 				}
@@ -82,19 +90,21 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 			}
 			temp2 = 0;
 			for (i=0; i < 17; i++ ) {
+				if (i == 16) {
+					GP_DEBUG(
+					"Illegal lookup value during decomp\n");
+					return GP_ERROR;
+				}
 				if (lookup == lookup_table[i] ) {
 					nibble_to_keep[parity] = translator[i];
 					break;	
 				}
-				if (i == 16) {
-					GP_DEBUG ("Illegal lookup value during decomp\n");
-					return GP_ERROR;
-				}	
 			}		
 			cycles = 0;
 			parity ++ ;
 		} 
-		output[bytes_done] = (nibble_to_keep[0]<<4)|nibble_to_keep[1];
+		output[bytes_done] = (nibble_to_keep[0] << 4)
+						| nibble_to_keep[1];
 		bytes_done ++ ;
 		parity = 0; 
 	}
@@ -119,24 +129,21 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 	unsigned char *templine_blue;
 	templine_red = malloc(width);
 	if (!templine_red) {
-		free(templine_red);
-		return GP_ERROR;
+		return GP_ERROR_NO_MEMORY;
 	}	
 	for(i=0; i < width; i++){
 	    templine_red[i] = 0x80;
 	}
 	templine_green = malloc(width);	
 	if (!templine_green) {
-		free(templine_green);
-		return GP_ERROR;
+		return GP_ERROR_NO_MEMORY;
 	}	
 	for(i=0; i < width; i++){
 		templine_green[i] = 0x80;
 	}
 	templine_blue = malloc(width);	
 	if (!templine_blue) {
-		free(templine_blue);
-		return GP_ERROR;
+		return GP_ERROR_NO_MEMORY;
 	}	
 	for(i=0; i < width; i++){
 		templine_blue[i] = 0x80;
@@ -155,7 +162,8 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 				tempval = templine_red[0] + diff;
 			else 
 				tempval = (templine_red[i]
-				        + uncomp[2*m*width+2*i-2])/2 + diff;
+				    + uncomp[2 *m * width + 2 * i - 2]) / 2
+								    + diff;
 			tempval = MIN(tempval, 0xff);
 			tempval = MAX(tempval, 0);
 			uncomp[2*m*width+2*i] = tempval;
@@ -188,8 +196,8 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 				tempval = templine_green[0] + diff;
 			else 
 				tempval = (templine_green[i]
-				    	    + uncomp[(2*m+1)*width+2*i-2])/2 
-						+ diff;
+				    + uncomp[(2 * m + 1) * width
+						+ 2 * i - 2]) / 2 + diff;
 			tempval = MIN(tempval, 0xff);
 			tempval = MAX(tempval, 0);
 			uncomp[(2*m+1)*width+2*i] = tempval;
@@ -200,8 +208,8 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 				tempval = templine_blue[0] + diff;
 			else 
 				tempval = (templine_blue[i]
-					    + uncomp[(2*m+1)*width+2*i-1])/2 
-						+ diff;
+				    + uncomp[(2 * m + 1) * width
+						+ 2 * i - 1]) / 2 + diff;
 			tempval = MIN(tempval, 0xff);
 			tempval = MAX(tempval, 0);
 			uncomp[(2*m+1)*width+2*i+1] = tempval;
@@ -223,7 +231,7 @@ digi_decompress (unsigned char *out_data, unsigned char *data,
 	size = w*h/2;
 	temp_data = malloc(size);
 	if (!temp_data) 
-		return(GP_ERROR_NO_MEMORY);	
+		return GP_ERROR_NO_MEMORY;
 	digi_first_decompress (temp_data, data, size);
 	GP_DEBUG("Stage one done\n");
 	digi_second_decompress (out_data, temp_data, w, h);
@@ -295,16 +303,18 @@ digi_postprocess(int width, int height,
 
 	for( y=0; y<height; y++){
 		for( x=0; x<width; x++ ){
-			RED(rgb,x,y,width)= MIN(amplify*(double)(RED(rgb,x,y,width)-min),255);
-			GREEN(rgb,x,y,width)= MIN(amplify*(double)(GREEN(rgb,x,y,width)-min),255);
-			BLUE(rgb,x,y,width)= MIN(amplify*(double)(BLUE(rgb,x,y,width)-min),255);
+			RED(rgb, x, y, width)= MIN(amplify *
+				  (double)(RED(rgb, x, y, width) - min), 255);
+			GREEN(rgb, x, y, width)= MIN(amplify *
+				  (double)(GREEN(rgb, x, y, width) - min), 255);
+			BLUE(rgb, x, y, width)= MIN(amplify *
+				  (double)(BLUE(rgb, x, y, width) -min), 255);
 		}
 	}
-
 	return GP_OK;
 }
 
-/*	========= White Balance / Color Enhance / Gamma adjust (experimental) ==========
+/*	===== White Balance / Color Enhance / Gamma adjust (experimental) =====
 
 	Get histogram for each color plane
 	Expand to reach 0.5% of white dots in image
@@ -318,10 +328,11 @@ digi_postprocess(int width, int height,
 	if not a dark image:
 	For each dot, increases color separation
 
-	================================================================================== */
+	===================================================================== */
 
 static int
-histogram (unsigned char *data, unsigned int size, int *htable_r, int *htable_g, int *htable_b)
+histogram (unsigned char *data, unsigned int size, int *htable_r, 
+					    int *htable_g, int *htable_b)
 {
 	int x;
 	/* Initializations */
@@ -391,7 +402,7 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 	if (g_factor > max_factor) max_factor = g_factor;
 	if (b_factor > max_factor) max_factor = b_factor;
 	if (max_factor >= 4.0) {
-	/* We need a little bit of control, here. If max_factor > 5 the photo
+	/* We need a little bit of control, here. If max_factor > 4 the photo
 	 * was very dark, after all. 
 	 */
 		if (2.0*b_factor < max_factor)
@@ -407,13 +418,16 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 
 	if (max_factor > 1.5) 
 		saturation = 0;
-	GP_DEBUG("White balance (bright): r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n", r, g, b, r_factor, g_factor, b_factor);
+	GP_DEBUG("White balance (bright): r=%1d, g=%1d, b=%1d, \
+			r_factor=%1.3f, g_factor=%1.3f, b_factor=%1.3f\n",
+					r, g, b, r_factor, g_factor, b_factor);
 	if (max_factor <= 1.4) {
 		for (x = 0; x < (size * 3); x += 3)
 		{
 			d = (data[x+0]<<8) * r_factor+8;
 			d >>=8;
-			if (d > 0xff) { d = 0xff; }
+			if (d > 0xff) 
+				d = 0xff;
 			data[x+0] = d;
 			d = (data[x+1]<<8) * g_factor+8;
 			d >>=8;
@@ -421,7 +435,8 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 			data[x+1] = d;
 			d = (data[x+2]<<8) * b_factor+8;
 			d >>=8;
-			if (d > 0xff) { d = 0xff; }
+			if (d > 0xff) 
+				d = 0xff;
 			data[x+2] = d;
 		}
 	}
@@ -429,11 +444,11 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 	max = size / 200;  /*  1/200 = 0.5%  */
 	histogram(data, size, htable_r, htable_g, htable_b);
 
-	for (r=0, x=0; (r < 96) && (x < max); r++)  
+	for (r = 0, x = 0; r < 96 && x < max; r++)
 		x += htable_r[r]; 
-	for (g=0, x=0; (g < 96) && (x < max); g++) 
+	for (g = 0, x = 0; g < 96 && x < max; g++)
 		x += htable_g[g];
-	for (b=0, x=0; (b < 96) && (x < max); b++) 
+	for (b = 0, x = 0; b < 96 && x < max; b++)
 		x += htable_b[b];
 
 	r_factor = (double) 0xfe / (0xff-r);
@@ -441,22 +456,26 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 	b_factor = (double) 0xfe / (0xff-b);
 
 	GP_DEBUG(
-	"White balance (dark): r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n", 
+	"White balance (dark): r=%1d, g=%1d, b=%1d, \
+			r_factor=%1.3f, g_factor=%1.3f, b_factor=%1.3f\n",
 				r, g, b, r_factor, g_factor, b_factor);
 
 	for (x = 0; x < (size * 3); x += 3)
 	{
 		d = (int) 0xff08-(((0xff-data[x+0])<<8) * r_factor);
 		d >>= 8;
-		if (d < 0) { d = 0; }
+		if (d < 0)
+			 d = 0;
 		data[x+0] = d;
 		d = (int) 0xff08-(((0xff-data[x+1])<<8) * g_factor);
 		d >>= 8;
-		if (d < 0) { d = 0; }
+		if (d < 0)
+			d = 0;
 		data[x+1] = d;
 		d = (int) 0xff08-(((0xff-data[x+2])<<8) * b_factor);
 		d >>= 8;
-		if (d < 0) { d = 0; }
+		if (d < 0)
+			d = 0;
 		data[x+2] = d;
 	}
 
@@ -468,17 +487,23 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 			r = data[x+0]; g = data[x+1]; b = data[x+2];
 			d = (int) (r + g + b) / 3.;
 			if ( r > d )
-				r = r + (int) ((r - d) * (0xff-r)/(0x100-d) * saturation);
+				r = r + (int) ((r - d) * (0xff - r)
+						/(0x100 - d) * saturation);
 			else 
-				r = r + (int) ((r - d) * (0xff-d)/(0x100-r) * saturation);
+				r = r + (int) ((r - d) * (0xff - d)
+						/ (0x100 - r) * saturation);
 			if (g > d)
-				g = g + (int) ((g - d) * (0xff-g)/(0x100-d) * saturation);
+				g = g + (int) ((g - d) * (0xff - g)
+						/ (0x100 - d) * saturation);
 			else 
-				g = g + (int) ((g - d) * (0xff-d)/(0x100-g) * saturation);
+				g = g + (int) ((g - d) * (0xff - d)
+						/ (0x100 - g) * saturation);
 			if (b > d)
-				b = b + (int) ((b - d) * (0xff-b)/(0x100-d) * saturation);
+				b = b + (int) ((b - d) * (0xff - b)
+						/(0x100 - d) * saturation);
 			else 
-				b = b + (int) ((b - d) * (0xff-d)/(0x100-b) * saturation);
+				b = b + (int) ((b - d) * (0xff - d)
+						/(0x100 - b) * saturation);
 			data[x+0] = CLAMP(r);
 			data[x+1] = CLAMP(g);
 			data[x+2] = CLAMP(b);
