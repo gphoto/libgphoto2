@@ -59,7 +59,7 @@ struct {
         {"American Idol Keychain Camera", GP_DRIVER_STATUS_TESTING, 
     							    0x0979, 0x0224},
         {"NogaNet TDC-15", GP_DRIVER_STATUS_TESTING, 0x0979, 0x0224},
-        {"Cobra DC-125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
+	{"Cobra DC125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
 	{NULL,0,0,0}
 };
 
@@ -246,7 +246,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	sprintf ((char *)ppm,
 			"P6\n"
-			"# CREATOR: gphoto2, SQ905C library\n"
+			"# CREATOR: gphoto2, JL2005A library\n"
 			"%d %d\n"
 			"255\n", w, h);
 	size = strlen ((char *)ppm);

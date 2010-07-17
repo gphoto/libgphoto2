@@ -1,6 +1,6 @@
 2009-12-24  Theodore Kilgore <kilgota@auburn.edu>
 	library.c: Some cameras can hold more than 100 photos. Numbering
-	field in filenames increased to 3 digits.
+	field in filenames increased to 3 digits. Some code cleanup.
 	gp_bayer_decode() replaced by gp_ahd_decode()
 
 2009-02-21  Theodore Kilgore <kilgota@auburn.edu>
