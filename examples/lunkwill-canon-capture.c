@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -24,7 +25,10 @@
 
 static void errordumper(GPLogLevel level, const char *domain, const char *str,
                  void *data) {
-  fprintf(stdout, "%s\n", str);
+  struct timeval tv;
+
+  gettimeofday (&tv, NULL);
+  fprintf(stdout, "%d.%d: %s\n", tv.tv_sec, tv.tv_usec, str);
 }
 
 /* This seems to have no effect on where images go
