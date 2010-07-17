@@ -210,6 +210,9 @@ static struct {
 
 	{"Pentax", "Optio 450", SIERRA_MODEL_DEFAULT, 0x0a17,0x0007, SIERRA_WRAP_USB_PENTAX, NULL },
 	{"Pentax", "Optio 33WR", SIERRA_MODEL_DEFAULT, 0x0a17,0x0009, SIERRA_WRAP_USB_PENTAX, NULL },
+	/* has only very bare reactions
+	{"Pentax", "Optio W90 (Sierra Mode)", SIERRA_MODEL_DEFAULT, 0x0a17,0x00f6, SIERRA_WRAP_USB_PENTAX, NULL },
+	 */
 
 	{"Polaroid", "PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, NULL },
 	{"Polaroid", "PDC 2300Z", SIERRA_MODEL_DEFAULT, 0x0546, 0x0daf,
