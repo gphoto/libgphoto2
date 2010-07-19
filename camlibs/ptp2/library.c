@@ -273,7 +273,6 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		di->Manufacturer
 	) {
-		camera->pl->bugs |= PTP_MTP;
 		if (strstr (di->Manufacturer,"Canon"))
 			di->VendorExtensionID = PTP_VENDOR_CANON;
 		if (strstr (di->Manufacturer,"Nikon"))
