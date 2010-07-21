@@ -795,6 +795,8 @@ static struct {
 	{"Casio:EX-S770",                 0x07cf, 0x1049, 0},
 	/* https://launchpad.net/bugs/64146 */
 	{"Casio:EX-Z700",                 0x07cf, 0x104c, 0},
+	/* IRC Reporter */
+	{"Casio:EX-Z65",                  0x07cf, 0x104d, 0},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
