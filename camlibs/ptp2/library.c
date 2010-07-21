@@ -5200,9 +5200,19 @@ fallback:
 	memset (params->objectinfo,0,sizeof(PTPObjectInfo)*params->handles.n);
 
 	for (i = 0; i < params->handles.n; i++) {
-		CPR (context, ptp_getobjectinfo(params,
+		uint16_t ret;
+
+		ret = ptp_getobjectinfo(params,
 			params->handles.Handler[i],
-			&params->objectinfo[i]));
+			&params->objectinfo[i]);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR, "ptp2/std_getobjectinfo", "received error 0x%04x on query of 0x%08x", ret, params->handles.Handler[i]);
+			if (i < params->handles.n-1)
+				memmove(&params->handles.Handler[i],params->handles.Handler[i+1],(params->handles.n-i-1)*sizeof(params->handles.Handler[i]));
+			params->handles.n--;
+			i--; /* so we get the same entry again ... */
+			continue;
+		}
 #if 1
 		debug_objectinfo(params, params->handles.Handler[i], &params->objectinfo[i]);
 #endif
