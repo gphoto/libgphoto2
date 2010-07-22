@@ -1,0 +1,29 @@
+Camera summary:
+	Manufacturer: FUJIFILM
+	Model: FinePix F70EXR
+	Version: 1.01
+	Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	Vendor Extension ID: 0xe (1.0)
+	Vendor Extension Description: fujifilm.co.jp: 1.0;
+
+Capture Formats:
+Display Formats: JPEG, JFIF
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+	store_10000001:
+		StorageDescription: External Memory
+		VolumeLabel: 000000000000000000000000000000000000000000000000
+		Storage Type: Removable RAM (memory card)
+		Filesystemtype: Digital Camera Layout (DCIM)
+		Access Capability: Read Only with Object deletion
+		Maximum Capability: 7969177600 (7600 MB)
+		Free Space (Bytes): 7459897344 (7114 MB)
+		Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd407:(read only) (type=0x6) 1
