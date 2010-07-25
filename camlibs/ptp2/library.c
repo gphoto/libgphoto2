@@ -2662,15 +2662,20 @@ camera_wait_for_event (Camera *camera, int timeout,
 			if (ret != PTP_RC_OK)
 				continue;
 			for (i=0;i<evtcnt;i++) {
-				gp_log (GP_LOG_DEBUG , "ptp/wait_nikon_event", "%d:nevent.Code is %x / param %lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
+				gp_log (GP_LOG_DEBUG , "ptp/wait_nikon_event", "%d:nevent.Code is 0x%x / param 0x%lx", i, nevent[i].Code, (unsigned long)nevent[i].Param1);
 				if (nevent[i].Code == PTP_EC_ObjectAdded) {
 					int j, res;
 					PTPObjectInfo	*obinfo;
 
+					newobject = nevent[i].Param1;
+					j = handle_to_n (newobject, camera);
+					if (j != PTP_HANDLER_SPECIAL) {
+						gp_log (GP_LOG_DEBUG , "ptp/wait_nikon_event", "ObjectAdded(0x%lx), is already in handle list", (unsigned long)nevent[i].Param1);
+						continue;
+					}
 					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 					if (!path)
 						return GP_ERROR_NO_MEMORY;
-					newobject = nevent[i].Param1;
 					res = add_object (camera, newobject, context);
 					if (res != GP_OK) /* might have been deleted previously */
 						continue;
@@ -2770,7 +2775,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				/* as we can read multiple events we should retrieve a good one if possible
 				 * and not a random one.*/
 				/* default: */
-				if  (i==evtcnt-1) {
+				{
 					char *x;
 					*eventtype = GP_EVENT_UNKNOWN;
 					x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
@@ -2780,8 +2785,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 						finish = 1;
 						break;
 					}
-				} else {
-					gp_log (GP_LOG_DEBUG, "ptp2/nikon_wait_event", "silently ignoring event 0x%04x param1=0x%08x", nevent[i].Code, nevent[i].Param1);
 				}
 			}
 			free (nevent);
@@ -5208,7 +5211,7 @@ fallback:
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/std_getobjectinfo", "received error 0x%04x on query of 0x%08x", ret, params->handles.Handler[i]);
 			if (i < params->handles.n-1)
-				memmove(&params->handles.Handler[i],params->handles.Handler[i+1],(params->handles.n-i-1)*sizeof(params->handles.Handler[i]));
+				memmove(&params->handles.Handler[i],&params->handles.Handler[i+1],(params->handles.n-i-1)*sizeof(params->handles.Handler[i]));
 			params->handles.n--;
 			i--; /* so we get the same entry again ... */
 			continue;
