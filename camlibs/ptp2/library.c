@@ -2605,6 +2605,17 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					break;
 				}
+				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS: {
+					char *x;
+					x = malloc(strlen("Camera Status 123456789012345")+1);
+					if (x) {
+						sprintf (x, "Camera Status %d", entry.u.status);
+						*eventtype = GP_EVENT_UNKNOWN;
+						*eventdata = x;
+						return GP_OK;
+					}
+					break;
+				}
 				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 					/* only return if interesting stuff happened */
 					if (entry.u.info) {

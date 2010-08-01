@@ -1067,6 +1067,7 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO		1
 #define PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER	2
 #define PTP_CANON_EOS_CHANGES_TYPE_PROPERTY		3
+#define PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS		4
 
 struct _PTPCanon_New_Object {
 	uint32_t	oid;
@@ -1079,6 +1080,7 @@ struct _PTPCanon_changes_entry {
 		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
 		char				*info;
 		uint16_t			propid;
+		int				status; /* 1 or 0 */
 	} u;
 };
 typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
