@@ -9,15 +9,48 @@ st2205:
     * Link iconv (MacOS build fix)
     * "delete all files" implemented.
 
+ax203:
+    * various improvements and bugfixes
+    * new compression method supported for ax206
+
 ptp2:
     * Fixed EOS capture to card waiting 1 minute bug
+    * Fixed EOS capture "no focus" waiting 1 minute bug
+    * Pass up more EOS events via wait_for_event (property changes, and all unknown events).
     * EOS Viewfinder Zoom Level and Position added
+    * Fixed setting multiple configuration values at once.
+    * Handle MTP -> Vendor id mapping for PTP/IP cameras.
+    * Lots of smaller bugfixes.
+    * Added new IDS:
+      Kodak Z950
+      Sony DSC-S370
+      Nikon CoolPix 7600, L110
+      Panasonic FZ38, DMC-GF1 (only download support), 
+      Canon PowerShot D10, SX120 IS
+      Fuji FinePix F60fd, F70 EXR, S1800
+      Pentax Optio W90
+
+canon:
+    * ability to read and set "shooting mode".
+
+digigr8:
+    * merged from TRUNK: new camera "Stop & Shop 87096", some cleanups and bugfixes
 
 jl2005c: 
-    * Decompression decoded and driver now working.
+    * Decompression decoded and driver now working. Enabled by default now.
 
 libgphoto2_port/usbscsi:
     * Check for scsi/sg.h and use it only if present (MacOS build fix)
+
+libgphoto2_port/usb:
+    * Do not filter out "usb:XXX,YYY" ... but have both usb: and
+      usb:XXX,YYY for now.
+
+packaging:
+    * Enhanced new udev rules to shortcut PTP devices (instead of
+      evaluating 1000 lines of other cameras)
+    * Enhanced new udev rules to disable USB Mass Storage interface
+      having devices for gphoto usage due too much confusion with gvfs.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.9
