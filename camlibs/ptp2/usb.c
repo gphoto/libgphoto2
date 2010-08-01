@@ -468,7 +468,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 		}
 		/* else will be handled by ptp.c as error. */
 	}
-
+	resp->Nparam=(rlen-12)/4;
 	resp->Param1=dtoh32(usbresp.payload.params.param1);
 	resp->Param2=dtoh32(usbresp.payload.params.param2);
 	resp->Param3=dtoh32(usbresp.payload.params.param3);
