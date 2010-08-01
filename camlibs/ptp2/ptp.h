@@ -2300,19 +2300,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  *
  **/
 #define ptp_canon_eos_requestdevicepropvalue(params,prop) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RequestDevicePropValue,1,prop)
-/**
- * ptp_canon_eos_capture:
- * 
- * This starts a EOS400D style capture. You have to use the
- * 0x9116 command to poll for its completion.
- * The image is saved on the CF Card currently.
- *
- * params:      PTPParams*
- *
- * Return values: Some PTP_RC_* code.
- *
- **/
-#define ptp_canon_eos_capture(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteRelease,0)
+uint16_t ptp_canon_eos_capture (PTPParams* params, uint32_t *result);
 uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
 				uint32_t offset, uint32_t size,

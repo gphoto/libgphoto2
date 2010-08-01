@@ -753,6 +753,33 @@ ptp_canon_eos_bulbstart (PTPParams* params)
 }
 
 /**
+ * ptp_eos_capture:
+ * params:	PTPParams*
+ *              uint32_t*	result
+ *
+ * This starts a EOS400D style capture. You have to use the
+ * get_eos_events to find out what resulted.
+ * The return value is "0" for all OK, and "1" for capture failed. (not fully confirmed)
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_canon_eos_capture (PTPParams* params, uint32_t *result)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_CANON_EOS_RemoteRelease;
+	ptp.Nparam = 0;
+	*result = 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	if ((ret == PTP_RC_OK) && (ptp.Nparam >= 1))
+		*result = ptp.Param1;
+	return ret;
+}
+
+/**
  * ptp_canon_eos_bulbend:
  * params:	PTPParams*
  *

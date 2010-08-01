@@ -2007,6 +2007,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
 	int			sleepcnt = 1;
+	uint32_t		result;
 	time_t                  capture_start=time(NULL);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
@@ -2021,10 +2022,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	_ptp_check_eos_events (params);
 
-	ret = ptp_canon_eos_capture (params);
+	ret = ptp_canon_eos_capture (params, &result);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return translate_ptp_result(ret);
+	}
+	if (result == 1) {
+		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+		return GP_ERROR;
 	}
 
 	newobject = 0;
