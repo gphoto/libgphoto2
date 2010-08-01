@@ -4,16 +4,16 @@ Canon Powershot series (currently: Powershot SX100IS)
 
 	--capture-image-and-download
 	--capture-image-and-download -F 3 -I 5
-		- via SDRAM (capturetarget=0):				PASS
-		- via Card (capturetarget=1):				PASS
-		- Card configured, but not inserted (capturetarget=1)	PASS
+		- via SDRAM (capturetarget=0):				TOTEST
+		- via Card (capturetarget=1):				TOTEST
+		- Card configured, but not inserted (capturetarget=1)	TOTEST
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							PASS
-		mixed with --capture-image-and-download			PASS
+		commandline tool					TOTEST
+		gtkam							TOTEST
+		mixed with --capture-image-and-download			TOTEST
 
-	--list-config							PASS
+	--list-config							TOTEST
 
 
 Canon EOS series (currently: Canon EOS 1000D)
@@ -25,69 +25,69 @@ Canon EOS series (currently: Canon EOS 1000D)
 			- JPEG						xxxx
 			- JPEG + RAW					xxxx
 		- no SD card inserted
-			- JPEG						FAIL/IGNORE (hangs without error)
-			- JPEG + RAW 					FAIL/IGNORE (hangs without error)
+			- JPEG						TOTEST/IGNORE (hangs without error)
+			- JPEG + RAW 					TOTEST/IGNORE (hangs without error)
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
 			- JPEG						PASS
 			- JPEG + RAW					PASS
 		- via Card (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TOTEST
+			- JPEG + RAW					TOTEST
 		- no SD card insert
-			- JPEG						FAIL/IGNORE (hangs without error)
-			- JPEG + RAW 					FAIL/IGNORE (hangs without error)
+			- JPEG						TOTEST/IGNORE (hangs without error)
+			- JPEG + RAW 					TOTEST/IGNORE (hangs without error)
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							PASS
-		mixed with --capture-image-and-download			PASS
+		commandline tool					TOTEST
+		gtkam							TOTEST
+		mixed with --capture-image-and-download			TOTEST
 
 	--wait-event-and-download
-		- JPEG							PASS
-		- JPEG + RAW						PASS
+		- JPEG							TOTEST
+		- JPEG + RAW						TOTEST
 
-	--list-config							PASS
-	--get-config somevalue						PASS
-	--set-config somevalue=value					PASS
+	--list-config							TOTEST
+	--get-config somevalue						TOTEST
+	--set-config somevalue=value					TOTEST
 
 
 Nikon DSLR series (currently: Nikon D90)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TOTEST
+			- JPEG + RAW					TOTEST
 		- via Card (SD) (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TOTEST
+			- JPEG + RAW					TOTEST
 		- no SD card inserted
-			- JPEG						PASS reports error
-			- JPEG + RAW 					PASS reports error
+			- JPEG						TOTEST reports error
+			- JPEG + RAW 					TOTEST reports error
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TOTEST
+			- JPEG + RAW					TOTEST
 		- via Card (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TOTEST
+			- JPEG + RAW					TOTEST
 		- no SD card insert
-			- JPEG						PASS reports error
-			- JPEG + RAW 					PASS reports error
+			- JPEG						TOTEST reports error
+			- JPEG + RAW 					TOTEST reports error
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							PASS
+		commandline tool					TOTEST
+		gtkam							TOTEST
 		mixed with --capture-image-and-download	
-			- SDRAM mode					PASS
-			- Card mode					FAIL/IGNORE (returns PTP Device Busy)
+			- SDRAM mode					TOTEST
+			- Card mode					TOTEST/IGNORE (returns PTP Device Busy)
 
 	--wait-event-and-download
-		- JPEG							PASS
-		- JPEG + RAW						FAIL (deleting NEF also deletes JPG I think)
+		- JPEG							TOTEST
+		- JPEG + RAW						TOTEST (deleting NEF also deletes JPG I think)
 
 
-	--list-config							PASS
-	--get-config somevalue						PASS
-	--set-config somevalue=value					PASS
+	--list-config							TOTEST
+	--get-config somevalue						TOTEST
+	--set-config somevalue=value					TOTEST
