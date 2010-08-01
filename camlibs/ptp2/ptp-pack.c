@@ -1431,6 +1431,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				}
 				dpd = &params->canon_props[j].dpd;
 
+				(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+				(*ce)[i].u.propid = proptype;
+
 				/* fix GetSet value */
 				switch (proptype) {
 #define XX(x) case PTP_DPC_CANON_##x:
@@ -1636,6 +1639,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 
 				break;
 		}
+		case PTP_EC_CANON_EOS_CameraStatusChanged:
+			ptp_debug (params, "event %d: EOS event CameraStatusChanged (size %d)", i, size);
+			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS;
+			(*ce)[i].u.status =  dtoh32a(curdata+8);
+			break;
 		case 0: /* end marker */
 			if (size == 8) /* no output */
 				break;
@@ -1667,11 +1675,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			XX(RequestObjectTransferTS)
 			XX(AfResult)
 #undef XX
-			case PTP_EC_CANON_EOS_CameraStatusChanged:
-				ptp_debug (params, "event %d: unhandled EOS event CameraStatusChanged (size %d)", i, size);
-				(*ce)[i].u.info = malloc(strlen("CameraStatusChanged 1234567890123456789"));
-				sprintf ((*ce)[i].u.info, "CameraStatusChanged %d",  dtoh32a(curdata+8));
-				break;
 			default:
 				ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
 				break;
