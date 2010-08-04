@@ -64,7 +64,7 @@
 #define USB_START_TIMEOUT 8000
 #define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
-#define USB_TIMEOUT_CAPTURE 20000
+#define USB_TIMEOUT_CAPTURE 60000
 
 #define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 #define	SET_CONTEXT_P(p, ctx) ((PTPData *) p->data)->context = ctx
@@ -2146,7 +2146,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			found, ret, isevent, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
+	int			found, ret, isevent, sawcapturecomplete = 0, viewfinderwason = 0;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
@@ -2226,11 +2226,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 	sawcapturecomplete = 0;
 	/* Checking events in stack. */
-	gp_port_get_timeout (camera->port, &timeout);
 	gettimeofday (&event_start, NULL);
 	found = FALSE;
 	
-	while (!_timeout_passed(&event_start, timeout)) {
+	while (!_timeout_passed(&event_start, USB_TIMEOUT_CAPTURE)) {
 		gp_context_idle (context);
 		if (PTP_RC_OK == params->event_check (params, &event)) {
 			if (event.Code == PTP_EC_CaptureComplete) {
