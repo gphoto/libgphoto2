@@ -86,10 +86,6 @@ gp_port_library_list (GPPortInfoList *list)
 
 	/* default port first */
 	info.type = GP_PORT_USB;
-	strcpy (info.name, "Universal Serial Bus");
-	strcpy (info.path, "usb:");
-	CHECK (gp_port_info_list_append (list, info));
-
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
 	memset (info.name, 0, sizeof(info.name));
 	strcpy (info.path, "^usb:");
@@ -195,6 +191,13 @@ gp_port_library_list (GPPortInfoList *list)
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		bus = bus->next;
+	}
+	/* This will only be added if no other device was ever added.
+	 * Users doing "usb:" usage will enter the regular expression matcher case. */
+	if (nrofdevices == 0) {
+		strcpy (info.name, "Universal Serial Bus");
+		strcpy (info.path, "usb:");
+		CHECK (gp_port_info_list_append (list, info));
 	}
 	return (GP_OK);
 }
