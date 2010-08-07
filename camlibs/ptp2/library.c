@@ -2626,7 +2626,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			gp_context_idle (context);
 			if (!ptp_get_one_event(params, &event))
 				continue;
-			gp_log (GP_LOG_DEBUG, "ptp","evdata: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+			gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 			goto handlegeneric;
 		}
 		return GP_OK;
@@ -2747,6 +2747,18 @@ downloadnow:
 				*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 				*eventdata = NULL;
 				break;
+			case PTP_EC_DevicePropChanged:
+			{
+				char *x;
+				x = malloc(strlen("PTP Property 0123 changed")+1);
+				if (x) {
+					sprintf (x, "PTP Property %04x changed", event.Param1);
+					*eventtype = GP_EVENT_UNKNOWN;
+					*eventdata = x;
+					return GP_OK;
+				}
+				break;
+			}
 			default: {
 				char *x;
 
@@ -2807,6 +2819,18 @@ handlegeneric:
 						  path->name, context));
 			*eventtype = GP_EVENT_FILE_ADDED;
 			*eventdata = path;
+		}
+		break;
+	}
+	case PTP_EC_DevicePropChanged:
+	{
+		char *x;
+		x = malloc(strlen("PTP Property 0123 changed")+1);
+		if (x) {
+			sprintf (x, "PTP Property %04x changed", event.Param1);
+			*eventtype = GP_EVENT_UNKNOWN;
+			*eventdata = x;
+			return GP_OK;
 		}
 		break;
 	}
@@ -4456,6 +4480,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return GP_OK;
 
 	camera->pl->checkevents = TRUE;
+	CPR (context, ptp_check_event (params));
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 	/* Get file number omiting storage pseudofolder */
@@ -4471,15 +4496,11 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (DELETE_SENDS_EVENT(params) &&
 	    ptp_event_issupported(params, PTP_EC_ObjectRemoved)) {
 		PTPContainer event;
-		int ret;
 
-		do {
-			ret = params->event_check (params, &event);
-			if (	(ret == PTP_RC_OK) &&
-				(event.Code == PTP_EC_ObjectRemoved)
-			)
+		CPR (context, ptp_check_event (params));
+		while (ptp_get_one_event (params, &event))
+			if (event.Code == PTP_EC_ObjectRemoved)
 				break;
-		} while (ret == PTP_RC_OK);
  	}
 	return (GP_OK);
 }
