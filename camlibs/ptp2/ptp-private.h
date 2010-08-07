@@ -41,6 +41,7 @@ int _ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
 
 struct _CameraPrivateLibrary {
 	PTPParams params;
+	int checkevents;
 	unsigned long bugs;
 	int	fs_loaded;
 };

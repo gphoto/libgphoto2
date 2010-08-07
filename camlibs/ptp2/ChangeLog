@@ -1,3 +1,7 @@
+2010-08-08  Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: backported event queue PTP handling from trunk
+
 2010-01-13  Marcus Meissner <marcus@jet.franken.de>
 
 	* library.c: Rewrote the timeout code.

@@ -4864,6 +4864,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	int			i;
 	SET_CONTEXT(camera, context);
 
+	camera->pl->checkevents = TRUE;
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {

@@ -56,11 +56,12 @@ Canon EOS series (currently: Canon EOS 1000D)
 Nikon DSLR series (currently: Nikon D90)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					first time not so good. second call gets stuff.
+									FAIL
 		- via Card (SD) (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					FAIL - not finding NEF
 		- no SD card inserted
 			- JPEG						TOTEST reports error
 			- JPEG + RAW 					TOTEST reports error
