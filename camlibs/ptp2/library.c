@@ -1446,7 +1446,7 @@ camera_exit (Camera *camera, GPContext *context)
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
 		while (ptp_get_one_event (params, &event))
-			gp_log (GP_LOG_DEBUG, "camera_exit", "missed ptp event 0x%x (param1=%x)", event.Code,event.Param1);
+			gp_log (GP_LOG_DEBUG, "camera_exit", "missed ptp event 0x%x (param1=%x)", event.Code, event.Param1);
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
@@ -2451,13 +2451,25 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		case PTP_EC_ObjectAdded: {
 			/* add newly created object to internal structures. but just once (think NEF+JPG) */
 			if (!newobject) {
+				PTPObjectInfo	*obinfo;
+				int		j;
+
 				res = add_object (camera, event.Param1, context);
 				if (res != GP_OK)
 					break;
-				newobject = event.Param1;
+				j = handle_to_n (event.Param1, camera);
+				obinfo = &camera->pl->params.objectinfo[j];
+				/* this might be just the folder add, ignore that. */
+				if (obinfo->ObjectFormat == PTP_OFC_Association) {
+					/* new directory ... mark fs as to be refreshed */
+					gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
+				} else {
+					/* new file */
+					newobject = event.Param1;
+					if (NO_CAPTURE_COMPLETE(camera->pl))
+						done=1;
+				}
 			}
-			if (NO_CAPTURE_COMPLETE(camera->pl))
-				done=1;
 			break;
 		}
 		case PTP_EC_CaptureComplete:
