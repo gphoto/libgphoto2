@@ -1439,6 +1439,13 @@ camera_exit (Camera *camera, GPContext *context)
 #endif
 		/* Disable EOS capture now, also end viewfinder mode. */
 		if (params->eos_captureenabled) {
+			if (camera->pl->checkevents) {
+				PTPCanon_changes_entry entry;
+
+				_ptp_check_eos_events (params);
+				while (_ptp_get_one_eos_event (params, &entry))
+					gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
+			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture(camera, context);
@@ -4523,7 +4530,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	    ptp_event_issupported(params, PTP_EC_ObjectRemoved)) {
 		PTPContainer event;
 
-		CPR (context, ptp_check_event (params));
+		ptp_check_event (params); /* ignore errors */
 		while (ptp_get_one_event (params, &event))
 			if (event.Code == PTP_EC_ObjectRemoved)
 				break;
