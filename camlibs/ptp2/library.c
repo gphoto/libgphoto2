@@ -2037,6 +2037,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
 		return GP_ERROR;
 	}
+	if (result == 7) {
+		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
+		return GP_ERROR_NO_MEMORY;
+	}
+	if (result) {
+		gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
+		return GP_ERROR;
+	}
 
 	newobject = 0;
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
