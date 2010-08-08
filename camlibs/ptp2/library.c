@@ -1445,8 +1445,11 @@ camera_exit (Camera *camera, GPContext *context)
 				PTPCanon_changes_entry entry;
 
 				_ptp_check_eos_events (params);
-				while (_ptp_get_one_eos_event (params, &entry))
+				while (_ptp_get_one_eos_event (params, &entry)) {
 					gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
+					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
+						free (entry.u.info);
+				}
 			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
@@ -1584,7 +1587,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				SET_CONTEXT_P(params, NULL);
 				return translate_ptp_result (ret);
 			}
-			gp_file_set_data_and_size ( file, (char*)data, size );
+			gp_file_append ( file, (char*)data, size );
+			free (data);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "canon_preview.jpg");
@@ -2071,6 +2075,10 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		while (_ptp_get_one_eos_event (params, &entry)) {
 			sleepcnt = 1;
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entry.type);
+			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN) {
+				free (entry.u.info);
+				break;
+			}
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 				newobject = entry.u.object.oid;
