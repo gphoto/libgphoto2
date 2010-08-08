@@ -3688,6 +3688,50 @@ _put_Canon_CaptureMode(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_EOS_ViewFinder(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	val = 2;	/* always changed, unless we can find out the state ... */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
+	int			val, ret;
+	uint16_t		res;
+	PTPParams		*params = &(camera->pl->params);
+	PTPPropertyValue	xval;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val) {
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
+			res = ptp_canon_eos_start_viewfinder (params);
+			params->eos_viewfinderenabled = 1;
+			return translate_ptp_result (res);
+		}
+	} else {
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder)) {
+			res = ptp_canon_eos_end_viewfinder (params);
+			params->eos_viewfinderenabled = 0;
+			return translate_ptp_result (res);
+		}
+	}
+	if (val)
+		xval.u32 = 2;
+	else
+		xval.u32 = 0;
+	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT32);
+	if (ret != PTP_RC_OK)
+		gp_log (GP_LOG_ERROR,"ptp2_eos_viewfinder enable", "setval of evf outputmode to %d failed, ret 0x%04x!", xval.u32, ret);
+	return translate_ptp_result (ret);
+}
+
+static int
 _get_Canon_FocusLock(CONFIG_GET_ARGS) {
 	int val;
 
@@ -4382,6 +4426,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DriveLens, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
 	{ N_("Canon EOS Zoom "),               "eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
 	{ N_("Canon EOS Zoom Position"),       "eoszoomposition",  0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_ZoomPosition, _get_Canon_EOS_ZoomPosition, _put_Canon_EOS_ZoomPosition},
+	{ N_("Canon EOS Viewfinder"),          "eosviewfinder",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder, _put_Canon_EOS_ViewFinder},
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -4667,7 +4712,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					if (setprops) /* handle oom */
 						setprops[nrofsetprops++] = cursub->propid;
 				} else {
-					ret = cursub->getfunc (camera, &widget, cursub, NULL);
+					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
+					if (	((cursub->type & 0x7000) != 0x1000) ||
+						 ptp_operation_issupported(params, cursub->type)
+					)
+						ret = cursub->getfunc (camera, &widget, cursub, NULL);
+					else
+						continue;
 				}
 				if (ret != GP_OK) {
 					gp_log (GP_LOG_DEBUG, "camera_get_config", "Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);

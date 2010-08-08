@@ -242,6 +242,8 @@ translate_ptp_result (short result)
 	switch (result) {
 	case PTP_RC_ParameterNotSupported:
 		return (GP_ERROR_BAD_PARAMETERS);
+	case PTP_RC_OperationNotSupported:
+		return (GP_ERROR_NOT_SUPPORTED);
 	case PTP_RC_DeviceBusy:
 		return (GP_ERROR_CAMERA_BUSY);
 	case PTP_ERROR_TIMEOUT:
