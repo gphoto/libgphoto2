@@ -61,7 +61,7 @@
 
 /* PTP2_FAST_TIMEOUT: how long (in milliseconds) we should wait for
  * an URB to come back on an interrupt endpoint */
-#define PTP2_FAST_TIMEOUT       50
+#define PTP2_FAST_TIMEOUT       100
 
 /* Pack / unpack functions */
 
@@ -517,6 +517,10 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		if (result == GP_ERROR_TIMEOUT)
 			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
+	}
+	if (!result) {
+		gp_log (GP_LOG_DEBUG, "ptp2/usb_event", "reading event a 0 byte read occured");
+		return PTP_ERROR_TIMEOUT;
 	}
 	rlen = result;
 	if (rlen < 8) {
