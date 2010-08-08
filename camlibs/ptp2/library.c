@@ -2749,7 +2749,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 				path->folder[0]='\0';
 
 				j = handle_to_n (newobject, camera);
-				if (j == PTP_HANDLER_SPECIAL) continue;
+				if (j == PTP_HANDLER_SPECIAL) {
+					free (path);
+					continue;
+				}
 
 				obinfo = &camera->pl->params.objectinfo[j];
 				strcpy  (path->name,  obinfo->Filename);
