@@ -1,4 +1,4 @@
-libgphoto2 2.4.9.4
+libgphoto2 2.4.9.5
 
 This is a 2.4 release branch update.
 
@@ -14,13 +14,15 @@ ax203:
     * new compression method supported for ax206
 
 ptp2:
+    * New PTP event handling added.
     * Fixed EOS capture to card waiting 1 minute bug
     * Fixed EOS capture "no focus" waiting 1 minute bug
+    * EOS "eosviewfinder" enable/disable option.
     * Pass up more EOS events via wait_for_event (property changes, and all unknown events).
     * EOS Viewfinder Zoom Level and Position added
     * Fixed setting multiple configuration values at once.
     * Handle MTP -> Vendor id mapping for PTP/IP cameras.
-    * Lots of smaller bugfixes.
+    * Lots of bugfixes.
     * Added new IDS:
       Kodak Z950
       Sony DSC-S370
@@ -29,6 +31,9 @@ ptp2:
       Canon PowerShot D10, SX120 IS
       Fuji FinePix F60fd, F70 EXR, S1800
       Pentax Optio W90
+
+sierra:
+    * Added Olympus E-520
 
 canon:
     * ability to read and set "shooting mode".
