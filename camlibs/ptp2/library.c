@@ -2547,9 +2547,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
 				break;
 			}
-			if (_timeout_passed (&event_start, timeout))
-				break;
-
 			while (_ptp_get_one_eos_event (params, &entry)) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entry.type);
 				switch (entry.type) {
@@ -2656,6 +2653,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				}
 			}
+			if (_timeout_passed (&event_start, timeout))
+				break;
 			/* incremental backoff wait ... including this wait loop */
 			for (i=sleepcnt;i--;) {
 				int resttime;
@@ -2671,22 +2670,23 @@ camera_wait_for_event (Camera *camera, int timeout,
 			sleepcnt++; /* incremental back off */
 			if (sleepcnt>10) sleepcnt=10;
 		}
-		gp_context_idle (context);
+		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
 		while (1) {
+			CPR (context, ptp_check_event (params));
+			if (ptp_get_one_event(params, &event)) {
+				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+				goto handleregular;
+			}
 			if (_timeout_passed (&event_start, timeout))
 				break;
-			CPR (context, ptp_check_event (params));
 			gp_context_idle (context);
-			if (!ptp_get_one_event(params, &event))
-				continue;
-			gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-			goto handleregular;
 		}
+		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
@@ -2694,14 +2694,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		uint32_t	newobject;
 
-		while (1) {
-			if (_timeout_passed (&event_start, timeout))
-				break;
+		do {
 			CPR (context, ptp_check_event (params));
-			if (!ptp_get_one_event (params, &event)) {
-				gp_context_idle (context);
+			if (!ptp_get_one_event (params, &event))
 				continue;
-			}
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_ObjectAdded: {
@@ -2829,7 +2825,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 			}
 			}
-		}
+			gp_context_idle (context);
+		} while (!_timeout_passed (&event_start, timeout));
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
