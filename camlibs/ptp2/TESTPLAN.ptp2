@@ -22,73 +22,76 @@ Canon EOS series (currently: Canon EOS 1000D)
 			- JPEG						PASS
 			- JPEG + RAW					PASS
 		- via Card (SD) (capturetarget=1)
-			- JPEG						xxxx
-			- JPEG + RAW					xxxx
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- no SD card inserted
-			- JPEG						TOTEST/IGNORE (hangs without error)
-			- JPEG + RAW 					TOTEST/IGNORE (hangs without error)
+			- JPEG						FAIL/IGNORE (hangs without error)
+			- JPEG + RAW 					FAIL/IGNORE (hangs without error)
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
 			- JPEG						PASS
 			- JPEG + RAW					PASS
 		- via Card (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- no SD card insert
-			- JPEG						TOTEST/IGNORE (hangs without error)
-			- JPEG + RAW 					TOTEST/IGNORE (hangs without error)
+			- JPEG						FAIL/IGNORE (hangs without error)
+			- JPEG + RAW 					FAIL/IGNORE (hangs without error)
 
 	--capture-preview
-		commandline tool					TOTEST
-		gtkam							TOTEST
-		mixed with --capture-image-and-download			TOTEST
+		commandline tool					PASS
+		gtkam							PASS
+		mixed with --capture-image-and-download			PASS
+
+	--capture-movie=10s						PASS
 
 	--wait-event-and-download
-		- JPEG							TOTEST
-		- JPEG + RAW						TOTEST
+		- JPEG							PASS
+		- JPEG + RAW						PASS
 
-	--list-config							TOTEST
-	--get-config somevalue						TOTEST
-	--set-config somevalue=value					TOTEST
+	--list-config							PASS
+	--get-config somevalue						PASS
+	--set-config somevalue=value					PASS
 
 
 Nikon DSLR series (currently: Nikon D90)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
 			- JPEG						PASS
-			- JPEG + RAW					first time not so good. second call gets stuff.
-									FAIL
+			- JPEG + RAW					PASS
 		- via Card (SD) (capturetarget=1)
 			- JPEG						PASS
-			- JPEG + RAW					FAIL - not finding NEF
-		- no SD card inserted
-			- JPEG						TOTEST reports error
-			- JPEG + RAW 					TOTEST reports error
+			- JPEG + RAW					PASS
+		- no SD card inserted, capturetarget=0
+			- JPEG						PASS
+			- JPEG + RAW 					PASS
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS (but not in correct order, JPGs are behind/IGNORE)
 		- via Card (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
-		- no SD card insert
-			- JPEG						TOTEST reports error
-			- JPEG + RAW 					TOTEST reports error
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+		- no SD card insert, capturetarget=0
+			- JPEG						PASS
+			- JPEG + RAW 					PASS
 
 	--capture-preview
-		commandline tool					TOTEST
-		gtkam							TOTEST
+		commandline tool					CHECK - First image is always plain white :(
+		gtkam							PASS
 		mixed with --capture-image-and-download	
-			- SDRAM mode					TOTEST
-			- Card mode					TOTEST/IGNORE (returns PTP Device Busy)
+			- SDRAM mode					PASS
+			- Card mode					FAIL/IGNORE (returns PTP Device Busy)
+
+	--capture-movie=10s						PASS
 
 	--wait-event-and-download
-		- JPEG							TOTEST
-		- JPEG + RAW						TOTEST (deleting NEF also deletes JPG I think)
+		- JPEG							PASS
+		- JPEG + RAW						PASS
 
 
-	--list-config							TOTEST
-	--get-config somevalue						TOTEST
-	--set-config somevalue=value					TOTEST
+	--list-config							PASS
+	--get-config somevalue						PASS
+	--set-config somevalue=value					PASS

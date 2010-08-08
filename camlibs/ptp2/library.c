@@ -2039,6 +2039,10 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return translate_ptp_result(ret);
 	}
+	if ((result & 0x7000) == 0x2000) { /* also happened */
+		gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
+		return translate_ptp_result(result);
+	}
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "result is %d", result);
 	if (result == 1) {
 		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
