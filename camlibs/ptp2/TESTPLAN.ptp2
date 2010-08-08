@@ -3,15 +3,21 @@ Testplan ptp2 driver
 Canon Powershot series (currently: Powershot SX100IS)
 
 	--capture-image-and-download
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
+		- Card configured, but not inserted (capturetarget=1)	TOTEST
+
 	--capture-image-and-download -F 3 -I 5
-		- via SDRAM (capturetarget=0):				TOTEST
-		- via Card (capturetarget=1):				TOTEST
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
 		- Card configured, but not inserted (capturetarget=1)	TOTEST
 
 	--capture-preview
-		commandline tool					TOTEST
-		gtkam							TOTEST
+		commandline tool					PASS
+		gtkam							PASS
 		mixed with --capture-image-and-download			TOTEST
+
+	--capture-movie=10s						PASS
 
 	--list-config							TOTEST
 
