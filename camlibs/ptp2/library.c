@@ -2743,8 +2743,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 				if (!path)
 					return GP_ERROR_NO_MEMORY;
 				res = add_object (camera, newobject, context);
-				if (res != GP_OK) /* might have been deleted previously */
+				if (res != GP_OK) { /* might have been deleted previously */
+					free (path);
 					continue;
+				}
 				path->name[0]='\0';
 				path->folder[0]='\0';
 
