@@ -616,7 +616,7 @@ static struct {
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112, 0},
 	/* Nikon Coolpix 5000, Firmware v1.7 or later */
-	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, 0},
+	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, PTP_CAP},
 	/* Nikon Coolpix 3100 */
 	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115, 0},
 	/* Nikon Coolpix 2100 */
