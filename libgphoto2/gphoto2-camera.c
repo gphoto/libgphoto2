@@ -664,15 +664,23 @@ gp_camera_init (Camera *camera, GPContext *context)
 	if (strcasecmp (camera->pc->a.model, "Directory Browse") &&
 	    !strcmp ("", camera->pc->a.model)) {
 		CameraAbilitiesList *al;
-		GPPortInfoList *il;
-		int m, p;
-		GPPortInfo info;
-        	CameraList *list;
+		GPPortInfo	pinfo;
+		GPPortInfoList	*il;
+		int		m, p;
+		GPPortInfo	info;
+        	CameraList	*list;
 
 		result = gp_list_new (&list);
 		if (result < GP_OK)
 			return result;
 
+		result = gp_port_get_info (camera->port, &pinfo);
+		if (result < GP_OK)
+			return result;
+
+		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "pinfo.type %d", pinfo.type);
+		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "pinfo.path %s", pinfo.path);
+		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "pinfo.name %s", pinfo.name);
 		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
 			"port nor model set. Trying auto-detection...");
 
@@ -685,18 +693,32 @@ gp_camera_init (Camera *camera, GPContext *context)
 		if (!gp_list_count (list)) {
 			gp_abilities_list_free (al);
 			gp_port_info_list_free (il);
-			gp_context_error (context, _("Could not detect "
-					     "any camera"));
+			gp_context_error (context, _("Could not detect any camera"));
 			gp_list_free (list);
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
+		p = 0;
+		/* if the port was set before, then use that entry */
+		if ((pinfo.type == GP_PORT_USB) && strlen(pinfo.name)) {
+			for (p = gp_list_count (list);p--;) {
+				const char *xp;
 
-		gp_list_get_name  (list, 0, &model);
+				gp_list_get_value (list, p, &xp);
+				if (!strcmp (xp, pinfo.name))
+					break;
+			}
+			if (p<0) {
+				gp_context_error (context, _("Could not detect any camera at port %s"), pinfo.path);
+				return (GP_ERROR_FILE_NOT_FOUND);
+			}
+		}
+
+		gp_list_get_name  (list, p, &model);
 		m = gp_abilities_list_lookup_model (al, model);
 		gp_abilities_list_get_abilities (al, m, &a);
 		gp_abilities_list_free (al);
 		CRSL (camera, gp_camera_set_abilities (camera, a), context, list);
-		CRSL (camera, gp_list_get_value (list, 0, &port), context, list);
+		CRSL (camera, gp_list_get_value (list, p, &port), context, list);
 		p = gp_port_info_list_lookup_path (il, port);
 		gp_port_info_list_get_info (il, p, &info);
 		gp_port_info_list_free (il);
