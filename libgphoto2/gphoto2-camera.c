@@ -730,10 +730,12 @@ gp_camera_init (Camera *camera, GPContext *context)
 	if (strcasecmp (camera->pc->a.model, "Directory Browse") &&
 	    !strcmp ("", camera->pc->a.model)) {
 		CameraAbilitiesList *al;
-		GPPortInfoList *il;
-		int m, p;
-		GPPortInfo info;
-        	CameraList *list;
+		GPPortInfoList	*il;
+		int		m, p;
+		char		*ppath;
+		GPPortType	ptype;
+		GPPortInfo	info;
+        	CameraList	*list;
 
 		result = gp_list_new (&list);
 		if (result < GP_OK)
@@ -756,13 +758,31 @@ gp_camera_init (Camera *camera, GPContext *context)
 			gp_list_free (list);
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
+		p = 0;
+		gp_port_get_info (camera->port, &info);
+		gp_port_info_get_path (info, &ppath);
+		gp_port_info_get_type (info, &ptype);
+		/* if the port was set before, then use that entry */
+		if ((ptype == GP_PORT_USB) && strlen(ppath)) {
+			for (p = gp_list_count (list);p--;) {
+				const char *xp;
 
-		gp_list_get_name  (list, 0, &model);
+				gp_list_get_value (list, p, &xp);
+				if (!strcmp (xp, ppath))
+					break;
+			}
+			if (p<0) {
+				gp_context_error (context, _("Could not detect any camera at port %s"), ppath);
+				return (GP_ERROR_FILE_NOT_FOUND);
+			}
+		}
+
+		gp_list_get_name  (list, p, &model);
 		m = gp_abilities_list_lookup_model (al, model);
 		gp_abilities_list_get_abilities (al, m, &a);
 		gp_abilities_list_free (al);
 		CRSL (camera, gp_camera_set_abilities (camera, a), context, list);
-		CRSL (camera, gp_list_get_value (list, 0, &port), context, list);
+		CRSL (camera, gp_list_get_value (list, p, &port), context, list);
 		p = gp_port_info_list_lookup_path (il, port);
 		gp_port_info_list_get_info (il, p, &info);
 		CRSL (camera, gp_camera_set_port_info (camera, info), context, list);
