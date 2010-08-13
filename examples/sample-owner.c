@@ -6,6 +6,12 @@
 
 #include "samples.h"
 
+static void errordumper(GPLogLevel level, const char *domain, const char *format,
+                 va_list args, void *data) {
+  vfprintf(stdout, format, args);
+  fprintf(stdout, "\n");
+}
+
 /* Set the owner of the first camera.
  *
  * This program can autodetect a single camera and then sets its
@@ -23,6 +29,9 @@ int main(int argc, char **argv) {
 	GPContext	*context;
 
 	context = sample_create_context (); /* see context.c */
+
+	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
+
 	gp_camera_new (&camera);
 
 	/* This call will autodetect cameras, take the
