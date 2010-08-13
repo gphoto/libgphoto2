@@ -1845,6 +1845,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			}
 		}
 	}
+	dpd->CurrentValue.u8 = u;
 	return GP_OK;
 }
 
