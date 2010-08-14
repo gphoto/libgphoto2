@@ -92,6 +92,7 @@ struct _CameraPrivateLibrary {
 	/* Used by st2205.c / st2205_decode.c */
 	int width;
 	int height;
+	int compressed; /* Is the image data compressed or rgb565 ? */
 	FILE *mem_dump;
 	char *mem;
 	char *buf; /* 512 bytes aligned buffer (for sending / reading cmds) */
@@ -158,5 +159,13 @@ st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src,
 int
 st2205_code_image(CameraPrivateLibrary *pl, int **src,
 	unsigned char *dest, uint8_t shuffle_pattern, int allow_uv_corr);
+
+int
+st2205_rgb565_to_rgb24(CameraPrivateLibrary *pl, unsigned char *src,
+	int **dest);
+
+int
+st2205_rgb24_to_rgb565(CameraPrivateLibrary *pl, int **src,
+	unsigned char *dest);
 
 #endif
