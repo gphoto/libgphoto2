@@ -762,8 +762,8 @@ gp_camera_init (Camera *camera, GPContext *context)
 		gp_port_get_info (camera->port, &info);
 		gp_port_info_get_path (info, &ppath);
 		gp_port_info_get_type (info, &ptype);
-		/* if the port was set before, then use that entry */
-		if ((ptype == GP_PORT_USB) && strlen(ppath)) {
+		/* if the port was set before, then use that entry, but not if it is "usb:" */
+		if ((ptype == GP_PORT_USB) && strlen(ppath) && strcmp(ppath, "usb:")) {
 			for (p = gp_list_count (list);p--;) {
 				const char *xp;
 
