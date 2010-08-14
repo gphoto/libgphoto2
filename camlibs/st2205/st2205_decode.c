@@ -350,6 +350,53 @@ st2205_code_image(CameraPrivateLibrary *pl, int **src,
 
 	return used;
 }
+
+int
+st2205_rgb565_to_rgb24(CameraPrivateLibrary *pl, unsigned char *src,
+	int **dest)
+{
+	int x,y;
+
+	for (y = 0; y < pl->height; y++) {
+		for (x = 0; x < pl->width; x++) {
+			unsigned short w = src[0] << 8 | src[1];
+
+			dest[y][x] = gdTrueColor ((w >> 8) & 0xf8,
+						  (w >> 3) & 0xfb,
+						  (w << 3) & 0xf8);
+			src += 2;
+		}
+	}
+
+	return GP_OK;
+}
+
+int
+st2205_rgb24_to_rgb565(CameraPrivateLibrary *pl, int **src,
+	unsigned char *dest)
+{
+	int x,y;
+
+	for (y = 0; y < pl->height; y++) {
+		for (x = 0; x < pl->width; x++) {
+			unsigned short w;
+
+			int r = gdTrueColorGetRed(src[y][x]);
+			int g = gdTrueColorGetGreen(src[y][x]);
+			int b = gdTrueColorGetBlue(src[y][x]);
+
+			w = ((r <<  8) & 0xf100) |
+			    ((g <<  3) & 0x07e0) |
+			    ((b >>  3) & 0x001f);
+
+			*dest++ = w >> 8;
+			*dest++ = w & 0xff;
+		}
+	}
+
+	return pl->height * pl->width * 2;
+}
+
 #else
 int
 st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src,
@@ -364,4 +411,19 @@ st2205_code_image(CameraPrivateLibrary *pl, int **src,
 {
 	return GP_ERROR_NOT_SUPPORTED;
 }
+
+int
+st2205_rgb565_to_rgb24(CameraPrivateLibrary *pl, unsigned char *src,
+	int **dest)
+{
+	return GP_ERROR_NOT_SUPPORTED;
+}
+
+int
+st2205_rgb24_to_rgb565(CameraPrivateLibrary *pl, int **src,
+	unsigned char *dest);
+{
+	return GP_ERROR_NOT_SUPPORTED;
+}
+
 #endif

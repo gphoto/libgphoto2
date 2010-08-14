@@ -379,7 +379,6 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 {
 	int count;
 	struct image_table_entry entry;
-	struct image_header header;
 
 	count = st2205_read_file_count(camera);
 	if (count < 0) return count;
@@ -407,7 +406,7 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 		   seem to care about this, but the windows software does this,
 		   so lets do it too. */
 		memset (&entry, 0, sizeof(entry));
-		entry.address = htole32 (start + size + sizeof(header));
+		entry.address = htole32 (start + size);
 		CHECK (st2205_write_mem (camera, ST2205_FILE_OFFSET (count),
 					 &entry, sizeof(entry)))
 	}
@@ -415,18 +414,29 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 	CHECK (st2205_update_fat_checksum (camera))
 	CHECK (st2205_copy_fat (camera))
 
-	memset(&header, 0, sizeof(header));
-	header.marker = ST2205_HEADER_MARKER;
-	header.width  = htobe16(camera->pl->width);
-	header.height = htobe16(camera->pl->height);
-	header.blocks = htobe16((camera->pl->width * camera->pl->height) / 64);
-	header.shuffle_table = shuffle;
-	header.unknown2 = 0x04;
-	header.unknown3 = camera->pl->unknown3[shuffle];
-	header.length = htobe16(size);
-	CHECK (st2205_write_mem (camera, start,
-				 &header, sizeof(header)))
-	CHECK (st2205_write_mem (camera, start + sizeof(header), buf, size))
+	if (camera->pl->compressed) {
+		struct image_header header = { 0, };
+		
+		/* The buffer we are passed in does not include the compressed
+		   image header, but the size does take it into account */
+		size -= sizeof(header);
+
+		/* Create and write compressed image header */
+		header.marker = ST2205_HEADER_MARKER;
+		header.width  = htobe16(camera->pl->width);
+		header.height = htobe16(camera->pl->height);
+		header.blocks = htobe16((camera->pl->width * camera->pl->height) / 64);
+		header.shuffle_table = shuffle;
+		header.unknown2 = 0x04;
+		header.unknown3 = camera->pl->unknown3[shuffle];
+		header.length = htobe16(size);
+		CHECK (st2205_write_mem (camera, start,
+					 &header, sizeof(header)))
+		/* And write the actual image data */
+		CHECK (st2205_write_mem (camera, start + sizeof(header),
+ 					buf, size))
+	} else
+		CHECK (st2205_write_mem (camera, start,	buf, size))
 
 	/* Let the caller know at which index we stored the table entry */
 	return idx;
@@ -511,35 +521,39 @@ st2205_read_raw_file(Camera *camera, int idx, unsigned char **raw)
 
 	GP_DEBUG ("file: %d start at: %08x\n", idx, entry.address);
 
-	CHECK (st2205_read_mem (camera, entry.address,
-				&header, sizeof(header)))
+	if (camera->pl->compressed) {
+		CHECK (st2205_read_mem (camera, entry.address,
+					&header, sizeof(header)))
 
-	if (header.marker != ST2205_HEADER_MARKER) {
-		gp_log (GP_LOG_ERROR, "st2205", "invalid header magic");
-		return GP_ERROR_CORRUPTED_DATA;
-	}
+		if (header.marker != ST2205_HEADER_MARKER) {
+			gp_log (GP_LOG_ERROR, "st2205", "invalid header magic");
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 
-	BE16TOH(header.width);
-	BE16TOH(header.height);
-	BE16TOH(header.length);
-	BE16TOH(header.blocks);
+		BE16TOH(header.width);
+		BE16TOH(header.height);
+		BE16TOH(header.length);
+		BE16TOH(header.blocks);
 
-	if ((header.width != camera->pl->width) ||
-	    (header.height != camera->pl->height)) {
-		gp_log (GP_LOG_ERROR, "st2205",
-			"picture size does not match frame size.");
-		return GP_ERROR_CORRUPTED_DATA;
-	}
+		if ((header.width != camera->pl->width) ||
+		    (header.height != camera->pl->height)) {
+			gp_log (GP_LOG_ERROR, "st2205",
+				"picture size does not match frame size.");
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 
-	if (((header.width / 8) * (header.height / 8)) != header.blocks) {
-		gp_log (GP_LOG_ERROR, "st2205", "invalid block count");
-		return GP_ERROR_CORRUPTED_DATA;
-	}
+		if (((header.width / 8) * (header.height / 8)) != header.blocks) {
+			gp_log (GP_LOG_ERROR, "st2205", "invalid block count");
+			return GP_ERROR_CORRUPTED_DATA;
+		}
 
-	GP_DEBUG ("file: %d header read, size: %dx%d, length: %d bytes\n",
-		  idx, header.width, header.height, header.length);
+		GP_DEBUG ("file: %d header read, size: %dx%d, length: %d bytes\n",
+			  idx, header.width, header.height, header.length);
 
-	size = header.length + sizeof (header);
+		size = header.length + sizeof (header);
+	} else
+		size = camera->pl->width * camera->pl->height * 2;
+
 	*raw = malloc (size);
 	if (!*raw) {
 		gp_log (GP_LOG_ERROR, "st2205", "allocating memory");
@@ -566,10 +580,14 @@ st2205_read_file(Camera *camera, int idx, int **rgb24)
 	CHECK (st2205_read_raw_file (camera, idx, &src))
 
 	header = (struct image_header *) src;
-	ret = st2205_decode_image (camera->pl,
-				   src + sizeof (struct image_header),
-				   be16toh (header->length), rgb24,
-				   header->shuffle_table);
+	if (camera->pl->compressed)
+		ret = st2205_decode_image (camera->pl,
+					   src + sizeof (struct image_header),
+					   be16toh (header->length), rgb24,
+					   header->shuffle_table);
+	else
+		ret = st2205_rgb565_to_rgb24 (camera->pl, src, rgb24);
+
 	free(src);
 
 	return ret;
@@ -585,9 +603,15 @@ st2205_real_write_file(Camera *camera,
 	struct image_header header;
 	int i, start, end, hole_start = 0, hole_idx = 0;
 
-	size = st2205_code_image (camera->pl, rgb24, buf, shuffle,
-				  allow_uv_corr);
-	if (size < 0) return size;
+	if (camera->pl->compressed) {
+		size = st2205_code_image (camera->pl, rgb24, buf, shuffle,
+					  allow_uv_corr);
+		if (size < 0) return size;
+		/* Make sure we have size for both the data and the compressed
+		   image header added by st2205_add_picture */
+		size += sizeof(header);
+	} else
+		size = st2205_rgb24_to_rgb565 (camera->pl, rgb24, buf);
 
 	count = st2205_read_file_count (camera);
 	if (count < 0) return count;
@@ -613,12 +637,16 @@ st2205_real_write_file(Camera *camera,
 
 			start = entry.address;
 			if (entry.present) {
-				CHECK (st2205_read_mem (camera, start,
-							&header,
-							sizeof(header)))
+				if (camera->pl->compressed) {
+					CHECK (st2205_read_mem (camera, start,
+							      &header,
+							      sizeof(header)))
 
-				BE16TOH(header.length);
-				end = start + sizeof(header) + header.length;
+					BE16TOH(header.length);
+					end = start + sizeof(header) + 
+					      header.length;
+				} else
+					end = start + size;
 			}
 		}
 
@@ -629,8 +657,8 @@ st2205_real_write_file(Camera *camera,
 				int hole_size = start - hole_start;
 				GP_DEBUG ("found a hole at: %08x, of %d bytes "
 					  "(need %d)\n", hole_start, hole_size,
-					  (int)(size + sizeof(header)));
-				if (hole_size < (size + sizeof(header))) {
+					  size);
+				if (hole_size < size) {
 					/* Too small, start searching
 					   for the next hole */
 					hole_start = 0;
@@ -656,7 +684,7 @@ st2205_real_write_file(Camera *camera,
 	}
 	
 	/* No freespace found, try again with uv correction tables disabled */
-	if (allow_uv_corr)
+	if (camera->pl->compressed && allow_uv_corr)
 		return st2205_real_write_file (camera, filename, rgb24, buf,
 					       shuffle, 0);
 
@@ -670,7 +698,7 @@ st2205_write_file(Camera *camera,
 	const char *filename, int **rgb24)
 {
 	/* The buffer must be large enough for the worst case scenario */
-	unsigned char buf[(camera->pl->width * camera->pl->height / 64) * 64];
+	unsigned char buf[camera->pl->width * camera->pl->height * 2];
 	int shuffle;
 
 	shuffle = (long long)rand_r(&camera->pl->rand_seed) *
@@ -734,6 +762,10 @@ int
 st2205_set_time_and_date(Camera *camera, struct tm *t)
 {
 	uint8_t *buf = (uint8_t *)camera->pl->buf;
+
+	/* We cannot do this when operating on a dump */
+	if (camera->pl->mem_dump)
+		return GP_OK;
 
 	memset(buf, 0, 512);
 	buf[0] = 6; /* cmd 6 set time */
@@ -974,6 +1006,10 @@ st2205_init(Camera *camera)
 	CHECK (st2205_check_fat_checksum (camera))
 
 	camera->pl->rand_seed = time(NULL);
+
+	/* FIXME add detection of picture frames which don't use compression
+	   (some 96x64 models) */
+	camera->pl->compressed = 1;
 
 	return GP_OK;
 }
