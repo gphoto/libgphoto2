@@ -698,7 +698,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 		p = 0;
-		/* if the port was set before, then use that entry */
+		/* if the port was set before, then use that entry. but not if it is "usb:" */
 		if (	(pinfo.type == GP_PORT_USB) &&
 			strlen(pinfo.path) &&
 			strcmp(pinfo.path,"usb:")
