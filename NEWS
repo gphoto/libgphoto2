@@ -1,20 +1,33 @@
-libgphoto2 2.4.9.5
+libgphoto2 2.4.10
 
 This is a 2.4 release branch update.
 
 libgphoto2:
     * Translation updates (polish, vietnamese).
+    * The "usb:" generic matcher entry is not reported anymore.
+      Auto detection will now always return "usb:XXX,YYY" and "usb:AAA,BBB" values.
+
+      You can still pass "usb:" in.
+
+    * The generated UDEV rules for version 136 and later have been changed:
+      - PTP class is shortcut to avoid 1000 entries to be evaluated for the common camera case.
+      - USB Mass Storage is now skipped and not tagged as gphoto supported.
+        This should avoid confuse users with MTP players in dual mode.
+
+       (Done just for the cameras and MTP players, not for the picture frame drivers).
 
 st2205:
     * Link iconv (MacOS build fix)
     * "delete all files" implemented.
 
 ax203:
-    * various improvements and bugfixes
+    * Various improvements and bug fixes
     * new compression method supported for ax206
 
 ptp2:
     * New PTP event handling added.
+      This might have caused some instabilities in capture code.
+
     * Fixed EOS capture to card waiting 1 minute bug
     * Fixed EOS capture "no focus" waiting 1 minute bug
     * EOS "eosviewfinder" enable/disable option.
@@ -22,14 +35,14 @@ ptp2:
     * EOS Viewfinder Zoom Level and Position added
     * Fixed setting multiple configuration values at once.
     * Handle MTP -> Vendor id mapping for PTP/IP cameras.
-    * Lots of bugfixes.
+    * Lots of bug fixes.
     * Added new IDS:
       Kodak Z950
       Sony DSC-S370
       Nikon CoolPix 7600, L110
       Panasonic FZ38, DMC-GF1 (only download support), 
       Canon PowerShot D10, SX120 IS
-      Fuji FinePix F60fd, F70 EXR, S1800
+      Fuji FinePix F60fd, F70 EXR, S1800, S5800
       Pentax Optio W90
 
 sierra:
@@ -39,7 +52,7 @@ canon:
     * ability to read and set "shooting mode".
 
 digigr8:
-    * merged from TRUNK: new camera "Stop & Shop 87096", some cleanups and bugfixes
+    * merged from TRUNK: new camera "Stop & Shop 87096", some cleanups and bug fixes
 
 jl2005c: 
     * Decompression decoded and driver now working. Enabled by default now.
@@ -50,12 +63,6 @@ libgphoto2_port/usbscsi:
 libgphoto2_port/usb:
     * Do not filter out "usb:XXX,YYY" ... but have both usb: and
       usb:XXX,YYY for now.
-
-packaging:
-    * Enhanced new udev rules to shortcut PTP devices (instead of
-      evaluating 1000 lines of other cameras)
-    * Enhanced new udev rules to disable USB Mass Storage interface
-      having devices for gphoto usage due too much confusion with gvfs.
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.9
@@ -68,8 +75,8 @@ ptp2:
      dual image capture (RAW+JPEG).
    * New Canon EOS properties: autoexposuremode, cameraoutput, evfmode, uilock.
    * New Nikon property: exposuredelaymode
-   * Fixed a Canon Powershot configuration bug that caused hangs.
-   * Fixed a Nikon Coolpix configuration bug that caused hangs.
+   * Fixed a Canon PowerShot configuration bug that caused hangs.
+   * Fixed a Nikon CoolPix configuration bug that caused hangs.
    * Fixed shutterspeed setting to be more generic.
    * New IDs added:
 	Nikon Coolpix 8800, P6000, L20, L19
