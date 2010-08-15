@@ -2713,7 +2713,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
 		while (1) {
-			CPR (context, ptp_check_event (params));
+			ptp_check_event (params);
 			if (ptp_get_one_event(params, &event)) {
 				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 				goto handleregular;
@@ -4535,7 +4535,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		return GP_OK;
 
 	camera->pl->checkevents = TRUE;
-	CPR (context, ptp_check_event (params));
+	ptp_check_event (params);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
