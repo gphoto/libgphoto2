@@ -566,7 +566,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_NIKON_AdvancedTransferCancel	0xA022
 
 /* Canon specific response codes */
-#define PTP_RC_CANON_A009		0xA009
+#define PTP_RC_CANON_UNKNOWN_COMMAND		0xA001
+#define PTP_RC_CANON_OPERATION_REFUSED		0xA005
+#define PTP_RC_CANON_LENS_COVER			0xA006
+#define PTP_RC_CANON_BATTERY_LOW		0xA101
+#define PTP_RC_CANON_NOT_READY			0xA102
+
+#define PTP_RC_CANON_A009			0xA009
 
 /* Microsoft/MTP specific codes */
 #define PTP_RC_MTP_Undefined			0xA800

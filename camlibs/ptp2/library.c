@@ -214,6 +214,11 @@ static struct {
 	{PTP_RC_NIKON_MfDriveStepEnd,	PTP_VENDOR_NIKON, N_("Mf Drive Step End")},
 	{PTP_RC_NIKON_MfDriveStepInsufficiency,	PTP_VENDOR_NIKON, N_("Mf Drive Step Insufficiency")},
 	{PTP_RC_NIKON_AdvancedTransferCancel, PTP_VENDOR_NIKON, N_("Advanced Transfer Cancel")},
+	{PTP_RC_CANON_UNKNOWN_COMMAND,	PTP_VENDOR_CANON, N_("Unknown command")},
+	{PTP_RC_CANON_OPERATION_REFUSED,PTP_VENDOR_CANON, N_("Operation refused")},
+	{PTP_RC_CANON_LENS_COVER,	PTP_VENDOR_CANON, N_("Lens cover present")},
+	{PTP_RC_CANON_BATTERY_LOW,	PTP_VENDOR_CANON, N_("Battery low")},
+	{PTP_RC_CANON_NOT_READY,	PTP_VENDOR_CANON, N_("Camera not ready")},
 
 	{PTP_ERROR_IO,		  0, N_("PTP I/O error")},
 	{PTP_ERROR_CANCEL,	  0, N_("PTP Cancel request")},
