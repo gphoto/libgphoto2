@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-07-10 15:26+0200\n"
+"POT-Creation-Date: 2010-08-08 22:53+0200\n"
 "PO-Revision-Date: 2010-04-11 15:14+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -344,12 +344,12 @@ msgstr "Keine Fehlerbeschreibung verfügbar."
 msgid "Could not lock device '%s'"
 msgstr "Konnte Gerät »%s« nicht reservieren"
 
-#: serial/unix.c:251 usbdiskdirect/linux.c:90 usbscsi/linux.c:95
+#: serial/unix.c:251 usbdiskdirect/linux.c:94 usbscsi/linux.c:95
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Gerät »%s« ist von PID %d reserviert"
 
-#: serial/unix.c:254 usbdiskdirect/linux.c:93 usbscsi/linux.c:98
+#: serial/unix.c:254 usbdiskdirect/linux.c:97 usbscsi/linux.c:98
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
@@ -359,14 +359,14 @@ msgstr "Gerät »%s« konnte nicht reserviert werden (dev_lock lieferte %d)"
 msgid "Device '%s' could not be unlocked."
 msgstr "Reservierung von Gerät »%s« konnte nicht freigegeben werden"
 
-#: serial/unix.c:300 usbdiskdirect/linux.c:122 usbscsi/linux.c:127
+#: serial/unix.c:300 usbdiskdirect/linux.c:126 usbscsi/linux.c:127
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr ""
 "Reservierung von Gerät »%s« konnte nicht freigegeben werden, da es von PID %d "
 "reserviert ist."
 
-#: serial/unix.c:304 usbdiskdirect/linux.c:126 usbscsi/linux.c:131
+#: serial/unix.c:304 usbdiskdirect/linux.c:130 usbscsi/linux.c:131
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr ""
@@ -378,12 +378,12 @@ msgstr ""
 msgid "Serial Port %i"
 msgstr "Serieller Port %i"
 
-#: serial/unix.c:476 usbdiskdirect/linux.c:281 usbscsi/linux.c:280
+#: serial/unix.c:476 usbdiskdirect/linux.c:285 usbscsi/linux.c:280
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Konnte »%s« nicht öffnen (%m)."
 
-#: serial/unix.c:494 usbdiskdirect/linux.c:295 usbscsi/linux.c:294
+#: serial/unix.c:494 usbdiskdirect/linux.c:299 usbscsi/linux.c:294
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Konnte »%s« nicht schließen (%m)."
@@ -427,30 +427,30 @@ msgstr "Konnte »%s« nicht leeren (%m)."
 msgid "Could not set the baudrate to %d"
 msgstr "Konnte Baudrate nicht auf %d setzen"
 
-#: usb/libusb.c:245
+#: usb/libusb.c:248
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Konnte USB-Gerät nicht öffnen (%m)."
 
-#: usb/libusb.c:257
+#: usb/libusb.c:260
 msgid "Camera is already in use."
 msgstr "Kamera ist bereits in Benutzung."
 
-#: usb/libusb.c:262
+#: usb/libusb.c:265
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
 msgstr "Gerät hat Kerneltreiber '%s' zugewiesen, löse Treiber jetzt."
 
-#: usb/libusb.c:265
+#: usb/libusb.c:268
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Konnte Kerneltreiber '%s' nicht vom Kamera Device lösen."
 
-#: usb/libusb.c:270
+#: usb/libusb.c:273
 msgid "Could not query kernel driver of device."
 msgstr "Konnte den Kerneltreiber des Gerätes nicht abfragen."
 
-#: usb/libusb.c:278
+#: usb/libusb.c:281
 #, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
@@ -462,38 +462,38 @@ msgstr ""
 "anderes Programm oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
-#: usb/libusb.c:296
+#: usb/libusb.c:299
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Konnte Schnittstelle %d nicht freigeben (%m)."
 
-#: usb/libusb.c:309
+#: usb/libusb.c:312
 #, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Konnte USB-Port nicht resetten (%m)."
 
-#: usb/libusb.c:336
+#: usb/libusb.c:339
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Konnte USB-Port nicht schließen (%m)."
 
-#: usb/libusb.c:585
+#: usb/libusb.c:588
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Konnte Konfiguration %d/%d nicht setzen (%m)"
 
-#: usb/libusb.c:618
+#: usb/libusb.c:621
 #, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Konnte Alternativ-Setting %d nicht auf %d setzen (%m)"
 
-#: usb/libusb.c:710
+#: usb/libusb.c:713
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr ""
 "Die angegebene Hersteller- oder Produkt-ID (0x%x,0x%x) ist nicht gültig."
 
-#: usb/libusb.c:746
+#: usb/libusb.c:749
 #, c-format
 msgid ""
 "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might "
@@ -503,7 +503,7 @@ msgstr ""
 "und wird von System direkt unterstützt (und deshalb nicht von gphoto2). "
 "Lesen Sie hierzu bitte %s"
 
-#: usb/libusb.c:789
+#: usb/libusb.c:792
 #, c-format
 msgid ""
 "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device "
@@ -513,7 +513,7 @@ msgstr ""
 "Stellen Sie sicher, dass das Gerät ordnungsgemäß an den Computer "
 "angeschlossen ist."
 
-#: usb/libusb.c:1053
+#: usb/libusb.c:1056
 #, c-format
 msgid ""
 "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make "
@@ -534,22 +534,22 @@ msgstr "Medium »%s«"
 msgid "(unknown)"
 msgstr "(unbekannt)"
 
-#: usbdiskdirect/linux.c:226
+#: usbdiskdirect/linux.c:230
 #, c-format
 msgid "USB Mass Storage direct IO"
 msgstr "USB Mass Storage direkt I/O"
 
-#: usbdiskdirect/linux.c:320
+#: usbdiskdirect/linux.c:324
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
 msgstr "Konnte nicht an Offset %x seeken auf »%s« (%m)."
 
-#: usbdiskdirect/linux.c:343
+#: usbdiskdirect/linux.c:347
 #, c-format
 msgid "Could not write to '%s' (%m)."
 msgstr "Konnte nicht auf »%s« schreiben (%m)."
 
-#: usbdiskdirect/linux.c:365
+#: usbdiskdirect/linux.c:369
 #, c-format
 msgid "Could not read from '%s' (%m)."
 msgstr "Konnte  nicht von »%s« lesen (%m)."
