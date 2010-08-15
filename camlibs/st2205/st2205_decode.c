@@ -421,7 +421,7 @@ st2205_rgb565_to_rgb24(CameraPrivateLibrary *pl, unsigned char *src,
 
 int
 st2205_rgb24_to_rgb565(CameraPrivateLibrary *pl, int **src,
-	unsigned char *dest);
+	unsigned char *dest)
 {
 	return GP_ERROR_NOT_SUPPORTED;
 }
