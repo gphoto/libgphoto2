@@ -865,6 +865,7 @@ st2205_init(Camera *camera)
 		  ST2205_V2_PICTURE_START, 1 },
 		{ }
 	};
+	const int uncompressed_firmware_checksums[] = { 0x00ab02fc, 0 };
 
 	GP_DEBUG ("st2205_init called");
 
@@ -1007,9 +1008,28 @@ st2205_init(Camera *camera)
 
 	camera->pl->rand_seed = time(NULL);
 
-	/* FIXME add detection of picture frames which don't use compression
-	   (some 96x64 models) */
-	camera->pl->compressed = 1;
+	/* Some 96x64 models don't use compression, unfortunately I've found
+	   no way to detect if this is the case, so we keep a list of firmware
+	   checksums to identify these. */
+	for (i = camera->pl->mem_size - camera->pl->firmware_size;
+	     i < camera->pl->mem_size; i += ST2205_BLOCK_SIZE)
+		CHECK (st2205_check_block_present (camera,
+						   i / ST2205_BLOCK_SIZE))
+	checksum = 0;
+	for (i = camera->pl->mem_size - camera->pl->firmware_size;
+	     i < camera->pl->mem_size; i++)
+		checksum += (uint8_t)camera->pl->mem[i];
+
+	GP_DEBUG ("firmware checksum: 0x%08x", checksum);
+
+	for (i = 0; uncompressed_firmware_checksums[i]; i++)
+		if (uncompressed_firmware_checksums[i] == checksum)
+			break;
+
+	if (!uncompressed_firmware_checksums[i])
+		camera->pl->compressed = 1;
+	else
+		camera->pl->compressed = 0;
 
 	return GP_OK;
 }
