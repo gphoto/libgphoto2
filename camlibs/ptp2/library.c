@@ -2296,6 +2296,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				ret=ptp_canon_checkevent(params,&event,&isevent);
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+				if (isevent)
+					gp_log (GP_LOG_DEBUG, "ptp", "Unhandled canon event: 0x%04x.", event.Code);
 			}
 			/* Marcus: Not sure if we really needs this. This refocuses the camera.
 			   ret = ptp_canon_reset_aeafawb(params,7);
