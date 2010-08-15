@@ -2254,6 +2254,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		viewfinderwason = 1;
 		params->canon_viewfinder_on = 0;
 	}
+	ptp_check_event (params);
 
 #if 0
 	/* FIXME: For now, to avoid flash during debug */
