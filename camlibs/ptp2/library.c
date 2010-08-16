@@ -1457,11 +1457,11 @@ camera_exit (Camera *camera, GPContext *context)
 					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
 						free (entry.u.info);
 				}
+				camera->pl->checkevents = 0;
 			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture(camera, context);
-			camera->pl->checkevents = 0;
 		}
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
