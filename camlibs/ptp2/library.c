@@ -1455,6 +1455,17 @@ camera_exit (Camera *camera, GPContext *context)
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 #endif
 		if (params->eos_captureenabled) {
+                        if (camera->pl->checkevents) {
+                                PTPCanon_changes_entry entry;
+
+                                _ptp_check_eos_events (params);
+                                while (_ptp_get_one_eos_event (params, &entry)) {
+                                        gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
+                                        if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
+                                                free (entry.u.info);
+                                }
+                                camera->pl->checkevents = 0;
+                        }
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture (camera, context);
