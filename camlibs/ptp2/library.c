@@ -1461,6 +1461,7 @@ camera_exit (Camera *camera, GPContext *context)
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture(camera, context);
+			camera->pl->checkevents = 0;
 		}
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
