@@ -210,6 +210,7 @@ ptp_ptpip_check_event (PTPParams* params) {
 
 #define ptpip_startdata_transid		0
 #define ptpip_startdata_totallen	4
+#define ptpip_startdata_unknown		8
 #define ptpip_data_transid		0
 #define ptpip_data_payload		4
 
@@ -218,7 +219,7 @@ uint16_t
 ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		unsigned long size, PTPDataHandler *handler
 ) {
-	unsigned char	request[16];
+	unsigned char	request[0x14];
 	int		ret, curwrite, towrite;
 	unsigned char*	xdata;
 
@@ -226,6 +227,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod32a(&request[ptpip_len],sizeof(request));
 	htod32a(&request[ptpip_startdata_transid  + 8],ptp->Transaction_ID);
 	htod32a(&request[ptpip_startdata_totallen + 8],size);
+	htod32a(&request[ptpip_startdata_unknown  + 8],0);
 	gp_log_data ( "ptpip/senddata", (char*)request, sizeof(request));
 	ret = write (params->cmdfd, request, sizeof(request));
 	if (ret == -1)
