@@ -17,6 +17,7 @@
 /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
 #include <stdlib.h>
 #include <stdio.h>
+#ifdef HAVE_LIBJPEG
 #include <jpeglib.h>
 #include <jerror.h>
 #include "jpeg_memsrcdest.h"
@@ -301,4 +302,5 @@ jpeg_mem_dest (j_compress_ptr cinfo, unsigned char ** outbuffer,
 	dest->pub.free_in_buffer = dest->buf_size;
 }
 
+#endif
 #endif
