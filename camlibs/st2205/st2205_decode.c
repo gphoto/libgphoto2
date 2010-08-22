@@ -115,11 +115,16 @@ st2205_decode_block(CameraPrivateLibrary *pl, unsigned char *src,
 }
 
 int
-st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src,
-	int src_length, int **dest, uint8_t shuffle_pattern)
+st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src, int **dest)
 {
 	int ret, block = 0, block_length;
 	struct st2205_coord *shuffle_table;
+	struct st2205_image_header *header = (struct st2205_image_header*)src;
+	uint8_t shuffle_pattern = header->shuffle_table;
+	int src_length = be16toh (header->length);
+
+	/* Skip the header */
+	src += sizeof(*header);
 
 	if (shuffle_pattern >= pl->no_shuffles) {
 		gp_log (GP_LOG_ERROR, "st2205", "invalid shuffle pattern");
@@ -330,6 +335,10 @@ st2205_code_image(CameraPrivateLibrary *pl, int **src,
 {
 	int block = 0, used = 0, ret;
 	struct st2205_coord *shuffle_table;
+	struct st2205_image_header *header = (struct st2205_image_header*)dest;
+
+	/* Make room for the header */
+	dest += sizeof(*header);
 
 	if (shuffle_pattern >= pl->no_shuffles) {
 		gp_log (GP_LOG_ERROR, "st2205", "invalid shuffle pattern");
@@ -348,7 +357,18 @@ st2205_code_image(CameraPrivateLibrary *pl, int **src,
 		block++;
 	}
 
-	return used;
+	/* Write the header now that we know the size */
+	memset(header, 0, sizeof(*header));
+	header->marker = ST2205_HEADER_MARKER;
+	header->width  = htobe16(pl->width);
+	header->height = htobe16(pl->height);
+	header->blocks = htobe16((pl->width * pl->height) / 64);
+	header->shuffle_table = shuffle_pattern;
+	header->unknown2 = 0x04;
+	header->unknown3 = pl->unknown3[shuffle_pattern];
+	header->length = htobe16(used);
+
+	return used + sizeof(*header);
 }
 
 int

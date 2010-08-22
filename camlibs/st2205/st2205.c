@@ -38,19 +38,6 @@ struct image_table_entry {
 	char name[ST2205_FILENAME_LENGTH + 1]; /* Image name (11 bytes) */
 } __attribute__((packed));
 
-struct image_header {
-	uint8_t marker;   /* Always 0xF5 */
-	uint16_t width;	  /* big endian */
-	uint16_t height;  /* big endian */
-	uint16_t blocks;  /* number of 8x8 blocks in the image, big endian */
-	uint8_t shuffle_table; /* shuffle table idx (for transition effects) */
-	uint8_t unknown2; /* Unknown usually 0x04 */
-	uint8_t unknown3; /* shuffle related, must have a special value depend
-			     on the pattern see the table in st2205_init */
-	uint16_t length;  /* length of the data *following* the header (be) */
-	uint8_t unknown4[4]; /* Always 4x 0x00 (padding ?) */
-} __attribute__((packed));
-
 /* The st2205 port driver's write and read functions require page aligned
    buffers, as they use O_DIRECT. */
 static char *st2205_malloc_page_aligned(int size)
@@ -413,30 +400,7 @@ st2205_add_picture(Camera *camera, int idx, const char *filename,
 
 	CHECK (st2205_update_fat_checksum (camera))
 	CHECK (st2205_copy_fat (camera))
-
-	if (camera->pl->compressed) {
-		struct image_header header = { 0, };
-		
-		/* The buffer we are passed in does not include the compressed
-		   image header, but the size does take it into account */
-		size -= sizeof(header);
-
-		/* Create and write compressed image header */
-		header.marker = ST2205_HEADER_MARKER;
-		header.width  = htobe16(camera->pl->width);
-		header.height = htobe16(camera->pl->height);
-		header.blocks = htobe16((camera->pl->width * camera->pl->height) / 64);
-		header.shuffle_table = shuffle;
-		header.unknown2 = 0x04;
-		header.unknown3 = camera->pl->unknown3[shuffle];
-		header.length = htobe16(size);
-		CHECK (st2205_write_mem (camera, start,
-					 &header, sizeof(header)))
-		/* And write the actual image data */
-		CHECK (st2205_write_mem (camera, start + sizeof(header),
- 					buf, size))
-	} else
-		CHECK (st2205_write_mem (camera, start,	buf, size))
+	CHECK (st2205_write_mem (camera, start,	buf, size))
 
 	/* Let the caller know at which index we stored the table entry */
 	return idx;
@@ -494,7 +458,7 @@ int
 st2205_read_raw_file(Camera *camera, int idx, unsigned char **raw)
 {
 	struct image_table_entry entry;
-	struct image_header header;
+	struct st2205_image_header header;
 	int ret, count, size;
 
 	*raw = NULL;
@@ -575,16 +539,11 @@ st2205_read_file(Camera *camera, int idx, int **rgb24)
 {
 	int ret;
 	unsigned char *src;
-	struct image_header *header;
 
 	CHECK (st2205_read_raw_file (camera, idx, &src))
 
-	header = (struct image_header *) src;
 	if (camera->pl->compressed)
-		ret = st2205_decode_image (camera->pl,
-					   src + sizeof (struct image_header),
-					   be16toh (header->length), rgb24,
-					   header->shuffle_table);
+		ret = st2205_decode_image (camera->pl, src, rgb24);
 	else
 		ret = st2205_rgb565_to_rgb24 (camera->pl, src, rgb24);
 
@@ -600,17 +559,13 @@ st2205_real_write_file(Camera *camera,
 {
 	int size, count;
 	struct image_table_entry entry;
-	struct image_header header;
+	struct st2205_image_header header;
 	int i, start, end, hole_start = 0, hole_idx = 0;
 
-	if (camera->pl->compressed) {
+	if (camera->pl->compressed)
 		size = st2205_code_image (camera->pl, rgb24, buf, shuffle,
 					  allow_uv_corr);
-		if (size < 0) return size;
-		/* Make sure we have size for both the data and the compressed
-		   image header added by st2205_add_picture */
-		size += sizeof(header);
-	} else
+	else
 		size = st2205_rgb24_to_rgb565 (camera->pl, rgb24, buf);
 
 	count = st2205_read_file_count (camera);
@@ -1112,7 +1067,7 @@ int
 st2205_get_free_mem_size(Camera *camera)
 {
 	struct image_table_entry entry;
-	struct image_header header;
+	struct st2205_image_header header;
 	int i, count, start, end, hole_start = 0, free = 0;
 
 	count = st2205_read_file_count (camera);
@@ -1136,12 +1091,19 @@ st2205_get_free_mem_size(Camera *camera)
 
 			start = entry.address;
 			if (entry.present) {
-				CHECK (st2205_read_mem (camera, start,
-							&header,
-							sizeof(header)))
+				if (camera->pl->compressed) {
+					CHECK (st2205_read_mem (camera, start,
+							      &header,
+							      sizeof(header)))
 
-				BE16TOH(header.length);
-				end = start + sizeof(header) + header.length;
+					BE16TOH(header.length);
+					end = start + sizeof(header) +
+					      header.length;
+				} else {
+					end = start +
+					      camera->pl->width *
+					      camera->pl->height * 2;
+				}
 			}
 		}
 
