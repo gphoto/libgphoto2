@@ -72,6 +72,19 @@ struct st2205_coord {
 	uint16_t y;
 };
 
+struct st2205_image_header {
+	uint8_t marker;   /* Always 0xF5 */
+	uint16_t width;	  /* big endian */
+	uint16_t height;  /* big endian */
+	uint16_t blocks;  /* number of 8x8 blocks in the image, big endian */
+	uint8_t shuffle_table; /* shuffle table idx (for transition effects) */
+	uint8_t unknown2; /* Unknown usually 0x04 */
+	uint8_t unknown3; /* shuffle related, must have a special value depend
+			     on the pattern see the table in st2205_init */
+	uint16_t length;  /* length of the data *following* the header (be) */
+	uint8_t unknown4[4]; /* Always 4x 0x00 (padding ?) */
+} __attribute__((packed));
+
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
 /* The + 5 is space for the "####-" prefix we add, + 4 for .png postfix. */
@@ -153,8 +166,7 @@ st2205_get_free_mem_size(Camera *camera);
 
 /* functions in st2205_decode.c */
 int
-st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src,
-	int src_length, int **dest, uint8_t shuffle_pattern);
+st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src, int **dest);
 
 int
 st2205_code_image(CameraPrivateLibrary *pl, int **src,
