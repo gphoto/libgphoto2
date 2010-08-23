@@ -1648,6 +1648,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 			ptp_debug (params, "event %d: EOS event 0, but size %d", i, size);
 			break;
+		case PTP_EC_CANON_EOS_BulbExposureTime:
+			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			(*ce)[i].u.info = malloc(strlen("BulbExposureTime 123456789"));
+			sprintf ((*ce)[i].u.info, "BulbExposureTime %d",  dtoh32a(curdata+8));
+			break;
 		default:
 			switch (type) {
 #define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
