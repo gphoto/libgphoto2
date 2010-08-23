@@ -1,3 +1,21 @@
+libgphoto2 2.4.10.1
+
+This is a regression + translation fix update only
+
+translations:
+* libgphoto2_port updated: russian, slovakian
+* libgphoto2 updated: italian, polish, russian
+
+sts2205:
+* Fix build without GD development headers due to stray ;
+
+ptp2: 
+* linear backoff waiting for Nikon events to reduce load
+* ptpip senddata fix (was broken before)
+* be more careful with USB interrupt checks on MacOS X, as they do
+  not timeout currently.
+
+------------------------------------------------------------------------
 libgphoto2 2.4.10
 
 This is a 2.4 release branch update.
