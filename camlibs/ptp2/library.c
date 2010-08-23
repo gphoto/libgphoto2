@@ -2274,7 +2274,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	
 	while (!_timeout_passed(&event_start, USB_TIMEOUT_CAPTURE)) {
 		gp_context_idle (context);
-		if (PTP_RC_OK == params->event_check (params, &event)) {
+		/* Make sure we do not poll USB interrupts after the capture complete event.
+		 * MacOS libusb 1 has non-timing out interrupts so we must avoid event reads that will not
+		 * result in anything.
+		 */
+		if (!sawcapturecomplete && (PTP_RC_OK == params->event_check (params, &event))) {
 			if (event.Code == PTP_EC_CaptureComplete) {
 				sawcapturecomplete = 1;
 				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete.");

@@ -1655,6 +1655,13 @@ ptp_check_event (PTPParams *params) {
 		if (isevent)
 			goto store_event;
 		/* FIXME: fallthrough or return? */
+#ifdef __APPLE__
+		/* the libusb 1 on darwin currently does not like polling
+		 * for interrupts, they have no timeout for it. 2010/08/23
+		 * Check back in 2011 or so. -Marcus
+		 */
+		return ret;
+#endif
 	}
 	ret = params->event_check(params,&event);
 
