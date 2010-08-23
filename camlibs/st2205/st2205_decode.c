@@ -419,8 +419,7 @@ st2205_rgb24_to_rgb565(CameraPrivateLibrary *pl, int **src,
 
 #else
 int
-st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src,
-	int src_length, int **dest, uint8_t shuffle_pattern)
+st2205_decode_image(CameraPrivateLibrary *pl, unsigned char *src, int **dest)
 {
 	return GP_ERROR_NOT_SUPPORTED;
 }
