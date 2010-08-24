@@ -2744,7 +2744,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		do {
 			CPR (context, ptp_check_event (params));
 			if (!ptp_get_one_event (params, &event))
-				continue;
+				goto nikon_capture_wait;
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_ObjectAdded: {
@@ -2880,6 +2880,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			gp_context_idle (context);
 			if (_timeout_passed (&event_start, timeout))
 				break;
+nikon_capture_wait:
 			/* incremental backoff wait ... including this wait loop */
 			for (i=sleepcnt;i--;) {
 				int resttime;
