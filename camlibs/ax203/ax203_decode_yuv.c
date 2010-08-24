@@ -40,7 +40,6 @@
 #endif
 
 #define CLAMP_U8(x) (((x) > 255) ? 255 : (((x) < 0) ? 0 : (x)))
-#define CLAMP_S8(x) (((x) > 127) ? 127 : (((x) < -128) ? -128 : (x)))
 
 #ifdef HAVE_GD
 static void
@@ -65,9 +64,9 @@ ax203_decode_block_yuv(char *src, int **dest, int dest_x, int dest_y)
 	   3 4  */
 	for (y = 0; y < 2; y ++) {
 		for (x = 0; x < 2; x ++) {
-			r = Y[y * 2 + x] + 1.403 * V;
-			g = Y[y * 2 + x] - 0.344 * U - 0.714 * V;
-			b = Y[y * 2 + x] + 1.770 * U;
+			r = 1.164 * (Y[y * 2 + x] - 16) + 1.596 * V;
+			g = 1.164 * (Y[y * 2 + x] - 16) - 0.391 * U - 0.813 * V;
+			b = 1.164 * (Y[y * 2 + x] - 16) + 2.018 * U;
 			dest[dest_y + y][dest_x + x] =
 				gdTrueColor (CLAMP_U8 (r),
 					     CLAMP_U8 (g),
@@ -100,9 +99,9 @@ ax203_encode_block_yuv(int **src, int src_x, int src_y, char *dest)
 	for (y = 0; y < 2; y ++) {
 		for (x = 0; x < 2; x ++) {
 			int p = src[src_y + y][src_x + x];
-			Y[y * 2 + x] = gdTrueColorGetRed(p) * 0.299 +
-				       gdTrueColorGetGreen(p) * 0.587 +
-				       gdTrueColorGetBlue(p) * 0.114;
+			Y[y * 2 + x] = gdTrueColorGetRed(p)   * 0.257 +
+				       gdTrueColorGetGreen(p) * 0.504 +
+				       gdTrueColorGetBlue(p)  * 0.098 + 16;
 		}
 	}
 
@@ -119,9 +118,8 @@ ax203_encode_block_yuv(int **src, int src_x, int src_y, char *dest)
 		int b = (gdTrueColorGetBlue(p1) + gdTrueColorGetBlue(p2) +
 			 gdTrueColorGetBlue(p3) + gdTrueColorGetBlue(p4)) / 4;
 
-		int Y = r * 0.299 + g * 0.587 + b * 0.114;
-		U = CLAMP_S8((b - Y) * 0.565);
-		V = CLAMP_S8((r - Y) * 0.713);
+		U = 0.439 * b - 0.291 * g - 0.148 * r;
+		V = 0.439 * r - 0.368 * g - 0.071 * b;
 	}
 
 	for (x = 0; x < 4; x++)

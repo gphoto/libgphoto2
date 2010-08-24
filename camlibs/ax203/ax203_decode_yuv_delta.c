@@ -41,7 +41,6 @@
 #endif
 
 #define CLAMP_U8(x) (((x) > 255) ? 255 : (((x) < 0) ? 0 : (x)))
-#define CLAMP_S8(x) (((x) > 127) ? 127 : (((x) < -128) ? -128 : (x)))
 
 static const int corr_tables[4][8] = {
 	/* Table 0 depends on wrap around to get negative
@@ -116,10 +115,13 @@ ax203_decode_block_yuv_delta(char *src, int **dest, int dest_x, int dest_y)
 
 	for (y = 0; y < 4; y++) {
 		for (x = 0; x < 4; x++) {
-			r = Y[y * 4 + x] + 1.403 * V[(y / 2) * 2 + x / 2];
-			g = Y[y * 4 + x] - 0.344 * U[(y / 2) * 2 + x / 2]
-					 - 0.714 * V[(y / 2) * 2 + x / 2];
-			b = Y[y * 4 + x] + 1.770 * U[(y / 2) * 2 + x / 2];
+			r = 1.164 * (Y[y * 4 + x] - 16) +
+			    1.596 *  V[(y / 2) * 2 + x / 2];
+			g = 1.164 * (Y[y * 4 + x] - 16) -
+			    0.391 *  U[(y / 2) * 2 + x / 2] -
+			    0.813 *  V[(y / 2) * 2 + x / 2];
+			b = 1.164 * (Y[y * 4 + x] - 16) +
+			    2.018 *  U[(y / 2) * 2 + x / 2];
 			dest[dest_y + y][dest_x + x] =
 				gdTrueColor (CLAMP_U8(r),
 					     CLAMP_U8(g),
@@ -153,7 +155,13 @@ ax203_find_closest_correction_signed(int8_t base, int8_t val, int table)
 		    ((base + corr_tables[table][i]) > 127 ||
 		     (base + corr_tables[table][i]) < -128))
 			continue;
+
+		/* We are used for U and V values skip correction vals which
+		   would lead to invalid U / V values */
 		corrected_val = base + corr_tables[table][i];
+		if (corrected_val < -112 || corrected_val > 111)
+			continue;
+
 		delta = abs(corrected_val - val);
 		if (delta < closest_delta) {
 			closest_delta = delta;
@@ -176,7 +184,13 @@ ax203_find_closest_correction_unsigned(uint8_t base, uint8_t val, int table)
 		    ((base + corr_tables[table][i]) > 255 ||
 		     (base + corr_tables[table][i]) < 0))
 			continue;
+
+		/* We are used for Y values skip correction vals which
+		   would lead to invalid Y values */
 		corrected_val = base + corr_tables[table][i];
+		if (corrected_val < 16 || corrected_val > 235)
+			continue;
+
 		delta = abs(corrected_val - val);
 		if (delta < closest_delta) {
 			closest_delta = delta;
@@ -297,9 +311,9 @@ ax203_encode_block_yuv_delta(int **src, int src_x, int src_y, char *dest)
 	for (y = 0; y < 4; y++) {
 		for (x = 0; x < 4; x++) {
 			int p = src[src_y + y][src_x + x];
-			Y[y * 4 + x] = gdTrueColorGetRed(p) * 0.299 +
-				       gdTrueColorGetGreen(p) * 0.587 +
-				       gdTrueColorGetBlue(p) * 0.114;
+			Y[y * 4 + x] = gdTrueColorGetRed(p)   * 0.257 +
+				       gdTrueColorGetGreen(p) * 0.504 +
+				       gdTrueColorGetBlue(p)  * 0.098 + 16;
 		}
 	}
 	for (y = 0; y < 4; y += 2) {
@@ -322,9 +336,8 @@ ax203_encode_block_yuv_delta(int **src, int src_x, int src_y, char *dest)
 				 gdTrueColorGetBlue(p3) +
 				 gdTrueColorGetBlue(p4)) / 4;
 
-			int Y = r * 0.299 + g * 0.587 + b * 0.114;
-			U[y + x / 2] = CLAMP_S8((b - Y) * 0.565);
-			V[y + x / 2] = CLAMP_S8((r - Y) * 0.713);
+			U[y + x / 2] = 0.439 * b - 0.291 * g - 0.148 * r;
+			V[y + x / 2] = 0.439 * r - 0.368 * g - 0.071 * b;
 		}
 	}
 
