@@ -2762,6 +2762,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 				if (sleepcnt>10) sleepcnt=10;
 				continue;
 			}
+			sleepcnt = 1;
+
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_ObjectAdded: {
