@@ -64,7 +64,7 @@
 #define USB_START_TIMEOUT 8000
 #define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
-#define USB_TIMEOUT_CAPTURE 20000
+#define USB_TIMEOUT_CAPTURE 100000
 
 #define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 #define	SET_CONTEXT_P(p, ctx) ((PTPData *) p->data)->context = ctx
@@ -1458,8 +1458,8 @@ camera_exit (Camera *camera, GPContext *context)
                         if (camera->pl->checkevents) {
                                 PTPCanon_changes_entry entry;
 
-                                _ptp_check_eos_events (params);
-                                while (_ptp_get_one_eos_event (params, &entry)) {
+                                ptp_check_eos_events (params);
+                                while (ptp_get_one_eos_event (params, &entry)) {
                                         gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
                                         if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
                                                 free (entry.u.info);
@@ -2164,7 +2164,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	gettimeofday (&event_start, NULL);
 	found = FALSE;
 	
-	while (!_timeout_passed(&event_start, timeout)) {
+	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
+	while (!_timeout_passed(&event_start, USB_TIMEOUT_CAPTURE)) {
 		gp_context_idle (context);
 		if (PTP_RC_OK == params->event_check (params, &event)) {
 			if (event.Code == PTP_EC_CaptureComplete) {
@@ -2200,6 +2201,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			break;
 		}
 	}
+	CR (gp_port_set_timeout (camera->port, timeout));
 	/* Catch event, attempt  2 */
 	if (!sawcapturecomplete) {
 		if (PTP_RC_OK==params->event_wait (params, &event)) {
