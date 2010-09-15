@@ -375,16 +375,16 @@ GP_UDEV([test "x$have_LIBUSB" = xyes])
 
 
 AC_ARG_ENABLE([disk],
-	AS_HELP_STRING([--disable-disk], [enable the 'disk' port driver]),
+	AS_HELP_STRING([--disable-disk], [disable the 'disk' port driver]),
 	,enable_disk=yes)
 
-dnl disk port also work everywhere, but its not really necessary
+dnl disk port also works everywhere, but it's not really necessary
 if test "x$enable_disk" = "xyes"; then
 	IOLIB_LIST="$IOLIB_LIST disk"
 fi
 
 AC_ARG_ENABLE([ptpip],
-	AS_HELP_STRING([--disable-ptpip], [enable the 'ptpip' port driver for TCP/IP connected PTP cameras]),
+	AS_HELP_STRING([--disable-ptpip], [disable the 'ptpip' port driver for TCP/IP connected PTP cameras]),
 	,enable_ptpip=yes)
 dnl ptpip - works 'everywhere' with TCP/IP stack.
 if test "x$enable_ptpip" = "xyes"; then
