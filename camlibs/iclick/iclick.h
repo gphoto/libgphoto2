@@ -55,7 +55,7 @@ struct _CameraPrivateLibrary {
 };
 
 
-// #define ID	0xf0
+/* #define ID	0xf0 */
 enum icl_cmnd_type {
 	CONFIG =0x20,
 	DATA   =0x30,

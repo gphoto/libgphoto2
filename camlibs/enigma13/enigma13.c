@@ -343,7 +343,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	Camera *camera = data;
         int image_no, result;
-	//int	i, ret, numpics;
+	/*int	i, ret, numpics;*/
 	char* img_data=NULL;
         int   img_size=-1;
 

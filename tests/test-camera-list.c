@@ -130,7 +130,7 @@ typedef enum {
 static OutputFormat format = FMT_HEADED_TEXT;
 
 
-// #define DEBUG_OUTPUT
+/* #define DEBUG_OUTPUT */
 
 
 /** Parse command line and set global variables. */

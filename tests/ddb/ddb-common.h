@@ -77,7 +77,7 @@ typedef struct YYLTYPE {
 YY_DECL;
 /* #define YYLEX_PARAM void */
 
-// #define YYDEBUG 1
+/* #define YYDEBUG 1 */
 
 extern FILE *yyin;
 

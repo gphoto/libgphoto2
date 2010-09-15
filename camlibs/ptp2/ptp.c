@@ -4992,7 +4992,7 @@ uint16_t
 ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob) {
 	uint16_t	ret;
 	PTPObject	*ob;
-	//Camera 		*camera = ((PTPData *)params->data)->camera;
+	/*Camera 		*camera = ((PTPData *)params->data)->camera;*/
 
 	*retob = NULL;
 	if (!handle) {

@@ -72,13 +72,13 @@ int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned 
 		 * for first half of image.
 		 */
 		switch (whichcolor % 3) {
-			case 0: // blue
+			case 0: /* blue */
 				MINMAX((int)c,lowblue,hiblue);
 				break;
-			case 1: // green
+			case 1: /* green */
 				MINMAX((int)c,lowgreen,higreen);
 				break;
-			default: // red
+			default: /* red */
 				MINMAX((int)c,lowred,hired);
 				break;
 		}
@@ -90,7 +90,7 @@ int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned 
 		whichcolor++;
 	}
 	
-	/* // could do more color processing here 
+	/* could do more color processing here
 	GP_DEBUG("adjusting color");
 	
 	// adjust image colours

@@ -544,15 +544,15 @@ static void decode_MCU_1x1_3planes(struct jdec_private *priv, int block_nr)
   priv->nbits_in_reservoir = 0;
   priv->reservoir = 0;
 
-  // Cb
+  /* Cb */
   process_Huffman_data_unit(priv, cCb, block_nr);
   IDCT(&priv->component_infos[cCb], priv->Cb, 8);
 
-  // Cr
+  /* Cr */
   process_Huffman_data_unit(priv, cCr, block_nr);
   IDCT(&priv->component_infos[cCr], priv->Cr, 8);
 
-  // Y
+  /* Y */
   process_Huffman_data_unit(priv, cY, block_nr);
   IDCT(&priv->component_infos[cY], priv->Y, 8);
 
@@ -573,15 +573,15 @@ static void decode_MCU_2x2_3planes(struct jdec_private *priv, int block_nr)
   priv->nbits_in_reservoir = 0;
   priv->reservoir = 0;
 
-  // Cb
+  /* Cb */
   process_Huffman_data_unit(priv, cCb, 0);
   IDCT(&priv->component_infos[cCb], priv->Cb, 8);
 
-  // Cr
+  /* Cr */
   process_Huffman_data_unit(priv, cCr, 0);
   IDCT(&priv->component_infos[cCr], priv->Cr, 8);
 
-  // Y
+  /* Y */
   process_Huffman_data_unit(priv, cY, block_nr);
   IDCT(&priv->component_infos[cY], priv->Y, 16);
   process_Huffman_data_unit(priv, cY, -1);
