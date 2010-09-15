@@ -73,7 +73,7 @@ int ricoh_set_mode  (Camera *camera, GPContext *context, RicohMode  mode);
 
 int ricoh_get_num   (Camera *camera, GPContext *context, unsigned int *n);
 
-int ricoh_get_pic_size  (Camera *, GPContext *, unsigned int, unsigned long *);
+int ricoh_get_pic_size  (Camera *, GPContext *, unsigned int, uint64_t *);
 int ricoh_get_pic_date  (Camera *, GPContext *, unsigned int, time_t *);
 int ricoh_get_pic_name  (Camera *, GPContext *, unsigned int, const char **);
 int ricoh_get_pic_memo  (Camera *, GPContext *, unsigned int, const char **);

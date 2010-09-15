@@ -377,7 +377,7 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
 
 int
 ricoh_get_pic_size (Camera *camera, GPContext *context, unsigned int n,
-		    unsigned long *size)
+		    uint64_t *size)
 {
 	unsigned char p[3], buf[0xff], len;
 
