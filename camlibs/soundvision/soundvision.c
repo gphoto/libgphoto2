@@ -21,7 +21,6 @@
 #ifdef OS2
 #include <db.h>
 #endif
-#include <netinet/in.h>
 
 #include <gphoto2/gphoto2.h>
 

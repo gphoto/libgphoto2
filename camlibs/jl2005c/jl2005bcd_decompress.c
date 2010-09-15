@@ -28,12 +28,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "gphoto2-endian.h"
 #include "jl2005bcd_decompress.h"
 #include "jpeg_memsrcdest.h"
 #include <bayer.h>
 #include "img_enhance.h"
 #include <math.h>
-#include <netinet/in.h>
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>

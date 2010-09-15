@@ -32,8 +32,8 @@
 #ifdef OS2
 #include <db.h>
 #endif
-#include <netinet/in.h>
 
+#include "gphoto2-endian.h"
 #include "digita.h"
 
 #define GP_MODULE "digita"

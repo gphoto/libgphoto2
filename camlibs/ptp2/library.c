@@ -28,8 +28,10 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
-#include <langinfo.h>
 #include <sys/time.h>
+#ifdef HAVE_ICONV
+#include <langinfo.h>
+#endif
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
