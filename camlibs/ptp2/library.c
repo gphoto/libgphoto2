@@ -4124,7 +4124,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPObject *ob;
 
 	SET_CONTEXT_P(params, context);
-	if (offset64 + *size64 >= 0x100000000) {
+	if (offset64 + *size64 > 0xffffffff) {
 		gp_log (GP_LOG_ERROR, "ptp2/read_file_func", "offset + size exceeds 32bit");
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
