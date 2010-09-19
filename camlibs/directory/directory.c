@@ -86,6 +86,8 @@ static const struct {
 	{"avi",  GP_MIME_AVI},
 	{"mov",  GP_MIME_QUICKTIME},
 	{"mpg",  GP_MIME_MPEG},
+	{"mts",  GP_MIME_AVCHD},
+	{"m2ts", GP_MIME_AVCHD},
 	{"pbm", "image/x-portable-bitmap"},
 	{"crw",  GP_MIME_CRW},
 	{"cr2",  GP_MIME_RAW},

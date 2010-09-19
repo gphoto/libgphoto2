@@ -53,6 +53,7 @@ extern "C" {
 #define GP_MIME_WMA       "audio/x-wma"
 #define GP_MIME_ASF       "audio/x-asf"
 #define GP_MIME_MPEG      "video/mpeg"
+#define GP_MIME_AVCHD     "video/avchd"
 
 /**
  * \brief The type of view on the specified file.

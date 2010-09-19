@@ -624,6 +624,8 @@ static const char *mime_table[] = {
     "ogg",  GP_MIME_OGG,
     "mpg",  GP_MIME_MPEG,
     "raw",  GP_MIME_RAW,
+    "mts",  GP_MIME_AVCHD,
+    "m2ts", GP_MIME_AVCHD,
     NULL};
 /**
  * @param file a #CameraFile
