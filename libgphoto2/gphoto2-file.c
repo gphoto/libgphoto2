@@ -538,6 +538,8 @@ gp_file_open (CameraFile *file, const char *filename)
             "asf",  GP_MIME_ASF,
             "ogg",  GP_MIME_OGG,
             "mpg",  GP_MIME_MPEG,
+            "mts",  GP_MIME_AVCHD,
+            "m2ts",  GP_MIME_AVCHD,
             NULL};
 
 	CHECK_NULL (file && filename);
