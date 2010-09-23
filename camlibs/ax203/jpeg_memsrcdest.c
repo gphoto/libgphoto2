@@ -15,6 +15,8 @@
 */
 
 /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
+#include "config.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #ifdef HAVE_LIBJPEG
