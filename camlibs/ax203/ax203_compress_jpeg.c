@@ -27,9 +27,11 @@
 #endif
 
 #include "ax203.h"
+#ifdef HAVE_LIBJPEG
 #include "jpeg_memsrcdest.h"
+#endif
 
-#ifdef HAVE_GD
+#if defined(HAVE_GD) && defined(HAVE_LIBJPEG)
 static int
 locate_tables_n_write(JOCTET *jpeg, int jpeg_size, JOCTET table_type,
 	uint8_t *outbuf, int *outc)

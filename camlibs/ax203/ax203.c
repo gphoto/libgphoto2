@@ -34,7 +34,9 @@
 
 #include <gphoto2/gphoto2-result.h>
 #include "ax203.h"
+#ifdef HAVE_LIBJPEG
 #include "jpeg_memsrcdest.h"
+#endif
 
 static const struct eeprom_info {
 	const char *name;
@@ -1028,10 +1030,12 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 	int ret;
 	unsigned int x, y, width, height;
 	unsigned char *components[3];
+#ifdef HAVE_LIBJPEG
 	struct jpeg_decompress_struct dinfo;
 	struct jpeg_error_mgr jderr;
 	JSAMPLE row[camera->pl->width * 3];
 	JSAMPROW row_pointer[1] = { row };
+#endif
 
 	switch (camera->pl->compression_version) {
 	case AX203_COMPRESSION_YUV:
@@ -1086,6 +1090,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		}
 		return GP_OK;
 	case AX3003_COMPRESSION_JPEG:
+#ifdef HAVE_LIBJPEG
 		dinfo.err = jpeg_std_error (&jderr);
 		jpeg_create_decompress (&dinfo);
 		jpeg_mem_src (&dinfo, (unsigned char *)src, src_size);
@@ -1115,6 +1120,11 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		jpeg_finish_decompress (&dinfo);
 		jpeg_destroy_decompress (&dinfo);
 		return GP_OK;
+#else
+		gp_log(GP_LOG_ERROR,"ax203", "jpeg decompression not supported - no libjpeg during build");
+		return GP_ERROR_NOT_SUPPORTED;
+#endif
+		break;
 	}
 #endif
 	/* Never reached */
@@ -1126,13 +1136,16 @@ static int
 ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 {
 #ifdef HAVE_GD
-	int x, y, size = ax203_filesize (camera);
+	int size = ax203_filesize (camera);
+#ifdef HAVE_LIBJPEG
+	int x, y;
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jcerr;
 	JOCTET *jpeg_dest = NULL;
 	unsigned long jpeg_size = 0;
 	JSAMPLE row[camera->pl->width * 3];
 	JSAMPROW row_pointer[1] = { row };
+#endif
 
 	if (dest_size < size)
 		return GP_ERROR_FIXED_LIMIT_EXCEEDED;
@@ -1152,6 +1165,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 					    camera->pl->width,
 					    camera->pl->height);
 	case AX3003_COMPRESSION_JPEG:
+#ifdef HAVE_LIBJPEG
 		cinfo.err = jpeg_std_error (&jcerr);
 		jpeg_create_compress (&cinfo);
 		jpeg_mem_dest (&cinfo, &jpeg_dest, &jpeg_size);
@@ -1184,6 +1198,9 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 		/* Round size up to a multiple of 256 because of ax3003
 		   abfs size granularity. */
                 return (jpeg_size + 0xff) & ~0xff;
+#else
+		return GP_ERROR_NOT_SUPPORTED;
+#endif
 	}
 	/* Never reached */
 #endif
