@@ -86,7 +86,7 @@ static const struct eeprom_info {
 	   are not supported */
 
 	{ "Winbond W25P80", 0x001420ef, 1048576, 0 },
-	{ "Winbond W25P16", 0x001420ef, 2097152, 0 },
+	{ "Winbond W25P16", 0x001520ef, 2097152, 0 },
 
 	{ "Winbond W25X40", 0x001330ef,  524288, 1 },
 	{ "Winbond W25X80", 0x001430ef, 1048576, 1 },
