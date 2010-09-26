@@ -1987,14 +1987,14 @@ ptp_check_eos_events (PTPParams *params) {
 		nrofentries = 0;
 		ret = ptp_canon_eos_getevent (params, &entries, &nrofentries);
 		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
+			return ret;
 		if (!nrofentries)
-			return GP_OK;
+			return PTP_RC_OK;
 
 		if (params->nrofbacklogentries) {
 			nentries = realloc(params->backlogentries,sizeof(entries[0])*(params->nrofbacklogentries+nrofentries));
 			if (!nentries)
-				return GP_ERROR_NO_MEMORY;
+				return PTP_RC_GeneralError;
 			params->backlogentries = nentries;
 			memcpy (nentries+params->nrofbacklogentries, entries, nrofentries*sizeof(entries[0]));
 			params->nrofbacklogentries += nrofentries;
@@ -2004,7 +2004,7 @@ ptp_check_eos_events (PTPParams *params) {
 			params->nrofbacklogentries = nrofentries;
 		}
 	}
-	return GP_OK;
+	return PTP_RC_OK;
 }
 
 int
@@ -2735,7 +2735,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
 		while (1) {
-			ptp_check_event (params);
+			CPR (context, ptp_check_event (params));
 			if (ptp_get_one_event(params, &event)) {
 				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 				goto handleregular;
