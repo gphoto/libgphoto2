@@ -249,6 +249,8 @@ translate_ptp_result (short result)
 	switch (result) {
 	case PTP_RC_ParameterNotSupported:
 		return (GP_ERROR_BAD_PARAMETERS);
+	case PTP_RC_OperationNotSupported:
+		return (GP_ERROR_NOT_SUPPORTED);
 	case PTP_RC_DeviceBusy:
 		return (GP_ERROR_CAMERA_BUSY);
 	case PTP_ERROR_TIMEOUT:
@@ -1108,6 +1110,8 @@ static struct {
 	{"Fuji:FinePix A920",			0x04cb, 0x01d3, 0},
 	/* Teppo Jalava <tjjalava@gmail.com> */
 	{"Fuji:FinePix F50fd",			0x04cb, 0x01d4, 0},
+	/* IRC reporter */
+	{"Fuji:FinePix S5800",			0x04cb, 0x01d7, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=108874&aid=1945259&group_id=8874 */
 	{"Fuji:FinePix Z100fd",			0x04cb, 0x01d8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2017171&group_id=8874&atid=358874 */
@@ -1622,7 +1626,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			}
 			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after 20 tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		gp_context_error (context, _("Sorry, your Canon camera does not support Canon Viewfinder mode"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -1693,7 +1697,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			gp_file_set_mtime (file, time(NULL));
 		} else {
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 #if 0
 		ret = ptp_nikon_end_liveview (params);
@@ -1869,14 +1873,14 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	newobject = 0xffff0001;
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
-		PTPContainer event;
+		PTPContainer	event;
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
 		gp_context_idle (context);
 		CPR (context, ptp_check_event (params));
 		while (ptp_get_one_event(params, &event)) {
-			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "nevent.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
+			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			if (event.Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
 				hasc101=1;
 				newobject = event.Param1;
@@ -1966,8 +1970,21 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
 		return translate_ptp_result (ret);
 	}
+	if ((result & 0x7000) == 0x2000) { /* also happened */
+		gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
+		return translate_ptp_result(result);
+	}
+	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "result is %d", result);
 	if (result == 1) {
 		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+		return GP_ERROR;
+	}
+	if (result == 7) {
+		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
+		return GP_ERROR_NO_MEMORY;
+	}
+	if (result) {
+		gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
 		return GP_ERROR;
 	}
 
