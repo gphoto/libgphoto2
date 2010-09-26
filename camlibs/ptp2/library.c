@@ -28,8 +28,10 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
-#include <langinfo.h>
 #include <sys/time.h>
+#ifdef HAVE_ICONV
+#include <langinfo.h>
+#endif
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -693,7 +695,7 @@ static struct {
 	{"Nikon:Coolpix 5200 (PTP mode)", 0x04b0, 0x0206, 0},
 	/* https://launchpad.net/bugs/63473 */
 	{"Nikon:Coolpix L1 (PTP mode)",   0x04b0, 0x0208, 0},
-	{"Nikon:Coolpix P4 (PTP mode)",   0x04b0, 0x020c, 0},
+	{"Nikon:Coolpix P4 (PTP mode)",   0x04b0, 0x020c, PTP_CAP},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
@@ -803,6 +805,8 @@ static struct {
 	{"Casio:EX-S770",                 0x07cf, 0x1049, 0},
 	/* https://launchpad.net/bugs/64146 */
 	{"Casio:EX-Z700",                 0x07cf, 0x104c, 0},
+	/* IRC Reporter */
+	{"Casio:EX-Z65",                  0x07cf, 0x104d, 0},
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
@@ -1132,6 +1136,8 @@ static struct {
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 	/* "Steven A. McIntosh" <mcintosh@cotterochan.co.uk> */
 	{"Fuji:FinePix S2500HD",		0x04cb, 0x0209, 0},
+	/* salsaman <salsaman@gmail.com> */
+	{"Fuji:FinePix Z700EXR",                0x04cb, 0x020d, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -1438,8 +1444,8 @@ static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl!=NULL) {
-		PTPContainer event;
 		PTPParams *params = &camera->pl->params;
+		PTPContainer event;
 		SET_CONTEXT_P(params, context);
 #ifdef HAVE_ICONV
 		/* close iconv converters */
@@ -1461,7 +1467,7 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
-			camera_unprepare_capture(camera, context);
+			camera_unprepare_capture (camera, context);
 		}
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
@@ -2046,6 +2052,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	else
 		CR( camera_canon_eos_update_capture_target(camera, context, -1));
 
+	/* Get the initial bulk set of event data, otherwise
+	 * capture might return busy. */
 	ptp_check_eos_events (params);
 
 	ret = ptp_canon_eos_capture (params, &result);
@@ -4089,8 +4097,7 @@ mtp_put_playlist(
 		return translate_ptp_result (ret);;
 	}
 	/* update internal structures */
-	add_object(camera, playlistid, context);
-	return GP_OK;
+	return add_object(camera, playlistid, context);
 }
 
 static int
@@ -4539,8 +4546,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
-	add_object(camera, handle, context);
-	return (GP_OK);
+	return add_object(camera, handle, context);
 }
 
 static int
@@ -4837,8 +4843,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
-	add_object(camera, handle, context);
-	return (GP_OK);
+	return add_object(camera, handle, context);
 }
 
 static int
