@@ -2162,7 +2162,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon disable viewfinder failed: %d"), ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		viewfinderwason = 1;
 		params->canon_viewfinder_on = 0;
@@ -2176,7 +2176,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon Capture failed: %x"), ret);
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	sawcapturecomplete = 0;
 	/* Checking events in stack. */
@@ -2242,14 +2242,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("Canon enable viewfinder failed: %d"), ret);
 			SET_CONTEXT_P(params, NULL);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		params->canon_viewfinder_on = 1;
 	}
 
 	/* FIXME: handle multiple images (as in BurstMode) */
 	ret = ptp_getobjectinfo (params, newobject, &oi);
-	if (ret != PTP_RC_OK) return GP_ERROR_IO;
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	if (oi.ParentObject != 0) {
 		if (xmode != CANON_TRANSFER_CARD) {
@@ -2387,7 +2387,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			}
 			gp_context_error (context,_("No event received, error %x."), ret);
 			/* we're not setting *path on error! */
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		switch (event.Code) {
 		case PTP_EC_ObjectRemoved:
@@ -3675,12 +3675,12 @@ ptp_mtp_render_metadata (
 	PTPObject	*ob;
 
 	ret = ptp_object_want (params, object_id, PTPOBJECT_MTPPROPLIST_LOADED, &ob);
-	if (ret != PTP_RC_OK) return GP_ERROR;
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	/* ... use little helper call to see if we missed anything in the global
 	 * retrieval. */
 	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
-	if (ret != PTP_RC_OK) return GP_ERROR;
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	mprops = ob->mtpprops;
 	if (mprops) { /* use the fast method, without device access since cached.*/
@@ -3842,7 +3842,7 @@ ptp_mtp_parse_metadata (
 		return (GP_ERROR);
 
 	ret = ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props);
-	if (ret != PTP_RC_OK) return (GP_ERROR);
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	for (j=0;j<propcnt;j++) {
 		char			propname[256],propname2[256];
@@ -4035,17 +4035,17 @@ mtp_put_playlist(
 	ret = ptp_sendobjectinfo(&camera->pl->params, &storage, &oi->ParentObject, &playlistid, oi);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed sendobjectinfo of playlist.");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_sendobject(&camera->pl->params, (unsigned char*)data, 1);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed dummy sendobject of playlist.");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	ret = ptp_mtp_setobjectreferences (&camera->pl->params, playlistid, oids, nrofoids);
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR, "put mtp playlist", "failed setobjectreferences.");
-		return GP_ERROR;
+		return translate_ptp_result (ret);
 	}
 	/* update internal structures */
 	return add_object(camera, playlistid, context);
@@ -4061,8 +4061,7 @@ mtp_get_playlist(
 	ret = mtp_get_playlist_string( camera, object_id, &content, &contentlen);
 	if (ret != GP_OK) return ret;
 	/* takes ownership of content */
-	gp_file_set_data_and_size (file, content, contentlen);
-	return (GP_OK);
+	return gp_file_set_data_and_size (file, content, contentlen);
 }
 
 typedef struct {
@@ -4425,7 +4424,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return ptp_mtp_parse_metadata (params,object_id,ob->oi.ObjectFormat,file);
 		}
 		gp_context_error (context, _("Metadata only supported for MTP devices."));
-		return GP_ERROR;
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 	if (type != GP_FILE_TYPE_NORMAL)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -4607,7 +4606,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			ret = ptp_setobjectprotection (params, object_id, newprot);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Device failed to set object protection to %d, error 0x%04x."), newprot, ret);
-				return (GP_ERROR_NOT_SUPPORTED);
+				return translate_ptp_result (ret);
 			}
 			ob->oi.ProtectionStatus = newprot; /* should actually reread objectinfo to be sure, but lets not. */
 		}
@@ -4801,7 +4800,7 @@ storage_info_func (CameraFilesystem *fs,
 		ret = ptp_getstorageinfo (params, sids.Storage[i], &si);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/storage_info_func", "ptp getstorageinfo failed: 0x%x", ret);
-			return GP_ERROR;
+			return translate_ptp_result (ret);
 		}
 		sif->fields |= GP_STORAGEINFO_BASE;
 		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", sids.Storage[i]);
