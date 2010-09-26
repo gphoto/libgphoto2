@@ -1137,7 +1137,7 @@ static struct {
 	/* "Steven A. McIntosh" <mcintosh@cotterochan.co.uk> */
 	{"Fuji:FinePix S2500HD",		0x04cb, 0x0209, 0},
 	/* salsaman <salsaman@gmail.com> */
-	{"Fuji:FinePix Z700EXR",                0x04cb, 0x020d, 0},
+	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -2059,11 +2059,11 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	ret = ptp_canon_eos_capture (params, &result);
 	if (ret != PTP_RC_OK) {
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), ret);
-		return translate_ptp_result(ret);
+		return translate_ptp_result (ret);
 	}
 	if ((result & 0x7000) == 0x2000) { /* also happened */
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
-		return translate_ptp_result(result);
+		return translate_ptp_result (result);
 	}
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "result is %d", result);
 	if (result == 1) {
@@ -3078,7 +3078,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	res = ptp_canon_get_customize_data (params, 1, &xdata, &size);
 	if (res != PTP_RC_OK)  {
 		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return (translate_ptp_result(res));
+		return (translate_ptp_result (res));
 	}
 	if (size < 42+sizeof(struct canon_theme_entry)*5)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -3123,7 +3123,7 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	res = ptp_nikon_curve_download (params, &xdata, &size);
 	if (res != PTP_RC_OK)  {
 		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return (translate_ptp_result(res));
+		return translate_ptp_result (res);
 	}
 	tonecurve = (PTPNIKONCurveData *) xdata;
 	ntcfile = malloc(2000);
@@ -3976,7 +3976,7 @@ mtp_get_playlist_string(
 
 	ret = ptp_mtp_getobjectreferences (params, object_id, &objects, &numobjects);
 	if (ret != PTP_RC_OK)
-		return (translate_ptp_result(ret));
+		return translate_ptp_result (ret);
 	
 	for (i=0;i<numobjects;i++) {
 		char		buf[4096];
@@ -5614,7 +5614,7 @@ camera_init (Camera *camera, GPContext *context)
 			}
 			/* FIXME: deviceinfo is not read yet ... */
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return translate_ptp_result(ret);
+			return translate_ptp_result (ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/camera_init", "ptp_opensession returns %x", ret);
@@ -5628,7 +5628,7 @@ camera_init (Camera *camera, GPContext *context)
 				continue;
 			}
 			report_result(context, ret, 0);
-			return (translate_ptp_result(ret));
+			return translate_ptp_result (ret);
 		}
 		break;
 	}
