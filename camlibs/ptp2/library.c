@@ -1451,8 +1451,8 @@ camera_exit (Camera *camera, GPContext *context)
 			if (camera->pl->checkevents) {
 				PTPCanon_changes_entry entry;
 
-				_ptp_check_eos_events (params);
-				while (_ptp_get_one_eos_event (params, &entry)) {
+				ptp_check_eos_events (params);
+				while (ptp_get_one_eos_event (params, &entry)) {
 					gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
 					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
 						free (entry.u.info);
@@ -1631,9 +1631,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			while (tries--) {
 				/* Poll for camera events, but just call
 				 * it once and do not drain the queue now */
-				ret = _ptp_check_eos_events (params);
-				if (ret != GP_OK)
-					return ret;
+				ret = ptp_check_eos_events (params);
+				if (ret != PTP_RC_OK)
+					return translate_ptp_result (ret);
 
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
@@ -1654,9 +1654,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_OK;
 				} else {
 					if (ret == 0xa102) { /* means "not there yet" ... so wait */
-						ret = _ptp_check_eos_events (params);
-						if (ret != GP_OK)
-							return ret;
+						ret = ptp_check_eos_events (params);
+						if (ret != PTP_RC_OK)
+							return translate_ptp_result (ret);
 						gp_context_idle (context);
 						usleep (50*1000);
 						continue;
@@ -1971,8 +1971,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 /* 60 seconds timeout ... (for long cycles) */
 #define EOS_CAPTURE_TIMEOUT 60
 
-int
-_ptp_check_eos_events (PTPParams *params) {
+uint16_t
+ptp_check_eos_events (PTPParams *params) {
 	uint16_t		ret;
 	PTPCanon_changes_entry	*entries = NULL, *nentries;
 	int			nrofentries;
@@ -2002,7 +2002,7 @@ _ptp_check_eos_events (PTPParams *params) {
 }
 
 int
-_ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry) {
+ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry) {
 	if (!params->nrofbacklogentries)
 		return 0;
 	memcpy (entry, params->backlogentries, sizeof(*entry));
@@ -2046,7 +2046,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	else
 		CR( camera_canon_eos_update_capture_target(camera, context, -1));
 
-	_ptp_check_eos_events (params);
+	ptp_check_eos_events (params);
 
 	ret = ptp_canon_eos_capture (params, &result);
 	if (ret != PTP_RC_OK) {
@@ -2075,12 +2075,12 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
 		int i;
 
-		ret = _ptp_check_eos_events (params);
-		if (ret != GP_OK) {
-			gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
+		ret = ptp_check_eos_events (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon EOS Get Changes failed: 0x%04x"), ret);
 			break;
 		}
-		while (_ptp_get_one_eos_event (params, &entry)) {
+		while (ptp_get_one_eos_event (params, &entry)) {
 			sleepcnt = 1;
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entry.type);
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN) {
@@ -2592,12 +2592,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 		while (1) {
 			PTPCanon_changes_entry	entry;
 
-			ret = _ptp_check_eos_events (params);
-			if (ret != GP_OK) {
-				gp_context_error (context, _("Canon EOS Get Changes failed: %x"), ret);
+			ret = ptp_check_eos_events (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon EOS Get Changes failed: %04x"), ret);
 				break;
 			}
-			while (_ptp_get_one_eos_event (params, &entry)) {
+			while (ptp_get_one_eos_event (params, &entry)) {
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entry.type);
 				switch (entry.type) {
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
@@ -2899,7 +2899,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 			}
 			}
-			gp_context_idle (context);
 			if (_timeout_passed (&event_start, timeout))
 				break;
 		} while (1);

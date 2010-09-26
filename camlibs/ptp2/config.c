@@ -238,10 +238,10 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	}
 
 	/* Get the initial bulk set of event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)) {
@@ -275,10 +275,10 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		}
 	}
 	/* Get the second bulk set of event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 
 	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
@@ -310,10 +310,10 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* FIXME: 9114 call missing here! */
 
 	/* Get the second bulk set of 0x9116 property data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 
 	params->eos_captureenabled = 1;
@@ -376,10 +376,10 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	CR( camera_canon_eos_update_capture_target(camera, context, 1) );
 
 	/* Drain the rest set of the event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 
 	ret = ptp_canon_eos_setremotemode(params, 0);
@@ -3419,10 +3419,10 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_afdrive", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 	return GP_OK;
 }
@@ -3507,10 +3507,10 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_mfdrive", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 	return GP_OK;
 }
@@ -3547,10 +3547,10 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoom", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 	return GP_OK;
 }
@@ -3587,10 +3587,10 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 		return translate_ptp_result (ret);
 	}
 	/* Get the next set of event data */
-	ret = _ptp_check_eos_events (params);
-	if (ret != GP_OK) {
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoomposition", "getevent failed!");
-		return ret;
+		return translate_ptp_result (ret);
 	}
 	return GP_OK;
 }
@@ -4672,7 +4672,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	) {
         	if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
-		_ptp_check_eos_events (params);
+		ptp_check_eos_events (params);
 	}
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
@@ -4922,7 +4922,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	) {
         	if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
-		_ptp_check_eos_events (params);
+		ptp_check_eos_events (params);
 	}
 
 	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
