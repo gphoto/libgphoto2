@@ -124,7 +124,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		else 
 			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%x", event.Code);
 	} else {
-		gp_log(GP_LOG_DEBUG, "ptp", "No event yet, we'll try later.");
+		gp_log (GP_LOG_DEBUG, "ptp", "No event yet, we'll try later.");
 	}
 
 	/* Emptying event stack */
