@@ -622,7 +622,7 @@ static struct {
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112, 0},
 	/* Nikon Coolpix 5000, Firmware v1.7 or later */
-	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, 0},
+	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, PTP_CAP},
 	/* Nikon Coolpix 3100 */
 	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115, 0},
 	/* Nikon Coolpix 2100 */
@@ -1461,18 +1461,19 @@ camera_exit (Camera *camera, GPContext *context)
 		iconv_close(camera->pl->params.cd_ucs2_to_locale);
 		iconv_close(camera->pl->params.cd_locale_to_ucs2);
 #endif
+		/* Disable EOS capture now, also end viewfinder mode. */
 		if (params->eos_captureenabled) {
-                        if (camera->pl->checkevents) {
-                                PTPCanon_changes_entry entry;
+			if (camera->pl->checkevents) {
+				PTPCanon_changes_entry entry;
 
-                                ptp_check_eos_events (params);
-                                while (ptp_get_one_eos_event (params, &entry)) {
-                                        gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
-                                        if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
-                                                free (entry.u.info);
-                                }
-                                camera->pl->checkevents = 0;
-                        }
+				ptp_check_eos_events (params);
+				while (ptp_get_one_eos_event (params, &entry)) {
+					gp_log (GP_LOG_DEBUG, "camera_exit", "missed EOS ptp type %d", entry.type);
+					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
+						free (entry.u.info);
+				}
+				camera->pl->checkevents = 0;
+			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture (camera, context);
@@ -1480,7 +1481,7 @@ camera_exit (Camera *camera, GPContext *context)
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
 		while (ptp_get_one_event (params, &event))
-			gp_log (GP_LOG_DEBUG, "camera_exit", "missed ptp event 0x%x (param1=%x)", event.Code,event.Param1);
+			gp_log (GP_LOG_DEBUG, "camera_exit", "missed ptp event 0x%x (param1=%x)", event.Code, event.Param1);
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
@@ -1594,8 +1595,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			ptp_free_devicepropdesc (&dpd);
 			params->eos_viewfinderenabled = 1;
 			while (tries--) {
-				/* Poll for camera events (should perhaps handle them?) */
-				ptp_check_eos_events (params);
+				/* Poll for camera events, but just call
+				 * it once and do not drain the queue now */
+				ret = ptp_check_eos_events (params);
+				if (ret != PTP_RC_OK)
+					return translate_ptp_result (ret);
+
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
 					uint32_t	len = dtoh32a(data);
@@ -1972,7 +1977,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	}
 	if ((result & 0x7000) == 0x2000) { /* also happened */
 		gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
-		return translate_ptp_result(result);
+		return translate_ptp_result (result);
 	}
 	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "result is %d", result);
 	if (result == 1) {
@@ -2011,7 +2016,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 				newobject = entry.u.object.oid;
 				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-				add_object (camera, newobject, context);
+				ret = add_object (camera, newobject, context);
+				if (ret != GP_OK)
+					continue;
 				strcpy  (path->name,  oi.Filename);
 				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 				get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
@@ -2651,6 +2658,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			sleepcnt++; /* incremental back off */
 			if (sleepcnt>10) sleepcnt=10;
 		}
+		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 
@@ -2658,15 +2666,16 @@ camera_wait_for_event (Camera *camera, int timeout,
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
 		while (1) {
+			CPR (context, ptp_check_event (params));
+			if (ptp_get_one_event(params, &event)) {
+				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+				goto handleregular;
+			}
 			if (_timeout_passed (&event_start, timeout))
 				break;
-			CPR (context, ptp_check_event (params));
 			gp_context_idle (context);
-			if (!ptp_get_one_event(params, &event))
-				continue;
-			gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-			goto handlegeneric;
 		}
+		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
@@ -2824,7 +2833,7 @@ downloadnow:
 	gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: code=0x%04x, param1 0x%08x",
 		event.Code, event.Param1
 	);
-handlegeneric:
+handleregular:
 	switch (event.Code) {
 	case PTP_EC_CaptureComplete:
 		*eventtype = GP_EVENT_CAPTURE_COMPLETE;
@@ -2975,7 +2984,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	res = ptp_canon_get_customize_data (params, 1, &xdata, &size);
 	if (res != PTP_RC_OK)  {
 		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return (translate_ptp_result(res));
+		return translate_ptp_result (res);
 	}
 	if (size < 42+sizeof(struct canon_theme_entry)*5)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -3020,7 +3029,7 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	res = ptp_nikon_curve_download (params, &xdata, &size);
 	if (res != PTP_RC_OK)  {
 		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return (translate_ptp_result(res));
+		return translate_ptp_result (res);
 	}
 	tonecurve = (PTPNIKONCurveData *) xdata;
 	ntcfile = malloc(2000);
@@ -3927,7 +3936,7 @@ mtp_get_playlist_string(
 
 	ret = ptp_mtp_getobjectreferences (params, object_id, &objects, &numobjects);
 	if (ret != PTP_RC_OK)
-		return (translate_ptp_result(ret));
+		return translate_ptp_result (ret);
 	
 	for (i=0;i<numobjects;i++) {
 		char		buf[4096];
@@ -5449,7 +5458,7 @@ camera_init (Camera *camera, GPContext *context)
 			}
 			/* FIXME: deviceinfo is not read yet ... */
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return translate_ptp_result(ret);
+			return translate_ptp_result (ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/camera_init", "ptp_opensession returns %x", ret);
@@ -5464,7 +5473,7 @@ camera_init (Camera *camera, GPContext *context)
 			}
 			/* FIXME: deviceinfo is not read yet ... */
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return (translate_ptp_result(ret));
+			return translate_ptp_result (ret);
 		}
 		break;
 	}
