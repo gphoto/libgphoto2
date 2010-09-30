@@ -338,7 +338,7 @@ sierra_get_memory_left (Camera *camera, int *memory, GPContext *context)
 static int
 sierra_check_connection (Camera *camera, GPContext *context)
 {
-	int r = 0, timeout;
+	int r = 0, ret, timeout;
 	unsigned char c;
 
 	/* Only serial cameras close the connection after some timeout. */
@@ -354,9 +354,9 @@ sierra_check_connection (Camera *camera, GPContext *context)
 		 */
 		CHECK (gp_port_get_timeout (camera->port, &timeout));
 		CHECK (gp_port_set_timeout (camera->port, 20));
-		r = gp_port_read (camera->port, &c, 1);
+		ret = gp_port_read (camera->port, &c, 1);
 		CHECK (gp_port_set_timeout (camera->port, timeout));
-		switch (r) {
+		switch (ret) {
 		case GP_ERROR_TIMEOUT:
 		case GP_ERROR_IO_READ:
 
@@ -372,7 +372,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 			 * If any error (except timeout) has occurred, 
 			 * report it.
 			 */
-			CHECK (r);
+			CHECK (ret);
 		}
 
 		/*
@@ -558,6 +558,16 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 				sierra_clear_usb_halt(camera);
 				GP_DEBUG ("Giving up...");
 				return (result);
+			}
+			GP_DEBUG ("Retrying...");
+			continue;
+		}
+		if (result == 0) {
+			GP_DEBUG ("Read got 0 bytes.."); 
+			if (++r > 2) {
+				sierra_clear_usb_halt(camera);
+				GP_DEBUG ("Giving up...");
+				return GP_ERROR_IO_READ;
 			}
 			GP_DEBUG ("Retrying...");
 			continue;
@@ -748,6 +758,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 
 		/* Write packet and read the answer */
 		CHECK (sierra_write_packet (camera, packet, context));
+		buf[0] = 0;
 		result = sierra_read_packet_wait (camera, buf, context);
 		switch (result) {
 		case GP_ERROR_CORRUPTED_DATA:
@@ -1059,6 +1070,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	while (1) {
 
 		/* Read the response */
+		buf[0] = 0;
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
 			  "(0x%02x)", buf[0]);
