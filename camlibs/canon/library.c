@@ -279,7 +279,7 @@ static const struct canonShootingModeStateStruct shootingModeStateArray[] = {
 	{0x73,N_("Flash off")},
 	{0x74,N_("Long shutter")},
 	{0x75,N_("Super macro")},
-	{0x76,N_("Foilage")},
+	{0x76,N_("Foliage")},
 	{0x77,N_("Indoor")},
 	{0x78,N_("Fireworks")},
 	{0x79,N_("Beach")},
