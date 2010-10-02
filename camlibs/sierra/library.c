@@ -758,7 +758,6 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 
 		/* Write packet and read the answer */
 		CHECK (sierra_write_packet (camera, packet, context));
-		buf[0] = 0;
 		result = sierra_read_packet_wait (camera, buf, context);
 		switch (result) {
 		case GP_ERROR_CORRUPTED_DATA:
@@ -1070,7 +1069,6 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	while (1) {
 
 		/* Read the response */
-		buf[0] = 0;
 		CHECK (sierra_read_packet_wait (camera, buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
 			  "(0x%02x)", buf[0]);
