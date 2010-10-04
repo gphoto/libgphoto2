@@ -4425,7 +4425,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Drive Canon DSLR Autofocus"),    "autofocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DoAf, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_MfDrive, _get_Nikon_MFDrive, _put_Nikon_MFDrive },
 	{ N_("Drive Canon DSLR Manual focus"), "manualfocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DriveLens, _get_Canon_EOS_MFDrive, _put_Canon_EOS_MFDrive },
-	{ N_("Canon EOS Zoom "),               "eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
+	{ N_("Canon EOS Zoom"),                "eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
 	{ N_("Canon EOS Zoom Position"),       "eoszoomposition",  0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_ZoomPosition, _get_Canon_EOS_ZoomPosition, _put_Canon_EOS_ZoomPosition},
 	{ N_("Canon EOS Viewfinder"),          "eosviewfinder",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder, _put_Canon_EOS_ViewFinder},
 	{ 0,0,0,0,0,0,0 },
