@@ -3116,19 +3116,31 @@ static struct deviceproptableu8 canon_expcompensation[] = {
 GENERIC8TABLE(Canon_ExpCompensation,canon_expcompensation)
 
 static struct deviceproptableu8 canon_expcompensation2[] = {
-      { "0",	0x00, 0 },
-      { "0.3",	0x03, 0 },
-      { "0.6",	0x05, 0 },
-      { "1.0",	0x08, 0 },
-      { "1.3",	0x0b, 0 },
-      { "1.6",	0x0d, 0 },
+      { "3",	0x18, 0 },
+      { "2.6",	0x15, 0 },
+      { "2.5",	0x14, 0 },
+      { "2.3",	0x13, 0 },
       { "2",	0x10, 0 },
+      { "1.6",	0x0d, 0 },
+      { "1.5",	0x0c, 0 },
+      { "1.3",	0x0b, 0 },
+      { "1.0",	0x08, 0 },
+      { "0.6",	0x05, 0 },
+      { "0.5",	0x04, 0 },
+      { "0.3",	0x03, 0 },
+      { "0",	0x00, 0 },
       { "-0.3",	0xfd, 0 },
+      { "-0.5",	0xfc, 0 },
       { "-0.6",	0xfb, 0 },
       { "-1.0",	0xf8, 0 },
       { "-1.3",	0xf5, 0 },
+      { "-1.5",	0xf4, 0 },
       { "-1.6",	0xf3, 0 },
       { "-2",	0xf0, 0 },
+      { "-2.3",	0xed, 0 },
+      { "-2.5",	0xec, 0 },
+      { "-2.6",	0xeb, 0 },
+      { "-3",	0xe8, 0 },
 };
 GENERIC8TABLE(Canon_ExpCompensation2,canon_expcompensation2)
 
