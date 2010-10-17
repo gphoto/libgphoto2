@@ -2202,7 +2202,6 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
 	PTPContainer		event;
-	uint32_t		handle;
 	char 			buf[1024];
 	int			xmode = CANON_TRANSFER_CARD;
 	struct timeval		event_start;
@@ -2301,16 +2300,36 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			if (ret!=PTP_RC_OK)
 				continue;
 		}
-		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-		if (	isevent  &&
-			(event.Code==PTP_EC_CANON_RequestObjectTransfer)
-		) {
+		if (!isevent)
+			continue;
+		gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		switch (event.Code) {
+		case PTP_EC_ObjectAdded: {
+			/* add newly created object to internal structures. this hopefully just is a new folder */
+			PTPObjectInfo	*obinfo;
+			int		j;
+
+			ret = add_object (camera, event.Param1, context);
+			if (ret != GP_OK)
+				break;
+			j = handle_to_n (event.Param1, camera);
+			obinfo = &camera->pl->params.objectinfo[j];
+			/* this might be just the folder add, ignore that. */
+			if (obinfo->ObjectFormat == PTP_OFC_Association) {
+				/* new directory ... mark fs as to be refreshed */
+				gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
+				break;
+			} else {
+				/* new file */
+				newobject = event.Param1;
+				/* FALLTHROUGH */
+			}
+		}
+		case PTP_EC_CANON_RequestObjectTransfer: {
 			int j;
 
-			handle=event.Param1;
-			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",handle);
 			newobject = event.Param1;
+			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",newobject);
 			for (j=0;j<2;j++) {
 				ret=ptp_canon_checkevent(params,&event,&isevent);
 				if ((ret==PTP_RC_OK) && isevent)
@@ -2325,6 +2344,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			   ret = ptp_canon_reset_aeafawb(params,7);
 			 */
 			found = TRUE;
+			break;
+		}
+		case PTP_EC_CaptureComplete:
+			sawcapturecomplete = 1;
 			break;
 		}
 	}
