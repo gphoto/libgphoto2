@@ -2331,6 +2331,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			newobject = event.Param1;
 			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",newobject);
 			for (j=0;j<2;j++) {
+				isevent = 0;
 				ret=ptp_canon_checkevent(params,&event,&isevent);
 				if ((ret==PTP_RC_OK) && isevent)
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
@@ -2350,6 +2351,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			sawcapturecomplete = 1;
 			break;
 		}
+		if (found == TRUE)
+			break;
 	}
 	CR (gp_port_set_timeout (camera->port, timeout));
 	/* Catch event, attempt  2 */
