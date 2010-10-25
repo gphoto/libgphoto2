@@ -3,7 +3,7 @@
  * List of music players as USB ids.
  *
  * Copyright (C) 2005-2007 Richard A. Low <richard@wentnet.com>
- * Copyright (C) 2005-2009 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2005-2010 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2006-2007 Marcus Meissner
  * Copyright (C) 2007 Ted Bullock
  *
@@ -52,6 +52,7 @@
   { "Creative", 0x041e, "ZEN Micro (MTP mode)", 0x4130, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "ZEN Touch (MTP mode)", 0x4131, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Dell", 0x041e, "Dell Pocket DJ (MTP mode)", 0x4132, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+ { "Creative", 0x041e, "ZEN MicroPhoto (alternate version)", 0x4133, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "ZEN Sleek (MTP mode)", 0x4137, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "ZEN MicroPhoto", 0x413c, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "ZEN Sleek Photo", 0x413d, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
@@ -99,6 +100,8 @@
    *  or DEVICE_FLAG_PLAYLIST_SPL_V2 to get playlists working.
    * YP-NEU, YP-NDU, YP-20, YP-800, YP-MF Series, YP-100, YP-30
    * YP-700 and YP-90 are NOT MTP, but use a Samsung custom protocol.
+   * See: http://wiki.xiph.org/index.php/PortablePlayers for Ogg
+   * status.
    */
   // From anonymous SourceForge user, not verified
   { "Samsung", 0x04e8, "YP-900", 0x0409, DEVICE_FLAG_NONE },
@@ -122,12 +125,15 @@
   { "Samsung", 0x04e8, "YH-J70J", 0x5033, DEVICE_FLAG_UNLOAD_DRIVER },
   // From XNJB user
   // Guessing on .spl flag
-  { "Samsung", 0x04e8, "YP-Z5", 0x503c, DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  { "Samsung", 0x04e8, "YP-Z5", 0x503c, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // Don't add 0x5041 as this is YP-Z5 in USB mode
   // Contributed by anonymous person on SourceForge
-  { "Samsung", 0x04e8, "YP-T7J", 0x5047, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Samsung", 0x04e8, "YP-T7J", 0x5047, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by cstrickler@gmail.com
-  { "Samsung", 0x04e8, "YP-U2J (YP-U2JXB/XAA)", 0x5054, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Samsung", 0x04e8, "YP-U2J (YP-U2JXB/XAA)", 0x5054,
+      DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Andrew Benson
   { "Samsung", 0x04e8, "YP-F2J", 0x5057, DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Patrick <skibler@gmail.com>
@@ -138,12 +144,14 @@
   // do not add that device.
   // From m.eik michalke
   // This device does NOT use the special SPL playlist according to sypqgjxu@gmx.de.
-  { "Samsung", 0x04e8, "YP-U3", 0x507d, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Samsung", 0x04e8, "YP-U3", 0x507d, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Matthew Wilcox <matthew@wil.cx>
   // Sergio <sfrdll@tiscali.it> reports this device need the BROKEN ALL flag.
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-T9", 0x507f, DEVICE_FLAG_UNLOAD_DRIVER |
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+      DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // From Paul Clinch
   // Just guessing but looks like .spl v1 http://www.anythingbutipod.com/forum/showthread.php?t=14160
   // Some versions of the firmware reportedly support OGG, reportedly only the
@@ -154,7 +162,8 @@
   // From Alistair Boyle, .spl v2 required for playlists
   // According to the device log it properly supports OGG
   { "Samsung", 0x04e8, "YP-P2", 0x5083, DEVICE_FLAG_UNLOAD_DRIVER |
-      DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_PLAYLIST_SPL_V2 },
+      DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_OGG_IS_UNKNOWN |
+      DEVICE_FLAG_PLAYLIST_SPL_V2 },
   // From Paul Clinch
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-T10", 0x508a, DEVICE_FLAG_UNLOAD_DRIVER |
@@ -178,8 +187,9 @@
   // From Chris Le Sueur <thefishface@gmail.com>
   // Guessing on .spl flag
   // This one supports OGG properly through the correct MTP type.
-  { "Samsung", 0x04e8, "YP-R1", 0x510f, DEVICE_FLAG_UNLOAD_DRIVER },
-  // From Anonymous SourceForge user, NOT VERIFIED TO BE MTP
+  { "Samsung", 0x04e8, "YP-R1", 0x510f, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_UNIQUE_FILENAMES | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // From Anonymous SourceForge user
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-Q1", 0x5115, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
@@ -200,12 +210,14 @@
   // From Marco Pizzocaro <mpizzocaro@users.sourceforge.net>
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-U5", 0x5121,
-     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+      DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 |
+      DEVICE_FLAG_UNIQUE_FILENAMES | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // From Leonardo Accorsi <laccorsi@users.sourceforge.net>
   // Guessing on .spl flag
   { "Samsung", 0x04e8, "YP-R0", 0x5125,
-     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 },
-  // From a rouge .INF file,
+      DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_PLAYLIST_SPL_V1 |
+      DEVICE_FLAG_UNIQUE_FILENAMES | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // From a rouge .INF file
   // this device ID seems to have been recycled for:
   // the Samsung SGH-A707 Cingular cellphone
   // the Samsung L760-V cellphone
@@ -215,6 +227,9 @@
   // { "Samsung", 0x04e8, "Z170 Mobile Phone", 0x6601, DEVICE_FLAG_UNLOAD_DRIVER },
   // From Santi Béjar <sbejar@gmail.com> - not sure this is MTP...
   // { "Samsung", 0x04e8, "E250 Mobile Phone", 0x663e, DEVICE_FLAG_UNLOAD_DRIVER },
+  // From an anonymous SF user
+  { "Samsung", 0x04e8, "M7600 Beat/GT-S8300T", 0x6642,
+      DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_BATTERY_LEVEL },
   // From Lionel Bouton
   { "Samsung", 0x04e8, "X830 Mobile Phone", 0x6702, DEVICE_FLAG_UNLOAD_DRIVER },
   // From James <jamestech@gmail.com>
@@ -229,6 +244,14 @@
   // Added by Greg Fitzgerald <netzdamon@gmail.com>
   { "Samsung", 0x04e8, "SAMSUNG Trance", 0x6763, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  // From: Erik Berglund <erikjber@users.sourceforge.net>
+  // Logs indicate this needs DEVICE_FLAG_NO_ZERO_READS
+  // https://sourceforge.net/tracker/?func=detail&atid=809061&aid=3026337&group_id=158745
+  { "Samsung", 0x04e8, "Galaxy S GT-I9000", 0x6877, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_PLAYLIST_SPL_V1 },
+  // From: John Gorkos <ab0oo@users.sourceforge.net> and Akos Maroy <darkeye@users.sourceforge.net>
+  { "Samsung", 0x04e8, "Vibrant SGH-T959", 0x68a9, DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_PLAYLIST_SPL_V1 },
   // From anonymous Sourceforge user
   { "Samsung", 0x04e8, "GT-S5230", 0xe20c, DEVICE_FLAG_NONE },
 
@@ -290,13 +313,16 @@
   { "Philips", 0x0471, "GoGear Muse", 0x2077,
       DEVICE_FLAG_UNLOAD_DRIVER },
   // From Elie De Brauwer <elie@de-brauwer.be>
-  { "Philips", 0x0471, "GoGear ViBE SA1VBE08", 0x207b,
+  { "Philips", 0x0471, "GoGear ViBE SA1VBE04/08", 0x207b,
     DEVICE_FLAG_UNLOAD_DRIVER },
   // From josmtx <josmtx@users.sourceforge.net>
   { "Philips", 0x0471, "GoGear Aria", 0x207c,
     DEVICE_FLAG_UNLOAD_DRIVER },
   // From epklein
   { "Philips", 0x0471, "GoGear SA1VBE08KX/78", 0x208e,
+    DEVICE_FLAG_UNLOAD_DRIVER },
+  // From Anonymous SourceForge User
+  { "Philips", 0x0471, "GoGear VIBE SA2VBE16K/02", 0x20b7,
     DEVICE_FLAG_UNLOAD_DRIVER },
   // from XNJB user
   { "Philips", 0x0471, "PSA235", 0x7e01, DEVICE_FLAG_NONE },
@@ -399,81 +425,81 @@
    * iRiver
    * we assume that PTP_OC_MTP_GetObjPropList is essentially
    * broken on all iRiver devices, meaning it simply won't return
-   * all properties for a file when asking for metadata 0xffffffff. 
+   * all properties for a file when asking for metadata 0xffffffff.
    * Please test on your device if you believe it isn't broken!
    */
   { "iRiver", 0x1006, "H300 Series MTP", 0x3004,
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   { "iRiver", 0x1006, "Portable Media Center", 0x4002,
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   { "iRiver", 0x1006, "Portable Media Center", 0x4003,
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // From [st]anislav <iamstanislav@gmail.com>
   { "iRiver", 0x1042, "T7 Volcano", 0x1143, DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // From an anonymous person at SourceForge, uncertain about this one
-  { "iRiver", 0x4102, "iFP-880", 0x1008, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "iFP-880", 0x1008,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // 0x4102, 0x1042 is a USB mass storage mode for E100 v2/Lplayer
   // From libgphoto2 source
-  { "iRiver", 0x4102, "T10", 0x1113, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T10", 0x1113,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "T20 FM", 0x1114, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T20 FM", 0x1114,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // This appears at the MTP-UMS site
-  { "iRiver", 0x4102, "T20", 0x1115, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T20", 0x1115,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "U10", 0x1116, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "U10", 0x1116,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "T10a", 0x1117, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T10a", 0x1117,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "T20", 0x1118, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T20", 0x1118,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "T30", 0x1119, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T30", 0x1119,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // Reported by David Wolpoff
-  { "iRiver", 0x4102, "T10 2GB", 0x1120, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T10 2GB", 0x1120,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // Rough guess this is the MTP device ID...
-  { "iRiver", 0x4102, "N12", 0x1122, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "N12", 0x1122,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // Reported by Philip Antoniades <philip@mysql.com>
   // Newer iriver devices seem to have shaped-up firmware without any
   // of the annoying bugs.
   { "iRiver", 0x4102, "Clix2", 0x1126, DEVICE_FLAG_NONE },
   // Reported by Adam Torgerson
-  { "iRiver", 0x4102, "Clix", 0x112a, 
+  { "iRiver", 0x4102, "Clix", 0x112a,
     DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // Reported by Douglas Roth <dougaus@gmail.com>
-  { "iRiver", 0x4102, "X20", 0x1132, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "X20", 0x1132,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // Reported by Robert Ugo <robert_ugo@users.sourceforge.net>
-  { "iRiver", 0x4102, "T60", 0x1134, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "T60", 0x1134,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // Reported by two anonymous SourceForge users
   // Needs the stronger OGG_IS_UNKNOWN flag to support OGG properly,
   // be aware of newer players that may be needing this too.
-  { "iRiver", 0x4102, "E100", 0x1141, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "E100", 0x1141,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by anonymous SourceForge user
   // Need verification of whether this firmware really need all these flags
-  { "iRiver", 0x4102, "E100 v2/Lplayer", 0x1142, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "E100 v2/Lplayer", 0x1142,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Richard Vennemann <vennemann@users.sourceforge.net>
   // In USB Mass Storage mode it is 0x4102/0x1047
@@ -481,19 +507,28 @@
   { "iRiver", 0x4102, "Spinn", 0x1147, DEVICE_FLAG_NONE },
   // Reported by Tony Janssen <tonyjanssen@users.sourceforge.net>
   { "iRiver", 0x4102, "E50", 0x1151,
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
+    DEVICE_FLAG_OGG_IS_UNKNOWN },
+   // Reported by Jakub Matraszek <jakub.matraszek@gmail.com>
+  { "iRiver", 0x4102, "T5", 0x1153,
+    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+    DEVICE_FLAG_NO_ZERO_READS | DEVICE_FLAG_OGG_IS_UNKNOWN },
+  // Reported by pyalex@users.sourceforge.net
+  // Guessing that this needs the FLAG_NO_ZERO_READS...
+  { "iRiver", 0x4102, "E30", 0x1167,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Scott Call
   // Assume this actually supports OGG though it reports it doesn't.
-  { "iRiver", 0x4102, "H10 20GB", 0x2101, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "H10 20GB", 0x2101,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
-  { "iRiver", 0x4102, "H10 5GB", 0x2102, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "H10 5GB", 0x2102,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
   // From Rockbox device listing
-  { "iRiver", 0x4102, "H10 5.6GB", 0x2105, 
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS | 
+  { "iRiver", 0x4102, "H10 5.6GB", 0x2105,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
 
 
@@ -601,7 +636,8 @@
   // Obviously this company goes by many names.
   // This device is USB 2.0 only. Broken pipe on closing.
   // A later report indicates that this is also used by the iRiver E200
-  { "Memorex or iRiver", 0x10d6, "MMP 8585/8586 or iRiver E200", 0x2300, DEVICE_FLAG_UNLOAD_DRIVER |
+  { "Memorex or iRiver", 0x10d6, "MMP 8585/8586 or iRiver E200", 0x2300,
+      DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_NO_RELEASE_INTERFACE},
 
   /*
@@ -656,13 +692,16 @@
   // From: robin (AT) headbank D0Tco DOTuk
   { "Nokia", 0x0421, "N95 Mobile Phone 8GB", 0x006e, DEVICE_FLAG_NONE },
   // From Bastien Nocera <hadess@hadess.net>
-  { "Nokia", 0x0421, "N82 Mobile Phone", 0x0074, DEVICE_FLAG_NONE },
+  { "Nokia", 0x0421, "N82 Mobile Phone", 0x0074,
+      DEVICE_FLAG_UNLOAD_DRIVER },
   // From Martijn van de Streek <martijn@vandestreek.net>
   { "Nokia", 0x0421, "N78 Mobile Phone", 0x0079, DEVICE_FLAG_NONE },
   // From William Pettersson <the_enigma@users.sourceforge.net>
   { "Nokia", 0x0421, "6220 Classic", 0x008d, DEVICE_FLAG_NONE },
   // From kellerkev@gmail.com
   { "Nokia", 0x0421, "N85 Mobile Phone", 0x0092, DEVICE_FLAG_NONE },
+  // From Alexandre LISSY <lissyx@users.sourceforge.net>
+  { "Nokia", 0x0421, "6210 Navigator", 0x0098, DEVICE_FLAG_NONE },
   // From: danielw
   { "Nokia", 0x0421, "E71", 0x00e4, DEVICE_FLAG_NONE },
   // From: Laurent Bigonville <bigon@users.sourceforge.net>
@@ -670,19 +709,32 @@
   // From: Pier <pierlucalino@users.sourceforge.net>
   { "Nokia", 0x0421, "5320 XpressMusic", 0x00ea, DEVICE_FLAG_NONE },
   // From: Gausie <innerdreams@users.sourceforge.net>
-  { "Nokia", 0x0421, "5800 XpressMusic", 0x0154, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Nokia", 0x0421, "5800 XpressMusic", 0x0154,
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // From: Willy Gardiol (web) <willy@gardiol.org>
-  // Spurious errors for getting all objects, lead me to believe this flag atleast is needed
-  { "Nokia", 0x0421, "5800 XpressMusic v2", 0x0155, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  // Spurious errors for getting all objects, lead me to believe
+  // this flag atleast is needed
+  { "Nokia", 0x0421, "5800 XpressMusic v2", 0x0155,
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   // From an anonymous SourceForge user
   // Not verified to be MTP
   { "Nokia", 0x0421, "E63", 0x0179, DEVICE_FLAG_NONE },
+  // From an anonymous SourceForge user
+  { "Nokia", 0x0421, "E71x", 0x01a1, DEVICE_FLAG_NONE },
+  // From Marcus Meissner
+  { "Nokia", 0x0421, "3710", 0x01ee, DEVICE_FLAG_NONE },
   // From: AxeL <axel__17@users.sourceforge.net>
   { "Nokia", 0x0421, "N97-1", 0x01f4, DEVICE_FLAG_NONE },
   // From: FunkyPenguin <awafaa@users.sourceforge.net>
   { "Nokia", 0x0421, "N97", 0x01f5, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "5130 XpressMusic", 0x0209, DEVICE_FLAG_NONE },
+  // From: Anonymous SourceForge user
+  { "Nokia", 0x0421, "E72", 0x0221, DEVICE_FLAG_NONE },
+  // From: Anonymous SourceForge user
+  { "Nokia", 0x0421, "5530", 0x0229, DEVICE_FLAG_NONE },
+  // From: Anonymous SourceForge user
+  { "Nokia", 0x0421, "N97 mini", 0x026b, DEVICE_FLAG_NONE },
   // From: Alexander Kojevnikov <alex-kay@users.sourceforge.net>
   { "Nokia", 0x0421, "6600i", 0x0297, DEVICE_FLAG_NONE },
   // https://sourceforge.net/tracker/index.php?func=detail&aid=2692473&group_id=8874&atid=358874
@@ -775,6 +827,10 @@
   // Reported by anonymous SourceForge user
   { "Maxfield", 0x066f, "G-Flash NG 1GB", 0x846c,
     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by PaoloC <efmpsc@users.sourceforge.net>
+  // Apparently SigmaTel has an SDK for MTP players with this ID
+  { "SigmaTel Inc.", 0x066f, "MTPMSCN Audio Player", 0xa010,
+    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Cristi Magherusan <majeru@gentoo.ro>
   { "TrekStor", 0x0402, "i.Beat Sweez FM", 0x0611,
     DEVICE_FLAG_UNLOAD_DRIVER },
@@ -801,41 +857,56 @@
   /*
    * Cowon Systems, Inc.
    * The iAudio audiophile devices don't encourage the use of MTP.
+   * See: http://wiki.xiph.org/index.php/PortablePlayers for Ogg
+   * status
    */
   // Reported by Patrik Johansson <Patrik.Johansson@qivalue.com>
   { "Cowon", 0x0e21, "iAudio U3 (MTP mode)", 0x0701,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // Reported by Kevin Michael Smith <hai-etlik@users.sourceforge.net>
   { "Cowon", 0x0e21, "iAudio 6 (MTP mode)", 0x0711,
    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Roberth Karman
   { "Cowon", 0x0e21, "iAudio 7 (MTP mode)", 0x0751,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // Reported by an anonymous SourceForge user
   { "Cowon", 0x0e21, "iAudio U5 (MTP mode)", 0x0761,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // Reported by TJ Something <tjbk_tjb@users.sourceforge.net>
   { "Cowon", 0x0e21, "iAudio D2 (MTP mode)", 0x0801,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // Reported by anonymous Sourceforge user
   { "Cowon", 0x0e21, "iAudio D2+ FW 2.x (MTP mode)", 0x0861,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // From Rockbox device listing
   { "Cowon", 0x0e21, "iAudio D2+ DAB FW 4.x (MTP mode)", 0x0871,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // From Rockbox device listing
   { "Cowon", 0x0e21, "iAudio D2+ FW 3.x (MTP mode)", 0x0881,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // From Rockbox device listing
   { "Cowon", 0x0e21, "iAudio D2+ DMB FW 1.x (MTP mode)", 0x0891,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // Reported by <twkonefal@users.sourceforge.net>
   { "Cowon", 0x0e21, "iAudio S9 (MTP mode)", 0x0901,
    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
    DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
   // Reported by Dan Nicholson <dbn.lists@gmail.com>
   { "Cowon", 0x0e21, "iAudio 9 (MTP mode)", 0x0911,
-   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
+  // Reported by Franck VDL <franckv@users.sourceforge.net>
+  { "Cowon", 0x0e21, "iAudio J3 (MTP mode)", 0x0921,
+   DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+   DEVICE_FLAG_OGG_IS_UNKNOWN | DEVICE_FLAG_FLAC_IS_UNKNOWN },
 
   /*
    * Insignia, dual-mode.
@@ -866,7 +937,7 @@
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_ALWAYS_PROBE_DESCRIPTOR },
   // Reported by anonymous sourceforge user
   { "LG Electronics Inc.", 0x1004, "KM900", 0x6132,
-      DEVICE_FLAG_UNLOAD_DRIVER },
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_UNLOAD_DRIVER },
 
   /*
    * Sony
@@ -943,17 +1014,31 @@
   { "Sony", 0x054c, "Walkman NWZ-B142F", 0x03d8,
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
-      DEVICE_FLAG_UNIQUE_FILENAMES  },
+      DEVICE_FLAG_UNIQUE_FILENAMES },
+  // Reported by Rick Warner <rick@reptileroom.net>
+  { "Sony", 0x054c, "Walkman NWZ-E344", 0x03fc,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      DEVICE_FLAG_UNIQUE_FILENAMES },
   // Reported by Jonathan Stowe <gellyfish@users.sourceforge.net>
   { "Sony", 0x054c, "Walkman NWZ-E445", 0x03fd,
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
-      DEVICE_FLAG_UNIQUE_FILENAMES  },
+      DEVICE_FLAG_UNIQUE_FILENAMES },
   // Reported by Anonymous SourceForge user
   { "Sony", 0x054c, "Walkman NWZ-S545", 0x03fe,
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
-      DEVICE_FLAG_UNIQUE_FILENAMES  },
+      DEVICE_FLAG_UNIQUE_FILENAMES },
+  { "Sony", 0x054c, "Walkman NWZ-A845", 0x0404,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      DEVICE_FLAG_UNIQUE_FILENAMES },
+  // Reported by Anonymous SourceForge user
+  { "Sony", 0x054c, "DCR-SR75", 0x1294,
+      DEVICE_FLAG_UNLOAD_DRIVER |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      DEVICE_FLAG_UNIQUE_FILENAMES },
 
 
   /*
@@ -992,6 +1077,11 @@
   { "SonyEricsson", 0x0fce, "W705/W715", 0x0105, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Håkan Kvist
   { "SonyEricsson", 0x0fce, "W995", 0x0112, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by anonymous SourceForge user
+  { "SonyEricsson", 0x0fce, "U5", 0x0133, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+
+  // Reported by Jonas Nyrén <spectralmks@users.sourceforge.net>
+  { "SonyEricsson", 0x0fce, "W302", 0x10c8, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
 
   /*
@@ -999,17 +1089,30 @@
    * Assume DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST on all of these.
    */
   // Reported by David Boyd <tiggrdave@users.sourceforge.net>
-  { "Motorola", 0x22b8, "V3m/V750 verizon", 0x2a65, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST |
-    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  { "Motorola", 0x22b8, "V3m/V750 verizon", 0x2a65,
+      DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
+  // Reported by Steven Roemen <sdroemen@users.sourceforge.net>
+  { "Motorola", 0x22b8, "Droid X", 0x41d6,
+      DEVICE_FLAG_NONE },
+  // Reported by anonymous user
+  { "Motorola", 0x22b8, "Milestone / Verizon Droid", 0x41dc,
+      DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST |
+      DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   // Reported by Marcus Meissner to libptp2
   { "Motorola", 0x22b8, "K1", 0x4811, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // Reported by Hans-Joachim Baader <hjb@pro-linux.de> to libptp2
-  { "Motorola", 0x22b8, "A1200", 0x60ca, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
+  { "Motorola", 0x22b8, "A1200", 0x60ca,
+      DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // http://mark.cdmaforums.com/Files/Motdmmtp.inf
-  { "Motorola", 0x22b8, "MTP Test Command Interface", 0x6413, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
+  { "Motorola", 0x22b8, "MTP Test Command Interface", 0x6413,
+      DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // Reported by anonymous user
-  { "Motorola", 0x22b8, "RAZR2 V8/U9/Z6", 0x6415, DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
-  
+  { "Motorola", 0x22b8, "RAZR2 V8/U9/Z6", 0x6415,
+      DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
+
 
   /*
    * Media Keg
@@ -1067,6 +1170,8 @@
 
   // Reported by Demadridsur <demadridsur@gmail.com>
   { "O2 Sistemas", 0x1e53, "ZoltarTV", 0x0006, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  // Reported by da-beat <dabeat@gmail.com>
+  { "Wyplay", 0x1e53, "Wyplayer", 0x0007, DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
   // Reported by Sense Hofstede <qense@users.sourceforge.net>
   { "Perception Digital, Ltd", 0x0aa6, "Gigaware GX400", 0x9702, DEVICE_FLAG_NONE },
@@ -1075,13 +1180,18 @@
    * RIM's BlackBerry
    */
   // Reported by Nicolas VIVIEN <nicolas@vivien.fr>
-  { "RIM", 0x0fca, "BlackBerry Storm", 0x8007, DEVICE_FLAG_UNLOAD_DRIVER |
+  { "RIM", 0x0fca, "BlackBerry Storm/9650", 0x8007, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_SWITCH_MODE_BLACKBERRY | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
 
   /*
    * Nextar
    */
-  { "Nextar", 0x0402, "MA715A-8R", 0x5668 },
+  { "Nextar", 0x0402, "MA715A-8R", 0x5668, DEVICE_FLAG_NONE },
+
+  /*
+   * Coby
+   */
+  { "Coby", 0x1e74, "COBY MP705", 0x6512, DEVICE_FLAG_NONE },
 
   /*
    * Other strange stuff.
