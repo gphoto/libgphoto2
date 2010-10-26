@@ -4967,6 +4967,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		}
 	}
 
+	ret = gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section);
+	if (ret != GP_OK) {
+		gp_log (GP_LOG_ERROR, "ptp2_set_config", "Other PTP Device Properties section widget not found?");
+		return ret;
+	}
 	/* Generic property setter */
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
