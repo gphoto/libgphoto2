@@ -628,7 +628,7 @@ static struct {
 	/* Nikon Coolpix 2100 */
 	{"Nikon:Coolpix 2100 (PTP mode)", 0x04b0, 0x0117, 0},
 	/* Nikon Coolpix 5400: T. Kaproncai, 25 Jul 2003 */
-	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119, 0},
+	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* Nikon Coolpix 3700: T. Ehlers, 18 Jan 2004 */
 	{"Nikon:Coolpix 3700 (PTP mode)", 0x04b0, 0x011d, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2110825&group_id=8874&atid=108874 */
