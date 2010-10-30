@@ -24,7 +24,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
