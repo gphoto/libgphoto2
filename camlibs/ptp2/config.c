@@ -4977,7 +4977,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
 		CameraWidget		*widget;
 		CameraWidgetType	type;
-		char			buf[20], *label;
+		char			buf[20], *label, *xval;
 		PTPDevicePropDesc	dpd;
 
 		label = (char*)ptp_get_property_description(params, propid);
@@ -5012,8 +5012,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				propval.val = f;			\
 			} else {					\
 				long x;					\
-				gp_widget_get_value (widget, buf);	\
-				sscanf (buf, "%ld", &x);		\
+				ret = gp_widget_get_value (widget, &xval);	\
+				sscanf (xval, "%ld", &x);		\
 				propval.val = x;			\
 			}\
 			break;
