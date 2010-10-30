@@ -243,7 +243,6 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
 		return translate_ptp_result (ret);
 	}
-
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)) {
 		/* request additional properties */
 		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Owner);
@@ -315,7 +314,6 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
 		return translate_ptp_result (ret);
 	}
-
 	params->eos_captureenabled = 1;
 	return GP_OK;
 }
@@ -1881,6 +1879,8 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "6400",		0x0078, 0 },
 	{ "12800",		0x0080, 0 },
 	{ "25600",		0x0088, 0 },
+	{ "51200",		0x0090, 0 },
+	{ "102400",		0x0098, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
@@ -3114,19 +3114,31 @@ static struct deviceproptableu8 canon_expcompensation[] = {
 GENERIC8TABLE(Canon_ExpCompensation,canon_expcompensation)
 
 static struct deviceproptableu8 canon_expcompensation2[] = {
-      { "0",	0x00, 0 },
-      { "0.3",	0x03, 0 },
-      { "0.6",	0x05, 0 },
-      { "1.0",	0x08, 0 },
-      { "1.3",	0x0b, 0 },
-      { "1.6",	0x0d, 0 },
+      { "3",	0x18, 0 },
+      { "2.6",	0x15, 0 },
+      { "2.5",	0x14, 0 },
+      { "2.3",	0x13, 0 },
       { "2",	0x10, 0 },
+      { "1.6",	0x0d, 0 },
+      { "1.5",	0x0c, 0 },
+      { "1.3",	0x0b, 0 },
+      { "1.0",	0x08, 0 },
+      { "0.6",	0x05, 0 },
+      { "0.5",	0x04, 0 },
+      { "0.3",	0x03, 0 },
+      { "0",	0x00, 0 },
       { "-0.3",	0xfd, 0 },
+      { "-0.5",	0xfc, 0 },
       { "-0.6",	0xfb, 0 },
       { "-1.0",	0xf8, 0 },
       { "-1.3",	0xf5, 0 },
+      { "-1.5",	0xf4, 0 },
       { "-1.6",	0xf3, 0 },
       { "-2",	0xf0, 0 },
+      { "-2.3",	0xed, 0 },
+      { "-2.5",	0xec, 0 },
+      { "-2.6",	0xeb, 0 },
+      { "-3",	0xe8, 0 },
 };
 GENERIC8TABLE(Canon_ExpCompensation2,canon_expcompensation2)
 
@@ -4914,14 +4926,15 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
 	int			i;
-	SET_CONTEXT(camera, context);
 
+	SET_CONTEXT(camera, context);
 	camera->pl->checkevents = TRUE;
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
         	if (!params->eos_captureenabled)
-			camera_prepare_capture (camera, context);
+                	camera_prepare_capture (camera, context);
 		ptp_check_eos_events (params);
 	}
 
