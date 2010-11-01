@@ -402,7 +402,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
         info->file.size = st.st_size;
 	mime_type = get_mime_type (file);
 	if (!mime_type)
-		mime_type = "application/octet-stream";
+		mime_type = GP_MIME_UNKNOWN;
 	strcpy (info->file.type, mime_type);
         return (GP_OK);
 }
