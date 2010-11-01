@@ -38,8 +38,8 @@ A standard install of libgphoto2 does about this:
      utilsdir='${libexecdir}', depending on your system.
    * Documentation:
      * Man pages:
-       * ${mandir}/man3/libgphoto3.1
-       * ${mandir}/man3/libgphoto3_port.1
+       * ${mandir}/man3/libgphoto2.3
+       * ${mandir}/man3/libgphoto2_port.3
      * ${docdir}/camlibs/README.*    (camlib docs)
      * ${docdir}/{README,AUTHORS,NEWS}
      * ${docdir}/apidocs.html/       API docs
