@@ -492,6 +492,10 @@ struct submenu {
 struct menu {
 	char		*label;
 	char		*name;
+
+	uint16_t	usb_vendorid;
+	uint16_t	usb_productid;
+
 	/* Either: Standard menu */
 	struct	submenu	*submenus;
 	/* Or: Non-standard menu with custom behaviour */
@@ -1063,6 +1067,39 @@ _put_Nikon_OnOff_UINT8(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Nikon_OffOn_UINT8(CONFIG_GET_ARGS) {
+	if (dpd->FormFlag != PTP_DPFF_Range)
+                return (GP_ERROR_NOT_SUPPORTED);
+        if (dpd->DataType != PTP_DTC_UINT8)
+                return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
+	gp_widget_add_choice (*widget,_("On"));
+	gp_widget_add_choice (*widget,_("Off"));
+	gp_widget_set_value ( *widget, (!dpd->CurrentValue.u8?_("On"):_("Off")));
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_OffOn_UINT8(CONFIG_PUT_ARGS) {
+	int ret;
+	char *value;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK) 
+		return ret;
+	if(!strcmp(value,_("On"))) {
+		propval->u8 = 0;
+		return (GP_OK);
+	}
+	if(!strcmp(value,_("Off"))) {
+		propval->u8 = 1;
+		return (GP_OK);
+	}
+	return (GP_ERROR);
+}
+
+static int
 _get_CANON_FirmwareVersion(CONFIG_GET_ARGS) {
 	char value[64];
 
@@ -1104,20 +1141,6 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Preset Custom 5"),	0x800c, PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(WhiteBalance,whitebalance)
-
-
-/* Everything is camera specific. */
-static struct deviceproptableu8 compression[] = {
-	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
-	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
-	{ N_("JPEG Fine"),	0x02, PTP_VENDOR_NIKON },
-	{ N_("NEF (Raw)"),	0x03, PTP_VENDOR_NIKON },
-	{ N_("NEF+Basic"),	0x04, PTP_VENDOR_NIKON },
-	{ N_("NEF+Normal"),	0x05, PTP_VENDOR_NIKON },
-	{ N_("NEF+Fine"),	0x06, PTP_VENDOR_NIKON },
-	{ N_("TIFF (RGB)"),	0x07, PTP_VENDOR_NIKON },
-};
-GENERIC8TABLE(Compression,compression)
 
 static struct deviceproptableu16 fuji_imageformat[] = {
 	{ N_("RAW"),			1,	PTP_VENDOR_FUJI },
@@ -2378,22 +2401,6 @@ static struct deviceproptableu8 canon_eos_colorspace[] = {
 };
 GENERIC8TABLE(Canon_EOS_ColorSpace,canon_eos_colorspace)
 
-static struct deviceproptableu8 nikon_padvpvalue[] = {
-	{ "1/125",		0x00, 0 },
-	{ "1/60",		0x01, 0 },
-	{ "1/30",		0x02, 0 },
-	{ "1/15",		0x03, 0 },
-	{ "1/8",		0x04, 0 },
-	{ "1/4",		0x05, 0 },
-	{ "1/2",		0x06, 0 },
-	{ "1",			0x07, 0 },
-	{ "2",			0x08, 0 },
-	{ "4",			0x09, 0 },
-	{ "8",			0x0a, 0 },
-	{ "15",			0x0b, 0 },
-	{ "30",			0x0c, 0 },
-};
-GENERIC8TABLE(Nikon_PADVPValue,nikon_padvpvalue)
 
 static struct deviceproptableu8 nikon_evstep[] = {
 	{ "1/3",	0, 0 },
@@ -3280,9 +3287,101 @@ static struct deviceproptableu8 nikon_lensid[] = {
 	{"AF-S Nikkor 18-200mm 1:3.5-5.6 GED DX VR",	139, 0},
 	{"AF-S Nikkor 24-70mm 1:2.8G ED DX",		147, 0},
 	{"AF-S Nikkor 18-55mm 1:3.5-F5.6G DX VR",	154, 0},
-	{"Sigma EX 30mm 1:1.4 DC HSM",			248, 0}, /* from eckermann */
+	{"AF-S Nikkor 35mm 1:1.8G DX", 			159, 0},
+	{"Sigma EX 30mm 1:1.4 DC HSM",			248, 0}, /* from mge */
 };
 GENERIC8TABLE(Nikon_LensID,nikon_lensid)
+
+static struct deviceproptableu8 nikon_moviequality[] = {
+	{"320x216",	0, 0},
+	{"640x424",	1, 0},
+	{"1280x720",	2, 0},
+};
+GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality);
+
+static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
+	{"400",		0, 0},
+	{"800",		1, 0},
+	{"1600",	2, 0},
+	{"3200",	3, 0},
+	{N_("Hi 1"),	4, 0},
+};
+GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
+
+static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
+	{ "1/125",		0x00, 0 },
+	{ "1/60",		0x01, 0 },
+	{ "1/30",		0x02, 0 },
+	{ "1/15",		0x03, 0 },
+	{ "1/8",		0x04, 0 },
+	{ "1/4",		0x05, 0 },
+	{ "1/2",		0x06, 0 },
+	{ "1",			0x07, 0 },
+	{ "2",			0x08, 0 },
+	{ "4",			0x09, 0 },
+	{ "8",			0x0a, 0 },
+	{ "15",			0x0b, 0 },
+	{ "30",			0x0c, 0 },
+};
+GENERIC8TABLE(Nikon_D70s_PADVPValue,nikon_d70s_padvpvalue)
+
+static struct deviceproptableu8 nikon_d90_padvpvalue[] = {
+	{ "1/2000",			0x00, 0 },
+	{ "1/1600",			0x01, 0 },
+	{ "1/1250",			0x02, 0 },
+	{ "1/1000",			0x03, 0 },
+	{ "1/800",			0x04, 0 },
+	{ "1/640",			0x05, 0 },
+	{ "1/500",			0x06, 0 },
+	{ "1/400",			0x07, 0 },
+	{ "1/320",			0x08, 0 },
+	{ "1/250",			0x09, 0 },
+	{ "1/200",			0x0a, 0 },
+	{ "1/160",			0x0b, 0 },
+	{ "1/125",			0x0c, 0 },
+	{ "1/100",			0x0d, 0 },
+	{ "1/80",			0x0e, 0 },
+	{ "1/60",			0x0f, 0 },
+	{ "1/50",			0x10, 0 },
+	{ "1/40",			0x11, 0 },
+	{ "1/30",			0x12, 0 },
+	{ "1/15",			0x13, 0 },
+	{ "1/8",			0x14, 0 },
+	{ "1/4",			0x15, 0 },
+	{ "1/2",			0x16, 0 },
+	{ "1",				0x17, 0 },
+};
+GENERIC8TABLE(Nikon_D90_PADVPValue,nikon_d90_padvpvalue)
+
+static struct deviceproptableu8 nikon_d90_activedlighting[] = {
+	{ N_("Extra high"),		0x00, 0 },
+	{ N_("High"),			0x01, 0 },
+	{ N_("Normal"),			0x02, 0 },
+	{ N_("Low"),			0x03, 0 },
+	{ N_("Off"),			0x04, 0 },
+	{ N_("Auto"),			0x05, 0 },
+};
+GENERIC8TABLE(Nikon_D90_ActiveDLighting,nikon_d90_activedlighting)
+
+static struct deviceproptableu8 nikon_d90_compression[] = {
+	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"),	0x02, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),	0x04, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
+};
+GENERIC8TABLE(Nikon_D90_Compression,nikon_d90_compression)
+
+static struct deviceproptableu8 nikon_d90_highisonr[] = {
+	{ N_("Off"),	0, 0 },
+	{ N_("Low"),	1, 0 },
+	{ N_("Normal"),	2, 0 },
+	{ N_("High"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_D90_HighISONR,nikon_d90_highisonr)
+
 
 static int
 _get_BurstNumber(CONFIG_GET_ARGS) {
@@ -4508,7 +4607,6 @@ static struct submenu camera_settings_menu[] = {
 
 /* think of this as properties of the "film" */
 static struct submenu image_settings_menu[] = {
-	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Compression, _put_Compression},
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CANON_ImageQuality, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Quality, _put_Canon_Quality},
 	{ N_("Image Format"), "imageformat", PTP_DPC_CANON_FullViewFileFormat, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Capture_Format, _put_Canon_Capture_Format},
 	{ N_("Image Format"), "imageformat", PTP_DPC_CANON_EOS_ImageFormat, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
@@ -4533,7 +4631,6 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"), "colorspace", PTP_DPC_NIKON_ColorSpace, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorSpace, _put_Nikon_ColorSpace},
 	{ N_("Color Space"), "colorspace", PTP_DPC_CANON_EOS_ColorSpace, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_ColorSpace, _put_Canon_EOS_ColorSpace},
 	{ N_("Auto ISO"), "autoiso", PTP_DPC_NIKON_ISOAuto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
-	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_PADVPValue, _put_Nikon_PADVPValue},
         { 0,0,0,0,0,0,0 },
 };
 
@@ -4658,17 +4755,37 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
 	{ N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 	{ N_("Auto Exposure Bracketing"), "aeb", PTP_DPC_CANON_EOS_AEB, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_AEB, _put_Canon_EOS_AEB},
+	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
+	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* Nikon camera specific values, as unfortunately the values are handled differently
+ * A generic fallback for the "rest" of the Nikons is in the main menu.
+ */
+/* Nikon D90. Marcus Meissner <marcus@jet.franken.de> */
+static struct submenu nikon_d90_capture_settings[] = {
+	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
+	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ISOAutoHiLimit, _put_Nikon_D90_ISOAutoHiLimit },
+	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
+	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_Compression, _put_Nikon_D90_Compression},
+	{ 0,0,0,0,0,0,0 },
+};
+
+
+
+
 static struct menu menus[] = {
-	{ N_("Camera Actions"), "actions", camera_actions_menu, NULL, NULL },
-	{ N_("Camera Settings"), "settings", camera_settings_menu, NULL, NULL },
-	{ N_("Camera Status Information"), "status", camera_status_menu, NULL, NULL },
-	{ N_("Image Settings"), "imgsettings", image_settings_menu, NULL, NULL },
-	{ N_("Capture Settings"), "capturesettings", capture_settings_menu, NULL, NULL },
-	{ N_("WIFI profiles"), "wifiprofiles", NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
+	{ N_("Camera Actions"), "actions", 0, 0, camera_actions_menu, NULL, NULL },
+	{ N_("Camera Settings"), "settings", 0, 0, camera_settings_menu, NULL, NULL },
+	{ N_("Camera Status Information"), "status", 0, 0, camera_status_menu, NULL, NULL },
+	{ N_("Image Settings"), "imgsettings", 0, 0, image_settings_menu, NULL, NULL },
+
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings, NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0, 0, capture_settings_menu, NULL, NULL },
+	{ N_("WIFI profiles"), "wifiprofiles", 0, 0, NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
 int
@@ -4679,8 +4796,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	uint16_t	*setprops = NULL;
 	int		i, nrofsetprops = 0;
 	PTPParams	*params = &camera->pl->params;
-	SET_CONTEXT(camera, context);
+	CameraAbilities	ab;
 
+	SET_CONTEXT(camera, context);
+	memset (&ab, 0, sizeof(ab));
+	gp_camera_get_abilities (camera, &ab);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
@@ -4699,17 +4819,47 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				gp_widget_append(*window, section);
 			continue;
 		}
-		
-		/* Standard menu with submenus */
-		gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].label), &section);
-		gp_widget_set_name (section, menus[menuno].name);
-		gp_widget_append (*window, section);
+		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
+			if (menus[menuno].usb_vendorid != ab.usb_vendor)
+				continue;
+			if (	menus[menuno].usb_productid &&
+				(menus[menuno].usb_productid != ab.usb_product)
+			)
+				continue;
+			gp_log (GP_LOG_DEBUG, "get_config", "usb vendor/product specific path entered");
+		}
 
+		/* Standard menu with submenus */
+		ret = gp_widget_get_child_by_label (*window, _(menus[menuno].label), &section);
+		if (ret != GP_OK) {
+			gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].label), &section);
+			gp_widget_set_name (section, menus[menuno].name);
+			gp_widget_append (*window, section);
+		}
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			widget = NULL;
 
 			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
+				int			j;
+
+				/* Do not handle a property we have already handled.
+				 * needed for the vendor specific but different configs.
+				 */
+				for (j=0;j<nrofsetprops;j++)
+					if (setprops[j] == cursub->propid)
+						break;
+				if (j<nrofsetprops) {
+					gp_log (GP_LOG_DEBUG, "camera_get_config", "Property '%s' / 0x%04x already handled before, skipping.", _(cursub->label), cursub->propid );
+					continue;
+				}
+				if (nrofsetprops)
+					setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
+				else
+					setprops = malloc(sizeof(setprops[0]));
+				if (setprops) /* handle oom */
+					setprops[nrofsetprops++] = cursub->propid;
+				/* ok, looking good */
 				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc	dpd;
 
@@ -4720,12 +4870,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
 					ptp_free_devicepropdesc(&dpd);
-					if (nrofsetprops)
-						setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
-					else
-						setprops = malloc(sizeof(setprops[0]));
-					if (setprops) /* handle oom */
-						setprops[nrofsetprops++] = cursub->propid;
 				} else {
 					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
 					if (	((cursub->type & 0x7000) != 0x1000) ||
@@ -4759,12 +4903,12 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			}
 		}
 	}
-	/* Last menu is "Other", a generic fallback window. */
-	if (nrofsetprops >= params->deviceinfo.DevicePropertiesSupported_len) {
-		free (setprops);
-		return GP_OK;
-	}
+	free (setprops);
 
+	if (!params->deviceinfo.DevicePropertiesSupported_len)
+		return GP_OK;
+
+	/* Last menu is "Other", a generic property fallback window. */
 	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
 	gp_widget_set_name (section, "other");
 	gp_widget_append (*window, section);
@@ -4776,15 +4920,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
 
-#if 0 /* expose the whole thing to the user instead for now... */
-		int			j
-
-		for (j=0;j<nrofsetprops;j++)
-			if (setprops[j] == propid)
-				break;
-		if (j<nrofsetprops) continue;
-		memset (&dpd,0,sizeof(dpd));
-#endif
 		ret = ptp_getdevicepropdesc (params,propid,&dpd);
 		if (ret != PTP_RC_OK)
 			continue;
@@ -4915,7 +5050,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_append (section, widget);
 		ptp_free_devicepropdesc(&dpd);
 	}
-	free (setprops);
 	return GP_OK;
 }
 
@@ -4928,10 +5062,14 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
 	int			i;
+	CameraAbilities		ab;
+
 
 	SET_CONTEXT(camera, context);
-	camera->pl->checkevents = TRUE;
+	memset (&ab, 0, sizeof(ab));
+	gp_camera_get_abilities (camera, &ab);
 
+	camera->pl->checkevents = TRUE;
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
@@ -4952,7 +5090,16 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			menus[menuno].putfunc(camera, section);
 			continue;
 		}
-		
+		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
+			if (menus[menuno].usb_vendorid != ab.usb_vendor)
+				continue;
+			if (	menus[menuno].usb_productid &&
+				(menus[menuno].usb_productid != ab.usb_product)
+			)
+				continue;
+			gp_log (GP_LOG_DEBUG, "set_config", "usb vendor/product specific path entered");
+		}
+
 		/* Standard menu with submenus */
 		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
@@ -5016,6 +5163,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				return ret;
 		}
 	}
+	if (!params->deviceinfo.DevicePropertiesSupported_len)
+		return GP_OK;
 
 	ret = gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section);
 	if (ret != GP_OK) {
