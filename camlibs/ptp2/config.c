@@ -4782,6 +4782,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Auto Exposure Bracketing"), "aeb", PTP_DPC_CANON_EOS_AEB, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_AEB, _put_Canon_EOS_AEB},
 	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
 	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Reverse Indicators"), "reverseindicators", PTP_DPC_NIKON_IndicatorDisp, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 
 	{ 0,0,0,0,0,0,0 },
 };
