@@ -3308,6 +3308,31 @@ static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 };
 GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
 
+static struct deviceproptableu8 nikon_d3s_isoautohilimit[] = {
+	{"400",	   0, 0},
+	{"500",	   1, 0},
+	{"640",	   3, 0},
+	{"800",    4, 0},
+	{"1000",   5, 0},
+	{"1250",   7, 0},
+	{"1600",   8, 0},
+	{"2000",   9, 0},
+	{"2500",  11, 0},
+	{"3200",  12, 0},
+	{"4000",  13, 0},
+	{"5000",  15, 0},
+	{"6400",  16, 0},
+	{"8000",  17, 0},
+	{"10000", 19, 0},
+	{"12800", 20, 0},
+	{"14400", 21, 0},
+	{"20000", 23, 0},
+	{"25600", 24, 0},
+	{"51200", 25, 0},
+	{"102400",26, 0},
+};
+GENERIC8TABLE(Nikon_D3s_ISOAutoHiLimit, nikon_d3s_isoautohilimit);
+
 static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
 	{ "1/125",		0x00, 0 },
 	{ "1/60",		0x01, 0 },
@@ -4774,7 +4799,10 @@ static struct submenu nikon_d90_capture_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
-
+static struct submenu nikon_d3s_capture_settings[] = {
+	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D3s_ISOAutoHiLimit, _put_Nikon_D3s_ISOAutoHiLimit },
+	{ 0,0,0,0,0,0,0 },
+};
 
 
 static struct menu menus[] = {
@@ -4783,8 +4811,11 @@ static struct menu menus[] = {
 	{ N_("Camera Status Information"), "status", 0, 0, camera_status_menu, NULL, NULL },
 	{ N_("Image Settings"), "imgsettings", 0, 0, image_settings_menu, NULL, NULL },
 
+
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings, NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0426, nikon_d3s_capture_settings, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0, 0, capture_settings_menu, NULL, NULL },
+
 	{ N_("WIFI profiles"), "wifiprofiles", 0, 0, NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
