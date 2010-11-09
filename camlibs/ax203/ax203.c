@@ -94,6 +94,9 @@ static const struct eeprom_info {
 	{ "Winbond W25X32", 0x001630ef, 4194304, 1 },
 	{ "Winbond W25X64", 0x001730ef, 8388608, 1 },
 
+	/* Unknown eeproms, reported by users, some may be capable of
+	   4k sector erase, but as we cannot find datasheets we don't know. */
+	{ "Unknown 1M", 0xc81440c8, 1048576, 0 },
 	{ }
 };
 
