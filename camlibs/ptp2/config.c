@@ -2113,15 +2113,26 @@ _get_FNumber(CONFIG_GET_ARGS) {
 static int
 _put_FNumber(CONFIG_PUT_ARGS)
 {
-	int	ret;
+	int	ret, i;
 	char	*value;
 	float	f;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
 		return ret;
+	if (strstr (value, "f/") == value)
+		value += strlen("f/");
 
-	if (sscanf(value, "f/%g", &f)) {
+        for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[20];
+
+		sprintf(buf,"%g",(dpd->FORM.Enum.SupportedValue[i].u16*1.0)/100.0);
+		if (!strcmp (buf, value)) {
+			propval->u16 = dpd->FORM.Enum.SupportedValue[i].u16;
+			return GP_OK;
+		}
+        }
+	if (sscanf(value, "%g", &f)) {
 		propval->u16 = f*100;
 		return GP_OK;
 	}
