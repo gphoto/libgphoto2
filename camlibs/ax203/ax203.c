@@ -71,6 +71,10 @@ static const struct eeprom_info {
 	{ "ESMT F25L008 (top)",    0x8c14208c, 1048576, 1 },
 	{ "ESMT F25L008 (bottom)", 0x8c14218c, 1048576, 1 },
 
+	{ "GigaDevice GD25Q40", 0xc81340c8,  524288, 1 },
+	{ "GigaDevice GD25Q80", 0xc81440c8, 1048576, 1 },
+	{ "GigaDevice GD25Q16", 0xc81540c8, 2097152, 1 },
+
 	{ "MXIC MX25L4005A", 0xc21320c2,  524288, 1 },
 	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1 },
 	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1 },
@@ -94,9 +98,6 @@ static const struct eeprom_info {
 	{ "Winbond W25X32", 0x001630ef, 4194304, 1 },
 	{ "Winbond W25X64", 0x001730ef, 8388608, 1 },
 
-	/* Unknown eeproms, reported by users, some may be capable of
-	   4k sector erase, but as we cannot find datasheets we don't know. */
-	{ "Unknown 1M", 0xc81440c8, 1048576, 0 },
 	{ }
 };
 
