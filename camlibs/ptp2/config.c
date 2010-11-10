@@ -3397,6 +3397,17 @@ static struct deviceproptableu8 nikon_d90_compression[] = {
 };
 GENERIC8TABLE(Nikon_D90_Compression,nikon_d90_compression)
 
+static struct deviceproptableu8 nikon_compression[] = {
+	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"),	0x02, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),	0x04, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
+};
+GENERIC8TABLE(Nikon_Compression,nikon_compression)
+
 static struct deviceproptableu8 nikon_d90_highisonr[] = {
 	{ N_("Off"),	0, 0 },
 	{ N_("Low"),	1, 0 },
@@ -4686,6 +4697,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, 0, PTP_DTC_UINT8, _get_Nikon_Compression, _put_Nikon_Compression},
 	{ N_("Focus Distance"), "focusdistance", PTP_DPC_FocusDistance, 0, PTP_DTC_UINT16, _get_FocusDistance, _put_FocusDistance},
 	{ N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
 	{ N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
