@@ -64,11 +64,13 @@
 /* IDENTIFY_INIT_TIMEOUT: the starting timeout (in milliseconds) 
  * to wait for the camera to respond to an "identify camera" request.
  * This timeout is doubled for each retry */
-#define IDENTIFY_INIT_TIMEOUT 10
+/* It was originally 10, but this made the communication fail, so
+ * bump up to 100. */
+#define IDENTIFY_INIT_TIMEOUT 100
 
 /* IDENTIFY_MAX_ATTEMPTS: how many "identify camera" requests to send 
  * to the camera, until we give up for lack of response. */
-#define IDENTIFY_MAX_ATTEMPTS 10
+#define IDENTIFY_MAX_ATTEMPTS 5
 
 /* CANON_FAST_TIMEOUT: how long (in milliseconds) we should wait for
  * an URB to come back on an interrupt endpoint */
