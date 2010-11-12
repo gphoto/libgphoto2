@@ -5021,19 +5021,21 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				/* Do not handle a property we have already handled.
 				 * needed for the vendor specific but different configs.
 				 */
-				for (j=0;j<nrofsetprops;j++)
-					if (setprops[j] == cursub->propid)
-						break;
-				if (j<nrofsetprops) {
-					gp_log (GP_LOG_DEBUG, "camera_get_config", "Property '%s' / 0x%04x already handled before, skipping.", _(cursub->label), cursub->propid );
-					continue;
+				if (cursub->propid) {
+					for (j=0;j<nrofsetprops;j++)
+						if (setprops[j] == cursub->propid)
+							break;
+					if (j<nrofsetprops) {
+						gp_log (GP_LOG_DEBUG, "camera_get_config", "Property '%s' / 0x%04x already handled before, skipping.", _(cursub->label), cursub->propid );
+						continue;
+					}
+					if (nrofsetprops)
+						setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
+					else
+						setprops = malloc(sizeof(setprops[0]));
+					if (setprops) /* handle oom */
+						setprops[nrofsetprops++] = cursub->propid;
 				}
-				if (nrofsetprops)
-					setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
-				else
-					setprops = malloc(sizeof(setprops[0]));
-				if (setprops) /* handle oom */
-					setprops[nrofsetprops++] = cursub->propid;
 				/* ok, looking good */
 				if ((cursub->propid & 0x7000) == 0x5000) {
 					PTPDevicePropDesc	dpd;
