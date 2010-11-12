@@ -3376,6 +3376,37 @@ static struct deviceproptableu8 nikon_d90_padvpvalue[] = {
 };
 GENERIC8TABLE(Nikon_D90_PADVPValue,nikon_d90_padvpvalue)
 
+static struct deviceproptableu8 nikon_d3s_padvpvalue[] = {
+	{ "1/4000",	0x00, 0 },
+	{ "1/3200",	0x01, 0 },
+	{ "1/2500",	0x02, 0 },
+	{ "1/2000",	0x03, 0 },
+	{ "1/1600",	0x04, 0 },
+	{ "1/1250",	0x05, 0 },
+	{ "1/1000",	0x06, 0 },
+	{ "1/800",	0x07, 0 },
+	{ "1/640",	0x08, 0 },
+	{ "1/500",	0x09, 0 },
+	{ "1/400",	0x0a, 0 },
+	{ "1/320",	0x0b, 0 },
+	{ "1/250",	0x0c, 0 },
+	{ "1/200",	0x0d, 0 },
+	{ "1/160",	0x0e, 0 },
+	{ "1/125",	0x0f, 0 },
+	{ "1/100",	0x10, 0 },
+	{ "1/80",	0x11, 0 },
+	{ "1/60",	0x12, 0 },
+	{ "1/50",	0x13, 0 },
+	{ "1/40",	0x14, 0 },
+	{ "1/30",	0x15, 0 },
+	{ "1/15",	0x16, 0 },
+	{ "1/8",	0x17, 0 },
+	{ "1/4",	0x18, 0 },
+	{ "1/2",	0x19, 0 },
+	{ "1",		0x1a, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_PADVPValue,nikon_d3s_padvpvalue)
+
 static struct deviceproptableu8 nikon_d90_activedlighting[] = {
 	{ N_("Extra high"),		0x00, 0 },
 	{ N_("High"),			0x01, 0 },
@@ -3396,6 +3427,18 @@ static struct deviceproptableu8 nikon_d90_compression[] = {
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
 };
 GENERIC8TABLE(Nikon_D90_Compression,nikon_d90_compression)
+
+static struct deviceproptableu8 nikon_d3s_compression[] = {
+	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"),	0x02, PTP_VENDOR_NIKON },
+	{ N_("TIFF (RGB)"),	0x03, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),	0x04, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
+};
+GENERIC8TABLE(Nikon_D3s_Compression,nikon_d3s_compression)
 
 static struct deviceproptableu8 nikon_compression[] = {
 	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
@@ -3429,13 +3472,67 @@ static struct deviceproptableu8 nikon_d90_meterofftime[] = {
 };
 GENERIC8TABLE(Nikon_D90_MeterOffTime,nikon_d90_meterofftime)
 
-static struct deviceproptableu8 nikon_shootingspeed[] = {
+
+static struct deviceproptableu8 nikon_d3s_jpegcompressionpolicy[] = {
+	{ N_("Size Priority"),	0x00, 0 },
+	{ N_("Optimal qualtiy"),0x01, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_JPEGCompressionPolicy,nikon_d3s_jpegcompressionpolicy)
+
+static struct deviceproptableu8 nikon_d3s_flashsyncspeed[] = {
+	{ N_("1/250s (Auto FP)"),	0x00, 0 },
+	{ N_("1/200s"),			0x01, 0 },
+	{ N_("1/160s"),			0x02, 0 },
+	{ N_("1/125s"),			0x03, 0 },
+	{ N_("1/100s"),			0x04, 0 },
+	{ N_("1/80s"),			0x05, 0 },
+	{ N_("1/60s"),			0x06, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_FlashSyncSpeed,nikon_d3s_flashsyncspeed)
+
+static struct deviceproptableu8 nikon_d3s_flashshutterspeed[] = {
+	{ N_("1/60s"),			0x00, 0 },
+	{ N_("1/30s"),			0x01, 0 },
+	{ N_("1/15s"),			0x02, 0 },
+	{ N_("1/8s"),			0x03, 0 },
+	{ N_("1/4s"),			0x04, 0 },
+	{ N_("1/2s"),			0x05, 0 },
+	{ N_("1s"),			0x06, 0 },
+	{ N_("2s"),			0x07, 0 },
+	{ N_("4s"),			0x08, 0 },
+	{ N_("8s"),			0x09, 0 },
+	{ N_("15s"),			0x0a, 0 },
+	{ N_("30s"),			0x0b, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_FlashShutterSpeed,nikon_d3s_flashshutterspeed)
+
+static struct deviceproptableu8 nikon_d90_shootingspeed[] = {
 	{ N_("4 fps"),	0x00, 0 },
 	{ N_("3 fps"),	0x01, 0 },
 	{ N_("2 fps"),	0x02, 0 },
 	{ N_("1 fps"),	0x03, 0 },
 };
-GENERIC8TABLE(Nikon_ShootingSpeed,nikon_shootingspeed)
+GENERIC8TABLE(Nikon_D90_ShootingSpeed,nikon_d90_shootingspeed)
+
+static struct deviceproptableu8 nikon_d3s_shootingspeed[] = {
+	{ N_("9 fps"),	0x00, 0 },
+	{ N_("8 fps"),	0x01, 0 },
+	{ N_("7 fps"),	0x02, 0 },
+	{ N_("6 fps"),	0x03, 0 },
+	{ N_("5 fps"),	0x04, 0 },
+	{ N_("4 fps"),	0x05, 0 },
+	{ N_("3 fps"),	0x06, 0 },
+	{ N_("2 fps"),	0x07, 0 },
+	{ N_("1 fps"),	0x08, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_ShootingSpeed,nikon_d3s_shootingspeed)
+
+static struct deviceproptableu8 nikon_d3s_shootingspeedhigh[] = {
+	{ N_("11 fps"),	0x00, 0 },
+	{ N_("10 fps"),	0x01, 0 },
+	{ N_("9 fps"),	0x02, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_ShootingSpeedHigh,nikon_d3s_shootingspeedhigh)
 
 
 static int
@@ -4790,7 +4887,6 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
 	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("Reverse Indicators"), "reverseindicators", PTP_DPC_NIKON_IndicatorDisp, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
-	{ N_("Shooting Speed in Frames per Second in Low Continuos"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ShootingSpeed, _put_Nikon_ShootingSpeed},
 
 	{ 0,0,0,0,0,0,0 },
 };
@@ -4810,11 +4906,41 @@ static struct submenu nikon_d90_capture_settings[] = {
 	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_Compression, _put_Nikon_D90_Compression},
+	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* One D3s reporter is Matthias Blaicher */
 static struct submenu nikon_d3s_capture_settings[] = {
+	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_PADVPValue, _put_Nikon_D3s_PADVPValue},
 	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D3s_ISOAutoHiLimit, _put_Nikon_D3s_ISOAutoHiLimit },
+	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeed, _put_Nikon_D3s_ShootingSpeed},
+	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh", PTP_DPC_NIKON_ContinuousSpeedHigh, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeedHigh, _put_Nikon_D3s_ShootingSpeedHigh},
+	{ N_("Flash Sync. Speed"), "flashsyncspeed", PTP_DPC_NIKON_FlashSyncSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_FlashSyncSpeed, _put_Nikon_D3s_FlashSyncSpeed},
+	{ N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_FlashShutterSpeed, _put_Nikon_D3s_FlashShutterSpeed},
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_Compression, _put_Nikon_D3s_Compression},
+	{ N_("JPEG Compression Policy"), "jpegcompressionpolicy", PTP_DPC_NIKON_JPEG_Compression_Policy, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_JPEGCompressionPolicy, _put_Nikon_D3s_JPEGCompressionPolicy},
+
+	/* same as D90 */
+	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
+	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
+
+
+	{ 0,0,0,0,0,0,0 },
+};
+
+static struct submenu nikon_generic_capture_settings[] = {
+	/* filled in with D90 values */
+	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
+	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ISOAutoHiLimit, _put_Nikon_D90_ISOAutoHiLimit },
+	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
+	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
+	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
+	/* And some D3s values */
+	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh", PTP_DPC_NIKON_ContinuousSpeedHigh, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeedHigh, _put_Nikon_D3s_ShootingSpeedHigh},
+	{ N_("Flash Sync. Speed"), "flashsyncspeed", PTP_DPC_NIKON_FlashSyncSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_FlashSyncSpeed, _put_Nikon_D3s_FlashSyncSpeed},
+	{ N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_FlashShutterSpeed, _put_Nikon_D3s_FlashShutterSpeed},
+
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -4829,8 +4955,9 @@ static struct menu menus[] = {
 	{ N_("Image Settings"), "imgsettings", 0, 0, image_settings_menu, NULL, NULL },
 
 
-	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings, NULL, NULL },
-	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0426, nikon_d3s_capture_settings, NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings,     NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0426, nikon_d3s_capture_settings,     NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0,      0, nikon_generic_capture_settings, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0, 0, capture_settings_menu, NULL, NULL },
 
 	{ N_("WIFI profiles"), "wifiprofiles", 0, 0, NULL, _get_wifi_profiles_menu, _put_wifi_profiles_menu },
