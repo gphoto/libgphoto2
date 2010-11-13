@@ -970,7 +970,7 @@ static struct {
 	{"Canon:PowerShot A550 (PTP mode)",     0x04a9, 0x3150, PTPBUG_DELETE_SENDS_EVENT},
 	/* https://launchpad.net/bugs/64146 */
 	{"Canon:PowerShot A450 (PTP mode)",     0x04a9, 0x3155, PTPBUG_DELETE_SENDS_EVENT},
-	/* Harald Dunkel <harald.dunkel@t-online.de> */                                                        
+	/* Harald Dunkel <harald.dunkel@t-online.de> */
 	{"Canon:PowerShot G9 (PTP mode)",       0x04a9, 0x315a, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* Barrie Stott <zen146410@zen.co.uk> */
 	{"Canon:PowerShot A650IS (PTP mode)",   0x04a9, 0x315b, PTP_CAP|PTP_CAP_PREVIEW},
@@ -2719,7 +2719,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					break;
 				}
 				if (ob->oi.StorageID == 0) {
-					/* We would always get the same filename, 
+					/* We would always get the same filename,
 					 * which will confuse the frontends */
 					if (strstr(ob->oi.Filename,".NEF")) {
 						sprintf (path->name, "capt%04d.nef", capcnt++);
@@ -4204,7 +4204,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (!xsize)
 			return (GP_ERROR_NOT_SUPPORTED);
 
-		if (size+offset > xsize) 
+		if (size+offset > xsize)
 			size = xsize - offset;
 		ret = ptp_getpartialobject(params, oid, offset, size, &xdata, &size);
 		if (ret == PTP_ERROR_CANCEL)
@@ -4549,7 +4549,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	    ptp_event_issupported(params, PTP_EC_ObjectRemoved)) {
 		PTPContainer event;
 
-		CPR (context, ptp_check_event (params));
+		ptp_check_event (params); /* ignore errors */
 		while (ptp_get_one_event (params, &event))
 			if (event.Code == PTP_EC_ObjectRemoved)
 				break;
