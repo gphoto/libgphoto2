@@ -1011,6 +1011,34 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 }
 #endif
 
+static int
+_get_Range_UINT8(CONFIG_GET_ARGS) {
+	float CurrentValue;
+	
+	if (dpd->FormFlag != PTP_DPFF_Range)
+		return (GP_ERROR_NOT_SUPPORTED);
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
+	CurrentValue = (float) dpd->CurrentValue.u8;
+	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinimumValue.u8, (float) dpd->FORM.Range.MaximumValue.u8, (float) dpd->FORM.Range.StepSize.u8);
+	gp_widget_set_value ( *widget, &CurrentValue);
+	return (GP_OK);
+}
+
+
+static int
+_put_Range_UINT8(CONFIG_PUT_ARGS) {
+	int ret;
+	float f;
+	ret = gp_widget_get_value (widget, &f);
+	if (ret != GP_OK) 
+		return ret;
+	propval->u8 = (int) f;
+	return (GP_OK);
+}
+
 /* generic int getter */
 static int
 _get_INT(CONFIG_GET_ARGS) {
@@ -3306,6 +3334,14 @@ static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 };
 GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
 
+static struct deviceproptableu8 nikon_manualbracketmode[] = {
+	{N_("Flash/speed"),	0, 0},
+	{N_("Flash/speed/aperture"),	1, 0},
+	{N_("Flash/aperture"),	2, 0},
+	{N_("Flash only"),	3, 0},
+};
+GENERIC8TABLE(Nikon_ManualBracketMode, nikon_manualbracketmode);
+
 static struct deviceproptableu8 nikon_d3s_isoautohilimit[] = {
 	{"400",	   0, 0},
 	{"500",	   1, 0},
@@ -3475,20 +3511,74 @@ GENERIC8TABLE(Nikon_D90_MeterOffTime,nikon_d90_meterofftime)
 
 static struct deviceproptableu8 nikon_d3s_jpegcompressionpolicy[] = {
 	{ N_("Size Priority"),	0x00, 0 },
-	{ N_("Optimal qualtiy"),0x01, 0 },
+	{ N_("Optimal quality"),0x01, 0 },
 };
 GENERIC8TABLE(Nikon_D3s_JPEGCompressionPolicy,nikon_d3s_jpegcompressionpolicy)
 
 static struct deviceproptableu8 nikon_d3s_flashsyncspeed[] = {
 	{ N_("1/250s (Auto FP)"),	0x00, 0 },
-	{ N_("1/200s"),			0x01, 0 },
-	{ N_("1/160s"),			0x02, 0 },
-	{ N_("1/125s"),			0x03, 0 },
-	{ N_("1/100s"),			0x04, 0 },
-	{ N_("1/80s"),			0x05, 0 },
-	{ N_("1/60s"),			0x06, 0 },
+	{ N_("1/250s"),			0x01, 0 },
+	{ N_("1/200s"),			0x02, 0 },
+	{ N_("1/160s"),			0x03, 0 },
+	{ N_("1/125s"),			0x04, 0 },
+	{ N_("1/100s"),			0x05, 0 },
+	{ N_("1/80s"),			0x06, 0 },
+	{ N_("1/60s"),			0x07, 0 },
 };
 GENERIC8TABLE(Nikon_D3s_FlashSyncSpeed,nikon_d3s_flashsyncspeed)
+
+static struct deviceproptableu8 nikon_d3s_afcmodepriority[] = {
+	{ N_("Release"),	0x00, 0 },
+	{ N_("Release + Focus"),0x01, 0 },
+	{ N_("Focus"),		0x02, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_AFCModePriority,nikon_d3s_afcmodepriority)
+
+static struct deviceproptableu8 nikon_d3s_afsmodepriority[] = {
+	{ N_("Release"),	0x00, 0 },
+	{ N_("Focus"),		0x01, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_AFSModePriority,nikon_d3s_afsmodepriority)
+
+static struct deviceproptableu8 nikon_d3s_dynamicafarea[] = {
+	{ N_("9 points"),	0x00, 0 },
+	{ N_("21 points"),	0x01, 0 },
+	{ N_("51 points"),	0x02, 0 },
+	{ N_("51 points (3D)"),	0x03, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_DynamicAFArea,nikon_d3s_dynamicafarea)
+
+static struct deviceproptableu8 nikon_d3s_aflockon[] = {
+	{ N_("5 (Long)"),	0x00, 0 },
+	{ N_("4"),		0x01, 0 },
+	{ N_("3 (Normal)"),	0x02, 0 },
+	{ N_("2"),		0x03, 0 },
+	{ N_("1 (Short)"),	0x04, 0 },
+	{ N_("Off"),		0x05, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_AFLockOn,nikon_d3s_aflockon)
+
+static struct deviceproptableu8 nikon_d3s_afactivation[] = {
+	{ N_("Shutter/AF-ON"),	0x00, 0 },
+	{ N_("AF-ON"),		0x01, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_AFActivation,nikon_d3s_afactivation)
+
+static struct deviceproptableu8 nikon_d3s_afareapoint[] = {
+	{ N_("AF51"),	0x00, 0 },
+	{ N_("AF11"),	0x01, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_AFAreaPoint,nikon_d3s_afareapoint)
+
+static struct deviceproptableu8 nikon_d3s_normalafon[] = {
+	{ N_("AF-ON"),		0x00, 0 },
+	{ N_("AE/AF lock"),	0x01, 0 },
+	{ N_("AE lock only"),	0x02, 0 },
+	{ N_("AE lock (Reset on release)"),	0x03, 0 },
+	{ N_("AE lock (Hold)"),	0x04, 0 },
+	{ N_("AF lock only"),	0x05, 0 },
+};
+GENERIC8TABLE(Nikon_D3s_NormalAFOn,nikon_d3s_normalafon)
 
 static struct deviceproptableu8 nikon_d3s_flashshutterspeed[] = {
 	{ N_("1/60s"),			0x00, 0 },
@@ -4843,6 +4933,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Auto Focus Area"), "autofocusarea", PTP_DPC_NIKON_AutofocusArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AutofocusArea, _put_Nikon_AutofocusArea},
 	{ N_("Flash Exposure Compensation"), "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation},
 	{ N_("Bracketing"), "bracketing", PTP_DPC_NIKON_Bracketing, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("Bracketing"), "bracketmode", PTP_DPC_NIKON_E6ManualModeBracketing, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ManualBracketMode, _put_Nikon_ManualBracketMode},
 	{ N_("Bracket Mode"), "bracketmode", PTP_DPC_CANON_EOS_BracketMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_INT, _put_None /*FIXME*/},
 	{ N_("EV Step"), "evstep", PTP_DPC_NIKON_EVStep, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_EVStep, _put_Nikon_EVStep},
 	{ N_("Bracket Set"), "bracketset", PTP_DPC_NIKON_BracketSet, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketSet, _put_Nikon_BracketSet},
@@ -4920,11 +5011,17 @@ static struct submenu nikon_d3s_capture_settings[] = {
 	{ N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_FlashShutterSpeed, _put_Nikon_D3s_FlashShutterSpeed},
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_Compression, _put_Nikon_D3s_Compression},
 	{ N_("JPEG Compression Policy"), "jpegcompressionpolicy", PTP_DPC_NIKON_JPEG_Compression_Policy, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_JPEGCompressionPolicy, _put_Nikon_D3s_JPEGCompressionPolicy},
+	{ N_("AF-C Mode Priority"), "afcmodepriority", PTP_DPC_NIKON_A1AFCModePriority, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_AFCModePriority, _put_Nikon_D3s_AFCModePriority},
+	{ N_("AF-S Mode Priority"), "afsmodepriority", PTP_DPC_NIKON_A2AFSModePriority, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_AFSModePriority, _put_Nikon_D3s_AFSModePriority},
+	{ N_("AF Activation"), "afactivation", PTP_DPC_NIKON_A4AFActivation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_AFActivation, _put_Nikon_D3s_AFActivation},
+	{ N_("Dynamic AF Area"), "dynamicafarea", PTP_DPC_NIKON_DynamicAFArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_DynamicAFArea, _put_Nikon_D3s_DynamicAFArea},
+	{ N_("AF Lock On"), "aflockon", PTP_DPC_NIKON_AFLockOn, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_AFLockOn, _put_Nikon_D3s_AFLockOn},
+	{ N_("AF Area Point"), "afareapoint", PTP_DPC_NIKON_AFAreaPoint, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_AFAreaPoint, _put_Nikon_D3s_AFAreaPoint},
+	{ N_("AF On Button"), "afonbutton", PTP_DPC_NIKON_NormalAFOn, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_NormalAFOn, _put_Nikon_D3s_NormalAFOn},
 
 	/* same as D90 */
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
-
 
 	{ 0,0,0,0,0,0,0 },
 };
@@ -4936,6 +5033,8 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
+	{ N_("Maximum continuous release"), "maximumcontinousrelease", PTP_DPC_NIKON_D2MaximumShots, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Range_UINT8, _put_Range_UINT8},
+
 	/* And some D3s values */
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh", PTP_DPC_NIKON_ContinuousSpeedHigh, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeedHigh, _put_Nikon_D3s_ShootingSpeedHigh},
 	{ N_("Flash Sync. Speed"), "flashsyncspeed", PTP_DPC_NIKON_FlashSyncSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_FlashSyncSpeed, _put_Nikon_D3s_FlashSyncSpeed},
