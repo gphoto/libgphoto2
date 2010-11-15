@@ -212,8 +212,12 @@ const struct canonCamModelData models[] = {
         {"Canon:EOS 300D (normal mode)", CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:EOS Digital Rebel (normal mode)",CANON_CLASS_4, 0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:EOS Kiss Digital (normal mode)",CANON_CLASS_4,  0x04A9, 0x3084, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+
+#if 0
         /* PS G5 uses the same ProductID for PTP and Canon, with protocol autodetection */
+	/* Use PTP driver, as this driver had broken reports - Marcus*/
         {"Canon:PowerShot G5 (normal mode)", CANON_CLASS_5,     0x04A9, 0x3085, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+#endif
 
         /* Elura 50 camcorder is 0x3087 in PTP mode; 3088 in Canon mode? */
         {"Canon:Elura 50 (normal mode)",  CANON_CLASS_1,  0x04A9, 0x3088, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
