@@ -414,7 +414,7 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 	ret = usb_interrupt_read(port->pl->dh, port->settings.usb.intep,
 			     bytes, size, timeout);
         if (ret < 0) {
-		if (errno == EAGAIN)
+		if ((errno == EAGAIN) || (errno == ETIMEDOUT))
 			return GP_ERROR_TIMEOUT;
 		return GP_ERROR_IO_READ;
 	}
