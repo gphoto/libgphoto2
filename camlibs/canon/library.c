@@ -179,6 +179,7 @@ static const struct canonShutterSpeedStateStruct shutterSpeedStateArray[] = {
 };
 
 static const struct canonApertureStateStruct apertureStateArray[] = {
+	{APERTURE_F1_2, "1.2"},
 	{APERTURE_F1_4, "1.4"},
 	{APERTURE_F1_6, "1.6"},
 	{APERTURE_F1_8, "1.8"},

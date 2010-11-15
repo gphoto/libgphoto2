@@ -224,6 +224,7 @@ struct canonShootingModeStateStruct {
 };
 
 typedef enum {
+	APERTURE_F1_2 = 0x0d,
 	APERTURE_F1_4 = 0x10,
 	APERTURE_F1_6 = 0x13,
 	APERTURE_F1_8 = 0x15,
