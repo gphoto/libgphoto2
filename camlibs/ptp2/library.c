@@ -1136,6 +1136,8 @@ static struct {
 	{"Fuji:FinePix S1500",			0x04cb, 0x01ef, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3018889&group_id=8874&atid=358874 */
 	{"Fuji:FinePix F70 EXR",		0x04cb, 0x01fa, 0},
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3111790&group_id=8874&atid=358874 */
+	{"Fuji:Fujifilm A220",			0x04cb, 0x01fe, 0},
 	/* NoOp <glgxg@sbcglobal.net> */
 	{"Fuji:FinePix S1800",			0x04cb, 0x0200, 0},
 	/* Luke Symes <allsymes@gmail.com> */
