@@ -1,0 +1,57 @@
+Device info:
+Manufacturer: SANYO Electric Co.,Ltd.
+  Model: C5  
+  device version: ver1.0.1
+  serial number: '000000000000'
+Vendor extension ID: 0x00000000
+Vendor extension version: 0
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100c
+  0x100d
+  0x101b
+Events Supported:
+  0x4001
+  0x4004
+  0x4005
+  0x4009
+Device Properties Supported:
+
+Camera summary:
+Manufacturer: SANYO Electric Co.,Ltd.
+Model: C5  
+  Version: ver1.0.1
+  Serial Number: 000000000000
+
+Capture Formats: 
+Display Formats: JPEG, TIFF, Association/Directory, DPOF, Apple Quicktime
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 1023541248 (976 MB)
+	Free Space (Bytes): 1018249216 (971 MB)
+	Free Space (Images): 400
+
+Device Property Summary:
+
