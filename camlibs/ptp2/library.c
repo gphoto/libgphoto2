@@ -470,6 +470,8 @@ static struct {
 	{"Kodak:C743",   0x040a, 0x05ae, 0},
 	/* via IRC */
 	{"Kodak:C653",   0x040a, 0x05af, 0},
+	/* "William L. Thomson Jr." <wlt@obsidian-studios.com> */
+	{"Kodak:Z710",	 0x040a, 0x05b3, 0},
 	/* Nicolas Brodu <nicolas.brodu@free.fr> */
 	{"Kodak:Z712 IS",0x040a, 0x05b4, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1904224&group_id=8874&atid=358874 */
