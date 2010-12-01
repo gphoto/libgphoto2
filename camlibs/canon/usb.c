@@ -993,6 +993,25 @@ canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
         return status;
 }
 
+int
+canon_usb_wait_for_event (Camera *camera, int timeout,
+		CameraEventType *eventtype, void **eventdata,
+		GPContext *context)
+{
+        unsigned char buf2[0x40]; /* for reading from interrupt endpoint */
+        int status;
+
+	*eventtype = GP_EVENT_TIMEOUT;
+	*eventdata = NULL;
+        status = canon_usb_poll_interrupt_pipe ( camera, buf2, timeout/CANON_FAST_TIMEOUT+1 );
+	gp_log (GP_LOG_DEBUG, "canon/usb.c", "canon_usb_wait_for_event: status %d", status);
+	if (!status)
+		return GP_OK;
+	*eventtype = GP_EVENT_UNKNOWN;
+	*eventdata = malloc(strlen("Unknown CANON event 0x01 0x02 0x03 0x04 0x05")+1);
+	sprintf (*eventdata,"Unknown CANON event 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
+	return GP_OK;
+}
 /**
  * canon_usb_capture_dialogue:
  * @camera: the Camera to work with

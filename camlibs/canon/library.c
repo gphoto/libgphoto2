@@ -1313,7 +1313,6 @@ convert_filename_to_8_3(const char* filename, char* dest)
     }
 }
 
-
 /* XXX This function should be merged with the other one of the same name */
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data,
@@ -1557,6 +1556,14 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 
 
 /****************************************************************************/
+
+/* Wait for an event */
+static int
+camera_wait_for_event (Camera *camera, int timeout, CameraEventType *eventtype, void **eventdata, GPContext *context) 
+{
+	return canon_int_wait_for_event (camera, timeout, eventtype, eventdata, context);
+}
+
 
 /* Get configuration into screen widgets for display. */
 
@@ -2591,6 +2598,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary = camera_summary;
 	camera->functions->manual = camera_manual;
 	camera->functions->about = camera_about;
+	camera->functions->wait_for_event = camera_wait_for_event;
 
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
