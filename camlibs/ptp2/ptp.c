@@ -2814,19 +2814,6 @@ ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprop
 /* devinfo testing functions */
 
 int
-ptp_operation_issupported(PTPParams* params, uint16_t operation)
-{
-	int i=0;
-
-	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
-		if (params->deviceinfo.OperationsSupported[i]==operation)
-			return 1;
-	}
-	return 0;
-}
-
-
-int
 ptp_event_issupported(PTPParams* params, uint16_t event)
 {
 	int i=0;
