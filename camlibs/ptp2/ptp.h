@@ -2578,7 +2578,18 @@ uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t 
 uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint32_t *propnum, uint16_t **props);
 
 /* Non PTP protocol functions */
-int ptp_operation_issupported	(PTPParams* params, uint16_t operation);
+static int
+ptp_operation_issupported(PTPParams* params, uint16_t operation)
+{
+	int i=0;
+
+	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
+		if (params->deviceinfo.OperationsSupported[i]==operation)
+			return 1;
+	}
+	return 0;
+}
+
 int ptp_event_issupported	(PTPParams* params, uint16_t event);
 int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
