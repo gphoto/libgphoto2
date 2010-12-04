@@ -715,6 +715,8 @@ int canon_int_set_zoom(Camera *camera, unsigned char zoom_level, GPContext *cont
  */
 int canon_int_get_release_params (Camera *camera, GPContext *context);
 
+void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned char *final_state, CameraFilePath *path );
+
 
 /* path conversion - needs drive letter, and therefore cannot be moved
  * to util.c */

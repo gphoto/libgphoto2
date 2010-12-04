@@ -1295,7 +1295,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
  * and its pathname is decoded into the given CameraFilePath.
  *
  */
-static void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned char *final_state,
+void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned char *final_state,
                            CameraFilePath *path )
 {
         char *old_entry = (char *)initial_state, *new_entry = (char *)final_state;

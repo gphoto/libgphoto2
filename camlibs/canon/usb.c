@@ -264,16 +264,15 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
         i = gp_port_usb_msg_read (camera->port, 0x04, 0x1, 0, (char *)msg, 0x58);
         if (i != 0x58) {
                 if ( i < 0 ) {
-												gp_context_error (context,
-																					_("Step #2 of initialization failed: (\"%s\" on read of %i). "
-																						"Camera not operational"), gp_result_as_string(i), 0x58);
+			gp_context_error (context,
+				_("Step #2 of initialization failed: (\"%s\" on read of %i). "
+				"Camera not operational"), gp_result_as_string(i), 0x58);
                         return GP_ERROR_OS_FAILURE;
-		}
-		else {
-						gp_context_error (context,
-															_("Step #2 of initialization failed! (returned %i bytes, expected %i). "
-																"Camera not operational"), i, 0x58);
-						return GP_ERROR_CORRUPTED_DATA;
+		} else {
+			gp_context_error (context,
+				_("Step #2 of initialization failed! (returned %i bytes, expected %i). "
+				"Camera not operational"), i, 0x58);
+			return GP_ERROR_CORRUPTED_DATA;
 		}
         }
         /* Get maximum download transfer length from camera, if
@@ -999,7 +998,15 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 		GPContext *context)
 {
         unsigned char buf2[0x40]; /* for reading from interrupt endpoint */
+	unsigned char *initial_state = NULL, *final_state = NULL; /* For comparing
+						     * before/after
+						     * directories */
+	unsigned int initial_state_len, final_state_len;
         int status;
+
+	status = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
+	if (!status)
+		return GP_ERROR;
 
 	*eventtype = GP_EVENT_TIMEOUT;
 	*eventdata = NULL;
@@ -1008,8 +1015,27 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 	if (!status)
 		return GP_OK;
 	*eventtype = GP_EVENT_UNKNOWN;
-	*eventdata = malloc(strlen("Unknown CANON event 0x01 0x02 0x03 0x04 0x05")+1);
-	sprintf (*eventdata,"Unknown CANON event 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
+	switch (buf2[4]) {
+	case 0x0e: {
+		CameraFilePath *path;
+		*eventtype = GP_EVENT_FILE_ADDED;
+		*eventdata = path = malloc(sizeof(CameraFilePath));
+		status = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
+		if (!status)
+			return GP_ERROR;
+		/* Find new file name in camera directory */
+		canon_int_find_new_image ( camera, initial_state, final_state, path );
+		free ( initial_state );
+		free ( final_state );
+		return GP_OK;
+	}
+	default:
+		*eventtype = GP_EVENT_UNKNOWN;
+		*eventdata = malloc(strlen("Unknown CANON event 0x01 0x02 0x03 0x04 0x05")+1);
+		sprintf (*eventdata,"Unknown CANON event 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
+		free (initial_state);
+		return GP_OK;
+	}
 	return GP_OK;
 }
 /**
