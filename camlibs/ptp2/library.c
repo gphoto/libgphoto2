@@ -66,7 +66,9 @@
 #define USB_START_TIMEOUT 8000
 #define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
+static int normal_timeout = USB_NORMAL_TIMEOUT;
 #define USB_TIMEOUT_CAPTURE 100000
+static int capture_timeout = USB_TIMEOUT_CAPTURE;
 
 #define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 #define	SET_CONTEXT_P(p, ctx) ((PTPData *) p->data)->context = ctx
@@ -1884,7 +1886,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 	CPR (context, ret);
 
-	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
+	CR (gp_port_set_timeout (camera->port, capture_timeout));
 
 	newobject = 0xffff0001;
 	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
@@ -2201,8 +2203,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	gettimeofday (&event_start, NULL);
 	found = FALSE;
 	
-	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
-	while (!_timeout_passed(&event_start, USB_TIMEOUT_CAPTURE)) {
+	CR (gp_port_set_timeout (camera->port, capture_timeout));
+	while (!_timeout_passed(&event_start, capture_timeout)) {
 		gp_context_idle (context);
 		if (PTP_RC_OK == params->event_check (params, &event)) {
 			if (event.Code == PTP_EC_CaptureComplete) {
@@ -2339,7 +2341,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * few seconds. moving down the code. (kil3r)
 	 */
 	CPR(context,ptp_initiatecapture(params, 0x00000000, 0x00000000));
-	CR (gp_port_set_timeout (camera->port, USB_TIMEOUT_CAPTURE));
+	CR (gp_port_set_timeout (camera->port, capture_timeout));
 	/* A word of comments is worth here.
 	 * After InitiateCapture camera should report with ObjectAdded event
 	 * all newly created objects. However there might be more than one
@@ -2396,7 +2398,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	done = 0;
 	while (!done) {
 		uint16_t ret = params->event_wait(params,&event);
-		CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
+		CR (gp_port_set_timeout (camera->port, normal_timeout));
 		if (ret!=PTP_RC_OK) {
 			if ((ret == PTP_ERROR_IO) && newobject) {
 				gp_log (GP_LOG_ERROR, "ptp/capture", "Did not receive capture complete event. Going on, but please report and try adding PTP_NO_CAPTURE_COMPLETE flag.");
@@ -5332,6 +5334,9 @@ camera_init (Camera *camera, GPContext *context)
 	char *curloc, *camloc;
 	GPPortSettings	settings;
 	uint32_t	sessionid;
+	char		buf[20];
+	int 		start_timeout = USB_START_TIMEOUT;
+	int 		canon_start_timeout = USB_CANON_START_TIMEOUT;
 
 	gp_port_get_settings (camera->port, &settings);
 	/* Make sure our port is either USB or PTP/IP. */
@@ -5441,18 +5446,27 @@ camera_init (Camera *camera, GPContext *context)
             }
         }
 
+	/* Read configurable timeouts */
+#define XT(val,def) 					\
+	if ((GP_OK == gp_setting_get("ptp2",#val,buf)))	\
+		sscanf(buf, "%d", &val);		\
+	if (!val) val = def;
+	XT(normal_timeout,USB_NORMAL_TIMEOUT);
+	XT(capture_timeout,USB_TIMEOUT_CAPTURE);
+
 	/* Choose a shorter timeout on inital setup to avoid
 	 * having the user wait too long.
 	 */
-
 	if (a.usb_vendor == 0x4a9) { /* CANON */
 		/* our special canon friends get a shorter timeout, sinc ethey
 		 * occasionaly need 2 retries. */
-		CR (gp_port_set_timeout (camera->port, USB_CANON_START_TIMEOUT));
+		XT(canon_start_timeout,USB_CANON_START_TIMEOUT);
+		CR (gp_port_set_timeout (camera->port, canon_start_timeout));
 	} else {
-		CR (gp_port_set_timeout (camera->port, USB_START_TIMEOUT));
+		XT(start_timeout,USB_START_TIMEOUT);
+		CR (gp_port_set_timeout (camera->port, start_timeout));
 	}
-
+#undef XT
 	/* Establish a connection to the camera */
 	SET_CONTEXT(camera, context);
 
@@ -5489,7 +5503,7 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	/* We have cameras where a response takes 15 seconds(!), so make
 	 * post init timeouts longer */
-	CR (gp_port_set_timeout (camera->port, USB_NORMAL_TIMEOUT));
+	CR (gp_port_set_timeout (camera->port, normal_timeout));
 
 	/* Seems HP does not like getdevinfo outside of session
 	   although it's legal to do so */
