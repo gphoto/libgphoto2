@@ -1028,6 +1028,12 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 			return status;
 		/* Find new file name in camera directory */
 		canon_int_find_new_image ( camera, initial_state, final_state, path );
+		if (path->folder[0] != '/') {
+			free (path);
+			*eventtype = GP_EVENT_UNKNOWN;
+			*eventdata = malloc(strlen("Failed to get added filename?")+1);
+			strcpy (*eventdata, "Failed to get added filename?");
+		}
 		free ( initial_state );
 		free ( final_state );
 		return GP_OK;
