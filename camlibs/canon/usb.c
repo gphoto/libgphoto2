@@ -1004,8 +1004,10 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
         int status;
 
 	status = canon_usb_list_all_dirs ( camera, &initial_state, &initial_state_len, context );
-	if (!status)
-		return GP_ERROR;
+	if (status < GP_OK) {
+		gp_log (GP_LOG_DEBUG, "canon/usb.c", "canon_usb_wait_for_event: status %d", status);
+		return status;
+	}
 
 	*eventtype = GP_EVENT_TIMEOUT;
 	*eventdata = NULL;
@@ -1014,16 +1016,23 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 	if (!status)
 		return GP_OK;
 	*eventtype = GP_EVENT_UNKNOWN;
+	gp_log (GP_LOG_DEBUG, "canon/usb.c", "canon_usb_wait_for_event: bytes %x %x %x %x %x", buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
 	switch (buf2[4]) {
 	case 0x0e: {
 		CameraFilePath *path;
 		*eventtype = GP_EVENT_FILE_ADDED;
 		*eventdata = path = malloc(sizeof(CameraFilePath));
 		status = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
-		if (!status)
-			return GP_ERROR;
+		if (status < GP_OK)
+			return status;
 		/* Find new file name in camera directory */
 		canon_int_find_new_image ( camera, initial_state, final_state, path );
+		if (path->folder[0] != '/') {
+			free (path);
+			*eventtype = GP_EVENT_UNKNOWN;
+			*eventdata = malloc(strlen("Failed to get added filename?")+1);
+			strcpy (*eventdata, "Failed to get added filename?");
+		}
 		free ( initial_state );
 		free ( final_state );
 		return GP_OK;
