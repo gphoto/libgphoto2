@@ -124,15 +124,6 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int i, x, y, stop, size, ret, outc;
 	unsigned long regular_jpeg_size = 0, buf_size = 0;
 	int last_dc_val[3] = { 0, 0, 0 };
-	/* Compression configuration settings */
-	int uv_subsample = camera->pl->jpeg_uv_subsample;
-
-	i = 8 * uv_subsample;
-	if (width % i || height % i) {
-		gp_log (GP_LOG_ERROR, "ax203",
-			"height and width must be a multiple of %d", i);
-		return GP_ERROR_BAD_PARAMETERS;
-	}
 
 	/* We have a rgb24bit image in the desired dimensions, first we
 	   compress it into a regular jpeg, which we use as a base for
@@ -145,8 +136,8 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	cinfo.input_components = 3;
 	cinfo.in_color_space = JCS_RGB;
 	jpeg_set_defaults (&cinfo);
-	cinfo.comp_info[0].h_samp_factor = uv_subsample;
-	cinfo.comp_info[0].v_samp_factor = uv_subsample;
+	cinfo.comp_info[0].h_samp_factor = 2;
+	cinfo.comp_info[0].v_samp_factor = 2;
 
 	jpeg_start_compress (&cinfo, TRUE);
 	while( cinfo.next_scanline < cinfo.image_height ) {
@@ -168,7 +159,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	outbuf[1] = width;
 	outbuf[2] = height >> 8;
 	outbuf[3] = height;
-	outbuf[4] = (uv_subsample == 2) ? 3 : 0;
+	outbuf[4] = 3; /* 2x uv sub-sampling */
 
 	outbuf[5] = 0;
 	outbuf[6] = 1;
@@ -187,8 +178,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 
 	/* Make outc point to after the MCU info table, so to the start of
 	   the quantisation tables */
-	outc = 16 + (width  / (8 * uv_subsample)) *
-		    (height / (8 * uv_subsample)) * 8;
+	outc = 16 + ((width + 15) / 16) * ((height + 15) / 16) * 8;
 
 	/* Locate quant tables and write them to outbuf */
 	ret = locate_tables_n_write (regular_jpeg, regular_jpeg_size, 0xdb,
@@ -224,8 +214,8 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	/* Create a JPEG compression object for our mini JPEGs */
 	cinfo.err = jpeg_std_error (&jcerr);
 	jpeg_create_compress (&cinfo);
-	cinfo.image_width = 8 * uv_subsample;
-	cinfo.image_height = 8 * uv_subsample;
+	cinfo.image_width = 16;
+	cinfo.image_height = 16;
 	cinfo.input_components = 3;
 	cinfo.in_color_space = JCS_RGB;
 	jpeg_set_defaults (&cinfo);
@@ -236,8 +226,8 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	cinfo.comp_info[0].dc_tbl_no = 1;
 	cinfo.comp_info[0].ac_tbl_no = 1;
 	/* We will write Y values as comp. 2, so give it luma settings */
-	cinfo.comp_info[2].h_samp_factor = uv_subsample;
-	cinfo.comp_info[2].v_samp_factor = uv_subsample;
+	cinfo.comp_info[2].h_samp_factor = 2;
+	cinfo.comp_info[2].v_samp_factor = 2;
 	cinfo.comp_info[2].quant_tbl_no = 0;
 	cinfo.comp_info[2].dc_tbl_no = 0;
 	cinfo.comp_info[2].ac_tbl_no = 0;
@@ -245,7 +235,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	/* And create a mini JPEG for each MCU with the shuffled component order
 	   and extract its huffman data. This fixes our component order problem and
 	   gives us the needed byte aligning for free. */
-	for (y = 0; y < height / (8 * uv_subsample); y++) {
+	for (y = 0; y < (height + 15) / 16; y++) {
 		JBLOCKARRAY in_row[3], out_row[3];
 		jvirt_barray_ptr out_barray[3];
 
@@ -258,16 +248,14 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 							  y, 1, 0);
 		in_row[2] = dinfo.mem->access_virt_barray((j_common_ptr)&dinfo,
 							   in_coefficients[0],
-							   y * uv_subsample,
-							   uv_subsample, 0);
+							   y * 2, 2, 0);
 
-		for (x = 0; x < width / (8 * uv_subsample); x++) {
+		for (x = 0; x < (width + 15) / 16; x++) {
 			/* (Re)init our destination buffer */
 			jpeg_mem_dest (&cinfo, &buf, &buf_size);
 
 			/* Add MCU info block to output */
-			add_mcu_info (outbuf,
-				      y * width / (8 * uv_subsample) + x,
+			add_mcu_info (outbuf, y * ((width + 15) / 16) + x,
 				      last_dc_val[2], last_dc_val[0],
 				      last_dc_val[1], outc);
 
@@ -281,8 +269,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 						JPOOL_IMAGE, 0, 1, 1, 1);
 			out_barray[2] = cinfo.mem->request_virt_barray(
 						(j_common_ptr)&cinfo,
-						JPOOL_IMAGE, 0, uv_subsample,
-						uv_subsample, uv_subsample);
+						JPOOL_IMAGE, 0, 2, 2, 2);
 			jpeg_write_coefficients (&cinfo, out_barray);
 
 			/* Copy over our 3 (or 6) coefficient blocks, and
@@ -295,44 +282,33 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 						out_barray[1], 0, 1, 1);
 			out_row[2] = cinfo.mem->access_virt_barray(
 						(j_common_ptr)&cinfo,
-						out_barray[2], 0,
-						uv_subsample, 1);
+						out_barray[2], 0, 2, 1);
 
-			if (uv_subsample == 2) {
-				for (i = 0; i < 2; i++) {
-					memcpy (out_row[i][0][0],
-						in_row[i][0][x],
-						sizeof(JBLOCK));
-					out_row[i][0][0][0] -= last_dc_val[i];
-					last_dc_val[i] = in_row[i][0][x][0];
-				}
-
-				memcpy (out_row[2][0][0],
-					in_row[2][0][x * 2 + 0],
+			for (i = 0; i < 2; i++) {
+				memcpy (out_row[i][0][0],
+					in_row[i][0][x],
 					sizeof(JBLOCK));
-				memcpy (out_row[2][0][1],
-					in_row[2][0][x * 2 + 1],
-					sizeof(JBLOCK));
-				memcpy (out_row[2][1][0],
-					in_row[2][1][x * 2 + 0],
-					sizeof(JBLOCK));
-				memcpy (out_row[2][1][1],
-					in_row[2][1][x * 2 + 1],
-					sizeof(JBLOCK));
-				out_row[2][0][0][0] -= last_dc_val[2];
-				out_row[2][0][1][0] -= last_dc_val[2];
-				out_row[2][1][0][0] -= last_dc_val[2];
-				out_row[2][1][1][0] -= last_dc_val[2];
-				last_dc_val[2] = in_row[2][1][x * 2 + 1][0];
-			} else {
-				for (i = 0; i < 3; i++) {
-					memcpy (out_row[i][0][0],
-						in_row[i][0][x],
-						sizeof(JBLOCK));
-					out_row[i][0][0][0] -= last_dc_val[i];
-					last_dc_val[i] = in_row[i][0][x][0];
-				}
+				out_row[i][0][0][0] -= last_dc_val[i];
+				last_dc_val[i] = in_row[i][0][x][0];
 			}
+
+			memcpy (out_row[2][0][0],
+				in_row[2][0][x * 2 + 0],
+				sizeof(JBLOCK));
+			memcpy (out_row[2][0][1],
+				in_row[2][0][x * 2 + 1],
+				sizeof(JBLOCK));
+			memcpy (out_row[2][1][0],
+				in_row[2][1][x * 2 + 0],
+				sizeof(JBLOCK));
+			memcpy (out_row[2][1][1],
+				in_row[2][1][x * 2 + 1],
+				sizeof(JBLOCK));
+			out_row[2][0][0][0] -= last_dc_val[2];
+			out_row[2][0][1][0] -= last_dc_val[2];
+			out_row[2][1][0][0] -= last_dc_val[2];
+			out_row[2][1][1][0] -= last_dc_val[2];
+			last_dc_val[2] = in_row[2][1][x * 2 + 1][0];
 
 			jpeg_finish_compress (&cinfo);
 

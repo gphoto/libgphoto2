@@ -557,6 +557,7 @@ static int ax203_read_parameter_block(Camera *camera)
 		{  96,  64 },
 		{ 120, 160 },
 		{ 128, 128 },
+		{ 132, 132 },
 		{ 128, 160 },
 		{ 160, 120 },
 		{ 160, 128 },
@@ -698,15 +699,6 @@ verify_parameters:
 	GP_DEBUG ("lcd size %dx%d, compression ver: %d, fs-start: %x",
 		  camera->pl->width, camera->pl->height,
 		  camera->pl->compression_version, camera->pl->fs_start);
-
-	/* Set JPEG compression parameters based on the found resolution */
-	if (camera->pl->compression_version == AX206_COMPRESSION_JPEG &&
-	    (camera->pl->width % 16 || camera->pl->height % 16)) {
-		gp_log (GP_LOG_DEBUG, "ax203", "height or width not a "
-			"multiple of 16, forcing 1x subsampling");
-		camera->pl->jpeg_uv_subsample = 1;
-	} else
-		camera->pl->jpeg_uv_subsample = 2;
 
 	return GP_OK;
 }
@@ -1032,7 +1024,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 {
 #ifdef HAVE_GD
 	int ret;
-	unsigned int x, y, width, height;
+	unsigned int x, y, width, height, row_skip = 0;
 	unsigned char *components[3];
 #ifdef HAVE_LIBJPEG
 	struct jpeg_decompress_struct dinfo;
@@ -1059,6 +1051,15 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 			if (!camera->pl->jdec)
 				return GP_ERROR_NO_MEMORY;
 		}
+		
+		/* Hack for width / heights which are not a multiple of 16 */
+		if (camera->pl->width % 16 || camera->pl->height % 16) {
+			width  = (camera->pl->width  + 15) & ~15;
+			height = (camera->pl->height + 15) & ~15;
+			htobe16a(src,     width);
+			htobe16a(src + 2, height);
+			row_skip = (width - camera->pl->width) * 3;
+		}
 		ret = tinyjpeg_parse_header (camera->pl->jdec,
 					     (unsigned char *)src, src_size);
 		if (ret) {
@@ -1067,14 +1068,16 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 				tinyjpeg_get_errorstring (camera->pl->jdec));
 			return GP_ERROR_CORRUPTED_DATA;
 		}
-		tinyjpeg_get_size (camera->pl->jdec, &width, &height);
-		if ((int)width  != camera->pl->width ||
-		    (int)height != camera->pl->height) {
-			gp_log (GP_LOG_ERROR, "ax203",
-				"Hdr dimensions %ux%u don't match lcd %dx%d",
-				width, height,
-				camera->pl->width, camera->pl->height);
-			return GP_ERROR_CORRUPTED_DATA;
+		if (!row_skip) {
+			tinyjpeg_get_size (camera->pl->jdec, &width, &height);
+			if ((int)width  != camera->pl->width ||
+			    (int)height != camera->pl->height) {
+				gp_log (GP_LOG_ERROR, "ax203",
+					"Hdr dimensions %ux%u don't match lcd %dx%d",
+					width, height,
+					camera->pl->width, camera->pl->height);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
 		}
 		ret = tinyjpeg_decode (camera->pl->jdec);
 		if (ret) {
@@ -1084,13 +1087,14 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 		tinyjpeg_get_components (camera->pl->jdec, components);
-		for (y = 0; y < height; y++) {
-			for (x = 0; x < width; x++) {
+		for (y = 0; y < camera->pl->height; y++) {
+			for (x = 0; x < camera->pl->width; x++) {
 				dest[y][x] = gdTrueColor (components[0][0],
 							  components[0][1],
 							  components[0][2]);
 				components[0] += 3;
 			}
+			components[0] += row_skip;
 		}
 		return GP_OK;
 	case AX3003_COMPRESSION_JPEG:
