@@ -1,0 +1,219 @@
+/main/actions/bulb
+   Label: Bulb Mode
+   Type: TOGGLE
+   Current: 2
+/main/actions/uilock
+   Label: UI Lock
+   Type: TOGGLE
+   Current: 2
+/main/actions/syncdatetime
+   Label: Synchronize camera date and time with PC
+   Type: TOGGLE
+   Current: 0
+/main/actions/autofocusdrive
+   Label: Drive Canon DSLR Autofocus
+   Type: TOGGLE
+   Current: 0
+/main/actions/manualfocusdrive
+   Label: Drive Canon DSLR Manual focus
+   Type: RADIO
+   Current: None
+   Choice: 0 Near 1
+   Choice: 1 Near 2
+   Choice: 2 Near 3
+   Choice: 3 None
+   Choice: 4 Far 1
+   Choice: 5 Far 2
+   Choice: 6 Far 3
+/main/actions/eoszoom
+   Label: Canon EOS Zoom
+   Type: TEXT
+   Current: 0
+/main/actions/eoszoomposition
+   Label: Canon EOS Zoom Position
+   Type: TEXT
+   Current: 0,0
+/main/actions/eosviewfinder
+   Label: Canon EOS Viewfinder
+   Type: TOGGLE
+   Current: 2
+/main/settings/datetime
+   Label: Camera Date and Time
+   Type: DATE
+   Current: 1292186018
+   Printable: Sun 12 Dec 2010 01:33:38 PM MST
+/main/settings/reviewtime
+   Label: Quick Review Time
+   Type: RADIO
+   Current: 2 seconds
+   Choice: 0 None
+   Choice: 1 2 seconds
+   Choice: 2 4 seconds
+   Choice: 3 8 seconds
+   Choice: 4 Hold
+/main/settings/output
+   Label: Camera Output
+   Type: RADIO
+   Current: Unknown value 0000
+   Choice: 0 TFT
+   Choice: 1 PC
+   Choice: 2 Unknown value 0000
+/main/settings/evfmode
+   Label: EVF Mode
+   Type: RADIO
+   Current: 0
+   Choice: 0 0
+/main/settings/ownername
+   Label: Owner Name
+   Type: TEXT
+   Current: Yiding Han
+/main/settings/artist
+   Label: Artist
+   Type: TEXT
+   Current: Photographer:Yiding
+/main/settings/copyright
+   Label: Copyright
+   Type: TEXT
+   Current:
+/main/settings/capturetarget
+   Label: Capture Target
+   Type: RADIO
+   Current: Internal RAM
+   Choice: 0 Internal RAM
+   Choice: 1 Memory card
+/main/settings/capture
+   Label: Capture
+   Type: TOGGLE
+   Current: 2
+/main/status/model
+   Label: Camera Model
+   Type: TEXT
+   Current: 2147484242
+/main/status/ptpversion
+   Label: PTP Version
+   Type: TEXT
+   Current: 256
+/main/status/batterylevel
+   Label: Battery Level
+   Type: TEXT
+   Current: 100%
+/main/status/lensname
+   Label: Lens Name
+   Type: TEXT
+   Current: EF-S18-55mm f/3.5-5.6 IS
+/main/status/serialnumber
+   Label: Serial Number
+   Type: TEXT
+   Current: 370113800
+/main/status/shuttercounter
+   Label: Shutter Counter
+   Type: TEXT
+   Current: 5419
+/main/status/availableshots
+   Label: Available Shots
+   Type: TEXT
+   Current: 50901
+/main/imgsettings/imageformat
+   Label: Image Format
+   Type: RADIO
+   Current: Large Fine JPEG
+   Choice: 0 Large Fine JPEG
+   Choice: 1 Large Normal JPEG
+   Choice: 2 Medium Fine JPEG
+   Choice: 3 Medium Normal JPEG
+   Choice: 4 Small Fine JPEG
+   Choice: 5 Small Normal JPEG
+   Choice: 6 RAW + Large Fine JPEG
+   Choice: 7 RAW
+/main/imgsettings/imageformatsd
+   Label: Image Format SD
+   Type: RADIO
+   Current: Large Fine JPEG
+   Choice: 0 Large Fine JPEG
+   Choice: 1 Large Normal JPEG
+   Choice: 2 Medium Fine JPEG
+   Choice: 3 Medium Normal JPEG
+   Choice: 4 Small Fine JPEG
+   Choice: 5 Small Normal JPEG
+   Choice: 6 RAW + Large Fine JPEG
+   Choice: 7 RAW
+/main/imgsettings/whitebalancexa
+   Label: WhiteBalance X A
+   Type: TEXT
+   Current: 0
+/main/imgsettings/whitebalancexb
+   Label: WhiteBalance X B
+   Type: TEXT
+   Current: 0
+/main/capturesettings/exposurecompensation
+   Label: Exposure Compensation
+   Type: RADIO
+   Current: 0
+   Choice: 0 -2
+   Choice: 1 -1.6
+   Choice: 2 -1.3
+   Choice: 3 -1.0
+   Choice: 4 -0.6
+   Choice: 5 -0.3
+   Choice: 6 0
+   Choice: 7 0.3
+   Choice: 8 0.6
+   Choice: 9 1.0
+   Choice: 10 1.3
+   Choice: 11 1.6
+   Choice: 12 2
+/main/capturesettings/autoexposuremode
+   Label: Canon Auto Exposure Mode
+   Type: RADIO
+   Current: Green
+   Choice: 0 P
+   Choice: 1 TV
+   Choice: 2 AV
+   Choice: 3 Manual
+   Choice: 4 Bulb
+   Choice: 5 A_DEP
+   Choice: 6 DEP
+   Choice: 7 Custom
+   Choice: 8 Lock
+   Choice: 9 Green
+   Choice: 10 Night Portrait
+   Choice: 11 Sports
+   Choice: 12 Portrait
+   Choice: 13 Landscape
+   Choice: 14 Closeup
+   Choice: 15 Flash Off
+/main/capturesettings/drivemode
+   Label: Drive Mode
+   Type: RADIO
+   Current: Single
+   Choice: 0 Single
+   Choice: 1 Timer 10 sec
+/main/capturesettings/picturestyle
+   Label: Picture Style
+   Type: RADIO
+   Current: Standard
+   Choice: 0 Standard
+   Choice: 1 Portrait
+   Choice: 2 Landscape
+   Choice: 3 Neutral
+   Choice: 4 Faithful
+   Choice: 5 Monochrome
+   Choice: 6 User defined 1
+   Choice: 7 User defined 2
+   Choice: 8 User defined 3
+/main/capturesettings/bracketmode
+   Label: Bracket Mode
+   Type: TEXT
+   Current: 0
+/main/other/d402
+   Label: PTP Property 0xd402
+   Type: TEXT
+   Current: Canon EOS REBEL T1i
+/main/other/d407
+   Label: PTP Property 0xd407
+   Type: TEXT
+   Current: 1
+/main/other/d406
+   Label: PTP Property 0xd406
+   Type: TEXT
+   Current: Unknown Initiator
