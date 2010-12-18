@@ -74,6 +74,7 @@ static const struct {
 							    0x2770, 0x905c},
 	{"Jazz JDC9",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Disney pix micro",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050},
+	{"Lego Bionicle",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9051},
 	/* from IRC reporter, adam@piggz.co.uk */
 	{"Disney pix micro 2",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9052},
 	{"Suprema Digital Keychain Camera",	GP_DRIVER_STATUS_EXPERIMENTAL,
@@ -140,16 +141,16 @@ static int camera_manual(Camera *camera, CameraText *manual,
 	strncpy(manual->text,
 	_(
 	"For cameras with insides from S&Q Technologies, which have the \n"
-	"USB Vendor ID 0x2770 and Product ID 0x905C, 0x9050, 0x9052,\n"
-	"or 0x913D.  Photos are saved in PPM format.\n\n"
+	"USB Vendor ID 0x2770 and Product ID 0x905C, 0x9050, 0x9051,\n"
+	"0x9052, or 0x913D.  Photos are saved in PPM format.\n\n"
 	"Some of these cameras allow software deletion of all photos.\n"
 	"Others do not. No supported camera can do capture-image. All\n"
 	"can do capture-preview (image captured and sent to computer).\n"
-	"If deletion does work for your camera, then capture-preview will\n"
+	"If delete-all does work for your camera, then capture-preview will\n"
 	"have the side-effect that it also deletes what is on the camera.\n\n"
-	"File uploading and deletion of individual photos by use of a\n"
-	"software command are not supported by the hardware in these\n"
-	"cameras.\n"
+	"File uploading is not supported for these cameras. Also, none of the\n"
+	"supported cameras allow deletion of individual photos by use of a\n"
+	"software command.\n"
 	), 700);
 	return (GP_OK);
 }
@@ -446,6 +447,7 @@ camera_init(Camera *camera, GPContext *context)
 	camera->pl->nb_entries = 0;
 	switch (abilities.usb_product) {
 	case 0x9050:
+	case 0x9051:
 	case 0x9052:
 		camera->pl->delete_all = 1;
 		break;
