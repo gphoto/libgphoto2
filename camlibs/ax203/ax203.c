@@ -89,6 +89,11 @@ static const struct eeprom_info {
 	   instruction can only program a single byte at a time. Thus they
 	   are not supported */
 
+	{ "ST M25P08", 0x7f142020, 1048576, 0 },
+	{ "ST M25P16", 0x7f152020, 2097152, 0 },
+	{ "ST M25P32", 0x7f162020, 4194304, 0 },
+	{ "ST M25P64", 0x7f172020, 8388608, 0 },
+
 	{ "Winbond W25P80", 0x001420ef, 1048576, 0 },
 	{ "Winbond W25P16", 0x001520ef, 2097152, 0 },
 
