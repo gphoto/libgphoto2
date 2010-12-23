@@ -3836,7 +3836,8 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 
 	/* FIXME: remember state of release */
 	gp_widget_add_choice (*widget, _("None"));
-	gp_widget_add_choice (*widget, _("On"));
+	gp_widget_add_choice (*widget, _("On 1"));
+	gp_widget_add_choice (*widget, _("On 2"));
 	gp_widget_add_choice (*widget, _("Off"));
 	gp_widget_set_value (*widget, _("None"));
 	return (GP_OK);
@@ -3854,14 +3855,18 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 
 	if (!strcmp (val, _("None"))) return GP_OK;
 
-	if (!strcmp (val, _("On"))) {
+	if (!strcmp (val, _("On 1"))) {
 		ret = ptp_canon_eos_remotereleaseon (params, 1);
 	} else {
-		if (!strcmp (val, _("Off"))) {
-			ret = ptp_canon_eos_remotereleaseoff (params, 1);
+		if (!strcmp (val, _("On 2"))) {
+			ret = ptp_canon_eos_remotereleaseon (params, 2);
 		} else {
-			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
-			return GP_ERROR_NOT_SUPPORTED;
+			if (!strcmp (val, _("Off"))) {
+				ret = ptp_canon_eos_remotereleaseoff (params, 1);
+			} else {
+				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
+				return GP_ERROR_NOT_SUPPORTED;
+			}
 		}
 	}
 
