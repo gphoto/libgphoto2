@@ -2434,11 +2434,11 @@ static struct deviceproptableu8 nikon_colorspace[] = {
 };
 GENERIC8TABLE(Nikon_ColorSpace,nikon_colorspace)
 
-static struct deviceproptableu8 canon_eos_colorspace[] = {
+static struct deviceproptableu16 canon_eos_colorspace[] = {
 	{ N_("sRGB"), 		0x01, 0 },
 	{ N_("AdobeRGB"),	0x02, 0 },
 };
-GENERIC8TABLE(Canon_EOS_ColorSpace,canon_eos_colorspace)
+GENERIC16TABLE(Canon_EOS_ColorSpace,canon_eos_colorspace)
 
 
 static struct deviceproptableu8 nikon_evstep[] = {
@@ -3830,6 +3830,56 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	/* FIXME: remember state of release */
+	gp_widget_add_choice (*widget, _("None"));
+	gp_widget_add_choice (*widget, _("On"));
+	gp_widget_add_choice (*widget, _("Off"));
+	gp_widget_set_value (*widget, _("None"));
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
+	uint16_t	ret;
+	const char*	val;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_get_value(widget, &val);
+
+	if (!strcmp (val, _("None"))) return GP_OK;
+
+	if (!strcmp (val, _("On"))) {
+		ret = ptp_canon_eos_remotereleaseon (params, 1);
+	} else {
+		if (!strcmp (val, _("Off"))) {
+			ret = ptp_canon_eos_remotereleaseoff (params, 1);
+		} else {
+			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
+			return GP_ERROR_NOT_SUPPORTED;
+		}
+	}
+
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Canon EOS remote release failed: 0x%x", ret);
+		return translate_ptp_result (ret);
+	}
+	/* Get the next set of event data */
+	ret = ptp_check_eos_events (params);
+	if (ret != PTP_RC_OK) {
+		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_remoterelease", "getevent failed!");
+		return translate_ptp_result (ret);
+	}
+	return GP_OK;
+}
+
+
+static int
 _get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -4770,6 +4820,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Canon EOS Zoom"),			"eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
 	{ N_("Canon EOS Zoom Position"),	"eoszoomposition",  0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_ZoomPosition, _get_Canon_EOS_ZoomPosition, _put_Canon_EOS_ZoomPosition},
 	{ N_("Canon EOS Viewfinder"),		"eosviewfinder",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder, _put_Canon_EOS_ViewFinder},
+	{ N_("Canon EOS Remote Release"),		"eosremoterelease",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_RemoteReleaseOn, _get_Canon_EOS_RemoteRelease, _put_Canon_EOS_RemoteRelease},
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -4857,7 +4908,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
 	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
 	{ N_("Color Space"), "colorspace", PTP_DPC_NIKON_ColorSpace, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorSpace, _put_Nikon_ColorSpace},
-	{ N_("Color Space"), "colorspace", PTP_DPC_CANON_EOS_ColorSpace, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_ColorSpace, _put_Canon_EOS_ColorSpace},
+	{ N_("Color Space"), "colorspace", PTP_DPC_CANON_EOS_ColorSpace, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace, _put_Canon_EOS_ColorSpace},
 	{ N_("Auto ISO"), "autoiso", PTP_DPC_NIKON_ISOAuto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ 0,0,0,0,0,0,0 },
 };

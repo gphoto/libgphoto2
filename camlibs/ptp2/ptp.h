@@ -29,6 +29,7 @@
 #include <iconv.h>
 #endif
 #include "gphoto2-endian.h"
+#include "device-flags.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -1064,7 +1065,7 @@ struct _PTPNIKONWifiProfile {
 	uint8_t   encryption; /* 0 - None, 1 - WEP 64bit, 2 - WEP 128bit (not supported: 3 - TKIP) */
 	uint8_t   key[64];
 	uint8_t   key_nr;
-//	char      guid[16];
+/*	char      guid[16]; */
 };
 
 typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
@@ -1086,7 +1087,7 @@ struct _PTPCanon_changes_entry {
 		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
 		char				*info;
 		uint16_t			propid;
-		int				status; /* 1 or 0 */
+		int				status;
 	} u;
 };
 typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
@@ -2475,6 +2476,9 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  **/
 #define ptp_canon_eos_zoom(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_Zoom,1,x)
 #define ptp_canon_eos_zoomposition(params,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_ZoomPosition,2,x,y)
+
+#define ptp_canon_eos_remotereleaseon(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOn,1,x)
+#define ptp_canon_eos_remotereleaseoff(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOff,1,x)
 /**
  * ptp_nikon_mfdrive:
  *
@@ -2592,6 +2596,9 @@ ptp_operation_issupported(PTPParams* params, uint16_t operation)
 
 int ptp_event_issupported	(PTPParams* params, uint16_t event);
 int ptp_property_issupported	(PTPParams* params, uint16_t property);
+
+uint16_t ptp_check_eos_events (PTPParams *params);
+int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
 
 void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
 void ptp_free_devicepropvalue	(uint16_t dt, PTPPropertyValue* dpd);

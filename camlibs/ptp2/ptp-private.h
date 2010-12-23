@@ -35,10 +35,6 @@ void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 int init_ptp_fs (Camera *camera, GPContext *context);
 
-uint16_t ptp_check_eos_events (PTPParams *params);
-int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
-
-
 struct _CameraPrivateLibrary {
 	PTPParams params;
 	int checkevents;
