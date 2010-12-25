@@ -178,10 +178,17 @@ gp_port_usbscsi_get_usb_id (const char *sg,
 {
 	FILE *f;
 	char c, *s, buf[32], path[PATH_MAX + 1];
+	char *xpath;
 
 	snprintf (path, sizeof (path), "/sys/class/scsi_generic/%s", sg);
-	snprintf (path, sizeof (path), "%s/../../../../../modalias",
-		  gp_port_usbscsi_resolve_symlink(path));
+	xpath = gp_port_usbscsi_resolve_symlink(path);
+	if (xpath) {
+		snprintf (path, sizeof (path), "%s/../../../../../modalias",
+			  gp_port_usbscsi_resolve_symlink(path));
+	} else {
+		/* older kernels, perhaps also works on newer ones */
+		snprintf (path, sizeof (path), "/sys/class/scsi_generic/%s/device/../../../modalias", sg);
+	}
 
 	f = fopen (path, "r");
 	if (!f)
@@ -228,13 +235,6 @@ gp_port_library_list (GPPortInfoList *list)
 		CHECK (gp_port_info_list_append (list, info))
 	}
 	closedir (dir);
-
-        /* generic matcher. This will catch passed usbscsi: entries for instance. */
-        gp_port_info_new (&info);
-        gp_port_info_set_type (info, GP_PORT_USB_SCSI);
-        gp_port_info_set_name (info, "");
-        gp_port_info_set_path (info, "^usbscsi:");
-        CHECK (gp_port_info_list_append (list, info));
 	return GP_OK;
 }
 
