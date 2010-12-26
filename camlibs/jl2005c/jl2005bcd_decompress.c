@@ -61,6 +61,7 @@ find_eoi (uint8_t *jpeg_data, int jpeg_data_idx, int jpeg_data_size)
 	return i + 2; /* + 2 -> Point to after EOI marker */
 }
 
+#define MAXBUFSIZE 500000
 int
 jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 					int inputsize, int get_thumbnail)
@@ -68,8 +69,8 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	int out_headerlen;
 	uint16_t *thumb = NULL;
 	unsigned char *header;
-	uint8_t jpeg_stripe[500000];
-	uint8_t out[5000000];
+	uint8_t *jpeg_stripe;
+	uint8_t *out;
 	unsigned char *jpeg_data;
 	int q, width, height;
 	int thumbnail_width, thumbnail_height;
@@ -89,9 +90,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	JSAMPARRAY samp_image[3];
 
 
-
 	GP_DEBUG("Running jl2005bcd_decompress() function.\n");
-
 	header = input;
 	q = header[3] & 0x7f;
 	height = header[4] * 8;
@@ -118,6 +117,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 			GP_DEBUG("No thumbnail is present!\n");
 			return GP_ERROR_NOT_SUPPORTED;
 		} else {
+			out = malloc(MAXBUFSIZE);
 			thumb = input + 16;
 			for (i = 0; i < thumbnail_width * thumbnail_height;
 									i++) {
@@ -140,6 +140,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 				thumbnail_width * thumbnail_height * 3);
 			outputsize = thumbnail_width * thumbnail_height * 3 +
 						out_headerlen;
+			free (out);
 			return outputsize;
 		}
 	}
@@ -200,6 +201,8 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	samp_image[1] = red_row_pointer;
 	samp_image[2] = blue_row_pointer;
 
+	out = malloc(MAXBUFSIZE);
+	jpeg_stripe = malloc(MAXBUFSIZE);
 	memcpy(jpeg_stripe, jpeg_header, JPEG_HEADER_SIZE);
 	jpeg_stripe[JPEG_HEIGHT_OFFSET    ] = height >> 8;
 	jpeg_stripe[JPEG_HEIGHT_OFFSET + 1] = height;
@@ -218,11 +221,16 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	jpeg_create_decompress (&dinfo);
 	for (x = 0; x < width; x += 16) {
 		eoi = find_eoi(jpeg_data, jpeg_data_idx, jpeg_data_size);
-		if (eoi < 0)
+		if (eoi < 0) {
+			free (jpeg_stripe);
+			free (out);
 			return eoi;
+		}
 
 		size = eoi - jpeg_data_idx;
-		if ((JPEG_HEADER_SIZE + size) > sizeof(jpeg_stripe)) {
+		if ((JPEG_HEADER_SIZE + size) > MAXBUFSIZE) {
+			free (jpeg_stripe);
+			free (out);
 			GP_DEBUG("AAAIIIIII\n");
 			return 1;
 		}
@@ -261,10 +269,12 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 		jpeg_data_idx = (jpeg_data_idx + size + 0x0f) & ~0x0f;
 	}
 	jpeg_destroy_decompress(&dinfo);
+	free (jpeg_stripe);
 
 	ret = gp_ahd_interpolate(out, width, height, BAYER_TILE_BGGR);
 	if (ret < 0) {
 		GP_DEBUG("HEUH?\n");
+		free (out);
 		return ret;
 	}
 	white_balance (out, width*height, 1.6);
@@ -278,5 +288,6 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	GP_DEBUG("out_headerlen = %d\n", out_headerlen);
 	memcpy(output + out_headerlen, out, width * height * 3);
 	outputsize = out_headerlen + width * height * 3;
+	free (out);
 	return outputsize;
 }
