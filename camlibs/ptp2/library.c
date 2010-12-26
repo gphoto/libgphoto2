@@ -2563,11 +2563,11 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		ret = ptp_canon_eos_capture (params, &result);
 		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("Canon EOS Trigger Capture failed: %x"), ret);
+			gp_context_error (context, _("Canon EOS Trigger Capture failed: 0x%x (result 0x%x)"), ret, result);
 			return translate_ptp_result (ret);
 		}
 		if ((result & 0x7000) == 0x2000) { /* also happened */
-			gp_context_error (context, _("Canon EOS Trigger Capture failed: %x"), result);
+			gp_context_error (context, _("Canon EOS Trigger Capture failed: 0x%x"), result);
 			return translate_ptp_result (result);
 		}
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "result is %d", result);
