@@ -117,7 +117,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 			GP_DEBUG("No thumbnail is present!\n");
 			return GP_ERROR_NOT_SUPPORTED;
 		} else {
-			out = malloc(MAXBUFSIZE);
+			out = malloc(thumbnail_width * thumbnail_height * 3);
 			thumb = input + 16;
 			for (i = 0; i < thumbnail_width * thumbnail_height;
 									i++) {
@@ -201,7 +201,6 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	samp_image[1] = red_row_pointer;
 	samp_image[2] = blue_row_pointer;
 
-	out = malloc(MAXBUFSIZE);
 	jpeg_stripe = malloc(MAXBUFSIZE);
 	memcpy(jpeg_stripe, jpeg_header, JPEG_HEADER_SIZE);
 	jpeg_stripe[JPEG_HEIGHT_OFFSET    ] = height >> 8;
@@ -215,6 +214,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 
 	jpeg_data_idx = 0;
 
+	out = malloc(width * height * 3);
 	memset(out, 0, width * height * 3);
 
 	dinfo.err = jpeg_std_error (&jderr);
