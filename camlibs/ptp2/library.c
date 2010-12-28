@@ -760,7 +760,7 @@ static struct {
 	/* Matthias Blaicher <blaicher@googlemail.com> */
 	{"Nikon:DSC D3s (PTP mode)",      0x04b0, 0x0426, PTP_CAP|PTP_CAP_PREVIEW},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3140014&group_id=8874 */
-	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP},
+	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP|PTP_CAP_PREVIEW},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
