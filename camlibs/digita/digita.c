@@ -32,7 +32,6 @@
 #ifdef OS2
 #include <db.h>
 #endif
-#include <netinet/in.h>
 
 #define GP_MODULE "digita"
 
@@ -53,6 +52,7 @@
 #  define N_(String) (String)
 #endif
 
+#include "gphoto2-endian.h"
 #include "digita.h"
 
 #ifndef MAX
