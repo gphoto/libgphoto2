@@ -1579,6 +1579,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	unsigned int expbias;
 	time_t camtime;
 	char formatted_camera_time[30];
+	float zoom;
 
 	GP_DEBUG ("camera_get_config()");
 
@@ -1738,7 +1739,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_range (t, 0, 255, 1);
 	/* Set an unknown zoom level (at the moment we don't read the
 	 * zoom level */
-	float zoom = -1;
+	zoom = -1;
 	gp_widget_set_value (t, &zoom);
 	gp_widget_append (section, t);
 

@@ -26,7 +26,6 @@
 #ifdef OS2
 #include <db.h>
 #endif
-#include <netinet/in.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
