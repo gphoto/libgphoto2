@@ -2184,9 +2184,9 @@ canon_int_set_shooting_mode (Camera *camera, unsigned char shooting_mode,
         status = canon_int_get_release_params (camera, context);
         if (status < 0)
                 return status;
-        /* Modify the shotting mode */
+        /* Modify the shooting mode */
         camera->pl->release_params[SHOOTING_MODE_INDEX] = shooting_mode;
-        /* Upload the shotting mode to the camera */
+        /* Upload the shooting mode to the camera */
         status = canon_int_set_release_params (camera, context);
         if (status < 0)
                 return status;
