@@ -1140,6 +1140,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		break;
 	}
 #endif
+	gp_log(GP_LOG_ERROR,"ax203", "GD decompression not supported - no libGD present during build");
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;
 }
@@ -1217,6 +1218,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 	}
 	/* Never reached */
 #endif
+	gp_log(GP_LOG_ERROR,"ax203", "GD decompression not supported - no libGD present during build");
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
