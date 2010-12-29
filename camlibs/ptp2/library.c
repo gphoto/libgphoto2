@@ -2561,7 +2561,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		/* Get the initial bulk set of event data, otherwise
 		 * capture might return busy. */
-		ptp_check_eos_events (params);
+		do {
+			ptp_check_eos_events (params);
+		} while (params->eos_camerastatus == 1);
 
 		ret = ptp_canon_eos_capture (params, &result);
 		if (ret != PTP_RC_OK) {
@@ -2585,7 +2587,14 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			gp_context_error (context, _("Canon EOS Trigger Capture failed to release: Unknown error %d, please report."), result);
 			return GP_ERROR;
 		}
-		/* wait until camera reports ready again? */
+		/* wait until camera reports busy ... */
+		do {
+			ptp_check_eos_events (params);
+		} while (params->eos_camerastatus == 0);
+		/* wait until camera reports ready ... */
+		do {
+			ptp_check_eos_events (params);
+		} while (params->eos_camerastatus == 1);
 		return GP_OK;
 	}
 #if 0
