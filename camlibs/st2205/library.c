@@ -242,6 +242,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gdFree (gdpng);
 	return ret;
 #else
+	gp_log(GP_LOG_ERROR,"ax203", "GD decompression not supported - no libGD present during build");
 	return GP_ERROR_NOT_SUPPORTED;
 #endif
 }
@@ -392,6 +393,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	free (out_name);
 	return ret;
 #else
+	gp_log(GP_LOG_ERROR,"ax203", "GD compression not supported - no libGD present during build");
 	return GP_ERROR_NOT_SUPPORTED;
 #endif
 }
