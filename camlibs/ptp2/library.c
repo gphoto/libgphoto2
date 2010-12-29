@@ -760,6 +760,9 @@ static struct {
 	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Matthias Blaicher <blaicher@googlemail.com> */
 	{"Nikon:DSC D3s (PTP mode)",      0x04b0, 0x0426, PTP_CAP|PTP_CAP_PREVIEW},
+	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3140014&group_id=8874 */
+	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP|PTP_CAP_PREVIEW},
+
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
@@ -3088,7 +3091,7 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	res = ptp_canon_get_customize_data (params, 1, &xdata, &size);
 	if (res != PTP_RC_OK)  {
 		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return (translate_ptp_result (res));
+		return translate_ptp_result (res);
 	}
 	if (size < 42+sizeof(struct canon_theme_entry)*5)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -4128,15 +4131,15 @@ typedef struct {
 } PTPCFHandlerPrivate;
 
 static uint16_t
-gpfile_getfunc (PTPParams *params, void *priv,
+gpfile_getfunc (PTPParams *params, void *xpriv,
 	unsigned long wantlen, unsigned char *bytes,
 	unsigned long *gotlen
 ) {
-	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
+	PTPCFHandlerPrivate* priv = (PTPCFHandlerPrivate*)xpriv;
 	int ret;
 	size_t	gotlensize;
 
-	ret = gp_file_slurp (private->file, (char*)bytes, wantlen, &gotlensize);
+	ret = gp_file_slurp (priv->file, (char*)bytes, wantlen, &gotlensize);
 	*gotlen = gotlensize;
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
@@ -4144,14 +4147,14 @@ gpfile_getfunc (PTPParams *params, void *priv,
 }
 
 static uint16_t
-gpfile_putfunc (PTPParams *params, void *priv,
+gpfile_putfunc (PTPParams *params, void *xpriv,
 	unsigned long sendlen, unsigned char *bytes,
 	unsigned long *written
 ) {
-	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
+	PTPCFHandlerPrivate* priv= (PTPCFHandlerPrivate*)xpriv;
 	int ret;
 	
-	ret = gp_file_append (private->file, (char*)bytes, sendlen);
+	ret = gp_file_append (priv->file, (char*)bytes, sendlen);
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
 	*written = sendlen;
@@ -4490,7 +4493,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 			return ptp_mtp_parse_metadata (params,object_id,poi->ObjectFormat,file);
 		}
 		gp_context_error (context, _("Metadata only supported for MTP devices."));
-		return GP_ERROR;
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 	if (type != GP_FILE_TYPE_NORMAL)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -4563,7 +4566,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 			const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	unsigned long object_id;
+	uint32_t object_id;
 	uint32_t storage;
 	PTPParams *params = &camera->pl->params;
 
@@ -4618,7 +4621,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 			const char *foldername, void *data, GPContext *context)
 {
 	Camera *camera = data;
-	unsigned long object_id;
+	uint32_t object_id;
 	uint32_t storage;
 	PTPParams *params = &camera->pl->params;
 

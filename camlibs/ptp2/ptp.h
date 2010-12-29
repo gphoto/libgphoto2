@@ -1961,6 +1961,7 @@ struct _PTPParams {
 	int			nrofbacklogentries;
 	int			eos_captureenabled;
 	int			eos_viewfinderenabled;
+	int			eos_camerastatus;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;

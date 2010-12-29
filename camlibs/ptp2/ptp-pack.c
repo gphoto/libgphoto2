@@ -1642,6 +1642,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS;
 			(*ce)[i].u.status = dtoh32a(curdata+8);
+			params->eos_camerastatus = dtoh32a(curdata+8);
 			break;
 		case 0: /* end marker */
 			if (size == 8) /* no output */
