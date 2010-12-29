@@ -1,3 +1,7 @@
+2010-12-17   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Lego Bionicle added. New Product number 0x9051.
+	* README.9051: Added.
+
 2010-05-16   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Stop & Shop, camera, UPC product code 87096, added.
 	Reported by Adam Rubin, Adam <adam707@verizon.net>
