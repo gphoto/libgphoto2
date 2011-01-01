@@ -44,8 +44,8 @@ static const struct eeprom_info {
 	int mem_size;
 	int has_4k_sectors;
 } ax203_eeprom_info[] = {
-	{ "AMIC A25L040", 0x00133037,  524288, 1 },
-	{ "AMIC A25L080", 0x00143037, 1048576, 1 },
+	{ "AMIC A25L040", 0x37133037,  524288, 1 },
+	{ "AMIC A25L080", 0x37143037, 1048576, 1 },
 	{ "AMIC A25L40P", 0x1320377f,  524288, 0 },
 	{ "AMIC A25L80P", 0x1420377f, 1048576, 0 },
 	{ "AMIC A25L16P", 0x1520377f, 2097152, 0 },
