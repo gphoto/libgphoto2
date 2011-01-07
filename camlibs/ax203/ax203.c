@@ -103,6 +103,10 @@ static const struct eeprom_info {
 	{ "Winbond W25X32", 0x001630ef, 4194304, 1 },
 	{ "Winbond W25X64", 0x001730ef, 8388608, 1 },
 
+	{ "Winbond W25Q80", 0x001440ef, 1048576, 1 },
+	{ "Winbond W25Q16", 0x001540ef, 2097152, 1 },
+	{ "Winbond W25Q32", 0x001640ef, 4194304, 1 },
+
 	{ }
 };
 
