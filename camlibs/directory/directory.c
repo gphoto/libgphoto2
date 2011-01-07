@@ -80,6 +80,7 @@ static const struct {
 } mime_table[] = {
 	{"jpeg", GP_MIME_JPEG},
 	{"jpg",  GP_MIME_JPEG}, 
+	{"thm",  GP_MIME_JPEG}, 
 	{"tif",  GP_MIME_TIFF},
 	{"ppm",  GP_MIME_PPM},
 	{"pgm",  GP_MIME_PGM},
@@ -103,6 +104,7 @@ static const struct {
 	{"raw",  GP_MIME_RAW},
 	{"dcr",  GP_MIME_RAW},
 	{"x3f",  GP_MIME_RAW},
+	{"srw",  GP_MIME_RAW},
 	{"png",  GP_MIME_PNG},
 	{"wav",  GP_MIME_WAV},
 	{NULL, NULL}
