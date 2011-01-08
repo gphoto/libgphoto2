@@ -472,6 +472,10 @@ canon_usb_init (Camera *camera, GPContext *context)
 
         GP_DEBUG ("Initializing the (USB) camera.");
 
+	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
+	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_OUT);
+	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_INT);
+
         camstat = canon_usb_camera_init (camera, context);
         if ( camstat < 0 )
                 return camstat;
