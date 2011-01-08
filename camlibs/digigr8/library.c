@@ -73,6 +73,8 @@ static const struct {
 	{"Stop & Shop 87096",		GP_DRIVER_STATUS_EXPERIMENTAL,
 							    0x2770, 0x905c},
 	{"Jazz JDC9",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"Aries Digital Keychain Camera, ITEM 128986",
+				GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Disney pix micro",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050},
 	{"Lego Bionicle",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9051},
 	/* from IRC reporter, adam@piggz.co.uk */
