@@ -1,3 +1,13 @@
+libgphoto2 2.4.10.3
+
+ptp2:
+* Lots of bugfixes
+
+canon:
+* implemented a basic wait_for_event() so --capture-tethered works
+  (not working correctly for CR2+JPG, but JPG or CR2 stand alone will work) 
+
+------------------------------------------------------------------------
 libgphoto2 2.4.10.1
 
 This is a regression + translation fix update only
