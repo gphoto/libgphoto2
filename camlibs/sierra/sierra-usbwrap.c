@@ -22,6 +22,10 @@
  * a USB PC Control mode in which "Sierra" protocol packets are tunneled
  * inside another protocol.  This file implements the wrapper protocol.
  * The (ab)use of USB clear halt is not needed for this protocol.
+ * 
+ * The other protocol is "SCSI via USB Mass Storage", so we can also use
+ * the Linux SCSI APIs. Interesting is also that the header looks a bit
+ * like a PTP header.
  *
  * IMPORTANT: In order to use this mode, the camera must be switched
  * _out_ of "USB Mass Storage" mode and into "USB PC control mode".
@@ -33,6 +37,9 @@
  * access door (the camera senses this) and then press and hold
  * both of the menu buttons until the camera control menu appears.
  * Set it to ON.  This disables the USB mass-storage support.
+ *
+ * Update 20110125: This switching might not be necessary with the new code,
+ * please just try.
  */
 
 #include "config.h"
@@ -91,28 +98,6 @@ cmdbyte (unsigned int type, unsigned char nr) {
 ((a).c1==(b).c1 && (a).c2==(b).c2 && (a).c3==(b).c3 && (a).c4==(b).c4)
 
 /*
- * USB wrapper packets start with ASCII bytes "USBC".
- * The responses back from the camera start with "USBS".
- */
-#define UW_MAGIC_OUT ((uw4c_t){ 'U','S','B','C' })
-#define UW_MAGIC_IN  ((uw4c_t){ 'U','S','B','S' })
-
-static void
-make_uw_request(uw4c_t *req,
-	unsigned char inout, unsigned char a,
-	unsigned char len, unsigned char cmd
-) {
-	req->c1 = inout;
-	req->c2 = a;
-	req->c3 = len;
-	req->c4 = cmd;
-}
-
-#define MAKE_UW_REQUEST_OUT(req, a, b) make_uw_request (req, 0x00, 0x00, a, b) /* write to camera */
-#define MAKE_UW_REQUEST_IN(req, a, b) make_uw_request (req, 0x80, 0x00, a, b)  /* read from camera */
-/* Move REQUEST_STAT calls to write_packet %%% */
-
-/*
  * Each of the following request types begins with USBC+SessionID and
  * ends with a response from the camera of USBS+SessionID (OK).
  *
@@ -139,22 +124,6 @@ make_uw_request(uw4c_t *req,
 #define UW_PACKET_STAT ((uw4c_t){ 0x03, 0x00, 0xff, 0x9f })
 
 #pragma pack(1)
-/*
- * The rest of the USB wrapper packet looks like this:
- */
-typedef struct
-{
-      uw4c_t magic;    /* The letters U S B C for packets sent to camera */
-      uw32_t sessionid;        /* Any 32-bit handle the host wants (maybe not 0?) */
-      uw32_t rw_length;        /* Length of data to be read or written next */
-      uw4c_t request_type;     /* One of the UW_REQUEST_* defines */
-      char   zero[3];          /* 00 00 00 ? */
-      char   req_camid_len;    /* 00 (or 0x22 if camera id request) */
-      char   zero2[4];         /* 00 00 00 ? */
-      uw32_t length;           /* Length of transaction repeated? */
-      char      zero3[3];      /* 00 00 00 */
-} uw_header_t;
-
 /*
  * Data packet sent along with a UW_REQUEST_RDY:
  */
@@ -205,113 +174,60 @@ typedef struct
       uw32_t sessionid;        /* A copy of whatever value the host made up */
       char   zero[5];  /* 00 00 00 00 00 */
 } uw_response_t;
-#pragma pack()
 
-/*
- * This routine is called after every UW_REQUEST_XXX to get an OK
- * with a matching session ID.
- */
-static int
-usb_wrap_OK (GPPort *dev, uw_header_t *hdr, unsigned int type)
+typedef struct
 {
-   uw_response_t rsp;
-   int ret;
-   memset(&rsp, 0, sizeof(rsp));
-
-   GP_DEBUG( "usb_wrap_OK" );
-
-   if ((ret = gp_port_read(dev, (char*)&rsp, sizeof(rsp))) != sizeof(rsp))
-   {
-      gp_log (GP_LOG_DEBUG, GP_MODULE, "gp_port_read *** FAILED (%d vs %d bytes)", (int)sizeof(rsp), ret );
-      if (ret < GP_OK)
-	return ret;
-      return GP_ERROR;
-   }
-
-   if (!UW_EQUAL(rsp.magic, UW_MAGIC_IN) ||
-       !UW_EQUAL(rsp.sessionid, hdr->sessionid))
-   {
-      GP_DEBUG( "usb_wrap_OK wrong session *** FAILED" );
-      return GP_ERROR;
-   }
-
-   /*
-    * No idea what these bytes really mean.  Normally they are always 0's
-    * when things are in a happy state.
-    */
-   if (rsp.zero[0] != 0 ||
-       rsp.zero[1] != 0 ||
-       rsp.zero[2] != 0 ||
-       rsp.zero[3] != 0 ||
-       rsp.zero[4] != 0)
-      {
-        GP_DEBUG( "error: ****  usb_wrap_OK failed - not all expected zero bytes are 0" );
-        return GP_ERROR;
-      }
-   return GP_OK;
-}
+      unsigned char cmd;
+      char   zero1[8];
+      uw32_t length;
+      char   zero2[3];
+} uw_scsicmd_t;
+#pragma pack()
 
 static int
 usb_wrap_RDY(gp_port* dev, unsigned int type)
 {
-   uw_header_t hdr;
    uw_pkout_rdy_t msg;
-   int ret, retries = 3;
+   int ret;
+   char sense_buffer[32];
+   uw_scsicmd_t cmd;
 
    GP_DEBUG( "usb_wrap_RDY" );
 
-try_rdy_again:
-   memset(&hdr, 0, sizeof(hdr));
+   memset(&cmd,0,sizeof(cmd));
+   cmd.cmd    		= cmdbyte(type, 0);
+   cmd.length 		= uw_value(sizeof(msg));
+
    memset(&msg, 0, sizeof(msg));
-
-   hdr.magic     = UW_MAGIC_OUT;
-   hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(sizeof(msg));
-   hdr.length    = uw_value(sizeof(msg));
-   msg.length    = uw_value(sizeof(msg));
-   MAKE_UW_REQUEST_RDY (&hdr.request_type, type);
-   msg.packet_type = UW_PACKET_RDY;
-  
-   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_write(dev, (char*)&msg, sizeof(msg))) < GP_OK)
-   {
+   msg.length    	= uw_value(sizeof(msg));
+   msg.packet_type	= UW_PACKET_RDY;
+   ret = gp_port_send_scsi_cmd (dev, 1, (char*)&cmd, sizeof(cmd),
+   	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
+   if (ret<GP_OK)
       GP_DEBUG( "usb_wrap_RDY *** FAILED" );
-      return ret;
-   }
-
-   if ((ret=usb_wrap_OK(dev, &hdr, type)) != GP_OK)
-   {
-      if (!retries--)
-      {
-        GP_DEBUG( "usb_wrap_RDY GIVING UP" );
-        return ret;
-      }
-      GP_DEBUG( "usb_wrap_RDY *** RETRYING" );
-      goto try_rdy_again;
-   }
    return GP_OK;
 }
 
 static int
 usb_wrap_STAT(gp_port* dev, unsigned int type)
 {
-   uw_header_t hdr;
    uw_stat_t msg;
+   uw32_t xlen;
    int ret;
+   char sense_buffer[32];
+   uw_scsicmd_t cmd;
 
    GP_DEBUG( "usb_wrap_STAT" );
 
-   memset(&hdr, 0, sizeof(hdr));
-   memset(&msg, 0, sizeof(msg));
+   memset(&cmd, 0, sizeof(cmd));
+   cmd.cmd    = cmdbyte(type, 3);
+   cmd.length = uw_value(sizeof(msg));
 
-   hdr.magic = UW_MAGIC_OUT;
-   hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(sizeof(msg));
-   hdr.length    = uw_value(sizeof(msg));
-   MAKE_UW_REQUEST_STAT (&hdr.request_type, type);
-  
-   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_read(dev, (char*)&msg, sizeof(msg))) != sizeof(msg))
+   memset(&msg, 0, sizeof(msg));
+   ret = gp_port_send_scsi_cmd (dev, 0, (char*)&cmd, sizeof(cmd),
+   	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
+
+   if (ret < GP_OK)
    {
       GP_DEBUG( "usb_wrap_STAT *** FAILED" );
       if (ret < GP_OK)
@@ -319,12 +235,13 @@ usb_wrap_STAT(gp_port* dev, unsigned int type)
       return GP_ERROR;
    }
 
-   if (!UW_EQUAL(msg.length, hdr.length) || !UW_EQUAL(msg.packet_type, UW_PACKET_STAT))
+   xlen = uw_value(sizeof(msg));
+   if (!UW_EQUAL(msg.length, xlen) || !UW_EQUAL(msg.packet_type, UW_PACKET_STAT))
    {
       GP_DEBUG( "usb_wrap_STAT got bad packet *** FAILED" );
       return GP_ERROR;
    }
-   
+
    if (msg.zero[0] != 0 ||
        msg.zero[1] != 0 ||
        msg.zero[2] != 0 ||
@@ -334,72 +251,71 @@ usb_wrap_STAT(gp_port* dev, unsigned int type)
    {
       GP_DEBUG( "warning: usb_wrap_STAT found non-zero bytes (ignoring)" );
    }
-
-   return usb_wrap_OK(dev, &hdr, type);
+   return GP_OK;
 }
 
 static int
 usb_wrap_CMND(gp_port* dev, unsigned int type, char* sierra_msg, int sierra_len)
 {
-   uw_header_t hdr;
    uw_pkout_sierra_hdr_t* msg;
    int ret, msg_len = sizeof(*msg) + sierra_len;
+   char sense_buffer[32];
+   uw_scsicmd_t cmd;
    
    GP_DEBUG( "usb_wrap_CMND" );
-   
+
+   memset(&cmd,  0, sizeof(cmd));
+   cmd.cmd    = cmdbyte(type, 1);
+   cmd.length = uw_value(msg_len);
+
    msg = (uw_pkout_sierra_hdr_t*)malloc(msg_len);
-   memset(&hdr, 0, sizeof(hdr));
    memset(msg,  0, msg_len);
-   
-   hdr.magic = UW_MAGIC_OUT;
-   hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(msg_len);
-   hdr.length    = uw_value(msg_len);
-   msg->length   = uw_value(msg_len);
-   MAKE_UW_REQUEST_CMND (&hdr.request_type, type);
-   msg->packet_type = UW_PACKET_DATA;
+   msg->length 		= uw_value(msg_len);
+   msg->packet_type	= UW_PACKET_DATA;
    memcpy((char*)msg + sizeof(*msg), sierra_msg, sierra_len);
-   GP_DEBUG( "usb_wrap_CMND writing %i + %i",
-                   (int)sizeof(hdr), msg_len);
+
+   GP_DEBUG( "usb_wrap_CMND writing %i", msg_len);
    
-   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_write(dev, (char*)msg, msg_len)) < GP_OK)
-   {
-      GP_DEBUG( "usb_wrap_CMND ** WRITE FAILED");
-      free(msg);
-      return ret;
-   }
+   ret = gp_port_send_scsi_cmd (dev, 1, (char*)&cmd, sizeof(cmd),
+   	 sense_buffer, sizeof(sense_buffer), (char*)msg, msg_len);
    free(msg);
 
-   return usb_wrap_OK(dev, &hdr, type);
+   if (ret < GP_OK)
+   {
+      GP_DEBUG( "usb_wrap_CMND ** WRITE FAILED");
+      return ret;
+   }
+   return GP_OK;
 }
 
 static int
 usb_wrap_SIZE(gp_port* dev, unsigned int type, uw32_t* size)
 {
-   uw_header_t hdr;
+   uw32_t xlen;
    uw_size_t msg;
    int ret;
+   char sense_buffer[32];
+   uw_scsicmd_t cmd;
   
    GP_DEBUG( "usb_wrap_SIZE" );
-   memset(&hdr, 0, sizeof(hdr));
-   memset(&msg, 0, sizeof(msg));
 
-   hdr.magic = UW_MAGIC_OUT;
-   hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(sizeof(msg));
-   hdr.length    = uw_value(sizeof(msg));
-   MAKE_UW_REQUEST_SIZE (&hdr.request_type, type);
-   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_read(dev, (char*)&msg, sizeof(msg))) != sizeof(msg))
+   memset(&cmd,  0, sizeof(cmd));
+   cmd.cmd 	= cmdbyte(type, 4);
+   cmd.length	= uw_value(sizeof(msg));
+
+   memset(&msg, 0, sizeof(msg));
+   ret = gp_port_send_scsi_cmd (dev, 0, (char*)&cmd, sizeof(cmd),
+   	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
+
+   if (ret < GP_OK)
    {
       GP_DEBUG( "usb_wrap_SIZE *** FAILED" );
       if (ret < GP_OK)
 	return ret;
       return GP_ERROR;
    }
-
-   if (!UW_EQUAL(msg.length, hdr.length) || !UW_EQUAL(msg.packet_type, UW_PACKET_DATA))
+   xlen = uw_value(sizeof(msg));
+   if (!UW_EQUAL(msg.length, xlen) || !UW_EQUAL(msg.packet_type, UW_PACKET_DATA))
    {
       GP_DEBUG( "usb_wrap_SIZE got bad packet *** FAILED" );
       return GP_ERROR;
@@ -412,19 +328,18 @@ usb_wrap_SIZE(gp_port* dev, unsigned int type, uw32_t* size)
    {
       GP_DEBUG( "warning: usb_wrap_SIZE found non-zero bytes (ignoring)" );
    }
-
    *size = msg.size;
-
-   return usb_wrap_OK(dev, &hdr, type);
+   return GP_OK;
 }
 
 static int
 usb_wrap_DATA (GPPort *dev, unsigned int type, char *sierra_response, int *sierra_len, uw32_t size)
 {
-   uw_header_t hdr;
    uw_pkout_sierra_hdr_t* msg;
    unsigned int msg_len;
    int ret;
+   char sense_buffer[32];
+   uw_scsicmd_t cmd;
 
    GP_DEBUG( "usb_wrap_DATA" );
 
@@ -442,28 +357,23 @@ usb_wrap_DATA (GPPort *dev, unsigned int type, char *sierra_response, int *sierr
    *sierra_len = msg_len - sizeof(*msg);
 
    msg = (uw_pkout_sierra_hdr_t*)malloc(msg_len);
+   memset(&cmd, 0, sizeof(cmd));
+   cmd.cmd 	= cmdbyte(type, 2);
+   cmd.length	= uw_value(msg_len);
+
    memset(msg, 0, sizeof(msg));
-   memset(&hdr, 0, sizeof(hdr));
+   ret = gp_port_send_scsi_cmd (dev, 0, (char*)&cmd, sizeof(cmd),
+   	 sense_buffer, sizeof(sense_buffer), (char*)msg, msg_len);
 
-   hdr.magic = UW_MAGIC_OUT;
-   hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(msg_len);
-   hdr.length    = uw_value(msg_len);
-   MAKE_UW_REQUEST_DATA (&hdr.request_type, type);
-
-   if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_read(dev, (char*)msg, msg_len)) != msg_len)
+   if (ret < GP_OK)
    {
       GP_DEBUG( "usb_wrap_DATA FAILED" );
       free(msg);
-      if (ret < GP_OK)
-	return ret;
-      return GP_ERROR;
+      return ret;
    }
    memcpy(sierra_response, (char*)msg + sizeof(*msg), *sierra_len);
    free(msg);
-
-   return usb_wrap_OK(dev, &hdr, type);
+   return GP_OK;
 }
 
 /*
@@ -497,4 +407,3 @@ usb_wrap_read_packet (GPPort *dev, unsigned int type, char *sierra_response, int
 	
 	return sierra_len;
 }
-
