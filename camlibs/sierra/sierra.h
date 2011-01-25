@@ -40,7 +40,7 @@ struct CameraDescriptor;
 							\
 	if (res < 0) {					\
 		gp_log (GP_LOG_DEBUG, "sierra",		\
-			"Operation failed (%i)!", res);	\
+			"Operation failed in %s (%i)!", __FUNCTION__, res);	\
 		return (res);				\
 	}						\
 }

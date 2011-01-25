@@ -524,6 +524,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 	GP_DEBUG ("Reading packet...");
 
 	switch (camera->port->type) {
+	case GP_PORT_USB_SCSI:
 	case GP_PORT_USB:
 		blocksize = SIERRA_PACKET_SIZE;
 		break;
@@ -545,7 +546,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 * Read data through the bus. If an error occurred,
 		 * try again.
 		 */
-		if (camera->port->type == GP_PORT_USB && (camera->pl->flags & SIERRA_WRAP_USB_MASK))
+		if ((camera->port->type == GP_PORT_USB_SCSI) && (camera->pl->flags & SIERRA_WRAP_USB_MASK))
 			result = usb_wrap_read_packet (camera->port,
 					(camera->pl->flags & SIERRA_WRAP_USB_MASK),
 					packet, blocksize);

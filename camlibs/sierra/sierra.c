@@ -274,8 +274,12 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		a.port     = GP_PORT_SERIAL;
 		if ((sierra_cameras[x].usb_vendor  > 0) &&
-		    (sierra_cameras[x].usb_product > 0))
-			a.port |= GP_PORT_USB;
+		    (sierra_cameras[x].usb_product > 0)) {
+			if (sierra_cameras[x].flags & (SIERRA_WRAP_USB_OLYMPUS|SIERRA_WRAP_USB_PENTAX|SIERRA_WRAP_USB_NIKON))
+			    a.port |= GP_PORT_USB_SCSI;
+                        else
+			    a.port |= GP_PORT_USB;
+		}
 		a.speed[0] = 9600;
 		a.speed[1] = 19200;
 		a.speed[2] = 38400;
@@ -482,6 +486,7 @@ camera_start (Camera *camera, GPContext *context)
 		break;
 
 	case GP_PORT_USB:
+	case GP_PORT_USB_SCSI:
 		CHECK (gp_port_set_timeout (camera->port, 5000));
 		break;
 	default:
@@ -2235,6 +2240,7 @@ camera_init (Camera *camera, GPContext *context)
                 break;
 
         case GP_PORT_USB:
+        case GP_PORT_USB_SCSI:
 
                 /* Test if we have usb information */
                 if (vendor == 0) {
