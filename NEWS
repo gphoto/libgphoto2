@@ -1,4 +1,9 @@
-libgphoto2 2.4.10.3
+libgphoto2 2.4.10.4
+
+sierra:
+* rewrote the USB wrapped command handling to use "usbscsi"
+  port. Now its no longer necessary to detach the mass storage
+  driver.
 
 ptp2:
 * Lots of bugfixes
