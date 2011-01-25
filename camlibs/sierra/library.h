@@ -30,7 +30,7 @@
 	int res = (result);					\
 								\
 	if (res < 0) {						\
-		GP_DEBUG ("Operation failed (%i)!", res);	\
+		GP_DEBUG ("Operation failed in %s (%i)!", __FUNCTION__, res);	\
 		camera_stop (camera, context);			\
 		return (res);					\
 	}							\
@@ -41,7 +41,7 @@
 	int res = (result);					\
 								\
 	if (res < 0) {						\
-		GP_DEBUG ("Operation failed (%i)!", res);	\
+		GP_DEBUG ("Operation failed in %s (%i)!", __FUNCTION__, res);	\
 		camera_stop (camera, context);			\
 		free (camera->pl);				\
 		camera->pl = NULL;				\
@@ -54,7 +54,7 @@
 	int res = (result);					\
 								\
 	if (res < 0) {						\
-		GP_DEBUG ("Operation failed (%i)!", res);	\
+		GP_DEBUG ("Operation failed in %s (%i)!", __FUNCTION__, res);	\
 		free (camera->pl);				\
 		camera->pl = NULL;				\
 		return (res);					\
