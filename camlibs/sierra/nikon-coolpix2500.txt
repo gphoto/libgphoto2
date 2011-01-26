@@ -1,0 +1,133 @@
+/Camera Configuration/Picture Settings/resolution
+	Label: Resolution plus Size
+	Type: RADIO
+	Current: Normal-UXGA
+	Choice: 0 Basic-VGA
+	Choice: 1 Normal-VGA
+	Choice: 2 Fine-VGA
+	Choice: 3 Basic-SXGA
+	Choice: 4 Normal-SXGA
+	Choice: 5 Fine-SXGA
+	Choice: 6 Basic-XGA
+	Choice: 7 Normal-XGA
+	Choice: 8 Fine-XGA
+	Choice: 9 Basic-UXGA
+	Choice: 10 Normal-UXGA
+	Choice: 11 Fine-UXGA
+/Camera Configuration/Picture Settings/color
+	Label: Color Mode
+	Type: RADIO
+	Current: Color
+	Choice: 0 Color
+	Choice: 1 B/W
+/Camera Configuration/Picture Settings/flash
+	Label: Flash Settings
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Force
+	Choice: 2 Off
+	Choice: 3 Anti-redeye
+	Choice: 4 Slow-sync
+/Camera Configuration/Picture Settings/image-adj
+	Label: Image Adjustment
+	Type: RADIO
+	Current: Normal
+	Choice: 0 Auto
+	Choice: 1 Normal
+	Choice: 2 Contrast+
+	Choice: 3 Contrast-
+	Choice: 4 Brightness+
+	Choice: 5 Brightness-
+/Camera Configuration/Picture Settings/whitebalance
+	Label: White Balance
+	Type: RADIO
+	Current: Auto
+	Choice: 0 Auto
+	Choice: 1 Fine
+	Choice: 2 Incandescent
+	Choice: 3 Fluorescent
+	Choice: 4 Flash
+	Choice: 5 Preset
+	Choice: 6 Cloudy
+/Camera Configuration/Picture Settings/focus-mode
+	Label: Focus Mode
+	Type: RADIO
+	Current: Normal
+	Choice: 0 Macro
+	Choice: 1 Normal
+	Choice: 2 Infinity
+/Camera Configuration/Picture Settings/exp
+	Label: Exposure Compensation
+	Type: MENU
+	Current:  0
+	Choice: 0 -2.0
+	Choice: 1 -1.7
+	Choice: 2 -1.3
+	Choice: 3 -1.0
+	Choice: 4 -0.7
+	Choice: 5 -0.3
+	Choice: 6  0
+	Choice: 7 +0.3
+	Choice: 8 +0.7
+	Choice: 9 +1.0
+	Choice: 10 +1.3
+	Choice: 11 +1.7
+	Choice: 12 +2.0
+/Camera Configuration/Picture Settings/exp-meter
+	Label: Exposure Metering
+	Type: RADIO
+	Current: 0 (unknown)
+	Choice: 0 Center-Weighted
+	Choice: 1 Spot
+	Choice: 2 Matrix
+	Choice: 3 Spot-AF
+	Choice: 4 0 (unknown)
+/Camera Configuration/Picture Settings/zoom
+	Label: Zoom (in millimeters)
+	Type: RANGE
+	Current: 5.6
+	Bottom: 8
+	Top: 20
+	Step: 0.1
+/Camera Configuration/Picture Settings/dzoom
+	Label: Digital Zoom
+	Type: RADIO
+	Current: off
+	Choice: 0 off
+	Choice: 1 on
+/Camera Configuration/Picture Settings/ael
+	Label: Auto exposure lock
+	Type: RADIO
+	Current: off
+	Choice: 0 off
+	Choice: 1 on
+/Camera Configuration/Camera Settings/date-time
+	Label: Date and time (GMT)
+	Type: DATE
+	Current: -1
+	Printable: Thu Jan  1 00:59:59 1970
+/Camera Configuration/Camera Settings/op-mode
+	Label: Operation Mode
+	Type: RADIO
+	Current: Off
+	Choice: 0 Off
+	Choice: 1 Record
+	Choice: 2 Play
+	Choice: 3 Preview Thumbnail
+	Choice: 4 Next
+	Choice: 5 Previous
+/Camera Configuration/Camera Settings/lcd-brightness
+	Label: LCD Brightness
+	Type: RANGE
+	Current: 4
+	Bottom: 0
+	Top: 7
+	Step: 1
+/Camera Configuration/Camera Settings/language
+	Label: Language
+	Type: RADIO
+	Current: German
+	Choice: 0 English
+	Choice: 1 French
+	Choice: 2 German
