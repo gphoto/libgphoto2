@@ -1,3 +1,9 @@
+2011-01-25	Marcus Meissner <marcus@jet.franken.de>
+
+	* sierra-usbwrap.c: Instead of synthesizing USB Mass Storage protocol
+          to send SCSI commands ... Use the usbscsi: port and send them
+          directly.
+
 2008-09-20	Marcus Meissner <marcus@jet.franken.de>
 
 	* sierra.c: Implement storage_info function.
