@@ -832,7 +832,7 @@ static int
 gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfaceno, int *altsettingno)
 {
 	char buf[1000], cmd;
-	int ret,i,i1,i2;
+	int ret,i,i1,i2, xifaces,xnocamifaces;
 	usb_dev_handle *devh;
 
 	/* All of them are "vendor specific" device class */
@@ -840,7 +840,36 @@ gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfac
 	if ((dev->descriptor.bDeviceClass!=0xff) && (dev->descriptor.bDeviceClass!=0))
 		return 0;
 #endif
+	if (dev->config) {
+		xifaces = xnocamifaces = 0;
+		for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
+			unsigned int j;
 
+			for (j = 0; j < dev->config[i].bNumInterfaces; j++) {
+				int k;
+				xifaces++;
+
+				for (k = 0; k < dev->config[i].interface[j].num_altsetting; k++) {
+					struct usb_interface_descriptor *intf = &dev->config[i].interface[j].altsetting[k]; 
+					if (	(intf->bInterfaceClass == USB_CLASS_HID)	||
+						(intf->bInterfaceClass == USB_CLASS_PRINTER)	||
+						(intf->bInterfaceClass == USB_CLASS_AUDIO)	||
+						(intf->bInterfaceClass == USB_CLASS_HUB)	||
+						(intf->bInterfaceClass == USB_CLASS_COMM)	||
+						(intf->bInterfaceClass == 0xe0)	/* wireless/bluetooth*/
+					)
+						xnocamifaces++;
+				}
+			}
+		}
+	}
+	if (xifaces == xnocamifaces) /* only non-camera ifaces */
+		return 0;
+
+	/* Marcus: Avoid this probing altogether, its too unstable on some devices */
+	return 0;
+
+#if 0
 	devh = usb_open (dev);
 	if (!devh)
 		return 0;
@@ -939,6 +968,7 @@ found:
 errout:
 	usb_close (devh);
 	return 0;
+#endif
 }
 
 static int
