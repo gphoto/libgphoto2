@@ -1145,6 +1145,7 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
+	memset (sense, 0, sense_size);
 	CHECK_SUPP (port, "send_scsi_cmd", port->pc->ops->send_scsi_cmd);
 	retval = port->pc->ops->send_scsi_cmd (port, to_dev, cmd, cmd_size,
 					sense, sense_size, data, data_size);
