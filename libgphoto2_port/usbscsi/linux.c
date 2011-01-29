@@ -348,29 +348,6 @@ static int gp_port_usbscsi_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
 			"'%s' (%m)."), port->settings.usbscsi.path);
 		return GP_ERROR_IO;
 	}
-	/* https://secure.wikimedia.org/wikipedia/en/wiki/Key_Code_Qualifier */
-	if (sense[0] != 0) {
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","Request Sense reports:");
-		if ((sense[0]&0x7f)!=0x70) {
-			gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tInvalid header.");
-			return GP_ERROR_IO;
-		}
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tCurrent command read filemark: %s",(sense[2]&0x80)?"yes":"no");
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tEarly warning passed: %s",(sense[2]&0x40)?"yes":"no");
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tIncorrect blocklengt: %s",(sense[2]&0x20)?"yes":"no");
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tSense Key: %d",sense[2]&0xf);
-		if (sense[0]&0x80)
-			gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tResidual Length: %d",sense[3]*0x1000000+sense[4]*0x10000+sense[5]*0x100+sense[6]);
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tAdditional Sense Length: %d",sense[7]);
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tAdditional Sense Code: %d",sense[12]);
-		gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tAdditional Sense Code Qualifier: %d",sense[13]);
-		if (sense[15]&0x80) {
-			gp_log(GP_LOG_DEBUG,"send_scsi_cmd","\tIllegal Param is in %s",(sense[15]&0x40)?"the CDB":"the Data Out Phase");
-			if (sense[15]&0x8) {
-				gp_log(GP_LOG_DEBUG,"send_scsi_cmd","Pointer at %d, bit %d",sense[16]*256+sense[17],sense[15]&0x7);
-			}
-		}
-	}
 	return GP_OK;
 #else
 	return GP_ERROR_NOT_SUPPORTED;
