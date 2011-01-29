@@ -1149,9 +1149,33 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 	retval = port->pc->ops->send_scsi_cmd (port, to_dev, cmd, cmd_size,
 					sense, sense_size, data, data_size);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", "scsi cmd result: %d, sense:",
-		retval);
-	gp_log_data ("gphoto2-port", sense, sense_size);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", "scsi cmd result: %d", retval);
+
+	if (sense[0] != 0) {
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", "sense data:");
+		gp_log_data ("gphoto2-port", sense, sense_size);
+		/* https://secure.wikimedia.org/wikipedia/en/wiki/Key_Code_Qualifier */
+		gp_log(GP_LOG_DEBUG, "gphoto2-port","sense decided:");
+		if ((sense[0]&0x7f)!=0x70) {
+			gp_log(GP_LOG_DEBUG, "gphoto2-port","\tInvalid header.");
+		}
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tCurrent command read filemark: %s",(sense[2]&0x80)?"yes":"no");
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tEarly warning passed: %s",(sense[2]&0x40)?"yes":"no");
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tIncorrect blocklengt: %s",(sense[2]&0x20)?"yes":"no");
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tSense Key: %d",sense[2]&0xf);
+		if (sense[0]&0x80)
+			gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tResidual Length: %d",sense[3]*0x1000000+sense[4]*0x10000+sense[5]*0x100+sense[6]);
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tAdditional Sense Length: %d",sense[7]);
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tAdditional Sense Code: %d",sense[12]);
+		gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tAdditional Sense Code Qualifier: %d",sense[13]);
+		if (sense[15]&0x80) {
+			gp_log(GP_LOG_DEBUG, "gphoto2-port", "\tIllegal Param is in %s",(sense[15]&0x40)?"the CDB":"the Data Out Phase");
+			if (sense[15]&0x8) {
+				gp_log(GP_LOG_DEBUG, "gphoto2-port", "Pointer at %d, bit %d",sense[16]*256+sense[17],sense[15]&0x7);
+			}
+		}
+	}
+
 	if (!to_dev && data_size) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-port", "scsi cmd data:");
 		gp_log_data ("gphoto2-port", data, data_size);
