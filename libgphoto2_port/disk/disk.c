@@ -154,6 +154,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
 			    (NULL != strstr(mntent->mnt_fsname,"fuse"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"nfs"))	||
+			    (NULL != strstr(mntent->mnt_fsname,"cifs"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_fsname,"afs"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"autofs"))||
