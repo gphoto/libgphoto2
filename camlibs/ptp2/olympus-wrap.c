@@ -271,7 +271,8 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
 
 /* Optional mid-step: Data In or Data Out */
    switch (flags&PTP_DP_DATA_MASK) {
-   case PTP_DP_SENDDATA:
+   case PTP_DP_SENDDATA: {
+      char *xdata;
       memset(&hdr, 0, sizeof(hdr));
       hdr.magic     = UW_MAGIC_OUT;
       hdr.sessionid = uw_value(getpid());
@@ -279,17 +280,28 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
       hdr.length    = uw_value(sendlen);
       MAKE_UW_REQUEST_DATAOUT (&hdr.request_type);
 
+      xdata = malloc(sendlen + 12);
+      usbreq.length = htod32(sendlen + 12);
+      usbreq.type   = htod16(PTP_USB_CONTAINER_DATA);
+      usbreq.code   = htod16(ptp->Code);
+      usbreq.trans_id = htod32(ptp->Transaction_ID);
+      memcpy (xdata, &usbreq, 12);
+      memcpy (xdata+12, *data, sendlen);
+
       if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-	  (ret=gp_port_write(dev, (char*)*data, sendlen)) < GP_OK)
+	  (ret=gp_port_write(dev, (char*)xdata, sendlen+12)) < GP_OK)
       {
+         free (xdata);
 	 GP_DEBUG( "usb_wrap_transaction *** data send FAILED" );
 	 return ret;
       }
+      free (xdata);
       if ((ret=usb_wrap_OK(dev, &hdr)) != GP_OK) {
 	 GP_DEBUG( "usb_wrap_transaction FAILED to send PTP data" );
 	 return ret;
       }
       break;
+   }
    case PTP_DP_GETDATA:
       memset(&hdr, 0, sizeof(hdr));
       hdr.magic     = UW_MAGIC_OUT;
