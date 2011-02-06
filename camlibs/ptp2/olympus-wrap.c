@@ -42,9 +42,9 @@
 #include <stdio.h>
 #include <_stdint.h>
 
-#include "olympus-wrap.h"
 #include "ptp.h"
 #include "ptp-pack.c"
+#include "olympus-wrap.h"
 
 
 
@@ -231,7 +231,7 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
 {
    uw_header_t hdr;
    PTPUSBBulkContainer usbreq, usbresp;
-   char respbuf[64];
+   char buf[64];
    int ret;
 
    GP_DEBUG( "usb_wrap_transaction" );
@@ -247,18 +247,21 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
    usbreq.payload.params.param4 = htod32(ptp->Param4);
    usbreq.payload.params.param5 = htod32(ptp->Param5);
 
+   memset(buf,0,sizeof(buf));
+   memcpy(buf,&usbreq,usbreq.length);
+
    memset(&hdr, 0, sizeof(hdr));
    hdr.magic     = UW_MAGIC_OUT;
    hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(usbreq.length);
-   hdr.length    = uw_value(usbreq.length);
+   hdr.rw_length = uw_value(sizeof(buf));
+   hdr.length    = uw_value(sizeof(buf));
    MAKE_UW_REQUEST_COMMAND (&hdr.request_type);
 
 /* First step: send PTP command */
    if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_write(dev, (char*)&usbreq, usbreq.length)) < GP_OK)
+       (ret=gp_port_write(dev, buf, sizeof(buf))) < GP_OK)
    {
-      GP_DEBUG( "usb_wrap_RDY *** FAILED" );
+      GP_DEBUG( "usb_wrap_transaction *** FAILED, ret %d", ret );
       return ret;
    }
    if ((ret=usb_wrap_OK(dev, &hdr)) != GP_OK) {
@@ -289,13 +292,13 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
       break;
    case PTP_DP_GETDATA:
       memset(&hdr, 0, sizeof(hdr));
-      hdr.magic     = UW_MAGIC_IN;
+      hdr.magic     = UW_MAGIC_OUT;
       hdr.sessionid = uw_value(getpid());
-      hdr.rw_length = uw_value(sizeof(respbuf));
-      hdr.length    = uw_value(sizeof(respbuf));
+      hdr.rw_length = uw_value(sizeof(buf));
+      hdr.length    = uw_value(sizeof(buf));
       MAKE_UW_REQUEST_DATAIN_SIZE (&hdr.request_type);
       if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-          (ret=gp_port_read(dev, respbuf, sizeof(respbuf))) != sizeof(respbuf))
+          (ret=gp_port_read(dev, buf, sizeof(buf))) != sizeof(buf))
       {
          GP_DEBUG( "usb_wrap_transaction *** FAILED to read PTP data in size" );
          if (ret < GP_OK)
@@ -306,8 +309,8 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
          GP_DEBUG( "usb_wrap_transaction FAILED to read PTP data in size" );
          return ret;
       }
-      memcpy (&usbresp, respbuf, sizeof(usbresp));
-      if (dtoh16(usbresp.code) != PTP_RC_OK) {
+      memcpy (&usbresp, buf, sizeof(usbresp));
+      if (dtoh16(usbresp.code) != ptp->Code) {
          GP_DEBUG( "usb_wrap_transaction *** PTP code %04x during PTP data in size read", dtoh16(usbresp.code));
          break;
       }
@@ -315,13 +318,13 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
          GP_DEBUG( "usb_wrap_transaction *** PTP size %d during PTP data in size read, expected 16", dtoh16(usbresp.length));
          break;
       }
-      *recvlen = dtoh32(usbreq.payload.params.param1);
+      *recvlen = dtoh32(usbresp.payload.params.param1);
       *data = malloc (*recvlen);
       if (!*data) {
 	return GP_ERROR_NO_MEMORY;
       }
       memset(&hdr, 0, sizeof(hdr));
-      hdr.magic     = UW_MAGIC_IN;
+      hdr.magic     = UW_MAGIC_OUT;
       hdr.sessionid = uw_value(getpid());
       hdr.rw_length = uw_value(*recvlen);
       hdr.length    = uw_value(*recvlen);
@@ -338,26 +341,29 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
          GP_DEBUG( "usb_wrap_transaction FAILED to read PTP data in" );
          return ret;
       }
+      /* skip away the 12 byte header */
+      memmove (*data,*data+12,*recvlen-12);
+      *recvlen -= 12;
       break;
    default:
       break;
    }
 /* Last step: get response */
    memset(&hdr, 0, sizeof(hdr));
-   hdr.magic     = UW_MAGIC_IN;
+   hdr.magic     = UW_MAGIC_OUT;
    hdr.sessionid = uw_value(getpid());
-   hdr.rw_length = uw_value(sizeof(respbuf));
-   hdr.length    = uw_value(sizeof(respbuf));
-   MAKE_UW_REQUEST_COMMAND (&hdr.request_type);
+   hdr.rw_length = uw_value(sizeof(buf));
+   hdr.length    = uw_value(sizeof(buf));
+   MAKE_UW_REQUEST_RESPONSE (&hdr.request_type);
    if ((ret=gp_port_write(dev, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-       (ret=gp_port_read(dev, respbuf, sizeof(respbuf))) != sizeof(respbuf))
+       (ret=gp_port_read(dev, buf, sizeof(buf))) != sizeof(buf))
    {
       GP_DEBUG( "usb_wrap_transaction *** FAILED to read PTP response" );
       if (ret < GP_OK)
 	return ret;
       return GP_ERROR;
    }
-   memcpy (&usbresp, respbuf, sizeof(usbresp));
+   memcpy (&usbresp, buf, sizeof(usbresp));
    ptp->Nparam = (dtoh32(usbreq.length)-PTP_USB_BULK_REQ_LEN)/sizeof(uint32_t);
    if (ptp->Code != dtoh16(usbreq.code)) {
       GP_DEBUG( "usb_wrap_transaction *** read response for wrong command, %04x vs %04x", ptp->Code, dtoh16(usbreq.code) );
@@ -409,3 +415,43 @@ usb_wrap_read_packet (GPPort *dev, unsigned int type, char *sierra_response, int
 }
 
 #endif
+
+int olympus_wrap_test (GPPort *dev, PTPParams *params) {
+	PTPContainer ptp;
+	PTPDeviceInfo di;
+	unsigned char *data = NULL;
+	unsigned int len = 0;
+	int ret, i;
+
+	memset (&ptp, 0 , sizeof (ptp));
+	ptp.Code = PTP_OC_GetDeviceInfo;
+	ptp.Nparam = 0;
+	ret = usb_wrap_ptp_transaction(dev, params, &ptp, PTP_DP_GETDATA, 0, &data, &len);
+	if (ret != GP_OK)
+		return ret;
+	memset (&di, 0, sizeof(di));
+	ptp_unpack_DI(params, data, &di, len);
+	free (data);
+	GP_DEBUG ("Device info:");
+	GP_DEBUG ("Manufacturer: %s",di.Manufacturer);
+	GP_DEBUG ("  Model: %s", di.Model);
+	GP_DEBUG ("  device version: %s", di.DeviceVersion);
+	GP_DEBUG ("  serial number: '%s'",di.SerialNumber);
+	GP_DEBUG ("Vendor extension ID: 0x%08x",di.VendorExtensionID);
+	GP_DEBUG ("Vendor extension version: %d",di.VendorExtensionVersion);
+	GP_DEBUG ("Vendor extension description: %s",di.VendorExtensionDesc);
+	GP_DEBUG ("Functional Mode: 0x%04x",di.FunctionalMode);
+	GP_DEBUG ("PTP Standard Version: %d",di.StandardVersion);
+	GP_DEBUG ("Supported operations:");
+	for (i=0; i<di.OperationsSupported_len; i++)
+		GP_DEBUG ("  0x%04x", di.OperationsSupported[i]);
+	GP_DEBUG ("Events Supported:");
+	for (i=0; i<di.EventsSupported_len; i++)
+		GP_DEBUG ("  0x%04x", di.EventsSupported[i]);
+	GP_DEBUG ("Device Properties Supported:");
+	for (i=0; i<di.DevicePropertiesSupported_len;
+		i++)
+		GP_DEBUG ("  0x%04x", di.DevicePropertiesSupported[i]);
+
+	return ret;
+}
