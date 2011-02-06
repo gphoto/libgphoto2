@@ -276,8 +276,8 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
       memset(&hdr, 0, sizeof(hdr));
       hdr.magic     = UW_MAGIC_OUT;
       hdr.sessionid = uw_value(getpid());
-      hdr.rw_length = uw_value(sendlen);
-      hdr.length    = uw_value(sendlen);
+      hdr.rw_length = uw_value(sendlen+12);
+      hdr.length    = uw_value(sendlen+12);
       MAKE_UW_REQUEST_DATAOUT (&hdr.request_type);
 
       xdata = malloc(sendlen + 12);
@@ -428,22 +428,32 @@ usb_wrap_read_packet (GPPort *dev, unsigned int type, char *sierra_response, int
 
 #endif
 
-int olympus_wrap_test (GPPort *dev, PTPParams *params) {
-	PTPContainer ptp;
+int olympus_wrap_ptp_transaction (GPPort *dev, PTPParams *params,
+	PTPContainer* ptp, uint16_t flags,
+	unsigned int sendlen, unsigned char **data, unsigned int *recvlen
+) {
+	PTPContainer ptp2;
 	PTPDeviceInfo di;
-	unsigned char *data = NULL;
+	unsigned char *xdata = NULL;
 	unsigned int len = 0;
-	int ret, i;
+	int res, i;
+	PTPObjectInfo oi;
+	char *req;
+        unsigned char* oidata=NULL;
+        uint32_t size, handle;
+	uint16_t ret;
 
-	memset (&ptp, 0 , sizeof (ptp));
-	ptp.Code = PTP_OC_GetDeviceInfo;
-	ptp.Nparam = 0;
-	ret = usb_wrap_ptp_transaction(dev, params, &ptp, PTP_DP_GETDATA, 0, &data, &len);
-	if (ret != GP_OK)
-		return ret;
+	memset (&ptp2, 0 , sizeof (ptp2));
+
+#if 1
+	ptp2.Code = PTP_OC_GetDeviceInfo;
+	ptp2.Nparam = 0;
+	res = usb_wrap_ptp_transaction(dev, params, &ptp2, PTP_DP_GETDATA, 0, &xdata, &len);
+	if (res != GP_OK)
+		return res;
 	memset (&di, 0, sizeof(di));
-	ptp_unpack_DI(params, data, &di, len);
-	free (data);
+	ptp_unpack_DI(params, xdata, &di, len);
+	free (xdata);
 	GP_DEBUG ("Device info:");
 	GP_DEBUG ("Manufacturer: %s",di.Manufacturer);
 	GP_DEBUG ("  Model: %s", di.Model);
@@ -454,16 +464,70 @@ int olympus_wrap_test (GPPort *dev, PTPParams *params) {
 	GP_DEBUG ("Vendor extension description: %s",di.VendorExtensionDesc);
 	GP_DEBUG ("Functional Mode: 0x%04x",di.FunctionalMode);
 	GP_DEBUG ("PTP Standard Version: %d",di.StandardVersion);
-	GP_DEBUG ("Supported operations:");
-	for (i=0; i<di.OperationsSupported_len; i++)
-		GP_DEBUG ("  0x%04x", di.OperationsSupported[i]);
-	GP_DEBUG ("Events Supported:");
-	for (i=0; i<di.EventsSupported_len; i++)
-		GP_DEBUG ("  0x%04x", di.EventsSupported[i]);
-	GP_DEBUG ("Device Properties Supported:");
-	for (i=0; i<di.DevicePropertiesSupported_len;
-		i++)
-		GP_DEBUG ("  0x%04x", di.DevicePropertiesSupported[i]);
+	GP_DEBUG ("Supported operations:"); for (i=0; i<di.OperationsSupported_len; i++) GP_DEBUG ("  0x%04x", di.OperationsSupported[i]);
+	GP_DEBUG ("Events Supported:"); for (i=0; i<di.EventsSupported_len; i++) GP_DEBUG ("  0x%04x", di.EventsSupported[i]);
+	GP_DEBUG ("Device Properties Supported:"); for (i=0; i<di.DevicePropertiesSupported_len; i++) GP_DEBUG ("  0x%04x", di.DevicePropertiesSupported[i]);
+#endif
+#if 0
+	ptp2.Code = PTP_OC_SendObjectInfo;
+	ptp2.Nparam = 1;
+	ptp2.Param1 = 0x80000001;
 
+	req = malloc(2000);
+	sprintf (req, "<?xml version=\"1.0\"?>\r\n<x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\"><input>");
+	sprintf (req+strlen(req), "<c%04x>", PTP_OC_GetDeviceInfo);
+#endif
+#if 0
+
+	case 5: sprintf (req+strlen(req), "<p%04x>", ptp.Param5);
+	case 4: sprintf (req+strlen(req), "<p%04x>", ptp.Param4);
+	case 3: sprintf (req+strlen(req), "<p%04x>", ptp.Param3);
+	case 2: sprintf (req+strlen(req), "<p%04x>", ptp.Param2);
+	case 1: sprintf (req+strlen(req), "<p%04x>", ptp.Param1);
+	case 0: break;
+	}
+	<value>0002</value>
+
+	switch (ptp.Nparam) {
+	case 5: sprintf (req+strlen(req), "</p%04x>", ptp.Param5);
+	case 4: sprintf (req+strlen(req), "</p%04x>", ptp.Param4);
+	case 3: sprintf (req+strlen(req), "</p%04x>", ptp.Param3);
+	case 2: sprintf (req+strlen(req), "</p%04x>", ptp.Param2);
+	case 1: sprintf (req+strlen(req), "</p%04x>", ptp.Param1);
+	case 0: break;
+	}
+#endif
+#if 0
+	sprintf (req+strlen(req), "</c%04x>", PTP_OC_GetDeviceInfo);
+
+	sprintf (req+strlen(req), "</input></x3c>\r\n");
+	memset (&oi, 0, sizeof (oi));
+	oi.ObjectFormat		= PTP_OFC_Script;
+	oi.StorageID 		= 0x80000001;
+	oi.Filename 		= "HREQUEST.X3C";
+	oi.ObjectCompressedSize	= strlen(req);
+
+
+        size = ptp_pack_OI(params, &oi, &oidata);
+        res = usb_wrap_ptp_transaction(dev, params, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+	if (res != GP_OK)
+		return res;
+        free(oidata);
+	handle = ptp2.Param3;
+
+	ptp2.Code = PTP_OC_SendObject;
+	ptp2.Nparam = 0;
+	res = usb_wrap_ptp_transaction(dev, params, &ptp2, PTP_DP_SENDDATA, strlen(req), (unsigned char**)&req, NULL);
+	if (res != GP_OK)
+		return res;
+	ret = params->event_wait(params, &ptp2);
+	if (ret == PTP_RC_OK) {
+		GP_DEBUG("event: code %04x, p %08x\n", ptp2.Code, ptp2.Param1);
+	}
+#if 0
+	sprintf (req, "<?xml version=\"1.0\"?>\n<x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\">\n<output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output>\n</x3c>\n");
+#endif
 	return ret;
+#endif
+	return GP_OK;
 }

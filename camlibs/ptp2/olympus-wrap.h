@@ -23,6 +23,9 @@
 
 #include <gphoto2/gphoto2-port.h>
 
-int olympus_wrap_test (GPPort *dev, PTPParams *params);
+int olympus_wrap_ptp_transaction (GPPort *dev, PTPParams *params,
+        PTPContainer* ptp, uint16_t flags,
+        unsigned int sendlen, unsigned char **data, unsigned int *recvlen);
+
 
 #endif /* __SIERRA_USBWRAP_H__ */
