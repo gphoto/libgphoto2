@@ -2625,6 +2625,9 @@ void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
 
 void ptp_perror			(PTPParams* params, uint16_t error);
+void ptp_debug			(PTPParams *params, const char *format, ...);
+void ptp_error			(PTPParams *params, const char *format, ...);
+
 
 const char*
 ptp_get_property_description(PTPParams* params, uint16_t dpc);
