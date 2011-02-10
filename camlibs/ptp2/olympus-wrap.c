@@ -322,9 +322,9 @@ usb_wrap_ptp_transaction(gp_port* dev, PTPParams *params, PTPContainer* ptp,
          return ret;
       }
       memcpy (&usbresp, buf, sizeof(usbresp));
-      if (dtoh16(usbresp.code) != ptp->Code) {
+      if ((dtoh16(usbresp.code) != ptp->Code) && (dtoh16(usbresp.code) != PTP_RC_OK)) {
          GP_DEBUG( "usb_wrap_transaction *** PTP code %04x during PTP data in size read", dtoh16(usbresp.code));
-         break;
+	 /* break; */
       }
       if (dtoh16(usbresp.length) != 16) {
          GP_DEBUG( "usb_wrap_transaction *** PTP size %d during PTP data in size read, expected 16", dtoh16(usbresp.length));
