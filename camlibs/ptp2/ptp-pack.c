@@ -4,9 +4,6 @@
 #include <iconv.h>
 #endif
 
-extern void
-ptp_debug (PTPParams *params, const char *format, ...);
-
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
 {
