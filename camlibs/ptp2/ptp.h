@@ -2607,6 +2607,11 @@ void ptp_free_objectpropdesc	(PTPObjectPropDesc* dpd);
 void ptp_free_params		(PTPParams *params);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 
+uint16_t
+ptp_transaction (PTPParams* params, PTPContainer* ptp,
+                uint16_t flags, unsigned int sendlen,
+                unsigned char **data, unsigned int *recvlen);
+
 
 void ptp_perror			(PTPParams* params, uint16_t error);
 

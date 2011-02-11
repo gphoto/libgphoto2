@@ -378,7 +378,7 @@ ptp_exit_fd_handler (PTPDataHandler *handler) {
 }
 
 /* Old style transaction, based on memory */
-static uint16_t
+uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp, 
 		uint16_t flags, unsigned int sendlen,
 		unsigned char **data, unsigned int *recvlen
