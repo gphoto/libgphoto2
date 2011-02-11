@@ -60,6 +60,7 @@
 #include "ptp-bugs.h"
 #include "ptp-private.h"
 #include "ptp-pack.c"
+#include "olympus-wrap.h"
 
 #define GP_MODULE "PTP2"
 
@@ -796,6 +797,9 @@ static struct {
 
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
+
+	{"Olympus:X-925 (UMS Mode)",	  0x07b4, 0x0109, 0},
+
 	/* From VICTOR <viaaurea@yahoo.es> */
 	{"Olympus:C-350Z",                0x07b4, 0x0114, 0},
 	{"Olympus:D-560Z",                0x07b4, 0x0114, 0},
@@ -5533,18 +5537,25 @@ camera_init (Camera *camera, GPContext *context)
 	else
 		camloc = "UCS-2BE";
 
-
+        gp_camera_get_abilities(camera, &a);
 	switch (camera->port->type) {
 	case GP_PORT_USB:
-		params->sendreq_func		= ptp_usb_sendreq;
+		params->sendreq_func	= ptp_usb_sendreq;
 		params->senddata_func	= ptp_usb_senddata;
-		params->getresp_func		= ptp_usb_getresp;
-		params->getdata_func		= ptp_usb_getdata;
-		params->event_wait		= ptp_usb_event_wait;
-		params->event_check		= ptp_usb_event_check;
+		params->getresp_func	= ptp_usb_getresp;
+		params->getdata_func	= ptp_usb_getdata;
+		params->event_wait	= ptp_usb_event_wait;
+		params->event_check	= ptp_usb_event_check;
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
+		if ((a.usb_vendor == 0x7b4) && (a.usb_product == 0x109)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
+			params->sendreq_func	= ums_wrap_sendreq;
+			params->senddata_func	= ums_wrap_senddata;
+			params->getresp_func	= ums_wrap_getresp;
+			params->getdata_func	= ums_wrap_getdata;
+		}
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	info;
@@ -5559,12 +5570,12 @@ camera_init (Camera *camera, GPContext *context)
 			gp_log (GP_LOG_ERROR, "ptpip", "Failed to connect.\n");
 			return ret;
 		}
-		params->sendreq_func		= ptp_ptpip_sendreq;
+		params->sendreq_func	= ptp_ptpip_sendreq;
 		params->senddata_func	= ptp_ptpip_senddata;
-		params->getresp_func		= ptp_ptpip_getresp;
-		params->getdata_func		= ptp_ptpip_getdata;
-		params->event_wait		= ptp_ptpip_event_wait;
-		params->event_check		= ptp_ptpip_event_check;
+		params->getresp_func	= ptp_ptpip_getresp;
+		params->getdata_func	= ptp_ptpip_getdata;
+		params->event_wait	= ptp_ptpip_event_wait;
+		params->event_check	= ptp_ptpip_event_check;
 		break;
 	}
 	default:
@@ -5583,7 +5594,6 @@ camera_init (Camera *camera, GPContext *context)
 		return (GP_ERROR_OS_FAILURE);
 	}
 #endif
-        gp_camera_get_abilities(camera, &a);
         for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
@@ -5728,6 +5738,8 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+	if ((a.usb_vendor == 0x7b4) && (a.usb_product == 0x109))
+		olympus_wrap_ptp_transaction (params, NULL, 0,0,NULL,NULL);
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	SET_CONTEXT(camera, NULL);
 	return (GP_OK);
