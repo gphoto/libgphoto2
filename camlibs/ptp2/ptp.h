@@ -2583,7 +2583,7 @@ uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t 
 uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint32_t *propnum, uint16_t **props);
 
 /* Non PTP protocol functions */
-static int
+static inline int
 ptp_operation_issupported(PTPParams* params, uint16_t operation)
 {
 	int i=0;
