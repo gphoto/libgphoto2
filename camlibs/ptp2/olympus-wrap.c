@@ -552,9 +552,9 @@ int olympus_wrap_ptp_transaction (PTPParams *params,
 	PTPContainer ptp2;
 	int res;
 	PTPObjectInfo oi;
-	char *req;
+	char *req, *resp;
         unsigned char* oidata=NULL;
-        uint32_t size, handle;
+        uint32_t size, handle, newhandle;
 	uint16_t ret;
 
 	memset (&ptp2, 0 , sizeof (ptp2));
@@ -607,9 +607,21 @@ int olympus_wrap_ptp_transaction (PTPParams *params,
 	if (res != PTP_RC_OK)
 		return res;
 	ret = params->event_wait(params, &ptp2);
-	if (ret == PTP_RC_OK) {
-		GP_DEBUG("event: code %04x, p %08x\n", ptp2.Code, ptp2.Param1);
-	}
+	if (ret != PTP_RC_OK)
+		return ret;
+	GP_DEBUG("event: code %04x, p %08x\n", ptp2.Code, ptp2.Param1);
+	if (ptp2.Code != PTP_EC_ObjectAdded) 
+		return PTP_RC_OK;
+	newhandle = ptp2.Code;
+	ret = ptp_getobjectinfo (params, newhandle, &oi);
+	if (ret != PTP_RC_OK)
+		return ret;
+	GP_DEBUG("got new file: %s", oi.Filename);
+	ret = ptp_getobject (params, newhandle, (unsigned char**)&resp);
+	if (ret != PTP_RC_OK)
+		return ret;
+	GP_DEBUG("file content: %s", resp);
+	unwrap_xml (resp, &ptp2, NULL, NULL);
 #if 0
 	sprintf (req, "<?xml version=\"1.0\"?>\n<x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\">\n<output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output>\n</x3c>\n");
 #endif
