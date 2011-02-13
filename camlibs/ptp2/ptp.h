@@ -2602,7 +2602,7 @@ uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t 
 uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint32_t *propnum, uint16_t **props);
 
 /* Non PTP protocol functions */
-static int
+static inline int
 ptp_operation_issupported(PTPParams* params, uint16_t operation)
 {
 	int i=0;
@@ -2650,6 +2650,64 @@ uint16_t ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob)
 uint16_t ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob);
 /* ptpip.c */
 void ptp_nikon_getptpipguid (unsigned char* guid);
+
+enum {
+  PTP_CHDK_Shutdown = 0,    // param2 is 0 (hard), 1 (soft), 2 (reboot) or 3 (reboot fw update)
+                            // if param2 == 3, then filename of fw update is send as data (empty for default)
+  PTP_CHDK_GetMemory,       // param2 is base address (or 0 for live image buffer, 1 for bitmap buffer)
+                            // param3 is size (in bytes)
+                            // return data is memory block
+  PTP_CHDK_SetMemoryLong,   // param2 is address
+                            // param3 is value
+  PTP_CHDK_CallFunction,    // data is array of function pointer and (long) arguments  (max: 10 args)
+                            // return param1 is return value
+  PTP_CHDK_GetPropCase,     // param2 is base id
+                            // param3 is number of properties
+                            // return data is array of longs
+  PTP_CHDK_GetParamData,    // param2 is base id
+                            // param3 is number of parameters
+                            // return data is sequence of strings prefixed by their length (as long)
+  PTP_CHDK_TempData,        // data is data to be stored for later
+  PTP_CHDK_UploadFile,      // data is 4-byte length of filename, followed by filename and contents
+  PTP_CHDK_DownloadFile,    // preceded by PTP_CHDK_TempData with filename
+                            // return data are file contents
+  PTP_CHDK_SwitchMode,      // param2 is 0 (playback) or 1 (record)
+  PTP_CHDK_ExecuteLUA,      // data is script to be executed
+  PTP_CHDK_GetVideoSettings,
+  PTP_CHDK_GetScriptOutput, // return script output in ASCIIZ
+  PTP_CHDK_OpenDir,         // open directory listing, data is directory name
+  PTP_CHDK_ReadDir,         // return data is next file info
+  PTP_CHDK_CloseDir,        // close directory listing
+  PTP_CHDK_GetShootingModesList, // not used
+  PTP_CHDK_StartDownloadFile,
+  PTP_CHDK_ResumeDownloadFile,
+  PTP_CHDK_EndDownloadFile,
+} PTP_CHDK_Command;
+
+#define PTP_OC_CHDK	0x9999
+typedef struct tagptp_chdk_videosettings {
+	long live_image_buffer_width;
+	long live_image_width;
+	long live_image_height;
+	long bitmap_buffer_width;
+	long bitmap_width;
+	long bitmap_height;
+	unsigned palette[16]; 
+} ptp_chdk_videosettings;
+
+#define ptp_chdk_shutdown_hard(params) ptp_generic_no_data(params,PTP_OC_CHDK,2,PTP_CHDK_Shutdown,0)
+#define ptp_chdk_shutdown_soft(params) ptp_generic_no_data(params,PTP_OC_CHDK,2,PTP_CHDK_Shutdown,1)
+#define ptp_chdk_reboot(params) ptp_generic_no_data(params,PTP_OC_CHDK,2,PTP_CHDK_Shutdown,2)
+#define ptp_chdk_reboot_fw_update(params) ptp_generic_no_data(params,PTP_OC_CHDK,2,PTP_CHDK_Shutdown,3)
+uint16_t ptp_chdk_get_memory(PTPParams* params, int start, int num, unsigned char**);
+#define ptp_chdk_set_memory_long(params,addr,val) ptp_generic_no_data(params,PTP_OC_CHDK,3,PTP_CHDK_SetMemoryLong,addr,val)
+uint16_t ptp_chdk_call(PTPParams* params, int *args, int size, int *ret);
+uint16_t ptp_chdk_get_propcase(PTPParams* params, int start, int num, int* ints);
+uint16_t ptp_chdk_get_paramdata(PTPParams* params, int start, int num, unsigned char** x);
+#define ptp_chdk_switch_mode(params,mode) ptp_generic_no_data(params,PTP_OC_CHDK,2,PTP_CHDK_SwitchMode,mode)
+uint16_t ptp_chdk_exec_lua(PTPParams *params, char *script, uint32_t* ret);
+uint16_t ptp_chdk_get_script_output(PTPParams* params, char **output );
+uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);
 
 #ifdef __cplusplus
 }
