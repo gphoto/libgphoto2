@@ -4016,6 +4016,69 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Canon_CHDK_Reboot(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	val = 2;	/* always changed, unless we can find out the state ... */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_CHDK_Reboot(CONFIG_PUT_ARGS) {
+	int val, ret;
+	PTPParams *params = &(camera->pl->params);
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val != 1)
+		return GP_OK;
+	ret = ptp_chdk_reboot (params);
+	return translate_ptp_result (ret);
+}
+
+static int
+_get_Canon_CHDK_Script(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	gp_widget_add_choice  (*widget, "cls();exit_alt();");
+	gp_widget_add_choice  (*widget, "shoot();cls();exit_alt();");
+	gp_widget_set_value  (*widget, "cls();exit_alt();");
+	return (GP_OK);
+}
+
+static int
+_put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
+	int		ret;
+	char		*val;
+	PTPParams	*params = &(camera->pl->params);
+	uint32_t	output;
+	char 		*scriptoutput;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	ret = ptp_chdk_switch_mode (params, 1);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+#if 0
+	ret = ptp_chdk_exec_lua (params, val, &output);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	fprintf(stderr,"output: 0x%08x\n", output);
+#endif
+	ret = ptp_chdk_get_script_output (params, &scriptoutput);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	fprintf(stderr,"script output: %s\n", scriptoutput);
+	return PTP_RC_OK;
+}
+
 
 static int
 _get_STR_as_time(CONFIG_GET_ARGS) {
@@ -4825,7 +4888,9 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Canon EOS Zoom"),			"eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
 	{ N_("Canon EOS Zoom Position"),	"eoszoomposition",  0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_ZoomPosition, _get_Canon_EOS_ZoomPosition, _put_Canon_EOS_ZoomPosition},
 	{ N_("Canon EOS Viewfinder"),		"eosviewfinder",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder, _put_Canon_EOS_ViewFinder},
-	{ N_("Canon EOS Remote Release"),		"eosremoterelease",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_RemoteReleaseOn, _get_Canon_EOS_RemoteRelease, _put_Canon_EOS_RemoteRelease},
+	{ N_("Canon EOS Remote Release"),	"eosremoterelease",	0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_RemoteReleaseOn, _get_Canon_EOS_RemoteRelease, _put_Canon_EOS_RemoteRelease},
+	{ N_("CHDK Reboot"),			"chdk_reboot",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Reboot, _put_Canon_CHDK_Reboot},
+	{ N_("CHDK Script"),			"chdk_script",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Script, _put_Canon_CHDK_Script},
 	{ 0,0,0,0,0,0,0 },
 };
 
