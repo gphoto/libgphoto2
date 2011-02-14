@@ -798,7 +798,9 @@ static struct {
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
 
-	{"Olympus:X-925 (UMS Mode)",	  0x07b4, 0x0109, 0},
+        /* Olympus wrap test code */
+	{"Olympus:X-925 (UMS mode)",      0x07b4, 0x0109, 0},
+	{"Olympus:E-520 (UMS mode)",      0x07b4, 0x0110, 0},
 
 	/* From VICTOR <viaaurea@yahoo.es> */
 	{"Olympus:C-350Z",                0x07b4, 0x0114, 0},
@@ -5738,7 +5740,7 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
-	if ((a.usb_vendor == 0x7b4) && (a.usb_product == 0x109))
+	if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110)))
 		olympus_wrap_ptp_transaction (params, NULL, 0,0,NULL,NULL);
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	SET_CONTEXT(camera, NULL);
