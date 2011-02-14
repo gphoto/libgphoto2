@@ -536,11 +536,11 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 	}
 
 	/* Try several times before leaving on error... */
+	/* Clear the USB bus
+	   (what about the SERIAL bus : do we need to flush it?) */
+	sierra_clear_usb_halt(camera);
 	while (1) {
 
-		/* Clear the USB bus
-		   (what about the SERIAL bus : do we need to flush it?) */
-		sierra_clear_usb_halt(camera);
 
 		/*
 		 * Read data through the bus. If an error occurred,
