@@ -2379,12 +2379,16 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	if (oi.ParentObject != 0) {
+		int j;
 		if (xmode != CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
 		}
-		ret = add_object (camera, newobject, context);
-		if (ret != GP_OK)
-			return ret;
+		j = handle_to_n (newobject, camera);
+		if (j == PTP_HANDLER_SPECIAL) { /* not added yet */
+			ret = add_object (camera, newobject, context);
+			if (ret != GP_OK)
+				return ret;
+		}
 		strcpy  (path->name,  oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
