@@ -610,9 +610,9 @@ int olympus_wrap_ptp_transaction (PTPParams *params,
 	if (ret != PTP_RC_OK)
 		return ret;
 	GP_DEBUG("event: code %04x, p %08x\n", ptp2.Code, ptp2.Param1);
-	if (ptp2.Code != PTP_EC_ObjectAdded) 
+	if (ptp2.Code != PTP_EC_RequestObjectTransfer) 
 		return PTP_RC_OK;
-	newhandle = ptp2.Code;
+	newhandle = ptp2.Param1;
 	ret = ptp_getobjectinfo (params, newhandle, &oi);
 	if (ret != PTP_RC_OK)
 		return ret;
