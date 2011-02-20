@@ -4,15 +4,6 @@ EXTRA_DIST += usb/usb-os2.c
 
 EXTRA_LTLIBRARIES += usb.la
 
-if HAVE_UDEV
-udevscript_PROGRAMS += check-mtp-device
-check_mtp_device_SOURCES = usb/check-mtp-device.c
-check_mtp_device_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBUSB_CFLAGS)
-check_mtp_device_LDADD = $(LIBUSB_LIBS)
-else
-EXTRA_DIST += usb/check-mtp-device.c
-endif
-
 usb_la_LDFLAGS = $(iolib_ldflags)
 usb_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
