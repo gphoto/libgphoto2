@@ -105,6 +105,7 @@ static const struct {
 	{"dcr",  GP_MIME_RAW},
 	{"x3f",  GP_MIME_RAW},
 	{"srw",  GP_MIME_RAW},
+	{"gf1",  GP_MIME_RAW},
 	{"png",  GP_MIME_PNG},
 	{"wav",  GP_MIME_WAV},
 	{NULL, NULL}
