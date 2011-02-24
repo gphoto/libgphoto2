@@ -1063,6 +1063,10 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 
 			if ((devname[0] != '\0') && strcmp(devname, dev->filename))
 				continue;
+			gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
+				"Looking for USB device "
+				"(class 0x%x, subclass, 0x%x, protocol 0x%x)...", 
+				class, subclass, protocol);
 
 			ret = gp_port_usb_match_device_by_class(dev, class, subclass, protocol, &config, &interface, &altsetting);
 			if (!ret)
@@ -1070,8 +1074,8 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 
 			port->pl->d = dev;
 			gp_log (GP_LOG_VERBOSE, "libusb",
-				"Looking for USB device "
-				"(class 0x%x, subclass, 0x%x, protocol 0x%x)... found.", 
+				"Found USB class device "
+				"(class 0x%x, subclass, 0x%x, protocol 0x%x)", 
 				class, subclass, protocol);
 			/* Set the defaults */
 			if (dev->config) {
