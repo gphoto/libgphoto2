@@ -285,10 +285,10 @@ int dc120_get_status (Camera *camera, Kodak_dc120_status *status, GPContext *con
         if( retval == (GP_OK) && status != NULL )
         {
 	    const char *data;
-	    long int  size;
+	    long int  lsize;
 
-	    gp_file_get_data_and_size( file, &data, &size );
-	    if( size<122 ) {
+	    gp_file_get_data_and_size( file, &data, &lsize );
+	    if( lsize<122 ) {
 	      gp_file_free (file);
 	      free (p);
 	      return (GP_ERROR);
