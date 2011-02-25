@@ -38,7 +38,7 @@
 
 #define PDC640_MAXTRIES 3
 
-#define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
+#define CHECK_RESULT(result) {int __r = (result); if (__r < 0) return (__r);}
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

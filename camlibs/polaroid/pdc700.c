@@ -174,7 +174,7 @@ static const char *power[]   = {N_("battery"), N_("a/c adaptor"), NULL};
 static const char *speed[]   = {"9600", "19200", "38400", "57600", "115200", NULL};
 static const char *size[]    = {"VGA (640x480)", "XGA (1024x768", NULL};
 
-#define CR(result) {int r=(result);if(r<0) return (r);}
+#define CR(result) {int __r=(result);if(__r<0) return (__r);}
 #define CRF(result,d)      {int r=(result);if(r<0) {free(d);return(r);}}
 
 #define PDC_EPOCH(info) ((!strcmp ((info)->version, "v2.45")) ? 1980 : 2000)
