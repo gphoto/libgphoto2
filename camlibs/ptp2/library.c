@@ -2844,7 +2844,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 			case PTP_EC_ObjectAdded: {
 				PTPObject	*ob;
 				uint16_t	ofc;
-				uint32_t	newobject;
 				PTPObjectInfo	oi;
 
 				if (!event.Param1 || event.Param1 == 0xffff0001)
@@ -3228,7 +3227,8 @@ nikon_curve_put (CameraFilesystem *fs, const char *folder, CameraFile *file,
 static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
-	int n, i, j, ret;
+	int n, i, j;
+	uint16_t ret;
 	int spaceleft;
 	char *txt;
 	PTPParams *params = &(camera->pl->params);
@@ -3308,9 +3308,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		n = snprintf (txt, spaceleft,_("Supported MTP Object Properties:\n"));
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 		for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
-			uint16_t ret, *props = NULL;
+			uint16_t *props = NULL;
 			uint32_t propcnt = 0;
-			int j;
 
 			n = snprintf (txt, spaceleft,"\t");
 			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
@@ -3850,7 +3849,7 @@ ptp_mtp_render_metadata (
 	if (mprops) { /* use the fast method, without device access since cached.*/
 		char			propname[256];
 		char			text[256];
-		int 			i, j, n;
+		int 			i, n;
 
 		for (j=0;j<ob->nrofmtpprops;j++) {
 			MTPProperties		*xpl = &mprops[j];

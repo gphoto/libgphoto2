@@ -716,7 +716,7 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 	}
 	if (dpd->FormFlag & PTP_DPFF_Range) {
 		for (i = dpd->FORM.Range.MinimumValue.i16; i<=dpd->FORM.Range.MaximumValue.i16; i+= dpd->FORM.Range.StepSize.i16) {
-			int isset = FALSE;
+			int isset3 = FALSE;
 
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == i) &&
@@ -728,11 +728,11 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 						isset2 = TRUE;
 						gp_widget_set_value (*widget, _(tbl[j].label));
 					}
-					isset = TRUE;
+					isset3 = TRUE;
 					break;
 				}
 			}
-			if (!isset) {
+			if (!isset3) {
 				char buf[200];
 				sprintf(buf, _("Unknown value %04d"), i);
 				gp_widget_add_choice (*widget, buf);
@@ -5323,7 +5323,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		CameraWidget		*widget;
 		char			buf[20], *label;
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
@@ -5582,7 +5581,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Generic property setter */
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		CameraWidget		*widget;
 		CameraWidgetType	type;
 		char			buf[20], *label, *xval;
 		PTPDevicePropDesc	dpd;

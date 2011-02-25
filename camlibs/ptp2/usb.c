@@ -156,7 +156,6 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	written = 0;
 	while(bytes_left_to_transfer > 0) {
 		unsigned long readlen, toread, oldwritten = written;
-		int res;
 
 		toread = 4096;
 		if (toread > bytes_left_to_transfer)
@@ -297,7 +296,6 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			);
 			/* stuff data directly to passed data handler */
 			while (1) {
-				unsigned long written;
 				int result = gp_port_read (camera->port, (char*)data, PTP_USB_BULK_HS_MAX_PACKET_LEN_READ);
 				if (result < 0) {
 					free (data);
@@ -370,7 +368,6 @@ retry:
 		curread = 0; res = 0;
 		while (bytes_to_read > 0) {
 			unsigned long toread = bytes_to_read;
-			int res;
 
 			/* read in large blobs.
 			 * if smaller than large blob, read all but the last short packet
