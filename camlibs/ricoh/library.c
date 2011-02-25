@@ -385,35 +385,35 @@ static struct {
 #undef R_ADD_RADIO
 #define R_ADD_RADIO(ca,co,s,type,n,Name)				\
 {									\
-	CameraWidget *w = NULL;						\
-	type v;								\
-	unsigned int i;							\
+	CameraWidget *__w = NULL;					\
+	type __v;							\
+	unsigned int __i;						\
 									\
-	CR (gp_widget_new (GP_WIDGET_RADIO, _(Name), &w));		\
-	CR (gp_widget_set_name (w, (Name)));				\
-	CR (gp_widget_append ((s), w));					\
-	CR (ricoh_get_##n ((ca), (co), &v));				\
-	for (i = 0; i < N_ELEMENTS (ricoh_##n##s); i++) {		\
-		CR (gp_widget_add_choice (w, _(ricoh_##n##s[i].name)));	\
-		if (v == ricoh_##n##s[i].n)				\
-			CR (gp_widget_set_value (w,			\
-				_(ricoh_##n##s[i].name)));		\
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(Name), &__w));		\
+	CR (gp_widget_set_name (__w, (Name)));				\
+	CR (gp_widget_append ((s), __w));				\
+	CR (ricoh_get_##n ((ca), (co), &__v));				\
+	for (__i = 0; __i < N_ELEMENTS (ricoh_##n##s); __i++) {		\
+		CR (gp_widget_add_choice (__w, _(ricoh_##n##s[__i].name)));	\
+		if (__v == ricoh_##n##s[__i].n)				\
+			CR (gp_widget_set_value (__w,			\
+				_(ricoh_##n##s[__i].name)));		\
 	}								\
 }
 
 #undef R_CHECK_RADIO
 #define R_CHECK_RADIO(c,co,wi,n,Name)					\
 {									\
-	CameraWidget *w = NULL;						\
-	const char *v = NULL;						\
-	unsigned int i;							\
+	CameraWidget *__w = NULL;					\
+	const char *__v = NULL;						\
+	unsigned int __i;						\
 									\
-        CR (gp_widget_get_child_by_name (wi, Name, &w));		\
-	if (gp_widget_changed (w)) {					\
-		CR (gp_widget_get_value (w, &v));			\
-		for (i = 0; i < N_ELEMENTS (ricoh_##n##s); i++)		\
-			if (!strcmp (v, _(ricoh_##n##s[i].name))) {	\
-				CR (ricoh_set_##n (c, co, ricoh_##n##s[i].n));		\
+        CR (gp_widget_get_child_by_name (wi, Name, &__w));		\
+	if (gp_widget_changed (__w)) {					\
+		CR (gp_widget_get_value (__w, &__v));			\
+		for (__i = 0; __i < N_ELEMENTS (ricoh_##n##s); __i++)	\
+			if (!strcmp (__v, _(ricoh_##n##s[__i].name))) {	\
+				CR (ricoh_set_##n (c, co, ricoh_##n##s[__i].n));		\
 				break;					\
 			}						\
 	}								\
