@@ -291,7 +291,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	int   count;
         const char* name;
 
-	if (type != GP_OPERATION_CAPTURE_IMAGE)
+	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* capture a image to flash (note: we do not check if full */
