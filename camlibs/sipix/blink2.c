@@ -188,8 +188,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 		char *convline,*convline2,*rawline;
 		unsigned char	*jpegdata;
-		unsigned int start, len, i, pitch;
-		int curread, ret;
+		unsigned int start, len, pitch;
+		int curread;
 		struct jpeg_decompress_struct	dinfo;
 		struct jpeg_source_mgr		xjsm;
 		struct jpeg_error_mgr		jerr;
