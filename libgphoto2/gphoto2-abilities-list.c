@@ -186,7 +186,6 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		return ret;
 	}
 	if (1) { /* a new block in which we can define a temporary variable */
-		int ret;
 		foreach_data_t foreach_data = { NULL, GP_OK };
 		foreach_data.list = flist;
 		lt_dlinit ();
