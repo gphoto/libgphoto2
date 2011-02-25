@@ -164,7 +164,7 @@ int mdc800_rs232_receive (GPPort *port,unsigned char* buffer, int b)
  */
 int mdc800_rs232_download (GPPort *port,unsigned char* buffer, int size)
 {
-	int readen=0,i;
+	int readen=0,i,j;
 	unsigned char checksum;
 	unsigned char DSC_checksum;
 	int numtries=0;
@@ -203,15 +203,12 @@ int mdc800_rs232_download (GPPort *port,unsigned char* buffer, int size)
 	}
 
 
+	for (i=0; i<4; i++)
 	{
-		int i,j;
-		for (i=0; i<4; i++)
-		{
-			printCError ("%i: ",i);
-			for (j=0; j<8; j++)
-				printCError (" %i", buffer[i*8+j]);
-			printCError ("\n");
-		}
+		printCError ("%i: ",i);
+		for (j=0; j<8; j++)
+			printCError (" %i", buffer[i*8+j]);
+		printCError ("\n");
 	}
 	return readen;
 }

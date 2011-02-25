@@ -191,7 +191,6 @@ int mdc800_usb_sendCommand(GPPort*port,unsigned char*command,unsigned char*buffe
 	default :
 		if (length > 0)
 		{
-			int ret;
 			ret = mdc800_usb_readFromIrq (port,1,tmp_buffer, mdc800_io_getCommandTimeout(command[1]));
 			if (ret != GP_OK)
 			{
