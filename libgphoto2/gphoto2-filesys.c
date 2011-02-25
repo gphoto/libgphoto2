@@ -269,26 +269,26 @@ struct _CameraFilesystem {
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
-#define CR(result)           {int r = (result); if (r < 0) return (r);}
+#define CR(result)           {int __r = (result); if (__r < 0) return (__r);}
 #define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
 #define CL(result,list)			\
 {					\
-	int r = (result);		\
+	int __r = (result);		\
 					\
-	 if (r < 0) {			\
+	 if (__r < 0) {			\
 		gp_list_free (list);	\
-		return (r);		\
+		return (__r);		\
 	}				\
 }
 
 #define CU(result,file)			\
 {					\
-	int r = (result);		\
+	int __r = (result);		\
 					\
-	if (r < 0) {			\
+	if (__r < 0) {			\
 		gp_file_unref (file);	\
-		return (r);		\
+		return (__r);		\
 	}				\
 }
 
@@ -1759,6 +1759,7 @@ gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
 		if (r == GP_OK)
 			return r;
 	}
+	return GP_ERROR_NOT_SUPPORTED;
 	/* fallback code */
 	CR (gp_file_new (&file));
 	CR (gp_filesystem_get_file (fs, folder, filename, type,
