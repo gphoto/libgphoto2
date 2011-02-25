@@ -52,7 +52,7 @@
 
 #define GP_MODULE "fuji"
 
-#define CR(result) {int r = (result); if (r < 0) return (r);}
+#define CR(result) {int __r = (result); if (__r < 0) return (__r);}
 
 static const struct {
 	const char *model;

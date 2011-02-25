@@ -31,7 +31,7 @@
 #define SER_PKT_SIZE 4096
 #define USB_PKT_SIZE 4096
 
-#define CHECK(result) {int res; res = result; if (res < 0) return (res);}
+#define CHECK(result) {int __res; __res = result; if (__res < 0) return (__res);}
 
 struct jamcam_file {
 	int position;

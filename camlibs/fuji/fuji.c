@@ -77,8 +77,8 @@
 
 #define GP_MODULE "fuji"
 
-#define CR(result)    {int r = (result); if (r < 0) return (r);}
-#define CRF(result,d) {int r = (result); if (r < 0) {free (d); return (r);}}
+#define CR(result)    {int __r = (result); if (__r < 0) return (__r);}
+#define CRF(result,d) {int __r = (result); if (__r < 0) {free (d); return (__r);}}
 #define CLEN(buf_len,required)					\
 {								\
 	if (buf_len < required) {				\
