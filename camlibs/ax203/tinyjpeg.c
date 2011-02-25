@@ -124,16 +124,16 @@ static const unsigned char zigzag[64] =
 #define fill_nbits(reservoir,nbits_in_reservoir,stream,nbits_wanted) do { \
    while (nbits_in_reservoir<nbits_wanted) \
     { \
-      unsigned char c; \
+      unsigned char __c; \
       if (stream >= priv->stream_end) { \
 	snprintf(priv->error_string, sizeof(priv->error_string), \
 	  "fill_nbits error: need %u more bits\n", \
 	  nbits_wanted - nbits_in_reservoir); \
 	longjmp(priv->jump_state, -EIO); \
       } \
-      c = *stream++; \
+      __c = *stream++; \
       reservoir <<= 8; \
-      reservoir |= c; \
+      reservoir |= __c; \
       nbits_in_reservoir+=8; \
     } \
 }  while(0);
