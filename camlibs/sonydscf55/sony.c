@@ -624,30 +624,27 @@ int
 sony_file_count(Camera * camera, SonyFileType file_type, int *count)
 {
 	Packet dp;
-	int rc;
+	int rc, nr;
 
 	GP_DEBUG( "sony_file_count()");
-	if (file_type == SONY_FILE_MPEG
-	    && (! sony_is_mpeg_supported(camera))) {
-		    rc = GP_OK;
-		    *count = 0;
+	if (file_type == SONY_FILE_MPEG && (! sony_is_mpeg_supported(camera))) {
+		*count = 0;
+		return GP_OK;
 	}
-	else {
-		*count = -1;
-		rc = sony_converse(camera, &dp, SetTransferRate, 4);
-		if (rc == GP_OK) {
-			int rc = sony_set_file_mode(camera, file_type);
-			if (rc == GP_OK) {
-				rc = sony_converse(camera, &dp, SendImageCount, 3);
-				if (rc == GP_OK) {
-					int nr = dp.buffer[5] | (dp.buffer[4]<<8);
-					GP_DEBUG ("count = %d", nr);
-					*count = nr;
-				}
-			}
-		}
-	}
-	return rc;
+	*count = -1;
+	rc = sony_converse(camera, &dp, SetTransferRate, 4);
+	if (rc != GP_OK)
+		return rc;
+	rc = sony_set_file_mode(camera, file_type);
+	if (rc != GP_OK)
+		return rc;
+	rc = sony_converse(camera, &dp, SendImageCount, 3);
+	if (rc != GP_OK)
+		return rc;
+	nr = dp.buffer[5] | (dp.buffer[4]<<8);
+	GP_DEBUG ("count = %d", nr);
+	*count = nr;
+	return GP_OK;
 }
 
 
@@ -658,25 +655,25 @@ sony_file_count(Camera * camera, SonyFileType file_type, int *count)
 int
 sony_file_name_get(Camera *camera, int imageid, SonyFileType mpeg, char buf[13])
 {
-       Packet dp;
-       int rc;
+	Packet dp;
+	int rc;
 
-       GP_DEBUG( "sony_file_name_get()");
-       rc = sony_set_file_mode(camera, mpeg);
-       if (rc == GP_OK) {
-	       sony_baud_set(camera, baud_rate);
-	       /* FIXME: Not nice, changing global data like this. */
-	       SelectImage[3] = (imageid >> 8);
-	       SelectImage[4] = imageid & 0xff;
-	       rc = sony_converse(camera, &dp, SelectImage, 7);
-	       if (rc == GP_OK) {
-		       memcpy(buf, &dp.buffer[5], 8);
-		       buf[8] = '.';
-		       memcpy(buf+9, &dp.buffer[5+8], 3);
-		       buf[12] = 0;
-	       }
-       }
-       return rc;
+	GP_DEBUG( "sony_file_name_get()");
+	rc = sony_set_file_mode(camera, mpeg);
+	if (rc != GP_OK)
+		return rc;
+	sony_baud_set(camera, baud_rate);
+	/* FIXME: Not nice, changing global data like this. */
+	SelectImage[3] = (imageid >> 8);
+	SelectImage[4] = imageid & 0xff;
+	rc = sony_converse(camera, &dp, SelectImage, 7);
+	if (rc != GP_OK)
+		return rc;
+	memcpy(buf, &dp.buffer[5], 8);
+	buf[8] = '.';
+	memcpy(buf+9, &dp.buffer[5+8], 3);
+	buf[12] = 0;
+	return rc;
 }
 
 
