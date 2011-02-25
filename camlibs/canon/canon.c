@@ -3681,7 +3681,7 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
                  * JPEG thumbnail and just fetch the thumbnail to get
                  * the EXIF data. */
                 int ifd0_offset, ifd1_offset, n_tags;
-                int jpeg_offset = -1, jpeg_size = -1, i;
+                int jpeg_offset = -1, jpeg_size = -1;
 
                 GP_DEBUG ( "canon_int_extract_jpeg_thumb: this is from a CR2 file.");
                 dump_hex ( stderr, data, 32 );
