@@ -1,0 +1,735 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: D3100
+  Version: V1.00
+  Serial Number: nnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: JPEG, Undefined Type, Association/Directory, DPOF, Script, Apple Quicktime
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: 
+:\MISC
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 507052032 (483 MB)
+	Free Space (Bytes): 475578368 (453 MB)
+	Free Space (Images): 55
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'4608x3072',
+	'3456x2304',
+	'2304x1536'
+	] value: '4608x3072'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,4,5] value: JPEG Fine (2)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32787] value: Daylight (4)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [280,320,350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/5 (500)
+Focal Length(0x5008):(read only) (type=0x6) Range [2800 - 2800, step 1] value: 28 mm (2800)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785,32786,32787] value: Manual Focus (1)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4] value: Multi-spot (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [4,32784,32786] value: Rear Curtain Sync + Slow Sync (32786)
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000,4294967295] value: 0.001 sec (100)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32785,32786,32787,32788,32789,32790,32791] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,200,400,800,1600,3200,6400,12800] value: ISO 400 (400)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20110228T184621'
+Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [1,2,32785,32790] value: Single Shot (1)
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 99, step 1] value: 1
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [2,32784,32785,32786] value: Single Area (32784)
+Property 0xd303:(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
+
+/main/settings/datetime
+    Label: Camera Date and Time
+    Type: DATE
+    Current: 1298936857
+    Printable: Mon 28 Feb 2011 06:47:37 PM EST
+/main/settings/fastfs
+    Label: Fast Filesystem
+    Type: TOGGLE
+    Current: 1
+/main/settings/capturetarget
+    Label: Capture Target
+    Type: RADIO
+    Current: Internal RAM
+    Choice: 0 Internal RAM
+    Choice: 1 Memory card
+/main/status/batterylevel
+    Label: Battery Level
+    Type: TEXT
+    Current: 100%
+/main/imgsettings/imagesize
+    Label: Image Size
+    Type: RADIO
+    Current: 4608x3072
+    Choice: 0 4608x3072
+    Choice: 1 3456x2304
+    Choice: 2 2304x1536
+/main/imgsettings/iso
+    Label: ISO Speed
+    Type: RADIO
+    Current: 400
+    Choice: 0 100
+    Choice: 1 200
+    Choice: 2 400
+    Choice: 3 800
+    Choice: 4 1600
+    Choice: 5 3200
+    Choice: 6 6400
+    Choice: 7 12800
+/main/imgsettings/whitebalance
+    Label: WhiteBalance
+    Type: RADIO
+    Current: Daylight
+    Choice: 0 Automatic
+    Choice: 1 Daylight
+    Choice: 2 Fluorescent
+    Choice: 3 Tungsten
+    Choice: 4 Flash
+    Choice: 5 Cloudy
+    Choice: 6 Shade
+    Choice: 7 Preset
+/main/capturesettings/exposurecompensation
+    Label: Exposure Compensation
+    Type: RADIO
+    Current: 0
+    Choice: 0 -5000
+    Choice: 1 -4666
+    Choice: 2 -4333
+    Choice: 3 -4000
+    Choice: 4 -3666
+    Choice: 5 -3333
+    Choice: 6 -3000
+    Choice: 7 -2666
+    Choice: 8 -2333
+    Choice: 9 -2000
+    Choice: 10 -1666
+    Choice: 11 -1333
+    Choice: 12 -1000
+    Choice: 13 -666
+    Choice: 14 -333
+    Choice: 15 0
+    Choice: 16 333
+    Choice: 17 666
+    Choice: 18 1000
+    Choice: 19 1333
+    Choice: 20 1666
+    Choice: 21 2000
+    Choice: 22 2333
+    Choice: 23 2666
+    Choice: 24 3000
+    Choice: 25 3333
+    Choice: 26 3666
+    Choice: 27 4000
+    Choice: 28 4333
+    Choice: 29 4666
+    Choice: 30 5000
+/main/capturesettings/flashmode
+    Label: Flash Mode
+    Type: RADIO
+    Current: Rear Curtain Sync + Slow Sync
+    Choice: 0 Red-eye automatic
+    Choice: 1 Default
+    Choice: 2 Rear Curtain Sync + Slow Sync
+/main/capturesettings/f-number
+    Label: F-Number
+    Type: RADIO
+    Current: f/5
+    Choice: 0 f/2.8
+    Choice: 1 f/3.2
+    Choice: 2 f/3.5
+    Choice: 3 f/4
+    Choice: 4 f/4.5
+    Choice: 5 f/5
+    Choice: 6 f/5.6
+    Choice: 7 f/6.3
+    Choice: 8 f/7.1
+    Choice: 9 f/8
+    Choice: 10 f/9
+    Choice: 11 f/10
+    Choice: 12 f/11
+    Choice: 13 f/13
+    Choice: 14 f/14
+    Choice: 15 f/16
+    Choice: 16 f/18
+    Choice: 17 f/20
+    Choice: 18 f/22
+/main/capturesettings/imagequality
+    Label: Image Quality
+    Type: RADIO
+    Current: JPEG Fine
+    Choice: 0 JPEG Basic
+    Choice: 1 JPEG Normal
+    Choice: 2 JPEG Fine
+    Choice: 3 NEF (Raw)
+    Choice: 4 NEF+Basic
+/main/capturesettings/focallength
+    Label: Focal Length
+    Type: RANGE
+    Current: 28
+    Bottom: 28
+    Top: 28
+    Step: 0.01
+/main/capturesettings/focusmode
+    Label: Focus Mode
+    Type: RADIO
+    Current: Manual
+    Choice: 0 Manual
+    Choice: 1 AF-S
+    Choice: 2 AF-C
+    Choice: 3 AF-A
+/main/capturesettings/expprogram
+    Label: Exposure Program
+    Type: RADIO
+    Current: M
+    Choice: 0 M
+    Choice: 1 P
+    Choice: 2 A
+    Choice: 3 S
+    Choice: 4 Auto
+    Choice: 5 Portrait
+    Choice: 6 Landscape
+    Choice: 7 Macro
+    Choice: 8 Sports
+    Choice: 9 Night Portrait
+    Choice: 10 Night Landscape
+    Choice: 11 Children
+/main/capturesettings/capturemode
+    Label: Still Capture Mode
+    Type: RADIO
+    Current: Single Shot
+    Choice: 0 Single Shot
+    Choice: 1 Burst
+    Choice: 2 Timer
+    Choice: 3 Quiet Release
+/main/capturesettings/focusmetermode
+    Label: Focus Metering Mode
+    Type: RADIO
+    Current: Single Area
+    Choice: 0 Multi-spot
+    Choice: 1 Single Area
+    Choice: 2 Closest Subject
+    Choice: 3 Group Dynamic
+/main/capturesettings/exposuremetermode
+    Label: Exposure Metering Mode
+    Type: RADIO
+    Current: Multi Spot
+    Choice: 0 Center Weighted
+    Choice: 1 Multi Spot
+    Choice: 2 Center Spot
+/main/capturesettings/shutterspeed
+    Label: Shutter Speed
+    Type: RADIO
+    Current: 0.0100s
+    Choice: 0 0.0002s
+    Choice: 1 0.0003s
+    Choice: 2 0.0004s
+    Choice: 3 0.0005s
+    Choice: 4 0.0006s
+    Choice: 5 0.0008s
+    Choice: 6 0.0010s
+    Choice: 7 0.0012s
+    Choice: 8 0.0015s
+    Choice: 9 0.0020s
+    Choice: 10 0.0025s
+    Choice: 11 0.0031s
+    Choice: 12 0.0040s
+    Choice: 13 0.0050s
+    Choice: 14 0.0062s
+    Choice: 15 0.0080s
+    Choice: 16 0.0100s
+    Choice: 17 0.0125s
+    Choice: 18 0.0166s
+    Choice: 19 0.0200s
+    Choice: 20 0.0250s
+    Choice: 21 0.0333s
+    Choice: 22 0.0400s
+    Choice: 23 0.0500s
+    Choice: 24 0.0666s
+    Choice: 25 0.0769s
+    Choice: 26 0.1000s
+    Choice: 27 0.1250s
+    Choice: 28 0.1666s
+    Choice: 29 0.2000s
+    Choice: 30 0.2500s
+    Choice: 31 0.3333s
+    Choice: 32 0.4000s
+    Choice: 33 0.5000s
+    Choice: 34 0.6250s
+    Choice: 35 0.7692s
+    Choice: 36 1.0000s
+    Choice: 37 1.3000s
+    Choice: 38 1.6000s
+    Choice: 39 2.0000s
+    Choice: 40 2.5000s
+    Choice: 41 3.0000s
+    Choice: 42 4.0000s
+    Choice: 43 5.0000s
+    Choice: 44 6.0000s
+    Choice: 45 8.0000s
+    Choice: 46 10.0000s
+    Choice: 47 13.0000s
+    Choice: 48 15.0000s
+    Choice: 49 20.0000s
+    Choice: 50 25.0000s
+    Choice: 51 30.0000s
+    Choice: 52 429496.7295s
+/main/capturesettings/burstnumber
+    Label: Burst Number
+    Type: RANGE
+    Current: 1
+    Bottom: 1
+    Top: 99
+    Step: 1
+/main/other/5001
+    Label: Battery Level
+    Type: MENU
+    Current: 100
+    Choice: 0 0
+    Choice: 1 1
+    Choice: 2 2
+    Choice: 3 3
+    Choice: 4 4
+    Choice: 5 5
+    Choice: 6 6
+    Choice: 7 7
+    Choice: 8 8
+    Choice: 9 9
+    Choice: 10 10
+    Choice: 11 11
+    Choice: 12 12
+    Choice: 13 13
+    Choice: 14 14
+    Choice: 15 15
+    Choice: 16 16
+    Choice: 17 17
+    Choice: 18 18
+    Choice: 19 19
+    Choice: 20 20
+    Choice: 21 21
+    Choice: 22 22
+    Choice: 23 23
+    Choice: 24 24
+    Choice: 25 25
+    Choice: 26 26
+    Choice: 27 27
+    Choice: 28 28
+    Choice: 29 29
+    Choice: 30 30
+    Choice: 31 31
+    Choice: 32 32
+    Choice: 33 33
+    Choice: 34 34
+    Choice: 35 35
+    Choice: 36 36
+    Choice: 37 37
+    Choice: 38 38
+    Choice: 39 39
+    Choice: 40 40
+    Choice: 41 41
+    Choice: 42 42
+    Choice: 43 43
+    Choice: 44 44
+    Choice: 45 45
+    Choice: 46 46
+    Choice: 47 47
+    Choice: 48 48
+    Choice: 49 49
+    Choice: 50 50
+    Choice: 51 51
+    Choice: 52 52
+    Choice: 53 53
+    Choice: 54 54
+    Choice: 55 55
+    Choice: 56 56
+    Choice: 57 57
+    Choice: 58 58
+    Choice: 59 59
+    Choice: 60 60
+    Choice: 61 61
+    Choice: 62 62
+    Choice: 63 63
+    Choice: 64 64
+    Choice: 65 65
+    Choice: 66 66
+    Choice: 67 67
+    Choice: 68 68
+    Choice: 69 69
+    Choice: 70 70
+    Choice: 71 71
+    Choice: 72 72
+    Choice: 73 73
+    Choice: 74 74
+    Choice: 75 75
+    Choice: 76 76
+    Choice: 77 77
+    Choice: 78 78
+    Choice: 79 79
+    Choice: 80 80
+    Choice: 81 81
+    Choice: 82 82
+    Choice: 83 83
+    Choice: 84 84
+    Choice: 85 85
+    Choice: 86 86
+    Choice: 87 87
+    Choice: 88 88
+    Choice: 89 89
+    Choice: 90 90
+    Choice: 91 91
+    Choice: 92 92
+    Choice: 93 93
+    Choice: 94 94
+    Choice: 95 95
+    Choice: 96 96
+    Choice: 97 97
+    Choice: 98 98
+    Choice: 99 99
+    Choice: 100 100
+/main/other/5003
+    Label: Image Size
+    Type: MENU
+    Current: 4608x3072
+    Choice: 0 4608x3072
+    Choice: 1 3456x2304
+    Choice: 2 2304x1536
+/main/other/5004
+    Label: Compression Setting
+    Type: MENU
+    Current: 2
+    Choice: 0 0
+    Choice: 1 1
+    Choice: 2 2
+    Choice: 3 4
+    Choice: 4 5
+/main/other/5005
+    Label: White Balance
+    Type: MENU
+    Current: 4
+    Choice: 0 2
+    Choice: 1 4
+    Choice: 2 5
+    Choice: 3 6
+    Choice: 4 7
+    Choice: 5 32784
+    Choice: 6 32785
+    Choice: 7 32787
+/main/other/5007
+    Label: F-Number
+    Type: MENU
+    Current: 500
+    Choice: 0 280
+    Choice: 1 320
+    Choice: 2 350
+    Choice: 3 400
+    Choice: 4 450
+    Choice: 5 500
+    Choice: 6 560
+    Choice: 7 630
+    Choice: 8 710
+    Choice: 9 800
+    Choice: 10 900
+    Choice: 11 1000
+    Choice: 12 1100
+    Choice: 13 1300
+    Choice: 14 1400
+    Choice: 15 1600
+    Choice: 16 1800
+    Choice: 17 2000
+    Choice: 18 2200
+/main/other/5008
+    Label: Focal Length
+    Type: MENU
+    Current: 2800
+    Choice: 0 2800
+/main/other/500a
+    Label: Focus Mode
+    Type: MENU
+    Current: 1
+    Choice: 0 1
+    Choice: 1 32784
+    Choice: 2 32785
+    Choice: 3 32786
+    Choice: 4 32787
+/main/other/500b
+    Label: Exposure Metering Mode
+    Type: MENU
+    Current: 3
+    Choice: 0 2
+    Choice: 1 3
+    Choice: 2 4
+/main/other/500c
+    Label: Flash Mode
+    Type: MENU
+    Current: 32786
+    Choice: 0 4
+    Choice: 1 32784
+    Choice: 2 32786
+/main/other/500d
+    Label: Exposure Time
+    Type: MENU
+    Current: 100
+    Choice: 0 2
+    Choice: 1 3
+    Choice: 2 4
+    Choice: 3 5
+    Choice: 4 6
+    Choice: 5 8
+    Choice: 6 10
+    Choice: 7 12
+    Choice: 8 15
+    Choice: 9 20
+    Choice: 10 25
+    Choice: 11 31
+    Choice: 12 40
+    Choice: 13 50
+    Choice: 14 62
+    Choice: 15 80
+    Choice: 16 100
+    Choice: 17 125
+    Choice: 18 166
+    Choice: 19 200
+    Choice: 20 250
+    Choice: 21 333
+    Choice: 22 400
+    Choice: 23 500
+    Choice: 24 666
+    Choice: 25 769
+    Choice: 26 1000
+    Choice: 27 1250
+    Choice: 28 1666
+    Choice: 29 2000
+    Choice: 30 2500
+    Choice: 31 3333
+    Choice: 32 4000
+    Choice: 33 5000
+    Choice: 34 6250
+    Choice: 35 7692
+    Choice: 36 10000
+    Choice: 37 13000
+    Choice: 38 16000
+    Choice: 39 20000
+    Choice: 40 25000
+    Choice: 41 30000
+    Choice: 42 40000
+    Choice: 43 50000
+    Choice: 44 60000
+    Choice: 45 80000
+    Choice: 46 100000
+    Choice: 47 130000
+    Choice: 48 150000
+    Choice: 49 200000
+    Choice: 50 250000
+    Choice: 51 300000
+    Choice: 52 -1
+/main/other/500e
+    Label: Exposure Program Mode
+    Type: MENU
+    Current: 1
+    Choice: 0 1
+    Choice: 1 2
+    Choice: 2 3
+    Choice: 3 4
+    Choice: 4 32784
+    Choice: 5 32785
+    Choice: 6 32786
+    Choice: 7 32787
+    Choice: 8 32788
+    Choice: 9 32789
+    Choice: 10 32790
+    Choice: 11 32791
+/main/other/500f
+    Label: Exposure Index (film speed ISO)
+    Type: MENU
+    Current: 400
+    Choice: 0 100
+    Choice: 1 200
+    Choice: 2 400
+    Choice: 3 800
+    Choice: 4 1600
+    Choice: 5 3200
+    Choice: 6 6400
+    Choice: 7 12800
+/main/other/5010
+    Label: Exposure Bias Compensation
+    Type: MENU
+    Current: 0
+    Choice: 0 -5000
+    Choice: 1 -4666
+    Choice: 2 -4333
+    Choice: 3 -4000
+    Choice: 4 -3666
+    Choice: 5 -3333
+    Choice: 6 -3000
+    Choice: 7 -2666
+    Choice: 8 -2333
+    Choice: 9 -2000
+    Choice: 10 -1666
+    Choice: 11 -1333
+    Choice: 12 -1000
+    Choice: 13 -666
+    Choice: 14 -333
+    Choice: 15 0
+    Choice: 16 333
+    Choice: 17 666
+    Choice: 18 1000
+    Choice: 19 1333
+    Choice: 20 1666
+    Choice: 21 2000
+    Choice: 22 2333
+    Choice: 23 2666
+    Choice: 24 3000
+    Choice: 25 3333
+    Choice: 26 3666
+    Choice: 27 4000
+    Choice: 28 4333
+    Choice: 29 4666
+    Choice: 30 5000
+/main/other/5011
+    Label: Date &amp; Time
+    Type: TEXT
+    Current: 20110228T184742
+/main/other/5013
+    Label: Still Capture Mode
+    Type: MENU
+    Current: 1
+    Choice: 0 1
+    Choice: 1 2
+    Choice: 2 32785
+    Choice: 3 32790
+/main/other/5018
+    Label: Burst Number
+    Type: MENU
+    Current: 1
+    Choice: 0 1
+    Choice: 1 2
+    Choice: 2 3
+    Choice: 3 4
+    Choice: 4 5
+    Choice: 5 6
+    Choice: 6 7
+    Choice: 7 8
+    Choice: 8 9
+    Choice: 9 10
+    Choice: 10 11
+    Choice: 11 12
+    Choice: 12 13
+    Choice: 13 14
+    Choice: 14 15
+    Choice: 15 16
+    Choice: 16 17
+    Choice: 17 18
+    Choice: 18 19
+    Choice: 19 20
+    Choice: 20 21
+    Choice: 21 22
+    Choice: 22 23
+    Choice: 23 24
+    Choice: 24 25
+    Choice: 25 26
+    Choice: 26 27
+    Choice: 27 28
+    Choice: 28 29
+    Choice: 29 30
+    Choice: 30 31
+    Choice: 31 32
+    Choice: 32 33
+    Choice: 33 34
+    Choice: 34 35
+    Choice: 35 36
+    Choice: 36 37
+    Choice: 37 38
+    Choice: 38 39
+    Choice: 39 40
+    Choice: 40 41
+    Choice: 41 42
+    Choice: 42 43
+    Choice: 43 44
+    Choice: 44 45
+    Choice: 45 46
+    Choice: 46 47
+    Choice: 47 48
+    Choice: 48 49
+    Choice: 49 50
+    Choice: 50 51
+    Choice: 51 52
+    Choice: 52 53
+    Choice: 53 54
+    Choice: 54 55
+    Choice: 55 56
+    Choice: 56 57
+    Choice: 57 58
+    Choice: 58 59
+    Choice: 59 60
+    Choice: 60 61
+    Choice: 61 62
+    Choice: 62 63
+    Choice: 63 64
+    Choice: 64 65
+    Choice: 65 66
+    Choice: 66 67
+    Choice: 67 68
+    Choice: 68 69
+    Choice: 69 70
+    Choice: 70 71
+    Choice: 71 72
+    Choice: 72 73
+    Choice: 73 74
+    Choice: 74 75
+    Choice: 75 76
+    Choice: 76 77
+    Choice: 77 78
+    Choice: 78 79
+    Choice: 79 80
+    Choice: 80 81
+    Choice: 81 82
+    Choice: 82 83
+    Choice: 83 84
+    Choice: 84 85
+    Choice: 85 86
+    Choice: 86 87
+    Choice: 87 88
+    Choice: 88 89
+    Choice: 89 90
+    Choice: 90 91
+    Choice: 91 92
+    Choice: 92 93
+    Choice: 93 94
+    Choice: 94 95
+    Choice: 95 96
+    Choice: 96 97
+    Choice: 97 98
+    Choice: 98 99
+/main/other/501c
+    Label: Focus Metering Mode
+    Type: MENU
+    Current: 32784
+    Choice: 0 2
+    Choice: 1 32784
+    Choice: 2 32785
+    Choice: 3 32786
+/main/other/d303
+    Label: PTP Property 0xd303
+    Type: TEXT
+    Current: 1
+/main/other/d406
+    Label: PTP Property 0xd406
+    Type: TEXT
+    Current: Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0
+/main/other/d407
+    Label: PTP Property 0xd407
+    Type: TEXT
+    Current: 1
+
