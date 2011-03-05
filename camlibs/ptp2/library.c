@@ -3005,7 +3005,7 @@ handleregular:
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
-		CPR (context, ptp_object_find (params, event.Param1, &ob));
+		CPR (context, ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 		strcpy  (path->name,  ob->oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 		ofc = ob->oi.ObjectFormat;
