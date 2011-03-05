@@ -61,7 +61,7 @@
 
 /* PTP2_FAST_TIMEOUT: how long (in milliseconds) we should wait for
  * an URB to come back on an interrupt endpoint */
-#define PTP2_FAST_TIMEOUT       50
+#define PTP2_FAST_TIMEOUT       100
 
 /* Pack / unpack functions */
 
@@ -493,7 +493,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	Camera			*camera = ((PTPData *)params->data)->camera;
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)
-		fasttimeout = PTP2_FAST_TIMEOUT*4;
+		fasttimeout = PTP2_FAST_TIMEOUT*2;
 	else
 		fasttimeout = PTP2_FAST_TIMEOUT;
 
