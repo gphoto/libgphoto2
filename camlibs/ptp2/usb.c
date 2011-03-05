@@ -546,12 +546,13 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
-	event->Code=dtoh16(usbevent.code);
+	resp->Nparam  = (rlen-12)/4;
+	event->Code   = dtoh16(usbevent.code);
 	event->SessionID=params->session_id;
 	event->Transaction_ID=dtoh32(usbevent.trans_id);
-	event->Param1=dtoh32(usbevent.param1);
-	event->Param2=dtoh32(usbevent.param2);
-	event->Param3=dtoh32(usbevent.param3);
+	event->Param1 = dtoh32(usbevent.param1);
+	event->Param2 = dtoh32(usbevent.param2);
+	event->Param3 = dtoh32(usbevent.param3);
 	return PTP_RC_OK;
 }
 
