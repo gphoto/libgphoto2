@@ -60,8 +60,10 @@
 #define PTP_CNT_INIT(cnt) {memset(&cnt,0,sizeof(cnt));}
 
 /* PTP2_FAST_TIMEOUT: how long (in milliseconds) we should wait for
- * an URB to come back on an interrupt endpoint */
-#define PTP2_FAST_TIMEOUT       50
+ * an URB to come back on an interrupt endpoint
+ * 50 is insufficient. 
+ */
+#define PTP2_FAST_TIMEOUT       100
 
 /* Pack / unpack functions */
 
