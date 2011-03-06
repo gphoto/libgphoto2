@@ -785,6 +785,7 @@ static struct {
 #endif
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
+	{"Panasonic:DMC-FZ45",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ38",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
