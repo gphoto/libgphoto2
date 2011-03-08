@@ -546,7 +546,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
-	resp->Nparam  = (rlen-12)/4;
+	event->Nparam  = (rlen-12)/4;
 	event->Code   = dtoh16(usbevent.code);
 	event->SessionID=params->session_id;
 	event->Transaction_ID=dtoh32(usbevent.trans_id);

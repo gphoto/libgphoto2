@@ -5369,7 +5369,6 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	uint16_t		ret;
 	uint32_t		xhandle = handle;
 	PTPObject		*newobs;
-	PTPObject		*ob;
 	PTPObjectHandles	handles;
 
 	gp_log (GP_LOG_DEBUG, "ptp_list_folder", "(storage=0x%08x, handle=0x%08x)", storage, handle);
@@ -5377,6 +5376,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 		return PTP_RC_OK;
 
 	if (handle) { /* 0 is the virtual root */
+		PTPObject		*ob;
 		/* first check if object itself is loaded, and get its objectinfo. */
 		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 		if (ret != PTP_RC_OK)
