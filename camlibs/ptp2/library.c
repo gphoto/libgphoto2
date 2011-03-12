@@ -1035,6 +1035,8 @@ static struct {
 	/* Paul Tinsley */
 	{"Canon:PowerShot G10",			0x04a9, 0x318f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Nikolay Rysev <nrysev@gmail.com> */
+	{"Canon:PowerShot A2000 IS",		0x04a9, 0x3191, PTPBUG_DELETE_SENDS_EVENT},
 	/* Chris Rodley <chris@takeabreak.co.nz> */
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
