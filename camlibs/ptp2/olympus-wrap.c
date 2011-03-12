@@ -557,7 +557,6 @@ int olympus_wrap_ptp_transaction (PTPParams *params,
         unsigned char* oidata=NULL;
         uint32_t size, handle, newhandle;
 	uint16_t ret;
-	xmlDocPtr docin;
 
 	memset (&ptp2, 0 , sizeof (ptp2));
 	ptp2.Code = PTP_OC_SendObjectInfo;
@@ -624,9 +623,6 @@ int olympus_wrap_ptp_transaction (PTPParams *params,
 	if (ret != PTP_RC_OK)
 		return ret;
 	GP_DEBUG("file content: %s", resp);
-
-	docin = xmlReadMemory (resp, strlen(resp), "http://gphoto.org/", "utf-8", 0);
-
 
 	unwrap_xml (resp, &ptp2, NULL, NULL);
 #if 0
