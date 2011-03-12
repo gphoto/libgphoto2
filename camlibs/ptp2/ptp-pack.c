@@ -336,7 +336,7 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		&len);
 }
 
-static void
+static void inline
 ptp_free_DI (PTPDeviceInfo *di) {
 	if (di->SerialNumber) free (di->SerialNumber);
 	if (di->DeviceVersion) free (di->DeviceVersion);
