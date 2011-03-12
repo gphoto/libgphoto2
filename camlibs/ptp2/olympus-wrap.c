@@ -42,7 +42,6 @@
 #include <stdio.h>
 #include <_stdint.h>
 
-#include <libxml/parser.h>
 
 #include "ptp.h"
 #include "ptp-private.h"
