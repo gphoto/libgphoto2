@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "gphoto2-endian.h"
+#include "ptp.h"
 #include <libxml/parser.h>
 
 void
@@ -43,61 +45,176 @@ parse_9301_cmd_tree (xmlNodePtr node) {
 	} while ((next = xmlNextElementSibling (next)));
 }
 
-void
-parse_value (int type, const char *str) {
+int
+parse_value (const char *str, uint16_t type, PTPPropertyValue *propval) {
 	switch (type) {
-	case 65535: /* string */
-	case 1: /*INT8*/
-	case 2: /*UINT8*/
-	case 3: /*INT16*/
-	case 4: /*UINT16*/
-	case 5: /*INT32*/
-	case 6: /*UINT32*/
+	case 6: { /*UINT32*/
+		unsigned int x;
+		if (!sscanf(str,"%08x", &x)) {
+			fprintf(stderr,"could not parse uint32 %s\n", str);
+			return 0;
+		}
+		propval->u32 = x;
+		break;
+	}
+	case 5: { /*INT32*/
+		int x;
+		if (!sscanf(str,"%08x", &x)) {
+			fprintf(stderr,"could not parse int32 %s\n", str);
+			return 0;
+		}
+		propval->i32 = x;
+		break;
+	}
+	case 4: { /*UINT16*/
+		unsigned int x;
+		if (!sscanf(str,"%04x", &x)) {
+			fprintf(stderr,"could not parse uint16 %s\n", str);
+			return 0;
+		}
+		propval->u16 = x;
+		break;
+	}
+	case 3: { /*INT16*/
+		int x;
+		if (!sscanf(str,"%04x", &x)) {
+			fprintf(stderr,"could not parse int16 %s\n", str);
+			return 0;
+		}
+		propval->i16 = x;
+		break;
+	}
+	case 2: { /*UINT8*/
+		unsigned int x;
+		if (!sscanf(str,"%02x", &x)) {
+			fprintf(stderr,"could not parse uint8 %s\n", str);
+			return 0;
+		}
+		propval->u8 = x;
+		break;
+	}
+	case 1: { /*INT8*/
+		int8_t xx;
+		int x;
+		if (!sscanf(str,"%02x", &x)) {
+			fprintf(stderr,"could not parse int8 %s\n", str);
+			return 0;
+		} 
+		propval->i8 = x;
+		break;
+	}
+	case 65535: { /* string */
+		int len;
+
+		/* ascii ptp string, 1 byte length, little endian 16 bit chars */
+		if (sscanf(str,"%02x", &len)) {
+			int i;
+			char *xstr = malloc(len+1);
+			for (i=0;i<len;i++) {
+				int xc;
+				if (sscanf(str+2+i*4,"%04x", &xc)) {
+					int cx;
+
+					cx = ((xc>>8) & 0xff) | ((xc & 0xff) << 8);
+					xstr[i] = cx;
+				}
+				xstr[len] = 0;
+			}
+			fprintf(stderr,"\t%s\n", xstr);
+			propval->str = xstr;
+			break;
+		}
+		fprintf(stderr,"string %s not parseable!\n", str);
+		return 0;
+	}
 	case 7: /*INT64*/
 	case 8: /*UINT64*/
 	case 9: /*INT128*/
 	case 10: /*UINT128*/
 	default:
 		fprintf(stderr,"unhandled data type %d!\n", type);
-		return;
+		return 0;
 	}
-	return;
+	return 1;
 }
 
-void
-parse_9301_propdesc (xmlNodePtr node) {
+int
+parse_propdesc (xmlNodePtr node, PTPDevicePropDesc *dpd) {
 	xmlNodePtr next;
 	int type = -1;
 
-	fprintf (stderr,"9301 prop: %s\n", node->name);
+	fprintf (stderr,"propdesc: %s\n", node->name);
+	dpd->FormFlag	= PTP_DPFF_None;
+	dpd->GetSet	= PTP_DPGS_Get;
 	next = xmlFirstElementChild (node);
 	do {
 		if (!strcmp(next->name,"type")) {	/* propdesc.DataType */
 			if (!sscanf(xmlNodeGetContent (next), "%04x", &type)) {
 				fprintf (stderr,"\ttype %s not parseable\n",xmlNodeGetContent (next));
+				return 0;
 			}
-			else fprintf (stderr,"\ttype is %d\n", type);
+			dpd->DataType = type;
 			continue;
 		}
 		if (!strcmp(next->name,"attribute")) {	/* propdesc.GetSet */
 			int attr;
 			if (!sscanf(xmlNodeGetContent (next), "%02x", &attr)) {
 				fprintf (stderr,"\tattr %s not parseable\n",xmlNodeGetContent (next));
+				return 0;
 			}
-			else fprintf (stderr,"\tattribute is %d\n", attr);
+			dpd->GetSet = attr;
 			continue;
 		}
 		if (!strcmp(next->name,"default")) {	/* propdesc.FactoryDefaultValue */
-			parse_value (type, xmlNodeGetContent (next));
+			parse_value (xmlNodeGetContent (next), type, &dpd->FactoryDefaultValue);
 			continue;
 		}
 		if (!strcmp(next->name,"value")) {	/* propdesc.CurrentValue */
-			parse_value (type, xmlNodeGetContent (next));
+			parse_value (xmlNodeGetContent (next), type, &dpd->CurrentValue);
+			continue;
+		}
+		if (!strcmp(next->name,"enum")) {	/* propdesc.FORM.Enum */
+			int n,i;
+			char *s;
+
+			dpd->FormFlag = PTP_DPFF_Enumeration;
+			s = xmlNodeGetContent (next);
+			n = 0;
+			do {
+				s = strchr(s,' ');
+				if (s) s++;
+				n++;
+			} while (s);
+			dpd->FORM.Enum.NumberOfValues = n;
+			dpd->FORM.Enum.SupportedValue = malloc (n * sizeof(PTPPropertyValue));
+			s = xmlNodeGetContent (next);
+			i = 0;
+			do {
+				parse_value (s, type, &dpd->FORM.Enum.SupportedValue[i]); /* should turn ' ' into \0? */
+				i++;
+				s = strchr(s,' ');
+				if (s) s++;
+			} while (s && (i<n));
+			continue;
+		}
+		if (!strcmp(next->name,"range")) {	/* propdesc.FORM.Enum */
+			char *s = xmlNodeGetContent (next);
+			dpd->FormFlag = PTP_DPFF_Range;
+			parse_value (s, type, &dpd->FORM.Range.MinimumValue); /* should turn ' ' into \0? */
+			s = strchr(s,' ');
+			if (!s) continue;
+			s++;
+			parse_value (s, type, &dpd->FORM.Range.MaximumValue); /* should turn ' ' into \0? */
+			s = strchr(s,' ');
+			if (!s) continue;
+			s++;
+			parse_value (s, type, &dpd->FORM.Range.StepSize); /* should turn ' ' into \0? */
 			continue;
 		}
 		fprintf (stderr,"\tpropdescvar: %s\n", next->name);
 		traverse_tree (3, next);
 	} while ((next = xmlNextElementSibling (next)));
+	return 1;
 }
 
 void
@@ -106,7 +223,8 @@ parse_9301_prop_tree (xmlNodePtr node) {
 
 	next = xmlFirstElementChild (node);
 	do {
-		parse_9301_propdesc (next);
+		PTPDevicePropDesc	dpd;
+		parse_propdesc (next, &dpd);
 	} while ((next = xmlNextElementSibling (next)));
 }
 
@@ -144,6 +262,26 @@ parse_9301_tree (xmlNodePtr node) {
 }
 
 void
+parse_910a_tree (xmlNodePtr node) {
+	xmlNodePtr next;
+
+	next = xmlFirstElementChild (node);
+	do {
+		if (!strcmp (next->name, "param")) {
+			unsigned int x;
+			xmlChar *xchar = xmlNodeGetContent (next);
+			if (!sscanf(xchar,"%08x", &x)) {
+				fprintf(stderr,"could not parse param content %s\n", xchar);
+			}
+			fprintf(stderr,"param content is 0x%08x\n", x);
+			continue;
+		}
+		fprintf (stderr,"910a: unhandled type %s\n", next->name);
+	} while ((next = xmlNextElementSibling (next)));
+	/*traverse_tree (0, node);*/
+}
+
+void
 parse_9302_tree (xmlNodePtr node) {
 	xmlNodePtr	next;
 	xmlChar		*xchar;
@@ -169,7 +307,7 @@ parse_9302_tree (xmlNodePtr node) {
 				nextspace=strchr(x,' ');
 				if (nextspace) nextspace++;
 
-				/* ascii ptp string, 1 byte lenght, little endian 16 bit chars */
+				/* ascii ptp string, 1 byte length, little endian 16 bit chars */
 				if (sscanf(x,"%02x", &len)) {
 					int i;
 					char *str = malloc(len+1);
@@ -192,6 +330,22 @@ parse_9302_tree (xmlNodePtr node) {
 		}
 		fprintf (stderr, "unknown node in 9301: %s\n", next->name);
 	} while ((next = xmlNextElementSibling (next)));
+}
+
+void
+parse_1014_tree (xmlNodePtr node) {
+	PTPDevicePropDesc	dpd;
+	
+	parse_propdesc (xmlFirstElementChild (node), &dpd);
+}
+
+void
+parse_1015_tree (xmlNodePtr node, uint16_t type) {
+	PTPPropertyValue	propval;
+	xmlNodePtr		next;
+
+	next = xmlFirstElementChild (node);
+	parse_value (xmlNodeGetContent (next), type, &propval);
 }
 
 void
@@ -228,6 +382,15 @@ traverse_output_tree (xmlNodePtr node) {
 		return parse_9301_tree (next);
 	case 0x9302:
 		return parse_9302_tree (next);
+	case 0x910a:
+		return parse_910a_tree (next);
+	case 0x1016: /* <output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output> */
+		/* we could cross check the parameter, but its not strictly necessary */
+		return;
+	case 0x1014:
+		return parse_1014_tree ( next );
+	case 0x1015:
+		return parse_1015_tree ( next , PTP_DTC_UINT32);
 	default:
 		return traverse_tree (0, next);
 	}
@@ -276,8 +439,81 @@ parse_xml(char*resp) {
 	traverse_x3c_tree (docroot);
 }
 
+void
+encode_command (xmlNodePtr inputnode, PTPContainer *ptp, unsigned char *data, int len)
+{
+	xmlNodePtr	cmdnode;
+	char 		code[20];
+
+	sprintf(code,"c%04x", ptp->Code);
+	cmdnode 	= xmlNewChild (inputnode, NULL, code, NULL);
+	if (ptp->Nparam) {
+		xmlNodePtr	pnode;
+
+		switch (ptp->Nparam) {
+		case 1:
+			if (ptp->Param1 >= 0x10000)
+				sprintf (code, "p%08x", ptp->Param1);
+			else
+				sprintf (code, "p%04x", ptp->Param1);
+			pnode 	= xmlNewChild (inputnode, NULL, code, NULL);
+			break;
+		case 2:
+			if (ptp->Param1 >= 0x10000)
+				sprintf (code, "p%08x", ptp->Param1);
+			else
+				sprintf (code, "p%04x", ptp->Param1);
+			pnode 	= xmlNewChild (inputnode, NULL, code, NULL);
+			if (ptp->Param2 >= 0x10000)
+				sprintf (code, "p%08x", ptp->Param2);
+			else
+				sprintf (code, "p%04x", ptp->Param2);
+			pnode 	= xmlNewChild (inputnode, NULL, code, NULL);
+			break;
+		}
+	}
+	switch (ptp->Code) {
+	case 0x1016: {
+		/* We can directly byte encode the data we get from the PTP stack */
+		int i;
+		xmlNodePtr	vnode;
+		char *x = malloc (len*2+1);
+
+		for (i=0;i<len;i++)
+			sprintf(x+2*i,"%02x",data[i]);
+		vnode 	= xmlNewChild (inputnode, NULL, "value", x);
+		free (x);
+		break;
+	}
+	}
+}
+
+const char*
+generate_xml(PTPContainer *ptp, unsigned char *data, int len) {
+	xmlDocPtr	docout;
+	xmlChar		*output;
+	xmlNsPtr	outns;
+	xmlNodePtr	x3cnode;
+	xmlNodePtr	inputnode;
+	xmlNodePtr	cmdnode;
+
+	docout 		= xmlNewDoc ("1.0");
+	x3cnode		= xmlNewDocNode (docout, NULL, "x3c", NULL);
+	outns 		= xmlNewNs (x3cnode,"http://www1.olympus-imaging.com/ww/x3c",NULL);
+	inputnode 	= xmlNewChild (x3cnode, NULL, "input", NULL);
+
+	/* the fun starts in here: */
+	encode_command (inputnode, ptp, data, len);
+
+	xmlDocSetRootElement (docout, x3cnode);
+	xmlDocDumpMemory (docout, &output, &len);
+	fprintf(stderr,"generated xml is:\n%s\n", output);
+}
+
 int
 main(int argc, char **argv) {
+	PTPContainer ptp;
+
 	parse_xml("<?xml version=\"1.0\"?> <x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\"> <output> <result>2001</result> <c9302> <x3cVersion>0100</x3cVersion> <productIDs>224F0045003000360034003000300030003000300030003000300030002D00300030003000300031003000300039002D004700370033003500310039003500360033000000 224F004C003000300032003300300031003000300030003000300030002D00300030003000300031003300300035002D003200310033003000340033003600300037000000</productIDs> </c9302> </output> </x3c>");
 	parse_xml("\
 <?xml version=\"1.0\"?>\
@@ -872,6 +1108,79 @@ main(int argc, char **argv) {
 </c9301>\
 </output>\
 </x3c>");
-	return 0;
+	parse_xml ("<?xml version=\"1.0\"?>\n<x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\">\n<output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output>\n</x3c>\n");
 
+	parse_xml ("<?xml version=\"1.0\"?><x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\"><output><result>2001</result><c910A><param>00000001</param></c910A></output></x3c>\n");
+	parse_xml ("<?xml version=\"1.0\"?><x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\"><output><result>2001</result><c1014><p5007><type>0004</type><attribute>01</attribute><default>017C</default><value>0230</value><enum>017C 0190 01C2 01F4 0230 0276 02C6 0320 0384 03E8 044C 0514 0578 0640 0708 07D0 0898</enum></p5007></c1014></output></x3c>");
+	parse_xml ("<?xml version=\"1.0\"?><x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\"> <output> <result>2001</result> <c1015> <pD10E> <value>00000000</value> </pD10E> </c1015> </output> </x3c>");
+	parse_xml ("<?xml version=\"1.0\"?><x3c xmlns=\"http://www1.olympus-imaging.com/ww/x3c\"><input><eC102><p5018/><pD126/><p5013/><pD104/><p500C/><pD106/><pD159/><pD103/><pD15C/><pD10E/></eC102></input></x3c>");
+
+	ptp.Code = 0x1016;
+	ptp.Nparam = 1;
+	ptp.Param1 = 0x5007;
+	generate_xml(&ptp, "abcd", 4);
+	return;
 }
+
+
+/* 1014:
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c"><input><c1014><p5007/></c1014></input></x3c>
+
+ */
+/* 1016
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c"><input><c1016><p5007><value>0230</value></p5007></c1016></input></x3c>
+
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c">
+<output>
+<result>2001</result>
+<c1016>
+<p5007/>
+</c1016>
+</output>
+</x3c>
+
+
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c"><input><c1016><pD10D><value>000A000D</value></pD10D></c1016></input></x3c>
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c">
+<output>
+<result>2001</result>
+<c1016>
+<pD10D/>
+</c1016>
+</output>
+</x3c>
+*/
+
+/*
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c"><input><c1015><p5001/></c1015></input></x3c>
+
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c">
+<output>
+<result>2001</result>
+<c1015>
+<p5001>
+<value>64</value>
+</p5001>
+</c1015>
+</output>
+</x3c>
+ */
+
+/* event:
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c"><output><result>2001</result><eC102/></output></x3c>
+
+*/
+
+/*
+<?xml version="1.0"?>
+<x3c xmlns="http://www1.olympus-imaging.com/ww/x3c"><input><c1015><pD10E/></c1015></input></x3c>
+
+*/

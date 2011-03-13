@@ -3158,6 +3158,25 @@ ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings
 	return ret;
 }
 
+uint16_t
+ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *deviceinfo) {
+	uint16_t 	ret;
+	unsigned long	len;
+	PTPContainer	ptp;
+	unsigned char*	di=NULL;
+	PTPDataHandler	handler;
+
+	ptp_init_recv_memory_handler (&handler);
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_OLYMPUS_GetDeviceInfo;
+	ptp.Nparam=0;
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_recv_memory_handler (&handler, &di, &len);
+	if (!di) ret = PTP_RC_GeneralError;
+	if (ret == PTP_RC_OK) ptp_unpack_DI(params, di, deviceinfo, len);
+	free(di);
+	return ret;
+}
 
 
 /* Non PTP protocol functions */

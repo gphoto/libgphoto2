@@ -5558,10 +5558,7 @@ camera_init (Camera *camera, GPContext *context)
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
 		if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110) || (a.usb_product == 0x102))) {
 			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
-			params->sendreq_func	= ums_wrap_sendreq;
-			params->senddata_func	= ums_wrap_senddata;
-			params->getresp_func	= ums_wrap_getresp;
-			params->getdata_func	= ums_wrap_getdata;
+			olympus_setup (params);
 		}
 		break;
 	case GP_PORT_PTPIP: {

@@ -2076,6 +2076,11 @@ struct _PTPParams {
 	uint32_t	eventpipeid;
 	char		*cameraname;
 
+	/* Olympus UMS wrapping related data */
+	PTPDeviceInfo	outer_deviceinfo;
+	char		*olympus_cmd;
+	char		*olympus_reply;
+
 #ifdef HAVE_ICONV
 	/* PTP: iconv converters */
 	iconv_t	cd_locale_to_ucs2;
@@ -2793,6 +2798,8 @@ uint16_t ptp_chdk_get_paramdata(PTPParams* params, int start, int num, unsigned 
 uint16_t ptp_chdk_exec_lua(PTPParams *params, char *script, uint32_t* ret);
 uint16_t ptp_chdk_get_script_output(PTPParams* params, char **output );
 uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);
+
+uint16_t ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di);
 
 #ifdef __cplusplus
 }

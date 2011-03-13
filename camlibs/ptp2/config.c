@@ -3378,6 +3378,7 @@ static struct deviceproptableu8 nikon_d3s_isoautohilimit[] = {
 };
 GENERIC8TABLE(Nikon_D3s_ISOAutoHiLimit, nikon_d3s_isoautohilimit);
 
+#if 0
 static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
 	{ "1/125",	0x00, 0 },
 	{ "1/60",	0x01, 0 },
@@ -3394,6 +3395,7 @@ static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
 	{ "30",		0x0c, 0 },
 };
 GENERIC8TABLE(Nikon_D70s_PADVPValue,nikon_d70s_padvpvalue)
+#endif
 
 static struct deviceproptableu8 nikon_d90_padvpvalue[] = {
 	{ "1/2000",	0x00, 0 },
@@ -4057,7 +4059,6 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		ret;
 	char		*val;
 	PTPParams	*params = &(camera->pl->params);
-	uint32_t	output;
 	char 		*scriptoutput;
 
 	ret = gp_widget_get_value (widget, &val);
