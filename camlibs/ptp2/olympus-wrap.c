@@ -478,7 +478,8 @@ usb_wrap_read_packet (GPPort *dev, unsigned int type, char *sierra_response, int
 #endif
 
 
-int olympus_ptp_transaction (PTPParams *params,
+static int
+olympus_ptp_transaction (PTPParams *params,
 	PTPContainer* ptp, uint16_t flags,
 	char *cmdxml, char **inxml
 ) {
@@ -1778,6 +1779,7 @@ ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	/* we must not yet overwrite the ptp content, it is used in getresp */
 	memcpy (&tmp, ptp, sizeof(tmp));
 	parse_xml (params, "txt", &tmp);
+	return PTP_RC_OK;
 }
 
 uint16_t
