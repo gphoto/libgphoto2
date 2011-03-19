@@ -2284,17 +2284,14 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		 * result in anything.
 		 */
 		if (!sawcapturecomplete && (PTP_RC_OK == params->event_check (params, &event))) {
-			if (event.Code == PTP_EC_CaptureComplete) {
-				sawcapturecomplete = 1;
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete.");
-			} else
-				gp_log (GP_LOG_DEBUG, "ptp", "Unknown event: 0x%X", event.Code);
 			isevent = 1;
 		} else {
 			ret = ptp_canon_checkevent (params,&event,&isevent);
 			if (ret!=PTP_RC_OK)
 				continue;
 		}
+		/* we sometimes get CaptureComplete only from ptp_canon_checkevent, but perhaps
+		 * also from regular USB events. Just make sure we write it down. */
 		if (!isevent)
 			continue;
 		gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
@@ -2319,6 +2316,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				newobject = event.Param1;
 				/* FALLTHROUGH */
 			}
+			/* FALLTHROUGH */
 		}
 		case PTP_EC_CANON_RequestObjectTransfer: {
 			int j;
@@ -2344,6 +2342,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 		case PTP_EC_CaptureComplete:
 			sawcapturecomplete = 1;
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete.");
 			break;
 		}
 		if (found == TRUE)
