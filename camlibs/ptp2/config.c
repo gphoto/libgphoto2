@@ -998,7 +998,6 @@ _get_Range_INT8(CONFIG_GET_ARGS) {
 }
 
 
-#if 0 /* not used right now */
 static int
 _put_Range_INT8(CONFIG_PUT_ARGS) {
 	int ret;
@@ -1009,7 +1008,6 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 	propval->i8 = (int) f;
 	return (GP_OK);
 }
-#endif
 
 static int
 _get_Range_UINT8(CONFIG_GET_ARGS) {
@@ -3378,6 +3376,7 @@ static struct deviceproptableu8 nikon_d3s_isoautohilimit[] = {
 };
 GENERIC8TABLE(Nikon_D3s_ISOAutoHiLimit, nikon_d3s_isoautohilimit);
 
+#if 0
 static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
 	{ "1/125",	0x00, 0 },
 	{ "1/60",	0x01, 0 },
@@ -3394,6 +3393,7 @@ static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
 	{ "30",		0x0c, 0 },
 };
 GENERIC8TABLE(Nikon_D70s_PADVPValue,nikon_d70s_padvpvalue)
+#endif
 
 static struct deviceproptableu8 nikon_d90_padvpvalue[] = {
 	{ "1/2000",	0x00, 0 },
@@ -4057,7 +4057,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		ret;
 	char		*val;
 	PTPParams	*params = &(camera->pl->params);
-	uint32_t	output;
+	/*uint32_t	output;*/
 	char 		*scriptoutput;
 
 	ret = gp_widget_get_value (widget, &val);
@@ -5016,6 +5016,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+	{ N_("Flexible Program"), "flexibleprogram", PTP_DPC_NIKON_FlexibleProgram, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Range_INT8, _put_Range_INT8},
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, 0, PTP_DTC_UINT8, _get_Nikon_Compression, _put_Nikon_Compression},
 	{ N_("Focus Distance"), "focusdistance", PTP_DPC_FocusDistance, 0, PTP_DTC_UINT16, _get_FocusDistance, _put_FocusDistance},
 	{ N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
