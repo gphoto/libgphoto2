@@ -716,7 +716,7 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 	}
 	if (dpd->FormFlag & PTP_DPFF_Range) {
 		for (i = dpd->FORM.Range.MinimumValue.i16; i<=dpd->FORM.Range.MaximumValue.i16; i+= dpd->FORM.Range.StepSize.i16) {
-			int isset = FALSE;
+			int isset3 = FALSE;
 
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == i) &&
@@ -728,11 +728,11 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 						isset2 = TRUE;
 						gp_widget_set_value (*widget, _(tbl[j].label));
 					}
-					isset = TRUE;
+					isset3 = TRUE;
 					break;
 				}
 			}
-			if (!isset) {
+			if (!isset3) {
 				char buf[200];
 				sprintf(buf, _("Unknown value %04d"), i);
 				gp_widget_add_choice (*widget, buf);
@@ -998,7 +998,6 @@ _get_Range_INT8(CONFIG_GET_ARGS) {
 }
 
 
-#if 0 /* not used right now */
 static int
 _put_Range_INT8(CONFIG_PUT_ARGS) {
 	int ret;
@@ -1009,7 +1008,6 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 	propval->i8 = (int) f;
 	return (GP_OK);
 }
-#endif
 
 static int
 _get_Range_UINT8(CONFIG_GET_ARGS) {
@@ -4059,6 +4057,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		ret;
 	char		*val;
 	PTPParams	*params = &(camera->pl->params);
+	/*uint32_t	output;*/
 	char 		*scriptoutput;
 
 	ret = gp_widget_get_value (widget, &val);
@@ -5017,6 +5016,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
+	{ N_("Flexible Program"), "flexibleprogram", PTP_DPC_NIKON_FlexibleProgram, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Range_INT8, _put_Range_INT8},
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, 0, PTP_DTC_UINT8, _get_Nikon_Compression, _put_Nikon_Compression},
 	{ N_("Focus Distance"), "focusdistance", PTP_DPC_FocusDistance, 0, PTP_DTC_UINT16, _get_FocusDistance, _put_FocusDistance},
 	{ N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
@@ -5324,7 +5324,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		CameraWidget		*widget;
 		char			buf[20], *label;
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
@@ -5583,7 +5582,6 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Generic property setter */
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		CameraWidget		*widget;
 		CameraWidgetType	type;
 		char			buf[20], *label, *xval;
 		PTPDevicePropDesc	dpd;
