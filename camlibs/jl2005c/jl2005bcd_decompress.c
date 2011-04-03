@@ -28,6 +28,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "config.h"
+
+#ifdef HAVE_LIBJPEG
 #include "gphoto2-endian.h"
 #include "jl2005bcd_decompress.h"
 #include "jpeg_memsrcdest.h"
@@ -291,3 +294,4 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	free (out);
 	return outputsize;
 }
+#endif
