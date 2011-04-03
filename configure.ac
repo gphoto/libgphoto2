@@ -602,7 +602,8 @@ AM_CONDITIONAL(HAVE_LIBUSB,test -n "${LIBUSB_CONFIG}")
 dnl FIXME: Is this accurate?
 AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
 
-GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],,,,,[default-on])
+dnl ... temporary off again
+dnl GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],,,,,[default-on])
 
 dnl ---------------------------------------------------------------------------
 dnl Configure subprojects
