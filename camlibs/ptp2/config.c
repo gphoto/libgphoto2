@@ -4154,9 +4154,9 @@ _get_Canon_CaptureMode(CONFIG_GET_ARGS) {
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	val = 2;	/* always changed, unless we can find out the state ... */
-	gp_widget_set_value  (*widget, &val);
-	return (GP_OK);
+	/* we use presence of FlashMode as indication of capture enablement or not */
+	val = have_prop (camera, PTP_VENDOR_CANON, PTP_DPC_CANON_FlashMode);
+	return gp_widget_set_value  (*widget, &val);
 }
 
 static int
