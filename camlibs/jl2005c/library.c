@@ -342,6 +342,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_data_and_size(file, (char *)pic_buffer , b+16 );
 		return GP_OK;
+#ifdef HAVE_LIBJPEG
 	} else if (type == GP_FILE_TYPE_PREVIEW) {
 		if (!camera->pl->can_do_capture)
 			return GP_ERROR_NOT_SUPPORTED;
@@ -373,6 +374,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_set_mime_type(file, GP_MIME_PPM);
 		gp_file_set_data_and_size(file, (char *)pic_output,
 								outputsize);
+#endif
 	} else
 		return GP_ERROR_NOT_SUPPORTED;
 
