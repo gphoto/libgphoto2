@@ -60,7 +60,7 @@ static uint16_t ptp_init_recv_memory_handler(PTPDataHandler*);
 static uint16_t ptp_init_send_memory_handler(PTPDataHandler*,unsigned char*,unsigned long len);
 static uint16_t ptp_exit_send_memory_handler (PTPDataHandler *handler);
 
-static void
+void
 ptp_debug (PTPParams *params, const char *format, ...)
 {  
         va_list args;
@@ -77,7 +77,7 @@ ptp_debug (PTPParams *params, const char *format, ...)
         va_end (args);
 }  
 
-static void
+void
 ptp_error (PTPParams *params, const char *format, ...)
 {  
         va_list args;

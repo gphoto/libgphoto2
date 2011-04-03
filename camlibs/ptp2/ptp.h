@@ -2721,6 +2721,8 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 
 
 void ptp_perror			(PTPParams* params, uint16_t error);
+void ptp_debug                  (PTPParams *params, const char *format, ...);
+void ptp_error                  (PTPParams *params, const char *format, ...);
 
 const char*
 ptp_get_property_description(PTPParams* params, uint16_t dpc);
