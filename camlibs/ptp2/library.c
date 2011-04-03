@@ -499,6 +499,8 @@ static struct {
 	{"Kodak:M1063",  0x040a, 0x05ce, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2889451&group_id=8874&atid=358874 */
 	{"Kodak:Z915",   0x040a, 0x05cf, 0},
+	/* rschweikert@novell.com */
+	{"Kodak:C183",   0x040a, 0x060b, 0},
 
 	/* HP PTP cameras */
 #if 0
@@ -686,6 +688,8 @@ static struct {
 	{"Nikon:Coolpix P6000 (PTP mode)",0x04b0, 0x016f, 0},
 	/*   http://bugs.debian.org/520752 */
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
+	/* Mike Strickland <livinwell@georgianatives.net> */
+	{"Nikon:Coolpix P90 (PTP mode)",  0x04b0, 0x0173, 0},
 	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
 	{"Nikon:Coolpix S220 (PTP mode)", 0x04b0, 0x0177, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* */
@@ -763,6 +767,8 @@ static struct {
 	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Matthias Blaicher <blaicher@googlemail.com> */
 	{"Nikon:DSC D3s (PTP mode)",      0x04b0, 0x0426, PTP_CAP|PTP_CAP_PREVIEW},
+	/* SWPLinux IRC reporter */
+	{"Nikon:DSC D3100 (PTP mode)",	  0x04b0, 0x0427, PTP_CAP|PTP_CAP_PREVIEW},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3140014&group_id=8874 */
 	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -781,6 +787,7 @@ static struct {
 #endif
 
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
+	{"Panasonic:DMC-FZ45",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ38",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ50",            0x04da, 0x2374, 0},
 	/* from Tomas Herrdin <tomas.herrdin@swipnet.se> */
