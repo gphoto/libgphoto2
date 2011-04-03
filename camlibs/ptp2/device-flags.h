@@ -3,7 +3,7 @@
  * Special device flags to deal with bugs in specific devices.
  *
  * Copyright (C) 2005-2007 Richard A. Low <richard@wentnet.com>
- * Copyright (C) 2005-2007 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2005-2011 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2006-2007 Marcus Meissner
  * Copyright (C) 2007 Ted Bullock
  *
@@ -35,12 +35,12 @@
 /**
  * This means that the PTP_OC_MTP_GetObjPropList is broken
  * in the sense that it won't return properly formatted metadata
- * for ALL files on the device when you request an object 
+ * for ALL files on the device when you request an object
  * property list for object 0xFFFFFFFF with parameter 3 likewise
- * set to 0xFFFFFFFF. Compare to 
+ * set to 0xFFFFFFFF. Compare to
  * DEVICE_FLAG_BROKEN_MTPGETOBJECTPROPLIST which only signify
  * that it's broken when getting metadata for a SINGLE object.
- * A typical way the implementation may be broken is that it 
+ * A typical way the implementation may be broken is that it
  * may not return a proper count of the objects, and sometimes
  * (like on the ZENs) objects are simply missing from the list
  * if you use this. Sometimes it has been used incorrectly to
@@ -52,14 +52,14 @@
  */
 #define DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL 0x00000001
 /**
- * This means that under Linux, another kernel module may 
- * be using this device's USB interface, so we need to detach 
+ * This means that under Linux, another kernel module may
+ * be using this device's USB interface, so we need to detach
  * it if it is. Typically this is on dual-mode devices that
  * will present both an MTP compliant interface and device
  * descriptor *and* a USB mass storage interface. If the USB
  * mass storage interface is in use, other apps (like our
  * userspace libmtp through libusb access path) cannot get in
- * and get cosy with it. So we can remove the offending 
+ * and get cosy with it. So we can remove the offending
  * application. Typically this means you have to run the program
  * as root as well.
  */
@@ -72,17 +72,17 @@
 #define DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST 0x00000004
 /**
  * This means the device doesn't send zero packets to indicate
- * end of transfer when the transfer boundary occurs at a 
- * multiple of 64 bytes (the USB 1.1 endpoint size). Instead, 
- * exactly one extra byte is sent at the end of the transfer 
- * if the size is an integer multiple of USB 1.1 endpoint size 
+ * end of transfer when the transfer boundary occurs at a
+ * multiple of 64 bytes (the USB 1.1 endpoint size). Instead,
+ * exactly one extra byte is sent at the end of the transfer
+ * if the size is an integer multiple of USB 1.1 endpoint size
  * (64 bytes).
  *
- * This behaviour is most probably a workaround due to the fact 
- * that the hardware USB slave controller in the device cannot 
- * handle zero writes at all, and the usage of the USB 1.1 
- * endpoint size is due to the fact that the device will "gear 
- * down" on a USB 1.1 hub, and since 64 bytes is a multiple of 
+ * This behaviour is most probably a workaround due to the fact
+ * that the hardware USB slave controller in the device cannot
+ * handle zero writes at all, and the usage of the USB 1.1
+ * endpoint size is due to the fact that the device will "gear
+ * down" on a USB 1.1 hub, and since 64 bytes is a multiple of
  * 512 bytes, it will work with USB 1.1 and USB 2.0 alike.
  */
 #define DEVICE_FLAG_NO_ZERO_READS 0x00000008
@@ -97,7 +97,7 @@
  * flag on won't hurt anything, just that the check against
  * filename extension will be done for files of "unknown" type.
  * If the player does not even know (reports) that it supports
- * ogg even though it does, please use the stronger 
+ * ogg even though it does, please use the stronger
  * OGG_IS_UNKNOWN flag, which will forcedly support ogg on
  * anything with the .ogg filename extension.
  */
@@ -127,7 +127,7 @@
  * contain junk. This is breaking the PTP/MTP spec but works
  * on Windows anyway, probably because the Windows implementation
  * does not check that these bytes are valid. To interoperate
- * with devices like this, we need this flag to emulate the 
+ * with devices like this, we need this flag to emulate the
  * Windows bug.
  */
 #define DEVICE_FLAG_IGNORE_HEADER_ERRORS 0x00000080
@@ -141,11 +141,11 @@
 #define DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST 0x00000100
 /**
  * The Samsung YP-T10 think Ogg files shall be sent with
- * the "unknown" (PTP_OFC_Undefined) file type, this gives a 
- * side effect that is a combination of the iRiver Ogg Alzheimer 
+ * the "unknown" (PTP_OFC_Undefined) file type, this gives a
+ * side effect that is a combination of the iRiver Ogg Alzheimer
  * problem (have to recognized Ogg files on file extension)
  * and a need to report the Ogg support (the device itself does
- * not properly claim to support it) and need to set filetype 
+ * not properly claim to support it) and need to set filetype
  * to unknown when storing Ogg files, even though they're not
  * actually unknown. Later iRivers seem to need this flag since
  * they do not report to support OGG even though they actually
@@ -209,36 +209,36 @@
 
 /**
  * Devices that send "ObjectDeleted" events after deletion
- * of images. (libgphoto2) 
- */ 
+ * of images. (libgphoto2)
+ */
 #define DEVICE_FLAG_DELETE_SENDS_EVENT	0x00020000
 
 /**
  * Cameras that can capture images. (libgphoto2)
- */ 
+ */
 #define DEVICE_FLAG_CAPTURE		0x00040000
 
 /**
  * Cameras that can capture images. (libgphoto2)
- */ 
+ */
 #define DEVICE_FLAG_CAPTURE_PREVIEW	0x00080000
 
 /**
  * Nikon broken capture support without proper ObjectAdded events.
  * (libgphoto2)
- */ 
+ */
 #define DEVICE_FLAG_NIKON_BROKEN_CAPTURE	0x00100000
 
 /**
  * Broken capture support where cameras do not send CaptureComplete events.
  * (libgphoto2)
- */ 
+ */
 #define DEVICE_FLAG_NO_CAPTURE_COMPLETE		0x00400000
 
 /**
  * Direct PTP match required.
  * (libgphoto2)
- */ 
+ */
 #define DEVICE_FLAG_MATCH_PTP_INTERFACE		0x00800000
 /**
  * This flag is like DEVICE_FLAG_OGG_IS_UNKNOWN but for FLAC
@@ -255,3 +255,14 @@
  * device to switch from USB mass storage to MTP mode we think.
  */
 #define DEVICE_FLAG_SWITCH_MODE_BLACKBERRY	0x04000000
+/**
+ * This flag indicates that the device need an extra long
+ * timeout on some operations.
+ */
+#define DEVICE_FLAG_LONG_TIMEOUT		0x08000000
+/**
+ * This flag indicates that the device need an explicit
+ * USB reset after each connection. Some devices don't
+ * like this, so it's not done by default.
+ */
+#define DEVICE_FLAG_FORCE_RESET_ON_CLOSE	0x10000000
