@@ -1,16 +1,75 @@
 libgphoto2 2.4.10.5
 
+ax203:
+* Various new ids:
+  GigaDevice GD25Q40, GD25Q80, GD25Q16
+  ST M25P08, M25P16, M25P32, M25P64
+  Winbond W25Q80, W25Q16, W25Q32
+* Various bugfixes
+
+canon:
+* implemented a basic wait_for_event() so --capture-tethered works
+  (not working correctly for CR2+JPG, but JPG or CR2 stand alone will work) 
+* Some bugfixes
+
+digigr8:
+* Added Lego Bionicle camera.
+
+directory:
+* More mimetypes that are images added
+
+jl2005c:
+* Reduced stack usage (do not have 5MB arrays on the stack),
+  making it work in programs with stacklimits
+
+mars3:
+* Added Shift3 camera.
+
 sierra:
 * rewrote the USB wrapped command handling to use "usbscsi"
   port. Now its no longer necessary to detach the mass storage
   driver.
 
 ptp2:
+* Allow by-camera specific configuration (used for Nikon DSLR currently)
+* Added some Nikon D90, D3s specific tables.
+* Canon EOS: support remoterelease (remote trigger manipulation) via eosremoterelease
+  config option
+* Merge some CHDK code (not tested working with my SX100IS -Marcus)
+* Make setting properties via the "other" config tree work.
+* merged new media player ids from libmtp
+* Timeouts configurable
+* New cameras:
+  Kodak Z710, C183
+  Nikon CoolPix S7c, P90, P100, S8000, S3000
+  Nikon DSLR D3s, D3100, D7000
+  Casio EX-Z65
+  Canon Powershot SD1300 IS, SX210 IS, SX130 IS, 
+  Canon EOS 60D
+  Fuji FinePix A220, Z700EXR, 
+* Some capture bugfixes
 * Lots of bugfixes
 
-canon:
-* implemented a basic wait_for_event() so --capture-tethered works
-  (not working correctly for CR2+JPG, but JPG or CR2 stand alone will work) 
+st2205:
+* Minor additions
+
+libgphoto2_port/usb:
+* Avoid MTP probing. Done by libmtp these days, also confuses some devices.
+* Do list less usb:XXX,YYY ports for things that are not cameras.
+
+libgphoto2_port/usbscsi:
+* Fixed symlink handling in device detection for newer kernels.
+* Decode SCSI sense data received.
+
+libgphoto2
+* Updated translations: danish, german, spanish, basque, french,
+  hungarian, italian, japanese, dutch, polish, russian, swedish, ukrainian,
+  vietnamese, simplified chinese
+
+libgphoto2_port
+* Updated translations: czech, danish, german, spanish, basque, french,
+  italian, japanese, dutch, polish, brazilian portuguese, russian, slovakian,
+  swedish, ukrainian, vietnamese, simplified chinese, traditional chinese
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.10.1
