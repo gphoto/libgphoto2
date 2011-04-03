@@ -1,5 +1,5 @@
 EXTRA_DIST += ptp2/ptp-pack.c ptp2/PTPIP.TXT ptp2/README.ptp2 \
-	ptp2/TODO ptp2/ChangeLog ptp2/ptpip.html ptp2/TESTPLAN.ptp2
+	ptp2/TODO ptp2/ChangeLog ptp2/ptpip.html ptp2/TESTPLAN.ptp2 ptp2/olympus-wrap.c
 camlibdoc_DATA += ptp2/README.ptp2
 
 EXTRA_LTLIBRARIES += ptp2.la
@@ -9,7 +9,8 @@ ptp2_la_SOURCES = \
 	ptp2/library.c ptp2/usb.c ptp2/ptp-bugs.h \
 	ptp2/ptp-private.h ptp2/ptpip.c ptp2/config.c \
 	ptp2/music-players.h ptp2/device-flags.h \
-	ptp2/olympus-wrap.h ptp2/olympus-wrap.c
+	ptp2/olympus-wrap.h
 ptp2_la_LDFLAGS = $(camlib_ldflags)
 ptp2_la_DEPENDENCIES = $(camlib_dependencies)
-ptp2_la_LIBADD = $(camlib_libadd) $(LTLIBICONV) @LIBXML2_LIBS@
+#ptp2_la_LIBADD = $(camlib_libadd) $(LTLIBICONV) @LIBXML2_LIBS@
+ptp2_la_LIBADD = $(camlib_libadd) $(LTLIBICONV)
