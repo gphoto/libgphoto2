@@ -622,7 +622,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	if ((camera->pl->bridge == BRIDGE_SPCA504) ||
 	    (camera->pl->bridge == BRIDGE_SPCA504B_PD)) {
-//		if (abilities.usb_vendor != 0x04fc && abilities.usb_product != 0x504a )
+/*		if (abilities.usb_vendor != 0x04fc && abilities.usb_product != 0x504a ) */
 		if (!(abilities.usb_vendor == 0x04fc && abilities.usb_product == 0x504a ))
 			ret = spca50x_reset (camera->pl);
 	}

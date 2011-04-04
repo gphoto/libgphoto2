@@ -49,8 +49,8 @@
 #define ENIGMA13_BLK_CARD_ALIGN 0x4000
 #define ENIGMA13_USB_TIMEOUT_MS 5000
 #define ENIGMA13_WAIT_FOR_READY_TIMEOUT_S 5
-#define ENIGMA13_WAIT_TOC_DELAY_MS 500000
-#define ENIGMA13_WAIT_IMAGE_READY_MS 300000
+#define ENIGMA13_WAIT_TOC_DELAY_MS 500
+#define ENIGMA13_WAIT_IMAGE_READY_MS 300
 #define GP_MODULE "enigma13"
 
 
@@ -199,7 +199,7 @@ static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
                            response, 0x0001,
                           NULL, 0x0000));
         /* Wait until cam is ready to send the T.O.C */
-	usleep( ENIGMA13_WAIT_TOC_DELAY_MS);
+	GP_SYSTEM_SLEEP(ENIGMA13_WAIT_TOC_DELAY_MS);
 
         CHECK (gp_port_usb_msg_read (camera->port, 0x21,
                            0x0000, 0x0000,
@@ -276,7 +276,7 @@ static int enigma13_download_img(Camera *camera, char *toc, int index, char **im
 
 	CHECK_AND_FREE (gp_port_usb_msg_write (camera->port,
 	0x54, index+1, 2, NULL, 0x00), buf);
-	usleep(ENIGMA13_WAIT_IMAGE_READY_MS);
+	GP_SYSTEM_SLEEP(ENIGMA13_WAIT_IMAGE_READY_MS);
 
 	CHECK_AND_FREE (gp_port_usb_msg_read (camera->port, 0x21,
 		0x0000, 0x0000,
@@ -343,8 +343,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	Camera *camera = data;
         int image_no, result;
-	//int	i, ret, numpics;
-
 
 	char* img_data=NULL;
         int   img_size=-1;
