@@ -180,10 +180,9 @@ typedef struct {
 /** Sleep passed amount of milliseconds. */
 # define GP_SYSTEM_SLEEP(_ms)			      \
   do {						      \
-    const struct timespec req = {		      \
-      0,					      \
-      1000*1000*((long)(_ms))			      \
-    };						      \
+    struct timespec req;			      \
+    req.tv_sec = 0;				      \
+    req.tv_nsec = 1000*1000*((long)(_ms));	      \
     nanosleep(&req, NULL);			      \
   } while (0)
 
