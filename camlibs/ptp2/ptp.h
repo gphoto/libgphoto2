@@ -2751,7 +2751,7 @@ uint16_t ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObjec
 /* ptpip.c */
 void ptp_nikon_getptpipguid (unsigned char* guid);
 
-enum {
+enum PTP_CHDK_Command {
   PTP_CHDK_Shutdown = 0,    // param2 is 0 (hard), 1 (soft), 2 (reboot) or 3 (reboot fw update)
                             // if param2 == 3, then filename of fw update is send as data (empty for default)
   PTP_CHDK_GetMemory,       // param2 is base address (or 0 for live image buffer, 1 for bitmap buffer)
@@ -2782,7 +2782,7 @@ enum {
   PTP_CHDK_StartDownloadFile,
   PTP_CHDK_ResumeDownloadFile,
   PTP_CHDK_EndDownloadFile,
-} PTP_CHDK_Command;
+};
 
 #define PTP_OC_CHDK	0x9999
 typedef struct tagptp_chdk_videosettings {
