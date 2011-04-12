@@ -83,7 +83,7 @@ are ten photos in the camera. Then what the camera will do is:
 	much room was taken up by the raw data for all the photos)
 	-- provide a table with one line for each photo, giving its size, start
 	location, output height and width, and some kind of code for the 
-	compression method used on it. 
+	compression method used on it.
 In the next step, one must request all the image data for all the ten photos
 to be downloaded. This happens in increments of 64000 bytes, with only the last
 increment permitted to be "short." This does not need to be done all at once;

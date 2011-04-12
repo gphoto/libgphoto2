@@ -60,6 +60,8 @@ struct {
 	{"Aries ATC-0017",      GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar no. 75379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar no. 81890",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
+	{"Sakar Nickelodeon iCarly no. 88061", GP_DRIVER_STATUS_EXPERIMENTAL,
+							0x0979, 0x0227},
 	{"Sakar no. 91379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar no. 98379",     GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Sakar Kidz-Cam no. 88379", GP_DRIVER_STATUS_EXPERIMENTAL,
@@ -385,12 +387,12 @@ static int
 delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
                  GPContext *context)
 {
-        Camera *camera = data;
-        
-        GP_DEBUG(" * delete_all_func()");
-        jl2005c_delete_all(camera, camera->port);
+	Camera *camera = data;
 
-        return (GP_OK);
+	GP_DEBUG(" * delete_all_func()");
+	jl2005c_delete_all(camera, camera->port);
+
+	return (GP_OK);
 }
 
 
