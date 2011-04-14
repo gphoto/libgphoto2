@@ -218,6 +218,13 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	cinfo.image_height = 16;
 	cinfo.input_components = 3;
 	cinfo.in_color_space = JCS_RGB;
+
+#if JPEG_LIB_VERSION >= 80
+	cinfo.min_DCT_h_scaled_size = dinfo.min_DCT_h_scaled_size;
+	cinfo.min_DCT_v_scaled_size = dinfo.min_DCT_h_scaled_size;
+	cinfo.jpeg_width = 16;
+	cinfo.jpeg_height = 16;
+#endif
 	jpeg_set_defaults (&cinfo);
 	/* We will write Cb values as comp. 0, so give it chroma settings */
 	cinfo.comp_info[0].h_samp_factor = 1; 
