@@ -564,6 +564,7 @@ ptp_unpack_PTPTIME (const char *str) {
 	strncpy (tmp, ptpdate + 13, 2);
 	tmp[2] = 0;
 	tm.tm_sec = atoi (tmp);
+	tm.tm_isdst = -1;
 	return mktime (&tm);
 }
 
