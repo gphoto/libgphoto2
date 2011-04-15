@@ -21,7 +21,7 @@ htod16ap (PTPParams *params, unsigned char *a, uint16_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
 		htole16a(a,val);
-	else 
+	else
 		htobe16a(a,val);
 }
 
@@ -30,7 +30,7 @@ htod32ap (PTPParams *params, unsigned char *a, uint32_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
 		htole32a(a,val);
-	else 
+	else
 		htobe32a(a,val);
 }
 
@@ -39,7 +39,7 @@ htod64ap (PTPParams *params, unsigned char *a, uint64_t val)
 {
 	if (params->byteorder==PTP_DL_LE)
 		htole64a(a,val);
-	else 
+	else
 		htobe64a(a,val);
 }
 
@@ -102,7 +102,7 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8
 	uint8_t length;
 	uint16_t string[PTP_MAXSTRLEN+1];
 	/* allow for UTF-8: max of 3 bytes per UCS-2 char, plus final null */
-	char loclstr[PTP_MAXSTRLEN*3+1]; 
+	char loclstr[PTP_MAXSTRLEN*3+1];
 	size_t nconv, srclen, destlen;
 	char *src, *dest;
 
@@ -115,7 +115,7 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8
 	memcpy(string, &data[offset+1], length * sizeof(string[0]));
 	string[length] = 0x0000U;   /* be paranoid!  add a terminator. */
 	loclstr[0] = '\0';
-    
+
 	/* convert from camera UCS-2 to our locale */
 	src = (char *)string;
 	srclen = length * sizeof(string[0]);
@@ -561,6 +561,7 @@ ptp_unpack_PTPTIME (const char *str) {
 	strncpy (tmp, ptpdate + 13, 2);
 	tmp[2] = 0;
 	tm.tm_sec = atoi (tmp);
+	tm.tm_isdst = -1;
 	return mktime (&tm);
 }
 
