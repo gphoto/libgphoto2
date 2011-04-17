@@ -1706,10 +1706,11 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					SET_CONTEXT_P(params, NULL);
 					return GP_OK;
 				} else {
-					if (ret == 0xa102) { /* means "not there yet" ... so wait */
-						ret = ptp_check_eos_events (params);
-						if (ret != PTP_RC_OK)
-							return translate_ptp_result (ret);
+					if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
+						uint16_t xret;
+						xret = ptp_check_eos_events (params);
+						if (xret != PTP_RC_OK)
+							return translate_ptp_result (xret);
 						gp_context_idle (context);
 						usleep (50*1000);
 						continue;

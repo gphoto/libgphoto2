@@ -45,25 +45,21 @@ Canon Powershot series (currently: Powershot SX100IS)
 Canon EOS series (currently: Canon EOS 1000D)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+			- RAW						PASS
 		- via Card (SD) (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
-		- no SD card inserted
-			- JPEG						TOTEST/IGNORE (hangs without error)
-			- JPEG + RAW 					TOTEST/IGNORE (hangs without error)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+			- RAW						PASS
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- via Card (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
-		- no SD card insert
-			- JPEG						TOTEST/IGNORE (hangs without error)
-			- JPEG + RAW 					TOTEST/IGNORE (hangs without error)
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 
 	--capture-preview
 		commandline tool					TOTEST
@@ -73,12 +69,24 @@ Canon EOS series (currently: Canon EOS 1000D)
 	--capture-movie=10s						TOTEST
 
 	--wait-event-and-download
-		- JPEG							TOTEST
-		- JPEG + RAW						TOTEST
+		- JPEG							PASS
+			--set-config capturetarget=0
+			--set-config capturetarget=1
+		- JPEG + RAW						PASS
+			--set-config capturetarget=0
+			--set-config capturetarget=1
 
-	--list-config							TOTEST
-	--get-config somevalue						TOTEST
-	--set-config somevalue=value					TOTEST
+	--list-config							PASS
+	"imageformat"							PASS
+		--get-config imageformat=0
+		--get-config imageformat
+		--set-config imageformat=6
+		--get-config imageformat
+
+	"ownername"							PASS
+		--get-config ownername
+		--set-config ownername="Marcus Meissner"
+		--get-config ownername
 
 
 Nikon DSLR series (currently: Nikon D90)
