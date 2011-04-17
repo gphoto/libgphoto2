@@ -1,4 +1,4 @@
-libgphoto2 2.4.10.6
+libgphoto2 2.4.11
 
 ax203:
 * Various new ids:
@@ -41,7 +41,7 @@ ptp2:
 * Timeouts configurable
 * New cameras:
   Kodak Z710, C183
-  Nikon CoolPix S7c, P90, P100, S8000, S3000
+  Nikon CoolPix S7c, P90, P100, S8000, S3000, S9100
   Nikon DSLR D3s, D3100, D7000
   Casio EX-Z65
   Canon Powershot SD1300 IS, SX210 IS, SX130 IS, 
