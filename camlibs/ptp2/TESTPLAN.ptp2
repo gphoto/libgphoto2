@@ -3,23 +3,43 @@ Testplan ptp2 driver
 Canon Powershot series (currently: Powershot SX100IS)
 
 	--capture-image-and-download
-		- via SDRAM (capturetarget=0):				TOTEST
-		- via Card (capturetarget=1):				TOTEST
-		- Card configured, but not inserted (capturetarget=1)	TOTEST
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
+		- Card configured, but not inserted (capturetarget=1)	PASS
 
 	--capture-image-and-download -F 3 -I 5
-		- via SDRAM (capturetarget=0):				TOTEST
-		- via Card (capturetarget=1):				TOTEST
-		- Card configured, but not inserted (capturetarget=1)	TOTEST
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
+		- Card configured, but not inserted (capturetarget=1)	PASS
 
 	--capture-preview
-		commandline tool					TOTEST
-		gtkam							TOTEST
-		mixed with --capture-image-and-download			TOTEST
+		commandline tool					PASS
+		gtkam							PASS
+		mixed with --capture-image-and-download			PASS
 
-	--capture-movie=10s						TOTEST
+	--capture-movie=10s						PASS
 
-	--list-config							TOTEST
+	--list-config							PASS
+	"capture option"						PASS
+		--get-config capture
+		--set-config capture=1
+		--get-config capture
+		--set-config capture=0
+		--get-config capture
+	"zoom" and /other/ config tree value				PASS
+		--get-config zoom
+		--set-config zoom=20
+		--get-config zoom
+		--get-config d02a
+		--set-config d02a=10
+		--get-config d02a
+	"ownername" 							PASS
+		--get-config ownername
+		--set-config ownername="Markus Meissner"
+		--get-config ownername
+		--set-config ownername="Marcus Meissner"
+	--get-config d402						PASS
+		(no string settable for the SX100IS)
 
 
 Canon EOS series (currently: Canon EOS 1000D)
