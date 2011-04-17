@@ -84,40 +84,60 @@ Canon EOS series (currently: Canon EOS 1000D)
 Nikon DSLR series (currently: Nikon D90)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- via Card (SD) (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- no SD card inserted, capturetarget=0
-			- JPEG						TOTEST
-			- JPEG + RAW 					TOTEST
+			- JPEG						FAIL/IGNORE (correct error)
+			- JPEG + RAW 					FAIL/IGNORE (correct error)
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST (but not in correct order, JPGs are behind/IGNORE)
+			- JPEG						PASS
+			- JPEG + RAW					PASS (but not in correct order, JPGs are behind/IGNORE)
 		- via Card (capturetarget=1)
-			- JPEG						TOTEST
-			- JPEG + RAW					TOTEST
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- no SD card insert, capturetarget=0
-			- JPEG						TOTEST
-			- JPEG + RAW 					TOTEST
+			- JPEG						FAIL/IGNORE (correct error)
+			- JPEG + RAW 					FAIL/IGNORE (correct error)
 
 	--capture-preview
-		commandline tool					CHECK - First image is always plain white :(
-		gtkam							TOTEST
+		commandline tool					PASS/CHECK - First image is always plain white :(
+		gtkam							PASS/CHECK (but no image capture possible)
 		mixed with --capture-image-and-download	
-			- SDRAM mode					TOTEST
-			- Card mode					TOTEST/IGNORE (returns PTP Device Busy)
+			- SDRAM mode					PASS
+			- Card mode					FAIL/IGNORE (returns PTP Device Busy)
 
-	--capture-movie=10s						TOTEST
+	--capture-movie=10s						PASS
 
 	--wait-event-and-download
-		- JPEG							TOTEST
-		- JPEG + RAW						TOTEST
+		- JPEG							PASS
+			--set-config capturetarget=0
+			--set-config capturetarget=1
+		- JPEG + RAW						PASS
+			--set-config capturetarget=0
+			--set-config capturetarget=1
 
 
-	--list-config							TOTEST
-	--get-config somevalue						TOTEST
-	--set-config somevalue=value					TOTEST
+	--list-config							PASS
+
+	"imagecommentenable", also in /other/ tree			PASS
+		--get-config imagecommentenable
+		--set-config imagecommentenable=An
+		--get-config imagecommentenable
+		--get-config d091
+		--set-config d091=0
+		--get-config d091
+		--set-config d091=1
+
+	"imagecomment" , also in /other/ tree				PASS
+		--get-config imagecomment
+		--set-config imagecomment="Marcus Meissner"
+		--get-config imagecomment
+		--get-config d090
+		--set-config d090="Markus Meissner"
+		--get-config d090
+		--set-config d090="Marcus Meissner"
