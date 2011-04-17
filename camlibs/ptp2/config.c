@@ -5631,10 +5631,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		X(PTP_DTC_INT32,i32)
 		X(PTP_DTC_UINT32,u32)
 #undef X
-		case PTP_DTC_STR:
-			gp_widget_get_value (widget, buf);
-			propval.str = strdup(buf);
+		case PTP_DTC_STR: {
+			char *val;
+			gp_widget_get_value (widget, &val);
+			propval.str = strdup(val);
 			break;
+		}
 		default:
 			break;
 		}
