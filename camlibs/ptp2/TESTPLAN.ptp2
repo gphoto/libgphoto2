@@ -62,11 +62,11 @@ Canon EOS series (currently: Canon EOS 1000D)
 			- JPEG + RAW					PASS
 
 	--capture-preview
-		commandline tool					TOTEST
-		gtkam							TOTEST
-		mixed with --capture-image-and-download			TOTEST
+		commandline tool					PASS
+		gtkam							PASS
+		mixed with --capture-image-and-download			PASS
 
-	--capture-movie=10s						TOTEST
+	--capture-movie=10s						PASS
 
 	--wait-event-and-download
 		- JPEG							PASS
