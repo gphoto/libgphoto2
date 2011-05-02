@@ -1644,6 +1644,13 @@ ptp_check_event (PTPParams *params) {
 		if (isevent)
 			goto store_event;
 		/* FIXME: fallthrough or return? */
+#ifdef __APPLE__
+		/* the libusb 1 on darwin currently does not like polling
+		 * for interrupts, they have no timeout for it. 2010/08/23
+		 * Check back in 2011 or so. -Marcus
+		 */
+		return ret;
+#endif
 	}
 	ret = params->event_check(params,&event);
 
@@ -1753,7 +1760,6 @@ ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry) {
 	}
 	return 1;
 }
-
 
 
 uint16_t
@@ -4268,7 +4274,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_ImageCommentEnable,PTP_VENDOR_NIKON),	/* D091 */
 		PTP_VENDOR_VAL_RBOOL(PTP_DPC_NIKON_ImageRotation,PTP_VENDOR_NIKON),	/* D092 */
 
-		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_MovVoice,PTP_VENDOR_NIKON),		/* D0A1 */
+		PTP_VENDOR_VAL_RBOOL(PTP_DPC_NIKON_MovVoice,PTP_VENDOR_NIKON),		/* D0A1 */
 
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_NIKON_Bracketing,PTP_VENDOR_NIKON),		/* D0C0 */
 
