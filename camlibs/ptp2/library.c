@@ -702,6 +702,8 @@ static struct {
 
 	/* Graeme Wyatt <graeme.wyatt@nookawarra.com> */
 	{"Nikon:Coolpix L120 (PTP mode)", 0x04b0, 0x0185, PTP_CAP},
+	/* Kévin Ottens <ervin@ipsquad.net> */
+	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
 
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
@@ -805,6 +807,14 @@ static struct {
 
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
+
+#if 0 /* OLYMPUS */
+        /* Olympus wrap test code */
+	{"Olympus:X-925 (UMS mode)",      0x07b4, 0x0109, 0},
+	{"Olympus:E-520 (UMS mode)",      0x07b4, 0x0110, 0},
+	{"Olympus:E-1 (UMS mode)",        0x07b4, 0x0102, 0},
+#endif
+
 	/* From VICTOR <viaaurea@yahoo.es> */
 	{"Olympus:C-350Z",                0x07b4, 0x0114, 0},
 	{"Olympus:D-560Z",                0x07b4, 0x0114, 0},
@@ -1662,10 +1672,11 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					SET_CONTEXT_P(params, NULL);
 					return GP_OK;
 				} else {
-					if (ret == 0xa102) { /* means "not there yet" ... so wait */
-						ret = ptp_check_eos_events (params);
-						if (ret != PTP_RC_OK)
-							return translate_ptp_result (ret);
+					if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
+						uint16_t xret;
+						xret = ptp_check_eos_events (params);
+						if (xret != PTP_RC_OK)
+							return translate_ptp_result (xret);
 						gp_context_idle (context);
 						usleep (50*1000);
 						continue;
@@ -3502,8 +3513,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	/* The information is cached. However, the canon firmware changes
 	 * the available properties in capture mode.
 	 */
-	CPR(context, ptp_getdeviceinfo(params, &pdi));
-	fixup_cached_deviceinfo(camera,&pdi);
+	CPR(context, ptp_getdeviceinfo (params, &pdi));
+	fixup_cached_deviceinfo (camera, &pdi);
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
@@ -4242,15 +4253,15 @@ typedef struct {
 } PTPCFHandlerPrivate;
 
 static uint16_t
-gpfile_getfunc (PTPParams *params, void *priv,
+gpfile_getfunc (PTPParams *params, void *xpriv,
 	unsigned long wantlen, unsigned char *bytes,
 	unsigned long *gotlen
 ) {
-	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
+	PTPCFHandlerPrivate* priv = (PTPCFHandlerPrivate*)xpriv;
 	int ret;
 	size_t	gotlensize;
 
-	ret = gp_file_slurp (private->file, (char*)bytes, wantlen, &gotlensize);
+	ret = gp_file_slurp (priv->file, (char*)bytes, wantlen, &gotlensize);
 	*gotlen = gotlensize;
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
@@ -4258,14 +4269,14 @@ gpfile_getfunc (PTPParams *params, void *priv,
 }
 
 static uint16_t
-gpfile_putfunc (PTPParams *params, void *priv,
+gpfile_putfunc (PTPParams *params, void *xpriv,
 	unsigned long sendlen, unsigned char *bytes,
 	unsigned long *written
 ) {
-	PTPCFHandlerPrivate* private = (PTPCFHandlerPrivate*)priv;
+	PTPCFHandlerPrivate* priv= (PTPCFHandlerPrivate*)xpriv;
 	int ret;
 	
-	ret = gp_file_append (private->file, (char*)bytes, sendlen);
+	ret = gp_file_append (priv->file, (char*)bytes, sendlen);
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
 	*written = sendlen;
@@ -4274,12 +4285,12 @@ gpfile_putfunc (PTPParams *params, void *priv,
 
 static uint16_t
 ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
-	PTPCFHandlerPrivate* private = malloc (sizeof(PTPCFHandlerPrivate));
-	if (!private) return PTP_RC_GeneralError;
-	handler->priv = private;
+	PTPCFHandlerPrivate* priv = malloc (sizeof(PTPCFHandlerPrivate));
+	if (!priv) return PTP_RC_GeneralError;
+	handler->priv = priv;
 	handler->getfunc = gpfile_getfunc;
 	handler->putfunc = gpfile_putfunc;
-	private->file = file;
+	priv->file = file;
 	return PTP_RC_OK;
 }
 
