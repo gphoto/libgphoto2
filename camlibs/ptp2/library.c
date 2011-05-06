@@ -697,6 +697,8 @@ static struct {
 
 	/* Ryan Nestor <ryan@monadnock.org> */
 	{"Nikon:Coolpix P100 (PTP mode)", 0x04b0, 0x017d, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
+	/* Štěpán Němec <stepnem@gmail.com> */
+	{"Nikon:Coolpix P7000 (PTP mode)",0x04b0, 0x017f, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3019787&group_id=8874&atid=358874 */
 	/* probably no need for nikon_broken_Cap as it worked without this flag for the user */
