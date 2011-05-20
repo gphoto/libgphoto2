@@ -86,7 +86,13 @@ static const struct {
 	{"pgm",  GP_MIME_PGM},
 	{"avi",  GP_MIME_AVI},
 	{"mov",  GP_MIME_QUICKTIME},
+	{"moov", GP_MIME_QUICKTIME},
+	{"qt",   GP_MIME_QUICKTIME},
+	{"qtvr", GP_MIME_QUICKTIME},
+	{"mp2",  GP_MIME_MPEG},
 	{"mpg",  GP_MIME_MPEG},
+	{"mpeg", GP_MIME_MPEG},
+	{"mpe",  GP_MIME_MPEG},
 	{"mts",  GP_MIME_AVCHD},
 	{"m2ts", GP_MIME_AVCHD},
 	{"pbm", "image/x-portable-bitmap"},
@@ -106,8 +112,12 @@ static const struct {
 	{"x3f",  GP_MIME_RAW},
 	{"srw",  GP_MIME_RAW},
 	{"gf1",  GP_MIME_RAW},
+	{"srw",  GP_MIME_RAW},
 	{"png",  GP_MIME_PNG},
 	{"wav",  GP_MIME_WAV},
+	{"3gp",  "video/3gpp"},
+	{"3g2",  "video/x-3gpp2"},
+	{"dif",  "video/dv"},
 	{NULL, NULL}
 };
 
