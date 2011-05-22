@@ -158,6 +158,9 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		} else
 			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.");
 	}
+
+	/* FIXME: Marcus: wait for the 0xC00C Canon event? also apparently sent by the SX100IS */
+
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
 	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
