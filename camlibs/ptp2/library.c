@@ -613,6 +613,8 @@ static struct {
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
 	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
+	/* Rudi */
+	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
