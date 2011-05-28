@@ -704,6 +704,8 @@ static struct {
 	/* probably no need for nikon_broken_Cap as it worked without this flag for the user */
 	{"Nikon:Coolpix L110 (PTP mode)", 0x04b0, 0x017e, PTP_CAP},
 
+	/* miguel@rozsas.eng.br */
+	{"Nikon:Coolpix P500 (PTP mode)", 0x04b0, 0x0184, 0},
 	/* Kévin Ottens <ervin@ipsquad.net> */
 	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
 
@@ -1957,6 +1959,24 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
 		if (ret == PTP_RC_OK)
 			inliveview = propval.u8;
+#if 0
+		if (inliveview) {
+			ret = ptp_nikon_end_liveview (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Nikon disable liveview failed: %x"), ret);
+				SET_CONTEXT_P(params, NULL);
+				//return GP_ERROR;
+			}
+#if 0
+			ret = ptp_check_event (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Nikon disable liveview ended: %x"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return translate_ptp_result (ret);
+			}
+#endif
+		}
+#endif
 	}
 
 	if (!inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
@@ -2295,6 +2315,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	gp_port_get_timeout (camera->port, &timeout);
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 	while (!_timeout_passed(&event_start, capture_timeout)) {
+		/*usleep(100000);*/
 		gp_context_idle (context);
 		/* Make sure we do not poll USB interrupts after the capture complete event.
 		 * MacOS libusb 1 has non-timing out interrupts so we must avoid event reads that will not
@@ -2302,7 +2323,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		 */
 		if (!sawcapturecomplete && (PTP_RC_OK == params->event_check (params, &event))) {
 			isevent = 1;
-		} else {
+		} else
+{
 			ret = ptp_canon_checkevent (params,&event,&isevent);
 			if (ret!=PTP_RC_OK)
 				continue;
@@ -2819,7 +2841,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			sleepcnt = 1;
 
-			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
+			gp_log (GP_LOG_DEBUG , "ptp/wait_nikon_event", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_ObjectAdded: {
 				int j, res;
