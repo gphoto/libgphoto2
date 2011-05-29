@@ -1193,6 +1193,8 @@ static struct {
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 	/* "Steven A. McIntosh" <mcintosh@cotterochan.co.uk> */
 	{"Fuji:FinePix S2500HD",		0x04cb, 0x0209, 0},
+	/* Erik Hahn <erik_hahn@gmx.de> */
+	{"Fuji:FinePix F80EXR",			0x04cb, 0x020e, 0},
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
 
