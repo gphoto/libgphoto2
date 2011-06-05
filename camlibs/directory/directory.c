@@ -500,13 +500,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned int buf_len;
 #endif /* HAVE_LIBEXIF */
 	Camera *camera = (Camera*)user_data;
+	struct stat st;
 
 	result = _get_path (camera->port, folder, filename, path, sizeof(path));
 	gp_log (GP_LOG_DEBUG, "directory/get_file_func", "%s %s",folder,filename);
 	if (result < GP_OK)
 		return result;
 	gp_log (GP_LOG_DEBUG, "directory/get_file_func", "->%s",path);
-	
+
+	if (lstat (path, &st) != 0) {
+		gp_context_error (context, _("Could not get information "
+			"about '%s' in '%s' (%m)."), filename, folder);
+		return (GP_ERROR);
+	}
+	gp_file_set_mtime (file, st.st_mtime);
 
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
