@@ -513,6 +513,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (result < GP_OK)
 		return result;
 
+	if (-1 == lstat(path,&stbuf))
+		return GP_ERROR_IO_READ;
+
+	gp_file_set_mtime (file, stbuf.st_mtime);
+
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 #ifdef DEBUG
@@ -538,17 +543,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-
-	if (-1 == fstat(fd,&stbuf)) {
-		close (fd);
-		return GP_ERROR_IO_READ;
-	}
 #define BLOCKSIZE 65536
 	/* do it in 64kb blocks */
 	buf = malloc(BLOCKSIZE);
 	if (!buf) {
 		close (fd);
 		return GP_ERROR_NO_MEMORY;
+	}
+	if (-1 == fstat(fd,&stbuf)) {
+		close (fd);
+		return GP_ERROR_IO_READ;
 	}
 
 	curread = 0;
