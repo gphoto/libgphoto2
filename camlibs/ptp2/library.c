@@ -1132,6 +1132,8 @@ static struct {
 	{"Canon:PowerShot SX130 IS",		0x04a9, 0x3211, PTPBUG_DELETE_SENDS_EVENT},
 	/* IRC Reporter */
 	{"Canon:EOS 60D",			0x04a9, 0x3215, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3312353&group_id=8874 */
+	{"Canon:EOS 1100D",			0x04a9, 0x3217, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3310995&group_id=8874 */
 	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 
