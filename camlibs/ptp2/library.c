@@ -746,6 +746,8 @@ static struct {
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, PTP_CAP},
 	/* Niclas Gustafsson (nulleman @ sf) */
 	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP}, /* no hidden props */
+	/* Didier Gasser-Morlay <didiergm@gmail.com> */
+	{"Nikon:D2Hs (PTP mode)",	  0x04b0, 0x040c, PTP_CAP},
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
