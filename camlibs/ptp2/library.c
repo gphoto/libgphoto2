@@ -615,6 +615,8 @@ static struct {
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
 	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
+	/* Rudi */
+	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -706,6 +708,8 @@ static struct {
 
 	/* miguel@rozsas.eng.br */
 	{"Nikon:Coolpix P500 (PTP mode)", 0x04b0, 0x0184, 0},
+	/* Graeme Wyatt <graeme.wyatt@nookawarra.com> */
+	{"Nikon:Coolpix L120 (PTP mode)", 0x04b0, 0x0185, PTP_CAP},
 	/* Kévin Ottens <ervin@ipsquad.net> */
 	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
 
@@ -746,6 +750,8 @@ static struct {
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, PTP_CAP},
 	/* Niclas Gustafsson (nulleman @ sf) */
 	{"Nikon:D50 (PTP mode)",          0x04b0, 0x040a, PTP_CAP}, /* no hidden props */
+	/* Didier Gasser-Morlay <didiergm@gmail.com> */
+	{"Nikon:D2Hs (PTP mode)",	  0x04b0, 0x040c, PTP_CAP},
 	{"Nikon:DSC D70s (PTP mode)",     0x04b0, 0x040e, PTP_CAP},
 	/* Jana Jaeger <jjaeger.suse.de> */
 	{"Nikon:DSC D200 (PTP mode)",     0x04b0, 0x0410, PTP_CAP},
@@ -1052,6 +1058,8 @@ static struct {
 	/* Paul Tinsley */
 	{"Canon:PowerShot G10",			0x04a9, 0x318f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Nikolay Rysev <nrysev@gmail.com> */
+	{"Canon:PowerShot A2000 IS",		0x04a9, 0x3191, PTPBUG_DELETE_SENDS_EVENT},
 	/* Chris Rodley <chris@takeabreak.co.nz> */
 	{"Canon:PowerShot SX110 IS",		0x04a9, 0x3192, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1103,6 +1111,10 @@ static struct {
 	{"Canon:EOS 500D",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:EOS Rebel T1i",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:EOS Kiss X3",			0x04a9, 0x31cf, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Peter Lawrence <peter@pjlcentral.com> */
+	{"Canon:EOS 1D Mark IV",		0x04a9, 0x31d0, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* From: Franck GIRARDIN - OPTOCONCEPT <fgirardin@optoconcept.com> */
 	{"Canon:PowerShot G11",			0x04a9, 0x31df, 0},
 
@@ -1126,6 +1138,10 @@ static struct {
 	{"Canon:PowerShot SX130 IS",		0x04a9, 0x3211, PTPBUG_DELETE_SENDS_EVENT},
 	/* IRC Reporter */
 	{"Canon:EOS 60D",			0x04a9, 0x3215, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3312353&group_id=8874 */
+	{"Canon:EOS 1100D",			0x04a9, 0x3217, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3310995&group_id=8874 */
+	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1187,6 +1203,8 @@ static struct {
 	{"Fuji:FinePix Z35",			0x04cb, 0x0201, 0},
 	/* "Steven A. McIntosh" <mcintosh@cotterochan.co.uk> */
 	{"Fuji:FinePix S2500HD",		0x04cb, 0x0209, 0},
+	/* Erik Hahn <erik_hahn@gmx.de> */
+	{"Fuji:FinePix F80EXR",			0x04cb, 0x020e, 0},
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
 
@@ -1230,6 +1248,9 @@ static struct {
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1680029&group_id=8874&atid=108874 */
 	{"Nokia:N73",				0x0421, 0x0488, 0},
+
+	/* IRC reporter */
+	{"Samsung:S5620",			0x04e8,	0x684a, 0},
 };
 
 #include "device-flags.h"
