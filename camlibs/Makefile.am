@@ -115,6 +115,7 @@ include sx330z/Makefile-files
 include template/Makefile-files
 include topfield/Makefile-files
 include toshiba/pdrm11/Makefile-files
+include tp6801/Makefile-files
 # End of list of Makefile-files
 
 
