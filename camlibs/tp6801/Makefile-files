@@ -1,0 +1,9 @@
+EXTRA_DIST += tp6801/README.tp6801 tp6801/tp6801-dump.c
+camlibdoc_DATA += tp6801/README.tp6801
+
+EXTRA_LTLIBRARIES += tp6801.la
+
+tp6801_la_SOURCES = tp6801/library.c tp6801/tp6801.c tp6801/tp6801.h
+tp6801_la_LDFLAGS = $(camlib_ldflags)
+tp6801_la_DEPENDENCIES = $(camlib_dependencies)
+tp6801_la_LIBADD = $(camlib_libadd) @LIBGD@

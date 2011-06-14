@@ -555,6 +555,7 @@ GP_CAMLIB([sx330z])dnl
 GP_CAMLIB([template], [unlisted])dnl
 GP_CAMLIB([topfield])dnl
 GP_CAMLIB([toshiba_pdrm11])dnl
+GP_CAMLIB([tp6801])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
 GP_CONFIG_MSG([Camlibs],[${camlibs}])
