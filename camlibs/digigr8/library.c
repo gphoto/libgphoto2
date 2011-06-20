@@ -57,6 +57,8 @@ static const struct {
 	unsigned short idProduct;
 } models[] = {
 	{"Digigr8",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"Cobra Digital Camera DC150", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770,
+									0x905c},
 	{"Che-Ez Snap SNAP-U",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"DC-N130t",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905C},
 	{"Soundstar TDC-35",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
