@@ -1,7 +1,9 @@
+2011-06-20  Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Sakar 88067 Dora the Explorer camera added.
+
 2010-04-28  Theodore Kilgore <kilgota@auburn.edu>
 	* README.jl2005c: minor cleanup.
 	* library.c: Sakar 88601 Nickelodeon iCarly camera added.
-
 
 2010-12-26  Marcus Meissner <marcus@jet.franken.de>
 
