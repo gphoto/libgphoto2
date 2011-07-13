@@ -264,15 +264,18 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		int i;
 
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
-			ptp_canon_eos_getdeviceinfo (params, &x);
-
-			for (i=0;i<x.EventsSupported_len;i++)
-				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
-			for (i=0;i<x.DevicePropertiesSupported_len;i++)
-				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
-			for (i=0;i<x.unk_len;i++)
-				gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
-			ptp_free_EOS_DI (&x);
+			ret = ptp_canon_eos_getdeviceinfo (params, &x);
+			if (ret == PTP_RC_OK) {
+				for (i=0;i<x.EventsSupported_len;i++)
+					gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
+				for (i=0;i<x.DevicePropertiesSupported_len;i++)
+					gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
+				for (i=0;i<x.unk_len;i++)
+					gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
+				ptp_free_EOS_DI (&x);
+			} else {
+				gp_log (GP_LOG_ERROR,"ptp2/eos_deviceinfoex", "getevent failed, ret %x!", ret);
+			}
 		}
 	}
 	/* Get the second bulk set of event data */
