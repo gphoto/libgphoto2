@@ -355,6 +355,8 @@ static inline void
 ptp_unpack_EOS_DI (PTPParams *params, unsigned char* data, PTPCanonEOSDeviceInfo *di, unsigned int datalen)
 {
 	int totallen = 4;
+
+	memset (di,0, sizeof(*di));
 	if (datalen < 8) return;
 
 	/* uint32_t struct len - ignore */
