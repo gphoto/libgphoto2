@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.4.12 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.4.11], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.4.11.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
@@ -259,11 +259,14 @@ dnl ---------------------------------------------------------------------------
 LIBJPEG=""
 libjpeg_msg="no"
 AC_SUBST(LIBJPEG)
-AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
-	AC_CHECK_HEADER(jpeglib.h,[
-		AC_DEFINE(HAVE_LIBJPEG,1,[define if we found LIBJPEG and its headers])
-		LIBJPEG="-ljpeg"
-		libjpeg_msg="yes"
+AC_ARG_WITH([jpeg], AS_HELP_STRING([--without-jpeg], [Build without jpeg library (default: no)]))
+AS_IF([test "x$with_jpeg" != "xno"], [
+	AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
+		AC_CHECK_HEADER(jpeglib.h,[
+			AC_DEFINE(HAVE_LIBJPEG,1,[define if we found LIBJPEG and its headers])
+			LIBJPEG="-ljpeg"
+			libjpeg_msg="yes"
+		])
 	])
 ])
 GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
@@ -274,11 +277,14 @@ dnl ---------------------------------------------------------------------------
 LIBGD=""
 libgd_msg="no"
 AC_SUBST(LIBGD)
-AC_CHECK_LIB(gd,gdImageCreateTrueColor,[
-	AC_CHECK_HEADER(gd.h,[
-		AC_DEFINE(HAVE_GD,1,[define if we have LIBGD and its headers])
-		LIBGD="-lgd"
-		libgd_msg="yes"
+AC_ARG_WITH([gd], AS_HELP_STRING([--without-gd], [Build without GD library (default: no)]))
+AS_IF([test "x$with_gd" != "xno"], [
+	AC_CHECK_LIB(gd,gdImageCreateTrueColor,[
+		AC_CHECK_HEADER(gd.h,[
+			AC_DEFINE(HAVE_GD,1,[define if we have LIBGD and its headers])
+			LIBGD="-lgd"
+			libgd_msg="yes"
+		])
 	])
 ])
 GP_CONFIG_MSG([GD conversion support],[${libgd_msg}])
