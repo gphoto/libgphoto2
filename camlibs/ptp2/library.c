@@ -1538,8 +1538,8 @@ camera_exit (Camera *camera, GPContext *context)
 		SET_CONTEXT_P(params, context);
 #ifdef HAVE_ICONV
 		/* close iconv converters */
-		iconv_close(params->cd_ucs2_to_locale);
-		iconv_close(params->cd_locale_to_ucs2);
+		if (params->cd_ucs2_to_locale != (iconv_t)-1) iconv_close(params->cd_ucs2_to_locale);
+		if (params->cd_locale_to_ucs2 != (iconv_t)-1) iconv_close(params->cd_locale_to_ucs2);
 #endif
 		/* Disable EOS capture now, also end viewfinder mode. */
 		if (params->eos_captureenabled) {
@@ -5729,7 +5729,8 @@ camera_init (Camera *camera, GPContext *context)
 	if ((params->cd_ucs2_to_locale == (iconv_t) -1) ||
 	    (params->cd_locale_to_ucs2 == (iconv_t) -1)) {
 		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
-		return (GP_ERROR_OS_FAILURE);
+		/* we can fallback */
+		/*return (GP_ERROR_OS_FAILURE);*/
 	}
 #endif
         gp_camera_get_abilities(camera, &a);
