@@ -260,6 +260,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	double aspect_in, aspect_out;
 #ifdef HAVE_ICONV
 	char *in, *out;
+#else
+	int i;
 #endif
 	unsigned long filesize = 0;
 	gdImagePtr rotated, im_out, im_in = NULL;
