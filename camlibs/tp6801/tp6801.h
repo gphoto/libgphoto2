@@ -33,7 +33,10 @@
 #define TP6801_PAT_PAGE			(TP6801_PAT_OFFSET / TP6801_PAGE_SIZE)
 #define TP6801_PAT_SIZE			256 /* Including the magic */
 #define TP6801_PAT_ENTRY_PRE_ERASED	0xff
-#define TP6801_PAT_ENTRY_DELETED	0xfe
+/* Windows software uses 0xfe to mark as deleted, the frame itself 0x00 */
+#define TP6801_PAT_ENTRY_DELETED_FRAME	0x00
+#define TP6801_PAT_ENTRY_DELETED_WIN	0xfe
+#define TP6801_PAT_ENTRY_DELETED(x)	((x) == 0xfe || (x) == 0x00)
 #define TP6801_PICTURE_OFFSET(i, size)	(0x10000 + (i) * (size))
 #define TP6801_READ			0xC1
 #define TP6801_ERASE_BLOCK		0xC6
