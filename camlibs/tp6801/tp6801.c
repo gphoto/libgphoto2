@@ -499,30 +499,9 @@ tp6801_write_file(Camera *camera, int **rgb24)
 int
 tp6801_delete_file(Camera *camera, int idx)
 {
-	int i, n, count = tp6801_max_filecount (camera);
-
 	CHECK (tp6801_check_file_present (camera, idx))
 
-	n = camera->pl->pat[idx];
 	camera->pl->pat[idx] = TP6801_PAT_ENTRY_DELETED_WIN;
-
-	/* Renumber remaining pictures */
-	for (i = 0; i < count; i++) {
-		if (camera->pl->pat[i] >= 1 &&
-		    camera->pl->pat[i] <= camera->pl->picture_count) {
-			if (camera->pl->pat[i] > n)
-				camera->pl->pat[i]--;
-		} else switch (camera->pl->pat[i]) {
-		case TP6801_PAT_ENTRY_DELETED_FRAME:
-		case TP6801_PAT_ENTRY_DELETED_WIN:
-		case TP6801_PAT_ENTRY_PRE_ERASED:
-			break;
-		default:
-			return GP_ERROR_CORRUPTED_DATA;
-		}
-	}
-
-	camera->pl->picture_count--;
 	camera->pl->page_state[TP6801_PAT_PAGE] |= TP6801_PAGE_DIRTY;
 
 	return GP_OK;
@@ -681,6 +660,33 @@ tp6801_commit(Camera *camera)
 			camera->pl->page_state[TP6801_PAT_PAGE] |=
 				TP6801_PAGE_DIRTY;
 		}
+	}
+
+	/* The picture numbering in the PAT can contain holes from us
+	   (or the frame which is why wo do this here) deleting pictures.
+	   These holes are a problem as if we keep deleting all but the
+	   highest numbered picture and adding new pictures the picture
+	   number could reach 254 / 255 which have special meaning.
+
+	   So we renumber the pictures here to remove the holes */
+	for (i = 1; i <= camera->pl->picture_count; i++) {
+		/* Step 1 see if this number exists in the PAT */
+		for (j = 0; j < count; j++)
+			if (camera->pl->pat[j] == i)
+				break;
+		if (j != count)
+			continue; /* Number exists no renumber needed */
+
+		/* Step 2 decr. the number of all higher numbered picts */
+		for (j = 0; j < count; j++) {
+			if (camera->pl->pat[j] >= 1 &&
+			    camera->pl->pat[j] <= camera->pl->picture_count &&
+			    camera->pl->pat[j] > i) {
+				camera->pl->pat[j]--;
+			}
+		}
+		camera->pl->picture_count--;
+		camera->pl->page_state[TP6801_PAT_PAGE] |= TP6801_PAGE_DIRTY;
 	}
 
 	/* And commit the block with the PAT */	
