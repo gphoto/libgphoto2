@@ -348,7 +348,8 @@ tp6801_file_present(Camera *camera, int idx)
 	    camera->pl->pat[idx] <= camera->pl->picture_count)
 		return 1;
 	else switch (camera->pl->pat[idx]) {
-	case TP6801_PAT_ENTRY_DELETED:
+	case TP6801_PAT_ENTRY_DELETED_FRAME:
+	case TP6801_PAT_ENTRY_DELETED_WIN:
 	case TP6801_PAT_ENTRY_PRE_ERASED:
 		return 0;
 	default:
@@ -475,7 +476,7 @@ tp6801_write_file(Camera *camera, int **rgb24)
 	if (i == count) {
 		/* Pass 2 try to find a deleted slot in the PAT */
 		for (i = 0; i < count; i++)
-			if (camera->pl->pat[i] == TP6801_PAT_ENTRY_DELETED)
+			if (TP6801_PAT_ENTRY_DELETED(camera->pl->pat[i]))
 				break;
 	}
 
@@ -503,7 +504,7 @@ tp6801_delete_file(Camera *camera, int idx)
 	CHECK (tp6801_check_file_present (camera, idx))
 
 	n = camera->pl->pat[idx];
-	camera->pl->pat[idx] = TP6801_PAT_ENTRY_DELETED;
+	camera->pl->pat[idx] = TP6801_PAT_ENTRY_DELETED_WIN;
 
 	/* Renumber remaining pictures */
 	for (i = 0; i < count; i++) {
@@ -512,7 +513,8 @@ tp6801_delete_file(Camera *camera, int idx)
 			if (camera->pl->pat[i] > n)
 				camera->pl->pat[i]--;
 		} else switch (camera->pl->pat[i]) {
-		case TP6801_PAT_ENTRY_DELETED:
+		case TP6801_PAT_ENTRY_DELETED_FRAME:
+		case TP6801_PAT_ENTRY_DELETED_WIN:
 		case TP6801_PAT_ENTRY_PRE_ERASED:
 			break;
 		default:
@@ -664,7 +666,7 @@ tp6801_commit(Camera *camera)
 	   and if so mark there PAT entries as pre-erased, rather then just
 	   deleted */
 	for (i = 0; i < count; i++) {
-		if (camera->pl->pat[i] != TP6801_PAT_ENTRY_DELETED)
+		if (!TP6801_PAT_ENTRY_DELETED(camera->pl->pat[i]))
 			continue;
 
 		begin = TP6801_PICTURE_OFFSET(i, size) / TP6801_PAGE_SIZE;
@@ -782,7 +784,8 @@ tp6801_open_device(Camera *camera)
 		case TP6801_PAT_ENTRY_PRE_ERASED:
 			clear_flags |= TP6801_PAGE_NEEDS_ERASE;
 			/* fall through */
-		case TP6801_PAT_ENTRY_DELETED:
+		case TP6801_PAT_ENTRY_DELETED_FRAME:
+		case TP6801_PAT_ENTRY_DELETED_WIN:
 			clear_flags |= TP6801_PAGE_CONTAINS_DATA;
 			break;
 		default:
