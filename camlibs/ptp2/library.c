@@ -719,6 +719,8 @@ static struct {
 	{"Nikon:Coolpix P4 (PTP mode)",   0x04b0, 0x020c, PTP_CAP},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3135935&group_id=8874&atid=358874 */
 	{"Nikon:Coolpix S8000 (PTP mode)",0x04b0, 0x021f, 0},
+	/* Aleksej Serdjukov <deletesoftware@yandex.ru> */
+	{"Nikon:Coolpix S5100 (PTP mode)",0x04b0, 0x0220, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
