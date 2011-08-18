@@ -786,6 +786,9 @@ static struct {
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3140014&group_id=8874 */
 	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* IRC Reporter popolon */
+	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
+
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
