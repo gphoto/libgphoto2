@@ -704,6 +704,8 @@ static struct {
 	/* probably no need for nikon_broken_Cap as it worked without this flag for the user */
 	{"Nikon:Coolpix L110 (PTP mode)", 0x04b0, 0x017e, PTP_CAP},
 
+	/* miguel@rozsas.eng.br */
+	{"Nikon:Coolpix P500 (PTP mode)", 0x04b0, 0x0184, 0},
 	/* Graeme Wyatt <graeme.wyatt@nookawarra.com> */
 	{"Nikon:Coolpix L120 (PTP mode)", 0x04b0, 0x0185, PTP_CAP},
 	/* Kévin Ottens <ervin@ipsquad.net> */
