@@ -541,6 +541,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_OLYMPUS_GetCameraControlMode		0x910a
 #define PTP_OC_OLYMPUS_SetCameraControlMode		0x910b
 #define PTP_OC_OLYMPUS_SetWBRGBGain			0x910c
+#define PTP_OC_OLYMPUS_GetDeviceInfo			0x9301
+#define PTP_OC_OLYMPUS_Init1				0x9302
 #define PTP_OC_OLYMPUS_SetDateTime			0x9402
 #define PTP_OC_OLYMPUS_GetDateTime			0x9482
 #define PTP_OC_OLYMPUS_SetCameraID			0x9501
@@ -1732,7 +1734,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_CustomWB			0xD10B
 #define PTP_DPC_OLYMPUS_CustomWBValue			0xD10C
 #define PTP_DPC_OLYMPUS_ExposureTimeEx			0xD10D
-#define PTP_DPC_OLYMPUS_BulbModeee			0xD10E
+#define PTP_DPC_OLYMPUS_BulbMode			0xD10E
 #define PTP_DPC_OLYMPUS_AntiMirrorMode			0xD10F
 #define PTP_DPC_OLYMPUS_AEBracketingFrame		0xD110
 #define PTP_DPC_OLYMPUS_AEBracketingStep		0xD111

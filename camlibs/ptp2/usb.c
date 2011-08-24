@@ -60,9 +60,7 @@
 #define PTP_CNT_INIT(cnt) {memset(&cnt,0,sizeof(cnt));}
 
 /* PTP2_FAST_TIMEOUT: how long (in milliseconds) we should wait for
- * an URB to come back on an interrupt endpoint
- * 50 is insufficient. 
- */
+ * an URB to come back on an interrupt endpoint */
 #define PTP2_FAST_TIMEOUT       100
 
 /* Pack / unpack functions */
@@ -158,6 +156,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	written = 0;
 	while(bytes_left_to_transfer > 0) {
 		unsigned long readlen, toread, oldwritten = written;
+		int res;
 
 		toread = 4096;
 		if (toread > bytes_left_to_transfer)
@@ -298,6 +297,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			);
 			/* stuff data directly to passed data handler */
 			while (1) {
+				unsigned long written;
 				int result = gp_port_read (camera->port, (char*)data, PTP_USB_BULK_HS_MAX_PACKET_LEN_READ);
 				if (result < 0) {
 					free (data);
@@ -370,6 +370,7 @@ retry:
 		curread = 0; res = 0;
 		while (bytes_to_read > 0) {
 			unsigned long toread = bytes_to_read;
+			int res;
 
 			/* read in large blobs.
 			 * if smaller than large blob, read all but the last short packet
@@ -485,10 +486,15 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 static inline uint16_t
 ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 {
-	int			result, timeout;
+	int			result, timeout, fasttimeout;
 	unsigned long		rlen;
 	PTPUSBEventContainer	usbevent;
 	Camera			*camera = ((PTPData *)params->data)->camera;
+
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)
+		fasttimeout = PTP2_FAST_TIMEOUT*2;
+	else
+		fasttimeout = PTP2_FAST_TIMEOUT;
 
 	PTP_CNT_INIT(usbevent);
 
@@ -502,7 +508,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		break;
 	case PTP_EVENT_CHECK_FAST:
 		gp_port_get_timeout (camera->port, &timeout);
-		gp_port_set_timeout (camera->port, PTP2_FAST_TIMEOUT);
+		gp_port_set_timeout (camera->port, fasttimeout);
 		result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
 		if (result <= 0) result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
 		gp_port_set_timeout (camera->port, timeout);
@@ -517,7 +523,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		return PTP_ERROR_IO;
 	}
 	if (result == 0) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_event", "reading event a 0 read occurred, reporting timeout.");
+		gp_log (GP_LOG_DEBUG, "ptp2/usb_event", "reading event an 0 read occurred, assuming timeout.");
 		return PTP_ERROR_TIMEOUT;
 	}
 	rlen = result;
