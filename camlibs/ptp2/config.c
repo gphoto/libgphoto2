@@ -3343,6 +3343,7 @@ static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{"1600",	2, 0},
 	{"3200",	3, 0},
 	{N_("Hi 1"),	4, 0},
+	{N_("Hi 2"),	5, 0},
 };
 GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
 
