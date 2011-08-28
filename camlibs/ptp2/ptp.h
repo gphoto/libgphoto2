@@ -1497,6 +1497,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_JPEG_Compression_Policy		0xD031
 #define PTP_DPC_NIKON_ColorSpace			0xD032
 #define PTP_DPC_NIKON_AutoDXCrop			0xD033
+#define PTP_DPC_NIKON_EffectsMode			0xD037
 #define PTP_DPC_NIKON_CSMMenuBankSelect			0xD040
 #define PTP_DPC_NIKON_MenuBankNameA			0xD041
 #define PTP_DPC_NIKON_MenuBankNameB			0xD042

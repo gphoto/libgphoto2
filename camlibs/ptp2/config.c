@@ -2392,6 +2392,22 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
+static struct deviceproptableu16 nikon_d5100_exposure_program_modes[] = {
+	{ "M",			0x0001, 0 },
+	{ "P",			0x0002, 0 },
+	{ "A",			0x0003, 0 },
+	{ "S",			0x0004, 0 },
+	{ N_("Auto"),		0x8010, PTP_VENDOR_NIKON},
+	{ N_("Portrait"),	0x8011, PTP_VENDOR_NIKON},
+	{ N_("Landscape"),	0x8012, PTP_VENDOR_NIKON},
+	{ N_("Macro"),		0x8013, PTP_VENDOR_NIKON},
+	{ N_("Sports"),		0x8014, PTP_VENDOR_NIKON},
+	{ N_("No Flash"),	0x8016, PTP_VENDOR_NIKON},
+	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
+	{ N_("Scene"),		0x8018, PTP_VENDOR_NIKON},
+	{ N_("Effects"),	0x8019, PTP_VENDOR_NIKON},
+};
+GENERIC16TABLE(NIKON_D5100_ExposureProgram,nikon_d5100_exposure_program_modes)
 
 static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Single Shot"),		0x0001, 0 },
@@ -5152,7 +5168,8 @@ static struct submenu nikon_d90_camera_settings[] = {
 };
 
 static struct submenu nikon_d5100_capture_settings[] = {
-	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D5100_MovieQuality, _put_Nikon_D5100_MovieQuality},
+	{ N_("Movie Quality"),  "moviequality", PTP_DPC_NIKON_MovScreenSize, 0, PTP_DTC_UINT8,  _get_Nikon_D5100_MovieQuality,    _put_Nikon_D5100_MovieQuality},
+	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_NIKON_D5100_ExposureProgram, _put_NIKON_D5100_ExposureProgram},
 	{ 0,0,0,0,0,0,0 },
 };
 static struct submenu nikon_d90_capture_settings[] = {
