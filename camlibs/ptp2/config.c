@@ -3330,12 +3330,35 @@ static struct deviceproptableu8 nikon_lensid[] = {
 };
 GENERIC8TABLE(Nikon_LensID,nikon_lensid)
 
+static struct deviceproptableu8 nikon_microphone[] = {
+	{N_("Auto sensitivity"),	0, 0},
+	{N_("High sensitivity"),	1, 0},
+	{N_("Medium sensitivity"),	2, 0},
+	{N_("Low sensitivity"),		3, 0},
+	{N_("Microphone off"),		4, 0},
+};
+GENERIC8TABLE(Nikon_Microphone, nikon_microphone);
+
 static struct deviceproptableu8 nikon_moviequality[] = {
 	{"320x216",	0, 0},
 	{"640x424",	1, 0},
 	{"1280x720",	2, 0},
 };
 GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality);
+
+static struct deviceproptableu8 nikon_d5100_moviequality[] = {
+	{"640x424; 25fps; normal",		0, 0},
+	{"640x424; 25fps; high quality",	1, 0},
+ 	{"1280x720; 24fps; normal",		2, 0},
+	{"1280x720; 24fps; high quality",	3, 0},
+	{"1280x720; 25fps; normal",		4, 0},
+	{"1280x720; 25fps; high quality",	5, 0},
+	{"1920x1080; 24fps; normal",		6, 0},
+	{"1920x1080; 24fps; high quality",	7, 0},
+	{"1920x1080; 25fps; normal",		8, 0},
+	{"1920x1080; 25fps; high quality",	9, 0},
+};
+GENERIC8TABLE(Nikon_D5100_MovieQuality, nikon_d5100_moviequality);
 
 static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{"400",		0, 0},
@@ -5112,8 +5135,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
 	{ N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 	{ N_("Auto Exposure Bracketing"), "aeb", PTP_DPC_CANON_EOS_AEB, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_AEB, _put_Canon_EOS_AEB},
-	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
 	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Microphone"), "microphone", PTP_DPC_NIKON_MovMicrophone, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Microphone, _put_Nikon_Microphone},
 	{ N_("Reverse Indicators"), "reverseindicators", PTP_DPC_NIKON_IndicatorDisp, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 
 	{ 0,0,0,0,0,0,0 },
@@ -5128,6 +5151,10 @@ static struct submenu nikon_d90_camera_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+static struct submenu nikon_d5100_capture_settings[] = {
+	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D5100_MovieQuality, _put_Nikon_D5100_MovieQuality},
+	{ 0,0,0,0,0,0,0 },
+};
 static struct submenu nikon_d90_capture_settings[] = {
 	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
 	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ISOAutoHiLimit, _put_Nikon_D90_ISOAutoHiLimit },
@@ -5171,6 +5198,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
 	{ N_("Maximum continuous release"), "maximumcontinousrelease", PTP_DPC_NIKON_D2MaximumShots, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Range_UINT8, _put_Range_UINT8},
+	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
 
 	/* And some D3s values */
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh", PTP_DPC_NIKON_ContinuousSpeedHigh, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeedHigh, _put_Nikon_D3s_ShootingSpeedHigh},
@@ -5193,6 +5221,7 @@ static struct menu menus[] = {
 
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings,     NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0426, nikon_d3s_capture_settings,     NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0429, nikon_d5100_capture_settings,   NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0,      0, nikon_generic_capture_settings, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0, 0, capture_settings_menu, NULL, NULL },
 
