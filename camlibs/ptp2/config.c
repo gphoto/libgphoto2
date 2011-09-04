@@ -2392,6 +2392,23 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
+static struct deviceproptableu8 nikon_scenemode[] = {
+	{ N_("Night landscape"),	0, 0 },
+	{ N_("Party/Indoor"),		1, 0 },
+	{ N_("Beach/Snow"),		2, 0 },
+	{ N_("Sunset"),			3, 0 },
+	{ N_("Dusk/Dawn"),		4, 0 },
+	{ N_("Pet Portrait"),		5, 0 },
+	{ N_("Candlelight"),		6, 0 },
+	{ N_("Blossom"),		7, 0 },
+	{ N_("Autumn colors"),		8, 0 },
+	{ N_("Food"),			9, 0 },
+	/* ? */
+	{ N_("Night Portrait"),		18, 0 },
+
+};
+GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode);
+
 static struct deviceproptableu16 nikon_d5100_exposure_program_modes[] = {
 	{ "M",			0x0001, 0 },
 	{ "P",			0x0002, 0 },
@@ -5070,6 +5087,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focus Mode"), "focusmode", PTP_DPC_CANON_EOS_FocusMode, 0, PTP_DTC_UINT16, _get_Canon_EOS_FocusMode, _put_Canon_EOS_FocusMode},
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
+	{ N_("Scene Mode"), "scenemode", PTP_DPC_NIKON_SceneMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_SceneMode, _put_NIKON_SceneMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_FUJI_ReleaseMode, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ReleaseMode, _put_Fuji_ReleaseMode},
 	{ N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ShootMode, _put_Canon_ShootMode},
