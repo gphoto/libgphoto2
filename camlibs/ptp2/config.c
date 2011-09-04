@@ -2564,6 +2564,17 @@ static struct deviceproptableu16 effect_modes[] = {
 };
 GENERIC16TABLE(EffectMode,effect_modes)
 
+static struct deviceproptableu8 nikon_effect_modes[] = {
+	{ N_("Night Vision"),		0x00, 0 },
+	{ N_("Color sketch"),		0x01, 0 },
+	{ N_("Miniature effect"),	0x02, 0 },
+	{ N_("Selective color"),	0x03, 0 },
+	{ N_("Silhouette"),		0x04, 0 },
+	{ N_("High key"),		0x05, 0 },
+	{ N_("Low key"),		0x06, 0 },
+};
+GENERIC16TABLE(NIKON_EffectMode,nikon_effect_modes)
+
 
 static int
 _get_FocalLength(CONFIG_GET_ARGS) {
@@ -5086,6 +5097,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focus Mode 2"), "focusmode2", PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFMode, _put_Nikon_AFMode},
 	{ N_("Focus Mode"), "focusmode", PTP_DPC_CANON_EOS_FocusMode, 0, PTP_DTC_UINT16, _get_Canon_EOS_FocusMode, _put_Canon_EOS_FocusMode},
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
+	{ N_("Effect Mode"), "effectmode", PTP_DPC_NIKON_EffectMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_EffectMode, _put_NIKON_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
 	{ N_("Scene Mode"), "scenemode", PTP_DPC_NIKON_SceneMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_SceneMode, _put_NIKON_SceneMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
