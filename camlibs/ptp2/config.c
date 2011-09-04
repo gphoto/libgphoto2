@@ -158,6 +158,9 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		} else
 			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.");
 	}
+
+	/* FIXME: Marcus: wait for the 0xC00C Canon event? also apparently sent by the SX100IS */
+
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
 	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
@@ -2392,6 +2395,39 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
+static struct deviceproptableu8 nikon_scenemode[] = {
+	{ N_("Night landscape"),	0, 0 },
+	{ N_("Party/Indoor"),		1, 0 },
+	{ N_("Beach/Snow"),		2, 0 },
+	{ N_("Sunset"),			3, 0 },
+	{ N_("Dusk/Dawn"),		4, 0 },
+	{ N_("Pet Portrait"),		5, 0 },
+	{ N_("Candlelight"),		6, 0 },
+	{ N_("Blossom"),		7, 0 },
+	{ N_("Autumn colors"),		8, 0 },
+	{ N_("Food"),			9, 0 },
+	/* ? */
+	{ N_("Night Portrait"),		18, 0 },
+
+};
+GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode);
+
+static struct deviceproptableu16 nikon_d5100_exposure_program_modes[] = {
+	{ "M",			0x0001, 0 },
+	{ "P",			0x0002, 0 },
+	{ "A",			0x0003, 0 },
+	{ "S",			0x0004, 0 },
+	{ N_("Auto"),		0x8010, PTP_VENDOR_NIKON},
+	{ N_("Portrait"),	0x8011, PTP_VENDOR_NIKON},
+	{ N_("Landscape"),	0x8012, PTP_VENDOR_NIKON},
+	{ N_("Macro"),		0x8013, PTP_VENDOR_NIKON},
+	{ N_("Sports"),		0x8014, PTP_VENDOR_NIKON},
+	{ N_("No Flash"),	0x8016, PTP_VENDOR_NIKON},
+	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
+	{ N_("Scene"),		0x8018, PTP_VENDOR_NIKON},
+	{ N_("Effects"),	0x8019, PTP_VENDOR_NIKON},
+};
+GENERIC16TABLE(NIKON_D5100_ExposureProgram,nikon_d5100_exposure_program_modes)
 
 static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Single Shot"),		0x0001, 0 },
@@ -2511,8 +2547,8 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Red-eye automatic"),		0x0004, 0 },
 	{ N_("Red-eye fill"),			0x0005, 0 },
 	{ N_("External sync"),			0x0006, 0 },
-	{ N_("Default"),			0x8010, PTP_VENDOR_NIKON},
-	{ N_("Slow Sync"),			0x8011, PTP_VENDOR_NIKON},
+	{ N_("Auto"),				0x8010, PTP_VENDOR_NIKON},
+	{ N_("Auto Slow Sync"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Rear Curtain Sync + Slow Sync"),	0x8012, PTP_VENDOR_NIKON},
 	{ N_("Red-eye Reduction + Slow Sync"),	0x8013, PTP_VENDOR_NIKON},
 	{ N_("Front-curtain sync"),			0x8001, PTP_VENDOR_FUJI},
@@ -2530,6 +2566,17 @@ static struct deviceproptableu16 effect_modes[] = {
 	{ N_("Sepia"),		0x0003, 0 },
 };
 GENERIC16TABLE(EffectMode,effect_modes)
+
+static struct deviceproptableu8 nikon_effect_modes[] = {
+	{ N_("Night Vision"),		0x00, 0 },
+	{ N_("Color sketch"),		0x01, 0 },
+	{ N_("Miniature effect"),	0x02, 0 },
+	{ N_("Selective color"),	0x03, 0 },
+	{ N_("Silhouette"),		0x04, 0 },
+	{ N_("High key"),		0x05, 0 },
+	{ N_("Low key"),		0x06, 0 },
+};
+GENERIC16TABLE(NIKON_EffectMode,nikon_effect_modes)
 
 
 static int
@@ -3330,6 +3377,15 @@ static struct deviceproptableu8 nikon_lensid[] = {
 };
 GENERIC8TABLE(Nikon_LensID,nikon_lensid)
 
+static struct deviceproptableu8 nikon_microphone[] = {
+	{N_("Auto sensitivity"),	0, 0},
+	{N_("High sensitivity"),	1, 0},
+	{N_("Medium sensitivity"),	2, 0},
+	{N_("Low sensitivity"),		3, 0},
+	{N_("Microphone off"),		4, 0},
+};
+GENERIC8TABLE(Nikon_Microphone, nikon_microphone);
+
 static struct deviceproptableu8 nikon_moviequality[] = {
 	{"320x216",	0, 0},
 	{"640x424",	1, 0},
@@ -3337,12 +3393,27 @@ static struct deviceproptableu8 nikon_moviequality[] = {
 };
 GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality);
 
+static struct deviceproptableu8 nikon_d5100_moviequality[] = {
+	{"640x424; 25fps; normal",		0, 0},
+	{"640x424; 25fps; high quality",	1, 0},
+ 	{"1280x720; 24fps; normal",		2, 0},
+	{"1280x720; 24fps; high quality",	3, 0},
+	{"1280x720; 25fps; normal",		4, 0},
+	{"1280x720; 25fps; high quality",	5, 0},
+	{"1920x1080; 24fps; normal",		6, 0},
+	{"1920x1080; 24fps; high quality",	7, 0},
+	{"1920x1080; 25fps; normal",		8, 0},
+	{"1920x1080; 25fps; high quality",	9, 0},
+};
+GENERIC8TABLE(Nikon_D5100_MovieQuality, nikon_d5100_moviequality);
+
 static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{"400",		0, 0},
 	{"800",		1, 0},
 	{"1600",	2, 0},
 	{"3200",	3, 0},
 	{N_("Hi 1"),	4, 0},
+	{N_("Hi 2"),	5, 0},
 };
 GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
 
@@ -4971,13 +5042,14 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_EOS_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
+	{ N_("ISO Auto"), "isoauto", PTP_DPC_NIKON_ISO_Auto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_EOS_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_WhiteBalance, _put_Canon_EOS_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
 	{ N_("WhiteBalance Adjust A") , "whitebalanceadjusta", PTP_DPC_CANON_EOS_WhiteBalanceAdjustA, PTP_VENDOR_CANON, PTP_DTC_INT16, _get_Canon_EOS_WBAdjust, _put_Canon_EOS_WBAdjust},
 	{ N_("WhiteBalance Adjust B") , "whitebalanceadjustb", PTP_DPC_CANON_EOS_WhiteBalanceAdjustB, PTP_VENDOR_CANON, PTP_DTC_INT16, _get_Canon_EOS_WBAdjust, _put_Canon_EOS_WBAdjust},
 	{ N_("WhiteBalance X A") , "whitebalancexa", PTP_DPC_CANON_EOS_WhiteBalanceXA, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
-	{ N_("WhiteBalance X B") , "whitebalancexb", PTP_DPC_CANON_EOS_WhiteBalanceXB, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
+	{ N_("WhiteBalance X B") , "whitebalancexb", PTP_DPC_CANON_EOS_WhiteBalanceXA, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
 	{ N_("Photo Effect"), "photoeffect", PTP_DPC_CANON_PhotoEffect, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_PhotoEffect, _put_Canon_PhotoEffect},
 	{ N_("Color Model"), "colormodel", PTP_DPC_NIKON_ColorModel, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorModel, _put_Nikon_ColorModel},
 	{ N_("Color Space"), "colorspace", PTP_DPC_NIKON_ColorSpace, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ColorSpace, _put_Nikon_ColorSpace},
@@ -5028,7 +5100,9 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focus Mode 2"), "focusmode2", PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFMode, _put_Nikon_AFMode},
 	{ N_("Focus Mode"), "focusmode", PTP_DPC_CANON_EOS_FocusMode, 0, PTP_DTC_UINT16, _get_Canon_EOS_FocusMode, _put_Canon_EOS_FocusMode},
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
+	{ N_("Effect Mode"), "effectmode", PTP_DPC_NIKON_EffectMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_EffectMode, _put_NIKON_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
+	{ N_("Scene Mode"), "scenemode", PTP_DPC_NIKON_SceneMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_SceneMode, _put_NIKON_SceneMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_FUJI_ReleaseMode, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ReleaseMode, _put_Fuji_ReleaseMode},
 	{ N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ShootMode, _put_Canon_ShootMode},
@@ -5111,8 +5185,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Saturation"), "saturation", PTP_DPC_NIKON_Saturation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Saturation, _put_Nikon_Saturation },
 	{ N_("Hue Adjustment"), "hueadjustment", PTP_DPC_NIKON_HueAdjustment, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_HueAdjustment, _put_Nikon_HueAdjustment },
 	{ N_("Auto Exposure Bracketing"), "aeb", PTP_DPC_CANON_EOS_AEB, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_AEB, _put_Canon_EOS_AEB},
-	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
 	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Microphone"), "microphone", PTP_DPC_NIKON_MovMicrophone, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Microphone, _put_Nikon_Microphone},
 	{ N_("Reverse Indicators"), "reverseindicators", PTP_DPC_NIKON_IndicatorDisp, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 
 	{ 0,0,0,0,0,0,0 },
@@ -5127,6 +5201,11 @@ static struct submenu nikon_d90_camera_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+static struct submenu nikon_d5100_capture_settings[] = {
+	{ N_("Movie Quality"),  "moviequality", PTP_DPC_NIKON_MovScreenSize, 0, PTP_DTC_UINT8,  _get_Nikon_D5100_MovieQuality,    _put_Nikon_D5100_MovieQuality},
+	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_NIKON_D5100_ExposureProgram, _put_NIKON_D5100_ExposureProgram},
+	{ 0,0,0,0,0,0,0 },
+};
 static struct submenu nikon_d90_capture_settings[] = {
 	{ N_("Auto ISO PADV Time"), "autoisopadv", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
 	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ISOAutoHiLimit, _put_Nikon_D90_ISOAutoHiLimit },
@@ -5170,6 +5249,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
 	{ N_("Maximum continuous release"), "maximumcontinousrelease", PTP_DPC_NIKON_D2MaximumShots, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Range_UINT8, _put_Range_UINT8},
+	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
 
 	/* And some D3s values */
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh", PTP_DPC_NIKON_ContinuousSpeedHigh, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeedHigh, _put_Nikon_D3s_ShootingSpeedHigh},
@@ -5192,6 +5272,7 @@ static struct menu menus[] = {
 
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings,     NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0426, nikon_d3s_capture_settings,     NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0429, nikon_d5100_capture_settings,   NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0,      0, nikon_generic_capture_settings, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0, 0, capture_settings_menu, NULL, NULL },
 
