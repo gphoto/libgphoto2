@@ -951,7 +951,7 @@ ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_getthumb (PTPParams* params, uint32_t handle, unsigned char** object, unsigned int len)
+ptp_getthumb (PTPParams* params, uint32_t handle, unsigned char** object, unsigned int *len)
 {
 	PTPContainer ptp;
 
