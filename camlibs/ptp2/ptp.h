@@ -2244,7 +2244,7 @@ uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offs
 				uint32_t maxbytes, unsigned char** object,
 				uint32_t *len);
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
-				unsigned char** object);
+				unsigned char** object, unsigned int *len);
 
 uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 				uint32_t ofc);

@@ -4452,14 +4452,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
 		unsigned char *ximage = NULL;
+		unsigned int xlen = 0;
 
 		/* If thumb size is 0 then there is no thumbnail at all... */
 		if((size=oi->ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
 		CPR (context, ptp_getthumb(params,
 			params->handles.Handler[object_id],
-			&ximage));
+			&ximage, &xlen));
+		if (xlen != size)
+			gp_log (GP_LOG_ERROR, "get_file_func/GP_FILE_TYPE_PREVIEW", "size mismatch %d vs %d", size, xlen);
 		set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
-		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
+		CR (gp_file_set_data_and_size (file, (char*)ximage, xlen));
 		break;
 	}
 	case	GP_FILE_TYPE_METADATA:

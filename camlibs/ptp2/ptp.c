@@ -951,16 +951,15 @@ ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_getthumb (PTPParams* params, uint32_t handle, unsigned char** object)
+ptp_getthumb (PTPParams* params, uint32_t handle, unsigned char** object, unsigned int len)
 {
 	PTPContainer ptp;
-	unsigned int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetThumb;
 	ptp.Param1=handle;
 	ptp.Nparam=1;
-	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, &len);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, len);
 }
 
 /**
