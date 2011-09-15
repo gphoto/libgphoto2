@@ -2081,6 +2081,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
 		}
 	}
+	ptp_check_event (params);
 	return GP_OK;
 }
 
