@@ -1659,12 +1659,19 @@ static struct deviceproptableu8 nikon_afmode[] = {
 };
 GENERIC8TABLE(Nikon_AFMode,nikon_afmode)
 
+static struct deviceproptableu8 nikon_videomode[] = {
+	{ N_("NTSC"),		0, 0 },
+	{ N_("PAL"),		1, 0 },
+};
+GENERIC8TABLE(Nikon_VideoMode,nikon_videomode)
+
 static struct deviceproptableu8 flash_modemanualpower[] = {
 	{ N_("Full"),	0x00, 0 },
 	{ "1/2",	0x01, 0 },
 	{ "1/4",	0x02, 0 },
 	{ "1/8",	0x03, 0 },
 	{ "1/16",	0x04, 0 },
+	{ "1/32",	0x05, 0 },
 };
 GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
 
@@ -5188,6 +5195,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("Microphone"), "microphone", PTP_DPC_NIKON_MovMicrophone, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Microphone, _put_Nikon_Microphone},
 	{ N_("Reverse Indicators"), "reverseindicators", PTP_DPC_NIKON_IndicatorDisp, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Auto Distortion Control"), "autodistortioncontrol", PTP_DPC_NIKON_AutoDistortionControl, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Video Mode"), "videomode", PTP_DPC_NIKON_VideoMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_VideoMode, _put_Nikon_VideoMode},
 
 	{ 0,0,0,0,0,0,0 },
 };
