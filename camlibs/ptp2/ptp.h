@@ -1497,6 +1497,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_JPEG_Compression_Policy		0xD031
 #define PTP_DPC_NIKON_ColorSpace			0xD032
 #define PTP_DPC_NIKON_AutoDXCrop			0xD033
+#define PTP_DPC_NIKON_VideoMode				0xD036
 #define PTP_DPC_NIKON_EffectMode			0xD037
 #define PTP_DPC_NIKON_CSMMenuBankSelect			0xD040
 #define PTP_DPC_NIKON_MenuBankNameA			0xD041
@@ -1532,6 +1533,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_SelfTimer				0xD063
 #define PTP_DPC_NIKON_MonitorOff			0xD064
 #define PTP_DPC_NIKON_ImgConfTime			0xD065
+#define PTP_DPC_NIKON_AutoOffTimers			0xD066
 #define PTP_DPC_NIKON_AngleLevel			0xD067
 #define PTP_DPC_NIKON_D1ShootingSpeed			0xD068 /* continous speed low */
 #define PTP_DPC_NIKON_D2MaximumShots			0xD069
@@ -1595,6 +1597,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_AutoOffInfo			0xD0F4
 #define PTP_DPC_NIKON_SelfTimerShootNum			0xD0F5
 #define PTP_DPC_NIKON_VignetteCtrl			0xD0F7
+#define PTP_DPC_NIKON_AutoDistortionControl		0xD0F8
 #define PTP_DPC_NIKON_SceneMode				0xD0F9
 #define PTP_DPC_NIKON_ExposureTime			0xD100	/* Shutter Speed */
 #define PTP_DPC_NIKON_ACPower				0xD101
