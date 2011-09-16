@@ -2576,7 +2576,7 @@ static struct deviceproptableu8 nikon_effect_modes[] = {
 	{ N_("High key"),		0x05, 0 },
 	{ N_("Low key"),		0x06, 0 },
 };
-GENERIC16TABLE(NIKON_EffectMode,nikon_effect_modes)
+GENERIC8TABLE(NIKON_EffectMode,nikon_effect_modes)
 
 
 static int
