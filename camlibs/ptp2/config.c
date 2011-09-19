@@ -2447,6 +2447,10 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Quick Response Remote"),	0x8014, PTP_VENDOR_NIKON}, /* others nikons */
 	{ N_("Delayed Remote"),		0x8015, PTP_VENDOR_NIKON}, /* d90 */
 	{ N_("Quiet Release"),		0x8016, PTP_VENDOR_NIKON}, /* d5000 */
+/*
+	{ N_("Continuous"),		0x8001, PTP_VENDOR_CASIO},
+	{ N_("Prerecord"),		0x8002, PTP_VENDOR_CASIO},
+*/
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
 
