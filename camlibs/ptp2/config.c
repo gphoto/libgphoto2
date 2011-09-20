@@ -804,7 +804,7 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 	int isset = FALSE, isset2 = FALSE;
 
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
-		if (dpd->DataType != PTP_DTC_UINT8)
+		if ((dpd->DataType != PTP_DTC_UINT8) || (dpd->DataType != PTP_DTC_INT8))
 			return (GP_ERROR);
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
@@ -2920,7 +2920,13 @@ _put_Canon_EOS_WBAdjust(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
-
+static struct deviceproptableu8 nikon_liveviewaf[] = {
+	{ N_("Face-priority AF"),	0, 0 },
+	{ N_("Wide-area AF"),		1, 0 },
+	{ N_("Normal-area AF"),		2, 0 },
+	{ N_("Subject-tracking AF"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_LiveViewAF,nikon_liveviewaf)
 
 static struct deviceproptableu8 nikon_afareaillum[] = {
 	{ N_("Auto"),		0, 0 },
@@ -5151,6 +5157,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Delay Mode"), "exposuredelaymode", PTP_DPC_NIKON_ExposureDelayMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Lock"), "exposurelock", PTP_DPC_NIKON_AELockMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("AE-L/AF-L Mode"), "aelaflmode", PTP_DPC_NIKON_AELAFLMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AELAFLMode, _put_Nikon_AELAFLMode},
+	{ N_("Live View AF Mode"), "liveviewafmode", PTP_DPC_NIKON_LiveViewAF, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LiveViewAF, _put_Nikon_LiveViewAF},
+	{ N_("Live View AF Mode"), "liveviewafmode", PTP_DPC_NIKON_LiveViewAF, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LiveViewAF, _put_Nikon_LiveViewAF},
 	{ N_("File Number Sequencing"), "filenrsequencing", PTP_DPC_NIKON_FileNumberSequence, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Flash Sign"), "flashsign", PTP_DPC_NIKON_FlashSign, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Modelling Flash"), "modelflash", PTP_DPC_NIKON_E4ModelingFlash, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
