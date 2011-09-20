@@ -3606,12 +3606,14 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Base Center")},
 		{PTP_DPC_NIKON_ExposureBaseSpot,		/* 0xD05C */
 		 N_("Exposure Base Spot")},
-		{PTP_DPC_NIKON_LiveViewAF,			/* 0xD05D */
-		 N_("Live View AF")},
+		{PTP_DPC_NIKON_LiveViewAFArea,			/* 0xD05D */
+		 N_("Live View AF Area")},
 		{PTP_DPC_NIKON_AELockMode,			/* 0xD05E */
 		 N_("Exposure Lock")},
 		{PTP_DPC_NIKON_AELAFLMode,			/* 0xD05F */
 		 N_("Focus Lock")},
+		{PTP_DPC_NIKON_LiveViewAFFocus,			/* 0xD061 */
+		 N_("Live View AF Focus")},
 		{PTP_DPC_NIKON_MeterOff,			/* 0xD062 */
 		 N_("Auto Meter Off Time")},
 		{PTP_DPC_NIKON_SelfTimer,			/* 0xD063 */
