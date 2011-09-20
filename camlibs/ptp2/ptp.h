@@ -1571,6 +1571,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_FunctionButton2			0xD08C
 #define PTP_DPC_NIKON_AFAreaPoint			0xD08D
 #define PTP_DPC_NIKON_NormalAFOn			0xD08E
+#define PTP_DPC_NIKON_CleanImageSensor			0xD08F
 #define PTP_DPC_NIKON_ImageCommentString		0xD090
 #define PTP_DPC_NIKON_ImageCommentEnable		0xD091
 #define PTP_DPC_NIKON_ImageRotation			0xD092

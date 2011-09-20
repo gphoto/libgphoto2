@@ -2454,7 +2454,6 @@ static struct deviceproptableu16 capture_mode[] = {
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
 
-
 static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Centre-spot"),	0x0001, 0 },
 	{ N_("Multi-spot"),	0x0002, 0 },
@@ -3358,6 +3357,14 @@ static struct deviceproptableu8 nikon_bracketset[] = {
 	{ N_("ADL bracketing"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_BracketSet,nikon_bracketset)
+
+static struct deviceproptableu8 nikon_cleansensor[] = {
+	{ N_("Off"),			0, 0 },
+	{ N_("Startup"),		1, 0 },
+	{ N_("Shutdown"),		2, 0 },
+	{ N_("Startup and Shutdown"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_CleanSensor,nikon_cleansensor)
 
 static struct deviceproptableu8 nikon_saturation[] = {
 	{ N_("Normal"),		0, 0 },
@@ -5030,6 +5037,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Copyright"), "copyright", PTP_DPC_CANON_EOS_Copyright, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
+	{ N_("Clean Sensor"), "cleansensor", PTP_DPC_NIKON_CleanImageSensor, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Nikon_CleanSensor, _put_Nikon_CleanSensor},
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
