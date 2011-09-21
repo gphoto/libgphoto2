@@ -804,7 +804,7 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 	int isset = FALSE, isset2 = FALSE;
 
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
-		if (dpd->DataType != PTP_DTC_UINT8)
+		if ((dpd->DataType != PTP_DTC_UINT8) || (dpd->DataType != PTP_DTC_INT8))
 			return (GP_ERROR);
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
@@ -1659,12 +1659,19 @@ static struct deviceproptableu8 nikon_afmode[] = {
 };
 GENERIC8TABLE(Nikon_AFMode,nikon_afmode)
 
+static struct deviceproptableu8 nikon_videomode[] = {
+	{ N_("NTSC"),		0, 0 },
+	{ N_("PAL"),		1, 0 },
+};
+GENERIC8TABLE(Nikon_VideoMode,nikon_videomode)
+
 static struct deviceproptableu8 flash_modemanualpower[] = {
 	{ N_("Full"),	0x00, 0 },
 	{ "1/2",	0x01, 0 },
 	{ "1/4",	0x02, 0 },
 	{ "1/8",	0x03, 0 },
 	{ "1/16",	0x04, 0 },
+	{ "1/32",	0x05, 0 },
 };
 GENERIC8TABLE(Nikon_FlashModeManualPower,flash_modemanualpower)
 
@@ -2440,9 +2447,12 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Quick Response Remote"),	0x8014, PTP_VENDOR_NIKON}, /* others nikons */
 	{ N_("Delayed Remote"),		0x8015, PTP_VENDOR_NIKON}, /* d90 */
 	{ N_("Quiet Release"),		0x8016, PTP_VENDOR_NIKON}, /* d5000 */
+/*
+	{ N_("Continuous"),		0x8001, PTP_VENDOR_CASIO},
+	{ N_("Prerecord"),		0x8002, PTP_VENDOR_CASIO},
+*/
 };
 GENERIC16TABLE(CaptureMode,capture_mode)
-
 
 static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Centre-spot"),	0x0001, 0 },
@@ -2910,7 +2920,20 @@ _put_Canon_EOS_WBAdjust(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static struct deviceproptableu8 nikon_liveviewaf[] = {
+	{ N_("Face-priority AF"),	0, 0 },
+	{ N_("Wide-area AF"),		1, 0 },
+	{ N_("Normal-area AF"),		2, 0 },
+	{ N_("Subject-tracking AF"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_LiveViewAF,nikon_liveviewaf)
 
+static struct deviceproptableu8 nikon_liveviewaffocus[] = {
+	{ N_("Single-servo AF"),	0, 0 },
+	{ N_("Full-time-servo AF"),	2, 0 },
+	{ N_("Manual Focus"),		4, 0 },
+};
+GENERIC8TABLE(Nikon_LiveViewAFFocus,nikon_liveviewaffocus)
 
 static struct deviceproptableu8 nikon_afareaillum[] = {
 	{ N_("Auto"),		0, 0 },
@@ -3347,6 +3370,14 @@ static struct deviceproptableu8 nikon_bracketset[] = {
 	{ N_("ADL bracketing"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_BracketSet,nikon_bracketset)
+
+static struct deviceproptableu8 nikon_cleansensor[] = {
+	{ N_("Off"),			0, 0 },
+	{ N_("Startup"),		1, 0 },
+	{ N_("Shutdown"),		2, 0 },
+	{ N_("Startup and Shutdown"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_CleanSensor,nikon_cleansensor)
 
 static struct deviceproptableu8 nikon_saturation[] = {
 	{ N_("Normal"),		0, 0 },
@@ -5019,6 +5050,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Copyright"), "copyright", PTP_DPC_CANON_EOS_Copyright, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
+	{ N_("Clean Sensor"), "cleansensor", PTP_DPC_NIKON_CleanImageSensor, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Nikon_CleanSensor, _put_Nikon_CleanSensor},
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
@@ -5132,6 +5164,9 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Delay Mode"), "exposuredelaymode", PTP_DPC_NIKON_ExposureDelayMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Exposure Lock"), "exposurelock", PTP_DPC_NIKON_AELockMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("AE-L/AF-L Mode"), "aelaflmode", PTP_DPC_NIKON_AELAFLMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AELAFLMode, _put_Nikon_AELAFLMode},
+	{ N_("Live View AF Mode"), "liveviewafmode", PTP_DPC_NIKON_LiveViewAFArea, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_LiveViewAF, _put_Nikon_LiveViewAF},
+	{ N_("Live View AF Mode"), "liveviewafmode", PTP_DPC_NIKON_LiveViewAFArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LiveViewAF, _put_Nikon_LiveViewAF},
+	{ N_("Live View AF Focus"), "liveviewaffocus", PTP_DPC_NIKON_LiveViewAFFocus, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LiveViewAFFocus, _put_Nikon_LiveViewAFFocus},
 	{ N_("File Number Sequencing"), "filenrsequencing", PTP_DPC_NIKON_FileNumberSequence, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Flash Sign"), "flashsign", PTP_DPC_NIKON_FlashSign, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Modelling Flash"), "modelflash", PTP_DPC_NIKON_E4ModelingFlash, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
@@ -5188,6 +5223,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Movie Sound"), "moviesound", PTP_DPC_NIKON_MovVoice, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("Microphone"), "microphone", PTP_DPC_NIKON_MovMicrophone, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Microphone, _put_Nikon_Microphone},
 	{ N_("Reverse Indicators"), "reverseindicators", PTP_DPC_NIKON_IndicatorDisp, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Auto Distortion Control"), "autodistortioncontrol", PTP_DPC_NIKON_AutoDistortionControl, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("Video Mode"), "videomode", PTP_DPC_NIKON_VideoMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_VideoMode, _put_Nikon_VideoMode},
 
 	{ 0,0,0,0,0,0,0 },
 };
