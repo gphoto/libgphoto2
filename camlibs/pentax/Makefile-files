@@ -1,4 +1,4 @@
-# If you use this as template for a real camlib (say 'foobar.la'),
+# If you use this as pentax for a real camlib (say 'foobar.la'),
 # make sure to change the "noinst_" at the beginning of the following
 # lines:
 #   * "noinst_DATA" into "camlibdoc_DATA"
@@ -16,8 +16,8 @@ EXTRA_DIST += pentax/README.pentax pentax/ChangeLog
 noinst_DATA += pentax/README.pentax
 noinst_LTLIBRARIES += pentax.la
 
-template_la_SOURCES = pentax/pentax.c
-template_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS)
-template_la_LDFLAGS = $(camlib_ldflags)
-template_la_DEPENDENCIES = $(camlib_dependencies)
-template_la_LIBADD = $(camlib_libadd)
+pentax_la_SOURCES = pentax/pentax.c
+pentax_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS)
+pentax_la_LDFLAGS = $(camlib_ldflags)
+pentax_la_DEPENDENCIES = $(camlib_dependencies)
+pentax_la_LIBADD = $(camlib_libadd)
