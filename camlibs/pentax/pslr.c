@@ -27,10 +27,21 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdbool.h>
+
+#ifndef LIBGPHOTO2
 #include <sys/ioctl.h>
 #include <linux/../scsi/sg.h>
+#endif
+
 #include <stdarg.h>
 #include <dirent.h>
+
+#ifdef LIBGPHOTO2
+#include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-result.h>
+#include <gphoto2/gphoto2-port.h>
+#include <gphoto2/gphoto2-setting.h>
+#endif
 
 #include "pslr.h"
 
@@ -79,7 +90,11 @@ typedef struct {
 } ipslr_model_info_t;
 
 typedef struct {
+#ifdef LIBGPHOTO2
+    GPPort *port;
+#else
     int fd;
+#endif
     pslr_status status;
     uint32_t id1;
     uint32_t id2;
@@ -110,16 +125,16 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...);
 
 //static int ipslr_cmd_00_04(ipslr_handle_t *p, uint32_t mode);
 
-static int command(int fd, int a, int b, int c);
-static int get_status(int fd);
-static int get_result(int fd);
-static int read_result(int fd, uint8_t *buf, uint32_t n);
+static int command(ipslr_handle_t *, int a, int b, int c);
+static int get_status(ipslr_handle_t *);
+static int get_result(ipslr_handle_t *);
+static int read_result(ipslr_handle_t *, uint8_t *buf, uint32_t n);
 
 void hexdump(uint8_t *buf, uint32_t bufLen);
 
-static int scsi_write(int sg_fd, uint8_t *cmd, uint32_t cmdLen,
+static int scsi_write(ipslr_handle_t *, uint8_t *cmd, uint32_t cmdLen,
                       uint8_t *buf, uint32_t bufLen);
-static int scsi_read(int sg_fd, uint8_t *cmd, uint32_t cmdLen,
+static int scsi_read(ipslr_handle_t *, uint8_t *cmd, uint32_t cmdLen,
                      uint8_t *buf, uint32_t bufLen);
 
 
@@ -144,7 +159,7 @@ static ipslr_model_info_t camera_models[] = {
     { PSLR_ID1_GX20, PSLR_ID2_GX20, "GX20" },
 };
 
-
+#ifndef LIBGPHOTO2
 pslr_handle_t pslr_init()
 {
     DIR *d;
@@ -211,6 +226,7 @@ pslr_handle_t pslr_init()
 
     return &pslr;
 }
+#endif
 
 int pslr_connect(pslr_handle_t h)
 {
@@ -247,7 +263,12 @@ int pslr_disconnect(pslr_handle_t h)
 int pslr_shutdown(pslr_handle_t h)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
+#ifdef LIBGPHOTO2
+	/* FIXME: close camera? */
+    gp_port_close (p->port);
+#else
     close(p->fd);
+#endif
     return PSLR_OK;
 }
 
@@ -262,8 +283,8 @@ int pslr_focus(pslr_handle_t h)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     CHECK(ipslr_write_args(p, 1, 1));
-    CHECK(command(p->fd, 0x10, 0x05, 0x04));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x10, 0x05, 0x04));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -293,8 +314,8 @@ int pslr_set_shutter(pslr_handle_t h, pslr_rational_t value)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     CHECK(ipslr_write_args(p, 2, value.nom, value.denom));
-    CHECK(command(p->fd, 0x18, 0x16, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x16, 0x08));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -302,8 +323,8 @@ int pslr_set_aperture(pslr_handle_t h, pslr_rational_t value)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     CHECK(ipslr_write_args(p, 3, value.nom, value.denom, 0));
-    CHECK(command(p->fd, 0x18, 0x17, 0x0c));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x17, 0x0c));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -313,8 +334,8 @@ int pslr_set_iso(pslr_handle_t h, uint32_t value)
     /* TODO: if cmd 00 09 fails? */
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 3, value, 0, 0));
-    CHECK(command(p->fd, 0x18, 0x15, 0x0c));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x15, 0x0c));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));
     return PSLR_OK;
 }
@@ -325,8 +346,8 @@ int pslr_set_ec(pslr_handle_t h, pslr_rational_t value)
     /* TODO: if cmd 00 09 fails? */
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 3, value.nom, value.denom));
-    CHECK(command(p->fd, 0x18, 0x18, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x18, 0x08));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));
     return PSLR_OK;
 }
@@ -347,8 +368,8 @@ int pslr_set_jpeg_quality(pslr_handle_t h, pslr_jpeg_quality_t quality)
     }
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, 1, hwqual));
-    CHECK(command(p->fd, 0x18, 0x13, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x13, 0x08));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));
     return PSLR_OK;
 }
@@ -369,8 +390,8 @@ int pslr_set_jpeg_resolution(pslr_handle_t h, pslr_jpeg_resolution_t resolution)
     }	
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, 1, hwres));
-    CHECK(command(p->fd, 0x18, 0x14, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x14, 0x08));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));
     return PSLR_OK;
 }
@@ -383,8 +404,8 @@ int pslr_set_jpeg_image_mode(pslr_handle_t h, pslr_jpeg_image_mode_t image_mode)
 
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 1, image_mode));
-    CHECK(command(p->fd, 0x18, 0x1b, 0x04));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x1b, 0x04));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));
     return PSLR_OK;
 }
@@ -395,8 +416,8 @@ int pslr_set_jpeg_sharpness(pslr_handle_t h, int32_t sharpness)
     if (sharpness < 0 || sharpness > 6)
         return PSLR_PARAM;
     CHECK(ipslr_write_args(p, 2, 0, sharpness));
-    CHECK(command(p->fd, 0x18, 0x21, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x21, 0x08));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -406,8 +427,8 @@ int pslr_set_jpeg_contrast(pslr_handle_t h, int32_t contrast)
     if (contrast < 0 || contrast > 6)
         return PSLR_PARAM;
     CHECK(ipslr_write_args(p, 2, 0, contrast));
-    CHECK(command(p->fd, 0x18, 0x22, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x22, 0x08));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -417,8 +438,8 @@ int pslr_set_jpeg_saturation(pslr_handle_t h, int32_t saturation)
     if (saturation < 0 || saturation > 6)
         return PSLR_PARAM;
     CHECK(ipslr_write_args(p, 2, 0, saturation));
-    CHECK(command(p->fd, 0x18, 0x20, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x20, 0x08));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -429,8 +450,8 @@ int pslr_set_image_format(pslr_handle_t h, pslr_image_format_t format)
         return PSLR_PARAM;
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, 1, format));
-    CHECK(command(p->fd, 0x18, 0x12, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x12, 0x08));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));    
     return PSLR_OK;
 }
@@ -443,8 +464,8 @@ int pslr_set_raw_format(pslr_handle_t h, pslr_raw_format_t format)
         return PSLR_PARAM;
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, 1, format));
-    CHECK(command(p->fd, 0x18, 0x1f, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x1f, 0x08));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));    
     return PSLR_OK;
 }
@@ -455,16 +476,16 @@ int pslr_delete_buffer(pslr_handle_t h, int bufno)
     if (bufno < 0 || bufno > 9)
         return PSLR_PARAM;
     CHECK(ipslr_write_args(p, 1, bufno));
-    CHECK(command(p->fd, 0x02, 0x03, 0x04));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x02, 0x03, 0x04));
+    CHECK(get_status(p));
     return PSLR_OK;    
 }
 
 int pslr_green_button(pslr_handle_t h)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    CHECK(command(p->fd, 0x10, 0x07, 0x00));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x10, 0x07, 0x00));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -472,10 +493,10 @@ int pslr_ae_lock(pslr_handle_t h, bool lock)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (lock)
-        CHECK(command(p->fd, 0x10, 0x06, 0x00));
+        CHECK(command(p, 0x10, 0x06, 0x00));
     else
-        CHECK(command(p->fd, 0x10, 0x08, 0x00));
-    CHECK(get_status(p->fd));
+        CHECK(command(p, 0x10, 0x08, 0x00));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -488,8 +509,8 @@ int pslr_set_exposure_mode(pslr_handle_t h, pslr_exposure_mode_t mode)
 
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, 1, mode));
-    CHECK(command(p->fd, 0x18, 0x01, 0x08));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x01, 0x08));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));    
     return PSLR_OK;
 }
@@ -623,8 +644,8 @@ int pslr_select_af_point(pslr_handle_t h, uint32_t point)
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 1, point));
-    CHECK(command(p->fd, 0x18, 0x07, 0x04));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x18, 0x07, 0x04));
+    CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));        
     return PSLR_OK;
 }
@@ -653,24 +674,24 @@ const char *pslr_camera_name(pslr_handle_t h)
 static int ipslr_set_mode(ipslr_handle_t *p, uint32_t mode)
 {
     CHECK(ipslr_write_args(p, 1, mode));
-    CHECK(command(p->fd, 0, 0, 4));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0, 0, 4));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
 static int ipslr_cmd_00_09(ipslr_handle_t *p, uint32_t mode)
 {
     CHECK(ipslr_write_args(p, 1, mode));
-    CHECK(command(p->fd, 0, 9, 4));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0, 9, 4));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
 static int ipslr_cmd_10_0a(ipslr_handle_t *p, uint32_t mode)
 {
     CHECK(ipslr_write_args(p, 1, mode));
-    CHECK(command(p->fd, 0x10, 0x0a, 4));
-    CHECK(get_status(p->fd));
+    CHECK(command(p, 0x10, 0x0a, 4));
+    CHECK(get_status(p));
     return PSLR_OK;
 }
 
@@ -678,23 +699,23 @@ static int ipslr_cmd_00_05(ipslr_handle_t *p)
 {
     int n;
     uint8_t buf[0xb8];
-    CHECK(command(p->fd, 0x00, 0x05, 0x00));
-    n = get_result(p->fd);
+    CHECK(command(p, 0x00, 0x05, 0x00));
+    n = get_result(p);
     if (n != 0xb8) {
         DPRINT("only got %d bytes\n", n);
         return PSLR_READ_ERROR;
     }
-    CHECK(read_result(p->fd, buf, n));
+    CHECK(read_result(p, buf, n));
     return PSLR_OK;
 }
 
 static int ipslr_status(ipslr_handle_t *p, uint8_t *buf)
 {
     int n;
-    CHECK(command(p->fd, 0, 1, 0));
-    n = get_result(p->fd);
+    CHECK(command(p, 0, 1, 0));
+    n = get_result(p);
     if (n == 16) {
-        return read_result(p->fd, buf, n);
+        return read_result(p, buf, n);
     } else {
         return PSLR_READ_ERROR;
     }
@@ -737,8 +758,8 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
 {
     int n;
     uint8_t buf[MAX_STATUS_BUF_SIZE];
-    CHECK(command(p->fd, 0, 8, 0));
-    n = get_result(p->fd);
+    CHECK(command(p, 0, 8, 0));
+    n = get_result(p);
 
     if (p->model && is_k10d(p)) {
         /* K10D status block */
@@ -747,7 +768,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
             return PSLR_READ_ERROR;
         }
 
-        CHECK(read_result(p->fd, buf, n));
+        CHECK(read_result(p, buf, n));
         memset(status, 0, sizeof(*status));
         status->bufmask = buf[0x16] << 8 | buf[0x17];
         status->current_iso = get_uint32(&buf[0x11c]);
@@ -797,7 +818,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
             return PSLR_READ_ERROR;
         }
 
-        CHECK(read_result(p->fd, buf, n));
+        CHECK(read_result(p, buf, n));
 #ifdef DEBUG
 	ipslr_status_diff(buf);
 #endif
@@ -881,8 +902,8 @@ static int ipslr_press_shutter(ipslr_handle_t *p)
     bufmask = p->status.bufmask;
     DPRINT("before: mask=0x%x\n", p->status.bufmask);
     CHECK(ipslr_write_args(p, 1, 2));
-    CHECK(command(p->fd, 0x10, 0x05, 0x04));
-    r = get_status(p->fd);
+    CHECK(command(p, 0x10, 0x05, 0x04));
+    r = get_status(p);
     DPRINT("shutter result code: 0x%x\n", r);
     return PSLR_OK;
 }
@@ -978,16 +999,16 @@ static int ipslr_select_buffer(ipslr_handle_t *p, int bufno, int buftype, int bu
     DPRINT("Select buffer %d,%d,%d,0\n", bufno, buftype,bufres);
     if (is_k20d(p)) {
         CHECK(ipslr_write_args(p, 4, bufno, buftype, bufres, 0));
-        CHECK(command(p->fd, 0x02, 0x01, 0x10));
+        CHECK(command(p, 0x02, 0x01, 0x10));
     } else if (is_k10d(p)) {
         CHECK(ipslr_write_args(p, 4, bufno, buftype, bufres-1, 0));
-        CHECK(command(p->fd, 0x02, 0x01, 0x10));
+        CHECK(command(p, 0x02, 0x01, 0x10));
     } else {
         /* older cameras: 3-arg select buffer */
         CHECK(ipslr_write_args(p, 4, bufno, buftype, bufres));
-        CHECK(command(p->fd, 0x02, 0x01, 0x0c));
+        CHECK(command(p, 0x02, 0x01, 0x0c));
     }
-    r = get_status(p->fd);
+    r = get_status(p);
     if (r != 0)
         return PSLR_COMMAND_ERROR;
     return PSLR_OK;
@@ -997,9 +1018,9 @@ static int ipslr_next_segment(ipslr_handle_t *p)
 {
     int r;
     CHECK(ipslr_write_args(p, 1, 0));
-    CHECK(command(p->fd, 0x04, 0x01, 0x04));
+    CHECK(command(p, 0x04, 0x01, 0x04));
     usleep(100000); // needed !! 100 too short, 1000 not short enough for PEF
-    r = get_status(p->fd);
+    r = get_status(p);
     if (r == 0)
         return PSLR_OK;
     return PSLR_COMMAND_ERROR;
@@ -1010,11 +1031,11 @@ static int ipslr_buffer_segment_info(ipslr_handle_t *p, pslr_buffer_segment_info
     uint8_t buf[16];
     uint32_t n;
 
-    CHECK(command(p->fd, 0x04, 0x00, 0x00));
-    n = get_result(p->fd);
+    CHECK(command(p, 0x04, 0x00, 0x00));
+    n = get_result(p);
     if (n != 16)
         return PSLR_READ_ERROR;
-    CHECK(read_result(p->fd, buf, 16));
+    CHECK(read_result(p, buf, 16));
     pInfo->a = get_uint32(&buf[0]);
     pInfo->b = get_uint32(&buf[4]);
     pInfo->addr = get_uint32(&buf[8]);
@@ -1040,11 +1061,11 @@ static int ipslr_download(ipslr_handle_t *p, uint32_t addr, uint32_t length, uin
 
         //DPRINT("Get 0x%x bytes from 0x%x\n", block, addr);
         CHECK(ipslr_write_args(p, 2, addr, block));
-        CHECK(command(p->fd, 0x06, 0x00, 0x08));
-        r = get_status(p->fd);
+        CHECK(command(p, 0x06, 0x00, 0x08));
+        r = get_status(p);
 
-        n = scsi_read(p->fd, downloadCmd, sizeof(downloadCmd), buf, block);
-        r = get_status(p->fd);
+        n = scsi_read(p, downloadCmd, sizeof(downloadCmd), buf, block);
+        r = get_status(p);
 
         if (n < 0) {
             if (retry < BLOCK_RETRY) {
@@ -1071,11 +1092,11 @@ static int ipslr_identify(ipslr_handle_t *p)
     int n;
     int i;
 
-    CHECK(command(p->fd, 0, 4, 0));
-    n = get_result(p->fd);
+    CHECK(command(p, 0, 4, 0));
+    n = get_result(p);
     if (n != 8)
         return PSLR_READ_ERROR;
-    CHECK(read_result(p->fd, idbuf, 8));
+    CHECK(read_result(p, idbuf, 8));
     p->id1 = get_uint32(&idbuf[0]);
     p->id2 = get_uint32(&idbuf[4]);
     p->model = NULL;
@@ -1093,7 +1114,6 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...)
     va_list ap;
     uint8_t cmd[8] = { 0xf0, 0x4f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     uint8_t buf[4*n];
-    int fd = p->fd;
     int res;
     int i;
     uint32_t data;
@@ -1109,7 +1129,7 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...)
             buf[4*i+3] = data;
         }
         cmd[4] = 4*n;
-        res = scsi_write(fd, cmd, sizeof(cmd), buf, 4*n);
+        res = scsi_write(p, cmd, sizeof(cmd), buf, 4*n);
         if (res != PSLR_OK)
             return res;
     } else {
@@ -1122,7 +1142,7 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...)
             buf[3] = data;
             cmd[4] = 4;
             cmd[2] = i*4;
-            res = scsi_write(fd, cmd, sizeof(cmd), buf, 4);
+            res = scsi_write(p, cmd, sizeof(cmd), buf, 4);
             if (res != PSLR_OK)
                 return res;
         }
@@ -1133,23 +1153,23 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...)
 
 /* ----------------------------------------------------------------------- */
 
-static int command(int fd, int a, int b, int c)
+static int command(ipslr_handle_t *p, int a, int b, int c)
 {
     uint8_t cmd[8] = { 0xf0, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
     cmd[2] = a;
     cmd[3] = b;
     cmd[4] = c;
-    CHECK(scsi_write(fd, cmd, sizeof(cmd), 0, 0));
+    CHECK(scsi_write(p, cmd, sizeof(cmd), 0, 0));
     return PSLR_OK;
 }
 
-static int read_status(int fd, uint8_t *buf)
+static int read_status(ipslr_handle_t *p, uint8_t *buf)
 {
     uint8_t cmd[8] = { 0xf0, 0x26, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     int n;
 
-    n = scsi_read(fd, cmd, 8, buf, 8);
+    n = scsi_read(p, cmd, 8, buf, 8);
     if (n != 8) {
         DPRINT("Only got %d bytes\n", n);
         /* The *ist DS doesn't know to return the correct number of
@@ -1160,12 +1180,12 @@ static int read_status(int fd, uint8_t *buf)
     return PSLR_OK;
 }
 
-static int get_status(int fd)
+static int get_status(ipslr_handle_t *p)
 {
     uint8_t statusbuf[8];
     while (1) {
         //usleep(POLL_INTERVAL);
-        CHECK(read_status(fd, statusbuf));
+        CHECK(read_status(p, statusbuf));
         //DPRINT("get_status->\n");
         //hexdump(statusbuf, 8);
         if ((statusbuf[7] & 0x01) == 0)
@@ -1180,12 +1200,12 @@ static int get_status(int fd)
     return statusbuf[7];
 }
 
-static int get_result(int fd)
+static int get_result(ipslr_handle_t *p)
 {
     uint8_t statusbuf[8];
     while (1) {
         //DPRINT("read out status\n");
-        CHECK(read_status(fd, statusbuf));
+        CHECK(read_status(p, statusbuf));
         //hexdump(statusbuf, 8);
         if (statusbuf[6] == 0x01)
             break;
@@ -1200,7 +1220,7 @@ static int get_result(int fd)
     return statusbuf[0] | statusbuf[1] << 8 | statusbuf[2] << 16 | statusbuf[3];
 }
 
-static int read_result(int fd, uint8_t *buf, uint32_t n)
+static int read_result(ipslr_handle_t *p, uint8_t *buf, uint32_t n)
 {
     uint8_t cmd[8] = { 0xf0, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     int r;
@@ -1208,7 +1228,7 @@ static int read_result(int fd, uint8_t *buf, uint32_t n)
     cmd[5] = n >> 8;
     cmd[6] = n >> 16;
     cmd[7] = n >> 24;
-    r = scsi_read(fd, cmd, sizeof(cmd), buf, n);
+    r = scsi_read(p, cmd, sizeof(cmd), buf, n);
     if (r != n)
         return PSLR_READ_ERROR;
     return PSLR_OK;
@@ -1232,7 +1252,29 @@ void hexdump(uint8_t *buf, uint32_t bufLen)
 
 
 /* ----------------------------------------------------------------------- */
+#ifdef LIBGPHOTO2
+static int scsi_write(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
+               uint8_t *buf, uint32_t bufLen) {
+	int ret;
+	char sense_buffer[32];
 
+	ret = gp_port_send_scsi_cmd (p->port, 1, (char*)cmd, cmdLen,
+		sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
+	if (ret == GP_OK) return PSLR_OK;
+	return PSLR_SCSI_ERROR;
+}
+static int scsi_read(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
+              uint8_t *buf, uint32_t bufLen)
+{
+	int ret;
+	char sense_buffer[32];
+
+	ret = gp_port_send_scsi_cmd (p->port, 0, (char*)cmd, cmdLen,
+		sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
+	if (ret == GP_OK) return PSLR_OK;
+	return PSLR_SCSI_ERROR;
+}
+#else
 static void print_scsi_error(sg_io_hdr_t *pIo, uint8_t *sense_buffer)
 {
     int k;
@@ -1254,11 +1296,12 @@ static void print_scsi_error(sg_io_hdr_t *pIo, uint8_t *sense_buffer)
         DPRINT("driver_status=0x%x\n", pIo->driver_status);
 }
 
-static int scsi_write(int sg_fd, uint8_t *cmd, uint32_t cmdLen,
+static int scsi_write(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
                uint8_t *buf, uint32_t bufLen)
 {
 
     sg_io_hdr_t io;
+    int sg_fd = p->fd;
     uint8_t sense[32];
     int r;
 
@@ -1293,10 +1336,11 @@ static int scsi_write(int sg_fd, uint8_t *cmd, uint32_t cmdLen,
     }
 }
 
-static int scsi_read(int sg_fd, uint8_t *cmd, uint32_t cmdLen,
+static int scsi_read(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
               uint8_t *buf, uint32_t bufLen)
 {
     sg_io_hdr_t io;
+    int sg_fd = p->fd;
     uint8_t sense[32];
     int r;
 
@@ -1334,7 +1378,7 @@ static int scsi_read(int sg_fd, uint8_t *cmd, uint32_t cmdLen,
             return bufLen - io.resid;
     }
 }
-
+#endif /* LIBGPHOTO2 */
 /* ----------------------------------------------------------------------- */
 
 static uint32_t get_uint32(uint8_t *buf)

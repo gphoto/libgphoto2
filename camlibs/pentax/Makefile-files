@@ -17,7 +17,7 @@ camlibdoc_DATA += pentax/README.pentax
 EXTRA_LTLIBRARIES += pentax.la
 
 pentax_la_SOURCES = pentax/pslr.c pentax/pslr.h
-pentax_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS)
+pentax_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) -DLIBGPHOTO2
 pentax_la_LDFLAGS = $(camlib_ldflags)
 pentax_la_DEPENDENCIES = $(camlib_dependencies)
 pentax_la_LIBADD = $(camlib_libadd)
