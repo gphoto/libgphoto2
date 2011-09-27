@@ -13,10 +13,10 @@
 
 EXTRA_DIST += pentax/README.pentax pentax/ChangeLog
 
-noinst_DATA += pentax/README.pentax
-noinst_LTLIBRARIES += pentax.la
+camlibdoc_DATA += pentax/README.pentax
+EXTRA_LTLIBRARIES += pentax.la
 
-pentax_la_SOURCES = pentax/pentax.c
+pentax_la_SOURCES = pentax/pslr.c pentax/pslr.h
 pentax_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS)
 pentax_la_LDFLAGS = $(camlib_ldflags)
 pentax_la_DEPENDENCIES = $(camlib_dependencies)
