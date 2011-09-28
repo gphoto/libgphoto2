@@ -2313,6 +2313,18 @@ ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, uns
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
+uint16_t
+ptp_canon_eos_get_viewfinder_image_handler (PTPParams* params, PTPDataHandler*handler)
+{
+        PTPContainer ptp;
+        
+        PTP_CNT_INIT(ptp);
+        ptp.Code=PTP_OC_CANON_EOS_GetViewFinderData;
+        ptp.Nparam=1;
+        ptp.Param1=0x00100000; /* from trace */
+        return ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, handler);
+}
+
 /**
  * ptp_nikon_check_event:
  *
