@@ -59,11 +59,11 @@ camera_abilities (CameraAbilitiesList *list)
 
 	memset (&a, 0, sizeof(a));
 	strcpy (a.model, "Pentax:K20D");
-	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-	a.port   = GP_PORT_USB_SCSI;
-	a.speed[0] = 0;
-	a.usb_vendor = 0x0a17;
-	a.usb_product= 0x0091;
+	a.status		= GP_DRIVER_STATUS_EXPERIMENTAL;
+	a.port			= GP_PORT_USB_SCSI;
+	a.speed[0]		= 0;
+	a.usb_vendor		= 0x0a17;
+	a.usb_product		= 0x0091;
 	a.operations 		= GP_CAPTURE_IMAGE;
 	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
 	a.file_operations	= GP_FILE_OPERATION_NONE;
@@ -140,7 +140,7 @@ camera_exit (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	camera->pl = pslr_init ();
+	camera->pl = pslr_init (camera->port);
 	if (camera->pl == NULL) return GP_ERROR_NO_MEMORY;
 	pslr_connect (camera->pl);
 

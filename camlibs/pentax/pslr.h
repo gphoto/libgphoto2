@@ -197,7 +197,11 @@ typedef struct {
 
 typedef void (*pslr_progress_callback_t)(uint32_t current, uint32_t total);
 
+#ifdef LIBGPHOTO2
+pslr_handle_t pslr_init(GPPort *port);
+#else
 pslr_handle_t pslr_init(void);
+#endif
 int pslr_connect(pslr_handle_t h);
 int pslr_disconnect(pslr_handle_t h);
 int pslr_shutdown(pslr_handle_t h);
