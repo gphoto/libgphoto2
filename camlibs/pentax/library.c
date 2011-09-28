@@ -97,7 +97,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-                        const char *filename, void *data, GPContext *context)
+		  const char *filename, void *data, GPContext *context)
 {
 	/* virtual file created by Penta capture */
 	if (!strncmp (filename, "capt", 4))
@@ -147,7 +147,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-                GPContext *context)
+		GPContext *context)
 {
 	pslr_handle_t		p = camera->pl;
 	pslr_status		status;
@@ -178,13 +178,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 	gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
 	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-        if (ret != GP_OK) {
+	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
 	gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
 	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-        if (ret != GP_OK) {
+	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
@@ -208,9 +208,46 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	CameraWidget *child;
+	CameraWidget *t, *section;
+	char *model;
+	pslr_status		status;
+
+	pslr_get_status (camera->pl, &status);
+
+	model = pslr_camera_name (camera->pl);
 
 	GP_DEBUG ("*** camera_get_config");
+
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
+	gp_widget_set_name (*window, "main");
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Camera Settings"), &section);
+	gp_widget_set_name (section, "settings");
+	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Model"), &t);
+	gp_widget_set_name (t, "model");
+	gp_widget_set_value (t, model);
+	gp_widget_append (section, t);
+
+
+	gp_widget_new (GP_WIDGET_RADIO, _("Image Size"), &t);
+	gp_widget_set_name (t, "imgsize");
+	gp_widget_add_choice (t, "14");
+	gp_widget_add_choice (t, "10");
+	gp_widget_add_choice (t, "6");
+	gp_widget_add_choice (t, "2");
+	gp_widget_add_choice (t, _("Max"));
+
+	switch (status.jpeg_resolution) {
+	case PSLR_JPEG_RESOLUTION_14M:	gp_widget_set_value (t, "14");break;
+	case PSLR_JPEG_RESOLUTION_10M:	gp_widget_set_value (t, "10");break;
+	case PSLR_JPEG_RESOLUTION_6M:	gp_widget_set_value (t, "6");break;
+	case PSLR_JPEG_RESOLUTION_2M:	gp_widget_set_value (t, "2");break;
+	case PSLR_JPEG_RESOLUTION_MAX:	gp_widget_set_value (t, _("Max"));break;
+	default: 			gp_widget_set_value (t, _("Unknown"));break;
+	}
+	gp_widget_append (section, t);
 
 	return GP_OK;
 }
@@ -237,6 +274,7 @@ camera_exit (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context) 
 {
+	char *model;
 	camera->pl = pslr_init (camera->port);
 	if (camera->pl == NULL) return GP_ERROR_NO_MEMORY;
 	pslr_connect (camera->pl);
@@ -246,5 +284,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->capture = camera_capture;
+	model = pslr_camera_name (camera->pl);
+	gp_log (GP_LOG_DEBUG, "pentax", "reported camera model is %s\n", model);
 	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }
