@@ -95,6 +95,7 @@ include panasonic/l859/Makefile-files
 include panasonic/Makefile-files
 include pccam300/Makefile-files
 include pccam600/Makefile-files
+include pentax/Makefile-files
 include polaroid/Makefile-files
 include ptp2/Makefile-files
 include ricoh/Makefile-files

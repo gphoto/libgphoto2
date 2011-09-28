@@ -538,6 +538,7 @@ GP_CAMLIB([panasonic_dc1000])dnl
 GP_CAMLIB([panasonic_dc1580])dnl
 GP_CAMLIB([pccam300])dnl
 GP_CAMLIB([pccam600])dnl
+GP_CAMLIB([pentax])dnl
 GP_CAMLIB([polaroid_pdc320])dnl
 GP_CAMLIB([polaroid_pdc640])dnl
 GP_CAMLIB([polaroid_pdc700])dnl
