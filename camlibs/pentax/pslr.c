@@ -1270,7 +1270,7 @@ static int scsi_write(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
 	ret = gp_port_send_scsi_cmd (p->port, 1, (char*)cmd, cmdLen,
 		sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
 	if (ret == GP_OK) return PSLR_OK;
-	fprintf (stderr, "gp_port_send_scsi_cmd repotred %d\n", ret);
+	fprintf (stderr, "gp_port_send_scsi_cmd write reported %d\n", ret);
 	return PSLR_SCSI_ERROR;
 }
 static int scsi_read(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
@@ -1281,8 +1281,8 @@ static int scsi_read(ipslr_handle_t *p, uint8_t *cmd, uint32_t cmdLen,
 
 	ret = gp_port_send_scsi_cmd (p->port, 0, (char*)cmd, cmdLen,
 		sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
-	fprintf (stderr, "gp_port_send_scsi_cmd reported %d on read \n", ret);
 	if (ret == GP_OK) return bufLen;
+	fprintf (stderr, "gp_port_send_scsi_cmd read reported %d\n", ret);
 	return -PSLR_SCSI_ERROR;
 }
 #else

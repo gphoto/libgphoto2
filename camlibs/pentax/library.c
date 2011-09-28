@@ -101,9 +101,51 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 static int
+save_buffer(pslr_handle_t camhandle, int bufno, int fd, pslr_status *status)
+{
+	int imagetype;
+	uint8_t buf[65536];
+	uint32_t length;
+	uint32_t current;
+
+	if (status->image_format != PSLR_IMAGE_FORMAT_JPEG) {       
+		gp_log (GP_LOG_ERROR, "pentax", "Sorry, don't know how to make capture work with RAW format yet :(\n");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	imagetype = status->jpeg_quality + 1;
+	GP_DEBUG("get buffer %d type %d res %d\n", bufno, imagetype, status->jpeg_resolution);
+
+	if ( pslr_buffer_open(camhandle, bufno, imagetype, status->jpeg_resolution) != PSLR_OK)
+		return 1 ;
+
+	length = pslr_buffer_get_size(camhandle);
+	current = 0;
+
+	while (1) {
+		uint32_t bytes;
+		bytes = pslr_buffer_read(camhandle, buf, sizeof(buf));
+		if (bytes == 0)
+			break;
+		/*write(fd, buf, bytes);*/
+		current += bytes;
+	}
+	pslr_buffer_close(camhandle);
+	return 0;
+}
+
+
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
                 GPContext *context)
 {
+	pslr_handle_t p = camera->pl;
+	pslr_status status;
+
+	pslr_get_status(p, &status);
+	pslr_shutter(p);
+	while ( save_buffer( p, (int)0, 42424242, &status) )
+		usleep(100000);
+	pslr_delete_buffer(p, (int)0 );
         return GP_OK;
 }
 
@@ -132,7 +174,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	/* nothing else to do but freeing */
+	pslr_disconnect (camera->pl);
 	free (camera->pl);
 	return GP_OK;
 }
@@ -144,6 +186,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (camera->pl == NULL) return GP_ERROR_NO_MEMORY;
 	pslr_connect (camera->pl);
 
+	camera->functions->exit = camera_exit;
 	camera->functions->summary = camera_summary;
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
