@@ -60,7 +60,7 @@ camera_abilities (CameraAbilitiesList *list)
 	memset (&a, 0, sizeof(a));
 	strcpy (a.model, "Pentax:K20D");
 	a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-	a.port   = GP_PORT_USB_DISK_DIRECT;
+	a.port   = GP_PORT_USB_SCSI;
 	a.speed[0] = 0;
 	a.usb_vendor = 0x0a17;
 	a.usb_product= 0x0091;
