@@ -64,9 +64,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.speed[0]		= 0;
 	a.usb_vendor		= 0x0a17;
 	a.usb_product		= 0x0091;
-	a.operations 		= GP_CAPTURE_IMAGE;
+	a.operations 		= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
-	a.file_operations	= GP_FILE_OPERATION_NONE;
+	a.file_operations	= GP_FILE_OPERATION_DELETE;
 	return gp_abilities_list_append (list, a);
 }
 
@@ -95,13 +95,25 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	return GP_OK;
 }
 
+static int
+delete_file_func (CameraFilesystem *fs, const char *folder,
+                        const char *filename, void *data, GPContext *context)
+{
+	/* virtual file created by Penta capture */
+	if (!strncmp (filename, "capt", 4))
+		return GP_OK;
+	return GP_ERROR_NOT_SUPPORTED;
+}
+
+
 static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.get_file_func = get_file_func,
+	.del_file_func = delete_file_func
 };
 
 static int
-save_buffer(pslr_handle_t camhandle, int bufno, int fd, pslr_status *status)
+save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *status)
 {
 	int imagetype;
 	uint8_t buf[65536];
@@ -116,21 +128,20 @@ save_buffer(pslr_handle_t camhandle, int bufno, int fd, pslr_status *status)
 	GP_DEBUG("get buffer %d type %d res %d\n", bufno, imagetype, status->jpeg_resolution);
 
 	if ( pslr_buffer_open(camhandle, bufno, imagetype, status->jpeg_resolution) != PSLR_OK)
-		return 1 ;
+		return GP_ERROR;
 
 	length = pslr_buffer_get_size(camhandle);
 	current = 0;
-
 	while (1) {
 		uint32_t bytes;
 		bytes = pslr_buffer_read(camhandle, buf, sizeof(buf));
 		if (bytes == 0)
 			break;
-		/*write(fd, buf, bytes);*/
+		gp_file_append (file, (char*)buf, bytes);
 		current += bytes;
 	}
 	pslr_buffer_close(camhandle);
-	return 0;
+	return current;
 }
 
 
@@ -138,17 +149,61 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
                 GPContext *context)
 {
-	pslr_handle_t p = camera->pl;
-	pslr_status status;
+	pslr_handle_t		p = camera->pl;
+	pslr_status		status;
+	int			ret, length;
+	CameraFile		*file = NULL;
+	CameraFileInfo		info;
+	static int 		capcnt = 0;
 
-	pslr_get_status(p, &status);
-	pslr_shutter(p);
-	while ( save_buffer( p, (int)0, 42424242, &status) )
+	pslr_get_status (p, &status);
+	pslr_shutter (p);
+
+	strcpy (path->folder, "/");
+	sprintf (path->name, "capt%04d.jpg", capcnt++);
+
+	ret = gp_file_new(&file);
+	if (ret!=GP_OK) return ret;
+	gp_file_set_mtime (file, time(NULL));
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+
+	while (1) {
+		length = save_buffer( p, (int)0, file, &status);
+		if (length == GP_ERROR_NOT_SUPPORTED) return length;
+		if (length >= GP_OK)
+			break;
 		usleep(100000);
+	}
 	pslr_delete_buffer(p, (int)0 );
-        return GP_OK;
-}
 
+	gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
+	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+        if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+        if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+
+	/* We have now handed over the file, disclaim responsibility by unref. */
+	gp_file_unref (file);
+
+	/* we also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+	strcpy (info.file.type, GP_MIME_JPEG);
+	info.file.size		= length;
+	info.file.mtime		= time(NULL);
+
+	info.preview.fields = 0;
+	gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
+	ret = gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+	return ret;
+}
 
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
