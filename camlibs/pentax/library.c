@@ -64,9 +64,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.speed[0] = 0;
 	a.usb_vendor = 0x0a17;
 	a.usb_product= 0x0091;
-	a.operations = GP_OPERATION_NONE;
-	a.folder_operations = GP_FOLDER_OPERATION_NONE;
-	a.file_operations   = GP_FILE_OPERATION_NONE;
+	a.operations 		= GP_CAPTURE_IMAGE;
+	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
+	a.file_operations	= GP_FILE_OPERATION_NONE;
 	return gp_abilities_list_append (list, a);
 }
 
@@ -85,8 +85,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
-	Camera *camera = data;
-
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
@@ -94,7 +92,6 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	Camera *camera = data; 
 	return GP_OK;
 }
 
@@ -102,6 +99,14 @@ static CameraFilesystemFuncs fsfuncs = {
 	.file_list_func = file_list_func,
 	.get_file_func = get_file_func,
 };
+
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+                GPContext *context)
+{
+        return GP_OK;
+}
+
 
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
@@ -127,11 +132,21 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
+	/* nothing else to do but freeing */
+	free (camera->pl);
 	return GP_OK;
 }
 
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	return GP_OK;
+	camera->pl = pslr_init ();
+	if (camera->pl == NULL) return GP_ERROR_NO_MEMORY;
+	pslr_connect (camera->pl);
+
+	camera->functions->summary = camera_summary;
+	camera->functions->get_config = camera_get_config;
+	camera->functions->set_config = camera_set_config;
+	camera->functions->capture = camera_capture;
+	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }

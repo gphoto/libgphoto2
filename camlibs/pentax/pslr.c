@@ -105,8 +105,6 @@ typedef struct {
     uint32_t offset;
 } ipslr_handle_t;
 
-ipslr_handle_t pslr;
-
 static int ipslr_set_mode(ipslr_handle_t *p, uint32_t mode);
 static int ipslr_cmd_00_09(ipslr_handle_t *p, uint32_t mode);
 static int ipslr_cmd_10_0a(ipslr_handle_t *p, uint32_t mode);
@@ -160,6 +158,8 @@ static ipslr_model_info_t camera_models[] = {
 };
 
 #ifndef LIBGPHOTO2
+static ipslr_handle_t pslr;
+
 pslr_handle_t pslr_init()
 {
     DIR *d;
@@ -225,6 +225,12 @@ pslr_handle_t pslr_init()
     }
 
     return &pslr;
+}
+#else
+pslr_handle_t
+pslr_init()
+{
+	return calloc(sizeof(ipslr_handle_t),1);
 }
 #endif
 
