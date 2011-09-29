@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/time.h>
 #include <stdbool.h>
 
 #include <gphoto2/gphoto2-library.h>
@@ -144,6 +145,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 	return current;
 }
 
+static int 		capcnt = 0;
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
@@ -154,7 +156,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int			ret, length;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
-	static int 		capcnt = 0;
 
 	pslr_get_status (p, &status);
 	pslr_shutter (p);
@@ -201,6 +202,99 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
 	ret = gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 	return ret;
+}
+
+static int
+_timeout_passed(struct timeval *start, int timeout) {
+	struct timeval curtime;
+
+	gettimeofday (&curtime, NULL);
+	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
+}
+
+
+static int
+camera_wait_for_event (Camera *camera, int timeout,
+                       CameraEventType *eventtype, void **eventdata,
+                       GPContext *context) {
+        struct timeval  event_start;
+	CameraFilePath	*path;
+	pslr_handle_t	p = camera->pl;
+	int		ret, length;
+	CameraFile	*file = NULL;
+	CameraFileInfo	info;
+
+	*eventtype = GP_EVENT_TIMEOUT;
+	*eventdata = NULL;
+
+	gettimeofday (&event_start, 0);
+	while (1) {
+		pslr_status	status;
+		int bufno;
+
+		if (PSLR_OK != pslr_get_status (camera->pl, &status))
+			break;
+
+		if (status.bufmask == 0)
+			goto next;
+		/* New image on camera! */
+		for (bufno=0;bufno<16;bufno++)
+			if (status.bufmask & (1<<bufno))
+				break;
+		if (bufno == 16) goto next;
+
+		path = malloc(sizeof(CameraFilePath));
+		strcpy (path->folder, "/");
+		sprintf (path->name, "capt%04d.jpg", capcnt++);
+
+		ret = gp_file_new(&file);
+		if (ret!=GP_OK) return ret;
+		gp_file_set_mtime (file, time(NULL));
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
+
+		while (1) {
+			length = save_buffer( p, bufno, file, &status);
+			if (length == GP_ERROR_NOT_SUPPORTED) return length;
+			if (length >= GP_OK)
+				break;
+			usleep(100000);
+		}
+		pslr_delete_buffer(p, bufno );
+
+		gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
+		ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
+		ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		/* We have now handed over the file, disclaim responsibility by unref. */
+		gp_file_unref (file);
+		/* we also get the fs info for free, so just set it */
+		info.file.fields = GP_FILE_INFO_TYPE |
+				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+		strcpy (info.file.type, GP_MIME_JPEG);
+		info.file.size		= length;
+		info.file.mtime		= time(NULL);
+
+		info.preview.fields = 0;
+		gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
+		ret = gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+		*eventtype = GP_EVENT_FILE_ADDED;
+		*eventdata = path;
+		return GP_OK;
+
+next:
+		if (_timeout_passed (&event_start, timeout))
+			break;
+		usleep(100*1000); /* 100 ms */
+	}
+	return GP_OK;
 }
 
 static int
@@ -522,6 +616,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->capture = camera_capture;
+	camera->functions->wait_for_event = camera_wait_for_event;
 	model = pslr_camera_name (camera->pl);
 	gp_log (GP_LOG_DEBUG, "pentax", "reported camera model is %s\n", model);
 	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
