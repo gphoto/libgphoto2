@@ -120,7 +120,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 	uint32_t length;
 	uint32_t current;
 
-	if (status->image_format != PSLR_IMAGE_FORMAT_JPEG) {       
+	if (status->image_format != PSLR_IMAGE_FORMAT_JPEG) {
 		gp_log (GP_LOG_ERROR, "pentax", "Sorry, don't know how to make capture work with RAW format yet :(\n");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
