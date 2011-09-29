@@ -188,10 +188,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		gp_file_free (file);
 		return ret;
 	}
-
 	/* We have now handed over the file, disclaim responsibility by unref. */
 	gp_file_unref (file);
-
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
@@ -208,9 +206,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	CameraWidget *t, *section;
-	char *model;
-	pslr_status		status;
+	CameraWidget	*t, *section;
+	char		*model;
+	pslr_status	status;
+	char		buf[20];
 
 	pslr_get_status (camera->pl, &status);
 
@@ -237,15 +236,65 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_add_choice (t, "10");
 	gp_widget_add_choice (t, "6");
 	gp_widget_add_choice (t, "2");
-	gp_widget_add_choice (t, _("Max"));
 
 	switch (status.jpeg_resolution) {
 	case PSLR_JPEG_RESOLUTION_14M:	gp_widget_set_value (t, "14");break;
 	case PSLR_JPEG_RESOLUTION_10M:	gp_widget_set_value (t, "10");break;
 	case PSLR_JPEG_RESOLUTION_6M:	gp_widget_set_value (t, "6");break;
 	case PSLR_JPEG_RESOLUTION_2M:	gp_widget_set_value (t, "2");break;
-	case PSLR_JPEG_RESOLUTION_MAX:	gp_widget_set_value (t, _("Max"));break;
 	default: 			gp_widget_set_value (t, _("Unknown"));break;
+	}
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_RADIO, _("ISO"), &t);
+	gp_widget_set_name (t, "iso");
+	gp_widget_add_choice (t, "100");
+	gp_widget_add_choice (t, "200");
+	gp_widget_add_choice (t, "400");
+	gp_widget_add_choice (t, "800");
+	gp_widget_add_choice (t, "1600");
+	gp_widget_add_choice (t, "3200");
+	sprintf(buf,"%d",status.current_iso);
+	gp_widget_set_value (t, buf);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Shutter Speed"), &t);
+	gp_widget_set_name (t, "shutterspeed");
+	sprintf(buf,"%d/%d",status.current_shutter_speed.nom,status.current_shutter_speed.denom);
+	gp_widget_set_value (t, buf);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Aperture"), &t);
+	gp_widget_set_name (t, "aperture");
+	sprintf(buf,"%d/%d",status.current_aperture.nom,status.current_aperture.denom);
+	gp_widget_set_value (t, buf);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_RADIO, _("Shooting Mode"), &t);
+	gp_widget_set_name (t, "shootingmode");
+	gp_widget_add_choice (t, _("GREEN"));
+	gp_widget_add_choice (t, _("P"));
+	gp_widget_add_choice (t, _("SV"));
+	gp_widget_add_choice (t, _("TV"));
+	gp_widget_add_choice (t, _("AV"));
+	gp_widget_add_choice (t, _("TAV"));
+	gp_widget_add_choice (t, _("M"));
+	gp_widget_add_choice (t, _("B"));
+	gp_widget_add_choice (t, _("X"));
+	switch (status.exposure_mode) {
+	case PSLR_EXPOSURE_MODE_GREEN:	gp_widget_set_value (t, _("GREEN"));break;
+	case PSLR_EXPOSURE_MODE_M:	gp_widget_set_value (t, _("M"));break;
+	case PSLR_EXPOSURE_MODE_P:	gp_widget_set_value (t, _("P"));break;
+	case PSLR_EXPOSURE_MODE_AV:	gp_widget_set_value (t, _("AV"));break;
+	case PSLR_EXPOSURE_MODE_TV:	gp_widget_set_value (t, _("TV"));break;
+	case PSLR_EXPOSURE_MODE_SV:	gp_widget_set_value (t, _("SV"));break;
+	case PSLR_EXPOSURE_MODE_TAV:	gp_widget_set_value (t, _("TAV"));break;
+	case PSLR_EXPOSURE_MODE_X:	gp_widget_set_value (t, _("X"));break;
+	case PSLR_EXPOSURE_MODE_B:	gp_widget_set_value (t, _("B"));break;
+	default:
+		sprintf(buf, _("Unknown mode %d"), status.exposure_mode);
+		gp_widget_set_value (t, buf);
+		break;
 	}
 	gp_widget_append (section, t);
 
