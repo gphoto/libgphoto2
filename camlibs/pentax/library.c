@@ -247,6 +247,16 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	}
 	gp_widget_append (section, t);
 
+	gp_widget_new (GP_WIDGET_RADIO, _("Image Quality"), &t);
+	gp_widget_set_name (t, "imgquality");
+	gp_widget_add_choice (t, "4");
+	gp_widget_add_choice (t, "3");
+	gp_widget_add_choice (t, "2");
+	gp_widget_add_choice (t, "1");
+	sprintf (buf,"%d",status.jpeg_quality);
+	gp_widget_set_value (t, buf);
+	gp_widget_append (section, t);
+
 	gp_widget_new (GP_WIDGET_RADIO, _("ISO"), &t);
 	gp_widget_set_name (t, "iso");
 	gp_widget_add_choice (t, "100");
@@ -373,10 +383,10 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 		gp_widget_get_value (w, &sval);
 		resolution = PSLR_JPEG_RESOLUTION_MAX;
-		if (!strcmp(sval,"14")) resolution = PSLR_JPEG_RESOLUTION_14M;
-		if (!strcmp(sval,"10")) resolution = PSLR_JPEG_RESOLUTION_10M;
-		if (!strcmp(sval,"6")) resolution = PSLR_JPEG_RESOLUTION_6M;
-		if (!strcmp(sval,"2")) resolution = PSLR_JPEG_RESOLUTION_2M;
+		if (!strcmp(sval,"14"))	resolution = PSLR_JPEG_RESOLUTION_14M;
+		if (!strcmp(sval,"10"))	resolution = PSLR_JPEG_RESOLUTION_10M;
+		if (!strcmp(sval,"6"))	resolution = PSLR_JPEG_RESOLUTION_6M;
+		if (!strcmp(sval,"2"))	resolution = PSLR_JPEG_RESOLUTION_2M;
 	
 		if (resolution != PSLR_JPEG_RESOLUTION_MAX) {
 			pslr_set_jpeg_resolution(camera->pl, resolution);
@@ -418,6 +428,21 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			pslr_get_status(camera->pl, &status);
 		} else
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode iso %s", sval);
+	}
+
+	gp_widget_get_child_by_label (window, _("Image Quality"), &w);
+	if (gp_widget_changed (w)) {
+		int qual;
+
+		/* FIXME: decoding is strange. the UI shows number of starts
+		 * on k20d: 4 stars = 3, 3 stars = 0, 2 stars = 1, 1 star = 2 
+		 */
+		gp_widget_get_value (w, &sval);
+		if (sscanf(sval, "%d", &qual)) {
+			pslr_set_jpeg_quality (camera->pl, qual);
+			pslr_get_status (camera->pl, &status);
+		} else
+			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image quality %s", sval);
 	}
 
 	gp_widget_get_child_by_label (window, _("Shutter Speed"), &w);
@@ -469,7 +494,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			pslr_set_aperture(camera->pl, aperture);
 			pslr_get_status(camera->pl, &status);
 		} else {
-			gp_log (GP_LOG_ERROR, "pentax", "Could not decode shutterspeed %s", sval);
+			gp_log (GP_LOG_ERROR, "pentax", "Could not decode aperture %s", sval);
 		}
 	}
 
