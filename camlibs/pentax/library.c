@@ -207,7 +207,7 @@ static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	CameraWidget	*t, *section;
-	char		*model;
+	const char	*model;
 	pslr_status	status;
 	char		buf[20];
 
@@ -267,20 +267,47 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Aperture"), &t);
 	gp_widget_set_name (t, "aperture");
-	sprintf(buf,"%d/%d",status.current_aperture.nom,status.current_aperture.denom);
+	if (status.current_aperture.denom == 1) {
+		sprintf(buf,"%d",status.current_aperture.nom);
+	} else if (status.current_aperture.denom == 10) {
+		if (status.current_aperture.nom % 10 == 0)
+			sprintf(buf,"%d",status.current_aperture.nom/10);
+		else
+			sprintf(buf,"%d.%d",status.current_aperture.nom/10,status.current_aperture.nom%10);
+	} else {
+		sprintf(buf,"%d/%d",status.current_aperture.nom,status.current_aperture.denom);
+	}
 	gp_widget_set_value (t, buf);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Aperture at Lens Minimum Focal Length"), &t);
 	gp_widget_set_name (t, "apertureatminfocallength");
-	sprintf(buf,"%d/%d",status.lens_min_aperture.nom,status.lens_min_aperture.denom);
+	if (status.lens_min_aperture.denom == 1) {
+		sprintf(buf,"%d",status.lens_min_aperture.nom);
+	} else if (status.lens_min_aperture.denom == 10) {
+		if (status.lens_min_aperture.nom % 10 == 0)
+			sprintf(buf,"%d",status.lens_min_aperture.nom/10);
+		else
+			sprintf(buf,"%d.%d",status.lens_min_aperture.nom/10,status.lens_min_aperture.nom%10);
+	} else {
+		sprintf(buf,"%d/%d",status.lens_min_aperture.nom,status.lens_min_aperture.denom);
+	}
 	gp_widget_set_value (t, buf);
 	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Aperture at Lens Maximum Focal Length"), &t);
 	gp_widget_set_name (t, "apertureatmaxfocallength");
-	sprintf(buf,"%d/%d",status.lens_max_aperture.nom,status.lens_max_aperture.denom);
+	if (status.lens_max_aperture.denom == 1) {
+		sprintf(buf,"%d",status.lens_max_aperture.nom);
+	} else if (status.lens_max_aperture.denom == 10) {
+		if (status.lens_max_aperture.nom % 10 == 0)
+			sprintf(buf,"%d",status.lens_max_aperture.nom/10);
+		else
+			sprintf(buf,"%d.%d",status.lens_max_aperture.nom/10,status.lens_max_aperture.nom%10);
+	} else {
+		sprintf(buf,"%d/%d",status.lens_max_aperture.nom,status.lens_max_aperture.denom);
+	}
 	gp_widget_set_value (t, buf);
 	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
@@ -333,10 +360,118 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 static int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
-	CameraWidget *child;
-	int ret;
+	CameraWidget *w;
+	char *sval;
+	pslr_status		status;
+
+	pslr_get_status(camera->pl, &status);
 
 	GP_DEBUG ("*** camera_set_config");
+	gp_widget_get_child_by_label (window, _("Image Size"), &w);
+	if (gp_widget_changed (w)) {
+		pslr_jpeg_resolution_t resolution;
+
+		gp_widget_get_value (w, &sval);
+		resolution = PSLR_JPEG_RESOLUTION_MAX;
+		if (!strcmp(sval,"14")) resolution = PSLR_JPEG_RESOLUTION_14M;
+		if (!strcmp(sval,"10")) resolution = PSLR_JPEG_RESOLUTION_10M;
+		if (!strcmp(sval,"6")) resolution = PSLR_JPEG_RESOLUTION_6M;
+		if (!strcmp(sval,"2")) resolution = PSLR_JPEG_RESOLUTION_2M;
+	
+		if (resolution != PSLR_JPEG_RESOLUTION_MAX) {
+			pslr_set_jpeg_resolution(camera->pl, resolution);
+			pslr_get_status(camera->pl, &status);
+		} else {
+			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image size %s", sval);
+		}
+	}
+
+	gp_widget_get_child_by_label (window, _("Shooting Mode"), &w);
+	if (gp_widget_changed (w)) {
+		pslr_exposure_mode_t exposuremode;
+		gp_widget_get_value (w, &sval);
+
+		exposuremode = PSLR_EXPOSURE_MODE_MAX;
+		if (!strcmp(sval,_("GREEN")))	exposuremode = PSLR_EXPOSURE_MODE_GREEN;
+		if (!strcmp(sval,_("M")))	exposuremode = PSLR_EXPOSURE_MODE_M;
+		if (!strcmp(sval,_("B")))	exposuremode = PSLR_EXPOSURE_MODE_B;
+		if (!strcmp(sval,_("P")))	exposuremode = PSLR_EXPOSURE_MODE_P;
+		if (!strcmp(sval,_("SV")))	exposuremode = PSLR_EXPOSURE_MODE_SV;
+		if (!strcmp(sval,_("TV")))	exposuremode = PSLR_EXPOSURE_MODE_TV;
+		if (!strcmp(sval,_("AV")))	exposuremode = PSLR_EXPOSURE_MODE_AV;
+		if (!strcmp(sval,_("TAV")))	exposuremode = PSLR_EXPOSURE_MODE_TAV;
+		if (!strcmp(sval,_("X")))	exposuremode = PSLR_EXPOSURE_MODE_TAV;
+		if (exposuremode != PSLR_EXPOSURE_MODE_MAX) {
+			pslr_set_exposure_mode(camera->pl, exposuremode);
+			pslr_get_status(camera->pl, &status);
+		} else {
+		}
+			gp_log (GP_LOG_ERROR, "pentax", "Could not decode exposuremode %s", sval);
+	}
+
+	gp_widget_get_child_by_label (window, _("ISO"), &w);
+	if (gp_widget_changed (w)) {
+		int iso;
+		gp_widget_get_value (w, &sval);
+		if (sscanf(sval, "%d", &iso)) {
+			pslr_set_iso(camera->pl, iso);
+			pslr_get_status(camera->pl, &status);
+		} else
+			gp_log (GP_LOG_ERROR, "pentax", "Could not decode iso %s", sval);
+	}
+
+	gp_widget_get_child_by_label (window, _("Shutter Speed"), &w);
+	if (gp_widget_changed (w)) {
+		pslr_rational_t speed;
+
+		gp_widget_get_value (w, &sval);
+		if (sscanf(sval, "%d/%d", &speed.nom, &speed.denom)) {
+			pslr_set_shutter(camera->pl, speed);
+			pslr_get_status(camera->pl, &status);
+		} else {
+			char c;
+			if (sscanf(sval, "%d%c", &speed.nom, &c) && (c=='s')) {
+				speed.denom = 1;
+				pslr_set_shutter(camera->pl, speed);
+				pslr_get_status(camera->pl, &status);
+			} else {
+				gp_log (GP_LOG_ERROR, "pentax", "Could not decode shutterspeed %s", sval);
+			}
+		}
+		/* parse more? */
+	}
+
+	gp_widget_get_child_by_label (window, _("Aperture"), &w);
+	if (gp_widget_changed (w)) {
+		pslr_rational_t aperture;
+		int apt1,apt2;
+
+		gp_widget_get_value (w, &sval);
+		if (sscanf(sval, "%d.%d", &apt1, &apt2)) {
+			if (apt1<11) {
+				aperture.nom = apt1*10+apt2;
+				aperture.denom = 10;
+			} else {
+				/* apt2 not in use */
+				aperture.nom = apt1;
+				aperture.denom = 1;
+			}
+			pslr_set_aperture(camera->pl, aperture);
+			pslr_get_status(camera->pl, &status);
+		} else if (sscanf(sval, "%d", &apt1)) {
+			if (apt1<11) {
+				aperture.nom = apt1*10;
+				aperture.denom = 10;
+			} else {
+				aperture.nom = apt1;
+				aperture.denom = 1;
+			}
+			pslr_set_aperture(camera->pl, aperture);
+			pslr_get_status(camera->pl, &status);
+		} else {
+			gp_log (GP_LOG_ERROR, "pentax", "Could not decode shutterspeed %s", sval);
+		}
+	}
 
 	return GP_OK;
 }
@@ -352,7 +487,7 @@ camera_exit (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	char *model;
+	const char *model;
 	camera->pl = pslr_init (camera->port);
 	if (camera->pl == NULL) return GP_ERROR_NO_MEMORY;
 	pslr_connect (camera->pl);
