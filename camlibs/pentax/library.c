@@ -285,6 +285,20 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
+	gp_widget_new (GP_WIDGET_TEXT, _("Zoom"), &t);
+	gp_widget_set_name (t, "zoom");
+	sprintf(buf,"%d/%d",status.zoom.nom,status.zoom.denom);
+	gp_widget_set_value (t, buf);
+	gp_widget_set_readonly (t, 1);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("EC"), &t);
+	gp_widget_set_name (t, "ec");
+	sprintf(buf,"%d/%d",status.ec.nom,status.ec.denom);
+	gp_widget_set_value (t, buf);
+	gp_widget_set_readonly (t, 1);
+	gp_widget_append (section, t);
+
 	gp_widget_new (GP_WIDGET_RADIO, _("Shooting Mode"), &t);
 	gp_widget_set_name (t, "shootingmode");
 	gp_widget_add_choice (t, _("GREEN"));
