@@ -227,6 +227,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_TEXT, _("Model"), &t);
 	gp_widget_set_name (t, "model");
 	gp_widget_set_value (t, model);
+	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 
@@ -268,6 +269,20 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_name (t, "aperture");
 	sprintf(buf,"%d/%d",status.current_aperture.nom,status.current_aperture.denom);
 	gp_widget_set_value (t, buf);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Aperture at Lens Minimum Focal Length"), &t);
+	gp_widget_set_name (t, "apertureatminfocallength");
+	sprintf(buf,"%d/%d",status.lens_min_aperture.nom,status.lens_min_aperture.denom);
+	gp_widget_set_value (t, buf);
+	gp_widget_set_readonly (t, 1);
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Aperture at Lens Maximum Focal Length"), &t);
+	gp_widget_set_name (t, "apertureatmaxfocallength");
+	sprintf(buf,"%d/%d",status.lens_max_aperture.nom,status.lens_max_aperture.denom);
+	gp_widget_set_value (t, buf);
+	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_RADIO, _("Shooting Mode"), &t);
