@@ -1010,7 +1010,8 @@ int sierra_sub_action (Camera *camera, SierraAction action, int sub_action,
 	CHECK (sierra_read_packet_wait (camera, buf, context));
 
 	switch (buf[0]) {
-		case SIERRA_PACKET_ENQ:
+	case ACK: /* reported on capture on Olympus 4040 */
+	case SIERRA_PACKET_ENQ:
 		return (GP_OK);
 	default:
 		gp_context_error (context, _("Received unexpected answer "
