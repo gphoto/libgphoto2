@@ -745,6 +745,8 @@ static struct {
 	{"Nikon:Coolpix S3000 (PTP mode)",0x04b0, 0x031b, PTP_CAP},
 	/* christian.moll@tudor.lu */
 	{"Nikon:Coolpix S3100 (PTP mode)",0x04b0, 0x0320, PTP_CAP},
+	/* Fabio <ctrlaltca@gmail.com> */
+	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
