@@ -5728,12 +5728,23 @@ camera_init (Camera *camera, GPContext *context)
 	sessionid = 1;
 	while (1) {
 		ret=ptp_opensession (params, sessionid);
-		while (ret==PTP_RC_InvalidTransactionID) {
+		if (ret==PTP_RC_InvalidTransactionID) {
 			sessionid++;
 			if (retried < 10) {
 				retried++;
 				continue;
 			}
+
+			if (retried < 11) {
+				retried++;
+				/* Try whacking PTP device */
+				if (camera->port->type == GP_PORT_USB) {
+					ptp_usb_control_device_reset_request (&camera->pl->params);
+					sessionid = 1;
+					continue;
+				}
+			}
+
 			/* FIXME: deviceinfo is not read yet ... */
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result (ret);
