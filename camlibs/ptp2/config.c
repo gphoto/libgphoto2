@@ -804,7 +804,7 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 	int isset = FALSE, isset2 = FALSE;
 
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
-		if ((dpd->DataType != PTP_DTC_UINT8) || (dpd->DataType != PTP_DTC_INT8))
+		if ((dpd->DataType != PTP_DTC_UINT8) && (dpd->DataType != PTP_DTC_INT8))
 			return (GP_ERROR);
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
