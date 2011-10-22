@@ -67,9 +67,7 @@
 #  include <sgtty.h>
 #endif
 
-#ifdef HAVE_BAUDBOY
-#  include <baudboy.h>
-#elif defined(HAVE_TTYLOCK)
+#ifdef HAVE_TTYLOCK
 #  include <ttylock.h>
 #elif defined(HAVE_LOCKDEV)
 #  include <lockdev.h>
@@ -223,7 +221,7 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
 		"Trying to lock '%s'...", path);
 
-#if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
+#if defined(HAVE_TTYLOCK)
 	if (ttylock ((char*) path)) {
 		if (dev)
 			gp_port_set_error (dev, _("Could not lock device "
@@ -265,7 +263,7 @@ static int
 gp_port_serial_unlock (GPPort *dev, const char *path)
 {
 
-#if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
+#if defined(HAVE_TTYLOCK)
 	if (ttyunlock ((char*) path)) {
 		if (dev)
 			gp_port_set_error (dev, _("Device '%s' could not be "

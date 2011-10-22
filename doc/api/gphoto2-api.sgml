@@ -69,17 +69,11 @@ strongly recommended that you have some library installed that handles
 locking of serial ports. GPhoto2 currently supports
 <variablelist>
   <varlistentry>
-    <term>baudboy.h</term>
-    <listitem>
-      <para>BaudBoy, a library used on Red-Hat systems,</para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
     <term>ttylock.h</term>
     <listitem>
       <para>
         ttyLock, a header file provided by several locking libraries
-	(i.e. BaudBoy and LockDev), and
+	(i.e. LockDev), and
       </para>
     </listitem>
   </varlistentry>

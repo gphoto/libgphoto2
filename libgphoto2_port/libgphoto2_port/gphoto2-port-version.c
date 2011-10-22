@@ -50,8 +50,6 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 
 #ifdef HAVE_RESMGR
 			"resmgr locking",
-#elif HAVE_BAUDBOY
-			"baudboy locking",
 #elif HAVE_TTYLOCK
 			"ttylock locking",
 #elif HAVE_LOCKDEV
@@ -94,11 +92,6 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"resmgr (serial port access and locking)",
 #else
 			"no resmgr (serial port access and locking)",
-#endif
-#ifdef HAVE_BAUDBOY
-			"baudboy (serial port locking)",
-#else
-			"no baudboy (serial port locking)",
 #endif
 #ifdef HAVE_TTYLOCK
 			"ttylock (serial port locking)",
