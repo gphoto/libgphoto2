@@ -71,9 +71,7 @@
 #  include <resmgr.h>
 #endif
 
-#ifdef HAVE_BAUDBOY
-#  include <baudboy.h>
-#elif defined(HAVE_TTYLOCK)
+#ifdef HAVE_TTYLOCK
 #  include <ttylock.h>
 #elif defined(HAVE_LOCKDEV)
 #  include <lockdev.h>
@@ -235,7 +233,7 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 #define __HAVE_LOCKING	
 #endif
 
-#if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
+#if defined(HAVE_TTYLOCK)
 	if (ttylock ((char*) path)) {
 		if (dev)
 			gp_port_set_error (dev, _("Could not lock device "
@@ -282,7 +280,7 @@ gp_port_serial_unlock (GPPort *dev, const char *path)
 	/* fallback through other unlock styles */
 #endif
 
-#if defined(HAVE_TTYLOCK) || defined(HAVE_BAUDBOY)
+#if defined(HAVE_TTYLOCK)
 	if (ttyunlock ((char*) path)) {
 		if (dev)
 			gp_port_set_error (dev, _("Device '%s' could not be "

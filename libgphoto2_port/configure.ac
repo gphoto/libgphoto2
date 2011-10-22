@@ -224,7 +224,6 @@ dnl serial
 dnl ---------------------------------------------------------------------------
 serial_msg=yes
 have_serial=true
-try_baudboy_msg=true
 try_ttylock=true
 try_lockdev=true
 try_resmgr=true
@@ -235,7 +234,6 @@ AC_ARG_ENABLE([serial],
 	if test x$enableval = xno; then
 		have_serial=false
 		serial_msg=no
-		try_baudboy=false
 		try_ttylock=false
 		try_lockdev=false
 		try_resmgr=false
@@ -254,9 +252,8 @@ if $have_serial; then
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
 dnl  (1) resmgr support
-dnl  (2) baudboy.h
-dnl  (3) ttylock.h
-dnl  (4) lockdev.h
+dnl  (2) ttylock.h
+dnl  (3) lockdev.h
 dnl -----------------------------------------
 AC_DEFUN([GP_SERLOCK],[dnl
 # $0([$1])
@@ -269,7 +266,6 @@ AC_ARG_ENABLE([$1],
 	fi
 ])
 ])dnl
-GP_SERLOCK([baudboy])dnl
 GP_SERLOCK([ttylock])dnl
 GP_SERLOCK([lockdev])dnl
 GP_SERLOCK([resmgr])dnl
@@ -285,17 +281,6 @@ if $try_resmgr; then
 	])
 fi
 GP_CONFIG_MSG([resmgr locking],[${resmgr_msg}])
-
-baudboy_msg=no
-if $try_baudboy; then
-	AC_CHECK_HEADER(baudboy.h,[
-		baudboy_msg=yes
-		try_ttylock=false
-		try_lockdev=false
-		AC_DEFINE(HAVE_BAUDBOY,1,[Define if you have Baudboy serial locking.])
-	])
-fi
-GP_CONFIG_MSG([baudboy locking],[${baudboy_msg}])
 
 ttylock_msg=no
 if $try_ttylock; then
