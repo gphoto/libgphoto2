@@ -2108,7 +2108,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "entry type %04x", entry.type);
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN) {
 				free (entry.u.info);
-				break;
+				continue; /* in loop ... do not poll while draining the queue */
 			}
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
