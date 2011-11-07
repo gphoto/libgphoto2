@@ -1,0 +1,9 @@
+2011-10-01  Marcus Meissner  <marcus@jet.franken.de>
+
+	* pslr.c,pslr.h: Imported from pkremote project, adjusted to
+	  have more generic port handling
+
+	* library.c: Interfaced with pslr code:
+	  - capture image (to ram)
+	  - configuration of base values
+	  - capture tethered
