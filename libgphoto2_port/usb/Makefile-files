@@ -1,14 +1,16 @@
 # -*- Makefile -*-
 
-EXTRA_LTLIBRARIES += usb1.la
+EXTRA_DIST += usb/usb-os2.c
 
-usb1_la_LDFLAGS = $(iolib_ldflags)
-usb1_la_CPPFLAGS = \
+EXTRA_LTLIBRARIES += usb.la
+
+usb_la_LDFLAGS = $(iolib_ldflags)
+usb_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(INTL_CFLAGS) \
-	$(LIBUSB1_CFLAGS) \
+	$(LIBUSB_CFLAGS) \
 	$(CPPFLAGS)
-usb1_la_DEPENDENCIES = $(iolib_dependencies)
-usb1_la_LIBADD = $(iolib_libadd)
-usb1_la_LIBADD += $(LIBUSB1_LIBS) $(INTLLIBS)
-usb1_la_SOURCES = libusb1/libusb1.c
+usb_la_DEPENDENCIES = $(iolib_dependencies)
+usb_la_LIBADD = $(iolib_libadd)
+usb_la_LIBADD += $(LIBUSB_LIBS)	$(INTLLIBS)
+usb_la_SOURCES = usb/libusb.c
