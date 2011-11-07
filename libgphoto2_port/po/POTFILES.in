@@ -5,4 +5,5 @@ disk/disk.c
 serial/unix.c
 usbdiskdirect/linux.c
 usb/libusb.c
+libusb1/libusb1.c
 usbscsi/linux.c

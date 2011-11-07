@@ -355,8 +355,19 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[http://libusb.sourceforge.net/]
 )
 
+dnl ---------------------------------------------------------------------------
+dnl libusb1
+dnl ---------------------------------------------------------------------------
+GP_CONFIG_MSG([USB ports])
+GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
+		[libusb.h],[libusb_init],[
+	IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
+],[],
+		[disable-explicitly],
+		[http://libusb.sourceforge.net/]
+)
 dnl depends on libusb's availability
-GP_UDEV([test "x$have_LIBUSB" = xyes])
+GP_UDEV([test "x$have_LIBUSB" = xyes -o "x$have_LIBUSB1" = xyes])
 
 
 AC_ARG_ENABLE([disk],
