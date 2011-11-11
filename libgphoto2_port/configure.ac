@@ -344,8 +344,19 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[http://libusb.sourceforge.net/]
 )
 
+dnl ---------------------------------------------------------------------------
+dnl libusb1
+dnl ---------------------------------------------------------------------------
+GP_CONFIG_MSG([USB ports])
+GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
+		[libusb.h],[libusb_init],[
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS libusb1 usbdiskdirect usbscsi"
+		],[],
+                [disable-explicitly],
+                [http://libusb.sourceforge.net/]
+)
 dnl depends on libusb's availability
-GP_UDEV([test "x$have_LIBUSB" = xyes])
+GP_UDEV([test "x$have_LIBUSB" = xyes -o "x$have_LIBUSB1" = xyes])
 
 dnl ---------------------------------------------------------------------------
 dnl disk - hal and various stuff
@@ -475,6 +486,7 @@ libgphoto2_port/Makefile
 libgphoto2_port.pc
 libgphoto2_port-uninstalled.pc
 serial/Makefile
+libusb1/Makefile
 usb/Makefile
 usbdiskdirect/Makefile
 usbscsi/Makefile
