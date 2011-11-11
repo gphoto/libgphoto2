@@ -158,6 +158,7 @@ gp_port_library_list (GPPortInfoList *list)
 						continue;
 					unknownint++;
 				}
+			libusb_free_config_descriptor (config);
 		}
 		/* when we find only hids, printer or comm ifaces  ... skip this */
 		if (!unknownint)
@@ -221,6 +222,7 @@ gp_port_library_list (GPPortInfoList *list)
 						continue;
 					unknownint++;
 				}
+			libusb_free_config_descriptor (config);
 		}
 		/* when we find only hids, printer or comm ifaces  ... skip this */
 		if (!unknownint)
@@ -699,10 +701,12 @@ gp_port_usb_find_ep(libusb_device *dev, int config, int interface, int altsettin
 
 	for (i = 0; i < intf->bNumEndpoints; i++) {
 		if ((intf->endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == direction &&
-		    (intf->endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == type)
+		    (intf->endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == type) {
+			libusb_free_config_descriptor (confdesc);
 			return intf->endpoint[i].bEndpointAddress;
+		}
 	}
-
+	libusb_free_config_descriptor (confdesc);
 	return -1;
 }
 
@@ -730,9 +734,11 @@ gp_port_usb_find_first_altsetting(struct libusb_device *dev, int *config, int *i
 					*config = i;
 					*interface = i1;
 					*altsetting = i2;
+					libusb_free_config_descriptor (confdesc);
 
 					return 0;
 				}
+		libusb_free_config_descriptor (confdesc);
 	}
 	return -1;
 }
@@ -830,7 +836,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 			confdesc->interface[interface].altsetting[altsetting].bInterfaceClass,
 			confdesc->interface[interface].altsetting[altsetting].bInterfaceSubClass
 			);
-
+		libusb_free_config_descriptor (confdesc);
 		return GP_OK;
 	}
 #if 0
@@ -1012,6 +1018,7 @@ gp_port_usb_match_device_by_class(struct libusb_device *dev, int class, int subc
 		struct libusb_config_descriptor *config;
 
 		ret = libusb_get_config_descriptor (dev, i, &config);
+		if (ret != LIBUSB_SUCCESS) continue;
 
 		for (i1 = 0; i1 < config->bNumInterfaces; i1++) {
 			const struct libusb_interface *interface =
@@ -1030,12 +1037,13 @@ gp_port_usb_match_device_by_class(struct libusb_device *dev, int class, int subc
 					*interfaceno = i1;
 					*altsettingno = i2;
 
+					libusb_free_config_descriptor (config);
 					return 2;
 				}
 			}
 		}
+		libusb_free_config_descriptor (config);
 	}
-
 	return 0;
 }
 
@@ -1123,6 +1131,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 			port->settings.usb.outep,
 			port->settings.usb.intep
 			);
+		libusb_free_config_descriptor (confdesc);
 		return GP_OK;
 	}
 #if 0
