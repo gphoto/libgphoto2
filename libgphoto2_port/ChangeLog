@@ -1,3 +1,7 @@
+2011-11-11  Marcus Meissner  <marcus@jet.franken.de>
+
+	* implemented and hook a libusb 1.0 driver.
+
 2008-03-22  Marcus Meissner  <marcus@jet.franken.de>
 
 	* --enable-serial, --enable-ptpip, --enable-disk, --enable-usb options
