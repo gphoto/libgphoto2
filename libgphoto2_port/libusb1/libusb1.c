@@ -263,14 +263,9 @@ static int gp_port_usb_init (GPPort *port)
 	port->pl->config = port->pl->interface = port->pl->altsetting = -1;
 
 	libusb_init (&port->pl->ctx);
-	libusb_set_debug (port->pl->ctx, 255);
-
 #if 0
-	usb_init ();
-	usb_find_busses ();
-	usb_find_devices ();
+	libusb_set_debug (port->pl->ctx, 255);
 #endif
-
 	return (GP_OK);
 }
 
