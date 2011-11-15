@@ -109,6 +109,15 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.");
 
 	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. EventEmulateMode to 4");
+/* interrupt  9013 get event
+ 1     Yes      No
+ 2     Yes      No
+ 3     Yes      Yes
+ 4     Yes      Yes
+ 5     Yes      Yes
+ 6     No       No
+ 7     No       Yes
+ */
 	propval.u16=4;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
 
@@ -3944,6 +3953,7 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 	gp_widget_add_choice (*widget, _("On 1"));
 	gp_widget_add_choice (*widget, _("On 2"));
 	gp_widget_add_choice (*widget, _("Off"));
+	gp_widget_add_choice (*widget, _("Immediate"));
 	gp_widget_set_value (*widget, _("None"));
 	return (GP_OK);
 }
@@ -3962,19 +3972,29 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 
 	if (!strcmp (val, _("On 1"))) {
 		ret = ptp_canon_eos_remotereleaseon (params, 1);
-	} else {
-		if (!strcmp (val, _("On 2"))) {
+		goto leave;
+	}
+	if (!strcmp (val, _("On 2"))) {
+		ret = ptp_canon_eos_remotereleaseon (params, 2);
+		goto leave;
+	}
+	if (!strcmp (val, _("Immediate"))) {
+		/* HACK by Flori Radlherr: "fire and forget" half release before release:
+		   Avoids autofocus drive while focus-switch on the lens is in AF state */
+		ret = ptp_canon_eos_remotereleaseon (params, 1);
+		if (ret == PTP_RC_OK)
 			ret = ptp_canon_eos_remotereleaseon (params, 2);
-		} else {
-			if (!strcmp (val, _("Off"))) {
-				ret = ptp_canon_eos_remotereleaseoff (params, 1);
-			} else {
-				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
-				return GP_ERROR_NOT_SUPPORTED;
-			}
-		}
+		goto leave;
+	}
+	if (!strcmp (val, _("Off"))) {
+		ret = ptp_canon_eos_remotereleaseoff (params, 1);
+		goto leave;
 	}
 
+	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
+	return GP_ERROR_NOT_SUPPORTED;
+
+leave:
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Canon EOS remote release failed: 0x%x", ret);
 		return translate_ptp_result (ret);
