@@ -1699,7 +1699,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 			PTPPropertyValue	val;
-			int 			tries = 20;
+			/* FIXME: this might cause a focusing pass and take seconds. 20 was not
+			 * enough. */
+			int 			tries = 100;
 			PTPDevicePropDesc       dpd;
 
 			SET_CONTEXT_P(params, context);
