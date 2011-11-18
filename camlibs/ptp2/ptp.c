@@ -1643,6 +1643,10 @@ ptp_check_event (PTPParams *params) {
 			return ret;
 		if (isevent)
 			goto store_event;
+		/* Event Emulate Mode 0 (unset) and 1-5 get interrupt events. 6-7 does not. */
+		if (params->canon_event_mode > 5)
+			return ret;
+
 		/* FIXME: fallthrough or return? */
 #ifdef __APPLE__
 		/* the libusb 1 on darwin currently does not like polling

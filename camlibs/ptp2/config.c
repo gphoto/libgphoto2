@@ -73,10 +73,9 @@ static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	PTPContainer		event;
 	PTPPropertyValue	propval;
-	uint16_t		val16;
-	int 			i, ret, isevent;
+	int 			ret;
 	PTPParams		*params = &camera->pl->params;
-	int oldtimeout;
+	int 			found, oldtimeout;
 
 	propval.u16 = 0;
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
@@ -88,6 +87,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 
 	propval.u16=1;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+	params->canon_event_mode = propval.u16;
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is 0x%8x, ret 0x%x",propval.u32, ret);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
@@ -104,6 +104,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+	params->canon_event_mode = propval.u16;
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%4x, ret 0x%x",propval.u16,ret);
 
 	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.");
@@ -118,35 +119,34 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
  6     No       No
  7     No       Yes
  */
-	propval.u16=4;
+	propval.u16 = 7;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+	params->canon_event_mode = propval.u16;
 
 	CPR (context, ptp_canon_startshootingmode (params));
 
 	gp_port_get_timeout (camera->port, &oldtimeout);
 	gp_port_set_timeout (camera->port, 1000);
 
-	/* Catch event */
-	if (PTP_RC_OK==(val16=params->event_wait (params, &event))) {
-		if (event.Code==PTP_EC_StorageInfoChanged)
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: entering  shooting mode.");
-		else 
+	/* Catch the event telling us the mode was switched ... */
+	found = 0;
+	while (!found) {
+		ret = ptp_check_event (params);
+		if (ret != PTP_RC_OK)
+			break;
+
+		while (ptp_get_one_event (params, &event)) {
 			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%x", event.Code);
-	} else {
-		gp_log (GP_LOG_DEBUG, "ptp", "No event yet, we'll try later.");
+			if ((event.Code==0xc00c) ||
+			    (event.Code==PTP_EC_StorageInfoChanged)) {
+				gp_log (GP_LOG_DEBUG, "ptp", "Event: Entered shooting mode.");
+				found = 1;
+				break;
+			}
+		}
+		if (!found) usleep(50*1000);
 	}
 
-	/* Emptying event stack */
-	for (i=0;i<2;i++) {
-		ret = ptp_canon_checkevent (params,&event,&isevent);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_DEBUG, "ptp", "error during check event: %d", ret);
-		}
-		if (isevent)
-			gp_log (GP_LOG_DEBUG, "ptp", "evdata: nparam=0x%x, C=0x%x, trans_id=0x%x, p1=0x%x, p2=0x%x, p3=0x%x",
-				event.Nparam,event.Code,event.Transaction_ID,
-				event.Param1, event.Param2, event.Param3);
-	}
 #if 0
 	gp_port_set_timeout (camera->port, oldtimeout);
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
@@ -157,18 +157,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	}
 	gp_port_set_timeout (camera->port, 1000);
 #endif
-	/* Catch event, attempt  2 */
-	if (val16!=PTP_RC_OK) {
-		if (PTP_RC_OK==params->event_wait (params, &event)) {
-			if (event.Code == PTP_EC_StorageInfoChanged)
-				gp_log (GP_LOG_DEBUG, "ptp","Event: entering shooting mode.");
-			else
-				gp_log (GP_LOG_DEBUG, "ptp","Event: 0x%x", event.Code);
-		} else
-			gp_log (GP_LOG_DEBUG, "ptp", "No expected mode change event.");
-	}
 
-	/* FIXME: Marcus: wait for the 0xC00C Canon event? also apparently sent by the SX100IS */
 
 	/* Reget device info, they change on the Canons. */
 	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);

@@ -1,3 +1,31 @@
+2010-11-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* config.c, library.c, ptp.c, ptp.h: switch the canon powershot event
+          handling to be non-interrupt (just using the 0x9013 opcode).
+
+2010-11-17  Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: Replace 20 by 100 tries in EOS preview capturing.
+
+2010-11-15  Flori Radlherr
+
+	* config.c: Implement a "Immediate" button trigger config on Canon EOS.
+
+
+2010-10-28  Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: Speed up initial EOS capture if the event stack was not
+	  drained before.
+
+2010-10-15  Chris Wulff
+
+	* library.c: Fixed session setup to really use incremental,
+          from Chris Wulff.
+
+2010-09-15  Marcus Meissner <marcus@jet.franken.de>
+
+	* library.c: When querying the thumb, use the direct thumbsize.
+
 2010-06-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: restructured eos event handling loops
@@ -8,7 +36,7 @@
 
 	* ptp-pack.c: Fixed EOS imageformat unpacking regression.
 	* config.c: fixed shadowed variable usage making set_config 
-          leave too early.
+	  leave too early.
 
 2010-01-09  Daniel P. Berrange <dan@berrange.com>
 

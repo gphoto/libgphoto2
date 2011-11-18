@@ -2141,6 +2141,7 @@ struct _PTPParams {
 	PTPCanon_Property	*canon_props;
 	int			nrofcanon_props;
 	int			canon_viewfinder_on;
+	int			canon_event_mode;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanon_changes_entry	*backlogentries;
