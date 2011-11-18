@@ -2370,7 +2370,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			usleep(20*1000);
 			continue;
 		}
-		gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		gp_log (GP_LOG_DEBUG, "ptp","Event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		switch (event.Code) {
 		case PTP_EC_ObjectAdded: {
 			/* add newly created object to internal structures. this hopefully just is a new folder */
