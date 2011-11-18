@@ -2267,7 +2267,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 {
 	static int 		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			found, ret, isevent, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
+	int			found, ret, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	PTPPropertyValue	propval;
@@ -2333,7 +2333,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		viewfinderwason = 1;
 		params->canon_viewfinder_on = 0;
 	}
-	ptp_check_event (params);
+	ret = ptp_check_event (params);
+	if (ret != PTP_RC_OK) {
+		gp_context_error (context, _("Canon Capture failed: 0x%04x"), ret);
+		return translate_ptp_result (ret);
+	}
 
 #if 0
 	/* FIXME: For now, to avoid flash during debug */
@@ -2342,7 +2346,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 #endif
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
-		gp_context_error (context, _("Canon Capture failed: %x"), ret);
+		gp_context_error (context, _("Canon Capture failed: 0x%04x"), ret);
 		return translate_ptp_result (ret);
 	}
 	sawcapturecomplete = 0;
@@ -2355,22 +2359,17 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	while (!_timeout_passed(&event_start, capture_timeout)) {
 		/*usleep(100000);*/
 		gp_context_idle (context);
-		/* Make sure we do not poll USB interrupts after the capture complete event.
-		 * MacOS libusb 1 has non-timing out interrupts so we must avoid event reads that will not
-		 * result in anything.
-		 */
-		if (!sawcapturecomplete && (PTP_RC_OK == params->event_check (params, &event))) {
-			isevent = 1;
-		} else
-{
-			ret = ptp_canon_checkevent (params,&event,&isevent);
-			if (ret!=PTP_RC_OK)
-				continue;
+		ret = ptp_check_event (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error (context, _("Canon Capture failed: 0x%04x"), ret);
+			return translate_ptp_result (ret);
 		}
-		/* we sometimes get CaptureComplete only from ptp_canon_checkevent, but perhaps
-		 * also from regular USB events. Just make sure we write it down. */
-		if (!isevent)
+
+		if (!ptp_get_one_event (params, &event)) {
+			/* FIXME: wait a bit? */
+			usleep(20*1000);
 			continue;
+		}
 		gp_log (GP_LOG_DEBUG, "ptp","evdata: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		switch (event.Code) {
 		case PTP_EC_ObjectAdded: {
@@ -2400,16 +2399,17 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 			newobject = event.Param1;
 			gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",newobject);
+
 			for (j=0;j<2;j++) {
-				isevent = 0;
-				ret=ptp_canon_checkevent(params,&event,&isevent);
-				if ((ret==PTP_RC_OK) && isevent)
+				ret = ptp_check_event (params);
+				while (ptp_get_one_event (params, &event) && !sawcapturecomplete) {
 					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-				if (isevent) {
-					gp_log (GP_LOG_DEBUG, "ptp", "Unhandled canon event: 0x%04x.", event.Code);
 					if (event.Code == PTP_EC_CaptureComplete)
 						sawcapturecomplete = 1;
 				}
+				if (sawcapturecomplete)
+					break;
+				usleep(20*1000);
 			}
 			/* Marcus: Not sure if we really needs this. This refocuses the camera.
 			   ret = ptp_canon_reset_aeafawb(params,7);
@@ -2426,15 +2426,22 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			break;
 	}
 	CR (gp_port_set_timeout (camera->port, timeout));
-	/* Catch event, attempt  2 */
-	if (!sawcapturecomplete) {
-		if (PTP_RC_OK==params->event_wait (params, &event)) {
-			if (event.Code==PTP_EC_CaptureComplete)
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: capture complete(2).");
-			else
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X (2)", event.Code);
-		} else
-			gp_log (GP_LOG_DEBUG, "ptp", "No expected capture complete event");
+	/* wait for capture complete */
+	gettimeofday (&event_start, NULL);
+	while (!sawcapturecomplete && !_timeout_passed(&event_start, capture_timeout)) {
+		ret = ptp_check_event (params);
+		if (ret != PTP_RC_OK)
+			break;
+		while (ptp_get_one_event (params, &event)) {
+			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%X (2)", event.Code);
+			if (event.Code == PTP_EC_CaptureComplete) {
+				sawcapturecomplete = 1;
+				break;
+			}
+		}
+		if (sawcapturecomplete)
+			break;
+		usleep(20*1000);
 	}
 	if (!found) {
 	    gp_log (GP_LOG_DEBUG, "ptp","ERROR: Capture timed out!");
