@@ -1,4 +1,52 @@
-libgphoto2 2.4.11.1
+libgphoto2 2.4.11.2
+
+libgphoto2_port:
+* Added libusb 1.0 port driver.
+* removed baudboy.h support from serial driver.
+
+canon:
+* Secondary RAW 2 format for some cameras.
+
+directory:
+* Handle more suffixes to mimetypes (unknowns will not show up in the
+  file list): moov, qt, qtvr, mp2, mpeg, mpe, srw, 3gp, 3g2, dif.
+* set the correct filetime
+
+ptp2:
+* New cameras:
+  Kodak C1530
+  Sony DSC-HX100V
+  Nikon CoolPix P7000, P500, L120, S5100, S3100, 
+  Nikon D2Hs, D5100
+  Canon EOS 10D, 1D Mark IV, 1100D, 600D
+  Canon PowerShot A2000IS, A3100IS, 
+  Fuji FinePix F80EXR
+
+* Canon Powershot event handling changed to no longer use PTP Events.
+  Should now be more reliable on MacOS.
+
+* Nikon configurations added: videomode, scenemode, exposure program mode,
+  effect mode, liveviewaf, liveviewaffocus, cleansensor, microphone, moviequality,
+  autodistortioncontrol, autoisopadv renamed to minimumshutterspeed.
+* Allow per-camera configuration tables.
+* Canon EOS configurations added: "Immediate" for shutter button pressing,
+
+* Handle missing runtime iconv module support (as found in embedded devices)
+* Bump retries on EOS liveview getting
+* Fixed stupid EOS event handling bug that caused a 1.5 second delay
+* Fixed more session startup issues
+* Tried a fix for getting bad thumbnail lengths
+
+sierra:
+* Bugfix: handle ACK as valid response code
+
+tp6801:
+* New driver for Tenx tp6801 picture frames from Hans de Goede.
+
+libgphoto2:
+* make jpeg and gd support configurable (Gentoo)
+* Updated translations: pl
+
 ------------------------------------------------------------------------
 libgphoto2 2.4.11
 
