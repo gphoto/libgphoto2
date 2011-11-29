@@ -338,9 +338,9 @@ AC_CHECK_LIB(pthread, pthread_create)
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb usbdiskdirect usbscsi"
-],[],
-		[disable-explicitly],
+			IOLIB_SUBDIRS="$IOLIB_SUBDIRS usb"
+		],[],
+		[default-on],
 		[http://libusb.sourceforge.net/]
 )
 
@@ -350,11 +350,16 @@ dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		[libusb.h],[libusb_init],[
-	IOLIB_SUBDIRS="$IOLIB_SUBDIRS libusb1 usbdiskdirect usbscsi"
+			IOLIB_SUBDIRS="$IOLIB_SUBDIRS libusb1"
 		],[],
-                [disable-explicitly],
+                [default-on],
                 [http://libusb.sourceforge.net/]
 )
+
+if test "x$have_LIBUSB" = "xyes" -o "x$have_LIBUSB1" = "xyes" ; then
+	IOLIB_SUBDIRS="$IOLIB_SUBDIRS usbdiskdirect usbscsi"
+fi
+
 dnl depends on libusb's availability
 GP_UDEV([test "x$have_LIBUSB" = xyes -o "x$have_LIBUSB1" = xyes])
 
