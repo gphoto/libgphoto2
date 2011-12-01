@@ -54,6 +54,7 @@ extern "C" {
 #define GP_MIME_ASF       "audio/x-asf"
 #define GP_MIME_MPEG      "video/mpeg"
 #define GP_MIME_AVCHD     "video/mp2t"
+#define GP_MIME_RW2       "image/x-panasonic-raw2"
 
 /**
  * \brief The type of view on the specified file.
