@@ -97,6 +97,7 @@ static const struct {
 	{"m2ts", GP_MIME_AVCHD},
 	{"pbm", "image/x-portable-bitmap"},
 	{"crw",  GP_MIME_CRW},
+	{"rw2",  GP_MIME_RW2},
 	{"cr2",  GP_MIME_RAW},
 	{"nef",  GP_MIME_RAW},
 	{"mrw",  GP_MIME_RAW},
