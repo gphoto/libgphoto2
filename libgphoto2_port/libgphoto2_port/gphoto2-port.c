@@ -897,7 +897,7 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
-	CHECK_SUPP (port, _("msg_read"), port->pc->ops->msg_read);
+	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_read);
         retval = port->pc->ops->msg_read (port, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
