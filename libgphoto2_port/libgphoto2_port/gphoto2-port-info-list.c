@@ -59,6 +59,7 @@
 #  define dcgettext(Domain,Message,Type) (Message)
 #  define bindtextdomain(Domain,Directory) (Domain)
 #  define bind_textdomain_codeset(Domain,codeset) (codeset)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
@@ -325,8 +326,12 @@ gp_port_info_list_count (GPPortInfoList *list)
 
 	CHECK_NULL (list);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Counting entries "
-		"(%i available)..."), list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+	ngettext(
+		"Counting entries (%i available)...",
+		"Counting entries (%i available)...",
+		list->count
+		), list->count);
 
 	/* Ignore generic entries */
 	count = list->count;
@@ -334,9 +339,13 @@ gp_port_info_list_count (GPPortInfoList *list)
 		if (!strlen (list->info[i]->name))
 			count--;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("%i regular entries "
-		"available."), count);
-	return (count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+		ngettext(
+			"%i regular entry available.",
+			"%i regular entries available.",
+			count
+		), count);
+	return count;
 }
 
 /**
@@ -364,8 +373,12 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	CHECK_NULL (list && path);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Looking for "
-		"path '%s' (%i entries available)..."), path, list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+		ngettext(
+		"Looking for path '%s' (%i entry available)...",
+		"Looking for path '%s' (%i entries available)...",
+		list->count
+		), path, list->count);
 
 	/* Exact match? */
 	for (generic = i = 0; i < list->count; i++)
@@ -486,22 +499,26 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	CHECK_NULL (list && info);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Getting info of "
-		"entry %i (%i available)..."), n, list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
+		ngettext(
+		"Getting info of entry %i (%i available)...",
+		"Getting info of entry %i (%i available)...",
+		list->count
+		), n, list->count);
 
 	if (n < 0 || n >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+		return GP_ERROR_BAD_PARAMETERS;
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
 		if (!strlen (list->info[i]->name)) {
 			n++;
 			if (n >= list->count)
-				return (GP_ERROR_BAD_PARAMETERS);
+				return GP_ERROR_BAD_PARAMETERS;
 		}
 
 	*info = list->info[n];
-	return (GP_OK);
+	return GP_OK;
 }
 
 
