@@ -50,6 +50,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 #define CHECK_RESULT(result) {int r=(result); if (r<0) return (r);}
@@ -371,8 +372,7 @@ gp_port_write (GPPort *port, const char *data, int size)
 	retval = port->pc->ops->write (port, data, size);
 	CHECK_RESULT (retval);
 	if ((port->type != GP_PORT_SERIAL) && (retval != size))
-		gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Could only write %i "
-			"out of %i byte(s)"), retval, size);
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext("Could only write %i out of %i byte","Could only write %i out of %i bytes",size), retval, size);
 
 	return (retval);
 }
@@ -394,7 +394,7 @@ gp_port_read (GPPort *port, char *data, int size)
 {
         int retval;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Reading %i=0x%x bytes from port..."),
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext("Reading %i=0x%x byte from port...","Reading %i=0x%x bytes from port...", size),
 		size, size);
 
 	CHECK_NULL (port);
@@ -405,8 +405,9 @@ gp_port_read (GPPort *port, char *data, int size)
 	retval = port->pc->ops->read (port, data, size);
 	CHECK_RESULT (retval);
 	if (retval != size)
-		gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Could only read %i "
-			"out of %i byte(s)"), retval, size);
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext(
+			"Could only read %i out of %i byte",
+			"Could only read %i out of %i byte(s)", size), retval, size);
 
 	gp_log_data ("gphoto2-port", data, retval);
 
@@ -431,8 +432,11 @@ gp_port_check_int (GPPort *port, char *data, int size)
 {
         int retval;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Reading %i=0x%x bytes from interrupt endpoint..."),
-		size, size);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port",
+		ngettext(
+	"Reading %i=0x%x byte from interrupt endpoint...",
+	"Reading %i=0x%x bytes from interrupt endpoint...",
+	size), size, size);
 
 	CHECK_NULL (port);
 	CHECK_INIT (port);
@@ -482,8 +486,11 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 #else
 	if (retval != size )
 #endif
-		gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Could only read %i "
-			"out of %i byte(s)"), retval, size);
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext(
+		"Could only read %i out of %i byte",
+		"Could only read %i out of %i bytes",
+		size
+		), retval, size);
 
 #ifdef IGNORE_EMPTY_INTR_READS
 	if ( retval != 0 ) {
@@ -492,7 +499,11 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 		   reads that will return zero length. Don't
 		   bother to log them as errors. */
 		gp_log (GP_LOG_DEBUG, "gphoto2-port",
-			_("Reading %i=0x%x bytes from interrupt endpoint (fast)..."),
+			ngettext(
+			"Reading %i=0x%x byte from interrupt endpoint (fast)...",
+			"Reading %i=0x%x bytes from interrupt endpoint (fast)...",
+			size
+			),
 			size, size);
 		gp_log_data ("gphoto2-port", data, retval);
 #ifdef IGNORE_EMPTY_INTR_READS
@@ -902,16 +913,18 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 	CHECK_NULL (port);
 	CHECK_INIT (port);
 
-	CHECK_SUPP (port, _("msg_read"), port->pc->ops->msg_read);
+	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_read);
         retval = port->pc->ops->msg_read (port, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
 	if (retval != size)
-		gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Could only read %i "
-			"out of %i byte(s)"), retval, size);
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext(
+			"Could only read %i out of %i byte",
+			"Could only read %i out of %i bytes",
+			size
+		), retval, size);
 
 	gp_log_data ("gphoto2-port", bytes, retval);
-
         return (retval);
 }
 
@@ -989,8 +1002,10 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 	CHECK_RESULT (retval);
 
 	if (retval != size)
-		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
-			"out of %i byte(s)", retval, size);
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext(
+			"Could only read %i out of %i byte",
+			"Could only read %i out of %i bytes",
+			size), retval, size);
 
 	gp_log_data ("gphoto2-port", bytes, retval);
 
@@ -1073,8 +1088,11 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 	CHECK_RESULT (retval);
 
 	if (retval != size)
-		gp_log (GP_LOG_DEBUG, "gphoto2-port", "Could only read %i "
-			"out of %i byte(s)", retval, size);
+		gp_log (GP_LOG_DEBUG, "gphoto2-port", ngettext(
+			"Could only read %i out of %i byte",
+			"Could only read %i out of %i bytes",
+			size
+			), retval, size);
 
 	gp_log_data ("gphoto2-port", bytes, retval);
 
