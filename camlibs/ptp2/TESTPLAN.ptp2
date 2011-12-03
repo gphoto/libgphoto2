@@ -14,12 +14,10 @@ Canon Powershot series (currently: Powershot SX100IS)
 
         time gphoto2 --capture-image-and-download -F 5 -I 1
                 - via SDRAM (capturetarget=0)
-                        real    0m34.579s               2.4.11 baseline
-			real    0m19.720s		2.4.12
+			approx 19-20 seconds		2.4.11 baseline
 
                 - via CARD (capturetarget=1)
-                        real    0m32.608s               2.4.11 baseline
-                        real    0m31.830s               2.4.12
+			approx 28.6 seconds		2.4.11 baseline
 
 
 	--capture-preview
