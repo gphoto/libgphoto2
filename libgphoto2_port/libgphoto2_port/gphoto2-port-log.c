@@ -43,6 +43,7 @@
 #else
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 #ifndef DISABLE_DEBUGGING
@@ -233,7 +234,11 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
         }
         curline[0] = '\0';
 
-	gp_log (GP_LOG_DATA, domain, _("Hexdump of %i = 0x%x bytes follows:\n%s"),
+	gp_log (GP_LOG_DATA, domain, ngettext(
+		"Hexdump of %i = 0x%x byte follows:\n%s",
+		"Hexdump of %i = 0x%x bytes follows:\n%s",
+		size
+		),
 		size, size, result);
 	free (result);
 }
