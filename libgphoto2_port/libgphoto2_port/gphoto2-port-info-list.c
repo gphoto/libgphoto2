@@ -59,6 +59,7 @@
 #  define bind_textdomain_codeset(Domain,codeset) (codeset)
 #  define _(String) (String)
 #  define N_(String) (String)
+#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
 #endif
 
 /**
@@ -309,8 +310,11 @@ gp_port_info_list_count (GPPortInfoList *list)
 
 	CHECK_NULL (list);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Counting entries "
-		"(%i available)..."), list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", ngettext(
+		"Counting entry (%i available)...",
+		"Counting entries (%i available)...",
+		list->count
+	), list->count);
 
 	/* Ignore generic entries */
 	count = list->count;
@@ -318,9 +322,12 @@ gp_port_info_list_count (GPPortInfoList *list)
 		if (!strlen (list->info[i].name))
 			count--;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("%i regular entries "
-		"available."), count);
-	return (count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", ngettext(
+		"%i regular entry available.",
+		"%i regular entries available.",
+		count
+	), count);
+	return count;
 }
 
 /**
@@ -348,8 +355,11 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 
 	CHECK_NULL (list && path);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", _("Looking for "
-		"path '%s' (%i entries available)..."), path, list->count);
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list", ngettext(
+		"Looking for path '%s' (%i entry available)...",
+		"Looking for path '%s' (%i entries available)...",
+		list->count
+	), path, list->count);
 
 	/* Exact match? */
 	for (generic = i = 0; i < list->count; i++)
