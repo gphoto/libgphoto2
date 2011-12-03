@@ -298,6 +298,8 @@ static const struct canonShootingModeStateStruct shootingModeStateArray[] = {
 static const struct canonImageFormatStateStruct imageFormatStateArray[] = {
 	{IMAGE_FORMAT_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
+	{IMAGE_FORMAT_RAW_2, N_("RAW 2"),
+	 0x03, 0x02, 0x00},
 	{IMAGE_FORMAT_SMALL_NORMAL_JPEG, N_("Small Normal JPEG"),
 	 0x02, 0x01, 0x02},
 	{IMAGE_FORMAT_SMALL_FINE_JPEG, N_("Small Fine JPEG"),
