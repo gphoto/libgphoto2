@@ -1644,6 +1644,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon PowerShot / IXUS preview mode */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 			SET_CONTEXT_P(params, context);
+			/* check if we need to prepare capture */
+			if (!params->canon_event_mode) {
+				ret = camera_prepare_capture (camera, context);
+				if (ret != GP_OK)
+					return ret;
+			}
 			if (!params->canon_viewfinder_on) { /* enable on demand, but just once */
 				ret = ptp_canon_viewfinderon (params);
 				if (ret != PTP_RC_OK) {
@@ -2240,6 +2246,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			_("Sorry, initializing your camera did not work. Please report this."));
 			return GP_ERROR_NOT_SUPPORTED;
 		}
+	}
+	if (!params->canon_event_mode) {
+		propval.u16 = 0;
+	        ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+		if (ret == PTP_RC_OK) params->canon_event_mode = propval.u16;
 	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
