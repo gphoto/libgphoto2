@@ -148,7 +148,7 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8
 static inline int
 ucs2strlen(uint16_t const * const unicstr)
 {
-	int length;
+	int length = 0;
 	
 	/* Unicode strings are terminated with 2 * 0x00 */
 	for(length = 0; unicstr[length] != 0x0000U; length ++);
@@ -159,7 +159,7 @@ ucs2strlen(uint16_t const * const unicstr)
 static inline void
 ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t offset, uint8_t *len)
 {
-	int packedlen;
+	int packedlen = 0;
 	uint16_t ucs2str[PTP_MAXSTRLEN+1];
 	char *ucs2strp = (char *) ucs2str;
 	size_t convlen = strlen(string);
