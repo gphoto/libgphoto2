@@ -1672,6 +1672,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		/* Canon PowerShot / IXUS preview mode */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 			SET_CONTEXT_P(params, context);
+			/* check if we need to prepare capture */
+			if (!params->canon_event_mode) {
+				ret = camera_prepare_capture (camera, context);
+				if (ret != GP_OK)
+					return ret;
+			}
 			if (!params->canon_viewfinder_on) { /* enable on demand, but just once */
 				ret = ptp_canon_viewfinderon (params);
 				if (ret != PTP_RC_OK) {

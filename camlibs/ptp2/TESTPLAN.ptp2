@@ -8,9 +8,9 @@ Canon Powershot series (currently: Powershot SX100IS)
 		- Card configured, but not inserted (capturetarget=1)	PASS
 
 	--capture-image-and-download -F 3 -I 5
-		- via SDRAM (capturetarget=0):				TODO
-		- via Card (capturetarget=1):				TODO
-		- Card configured, but not inserted (capturetarget=1)	TODO
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
+		- Card configured, but not inserted (capturetarget=1)	PASS
 
         time gphoto2 --capture-image-and-download -F 5 -I 1
                 - via SDRAM (capturetarget=0)
@@ -23,7 +23,7 @@ Canon Powershot series (currently: Powershot SX100IS)
 
 
 	--capture-preview
-		commandline tool					TODO
+		commandline tool					PASS
 		gtkam							TODO
 		mixed with --capture-image-and-download			TODO
 
