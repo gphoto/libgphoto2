@@ -2293,6 +2293,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			return GP_ERROR_NOT_SUPPORTED;
 		}
 	}
+	if (!params->canon_event_mode) {
+		propval.u16 = 0;
+	        ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+		if (ret == PTP_RC_OK) params->canon_event_mode = propval.u16;
+	}
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
 		if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
