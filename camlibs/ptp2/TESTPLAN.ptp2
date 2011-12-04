@@ -12,7 +12,7 @@ Canon Powershot series (currently: Powershot SX100IS)
 		- via Card (capturetarget=1):				PASS
 		- Card configured, but not inserted (capturetarget=1)	PASS
 
-        time gphoto2 --capture-image-and-download -F 5 -I 1
+        time gphoto2 --capture-image-and-download -F 5 -I 1		PASS
                 - via SDRAM (capturetarget=0)
 			approx 19-20 seconds		2.4.11 baseline
 			16.75-17 seconds		2.4.12
@@ -24,31 +24,31 @@ Canon Powershot series (currently: Powershot SX100IS)
 
 	--capture-preview
 		commandline tool					PASS
-		gtkam							TODO
-		mixed with --capture-image-and-download			TODO
+		gtkam							FAIL (gtkam brokenness)
+		mixed with --capture-image-and-download			PASS
 
-	--capture-movie=10s						TODO
+	--capture-movie=10s						PASS
 
-	--list-config							TODO
-	"capture option"						TODO
+	--list-config							PASS
+	"capture option"						PASS
 		--get-config capture
 		--set-config capture=1
 		--get-config capture
 		--set-config capture=0
 		--get-config capture
-	"zoom" and /other/ config tree value				TODO
+	"zoom" and /other/ config tree value				PASS
 		--get-config zoom
 		--set-config zoom=20
 		--get-config zoom
 		--get-config d02a
 		--set-config d02a=10
 		--get-config d02a
-	"ownername" 							TODO
+	"ownername" 							PASS
 		--get-config ownername
 		--set-config ownername="Markus Meissner"
 		--get-config ownername
 		--set-config ownername="Marcus Meissner"
-	--get-config d402						TODO
+	--get-config d402						PASS
 		(no string settable for the SX100IS)
 
 
