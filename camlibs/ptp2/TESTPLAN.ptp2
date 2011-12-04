@@ -3,9 +3,9 @@ Testplan ptp2 driver
 Canon Powershot series (currently: Powershot SX100IS)
 
 	--capture-image-and-download
-		- via SDRAM (capturetarget=0):				TODO
-		- via Card (capturetarget=1):				TODO
-		- Card configured, but not inserted (capturetarget=1)	TODO
+		- via SDRAM (capturetarget=0):				PASS
+		- via Card (capturetarget=1):				PASS
+		- Card configured, but not inserted (capturetarget=1)	PASS
 
 	--capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0):				TODO
@@ -15,9 +15,11 @@ Canon Powershot series (currently: Powershot SX100IS)
         time gphoto2 --capture-image-and-download -F 5 -I 1
                 - via SDRAM (capturetarget=0)
 			approx 19-20 seconds		2.4.11 baseline
+			16.75-17 seconds		2.4.12
 
                 - via CARD (capturetarget=1)
 			approx 28.6 seconds		2.4.11 baseline
+			approx 26-28 seconds		2.4.12
 
 
 	--capture-preview
@@ -69,6 +71,11 @@ Canon EOS series (currently: Canon EOS 1000D)
 			- JPEG						TODO
 			- JPEG + RAW					TODO
 
+        time gphoto2 --capture-image-and-download -F 5 -I 1
+                - via SDRAM (capturetarget=0)
+
+                - via CARD (capturetarget=1)
+
 	--capture-preview
 		commandline tool					TODO
 		gtkam							TODO
@@ -119,6 +126,11 @@ Nikon DSLR series (currently: Nikon D90)
 		- no SD card insert, capturetarget=0
 			- JPEG						TODO/IGNORE (correct error)
 			- JPEG + RAW 					TODO/IGNORE (correct error)
+
+        time gphoto2 --capture-image-and-download -F 5 -I 1
+                - via SDRAM (capturetarget=0)
+
+                - via CARD (capturetarget=1)
 
 	--capture-preview
 		commandline tool					TODO/CHECK - First image is always plain white :(
