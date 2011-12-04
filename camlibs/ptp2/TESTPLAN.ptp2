@@ -1,5 +1,7 @@
 Testplan ptp2 driver
 
+(Card capture with 16MB reference SD card.)
+
 Canon Powershot series (currently: Powershot SX100IS)
 
 	--capture-image-and-download
@@ -55,50 +57,56 @@ Canon Powershot series (currently: Powershot SX100IS)
 Canon EOS series (currently: Canon EOS 1000D)
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
-			- RAW						TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+			- RAW						PASS
 		- via Card (SD) (capturetarget=1)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
-			- RAW						TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+			- RAW						PASS
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+			- RAW						PASS
 		- via Card (capturetarget=1)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
+			- RAW						PASS
 
         time gphoto2 --capture-image-and-download -F 5 -I 1
                 - via SDRAM (capturetarget=0)
+			real    12.3s			2.4.11 baseline
+			real    11.1s			2.4.12 new baseline
 
                 - via CARD (capturetarget=1)
+			real 	29.8s,30.5s		2.4.11 baseline
+			real	30.4s			2.4.12
 
 	--capture-preview
-		commandline tool					TODO
-		gtkam							TODO
-		mixed with --capture-image-and-download			TODO
+		commandline tool					PASS
+		gtkam							PASS ?
+		mixed with --capture-image-and-download			PASS
 
-	--capture-movie=10s						TODO
+	--capture-movie=10s						PASS
 
 	--wait-event-and-download
-		- JPEG							TODO
+		- JPEG							PASS
 			--set-config capturetarget=0
 			--set-config capturetarget=1
-		- JPEG + RAW						TODO
+		- JPEG + RAW						PASS
 			--set-config capturetarget=0
 			--set-config capturetarget=1
 
-	--list-config							TODO
-	"imageformat"							TODO
+	--list-config							PASS
+	"imageformat"							PASS
 		--get-config imageformat=0
 		--get-config imageformat
 		--set-config imageformat=6
 		--get-config imageformat
 
-	"ownername"							TODO
+	"ownername"							PASS
 		--get-config ownername
 		--set-config ownername="Marcus Meissner"
 		--get-config ownername
@@ -131,6 +139,7 @@ Nikon DSLR series (currently: Nikon D90)
                 - via SDRAM (capturetarget=0)
 
                 - via CARD (capturetarget=1)
+			- real    32.7		libgphoto2 2.4.11 baseline
 
 	--capture-preview
 		commandline tool					TODO/CHECK - First image is always plain white :(
