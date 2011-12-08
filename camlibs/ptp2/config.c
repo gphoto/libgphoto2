@@ -1816,12 +1816,38 @@ static struct deviceproptableu16 canon_eos_cameraoutput[] = {
 };
 GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
 
-/* on the EOS 7d it lists 0 and 4 ... Likely similar to capturetarget? */
-static struct deviceproptableu16 canon_eos_evfrecordtarget[] = {
-	{ N_("None"),	0, 0 },
-	{ N_("Record"), 4, 0 },
-};
-GENERIC16TABLE(Canon_EOS_EVFRecordTarget,canon_eos_evfrecordtarget)
+static int
+_get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
+	char buf[20];
+
+/*	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+*/
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf,"%d",dpd->CurrentValue.u32);
+	gp_widget_set_value (*widget,buf);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_EVFRecordTarget(CONFIG_PUT_ARGS) {
+	int	ret, i;
+	char	*value;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	if (!sscanf(value, "%d", &i))
+		return GP_ERROR;
+	propval->u32 = i;
+	return GP_OK;
+}
+
+
 
 /* values currently unknown */
 static struct deviceproptableu16 canon_eos_evfmode[] = {
@@ -1914,7 +1940,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			}
 		}
 	}
-	dpd->CurrentValue.u8 = u;
+	propval->u8 = u;
 	return GP_OK;
 }
 
@@ -5061,7 +5087,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_EOS_EVFOutputDevice, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_CameraOutput, _put_Canon_EOS_CameraOutput },
-	{ N_("Movie Recording"), "movierecord", PTP_DPC_CANON_EOS_EVFRecordStatus, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
+	{ N_("Movie Recording"), "movierecord", PTP_DPC_CANON_EOS_EVFRecordStatus, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
 	{ N_("EVF Mode"), "evfmode", PTP_DPC_CANON_EOS_EVFMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFMode, _put_Canon_EOS_EVFMode },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
