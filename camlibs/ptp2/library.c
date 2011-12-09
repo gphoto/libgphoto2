@@ -2720,11 +2720,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 			int i;
 			PTPCanon_changes_entry	entry;
 
-			ret = ptp_check_eos_events (params);
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon EOS Get Changes failed: 0x%04x"), ret);
-				return translate_ptp_result (ret);
-			}
 			while (ptp_get_one_eos_event (params, &entry)) {
 				sleepcnt = 1;
 				gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "entry type %04x", entry.type);
@@ -2830,6 +2825,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_log (GP_LOG_DEBUG, "ptp2/wait_for_eos_event", "Unhandled EOS event 0x%04x", entry.type);
 					break;
 				}
+			}
+			ret = ptp_check_eos_events (params);
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Canon EOS Get Changes failed: 0x%04x"), ret);
+				return translate_ptp_result (ret);
 			}
 			if (_timeout_passed (&event_start, timeout))
 				break;
