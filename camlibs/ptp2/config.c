@@ -201,11 +201,16 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		     ? (GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram") ? cardval : PTP_CANON_EOS_CAPTUREDEST_HD
 		     : value;
 
-	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
-		return translate_ptp_result (ret);
-	}
+	/* otherwise we get DeviceBusy for some reason */
+	if (ct_val.u32 != dpd.CurrentValue.u32) {
+		ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
+			return translate_ptp_result (ret);
+		}
+	} else
+		gp_log (GP_LOG_DEBUG,"camera_canon_eos_update_capture_target", "optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
+
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
 		 * that we have enough space left. */
@@ -228,6 +233,8 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams	*params = &camera->pl->params;
 	int		ret;
 	PTPStorageIDs	sids;
+
+	gp_log (GP_LOG_DEBUG, "ptp2_prepare_eos_capture", "preparing EOS capture...");
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
