@@ -178,3 +178,7 @@ Nikon DSLR series (currently: Nikon D90)
 		--set-config d090="Markus Meissner"
 		--get-config d090
 		--set-config d090="Marcus Meissner"
+
+
+Samsung Galaxy S2
+	-- gphoto2 -L  							TODO
