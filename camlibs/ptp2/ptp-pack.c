@@ -167,7 +167,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
 	memset(ucs2strp, 0, sizeof(ucs2str));  /* XXX: necessary? */
 #ifdef HAVE_ICONV
-	if (params->cd_locale_to_ucs2 == (iconv_t)-1) {
+	if (params->cd_locale_to_ucs2 != (iconv_t)-1) {
 		size_t nconv;
 		size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
 		char *stringp = string;
