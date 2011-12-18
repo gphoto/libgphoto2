@@ -163,8 +163,9 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 
 	/* Cannot exceed 255 (PTP_MAXSTRLEN) since it is a single byte, duh ... */
 	memset(ucs2strp, 0, sizeof(ucs2str));  /* XXX: necessary? */
+	/*ptp_debug (params ,"pack_string of %s", string);*/
 #ifdef HAVE_ICONV
-	if (params->cd_locale_to_ucs2 == (iconv_t)-1) {
+	if (params->cd_locale_to_ucs2 != (iconv_t)-1) {
 		size_t nconv;
 		size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
 		char *stringp = string;
@@ -174,7 +175,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 		if (nconv == (size_t) -1)
 			ucs2str[0] = 0x0000U;
 	} else
-#else
+#endif
 	{
 		int i;
 		for (i=0;i<convlen;i++) {
@@ -182,7 +183,6 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 		}
 		ucs2str[convlen] = 0;
 	}
-#endif
 	/*
 	 * XXX: isn't packedlen just ( (uint16_t *)ucs2strp - ucs2str )?
 	 *      why do we need ucs2strlen()?
