@@ -177,7 +177,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 		if (nconv == (size_t) -1)
 			ucs2str[0] = 0x0000U;
 	} else
-#else
+#endif
 	{
 		int i;
 		for (i=0;i<convlen;i++) {
@@ -185,7 +185,6 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 		}
 		ucs2str[convlen] = 0;
 	}
-#endif
 	/*
 	 * XXX: isn't packedlen just ( (uint16_t *)ucs2strp - ucs2str )?
 	 *      why do we need ucs2strlen()?
