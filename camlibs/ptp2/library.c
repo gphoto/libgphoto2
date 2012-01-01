@@ -1226,7 +1226,7 @@ static struct {
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
 	/* Luis Arias <kaaloo@gmail.com> */
-	{"Fuji:FinePix X100",			0x04cb, 0x0263, 0},
+	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
 
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
