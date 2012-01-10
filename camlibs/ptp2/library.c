@@ -715,6 +715,9 @@ static struct {
 	/* Kévin Ottens <ervin@ipsquad.net> */
 	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
 
+	/* Dale Pontius <DEPontius@edgehp.net> */
+	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, 0},
+
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
