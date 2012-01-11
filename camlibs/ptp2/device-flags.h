@@ -273,6 +273,18 @@
  * if you try to get individual properties of an object.
  */
 #define DEVICE_FLAG_BROKEN_GET_OBJECT_PROPVAL	0x20000000
+
+
+/**
+ * All these bug flags need to be set on SONY NWZ Walkman
+ * players, and will be autodetected on unknown devices
+ * by detecting the vendor extension descriptor "sony.net"
+ */
+#define DEVICE_FLAGS_SONY_NWZ_BUGS \
+  (DEVICE_FLAG_UNLOAD_DRIVER | \
+   DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | \
+   DEVICE_FLAG_UNIQUE_FILENAMES | \
+   DEVICE_FLAG_FORCE_RESET_ON_CLOSE )
 /**
  * All these bug flags need to be set on Android devices,
  * they claim to support MTP operations they actually
@@ -283,4 +295,6 @@
 #define DEVICE_FLAGS_ANDROID_BUGS \
   (DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | \
    DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST | \
-   DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST)
+   DEVICE_FLAG_BROKEN_SEND_OBJECT_PROPLIST | \
+   DEVICE_FLAG_UNLOAD_DRIVER | \
+   DEVICE_FLAG_LONG_TIMEOUT )
