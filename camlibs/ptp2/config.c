@@ -201,11 +201,16 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		     ? (GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && strcmp(buf,"sdram") ? cardval : PTP_CANON_EOS_CAPTUREDEST_HD
 		     : value;
 
-	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
-		return translate_ptp_result (ret);
-	}
+	/* otherwise we get DeviceBusy for some reason */
+	if (ct_val.u32 != dpd.CurrentValue.u32) {
+		ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
+			return translate_ptp_result (ret);
+		}
+	} else
+		gp_log (GP_LOG_DEBUG,"camera_canon_eos_update_capture_target", "optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
+
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
 		 * that we have enough space left. */
@@ -228,6 +233,8 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams	*params = &camera->pl->params;
 	int		ret;
 	PTPStorageIDs	sids;
+
+	gp_log (GP_LOG_DEBUG, "ptp2_prepare_eos_capture", "preparing EOS capture...");
 
 	ret = ptp_canon_eos_setremotemode(params, 1);
 	if (ret != PTP_RC_OK) {
@@ -1816,12 +1823,38 @@ static struct deviceproptableu16 canon_eos_cameraoutput[] = {
 };
 GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
 
-/* on the EOS 7d it lists 0 and 4 ... Likely similar to capturetarget? */
-static struct deviceproptableu16 canon_eos_evfrecordtarget[] = {
-	{ N_("None"),	0, 0 },
-	{ N_("Record"), 4, 0 },
-};
-GENERIC16TABLE(Canon_EOS_EVFRecordTarget,canon_eos_evfrecordtarget)
+static int
+_get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
+	char buf[20];
+
+/*	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+*/
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf,"%d",dpd->CurrentValue.u32);
+	gp_widget_set_value (*widget,buf);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_EVFRecordTarget(CONFIG_PUT_ARGS) {
+	int	ret, i;
+	char	*value;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	if (!sscanf(value, "%d", &i))
+		return GP_ERROR;
+	propval->u32 = i;
+	return GP_OK;
+}
+
+
 
 /* values currently unknown */
 static struct deviceproptableu16 canon_eos_evfmode[] = {
@@ -1914,7 +1947,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			}
 		}
 	}
-	dpd->CurrentValue.u8 = u;
+	propval->u8 = u;
 	return GP_OK;
 }
 
@@ -5061,7 +5094,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_EOS_EVFOutputDevice, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_CameraOutput, _put_Canon_EOS_CameraOutput },
-	{ N_("Movie Recording"), "movierecord", PTP_DPC_CANON_EOS_EVFRecordStatus, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
+	{ N_("Movie Recording"), "movierecord", PTP_DPC_CANON_EOS_EVFRecordStatus, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
 	{ N_("EVF Mode"), "evfmode", PTP_DPC_CANON_EOS_EVFMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFMode, _put_Canon_EOS_EVFMode },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
