@@ -613,6 +613,8 @@ static struct {
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
 	/* "Riccardo (C10uD)" <c10ud.dev@gmail.com> */
 	{"Sony:DSC-S730 (PTP mode)",  0x054c, 0x0296, 0},
+	/* Fernando Santoro <fernando.lopezjr@gmail.com> */
+	{"Sony:DSC-A100 (PTP mode)",  0x054c, 0x02c0, 0},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
@@ -715,6 +717,9 @@ static struct {
 	/* Kévin Ottens <ervin@ipsquad.net> */
 	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
 
+	/* Dale Pontius <DEPontius@edgehp.net> */
+	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
+
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},
@@ -747,6 +752,8 @@ static struct {
 	{"Nikon:Coolpix S3000 (PTP mode)",0x04b0, 0x031b, PTP_CAP},
 	/* christian.moll@tudor.lu */
 	{"Nikon:Coolpix S3100 (PTP mode)",0x04b0, 0x0320, PTP_CAP},
+	/* Fabio <ctrlaltca@gmail.com> */
+	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
@@ -819,6 +826,8 @@ static struct {
 	{"Panasonic:DMC-TZ15",		  0x04da, 0x2374, 0},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=2950529&group_id=8874 */
 	{"Panasonic:DMC-FS62",		  0x04da, 0x2374, 0},
+	{"Panasonic:DMC-TZ18",		  0x04da, 0x2374, 0},
+	{"Panasonic:DMC-TZ20",		  0x04da, 0x2374, 0},
 	/* Constantin B <klochto@gmail.com> */
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 
@@ -1221,6 +1230,9 @@ static struct {
 	{"Fuji:FinePix F80EXR",			0x04cb, 0x020e, 0},
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
+	/* Luis Arias <kaaloo@gmail.com> */
+	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
+
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
