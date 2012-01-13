@@ -46,17 +46,17 @@ chip inside.
 WHAT FEATURES DO THESE CAMERAS HAVE, AND WHAT DOES THIS DRIVER SUPPORT?
 
 	FEATURE LIST					SUPPORTED (Y/N/Part)
--- USB connection to computer
--- High resolution 640x480, uncompressed 				Y
--- Low resolution 320x240, uncompressed					Y
--- High resolution 640x480, compressed 					Y
--- Low resolution 320x240, compressed					Y
--- Ability to "switch" resolution between pictures 			Y
--- Ability to download all pictures on camera				Y
+-- USB connection to computer					Y
+-- High resolution 640x480, uncompressed 			Y
+-- Low resolution 320x240, uncompressed				Y
+-- High resolution 640x480, compressed 				Y
+-- Low resolution 320x240, compressed				Y
+-- Ability to "switch" resolution between pictures 		Y
+-- Ability to download all pictures on camera			Y
 -- Ability to download the first k pictures, where 
-	k is less than the number on the camera 			Y
--- Ability to download individual photos				Y (faked, but works)
--- Shoot a frame and save image to computer				Y
+	k is less than the number on the camera 		Y
+-- Ability to download individual photos			Y (faked, but works)
+-- Shoot a frame and save image to computer			Y
 -- Internal battery, which recharges through the USB port	(some models)
 
 -------------------------------------------------------------------------
@@ -82,7 +82,7 @@ The following things can be done with button-pushes on the camera:
 	for still photos. AVI mode will use compression if it otherwise 
 	happens to be turned on. 
 
-Notes:  
+Notes:
 
 The 0x2770:0x9050 and 0x2770:913D cameras differ from the above description in 
 some particulars. Please see the respective README files for details. 
@@ -105,8 +105,8 @@ those obtained using the software which came with the camera, but not
 always. Generally, considering that they are cheap, low resolution cameras,
 these cameras give relatively good pictures.
 
-The digigr8 cameras can also function as webcams, but that is outside the 
-scope of gphoto2. 
+The digigr8 cameras can also function as webcams. That is supported in the
+kernel but is outside the scope of gphoto2. 
 
 
 HARDWARE LIMITATIONS AND CONSTRAINTS
@@ -153,6 +153,12 @@ reasons, it would also seem impossible to delete a photo from the camera by
 action of software on the computer. The camera itself supports two choices for
 deletion: delete the last photo taken, or delete all. Each action is
 performed by an appropriate sequence of button pushes on the camera.
+
+WARNING about battery use:
+
+In addition to all of the above limitations, the cameras use SDRAM for data
+storage. Consequently, the batteries will be drained if one leaves them in
+the camera when it is not being used.
 
 
 WHAT GUI FRONTENDS DOES THIS CAMERA LIBRARY SUPPORT?
@@ -264,4 +270,5 @@ WARRANTY?
 
 Theodore Kilgore
 12/05/05
-(revised 12/29/05, 03/28/07, 06/25/07, 07/16/07, 07/23/07, 01/21/08, 01/22/08)
+(revised 12/29/2005, 03/28/2007, 06/25/2007, 07/16/2007, 07/23/2007, 
+01/21/2008, 01/22/2008, 01/12/2012)

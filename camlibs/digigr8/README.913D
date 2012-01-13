@@ -13,7 +13,7 @@ basic functions of this camera are the same as those of the 0x2770:0x905c
 cameras which are the main ones supported in libgphoto2/camlibs/digigr8, but
 there are some small differences. For a complete description and discussion
 of the 0x2770:0x913D camera, therefore, the reader should also read 
-README.905C. Only the basic features and differences with the 
+README.905C. Only the basic features and the differences with the 
 previously-supported 0x2770:0x905C cameras are listed here:
 
 Features of the Suprema Digital Keychain Camera:
@@ -37,10 +37,9 @@ Features of the Suprema Digital Keychain Camera:
 		It will probably not ever be possible, unfortunately, to
 		support deletion of any photos or images on the camera, by
 		means of software control from the computer.
-	-- webcam functionality. The webcam function is obviously
-		supportable (gphoto2 --capture-image uses it to shoot one
-		frame), but libgphoto2 does not do webcams, so that can't be
-		done here. 
+	-- webcam functionality. The webcam function is supported by the
+		kernel. This camera library in libgphoto2 supports stillcam
+		functionality.
 
 As a further note, the gphoto2 --capture-image USB command when used with an
 0x2770:0x913D camera will _not_ delete the images already on the camera. This 
@@ -57,16 +56,10 @@ battery.
 On 12/23/07 the Sakar Spiderman (no. 92045) has been reported by Martin Laberge 
 <mlsoft@videotron.ca>. THERE IS POTENTIAL NAME CONFUSION WITH THIS CAMERA. The
 Sakar Amazing Spiderman (no. 94044) has in it a JL2005C chip which is currently
-not supported in libgphoto2. Buyer beware!
-
-PLEASE TEST THE STANDALONE RAW PHOTO CONVERTER/DISPLAYER
-
-An experimental program for processing raw files into finished photos is
-available now, in gphoto2/trunk/playground/raw_converters/sq_raw_converter
-Please try this program. If the results are good, I will incorporate the
-routines used there directly into libgphot02/camlibs/digigr8. I like the
-results, but they need testing.
-
+not supported in libgphoto2. Buyer beware! (Update 01/12/2012: Support for 
+all JL2005C cameras has been added to libgphoto2. The buyer need not "beware"
+any longer. However, it seems to remain true that SQ cameras take better than
+average pictures, relative to their low price range.)
 
 WARRANTY: 
 
@@ -74,4 +67,5 @@ None. For a more complete discussion of this issue, the reader is referred to
 README.905C and to the statements of the LGPL license regarding warranty. 
 
 
-Theodore Kilgore, 08/24/2007, revised 12/23/2007, 01/21/2008, 01/22/08
+Theodore Kilgore, 08/24/2007, revised 12/23/2007, 01/21/2008, 
+01/22/2008, 01/12/2012

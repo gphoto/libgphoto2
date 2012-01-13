@@ -79,6 +79,8 @@ static const struct {
 				GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Disney pix micro",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050},
 	{"Lego Bionicle",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9051},
+	{"Barbie Camera (Digital Blue)",	GP_DRIVER_STATUS_EXPERIMENTAL,
+							    0x2770, 0x9051},
 	/* from IRC reporter, adam@piggz.co.uk */
 	{"Disney pix micro 2",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9052},
 	{"Suprema Digital Keychain Camera",	GP_DRIVER_STATUS_EXPERIMENTAL,

@@ -8,7 +8,14 @@
 
 CONCERNING 0x2770:0x9050 CAMERAS:
 
-As of 01/20/2008, the only known camera with this USB ID string is the 
+First, a general remark. The reader is strongly encouraged to read 
+README.905C as well as this file. That file in fact pertains to all of the 
+cameras which are supported by libgphoto2/camlibs/digigr8. All of what it says
+pertains to the 0x2770:0x9050 cameras, too, unless something to the contrary is
+stated below.
+
+
+As of 01/20/2008, the only known camera with USB ID string 0x2770:0x9050 is the
 "Disney pix micro," found at KB Toys. Its functionality is very basic. On the 
 package it says the camera is able to take 20 photos, but in fact the number 
 of photos is variable. For, they are all compressed. 
@@ -26,21 +33,22 @@ gphoto2 -D, while for the other cameras supported in camlibs/digigr8 the
 gphoto2 -D option does nothing at all and is therefore considered as an 
 unsupported operation for those other cameras. However:
 
+
+WARNING
+
 The USB command to delete is the same as the command to shoot a frame 
 (gphoto2 option is --capture-preview). If you shoot a frame with the Disney 
 pix micro, it will delete whatever photos are on the camera !!!
 
+WARNING
 
-PLEASE TEST THE STANDALONE RAW PHOTO CONVERTER/DISPLAYER
+The camera has kernel support as a webcam, at 320x240 resolution. 
 
-An experimental program for processing raw files into finished photos is
-available now, in gphoto2/trunk/playground/raw_converters/sq_raw_converter
-Please try this program. If the results are good, I will incorporate the
-routines used there directly into libgphot02/camlibs/digigr8. I like the
-results, but they need testing.
+Use of the camera in webcam mode will delete all photos stored on the 
+camera, too !!!
 
 
-WARRANTY? 
+WARRANTY?
 
 	Absolutely not. No warranty. Never. Not responsible for any actual
 	or potential damage or consequences to anyone or to the equipment of
@@ -59,4 +67,4 @@ WARRANTY?
 
 
 Theodore Kilgore
-01/21/2008, revised 01/22/2008
+01/21/2008, revised 01/22/2008, 01/12/2012
