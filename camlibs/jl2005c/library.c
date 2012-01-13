@@ -74,6 +74,8 @@ struct {
 							       0x0979, 0x0227},
 	{"Sakar Star Wars kit no. 92022", GP_DRIVER_STATUS_EXPERIMENTAL,
 							       0x0979, 0x0227},
+	{"Jazwares Star Wars no. 15256", GP_DRIVER_STATUS_EXPERIMENTAL,
+							       0x0979, 0x0227},
 	{"Argus Bean Sprout",   GP_DRIVER_STATUS_EXPERIMENTAL,
 							       0x0979, 0x0227},
 	{"Global Point Clipster", GP_DRIVER_STATUS_EXPERIMENTAL,
