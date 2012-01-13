@@ -57,6 +57,8 @@ static const struct {
    	unsigned short idProduct;
 } models[] = {
 	{"Digigr8",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"Cobra Digital Camera DC150", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770,
+									0x905c},
 	{"Che-Ez Snap SNAP-U",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"DC-N130t",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905C},
 	{"Soundstar TDC-35",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
@@ -73,8 +75,12 @@ static const struct {
 	{"Stop & Shop 87096",		GP_DRIVER_STATUS_EXPERIMENTAL,
 							    0x2770, 0x905c},
 	{"Jazz JDC9",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"Aries Digital Keychain Camera, ITEM 128986",
+				GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
 	{"Disney pix micro",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9050},
 	{"Lego Bionicle",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9051},
+	{"Barbie Camera (Digital Blue)",	GP_DRIVER_STATUS_EXPERIMENTAL,
+							    0x2770, 0x9051},
 	/* from IRC reporter, adam@piggz.co.uk */
 	{"Disney pix micro 2",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9052},
 	{"Suprema Digital Keychain Camera",	GP_DRIVER_STATUS_EXPERIMENTAL,

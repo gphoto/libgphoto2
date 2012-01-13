@@ -1,3 +1,13 @@
+2012-01-12   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Digital Blue Barbie Camera DC150 added.
+	* README.*: Revisions.
+
+2011-06-20   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Cobra Digital Camera DC150 added.
+
+2010-12-17   Theodore Kilgore <kilgota@auburn.edu>
+	* library.c: Aries Digital Keychain Camera, ITEM 128986 added.
+
 2010-12-17   Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Lego Bionicle added. New Product number 0x9051.
 	* README.9051: Added.
