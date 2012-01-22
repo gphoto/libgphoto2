@@ -3,6 +3,7 @@ libgphoto2 2.4.11.2
 libgphoto2_port:
 * Added libusb 1.0 port driver.
 * removed baudboy.h support from serial driver.
+* Updated translations: czech, german
 
 canon:
 * Secondary RAW 2 format for some cameras.
@@ -15,12 +16,14 @@ directory:
 ptp2:
 * New cameras:
   Kodak C1530
-  Sony DSC-HX100V
-  Nikon CoolPix P7000, P500, L120, S5100, S3100, 
+  Sony DSC-HX100V, DSC-A1000, SLT-A55
+  Nikon CoolPix P7000, P7100, P500, L120, L23, S5100, S3100, 
   Nikon D2Hs, D5100
   Canon EOS 10D, 1D Mark IV, 1100D, 600D
   Canon PowerShot A2000IS, A3100IS, 
-  Fuji FinePix F80EXR
+  Fuji FinePix F80EXR, X10
+  Apple iPad, iPhone 4
+  Panasonic DMC-TZ18, TZ20
 
 * Canon Powershot event handling changed to no longer use PTP Events.
   Should now be more reliable on MacOS.
@@ -42,6 +45,14 @@ sierra:
 
 tp6801:
 * New driver for Tenx tp6801 picture frames from Hans de Goede.
+
+digigr8:
+* added Digital Blue Barbie Camera DC150, Cobra Digital Camera DC150,
+  Aries Digital Keychain Camera, ITEM 128986, Lego Bionicle
+
+jl2005a:
+* added Sakar Nickelodeon iCarly no. 88061, Sakar Dora the Explorer no. 88067,
+  Jazwares Star Wars no. 15256
 
 libgphoto2:
 * make jpeg and gd support configurable (Gentoo)
