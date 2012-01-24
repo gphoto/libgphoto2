@@ -1,4 +1,4 @@
-libgphoto2 2.4.11.2
+libgphoto2 2.4.12
 
 libgphoto2_port:
 * Added libusb 1.0 port driver.
