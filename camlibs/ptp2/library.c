@@ -715,7 +715,7 @@ static struct {
 	/* Graeme Wyatt <graeme.wyatt@nookawarra.com> */
 	{"Nikon:Coolpix L120 (PTP mode)", 0x04b0, 0x0185, PTP_CAP},
 	/* Kévin Ottens <ervin@ipsquad.net> */
-	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
+	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, PTP_CAP},
 
 	/* Dale Pontius <DEPontius@edgehp.net> */
 	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
