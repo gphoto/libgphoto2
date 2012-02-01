@@ -95,6 +95,7 @@ static const struct {
 	{"mpg",  GP_MIME_MPEG},
 	{"mpeg", GP_MIME_MPEG},
 	{"mpe",  GP_MIME_MPEG},
+	{"ogg",  GP_MIME_OGG},
 	{"mts",  GP_MIME_AVCHD},
 	{"m2ts", GP_MIME_AVCHD},
 	{"pbm", "image/x-portable-bitmap"},
