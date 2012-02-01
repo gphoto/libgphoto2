@@ -90,6 +90,8 @@ static const struct {
 	{"qt",   GP_MIME_QUICKTIME},
 	{"qtvr", GP_MIME_QUICKTIME},
 	{"mp2",  GP_MIME_MPEG},
+	{"mp3",  GP_MIME_MPEG},
+	{"mp4",  GP_MIME_MPEG},
 	{"mpg",  GP_MIME_MPEG},
 	{"mpeg", GP_MIME_MPEG},
 	{"mpe",  GP_MIME_MPEG},
