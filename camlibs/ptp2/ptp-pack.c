@@ -1164,6 +1164,80 @@ ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry
 		fe->Filename[i]=(char)dtoh8a(&data[PTP_cfe_Filename+i]);
 }
 
+/*
+    PTP Canon EOS Folder Entry unpack
+0: 00 00 08 a0     objectid
+4: 01 00 02 00     storageid
+8: 01 30 00 00     ofc
+12: 01 00
+14: 00 00
+16: 11 00 00 00
+20: 00 00 00 00
+24: 00 00 00 80
+28: 00 00 08 a0
+32: 4d 49 53 43-00 00 00 00 00 00 00 00     name
+00 00 00 00
+84 bc 74 46     objectime
+
+
+(normal PTP GetObjectInfo)
+ObjectInfo for 'IMG_0199.JPG':
+  Object ID: 0x92740c72
+  StorageID: 0x00020001
+  ObjectFormat: 0x3801
+  ProtectionStatus: 0x0000
+  ObjectCompressedSize: 2217241
+  ThumbFormat: 0x3808
+  ThumbCompressedSize: 5122
+  ThumbPixWidth: 160
+  ThumbPixHeight: 120
+  ImagePixWidth: 4000
+  ImagePixHeight: 3000
+  ImageBitDepth: 24
+  ParentObject: 0x92740000
+  AssociationType: 0x0000
+  AssociationDesc: 0x00000000
+  SequenceNumber: 0x00000000
+  ModificationDate: 0x4d985ff0
+  CaptureDate: 0x4d985ff0
+
+0010  38 00 00 00  Size of this entry
+0014  72 0c 74 92  OID
+0018  01 00 02 00  StorageID
+001c  01 38 00 00  OFC
+0020  00 00 00 00 00 00 00 00  ? 
+0028  19 d5 21 00  Size
+002c  00 00 74 92  ?
+0030  70 0c 74 92  OID
+0034  49 4d 47 5f-30 31 39 39 2e 4a 50 47  IMG_0199.JPG
+0040  00 00 00 00
+0044  10 7c 98 4d Time
+
+
+*/
+#define PTP_cefe_ObjectHandle		0
+#define PTP_cefe_StorageID		4
+#define PTP_cefe_ObjectFormatCode	8
+#define PTP_cefe_Flags			12
+#define PTP_cefe_ObjectSize		20
+#define PTP_cefe_Filename		32
+#define PTP_cefe_Time			48
+
+static inline void
+ptp_unpack_Canon_EOS_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry *fe)
+{
+	int i;
+
+	fe->ObjectHandle=dtoh32a(&data[PTP_cefe_ObjectHandle]);
+	fe->ObjectFormatCode=dtoh16a(&data[PTP_cefe_ObjectFormatCode]);
+	fe->Flags=dtoh8a(&data[PTP_cefe_Flags]);
+	fe->ObjectSize=dtoh32a((unsigned char*)&data[PTP_cefe_ObjectSize]);
+	fe->Time=(time_t)dtoh32a(&data[PTP_cefe_Time]);
+	for (i=0; i<PTP_CANON_FilenameBufferLen; i++)
+		fe->Filename[i]=(char)data[PTP_cefe_Filename+i];
+}
+
+
 static inline uint16_t
 ptp_unpack_EOS_ImageFormat (PTPParams* params, unsigned char** data )
 {
