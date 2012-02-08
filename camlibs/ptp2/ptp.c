@@ -881,6 +881,29 @@ ptp_getobject_to_handler (PTPParams* params, uint32_t handle, PTPDataHandler *ha
 }
 
 /**
+ * ptp_canon_eos_getobject_to_handler:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		PTPDataHandler*		- pointer datahandler
+ *
+ * Get object 'handle' from device and store the data in newly
+ * allocated 'object'.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_canon_eos_getobject_to_handler (PTPParams* params, uint32_t handle, PTPDataHandler *handler)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_CANON_EOS_GetObject;
+	ptp.Param1=handle;
+	ptp.Nparam=1;
+	return ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, handler);
+}
+
+/**
  * ptp_getobject_tofd:
  * params:	PTPParams*
  *		handle			- Object handle
