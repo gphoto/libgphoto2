@@ -4528,18 +4528,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			PTPDataHandler	handler;
 
 			ptp_init_camerafile_handler (&handler, file);
-			if (0 && (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-			    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
-				ret = ptp_canon_eos_getobject_to_handler(params,
-					params->handles.Handler[object_id],
-					&handler
-				);
-			} else {
-				ret = ptp_getobject_to_handler(params,
-					params->handles.Handler[object_id],
-					&handler
-				);
-			}
+			ret = ptp_getobject_to_handler(params,
+				params->handles.Handler[object_id],
+				&handler
+			);
 			ptp_exit_camerafile_handler (&handler);
 			if (ret == PTP_ERROR_CANCEL)
 				return GP_ERROR_CANCEL;
@@ -5292,8 +5284,8 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		return PTP_RC_OK;
 	}
 
-	/* CANON EOS fast mode -*/
-	if (0 && (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	/* CANON EOS fast mode */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
 		unsigned int j,k;
 		PTPStorageIDs storageids;
@@ -5944,8 +5936,19 @@ camera_init (Camera *camera, GPContext *context)
 #if 0
 		/* Marcus: this hides all files on the EOS 450D when triggered */
 		/* automatically enable capture mode on EOS cameras to populate property list */
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 			camera_prepare_capture(camera,context);  
+		}
+#endif
+#if 1
+
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
+			ret = ptp_canon_eos_setremotemode(params, 1);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR,"ptp2/enable_remote_mode", "set remotemode 1 failed!");
+				return translate_ptp_result (ret);
+			}
+		}
 #endif
 		break;
 	case PTP_VENDOR_NIKON:

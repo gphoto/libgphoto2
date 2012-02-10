@@ -3,6 +3,8 @@ Testplan ptp2 driver
 (Card capture with 16MB reference SD card.)
 
 Canon Powershot series (currently: Powershot SX100IS)
+	time gphoto2 -L
+									UNTESTED
 
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0):				PASS
@@ -55,6 +57,8 @@ Canon Powershot series (currently: Powershot SX100IS)
 
 
 Canon EOS series (currently: Canon EOS 1000D)
+	time gphoto2 -L
+									UNTESTED
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
 			- JPEG						PASS
@@ -113,6 +117,8 @@ Canon EOS series (currently: Canon EOS 1000D)
 
 
 Nikon DSLR series (currently: Nikon D90)
+	time gphoto2 -L
+									UNTESTED
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
 			- JPEG						TODO
