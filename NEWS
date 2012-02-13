@@ -1,4 +1,12 @@
 libgphoto2 2.4.12.1
+
+libgphoto2:
+* capture to card added a lonely file to the target folder
+  instead of keeping the old
+
+ptp2:
+* New Canon EOS very fast directory retrieval.
+
 ------------------------------------------------------------------------
 libgphoto2 2.4.12
 
