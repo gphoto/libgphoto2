@@ -85,7 +85,7 @@ static int nrofdevs = 0;
 static libusb_device **devs = NULL;
 
 static ssize_t
-load_devicelist (void) {
+load_devicelist (libusb_context *ctx) {
 	time_t	xtime;
 
 	time(&xtime);
@@ -96,7 +96,7 @@ load_devicelist (void) {
 		devs = NULL;
 	}
 	if (!nrofdevs)
-		nrofdevs = libusb_get_device_list (NULL, &devs);
+		nrofdevs = libusb_get_device_list (ctx, &devs);
 	return nrofdevs;
 }
 
@@ -114,7 +114,7 @@ gp_port_library_list (GPPortInfoList *list)
 	CHECK (gp_port_info_list_append (list, info));
 
 	libusb_init (NULL);
-	nrofdevs = load_devicelist ();
+	nrofdevs = load_devicelist (NULL);
 
 	for (d = 0; d < nrofdevs; d++) {
 		struct libusb_device_descriptor desc;
@@ -311,14 +311,16 @@ gp_port_usb_open (GPPort *port)
 	}
 #endif
 
-	if (ret >= 0) {
-		gp_log (GP_LOG_DEBUG,"libusb1",_("Device has a kernel driver attached (%d), detaching it now."), ret);
+	switch (ret) {
+	case 1: gp_log (GP_LOG_DEBUG,"libusb1",_("Device has a kernel driver attached (%d), detaching it now."), ret);
 		ret = libusb_detach_kernel_driver (port->pl->dh, port->settings.usb.interface);
 		if (ret < 0)
 			gp_port_set_error (port, _("Could not detach kernel driver of camera device."));
 		else
 			port->pl->detached = 1;
-	} else {
+	case 0:	/* not detached */
+		break;
+	default:
 		if (errno != ENODATA) /* ENODATA - just no driver there */
 			gp_port_set_error (port, _("Could not query kernel driver of device."));
 	}
@@ -766,7 +768,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
-	nrofdevs = load_devicelist ();
+	nrofdevs = load_devicelist (port->pl->ctx);
 
 	for (d = 0; d < nrofdevs; d++) {
 		struct libusb_device_descriptor desc;
@@ -1067,7 +1069,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 	if (!class)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	nrofdevs = load_devicelist ();
+	nrofdevs = load_devicelist (port->pl->ctx);
 	for (d = 0; d < nrofdevs; d++) {
 		struct libusb_device_descriptor desc;
 		struct libusb_config_descriptor *confdesc;
