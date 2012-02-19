@@ -693,12 +693,13 @@ gp_port_usb_find_ep(libusb_device *dev, int config, int interface, int altsettin
 	if (ret) return -1;
 
 	intf = &confdesc->interface[interface].altsetting[altsetting];
-
 	for (i = 0; i < intf->bNumEndpoints; i++) {
-		if ((intf->endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == direction &&
-		    (intf->endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == type) {
+		if (((intf->endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == direction) &&
+		    ((intf->endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == type)) {
+			unsigned char ret;
+			ret = intf->endpoint[i].bEndpointAddress; /* intf is cleared after next line, copy epaddr! */
 			libusb_free_config_descriptor (confdesc);
-			return intf->endpoint[i].bEndpointAddress;
+			return ret;
 		}
 	}
 	libusb_free_config_descriptor (confdesc);
