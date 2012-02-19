@@ -1,12 +1,22 @@
 libgphoto2 2.4.12.1
 
+libgphoto2_port/libusb1:
+* fixed accessing freed memory which lead to non-working communication
+* use the correct context everywhere avoid crashes on startup on newer libusb1
+* fixed and rewrote the whole device caching mechanisms for major initial speedup.
+
+ptp2:
+* Implemented fast Canon EOS directory loading
+
+storage:
+* add ogg, mp3, mp4 extensions to "good"
+
+translations:
+* updated polish
+  
 libgphoto2:
 * capture to card added a lonely file to the target folder
   instead of keeping the old
-
-ptp2:
-* New Canon EOS very fast directory retrieval.
-
 ------------------------------------------------------------------------
 libgphoto2 2.4.12
 
