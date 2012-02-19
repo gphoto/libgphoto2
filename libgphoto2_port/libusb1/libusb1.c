@@ -695,12 +695,13 @@ gp_port_usb_find_ep(libusb_device *dev, int config, int interface, int altsettin
 	if (ret) return -1;
 
 	intf = &confdesc->interface[interface].altsetting[altsetting];
-
 	for (i = 0; i < intf->bNumEndpoints; i++) {
-		if ((intf->endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == direction &&
-		    (intf->endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == type) {
+		if (((intf->endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_DIR_MASK) == direction) &&
+		    ((intf->endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == type)) {
+			unsigned char ret;
+			ret = intf->endpoint[i].bEndpointAddress; /* intf is cleared after next line, copy epaddr! */
 			libusb_free_config_descriptor (confdesc);
-			return intf->endpoint[i].bEndpointAddress;
+			return ret;
 		}
 	}
 	libusb_free_config_descriptor (confdesc);
@@ -814,7 +815,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		port->settings.usb.interface = confdesc->interface[interface].altsetting[altsetting].bInterfaceNumber;
 		port->settings.usb.altsetting = confdesc->interface[interface].altsetting[altsetting].bAlternateSetting;
 
-		port->settings.usb.inep = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_BULK);
+		port->settings.usb.inep  = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_BULK);
 		port->settings.usb.outep = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_OUT, LIBUSB_TRANSFER_TYPE_BULK);
 		port->settings.usb.intep = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_INTERRUPT);
 
@@ -1103,7 +1104,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 		port->settings.usb.interface = confdesc->interface[interface].altsetting[altsetting].bInterfaceNumber;
 		port->settings.usb.altsetting = confdesc->interface[interface].altsetting[altsetting].bAlternateSetting;
 
-		port->settings.usb.inep = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_BULK);
+		port->settings.usb.inep  = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_BULK);
 		port->settings.usb.outep = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_OUT, LIBUSB_TRANSFER_TYPE_BULK);
 		port->settings.usb.intep = gp_port_usb_find_ep(devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_INTERRUPT);
 		port->settings.usb.maxpacketsize = 0;
