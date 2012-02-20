@@ -717,12 +717,41 @@ gp_filesystem_free (CameraFilesystem *fs)
  *
  * \return a gphoto2 error code.
  **/
+static int
+internal_append (CameraFilesystem *fs, CameraFilesystemFolder *f,
+		      const char *filename, GPContext *context)
+{
+	CameraFilesystemFile **new;
+
+	CHECK_NULL (fs && f);
+
+	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Internal append %s to folder %s", filename, f->name);
+	/* Check folder for existence, if not, create it. */
+	new = &f->files;
+	while (*new) {
+		if (!strcmp((*new)->name, filename)) break;
+		new = &((*new)->next);
+	}
+	if (*new)
+		return (GP_ERROR_FILE_EXISTS);
+
+	CHECK_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1))
+	(*new)->name = strdup (filename);
+	if (!(*new)->name) {
+		free (*new);
+		*new = NULL;
+		return (GP_ERROR_NO_MEMORY);
+	}
+	(*new)->info_dirty = 1;
+	return (GP_OK);
+}
+
 int
 gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 		      const char *filename, GPContext *context)
 {
-	CameraFilesystemFile **new;
 	CameraFilesystemFolder *f;
+	int ret;
 
 	CHECK_NULL (fs && folder);
 	CC (context);
@@ -733,30 +762,22 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	f = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!f)
 		CR (append_folder (fs, folder, &f, context));
+	if (f->files_dirty) { /* Need to load folder from driver first ... capture case */
+		CameraList	*xlist;
+		int ret;
 
-	new = &f->files;
-	while (*new) {
-		if (!strcmp((*new)->name, filename)) break;
-		new = &((*new)->next);
+		ret = gp_list_new (&xlist);
+		if (ret != GP_OK) return ret;
+		ret = gp_filesystem_list_files (fs, folder, xlist, context);
+		gp_list_free (xlist);
+		if (ret != GP_OK) return ret;
 	}
-	if (*new) {
-		gp_context_error (context,
-			_("Could not append '%s' to folder '%s' because "
-			  "this file already exists."), filename, folder);
-		return (GP_ERROR_FILE_EXISTS);
-	}
-
-	CHECK_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1))
-	(*new)->name = strdup (filename);
-	if (!(*new)->name) {
-		free (*new);
-		*new = NULL;
-		return (GP_ERROR_NO_MEMORY);
-	}
-	(*new)->info_dirty = 1;
-	f->files_dirty = 0;
-	return (GP_OK);
+	ret = internal_append (fs, f, filename, context);
+	if (ret == GP_ERROR_FILE_EXISTS) /* not an error here ... just in case we add files twice to the list */
+		ret = GP_OK;
+	return ret;
 }
+
 
 static void
 recursive_fs_dump (CameraFilesystemFolder *folder, int depth) {
@@ -965,7 +986,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 			CR (gp_list_get_name (list, y, &name));
 			gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
 					 "Added '%s'", name);
-			CR (gp_filesystem_append (fs, folder, name, context));
+			CR (internal_append (fs, f, name, context));
 		}
 		gp_list_reset (list);
 	}
@@ -1492,10 +1513,9 @@ recursive_folder_scan (
  **/
 int
 gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
-			  const char **folder, GPContext *context)
+			  char **folder, GPContext *context)
 {
 	int ret;
-
 	CHECK_NULL (fs && filename && folder);
 	CC (context);
 

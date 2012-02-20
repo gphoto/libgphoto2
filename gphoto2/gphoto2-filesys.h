@@ -255,7 +255,7 @@ int gp_filesystem_name         (CameraFilesystem *fs, const char *folder,
 			        int filenumber, const char **filename,
 				GPContext *context);
 int gp_filesystem_get_folder   (CameraFilesystem *fs, const char *filename,
-			        const char **folder, GPContext *context);
+			        char **folder, GPContext *context);
 int gp_filesystem_number       (CameraFilesystem *fs, const char *folder,
 				const char *filename, GPContext *context);
 
