@@ -691,7 +691,7 @@ static struct {
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=2589245&group_id=8874&atid=108874 */
 	{"Nikon:Coolpix P50 (PTP mode)",  0x04b0, 0x0169, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2951663&group_id=8874&atid=358874 */
-	{"Nikon:Coolpix P6000 (PTP mode)",0x04b0, 0x016f, 0},
+	{"Nikon:Coolpix P6000 (PTP mode)",0x04b0, 0x016f, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/*   http://bugs.debian.org/520752 */
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
 	/* Mike Strickland <livinwell@georgianatives.net> */
@@ -794,8 +794,8 @@ static struct {
 	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Matthias Blaicher <blaicher@googlemail.com> */
 	{"Nikon:DSC D3s (PTP mode)",      0x04b0, 0x0426, PTP_CAP|PTP_CAP_PREVIEW},
-	/* SWPLinux IRC reporter */
-	{"Nikon:DSC D3100 (PTP mode)",	  0x04b0, 0x0427, PTP_CAP|PTP_CAP_PREVIEW},
+	/* SWPLinux IRC reporter... does not have liveview -lowend model. */
+	{"Nikon:DSC D3100 (PTP mode)",	  0x04b0, 0x0427, PTP_CAP},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3140014&group_id=8874 */
 	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -5562,6 +5562,96 @@ init_ptp_fs (Camera *camera, GPContext *context)
 }
 #endif
 
+/* CANON EOS fast directory mode */
+/* FIXME: incomplete ... needs storage mode retrieval support too (storage == 0xffffffff) */
+static uint16_t
+ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
+	unsigned int	k, i, j, last, changed;
+	PTPCANONFolderEntry *tmp = NULL;
+	PTPCANONFolderEntry *entries = NULL;
+	unsigned int	nroftmp = 0;
+	uint16_t	ret;
+	PTPStorageIDs	storageids;
+
+	if (storage == 0xffffffff) {
+		if (handle != 0xffffffff)  {
+			gp_log (GP_LOG_ERROR, "ptp2/eos_directory", "storage 0x%08x, but handle 0x%08x?", storage, handle);
+			handle = 0xffffffff;
+		}
+		ret = ptp_getstorageids(params, &storageids);
+		if (ret != PTP_RC_OK) return ret;
+	} else {
+		storageids.n = 1;
+		storageids.Storage = malloc(sizeof(storageids.Storage[0]));
+		storageids.Storage[0] = storage;
+	}
+	last = changed = 0;
+
+	for (k=0;k<storageids.n;k++) {
+		gp_log (GP_LOG_DEBUG, "ptp2/eos_directory", "reading handle %08x directory of 0x%08x", storage, handle);
+		ret = ptp_canon_eos_getobjectinfoex (
+			params, storageids.Storage[k], handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp
+		);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_DEBUG, "ptp2/eos_directory", "reading directory failed: %04x", ret);
+			return ret;
+		}
+		/* convert read entries into objectinfos */
+		for (i=0;i<nroftmp;i++) {
+			PTPObject	*ob = NULL;
+			PTPObject	*newobs;
+
+			for (j=0;j<params->nrofobjects;j++) {
+				if (params->objects[(last+j)%params->nrofobjects].oid == entries[i].ObjectHandle)  {
+					ob = &params->objects[(last+j)%params->nrofobjects];
+					break;
+				}
+			}
+			if (j == params->nrofobjects) {
+				gp_log (GP_LOG_DEBUG, "ptp_list_folder_eos", "adding new objectid 0x%08x (nrofobs=%d,j=%d)", entries[i].ObjectHandle, params->nrofobjects,j);
+				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
+				if (!newobs) return PTP_RC_GeneralError;
+				params->objects = newobs;
+				memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
+				params->objects[params->nrofobjects].oid   = entries[i].ObjectHandle;
+				params->objects[params->nrofobjects].flags = 0;
+
+				params->objects[params->nrofobjects].oi.StorageID = storageids.Storage[k];
+				params->objects[params->nrofobjects].flags |= PTPOBJECT_STORAGEID_LOADED;
+				params->objects[params->nrofobjects].oi.ParentObject = handle;
+				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
+				params->objects[params->nrofobjects].oi.Filename = strdup(entries[i].Filename);
+				params->objects[params->nrofobjects].oi.ObjectFormat = entries[i].ObjectFormatCode;
+				params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_DPGS_Get; /* FIXME: check if ok */
+				params->objects[params->nrofobjects].oi.ObjectCompressedSize = entries[i].ObjectSize;
+				params->objects[params->nrofobjects].oi.CaptureDate = entries[i].Time;
+				params->objects[params->nrofobjects].oi.ModificationDate = entries[i].Time;
+				params->objects[params->nrofobjects].flags |= PTPOBJECT_OBJECTINFO_LOADED;
+
+				debug_objectinfo(params, entries[i].ObjectHandle, &params->objects[params->nrofobjects].oi);
+				last = params->nrofobjects;
+				params->nrofobjects++;
+				changed = 1;
+			} else {
+				gp_log (GP_LOG_DEBUG, "ptp_list_folder_eos", "adding old objectid 0x%08x (nrofobs=%d,j=%d)", entries[i].ObjectHandle, params->nrofobjects,j);
+				ob = &params->objects[(last+j)%params->nrofobjects];
+				/* for speeding up search */
+				last = (last+j)%params->nrofobjects;
+				if (handle != PTP_HANDLER_SPECIAL) {
+					ob->oi.ParentObject = handle;
+					ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
+				}
+				if (storageids.Storage[k] != PTP_HANDLER_SPECIAL) {
+					ob->oi.StorageID = storageids.Storage[k];
+					ob->flags |= PTPOBJECT_STORAGEID_LOADED;
+				}
+			}
+		}
+	}
+	if (changed) ptp_objects_sort (params);
+	return PTP_RC_OK;
+}
+
 uint16_t
 ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	int			i, changed, last;
@@ -5573,6 +5663,14 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	gp_log (GP_LOG_DEBUG, "ptp_list_folder", "(storage=0x%08x, handle=0x%08x)", storage, handle);
 	if (!handle && params->nrofobjects) /* handle=0 is only not read when there is no object */
 		return PTP_RC_OK;
+
+	/* Canon EOS Fast directory strategy */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
+		ret = ptp_list_folder_eos (params, storage, handle);
+		if (ret == PTP_RC_OK)
+			return ret;
+	}
 
 	if (handle) { /* 0 is the virtual root */
 		PTPObject		*ob;
@@ -5901,8 +5999,10 @@ camera_init (Camera *camera, GPContext *context)
 		}
 #endif
 		/* automatically enable capture mode on EOS to populate property list */
+		/* also sets remote mode for Fast Directory retrieval */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
 			camera_prepare_capture(camera,context);
+	
 		break;
 	case PTP_VENDOR_NIKON:
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))

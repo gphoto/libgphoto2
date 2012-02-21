@@ -1829,6 +1829,40 @@ ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1, unsigned char **da
 	return ret;
 }
 
+uint16_t
+ptp_canon_eos_getobjectinfoex (
+	PTPParams* params, uint32_t storageid, uint32_t oid, uint32_t unk,
+	PTPCANONFolderEntry **entries, unsigned int *nrofentries
+) {
+	PTPContainer	ptp;
+	unsigned int	i, size = 0;
+	unsigned char	*data, *xdata;
+	uint16_t	ret;
+
+	data = NULL;
+	PTP_CNT_INIT(ptp);
+	ptp.Code 	= PTP_OC_CANON_EOS_GetObjectInfoEx;
+	ptp.Nparam	= 3;
+	ptp.Param1	= storageid;
+	ptp.Param2	= oid;
+	ptp.Param3	= unk;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret != PTP_RC_OK)
+		return ret;
+
+	*nrofentries = dtoh32a(data);
+	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
+	if (!*entries)
+		return PTP_RC_GeneralError;
+
+	xdata = data+sizeof(uint32_t);
+	for (i=0;i<*nrofentries;i++) {
+		ptp_unpack_Canon_EOS_FE (params, &xdata[4], &((*entries)[i]));
+		xdata += dtoh32a(xdata);
+	}
+	return PTP_RC_OK;
+}
+
 /**
  * ptp_canon_eos_getpartialobject:
  * 
