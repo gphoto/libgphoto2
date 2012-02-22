@@ -79,10 +79,8 @@ gp_port_library_type (void)
 	return (GP_PORT_USB);
 }
 
-/* FIXME: timeout this cached information */
 static time_t gp_devslastchecked = 0;
 static int gp_nrofdevs = 0;
-
 static struct libusb_device_descriptor	*gp_descs;
 static libusb_device			**gp_devs;
 
@@ -93,7 +91,7 @@ load_devicelist (libusb_context *ctx) {
 	time(&xtime);
 	if (xtime != gp_devslastchecked) {
 		if (gp_nrofdevs)
-			libusb_free_device_list (gp_devs, 0);
+			libusb_free_device_list (gp_devs, 1);
 		free (gp_descs);
 		gp_nrofdevs = 0;
 		gp_devs = NULL;
@@ -275,7 +273,8 @@ gp_port_usb_exit (GPPort *port)
 		free (port->pl);
 		port->pl = NULL;
 	}
-
+	if (gp_devs) libusb_free_device_list (gp_devs, 1);
+	free (gp_descs);
 	return (GP_OK);
 }
 
@@ -309,14 +308,16 @@ gp_port_usb_open (GPPort *port)
 	}
 #endif
 
-	if (ret >= 0) {
-		gp_log (GP_LOG_DEBUG,"libusb1",_("Device has a kernel driver attached (%d), detaching it now."), ret);
+	switch (ret) {
+	case 1: gp_log (GP_LOG_DEBUG,"libusb1",_("Device has a kernel driver attached (%d), detaching it now."), ret);
 		ret = libusb_detach_kernel_driver (port->pl->dh, port->settings.usb.interface);
 		if (ret < 0)
 			gp_port_set_error (port, _("Could not detach kernel driver of camera device."));
 		else
 			port->pl->detached = 1;
-	} else {
+	case 0:	/* not detached */
+		break;
+	default:
 		if (errno != ENODATA) /* ENODATA - just no driver there */
 			gp_port_set_error (port, _("Could not query kernel driver of device."));
 	}
