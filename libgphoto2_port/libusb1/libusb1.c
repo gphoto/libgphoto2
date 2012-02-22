@@ -79,10 +79,8 @@ gp_port_library_type (void)
 	return (GP_PORT_USB);
 }
 
-/* FIXME: timeout this cached information */
 static time_t gp_devslastchecked = 0;
 static int gp_nrofdevs = 0;
-
 static struct libusb_device_descriptor	*gp_descs;
 static libusb_device			**gp_devs;
 
@@ -93,7 +91,7 @@ load_devicelist (libusb_context *ctx) {
 	time(&xtime);
 	if (xtime != gp_devslastchecked) {
 		if (gp_nrofdevs)
-			libusb_free_device_list (gp_devs, 0);
+			libusb_free_device_list (gp_devs, 1);
 		free (gp_descs);
 		gp_nrofdevs = 0;
 		gp_devs = NULL;
@@ -274,7 +272,8 @@ gp_port_usb_exit (GPPort *port)
 		free (port->pl);
 		port->pl = NULL;
 	}
-
+	if (gp_devs) libusb_free_device_list (gp_devs, 1);
+	free (gp_descs);
 	return (GP_OK);
 }
 
