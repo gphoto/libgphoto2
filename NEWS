@@ -1,4 +1,4 @@
-libgphoto2 2.4.12.1
+libgphoto2 2.4.13
 
 libgphoto2_port/libusb1:
 * fixed accessing freed memory which lead to non-working communication
@@ -15,8 +15,9 @@ translations:
 * updated polish
   
 libgphoto2:
-* capture to card added a lonely file to the target folder
-  instead of keeping the old
+* capture to card added a lonely file to a camera folder
+  instead of getting the content from the card
+
 ------------------------------------------------------------------------
 libgphoto2 2.4.12
 
