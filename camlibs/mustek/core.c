@@ -75,7 +75,7 @@ mdc800_sendInitialCommand (Camera *camera, unsigned char* answer)
 	    }
 	    printCoreError("Probing RS232 Baudrate with %d fails.\n",baud_rates[rate]);
 	}
-	printCoreError ("Probing failed completly.\n");
+	printCoreError ("Probing failed completely.\n");
 	return GP_ERROR_IO;
 }
 

@@ -422,7 +422,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		break;
 	default:
 		packet_size = 0;
-		GP_DEBUG("largan_receive_reply: Unkown reply.\n");
+		GP_DEBUG("largan_receive_reply: Unknown reply.\n");
 		break;
 	}
 	if (reply) {
