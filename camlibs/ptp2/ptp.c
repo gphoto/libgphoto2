@@ -1147,7 +1147,12 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	ptp.Nparam=1;
 	len=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd, &len);
-	if (ret == PTP_RC_OK) ptp_unpack_DPD(params, dpd, devicepropertydesc, len);
+	if (ret != PTP_RC_OK) {
+		free (dpd);
+		return ret;
+	}
+	if (!dpd) return PTP_RC_GeneralError;
+	ptp_unpack_DPD(params, dpd, devicepropertydesc, len);
 	free(dpd);
 	return ret;
 }
