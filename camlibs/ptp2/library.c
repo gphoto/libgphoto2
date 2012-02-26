@@ -1152,6 +1152,7 @@ static struct {
 	/* ErVito on IRC */
 	{"Canon:PowerShot A3100 IS",		0x04a9, 0x31f1, PTPBUG_DELETE_SENDS_EVENT},
 
+	{"Canon:PowerShot A3000 IS",		0x04a9, 0x31f2, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 130",		0x04a9, 0x31f3, PTPBUG_DELETE_SENDS_EVENT},
 	/* Mark Voorhies <mvoorhie@yahoo.com> */
 	{"Canon:PowerShot SD1300 IS",		0x04a9, 0x31f4, PTPBUG_DELETE_SENDS_EVENT},
