@@ -2306,6 +2306,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		viewfinderwason = 1;
 		params->canon_viewfinder_on = 0;
 	}
+	ret = ptp_check_event (params);
+	if (ret != PTP_RC_OK) {
+		gp_context_error (context, _("Canon Capture failed: 0x%04x"), ret);
+		return translate_ptp_result (ret);
+	}
 
 #if 0
 	/* FIXME: For now, to avoid flash during debug */
@@ -2314,7 +2319,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 #endif
 	ret = ptp_canon_initiatecaptureinmemory (params);
 	if (ret != PTP_RC_OK) {
-		gp_context_error (context, _("Canon Capture failed: %x"), ret);
+		gp_context_error (context, _("Canon Capture failed: 0x%04x"), ret);
 		return translate_ptp_result (ret);
 	}
 	sawcapturecomplete = 0;
