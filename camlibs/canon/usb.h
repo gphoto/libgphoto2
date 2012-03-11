@@ -279,6 +279,9 @@ int canon_usb_set_file_attributes (Camera *camera,
 				   GPContext *context);
 int canon_usb_ready (Camera *camera, GPContext *context);
 
+int canon_usb_wait_for_event (Camera *camera, int timeout,
+			CameraEventType *eventtype, void **eventdata,
+			GPContext *context);
 #endif /* _CANON_USB_H */
 
 /****************************************************************************

@@ -3597,6 +3597,22 @@ canon_int_put_file (Camera *camera, CameraFile *file, const char *filename,
         return GP_ERROR;
 }
 
+int
+canon_int_wait_for_event (Camera *camera, int timeout,
+                CameraEventType *eventtype, void **eventdata,
+                GPContext *context)
+{
+	switch (camera->port->type) {
+	case GP_PORT_USB:
+		return canon_usb_wait_for_event (camera, timeout, eventtype, eventdata, context);
+		break;
+	GP_PORT_DEFAULT
+	}
+	/* Never reached */
+	return GP_ERROR;
+}
+
+
 /**
  * canon_int_extract_jpeg_thumb:
  * @data: raw JFIF from which to extract thumbnail

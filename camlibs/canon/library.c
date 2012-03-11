@@ -298,6 +298,8 @@ static const struct canonShootingModeStateStruct shootingModeStateArray[] = {
 static const struct canonImageFormatStateStruct imageFormatStateArray[] = {
 	{IMAGE_FORMAT_RAW, N_("RAW"),
 	 0x04, 0x02, 0x00},
+	{IMAGE_FORMAT_RAW_2, N_("RAW 2"),
+	 0x03, 0x02, 0x00},
 	{IMAGE_FORMAT_SMALL_NORMAL_JPEG, N_("Small Normal JPEG"),
 	 0x02, 0x01, 0x02},
 	{IMAGE_FORMAT_SMALL_FINE_JPEG, N_("Small Fine JPEG"),
@@ -1552,6 +1554,14 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, c
 
 /****************************************************************************/
 
+/* Wait for an event */
+static int
+camera_wait_for_event (Camera *camera, int timeout, CameraEventType *eventtype, void **eventdata, GPContext *context) 
+{
+	return canon_int_wait_for_event (camera, timeout, eventtype, eventdata, context);
+}
+
+
 /* Get configuration into screen widgets for display. */
 
 static int
@@ -2582,6 +2592,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->summary = camera_summary;
 	camera->functions->manual = camera_manual;
 	camera->functions->about = camera_about;
+	camera->functions->wait_for_event = camera_wait_for_event;
 
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
