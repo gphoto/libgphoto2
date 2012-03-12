@@ -1,5 +1,5 @@
 EXTRA_DIST += jl2005a/README.jl2005a
-camlibdoc_DATA += jl2005a/README.jl2005a
+camlibdoc_DATA += jl2005a/README.jl2005a jl2005a/ChangeLog
 
 EXTRA_LTLIBRARIES += jl2005a.la
 
