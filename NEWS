@@ -1,4 +1,4 @@
-libgphoto2 2.4.99.7 development state
+libgphoto2 2.4.99.8 development state
 
 libgphoto2 API:
    TODO:
@@ -73,26 +73,6 @@ Directory driver:
    * Use GPPortInfo instead of settings to pass basepath in.
    * Abstracted common functionality.
 
-ST2205 Driver:
-   * New Pictureframe driver from Hans de Goede. st2205 based frames present
-     themselves as a regular usb mass storage device, but cannot be used
-     as a normal disk! Communication with the device happens by a special
-     protocol which consist of reading / writing sectors of the disk at
-     certain magic offsets. Also included is a "usbdiskdirect" port driver,
-     which allows the direct sector access the camlib for these devices needs.
-
-AX203 Driver:
-   * New Pictureframe driver from Hans de Goede. ax203 based frames present
-     themselves as a usb mass storage cdrom, which contains the windows
-     software. Communication with the device happens by issuing special
-     (custom) scsi commands. Also included is a "usbscsi" port driver,
-     which allows sending the custom scsi commands.
-
-     Note that if your ax203 frame has a usb-id of 1908:1315, you need to 
-     tell Linux not to touch the HID device this version also presents
-     in its USB descriptor. To do this add the following on the linux kernel
-     cmdline: "usbhid.quirks=0x1908:0x1315:0x4"
-
 Build:
    * Removed dummy README file from SVN.
    * Ship README.packaging in dist tarball for the first time.
@@ -106,6 +86,459 @@ Documentation:
 
 Test cases:
    * Test camlib loading of both uninstalled and installed camlibs.
+------------------------------------------------------------------------
+libgphoto2 2.4.13
+
+libgphoto2_port/libusb1:
+* fixed accessing freed memory which lead to non-working communication
+* use the correct context everywhere avoid crashes on startup on newer libusb1
+* fixed and rewrote the whole device caching mechanisms for major initial speedup.
+
+ptp2:
+* Implemented fast Canon EOS directory loading
+
+storage:
+* add ogg, mp3, mp4 extensions to "good"
+
+translations:
+* updated polish
+  
+libgphoto2:
+* capture to card added a lonely file to a camera folder
+  instead of getting the content from the card
+
+------------------------------------------------------------------------
+libgphoto2 2.4.12
+
+libgphoto2_port:
+* Added libusb 1.0 port driver.
+* removed baudboy.h support from serial driver.
+* Updated translations: czech, german
+
+canon:
+* Secondary RAW 2 format for some cameras.
+
+directory:
+* Handle more suffixes to mimetypes (unknowns will not show up in the
+  file list): moov, qt, qtvr, mp2, mpeg, mpe, srw, 3gp, 3g2, dif.
+* set the correct filetime
+
+ptp2:
+* New cameras:
+  Kodak C1530
+  Sony DSC-HX100V, DSC-A1000, SLT-A55
+  Nikon CoolPix P7000, P7100, P500, L120, L23, S5100, S3100, 
+  Nikon D2Hs, D5100
+  Canon EOS 10D, 1D Mark IV, 1100D, 600D
+  Canon PowerShot A2000IS, A3100IS, 
+  Fuji FinePix F80EXR, X10
+  Apple iPad, iPhone 4
+  Panasonic DMC-TZ18, TZ20
+
+* Canon Powershot event handling changed to no longer use PTP Events.
+  Should now be more reliable on MacOS.
+
+* Nikon configurations added: videomode, scenemode, exposure program mode,
+  effect mode, liveviewaf, liveviewaffocus, cleansensor, microphone, moviequality,
+  autodistortioncontrol, autoisopadv renamed to minimumshutterspeed.
+* Allow per-camera configuration tables.
+* Canon EOS configurations added: "Immediate" for shutter button pressing,
+
+* Handle missing runtime iconv module support (as found in embedded devices)
+* Bump retries on EOS liveview getting
+* Fixed stupid EOS event handling bug that caused a 1.5 second delay
+* Fixed more session startup issues
+* Tried a fix for getting bad thumbnail lengths
+
+sierra:
+* Bugfix: handle ACK as valid response code
+
+tp6801:
+* New driver for Tenx tp6801 picture frames from Hans de Goede.
+
+digigr8:
+* added Digital Blue Barbie Camera DC150, Cobra Digital Camera DC150,
+  Aries Digital Keychain Camera, ITEM 128986, Lego Bionicle
+
+jl2005c:
+* added Sakar Nickelodeon iCarly no. 88061, Sakar Dora the Explorer no. 88067,
+  Jazwares Star Wars no. 15256
+
+libgphoto2:
+* make jpeg and gd support configurable (Gentoo)
+* Updated translations: pl
+
+------------------------------------------------------------------------
+libgphoto2 2.4.11
+
+ax203:
+* Various new ids:
+  GigaDevice GD25Q40, GD25Q80, GD25Q16
+  ST M25P08, M25P16, M25P32, M25P64
+  Winbond W25Q80, W25Q16, W25Q32
+* Various bugfixes
+
+canon:
+* implemented a basic wait_for_event() so --capture-tethered works
+  (not working correctly for CR2+JPG, but JPG or CR2 stand alone will work) 
+* Some bugfixes
+
+digigr8:
+* Added Lego Bionicle camera.
+
+directory:
+* More mimetypes that are images added
+
+jl2005c:
+* Reduced stack usage (do not have 5MB arrays on the stack),
+  making it work in programs with stacklimits
+
+mars3:
+* Added Shift3 camera.
+
+sierra:
+* rewrote the USB wrapped command handling to use "usbscsi"
+  port. Now its no longer necessary to detach the mass storage
+  driver.
+
+ptp2:
+* Allow by-camera specific configuration (used for Nikon DSLR currently)
+* Added some Nikon D90, D3s specific tables.
+* Canon EOS: support remoterelease (remote trigger manipulation) via eosremoterelease
+  config option
+* Merge some CHDK code (not tested working with my SX100IS -Marcus)
+* Make setting properties via the "other" config tree work.
+* merged new media player ids from libmtp
+* Timeouts configurable
+* New cameras:
+  Kodak Z710, C183
+  Nikon CoolPix S7c, P90, P100, S8000, S3000, S9100
+  Nikon DSLR D3s, D3100, D7000
+  Casio EX-Z65
+  Canon Powershot SD1300 IS, SX210 IS, SX130 IS, 
+  Canon EOS 60D
+  Fuji FinePix A220, Z700EXR, 
+* Some capture bugfixes
+* Lots of bugfixes
+
+st2205:
+* Minor additions
+
+libgphoto2_port/usb:
+* Avoid MTP probing. Done by libmtp these days, also confuses some devices.
+* Do list less usb:XXX,YYY ports for things that are not cameras.
+
+libgphoto2_port/usbscsi:
+* Fixed symlink handling in device detection for newer kernels.
+* Decode SCSI sense data received.
+
+libgphoto2
+* Updated translations: danish, german, spanish, basque, french,
+  hungarian, italian, japanese, dutch, polish, russian, swedish, ukrainian,
+  vietnamese, simplified chinese
+
+libgphoto2_port
+* Updated translations: czech, danish, german, spanish, basque, french,
+  italian, japanese, dutch, polish, brazilian portuguese, russian, slovakian,
+  swedish, ukrainian, vietnamese, simplified chinese, traditional chinese
+
+------------------------------------------------------------------------
+libgphoto2 2.4.10.1
+
+This is a regression + translation fix update only
+
+translations:
+* libgphoto2_port updated: russian, slovakian
+* libgphoto2 updated: italian, polish, russian
+
+sts2205:
+* Fix build without GD development headers due to stray ;
+
+ptp2: 
+* linear backoff waiting for Nikon events to reduce load
+* ptpip senddata fix (was broken before)
+* be more careful with USB interrupt checks on MacOS X, as they do
+  not timeout currently.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.10
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+    * Translation updates (polish, vietnamese).
+    * The "usb:" generic matcher entry is not reported anymore.
+      Auto detection will now always return "usb:XXX,YYY" and "usb:AAA,BBB" values.
+
+      You can still pass "usb:" in.
+
+    * The generated UDEV rules for version 136 and later have been changed:
+      - PTP class is shortcut to avoid 1000 entries to be evaluated for the common camera case.
+      - USB Mass Storage is now skipped and not tagged as gphoto supported.
+        This should avoid confuse users with MTP players in dual mode.
+
+       (Done just for the cameras and MTP players, not for the picture frame drivers).
+
+st2205:
+    * Link iconv (MacOS build fix)
+    * "delete all files" implemented.
+
+ax203:
+    * Various improvements and bug fixes
+    * new compression method supported for ax206
+
+ptp2:
+    * New PTP event handling added.
+      This might have caused some instabilities in capture code.
+
+    * Fixed EOS capture to card waiting 1 minute bug
+    * Fixed EOS capture "no focus" waiting 1 minute bug
+    * EOS "eosviewfinder" enable/disable option.
+    * Pass up more EOS events via wait_for_event (property changes, and all unknown events).
+    * EOS Viewfinder Zoom Level and Position added
+    * Fixed setting multiple configuration values at once.
+    * Handle MTP -> Vendor id mapping for PTP/IP cameras.
+    * Lots of bug fixes.
+    * Added new IDS:
+      Kodak Z950
+      Sony DSC-S370
+      Nikon CoolPix 7600, L110
+      Panasonic FZ38, DMC-GF1 (only download support), 
+      Canon PowerShot D10, SX120 IS
+      Fuji FinePix F60fd, F70 EXR, S1800, S5800
+      Pentax Optio W90
+
+sierra:
+    * Added Olympus E-520
+
+canon:
+    * ability to read and set "shooting mode".
+
+digigr8:
+    * merged from TRUNK: new camera "Stop & Shop 87096", some cleanups and bug fixes
+
+jl2005c: 
+    * Decompression decoded and driver now working. Enabled by default now.
+
+libgphoto2_port/usbscsi:
+    * Check for scsi/sg.h and use it only if present (MacOS build fix)
+
+libgphoto2_port/usb:
+    * Do not filter out "usb:XXX,YYY" ... but have both usb: and
+      usb:XXX,YYY for now.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.9
+
+This is a 2.4 release branch update.
+
+ptp2:
+   * Fixed EOS viewfinder capture speed (2 images/s -> 20 i/s)
+   * EOS event handling cleaned up, so that we can also have
+     dual image capture (RAW+JPEG).
+   * New Canon EOS properties: autoexposuremode, cameraoutput, evfmode, uilock.
+   * New Nikon property: exposuredelaymode
+   * Fixed a Canon PowerShot configuration bug that caused hangs.
+   * Fixed a Nikon CoolPix configuration bug that caused hangs.
+   * Fixed shutterspeed setting to be more generic.
+   * New IDs added:
+	Nikon Coolpix 8800, P6000, L20, L19
+	Panasonic FS62
+	Olympus FE4000/X920/X925, 
+	Canon EOS 550D
+	Canon Powershot A2100IS, SD970IS, SX20IS, IXUS 120IS
+	Fuji FinePix S1500, Z35, S2500HD
+	Apple iPhone 3GS
+   * Some bugs fixed, some memory leaks closed.
+   * music-players.h merged from libmtp, bringing new MTP devices.
+
+ST2205 Driver:
+   * New Pictureframe driver from Hans de Goede. st2205 based frames present
+     themselves as a regular usb mass storage device, but cannot be used
+     as a normal disk! Communication with the device happens by a special
+     protocol which consist of reading / writing sectors of the disk at
+     certain magic offsets. Also included is a "usbdiskdirect" port driver,
+     which allows the direct sector access the camlib for these devices needs.
+
+AX203 Driver: 
+   * New Pictureframe driver from Hans de Goede. ax203 based frames present 
+     themselves as a usb mass storage cdrom, which contains the windows
+     software. Communication with the device happens by issuing special
+     (custom) scsi commands. Also included is a "usbscsi" port driver,      
+     which allows sending the custom scsi commands.
+
+     Note that if your ax203 frame has a usb-id of 1908:1315, you need to
+     tell Linux not to touch the HID device this version also presents
+     in its USB descriptor. To do this add the following on the linux kernel
+     cmdline: "usbhid.quirks=0x1908:0x1315:0x4"
+
+digita:
+   Made to work again hopefully after breakage due to filesystem changes.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.8
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+   * Updated translations.
+   * Added read-only flag for Widgets. gp_widget_set_readonly / gp_widget_get_readonly.
+   * GP_EVENT_CAPTURE_COMPLETE event added from trunk.
+   * Some bugfixes.
+
+ptp2:
+   * New USB IDs for cameras:
+	Kodak Z915
+	Nikon CoolPix S220, S225,
+	Nikon DSLR D5000, D3000, D300s
+	Canon PowerShot SD770 IS, A580, SD1200, IXUS 95 IS, G11, IXY 220IS, SD940IS
+	Canon EOS 7D
+	Fuji S5 Pro
+	Sea & Sea 2G
+   	Also merged new libmtp deviceids.
+   * Fuji S5 Pro capture support.
+   * Bugfixes in Canon EOS preview code.
+   * Fixed NIKON DSLR shutterspeed not able to set bug.
+   * Nikon error decoding.
+   * Several Canon EOS configuration and capture additions and fixes, focus pulling.
+   * PTP protocol stability improvements.
+   * Lots of bugfixes.
+
+sierra:
+   * restrict list of choices for Nikon Coolpix 4300
+
+directory:
+   * Merged from TRUNK to gain the good stuff.
+
+libgphoto2_port/usb:
+   * Updated translations.
+   * Check for MTP devices by string descriptor first and by OSD later.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.7
+
+This is a 2.4 release branch update.
+
+libgphoto2:
+   * Translation updates from translationproject.org.
+   * Widget and choice lists now dynamic, to be able to create longer ones.
+   * 3rd generation UDEV rules emission, now able to emit "post HAL"
+     UDEV rules.
+
+     print-camera-list udev-rules version 136 > /lib/udev/rules.d/40-libgphoto2.rules
+  
+   * Disabled LRU of images. Not really useful in times of USB 2.0,
+     also disabled by at least Debian und Ubuntu already.
+
+libgphoto2_port / USB:
+   * If we detached a USB driver, reattach it on close.
+     This allows using e.g. cheap camera as both webcam with in-kernel
+     driver and still camera with libgphoto2.
+
+PTP2 driver:
+   * Renamed various configuration options and changed values to
+     match a unified model. Some common names have changed:
+          owner->ownername
+          exptime->shutterspeed
+          eos-* -> non-eos prefixed variants
+          etc.
+     You will need to review configuration setting code if you have any.
+
+   * Create config submenus /actions for action triggers and /status for
+     read-only values, moved stuff there.
+
+   * New IDs:
+   	Kodak M863
+	Canon Digital IXUS 110IS, IXUS 100IS, Powershot SX200IS, SD780 IS, A1100IS
+	Canon EOS 500D
+	Fuji Finepix F200 EXR
+	Apple iPod Touch first generation
+
+
+   * Lots of Canon EOS capture improvements, for card capture, for LiveView,
+     and for property setting. More properties are now possible.
+   * Canon EOS Bulb mode support (available in newer canons).
+     --set-config bulb=(0|1)
+
+   * Fixed Nikon DSC shutterspeed setting (also for times < 1/1000)
+   * Enable Viewfinder on demand for Canon Powershot, not for all capture things.
+   * Generic PTP Property Get/Set in the configuration handling.
+   * Decode more Nikon DSC properties (for D90 now nearly complete).
+   * Turned several PTP generic commands to macros to reduce number of functions.
+   * MTP player list synced with libmtp 1.0.
+   * Lots of bugfixes.
+
+Canon driver:
+   * Renamed various configuration options and changed values to
+     match a unified model.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.6
+
+This is a 2.4 release branch update.
+
+PTP2 driver:
+   * Fixed Nikon DSLR capture in LiveView mode (like gtkam uses).
+   * More Canon EOS stuff decoded, added experimental "capturetarget" support
+     for EOS.
+   * Canon EOS LiveView support (experimental, reported working for EOS 1000D).
+   * Added new USB ids:
+	- Kodak V803, M1063
+	- Canon PowerShot A650IS, SD990 (aka IXUS 980IS), SD880IS, A480
+	- Canon EOS 50D
+	- Fuji FinePix S1000fd
+   * Retrieve filedates again from PTP objects.
+   * speedup: Do not list files on / (there aren't any).
+   * Bugfixes.
+
+Canon driver:
+   * Support Exposure Bias setting.
+   * More shutterspeeds.
+
+libgphoto2:
+   * Fixed a problem during file retrieval which causes Canon Normal 
+     --capture-image-and-download errors, handle CR2 and CRW mimetypes.
+   * Fixed ordering of filelists again that broke the digigr8 driver.
+   * Translation updates.
+
+digigr8: 
+   * Added a new version of the disney pix micro.
+
+------------------------------------------------------------------------
+libgphoto2 2.4.5
+
+This is a 2.4 release branch update.
+
+PTP2 driver:
+   * Increased timeout for Canon Viewfinder enable.
+   * Fixed intial Canon timeout (0.5 -> 1.5 seconds), was too small
+     for some Canons.
+   * Canon EOS capture mode and tethered mode bugfixes.
+   * Nikon DSLR LiveView support, with Autofocus and ManualFocus Drive possibility.
+   * Nikon tethered capture fixes.
+   * New cameras listed:
+                Nikon CoolPix P50, S60
+                Canon Digital IXUS 85
+                Canon PowerShot A740, G10,
+                Canon EOS 5D Mark II
+   * Merged new IDs of Music Players from libmtp.
+   * Lots of bugfixes.
+
+KODAK DC240:
+   * Made driver work again.
+   * Cleanups
+
+libgphoto2:
+   * rewrote gphoto2-filesys.c to be dynamic and fix LRU problems.
+     (backport from TRUNK)
+   * Translation updates.
+
+libgphoto2_port:
+   * added --enable/--disable configure options for: disk, serial, ptpip
+   * added --with/--without configure options for: bonjour, hal
+   * backported Gentoo "if just canon driver selected, auto-select ptp2 driver"
+     usability fix.
+   * Translation updates.
 ------------------------------------------------------------------------
 libgphoto2 2.4.4
 
