@@ -1,7 +1,7 @@
 /* usb.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2011 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
