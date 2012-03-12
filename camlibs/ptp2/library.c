@@ -2340,9 +2340,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			break;
 
 		if (!ptp_get_one_event (params, &event)) {
-			usleep(50*1000);
+			/* FIXME: wait a bit? */
+			usleep(20*1000);
 			continue;
 		}
+		gp_log (GP_LOG_DEBUG, "ptp","Event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		switch (event.Code) {
 		case PTP_EC_ObjectAdded: {
 			/* add newly created object to internal structures. this hopefully just is a new folder */
@@ -2363,16 +2365,24 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				newobject = event.Param1;
 				/* FALLTHROUGH */
 			}
+			/* FALLTHROUGH */
 		}
 		case PTP_EC_CANON_RequestObjectTransfer: {
+			int j;
+
 			newobject = event.Param1;
 			gp_log (GP_LOG_DEBUG, "ptp", "Event PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.", newobject);
 			/* drain the event queue further */
-			ptp_check_event (params);
-			while (ptp_get_one_event (params, &event) && !sawcapturecomplete) {
-				gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-				if (event.Code == PTP_EC_CaptureComplete)
-					sawcapturecomplete = 1;
+			for (j=0;j<2;j++) {
+				ret = ptp_check_event (params);
+				while (ptp_get_one_event (params, &event) && !sawcapturecomplete) {
+					gp_log (GP_LOG_DEBUG, "ptp", "evdata: L=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+					if (event.Code == PTP_EC_CaptureComplete)
+						sawcapturecomplete = 1;
+				}
+				if (sawcapturecomplete)
+					break;
+				usleep(20*1000);
 			}
 			/* Marcus: Not sure if we really needs this. This refocuses the camera.
 			   ret = ptp_canon_reset_aeafawb(params,7);
@@ -6008,11 +6018,13 @@ camera_init (Camera *camera, GPContext *context)
 			add_special_file("selftimer.wav",	canon_theme_get, canon_theme_put);
 		}
 #endif
-		/* automatically enable capture mode on EOS to populate property list */
-		/* also sets remote mode for Fast Directory retrieval */
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
-			camera_prepare_capture(camera,context);
-	
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
+			ret = ptp_canon_eos_setremotemode(params, 1);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR,"ptp2/enable_remote_mode", "set remotemode 1 failed!");
+				return translate_ptp_result (ret);
+			}
+		}
 		break;
 	case PTP_VENDOR_NIKON:
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))
