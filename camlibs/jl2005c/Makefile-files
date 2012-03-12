@@ -1,4 +1,4 @@
-EXTRA_DIST += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression
+EXTRA_DIST += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression jl2005c/ChangeLog
 camlibdoc_DATA += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression
 
 EXTRA_LTLIBRARIES += jl2005c.la
