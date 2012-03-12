@@ -1,138 +1,173 @@
 Testplan ptp2 driver
 
+(Card capture with 16MB reference SD card.)
+
 Canon Powershot series (currently: Powershot SX100IS)
+	time gphoto2 -L
+									UNTESTED
 
 	--capture-image-and-download
-		- via SDRAM (capturetarget=0):				PASS
-		- via Card (capturetarget=1):				PASS
-		- Card configured, but not inserted (capturetarget=1)	PASS
+		- via SDRAM (capturetarget=0):				TODO
+		- via Card (capturetarget=1):				TODO
+		- Card configured, but not inserted (capturetarget=1)	TODO
 
 	--capture-image-and-download -F 3 -I 5
-		- via SDRAM (capturetarget=0):				PASS
-		- via Card (capturetarget=1):				PASS
-		- Card configured, but not inserted (capturetarget=1)	PASS
+		- via SDRAM (capturetarget=0):				TODO
+		- via Card (capturetarget=1):				TODO
+		- Card configured, but not inserted (capturetarget=1)	TODO
+
+        time gphoto2 --capture-image-and-download -F 5 -I 1		TODO
+                - via SDRAM (capturetarget=0)
+			approx 19-20 seconds		2.4.11 baseline
+			16.75-17 seconds		2.4.12
+
+                - via CARD (capturetarget=1)
+			approx 28.6 seconds		2.4.11 baseline
+			approx 26-28 seconds		2.4.12
+
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							PASS
-		mixed with --capture-image-and-download			PASS
+		commandline tool					TODO
+		gtkam							TODO (gtkam brokenness)
+		mixed with --capture-image-and-download			TODO
 
-	--capture-movie=10s						PASS
+	--capture-movie=10s						TODO
 
-	--list-config							PASS
-	"capture option"						PASS
+	--list-config							TODO
+	"capture option"						TODO
 		--get-config capture
 		--set-config capture=1
 		--get-config capture
 		--set-config capture=0
 		--get-config capture
-	"zoom" and /other/ config tree value				PASS
+	"zoom" and /other/ config tree value				TODO
 		--get-config zoom
 		--set-config zoom=20
 		--get-config zoom
 		--get-config d02a
 		--set-config d02a=10
 		--get-config d02a
-	"ownername" 							PASS
+	"ownername" 							TODO
 		--get-config ownername
 		--set-config ownername="Markus Meissner"
 		--get-config ownername
 		--set-config ownername="Marcus Meissner"
-	--get-config d402						PASS
+	--get-config d402						TODO
 		(no string settable for the SX100IS)
 
 
 Canon EOS series (currently: Canon EOS 1000D)
+	time gphoto2 -L
+									UNTESTED
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
-			- RAW						PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 		- via Card (SD) (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
-			- RAW						PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 		- via Card (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
+
+        time gphoto2 --capture-image-and-download -F 5 -I 1
+                - via SDRAM (capturetarget=0)
+			real    12.3s			2.4.11 baseline
+			real    11.1s			2.4.12 new baseline
+
+                - via CARD (capturetarget=1)
+			real 	29.8s,30.5s		2.4.11 baseline
+			real	30.4s			2.4.12
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							PASS
-		mixed with --capture-image-and-download			PASS
+		commandline tool					TODO
+		gtkam							TODO ?
+		mixed with --capture-image-and-download			TODO
 
-	--capture-movie=10s						PASS
+	--capture-movie=10s						TODO
 
 	--wait-event-and-download
-		- JPEG							PASS
+		- JPEG							TODO
 			--set-config capturetarget=0
 			--set-config capturetarget=1
-		- JPEG + RAW						PASS
+		- JPEG + RAW						TODO
 			--set-config capturetarget=0
 			--set-config capturetarget=1
 
-	--list-config							PASS
-	"imageformat"							PASS
+	--list-config							TODO
+	"imageformat"							TODO
 		--get-config imageformat=0
 		--get-config imageformat
 		--set-config imageformat=6
 		--get-config imageformat
 
-	"ownername"							PASS
+	"ownername"							TODO
 		--get-config ownername
 		--set-config ownername="Marcus Meissner"
 		--get-config ownername
 
 
 Nikon DSLR series (currently: Nikon D90)
+	time gphoto2 -L
+									UNTESTED
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
 		- via Card (SD) (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
 		- no SD card inserted, capturetarget=0
-			- JPEG						FAIL/IGNORE (correct error)
-			- JPEG + RAW 					FAIL/IGNORE (correct error)
+			- JPEG						TODO/IGNORE (correct error)
+			- JPEG + RAW 					TODO/IGNORE (correct error)
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS (but not in correct order, JPGs are behind/IGNORE)
+			- JPEG						TODO
+			- JPEG + RAW					TODO (but not in correct order, JPGs are behind/IGNORE)
 		- via Card (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
 		- no SD card insert, capturetarget=0
-			- JPEG						FAIL/IGNORE (correct error)
-			- JPEG + RAW 					FAIL/IGNORE (correct error)
+			- JPEG						TODO/IGNORE (correct error)
+			- JPEG + RAW 					TODO/IGNORE (correct error)
+
+        time gphoto2 --capture-image-and-download -F 5 -I 1
+                - via SDRAM (capturetarget=0)
+
+                - via CARD (capturetarget=1)
+			- real    32.7		libgphoto2 2.4.11 baseline
 
 	--capture-preview
-		commandline tool					PASS/CHECK - First image is always plain white :(
-		gtkam							PASS/CHECK (but no image capture possible)
+		commandline tool					TODO/CHECK - First image is always plain white :(
+		gtkam							TODO/CHECK (but no image capture possible)
 		mixed with --capture-image-and-download	
-			- SDRAM mode					PASS
-			- Card mode					FAIL/IGNORE (returns PTP Device Busy)
+			- SDRAM mode					TODO
+			- Card mode					TODO/IGNORE (returns PTP Device Busy)
 
-	--capture-movie=10s						PASS
+	--capture-movie=10s						TODO
 
 	--wait-event-and-download
-		- JPEG							PASS
+		- JPEG							TODO
 			--set-config capturetarget=0
 			--set-config capturetarget=1
-		- JPEG + RAW						PASS
+		- JPEG + RAW						TODO
 			--set-config capturetarget=0
 			--set-config capturetarget=1
 
 
-	--list-config							PASS
+	--list-config							TODO
 
-	"imagecommentenable", also in /other/ tree			PASS
+	"imagecommentenable", also in /other/ tree			TODO
 		--get-config imagecommentenable
 		--set-config imagecommentenable=An
 		--get-config imagecommentenable
@@ -141,7 +176,7 @@ Nikon DSLR series (currently: Nikon D90)
 		--get-config d091
 		--set-config d091=1
 
-	"imagecomment" , also in /other/ tree				PASS
+	"imagecomment" , also in /other/ tree				TODO
 		--get-config imagecomment
 		--set-config imagecomment="Marcus Meissner"
 		--get-config imagecomment
@@ -149,3 +184,7 @@ Nikon DSLR series (currently: Nikon D90)
 		--set-config d090="Markus Meissner"
 		--get-config d090
 		--set-config d090="Marcus Meissner"
+
+
+Samsung Galaxy S2
+	-- gphoto2 -L  							TODO
