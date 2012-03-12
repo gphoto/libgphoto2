@@ -408,6 +408,11 @@ ptp_unpack_OH (PTPParams *params, unsigned char* data, PTPObjectHandles *oh, uns
 static inline void
 ptp_unpack_SIDs (PTPParams *params, unsigned char* data, PTPStorageIDs *sids, unsigned int len)
 {
+	if (!data && !len) {
+		sids->n = 0;
+		sids->Storage = NULL;
+		return;
+	}
 	sids->n = ptp_unpack_uint32_t_array(params, data, PTP_sids,
 	&sids->Storage);
 }
