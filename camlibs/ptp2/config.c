@@ -4371,6 +4371,68 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Nikon_ViewFinder(CONFIG_GET_ARGS) {
+	int			val;
+	uint16_t		ret;
+	PTPPropertyValue	value;
+	PTPParams		*params = &(camera->pl->params);
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
+	if (ret != PTP_RC_OK)
+		value.u8 = 0;
+	val = value.u8 ? 1 : 0;
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
+	int			val, ret;
+	uint16_t		res;
+	PTPParams		*params = &(camera->pl->params);
+	GPContext 		*context = ((PTPData *) params->data)->context;
+
+	if (!ptp_operation_issupported(params, PTP_OC_NIKON_StartLiveView))
+		return GP_ERROR_NOT_SUPPORTED;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val) {
+		PTPPropertyValue	value;
+
+		res = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
+		if (res != PTP_RC_OK) {
+			value.u8 = 0;
+			res = PTP_RC_OK;
+		}
+
+                if (!value.u8) {
+			value.u8 = 1;
+			res = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
+			if (res != PTP_RC_OK)
+				gp_log (GP_LOG_DEBUG, "ptp2/viewfinder_on", "set recordingmedia to 1 failed with 0x%04x", ret);
+
+			res = ptp_nikon_start_liveview (params);
+			if (res != PTP_RC_OK) {
+				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+				return translate_ptp_result (res);
+			}
+			while (ptp_nikon_device_ready(params) != PTP_RC_OK) usleep(50*1000)/*wait a bit*/;
+		}
+		return translate_ptp_result (res);
+	} else {
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView)) {
+			res = ptp_nikon_end_liveview (params);
+			return translate_ptp_result (res);
+		}
+	}
+	return translate_ptp_result (ret);
+}
+
+static int
 _get_Canon_FocusLock(CONFIG_GET_ARGS) {
 	int val;
 
@@ -5042,6 +5104,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Canon EOS Zoom"),			"eoszoom",          0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_Zoom, _get_Canon_EOS_Zoom, _put_Canon_EOS_Zoom},
 	{ N_("Canon EOS Zoom Position"),	"eoszoomposition",  0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_ZoomPosition, _get_Canon_EOS_ZoomPosition, _put_Canon_EOS_ZoomPosition},
 	{ N_("Canon EOS Viewfinder"),		"eosviewfinder",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder, _put_Canon_EOS_ViewFinder},
+	{ N_("Nikon Viewfinder"),		"viewfinder",       0, PTP_VENDOR_NIKON, PTP_OC_NIKON_StartLiveView, _get_Nikon_ViewFinder, _put_Nikon_ViewFinder},
 	{ N_("Canon EOS Remote Release"),	"eosremoterelease",	0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_RemoteReleaseOn, _get_Canon_EOS_RemoteRelease, _put_Canon_EOS_RemoteRelease},
 	{ N_("CHDK Reboot"),			"chdk_reboot",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Reboot, _put_Canon_CHDK_Reboot},
 	{ N_("CHDK Script"),			"chdk_script",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Script, _put_Canon_CHDK_Script},
