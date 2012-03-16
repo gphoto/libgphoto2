@@ -1760,6 +1760,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
+		int 			tries;
 
 		if (!ptp_operation_issupported(params, PTP_OC_NIKON_StartLiveView)) {
 			gp_context_error (context,
@@ -1784,46 +1785,53 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			}
 			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
 		}
-
-		ret = ptp_nikon_get_liveview_image (params , &data, &size);
-		if (ret == PTP_RC_OK) {
-			/* look for the JPEG SOI marker (0xFFD8) in data */
-			jpgStartPtr = (unsigned char*)memchr(data, 0xff, size);
-			while(jpgStartPtr && ((jpgStartPtr+1) < (data + size))) {
-				if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
-					break;
-				} else { /* go on looking (starting at next byte) */
-					jpgStartPtr++;
-					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+		tries = 20;
+		while (tries--) {
+			ret = ptp_nikon_get_liveview_image (params , &data, &size);
+			if (ret == PTP_RC_OK) {
+				/* look for the JPEG SOI marker (0xFFD8) in data */
+				jpgStartPtr = (unsigned char*)memchr(data, 0xff, size);
+				while(jpgStartPtr && ((jpgStartPtr+1) < (data + size))) {
+					if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
+						break;
+					} else { /* go on looking (starting at next byte) */
+						jpgStartPtr++;
+						jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+					}
 				}
-			}
-			if(!jpgStartPtr) { /* no SOI -> no JPEG */
-				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
-				return GP_ERROR;
-			}
-			/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
-			   (just to be sure we will not go beyond the end of the data array) */
-			jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, data+size-jpgStartPtr-1);
-			while(jpgEndPtr && ((jpgEndPtr+1) < (data + size))) {
-				if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
-					jpgEndPtr += 2;
-					break;
-				} else { /* go on looking (starting at next byte) */
-					jpgEndPtr++;
-					jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, data + size - jpgEndPtr);
+				if(!jpgStartPtr) { /* no SOI -> no JPEG */
+					gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
+					return GP_ERROR;
 				}
+				/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
+				   (just to be sure we will not go beyond the end of the data array) */
+				jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, data+size-jpgStartPtr-1);
+				while(jpgEndPtr && ((jpgEndPtr+1) < (data + size))) {
+					if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
+						jpgEndPtr += 2;
+						break;
+					} else { /* go on looking (starting at next byte) */
+						jpgEndPtr++;
+						jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, data + size - jpgEndPtr);
+					}
+				}
+				if(!jpgEndPtr) { /* no EOI -> no JPEG */
+					gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
+					return GP_ERROR;
+				}
+				gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
+				free (data); /* FIXME: perhaps handle the 128 byte header data too. */
+				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+				/* Add an arbitrary file name so caller won't crash */
+				gp_file_set_name (file, "preview.jpg");
+				gp_file_set_mtime (file, time(NULL));
+				break;
 			}
-			if(!jpgEndPtr) { /* no EOI -> no JPEG */
-				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
-				return GP_ERROR;
+			if (ret == PTP_RC_DeviceBusy) {
+				gp_log (GP_LOG_DEBUG, "ptp2/nikon_liveview", "busy, retrying after a bit of wait, try %d", tries);
+				usleep(10*1000);
+				continue;
 			}
-			gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
-			free (data); /* FIXME: perhaps handle the 128 byte header data too. */
-			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-			/* Add an arbitrary file name so caller won't crash */
-			gp_file_set_name (file, "preview.jpg");
-			gp_file_set_mtime (file, time(NULL));
-		} else {
 			SET_CONTEXT_P(params, NULL);
 			return translate_ptp_result (ret);
 		}
