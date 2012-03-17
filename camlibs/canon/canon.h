@@ -494,6 +494,9 @@ struct _CameraPrivateLibrary
 
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
+
+	unsigned char *directory_state;	/* directory content state for wait_for_event */
+
 	long image_key, thumb_length, image_length; /* For immediate download of captured image */
 	long image_b_key, image_b_length; /* For immediate download of secondary captured image */
 	int capture_step;	/* To record progress in interrupt
