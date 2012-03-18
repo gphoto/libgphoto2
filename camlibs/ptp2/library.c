@@ -1787,7 +1787,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				return translate_ptp_result (ret);
 			}
 			while (ptp_nikon_device_ready(params) != PTP_RC_OK)
-				/* empty */usleep(20*1000);
+				usleep(20*1000);
 		}
 		tries = 20;
 		while (tries--) {
