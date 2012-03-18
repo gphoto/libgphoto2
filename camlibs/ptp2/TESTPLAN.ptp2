@@ -121,28 +121,29 @@ Nikon DSLR series (currently: Nikon D90)
 									UNTESTED
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- via Card (SD) (capturetarget=1)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- no SD card inserted, capturetarget=0
-			- JPEG						TODO/IGNORE (correct error)
-			- JPEG + RAW 					TODO/IGNORE (correct error)
+			- JPEG						FAIL/IGNORE (correct error)
+			- JPEG + RAW 					FAIL/IGNORE (correct error)
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						TODO
-			- JPEG + RAW					TODO (but not in correct order, JPGs are behind/IGNORE)
+			- JPEG						PASS
+			- JPEG + RAW					PASS (but not in correct order, JPGs are behind/IGNORE)
 		- via Card (capturetarget=1)
-			- JPEG						TODO
-			- JPEG + RAW					TODO
+			- JPEG						PASS
+			- JPEG + RAW					PASS
 		- no SD card insert, capturetarget=0
-			- JPEG						TODO/IGNORE (correct error)
-			- JPEG + RAW 					TODO/IGNORE (correct error)
+			- JPEG						FAIL/IGNORE (correct error)
+			- JPEG + RAW 					FAIL/IGNORE (correct error)
 
         time gphoto2 --capture-image-and-download -F 5 -I 1
                 - via SDRAM (capturetarget=0)
+			- 						FAIL (endless repeat)
 
                 - via CARD (capturetarget=1)
 			- real    32.7		libgphoto2 2.4.11 baseline
