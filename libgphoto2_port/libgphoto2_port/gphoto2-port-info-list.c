@@ -148,6 +148,7 @@ gp_port_info_list_free (GPPortInfoList *list)
 			list->info[i]->path = NULL;
 			free (list->info[i]->library_filename);
 			list->info[i]->library_filename = NULL;
+			free (list->info[i]);
 		}
 		free (list->info);
 		list->info = NULL;
