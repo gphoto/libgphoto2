@@ -1463,11 +1463,14 @@ camera_abilities (CameraAbilitiesList *list)
 		if (models[i].device_flags & PTP_CAP) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 
+#if 0
+			/* not yet working, failed testcase */
 			/* Only Nikon *D* cameras for now -Marcus */
 			if (	(models[i].usb_vendor == 0x4b0) &&
 				strchr(models[i].model,'D')
 			)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+#endif
 #if 0
 			/* SX 100 IS ... works in sdram, not in card mode */
 			if (	(models[i].usb_vendor == 0x4a9) &&
