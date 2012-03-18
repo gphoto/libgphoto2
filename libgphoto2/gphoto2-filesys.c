@@ -978,6 +978,9 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 		gp_log (GP_LOG_DEBUG, "gphoto2-filesystem",
 			"Querying folder %s...", folder);
 		CR (delete_all_files (fs, f));
+
+		/* set it to non-dirty now, so we do not recurse via _append. */
+		f->files_dirty = 0;
 		CR (fs->file_list_func (fs, folder, list,
 					fs->list_data, context));
 
