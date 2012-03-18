@@ -166,6 +166,7 @@ int gp_abilities_list_new    (CameraAbilitiesList **list);
 int gp_abilities_list_free   (CameraAbilitiesList *list);
 
 int gp_abilities_list_load   (CameraAbilitiesList *list, GPContext *context);
+int gp_abilities_list_load_dir   (CameraAbilitiesList *list, const char *dir, GPContext *context);
 int gp_abilities_list_reset  (CameraAbilitiesList *list);
 
 int gp_abilities_list_detect (CameraAbilitiesList *list,

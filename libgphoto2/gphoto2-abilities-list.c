@@ -161,7 +161,7 @@ foreach_func (const char *filename, lt_ptr data)
 }
 
 
-static int
+int
 gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			    GPContext *context)
 {

@@ -4,6 +4,7 @@ gp_abilities_list_detect
 gp_abilities_list_free
 gp_abilities_list_get_abilities
 gp_abilities_list_load
+gp_abilities_list_load_dir
 gp_abilities_list_lookup_model
 gp_abilities_list_new
 gp_abilities_list_reset
