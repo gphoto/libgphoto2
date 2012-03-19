@@ -1,6 +1,6 @@
 /* config.c
  *
- * Copyright (C) 2003-2007 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2012 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -5243,7 +5243,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
 	/* Nikon DSLR have both PTP focus mode and Nikon specific focus mode */
 	{ N_("Focus Mode 2"), "focusmode2", PTP_DPC_NIKON_AutofocusMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFMode, _put_Nikon_AFMode},
-	{ N_("Focus Mode"), "focusmode", PTP_DPC_CANON_EOS_FocusMode, 0, PTP_DTC_UINT16, _get_Canon_EOS_FocusMode, _put_Canon_EOS_FocusMode},
+	{ N_("Focus Mode"), "focusmode", PTP_DPC_CANON_EOS_FocusMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_FocusMode, _put_Canon_EOS_FocusMode},
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_EffectMode, 0, PTP_DTC_UINT16, _get_EffectMode, _put_EffectMode},
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_NIKON_EffectMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_EffectMode, _put_NIKON_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
