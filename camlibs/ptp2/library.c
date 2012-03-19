@@ -5600,7 +5600,6 @@ static uint16_t
 ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	unsigned int	k, i, j, last, changed;
 	PTPCANONFolderEntry *tmp = NULL;
-	PTPCANONFolderEntry *entries = NULL;
 	unsigned int	nroftmp = 0;
 	uint16_t	ret;
 	PTPStorageIDs	storageids;
@@ -5634,38 +5633,38 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 			PTPObject	*newobs;
 
 			for (j=0;j<params->nrofobjects;j++) {
-				if (params->objects[(last+j)%params->nrofobjects].oid == entries[i].ObjectHandle)  {
+				if (params->objects[(last+j)%params->nrofobjects].oid == tmp[i].ObjectHandle)  {
 					ob = &params->objects[(last+j)%params->nrofobjects];
 					break;
 				}
 			}
 			if (j == params->nrofobjects) {
-				gp_log (GP_LOG_DEBUG, "ptp_list_folder_eos", "adding new objectid 0x%08x (nrofobs=%d,j=%d)", entries[i].ObjectHandle, params->nrofobjects,j);
+				gp_log (GP_LOG_DEBUG, "ptp_list_folder_eos", "adding new objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->nrofobjects,j);
 				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
 				if (!newobs) return PTP_RC_GeneralError;
 				params->objects = newobs;
 				memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
-				params->objects[params->nrofobjects].oid   = entries[i].ObjectHandle;
+				params->objects[params->nrofobjects].oid   = tmp[i].ObjectHandle;
 				params->objects[params->nrofobjects].flags = 0;
 
 				params->objects[params->nrofobjects].oi.StorageID = storageids.Storage[k];
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_STORAGEID_LOADED;
 				params->objects[params->nrofobjects].oi.ParentObject = handle;
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
-				params->objects[params->nrofobjects].oi.Filename = strdup(entries[i].Filename);
-				params->objects[params->nrofobjects].oi.ObjectFormat = entries[i].ObjectFormatCode;
+				params->objects[params->nrofobjects].oi.Filename = strdup(tmp[i].Filename);
+				params->objects[params->nrofobjects].oi.ObjectFormat = tmp[i].ObjectFormatCode;
 				params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_DPGS_Get; /* FIXME: check if ok */
-				params->objects[params->nrofobjects].oi.ObjectCompressedSize = entries[i].ObjectSize;
-				params->objects[params->nrofobjects].oi.CaptureDate = entries[i].Time;
-				params->objects[params->nrofobjects].oi.ModificationDate = entries[i].Time;
+				params->objects[params->nrofobjects].oi.ObjectCompressedSize = tmp[i].ObjectSize;
+				params->objects[params->nrofobjects].oi.CaptureDate = tmp[i].Time;
+				params->objects[params->nrofobjects].oi.ModificationDate = tmp[i].Time;
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_OBJECTINFO_LOADED;
 
-				debug_objectinfo(params, entries[i].ObjectHandle, &params->objects[params->nrofobjects].oi);
+				debug_objectinfo(params, tmp[i].ObjectHandle, &params->objects[params->nrofobjects].oi);
 				last = params->nrofobjects;
 				params->nrofobjects++;
 				changed = 1;
 			} else {
-				gp_log (GP_LOG_DEBUG, "ptp_list_folder_eos", "adding old objectid 0x%08x (nrofobs=%d,j=%d)", entries[i].ObjectHandle, params->nrofobjects,j);
+				gp_log (GP_LOG_DEBUG, "ptp_list_folder_eos", "adding old objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->nrofobjects,j);
 				ob = &params->objects[(last+j)%params->nrofobjects];
 				/* for speeding up search */
 				last = (last+j)%params->nrofobjects;
