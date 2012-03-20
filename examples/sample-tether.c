@@ -2,7 +2,7 @@
  * This program does the equivalent of:
  * gphoto2 --wait-event-and-download
  *
- * compile with gcc -Wall -o canon-capture -lgphoto2 canon-capture.c
+ * compile with: gcc -Wall -o sample-tether sample-tether.c context.c -lgphoto2 
  *
  */
 
