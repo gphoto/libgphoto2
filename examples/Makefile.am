@@ -26,6 +26,7 @@ noinst_PROGRAMS += \
 	lunkwill-canon-capture  \
 	sample-owner \
 	sample-preview \
+	sample-tether \
 	sample-capture sample-trigger-capture
 
 sample_autodetect_SOURCES = sample-autodetect.c samples.h context.c config.c
@@ -35,6 +36,7 @@ lunkwill_canon_capture_SOURCES = lunkwill-canon-capture.c context.c samples.h co
 sample_capture_SOURCES = sample-capture.c context.c samples.h config.c
 sample_trigger_capture_SOURCES = sample-trigger-capture.c context.c samples.h config.c
 sample_preview_SOURCES = preview.c samples.h context.c config.c
+sample_tether_SOURCES = samples.h sample-tether.c context.c
 
 LDADD = $(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
