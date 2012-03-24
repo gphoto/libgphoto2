@@ -5603,6 +5603,13 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	unsigned int	nroftmp = 0;
 	uint16_t	ret;
 	PTPStorageIDs	storageids;
+	PTPObject	*ob;
+
+	if (handle != 0xffffffff) {
+		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+		if ((ret == PTP_RC_OK) && (ob->flags & PTPOBJECT_DIRECTORY_LOADED))
+			return PTP_RC_OK;
+	}
 
 	if (storage == 0xffffffff) {
 		if (handle != 0xffffffff)  {
@@ -5619,7 +5626,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	last = changed = 0;
 
 	for (k=0;k<storageids.n;k++) {
-		gp_log (GP_LOG_DEBUG, "ptp2/eos_directory", "reading handle %08x directory of 0x%08x", storage, handle);
+		gp_log (GP_LOG_DEBUG, "ptp2/eos_directory", "reading handle %08x directory of 0x%08x", storageids.Storage[k], handle);
 		ret = ptp_canon_eos_getobjectinfoex (
 			params, storageids.Storage[k], handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp
 		);
@@ -5649,7 +5656,10 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 
 				params->objects[params->nrofobjects].oi.StorageID = storageids.Storage[k];
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_STORAGEID_LOADED;
-				params->objects[params->nrofobjects].oi.ParentObject = handle;
+				if (handle == 0xffffffff)
+					params->objects[params->nrofobjects].oi.ParentObject = 0;
+				else
+					params->objects[params->nrofobjects].oi.ParentObject = handle;
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
 				params->objects[params->nrofobjects].oi.Filename = strdup(tmp[i].Filename);
 				params->objects[params->nrofobjects].oi.ObjectFormat = tmp[i].ObjectFormatCode;
@@ -5680,6 +5690,14 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		}
 	}
 	if (changed) ptp_objects_sort (params);
+
+	/* Do not cache ob, it might be reallocated and have a new address */
+	if (handle != 0xffffffff) {
+		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+		if (ret == PTP_RC_OK)
+			ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
+	}
+
 	return PTP_RC_OK;
 }
 
