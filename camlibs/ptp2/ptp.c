@@ -699,7 +699,6 @@ ptp_getnumobjects (PTPParams* params, uint32_t storage,
 {
 	uint16_t ret;
 	PTPContainer ptp;
-	int len;
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code=PTP_OC_GetNumObjects;
@@ -707,7 +706,6 @@ ptp_getnumobjects (PTPParams* params, uint32_t storage,
 	ptp.Param2=objectformatcode;
 	ptp.Param3=associationOH;
 	ptp.Nparam=3;
-	len=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 	if (ret == PTP_RC_OK) {
 		if (ptp.Nparam >= 1)
@@ -5395,6 +5393,10 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 	PTPObject	*ob;
 	/*Camera 		*camera = ((PTPData *)params->data)->camera;*/
 
+	/* If GetObjectInfo is broken, force GetPropList */
+	if (params->device_flags & DEVICE_FLAG_BROKEN_GET_OBJECT_INFO)
+		want |= PTPOBJECT_MTPPROPLIST_LOADED;
+
 	*retob = NULL;
 	if (!handle) {
 		ptp_debug (params, "ptp_object_want: querying handle 0?\n");
@@ -5456,6 +5458,63 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 			goto fallback;
 		ob->mtpprops = props;
 		ob->nrofmtpprops = nrofprops;
+
+		/* Override the ObjectInfo data with data from properties */
+		if (params->device_flags & DEVICE_FLAG_BROKEN_GET_OBJECT_INFO) {
+			int i;
+			MTPProperties *prop = ob->mtpprops;
+
+			for (i=0;i<ob->nrofmtpprops;i++,prop++) {
+				switch (prop->property) {
+				case PTP_OPC_StorageID:
+					ob->oi.StorageID = prop->propval.u32;
+					break;
+				case PTP_OPC_ObjectFormat:
+					ob->oi.ObjectFormat = prop->propval.u16;
+					break;
+				case PTP_OPC_ProtectionStatus:
+					ob->oi.ProtectionStatus = prop->propval.u16;
+					break;
+				case PTP_OPC_ObjectSize:
+					if (prop->datatype == PTP_DTC_UINT64) {
+						if (prop->propval.u64 > 0xFFFFFFFFU)
+							ob->oi.ObjectCompressedSize = 0xFFFFFFFFU;
+						else
+							ob->oi.ObjectCompressedSize = (uint32_t)prop->propval.u64;
+					} else if (prop->datatype == PTP_DTC_UINT32) {
+						ob->oi.ObjectCompressedSize = prop->propval.u32;
+					}
+					break;
+				case PTP_OPC_AssociationType:
+					ob->oi.AssociationType = prop->propval.u16;
+					break;
+				case PTP_OPC_AssociationDesc:
+					ob->oi.AssociationDesc = prop->propval.u32;
+					break;
+				case PTP_OPC_ObjectFileName:
+					if (prop->propval.str) {
+						free(ob->oi.Filename);
+						ob->oi.Filename = strdup(prop->propval.str);
+					}
+					break;
+				case PTP_OPC_DateCreated:
+					ob->oi.CaptureDate = ptp_unpack_PTPTIME(prop->propval.str);
+					break;
+				case PTP_OPC_DateModified:
+					ob->oi.ModificationDate = ptp_unpack_PTPTIME(prop->propval.str);
+					break;
+				case PTP_OPC_Keywords:
+					if (prop->propval.str) {
+						free(ob->oi.Keywords);
+						ob->oi.Keywords = strdup(prop->propval.str);
+					}
+					break;
+				case PTP_OPC_ParentObject:
+					ob->oi.ParentObject = prop->propval.u32;
+					break;
+				}
+			}
+		}
 
 #if 0
 		MTPProperties 	*xpl;
