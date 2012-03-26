@@ -429,11 +429,15 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 {
 	int ret, curread;
 
-	if (!port || !port->pl->dh)
+	if (!port || !port->pl->dh) {
+		gp_log (GP_LOG_ERROR, "libusb1", "gp_port_usb_read: bad parameters");
 		return GP_ERROR_BAD_PARAMETERS;
+	}
 
+	gp_log (GP_LOG_DEBUG, "libusb1", "reading with timeout %d", port->timeout);
 	ret = libusb_bulk_transfer (port->pl->dh, port->settings.usb.inep,
 			     (unsigned char*)bytes, size, &curread, port->timeout);
+	gp_log (GP_LOG_DEBUG, "libusb1", "ret = %d", ret);
         if (ret < 0)
 		return GP_ERROR_IO_READ;
 
@@ -568,9 +572,11 @@ gp_port_usb_update (GPPort *port)
 		port->settings_pending.usb.altsetting
 	);
 
+/* do not overwrite it ... we need to set it.
 	if (port->pl->interface == -1) port->pl->interface = port->settings.usb.interface;
 	if (port->pl->config == -1) port->pl->config = port->settings.usb.config;
 	if (port->pl->altsetting == -1) port->pl->altsetting = port->settings.usb.altsetting;
+*/
 
 	/* The portname can also be changed with the device still fully closed. */
 	memcpy(&port->settings.usb.port, &port->settings_pending.usb.port,

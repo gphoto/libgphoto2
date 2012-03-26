@@ -553,9 +553,11 @@ gp_port_usb_update (GPPort *port)
 		port->settings_pending.usb.altsetting
 	);
 
+#if 0
 	if (port->pl->interface == -1) port->pl->interface = port->settings.usb.interface;
 	if (port->pl->config == -1) port->pl->config = port->settings.usb.config;
 	if (port->pl->altsetting == -1) port->pl->altsetting = port->settings.usb.altsetting;
+#endif
 
 	/* The portname can also be changed with the device still fully closed. */
 	memcpy(&port->settings.usb.port, &port->settings_pending.usb.port,
