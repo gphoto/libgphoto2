@@ -1,4 +1,10 @@
 2012-01-12  Theodore Kilgore <kilgota@auburn.edu>
+	* README.jl2005c: updated.
+	* library.c: Sakar 94009 Hello Kitty added. Yet another Vivitar Freelance
+	discovered in the wild. Looks different from the others. Not listed
+	separately.
+
+2012-01-12  Theodore Kilgore <kilgota@auburn.edu>
 	* library.c: Jazwares Star Wars camera added.
 
 2011-06-20  Theodore Kilgore <kilgota@auburn.edu>

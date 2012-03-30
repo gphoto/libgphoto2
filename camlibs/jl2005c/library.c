@@ -87,6 +87,8 @@ struct {
 				GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0227},
 	{"Vivitar Freelance", GP_DRIVER_STATUS_EXPERIMENTAL,
 							       0x0979, 0x0227},
+	{"Sakar Hello Kitty no. 94009", GP_DRIVER_STATUS_EXPERIMENTAL,
+							       0x0979, 0x0227},
 	{NULL,0,0,0}
 };
 
