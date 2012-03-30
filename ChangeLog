@@ -1,3 +1,15 @@
+2012-03-30  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* auto-m4/gettext.m4: Upgrade to gettext-0.17.
+	* auto-m4/iconv.m4: Upgrade to gettext-0.17.
+	* auto-m4/lib-ld.m4: Upgrade to gettext-0.17.
+	* auto-m4/lib-link.m4: Upgrade to gettext-0.17.
+	* auto-m4/lib-prefix.m4: Upgrade to gettext-0.17.
+	* auto-m4/nls.m4: Upgrade to gettext-0.17.
+	* auto-m4/po.m4: Upgrade to gettext-0.17.
+	* auto-m4/progtest.m4: Upgrade to gettext-0.17.
+	* configure.ac (AM_GNU_GETTEXT_VERSION): Bump to 0.17.
+
 2009-07-30  Dan Fandrich <dan@coneharvesters.com>
 
 	* Fixed a bunch of C89 and SUS portability issues.
