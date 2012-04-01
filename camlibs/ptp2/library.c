@@ -3981,10 +3981,14 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (!strcmp(folder, "/")) {
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
 			PTPStorageIDs storageids;
+			char fname[PTP_MAXSTRLEN];
 
 			CPR (context, ptp_getstorageids(params, &storageids));
+			if (!storageids.n) {
+				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x",0x00010001);
+				CR (gp_list_append (list, fname, NULL));
+			}
 			for (i=0; i<storageids.n; i++) {
-				char fname[PTP_MAXSTRLEN];
 
 				/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
 				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
