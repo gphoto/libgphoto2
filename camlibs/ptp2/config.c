@@ -635,7 +635,9 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 static int
 _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize) {
 	char *value;
-	int i, ret, intval;
+	int i, ret, intval, j;
+	int foundvalue = 0;
+	uint16_t	u16val = 0;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
@@ -644,9 +646,30 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 		if (!strcmp(_(tbl[i].label),value) &&
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
 		) {
-			propval->u16 = tbl[i].value;
-			return GP_OK;
+			u16val = tbl[i].value;
+			foundvalue = 1;
+		
+			if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+				for (j = 0; j<dpd->FORM.Enum.NumberOfValues; j++) {
+					if (u16val == dpd->FORM.Enum.SupportedValue[j].u16) {
+						gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "FOUND right value for %s in the enumeration at val %d", value, u16val);
+						propval->u16 = u16val;
+						return GP_OK;
+					}
+				}
+				gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "did not find the right value for %s in the enumeration at val %d... continuing", value, u16val);
+				/* continue looking, but with this value as fallback */
+			} else {
+				gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "not an enumeration ... return %s as %d", value, u16val);
+				propval->u16 = u16val;
+				return GP_OK;
+			}
 		}
+	}
+	gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "Using fallback, not found in enum... return %s as %d", value, u16val);
+	if (foundvalue) {
+		propval->u16 = u16val;
+		return GP_OK;
 	}
 	if (!sscanf(value, _("Unknown value %04x"), &intval)) {
 		gp_log (GP_LOG_ERROR, "ptp2/config", "failed to find value %s in list", value);
@@ -3328,8 +3351,8 @@ static struct deviceproptableu16 canon_aperture[] = {
 	{ "3.5",	0x0024, 0 },
 	{ "3.5",	0x0025, 0 }, /* (1/3)? */
 	{ "4",		0x0028, 0 },
-	{ "4.5",	0x002b, 0 }, /* (1/3)? */
 	{ "4.5",	0x002c, 0 },
+	{ "4.5",	0x002b, 0 }, /* (1/3)? */
 	{ "5",		0x002d, 0 }, /* 5.6 (1/3)??? */
 	{ "5.6",	0x0030, 0 },
 	{ "6.3",	0x0033, 0 },
