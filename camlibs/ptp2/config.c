@@ -2013,32 +2013,38 @@ GENERIC16TABLE(Canon_ISO,canon_isospeed)
 /* see ptp-pack.c:ptp_unpack_EOS_ImageFormat */
 static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("RAW"),				0x0400, 0 },
-	{ N_("sRAW1"),				0x1400, 0 },
-	{ N_("sRAW2"),				0x2400, 0 },
+	{ N_("mRAW"),				0x1400, 0 },
+	{ N_("sRAW"),				0x2400, 0 },
 	{ N_("Large Fine JPEG"),		0x0300, 0 },
 	{ N_("Large Normal JPEG"),		0x0200, 0 },
 	{ N_("Medium Fine JPEG"),		0x1300, 0 },
 	{ N_("Medium Normal JPEG"),		0x1200, 0 },
 	{ N_("Small Fine JPEG"),		0x2300, 0 },
 	{ N_("Small Normal JPEG"),		0x2200, 0 },
+	{ N_("Small Fine JPEG"),		0xd300, 0 },
+	{ N_("Small Normal JPEG"),		0xd200, 0 },
+	{ N_("Smaller JPEG"),			0xe300, 0 },
+	{ N_("Tiny JPEG"),			0xf300, 0 },
 	{ N_("RAW + Large Fine JPEG"),		0x0403, 0 },
-	{ N_("sRAW1 + Large Fine JPEG"),	0x1403, 0 },
-	{ N_("sRAW2 + Large Fine JPEG"),	0x2403, 0 },
+	{ N_("mRAW + Large Fine JPEG"),		0x1403, 0 },
+	{ N_("sRAW + Large Fine JPEG"),		0x2403, 0 },
 	{ N_("RAW + Medium Fine JPEG"),		0x0413, 0 },
-	{ N_("sRAW1 + Medium Fine JPEG"),	0x1413, 0 },
-	{ N_("sRAW2 + Medium Fine JPEG"),	0x2413, 0 },
+	{ N_("mRAW + Medium Fine JPEG"),	0x1413, 0 },
+	{ N_("sRAW + Medium Fine JPEG"),	0x2413, 0 },
 	{ N_("RAW + Small Fine JPEG"),		0x0423, 0 },
-	{ N_("sRAW1 + Small Fine JPEG"),	0x1423, 0 },
-	{ N_("sRAW2 + Small Fine JPEG"),	0x2423, 0 },
+	{ N_("mRAW + Small Fine JPEG"),		0x1423, 0 },
+	{ N_("sRAW + Small Fine JPEG"),		0x2423, 0 },
 	{ N_("RAW + Large Normal JPEG"),	0x0402, 0 },
-	{ N_("sRAW1 + Large Normal JPEG"),	0x1402, 0 },
-	{ N_("sRAW2 + Large Normal JPEG"),	0x2402, 0 },
+	{ N_("mRAW + Large Normal JPEG"),	0x1402, 0 },
+	{ N_("sRAW + Large Normal JPEG"),	0x2402, 0 },
 	{ N_("RAW + Medium Normal JPEG"),	0x0412, 0 },
-	{ N_("sRAW1 + Medium Normal JPEG"),	0x1412, 0 },
-	{ N_("sRAW2 + Medium Normal JPEG"),	0x2412, 0 },
+	{ N_("mRAW + Medium Normal JPEG"),	0x1412, 0 },
+	{ N_("sRAW + Medium Normal JPEG"),	0x2412, 0 },
 	{ N_("RAW + Small Normal JPEG"),	0x0422, 0 },
-	{ N_("sRAW1 + Small Normal JPEG"),	0x1422, 0 },
-	{ N_("sRAW2 + Small Normal JPEG"),	0x2422, 0 },
+	{ N_("mRAW + Small Normal JPEG"),	0x1422, 0 },
+	{ N_("sRAW + Small Normal JPEG"),	0x2422, 0 },
+/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
+   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
 };
 GENERIC16TABLE(Canon_EOS_ImageFormat,canon_eos_image_format)
 
@@ -2066,6 +2072,8 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Continuous low speed"),	0x0005, 0 },
 	{ N_("Timer 10 sec"),		0x0010, 0 },
 	{ N_("Timer 2 sec"),		0x0011, 0 },
+	{ N_("Single silent"),		0x0013, 0 },
+	{ N_("Continuous silent"),	0x0014, 0 },
 };
 GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
 
@@ -3199,8 +3207,9 @@ GENERIC16TABLE(FocusMode,focusmodes)
 
 static struct deviceproptableu16 eos_focusmodes[] = {
 	{ N_("One Shot"),	0x0000, 0 },
-	{ N_("AI Focus"),	0x0001, 0 },
-	{ N_("AI Servo"),	0x0002, 0 },
+	{ N_("AI Servo"),	0x0001, 0 },
+	{ N_("AI Focus"),	0x0002, 0 },
+	{ N_("Manual"),		0x0003, 0 },
 };
 GENERIC16TABLE(Canon_EOS_FocusMode,eos_focusmodes)
 
