@@ -585,6 +585,11 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	oi->ObjectFormat=dtoh16a(&data[PTP_oi_ObjectFormat]);
 	oi->ProtectionStatus=dtoh16a(&data[PTP_oi_ProtectionStatus]);
 	oi->ObjectCompressedSize=dtoh32a(&data[PTP_oi_ObjectCompressedSize]);
+
+	/* Stupid Samsung Galaxy developers emit a 64bit objectcompressedsize */
+	if ((data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
+		data += 4;
+	}
 	oi->ThumbFormat=dtoh16a(&data[PTP_oi_ThumbFormat]);
 	oi->ThumbCompressedSize=dtoh32a(&data[PTP_oi_ThumbCompressedSize]);
 	oi->ThumbPixWidth=dtoh32a(&data[PTP_oi_ThumbPixWidth]);
@@ -596,6 +601,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	oi->AssociationType=dtoh16a(&data[PTP_oi_AssociationType]);
 	oi->AssociationDesc=dtoh32a(&data[PTP_oi_AssociationDesc]);
 	oi->SequenceNumber=dtoh32a(&data[PTP_oi_SequenceNumber]);
+
 	oi->Filename= ptp_unpack_string(params, data, PTP_oi_filenamelen, &filenamelen);
 
 	capture_date = ptp_unpack_string(params, data,
