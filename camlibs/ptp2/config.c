@@ -5196,6 +5196,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Copyright"), "copyright", PTP_DPC_CANON_EOS_Copyright, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Clean Sensor"), "cleansensor", PTP_DPC_NIKON_CleanImageSensor, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Nikon_CleanSensor, _put_Nikon_CleanSensor},
+	{ N_("Custom Functions Ex"), "customfuncex", PTP_DPC_CANON_EOS_CustomFuncEx, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },

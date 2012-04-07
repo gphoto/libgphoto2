@@ -1348,6 +1348,41 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
 	return s;
 }
 
+static inline char*
+ptp_unpack_EOS_CustomFuncEx (PTPParams* params, unsigned char** data )
+{
+	uint32_t s = dtoh32a( *data );
+	uint32_t n = s/4, i;
+	char* str = (char*)malloc( s ); // n is size in uint32, average len(itoa(i)) < 4 -> alloc n chars
+	if (!str)
+		return str;
+	char* p = str;
+
+	for (i=0; i < n; ++i)
+		p += sprintf(p, "%x,", dtoh32a( *data + 4*i ));
+
+	return str;
+}
+
+static inline uint32_t
+ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
+{
+	uint32_t s = strtoul(str, NULL, 16);
+	uint32_t n = s/4, i, v;
+
+	if (!data)
+		return s;
+
+	for (i=0; i<n; i++)
+	{
+		v = strtoul(str, &str, 16);
+		str++; // skip the ',' delimiter
+		htod32a(data + i*4, v);
+	}
+
+	return s;
+}
+
 /*
     PTP EOS Changes Entry unpack
 */
@@ -1668,7 +1703,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_MovSize:
 				case PTP_DPC_CANON_EOS_DepthOfField:
 				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
-				case PTP_DPC_CANON_EOS_CustomFuncEx:
 					dpd->DataType = PTP_DTC_UINT32;
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint32", i ,proptype, size-PTP_ece_Prop_Val_Data);
 					if ((size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) != 0)
@@ -1681,6 +1715,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_ImageFormatCF:
 				case PTP_DPC_CANON_EOS_ImageFormatSD:
 				case PTP_DPC_CANON_EOS_ImageFormatExtHD:
+				case PTP_DPC_CANON_EOS_CustomFuncEx:
 					break;
 				default:
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d", i ,proptype, size-PTP_ece_Prop_Val_Data);
@@ -1724,7 +1759,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					break;
 				}
 
-				/* ImageFormat special handling (WARNING: dont move this in front of the dpd->DataType switch!) */
+				/* ImageFormat and customFuncEx special handling (WARNING: dont move this in front of the dpd->DataType switch!) */
 				switch (proptype) {
 				case PTP_DPC_CANON_EOS_ImageFormat:
 				case PTP_DPC_CANON_EOS_ImageFormatCF:
@@ -1734,6 +1769,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->FactoryDefaultValue.u16	= ptp_unpack_EOS_ImageFormat( params, &data );
 					dpd->CurrentValue.u16		= dpd->FactoryDefaultValue.u16;
 					ptp_debug (params,"event %d: decoded imageformat, currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u16);
+					break;
+				case PTP_DPC_CANON_EOS_CustomFuncEx:
+					dpd->DataType = PTP_DTC_STR;
+					if (dpd->FactoryDefaultValue.str) free (dpd->FactoryDefaultValue.str);
+					if (dpd->CurrentValue.str)	  free (dpd->CurrentValue.str);
+					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_CustomFuncEx( params, &data );
+					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
+					ptp_debug (params,"event %d: decoded custom function, currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
 					break;
 				}
 
