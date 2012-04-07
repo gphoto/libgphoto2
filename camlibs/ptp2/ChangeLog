@@ -1,3 +1,8 @@
+2012-04-07  Axel Waggershauser  <awagger@web.de>
+
+	* EOS 5D Mark III support
+	* CustomFunctionEx support for EOS
+
 2010-11-17  Marcus Meissner <marcus@jet.franken.de>
 
 	* config.c, library.c, ptp.c, ptp.h: switch the canon powershot event
