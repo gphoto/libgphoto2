@@ -619,6 +619,8 @@ static struct {
 	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
 	/* tux droid <gnutuxdroid@gmail.com> */
 	{"Sony:SLT-A55 (PTP mode)",   0x054c, 0x04a3, 0},
+	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3515558&group_id=8874 */
+	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
 	/* Rudi */
 	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
 
