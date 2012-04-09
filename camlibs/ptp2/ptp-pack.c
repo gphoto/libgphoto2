@@ -476,16 +476,19 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 	uint8_t filenamelen;
 	uint8_t capturedatelen=0;
 	/* let's allocate some memory first; correct assuming zero length dates */
-	oidata=malloc(PTP_oi_MaxLen);
+	oidata=malloc(PTP_oi_MaxLen + params->ocs64*4);
+	*oidataptr=oidata;
 	/* the caller should free it after use! */
 #if 0
 	char *capture_date="20020101T010101"; /* XXX Fake date */
 #endif
-	memset (oidata, 0, PTP_oi_MaxLen);
+	memset (oidata, 0, PTP_oi_MaxLen + params->ocs64*4);
 	htod32a(&oidata[PTP_oi_StorageID],oi->StorageID);
 	htod16a(&oidata[PTP_oi_ObjectFormat],oi->ObjectFormat);
 	htod16a(&oidata[PTP_oi_ProtectionStatus],oi->ProtectionStatus);
 	htod32a(&oidata[PTP_oi_ObjectCompressedSize],oi->ObjectCompressedSize);
+	if (params->ocs64)
+		oidata += 4;
 	htod16a(&oidata[PTP_oi_ThumbFormat],oi->ThumbFormat);
 	htod32a(&oidata[PTP_oi_ThumbCompressedSize],oi->ThumbCompressedSize);
 	htod32a(&oidata[PTP_oi_ThumbPixWidth],oi->ThumbPixWidth);
@@ -526,9 +529,7 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 	}
 #endif
 	/* XXX this function should return dataset length */
-	
-	*oidataptr=oidata;
-	return (PTP_oi_Filename+filenamelen*2+(capturedatelen+1)*3);
+	return (PTP_oi_Filename+filenamelen*2+(capturedatelen+1)*3)+params->ocs64*4;
 }
 
 static time_t
@@ -588,6 +589,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 
 	/* Stupid Samsung Galaxy developers emit a 64bit objectcompressedsize */
 	if ((data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
+		params->ocs64 = 1;
 		data += 4;
 	}
 	oi->ThumbFormat=dtoh16a(&data[PTP_oi_ThumbFormat]);

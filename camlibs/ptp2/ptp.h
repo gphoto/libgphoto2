@@ -2108,6 +2108,7 @@ struct _PTPParams {
 
 	/* PTP IO: if we have MTP style split header/data transfers */
 	int		split_header_data;
+	int		ocs64; /* 64bit objectsize */
 
 	/* PTP: MTP specific structure. */
 	MTPProperties	*props;
