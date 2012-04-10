@@ -273,7 +273,11 @@
  * if you try to get individual properties of an object.
  */
 #define DEVICE_FLAG_BROKEN_GET_OBJECT_PROPVAL	0x20000000
-
+/**
+ * It seems that some devices return an bad data when
+ * using the GetObjectInfo operation.
+ */
+#define DEVICE_FLAG_BROKEN_GET_OBJECT_INFO	0x40000000
 
 /**
  * All these bug flags need to be set on SONY NWZ Walkman
