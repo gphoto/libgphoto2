@@ -3796,6 +3796,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			PTPStorageIDs storageids;
 
 			CPR (context, ptp_getstorageids(params, &storageids));
+			if (!storageids.n) {
+				/* happens on Samsung Galaxy S2, fall back to default store. */
+				CR (gp_list_append (list, STORAGE_FOLDER_PREFIX"00010001", NULL));
+			}
 			for (i=0; i<storageids.n; i++) {
 				char fname[PTP_MAXSTRLEN];
 
@@ -5134,7 +5138,7 @@ debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
 int
 init_ptp_fs (Camera *camera, GPContext *context)
 {
-	int i, id, nroot = 0;
+	int i, id, nroot = 0, nonroot = 0;
 	PTPParams *params = &camera->pl->params;
 	char buf[1024];
 	uint16_t ret;
@@ -5492,6 +5496,16 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				}
 				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "objectsize %u", xpl->propval.u32);
 				break;
+			case PTP_OPC_AssociationType:
+				if (xpl->datatype != PTP_DTC_UINT16) {
+					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "assoctype has type 0x%x???", xpl->datatype);
+					break;
+				}
+				oinfos[i].AssociationType = xpl->propval.u16;
+				if (xpl->propval.u16 == 0)
+					nroot++;
+				gp_log (GP_LOG_DEBUG, "ptp2/mtpfast", "assoctype 0x%x", xpl->propval.u16);
+				break;
 			case PTP_OPC_StorageID:
 				if (xpl->datatype != PTP_DTC_UINT32) {
 					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "storageid has type 0x%x???", xpl->datatype);
@@ -5575,6 +5589,8 @@ fallback:
 #endif
 		if (params->objectinfo[i].ParentObject == 0)
 			nroot++;
+		else
+			nonroot++;
 
                 if (	!params->objectinfo[i].Filename ||
 			!strlen (params->objectinfo[i].Filename)
@@ -5588,6 +5604,31 @@ fallback:
 		10+(90*i)/params->handles.n);
 	}
 	gp_context_progress_stop (context, id);
+
+	if (!nonroot && params->handles.n) {
+		for (i = 0; i < params->handles.n; i++) {
+			int j;
+			PTPObjectHandles nhandles;
+
+			if (params->objectinfo[i].AssociationType != 1)
+				continue;
+			CPR (context, ptp_getobjecthandles (params, 0xffffffff, 0x000000, params->handles.Handler[i], &nhandles));
+			if (nhandles.n == 0)
+				continue;
+			for (j=0;j<nhandles.n;j++) {
+				/* linear search probably not necessary ... */
+#if 0
+				int k;
+				for (k = 0; k < params->handles.n; k++)
+					if (nhandles.Handler[j] == params->handles.Handler[k])
+						break;
+				if (k < params->handles.n)
+					continue;
+#endif
+				add_object (camera, nhandles.Handler[j], context);
+			}
+		}
+	}
 
 	/* for older Canons we now retrieve their object flags, to allow
 	 * "new" image handling. This is not yet a substitute for regular
