@@ -1631,6 +1631,13 @@ ptp_check_event (PTPParams *params) {
 		}
 		return PTP_RC_OK;
 	}
+	/* should not get here ... EOS has no normal PTP events and another queue handling. */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetEvent)
+	) {
+		return PTP_RC_OK;
+	}
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_CheckEvent)
 	) {
