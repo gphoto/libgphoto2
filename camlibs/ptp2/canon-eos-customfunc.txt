@@ -1,0 +1,109 @@
+From: Axel Waggershauser <awagger@web.de>
+
+
+
+To whom it may concern... ;-)
+
+attached is a patch to enable some _very_ low level (but therefore
+general) access to the custom functions of (modern) EOS cameras. But
+before anyone gets excited: this is nowhere near something like
+
+    gphoto2 --set-config mirrorlockup=on
+
+instead it's more like
+
+    gphoto2 --set-config
+customfuncex=60,1,1,54,6,101,1,1,102,1,0,104,1,0,105,1,0,106,2,2,1,108,1,0
+
+
+The background details: There is a PTP property called CustomFuncEx
+(hex code 0xd1a0) for accessing custom functions. Unfortunately, this
+property is not like any other standard PTP property (like e.g. the
+aperture property, which has exactly one meaning and one value at a
+time and you can select a value from an automatically enumerated list
+of supported values):
+ * the CustomFuncEx property represents all custom functions at the same time
+ * the list of available functions may differ from camera to camera
+ * there is no automatic enumeration of available values for
+individual custom functions
+ * the individual custom functions can only be changed/accessed in
+groups simultaneously
+Therefore it does not fit into the libgphoto2 supplied structures to
+access camera properties. And therefore I came up with this minimal
+invasive patch with the downside of having a horrible user interface.
+
+A 'value' of the CustomFuncEx property is a list of numbers (4 byte
+integers) that forms a two-level hierarchical structure of individual
+enumerated custom functions. First level is the group of functions,
+second level is the list of functions within that group. The 5DM3
+seems to have 3 groups (1,2,4), the 60D 4 groups (1,2,3,4). The groups
+seem to be somewhat related to the different pages in the custom
+functions menu structure on the camera. The first group of the 5DM3
+contains the individual functions numbered 101, 102, 104, 105, 106,
+108. On the 60D it's 101, 102, 104, 105, 108, 10f (beware: those
+numbers are all in base 16). To give an example: the 101 is the
+"Exposure level increments" custom function. Each function may have 1
+to several individual (integer) values. Most of them have only 1 value
+but e.g. the bracket-count function (number 106) is mapped to two
+numbers.
+
+The complete structure of a valid CustomFuncEx property value
+explained on the example
+60,1,1,54,6, 101,1,1, 102,1,0, 104,1,0, 105,1,0, 106,2,2,1, 108,1,0
+is as follows (remember: every number is hex encoded):
+1. size of the whole data set in bytes: here 0x60 = 96, i.e. 96/4=24 integers
+2. number of groups in this data set: always 1
+3. group id: here 1, I've seen 1, 2, 3 and 4
+4. size of the group part in bytes: here 0x54 = 84, i.e. 84/4=21 integers
+5. number of individual custom functions in the group: here 6
+--- and now for each custom function in this group ---
+a. function id: here 101, 102, 104, 105, 106, 108
+b. number of 'sub-values' of this function: mostly 1, in case of 106 it's 2
+c-?. the (final) sub-values of the functions
+
+One may construct valid 'values' for that property mentioning only
+individual functions (e.g. 20,1,1,14,1,101,1,1 which sets the 101
+function to '1') but the camera then sets all other available
+functions in the same group back to their default state. Notice: the
+group id is redundant since the function id completely determines the
+function. If you try to set a 10x function inside group 2 nothing
+happens.
+
+To actually make use of that feature (e.g. toggle mirror lockup on a
+5DM2) you may proceed as follows:
+1) set the mirror lockup to off
+2) gphoto2 --debug --debug-logfile=off.txt --get-config customfuncex
+3) set the mirror lockup to on (you may have to disconnect the camera
+if it says 'busy')
+4) gphoto2 --debug --debug-logfile=on.txt --get-config customfuncex
+5) grep custom off.txt | cut -d' ' -f 12
+6) grep custom on.txt | cut -d' ' -f 12
+
+The last two commands will output something like:
+
+68,1,1,5c,7,101,1,1,102,1,1,103,1,0,104,1,0,105,1,0,108,1,0,10f,1,0,
+50,1,2,44,5,201,1,0,202,1,0,203,1,0,204,1,0,205,1,0,
+84,1,3,78,8,505,1,0,506,1,0,50f,1,0,510,1,0,50e,1,0,60f,1,0,508,1,0,507,5,0,ff,0,ff,0,
+68,1,4,5c,7,701,1,0,702,1,0,704,1,0,706,1,0,80b,1,0,80f,1,0,70b,1,0,
+
+68,1,1,5c,7,101,1,1,102,1,1,103,1,0,104,1,0,105,1,0,108,1,0,10f,1,0,
+50,1,2,44,5,201,1,0,202,1,0,203,1,0,204,1,0,205,1,0,
+84,1,3,78,8,505,1,0,506,1,0,50f,1,0,510,1,0,50e,1,0,60f,1,1,508,1,0,507,5,0,ff,0,ff,0,
+68,1,4,5c,7,701,1,0,702,1,0,704,1,0,706,1,0,80b,1,0,80f,1,0,70b,1,0,
+
+You can see the 4 groups and after close inspection you'll find that
+the mirror lockup belongs to group 3 and has id 60f with the values 0
+and 1. Hence, to enable mirror lockup you may finally call
+
+    gphoto2 --set-config
+customfuncex=84,1,3,78,8,505,1,0,506,1,0,50f,1,0,510,1,0,50e,1,0,60f,1,1,508,1,0,507,5,0,ff,0,ff,0,
+
+In fact if you don't care for anything else than mirror lockup you may also call
+
+    gphoto2 --set-config customfuncex=20,1,3,14,1,60f,1,1
+
+DISCLAIMER: Throwing random numbers at your Canon may SET IT ON FIRE!
+(Well, that is actually pretty unlikely but anyway: _your_ risk. What
+is pretty likely is, that it will crash your gphoto2 process.)
+
+ - Axel
