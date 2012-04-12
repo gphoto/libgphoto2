@@ -363,7 +363,7 @@
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_LONG_TIMEOUT |
-      DEVICE_FLAG_BROKEN_GET_OBJECT_INFO },
+      DEVICE_FLAG_PROPLIST_OVERRIDES_OI },
   // From: Erik Berglund <erikjber@users.sourceforge.net>
   // Logs indicate this needs DEVICE_FLAG_NO_ZERO_READS
   // No Samsung platlists on this device.

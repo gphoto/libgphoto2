@@ -5410,7 +5410,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 	/*Camera 		*camera = ((PTPData *)params->data)->camera;*/
 
 	/* If GetObjectInfo is broken, force GetPropList */
-	if (params->device_flags & DEVICE_FLAG_BROKEN_GET_OBJECT_INFO)
+	if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI)
 		want |= PTPOBJECT_MTPPROPLIST_LOADED;
 
 	*retob = NULL;
@@ -5476,7 +5476,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 		ob->nrofmtpprops = nrofprops;
 
 		/* Override the ObjectInfo data with data from properties */
-		if (params->device_flags & DEVICE_FLAG_BROKEN_GET_OBJECT_INFO) {
+		if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI) {
 			int i;
 			MTPProperties *prop = ob->mtpprops;
 

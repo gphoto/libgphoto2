@@ -277,7 +277,7 @@
  * It seems that some devices return an bad data when
  * using the GetObjectInfo operation.
  */
-#define DEVICE_FLAG_BROKEN_GET_OBJECT_INFO	0x40000000
+#define DEVICE_FLAG_PROPLIST_OVERRIDES_OI	0x40000000
 
 /**
  * All these bug flags need to be set on SONY NWZ Walkman
