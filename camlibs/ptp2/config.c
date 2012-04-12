@@ -1080,8 +1080,20 @@ _get_INT(CONFIG_GET_ARGS) {
 	case PTP_DTC_UINT32:
 		sprintf (value, "%u", dpd->CurrentValue.u32 );
 		break;
+	case PTP_DTC_INT32:
+		sprintf (value, "%d", dpd->CurrentValue.i32 );
+		break;
 	case PTP_DTC_UINT16:
 		sprintf (value, "%u", dpd->CurrentValue.u16 );
+		break;
+	case PTP_DTC_INT16:
+		sprintf (value, "%d", dpd->CurrentValue.i16 );
+		break;
+	case PTP_DTC_UINT8:
+		sprintf (value, "%u", dpd->CurrentValue.u8 );
+		break;
+	case PTP_DTC_INT8:
+		sprintf (value, "%d", dpd->CurrentValue.i8 );
 		break;
 	default:
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
@@ -5331,6 +5343,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Bracket Order"), "bracketorder", PTP_DPC_NIKON_BracketOrder, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_BracketOrder, _put_Nikon_BracketOrder},
 	{ N_("Burst Number"), "burstnumber", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_BurstNumber, _put_BurstNumber},
 	{ N_("Burst Interval"), "burstinterval", PTP_DPC_BurstNumber, 0, PTP_DTC_UINT16, _get_Milliseconds, _put_Milliseconds},
+	{ N_("Maximum Shots"), "maximumshots", PTP_DPC_NIKON_MaximumShots, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_INT, _put_None},
 
 	/* Newer Nikons have UINT8 ranges */
 	{ N_("Auto White Balance Bias"), "autowhitebias", PTP_DPC_NIKON_WhiteBalanceAutoBias, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_UWBBias, _put_Nikon_UWBBias},
