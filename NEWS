@@ -6,16 +6,22 @@ packaging:
 libgphoto2:
 * fixed stupid bug in directory listing (fixes "canon" driver)
 
+libgphoto2_port/usb:
+* Fixed stv680 usb config alternate setting (unbreaks stv680 driver)
+
 canon:
 * enhanced wait_for_event a bit.
 
 ptp2:
 * Nikon viewfinder enable/disable via config
-* added Nikon S6000, Canon PowerShot A3000, PowerShot SX230HS
+* added Nikon S6000, Canon PowerShot A3000, PowerShot SX230HS, Canon EOS 5D Mark III
+* lowlevel Canon EOS CustomFuncEx support added
+* Canon EOS 5D Mark III imagesize packing/unpacking support
+* Samsung Galaxy file handling support restored
+* match configuration table values more exact and correct.
 
 translations:
-* updated russian, ukrainian,
-
+* updated russian, ukrainian, danish, czech
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.13
