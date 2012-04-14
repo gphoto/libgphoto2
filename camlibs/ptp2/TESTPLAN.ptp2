@@ -7,16 +7,16 @@ Canon Powershot series (currently: Powershot SX100IS)
 									UNTESTED
 
 	--capture-image-and-download
-		- via SDRAM (capturetarget=0):				PASS
-		- via Card (capturetarget=1):				PASS
-		- Card configured, but not inserted (capturetarget=1)	PASS
+		- via SDRAM (capturetarget=0):				TODO
+		- via Card (capturetarget=1):				TODO
+		- Card configured, but not inserted (capturetarget=1)	TODO
 
 	--capture-image-and-download -F 3 -I 5
-		- via SDRAM (capturetarget=0):				PASS
-		- via Card (capturetarget=1):				PASS
-		- Card configured, but not inserted (capturetarget=1)	PASS
+		- via SDRAM (capturetarget=0):				TODO
+		- via Card (capturetarget=1):				TODO
+		- Card configured, but not inserted (capturetarget=1)	TODO
 
-        time gphoto2 --capture-image-and-download -F 5 -I 1		PASS
+        time gphoto2 --capture-image-and-download -F 5 -I 1		TODO
                 - via SDRAM (capturetarget=0)
 			approx 19-20 seconds		2.4.11 baseline
 			16.75-17 seconds		2.4.12
@@ -27,32 +27,32 @@ Canon Powershot series (currently: Powershot SX100IS)
 
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							FAIL (gtkam brokenness)
-		mixed with --capture-image-and-download			PASS
+		commandline tool					TODO
+		gtkam							TODO (gtkam brokenness)
+		mixed with --capture-image-and-download			TODO
 
-	--capture-movie=10s						PASS
+	--capture-movie=10s						TODO
 
-	--list-config							PASS
-	"capture option"						PASS
+	--list-config							TODO
+	"capture option"						TODO
 		--get-config capture
 		--set-config capture=1
 		--get-config capture
 		--set-config capture=0
 		--get-config capture
-	"zoom" and /other/ config tree value				PASS
+	"zoom" and /other/ config tree value				TODO
 		--get-config zoom
 		--set-config zoom=20
 		--get-config zoom
 		--get-config d02a
 		--set-config d02a=10
 		--get-config d02a
-	"ownername" 							PASS
+	"ownername" 							TODO
 		--get-config ownername
 		--set-config ownername="Markus Meissner"
 		--get-config ownername
 		--set-config ownername="Marcus Meissner"
-	--get-config d402						PASS
+	--get-config d402						TODO
 		(no string settable for the SX100IS)
 
 
@@ -61,23 +61,23 @@ Canon EOS series (currently: Canon EOS 1000D)
 									UNTESTED
 	--capture-image-and-download
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
-			- RAW						PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 		- via Card (SD) (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
-			- RAW						PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 
         --capture-image-and-download -F 3 -I 5
 		- via SDRAM (capturetarget=0)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
-			- RAW						PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 		- via Card (capturetarget=1)
-			- JPEG						PASS
-			- JPEG + RAW					PASS
-			- RAW						PASS
+			- JPEG						TODO
+			- JPEG + RAW					TODO
+			- RAW						TODO
 
         time gphoto2 --capture-image-and-download -F 5 -I 1
                 - via SDRAM (capturetarget=0)
@@ -89,28 +89,28 @@ Canon EOS series (currently: Canon EOS 1000D)
 			real	30.4s			2.4.12
 
 	--capture-preview
-		commandline tool					PASS
-		gtkam							PASS ?
-		mixed with --capture-image-and-download			PASS
+		commandline tool					TODO
+		gtkam							TODO ?
+		mixed with --capture-image-and-download			TODO
 
-	--capture-movie=10s						PASS
+	--capture-movie=10s						TODO
 
 	--wait-event-and-download
-		- JPEG							PASS
+		- JPEG							TODO
 			--set-config capturetarget=0
 			--set-config capturetarget=1
-		- JPEG + RAW						PASS
+		- JPEG + RAW						TODO
 			--set-config capturetarget=0
 			--set-config capturetarget=1
 
-	--list-config							PASS
-	"imageformat"							PASS
+	--list-config							TODO
+	"imageformat"							TODO
 		--get-config imageformat=0
 		--get-config imageformat
 		--set-config imageformat=6
 		--get-config imageformat
 
-	"ownername"							PASS
+	"ownername"							TODO
 		--get-config ownername
 		--set-config ownername="Marcus Meissner"
 		--get-config ownername
