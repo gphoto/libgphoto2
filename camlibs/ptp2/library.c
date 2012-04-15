@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2010 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2012 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
@@ -621,6 +621,8 @@ static struct {
 	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
 	/* tux droid <gnutuxdroid@gmail.com> */
 	{"Sony:SLT-A55 (PTP mode)",   0x054c, 0x04a3, 0},
+	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3515558&group_id=8874 */
+	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
 	/* Rudi */
 	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
 
@@ -717,7 +719,10 @@ static struct {
 	/* Graeme Wyatt <graeme.wyatt@nookawarra.com> */
 	{"Nikon:Coolpix L120 (PTP mode)", 0x04b0, 0x0185, PTP_CAP},
 	/* Kévin Ottens <ervin@ipsquad.net> */
-	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, 0},
+	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, PTP_CAP},
+
+	/* johnnolan@comcast.net */
+	{"Nikon:Coolpix AW100 (PTP mode)",0x04b0, 0x0188, PTP_CAP/*?*/},
 
 	/* Dale Pontius <DEPontius@edgehp.net> */
 	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
@@ -1278,6 +1283,12 @@ static struct {
 	/* Mark Lehrer <mark@knm.org> */
 	{"Apple:iPhone 3GS (PTP mode)",		0x05ac, 0x1294, 0},
 
+	/* Rasmus P */
+	{"Apple:iPhone 4 (PTP mode)",		0x05ac, 0x1297, 0},
+
+	{"Apple:iPod Touch 3rd Gen (PTP mode)",	0x05ac, 0x1299, 0},
+	{"Apple:iPad (PTP mode)",		0x05ac, 0x129a, 0},
+
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
 
@@ -1796,6 +1807,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
+		int 			tries;
 
 		if (!ptp_operation_issupported(params, PTP_OC_NIKON_StartLiveView)) {
 			gp_context_error (context,
@@ -1818,48 +1830,56 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				SET_CONTEXT_P(params, NULL);
 				return translate_ptp_result (ret);
 			}
-			while (ptp_nikon_device_ready(params) != PTP_RC_OK) /* empty */;
+			while (ptp_nikon_device_ready(params) != PTP_RC_OK)
+				usleep(20*1000);
 		}
-
-		ret = ptp_nikon_get_liveview_image (params , &data, &size);
-		if (ret == PTP_RC_OK) {
-			/* look for the JPEG SOI marker (0xFFD8) in data */
-			jpgStartPtr = (unsigned char*)memchr(data, 0xff, size);
-			while(jpgStartPtr && ((jpgStartPtr+1) < (data + size))) {
-				if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
-					break;
-				} else { /* go on looking (starting at next byte) */
-					jpgStartPtr++;
-					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+		tries = 20;
+		while (tries--) {
+			ret = ptp_nikon_get_liveview_image (params , &data, &size);
+			if (ret == PTP_RC_OK) {
+				/* look for the JPEG SOI marker (0xFFD8) in data */
+				jpgStartPtr = (unsigned char*)memchr(data, 0xff, size);
+				while(jpgStartPtr && ((jpgStartPtr+1) < (data + size))) {
+					if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
+						break;
+					} else { /* go on looking (starting at next byte) */
+						jpgStartPtr++;
+						jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+					}
 				}
-			}
-			if(!jpgStartPtr) { /* no SOI -> no JPEG */
-				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
-				return GP_ERROR;
-			}
-			/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
-			   (just to be sure we will not go beyond the end of the data array) */
-			jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, data+size-jpgStartPtr-1);
-			while(jpgEndPtr && ((jpgEndPtr+1) < (data + size))) {
-				if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
-					jpgEndPtr += 2;
-					break;
-				} else { /* go on looking (starting at next byte) */
-					jpgEndPtr++;
-					jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, data + size - jpgEndPtr);
+				if(!jpgStartPtr) { /* no SOI -> no JPEG */
+					gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
+					return GP_ERROR;
 				}
+				/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
+				   (just to be sure we will not go beyond the end of the data array) */
+				jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, data+size-jpgStartPtr-1);
+				while(jpgEndPtr && ((jpgEndPtr+1) < (data + size))) {
+					if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
+						jpgEndPtr += 2;
+						break;
+					} else { /* go on looking (starting at next byte) */
+						jpgEndPtr++;
+						jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, data + size - jpgEndPtr);
+					}
+				}
+				if(!jpgEndPtr) { /* no EOI -> no JPEG */
+					gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
+					return GP_ERROR;
+				}
+				gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
+				free (data); /* FIXME: perhaps handle the 128 byte header data too. */
+				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+				/* Add an arbitrary file name so caller won't crash */
+				gp_file_set_name (file, "preview.jpg");
+				gp_file_set_mtime (file, time(NULL));
+				break;
 			}
-			if(!jpgEndPtr) { /* no EOI -> no JPEG */
-				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
-				return GP_ERROR;
+			if (ret == PTP_RC_DeviceBusy) {
+				gp_log (GP_LOG_DEBUG, "ptp2/nikon_liveview", "busy, retrying after a bit of wait, try %d", tries);
+				usleep(10*1000);
+				continue;
 			}
-			gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
-			free (data); /* FIXME: perhaps handle the 128 byte header data too. */
-			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-			/* Add an arbitrary file name so caller won't crash */
-			gp_file_set_name (file, "preview.jpg");
-			gp_file_set_mtime (file, time(NULL));
-		} else {
 			SET_CONTEXT_P(params, NULL);
 			return translate_ptp_result (ret);
 		}
