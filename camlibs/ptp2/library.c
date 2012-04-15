@@ -2900,6 +2900,42 @@ camera_wait_for_event (Camera *camera, int timeout,
 			CPR (context, ptp_check_event (params));
 			if (ptp_get_one_event(params, &event)) {
 				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+				switch (event.Code) {
+				case PTP_EC_CANON_RequestObjectTransfer: {
+					CameraFilePath *path;
+					PTPObjectInfo   oi;
+
+					newobject = event.Param1;
+					gp_log (GP_LOG_DEBUG, "ptp", "PTP_EC_CANON_RequestObjectTransfer, object handle=0x%X.",newobject);
+					/* FIXME: handle multiple images (as in BurstMode) */
+					ret = ptp_getobjectinfo (params, newobject, &oi);
+					if (ret != PTP_RC_OK) return translate_ptp_result (ret);
+
+					if (oi.ParentObject != 0) {
+						ret = add_object (camera, newobject, context);
+						if (ret != GP_OK)
+							return ret;
+						path = malloc (sizeof(CameraFilePath));
+						strcpy  (path->name,  oi.Filename);
+						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+						get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+						/* delete last / or we get confused later. */
+						path->folder[ strlen(path->folder)-1 ] = '\0';
+						gp_filesystem_append (camera->fs, path->folder, path->name, context);
+
+					} else {
+						path = malloc (sizeof(CameraFilePath));
+						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+						sprintf (path->name, "capt%04d.jpg", capcnt++);
+						add_objectid_and_upload (camera, path, context, newobject, &oi);
+					}
+					*eventdata = path;
+					*eventtype = GP_EVENT_FILE_ADDED;
+					return GP_OK;
+				}
+				default:
+					break;
+				}
 				goto handleregular;
 			}
 			if (_timeout_passed (&event_start, timeout))
