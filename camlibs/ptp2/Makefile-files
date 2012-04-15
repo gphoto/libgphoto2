@@ -1,6 +1,6 @@
 EXTRA_DIST += ptp2/ptp-pack.c ptp2/PTPIP.TXT ptp2/README.ptp2 \
 	ptp2/TODO ptp2/ChangeLog ptp2/ptpip.html ptp2/TESTPLAN.ptp2 ptp2/olympus-wrap.c \
-	ptp2/test-nikon-d90.sh
+	ptp2/test-nikon-d90.sh ptp2/test-canon-eos-1000d.sh ptp2/test-canon-powershot-sx100is.sh
 camlibdoc_DATA += ptp2/README.ptp2
 
 EXTRA_LTLIBRARIES += ptp2.la
