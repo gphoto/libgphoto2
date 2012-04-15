@@ -1,4 +1,4 @@
-libgphoto2 2.4.13.1
+libgphoto2 2.4.14
 
 packaging:
 * new udev 175 mode for print-camera-list (from Ubuntu)
@@ -14,14 +14,18 @@ canon:
 
 ptp2:
 * Nikon viewfinder enable/disable via config
-* added Nikon S6000, Canon PowerShot A3000, PowerShot SX230HS, Canon EOS 5D Mark III
+* added Nikon S6000, Canon PowerShot A3000, PowerShot SX230HS, Canon EOS 5D Mark III, Sony SLT A35, Nikon Coolpix AW100
 * lowlevel Canon EOS CustomFuncEx support added
 * Canon EOS 5D Mark III imagesize packing/unpacking support
 * Samsung Galaxy file handling support restored
 * match configuration table values more exact and correct.
+* mtp player list synced with libmtp
 
 translations:
-* updated russian, ukrainian, danish, czech
+* updated russian, ukrainian, danish, czech, german
+
+examples:
+* sample-tether added
 
 ------------------------------------------------------------------------
 libgphoto2 2.4.13
