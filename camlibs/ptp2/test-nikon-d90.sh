@@ -71,6 +71,7 @@ gphoto2 --set-config imagequality=2
 gphoto2 --wait-event-and-download=50
 gphoto2 --set-config imagequality=6
 gphoto2 --wait-event-and-download=50
+gphoto2 --set-config imagequality=2
 
 echo "*** config "
 gphoto2 --list-config
