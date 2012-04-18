@@ -3951,6 +3951,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (ob->oi.ObjectFormat == PTP_OFC_Association)
 		continue;
 
+	debug_objectinfo(params, params->objects[i].oid, &ob->oi);
+
 	if (!ob->oi.Filename)
 	    continue;
 
