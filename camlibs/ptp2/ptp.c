@@ -2833,6 +2833,29 @@ ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **p
 }
 
 uint16_t
+ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	unsigned char* opldata = NULL;
+	unsigned int oplsize;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code = PTP_OC_MTP_GetObjPropList;
+	ptp.Param1 = handle;
+	ptp.Param2 = 0x00000000U;  /* 0x00000000U should be "all formats" */
+	ptp.Param3 = 0xFFFFFFFFU;  /* 0xFFFFFFFFU should be "all properties" */
+	ptp.Param4 = 0x00000000U;
+	ptp.Param5 = 0x00000000U;  /* means - return single tree below the Param1 handle */
+	ptp.Nparam = 5;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &opldata, &oplsize);  
+	if (ret == PTP_RC_OK) *nrofprops = ptp_unpack_OPL(params, opldata, props, oplsize);
+	if (opldata != NULL)
+		free(opldata);
+	return ret;
+}
+
+uint16_t
 ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
 			    uint16_t objecttype, uint64_t objectsize, MTPProperties *props, int nrofprops)
 {
