@@ -5492,7 +5492,8 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 		}
 
 		ptp_debug (params, "ptp2/mtpfast: reading mtp proplist of %08x", handle);
-		ret = ptp_mtp_getobjectproplist (params, handle, &props, &nrofprops);
+		/* We just want this one object, not all at once. */
+		ret = ptp_mtp_getobjectproplist_single (params, handle, &props, &nrofprops);
 		if (ret != PTP_RC_OK)
 			goto fallback;
 		ob->mtpprops = props;
@@ -5504,6 +5505,9 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 			MTPProperties *prop = ob->mtpprops;
 
 			for (i=0;i<ob->nrofmtpprops;i++,prop++) {
+				/* in case we got all subtree objects */
+				if (prop->ObjectHandle != handle) continue;
+
 				switch (prop->property) {
 				case PTP_OPC_StorageID:
 					ob->oi.StorageID = prop->propval.u32;
