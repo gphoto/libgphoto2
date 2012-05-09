@@ -2500,6 +2500,21 @@ static struct deviceproptableu8 nikon_scenemode[] = {
 };
 GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode);
 
+static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
+	{ N_("Auto"),	0, 0 },
+	{ N_("1 EV"),	1, 0 },
+	{ N_("2 EV"),	2, 0 },
+	{ N_("3 EV"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_HDRHighDynamic,nikon_hdrhighdynamic);
+
+static struct deviceproptableu8 nikon_hdrsmoothing[] = {
+	{ N_("High"),	0, 0 },
+	{ N_("Normal"),	1, 0 },
+	{ N_("Low"),	1, 0 },
+};
+GENERIC8TABLE(Nikon_HDRSmoothing,nikon_hdrsmoothing);
+
 static struct deviceproptableu16 nikon_d5100_exposure_program_modes[] = {
 	{ "M",			0x0001, 0 },
 	{ "P",			0x0002, 0 },
@@ -5293,6 +5308,9 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_NIKON_EffectMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_EffectMode, _put_NIKON_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
 	{ N_("Scene Mode"), "scenemode", PTP_DPC_NIKON_SceneMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_SceneMode, _put_NIKON_SceneMode},
+	{ N_("HDR Mode"), "hdrmode", PTP_DPC_NIKON_HDRMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("HDR High Dynamic"), "hdrhighdynamic", PTP_DPC_NIKON_HDRHighDynamic, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_HDRHighDynamic, _put_Nikon_HDRHighDynamic},
+	{ N_("HDR Smoothing"), "hdrsmoothing", PTP_DPC_NIKON_HDRSmoothing, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_HDRSmoothing, _put_Nikon_HDRSmoothing},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_StillCaptureMode, 0, PTP_DTC_UINT16, _get_CaptureMode, _put_CaptureMode},
 	{ N_("Still Capture Mode"), "capturemode", PTP_DPC_FUJI_ReleaseMode, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ReleaseMode, _put_Fuji_ReleaseMode},
 	{ N_("Canon Shooting Mode"), "shootingmode", PTP_DPC_CANON_ShootingMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_ShootMode, _put_Canon_ShootMode},
