@@ -1056,6 +1056,8 @@ static struct {
 
 	/* Martin Lasarsch at SUSE. MTP_PROPLIST returns just 0 entries */
 	{"Canon:Digital IXUS 90 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
+	/* Daniel Moyne <daniel.moyne@free.fr> */
+	{"Canon:Powershot SD790 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/?func=detail&aid=2722422&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 85 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
