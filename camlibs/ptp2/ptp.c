@@ -3731,6 +3731,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("LCD Off Time")},
 		{PTP_DPC_NIKON_ImgConfTime,			/* 0xD065 */
 		 N_("Img Conf Time")},
+		{PTP_DPC_NIKON_AutoOffTimers,			/* 0xD066 */
+		 N_("Auto Off Timers")},
 		{PTP_DPC_NIKON_AngleLevel,			/* 0xD067 */
 		 N_("Angle Level")},
 		{PTP_DPC_NIKON_D1ShootingSpeed,			/* 0xD068 */
@@ -3852,6 +3854,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Self Timer Shot Number")},
 		{PTP_DPC_NIKON_VignetteCtrl,			/* 0xD0F7 */
 		 N_("Vignette Control")},
+		{PTP_DPC_NIKON_AutoDistortionControl,		/* 0xD0F8 */
+		 N_("Auto Distortion Control")},
 		{PTP_DPC_NIKON_ExposureTime,			/* 0xD100 */
 		 N_("Nikon Exposure Time")},
 		{PTP_DPC_NIKON_ACPower, N_("AC Power")},	/* 0xD101 */
@@ -3905,6 +3909,12 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("External Flash Mode")},
 		{PTP_DPC_NIKON_FlashExposureCompensation,	/* 0xD126 */
 		 N_("Flash Exposure Compensation")},
+		{PTP_DPC_NIKON_HDRMode,				/* 0xD130 */
+		 N_("HDR Mode")},
+		{PTP_DPC_NIKON_HDRHighDynamic,			/* 0xD131 */
+		 N_("HDR High Dynamic")},
+		{PTP_DPC_NIKON_HDRSmoothing,			/* 0xD132 */
+		 N_("HDR Smoothing")},
 		{PTP_DPC_NIKON_OptimizeImage,			/* 0xD140 */
 		 N_("Optimize Image")},
 		{PTP_DPC_NIKON_Saturation,			/* 0xD142 */
