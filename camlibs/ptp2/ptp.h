@@ -1632,6 +1632,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ExternalFlashCompensation		0xD124
 #define PTP_DPC_NIKON_NewExternalFlashMode		0xD125
 #define PTP_DPC_NIKON_FlashExposureCompensation		0xD126
+#define PTP_DPC_NIKON_Mode				0xD130
+#define PTP_DPC_NIKON_HighDynamic			0xD131
+#define PTP_DPC_NIKON_HDRSmoothing			0xD132
 #define PTP_DPC_NIKON_OptimizeImage			0xD140
 #define PTP_DPC_NIKON_Saturation			0xD142
 #define PTP_DPC_NIKON_BW_FillerEffect			0xD143
