@@ -226,43 +226,27 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 }
 
 /**
-  * \internal
-  */
-static void
-exchange (CameraList *list, int x, int y)
-{
-	char *tmp;
-
-	tmp = list->entry[x].name;
-	list->entry[x].name = list->entry[y].name;
-	list->entry[y].name = tmp;
-
-	tmp = list->entry[x].value;
-	list->entry[x].value = list->entry[y].value;
-	list->entry[y].value = tmp;
-}
-
-/**
  * Sorts the \c list entries with respect to the names.
  *
  * \param list a #CameraList
  * \return a gphoto2 error code
  *
  **/
+static int
+cmp_list (const void *a, const void *b) {
+        const struct _entry *ca = a;
+        const struct _entry *cb = b;
+
+        return strcmp (ca->name, cb->name);
+}
+
 int
 gp_list_sort (CameraList *list)
 {
-	int x, y, z;
 	CHECK_LIST (list);
 
-	for (x = 0; x < list->used - 1; x++)
-		for (y = x + 1; y < list->used; y++) {
-			z = strcmp (list->entry[x].name, list->entry[y].name);
-			if (z > 0)
-				exchange (list, x, y);
-		}
-
-	return (GP_OK);
+	qsort (list->entry, list->used, sizeof(list->entry[0]), cmp_list);
+	return GP_OK;
 }
 
 /**
