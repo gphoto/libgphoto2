@@ -2223,7 +2223,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	if (ret!=GP_OK) return ret;
 	gp_file_set_mtime (file, time(NULL));
 
-	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
 	CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
 	CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
@@ -2911,7 +2911,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					gp_file_set_mtime (file, time(NULL));
 
-					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%x", entry.u.object.oi.ObjectCompressedSize);
+					gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "trying to get object size=0x%lx", (unsigned long)entry.u.object.oi.ObjectCompressedSize);
 					CPR (context, ptp_canon_eos_getpartialobject (params, newobject, 0, entry.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
 					CPR (context, ptp_canon_eos_transfercomplete (params, newobject));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entry.u.object.oi.ObjectCompressedSize);
@@ -3169,7 +3169,7 @@ downloadnow:
 				}
 				gp_file_set_mtime (file, time(NULL));
 
-				gp_log (GP_LOG_DEBUG, "ptp2/nikon_wait_event", "trying to get object size=0x%x", oi.ObjectCompressedSize);
+				gp_log (GP_LOG_DEBUG, "ptp2/nikon_wait_event", "trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
 				CPR (context, ptp_getobject (params, newobject, (unsigned char**)&ximage));
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 				if (ret != GP_OK) {
@@ -4734,8 +4734,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case	GP_FILE_TYPE_PREVIEW: {
 		unsigned char *ximage = NULL;
 
-		/* If thumb size is 0 then there is no thumbnail at all... */
-		if((size=ob->oi.ThumbCompressedSize)==0) return (GP_ERROR_NOT_SUPPORTED);
+		/* If thumb size is 0, and the ofc is not an image type (0x38xx or 0xb8xx)
+		 * then there is no thumbnail at all... */
+		size=ob->oi.ThumbCompressedSize;
+		if((size==0) && ((ob->oi.ObjectFormat & 0x7800) != 0x3800))
+			return GP_ERROR_NOT_SUPPORTED;
 		CPR (context, ptp_getthumb(params, oid, &ximage));
 		set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
 		CR (gp_file_set_data_and_size (file, (char*)ximage, size));
@@ -5313,7 +5316,7 @@ debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
 	GP_DEBUG ("  StorageID: 0x%08x", oi->StorageID);
 	GP_DEBUG ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
 	GP_DEBUG ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
-	GP_DEBUG ("  ObjectCompressedSize: %d", oi->ObjectCompressedSize);
+	GP_DEBUG ("  ObjectCompressedSize: %ld", (unsigned long)oi->ObjectCompressedSize);
 	GP_DEBUG ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
 	GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
 	GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
