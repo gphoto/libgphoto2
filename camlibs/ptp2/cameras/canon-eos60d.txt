@@ -13,16 +13,16 @@ Current: 0
 /main/actions/manualfocusdrive
 Label: Drive Canon DSLR Manual focus
 Type: RADIO
-Current: None
+Current: Geen
 Choice: 0 Near 1
 Choice: 1 Near 2
 Choice: 2 Near 3
-Choice: 3 None
+Choice: 3 Geen
 Choice: 4 Far 1
 Choice: 5 Far 2
 Choice: 6 Far 3
 /main/actions/eoszoom
-Label: Canon EOS Zoom 
+Label: Canon EOS Zoom
 Type: TEXT
 Current: 0
 /main/actions/eoszoomposition
@@ -33,28 +33,41 @@ Current: 0,0
 Label: Canon EOS Viewfinder
 Type: TOGGLE
 Current: 2
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Type: RADIO
+Current: Geen
+Choice: 0 Geen
+Choice: 1 On 1
+Choice: 2 On 2
+Choice: 3 Uit
+Choice: 4 Immediate
 /main/settings/datetime
 Label: Camera Date and Time
 Type: DATE
-Current: 1296011210
-Printable: Tue 25 Jan 2011 07:06:50 PM PST
+Current: 1337727669
+Printable: wo 23 mei 2012 00:01:09 WEST
 /main/settings/reviewtime
 Label: Quick Review Time
 Type: RADIO
-Current: 2 seconds
-Choice: 0 None
-Choice: 1 2 seconds
-Choice: 2 4 seconds
-Choice: 3 8 seconds
+Current: 2 seconden
+Choice: 0 Geen
+Choice: 1 2 seconden
+Choice: 2 4 seconden
+Choice: 3 8 seconden
 Choice: 4 Hold
 /main/settings/output
-Label: Camera Output
+Label: Camera-uitvoer
 Type: RADIO
-Current: Unknown value 0000
+Current: Onbekende waarde 0000
 Choice: 0 TFT
 Choice: 1 PC
 Choice: 2 TFT + PC
-Choice: 3 Unknown value 0000
+Choice: 3 Onbekende waarde 0000
+/main/settings/movierecord
+Label: Movie Recording
+Type: TEXT
+Current: 0
 /main/settings/evfmode
 Label: EVF Mode
 Type: RADIO
@@ -66,25 +79,29 @@ Label: Owner Name
 Type: TEXT
 Current: 
 /main/settings/artist
-Label: Artist
+Label: Artiest
 Type: TEXT
-Current: Mike Lundy
+Current: 
 /main/settings/copyright
 Label: Copyright
 Type: TEXT
 Current: 
+/main/settings/customfuncex
+Label: Custom Functions Ex
+Type: TEXT
+Current: 50,1,4,44,5,701,1,0,704,1,0,706,1,0,80b,1,0,80f,1,0,
 /main/settings/capturetarget
-Label: Capture Target
+Label: Opnamedoel
 Type: RADIO
-Current: Internal RAM
-Choice: 0 Internal RAM
-Choice: 1 Memory card
+Current: Interne RAM
+Choice: 0 Interne RAM
+Choice: 1 Geheugenkaart
 /main/settings/capture
-Label: Capture
+Label: Opname
 Type: TOGGLE
-Current: 2
+Current: 0
 /main/status/model
-Label: Camera Model
+Label: Cameramodel
 Type: TEXT
 Current: 2147484295
 /main/status/ptpversion
@@ -92,83 +109,83 @@ Label: PTP Version
 Type: TEXT
 Current: 256
 /main/status/batterylevel
-Label: Battery Level
+Label: Batterijniveau
 Type: TEXT
 Current: 75%
 /main/status/lensname
 Label: Lens Name
 Type: TEXT
-Current: EF-S18-200mm f/3.5-5.6 IS
+Current: EF100-400mm f/4.5-5.6L IS USM
 /main/status/serialnumber
 Label: Serial Number
 Type: TEXT
-Current: 570413968
+Current: 281200255
 /main/status/shuttercounter
 Label: Shutter Counter
 Type: TEXT
-Current: 389
+Current: 297
 /main/status/availableshots
 Label: Available Shots
 Type: TEXT
-Current: 48431
+Current: 7962
 /main/imgsettings/imageformat
 Label: Image Format
 Type: RADIO
-Current: Large Fine JPEG
-Choice: 0 Large Fine JPEG
-Choice: 1 Large Normal JPEG
-Choice: 2 Medium Fine JPEG
-Choice: 3 Medium Normal JPEG
-Choice: 4 Large Fine JPEG
-Choice: 5 RAW + Large Fine JPEG
-Choice: 6 RAW + Large Normal JPEG
-Choice: 7 RAW + Medium Fine JPEG
-Choice: 8 RAW + Medium Normal JPEG
-Choice: 9 RAW + Large Fine JPEG
-Choice: 10 sRAW1 + Large Fine JPEG
-Choice: 11 sRAW1 + Large Normal JPEG
-Choice: 12 sRAW1 + Medium Fine JPEG
-Choice: 13 sRAW1 + Medium Normal JPEG
-Choice: 14 sRAW1 + Large Fine JPEG
-Choice: 15 sRAW2 + Large Fine JPEG
-Choice: 16 sRAW2 + Large Normal JPEG
-Choice: 17 sRAW2 + Medium Fine JPEG
-Choice: 18 sRAW2 + Medium Normal JPEG
-Choice: 19 sRAW2 + Large Fine JPEG
+Current: RAW + grote, fijne JPEG
+Choice: 0 Grote, fijne JPEG
+Choice: 1 Grote, normale JPEG
+Choice: 2 Gemiddelde, fijne JPEG
+Choice: 3 Gemiddelde, normale JPEG
+Choice: 4 Kleine, fijne JPEG
+Choice: 5 Kleine, normale JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + grote, fijne JPEG
+Choice: 9 RAW + grote, normale JPEG
+Choice: 10 RAW + gemiddelde, fijne JPEG
+Choice: 11 RAW + gemiddelde, normale JPEG
+Choice: 12 mRAW + Large Fine JPEG
+Choice: 13 mRAW + Large Normal JPEG
+Choice: 14 mRAW + Medium Fine JPEG
+Choice: 15 mRAW + Medium Normal JPEG
+Choice: 16 sRAW + Large Fine JPEG
+Choice: 17 sRAW + Large Normal JPEG
+Choice: 18 sRAW + Medium Fine JPEG
+Choice: 19 sRAW + Medium Normal JPEG
 Choice: 20 RAW
-Choice: 21 sRAW1
-Choice: 22 sRAW2
+Choice: 21 mRAW
+Choice: 22 sRAW
 /main/imgsettings/imageformatsd
 Label: Image Format SD
 Type: RADIO
-Current: Large Fine JPEG
-Choice: 0 Large Fine JPEG
-Choice: 1 Large Normal JPEG
-Choice: 2 Medium Fine JPEG
-Choice: 3 Medium Normal JPEG
-Choice: 4 Large Fine JPEG
-Choice: 5 RAW + Large Fine JPEG
-Choice: 6 RAW + Large Normal JPEG
-Choice: 7 RAW + Medium Fine JPEG
-Choice: 8 RAW + Medium Normal JPEG
-Choice: 9 RAW + Large Fine JPEG
-Choice: 10 sRAW1 + Large Fine JPEG
-Choice: 11 sRAW1 + Large Normal JPEG
-Choice: 12 sRAW1 + Medium Fine JPEG
-Choice: 13 sRAW1 + Medium Normal JPEG
-Choice: 14 sRAW1 + Large Fine JPEG
-Choice: 15 sRAW2 + Large Fine JPEG
-Choice: 16 sRAW2 + Large Normal JPEG
-Choice: 17 sRAW2 + Medium Fine JPEG
-Choice: 18 sRAW2 + Medium Normal JPEG
-Choice: 19 sRAW2 + Large Fine JPEG
+Current: RAW + grote, fijne JPEG
+Choice: 0 Grote, fijne JPEG
+Choice: 1 Grote, normale JPEG
+Choice: 2 Gemiddelde, fijne JPEG
+Choice: 3 Gemiddelde, normale JPEG
+Choice: 4 Kleine, fijne JPEG
+Choice: 5 Kleine, normale JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + grote, fijne JPEG
+Choice: 9 RAW + grote, normale JPEG
+Choice: 10 RAW + gemiddelde, fijne JPEG
+Choice: 11 RAW + gemiddelde, normale JPEG
+Choice: 12 mRAW + Large Fine JPEG
+Choice: 13 mRAW + Large Normal JPEG
+Choice: 14 mRAW + Medium Fine JPEG
+Choice: 15 mRAW + Medium Normal JPEG
+Choice: 16 sRAW + Large Fine JPEG
+Choice: 17 sRAW + Large Normal JPEG
+Choice: 18 sRAW + Medium Fine JPEG
+Choice: 19 sRAW + Medium Normal JPEG
 Choice: 20 RAW
-Choice: 21 sRAW1
-Choice: 22 sRAW2
+Choice: 21 mRAW
+Choice: 22 sRAW
 /main/imgsettings/iso
-Label: ISO Speed
+Label: ISO-snelheid
 Type: RADIO
-Current: 100
+Current: 12800
 Choice: 0 Auto
 Choice: 1 100
 Choice: 2 125
@@ -189,19 +206,20 @@ Choice: 16 3200
 Choice: 17 4000
 Choice: 18 5000
 Choice: 19 6400
+Choice: 20 12800
 /main/imgsettings/whitebalance
-Label: WhiteBalance
+Label: Witbalans
 Type: RADIO
 Current: Auto
 Choice: 0 Auto
-Choice: 1 Daylight
+Choice: 1 Daglicht
 Choice: 2 Shadow
-Choice: 3 Cloudy
-Choice: 4 Tungsten
-Choice: 5 Fluorescent
-Choice: 6 Flash
-Choice: 7 Manual
-Choice: 8 Color Temperature
+Choice: 3 Bewolkt
+Choice: 4 Gloeilamp
+Choice: 5 TL-licht
+Choice: 6 Flits
+Choice: 7 Handmatig
+Choice: 8 Kleurtemperatuur
 /main/imgsettings/whitebalanceadjusta
 Label: WhiteBalance Adjust A
 Type: RADIO
@@ -256,78 +274,87 @@ Current: 0
 Label: WhiteBalance X B
 Type: TEXT
 Current: 0
-/main/capturesettings/exposurecompensation
-Label: Exposure Compensation
+/main/imgsettings/colorspace
+Label: Color Space
 Type: RADIO
-Current: 0
-Choice: 0 Unknown value 00d8
-Choice: 1 Unknown value 00db
-Choice: 2 Unknown value 00dd
-Choice: 3 Unknown value 00e0
-Choice: 4 Unknown value 00e3
-Choice: 5 Unknown value 00e5
-Choice: 6 Unknown value 00e8
-Choice: 7 Unknown value 00eb
-Choice: 8 Unknown value 00ed
-Choice: 9 -2
-Choice: 10 -1.6
-Choice: 11 -1.3
-Choice: 12 -1.0
-Choice: 13 -0.6
-Choice: 14 -0.3
-Choice: 15 0
-Choice: 16 0.3
-Choice: 17 0.6
-Choice: 18 1.0
-Choice: 19 1.3
-Choice: 20 1.6
-Choice: 21 2
+Current: sRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+/main/capturesettings/focusmode
+Label: Focusmodus
+Type: RADIO
+Current: AI Servo
+Choice: 0 One Shot
+Choice: 1 AI Focus
+Choice: 2 AI Servo
 /main/capturesettings/autoexposuremode
 Label: Canon Auto Exposure Mode
 Type: RADIO
-Current: P
+Current: Bulb
 Choice: 0 P
 Choice: 1 TV
 Choice: 2 AV
-Choice: 3 Manual
+Choice: 3 Handmatig
 Choice: 4 Bulb
 Choice: 5 A_DEP
 Choice: 6 DEP
-Choice: 7 Custom
+Choice: 7 Aangepast
 Choice: 8 Lock
-Choice: 9 Green
-Choice: 10 Night Portrait
-Choice: 11 Sports
-Choice: 12 Portrait
-Choice: 13 Landscape
+Choice: 9 Groen
+Choice: 10 Nachtportret
+Choice: 11 Sport
+Choice: 12 Portret
+Choice: 13 Landschap
 Choice: 14 Closeup
 Choice: 15 Flash Off
 /main/capturesettings/drivemode
-Label: Drive Mode
+Label: Drivemodus
 Type: RADIO
-Current: Continuous low speed
-Choice: 0 Single
+Current: Enkel
+Choice: 0 Enkel
 Choice: 1 Continuous high speed
 Choice: 2 Continuous low speed
 Choice: 3 Timer 2 sec
 Choice: 4 Timer 10 sec
 /main/capturesettings/picturestyle
-Label: Picture Style
+Label: Afbeeldingsstijl
 Type: RADIO
-Current: Portrait
-Choice: 0 Standard
-Choice: 1 Portrait
-Choice: 2 Landscape
-Choice: 3 Neutral
-Choice: 4 Faithful
-Choice: 5 Monochrome
-Choice: 6 User defined 1
-Choice: 7 User defined 2
-Choice: 8 User defined 3
+Current: Standaard
+Choice: 0 Standaard
+Choice: 1 Portret
+Choice: 2 Landschap
+Choice: 3 Neutraal
+Choice: 4 Getrouw
+Choice: 5 Monochroom
+Choice: 6 Gebruikersinstelling 1
+Choice: 7 Gebruikersinstelling 2
+Choice: 8 Gebruikersinstelling 3
+/main/capturesettings/aperture
+Label: Diafragma
+Type: RADIO
+Current: 5.6
+Choice: 0 4.5
+Choice: 1 5
+Choice: 2 5.6
+Choice: 3 6.3
+Choice: 4 7.1
+Choice: 5 8
+Choice: 6 9
+Choice: 7 10
+Choice: 8 11
+Choice: 9 13
+Choice: 10 14
+Choice: 11 16
+Choice: 12 18
+Choice: 13 20
+Choice: 14 22
+Choice: 15 25
+Choice: 16 29
+Choice: 17 32
 /main/capturesettings/meteringmode
-Label: Metering Mode
+Label: Meetmethode
 Type: RADIO
-Current: Partial
+Current: Evaluative
 Choice: 0 Evaluative
 Choice: 1 Partial
 Choice: 2 Spot
@@ -336,20 +363,6 @@ Choice: 3 Center-weighted average
 Label: Bracket Mode
 Type: TEXT
 Current: 0
-/main/capturesettings/aeb
-Label: Auto Exposure Bracketing
-Type: RADIO
-Current: off
-Choice: 0 off
-Choice: 1 +/- 1/3
-Choice: 2 +/- 2/3
-Choice: 3 +/- 1
-Choice: 4 +/- 1 1/3
-Choice: 5 +/- 1 2/3
-Choice: 6 +/- 2
-Choice: 7 +/- 2 1/3
-Choice: 8 +/- 2 2/3
-Choice: 9 +/- 3
 /main/other/d402
 Label: PTP Property 0xd402
 Type: TEXT
@@ -367,7 +380,7 @@ Label: PTP Property 0xd303
 Type: TEXT
 Current: 1
 /main/other/5001
-Label: Battery Level
+Label: Batterijniveau
 Type: MENU
 Current: 75
 Choice: 0 100
