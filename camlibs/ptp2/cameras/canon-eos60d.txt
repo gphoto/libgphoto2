@@ -13,11 +13,11 @@ Current: 0
 /main/actions/manualfocusdrive
 Label: Drive Canon DSLR Manual focus
 Type: RADIO
-Current: Geen
+Current: None
 Choice: 0 Near 1
 Choice: 1 Near 2
 Choice: 2 Near 3
-Choice: 3 Geen
+Choice: 3 None
 Choice: 4 Far 1
 Choice: 5 Far 2
 Choice: 6 Far 3
@@ -36,34 +36,34 @@ Current: 2
 /main/actions/eosremoterelease
 Label: Canon EOS Remote Release
 Type: RADIO
-Current: Geen
-Choice: 0 Geen
+Current: None
+Choice: 0 None
 Choice: 1 On 1
 Choice: 2 On 2
-Choice: 3 Uit
+Choice: 3 Off
 Choice: 4 Immediate
 /main/settings/datetime
 Label: Camera Date and Time
 Type: DATE
-Current: 1337727669
-Printable: wo 23 mei 2012 00:01:09 WEST
+Current: 1337728626
+Printable: Wed May 23 00:17:06 2012
 /main/settings/reviewtime
 Label: Quick Review Time
 Type: RADIO
-Current: 2 seconden
-Choice: 0 Geen
-Choice: 1 2 seconden
-Choice: 2 4 seconden
-Choice: 3 8 seconden
+Current: 2 seconds
+Choice: 0 None
+Choice: 1 2 seconds
+Choice: 2 4 seconds
+Choice: 3 8 seconds
 Choice: 4 Hold
 /main/settings/output
-Label: Camera-uitvoer
+Label: Camera Output
 Type: RADIO
-Current: Onbekende waarde 0000
+Current: Unknown value 0000
 Choice: 0 TFT
 Choice: 1 PC
 Choice: 2 TFT + PC
-Choice: 3 Onbekende waarde 0000
+Choice: 3 Unknown value 0000
 /main/settings/movierecord
 Label: Movie Recording
 Type: TEXT
@@ -79,7 +79,7 @@ Label: Owner Name
 Type: TEXT
 Current: 
 /main/settings/artist
-Label: Artiest
+Label: Artist
 Type: TEXT
 Current: 
 /main/settings/copyright
@@ -91,17 +91,17 @@ Label: Custom Functions Ex
 Type: TEXT
 Current: 50,1,4,44,5,701,1,0,704,1,0,706,1,0,80b,1,0,80f,1,0,
 /main/settings/capturetarget
-Label: Opnamedoel
+Label: Capture Target
 Type: RADIO
-Current: Interne RAM
-Choice: 0 Interne RAM
-Choice: 1 Geheugenkaart
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
 /main/settings/capture
-Label: Opname
+Label: Capture
 Type: TOGGLE
 Current: 0
 /main/status/model
-Label: Cameramodel
+Label: Camera Model
 Type: TEXT
 Current: 2147484295
 /main/status/ptpversion
@@ -109,7 +109,7 @@ Label: PTP Version
 Type: TEXT
 Current: 256
 /main/status/batterylevel
-Label: Batterijniveau
+Label: Battery Level
 Type: TEXT
 Current: 75%
 /main/status/lensname
@@ -131,19 +131,19 @@ Current: 7962
 /main/imgsettings/imageformat
 Label: Image Format
 Type: RADIO
-Current: RAW + grote, fijne JPEG
-Choice: 0 Grote, fijne JPEG
-Choice: 1 Grote, normale JPEG
-Choice: 2 Gemiddelde, fijne JPEG
-Choice: 3 Gemiddelde, normale JPEG
-Choice: 4 Kleine, fijne JPEG
-Choice: 5 Kleine, normale JPEG
+Current: RAW + Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
 Choice: 6 Smaller JPEG
 Choice: 7 Tiny JPEG
-Choice: 8 RAW + grote, fijne JPEG
-Choice: 9 RAW + grote, normale JPEG
-Choice: 10 RAW + gemiddelde, fijne JPEG
-Choice: 11 RAW + gemiddelde, normale JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
 Choice: 12 mRAW + Large Fine JPEG
 Choice: 13 mRAW + Large Normal JPEG
 Choice: 14 mRAW + Medium Fine JPEG
@@ -158,19 +158,19 @@ Choice: 22 sRAW
 /main/imgsettings/imageformatsd
 Label: Image Format SD
 Type: RADIO
-Current: RAW + grote, fijne JPEG
-Choice: 0 Grote, fijne JPEG
-Choice: 1 Grote, normale JPEG
-Choice: 2 Gemiddelde, fijne JPEG
-Choice: 3 Gemiddelde, normale JPEG
-Choice: 4 Kleine, fijne JPEG
-Choice: 5 Kleine, normale JPEG
+Current: RAW + Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
 Choice: 6 Smaller JPEG
 Choice: 7 Tiny JPEG
-Choice: 8 RAW + grote, fijne JPEG
-Choice: 9 RAW + grote, normale JPEG
-Choice: 10 RAW + gemiddelde, fijne JPEG
-Choice: 11 RAW + gemiddelde, normale JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
 Choice: 12 mRAW + Large Fine JPEG
 Choice: 13 mRAW + Large Normal JPEG
 Choice: 14 mRAW + Medium Fine JPEG
@@ -183,7 +183,7 @@ Choice: 20 RAW
 Choice: 21 mRAW
 Choice: 22 sRAW
 /main/imgsettings/iso
-Label: ISO-snelheid
+Label: ISO Speed
 Type: RADIO
 Current: 12800
 Choice: 0 Auto
@@ -208,18 +208,18 @@ Choice: 18 5000
 Choice: 19 6400
 Choice: 20 12800
 /main/imgsettings/whitebalance
-Label: Witbalans
+Label: WhiteBalance
 Type: RADIO
 Current: Auto
 Choice: 0 Auto
-Choice: 1 Daglicht
+Choice: 1 Daylight
 Choice: 2 Shadow
-Choice: 3 Bewolkt
-Choice: 4 Gloeilamp
-Choice: 5 TL-licht
-Choice: 6 Flits
-Choice: 7 Handmatig
-Choice: 8 Kleurtemperatuur
+Choice: 3 Cloudy
+Choice: 4 Tungsten
+Choice: 5 Fluorescent
+Choice: 6 Flash
+Choice: 7 Manual
+Choice: 8 Color Temperature
 /main/imgsettings/whitebalanceadjusta
 Label: WhiteBalance Adjust A
 Type: RADIO
@@ -281,7 +281,7 @@ Current: sRGB
 Choice: 0 sRGB
 Choice: 1 AdobeRGB
 /main/capturesettings/focusmode
-Label: Focusmodus
+Label: Focus Mode
 Type: RADIO
 Current: AI Servo
 Choice: 0 One Shot
@@ -294,43 +294,43 @@ Current: Bulb
 Choice: 0 P
 Choice: 1 TV
 Choice: 2 AV
-Choice: 3 Handmatig
+Choice: 3 Manual
 Choice: 4 Bulb
 Choice: 5 A_DEP
 Choice: 6 DEP
-Choice: 7 Aangepast
+Choice: 7 Custom
 Choice: 8 Lock
-Choice: 9 Groen
-Choice: 10 Nachtportret
-Choice: 11 Sport
-Choice: 12 Portret
-Choice: 13 Landschap
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
 Choice: 14 Closeup
 Choice: 15 Flash Off
 /main/capturesettings/drivemode
-Label: Drivemodus
+Label: Drive Mode
 Type: RADIO
-Current: Enkel
-Choice: 0 Enkel
+Current: Single
+Choice: 0 Single
 Choice: 1 Continuous high speed
 Choice: 2 Continuous low speed
 Choice: 3 Timer 2 sec
 Choice: 4 Timer 10 sec
 /main/capturesettings/picturestyle
-Label: Afbeeldingsstijl
+Label: Picture Style
 Type: RADIO
-Current: Standaard
-Choice: 0 Standaard
-Choice: 1 Portret
-Choice: 2 Landschap
-Choice: 3 Neutraal
-Choice: 4 Getrouw
-Choice: 5 Monochroom
-Choice: 6 Gebruikersinstelling 1
-Choice: 7 Gebruikersinstelling 2
-Choice: 8 Gebruikersinstelling 3
+Current: Standard
+Choice: 0 Standard
+Choice: 1 Portrait
+Choice: 2 Landscape
+Choice: 3 Neutral
+Choice: 4 Faithful
+Choice: 5 Monochrome
+Choice: 6 User defined 1
+Choice: 7 User defined 2
+Choice: 8 User defined 3
 /main/capturesettings/aperture
-Label: Diafragma
+Label: Aperture
 Type: RADIO
 Current: 5.6
 Choice: 0 4.5
@@ -352,7 +352,7 @@ Choice: 15 25
 Choice: 16 29
 Choice: 17 32
 /main/capturesettings/meteringmode
-Label: Meetmethode
+Label: Metering Mode
 Type: RADIO
 Current: Evaluative
 Choice: 0 Evaluative
@@ -380,7 +380,7 @@ Label: PTP Property 0xd303
 Type: TEXT
 Current: 1
 /main/other/5001
-Label: Batterijniveau
+Label: Battery Level
 Type: MENU
 Current: 75
 Choice: 0 100
