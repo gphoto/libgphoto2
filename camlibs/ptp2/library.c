@@ -738,6 +738,8 @@ static struct {
 	{"Nikon:Coolpix S8000 (PTP mode)",0x04b0, 0x021f, 0},
 	/* Aleksej Serdjukov <deletesoftware@yandex.ru> */
 	{"Nikon:Coolpix S5100 (PTP mode)",0x04b0, 0x0220, 0},
+	/* wlady.cs@gmail.com */
+	{"Nikon:Coolpix P300 (PTP mode)", 0x04b0, 0x0221, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
