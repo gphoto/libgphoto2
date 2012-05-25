@@ -790,7 +790,11 @@ struct _PTPObjectInfo {
 	uint32_t StorageID;
 	uint16_t ObjectFormat;
 	uint16_t ProtectionStatus;
-	uint32_t ObjectCompressedSize;
+	/* In the regular objectinfo this is 32bit,
+	 * but we keep the general object size here
+	 * that also arrives via other methods and so
+	 * use 64bit */
+	uint64_t ObjectCompressedSize;
 	uint16_t ThumbFormat;
 	uint32_t ThumbCompressedSize;
 	uint32_t ThumbPixWidth;
