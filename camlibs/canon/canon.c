@@ -1333,8 +1333,7 @@ void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, un
                         if ( is_image ( new_name ) ) {
                                 /* Yup, we'll assume that this is the new image. */
                                 GP_DEBUG ( "  Found our new image file" );
-                                strncpy ( path->name, new_name,
-                                          strlen ( new_name ) );
+                                strcpy ( path->name, new_name );
                                 strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
 
 				/* FIXME: Marcus: make it less large effort... */
