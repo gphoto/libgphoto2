@@ -678,6 +678,26 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	return ret;
 }
 
+uint16_t
+ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
+			uint32_t objectformatcode, uint32_t associationOH,
+			unsigned char** data)
+{
+	uint16_t ret;
+	PTPContainer ptp;
+	unsigned int len;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_GetFilesystemManifest;
+	ptp.Param1=storage;
+	ptp.Param2=objectformatcode;
+	ptp.Param3=associationOH;
+	ptp.Nparam=3;
+	len=0;
+	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, &len);
+	return ret;
+}
+
 /**
  * ptp_getnumobjects:
  * params:	PTPParams*
