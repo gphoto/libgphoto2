@@ -810,6 +810,11 @@ static struct {
 	/* IRC Reporter popolon */
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
 
+	
+	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
+
+
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
@@ -6092,6 +6097,13 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+#if 0
+	/* new ptp 1.1 command, implemented in the newer iphone firmware */
+	{
+		unsigned char *data;
+		ptp_getfilesystemmanifest (params, 0x00010001, 0, 0, &data);
+	}
+#endif
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	ptp_list_folder (params, PTP_HANDLER_SPECIAL, 0);
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
