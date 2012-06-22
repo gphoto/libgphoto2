@@ -3895,11 +3895,13 @@ folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32
 
 	if (retob) *retob = NULL;
 	if (!strlen(folder)) {
-		ptp_list_folder (params, storage, 0);
+		/* was initially read, no need to reread */
+		/* ptp_list_folder (params, storage, 0); */
 		return PTP_HANDLER_ROOT;
 	}
 	if (!strcmp(folder,"/")) {
-		ptp_list_folder (params, storage, 0);
+		/* was initially read, no need to reread */
+		/* ptp_list_folder (params, storage, 0); */
 		return PTP_HANDLER_ROOT;
 	}
 
@@ -5745,8 +5747,13 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	PTPObjectHandles	handles;
 
 	gp_log (GP_LOG_DEBUG, "ptp_list_folder", "(storage=0x%08x, handle=0x%08x)", storage, handle);
-	if (!handle && params->nrofobjects) /* handle=0 is only not read when there is no object */
+	/* handle=0 is only not read when there is no object in the list yet
+	 * and we do the initial read. */
+	if (!handle && params->nrofobjects)
 		return PTP_RC_OK;
+	/* but we can override this to read 0 object of storages */
+	if (handle == PTP_HANDLER_SPECIAL)
+		handle = 0;
 
 	/* Canon EOS Fast directory strategy */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
@@ -6105,8 +6112,22 @@ camera_init (Camera *camera, GPContext *context)
 	}
 #endif
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
-	ptp_list_folder (params, PTP_HANDLER_SPECIAL, 0);
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
+	ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
+	{
+		PTPStorageIDs storageids;
+
+		ret = ptp_getstorageids(params, &storageids);
+		if (ret == PTP_RC_OK) {
+			int k;
+			for (k=0;k<storageids.n;k++) {
+				if (!(storageids.Storage[k] & 0xffff)) continue;
+				if (storageids.Storage[k] == 0x80000001) continue;
+				ptp_list_folder (params, storageids.Storage[k], PTP_HANDLER_SPECIAL);
+			}
+			free (storageids.Storage);
+		}
+	}
 	SET_CONTEXT(camera, NULL);
 	return (GP_OK);
 }
