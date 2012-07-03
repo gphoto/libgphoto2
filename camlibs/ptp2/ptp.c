@@ -3406,8 +3406,8 @@ ptp_free_object (PTPObject *ob)
 	ob->flags = 0;
 }
 
-void 
-ptp_perror(PTPParams* params, uint16_t error) {
+const char *
+ptp_strerror(uint16_t error) {
 
 	int i;
 	/* PTP error descriptions */
@@ -3464,7 +3464,15 @@ ptp_perror(PTPParams* params, uint16_t error) {
 
 	for (i=0; ptp_errors[i].txt!=NULL; i++)
 		if (ptp_errors[i].n == error)
-			ptp_error(params, ptp_errors[i].txt);
+			return ptp_errors[i].txt;
+	return NULL;
+}
+
+void
+ptp_perror(PTPParams* params, uint16_t error) {
+	const char *txt = ptp_strerror(error);
+	if (txt != NULL)
+		ptp_error(params, txt);
 }
 
 const char*

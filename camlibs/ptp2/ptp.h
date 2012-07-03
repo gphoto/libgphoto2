@@ -2827,6 +2827,7 @@ void ptp_free_params		(PTPParams *params);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
 
+const char *ptp_strerror(uint16_t error);
 void ptp_perror			(PTPParams* params, uint16_t error);
 void ptp_debug			(PTPParams *params, const char *format, ...);
 void ptp_error			(PTPParams *params, const char *format, ...);
