@@ -740,6 +740,8 @@ static struct {
 	{"Nikon:Coolpix S8000 (PTP mode)",0x04b0, 0x021f, 0},
 	/* Aleksej Serdjukov <deletesoftware@yandex.ru> */
 	{"Nikon:Coolpix S5100 (PTP mode)",0x04b0, 0x0220, 0},
+	/* wlady.cs@gmail.com */
+	{"Nikon:Coolpix P300 (PTP mode)", 0x04b0, 0x0221, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
@@ -809,6 +811,11 @@ static struct {
 
 	/* IRC Reporter popolon */
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
+
+	
+	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
+
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
@@ -1058,6 +1065,8 @@ static struct {
 
 	/* Martin Lasarsch at SUSE. MTP_PROPLIST returns just 0 entries */
 	{"Canon:Digital IXUS 90 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
+	/* Daniel Moyne <daniel.moyne@free.fr> */
+	{"Canon:Powershot SD790 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/?func=detail&aid=2722422&group_id=8874&atid=358874 */
 	{"Canon:Digital IXUS 85 IS",		0x04a9, 0x3174, PTPBUG_DELETE_SENDS_EVENT},
@@ -1288,6 +1297,9 @@ static struct {
 
 	{"Apple:iPod Touch 3rd Gen (PTP mode)",	0x05ac, 0x1299, 0},
 	{"Apple:iPad (PTP mode)",		0x05ac, 0x129a, 0},
+
+	/* Don Cohen <don-sourceforge-xxzw@isis.cs3-inc.com> */
+	{"Apple:iPhone 4S (PTP mode)",		0x05ac, 0x12a0, 0},
 
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
