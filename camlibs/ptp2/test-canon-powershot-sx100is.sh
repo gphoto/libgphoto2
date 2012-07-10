@@ -34,18 +34,18 @@ gphoto2 --set-config capturetarget=1
 time gphoto2 --capture-image-and-download
 
 echo "*** testing preview"
-rm canon_preview.jpg || true
+rm capture_preview.jpg || true
 gphoto2 --capture-preview
-gwenview canon_preview.jpg
-rm canon_preview.jpg || true
+gwenview capture_preview.jpg
+rm capture_preview.jpg || true
 gphoto2 --set-config capturetarget=0
 gphoto2 --capture-preview --capture-image-and-download --capture-preview --capture-image-and-download
-rm capt*.*
-gwenview canon_preview.jpg
+rm capt0*.*
+gwenview capture_preview.jpg
 gphoto2 --set-config capturetarget=1
 gphoto2 --capture-preview --capture-image-and-download --capture-preview --capture-image-and-download
-gwenview canon_preview.jpg
-rm canon_preview.jpg
+gwenview capture_preview.jpg
+rm capture_preview.jpg
 
 rm movie.mjpg || true
 gphoto2 --capture-movie=10s
