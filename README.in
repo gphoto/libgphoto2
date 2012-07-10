@@ -64,17 +64,13 @@ Other camera support a protocol called PTP or USB Imaging Devices that has
 been developped by Kodak and other. libgphoto2 does support PTP. Also working
 will be cameras labeled as "PictBridge", which is a extension to PTP.
 
-Here is a short incomplete list of camera that use this protocol:
-
- * HP PhotoSmart 318, 612, 715
- * Kodak DC-4800, DX-3215, DX-3500, DX-3600, DX-3700, DX-3900, MC3 and all the
-   camera that use Kodak Easy Share(tm) system.
- * Sony DSC-P5, DSC-F707, DSC-P30, DSC-P50, DSC-S75, DSC-S85, MVC-CD300
-   (all need user configuration of the camera)
+Almost all cameras that are not mass storage support it these days, including
+but not limited to all Nikon, Canon, Fuji, Sony, Panasonic, HP and more.
 
 PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
 will work as-is without any changes.
-MTP (Microsoft Transfer Protocol) players will also be accessible,
+
+MTP (Microsoft Transfer Protocol) capable devices will also be accessible,
 since MTP is based on PTP.
 
 
