@@ -4038,10 +4038,10 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 
 	/* FIXME: remember state of release */
 	gp_widget_add_choice (*widget, _("None"));
-	gp_widget_add_choice (*widget, _("On 1"));
-	gp_widget_add_choice (*widget, _("On 2"));
-	gp_widget_add_choice (*widget, _("Off"));
-	gp_widget_add_choice (*widget, _("Immediate"));
+	gp_widget_add_choice (*widget, _("Press Half"));
+	gp_widget_add_choice (*widget, _("Press Full"));
+	gp_widget_add_choice (*widget, _("Release Half"));
+	gp_widget_add_choice (*widget, _("Release Full"));
 	gp_widget_set_value (*widget, _("None"));
 	return (GP_OK);
 }
@@ -4058,12 +4058,12 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 
 	if (!strcmp (val, _("None"))) return GP_OK;
 
-	if (!strcmp (val, _("On 1"))) {
+	if (!strcmp (val, _("Press Half"))) {
 		ret = ptp_canon_eos_remotereleaseon (params, 1);
 		goto leave;
 	}
-	if (!strcmp (val, _("On 2"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 2);
+	if (!strcmp (val, _("Press Full"))) {
+		ret = ptp_canon_eos_remotereleaseon (params, 3);
 		goto leave;
 	}
 	if (!strcmp (val, _("Immediate"))) {
@@ -4071,11 +4071,15 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 		   Avoids autofocus drive while focus-switch on the lens is in AF state */
 		ret = ptp_canon_eos_remotereleaseon (params, 1);
 		if (ret == PTP_RC_OK)
-			ret = ptp_canon_eos_remotereleaseon (params, 2);
+			ret = ptp_canon_eos_remotereleaseon (params, 3);
 		goto leave;
 	}
-	if (!strcmp (val, _("Off"))) {
+	if (!strcmp (val, _("Release Half"))) {
 		ret = ptp_canon_eos_remotereleaseoff (params, 1);
+		goto leave;
+	}
+	if (!strcmp (val, _("Release Full"))) {
+		ret = ptp_canon_eos_remotereleaseoff (params, 3);
 		goto leave;
 	}
 
