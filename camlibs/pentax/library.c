@@ -68,7 +68,14 @@ camera_abilities (CameraAbilitiesList *list)
 	a.operations 		= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
 	a.file_operations	= GP_FILE_OPERATION_DELETE;
-	return gp_abilities_list_append (list, a);
+	CR( gp_abilities_list_append (list, a));
+	strcpy (a.model, "Pentax:K10D");
+	a.usb_product		= 0x006e;
+	CR( gp_abilities_list_append (list, a));
+	strcpy (a.model, "Pentax:K100D");
+	a.usb_product		= 0x0070;
+	CR( gp_abilities_list_append (list, a));
+	return GP_OK;
 }
 
 static int
@@ -76,7 +83,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	sprintf (summary->text, _(
 		"Pentax K DSLR capture driver.\n"
-		"Based in pkremote by Pontus Lidman.\n"
+		"Based on pkremote by Pontus Lidman.\n"
 	));
 	return GP_OK;
 }
