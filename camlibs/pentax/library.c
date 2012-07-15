@@ -80,8 +80,13 @@ camera_abilities (CameraAbilitiesList *list)
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
 		return ret;
 
+	strcpy (a.model, "Pentax:K200D");
+	a.usb_product		= 0x0093;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
 	/* weird usb vendor? */
-	strcpy (a.model, "Pentax:K100D");
+	strcpy (a.model, "Pentax:K5D");
 	a.usb_vendor		= 0x25fb;
 	a.usb_product		= 0x0102;
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
