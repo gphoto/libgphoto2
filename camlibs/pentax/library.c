@@ -57,6 +57,7 @@ int
 camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
+	int ret;
 
 	memset (&a, 0, sizeof(a));
 	strcpy (a.model, "Pentax:K20D");
@@ -68,13 +69,23 @@ camera_abilities (CameraAbilitiesList *list)
 	a.operations 		= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
 	a.file_operations	= GP_FILE_OPERATION_DELETE;
-	CR( gp_abilities_list_append (list, a));
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 	strcpy (a.model, "Pentax:K10D");
 	a.usb_product		= 0x006e;
-	CR( gp_abilities_list_append (list, a));
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 	strcpy (a.model, "Pentax:K100D");
 	a.usb_product		= 0x0070;
-	CR( gp_abilities_list_append (list, a));
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
+	/* weird usb vendor? */
+	strcpy (a.model, "Pentax:K100D");
+	a.usb_vendor		= 0x25fb;
+	a.usb_product		= 0x0102;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 	return GP_OK;
 }
 
@@ -125,7 +136,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 {
 	int imagetype;
 	uint8_t buf[65536];
-	uint32_t length;
+	int length;
 	uint32_t current;
 
 	if (status->image_format != PSLR_IMAGE_FORMAT_JPEG) {
