@@ -119,6 +119,7 @@ gp_port_library_list (GPPortInfoList *list)
 	GPPortInfo	info;
 	int		nrofdevices = 0;
 	int		d, i, i1, i2, unknownint;
+	libusb_context	*ctx;
 
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
 	gp_port_info_new (&info);
@@ -127,8 +128,8 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_set_path (info, "^usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
-	libusb_init (NULL);
-	gp_nrofdevs = load_devicelist (NULL);
+	libusb_init (&ctx);
+	gp_nrofdevs = load_devicelist (ctx);
 
 	for (d = 0; d < gp_nrofdevs; d++) {
 		/* Devices which are definitely not cameras. */
@@ -245,7 +246,9 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_info_set_path (info, "usb:");
 		CHECK (gp_port_info_list_append (list, info));
 	}
-	libusb_exit (NULL);
+	libusb_exit (ctx);
+	gp_nrofdevs = 0;
+	gp_devs = NULL;
 	return (GP_OK);
 }
 
