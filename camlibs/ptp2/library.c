@@ -1185,6 +1185,9 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3310995&group_id=8874 */
 	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* analemma88@gmail.com */
+	{"Canon:PowerShot A800",		0x04a9, 0x3226, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Juha Pesonen <juha.e.pesonen@gmail.com> */
 	{"Canon:PowerShot SX230HS",		0x04a9, 0x3228, PTPBUG_DELETE_SENDS_EVENT},
 
