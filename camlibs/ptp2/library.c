@@ -60,6 +60,7 @@
 #include "ptp-bugs.h"
 #include "ptp-private.h"
 #include "ptp-pack.c"
+#include "olympus-wrap.h"
 
 #define GP_MODULE "PTP2"
 
@@ -5917,6 +5918,12 @@ camera_init (Camera *camera, GPContext *context)
 		params->event_check	= ptp_usb_event_check;
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
+#if 0 /* OLYMPUS */
+                if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110) || (a.usb_product == 0x102))) {
+                        gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
+                        olympus_setup (params);
+                }
+#endif
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
 		break;
 	case GP_PORT_PTPIP: {
@@ -6110,6 +6117,10 @@ camera_init (Camera *camera, GPContext *context)
 		unsigned char *data;
 		ptp_getfilesystemmanifest (params, 0x00010001, 0, 0, &data);
 	}
+#endif
+#if 0 /* OLYMPUS */
+        if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110) || (a.usb_product == 0x102)))
+                olympus_wrap_ptp_transaction (params, NULL, 0,0,NULL,NULL);
 #endif
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
