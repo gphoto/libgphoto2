@@ -1,106 +1,114 @@
 # Vietnamese translation for Lib GPhoto Port.
-# Copyright © 2010 Free Software Foundation, Inc.
+# Copyright © 2012 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgphoto2 package.
 # Ngô Trần Thủy <ngotranthuy@gmail.com>, 2005.
 # Clytie Siddall <clytie@riverland.net.au>, 2008, 2009, 2010.
+# Trần Ngọc Quân <vnwildman@gmail.com>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.4.9\n"
+"Project-Id-Version: libgphoto2_port-2.4.14\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-04-11 14:39+0200\n"
-"PO-Revision-Date: 2010-04-16 21:48+0930\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
+"POT-Creation-Date: 2012-03-31 00:03+0200\n"
+"PO-Revision-Date: 2012-06-20 08:58+0700\n"
+"Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
+"Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: LocFactoryEditor 1.8\n"
+"X-Poedit-Language: Vietnamese\n"
+"X-Poedit-Country: VIET NAM\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:213
+#: libgphoto2_port/gphoto2-port-info-list.c:214
 #, c-format
 msgid "Called for filename '%s'."
-msgstr "Đã gọi tên tập tin « %s »."
+msgstr "Đã gọi tên tập tin \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:218
+#: libgphoto2_port/gphoto2-port-info-list.c:219
 #, c-format
 msgid "Could not load '%s': '%s'."
-msgstr "Không thể nạp « %s »:« %s »."
+msgstr "Không thể nạp \"%s\":\"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:226
+#: libgphoto2_port/gphoto2-port-info-list.c:227
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
-msgstr "Không thể tìm thấy một số chức năng trong « %s »:« %s »."
+msgstr "Không thể tìm thấy một số chức năng trong \"%s\":\"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:238
+#: libgphoto2_port/gphoto2-port-info-list.c:239
 #, c-format
 msgid "'%s' already loaded"
-msgstr "« %s » đã được nạp"
+msgstr "\"%s\" đã được nạp sẵn"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:247
+#: libgphoto2_port/gphoto2-port-info-list.c:248
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Không thể nạp được danh sách trình điều khiển thiết bị cổng: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:254
+#: libgphoto2_port/gphoto2-port-info-list.c:255
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
-msgstr "Đã nạp « %s » (« %s ») từ « %s »."
+msgstr "Đã nạp \"%s\" (\"%s\") từ \"%s\"."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:286
+#: libgphoto2_port/gphoto2-port-info-list.c:287
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
-msgstr "Đang dùng ltdl để nạp các trình điều khiển V/R từ « %s »..."
+msgstr "Đang dùng ltdl để nạp các trình điều khiển V/R từ \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:312
+#: libgphoto2_port/gphoto2-port-info-list.c:314
 #, c-format
-msgid "Counting entries (%i available)..."
-msgstr "Đang đếm các mục nhập (có %i sẵn sàng)..."
+msgid "Counting entry (%i available)..."
+msgid_plural "Counting entries (%i available)..."
+msgstr[0] "Đang đếm số lượng mục tin (có %i sẵn sàng)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:321
+#: libgphoto2_port/gphoto2-port-info-list.c:326
 #, c-format
-msgid "%i regular entries available."
-msgstr "%i các mục nhập chính quy sẵn có"
+msgid "%i regular entry available."
+msgid_plural "%i regular entries available."
+msgstr[0] "%i mục tin thông thường sẵn dùng."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:351
+#: libgphoto2_port/gphoto2-port-info-list.c:359
 #, c-format
-msgid "Looking for path '%s' (%i entries available)..."
-msgstr "Đang tìm kiếm đường dẫn « %s » (có %i mục sẵn sàng)..."
+msgid "Looking for path '%s' (%i entry available)..."
+msgid_plural "Looking for path '%s' (%i entries available)..."
+msgstr[0] "Đang tìm cho đường đẫn '%s' (%i mục sẵn dùng)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:363
+#: libgphoto2_port/gphoto2-port-info-list.c:373
 #, c-format
 msgid "Starting regex search for '%s'..."
-msgstr "Đang bắt đầu quá trình tìm kiếm bằng biểu thức chính quy cho « %s »..."
+msgstr "Đang bắt đầu quá trình tìm kiếm bằng biểu thức chính quy cho \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:371
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "Trying '%s'..."
-msgstr "Đang thử « %s »..."
+msgstr "Đang thử \"%s\"..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:392
+#: libgphoto2_port/gphoto2-port-info-list.c:402
 msgid "regcomp failed"
 msgstr "regcomp bị lỗi"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:403
+#: libgphoto2_port/gphoto2-port-info-list.c:413
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match (khớp lại) bị lỗi (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:411
+#: libgphoto2_port/gphoto2-port-info-list.c:421
 msgid "regexec failed"
-msgstr "regexec (thực hiện biểu thức chính quy) bị lỗi"
+msgstr "regexec (thực hiện biểu thức chính quy) gặp lỗi"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:417
+#: libgphoto2_port/gphoto2-port-info-list.c:427
 msgid "Generic Port"
 msgstr "Cổng Chung"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:441
+#: libgphoto2_port/gphoto2-port-info-list.c:451
 #, c-format
 msgid "Looking up entry '%s'..."
-msgstr "Tìm kiếm mục « %s »... "
+msgstr "Tìm kiếm mục \"%s\"... "
 
-#: libgphoto2_port/gphoto2-port-info-list.c:471
+#: libgphoto2_port/gphoto2-port-info-list.c:481
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgstr "Đang lấy dữ liệu của mục %i (có %i sẵn sàng)"
@@ -127,7 +135,7 @@ msgstr "Thao tác không được hỗ trợ"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Fixed limit exceeded"
-msgstr "Vượt quá giới hạn cố định"
+msgstr "Cố định vượt quá giới hạn"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
@@ -197,338 +205,389 @@ msgstr "Lỗi libhal"
 msgid "Unknown error"
 msgstr "Lỗi không rõ"
 
-#: libgphoto2_port/gphoto2-port.c:55
+#: libgphoto2_port/gphoto2-port.c:56
 #, c-format
 msgid "The operation '%s' is not supported by this device"
-msgstr "Thao tác « %s » không được hỗ trợ bởi thiết bị này"
+msgstr "Thao tác \"%s\" không được hỗ trợ bởi thiết bị này"
 
-#: libgphoto2_port/gphoto2-port.c:56
+#: libgphoto2_port/gphoto2-port.c:57
 msgid "The port has not yet been initialized"
 msgstr "Chưa sơ khởi cổng đó"
 
-#: libgphoto2_port/gphoto2-port.c:87
+#: libgphoto2_port/gphoto2-port.c:88
 msgid "Creating new device..."
 msgstr "Đang tạo thiết bị mới..."
 
-#: libgphoto2_port/gphoto2-port.c:165
+#: libgphoto2_port/gphoto2-port.c:166
 #, c-format
 msgid "Could not load '%s' ('%s')."
-msgstr "Không thể nạp « %s » (« %s »)."
+msgstr "Không thể nạp \"%s\" (\"%s\")."
 
-#: libgphoto2_port/gphoto2-port.c:175
+#: libgphoto2_port/gphoto2-port.c:176
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr "Không tìm thấy « gp_port_library_operations » (các thao tác thư viện cổng gp) tại « %s » (« %s »)"
+msgstr "Không tìm thấy \"gp_port_library_operations\" (các thao tác thư viện cổng gp) tại \"%s\" (\"%s\")"
 
-#: libgphoto2_port/gphoto2-port.c:265
+#: libgphoto2_port/gphoto2-port.c:266
 #, c-format
 msgid "Opening %s port..."
 msgstr "Đang mở cổng %s..."
 
-#: libgphoto2_port/gphoto2-port.c:287
+#: libgphoto2_port/gphoto2-port.c:288
 msgid "Closing port..."
 msgstr "Đang đóng cổng..."
 
-#: libgphoto2_port/gphoto2-port.c:309
+#: libgphoto2_port/gphoto2-port.c:310
 msgid "Freeing port..."
 msgstr "Đang giải phóng cổng..."
 
-#: libgphoto2_port/gphoto2-port.c:356
+#: libgphoto2_port/gphoto2-port.c:358
 #, c-format
-msgid "Writing %i=0x%x byte(s) to port..."
-msgstr "Đang ghi %i=0x%x byte vào cổng..."
+msgid "Writing %i=0x%x byte to port..."
+msgid_plural "Writing %i=0x%x bytes to port..."
+msgstr[0] "Đang ghi %i=0x%x byte tới cổng..."
 
-#: libgphoto2_port/gphoto2-port.c:369
+#: libgphoto2_port/gphoto2-port.c:373
 #, c-format
-msgid "Could only write %i out of %i byte(s)"
-msgstr "Chỉ ghi được %i trên %i byte"
+msgid "Could only write %i out of %i byte"
+msgid_plural "Could only write %i out of %i bytes"
+msgstr[0] "Chỉ ghi được %i từ %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:392
+#: libgphoto2_port/gphoto2-port.c:398
 #, c-format
-msgid "Reading %i=0x%x bytes from port..."
-msgstr "Đang đọc %i=0x%x byte từ cổng..."
+msgid "Reading %i=0x%x byte from port..."
+msgid_plural "Reading %i=0x%x bytes from port..."
+msgstr[0] "Đang đọc %i=0x%x byte từ cổng..."
 
-#: libgphoto2_port/gphoto2-port.c:403 libgphoto2_port/gphoto2-port.c:440
-#: libgphoto2_port/gphoto2-port.c:480 libgphoto2_port/gphoto2-port.c:905
+#: libgphoto2_port/gphoto2-port.c:412 libgphoto2_port/gphoto2-port.c:453
+#: libgphoto2_port/gphoto2-port.c:493 libgphoto2_port/gphoto2-port.c:929
+#: libgphoto2_port/gphoto2-port.c:1012 libgphoto2_port/gphoto2-port.c:1097
 #, c-format
-msgid "Could only read %i out of %i byte(s)"
-msgstr "Chỉ đọc được %i của %i byte"
+msgid "Could only read %i out of %i byte"
+msgid_plural "Could only read %i out of %i bytes"
+msgstr[0] "Chỉ đọc được %i từ %i byte"
 
-#: libgphoto2_port/gphoto2-port.c:429
+#: libgphoto2_port/gphoto2-port.c:439
 #, c-format
-msgid "Reading %i=0x%x bytes from interrupt endpoint..."
-msgstr "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị gián đoạn..."
+msgid "Reading %i=0x%x byte from interrupt endpoint..."
+msgid_plural "Reading %i=0x%x bytes from interrupt endpoint..."
+msgstr[0] "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị ngắt..."
 
-#: libgphoto2_port/gphoto2-port.c:490
+#: libgphoto2_port/gphoto2-port.c:505
 #, c-format
-msgid "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
-msgstr "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị gián đoạn (nhanh)..."
+msgid "Reading %i=0x%x byte from interrupt endpoint (fast)..."
+msgid_plural "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
+msgstr[0] "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị ngắt (nhanh)..."
 
-#: libgphoto2_port/gphoto2-port.c:515
+#: libgphoto2_port/gphoto2-port.c:533
 #, c-format
-msgid "Setting timeout to %i millisecond(s)..."
-msgstr "Đang đặt thời hạn là %i phần nghìn giây..."
+msgid "Setting timeout to %i millisecond..."
+msgid_plural "Setting timeout to %i milliseconds..."
+msgstr[0] "Đang đặt thời gian chờ tối đa thành %i mi-li-giây..."
 
-#: libgphoto2_port/gphoto2-port.c:551
+#: libgphoto2_port/gphoto2-port.c:571
 msgid "Getting timeout..."
-msgstr "Đang lấy thời hạn..."
+msgstr "Đang lấy thời gian chờ tối đa..."
 
-#: libgphoto2_port/gphoto2-port.c:555
+#: libgphoto2_port/gphoto2-port.c:575
 #, c-format
 msgid "Current timeout: %i milliseconds"
-msgstr "Thời hạn hiện thời: %i phần nghìn giây"
+msgstr "Thời gian chờ tối đa hiện thời: %i phần nghìn giây"
 
-#: libgphoto2_port/gphoto2-port.c:577
+#: libgphoto2_port/gphoto2-port.c:597
 msgid "Setting settings..."
 msgstr "Đang đặt thiết lập...."
 
-#: libgphoto2_port/gphoto2-port.c:638
+#: libgphoto2_port/gphoto2-port.c:658
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Đang lấy mức của chạc %i..."
 
-#: libgphoto2_port/gphoto2-port.c:647
+#: libgphoto2_port/gphoto2-port.c:667
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Mức chạc %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:673
+#: libgphoto2_port/gphoto2-port.c:693
 msgid "low"
 msgstr "thấp"
 
-#: libgphoto2_port/gphoto2-port.c:674
+#: libgphoto2_port/gphoto2-port.c:694
 msgid "high"
 msgstr "cao"
 
-#: libgphoto2_port/gphoto2-port.c:700
+#: libgphoto2_port/gphoto2-port.c:720
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
-msgstr "Đăng đặt chạc %i (%s: « %s ») thành « %s »... "
+msgstr "Đăng đặt chân %i (%s: \"%s\") thành \"%s\"... "
 
-#: libgphoto2_port/gphoto2-port.c:727
+#: libgphoto2_port/gphoto2-port.c:748
 #, c-format
-msgid "Sending break (%i milliseconds)..."
-msgstr "Đang gửi tín hiệu ngắt quãng (%i phần nghìn giây)..."
+msgid "Sending break (%i millisecond)..."
+msgid_plural "Sending break (%i milliseconds)..."
+msgstr[0] "Đang gửi lệnh ngắt (%i mi-li giây)..."
 
-#: libgphoto2_port/gphoto2-port.c:753
+#: libgphoto2_port/gphoto2-port.c:776
 msgid "Flushing port..."
 msgstr "Đang tràn ngập cổng..."
 
-#: libgphoto2_port/gphoto2-port.c:827
+#: libgphoto2_port/gphoto2-port.c:850
 msgid "Clear halt..."
 msgstr "Thoát khỏi trạng thái bị ngừng..."
 
-#: libgphoto2_port/gphoto2-port.c:858
+#: libgphoto2_port/gphoto2-port.c:881
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr "Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:893
+#: libgphoto2_port/gphoto2-port.c:916
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr "Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:900
-msgid "msg_read"
-msgstr "msg_read (đọc thông điệp)"
-
-#: libgphoto2_port/gphoto2-port.c:1205
+#: libgphoto2_port/gphoto2-port.c:1231
 msgid "No error description available"
 msgstr "Không có sẵn mô tả lỗi"
 
-#: serial/unix.c:241
+#: serial/unix.c:239
 #, c-format
 msgid "Could not lock device '%s'"
-msgstr "Không thể khoá thiết bị « %s »"
+msgstr "Không thể khoá thiết bị \"%s\""
 
-#: serial/unix.c:251 usbdiskdirect/linux.c:87 usbscsi/linux.c:84
+#: serial/unix.c:249 usbdiskdirect/linux.c:94 usbscsi/linux.c:95
 #, c-format
 msgid "Device '%s' is locked by pid %d"
-msgstr "Thiết bị « %s » bị khoá bởi mã số tiến trình (PID) %d"
+msgstr "Thiết bị \"%s\" bị khoá bởi tiến trình có mã số (PID) %d"
 
-#: serial/unix.c:254 usbdiskdirect/linux.c:90 usbscsi/linux.c:87
+#: serial/unix.c:252 usbdiskdirect/linux.c:97 usbscsi/linux.c:98
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Không thể khóa thiết bị « %s » (dev_lock [khóa thiết bị] đã trả lại %d)"
+msgstr "Không thể khóa thiết bị \"%s\" (dev_lock [khóa thiết bị] đã trả lại %d)"
 
-#: serial/unix.c:288
+#: serial/unix.c:286
 #, c-format
 msgid "Device '%s' could not be unlocked."
-msgstr "Không thể mở khóa thiết bị « %s »"
+msgstr "Không thể mở khóa thiết bị \"%s\""
 
-#: serial/unix.c:300 usbdiskdirect/linux.c:119 usbscsi/linux.c:116
+#: serial/unix.c:298 usbdiskdirect/linux.c:126 usbscsi/linux.c:127
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Không thể mở khoá thiết bị « %s » vì nó được PID %d khoá."
+msgstr "Không thể mở khoá thiết bị \"%s\" vì nó được PID %d khoá."
 
-#: serial/unix.c:304 usbdiskdirect/linux.c:123 usbscsi/linux.c:120
+#: serial/unix.c:302 usbdiskdirect/linux.c:130 usbscsi/linux.c:131
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Không thể mở khoá thiết bị « %s » (dev_unlock [mở khoá thiết bị] đã trả lại %d)"
+msgstr "Không thể mở khoá thiết bị \"%s\" (dev_unlock [mở khoá thiết bị] đã trả lại %d)"
 
-#: serial/unix.c:385
+#: serial/unix.c:383
 #, c-format
 msgid "Serial Port %i"
 msgstr "Cổng nối tiếp %i"
 
-#: serial/unix.c:476 usbdiskdirect/linux.c:278 usbscsi/linux.c:269
+#: serial/unix.c:474 usbdiskdirect/linux.c:285 usbscsi/linux.c:287
 #, c-format
 msgid "Failed to open '%s' (%m)."
-msgstr "Lỗi mở « %s » (%m)."
+msgstr "Lỗi mở \"%s\" (%m)."
 
-#: serial/unix.c:494 usbdiskdirect/linux.c:292 usbscsi/linux.c:283
+#: serial/unix.c:492 usbdiskdirect/linux.c:299 usbscsi/linux.c:301
 #, c-format
 msgid "Could not close '%s' (%m)."
-msgstr "Không thể đóng « %s » (%m)."
+msgstr "Không thể đóng \"%s\" (%m)."
 
-#: serial/unix.c:548
+#: serial/unix.c:546
 #, c-format
 msgid "Could not write to port (%m)"
 msgstr "Không thể ghi vào cổng (%m)"
 
-#: serial/unix.c:625
+#: serial/unix.c:623
 msgid "Parity error."
 msgstr "Lỗi chẵn lẻ."
 
-#: serial/unix.c:629
+#: serial/unix.c:627
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Gặp dãy đáp ứng chẵn lẻ bất thường 0xff 0x%02x."
 
-#: serial/unix.c:672
+#: serial/unix.c:670
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Không rõ chạc %i."
 
-#: serial/unix.c:694
+#: serial/unix.c:692
 #, c-format
 msgid "Could not get level of pin %i (%m)."
-msgstr "Không thể lấy được mức chạc %i (%m)."
+msgstr "Không thể lấy được mức của chân %i (%m)."
 
-#: serial/unix.c:729
+#: serial/unix.c:727
 #, c-format
 msgid "Could not set level of pin %i to %i (%m)."
-msgstr "Không thể đặt mức chạc từ %i thành %i (%m)."
+msgstr "Không thể đặt mức cho chân %i thành %i (%m)."
 
-#: serial/unix.c:754
+#: serial/unix.c:752
 #, c-format
 msgid "Could not flush '%s' (%m)."
-msgstr "Không thể tràn ngập « %s » (%m)."
+msgstr "Không thể tràn ngập \"%s\" (%m)."
 
-#: serial/unix.c:867
+#: serial/unix.c:865
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Không thể đặt tốc độ truyền thành %d"
 
-#: usb/libusb.c:242
+#: usb/libusb.c:248
 #, c-format
 msgid "Could not open USB device (%m)."
 msgstr "Không thể mở thiết bị USB (%m)."
 
-#: usb/libusb.c:254
+#: usb/libusb.c:260 libusb1/libusb1.c:305
 msgid "Camera is already in use."
 msgstr "Máy ảnh đang được dùng."
 
-#: usb/libusb.c:259
+#: usb/libusb.c:265
 #, c-format
 msgid "Device has driver '%s' attached, detaching it now."
-msgstr "Thiết bị đính kèm trình điều khiển « %s » nên gỡ ra ngay bây giờ."
+msgstr "Thiết bị đính kèm trình điều khiển \"%s\" nên gỡ ra ngay bây giờ."
 
-#: usb/libusb.c:262
+#: usb/libusb.c:268
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "Không thể gỡ ra trình điều khiển hạt nhân « %s » của thiết bị máy ảnh."
+msgstr "Không thể gỡ ra trình điều khiển hạt nhân \"%s\" của thiết bị máy ảnh."
 
-#: usb/libusb.c:267
+#: usb/libusb.c:273 libusb1/libusb1.c:321
 msgid "Could not query kernel driver of device."
 msgstr "Không thể truy vấn trình điều khiển hạt nhân của thiết bị."
 
-#: usb/libusb.c:275
+#: usb/libusb.c:281
 #, c-format
 msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Không thể quyền đòi giao diện %d (%m). Kiểm tra xem không có chương trình khác hoặc môđ-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền đọc từ và ghi vào thiết bị này."
 
-#: usb/libusb.c:293
+#: usb/libusb.c:299
 #, c-format
 msgid "Could not release interface %d (%m)."
 msgstr "Không thể nhả giao diện %d (%m)."
 
-#: usb/libusb.c:306
+#: usb/libusb.c:312
 #, c-format
 msgid "Could not reset USB port (%m)."
 msgstr "Không thể đặt lại cổng USB (%m)."
 
-#: usb/libusb.c:333
+#: usb/libusb.c:339
 #, c-format
 msgid "Could not close USB port (%m)."
 msgstr "Không thể đóng cổng USB (%m)."
 
-#: usb/libusb.c:582
+#: usb/libusb.c:590
 #, c-format
 msgid "Could not set config %d/%d (%m)"
 msgstr "Không thể đặt cấu hình %d/%d (%m)"
 
-#: usb/libusb.c:615
+#: usb/libusb.c:623
 #, c-format
 msgid "Could not set altsetting from %d to %d (%m)"
 msgstr "Không thể đặt altsetting (thiết lập xen kẽ) từ %d thành %d (%m)"
 
-#: usb/libusb.c:707
+#: usb/libusb.c:715 libusb1/libusb1.c:765
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Mã sản phẩm hay mã nhà sản xuất (0x%x, 0x%x) không phải hợp lệ."
 
-#: usb/libusb.c:743
+#: usb/libusb.c:751 libusb1/libusb1.c:804
 #, c-format
 msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
 msgstr "Thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x) là một thiết bị lưu trữ hàng loạt, và có thể không hoạt động được với trình gphoto2. Tham khảo : %s"
 
-#: usb/libusb.c:786
+#: usb/libusb.c:794 libusb1/libusb1.c:836
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: usb/libusb.c:1050
+#: usb/libusb.c:1092 libusb1/libusb1.c:1130
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (hạng 0x%x, hạng con 0x%x, giao thức 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: disk/disk.c:179 disk/disk.c:229 disk/disk.c:270 disk/disk.c:302
-#: disk/disk.c:325
+#: libusb1/libusb1.c:296
+#, c-format
+msgid "Could not open USB device (%s)."
+msgstr "Không thể mở thiết bị USB (%s)."
+
+#: libusb1/libusb1.c:311
+#, c-format
+msgid "Device has a kernel driver attached (%d), detaching it now."
+msgstr "Thiết bị có trình điều khiển nhân đính kèm (%d), đang gỡ ra ngay bây giờ."
+
+#: libusb1/libusb1.c:314
+msgid "Could not detach kernel driver of camera device."
+msgstr "Không thể gỡ ra trình điều khiển hạt nhân của thiết bị máy ảnh."
+
+#: libusb1/libusb1.c:329
+#, c-format
+msgid "Could not claim interface %d (%s). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Không thể yêu cầu giao diện %d (%s). Kiểm tra xem không có chương trình khác hoặc mô-đun hạt nhân (v.d. %s) đang sử dụng thiết bị, và bạn có quyền đọc/ghi vào thiết bị này."
+
+#: libusb1/libusb1.c:351
+#, c-format
+msgid "Could not release interface %d (%s)."
+msgstr "Không thể thả giao diện %d (%s)."
+
+#: libusb1/libusb1.c:366
+#, c-format
+msgid "Could not reset USB port (%s)."
+msgstr "Không thể đặt lại cổng USB (%s)."
+
+#: libusb1/libusb1.c:377
+msgid "Could not reattach kernel driver of camera device."
+msgstr "Không thể gỡ kết nối lại trình điều khiển hạt nhân của thiết bị máy ảnh."
+
+#: libusb1/libusb1.c:628
+#, c-format
+msgid "Could not set config %d/%d (%s)"
+msgstr "Không thể đặt cấu hình %d/%d (%s)"
+
+#: libusb1/libusb1.c:667
+#, c-format
+msgid "Could not set altsetting from %d to %d (%s)"
+msgstr "Không thể đặt altsetting (thiết lập xen kẽ) từ %d thành %d (%s)"
+
+#: disk/disk.c:179 disk/disk.c:237 disk/disk.c:286 disk/disk.c:318
+#: disk/disk.c:341
 #, c-format
 msgid "Media '%s'"
-msgstr "Vật chứa « %s »"
+msgstr "Vật chứa \"%s\""
 
 #: disk/disk.c:180
 msgid "(unknown)"
 msgstr "(không rõ)"
 
-#: usbdiskdirect/linux.c:223
+#: usbdiskdirect/linux.c:230
 #, c-format
 msgid "USB Mass Storage direct IO"
 msgstr "V/R trực tiếp Lưu trữ Hàng loạt USB"
 
-#: usbdiskdirect/linux.c:317
+#: usbdiskdirect/linux.c:324
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "Không thể tìm nơi theo khoảng bù : %x trên « %s » (%m)."
+msgstr "Không thể tìm nơi theo khoảng bù : %x trên \"%s\" (%m)."
 
-#: usbdiskdirect/linux.c:340
+#: usbdiskdirect/linux.c:347
 #, c-format
 msgid "Could not write to '%s' (%m)."
-msgstr "Không thể ghi vào « %s » (%m)."
+msgstr "Không thể ghi vào \"%s\" (%m)."
 
-#: usbdiskdirect/linux.c:362
+#: usbdiskdirect/linux.c:369
 #, c-format
 msgid "Could not read from '%s' (%m)."
-msgstr "Không thể đọc từ « %s » (%m)."
+msgstr "Không thể đọc từ \"%s\" (%m)."
 
-#: usbscsi/linux.c:214
+#: usbscsi/linux.c:232
 #, c-format
 msgid "USB Mass Storage raw SCSI"
 msgstr "SCSI thô Lưu trữ Hàng loạt USB"
 
-#: usbscsi/linux.c:323
+#: usbscsi/linux.c:345
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
-msgstr "Không thể gửi câu lệnh scsi cho : « %s » (%m)."
+msgstr "Không thể gửi câu lệnh scsi cho : \"%s\" (%m)."
+
+#~ msgid "msg_read"
+#~ msgstr "msg_read (đọc thông điệp)"
