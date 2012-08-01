@@ -276,7 +276,6 @@ gp_port_usb_exit (GPPort *port)
 		free (port->pl);
 		port->pl = NULL;
 	}
-	if (gp_devs) libusb_free_device_list (gp_devs, 1);
 	gp_devs = NULL; gp_nrofdevs = 0;
 	free (gp_descs);
 	return (GP_OK);
