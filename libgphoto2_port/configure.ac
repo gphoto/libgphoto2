@@ -63,6 +63,7 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
+AM_PROG_AR
 
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
@@ -353,7 +354,7 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
 	IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
 ],[],
-		[disable-explicitly],
+		[default-on],
 		[http://libusb.sourceforge.net/]
 )
 
@@ -365,7 +366,7 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		[libusb.h],[libusb_init],[
 	IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
 ],[],
-		[disable-explicitly],
+		[default-on],
 		[http://libusb.sourceforge.net/]
 )
 dnl depends on libusb's availability
