@@ -1,3 +1,10 @@
+libgphoto2 2.5.0.1 release
+
+libgphoto2_port/libusb1:
+* rewrote cache handling to work
+
+
+------------------------------------------------------------------------------
 libgphoto2 2.5.0 release
 
 libgphoto2 API:
