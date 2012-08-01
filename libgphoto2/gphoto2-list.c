@@ -225,13 +225,6 @@ gp_list_append (CameraList *list, const char *name, const char *value)
         return (GP_OK);
 }
 
-/**
- * Sorts the \c list entries with respect to the names.
- *
- * \param list a #CameraList
- * \return a gphoto2 error code
- *
- **/
 static int
 cmp_list (const void *a, const void *b) {
         const struct _entry *ca = a;
@@ -240,6 +233,13 @@ cmp_list (const void *a, const void *b) {
         return strcmp (ca->name, cb->name);
 }
 
+/**
+ * Sorts the \c list entries with respect to the names.
+ *
+ * \param list a #CameraList
+ * \return a gphoto2 error code
+ *
+ **/
 int
 gp_list_sort (CameraList *list)
 {
