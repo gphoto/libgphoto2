@@ -1014,6 +1014,8 @@ gp_port_usb_match_device_by_class(struct libusb_device *dev, int class, int subc
 	if (class == 666) /* Special hack for MTP devices with MS OS descriptors. */
 		return gp_port_usb_match_mtp_device (dev, configno, interfaceno, altsettingno);
 
+	ret = libusb_get_device_descriptor(dev, &desc);
+
 	if (desc.bDeviceClass == class &&
 	    (subclass == -1 ||
 	     desc.bDeviceSubClass == subclass) &&
@@ -1021,7 +1023,6 @@ gp_port_usb_match_device_by_class(struct libusb_device *dev, int class, int subc
 	     desc.bDeviceProtocol == protocol))
 		return 1;
 
-	ret = libusb_get_device_descriptor(dev, &desc);
 
 	for (i = 0; i < desc.bNumConfigurations; i++) {
 		struct libusb_config_descriptor *config;
