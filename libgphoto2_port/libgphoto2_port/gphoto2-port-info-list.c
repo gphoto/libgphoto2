@@ -306,7 +306,8 @@ gp_port_info_list_load (GPPortInfoList *list)
 	if (result < 0)
 		return (result);
 	if (list->iolib_count == 0) {
-		gp_log (GP_LOG_ERROR, "No iolibs found in '%s'", iolibs);
+		gp_log (GP_LOG_ERROR, "gphoto2-port-info-list",
+                        "No iolibs found in '%s'", iolibs);
 		return GP_ERROR_LIBRARY;
 	}
         return (GP_OK);
