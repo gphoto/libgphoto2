@@ -1255,6 +1255,8 @@ static struct {
 	{"Fuji:FinePix F80EXR",			0x04cb, 0x020e, 0},
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=3556692&group_id=8874&atid=108874 */
+	{"Fuji:FinePix S2950",			0x04cb, 0x0240, 0},
 	/* Luis Arias <kaaloo@gmail.com> */
 	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
 
