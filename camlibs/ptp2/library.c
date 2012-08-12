@@ -814,6 +814,8 @@ static struct {
 	
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
+	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP},
 
 
 #if 0
