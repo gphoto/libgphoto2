@@ -622,8 +622,13 @@ static struct {
 	{"Sony:SLT-A55 (PTP mode)",   0x054c, 0x04a3, 0},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3515558&group_id=8874 */
 	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
+	/* t.ludewig@gmail.com */
+	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Rudi */
 	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
+
+	/* t.ludewig@gmail.com */
+	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -741,6 +746,8 @@ static struct {
 	{"Nikon:Coolpix S5100 (PTP mode)",0x04b0, 0x0220, 0},
 	/* wlady.cs@gmail.com */
 	{"Nikon:Coolpix P300 (PTP mode)", 0x04b0, 0x0221, 0},
+	/* t.ludewig@gmail.com */
+	{"Nikon:Coolpix P510 (PTP mode)", 0x04b0, 0x0223, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
@@ -879,6 +886,9 @@ static struct {
 	{"Olympus:FE4000",                0x07b4, 0x0116, 0},
 	{"Olympus:X920",                  0x07b4, 0x0116, 0},
 	{"Olympus:X925",                  0x07b4, 0x0116, 0},
+
+	/* t.ludewig@gmail.com */
+	{"Olympus:SP-720UZ",		  0x07b4, 0x012f, 0},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
@@ -1193,6 +1203,12 @@ static struct {
 	/* Juha Pesonen <juha.e.pesonen@gmail.com> */
 	{"Canon:PowerShot SX230HS",		0x04a9, 0x3228, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* t.ludewig@gmail.com */
+	{"Canon:PowerShot SX40HS",		0x04a9, 0x3238, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* t.ludewig@gmail.com */
+	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
@@ -1261,7 +1277,12 @@ static struct {
 	{"Fuji:FinePix S2950",			0x04cb, 0x0240, 0},
 	/* Luis Arias <kaaloo@gmail.com> */
 	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
-
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix S4300",			0x04cb, 0x0265, 0},
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix X-S1",			0x04cb, 0x026e, 0},
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix HS30EXR",		0x04cb, 0x0271, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
