@@ -818,6 +818,8 @@ static struct {
 	/* IRC Reporter popolon */
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Roderick Stewart <roderick.stewart@gmail.com> */
+	{"Nikon:DSC D800E (PTP mode)",    0x04b0, 0x042e, PTP_CAP|PTP_CAP_PREVIEW},
 	
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
