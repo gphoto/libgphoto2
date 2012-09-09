@@ -1,17 +1,16 @@
 # Dutch translations for libgphoto2_port.
 # This file is distributed under the same license as the libgphoto2 package.
 #
-# Gisteren, op de markt, een oudere vrouw die
-# in haar mobieltje roept: "Scheißegal!"
+# "To noč sem jo videl"
 #
 # Kurt De Bree <kdebree(AT)telenet(DOT)be>, 2006.
 # Benno Schulenberg <benno@vertaalt.nl>, 2008, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port-2.4.14\n"
+"Project-Id-Version: libgphoto2_port-2.5.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2012-03-31 00:03+0200\n"
-"PO-Revision-Date: 2012-04-18 21:18+0200\n"
+"POT-Creation-Date: 2012-07-10 07:57+0200\n"
+"PO-Revision-Date: 2012-07-29 18:32+0200\n"
 "Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -21,98 +20,100 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.0\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:214
+#: libgphoto2_port/gphoto2-port-info-list.c:220
 #, c-format
 msgid "Called for filename '%s'."
 msgstr "Gevraagde bestandsnaam is '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:219
+#: libgphoto2_port/gphoto2-port-info-list.c:225
 #, c-format
 msgid "Could not load '%s': '%s'."
 msgstr "Kan '%s' niet laden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:227
+#: libgphoto2_port/gphoto2-port-info-list.c:233
 #, c-format
 msgid "Could not find some functions in '%s': '%s'."
 msgstr "Kan sommige functies in '%s' niet vinden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:239
+#: libgphoto2_port/gphoto2-port-info-list.c:245
 #, c-format
 msgid "'%s' already loaded"
 msgstr "'%s' is al geladen"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:248
+#: libgphoto2_port/gphoto2-port-info-list.c:254
 #, c-format
 msgid "Could not load port driver list: '%s'."
 msgstr "Kan poortstuurprogrammalijst niet laden: '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:255
+#: libgphoto2_port/gphoto2-port-info-list.c:267
 #, c-format
 msgid "Loaded '%s' ('%s') from '%s'."
 msgstr "'%s' ('%s') is geladen uit '%s'."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:287
+#: libgphoto2_port/gphoto2-port-info-list.c:300
 #, c-format
 msgid "Using ltdl to load io-drivers from '%s'..."
 msgstr "Laden (met 'ltdl') van invoer-/uitvoerstuurprogramma's uit '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:314
+#: libgphoto2_port/gphoto2-port-info-list.c:332
 #, c-format
-msgid "Counting entry (%i available)..."
+msgid "Counting entries (%i available)..."
 msgid_plural "Counting entries (%i available)..."
-msgstr[0] "Tellen van item (%i beschikbaar)..."
+msgstr[0] "Tellen van items (%i beschikbaar)..."
 msgstr[1] "Tellen van items (%i beschikbaar)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:326
+#: libgphoto2_port/gphoto2-port-info-list.c:345
 #, c-format
 msgid "%i regular entry available."
 msgid_plural "%i regular entries available."
 msgstr[0] "%i normaal item is beschikbaar."
 msgstr[1] "%i normale items zijn beschikbaar."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:359
+#: libgphoto2_port/gphoto2-port-info-list.c:379
 #, c-format
 msgid "Looking for path '%s' (%i entry available)..."
 msgid_plural "Looking for path '%s' (%i entries available)..."
 msgstr[0] "Zoeken naar pad '%s' (%i item beschikbaar)..."
 msgstr[1] "Zoeken naar pad '%s' (%i items beschikbaar)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:373
+#: libgphoto2_port/gphoto2-port-info-list.c:393
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Begin van zoeken (met reguliere expressie) naar '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:381
+#: libgphoto2_port/gphoto2-port-info-list.c:401
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Proberen van '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:402
+#: libgphoto2_port/gphoto2-port-info-list.c:422
 msgid "regcomp failed"
 msgstr "regcomp() is mislukt"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:413
+#: libgphoto2_port/gphoto2-port-info-list.c:433
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "re_match() is mislukt (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:421
+#: libgphoto2_port/gphoto2-port-info-list.c:441
 msgid "regexec failed"
 msgstr "regexec() is mislukt"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:427
+#: libgphoto2_port/gphoto2-port-info-list.c:448
 msgid "Generic Port"
 msgstr "Algemene poort"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:451
+#: libgphoto2_port/gphoto2-port-info-list.c:473
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Zoeken van item '%s'..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:481
+#: libgphoto2_port/gphoto2-port-info-list.c:505
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
-msgstr "Ontvangen van info over item %i (%i beschikbaar)..."
+msgid_plural "Getting info of entry %i (%i available)..."
+msgstr[0] "Ontvangen van info over item %i (%i beschikbaar)..."
+msgstr[1] "Ontvangen van info over item %i (%i beschikbaar)..."
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
@@ -206,394 +207,393 @@ msgstr "'libhal'-fout"
 msgid "Unknown error"
 msgstr "Onbekende fout"
 
-#: libgphoto2_port/gphoto2-port.c:56
+#: libgphoto2_port/gphoto2-port.c:58
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Actie '%s' wordt niet ondersteund door dit apparaat"
 
-#: libgphoto2_port/gphoto2-port.c:57
+#: libgphoto2_port/gphoto2-port.c:59
 msgid "The port has not yet been initialized"
 msgstr "De poort is nog niet geïnitialiseerd"
 
-#: libgphoto2_port/gphoto2-port.c:88
+#: libgphoto2_port/gphoto2-port.c:90
 msgid "Creating new device..."
 msgstr "Aanmaken van nieuw apparaat..."
 
-#: libgphoto2_port/gphoto2-port.c:166
+#: libgphoto2_port/gphoto2-port.c:175
 #, c-format
 msgid "Could not load '%s' ('%s')."
 msgstr "Kan '%s' niet laden ('%s')."
 
-#: libgphoto2_port/gphoto2-port.c:176
+#: libgphoto2_port/gphoto2-port.c:185
 #, c-format
 msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
 msgstr "Kan 'gp_port_library_operations' niet vinden in '%s' ('%s')"
 
-#: libgphoto2_port/gphoto2-port.c:266
+#: libgphoto2_port/gphoto2-port.c:267
 #, c-format
 msgid "Opening %s port..."
 msgstr "Openen van de %s-poort..."
 
-#: libgphoto2_port/gphoto2-port.c:288
+#: libgphoto2_port/gphoto2-port.c:289
 msgid "Closing port..."
 msgstr "Sluiten van poort..."
 
-#: libgphoto2_port/gphoto2-port.c:310
+#: libgphoto2_port/gphoto2-port.c:311
 msgid "Freeing port..."
 msgstr "Vrijmaken van poort..."
 
-#: libgphoto2_port/gphoto2-port.c:358
+#: libgphoto2_port/gphoto2-port.c:362
 #, c-format
-msgid "Writing %i=0x%x byte to port..."
-msgid_plural "Writing %i=0x%x bytes to port..."
-msgstr[0] "Schrijven van %i=0x%x byte naar de poort..."
-msgstr[1] "Schrijven van %i=0x%x bytes naar de poort..."
+msgid "Writing %i=0x%x byte(s) to port..."
+msgstr "Schrijven van %i=0x%x byte(s) naar de poort..."
 
-#: libgphoto2_port/gphoto2-port.c:373
+#: libgphoto2_port/gphoto2-port.c:375
 #, c-format
 msgid "Could only write %i out of %i byte"
 msgid_plural "Could only write %i out of %i bytes"
 msgstr[0] "Kon slechts %i van %i byte schrijven"
 msgstr[1] "Kon slechts %i van %i bytes schrijven"
 
-#: libgphoto2_port/gphoto2-port.c:398
+#: libgphoto2_port/gphoto2-port.c:397
 #, c-format
 msgid "Reading %i=0x%x byte from port..."
 msgid_plural "Reading %i=0x%x bytes from port..."
 msgstr[0] "Lezen van %i=0x%x byte van de poort..."
 msgstr[1] "Lezen van %i=0x%x bytes van de poort..."
 
-#: libgphoto2_port/gphoto2-port.c:412 libgphoto2_port/gphoto2-port.c:453
-#: libgphoto2_port/gphoto2-port.c:493 libgphoto2_port/gphoto2-port.c:929
-#: libgphoto2_port/gphoto2-port.c:1012 libgphoto2_port/gphoto2-port.c:1097
+#: libgphoto2_port/gphoto2-port.c:409 libgphoto2_port/gphoto2-port.c:490
+#: libgphoto2_port/gphoto2-port.c:922 libgphoto2_port/gphoto2-port.c:1006
+#: libgphoto2_port/gphoto2-port.c:1092
 #, c-format
 msgid "Could only read %i out of %i byte"
-msgid_plural "Could only read %i out of %i bytes"
+msgid_plural "Could only read %i out of %i byte(s)"
 msgstr[0] "Kon slechts %i van %i byte lezen"
 msgstr[1] "Kon slechts %i van %i bytes lezen"
 
-#: libgphoto2_port/gphoto2-port.c:439
+#: libgphoto2_port/gphoto2-port.c:437
 #, c-format
 msgid "Reading %i=0x%x byte from interrupt endpoint..."
 msgid_plural "Reading %i=0x%x bytes from interrupt endpoint..."
 msgstr[0] "Lezen van %i=0x%x byte van interrupt-eindpunt..."
 msgstr[1] "Lezen van %i=0x%x bytes van interrupt-eindpunt..."
 
-#: libgphoto2_port/gphoto2-port.c:505
+#: libgphoto2_port/gphoto2-port.c:449
+#, c-format
+msgid "Could only read %i out of %i byte(s)"
+msgstr "Kon slechts %i van %i byte(s) lezen"
+
+#: libgphoto2_port/gphoto2-port.c:503
 #, c-format
 msgid "Reading %i=0x%x byte from interrupt endpoint (fast)..."
 msgid_plural "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
 msgstr[0] "Lezen van %i=0x%x byte van interrupt-eindpunt (snel)..."
 msgstr[1] "Lezen van %i=0x%x bytes van interrupt-eindpunt (snel)..."
 
-#: libgphoto2_port/gphoto2-port.c:533
+#: libgphoto2_port/gphoto2-port.c:531
 #, c-format
-msgid "Setting timeout to %i millisecond..."
-msgid_plural "Setting timeout to %i milliseconds..."
-msgstr[0] "Instellen van tijdslimiet op %i milliseconde..."
-msgstr[1] "Instellen van tijdslimiet op %i milliseconden..."
+msgid "Setting timeout to %i millisecond(s)..."
+msgstr "Instellen van tijdslimiet op %i milliseconde(n)..."
 
-#: libgphoto2_port/gphoto2-port.c:571
+#: libgphoto2_port/gphoto2-port.c:567
 msgid "Getting timeout..."
 msgstr "Bepalen van tijdslimiet..."
 
-#: libgphoto2_port/gphoto2-port.c:575
+#: libgphoto2_port/gphoto2-port.c:571
 #, c-format
 msgid "Current timeout: %i milliseconds"
 msgstr "Huidige tijdslimiet: %i milliseconden"
 
-#: libgphoto2_port/gphoto2-port.c:597
+#: libgphoto2_port/gphoto2-port.c:593
 msgid "Setting settings..."
 msgstr "Doorvoeren van instellingen..."
 
-#: libgphoto2_port/gphoto2-port.c:658
+#: libgphoto2_port/gphoto2-port.c:654
 #, c-format
 msgid "Getting level of pin %i..."
 msgstr "Bepalen van het niveau van pin %i..."
 
-#: libgphoto2_port/gphoto2-port.c:667
+#: libgphoto2_port/gphoto2-port.c:663
 #, c-format
 msgid "Level of pin %i: %i"
 msgstr "Niveau van pin %i: %i"
 
-#: libgphoto2_port/gphoto2-port.c:693
+#: libgphoto2_port/gphoto2-port.c:689
 msgid "low"
 msgstr "laag"
 
-#: libgphoto2_port/gphoto2-port.c:694
+#: libgphoto2_port/gphoto2-port.c:690
 msgid "high"
 msgstr "hoog"
 
-#: libgphoto2_port/gphoto2-port.c:720
+#: libgphoto2_port/gphoto2-port.c:716
 #, c-format
 msgid "Setting pin %i (%s: '%s') to '%s'..."
 msgstr "Instellen van pin %i (%s: '%s') op '%s'..."
 
-#: libgphoto2_port/gphoto2-port.c:748
+#: libgphoto2_port/gphoto2-port.c:743
 #, c-format
-msgid "Sending break (%i millisecond)..."
-msgid_plural "Sending break (%i milliseconds)..."
-msgstr[0] "Verzenden van 'break' (%i milliseconde)..."
-msgstr[1] "Verzenden van 'break' (%i milliseconden)..."
+msgid "Sending break (%i milliseconds)..."
+msgstr "Verzenden van 'break' (%i milliseconden)..."
 
-#: libgphoto2_port/gphoto2-port.c:776
+#: libgphoto2_port/gphoto2-port.c:769
 msgid "Flushing port..."
 msgstr "Leegmaken van poort..."
 
-#: libgphoto2_port/gphoto2-port.c:850
+#: libgphoto2_port/gphoto2-port.c:843
 msgid "Clear halt..."
 msgstr "Wissen van 'halt'-toestand..."
 
-#: libgphoto2_port/gphoto2-port.c:881
+#: libgphoto2_port/gphoto2-port.c:874
 #, c-format
 msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr "Schrijven van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:916
+#: libgphoto2_port/gphoto2-port.c:909
 #, c-format
 msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
 msgstr "Lezen van bericht (verzoek=0x%x waarde=0x%x index=0x%x omvang=%i=0x%x)..."
 
-#: libgphoto2_port/gphoto2-port.c:1231
+#: libgphoto2_port/gphoto2-port.c:1253
 msgid "No error description available"
 msgstr "Geen foutbeschrijving beschikbaar"
 
-#: serial/unix.c:239
-#, c-format
-msgid "Could not lock device '%s'"
-msgstr "Kan apparaat '%s' niet vergrendelen"
-
-#: serial/unix.c:249 usbdiskdirect/linux.c:94 usbscsi/linux.c:95
-#, c-format
-msgid "Device '%s' is locked by pid %d"
-msgstr "Apparaat '%s' is vergrendeld door PID %d"
-
-#: serial/unix.c:252 usbdiskdirect/linux.c:97 usbscsi/linux.c:98
-#, c-format
-msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Apparaat '%s' kan niet worden vergrendeld (dev_lock gaf %d terug)"
-
-#: serial/unix.c:286
-#, c-format
-msgid "Device '%s' could not be unlocked."
-msgstr "Apparaat '%s' kan niet worden ontgrendeld."
-
-#: serial/unix.c:298 usbdiskdirect/linux.c:126 usbscsi/linux.c:127
-#, c-format
-msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Apparaat '%s' kan niet worden ontgrendeld aangezien het vergrendeld is door PID %d."
-
-#: serial/unix.c:302 usbdiskdirect/linux.c:130 usbscsi/linux.c:131
-#, c-format
-msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Apparaat '%s' kan niet worden ontgrendeld (dev_unlock gaf %d terug)"
-
-#: serial/unix.c:383
-#, c-format
-msgid "Serial Port %i"
-msgstr "Seriële poort %i"
-
-#: serial/unix.c:474 usbdiskdirect/linux.c:285 usbscsi/linux.c:287
-#, c-format
-msgid "Failed to open '%s' (%m)."
-msgstr "Kan '%s' niet openen (%m)."
-
-#: serial/unix.c:492 usbdiskdirect/linux.c:299 usbscsi/linux.c:301
-#, c-format
-msgid "Could not close '%s' (%m)."
-msgstr "Kan '%s' niet sluiten (%m)."
-
-#: serial/unix.c:546
-#, c-format
-msgid "Could not write to port (%m)"
-msgstr "Kan niet naar poort schrijven (%m)"
-
-#: serial/unix.c:623
-msgid "Parity error."
-msgstr "Pariteitsfout."
-
-#: serial/unix.c:627
-#, c-format
-msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr "Onverwachte pariteitsantwoordvolgorde  0xff 0x%02x."
-
-#: serial/unix.c:670
-#, c-format
-msgid "Unknown pin %i."
-msgstr "Onbekende pin %i."
-
-#: serial/unix.c:692
-#, c-format
-msgid "Could not get level of pin %i (%m)."
-msgstr "Kan het niveau van pin %i niet bepalen (%m)."
-
-#: serial/unix.c:727
-#, c-format
-msgid "Could not set level of pin %i to %i (%m)."
-msgstr "Kan het niveau van pin %i niet op %i instellen (%m)."
-
-#: serial/unix.c:752
-#, c-format
-msgid "Could not flush '%s' (%m)."
-msgstr "Kan '%s' niet leegmaken (%m)."
-
-#: serial/unix.c:865
-#, c-format
-msgid "Could not set the baudrate to %d"
-msgstr "Kan de baudrate niet instellen op %d"
-
-#: usb/libusb.c:248
-#, c-format
-msgid "Could not open USB device (%m)."
-msgstr "Kan USB-apparaat niet openen (%m)."
-
-#: usb/libusb.c:260 libusb1/libusb1.c:305
-msgid "Camera is already in use."
-msgstr "Camera is reeds in gebruik."
-
-#: usb/libusb.c:265
-#, c-format
-msgid "Device has driver '%s' attached, detaching it now."
-msgstr "Het apparaat heeft als stuurprogramma '%s' aangehecht; dit wordt nu onthecht."
-
-#: usb/libusb.c:268
-#, c-format
-msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "Kan het kernelstuurprogramma '%s' van het camera-apparaat niet onthechten."
-
-#: usb/libusb.c:273 libusb1/libusb1.c:321
-msgid "Could not query kernel driver of device."
-msgstr "Kan het kernelstuurprogramma van het apparaat niet ondervragen."
-
-#: usb/libusb.c:281
-#, c-format
-msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Kan interface %d niet claimen (%m).  Zorg ervoor dat geen ander programma of kernelmodule (zoals %s) het apparaat gebruikt en dat u lees- en schrijfrechten voor dit apparaat hebt."
-
-#: usb/libusb.c:299
-#, c-format
-msgid "Could not release interface %d (%m)."
-msgstr "Kan interface %d niet vrijgeven (%m)."
-
-#: usb/libusb.c:312
-#, c-format
-msgid "Could not reset USB port (%m)."
-msgstr "Kan USB-poort niet resetten (%m)."
-
-#: usb/libusb.c:339
-#, c-format
-msgid "Could not close USB port (%m)."
-msgstr "Kan USB-poort niet sluiten (%m)."
-
-#: usb/libusb.c:590
-#, c-format
-msgid "Could not set config %d/%d (%m)"
-msgstr "Kan configuratie %d/%d niet instellen (%m)"
-
-#: usb/libusb.c:623
-#, c-format
-msgid "Could not set altsetting from %d to %d (%m)"
-msgstr "Kan 'alt'-instelling niet wijzigen van %d naar %d (%m)"
-
-#: usb/libusb.c:715 libusb1/libusb1.c:765
-#, c-format
-msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Het opgegeven leveranciers- of product-ID (0x%x,0x%x) is ongeldig."
-
-#: usb/libusb.c:751 libusb1/libusb1.c:804
-#, c-format
-msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "Het USB-apparaat (leverancier 0x%x, product 0x%x) is een massa-opslagmedium en zal misschien niet werken met gphoto2.  Referentie: %s"
-
-#: usb/libusb.c:794 libusb1/libusb1.c:836
-#, c-format
-msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
-msgstr "Kan USB-apparaat (leverancier 0x%x, product 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
-
-#: usb/libusb.c:1092 libusb1/libusb1.c:1130
-#, c-format
-msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Kan USB-apparaat (klasse 0x%x, subklasse 0x%x, protocol 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
-
-#: libusb1/libusb1.c:296
-#, c-format
-msgid "Could not open USB device (%s)."
-msgstr "Kan USB-apparaat niet openen (%s)."
-
-#: libusb1/libusb1.c:311
-#, c-format
-msgid "Device has a kernel driver attached (%d), detaching it now."
-msgstr "Het apparaat heeft een stuurprogramma aangehecht (%d); deze wordt nu onthecht."
-
-#: libusb1/libusb1.c:314
-msgid "Could not detach kernel driver of camera device."
-msgstr "Kan het kernelstuurprogramma van het camera-apparaat niet onthechten."
-
-#: libusb1/libusb1.c:329
-#, c-format
-msgid "Could not claim interface %d (%s). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Kan interface %d niet claimen (%s).  Zorg ervoor dat geen ander programma of kernelmodule (zoals %s) het apparaat gebruikt en dat u lees- en schrijfrechten voor dit apparaat hebt."
-
-#: libusb1/libusb1.c:351
-#, c-format
-msgid "Could not release interface %d (%s)."
-msgstr "Kan interface %d niet vrijgeven (%s)."
-
-#: libusb1/libusb1.c:366
-#, c-format
-msgid "Could not reset USB port (%s)."
-msgstr "Kan USB-poort niet resetten (%s)."
-
-#: libusb1/libusb1.c:377
-msgid "Could not reattach kernel driver of camera device."
-msgstr "Kan het kernelstuurprogramma van het camera-apparaat niet opnieuw aanhechten."
-
-#: libusb1/libusb1.c:628
-#, c-format
-msgid "Could not set config %d/%d (%s)"
-msgstr "Kan configuratie %d/%d niet instellen (%s)"
-
-#: libusb1/libusb1.c:667
-#, c-format
-msgid "Could not set altsetting from %d to %d (%s)"
-msgstr "Kan 'alt'-instelling niet wijzigen van %d naar %d (%s)"
-
-#: disk/disk.c:179 disk/disk.c:237 disk/disk.c:286 disk/disk.c:318
-#: disk/disk.c:341
+#: disk/disk.c:135 disk/disk.c:136 disk/disk.c:197 disk/disk.c:198
+#: disk/disk.c:238 disk/disk.c:261
 #, c-format
 msgid "Media '%s'"
 msgstr "Media '%s'"
 
-#: disk/disk.c:180
-msgid "(unknown)"
-msgstr "(onbekend)"
-
-#: usbdiskdirect/linux.c:230
+#: serial/unix.c:227
 #, c-format
+msgid "Could not lock device '%s'"
+msgstr "Kan apparaat '%s' niet vergrendelen"
+
+#: serial/unix.c:237 usbdiskdirect/linux.c:94 usbscsi/linux.c:95
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "Apparaat '%s' is vergrendeld door PID %d"
+
+#: serial/unix.c:240 usbdiskdirect/linux.c:97 usbscsi/linux.c:98
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "Apparaat '%s' kan niet worden vergrendeld (dev_lock gaf %d terug)"
+
+#: serial/unix.c:269
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "Apparaat '%s' kan niet worden ontgrendeld."
+
+#: serial/unix.c:281 usbdiskdirect/linux.c:126 usbscsi/linux.c:127
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "Apparaat '%s' kan niet worden ontgrendeld aangezien het vergrendeld is door PID %d."
+
+#: serial/unix.c:285 usbdiskdirect/linux.c:130 usbscsi/linux.c:131
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "Apparaat '%s' kan niet worden ontgrendeld (dev_unlock gaf %d terug)"
+
+#: serial/unix.c:362
+#, c-format
+msgid "Serial Port %i"
+msgstr "Seriële poort %i"
+
+#: serial/unix.c:459
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "Kan '%s' niet openen (%s)."
+
+#: serial/unix.c:479
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "Kan '%s' niet sluiten (%s)."
+
+#: serial/unix.c:536
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "Kan niet naar poort schrijven (%s)."
+
+#: serial/unix.c:614
+msgid "Parity error."
+msgstr "Pariteitsfout."
+
+#: serial/unix.c:618
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Onverwachte pariteitsantwoordvolgorde  0xff 0x%02x."
+
+#: serial/unix.c:661
+#, c-format
+msgid "Unknown pin %i."
+msgstr "Onbekende pin %i."
+
+#: serial/unix.c:684
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "Kan het niveau van pin %i niet bepalen (%s)."
+
+#: serial/unix.c:721
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "Kan het niveau van pin %i niet op %i instellen (%s)."
+
+#: serial/unix.c:748
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "Kan '%s' niet leegmaken (%s)."
+
+#: serial/unix.c:862
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "Kan de baudrate niet instellen op %d"
+
+#: usbdiskdirect/linux.c:232
 msgid "USB Mass Storage direct IO"
 msgstr "USB-massaopslag, directe invoer/uitvoer"
 
-#: usbdiskdirect/linux.c:324
+#: usbdiskdirect/linux.c:287 usbscsi/linux.c:289
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "Kan '%s' niet openen (%m)."
+
+#: usbdiskdirect/linux.c:301 usbscsi/linux.c:303
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Kan '%s' niet sluiten (%m)."
+
+#: usbdiskdirect/linux.c:326
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
 msgstr "Kan niet springen naar positie %x in '%s' (%m)."
 
-#: usbdiskdirect/linux.c:347
+#: usbdiskdirect/linux.c:349
 #, c-format
 msgid "Could not write to '%s' (%m)."
 msgstr "Kan niet naar '%s' schrijven (%m)"
 
-#: usbdiskdirect/linux.c:369
+#: usbdiskdirect/linux.c:371
 #, c-format
 msgid "Could not read from '%s' (%m)."
 msgstr "Kan niet uit '%s' lezen (%m)."
 
-#: usbscsi/linux.c:232
+#: usb/libusb.c:258 libusb1/libusb1.c:297
 #, c-format
+msgid "Could not open USB device (%s)."
+msgstr "Kan USB-apparaat niet openen (%s)."
+
+#: usb/libusb.c:268
+#, c-format
+msgid "Device has driver '%s' attached."
+msgstr "Het apparaat heeft als stuurprogramma '%s' aangehecht."
+
+#: usb/libusb.c:271 libusb1/libusb1.c:306
+msgid "Camera is already in use."
+msgstr "Camera is reeds in gebruik."
+
+#: usb/libusb.c:276
+#, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr "Het apparaat heeft als stuurprogramma '%s' aangehecht; dit wordt nu onthecht."
+
+#: usb/libusb.c:279
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "Kan het kernelstuurprogramma '%s' van het camera-apparaat niet onthechten."
+
+#: usb/libusb.c:284 libusb1/libusb1.c:322
+msgid "Could not query kernel driver of device."
+msgstr "Kan het kernelstuurprogramma van het apparaat niet ondervragen."
+
+#: usb/libusb.c:293 libusb1/libusb1.c:330
+#, c-format
+msgid "Could not claim interface %d (%s). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Kan interface %d niet claimen (%s).  Zorg ervoor dat geen ander programma of kernelmodule (zoals %s) het apparaat gebruikt en dat u lees- en schrijfrechten voor dit apparaat hebt."
+
+#: usb/libusb.c:315 libusb1/libusb1.c:352
+#, c-format
+msgid "Could not release interface %d (%s)."
+msgstr "Kan interface %d niet vrijgeven (%s)."
+
+#: usb/libusb.c:330 libusb1/libusb1.c:367
+#, c-format
+msgid "Could not reset USB port (%s)."
+msgstr "Kan USB-poort niet resetten (%s)."
+
+#: usb/libusb.c:360
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "Kan USB-poort niet sluiten (%s)."
+
+#: usb/libusb.c:614 libusb1/libusb1.c:633
+#, c-format
+msgid "Could not set config %d/%d (%s)"
+msgstr "Kan configuratie %d/%d niet instellen (%s)"
+
+#: usb/libusb.c:649 libusb1/libusb1.c:672
+#, c-format
+msgid "Could not set altsetting from %d to %d (%s)"
+msgstr "Kan 'alt'-instelling niet wijzigen van %d naar %d (%s)"
+
+#: usb/libusb.c:742 libusb1/libusb1.c:770
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "Het opgegeven leveranciers- of product-ID (0x%x,0x%x) is ongeldig."
+
+#: usb/libusb.c:778 libusb1/libusb1.c:809
+#, c-format
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "Het USB-apparaat (leverancier 0x%x, product 0x%x) is een massa-opslagmedium en zal misschien niet werken met gphoto2.  Referentie: %s"
+
+#: usb/libusb.c:821 libusb1/libusb1.c:841
+#, c-format
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Kan USB-apparaat (leverancier 0x%x, product 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
+
+#: usb/libusb.c:1121 libusb1/libusb1.c:1135
+#, c-format
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Kan USB-apparaat (klasse 0x%x, subklasse 0x%x, protocol 0x%x) niet vinden.  Zorg ervoor dat het apparaat aan de computer aangesloten is."
+
+#: libusb1/libusb1.c:312
+#, c-format
+msgid "Device has a kernel driver attached (%d), detaching it now."
+msgstr "Het apparaat heeft een stuurprogramma aangehecht (%d); deze wordt nu onthecht."
+
+#: libusb1/libusb1.c:315
+msgid "Could not detach kernel driver of camera device."
+msgstr "Kan het kernelstuurprogramma van het camera-apparaat niet onthechten."
+
+#: libusb1/libusb1.c:378
+msgid "Could not reattach kernel driver of camera device."
+msgstr "Kan het kernelstuurprogramma van het camera-apparaat niet opnieuw aanhechten."
+
+#: usbscsi/linux.c:234
 msgid "USB Mass Storage raw SCSI"
 msgstr "USB-massaopslag, rauwe SCSI-toegang"
 
-#: usbscsi/linux.c:345
+#: usbscsi/linux.c:347
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Kan SCSI-commando niet verzenden naar '%s' (%m)."
+
+#~ msgid "Could not open USB device (%m)."
+#~ msgstr "Kan USB-apparaat niet openen (%m)."
+
+#~ msgid "Could not claim interface %d (%m). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+#~ msgstr "Kan interface %d niet claimen (%m).  Zorg ervoor dat geen ander programma of kernelmodule (zoals %s) het apparaat gebruikt en dat u lees- en schrijfrechten voor dit apparaat hebt."
+
+#~ msgid "Could not release interface %d (%m)."
+#~ msgstr "Kan interface %d niet vrijgeven (%m)."
+
+#~ msgid "Could not reset USB port (%m)."
+#~ msgstr "Kan USB-poort niet resetten (%m)."
+
+#~ msgid "Could not set config %d/%d (%m)"
+#~ msgstr "Kan configuratie %d/%d niet instellen (%m)"
+
+#~ msgid "Could not set altsetting from %d to %d (%m)"
+#~ msgstr "Kan 'alt'-instelling niet wijzigen van %d naar %d (%m)"
+
+#~ msgid "(unknown)"
+#~ msgstr "(onbekend)"
