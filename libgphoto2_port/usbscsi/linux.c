@@ -338,7 +338,7 @@ static int gp_port_usbscsi_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
 	io_hdr.mx_sb_len = sense_size;
 	io_hdr.dxferp = (unsigned char *)data;
 	io_hdr.dxfer_len = data_size;
-	io_hdr.timeout = 500;
+	io_hdr.timeout = 1500;
 
 	if (ioctl (port->pl->fd, SG_IO, &io_hdr) < 0)
 	{
