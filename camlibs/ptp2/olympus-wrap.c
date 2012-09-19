@@ -37,6 +37,8 @@
 
 #include "config.h"
 
+#if 0
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -2562,3 +2564,4 @@ olympus_setup (PTPParams *params) {
 </x3c>
 */
 
+#endif
