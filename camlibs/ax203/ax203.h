@@ -49,6 +49,7 @@
 #define AX203_EEPROM_CMD	0x00
 #define AX203_GET_VERSION	0x01
 #define AX203_GET_LCD_SIZE	0x02
+#define AX203_GET_CHECKSUM	0x05 /* Note only seen on 206 sofar */
 
 #define AX3003_FRAME_CMD	0xCA
 #define AX3003_SET_TIME		0x01
