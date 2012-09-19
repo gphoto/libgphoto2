@@ -126,7 +126,7 @@ byte       5: 5
 byte       6: 5
 byte  7 -  8: size of area to checksum, byte 7 == MSB, 0 means 65536
 byte  9 - 10: 0
-byte 11 - 13: address to start checksum, byte 7 == MSB
+byte 11 - 13: address to start checksum, byte 11 == MSB
 
 And then readback 64 bytes of scsi data, where the first 2 are the 16 bit
 checksum of all the bytes in the area with byte 0 being the MSB.

@@ -1,6 +1,6 @@
 /* Appotech ax203 picframe access library
  *
- *   Copyright (c) 2010 Hans de Goede <hdegoede@redhat.com>
+ *   Copyright (c) 2010-2012 Hans de Goede <hdegoede@redhat.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -194,6 +194,31 @@ ax203_get_lcd_size(Camera *camera)
 	return GP_OK;
 }
 #endif
+
+static int
+ax203_get_checksum(Camera *camera, int address, int size)
+{
+	int ret;
+	char cmd_buffer[16];
+	uint8_t buf[2];
+
+	memset (cmd_buffer, 0, sizeof (cmd_buffer));
+
+	cmd_buffer[0] = AX203_FROM_DEV;
+	cmd_buffer[5] = AX203_GET_CHECKSUM;
+	cmd_buffer[6] = AX203_GET_CHECKSUM;
+	cmd_buffer[7] = (size >> 8) & 0xff;
+	cmd_buffer[8] = size & 0xff;
+	cmd_buffer[11] = (address >> 16) & 0xff;
+	cmd_buffer[12] = (address >> 8) & 0xff;
+	cmd_buffer[13] = address & 0xff;
+
+	ret = ax203_send_cmd (camera, 0, cmd_buffer, sizeof(cmd_buffer),
+			      (char *)buf, 2);
+	if (ret < 0) return ret;
+
+	return be16atoh(buf);
+}
 
 static int
 ax3003_get_frame_id(Camera *camera)
