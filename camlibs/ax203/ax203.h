@@ -103,6 +103,7 @@ struct _CameraPrivateLibrary {
 	int mem_size;
 	int has_4k_sectors;
 	int block_protection_removed;
+	int pp_64k;
 	/* Driver configuration settings */
 	int syncdatetime;
 };
