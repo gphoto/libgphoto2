@@ -623,8 +623,13 @@ static struct {
 	{"Sony:SLT-A55 (PTP mode)",   0x054c, 0x04a3, 0},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3515558&group_id=8874 */
 	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
+	/* t.ludewig@gmail.com */
+	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Rudi */
 	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
+
+	/* t.ludewig@gmail.com */
+	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -742,6 +747,8 @@ static struct {
 	{"Nikon:Coolpix S5100 (PTP mode)",0x04b0, 0x0220, 0},
 	/* wlady.cs@gmail.com */
 	{"Nikon:Coolpix P300 (PTP mode)", 0x04b0, 0x0221, 0},
+	/* t.ludewig@gmail.com */
+	{"Nikon:Coolpix P510 (PTP mode)", 0x04b0, 0x0223, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
@@ -812,9 +819,13 @@ static struct {
 	/* IRC Reporter popolon */
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Roderick Stewart <roderick.stewart@gmail.com> */
+	{"Nikon:DSC D800E (PTP mode)",    0x04b0, 0x042e, PTP_CAP|PTP_CAP_PREVIEW},
 	
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
+	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
+	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP},
 
 
 #if 0
@@ -878,6 +889,9 @@ static struct {
 	{"Olympus:FE4000",                0x07b4, 0x0116, 0},
 	{"Olympus:X920",                  0x07b4, 0x0116, 0},
 	{"Olympus:X925",                  0x07b4, 0x0116, 0},
+
+	/* t.ludewig@gmail.com */
+	{"Olympus:SP-720UZ",		  0x07b4, 0x012f, 0},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
@@ -1186,8 +1200,17 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3310995&group_id=8874 */
 	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* analemma88@gmail.com */
+	{"Canon:PowerShot A800",		0x04a9, 0x3226, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Juha Pesonen <juha.e.pesonen@gmail.com> */
 	{"Canon:PowerShot SX230HS",		0x04a9, 0x3228, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* t.ludewig@gmail.com */
+	{"Canon:PowerShot SX40HS",		0x04a9, 0x3238, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* t.ludewig@gmail.com */
+	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1253,9 +1276,16 @@ static struct {
 	{"Fuji:FinePix F80EXR",			0x04cb, 0x020e, 0},
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
+	/* https://sourceforge.net/tracker/index.php?func=detail&aid=3556692&group_id=8874&atid=108874 */
+	{"Fuji:FinePix S2950",			0x04cb, 0x0240, 0},
 	/* Luis Arias <kaaloo@gmail.com> */
 	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
-
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix S4300",			0x04cb, 0x0265, 0},
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix X-S1",			0x04cb, 0x026e, 0},
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix HS30EXR",		0x04cb, 0x0271, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
