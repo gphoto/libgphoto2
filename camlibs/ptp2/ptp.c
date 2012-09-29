@@ -134,7 +134,7 @@ ptp_error (PTPParams *params, const char *format, ...)
  * Upon success PTPContainer* ptp contains PTP Response Phase container with
  * all fields filled in.
  **/
-static uint16_t
+uint16_t
 ptp_transaction_new (PTPParams* params, PTPContainer* ptp, 
 		uint16_t flags, unsigned int sendlen,
 		PTPDataHandler *handler
@@ -378,7 +378,7 @@ ptp_exit_fd_handler (PTPDataHandler *handler) {
 }
 
 /* Old style transaction, based on memory */
-static uint16_t
+uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp, 
 		uint16_t flags, unsigned int sendlen,
 		unsigned char **data, unsigned int *recvlen

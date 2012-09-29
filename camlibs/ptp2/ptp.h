@@ -2221,6 +2221,15 @@ uint16_t ptp_generic_no_data	(PTPParams* params, uint16_t opcode, unsigned int c
 
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 
+uint16_t ptp_transaction_new (PTPParams* params, PTPContainer* ptp, 
+                uint16_t flags, unsigned int sendlen,
+                PTPDataHandler *handler
+);
+uint16_t ptp_transaction (PTPParams* params, PTPContainer* ptp,
+                uint16_t flags, unsigned int sendlen,
+                unsigned char **data, unsigned int *recvlen
+);
+
 /**
  * ptp_closesession:
  * params:      PTPParams*
