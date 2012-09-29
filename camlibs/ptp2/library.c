@@ -1205,6 +1205,9 @@ static struct {
 	/* Juha Pesonen <juha.e.pesonen@gmail.com> */
 	{"Canon:PowerShot SX230HS",		0x04a9, 0x3228, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3572477&group_id=8874 */
+	{"Canon:PowerShot SX220HS",		0x04a9, 0x322c, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* t.ludewig@gmail.com */
 	{"Canon:PowerShot SX40HS",		0x04a9, 0x3238, PTPBUG_DELETE_SENDS_EVENT},
 
