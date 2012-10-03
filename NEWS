@@ -1,8 +1,13 @@
 libgphoto2 2.5.0.1 release
 
 libgphoto2_port/libusb1:
-* rewrote cache handling to work
+* rewrote the cache handling to work
 
+translations updates
+* lots of translations synced to 2.5.0 release
+
+ptp2:
+* several new USB ids added
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.0 release
