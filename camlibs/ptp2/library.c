@@ -3090,6 +3090,21 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventtype = GP_EVENT_FILE_ADDED;
 					return GP_OK;
 				}
+				case PTP_EC_CANON_ShutterButtonPressed0:
+				case PTP_EC_CANON_ShutterButtonPressed1:
+				{
+					CameraFilePath *path;
+
+					path = malloc(sizeof(CameraFilePath));
+					ret = camera_canon_capture (camera, GP_FILE_TYPE_NORMAL, path, context);
+					if (ret != GP_OK) {
+						free (path);
+						break;
+					}
+					*eventdata = path;
+					*eventtype = GP_EVENT_FILE_ADDED;
+					return GP_OK;
+				}
 				default:
 					break;
 				}
