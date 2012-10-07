@@ -311,7 +311,7 @@ AS_IF([test "x$with_libxml2" != "xno"], [
 	AC_CHECK_LIB(xml2,xmlFirstElementChild,[
 		AC_CHECK_HEADER(libxml/parser.h,[
 			AC_DEFINE(HAVE_LIBXML2,1,[define if we found LIBXML2 and its headers])
-			LIBJPEG="-lxml2"
+			LIBXML2="-lxml2"
 			libxml2_msg="yes"
 		])
 	])
