@@ -1,6 +1,6 @@
 /* olympus_wrap.c
  *
- * Copyright © 2011 Marcus Meissner  <marcus@jet.franken.de>
+ * Copyright (c) 2012 Marcus Meissner  <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,7 @@
 
 #include "config.h"
 
-#if 0
+#ifdef HAVE_LIBXML2
 
 #include <string.h>
 #include <stdlib.h>
@@ -443,42 +443,6 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	}
 	return PTP_RC_OK;
 }
-
-#if 0
-/*
- * -------------------------------------------------------------------------
- * Here are the two public functions of this C file:
- * -------------------------------------------------------------------------
- */
-int
-usb_wrap_write_packet (GPPort *dev, unsigned int type, char *sierra_msg, int sierra_len)
-{
-	GP_DEBUG ("usb_wrap_write_packet");
-
-	CR (usb_wrap_RDY (dev, type));
-	CR (usb_wrap_CMND (dev, type, sierra_msg, sierra_len));
-	CR (usb_wrap_STAT (dev, type));
-	
-	return GP_OK;
-}
-
-int
-usb_wrap_read_packet (GPPort *dev, unsigned int type, char *sierra_response, int sierra_len)
-{
-	uw32_t uw_size;
-
-	GP_DEBUG ("usb_wrap_read_packet");
-
-	CR (usb_wrap_RDY (dev, type));
-	CR (usb_wrap_SIZE (dev, type, &uw_size));
-	CR (usb_wrap_DATA (dev, type, sierra_response, &sierra_len, uw_size));
-	CR (usb_wrap_STAT (dev, type));
-	
-	return sierra_len;
-}
-
-#endif
-
 
 static int
 olympus_ptp_transaction (PTPParams *params,
@@ -1810,6 +1774,29 @@ ums_wrap2_event_wait (PTPParams* params, PTPContainer* event) {
 	return ptp_usb_event_wait (params, event);
 }
 
+static uint16_t
+ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
+{
+        uint16_t        ret;
+        unsigned long   len;
+        PTPContainer    ptp;
+        unsigned char*  di=NULL;
+
+        memset(&ptp, 0, sizeof(ptp));
+        ptp.Code   = PTP_OC_GetDeviceInfo;
+        ptp.Nparam = 0;
+        len=0;
+        ret = ptp_transaction (params, &ptp,
+                PTP_DP_GETDATA, 0,
+                &di, &len
+        );
+        if (!di) ret = PTP_RC_GeneralError;
+        if (ret == PTP_RC_OK) ptp_unpack_DI(params, di, deviceinfo, len);
+        free(di);
+        return ret;
+}
+
+
 uint16_t
 olympus_setup (PTPParams *params) {
 	uint16_t	ret;
@@ -2564,4 +2551,4 @@ olympus_setup (PTPParams *params) {
 </x3c>
 */
 
-#endif
+#endif /* HAVE_LIBXML2 */

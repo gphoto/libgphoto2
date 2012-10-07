@@ -1,6 +1,6 @@
-/* sierra_usbwrap.h
+/* olympus-wrap.h
  *
- * Copyright © 2002 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright (c) 2012 Marcus Meissner  <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,14 +18,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __SIERRA_USBWRAP_H__
-#define __SIERRA_USBWRAP_H__
+#ifndef __OLYMPUS_USBWRAP_H__
+#define __OLYMPUS_USBWRAP_H__
 
 #include <gphoto2/gphoto2-port.h>
-
-int olympus_wrap_ptp_transaction (PTPParams *params,
-        PTPContainer* ptp, uint16_t flags,
-        unsigned int sendlen, unsigned char **data, unsigned int *recvlen);
 
 uint16_t olympus_setup (PTPParams *params);
 
@@ -42,4 +38,4 @@ uint16_t ums_wrap2_getresp(PTPParams* params, PTPContainer* resp);
 uint16_t ums_wrap2_event_check  (PTPParams* params, PTPContainer* req);
 uint16_t ums_wrap2_event_wait  (PTPParams* params, PTPContainer* req);
 
-#endif /* __SIERRA_USBWRAP_H__ */
+#endif /* __OLYMPUS_USBWRAP_H__ */
