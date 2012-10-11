@@ -1504,6 +1504,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_JPEG_Compression_Policy		0xD031
 #define PTP_DPC_NIKON_ColorSpace			0xD032
 #define PTP_DPC_NIKON_AutoDXCrop			0xD033
+#define PTP_DPC_NIKON_FlickerReduction			0xD034
+#define PTP_DPC_NIKON_RemoteMode			0xD035
 #define PTP_DPC_NIKON_VideoMode				0xD036
 #define PTP_DPC_NIKON_EffectMode			0xD037
 #define PTP_DPC_NIKON_CSMMenuBankSelect			0xD040
@@ -1587,6 +1589,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_MovScreenSize			0xD0A0
 #define PTP_DPC_NIKON_MovVoice				0xD0A1
 #define PTP_DPC_NIKON_MovMicrophone			0xD0A2
+#define PTP_DPC_NIKON_MovFileSlot			0xD0A3
+#define PTP_DPC_NIKON_ManualMovieSetting		0xD0A6
+#define PTP_DPC_NIKON_MonitorOffDelay			0xD0B3
 #define PTP_DPC_NIKON_Bracketing			0xD0C0
 #define PTP_DPC_NIKON_AutoExposureBracketStep		0xD0C1
 #define PTP_DPC_NIKON_AutoExposureBracketProgram	0xD0C2
