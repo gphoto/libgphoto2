@@ -1,0 +1,76 @@
+Device info:
+Manufacturer: Sony Corporation
+  Model: DSC-RX100
+  device version: 1.0
+  serial number: 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+Vendor extension ID: 0xffffffff
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002
+  0x1003
+  0x1001
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+  0x9280
+  0x9281
+  0x9282
+  0x9283
+  0x9284
+  0x9285
+Events Supported:
+  0x4004
+  0x4005
+  0x4006
+Device Properties Supported:
+  0x5001
+  0xd402
+  0xd406
+  0xd407
+  0xd303
+Camera summary:
+Manufacturer: Sony Corporation
+Model: DSC-RX100
+  Version: 1.0
+  Serial Number: nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+Vendor Extension ID: 0xffffffff (1.0)
+
+Capture Formats: 
+Display Formats: Association/Directory, Executable, MPEG, JPEG, MP4, Unknown(b301), Undefined Type, Unknown(b101), Unknown(b310)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Storage Media
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Only
+	Maximum Capability: 0 (0 MB)
+	Free Space (Bytes): 0 (0 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,100] value: 100% (100)
+Friendly Device Name(0xd402):(read only) (type=0xffff) DSC-RX100 ('DSC-RX100')
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) '(null)'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1

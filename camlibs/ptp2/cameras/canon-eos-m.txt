@@ -1,0 +1,121 @@
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon EOS M
+  device version: 3-1.0.6
+  serial number: 'xxxxxxx'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 200
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x91d5
+  0x101b
+  0x9101
+  0x9102
+  0x9103
+  0x9104
+  0x9105
+  0x9106
+  0x9107
+  0x9108
+  0x9109
+  0x910a
+  0x910b
+  0x910c
+  0x910e
+  0x9110
+  0x9113
+  0x9114
+  0x9115
+  0x9116
+  0x9117
+  0x9118
+  0x911b
+  0x911c
+  0x911d
+  0x911e
+  0x911f
+  0x9127
+  0x912c
+  0x9132
+  0x9135
+  0x9136
+  0x9137
+  0x9138
+  0x9139
+  0x913a
+  0x913b
+  0x913c
+  0x913f
+  0x913d
+  0x91da
+  0x91db
+  0x91dc
+  0x91dd
+  0x91de
+  0x91d8
+  0x91d9
+  0x91d7
+  0x913e
+  0x9052
+  0x9053
+  0x9057
+  0x9058
+  0x9059
+  0x905a
+  0x905f
+Events Supported:
+  0x4009
+  0x4004
+  0x4005
+  0x4003
+  0x4002
+  0x4007
+  0xc101
+Device Properties Supported:
+  0xd402
+  0xd407
+  0xd406
+  0xd303
+  0x5001
+
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon EOS M
+  Version: 3-1.0.6
+  Serial Number: xxxxxxx
+Vendor Extension ID: 0xb (2.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type, Unknown(b104), Unknown(b105)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS M'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+Property 0xd303:(read only) (type=0x2) 1
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 100% (100)
