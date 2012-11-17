@@ -623,6 +623,8 @@ static struct {
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3515558&group_id=8874 */
 	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
 	/* t.ludewig@gmail.com */
+	{"Sony:DSC-RX100 (PTP mode)", 0x054c, 0x052a, 0},
+	/* t.ludewig@gmail.com */
 	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Rudi */
 	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
@@ -771,6 +773,9 @@ static struct {
 	/* Fabio <ctrlaltca@gmail.com> */
 	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
 
+	/* t.ludewig@gmail.com */
+	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},
+
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
@@ -818,6 +823,8 @@ static struct {
 	/* IRC Reporter popolon */
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* t.ludewig@gmail.com */
+	{"Nikon:DSC D600 (PTP mode)",	  0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roderick Stewart <roderick.stewart@gmail.com> */
 	{"Nikon:DSC D800E (PTP mode)",    0x04b0, 0x042e, PTP_CAP|PTP_CAP_PREVIEW},
 	
@@ -866,6 +873,7 @@ static struct {
         /* Olympus wrap test code */
 	{"Olympus:X-925 (UMS mode)",      0x07b4, 0x0109, 0},
 	{"Olympus:E-520 (UMS mode)",      0x07b4, 0x0110, 0},
+	{"Olympus:E-410 (UMS mode)",      0x07b4, 0x0110, 0},
 	{"Olympus:E-1 (UMS mode)",        0x07b4, 0x0102, 0},
 #endif
 
@@ -891,6 +899,7 @@ static struct {
 
 	/* t.ludewig@gmail.com */
 	{"Olympus:SP-720UZ",		  0x07b4, 0x012f, 0},
+	{"Olympus:E-PL5",		  0x07b4, 0x012f, 0},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
@@ -1210,12 +1219,11 @@ static struct {
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot G1 X",		0x04a9, 0x3233, PTPBUG_DELETE_SENDS_EVENT},
-
-	/* t.ludewig@gmail.com */
 	{"Canon:PowerShot SX40HS",		0x04a9, 0x3238, PTPBUG_DELETE_SENDS_EVENT},
-
-	/* t.ludewig@gmail.com */
 	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS M",				0x04a9, 0x323d, 0/*PTP_CAP|PTP_CAP_PREVIEW ... might be unknown opcodes -Marcus */},
+	{"Canon:PowerShot S110",		0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SX500IS",		0x04a9, 0x325c, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1291,6 +1299,8 @@ static struct {
 	{"Fuji:FinePix X-S1",			0x04cb, 0x026e, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix HS30EXR",		0x04cb, 0x0271, 0},
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix XF1",			0x04cb, 0x0288, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
@@ -5970,6 +5980,7 @@ camera_init (Camera *camera, GPContext *context)
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
 #if 0 /* OLYMPUS */
+		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
                 if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110) || (a.usb_product == 0x102))) {
                         gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
                         olympus_setup (params);
