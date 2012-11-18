@@ -3854,6 +3854,12 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Movie Screen Size")},
 		{PTP_DPC_NIKON_MovVoice,			/* 0xD0A1 */
 		 N_("Movie Voice")},
+		{PTP_DPC_NIKON_MovMicrophone,			/* 0xD0A2 */
+		 N_("Movie Microphone")},
+		{PTP_DPC_NIKON_MovFileSlot,			/* 0xD0A3 */
+		 N_("Movie Card Slot")},
+		{PTP_DPC_NIKON_ManualMovieSetting,		/* 0xD0A6 */
+		 N_("Manual Movie Setting")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0C0 */
 		 N_("Bracketing Enable")},
 		{PTP_DPC_NIKON_AutoExposureBracketStep,		/* 0xD0C1 */
@@ -4053,7 +4059,9 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Exposure Display Status")},
 		{PTP_DPC_NIKON_ExposureIndicateStatus,		/* 0xD1B1 */
 		 N_("Exposure Indicate Status")},
-		{PTP_DPC_NIKON_ExposureIndicateLightup,		/* 0xD1B2 */
+		{PTP_DPC_NIKON_InfoDispErrStatus,		/* 0xD1B2 */
+		 N_("Info Display Error Status")},
+		{PTP_DPC_NIKON_ExposureIndicateLightup,		/* 0xD1B3 */
 		 N_("Exposure Indicate Lightup")},
 		{PTP_DPC_NIKON_FlashOpen,			/* 0xD1C0 */
 		 N_("Flash Open")},
