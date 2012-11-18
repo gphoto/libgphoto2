@@ -3842,6 +3842,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("AF Area Point")},
 		{PTP_DPC_NIKON_NormalAFOn,			/* 0xD08E */
 		 N_("Normal AF On")},
+		{PTP_DPC_NIKON_CleanImageSensor,		/* 0xD08F */
+		 N_("Clean Image Sensor")},
 		{PTP_DPC_NIKON_ImageCommentString,		/* 0xD090 */
 		 N_("Image Comment String")},
 		{PTP_DPC_NIKON_ImageCommentEnable,		/* 0xD091 */
@@ -3860,6 +3862,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Movie Card Slot")},
 		{PTP_DPC_NIKON_ManualMovieSetting,		/* 0xD0A6 */
 		 N_("Manual Movie Setting")},
+		{PTP_DPC_NIKON_MonitorOffDelay,			/* 0xD0B3 */
+		 N_("Monitor Off Delay")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0C0 */
 		 N_("Bracketing Enable")},
 		{PTP_DPC_NIKON_AutoExposureBracketStep,		/* 0xD0C1 */
@@ -3898,6 +3902,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Vignette Control")},
 		{PTP_DPC_NIKON_AutoDistortionControl,		/* 0xD0F8 */
 		 N_("Auto Distortion Control")},
+		{PTP_DPC_NIKON_SceneMode,			/* 0xD0F9 */
+		 N_("Scene Mode")},
 		{PTP_DPC_NIKON_ExposureTime,			/* 0xD100 */
 		 N_("Nikon Exposure Time")},
 		{PTP_DPC_NIKON_ACPower, N_("AC Power")},	/* 0xD101 */
@@ -4007,7 +4013,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Flash Commander Mode")},
 		{PTP_DPC_NIKON_FlashSign,			/* 0xD169 */
 		 N_("Flash Sign")},
-		{PTP_DPC_NIKON_ISOAuto,				/* 0xD16A */
+		{PTP_DPC_NIKON_ISO_Auto,			/* 0xD16A */
 		 N_("ISO Auto")},
 		{PTP_DPC_NIKON_RemoteTimeout,			/* 0xD16B */
 		 N_("Remote Timeout")},
