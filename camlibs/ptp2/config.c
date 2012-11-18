@@ -3476,6 +3476,19 @@ static struct deviceproptableu8 nikon_cleansensor[] = {
 };
 GENERIC8TABLE(Nikon_CleanSensor,nikon_cleansensor)
 
+static struct deviceproptableu8 nikon_flickerreduction[] = {
+	{ N_("50 Hz"),			0, 0 },
+	{ N_("60 Hz"),			1, 0 },
+};
+GENERIC8TABLE(Nikon_FlickerReduction,nikon_flickerreduction)
+
+static struct deviceproptableu8 nikon_remotemode[] = {
+	{ N_("Delayed Remote"),			0, 0 },
+	{ N_("Quick Response"),			1, 0 },
+	{ N_("Remote Mirror Up"),		2, 0 },
+};
+GENERIC8TABLE(Nikon_RemoteMode,nikon_remotemode)
+
 static struct deviceproptableu8 nikon_saturation[] = {
 	{ N_("Normal"),		0, 0 },
 	{ N_("Moderate"),	1, 0 },
@@ -5226,7 +5239,8 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Artist"), "artist", PTP_DPC_CANON_EOS_Artist, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 	{ N_("Copyright"), "copyright", PTP_DPC_CANON_EOS_Copyright, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
-	{ N_("Clean Sensor"), "cleansensor", PTP_DPC_NIKON_CleanImageSensor, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Nikon_CleanSensor, _put_Nikon_CleanSensor},
+	{ N_("Clean Sensor"), "cleansensor", PTP_DPC_NIKON_CleanImageSensor, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CleanSensor, _put_Nikon_CleanSensor},
+	{ N_("Flicker Reduction"), "flickerreduction", PTP_DPC_NIKON_FlickerReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlickerReduction, _put_Nikon_FlickerReduction},
 	{ N_("Custom Functions Ex"), "customfuncex", PTP_DPC_CANON_EOS_CustomFuncEx, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 
 /* virtual */
@@ -5395,6 +5409,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Center Weight Area"), "centerweightsize", PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CenterWeight, _put_Nikon_CenterWeight },
 	{ N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashShutterSpeed, _put_Nikon_FlashShutterSpeed },
 	{ N_("Remote Timeout"), "remotetimeout", PTP_DPC_NIKON_RemoteTimeout, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RemoteTimeout, _put_Nikon_RemoteTimeout },
+	{ N_("Remote Mode"), "remotemode", PTP_DPC_NIKON_RemoteMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RemoteMode, _put_Nikon_RemoteMode},
 	{ N_("Optimize Image"), "optimizeimage", PTP_DPC_NIKON_OptimizeImage, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OptimizeImage, _put_Nikon_OptimizeImage },
 	{ N_("Sharpening"), "sharpening", PTP_DPC_NIKON_ImageSharpening, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Sharpening, _put_Nikon_Sharpening },
 	{ N_("Tone Compensation"), "tonecompensation", PTP_DPC_NIKON_ToneCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ToneCompensation, _put_Nikon_ToneCompensation },

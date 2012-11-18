@@ -3689,6 +3689,14 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Color Space")},
 		{PTP_DPC_NIKON_AutoDXCrop,			/* 0xD033 */
 		 N_("Auto DX Crop")},
+		{PTP_DPC_NIKON_FlickerReduction,		/* 0xD034 */
+		 N_("Flicker Reduction")},
+		{PTP_DPC_NIKON_RemoteMode,			/* 0xD035 */
+		 N_("Remote Mode")},
+		{PTP_DPC_NIKON_VideoMode,			/* 0xD036 */
+		 N_("Video Mode")},
+		{PTP_DPC_NIKON_EffectMode,			/* 0xD037 */
+		 N_("Effect Mode")},
 		{PTP_DPC_NIKON_CSMMenuBankSelect,		/* 0xD040 */
 		 "PTP_DPC_NIKON_CSMMenuBankSelect"},
 		{PTP_DPC_NIKON_MenuBankNameA,			/* 0xD041 */
@@ -4441,6 +4449,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_NIKON_FinderISODisp, PTP_VENDOR_NIKON, 1, "Show ISO/Easy ISO"},
 		{PTP_DPC_NIKON_FinderISODisp, PTP_VENDOR_NIKON, 2, "Show frame count"},
 
+		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_RawCompression,PTP_VENDOR_NIKON),	/* D016 */
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_ACPower,PTP_VENDOR_NIKON),		/* D101 */
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_AFLockStatus,PTP_VENDOR_NIKON),		/* D104 */
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_AELockStatus,PTP_VENDOR_NIKON),		/* D105 */
@@ -4578,6 +4587,22 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_FlashOpen,PTP_VENDOR_NIKON),		/* D1C0 */
 		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_FlashCharged,PTP_VENDOR_NIKON),		/* D1C1 */
+
+		PTP_VENDOR_VAL_YN(PTP_DPC_NIKON_ManualMovieSetting,PTP_VENDOR_NIKON),	/* 0xD0A6 */
+
+		{PTP_DPC_NIKON_FlickerReduction, PTP_VENDOR_NIKON, 0, "50Hz"},		/* 0xD034 */
+		{PTP_DPC_NIKON_FlickerReduction, PTP_VENDOR_NIKON, 1, "60Hz"},
+
+		{PTP_DPC_NIKON_RemoteMode, PTP_VENDOR_NIKON, 0, N_("Delayed Remote")},	/* 0xD035 */
+		{PTP_DPC_NIKON_RemoteMode, PTP_VENDOR_NIKON, 1, N_("Quick Response")},	/* 0xD035 */
+		{PTP_DPC_NIKON_RemoteMode, PTP_VENDOR_NIKON, 2, N_("Remote Mirror Up")},/* 0xD035 */
+
+		{PTP_DPC_NIKON_MonitorOffDelay, PTP_VENDOR_NIKON, 0, "5min"},	/* 0xD0b3 */
+		{PTP_DPC_NIKON_MonitorOffDelay, PTP_VENDOR_NIKON, 1, "10min"},	/* 0xD0b3 */
+		{PTP_DPC_NIKON_MonitorOffDelay, PTP_VENDOR_NIKON, 2, "15min"},	/* 0xD0b3 */
+		{PTP_DPC_NIKON_MonitorOffDelay, PTP_VENDOR_NIKON, 3, "20min"},	/* 0xD0b3 */
+		{PTP_DPC_NIKON_MonitorOffDelay, PTP_VENDOR_NIKON, 4, "30min"},	/* 0xD0b3 */
+
 
 		/* Canon stuff */
 		PTP_VENDOR_VAL_BOOL(PTP_DPC_CANON_AssistLight,PTP_VENDOR_CANON),
