@@ -2625,6 +2625,19 @@ _get_Canon_CameraOrientation(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Nikon_AngleLevel(CONFIG_GET_ARGS) {
+	char	orient[20];
+
+	if (dpd->DataType != PTP_DTC_INT32)
+		return (GP_ERROR);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	sprintf (orient, "%.f'", dpd->CurrentValue.i32/65536.0);
+	gp_widget_set_value (*widget, orient);
+	return GP_OK;
+}
+
 
 static struct deviceproptableu8 nikon_afsensor[] = {
 	{ N_("Centre"),	0x00, 0 },
@@ -5198,6 +5211,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Battery Level"), "batterylevel", PTP_DPC_BatteryLevel, 0, PTP_DTC_UINT8, _get_BatteryLevel, _put_None },
 	{ N_("Battery Level"), "batterylevel", PTP_DPC_CANON_EOS_BatteryPower, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel, _put_None},
 	{ N_("Camera Orientation"), "orientation", PTP_DPC_NIKON_CameraOrientation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CameraOrientation, _put_None },
+	{ N_("Camera Orientation"), "orientation2", PTP_DPC_NIKON_AngleLevel, PTP_VENDOR_NIKON, PTP_DTC_INT32, _get_Nikon_AngleLevel, _put_None },
 	{ N_("Camera Orientation"), "orientation", PTP_DPC_CANON_RotationAngle, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_CameraOrientation, _put_None },
 	{ N_("Flash Open"), "flashopen", PTP_DPC_NIKON_FlashOpen, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
 	{ N_("Flash Charged"), "flashcharged", PTP_DPC_NIKON_FlashCharged, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
