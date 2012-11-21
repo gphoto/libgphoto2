@@ -25,6 +25,8 @@
  * - Not everything implementation correctly cross checked.
  * - Coolpix P3 does not give transfer status (image 000x/000y), and reports an
  *   error when transfers finish correctly.
+ *
+ * Nikon WU-1* adapters might use 0011223344556677 as GUID always...
  */
 #define _BSD_SOURCE
 #include "config.h"
