@@ -131,7 +131,10 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_set_path (info, "^usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
-	libusb_init (&ctx);
+	if (libusb_init (&ctx) != 0) {
+		gp_log (GP_LOG_ERROR, "libusb1", "libusb_init failed.");
+		return GP_ERROR_IO;
+	}
 	nrofdevs = libusb_get_device_list (ctx, &devs);
 	descs = malloc (sizeof(descs[0])*nrofdevs);
 	for (i=0;i<nrofdevs;i++) {
@@ -269,11 +272,16 @@ static int gp_port_usb_init (GPPort *port)
 
 	port->pl->config = port->pl->interface = port->pl->altsetting = -1;
 
-	libusb_init (&port->pl->ctx);
+	if (libusb_init (&port->pl->ctx) != 0) {
+		gp_log (GP_LOG_ERROR, "libusb1", "libusb_init failed.");
+		free (port->pl);
+		port->pl = NULL;
+		return GP_ERROR_IO;
+	}
 #if 0
 	libusb_set_debug (port->pl->ctx, 255);
 #endif
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
