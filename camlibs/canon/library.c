@@ -1582,6 +1582,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	time_t camtime;
 	char formatted_camera_time[30];
 	float zoom;
+	unsigned char zoomVal;
 
 	GP_DEBUG ("camera_get_config()");
 
@@ -1675,7 +1676,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	if (camera->pl->cached_ready == 1) {
 		res = canon_int_get_release_params(camera, context);
 		if (res == GP_OK)
-			iso = camera->pl->release_params[SHOOTING_MODE_INDEX];
+			shooting_mode = camera->pl->release_params[SHOOTING_MODE_INDEX];
 	}
 
 	/* Map it to the list of choices */
@@ -1739,9 +1740,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_RANGE, _("Zoom"), &t);
 	gp_widget_set_name (t, "zoom");
 	gp_widget_set_range (t, 0, 255, 1);
-	/* Set an unknown zoom level (at the moment we don't read the
-	 * zoom level */
-	zoom = -1;
+	canon_int_get_zoom(camera, &zoomVal, context);
+	zoom = zoomVal;
 	gp_widget_set_value (t, &zoom);
 	gp_widget_append (section, t);
 

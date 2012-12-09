@@ -2026,6 +2026,65 @@ canon_int_set_zoom (Camera *camera, unsigned char zoom_level,
 
 
 /**
+ * canon_int_get_zoom
+ * @camera: camera to work with
+ * @zoom_level: pointer to hold returned zoom level - A40: 1..10; G1: 0..40 (pMaxOpticalZoomPos*4)
+ * @context: context for error reporting
+ *
+ * Gets the camera's zoom. Only tested for G1 via USB.
+ *
+ * Returns: gphoto2 error code
+ *
+ */
+int
+canon_int_get_zoom (Camera *camera, unsigned char *zoom_level,
+                    GPContext *context)
+{
+        unsigned char *msg = NULL;
+        unsigned int datalen = 0;
+        unsigned char payload[0x4c];
+        int payloadlen;
+        char desc[128];
+
+        *zoom_level = 0;
+        GP_DEBUG ("canon_int_get_zoom() called");
+
+        payloadlen = canon_int_pack_control_subcmd( payload,
+                                                    CANON_USB_CONTROL_GET_ZOOM_POS,
+                                                    0, 0, desc );
+
+        if ( camera->pl->md->model == CANON_CLASS_6 ) {
+                /* Newer protocol uses a different code, but with same
+                 * response. It also needs an extra zero byte at the
+                 * end. */
+                payload[payloadlen++] = 0;
+                msg = canon_usb_dialogue ( camera,
+                                           CANON_USB_FUNCTION_CONTROL_CAMERA_2,
+                                           &datalen, payload, payloadlen );
+        }
+        else
+                msg = canon_usb_dialogue ( camera,
+                                           CANON_USB_FUNCTION_CONTROL_CAMERA,
+                                           &datalen, payload, payloadlen );
+        if ( msg == NULL  && datalen != 0x1c) {
+                /* ERROR */
+                GP_DEBUG ("%s datalen=%x",
+                          desc, datalen);
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+        *zoom_level = msg[12];
+
+        msg = NULL;
+        datalen = 0;
+
+        GP_DEBUG ("canon_int_get_zoom() finished successfully level=%d", *zoom_level);
+
+        return GP_OK;
+}
+
+
+/**
  * canon_int_set_image_format
  * @camera: camera to work with
  * @res_byte1: byte 1 of the 3-byte image format code

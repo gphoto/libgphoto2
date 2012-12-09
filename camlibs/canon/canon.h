@@ -713,6 +713,7 @@ int canon_int_end_remote_control(Camera *camera, GPContext *context);
 int canon_int_set_beep(Camera *camera, canonBeepMode beep_mode, GPContext *context);
 int canon_int_set_flash(Camera *camera, canonFlashMode flash_mode, GPContext *context);
 int canon_int_set_zoom(Camera *camera, unsigned char zoom_level, GPContext *context);
+int canon_int_get_zoom(Camera *camera, unsigned char *zoom_level, GPContext *context);
 
 /*
  * introduced for capturing
