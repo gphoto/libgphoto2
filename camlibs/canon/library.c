@@ -1670,7 +1670,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	if (camera->pl->cached_ready == 1) {
 		res = canon_int_get_release_params(camera, context);
 		if (res == GP_OK)
-			iso = camera->pl->release_params[SHOOTING_MODE_INDEX];
+			shooting_mode = camera->pl->release_params[SHOOTING_MODE_INDEX];
 	}
 
 	/* Map it to the list of choices */
