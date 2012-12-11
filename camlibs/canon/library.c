@@ -1639,11 +1639,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current ISO Speed setting */
 	iso = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			iso = camera->pl->release_params[ISO_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		iso = camera->pl->release_params[ISO_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1673,11 +1671,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current shooting mode setting */
 	shooting_mode = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK)
-			shooting_mode = camera->pl->release_params[SHOOTING_MODE_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK)
+		shooting_mode = camera->pl->release_params[SHOOTING_MODE_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1707,11 +1703,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current shutter speed setting */
 	shutter_speed = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			shutter_speed = camera->pl->release_params[SHUTTERSPEED_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		shutter_speed = camera->pl->release_params[SHUTTERSPEED_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1753,11 +1747,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current aperture setting */
 	aperture = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			aperture = camera->pl->release_params[APERTURE_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		aperture = camera->pl->release_params[APERTURE_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1786,11 +1778,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current exposure compensation setting */
 	expbias = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			expbias = camera->pl->release_params[EXPOSUREBIAS_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		expbias = camera->pl->release_params[EXPOSUREBIAS_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1819,13 +1809,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current image format setting */
 	res_byte1 = res_byte2 = res_byte3 = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params (camera, context);
-		if (res == GP_OK) {
-			res_byte1 = camera->pl->release_params[IMAGE_FORMAT_1_INDEX];
-			res_byte2 = camera->pl->release_params[IMAGE_FORMAT_2_INDEX];
-			res_byte3 = camera->pl->release_params[IMAGE_FORMAT_3_INDEX];
-		}
+	res = canon_int_get_release_params (camera, context);
+	if (res == GP_OK) {
+		res_byte1 = camera->pl->release_params[IMAGE_FORMAT_1_INDEX];
+		res_byte2 = camera->pl->release_params[IMAGE_FORMAT_2_INDEX];
+		res_byte3 = camera->pl->release_params[IMAGE_FORMAT_3_INDEX];
 	}
 
 	/* Map it to the list of choices */
@@ -1858,11 +1846,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current focus mode setting */
 	focus_mode = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			focus_mode = camera->pl->release_params[FOCUS_MODE_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		focus_mode = camera->pl->release_params[FOCUS_MODE_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1892,11 +1878,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current flash mode setting */
 	flash_mode = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			flash_mode = camera->pl->release_params[FLASH_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		flash_mode = camera->pl->release_params[FLASH_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1926,11 +1910,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	/* Get the camera's current beep setting */
 	beep_mode = -1;
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_release_params(camera, context);
-		if (res == GP_OK) 
-			beep_mode = camera->pl->release_params[BEEP_INDEX];
-	}
+	res = canon_int_get_release_params(camera, context);
+	if (res == GP_OK) 
+		beep_mode = camera->pl->release_params[BEEP_INDEX];
 
 	/* Map it to the list of choices */
 	i = 0;
@@ -1980,17 +1962,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Date and Time"), &t);
 	gp_widget_set_name (t, "datetime");
-	if (camera->pl->cached_ready == 1) {
-		res = canon_int_get_time (camera, &camtime, context);
-		if (res == GP_OK) {
-			strftime (formatted_camera_time, sizeof (formatted_camera_time),
+	res = canon_int_get_time (camera, &camtime, context);
+	if (res == GP_OK) {
+		strftime (formatted_camera_time, sizeof (formatted_camera_time),
                           "%Y-%m-%d %H:%M:%S", gmtime (&camtime));
-			gp_widget_set_value (t, formatted_camera_time);
-		} else {
-			gp_widget_set_value (t, _("Error"));
-		}
+		gp_widget_set_value (t, formatted_camera_time);
 	} else {
-		gp_widget_set_value (t, _("Unavailable"));
+		gp_widget_set_value (t, _("Error"));
 	}
 	gp_widget_append (section, t);
 
@@ -2001,23 +1979,18 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (t, firm);
 	gp_widget_append (section, t);
 
-	if (camera->pl->cached_ready == 1) {
-		canon_get_batt_status (camera, &pwr_status, &pwr_source, context);
+	canon_get_batt_status (camera, &pwr_status, &pwr_source, context);
 
-		if (pwr_status == CAMERA_POWER_OK || pwr_status == CAMERA_POWER_BAD)
-			snprintf (power_str, sizeof (power_str), "%s (%s)",
-				  ((pwr_source & CAMERA_MASK_BATTERY) ==
-				   0) ? _("AC adapter") : _("on battery"),
-				  pwr_status ==
-				  CAMERA_POWER_OK ? _("power OK") : _("power bad"));
-		else
-			snprintf (power_str, sizeof (power_str), "%s - %i",
-				  ((pwr_source & CAMERA_MASK_BATTERY) ==
-				   0) ? _("AC adapter") : _("on battery"), pwr_status);
-	} else {
-		strncpy (power_str, _("Unavailable"), sizeof (power_str) - 1);
-		power_str[sizeof (power_str) - 1] = 0;
-	}
+	if (pwr_status == CAMERA_POWER_OK || pwr_status == CAMERA_POWER_BAD)
+		snprintf (power_str, sizeof (power_str), "%s (%s)",
+			  ((pwr_source & CAMERA_MASK_BATTERY) ==
+			   0) ? _("AC adapter") : _("on battery"),
+			  pwr_status ==
+			  CAMERA_POWER_OK ? _("power OK") : _("power bad"));
+	else
+		snprintf (power_str, sizeof (power_str), "%s - %i",
+			  ((pwr_source & CAMERA_MASK_BATTERY) ==
+			   0) ? _("AC adapter") : _("on battery"), pwr_status);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Power"), &t);
 	gp_widget_set_name (t, "power");
