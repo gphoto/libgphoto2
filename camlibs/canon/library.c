@@ -1577,7 +1577,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	time_t camtime;
 	char formatted_camera_time[30];
 	float zoom;
-	unsigned char zoomVal;
+	unsigned char zoomVal, zoomMax;
 
 	GP_DEBUG ("camera_get_config()");
 
@@ -1734,8 +1734,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	/* Zoom level */
 	gp_widget_new (GP_WIDGET_RANGE, _("Zoom"), &t);
 	gp_widget_set_name (t, "zoom");
-	gp_widget_set_range (t, 0, 255, 1);
-	canon_int_get_zoom(camera, &zoomVal, context);
+	canon_int_get_zoom(camera, &zoomVal, &zoomMax, context);
+	gp_widget_set_range (t, 0, zoomMax, 1);
 	zoom = zoomVal;
 	gp_widget_set_value (t, &zoom);
 	gp_widget_append (section, t);
