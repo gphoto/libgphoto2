@@ -2029,6 +2029,7 @@ canon_int_set_zoom (Camera *camera, unsigned char zoom_level,
  * canon_int_get_zoom
  * @camera: camera to work with
  * @zoom_level: pointer to hold returned zoom level - A40: 1..10; G1: 0..40 (pMaxOpticalZoomPos*4)
+ * @zoom_max: pointer to hold zoom upper bound
  * @context: context for error reporting
  *
  * Gets the camera's zoom. Only tested for G1 via USB.
@@ -2037,7 +2038,9 @@ canon_int_set_zoom (Camera *camera, unsigned char zoom_level,
  *
  */
 int
-canon_int_get_zoom (Camera *camera, unsigned char *zoom_level,
+canon_int_get_zoom (Camera *camera,
+                    unsigned char *zoom_level,
+                    unsigned char *zoom_max,
                     GPContext *context)
 {
         unsigned char *msg = NULL;
@@ -2047,6 +2050,7 @@ canon_int_get_zoom (Camera *camera, unsigned char *zoom_level,
         char desc[128];
 
         *zoom_level = 0;
+        *zoom_max = 0;
         GP_DEBUG ("canon_int_get_zoom() called");
 
         payloadlen = canon_int_pack_control_subcmd( payload,
@@ -2074,6 +2078,7 @@ canon_int_get_zoom (Camera *camera, unsigned char *zoom_level,
         }
 
         *zoom_level = msg[12];
+        *zoom_max = msg[14];
 
         msg = NULL;
         datalen = 0;
