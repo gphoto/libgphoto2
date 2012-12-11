@@ -1570,10 +1570,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CameraWidget *t, *section;
 	char power_str[128], firm[64];
 
-	int iso, shutter_speed, aperture, focus_mode, flash_mode, beep_mode, shooting_mode;
-	int res_byte1, res_byte2, res_byte3;
 	int pwr_status, pwr_source, res, i, menuval;
-	unsigned int expbias;
 	time_t camtime;
 	char formatted_camera_time[30];
 	float zoom;
@@ -1628,22 +1625,24 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			return -1;
 	}
 
+	res = canon_int_get_release_params(camera, context);
+	if (res != GP_OK) {
+		for (i = 0 ; i < RELEASE_PARAMS_LEN ; i++)
+			camera->pl->release_params[i] = -1;
+	}
+
+
 	/* ISO speed */
 	gp_widget_new (GP_WIDGET_MENU, _("ISO Speed"), &t);
 	gp_widget_set_name (t, "iso");
 
-	/* Get the camera's current ISO Speed setting */
-	iso = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		iso = camera->pl->release_params[ISO_INDEX];
-
-	/* Map it to the list of choices */
+	/* Map ISO speed to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (isoStateArray[i].label) {
 		gp_widget_add_choice (t, isoStateArray[i].label);
-		if (iso == (int)isoStateArray[i].value) {
+		if (camera->pl->release_params[ISO_INDEX] ==
+		    (int)isoStateArray[i].value) {
 			gp_widget_set_value (t, isoStateArray[i].label);
 			menuval = i;
 		}
@@ -1664,18 +1663,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Shooting mode"), &t);
 	gp_widget_set_name (t, "shootingmode");
 
-	/* Get the camera's current shooting mode setting */
-	shooting_mode = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK)
-		shooting_mode = camera->pl->release_params[SHOOTING_MODE_INDEX];
-
-	/* Map it to the list of choices */
+	/* Map shooting mode to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (shootingModeStateArray[i].label) {
 		gp_widget_add_choice (t, _(shootingModeStateArray[i].label));
-		if (shooting_mode == (int)shootingModeStateArray[i].value) {
+		if (camera->pl->release_params[SHOOTING_MODE_INDEX] ==
+		    (int)shootingModeStateArray[i].value) {
 			gp_widget_set_value (t, _(shootingModeStateArray[i].label));
 			menuval = i;
 		}
@@ -1696,18 +1690,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Shutter Speed"), &t);
 	gp_widget_set_name (t, "shutterspeed");
 
-	/* Get the camera's current shutter speed setting */
-	shutter_speed = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		shutter_speed = camera->pl->release_params[SHUTTERSPEED_INDEX];
-
-	/* Map it to the list of choices */
+	/* Map shutter speed to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (shutterSpeedStateArray[i].label) {
 		gp_widget_add_choice (t, _(shutterSpeedStateArray[i].label));
-		if (shutter_speed == (int)shutterSpeedStateArray[i].value) {
+		if (camera->pl->release_params[SHUTTERSPEED_INDEX] ==
+		    (int)shutterSpeedStateArray[i].value) {
 			gp_widget_set_value (t, _(shutterSpeedStateArray[i].label));
 			menuval = i;
 		}
@@ -1740,18 +1729,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Aperture"), &t);
 	gp_widget_set_name (t, "aperture");
 
-	/* Get the camera's current aperture setting */
-	aperture = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		aperture = camera->pl->release_params[APERTURE_INDEX];
-
-	/* Map it to the list of choices */
+	/* Map aperture to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (apertureStateArray[i].label) {
 		gp_widget_add_choice (t, _(apertureStateArray[i].label));
-		if (aperture == (int)apertureStateArray[i].value) {
+		if (camera->pl->release_params[APERTURE_INDEX] ==
+		    (int)apertureStateArray[i].value) {
 			gp_widget_set_value (t, _(apertureStateArray[i].label));
 			menuval = i;
 		}
@@ -1771,18 +1755,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Exposure Compensation"), &t);
 	gp_widget_set_name (t, "exposurecompensation");
 
-	/* Get the camera's current exposure compensation setting */
-	expbias = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		expbias = camera->pl->release_params[EXPOSUREBIAS_INDEX];
 
-	/* Map it to the list of choices */
+	/* Map exposure compensation to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (exposureBiasStateArray[i].label) {
 		gp_widget_add_choice (t, _(exposureBiasStateArray[i].label));
-		if (expbias == exposureBiasStateArray[i].value) {
+		if (camera->pl->release_params[EXPOSUREBIAS_INDEX] ==
+		    exposureBiasStateArray[i].value) {
 			gp_widget_set_value (t, _(exposureBiasStateArray[i].label));
 			menuval = i;
 		}
@@ -1802,23 +1782,18 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Image Format"), &t);
 	gp_widget_set_name (t, "imageformat");
 
-	/* Get the camera's current image format setting */
-	res_byte1 = res_byte2 = res_byte3 = -1;
-	res = canon_int_get_release_params (camera, context);
-	if (res == GP_OK) {
-		res_byte1 = camera->pl->release_params[IMAGE_FORMAT_1_INDEX];
-		res_byte2 = camera->pl->release_params[IMAGE_FORMAT_2_INDEX];
-		res_byte3 = camera->pl->release_params[IMAGE_FORMAT_3_INDEX];
-	}
 
-	/* Map it to the list of choices */
+	/* Map image format to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (imageFormatStateArray[i].label) {
 		gp_widget_add_choice (t, _(imageFormatStateArray[i].label));
-		if (res_byte1 == imageFormatStateArray[i].res_byte1 &&
-			res_byte2 == imageFormatStateArray[i].res_byte2 &&
-			res_byte3 == imageFormatStateArray[i].res_byte3) {
+		if ((camera->pl->release_params[IMAGE_FORMAT_1_INDEX] ==
+		     imageFormatStateArray[i].res_byte1) &&
+		    (camera->pl->release_params[IMAGE_FORMAT_2_INDEX] ==
+		     imageFormatStateArray[i].res_byte2) &&
+		    (camera->pl->release_params[IMAGE_FORMAT_3_INDEX] ==
+		     imageFormatStateArray[i].res_byte3)) {
 			gp_widget_set_value (t, _(imageFormatStateArray[i].label));
 			menuval = i;
 		}
@@ -1839,18 +1814,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Focus Mode"), &t);
 	gp_widget_set_name (t, "focusmode");
 
-	/* Get the camera's current focus mode setting */
-	focus_mode = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		focus_mode = camera->pl->release_params[FOCUS_MODE_INDEX];
 
-	/* Map it to the list of choices */
+	/* Map focus to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (focusModeStateArray[i].label) {
 		gp_widget_add_choice (t, _(focusModeStateArray[i].label));
-		if (focus_mode == (int)focusModeStateArray[i].value) {
+		if (camera->pl->release_params[FOCUS_MODE_INDEX] ==
+		    (int)focusModeStateArray[i].value) {
 			gp_widget_set_value (t, _(focusModeStateArray[i].label));
 			menuval = i;
 		}
@@ -1871,25 +1842,21 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Flash Mode"), &t);
 	gp_widget_set_name (t, "flashmode");
 
-	/* Get the camera's current flash mode setting */
-	flash_mode = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		flash_mode = camera->pl->release_params[FLASH_INDEX];
 
-	/* Map it to the list of choices */
+	/* Map flash mode to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (flashModeStateArray[i].label) {
 		gp_widget_add_choice (t, _(flashModeStateArray[i].label));
-		if (flash_mode == (int)flashModeStateArray[i].value) {
+		if (camera->pl->release_params[FLASH_INDEX] ==
+		    (int)flashModeStateArray[i].value) {
 			gp_widget_set_value (t, _(flashModeStateArray[i].label));
 			menuval = i;
 		}
 		i++;
 	}
 	
-	/* Set an unknown shutter value if the 
+	/* Set an unknown flash value if the 
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1903,18 +1870,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_MENU, _("Beep"), &t);
 	gp_widget_set_name (t, "beep");
 
-	/* Get the camera's current beep setting */
-	beep_mode = -1;
-	res = canon_int_get_release_params(camera, context);
-	if (res == GP_OK) 
-		beep_mode = camera->pl->release_params[BEEP_INDEX];
 
-	/* Map it to the list of choices */
+	/* Map beep mode to the list of choices */
 	i = 0;
 	menuval = -1;
 	while (beepModeStateArray[i].label) {
 		gp_widget_add_choice (t, _(beepModeStateArray[i].label));
-		if (beep_mode == (int)beepModeStateArray[i].value) {
+		if (camera->pl->release_params[BEEP_INDEX] ==
+		    (int)beepModeStateArray[i].value) {
 			gp_widget_set_value (t, _(beepModeStateArray[i].label));
 			menuval = i;
 		}
