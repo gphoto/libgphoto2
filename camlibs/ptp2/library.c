@@ -1766,7 +1766,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				SET_CONTEXT_P(params, NULL);
 				return translate_ptp_result (ret);
 			}
-			gp_file_set_data_and_size ( file, (char*)data, size );
+			gp_file_append ( file, (char*)data, size );
+			free (data);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
 			/* Add an arbitrary file name so caller won't crash */
 			gp_file_set_name (file, "canon_preview.jpg");
