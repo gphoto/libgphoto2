@@ -8,6 +8,8 @@ translations updates
 
 ptp2:
 * several new USB ids added
+* wait-for-event also for Canon PowerShot (capture capable ones)
+  now waits for "shutter press" signal and triggers a capture.
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.0 release
