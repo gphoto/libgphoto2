@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.5.0\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-07-10 07:57+0200\n"
-"PO-Revision-Date: 2012-07-28 19:26+0200\n"
+"PO-Revision-Date: 2012-11-30 15:30+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
@@ -725,7 +725,7 @@ msgstr "Klasa rozmiaru zdjęcia"
 #: camlibs/ptp2/config.c:5249 camlibs/ptp2/ptp.c:3568
 #: camlibs/sierra/olympus-desc.c:881 camlibs/sierra/olympus-desc.c:899
 msgid "ISO Speed"
-msgstr "Prędkość ISO"
+msgstr "Czułość ISO"
 
 #: camlibs/canon/library.c:1657 camlibs/canon/library.c:1658
 #: camlibs/canon/library.c:1691 camlibs/canon/library.c:1692
@@ -889,15 +889,15 @@ msgstr "Błędne ustawienie klasy rozmiaru zdjęcia"
 
 #: camlibs/canon/library.c:2114
 msgid "Invalid ISO speed setting"
-msgstr "Błędne ustawienie prędkości ISO"
+msgstr "Błędne ustawienie czułości ISO"
 
 #: camlibs/canon/library.c:2117
 msgid "ISO speed changed"
-msgstr "Zmieniono prędkość ISO"
+msgstr "Zmieniono czułość ISO"
 
 #: camlibs/canon/library.c:2119
 msgid "Could not change ISO speed"
-msgstr "nie udało się zmienić prędkości ISO"
+msgstr "Nie udało się zmienić czułości ISO"
 
 #: camlibs/canon/library.c:2143
 msgid "Invalid shooting mode setting"
@@ -7540,7 +7540,7 @@ msgstr "Tryb programu ekspozycji"
 
 #: camlibs/ptp2/ptp.c:3503
 msgid "Exposure Index (film speed ISO)"
-msgstr "Indeks ekspozycji (prędkość filmu ISO)"
+msgstr "Indeks ekspozycji (czułość ISO filmu)"
 
 #: camlibs/ptp2/ptp.c:3505
 msgid "Exposure Bias Compensation"
