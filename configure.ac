@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.1 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.5.0.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.5.0.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
@@ -88,6 +88,7 @@ AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
+AM_PROG_AR
 
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the

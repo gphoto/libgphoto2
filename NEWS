@@ -1,15 +1,35 @@
-libgphoto2 2.5.0.1 release
-
-libgphoto2_port/libusb1:
-* rewrote the cache handling to work
+libgphoto2 2.5.0.2 release
 
 translations updates
 * lots of translations synced to 2.5.0 release
 
 ptp2:
-* several new USB ids added
+* lots of new USB ids added
+  - Sony RX100, A65V, HX200V
+  - Nikon Coolpix S01, S8200, P510, DSC 600, DSC 800E, J1
+  - Panasonic DMC LX7
+  - Olympus SP-720UZ, E-PL5
+  - Canon PowerShot D10, IXUS 310IS, SX220HS, G1 X, SX40HS, 
+    A4000IS, SX240HS, A2400IS, S110, SX500IS
+  - Canon EOS M, EOS 650D
+  - Fuji FinePix S2950, S4300, X-S1, HS30EXR, XF1
 * wait-for-event also for Canon PowerShot (capture capable ones)
   now waits for "shutter press" signal and triggers a capture.
+* Canon Powershot Preview mode fixes
+* various Nikon configurations added: angle, flickerreduction,
+  rawcompression, remotemode.
+* merged music player ids from libmtp. Includes big Samsung devices rename.
+
+ax203:
+* SST25VF080 and SST25VF016 support added.
+* ax206 support enhanced.
+
+canon:
+* decode "zoom" settings better
+* "shootingmode" fix
+
+libgphoto2_port/libusb1:
+* bugfixes
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.0 release
