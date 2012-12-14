@@ -1,0 +1,613 @@
+# Finnish messages for libgphoto2_port.
+# Copyright © 2012 Free Software Foundation, Inc.
+# Copyright © 2012 Lutz Mueller and others
+# This file is distributed under the same license as the libgphoto2 package.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgphoto2_port 2.5.0\n"
+"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2012-07-10 07:57+0200\n"
+"PO-Revision-Date: 2012-08-02 09:32+0200\n"
+"Last-Translator: Jorma Karvonen <karvonen.jorma@gmail.com>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#  Tässä tulostetaan jokainen tiedostonimi, jonka funktio 
+#  foreach_func kutsuu.
+#: libgphoto2_port/gphoto2-port-info-list.c:220
+#, c-format
+msgid "Called for filename '%s'."
+msgstr "Kutsuttu tiedostonimellä ’%s’."
+
+#  Tämä virheilmoitus seuraa, jos edellisen lataus edellisen kohdan 
+#  tiedostonimellä epäonnistuu.
+#: libgphoto2_port/gphoto2-port-info-list.c:225
+#, c-format
+msgid "Could not load '%s': '%s'."
+msgstr "Ei voitu ladata tiedostonimellä ’%s’: ’%s’."
+
+#  Ensimmäinen parametri on edelleen tiedostonimi
+#: libgphoto2_port/gphoto2-port-info-list.c:233
+#, c-format
+msgid "Could not find some functions in '%s': '%s'."
+msgstr "Tiedostonimestä ’%s’ ei löydetty mitään funktioita: ’%s’."
+
+#  Ensimmäinen parametri on edelleen tiedostonimi
+#: libgphoto2_port/gphoto2-port-info-list.c:245
+#, c-format
+msgid "'%s' already loaded"
+msgstr "’%s’ on jo ladattu"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:254
+#, c-format
+msgid "Could not load port driver list: '%s'."
+msgstr "Ei voitu ladata porttiajuriluetteloa: ’%s’."
+
+#  1. parametri on GPPortInfoList-tietueen nimikenttä
+#  2. parametri on polku
+#  3. parametri on edelleen edellä mainittu tiedostonimi
+#: libgphoto2_port/gphoto2-port-info-list.c:267
+#, c-format
+msgid "Loaded '%s' ('%s') from '%s'."
+msgstr "Ladattu ’%s’ (’%s’) tiedostonimestä ’%s’."
+
+#  Parametri on iolibs
+#: libgphoto2_port/gphoto2-port-info-list.c:300
+#, c-format
+msgid "Using ltdl to load io-drivers from '%s'..."
+msgstr "Käytetään ltdl:ää lataamaan siirtoajurit siirtokirjastoista ’%s’..."
+
+#  Lasketaan porttien lukumäärää luettelossa
+#: libgphoto2_port/gphoto2-port-info-list.c:332
+#, c-format
+msgid "Counting entries (%i available)..."
+msgid_plural "Counting entries (%i available)..."
+msgstr[0] "Lasketaan portteja (%i saatavilla)..."
+msgstr[1] "Lasketaan portteja (%i saatavilla)..."
+
+#  Porttien lukumäärästä on vähennetty geneeriset portit
+#: libgphoto2_port/gphoto2-port-info-list.c:345
+#, c-format
+msgid "%i regular entry available."
+msgid_plural "%i regular entries available."
+msgstr[0] "%i tavallinen portti saatavilla."
+msgstr[1] "%i tavallista porttia saatavilla."
+
+#  Etsitään luettelon portit ja kerrotaan, kuinka monta polkuun täsmäävää 
+#  porttia löytyy.
+#: libgphoto2_port/gphoto2-port-info-list.c:379
+#, c-format
+msgid "Looking for path '%s' (%i entry available)..."
+msgid_plural "Looking for path '%s' (%i entries available)..."
+msgstr[0] "Etsitään polkua ’%s’ (%i portti saatavilla)..."
+msgstr[1] "Etsitään polkua ’%s’ (%i porttia saatavilla)..."
+
+#  Käytetään säännöllistä lauseketta polkuetsinnässä
+#: libgphoto2_port/gphoto2-port-info-list.c:393
+#, c-format
+msgid "Starting regex search for '%s'..."
+msgstr "Aloitetaan säännöllisen lausekkeen etsintä polulle ’%s’..."
+
+#  Kokeillaan vuorotellen eri polkuja
+#: libgphoto2_port/gphoto2-port-info-list.c:401
+#, c-format
+msgid "Trying '%s'..."
+msgstr "Yritetään polkua ’%s’..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:422
+msgid "regcomp failed"
+msgstr "funktio regcomp epäonnistui"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:433
+#, c-format
+msgid "re_match failed (%i)"
+msgstr "funktio re_match epäonnistui (%i)"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:441
+msgid "regexec failed"
+msgstr "funktio regexec epäonnistui"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:448
+msgid "Generic Port"
+msgstr "Geneerinen portti"
+
+#  Parametrina on portin nimi, listalta etsitään tätä nimeä
+#: libgphoto2_port/gphoto2-port-info-list.c:473
+#, c-format
+msgid "Looking up entry '%s'..."
+msgstr "Etsitään porttia ’%s’..."
+
+#: libgphoto2_port/gphoto2-port-info-list.c:505
+#, c-format
+msgid "Getting info of entry %i (%i available)..."
+msgid_plural "Getting info of entry %i (%i available)..."
+msgstr[0] "Haetaan portin %i tietoja (%i saatavilla)..."
+msgstr[1] "Haetaan portin %i tietoja (%i saatavilla)..."
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "No error"
+msgstr "Ei virhettä"
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "Unspecified error"
+msgstr "Määrittelemätön virhe"
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "I/O problem"
+msgstr "Siirräntäpulma"
+
+#: libgphoto2_port/gphoto2-port-result.c:64
+msgid "Bad parameters"
+msgstr "Virheelliset parametrit"
+
+#: libgphoto2_port/gphoto2-port-result.c:66
+msgid "Unsupported operation"
+msgstr "Tukematon toiminto"
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Fixed limit exceeded"
+msgstr "Kiinteä raja ylitetty"
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Timeout reading from or writing to the port"
+msgstr "Aikakatkaisu portin lukemisessa tai kirjoittamisessa"
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "Serial port not supported"
+msgstr "Sarjaporttia ei tueta"
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "USB port not supported"
+msgstr "USB-porttia  ei  tueta"
+
+#: libgphoto2_port/gphoto2-port-result.c:76
+msgid "Unknown port"
+msgstr "Tuntematon portti"
+
+#: libgphoto2_port/gphoto2-port-result.c:78
+msgid "Out of memory"
+msgstr "Muisti loppui"
+
+#: libgphoto2_port/gphoto2-port-result.c:80
+msgid "Error loading a library"
+msgstr "Virhe ladattaessa kirjastoa"
+
+#: libgphoto2_port/gphoto2-port-result.c:82
+msgid "Error initializing the port"
+msgstr "Virhe alustettaessa porttia"
+
+#: libgphoto2_port/gphoto2-port-result.c:84
+msgid "Error reading from the port"
+msgstr "Virhe luettaessa portista"
+
+#: libgphoto2_port/gphoto2-port-result.c:86
+msgid "Error writing to the port"
+msgstr "Virhe kirjoitettaessa porttiin"
+
+#: libgphoto2_port/gphoto2-port-result.c:88
+msgid "Error updating the port settings"
+msgstr "Virhe päivitettäessä portin asetuksia"
+
+#: libgphoto2_port/gphoto2-port-result.c:90
+msgid "Error setting the serial port speed"
+msgstr "Virhe asetettaessa sarjaportin nopeutta"
+
+#: libgphoto2_port/gphoto2-port-result.c:92
+msgid "Error clearing a halt condition on the USB port"
+msgstr "Virhe nollatessa halt-tilaa USB-portissa"
+
+#: libgphoto2_port/gphoto2-port-result.c:94
+msgid "Could not find the requested device on the USB port"
+msgstr "Ei löydetty pyydettyä laitetta USB-portista"
+
+#: libgphoto2_port/gphoto2-port-result.c:96
+msgid "Could not claim the USB device"
+msgstr "Ei voitu vaatia USB-laitetta"
+
+#: libgphoto2_port/gphoto2-port-result.c:98
+msgid "Could not lock the device"
+msgstr "Laitetta ei voitu lukita"
+
+#: libgphoto2_port/gphoto2-port-result.c:100
+msgid "libhal error"
+msgstr "libhal-virhe"
+
+#: libgphoto2_port/gphoto2-port-result.c:102
+msgid "Unknown error"
+msgstr "Tuntematon virhe"
+
+#: libgphoto2_port/gphoto2-port.c:58
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "Tämä laite ei tue ’%s’-toimintoa"
+
+#: libgphoto2_port/gphoto2-port.c:59
+msgid "The port has not yet been initialized"
+msgstr "Porttia ei ole vielä alustettu"
+
+#: libgphoto2_port/gphoto2-port.c:90
+msgid "Creating new device..."
+msgstr "Luodaan uusi laite..."
+
+#  Parametri on info->library_filename
+#: libgphoto2_port/gphoto2-port.c:175
+#, c-format
+msgid "Could not load '%s' ('%s')."
+msgstr "Ei voitu ladata kirjastotiedostonimeä ’%s’ (’%s’)."
+
+#: libgphoto2_port/gphoto2-port.c:185
+#, c-format
+msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
+msgstr "Ei löydetty ’gp_port_library_operations’ kirjastotiedostonimestä ’%s’ (’%s’)"
+
+#  Parametrina on SERIAL tai USB
+#: libgphoto2_port/gphoto2-port.c:267
+#, c-format
+msgid "Opening %s port..."
+msgstr "Avataan %s-portti..."
+
+#: libgphoto2_port/gphoto2-port.c:289
+msgid "Closing port..."
+msgstr "Suljetaan portti..."
+
+#: libgphoto2_port/gphoto2-port.c:311
+msgid "Freeing port..."
+msgstr "Vapautetaan portti..."
+
+#: libgphoto2_port/gphoto2-port.c:362
+#, c-format
+msgid "Writing %i=0x%x byte(s) to port..."
+msgstr "Kirjoitetaan %i=0x%x tavua porttiin..."
+
+#: libgphoto2_port/gphoto2-port.c:375
+#, c-format
+msgid "Could only write %i out of %i byte"
+msgid_plural "Could only write %i out of %i bytes"
+msgstr[0] "Voitiin kirjoittaa vain %i / %i tavu"
+msgstr[1] "Voitiin kirjoittaa ain %i / %i tavua"
+
+#: libgphoto2_port/gphoto2-port.c:397
+#, c-format
+msgid "Reading %i=0x%x byte from port..."
+msgid_plural "Reading %i=0x%x bytes from port..."
+msgstr[0] "Luetaan %i=0x%x tavu portista..."
+msgstr[1] "Luetaan %i=0x%x tavua portista..."
+
+#: libgphoto2_port/gphoto2-port.c:409 libgphoto2_port/gphoto2-port.c:490
+#: libgphoto2_port/gphoto2-port.c:922 libgphoto2_port/gphoto2-port.c:1006
+#: libgphoto2_port/gphoto2-port.c:1092
+#, c-format
+msgid "Could only read %i out of %i byte"
+msgid_plural "Could only read %i out of %i byte(s)"
+msgstr[0] "Voitiin lukea vain %i / %i tavu"
+msgstr[1] "Voitiin lukea vain %i / %i tavua"
+
+#: libgphoto2_port/gphoto2-port.c:437
+#, c-format
+msgid "Reading %i=0x%x byte from interrupt endpoint..."
+msgid_plural "Reading %i=0x%x bytes from interrupt endpoint..."
+msgstr[0] "Luetaan %i=0x%x tavu keskeytyspäätepisteestä..."
+msgstr[1] "Luetaan %i=0x%x tavua keskeytyspäätepisteestä..."
+
+#: libgphoto2_port/gphoto2-port.c:449
+#, c-format
+msgid "Could only read %i out of %i byte(s)"
+msgstr "Ei voitu lukea %i / %i tavua"
+
+#: libgphoto2_port/gphoto2-port.c:503
+#, c-format
+msgid "Reading %i=0x%x byte from interrupt endpoint (fast)..."
+msgid_plural "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
+msgstr[0] "Luetaan %i=0x%x tavu keskeytyspäätepisteestä (nopea)..."
+msgstr[1] "Luetaan %i=0x%x tavua keskeytyspäätepisteestä (nopea)..."
+
+#: libgphoto2_port/gphoto2-port.c:531
+#, c-format
+msgid "Setting timeout to %i millisecond(s)..."
+msgstr "Asetetaan aikakatkaisuksi %i millisekuntia..."
+
+#: libgphoto2_port/gphoto2-port.c:567
+msgid "Getting timeout..."
+msgstr "Haetaan aikakatkaisu..."
+
+#: libgphoto2_port/gphoto2-port.c:571
+#, c-format
+msgid "Current timeout: %i milliseconds"
+msgstr "Nykyinen aikakatkaisu: %i millisekuntia"
+
+#: libgphoto2_port/gphoto2-port.c:593
+msgid "Setting settings..."
+msgstr "Tee asetukset..."
+
+#: libgphoto2_port/gphoto2-port.c:654
+#, c-format
+msgid "Getting level of pin %i..."
+msgstr "Haetaan nastan %i taso..."
+
+#: libgphoto2_port/gphoto2-port.c:663
+#, c-format
+msgid "Level of pin %i: %i"
+msgstr "Nastan %i taso: %i"
+
+#  low ja high ovat mikropiirin tai sarjaportin nastojen binaaritiloja. 
+#  Mikropiireissä low on looginen nolla (maan potentiaali) ja high on 
+#  looginen ykkönen (esimerkiksi +5V). Sarjaporteissa looginen ykkönen 
+#  on yleensä -5...-12V ja looginen nolla +5...+12 V, mutta Gphotossa
+#  näytetään noudattavan mikropiirilogiikkaa.
+#: libgphoto2_port/gphoto2-port.c:689
+msgid "low"
+msgstr "looginen nolla"
+
+#  low ja high ovat mikropiirin tai sarjaportin nastojen binaaritiloja. 
+#  Mikropiireissä low on looginen nolla (maan potentiaali) ja high on 
+#  looginen ykkönen (esimerkiksi +5V). Sarjaporteissa looginen ykkönen 
+#  on yleensä -5...-12V ja looginen nolla +5...+12 V, mutta Gphotossa
+#  näytetään noudattavan mikropiirilogiikkaa.
+#: libgphoto2_port/gphoto2-port.c:690
+msgid "high"
+msgstr "looginen ykkönen"
+
+#: libgphoto2_port/gphoto2-port.c:716
+#, c-format
+msgid "Setting pin %i (%s: '%s') to '%s'..."
+msgstr "Asetetaan nastan %i (%s: ’%s’) arvoksi ’%s’..."
+
+#: libgphoto2_port/gphoto2-port.c:743
+#, c-format
+msgid "Sending break (%i milliseconds)..."
+msgstr "Lähetetään katkos (%i millisekuntia)..."
+
+#: libgphoto2_port/gphoto2-port.c:769
+msgid "Flushing port..."
+msgstr "Puhdistetaan portti..."
+
+#: libgphoto2_port/gphoto2-port.c:843
+msgid "Clear halt..."
+msgstr "Nollaa halt-tila..."
+
+#: libgphoto2_port/gphoto2-port.c:874
+#, c-format
+msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+msgstr "Kirjoitetaan viesti (pyyntö=0x%x arvo=0x%x indeksi=0x%x koko=%i=0x%x)..."
+
+#: libgphoto2_port/gphoto2-port.c:909
+#, c-format
+msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+msgstr "Luetaan viesti (pyyntö=0x%x arvo=0x%x indeksi=0x%x koko=%i=0x%x)..."
+
+#: libgphoto2_port/gphoto2-port.c:1253
+msgid "No error description available"
+msgstr "Virhekuvausta ei ole saatavilla"
+
+#: disk/disk.c:135 disk/disk.c:136 disk/disk.c:197 disk/disk.c:198
+#: disk/disk.c:238 disk/disk.c:261
+#, c-format
+msgid "Media '%s'"
+msgstr "Media ’%s’"
+
+#: serial/unix.c:227
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "Laitetta ’%s’ ei voitu lukita"
+
+#: serial/unix.c:237 usbdiskdirect/linux.c:94 usbscsi/linux.c:95
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "Laitteen ’%s’ on lukinnut pid %d"
+
+#: serial/unix.c:240 usbdiskdirect/linux.c:97 usbscsi/linux.c:98
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "Laitetta ’%s’ ei voitu lukita (dev_lock palautti %d)"
+
+#: serial/unix.c:269
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "Laitteen ’%s’ lukitusta ei voitu avata."
+
+#: serial/unix.c:281 usbdiskdirect/linux.c:126 usbscsi/linux.c:127
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "Laitteen ’%s’ lukitusta ei voitu avata, koska sen on lukinnut pid %d."
+
+#: serial/unix.c:285 usbdiskdirect/linux.c:130 usbscsi/linux.c:131
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "Laitteen ’%s’ lukitusta ei voitu avata (dev_unlock palautti %d)"
+
+#: serial/unix.c:362
+#, c-format
+msgid "Serial Port %i"
+msgstr "Sarjaportti %i"
+
+#  Ensimmäinen parametri on portti
+#: serial/unix.c:459
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "Portin ’%s’ avaaminen epäonnistui (%s)."
+
+#  Ensimmäinen parametri on sarjaportti
+#: serial/unix.c:479
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "Sarjaporttia ’%s’ ei voitu sulkea (%s)."
+
+#: serial/unix.c:536
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "Ei voitu kirjoittaa porttiin (%s)"
+
+#: serial/unix.c:614
+msgid "Parity error."
+msgstr "Pariteettivirhe."
+
+#: serial/unix.c:618
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Odottamaton pariteettivastaussekvenssi 0xff 0x%02x."
+
+#: serial/unix.c:661
+#, c-format
+msgid "Unknown pin %i."
+msgstr "Tuntematon nasta %i."
+
+#: serial/unix.c:684
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "Ei voitu hakea nastan %i tasoa (%s)."
+
+#: serial/unix.c:721
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "Ei voitu asettaa nastan %i tasoksi %i (%s)."
+
+#  Ensimmäinen parametri on sarjaportti
+#: serial/unix.c:748
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "Ei voitu puhdistaa sarjaporttia ’%s’ (%s)."
+
+#: serial/unix.c:862
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "Ei voitu asettaa siirtonopeudeksi %d"
+
+#: usbdiskdirect/linux.c:232
+msgid "USB Mass Storage direct IO"
+msgstr "USB-massatallennuksen suora liitäntä"
+
+#  Ensimmäinen parametri on polku
+#: usbdiskdirect/linux.c:287 usbscsi/linux.c:289
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "Polun ’%s’ avaaminen epäonnistui (%m)."
+
+#  Ensimmäinen parametri on polku
+#: usbdiskdirect/linux.c:301 usbscsi/linux.c:303
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Polkua ’%s’ ei voitu sulkea (%m)."
+
+#  Toinen parametri on polku
+#: usbdiskdirect/linux.c:326
+#, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "Ei voitu etsiä siirrososoitteeseen: %x polussa ’%s’ (%m)."
+
+#  Ensimmäinen parametri on polku
+#: usbdiskdirect/linux.c:349
+#, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "Ei voitu kirjoittaa polkuun ’%s’ (%m)."
+
+#  Ensimmäinen parametri on polku
+#: usbdiskdirect/linux.c:371
+#, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "Ei voitu lukea polusta ’%s’ (%m)."
+
+#: usb/libusb.c:258 libusb1/libusb1.c:297
+#, c-format
+msgid "Could not open USB device (%s)."
+msgstr "Ei voitu avata USB-laitetta (%s)."
+
+#: usb/libusb.c:268
+#, c-format
+msgid "Device has driver '%s' attached."
+msgstr "Laitteeseen on liitetty ajuri ’%s’."
+
+#: usb/libusb.c:271 libusb1/libusb1.c:306
+msgid "Camera is already in use."
+msgstr "Kamera on jo käytössä."
+
+#: usb/libusb.c:276
+#, c-format
+msgid "Device has driver '%s' attached, detaching it now."
+msgstr "Laitteeseen on liitetty ajuri ’%s’, irrotetaan se nyt."
+
+#: usb/libusb.c:279
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "Kameralaitteen käyttöjärjestelmäajuria ’%s’ ei voitu irrottaa."
+
+#: usb/libusb.c:284 libusb1/libusb1.c:322
+msgid "Could not query kernel driver of device."
+msgstr "Ei voitu kysellä laitteen käyttöjärjestelmäajuria."
+
+#: usb/libusb.c:293 libusb1/libusb1.c:330
+#, c-format
+msgid "Could not claim interface %d (%s). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Ei voitu vaatia liitäntää %d (%s). Varmista, että mikään toinen ohjelma tai käyttöjärjestelmämoduuli (sellainen kuin %s) ei käytä laitetta ja sinulla on laitteeseen luku- tai kirjoitusoikeus."
+
+#: usb/libusb.c:315 libusb1/libusb1.c:352
+#, c-format
+msgid "Could not release interface %d (%s)."
+msgstr "Ei voitu vapauttaa liitäntää %d (%s)."
+
+#: usb/libusb.c:330 libusb1/libusb1.c:367
+#, c-format
+msgid "Could not reset USB port (%s)."
+msgstr "Ei voitu nollata USB-porttia (%s)."
+
+#: usb/libusb.c:360
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "Ei voitu sulkea USB-porttia (%s)."
+
+#: usb/libusb.c:614 libusb1/libusb1.c:633
+#, c-format
+msgid "Could not set config %d/%d (%s)"
+msgstr "Ei voitu asettaa asetusta %d/%d (%s)"
+
+#: usb/libusb.c:649 libusb1/libusb1.c:672
+#, c-format
+msgid "Could not set altsetting from %d to %d (%s)"
+msgstr "Ei voitu asettaa altsetting-asetusta arvosta %d arvoon %d (%s)"
+
+#: usb/libusb.c:742 libusb1/libusb1.c:770
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "Tarjottu toimittaja- tai tuotetunniste (0x%x,0x%x) ei ole kelvollinen."
+
+#: usb/libusb.c:778 libusb1/libusb1.c:809
+#, c-format
+msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+msgstr "USB-laite (toimittaja 0x%x, tuote 0x%x) on massatallennuslaite, ja ei ehkä toimi gphoto2:n kanssa. Viite: %s"
+
+#: usb/libusb.c:821 libusb1/libusb1.c:841
+#, c-format
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "Ei löydetty USB-laitetta (toimittaja 0x%x, tuote 0x%x). Varmista, että laite on liitetty tietokoneeseen."
+
+#: usb/libusb.c:1121 libusb1/libusb1.c:1135
+#, c-format
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "Ei löydetty USB-laitetta (luokka 0x%x, aliluokka 0x%x, yhteyskäytäntö 0x%x). Varmista, että laite on liitetty tietokoneeseen."
+
+#: libusb1/libusb1.c:312
+#, c-format
+msgid "Device has a kernel driver attached (%d), detaching it now."
+msgstr "Laitteen käyttöjärjestelmäajuri on liitetty (%d), irrota se nyt."
+
+#: libusb1/libusb1.c:315
+msgid "Could not detach kernel driver of camera device."
+msgstr "Kameralaitteen käyttöjärjestelmäajuria ei voitu irrottaa."
+
+#: libusb1/libusb1.c:378
+msgid "Could not reattach kernel driver of camera device."
+msgstr "Ei voitu liittää kameralaitteen käyttöjärjestelmäajuria uudelleen."
+
+#: usbscsi/linux.c:234
+msgid "USB Mass Storage raw SCSI"
+msgstr "USB-massatallennuksen raaka-SCSI"
+
+#: usbscsi/linux.c:347
+#, c-format
+msgid "Could not send scsi command to: '%s' (%m)."
+msgstr "Ei voitu lähettää scsi-komentoa kohteeseen: ’%s’ (%m)."
