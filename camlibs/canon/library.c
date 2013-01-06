@@ -821,7 +821,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
 			if (thumbname == NULL) {
 				/* no thumbnail available */
-				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"),canon_path);
+				GP_DEBUG ("%s is a file type for which no thumbnail is provided",canon_path);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
 #ifdef HAVE_LIBEXIF
@@ -859,7 +859,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
 			if (thumbname == NULL) {
 				/* no thumbnail available */
-				GP_DEBUG (_("%s is a file type for which no thumbnail is provided"), canon_path);
+				GP_DEBUG ("%s is a file type for which no thumbnail is provided", canon_path);
 				return (GP_ERROR_NOT_SUPPORTED);
 			}
 
