@@ -646,7 +646,7 @@ static struct {
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112, 0},
 	/* Nikon Coolpix 5000, Firmware v1.7 or later */
-	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, PTP_CAP},
+	{"Nikon:Coolpix 5000 (PTP mode)", 0x04b0, 0x0113, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 	/* Nikon Coolpix 3100 */
 	{"Nikon:Coolpix 3100 (PTP mode)", 0x04b0, 0x0115, 0},
 	/* Nikon Coolpix 2100 */
@@ -751,6 +751,8 @@ static struct {
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S8200",           0x04b0, 0x0222, 0},
 	{"Nikon:Coolpix P510 (PTP mode)", 0x04b0, 0x0223, 0},
+	/* Bernhard Schiffner <bernhard@schiffner-limbach.de> */
+	{"Nikon:Coolpix P7700 (PTP mode)",0x04b0, 0x0225, 0},
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
@@ -773,6 +775,8 @@ static struct {
 	{"Nikon:Coolpix S3100 (PTP mode)",0x04b0, 0x0320, PTP_CAP},
 	/* Fabio <ctrlaltca@gmail.com> */
 	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
+	/* "M.-A. DARCHE" <ma.darche@cynode.org> */
+	{"Nikon:Coolpix S3300 (PTP mode)",0x04b0, 0x032a, PTP_CAP},
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},
@@ -825,9 +829,11 @@ static struct {
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* t.ludewig@gmail.com */
-	{"Nikon:DSC D600 (PTP mode)",	  0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:DSC D600",	          0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roderick Stewart <roderick.stewart@gmail.com> */
-	{"Nikon:DSC D800E (PTP mode)",    0x04b0, 0x042e, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:DSC D800E",               0x04b0, 0x042e, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Simeon Pilgrim <simeon.pilgrim@gmail.com> */
+	{"Nikon:DSC D5200",               0x04b0, 0x042f, PTP_CAP|PTP_CAP_PREVIEW},
 	
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
@@ -1231,7 +1237,6 @@ static struct {
 	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:EOS M",				0x04a9, 0x323d, 0/*PTP_CAP|PTP_CAP_PREVIEW ... might be unknown opcodes -Marcus */},
 	{"Canon:PowerShot A4000IS",		0x04a9, 0x3243, PTPBUG_DELETE_SENDS_EVENT},
-	{"Canon:PowerShot SX240HS",		0x04a9, 0x3245, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SX240HS",		0x04a9, 0x3245, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot A2400IS",		0x04a9, 0x3249, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot S110",		0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
