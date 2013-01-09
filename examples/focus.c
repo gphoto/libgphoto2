@@ -65,7 +65,7 @@ camera_auto_focus(Camera *camera, GPContext *context) {
 		goto out;
 	}
 
-	ret = gp_camera_get_config (camera, &widget, context);
+	ret = gp_camera_set_config (camera, widget, context);
 	if (ret < GP_OK) {
 		fprintf (stderr, "could not set config tree to autofocus: %d\n", ret);
 		goto out;

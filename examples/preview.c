@@ -148,6 +148,11 @@ main(int argc, char **argv) {
 			fprintf(stderr,"gp_file_new: %d\n", retval);
 			exit(1);
 		}
+
+		/* autofocus every 10 shots */
+		if (i%10 == 9) {
+			camera_auto_focus (canon, canoncontext);
+		}
 #if 0 /* testcase for EOS zooming */
 		{
 			char buf[20];

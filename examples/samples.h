@@ -9,4 +9,6 @@ extern GPContext* sample_create_context(void);
 extern int get_config_value_string (Camera *, const char *, char **, GPContext *);
 extern int set_config_value_string (Camera *, const char *, const char *, GPContext *);
 int canon_enable_capture (Camera *camera, int onoff, GPContext *context);
+
+extern int camera_auto_focus (Camera *list, GPContext *context);
 #endif
