@@ -11,4 +11,5 @@ extern int set_config_value_string (Camera *, const char *, const char *, GPCont
 int canon_enable_capture (Camera *camera, int onoff, GPContext *context);
 
 extern int camera_auto_focus (Camera *list, GPContext *context);
+extern int camera_manual_focus (Camera *list, int tgt, GPContext *context);
 #endif

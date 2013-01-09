@@ -152,6 +152,8 @@ main(int argc, char **argv) {
 		/* autofocus every 10 shots */
 		if (i%10 == 9) {
 			camera_auto_focus (canon, canoncontext);
+		} else {
+			camera_manual_focus (canon, (i/10-5)/2, canoncontext);
 		}
 #if 0 /* testcase for EOS zooming */
 		{
