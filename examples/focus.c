@@ -77,7 +77,7 @@ out:
 
 
 /* Manual focusing a camera...
- * xx is -2 / -1 / 0 / 1 / 2
+ * xx is -3 / -2 / -1 / 0 / 1 / 2 / 3
  */
 int
 camera_manual_focus (Camera *camera, int xx, GPContext *context) {
@@ -114,7 +114,7 @@ camera_manual_focus (Camera *camera, int xx, GPContext *context) {
 			goto out;
 		}
 		if (choices == 7) { /* see what Canon has in EOS_MFDrive */
-			ret = gp_widget_get_choice (child, xx+3, (const char**)&mval);
+			ret = gp_widget_get_choice (child, xx+4, (const char**)&mval);
 			if (ret < GP_OK) {
 				fprintf (stderr, "could not get widget choice %d: %d\n", xx+2, ret);
 				goto out;
@@ -136,14 +136,17 @@ camera_manual_focus (Camera *camera, int xx, GPContext *context) {
 		}
 	
 		switch (xx) { /* Range is on Nikon from -32768 <-> 32768 */
-		case -2:	rval =  -1024;break;
-		case -1:	rval =  -256;break;
-		case  0:	rval = 0;     break;
-		case  1:	rval =   256;break;
-		case  2:	rval =   1024;break;
+		case -3:	rval = -1024;break;
+		case -2:	rval =  -512;break;
+		case -1:	rval =  -128;break;
+		case  0:	rval =     0;break;
+		case  1:	rval =   128;break;
+		case  2:	rval =   512;break;
+		case  3:	rval =  1024;break;
 
 		default:	rval = xx;	break; /* hack */
 		}
+
 		fprintf(stderr,"manual focus %d -> %f\n", xx, rval);
 
 		ret = gp_widget_set_value (child, &rval);
