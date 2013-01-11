@@ -2181,6 +2181,7 @@ struct _PTPParams {
 	PTPDeviceInfo	outer_deviceinfo;
 	char		*olympus_cmd;
 	char		*olympus_reply;
+	struct _PTPParams *outer_params;
 
 #ifdef HAVE_ICONV
 	/* PTP: iconv converters */

@@ -179,6 +179,15 @@ typedef struct
       uw32_t sessionid;        /* A copy of whatever value the host made up */
       char   zero[5];  /* 00 00 00 00 00 */
 } uw_response_t;
+
+typedef struct
+{
+      unsigned char cmd;
+      char   zero1[8];
+      uw32_t length;
+      char   zero2[3];
+} uw_scsicmd_t;
+
 #pragma pack()
 
 /*
@@ -235,11 +244,12 @@ static int ums_sessionid = 0x42424242;
 
 uint16_t
 ums_wrap_sendreq (PTPParams* params, PTPContainer* req) {
-	uw_header_t hdr;
-	PTPUSBBulkContainer usbreq;
-	char buf[64];
-	int ret;
-	Camera *camera = ((PTPData *)params->data)->camera;
+	Camera			*camera = ((PTPData *)params->data)->camera;
+	PTPUSBBulkContainer	usbreq;
+	char			buf[64];
+	int			ret;
+	uw_scsicmd_t		cmd;
+	char			sense_buffer[32];
 
 	GP_DEBUG( "ums_wrap_sendreq" );
 	/* Build appropriate USB container */
@@ -255,27 +265,16 @@ ums_wrap_sendreq (PTPParams* params, PTPContainer* req) {
 	usbreq.payload.params.param5 = htod32(req->Param5);
 
 	memset(buf,0,sizeof(buf));
-	memcpy(buf,&usbreq,usbreq.length);
 
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.magic     = UW_MAGIC_OUT;
-	hdr.sessionid = uw_value(ums_sessionid);
-	ums_sessionid++;
-	hdr.rw_length = uw_value(sizeof(buf));
-	hdr.length    = uw_value(sizeof(buf));
-	MAKE_UW_REQUEST_COMMAND (&hdr.request_type);
+	memset (&cmd, 0, sizeof(cmd));
+	cmd.cmd    = cmdbyte(0);
+	cmd.length = uw_value(usbreq.length);
 
-	/* First step: send PTP command, first UMS header packet, then data blob  */
-	if (	(ret=gp_port_write(camera->port, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-		(ret=gp_port_write(camera->port, buf, sizeof(buf))) < GP_OK)
-	{
-		GP_DEBUG( "ums_wrap_sendreq *** FAILED, ret %d", ret );
-		return PTP_ERROR_IO;
-	}
-	if ((ret=usb_wrap_OK(camera->port, &hdr)) != GP_OK) {
-		GP_DEBUG( "ums_wrap_sendreq FAILED to send PTP command" );
-		return PTP_ERROR_IO;
-	}
+	ret = gp_port_send_scsi_cmd (camera->port, 1, (char*)&cmd, sizeof(cmd),
+		sense_buffer, sizeof(sense_buffer), (char*)&usbreq, usbreq.length);
+
+	GP_DEBUG("send_scsi_cmd ret %d", ret);
+
 	return PTP_RC_OK;
 }
 
@@ -283,21 +282,19 @@ uint16_t
 ums_wrap_senddata (
 	PTPParams* params, PTPContainer* ptp, unsigned long sendlen, PTPDataHandler*getter
 ) {
-	uw_header_t hdr;
-	PTPUSBBulkContainer usbreq;
-	int ret;
-	unsigned long gotlen;
-	unsigned char *xdata;
-	Camera *camera = ((PTPData *)params->data)->camera;
+	Camera			*camera = ((PTPData *)params->data)->camera;
+	PTPUSBBulkContainer	usbreq;
+	int			ret;
+	unsigned long		gotlen;
+	unsigned char		*xdata;
+	uw_scsicmd_t		cmd;
+	char			sense_buffer[32];
 
 	GP_DEBUG( "ums_wrap_senddata" );
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.magic     = UW_MAGIC_OUT;
-	hdr.sessionid = uw_value(ums_sessionid);
-	ums_sessionid++;
-	hdr.rw_length = uw_value(sendlen+12);
-	hdr.length    = uw_value(sendlen+12);
-	MAKE_UW_REQUEST_DATAOUT (&hdr.request_type);
+
+	memset (&cmd, 0, sizeof(cmd));
+	cmd.cmd    = cmdbyte(1);
+	cmd.length = uw_value(sendlen+12);
 
 	xdata = malloc(sendlen + 12);
 	usbreq.length = htod32(sendlen + 12);
@@ -315,48 +312,36 @@ ums_wrap_senddata (
 		return PTP_ERROR_IO;
 	}
 
-	if ((ret=gp_port_write(camera->port, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-	    (ret=gp_port_write(camera->port, (char*)xdata, sendlen+12)) < GP_OK)
-	{
-		free (xdata);
-		GP_DEBUG( "ums_wrap_senddata *** data send FAILED, ret %d", ret );
-		return PTP_ERROR_IO;
-	}
+	ret = gp_port_send_scsi_cmd (camera->port, 1, (char*)&cmd, sizeof(cmd),
+		sense_buffer, sizeof(sense_buffer), (char*)xdata, sendlen+12);
+
+	GP_DEBUG("send_scsi_cmd ret %d", ret);
+
 	free (xdata);
-	if ((ret=usb_wrap_OK(camera->port, &hdr)) != GP_OK) {
-		GP_DEBUG( "ums_wrap_senddata FAILED to send PTP data, ret %d", ret );
-		return PTP_ERROR_IO;
-	}
+
 	return PTP_RC_OK;
 }
 
 uint16_t
 ums_wrap_getresp (PTPParams* params, PTPContainer* resp)
 {
-	uw_header_t hdr;
-	PTPUSBBulkContainer usbresp;
-	char buf[64];
-	int ret;
-	Camera *camera = ((PTPData *)params->data)->camera;
+	Camera			*camera  = ((PTPData *)params->data)->camera;
+	PTPUSBBulkContainer	usbresp;
+	char			buf[64];
+	int			ret;
+	uw_scsicmd_t		cmd;
+	char			sense_buffer[32];
 
 	GP_DEBUG( "ums_wrap_getresp" );
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.magic     = UW_MAGIC_OUT;
-	hdr.sessionid = uw_value(ums_sessionid);
-	ums_sessionid++;
-	hdr.rw_length = uw_value(sizeof(buf));
-	hdr.length    = uw_value(sizeof(buf));
-	MAKE_UW_REQUEST_RESPONSE (&hdr.request_type);
-	if ((ret=gp_port_write(camera->port, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-	    (ret=gp_port_read(camera->port, buf, sizeof(buf))) != sizeof(buf))
-	{
-		GP_DEBUG( "ums_wrap_getresp *** FAILED to read PTP response, ret %d", ret );
-		return PTP_ERROR_IO;
-	}
-	if ((ret=usb_wrap_OK(camera->port, &hdr)) != GP_OK) {
-		GP_DEBUG( "ums_wrap_getresp FAILED to read UMS reply, ret %d", ret );
-		return PTP_ERROR_IO;
-	}
+	memset (&cmd, 0, sizeof(cmd));
+	cmd.cmd    = cmdbyte(3);
+	cmd.length = uw_value(sizeof(buf));
+
+	ret = gp_port_send_scsi_cmd (camera->port, 0, (char*)&cmd, sizeof(cmd),
+		sense_buffer, sizeof(sense_buffer), (char*)buf, sizeof(buf));
+
+	GP_DEBUG("send_scsi_cmd ret %d", ret);
+
 	memcpy (&usbresp, buf, sizeof(usbresp));
 	resp->Code = dtoh16(usbresp.code);
 	resp->Nparam = (dtoh32(usbresp.length)-PTP_USB_BULK_REQ_LEN)/sizeof(uint32_t);
@@ -371,13 +356,13 @@ ums_wrap_getresp (PTPParams* params, PTPContainer* resp)
 uint16_t
 ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 {
-	uw_header_t hdr;
-	PTPUSBBulkContainer usbresp;
-	char buf[64];
-	int ret;
-	Camera *camera = ((PTPData *)params->data)->camera;
-	unsigned long recvlen, written;
-	char *data;
+	Camera			*camera = ((PTPData *)params->data)->camera;
+	uw_header_t		hdr;
+	PTPUSBBulkContainer	usbresp;
+	char			buf[64];
+	int			ret;
+	unsigned long		recvlen, written;
+	char			*data;
 
 	GP_DEBUG( "ums_wrap_getdata" );
 	memset(&hdr, 0, sizeof(hdr));
@@ -445,27 +430,32 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 }
 
 static int
-olympus_ptp_transaction (PTPParams *params,
-	PTPContainer* ptp, uint16_t flags,
+olympus_xml_transfer (PTPParams *params,
 	char *cmdxml, char **inxml
 ) {
 	PTPContainer	ptp2;
 	int		res;
 	PTPObjectInfo	oi;
 	char		*req, *resp;
-        unsigned char	*oidata=NULL;
+        unsigned char	*oidata = NULL;
         uint32_t	size, handle, newhandle;
 	uint16_t	ret;
-	PTPParams	outerparams;
+	PTPParams	*outerparams = params->outer_params;
 
-	memcpy(&outerparams, params, sizeof(PTPParams));
-	outerparams.sendreq_func	= ums_wrap_sendreq;
-	outerparams.getresp_func	= ums_wrap_getresp;
-	outerparams.senddata_func	= ums_wrap_senddata;
-	outerparams.getdata_func	= ums_wrap_getdata;
-	outerparams.getdata_func	= ums_wrap_getdata;
-	outerparams.event_check		= ptp_usb_event_check;
-	outerparams.event_wait		= ptp_usb_event_wait;
+	if (!outerparams) {
+		params->outer_params = outerparams = malloc (sizeof(PTPParams));
+		memcpy(outerparams, params, sizeof(PTPParams));
+		outerparams->sendreq_func	= ums_wrap_sendreq;
+		outerparams->getresp_func	= ums_wrap_getresp;
+		outerparams->senddata_func	= ums_wrap_senddata;
+		outerparams->getdata_func	= ums_wrap_getdata;
+		outerparams->getdata_func	= ums_wrap_getdata;
+		outerparams->event_check		= ptp_usb_event_check;
+		outerparams->event_wait		= ptp_usb_event_wait;
+
+		res = ptp_opensession (outerparams, 0);
+		if (res != PTP_RC_OK) return res;
+	}
 
 	while (1) {
 		memset (&ptp2, 0 , sizeof (ptp2));
@@ -480,7 +470,7 @@ olympus_ptp_transaction (PTPParams *params,
 		oi.ObjectCompressedSize	= strlen(cmdxml);
 
 		size = ptp_pack_OI(params, &oi, &oidata);
-		res = ptp_transaction (&outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
 		if (res != PTP_RC_OK)
 			return res;
 		free(oidata);
@@ -488,21 +478,21 @@ olympus_ptp_transaction (PTPParams *params,
 
 		ptp2.Code = PTP_OC_SendObject;
 		ptp2.Nparam = 0;
-		res = ptp_transaction(params, &ptp2, PTP_DP_SENDDATA, strlen(req), (unsigned char**)&req, NULL);
+		res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(req), (unsigned char**)&req, NULL);
 		if (res != PTP_RC_OK)
 			return res;
-		ret = params->event_wait(params, &ptp2);
+		ret = params->event_wait(outerparams, &ptp2);
 		if (ret != PTP_RC_OK)
 			return ret;
-		GP_DEBUG("event: code %04x, p %08x\n", ptp2.Code, ptp2.Param1);
+		GP_DEBUG("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
 		if (ptp2.Code != PTP_EC_RequestObjectTransfer) 
 			return PTP_RC_OK;
 		newhandle = ptp2.Param1;
-		ret = ptp_getobjectinfo (params, newhandle, &oi);
+		ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
 		if (ret != PTP_RC_OK)
 			return ret;
 		GP_DEBUG("got new file: %s", oi.Filename);
-		ret = ptp_getobject (params, newhandle, (unsigned char**)&resp);
+		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resp);
 		if (ret != PTP_RC_OK)
 			return ret;
 		GP_DEBUG("file content: %s", resp);
@@ -1735,17 +1725,23 @@ ums_wrap2_senddata (
 
 uint16_t
 ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter) {
-	PTPContainer tmp;
+	PTPContainer	tmp;
+	char		*resxml = NULL;
+	uint16_t	ret;
+
 	if (is_outer_operation (params, ptp->Code))
 		return ums_wrap_getdata (params, ptp, putter);
 	/* either send or get data, not both. So olympus_cmd is NULL now */
 	params->olympus_cmd = generate_xml (params, ptp, NULL, 0);
 	/* do the fun stuff */
 
+	ret = olympus_xml_transfer (params, params->olympus_cmd, &resxml);
+
 	/* we must not yet overwrite the ptp content, it is used in getresp */
 	memcpy (&tmp, ptp, sizeof(tmp));
-	parse_xml (params, "txt", &tmp);
-	return PTP_RC_OK;
+	if (ret == PTP_RC_OK)
+		parse_xml (params, resxml, &tmp);
+	return ret;
 }
 
 uint16_t
