@@ -2118,7 +2118,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			}
 		}
 		/* do not drain all of the DSLRs compute time */
-		usleep(50*1000); /* 0.05 seconds */
+		usleep(100*1000); /* 0.1 seconds */
 	}
 	if (!newobject) newobject = 0xffff0001;
 
