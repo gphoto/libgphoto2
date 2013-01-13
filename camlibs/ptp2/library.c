@@ -885,6 +885,7 @@ static struct {
 	{"Olympus:X-925 (UMS mode)",      0x07b4, 0x0109, 0},
 	{"Olympus:E-520 (UMS mode)",      0x07b4, 0x0110, 0},
 	{"Olympus:E-410 (UMS mode)",      0x07b4, 0x0110, 0},
+	{"Olympus:E-410 (UMS 2 mode)",      0x07b4, 0x0118, 0},
 	{"Olympus:E-1 (UMS mode)",        0x07b4, 0x0102, 0},
 #endif
 
@@ -1552,9 +1553,11 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_product		= models[i].usb_product;
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
-#ifdef OLYMPUS
+#if 0 && defined(OLYMPUS)
 		if (	(models[i].usb_vendor  == 0x7b4) &&
-			(models[i].usb_product == 0x110)
+			(	(models[i].usb_product == 0x110) ||
+				(models[i].usb_product == 0x118)
+			)
 		)
 			a.port = GP_PORT_USB_SCSI;
 #endif
@@ -6017,7 +6020,6 @@ camera_init (Camera *camera, GPContext *context)
 
 	switch (camera->port->type) {
 	case GP_PORT_USB_SCSI:
-		gp_log (GP_LOG_DEBUG, "ptp2/usb", "a.usb_vendor %x, a.usb_product %x.\n", a.usb_vendor, a.usb_product);
 #ifdef OLYMPUS
 		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
 		if (a.usb_vendor == 0x7b4) {
@@ -6036,6 +6038,16 @@ camera_init (Camera *camera, GPContext *context)
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
+#ifdef OLYMPUS
+		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
+		if ((a.usb_vendor == 0x7b4) && (
+			(a.usb_product == 0x110) ||
+			(a.usb_product == 0x118)
+		)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
+			olympus_setup (params);
+		}
+#endif
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	info;

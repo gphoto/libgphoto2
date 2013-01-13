@@ -69,8 +69,7 @@ typedef struct
 { unsigned char c1, c2, c3, c4; } uw32_t; /* A type for 32-bit integers */
 typedef struct
 { unsigned char c1, c2, c3, c4; } uw4c_t; /* A type for 4-byte things */
-typedef struct
-{ unsigned char c1, c2; } uw2c_t; /* A type for 2-byte things? */
+
 static uw32_t uw_value(unsigned int value) /* Convert from host-integer to uw32_t */
 {
    uw32_t ret;
@@ -91,95 +90,46 @@ cmdbyte (unsigned char nr) {
 ((a).c1==(b).c1 && (a).c2==(b).c2 && (a).c3==(b).c3 && (a).c4==(b).c4)
 
 /*
- * USB wrapper packets start with ASCII bytes "USBC".
+ * USB storage wrapper packets start with ASCII bytes "USBC".
  * The responses back from the camera start with "USBS".
  */
 #define UW_MAGIC_OUT ((uw4c_t){ 'U','S','B','C' })
 #define UW_MAGIC_IN  ((uw4c_t){ 'U','S','B','S' })
 
-static void
-make_uw_request(uw4c_t *req,
-	unsigned char inout, unsigned char a,
-	unsigned char len, unsigned char cmd
-) {
-	req->c1 = inout;
-	req->c2 = a;
-	req->c3 = len;
-	req->c4 = cmd;
-}
-
-#define MAKE_UW_REQUEST_OUT(req, a, b) make_uw_request (req, 0x00, 0x00, a, b) /* write to camera */
-#define MAKE_UW_REQUEST_IN(req, a, b) make_uw_request (req, 0x80, 0x00, a, b)  /* read from camera */
-/* Move REQUEST_STAT calls to write_packet %%% */
-
-/*
- * Each of the following request types begins with USBC+SessionID and
- * ends with a response from the camera of USBS+SessionID (OK).
- */
-#define MAKE_UW_REQUEST_COMMAND(req)		MAKE_UW_REQUEST_OUT(req,0x0c,cmdbyte(0))
-#define MAKE_UW_REQUEST_DATAOUT(req)		MAKE_UW_REQUEST_OUT(req,0x0c,cmdbyte(1))
-#define MAKE_UW_REQUEST_DATAIN(req)		MAKE_UW_REQUEST_IN (req,0x0c,cmdbyte(2))
-#define MAKE_UW_REQUEST_RESPONSE(req)		MAKE_UW_REQUEST_IN (req,0x0c,cmdbyte(3))
-#define MAKE_UW_REQUEST_DATAIN_SIZE(req)	MAKE_UW_REQUEST_IN (req,0x0c,cmdbyte(4))
-
 #pragma pack(1)
 /*
  * The rest of the USB wrapper packet looks like this:
  */
+
+/* This is linux/include/linux/usb/storage.h, struct bulk_cb_wrap
+ * 31 byte length */
 typedef struct
 {
-      uw4c_t magic;    /* The letters U S B C for packets sent to camera */
-      uw32_t sessionid;        /* Any 32-bit handle the host wants (maybe not 0?) */
-      uw32_t rw_length;        /* Length of data to be read or written next */
-      uw4c_t request_type;     /* One of the UW_REQUEST_* defines */
-      char   zero[3];          /* 00 00 00 ? */
-      char   req_camid_len;    /* 00 (or 0x22 if camera id request) */
-      char   zero2[4];         /* 00 00 00 ? */
-      uw32_t length;           /* Length of transaction repeated? */
-      char      zero3[3];      /* 00 00 00 */
+      uw4c_t magic;		/* The letters U S B C for packets sent to camera */
+      uw32_t tag;		/* The SCSI command tag */
+      uw32_t rw_length;		/* Length of data to be read or written next */
+      unsigned char flags;	/* in / out flag mostly */
+      unsigned char lun;	/* 0 here */
+      unsigned char length;	/* of the CDB... but 0x0c is used here in the traces */
+      unsigned char cdb[16];	
 } uw_header_t;
 
 /*
- * Data packet to send along with a UW_REQUEST_DATA:
- */
+ * This is the end response block from the camera looks like this:
+ *
+ * This is the generic bulk style USB Storage response block.
+ *
+ * linux/include/linux/usb/storage.h, struct bulk_cs_wrap */
 typedef struct
 {
-      uw32_t length;   /* sizeof(uw_data_t) *plus* sierra pckt after it */
-      uw4c_t packet_type;      /* Set this to UW_PACKET_DATA */
-      char   zero[56];         /* ? */
-} uw_pkout_sierra_hdr_t;
-
-/*
- * Expected response to a UW_REQUEST_STAT:
- */
-typedef struct
-{
-      uw32_t length;   /* Length of this structure, sizeof(uw_stat_t) */
-      uw4c_t packet_type;      /* Compare with UW_PACKET_STAT here. */
-      char   zero[6];          /* 00 00 00 00 00 00 ? */
-} uw_stat_t;
-
-/*
- * Expected response to a get size request, UW_REQUEST_SIZE:
- */
-typedef struct
-{
-      uw32_t length;   /* Length of this structure, sizeof(uw_size_t) */
-      uw4c_t packet_type;      /* Compare with UW_PACKET_DATA here. */
-      char   zero[4];          /* 00 00 00 00 ? */
-      uw32_t size;             /* The size of data waiting to be sent by camera */
-} uw_size_t;
-
-/*
- * The end of the response from the camera looks like this:
- */
-typedef struct
-{
-      uw4c_t magic;    /* The letters U S B S for packets from camera */
-      uw32_t sessionid;        /* A copy of whatever value the host made up */
-      char   zero[5];  /* 00 00 00 00 00 */
+      uw4c_t magic;	/* The letters U S B S for packets from camera */
+      uw32_t tag;	/* A copy of whatever value the host made up */
+      uw32_t residue;	/* residual read? */
+      char   status;	/* status byte */
 } uw_response_t;
 
+
+/* In the SCSI API, the CDB[16] block. */
 typedef struct
 {
       unsigned char cmd;
@@ -190,6 +140,10 @@ typedef struct
 
 #pragma pack()
 
+/* This is for the unique tag id for the UMS command / response
+ * It gets incremented by one for every command.
+ */
+static int ums_tag = 0x42424242;
 /*
  * This routine is called after every UW_REQUEST_XXX to get an OK
  * with a matching session ID.
@@ -197,44 +151,86 @@ typedef struct
 static int
 usb_wrap_OK (GPPort *dev, uw_header_t *hdr)
 {
-   uw_response_t rsp;
-   int ret;
-   memset(&rsp, 0, sizeof(rsp));
+	uw_response_t rsp;
+	int ret;
+	memset(&rsp, 0, sizeof(rsp));
 
-   GP_DEBUG( "usb_wrap_OK" );
-   if ((ret = gp_port_read(dev, (char*)&rsp, sizeof(rsp))) != sizeof(rsp))
-   {
-      gp_log (GP_LOG_DEBUG, GP_MODULE, "gp_port_read *** FAILED (%d vs %d bytes)", (int)sizeof(rsp), ret );
-      if (ret < GP_OK)
-	return ret;
-      return GP_ERROR;
-   }
-   if (!UW_EQUAL(rsp.magic, UW_MAGIC_IN) ||
-       !UW_EQUAL(rsp.sessionid, hdr->sessionid))
-   {
-      GP_DEBUG( "usb_wrap_OK wrong session *** FAILED" );
-      return GP_ERROR;
-   }
-   /*
-    * No idea what these bytes really mean.  Normally they are always 0's
-    * when things are in a happy state.
-    */
-   if (rsp.zero[0] != 0 ||
-       rsp.zero[1] != 0 ||
-       rsp.zero[2] != 0 ||
-       rsp.zero[3] != 0 ||
-       rsp.zero[4] != 0)
-      {
-        GP_DEBUG( "error: ****  usb_wrap_OK failed - not all expected zero bytes are 0" );
-        return GP_ERROR;
-      }
-   return GP_OK;
+	GP_DEBUG( "usb_wrap_OK" );
+	if ((ret = gp_port_read(dev, (char*)&rsp, sizeof(rsp))) != sizeof(rsp)) {
+		gp_log (GP_LOG_DEBUG, GP_MODULE, "gp_port_read *** FAILED (%d vs %d bytes)", (int)sizeof(rsp), ret );
+		if (ret < GP_OK)
+			return ret;
+		return GP_ERROR;
+	}
+	if (	!UW_EQUAL(rsp.magic, UW_MAGIC_IN) ||
+		!UW_EQUAL(rsp.tag, hdr->tag))
+	{
+		GP_DEBUG( "usb_wrap_OK wrong session *** FAILED" );
+		return GP_ERROR;
+	}
+	/*
+	 * 32bit residual length (0) and 8 bit status (0) are good.
+	 */
+	if (	rsp.residue.c1 != 0 ||
+		rsp.residue.c2 != 0 ||
+		rsp.residue.c3 != 0 ||
+		rsp.residue.c4 != 0 ||
+		rsp.status != 0) {
+		GP_DEBUG( "Error: usb_wrap_OK failed - residual non-0 or status %x", rsp.status);
+		return GP_ERROR;
+	}
+	return GP_OK;
 }
 
-/* This is for the unique session id for the UMS command / response
- * It gets incremented by one for every command.
+/* so it mirrors:
+	ret = gp_port_send_scsi_cmd (camera->port, 1, (char*)&cmd, sizeof(cmd),
+		sense_buffer, sizeof(sense_buffer), (char*)&usbreq, usbreq.length);
  */
-static int ums_sessionid = 0x42424242;
+static int
+scsi_wrap_cmd(
+	GPPort *port,
+	int todev,
+	char *cmd,   unsigned int cmdlen,
+	char *sense, unsigned int senselen,
+	char *data,  unsigned int size
+) {
+	uw_header_t		hdr;
+	int			ret;
+
+	memset(&hdr, 0, sizeof(hdr));
+	hdr.magic	= UW_MAGIC_OUT;
+	hdr.tag		= uw_value(ums_tag);
+	ums_tag++;
+	hdr.rw_length	= uw_value(size);
+	hdr.length	= 12; /* seems to be always 12, even as we send 16 byte CDBs */
+	hdr.flags	= todev?0:(1<<7);
+	hdr.lun		= 0;
+
+	memcpy(hdr.cdb, cmd, cmdlen);
+
+	if ((ret=gp_port_write(port, (char*)&hdr, sizeof(hdr))) < GP_OK) {
+		GP_DEBUG( "scsi_wrap_cmd *** FAILED to write scsi cmd" );
+		return GP_ERROR_IO;
+	}
+	if (todev) {
+		if ((ret=gp_port_write(port, (char*)data, size)) < GP_OK) {
+			GP_DEBUG( "scsi_wrap_cmd *** FAILED to write scsi data" );
+			return GP_ERROR_IO;
+		}
+	} else {
+		if ((ret=gp_port_read(port, (char*)data, size)) < GP_OK) {
+			GP_DEBUG( "scsi_wrap_cmd *** FAILED to read scsi data" );
+			return GP_ERROR_IO;
+		}
+	}
+	if ((ret=usb_wrap_OK(port, &hdr)) != GP_OK) {
+		GP_DEBUG( "scsi_wrap_cmd *** FAILED to get scsi reply" );
+		return GP_ERROR_IO;
+	}
+	return GP_OK;
+}
+
+#define gp_port_send_scsi_cmd scsi_wrap_cmd
 
 /* Transaction data phase description */
 #define PTP_DP_NODATA           0x0000  /* no data phase */
@@ -272,9 +268,7 @@ ums_wrap_sendreq (PTPParams* params, PTPContainer* req) {
 
 	ret = gp_port_send_scsi_cmd (camera->port, 1, (char*)&cmd, sizeof(cmd),
 		sense_buffer, sizeof(sense_buffer), (char*)&usbreq, usbreq.length);
-
 	GP_DEBUG("send_scsi_cmd ret %d", ret);
-
 	return PTP_RC_OK;
 }
 
@@ -357,65 +351,51 @@ uint16_t
 ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 {
 	Camera			*camera = ((PTPData *)params->data)->camera;
-	uw_header_t		hdr;
 	PTPUSBBulkContainer	usbresp;
 	char			buf[64];
 	int			ret;
 	unsigned long		recvlen, written;
 	char			*data;
+	uw_scsicmd_t		cmd;
+	char			sense_buffer[32];
 
 	GP_DEBUG( "ums_wrap_getdata" );
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.magic     = UW_MAGIC_OUT;
-	hdr.sessionid = uw_value(ums_sessionid);
-	ums_sessionid++;
-	hdr.rw_length = uw_value(sizeof(buf));
-	hdr.length    = uw_value(sizeof(buf));
-	MAKE_UW_REQUEST_DATAIN_SIZE (&hdr.request_type);
-	if (	(ret=gp_port_write(camera->port, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-		(ret=gp_port_read(camera->port, buf, sizeof(buf))) != sizeof(buf))
-	{
-		GP_DEBUG( "ums_wrap_getdata *** FAILED to read PTP data in size" );
-		return PTP_ERROR_IO;
-	}
-	if ((ret=usb_wrap_OK(camera->port, &hdr)) != GP_OK) {
-		GP_DEBUG( "ums_wrap_getdata FAILED to read PTP data in size" );
-		return PTP_ERROR_IO;
-	}
+
+	memset(&cmd,0,sizeof(cmd));
+	cmd.cmd	   = cmdbyte(4);
+	cmd.length = uw_value(sizeof(buf));
+
+	ret = gp_port_send_scsi_cmd (camera->port, 0, (char*)&cmd, sizeof(cmd),
+		sense_buffer, sizeof(sense_buffer), (char*)buf, sizeof(buf));
+
+	GP_DEBUG("send_scsi_cmd ret %d", ret);
+
 	memcpy (&usbresp, buf, sizeof(usbresp));
 	if ((dtoh16(usbresp.code) != ptp->Code) && (dtoh16(usbresp.code) != PTP_RC_OK)) {
 		GP_DEBUG( "ums_wrap_getdata *** PTP code %04x during PTP data in size read", dtoh16(usbresp.code));
 		/* break; */
 	}
-	if (dtoh16(usbresp.length) != 16) {
+	if (dtoh16(usbresp.length) < 16) {
+		recvlen = 0;
 		GP_DEBUG( "ums_wrap_getdata *** PTP size %d during PTP data in size read, expected 16", dtoh16(usbresp.length));
-		return PTP_ERROR_IO;
+	} else {
+		recvlen = dtoh32(usbresp.payload.params.param1);
 	}
-	recvlen = dtoh32(usbresp.payload.params.param1);
 	data = malloc (recvlen);
-	if (!data) {
+	if (!data)
 		return PTP_ERROR_IO;
-	}
-	memset(&hdr, 0, sizeof(hdr));
-	hdr.magic     = UW_MAGIC_OUT;
-	hdr.sessionid = uw_value(ums_sessionid);
-	ums_sessionid++;
-	hdr.rw_length = uw_value(recvlen);
-	hdr.length    = uw_value(recvlen);
-	MAKE_UW_REQUEST_DATAIN (&hdr.request_type);
-	if (	(ret=gp_port_write(camera->port, (char*)&hdr, sizeof(hdr))) < GP_OK ||
-		(ret=gp_port_read(camera->port, (char*)data, recvlen)) != recvlen)
-	{
-		GP_DEBUG( "ums_wrap_getdata *** FAILED to read PTP response" );
-		free (data);
-		return PTP_ERROR_IO;
-	}
-	if ((ret=usb_wrap_OK(camera->port, &hdr)) != GP_OK) {
-		GP_DEBUG( "ums_wrap_getdata FAILED to read PTP data in" );
-		free (data);
-		return PTP_ERROR_IO;
-	}
+
+	memset(&cmd,0,sizeof(cmd));
+	cmd.cmd    = cmdbyte(2);
+	cmd.length = uw_value(recvlen);
+
+	ret = gp_port_send_scsi_cmd (camera->port, 0, (char*)&cmd, sizeof(cmd),
+		sense_buffer, sizeof(sense_buffer), (char*)data, recvlen);
+
+	GP_DEBUG("send_scsi_cmd 2 ret  %d", ret);
 	/* skip away the 12 byte header */
+	if (recvlen >= 16)
+		gp_log_data ("ptp2/olympus/getdata", data + PTP_USB_BULK_HDR_LEN, recvlen - PTP_USB_BULK_HDR_LEN);
 	ret = putter->putfunc ( params, putter->priv, recvlen - PTP_USB_BULK_HDR_LEN, (unsigned char*)data + PTP_USB_BULK_HDR_LEN, &written);
 	free (data);
 	if (ret != PTP_RC_OK) {
@@ -436,7 +416,7 @@ olympus_xml_transfer (PTPParams *params,
 	PTPContainer	ptp2;
 	int		res;
 	PTPObjectInfo	oi;
-	char		*req, *resp;
+	char		*resp;
         unsigned char	*oidata = NULL;
         uint32_t	size, handle, newhandle;
 	uint16_t	ret;
@@ -450,7 +430,7 @@ olympus_xml_transfer (PTPParams *params,
 		outerparams->senddata_func	= ums_wrap_senddata;
 		outerparams->getdata_func	= ums_wrap_getdata;
 		outerparams->getdata_func	= ums_wrap_getdata;
-		outerparams->event_check		= ptp_usb_event_check;
+		outerparams->event_check	= ptp_usb_event_check;
 		outerparams->event_wait		= ptp_usb_event_wait;
 
 		res = ptp_opensession (outerparams, 0);
@@ -478,7 +458,7 @@ olympus_xml_transfer (PTPParams *params,
 
 		ptp2.Code = PTP_OC_SendObject;
 		ptp2.Nparam = 0;
-		res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(req), (unsigned char**)&req, NULL);
+		res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(cmdxml), (unsigned char**)&cmdxml, NULL);
 		if (res != PTP_RC_OK)
 			return res;
 		ret = params->event_wait(outerparams, &ptp2);
@@ -1683,6 +1663,8 @@ static int
 is_outer_operation (PTPParams* params, uint16_t opcode) {
 	int i;
 
+	if (opcode == PTP_OC_OpenSession) return 1;
+	if (opcode == PTP_OC_GetDeviceInfo) return 1;
 	/* Do nothing here, either do stuff in senddata, getdata or getresp,
 	 * which will get the PTPContainer req too. */
         for (i=0;i<params->outer_deviceinfo.OperationsSupported_len;i++)
@@ -1774,7 +1756,7 @@ static uint16_t
 ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 {
         uint16_t        ret;
-        unsigned long   len;
+        unsigned int	len;
         PTPContainer    ptp;
         unsigned char*  di=NULL;
 
@@ -1797,7 +1779,6 @@ uint16_t
 olympus_setup (PTPParams *params) {
 	uint16_t	ret;
 
-	memcpy (&params->deviceinfo,&params->deviceinfo,sizeof(params->deviceinfo));
 	params->getresp_func	= ums_wrap2_getresp;
 	params->senddata_func	= ums_wrap2_senddata;
 	params->getdata_func	= ums_wrap2_getdata;
