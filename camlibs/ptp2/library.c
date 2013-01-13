@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2012 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2013 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
@@ -20,6 +20,9 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
+#undef OLYMPUS
+
 #define _BSD_SOURCE
 #include "config.h"
 
@@ -877,7 +880,7 @@ static struct {
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
 
-#if 0 /* OLYMPUS */
+#ifdef OLYMPUS
         /* Olympus wrap test code */
 	{"Olympus:X-925 (UMS mode)",      0x07b4, 0x0109, 0},
 	{"Olympus:E-520 (UMS mode)",      0x07b4, 0x0110, 0},
@@ -1549,6 +1552,12 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_product		= models[i].usb_product;
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
+#ifdef OLYMPUS
+		if (	(models[i].usb_vendor  == 0x7b4) &&
+			(models[i].usb_product == 0x110)
+		)
+			a.port = GP_PORT_USB_SCSI;
+#endif
 		if (models[i].device_flags & PTP_CAP) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 
@@ -5955,7 +5964,10 @@ camera_init (Camera *camera, GPContext *context)
 
 	gp_port_get_settings (camera->port, &settings);
 	/* Make sure our port is either USB or PTP/IP. */
-	if ((camera->port->type != GP_PORT_USB) && (camera->port->type != GP_PORT_PTPIP)) {
+	if (	(camera->port->type != GP_PORT_USB)	&&
+		(camera->port->type != GP_PORT_PTPIP)	&&
+		(camera->port->type != GP_PORT_USB_SCSI)
+	) {
 		gp_context_error (context, _("Currently, PTP is only implemented for "
 			"USB and PTP/IP cameras currently, port type %x"), camera->port->type);
 		return (GP_ERROR_UNKNOWN_PORT);
@@ -5988,8 +6000,32 @@ camera_init (Camera *camera, GPContext *context)
 	else
 		camloc = "UCS-2BE";
 
+        gp_camera_get_abilities(camera, &a);
+
+#ifdef HAVE_ICONV
+	curloc = nl_langinfo (CODESET);
+	if (!curloc) curloc="UTF-8";
+	params->cd_ucs2_to_locale = iconv_open(curloc, camloc);
+	params->cd_locale_to_ucs2 = iconv_open(camloc, curloc);
+	if ((params->cd_ucs2_to_locale == (iconv_t) -1) ||
+	    (params->cd_locale_to_ucs2 == (iconv_t) -1)) {
+		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
+		/* we can fallback */
+		/*return (GP_ERROR_OS_FAILURE);*/
+	}
+#endif
 
 	switch (camera->port->type) {
+	case GP_PORT_USB_SCSI:
+		gp_log (GP_LOG_DEBUG, "ptp2/usb", "a.usb_vendor %x, a.usb_product %x.\n", a.usb_vendor, a.usb_product);
+#ifdef OLYMPUS
+		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
+		if (a.usb_vendor == 0x7b4) {
+			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
+			olympus_setup (params);
+		}
+#endif
+		break;
 	case GP_PORT_USB:
 		params->sendreq_func	= ptp_usb_sendreq;
 		params->senddata_func	= ptp_usb_senddata;
@@ -5999,13 +6035,6 @@ camera_init (Camera *camera, GPContext *context)
 		params->event_check	= ptp_usb_event_check;
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
-#if 0 /* OLYMPUS */
-		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
-                if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110) || (a.usb_product == 0x102))) {
-                        gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
-                        olympus_setup (params);
-                }
-#endif
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
 		break;
 	case GP_PORT_PTPIP: {
@@ -6037,19 +6066,6 @@ camera_init (Camera *camera, GPContext *context)
 	if (!params->maxpacketsize)
 		params->maxpacketsize = 64; /* assume USB 1.0 */
 
-#ifdef HAVE_ICONV
-	curloc = nl_langinfo (CODESET);
-	if (!curloc) curloc="UTF-8";
-	params->cd_ucs2_to_locale = iconv_open(curloc, camloc);
-	params->cd_locale_to_ucs2 = iconv_open(camloc, curloc);
-	if ((params->cd_ucs2_to_locale == (iconv_t) -1) ||
-	    (params->cd_locale_to_ucs2 == (iconv_t) -1)) {
-		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
-		/* we can fallback */
-		/*return (GP_ERROR_OS_FAILURE);*/
-	}
-#endif
-        gp_camera_get_abilities(camera, &a);
         for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
             if ((a.usb_vendor == models[i].usb_vendor) &&
                 (a.usb_product == models[i].usb_product)){
