@@ -2114,12 +2114,17 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 
 	newobject = 0xffff0001;
-	while (!((ptp_nikon_device_ready(params) == PTP_RC_OK) && hasc101)) {
+	while (ptp_nikon_device_ready(params) != PTP_RC_OK) {
+		gp_context_idle (context);
+		/* do not drain all of the DSLRs compute time */
+		usleep(100*1000); /* 0.1 seconds */
+	}
+
+	while (1) {
 		PTPContainer	event;
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
-		gp_context_idle (context);
 		CPR (context, ptp_check_event (params));
 		while (ptp_get_one_event(params, &event)) {
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
@@ -2127,10 +2132,14 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				hasc101=1;
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
+				break;
 			}
 		}
+		if (hasc101)
+			break;
+		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-		usleep(100*1000); /* 0.1 seconds */
+		usleep(50*1000); /* 0.1 seconds */
 	}
 	if (!newobject) newobject = 0xffff0001;
 
@@ -3191,7 +3200,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			sleepcnt = 1;
 
-			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
+			gp_log (GP_LOG_DEBUG , "ptp2/nikon_wait_event", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_Nikon_ObjectAddedInSDRAM:
 			case PTP_EC_ObjectAdded: {
@@ -3261,7 +3270,7 @@ downloadnow:
 				ret = gp_file_new(&file);
 				if (ret!=GP_OK) return ret;
 				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
-					gp_log (GP_LOG_DEBUG,"nikon_wait_event", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+					gp_log (GP_LOG_DEBUG,"ptp2/nikon_wait_event", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
 					sprintf (path->name, "capt%04d.nef", capcnt++);
 					gp_file_set_mime_type (file, "image/x-nikon-nef"); /* FIXME */
 				} else {
@@ -3333,11 +3342,11 @@ downloadnow:
 	CPR (context, ptp_check_event(params));
 	if (!ptp_get_one_event (params, &event)) {
 		/* FIXME: Might be another error, but usually is a timeout */
-		gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: no events received.");
+		gp_log (GP_LOG_DEBUG, "ptp2/wait_for_event", "no events received.");
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
-	gp_log (GP_LOG_DEBUG, "ptp2", "wait_for_event: code=0x%04x, param1 0x%08x",
+	gp_log (GP_LOG_DEBUG, "ptp2/wait_for_event", "code=0x%04x, param1 0x%08x",
 		event.Code, event.Param1
 	);
 handleregular:
