@@ -449,6 +449,11 @@ olympus_xml_transfer (PTPParams *params,
 		oi.Filename 		= "HREQUEST.X3C";
 		oi.ObjectCompressedSize	= strlen(cmdxml);
 
+/* 
+"HRSPONSE.X3C" ... sent back to camera after receiving an event. 
+<output><result>2001</result><ec102/></output
+ */
+
 		size = ptp_pack_OI(params, &oi, &oidata);
 		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
 		if (res != PTP_RC_OK)
@@ -1663,6 +1668,7 @@ static int
 is_outer_operation (PTPParams* params, uint16_t opcode) {
 	int i;
 
+	return 1;
 	if (opcode == PTP_OC_OpenSession) return 1;
 	if (opcode == PTP_OC_GetDeviceInfo) return 1;
 	/* Do nothing here, either do stuff in senddata, getdata or getresp,
@@ -2526,6 +2532,26 @@ olympus_setup (PTPParams *params) {
 </c1015>
 </output>
 </x3c>
+*/
+
+/*
+ Looking at E-510 trace:
+
+ D135: 16bit , 0002 
+
+ D136: type 4 UINT16, attribute=01, default=0, value=0, enum=0,1
+ 
+ C102 - <propertycode> likely  "propertychanged" or so
+
+
+ 9101 - 1 32bitparameter parameter, param1=3 
+
+ C103 - 32bit parameter, value 1
+
+ 9101 - 32bit parameter, value 0
+
+ GetNumObjects 0x80000001, 0x3001, 0x1a000001 ... returns 1 
+  then retrieves 0x1a0000002 ... 
 */
 
 #endif /* HAVE_LIBXML2 */
