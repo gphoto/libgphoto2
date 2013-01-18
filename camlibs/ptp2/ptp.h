@@ -2078,7 +2078,7 @@ typedef struct _PTPDataHandler {
  */
 typedef uint16_t (* PTPIOSendReq)	(PTPParams* params, PTPContainer* req);
 typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
-					 unsigned long size, PTPDataHandler*getter);
+					 uint64_t size, PTPDataHandler*getter);
 
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
@@ -2233,11 +2233,11 @@ uint16_t ptp_generic_no_data	(PTPParams* params, uint16_t opcode, unsigned int c
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 
 uint16_t ptp_transaction_new (PTPParams* params, PTPContainer* ptp, 
-                uint16_t flags, unsigned int sendlen,
+                uint16_t flags, uint64_t sendlen,
                 PTPDataHandler *handler
 );
 uint16_t ptp_transaction (PTPParams* params, PTPContainer* ptp,
-                uint16_t flags, unsigned int sendlen,
+                uint16_t flags, uint64_t sendlen,
                 unsigned char **data, unsigned int *recvlen
 );
 
@@ -2317,9 +2317,9 @@ uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
  */
 #define ptp_setobjectprotection(params,oid,newprot) ptp_generic_no_data(params,PTP_OC_SetObjectProtection,2,oid,newprot)
 uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
-				 uint32_t size);
-uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint32_t size);
-uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint32_t size);
+				 uint64_t size);
+uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint64_t size);
+uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint64_t size);
 /**
  * ptp_initiatecapture:
  * params:      PTPParams*

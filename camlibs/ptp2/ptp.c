@@ -136,8 +136,8 @@ ptp_error (PTPParams *params, const char *format, ...)
  **/
 uint16_t
 ptp_transaction_new (PTPParams* params, PTPContainer* ptp, 
-		uint16_t flags, unsigned int sendlen,
-		PTPDataHandler *handler
+		     uint16_t flags, uint64_t sendlen,
+		     PTPDataHandler *handler
 ) {
 	int 		tries;
 	uint16_t	cmd;
@@ -380,7 +380,7 @@ ptp_exit_fd_handler (PTPDataHandler *handler) {
 /* Old style transaction, based on memory */
 uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp, 
-		uint16_t flags, unsigned int sendlen,
+		uint16_t flags, uint64_t sendlen,
 		unsigned char **data, unsigned int *recvlen
 ) {
 	PTPDataHandler	handler;
@@ -1047,7 +1047,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
  * ptp_sendobject:
  * params:	PTPParams*
  *		char*	object		- contains the object that is to be sent
- *		uint32_t size		- object size
+ *		uint64_t size		- object size
  *		
  * Sends object to Responder.
  *
@@ -1055,7 +1055,7 @@ ptp_sendobjectinfo (PTPParams* params, uint32_t* store,
  *
  */
 uint16_t
-ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
+ptp_sendobject (PTPParams* params, unsigned char* object, uint64_t size)
 {
 	PTPContainer ptp;
 
@@ -1070,7 +1070,7 @@ ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
  * ptp_sendobject_from_handler:
  * params:	PTPParams*
  *		PTPDataHandler*         - File descriptor to read() object from
- *              uint32_t size           - File/object size
+ *              uint64_t size           - File/object size
  *
  * Sends object from file descriptor by consecutive reads from this
  * descriptor.
@@ -1078,7 +1078,7 @@ ptp_sendobject (PTPParams* params, unsigned char* object, uint32_t size)
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_sendobject_from_handler (PTPParams* params, PTPDataHandler *handler, uint32_t size)
+ptp_sendobject_from_handler (PTPParams* params, PTPDataHandler *handler, uint64_t size)
 {
 	PTPContainer	ptp;
 
@@ -1093,7 +1093,7 @@ ptp_sendobject_from_handler (PTPParams* params, PTPDataHandler *handler, uint32_
  * ptp_sendobject_fromfd:
  * params:	PTPParams*
  *		fd                      - File descriptor to read() object from
- *              uint32_t size           - File/object size
+ *              uint64_t size           - File/object size
  *
  * Sends object from file descriptor by consecutive reads from this
  * descriptor.
@@ -1101,7 +1101,7 @@ ptp_sendobject_from_handler (PTPParams* params, PTPDataHandler *handler, uint32_
  * Return values: Some PTP_RC_* code.
  **/
 uint16_t
-ptp_sendobject_fromfd (PTPParams* params, int fd, uint32_t size)
+ptp_sendobject_fromfd (PTPParams* params, int fd, uint64_t size)
 {
 	PTPContainer	ptp;
 	PTPDataHandler	handler;
