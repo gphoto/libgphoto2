@@ -4737,12 +4737,12 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free (xdata);
 		/* clear the "new" flag on Canons */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-			(ob->canon_flags & 0x2000) &&
+			(ob->canon_flags & 0x20) &&
 			ptp_operation_issupported(params,PTP_OC_CANON_SetObjectArchive)
 		) {
 			/* seems just a byte (0x20 - new) */
-			ptp_canon_setobjectarchive (params, oid, (ob->canon_flags &~0x2000)>>8);
-			ob->canon_flags &= ~0x2000;
+			ptp_canon_setobjectarchive (params, oid, ob->canon_flags & ~0x20);
+			ob->canon_flags &= ~0x20;
 		}
 		}
 		break;
@@ -4906,12 +4906,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		/* clear the "new" flag on Canons */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-			(ob->canon_flags & 0x2000) &&
+			(ob->canon_flags & 0x20) &&
 			ptp_operation_issupported(params,PTP_OC_CANON_SetObjectArchive)
 		) {
 			/* seems just a byte (0x20 - new) */
-			ptp_canon_setobjectarchive (params, oid, (ob->canon_flags &~0x2000)>>8);
-			ob->canon_flags &= ~0x2000;
+			ptp_canon_setobjectarchive (params, oid, ob->canon_flags &~0x20);
+			ob->canon_flags &= ~0x20;
 		}
 		break;
 	}
@@ -5185,7 +5185,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
 		info->file.fields |= GP_FILE_INFO_STATUS;
-		if (ob->canon_flags & 0x2000)
+		if (ob->canon_flags & 0x20)
 			info->file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
 		else
 			info->file.status = GP_FILE_STATUS_DOWNLOADED;
@@ -5678,7 +5678,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				PTPObject	*ob2;
 
 				ptp_object_want (params, ents[j].ObjectHandle, 0, &ob2);
-				ob2->canon_flags = ents[j].Flags << 8;
+				ob2->canon_flags = ents[j].Flags;
 			}
 		}
 	}
