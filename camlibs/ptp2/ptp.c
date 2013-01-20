@@ -5550,9 +5550,23 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 		/* Second EOS issue, 0x20000000 has 0x20000000 as parent */
 		if (ob->oi.ParentObject == handle)
 			ob->oi.ParentObject = 0;
-		ob->flags |= X;
 
-		/* EOS bug, DCIM links back to itself. */
+		/* Read out the canon special flags */
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		    ptp_operation_issupported(params,PTP_OC_CANON_GetObjectInfoEx)) {
+			PTPCANONFolderEntry *ents = NULL;
+			uint32_t            numents = 0;
+
+			ret = ptp_canon_getobjectinfo(params,
+				ob->oi.StorageID,0,
+				ob->oi.ParentObject,handle,
+				&ents,&numents
+			);
+			if ((ret == PTP_RC_OK) && (numents >= 1))
+				ob->canon_flags = ents[0].Flags;
+		}
+
+		ob->flags |= X;
 	}
 #undef X
 	if (	(want & PTPOBJECT_MTPPROPLIST_LOADED) &&
