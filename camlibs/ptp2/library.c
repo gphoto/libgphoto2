@@ -1844,12 +1844,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_OK;
 				} else {
 					if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
-						uint16_t xret;
-						xret = ptp_check_eos_events (params);
-						if (xret != PTP_RC_OK)
-							return translate_ptp_result (xret);
-						gp_context_idle (context);
-						usleep (50*1000);
+						/* leave some compute time for the camera */
+						usleep (1000);
 						continue;
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
