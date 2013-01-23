@@ -111,7 +111,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 
 	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.");
 
-	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. EventEmulateMode to 4");
+	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. EventEmulateMode to 7.");
 /* interrupt  9013 get event
  1     Yes      No
  2     Yes      No
