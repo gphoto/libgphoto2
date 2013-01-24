@@ -27,7 +27,7 @@ noinst_PROGRAMS += \
 	sample-owner \
 	sample-preview \
 	sample-tether \
-	sample-capture sample-trigger-capture
+	sample-capture sample-trigger-capture sample-justfocus
 
 sample_autodetect_SOURCES = sample-autodetect.c samples.h context.c config.c
 sample_owner_SOURCES = sample-owner.c samples.h context.c config.c
@@ -37,6 +37,7 @@ sample_capture_SOURCES = sample-capture.c context.c samples.h config.c focus.c
 sample_trigger_capture_SOURCES = sample-trigger-capture.c context.c samples.h config.c
 sample_preview_SOURCES = preview.c samples.h context.c config.c focus.c
 sample_tether_SOURCES = samples.h sample-tether.c context.c
+sample_justfocus_SOURCES = samples.h sample-justfocus.c context.c focus.c
 
 LDADD = $(top_builddir)/libgphoto2/libgphoto2.la \
 	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
