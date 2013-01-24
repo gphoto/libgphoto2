@@ -831,6 +831,8 @@ static struct {
 	/* IRC Reporter popolon */
 	{"Nikon:DSC D5100 (PTP mode)",    0x04b0, 0x0429, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* "François G." <francois@webcampak.com> */
+	{"Nikon:DSC D800",	          0x04b0, 0x042a, PTP_CAP|PTP_CAP_PREVIEW},
 	/* t.ludewig@gmail.com */
 	{"Nikon:DSC D600",	          0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roderick Stewart <roderick.stewart@gmail.com> */
