@@ -1695,9 +1695,8 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
+			camera_unprepare_capture (camera, context);
 		}
-
-		camera_unprepare_capture (camera, context);
 
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
@@ -2384,17 +2383,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
-		/* did not call --set-config capture=on, do it for user */
-		ret = camera_prepare_capture (camera, context);
-		if (ret != GP_OK)
-			return ret;
-		if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
-			gp_context_error (context,
-			_("Sorry, initializing your camera did not work. Please report this."));
-			return GP_ERROR_NOT_SUPPORTED;
-		}
-	}
+	/* did not call --set-config capture=on, do it for user */
+	ret = camera_prepare_capture (camera, context);
+	if (ret != GP_OK)
+		return ret;
+
 	if (!params->canon_event_mode) {
 		propval.u16 = 0;
 	        ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);

@@ -75,7 +75,19 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	PTPPropertyValue	propval;
 	int 			ret;
 	PTPParams		*params = &camera->pl->params;
-	int 			found, oldtimeout, mightbeprepared = 0;
+	int 			found, oldtimeout;
+
+        if (ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
+		gp_log (GP_LOG_DEBUG, "ptp", "Canon capture mode is already set up.");
+		ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_DEBUG, "ptp", "failed get event emulate mode");
+			return translate_ptp_result (ret);
+		}
+		gp_log (GP_LOG_DEBUG, "ptp", "Event emulate mode 0x%04x", propval.u16);
+		params->canon_event_mode = propval.u16;
+		return GP_OK;
+	}
 
 	propval.u16 = 0;
 	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
@@ -84,8 +96,6 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		return translate_ptp_result (ret);
 	}
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x",propval.u16);
-	if (propval.u16 == 7)
-		mightbeprepared = 1;
 
 	propval.u16=1;
 	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
@@ -126,7 +136,6 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	params->canon_event_mode = propval.u16;
 
 	ret = ptp_canon_startshootingmode (params);
-#if 0
 	if (ret == PTP_RC_CANON_A009) {
 		/* I think this means ... already in capture mode */
 		return GP_OK;
@@ -135,14 +144,13 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_DEBUG, "ptp","shooting mode resulted in 0x%04x.", ret);
 		CPR (context, ret);
 	}
-#endif
 	gp_port_get_timeout (camera->port, &oldtimeout);
 	gp_port_set_timeout (camera->port, 1000);
 
 	/* Catch the event telling us the mode was switched ... */
 	/* If we were prepared already, it will be 5*50*1000 wait, so 1/4 second ... hmm */
 	found = 0;
-	while (found++<10-5*mightbeprepared) {
+	while (found++<10) {
 		ret = ptp_check_event (params);
 		if (ret != PTP_RC_OK)
 			break;
