@@ -1,6 +1,6 @@
 /* config.c
  *
- * Copyright (C) 2003-2012 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2013 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -588,6 +588,7 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 			return GP_OK;
 		}
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			isset = FALSE;
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u16) &&
 				    ((tbl[j].vendor_id == 0) ||
@@ -618,6 +619,7 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 			i<=dpd->FORM.Range.MaximumValue.u16;
 			i+= dpd->FORM.Range.StepSize.u16
 		) {
+			isset = FALSE;
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == i) &&
 				    ((tbl[j].vendor_id == 0) ||
@@ -746,6 +748,7 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 			return GP_OK;
 		}
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			isset = FALSE;
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].i16) &&
 				    ((tbl[j].vendor_id == 0) ||
@@ -858,6 +861,7 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			isset = FALSE;
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == dpd->FORM.Enum.SupportedValue[i].u8) &&
 				    ((tbl[j].vendor_id == 0) ||
@@ -897,6 +901,7 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 			i <= dpd->FORM.Range.MaximumValue.u8;
 			i+= dpd->FORM.Range.StepSize.u8
 		) {
+			isset = FALSE;
 			for (j=0;j<tblsize;j++) {
 				if ((tbl[j].value == i) &&
 				    ((tbl[j].vendor_id == 0) ||
