@@ -1206,6 +1206,8 @@ static struct {
 	{"Canon:PowerShot SD940 IS",		0x04a9, 0x31e6, PTPBUG_DELETE_SENDS_EVENT},
 	/* IRC reporter */
 	{"Canon:EOS 550D",			0x04a9, 0x31ea, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Mauricio Pasquier Juan <mauricio@pasquierjuan.com.ar> */
+	{"Canon:Rebel T2i",			0x04a9, 0x31ea, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* ErVito on IRC */
 	{"Canon:PowerShot A3100 IS",		0x04a9, 0x31f1, PTPBUG_DELETE_SENDS_EVENT},
@@ -1678,11 +1680,6 @@ camera_exit (Camera *camera, GPContext *context)
 		PTPParams *params = &camera->pl->params;
 		PTPContainer event;
 		SET_CONTEXT_P(params, context);
-#ifdef HAVE_ICONV
-		/* close iconv converters */
-		if (params->cd_ucs2_to_locale != (iconv_t)-1) iconv_close(params->cd_ucs2_to_locale);
-		if (params->cd_locale_to_ucs2 != (iconv_t)-1) iconv_close(params->cd_locale_to_ucs2);
-#endif
 		/* Disable EOS capture now, also end viewfinder mode. */
 		if (params->eos_captureenabled) {
 			if (camera->pl->checkevents) {
@@ -1698,8 +1695,10 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			if (params->eos_viewfinderenabled)
 				ptp_canon_eos_end_viewfinder (params);
-			camera_unprepare_capture (camera, context);
 		}
+
+		camera_unprepare_capture (camera, context);
+
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
 		while (ptp_get_one_event (params, &event))
@@ -1707,6 +1706,13 @@ camera_exit (Camera *camera, GPContext *context)
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
+
+#ifdef HAVE_ICONV
+		/* close iconv converters */
+		if (params->cd_ucs2_to_locale != (iconv_t)-1) iconv_close(params->cd_ucs2_to_locale);
+		if (params->cd_locale_to_ucs2 != (iconv_t)-1) iconv_close(params->cd_locale_to_ucs2);
+#endif
+
 		free (params->data);
 		free (camera->pl); /* also frees params */
 		params = NULL;
@@ -1737,7 +1743,7 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
 	   "\n"
-	   "Enjoy!"), 2012);
+	   "Enjoy!"), 2013);
 	return (GP_OK);
 }
 
