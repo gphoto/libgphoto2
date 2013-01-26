@@ -375,6 +375,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d", ret);
 		return translate_ptp_result (ret);
 	}
+
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 		if (params->canon_viewfinder_on) {
 			params->canon_viewfinder_on = 0;
@@ -5197,6 +5198,57 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 	return GP_OK;
 }
 
+static int
+_get_PTP_DeviceVersion_STR(CONFIG_GET_ARGS) {
+	PTPParams	*params = &camera->pl->params;
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget,params->deviceinfo.DeviceVersion?params->deviceinfo.DeviceVersion:_("None"));
+	return GP_OK;
+}
+
+static int
+_get_PTP_Model_STR(CONFIG_GET_ARGS) {
+	PTPParams	*params = &camera->pl->params;
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget,params->deviceinfo.Model?params->deviceinfo.Model:_("None"));
+	return GP_OK;
+}
+
+static int
+_get_PTP_VendorExtension_STR(CONFIG_GET_ARGS) {
+	PTPParams	*params = &camera->pl->params;
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget,params->deviceinfo.VendorExtensionDesc?params->deviceinfo.VendorExtensionDesc:_("None"));
+	return GP_OK;
+}
+
+static int
+_get_PTP_Serial_STR(CONFIG_GET_ARGS) {
+	PTPParams	*params = &camera->pl->params;
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget,params->deviceinfo.SerialNumber?params->deviceinfo.SerialNumber:_("None"));
+	return GP_OK;
+}
+
+static int
+_get_PTP_Manufacturer_STR(CONFIG_GET_ARGS) {
+	PTPParams	*params = &camera->pl->params;
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget,params->deviceinfo.Manufacturer?params->deviceinfo.Manufacturer:_("None"));
+	return GP_OK;
+}
+
+
 static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ N_("Focus Lock"),			"focuslock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_FocusLock, _get_Canon_FocusLock, _put_Canon_FocusLock},
@@ -5219,6 +5271,12 @@ static struct submenu camera_actions_menu[] = {
 };
 
 static struct submenu camera_status_menu[] = {
+	{ N_("Serial Number"), "serialnumber",       0, 0, PTP_OC_GetDeviceInfo, _get_PTP_Serial_STR, _put_None},
+	{ N_("Camera Manufacturer"), "manufacturer", 0, 0, PTP_OC_GetDeviceInfo, _get_PTP_Manufacturer_STR, _put_None},
+	{ N_("Camera Model"), "cameramodel",         0, 0, PTP_OC_GetDeviceInfo, _get_PTP_Model_STR, _put_None},
+	{ N_("Device Version"), "deviceversion",     0, 0, PTP_OC_GetDeviceInfo, _get_PTP_DeviceVersion_STR, _put_None},
+	{ N_("Vendor Extension"), "vendorextension", 0, 0, PTP_OC_GetDeviceInfo, _get_PTP_VendorExtension_STR, _put_None},
+
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_CameraModel, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None },
 	{ N_("Camera Model"), "model", PTP_DPC_CANON_EOS_ModelID, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None },
 	{ N_("Firmware Version"), "firmwareversion", PTP_DPC_CANON_FirmwareVersion, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_CANON_FirmwareVersion, _put_None },
@@ -5235,7 +5293,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Flash Charged"), "flashcharged", PTP_DPC_NIKON_FlashCharged, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_None },
 	{ N_("Lens Name"), "lensname", PTP_DPC_NIKON_LensID, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_LensID, _put_None },
 	{ N_("Lens Name"), "lensname", PTP_DPC_CANON_EOS_LensName, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None},
-	{ N_("Serial Number"), "serialnumber", PTP_DPC_CANON_EOS_SerialNumber, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None},
+	{ N_("Serial Number"), "eosserialnumber", PTP_DPC_CANON_EOS_SerialNumber, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_None},
 	{ N_("Shutter Counter"), "shuttercounter", PTP_DPC_CANON_EOS_ShutterCounter, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
 	{ N_("Available Shots"), "availableshots", PTP_DPC_CANON_EOS_AvailableShots, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
 	{ N_("Focal Length Minimum"), "minfocallength", PTP_DPC_NIKON_FocalLengthMin, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_FocalLength, _put_None},
@@ -5603,7 +5661,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			widget = NULL;
 
-			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
+			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
+				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
+			) {
 				int			j;
 
 				/* Do not handle a property we have already handled.
@@ -5639,9 +5699,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
 					if (	((cursub->type & 0x7000) != 0x1000) ||
 						 ptp_operation_issupported(params, cursub->type)
-					)
+					) {
+						gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting function prop '%s' / 0x%04x", _(cursub->label), cursub->type );
 						ret = cursub->getfunc (camera, &widget, cursub, NULL);
-					else
+					} else
 						continue;
 				}
 				if (ret != GP_OK) {
@@ -5877,7 +5938,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* restore the "changed flag" */
 			gp_widget_set_changed (widget, TRUE);
 
-			if (have_prop(camera,cursub->vendorid,cursub->propid)) {
+			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
+				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
+			) {
 				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 				if ((cursub->propid & 0x7000) == 0x5000) {
