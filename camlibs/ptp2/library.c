@@ -3258,7 +3258,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					goto downloadnow;
 
 				/* if we have the object already loaded, no need to add it here */
-				if (ptp_object_find(params, event.Param1, &ob))
+				if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
 					continue;
 
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
