@@ -1839,21 +1839,61 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if (ret == PTP_RC_OK) {
-					uint32_t	len = dtoh32a(data);
+					unsigned char	*xdata = data;
 
-					/* 4 byte len of jpeg data, 4 byte unknown */
-					/* JPEG blob */
-					/* stuff */
-					gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "get_viewfinder_image unknown bytes: 0x%02x 0x%02x 0x%02x 0x%02x", data[4],data[5],data[6],data[7]);
+					/* returns multiple blobs, they are usually structured as
+					 * uint32 len
+					 * uint32 type
+					 * ... data ... 
+					 *
+					 * 1: JPEG preview
+					 */
 
-					if (len > size) len = size;
-					gp_file_append ( file, (char*)data+8, len );
-					gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-					/* Add an arbitrary file name so caller won't crash */
-					gp_file_set_name (file, "preview.jpg");
-					free (data);
-					SET_CONTEXT_P(params, NULL);
-					return GP_OK;
+					gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "total size: len=%d", size);
+					while ((xdata-data) < size) {
+						uint32_t	len  = dtoh32a(xdata);
+						uint32_t	type = dtoh32a(xdata+4);
+
+						/* 4 byte len of jpeg data, 4 byte type */
+						/* JPEG blob */
+						/* stuff */
+						gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "get_viewfinder_image header: len=%d type=%d", len, type);
+						if (type != 1) {
+							gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
+							xdata = xdata+len;
+							continue;
+						}
+
+						if (len > (size-(xdata-data))) {
+							len = size;
+							gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "len=%d larger than rest size %ld", len, (size-(xdata-data)));
+							break;
+						}
+						gp_file_append ( file, (char*)xdata+8, len-8 );
+						gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
+						/* Add an arbitrary file name so caller won't crash */
+						gp_file_set_name (file, "preview.jpg");
+
+						/* dump the rest of the blobs */
+						xdata = xdata+len;
+						while ((xdata-data) < size) {
+							uint32_t	len  = dtoh32a(xdata);
+							uint32_t	type = dtoh32a(xdata+4);
+
+							gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "get_viewfinder_image header: len=%d type=%d", len, type);
+							if (len > (size-(xdata-data))) {
+								len = size;
+								gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "len=%d larger than rest size %ld", len, (size-(xdata-data)));
+								break;
+							}
+							gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
+							xdata = xdata+len;
+						}
+						free (data);
+						SET_CONTEXT_P(params, NULL);
+						return GP_OK;
+					}
+					return GP_ERROR;
 				} else {
 					if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
 						/* leave some compute time for the camera */
