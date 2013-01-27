@@ -388,10 +388,12 @@ ptp_transaction (PTPParams* params, PTPContainer* ptp,
 
 	switch (flags & PTP_DP_DATA_MASK) {
 	case PTP_DP_SENDDATA:
-		ptp_init_send_memory_handler (&handler, *data, sendlen);
+		ret = ptp_init_send_memory_handler (&handler, *data, sendlen);
+		if (ret != PTP_RC_OK) return ret;
 		break;
 	case PTP_DP_GETDATA:
-		ptp_init_recv_memory_handler (&handler);
+		ret = ptp_init_recv_memory_handler (&handler);
+		if (ret != PTP_RC_OK) return ret;
 		break;
 	default:break;
 	}
