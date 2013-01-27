@@ -1,26 +1,28 @@
-libgphoto2 2.5.0.2 release
+libgphoto2 2.5.1 release
 
 translations updates
 * lots of translations synced to 2.5.0 release
 
 ptp2:
-* lots of new USB ids added
-  - Sony RX100, A65V, HX200V
-  - Nikon Coolpix S01, S3300, S8200, P510, J1
+* Lots of new USB ids added
+  - Sony RX100, SLT-A65V, HX200V
+  - Nikon Coolpix S01, S3300, P7700, S8200, P510, J1
   - Nikon DSLR D600, D800E, D800, D5200
   - Panasonic DMC LX7
   - Olympus SP-720UZ, E-PL5
   - Canon PowerShot D10, IXUS 310IS, SX220HS, G1 X, SX40HS, 
     A4000IS, SX240HS, A2400IS, S110, SX500IS
-  - Canon EOS M, EOS 650D, 6D
+  - Canon EOS M, EOS 650D, EOS 6D
   - Fuji FinePix S2950, S4300, X-S1, HS30EXR, XF1
 * wait-for-event also for Canon PowerShot (capture capable ones)
   now waits for "shutter press" signal and triggers a capture.
-* Canon Powershot Preview mode fixes on newer Linux
+* Canon Powershot Preview mode fixes
 * various Nikon configurations added: angle, flickerreduction,
   rawcompression, remotemode.
+* Nikon DSLR to-ram capture fixes
 * merged music player ids from libmtp. Includes big Samsung devices rename.
-* some waiting reduced to allow higher preview / regular capture speed on Canon EOS.
+* EOS preview capture bugfixes: some waiting reduced to allow higher
+  preview / regular capture speed on Canon EOS, understand newer EOS.
 * some more bug fixes
 
 ax203:
