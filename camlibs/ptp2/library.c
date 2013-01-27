@@ -3257,6 +3257,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 				if (!event.Param1 || (event.Param1 == 0xffff0001))
 					goto downloadnow;
 
+				/* if we have the object already loaded, no need to add it here */
+				if (ptp_object_find(params, event.Param1, &ob))
+					continue;
+
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 				if (!path)
 					return GP_ERROR_NO_MEMORY;
