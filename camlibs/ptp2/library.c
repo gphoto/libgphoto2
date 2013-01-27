@@ -2204,9 +2204,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (oi.ParentObject != 0)
 			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
 		/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
-		if (oi.StorageID == 0)
-			oi.StorageID = 0x00010001;
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+		if (oi.StorageID == 0) {
+			strcpy (path->folder, "/");
+		} else {
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+		}
 		if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 			gp_log (GP_LOG_DEBUG,"nikon_capture", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
 			sprintf (path->name, "capt%04d.nef", capcnt++);
@@ -3248,13 +3250,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 			gp_log (GP_LOG_DEBUG , "ptp2/nikon_wait_event", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
-			case PTP_EC_Nikon_ObjectAddedInSDRAM:
 			case PTP_EC_ObjectAdded: {
 				PTPObject	*ob;
 				uint16_t	ofc;
-				PTPObjectInfo	oi;
 
-				if (!event.Param1 || event.Param1 == 0xffff0001)
+				if (!event.Param1 || (event.Param1 == 0xffff0001))
 					goto downloadnow;
 
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
@@ -3271,22 +3271,23 @@ camera_wait_for_event (Camera *camera, int timeout,
 				if (ob->oi.StorageID == 0) {
 					/* We would always get the same filename,
 					 * which will confuse the frontends */
-					if (strstr(ob->oi.Filename,".NEF")) {
+					if (strstr(ob->oi.Filename,".NEF"))
 						sprintf (path->name, "capt%04d.nef", capcnt++);
-					} else {
+					else
 						sprintf (path->name, "capt%04d.jpg", capcnt++);
-					}
 					free (ob->oi.Filename);
 					ob->oi.Filename = strdup (path->name);
+					strcpy (path->folder,"/");
+					goto downloadnow;
 				} else {
 					strcpy  (path->name,  ob->oi.Filename);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+					path->folder[ strlen(path->folder)-1 ] = '\0';
 				}
-				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 				ofc = ob->oi.ObjectFormat;
-				get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
 				/* ob pointer can be invalid now! */
 				/* delete last / or we get confused later. */
-				path->folder[ strlen(path->folder)-1 ] = '\0';
 				if (ofc == PTP_OFC_Association) { /* new folder! */
 					*eventtype = GP_EVENT_FOLDER_ADDED;
 					*eventdata = path;
@@ -3301,6 +3302,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 					return GP_OK;
 				}
 				break;
+			}
+			case PTP_EC_Nikon_ObjectAddedInSDRAM: {
+				PTPObjectInfo	oi;
 downloadnow:
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
@@ -3346,13 +3350,13 @@ downloadnow:
 				*eventdata = path;
 				/* We have now handed over the file, disclaim responsibility by unref. */
 				gp_file_unref (file);
-				break;
+				return GP_OK;
 			}
 			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
 			case PTP_EC_CaptureComplete:
 				*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 				*eventdata = NULL;
-				break;
+				return GP_OK;
 			case PTP_EC_DevicePropChanged:
 			{
 				char *x;
