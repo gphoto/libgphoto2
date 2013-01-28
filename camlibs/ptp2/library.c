@@ -1243,6 +1243,7 @@ static struct {
 	{"Canon:PowerShot G1 X",		0x04a9, 0x3233, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SX40HS",		0x04a9, 0x3238, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Rebel T4i",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:EOS M",				0x04a9, 0x323d, 0/*PTP_CAP|PTP_CAP_PREVIEW ... might be unknown opcodes -Marcus */},
 	{"Canon:PowerShot A4000IS",		0x04a9, 0x3243, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SX240HS",		0x04a9, 0x3245, PTPBUG_DELETE_SENDS_EVENT},
