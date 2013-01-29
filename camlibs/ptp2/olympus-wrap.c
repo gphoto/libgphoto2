@@ -274,7 +274,7 @@ ums_wrap_sendreq (PTPParams* params, PTPContainer* req) {
 
 uint16_t
 ums_wrap_senddata (
-	PTPParams* params, PTPContainer* ptp, unsigned long sendlen, PTPDataHandler*getter
+	PTPParams* params, PTPContainer* ptp, uint64_t sendlen, PTPDataHandler*getter
 ) {
 	Camera			*camera = ((PTPData *)params->data)->camera;
 	PTPUSBBulkContainer	usbreq;
@@ -1691,7 +1691,7 @@ ums_wrap2_sendreq (PTPParams* params, PTPContainer* req)
 
 uint16_t
 ums_wrap2_senddata (
-	PTPParams* params, PTPContainer* ptp, unsigned long sendlen, PTPDataHandler*getter
+	PTPParams* params, PTPContainer* ptp, uint64_t sendlen, PTPDataHandler*getter
 ) {
 	unsigned char	*data;
 	uint16_t	ret;

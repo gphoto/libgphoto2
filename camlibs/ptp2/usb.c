@@ -102,7 +102,7 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 
 uint16_t
 ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
-		  unsigned long size, PTPDataHandler *handler
+		  uint64_t size, PTPDataHandler *handler
 ) {
 	uint16_t ret = PTP_RC_OK;
 	int res, wlen, datawlen;

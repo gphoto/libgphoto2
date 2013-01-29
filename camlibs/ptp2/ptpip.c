@@ -222,7 +222,7 @@ ptp_ptpip_check_event (PTPParams* params) {
 #define WRITE_BLOCKSIZE 65536
 uint16_t
 ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
-		unsigned long size, PTPDataHandler *handler
+		uint64_t size, PTPDataHandler *handler
 ) {
 	unsigned char	request[0x14];
 	int		ret, curwrite, towrite;
