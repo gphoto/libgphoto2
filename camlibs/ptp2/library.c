@@ -802,6 +802,8 @@ static struct {
 	{"Nikon:DSC D80 (PTP mode)",      0x04b0, 0x0412, PTP_CAP},
 	/* Huy Hoang <hoang027@umn.edu> */
 	{"Nikon:DSC D40 (PTP mode)",      0x04b0, 0x0414, PTP_CAP},
+	/* Mark de Ruijter <mark@ridersoft.net> */
+	{"Nikon:DSC D2Xs (PTP mode)",     0x04b0, 0x0416, PTP_CAP},
 	/* Luca Gervasi <luca.gervasi@gmail.com> */
 	{"Nikon:DSC D40x (PTP mode)",     0x04b0, 0x0418, PTP_CAP},
 	/* Andreas Jaeger <aj@suse.de>.
