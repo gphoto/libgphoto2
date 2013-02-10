@@ -3278,6 +3278,71 @@ ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings
 }
 
 
+/**
+ * Android MTP Extensions
+ */
+
+/**
+ * ptp_android_getpartialobject64:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		offset			- Offset into object
+ *		maxbytes		- Maximum of bytes to read
+ *		object			- pointer to data area
+ *		len			- pointer to returned length
+ *
+ * Get object 'handle' from device and store the data in newly
+ * allocated 'object'. Start from offset and read at most maxbytes.
+ *
+ * This is a 64bit offset version of the standard GetPartialObject.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_android_getpartialobject64 (PTPParams* params, uint32_t handle, uint64_t offset,
+				uint32_t maxbytes, unsigned char** object,
+				uint32_t *len)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_ANDROID_GetPartialObject64;
+	ptp.Param1=handle;
+	ptp.Param2=offset & 0xFFFFFFFF;
+	ptp.Param3=offset >> 32;
+	ptp.Param4=maxbytes;
+	ptp.Nparam=4;
+	*len=0;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, len);
+}
+
+uint16_t
+ptp_android_sendpartialobject (PTPParams* params, uint32_t handle, uint64_t offset,
+				unsigned char* object,	uint32_t len)
+{
+	uint32_t err;
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code=PTP_OC_ANDROID_SendPartialObject;
+	ptp.Param1=handle;
+	ptp.Param2=offset & 0xFFFFFFFF;
+	ptp.Param3=offset >> 32;
+	ptp.Param4=len;
+	ptp.Nparam=4;
+
+	/*
+	 * MtpServer.cpp is buggy: it uses write() without offset
+	 * rather than pwrite to send the data for data coming with
+	 * the header packet
+	 */
+	params->split_header_data = 1;
+	err=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, len, &object, NULL);
+	params->split_header_data = 0;
+
+	return err;
+}
+
 
 /* Non PTP protocol functions */
 /* devinfo testing functions */

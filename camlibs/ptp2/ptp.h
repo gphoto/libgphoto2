@@ -548,6 +548,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_OLYMPUS_SetCameraID			0x9501
 #define PTP_OC_OLYMPUS_GetCameraID			0x9581
 
+/* Android Random I/O Extensions Codes */
+#define PTP_OC_ANDROID_GetPartialObject64		0x95C1
+#define PTP_OC_ANDROID_SendPartialObject		0x95C2
+#define PTP_OC_ANDROID_TruncateObject			0x95C3
+#define PTP_OC_ANDROID_BeginEditObject			0x95C4
+#define PTP_OC_ANDROID_EndEditObject			0x95C5
+
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
 #define PTP_OC_EXTENSION                0x9000
@@ -2823,6 +2830,17 @@ uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t 
  **/
 #define ptp_nikon_device_ready(params) ptp_generic_no_data (params, PTP_OC_NIKON_DeviceReady, 0)
 uint16_t ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc, uint32_t *propnum, uint16_t **props);
+
+
+/* Android MTP Extensions */
+uint16_t ptp_android_getpartialobject64	(PTPParams* params, uint32_t handle, uint64_t offset,
+					uint32_t maxbytes, unsigned char** object,
+					uint32_t *len);
+#define ptp_android_begineditobject(params,handle) ptp_generic_no_data (params, PTP_OC_ANDROID_BeginEditObject, 1, handle);
+#define ptp_android_truncate(params,handle,offset) ptp_generic_no_data (params, PTP_OC_ANDROID_TruncateObject, 3, handle, (offset & 0xFFFFFFFF), (offset >> 32));
+uint16_t ptp_android_sendpartialobject (PTPParams *params, uint32_t handle,
+					uint64_t offset, unsigned char *object, uint32_t len);
+#define ptp_android_endeditobject(params,handle) ptp_generic_no_data (params, PTP_OC_ANDROID_EndEditObject, 1, handle);
 
 /* Non PTP protocol functions */
 static inline int
