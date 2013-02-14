@@ -533,7 +533,7 @@ static time_t
 ptp_unpack_PTPTIME (const char *str) {
 	char ptpdate[40];
 	char tmp[5];
-	int  ptpdatelen;
+	size_t  ptpdatelen;
 	struct tm tm;
 
 	if (!str)
@@ -543,11 +543,12 @@ ptp_unpack_PTPTIME (const char *str) {
 		/*ptp_debug (params ,"datelen is larger then size of buffer", ptpdatelen, (int)sizeof(ptpdate));*/
 		return 0;
 	}
-	strcpy (ptpdate, str);
 	if (ptpdatelen<15) {
 		/*ptp_debug (params ,"datelen is less than 15 (%d)", ptpdatelen);*/
 		return 0;
 	}
+	strncpy (ptpdate, str, sizeof(ptpdate));
+	ptpdate[sizeof(ptpdate) - 1] = '\0';
 
 	memset(&tm,0,sizeof(tm));
 	strncpy (tmp, ptpdate, 4);
