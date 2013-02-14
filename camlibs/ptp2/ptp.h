@@ -2846,7 +2846,7 @@ uint16_t ptp_android_sendpartialobject (PTPParams *params, uint32_t handle,
 static inline int
 ptp_operation_issupported(PTPParams* params, uint16_t operation)
 {
-	int i=0;
+	unsigned int i=0;
 
 	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
 		if (params->deviceinfo.OperationsSupported[i]==operation)
