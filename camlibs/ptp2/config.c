@@ -4011,6 +4011,9 @@ _get_Nikon_AFDrive(CONFIG_GET_ARGS) {
 static int
 _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 	uint16_t	ret;
+	int		tries;
+	PTPParams	*params = &(camera->pl->params);
+	GPContext 	*context = ((PTPData *) params->data)->context;
 
 	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_AfDrive)) 
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -4020,8 +4023,17 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
 		return translate_ptp_result (ret);
 	}
-	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
-	return GP_OK;
+	/* wait at most 2 seconds for focusing currently */
+	while (PTP_RC_DeviceBusy == (ret = ptp_nikon_device_ready(&camera->pl->params))) {
+		tries++;
+		if (tries == 500)
+			return GP_ERROR_CAMERA_BUSY;
+		usleep(10*1000);
+	}
+	/* this can return PTP_RC_OK or PTP_RC_NIKON_OutOfFocus */
+	if (ret == PTP_RC_NIKON_OutOfFocus)
+		gp_context_error (context, _("Nikon autofocus drive did not focus."));
+	return translate_ptp_result (ret);
 }
 
 static int
