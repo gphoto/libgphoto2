@@ -780,6 +780,8 @@ static struct {
 	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
 	/* "M.-A. DARCHE" <ma.darche@cynode.org> */
 	{"Nikon:Coolpix S3300 (PTP mode)",0x04b0, 0x032a, PTP_CAP},
+	/* sakax <sakamotox@gmail.com> */
+	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP},
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},

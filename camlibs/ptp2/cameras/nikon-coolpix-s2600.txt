@@ -1,0 +1,193 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: S2600
+  Version: COOLPIX S2600 V1.0
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0;
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Defined Type, JPEG, DPOF, MS AVI, Apple Quicktime, MS Wave
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc08/DateCreated
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc09/DateModified dc08/DateCreated
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc87/Width dc88/Height dcd3/ImageBitDepth dc09/DateModified dc08/DateCreated
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc87/Width dc88/Height dc89/Duration de97/ScanDepth de9b/VideoFourCCCodec de9c/VideoBitRate de9a/AudioBitRate de93/SampleRate de94/NumberOfChannels dc09/DateModified dc08/DateCreated
+	Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc09/DateModified dc08/DateCreated
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: S2600
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 7939817472 (7572 MB)
+	Free Space (Bytes): 7936442368 (7568 MB)
+	Free Space (Images): 1743
+
+Device Property Summary:
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5,6,7] value: 6
+Date & Time(0x5011):(readwrite) (type=0xffff) '20130217T212051'
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Automatic flash (1)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Focal Length(0x5008):(read only) (type=0x6) Enumeration [3500,4600,5300,6100,7300,8600,10500] value: 35 mm (3500)
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1361132463
+Printable: Sun Feb 17 21:21:03 2013
+/main/settings/fastfs
+Label: Fast Filesystem
+Type: TOGGLE
+Current: 1
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/capturesettings/flashmode
+Label: Flash Mode
+Type: RADIO
+Current: Automatic Flash
+Choice: 0 Automatic Flash
+Choice: 1 Flash off
+Choice: 2 Fill flash
+Choice: 3 Red-eye automatic
+/main/capturesettings/focallength
+Label: Focal Length
+Type: RANGE
+Current: 35
+Bottom: 35
+Top: 105
+Step: 1
+/main/capturesettings/focusmode
+Label: Focus Mode
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Automatic Macro
+/main/wifiprofiles/new/name
+Label: Profile name
+Type: TEXT
+Current: 
+/main/wifiprofiles/new/essid
+Label: WIFI ESSID
+Type: TEXT
+Current: 
+/main/wifiprofiles/new/ipaddr
+Label: IP address (empty for DHCP)
+Type: TEXT
+Current: 
+/main/wifiprofiles/new/netmask
+Label: Network mask
+Type: TEXT
+Current: 
+/main/wifiprofiles/new/gw
+Label: Default gateway
+Type: TEXT
+Current: 
+/main/wifiprofiles/new/accessmode
+Label: Access mode
+Type: RADIO
+Current: Managed
+Choice: 0 Managed
+Choice: 1 Ad-hoc
+/main/wifiprofiles/new/channel
+Label: WIFI channel
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 11
+Step: 1
+/main/wifiprofiles/new/encryption
+Label: Encryption
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 WEP 64-bit
+Choice: 2 WEP 128-bit
+/main/wifiprofiles/new/key
+Label: Encryption key (hex)
+Type: TEXT
+Current: 
+/main/wifiprofiles/new/write
+Label: Write
+Type: TOGGLE
+Current: 0
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current: 
+/main/other/d002
+Label: PTP Property 0xd002
+Type: MENU
+Current: 6
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+/main/other/5011
+Label: Date & Time
+Type: TEXT
+Current: 20130217T212103
+/main/other/500c
+Label: Flash Mode
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+/main/other/500a
+Label: Focus Mode
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 3
+/main/other/5008
+Label: Focal Length
+Type: MENU
+Current: 3500
+Choice: 0 3500
+Choice: 1 4600
+Choice: 2 5300
+Choice: 3 6100
+Choice: 4 7300
+Choice: 5 8600
+Choice: 6 10500
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 100
+Choice: 0 2
+Choice: 1 5
+Choice: 2 25
+Choice: 3 50
+Choice: 4 65
+Choice: 5 80
+Choice: 6 100
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+
