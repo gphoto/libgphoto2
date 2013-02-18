@@ -840,6 +840,9 @@ static struct {
 
 	/* "François G." <francois@webcampak.com> */
 	{"Nikon:DSC D800",	          0x04b0, 0x042a, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Christian Deckelmann of Xerox */
+	{"Nikon:DSC D4",	          0x04b0, 0x042b, PTP_CAP|PTP_CAP_PREVIEW},
 	/* t.ludewig@gmail.com */
 	{"Nikon:DSC D600",	          0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roderick Stewart <roderick.stewart@gmail.com> */
