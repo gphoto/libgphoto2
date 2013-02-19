@@ -23,6 +23,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _BSD_SOURCE
+
 #include "config.h"
 
 #include <stdarg.h>
