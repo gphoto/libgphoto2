@@ -30,7 +30,9 @@
 #ifdef HAVE_LIMITS_H
 # include <limits.h>
 #endif
-#include <sys/file.h>
+#ifdef HAVE_SYS_FILE_H
+# include <sys/file.h>
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #ifdef HAVE_SYS_PARAM_H
@@ -81,6 +83,7 @@ gp_port_library_type ()
 static int
 gp_port_usbscsi_lock (GPPort *port)
 {
+#if HAVE_FLOCK
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-usbscsi",
 		"Trying to lock '%s'...", port->settings.usbscsi.path);
 
@@ -98,18 +101,23 @@ gp_port_usbscsi_lock (GPPort *port)
 			return GP_ERROR_IO;
 		}
 	}
-
+#else
+	gp_log (GP_LOG_DEBUG, "gphoto2-port-usbscsi",
+		"Locking '%s' not possible, flock not availbale.", port->settings.usbscsi.path);
+#endif
 	return GP_OK;
 }
 
 static int
 gp_port_usbscsi_unlock (GPPort *port)
 {
+#ifdef HAVE_FLOCK
 	if (flock(port->pl->fd, LOCK_UN) != 0) {
 		gp_port_set_error (port, _("Failed to unlock '%s' (%m)."),
 				   port->settings.usbscsi.path);
 		return GP_ERROR_IO;
 	}
+#endif
 	return GP_OK;
 }
 
