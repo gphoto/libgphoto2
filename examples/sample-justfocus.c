@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 		printf("gp_file_new: %d\n", retval);
 		return 1;
 	}
-	//retval = gp_camera_capture_preview(camera, file, context);
+	/*retval = gp_camera_capture_preview(camera, file, context); */
 	if (retval != GP_OK) {
 		printf("gp_camera_capture_preview: %d\n", retval);
 		return 1;
