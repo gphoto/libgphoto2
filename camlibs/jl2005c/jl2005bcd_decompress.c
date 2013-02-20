@@ -23,6 +23,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#define _BSD_SOURCE
+
 #include <stdio.h>
 #include <_stdint.h>
 #include <stdlib.h>
