@@ -1,3 +1,4 @@
+#define _BSD_SOURCE
 #include "config.h"
 
 #include <stdio.h>

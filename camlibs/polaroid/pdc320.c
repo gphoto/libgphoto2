@@ -29,6 +29,8 @@
  *	http://www.polaroid.com/service/software/index.html
  */
 
+#define _BSD_SOURCE
+
 #include "config.h"
 
 #include <stdlib.h>

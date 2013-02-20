@@ -20,10 +20,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#define _BSD_SOURCE
+
 #include <config.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
