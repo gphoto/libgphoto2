@@ -1,3 +1,6 @@
+#define _BSD_SOURCE
+#define _POSIX_C_SOURCE 199309L
+
 #include "config.h"
 
 #include <stdlib.h>
@@ -301,15 +304,12 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	gp_list_get_name (list, count - 1, &name);
 	gp_list_free(list);
 
-
 	/* Set the filename */
-	snprintf(path->folder, sizeof(path->folder), "/");
-	
+	strcpy(path->folder, "/");
 
 	CHECK_RESULT (gp_filesystem_append (camera->fs, 
 					    path->folder, 
 					    path->name, context));
-
         return (GP_OK);
 
 }

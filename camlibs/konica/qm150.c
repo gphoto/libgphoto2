@@ -33,6 +33,8 @@
  * information header and use this number with all functions !!
  */
 
+#define _BSD_SOURCE
+
 #include "config.h"
 
 #include <string.h>

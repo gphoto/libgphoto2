@@ -71,7 +71,7 @@ typedef enum {
 } pslr_buffer_type;
 
 typedef enum {
-    PSLR_JPEG_QUALITY_4, // K20D only
+    PSLR_JPEG_QUALITY_4, /* K20D only */
     PSLR_JPEG_QUALITY_3,
     PSLR_JPEG_QUALITY_2,
     PSLR_JPEG_QUALITY_1,
@@ -79,7 +79,7 @@ typedef enum {
 } pslr_jpeg_quality_t;
 
 typedef enum {
-    PSLR_JPEG_RESOLUTION_14M, // K20D only
+    PSLR_JPEG_RESOLUTION_14M, /* K20D only */
     PSLR_JPEG_RESOLUTION_10M,
     PSLR_JPEG_RESOLUTION_6M,
     PSLR_JPEG_RESOLUTION_2M,

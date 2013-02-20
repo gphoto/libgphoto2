@@ -19,6 +19,8 @@
 *                                                                     *
 **********************************************************************/
 
+#define _BSD_SOURCE
+
 #include "config.h"
 
 #ifdef ENABLE_NLS

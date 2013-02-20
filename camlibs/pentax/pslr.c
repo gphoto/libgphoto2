@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define _BSD_SOURCE
+
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -121,7 +123,7 @@ static int ipslr_download(ipslr_handle_t *p, uint32_t addr, uint32_t length, uin
 static int ipslr_identify(ipslr_handle_t *p);
 static int ipslr_write_args(ipslr_handle_t *p, int n, ...);
 
-//static int ipslr_cmd_00_04(ipslr_handle_t *p, uint32_t mode);
+/*static int ipslr_cmd_00_04(ipslr_handle_t *p, uint32_t mode);*/
 
 static int command(ipslr_handle_t *, int a, int b, int c);
 static int get_status(ipslr_handle_t *);
@@ -619,8 +621,8 @@ uint32_t pslr_buffer_read(pslr_handle_t h, uint8_t *buf, uint32_t size)
     if (blksz > BLKSZ)
         blksz = BLKSZ;
 
-    //printf("File offset %d segment: %d offset %d address 0x%x read size %d\n", p->offset, 
-    //       i, seg_offs, addr, blksz);
+    /*printf("File offset %d segment: %d offset %d address 0x%x read size %d\n", p->offset, 
+     *       i, seg_offs, addr, blksz); */
     
     ret = ipslr_download(p, addr, blksz, buf);
     if (ret != PSLR_OK)
@@ -833,49 +835,50 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
 #endif
         memset(status, 0, sizeof(*status));
         status->bufmask = buf[0x16] << 8 | buf[0x17]; 
-	status->current_iso = get_uint32(&buf[0x130]); //d
-        status->current_shutter_speed.nom = get_uint32(&buf[0x108]); //d
-        status->current_shutter_speed.denom = get_uint32(&buf[0x10C]); //d
-        status->current_aperture.nom = get_uint32(&buf[0x110]); //d
-        status->current_aperture.denom = get_uint32(&buf[0x114]); //d
-        status->lens_min_aperture.nom = get_uint32(&buf[0x140]); //d
-        status->lens_min_aperture.denom = get_uint32(&buf[0x144]); //d
-        status->lens_max_aperture.nom = get_uint32(&buf[0x148]); //d
-        status->lens_max_aperture.denom = get_uint32(&buf[0x14B]); //d
-        status->current_zoom.nom = get_uint32(&buf[0x180]); //d
-        status->current_zoom.denom = get_uint32(&buf[0x184]); //d
-        status->set_aperture.nom = get_uint32(&buf[0x34]); //d
-        status->set_aperture.denom = get_uint32(&buf[0x38]); //d
-        status->set_shutter_speed.nom = get_uint32(&buf[0x2c]); //d
-        status->set_shutter_speed.denom = get_uint32(&buf[0x30]); //d
-        status->set_iso = get_uint32(&buf[0x60]); //d
-        status->jpeg_resolution = get_uint32(&buf[0x7c]); //d
-        status->jpeg_contrast = get_uint32(&buf[0x94]); // commands do now work for it?
-        status->jpeg_sharpness = get_uint32(&buf[0x90]); // commands do now work for it?
-        status->jpeg_saturation = get_uint32(&buf[0x8c]); // commands do now work for it?
-        status->jpeg_quality = get_uint32(&buf[0x80]); //d
-        status->jpeg_image_mode = get_uint32(&buf[0x88]); //d
-        status->zoom.nom = get_uint32(&buf[0x180]); //d
-        status->zoom.denom = get_uint32(&buf[0x184]); //d
-        status->focus = get_uint32(&buf[0x188]); //d current focus ring position?
-        status->raw_format = get_uint32(&buf[0x84]); //d
-        status->image_format = get_uint32(&buf[0x78]); //d
-        status->light_meter_flags = get_uint32(&buf[0x138]); //d
-        status->ec.nom = get_uint32(&buf[0x3c]); //d
-        status->ec.denom = get_uint32(&buf[0x40]); //d
+	status->current_iso = get_uint32(&buf[0x130]); /*d*/
+        status->current_shutter_speed.nom = get_uint32(&buf[0x108]); /*d*/
+        status->current_shutter_speed.denom = get_uint32(&buf[0x10C]); /*d*/
+        status->current_aperture.nom = get_uint32(&buf[0x110]); /*d*/
+        status->current_aperture.denom = get_uint32(&buf[0x114]); /*d*/
+        status->lens_min_aperture.nom = get_uint32(&buf[0x140]); /*d*/
+        status->lens_min_aperture.denom = get_uint32(&buf[0x144]); /*d*/
+        status->lens_max_aperture.nom = get_uint32(&buf[0x148]); /*d*/
+        status->lens_max_aperture.denom = get_uint32(&buf[0x14B]); /*d*/
+        status->current_zoom.nom = get_uint32(&buf[0x180]); /*d*/
+        status->current_zoom.denom = get_uint32(&buf[0x184]); /*d*/
+        status->set_aperture.nom = get_uint32(&buf[0x34]); /*d*/
+        status->set_aperture.denom = get_uint32(&buf[0x38]); /*d*/
+        status->set_shutter_speed.nom = get_uint32(&buf[0x2c]); /*d*/
+        status->set_shutter_speed.denom = get_uint32(&buf[0x30]); /*d*/
+        status->set_iso = get_uint32(&buf[0x60]); /*d*/
+        status->jpeg_resolution = get_uint32(&buf[0x7c]); /*d*/
+        status->jpeg_contrast = get_uint32(&buf[0x94]); /* commands do now work for it?*/
+        status->jpeg_sharpness = get_uint32(&buf[0x90]); /* commands do now work for it?*/
+        status->jpeg_saturation = get_uint32(&buf[0x8c]); /* commands do now work for it?*/
+        status->jpeg_quality = get_uint32(&buf[0x80]); /*d*/
+        status->jpeg_image_mode = get_uint32(&buf[0x88]); /*d*/
+        status->zoom.nom = get_uint32(&buf[0x180]); /*d*/
+        status->zoom.denom = get_uint32(&buf[0x184]); /*d*/
+        status->focus = get_uint32(&buf[0x188]); /*d current focus ring position?*/
+        status->raw_format = get_uint32(&buf[0x84]); /*d*/
+        status->image_format = get_uint32(&buf[0x78]); /*d*/
+        status->light_meter_flags = get_uint32(&buf[0x138]); /*d*/
+        status->ec.nom = get_uint32(&buf[0x3c]); /*d*/
+        status->ec.denom = get_uint32(&buf[0x40]); /*d*/
         status->custom_ev_steps = get_uint32(&buf[0x9c]);
         status->custom_sensitivity_steps = get_uint32(&buf[0xa0]);
-        status->exposure_mode = get_uint32(&buf[0xe0]); //d
-        status->user_mode_flag = get_uint32(&buf[0x1c]); //d
-        status->af_point_select = get_uint32(&buf[0xbc]); // not sure
-        status->selected_af_point = get_uint32(&buf[0xc0]); //d
-        status->focused_af_point = get_uint32(&buf[0x160]); //d, unsure about it, a lot is changing when the camera focuses
-	// 0x158 current ev?
-	// 0xB8 0 - MF, 1 - AF.S, 2 - AF.C
-	// 0xB4, 0xC4 - metering mode, 0 - matrix, 1 - center weighted, 2 - spot
-	// 0x160 and 0x164 change when AF
-	// 0xC0 changes when selecting focus point manually or from GUI
-	// 0xBC focus point selection 0 - auto, 1 - manual, 2 - center
+        status->exposure_mode = get_uint32(&buf[0xe0]); /*d*/
+        status->user_mode_flag = get_uint32(&buf[0x1c]); /*d*/
+        status->af_point_select = get_uint32(&buf[0xbc]); /* not sure*/
+        status->selected_af_point = get_uint32(&buf[0xc0]); /*d*/
+        status->focused_af_point = get_uint32(&buf[0x160]); /*d, unsure about it, a lot is changing when the camera focuses*/
+	/* 0x158 current ev?
+	 / 0xB8 0 - MF, 1 - AF.S, 2 - AF.C
+	 / 0xB4, 0xC4 - metering mode, 0 - matrix, 1 - center weighted, 2 - spot
+	 / 0x160 and 0x164 change when AF
+	 / 0xC0 changes when selecting focus point manually or from GUI
+	 / 0xBC focus point selection 0 - auto, 1 - manual, 2 - center
+         */
         return PSLR_OK;
     }
 
@@ -1028,7 +1031,7 @@ static int ipslr_next_segment(ipslr_handle_t *p)
     int r;
     CHECK(ipslr_write_args(p, 1, 0));
     CHECK(command(p, 0x04, 0x01, 0x04));
-    usleep(100000); // needed !! 100 too short, 1000 not short enough for PEF
+    usleep(100000); /* needed !! 100 too short, 1000 not short enough for PEF */
     r = get_status(p);
     if (r == 0)
         return PSLR_OK;
@@ -1068,7 +1071,7 @@ static int ipslr_download(ipslr_handle_t *p, uint32_t addr, uint32_t length, uin
         else
             block = length;
 
-        //DPRINT("Get 0x%x bytes from 0x%x\n", block, addr);
+        /*DPRINT("Get 0x%x bytes from 0x%x\n", block, addr); */
         CHECK(ipslr_write_args(p, 2, addr, block));
         CHECK(command(p, 0x06, 0x00, 0x08));
         r = get_status(p);
@@ -1193,14 +1196,14 @@ static int get_status(ipslr_handle_t *p)
 {
     uint8_t statusbuf[8];
     while (1) {
-        //usleep(POLL_INTERVAL);
+        /*usleep(POLL_INTERVAL); */
         CHECK(read_status(p, statusbuf));
-        //DPRINT("get_status->\n");
-        //hexdump(statusbuf, 8);
+        /*DPRINT("get_status->\n"); */
+        /*hexdump(statusbuf, 8); */
         if ((statusbuf[7] & 0x01) == 0)
             break;
-        //DPRINT("Waiting for ready - ");
-        //hexdump(statusbuf, 8);
+        /*DPRINT("Waiting for ready - "); */
+        /*hexdump(statusbuf, 8); */
         usleep(POLL_INTERVAL);
     }
     if ((statusbuf[7] & 0xff) != 0) {
@@ -1213,13 +1216,13 @@ static int get_result(ipslr_handle_t *p)
 {
     uint8_t statusbuf[8];
     while (1) {
-        //DPRINT("read out status\n");
+        /*DPRINT("read out status\n");*/
         CHECK(read_status(p, statusbuf));
-        //hexdump(statusbuf, 8);
+        /*hexdump(statusbuf, 8);*/
         if (statusbuf[6] == 0x01)
             break;
-        //DPRINT("Waiting for result\n");
-        //hexdump(statusbuf, 8);
+        /*DPRINT("Waiting for result\n");*/
+        /*hexdump(statusbuf, 8);*/
         usleep(POLL_INTERVAL);
     }
     if ((statusbuf[7] & 0xff) != 0) {
