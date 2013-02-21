@@ -4915,7 +4915,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* If thumb size is 0, and the ofc is not an image type (0x38xx or 0xb8xx)
 		 * then there is no thumbnail at all... */
 		size=ob->oi.ThumbCompressedSize;
-		if((size==0) && ((ob->oi.ObjectFormat & 0x7800) != 0x3800))
+		if((size==0) && (
+			((ob->oi.ObjectFormat & 0x7800) != 0x3800) &&
+			((ob->oi.ObjectFormat != PTP_OFC_CANON_CRW)) &&
+			((ob->oi.ObjectFormat != PTP_OFC_CANON_CRW3))
+		))
 			return GP_ERROR_NOT_SUPPORTED;
 		CPR (context, ptp_getthumb(params, oid, &ximage, &xlen));
 		set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
