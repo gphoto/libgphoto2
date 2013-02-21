@@ -21,6 +21,8 @@
  * supports rs232 and USB. 
  */
 
+#define _BSD_SOURCE
+
 /*
 	Implemenation of the USB Version of ExecuteCommand
 */
