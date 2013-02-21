@@ -4919,6 +4919,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			((ob->oi.ObjectFormat & 0x7800) != 0x3800) &&
 			((ob->oi.ObjectFormat != PTP_OFC_CANON_CRW)) &&
 			((ob->oi.ObjectFormat != PTP_OFC_CANON_MOV)) &&
+			((ob->oi.ObjectFormat != PTP_OFC_CANON_MOV2)) &&
 			((ob->oi.ObjectFormat != PTP_OFC_CANON_CRW3))
 		))
 			return GP_ERROR_NOT_SUPPORTED;

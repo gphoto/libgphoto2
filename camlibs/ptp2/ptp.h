@@ -872,6 +872,7 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_CANON_CRW			0xb101
 #define PTP_OFC_CANON_CRW3			0xb103
 #define PTP_OFC_CANON_MOV			0xb104
+#define PTP_OFC_CANON_MOV2			0xb105
 /* CHDK specific raw mode */
 #define PTP_OFC_CANON_CHDK_CRW			0xb1ff
 /* MTP extensions */
