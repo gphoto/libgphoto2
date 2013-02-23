@@ -5179,7 +5179,14 @@ struct {
 	{PTP_OC_MTP_WMDRMND_GetWMDRMNDLicenseResponse,N_("Get WMDRM-ND License Response")},
 
 	/* WiFi Provisioning MTP Extension Codes (microsoft.com/WPDWCN: 1.0) */
-	{PTP_OC_MTP_WPDWCN_ProcessWFCObject,N_("Process WFC Object")}
+	{PTP_OC_MTP_WPDWCN_ProcessWFCObject,N_("Process WFC Object")},
+
+	/* Android Direct I/O Extensions */
+	{PTP_OC_ANDROID_GetPartialObject64,N_("Get Partial Object (64bit Offset)")},
+	{PTP_OC_ANDROID_SendPartialObject,N_("Send Partial Object")},
+	{PTP_OC_ANDROID_TruncateObject,N_("Truncate Object")},
+	{PTP_OC_ANDROID_BeginEditObject,N_("Begin Edit Object")},
+	{PTP_OC_ANDROID_EndEditObject,N_("End Edit Object")},
 };
 
 int
