@@ -627,6 +627,8 @@ static struct {
 	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-RX100 (PTP mode)", 0x054c, 0x052a, 0},
+	/* Stuart Nettleton <snettlet@gmail.com> */
+	{"Sony:DSC-RX1 (PTP mode)",   0x054c, 0x052b, 0},
 	/* t.ludewig@gmail.com */
 	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Rudi */
