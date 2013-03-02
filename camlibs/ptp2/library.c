@@ -1842,6 +1842,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				}
 			}
 			ptp_free_devicepropdesc (&dpd);
+
+			/* Otherwise the camera will auto-shutdown */
+			ret = ptp_canon_eos_keepdeviceon (params);
+			if (ret != PTP_RC_OK)
+				return translate_ptp_result (ret);
+
 			params->eos_viewfinderenabled = 1;
 			while (tries--) {
 				/* Poll for camera events, but just call
@@ -1909,8 +1915,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_ERROR;
 				} else {
 					if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
-						/* leave some compute time for the camera */
-						usleep (1000);
+						usleep (1300);
 						continue;
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
