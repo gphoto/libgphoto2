@@ -4161,13 +4161,14 @@ static int
 _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 	uint16_t	ret;
 	char*		val;
-	unsigned int	xval;
+	unsigned int	xval = 0;
 
 	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_SetControlMode)) 
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 	gp_widget_get_value(widget, &val);
 
-	sscanf(val,"%d",&xval);
+	if (!sscanf(val,"%d",&xval))	
+		return GP_ERROR;
 
 	ret = ptp_nikon_setcontrolmode (&camera->pl->params, xval);
 	if (ret != PTP_RC_OK) {
