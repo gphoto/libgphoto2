@@ -1128,8 +1128,56 @@ _get_INT(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_value (*widget,value);
-	return (GP_OK);
+	return GP_OK;
 }
+
+static int
+_put_INT(CONFIG_PUT_ARGS) {
+	char *value;
+	unsigned int u;
+	int i, ret;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+
+	switch (dpd->DataType) {
+	case PTP_DTC_UINT32:
+	case PTP_DTC_UINT16:
+	case PTP_DTC_UINT8:
+		sscanf (value, "%u", &u );
+		break;
+	case PTP_DTC_INT32:
+	case PTP_DTC_INT16:
+	case PTP_DTC_INT8:
+		sscanf (value, "%d", &i );
+		break;
+	default:
+		return GP_ERROR;
+	}
+	switch (dpd->DataType) {
+	case PTP_DTC_UINT32:
+		dpd->CurrentValue.u32 = u;
+		break;
+	case PTP_DTC_INT32:
+		dpd->CurrentValue.i32 = i;
+		break;
+	case PTP_DTC_UINT16:
+		dpd->CurrentValue.u16 = u;
+		break;
+	case PTP_DTC_INT16:
+		dpd->CurrentValue.i16 = i;
+		break;
+	case PTP_DTC_UINT8:
+		dpd->CurrentValue.u8 = u;
+		break;
+	case PTP_DTC_INT8:
+		dpd->CurrentValue.i8 = i;
+		break;
+	}
+	return GP_OK;
+}
+
 
 static int
 _get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
@@ -4772,7 +4820,7 @@ _put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
 	for (i = 0; i < gp_widget_count_children(widget); i++) {
 		gp_widget_get_child(widget, i, &child);
 		gp_widget_get_child_by_name(child, "delete", &child2);
-		
+
 		gp_widget_get_value(child2, &value);
 		if (value) {
 			gp_widget_get_name(child, &name);
@@ -5389,6 +5437,8 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Clean Sensor"), "cleansensor", PTP_DPC_NIKON_CleanImageSensor, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_CleanSensor, _put_Nikon_CleanSensor},
 	{ N_("Flicker Reduction"), "flickerreduction", PTP_DPC_NIKON_FlickerReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlickerReduction, _put_Nikon_FlickerReduction},
 	{ N_("Custom Functions Ex"), "customfuncex", PTP_DPC_CANON_EOS_CustomFuncEx, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
+
+	{ N_("Auto Power Off"), "autopoweroff", PTP_DPC_CANON_EOS_AutoPowerOff, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_INT, _put_INT},
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },

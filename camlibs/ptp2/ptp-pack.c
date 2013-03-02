@@ -1664,6 +1664,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_QuickReviewTime:
 				case PTP_DPC_CANON_EOS_EVFMode:
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
+				case PTP_DPC_CANON_EOS_AutoPowerOff:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
@@ -1684,7 +1685,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_INT16;
 					break;
 				/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
-				case 0xd114:
 				case PTP_DPC_CANON_EOS_DPOFVersion:
 					dpd->DataType = PTP_DTC_UINT16;
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint16", i ,proptype, size-PTP_ece_Prop_Val_Data);

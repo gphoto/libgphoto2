@@ -1379,6 +1379,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_BatteryPower		0xD111
 #define PTP_DPC_CANON_EOS_BatterySelect		0xD112
 #define PTP_DPC_CANON_EOS_CameraTime		0xD113
+#define PTP_DPC_CANON_EOS_AutoPowerOff		0xD114
 #define PTP_DPC_CANON_EOS_Owner			0xD115
 #define PTP_DPC_CANON_EOS_ModelID		0xD116
 #define PTP_DPC_CANON_EOS_PTPExtensionVersion	0xD119
