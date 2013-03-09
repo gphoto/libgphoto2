@@ -1730,7 +1730,9 @@ camera_exit (Camera *camera, GPContext *context)
 		params = NULL;
 		camera->pl = NULL;
 	}
-	if ((camera->port!=NULL) && (camera->port->type == GP_PORT_USB)) {
+	/* This code hangs USB 3 devices after the first bulk image transmission.
+         * For some unknown reason. */
+	if (0 && (camera->port!=NULL) && (camera->port->type == GP_PORT_USB)) {
 		/* clear halt */
 		gp_port_usb_clear_halt
 				(camera->port, GP_PORT_USB_ENDPOINT_IN);
