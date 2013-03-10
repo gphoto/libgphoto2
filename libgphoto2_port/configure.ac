@@ -63,7 +63,8 @@ AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
-m4_pattern_allow([AM_PROG_AR], [AM_PROG_AR])
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
@@ -98,9 +99,7 @@ GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
 
 AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
 
-AM_CPPFLAGS="$CPPFLAGS"
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
-
+AM_CPPFLAGS=""
 
 # ----------------------------------------------------------------------
 # References to external resources (web sites, mailing listes, etc.)
@@ -438,23 +437,15 @@ GP_CHECK_DOC_DIR()dnl
 GP_BUILD_GTK_DOCS()dnl
 
 
-# Make sure that the *FLAGS given at ./configure time will be active by
-# default in AM_*FLAGS
-AM_CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
-AM_CFLAGS="$AM_CFLAGS $CFLAGS"
-AM_CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
-AM_LDFLAGS="$AM_LDFLAGS $LDFLAGS"
-
 dnl ---------------------------------------------------------------------------
 dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
-	AM_CPPFLAGS="$AM_CPPFLAGS -Wmissing-declarations -Wmissing-prototypes"
-	AM_LDFLAGS="$AM_LDFLAGS -Wall"
+	CFLAGS="$CFLAGS -Wall"
+	CFLAGS="$CFLAGS -Wmissing-declarations -Wmissing-prototypes"
 	# FIXME: Check for --enable-debug here
-	AM_CPPFLAGS="$AM_CPPFLAGS -g"
-	AM_LDFLAGS="$AM_LDFLAGS -g"
+	CFLAGS="$CFLAGS -g"
+	LDFLAGS="$LDFLAGS -g"
 fi
 
 # Activate internal code

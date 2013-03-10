@@ -52,6 +52,7 @@ camlib_ldflags = -module -no-undefined -avoid-version -export-dynamic \
 	-rpath '$(camlibdir)'
 camlib_libadd = $(top_builddir)/libgphoto2/libgphoto2.la
 
+AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_port -I$(top_srcdir)/libgphoto2 -I$(top_builddir)/libgphoto2
 
 ########################################################################
 # You can generate this Makefile-files include list by running

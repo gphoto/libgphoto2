@@ -46,6 +46,8 @@ iolib_ldflags = -module -no-undefined -avoid-version \
 	-rpath '$(iolibdir)'
 iolib_libadd = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
 
+AM_CPPFLAGS += -I$(top_srcdir)
+
 include disk/Makefile-files
 include ptpip/Makefile-files
 include serial/Makefile-files

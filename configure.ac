@@ -67,18 +67,6 @@ AC_SUBST([LIBGPHOTO2_VERSION_INFO],
          [$LIBGPHOTO2_CURRENT:$LIBGPHOTO2_REVISION:$LIBGPHOTO2_AGE])
 
 
-dnl Set up compiler options
-dnl "CPPFLAGS" concerns the C preprocessor, i.e. both C and C++ source code.
-dnl C only would be CFLAGS, C++ only CXXFLAGS
-AM_CPPFLAGS="$CPPFLAGS"
-
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)"
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_builddir)"
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2_port"
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/libgphoto2"
-AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_builddir)/libgphoto2"
-
-
 dnl ---------------------------------------------------------------------------
 dnl Checks for programs.
 dnl ---------------------------------------------------------------------------
@@ -88,34 +76,20 @@ AC_PROG_CPP
 AC_PROG_CXX
 AC_PROG_INSTALL
 AM_PROG_CC_C_O
-m4_pattern_allow([AM_PROG_AR], [AM_PROG_AR])
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
 dnl sequence seems to get mixed up.
 SED=${SED-sed}
 
-
-# Make sure that the *FLAGS given at ./configure time will be active by
-# default in AM_*FLAGS
-AM_CPPFLAGS="$AM_CPPFLAGS $CPPFLAGS"
-AM_CFLAGS="$AM_CFLAGS $CFLAGS"
-AM_CXXFLAGS="$AM_CXXFLAGS $CXXFLAGS"
-AM_LDFLAGS="$AM_LDFLAGS $LDFLAGS"
-
 dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
-	AM_CPPFLAGS="$AM_CPPFLAGS -Wall"
-	# AM_CFLAGS="$AM_CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"
-	AM_CFLAGS="$AM_CFLAGS -Wall"
-	# AM_CFLAGS="$AM_CFLAGS -Wno-pointer-sign -Wno-unused -Wno-sign-compare"
-	AM_CFLAGS="$AM_CFLAGS -Wmissing-declarations -Wmissing-prototypes"
-	AM_LDFLAGS="$AM_LDFLAGS -Wall"
-	# FIXME: Check for --enable-debug here
-	AM_CPPFLAGS="$AM_CPPFLAGS -g"
-	AM_LDFLAGS="$AM_LDFLAGS -g"
+	# CFLAGS="$CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"
+	CFLAGS="$CFLAGS -Wall -g -Wmissing-declarations -Wmissing-prototypes"
+	LDFLAGS="$LDFLAGS -g"
 	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
 fi
 AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
@@ -135,11 +109,8 @@ AC_SUBST([AM_LDFLAGS])
 # Check for va_copy()
 GP_VA_COPY
 
-# Define compiler flags for later compile tests
 # Note: Do NOT add specific libraries and stuff to the generic _FLAGS.
 #       Put these into LIBFOO_CFLAGS and LIBFOO_LIBS instead.
-CFLAGS="$AM_CFLAGS"
-CPPFLAGS="$AM_CPPFLAGS"
 
 
 try_gp2ddb=false

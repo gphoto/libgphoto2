@@ -17,6 +17,7 @@ INSTALL_TESTS_ENVIRONMENT = env \
 	CAMLIBS="$(DESTDIR)$(camlibdir)" \
 	LD_LIBRARY_PATH="$(DESTDIR)$(libdir)$${LD_LIBRARY_PATH+:$${LD_LIBRARY_PATH}}"
 
+AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_port -I$(top_srcdir)/libgphoto2 -I$(top_builddir)/libgphoto2
 
 CLEANFILES = $(check_SCRIPTS)
 

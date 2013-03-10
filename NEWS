@@ -4,6 +4,9 @@ libgphoto2 2.5.1.2 release
 translations:
 * updated ukrainian, finish, dutch, polish, russian, french, vietnamese
 
+build:
+* cleaned up AM_CPPFLAGS/CPPFLAGS usage, do not use both together.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.1.1 release
 

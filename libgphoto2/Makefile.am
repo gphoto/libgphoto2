@@ -12,6 +12,8 @@ lib_LTLIBRARIES = libgphoto2.la
 # Yes, this is messy, but we are going to clean this up.
 
 libgphoto2_la_CPPFLAGS =				\
+	-I$(top_srcdir) -I$(top_builddir)		\
+	-I$(top_srcdir)/libgphoto2_port -I$(top_builddir)/libgphoto2_port		\
 	$(AM_CPPFLAGS) $(CPPFLAGS)			\
 	$(LTDLINCL)					\
 	$(LIBEXIF_CFLAGS)
