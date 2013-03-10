@@ -463,6 +463,24 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 }
 
 static int
+gp_port_usb_reset(GPPort *port)
+{
+	int ret, curread;
+
+	if (!port || !port->pl->dh) {
+		gp_log (GP_LOG_ERROR, "libusb1", "gp_port_usb_reset: bad parameters");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	gp_log (GP_LOG_DEBUG, "libusb1", "reseting");
+	ret = libusb_reset_device (port->pl->dh);
+	gp_log (GP_LOG_DEBUG, "libusb1", "ret = %d", ret);
+        if (ret < 0)
+		return GP_ERROR_IO_READ;
+        return GP_OK;
+}
+
+static int
 gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int ret, curread;
@@ -1175,6 +1193,7 @@ gp_port_library_operations (void)
 	ops->open   = gp_port_usb_open;
 	ops->close  = gp_port_usb_close;
 	ops->read   = gp_port_usb_read;
+	ops->reset  = gp_port_usb_reset;
 	ops->write  = gp_port_usb_write;
 	ops->check_int = gp_port_usb_check_int;
 	ops->update = gp_port_usb_update;

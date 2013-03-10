@@ -81,6 +81,8 @@ typedef struct _GPPortOperations {
 				char *sense, int sense_size,
 				char *data, int data_size);
 
+        int (*reset)     (GPPort *);
+
 } GPPortOperations;
 
 typedef GPPortType (* GPPortLibraryType) (void);

@@ -300,6 +300,28 @@ gp_port_close (GPPort *port)
 }
 
 /**
+ * \brief Reset a port.
+ * \param port a #GPPort
+ *
+ * Resets a port. Device will likely reconnect and appear under a new id.
+ *
+ * \return a gphoto2 error code
+ **/
+int
+gp_port_reset (GPPort *port)
+{
+	gp_log (GP_LOG_DEBUG, "gphoto2-port", _("Resetting port..."));
+
+	CHECK_NULL (port);
+	CHECK_INIT (port);
+
+	CHECK_SUPP (port, "reset", port->pc->ops->reset);
+        CHECK_RESULT (port->pc->ops->reset(port));
+
+	return (GP_OK);
+}
+
+/**
  * \brief Free the port structure
  * \param port a #GPPort
  *

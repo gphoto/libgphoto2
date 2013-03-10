@@ -429,6 +429,20 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 }
 
 static int
+gp_port_usb_reset(GPPort *port)
+{
+	int ret;
+
+	if (!port || !port->pl->dh)
+		return GP_ERROR_BAD_PARAMETERS;
+
+	ret = usb_reset(port->pl->dh);
+        if (ret < 0)
+		return GP_ERROR_IO_READ;
+        return GP_OK;
+}
+
+static int
 gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int ret;
@@ -1143,6 +1157,7 @@ gp_port_library_operations (void)
 	ops->open   = gp_port_usb_open;
 	ops->close  = gp_port_usb_close;
 	ops->read   = gp_port_usb_read;
+	ops->reset  = gp_port_usb_reset;
 	ops->write  = gp_port_usb_write;
 	ops->check_int = gp_port_usb_check_int;
 	ops->update = gp_port_usb_update;
