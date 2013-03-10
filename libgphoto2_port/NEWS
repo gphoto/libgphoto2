@@ -1,3 +1,8 @@
+libgphoto2_port 0.10.1
+
+API:
+gp_port_reset(GPPort*) added for a usb reset of the device.
+
 libgphoto2_port 0.10.0
 
 API:
