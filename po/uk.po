@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.5.1\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-01-27 20:58+0100\n"
-"PO-Revision-Date: 2013-02-03 20:36+0200\n"
+"PO-Revision-Date: 2013-03-04 22:11+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "Language: uk\n"
@@ -215,9 +215,9 @@ msgid "NULL parameter \"%s\" in %s line %i"
 msgstr "параметр NULL \"%s\" у %s рядок %i"
 
 #: camlibs/canon/canon.h:638
-#, fuzzy, c-format
+#, c-format
 msgid "Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
-msgstr "Невідомо як працювати із значеннями camera->port->type, що дорівнюють %i 0x%x у %s рядок %i."
+msgstr "Невідомо як працювати із значеннями camera->port->type, що дорівнюють %i 0x%x у %s, рядок %i."
 
 #: camlibs/canon/crc.c:234
 #, c-format
@@ -548,7 +548,7 @@ msgstr "Вимикання фотоапарата"
 
 #: camlibs/canon/library.c:586 camlibs/canon/library.c:620
 msgid "Error capturing image"
-msgstr "Помилка отримання знімку"
+msgstr "Помилка отримання знімка"
 
 #: camlibs/canon/library.c:676 camlibs/canon/library.c:1108
 #, c-format
@@ -715,9 +715,8 @@ msgid "Owner Name"
 msgstr "Ім’я власника"
 
 #: camlibs/canon/library.c:1597 camlibs/canon/library.c:2006
-#, fuzzy
 msgid "Capture Size Class"
-msgstr "Клас розміру знімку"
+msgstr "Клас розміру захоплення"
 
 #: camlibs/canon/library.c:1636 camlibs/canon/library.c:2032
 #: camlibs/ptp2/config.c:5371 camlibs/ptp2/config.c:5372
@@ -807,9 +806,8 @@ msgid "Beep"
 msgstr "Сигнал"
 
 #: camlibs/canon/library.c:1901 camlibs/ptp2/config.c:5607
-#, fuzzy
 msgid "Camera Actions"
-msgstr "Параметри фотоапарата"
+msgstr "Дії фотоапарата"
 
 #: camlibs/canon/library.c:1905 camlibs/canon/library.c:2335
 #: camlibs/ptp2/config.c:5270 camlibs/ptp2/config.c:5271
@@ -2115,12 +2113,11 @@ msgstr ""
 "Докладніша інформація наведена у libgphoto2/camlibs/README.\n"
 
 #: camlibs/jl2005c/library.c:161
-#, fuzzy
 msgid ""
 "jl2005bcd camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Бібліотека для фотоапарата Sonix\n"
+"Бібліотека для фотоапарата jl2005bcd\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/kodak/dc120/dc120.c:68 camlibs/kodak/dc120/dc120.c:144
@@ -2900,7 +2897,7 @@ msgstr "Постійні параметри"
 
 #: camlibs/konica/library.c:678
 msgid "Shall the camera beep when taking a picture?"
-msgstr "Чи подавати звуковий сигнал при отриманні знімку?"
+msgstr "Чи подавати звуковий сигнал при отриманні знімка?"
 
 #: camlibs/konica/library.c:682 camlibs/konica/library.c:892
 msgid "Self Timer Time"
@@ -3097,9 +3094,8 @@ msgid "Can't upload this image to the camera. An error has occurred."
 msgstr "Не вдалося відвантажити це зображення у фотоапарат. Виникла помилка."
 
 #: camlibs/konica/qm150.c:632
-#, fuzzy
 msgid "You must be in record mode to capture images."
-msgstr "Щоб зробити знімок треба перейти у режим запису."
+msgstr "Щоб зробити знімок, треба перейти у режим запису."
 
 #: camlibs/konica/qm150.c:635
 #, fuzzy
@@ -3329,15 +3325,12 @@ msgstr ""
 "Дякуємо за використання GPhoto2 та ОС UNIX/Linux.\n"
 
 #: camlibs/largan/lmini/largan.c:226
-#, fuzzy
 msgid ""
 "Largan driver\n"
 "Hubert Figuiere <hfiguiere@teaser.fr>\n"
 msgstr ""
 "Драйвер Largan\n"
 "Hubert Figuiere <hfiguiere@teaser.fr>\n"
-"\n"
-"Підтримка фотоапарата Largan Lmini.\n"
 
 #: camlibs/lg_gsm/library.c:102
 #, fuzzy, c-format
@@ -3359,7 +3352,7 @@ msgstr ""
 "Guillaume Bedot <littletux@zarb.org>\n"
 
 #: camlibs/mars/library.c:124
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Mars MR97310 camera.\n"
 "There is %i photo in it.\n"
@@ -3368,10 +3361,10 @@ msgid_plural ""
 "There are %i photos in it.\n"
 msgstr[0] ""
 "Фотоапарат Mars MR97310.\n"
-"Містить %i знімків. \n"
+"Містить %i знімок. \n"
 msgstr[1] ""
 "Фотоапарат Mars MR97310.\n"
-"Містить %i знімків. \n"
+"Містить %i знімки. \n"
 msgstr[2] ""
 "Фотоапарат Mars MR97310.\n"
 "Містить %i знімків. \n"
@@ -3711,7 +3704,7 @@ msgstr ""
 "Mariusz Zynel <mariusz@mizar.org>\n"
 "\n"
 "Основана на програмі для dc1000, яку написав\n"
-"Fredrik Roubert <roubert@df.lth.se> и\n"
+"Fredrik Roubert <roubert@df.lth.se> і\n"
 "Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/dc1580.c:521
@@ -3720,7 +3713,6 @@ msgid "Downloading %s."
 msgstr "Копіюється %s."
 
 #: camlibs/panasonic/dc1580.c:627
-#, fuzzy
 msgid ""
 "Panasonic DC1580 gPhoto2 library\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
@@ -3729,11 +3721,11 @@ msgid ""
 "Fredrik Roubert <roubert@df.lth.se> and\n"
 "Galen Brooks <galen@nine.com>."
 msgstr ""
-"Бібліотека gPhoto для Panasonic DC1000\n"
+"Бібліотека gPhoto2 для Panasonic DC1580\n"
 "Mariusz Zynel <mariusz@mizar.org>\n"
 "\n"
-"Основана на програмі для dc1000, яку написав\n"
-"Fredrik Roubert <roubert@df.lth.se> и\n"
+"Засновано на програмі для dc1000, яку написав\n"
+"Fredrik Roubert <roubert@df.lth.se> і\n"
 "Galen Brooks <galen@nine.com>."
 
 #: camlibs/panasonic/l859/l859.c:500
@@ -3800,19 +3792,17 @@ msgid "Downloading file..."
 msgstr "Копіюється файл..."
 
 #: camlibs/pccam600/library.c:251
-#, fuzzy
 msgid ""
 "Creative PC-CAM600\n"
 "Author: Peter Kajberg <pbk@odense.kollegienet.dk>\n"
 msgstr ""
 "Creative PC-CAM600\n"
-" Автор: Peter Kajberg\n"
-" ел-пошта: <pbk@odense.kollegienet.dk>\n"
+"Автор: Peter Kajberg <pbk@odense.kollegienet.dk>\n"
 
 #: camlibs/pccam600/pccam600.c:128 camlibs/pccam600/pccam600.c:157
-#, fuzzy, c-format
+#, c-format
 msgid "pccam600_init: Expected > %d blocks got %d"
-msgstr "pccam600_init:Очікується > %d отримано блоків %d"
+msgstr "pccam600_init: очікувалося більше %d блоків, отримано %d"
 
 #: camlibs/pccam600/pccam600.c:141
 #, c-format
@@ -3820,19 +3810,19 @@ msgid "pccam600_get_file:got index %d but expected index > %d"
 msgstr "pccam600_get_file:отримано індекс %d але очікувався індекс > %d"
 
 #: camlibs/pccam600/pccam600.c:183
-#, fuzzy, c-format
+#, c-format
 msgid "pccam600_close: return value was %d instead of %d"
-msgstr "pccam600_close:повернула значення %d замість %d"
+msgstr "pccam600_close: повернуто значення %d замість %d"
 
 #: camlibs/pccam600/pccam600.c:217
-#, fuzzy, c-format
+#, c-format
 msgid "pccam600_init: Expected %d blocks got %d"
-msgstr "pccam600_init:Очікувалось %d блоків, отримано %d"
+msgstr "pccam600_init: очікувалося %d блоків, отримано %d"
 
 #: camlibs/pccam600/pccam600.c:228
-#, fuzzy, c-format
+#, c-format
 msgid "pccam600 init: Unexpected error: gp_port_read returned %d instead of %d"
-msgstr "pccam600 init:Неочікувана помилка: gp_port_read повернула %d замість %d"
+msgstr "pccam600 init: неочікувана помилка: функція gp_port_read повернула %d замість %d"
 
 #: camlibs/polaroid/pdc320.c:456
 msgid ""
@@ -4043,9 +4033,9 @@ msgstr "Невідоме значення %04x"
 
 #: camlibs/ptp2/config.c:639 camlibs/ptp2/config.c:795
 #: camlibs/ptp2/config.c:830
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown value %04d"
-msgstr "Невідоме значення %04x"
+msgstr "Невідоме значення %04d"
 
 #: camlibs/ptp2/config.c:987 camlibs/ptp2/config.c:1004
 #: camlibs/ptp2/config.c:1125 camlibs/ptp2/config.c:1207
@@ -4142,23 +4132,23 @@ msgstr "Виберіть кольорову температуру"
 
 #: camlibs/ptp2/config.c:1235
 msgid "Preset Custom 1"
-msgstr ""
+msgstr "Нетиповий набір параметрів 1"
 
 #: camlibs/ptp2/config.c:1236
 msgid "Preset Custom 2"
-msgstr ""
+msgstr "Нетиповий набір параметрів 2"
 
 #: camlibs/ptp2/config.c:1237
 msgid "Preset Custom 3"
-msgstr ""
+msgstr "Нетиповий набір параметрів 3"
 
 #: camlibs/ptp2/config.c:1238
 msgid "Preset Custom 4"
-msgstr ""
+msgstr "Нетиповий набір параметрів 4"
 
 #: camlibs/ptp2/config.c:1239
 msgid "Preset Custom 5"
-msgstr ""
+msgstr "Нетиповий набір параметрів 5"
 
 #: camlibs/ptp2/config.c:1245 camlibs/ptp2/config.c:3724
 #: camlibs/ptp2/config.c:3735 camlibs/ptp2/config.c:3747
@@ -4172,14 +4162,12 @@ msgid "JPEG Normal"
 msgstr "Звичайний JPEG"
 
 #: camlibs/ptp2/config.c:1247
-#, fuzzy
 msgid "RAW + JPEG Fine"
-msgstr "RAW + основний JPEG"
+msgstr "RAW + покращений JPEG"
 
 #: camlibs/ptp2/config.c:1248
-#, fuzzy
 msgid "RAW + JPEG Normal"
-msgstr "Звичайний JPEG"
+msgstr "RAW + звичайний JPEG"
 
 #: camlibs/ptp2/config.c:1253
 msgid "Single frame"
@@ -4187,11 +4175,11 @@ msgstr "Окремий кадр"
 
 #: camlibs/ptp2/config.c:1254 camlibs/ptp2/config.c:2110
 msgid "Continuous low speed"
-msgstr ""
+msgstr "Неперервно з повільною швидкістю"
 
 #: camlibs/ptp2/config.c:1255 camlibs/ptp2/config.c:2109
 msgid "Continuous high speed"
-msgstr ""
+msgstr "Неперервно з високою швидкістю"
 
 #: camlibs/ptp2/config.c:1256
 msgid "Self-timer"
@@ -4206,9 +4194,8 @@ msgid "undefined"
 msgstr "не визначено"
 
 #: camlibs/ptp2/config.c:1553
-#, fuzzy
 msgid "economy"
-msgstr "Економний друк"
+msgstr "економно"
 
 #: camlibs/ptp2/config.c:1556
 msgid "lossless"
@@ -4223,18 +4210,16 @@ msgid "Undefined"
 msgstr "Не визначено"
 
 #: camlibs/ptp2/config.c:1564 camlibs/ptp2/ptp.c:4658
-#, fuzzy
 msgid "CRW"
-msgstr "RAW"
+msgstr "CRW"
 
 #: camlibs/ptp2/config.c:1570 camlibs/ptp2/config.c:1583
 msgid "TV"
 msgstr "Телебачення"
 
 #: camlibs/ptp2/config.c:1571 camlibs/ptp2/config.c:1584
-#, fuzzy
 msgid "AV"
-msgstr "Ав"
+msgstr "AV"
 
 #: camlibs/ptp2/config.c:1573 camlibs/ptp2/config.c:1587
 #: camlibs/ptp2/ptp.c:4683
@@ -4246,9 +4231,8 @@ msgid "M_DEP"
 msgstr "M_DEP"
 
 #: camlibs/ptp2/config.c:1588
-#, fuzzy
 msgid "DEP"
-msgstr "<nl/>Відпр.: <emphasis strong='1'>%1</emphasis>"
+msgstr "DEP"
 
 #: camlibs/ptp2/config.c:1589 camlibs/ptp2/config.c:3217
 #: camlibs/ptp2/config.c:3239 camlibs/ptp2/config.c:3298
@@ -4281,31 +4265,27 @@ msgstr "Пейзаж"
 
 #: camlibs/ptp2/config.c:1596
 msgid "Closeup"
-msgstr ""
+msgstr "Знімання зблизька"
 
 #: camlibs/ptp2/config.c:1597
-#, fuzzy
 msgid "Flash Off"
 msgstr "Спалах вимкнено"
 
 #: camlibs/ptp2/config.c:1605
-#, fuzzy
 msgid "red eye suppression"
-msgstr "Увімк, зменшення червоності очей"
+msgstr "придушення ефекту червоних очей"
 
 #: camlibs/ptp2/config.c:1606
 msgid "fill in"
-msgstr ""
+msgstr "заповнення"
 
 #: camlibs/ptp2/config.c:1607
-#, fuzzy
 msgid "auto + red eye suppression"
-msgstr "Авто, зменшення червоності очей"
+msgstr "авто + придушення ефекту червоних очей"
 
 #: camlibs/ptp2/config.c:1608
-#, fuzzy
 msgid "on + red eye suppression"
-msgstr "Увімк, зменшення червоності очей"
+msgstr "увімкнено + придушення ефекту червоних очей"
 
 #: camlibs/ptp2/config.c:1613
 msgid "iTTL"
@@ -4330,9 +4310,8 @@ msgid "Auto Aperture"
 msgstr "Автодіафрагма"
 
 #: camlibs/ptp2/config.c:1623 camlibs/ptp2/ptp.c:4554
-#, fuzzy
 msgid "Full Manual"
-msgstr "Ручний"
+msgstr "Повністю вручну"
 
 #: camlibs/ptp2/config.c:1719 camlibs/ptp2/config.c:3266
 #: camlibs/ptp2/ptp.c:4520
@@ -4355,12 +4334,10 @@ msgid "MF (fixed)"
 msgstr "Фіксований"
 
 #: camlibs/ptp2/config.c:1723 camlibs/ptp2/ptp.c:4524
-#, fuzzy
 msgid "MF (selection)"
-msgstr "Видалення файлів, "
+msgstr "MF (вибір)"
 
 #: camlibs/ptp2/config.c:1745
-#, fuzzy
 msgid "Center-weighted"
 msgstr "Центрально-зважений"
 
@@ -4422,23 +4399,20 @@ msgid "Multiple Focusing Points (No Specification), Manual"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1854 camlibs/ptp2/ptp.c:4737
-#, fuzzy
 msgid "Multiple Focusing Points, Auto"
-msgstr "Точка фокусування"
+msgstr "Декілька точок фокусування, авто"
 
 #: camlibs/ptp2/config.c:1855 camlibs/ptp2/ptp.c:4738
-#, fuzzy
 msgid "Multiple Focusing Points (Right)"
-msgstr "Точка фокусування"
+msgstr "Декілька точок фокусування (праворуч)"
 
 #: camlibs/ptp2/config.c:1856 camlibs/ptp2/ptp.c:4739
 msgid "Multiple Focusing Points (Center)"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1857 camlibs/ptp2/ptp.c:4740
-#, fuzzy
 msgid "Multiple Focusing Points (Left)"
-msgstr "Точка фокусування"
+msgstr "Декілька точок фокусування (ліворуч)"
 
 #: camlibs/ptp2/config.c:1862 camlibs/ptp2/ptp.c:4660
 msgid "Large"
@@ -4490,9 +4464,9 @@ msgstr "Вивід відео"
 
 #: camlibs/ptp2/config.c:1953 camlibs/ptp2/config.c:1967
 #: camlibs/ptp2/config.c:1986
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown %d"
-msgstr "(невідомий %3d) "
+msgstr "Невідомий %d"
 
 #: camlibs/ptp2/config.c:2017 camlibs/ptp2/config.c:3329
 msgid "Factory Default"
@@ -4500,103 +4474,87 @@ msgstr "Заводські параметри"
 
 #: camlibs/ptp2/config.c:2054
 msgid "mRAW"
-msgstr ""
+msgstr "mRAW"
 
 #: camlibs/ptp2/config.c:2055
 msgid "sRAW"
-msgstr ""
+msgstr "sRAW"
 
 #: camlibs/ptp2/config.c:2064
 msgid "Smaller JPEG"
 msgstr "Менший JPEG"
 
 #: camlibs/ptp2/config.c:2065
-#, fuzzy
 msgid "Tiny JPEG"
-msgstr "JPEG"
+msgstr "Малюсінький JPEG"
 
 #: camlibs/ptp2/config.c:2067
-#, fuzzy
 msgid "mRAW + Large Fine JPEG"
-msgstr "RAW + великий JPEG доброї якості"
+msgstr "mRAW + великий покращений JPEG"
 
 #: camlibs/ptp2/config.c:2068
-#, fuzzy
 msgid "sRAW + Large Fine JPEG"
-msgstr "RAW + великий JPEG доброї якості"
+msgstr "sRAW + великий покращений JPEG"
 
 #: camlibs/ptp2/config.c:2070
-#, fuzzy
 msgid "mRAW + Medium Fine JPEG"
-msgstr "RAW + середній JPEG доброї якості"
+msgstr "mRAW + середній покращений JPEG"
 
 #: camlibs/ptp2/config.c:2071
-#, fuzzy
 msgid "sRAW + Medium Fine JPEG"
-msgstr "RAW + середній JPEG доброї якості"
+msgstr "sRAW + середній покращений JPEG"
 
 #: camlibs/ptp2/config.c:2073
-#, fuzzy
 msgid "mRAW + Small Fine JPEG"
-msgstr "RAW + маленький JPEG доброї якості"
+msgstr "mRAW + маленький покращений JPEG"
 
 #: camlibs/ptp2/config.c:2074
-#, fuzzy
 msgid "sRAW + Small Fine JPEG"
-msgstr "RAW + маленький JPEG доброї якості"
+msgstr "sRAW + маленький покращений JPEG"
 
 #: camlibs/ptp2/config.c:2076
-#, fuzzy
 msgid "mRAW + Large Normal JPEG"
-msgstr "RAW + великий звичайний JPEG"
+msgstr "mRAW + великий звичайний JPEG"
 
 #: camlibs/ptp2/config.c:2077
-#, fuzzy
 msgid "sRAW + Large Normal JPEG"
-msgstr "RAW + великий звичайний JPEG"
+msgstr "sRAW + великий звичайний JPEG"
 
 #: camlibs/ptp2/config.c:2079
-#, fuzzy
 msgid "mRAW + Medium Normal JPEG"
-msgstr "RAW + середній звичайний JPEG"
+msgstr "mRAW + середній звичайний JPEG"
 
 #: camlibs/ptp2/config.c:2080
-#, fuzzy
 msgid "sRAW + Medium Normal JPEG"
-msgstr "RAW + середній звичайний JPEG"
+msgstr "sRAW + середній звичайний JPEG"
 
 #: camlibs/ptp2/config.c:2082
-#, fuzzy
 msgid "mRAW + Small Normal JPEG"
-msgstr "RAW + маленький звичайний JPEG"
+msgstr "mRAW + маленький звичайний JPEG"
 
 #: camlibs/ptp2/config.c:2083
-#, fuzzy
 msgid "sRAW + Small Normal JPEG"
-msgstr "RAW + маленький звичайний JPEG"
+msgstr "sRAW + малий звичайний JPEG"
 
 #: camlibs/ptp2/config.c:2108 camlibs/ptp2/ptp.c:4765
 msgid "Continuous"
 msgstr "Неперервний"
 
 #: camlibs/ptp2/config.c:2111
-#, fuzzy
 msgid "Timer 10 sec"
-msgstr "Таймер + віддалене керування"
+msgstr "Таймер 10 сек."
 
 #: camlibs/ptp2/config.c:2112
-#, fuzzy
 msgid "Timer 2 sec"
-msgstr "Таймер + віддалене керування"
+msgstr "Таймер 2 сек."
 
 #: camlibs/ptp2/config.c:2113
-#, fuzzy
 msgid "Single silent"
-msgstr "Знімок екрана"
+msgstr "Одинарний без сповіщень"
 
 #: camlibs/ptp2/config.c:2114
 msgid "Continuous silent"
-msgstr ""
+msgstr "Неперервний без сповіщень"
 
 #: camlibs/ptp2/config.c:2302
 #, c-format
@@ -8199,14 +8157,12 @@ msgid "On screen tips"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:3797
-#, fuzzy
 msgid "Artist Name"
-msgstr "Ім'я виконавця"
+msgstr "Ім’я художника"
 
 #: camlibs/ptp2/ptp.c:3799
-#, fuzzy
 msgid "Copyright Information"
-msgstr "Інформація про авторські права"
+msgstr "Відомості щодо авторських прав"
 
 #: camlibs/ptp2/ptp.c:3807
 msgid "Modeling Flash"
@@ -8271,9 +8227,8 @@ msgid "Center Button Zoom Ratio"
 msgstr "Режим спуску середньою кнопкою"
 
 #: camlibs/ptp2/ptp.c:3842
-#, fuzzy
 msgid "Function Button 2"
-msgstr "Режим функціонування"
+msgstr "Функціональна кнопка 2"
 
 #: camlibs/ptp2/ptp.c:3846
 #, fuzzy
@@ -8281,9 +8236,8 @@ msgid "Normal AF On"
 msgstr "Вертикальний AF On"
 
 #: camlibs/ptp2/ptp.c:3848
-#, fuzzy
 msgid "Clean Image Sensor"
-msgstr "Очистити носій даних"
+msgstr "Очистити датчик зображення"
 
 #: camlibs/ptp2/ptp.c:3850
 msgid "Image Comment String"
@@ -8394,14 +8348,12 @@ msgid "Auto Off Photo"
 msgstr "Час автовимикання"
 
 #: camlibs/ptp2/ptp.c:3898
-#, fuzzy
 msgid "Auto Off Menu"
-msgstr "Час автовимикання"
+msgstr "Меню автовимикання"
 
 #: camlibs/ptp2/ptp.c:3900
-#, fuzzy
 msgid "Auto Off Info"
-msgstr "Час автовимикання"
+msgstr "Дані щодо автовимикання"
 
 #: camlibs/ptp2/ptp.c:3902
 #, fuzzy
@@ -8409,14 +8361,12 @@ msgid "Self Timer Shot Number"
 msgstr "Час автоспуску"
 
 #: camlibs/ptp2/ptp.c:3904
-#, fuzzy
 msgid "Vignette Control"
-msgstr "Високий"
+msgstr "Керування віньєтуванням"
 
 #: camlibs/ptp2/ptp.c:3910
-#, fuzzy
 msgid "Nikon Exposure Time"
-msgstr "Час експозиції"
+msgstr "Час експозиції Nikon"
 
 #: camlibs/ptp2/ptp.c:3912
 #, fuzzy
@@ -8436,9 +8386,8 @@ msgid "Exposure Meter"
 msgstr "Лічильник експозиції"
 
 #: camlibs/ptp2/ptp.c:3929
-#, fuzzy
 msgid "USB Speed"
-msgstr "Швидкість ISO"
+msgstr "Швидкість USB"
 
 #: camlibs/ptp2/ptp.c:3931
 #, fuzzy
@@ -8594,9 +8543,8 @@ msgid "Auto FP"
 msgstr "Авто"
 
 #: camlibs/ptp2/ptp.c:4033
-#, fuzzy
 msgid "Warning Display"
-msgstr "Відображення"
+msgstr "Показ попереджень"
 
 #: camlibs/ptp2/ptp.c:4035
 #, fuzzy
@@ -8617,14 +8565,12 @@ msgid "Info Disp Setting"
 msgstr "Параметри спалаху"
 
 #: camlibs/ptp2/ptp.c:4045
-#, fuzzy
 msgid "Preview Button"
-msgstr "Попередній перегляд мініатюр"
+msgstr "Кнопка попереднього перегляду"
 
 #: camlibs/ptp2/ptp.c:4047
-#, fuzzy
 msgid "Preview Button 2"
-msgstr "Попередній перегляд мініатюр"
+msgstr "Кнопка попереднього перегляду 2"
 
 #: camlibs/ptp2/ptp.c:4049
 #, fuzzy
@@ -8724,13 +8670,12 @@ msgid "Synchronization Partner"
 msgstr "Партнер синхронізації"
 
 #: camlibs/ptp2/ptp.c:4120
-#, fuzzy
 msgid "Friendly Device Name"
-msgstr "Назва пристрою"
+msgstr "Зрозуміла назва пристрою"
 
 #: camlibs/ptp2/ptp.c:4121
 msgid "Volume Level"
-msgstr "Рівень тому"
+msgstr "Рівень звуку"
 
 #: camlibs/ptp2/ptp.c:4122
 msgid "Device Icon"
@@ -8903,47 +8848,40 @@ msgid "15 mins"
 msgstr "15 хвилин"
 
 #: camlibs/ptp2/ptp.c:4596
-#, fuzzy
 msgid "Dark on light"
-msgstr "Денне світло"
+msgstr "Темне на світлому"
 
 #: camlibs/ptp2/ptp.c:4597
-#, fuzzy
 msgid "Light on dark"
-msgstr "Недостатнє освітлення."
+msgstr "Світле на темному"
 
 #: camlibs/ptp2/ptp.c:4638
-#, fuzzy
 msgid "Lithium Ion"
 msgstr "Літій-іонний"
 
 #: camlibs/ptp2/ptp.c:4639
 msgid "Nickel hydride"
-msgstr ""
+msgstr "Нікелевий гібридний"
 
 #: camlibs/ptp2/ptp.c:4640
-#, fuzzy
 msgid "Nickel cadmium"
 msgstr "Нікель-кадмієвий"
 
 #: camlibs/ptp2/ptp.c:4641
 msgid "Alkalium manganese"
-msgstr ""
+msgstr "Лужно-марганцевий"
 
 #: camlibs/ptp2/ptp.c:4645
-#, fuzzy
 msgid "Warning Level 1"
-msgstr "Рівень попереджень:"
+msgstr "Рівень попередження 1"
 
 #: camlibs/ptp2/ptp.c:4646
-#, fuzzy
 msgid "Emergency"
 msgstr "Критичний стан"
 
 #: camlibs/ptp2/ptp.c:4647
-#, fuzzy
 msgid "Warning Level 0"
-msgstr "Рівень попереджень:"
+msgstr "Рівень попередження 0"
 
 #: camlibs/ptp2/ptp.c:4650
 msgid "Economy"
@@ -8955,38 +8893,35 @@ msgstr "Дуже якісний"
 
 #: camlibs/ptp2/ptp.c:4673
 msgid "Red Eye Suppression"
-msgstr ""
+msgstr "Придушення ефекту червоних очей"
 
 #: camlibs/ptp2/ptp.c:4674
-#, fuzzy
 msgid "Low Speed Synchronization"
-msgstr "Партнер синхронізації"
+msgstr "Низькошвидкісна синхронізація"
 
 #: camlibs/ptp2/ptp.c:4675
-#, fuzzy
 msgid "Auto + Red Eye Suppression"
-msgstr "Авто, зменшення червоності очей"
+msgstr "Авто + придушення ефекту червоних очей"
 
 #: camlibs/ptp2/ptp.c:4676
 msgid "On + Red Eye Suppression"
-msgstr ""
+msgstr "Увімкнено + придушення ефекту червоних очей"
 
 #: camlibs/ptp2/ptp.c:4690
-#, fuzzy
 msgid "Distant View"
 msgstr "На відстані"
 
 #: camlibs/ptp2/ptp.c:4691
 msgid "High-Speed Shutter"
-msgstr ""
+msgstr "Високошвидкісний затвор"
 
 #: camlibs/ptp2/ptp.c:4692
 msgid "Low-Speed Shutter"
-msgstr ""
+msgstr "Низькошвидкісний затвор"
 
 #: camlibs/ptp2/ptp.c:4693 camlibs/ptp2/ptp.c:4757
 msgid "Night View"
-msgstr ""
+msgstr "Нічне бачення"
 
 #: camlibs/ptp2/ptp.c:4694
 msgid "Grayscale"
@@ -9010,11 +8945,11 @@ msgstr "Знімок за таймером"
 
 #: camlibs/ptp2/ptp.c:4707
 msgid "Continuous Low-speed Shooting"
-msgstr ""
+msgstr "Неперервне низькошвидкісне знімання"
 
 #: camlibs/ptp2/ptp.c:4708
 msgid "Continuous High-speed Shooting"
-msgstr ""
+msgstr "Неперервне високошвидкісне знімання"
 
 #: camlibs/ptp2/ptp.c:4711 camlibs/ricoh/library.c:375
 #: camlibs/sierra/sierra.c:1156 camlibs/sierra/sierra.c:1162
@@ -9030,34 +8965,28 @@ msgid "Smooth"
 msgstr "Згладити"
 
 #: camlibs/ptp2/ptp.c:4715
-#, fuzzy
 msgid "Center-weighted Metering"
-msgstr "Центрально-зважений"
+msgstr "Центрально-зважене вимірювання"
 
 #: camlibs/ptp2/ptp.c:4716
-#, fuzzy
 msgid "Spot Metering"
-msgstr "Точковий режим виміру"
+msgstr "Точкове вимірювання"
 
 #: camlibs/ptp2/ptp.c:4717
-#, fuzzy
 msgid "Average Metering"
-msgstr "Замір експозиції"
+msgstr "Середнє вимірювання"
 
 #: camlibs/ptp2/ptp.c:4718
-#, fuzzy
 msgid "Evaluative Metering"
-msgstr "Замір експозиції"
+msgstr "Оціночне вимірювання"
 
 #: camlibs/ptp2/ptp.c:4719
-#, fuzzy
 msgid "Partial Metering"
-msgstr "Часткове видалення PTP"
+msgstr "Часткове вимірювання"
 
 #: camlibs/ptp2/ptp.c:4720
-#, fuzzy
 msgid "Center-weighted Average Metering"
-msgstr "Область центру мас"
+msgstr "Центрально-зважене осереднене вимінювання"
 
 #: camlibs/ptp2/ptp.c:4721
 msgid "Spot Metering Interlocked with AF Frame"
@@ -9085,9 +9014,8 @@ msgid "Upper 1"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:4789
-#, fuzzy
 msgid "Upper 2"
-msgstr "Верхня:"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:4791
 msgid "Standard Development Parameters"
@@ -10305,9 +10233,8 @@ msgid "Slow"
 msgstr "Повільно"
 
 #: camlibs/sierra/olympus-desc.c:540
-#, fuzzy
 msgid "Anti-redeye Fill"
-msgstr "Проти червоних очей"
+msgstr "Заповнення проти червоних очей"
 
 #: camlibs/sierra/olympus-desc.c:596
 msgid "Fluorescent-1-home-6700K"
