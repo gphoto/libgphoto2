@@ -11,4 +11,4 @@ sierra_la_SOURCES = \
 	sierra/nikon-desc.c sierra/olympus-desc.c sierra/epson-desc.c
 sierra_la_LDFLAGS = $(camlib_ldflags)
 sierra_la_DEPENDENCIES = $(camlib_dependencies)
-sierra_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la $(LIBEXIF_LIBS)
+sierra_la_LIBADD = $(camlib_libadd) $(LIBEXIF_LIBS)
