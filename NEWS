@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 libgphoto2 2.5.1.2 release
 
+ptp2:
+* Fixed Raspberry Pi and USB 3.0 "connect only once" problem.
+
 translations:
 * updated ukrainian, finish, dutch, polish, russian, french, vietnamese
 
