@@ -1,0 +1,63 @@
+LANG=C gphoto2 --summary
+Camera summary:                                                                
+Manufacturer: Sony Corporation
+Model: DSLR-A350
+  Version: 1.00
+
+Capture Formats: 
+Display Formats: DPOF, MS Wave, JPEG, TIFF EP, JFIF, Unknown(b101), Unknown(b102)
+
+Device Capabilities:
+        File Download, No File Deletion, File Upload
+        No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+        StorageDescription: None
+        VolumeLabel: None
+        Storage Type: Removable RAM (memory card)
+        Filesystemtype: Digital Camera Layout (DCIM)
+        Access Capability: Read-Write
+        Maximum Capability: 1354760192 (1292 MB)
+        Free Space (Bytes): 1833959424 (1749 MB)
+        Free Space (Images): -1
+store_ffff0001:
+        StorageDescription: None
+        VolumeLabel: None
+        Storage Type: Builtin RAM
+        Filesystemtype: Generic Flat
+        Access Capability: Read-Only
+        Maximum Capability: 18446744073709551615 (17592186044415 MB)
+        Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+        Free Space (Images): -1
+
+Device Property Summary:
+root@vala ~ $ LANG=C gphoto2 --list-all-config
+/main/status/serialnumber                                                      
+Label: Serial Number
+Type: TEXT
+Current: None
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Sony Corporation
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: DSLR-A350
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1.00
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+
+gphoto2 --capture-image
+                                                                               
+*** Error ***              
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***       
