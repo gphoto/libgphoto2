@@ -5733,6 +5733,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
 		ptp_check_eos_events (params);
+		/* Otherwise the camera will auto-shutdown */
+		ret = ptp_canon_eos_keepdeviceon (params);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
 	}
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
