@@ -619,6 +619,8 @@ static struct {
 	{"Sony:DSC-A100 (PTP mode)",  0x054c, 0x02c0, 0},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
+	/* Martin Vala <vala.martin@gmail.com> */
+	{"Sony:SLT-A350 (PTP mode)",   0x054c, 0x0321, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1946931&group_id=8874&atid=308874 */
 	{"Sony:DSC-W130 (PTP mode)",  0x054c, 0x0343, 0},
 	/* tux droid <gnutuxdroid@gmail.com> */
