@@ -2281,6 +2281,10 @@ camera_init (Camera *camera, GPContext *context)
         /* FIXME??? What's that for? "Resetting folder system"? */
 	sierra_set_int_register (camera, 83, -1, NULL);
 #endif
+	/* How to switch the coolpix 2500 between RAW / NORMAL
+   return dsc->SetStr(0x16, raw_enabled ? "DIAG RAW" : "NIKON DIGITAL CAMERA" );
+        ret = sierra_set_string_register (camera, 0x16, "NIKON DIGITAL CAMERA", strlen("NIKON DIGITAL CAMERA"), NULL);
+	 */
 
         /* Folder support? */
 	CHECK_STOP_FREE (camera, gp_port_set_timeout (camera->port, 50));
