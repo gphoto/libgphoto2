@@ -1877,6 +1877,11 @@ ptp_canon_eos_getobjectinfoex (
 	if (ret != PTP_RC_OK)
 		return ret;
 
+	if (!data) {
+		*nrofentries = 0;
+		return PTP_RC_OK;
+	}
+
 	*nrofentries = dtoh32a(data);
 	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
 	if (!*entries)
