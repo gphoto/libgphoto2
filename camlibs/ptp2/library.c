@@ -618,7 +618,7 @@ static struct {
 	/* Fernando Santoro <fernando.lopezjr@gmail.com> */
 	{"Sony:DSC-A100 (PTP mode)",  0x054c, 0x02c0, 0},
 	/* Sam Tseng <samtz1223@gmail.com> */
-	{"Sony:DSC-A900 (PTP mode)",  0x054c, 0x02e7, 0},
+	{"Sony:DSC-A900 (PTP mode)",  0x054c, 0x02e7, 0}, /* PTP_CAP via Sony RCC */
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
 	/* Martin Vala <vala.martin@gmail.com> */
