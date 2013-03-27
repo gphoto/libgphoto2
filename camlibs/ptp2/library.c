@@ -3964,6 +3964,11 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				continue;
 			}
 		}
+		if (!ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
+			n = snprintf(txt, spaceleft, _("cannot be queried.\n"));
+			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			continue;
+		}
 
 		memset (&dpd, 0, sizeof (dpd));
 		ret = ptp_getdevicepropdesc (params, dpc, &dpd);
@@ -5165,6 +5170,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		while (ptp_get_one_event (params, &event))
 			if (event.Code == PTP_EC_ObjectRemoved)
 				break;
+		/* FIXME: need to handle folder additions during capture-image-and-download */
  	}
 	return (GP_OK);
 }
