@@ -451,6 +451,16 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CASIO_GET_OBJECT		0x9025
 #define PTP_OC_CASIO_GET_THUMBNAIL	0x9026
 
+/* Sony stuff */
+#define PTP_OC_SONY_SDIOConnect			0x9201
+#define PTP_OC_SONY_GetSDIOGetExtDeviceInfo	0x9202
+#define PTP_OC_SONY_GetDevicePropdesc		0x9203
+#define PTP_OC_SONY_GetDevicePropertyValue	0x9204
+#define PTP_OC_SONY_SetControlDeviceA		0x9205
+#define PTP_OC_SONY_GetControlDeviceDesc	0x9206
+#define PTP_OC_SONY_SetControlDeviceB		0x9207
+#define PTP_OC_SONY_9209			0x9209	/* gets a 4126 byte blob ?*/
+
 /* Microsoft / MTP extension codes */
 
 #define PTP_OC_MTP_GetObjectPropsSupported	0x9801
@@ -1842,6 +1852,18 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_FlashBracket			0xD15C
 #define PTP_DPC_OLYMPUS_ISOBracket			0xD15D
 #define PTP_DPC_OLYMPUS_MyModeStatus			0xD15E
+
+/* Sony A900 */
+#define PTP_DPC_SONY_DPCCompensation			0xD200
+#define PTP_DPC_SONY_DRangeOptimize			0xD201
+#define PTP_DPC_SONY_ImageSize				0xD203
+#define PTP_DPC_SONY_ColorTemp				0xD20F
+#define PTP_DPC_SONY_CCFilter				0xD210
+#define PTP_DPC_SONY_AspectRatio			0xD211
+#define PTP_DPC_SONY_ExposeIndex			0xD216
+#define PTP_DPC_SONY_PictureEffect			0xD21B
+#define PTP_DPC_SONY_ABFilter				0xD21C
+/* also seen: D2C3 D2C4 */
 
 /* Casio EX-F1 */
 #define PTP_DPC_CASIO_MONITOR		0xD001 
