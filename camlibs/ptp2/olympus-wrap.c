@@ -1,6 +1,6 @@
 /* olympus_wrap.c
  *
- * Copyright (c) 2012 Marcus Meissner  <marcus@jet.franken.de>
+ * Copyright (c) 2012-2013 Marcus Meissner  <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -424,7 +424,9 @@ olympus_xml_transfer (PTPParams *params,
 	uint16_t	ret;
 	PTPParams	*outerparams = params->outer_params;
 
+	GP_DEBUG("olympus_xml_transfer");
 	if (!outerparams) {
+		GP_DEBUG("- no outer params yet ... creating ...");
 		params->outer_params = outerparams = malloc (sizeof(PTPParams));
 		memcpy(outerparams, params, sizeof(PTPParams));
 		outerparams->sendreq_func	= ums_wrap_sendreq;
@@ -440,6 +442,7 @@ olympus_xml_transfer (PTPParams *params,
 	}
 
 	while (1) {
+		GP_DEBUG("... sending XML request to camera ... "); 
 		memset (&ptp2, 0 , sizeof (ptp2));
 		ptp2.Code = PTP_OC_SendObjectInfo;
 		ptp2.Nparam = 1;
@@ -468,6 +471,8 @@ olympus_xml_transfer (PTPParams *params,
 		res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(cmdxml), (unsigned char**)&cmdxml, NULL);
 		if (res != PTP_RC_OK)
 			return res;
+
+		GP_DEBUG("... waiting for camera ..."); 
 		ret = params->event_wait(outerparams, &ptp2);
 		if (ret != PTP_RC_OK)
 			return ret;
@@ -483,6 +488,7 @@ olympus_xml_transfer (PTPParams *params,
 		if (ret != PTP_RC_OK)
 			return ret;
 		GP_DEBUG("file content: %s", resp);
+
 	}
 	return PTP_RC_OK;
 }
@@ -1670,6 +1676,7 @@ static int
 is_outer_operation (PTPParams* params, uint16_t opcode) {
 	int i;
 
+	GP_DEBUG("is_outer_operation %04x", opcode);
 	return 1;
 	if (opcode == PTP_OC_OpenSession) return 1;
 	if (opcode == PTP_OC_GetDeviceInfo) return 1;
@@ -1678,12 +1685,14 @@ is_outer_operation (PTPParams* params, uint16_t opcode) {
         for (i=0;i<params->outer_deviceinfo.OperationsSupported_len;i++)
                 if (params->outer_deviceinfo.OperationsSupported[i]==opcode)
                         return TRUE;
+	GP_DEBUG("is_outer_operation %04x - is WRAPPED", opcode);
 	return FALSE;
 }
 
 uint16_t
 ums_wrap2_sendreq (PTPParams* params, PTPContainer* req)
 {
+	GP_DEBUG("ums_wrap2_sendreq");
 	if (is_outer_operation (params,req->Code))
 		return ums_wrap_sendreq (params,req);
 	/* Wait for next state before doing stuff */
@@ -1701,6 +1710,8 @@ ums_wrap2_senddata (
 
 	if (is_outer_operation (params, ptp->Code))
 		return ums_wrap_senddata (params, ptp, sendlen, getter);
+
+	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_senddata");
 	data = malloc (sendlen);
 	ret = getter->getfunc(params, getter->priv, sendlen, data, &gotlen);
 	if (ret != PTP_RC_OK) {
@@ -1721,6 +1732,8 @@ ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 
 	if (is_outer_operation (params, ptp->Code))
 		return ums_wrap_getdata (params, ptp, putter);
+
+	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_getdata");
 	/* either send or get data, not both. So olympus_cmd is NULL now */
 	params->olympus_cmd = generate_xml (params, ptp, NULL, 0);
 	/* do the fun stuff */
@@ -1739,6 +1752,7 @@ ums_wrap2_getresp (PTPParams* params, PTPContainer* resp) {
 	if (is_outer_operation(params, resp->Code))
 		return ums_wrap_getresp (params, resp);
 
+	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_getresp");
 	if (!params->olympus_cmd) /* no data phase at all */
 		params->olympus_cmd = generate_xml (params, resp, NULL, 0);
 	if (!params->olympus_reply) {
@@ -1756,6 +1770,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* event) {
 
 uint16_t
 ums_wrap2_event_wait (PTPParams* params, PTPContainer* event) {
+	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_event_wait");
 	/* insert our code */
 	return ptp_usb_event_wait (params, event);
 }
@@ -2555,5 +2570,13 @@ olympus_setup (PTPParams *params) {
  GetNumObjects 0x80000001, 0x3001, 0x1a000001 ... returns 1 
   then retrieves 0x1a0000002 ... 
 */
+/* E-620 traces:
+
+ 9302 - initial command?
+ 9301 - getdeviceinfo style
+
+ 
+
+ */
 
 #endif /* HAVE_LIBXML2 */
