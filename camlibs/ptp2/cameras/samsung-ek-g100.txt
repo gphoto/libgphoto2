@@ -1,0 +1,166 @@
+Device info:
+Manufacturer: SAMSUNG Electronics Co. Ltd. 
+  Model: EK-GC100
+  device version: V1.0
+  serial number: 'ABCDEFGH123'
+Vendor extension ID: 0x00000000
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9810
+  0x9811
+  0x9802
+  0x9801
+  0x9803
+  0x9804
+  0x9805
+  0x9806
+  0x9201
+  0x9202
+  0x100a
+  0x1011
+  0x1012
+  0x1017
+  0x9807
+  0x9808
+  0x9100
+  0x9101
+  0x9102
+  0x9103
+  0x9104
+  0x9105
+  0x9106
+  0x9107
+  0x9108
+  0x9109
+  0x910a
+  0x910b
+  0x910c
+  0x910d
+  0x910e
+  0x910f
+  0x9110
+  0x9111
+  0x9112
+  0x9113
+  0x9114
+  0x9115
+  0x9116
+Events Supported:
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+Device Properties Supported:
+  0x5001
+  0xd401
+  0xd402
+  0xd404
+  0xd407
+  0xd101
+  0xd102
+  0xd103
+  0xd104
+  0xd105
+
+Camera summary:
+Manufacturer: SAMSUNG Electronics Co. Ltd. 
+Model: EK-GC100
+  Version: V1.0
+  Serial Number: ABCDEFGH123
+
+Capture Formats: Unknown(0000)
+Display Formats: Unknown(b984), MP3, Unknown(b901), Unknown(b981), JPEG, Association/Directory, Unknown(ba05), Undefined Type, GIF, MS AVI, MPEG, ASF, Unknown(b982), Unknown(ba10), Unknown(ba11), Unknown(ba03)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Camera
+	VolumeLabel: ABCDEFGHIJ123467
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 4162199552 (3969 MB)
+	Free Space (Bytes): 2611527680 (2490 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 10] value: 54% (54)
+Property 0xd401:(readwrite) (type=0xffff) 'Longhorn Sync Engine'
+Property 0xd402:(readwrite) (type=0xffff) 'EK-GC100'
+Property 0xd404:(read only) (type=0x2) 1
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd101:(read only) (type=0x4004) 
+Property 0xd102:(read only) (type=0x4004) 
+Property 0xd103:(read only) (type=0x4004) a[0] 
+Property 0xd105:(read only) (type=0x4002) a[0] 
+
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 54%
+/main/other/5001
+Label: Battery Level
+Type: RANGE
+Current: 54
+Bottom: 0
+Top: 100
+Step: 10
+/main/other/d401
+Label: PTP Property 0xd401
+Type: TEXT
+Current: Longhorn Sync Engine
+/main/other/d402
+Label: PTP Property 0xd402
+Type: TEXT
+Current: EK-GC100
+/main/other/d404
+Label: PTP Property 0xd404
+Type: TEXT
+Current: 1
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d101
+Label: PTP Property 0xd101
+Type: TEXT
+Current: (null)
+/main/other/d102
+Label: PTP Property 0xd102
+Type: TEXT
+Current: (null)
+/main/other/d103
+Label: PTP Property 0xd103
+Type: TEXT
+Current: (null)
+/main/other/d104
+Label: PTP Property 0xd104
+Type: TEXT
+Current: (null)
+/main/other/d105
+Label: PTP Property 0xd105
+Type: TEXT
+Current: (null)
