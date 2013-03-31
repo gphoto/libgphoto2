@@ -1407,6 +1407,9 @@ static struct {
 
 	/* IRC reporter */
 	{"Samsung:S5620",			0x04e8,	0x684a, 0},
+
+	/* This is a camera ... reported by TAN JIAN QI <JQTAN1@e.ntu.edu.sg */
+	{"Samsung:EK-GC100",			0x04e8,	0x6866, 0},
 };
 
 #include "device-flags.h"
