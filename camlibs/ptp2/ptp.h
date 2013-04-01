@@ -553,7 +553,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_OLYMPUS_SetCameraControlMode		0x910b
 #define PTP_OC_OLYMPUS_SetWBRGBGain			0x910c
 #define PTP_OC_OLYMPUS_GetDeviceInfo			0x9301
-#define PTP_OC_OLYMPUS_Init1				0x9302
+#define PTP_OC_OLYMPUS_OpenSession			0x9302
 #define PTP_OC_OLYMPUS_SetDateTime			0x9402
 #define PTP_OC_OLYMPUS_GetDateTime			0x9482
 #define PTP_OC_OLYMPUS_SetCameraID			0x9501
@@ -2866,6 +2866,11 @@ uint16_t ptp_android_getpartialobject64	(PTPParams* params, uint32_t handle, uin
 uint16_t ptp_android_sendpartialobject (PTPParams *params, uint32_t handle,
 					uint64_t offset, unsigned char *object, uint32_t len);
 #define ptp_android_endeditobject(params,handle) ptp_generic_no_data (params, PTP_OC_ANDROID_EndEditObject, 1, handle);
+
+uint16_t ptp_olympus_getdeviceinfo (PTPParams*params, unsigned char **data, unsigned long*);
+#define ptp_olympus_setcameracontrolmode(params,p1) ptp_generic_no_data (params, PTP_OC_OLYMPUS_SetCameraControlMode, 1, p1);
+uint16_t ptp_olympus_opensession (PTPParams*, unsigned char**, unsigned long *);
+uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned long *);
 
 /* Non PTP protocol functions */
 static inline int

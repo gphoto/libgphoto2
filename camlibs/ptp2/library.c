@@ -278,6 +278,12 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
         gp_camera_get_abilities(camera, &a);
 
+	if (di->Manufacturer || !strcmp(di->Manufacturer,"OLYMPUS")) {
+		unsigned char *data;
+		unsigned long len;
+		ptp_olympus_getdeviceinfo (&camera->pl->params, &data, &len);
+	}
+
 	/* for USB class matches on unknown cameras... */
 	if (!a.usb_vendor && di->Manufacturer) {
 		if (strstr (di->Manufacturer,"Canon"))
@@ -6285,6 +6291,23 @@ camera_init (Camera *camera, GPContext *context)
 	 * post init timeouts longer */
 	CR (gp_port_set_timeout (camera->port, normal_timeout));
 
+#if defined(OLYMPUS)
+	if ((a.usb_vendor == 0x7b4) && (
+		(a.usb_product == 0x110) ||
+		(a.usb_product == 0x118)
+	)) {
+		unsigned char *data;
+		unsigned long len;
+
+		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus getcameraid\n");
+		ptp_olympus_getcameraid (params, &data, &len);
+		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus setcameracontrolmode\n");
+		ptp_olympus_setcameracontrolmode (params, 1);
+		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus opensession\n");
+		ptp_olympus_opensession (params, &data, &len);
+	}
+#endif
+
 	/* Seems HP does not like getdevinfo outside of session
 	   although it's legal to do so */
 	/* get device info */
@@ -6345,10 +6368,6 @@ camera_init (Camera *camera, GPContext *context)
 		unsigned char *data;
 		ptp_getfilesystemmanifest (params, 0x00010001, 0, 0, &data);
 	}
-#endif
-#if 0 /* OLYMPUS */
-        if ((a.usb_vendor == 0x7b4) && ((a.usb_product == 0x109)  || (a.usb_product == 0x110) || (a.usb_product == 0x102)))
-                olympus_wrap_ptp_transaction (params, NULL, 0,0,NULL,NULL);
 #endif
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));

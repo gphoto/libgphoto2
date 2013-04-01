@@ -475,6 +475,60 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 	return ret;
 }
 
+uint16_t
+ptp_olympus_getdeviceinfo (PTPParams* params, unsigned char**data, unsigned long*len)
+{
+	uint16_t 	ret;
+	PTPContainer	ptp;
+	PTPDataHandler	handler;
+
+	ptp_init_recv_memory_handler (&handler);
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_OLYMPUS_GetDeviceInfo;
+	ptp.Nparam = 0;
+	*len	   = 0;
+	*data       = NULL;
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_recv_memory_handler (&handler, data, len);
+	return ret;
+}
+
+uint16_t
+ptp_olympus_opensession (PTPParams* params, unsigned char**data, unsigned long *len)
+{
+	uint16_t 	ret;
+	PTPContainer	ptp;
+	PTPDataHandler	handler;
+
+	ptp_init_recv_memory_handler (&handler);
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_OLYMPUS_OpenSession;
+	ptp.Nparam = 0;
+	*len	   = 0;
+	*data       = NULL;
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_recv_memory_handler (&handler, data, len);
+	return ret;
+}
+
+uint16_t
+ptp_olympus_getcameraid (PTPParams* params, unsigned char**data, unsigned long *len)
+{
+	uint16_t 	ret;
+	PTPContainer	ptp;
+	PTPDataHandler	handler;
+
+	ptp_init_recv_memory_handler (&handler);
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_OLYMPUS_GetCameraID;
+	ptp.Nparam = 0;
+	*len	   = 0;
+	*data       = NULL;
+	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
+	ptp_exit_recv_memory_handler (&handler, data, len);
+	return ret;
+}
+
 /**
  * ptp_generic_no_data:
  * params:	PTPParams*
