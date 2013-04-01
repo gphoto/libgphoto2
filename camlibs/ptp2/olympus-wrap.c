@@ -1677,9 +1677,9 @@ is_outer_operation (PTPParams* params, uint16_t opcode) {
 	int i;
 
 	GP_DEBUG("is_outer_operation %04x", opcode);
-	return 1;
 	if (opcode == PTP_OC_OpenSession) return 1;
-	if (opcode == PTP_OC_GetDeviceInfo) return 1;
+	/*if (opcode == PTP_OC_GetDeviceInfo) return 1;*/
+	return 1;
 	/* Do nothing here, either do stuff in senddata, getdata or getresp,
 	 * which will get the PTPContainer req too. */
         for (i=0;i<params->outer_deviceinfo.OperationsSupported_len;i++)

@@ -1164,8 +1164,6 @@ static struct {
 
 	/* IRC Reporter */
 	{"Canon:EOS 5D Mark II",		0x04a9, 0x3199, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
-	/* Axel Waggershauser <awagger@web.de> */
-	{"Canon:EOS 5D Mark III",		0x04a9, 0x323a, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* Thomas Tanner <thomas@tannerlab.com> */
 	{"Canon:EOS 7D",			0x04a9, 0x319a, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 	/* mitch <debianuser@mll.dissimulo.com> */
@@ -1260,11 +1258,21 @@ static struct {
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot G1 X",		0x04a9, 0x3233, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:PowerShot SX40HS",		0x04a9, 0x3238, PTPBUG_DELETE_SENDS_EVENT},
+	/* Axel Waggershauser <awagger@web.de> */
+	{"Canon:EOS 5D Mark III",		0x04a9, 0x323a, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:Rebel T4i",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS M",				0x04a9, 0x323d, 0/*PTP_CAP|PTP_CAP_PREVIEW ... might be unknown opcodes -Marcus */},
+	/* via https://bugs.kde.org/show_bug.cgi?id=311393 */
+	{"Canon:PowerShot A1300IS",		0x04a9, 0x323e, PTPBUG_DELETE_SENDS_EVENT},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot A4000IS",		0x04a9, 0x3243, PTPBUG_DELETE_SENDS_EVENT},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot SX240HS",		0x04a9, 0x3245, PTPBUG_DELETE_SENDS_EVENT},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot A2400IS",		0x04a9, 0x3249, PTPBUG_DELETE_SENDS_EVENT},
 	/* Coro Fe <corofecoro@gmail.com> */
 	{"Canon:PowerShot A2300IS",		0x04a9, 0x324a, PTPBUG_DELETE_SENDS_EVENT},
