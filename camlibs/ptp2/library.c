@@ -787,6 +787,8 @@ static struct {
 	{"Nikon:Coolpix S3000 (PTP mode)",0x04b0, 0x031b, PTP_CAP},
 	/* christian.moll@tudor.lu */
 	{"Nikon:Coolpix S3100 (PTP mode)",0x04b0, 0x0320, PTP_CAP},
+	/* Teemu rytilahti of KDE */
+	{"Nikon:Coolpix S2500 (PTP mode)",0x04b0, 0x0321, PTP_CAP},
 	/* Fabio <ctrlaltca@gmail.com> */
 	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
 	/* "M.-A. DARCHE" <ma.darche@cynode.org> */
