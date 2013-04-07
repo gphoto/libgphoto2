@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#undef OLYMPUS
+#define OLYMPUS
 
 #define _BSD_SOURCE
 #include "config.h"

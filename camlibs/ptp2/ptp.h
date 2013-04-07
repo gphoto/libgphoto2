@@ -165,7 +165,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_VENDOR_FOTONATION		0x0000000C
 #define PTP_VENDOR_PENTAX		0x0000000D
 #define PTP_VENDOR_FUJI			0x0000000E
+/* not from standards papers, but from traces: */
 #define PTP_VENDOR_SONY			0x00000011 /* observed in the A900 */
+#define PTP_VENDOR_SAMSUNG		0x0000001a /* observed in the Samsung NX1000 */
 /* Vendor extension ID used for MTP (occasionaly, usualy 6 is used) */
 #define PTP_VENDOR_MTP			0xffffffff  
 
