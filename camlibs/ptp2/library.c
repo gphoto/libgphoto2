@@ -1424,6 +1424,9 @@ static struct {
 	/* IRC reporter */
 	{"Samsung:S5620",			0x04e8,	0x684a, 0},
 
+	/* Israel Barrientos <jbarrien@gmail.com> */
+	{"Samsung:NX1000",			0x04e8,	0x1384, 0},
+
 	/* This is a camera ... reported by TAN JIAN QI <JQTAN1@e.ntu.edu.sg */
 	{"Samsung:EK-GC100",			0x04e8,	0x6866, 0},
 };
@@ -5186,9 +5189,16 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		PTPContainer event;
 
 		ptp_check_event (params); /* ignore errors */
-		while (ptp_get_one_event (params, &event))
+		while (ptp_get_one_event (params, &event)) {
 			if (event.Code == PTP_EC_ObjectRemoved)
 				break;
+			if (event.Code == PTP_EC_ObjectAdded) {
+				PTPObject *ob;
+				PTPParams *params = &camera->pl->params;
+
+				ptp_object_want (params, event.Param1, 0, &ob);
+			}
+		}
 		/* FIXME: need to handle folder additions during capture-image-and-download */
  	}
 	return (GP_OK);
