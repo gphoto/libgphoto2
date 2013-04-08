@@ -718,17 +718,51 @@ parse_9301_tree (xmlNodePtr node) {
 	while (next) {
 		if (!strcmp ((char*)next->name, "cmd")) {
 			parse_9301_cmd_tree (next);
+			next = xmlNextElementSibling (next);
 			continue;
 		}
 		if (!strcmp ((char*)next->name, "prop")) {
 			parse_9301_prop_tree (next);
+			next = xmlNextElementSibling (next);
 			continue;
 		}
 		if (!strcmp ((char*)next->name, "event")) {
 			parse_9301_event_tree (next);
+			next = xmlNextElementSibling (next);
 			continue;
 		}
 		fprintf (stderr,"9301: unhandled type %s\n", next->name);
+		next = xmlNextElementSibling (next);
+	}
+	/*traverse_tree (0, node);*/
+	return TRUE;
+}
+
+static int
+parse_9581_tree (xmlNodePtr node) {
+	xmlNodePtr next;
+
+	next = xmlFirstElementChild (node);
+	while (next) {
+		if (!strcmp ((char*)next->name, "data")) {
+			char *decoded, *x;
+			char *xchars = (char*)xmlNodeGetContent (next);
+
+			x = decoded = malloc(strlen(xchars)+1);
+			while (xchars[0] && xchars[1]) {
+				int y;
+				sscanf(xchars,"%02x", &y);
+				*x++ = y;
+				xchars+=2;
+			}
+			*x = '\0';
+			gp_log (GP_LOG_DEBUG, "olympus", "9581: decoded string is %s", decoded);
+
+
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		gp_log (GP_LOG_ERROR, "olympus","9581: unhandled type %s", next->name);
 		next = xmlNextElementSibling (next);
 	}
 	/*traverse_tree (0, node);*/
@@ -763,18 +797,19 @@ parse_9302_tree (xmlNodePtr node) {
 	
 	next = xmlFirstElementChild (node);
 	while (next) {
+		gp_log (GP_LOG_DEBUG, "olympus", "9302: tag %s", (char*)next->name);
 		if (!strcmp((char*)next->name, "x3cVersion")) {
 			int x3cver;
 			xchar = xmlNodeGetContent (next);
 			sscanf((char*)xchar, "%04x", &x3cver);
-			fprintf(stderr,"x3cVersion %d.%d\n", (x3cver>>8)&0xff, x3cver&0xff);
-			continue;
+			gp_log (GP_LOG_DEBUG, "olympus","x3cVersion %d.%d", (x3cver>>8)&0xff, x3cver&0xff);
+			goto xnext;
 		}
 		if (!strcmp((char*)next->name, "productIDs")) {
 			char *x, *nextspace;
 			int len;
 			x = (char*)(xchar = xmlNodeGetContent (next));
-			fprintf(stderr,"productIDs:\n");
+			gp_log (GP_LOG_DEBUG, "olympus", "productIDs:");
 
 			do {
 				nextspace=strchr(x,' ');
@@ -794,14 +829,16 @@ parse_9302_tree (xmlNodePtr node) {
 						}
 						str[len] = 0;
 					}
-					fprintf(stderr,"\t%s\n", str);
+					gp_log (GP_LOG_DEBUG, "olympus" ,"\t%s", str);
 					free (str);
 				}
 				x = nextspace;
 			} while (x);
-			continue;
+
+			goto xnext;
 		}
 		fprintf (stderr, "unknown node in 9301: %s\n", next->name);
+xnext:
 		next = xmlNextElementSibling (next);
 	}
 	return TRUE;
@@ -854,19 +891,15 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	}
 	gp_log (GP_LOG_DEBUG ,"ptp2/olympus", "cmd is 0x%04x", cmd);
 	switch (cmd) {
-	case 0x9301:
-		return parse_9301_tree (next);
-	case 0x9302:
-		return parse_9302_tree (next);
-	case 0x910a:
-		return parse_910a_tree (next);
+	case 0x9301: return parse_9301_tree (next);
+	case 0x9302: return parse_9302_tree (next);
+	case 0x910a: return parse_910a_tree (next);
+	case 0x9581: return parse_9581_tree (next);
 	case 0x1016: /* <output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output> */
 		/* we could cross check the parameter, but its not strictly necessary */
 		return TRUE;
-	case 0x1014:
-		return parse_1014_tree ( next );
-	case 0x1015:
-		return parse_1015_tree ( next , PTP_DTC_UINT32);
+	case 0x1014: return parse_1014_tree ( next );
+	case 0x1015: return parse_1015_tree ( next , PTP_DTC_UINT32);
 	default:
 		return traverse_tree (0, next);
 	}
@@ -1108,43 +1141,9 @@ ums_wrap2_event_wait (PTPParams* params, PTPContainer* event) {
 	return ptp_usb_event_wait (params, event);
 }
 
-static uint16_t
-xptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
-{
-        uint16_t        ret;
-        unsigned long	len;
-        unsigned int	ilen;
-        PTPContainer    ptp;
-        unsigned char*  data=NULL;
-
-        memset(&ptp, 0, sizeof(ptp));
-        ptp.Code   = PTP_OC_GetDeviceInfo;
-        ptp.Nparam = 0;
-        ilen=0;
-        ret = ptp_transaction (params, &ptp,
-                PTP_DP_GETDATA, 0,
-                &data, &ilen
-        );
-        if (!data) ret = PTP_RC_GeneralError;
-        if (ret == PTP_RC_OK) ptp_unpack_DI(params, data, deviceinfo, ilen);
-        free(data);
-
-	data=NULL;
-	len=0;
-	ptp_olympus_getdeviceinfo (params, &data, &len);
-        return ret;
-}
-
-
 uint16_t
 olympus_setup (PTPParams *params) {
-	uint16_t	ret;
 	PTPParams	*outerparams;
-	PTPContainer	ptp;	
-	PTPObjectInfo	oi;
-	PTPDeviceInfo	di;
-	unsigned char	*oidata;
-	unsigned int	size;
 
 	params->getresp_func	= ums_wrap2_getresp;
 	params->senddata_func	= ums_wrap2_senddata;
