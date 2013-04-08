@@ -18,21 +18,8 @@
  * Boston, MA 02111-1307, USA.
  * 
  *
- * Olympus C-3040Z (and possibly also the C-2040Z and others) have
- * a USB PC Control mode in which "Sierra" protocol packets are tunneled
- * inside another protocol.  This file implements the wrapper protocol.
- * The (ab)use of USB clear halt is not needed for this protocol.
- *
- * IMPORTANT: In order to use this mode, the camera must be switched
- * _out_ of "USB Mass Storage" mode and into "USB PC control mode".
- * The images will not be accessable as a mass-storage/disk device in
- * this mode, but you can control the camera, tell it to take pictures
- * and download images using the protocol implemented in sierra.c.
- *
- * To get to the menu for switching modes, open the memory card
- * access door (the camera senses this) and then press and hold
- * both of the menu buttons until the camera control menu appears.
- * Set it to ON.  This disables the USB mass-storage support.
+ * Notes:
+ * XDISCVRY.X3C file sent on start, empty.
  */
 
 #define _BSD_SOURCE
@@ -518,9 +505,10 @@ parse_9301_cmd_tree (xmlNodePtr node) {
 	xmlNodePtr next;
 
 	next = xmlFirstElementChild (node);
-	do {
+	while (next) {
 		fprintf (stderr,"9301 cmd: %s\n", next->name);
-	} while ((next = xmlNextElementSibling (next)));
+		next = xmlNextElementSibling (next);
+	}
 	return TRUE;
 }
 
@@ -700,10 +688,13 @@ parse_9301_prop_tree (xmlNodePtr node) {
 	xmlNodePtr next;
 
 	next = xmlFirstElementChild (node);
-	do {
+	while (next) {
 		PTPDevicePropDesc	dpd;
+
 		parse_propdesc (next, &dpd);
-	} while ((next = xmlNextElementSibling (next)));
+
+		next = xmlNextElementSibling (next);
+	}
 	return TRUE;
 }
 
@@ -712,9 +703,10 @@ parse_9301_event_tree (xmlNodePtr node) {
 	xmlNodePtr next;
 
 	next = xmlFirstElementChild (node);
-	do {
+	while (next) {
 		fprintf (stderr,"9301 event: %s\n", next->name);
-	} while ((next = xmlNextElementSibling (next)));
+		next = xmlNextElementSibling (next);
+	}
 	return TRUE;
 }
 
@@ -723,7 +715,7 @@ parse_9301_tree (xmlNodePtr node) {
 	xmlNodePtr next;
 
 	next = xmlFirstElementChild (node);
-	do {
+	while (next) {
 		if (!strcmp ((char*)next->name, "cmd")) {
 			parse_9301_cmd_tree (next);
 			continue;
@@ -737,7 +729,8 @@ parse_9301_tree (xmlNodePtr node) {
 			continue;
 		}
 		fprintf (stderr,"9301: unhandled type %s\n", next->name);
-	} while ((next = xmlNextElementSibling (next)));
+		next = xmlNextElementSibling (next);
+	}
 	/*traverse_tree (0, node);*/
 	return TRUE;
 }
@@ -769,7 +762,7 @@ parse_9302_tree (xmlNodePtr node) {
 	xmlChar		*xchar;
 	
 	next = xmlFirstElementChild (node);
-	do {
+	while (next) {
 		if (!strcmp((char*)next->name, "x3cVersion")) {
 			int x3cver;
 			xchar = xmlNodeGetContent (next);
@@ -809,7 +802,8 @@ parse_9302_tree (xmlNodePtr node) {
 			continue;
 		}
 		fprintf (stderr, "unknown node in 9301: %s\n", next->name);
-	} while ((next = xmlNextElementSibling (next)));
+		next = xmlNextElementSibling (next);
+	}
 	return TRUE;
 }
 
@@ -933,13 +927,13 @@ encode_command (xmlNodePtr inputnode, PTPContainer *ptp, unsigned char *data, in
 		switch (ptp->Nparam) {
 		case 1:
 			sprintf (code, "%08X", ptp->Param1);
-			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", code);
+			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
 			break;
 		case 2:
 			sprintf (code, "p%08X", ptp->Param1);
-			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", code);
+			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
 			sprintf (code, "p%08X", ptp->Param2);
-			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", code);
+			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
 			break;
 		}
 	}
@@ -1146,6 +1140,11 @@ uint16_t
 olympus_setup (PTPParams *params) {
 	uint16_t	ret;
 	PTPParams	*outerparams;
+	PTPContainer	ptp;	
+	PTPObjectInfo	oi;
+	PTPDeviceInfo	di;
+	unsigned char	*oidata;
+	unsigned int	size;
 
 	params->getresp_func	= ums_wrap2_getresp;
 	params->senddata_func	= ums_wrap2_senddata;

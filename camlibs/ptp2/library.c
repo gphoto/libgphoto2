@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#define OLYMPUS
+#undef OLYMPUS
 
 #define _BSD_SOURCE
 #include "config.h"
@@ -281,6 +281,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	if (di->Manufacturer || !strcmp(di->Manufacturer,"OLYMPUS")) {
 		unsigned char *data;
 		unsigned long len;
+
 		ptp_olympus_getdeviceinfo (&camera->pl->params, &data, &len);
 	}
 
@@ -6306,8 +6307,23 @@ camera_init (Camera *camera, GPContext *context)
 		(a.usb_product == 0x110) ||
 		(a.usb_product == 0x118)
 	)) {
-		unsigned char *data;
-		unsigned long len;
+		unsigned char	*data;
+		unsigned long	len;
+		PTPObjectInfo	oi;
+		uint32_t	parenthandle,storagehandle, handle;
+
+		GP_DEBUG("... sending empty XDISCVRY.X3C file to camera ... "); 
+
+		storagehandle = 0x80000001;
+		parenthandle = 0;
+		handle = 0;
+
+		memset (&oi, 0, sizeof (oi));
+		oi.ObjectFormat		= PTP_OFC_Script;
+		oi.StorageID 		= 0x80000001;
+		oi.Filename 		= "XDISCVRY.X3C";
+		oi.ObjectCompressedSize	= 0;
+		CR(ptp_sendobjectinfo (params, &storagehandle, &parenthandle, &handle, &oi));
 
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus getcameraid\n");
 		ptp_olympus_getcameraid (params, &data, &len);
