@@ -45,7 +45,7 @@
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>
 
-#define GP_MODULE "ptp2-olympus"
+#define GP_MODULE "olympus"
 
 #define CR(result) {int r = (result); if (r < 0) return (r);}
 
@@ -501,12 +501,26 @@ traverse_tree (int depth, xmlNodePtr node) {
 }
 
 static int
-parse_9301_cmd_tree (xmlNodePtr node) {
+parse_9301_cmd_tree (xmlNodePtr node, PTPDeviceInfo *di) {
 	xmlNodePtr next;
+	int	cnt;
 
+	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
-		fprintf (stderr,"9301 cmd: %s\n", next->name);
+		cnt++;
+		next = xmlNextElementSibling (next);
+	}
+	di->OperationsSupported_len = cnt;
+	di->OperationsSupported = malloc (cnt*sizeof(di->OperationsSupported[0]));
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		unsigned int p;
+
+		sscanf((char*)next->name, "c%04x", &p);
+		gp_log (GP_LOG_DEBUG, "olympus", "cmd %s / 0x%04x", next->name, p);
+		di->OperationsSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
 	return TRUE;
@@ -518,54 +532,60 @@ parse_value (const char *str, uint16_t type, PTPPropertyValue *propval) {
 	case 6: { /*UINT32*/
 		unsigned int x;
 		if (!sscanf(str,"%08x", &x)) {
-			fprintf(stderr,"could not parse uint32 %s\n", str);
+			gp_log (GP_LOG_ERROR, "olympus", "could not parse uint32 %s\n", str);
 			return FALSE;
 		}
+		gp_log (GP_LOG_DEBUG, "olympus", "\t%d", x);
 		propval->u32 = x;
 		break;
 	}
 	case 5: { /*INT32*/
 		int x;
 		if (!sscanf(str,"%08x", &x)) {
-			fprintf(stderr,"could not parse int32 %s\n", str);
+			gp_log (GP_LOG_ERROR, "olympus", "could not parse int32 %s\n", str);
 			return FALSE;
 		}
+		gp_log (GP_LOG_DEBUG, "olympus", "\t%d", x);
 		propval->i32 = x;
 		break;
 	}
 	case 4: { /*UINT16*/
 		unsigned int x;
 		if (!sscanf(str,"%04x", &x)) {
-			fprintf(stderr,"could not parse uint16 %s\n", str);
+			gp_log (GP_LOG_ERROR, "olympus", "could not parse uint16 %s\n", str);
 			return FALSE;
 		}
+		gp_log (GP_LOG_DEBUG, "olympus", "\t%d", x);
 		propval->u16 = x;
 		break;
 	}
 	case 3: { /*INT16*/
 		int x;
 		if (!sscanf(str,"%04x", &x)) {
-			fprintf(stderr,"could not parse int16 %s\n", str);
+			gp_log (GP_LOG_ERROR, "olympus", "could not parse int16 %s\n", str);
 			return FALSE;
 		}
+		gp_log (GP_LOG_DEBUG, "olympus", "\t%d", x);
 		propval->i16 = x;
 		break;
 	}
 	case 2: { /*UINT8*/
 		unsigned int x;
 		if (!sscanf(str,"%02x", &x)) {
-			fprintf(stderr,"could not parse uint8 %s\n", str);
+			gp_log (GP_LOG_ERROR, "olympus", "could not parse uint8 %s\n", str);
 			return FALSE;
 		}
+		gp_log (GP_LOG_DEBUG, "olympus", "\t%d", x);
 		propval->u8 = x;
 		break;
 	}
 	case 1: { /*INT8*/
 		int x;
 		if (!sscanf(str,"%02x", &x)) {
-			fprintf(stderr,"could not parse int8 %s\n", str);
+			gp_log (GP_LOG_ERROR, "olympus", "could not parse int8 %s\n", str);
 			return FALSE;
 		} 
+		gp_log (GP_LOG_DEBUG, "olympus", "\t%d", x);
 		propval->i8 = x;
 		break;
 	}
@@ -586,11 +606,11 @@ parse_value (const char *str, uint16_t type, PTPPropertyValue *propval) {
 				}
 				xstr[len] = 0;
 			}
-			fprintf(stderr,"\t%s\n", xstr);
+			gp_log (GP_LOG_DEBUG, "olympus", "\t%s", xstr);
 			propval->str = xstr;
 			break;
 		}
-		fprintf(stderr,"string %s not parseable!\n", str);
+		gp_log (GP_LOG_ERROR, "olympus", "string %s not parseable!", str);
 		return FALSE;
 	}
 	case 7: /*INT64*/
@@ -598,7 +618,7 @@ parse_value (const char *str, uint16_t type, PTPPropertyValue *propval) {
 	case 9: /*INT128*/
 	case 10: /*UINT128*/
 	default:
-		fprintf(stderr,"unhandled data type %d!\n", type);
+		gp_log (GP_LOG_ERROR, "olympus", "unhandled data type %d!", type);
 		return FALSE;
 	}
 	return TRUE;
@@ -609,33 +629,37 @@ parse_propdesc (xmlNodePtr node, PTPDevicePropDesc *dpd) {
 	xmlNodePtr next;
 	int type = -1;
 
-	fprintf (stderr,"propdesc: %s\n", node->name);
 	dpd->FormFlag	= PTP_DPFF_None;
 	dpd->GetSet	= PTP_DPGS_Get;
 	next = xmlFirstElementChild (node);
 	do {
 		if (!strcmp((char*)next->name,"type")) {	/* propdesc.DataType */
 			if (!sscanf((char*)xmlNodeGetContent (next), "%04x", &type)) {
-				fprintf (stderr,"\ttype %s not parseable\n",xmlNodeGetContent (next));
+				gp_log (GP_LOG_ERROR, "olympus", "\ttype %s not parseable?\n",xmlNodeGetContent (next));
 				return 0;
 			}
+			gp_log (GP_LOG_DEBUG, "olympus", "type 0x%x", type);
 			dpd->DataType = type;
 			continue;
 		}
 		if (!strcmp((char*)next->name,"attribute")) {	/* propdesc.GetSet */
 			int attr;
+
 			if (!sscanf((char*)xmlNodeGetContent (next), "%02x", &attr)) {
-				fprintf (stderr,"\tattr %s not parseable\n",xmlNodeGetContent (next));
+				gp_log (GP_LOG_ERROR, "olympus", "\tattr %s not parseable\n",xmlNodeGetContent (next));
 				return 0;
 			}
+			gp_log (GP_LOG_DEBUG, "olympus", "attribute 0x%x", attr);
 			dpd->GetSet = attr;
 			continue;
 		}
 		if (!strcmp((char*)next->name,"default")) {	/* propdesc.FactoryDefaultValue */
+			gp_log (GP_LOG_DEBUG, "olympus", "default value");
 			parse_value ((char*)xmlNodeGetContent (next), type, &dpd->FactoryDefaultValue);
 			continue;
 		}
 		if (!strcmp((char*)next->name,"value")) {	/* propdesc.CurrentValue */
+			gp_log (GP_LOG_DEBUG, "olympus", "current value");
 			parse_value ((char*)xmlNodeGetContent (next), type, &dpd->CurrentValue);
 			continue;
 		}
@@ -643,6 +667,7 @@ parse_propdesc (xmlNodePtr node, PTPDevicePropDesc *dpd) {
 			int n,i;
 			char *s;
 
+			gp_log (GP_LOG_DEBUG, "olympus", "enum");
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			s = (char*)xmlNodeGetContent (next);
 			n = 0;
@@ -666,6 +691,7 @@ parse_propdesc (xmlNodePtr node, PTPDevicePropDesc *dpd) {
 		if (!strcmp((char*)next->name,"range")) {	/* propdesc.FORM.Enum */
 			char *s = (char*)xmlNodeGetContent (next);
 			dpd->FormFlag = PTP_DPFF_Range;
+			gp_log (GP_LOG_DEBUG, "olympus", "range");
 			parse_value (s, type, &dpd->FORM.Range.MinimumValue); /* should turn ' ' into \0? */
 			s = strchr(s,' ');
 			if (!s) continue;
@@ -675,6 +701,7 @@ parse_propdesc (xmlNodePtr node, PTPDevicePropDesc *dpd) {
 			if (!s) continue;
 			s++;
 			parse_value (s, type, &dpd->FORM.Range.StepSize); /* should turn ' ' into \0? */
+
 			continue;
 		}
 		fprintf (stderr,"\tpropdescvar: %s\n", next->name);
@@ -684,27 +711,55 @@ parse_propdesc (xmlNodePtr node, PTPDevicePropDesc *dpd) {
 }
 
 static int
-parse_9301_prop_tree (xmlNodePtr node) {
+parse_9301_prop_tree (xmlNodePtr node, PTPDeviceInfo *di) {
 	xmlNodePtr next;
+	int	cnt;
 
+	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
+		cnt++;
+		next = xmlNextElementSibling (next);
+	}
+
+	di->DevicePropertiesSupported_len = cnt;
+	di->DevicePropertiesSupported = malloc (cnt*sizeof(di->DevicePropertiesSupported[0]));
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		unsigned int p;
 		PTPDevicePropDesc	dpd;
 
+		sscanf((char*)next->name, "p%04x", &p);
+		gp_log (GP_LOG_DEBUG, "olympus", "prop %s / 0x%04x", next->name, p);
 		parse_propdesc (next, &dpd);
-
+		di->DevicePropertiesSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
 	return TRUE;
 }
 
 static int
-parse_9301_event_tree (xmlNodePtr node) {
+parse_9301_event_tree (xmlNodePtr node, PTPDeviceInfo *di) {
 	xmlNodePtr next;
+	int	cnt;
 
+	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
-		fprintf (stderr,"9301 event: %s\n", next->name);
+		cnt++;
+		next = xmlNextElementSibling (next);
+	}
+	di->EventsSupported_len = cnt;
+	di->EventsSupported = malloc (cnt*sizeof(di->EventsSupported[0]));
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		unsigned int p;
+
+		sscanf((char*)next->name, "e%04x", &p);
+		gp_log (GP_LOG_DEBUG, "olympus", "event %s / 0x%04x", next->name, p);
+		di->EventsSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
 	return TRUE;
@@ -712,22 +767,23 @@ parse_9301_event_tree (xmlNodePtr node) {
 
 static int
 parse_9301_tree (xmlNodePtr node) {
-	xmlNodePtr next;
+	xmlNodePtr	next;
+	PTPDeviceInfo	di;
 
 	next = xmlFirstElementChild (node);
 	while (next) {
 		if (!strcmp ((char*)next->name, "cmd")) {
-			parse_9301_cmd_tree (next);
+			parse_9301_cmd_tree (next, &di);
 			next = xmlNextElementSibling (next);
 			continue;
 		}
 		if (!strcmp ((char*)next->name, "prop")) {
-			parse_9301_prop_tree (next);
+			parse_9301_prop_tree (next, &di);
 			next = xmlNextElementSibling (next);
 			continue;
 		}
 		if (!strcmp ((char*)next->name, "event")) {
-			parse_9301_event_tree (next);
+			parse_9301_event_tree (next, &di);
 			next = xmlNextElementSibling (next);
 			continue;
 		}
@@ -866,11 +922,11 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	int cmd;
 
 	if (strcmp((char*)node->name,"output")) {
-		gp_log (GP_LOG_ERROR, "ptp2/olympus","node is not output, but %s\n", node->name);
+		gp_log (GP_LOG_ERROR, "olympus","node is not output, but %s\n", node->name);
 		return FALSE;
 	}
 	if (xmlChildElementCount(node) != 2) {
-		gp_log (GP_LOG_ERROR, "ptp2/olympus","output: expected 2 childs, got %ld\n", xmlChildElementCount(node));
+		gp_log (GP_LOG_ERROR, "olympus","output: expected 2 childs, got %ld\n", xmlChildElementCount(node));
 		return FALSE;
 	}
 	next = xmlFirstElementChild (node);
@@ -879,17 +935,17 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		xmlChar *xchar;
 		xchar = xmlNodeGetContent (next);
 		if (!sscanf((char*)xchar,"%04x",&result))
-			gp_log (GP_LOG_ERROR, "ptp2/olympus","failed scanning result from %s", xchar);
+			gp_log (GP_LOG_ERROR, "olympus","failed scanning result from %s", xchar);
 		resp->Code = result;
-		gp_log (GP_LOG_DEBUG,"ptp2/olympus", "ptp result is 0x%04x", result);
+		gp_log (GP_LOG_DEBUG,"olympus", "ptp result is 0x%04x", result);
 	
 	}
 	next = xmlNextElementSibling (next);
 	if (!sscanf ((char*)next->name, "c%04x", &cmd)) {
-		gp_log (GP_LOG_ERROR, "ptp2/olympus","expected c<HEX>, have %s", next->name);
+		gp_log (GP_LOG_ERROR, "olympus","expected c<HEX>, have %s", next->name);
 		return FALSE;
 	}
-	gp_log (GP_LOG_DEBUG ,"ptp2/olympus", "cmd is 0x%04x", cmd);
+	gp_log (GP_LOG_DEBUG ,"olympus", "cmd is 0x%04x", cmd);
 	switch (cmd) {
 	case 0x9301: return parse_9301_tree (next);
 	case 0x9302: return parse_9302_tree (next);
@@ -918,11 +974,11 @@ traverse_x3c_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	if (!node)
 		return FALSE;
 	if (strcmp((char*)node->name,"x3c")) {
-		gp_log (GP_LOG_ERROR, "ptp2/olympus","node is not x3c, but %s\n", node->name);
+		gp_log (GP_LOG_ERROR, "olympus","node is not x3c, but %s\n", node->name);
 		return FALSE;
 	}
 	if (xmlChildElementCount(node) != 1) {
-		gp_log (GP_LOG_ERROR, "ptp2/olympus","x3c: expected 1 child, got %ld\n", xmlChildElementCount(node));
+		gp_log (GP_LOG_ERROR, "olympus","x3c: expected 1 child, got %ld\n", xmlChildElementCount(node));
 		return FALSE;
 	}
 	next = xmlFirstElementChild (node);
@@ -930,7 +986,7 @@ traverse_x3c_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		return traverse_output_tree (params, next, resp);
 	if (!strcmp((char*)next->name, "input"))
 		return traverse_input_tree (params, next, resp); /* event */
-	gp_log (GP_LOG_ERROR, "ptp2/olympus","unknown name %s below x3c\n", next->name);
+	gp_log (GP_LOG_ERROR, "olympus","unknown name %s below x3c\n", next->name);
 	return FALSE;
 }
 
@@ -1004,7 +1060,8 @@ generate_xml(PTPParams *params, PTPContainer *ptp, unsigned char *data, int len)
 
 	xmlDocSetRootElement (docout, x3cnode);
 	xmlDocDumpMemory (docout, &output, &len);
-	fprintf(stderr,"generated xml is:\n%s\n", output);
+	gp_log (GP_LOG_DEBUG, "olympus", "generated xml is:");
+	gp_log (GP_LOG_DEBUG, "olympus", "%s", output);
 	return (char*)output;
 
 #if 0
