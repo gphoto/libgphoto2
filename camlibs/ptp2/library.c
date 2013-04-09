@@ -2345,6 +2345,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	}
 
 	newobject = 0;
+	memset (&oi, 0, sizeof(oi));
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
 		int i;
 
@@ -2942,7 +2943,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
 	) {
 		uint16_t xmode;
-		int viewfinderwason = 0;
+		/*int viewfinderwason = 0;*/
 		PTPPropertyValue propval;
 
 		if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
@@ -2993,7 +2994,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				SET_CONTEXT_P(params, NULL);
 				return translate_ptp_result (ret);
 			}
-			viewfinderwason = 1;
+			/*viewfinderwason = 1;*/
 			params->canon_viewfinder_on = 0;
 		}
 
@@ -4493,7 +4494,7 @@ ptp_mtp_parse_metadata (
 		char			propname[256],propname2[256];
 		char			*begin, *end, *content;
 		PTPObjectPropDesc	opd;
-		int 			i, n;
+		int 			i;
 		PTPPropertyValue	pv;
 
 		for (i=sizeof(readonly_props)/sizeof(readonly_props[0]);i--;)
@@ -4501,7 +4502,7 @@ ptp_mtp_parse_metadata (
 				break;
 		if (i != -1) /* Is read/only */
 			continue;
-		n = ptp_render_mtp_propname(props[j], sizeof(propname), propname);
+		ptp_render_mtp_propname(props[j], sizeof(propname), propname);
 		sprintf (propname2, "<%s>", propname);
 		begin= strstr (filedata, propname2);
 		if (!begin) continue;

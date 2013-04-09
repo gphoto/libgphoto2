@@ -600,6 +600,89 @@ ptp_opensession (PTPParams* params, uint32_t session)
 	return ret;
 }
 
+void
+ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd) {
+	switch (dt) {
+	case PTP_DTC_INT8:	case PTP_DTC_UINT8:
+	case PTP_DTC_UINT16:	case PTP_DTC_INT16:
+	case PTP_DTC_UINT32:	case PTP_DTC_INT32:
+	case PTP_DTC_UINT64:	case PTP_DTC_INT64:
+	case PTP_DTC_UINT128:	case PTP_DTC_INT128:
+		/* Nothing to free */
+		break;
+	case PTP_DTC_AINT8:	case PTP_DTC_AUINT8:
+	case PTP_DTC_AUINT16:	case PTP_DTC_AINT16:
+	case PTP_DTC_AUINT32:	case PTP_DTC_AINT32:
+	case PTP_DTC_AUINT64:	case PTP_DTC_AINT64:
+	case PTP_DTC_AUINT128:	case PTP_DTC_AINT128:
+		if (dpd->a.v)
+			free(dpd->a.v);
+		break;
+	case PTP_DTC_STR:
+		if (dpd->str)
+			free(dpd->str);
+		break;
+	}
+}
+
+void
+ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
+{
+	uint16_t i;
+
+	ptp_free_devicepropvalue (dpd->DataType, &dpd->FactoryDefaultValue);
+	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
+	switch (dpd->FormFlag) {
+	case PTP_DPFF_Range:
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinimumValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
+		break;
+	case PTP_DPFF_Enumeration:
+		if (dpd->FORM.Enum.SupportedValue) {
+			for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++)
+				ptp_free_devicepropvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
+			free (dpd->FORM.Enum.SupportedValue);
+		}
+	}
+}
+
+
+void
+ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
+{
+	uint16_t i;
+
+	ptp_free_devicepropvalue (opd->DataType, &opd->FactoryDefaultValue);
+	switch (opd->FormFlag) {
+	case PTP_OPFF_None:
+		break;
+	case PTP_OPFF_Range:
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MinimumValue);
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.StepSize);
+		break;
+	case PTP_OPFF_Enumeration:
+		if (opd->FORM.Enum.SupportedValue) {
+			for (i=0;i<opd->FORM.Enum.NumberOfValues;i++)
+				ptp_free_devicepropvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
+			free (opd->FORM.Enum.SupportedValue);
+		}
+		break;
+	case PTP_OPFF_DateTime:
+	case PTP_OPFF_FixedLengthArray:
+	case PTP_OPFF_RegularExpression:
+	case PTP_OPFF_ByteArray:
+	case PTP_OPFF_LongString:
+		/* Ignore these presently, we cannot unpack them, so there is nothing to be freed. */
+		break;
+	default:
+		fprintf (stderr, "Unknown OPFF type %d\n", opd->FormFlag);
+		break;
+	}
+}
+
+
 /**
  * ptp_free_params:
  * params:	PTPParams*
@@ -1172,6 +1255,7 @@ ptp_sendobject_fromfd (PTPParams* params, int fd, uint64_t size)
 	return ret;
 }
 
+#define PROPCACHE_TIMEOUT 5	/* seconds */
 
 uint16_t
 ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode, 
@@ -1179,17 +1263,44 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 {
 	PTPContainer ptp;
 	uint16_t ret;
-	unsigned int len;
+	unsigned int len, i;
 	unsigned char* dpd=NULL;
 
+#if 0
+	for (i=0;i<params->nrofdeviceproperties;i++) {
+		if (params->deviceproperties[i].prop == propcode) {
+			if (params->deviceproperties[i].timestamp + PROPCACHE_TIMEOUT < time(NULL)) {
+				duplicate_DevicePropDesc (devicepropertydesc, &params->deviceproperties[i].desc);
+				return PTP_RC_OK;
+			}
+			break;
+		}
+	}
+	if (i == params->nrofdeviceproperties) {
+		if (i == 0)
+			params->deviceproperties = malloc (sizeof(params->deviceproperties[0]));
+		else
+			params->deviceproperties = realloc (params->deviceproperties, (i+1)*sizeof(params->deviceproperties[0]));
+		params->nrofdeviceproperties++;
+	}
+#endif
+
 	PTP_CNT_INIT(ptp);
-	ptp.Code=PTP_OC_GetDevicePropDesc;
-	ptp.Param1=propcode;
-	ptp.Nparam=1;
-	len=0;
+	ptp.Code   = PTP_OC_GetDevicePropDesc;
+	ptp.Param1 = propcode;
+	ptp.Nparam = 1;
+	len        = 0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd, &len);
 	if (ret == PTP_RC_OK) ptp_unpack_DPD(params, dpd, devicepropertydesc, len);
 	free(dpd);
+
+#if 0
+	duplicate_DevicePropDesc (devicepropertydesc, &params->deviceproperties[i].desc);
+	params->deviceproperties[i].prop = propcode;
+	params->deviceproperties[i].timestamp = time(NULL);
+
+	duplicate_PropertyValue(&params->deviceproperties[i].value, &devicepropertydesc->CurrentValue, params->deviceproperties[i].desc.DataType);
+#endif
 	return ret;
 }
 
@@ -2670,9 +2781,11 @@ ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile)
 	ptp_pack_string(params, "19990909T090909", data, 0x19, &len);
 	
 	/* IP parameters */
-	*((unsigned int*)&buffer[0x3A]) = profile->ip_address; /* Do not reverse bytes */
+	memcpy(&buffer[0x3A],&profile->ip_address,sizeof(profile->ip_address));
+	/**((unsigned int*)&buffer[0x3A]) = profile->ip_address; *//* Do not reverse bytes */
 	buffer[0x3E] = profile->subnet_mask;
-	*((unsigned int*)&buffer[0x3F]) = profile->gateway_address; /* Do not reverse bytes */
+	memcpy(&buffer[0x3F],&profile->gateway_address,sizeof(profile->gateway_address));
+	/**((unsigned int*)&buffer[0x3F]) = profile->gateway_address; */ /* Do not reverse bytes */
 	buffer[0x43] = profile->address_mode;
 	
 	/* Wifi parameters */
@@ -3428,88 +3541,6 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 		if (params->deviceinfo.DevicePropertiesSupported[i]==property)
 			return 1;
 	return 0;
-}
-
-/* ptp structures freeing functions */
-void
-ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd) {
-	switch (dt) {
-	case PTP_DTC_INT8:	case PTP_DTC_UINT8:
-	case PTP_DTC_UINT16:	case PTP_DTC_INT16:
-	case PTP_DTC_UINT32:	case PTP_DTC_INT32:
-	case PTP_DTC_UINT64:	case PTP_DTC_INT64:
-	case PTP_DTC_UINT128:	case PTP_DTC_INT128:
-		/* Nothing to free */
-		break;
-	case PTP_DTC_AINT8:	case PTP_DTC_AUINT8:
-	case PTP_DTC_AUINT16:	case PTP_DTC_AINT16:
-	case PTP_DTC_AUINT32:	case PTP_DTC_AINT32:
-	case PTP_DTC_AUINT64:	case PTP_DTC_AINT64:
-	case PTP_DTC_AUINT128:	case PTP_DTC_AINT128:
-		if (dpd->a.v)
-			free(dpd->a.v);
-		break;
-	case PTP_DTC_STR:
-		if (dpd->str)
-			free(dpd->str);
-		break;
-	}
-}
-
-void
-ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
-{
-	uint16_t i;
-
-	ptp_free_devicepropvalue (dpd->DataType, &dpd->FactoryDefaultValue);
-	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
-	switch (dpd->FormFlag) {
-	case PTP_DPFF_Range:
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinimumValue);
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaximumValue);
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
-		break;
-	case PTP_DPFF_Enumeration:
-		if (dpd->FORM.Enum.SupportedValue) {
-			for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++)
-				ptp_free_devicepropvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
-			free (dpd->FORM.Enum.SupportedValue);
-		}
-	}
-}
-
-void
-ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
-{
-	uint16_t i;
-
-	ptp_free_devicepropvalue (opd->DataType, &opd->FactoryDefaultValue);
-	switch (opd->FormFlag) {
-	case PTP_OPFF_None:
-		break;
-	case PTP_OPFF_Range:
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MinimumValue);
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MaximumValue);
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.StepSize);
-		break;
-	case PTP_OPFF_Enumeration:
-		if (opd->FORM.Enum.SupportedValue) {
-			for (i=0;i<opd->FORM.Enum.NumberOfValues;i++)
-				ptp_free_devicepropvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
-			free (opd->FORM.Enum.SupportedValue);
-		}
-		break;
-	case PTP_OPFF_DateTime:
-	case PTP_OPFF_FixedLengthArray:
-	case PTP_OPFF_RegularExpression:
-	case PTP_OPFF_ByteArray:
-	case PTP_OPFF_LongString:
-		/* Ignore these presently, we cannot unpack them, so there is nothing to be freed. */
-		break;
-	default:
-		fprintf (stderr, "Unknown OPFF type %d\n", opd->FormFlag);
-		break;
-	}
 }
 
 void

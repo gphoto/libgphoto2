@@ -2148,6 +2148,15 @@ struct _PTPObject {
 };
 typedef struct _PTPObject PTPObject;
 
+/* The Device Property Cache */
+struct _PTPDeviceProperty {
+	uint16_t		prop;
+	time_t			timestamp;
+	PTPDevicePropDesc	desc;
+	PTPPropertyValue	value;
+};
+typedef struct _PTPDeviceProperty PTPDeviceProperty;
+
 struct _PTPParams {
 	/* device flags */
 	uint32_t	device_flags;
@@ -2190,6 +2199,10 @@ struct _PTPParams {
 	/* PTP: the current event queue */
 	PTPContainer	*events;
 	int		nrofevents;
+
+	/* PTP: Device Property Caching */
+	PTPDeviceProperty	*deviceproperties;
+	int			nrofdeviceproperties;
 
 	/* PTP: Canon specific flags list */
 	PTPCanon_Property	*canon_props;
@@ -2890,10 +2903,10 @@ ptp_operation_issupported(PTPParams* params, uint16_t operation)
 int ptp_event_issupported	(PTPParams* params, uint16_t event);
 int ptp_property_issupported	(PTPParams* params, uint16_t property);
 
-void ptp_free_devicepropdesc	(PTPDevicePropDesc* dpd);
-void ptp_free_devicepropvalue	(uint16_t dt, PTPPropertyValue* dpd);
-void ptp_free_objectpropdesc	(PTPObjectPropDesc* dpd);
 void ptp_free_params		(PTPParams *params);
+void ptp_free_objectpropdesc	(PTPObjectPropDesc*);
+void ptp_free_devicepropdesc	(PTPDevicePropDesc*);
+void ptp_free_devicepropvalue	(uint16_t, PTPPropertyValue*);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
 

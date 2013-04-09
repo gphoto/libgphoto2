@@ -750,7 +750,6 @@ ptp_unpack_DPV (
 }
 
 /* Device Property pack/unpack */
-
 #define PTP_dpd_DevicePropertyCode	0
 #define PTP_dpd_DataType		2
 #define PTP_dpd_GetSet			4
@@ -829,7 +828,65 @@ outofmemory:
 	return 0;
 }
 
-/* (MTP) Object Property pack/unpack */
+static inline void
+duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uint16_t type) {
+	if (type & PTP_DTC_ARRAY_MASK) {
+		int i;
+
+		dst->a.count = src->a.count;
+		dst->a.v = malloc (sizeof(src->a.v)*src->a.count);
+		for (i=0;i<src->a.count;i++)
+			duplicate_PropertyValue (&src->a.v[i], &dst->a.v[i], type & ~PTP_DTC_ARRAY_MASK);
+		return;
+	}
+	switch (type & ~PTP_DTC_ARRAY_MASK) {
+	case PTP_DTC_INT8:	dst->i8 = src->i8; break;
+	case PTP_DTC_UINT8:	dst->u8 = src->u8; break;
+	case PTP_DTC_INT16:	dst->i16 = src->i16; break;
+	case PTP_DTC_UINT16:	dst->u16 = src->u16; break;
+	case PTP_DTC_INT32:	dst->i32 = src->i32; break;
+	case PTP_DTC_UINT32:	dst->u32 = src->u32; break;
+	case PTP_DTC_UINT64:	dst->u64 = src->u64; break;
+	case PTP_DTC_INT64:	dst->i64 = src->i64; break;
+#if 0
+	case PTP_DTC_INT128:	dst->i128 = src->i128; break;
+	case PTP_DTC_UINT128:	dst->u128 = src->u128; break;
+#endif
+	case PTP_DTC_STR: 	dst->str = strdup(src->str); break;
+	default:		break;
+	}
+	return;
+}
+
+static inline void
+duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
+	int i;
+
+	dst->DevicePropertyCode	= src->DevicePropertyCode;
+	dst->DataType		= src->DataType;
+	dst->GetSet		= src->GetSet;
+	
+	duplicate_PropertyValue (&src->FactoryDefaultValue, &dst->FactoryDefaultValue, dst->DataType);
+	duplicate_PropertyValue (&src->CurrentValue, &dst->CurrentValue, dst->DataType);
+
+	dst->FormFlag		= src->FormFlag;
+	switch (src->FormFlag) {
+	case PTP_DPFF_Range:
+		duplicate_PropertyValue (&src->FORM.Range.MinimumValue, &dst->FORM.Range.MinimumValue, src->DataType);
+		duplicate_PropertyValue (&src->FORM.Range.MaximumValue, &dst->FORM.Range.MaximumValue, src->DataType);
+		duplicate_PropertyValue (&src->FORM.Range.StepSize,     &dst->FORM.Range.StepSize,     src->DataType);
+		break;
+	case PTP_DPFF_Enumeration:
+		dst->FORM.Enum.NumberOfValues = src->FORM.Enum.NumberOfValues;
+		dst->FORM.Enum.SupportedValue = malloc (sizeof(dst->FORM.Enum.SupportedValue[0])*src->FORM.Enum.NumberOfValues);
+		for (i = 0; i<src->FORM.Enum.NumberOfValues ; i++)
+			duplicate_PropertyValue (&src->FORM.Enum.SupportedValue[i], &dst->FORM.Enum.SupportedValue[i], src->DataType);
+		break;
+	case PTP_DPFF_None:
+		break;
+	}
+}
+
 #define PTP_opd_ObjectPropertyCode	0
 #define PTP_opd_DataType		2
 #define PTP_opd_GetSet			4
