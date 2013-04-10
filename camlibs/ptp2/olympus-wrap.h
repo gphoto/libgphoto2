@@ -25,17 +25,4 @@
 
 uint16_t olympus_setup (PTPParams *params);
 
-uint16_t ums_wrap_sendreq  (PTPParams* params, PTPContainer* req);
-uint16_t ums_wrap_wrap_sendreq  (PTPParams* params, PTPContainer* req);
-uint16_t ums_wrap_senddata (PTPParams* params, PTPContainer* ptp, unsigned long sendlen, PTPDataHandler*getter);
-uint16_t ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter);
-uint16_t ums_wrap_getresp(PTPParams* params, PTPContainer* resp);
-
-uint16_t ums_wrap2_sendreq  (PTPParams* params, PTPContainer* req);
-uint16_t ums_wrap2_senddata (PTPParams* params, PTPContainer* ptp, unsigned long sendlen, PTPDataHandler*getter);
-uint16_t ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter);
-uint16_t ums_wrap2_getresp(PTPParams* params, PTPContainer* resp);
-uint16_t ums_wrap2_event_check  (PTPParams* params, PTPContainer* req);
-uint16_t ums_wrap2_event_wait  (PTPParams* params, PTPContainer* req);
-
 #endif /* __OLYMPUS_USBWRAP_H__ */

@@ -26,6 +26,10 @@
 #include "config.h"
 #include "ptp.h"
 
+#ifdef HAVE_LIBXML2
+# include <libxml/parser.h>
+#endif
+
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -475,21 +479,355 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 	return ret;
 }
 
+#ifdef HAVE_LIBXML2
+static int
+traverse_tree (PTPParams *params, int depth, xmlNodePtr node) {
+	xmlNodePtr	next;
+	xmlChar		*xchar;
+	int n;
+	char 		*xx;
+
+
+	if (!node) return 0;
+	xx = malloc(depth * 4 + 1);
+	memset (xx, ' ', depth*4);
+	xx[depth*4] = 0;
+
+	n = xmlChildElementCount (node);
+
+	next = node;
+	do {
+		fprintf(stderr,"%snode %s\n", xx,next->name);
+		fprintf(stderr,"%selements %d\n", xx,n);
+		xchar = xmlNodeGetContent (next);
+		fprintf(stderr,"%scontent %s\n", xx,xchar);
+		traverse_tree (params, depth+1,xmlFirstElementChild (next));
+	} while ((next = xmlNextElementSibling (next)));
+	return 1;
+}
+
+static int
+parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
+	xmlNodePtr next;
+	int	cnt;
+
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		cnt++;
+		next = xmlNextElementSibling (next);
+	}
+	di->OperationsSupported_len = cnt;
+	di->OperationsSupported = malloc (cnt*sizeof(di->OperationsSupported[0]));
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		unsigned int p;
+
+		sscanf((char*)next->name, "c%04x", &p);
+		ptp_debug( params, "cmd %s / 0x%04x", next->name, p);
+		di->OperationsSupported[cnt++] = p;
+		next = xmlNextElementSibling (next);
+	}
+	return 1;
+}
+
+static int
+parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropertyValue *propval) {
+	switch (type) {
+	case 6: { /*UINT32*/
+		unsigned int x;
+		if (!sscanf(str,"%08x", &x)) {
+			ptp_debug( params, "could not parse uint32 %s\n", str);
+			return 0;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->u32 = x;
+		break;
+	}
+	case 5: { /*INT32*/
+		int x;
+		if (!sscanf(str,"%08x", &x)) {
+			ptp_debug( params, "could not parse int32 %s\n", str);
+			return 0;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->i32 = x;
+		break;
+	}
+	case 4: { /*UINT16*/
+		unsigned int x;
+		if (!sscanf(str,"%04x", &x)) {
+			ptp_debug( params, "could not parse uint16 %s\n", str);
+			return 0;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->u16 = x;
+		break;
+	}
+	case 3: { /*INT16*/
+		int x;
+		if (!sscanf(str,"%04x", &x)) {
+			ptp_debug( params, "could not parse int16 %s\n", str);
+			return 0;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->i16 = x;
+		break;
+	}
+	case 2: { /*UINT8*/
+		unsigned int x;
+		if (!sscanf(str,"%02x", &x)) {
+			ptp_debug( params, "could not parse uint8 %s\n", str);
+			return 0;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->u8 = x;
+		break;
+	}
+	case 1: { /*INT8*/
+		int x;
+		if (!sscanf(str,"%02x", &x)) {
+			ptp_debug( params, "could not parse int8 %s\n", str);
+			return 0;
+		} 
+		ptp_debug( params, "\t%d", x);
+		propval->i8 = x;
+		break;
+	}
+	case 65535: { /* string */
+		int len;
+
+		/* ascii ptp string, 1 byte length, little endian 16 bit chars */
+		if (sscanf(str,"%02x", &len)) {
+			int i;
+			char *xstr = malloc(len+1);
+			for (i=0;i<len;i++) {
+				int xc;
+				if (sscanf(str+2+i*4,"%04x", &xc)) {
+					int cx;
+
+					cx = ((xc>>8) & 0xff) | ((xc & 0xff) << 8);
+					xstr[i] = cx;
+				}
+				xstr[len] = 0;
+			}
+			ptp_debug( params, "\t%s", xstr);
+			propval->str = xstr;
+			break;
+		}
+		ptp_debug( params, "string %s not parseable!", str);
+		return 0;
+	}
+	case 7: /*INT64*/
+	case 8: /*UINT64*/
+	case 9: /*INT128*/
+	case 10: /*UINT128*/
+	default:
+		ptp_debug( params, "unhandled data type %d!", type);
+		return 0;
+	}
+	return 1;
+}
+
+static int
+parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd) {
+	xmlNodePtr next;
+	int type = -1;
+
+	dpd->FormFlag	= PTP_DPFF_None;
+	dpd->GetSet	= PTP_DPGS_Get;
+	next = xmlFirstElementChild (node);
+	do {
+		if (!strcmp((char*)next->name,"type")) {	/* propdesc.DataType */
+			if (!sscanf((char*)xmlNodeGetContent (next), "%04x", &type)) {
+				ptp_debug( params, "\ttype %s not parseable?\n",xmlNodeGetContent (next));
+				return 0;
+			}
+			ptp_debug( params, "type 0x%x", type);
+			dpd->DataType = type;
+			continue;
+		}
+		if (!strcmp((char*)next->name,"attribute")) {	/* propdesc.GetSet */
+			int attr;
+
+			if (!sscanf((char*)xmlNodeGetContent (next), "%02x", &attr)) {
+				ptp_debug( params, "\tattr %s not parseable\n",xmlNodeGetContent (next));
+				return 0;
+			}
+			ptp_debug( params, "attribute 0x%x", attr);
+			dpd->GetSet = attr;
+			continue;
+		}
+		if (!strcmp((char*)next->name,"default")) {	/* propdesc.FactoryDefaultValue */
+			ptp_debug( params, "default value");
+			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->FactoryDefaultValue);
+			continue;
+		}
+		if (!strcmp((char*)next->name,"value")) {	/* propdesc.CurrentValue */
+			ptp_debug( params, "current value");
+			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->CurrentValue);
+			continue;
+		}
+		if (!strcmp((char*)next->name,"enum")) {	/* propdesc.FORM.Enum */
+			int n,i;
+			char *s;
+
+			ptp_debug( params, "enum");
+			dpd->FormFlag = PTP_DPFF_Enumeration;
+			s = (char*)xmlNodeGetContent (next);
+			n = 0;
+			do {
+				s = strchr(s,' ');
+				if (s) s++;
+				n++;
+			} while (s);
+			dpd->FORM.Enum.NumberOfValues = n;
+			dpd->FORM.Enum.SupportedValue = malloc (n * sizeof(PTPPropertyValue));
+			s = (char*)xmlNodeGetContent (next);
+			i = 0;
+			do {
+				parse_9301_value (params, s, type, &dpd->FORM.Enum.SupportedValue[i]); /* should turn ' ' into \0? */
+				i++;
+				s = strchr(s,' ');
+				if (s) s++;
+			} while (s && (i<n));
+			continue;
+		}
+		if (!strcmp((char*)next->name,"range")) {	/* propdesc.FORM.Enum */
+			char *s = (char*)xmlNodeGetContent (next);
+			dpd->FormFlag = PTP_DPFF_Range;
+			ptp_debug( params, "range");
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MinimumValue); /* should turn ' ' into \0? */
+			s = strchr(s,' ');
+			if (!s) continue;
+			s++;
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MaximumValue); /* should turn ' ' into \0? */
+			s = strchr(s,' ');
+			if (!s) continue;
+			s++;
+			parse_9301_value (params, s, type, &dpd->FORM.Range.StepSize); /* should turn ' ' into \0? */
+
+			continue;
+		}
+		fprintf (stderr,"\tpropdescvar: %s\n", next->name);
+		traverse_tree (params, 3, next);
+	} while ((next = xmlNextElementSibling (next)));
+	return 1;
+}
+
+static int
+parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
+	xmlNodePtr next;
+	int	cnt;
+
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		cnt++;
+		next = xmlNextElementSibling (next);
+	}
+
+	di->DevicePropertiesSupported_len = cnt;
+	di->DevicePropertiesSupported = malloc (cnt*sizeof(di->DevicePropertiesSupported[0]));
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		unsigned int p;
+		PTPDevicePropDesc	dpd;
+
+		sscanf((char*)next->name, "p%04x", &p);
+		ptp_debug( params, "prop %s / 0x%04x", next->name, p);
+		parse_9301_propdesc (params, next, &dpd);
+		di->DevicePropertiesSupported[cnt++] = p;
+		next = xmlNextElementSibling (next);
+	}
+	return 1;
+}
+
+static int
+parse_9301_event_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
+	xmlNodePtr next;
+	int	cnt;
+
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		cnt++;
+		next = xmlNextElementSibling (next);
+	}
+	di->EventsSupported_len = cnt;
+	di->EventsSupported = malloc (cnt*sizeof(di->EventsSupported[0]));
+	cnt = 0;
+	next = xmlFirstElementChild (node);
+	while (next) {
+		unsigned int p;
+
+		sscanf((char*)next->name, "e%04x", &p);
+		ptp_debug( params, "event %s / 0x%04x", next->name, p);
+		di->EventsSupported[cnt++] = p;
+		next = xmlNextElementSibling (next);
+	}
+	return 1;
+}
+
+static int
+parse_9301_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
+	xmlNodePtr	next;
+
+	next = xmlFirstElementChild (node);
+	while (next) {
+		if (!strcmp ((char*)next->name, "cmd")) {
+			parse_9301_cmd_tree (params, next, di);
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		if (!strcmp ((char*)next->name, "prop")) {
+			parse_9301_prop_tree (params, next, di);
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		if (!strcmp ((char*)next->name, "event")) {
+			parse_9301_event_tree (params, next, di);
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		fprintf (stderr,"9301: unhandled type %s\n", next->name);
+		next = xmlNextElementSibling (next);
+	}
+	/*traverse_tree (0, node);*/
+	return 1;
+}
+#endif
+
 uint16_t
-ptp_olympus_getdeviceinfo (PTPParams* params, unsigned char**data, unsigned long*len)
+ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 {
 	uint16_t 	ret;
 	PTPContainer	ptp;
 	PTPDataHandler	handler;
+	unsigned char	*data;
+	unsigned long	len;
+        xmlDocPtr       docin;
+        xmlNodePtr      docroot;
 
 	ptp_init_recv_memory_handler (&handler);
+
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_OLYMPUS_GetDeviceInfo;
 	ptp.Nparam = 0;
-	*len	   = 0;
-	*data       = NULL;
+	len	   = 0;
+	data       = NULL;
 	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
-	ptp_exit_recv_memory_handler (&handler, data, len);
+
+	ptp_exit_recv_memory_handler (&handler, &data, &len);
+
+        docin = xmlReadMemory ((char*)data, len, "http://gphoto.org/", "utf-8", 0);
+        if (!docin) return PTP_RC_GeneralError;
+        docroot = xmlDocGetRootElement (docin);
+        if (!docroot) return PTP_RC_GeneralError;
+
+	ret = parse_9301_tree (params, docroot, di);
 	return ret;
 }
 
@@ -1266,7 +1604,6 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	unsigned int len, i;
 	unsigned char* dpd=NULL;
 
-#if 0
 	for (i=0;i<params->nrofdeviceproperties;i++) {
 		if (params->deviceproperties[i].prop == propcode) {
 			if (params->deviceproperties[i].timestamp + PROPCACHE_TIMEOUT < time(NULL)) {
@@ -1283,7 +1620,6 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 			params->deviceproperties = realloc (params->deviceproperties, (i+1)*sizeof(params->deviceproperties[0]));
 		params->nrofdeviceproperties++;
 	}
-#endif
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_GetDevicePropDesc;
@@ -1294,13 +1630,11 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	if (ret == PTP_RC_OK) ptp_unpack_DPD(params, dpd, devicepropertydesc, len);
 	free(dpd);
 
-#if 0
 	duplicate_DevicePropDesc (devicepropertydesc, &params->deviceproperties[i].desc);
 	params->deviceproperties[i].prop = propcode;
 	params->deviceproperties[i].timestamp = time(NULL);
 
 	duplicate_PropertyValue(&params->deviceproperties[i].value, &devicepropertydesc->CurrentValue, params->deviceproperties[i].desc.DataType);
-#endif
 	return ret;
 }
 

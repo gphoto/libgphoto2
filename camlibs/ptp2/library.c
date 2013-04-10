@@ -278,11 +278,19 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
         gp_camera_get_abilities(camera, &a);
 
-	if (di->Manufacturer || !strcmp(di->Manufacturer,"OLYMPUS")) {
-		unsigned char *data;
-		unsigned long len;
+	/* XML style Olympus E series control? */
+	if (	di->Manufacturer &&
+		!strcmp(di->Manufacturer,"OLYMPUS") &&
+		ptp_operation_issupported(&camera->pl->params, PTP_OC_OLYMPUS_GetDeviceInfo)
+	) {
+		PTPDeviceInfo	di;
+		uint16_t	ret;
 
-		ptp_olympus_getdeviceinfo (&camera->pl->params, &data, &len);
+		ret = ptp_olympus_getdeviceinfo (&camera->pl->params, &di);
+		if (ret != PTP_RC_OK)
+			return;
+
+		/* FIXME: do stuff */
 	}
 
 	/* for USB class matches on unknown cameras... */
