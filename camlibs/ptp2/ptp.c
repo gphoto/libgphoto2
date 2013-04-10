@@ -810,6 +810,7 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 	unsigned long	len;
         xmlDocPtr       docin;
         xmlNodePtr      docroot;
+        xmlNodePtr      next;
 
 	ptp_init_recv_memory_handler (&handler);
 
@@ -826,6 +827,21 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
         if (!docin) return PTP_RC_GeneralError;
         docroot = xmlDocGetRootElement (docin);
         if (!docroot) return PTP_RC_GeneralError;
+
+        if (strcmp((char*)docroot->name,"x3c")) {
+                ptp_debug (params, "olympus: docroot is not x3c, but %s", docroot->name);
+                return PTP_RC_GeneralError;
+        }
+        if (xmlChildElementCount(docroot) != 1) {
+                ptp_debug (params, "olympus: x3c: expected 1 child, got %ld", xmlChildElementCount(docroot));
+                return PTP_RC_GeneralError;
+        }
+        next = xmlFirstElementChild (docroot);
+        if (strcmp((char*)next->name, "output") != 0) {
+                ptp_debug (params, "olympus: x3c node: expected child 'output', but got %s", (char*)next->name);
+                return PTP_RC_GeneralError;
+	}
+
 
 	ret = parse_9301_tree (params, docroot, di);
 	return ret;
