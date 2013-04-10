@@ -21,8 +21,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#define OLYMPUS
-
 #define _BSD_SOURCE
 #include "config.h"
 
@@ -981,7 +979,7 @@ static struct {
 
         /* Olympus wrap test code */
 	{"Olympus:E series (Control)",	  0x07b4, 0x0110, PTP_OLYMPUS_XML},
-#if 0
+#if 0 /* talks PTP via SCSI vendor command backchannel, like above. */
 	{"Olympus:E-410 (UMS 2 mode)",    0x07b4, 0x0118, 0}, /* not XML wrapped */
 #endif
 
