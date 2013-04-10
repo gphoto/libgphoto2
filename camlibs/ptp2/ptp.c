@@ -503,7 +503,7 @@ traverse_tree (PTPParams *params, int depth, xmlNodePtr node) {
 		fprintf(stderr,"%scontent %s\n", xx,xchar);
 		traverse_tree (params, depth+1,xmlFirstElementChild (next));
 	} while ((next = xmlNextElementSibling (next)));
-	return 1;
+	return PTP_RC_OK;
 }
 
 static int
@@ -529,7 +529,7 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 		di->OperationsSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
-	return 1;
+	return PTP_RC_OK;
 }
 
 static int
@@ -538,8 +538,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 6: { /*UINT32*/
 		unsigned int x;
 		if (!sscanf(str,"%08x", &x)) {
-			ptp_debug( params, "could not parse uint32 %s\n", str);
-			return 0;
+			ptp_debug( params, "could not parse uint32 %s", str);
+			return PTP_RC_GeneralError;
 		}
 		ptp_debug( params, "\t%d", x);
 		propval->u32 = x;
@@ -548,8 +548,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 5: { /*INT32*/
 		int x;
 		if (!sscanf(str,"%08x", &x)) {
-			ptp_debug( params, "could not parse int32 %s\n", str);
-			return 0;
+			ptp_debug( params, "could not parse int32 %s", str);
+			return PTP_RC_GeneralError;
 		}
 		ptp_debug( params, "\t%d", x);
 		propval->i32 = x;
@@ -558,8 +558,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 4: { /*UINT16*/
 		unsigned int x;
 		if (!sscanf(str,"%04x", &x)) {
-			ptp_debug( params, "could not parse uint16 %s\n", str);
-			return 0;
+			ptp_debug( params, "could not parse uint16 %s", str);
+			return PTP_RC_GeneralError;
 		}
 		ptp_debug( params, "\t%d", x);
 		propval->u16 = x;
@@ -568,8 +568,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 3: { /*INT16*/
 		int x;
 		if (!sscanf(str,"%04x", &x)) {
-			ptp_debug( params, "could not parse int16 %s\n", str);
-			return 0;
+			ptp_debug( params, "could not parse int16 %s", str);
+			return PTP_RC_GeneralError;
 		}
 		ptp_debug( params, "\t%d", x);
 		propval->i16 = x;
@@ -578,8 +578,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 2: { /*UINT8*/
 		unsigned int x;
 		if (!sscanf(str,"%02x", &x)) {
-			ptp_debug( params, "could not parse uint8 %s\n", str);
-			return 0;
+			ptp_debug( params, "could not parse uint8 %s", str);
+			return PTP_RC_GeneralError;
 		}
 		ptp_debug( params, "\t%d", x);
 		propval->u8 = x;
@@ -588,8 +588,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 1: { /*INT8*/
 		int x;
 		if (!sscanf(str,"%02x", &x)) {
-			ptp_debug( params, "could not parse int8 %s\n", str);
-			return 0;
+			ptp_debug( params, "could not parse int8 %s", str);
+			return PTP_RC_GeneralError;
 		} 
 		ptp_debug( params, "\t%d", x);
 		propval->i8 = x;
@@ -617,7 +617,7 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 			break;
 		}
 		ptp_debug( params, "string %s not parseable!", str);
-		return 0;
+		return PTP_RC_GeneralError;
 	}
 	case 7: /*INT64*/
 	case 8: /*UINT64*/
@@ -625,9 +625,9 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	case 10: /*UINT128*/
 	default:
 		ptp_debug( params, "unhandled data type %d!", type);
-		return 0;
+		return PTP_RC_GeneralError;
 	}
-	return 1;
+	return PTP_RC_OK;
 }
 
 static int
@@ -641,7 +641,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 	do {
 		if (!strcmp((char*)next->name,"type")) {	/* propdesc.DataType */
 			if (!sscanf((char*)xmlNodeGetContent (next), "%04x", &type)) {
-				ptp_debug( params, "\ttype %s not parseable?\n",xmlNodeGetContent (next));
+				ptp_debug( params, "\ttype %s not parseable?",xmlNodeGetContent (next));
 				return 0;
 			}
 			ptp_debug( params, "type 0x%x", type);
@@ -652,7 +652,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 			int attr;
 
 			if (!sscanf((char*)xmlNodeGetContent (next), "%02x", &attr)) {
-				ptp_debug( params, "\tattr %s not parseable\n",xmlNodeGetContent (next));
+				ptp_debug( params, "\tattr %s not parseable",xmlNodeGetContent (next));
 				return 0;
 			}
 			ptp_debug( params, "attribute 0x%x", attr);
@@ -710,10 +710,10 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 
 			continue;
 		}
-		fprintf (stderr,"\tpropdescvar: %s\n", next->name);
+		ptp_debug (params, "\tpropdescvar: %s", next->name);
 		traverse_tree (params, 3, next);
 	} while ((next = xmlNextElementSibling (next)));
-	return 1;
+	return PTP_RC_OK;
 }
 
 static int
@@ -742,7 +742,7 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
-	return 1;
+	return PTP_RC_OK;
 }
 
 static int
@@ -768,7 +768,7 @@ parse_9301_event_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 		di->EventsSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
-	return 1;
+	return PTP_RC_OK;
 }
 
 static int
@@ -796,9 +796,74 @@ parse_9301_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 		next = xmlNextElementSibling (next);
 	}
 	/*traverse_tree (0, node);*/
-	return 1;
+	return PTP_RC_OK;
 }
 #endif
+
+static uint16_t
+ptp_olympus_parse_output_xml(PTPParams* params, char*data, int len, xmlNodePtr *code) {
+        xmlDocPtr       docin;
+        xmlNodePtr      docroot, output, next;
+	int 		result, xcode;
+
+	*code = NULL;
+
+        docin = xmlReadMemory ((char*)data, len, "http://gphoto.org/", "utf-8", 0);
+        if (!docin) return PTP_RC_GeneralError;
+        docroot = xmlDocGetRootElement (docin);
+        if (!docroot) {
+		xmlFreeDoc (docin);
+		return PTP_RC_GeneralError;
+	}
+
+        if (strcmp((char*)docroot->name,"x3c")) {
+                ptp_debug (params, "olympus: docroot is not x3c, but %s", docroot->name);
+		xmlFreeDoc (docin);
+                return PTP_RC_GeneralError;
+        }
+        if (xmlChildElementCount(docroot) != 1) {
+                ptp_debug (params, "olympus: x3c: expected 1 child, got %ld", xmlChildElementCount(docroot));
+		xmlFreeDoc (docin);
+                return PTP_RC_GeneralError;
+        }
+        output = xmlFirstElementChild (docroot);
+        if (strcmp((char*)output->name, "output") != 0) {
+                ptp_debug (params, "olympus: x3c node: expected child 'output', but got %s", (char*)output->name);
+		xmlFreeDoc (docin);
+                return PTP_RC_GeneralError;
+	}
+        next = xmlFirstElementChild (output);
+
+	result = PTP_RC_GeneralError;
+
+	while (next) {
+		if (!strcmp((char*)next->name,"result")) {
+			xmlChar	 *xchar;
+
+			xchar = xmlNodeGetContent (next);
+			if (!sscanf((char*)xchar,"%04x",&result))
+				ptp_debug (params, "failed scanning result from %s", xchar);
+			ptp_debug (params,  "ptp result is 0x%04x", result);
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		if (sscanf((char*)next->name,"c%x", &xcode)) {
+			ptp_debug (params,  "ptp code node found %s", (char*)next->name);
+			*code = next;
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		ptp_debug (params, "unhandled node %s", (char*)next->name);
+		next = xmlNextElementSibling (next);
+	}
+
+	if (result != PTP_RC_OK) {
+		*code = NULL;
+		xmlFreeDoc (docin);
+	}
+	return result;
+}
+
 
 uint16_t
 ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
@@ -808,10 +873,9 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 	PTPDataHandler	handler;
 	unsigned char	*data;
 	unsigned long	len;
-        xmlDocPtr       docin;
-        xmlNodePtr      docroot;
-        xmlNodePtr      next;
+	xmlNodePtr	code;
 
+	memset (di, 0, sizeof(PTPDeviceInfo));
 	ptp_init_recv_memory_handler (&handler);
 
 	PTP_CNT_INIT(ptp);
@@ -823,27 +887,14 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 
 	ptp_exit_recv_memory_handler (&handler, &data, &len);
 
-        docin = xmlReadMemory ((char*)data, len, "http://gphoto.org/", "utf-8", 0);
-        if (!docin) return PTP_RC_GeneralError;
-        docroot = xmlDocGetRootElement (docin);
-        if (!docroot) return PTP_RC_GeneralError;
+	ret = ptp_olympus_parse_output_xml(params,(char*)data,len,&code);
+	if (ret != PTP_RC_OK)
+		return ret;
 
-        if (strcmp((char*)docroot->name,"x3c")) {
-                ptp_debug (params, "olympus: docroot is not x3c, but %s", docroot->name);
-                return PTP_RC_GeneralError;
-        }
-        if (xmlChildElementCount(docroot) != 1) {
-                ptp_debug (params, "olympus: x3c: expected 1 child, got %ld", xmlChildElementCount(docroot));
-                return PTP_RC_GeneralError;
-        }
-        next = xmlFirstElementChild (docroot);
-        if (strcmp((char*)next->name, "output") != 0) {
-                ptp_debug (params, "olympus: x3c node: expected child 'output', but got %s", (char*)next->name);
-                return PTP_RC_GeneralError;
-	}
+	ret = parse_9301_tree (params, code, di);
 
+	xmlFreeDoc(code->doc);
 
-	ret = parse_9301_tree (params, docroot, di);
 	return ret;
 }
 
@@ -859,7 +910,7 @@ ptp_olympus_opensession (PTPParams* params, unsigned char**data, unsigned long *
 	ptp.Code   = PTP_OC_OLYMPUS_OpenSession;
 	ptp.Nparam = 0;
 	*len	   = 0;
-	*data       = NULL;
+	*data      = NULL;
 	ret=ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, &handler);
 	ptp_exit_recv_memory_handler (&handler, data, len);
 	return ret;

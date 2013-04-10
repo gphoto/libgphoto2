@@ -241,7 +241,7 @@
  * Direct PTP match required.
  * (libgphoto2)
  */
-#define DEVICE_FLAG_MATCH_PTP_INTERFACE		0x00800000
+#define DEVICE_FLAG_OLYMPUS_XML_WRAPPED		0x00800000
 /**
  * This flag is like DEVICE_FLAG_OGG_IS_UNKNOWN but for FLAC
  * files instead. Using the unknown filetype for FLAC files.

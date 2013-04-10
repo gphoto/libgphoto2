@@ -722,35 +722,41 @@ encode_command (xmlNodePtr inputnode, PTPContainer *ptp, unsigned char *data, in
 
 	sprintf(code,"c%04X", ptp->Code);
 	cmdnode 	= xmlNewChild (inputnode, NULL, (xmlChar*)code, NULL);
-	if (ptp->Nparam) {
-		xmlNodePtr	pnode;
 
-		switch (ptp->Nparam) {
-		case 1:
-			sprintf (code, "%08X", ptp->Param1);
-			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
-			break;
-		case 2:
-			sprintf (code, "p%08X", ptp->Param1);
-			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
-			sprintf (code, "p%08X", ptp->Param2);
-			pnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
-			break;
-		}
-	}
 	switch (ptp->Code) {
+	case 0x1014: { /* OK */
+		sprintf (code, "p%04X", ptp->Param1);
+		xmlNewChild (cmdnode, NULL, (xmlChar*)code, NULL);
+		break;
+	}
 	case 0x1016: {
+		/* FIXME: might still be wrong. */
 		/* We can directly byte encode the data we get from the PTP stack */
 		int i;
-		xmlNodePtr	vnode;
 		char *x = malloc (len*2+1);
 
 		for (i=0;i<len;i++)
 			sprintf(x+2*i,"%02x",data[i]);
-		vnode 	= xmlNewChild (cmdnode, NULL, (xmlChar*)"value", (xmlChar*)x);
+		xmlNewChild (cmdnode, NULL, (xmlChar*)"value", (xmlChar*)x);
 		free (x);
 		break;
 	}
+	default:
+		if (ptp->Nparam) {
+			switch (ptp->Nparam) {
+			case 1:
+				sprintf (code, "%08X", ptp->Param1);
+				xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
+				break;
+			case 2:
+				sprintf (code, "%08X", ptp->Param1);
+				xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
+				sprintf (code, "%08X", ptp->Param2);
+				xmlNewChild (cmdnode, NULL, (xmlChar*)"param", (xmlChar*)code);
+				break;
+			}
+		}
+		break;
 	}
 }
 
@@ -786,11 +792,15 @@ is_outer_operation (PTPParams* params, uint16_t opcode) {
 	int i;
 
 	GP_DEBUG("is_outer_operation %04x", opcode);
-	if (opcode == PTP_OC_OpenSession) return 1;
-	/*if (opcode == PTP_OC_GetDeviceInfo) return 1;*/
+	/* the ones we need before we can do getdeviceinfo */
+	if (opcode == PTP_OC_OpenSession)	return 1;
+	if (opcode == PTP_OC_SendObjectInfo)	return 1;
+	if (opcode == PTP_OC_SendObject)	return 1;
+	if (opcode == PTP_OC_GetDeviceInfo)	return 1;
+	if (opcode == PTP_OC_GetStorageIDs)	return 1;
 
+	/* all vendor ones are XML driven. */
 	if ((opcode & 0x8000) == 0x8000) return 0;
-	return 1;
 
 	/* Do nothing here, either do stuff in senddata, getdata or getresp,
 	 * which will get the PTPContainer req too. */
@@ -857,9 +867,14 @@ ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 
 	/* Remember the returned XML for getresp() for the PTP return code. */
 	params->olympus_reply = resxml;
-
-	/* Just put the XML blob as-is as data... It will be processed in ptp.c */
-	return putter->putfunc(params,putter->priv,strlen(resxml)+1,(unsigned char*)resxml, &written);
+	switch (ptp->Code) {
+	case PTP_OC_GetDevicePropDesc:
+		/* decode the XML ... reencode the binary presentation of the propdesc */
+		break;
+	default:
+		/* Just put the XML blob as-is as data... It will be processed in ptp.c */
+		return putter->putfunc(params,putter->priv,strlen(resxml)+1,(unsigned char*)resxml, &written);
+	}
 }
 
 static uint16_t

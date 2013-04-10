@@ -21,7 +21,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#undef OLYMPUS
+#define OLYMPUS
 
 #define _BSD_SOURCE
 #include "config.h"
@@ -272,25 +272,87 @@ translate_ptp_result (short result)
 	}
 }
 
+static void
+print_debug_deviceinfo (PTPParams*params, PTPDeviceInfo *di)
+{
+	unsigned int i;
+
+	GP_DEBUG ("Device info:");
+	GP_DEBUG ("Manufacturer: %s",di->Manufacturer);
+	GP_DEBUG ("  Model: %s", di->Model);
+	GP_DEBUG ("  device version: %s", di->DeviceVersion);
+	GP_DEBUG ("  serial number: '%s'",di->SerialNumber);
+	GP_DEBUG ("Vendor extension ID: 0x%08x",di->VendorExtensionID);
+	GP_DEBUG ("Vendor extension version: %d",di->VendorExtensionVersion);
+	GP_DEBUG ("Vendor extension description: %s",di->VendorExtensionDesc);
+	GP_DEBUG ("Functional Mode: 0x%04x",di->FunctionalMode);
+	GP_DEBUG ("PTP Standard Version: %d",di->StandardVersion);
+	GP_DEBUG ("Supported operations:");
+	for (i=0; i<di->OperationsSupported_len; i++)
+		GP_DEBUG ("  0x%04x", di->OperationsSupported[i]);
+	GP_DEBUG ("Events Supported:");
+	for (i=0; i<di->EventsSupported_len; i++)
+		GP_DEBUG ("  0x%04x", di->EventsSupported[i]);
+	GP_DEBUG ("Device Properties Supported:");
+	for (i=0; i<di->DevicePropertiesSupported_len; i++)
+		GP_DEBUG ("  0x%04x", di->DevicePropertiesSupported[i]);
+}
+
 void
 fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	CameraAbilities a;
+	PTPParams	*params = &camera->pl->params;
 
         gp_camera_get_abilities(camera, &a);
 
 	/* XML style Olympus E series control? */
-	if (	di->Manufacturer &&
-		!strcmp(di->Manufacturer,"OLYMPUS") &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_OLYMPUS_GetDeviceInfo)
+	if (	di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
+		(params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
 	) {
-		PTPDeviceInfo	di;
+		PTPDeviceInfo	ndi, newdi, *outerdi;
 		uint16_t	ret;
+		int		i;
 
-		ret = ptp_olympus_getdeviceinfo (&camera->pl->params, &di);
+		ret = ptp_getdeviceinfo (params, &params->outer_deviceinfo);
+		if (ret != PTP_RC_OK)
+			return;
+		outerdi = &params->outer_deviceinfo;
+
+		ret = ptp_olympus_getdeviceinfo (&camera->pl->params, &ndi);
 		if (ret != PTP_RC_OK)
 			return;
 
-		/* FIXME: do stuff */
+		/* Now merge the XML (inner) and outer (PictBridge) Deviceinfo. */
+		memcpy (&newdi, outerdi, sizeof(PTPDeviceInfo));
+
+		/* dup the strings */
+		if (outerdi->VendorExtensionDesc)	newdi.VendorExtensionDesc = strdup (outerdi->VendorExtensionDesc);
+		if (outerdi->Manufacturer)		newdi.Manufacturer = strdup (outerdi->Manufacturer);
+		if (outerdi->Model)			newdi.Model = strdup (outerdi->Model);
+		if (outerdi->DeviceVersion)		newdi.DeviceVersion = strdup (outerdi->DeviceVersion);
+		if (outerdi->SerialNumber)		newdi.SerialNumber = strdup (outerdi->SerialNumber);
+
+		/* Dup and merge the lists */
+#define DI_MERGE(x) \
+		newdi.x = malloc(sizeof(outerdi->x[0])*(ndi.x##_len + outerdi->x##_len));	\
+		for (i = 0; i < outerdi->x##_len ; i++) 					\
+			newdi.x[i] = outerdi->x[i];						\
+		for (i = 0; i < ndi.x##_len ; i++)						\
+			newdi.x[i+outerdi->x##_len] = ndi.x[i];					\
+		newdi.x##_len = ndi.x##_len + outerdi->x##_len;
+
+		DI_MERGE(OperationsSupported);
+		DI_MERGE(EventsSupported);
+		DI_MERGE(DevicePropertiesSupported);
+		DI_MERGE(CaptureFormats);
+		DI_MERGE(ImageFormats);
+
+		gp_log (GP_LOG_DEBUG, "olympus", "Dumping Olympus Deviceinfo");
+
+		print_debug_deviceinfo (&camera->pl->params, &newdi);
+		ptp_free_DI (di);
+		memcpy (di, &newdi, sizeof(newdi));
+		return;
 	}
 
 	/* for USB class matches on unknown cameras... */
@@ -917,13 +979,10 @@ static struct {
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
 
-#ifdef OLYMPUS
         /* Olympus wrap test code */
-	{"Olympus:X-925 (UMS mode)",      0x07b4, 0x0109, 0},
-	{"Olympus:E-520 (UMS mode)",      0x07b4, 0x0110, 0},
-	{"Olympus:E-410 (UMS mode)",      0x07b4, 0x0110, 0},
-	{"Olympus:E-410 (UMS 2 mode)",      0x07b4, 0x0118, 0},
-	{"Olympus:E-1 (UMS mode)",        0x07b4, 0x0102, 0},
+	{"Olympus:E series (Control)",	  0x07b4, 0x0110, PTP_OLYMPUS_XML},
+#if 0
+	{"Olympus:E-410 (UMS 2 mode)",    0x07b4, 0x0118, 0}, /* not XML wrapped */
 #endif
 
 	/* From VICTOR <viaaurea@yahoo.es> */
@@ -1616,14 +1675,6 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_product		= models[i].usb_product;
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
-#if 0 && defined(OLYMPUS)
-		if (	(models[i].usb_vendor  == 0x7b4) &&
-			(	(models[i].usb_product == 0x110) ||
-				(models[i].usb_product == 0x118)
-			)
-		)
-			a.port = GP_PORT_USB_SCSI;
-#endif
 		if (models[i].device_flags & PTP_CAP) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 
@@ -6162,16 +6213,27 @@ camera_init (Camera *camera, GPContext *context)
 	}
 #endif
 
+        for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
+            if ((a.usb_vendor == models[i].usb_vendor) &&
+                (a.usb_product == models[i].usb_product)){
+                params->device_flags = models[i].device_flags;
+                break;
+            }
+	    /* do not run the funny MTP stuff on the cameras for now */
+	    params->device_flags |= DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL;
+	    params->device_flags |= DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST;
+        }
+	/* map the libmtp flags to ours. Currently its just 1 flag. */
+        for (i = 0; i<sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+            if ((a.usb_vendor == mtp_models[i].usb_vendor) &&
+                (a.usb_product == mtp_models[i].usb_product)) {
+			params->device_flags = mtp_models[i].flags;
+                break;
+            }
+        }
+
+
 	switch (camera->port->type) {
-	case GP_PORT_USB_SCSI:
-#ifdef OLYMPUS
-		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
-		if (a.usb_vendor == 0x7b4) {
-			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
-			olympus_setup (params);
-		}
-#endif
-		break;
 	case GP_PORT_USB:
 		params->sendreq_func	= ptp_usb_sendreq;
 		params->senddata_func	= ptp_usb_senddata;
@@ -6182,16 +6244,10 @@ camera_init (Camera *camera, GPContext *context)
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
-#ifdef OLYMPUS
-		/* We hook our kind of ptp layer into the USB Mass Storage protocol */
-		if ((a.usb_vendor == 0x7b4) && (
-			(a.usb_product == 0x110) ||
-			(a.usb_product == 0x118)
-		)) {
-			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage Wrapped Mode.\n");
+		if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
+			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage XML Wrapped Mode.\n");
 			olympus_setup (params);
 		}
-#endif
 		break;
 	case GP_PORT_PTPIP: {
 		GPPortInfo	info;
@@ -6221,25 +6277,6 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	if (!params->maxpacketsize)
 		params->maxpacketsize = 64; /* assume USB 1.0 */
-
-        for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
-            if ((a.usb_vendor == models[i].usb_vendor) &&
-                (a.usb_product == models[i].usb_product)){
-                params->device_flags = models[i].device_flags;
-                break;
-            }
-	    /* do not run the funny MTP stuff on the cameras for now */
-	    params->device_flags |= DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL;
-	    params->device_flags |= DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST;
-        }
-	/* map the libmtp flags to ours. Currently its just 1 flag. */
-        for (i = 0; i<sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
-            if ((a.usb_vendor == mtp_models[i].usb_vendor) &&
-                (a.usb_product == mtp_models[i].usb_product)) {
-			params->device_flags = mtp_models[i].flags;
-                break;
-            }
-        }
 
 	/* Read configurable timeouts */
 #define XT(val,def) 					\
@@ -6311,11 +6348,7 @@ camera_init (Camera *camera, GPContext *context)
 	 * post init timeouts longer */
 	CR (gp_port_set_timeout (camera->port, normal_timeout));
 
-#if defined(OLYMPUS)
-	if ((a.usb_vendor == 0x7b4) && (
-		(a.usb_product == 0x110) ||
-		(a.usb_product == 0x118)
-	)) {
+	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 		unsigned char	*data;
 		unsigned long	len;
 		PTPObjectInfo	oi;
@@ -6341,7 +6374,6 @@ camera_init (Camera *camera, GPContext *context)
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus opensession\n");
 		ptp_olympus_opensession (params, &data, &len);
 	}
-#endif
 
 	/* Seems HP does not like getdevinfo outside of session
 	   although it's legal to do so */
@@ -6350,27 +6382,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	fixup_cached_deviceinfo (camera,&params->deviceinfo);
 
-	GP_DEBUG ("Device info:");
-	GP_DEBUG ("Manufacturer: %s",params->deviceinfo.Manufacturer);
-	GP_DEBUG ("  Model: %s", params->deviceinfo.Model);
-	GP_DEBUG ("  device version: %s", params->deviceinfo.DeviceVersion);
-	GP_DEBUG ("  serial number: '%s'",params->deviceinfo.SerialNumber);
-	GP_DEBUG ("Vendor extension ID: 0x%08x",params->deviceinfo.VendorExtensionID);
-	GP_DEBUG ("Vendor extension version: %d",params->deviceinfo.VendorExtensionVersion);
-	GP_DEBUG ("Vendor extension description: %s",params->deviceinfo.VendorExtensionDesc);
-	GP_DEBUG ("Functional Mode: 0x%04x",params->deviceinfo.FunctionalMode);
-	GP_DEBUG ("PTP Standard Version: %d",params->deviceinfo.StandardVersion);
-	GP_DEBUG ("Supported operations:");
-	for (i=0; i<params->deviceinfo.OperationsSupported_len; i++)
-		GP_DEBUG ("  0x%04x", params->deviceinfo.OperationsSupported[i]);
-	GP_DEBUG ("Events Supported:");
-	for (i=0; i<params->deviceinfo.EventsSupported_len; i++)
-		GP_DEBUG ("  0x%04x", params->deviceinfo.EventsSupported[i]);
-	GP_DEBUG ("Device Properties Supported:");
-	for (i=0; i<params->deviceinfo.DevicePropertiesSupported_len;
-		i++)
-		GP_DEBUG ("  0x%04x", params->deviceinfo.DevicePropertiesSupported[i]);
-
+	print_debug_deviceinfo(params, &params->deviceinfo);
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 #if 0
