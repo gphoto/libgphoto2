@@ -2885,6 +2885,7 @@ uint16_t ptp_android_sendpartialobject (PTPParams *params, uint32_t handle,
 uint16_t ptp_olympus_getdeviceinfo (PTPParams*, PTPDeviceInfo*);
 #define ptp_olympus_setcameracontrolmode(params,p1) ptp_generic_no_data (params, PTP_OC_OLYMPUS_SetCameraControlMode, 1, p1);
 uint16_t ptp_olympus_opensession (PTPParams*, unsigned char**, unsigned long *);
+#define ptp_olympus_capture(params,p1) ptp_generic_no_data (params, PTP_OC_OLYMPUS_Capture, 1, p1);
 uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned long *);
 
 /* Non PTP protocol functions */

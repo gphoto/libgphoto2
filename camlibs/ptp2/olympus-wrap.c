@@ -398,6 +398,9 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	return PTP_RC_OK;
 }
 
+static char* generate_event_OK_xml(PTPParams *params, PTPContainer *ptp);
+static int parse_event_xml(PTPParams *params, const char *txt, PTPContainer *resp);
+
 static int
 olympus_xml_transfer (PTPParams *params,
 	char *cmdxml, char **inxml
@@ -415,8 +418,57 @@ olympus_xml_transfer (PTPParams *params,
 		GP_DEBUG("... checking camera for events ..."); 
 		ret = params->event_check(outerparams, &ptp2);
 		if (ret == PTP_RC_OK) {
+			char *evxml;
+
 			GP_DEBUG("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
+
+			if (ptp2.Code != PTP_EC_RequestObjectTransfer) 
+				goto skip;
+			newhandle = ptp2.Param1;
+			ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
+			if (ret != PTP_RC_OK)
+				return ret;
+			GP_DEBUG("got new file: %s", oi.Filename);
+			ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
+			if (ret != PTP_RC_OK)
+				return ret;
+			evxml = malloc (oi.ObjectCompressedSize + 1);
+			memcpy (evxml, resxml, oi.ObjectCompressedSize);
+			(evxml)[oi.ObjectCompressedSize] = 0x00;
+
+			GP_DEBUG("file content: %s", evxml);
+
+			parse_event_xml (params, evxml, &ptp2);
+			/* parse it */
+
+			evxml = generate_event_OK_xml(params, &ptp2);
+
+			GP_DEBUG("... sending XML event reply to camera ... "); 
+			memset (&ptp2, 0 , sizeof (ptp2));
+			ptp2.Code = PTP_OC_SendObjectInfo;
+			ptp2.Nparam = 1;
+			ptp2.Param1 = 0x80000001;
+
+			memset (&oi, 0, sizeof (oi));
+			oi.ObjectFormat		= PTP_OFC_Script;
+			oi.StorageID 		= 0x80000001;
+			oi.Filename 		= "HRSPONSE.X3C";
+			oi.ObjectCompressedSize	= strlen(evxml);
+			size = ptp_pack_OI(params, &oi, &oidata);
+			res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+			if (res != PTP_RC_OK)
+				return res;
+			free(oidata);
+			/*handle = ptp2.Param3; ... we do not use the returned handle and leave the file on camera. */
+
+			ptp2.Code = PTP_OC_SendObject;
+			ptp2.Nparam = 0;
+			res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(evxml), (unsigned char**)&evxml, NULL);
+			if (res != PTP_RC_OK)
+				return res;
+			continue;
 		}
+	skip:
 
 		GP_DEBUG("... sending XML request to camera ... "); 
 		memset (&ptp2, 0 , sizeof (ptp2));
@@ -475,7 +527,7 @@ olympus_xml_transfer (PTPParams *params,
 }
 
 static int
-traverse_tree (int depth, xmlNodePtr node) {
+traverse_tree (PTPParams *params, int depth, xmlNodePtr node) {
 	xmlNodePtr	next;
 	xmlChar		*xchar;
 	int n;
@@ -495,7 +547,7 @@ traverse_tree (int depth, xmlNodePtr node) {
 		fprintf(stderr,"%selements %d\n", xx,n);
 		xchar = xmlNodeGetContent (next);
 		fprintf(stderr,"%scontent %s\n", xx,xchar);
-		traverse_tree (depth+1,xmlFirstElementChild (next));
+		traverse_tree (params, depth+1,xmlFirstElementChild (next));
 	} while ((next = xmlNextElementSibling (next)));
 	return TRUE;
 }
@@ -606,14 +658,191 @@ xnext:
 	return TRUE;
 }
 
-#if 0
 static int
-parse_1014_tree (xmlNodePtr node) {
-	PTPDevicePropDesc	dpd;
+parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropertyValue *propval) {
+	switch (type) {
+	case 6: { /*UINT32*/
+		unsigned int x;
+		if (!sscanf(str,"%08x", &x)) {
+			ptp_debug( params, "could not parse uint32 %s", str);
+			return PTP_RC_GeneralError;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->u32 = x;
+		break;
+	}
+	case 5: { /*INT32*/
+		int x;
+		if (!sscanf(str,"%08x", &x)) {
+			ptp_debug( params, "could not parse int32 %s", str);
+			return PTP_RC_GeneralError;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->i32 = x;
+		break;
+	}
+	case 4: { /*UINT16*/
+		unsigned int x;
+		if (!sscanf(str,"%04x", &x)) {
+			ptp_debug( params, "could not parse uint16 %s", str);
+			return PTP_RC_GeneralError;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->u16 = x;
+		break;
+	}
+	case 3: { /*INT16*/
+		int x;
+		if (!sscanf(str,"%04x", &x)) {
+			ptp_debug( params, "could not parse int16 %s", str);
+			return PTP_RC_GeneralError;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->i16 = x;
+		break;
+	}
+	case 2: { /*UINT8*/
+		unsigned int x;
+		if (!sscanf(str,"%02x", &x)) {
+			ptp_debug( params, "could not parse uint8 %s", str);
+			return PTP_RC_GeneralError;
+		}
+		ptp_debug( params, "\t%d", x);
+		propval->u8 = x;
+		break;
+	}
+	case 1: { /*INT8*/
+		int x;
+		if (!sscanf(str,"%02x", &x)) {
+			ptp_debug( params, "could not parse int8 %s", str);
+			return PTP_RC_GeneralError;
+		} 
+		ptp_debug( params, "\t%d", x);
+		propval->i8 = x;
+		break;
+	}
+	case 65535: { /* string */
+		int len;
 
-	return parse_propdesc (xmlFirstElementChild (node), &dpd);
+		/* ascii ptp string, 1 byte length, little endian 16 bit chars */
+		if (sscanf(str,"%02x", &len)) {
+			int i;
+			char *xstr = malloc(len+1);
+			for (i=0;i<len;i++) {
+				int xc;
+				if (sscanf(str+2+i*4,"%04x", &xc)) {
+					int cx;
+
+					cx = ((xc>>8) & 0xff) | ((xc & 0xff) << 8);
+					xstr[i] = cx;
+				}
+				xstr[len] = 0;
+			}
+			ptp_debug( params, "\t%s", xstr);
+			propval->str = xstr;
+			break;
+		}
+		ptp_debug( params, "string %s not parseable!", str);
+		return PTP_RC_GeneralError;
+	}
+	case 7: /*INT64*/
+	case 8: /*UINT64*/
+	case 9: /*INT128*/
+	case 10: /*UINT128*/
+	default:
+		ptp_debug( params, "unhandled data type %d!", type);
+		return PTP_RC_GeneralError;
+	}
+	return PTP_RC_OK;
 }
 
+static int
+parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd) {
+	xmlNodePtr next;
+	int type = -1;
+
+	dpd->FormFlag	= PTP_DPFF_None;
+	dpd->GetSet	= PTP_DPGS_Get;
+	next = xmlFirstElementChild (node);
+	do {
+		if (!strcmp((char*)next->name,"type")) {	/* propdesc.DataType */
+			if (!sscanf((char*)xmlNodeGetContent (next), "%04x", &type)) {
+				ptp_debug( params, "\ttype %s not parseable?",xmlNodeGetContent (next));
+				return 0;
+			}
+			ptp_debug( params, "type 0x%x", type);
+			dpd->DataType = type;
+			continue;
+		}
+		if (!strcmp((char*)next->name,"attribute")) {	/* propdesc.GetSet */
+			int attr;
+
+			if (!sscanf((char*)xmlNodeGetContent (next), "%02x", &attr)) {
+				ptp_debug( params, "\tattr %s not parseable",xmlNodeGetContent (next));
+				return 0;
+			}
+			ptp_debug( params, "attribute 0x%x", attr);
+			dpd->GetSet = attr;
+			continue;
+		}
+		if (!strcmp((char*)next->name,"default")) {	/* propdesc.FactoryDefaultValue */
+			ptp_debug( params, "default value");
+			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->FactoryDefaultValue);
+			continue;
+		}
+		if (!strcmp((char*)next->name,"value")) {	/* propdesc.CurrentValue */
+			ptp_debug( params, "current value");
+			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->CurrentValue);
+			continue;
+		}
+		if (!strcmp((char*)next->name,"enum")) {	/* propdesc.FORM.Enum */
+			int n,i;
+			char *s;
+
+			ptp_debug( params, "enum");
+			dpd->FormFlag = PTP_DPFF_Enumeration;
+			s = (char*)xmlNodeGetContent (next);
+			n = 0;
+			do {
+				s = strchr(s,' ');
+				if (s) s++;
+				n++;
+			} while (s);
+			dpd->FORM.Enum.NumberOfValues = n;
+			dpd->FORM.Enum.SupportedValue = malloc (n * sizeof(PTPPropertyValue));
+			s = (char*)xmlNodeGetContent (next);
+			i = 0;
+			do {
+				parse_9301_value (params, s, type, &dpd->FORM.Enum.SupportedValue[i]); /* should turn ' ' into \0? */
+				i++;
+				s = strchr(s,' ');
+				if (s) s++;
+			} while (s && (i<n));
+			continue;
+		}
+		if (!strcmp((char*)next->name,"range")) {	/* propdesc.FORM.Enum */
+			char *s = (char*)xmlNodeGetContent (next);
+			dpd->FormFlag = PTP_DPFF_Range;
+			ptp_debug( params, "range");
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MinimumValue); /* should turn ' ' into \0? */
+			s = strchr(s,' ');
+			if (!s) continue;
+			s++;
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MaximumValue); /* should turn ' ' into \0? */
+			s = strchr(s,' ');
+			if (!s) continue;
+			s++;
+			parse_9301_value (params, s, type, &dpd->FORM.Range.StepSize); /* should turn ' ' into \0? */
+
+			continue;
+		}
+		ptp_debug (params, "\tpropdescvar: %s", next->name);
+		traverse_tree (params, 3, next);
+	} while ((next = xmlNextElementSibling (next)));
+	return PTP_RC_OK;
+}
+
+#if 0
 static int
 parse_1015_tree (xmlNodePtr node, uint16_t type) {
 	PTPPropertyValue	propval;
@@ -669,14 +898,28 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	case 0x1015: return parse_1015_tree ( next , PTP_DTC_UINT32);
 #endif
 	default:
-		return traverse_tree (0, next);
+		return traverse_tree (params, 0, next);
 	}
 	return FALSE;
 }
 
 static int
 traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
-	return traverse_tree (0, node);
+	int evt;
+	xmlNodePtr	next = xmlFirstElementChild (node);
+
+	if (!next) {
+		gp_log (GP_LOG_ERROR, "olympus","no nodes below input.\n");
+		return FALSE;
+	}
+
+	if (!sscanf((char*)next->name,"e%x",&evt)) {
+		gp_log (GP_LOG_ERROR, "olympus","expected event. got %s\n", next->name);
+		return FALSE;
+	}
+	resp->Code = evt;
+	/* FIXME: decode content and inject into PTP event queue. */
+	return traverse_tree (params, 0, node);
 }
 
 static int
@@ -703,6 +946,27 @@ traverse_x3c_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 }
 
 static int
+traverse_x3c_event_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
+	xmlNodePtr	next;
+
+	if (!node)
+		return FALSE;
+	if (strcmp((char*)node->name,"x3c")) {
+		gp_log (GP_LOG_ERROR, "olympus","node is not x3c, but %s\n", node->name);
+		return FALSE;
+	}
+	if (xmlChildElementCount(node) != 1) {
+		gp_log (GP_LOG_ERROR, "olympus","x3c: expected 1 child, got %ld\n", xmlChildElementCount(node));
+		return FALSE;
+	}
+	next = xmlFirstElementChild (node);
+	if (!strcmp((char*)next->name, "input"))
+		return traverse_input_tree (params, next, resp); /* event */
+	gp_log (GP_LOG_ERROR, "olympus","unknown name %s below x3c\n", next->name);
+	return FALSE;
+}
+
+static int
 parse_xml(PTPParams *params, const char *txt, PTPContainer *resp) {
 	xmlDocPtr	docin;
 	xmlNodePtr	docroot;
@@ -712,6 +976,18 @@ parse_xml(PTPParams *params, const char *txt, PTPContainer *resp) {
 	docroot = xmlDocGetRootElement (docin);
 	if (!docroot) return FALSE;
 	return traverse_x3c_tree (params, docroot, resp);
+}
+
+static int
+parse_event_xml(PTPParams *params, const char *txt, PTPContainer *resp) {
+	xmlDocPtr	docin;
+	xmlNodePtr	docroot;
+
+	docin = xmlReadMemory (txt, strlen(txt), "http://gphoto.org/", "utf-8", 0);
+	if (!docin) return FALSE;
+	docroot = xmlDocGetRootElement (docin);
+	if (!docroot) return FALSE;
+	return traverse_x3c_event_tree (params, docroot, resp);
 }
 
 static void
@@ -760,6 +1036,40 @@ encode_command (xmlNodePtr inputnode, PTPContainer *ptp, unsigned char *data, in
 	}
 }
 
+static char*
+generate_event_OK_xml(PTPParams *params, PTPContainer *ptp) {
+	xmlDocPtr	docout;
+	xmlChar		*output;
+	xmlNsPtr	outns;
+	int		len;
+	xmlNodePtr	x3cnode, inputnode;
+	char		buf[10];
+
+	/* 
+	"HRSPONSE.X3C" ... sent back to camera after receiving an event. 
+	<output><result>2001</result><ec102/></output
+	 */
+
+	docout 		= xmlNewDoc ((xmlChar*)"1.0");
+	x3cnode		= xmlNewDocNode (docout, NULL, (xmlChar*)"x3c", NULL);
+	outns 		= xmlNewNs (x3cnode,(xmlChar*)"http://www1.olympus-imaging.com/ww/x3c",NULL);
+	inputnode 	= xmlNewChild (x3cnode, NULL, (xmlChar*)"output", NULL);
+
+	sprintf (buf,"e%04X", ptp->Code);
+
+	xmlNewChild (inputnode,  NULL, (xmlChar*)"result", (xmlChar*)"2001");
+	xmlNewChild (inputnode,  NULL, (xmlChar*)buf, NULL);
+
+	xmlDocSetRootElement (docout, x3cnode);
+	xmlDocDumpMemory (docout, &output, &len);
+
+	gp_log (GP_LOG_DEBUG, "olympus", "generated xml is:");
+	gp_log (GP_LOG_DEBUG, "olympus", "%s", output);
+
+	/* NOTE: Windows driver generates XML with CRLF, Unix just creates XML with LF.
+	 * Olympus E-410 does not seem to care. */
+	return (char*)output;
+}
 static char*
 generate_xml(PTPParams *params, PTPContainer *ptp, unsigned char *data, int len) {
 	xmlDocPtr	docout;
@@ -818,7 +1128,8 @@ ums_wrap2_sendreq (PTPParams* params, PTPContainer* req)
 	if (is_outer_operation (params,req->Code))
 		return ums_wrap_sendreq (params,req);
 	/* We do stuff in either senddata, getdata or getresp, not here. */
-	params->olympus_cmd = NULL;
+	params->olympus_cmd   = NULL;
+	params->olympus_reply = NULL;
 	return PTP_RC_OK;
 }
 
@@ -868,9 +1179,14 @@ ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	/* Remember the returned XML for getresp() for the PTP return code. */
 	params->olympus_reply = resxml;
 	switch (ptp->Code) {
-	case PTP_OC_GetDevicePropDesc:
+#if 0
+	case PTP_OC_GetDevicePropDesc: {
+		PTPPropertyDesc	dpd;
+		parse_9301_propdesc (xmlFirstElementChild (next), &dpd);
 		/* decode the XML ... reencode the binary presentation of the propdesc */
 		break;
+	}
+#endif
 	default:
 		/* Just put the XML blob as-is as data... It will be processed in ptp.c */
 		return putter->putfunc(params,putter->priv,strlen(resxml)+1,(unsigned char*)resxml, &written);

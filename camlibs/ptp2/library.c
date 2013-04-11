@@ -6381,6 +6381,15 @@ camera_init (Camera *camera, GPContext *context)
 	fixup_cached_deviceinfo (camera,&params->deviceinfo);
 
 	print_debug_deviceinfo(params, &params->deviceinfo);
+
+	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
+		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture\n");
+		ptp_olympus_capture (params, 3);
+		sleep(1);
+		ptp_olympus_capture (params, 0);
+		/* 0x1a000002 object id */
+	}
+
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 #if 0
