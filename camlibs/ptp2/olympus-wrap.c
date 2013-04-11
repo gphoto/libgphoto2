@@ -885,7 +885,8 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	gp_log (GP_LOG_DEBUG ,"olympus", "cmd is 0x%04x", cmd);
 	switch (cmd) {
 	/* reviewed OK. */
-	case 0x9101: return TRUE;
+	case PTP_OC_OLYMPUS_Capture:	return TRUE;
+	case PTP_OC_GetDevicePropDesc:	return TRUE;
 
 	/* TODO */
 #if 0
