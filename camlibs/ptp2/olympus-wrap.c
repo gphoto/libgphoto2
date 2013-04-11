@@ -416,7 +416,7 @@ olympus_xml_transfer (PTPParams *params,
 	GP_DEBUG("olympus_xml_transfer");
 	while (1) {
 		GP_DEBUG("... checking camera for events ..."); 
-		ret = params->event_check(outerparams, &ptp2);
+		ret = outerparams->event_check(outerparams, &ptp2);
 		if (ret == PTP_RC_OK) {
 			char *evxml;
 
@@ -501,7 +501,7 @@ olympus_xml_transfer (PTPParams *params,
 			return res;
 
 		GP_DEBUG("... waiting for camera ..."); 
-		ret = params->event_wait(outerparams, &ptp2);
+		ret = outerparams->event_wait(outerparams, &ptp2);
 		if (ret != PTP_RC_OK)
 			return ret;
 		GP_DEBUG("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
@@ -905,21 +905,48 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 
 static int
 traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
-	int evt;
+	int		evt, curpar = 0;
 	xmlNodePtr	next = xmlFirstElementChild (node);
+	uint32_t	pars[5];
+
 
 	if (!next) {
 		gp_log (GP_LOG_ERROR, "olympus","no nodes below input.\n");
 		return FALSE;
 	}
 
-	if (!sscanf((char*)next->name,"e%x",&evt)) {
-		gp_log (GP_LOG_ERROR, "olympus","expected event. got %s\n", next->name);
-		return FALSE;
+	resp->Code = 0;
+	while (next) {
+		if (sscanf((char*)next->name,"e%x",&evt)) {
+			resp->Code = evt;
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		if (!strcmp((char*)next->name,"param")) {
+			int x;
+			if (sscanf((char*)xmlNodeGetContent(next),"%x", &x)) {
+				if (curpar < sizeof(pars)/sizeof(pars[0]))
+					pars[curpar++] = x;
+				else
+					gp_log (GP_LOG_ERROR, "olympus", "ignore superflous argument %s/%x", (char*)xmlNodeGetContent(next), x);
+			}
+			next = xmlNextElementSibling (next);
+			continue;
+		}
+		gp_log (GP_LOG_ERROR, "olympus", "parsing event input node, unknown node %s", (char*)next->name);
+		next = xmlNextElementSibling (next);
 	}
-	resp->Code = evt;
+	resp->Nparam = curpar;
+	switch (curpar) {
+	case 5: resp->Param5 = pars[4];
+	case 4: resp->Param4 = pars[3];
+	case 3: resp->Param4 = pars[2];
+	case 2: resp->Param4 = pars[1];
+	case 1: resp->Param4 = pars[0];
+	case 0: break;
+	}
 	/* FIXME: decode content and inject into PTP event queue. */
-	return traverse_tree (params, 0, node);
+	return TRUE;
 }
 
 static int
@@ -1122,6 +1149,80 @@ is_outer_operation (PTPParams* params, uint16_t opcode) {
 }
 
 static uint16_t
+ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
+{
+	PTPContainer	ptp2;
+	int		res;
+	PTPObjectInfo	oi;
+        unsigned char	*resxml, *oidata = NULL;
+        uint32_t	size, newhandle;
+	uint16_t	ret;
+	PTPParams	*outerparams = params->outer_params;
+
+	GP_DEBUG("ums_wrap2_event_check");
+
+	ret = params->event_check(outerparams, &ptp2);
+	if (ret == PTP_RC_OK) {
+		char *evxml;
+
+		GP_DEBUG("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
+
+		if (ptp2.Code != PTP_EC_RequestObjectTransfer) {
+			memcpy (req, &ptp2, sizeof(ptp2));
+			return PTP_RC_OK;
+		}
+
+		newhandle = ptp2.Param1;
+		ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
+		if (ret != PTP_RC_OK)
+			return ret;
+		GP_DEBUG("got new file: %s", oi.Filename);
+		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
+		if (ret != PTP_RC_OK)
+			return ret;
+		evxml = malloc (oi.ObjectCompressedSize + 1);
+		memcpy (evxml, resxml, oi.ObjectCompressedSize);
+		(evxml)[oi.ObjectCompressedSize] = 0x00;
+
+		GP_DEBUG("file content: %s", evxml);
+
+		/* FIXME: handle the case where we get a non X3C file, like during capture */
+
+		/* parse it */
+		parse_event_xml (params, evxml, &ptp2);
+
+		/* generate reply */
+		evxml = generate_event_OK_xml(params, &ptp2);
+
+		GP_DEBUG("... sending XML event reply to camera ... "); 
+		memset (&ptp2, 0 , sizeof (ptp2));
+		ptp2.Code = PTP_OC_SendObjectInfo;
+		ptp2.Nparam = 1;
+		ptp2.Param1 = 0x80000001;
+
+		memset (&oi, 0, sizeof (oi));
+		oi.ObjectFormat		= PTP_OFC_Script;
+		oi.StorageID 		= 0x80000001;
+		oi.Filename 		= "HRSPONSE.X3C";
+		oi.ObjectCompressedSize	= strlen(evxml);
+		size = ptp_pack_OI(params, &oi, &oidata);
+		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+		if (res != PTP_RC_OK)
+			return res;
+		free(oidata);
+		/*handle = ptp2.Param3; ... we do not use the returned handle and leave the file on camera. */
+
+		ptp2.Code = PTP_OC_SendObject;
+		ptp2.Nparam = 0;
+		res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(evxml), (unsigned char**)&evxml, NULL);
+		if (res != PTP_RC_OK)
+			return res;
+		return PTP_RC_OK;
+	}
+	return PTP_RC_OK;
+}
+
+static uint16_t
 ums_wrap2_sendreq (PTPParams* params, PTPContainer* req)
 {
 	GP_DEBUG("ums_wrap2_sendreq");
@@ -1224,9 +1325,8 @@ olympus_setup (PTPParams *params) {
 	params->getdata_func	= ums_wrap2_getdata;
 	params->sendreq_func	= ums_wrap2_sendreq;
 
-	/* events come just as PTP events */
-	params->event_check	= ptp_usb_event_check;
-	params->event_wait	= ptp_usb_event_wait;
+	params->event_check	= ums_wrap2_event_check;
+	params->event_wait	= ums_wrap2_event_check;
 
 	params->outer_params = outerparams = malloc (sizeof(PTPParams));
 	memcpy(outerparams, params, sizeof(PTPParams));

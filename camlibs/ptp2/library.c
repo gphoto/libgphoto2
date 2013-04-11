@@ -6389,9 +6389,21 @@ camera_init (Camera *camera, GPContext *context)
 
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture\n");
-		ptp_olympus_capture (params, 3);
-		sleep(1);
-		ptp_olympus_capture (params, 0);
+		ret = ptp_olympus_capture (params, 3);
+		while (1) {
+			PTPContainer event;
+
+			ret = ptp_check_event(params);
+			if (ret != PTP_RC_OK) break;
+
+			event.Code = 0;
+			while (ptp_get_one_event (params, &event)) {
+				gp_log (GP_LOG_DEBUG, "olympus", "got event 0x%x (param1=%x)", event.Code, event.Param1);
+				if (event.Code == PTP_EC_Olympus_CaptureComplete) break;
+			}
+			if (event.Code == PTP_EC_Olympus_CaptureComplete) break;
+		}
+		ret = ptp_olympus_capture (params, 0);
 		/* 0x1a000002 object id */
 	}
 
