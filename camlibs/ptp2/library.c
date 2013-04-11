@@ -2281,7 +2281,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	if (ret != PTP_RC_OK) { /* e.g. out of focus gets reported here. */
 		report_result(context, ret, params->deviceinfo.VendorExtensionID);
-		return ret;
+		return translate_ptp_result (ret);
 	}
 
 	newobject = 0xffff0001;
