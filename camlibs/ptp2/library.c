@@ -2273,13 +2273,16 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 
-	newobject = 0xffff0001;
-	while (ptp_nikon_device_ready(params) != PTP_RC_OK) {
+	while ((ret = ptp_nikon_device_ready(params)) == PTP_RC_DeviceBusy) {
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
 		usleep(100*1000); /* 0.1 seconds */
 	}
 
+	if (ret != PTP_RC_OK) /* e.g. out of focus gets reported here. */
+		return ret;
+
+	newobject = 0xffff0001;
 	while (1) {
 		PTPContainer	event;
 
