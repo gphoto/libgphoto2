@@ -631,13 +631,15 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 }
 
 static int
-parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd) {
-	xmlNodePtr next;
+parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd) {
 	int type = -1;
 
+	if (!next)
+		return PTP_RC_GeneralError;
+
+	ptp_debug (params, "parse_9301_propdesc");
 	dpd->FormFlag	= PTP_DPFF_None;
 	dpd->GetSet	= PTP_DPGS_Get;
-	next = xmlFirstElementChild (node);
 	do {
 		if (!strcmp((char*)next->name,"type")) {	/* propdesc.DataType */
 			if (!sscanf((char*)xmlNodeGetContent (next), "%04x", &type)) {
@@ -738,7 +740,7 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 
 		sscanf((char*)next->name, "p%04x", &p);
 		ptp_debug( params, "prop %s / 0x%04x", next->name, p);
-		parse_9301_propdesc (params, next, &dpd);
+		parse_9301_propdesc (params, xmlFirstElementChild (next), &dpd);
 		di->DevicePropertiesSupported[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
@@ -1668,25 +1670,9 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 {
 	PTPContainer ptp;
 	uint16_t ret;
-	unsigned int len, i;
+	unsigned int len;
 	unsigned char* dpd=NULL;
 
-	for (i=0;i<params->nrofdeviceproperties;i++) {
-		if (params->deviceproperties[i].prop == propcode) {
-			if (params->deviceproperties[i].timestamp + PROPCACHE_TIMEOUT < time(NULL)) {
-				duplicate_DevicePropDesc (devicepropertydesc, &params->deviceproperties[i].desc);
-				return PTP_RC_OK;
-			}
-			break;
-		}
-	}
-	if (i == params->nrofdeviceproperties) {
-		if (i == 0)
-			params->deviceproperties = malloc (sizeof(params->deviceproperties[0]));
-		else
-			params->deviceproperties = realloc (params->deviceproperties, (i+1)*sizeof(params->deviceproperties[0]));
-		params->nrofdeviceproperties++;
-	}
 
 	PTP_CNT_INIT(ptp);
 	ptp.Code   = PTP_OC_GetDevicePropDesc;
@@ -1694,14 +1680,37 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	ptp.Nparam = 1;
 	len        = 0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpd, &len);
-	if (ret == PTP_RC_OK) ptp_unpack_DPD(params, dpd, devicepropertydesc, len);
+
+	if (ret == PTP_RC_OK) {
+		if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
+#ifdef HAVE_LIBXML2
+			xmlNodePtr	code;
+
+			ret = ptp_olympus_parse_output_xml (params,(char*)dpd,len,&code);
+			if (ret == PTP_RC_OK) {
+				int x;
+
+				if (	(xmlChildElementCount(code) == 1) &&
+					(!strcmp((char*)code->name,"c1014"))
+				) {
+					code = xmlFirstElementChild (code);
+
+					if (	(sscanf((char*)code->name,"p%x", &x)) &&
+						(x == propcode)
+					) {
+						ret = parse_9301_propdesc (params, xmlFirstElementChild (code), devicepropertydesc);
+						xmlFreeDoc(code->doc);
+					}
+				}
+			} else {
+				ptp_debug(params,"failed to parse output xml, ret %x?", ret);
+			}
+#endif
+		} else {
+			ptp_unpack_DPD(params, dpd, devicepropertydesc, len);
+		}
+	}
 	free(dpd);
-
-	duplicate_DevicePropDesc (devicepropertydesc, &params->deviceproperties[i].desc);
-	params->deviceproperties[i].prop = propcode;
-	params->deviceproperties[i].timestamp = time(NULL);
-
-	duplicate_PropertyValue(&params->deviceproperties[i].value, &devicepropertydesc->CurrentValue, params->deviceproperties[i].desc.DataType);
 	return ret;
 }
 
