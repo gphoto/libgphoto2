@@ -2515,6 +2515,58 @@ _timeout_passed(struct timeval *start, int timeout) {
 	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
 }
 
+static int
+camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
+		GPContext *context)
+{
+	uint16_t	ret;
+	PTPParams	*params = &camera->pl->params;
+
+	gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture\n");
+
+	ret = ptp_olympus_capture (params, 3);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+
+	while (1) {
+		PTPContainer event;
+
+		ret = ptp_check_event(params);
+		if (ret != PTP_RC_OK)
+			break;
+
+		event.Code = 0;
+		while (ptp_get_one_event (params, &event)) {
+			gp_log (GP_LOG_DEBUG, "olympus", "capture 1: got event 0x%x (param1=%x)", event.Code, event.Param1);
+			if (event.Code == PTP_EC_Olympus_CaptureComplete) break;
+		}
+		if (event.Code == PTP_EC_Olympus_CaptureComplete)
+			break;
+	}
+	ret = ptp_olympus_capture (params, 0);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	/* 0x1a000002 object id */
+	while (1) {
+		PTPContainer event;
+
+		ret = ptp_check_event(params);
+		if (ret != PTP_RC_OK) break;
+
+		event.Code = 0;
+		while (ptp_get_one_event (params, &event)) {
+			gp_log (GP_LOG_DEBUG, "olympus", "capture 2: got event 0x%x (param1=%x)", event.Code, event.Param1);
+			if (event.Code == PTP_EC_RequestObjectTransfer) {
+				PTPObject *ob;
+				ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			}
+		}
+	}
+	strcpy(path->folder,"/");
+	strcpy(path->name,"notyet");
+	return GP_OK;
+
+}
 /* To use:
  *	gphoto2 --set-config capture=on --config --capture-image
  *	gphoto2  -f /store_80000001 -p 1
@@ -2769,6 +2821,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			return camera_nikon_capture (camera, type, path, context);
 	}
+
+	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
+		return camera_olympus_xml_capture (camera, type, path, context);
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
 	) {
@@ -6386,26 +6442,6 @@ camera_init (Camera *camera, GPContext *context)
 	fixup_cached_deviceinfo (camera,&params->deviceinfo);
 
 	print_debug_deviceinfo(params, &params->deviceinfo);
-
-	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture\n");
-		ret = ptp_olympus_capture (params, 3);
-		while (1) {
-			PTPContainer event;
-
-			ret = ptp_check_event(params);
-			if (ret != PTP_RC_OK) break;
-
-			event.Code = 0;
-			while (ptp_get_one_event (params, &event)) {
-				gp_log (GP_LOG_DEBUG, "olympus", "got event 0x%x (param1=%x)", event.Code, event.Param1);
-				if (event.Code == PTP_EC_Olympus_CaptureComplete) break;
-			}
-			if (event.Code == PTP_EC_Olympus_CaptureComplete) break;
-		}
-		ret = ptp_olympus_capture (params, 0);
-		/* 0x1a000002 object id */
-	}
 
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
