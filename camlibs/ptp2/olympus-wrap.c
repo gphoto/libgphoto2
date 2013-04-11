@@ -884,6 +884,10 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	}
 	gp_log (GP_LOG_DEBUG ,"olympus", "cmd is 0x%04x", cmd);
 	switch (cmd) {
+	/* reviewed OK. */
+	case 0x9101: return TRUE;
+
+	/* TODO */
 #if 0
 	case 0x9301: return parse_9301_tree (next);
 #endif
@@ -1158,11 +1162,11 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
         uint32_t	size, newhandle;
 	uint16_t	ret;
 	PTPParams	*outerparams = params->outer_params;
-	char *evxml;
+	char		*evxml;
 
 	GP_DEBUG("ums_wrap2_event_check");
 
-	ret = params->event_check(outerparams, &ptp2);
+	ret = outerparams->event_check(outerparams, &ptp2);
 	if (ret != PTP_RC_OK)
 		return ret;
 
@@ -1175,6 +1179,11 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 	}
 
 	newhandle = ptp2.Param1;
+	if ((newhandle & 0xff000000) != 0x1e000000) {
+		gp_log (GP_LOG_DEBUG, "olympus", "event 0x%04x, handle 0x%08x received, no XML event, just passing on", ptp2.Code, ptp2.Param1);
+		memcpy (req, &ptp2, sizeof(ptp2));
+		return PTP_RC_OK;
+	}
 	ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
 	if (ret != PTP_RC_OK)
 		return ret;
