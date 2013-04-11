@@ -1158,67 +1158,72 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
         uint32_t	size, newhandle;
 	uint16_t	ret;
 	PTPParams	*outerparams = params->outer_params;
+	char *evxml;
 
 	GP_DEBUG("ums_wrap2_event_check");
 
 	ret = params->event_check(outerparams, &ptp2);
-	if (ret == PTP_RC_OK) {
-		char *evxml;
+	if (ret != PTP_RC_OK)
+		return ret;
 
-		GP_DEBUG("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
+	GP_DEBUG("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
 
-		if (ptp2.Code != PTP_EC_RequestObjectTransfer) {
-			memcpy (req, &ptp2, sizeof(ptp2));
-			return PTP_RC_OK;
-		}
-
-		newhandle = ptp2.Param1;
-		ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
-		if (ret != PTP_RC_OK)
-			return ret;
-		GP_DEBUG("got new file: %s", oi.Filename);
-		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
-		if (ret != PTP_RC_OK)
-			return ret;
-		evxml = malloc (oi.ObjectCompressedSize + 1);
-		memcpy (evxml, resxml, oi.ObjectCompressedSize);
-		(evxml)[oi.ObjectCompressedSize] = 0x00;
-
-		GP_DEBUG("file content: %s", evxml);
-
-		/* FIXME: handle the case where we get a non X3C file, like during capture */
-
-		/* parse it */
-		parse_event_xml (params, evxml, &ptp2);
-
-		/* generate reply */
-		evxml = generate_event_OK_xml(params, &ptp2);
-
-		GP_DEBUG("... sending XML event reply to camera ... "); 
-		memset (&ptp2, 0 , sizeof (ptp2));
-		ptp2.Code = PTP_OC_SendObjectInfo;
-		ptp2.Nparam = 1;
-		ptp2.Param1 = 0x80000001;
-
-		memset (&oi, 0, sizeof (oi));
-		oi.ObjectFormat		= PTP_OFC_Script;
-		oi.StorageID 		= 0x80000001;
-		oi.Filename 		= "HRSPONSE.X3C";
-		oi.ObjectCompressedSize	= strlen(evxml);
-		size = ptp_pack_OI(params, &oi, &oidata);
-		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
-		if (res != PTP_RC_OK)
-			return res;
-		free(oidata);
-		/*handle = ptp2.Param3; ... we do not use the returned handle and leave the file on camera. */
-
-		ptp2.Code = PTP_OC_SendObject;
-		ptp2.Nparam = 0;
-		res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(evxml), (unsigned char**)&evxml, NULL);
-		if (res != PTP_RC_OK)
-			return res;
+	if (ptp2.Code != PTP_EC_RequestObjectTransfer) {
+		gp_log (GP_LOG_DEBUG, "olympus", "event 0x%04x received, just passing on", ptp2.Code);
+		memcpy (req, &ptp2, sizeof(ptp2));
 		return PTP_RC_OK;
 	}
+
+	newhandle = ptp2.Param1;
+	ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
+	if (ret != PTP_RC_OK)
+		return ret;
+	GP_DEBUG("got new file: %s", oi.Filename);
+	if (!strstr(oi.Filename,".X3C")) {
+		gp_log (GP_LOG_DEBUG, "olympus", "PTP_EC_RequestObjectTransfer with non XML filename %s", oi.Filename);
+		memcpy (req, &ptp2, sizeof(ptp2));
+		return PTP_RC_OK;
+	}
+	ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
+	if (ret != PTP_RC_OK)
+		return ret;
+	evxml = malloc (oi.ObjectCompressedSize + 1);
+	memcpy (evxml, resxml, oi.ObjectCompressedSize);
+	(evxml)[oi.ObjectCompressedSize] = 0x00;
+
+	GP_DEBUG("file content: %s", evxml);
+
+	/* FIXME: handle the case where we get a non X3C file, like during capture */
+
+	/* parse it  ... into req */
+	parse_event_xml (params, evxml, req);
+
+	/* generate reply */
+	evxml = generate_event_OK_xml(params, req);
+
+	GP_DEBUG("... sending XML event reply to camera ... "); 
+	memset (&ptp2, 0 , sizeof (ptp2));
+	ptp2.Code = PTP_OC_SendObjectInfo;
+	ptp2.Nparam = 1;
+	ptp2.Param1 = 0x80000001;
+
+	memset (&oi, 0, sizeof (oi));
+	oi.ObjectFormat		= PTP_OFC_Script;
+	oi.StorageID 		= 0x80000001;
+	oi.Filename 		= "HRSPONSE.X3C";
+	oi.ObjectCompressedSize	= strlen(evxml);
+	size = ptp_pack_OI(params, &oi, &oidata);
+	res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+	if (res != PTP_RC_OK)
+		return res;
+	free(oidata);
+	/*handle = ptp2.Param3; ... we do not use the returned handle and leave the file on camera. */
+
+	ptp2.Code = PTP_OC_SendObject;
+	ptp2.Nparam = 0;
+	res = ptp_transaction(outerparams, &ptp2, PTP_DP_SENDDATA, strlen(evxml), (unsigned char**)&evxml, NULL);
+	if (res != PTP_RC_OK)
+		return res;
 	return PTP_RC_OK;
 }
 
