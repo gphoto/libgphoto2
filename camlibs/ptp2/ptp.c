@@ -2203,6 +2203,17 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 }
 
 uint16_t
+ptp_add_event (PTPParams *params, PTPContainer *evt) {
+	if (params->nrofevents)
+		params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
+	else
+		params->events = malloc(sizeof(PTPContainer)*1);
+	memcpy (&params->events[params->nrofevents],evt,1*sizeof(PTPContainer));
+	params->nrofevents += 1;
+	return PTP_RC_OK;
+}
+
+uint16_t
 ptp_check_event (PTPParams *params) {
 	PTPContainer		event;
 	uint16_t		ret;
@@ -2263,12 +2274,7 @@ ptp_check_event (PTPParams *params) {
 store_event:
 	if (ret == PTP_RC_OK) {
 		ptp_debug (params, "event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-		if (params->nrofevents)
-			params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
-		else
-			params->events = malloc(sizeof(PTPContainer)*1);
-		memcpy (&params->events[params->nrofevents],&event,1*sizeof(PTPContainer));
-		params->nrofevents += 1;
+		ptp_add_event (params, &event);
 	}
 	if (ret == PTP_ERROR_TIMEOUT) /* ok, just new events */
 		ret = PTP_RC_OK;

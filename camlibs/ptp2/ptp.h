@@ -2396,6 +2396,7 @@ uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 
 
 uint16_t ptp_check_event (PTPParams *params);
+uint16_t ptp_add_event (PTPParams *params, PTPContainer *evt);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
 uint16_t ptp_check_eos_events (PTPParams *params);
 int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
