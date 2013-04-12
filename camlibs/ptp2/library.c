@@ -3182,6 +3182,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 	*eventtype = GP_EVENT_TIMEOUT;
 	*eventdata = NULL;
 
+	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
+		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus setcameracontrolmode 2\n");
+		ptp_olympus_setcameracontrolmode (params, 2);
+	}
+
 	gettimeofday (&event_start,NULL);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
@@ -6430,8 +6435,10 @@ camera_init (Camera *camera, GPContext *context)
 
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus getcameraid\n");
 		ptp_olympus_getcameraid (params, &data, &len);
+
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus setcameracontrolmode\n");
 		ptp_olympus_setcameracontrolmode (params, 1);
+
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus opensession\n");
 		ptp_olympus_opensession (params, &data, &len);
 	}
