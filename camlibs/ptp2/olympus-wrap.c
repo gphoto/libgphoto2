@@ -430,7 +430,8 @@ olympus_xml_transfer (PTPParams *params,
 			ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
 			if (ret != PTP_RC_OK)
 				return ret;
-			GP_DEBUG("got new file: %s", oi.Filename);
+	eventhandler:
+			GP_DEBUG("event xml transfer: got new file: %s", oi.Filename);
 			ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
 			if (ret != PTP_RC_OK)
 				return ret;
@@ -517,7 +518,11 @@ redo:
 		ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
 		if (ret != PTP_RC_OK)
 			return ret;
-		GP_DEBUG("got new file: %s", oi.Filename);
+		GP_DEBUG("regular xml transfer: got new file: %s", oi.Filename);
+		if (strcmp(oi.Filename,"DRSPONSE.X3C")) {
+			gp_log (GP_LOG_ERROR,"olympus", "FIXME: regular xml transfer: got new file: %s", oi.Filename);
+			goto eventhandler;
+		}
 		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
 		if (ret != PTP_RC_OK)
 			return ret;
@@ -895,17 +900,17 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 
 	/* TODO */
 #if 0
-	case 0x9301: return parse_9301_tree (next);
+	case PTP_OC_OLYMPUS_GetDeviceInfo: return parse_9301_tree (next); /* 9301 */
 #endif
-	case 0x9302: return parse_9302_tree (next);
-	case 0x910a: return parse_910a_tree (next);
-	case 0x9581: return parse_9581_tree (next);
-	case 0x1016: /* <output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output> */
+	case PTP_OC_OLYMPUS_OpenSession: return parse_9302_tree (next);
+	case PTP_OC_OLYMPUS_GetCameraControlMode: return parse_910a_tree (next);
+	case PTP_OC_OLYMPUS_GetCameraID: return parse_9581_tree (next);
+
+	case PTP_OC_SetDevicePropValue: /* <output>\n<result>2001</result>\n<c1016>\n<pD135/>\n</c1016>\n</output> */
 		/* we could cross check the parameter, but its not strictly necessary */
 		return TRUE;
 #if 0
-	case 0x1014: return parse_1014_tree ( next );
-	case 0x1015: return parse_1015_tree ( next , PTP_DTC_UINT32);
+	case PTP_OC_GetDevicePropValue: return parse_1015_tree ( next , PTP_DTC_UINT32);
 #endif
 	default:
 		return traverse_tree (params, 0, next);
@@ -1193,7 +1198,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 	ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
 	if (ret != PTP_RC_OK)
 		return ret;
-	GP_DEBUG("got new file: %s", oi.Filename);
+	GP_DEBUG("event xml: got new file: %s", oi.Filename);
 	if (!strstr(oi.Filename,".X3C")) {
 		gp_log (GP_LOG_DEBUG, "olympus", "PTP_EC_RequestObjectTransfer with non XML filename %s", oi.Filename);
 		memcpy (req, &ptp2, sizeof(ptp2));
