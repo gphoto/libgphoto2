@@ -591,7 +591,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 
 			/* Those are all single byte packets. */
 			sierra_clear_usb_halt(camera);
-			GP_DEBUG ("Packet read. Returning GP_OK.");
+			GP_DEBUG ("Packet type 0x%02x read. Returning GP_OK.", packet[0]);
 			return GP_OK;
 
 		case SIERRA_PACKET_DATA:
@@ -1392,7 +1392,10 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		 * current picture.
 		 */ 
 		GP_DEBUG ("Getting picture number.");
-		CHECK (sierra_get_int_register (camera, 4, &n, context));
+		r = sierra_get_int_register (camera, 4, &n, context);
+		if (r == GP_OK) {
+			GP_DEBUG ("Getting filename of file %i.", n);
+		}
 		/*
 		 * We need to tell the frontend where the new image can be
 		 * found.  Unfortunatelly, we can only figure out the
@@ -1404,8 +1407,10 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		 *
 		 * Not that some cameras that don't support filenames will
 		 * return 8 blanks instead of reporting an error.
+		 * 
+		 * Some newer cameras (Nikon*) do not return register 4, so
+		 * ignore errors from that.
 		 */
-		GP_DEBUG ("Getting filename of file %i.", n);
 		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
 						   filename, &len, context));
 		if ((len <= 0) || !strcmp (filename, "        "))
