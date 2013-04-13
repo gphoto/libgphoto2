@@ -3,11 +3,23 @@ libgphoto2 2.5.1.2 release
 
 ptp2:
 * Fixed Raspberry Pi and USB 3.0 "connect only once" problem.
+* Nikon DSLR: out of focus during capture fixed
+* Lots of work on getting Olympus E-series DSLRs in Control mode
+  to run.
+
+sierra:
+* Fixed the Nikon Coolpix 4300 and 2500 USB over SCSI capture mode.
+* Ignore register 4 read errors after capture as Nikon does not supply them.
+
+libgphoto2_port/usbscsi:
+* Use timeout supplied by driver, not hardcoded 1.5 seconds (fixes Nikon).
 
 translations:
 * updated ukrainian, finish, dutch, polish, russian, french, vietnamese
 
 build:
+* specify lots of _BSD_SOURCE et.al. to make the strict MacOS ports
+  build happier. Might break others, please report.
 * cleaned up AM_CPPFLAGS/CPPFLAGS usage, do not use both together.
 
 ------------------------------------------------------------------------------
