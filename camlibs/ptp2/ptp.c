@@ -800,7 +800,6 @@ parse_9301_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 	/*traverse_tree (0, node);*/
 	return PTP_RC_OK;
 }
-#endif
 
 static uint16_t
 ptp_olympus_parse_output_xml(PTPParams* params, char*data, int len, xmlNodePtr *code) {
@@ -865,11 +864,12 @@ ptp_olympus_parse_output_xml(PTPParams* params, char*data, int len, xmlNodePtr *
 	}
 	return result;
 }
-
+#endif
 
 uint16_t
 ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 {
+#ifdef HAVE_LIBXML2
 	uint16_t 	ret;
 	PTPContainer	ptp;
 	PTPDataHandler	handler;
@@ -896,8 +896,10 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 	ret = parse_9301_tree (params, code, di);
 
 	xmlFreeDoc(code->doc);
-
 	return ret;
+#else
+	return PTP_RC_GeneralError;
+#endif
 }
 
 uint16_t
