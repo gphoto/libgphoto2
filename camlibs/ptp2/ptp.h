@@ -1379,7 +1379,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_ExpCompensation	0xD104
 #define PTP_DPC_CANON_EOS_AutoExposureMode	0xD105
 #define PTP_DPC_CANON_EOS_DriveMode		0xD106
-#define PTP_DPC_CANON_EOS_MeteringMode		0xD107 
+#define PTP_DPC_CANON_EOS_MeteringMode		0xD107
 #define PTP_DPC_CANON_EOS_FocusMode		0xD108
 #define PTP_DPC_CANON_EOS_WhiteBalance		0xD109
 #define PTP_DPC_CANON_EOS_ColorTemperature	0xD10A

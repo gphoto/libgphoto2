@@ -820,6 +820,9 @@ static struct {
 	/* Dale Pontius <DEPontius@edgehp.net> */
 	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
 
+	/* https://sourceforge.net/p/gphoto/feature-requests/429/ */
+	{"Nikon:Coolpix S9500 (PTP mode)",0x04b0, 0x0193, PTP_CAP},
+
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
 	{"Nikon:Coolpix 4200 (PTP mode)", 0x04b0, 0x0204, 0},

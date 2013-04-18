@@ -1044,6 +1044,8 @@
   { "Nokia", 0x0421, "E72", 0x0221, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "5530", 0x0229, DEVICE_FLAG_NONE },
+  /* Grzegorz Woźniak <wozniakg@gmail.com> */
+  { "Nokia", 0x0421, "E6", 0x032f, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "N97 mini", 0x026b, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
