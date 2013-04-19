@@ -2570,13 +2570,17 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 					return translate_ptp_result (ret);
 				}
 				debug_objectinfo(params, event.Param1, &oi);
+				/* We get usually
+				 * 0x1a000001 - folder
+				 * 0x1a000002 - image within that folder
+				 */
 
 				if (oi.ObjectFormat == PTP_OFC_Association)
 					continue;
 
 				if (oi.ObjectFormat == PTP_OFC_EXIF_JPEG) {
 					static int capcnt = 0;
-					sprintf (path->folder,"/");
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 					sprintf (path->name, "capt%04d.jpg", capcnt++);
 					return add_objectid_and_upload (camera, path, context, event.Param1, &oi);
 				}
