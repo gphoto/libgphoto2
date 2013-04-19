@@ -2562,14 +2562,29 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 		while (ptp_get_one_event (params, &event)) {
 			gp_log (GP_LOG_DEBUG, "olympus", "capture 2: got event 0x%x (param1=%x)", event.Code, event.Param1);
 			if (event.Code == PTP_EC_RequestObjectTransfer) {
-				PTPObject *ob;
-				ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+				PTPObjectInfo oi;
+
+				ret = ptp_getobjectinfo (params, event.Param1, &oi);
+				if (ret != PTP_RC_OK) {
+					gp_log (GP_LOG_ERROR, "olympus", "capture 2: no objectinfo for 0x%x, ret 0x%04x", event.Param1, ret);
+					return translate_ptp_result (ret);
+				}
+				debug_objectinfo(params, event.Param1, &oi);
+
+				if (oi.ObjectFormat == PTP_OFC_Association)
+					continue;
+
+				if (oi.ObjectFormat == PTP_OFC_EXIF_JPEG) {
+					static int capcnt = 0;
+					sprintf (path->folder,"/");
+					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					return add_objectid_and_upload (camera, path, context, event.Param1, &oi);
+				}
+				gp_log (GP_LOG_ERROR, "olympus", "capture 2: unknown OFC 0x%04x for 0x%x", oi.ObjectFormat, event.Param1);
 			}
 		}
 	}
-	strcpy(path->folder,"/");
-	strcpy(path->name,"notyet");
-	return GP_OK;
+	return GP_ERROR;
 
 }
 /* To use:
