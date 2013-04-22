@@ -1023,8 +1023,8 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 	*eventdata = NULL;
 	status = canon_usb_poll_interrupt_pipe ( camera, buf2, timeout );
 	GP_DEBUG ("canon_usb_wait_for_event: status %d", status);
-	if (!status)
-		return GP_OK;
+	if (status <= GP_OK)
+		return status;
 	*eventtype = GP_EVENT_UNKNOWN;
 	GP_DEBUG ("canon_usb_wait_for_event: bytes %x %x %x %x %x", buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
 	switch (buf2[4]) {
