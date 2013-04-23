@@ -419,6 +419,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_MfDrive		0x9204
 #define PTP_OC_NIKON_ChangeAfArea	0x9205
 #define PTP_OC_NIKON_AfDriveCancel	0x9206
+#define PTP_OC_NIKON_InitiateCaptureRecInMedia	0x9207
+
+#define PTP_OC_NIKON_StartMovieRecInCard	0x920a
+#define PTP_OC_NIKON_EndMovieRec	0x920b
 
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
