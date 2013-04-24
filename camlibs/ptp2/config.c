@@ -4671,6 +4671,35 @@ _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 
 
 static int
+_get_Nikon_Movie(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_Movie(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val, ret;
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val)
+		ret = ptp_nikon_startmovie (params);
+	else
+		ret = ptp_nikon_stopmovie (params);
+	CPR(context, ret);
+	return GP_OK;
+}
+
+static int
 _get_Canon_EOS_Bulb(CONFIG_GET_ARGS) {
 	int val;
 
@@ -5370,6 +5399,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Canon EOS Remote Release"),	"eosremoterelease",	0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_RemoteReleaseOn, _get_Canon_EOS_RemoteRelease, _put_Canon_EOS_RemoteRelease},
 	{ N_("CHDK Reboot"),			"chdk_reboot",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Reboot, _put_Canon_CHDK_Reboot},
 	{ N_("CHDK Script"),			"chdk_script",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Script, _put_Canon_CHDK_Script},
+	{ N_("Movie Capture"),			"movie",		0, PTP_VENDOR_NIKON, PTP_OC_NIKON_StartMovieRecInCard, _get_Nikon_Movie, _put_Nikon_Movie},
 	{ 0,0,0,0,0,0,0 },
 };
 
