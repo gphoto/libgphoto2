@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
         for (i = 0; i < count; i++) {
                 gp_list_get_name  (list, i, &name);
                 gp_list_get_value (list, i, &value);
-		ret = sample_open_camera (&cams[i], name, value);
+		ret = sample_open_camera (&cams[i], name, value, context);
 		if (ret < GP_OK) fprintf(stderr,"Camera %s on port %s failed to open\n", name, value);
         }
 	/* Now call a simple function in each of those cameras. */

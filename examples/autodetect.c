@@ -24,13 +24,21 @@ sample_autodetect (CameraList *list, GPContext *context) {
  * This function opens a camera depending on the specified model and port.
  */
 int
-sample_open_camera (Camera ** camera, const char *model, const char *port) {
+sample_open_camera (Camera ** camera, const char *model, const char *port, GPContext *context) {
 	int		ret, m, p;
 	CameraAbilities	a;
 	GPPortInfo	pi;
 
 	ret = gp_camera_new (camera);
 	if (ret < GP_OK) return ret;
+
+	if (!abilities) {
+		/* Load all the camera drivers we have... */
+		ret = gp_abilities_list_new (&abilities);
+		if (ret < GP_OK) return ret;
+		ret = gp_abilities_list_load (abilities, context);
+		if (ret < GP_OK) return ret;
+	}
 
 	/* First lookup the model / driver */
         m = gp_abilities_list_lookup_model (abilities, model);
@@ -39,6 +47,16 @@ sample_open_camera (Camera ** camera, const char *model, const char *port) {
 	if (ret < GP_OK) return ret;
         ret = gp_camera_set_abilities (*camera, a);
 	if (ret < GP_OK) return ret;
+
+	if (!portinfolist) {
+		/* Load all the port drivers we have... */
+		ret = gp_port_info_list_new (&portinfolist);
+		if (ret < GP_OK) return ret;
+		ret = gp_port_info_list_load (portinfolist);
+		if (ret < 0) return ret;
+		ret = gp_port_info_list_count (portinfolist);
+		if (ret < 0) return ret;
+	}
 
 	/* Then associate the camera with the specified port */
         p = gp_port_info_list_lookup_path (portinfolist, port);

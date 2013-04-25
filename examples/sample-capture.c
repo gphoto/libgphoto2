@@ -99,6 +99,9 @@ main(int argc, char **argv) {
 	Camera	*camera;
 	int	retval;
 	GPContext *context = sample_create_context();
+	FILE 	*f;
+	char	*data;
+	unsigned long size;
 
 	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
 	gp_camera_new(&camera);
@@ -111,10 +114,22 @@ main(int argc, char **argv) {
 	printf("Camera init.  Takes about 10 seconds.\n");
 	retval = gp_camera_init(camera, context);
 	if (retval != GP_OK) {
-		printf("  Retval: %d\n", retval);
+		printf("  Retval of capture_to_file: %d\n", retval);
 		exit (1);
 	}
 	capture_to_file(camera, context, "foo.jpg");
+
+	capture_to_memory(camera, context, (const char**)&data, &size);
+
+	f = fopen("foo2.jpg", "wb");
+	if (f) {
+		retval = fwrite (data, size, 1, f);
+		if (retval != size) {
+			printf("  fwrite size %ld, written %d\n", size, retval);
+		}
+		fclose(f);
+	} else
+		printf("  fopen foo2.jpg failed.\n");
 	gp_camera_exit(camera, context);
 	return 0;
 }
