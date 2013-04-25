@@ -4691,9 +4691,38 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 	ret = gp_widget_get_value (widget, &val);
 	if (ret != GP_OK)
 		return ret;
-	if (val)
+	if (val) {
+		PTPPropertyValue	value;
+
+                ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
+                if (ret != PTP_RC_OK)
+                        value.u8 = 0;
+
+                if (!value.u8) {
+                        value.u8 = 1;
+                        ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
+                        if (ret != PTP_RC_OK)
+                                gp_log (GP_LOG_DEBUG, "ptp2/nikon_movie", "set recordingmedia to 1 failed with 0x%04x", ret);
+                        ret = ptp_nikon_start_liveview (params);
+                        if (ret != PTP_RC_OK) {
+                                gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+                                return translate_ptp_result (ret);
+                        }
+                        while (1) {
+				ret = ptp_nikon_device_ready(params);
+				if (ret == PTP_RC_DeviceBusy) {
+					usleep(20*1000);
+					continue;
+				}
+				break;
+			}
+                        if (ret != PTP_RC_OK) {
+                                gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+                                return translate_ptp_result (ret);
+                        }
+                }
 		ret = ptp_nikon_startmovie (params);
-	else
+	} else
 		ret = ptp_nikon_stopmovie (params);
 	CPR(context, ret);
 	return GP_OK;
