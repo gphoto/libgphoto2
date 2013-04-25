@@ -4,8 +4,12 @@ libgphoto2 2.5.1.2 release
 ptp2:
 * Fixed Raspberry Pi and USB 3.0 "connect only once" problem.
 * Nikon DSLR: out of focus during capture fixed
+* Nikon DSLR: real movie capture! (use --set-config movie=1/0 and --wait-event)
 * Lots of work on getting Olympus E-series DSLRs in Control mode
   to run.
+
+canon:
+* wait-for-event: handle when camera goes offline during waiting.
 
 sierra:
 * Fixed the Nikon Coolpix 4300 and 2500 USB over SCSI capture mode.
