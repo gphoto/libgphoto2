@@ -3468,11 +3468,15 @@ camera_wait_for_event (Camera *camera, int timeout,
 				path->name[0]='\0';
 				path->folder[0]='\0';
 				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+				debug_objectinfo(params, event.Param1, &ob->oi);
 				if (ret != PTP_RC_OK) {
 					*eventtype = GP_EVENT_UNKNOWN;
 					*eventdata = strdup ("object added not found (already deleted)");
 					break;
 				}
+				ofc = ob->oi.ObjectFormat;
+				/* ob might be invalidated by get_folder_from_handle */
+
 				if (ob->oi.StorageID == 0) {
 					/* We would always get the same filename,
 					 * which will confuse the frontends */
@@ -3490,7 +3494,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
 					path->folder[ strlen(path->folder)-1 ] = '\0';
 				}
-				ofc = ob->oi.ObjectFormat;
 				/* ob pointer can be invalid now! */
 				/* delete last / or we get confused later. */
 				if (ofc == PTP_OFC_Association) { /* new folder! */
