@@ -1084,14 +1084,25 @@ encode_command (xmlNodePtr inputnode, PTPContainer *ptp, unsigned char *data, in
 		break;
 	}
 	case 0x1016: {
+		char buf[20];
+		xmlNodePtr	pnode;
+		/* zb <c1016><pD10D><value>000A000D</value></pD10D></c1016> */
 		/* FIXME: might still be wrong. */
 		/* We can directly byte encode the data we get from the PTP stack */
+		/* ... BUT the byte order is bigendian (printed) vs encoded */
 		int i;
 		char *x = malloc (len*2+1);
 
-		for (i=0;i<len;i++)
-			sprintf(x+2*i,"%02x",data[i]);
-		xmlNewChild (cmdnode, NULL, (xmlChar*)"value", (xmlChar*)x);
+		if (len <= 4) { /* just dump the bytes in big endian byteorder */
+			for (i=0;i<len;i++)
+				sprintf(x+2*i,"%02X",data[len-i-1]);
+		} else {
+			for (i=0;i<len;i++)
+				sprintf(x+2*i,"%02X",data[i]);
+		}
+		sprintf(buf,"p%04X", ptp->Param1);
+		pnode = xmlNewChild (cmdnode, NULL, (xmlChar*)buf, NULL);
+		xmlNewChild (pnode, NULL, (xmlChar*)"value", (xmlChar*)x);
 		free (x);
 		break;
 	}
