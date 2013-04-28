@@ -1,0 +1,146 @@
+Camera summary:
+Manufacturer: FUJIFILM
+Model: X20
+  Version: 1.01
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: 
+Display Formats: JPEG, JFIF
+Supported MTP Object Properties:
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JFIF/3808: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Internal Memory
+	VolumeLabel: 000000000000000000000000000000000000000000000000
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 25362432 (24 MB)
+	Free Space (Bytes): 16816128 (16 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 3, step 1] value: 3% (3)
+Property 0xd303:(read only) (type=0x2) 1
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: 59323133343313030615F030111742
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: FUJIFILM
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: X20
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1.01
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: fujifilm.co.jp: 1.0; 
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 100%
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: Session Initiator Info
+Type: TEXT
+Current: 
+/main/other/d407
+Label: Perceived Device Type
+Type: TEXT
+Current: 1
+Waiting for 5 seconds for events from camera. Press Ctrl-C to abort.
+
+*** Error ***              
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***       
+
+For debugging messages, please use the --debug option.
+Debugging messages may help finding a solution to your problem.
+If you intend to send any error or debug messages to the gphoto
+developer mailing list <gphoto-devel@lists.sourceforge.net>, please run
+gphoto2 as follows:
+
+    env LANG=C gphoto2 --debug --debug-logfile=my-logfile.txt --version --summary --list-all-config --set-config capturetarget=1 --set-config capture=on --wait-event=5s --capture-image
+
+Please make sure there is sufficient quoting around the arguments.
+
+Device info:
+Manufacturer: FUJIFILM
+  Model: X20
+  device version: 1.01
+  serial number: '59323133343313030615F030111742'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: fujifilm.co.jp: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x900c
+  0x900d
+  0x901d
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4008
+  0x4009
+Device Properties Supported:
+  0x5001
+  0xd303
+  0xd406
+  0xd407
