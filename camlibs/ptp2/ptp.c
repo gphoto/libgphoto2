@@ -2945,6 +2945,10 @@ ptp_nikon_get_preview_image (PTPParams* params, unsigned char **xdata, unsigned 
         PTP_CNT_INIT(ptp);
         ptp.Code=PTP_OC_NIKON_GetPreviewImg;
         ptp.Nparam=0;
+	/* FIXME:
+	 * pdslrdashboard passes 3 parameters:
+	 * objectid, minimum size, maximum size
+	 */
         ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, xdata, xsize);
 	if (ret == PTP_RC_OK) {
 		if (ptp.Nparam > 0)
