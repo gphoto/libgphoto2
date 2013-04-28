@@ -716,6 +716,12 @@ static struct {
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
 
+	/* t.ludewig@gmail.com */
+	{"Sony:DSC-HX300 (PTP mode)", 0x054c, 0x06ee, 0},
+
+	/* t.ludewig@gmail.com */
+	{"Sony:NEX-3N (PTP mode)",    0x054c, 0x072f, 0},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
@@ -820,6 +826,8 @@ static struct {
 	/* Dale Pontius <DEPontius@edgehp.net> */
 	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
 
+	/* t.ludewig@gmail.com */
+	{"Nikon:Coolpix L820  (PTP mode)",0x04b0, 0x0192, PTP_CAP},
 	/* https://sourceforge.net/p/gphoto/feature-requests/429/ */
 	{"Nikon:Coolpix S9500 (PTP mode)",0x04b0, 0x0193, PTP_CAP},
 
@@ -845,6 +853,18 @@ static struct {
 	{"Nikon:Coolpix P510 (PTP mode)", 0x04b0, 0x0223, 0},
 	/* Bernhard Schiffner <bernhard@schiffner-limbach.de> */
 	{"Nikon:Coolpix P7700 (PTP mode)",0x04b0, 0x0225, 0},
+
+	/* t.ludewig@gmail.com */
+	/* N CP A seems capture capable, but does not list vendor commands */
+	/* Reports 0x400d aka CaptureComplete event ... but has no 
+	 * vendor commands? yeah right ... */
+	{"Nikon:Coolpix A (PTP mode)",	  0x04b0, 0x0226, 0}, /* PTP_CAP */
+
+	/* t.ludewig@gmail.com */
+	/* Also reports 0x400d aka CaptureComplete event ... but has no 
+	 * vendor commands? yeah right... */
+	{"Nikon:Coolpix P520 (PTP mode)", 0x04b0, 0x0228, 0}, /* PTP_CAP */
+
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
@@ -937,7 +957,10 @@ static struct {
 	{"Nikon:DSC D800E",               0x04b0, 0x042e, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Simeon Pilgrim <simeon.pilgrim@gmail.com> */
 	{"Nikon:DSC D5200",               0x04b0, 0x042f, PTP_CAP|PTP_CAP_PREVIEW},
-	
+
+	/* t.ludewig@gmail.com */
+	{"Nikon:DSC D7100",               0x04b0, 0x0430, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
@@ -1361,7 +1384,10 @@ static struct {
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot S110",		0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot SX500IS",		0x04a9, 0x325c, PTPBUG_DELETE_SENDS_EVENT},
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
+	{"Canon:EOS 700D",			0x04a9, 0x3272, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -1441,6 +1467,8 @@ static struct {
 	{"Fuji:FinePix HS30EXR",		0x04cb, 0x0271, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix XF1",			0x04cb, 0x0288, 0},
+	/* t.ludewig@gmail.com */
+	{"Fuji:FinePix X20",			0x04cb, 0x02a6, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
