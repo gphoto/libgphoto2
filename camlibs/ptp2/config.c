@@ -2681,7 +2681,7 @@ static struct deviceproptableu16 canon_orientation[] = {
 
 static int
 _get_Canon_CameraOrientation(CONFIG_GET_ARGS) {
-	char	orient[20];
+	char	orient[50]; /* needs also to fit the translated string */
 	int	i;
 
 	if (dpd->DataType != PTP_DTC_UINT16)
