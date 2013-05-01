@@ -6085,6 +6085,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		);
 		if (ret != PTP_RC_OK) {
 			gp_log (GP_LOG_DEBUG, "ptp2/eos_directory", "reading directory failed: %04x", ret);
+			free (storageids.Storage);
 			return ret;
 		}
 		/* convert read entries into objectinfos */
@@ -6150,7 +6151,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		if (ret == PTP_RC_OK)
 			ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
 	}
-
+	free (storageids.Storage);
 	return PTP_RC_OK;
 }
 
