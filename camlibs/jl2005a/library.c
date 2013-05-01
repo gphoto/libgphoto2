@@ -240,6 +240,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy(p_data, image_start, w*h);
 	ppm = malloc (w * h * 3 + 256); /* room for data and header */
 	if (!ppm) {
+		free(p_data);
 		status = GP_ERROR_NO_MEMORY;
 		goto end;
 	}
