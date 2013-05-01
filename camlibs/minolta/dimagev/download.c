@@ -116,10 +116,10 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	free(r);
 
 	for ( i = 0 ; i < ( total_packets -1 ) ; i++ ) {
-
 		char_buffer=DIMAGEV_ACK;
 		if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 			GP_DEBUG( "dimagev_get_picture::unable to send ACK");
+			free(data);
 			return GP_ERROR_IO;
 		}
 	
@@ -133,17 +133,20 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			char_buffer=DIMAGEV_NAK;
 			if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 				GP_DEBUG( "dimagev_get_picture::unable to send NAK");
+				free(data);
 				return GP_ERROR_IO;
 			}
 
 			if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 				GP_DEBUG( "dimagev_get_picture::unable to read packet");
+				free(data);
 				return GP_ERROR_IO;
 			}
 		}
 
 		if ( ( r = dimagev_strip_packet(p) ) == NULL ) {
 			GP_DEBUG( "dimagev_get_picture::unable to strip packet");
+			free(data);
 			free(p);
 			return GP_ERROR_NO_MEMORY;
 		}
@@ -161,11 +164,13 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	char_buffer=DIMAGEV_EOT;
 	if ( gp_port_write(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		GP_DEBUG( "dimagev_get_picture::unable to send ACK");
+		free(data);
 		return GP_ERROR_IO;
 	}
 
 	if ( gp_port_read(dimagev->dev, &char_buffer, 1) < GP_OK ) {
 		GP_DEBUG( "dimagev_get_picture::no response from camera");
+		free(data);
 		return GP_ERROR_IO;
 	}
 		
@@ -174,12 +179,15 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			break;
 		case DIMAGEV_NAK:
 			GP_DEBUG( "dimagev_get_picture::camera did not acknowledge transmission");
+			free(data);
 			return GP_ERROR_IO;
 		case DIMAGEV_CAN:
 			GP_DEBUG( "dimagev_get_picture::camera cancels transmission");
+			free(data);
 			return GP_ERROR_IO;
 		default:
 			GP_DEBUG( "dimagev_get_picture::camera responded with unknown value %x", char_buffer);
+			free(data);
 			return GP_ERROR_IO;
 	}
 
@@ -189,6 +197,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 
 	if ( gpi_exif_stat(&exifdat) != 0 ) {
 		GP_DEBUG( "dimagev_get_picture::unable to stat EXIF tags");
+		free(data);
 		return GP_OK;
 	}
 
