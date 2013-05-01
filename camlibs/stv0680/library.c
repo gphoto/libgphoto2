@@ -493,8 +493,10 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 		break;
 	default:break;
 	}
-	if ((ret = stv0680_try_cmd(port, CMDID_STOP_VIDEO, 0, NULL, 0)!=GP_OK))
+	if ((ret = stv0680_try_cmd(port, CMDID_STOP_VIDEO, 0, NULL, 0)!=GP_OK)) {
+		free (raw);
 		return ret;
+	}
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	*data = malloc((*size * 3) + strlen(header));
 	strcpy(*data, header);
