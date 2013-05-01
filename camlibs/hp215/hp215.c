@@ -182,6 +182,8 @@ hp_gen_cmd_blob (enum hp215_cmd cmd, int bytes, unsigned char *argdata, unsigned
 	(*buf)[1] = cmd;
 	if (bytes >= 0x7d) {
 		gp_log (GP_LOG_ERROR, "hp215", "Using too large argument buffer %d bytes", bytes);
+		free (*buf);
+		*buf = NULL;
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	/* store arglen */
@@ -395,6 +397,7 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 		return ret;
 	xmsg = msg;
 	if (msglen < 0x59) {
+		free (msg);
 		gp_log (GP_LOG_ERROR, "hp215", "too short reply block, %d bytes", msglen);
 		return GP_ERROR_IO;
 	}
