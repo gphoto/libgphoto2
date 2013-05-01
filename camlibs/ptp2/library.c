@@ -1709,6 +1709,11 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_product		= models[i].usb_product;
 		a.device_type		= GP_DEVICE_STILL_CAMERA;
 		a.operations		= GP_OPERATION_NONE;
+
+		/* for now */
+		if (models[i].device_flags & PTP_OLYMPUS_XML)
+			a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
+
 		if (models[i].device_flags & PTP_CAP) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 
