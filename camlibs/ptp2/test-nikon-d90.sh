@@ -48,16 +48,21 @@ gwenview capture_preview.jpg
 rm capture_preview.jpg || true
 gphoto2 --set-config capturetarget=0
 gphoto2 --capture-preview --capture-image-and-download --capture-preview --capture-image-and-download
-rm capt*.*
 gwenview capture_preview.jpg
+rm capt*.*
 gphoto2 --set-config capturetarget=1
 gphoto2 --capture-preview --capture-image-and-download --capture-preview --capture-image-and-download
 gwenview capture_preview.jpg
-rm capture_preview.jpg
+rm capt*.*
 
 rm movie.mjpg || true
 gphoto2 --capture-movie=10s
+mplayer movie.mjpg
 rm movie.mjpg
+
+gphoto2 --set-config movie=1 --wait-event=10s --set-config movie=0 --wait-event-and-download=10s
+mplayer *.MOV
+rm *.MOV
 
 echo "*** capture and wait_event  - jpg/sdram - 10s"
 gphoto2 --set-config capturetarget=0
