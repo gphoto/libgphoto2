@@ -8159,9 +8159,8 @@ msgid "Self Timer Delay"
 msgstr "Selbstauslöserzeit"
 
 #: camlibs/ptp2/ptp.c:4348
-#, fuzzy
 msgid "Img Conf Time"
-msgstr "Bild Kommentar"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:4350
 msgid "Auto Off Timers"
@@ -8386,9 +8385,8 @@ msgid "Self Timer Shot Number"
 msgstr "Selbstauslöser Aufnahmenummer"
 
 #: camlibs/ptp2/ptp.c:4481
-#, fuzzy
 msgid "Vignette Control"
-msgstr "Vignette Parameter"
+msgstr "Vignette Einstellungen"
 
 #: camlibs/ptp2/ptp.c:4487
 msgid "Nikon Exposure Time"
@@ -8439,9 +8437,8 @@ msgid "AV Lock Setting"
 msgstr "AV Lock Einstellungen"
 
 #: camlibs/ptp2/ptp.c:4522
-#, fuzzy
 msgid "Illum Setting"
-msgstr "Bildeinstellungen"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:4524
 msgid "Focus Point Bright"
@@ -8469,69 +8466,60 @@ msgstr "Externer Blitz Belichtungskompensation"
 
 #: camlibs/ptp2/ptp.c:4550
 msgid "BW Filler Effect"
-msgstr ""
+msgstr "Schwarz/Weiss Filter Effekt"
 
 #: camlibs/ptp2/ptp.c:4552
-#, fuzzy
 msgid "BW Sharpness"
-msgstr "Schärfe"
+msgstr "Schwarz/Weiss Schärfe"
 
 #: camlibs/ptp2/ptp.c:4554
-#, fuzzy
 msgid "BW Contrast"
-msgstr "Kontrast"
+msgstr "Schwarz/Weiss Kontrast"
 
 #: camlibs/ptp2/ptp.c:4556
 msgid "BW Setting Type"
-msgstr ""
+msgstr "Schwarz/Weiss Setting Typ"
 
 #: camlibs/ptp2/ptp.c:4558
 msgid "Slot 2 Save Mode"
-msgstr ""
+msgstr "Slot 2 Speichermodus"
 
 #: camlibs/ptp2/ptp.c:4560
 msgid "Raw Bit Mode"
-msgstr ""
+msgstr "RAW Bit Modus"
 
 #: camlibs/ptp2/ptp.c:4562
 #, fuzzy
 msgid "ISO Auto Time"
-msgstr "Zeit für automatische Abschaltung"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:4564
-#, fuzzy
 msgid "Flourescent Type"
-msgstr "Fluoreszenz H"
+msgstr "Fluoreszenz Typ"
 
 #: camlibs/ptp2/ptp.c:4566
-#, fuzzy
 msgid "Tune Colour Temperature"
-msgstr "Farbtemperatur"
+msgstr "Farbtemperatur einstellen"
 
 #: camlibs/ptp2/ptp.c:4568
-#, fuzzy
 msgid "Tune Preset 0"
-msgstr "Voreinstellung"
+msgstr "Voreinstellung 0"
 
 #: camlibs/ptp2/ptp.c:4570
-#, fuzzy
 msgid "Tune Preset 1"
-msgstr "Voreinstellung"
+msgstr "Voreinstellung 1"
 
 #: camlibs/ptp2/ptp.c:4572
-#, fuzzy
 msgid "Tune Preset 2"
-msgstr "Voreinstellung"
+msgstr "Voreinstellung 2"
 
 #: camlibs/ptp2/ptp.c:4574
-#, fuzzy
 msgid "Tune Preset 3"
-msgstr "Voreinstellung"
+msgstr "Voreinstellung 3"
 
 #: camlibs/ptp2/ptp.c:4576
-#, fuzzy
 msgid "Tune Preset 4"
-msgstr "Voreinstellung"
+msgstr "Voreinstellung 4"
 
 #: camlibs/ptp2/ptp.c:4580
 msgid "Autofocus Mode"
@@ -8554,114 +8542,98 @@ msgid "Flash Mode Commander Power"
 msgstr "Blitzkommandomodus Energie"
 
 #: camlibs/ptp2/ptp.c:4606
-#, fuzzy
 msgid "Auto FP"
-msgstr "Auto"
+msgstr "Auto FP"
 
 #: camlibs/ptp2/ptp.c:4610
-#, fuzzy
 msgid "Warning Display"
-msgstr "Anzeige"
+msgstr "Warnungs Anzeige"
 
 #: camlibs/ptp2/ptp.c:4612
-#, fuzzy
 msgid "Battery Cell Kind"
-msgstr "Batterie Ladezustand"
+msgstr "Batterietyp"
 
 #: camlibs/ptp2/ptp.c:4614
 msgid "ISO Auto High Limit"
-msgstr ""
+msgstr "ISO Auto High Limit"
 
 #: camlibs/ptp2/ptp.c:4618
-#, fuzzy
 msgid "Continuous Speed High"
-msgstr "Kontinuierlicher Langsame Geschwindigkeit"
+msgstr "Kontinuierliche Aufnahme schnell"
 
 #: camlibs/ptp2/ptp.c:4620
-#, fuzzy
 msgid "Info Disp Setting"
-msgstr "Andere Einstellungen"
+msgstr "Info Anzeige Einstellung"
 
 #: camlibs/ptp2/ptp.c:4622
-#, fuzzy
 msgid "Preview Button"
-msgstr "Vorschau Modus"
+msgstr "Vorschau Knopf"
 
 #: camlibs/ptp2/ptp.c:4624
-#, fuzzy
 msgid "Preview Button 2"
-msgstr "Vorschau Modus"
+msgstr "Vorschau Knopf 2"
 
 #: camlibs/ptp2/ptp.c:4626
-#, fuzzy
 msgid "AEAF Lock Button 2"
-msgstr "nur AE Lock"
+msgstr "AEAF Lock Knopf 2"
 
 #: camlibs/ptp2/ptp.c:4628
-#, fuzzy
 msgid "Indicator Display"
-msgstr "Datumsanzeige"
+msgstr "Anzeige"
 
 #: camlibs/ptp2/ptp.c:4630
 msgid "Cell Kind Priority"
-msgstr ""
+msgstr "Battery Typ Priorität"
 
 #: camlibs/ptp2/ptp.c:4632
 msgid "Bracketing Frames and Steps"
 msgstr "Belichtungsreihe Anzahl und Schritte"
 
 #: camlibs/ptp2/ptp.c:4634
-#, fuzzy
 msgid "Live View Mode"
-msgstr "Auslöse Modus"
+msgstr "Live View Modus"
 
 #: camlibs/ptp2/ptp.c:4636
-#, fuzzy
 msgid "Live View Drive Mode"
-msgstr "Auslöse Modus"
+msgstr "Live View Auslöse Modus"
 
 #: camlibs/ptp2/ptp.c:4638
 msgid "Live View Status"
-msgstr ""
+msgstr "Live View Status"
 
 #: camlibs/ptp2/ptp.c:4640
 msgid "Live View Image Zoom Ratio"
-msgstr ""
+msgstr "Live View Zoom Faktor"
 
 #: camlibs/ptp2/ptp.c:4642
 msgid "Live View Prohibit Condition"
-msgstr ""
+msgstr "Live View Verhinderungszustand"
 
 #: camlibs/ptp2/ptp.c:4644
-#, fuzzy
 msgid "Exposure Display Status"
-msgstr "Belichtungszeitschritt"
+msgstr "Belichtungs Anzeige Status"
 
 #: camlibs/ptp2/ptp.c:4646
 msgid "Exposure Indicate Status"
-msgstr ""
+msgstr "Belichtungs Indikator Status"
 
 #: camlibs/ptp2/ptp.c:4648
-#, fuzzy
 msgid "Info Display Error Status"
-msgstr "Belichtungszeitschritt"
+msgstr "Info Anzeige Fehler Status"
 
 #: camlibs/ptp2/ptp.c:4650
-#, fuzzy
 msgid "Exposure Indicate Lightup"
-msgstr "Belichtungszeitschritt"
+msgstr "Belichtungs Indikator Aufleuchten"
 
 #: camlibs/ptp2/ptp.c:4656
 msgid "Flash MRepeat Value"
-msgstr ""
+msgstr "Blitz MRepeat Wert"
 
 #: camlibs/ptp2/ptp.c:4658
-#, fuzzy
 msgid "Flash MRepeat Count"
-msgstr "Blitzanzahl"
+msgstr "Blitz MRepeat Nummer"
 
 #: camlibs/ptp2/ptp.c:4660
-#, fuzzy
 msgid "Flash MRepeat Interval"
 msgstr "Zeitraffer Intervall"
 
@@ -8675,7 +8647,7 @@ msgstr ""
 
 #: camlibs/ptp2/ptp.c:4691
 msgid "Secure Time"
-msgstr "SIchere Zeit"
+msgstr "Sichere Zeit"
 
 #: camlibs/ptp2/ptp.c:4692
 msgid "Device Certificate"
@@ -8706,9 +8678,8 @@ msgid "Session Initiator Info"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:4701
-#, fuzzy
 msgid "Perceived Device Type"
-msgstr "Anzeigbarer Gerätename"
+msgstr "Angenommener Gerätetyp"
 
 #: camlibs/ptp2/ptp.c:4702
 msgid "Playback Rate"
@@ -8731,24 +8702,20 @@ msgid "PlaysForSure ID"
 msgstr "PlaysForSure ID"
 
 #: camlibs/ptp2/ptp.c:4715
-#, fuzzy
 msgid "Quality"
-msgstr "Bildqualität"
+msgstr "Qualität"
 
 #: camlibs/ptp2/ptp.c:4716
-#, fuzzy
 msgid "Release Mode"
-msgstr "Blitzmodus"
+msgstr "Aufnahme Modus"
 
 #: camlibs/ptp2/ptp.c:4717
-#, fuzzy
 msgid "Focus Areas"
-msgstr "Fokus Bereich Wraparound"
+msgstr "Fokus Bereich"
 
 #: camlibs/ptp2/ptp.c:4718
-#, fuzzy
 msgid "AE Lock"
-msgstr "AE Lock an"
+msgstr "AE Lock"
 
 #: camlibs/ptp2/ptp.c:4821 camlibs/ptp2/ptp.c:4827 camlibs/ptp2/ptp.c:4828
 #: camlibs/ptp2/ptp.c:4835
@@ -8823,31 +8790,28 @@ msgid "Highlight active focus point"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:5016
-#, fuzzy
 msgid "Unused"
-msgstr "Benutzt"
+msgstr "Unbenutzt"
 
 #: camlibs/ptp2/ptp.c:5061
 msgid "SDRam"
-msgstr ""
+msgstr "SDRam"
 
 #: camlibs/ptp2/ptp.c:5063
 msgid "USB 1.1"
-msgstr ""
+msgstr "USB 1.1"
 
 #: camlibs/ptp2/ptp.c:5064
-#, fuzzy
 msgid "USB 2.0"
-msgstr "2.0"
+msgstr "USB 2.0"
 
 #: camlibs/ptp2/ptp.c:5076
-#, fuzzy
 msgid "LCD Backlight"
-msgstr "Tageslicht"
+msgstr "LCD Hintergrundbeleuchtung"
 
 #: camlibs/ptp2/ptp.c:5077
 msgid "LCD Backlight and Info Display"
-msgstr ""
+msgstr "LCD Hintergrund und Info Display Beleuchtung"
 
 #: camlibs/ptp2/ptp.c:5135
 msgid "1 min"
@@ -8866,14 +8830,12 @@ msgid "15 mins"
 msgstr "15 Minuten"
 
 #: camlibs/ptp2/ptp.c:5173
-#, fuzzy
 msgid "Dark on light"
-msgstr "Tageslicht"
+msgstr "Dunkel auf Hell"
 
 #: camlibs/ptp2/ptp.c:5174
-#, fuzzy
 msgid "Light on dark"
-msgstr "Nicht genügend Licht."
+msgstr "Hell auf Dunkel"
 
 #: camlibs/ptp2/ptp.c:5215
 msgid "Lithium Ion"
@@ -9099,9 +9061,8 @@ msgid "Audible.com Codec"
 msgstr "Audible.com Codec"
 
 #: camlibs/ptp2/ptp.c:5518
-#, fuzzy
 msgid "Samsung Playlist"
-msgstr "ASX Playlist"
+msgstr "Samsung Playlist"
 
 #: camlibs/ptp2/ptp.c:5519
 msgid "Undefined Video"
@@ -9541,29 +9502,24 @@ msgid "Process WFC Object"
 msgstr "Bearbeite WFC Objekt"
 
 #: camlibs/ptp2/ptp.c:5697
-#, fuzzy
 msgid "Get Partial Object (64bit Offset)"
-msgstr "Get partial object"
+msgstr "Get partial object (64bit Offset)"
 
 #: camlibs/ptp2/ptp.c:5698
-#, fuzzy
 msgid "Send Partial Object"
-msgstr "Get partial object"
+msgstr "Send partial object"
 
 #: camlibs/ptp2/ptp.c:5699
-#, fuzzy
 msgid "Truncate Object"
-msgstr "Bearbeite WFC Objekt"
+msgstr "Truncate Objekt"
 
 #: camlibs/ptp2/ptp.c:5700
-#, fuzzy
 msgid "Begin Edit Object"
-msgstr "Send object"
+msgstr "Begin Edit Object"
 
 #: camlibs/ptp2/ptp.c:5701
-#, fuzzy
 msgid "End Edit Object"
-msgstr "Send object"
+msgstr "End Edit Object"
 
 #: camlibs/ptp2/ptp.c:5724
 #, c-format
@@ -11036,7 +10992,6 @@ msgid ""
 msgstr ""
 
 #: camlibs/st2205/library.c:548 camlibs/st2205/library.c:572
-#, fuzzy
 msgid "Orientation"
 msgstr "Kameraausrichtung"
 
@@ -11194,14 +11149,12 @@ msgid "sx330z is USB only"
 msgstr "sx330z ist nur-USB"
 
 #: camlibs/topfield/puppy.c:539
-#, fuzzy
 msgid "Driver Settings"
-msgstr "Andere Einstellungen"
+msgstr "Treiber Einstellungen"
 
 #: camlibs/topfield/puppy.c:543
-#, fuzzy
 msgid "Turbo mode"
-msgstr "Fokusmodus"
+msgstr "Turbo Modus"
 
 #: camlibs/topfield/puppy.c:598
 msgid ""
@@ -11212,7 +11165,7 @@ msgid ""
 msgstr ""
 
 #: camlibs/topfield/puppy.c:645
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s..."
 msgstr "Lade »%s« herunter..."
 
@@ -11255,9 +11208,9 @@ msgid "Could not detect any camera"
 msgstr "Konnte keine Kamera finden"
 
 #: libgphoto2/gphoto2-camera.c:775
-#, fuzzy, c-format
+#, c-format
 msgid "Could not detect any camera at port %s"
-msgstr "Konnte keine Kamera finden"
+msgstr "Konnte keine Kamera am Port %s finden"
 
 #: libgphoto2/gphoto2-camera.c:796
 msgid "You have to set the port prior to initialization of the camera."
@@ -11275,7 +11228,6 @@ msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr "Kameratreiber »%s« hat keine Funktion »camera_init«."
 
 #: libgphoto2/gphoto2-camera.c:887
-#, fuzzy
 msgid "This camera does not provide any configuration options."
 msgstr "Diese Kamera bietet keine Konfigurationsoptionen."
 
@@ -11288,7 +11240,6 @@ msgid "This camera does not support summaries."
 msgstr "Diese Kamera unterstützt keine Zusammenfassung."
 
 #: libgphoto2/gphoto2-camera.c:983
-#, fuzzy
 msgid "This camera does not provide a manual."
 msgstr "Für diese Kamera existiert kein Handbuch."
 
@@ -11301,7 +11252,6 @@ msgid "This camera can not capture."
 msgstr "Diese Kamera kann keine Aufnahme machen."
 
 #: libgphoto2/gphoto2-camera.c:1079
-#, fuzzy
 msgid "This camera can not trigger capture."
 msgstr "Diese Kamera kann keine Aufnahme machen."
 
