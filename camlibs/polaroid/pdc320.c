@@ -392,7 +392,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = user_data;
 	jpeg *myjpeg;
 	chunk *tempchunk;
-	int n, size, width, height;
+	int r, n, size, width, height;
 	unsigned char *data;
 
 	if ((type != GP_FILE_TYPE_RAW) && (type != GP_FILE_TYPE_NORMAL))
@@ -409,7 +409,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Get the file */
 	GP_DEBUG ("Getting file %i...", n);
 	CR (pdc320_pic (camera, n, &data, &size));
-	CR (pdc320_0c (camera, n));
+	r = pdc320_0c (camera, n);
+	if (r < GP_OK) {
+		free (data);
+		return r;
+	}
 
 	/* Post-processing */
 	switch (type) {
