@@ -6150,6 +6150,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, int want, PTPObject **retob
 			);
 			if ((ret == PTP_RC_OK) && (numents >= 1))
 				ob->canon_flags = ents[0].Flags;
+			free (ents);
 		}
 
 		ob->flags |= X;
