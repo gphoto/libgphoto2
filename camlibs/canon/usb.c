@@ -2313,7 +2313,11 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
         }
 
         GP_DEBUG ( "canon_put_file_usb: converting file name" );
-        CHECK_RESULT (gp_file_get_name (file, &srcname));
+        status = gp_file_get_name (file, &srcname)
+	if (status < GP_OK) {
+		free (packet);
+		return status;
+	}
 
         /* Open input file and read all its data into a buffer. */
         if(!gp_file_get_data_and_size (file, (const char **)&data, &size)) {
