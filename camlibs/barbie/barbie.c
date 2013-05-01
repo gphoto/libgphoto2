@@ -217,6 +217,7 @@ barbie_read_picture(GPPort *port, int picture_number, int get_thumbnail, CameraF
 		free(us);
 		free(rg);
 		free(s);
+		free(t);
 		return GP_ERROR_IO_READ;
 	}
 	/* Unshuffle the data */
@@ -237,13 +238,12 @@ barbie_read_picture(GPPort *port, int picture_number, int get_thumbnail, CameraF
 	for (x=0; x<visrows; x++)
 		memcpy (t+x*(cols-4)*3,s+cols*(x+blackrows)*3,(cols-4)*3);
 	gp_file_append (file, (char*)t, visrows*(cols-4)*3);
+	free (s);
 	free (t);
 
 	/* read the footer */
-	if (gp_port_read(port, &c, 1) < 0) {
-		free(s);
+	if (gp_port_read(port, &c, 1) < 0)
 		return GP_ERROR_IO_READ;
-	}
 	return GP_OK;
 }
 
