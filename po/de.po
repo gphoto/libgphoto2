@@ -7,13 +7,13 @@
 #
 # Lutz Müller <lutz@users.sf.net>, 2000.
 # Colin Marquardt <colin@marquardt-home.de>, 2001, 2002.
-# Marcus Meissner <marcus@jet.franken.de>, 2003, 2004, 2005, 2006, 2007, 2008, 2009.
+# Marcus Meissner <marcus@jet.franken.de>, 2003, 2004, 2005, 2006, 2007, 2008, 2009. 2010, 2011, 2012, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: libexif 0.6.16\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2013-05-01 09:02+0200\n"
-"PO-Revision-Date: 2009-07-30 23:20+0200\n"
+"PO-Revision-Date: 2013-05-01 10:00+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: Deutsch <German <translation-team-de@lists.sourceforge.net>>\n"
 "Language: \n"
@@ -306,7 +306,7 @@ msgstr "Blitz automatisch"
 
 #: camlibs/canon/library.c:260
 msgid "AUTO"
-msgstr ""
+msgstr "AUTO"
 
 #: camlibs/canon/library.c:261 camlibs/ptp2/config.c:1630
 #: camlibs/ptp2/ptp.c:5256
@@ -327,11 +327,11 @@ msgstr "M"
 
 #: camlibs/canon/library.c:265
 msgid "A-DEP"
-msgstr ""
+msgstr "A-DEP"
 
 #: camlibs/canon/library.c:266
 msgid "M-DEP"
-msgstr ""
+msgstr "M-DEP"
 
 #: camlibs/canon/library.c:268
 msgid "Manual 2"
@@ -4451,7 +4451,7 @@ msgstr "Landschaft"
 
 #: camlibs/ptp2/config.c:1644
 msgid "Closeup"
-msgstr ""
+msgstr "Nahaufnahme"
 
 #: camlibs/ptp2/config.c:1645
 msgid "Flash Off"
@@ -4659,7 +4659,7 @@ msgstr "Werkseinstellung"
 
 #: camlibs/ptp2/config.c:2102
 msgid "mRAW"
-msgstr ""
+msgstr "mRAW"
 
 #: camlibs/ptp2/config.c:2103
 msgid "sRAW"
@@ -4749,12 +4749,12 @@ msgstr "%0.4fs"
 #: camlibs/ptp2/config.c:2370
 #, c-format
 msgid "%d %d/%d"
-msgstr ""
+msgstr "%d %d/%d"
 
 #: camlibs/ptp2/config.c:2373
 #, c-format
 msgid "%d/%d"
-msgstr ""
+msgstr "%d/%d"
 
 #: camlibs/ptp2/config.c:2376
 #, c-format
@@ -4787,15 +4787,15 @@ msgstr "Nachtlandschaft"
 
 #: camlibs/ptp2/config.c:2562
 msgid "Party/Indoor"
-msgstr ""
+msgstr "Party/Innenraum"
 
 #: camlibs/ptp2/config.c:2563
 msgid "Beach/Snow"
-msgstr ""
+msgstr "Strand/Schnee"
 
 #: camlibs/ptp2/config.c:2564
 msgid "Sunset"
-msgstr ""
+msgstr "Sonnenuntergang"
 
 #: camlibs/ptp2/config.c:2565
 msgid "Dusk/Dawn"
@@ -4867,7 +4867,7 @@ msgstr "Spiegel hochklappen"
 
 #: camlibs/ptp2/config.c:2617
 msgid "Quick Response Remote"
-msgstr ""
+msgstr "Schnellreagierende Fernbedienung"
 
 #: camlibs/ptp2/config.c:2618 camlibs/ptp2/config.c:3573
 #: camlibs/ptp2/ptp.c:5192
@@ -4929,7 +4929,7 @@ msgstr "sRGB (Natur optimiert)"
 
 #: camlibs/ptp2/config.c:2649 camlibs/ptp2/config.c:2655
 msgid "sRGB"
-msgstr ""
+msgstr "sRGB"
 
 #: camlibs/ptp2/config.c:2697
 #, c-format
@@ -5043,7 +5043,7 @@ msgstr "Miniatur Effekt"
 
 #: camlibs/ptp2/config.c:2767
 msgid "Selective color"
-msgstr ""
+msgstr "Selektive Farbe"
 
 #: camlibs/ptp2/config.c:2768
 msgid "Silhouette"
@@ -5069,11 +5069,11 @@ msgstr "%d mm"
 
 #: camlibs/ptp2/config.c:3107
 msgid "Face-priority AF"
-msgstr ""
+msgstr "AF mit Gesichts-Priorität"
 
 #: camlibs/ptp2/config.c:3108
 msgid "Wide-area AF"
-msgstr ""
+msgstr "Weitwinkel AF"
 
 #: camlibs/ptp2/config.c:3109
 msgid "Normal-area AF"
@@ -5081,7 +5081,7 @@ msgstr "Normaler Bereich AF"
 
 #: camlibs/ptp2/config.c:3110
 msgid "Subject-tracking AF"
-msgstr ""
+msgstr "Subjektfolgender AF"
 
 #: camlibs/ptp2/config.c:3115
 msgid "Single-servo AF"
@@ -5089,7 +5089,7 @@ msgstr "Einzel AF"
 
 #: camlibs/ptp2/config.c:3116
 msgid "Full-time-servo AF"
-msgstr ""
+msgstr "Kontinuierlicher AF"
 
 #: camlibs/ptp2/config.c:3117 camlibs/ptp2/ptp.c:4862
 msgid "Manual Focus"
@@ -5218,7 +5218,7 @@ msgstr "30"
 
 #: camlibs/ptp2/config.c:3189
 msgid "bulb"
-msgstr ""
+msgstr "Lampe"
 
 #: camlibs/ptp2/config.c:3190 camlibs/ptp2/config.c:3914
 msgid "30s"
@@ -5607,27 +5607,27 @@ msgstr "ADL Abstufung"
 
 #: camlibs/ptp2/config.c:3560
 msgid "Startup"
-msgstr ""
+msgstr "Einschalten"
 
 #: camlibs/ptp2/config.c:3561
 msgid "Shutdown"
-msgstr ""
+msgstr "Abschalten"
 
 #: camlibs/ptp2/config.c:3562
 msgid "Startup and Shutdown"
-msgstr ""
+msgstr "Ein- und Abschalten"
 
 #: camlibs/ptp2/config.c:3567
 msgid "50 Hz"
-msgstr ""
+msgstr "50 Hz"
 
 #: camlibs/ptp2/config.c:3568
 msgid "60 Hz"
-msgstr ""
+msgstr "60 Hz"
 
 #: camlibs/ptp2/config.c:3574 camlibs/ptp2/ptp.c:5193
 msgid "Quick Response"
-msgstr ""
+msgstr "Schnelle Reaktion"
 
 #: camlibs/ptp2/config.c:3575 camlibs/ptp2/ptp.c:5194
 msgid "Remote Mirror Up"
@@ -5748,7 +5748,7 @@ msgstr "Verlustbehaftet"
 
 #: camlibs/ptp2/config.c:3832
 msgid "Size Priority"
-msgstr ""
+msgstr "Grössen Priorität"
 
 #: camlibs/ptp2/config.c:3833
 msgid "Optimal quality"
@@ -5796,19 +5796,19 @@ msgstr "1 (Kurz)"
 
 #: camlibs/ptp2/config.c:3881
 msgid "Shutter/AF-ON"
-msgstr ""
+msgstr "Auslöser/AF-ON"
 
 #: camlibs/ptp2/config.c:3882 camlibs/ptp2/config.c:3893
 msgid "AF-ON"
-msgstr ""
+msgstr "AF-AN"
 
 #: camlibs/ptp2/config.c:3887
 msgid "AF51"
-msgstr ""
+msgstr "AF51"
 
 #: camlibs/ptp2/config.c:3888
 msgid "AF11"
-msgstr ""
+msgstr "AF11"
 
 #: camlibs/ptp2/config.c:3894
 msgid "AE/AF lock"
@@ -5820,7 +5820,7 @@ msgstr "nur AE Lock"
 
 #: camlibs/ptp2/config.c:3896
 msgid "AE lock (Reset on release)"
-msgstr ""
+msgstr "AE LOck (Löschen beim Auslösen)"
 
 #: camlibs/ptp2/config.c:3897
 msgid "AE lock (Hold)"
@@ -5896,11 +5896,11 @@ msgstr "Unbekannter Wert"
 
 #: camlibs/ptp2/config.c:4083
 msgid "Nikon autofocus drive did not focus."
-msgstr ""
+msgstr "Nikon autofokus erhielt keinen Fokus."
 
 #: camlibs/ptp2/config.c:4188 camlibs/ptp2/config.c:4208
 msgid "Press Half"
-msgstr ""
+msgstr "Halb durchdrücken"
 
 #: camlibs/ptp2/config.c:4189 camlibs/ptp2/config.c:4212
 msgid "Press Full"
@@ -5916,41 +5916,41 @@ msgstr "Voll auslösen"
 
 #: camlibs/ptp2/config.c:4216
 msgid "Immediate"
-msgstr ""
+msgstr "Sofort"
 
 #: camlibs/ptp2/config.c:4256
 msgid "Near 1"
-msgstr ""
+msgstr "Nah 1"
 
 #: camlibs/ptp2/config.c:4257
 msgid "Near 2"
-msgstr ""
+msgstr "Nah 2"
 
 #: camlibs/ptp2/config.c:4258
 msgid "Near 3"
-msgstr ""
+msgstr "Nah 3"
 
 #: camlibs/ptp2/config.c:4260
 msgid "Far 1"
-msgstr ""
+msgstr "Weit 1"
 
 #: camlibs/ptp2/config.c:4261
 msgid "Far 2"
-msgstr ""
+msgstr "Weit 2"
 
 #: camlibs/ptp2/config.c:4262
 msgid "Far 3"
-msgstr ""
+msgstr "Weit 3"
 
 #: camlibs/ptp2/config.c:4281
 #, c-format
 msgid "Near %d"
-msgstr ""
+msgstr "Nah %d"
 
 #: camlibs/ptp2/config.c:4282
 #, c-format
 msgid "Far %d"
-msgstr ""
+msgstr "Weit %d"
 
 #: camlibs/ptp2/config.c:4630 camlibs/ptp2/config.c:4708
 #: camlibs/ptp2/config.c:4720 camlibs/ptp2/library.c:2081
@@ -6242,7 +6242,7 @@ msgstr "Aufnahmemedium"
 
 #: camlibs/ptp2/config.c:5483
 msgid "Quick Review Time"
-msgstr ""
+msgstr "Schnellansicht Zeit"
 
 #: camlibs/ptp2/config.c:5484 camlibs/ptp2/ptp.c:4608
 msgid "CSM Menu"
@@ -6891,7 +6891,7 @@ msgstr "Die Property »%s« / 0x%04x wurde nicht gesetzt, PTP Fehlercode 0x%04x."
 #: camlibs/ptp2/config.c:6153
 #, c-format
 msgid "Parsing the value of widget '%s' / 0x%04x failed with %d!"
-msgstr ""
+msgstr "Parsen des Wertes von Widget »%s« / 0x%04x fehlgeschalten mit %d!"
 
 #: camlibs/ptp2/library.c:127
 msgid "You need to specify a folder starting with /store_xxxxxxxxx/"
@@ -7043,7 +7043,7 @@ msgstr "PTP-EK-Filename ungültig"
 
 #: camlibs/ptp2/library.c:209
 msgid "Hardware Error"
-msgstr ""
+msgstr "Hardware Fehler"
 
 #: camlibs/ptp2/library.c:210
 msgid "Out of Focus"
@@ -8160,7 +8160,7 @@ msgstr "Selbstauslöserzeit"
 
 #: camlibs/ptp2/ptp.c:4348
 msgid "Img Conf Time"
-msgstr ""
+msgstr "Img Conf Time"
 
 #: camlibs/ptp2/ptp.c:4350
 msgid "Auto Off Timers"
@@ -8290,11 +8290,11 @@ msgstr "Bildrotationsflag"
 
 #: camlibs/ptp2/ptp.c:4433
 msgid "Manual Set Lens Number"
-msgstr ""
+msgstr "Manuell gesetzte Objektivnummer"
 
 #: camlibs/ptp2/ptp.c:4435
 msgid "Movie Screen Size"
-msgstr ""
+msgstr "Film Bildschirmgrösse"
 
 #: camlibs/ptp2/ptp.c:4437
 msgid "Movie Voice"
@@ -8438,7 +8438,7 @@ msgstr "AV Lock Einstellungen"
 
 #: camlibs/ptp2/ptp.c:4522
 msgid "Illum Setting"
-msgstr ""
+msgstr "Illum Einstellung"
 
 #: camlibs/ptp2/ptp.c:4524
 msgid "Focus Point Bright"
@@ -8489,9 +8489,8 @@ msgid "Raw Bit Mode"
 msgstr "RAW Bit Modus"
 
 #: camlibs/ptp2/ptp.c:4562
-#, fuzzy
 msgid "ISO Auto Time"
-msgstr ""
+msgstr "ISO Auto Zeit"
 
 #: camlibs/ptp2/ptp.c:4564
 msgid "Flourescent Type"
@@ -8639,11 +8638,11 @@ msgstr "Zeitraffer Intervall"
 
 #: camlibs/ptp2/ptp.c:4682
 msgid "Active Pic Ctrl Item"
-msgstr ""
+msgstr "Aktiviertes Pic Ctrl Item"
 
 #: camlibs/ptp2/ptp.c:4684
 msgid "Change Pic Ctrl Item"
-msgstr ""
+msgstr "Ändere Pic Ctrl Item"
 
 #: camlibs/ptp2/ptp.c:4691
 msgid "Secure Time"
@@ -8675,7 +8674,7 @@ msgstr "Geräte Icon"
 
 #: camlibs/ptp2/ptp.c:4700
 msgid "Session Initiator Info"
-msgstr ""
+msgstr "Session Initiator Information"
 
 #: camlibs/ptp2/ptp.c:4701
 msgid "Perceived Device Type"
@@ -8783,11 +8782,11 @@ msgstr "Blitz Lock"
 
 #: camlibs/ptp2/ptp.c:5014
 msgid "Reset focus point to center"
-msgstr ""
+msgstr "Setze Fokus Punkt ins Zentrum"
 
 #: camlibs/ptp2/ptp.c:5015
 msgid "Highlight active focus point"
-msgstr ""
+msgstr "Highlight auf aktiven Fokuspunkt"
 
 #: camlibs/ptp2/ptp.c:5016
 msgid "Unused"
@@ -10974,7 +10973,7 @@ msgstr ""
 #: camlibs/st2205/library.c:82
 #, c-format
 msgid "Your USB picture frame has a ST2205 chipset\n"
-msgstr ""
+msgstr "Der USB Bilder Rahmer hat einen ST2205 Chipsatz.\n"
 
 #: camlibs/st2205/library.c:91
 msgid ""
@@ -10982,6 +10981,9 @@ msgid ""
 "The gphoto driver for these devices allows you to download,\n"
 "upload and delete pictures from the picture frame."
 msgstr ""
+"ST2205 basierte Bilderrahmen haben viele mögliche Auflösungen.\n"
+"Dieser Treiber erlaubt das Herunterladen, Hochladen und Löschen von Bildern\n"
+"vom Bilderrahmen."
 
 #: camlibs/st2205/library.c:104
 msgid ""
@@ -10990,6 +10992,10 @@ msgid ""
 "This driver allows you to download, upload and delete pictures\n"
 "from the picture frame."
 msgstr ""
+"Treiber für ST2205 USB Bilder Rahmen\n"
+"Hans de Goede <hdegoede@redhat.com>\n"
+"Dieser Treiber erlaubt das Herunterladen, Hochladen und Löschen von Bildern\n"
+"vom Bilderrahmen."
 
 #: camlibs/st2205/library.c:548 camlibs/st2205/library.c:572
 msgid "Orientation"
@@ -11394,7 +11400,7 @@ msgstr "Fehler in der Kamerakommunikation"
 
 #: libgphoto2/gphoto2-result.c:58
 msgid "Not enough free space"
-msgstr ""
+msgstr "Nicht genug Plattenplatz"
 
 #: libgphoto2/gphoto2-result.c:83
 msgid "Unknown camera library error"
