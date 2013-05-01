@@ -556,8 +556,10 @@ gp_file_save (CameraFile *file, const char *filename)
 		data = malloc(65536);
 		if (!data)
 			return GP_ERROR_NO_MEMORY;
-		if (!(fp = fopen (filename, "wb")))
+		if (!(fp = fopen (filename, "wb"))) {
+			free (data);
 			return GP_ERROR;
+		}
 		while (curread < offset) {
 			int toread, res;
 
@@ -863,6 +865,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			if (res < 65536) /* end of file */
 				break;
 		}
+		free (data);
 		return GP_OK;
 	}
 	if (	(destination->accesstype == GP_FILE_ACCESSTYPE_FD) &&
