@@ -558,6 +558,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NO_MEMORY;
 	}
 	if (-1 == fstat(fd,&stbuf)) {
+		free (buf);
 		close (fd);
 		return GP_ERROR_IO_READ;
 	}
