@@ -6815,45 +6815,40 @@ msgid "Flash Sync. Speed"
 msgstr "Blitzsynchronisations Geschwindigkeit"
 
 #: camlibs/ptp2/config.c:5720 camlibs/ptp2/ptp.c:4266
-#, fuzzy
 msgid "JPEG Compression Policy"
-msgstr "Kompression"
+msgstr "JPEG Kompression Policy"
 
 #: camlibs/ptp2/config.c:5721
 msgid "AF-C Mode Priority"
-msgstr ""
+msgstr "AF-C Modus Priorität"
 
 #: camlibs/ptp2/config.c:5722
 msgid "AF-S Mode Priority"
-msgstr ""
+msgstr "AF-S Modus Priorität"
 
 #: camlibs/ptp2/config.c:5723
-#, fuzzy
 msgid "AF Activation"
-msgstr "Aktion"
+msgstr "AF Aktivierung"
 
 #: camlibs/ptp2/config.c:5724 camlibs/ptp2/ptp.c:4616
 msgid "Dynamic AF Area"
-msgstr ""
+msgstr "Dynamischer AF Bereich"
 
 #: camlibs/ptp2/config.c:5725 camlibs/ptp2/ptp.c:4310
-#, fuzzy
 msgid "AF Lock On"
-msgstr "Nur AF Lock"
+msgstr "AF Lock An"
 
 #: camlibs/ptp2/config.c:5726 camlibs/ptp2/ptp.c:4421
-#, fuzzy
 msgid "AF Area Point"
-msgstr "AF Bereich Aufhellung"
+msgstr "AF Bereich Punkt"
 
 #: camlibs/ptp2/config.c:5727
-#, fuzzy
 msgid "AF On Button"
-msgstr "nur AE Lock"
+msgstr "AF An Knopf"
 
 #: camlibs/ptp2/config.c:5743
 msgid "Maximum continuous release"
-msgstr ""
+msgstr "Maximum an kontinuierlichen Aufnahmen"
 
 #: camlibs/ptp2/config.c:5746 camlibs/ptp2/ptp.c:4212
 msgid "Raw Compression"
@@ -7051,88 +7046,76 @@ msgid "Hardware Error"
 msgstr ""
 
 #: camlibs/ptp2/library.c:210
-#, fuzzy
 msgid "Out of Focus"
-msgstr "Autofokusmodus"
+msgstr "Nicht im Fokus"
 
 #: camlibs/ptp2/library.c:211
-#, fuzzy
 msgid "Change Camera Mode Failed"
-msgstr "Kameramodell"
+msgstr "Ändern des Kameramodells fehlgeschlagen"
 
 #: camlibs/ptp2/library.c:212
-#, fuzzy
 msgid "Invalid Status"
-msgstr "Ungültig"
+msgstr "Ungültiger Status"
 
 #: camlibs/ptp2/library.c:213
-#, fuzzy
 msgid "Set Property Not Supported"
-msgstr "PTP-Geräteeigenschaft nicht unterstützt"
+msgstr "Setzen der PTP-Geräteeigenschaft nicht unterstützt"
 
 #: camlibs/ptp2/library.c:214
-#, fuzzy
 msgid "Whitebalance Reset Error"
-msgstr "Weißabgleich Preset Nummer"
+msgstr "Weißabgleich Preset Fehler"
 
 #: camlibs/ptp2/library.c:215
 msgid "Dust Reference Error"
-msgstr ""
+msgstr "Staub Referenz Fehler"
 
 #: camlibs/ptp2/library.c:216
-#, fuzzy
 msgid "Shutter Speed Bulb"
-msgstr "Belichtungszeit"
+msgstr "Belichtungszeit Lampe"
 
 #: camlibs/ptp2/library.c:217
-#, fuzzy
 msgid "Mirror Up Sequence"
 msgstr "Spiegel hochklappen"
 
 #: camlibs/ptp2/library.c:218
 msgid "Camera Mode Not Adjust FNumber"
-msgstr ""
+msgstr "Kamera Modus FNummer nicht anpassen"
 
 #: camlibs/ptp2/library.c:219
 msgid "Not in Liveview"
-msgstr ""
+msgstr "Nicht im Liveview Modus"
 
 #: camlibs/ptp2/library.c:220
 msgid "Mf Drive Step End"
-msgstr ""
+msgstr "MF am Anschlag"
 
 #: camlibs/ptp2/library.c:221
 msgid "Mf Drive Step Insufficiency"
-msgstr ""
+msgstr "MF Schritt zu klein"
 
 #: camlibs/ptp2/library.c:222
 msgid "Advanced Transfer Cancel"
-msgstr ""
+msgstr "Abbruch des erweiterten Transfers"
 
 #: camlibs/ptp2/library.c:223
-#, fuzzy
 msgid "Unknown command"
-msgstr "Unbekannt %d"
+msgstr "Unbekanntes Kommando"
 
 #: camlibs/ptp2/library.c:224
-#, fuzzy
 msgid "Operation refused"
-msgstr "Operation abgebrochen"
+msgstr "Operation abgelehnt"
 
 #: camlibs/ptp2/library.c:225
-#, fuzzy
 msgid "Lens cover present"
-msgstr "Keine Karte vorhanden."
+msgstr "Objektivkappe aufgesetzt"
 
 #: camlibs/ptp2/library.c:226
-#, fuzzy
 msgid "Battery low"
-msgstr "Batteriemodus"
+msgstr "Batterie fast leer"
 
 #: camlibs/ptp2/library.c:227
-#, fuzzy
 msgid "Camera not ready"
-msgstr "Kameramodus"
+msgstr "Kamera nicht bereit"
 
 #: camlibs/ptp2/library.c:229
 msgid "PTP I/O error"
@@ -7155,9 +7138,8 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP-Protokollfehler: Antwort erwartet"
 
 #: camlibs/ptp2/library.c:234
-#, fuzzy
 msgid "PTP Timeout"
-msgstr "Fernsteuerungsabschaltzeit"
+msgstr "PTP Timeout"
 
 #: camlibs/ptp2/library.c:1880
 #, c-format
@@ -7193,11 +7175,10 @@ msgid "Sorry, your Nikon camera does not support LiveView mode"
 msgstr "Diese Nikon Kamera unterstützt nicht den LiveView Modus"
 
 #: camlibs/ptp2/library.c:2103 camlibs/ptp2/library.c:2119
-#, fuzzy
 msgid ""
 "Sorry, your Nikon camera does not seem to return a JPEG image in LiveView "
 "mode"
-msgstr "Diese Nikon Kamera unterstützt nicht den LiveView Modus"
+msgstr "Diese Nikon Kamera scheint kein JPEG im LiveView Modus zu holen"
 
 #: camlibs/ptp2/library.c:2141
 #, c-format
@@ -7218,23 +7199,22 @@ msgid "Canon EOS Capture failed: %x"
 msgstr "Canon EOS Aufnahme fehlgeschlagen: %x"
 
 #: camlibs/ptp2/library.c:2433
-#, fuzzy
 msgid "Canon EOS Capture failed to release: Perhaps no focus?"
-msgstr "Canon EOS Aufnahme fehlgeschlagen: %x"
+msgstr "Canon EOS Aufnahme fehlgeschlagen: Evt kein Fokus?"
 
 #: camlibs/ptp2/library.c:2437
 msgid "Canon EOS Capture failed to release: Perhaps no more memory on card?"
-msgstr ""
+msgstr "Canon EOS Aufnahme fehlgeschlagen: Karte voll?"
 
 #: camlibs/ptp2/library.c:2441
 #, c-format
 msgid "Canon EOS Capture failed to release: Unknown error %d, please report."
-msgstr ""
+msgstr "Canon EOS Aufnahme fehlgeschlagen: Unbekannter Fehler %d, bitte berichten."
 
 #: camlibs/ptp2/library.c:2452 camlibs/ptp2/library.c:3255
-#, fuzzy, c-format
+#, c-format
 msgid "Canon EOS Get Changes failed: 0x%04x"
-msgstr "Canon EOS Abfrage fehlgeschlagen: %x"
+msgstr "Canon EOS Event Abfrage fehlgeschlagen: 0x%04x"
 
 #: camlibs/ptp2/library.c:2647
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
@@ -7243,9 +7223,9 @@ msgstr ""
 "Fernauslöser nicht"
 
 #: camlibs/ptp2/library.c:2703 camlibs/ptp2/library.c:2714
-#, fuzzy, c-format
+#, c-format
 msgid "Canon Capture failed: 0x%04x"
-msgstr "Canon Aufnahme fehlgeschlagen: %x"
+msgstr "Canon Aufnahme fehlgeschlagen: 0x%04x"
 
 #: camlibs/ptp2/library.c:2897 camlibs/ptp2/library.c:3210
 msgid "Sorry, your camera does not support generic capture"
@@ -7257,29 +7237,29 @@ msgid "No event received, error %x."
 msgstr "Kein Event empfangen, Fehler %x."
 
 #: camlibs/ptp2/library.c:3085
-#, fuzzy, c-format
+#, c-format
 msgid "Canon EOS Trigger Capture failed: 0x%x (result 0x%x)"
-msgstr "Canon EOS Aufnahme fehlgeschlagen: %x"
+msgstr "Canon EOS Aufnahme triggern fehlgeschlagen: 0x%x (Resultat 0x%x)"
 
 #: camlibs/ptp2/library.c:3089
-#, fuzzy, c-format
+#, c-format
 msgid "Canon EOS Trigger Capture failed: 0x%x"
-msgstr "Canon EOS Aufnahme fehlgeschlagen: %x"
+msgstr "Canon EOS Aufnahme triggern fehlgeschlagen: 0x%x"
 
 #: camlibs/ptp2/library.c:3094
 msgid "Canon EOS Trigger Capture failed to release: Perhaps no focus?"
-msgstr ""
+msgstr "Canon EOS Aufnahme triggern fehlgeschlagen: Kein Fokus?"
 
 #: camlibs/ptp2/library.c:3098
 msgid ""
 "Canon EOS Trigger Capture failed to release: Perhaps no more memory on card?"
-msgstr ""
+msgstr "Canon EOS Aufnahme triggern fehlgeschlagen: Speicherkarte voll?"
 
 #: camlibs/ptp2/library.c:3102
 #, c-format
 msgid ""
 "Canon EOS Trigger Capture failed to release: Unknown error %d, please report."
-msgstr ""
+msgstr "Canon EOS Aufnahme triggern fehlgeschlagen: Unbekannter Fehler %d, bitte berichten."
 
 #: camlibs/ptp2/library.c:3129
 msgid "Sorry, initializing your camera did not work. Please report this."
@@ -7558,9 +7538,9 @@ msgid " not read out.\n"
 msgstr " nicht ausgelesen.\n"
 
 #: camlibs/ptp2/library.c:4173
-#, fuzzy, c-format
+#, c-format
 msgid "cannot be queried.\n"
-msgstr "Speicherkarte kann nicht geschrieben werden."
+msgstr "kann nicht abgefragt werden.\n"
 
 #: camlibs/ptp2/library.c:4245
 #, c-format
@@ -8043,9 +8023,8 @@ msgid "Shooting Bank Name D"
 msgstr "Aufnahme Bankname D"
 
 #: camlibs/ptp2/ptp.c:4210
-#, fuzzy
 msgid "Reset Bank 0"
-msgstr "Setze Menübank zurück"
+msgstr "Setze Menübank 0 zurück"
 
 #: camlibs/ptp2/ptp.c:4228
 msgid "White Balance Colour Temperature"
@@ -8056,29 +8035,24 @@ msgid "White Balance Preset Number"
 msgstr "Weißabgleich Preset Nummer"
 
 #: camlibs/ptp2/ptp.c:4232
-#, fuzzy
 msgid "White Balance Preset Name 0"
-msgstr "Weißabgleich Preset Wert 0"
+msgstr "Weißabgleich Preset Name 0"
 
 #: camlibs/ptp2/ptp.c:4234
-#, fuzzy
 msgid "White Balance Preset Name 1"
-msgstr "Weißabgleich Preset Wert 1"
+msgstr "Weißabgleich Preset Name 1"
 
 #: camlibs/ptp2/ptp.c:4236
-#, fuzzy
 msgid "White Balance Preset Name 2"
-msgstr "Weißabgleich Preset Wert 2"
+msgstr "Weißabgleich Preset Name 2"
 
 #: camlibs/ptp2/ptp.c:4238
-#, fuzzy
 msgid "White Balance Preset Name 3"
-msgstr "Weißabgleich Preset Wert 3"
+msgstr "Weißabgleich Preset Name 3"
 
 #: camlibs/ptp2/ptp.c:4240
-#, fuzzy
 msgid "White Balance Preset Name 4"
-msgstr "Weißabgleich Preset Wert 4"
+msgstr "Weißabgleich Preset Name 4"
 
 #: camlibs/ptp2/ptp.c:4242
 msgid "White Balance Preset Value 0"
@@ -8105,13 +8079,12 @@ msgid "Lens Focal Length (Non CPU)"
 msgstr "Fokus Tiefe der Linse (Nicht CPU)"
 
 #: camlibs/ptp2/ptp.c:4262
-#, fuzzy
 msgid "Lens Maximum Aperture (Non CPU)"
 msgstr "Maximale Blende der Linse (Nicht CPU)"
 
 #: camlibs/ptp2/ptp.c:4270
 msgid "Auto DX Crop"
-msgstr ""
+msgstr "Automatisches DX Crop"
 
 #: camlibs/ptp2/ptp.c:4282
 msgid "Menu Bank Name A"
@@ -8138,19 +8111,16 @@ msgid "Vertical AF On"
 msgstr "Vertikaler Autofokus An"
 
 #: camlibs/ptp2/ptp.c:4312
-#, fuzzy
 msgid "Focus Area Zone"
-msgstr "Fokus Bereich Wraparound"
+msgstr "Fokus Bereich Zone"
 
 #: camlibs/ptp2/ptp.c:4314
-#, fuzzy
 msgid "Enable Copyright"
-msgstr "Copyright"
+msgstr "Copyright aktivieren"
 
 #: camlibs/ptp2/ptp.c:4318
-#, fuzzy
 msgid "Exposure ISO Step"
-msgstr "Belichtungszeitschritt"
+msgstr "Belichtungs ISO Schritt"
 
 #: camlibs/ptp2/ptp.c:4320
 msgid "Exposure Step"
@@ -8165,24 +8135,20 @@ msgid "Centre Weight Area"
 msgstr "Mittelpunkt/Gewichtet Bereich"
 
 #: camlibs/ptp2/ptp.c:4328
-#, fuzzy
 msgid "Exposure Base Matrix"
-msgstr "Belichtungszeit"
+msgstr "Belichtungs Basis Matrix"
 
 #: camlibs/ptp2/ptp.c:4330
-#, fuzzy
 msgid "Exposure Base Center"
-msgstr "Belichtungsmesser"
+msgstr "Belichtungs Basis Zentrum"
 
 #: camlibs/ptp2/ptp.c:4332
-#, fuzzy
 msgid "Exposure Base Spot"
-msgstr "Belichtungszeit"
+msgstr "Belichtungs Basis Punkt"
 
 #: camlibs/ptp2/ptp.c:4334
-#, fuzzy
 msgid "Live View AF Area"
-msgstr "Auslöse Modus"
+msgstr "Liveview AF Bereich"
 
 #: camlibs/ptp2/ptp.c:4342
 msgid "Auto Meter Off Time"
@@ -8198,49 +8164,42 @@ msgid "Img Conf Time"
 msgstr "Bild Kommentar"
 
 #: camlibs/ptp2/ptp.c:4350
-#, fuzzy
 msgid "Auto Off Timers"
 msgstr "Zeit für automatische Abschaltung"
 
 #: camlibs/ptp2/ptp.c:4352
-#, fuzzy
 msgid "Angle Level"
-msgstr "Lautstärke"
+msgstr "Neigung"
 
 #: camlibs/ptp2/ptp.c:4354
 msgid "Shooting Speed"
 msgstr "Abstand bei Mehrfachbelichtung"
 
 #: camlibs/ptp2/ptp.c:4358
-#, fuzzy
 msgid "Exposure delay mode"
-msgstr "Belichtungs Programm Modus"
+msgstr "Belichtungs Verzögerungs Modus"
 
 #: camlibs/ptp2/ptp.c:4360
 msgid "Long Exposure Noise Reduction"
 msgstr "Langzeitbelichtungsrauschkompensation"
 
 #: camlibs/ptp2/ptp.c:4368
-#, fuzzy
 msgid "LCD Illumination"
-msgstr "AF Bereich Aufhellung"
+msgstr "LCD Beleuchtung"
 
 #: camlibs/ptp2/ptp.c:4370
-#, fuzzy
 msgid "High ISO noise reduction"
-msgstr "Rauschunterdrückung bei Langzeit Aufnahme"
+msgstr "Rauschunterdrückung bei hohen ISO"
 
 #: camlibs/ptp2/ptp.c:4372
 msgid "On screen tips"
-msgstr ""
+msgstr "Tips auf dem Bildschirm"
 
 #: camlibs/ptp2/ptp.c:4374
-#, fuzzy
 msgid "Artist Name"
-msgstr "Künstler"
+msgstr "Künstlername"
 
 #: camlibs/ptp2/ptp.c:4376
-#, fuzzy
 msgid "Copyright Information"
 msgstr "Copyright Information"
 
@@ -8303,24 +8262,20 @@ msgstr "Auslösen ohne CF Karte"
 
 # Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/ptp2/ptp.c:4417
-#, fuzzy
 msgid "Center Button Zoom Ratio"
-msgstr "Mittlerer Button Aufnahme Modus"
+msgstr "Mittlerer Button Zoom Faktor"
 
 #: camlibs/ptp2/ptp.c:4419
-#, fuzzy
 msgid "Function Button 2"
-msgstr "Funktionsmodus"
+msgstr "Funktions Knopf 2"
 
 #: camlibs/ptp2/ptp.c:4423
-#, fuzzy
 msgid "Normal AF On"
-msgstr "Vertikaler Autofokus An"
+msgstr "Normaler Autofokus An"
 
 #: camlibs/ptp2/ptp.c:4425
-#, fuzzy
 msgid "Clean Image Sensor"
-msgstr "Lösche Daten Store"
+msgstr "Säubere Bildsensor"
 
 #: camlibs/ptp2/ptp.c:4427
 msgid "Image Comment String"
@@ -8343,23 +8298,20 @@ msgid "Movie Screen Size"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:4437
-#, fuzzy
 msgid "Movie Voice"
-msgstr "Move object"
+msgstr "Film Stimme"
 
 #: camlibs/ptp2/ptp.c:4439
-#, fuzzy
 msgid "Movie Microphone"
-msgstr "Move object"
+msgstr "Film Mikrofon"
 
 #: camlibs/ptp2/ptp.c:4441
-#, fuzzy
 msgid "Movie Card Slot"
-msgstr "Bildqualität"
+msgstr "Film Kartenslot"
 
 #: camlibs/ptp2/ptp.c:4445
 msgid "Monitor Off Delay"
-msgstr ""
+msgstr "Bildschirmabschaltverzögerung"
 
 #: camlibs/ptp2/ptp.c:4447
 msgid "Bracketing Enable"
@@ -8414,34 +8366,29 @@ msgid "Max. Aperture at Max. Focal Length"
 msgstr "Maximale Blende bei maximaler Brennweite"
 
 #: camlibs/ptp2/ptp.c:4471
-#, fuzzy
 msgid "Finder ISO Display"
-msgstr "Gitterlinien im Sucher"
+msgstr "ISO Anzeige im Sucher"
 
 #: camlibs/ptp2/ptp.c:4473
-#, fuzzy
 msgid "Auto Off Photo"
-msgstr "Zeit für automatische Abschaltung"
+msgstr "Abschaltzeit für Fotoanzeige"
 
 #: camlibs/ptp2/ptp.c:4475
-#, fuzzy
 msgid "Auto Off Menu"
-msgstr "Zeit für automatische Abschaltung"
+msgstr "Abschaltzeit für Menü"
 
 #: camlibs/ptp2/ptp.c:4477
-#, fuzzy
 msgid "Auto Off Info"
-msgstr "Zeit für automatische Abschaltung"
+msgstr "Abschaltzeit Information"
 
 #: camlibs/ptp2/ptp.c:4479
-#, fuzzy
 msgid "Self Timer Shot Number"
-msgstr "Selbstauslöserzeit"
+msgstr "Selbstauslöser Aufnahmenummer"
 
 #: camlibs/ptp2/ptp.c:4481
 #, fuzzy
 msgid "Vignette Control"
-msgstr "Hoch kontrolliert"
+msgstr "Vignette Parameter"
 
 #: camlibs/ptp2/ptp.c:4487
 msgid "Nikon Exposure Time"
@@ -8464,37 +8411,32 @@ msgid "Exposure Meter"
 msgstr "Belichtungsmesser"
 
 #: camlibs/ptp2/ptp.c:4506
-#, fuzzy
 msgid "USB Speed"
-msgstr "ISO-Geschwindigkeit"
+msgstr "USB Geschwindigkeit"
 
 #: camlibs/ptp2/ptp.c:4508
-#, fuzzy
 msgid "CCD Serial Number"
-msgstr "  Seriennummer: %s\n"
+msgstr "CCD Seriennummer"
 
 #: camlibs/ptp2/ptp.c:4512
 msgid "Group PTN Type"
-msgstr ""
+msgstr "Gruppen PTN Typ"
 
 #: camlibs/ptp2/ptp.c:4514
-#, fuzzy
 msgid "FNumber Lock"
-msgstr "F-Nummer"
+msgstr "F-Nummer Lock"
 
 #: camlibs/ptp2/ptp.c:4516
 msgid "Exposure Aperture Lock"
 msgstr "Belichtung Blende Lock"
 
 #: camlibs/ptp2/ptp.c:4518
-#, fuzzy
 msgid "TV Lock Setting"
-msgstr "Aufnahme-Einstellungen"
+msgstr "TV Lock Einstellungen"
 
 #: camlibs/ptp2/ptp.c:4520
-#, fuzzy
 msgid "AV Lock Setting"
-msgstr "Aufnahme-Einstellungen"
+msgstr "AV Lock Einstellungen"
 
 #: camlibs/ptp2/ptp.c:4522
 #, fuzzy
@@ -8502,9 +8444,8 @@ msgid "Illum Setting"
 msgstr "Bildeinstellungen"
 
 #: camlibs/ptp2/ptp.c:4524
-#, fuzzy
 msgid "Focus Point Bright"
-msgstr "Fokuspunkt"
+msgstr "Fokuspunkt beleuchtet"
 
 #: camlibs/ptp2/ptp.c:4526
 msgid "External Flash Attached"
