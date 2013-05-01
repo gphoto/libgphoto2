@@ -433,12 +433,15 @@ gp_port_usb_reset(GPPort *port)
 {
 	int ret;
 
+	gp_log (GP_LOG_DEBUG, "libusb", "Reseting port");
 	if (!port || !port->pl->dh)
 		return GP_ERROR_BAD_PARAMETERS;
 
 	ret = usb_reset(port->pl->dh);
-        if (ret < 0)
+        if (ret < 0) {
+		gp_log (GP_LOG_ERROR, "libusb", "gp_port_reset: %d", ret);
 		return GP_ERROR_IO_READ;
+	}
         return GP_OK;
 }
 
