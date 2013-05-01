@@ -197,12 +197,9 @@ int digi_delete_all     (GPPort *port, CameraPrivateLibrary *priv)
 {
 	int size;
 	int num_pics;
-	unsigned char *get_size;
+	unsigned char get_size[0x50];
 	unsigned char *junk=NULL;
 
-	get_size=malloc(0x50);
-	if(!get_size) 
-		return GP_ERROR_NO_MEMORY;
 	num_pics = priv->nb_entries;
 	GP_DEBUG("number of entries is %i\n", num_pics);
 	digi_reset (port);
@@ -221,7 +218,6 @@ int digi_delete_all     (GPPort *port, CameraPrivateLibrary *priv)
 						(get_size[0x43]<<24);
 	GP_DEBUG("size = 0x%x\n", size);
 	if(size <= 0xff) {
-		free(get_size);
 		GP_DEBUG("No size to read. This will not work.\n");
 		digi_reset(port);
 		return GP_OK;
@@ -237,4 +233,3 @@ int digi_delete_all     (GPPort *port, CameraPrivateLibrary *priv)
 
 	return GP_OK;
 }
-

@@ -131,23 +131,26 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 	if (!templine_red) {
 		return GP_ERROR_NO_MEMORY;
 	}
-	for(i=0; i < width; i++){
+	for(i=0; i < width; i++)
 	    templine_red[i] = 0x80;
-	}
+
 	templine_green = malloc(width);
 	if (!templine_green) {
+		free (templine_red);
 		return GP_ERROR_NO_MEMORY;
 	}
-	for(i=0; i < width; i++){
+	for(i=0; i < width; i++)
 		templine_green[i] = 0x80;
-	}
+	
 	templine_blue = malloc(width);
 	if (!templine_blue) {
+		free (templine_red);
+		free (templine_green);
 		return GP_ERROR_NO_MEMORY;
 	}
-	for(i=0; i < width; i++){
+	for(i=0; i < width; i++)
 		templine_blue[i] = 0x80;
-	}
+
 	GP_DEBUG ("Running second_decompress.\n");
 	for (m = 0; m < height / 2; m++) {
 		/* First we do an even-numbered line */
