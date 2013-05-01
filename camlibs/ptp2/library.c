@@ -3250,6 +3250,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 			int i;
 			PTPCanon_changes_entry	entry;
 
+			/* keep device alive */
+			ret = ptp_canon_eos_keepdeviceon (params);
+			if (ret != PTP_RC_OK)
+				return translate_ptp_result (ret);
+
 			ret = ptp_check_eos_events (params);
 			if (ret != PTP_RC_OK) {
 				gp_context_error (context, _("Canon EOS Get Changes failed: 0x%04x"), ret);
