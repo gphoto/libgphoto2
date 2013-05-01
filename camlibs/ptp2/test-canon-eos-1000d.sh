@@ -1,6 +1,3 @@
-echo "implement thumbnail retrieval checking of JPG and CR2 and MOV"
-exit 1
-
 dir=`mktemp -d /tmp/camera.XXXXXX`
 cd $dir
 echo -n "Attach Canon EOS 1000D and press return: "
