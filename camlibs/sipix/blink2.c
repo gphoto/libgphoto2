@@ -253,11 +253,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		pitch = (dinfo.output_width*dinfo.output_components+3)&~3;
 
+		if (ret != JPEG_HEADER_OK)
+			return GP_ERROR;
+
 		rawline = malloc(pitch);
 		convline = malloc(dinfo.output_width*2*3);
 		convline2 = malloc(dinfo.output_width*2*2*3);
-		if (ret != JPEG_HEADER_OK)
-			return GP_ERROR;
 		{
 			char foo[30];
 			sprintf(foo,"P6\n%d %d 255\n",dinfo.output_width, dinfo.output_height*2);
