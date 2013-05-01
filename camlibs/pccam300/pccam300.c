@@ -150,7 +150,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
                    unsigned char **data, unsigned int *size,
                    unsigned int *type)
 {
-	int data_size;
+	int data_size, r;
 	uint8_t *buf = NULL;
 
 	/* This is somewhat strange, but works, and the win driver does the
@@ -168,7 +168,11 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
 
 	/* Read the data into the buffer overlapping the header area by
 	 * 0x200 bytes. */
-	CHECK (gp_port_read (port, buf + 623 - 0x200, data_size));
+	r = gp_port_read (port, buf + 623 - 0x200, data_size);
+	if (r < GP_OK) {
+		free (buf);
+		return r;
+	}
 
 	/* FIXME: if we find a RIFF marker in the data stream, assume that
 	 *        this is an avi, for now
@@ -181,9 +185,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
 		*type = PCCAM300_MIME_AVI;
 		memmove(buf, buf + 623 - 0x200, data_size);
 		*size = data_size;
-	}
-	else
-	{
+	} else {
 		/* offset 0x8 in the downloaded data contains the identifier
 		 * we need to request the correct header.
 		 */
@@ -191,9 +193,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
 		                           0x3, buf, 623));
 		*type = PCCAM300_MIME_JPEG;
 	}
-
 	*data = buf;
-
 	return GP_OK;
 }
 
