@@ -1,0 +1,501 @@
+Camera summary:
+Manufacturer: FujitsuToshibaMobileCommun
+Model: IS12T
+  Version: 07.10.08862.03-00.00.00000.00-00.00.00000.00
+  Serial Number: xxxxxxxx - xxxxxxxx - xxxxxxxx - xxxxxxxx
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: microsoft.com: 1.0; microsoft.com/WMDRMPD: 10.1; microsoft.com/WMPPD: 11.1; microsoft.com/AAVT: 1.0; microsoft.com/WMDRMND: 1.0; microsoft.com/MTPZ: 1.0;
+
+Capture Formats: 
+Display Formats: Undefined Contact, Unknown(b218), Abstract Mediacast, Unknown(b401), Undefined Type, Media Card, Abstract Audio Video Playlist, Abstract Audio Album, Association/Directory, JPEG, WMV, MP4, Unknown(b216), AAC, M4A, ASF, WMA, MP3
+Supported MTP Object Properties:
+	Undefined Contact/bb80: da99/unknown(da99) dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc01/StorageID dc41/PersistantUniqueObjectIdentifier
+	Unknown(b218)/b218: da99/unknown(da99) dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc01/StorageID dc41/PersistantUniqueObjectIdentifier dac6/unknown(dac6)
+	Abstract Mediacast/ba0b: da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dc01/StorageID dc41/PersistantUniqueObjectIdentifier dc86/RepresentativeSampleData dc46/Artist dd60/URLSource dc83/RepresentativeSampleHeight
+	Unknown(b401)/b401: da99/unknown(da99) dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc01/StorageID dc41/PersistantUniqueObjectIdentifier
+	Undefined Type/3000: da99/unknown(da99) dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc01/StorageID dc41/PersistantUniqueObjectIdentifier
+	Media Card/b211: da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dc01/StorageID dc41/PersistantUniqueObjectIdentifier da95/unknown(da95) dc83/RepresentativeSampleHeight daa3/unknown(daa3) da96/unknown(da96) dab1/unknown(dab1) dc86/RepresentativeSampleData
+	Abstract Audio Video Playlist/ba05: da99/unknown(da99) dac4/unknown(dac4) dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc01/StorageID dc41/PersistantUniqueObjectIdentifier da9f/unknown(da9f) daa3/unknown(daa3) dab3/unknown(dab3) dac5/unknown(dac5) dd60/URLSource
+	Abstract Audio Album/ba03: dab9/unknown(dab9) da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc47/DateAuthored dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dc01/StorageID dc41/PersistantUniqueObjectIdentifier dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist dc83/RepresentativeSampleHeight
+	Association/Directory/3001: da99/unknown(da99) dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc07/ObjectFileName dc02/ObjectFormat dc0b/ParentObject dc01/StorageID dc41/PersistantUniqueObjectIdentifier
+	JPEG/3801: da99/unknown(da99) dc84/RepresentativeSampleWidth dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc87/Width dc47/DateAuthored dc07/ObjectFileName dac2/unknown(dac2) dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dac1/unknown(dac1) dc01/StorageID dc41/PersistantUniqueObjectIdentifier dc88/Height dac0/unknown(dac0) dc83/RepresentativeSampleHeight dac3/unknown(dac3) dc8a/Rating dc86/RepresentativeSampleData
+	WMV/b981: de99/AudioWAVECodec da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) de97/ScanDepth da97/unknown(da97) dc4f/NonConsumable dc87/Width dc47/DateAuthored dc07/ObjectFileName da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dea1/EncodingProfile dc01/StorageID dc41/PersistantUniqueObjectIdentifier dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist de9b/VideoFourCCCodec da9b/unknown(da9b) dc88/Height dc48/Description de9d/FramesPerThousandSeconds dc9d/DRMStatus dc89/Duration dab6/unknown(dab6) dab5/unknown(dab5) dc95/MetaGenre de9e/KeyFrameDistance da9e/unknown(da9e) de9a/AudioBitRate da9a/unknown(da9a) de94/NumberOfChannels dc94/ParentalRating de91/TotalBitRate dc91/UseCount dc4c/Source dea0/EncodingQuality dd60/URLSource dc8a/Rating da98/unknown(da98) de92/BitRateType de9f/BufferSize dc83/RepresentativeSampleHeight de93/SampleRate de9c/VideoBitRate
+	MP4/b982: de99/AudioWAVECodec da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) de97/ScanDepth da97/unknown(da97) dc4f/NonConsumable dc87/Width dc47/DateAuthored dc07/ObjectFileName da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dea1/EncodingProfile dc01/StorageID dc41/PersistantUniqueObjectIdentifier dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist de9b/VideoFourCCCodec da9b/unknown(da9b) dc88/Height dc48/Description de9d/FramesPerThousandSeconds dc9d/DRMStatus dc89/Duration dab6/unknown(dab6) dab5/unknown(dab5) dc95/MetaGenre de9e/KeyFrameDistance da9e/unknown(da9e) de9a/AudioBitRate da9a/unknown(da9a) de94/NumberOfChannels dc94/ParentalRating de91/TotalBitRate dc91/UseCount dc4c/Source dea0/EncodingQuality dd60/URLSource dc8a/Rating da98/unknown(da98) de92/BitRateType de9f/BufferSize dc83/RepresentativeSampleHeight de93/SampleRate de9c/VideoBitRate
+	Unknown(b216)/b216: de99/AudioWAVECodec da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) de97/ScanDepth da97/unknown(da97) dc4f/NonConsumable dc87/Width dc47/DateAuthored dc07/ObjectFileName da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dea1/EncodingProfile dc01/StorageID dc41/PersistantUniqueObjectIdentifier dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist de9b/VideoFourCCCodec da9b/unknown(da9b) dc88/Height dc48/Description de9d/FramesPerThousandSeconds dc9d/DRMStatus dc89/Duration dab6/unknown(dab6) dab5/unknown(dab5) dc95/MetaGenre de9e/KeyFrameDistance da9e/unknown(da9e) de9a/AudioBitRate da9a/unknown(da9a) de94/NumberOfChannels dc94/ParentalRating de91/TotalBitRate dc91/UseCount dc4c/Source dea0/EncodingQuality dd60/URLSource dc8a/Rating da98/unknown(da98) de92/BitRateType de9f/BufferSize dc83/RepresentativeSampleHeight de93/SampleRate de9c/VideoBitRate
+	AAC/b903: de99/AudioWAVECodec dab9/unknown(dab9) da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc47/DateAuthored dc07/ObjectFileName da02/unknown(da02) da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc8b/Track dc0b/ParentObject da01/unknown(da01) dc81/RepresentativeSampleFormat d901/BuyFlag dc01/StorageID dc41/PersistantUniqueObjectIdentifier da9b/unknown(da9b) dabb/unknown(dabb) dc9b/AlbumArtist de9a/AudioBitRate da9a/unknown(da9a) dc9a/AlbumName dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist dab2/unknown(dab2) dc48/Description dab8/unknown(dab8) dc9d/DRMStatus dc89/Duration dabc/unknown(dabc) dc8c/Genre dc95/MetaGenre dc91/UseCount da9e/unknown(da9e) da00/unknown(da00) dd60/URLSource dc8a/Rating da03/unknown(da03) dc83/RepresentativeSampleHeight da05/unknown(da05) de93/SampleRate de94/NumberOfChannels
+	M4A/b215: de99/AudioWAVECodec dab9/unknown(dab9) da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc47/DateAuthored dc07/ObjectFileName da02/unknown(da02) da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc8b/Track dc0b/ParentObject da01/unknown(da01) dc81/RepresentativeSampleFormat d901/BuyFlag dc01/StorageID dc41/PersistantUniqueObjectIdentifier da9b/unknown(da9b) dabb/unknown(dabb) dc9b/AlbumArtist de9a/AudioBitRate da9a/unknown(da9a) dc9a/AlbumName dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist dab2/unknown(dab2) dc48/Description dab8/unknown(dab8) dc9d/DRMStatus dc89/Duration dabc/unknown(dabc) dc8c/Genre dc95/MetaGenre dc91/UseCount da9e/unknown(da9e) da00/unknown(da00) dd60/URLSource dc8a/Rating da03/unknown(da03) dc83/RepresentativeSampleHeight da05/unknown(da05) de93/SampleRate de94/NumberOfChannels
+	ASF/300c: de99/AudioWAVECodec da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) de97/ScanDepth da97/unknown(da97) dc4f/NonConsumable dc87/Width dc47/DateAuthored dc07/ObjectFileName da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc0b/ParentObject dc81/RepresentativeSampleFormat dea1/EncodingProfile dc01/StorageID dc41/PersistantUniqueObjectIdentifier dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist de9b/VideoFourCCCodec da9b/unknown(da9b) dc88/Height dc48/Description de9d/FramesPerThousandSeconds dc9d/DRMStatus dc89/Duration dab6/unknown(dab6) dab5/unknown(dab5) dc95/MetaGenre de9e/KeyFrameDistance da9e/unknown(da9e) de9a/AudioBitRate da9a/unknown(da9a) de94/NumberOfChannels dc94/ParentalRating de91/TotalBitRate dc91/UseCount dc4c/Source dea0/EncodingQuality dd60/URLSource dc8a/Rating da98/unknown(da98) de92/BitRateType de9f/BufferSize dc83/RepresentativeSampleHeight de93/SampleRate de9c/VideoBitRate
+	WMA/b901: de99/AudioWAVECodec dab9/unknown(dab9) da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc47/DateAuthored dc07/ObjectFileName da02/unknown(da02) da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc8b/Track dc0b/ParentObject da01/unknown(da01) dc81/RepresentativeSampleFormat d901/BuyFlag dc01/StorageID dc41/PersistantUniqueObjectIdentifier da9b/unknown(da9b) dabb/unknown(dabb) dc9b/AlbumArtist de9a/AudioBitRate da9a/unknown(da9a) dc9a/AlbumName dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist dab2/unknown(dab2) dc48/Description dab8/unknown(dab8) dc9d/DRMStatus dc89/Duration dabc/unknown(dabc) dc8c/Genre dc95/MetaGenre dc91/UseCount da9e/unknown(da9e) da00/unknown(da00) dd60/URLSource dc8a/Rating da03/unknown(da03) dc83/RepresentativeSampleHeight da05/unknown(da05) de93/SampleRate de94/NumberOfChannels
+	MP3/3009: de99/AudioWAVECodec dab9/unknown(dab9) da99/unknown(da99) dc84/RepresentativeSampleWidth dc44/Name dc04/ObjectSize dab0/unknown(dab0) da97/unknown(da97) dc4f/NonConsumable dc47/DateAuthored dc07/ObjectFileName da02/unknown(da02) da82/unknown(da82) dd62/TimeBookmark dc02/ObjectFormat dc8b/Track dc0b/ParentObject da01/unknown(da01) dc81/RepresentativeSampleFormat d901/BuyFlag dc01/StorageID dc41/PersistantUniqueObjectIdentifier da9b/unknown(da9b) dabb/unknown(dabb) dc9b/AlbumArtist de9a/AudioBitRate da9a/unknown(da9a) dc9a/AlbumName dac6/unknown(dac6) dc86/RepresentativeSampleData dc46/Artist dab2/unknown(dab2) dc48/Description dab8/unknown(dab8) dc9d/DRMStatus dc89/Duration dabc/unknown(dabc) dc8c/Genre dc95/MetaGenre dc91/UseCount da9e/unknown(da9e) da00/unknown(da00) dd60/URLSource dc8a/Rating da03/unknown(da03) dc83/RepresentativeSampleHeight da05/unknown(da05) de93/SampleRate de94/NumberOfChannels
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Storage
+	VolumeLabel: xxxxxxxx - xxxxxxxx - xxxxxxxx - xxxxxxxx
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 29868408832 (28484 MB)
+	Free Space (Bytes): 26766000128 (25526 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd301:(read only) (type=0x8) Unknown 8
+Property 0xd501:(read only) (type=0x6) 0
+Property 0xd221:(read only) (type=0xffff) '{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}'
+Secure Time(0xd101): error 2002 on query.
+Synchronization Partner(0xd401):(readwrite) (type=0xffff) {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx} ('{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}')
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 255, step 1] value: 0% (0)
+Property 0xd302:(read only) (type=0x6) 1
+Device Certificate(0xd102):(read only) (type=0x4004) (a[2474] ... removed content ... )
+Friendly Device Name(0xd402):(readwrite) (type=0xffff) IS12T ('IS12T')
+Functional Mode(0x5002):(read only) (type=0x4) Enumeration [0] value: 0
+Property 0xd219:(read only) (type=0x6) 1
+Property 0xd238:(readwrite) (type=0xffff) '(null)'
+Property 0xd218:(read only) (type=0x6) 917504
+Property 0xd30f:(read only) (type=0xffff) 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Property 0xd22f:(read only) (type=0x6) 4
+Property 0xd305:(read only) (type=0x8) Unknown 8
+Device Icon(0xd405): error 2002 on query.
+Property 0xd225:(readwrite) (type=0xffff) '(null)'
+Property 0xd21c:(readwrite) (type=0xffff) '(null)'
+Property 0xd226:(readwrite) (type=0x6) 0
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) '(null)'
+Property 0xd237:(read only) (type=0xffff) '0024A5326C16'
+Property 0xd217:(read only) (type=0x6) 4772
+Revocation Info(0xd103): error 2002 on query.
+Property 0xd21a:(read only) (type=0x6) 4
+Property 0xd232:(read only) (type=0x4002) a[0] 
+Property 0xd235:(read only) (type=0x4002) a[12] 0,0,0,0,0,0,0,0,0,0,0,0
+Property 0xd233:(read only) (type=0xffff) '00.00.00000.00'
+Property 0xd234:(read only) (type=0x4002) a[15] 1,133,0,0,0,2,0,0,0,0,3,2,0,0,0
+Property 0xd21b:(read only) (type=0xffff) '(null)'
+Property 0xd21f:(read only) (type=0xffff) 'uuid:00000000-0000-0000-ffff-5c9ad8ef59ca'
+Property 0xd300:(read only) (type=0x8) Unknown 8
+Property 0xd100:(readwrite) (type=0x4002) a[0] 
+Property 0xd220:(readwrite) (type=0xffff) '(null)'
+Property 0xd230:(readwrite) (type=0x8) Unknown 8
+Property 0xd307:(read only) (type=0xffff) 'IS12TFF5FB10E3C'
+Property 0xd227:(readwrite) (type=0x6) 0
+Property 0xd308:(read only) (type=0x8) Unknown 8
+Property 0xd228:(readwrite) (type=0x6) 0
+Property 0xd30a:(read only) (type=0x4002) a[20] 153,72,243,237,82,115,64,216,22,52,42,135,233,8,49,200,70,144,30,199
+Property 0xd22a:(readwrite) (type=0x6) 540
+Property 0xd30b:(read only) (type=0xffff) 'KDI-JP'
+Property 0xd22b:(read only) (type=0xffff) '{d1004d5b-e2b8-be01-5db1-3bdd1513771f}'
+Property 0xd30c:(read only) (type=0xffff) '9948f3ed527340d816342a87e90831c846901ec7'
+Property 0xd22c:(readwrite) (type=0x6) 0
+Property 0xd309:(read only) (type=0x6) 1
+Property 0xd229:(readwrite) (type=0x6) 122
+Property 0xd30d:(read only) (type=0xffff) '00A100001630982C'
+Property 0xd22d:(read only) (type=0x6) 0
+Property 0xd30e:(read only) (type=0x8) Unknown 8
+Property 0xd22e:(readwrite) (type=0xffff) '(null)'
+Property 0xd231:(read only) (type=0x4004) 
+Property 0xd304:(read only) (type=0x6) 0
+Property 0xd236:(read only) (type=0xffff) 'mail@host.co.jp'
+
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: xxxxxxxx - xxxxxxxx - xxxxxxxx - xxxxxxxx
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: FujitsuToshibaMobileCommun
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: IS12T
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 07.10.08862.03-00.00.00000.00-00.00.00000.00
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: microsoft.com: 1.0; microsoft.com/WMDRMPD: 10.1; microsoft.com/WMPPD: 11.1; microsoft.com/AAVT: 1.0; microsoft.com/WMDRMND: 1.0; microsoft.com/MTPZ: 1.0;
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 0%
+/main/other/d301
+Label: PTP Property 0xd301
+Type: TEXT
+Current: (null)
+/main/other/d501
+Label: PTP Property 0xd501
+Type: TEXT
+Current: 0
+/main/other/d221
+Label: PTP Property 0xd221
+Type: TEXT
+Current: {8c455dbf-c16e-1ae8-463c-63296f9858d7}
+/main/other/d401
+Label: Synchronization Partner
+Type: TEXT
+Current: {3DFFE8F5-C6A9-4BDD-9060-29E9CEC6B547}
+/main/other/5001
+Label: Battery Level
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 255
+Step: 1
+/main/other/d302
+Label: PTP Property 0xd302
+Type: TEXT
+Current: 1
+/main/other/d102
+Label: Device Certificate
+Type: TEXT
+Current: (null)
+/main/other/d402
+Label: Friendly Device Name
+Type: TEXT
+Current: IS12T
+/main/other/5002
+Label: Functional Mode
+Type: MENU
+Current: 0
+Choice: 0 0
+/main/other/d219
+Label: PTP Property 0xd219
+Type: TEXT
+Current: 1
+/main/other/d238
+Label: PTP Property 0xd238
+Type: TEXT
+Current: (null)
+/main/other/d218
+Label: PTP Property 0xd218
+Type: TEXT
+Current: 917504
+/main/other/d30f
+Label: PTP Property 0xd30f
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+/main/other/d22f
+Label: PTP Property 0xd22f
+Type: TEXT
+Current: 4
+/main/other/d305
+Label: PTP Property 0xd305
+Type: TEXT
+Current: (null)
+/main/other/d225
+Label: PTP Property 0xd225
+Type: TEXT
+Current: (null)
+/main/other/d21c
+Label: PTP Property 0xd21c
+Type: TEXT
+Current: (null)
+/main/other/d226
+Label: PTP Property 0xd226
+Type: TEXT
+Current: 0
+/main/other/d406
+Label: Session Initiator Info
+Type: TEXT
+Current: (null)
+/main/other/d237
+Label: PTP Property 0xd237
+Type: TEXT
+Current: 0024A5326C16
+/main/other/d217
+Label: PTP Property 0xd217
+Type: TEXT
+Current: 4772
+/main/other/d21a
+Label: PTP Property 0xd21a
+Type: TEXT
+Current: 4
+/main/other/d232
+Label: PTP Property 0xd232
+Type: TEXT
+Current: (null)
+/main/other/d235
+Label: PTP Property 0xd235
+Type: TEXT
+Current: (null)
+/main/other/d233
+Label: PTP Property 0xd233
+Type: TEXT
+Current: 00.00.00000.00
+/main/other/d234
+Label: PTP Property 0xd234
+Type: TEXT
+Current: (null)
+/main/other/d21b
+Label: PTP Property 0xd21b
+Type: TEXT
+Current: (null)
+/main/other/d21f
+Label: PTP Property 0xd21f
+Type: TEXT
+Current: uuid:00000000-0000-0000-ffff-5c9ad8ef59ca
+/main/other/d300
+Label: PTP Property 0xd300
+Type: TEXT
+Current: (null)
+/main/other/d100
+Label: PTP Property 0xd100
+Type: TEXT
+Current: (null)
+/main/other/d220
+Label: PTP Property 0xd220
+Type: TEXT
+Current: (null)
+/main/other/d230
+Label: PTP Property 0xd230
+Type: TEXT
+Current: (null)
+/main/other/d307
+Label: PTP Property 0xd307
+Type: TEXT
+Current: IS12TFF5FB10E3C
+/main/other/d227
+Label: PTP Property 0xd227
+Type: TEXT
+Current: 0
+/main/other/d308
+Label: PTP Property 0xd308
+Type: TEXT
+Current: (null)
+/main/other/d228
+Label: PTP Property 0xd228
+Type: TEXT
+Current: 0
+/main/other/d30a
+Label: PTP Property 0xd30a
+Type: TEXT
+Current: (null)
+/main/other/d22a
+Label: PTP Property 0xd22a
+Type: TEXT
+Current: 540
+/main/other/d30b
+Label: PTP Property 0xd30b
+Type: TEXT
+Current: KDI-JP
+/main/other/d22b
+Label: PTP Property 0xd22b
+Type: TEXT
+Current: {d1004d5b-e2b8-be01-5db1-3bdd1513771f}
+/main/other/d30c
+Label: PTP Property 0xd30c
+Type: TEXT
+Current: 9948f3ed527340d816342a87e90831c846901ec7
+/main/other/d22c
+Label: PTP Property 0xd22c
+Type: TEXT
+Current: 0
+/main/other/d309
+Label: PTP Property 0xd309
+Type: TEXT
+Current: 1
+/main/other/d229
+Label: PTP Property 0xd229
+Type: TEXT
+Current: 122
+/main/other/d30d
+Label: PTP Property 0xd30d
+Type: TEXT
+Current: 00A100001630982C
+/main/other/d22d
+Label: PTP Property 0xd22d
+Type: TEXT
+Current: 0
+/main/other/d30e
+Label: PTP Property 0xd30e
+Type: TEXT
+Current: (null)
+/main/other/d22e
+Label: PTP Property 0xd22e
+Type: TEXT
+Current: (null)
+/main/other/d231
+Label: PTP Property 0xd231
+Type: TEXT
+Current: (null)
+/main/other/d304
+Label: PTP Property 0xd304
+Type: TEXT
+Current: 0
+/main/other/d236
+Label: PTP Property 0xd236
+Type: TEXT
+Current: mail@host.co.jp
+
+Device info:
+Manufacturer: FujitsuToshibaMobileCommun
+  Model: IS12T
+  device version: 07.10.08862.03-00.00.00000.00-00.00.00000.00
+  serial number: 'xxxxxxxx - xxxxxxxx - xxxxxxxx - xxxxxxxx'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0; microsoft.com/WMDRMPD: 10.1; microsoft.com/WMPPD: 11.1; microsoft.com/AAVT: 1.0; microsoft.com/WMDRMND: 1.0; microsoft.com/MTPZ: 1.0;
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100b
+  0x100c
+  0x100d
+  0x100f
+  0x1010
+  0x1013
+  0x1014
+  0x1015
+  0x1016
+  0x1019
+  0x101b
+  0x9810
+  0x9811
+  0x9802
+  0x9807
+  0x9801
+  0x9803
+  0x9804
+  0x9805
+  0x9806
+  0x9808
+  0x9229
+  0x922a
+  0x922e
+  0x922f
+  0x9230
+  0x9231
+  0x9101
+  0x9102
+  0x9103
+  0x9104
+  0x9105
+  0x9106
+  0x9107
+  0x9108
+  0x9109
+  0x910a
+  0x910b
+  0x9218
+  0x9219
+  0x9204
+  0x9217
+  0x9232
+  0x9233
+  0x9212
+  0x9213
+  0x9214
+  0x9215
+  0x9216
+  0x9220
+  0x9221
+  0x9222
+  0x9223
+  0x6108
+  0x6101
+  0x6102
+  0x6103
+  0x6104
+  0x6105
+  0x6106
+  0x6109
+  0x610a
+  0x610b
+  0x610d
+  0x6107
+  0x9300
+  0x9301
+  0x9306
+  0x9302
+  0x9303
+  0x9304
+  0x9305
+  0x930b
+  0x930c
+  0x930d
+  0x930e
+  0x9312
+  0x9313
+  0x9314
+  0x9360
+  0x9361
+  0x9362
+  0x9363
+  0x9364
+  0x9365
+  0x9366
+  0x9234
+Events Supported:
+  0x400c
+  0x4003
+  0xc701
+  0xc702
+Device Properties Supported:
+  0xd301
+  0xd501
+  0xd221
+  0xd101
+  0xd401
+  0x5001
+  0xd302
+  0xd102
+  0xd402
+  0x5002
+  0xd219
+  0xd238
+  0xd218
+  0xd30f
+  0xd22f
+  0xd305
+  0xd405
+  0xd225
+  0xd21c
+  0xd226
+  0xd406
+  0xd237
+  0xd217
+  0xd103
+  0xd21a
+  0xd232
+  0xd235
+  0xd233
+  0xd234
+  0xd21b
+  0xd21f
+  0xd300
+  0xd100
+  0xd220
+  0xd230
+  0xd307
+  0xd227
+  0xd308
+  0xd228
+  0xd30a
+  0xd22a
+  0xd30b
+  0xd22b
+  0xd30c
+  0xd22c
+  0xd309
+  0xd229
+  0xd30d
+  0xd22d
+  0xd30e
+  0xd22e
+  0xd231
+  0xd304
+  0xd236
