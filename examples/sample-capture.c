@@ -58,8 +58,7 @@ capture_to_memory(Camera *camera, GPContext *context, const char **ptr, unsigned
 	retval = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name,
 			context);
 	printf("  Retval: %d\n", retval);
-
-	gp_file_free(file);
+	/*gp_file_free(file); */
 }
 
 static void
