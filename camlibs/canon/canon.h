@@ -688,6 +688,7 @@ int canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned in
 int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available, GPContext *context);
 
 int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const canonDirlistFunctionBits flags, GPContext *context);
+int canon_int_get_info_func (Camera *camera, const char *folder, const char *filename, CameraFileInfo * info, GPContext *context);
 
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);
 int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, unsigned int *length, GPContext *context);

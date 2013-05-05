@@ -805,6 +805,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 										 folder,
 										 context),
 							       attr, context);
+
+				/* we cannot easily retrieve it except by reading the directory */
+				if (info.file.fields & GP_FILE_INFO_MTIME)
+					gp_file_set_mtime (file, info.file.mtime);
 			}
 			break;
 
@@ -2380,6 +2384,7 @@ get_info_func (CameraFilesystem __unused__ *fs, const char *folder,
 	       CameraFileInfo * info, 
 	       void __unused__ *data, GPContext __unused__ *context)
 {
+	Camera *camera = data;
 	GP_DEBUG ("get_info_func() called for '%s'/'%s'", folder, filename);
 
 	info->preview.fields = GP_FILE_INFO_TYPE;
@@ -2400,7 +2405,8 @@ get_info_func (CameraFilesystem __unused__ *fs, const char *folder,
 		strcpy (info->file.type, GP_MIME_WAV);
 	else
 		strcpy (info->file.type, GP_MIME_UNKNOWN);
-	return GP_OK;
+	/* let it fill driver specific info */
+	return canon_int_get_info_func (camera, folder, filename, info, context);
 }
 
 static int

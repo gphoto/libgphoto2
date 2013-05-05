@@ -1735,7 +1735,9 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
                         status = canon_int_do_control_dialogue (camera,
                                                                 CANON_USB_CONTROL_GET_PARAMS,
                                                                 0x00, 0, &response, &len);
-                        
+			if ( status != GP_OK )
+				return status;
+
                         if ( response == NULL )
                                 return GP_ERROR_OS_FAILURE;
                         break;
@@ -3673,6 +3675,306 @@ canon_int_wait_for_event (Camera *camera, int timeout,
 	}
 	/* Never reached */
 	return GP_ERROR;
+}
+
+/* NOTE:
+ * This function should actually not be necessary, as
+ * canon_int_list_directory preps the filesystem info backing store with
+ * all the CameraFileInfos it needs.
+ * It might never be called.
+ */
+int
+canon_int_get_info_func (Camera *camera, const char *folder,
+                const char *filename, CameraFileInfo *info,
+                GPContext *context)
+{
+	/* FIXME: big copy and paste mess from canon_int_list_directory */
+        int res;
+        unsigned int dirents_length;
+        unsigned char *dirent_data = NULL;
+        unsigned char *end_of_data, *temp_ch, *pos;
+        const char *canonfolder = gphoto2canonpath (camera, folder, context);
+
+        GP_DEBUG ("BEGIN canon_int_get_info_func() folder '%s' aka '%s' filename %s", folder, canonfolder, filename);
+
+        if ( canonfolder == NULL ) {
+                GP_DEBUG ( "Error: canon_int_get_info_func called with null name for camera folder" );
+                return GP_ERROR;
+        }
+
+        /* Fetch all directory entries from the camera */
+        switch (camera->port->type) {
+                case GP_PORT_USB:
+                        res = canon_usb_get_dirents (camera, &dirent_data, &dirents_length,
+                                                     canonfolder, context);
+                        break;
+                case GP_PORT_SERIAL:
+                        res = canon_serial_get_dirents (camera, &dirent_data, &dirents_length,
+                                                        canonfolder, context);
+                        break;
+                GP_PORT_DEFAULT
+        }
+        if (res != GP_OK)
+                return res;
+
+        end_of_data = dirent_data + dirents_length;
+
+        if (dirents_length < CANON_MINIMUM_DIRENT_SIZE) {
+                gp_context_error (context,
+                                  _("canon_int_get_info_func: ERROR: "
+                                    "initial message too short (%i < minimum %i)"),
+                                  dirents_length, CANON_MINIMUM_DIRENT_SIZE);
+                free (dirent_data);
+                dirent_data = NULL;
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+
+        /* The first data we have got here is the dirent for the
+         * directory we are reading. Skip over 10 bytes
+         * (2 for attributes, 4 date and 4 size) and then go find
+         * the end of the directory name so that we get to the next
+         * dirent which is actually the first one we are interested
+         * in
+         */
+        GP_DEBUG ("canon_int_get_info_func: Camera directory listing for directory '%s'",
+                  dirent_data + CANON_DIRENT_NAME);
+
+        for (pos = dirent_data + CANON_DIRENT_NAME; pos < end_of_data && *pos != 0; pos++)
+                /* do nothing */ ;
+        if (pos == end_of_data || *pos != 0) {
+                gp_log (GP_LOG_ERROR, "canon_int_get_info_func",
+                                  "Reached end of packet while examining the first dirent");
+                free (dirent_data);
+                dirent_data = NULL;
+                return GP_ERROR_CORRUPTED_DATA;
+        }
+        pos++;                  /* skip NULL byte terminating directory name */
+
+        /* we are now positioned at the first interesting dirent */
+
+        /* This is the main loop, for every directory entry returned */
+        while (pos < end_of_data) {
+                int is_dir, is_file;
+                uint16_t dirent_attrs;  /* attributes of dirent */
+                uint32_t dirent_file_size;      /* size of dirent in octets */
+                uint32_t dirent_time;   /* time stamp of dirent (Unix Epoch) */
+                uint8_t *dirent_name;   /* name of dirent */
+                size_t dirent_name_len; /* length of dirent_name */
+                size_t dirent_ent_size; /* size of dirent in octets */
+                uint32_t tmp_time;
+                time_t date;
+                struct tm *tm;
+
+                dirent_attrs = le16atoh (pos + CANON_DIRENT_ATTRS);
+                dirent_file_size = le32atoh (pos + CANON_DIRENT_SIZE);
+                dirent_name = pos + CANON_DIRENT_NAME;
+
+                /* see canon_int_set_time() for timezone handling */
+                tmp_time = le32atoh (pos + CANON_DIRENT_TIME);
+                if (tmp_time != 0) {
+                        /* FIXME: I just want the tm_gmtoff/timezone info */
+                        date = time(NULL);
+                        tm   = localtime (&date);
+#ifdef HAVE_TM_GMTOFF
+                        dirent_time = tmp_time - tm->tm_gmtoff;
+                        GP_DEBUG ("canon_int_get_info_func: converted %ld to UTC %ld (tm_gmtoff is %ld)",
+                                (long)tmp_time, (long)dirent_time, (long)tm->tm_gmtoff);
+#else
+                        dirent_time = tmp_time + timezone;
+                        GP_DEBUG ("canon_int_get_info_func: converted %ld to UTC %ld (timezone is %ld)",
+                                (long)tmp_time, (long)dirent_time, (long)timezone);
+#endif
+                } else {
+                        dirent_time = tmp_time;
+                }
+
+                is_dir = ((dirent_attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0)
+                        || ((dirent_attrs & CANON_ATTR_RECURS_ENT_DIR) != 0);
+                is_file = !is_dir;
+
+                gp_log (GP_LOG_DATA, "canon/canon.c",
+                        "canon_int_get_info_func: "
+                        "reading dirent at position %li of %li (0x%lx of 0x%lx)",
+                        (long)(pos - dirent_data), (long)(end_of_data - dirent_data),
+                        (long)(pos - dirent_data), (long)(end_of_data - dirent_data) );
+
+                if (pos + CANON_MINIMUM_DIRENT_SIZE > end_of_data) {
+                        if (camera->port->type == GP_PORT_SERIAL) {
+                                /* check to see if it is only NULL bytes left,
+                                 * that is not an error for serial cameras
+                                 * (at least the A50 adds five zero bytes at the end)
+                                 */
+                                for (temp_ch = pos; (temp_ch < end_of_data) && (!*temp_ch); temp_ch++) ;        /* do nothing */
+
+                                if (temp_ch == end_of_data) {
+                                        GP_DEBUG ("canon_int_get_info_func: "
+                                                  "the last %li bytes were all 0 - ignoring.",
+                                                  (long)(temp_ch - pos));
+                                        break;
+                                } else {
+                                        GP_DEBUG ("canon_int_get_info_func: "
+                                                  "byte[%li=0x%lx] == %i=0x%x", (long)(temp_ch - pos),
+                                                  (long)(temp_ch - pos), *temp_ch, *temp_ch);
+                                        GP_DEBUG ("canon_int_get_info_func: "
+                                                  "pos is %p, end_of_data is %p, temp_ch is %p - diff is 0x%lx",
+                                                  pos, end_of_data, temp_ch, (long)(temp_ch - pos));
+                                }
+                        }
+                        GP_DEBUG ("canon_int_get_info_func: "
+                                  "dirent at position %li=0x%lx of %li=0x%lx is too small, "
+                                  "minimum dirent is %i bytes",
+                                  (long)(pos - dirent_data), (long)(pos - dirent_data),
+                                  (long)(end_of_data - dirent_data), (long)(end_of_data - dirent_data),
+                                  CANON_MINIMUM_DIRENT_SIZE);
+                        gp_log (GP_LOG_ERROR,"canon_int_get_info_func", "truncated directory entry encountered");
+                        free (dirent_data);
+                        dirent_data = NULL;
+                        return GP_ERROR_CORRUPTED_DATA;
+                }
+
+                /* Check end of this dirent, 10 is to skip over
+                 * 2    attributes + 0x00
+                 * 4    file size
+                 * 4    file date (UNIX localtime)
+                 * to where the direntry name begins.
+                 */
+                for (temp_ch = dirent_name; temp_ch < end_of_data && *temp_ch != 0;
+                     temp_ch++) ;
+
+                if (temp_ch == end_of_data || *temp_ch != 0) {
+                        GP_DEBUG ("canon_int_get_info_func: "
+                                  "dirent at position %li of %li has invalid name in it."
+                                  "bailing out with what we've got.",
+                                  (long)(pos - dirent_data),
+                                  (long)(end_of_data - dirent_data));
+                        break;
+                }
+                dirent_name_len = strlen ((char *)dirent_name);
+                dirent_ent_size = CANON_MINIMUM_DIRENT_SIZE + dirent_name_len;
+
+                /* check that length of name in this dirent is not of unreasonable size.
+                 * 256 was picked out of the blue
+                 */
+                if (dirent_name_len > 256) {
+                        GP_DEBUG ("canon_int_get_info_func: "
+                                  "the name in dirent at position %li of %li is too long. (%li bytes)."
+                                  "bailing out with what we've got.",
+                                  (long)(pos - dirent_data), (long)(end_of_data - dirent_data),
+                                  (long)dirent_name_len);
+                        break;
+                }
+
+                /* 10 bytes of attributes, size and date, a name and a NULL terminating byte */
+                /* don't use GP_DEBUG since we log this with GP_LOG_DATA */
+                gp_log (GP_LOG_DATA, "canon/canon.c",
+                        "canon_int_get_info_func: dirent determined to be %li=0x%lx bytes :",
+                        (long)dirent_ent_size, (long)dirent_ent_size);
+                gp_log_data ("canon", (char *)pos, dirent_ent_size);
+                if (dirent_name_len) {
+                        /* OK, this directory entry has a name in it. */
+
+                        if (!strcmp(filename, (char*)dirent_name)) {
+                                /* we're going to fill out the info structure
+                                   in this block */
+
+                                /* We start with nothing and continously add stuff */
+                                info->file.fields = GP_FILE_INFO_NONE;
+
+                                info->file.mtime = dirent_time;
+                                if (info->file.mtime != 0)
+                                        info->file.fields |= GP_FILE_INFO_MTIME;
+
+                                if (is_file) {
+                                        /* determine file type based on file name
+                                         * this stuff only makes sense for files, not for folders
+                                         */
+
+                                        strncpy (info->file.type,
+                                                 filename2mimetype (filename),
+                                                 sizeof (info->file.type));
+                                        info->file.fields |= GP_FILE_INFO_TYPE;
+
+                                        if ((dirent_attrs & CANON_ATTR_DOWNLOADED) == 0)
+                                                info->file.status = GP_FILE_STATUS_DOWNLOADED;
+                                        else
+                                                info->file.status =
+                                                        GP_FILE_STATUS_NOT_DOWNLOADED;
+                                        info->file.fields |= GP_FILE_INFO_STATUS;
+
+                                        /* the size is located at offset 2 and is 4
+                                         * bytes long, re-order little/big endian */
+                                        info->file.size = dirent_file_size;
+                                        info->file.fields |= GP_FILE_INFO_SIZE;
+
+                                        /* file access modes */
+                                        if ((dirent_attrs & CANON_ATTR_WRITE_PROTECTED) == 0)
+                                                info->file.permissions =
+                                                        GP_FILE_PERM_READ |
+                                                        GP_FILE_PERM_DELETE;
+                                        else
+                                                info->file.permissions = GP_FILE_PERM_READ;
+                                        info->file.fields |= GP_FILE_INFO_PERMISSIONS;
+                                }
+
+                                /* print dirent as text */
+                                GP_DEBUG ("Raw info: name=%s is_dir=%i, is_file=%i, attrs=0x%x",
+                                          dirent_name, is_dir, is_file, dirent_attrs);
+                                debug_fileinfo (info);
+
+                                if (is_file) {
+                                        /*
+                                         * Append directly to the filesystem instead of to the list,
+                                         * because we have additional information.
+                                         */
+                                        if (!camera->pl->list_all_files
+                                            && !is_image (filename)
+                                            && !is_movie (filename)
+                                            && !is_audio (filename)) {
+                                                /* FIXME: Find associated main file and add it there */
+                                                /* do nothing */
+                                                GP_DEBUG ("Ignored %s/%s", folder, filename);
+                                        } else {
+                                                const char *thumbname;
+
+
+                                                thumbname = canon_int_filename2thumbname (camera,
+                                                                                              filename);
+                                                if (thumbname == NULL) {
+                                                        /* no thumbnail */
+                                                } else {
+                                                        if ( is_cr2 ( filename ) ) {
+                                                                /* We get the first part of the raw file as the thumbnail;
+                                                                   this is (almost) a valid EXIF file. */
+                                                                info->preview.fields = GP_FILE_INFO_TYPE;
+                                                                strcpy (info->preview.type, GP_MIME_EXIF);
+                                                        } else {
+                                                                /* Older Canon cams have JPEG thumbs */
+                                                                info->preview.fields = GP_FILE_INFO_TYPE;
+                                                                strcpy (info->preview.type, GP_MIME_JPEG);
+                                                        }
+                                                }
+                                                GP_DEBUG ( "file \"%s\" has preview of MIME type \"%s\"",
+                                                           filename, info->preview.type );
+                                        }
+                                }
+				/* found ... leave loop */
+				break;
+                        }
+                }
+
+                /* make 'pos' point to next dirent in packet.
+                 * first we skip 10 bytes of attribute, size and date,
+                 * then we skip the name plus 1 for the NULL
+                 * termination bytes.
+                 */
+                pos += dirent_ent_size;
+        }
+        free (dirent_data);
+        dirent_data = NULL;
+
+        GP_DEBUG ("END canon_int_get_info_func() folder '%s' aka '%s' fn '%s'", folder, canonfolder, filename);
+
+	return GP_OK;
 }
 
 
