@@ -1,11 +1,10 @@
 ------------------------------------------------------------------------------
-libgphoto2 2.5.1.2 release
+libgphoto2 2.5.2 release
 
 ptp2:
 * Fixed Raspberry Pi and USB 3.0 "connect only once" problem.
 * Experimental Olympus E-series (not Pen) remote control support. Try in "Control" mode.
 * Nikon DSLR: real movie capture! (use --set-config movie=1/0 and --wait-event)
-
 * New ids:
   Sony: DSC-A900, SLT-A350, DSC-RX1, HX300, NEX-3N
   Nikon Coolpix: P80, L820, S9500, S620, P520, S2500, S2600
@@ -16,23 +15,26 @@ ptp2:
   Canon EOS: 700D, 100D
   Fuji FinePix: H20EXR, X20
   Samsung: NX1000, EK-GC100
-
   Also various MTP device ids merged from libmtp.
 * ptpip: major/minor number was switched in init packet.
 * Nikon DSLR: out of focus during capture fixed, various bugfixes
 * Nikon "controlmode" config for unlocking the camera.
-* Canon DSLR: "keepdeviceon" pinging in get_config, liveviewkkk
+* Canon DSLR: "keepdeviceon" pinging in get_config, liveview
 * Canon thumbnail retrieval fixed.
 * Lots of work on getting Olympus E-series DSLRs in Control mode
   to run.
 
 canon:
 * wait-for-event: handle when camera goes offline during waiting.
+* fixed mtime 0 (Jan 1 1970) issue when downloading files and using --filename
 
 sierra:
 * Fixed the Nikon Coolpix 4300 and 2500 USB over SCSI capture mode.
 * Ignore register 4 read errors after capture as Nikon does not supply them.
 * added commented code on how to switch the Coolpix 2500 to RAW DIAG mode.
+
+libgphoto2_port:
+* gp_port_reset functionality to do a port reset.
 
 libgphoto2_port/usbscsi:
 * Use timeout supplied by driver, not hardcoded 1.5 seconds (fixes Nikon sierra capture).
