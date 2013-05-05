@@ -241,15 +241,22 @@ gp_port_usb_exit (GPPort *port)
 	return (GP_OK);
 }
 
+static int gp_port_usb_find_path_lib(GPPort *);
+
 static int
 gp_port_usb_open (GPPort *port)
 {
 	int ret;
 	char name[64];
 
-	gp_log (GP_LOG_DEBUG,"libusb","gp_port_usb_open()");
-	if (!port || !port->pl->d)
+	gp_log (GP_LOG_DEBUG,"libusb","gp_port_usb_open(%p)", port);
+	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
+	if (!port->pl->d) {
+		ret = gp_port_usb_find_path_lib(port);
+		if (!port->pl->d)
+			return GP_ERROR_BAD_PARAMETERS;
+	}
 
         /*
 	 * Open the device using the previous usb_handle returned by
@@ -564,13 +571,15 @@ gp_port_usb_update (GPPort *port)
 	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	gp_log (GP_LOG_DEBUG, "libusb", "gp_port_usb_update(old int=%d, conf=%d, alt=%d), (new int=%d, conf=%d, alt=%d)",
+	gp_log (GP_LOG_DEBUG, "libusb", "gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d), port %s",
 		port->settings.usb.interface,
 		port->settings.usb.config,
 		port->settings.usb.altsetting,
+		port->settings.usb.port,
 		port->settings_pending.usb.interface,
 		port->settings_pending.usb.config,
-		port->settings_pending.usb.altsetting
+		port->settings_pending.usb.altsetting,
+		port->settings_pending.usb.port
 	);
 
 #if 0
@@ -834,6 +843,101 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 				return GP_OK;
 			}
+		}
+	}
+
+#if 0
+	gp_port_set_error (port, _("Could not find USB device "
+		"(vendor 0x%x, product 0x%x). Make sure this device "
+		"is connected to the computer."), idvendor, idproduct);
+#endif
+	return GP_ERROR_IO_USB_FIND;
+}
+
+static int
+gp_port_usb_find_path_lib(GPPort *port)
+{
+	struct usb_bus *bus;
+	struct usb_device *dev;
+	char *s;
+	char busname[64], devname[64];
+
+	if (!port)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	s = strchr (port->settings.usb.port,':');
+	busname[0] = devname[0] = '\0';
+	if (!s || s[1] == '\0') {
+		/* generic usb: match ... can't do */
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	if (s && (s[1] != '\0')) { /* usb:%d,%d */
+		strncpy(busname,s+1,sizeof(busname));
+		busname[sizeof(busname)-1] = '\0';
+
+		s = strchr(busname,',');
+		if (s) {
+			strncpy(devname, s+1,sizeof(devname));
+			devname[sizeof(devname)-1] = '\0';
+			*s = '\0';
+		} else {
+			/* generic usb: match ... can't do */
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+	}
+	for (bus = usb_busses; bus; bus = bus->next) {
+		if (strcmp(busname, bus->dirname))
+			continue;
+
+		for (dev = bus->devices; dev; dev = dev->next) {
+			int config = -1, interface = -1, altsetting = -1;
+
+			if ((dev->filename != strstr(dev->filename, devname)))
+				continue;
+
+			port->pl->d = dev;
+
+			gp_log (GP_LOG_VERBOSE, "libusb", "Found device for path %s", port->settings.usb.port);
+
+			/* Use the first config, interface and altsetting we find */
+			gp_port_usb_find_first_altsetting(dev, &config, &interface, &altsetting);
+
+			/* Set the defaults */
+			if (dev->config) {
+				int i;
+
+				port->settings.usb.config = dev->config[config].bConfigurationValue;
+				port->settings.usb.interface = dev->config[config].interface[interface].altsetting[altsetting].bInterfaceNumber;
+				port->settings.usb.altsetting = dev->config[config].interface[interface].altsetting[altsetting].bAlternateSetting;
+
+				port->settings.usb.inep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_BULK);
+				port->settings.usb.outep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_OUT, USB_ENDPOINT_TYPE_BULK);
+				port->settings.usb.intep = gp_port_usb_find_ep(dev, config, interface, altsetting, USB_ENDPOINT_IN, USB_ENDPOINT_TYPE_INTERRUPT);
+
+				port->settings.usb.maxpacketsize = 0;
+				gp_log (GP_LOG_DEBUG, "libusb", "inep to look for is %02x", port->settings.usb.inep);
+				for (i=0;i<dev->config[config].interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
+					if (port->settings.usb.inep == dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
+						port->settings.usb.maxpacketsize = dev->config[config].interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;
+						break;
+					}
+				}
+				gp_log (GP_LOG_VERBOSE, "libusb",
+					"Detected defaults: config %d, "
+					"interface %d, altsetting %d, "
+					"inep %02x, outep %02x, intep %02x, "
+					"class %02x, subclass %02x",
+					port->settings.usb.config,
+					port->settings.usb.interface,
+					port->settings.usb.altsetting,
+					port->settings.usb.inep,
+					port->settings.usb.outep,
+					port->settings.usb.intep,
+					dev->config[config].interface[interface].altsetting[altsetting].bInterfaceClass,
+					dev->config[config].interface[interface].altsetting[altsetting].bInterfaceSubClass
+					);
+			}
+			return GP_OK;
 		}
 	}
 
