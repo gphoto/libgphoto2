@@ -444,7 +444,7 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 		gp_camera_exit (camera, NULL);
 
 	gp_port_info_get_name (info, &name);
-	gp_port_info_get_name (info, &path);
+	gp_port_info_get_path (info, &path);
 	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
 		"port '%s' at '%s'...", name, path);
 	CR (camera, gp_port_set_info (camera->port, info), NULL);
