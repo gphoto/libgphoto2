@@ -296,14 +296,21 @@ gp_port_usb_exit (GPPort *port)
 	return (GP_OK);
 }
 
+static int gp_port_usb_find_path_lib(GPPort *port);
 static int
 gp_port_usb_open (GPPort *port)
 {
 	int ret;
 
 	gp_log (GP_LOG_DEBUG,"libusb1","gp_port_usb_open()");
-	if (!port || !port->pl->d)
+	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
+
+	if (!port->pl->d) {
+		gp_port_usb_find_path_lib(port);
+		if (!port->pl->d)
+			return GP_ERROR_BAD_PARAMETERS;
+	}
 
 	ret = libusb_open (port->pl->d, &port->pl->dh);
 	if (ret) {
@@ -599,13 +606,15 @@ gp_port_usb_update (GPPort *port)
 	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	gp_log (GP_LOG_DEBUG, "libusb1", "gp_port_usb_update(old int=%d, conf=%d, alt=%d), (new int=%d, conf=%d, alt=%d)",
+	gp_log (GP_LOG_DEBUG, "libusb1", "gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d) port %s",
 		port->settings.usb.interface,
 		port->settings.usb.config,
 		port->settings.usb.altsetting,
+		port->settings.usb.port,
 		port->settings_pending.usb.interface,
 		port->settings_pending.usb.config,
-		port->settings_pending.usb.altsetting
+		port->settings_pending.usb.altsetting,
+		port->settings_pending.usb.port
 	);
 
 /* do not overwrite it ... we need to set it.
@@ -780,6 +789,81 @@ gp_port_usb_find_first_altsetting(struct libusb_device *dev, int *config, int *i
 	return -1;
 }
 
+static int
+gp_port_usb_find_path_lib(GPPort *port)
+{
+	char *s;
+	int d, busnr = 0, devnr = 0;
+	GPPortPrivateLibrary *pl = port->pl;
+
+	if (!port)
+		return (GP_ERROR_BAD_PARAMETERS);
+
+	s = strchr (port->settings.usb.port,':');
+	if (s && (s[1] != '\0')) { /* usb:%d,%d */
+		if (sscanf (s+1, "%d,%d", &busnr, &devnr) != 2)
+			return GP_ERROR_BAD_PARAMETERS;
+	} else {
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+
+	pl->nrofdevs = load_devicelist (port->pl);
+
+	for (d = 0; d < pl->nrofdevs; d++) {
+		struct libusb_config_descriptor *confdesc;
+		int ret;
+		int config = -1, interface = -1, altsetting = -1;
+
+		if (busnr != libusb_get_bus_number (pl->devs[d]))
+			continue;
+		if (devnr != libusb_get_device_address (pl->devs[d]))
+			continue;
+
+		port->pl->d = pl->devs[d];
+
+		gp_log (GP_LOG_VERBOSE, "libusb1", "Found path %s", port->settings.usb.port); 
+
+		/* Use the first config, interface and altsetting we find */
+		gp_port_usb_find_first_altsetting(pl->devs[d], &config, &interface, &altsetting);
+
+		ret = libusb_get_config_descriptor (pl->devs[d], config, &confdesc);
+		if (ret)
+			continue;
+
+		/* Set the defaults */
+		port->settings.usb.config = confdesc->bConfigurationValue;
+		port->settings.usb.interface = confdesc->interface[interface].altsetting[altsetting].bInterfaceNumber;
+		port->settings.usb.altsetting = confdesc->interface[interface].altsetting[altsetting].bAlternateSetting;
+
+		port->settings.usb.inep  = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_BULK);
+		port->settings.usb.outep = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_OUT, LIBUSB_TRANSFER_TYPE_BULK);
+		port->settings.usb.intep = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_INTERRUPT);
+
+		port->settings.usb.maxpacketsize = libusb_get_max_packet_size (pl->devs[d], port->settings.usb.inep);
+		gp_log (GP_LOG_VERBOSE, "libusb1",
+			"Detected defaults: config %d, "
+			"interface %d, altsetting %d, "
+			"inep %02x, outep %02x, intep %02x, "
+			"class %02x, subclass %02x",
+			port->settings.usb.config,
+			port->settings.usb.interface,
+			port->settings.usb.altsetting,
+			port->settings.usb.inep,
+			port->settings.usb.outep,
+			port->settings.usb.intep,
+			confdesc->interface[interface].altsetting[altsetting].bInterfaceClass,
+			confdesc->interface[interface].altsetting[altsetting].bInterfaceSubClass
+			);
+		libusb_free_config_descriptor (confdesc);
+		return GP_OK;
+	}
+#if 0
+	gp_port_set_error (port, _("Could not find USB device "
+		"(vendor 0x%x, product 0x%x). Make sure this device "
+		"is connected to the computer."), idvendor, idproduct);
+#endif
+	return GP_ERROR_IO_USB_FIND;
+}
 static int
 gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 {
