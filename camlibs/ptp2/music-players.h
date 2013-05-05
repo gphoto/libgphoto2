@@ -1044,8 +1044,6 @@
   { "Nokia", 0x0421, "E72", 0x0221, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "5530", 0x0229, DEVICE_FLAG_NONE },
-  /* Grzegorz Woźniak <wozniakg@gmail.com> */
-  { "Nokia", 0x0421, "E6", 0x032f, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "N97 mini", 0x026b, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
@@ -1286,7 +1284,6 @@
   /*
    * LG Electronics
    */
-  // From anonymous SourceForge user
   // Uncertain if this is really the MTP mode device ID...
   { "LG Electronics Inc.", 0x043e, "T54", 0x7040,
       DEVICE_FLAG_UNLOAD_DRIVER },
@@ -1303,16 +1300,16 @@
   { "LG Electronics Inc.", 0x1004, "GR-500 Music Player", 0x611b,
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_ALWAYS_PROBE_DESCRIPTOR },
-  // Reported by anonymous sourceforge user
   { "LG Electronics Inc.", 0x1004, "KM900", 0x6132,
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_UNLOAD_DRIVER },
-  // Reported by anonymous sourceforge user
   { "LG Electronics Inc.", 0x1004, "LG8575", 0x619a,
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_UNLOAD_DRIVER },
-  // Reported by anonymous sourceforge user
   { "LG Electronics Inc.", 0x1004, "V909 G-Slate", 0x61f9,
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      DEVICE_FLAG_UNLOAD_DRIVER },
+  { "LG Electronics Inc.", 0x1004, "LG2 Optimus", 0x6225,
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Brian J. Murrell
@@ -1533,6 +1530,8 @@
       DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "MT11i Xperia Neo MTP", 0x0156,
       DEVICE_FLAG_NONE },
+  { "SonyEricsson", 0x0fce, "IS12S Xperia Acro MTP", 0x0157,
+      DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "MK16i Xperia MTP", 0x015a,
       DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "R800/R88i Xperia Play MTP", 0x015d,
@@ -1581,7 +1580,7 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia E MTP", 0x018c,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x018D,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x018d,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia Z MTP", 0x0193,
       DEVICE_FLAG_NONE },
@@ -1591,6 +1590,8 @@
   /*
    * MTP+UMS personalities of MTP devices (see above)
    */
+  { "SonyEricsson", 0x0fce, "IS12S Xperia Acro MTP+CDROM", 0x4157,
+      DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "ST17i Xperia Active MTP+CDROM", 0x4168,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "LT26i Xperia S MTP+CDROM", 0x4169,
@@ -1641,7 +1642,11 @@
       DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "MT11i Xperia Neo MTP+ADB", 0x5156,
       DEVICE_FLAG_NONE },
+  { "SonyEricsson", 0x0fce, "IS12S Xperia Acro MTP+ADB", 0x5157,
+      DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "MK16i Xperia MTP+ADB", 0x515a,
+      DEVICE_FLAG_NONE },
+  { "SonyEricsson", 0x0fce, "R800/R88i Xperia Play MTP+ADB", 0x515d,
       DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "ST18i Xperia Ray MTP+ADB", 0x5161,
       DEVICE_FLAG_NONE },
@@ -2088,6 +2093,8 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One S (ID1)", 0x0cec,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC Evo 4G LTE (ID1)", 0x0df5,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One S (ID2)", 0x0df9,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One X (ID1)", 0x0dfb,
@@ -2195,6 +2202,14 @@
   { "Xiaomi", 0x2717, "Mi-2 (MTP+ADB)", 0x9039,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP)", 0xf003,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * XO Learning Tablet
+   */
+  { "Acromag Inc.", 0x16d5, "XO Learning Tablet (MTP+ADB)", 0x8005,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Acromag Inc.", 0x16d5, "XO Learning Tablet (MTP)", 0x8006,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
