@@ -3,6 +3,10 @@ cd $dir
 echo -n "Attach Nikon D90 and press return: "
 read dummy 
 set -x -v
+echo "***  basics"
+gphoto2 -L
+gphoto2 -l
+gphoto2 --summary
 echo "***  single capture"
 gphoto2 --set-config capturetarget=0
 gphoto2 --set-config imagequality=2 --capture-image-and-download

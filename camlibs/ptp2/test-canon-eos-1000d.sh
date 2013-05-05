@@ -3,6 +3,10 @@ cd $dir
 echo -n "Attach Canon EOS 1000D and press return: "
 read dummy 
 set -x -v
+echo "***  standard actions"
+gphoto2 -l
+gphoto2 -L
+gphoto2 --summary
 echo "***  single capture"
 gphoto2 --set-config capturetarget=0
 gphoto2 --set-config imageformat=0 --capture-image-and-download
