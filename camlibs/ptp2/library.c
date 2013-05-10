@@ -1345,6 +1345,9 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3310995&group_id=8874 */
 	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Brian L Murphy <brian.l.murphy@gmail.com> */
+	{"Canon:EOS 1D X",			0x04a9, 0x3219, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:IXUS 310IS",			0x04a9, 0x3225, PTPBUG_DELETE_SENDS_EVENT},
 
