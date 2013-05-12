@@ -388,3 +388,1669 @@ Choice: 1 0
 Choice: 2 75
 Choice: 3 0
 Choice: 4 50
+
+
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon EOS 60D
+  device version: 3-1.1.0
+  serial number: '596bbf9a935147d6842d8d8e28fe8fb5'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 200
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1014
+  0x1015
+  0x1016
+  0x1001
+  0x1002
+  0x1003
+  0x1006
+  0x1004
+  0x9101
+  0x1005
+  0x9102
+  0x1007
+  0x1008
+  0x9103
+  0x1009
+  0x9104
+  0x100a
+  0x101b
+  0x9107
+  0x100c
+  0x100d
+  0x100b
+  0x9105
+  0x100f
+  0x9106
+  0x9110
+  0x9127
+  0x910b
+  0x9108
+  0x9109
+  0x910c
+  0x910e
+  0x910f
+  0x9115
+  0x9114
+  0x9113
+  0x9116
+  0x9117
+  0x9120
+  0x91f0
+  0x9118
+  0x9121
+  0x91f1
+  0x911d
+  0x910a
+  0x911b
+  0x911c
+  0x911e
+  0x911a
+  0x9153
+  0x9154
+  0x9160
+  0x9155
+  0x9157
+  0x9158
+  0x9159
+  0x915a
+  0x911f
+  0x91fe
+  0x91ff
+  0x9128
+  0x9129
+  0x912d
+  0x912e
+  0x912f
+  0x912c
+  0x9130
+  0x9131
+  0x9132
+  0x9133
+  0x9134
+  0x912b
+  0x9135
+  0x9136
+  0x9137
+  0x9801
+  0x9802
+  0x9803
+  0x9804
+  0x9805
+  0x9052
+  0x9053
+  0x9057
+  0x9058
+  0x9059
+  0x905a
+  0x905f
+Events Supported:
+  0x4009
+  0x4004
+  0x4005
+  0x4003
+  0x4002
+  0x4007
+  0xc101
+Device Properties Supported:
+  0xd402
+  0xd407
+  0xd406
+  0xd303
+  0x5001
+
+event 0: EOS prop d105 info record, datasize is 4
+event 0: currentvalue of d105 is 2
+event 1: EOS prop d108 info record, datasize is 4
+event 1: currentvalue of d108 is 3
+event 2: EOS prop d106 info record, datasize is 4
+event 2: currentvalue of d106 is 4
+event 3: EOS prop d107 info record, datasize is 4
+event 3: currentvalue of d107 is 3
+event 4: EOS prop d109 info record, datasize is 4
+event 4: currentvalue of d109 is 0
+event 5: EOS prop d10a info record, datasize is 4
+event 5: Unknown EOS property d10a, datasize is 4, using uint32
+    0: 0x    1450
+event 5: currentvalue of d10a is 1450
+event 6: EOS prop d10b info record, datasize is 4
+event 7: EOS prop d10c info record, datasize is 4
+event 8: EOS prop d10d info record, datasize is 4
+event 8: currentvalue of d10d is 0
+event 9: EOS prop d10e info record, datasize is 4
+event 9: currentvalue of d10e is 0
+event 10: EOS prop d10f info record, datasize is 4
+event 10: currentvalue of d10f is 1
+event 11: EOS prop d11b info record, datasize is 4
+event 11: currentvalue of d11b is f62
+event 12: EOS prop d114 info record, datasize is 4
+event 12: Unknown EOS property d114, datasize is 4, using uint16
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 12: currentvalue of d114 is 0
+event 13: EOS prop d116 info record, datasize is 4
+event 13: currentvalue of d116 is 80000287
+event 14: EOS prop d119 info record, datasize is 4
+event 14: currentvalue of d119 is 100
+event 15: EOS prop d110 info record, datasize is 4
+event 15: currentvalue of d110 is 81
+event 16: EOS prop d101 info record, datasize is 4
+event 16: currentvalue of d101 is 28
+event 17: EOS prop d102 info record, datasize is 4
+event 17: currentvalue of d102 is 0
+event 18: EOS prop d103 info record, datasize is 4
+event 18: currentvalue of d103 is 68
+event 19: EOS prop d104 info record, datasize is 4
+event 19: currentvalue of d104 is 0
+event 20: EOS prop d11d info record, datasize is 4
+event 20: currentvalue of d11d is 0
+event 21: EOS prop d111 info record, datasize is 4
+event 21: currentvalue of d111 is 1
+event 22: EOS prop d112 info record, datasize is 4
+event 22: currentvalue of d112 is 0
+event 23: EOS prop d113 info record, datasize is 4
+event 23: currentvalue of d113 is 4f6614cb
+event 24: EOS prop d120 info record, datasize is 20
+event 24: decoded imageformat, currentvalue of d120 is 300
+event 25: EOS prop d122 info record, datasize is 20
+event 25: decoded imageformat, currentvalue of d122 is 300
+event 26: EOS prop d150 info record, datasize is 28
+event 26: Unknown EOS property d150, datasize is 28
+    0: 1c
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 03
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+event 27: EOS prop d151 info record, datasize is 28
+event 27: Unknown EOS property d151, datasize is 28
+    0: 1c
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 02
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+event 28: EOS prop d152 info record, datasize is 28
+event 28: Unknown EOS property d152, datasize is 28
+    0: 1c
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 04
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+event 29: EOS prop d153 info record, datasize is 28
+event 29: Unknown EOS property d153, datasize is 28
+    0: 1c
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+event 30: EOS prop d154 info record, datasize is 28
+event 30: Unknown EOS property d154, datasize is 28
+    0: 1c
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+event 31: EOS prop d155 info record, datasize is 28
+event 31: Unknown EOS property d155, datasize is 28
+    0: 1c
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 03
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+event 32: EOS prop d160 info record, datasize is 32
+event 32: Unknown EOS property d160, datasize is 32
+    0: 20
+    1: 00
+    2: 00
+    3: 00
+    4: 81
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 03
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+    28: 00
+    29: 00
+    30: 00
+    31: 00
+event 33: EOS prop d161 info record, datasize is 32
+event 33: Unknown EOS property d161, datasize is 32
+    0: 20
+    1: 00
+    2: 00
+    3: 00
+    4: 81
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 03
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+    28: 00
+    29: 00
+    30: 00
+    31: 00
+event 34: EOS prop d162 info record, datasize is 32
+event 34: Unknown EOS property d162, datasize is 32
+    0: 20
+    1: 00
+    2: 00
+    3: 00
+    4: 81
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 03
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+    28: 00
+    29: 00
+    30: 00
+    31: 00
+event 35: EOS prop d11c info record, datasize is 4
+event 35: currentvalue of d11c is 2
+event 36: EOS prop d1a0 info record, datasize is 104
+event 36: Unknown EOS property d1a0, datasize is 104, using uint32
+    0: 0x      68
+    1: 0x       1
+    2: 0x       1
+    3: 0x      5c
+    4: 0x       7
+    5: 0x     101
+    6: 0x       1
+    7: 0x       0
+    8: 0x     102
+    9: 0x       1
+    10: 0x       0
+    11: 0x     103
+    12: 0x       1
+    13: 0x       0
+    14: 0x     104
+    15: 0x       1
+    16: 0x       0
+    17: 0x     105
+    18: 0x       1
+    19: 0x       0
+    20: 0x     108
+    21: 0x       1
+    22: 0x       0
+    23: 0x     10f
+    24: 0x       1
+    25: 0x       0
+event 36: currentvalue of d1a0 is 68
+event 37: EOS prop d1a0 info record, datasize is 56
+event 37: Unknown EOS property d1a0, datasize is 56, using uint32
+    0: 0x      38
+    1: 0x       1
+    2: 0x       2
+    3: 0x      2c
+    4: 0x       3
+    5: 0x     201
+    6: 0x       1
+    7: 0x       0
+    8: 0x     202
+    9: 0x       1
+    10: 0x       0
+    11: 0x     203
+    12: 0x       1
+    13: 0x       0
+event 37: currentvalue of d1a0 is 38
+event 38: EOS prop d1a0 info record, datasize is 80
+event 38: Unknown EOS property d1a0, datasize is 80, using uint32
+    0: 0x      50
+    1: 0x       1
+    2: 0x       3
+    3: 0x      44
+    4: 0x       5
+    5: 0x     505
+    6: 0x       1
+    7: 0x       0
+    8: 0x     50f
+    9: 0x       1
+    10: 0x       0
+    11: 0x     510
+    12: 0x       1
+    13: 0x       0
+    14: 0x     50e
+    15: 0x       1
+    16: 0x       0
+    17: 0x     60f
+    18: 0x       1
+    19: 0x       0
+event 38: currentvalue of d1a0 is 50
+event 39: EOS prop d1a0 info record, datasize is 80
+event 39: Unknown EOS property d1a0, datasize is 80, using uint32
+    0: 0x      50
+    1: 0x       1
+    2: 0x       4
+    3: 0x      44
+    4: 0x       5
+    5: 0x     701
+    6: 0x       1
+    7: 0x       0
+    8: 0x     704
+    9: 0x       1
+    10: 0x       0
+    11: 0x     706
+    12: 0x       1
+    13: 0x       0
+    14: 0x     80b
+    15: 0x       1
+    16: 0x       0
+    17: 0x     80f
+    18: 0x       1
+    19: 0x       0
+event 39: currentvalue of d1a0 is 50
+event 40: EOS prop d1a1 info record, datasize is 24
+event 40: Unknown EOS property d1a1, datasize is 24
+    0: 18
+    1: 00
+    2: 00
+    3: 00
+    4: 02
+    5: 00
+    6: 00
+    7: 00
+    8: 01
+    9: 00
+    10: 00
+    11: 00
+    12: 14
+    13: 00
+    14: 00
+    15: 00
+    16: 02
+    17: 00
+    18: 00
+    19: 00
+    20: 02
+    21: 00
+    22: 03
+    23: 00
+event 41: EOS prop d1a8 info record, datasize is 4
+event 41: Unknown EOS property d1a8, datasize is 4, using uint32
+    0: 0x       1
+event 41: currentvalue of d1a8 is 1
+event 42: EOS prop d1ab info record, datasize is 4
+event 42: Unknown EOS property d1ab, datasize is 4, using uint32
+    0: 0x       0
+event 42: currentvalue of d1ab is 0
+event 43: EOS prop d1b0 info record, datasize is 4
+event 43: currentvalue of d1b0 is 0
+event 44: EOS prop d1b1 info record, datasize is 4
+event 44: currentvalue of d1b1 is 1
+event 45: EOS prop d1b2 info record, datasize is 4
+event 45: Unknown EOS property d1b2, datasize is 4, using uint32
+    0: 0x       0
+event 45: currentvalue of d1b2 is 0
+event 46: EOS prop d1b3 info record, datasize is 4
+event 46: Unknown EOS property d1b3, datasize is 4, using uint32
+    0: 0x       0
+event 46: currentvalue of d1b3 is 0
+event 47: EOS prop d1b4 info record, datasize is 4
+event 47: Unknown EOS property d1b4, datasize is 4, using uint32
+    0: 0x       0
+event 47: currentvalue of d1b4 is 0
+event 48: EOS prop d1b5 info record, datasize is 48
+event 48: Unknown EOS property d1b5, datasize is 48, using uint32
+    0: 0x      30
+    1: 0x       0
+    2: 0xfaeeff00
+    3: 0xff767abe
+    4: 0xfbbfdbbb
+    5: 0xdbfafee7
+    6: 0xffefa6ff
+    7: 0xeefecbf3
+    8: 0xdae9faff
+    9: 0xf6faaaae
+    10: 0x 4000400
+    11: 0x 4000400
+event 48: currentvalue of d1b5 is 30
+event 49: EOS prop d1b6 info record, datasize is 4
+event 49: Unknown EOS property d1b6, datasize is 4, using uint32
+    0: 0x    1450
+event 49: currentvalue of d1b6 is 1450
+event 50: EOS prop d1a9 info record, datasize is 4
+event 50: currentvalue of d1a9 is 2
+event 51: EOS prop d145 info record, datasize is 56
+event 51: Unknown EOS property d145, datasize is 56
+    0: 38
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 00
+    13: 00
+    14: 00
+    15: 00
+    16: 00
+    17: 00
+    18: 00
+    19: 00
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 00
+    25: 00
+    26: 00
+    27: 00
+    28: 00
+    29: 00
+    30: 00
+    31: 00
+    32: 00
+    33: 00
+    34: 00
+    35: 00
+    36: 00
+    37: 00
+    38: 00
+    39: 00
+    40: 00
+    41: 00
+    42: 00
+    43: 00
+    44: 00
+    45: 00
+    46: 00
+    47: 00
+    48: e9
+    49: 01
+    50: 00
+    51: 04
+    52: 00
+    53: 04
+    54: 9f
+    55: 02
+event 52: EOS prop d1ac info record, datasize is 4
+event 52: currentvalue of d1ac is 19d0
+event 53: EOS prop d11e info record, datasize is 4
+event 53: currentvalue of d11e is 20001
+event 54: EOS prop d11f info record, datasize is 4
+event 54: currentvalue of d11f is 91900000
+event 55: EOS prop d1d9 info record, datasize is 4
+event 55: currentvalue of d1d9 is 0
+event 56: EOS prop d1ba info record, datasize is 4
+event 56: Unknown EOS property d1ba, datasize is 4, using uint32
+    0: 0x       0
+event 56: currentvalue of d1ba is 0
+event 57: EOS prop d1be info record, datasize is 20
+event 57: Unknown EOS property d1be, datasize is 20
+    0: 14
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 00
+    9: 00
+    10: 00
+    11: 00
+    12: 19
+    13: 00
+    14: 00
+    15: 00
+    16: 0c
+    17: 00
+    18: 00
+    19: 00
+event 58: EOS prop d1bc info record, datasize is 4
+event 58: Unknown EOS property d1bc, datasize is 4, using uint32
+    0: 0x       1
+event 58: currentvalue of d1bc is 1
+event 59: EOS prop d1b8 info record, datasize is 4
+event 59: Unknown EOS property d1b8, datasize is 4, using uint32
+    0: 0x       0
+event 59: currentvalue of d1b8 is 0
+event 60: EOS prop d1d3 info record, datasize is 100
+event 60: Unknown EOS property d1d3, datasize is 100
+    0: 64
+    1: 00
+    2: 00
+    3: 00
+    4: 60
+    5: 00
+    6: 00
+    7: 00
+    8: 09
+    9: 00
+    10: 09
+    11: 00
+    12: 40
+    13: 14
+    14: 80
+    15: 0d
+    16: 40
+    17: 14
+    18: 80
+    19: 0d
+    20: 6c
+    21: 00
+    22: 58
+    23: 00
+    24: 58
+    25: 00
+    26: 58
+    27: 00
+    28: 81
+    29: 00
+    30: 58
+    31: 00
+    32: 58
+    33: 00
+    34: 58
+    35: 00
+    36: 6c
+    37: 00
+    38: 56
+    39: 00
+    40: 6b
+    41: 00
+    42: 6b
+    43: 00
+    44: 6b
+    45: 00
+    46: 83
+    47: 00
+    48: 6b
+    49: 00
+    50: 6b
+    51: 00
+    52: 6b
+    53: 00
+    54: 56
+    55: 00
+    56: 00
+    57: 00
+    58: a4
+    59: fc
+    60: 5c
+    61: 03
+    62: a8
+    63: fa
+    64: 00
+    65: 00
+    66: 58
+    67: 05
+    68: a4
+    69: fc
+    70: 5c
+    71: 03
+    72: 00
+    73: 00
+    74: e7
+    75: 02
+    76: 89
+    77: 01
+    78: 89
+    79: 01
+    80: 00
+    81: 00
+    82: 00
+    83: 00
+    84: 00
+    85: 00
+    86: 77
+    87: fe
+    88: 77
+    89: fe
+    90: 19
+    91: fd
+    92: 00
+    93: 00
+    94: 10
+    95: 00
+    96: 00
+    97: 00
+    98: ff
+    99: ff
+event 61: EOS prop d1d8 info record, datasize is 64
+event 61: currentvalue of d1d8 is EF-S15-85mm f/3.5-5.6 IS USM
+event 62: EOS prop d1b7 info record, datasize is 4
+event 62: Unknown EOS property d1b7, datasize is 4, using uint32
+    0: 0x       1
+event 62: currentvalue of d1b7 is 1
+event 63: EOS prop d1b9 info record, datasize is 38
+event 63: Unknown EOS property d1b9, datasize is 38
+    0: 26
+    1: 00
+    2: 00
+    3: 00
+    4: 00
+    5: 00
+    6: 00
+    7: 00
+    8: 03
+    9: 00
+    10: 00
+    11: 00
+    12: 3a
+    13: 00
+    14: 00
+    15: 00
+    16: 39
+    17: 00
+    18: 03
+    19: 80
+    20: 00
+    21: 00
+    22: 00
+    23: 00
+    24: 03
+    25: 00
+    26: 00
+    27: 00
+    28: 32
+    29: 00
+    30: 00
+    31: 00
+    32: 3a
+    33: 00
+    34: 03
+    35: 80
+    36: 00
+    37: 00
+event 64: EOS prop d1db info record, datasize is 14
+event 64: Unknown EOS property d1db, datasize is 14
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+    4: 03
+    5: 00
+    6: 00
+    7: 00
+    8: 2f
+    9: 00
+    10: 00
+    11: 00
+    12: 28
+    13: 00
+event 65: EOS prop d1dc info record, datasize is 4
+event 65: currentvalue of d1dc is 0
+event 66: EOS prop d1df info record, datasize is 4
+event 66: Unknown EOS property d1df, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 67: EOS prop d1bd info record, datasize is 4
+event 67: Unknown EOS property d1bd, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 68: EOS prop d1c1 info record, datasize is 4
+event 68: Unknown EOS property d1c1, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 69: EOS prop d1c0 info record, datasize is 4
+event 69: Unknown EOS property d1c0, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 70: EOS prop d1bf info record, datasize is 4
+event 70: Unknown EOS property d1bf, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 71: EOS prop d1c4 info record, datasize is 4
+event 71: Unknown EOS property d1c4, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 72: EOS prop d1c2 info record, datasize is 4
+event 72: Unknown EOS property d1c2, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 73: EOS prop d1c5 info record, datasize is 4
+event 73: Unknown EOS property d1c5, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 74: EOS prop d194 info record, datasize is 4
+event 74: Unknown EOS property d194, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 75: EOS prop d198 info record, datasize is 4
+event 75: Unknown EOS property d198, datasize is 4
+    0: ff
+    1: 00
+    2: 00
+    3: 00
+event 76: EOS prop d1c7 info record, datasize is 4
+event 76: Unknown EOS property d1c7, datasize is 4
+    0: 00
+    1: 00
+    2: 00
+    3: 00
+event 77: unknown EOS event c1a4
+    8: 01
+    9: 00
+    10: 02
+    11: 00
+event 78: EOS prop d105 desc record, datasize 0, propxtype 1
+event 78: propxtype is 1 for d105, unhandled.
+event 79: EOS prop d108 desc record, datasize 12, propxtype 3
+event 79: propxtype is 3, prop is 0xd108, data type is 0x0004, propxcnt is 3.
+event 79: suppval[0] of d108 is 0x0.
+event 79: suppval[1] of d108 is 0x2.
+event 79: suppval[2] of d108 is 0x1.
+event 80: EOS prop d106 desc record, datasize 20, propxtype 3
+event 80: propxtype is 3, prop is 0xd106, data type is 0x0004, propxcnt is 5.
+event 80: suppval[0] of d106 is 0x0.
+event 80: suppval[1] of d106 is 0x4.
+event 80: suppval[2] of d106 is 0x5.
+event 80: suppval[3] of d106 is 0x11.
+event 80: suppval[4] of d106 is 0x10.
+event 81: EOS prop d107 desc record, datasize 16, propxtype 3
+event 81: propxtype is 3, prop is 0xd107, data type is 0x0002, propxcnt is 4.
+event 81: suppval[0] of d107 is 0x3.
+event 81: suppval[1] of d107 is 0x4.
+event 81: suppval[2] of d107 is 0x1.
+event 81: suppval[3] of d107 is 0x5.
+event 82: EOS prop d109 desc record, datasize 36, propxtype 3
+event 82: propxtype is 3, prop is 0xd109, data type is 0x0002, propxcnt is 9.
+event 82: suppval[0] of d109 is 0x0.
+event 82: suppval[1] of d109 is 0x1.
+event 82: suppval[2] of d109 is 0x8.
+event 82: suppval[3] of d109 is 0x2.
+event 82: suppval[4] of d109 is 0x3.
+event 82: suppval[5] of d109 is 0x4.
+event 82: suppval[6] of d109 is 0x5.
+event 82: suppval[7] of d109 is 0x6.
+event 82: suppval[8] of d109 is 0x9.
+event 83: EOS prop d10a desc record, datasize 304, propxtype 3
+event 83: propxtype is 3, prop is 0xd10a, data type is 0x0006, propxcnt is 76.
+event 83: suppval[0] of d10a is 0x9c4.
+event 83: suppval[1] of d10a is 0xa28.
+event 83: suppval[2] of d10a is 0xa8c.
+event 83: suppval[3] of d10a is 0xaf0.
+event 83: suppval[4] of d10a is 0xb54.
+event 83: suppval[5] of d10a is 0xbb8.
+event 83: suppval[6] of d10a is 0xc1c.
+event 83: suppval[7] of d10a is 0xc80.
+event 83: suppval[8] of d10a is 0xce4.
+event 83: suppval[9] of d10a is 0xd48.
+event 83: suppval[10] of d10a is 0xdac.
+event 83: suppval[11] of d10a is 0xe10.
+event 83: suppval[12] of d10a is 0xe74.
+event 83: suppval[13] of d10a is 0xed8.
+event 83: suppval[14] of d10a is 0xf3c.
+event 83: suppval[15] of d10a is 0xfa0.
+event 83: suppval[16] of d10a is 0x1004.
+event 83: suppval[17] of d10a is 0x1068.
+event 83: suppval[18] of d10a is 0x10cc.
+event 83: suppval[19] of d10a is 0x1130.
+event 83: suppval[20] of d10a is 0x1194.
+event 83: suppval[21] of d10a is 0x11f8.
+event 83: suppval[22] of d10a is 0x125c.
+event 83: suppval[23] of d10a is 0x12c0.
+event 83: suppval[24] of d10a is 0x1324.
+event 83: suppval[25] of d10a is 0x1388.
+event 83: suppval[26] of d10a is 0x13ec.
+event 83: suppval[27] of d10a is 0x1450.
+event 83: suppval[28] of d10a is 0x14b4.
+event 83: suppval[29] of d10a is 0x1518.
+event 83: suppval[30] of d10a is 0x157c.
+event 83: suppval[31] of d10a is 0x15e0.
+event 83: suppval[32] of d10a is 0x1644.
+event 83: suppval[33] of d10a is 0x16a8.
+event 83: suppval[34] of d10a is 0x170c.
+event 83: suppval[35] of d10a is 0x1770.
+event 83: suppval[36] of d10a is 0x17d4.
+event 83: suppval[37] of d10a is 0x1838.
+event 83: suppval[38] of d10a is 0x189c.
+event 83: suppval[39] of d10a is 0x1900.
+event 83: suppval[40] of d10a is 0x1964.
+event 83: suppval[41] of d10a is 0x19c8.
+event 83: suppval[42] of d10a is 0x1a2c.
+event 83: suppval[43] of d10a is 0x1a90.
+event 83: suppval[44] of d10a is 0x1af4.
+event 83: suppval[45] of d10a is 0x1b58.
+event 83: suppval[46] of d10a is 0x1bbc.
+event 83: suppval[47] of d10a is 0x1c20.
+event 83: suppval[48] of d10a is 0x1c84.
+event 83: suppval[49] of d10a is 0x1ce8.
+event 83: suppval[50] of d10a is 0x1d4c.
+event 83: suppval[51] of d10a is 0x1db0.
+event 83: suppval[52] of d10a is 0x1e14.
+event 83: suppval[53] of d10a is 0x1e78.
+event 83: suppval[54] of d10a is 0x1edc.
+event 83: suppval[55] of d10a is 0x1f40.
+event 83: suppval[56] of d10a is 0x1fa4.
+event 83: suppval[57] of d10a is 0x2008.
+event 83: suppval[58] of d10a is 0x206c.
+event 83: suppval[59] of d10a is 0x20d0.
+event 83: suppval[60] of d10a is 0x2134.
+event 83: suppval[61] of d10a is 0x2198.
+event 83: suppval[62] of d10a is 0x21fc.
+event 83: suppval[63] of d10a is 0x2260.
+event 83: suppval[64] of d10a is 0x22c4.
+event 83: suppval[65] of d10a is 0x2328.
+event 83: suppval[66] of d10a is 0x238c.
+event 83: suppval[67] of d10a is 0x23f0.
+event 83: suppval[68] of d10a is 0x2454.
+event 83: suppval[69] of d10a is 0x24b8.
+event 83: suppval[70] of d10a is 0x251c.
+event 83: suppval[71] of d10a is 0x2580.
+event 83: suppval[72] of d10a is 0x25e4.
+event 83: suppval[73] of d10a is 0x2648.
+event 83: suppval[74] of d10a is 0x26ac.
+event 83: suppval[75] of d10a is 0x2710.
+event 84: EOS prop d10b desc record, datasize 76, propxtype 3
+event 84: propxtype is 3, prop is 0xd10b, data type is 0x0003, propxcnt is 19.
+event 84: suppval[0] of d10b is 0xfff7.
+event 84: suppval[1] of d10b is 0xfff8.
+event 84: suppval[2] of d10b is 0xfff9.
+event 84: suppval[3] of d10b is 0xfffa.
+event 84: suppval[4] of d10b is 0xfffb.
+event 84: suppval[5] of d10b is 0xfffc.
+event 84: suppval[6] of d10b is 0xfffd.
+event 84: suppval[7] of d10b is 0xfffe.
+event 84: suppval[8] of d10b is 0xffff.
+event 84: suppval[9] of d10b is 0x0.
+event 84: suppval[10] of d10b is 0x1.
+event 84: suppval[11] of d10b is 0x2.
+event 84: suppval[12] of d10b is 0x3.
+event 84: suppval[13] of d10b is 0x4.
+event 84: suppval[14] of d10b is 0x5.
+event 84: suppval[15] of d10b is 0x6.
+event 84: suppval[16] of d10b is 0x7.
+event 84: suppval[17] of d10b is 0x8.
+event 84: suppval[18] of d10b is 0x9.
+event 85: EOS prop d10c desc record, datasize 76, propxtype 3
+event 85: propxtype is 3, prop is 0xd10c, data type is 0x0003, propxcnt is 19.
+event 85: suppval[0] of d10c is 0xfff7.
+event 85: suppval[1] of d10c is 0xfff8.
+event 85: suppval[2] of d10c is 0xfff9.
+event 85: suppval[3] of d10c is 0xfffa.
+event 85: suppval[4] of d10c is 0xfffb.
+event 85: suppval[5] of d10c is 0xfffc.
+event 85: suppval[6] of d10c is 0xfffd.
+event 85: suppval[7] of d10c is 0xfffe.
+event 85: suppval[8] of d10c is 0xffff.
+event 85: suppval[9] of d10c is 0x0.
+event 85: suppval[10] of d10c is 0x1.
+event 85: suppval[11] of d10c is 0x2.
+event 85: suppval[12] of d10c is 0x3.
+event 85: suppval[13] of d10c is 0x4.
+event 85: suppval[14] of d10c is 0x5.
+event 85: suppval[15] of d10c is 0x6.
+event 85: suppval[16] of d10c is 0x7.
+event 85: suppval[17] of d10c is 0x8.
+event 85: suppval[18] of d10c is 0x9.
+event 86: EOS prop d10d desc record, datasize 16, propxtype 3
+event 86: propxtype is 3, prop is 0xd10d, data type is 0x0006, propxcnt is 4.
+event 86: suppval[0] of d10d is 0x0.
+event 86: suppval[1] of d10d is 0x1.
+event 86: suppval[2] of d10d is 0x2.
+event 86: suppval[3] of d10d is 0x3.
+event 87: EOS prop d10e desc record, datasize 16, propxtype 3
+event 87: propxtype is 3, prop is 0xd10e, data type is 0x0006, propxcnt is 4.
+event 87: suppval[0] of d10e is 0x0.
+event 87: suppval[1] of d10e is 0x1.
+event 87: suppval[2] of d10e is 0x2.
+event 87: suppval[3] of d10e is 0x3.
+event 88: EOS prop d10f desc record, datasize 8, propxtype 3
+event 88: propxtype is 3, prop is 0xd10f, data type is 0x0004, propxcnt is 2.
+event 88: suppval[0] of d10f is 0x1.
+event 88: suppval[1] of d10f is 0x2.
+event 89: EOS prop d11b desc record, datasize 0, propxtype 1
+event 89: propxtype is 1 for d11b, unhandled.
+event 90: EOS prop d114 desc record, datasize 0, propxtype 1
+event 90: propxtype is 1 for d114, unhandled.
+event 91: EOS prop d116 desc record, datasize 0, propxtype 1
+event 91: propxtype is 1 for d116, unhandled.
+event 92: EOS prop d119 desc record, datasize 0, propxtype 1
+event 92: propxtype is 1 for d119, unhandled.
+event 93: EOS prop d11a desc record, datasize 0, propxtype 1
+event 93: propdesc d11a, default value not found.
+event 94: EOS prop d110 desc record, datasize 36, propxtype 3
+event 94: propxtype is 3, prop is 0xd110, data type is 0x0002, propxcnt is 9.
+event 94: suppval[0] of d110 is 0x81.
+event 94: suppval[1] of d110 is 0x82.
+event 94: suppval[2] of d110 is 0x83.
+event 94: suppval[3] of d110 is 0x84.
+event 94: suppval[4] of d110 is 0x85.
+event 94: suppval[5] of d110 is 0x86.
+event 94: suppval[6] of d110 is 0x21.
+event 94: suppval[7] of d110 is 0x22.
+event 94: suppval[8] of d110 is 0x23.
+event 95: EOS prop d115 desc record, datasize 0, propxtype 7
+event 95: propdesc d115, default value not found.
+event 96: EOS prop d101 desc record, datasize 68, propxtype 3
+event 96: propxtype is 3, prop is 0xd101, data type is 0x0004, propxcnt is 17.
+event 96: suppval[0] of d101 is 0x25.
+event 96: suppval[1] of d101 is 0x28.
+event 96: suppval[2] of d101 is 0x2b.
+event 96: suppval[3] of d101 is 0x2d.
+event 96: suppval[4] of d101 is 0x30.
+event 96: suppval[5] of d101 is 0x33.
+event 96: suppval[6] of d101 is 0x35.
+event 96: suppval[7] of d101 is 0x38.
+event 96: suppval[8] of d101 is 0x3b.
+event 96: suppval[9] of d101 is 0x3d.
+event 96: suppval[10] of d101 is 0x40.
+event 96: suppval[11] of d101 is 0x43.
+event 96: suppval[12] of d101 is 0x45.
+event 96: suppval[13] of d101 is 0x48.
+event 96: suppval[14] of d101 is 0x4b.
+event 96: suppval[15] of d101 is 0x4d.
+event 96: suppval[16] of d101 is 0x50.
+event 97: EOS prop d102 desc record, datasize 0, propxtype 3
+event 98: EOS prop d103 desc record, datasize 80, propxtype 3
+event 98: propxtype is 3, prop is 0xd103, data type is 0x0004, propxcnt is 20.
+event 98: suppval[0] of d103 is 0x0.
+event 98: suppval[1] of d103 is 0x48.
+event 98: suppval[2] of d103 is 0x4b.
+event 98: suppval[3] of d103 is 0x4d.
+event 98: suppval[4] of d103 is 0x50.
+event 98: suppval[5] of d103 is 0x53.
+event 98: suppval[6] of d103 is 0x55.
+event 98: suppval[7] of d103 is 0x58.
+event 98: suppval[8] of d103 is 0x5b.
+event 98: suppval[9] of d103 is 0x5d.
+event 98: suppval[10] of d103 is 0x60.
+event 98: suppval[11] of d103 is 0x63.
+event 98: suppval[12] of d103 is 0x65.
+event 98: suppval[13] of d103 is 0x68.
+event 98: suppval[14] of d103 is 0x6b.
+event 98: suppval[15] of d103 is 0x6d.
+event 98: suppval[16] of d103 is 0x70.
+event 98: suppval[17] of d103 is 0x73.
+event 98: suppval[18] of d103 is 0x75.
+event 98: suppval[19] of d103 is 0x78.
+event 99: EOS prop d104 desc record, datasize 124, propxtype 3
+event 99: propxtype is 3, prop is 0xd104, data type is 0x0002, propxcnt is 31.
+event 99: suppval[0] of d104 is 0xd8.
+event 99: suppval[1] of d104 is 0xdb.
+event 99: suppval[2] of d104 is 0xdd.
+event 99: suppval[3] of d104 is 0xe0.
+event 99: suppval[4] of d104 is 0xe3.
+event 99: suppval[5] of d104 is 0xe5.
+event 99: suppval[6] of d104 is 0xe8.
+event 99: suppval[7] of d104 is 0xeb.
+event 99: suppval[8] of d104 is 0xed.
+event 99: suppval[9] of d104 is 0xf0.
+event 99: suppval[10] of d104 is 0xf3.
+event 99: suppval[11] of d104 is 0xf5.
+event 99: suppval[12] of d104 is 0xf8.
+event 99: suppval[13] of d104 is 0xfb.
+event 99: suppval[14] of d104 is 0xfd.
+event 99: suppval[15] of d104 is 0x0.
+event 99: suppval[16] of d104 is 0x3.
+event 99: suppval[17] of d104 is 0x5.
+event 99: suppval[18] of d104 is 0x8.
+event 99: suppval[19] of d104 is 0xb.
+event 99: suppval[20] of d104 is 0xd.
+event 99: suppval[21] of d104 is 0x10.
+event 99: suppval[22] of d104 is 0x13.
+event 99: suppval[23] of d104 is 0x15.
+event 99: suppval[24] of d104 is 0x18.
+event 99: suppval[25] of d104 is 0x1b.
+event 99: suppval[26] of d104 is 0x1d.
+event 99: suppval[27] of d104 is 0x20.
+event 99: suppval[28] of d104 is 0x23.
+event 99: suppval[29] of d104 is 0x25.
+event 99: suppval[30] of d104 is 0x28.
+event 100: EOS prop d11d desc record, datasize 0, propxtype 1
+event 100: propxtype is 1 for d11d, unhandled.
+event 101: EOS prop d111 desc record, datasize 0, propxtype 1
+event 101: propxtype is 1 for d111, unhandled.
+event 102: EOS prop d112 desc record, datasize 0, propxtype 1
+event 102: propxtype is 1 for d112, unhandled.
+event 103: EOS prop d113 desc record, datasize 0, propxtype 7
+event 103: propxtype is 7 for d113, unhandled.
+event 104: EOS prop d120 desc record, datasize 1084, propxtype 3
+event 104: propxtype is 3, prop is 0xd120, data type is 0x0004, propxcnt is 35.
+event 104: suppval[0] of d120 is 0x300.
+event 104: suppval[1] of d120 is 0x200.
+event 104: suppval[2] of d120 is 0x1300.
+event 104: suppval[3] of d120 is 0x1200.
+event 104: suppval[4] of d120 is 0xe300.
+event 104: suppval[5] of d120 is 0xe200.
+event 104: suppval[6] of d120 is 0xf300.
+event 104: suppval[7] of d120 is 0x300.
+event 104: suppval[8] of d120 is 0x403.
+event 104: suppval[9] of d120 is 0x402.
+event 104: suppval[10] of d120 is 0x413.
+event 104: suppval[11] of d120 is 0x412.
+event 104: suppval[12] of d120 is 0x4e3.
+event 104: suppval[13] of d120 is 0x4e2.
+event 104: suppval[14] of d120 is 0x4f3.
+event 104: suppval[15] of d120 is 0x403.
+event 104: suppval[16] of d120 is 0x1403.
+event 104: suppval[17] of d120 is 0x1402.
+event 104: suppval[18] of d120 is 0x1413.
+event 104: suppval[19] of d120 is 0x1412.
+event 104: suppval[20] of d120 is 0x14e3.
+event 104: suppval[21] of d120 is 0x14e2.
+event 104: suppval[22] of d120 is 0x14f3.
+event 104: suppval[23] of d120 is 0x1403.
+event 104: suppval[24] of d120 is 0x2403.
+event 104: suppval[25] of d120 is 0x2402.
+event 104: suppval[26] of d120 is 0x2413.
+event 104: suppval[27] of d120 is 0x2412.
+event 104: suppval[28] of d120 is 0x24e3.
+event 104: suppval[29] of d120 is 0x24e2.
+event 104: suppval[30] of d120 is 0x24f3.
+event 104: suppval[31] of d120 is 0x2403.
+event 104: suppval[32] of d120 is 0x400.
+event 104: suppval[33] of d120 is 0x1400.
+event 104: suppval[34] of d120 is 0x2400.
+event 105: EOS prop d122 desc record, datasize 1084, propxtype 3
+event 105: propxtype is 3, prop is 0xd122, data type is 0x0004, propxcnt is 35.
+event 105: suppval[0] of d122 is 0x300.
+event 105: suppval[1] of d122 is 0x200.
+event 105: suppval[2] of d122 is 0x1300.
+event 105: suppval[3] of d122 is 0x1200.
+event 105: suppval[4] of d122 is 0xe300.
+event 105: suppval[5] of d122 is 0xe200.
+event 105: suppval[6] of d122 is 0xf300.
+event 105: suppval[7] of d122 is 0x300.
+event 105: suppval[8] of d122 is 0x403.
+event 105: suppval[9] of d122 is 0x402.
+event 105: suppval[10] of d122 is 0x413.
+event 105: suppval[11] of d122 is 0x412.
+event 105: suppval[12] of d122 is 0x4e3.
+event 105: suppval[13] of d122 is 0x4e2.
+event 105: suppval[14] of d122 is 0x4f3.
+event 105: suppval[15] of d122 is 0x403.
+event 105: suppval[16] of d122 is 0x1403.
+event 105: suppval[17] of d122 is 0x1402.
+event 105: suppval[18] of d122 is 0x1413.
+event 105: suppval[19] of d122 is 0x1412.
+event 105: suppval[20] of d122 is 0x14e3.
+event 105: suppval[21] of d122 is 0x14e2.
+event 105: suppval[22] of d122 is 0x14f3.
+event 105: suppval[23] of d122 is 0x1403.
+event 105: suppval[24] of d122 is 0x2403.
+event 105: suppval[25] of d122 is 0x2402.
+event 105: suppval[26] of d122 is 0x2413.
+event 105: suppval[27] of d122 is 0x2412.
+event 105: suppval[28] of d122 is 0x24e3.
+event 105: suppval[29] of d122 is 0x24e2.
+event 105: suppval[30] of d122 is 0x24f3.
+event 105: suppval[31] of d122 is 0x2403.
+event 105: suppval[32] of d122 is 0x400.
+event 105: suppval[33] of d122 is 0x1400.
+event 105: suppval[34] of d122 is 0x2400.
+event 106: EOS prop d150 desc record, datasize 0, propxtype 7
+event 106: propxtype is 7 for d150, unhandled.
+event 107: EOS prop d151 desc record, datasize 0, propxtype 7
+event 107: propxtype is 7 for d151, unhandled.
+event 108: EOS prop d152 desc record, datasize 0, propxtype 7
+event 108: propxtype is 7 for d152, unhandled.
+event 109: EOS prop d153 desc record, datasize 0, propxtype 7
+event 109: propxtype is 7 for d153, unhandled.
+event 110: EOS prop d154 desc record, datasize 0, propxtype 7
+event 110: propxtype is 7 for d154, unhandled.
+event 111: EOS prop d155 desc record, datasize 0, propxtype 7
+event 111: propxtype is 7 for d155, unhandled.
+event 112: EOS prop d160 desc record, datasize 0, propxtype 7
+event 112: propxtype is 7 for d160, unhandled.
+event 113: EOS prop d161 desc record, datasize 0, propxtype 7
+event 113: propxtype is 7 for d161, unhandled.
+event 114: EOS prop d162 desc record, datasize 0, propxtype 7
+event 114: propxtype is 7 for d162, unhandled.
+event 115: EOS prop d170 desc record, datasize 0, propxtype 7
+event 115: propdesc d170, default value not found.
+event 116: EOS prop d171 desc record, datasize 0, propxtype 7
+event 116: propdesc d171, default value not found.
+event 117: EOS prop d172 desc record, datasize 0, propxtype 7
+event 117: propdesc d172, default value not found.
+event 118: EOS prop d11c desc record, datasize 12, propxtype 3
+event 118: propxtype is 3, prop is 0xd11c, data type is 0x0006, propxcnt is 3.
+event 118: suppval[0] of d11c is 0x2.
+event 118: suppval[1] of d11c is 0x4.
+event 118: suppval[2] of d11c is 0x6.
+event 119: EOS prop d1a0 desc record, datasize 0, propxtype 7
+event 119: propxtype is 7 for d1a0, unhandled.
+event 120: EOS prop d1a1 desc record, datasize 0, propxtype 7
+event 120: propxtype is 7 for d1a1, unhandled.
+event 121: EOS prop d1a2 desc record, datasize 0, propxtype 7
+event 121: propdesc d1a2, default value not found.
+event 122: EOS prop d1a8 desc record, datasize 0, propxtype 1
+event 122: propxtype is 1 for d1a8, unhandled.
+event 123: EOS prop d1ab desc record, datasize 0, propxtype 1
+event 123: propxtype is 1 for d1ab, unhandled.
+event 124: EOS prop d1b0 desc record, datasize 28, propxtype 3
+event 124: propxtype is 3, prop is 0xd1b0, data type is 0x0004, propxcnt is 7.
+event 124: suppval[0] of d1b0 is 0x1.
+event 124: suppval[1] of d1b0 is 0x2.
+event 124: suppval[2] of d1b0 is 0x3.
+event 124: suppval[3] of d1b0 is 0x4.
+event 124: suppval[4] of d1b0 is 0x5.
+event 124: suppval[5] of d1b0 is 0x6.
+event 124: suppval[6] of d1b0 is 0x7.
+event 125: EOS prop d1b1 desc record, datasize 8, propxtype 3
+event 125: propxtype is 3, prop is 0xd1b1, data type is 0x0004, propxcnt is 2.
+event 125: suppval[0] of d1b1 is 0x0.
+event 125: suppval[1] of d1b1 is 0x1.
+event 126: EOS prop d1b2 desc record, datasize 0, propxtype 7
+event 126: propxtype is 7 for d1b2, unhandled.
+event 127: EOS prop d1b3 desc record, datasize 0, propxtype 7
+event 127: propxtype is 7 for d1b3, unhandled.
+event 128: EOS prop d1b4 desc record, datasize 40, propxtype 3
+event 128: propxtype is 3, prop is 0xd1b4, data type is 0x0006, propxcnt is 10.
+event 128: suppval[0] of d1b4 is 0x0.
+event 128: suppval[1] of d1b4 is 0x1.
+event 128: suppval[2] of d1b4 is 0x8.
+event 128: suppval[3] of d1b4 is 0x2.
+event 128: suppval[4] of d1b4 is 0x3.
+event 128: suppval[5] of d1b4 is 0x4.
+event 128: suppval[6] of d1b4 is 0x5.
+event 128: suppval[7] of d1b4 is 0x6.
+event 128: suppval[8] of d1b4 is 0x9.
+event 128: suppval[9] of d1b4 is 0x8000.
+event 129: EOS prop d1b5 desc record, datasize 0, propxtype 7
+event 129: propxtype is 7 for d1b5, unhandled.
+event 130: EOS prop d1b6 desc record, datasize 304, propxtype 3
+event 130: propxtype is 3, prop is 0xd1b6, data type is 0x0006, propxcnt is 76.
+event 130: suppval[0] of d1b6 is 0x9c4.
+event 130: suppval[1] of d1b6 is 0xa28.
+event 130: suppval[2] of d1b6 is 0xa8c.
+event 130: suppval[3] of d1b6 is 0xaf0.
+event 130: suppval[4] of d1b6 is 0xb54.
+event 130: suppval[5] of d1b6 is 0xbb8.
+event 130: suppval[6] of d1b6 is 0xc1c.
+event 130: suppval[7] of d1b6 is 0xc80.
+event 130: suppval[8] of d1b6 is 0xce4.
+event 130: suppval[9] of d1b6 is 0xd48.
+event 130: suppval[10] of d1b6 is 0xdac.
+event 130: suppval[11] of d1b6 is 0xe10.
+event 130: suppval[12] of d1b6 is 0xe74.
+event 130: suppval[13] of d1b6 is 0xed8.
+event 130: suppval[14] of d1b6 is 0xf3c.
+event 130: suppval[15] of d1b6 is 0xfa0.
+event 130: suppval[16] of d1b6 is 0x1004.
+event 130: suppval[17] of d1b6 is 0x1068.
+event 130: suppval[18] of d1b6 is 0x10cc.
+event 130: suppval[19] of d1b6 is 0x1130.
+event 130: suppval[20] of d1b6 is 0x1194.
+event 130: suppval[21] of d1b6 is 0x11f8.
+event 130: suppval[22] of d1b6 is 0x125c.
+event 130: suppval[23] of d1b6 is 0x12c0.
+event 130: suppval[24] of d1b6 is 0x1324.
+event 130: suppval[25] of d1b6 is 0x1388.
+event 130: suppval[26] of d1b6 is 0x13ec.
+event 130: suppval[27] of d1b6 is 0x1450.
+event 130: suppval[28] of d1b6 is 0x14b4.
+event 130: suppval[29] of d1b6 is 0x1518.
+event 130: suppval[30] of d1b6 is 0x157c.
+event 130: suppval[31] of d1b6 is 0x15e0.
+event 130: suppval[32] of d1b6 is 0x1644.
+event 130: suppval[33] of d1b6 is 0x16a8.
+event 130: suppval[34] of d1b6 is 0x170c.
+event 130: suppval[35] of d1b6 is 0x1770.
+event 130: suppval[36] of d1b6 is 0x17d4.
+event 130: suppval[37] of d1b6 is 0x1838.
+event 130: suppval[38] of d1b6 is 0x189c.
+event 130: suppval[39] of d1b6 is 0x1900.
+event 130: suppval[40] of d1b6 is 0x1964.
+event 130: suppval[41] of d1b6 is 0x19c8.
+event 130: suppval[42] of d1b6 is 0x1a2c.
+event 130: suppval[43] of d1b6 is 0x1a90.
+event 130: suppval[44] of d1b6 is 0x1af4.
+event 130: suppval[45] of d1b6 is 0x1b58.
+event 130: suppval[46] of d1b6 is 0x1bbc.
+event 130: suppval[47] of d1b6 is 0x1c20.
+event 130: suppval[48] of d1b6 is 0x1c84.
+event 130: suppval[49] of d1b6 is 0x1ce8.
+event 130: suppval[50] of d1b6 is 0x1d4c.
+event 130: suppval[51] of d1b6 is 0x1db0.
+event 130: suppval[52] of d1b6 is 0x1e14.
+event 130: suppval[53] of d1b6 is 0x1e78.
+event 130: suppval[54] of d1b6 is 0x1edc.
+event 130: suppval[55] of d1b6 is 0x1f40.
+event 130: suppval[56] of d1b6 is 0x1fa4.
+event 130: suppval[57] of d1b6 is 0x2008.
+event 130: suppval[58] of d1b6 is 0x206c.
+event 130: suppval[59] of d1b6 is 0x20d0.
+event 130: suppval[60] of d1b6 is 0x2134.
+event 130: suppval[61] of d1b6 is 0x2198.
+event 130: suppval[62] of d1b6 is 0x21fc.
+event 130: suppval[63] of d1b6 is 0x2260.
+event 130: suppval[64] of d1b6 is 0x22c4.
+event 130: suppval[65] of d1b6 is 0x2328.
+event 130: suppval[66] of d1b6 is 0x238c.
+event 130: suppval[67] of d1b6 is 0x23f0.
+event 130: suppval[68] of d1b6 is 0x2454.
+event 130: suppval[69] of d1b6 is 0x24b8.
+event 130: suppval[70] of d1b6 is 0x251c.
+event 130: suppval[71] of d1b6 is 0x2580.
+event 130: suppval[72] of d1b6 is 0x25e4.
+event 130: suppval[73] of d1b6 is 0x2648.
+event 130: suppval[74] of d1b6 is 0x26ac.
+event 130: suppval[75] of d1b6 is 0x2710.
+event 131: EOS prop d1a9 desc record, datasize 20, propxtype 3
+event 131: propxtype is 3, prop is 0xd1a9, data type is 0x0004, propxcnt is 5.
+event 131: suppval[0] of d1a9 is 0x0.
+event 131: suppval[1] of d1a9 is 0x2.
+event 131: suppval[2] of d1a9 is 0x4.
+event 131: suppval[3] of d1a9 is 0x8.
+event 131: suppval[4] of d1a9 is 0xff.
+event 132: EOS prop d145 desc record, datasize 0, propxtype 7
+event 132: propxtype is 7 for d145, unhandled.
+event 133: EOS prop d1ac desc record, datasize 0, propxtype 1
+event 133: propxtype is 1 for d1ac, unhandled.
+event 134: EOS prop d1ad desc record, datasize 0, propxtype 1
+event 134: propdesc d1ad, default value not found.
+event 135: EOS prop d1ae desc record, datasize 0, propxtype 1
+event 135: propdesc d1ae, default value not found.
+event 136: EOS prop d11e desc record, datasize 0, propxtype 1
+event 136: propxtype is 1 for d11e, unhandled.
+event 137: EOS prop d11f desc record, datasize 0, propxtype 1
+event 137: propxtype is 1 for d11f, unhandled.
+event 138: EOS prop d1af desc record, datasize 0, propxtype 1
+event 138: propdesc d1af, default value not found.
+event 139: EOS prop d1d0 desc record, datasize 0, propxtype 7
+event 139: propdesc d1d0, default value not found.
+event 140: EOS prop d1d1 desc record, datasize 0, propxtype 7
+event 140: propdesc d1d1, default value not found.
+event 141: EOS prop d1d9 desc record, datasize 40, propxtype 3
+event 141: propxtype is 3, prop is 0xd1d9, data type is 0x0004, propxcnt is 10.
+event 141: suppval[0] of d1d9 is 0x0.
+event 141: suppval[1] of d1d9 is 0x3.
+event 141: suppval[2] of d1d9 is 0x5.
+event 141: suppval[3] of d1d9 is 0x8.
+event 141: suppval[4] of d1d9 is 0xb.
+event 141: suppval[5] of d1d9 is 0xd.
+event 141: suppval[6] of d1d9 is 0x10.
+event 141: suppval[7] of d1d9 is 0x13.
+event 141: suppval[8] of d1d9 is 0x15.
+event 141: suppval[9] of d1d9 is 0x18.
+event 142: EOS prop d1ba desc record, datasize 12, propxtype 3
+event 142: propxtype is 3, prop is 0xd1ba, data type is 0x0006, propxcnt is 3.
+event 142: suppval[0] of d1ba is 0x1.
+event 142: suppval[1] of d1ba is 0x2.
+event 142: suppval[2] of d1ba is 0x0.
+event 143: EOS prop d1be desc record, datasize 0, propxtype 3
+event 144: EOS prop d1bc desc record, datasize 8, propxtype 3
+event 144: propxtype is 3, prop is 0xd1bc, data type is 0x0006, propxcnt is 2.
+event 144: suppval[0] of d1bc is 0x0.
+event 144: suppval[1] of d1bc is 0x1.
+event 145: EOS prop d1b8 desc record, datasize 0, propxtype 3
+event 146: EOS prop d1d3 desc record, datasize 0, propxtype 7
+event 146: propxtype is 7 for d1d3, unhandled.
+event 147: EOS prop d1d8 desc record, datasize 0, propxtype 1
+event 147: propxtype is 1 for d1d8, unhandled.
+event 148: EOS prop d17f desc record, datasize 0, propxtype 1
+event 148: propdesc d17f, default value not found.
+event 149: EOS prop d1b7 desc record, datasize 0, propxtype 1
+event 149: propxtype is 1 for d1b7, unhandled.
+event 150: EOS prop d1b9 desc record, datasize 0, propxtype 7
+event 150: propxtype is 7 for d1b9, unhandled.
+event 151: EOS prop d1db desc record, datasize 0, propxtype 7
+event 151: propxtype is 7 for d1db, unhandled.
+event 152: EOS prop d1dc desc record, datasize 12, propxtype 3
+event 152: propxtype is 3, prop is 0xd1dc, data type is 0x0006, propxcnt is 3.
+event 152: suppval[0] of d1dc is 0x0.
+event 152: suppval[1] of d1dc is 0x1.
+event 152: suppval[2] of d1dc is 0x2.
+event 153: EOS prop d1df desc record, datasize 0, propxtype 3
+event 154: EOS prop d1bd desc record, datasize 0, propxtype 1
+event 154: propxtype is 1 for d1bd, unhandled.
+event 155: EOS prop d1c1 desc record, datasize 16, propxtype 3
+event 155: propxtype is 3, prop is 0xd1c1, data type is 0x0000, propxcnt is 4.
+event 155: data type 0x0000 of d1c1 unhandled, raw values:
+      0: 0x       0
+      1: 0x       1
+      2: 0x       2
+      3: 0x       3
+event 156: EOS prop d1c0 desc record, datasize 0, propxtype 1
+event 156: propxtype is 1 for d1c0, unhandled.
+event 157: EOS prop d1bf desc record, datasize 0, propxtype 7
+event 157: propxtype is 7 for d1bf, unhandled.
+event 158: EOS prop d1c4 desc record, datasize 0, propxtype 1
+event 158: propxtype is 1 for d1c4, unhandled.
+event 159: EOS prop d1c2 desc record, datasize 0, propxtype 1
+event 159: propxtype is 1 for d1c2, unhandled.
+event 160: EOS prop d1c5 desc record, datasize 0, propxtype 3
+event 161: EOS prop d194 desc record, datasize 16, propxtype 3
+event 161: propxtype is 3, prop is 0xd194, data type is 0x0000, propxcnt is 4.
+event 161: data type 0x0000 of d194 unhandled, raw values:
+      0: 0x       0
+      1: 0x       2
+      2: 0x       7
+      3: 0x       1
+event 162: EOS prop d198 desc record, datasize 0, propxtype 1
+event 162: propxtype is 1 for d198, unhandled.
+event 163: EOS prop d1c7 desc record, datasize 0, propxtype 7
+event 163: propxtype is 7 for d1c7, unhandled.
+
+event: c181
+event: c182
+event: c183
+event: c184
+event: c185
+event: c186
+event: c187
+event: c188
+event: c189
+event: c18a
+event: c18b
+event: c18d
+event: c18e
+event: c18f
+event: c190
+event: c191
+event: c1a0
+event: c1a1
+deviceprop: d105
+deviceprop: d108
+deviceprop: d106
+deviceprop: d107
+deviceprop: d109
+deviceprop: d10a
+deviceprop: d10b
+deviceprop: d10c
+deviceprop: d10d
+deviceprop: d10e
+deviceprop: d10f
+deviceprop: d11b
+deviceprop: d114
+deviceprop: d116
+deviceprop: d119
+deviceprop: d11a
+deviceprop: d110
+deviceprop: d115
+deviceprop: d101
+deviceprop: d102
+deviceprop: d103
+deviceprop: d104
+deviceprop: d11d
+deviceprop: d111
+deviceprop: d112
+deviceprop: d113
+deviceprop: d120
+deviceprop: d122
+deviceprop: d150
+deviceprop: d151
+deviceprop: d152
+deviceprop: d153
+deviceprop: d154
+deviceprop: d155
+deviceprop: d160
+deviceprop: d161
+deviceprop: d162
+deviceprop: d170
+deviceprop: d171
+deviceprop: d172
+deviceprop: d11c
+deviceprop: d1a0
+deviceprop: d1a1
+deviceprop: d1a2
+deviceprop: d1a5
+deviceprop: d1a8
+deviceprop: d1ab
+deviceprop: d1b0
+deviceprop: d1b1
+deviceprop: d1b2
+deviceprop: d1b3
+deviceprop: d1b4
+deviceprop: d1b5
+deviceprop: d1b6
+deviceprop: d1a9
+deviceprop: d145
+deviceprop: d1ac
+deviceprop: d1ad
+deviceprop: d1ae
+deviceprop: d11e
+deviceprop: d11f
+deviceprop: d1af
+deviceprop: d1d0
+deviceprop: d1d1
+deviceprop: d1d9
+deviceprop: d1ba
+deviceprop: d1be
+deviceprop: d1bc
+deviceprop: d1b8
+deviceprop: d1d3
+deviceprop: d1d8
+deviceprop: d17f
+deviceprop: d1b7
+deviceprop: d1b9
+deviceprop: d1db
+deviceprop: d1dc
+deviceprop: d1df
+deviceprop: d1bd
+deviceprop: d1c1
+deviceprop: d1c0
+deviceprop: d1bf
+deviceprop: d1c4
+deviceprop: d1c2
+deviceprop: d1c5
+deviceprop: d194
+deviceprop: d198
+deviceprop: d1c7
+unk: 0000
+unk: 0001
+unk: 0002
+unk: 0004
+
+
+event 0: EOS prop d115 info record, datasize is 1
+event 0: currentvalue of d115 is 
+event 1: EOS prop d1d0 info record, datasize is 64
+event 1: currentvalue of d1d0 is Matthias Jansen
+event 2: EOS prop d1d1 info record, datasize is 64
+event 2: currentvalue of d1d1 is Matthias Jansen
+event 3: EOS prop d1af info record, datasize is 11
+event 3: currentvalue of d1af is 1280627086
