@@ -5,7 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.3 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.5.2], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+AC_INIT([libgphoto2 photo camera library], [2.5.2.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
@@ -273,22 +273,14 @@ AS_IF([test "x$with_jpeg" != "xno"], [
 GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
 
 dnl ---------------------------------------------------------------------------
-dnl check for libxml22
+dnl check for libxml2
 dnl ---------------------------------------------------------------------------
-LIBXML2=""
-libxml2_msg="no"
-AC_SUBST(LIBXML2)
-AC_ARG_WITH([libxml2], AS_HELP_STRING([--without-libxml2], [Build without libxml2 library (default: no)]))
-AS_IF([test "x$with_libxml2" != "xno"], [
-	AC_CHECK_LIB(xml2,xmlFirstElementChild,[
-		AC_CHECK_HEADER(libxml/parser.h,[
-			AC_DEFINE(HAVE_LIBXML2,1,[define if we found LIBXML2 and its headers])
-			LIBXML2="-lxml2"
-			libxml2_msg="yes"
-		])
-	])
-])
-GP_CONFIG_MSG([LIBXML2 to support Olympus E remote control],[${libxml2_msg}])
+GP_CONFIG_MSG([libxml2 support])
+GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
+                [libxml/parser.h],[xmlFirstElementChild],[],[],
+                [default-on],
+                [http://xmlsoft.org]
+)
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
