@@ -1722,14 +1722,11 @@ camera_abilities (CameraAbilitiesList *list)
 		if (models[i].device_flags & PTP_CAP) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 
-#if 0
-			/* not yet working, failed testcase */
 			/* Only Nikon *D* cameras for now -Marcus */
 			if (	(models[i].usb_vendor == 0x4b0) &&
 				strchr(models[i].model,'D')
 			)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
-#endif
 #if 0
 			/* SX 100 IS ... works in sdram, not in card mode */
 			if (	(models[i].usb_vendor == 0x4a9) &&
@@ -2246,6 +2243,8 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
  * params:      Camera*			- camera object
  *              CameraCaptureType type	- type of object to capture
  *              CameraFilePath *path    - filled out with filename and folder on return
+ *              uint32_t af             - use autofocus or not.
+ *              uint32_t sdram          - capture to sdram or not
  *              GPContext* context      - gphoto context for this operation
  *
  * This function captures an image using special Nikon capture to SDRAM.
@@ -2258,7 +2257,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
  */
 static int
 camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-		GPContext *context)
+		uint32_t af, GPContext *context)
 {
 	static int capcnt = 0;
 	PTPObjectInfo		oi;
@@ -2274,7 +2273,10 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (params->deviceinfo.VendorExtensionID!=PTP_VENDOR_NIKON)
 		return GP_ERROR_NOT_SUPPORTED;
 
-	if (!ptp_operation_issupported(params,PTP_OC_NIKON_Capture)) {
+	if (	!ptp_operation_issupported(params,PTP_OC_NIKON_Capture) &&
+		!ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM) &&
+		!ptp_operation_issupported(params,PTP_OC_NIKON_InitiateCaptureRecInMedia)
+	) {
 		gp_context_error(context,
                	_("Sorry, your camera does not support Nikon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -2304,6 +2306,13 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			inliveview = propval.u8;
 	}
 
+	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
+		do {
+			ret = ptp_nikon_capture2(params,af,1);
+		} while (ret == PTP_RC_DeviceBusy);
+		goto capturetriggered;
+	}
+
 	if (!inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
 		do {
 			ret = ptp_nikon_capture_sdram(params);
@@ -2313,6 +2322,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			ret = ptp_nikon_capture(params, 0xffffffff);
 		} while (ret == PTP_RC_DeviceBusy);
 	}
+
+capturetriggered:
 	CPR (context, ret);
 
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
@@ -2331,24 +2342,47 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	newobject = 0xffff0001;
 	while (1) {
 		PTPContainer	event;
+		int 		checkevt;
 
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
 		CPR (context, ptp_check_event (params));
+		checkevt = 0;
 		while (ptp_get_one_event(params, &event)) {
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
-			if (event.Code == PTP_EC_Nikon_ObjectAddedInSDRAM) {
+			switch (event.Code) {
+			case PTP_EC_Nikon_ObjectAddedInSDRAM:
 				hasc101=1;
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				break;
+			case PTP_EC_ObjectAdded:
+				/* if we got one object already, put it into the queue */
+				/* e.g. for NEF+RAW capture */
+				if (newobject != 0xffff0001) {
+					ptp_add_event (params, &event);
+					checkevt = 1; /* avoid endless loop */
+				} else {
+					newobject = event.Param1;
+				}
+				break;
+			case PTP_EC_CaptureComplete:
+				hasc101=1;
+				break;
+			default:
+				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "UNHANDLED event.Code is %x / param %lx, DEFER", event.Code, (unsigned long)event.Param1);
+				ptp_add_event (params, &event);
+				checkevt = 1; /* avoid endless loop */
+				break;
 			}
+			if (checkevt || hasc101)
+				break;
 		}
 		if (hasc101)
 			break;
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-		usleep(50*1000); /* 0.1 seconds */
+		usleep(50*1000);
 	}
 	if (!newobject) newobject = 0xffff0001;
 
@@ -2884,11 +2918,18 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	camera->pl->checkevents = TRUE;
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_Capture)
-	) {
+		(ptp_operation_issupported(params, PTP_OC_NIKON_Capture) ||
+		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM) ||
+		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
+	)) {
+		int ret = GP_OK;
 		char buf[1024];
+
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
-			return camera_nikon_capture (camera, type, path, context);
+			ret = camera_nikon_capture (camera, type, path, 1, context);
+		if (ret != GP_ERROR_NOT_SUPPORTED)
+			 return ret;
+		/* for unsupported combination, fall through */
 	}
 
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
@@ -3049,18 +3090,24 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 	SET_CONTEXT_P(params, context);
 
-	strcpy (buf, "UNKNOWN");
+	strcpy (buf, "card");
 	gp_setting_get("ptp2","capturetarget",buf);
+
+	gp_log (GP_LOG_DEBUG, "ptp2/trigger_capture", "Triggering capture to %s", buf);
 
 	/* Nikon */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_Capture) &&
-		!strcmp (buf, "sdram")
+		(ptp_operation_issupported(params, PTP_OC_NIKON_Capture) ||
+		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM) 
+		)
+		&& !strcmp (buf, "sdram")
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
 		PTPPropertyValue propval;
 
+		CPR (context, ptp_check_event (params));
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
 		CPR (context, ptp_check_event (params));
 
 		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
@@ -3073,6 +3120,31 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			ret = ptp_nikon_capture_sdram (params);
 		else
 			ret = ptp_nikon_capture (params, 0xffffffff);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		return GP_OK;
+	}
+	/* Nikon 2 */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
+		!strcmp (buf, "card")
+	) {
+		/* If in liveview mode, we have to run non-af capture */
+		int inliveview = 0;
+		PTPPropertyValue propval;
+
+		CPR (context, ptp_check_event (params));
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		CPR (context, ptp_check_event (params));
+
+		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
+			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
+			if (ret == PTP_RC_OK)
+				inliveview = propval.u8;
+		}
+
+		ret = ptp_nikon_capture2 (params, !inliveview, 0);
 		if (ret != PTP_RC_OK)
 			return translate_ptp_result (ret);
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
@@ -3091,7 +3163,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* Get the initial bulk set of event data, otherwise
 		 * capture might return busy. */
 		do {
-			ptp_check_eos_events (params);
+			ret = ptp_check_eos_events (params);
+			if (ret != PTP_RC_OK)
+				break;
 		} while (params->eos_camerastatus == 1);
 
 		ret = ptp_canon_eos_capture (params, &result);
@@ -3508,9 +3582,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 				if (!event.Param1 || (event.Param1 == 0xffff0001))
 					goto downloadnow;
 
+#if 0
 				/* if we have the object already loaded, no need to add it here */
+				/* but in dual mode capture at empty startup we can
+				 * encounter that the second image is not loaded */
 				if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
 					continue;
+#endif
 
 				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 				if (!path)
@@ -4038,22 +4116,27 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
 		n = 0;
-		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		    ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
+		switch (params->deviceinfo.VendorExtensionID) {
+		case PTP_VENDOR_CANON:
+		    if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn))
 			n = snprintf (txt, spaceleft,_("Canon Capture\n"));
-		} else  {
-			if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-			    ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
-				n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
-			} else  {
-				if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-				     ptp_operation_issupported(params, PTP_OC_NIKON_Capture)) {
-					n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
-				} else {
-					n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
-				}
-			}
+		    if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+			n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
+		     break;
+		case PTP_VENDOR_NIKON:
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture)  ||
+			    ptp_operation_issupported(params, PTP_OC_NIKON_DeviceReady)||
+			    ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia))
+				n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+			break;
+		default:
+			/* does not belong to good vendor ... needs another detection */
+			if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
+				n = snprintf (txt, spaceleft,_("Olympus E XML Capture\n"));
+			break;
 		}
+		if (!n)
+			n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
 		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 
 	/* Third line for Wifi support, but just leave it out if not there. */
