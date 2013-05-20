@@ -2840,12 +2840,28 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  * This command captures a picture on the Nikon.
  *  
  * params:      PTPParams*
- *      uint32_t x - unknown parameter. seen to be -1.
+ *      uint32_t x: unknown parameter. seen to be -1.
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
 #define ptp_nikon_capture(params,x) ptp_generic_no_data(params,PTP_OC_NIKON_Capture,1,x)
+
+/**
+ * ptp_nikon_capture2:
+ *
+ * This command captures a picture on the Nikon.
+ *  
+ * params:      PTPParams*
+ * af: 		autofocus before capture (1 yes , 0 no)
+ * target:	sdram 1, card 0
+ *
+ * Return values: Some PTP_RC_* code.
+ * 2 params:
+ * 0xffffffff == No AF before,  0xfffffffe == AF before capture
+ * sdram=1, card=0
+ */
+#define ptp_nikon_capture2(params,af,target) ptp_generic_no_data(params,PTP_OC_NIKON_InitiateCaptureRecInMedia,2,af?0xfffffffe:0xffffffff,target)
 /**
  * ptp_nikon_capture_sdram:
  *
