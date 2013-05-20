@@ -1,3 +1,10 @@
+libgphoto2 2.5.2.1 release
+
+ptp2:
+* Nikon: added new ptp function for Nikon capture
+* Nikon: enable --trigger-capture support
+* Nikon: hook up some more configuration variables
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.2 release
 
