@@ -3943,6 +3943,39 @@ static struct deviceproptableu8 nikon_d3s_shootingspeedhigh[] = {
 };
 GENERIC8TABLE(Nikon_D3s_ShootingSpeedHigh,nikon_d3s_shootingspeedhigh)
 
+static struct deviceproptableu8 nikon_d7000_funcbutton[] = {
+	{ N_("Unassigned"),			0x00, 0 },/* unselectable */
+	{ N_("Preview"),			0x01, 0 },
+	{ N_("FV lock"),			0x02, 0 },
+	{ N_("AE/AF lock"),			0x03, 0 },
+	{ N_("AE lock only"),			0x04, 0 },
+	{ N_("Invalid"),			0x05, 0 },/* unselectable */
+	{ N_("AE lock (hold)"),			0x06, 0 },
+	{ N_("AF lock only"),			0x07, 0 },
+	{ N_("Flash off"),			0x08, 0 },
+	{ N_("Bracketing burst"),		0x09, 0 },
+	{ N_("Matrix metering"),		0x0a, 0 },
+	{ N_("Center-weighted metering"),	0x0b, 0 },
+	{ N_("Spot metering"),			0x0c, 0 },
+	{ N_("Playback"),			0x0d, 0 },
+	{ N_("Access top item in MY MENU"),	0x0e, 0 },
+	{ N_("+NEF (RAW)"),			0x0f, 0 },
+	{ N_("Framing grid"),			0x10, 0 },
+	{ N_("Active D-Lighting"),		0x11, 0 },
+	{ N_("1 step spd/aperture"),		0x12, 0 },
+	{ N_("Choose non-CPU lens number"),	0x13, 0 },
+	{ N_("Viewfinder virtual horizont"),	0x14, 0 },
+	{ N_("Start movie recording"),		0x15, 0 },
+};
+GENERIC8TABLE(Nikon_D7000_FuncButton,nikon_d7000_funcbutton)
+
+static struct deviceproptableu8 nikon_menus_and_playback[] = {
+	{ N_("Off"),				0x0, 0 },
+	{ N_("On"),				0x1, 0 },
+	{ N_("On (image review excluded)"),	0x2, 0 },
+};
+GENERIC8TABLE(Nikon_MenusAndPlayback,nikon_menus_and_playback)
+
 
 static int
 _get_BurstNumber(CONFIG_GET_ARGS) {
@@ -5499,6 +5532,8 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Custom Functions Ex"), "customfuncex", PTP_DPC_CANON_EOS_CustomFuncEx, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
 
 	{ N_("Auto Power Off"), "autopoweroff", PTP_DPC_CANON_EOS_AutoPowerOff, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_INT, _put_INT},
+	{ N_("Menus and Playback"), "menusandplayback", PTP_DPC_NIKON_MenusAndPlayback, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MenusAndPlayback, _put_Nikon_MenusAndPlayback},
+
 
 /* virtual */
 	{ N_("Fast Filesystem"), "fastfs", 0, PTP_VENDOR_NIKON, 0, _get_Nikon_FastFS, _put_Nikon_FastFS },
@@ -5692,6 +5727,13 @@ static struct submenu nikon_d90_camera_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* Nikon D7000. Marcus Meissner <marcus@jet.franken.de> */
+static struct submenu nikon_d7000_camera_settings[] = {
+	{ N_("Assign Func Button"), "funcbutton", PTP_DPC_NIKON_F4AssignFuncButton, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7000_FuncButton, _put_Nikon_D7000_FuncButton},
+	{ N_("Assign Preview Button"), "previewbutton", PTP_DPC_NIKON_PreviewButton, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7000_FuncButton, _put_Nikon_D7000_FuncButton},
+	{ 0,0,0,0,0,0,0 },
+};
+
 static struct submenu nikon_d5100_capture_settings[] = {
 	{ N_("Movie Quality"),  "moviequality", PTP_DPC_NIKON_MovScreenSize, 0, PTP_DTC_UINT8,  _get_Nikon_D5100_MovieQuality,    _put_Nikon_D5100_MovieQuality},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_NIKON_D5100_ExposureProgram, _put_NIKON_D5100_ExposureProgram},
@@ -5757,6 +5799,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 static struct menu menus[] = {
 	{ N_("Camera Actions"), "actions", 0, 0, camera_actions_menu, NULL, NULL },
 
+	{ N_("Camera Settings"), "settings", 0x4b0, 0x0428, nikon_d7000_camera_settings, NULL, NULL },
 	{ N_("Camera Settings"), "settings", 0x4b0, 0x0421, nikon_d90_camera_settings, NULL, NULL },
 	{ N_("Camera Settings"), "settings", 0, 0, camera_settings_menu, NULL, NULL },
 
