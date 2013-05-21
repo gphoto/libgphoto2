@@ -5940,7 +5940,6 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			}
 		}
 	}
-	free (setprops);
 
 	if (!params->deviceinfo.DevicePropertiesSupported_len)
 		return GP_OK;
@@ -5955,6 +5954,18 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		char			buf[20], *label;
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
+		int j;
+
+		for (j=0;j<nrofsetprops;j++)
+			if (setprops[j] == propid)
+				break;
+#if 0 /* enable this for suppression of generic properties for already decoded ones */
+		if (j<nrofsetprops) {
+			gp_log (GP_LOG_DEBUG, "camera_get_config", "Property 0x%04x already handled before, skipping.", propid );
+			continue;
+		}
+#endif
+
 
 		ret = ptp_getdevicepropdesc (params,propid,&dpd);
 		if (ret != PTP_RC_OK)
@@ -6086,6 +6097,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_widget_append (section, widget);
 		ptp_free_devicepropdesc(&dpd);
 	}
+	free (setprops);
 	return GP_OK;
 }
 
