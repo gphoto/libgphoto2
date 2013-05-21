@@ -967,6 +967,8 @@ static struct {
 	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP},
 	/* https://bugzilla.novell.com/show_bug.cgi?id=814622 Martin Caj at SUSE */
 	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP},
+	/* Ralph Schindler <ralph@ralphschindler.com> */
+	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP},
 
 
 #if 0
