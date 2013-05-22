@@ -80,6 +80,8 @@ static const struct eeprom_info {
 	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1 },
 	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1 },
 
+	{ "Nantronics N25S80", 0xd51430d5, 1048576, 1 },                                                                                                                                     
+
 	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 0 },
 
 	{ "Spansion S25FL004A", 0x00120201,  524288, 0 },
