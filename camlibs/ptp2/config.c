@@ -4210,6 +4210,8 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	uint16_t	ret;
 	float		val;
 	unsigned int	xval, flag;
+	PTPParams	*params = &(camera->pl->params);
+	GPContext 	*context = ((PTPData *) params->data)->context;
 
 	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_MfDrive)) 
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -4224,12 +4226,31 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	}
 	if (!xval) xval = 1;
 	ret = ptp_nikon_mfdrive (&camera->pl->params, flag, xval);
+	if (ret == PTP_RC_NIKON_NotLiveView) {
+		gp_context_error (context, _("Nikon manual focus works only in LiveView mode."));
+		return GP_ERROR;
+	}
+
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp2/nikon_mfdrive", "Nikon manual focus drive failed: 0x%x", ret);
 		return translate_ptp_result (ret);
 	}
-	while (PTP_RC_DeviceBusy == ptp_nikon_device_ready(&camera->pl->params));
-	return GP_OK;
+
+	/* The mf drive operation has started ... wait for it to
+	 * finish. */
+	do {
+		ret = ptp_nikon_device_ready(&camera->pl->params);
+	} while (ret == PTP_RC_DeviceBusy);
+
+	if (ret == PTP_RC_NIKON_MfDriveStepEnd) {
+		gp_context_error (context, _("Nikon manual focus at limit."));
+		return GP_ERROR_CAMERA_ERROR;
+	}
+	if (ret == PTP_RC_NIKON_MfDriveStepInsufficiency) {
+		gp_context_error (context, _("Nikon manual focus stepping too small."));
+		return GP_ERROR_CAMERA_ERROR;
+	}
+	return translate_ptp_result(ret);
 }
 
 static int
