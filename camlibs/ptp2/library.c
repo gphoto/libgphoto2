@@ -2091,8 +2091,16 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				SET_CONTEXT_P(params, NULL);
 				return translate_ptp_result (ret);
 			}
-			while (ptp_nikon_device_ready(params) != PTP_RC_OK)
+			do {
+				ret = ptp_nikon_device_ready(params);
 				usleep(20*1000);
+			} while (ret == PTP_RC_DeviceBusy);
+
+			if (ret != PTP_RC_OK) {
+				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+				SET_CONTEXT_P(params, NULL);
+				return translate_ptp_result (ret);
+			}
 		}
 		tries = 20;
 		while (tries--) {
