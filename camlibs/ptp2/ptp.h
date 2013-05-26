@@ -2760,6 +2760,19 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
  **/
 #define ptp_nikon_afdrive(params) ptp_generic_no_data(params,PTP_OC_NIKON_AfDrive,0)
 /**
+ * ptp_nikon_changeafarea:
+ *
+ * This command starts movie capture (to card)
+ *  
+ * params:      PTPParams*
+ * x: x coordinate
+ * y: y coordinate
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_changeafarea(params,x,y) ptp_generic_no_data(params,PTP_OC_NIKON_ChangeAfArea,2,x,y)
+/**
  * ptp_nikon_startmovie:
  *
  * This command starts movie capture (to card)
