@@ -3,16 +3,16 @@ If you have specific questions (like why doesn't my HP C20 answer with 0x20
 if I send 0xff as described in whatever/file.c), those are the guys to ask.
 
 libgphoto2_port:
+	Marcus Meissner <marcus@jet.franken.de>
 	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
 	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
 	Hubert Figuiere <hfiguiere@teaser.fr>	(old maintainer)
-	Marcus Meissner <marcus@jet.franken.de>
 
 libgphoto2:
+	Marcus Meissner <marcus@jet.franken.de>
 	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
 	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
 	Hubert Figuiere <hfiguiere@teaser.fr>	(old maintainer)
-	Marcus Meissner <marcus@jet.franken.de>
 
 --------------------------------------------------------------------------------
 				     PORTS
@@ -222,25 +222,30 @@ Wine (TWAIN):
 --------------------------------------------------------------------------------
 
 Build system up to 'configure' (i.e. 'autogen.sh'):
-	Arnaud Launay <asl@launay.org>
+	Marcus Meissner <marcus@jet.franken.de>
 
 Bug reports:
-	Hubert Figuiere <hfiguiere@teaser.fr>
+	Please use the sourceforge tracker at http://sf.net/projects/gphoto .
 
 Releases:
-	Christophe Barbé <christophe.barbe@ufies.org>
+	Marcus Meissner <marcus@jet.franken.de>
 
 Packaging (RPM):
 	Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 Translation:
-	Colin Marquardt <colin@marquardt-home.de>
+	We use http://translationproject.org/
+	packages: libgphoto2, libgphoto2_port, gphoto2, gtkam
+
+	Marcus Meissner <marcus@jet.franken.de>
 
 Manual pages:
 	gphoto2 command-line app: Tim Waugh <twaugh@redhat.com>
 
 Other documentation (gphoto2.xml manual):
+	Marcus Meissner <marcus@jet.franken.de>
         Hans Ulrich Niedermann <gp@n-dimensional.de>
 
 Mailing lists:
+	Marcus Meissner <marcus@jet.franken.de>
 	Hans Ulrich Niedermann <gp@n-dimensional.de>
