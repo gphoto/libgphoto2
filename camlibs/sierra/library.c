@@ -775,6 +775,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 		}
 
 		switch (buf[0]) {
+		case SIERRA_PACKET_ENQ:
 		case ACK:
 			GP_DEBUG ("Transmission successful.");
 			return GP_OK;
