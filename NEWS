@@ -5,6 +5,11 @@ ptp2:
 * Nikon: enable --trigger-capture support
 * Nikon: hook up some more configuration variables
 
+sierra:
+* capture fixed for Olympus C-3030
+------------------------------------------------------------------------------
+libgphoto2 2.5.2.1 release
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.2 release
 
