@@ -951,6 +951,11 @@ static struct {
 
 	/* Christian Deckelmann of Xerox */
 	{"Nikon:DSC D4",	          0x04b0, 0x042b, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Lihuijun <lihuiplus@hotmail.com> */
+	/* cheap version, but perhaps has hidden commands */
+	{"Nikon:DSC D3200",	          0x04b0, 0x042c, PTP_CAP/*|PTP_CAP_PREVIEW*/},
+
 	/* t.ludewig@gmail.com */
 	{"Nikon:DSC D600",	          0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Roderick Stewart <roderick.stewart@gmail.com> */
