@@ -450,6 +450,24 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+static uint16_t
+nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
+	uint16_t	res;
+	int		tries;
+
+	/* wait either 1 second, or 50 tries */
+	if (waitms)
+		tries=timeout/waitms;
+	else
+		tries=50;
+	do {
+		res = ptp_nikon_device_ready(params);
+		if (res != PTP_RC_DeviceBusy)
+			return res;
+		if (waitms) usleep(waitms*1000)/*wait a bit*/;
+	} while (tries--);
+	return res;
+}
 
 static int
 have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
@@ -4092,7 +4110,6 @@ _get_Nikon_AFDrive(CONFIG_GET_ARGS) {
 static int
 _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 	uint16_t	ret;
-	int		tries = 0;
 	PTPParams	*params = &(camera->pl->params);
 	GPContext 	*context = ((PTPData *) params->data)->context;
 
@@ -4105,12 +4122,7 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 		return translate_ptp_result (ret);
 	}
 	/* wait at most 5 seconds for focusing currently */
-	while (PTP_RC_DeviceBusy == (ret = ptp_nikon_device_ready(&camera->pl->params))) {
-		tries++;
-		if (tries == 500)
-			return GP_ERROR_CAMERA_BUSY;
-		usleep(10*1000);
-	}
+	ret = nikon_wait_busy (params, 10, 5000);
 	/* this can return PTP_RC_OK or PTP_RC_NIKON_OutOfFocus */
 	if (ret == PTP_RC_NIKON_OutOfFocus)
 		gp_context_error (context, _("Nikon autofocus drive did not focus."));
@@ -4238,10 +4250,7 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 
 	/* The mf drive operation has started ... wait for it to
 	 * finish. */
-	do {
-		ret = ptp_nikon_device_ready(&camera->pl->params);
-	} while (ret == PTP_RC_DeviceBusy);
-
+	ret = nikon_wait_busy (&camera->pl->params, 20, 1000);
 	if (ret == PTP_RC_NIKON_MfDriveStepEnd) {
 		gp_context_error (context, _("Nikon manual focus at limit."));
 		return GP_ERROR_CAMERA_ERROR;
@@ -4734,7 +4743,8 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
 				return translate_ptp_result (res);
 			}
-			while (ptp_nikon_device_ready(params) != PTP_RC_OK) usleep(50*1000)/*wait a bit*/;
+			/* Has to put the mirror up, so takes a bit. */
+			res = nikon_wait_busy(params, 50, 1000);
 		}
 		return translate_ptp_result (res);
 	} else {
@@ -4812,14 +4822,7 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
                                 gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
                                 return translate_ptp_result (ret);
                         }
-                        while (1) {
-				ret = ptp_nikon_device_ready(params);
-				if (ret == PTP_RC_DeviceBusy) {
-					usleep(20*1000);
-					continue;
-				}
-				break;
-			}
+			ret = nikon_wait_busy(params, 50, 1000);
                         if (ret != PTP_RC_OK) {
                                 gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
                                 return translate_ptp_result (ret);

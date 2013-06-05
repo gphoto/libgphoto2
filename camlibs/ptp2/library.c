@@ -438,6 +438,27 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 #endif
 }
 
+static uint16_t
+nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
+	uint16_t	res;
+	int		tries;
+
+	/* wait either 1 second, or 50 tries */
+	if (waitms)
+		tries=timeout/waitms;
+	else
+		tries=50;
+
+	do {
+		res = ptp_nikon_device_ready(params);
+		if (res != PTP_RC_DeviceBusy)
+			return res;
+		if (waitms) usleep(waitms*1000)/*wait a bit*/;
+	} while (tries--);
+	return res;
+}
+
+
 static struct {
 	const char *model;
 	unsigned short usb_vendor;
@@ -3122,7 +3143,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		PTPPropertyValue propval;
 
 		CPR (context, ptp_check_event (params));
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		CPR (context, nikon_wait_busy (params, 20, 1000));
 		CPR (context, ptp_check_event (params));
 
 		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
