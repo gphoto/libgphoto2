@@ -5140,12 +5140,15 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* We do not allow downloading unknown type files as in most
 		cases they are special file (like firmware or control) which
 		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
-		if (ob->oi.ObjectFormat == PTP_OFC_Association ||
-			(ob->oi.ObjectFormat == PTP_OFC_Undefined &&
+		/* however this avoids the possibility to download files on
+		 * Androids ... doh. Let reenable it again. */
+		if (ob->oi.ObjectFormat == PTP_OFC_Association
+	/*
+			|| (ob->oi.ObjectFormat == PTP_OFC_Undefined &&
 				((ob->oi.ThumbFormat == PTP_OFC_Undefined) ||
 				 (ob->oi.ThumbFormat == 0)
 			)
-			)
+			) */
 		)
 			return (GP_ERROR_NOT_SUPPORTED);
 
