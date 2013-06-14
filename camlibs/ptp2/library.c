@@ -711,6 +711,7 @@ static struct {
 	{"Sony:DSC-U10 (PTP mode)",   0x054c, 0x004e, 0},
 	/* "Riccardo (C10uD)" <c10ud.dev@gmail.com> */
 	{"Sony:DSC-S730 (PTP mode)",  0x054c, 0x0296, 0},
+	{"Sony:DSC-S780 (PTP mode)",  0x054c, 0x0296, 0},
 	/* Fernando Santoro <fernando.lopezjr@gmail.com> */
 	{"Sony:DSC-A100 (PTP mode)",  0x054c, 0x02c0, 0},
 	/* Sam Tseng <samtz1223@gmail.com> */
