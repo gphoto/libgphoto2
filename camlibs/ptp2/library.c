@@ -1421,7 +1421,7 @@ static struct {
 	{"Canon:EOS 6D",			0x04a9, 0x3250, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
-	{"Canon:PowerShot S110",		0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S110 (PTP Mode)",	0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot SX500IS",		0x04a9, 0x325c, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
