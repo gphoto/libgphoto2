@@ -1142,8 +1142,10 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...)
         }
         cmd[4] = 4*n;
         res = scsi_write(p, cmd, sizeof(cmd), buf, 4*n);
-        if (res != PSLR_OK)
+        if (res != PSLR_OK) {
+    	    va_end(ap);
             return res;
+	}
     } else {
         /* Arguments one by one */
         for (i=0; i<n; i++) {
@@ -1155,8 +1157,10 @@ static int ipslr_write_args(ipslr_handle_t *p, int n, ...)
             cmd[4] = 4;
             cmd[2] = i*4;
             res = scsi_write(p, cmd, sizeof(cmd), buf, 4);
-            if (res != PSLR_OK)
+            if (res != PSLR_OK) {
+    	        va_end(ap);
                 return res;
+            }
         }
     }
     va_end(ap);
