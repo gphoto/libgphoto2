@@ -139,7 +139,7 @@ const struct canonCamModelData models[] = {
         /* Mac OS includes this as a valid ID; don't know which camera model --swestin */
         {"Canon:PowerShot unknown 1",   CANON_CLASS_1,  0x04A9, 0x3050, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         /* Canon IXY DIGITAL 200 here? */
-        {"Canon:PowerShot S110",        CANON_CLASS_0,  0x04A9, 0x3051, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot S110 (2001)", CANON_CLASS_0,  0x04A9, 0x3051, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS v",        CANON_CLASS_0,  0x04A9, 0x3052, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
         {"Canon:PowerShot G2",          CANON_CLASS_1,  0x04A9, 0x3055, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
