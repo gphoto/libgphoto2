@@ -6513,8 +6513,13 @@ camera_init (Camera *camera, GPContext *context)
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
 		gp_log (GP_LOG_DEBUG, "ptp2", "maxpacketsize %d", settings.usb.maxpacketsize);
 		if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
+#ifdef HAVE_LIBXML2
 			gp_log (GP_LOG_DEBUG, "ptp2/usb", "Entering Olympus USB Mass Storage XML Wrapped Mode.\n");
 			olympus_setup (params);
+#else
+			gp_context_error (context, _("Olympus wrapped XML support is currently only available with libxml2 support built in."));				\
+			return GP_ERROR;
+#endif
 		}
 		break;
 	case GP_PORT_PTPIP: {
