@@ -1434,7 +1434,7 @@ ptp_unpack_EOS_CustomFuncEx (PTPParams* params, unsigned char** data )
 {
 	uint32_t s = dtoh32a( *data );
 	uint32_t n = s/4, i;
-	char* str = (char*)malloc( s ); /* n is size in uint32, average len(itoa(i)) < 4 -> alloc n chars */
+	char* str = (char*)malloc( s*2+s/4+1 ); /* n is size in uint32, maximum %x len is 8 chars and \0*/
 	if (!str)
 		return str;
 	char* p = str;
