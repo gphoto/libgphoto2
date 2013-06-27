@@ -301,12 +301,21 @@ gp_port_usb_open (GPPort *port)
 	if (ret < 0) {
 		int saved_errno = errno;
 		gp_port_set_error (port, _("Could not claim interface %d (%s). "
-					   "Make sure no other program "
+					   "Make sure no other program (%s) "
 					   "or kernel module (such as %s) "
 					   "is using the device and you have "
 					   "read/write access to the device."),
 				   port->settings.usb.interface,
 				   strerror(saved_errno),
+#ifdef __linux__
+				   "gvfs-gphoto2-volume-monitor",
+#else
+#if defined(__APPLE__)
+				   N_("MacOS PTPCamera service"),
+#else
+				   N_("unknown libgphoto2 using program"),
+#endif
+#endif
 				   "sdc2xx, stv680, spca50x");
 		return GP_ERROR_IO_USB_CLAIM;
 	}
