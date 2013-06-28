@@ -505,11 +505,11 @@ ptp_ptpip_init_event_ack (PTPParams* params)
 	ret = ptp_ptpip_evt_read (params, &hdr, &data);
 	if (ret != PTP_RC_OK)
 		return ret;
+	free (data);
 	if (hdr.type != dtoh32(PTPIP_INIT_EVENT_ACK)) {
 		gp_log (GP_LOG_ERROR, "ptpip", "bad type returned %d\n", htod32(hdr.type));
 		return PTP_RC_GeneralError;
 	}
-	free (data);
 	return PTP_RC_OK;
 }
 
