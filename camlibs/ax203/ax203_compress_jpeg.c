@@ -22,7 +22,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 #include <gd.h>
 #endif
 
@@ -31,7 +31,7 @@
 #include "jpeg_memsrcdest.h"
 #endif
 
-#if defined(HAVE_GD) && defined(HAVE_LIBJPEG)
+#if defined(HAVE_LIBGD) && defined(HAVE_LIBJPEG)
 static int
 locate_tables_n_write(JOCTET *jpeg, int jpeg_size, JOCTET table_type,
 	uint8_t *outbuf, int *outc)

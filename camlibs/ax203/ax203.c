@@ -28,7 +28,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 #include <gd.h>
 #endif
 
@@ -1067,7 +1067,7 @@ ax203_file_present(Camera *camera, int idx)
 static int
 ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 {
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 	int ret;
 	unsigned int x, y, width, height, row_skip = 0;
 	unsigned char *components[3];
@@ -1189,7 +1189,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 static int
 ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 {
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 	int size = ax203_filesize (camera);
 #ifdef HAVE_LIBJPEG
 	int x, y;

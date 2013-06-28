@@ -31,7 +31,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 #include <gd.h>
 #endif
 
@@ -41,7 +41,7 @@
 
 #define CLAMP_U8(x) (((x) > 255) ? 255 : (((x) < 0) ? 0 : (x)))
 
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 static void
 ax203_decode_block_yuv(char *src, int **dest, int dest_x, int dest_y)
 {
