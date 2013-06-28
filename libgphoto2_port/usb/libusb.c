@@ -975,8 +975,8 @@ gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfac
 	if ((dev->descriptor.bDeviceClass!=0xff) && (dev->descriptor.bDeviceClass!=0))
 		return 0;
 #endif
+	xifaces = xnocamifaces = 0;
 	if (dev->config) {
-		xifaces = xnocamifaces = 0;
 		for (i = 0; i < dev->descriptor.bNumConfigurations; i++) {
 			unsigned int j;
 
