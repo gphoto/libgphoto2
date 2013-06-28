@@ -205,7 +205,7 @@ dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 
-ALL_LINGUAS="da de es eu fr hu it ja nl pl ru sv uk vi zh_CN"
+ALL_LINGUAS="cs da de es eu fr hu it ja nl pl ru sv uk vi zh_CN"
 GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
@@ -275,30 +275,18 @@ GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
 dnl ---------------------------------------------------------------------------
 dnl check for libxml2
 dnl ---------------------------------------------------------------------------
-GP_CONFIG_MSG([libxml2 support])
 GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
                 [libxml/parser.h],[xmlFirstElementChild],[],[],
                 [default-on],
                 [http://xmlsoft.org]
 )
+GP_CONFIG_MSG([XML support for Olympus E series],[${have_LIBXML2}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
 dnl ---------------------------------------------------------------------------
-LIBGD=""
-libgd_msg="no"
-AC_SUBST(LIBGD)
-AC_ARG_WITH([gd], AS_HELP_STRING([--without-gd], [Build without GD library (default: no)]))
-AS_IF([test "x$with_gd" != "xno"], [
-	AC_CHECK_LIB(gd,gdImageCreateTrueColor,[
-		AC_CHECK_HEADER(gd.h,[
-			AC_DEFINE(HAVE_GD,1,[define if we have LIBGD and its headers])
-			LIBGD="-lgd"
-			libgd_msg="yes"
-		])
-	])
-])
-GP_CONFIG_MSG([GD conversion support],[${libgd_msg}])
+GP_CHECK_LIBRARY([LIBGD],[libgd],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[],[],[default-on],[http://www.libgd.org/])
+GP_CONFIG_MSG([libGD conversion support],[${have_LIBGD}])
 
 dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
