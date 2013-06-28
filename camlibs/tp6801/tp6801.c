@@ -30,7 +30,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 #include <gd.h>
 #endif
 
@@ -373,7 +373,7 @@ tp6801_check_file_present(Camera *camera, int idx)
 static int
 tp6801_decode_image(Camera *camera, char *_src, int **dest)
 {
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 	int x, y;
 	unsigned char *src = (unsigned char *)_src;
 
@@ -401,7 +401,7 @@ tp6801_decode_image(Camera *camera, char *_src, int **dest)
 static int
 tp6801_encode_image(Camera *camera, int **src, char *dest)
 {
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 	int x, y;
 
 	for (y = 0; y < camera->pl->height; y++) {
