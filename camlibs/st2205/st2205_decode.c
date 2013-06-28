@@ -20,13 +20,13 @@
 
 #include <string.h>
 #include <stdlib.h>
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 # include <gd.h>
 #endif
 
 #include "st2205.h"
 
-#ifdef HAVE_GD
+#ifdef HAVE_LIBGD
 #define CLAMP256(x) (((x) > 255) ? 255 : (((x) < 0) ? 0 : (x)))
 #define CLAMP64S(x) (((x) > 63) ? 63 : (((x) < -64) ? -64 : (x)))
 
