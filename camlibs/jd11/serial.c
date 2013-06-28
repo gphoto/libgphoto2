@@ -459,7 +459,7 @@ serial_image_reader(Camera *camera,CameraFile *file,int nr,unsigned char ***imag
     unsigned int id;
 
     jd11_select_image(port,nr);
-    *imagebufs = (unsigned char**)malloc(3*sizeof(char**));
+    *imagebufs = (unsigned char**)malloc(3*sizeof(unsigned char*));
     for (picnum=0;picnum<3;picnum++) {
 	curread=0;
 	sizes[picnum] = jd11_imgsize(port);
