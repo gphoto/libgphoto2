@@ -166,7 +166,7 @@ k_ping (GPPort *port) {
  */
 static int
 k_info_img (unsigned int image_no, void *data, CameraFileInfo* info, 
-		unsigned int *data_number)
+		int *data_number)
 {
 	unsigned char	cmd[6], buf[INFO_BUFFER];
 	Camera *camera = data;
@@ -335,8 +335,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	unsigned char *d,*thumbnail;
-	unsigned int image_number;
-	int image_no, len, ret;
+	int image_number, image_no, len, ret;
 	long long_len;
 	CameraFileInfo file_info;
 	exifparser exifdat;
@@ -416,7 +415,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	CameraFileInfo file_info;
 	unsigned char cmd[7], ack;
-	unsigned int image_no;
+	int image_no;
 	int ret;
 
 	GP_DEBUG ("*** ENTER: delete_file_func ***");
