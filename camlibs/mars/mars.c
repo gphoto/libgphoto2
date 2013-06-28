@@ -67,7 +67,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 {
 	char c[16];
 	unsigned char status = 0;
-	memset(info,0, sizeof(info)); 
+	memset(info,0, sizeof(*info)); 
 	memset(c,0,sizeof(c));
 	GP_DEBUG("Running mars_init\n");
 
