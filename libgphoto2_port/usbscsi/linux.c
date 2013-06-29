@@ -35,6 +35,18 @@
 #endif
 #ifdef HAVE_SYS_FILE_H
 # include <sys/file.h>
+# ifndef LOCK_SH
+#  define LOCK_SH 1
+# endif
+# ifndef LOCK_EX
+#  define LOCK_EX 2
+# endif
+# ifndef LOCK_NB
+#  define LOCK_NB 4
+# endif
+# ifndef LOCK_UN
+#  define LOCK_UN 4
+# endif
 #endif
 #include <sys/stat.h>
 #include <sys/types.h>
