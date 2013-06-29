@@ -6367,7 +6367,8 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
 			params->objects[params->nrofobjects].oid = handles.Handler[i];
 			params->objects[params->nrofobjects].flags = 0;
-			if (handle != PTP_HANDLER_SPECIAL) {
+			/* root directory list files might return all files, so avoid tagging it */
+			if (handle != PTP_HANDLER_SPECIAL && handle) {
 				gp_log (GP_LOG_DEBUG, "ptp_list_folder", "  parenthandle 0x%08x", handle);
 				if (handles.Handler[i] == handle) { /* EOS bug where oid == parent(oid) */
 					params->objects[params->nrofobjects].oi.ParentObject = 0;
