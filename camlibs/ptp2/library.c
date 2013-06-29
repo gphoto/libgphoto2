@@ -541,6 +541,8 @@ static struct {
 	{"Kodak:V570",   0x040a, 0x0591, 0},
 	{"Kodak:P850",   0x040a, 0x0592, 0},
 	{"Kodak:P880",   0x040a, 0x0593, 0},
+	/* Илья Розановский <rozanovskii.ilia@gmail.com> */
+	{"Kodak:Z8612 IS",0x040a, 0x0595, 0},
 	/* https://launchpad.net/distros/ubuntu/+source/libgphoto2/+bug/67532 */
 	{"Kodak:C530",   0x040a, 0x059a, 0},
 	/* Ivan Baldo, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=387998 */
