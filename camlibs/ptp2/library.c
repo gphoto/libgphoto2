@@ -748,6 +748,8 @@ static struct {
 
 	/* t.ludewig@gmail.com */
 	{"Sony:NEX-3N (PTP mode)",    0x054c, 0x072f, 0},
+	/* Thorsten Ludewig <t.ludewig@gmail.com> */
+	{"Sony:SLT-A58",	      0x054c, 0x0736, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -1421,6 +1423,9 @@ static struct {
 
 	/* "François G." <francois@webcampak.com> */
 	{"Canon:EOS 6D",			0x04a9, 0x3250, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Thorsten Ludewig <t.ludewig@gmail.com> */
+	{"Canon:PowerShot G15",			0x04a9, 0x3258, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot S110 (PTP Mode)",	0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
