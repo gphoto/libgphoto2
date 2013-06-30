@@ -1030,7 +1030,8 @@ static struct {
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=2950529&group_id=8874 */
 	{"Panasonic:DMC-FS62",		  0x04da, 0x2374, 0},
 	{"Panasonic:DMC-TZ18",		  0x04da, 0x2374, 0},
-	{"Panasonic:DMC-TZ20",		  0x04da, 0x2374, 0},
+	/* Jean Ribière <jean.ribiere@orange.fr> */
+	{"Panasonic:DMC-TZ8",		  0x04da, 0x2374, 0},
 	{"Panasonic:DMC-LX7",		  0x04da, 0x2374, 0},
 	/* Constantin B <klochto@gmail.com> */
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
