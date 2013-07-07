@@ -1810,6 +1810,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->CurrentValue.u32		= dtoh32a(xdata);
 					ptp_debug (params ,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u32);
 					break;
+				case PTP_DTC_INT16:
+					dpd->FactoryDefaultValue.i16	= dtoh16a(xdata);
+					dpd->CurrentValue.i16		= dtoh16a(xdata);
+					ptp_debug (params,"event %d: currentvalue of %x is %d", i, proptype, dpd->CurrentValue.i16);
+					break;
 				case PTP_DTC_UINT16:
 					dpd->FactoryDefaultValue.u16	= dtoh16a(xdata);
 					dpd->CurrentValue.u16		= dtoh16a(xdata);
