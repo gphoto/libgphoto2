@@ -599,11 +599,13 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 				    (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)
 				) {
 					gp_widget_add_choice (*widget, _(tbl[j].label));
-					if (tbl[j].value == dpd->CurrentValue.u16)
+					if (tbl[j].value == dpd->CurrentValue.u16) {
 						gp_widget_set_value (*widget, _(tbl[j].label));
+						isset2 = TRUE;
+					}
 				}
 			}
-			return GP_OK;
+			/* fallthrough in case we do not have currentvalue in the table. isset2 = FALSE */
 		}
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 			isset = FALSE;
@@ -759,11 +761,13 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 				    (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)
 				) {
 					gp_widget_add_choice (*widget, _(tbl[j].label));
-					if (tbl[j].value == dpd->CurrentValue.i16)
+					if (tbl[j].value == dpd->CurrentValue.i16) {
 						gp_widget_set_value (*widget, _(tbl[j].label));
+						isset2 = TRUE;
+					}
 				}
 			}
-			return GP_OK;
+			/* fallthrough */
 		}
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 			isset = FALSE;
