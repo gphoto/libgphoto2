@@ -1169,36 +1169,34 @@ _put_INT(CONFIG_PUT_ARGS) {
 	case PTP_DTC_UINT8:
 		if (1 != sscanf (value, "%u", &u ))
 			return GP_ERROR_BAD_PARAMETERS;
-		gp_log (GP_LOG_DEBUG, "config/put_INT", "%s assumed to be %u\n", value, u);
 		break;
 	case PTP_DTC_INT32:
 	case PTP_DTC_INT16:
 	case PTP_DTC_INT8:
 		if (1 != sscanf (value, "%d", &i ))
 			return GP_ERROR_BAD_PARAMETERS;
-		gp_log (GP_LOG_DEBUG, "config/put_INT", "%s assumed to be %d\n", value, i);
 		break;
 	default:
 		return GP_ERROR;
 	}
 	switch (dpd->DataType) {
 	case PTP_DTC_UINT32:
-		dpd->CurrentValue.u32 = u;
+		propval->u32 = u;
 		break;
 	case PTP_DTC_INT32:
-		dpd->CurrentValue.i32 = i;
+		propval->i32 = i;
 		break;
 	case PTP_DTC_UINT16:
-		dpd->CurrentValue.u16 = u;
+		propval->u16 = u;
 		break;
 	case PTP_DTC_INT16:
-		dpd->CurrentValue.i16 = i;
+		propval->i16 = i;
 		break;
 	case PTP_DTC_UINT8:
-		dpd->CurrentValue.u8 = u;
+		propval->u8 = u;
 		break;
 	case PTP_DTC_INT8:
-		dpd->CurrentValue.i8 = i;
+		propval->i8 = i;
 		break;
 	}
 	return GP_OK;
