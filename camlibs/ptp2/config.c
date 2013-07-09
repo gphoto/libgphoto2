@@ -1201,7 +1201,6 @@ _put_INT(CONFIG_PUT_ARGS) {
 		dpd->CurrentValue.i8 = i;
 		break;
 	}
-	gp_log (GP_LOG_DEBUG, "config/put_INT", "%s assumed to be %d\n", value, u);
 	return GP_OK;
 }
 
