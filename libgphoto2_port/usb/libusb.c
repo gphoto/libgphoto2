@@ -304,7 +304,8 @@ gp_port_usb_open (GPPort *port)
 					   "Make sure no other program (%s) "
 					   "or kernel module (such as %s) "
 					   "is using the device and you have "
-					   "read/write access to the device."),
+					   "read/write access to the device."
+					),
 				   port->settings.usb.interface,
 				   strerror(saved_errno),
 #ifdef __linux__
@@ -963,6 +964,7 @@ gp_port_usb_find_path_lib(GPPort *port)
  * Windows Media Player 10 uses.
  * It is documented to some degree on various internet pages.
  */
+#if 0
 static int
 gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfaceno, int *altsettingno)
 {
@@ -1105,14 +1107,17 @@ errout:
 	return 0;
 #endif
 }
+#endif
 
 static int
 gp_port_usb_match_device_by_class(struct usb_device *dev, int class, int subclass, int protocol, int *configno, int *interfaceno, int *altsettingno)
 {
 	int i, i1, i2;
 
+#if 0
 	if (class == 666) /* Special hack for MTP devices with MS OS descriptors. */
 		return gp_port_usb_match_mtp_device (dev, configno, interfaceno, altsettingno);
+#endif
 
 	if (dev->descriptor.bDeviceClass == class &&
 	    (subclass == -1 ||
