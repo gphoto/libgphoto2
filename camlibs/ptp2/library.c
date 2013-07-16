@@ -918,8 +918,8 @@ static struct {
 	{"Nikon:Coolpix S2500 (PTP mode)",0x04b0, 0x0321, PTP_CAP},
 	/* Fabio <ctrlaltca@gmail.com> */
 	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
-	/* "M.-A. DARCHE" <ma.darche@cynode.org> */
-	{"Nikon:Coolpix S3300 (PTP mode)",0x04b0, 0x032a, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
+	/* "M.-A. DARCHE" <ma.darche@cynode.org> . gets capturecomplete events nicely */
+	{"Nikon:Coolpix S3300 (PTP mode)",0x04b0, 0x032a, PTP_CAP},
 	/* sakax <sakamotox@gmail.com> */
 	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP},
 
@@ -2971,7 +2971,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM) ||
 		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
 	)) {
-		int ret = GP_OK;
+		int ret = GP_ERROR_NOT_SUPPORTED;
 		char buf[1024];
 
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
