@@ -731,6 +731,82 @@ udev_camera_func2 (const func_params_t *params,
 
 
 static int
+hwdb_begin_func (const func_params_t *params, void **data)
+{
+	printf ("# hardware database file for libgphoto2 devices\n");
+	return 0;
+}
+
+
+static int
+hwdb_camera_func (const func_params_t *params, 
+		  const int i,
+		  const int total,
+		  const CameraAbilities *a,
+		  void *data)
+{
+	int flags = 0;
+	int class = 0, subclass = 0, proto = 0;
+	int usb_vendor = 0, usb_product = 0;
+	int has_valid_rule = 0;
+
+	if (!(a->port & GP_PORT_USB))
+		return 0;
+
+	if (a->usb_vendor) { /* usb product id may be zero! */
+		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+			 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
+		usb_vendor = a->usb_vendor;
+		usb_product = a->usb_product;
+	} else {
+		if (a->usb_class) {
+			class = a->usb_class;
+			subclass = a->usb_subclass;
+			proto = a->usb_protocol;
+			flags = GP_USB_HOTPLUG_MATCH_INT_CLASS;
+			if (subclass != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_SUBCLASS;
+			else
+				subclass = 0;
+			if (proto != -1)
+				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
+			else
+				proto = 0;
+		}
+	}
+
+	printf ("\n# %s\n", a->model);
+
+	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
+		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
+			printf("usb:v*p*d*dc%02ddsc%02dp%02d*\"\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);
+			has_valid_rule = 1;
+		} else {
+			if (class == 666) {
+				printf("# not working yet\n");
+			} else {
+				fprintf(stderr, "unhandled interface match flags %x\n", flags);
+			}
+		}
+	} else {
+		if (flags & GP_USB_HOTPLUG_MATCH_VENDOR_ID) {
+			printf ("usb:v%04Xp%04X*\n GPHOTO2_DRIVER=proprietary\n", usb_vendor, usb_product);
+			has_valid_rule = 1;
+		} else {
+			fprintf (stderr, "Error: Trying to output device %d/%d with incorrect match flags.\n",
+				usb_vendor, usb_product
+			);
+		}
+	}
+	if (has_valid_rule != 0) {
+		printf(" ID_GPHOTO2=1\n");
+		if (a->device_type & GP_DEVICE_AUDIO_PLAYER)
+			printf(" ID_MEDIA_PLAYER=1\n");
+	}
+	return 0;
+}
+
+static int
 empty_begin_func (const func_params_t *params, void **data)
 {
 	return 0;
@@ -1486,6 +1562,16 @@ static const output_format_t formats[] = {
 	 udev_middle_func,
 	 udev_camera_func2,
 	 udev_end_func
+	},
+	{"hwdb",
+	 "hardware database file",
+	 "Put it into /usr/lib/udev/hwdb.d/20-gphoto.conf.\n",
+	 NULL,
+	 hwdb_begin_func,
+	 hwdb_camera_func,
+	 NULL,
+	 hwdb_camera_func,
+	 empty_end_func
 	},
 	{"html",
 	 "HTML table file for gphoto.org website",
