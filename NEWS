@@ -7,8 +7,14 @@ ptp2:
 
 sierra:
 * capture fixed for Olympus C-3030
-------------------------------------------------------------------------------
-libgphoto2 2.5.2.1 release
+
+translations:
+* new czech translation by Pavel Borecki.
+* updated dutch, polish, ukranian
+
+packaging:
+* "print-camera-list hwdb" output mode added for udev versions >= 201.
+* "print-camera-list html" output mode added for http://gphoto.org/proj/libgphoto2/support.php
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.2 release
