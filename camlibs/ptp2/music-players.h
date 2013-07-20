@@ -3,7 +3,7 @@
  * List of music players as USB ids.
  *
  * Copyright (C) 2005-2007 Richard A. Low <richard@wentnet.com>
- * Copyright (C) 2005-2012 Linus Walleij <triad@df.lth.se>
+ * Copyright (C) 2005-2013 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2006-2007 Marcus Meissner
  * Copyright (C) 2007 Ted Bullock
  * Copyright (C) 2012 Sony Mobile Communications AB
@@ -570,14 +570,16 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Acer", 0x0502, "Iconia TAB A510 (ID2)", 0x338a,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Acer", 0x0502, "S500 CloudMobile", 0x33aa,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Acer", 0x0502, "E350 Liquid Gallant Duo", 0x33c3,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Acer", 0x0502, "Iconia TAB A210", 0x33cb,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Acer", 0x0502, "Iconia TAB A110", 0x33d8,
       DEVICE_FLAGS_ANDROID_BUGS },
-
-
+  { "Acer", 0x0502, "Liquid Z120 MT65xx Android Phone", 0x3473,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * SanDisk
@@ -1044,6 +1046,8 @@
   { "Nokia", 0x0421, "E72", 0x0221, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "5530", 0x0229, DEVICE_FLAG_NONE },
+  /* Grzegorz Woźniak <wozniakg@gmail.com> */
+  { "Nokia", 0x0421, "E6", 0x032f, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
   { "Nokia", 0x0421, "N97 mini", 0x026b, DEVICE_FLAG_NONE },
   // From: Anonymous SourceForge user
@@ -1099,6 +1103,7 @@
   // From: Maxin B. John <maxin.john@gmail.com>
   { "Nokia", 0x0421, "N9", 0x051a, DEVICE_FLAG_NONE },
   { "Nokia", 0x0421, "C5-00", 0x0592, DEVICE_FLAG_NONE },
+  { "Nokia", 0x0421, "808 PureView", 0x05d3, DEVICE_FLAG_NONE },
   // Reported by Sampo Savola
   // Covers Lumia 920, 820 and probably any WP8 device.
   { "Nokia", 0x0421, "Nokia Lumia WP8", 0x0661, DEVICE_FLAG_NONE },
@@ -1580,11 +1585,13 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia E MTP", 0x018c,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x018d,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP 1", 0x018d,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia Z MTP", 0x0193,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x0194,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP 2", 0x0194,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia SP MTP", 0x0195,
       DEVICE_FLAG_NONE },
 
   /*
@@ -1624,15 +1631,17 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia J MTP+CDROM", 0x4188,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia ZL MTP", 0x4189,
+  { "SONY", 0x0fce, "Xperia ZL MTP+CDROM", 0x4189,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia E MTP+CDROM", 0x418c,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x418d,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP+CDROM 1", 0x418d,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Z MTP", 0x4193,
+  { "SONY", 0x0fce, "Xperia Z MTP+CDROM", 0x4193,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x4194,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP+CDROM 2", 0x4194,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia SP MTP+CDROM", 0x4195,
       DEVICE_FLAG_NONE },
 
   /*
@@ -1658,7 +1667,7 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "LT26i Xperia S MTP+ADB", 0x5169,
       DEVICE_FLAG_NO_ZERO_READS },
-  { "SonyEricsson", 0x0fce, "SK17i Xperia Mini Pro MTP+ADB", 0x516d,
+  { "SonyEricsson", 0x0fce, "WT19i Live Walkman MTP+ADB", 0x516d,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "ST21i Xperia Tipo MTP+ADB", 0x5170,
       DEVICE_FLAG_NONE },
@@ -1688,15 +1697,17 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia J MTP+ADB", 0x5188,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia ZL MTP", 0x5189,
+  { "SONY", 0x0fce, "Xperia ZL MTP+ADB", 0x5189,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia E MTP+ADB", 0x518c,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x518d,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP+ADB 1", 0x518d,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Z MTP", 0x5193,
+  { "SONY", 0x0fce, "Xperia Z MTP+ADB", 0x5193,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Tablet Z MTP", 0x5194,
+  { "SONY", 0x0fce, "Xperia Tablet Z MTP+ADB 2", 0x5194,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia SP MTP+ADB", 0x5195,
       DEVICE_FLAG_NONE },
 
   /*
@@ -1837,6 +1848,10 @@
   { "Google Inc (for Asus)", 0x18d1, "TF101 Transformer", 0x4e0f,
       DEVICE_FLAGS_ANDROID_BUGS },
   // 0x4e21 (Nexus S) is a USB Mass Storage device.
+  { "Google Inc (for Samsung)", 0x18d1, "Nexus S (MTP)", 0x4e25,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Google Inc (for Samsung)", 0x18d1, "Nexus S (MTP+ADB)", 0x4e26,
+      DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Chris Smith <tcgsmythe@users.sourceforge.net>
   { "Google Inc (for Asus)", 0x18d1, "Nexus 7 (MTP)", 0x4e41,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2016,6 +2031,8 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "TF101 Eeepad Transformer (MTP+ADB)", 0x4e1f,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "Fonepad", 0x514f,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "PadFone (MTP)", 0x5200,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "PadFone (MTP+ADB)", 0x5201,
@@ -2070,7 +2087,9 @@
    */
   { "ZTE", 0x19d2, "V55 ID 1", 0x0244, DEVICE_FLAGS_ANDROID_BUGS },
   { "ZTE", 0x19d2, "V55 ID 2", 0x0245, DEVICE_FLAGS_ANDROID_BUGS },
-  { "ZTE", 0x19d2, "v790/Blade 3", 0x0306, DEVICE_FLAGS_ANDROID_BUGS },
+  { "ZTE", 0x19d2, "V790/Blade 3", 0x0306, DEVICE_FLAGS_ANDROID_BUGS },
+  { "ZTE", 0x19d2, "V880E", 0x0307, DEVICE_FLAGS_ANDROID_BUGS },
+  { "ZTE", 0x19d2, "V985", 0x0383, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * HTC (High Tech Computer Corp)
@@ -2093,6 +2112,12 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One S (ID1)", 0x0cec,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC Desire X", 0x0dd5,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (ID1)", 0x0dda,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (MTP+UMS+ADB)", 0x0dea,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC Evo 4G LTE (ID1)", 0x0df5,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One S (ID2)", 0x0df9,
@@ -2113,7 +2138,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "Droid DNA (MTP+UMS)", 0x0ebd,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "HTC", 0x0bb4, "HTC One X (ID2)", 0x0f91,
+  { "HTC", 0x0bb4, "HTC One (MTP+ADB)", 0x0f87,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (ID3)", 0x0f91,
       DEVICE_FLAGS_ANDROID_BUGS },
   // These identify themselves as "cm_tenderloin", fun...
   // Done by HTC for HP I guess.
@@ -2122,6 +2149,9 @@
   { "Hewlett-Packard", 0x0bb4, "HP Touchpad (MTP+ADB)", 0x6860,
       DEVICE_FLAGS_ANDROID_BUGS },
 #if 0
+  // Apparently also used by a clone called Jiayu G2S
+  // with the MTK6577T chipset
+  // http://www.ejiayu.com/en/Product-19.html with
   { "HTC", 0x0bb4, "Android Device ID2 (Zopo, HD2...)", 0x2008,
       DEVICE_FLAGS_ANDROID_BUGS },
 #endif
@@ -2148,6 +2178,7 @@
   // Reported by Michael Gurski <gurski@users.sourceforge.net>
   { "Vizio", 0x0489, "VTAB1008", 0xe040, DEVICE_FLAGS_ANDROID_BUGS },
 
+
   /*
    * Amazon
    */
@@ -2164,6 +2195,8 @@
    * Barnes&Noble
    */
   { "Barnes&Noble", 0x2080, "Nook HD+", 0x0005,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Barnes&Noble", 0x2080, "Nook HD", 0x0006,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2210,6 +2243,20 @@
   { "Acromag Inc.", 0x16d5, "XO Learning Tablet (MTP+ADB)", 0x8005,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Acromag Inc.", 0x16d5, "XO Learning Tablet (MTP)", 0x8006,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * SHARP Corporation
+   */
+  { "SHARP Corporation", 0x0489, "SH930W", 0xc025,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "SHARP Corporation", 0x04dd, "SBM203SH", 0x9661,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * Alcatel
+   */
+  { "Alcatel", 0x1bbb, "One Touch 997D", 0x2008,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
