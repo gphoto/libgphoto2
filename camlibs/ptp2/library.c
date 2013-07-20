@@ -923,6 +923,9 @@ static struct {
 	/* sakax <sakamotox@gmail.com> */
 	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP},
 
+	/* Borja Latorre <borja.latorre@csic.es> */
+	{"Nikon:Coolpix S3200",		  0x04b0, 0x0334, PTP_CAP},
+
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},
 
