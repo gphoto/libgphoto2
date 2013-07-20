@@ -1,0 +1,294 @@
+Résumé de l'appareil :
+Fabricant : Nokia
+Modèle: 808 PureView
+Version : 113.010.1508
+ Numéro de série : nnnnnnnnnnnnnnn
+Identifiant du vendeur: 0x6 (1.0)
+Description du vendeur: microsoft.com/WMPPD: 11.0; vodafone.com/omadrmv2: 1.0; microsoft.com/DeviceServices: 1.0; microsoft.com: 1.0; microsoft.com/WMPPD: 10.0; microsoft.com/WMDRMPD:10.1; 
+
+Format de capture: Undefined Type Association/Directory MP4 3GP AAC MP3 WMA MS Wave WMV ASF Abstract Audio Video Playlist M3U Playlist Script Text HTML JPEG BMP GIF PNG Abstract Audio Album Microsoft Word Document Microsoft Excel Spreadsheet (.xls) Microsoft Powerpoint (.ppt)
+Formats d'affichageUndefined Type, Association/Directory, MP4, 3GP, AAC, MP3, WMA, MS Wave, WMV, ASF, Abstract Audio Video Playlist, M3U Playlist, Script, Text, HTML, JPEG, BMP, GIF, PNG, Abstract Audio Album, Microsoft Word Document, Microsoft Excel Spreadsheet (.xls), Microsoft Powerpoint (.ppt)
+Propriété du support MTP de l'objet:
+	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden dc05/AssociationType dc06/AssociationDesc
+	MP4/b982: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc46/Artist dc8b/Track dc8c/Genre dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate dc9b/AlbumArtist dc89/Duration dc99/OriginalReleaseDate dc48/Description dc96/Composer dc9d/DRMStatus db01/unknown(db01) dc87/Width dc88/Height de97/ScanDepth de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds de9e/KeyFrameDistance dea1/EncodingProfile
+	3GP/b984: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc46/Artist dc8b/Track dc8c/Genre dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate dc9b/AlbumArtist dc89/Duration dc99/OriginalReleaseDate dc48/Description dc96/Composer dc9d/DRMStatus db01/unknown(db01)
+	AAC/b903: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc46/Artist dc8b/Track dc8c/Genre dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate dc9b/AlbumArtist dc89/Duration dc99/OriginalReleaseDate dc48/Description dc96/Composer dc9d/DRMStatus db01/unknown(db01)
+	MP3/3009: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc46/Artist dc8b/Track dc8c/Genre dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate dc9b/AlbumArtist dc89/Duration dc99/OriginalReleaseDate dc48/Description dc96/Composer dc9d/DRMStatus db01/unknown(db01)
+	WMA/b901: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc46/Artist dc8b/Track dc8c/Genre dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate dc9b/AlbumArtist dc89/Duration dc99/OriginalReleaseDate dc48/Description dc96/Composer dc9d/DRMStatus db01/unknown(db01)
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc46/Artist dc8b/Track dc8c/Genre dc9a/AlbumName de93/SampleRate de94/NumberOfChannels de99/AudioWAVECodec de9a/AudioBitRate dc9b/AlbumArtist dc89/Duration dc99/OriginalReleaseDate dc48/Description dc96/Composer dc9d/DRMStatus db01/unknown(db01)
+	WMV/b981: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dc89/Duration dc8c/Genre de93/SampleRate de94/NumberOfChannels de97/ScanDepth de99/AudioWAVECodec de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds de9e/KeyFrameDistance dea1/EncodingProfile dc94/ParentalRating dc9d/DRMStatus db01/unknown(db01)
+	ASF/300c: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dc89/Duration dc8c/Genre de93/SampleRate de94/NumberOfChannels de97/ScanDepth de99/AudioWAVECodec de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds de9e/KeyFrameDistance dea1/EncodingProfile dc94/ParentalRating dc9d/DRMStatus db01/unknown(db01)
+	Abstract Audio Video Playlist/ba05: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified
+	M3U Playlist/ba11: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified
+	Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+	Text/3004: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+	HTML/3005: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc04/ObjectSize dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc4f/NonConsumable dc0d/Hidden
+	BMP/3804: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc04/ObjectSize dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc4f/NonConsumable dc0d/Hidden
+	GIF/3807: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc04/ObjectSize dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc4f/NonConsumable dc0d/Hidden
+	PNG/380b: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc04/ObjectSize dc08/DateCreated dc09/DateModified dc87/Width dc88/Height dcd3/ImageBitDepth dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc4f/NonConsumable dc0d/Hidden
+	Abstract Audio Album/ba03: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc4e/DateAdded dc08/DateCreated dc09/DateModified dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc9b/AlbumArtist
+	Microsoft Word Document/ba83: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+	Microsoft Excel Spreadsheet (.xls)/ba85: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+	Microsoft Powerpoint (.ppt)/ba86: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc4f/NonConsumable dc0d/Hidden
+
+Capacités de l'appareil photo:
+	Fichier téléchargé, Fichier supprimé,Fichier envoyé
+	Pas d'image capturé,Pas de capture possible,Impossible obtenir les spécifications de capture du vendeur
+
+Résumé du dispositifs de stockage:
+store_00020001:
+	Description du stockage: Mass memory
+	Nom de volume: 00020001-XXXXXXXX
+	Type de stockage: RAM intégrée
+	Système de fichiers: Stockage hiérarchique
+	Capacité d'accès: Lecture-Écriture
+	Capacité maximale: 14810087424 (14124 MO)
+	Espace mémoire libre (en Octets): 6318620672 (6025 MO)
+	Espace mémoire libre (en nombre d'images) : -1
+store_00010001:
+	Description du stockage: Phone memory
+	Nom de volume: 00010001-XXXXXXXX
+	Type de stockage: ROM intégrée
+	Système de fichiers: Stockage hiérarchique
+	Capacité d'accès: Lecture seule
+	Capacité maximale: 642805760 (613 MO)
+	Espace mémoire libre (en Octets): 0 (0 MO)
+	Espace mémoire libre (en nombre d'images) : -1
+store_00030001:
+	Description du stockage: SD Card 808
+	Nom de volume: 00030001-XXXXXXXX-SD Card 808
+	Type de stockage: RAM amovible (alias: carte mémoire)
+	Système de fichiers: Stockage hiérarchique
+	Capacité d'accès: Lecture-Écriture
+	Capacité maximale: 31902367744 (30424 MO)
+	Espace mémoire libre (en Octets): 3050602496 (2909 MO)
+	Espace mémoire libre (en nombre d'images) : -1
+
+Résumé des propriétés de l'appareil:
+Niveau de batterie(0x5001):(read only) (type=0x2) Range [0 - 100, step 10] value: 100% (100)
+Date & heure(0x5011):(readwrite) (type=0xffff) '20130720T164042Z'
+Certification du périphérique(0xd102):(read only) (type=0x4004) <DEVCERT version="1.0"><CERTIFICATE type="DEVICE"><DATA><UNIQUEID private="1">vFsAgP/7fEC0hgTuZ6i68FK3kGk=</UNIQUEID><PUBLICKEY private="1">VsQaT4C8N/zZBZtcRmJfu7/BXxYlYSXLJf2NUod6P53YduTP9teIBA==</PUBLICKEY><KEYDATA>06Q8qcX7XS/xyY0kdFenvxcZsDA=</KEYDATA></DATA><MSDRM_SIGNATURE_VALUE>8yZwvXLy1V1S2JvQXL/eFm6AQAulsRnx7p+1AMtOamQ1z8YwBuS4UA==</MSDRM_SIGNATURE_VALUE><SYMSIGNATURE>/tBujkYeL+wptU2qkRE6WfxoFaw=</SYMSIGNATURE></CERTIFICATE><FALLBACK><SECURITYVERSION>2.4.121.143</SECURITYVERSION><CERTIFICATE private="1">VsQaT4C8N/zZBZtcRmJfu7/BXxYlYSXLJf2NUod6P53YduTP9teIBAIEeY+viAkMbNlC9nZrSYIIknvWJ+1mMbkplSJdI2LikNjkon9J5zDtbhMZ</CERTIFICATE></FALLBACK><CERTIFICATE type="GROUP"><DATA><NAME>Nokia 808</NAME>
+    <MANUFACTURER>Nokia</MANUFACTURER>
+    <MAKE>Nokia</MAKE>
+    <DISTRIBUTOR>Nokia</DISTRIBUTOR>
+    <MODEL>RM-807</MODEL>
+    <SECURITYLEVEL>2000</SECURITYLEVEL>
+    <HARDWARE_VER_MAJOR>1</HARDWARE_VER_MAJOR>
+    <HARDWARE_VER_MINOR>0</HARDWARE_VER_MINOR>
+    <FIRMWARE_VER_MAJOR>1</FIRMWARE_VER_MAJOR>
+    <FIRMWARE_VER_MINOR>0</FIRMWARE_VER_MINOR>
+    <FEATURES>
+        <CLOCK>1</CLOCK>
+        <METERING>1</METERING>
+        <LICENSE_ACQ>1</LICENSE_ACQ>
+        <LICENSE_SYNC>1</LICENSE_SYNC>
+        <ENCRYPTION>1</ENCRYPTION>
+        <SYMMETRIC_OPT>1</SYMMETRIC_OPT>
+    </FEATURES>
+    <LIMITS>
+        <MAXCHAINDEPTH>2</MAXCHAINDEPTH>
+        <MAXLICENSESIZE>10240</MAXLICENSESIZE>
+        <MAXHEADERSIZE>5120</MAXHEADERSIZE>
+    </LIMITS><PUBLICKEY>ft3+NF5g3OTRZs3PzAmx03DhE2qdzBQPr5UxRjwH3ttzZsWQXCaXTA==</PUBLICKEY></DATA><MSDRM_SIGNATURE_VALUE>yZZmHgzmhpwcjt6bZufkKrNbpiQb122k28eCMgsxRDQvKizLm8DjLg==</MSDRM_SIGNATURE_VALUE></CERTIFICATE><CERTIFICATE type="AUTHORIZATION"><DATA><SECURITYLEVEL>2000</SECURITYLEVEL><AUTH_ID>5359</AUTH_ID><PUBLICKEY>868vU9FOMK7y6PxIuVseOiqEsx/bQ7/aPV6uBXhFI12l+LGKWWLYEQ==</PUBLICKEY></DATA><MSDRM_SIGNATURE_VALUE>QYYOy+Nw8l4vu2/TGJp7YRUVq0o44izpNzHHpHmKGDqklWInClG/Kg==</MSDRM_SIGNATURE_VALUE></CERTIFICATE><CERTIFICATE type="AUTHORIZATION_ROOT"><DATA><AUTH_ID>1</AUTH_ID><PUBLICKEY>a1t3hxrg!qbOgktnbYaEEi4teCse!gz6RvTPuC!zizKJlpU7xoduSw==</PUBLICKEY></DATA><MSDRM_SIGNATURE_VALUE>IHORBxl26IqWigUC8XawnTvr6HABENy6kvnBjczQIMnDXQM0ckVFSA==</MSDRM_SIGNATURE_VALUE></CERTIFICATE></DEVCERT (a[2263] 60,68,69,86,67,69,82,84,32,118,101,114,115,105,111,110,61,34,49,46,48,34,62,60,67,69,82,84,73,70,73,67,65,84,69,32,116,121,112,101,61,34,68,69,86,73,67,69,34,62,60,68,65,84,65,62,60,85,78,73,81,85,69,73,68,32,112,114,105,118,97,116,101,61,34,49,34,62,118,70,115,65,103,80,47,55,102,69,67,48,104,103,84,117,90,54,105,54,56,70,75,51,107,71,107,61,60,47,85,78,73,81,85,69,73,68,62,60,80,85,66,76,73,67,75,69,89,32,112,114,105,118,97,116,101,61,34,49,34,62,86,115,81,97,84,52,67,56,78,47,122,90,66,90,116,99,82,109,74,102,117,55,47,66,88,120,89,108,89,83,88,76,74,102,50,78,85,111,100,54,80,53,51,89,100,117,84,80,57,116,101,73,66,65,61,61,60,47,80,85,66,76,73,67,75,69,89,62,60,75,69,89,68,65,84,65,62,48,54,81,56,113,99,88,55,88,83,47,120,121,89,48,107,100,70,101,110,118,120,99,90,115,68,65,61,60,47,75,69,89,68,65,84,65,62,60,47,68,65,84,65,62,60,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,56,121,90,119,118,88,76,121,49,86,49,83,50,74,118,81,88,76,47,101,70,109,54,65,81,65,117,108,115,82,110,120,55,112,43,49,65,77,116,79,97,109,81,49,122,56,89,119,66,117,83,52,85,65,61,61,60,47,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,60,83,89,77,83,73,71,78,65,84,85,82,69,62,47,116,66,117,106,107,89,101,76,43,119,112,116,85,50,113,107,82,69,54,87,102,120,111,70,97,119,61,60,47,83,89,77,83,73,71,78,65,84,85,82,69,62,60,47,67,69,82,84,73,70,73,67,65,84,69,62,60,70,65,76,76,66,65,67,75,62,60,83,69,67,85,82,73,84,89,86,69,82,83,73,79,78,62,50,46,52,46,49,50,49,46,49,52,51,60,47,83,69,67,85,82,73,84,89,86,69,82,83,73,79,78,62,60,67,69,82,84,73,70,73,67,65,84,69,32,112,114,105,118,97,116,101,61,34,49,34,62,86,115,81,97,84,52,67,56,78,47,122,90,66,90,116,99,82,109,74,102,117,55,47,66,88,120,89,108,89,83,88,76,74,102,50,78,85,111,100,54,80,53,51,89,100,117,84,80,57,116,101,73,66,65,73,69,101,89,43,118,105,65,107,77,98,78,108,67,57,110,90,114,83,89,73,73,107,110,118,87,74,43,49,109,77,98,107,112,108,83,74,100,73,50,76,105,107,78,106,107,111,110,57,74,53,122,68,116,98,104,77,90,60,47,67,69,82,84,73,70,73,67,65,84,69,62,60,47,70,65,76,76,66,65,67,75,62,60,67,69,82,84,73,70,73,67,65,84,69,32,116,121,112,101,61,34,71,82,79,85,80,34,62,60,68,65,84,65,62,60,78,65,77,69,62,78,111,107,105,97,32,56,48,56,60,47,78,65,77,69,62,13,10,32,32,32,32,60,77,65,78,85,70,65,67,84,85,82,69,82,62,78,111,107,105,97,60,47,77,65,78,85,70,65,67,84,85,82,69,82,62,13,10,32,32,32,32,60,77,65,75,69,62,78,111,107,105,97,60,47,77,65,75,69,62,13,10,32,32,32,32,60,68,73,83,84,82,73,66,85,84,79,82,62,78,111,107,105,97,60,47,68,73,83,84,82,73,66,85,84,79,82,62,13,10,32,32,32,32,60,77,79,68,69,76,62,82,77,45,56,48,55,60,47,77,79,68,69,76,62,13,10,32,32,32,32,60,83,69,67,85,82,73,84,89,76,69,86,69,76,62,50,48,48,48,60,47,83,69,67,85,82,73,84,89,76,69,86,69,76,62,13,10,32,32,32,32,60,72,65,82,68,87,65,82,69,95,86,69,82,95,77,65,74,79,82,62,49,60,47,72,65,82,68,87,65,82,69,95,86,69,82,95,77,65,74,79,82,62,13,10,32,32,32,32,60,72,65,82,68,87,65,82,69,95,86,69,82,95,77,73,78,79,82,62,48,60,47,72,65,82,68,87,65,82,69,95,86,69,82,95,77,73,78,79,82,62,13,10,32,32,32,32,60,70,73,82,77,87,65,82,69,95,86,69,82,95,77,65,74,79,82,62,49,60,47,70,73,82,77,87,65,82,69,95,86,69,82,95,77,65,74,79,82,62,13,10,32,32,32,32,60,70,73,82,77,87,65,82,69,95,86,69,82,95,77,73,78,79,82,62,48,60,47,70,73,82,77,87,65,82,69,95,86,69,82,95,77,73,78,79,82,62,13,10,32,32,32,32,60,70,69,65,84,85,82,69,83,62,13,10,32,32,32,32,32,32,32,32,60,67,76,79,67,75,62,49,60,47,67,76,79,67,75,62,13,10,32,32,32,32,32,32,32,32,60,77,69,84,69,82,73,78,71,62,49,60,47,77,69,84,69,82,73,78,71,62,13,10,32,32,32,32,32,32,32,32,60,76,73,67,69,78,83,69,95,65,67,81,62,49,60,47,76,73,67,69,78,83,69,95,65,67,81,62,13,10,32,32,32,32,32,32,32,32,60,76,73,67,69,78,83,69,95,83,89,78,67,62,49,60,47,76,73,67,69,78,83,69,95,83,89,78,67,62,13,10,32,32,32,32,32,32,32,32,60,69,78,67,82,89,80,84,73,79,78,62,49,60,47,69,78,67,82,89,80,84,73,79,78,62,13,10,32,32,32,32,32,32,32,32,60,83,89,77,77,69,84,82,73,67,95,79,80,84,62,49,60,47,83,89,77,77,69,84,82,73,67,95,79,80,84,62,13,10,32,32,32,32,60,47,70,69,65,84,85,82,69,83,62,13,10,32,32,32,32,60,76,73,77,73,84,83,62,13,10,32,32,32,32,32,32,32,32,60,77,65,88,67,72,65,73,78,68,69,80,84,72,62,50,60,47,77,65,88,67,72,65,73,78,68,69,80,84,72,62,13,10,32,32,32,32,32,32,32,32,60,77,65,88,76,73,67,69,78,83,69,83,73,90,69,62,49,48,50,52,48,60,47,77,65,88,76,73,67,69,78,83,69,83,73,90,69,62,13,10,32,32,32,32,32,32,32,32,60,77,65,88,72,69,65,68,69,82,83,73,90,69,62,53,49,50,48,60,47,77,65,88,72,69,65,68,69,82,83,73,90,69,62,13,10,32,32,32,32,60,47,76,73,77,73,84,83,62,60,80,85,66,76,73,67,75,69,89,62,102,116,51,43,78,70,53,103,51,79,84,82,90,115,51,80,122,65,109,120,48,51,68,104,69,50,113,100,122,66,81,80,114,53,85,120,82,106,119,72,51,116,116,122,90,115,87,81,88,67,97,88,84,65,61,61,60,47,80,85,66,76,73,67,75,69,89,62,60,47,68,65,84,65,62,60,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,121,90,90,109,72,103,122,109,104,112,119,99,106,116,54,98,90,117,102,107,75,114,78,98,112,105,81,98,49,50,50,107,50,56,101,67,77,103,115,120,82,68,81,118,75,105,122,76,109,56,68,106,76,103,61,61,60,47,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,60,47,67,69,82,84,73,70,73,67,65,84,69,62,60,67,69,82,84,73,70,73,67,65,84,69,32,116,121,112,101,61,34,65,85,84,72,79,82,73,90,65,84,73,79,78,34,62,60,68,65,84,65,62,60,83,69,67,85,82,73,84,89,76,69,86,69,76,62,50,48,48,48,60,47,83,69,67,85,82,73,84,89,76,69,86,69,76,62,60,65,85,84,72,95,73,68,62,53,51,53,57,60,47,65,85,84,72,95,73,68,62,60,80,85,66,76,73,67,75,69,89,62,56,54,56,118,85,57,70,79,77,75,55,121,54,80,120,73,117,86,115,101,79,105,113,69,115,120,47,98,81,55,47,97,80,86,54,117,66,88,104,70,73,49,50,108,43,76,71,75,87,87,76,89,69,81,61,61,60,47,80,85,66,76,73,67,75,69,89,62,60,47,68,65,84,65,62,60,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,81,89,89,79,121,43,78,119,56,108,52,118,117,50,47,84,71,74,112,55,89,82,85,86,113,48,111,52,52,105,122,112,78,122,72,72,112,72,109,75,71,68,113,107,108,87,73,110,67,108,71,47,75,103,61,61,60,47,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,60,47,67,69,82,84,73,70,73,67,65,84,69,62,60,67,69,82,84,73,70,73,67,65,84,69,32,116,121,112,101,61,34,65,85,84,72,79,82,73,90,65,84,73,79,78,95,82,79,79,84,34,62,60,68,65,84,65,62,60,65,85,84,72,95,73,68,62,49,60,47,65,85,84,72,95,73,68,62,60,80,85,66,76,73,67,75,69,89,62,97,49,116,51,104,120,114,103,33,113,98,79,103,107,116,110,98,89,97,69,69,105,52,116,101,67,115,101,33,103,122,54,82,118,84,80,117,67,33,122,105,122,75,74,108,112,85,55,120,111,100,117,83,119,61,61,60,47,80,85,66,76,73,67,75,69,89,62,60,47,68,65,84,65,62,60,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,73,72,79,82,66,120,108,50,54,73,113,87,105,103,85,67,56,88,97,119,110,84,118,114,54,72,65,66,69,78,121,54,107,118,110,66,106,99,122,81,73,77,110,68,88,81,77,48,99,107,86,70,83,65,61,61,60,47,77,83,68,82,77,95,83,73,71,78,65,84,85,82,69,95,86,65,76,85,69,62,60,47,67,69,82,84,73,70,73,67,65,84,69,62,60,47,68,69,86,67,69,82,84,62)
+Property 0xd301:(readwrite) (type=0xa) Unknown a
+Property 0xd302:(read only) (type=0xa) Unknown a
+Property 0xd303:(read only) (type=0x2) 1
+Synchronisation des partenaires(0xd401):(readwrite) (type=0xffff) 808 PureView ('808 PureView')
+Nom du périphérique familier(0xd402):(readwrite) (type=0xffff) Nokia 808 PureView ('Nokia 808 PureView')
+Niveau Sonore(0xd403):(readwrite) (type=0x6) Range [0 - 100, step 1] value: 55
+Property 0xd404:(read only) (type=0x2) 1
+Icon périphérique(0xd405):(read only) (type=0x4002) 
+Session initiateur d'infos(0xd406):(readwrite) (type=0xffff) 'None'
+Type d'appareil perçu(0xd407):(read only) (type=0x6) 3
+Taux de lecture(0xd410):(readwrite) (type=0x5) Enumeration [-2000,0,1000,2000] value: 0
+Lecture d'objets(0xd411):(readwrite) (type=0x6) 0
+Lecture du container indexé(0xd412):(readwrite) (type=0x6) 0
+Position de lecture(0xd413):(readwrite) (type=0x6) 0
+
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1374334877
+Printable: sam. 20 juil. 2013 17:41:17 CEST
+/main/status/batterylevel
+Label: Niveau de batterie
+Type: TEXT
+Current: 100%
+/main/other/5001
+Label: Niveau de batterie
+Type: RANGE
+Current: 100
+Bottom: 0
+Top: 100
+Step: 10
+/main/other/5011
+Label: Date & heure
+Type: TEXT
+Current: 20130720T164117Z
+/main/other/d102
+Label: Certification du périphérique
+Type: TEXT
+Current: (null)
+/main/other/d301
+Label: PTP Property 0xd301
+Type: TEXT
+Current: (null)
+/main/other/d302
+Label: PTP Property 0xd302
+Type: TEXT
+Current: (null)
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+/main/other/d401
+Label: Synchronisation des partenaires
+Type: TEXT
+Current: 808 PureView
+/main/other/d402
+Label: Nom du périphérique familier
+Type: TEXT
+Current: Nokia 808 PureView
+/main/other/d403
+Label: Niveau Sonore
+Type: MENU
+Current: 55
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+Choice: 41 41
+Choice: 42 42
+Choice: 43 43
+Choice: 44 44
+Choice: 45 45
+Choice: 46 46
+Choice: 47 47
+Choice: 48 48
+Choice: 49 49
+Choice: 50 50
+Choice: 51 51
+Choice: 52 52
+Choice: 53 53
+Choice: 54 54
+Choice: 55 55
+Choice: 56 56
+Choice: 57 57
+Choice: 58 58
+Choice: 59 59
+Choice: 60 60
+Choice: 61 61
+Choice: 62 62
+Choice: 63 63
+Choice: 64 64
+Choice: 65 65
+Choice: 66 66
+Choice: 67 67
+Choice: 68 68
+Choice: 69 69
+Choice: 70 70
+Choice: 71 71
+Choice: 72 72
+Choice: 73 73
+Choice: 74 74
+Choice: 75 75
+Choice: 76 76
+Choice: 77 77
+Choice: 78 78
+Choice: 79 79
+Choice: 80 80
+Choice: 81 81
+Choice: 82 82
+Choice: 83 83
+Choice: 84 84
+Choice: 85 85
+Choice: 86 86
+Choice: 87 87
+Choice: 88 88
+Choice: 89 89
+Choice: 90 90
+Choice: 91 91
+Choice: 92 92
+Choice: 93 93
+Choice: 94 94
+Choice: 95 95
+Choice: 96 96
+Choice: 97 97
+Choice: 98 98
+Choice: 99 99
+Choice: 100 100
+/main/other/d404
+Label: PTP Property 0xd404
+Type: TEXT
+Current: 1
+/main/other/d405
+Label: Icon périphérique
+Type: TEXT
+Current: (null)
+/main/other/d406
+Label: Session initiateur d'infos
+Type: TEXT
+Current: None
+/main/other/d407
+Label: Type d'appareil perçu
+Type: TEXT
+Current: 3
+/main/other/d410
+Label: Taux de lecture
+Type: MENU
+Current: 0
+Choice: 0 -2000
+Choice: 1 0
+Choice: 2 1000
+Choice: 3 2000
+/main/other/d411
+Label: Lecture d'objets
+Type: TEXT
+Current: 0
+/main/other/d412
+Label: Lecture du container indexé
+Type: TEXT
+Current: 0
+/main/other/d413
+Label: Position de lecture
+Type: TEXT
+Current: 0
