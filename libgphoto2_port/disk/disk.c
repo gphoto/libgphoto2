@@ -122,7 +122,17 @@ gp_port_library_list (GPPortInfoList *list)
                             (NULL != strstr(mntent->mnt_fsname,"devtmpfs"))||
                             (NULL != strstr(mntent->mnt_fsname,"devpts"))||
                             (NULL != strstr(mntent->mnt_fsname,"sysfs"))||
-			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))
+			    (NULL != strstr(mntent->mnt_fsname,"gphotofs")||
+			/* fstype based */
+			    (NULL != strstr(mntent->mnt_type,"autofs"))	||
+			    (NULL != strstr(mntent->mnt_type,"nfs"))	||
+			    (NULL != strstr(mntent->mnt_type,"smbfs"))||
+			    (NULL != strstr(mntent->mnt_type,"proc"))||
+			    (NULL != strstr(mntent->mnt_type,"sysfs"))||
+			    (NULL != strstr(mntent->mnt_type,"fuse"))||
+			    (NULL != strstr(mntent->mnt_type,"cifs"))||
+			    (NULL != strstr(mntent->mnt_type,"afs"))
+)
 			) {
 				continue;
 			}
@@ -174,7 +184,16 @@ gp_port_library_list (GPPortInfoList *list)
                             (NULL != strstr(mntent->mnt_fsname,"devtmpfs"))||
                             (NULL != strstr(mntent->mnt_fsname,"devpts"))||
                             (NULL != strstr(mntent->mnt_fsname,"sysfs"))||
-			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))
+			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))||
+			/* fstype based */
+			    (NULL != strstr(mntent->mnt_type,"autofs"))	||
+			    (NULL != strstr(mntent->mnt_type,"nfs"))	||
+			    (NULL != strstr(mntent->mnt_type,"smbfs"))||
+			    (NULL != strstr(mntent->mnt_type,"proc"))||
+			    (NULL != strstr(mntent->mnt_type,"sysfs"))||
+			    (NULL != strstr(mntent->mnt_type,"fuse"))||
+			    (NULL != strstr(mntent->mnt_type,"cifs"))||
+			    (NULL != strstr(mntent->mnt_type,"afs"))
 			) {
 				continue;
 			}
