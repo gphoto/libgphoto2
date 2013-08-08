@@ -1,7 +1,7 @@
 libgphoto2 2.5.2.1 release
 
 ptp2:
-* Nikon: added new ptp function for Nikon capture
+* Nikon: added new ptp capture function for Nikon capture
 * Nikon: enable --trigger-capture support
 * Nikon: hook up some more configuration variables
 
@@ -10,7 +10,7 @@ sierra:
 
 translations:
 * new czech translation by Pavel Borecki.
-* updated dutch, polish, ukranian
+* updated danish, dutch, polish, ukrainian, french, vietnamese, taiwanese
 
 packaging:
 * "print-camera-list hwdb" output mode added for udev versions >= 201.
