@@ -1,0 +1,58 @@
+Camera summary:
+Manufacturer: FUJIFILM
+Model: FinePix SL1000/SL1010
+  Version: 1.02
+  Serial Number: ????????????????????????????????
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: 
+Display Formats: JPEG
+Supported MTP Object Properties:
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: External Memory
+	VolumeLabel: 000000000000000000000000000000000000000000000000
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 7939817472 (7572 MB)
+	Free Space (Bytes): 7914684416 (7548 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 3, step 1] value: 1% (1)
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 50%
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+/main/other/d407
+Label: Perceived Device Type
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: Session Initiator Info
+Type: TEXT
+Current: 
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
