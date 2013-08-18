@@ -911,8 +911,11 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, u
         	gettimeofday ( &cur, NULL );
 		curduration =	(cur.tv_sec-start.tv_sec)*1000 +
 				(cur.tv_usec-start.tv_usec)/1000;
-		if (curduration >= timeout)
+		if (curduration >= timeout) {
+			/* Timeout is not an error */
+			status = 0;
 			break;
+		}
         }
         gettimeofday ( &end, NULL );
 
