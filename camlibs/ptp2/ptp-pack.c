@@ -200,7 +200,8 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	} else
 #endif
 	{
-		int i;
+		unsigned int i;
+
 		for (i=0;i<convlen;i++) {
 			ucs2str[i] = string[i];
 		}
@@ -356,7 +357,7 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		&len);
 }
 
-static void inline
+inline static void
 ptp_free_DI (PTPDeviceInfo *di) {
 	if (di->SerialNumber) free (di->SerialNumber);
 	if (di->DeviceVersion) free (di->DeviceVersion);
@@ -374,7 +375,7 @@ ptp_free_DI (PTPDeviceInfo *di) {
 static inline void
 ptp_unpack_EOS_DI (PTPParams *params, unsigned char* data, PTPCanonEOSDeviceInfo *di, unsigned int datalen)
 {
-	int totallen = 4;
+	unsigned int totallen = 4;
 
 	memset (di,0, sizeof(*di));
 	if (datalen < 8) return;
@@ -653,7 +654,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 }
 
 #define RARR(val,member,func)	{			\
-	int n,j;					\
+	unsigned int n,j;					\
 	if (total - *offset < sizeof(uint32_t))		\
 		return 0;				\
 	n = dtoh32a (&data[*offset]);			\
@@ -758,7 +759,7 @@ ptp_unpack_DPV (
 static inline int
 ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen)
 {
-	int offset=0, ret;
+	unsigned int offset=0, ret;
 
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_DevicePropertyCode]);
