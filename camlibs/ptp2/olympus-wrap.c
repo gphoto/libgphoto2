@@ -991,9 +991,9 @@ traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	switch (curpar) {
 	case 5: resp->Param5 = pars[4];
 	case 4: resp->Param4 = pars[3];
-	case 3: resp->Param4 = pars[2];
-	case 2: resp->Param4 = pars[1];
-	case 1: resp->Param4 = pars[0];
+	case 3: resp->Param3 = pars[2];
+	case 2: resp->Param2 = pars[1];
+	case 1: resp->Param1 = pars[0];
 	case 0: break;
 	}
 	/* FIXME: decode content and inject into PTP event queue. */
