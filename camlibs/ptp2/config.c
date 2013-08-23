@@ -289,7 +289,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	}
 	{
 		PTPCanonEOSDeviceInfo x;
-		int i;
+		unsigned int i;
 
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
 			ret = ptp_canon_eos_getdeviceinfo (params, &x);
@@ -471,7 +471,7 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 
 static int
 have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
-	int i;
+	unsigned int i;
 
 	/* prop 0 matches */
 	if (!prop && (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
@@ -502,7 +502,7 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 
 static int
 have_eos_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
-	int i;
+	unsigned int i;
 
 	/* The special Canon EOS property set gets special treatment. */
 	if ((camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) ||
@@ -1000,8 +1000,8 @@ _put_##name(CONFIG_PUT_ARGS) {				\
 
 static int
 _get_AUINT8_as_CHAR_ARRAY(CONFIG_GET_ARGS) {
-	int	j;
-	char 	value[128];
+	unsigned int	j;
+	char 		value[128];
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
