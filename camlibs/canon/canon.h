@@ -570,7 +570,7 @@ typedef enum {
  * @CANON_ATTR_UNKNOWN_8: 
  * @CANON_ATTR_NON_RECURS_ENT_DIR: This entry represents a directory
  *   that was not entered in this listing.
- * @CANON_ATTR_DOWNLOADED: This file has not yet been downloaded
+ * @CANON_ATTR_NOT_DOWNLOADED: This file has not yet been downloaded
  *   (the bit is cleared by the host software).
  * @CANON_ATTR_UNKNOWN_40: 
  * @CANON_ATTR_RECURS_ENT_DIR: This entry represents a directory
@@ -588,7 +588,7 @@ typedef enum {
 	CANON_ATTR_UNKNOWN_4	      = 0x04,
 	CANON_ATTR_UNKNOWN_8	      = 0x08,
 	CANON_ATTR_NON_RECURS_ENT_DIR = 0x10,
-	CANON_ATTR_DOWNLOADED	      = 0x20,
+	CANON_ATTR_NOT_DOWNLOADED     = 0x20,
 	CANON_ATTR_UNKNOWN_40	      = 0x40,
 	CANON_ATTR_RECURS_ENT_DIR     = 0x80
 } canonDirentAttributeBits;

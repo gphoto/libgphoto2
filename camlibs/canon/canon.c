@@ -3330,11 +3330,10 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                                  sizeof (info.file.type));
                                         info.file.fields |= GP_FILE_INFO_TYPE;
 
-                                        if ((dirent_attrs & CANON_ATTR_DOWNLOADED) == 0)
-                                                info.file.status = GP_FILE_STATUS_DOWNLOADED;
+                                        if (dirent_attrs & CANON_ATTR_NOT_DOWNLOADED)
+                                                info.file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
                                         else
-                                                info.file.status =
-                                                        GP_FILE_STATUS_NOT_DOWNLOADED;
+                                                info.file.status = GP_FILE_STATUS_DOWNLOADED;
                                         info.file.fields |= GP_FILE_INFO_STATUS;
 
                                         /* the size is located at offset 2 and is 4
@@ -3894,11 +3893,10 @@ canon_int_get_info_func (Camera *camera, const char *folder,
                                                  sizeof (info->file.type));
                                         info->file.fields |= GP_FILE_INFO_TYPE;
 
-                                        if ((dirent_attrs & CANON_ATTR_DOWNLOADED) == 0)
-                                                info->file.status = GP_FILE_STATUS_DOWNLOADED;
+                                        if (dirent_attrs & CANON_ATTR_NOT_DOWNLOADED)
+                                                info->file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
                                         else
-                                                info->file.status =
-                                                        GP_FILE_STATUS_NOT_DOWNLOADED;
+                                                info->file.status = GP_FILE_STATUS_DOWNLOADED;
                                         info->file.fields |= GP_FILE_INFO_STATUS;
 
                                         /* the size is located at offset 2 and is 4

@@ -787,6 +787,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			ret = canon_int_get_file (camera, canon_path, &data, &datalen,
 						  context);
 			if (ret == GP_OK) {
+				/* 0 also marks image as downloaded */
 				uint8_t attr = 0;
 
 				/* This should cover all attribute
@@ -796,8 +797,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				CameraFileInfo info;
 
 				gp_filesystem_get_info (fs, folder, filename, &info, context);
-				if (info.file.status == GP_FILE_STATUS_NOT_DOWNLOADED)
-					attr &= ~CANON_ATTR_DOWNLOADED;
 				if ((info.file.permissions & GP_FILE_PERM_DELETE) == 0)
 					attr |= CANON_ATTR_WRITE_PROTECTED;
 				canon_int_set_file_attributes (camera, filename,
