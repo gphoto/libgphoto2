@@ -4174,30 +4174,53 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		n = 0;
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_CANON:
-			if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn))
-				n = snprintf (txt, spaceleft,_("Canon Capture\n"));
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
-				n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
-				n = snprintf (txt, spaceleft,_("Canon EOS Shutter Button\n"));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
+				n = snprintf (txt, spaceleft,_("Canon Capture"));
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
+				n = snprintf (txt, spaceleft,_("Canon EOS Capture"));
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
+				n = snprintf (txt, spaceleft,_("%sCanon EOS Shutter Button"),n?", ":"");
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			if (n) {
+				n = snprintf (txt, spaceleft,"\n");
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
 			break;
 		case PTP_VENDOR_NIKON:
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture))
-				n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM))
-				n = snprintf (txt, spaceleft,_("Nikon Capture 2\n"));
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia))
-				n = snprintf (txt, spaceleft,_("Nikon Capture 3\n"));
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture)) {
+				n = snprintf (txt, spaceleft,_("Nikon Capture 1"));
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM)) {
+				n = snprintf (txt, spaceleft,_("%sNikon Capture 2"),n?", ":"");
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
+				n = snprintf (txt, spaceleft,_("%sNikon Capture 3 "),n?", ":"");
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			if (n) {
+				n = snprintf (txt, spaceleft,"\n");
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
 			break;
 		default:
 			/* does not belong to good vendor ... needs another detection */
-			if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
+			if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 				n = snprintf (txt, spaceleft,_("Olympus E XML Capture\n"));
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
 			break;
 		}
-		if (!n)
+		if (!n) {
 			n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		}
 
 	/* Third line for Wifi support, but just leave it out if not there. */
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
