@@ -4174,16 +4174,20 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		n = 0;
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_CANON:
-		    if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn))
-			n = snprintf (txt, spaceleft,_("Canon Capture\n"));
-		    if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
-			n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
-		     break;
+			if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn))
+				n = snprintf (txt, spaceleft,_("Canon Capture\n"));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+				n = snprintf (txt, spaceleft,_("Canon EOS Capture\n"));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
+				n = snprintf (txt, spaceleft,_("Canon EOS Shutter Button\n"));
+			break;
 		case PTP_VENDOR_NIKON:
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture)  ||
-			    ptp_operation_issupported(params, PTP_OC_NIKON_DeviceReady)||
-			    ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia))
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture))
 				n = snprintf (txt, spaceleft,_("Nikon Capture\n"));
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM))
+				n = snprintf (txt, spaceleft,_("Nikon Capture 2\n"));
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia))
+				n = snprintf (txt, spaceleft,_("Nikon Capture 3\n"));
 			break;
 		default:
 			/* does not belong to good vendor ... needs another detection */
