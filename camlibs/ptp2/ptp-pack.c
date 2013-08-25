@@ -669,7 +669,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 
 static inline int
 ptp_unpack_DPV (
-	PTPParams *params, unsigned char* data, int *offset, int total,
+	PTPParams *params, unsigned char* data, unsigned int *offset, int total,
 	PTPPropertyValue* value, uint16_t datatype
 ) {
 	switch (datatype) {
@@ -896,7 +896,7 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 static inline int
 ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
 {
-	int offset=0, ret;
+	unsigned int offset=0, ret;
 
 	memset (opd, 0, sizeof(*opd));
 	opd->ObjectPropertyCode=dtoh16a(&data[PTP_opd_ObjectPropertyCode]);
@@ -923,7 +923,7 @@ ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, 
 		if (!ret) goto outofmemory;
 		break;
 	case PTP_OPFF_Enumeration: {
-		int i;
+		unsigned int i;
 #define N	opd->FORM.Enum.NumberOfValues
 		N = dtoh16a(&data[offset]);
 		offset+=sizeof(uint16_t);
@@ -1143,7 +1143,7 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 { 
 	uint32_t prop_count = dtoh32a(data);
 	MTPProperties *props = NULL;
-	int offset = 0, i;
+	unsigned int offset = 0, i;
 
 	if (prop_count == 0) {
 		*pprops = NULL;

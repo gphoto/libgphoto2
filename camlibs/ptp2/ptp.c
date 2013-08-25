@@ -1723,8 +1723,7 @@ ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
 {
 	PTPContainer ptp;
 	uint16_t ret;
-	unsigned int len;
-	int offset;
+	unsigned int len, offset;
 	unsigned char* dpv=NULL;
 
 
@@ -3333,7 +3332,7 @@ ptp_mtp_getobjectpropvalue (
 	uint16_t ret;
 	unsigned char *data = NULL;
 	unsigned int size = 0;
-	int offset = 0;
+	unsigned int offset = 0;
         
         PTP_CNT_INIT(ptp);
         ptp.Code=PTP_OC_MTP_GetObjectPropValue;
