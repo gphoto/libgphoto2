@@ -5825,7 +5825,7 @@ static struct submenu nikon_d5100_capture_settings[] = {
 static struct submenu nikon_d90_capture_settings[] = {
 	{ N_("Minimum Shutter Speed"), "minimumshutterspeed", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
 	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ISOAutoHiLimit, _put_Nikon_D90_ISOAutoHiLimit },
-	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
+	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ActiveDLighting, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_Compression, _put_Nikon_D90_Compression},
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
@@ -5852,7 +5852,7 @@ static struct submenu nikon_d3s_capture_settings[] = {
 
 	/* same as D90 */
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
-	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
+	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ActiveDLighting, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
 
 	{ 0,0,0,0,0,0,0 },
 };
@@ -5861,7 +5861,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	/* filled in with D90 values */
 	{ N_("Minimum Shutter Speed"), "minimumshutterspeed", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
 	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ISOAutoHiLimit, _put_Nikon_D90_ISOAutoHiLimit },
-	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ISOAutoTime, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
+	{ N_("Active D-Lighting"), "dlighting", PTP_DPC_NIKON_ActiveDLighting, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_NrHighISO, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D90_HighISONR, _put_Nikon_D90_HighISONR },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
 	{ N_("Maximum continuous release"), "maximumcontinousrelease", PTP_DPC_NIKON_D2MaximumShots, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Range_UINT8, _put_Range_UINT8},

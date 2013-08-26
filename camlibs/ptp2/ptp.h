@@ -1693,7 +1693,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_BW_Setting_Type			0xD146
 #define PTP_DPC_NIKON_Slot2SaveMode			0xD148
 #define PTP_DPC_NIKON_RawBitMode			0xD149
-#define PTP_DPC_NIKON_ISOAutoTime			0xD14E
+#define PTP_DPC_NIKON_ActiveDLighting			0xD14E /* was PTP_DPC_NIKON_ISOAutoTime */
 #define PTP_DPC_NIKON_FlourescentType			0xD14F
 #define PTP_DPC_NIKON_TuneColourTemperature		0xD150
 #define PTP_DPC_NIKON_TunePreset0			0xD151

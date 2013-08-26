@@ -4557,8 +4557,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Slot 2 Save Mode")},
 		{PTP_DPC_NIKON_RawBitMode,			/* 0xD149 */
 		 N_("Raw Bit Mode")},
-		{PTP_DPC_NIKON_ISOAutoTime,			/* 0xD14E */
-		 N_("ISO Auto Time")},
+		{PTP_DPC_NIKON_ActiveDLighting,			/* 0xD14E */
+		 N_("Active D-Lighting")},
 		{PTP_DPC_NIKON_FlourescentType,			/* 0xD14F */
 		 N_("Flourescent Type")},
 		{PTP_DPC_NIKON_TuneColourTemperature,		/* 0xD150 */
