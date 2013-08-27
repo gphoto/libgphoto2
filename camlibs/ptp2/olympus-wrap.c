@@ -927,7 +927,8 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 
 static int
 traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
-	int		evt, curpar = 0;
+	unsigned int	curpar = 0;
+	int		evt;
 	xmlNodePtr	next = xmlFirstElementChild (node);
 	uint32_t	pars[5];
 
@@ -1188,7 +1189,7 @@ generate_xml(PTPParams *params, PTPContainer *ptp, unsigned char *data, int len)
 
 static int
 is_outer_operation (PTPParams* params, uint16_t opcode) {
-	int i;
+	unsigned int i;
 
 	GP_DEBUG("is_outer_operation %04x", opcode);
 	/* the ones we need before we can do getdeviceinfo */
