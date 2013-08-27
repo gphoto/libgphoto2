@@ -202,7 +202,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		return translate_ptp_result (ret);
 	}
 	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
-		int			i;
+		unsigned int	i;
 		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
 			if (dpd.FORM.Enum.SupportedValue[i].u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
 				cardval = dpd.FORM.Enum.SupportedValue[i].u32;
@@ -6190,10 +6190,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget		*section, *widget, *subwindow;
 	uint16_t		ret2;
-	int			menuno, submenuno, ret;
+	unsigned int		menuno, submenuno;
+	int			ret;
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
-	int			i;
+	unsigned int		i;
 	CameraAbilities		ab;
 
 
