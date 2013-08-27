@@ -1718,7 +1718,8 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 {
         unsigned char *response = NULL;
         unsigned int len = 0x8c;
-        int i, status;
+	unsigned int i;
+        int status;
 
         GP_DEBUG ("canon_int_get_release_params()");
 
@@ -4059,7 +4060,8 @@ canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datalen,
                  * software assume that the EXIF is included in the
                  * JPEG thumbnail and just fetch the thumbnail to get
                  * the EXIF data. */
-                int ifd0_offset, ifd1_offset, n_tags;
+		unsigned int n_tags;
+                int ifd0_offset, ifd1_offset;
                 int jpeg_offset = -1, jpeg_size = -1;
 
                 GP_DEBUG ( "canon_int_extract_jpeg_thumb: this is from a CR2 file.");
