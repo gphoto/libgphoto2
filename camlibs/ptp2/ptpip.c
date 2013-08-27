@@ -99,9 +99,9 @@ static uint16_t ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wai
 uint16_t
 ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req)
 {
-	unsigned int 		ret;
-	uint32_t		len = 18+req->Nparam*4;
-	unsigned char 		*request = malloc(len);
+	int		ret;
+	int		len = 18+req->Nparam*4;
+	unsigned char 	*request = malloc(len);
 
 	ptp_ptpip_check_event (params);
 
@@ -221,7 +221,8 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		uint64_t size, PTPDataHandler *handler
 ) {
 	unsigned char	request[0x14];
-	int		ret, curwrite, towrite;
+	unsigned int	curwrite, towrite;
+	int		ret;
 	unsigned char*	xdata;
 
 	htod32a(&request[ptpip_type],PTPIP_START_DATA_PACKET);
@@ -403,7 +404,8 @@ ptp_ptpip_init_command_request (PTPParams* params)
 {
 	char		hostname[100];
 	unsigned char*	cmdrequest;
-	int 		len,i,ret;
+	unsigned int	i;
+	int 		len, ret;
 	unsigned char	guid[16];
 	
 	ptp_nikon_getptpipguid(guid);
