@@ -1047,7 +1047,8 @@ _put_STR(CONFIG_PUT_ARGS) {
 static int
 _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	char	*value;
-	int	i, ret;
+	unsigned int i;
+	int	ret;
 
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
@@ -5901,8 +5902,9 @@ static struct menu menus[] = {
 int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	CameraWidget *section, *widget;
-	int menuno, submenuno, ret;
+	CameraWidget	*section, *widget;
+	unsigned int	menuno, submenuno;
+	int 		ret;
 	uint16_t	*setprops = NULL;
 	int		i, nrofsetprops = 0;
 	PTPParams	*params = &camera->pl->params;
