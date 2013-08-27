@@ -6749,7 +6749,8 @@ camera_init (Camera *camera, GPContext *context)
 
 		ret = ptp_getstorageids(params, &storageids);
 		if (ret == PTP_RC_OK) {
-			int k;
+			unsigned int k;
+
 			for (k=0;k<storageids.n;k++) {
 				if (!(storageids.Storage[k] & 0xffff)) continue;
 				if (storageids.Storage[k] == 0x80000001) continue;
