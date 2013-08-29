@@ -1,0 +1,282 @@
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon EOS REBEL T3
+  Version: 3-1.0.5
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0xb (2.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type, Unknown(b104), Unknown(b105)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, Canon EOS Capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: SD
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 7813988352 (7452 MB)
+	Free Space (Bytes): 7759986688 (7400 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS REBEL T3'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+Property 0xd303:(read only) (type=0x2) 1
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 100% (100)
+
+/main/actions/uilock
+Label: UI Lock
+Type: TOGGLE
+Current: 2
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Type: TOGGLE
+Current: 0
+/main/actions/autofocusdrive
+Label: Drive Canon DSLR Autofocus
+Type: TOGGLE
+Current: 0
+/main/actions/manualfocusdrive
+Label: Drive Canon DSLR Manual focus
+Type: RADIO
+Current: None
+Choice: 0 Near 1
+Choice: 1 Near 2
+Choice: 2 Near 3
+Choice: 3 None
+Choice: 4 Far 1
+Choice: 5 Far 2
+Choice: 6 Far 3
+/main/actions/eoszoom
+Label: Canon EOS Zoom
+Type: TEXT
+Current: 0
+/main/actions/eoszoomposition
+Label: Canon EOS Zoom Position
+Type: TEXT
+Current: 0,0
+/main/actions/eosviewfinder
+Label: Canon EOS Viewfinder
+Type: TOGGLE
+Current: 2
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1328747980
+Printable: Wed Feb  8 19:39:40 2012
+/main/settings/reviewtime
+Label: Quick Review Time
+Type: RADIO
+Current: 2 seconds
+Choice: 0 None
+Choice: 1 2 seconds
+Choice: 2 4 seconds
+Choice: 3 8 seconds
+Choice: 4 Hold
+/main/settings/output
+Label: Camera Output
+Type: RADIO
+Current: Unknown value 0000
+Choice: 0 TFT
+Choice: 1 PC
+Choice: 2 TFT + PC
+Choice: 3 Unknown value 0004
+Choice: 4 Unknown value 0005
+Choice: 5 Unknown value 0006
+Choice: 6 Unknown value 0007
+Choice: 7 Unknown value 0000
+/main/settings/movierecord
+Label: Movie Recording
+Type: TEXT
+Current: 0
+/main/settings/evfmode
+Label: EVF Mode
+Type: RADIO
+Current: 1
+Choice: 0 0
+Choice: 1 1
+/main/settings/ownername
+Label: Owner Name
+Type: TEXT
+Current: 
+/main/settings/artist
+Label: Artist
+Type: TEXT
+Current: 
+/main/settings/copyright
+Label: Copyright
+Type: TEXT
+Current: 
+/main/settings/customfuncex
+Label: Custom Functions Ex
+Type: TEXT
+Current: 10,c189,d105,9,
+/main/settings/autopoweroff
+Label: Auto Power Off
+Type: TEXT
+Current: 0
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/settings/capture
+Label: Capture
+Type: TOGGLE
+Current: 0
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Canon Inc.
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: Canon EOS REBEL T3
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 3-1.0.5
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/status/model
+Label: Camera Model
+Type: TEXT
+Current: 2147484296
+/main/status/ptpversion
+Label: PTP Version
+Type: TEXT
+Current: 256
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 100%
+/main/status/lensname
+Label: Lens Name
+Type: TEXT
+Current: EF-S18-55mm f/3.5-5.6 III
+/main/status/eosserialnumber
+Label: Serial Number
+Type: TEXT
+Current: 172163154146
+/main/status/shuttercounter
+Label: Shutter Counter
+Type: TEXT
+Current: 30903
+/main/status/availableshots
+Label: Available Shots
+Type: TEXT
+Current: 233014
+/main/imgsettings/imageformat
+Label: Image Format
+Type: RADIO
+Current: Smaller JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW
+/main/imgsettings/imageformatsd
+Label: Image Format SD
+Type: RADIO
+Current: Smaller JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW
+/main/imgsettings/whitebalancexa
+Label: WhiteBalance X A
+Type: TEXT
+Current: 0
+/main/imgsettings/whitebalancexb
+Label: WhiteBalance X B
+Type: TEXT
+Current: 0
+/main/capturesettings/autoexposuremode
+Label: Canon Auto Exposure Mode
+Type: RADIO
+Current: Green
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+/main/capturesettings/drivemode
+Label: Drive Mode
+Type: RADIO
+Current: Single
+Choice: 0 Single
+Choice: 1 Timer 10 sec
+Choice: 2 Unknown value 0007
+/main/capturesettings/bracketmode
+Label: Bracket Mode
+Type: TEXT
+Current: 0
+/main/other/d402
+Label: PTP Property 0xd402
+Type: TEXT
+Current: Canon EOS REBEL T3
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current: Unknown Initiator
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 100
+Choice: 0 100
+Choice: 1 0
+Choice: 2 75
+Choice: 3 0
+Choice: 4 50
