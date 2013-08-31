@@ -1,0 +1,119 @@
+root@debian:/home/jonivar/jon# env LANG=C gphoto2 --summary
+Camera summary:                                                                
+Manufacturer: Nikon Corporation
+Model: J3
+  Version: Ver.1.0001
+  Serial Number: nnnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: Undefined Type, Association/Directory, Script, DPOF, Apple
+Quicktime, JPEG, TIFF
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel:  [Slot 1]
+
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 16004415488 (15263 MB)
+	Free Space (Bytes): 15996092416 (15255 MB)
+	Free Space (Images): 3276
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 20% (20)
+Compression Setting(0x5004):(read only) (type=0x2) Enumeration [0,1,2,4,7] value: JPEG Norm (1)
+F-Number(0x5007):(read only) (type=0x4) Enumeration [100,110,120,130,140,150,160,170,180,190,200,220,240,250,270,280,300,320,350,380,400,420,450,480,500,530,560,600,630,670,710,760,800,850,900,950,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2400,2500,2760,2900,3000,3200,0] value: f/5.6 (560)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [32784,32785,32786,32787,32788] value: Auto (32784)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20130830T221553'
+Property 0xd303:(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
+
+root@debian:/home/jonivar/jon# env LANG=C gphoto2 --debug
+--debug-logfile=my-logfile.txt --capture-image
+                                                                               
+*** Error ***              
+PTP Operation Not Supported
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') *** 
+
+0.627938 PTP2/ptp2/library.c(2): Device info:
+0.627962 PTP2/ptp2/library.c(2): Manufacturer: Nikon Corporation
+0.627979 PTP2/ptp2/library.c(2):   Model: J3
+0.627996 PTP2/ptp2/library.c(2):   device version: Ver.1.0001
+0.628013 PTP2/ptp2/library.c(2):   serial number: 'nnnnnnnn'
+0.628030 PTP2/ptp2/library.c(2): Vendor extension ID: 0x0000000a
+0.628047 PTP2/ptp2/library.c(2): Vendor extension version: 100
+0.628082 PTP2/ptp2/library.c(2): Vendor extension description: microsoft.com: 1.0
+0.628101 PTP2/ptp2/library.c(2): Functional Mode: 0x0000
+0.628118 PTP2/ptp2/library.c(2): PTP Standard Version: 100
+0.628135 PTP2/ptp2/library.c(2): Supported operations:
+0.628152 PTP2/ptp2/library.c(2):   0x1001
+0.628169 PTP2/ptp2/library.c(2):   0x1002
+0.628186 PTP2/ptp2/library.c(2):   0x1003
+0.628203 PTP2/ptp2/library.c(2):   0x1004
+0.628220 PTP2/ptp2/library.c(2):   0x1005
+0.628237 PTP2/ptp2/library.c(2):   0x1006
+0.628254 PTP2/ptp2/library.c(2):   0x1007
+0.628308 PTP2/ptp2/library.c(2):   0x1008
+0.628327 PTP2/ptp2/library.c(2):   0x1009
+0.628344 PTP2/ptp2/library.c(2):   0x100a
+0.628361 PTP2/ptp2/library.c(2):   0x100b
+0.628378 PTP2/ptp2/library.c(2):   0x100c
+0.628394 PTP2/ptp2/library.c(2):   0x100d
+0.628411 PTP2/ptp2/library.c(2):   0x100e
+0.628428 PTP2/ptp2/library.c(2):   0x100f
+0.628444 PTP2/ptp2/library.c(2):   0x1014
+0.628461 PTP2/ptp2/library.c(2):   0x1015
+0.628478 PTP2/ptp2/library.c(2):   0x1016
+0.628494 PTP2/ptp2/library.c(2):   0x101b
+0.628511 PTP2/ptp2/library.c(2):   0x90c0
+0.628528 PTP2/ptp2/library.c(2):   0x90c1
+0.628545 PTP2/ptp2/library.c(2):   0x90c2
+0.628562 PTP2/ptp2/library.c(2):   0x90c3
+0.628578 PTP2/ptp2/library.c(2):   0x90c4
+0.628595 PTP2/ptp2/library.c(2):   0x90c7
+0.628611 PTP2/ptp2/library.c(2):   0x90c8
+0.628628 PTP2/ptp2/library.c(2):   0x9201
+0.628645 PTP2/ptp2/library.c(2):   0x9202
+0.628661 PTP2/ptp2/library.c(2):   0x9203
+0.628678 PTP2/ptp2/library.c(2):   0x9207
+0.628695 PTP2/ptp2/library.c(2):   0x9801
+0.628711 PTP2/ptp2/library.c(2):   0x9802
+0.628728 PTP2/ptp2/library.c(2):   0x9803
+0.628745 PTP2/ptp2/library.c(2):   0x9805
+0.628763 PTP2/ptp2/library.c(2): Events Supported:
+0.628822 PTP2/ptp2/library.c(2):   0x4001
+0.628839 PTP2/ptp2/library.c(2):   0x4002
+0.628856 PTP2/ptp2/library.c(2):   0x4004
+0.628873 PTP2/ptp2/library.c(2):   0x4005
+0.628890 PTP2/ptp2/library.c(2):   0x4006
+0.628906 PTP2/ptp2/library.c(2):   0x4008
+0.628923 PTP2/ptp2/library.c(2):   0x4009
+0.628940 PTP2/ptp2/library.c(2):   0x400a
+0.628957 PTP2/ptp2/library.c(2):   0x400c
+0.628974 PTP2/ptp2/library.c(2):   0x400d
+0.629074 PTP2/ptp2/library.c(2): Device Properties Supported:
+0.629093 PTP2/ptp2/library.c(2):   0x5001
+0.629110 PTP2/ptp2/library.c(2):   0x5004
+0.629127 PTP2/ptp2/library.c(2):   0x5007
+0.629144 PTP2/ptp2/library.c(2):   0x500e
+0.629161 PTP2/ptp2/library.c(2):   0x5011
+0.629177 PTP2/ptp2/library.c(2):   0xd303
+0.629194 PTP2/ptp2/library.c(2):   0xd406
+0.629211 PTP2/ptp2/library.c(2):   0xd407
+
+
+0000  10 00 00 00 01 00 c0 90-05 00 00 00 ff ff ff ff  ................
+0000  0c 00 00 00 03 00 05 20-05 00 00 00              ....... ....    
+
+0.660727 ptp2/usb_getresp(2): request code 0x90c0 getting resp error 0x2005
