@@ -1,9 +1,30 @@
-libgphoto2 2.5.2.1 release
+libgphoto2 2.5.2.2 release
 
 ptp2:
-* Nikon: added new ptp capture function for Nikon capture
+* Nikon: added a new PTP capture opcode function
 * Nikon: enable --trigger-capture support
-* Nikon: hook up some more configuration variables
+* Nikon: hook up some more configuration variables (funcbutton, previewbutton, menusandplayback, changeafarea)
+* Canon: hook up configuration variables (colortemperature
+* ptpip: several contributed bugfixes
+* new ids:
+  * Kodak Z8612 IS
+  * Sony DSC-S780, SLT-A57, SLT-A58, 
+  * Nikon Coolpix S3200, DSLR D3200, J3
+  * Panasonic TZ-8
+  * Olympus E-M5
+  * Canon Rebel T3, EOS 1Dx, PowerShot G15, 
+  * Fuji FinePix SL1000
+* lots of bugfixes
+
+canon:
+* label PowerShot S110 from 2001 differently than the 2012 PowerShot S110.
+* fixed "new / downloaded" logic
+
+ax203:
+* support Nantronics N25S80 chipset
+
+directory:
+* support NRW files
 
 sierra:
 * capture fixed for Olympus C-3030
@@ -11,6 +32,12 @@ sierra:
 translations:
 * new czech translation by Pavel Borecki.
 * updated danish, dutch, polish, ukrainian, french, vietnamese, taiwanese
+
+libgphoto2:
+* use generic macros to check for libGD and libxml2 to allow better handling.
+
+libgphoto2_port/disk:
+* check the right fstab field for ignoring filesystems (avoids autofs scans)
 
 packaging:
 * "print-camera-list hwdb" output mode added for udev versions >= 201.
