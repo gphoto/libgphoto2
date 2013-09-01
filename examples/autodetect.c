@@ -60,7 +60,6 @@ sample_open_camera (Camera ** camera, const char *model, const char *port, GPCon
 
 	/* Then associate the camera with the specified port */
         p = gp_port_info_list_lookup_path (portinfolist, port);
-        if (ret < GP_OK) return ret;
         switch (p) {
         case GP_ERROR_UNKNOWN_PORT:
                 fprintf (stderr, "The port you specified "
@@ -74,7 +73,8 @@ sample_open_camera (Camera ** camera, const char *model, const char *port, GPCon
         default:
                 break;
         }
-        if (ret < GP_OK) return ret;
+        if (p < GP_OK) return p;
+
         ret = gp_port_info_list_get_info (portinfolist, p, &pi);
         if (ret < GP_OK) return ret;
         ret = gp_camera_set_port_info (*camera, pi);
