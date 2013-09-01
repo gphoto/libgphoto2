@@ -803,10 +803,12 @@ gp_port_usb_find_path_lib(GPPort *port)
 {
 	char *s;
 	int d, busnr = 0, devnr = 0;
-	GPPortPrivateLibrary *pl = port->pl;
+	GPPortPrivateLibrary *pl;
 
 	if (!port)
 		return (GP_ERROR_BAD_PARAMETERS);
+
+	pl = port->pl;
 
 	s = strchr (port->settings.usb.port,':');
 	if (s && (s[1] != '\0')) { /* usb:%d,%d */
@@ -878,10 +880,12 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 {
 	char *s;
 	int d, busnr = 0, devnr = 0;
-	GPPortPrivateLibrary *pl = port->pl;
+	GPPortPrivateLibrary *pl;
 
 	if (!port)
 		return (GP_ERROR_BAD_PARAMETERS);
+
+	pl = port->pl;
 
 	s = strchr (port->settings.usb.port,':');
 	if (s && (s[1] != '\0')) { /* usb:%d,%d */
@@ -1181,10 +1185,12 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 {
 	char *s;
 	int d, busnr = 0, devnr = 0;
-	GPPortPrivateLibrary *pl = port->pl;
+	GPPortPrivateLibrary *pl;
 
 	if (!port)
 		return (GP_ERROR_BAD_PARAMETERS);
+
+	pl = port->pl;
 
 	s = strchr (port->settings.usb.port,':');
 	if (s && (s[1] != '\0')) { /* usb:%d,%d */
