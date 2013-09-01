@@ -325,7 +325,7 @@ ums_wrap_getresp (PTPParams* params, PTPContainer* resp)
 
 	GP_DEBUG("send_scsi_cmd ret %d", ret);
 
-	memcpy (&usbresp, buf, sizeof(usbresp));
+	memcpy (&usbresp, buf, sizeof(buf));
 	resp->Code = dtoh16(usbresp.code);
 	resp->Nparam = (dtoh32(usbresp.length)-PTP_USB_BULK_REQ_LEN)/sizeof(uint32_t);
 	resp->Param1 = dtoh32(usbresp.payload.params.param1);
@@ -359,7 +359,7 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 
 	GP_DEBUG("send_scsi_cmd ret %d", ret);
 
-	memcpy (&usbresp, buf, sizeof(usbresp));
+	memcpy (&usbresp, buf, sizeof(buf));
 	if ((dtoh16(usbresp.code) != ptp->Code) && (dtoh16(usbresp.code) != PTP_RC_OK)) {
 		GP_DEBUG( "ums_wrap_getdata *** PTP code %04x during PTP data in size read", dtoh16(usbresp.code));
 		/* break; */
