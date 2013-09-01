@@ -227,7 +227,7 @@ retry:
 		gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.");
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 		/* retrying only makes sense if we did not read anything yet */
-		if ((tries++ < 1) && (result == 0))
+		if (tries++ < 1)
 			goto retry;
 	}
 	return PTP_ERROR_IO;
