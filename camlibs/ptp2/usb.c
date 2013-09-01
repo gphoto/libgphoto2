@@ -370,7 +370,6 @@ retry:
 		curread = 0; res = 0;
 		while (bytes_to_read > 0) {
 			unsigned long toread = bytes_to_read;
-			int res;
 
 			/* read in large blobs.
 			 * if smaller than large blob, read all but the last short packet
