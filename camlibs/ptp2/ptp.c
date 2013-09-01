@@ -6082,7 +6082,7 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 	newobs = realloc (params->objects, sizeof(PTPObject)*(params->nrofobjects+1));
 	if (!newobs) return PTP_RC_GeneralError;
 	params->objects = newobs;
-	if (insertat<=params->nrofobjects)
+	if (insertat<params->nrofobjects)
 		memmove (&params->objects[insertat+1],&params->objects[insertat],(params->nrofobjects-insertat)*sizeof(PTPObject));
 	memset(&params->objects[insertat],0,sizeof(PTPObject));
 	params->objects[insertat].oid = handle;
