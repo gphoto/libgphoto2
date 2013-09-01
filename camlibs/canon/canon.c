@@ -2821,9 +2821,8 @@ canon_int_get_disk_name (Camera *camera, GPContext *context)
                          */
                         msg = (unsigned char *)strdup ((char *)msg + 4);        /* @@@ should check length */
                         if ( msg == NULL ) {
-                                GP_DEBUG ("canon_int_get_disk_name: could not allocate %li "
-                                          "bytes of memory to hold response",
-                                          (long)(strlen ((char *) msg + 4)));
+                                GP_DEBUG ("canon_int_get_disk_name: could not allocate "
+                                          "memory to hold response");
                                 return NULL;
                         }
                         break;
