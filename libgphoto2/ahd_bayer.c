@@ -263,7 +263,7 @@ int do_green_ctr_row(unsigned char *image, unsigned char *image_h,
 					value -= image[AD(x+2,y,w)+RED];
 				else
 					value -= image[AD(x+2,y,w)+BLUE];
-					div--;
+				div--;
 			}
 			if (x > 0) {
 				value += 2*image[AD(x-1,y,w)+GREEN];
