@@ -486,9 +486,9 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (k+1 != camera->pl->num_pics) {
 		GP_DEBUG("Only the last photo can be deleted!\n");
 		return GP_ERROR_NOT_SUPPORTED;
-	} else
-	    sonix_delete_last (camera->port);
-	    camera->pl->num_pics -= 1;
+	}
+	sonix_delete_last (camera->port);
+	camera->pl->num_pics -= 1;
 	return GP_OK;
 }
 
