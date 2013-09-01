@@ -370,7 +370,7 @@ spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 static int
 spca50x_flash_get_number_from_file_name (CameraPrivateLibrary *pl, int index, int *file_number)
 {
-	char name[13];
+	char name[14];
 
 	CHECK (spca50x_flash_get_file_name (pl, index, name));
 	if(sscanf(&(name[4]), "%d", file_number) != 1)    /* skip "DSC_" */
