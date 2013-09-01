@@ -787,7 +787,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		int n = 0, channel, len, rlen;
 		ret = g3_channel_read(camera->port, &channel, &buf, &len); /* data. */
 		if (ret < GP_OK) goto out;
-		g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
+		ret = g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
 		if (ret < GP_OK) goto out;
 		gp_log(GP_LOG_DEBUG, "g3" , "reply %s", reply);
 
