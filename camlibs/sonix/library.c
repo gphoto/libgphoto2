@@ -98,10 +98,10 @@ camera_abilities (CameraAbilitiesList *list)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-			a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-			a.file_operations   = GP_FILE_OPERATION_DELETE|
-					GP_FILE_OPERATION_PREVIEW;
-			gp_abilities_list_append (list, a);
+		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		a.file_operations   = GP_FILE_OPERATION_DELETE|
+				GP_FILE_OPERATION_PREVIEW;
+		gp_abilities_list_append (list, a);
 	}
 	return GP_OK;
 }
