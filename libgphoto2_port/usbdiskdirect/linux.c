@@ -207,6 +207,7 @@ gp_port_library_list (GPPortInfoList *list)
 	DIR *dir;
 	struct dirent *dirent;
 	GPPortInfo info;
+	int ret;
 	unsigned short vendor_id, product_id;
 
 	dir = opendir ("/sys/block");
@@ -232,7 +233,9 @@ gp_port_library_list (GPPortInfoList *list)
 			  dirent->d_name);
 		gp_port_info_set_path (info, path);
 		gp_port_info_set_name (info, _("USB Mass Storage direct IO"));
-		CHECK (gp_port_info_list_append (list, info))
+		ret = gp_port_info_list_append (list, info);
+		if (ret < GP_OK)
+			break;
 	}
 	closedir (dir);
 	return GP_OK;
