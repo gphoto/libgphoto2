@@ -260,6 +260,7 @@ gp_port_library_list (GPPortInfoList *list)
 		CHECK (gp_port_info_list_append (list, info));
 	}
 	libusb_exit (ctx); /* should free all stuff above */
+	free (descs);
 	return (GP_OK);
 }
 
@@ -481,7 +482,7 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 static int
 gp_port_usb_reset(GPPort *port)
 {
-	int ret, curread;
+	int ret;
 
 	if (!port || !port->pl->dh) {
 		gp_log (GP_LOG_ERROR, "libusb1", "gp_port_usb_reset: bad parameters");
