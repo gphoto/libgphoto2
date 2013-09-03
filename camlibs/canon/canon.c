@@ -2650,11 +2650,11 @@ canon_int_get_time (Camera *camera, time_t *camera_time, GPContext *context)
                 return GP_ERROR_CORRUPTED_DATA;
         }
 
-        if (camera_time != NULL)
+        if (camera_time != NULL) {
                 *camera_time = (time_t) le32atoh (msg + 4);
-
-        /* XXX should strip \n at the end of asctime() return data */
-        GP_DEBUG ("Camera time: %s", asctime (gmtime (camera_time)));
+		/* XXX should strip \n at the end of asctime() return data */
+		GP_DEBUG ("Camera time: %s", asctime (gmtime (camera_time)));
+	}
 
         return GP_OK;
 }
