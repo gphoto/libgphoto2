@@ -209,6 +209,7 @@ gp_port_library_list (GPPortInfoList *list)
 {
 	DIR *dir;
 	struct dirent *dirent;
+	int ret;
 	GPPortInfo info;
 	unsigned short vendor_id, product_id;
 
@@ -229,7 +230,9 @@ gp_port_library_list (GPPortInfoList *list)
 			  dirent->d_name);
 		gp_port_info_set_path (info, path);
 		gp_port_info_set_name (info, _("USB Mass Storage raw SCSI"));
-		CHECK (gp_port_info_list_append (list, info))
+		ret = gp_port_info_list_append (list, info);
+		if (ret < GP_OK) /* can only be out of memory */
+			break;
 	}
 	closedir (dir);
 	return GP_OK;
