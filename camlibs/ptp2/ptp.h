@@ -1653,6 +1653,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_VignetteCtrl			0xD0F7
 #define PTP_DPC_NIKON_AutoDistortionControl		0xD0F8
 #define PTP_DPC_NIKON_SceneMode				0xD0F9
+#define PTP_DPC_NIKON_SceneMode2			0xD0FD
+#define PTP_DPC_NIKON_SelfTimerInterval			0xD0FE
 #define PTP_DPC_NIKON_ExposureTime			0xD100	/* Shutter Speed */
 #define PTP_DPC_NIKON_ACPower				0xD101
 #define PTP_DPC_NIKON_WarningStatus			0xD102
@@ -2164,7 +2166,7 @@ struct _PTPObject {
 	PTPObjectInfo	oi;
 	uint32_t	canon_flags;
 	MTPProperties	*mtpprops;
-	int		nrofmtpprops;
+	unsigned int	nrofmtpprops;
 };
 typedef struct _PTPObject PTPObject;
 
@@ -2212,7 +2214,7 @@ struct _PTPParams {
 
 	/* PTP: internal structures used by ptp driver */
 	PTPObject	*objects;
-	int		nrofobjects;
+	unsigned int	nrofobjects;
 
 	PTPDeviceInfo	deviceinfo;
 
@@ -2226,13 +2228,13 @@ struct _PTPParams {
 
 	/* PTP: Canon specific flags list */
 	PTPCanon_Property	*canon_props;
-	int			nrofcanon_props;
+	unsigned int		nrofcanon_props;
 	int			canon_viewfinder_on;
 	int			canon_event_mode;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanon_changes_entry	*backlogentries;
-	int			nrofbacklogentries;
+	unsigned int		nrofbacklogentries;
 	int			eos_captureenabled;
 	int			eos_viewfinderenabled;
 	int			eos_camerastatus;
@@ -2926,7 +2928,7 @@ uint16_t ptp_nikon_get_preview_image (PTPParams* params, unsigned char**, unsign
  *
  **/
 #define ptp_nikon_end_liveview(params) ptp_generic_no_data(params,PTP_OC_NIKON_EndLiveView,0)
-uint16_t ptp_nikon_check_event (PTPParams* params, PTPContainer **evt, int *evtcnt);
+uint16_t ptp_nikon_check_event (PTPParams* params, PTPContainer **evt, unsigned int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
 /**
@@ -2994,7 +2996,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc);
 
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
-                          PTPDevicePropDesc *dpd, int length, char *out);
+                          PTPDevicePropDesc *dpd, unsigned int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
@@ -3004,7 +3006,7 @@ void ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops);
 MTPProperties *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
 void ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);
-uint16_t ptp_object_want (PTPParams *, uint32_t handle, int want, PTPObject**retob);
+uint16_t ptp_object_want (PTPParams *, uint32_t handle, unsigned int want, PTPObject**retob);
 void ptp_objects_sort (PTPParams *);
 uint16_t ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob);
 uint16_t ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob);

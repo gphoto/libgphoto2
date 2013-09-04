@@ -667,7 +667,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 		CTVAL(val->a.v[j].member, func);	\
 }
 
-static inline int
+static inline unsigned int
 ptp_unpack_DPV (
 	PTPParams *params, unsigned char* data, unsigned int *offset, int total,
 	PTPPropertyValue* value, uint16_t datatype
@@ -832,7 +832,7 @@ outofmemory:
 static inline void
 duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uint16_t type) {
 	if (type & PTP_DTC_ARRAY_MASK) {
-		int i;
+		unsigned int i;
 
 		dst->a.count = src->a.count;
 		dst->a.v = malloc (sizeof(src->a.v)*src->a.count);
@@ -962,7 +962,7 @@ ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr
 {
 	unsigned char* dpv=NULL;
 	uint32_t size=0;
-	int	i;
+	unsigned int i;
 
 	switch (datatype) {
 	case PTP_DTC_INT8:
@@ -1545,7 +1545,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			uint32_t	propxtype = dtoh32a(&curdata[PTP_ece_Prop_Desc_Type]);
 			uint32_t	propxcnt = dtoh32a(&curdata[PTP_ece_Prop_Desc_Count]);
 			unsigned char	*xdata = &curdata[PTP_ece_Prop_Desc_Data];
-			int		j;
+			unsigned int	j;
 			PTPDevicePropDesc	*dpd;
 
 			ptp_debug (params, "event %d: EOS prop %04x desc record, datasize %d, propxtype %d", i, proptype, size-PTP_ece_Prop_Desc_Data, propxtype);
@@ -1616,7 +1616,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		}
 		case PTP_EC_CANON_EOS_PropValueChanged:
 			if (size >= 0xc) {	/* property info */
-				int j;
+				unsigned int j;
 				uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
 				unsigned char	*xdata = &curdata[PTP_ece_Prop_Val_Data];
 				PTPDevicePropDesc	*dpd;
@@ -1916,7 +1916,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 			}
 			if (size >= 0x8) {	/* event info */
-				int j;
+				unsigned int j;
 				for (j=8;j<size;j++)
 					ptp_debug (params, "    %d: %02x", j, curdata[j]);
 			}
@@ -1943,9 +1943,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 #define PTP_nikon_ec_Param1		4
 #define PTP_nikon_ec_Size		6
 static inline void
-ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, PTPContainer **ec, int *cnt)
+ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, PTPContainer **ec, unsigned int *cnt)
 {
-	int i;
+	unsigned int i;
 
 	*ec = NULL;
 	if (data == NULL)
@@ -2094,7 +2094,7 @@ ptp_unpack_canon_directory (
 	}
 	/* Walk over all objects and distribute the storage ids */
 	while (1) {
-		int changed = 0;
+		unsigned int changed = 0;
 		for (i=0;i<cnt;i++) {
 			unsigned char	*cur = dir+i*0x4c;
 			uint32_t	oid = dtoh32a(cur + ptp_canon_dir_objectid);
