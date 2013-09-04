@@ -2823,7 +2823,7 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 #define ptp_canon_eos_zoom(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_Zoom,1,x)
 #define ptp_canon_eos_zoomposition(params,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_ZoomPosition,2,x,y)
 
-#define ptp_canon_eos_remotereleaseon(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOn,2,x,1)
+#define ptp_canon_eos_remotereleaseon(params,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOn,2,x,y)
 #define ptp_canon_eos_remotereleaseoff(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOff,1,x)
 /**
  * ptp_nikon_mfdrive:

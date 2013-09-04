@@ -4309,9 +4309,23 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 	gp_widget_add_choice (*widget, _("Press Full"));
 	gp_widget_add_choice (*widget, _("Release Half"));
 	gp_widget_add_choice (*widget, _("Release Full"));
+	gp_widget_add_choice (*widget, _("Immediate"));
+	/* debugging */
+	gp_widget_add_choice (*widget, _("Press 1"));
+	gp_widget_add_choice (*widget, _("Press 2"));
+	gp_widget_add_choice (*widget, _("Press 3"));
+	gp_widget_add_choice (*widget, _("Release 1"));
+	gp_widget_add_choice (*widget, _("Release 2"));
+	gp_widget_add_choice (*widget, _("Release 3"));
 	gp_widget_set_value (*widget, _("None"));
 	return (GP_OK);
 }
+
+/* On EOS 7D:
+ * 9128 1 0  (half?)
+ * 9128 2 0  (full?)
+ * paramters: press mode, ? afmode ? SDK seems to suggest 1==NonAF, 0 == AF
+ */
 
 static int
 _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
@@ -4326,21 +4340,48 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 	if (!strcmp (val, _("None"))) return GP_OK;
 
 	if (!strcmp (val, _("Press Half"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 1);
+		ret = ptp_canon_eos_remotereleaseon (params, 1, 1);
 		goto leave;
 	}
 	if (!strcmp (val, _("Press Full"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 3);
+		ret = ptp_canon_eos_remotereleaseon (params, 3, 1);
 		goto leave;
 	}
 	if (!strcmp (val, _("Immediate"))) {
 		/* HACK by Flori Radlherr: "fire and forget" half release before release:
 		   Avoids autofocus drive while focus-switch on the lens is in AF state */
-		ret = ptp_canon_eos_remotereleaseon (params, 1);
+		ret = ptp_canon_eos_remotereleaseon (params, 1, 1);
 		if (ret == PTP_RC_OK)
-			ret = ptp_canon_eos_remotereleaseon (params, 3);
+			ret = ptp_canon_eos_remotereleaseon (params, 3, 1);
 		goto leave;
 	}
+/* try out others with 0 */
+	if (!strcmp (val, _("Press 1"))) {
+		ret = ptp_canon_eos_remotereleaseon (params, 1, 0);
+		goto leave;
+	}
+	if (!strcmp (val, _("Press 2"))) {
+		ret = ptp_canon_eos_remotereleaseon (params, 2, 0);
+		goto leave;
+	}
+	if (!strcmp (val, _("Press 3"))) {
+		ret = ptp_canon_eos_remotereleaseon (params, 3, 0);
+		goto leave;
+	}
+	if (!strcmp (val, _("Release 1"))) {
+		ret = ptp_canon_eos_remotereleaseoff (params, 1);
+		goto leave;
+	}
+	if (!strcmp (val, _("Release 2"))) {
+		ret = ptp_canon_eos_remotereleaseoff (params, 2);
+		goto leave;
+	}
+	if (!strcmp (val, _("Release 3"))) {
+		ret = ptp_canon_eos_remotereleaseoff (params, 3);
+		goto leave;
+	}
+
+
 	if (!strcmp (val, _("Release Half"))) {
 		ret = ptp_canon_eos_remotereleaseoff (params, 1);
 		goto leave;
