@@ -1519,6 +1519,8 @@ static struct {
 	{"Fuji:FinePix X-S1",			0x04cb, 0x026e, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix HS30EXR",		0x04cb, 0x0271, 0},
+	/* Marcel Bonnet <marcelbonnet@gmail.com> */
+	{"Fuji:FinePix S2980",			0x04cb, 0x027d, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix XF1",			0x04cb, 0x0288, 0},
 	/* Larry D. DeMaris" <demarisld@gmail.com> */
