@@ -366,7 +366,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_TransferCompleteDT	0x9120
 #define PTP_OC_CANON_EOS_CancelTransferDT	0x9121
 #define PTP_OC_CANON_EOS_SetWftProfile		0x9122
-#define PTP_OC_CANON_EOS_GetWftProfile		0x9122
+#define PTP_OC_CANON_EOS_GetWftProfile		0x9123
 #define PTP_OC_CANON_EOS_SetProfileToWft	0x9124
 #define PTP_OC_CANON_EOS_BulbStart		0x9125
 #define PTP_OC_CANON_EOS_BulbEnd		0x9126
@@ -376,6 +376,25 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_RemoteReleaseOn	0x9128
 /* 0x9129 args (0x1/0x2), no data, no resp args */
 #define PTP_OC_CANON_EOS_RemoteReleaseOff	0x9129
+
+#define PTP_OC_CANON_EOS_RegistBackgroundImage	0x912A
+#define PTP_OC_CANON_EOS_ChangePhotoStadioMode	0x912B
+#define PTP_OC_CANON_EOS_GetPartialObjectEx	0x912C
+#define PTP_OC_CANON_EOS_ResetMirrorLockupState	0x9130
+#define PTP_OC_CANON_EOS_PopupBuiltinFlash	0x9131
+#define PTP_OC_CANON_EOS_EndGetPartialObjectEx	0x9132
+#define PTP_OC_CANON_EOS_MovieSelectSWOn	0x9133
+#define PTP_OC_CANON_EOS_MovieSelectSWOff	0x9134
+#define PTP_OC_CANON_EOS_GetCTGInfo		0x9135
+#define PTP_OC_CANON_EOS_GetLensAdjust		0x9136
+#define PTP_OC_CANON_EOS_SetLensAdjust		0x9137
+#define PTP_OC_CANON_EOS_ReadyToSendMusic	0x9138
+#define PTP_OC_CANON_EOS_CreateHandle		0x9139
+#define PTP_OC_CANON_EOS_SendPartialObjectEx	0x913A
+#define PTP_OC_CANON_EOS_EndSendPartialObjectEx	0x913B
+#define PTP_OC_CANON_EOS_SetCTGInfo		0x913C
+#define PTP_OC_CANON_EOS_SetRequestOLCInfoGroup	0x913D
+#define PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel	0x913E
 
 #define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151
 #define PTP_OC_CANON_EOS_TerminateViewfinder	0x9152
@@ -388,6 +407,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_ZoomPosition		0x9159
 #define PTP_OC_CANON_EOS_SetLiveAfFrame		0x915a
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+#define PTP_OC_CANON_EOS_GetAEData		0x91BF
+#define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8
+#define PTP_OC_CANON_EOS_AdapterTransferProgress	0x91E9
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
 
