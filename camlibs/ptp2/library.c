@@ -743,6 +743,9 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/feature-requests/424/ */
 	{"Sony:SLT-A57", 	      0x054c, 0x0669, 0},
 
+	/* Mike Breeuwer <info@mikebreeuwer.com> */
+	{"Sony:SLT-A99v", 	      0x054c, 0x0675, 0},
+
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX300 (PTP mode)", 0x054c, 0x06ee, 0},
 
