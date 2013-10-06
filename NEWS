@@ -1,24 +1,25 @@
 libgphoto2 2.5.2.2 release
 
 ptp2:
-* Nikon: added a new PTP capture opcode function
+* Nikon: added a new PTP capture opcode function, allows capture to card during liveview
 * Nikon: enable --trigger-capture support
 * Nikon: hook up some more configuration variables (funcbutton, previewbutton, menusandplayback, changeafarea)
-* Canon: hook up configuration variables (colortemperature
-* ptpip: several contributed bugfixes
+* Canon: hook up configuration variables (colortemperature)
+* ptpip: several contributed bugfixes, and event handling
 * new ids:
   * Kodak Z8612 IS
-  * Sony DSC-S780, SLT-A57, SLT-A58, 
-  * Nikon Coolpix S3200, DSLR D3200, J3
+  * Sony DSC-S780, SLT-A57, SLT-A58, SLT-A99v
+  * Nikon Coolpix S3200, DSLR D3200, J3, V2
   * Panasonic TZ-8
   * Olympus E-M5
   * Canon Rebel T3, EOS 1Dx, PowerShot G15, 
-  * Fuji FinePix SL1000
+  * Fuji FinePix SL1000, S2980
 * lots of bugfixes
 
 canon:
 * label PowerShot S110 from 2001 differently than the 2012 PowerShot S110.
 * fixed "new / downloaded" logic
+* disable unconditional "clear halt" calls as they confuse newer controllers
 
 ax203:
 * support Nantronics N25S80 chipset
