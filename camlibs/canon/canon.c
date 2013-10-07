@@ -2074,7 +2074,7 @@ canon_int_get_zoom (Camera *camera,
                 msg = canon_usb_dialogue ( camera,
                                            CANON_USB_FUNCTION_CONTROL_CAMERA,
                                            &datalen, payload, payloadlen );
-        if ( msg == NULL  && datalen != 0x1c) {
+        if ( msg == NULL  || datalen != 0x1c) {
                 /* ERROR */
                 GP_DEBUG ("%s datalen=%x",
                           desc, datalen);
