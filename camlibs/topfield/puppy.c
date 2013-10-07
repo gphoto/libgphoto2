@@ -137,7 +137,7 @@ strdup_to_locale (char *str) {
 		if (ret == -1) {
 			perror("iconv");
 			free (dest);
-			dest = NULL;
+			return NULL;
 		}
 		break;
 	}
