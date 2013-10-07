@@ -165,9 +165,9 @@ print_version_comment(FILE *out,
 	unsigned int n;
 	if (out == NULL) { FATAL("Internal error: NULL out in print_version_comment()"); }
 	if (firstline != NULL) { fputs(firstline, out); }
-	fputs(startline, out);
+	if (startline != NULL) { fputs(startline, out); }
 	fputs("Created from this library:", out);
-	fputs(endline, out);
+	if (endline != NULL) { fputs(endline, out); }
 	for (n=0; (module_versions[n].name != NULL) && (module_versions[n].version_func != NULL); n++) {
 		const char *name = module_versions[n].name;
 		GPVersionFunc func = module_versions[n].version_func;
