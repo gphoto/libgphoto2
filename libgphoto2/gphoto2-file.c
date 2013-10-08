@@ -659,8 +659,10 @@ gp_file_open (CameraFile *file, const char *filename)
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
 		file->data = malloc (sizeof(char)*(size + 1));
-		if (!file->data)
+		if (!file->data) {
+			fclose (fp);
 			return (GP_ERROR_NO_MEMORY);
+		}
 		size_read = fread (file->data, (size_t)sizeof(char), (size_t)size, fp);
 		if (ferror(fp)) {
 			gp_file_clean (file);
