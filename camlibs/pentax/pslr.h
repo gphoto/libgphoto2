@@ -31,6 +31,8 @@
 #define PSLR_AF_POINT_BOT_MID    0x200
 #define PSLR_AF_POINT_BOT_RIGHT  0x400
 
+#define PSLR_ID1_K30     0x12f52
+#define PSLR_ID2_K30     0x20c
 #define PSLR_ID1_K20D    0x12cd2
 #define PSLR_ID2_K20D    0x1ba
 #define PSLR_ID1_K10D    0x12c1e

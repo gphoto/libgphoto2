@@ -94,7 +94,14 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product		= 0x0102;
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
 		return ret;
+
+        strcpy (a.model, "Pentax:K30");
+        // same usb vendor like Pentax K5D
+        a.usb_product           = 0x0132;
+        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+                return ret;
 	return GP_OK;
+
 }
 
 static int

@@ -142,11 +142,13 @@ static uint32_t get_uint32(uint8_t *buf);
 
 static bool is_k10d(ipslr_handle_t *p);
 static bool is_k20d(ipslr_handle_t *p);
+static bool is_k30(ipslr_handle_t *p);
 static bool is_istds(ipslr_handle_t *p);
 
 static pslr_progress_callback_t progress_callback = NULL;
 
 static ipslr_model_info_t camera_models[] = {
+    { PSLR_ID1_K30, PSLR_ID2_K30, "K30" },
     { PSLR_ID1_K20D, PSLR_ID2_K20D, "K20D" },
     { PSLR_ID1_K10D, PSLR_ID2_K10D, "K10D" },
     { PSLR_ID1_K110D, PSLR_ID2_K110D, "K110D" },
@@ -204,7 +206,8 @@ pslr_handle_t pslr_init()
         close(fd);
 
         if (!(strncmp(infobuf, "DIGITAL_CAMERA", 14) == 0
-	      || strncmp(infobuf, "DSC_K20D", 8) == 0)) {
+	      || strncmp(infobuf, "DSC_K20D", 8) == 0)
+              || strncmp(infobuf, "DSC_K-30", 8) == 0) {
             continue;
         }
 
@@ -242,21 +245,21 @@ pslr_init(GPPort *port)
 int pslr_connect(pslr_handle_t h)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    uint8_t statusbuf[16];
+    uint8_t statusbuf[28];
     CHECK(ipslr_status(p, statusbuf));
     CHECK(ipslr_set_mode(p, 1));
     CHECK(ipslr_status(p, statusbuf));
     CHECK(ipslr_identify(p));
     CHECK(ipslr_status_full(p, &p->status));
     DPRINT("init bufmask=0x%x\n", p->status.bufmask);
-    if (is_k10d(p) || is_k20d(p))
+    if (is_k10d(p) || is_k20d(p) || is_k30(p))
         CHECK(ipslr_cmd_00_09(p, 2));
     CHECK(ipslr_status_full(p, &p->status));
     CHECK(ipslr_cmd_10_0a(p, 1));
-    if (is_istds(p)) {
+    if (!is_k30(p) && is_istds(p)) {
         CHECK(ipslr_cmd_00_05(p));
     }
-    
+
     CHECK(ipslr_status_full(p, &p->status));
     return 0;
 }
@@ -264,7 +267,7 @@ int pslr_connect(pslr_handle_t h)
 int pslr_disconnect(pslr_handle_t h)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    uint8_t statusbuf[16];
+    uint8_t statusbuf[28];
     CHECK(ipslr_cmd_10_0a(p, 0));
     CHECK(ipslr_set_mode(p, 0));
     CHECK(ipslr_status(p, statusbuf));
@@ -725,14 +728,14 @@ static int ipslr_status(ipslr_handle_t *p, uint8_t *buf)
     int n;
     CHECK(command(p, 0, 1, 0));
     n = get_result(p);
-    if (n == 16) {
+    if (n == 16 || n == 28) {
         return read_result(p, buf, n);
     } else {
         return PSLR_READ_ERROR;
     }
 }
 
-#define MAX_STATUS_BUF_SIZE 412
+#define MAX_STATUS_BUF_SIZE 452
 #ifdef DEBUG
 static uint8_t lastbuf[MAX_STATUS_BUF_SIZE];
 static int first = 1;
@@ -882,6 +885,56 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
         return PSLR_OK;
     }
 
+    if (p->model && is_k30(p)) { // might work with k01 too
+        if (n != 452)  {
+            DPRINT("only got %d bytes\n", n);
+            return PSLR_READ_ERROR;
+        }
+        CHECK(read_result(p, buf, n));
+#ifdef DEBUG
+        ipslr_status_diff(buf);
+#endif
+        memset(status, 0, sizeof(*status));
+        status->bufmask = get_uint32( &buf[0x1E]);
+        status->current_iso = get_uint32(&buf[0x134]);
+        status->current_shutter_speed.nom = get_uint32(&buf[0x10C]);
+        status->current_shutter_speed.denom = get_uint32(&buf[0x110]);
+        status->current_aperture.nom = get_uint32(&buf[0x114]);
+        status->current_aperture.denom = get_uint32(&buf[0x118]);
+        status->lens_min_aperture.nom = get_uint32(&buf[0x144]);
+        status->lens_min_aperture.denom = get_uint32(&buf[0x148]);
+        status->lens_max_aperture.nom = get_uint32(&buf[0x14C]);
+        status->lens_max_aperture.denom = get_uint32(&buf[0x150]);
+        status->current_zoom.nom = get_uint32(&buf[0x1A0]);
+        status->current_zoom.denom = 100;
+        status->set_aperture.nom = get_uint32(&buf[0x3C]);
+        status->set_aperture.denom = get_uint32(&buf[0x40]);
+        status->set_shutter_speed.nom = get_uint32(&buf[0x34]);
+        status->set_shutter_speed.denom = get_uint32(&buf[0x38]);
+        status->set_iso = get_uint32(&buf[0x60]);
+        status->jpeg_resolution = 1+get_uint32(&buf[0x84]);
+        status->jpeg_contrast = get_uint32(&buf[0x9C]);
+        status->jpeg_sharpness = get_uint32(&buf[0x98]);
+        status->jpeg_saturation = get_uint32(&buf[0x94]);
+        status->jpeg_quality = 1+get_uint32(&buf[0x80]);
+        status->jpeg_image_mode = get_uint32(&buf[0x88]);
+        status->zoom.nom = get_uint32(&buf[0x1A0]);
+        status->zoom.denom = 100;
+        status->focus = get_uint32(&buf[0x1A8]);
+        status->raw_format = get_uint32(&buf[0x8C]);
+        status->image_format = get_uint32(&buf[0x80]);
+        status->light_meter_flags = get_uint32(&buf[0x13C]);
+        status->ec.nom = get_uint32(&buf[0x44]);
+        status->ec.denom = get_uint32(&buf[0x48]);
+        status->custom_ev_steps = get_uint32(&buf[0x15C]);
+        status->custom_sensitivity_steps = get_uint32(&buf[0xa8]);
+        status->exposure_mode = get_uint32(&buf[0xb4]);
+        status->user_mode_flag = get_uint32(&buf[0x24]);
+        status->af_point_select = get_uint32(&buf[0xc4]);
+        status->selected_af_point = get_uint32(&buf[0xc0]);
+        status->focused_af_point = get_uint32(&buf[0x168]);
+        return PSLR_OK;
+    }
 
     if (p->model && is_istds(p)) {
         /* *ist DS status block */
@@ -1431,6 +1484,13 @@ static bool is_k20d(ipslr_handle_t *p)
     return false;
 }
 
+static bool is_k30(ipslr_handle_t *p)
+{
+    if (p->model && p->model->id1 == PSLR_ID1_K30
+        && p->model->id2 == PSLR_ID2_K30)
+        return true;
+    return false;
+}
 
 static bool is_istds(ipslr_handle_t *p)
 {
