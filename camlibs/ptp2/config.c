@@ -1960,6 +1960,7 @@ GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
 static int
 _get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
 	char buf[20];
+	int inlist = 0;
 
 /*	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
@@ -1967,10 +1968,38 @@ _get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return (GP_ERROR);
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	sprintf(buf,"%d",dpd->CurrentValue.u32);
-	gp_widget_set_value (*widget,buf);
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		int i;
+
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+			switch (dpd->FORM.Enum.SupportedValue[i].u32) {
+			case 0: gp_widget_add_choice (*widget, _("None"));
+				if (dpd->CurrentValue.u32 == 0) {
+					gp_widget_set_value (*widget,_("None"));
+					inlist = 1;
+				}
+				break;
+			case 4: gp_widget_add_choice (*widget, _("Card"));
+				if (dpd->CurrentValue.u32 == 4) {
+					gp_widget_set_value (*widget,_("Card"));
+					inlist = 1;
+				}
+				break;
+			default:
+				sprintf (buf, _("Unknown %d"), dpd->FORM.Enum.SupportedValue[i].u32);
+				gp_widget_add_choice (*widget, buf);
+				break;
+			}
+		}
+	}
+	if (!inlist) {
+		sprintf(buf,_("Unknown %d"),dpd->CurrentValue.u32);
+		gp_widget_add_choice (*widget, buf); 
+		gp_widget_set_value (*widget,buf);
+	}
 	return GP_OK;
 }
 
@@ -1982,7 +2011,15 @@ _put_Canon_EOS_EVFRecordTarget(CONFIG_PUT_ARGS) {
 	ret = gp_widget_get_value (widget, &value);
 	if (ret != GP_OK)
 		return ret;
-	if (!sscanf(value, "%d", &i))
+	if (!strcmp(value,_("Card"))) {
+		propval->u32 = 4;
+		return GP_OK;
+	}
+	if (!strcmp(value,_("None"))) {
+		propval->u32 = 0;
+		return GP_OK;
+	}
+	if (!sscanf(value, _("Unknown %d"), &i))
 		return GP_ERROR;
 	propval->u32 = i;
 	return GP_OK;
