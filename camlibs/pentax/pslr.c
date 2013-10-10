@@ -600,7 +600,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
 uint32_t pslr_buffer_read(pslr_handle_t h, uint8_t *buf, uint32_t size)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    int i;
+    unsigned int i;
     uint32_t pos = 0;
     uint32_t seg_offs;
     uint32_t addr;
@@ -637,7 +637,7 @@ uint32_t pslr_buffer_read(pslr_handle_t h, uint8_t *buf, uint32_t size)
 uint32_t pslr_buffer_get_size(pslr_handle_t h)
 {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    int i;
+    unsigned int i;
     uint32_t len = 0;
     for (i=0; i<p->segment_count; i++) {
         len += p->segments[i].length;
@@ -1155,7 +1155,7 @@ static int ipslr_identify(ipslr_handle_t *p)
 {
     uint8_t idbuf[8];
     int n;
-    int i;
+    unsigned int i;
 
     CHECK(command(p, 0, 4, 0));
     n = get_result(p);
@@ -1292,7 +1292,7 @@ static int get_result(ipslr_handle_t *p)
 static int read_result(ipslr_handle_t *p, uint8_t *buf, uint32_t n)
 {
     uint8_t cmd[8] = { 0xf0, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-    int r;
+    unsigned int r;
     cmd[4] = n;
     cmd[5] = n >> 8;
     cmd[6] = n >> 16;
@@ -1305,7 +1305,8 @@ static int read_result(ipslr_handle_t *p, uint8_t *buf, uint32_t n)
 
 void hexdump(uint8_t *buf, uint32_t bufLen)
 {
-    int i;
+    unsigned int i;
+
     for (i=0; i<bufLen; i++) {
         if (i%16 == 0)
             DPRINT("0x%04x | ", i);
