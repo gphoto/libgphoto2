@@ -376,6 +376,11 @@ int pslr_set_jpeg_quality(pslr_handle_t h, pslr_jpeg_quality_t quality)
     {
 	hwqual = quality;
     }
+    else if (is_k30(p))
+    {
+        // max_qual - hwqual = number of stars (on the lcd)
+        hwqual = abs(quality-3);
+    }
     else
     {
 	hwqual = quality-1;
@@ -394,7 +399,7 @@ int pslr_set_jpeg_resolution(pslr_handle_t h, pslr_jpeg_resolution_t resolution)
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (resolution >= PSLR_JPEG_RESOLUTION_MAX)
         return PSLR_PARAM;	
-    if (is_k20d(p))
+    if (is_k20d(p) || is_k30(p))
     {
 	hwres = resolution;
     }
@@ -895,7 +900,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
         ipslr_status_diff(buf);
 #endif
         memset(status, 0, sizeof(*status));
-        status->bufmask = get_uint32( &buf[0x1E]);
+        status->bufmask = get_uint32(&buf[0x1E]);
         status->current_iso = get_uint32(&buf[0x134]);
         status->current_shutter_speed.nom = get_uint32(&buf[0x10C]);
         status->current_shutter_speed.denom = get_uint32(&buf[0x110]);
@@ -906,20 +911,20 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
         status->lens_max_aperture.nom = get_uint32(&buf[0x14C]);
         status->lens_max_aperture.denom = get_uint32(&buf[0x150]);
         status->current_zoom.nom = get_uint32(&buf[0x1A0]);
-        status->current_zoom.denom = 100;
+        status->current_zoom.denom = get_uint32(&buf[0x1A4]);
         status->set_aperture.nom = get_uint32(&buf[0x3C]);
         status->set_aperture.denom = get_uint32(&buf[0x40]);
         status->set_shutter_speed.nom = get_uint32(&buf[0x34]);
         status->set_shutter_speed.denom = get_uint32(&buf[0x38]);
-        status->set_iso = get_uint32(&buf[0x60]);
-        status->jpeg_resolution = 1+get_uint32(&buf[0x84]);
+        status->set_iso = get_uint32(&buf[0x14]);
+        status->jpeg_resolution = get_uint32(&buf[0x84]);
         status->jpeg_contrast = get_uint32(&buf[0x9C]);
         status->jpeg_sharpness = get_uint32(&buf[0x98]);
         status->jpeg_saturation = get_uint32(&buf[0x94]);
-        status->jpeg_quality = 1+get_uint32(&buf[0x80]);
-        status->jpeg_image_mode = get_uint32(&buf[0x88]);
+        status->jpeg_quality = 3-get_uint32(&buf[0x88]); // Maximum quality is 3
+        status->jpeg_image_mode = get_uint32(&buf[0x80]);
         status->zoom.nom = get_uint32(&buf[0x1A0]);
-        status->zoom.denom = 100;
+        status->zoom.denom = get_uint32(&buf[0x1A4]);
         status->focus = get_uint32(&buf[0x1A8]);
         status->raw_format = get_uint32(&buf[0x8C]);
         status->image_format = get_uint32(&buf[0x80]);

@@ -553,6 +553,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (sscanf(sval, "%d", &iso)) {
 			pslr_set_iso(camera->pl, iso);
 			pslr_get_status(camera->pl, &status);
+			// FIXME: K-30 iso doesn't get updated immediately
 		} else
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode iso %s", sval);
 	}
@@ -561,8 +562,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 		int qual;
 
-		/* FIXME: decoding is strange. the UI shows number of starts
-		 * on k20d: 4 stars = 3, 3 stars = 0, 2 stars = 1, 1 star = 2 
+		/* FIXME: decoding is strange. the UI shows number of stars
+		 * on k20d: 4 stars = 3, 3 stars = 0, 2 stars = 1, 1 star = 2
 		 */
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &qual)) {
