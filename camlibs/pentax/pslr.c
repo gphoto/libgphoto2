@@ -402,7 +402,7 @@ int pslr_set_jpeg_resolution(pslr_handle_t h, int resolution)
         return PSLR_PARAM;	
 
     CHECK(ipslr_cmd_00_09(p, 1));
-    CHECK(ipslr_write_args(p, 2, 1, hwres));
+    CHECK(ipslr_write_args(p, 2, 1, resolution));
     CHECK(command(p, 0x18, 0x14, 0x08));
     CHECK(get_status(p));
     CHECK(ipslr_cmd_00_09(p, 2));
