@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#define PSLR_MAX_RESOLUTIONS 4
+
 #define PSLR_LIGHT_METER_AE_LOCK 0x8
 
 #define PSLR_AF_POINT_TOP_LEFT   0x1
@@ -79,14 +81,6 @@ typedef enum {
     PSLR_JPEG_QUALITY_1,
     PSLR_JPEG_QUALITY_MAX
 } pslr_jpeg_quality_t;
-
-typedef enum {
-    PSLR_JPEG_RESOLUTION_14M, /* K20D only */
-    PSLR_JPEG_RESOLUTION_10M,
-    PSLR_JPEG_RESOLUTION_6M,
-    PSLR_JPEG_RESOLUTION_2M,
-    PSLR_JPEG_RESOLUTION_MAX
-} pslr_jpeg_resolution_t;
 
 typedef enum {
     PSLR_JPEG_IMAGE_MODE_NATURAL,
@@ -225,7 +219,7 @@ int pslr_set_iso(pslr_handle_t h, uint32_t value);
 int pslr_set_ec(pslr_handle_t h, pslr_rational_t value);
 
 int pslr_set_jpeg_quality(pslr_handle_t h, pslr_jpeg_quality_t quality);
-int pslr_set_jpeg_resolution(pslr_handle_t h, pslr_jpeg_resolution_t resolution);
+int pslr_set_jpeg_resolution(pslr_handle_t h, int resolution);
 int pslr_set_jpeg_image_mode(pslr_handle_t h, pslr_jpeg_image_mode_t image_mode);
 
 int pslr_set_jpeg_sharpness(pslr_handle_t h, int32_t sharpness);
@@ -249,3 +243,4 @@ int pslr_set_exposure_mode(pslr_handle_t h, pslr_exposure_mode_t mode);
 int pslr_select_af_point(pslr_handle_t h, uint32_t point);
 
 const char *pslr_camera_name(pslr_handle_t h);
+const char **pslr_camera_resolution_steps(pslr_handle_t h);

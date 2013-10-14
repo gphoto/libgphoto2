@@ -48,6 +48,7 @@
 #include "pslr.h"
 
 #define MAX_SEGMENTS 4
+#define MAX_RESOLUTIONS 4
 #define POLL_INTERVAL 100000 /* Number of us to wait when polling */
 #define BLKSZ 65536 /* Block size for downloads; if too big, we get
                      * memory allocation error from sg driver */
@@ -89,6 +90,7 @@ typedef struct {
     uint32_t id1;
     uint32_t id2;
     const char *name;
+    const char *resolution_steps[MAX_RESOLUTIONS];
 } ipslr_model_info_t;
 
 typedef struct {
@@ -148,17 +150,17 @@ static bool is_istds(ipslr_handle_t *p);
 static pslr_progress_callback_t progress_callback = NULL;
 
 static ipslr_model_info_t camera_models[] = {
-    { PSLR_ID1_K30, PSLR_ID2_K30, "K30" },
-    { PSLR_ID1_K20D, PSLR_ID2_K20D, "K20D" },
-    { PSLR_ID1_K10D, PSLR_ID2_K10D, "K10D" },
-    { PSLR_ID1_K110D, PSLR_ID2_K110D, "K110D" },
-    { PSLR_ID1_K100D, PSLR_ID2_K100D, "K100D" },
-    { PSLR_ID1_IST_DS2, PSLR_ID2_IST_DS2, "*ist DS2" },
-    { PSLR_ID1_IST_DL, PSLR_ID2_IST_DL, "*ist DL" },
-    { PSLR_ID1_IST_DS, PSLR_ID2_IST_DS, "*ist DS" },
-    { PSLR_ID1_IST_D, PSLR_ID2_IST_D, "*ist D" },
-    { PSLR_ID1_GX10, PSLR_ID2_GX10, "GX10" },
-    { PSLR_ID1_GX20, PSLR_ID2_GX20, "GX20" },
+    { PSLR_ID1_K30, PSLR_ID2_K30, "K30", { "16", "12", "8", "5" } },
+    { PSLR_ID1_K20D, PSLR_ID2_K20D, "K20D", { "14", "10", "6", "2" } },
+    { PSLR_ID1_K10D, PSLR_ID2_K10D, "K10D", { "10", "6", "2" } },
+    { PSLR_ID1_K110D, PSLR_ID2_K110D, "K110D", { "6", "4", "2" } },
+    { PSLR_ID1_K100D, PSLR_ID2_K100D, "K100D", { "6", "4", "2" } },
+    { PSLR_ID1_IST_DS2, PSLR_ID2_IST_DS2, "*ist DS2", { "6", "4", "2" } },
+    { PSLR_ID1_IST_DL, PSLR_ID2_IST_DL, "*ist DL", { "6", "4", "2" } },
+    { PSLR_ID1_IST_DS, PSLR_ID2_IST_DS, "*ist DS", { "6", "4", "2" } },
+    { PSLR_ID1_IST_D, PSLR_ID2_IST_D, "*ist D", { { "6", "4", "2" } },
+    { PSLR_ID1_GX10, PSLR_ID2_GX10, "GX10", { "10", "6", "2" } },
+    { PSLR_ID1_GX20, PSLR_ID2_GX20, "GX20", { "14", "10", "6", "2" } },
 };
 
 #ifndef LIBGPHOTO2
@@ -393,11 +395,11 @@ int pslr_set_jpeg_quality(pslr_handle_t h, pslr_jpeg_quality_t quality)
     return PSLR_OK;
 }
 
-int pslr_set_jpeg_resolution(pslr_handle_t h, pslr_jpeg_resolution_t resolution)
+int pslr_set_jpeg_resolution(pslr_handle_t h, int resolution)
 {
     int hwres;
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    if (resolution >= PSLR_JPEG_RESOLUTION_MAX)
+    if (resolution >= PSLR_MAX_RESOLUTIONS)
         return PSLR_PARAM;	
     if (is_k20d(p) || is_k30(p))
     {
@@ -686,6 +688,13 @@ const char *pslr_camera_name(pslr_handle_t h)
         unk_name[sizeof(unk_name)-1] = '\0';
         return unk_name;
     }
+}
+
+const char **pslr_camera_resolution_steps(pslr_handle_t h)
+{
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    if (p->model)
+      return p->model->resolution_steps;
 }
 
 /* ----------------------------------------------------------------------- */
