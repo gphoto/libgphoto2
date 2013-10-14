@@ -397,18 +397,10 @@ int pslr_set_jpeg_quality(pslr_handle_t h, pslr_jpeg_quality_t quality)
 
 int pslr_set_jpeg_resolution(pslr_handle_t h, int resolution)
 {
-    int hwres;
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (resolution >= PSLR_MAX_RESOLUTIONS)
         return PSLR_PARAM;	
-    if (is_k20d(p) || is_k30(p))
-    {
-	hwres = resolution;
-    }
-    else
-    {
-	hwres = resolution-1;
-    }	
+
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, 1, hwres));
     CHECK(command(p, 0x18, 0x14, 0x08));
@@ -815,7 +807,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
         status->set_shutter_speed.nom = get_uint32(&buf[0x2c]);
         status->set_shutter_speed.denom = get_uint32(&buf[0x30]);
         status->set_iso = get_uint32(&buf[0x60]);
-        status->jpeg_resolution = 1+get_uint32(&buf[0x7c]);
+        status->jpeg_resolution = get_uint32(&buf[0x7c]);
         status->jpeg_contrast = get_uint32(&buf[0x94]);
         status->jpeg_sharpness = get_uint32(&buf[0x90]);
         status->jpeg_saturation = get_uint32(&buf[0x8c]);
