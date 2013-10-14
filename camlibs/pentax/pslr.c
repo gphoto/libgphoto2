@@ -158,7 +158,7 @@ static ipslr_model_info_t camera_models[] = {
     { PSLR_ID1_IST_DS2, PSLR_ID2_IST_DS2, "*ist DS2", { "6", "4", "2" } },
     { PSLR_ID1_IST_DL, PSLR_ID2_IST_DL, "*ist DL", { "6", "4", "2" } },
     { PSLR_ID1_IST_DS, PSLR_ID2_IST_DS, "*ist DS", { "6", "4", "2" } },
-    { PSLR_ID1_IST_D, PSLR_ID2_IST_D, "*ist D", { { "6", "4", "2" } },
+    { PSLR_ID1_IST_D, PSLR_ID2_IST_D, "*ist D", { "6", "4", "2" } },
     { PSLR_ID1_GX10, PSLR_ID2_GX10, "GX10", { "10", "6", "2" } },
     { PSLR_ID1_GX20, PSLR_ID2_GX20, "GX20", { "14", "10", "6", "2" } },
 };
@@ -687,6 +687,7 @@ const char **pslr_camera_resolution_steps(pslr_handle_t h)
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (p->model)
       return p->model->resolution_steps;
+    return NULL;
 }
 
 /* ----------------------------------------------------------------------- */
