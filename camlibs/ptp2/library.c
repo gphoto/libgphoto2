@@ -751,8 +751,14 @@ static struct {
 
 	/* t.ludewig@gmail.com */
 	{"Sony:NEX-3N (PTP mode)",    0x054c, 0x072f, 0},
+
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:SLT-A58",	      0x054c, 0x0736, 0},
+
+	/* Thorsten Ludewig <t.ludewig@gmail.com> */
+	{"Sony:DSC-RX100M2",	      0x054c, 0x074b, 0},
+	/* Thorsten Ludewig <t.ludewig@gmail.com> */
+	{"Sony:Alpha-A3000",	      0x054c, 0x074e, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -931,6 +937,9 @@ static struct {
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},
+
+	/* t.ludewig@gmail.com */
+	{"Nikon:Coolpix S02",  		  0x04b0, 0x0346, PTP_CAP},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
@@ -1435,6 +1444,8 @@ static struct {
 
 	/* "François G." <francois@webcampak.com> */
 	{"Canon:EOS 6D",			0x04a9, 0x3250, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Thorsten Ludewig <t.ludewig@gmail.com> */
+	{"Canon:EOS 70D",			0x04a9, 0x3253, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Canon:PowerShot G15",			0x04a9, 0x3258, PTPBUG_DELETE_SENDS_EVENT},
