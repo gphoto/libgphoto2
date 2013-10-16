@@ -1,0 +1,217 @@
+
+
+*** Error ***              
+The capturetarget widget is not configurable.
+
+*** Error ***              
+The capture widget is not configurable.
+gphoto2 2.5.2.1
+
+Copyright (c) 2000-2013 Lutz Mueller and others
+
+gphoto2 comes with NO WARRANTY, to the extent permitted by law. You may
+redistribute copies of gphoto2 under the terms of the GNU General Public
+License. For more information about these matters, see the files named COPYING.
+
+This version of gphoto2 is using the following software versions and options:
+gphoto2         2.5.2.1        gcc, popt(m), exif, cdk, aa, jpeg, readline
+libgphoto2      2.5.2.2        all camlibs, gcc, ltdl, EXIF
+libgphoto2_port 0.10.0         gcc, ltdl, USB, serial without locking
+Camera summary:
+Manufacturer: Sony Corporation
+Model: ILCE-3000
+  Version: 1.0
+  Serial Number: 00000000000000003282603503972187
+Vendor Extension ID: 0xffffffff (1.0)
+
+Capture Formats: 
+Display Formats: Association/Directory, MPEG, JPEG, MP4, Unknown(b301), Undefined Type, Unknown(b101), Unknown(b310)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: Storage Media
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Only
+	Maximum Capability: 0 (0 MB)
+	Free Space (Bytes): 0 (0 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,100] value: 100% (100)
+Friendly Device Name(0xd402):(read only) (type=0xffff) ILCE-3000 ('ILCE-3000')
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) '(null)'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: 00000000000000003282603503972187
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Sony Corporation
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: ILCE-3000
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1.0
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 100
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+Choice: 41 41
+Choice: 42 42
+Choice: 43 43
+Choice: 44 44
+Choice: 45 45
+Choice: 46 46
+Choice: 47 47
+Choice: 48 48
+Choice: 49 49
+Choice: 50 50
+Choice: 51 51
+Choice: 52 52
+Choice: 53 53
+Choice: 54 54
+Choice: 55 55
+Choice: 56 56
+Choice: 57 57
+Choice: 58 58
+Choice: 59 59
+Choice: 60 60
+Choice: 61 100
+/main/other/d402
+Label: Friendly Device Name
+Type: TEXT
+Current: ILCE-3000
+/main/other/d406
+Label: Session Initiator Info
+Type: TEXT
+Current: (null)
+/main/other/d407
+Label: Perceived Device Type
+Type: TEXT
+Current: 1
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+Waiting for 5 seconds for events from camera. Press Ctrl-C to abort.
+
+*** Error ***              
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***       
+
+For debugging messages, please use the --debug option.
+Debugging messages may help finding a solution to your problem.
+If you intend to send any error or debug messages to the gphoto
+developer mailing list <gphoto-devel@lists.sourceforge.net>, please run
+gphoto2 as follows:
+
+    env LANG=C gphoto2 --debug --debug-logfile=my-logfile.txt --version --summary --list-all-config --set-config capturetarget=1 --set-config capture=on --wait-event=5s --capture-image
+
+Please make sure there is sufficient quoting around the arguments.
+
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: ILCE-3000
+  device version: 1.0
+  serial number: '00000000000000003282603503972187'
+Vendor extension ID: 0xffffffff
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002
+  0x1003
+  0x1001
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+  0x9280
+  0x9281
+  0x9282
+  0x9283
+  0x9284
+  0x9285
+Events Supported:
+  0x4004
+  0x4005
+  0x4006
+Device Properties Supported:
+  0x5001
+  0xd402
+  0xd406
+  0xd407
+  0xd303
