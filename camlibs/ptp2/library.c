@@ -843,7 +843,7 @@ static struct {
 	{"Nikon:Coolpix S225 (PTP mode)", 0x04b0, 0x0178, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 	/* Ryan Nestor <ryan@monadnock.org> */
-	{"Nikon:Coolpix P100 (PTP mode)", 0x04b0, 0x017d, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
+	{"Nikon:Coolpix P100 (PTP mode)", 0x04b0, 0x017d, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Štěpán Němec <stepnem@gmail.com> */
 	{"Nikon:Coolpix P7000 (PTP mode)",0x04b0, 0x017f, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 
@@ -2023,7 +2023,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetViewFinderData)) {
 			PTPPropertyValue	val;
 			/* FIXME: this might cause a focusing pass and take seconds. 20 was not
-			 * enough. */
+			 * enough (would be 0.2 seconds, too short for the mirror up operation.). */
 			int 			tries = 100;
 			PTPDevicePropDesc       dpd;
 
