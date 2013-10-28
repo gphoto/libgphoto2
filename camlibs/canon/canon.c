@@ -125,7 +125,7 @@ const struct canonCamModelData models[] = {
         /* 3042 is a scanner, so it will never be added here. */
         {"Canon:PowerShot S20",         CANON_CLASS_0,  0x04A9, 0x3043, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot S20"},
         {"Canon:EOS D30",               CANON_CLASS_4,  0x04A9, 0x3044, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:PowerShot S100",        CANON_CLASS_0,  0x04A9, 0x3045, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot S100 (2000)", CANON_CLASS_0,  0x04A9, 0x3045, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY DIGITAL",           CANON_CLASS_0,  0x04A9, 0x3046, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS",          CANON_CLASS_0,  0x04A9, 0x3047, CAP_NON, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:PowerShot G1",          CANON_CLASS_0,  0x04A9, 0x3048, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, "Canon PowerShot G1"},
