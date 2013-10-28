@@ -1328,6 +1328,7 @@ static struct {
 	{"Canon:EOS 50D",			0x04a9, 0x319b, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://bugs.launchpad.net/ubuntu/+source/libgphoto2/+bug/569419 */
+	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot D10",			0x04a9, 0x31bc, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Carsten Grohmann <carstengrohmann@gmx.de> */
@@ -1335,10 +1336,6 @@ static struct {
 
 	/* Willy Tarreau <w@1wt.eu> */
 	{"Canon:PowerShot A2100 IS",		0x04a9, 0x31be, PTPBUG_DELETE_SENDS_EVENT},
-
-
-	/* "T. Ludewig" <t.ludewig@gmail.com> */
-	{"Canon:PowerShot D10",			0x04a9, 0x31bc, PTPBUG_DELETE_SENDS_EVENT},
 
 	{"Canon:PowerShot A480",		0x04a9, 0x31bf, PTPBUG_DELETE_SENDS_EVENT},
 
