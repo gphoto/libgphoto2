@@ -296,19 +296,45 @@ print_debug_deviceinfo (PTPParams*params, PTPDeviceInfo *di)
 		GP_DEBUG ("  0x%04x", di->DevicePropertiesSupported[i]);
 }
 
+/* Changes the ptp deviceinfo with additional hidden information available,
+ * or stuff that requires special tricks 
+ */
 void
 fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	CameraAbilities a;
 	PTPParams	*params = &camera->pl->params;
+	uint16_t	ret;
 
         gp_camera_get_abilities(camera, &a);
 
-	/* XML style Olympus E series control? */
+	/* Panasonic hack */
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x04da)
+	) {
+		PTPPropertyValue propval;
+		/* Panasonic changes its device info if the MTP Initiator
+		 * is set, and e.g. adds DeleteObject.
+		 * (found in Windows USB traces) */
+
+		if (!ptp_property_issupported(params, PTP_DPC_MTP_SessionInitiatorInfo))
+			return;
+
+		propval.str = "Windows/6.2.9200 MTPClassDriver/6.2.9200.16384";
+
+		ret = ptp_setdevicepropvalue (params, PTP_DPC_MTP_SessionInitiatorInfo, &propval, PTP_DTC_STR);
+		if (ret != PTP_RC_OK)
+			return;
+		ret = ptp_getdeviceinfo (params, di);
+		if (ret != PTP_RC_OK)
+			return;
+		return;
+	}
+	/* XML style Olympus E series control. internal deviceInfos is encoded in XML. */
 	if (	di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
 		(params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
 	) {
 		PTPDeviceInfo	ndi, newdi, *outerdi;
-		uint16_t	ret;
 		unsigned int	i;
 
 		ret = ptp_getdeviceinfo (params, &params->outer_deviceinfo);
@@ -353,13 +379,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		return;
 	}
 
-	/* for USB class matches on unknown cameras... */
+	/* for USB class matches on unknown cameras that were matches with PTP generic... */
 	if (!a.usb_vendor && di->Manufacturer) {
 		if (strstr (di->Manufacturer,"Canon"))
 			a.usb_vendor = 0x4a9;
 		if (strstr (di->Manufacturer,"Nikon"))
 			a.usb_vendor = 0x4b0;
 	}
+	/* Switch the PTP vendor, so that the vendor specific sets become available. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		di->Manufacturer
 	) {
@@ -387,7 +414,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_NIKON;
 	}
 
-	/* Fuji S5 Pro mostly */
+	/* Fuji S5 Pro mostly, make its vendor set available. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4cb) &&
@@ -397,6 +424,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_FUJI;
 	}
 
+	/* Nikon DSLR hide its newer opcodes behind another vendor specific query,
+	 * do that and merge it into the generic PTP deviceinfo. */
 	if (di->VendorExtensionID == PTP_VENDOR_NIKON) {
 		unsigned int i;
 
