@@ -6,13 +6,14 @@ ptp2:
 * Nikon: hook up some more configuration variables (funcbutton, previewbutton, menusandplayback, changeafarea)
 * Canon: hook up configuration variables (colortemperature)
 * ptpip: several contributed bugfixes, and event handling
+* panasonic: allow deleting files by setting MTP Responder code.
 * new ids:
   * Kodak Z8612 IS
-  * Sony DSC-S780, SLT-A57, SLT-A58, SLT-A99v
-  * Nikon Coolpix S3200, DSLR D3200, J3, V2
+  * Sony DSC-S780, SLT-A57, SLT-A58, SLT-A99v, DSC-RX100M2, Alpha A3000
+  * Nikon Coolpix S3200, DSLR D3200, J3, V2, S02
   * Panasonic TZ-8
   * Olympus E-M5
-  * Canon Rebel T3, EOS 1Dx, PowerShot G15, 
+  * Canon Rebel T3, EOS 1Dx, PowerShot G15, EOS 70D
   * Fuji FinePix SL1000, S2980
 * lots of bugfixes
 
