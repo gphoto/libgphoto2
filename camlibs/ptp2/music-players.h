@@ -698,10 +698,10 @@
   { "iRiver", 0x1006, "H300 Series MTP", 0x3004,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x1006, "Portable Media Center", 0x4002,
+  { "iRiver", 0x1006, "Portable Media Center 1", 0x4002,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x1006, "Portable Media Center", 0x4003,
+  { "iRiver", 0x1006, "Portable Media Center 2", 0x4003,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   // From [st]anislav <iamstanislav@gmail.com>
@@ -725,10 +725,10 @@
   { "iRiver", 0x4102, "U10", 0x1116,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "T10a", 0x1117,
+  { "iRiver", 0x4102, "T10b", 0x1117,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
-  { "iRiver", 0x4102, "T20", 0x1118,
+  { "iRiver", 0x4102, "T20b", 0x1118,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_IRIVER_OGG_ALZHEIMER },
   { "iRiver", 0x4102, "T30", 0x1119,
@@ -908,8 +908,8 @@
   { "Archos", 0x0e79, "TV+ (MTP mode)", 0x131b, DEVICE_FLAG_UNLOAD_DRIVER },
   { "Archos", 0x0e79, "105 (MTP mode)", 0x131d, DEVICE_FLAG_UNLOAD_DRIVER },
   { "Archos", 0x0e79, "405HDD (MTP mode)", 0x1321, DEVICE_FLAG_UNLOAD_DRIVER },
-  { "Archos", 0x0e79, "5 (MTP mode)", 0x1331, DEVICE_FLAG_UNLOAD_DRIVER },
-  { "Archos", 0x0e79, "5 (MTP mode)", 0x1333, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "5 (MTP mode 1)", 0x1331, DEVICE_FLAG_UNLOAD_DRIVER },
+  { "Archos", 0x0e79, "5 (MTP mode 2)", 0x1333, DEVICE_FLAG_UNLOAD_DRIVER },
   { "Archos", 0x0e79, "7 (MTP mode)", 0x1335, DEVICE_FLAG_UNLOAD_DRIVER },
   { "Archos", 0x0e79, "SPOD (MTP mode)", 0x1341, DEVICE_FLAG_UNLOAD_DRIVER },
   { "Archos", 0x0e79, "5S IT (MTP mode)", 0x1351, DEVICE_FLAG_UNLOAD_DRIVER },
@@ -1945,9 +1945,9 @@
    */
   // Both reported by an anonymous SourceForge user
   // This is the 30 GiB model
-  { "Haier", 0x1302, "Ibiza Rhapsody", 0x1016, DEVICE_FLAG_NONE },
+  { "Haier", 0x1302, "Ibiza Rhapsody 1", 0x1016, DEVICE_FLAG_NONE },
   // This is the 4/8 GiB model
-  { "Haier", 0x1302, "Ibiza Rhapsody", 0x1017, DEVICE_FLAG_NONE },
+  { "Haier", 0x1302, "Ibiza Rhapsody 2", 0x1017, DEVICE_FLAG_NONE },
 
   /*
    * Panasonic
