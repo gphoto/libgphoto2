@@ -82,7 +82,8 @@ static struct {
 		SIERRA_NO_51 | SIERRA_LOW_SPEED, NULL },
 	{"Agfa", "ePhoto 1280",	SIERRA_MODEL_DEFAULT,	0, 0, 0, NULL },
 	{"Agfa", "ePhoto 1680", SIERRA_MODEL_DEFAULT,	0, 0, 0, NULL },
-	{"Apple", "QuickTake 200", SIERRA_MODEL_DEFAULT,	0, 0, 0, NULL },
+	/* unclear, if driven by fuji driver or by sierra driver */
+	{"Apple", "QuickTake 200 (Sierra Mode)", SIERRA_MODEL_DEFAULT,	0, 0, 0, NULL },
 	{"Chinon", "ES-1000", 	SIERRA_MODEL_DEFAULT,	0, 0, 0, NULL },
 	{"Epson", "PhotoPC 500", SIERRA_MODEL_EPSON,	0, 0, 0, NULL },
 	{"Epson", "PhotoPC 550", SIERRA_MODEL_EPSON,	0, 0, 0, NULL },
