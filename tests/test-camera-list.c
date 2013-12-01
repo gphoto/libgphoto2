@@ -183,6 +183,7 @@ main (int argc, char *argv[])
 	int i;
 	int count;
 	const char *fmt_str = NULL;
+	char lastmodel[200];
 
 	parse_command_line (argc, argv);
 
@@ -244,6 +245,7 @@ main (int argc, char *argv[])
 		break;
 	}
 
+	strcpy(lastmodel,"xxx");
 	/* For each camera in the list, add a text snippet to the 
 	 * output file. */
 	for (i = 0; i < count; i++) {
@@ -251,6 +253,12 @@ main (int argc, char *argv[])
 		const char *camlib_basename;
 		CHECK (gp_abilities_list_get_abilities (al, i, &abilities));
 		camlib_basename = path_basename(abilities.library);
+
+		if (!strcmp(lastmodel, abilities.model)) {
+			fprintf(stderr,"Duplicated model name in camera list: %s\n", lastmodel);
+			exit(1);
+		}
+		strcpy(lastmodel,abilities.model);
 
 		switch (format) {
 		case FMT_HEADED_TEXT:
