@@ -37,6 +37,7 @@
 
 #define GP_MODULE "Smal Ultrapocket"
 
+#include <locale.h>
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
