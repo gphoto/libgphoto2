@@ -818,6 +818,11 @@ static struct {
 	{"Nikon:Coolpix 3200 (PTP mode)", 0x04b0, 0x0121, 0},
 	/* Nikon Coolpix 2200 */
 	{"Nikon:Coolpix 2200 (PTP mode)", 0x04b0, 0x0122, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
+	/* Jonathan Marten <jonathanmarten@users.sf.net> 
+	 * https://sourceforge.net/p/gphoto/bugs/968/ */
+	{"Nikon:Coolpix 2200v1.1 (PTP mode)", 0x04b0, 0x0123, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
+
 	/* Harry Reisenleiter <harrylr@earthlink.net> */
 	{"Nikon:Coolpix 8800 (PTP mode)", 0x04b0, 0x0127, PTP_CAP},
 	/* Nikon Coolpix 4800 */
