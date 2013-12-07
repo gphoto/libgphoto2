@@ -2154,7 +2154,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return translate_ptp_result (ret);
 				}
 			}
-			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after 20 tries with ret: 0x%x\n", ret);
+			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after all tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
 			return translate_ptp_result (ret);
 		}
