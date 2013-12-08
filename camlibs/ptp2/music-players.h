@@ -577,6 +577,8 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Acer", 0x0502, "Iconia A1-810", 0x353c,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Acer", 0x0502, "Liquid Z130 MT65xx Android Phone", 0x355f,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * SanDisk
@@ -806,9 +808,13 @@
   /*
    * Dell
    */
-  { "Dell, Inc", 0x413c, "DJ Itty", 0x4500, DEVICE_FLAG_NONE },
+  { "Dell Inc", 0x413c, "DJ Itty", 0x4500,
+      DEVICE_FLAG_NONE },
   /* Reported by: JR */
-  { "Dell, Inc", 0x413c, "Dell Streak 7", 0xb10b, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Dell Inc", 0x413c, "Dell Streak 7", 0xb10b,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Dell Inc", 0x413c, "Dell Venue 7 inch", 0xb11a,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Toshiba
@@ -930,6 +936,7 @@
   { "Archos", 0x0e79, "70it2 (ID 1)", 0x1568, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "70it2 (ID 2)", 0x1569, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "101 G4", 0x4002, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Archos (for Tesco)", 0x0e79, "Hudl", 0x5008, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Dunlop (OEM of EGOMAN ltd?) reported by Nanomad
@@ -958,6 +965,7 @@
   { "Sirius", 0x18f6, "Stiletto", 0x0102, DEVICE_FLAG_NONE },
   // Reported by Chris Bagwell <chris@cnpbagwell.com>
   { "Sirius", 0x18f6, "Stiletto 2", 0x0110, DEVICE_FLAG_NONE },
+
 
   /*
    * Nokia
@@ -1617,6 +1625,9 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia M MTP", 0x019b,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia Z1 MTP", 0x019e,
+      DEVICE_FLAG_NONE },
+
 
   /*
    * MTP+UMS personalities of MTP devices (see above)
@@ -1670,6 +1681,8 @@
   { "SONY", 0x0fce, "Xperia SP MTP+CDROM", 0x4195,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia M MTP+CDROM", 0x419b,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia Z1 MTP+CDROM", 0x419e,
       DEVICE_FLAG_NONE },
 
   /*
@@ -1741,6 +1754,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia M MTP+ADB", 0x519b,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia Z1 MTP+ADB", 0x519e,
+      DEVICE_FLAG_NONE },
 
   /*
    * MTP+UMS modes
@@ -1787,9 +1802,17 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "Atrix/Razr HD (MTP+ADB)", 0x2e33,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Motorola", 0x22b8, "RAZR M (XT907)", 0x2e51,
+  { "Motorola", 0x22b8, "RAZR M XT907 (MTP)", 0x2e50,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "RAZR M XT907 (MTP+ADB)", 0x2e51,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "Moto X (XT1053)", 0x2e62,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "Moto X (XT1058)", 0x2e63,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "Droid Maxx (XT1080)", 0x2e67,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "Moto G", 0x2e82,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Jader Rodrigues Simoes <jadersimoes@users.sourceforge.net>
   { "Motorola", 0x22b8, "Xoom 2 Media Edition (ID2)", 0x41cf,
@@ -1825,7 +1848,7 @@
       DEVICE_FLAG_BROKEN_SET_OBJECT_PROPLIST },
   // Reported by Rodrigo Angelo Rafael
   // Razr D1, D3
-  { "Motorola", 0x22b8, "Rarz D1/D3 (MTP)", 0x64b5,
+  { "Motorola", 0x22b8, "Razr D1/D3/i (MTP)", 0x64b5,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Brian Dolbec <dol-sen@users.sourceforge.net>
   { "Motorola", 0x22b8, "Atrix MB860 (MTP)", 0x7088,
@@ -1859,12 +1882,14 @@
   // "carried by C Spire and other CDMA US carriers"
   { "Motorola", 0x22b8, "Milestone X2", 0x70ca,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Motorola", 0x22b8, "XT890/907 (MTP)", 0x710d,
+  { "Motorola", 0x22b8, "XT890/907/Razr (MTP)", 0x710d,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Motorola", 0x22b8, "XT890/907 (MTP+ADB)", 0x710e,
+  { "Motorola", 0x22b8, "XT890/907/Razr (MTP+ADB)", 0x710e,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Motorola", 0x22b8, "XT890/907 (MTP+?)", 0x710f,
-      DEVICE_FLAGS_ANDROID_BUGS },
+  /*
+   * XT890/907/Razr
+   * 710f is USB mass storage
+   */
 
   /*
    * Google
@@ -1872,7 +1897,7 @@
    * road to produce an Android tablet it seems... The Vendor ID
    * was originally used for Nexus phones
    */
-  { "Google Inc (for Unknown)", 0x18d1, "Unknown", 0x0006,
+  { "Google Inc (for Allwinner)", 0x18d1, "A31 SoC", 0x0006,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Google Inc (for Ainol Novo)", 0x18d1, "Fire/Flame", 0x0007,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -1900,10 +1925,10 @@
   { "Google Inc (for Asus)", 0x18d1, "Nexus 7 (MTP+ADB)", 0x4e42,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Google Inc (for LG Electronics/Samsung)", 0x18d1,
-      "Nexus 4/10 (MTP)", 0x4ee1,
+      "Nexus 4/5/7/10 (MTP)", 0x4ee1,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Google Inc (for LG Electronics/Samsung)", 0x18d1,
-      "Nexus 4/10 (MTP+ADB)", 0x4ee2,
+      "Nexus 4/5/7/10 (MTP+ADB)", 0x4ee2,
       DEVICE_FLAGS_ANDROID_BUGS },
   // WiFi-only version of Xoom
   // See: http://bugzilla.gnome.org/show_bug.cgi?id=647506
@@ -2057,7 +2082,13 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "TF700 Transformer (MTP+ADB)", 0x4c91,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Asus", 0x0b05, "ME301T MeMo Pad Smart 10", 0x4cd0,
+  { "Asus", 0x0b05, "ME301T MeMo Pad Smart 10 (MTP)", 0x4cd0,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "ME301T MeMo Pad Smart 10 (MTP+ADB)", 0x4cd1,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "Asus Fonepad Note 6 (MTP)", 0x4ce0,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "Asus Fonepad Note 6 (MTP+ADB)", 0x4ce1,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "TF201 Transformer Prime (keyboard dock)", 0x4d00,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2089,6 +2120,8 @@
   { "Asus", 0x0b05, "Memo ME172V (MTP)", 0x5400,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "Memo ME173X (MTP)", 0x5410,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "Memo ME173X (MTP+ADB)", 0x5411,
       DEVICE_FLAGS_ANDROID_BUGS },
 
 
@@ -2122,14 +2155,12 @@
 
   /*
    * Huawei
+   * IDs used by Honor U8860,U8815,U9200,P2
    */
-  // Reported by anonymous SourceForge user
-  { "Huawei", 0x12d1, "Honor U8860", 0x1051,
+  { "Huawei", 0x12d1, "MTP device (ID1)", 0x1051,
       DEVICE_FLAGS_ANDROID_BUGS },
-  // Reported by anonymous SourceForge user
-  { "Huawei", 0x12d1, "U8815/U9200", 0x1052,
+  { "Huawei", 0x12d1, "MTP device (ID2)", 0x1052,
       DEVICE_FLAGS_ANDROID_BUGS },
-  // Reported by anonymous SourceForge user
   { "Huawei", 0x12d1, "Mediapad (mode 0)", 0x360f,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Bearsh <bearsh@users.sourceforge.net>
@@ -2207,23 +2238,32 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "Droid DNA (MTP+UMS)", 0x0ebd,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (ID2)", 0x0f63,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One (MTP+ADB)", 0x0f87,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One (ID3)", 0x0f91,
       DEVICE_FLAGS_ANDROID_BUGS },
-  // These identify themselves as "cm_tenderloin", fun...
-  // Done by HTC for HP I guess.
-  { "Hewlett-Packard", 0x0bb4, "HP Touchpad (MTP)", 0x685c,
-      DEVICE_FLAGS_ANDROID_BUGS },
-  { "Hewlett-Packard", 0x0bb4, "HP Touchpad (MTP+ADB)", 0x6860,
-      DEVICE_FLAGS_ANDROID_BUGS },
 #if 0
-  // Apparently also used by a clone called Jiayu G2S
-  // with the MTK6577T chipset
-  // http://www.ejiayu.com/en/Product-19.html with
+  /*
+   * This had to be commented out - the same VID+PID is used also for
+   * other modes than MTP, so we need to let mtp-probe do its job on this
+   * device instead of adding it to the database.
+   *
+   * Apparently also used by a clone called Jiayu G2S
+   * with the MTK6577T chipset
+   * http://www.ejiayu.com/en/Product-19.html
+   * Wiko Cink Peax 2
+   */
   { "HTC", 0x0bb4, "Android Device ID2 (Zopo, HD2...)", 0x2008,
       DEVICE_FLAGS_ANDROID_BUGS },
 #endif
+  // These identify themselves as "cm_tenderloin", fun...
+  // Done by HTC for HP I guess.
+  { "HTC (for Hewlett-Packard)", 0x0bb4, "HP Touchpad (MTP)", 0x685c,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC (for Hewlett-Packard)", 0x0bb4, "HP Touchpad (MTP+ADB)", 0x6860,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "Windows Phone 8s ID1", 0xf0ca,
       DEVICE_FLAG_NONE },
 
@@ -2233,6 +2273,7 @@
    */
   { "NEC", 0x0409, "FOMA N01A", 0x0242, DEVICE_FLAG_NONE },
   { "NEC", 0x0409, "Casio C811", 0x0326, DEVICE_FLAG_NONE },
+  { "NEC", 0x0409, "Casio CA-201L", 0x0432, DEVICE_FLAG_NONE },
 
   /*
    * nVidia
@@ -2250,10 +2291,15 @@
 
   /*
    * Vizio
+   * Reported by:
+   * Michael Gurski <gurski@users.sourceforge.net>
    */
-  { "Vizio", 0x0489, "Unknown 1", 0xc026, DEVICE_FLAGS_ANDROID_BUGS },
-  // Reported by Michael Gurski <gurski@users.sourceforge.net>
-  { "Vizio", 0x0489, "VTAB1008", 0xe040, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Vizio", 0x0489, "Unknown 1", 0xc026,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Vizio", 0x0489, "VTAB1008", 0xe040,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Vizio (for Lenovo)", 0x0489, "LIFETAB S9714", 0xe111,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
 
   /*
@@ -2266,6 +2312,8 @@
   { "Amazon", 0x1949, "Kindle Fire (ID2)", 0x0008,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Kindle Fire (ID3)", 0x000a,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Amazon", 0x1949, "Kindle Fire (ID4)", 0x000c,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2310,6 +2358,8 @@
   /*
    * Xiaomi
    */
+  { "Xiaomi", 0x2717, "Mi-3 (MTP)", 0x0368,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP+ADB)", 0x9039,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP)", 0xf003,
@@ -2339,7 +2389,7 @@
    */
   { "Alcatel", 0x1bbb, "One Touch 997D", 0x2008,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "TCT", 0x1bbb, "TCL S950", 0x0167,
+  { "Alcatel/TCT", 0x1bbb, "6010D/TCL S950", 0x0167,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Alcatel", 0x1bbb, "6030a", 0x0168,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2368,6 +2418,12 @@
    * MediaTek Inc.
    */
   { "MediaTek Inc", 0x0e8d, "MT510R", 0x0050,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * Jolla
+   */
+  { "Jolla", 0x2931, "Sailfish", 0x0a01,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
