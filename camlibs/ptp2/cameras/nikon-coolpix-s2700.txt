@@ -1,0 +1,42 @@
+Thumbnails: yes
+Capture image: yes
+Delete items: yes
+Upload items: yes
+Create directories: yes
+Delete Directories: yes
+
+	Manufacturer: Nikon Corporation
+	Model: S2700
+	Version: COOLPIX S2700 V1.0
+	Vendor Extension ID: 0xa (1.0)
+	Vendor Extension Description: microsoft.com: 1.0;
+
+Capture Formats: JPEG
+Display Formats: Undefined Type, Association/Directory, Defined Type, JPEG, DPOF, MS AVI, Apple Quicktime, MS Wave
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+	store_00010001:
+		StorageDescription: S2700
+		VolumeLabel: None
+		Storage Type: Removable RAM (memory card)
+		Filesystemtype: Digital Camera Layout (DCIM)
+		Access Capability: Read-Write
+		Maximum Capability: 7939817472 (7572 MB)
+		Free Space (Bytes): 7932936192 (7565 MB)
+		Free Space (Images): 1531
+
+Device Property Summary:
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5,6,7] value: 6
+Date & Time(0x5011):(readwrite) (type=0xffff) '20131217T203137'
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Automatic flash (1)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Focal Length(0x5008):(read only) (type=0x6) Enumeration [3500,4600,5300,6100,7300,8600,10500] value: 35 mm (3500)
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
+Property 0xd303:(read only) (type=0x2) 1
