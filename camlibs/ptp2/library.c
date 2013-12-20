@@ -969,11 +969,15 @@ static struct {
 	/* Borja Latorre <borja.latorre@csic.es> */
 	{"Nikon:Coolpix S3200",		  0x04b0, 0x0334, PTP_CAP},
 
-	/* Jeremy Harkcom <jeremy@harkcom.co.uk> */
-	{"Nikon:Coolpix L27",		  0x04b0, 0x0343, PTP_CAP},
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},
+
+	/* https://sourceforge.net/p/gphoto/bugs/971/ */
+	{"Nikon:Coolpix S2700", 	  0x04b0, 0x033f, PTP_CAP},
+
+	/* Jeremy Harkcom <jeremy@harkcom.co.uk> */
+	{"Nikon:Coolpix L27",		  0x04b0, 0x0343, PTP_CAP},
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S02",  		  0x04b0, 0x0346, PTP_CAP},
