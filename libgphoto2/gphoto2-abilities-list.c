@@ -169,7 +169,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	CameraLibraryAbilitiesFunc ab;
 	CameraText text;
 	int ret, x, old_count, new_count;
-	unsigned int i, p;
+	int i, p;
 	const char *filename;
 	CameraList *flist;
 	int count;

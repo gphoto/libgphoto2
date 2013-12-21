@@ -422,7 +422,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   unsigned char *imagedata,*exifimg,*newimg,*curptr;
   unsigned int entry;
   long dataptr,dsize,tag,datvec,tmp;
-  int i,j;
+  unsigned int i,j;
 
   exif_debug=1;
   if (exif_parse_data(exifdat)<0) return(NULL);
