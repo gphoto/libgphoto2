@@ -183,7 +183,7 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 	char *curline, *result;
 	int x = HEXDUMP_INIT_X;
 	int y = HEXDUMP_INIT_Y;
-	int index;
+	unsigned int index;
 	unsigned char value;
 
 	if (!data) {
@@ -262,7 +262,7 @@ void
 gp_logv (GPLogLevel level, const char *domain, const char *format,
 	 va_list args)
 {
-	int i;
+	unsigned int i;
 #ifdef HAVE_VA_COPY
 	va_list xargs;
 #else

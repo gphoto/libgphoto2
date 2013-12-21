@@ -139,7 +139,7 @@ gp_port_info_list_free (GPPortInfoList *list)
 	CHECK_NULL (list);
 
 	if (list->info) {
-		int i;
+		unsigned int i;
 
 		for (i=0;i<list->count;i++) {
 			free (list->info[i]->name);
@@ -179,7 +179,7 @@ gp_port_info_list_free (GPPortInfoList *list)
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
-	int generic, i;
+	unsigned int generic, i;
 	GPPortInfo *new_info;
 
 	CHECK_NULL (list);
@@ -324,7 +324,7 @@ gp_port_info_list_load (GPPortInfoList *list)
 int
 gp_port_info_list_count (GPPortInfoList *list)
 {
-	int count, i;
+	unsigned int count, i;
 
 	CHECK_NULL (list);
 
@@ -365,7 +365,8 @@ gp_port_info_list_count (GPPortInfoList *list)
 int
 gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
-	int i, result, generic;
+	unsigned int i;
+	int result, generic;
 	regex_t pattern;
 #ifdef HAVE_GNU_REGEX
 	const char *rv;
@@ -467,7 +468,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 int
 gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 {
-	int i, generic;
+	unsigned int i, generic;
 
 	CHECK_NULL (list && name);
 
