@@ -51,7 +51,7 @@ void gpi_jpeg_chunk_print(chunk *mychunk);
 
 char  gpi_jpeg_findff(int *location, chunk *picture);
 char  gpi_jpeg_findactivemarker(char *id, int *location, chunk *picture);
-char *gpi_jpeg_markername(int c);
+char *gpi_jpeg_markername(unsigned int c);
 
 jpeg *gpi_jpeg_new        (void);
 void  gpi_jpeg_destroy    (jpeg *myjpeg);

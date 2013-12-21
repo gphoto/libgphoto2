@@ -128,9 +128,9 @@ char gpi_jpeg_findactivemarker(char *id, int *location, chunk *picture)
     return 0;
 }
 
-char *gpi_jpeg_markername(int c)
+char *gpi_jpeg_markername(unsigned int c)
 {
-    int x;
+    unsigned int x;
 /*    printf("searching for marker %X in list\n",c); */
 /*    printf("%i\n", sizeof(markers)); */
     for (x=0; x<countof(JPEG_MARKERS); x++)
