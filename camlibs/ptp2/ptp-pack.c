@@ -1201,13 +1201,18 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 static inline void
 ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPContainer *ec, unsigned int len)
 {
-	int	length;
+	unsigned int	length;
 	int	type;
 
 	if (data==NULL)
 		return;
 	memset(ec,0,sizeof(*ec));
+
 	length=dtoh32a(&data[PTP_ec_Length]);
+	if (length > len) {
+		ptp_debug (params, "length %d in container, but data only %d bytes?!", length, len);
+		return;
+	}
 	type = dtoh16a(&data[PTP_ec_Type]);
 
 	ec->Code=dtoh16a(&data[PTP_ec_Code]);
