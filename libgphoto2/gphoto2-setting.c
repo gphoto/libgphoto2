@@ -134,7 +134,7 @@ verify_settings (char *settings_file)
 {
 	FILE *f;
 	char buf[1024];
-	int x, equals;
+	unsigned int x, equals;
 
 	if ((f=fopen(settings_file, "r"))==NULL) {
 		GP_DEBUG ("Can't open settings file for reading");
