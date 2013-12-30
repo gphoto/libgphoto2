@@ -24,6 +24,12 @@
 
 /* currently this file is included into ptp.c */
 
+#ifdef HAVE_LIMITS_H
+#include <limits.h>
+#endif
+#ifndef UINT_MAX
+# define UINT_MAX 0xFFFFFFFF
+#endif
 #ifdef HAVE_ICONV
 #include <iconv.h>
 #endif
@@ -257,6 +263,8 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, uint16_t offse
 	uint32_t n, i=0;
 
 	n=dtoh32a(&data[offset]);
+	if (n >= UINT_MAX/sizeof(uint32_t))
+		return 0;
 	*array = malloc (n*sizeof(uint32_t));
 	while (n>i) {
 		(*array)[i]=dtoh32a(&data[offset+(sizeof(uint32_t)*(i+1))]);
@@ -283,6 +291,8 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, uint16_t offse
 	uint32_t n, i=0;
 
 	n=dtoh32a(&data[offset]);
+	if (n >= UINT_MAX/sizeof(uint16_t))
+		return 0;
 	*array = malloc (n*sizeof(uint16_t));
 	while (n>i) {
 		(*array)[i]=dtoh16a(&data[offset+(sizeof(uint16_t)*(i+2))]);
@@ -654,12 +664,14 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 }
 
 #define RARR(val,member,func)	{			\
-	unsigned int n,j;					\
+	unsigned int n,j;				\
 	if (total - *offset < sizeof(uint32_t))		\
 		return 0;				\
 	n = dtoh32a (&data[*offset]);			\
 	*offset += sizeof(uint32_t);			\
 							\
+	if (n >= UINT_MAX/sizeof(val->a.v[0]))		\
+		return 0;				\
 	val->a.count = n;				\
 	val->a.v = malloc(sizeof(val->a.v[0])*n);	\
 	if (!val->a.v) return 0;			\
@@ -1573,6 +1585,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 			}
 			if (! propxcnt)
+				break;
+			if (propxcnt >= 2<<16) /* buggy or exploit */
 				break;
 
 			ptp_debug (params, "event %d: propxtype is %x, prop is 0x%04x, data type is 0x%04x, propxcnt is %d.",
