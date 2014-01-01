@@ -3389,11 +3389,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				usleep(10000); /* 10 ms  ... fixme: perhaps experimental backoff? */
 				continue;
 			}
-			if (ret != PTP_RC_OK) {
-				gp_context_error (context, _("Canon Capture failed: %x"), ret);
-				return translate_ptp_result (ret);
-			}
-			return GP_OK;
+			gp_context_error (context, _("Canon Capture failed: %x"), ret);
+			return translate_ptp_result (ret);
 		}
 		gp_log (GP_LOG_DEBUG, "ptp/trigger_capture", "Canon Powershot capture triggered...");
 		return GP_OK;
