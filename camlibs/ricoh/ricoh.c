@@ -830,7 +830,7 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 	if (strlen (name) > 12) {
 		gp_context_error (context, _("The filename's length must not "
 			"exceed 12 characters ('%s' has %i characters)."),
-			name, strlen (name));
+			name, (int)strlen (name));
 		return (GP_ERROR);
 	}
 
