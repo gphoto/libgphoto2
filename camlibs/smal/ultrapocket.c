@@ -232,7 +232,7 @@ ultrapocket_getrawpicture(Camera *camera, GPContext *context,
 	imgstart = 0x29;
 	break;
      default:
-	break;
+        return GP_ERROR;
     }
 
    tile = BAYER_TILE_BGGR;
