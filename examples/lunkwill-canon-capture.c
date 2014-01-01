@@ -28,7 +28,7 @@ static void errordumper(GPLogLevel level, const char *domain, const char *str,
   struct timeval tv;
 
   gettimeofday (&tv, NULL);
-  fprintf(stdout, "%d.%d: %s\n", tv.tv_sec, tv.tv_usec, str);
+  fprintf(stdout, "%d.%d: %s\n", (int)tv.tv_sec, (int)tv.tv_usec, str);
 }
 
 /* This seems to have no effect on where images go
