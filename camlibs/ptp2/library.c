@@ -2155,7 +2155,13 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					return GP_ERROR;
 				} else {
 					if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
-						usleep (1300);
+						/* frames/second rate vs compute power drainage ... polling
+						 * makes the camera too busy to do other tasks and they take
+						 * longer. */
+						if (tries < 98)
+							usleep (2000);
+						else
+							usleep (1300);
 						continue;
 					}
 					gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "get_viewfinder_image failed: 0x%x", ret);
