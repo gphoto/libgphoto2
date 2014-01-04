@@ -775,6 +775,9 @@ static struct {
 	/* Mike Breeuwer <info@mikebreeuwer.com> */
 	{"Sony:SLT-A99v", 	      0x054c, 0x0675, 0},
 
+	/* Ramon Carlos Garcia Bruna <ramongarciabruna@gmail.com> */
+	{"Sony:NEX-6", 	      	      0x054c, 0x0678, 0},
+
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX300 (PTP mode)", 0x054c, 0x06ee, 0},
 
