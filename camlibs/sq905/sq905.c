@@ -91,10 +91,12 @@ sq_init (GPPort *port, CameraPrivateLibrary *priv)
 	/* The first occurence of a zero denotes end of files entries (here clips count as 1 entry) */
 	for (i=0; i<0x4000 && catalog[i]; i+=16) ;
 	priv->nb_entries = i>>4;
-	catalog_tmp = realloc(catalog, i);
 	if (i) {
-	if (catalog_tmp) priv->catalog = catalog_tmp;
-	else priv->catalog = catalog;
+		catalog_tmp = realloc(catalog, i);
+		if (catalog_tmp)
+			priv->catalog = catalog_tmp;
+		else
+			priv->catalog = catalog;
 	} else {
 		priv->catalog = NULL;	/* We just have freed catalog_tmp */
 	}
