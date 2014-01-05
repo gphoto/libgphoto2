@@ -298,14 +298,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_mime_type (file, GP_MIME_AVI);
 			frame_data = malloc(frame_size);
 			if (!frame_data) {
-				free (frame_data);
 				return -1;
 			}
 			size = (numframes)*(3*frame_size+ 8) + 224;
 			GP_DEBUG("size = %i\n", size);
 			avi = malloc(224);
 			if (!avi) {
-				free(avi); 
+				free(frame_data);
 				return -1;
 			}
 			GP_DEBUG("avi malloc'ed\n");
@@ -328,7 +327,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			avi[0x8c] = numframes&0xff;
 			ptr=malloc(3*frame_size+8);
 			if(!ptr) {
-				free(ptr);
+				free(frame_data);
+				free(avi);
 				return GP_ERROR_NO_MEMORY;
 			}
 			GP_DEBUG("avi hdr written\n");
