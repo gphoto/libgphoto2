@@ -949,6 +949,10 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
             DPRINT("only got %d bytes\n", n);
             return PSLR_READ_ERROR;
         }
+        CHECK(read_result(p, buf, n));
+#ifdef DEBUG
+        ipslr_status_diff(buf);
+#endif
         memset(status, 0, sizeof(*status));
         status->bufmask = get_uint32(&buf[0x10]);
         status->set_shutter_speed.nom = get_uint32(&buf[0x80]);
