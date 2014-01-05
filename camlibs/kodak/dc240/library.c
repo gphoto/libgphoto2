@@ -381,8 +381,7 @@ read_data_read_again:
     }
     gp_context_progress_stop (context, id);
     /* Read in command completed */
-    dc240_wait_for_completion(camera);
-    return (GP_OK);
+    return dc240_wait_for_completion(camera);
 }
 
 
