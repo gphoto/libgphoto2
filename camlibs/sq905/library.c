@@ -397,6 +397,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
 		gp_file_set_data_and_size (file, (char *)ppm, size);
+		free (rawdata);
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
 		size = w*h/comp_ratio;
