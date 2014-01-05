@@ -90,10 +90,13 @@ static int l859_connect(Camera *camera) {
 
 	GPPortSettings settings;
 	uint8_t	bps;
+	int ret;
 
 	GP_DEBUG ("Connecting to a camera.");
 
-	l859_sendcmd(camera, L859_CMD_CONNECT);
+	ret = l859_sendcmd(camera, L859_CMD_CONNECT);
+	if (ret < GP_OK)
+		return ret;
 	if (l859_retrcmd(camera) == GP_ERROR) {
 		if (l859_sendcmd(camera, L859_CMD_RESET) != GP_OK)
 			return GP_ERROR;
@@ -115,6 +118,7 @@ static int l859_connect(Camera *camera) {
 			break;
 		default:
 			bps = L859_CMD_SPEED_DEFAULT;
+			break;
 	}
 
 	if (bps != L859_CMD_SPEED_DEFAULT) {
