@@ -745,11 +745,11 @@ gp_camera_init (Camera *camera, GPContext *context)
 			"port nor model set. Trying auto-detection...");
 
 		/* Call auto-detect and choose the first camera */
-		gp_abilities_list_new (&al);
-		gp_abilities_list_load (al, context);
-		gp_port_info_list_new (&il);
-		gp_port_info_list_load (il);
-		gp_abilities_list_detect (al, il, list, context);
+		CRSL (camera, gp_abilities_list_new (&al), context, list);
+		CRSL (camera, gp_abilities_list_load (al, context), context, list);
+		CRSL (camera, gp_port_info_list_new (&il), context, list);
+		CRSL (camera, gp_port_info_list_load (il), context, list);
+		CRSL (camera, gp_abilities_list_detect (al, il, list, context), context, list);
 		if (!gp_list_count (list)) {
 			gp_abilities_list_free (al);
 			gp_port_info_list_free (il);
@@ -759,9 +759,9 @@ gp_camera_init (Camera *camera, GPContext *context)
 			return (GP_ERROR_MODEL_NOT_FOUND);
 		}
 		p = 0;
-		gp_port_get_info (camera->port, &info);
-		gp_port_info_get_path (info, &ppath);
-		gp_port_info_get_type (info, &ptype);
+		CRSL (camera, gp_port_get_info (camera->port, &info), context, list);
+		CRSL (camera, gp_port_info_get_path (info, &ppath), context, list);
+		CRSL (camera, gp_port_info_get_type (info, &ptype), context, list);
 		/* if the port was set before, then use that entry, but not if it is "usb:" */
 		if ((ptype == GP_PORT_USB) && strlen(ppath) && strcmp(ppath, "usb:")) {
 			for (p = gp_list_count (list);p--;) {
@@ -772,7 +772,10 @@ gp_camera_init (Camera *camera, GPContext *context)
 					break;
 			}
 			if (p<0) {
+				gp_abilities_list_free (al);
+				gp_port_info_list_free (il);
 				gp_context_error (context, _("Could not detect any camera at port %s"), ppath);
+				gp_list_free (list);
 				return (GP_ERROR_FILE_NOT_FOUND);
 			}
 		}
