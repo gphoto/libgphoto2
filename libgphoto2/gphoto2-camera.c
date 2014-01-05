@@ -777,14 +777,16 @@ gp_camera_init (Camera *camera, GPContext *context)
 			}
 		}
 
-		gp_list_get_name  (list, p, &model);
+		CRSL (camera, gp_list_get_name  (list, p, &model), context, list);
 		m = gp_abilities_list_lookup_model (al, model);
-		gp_abilities_list_get_abilities (al, m, &a);
+		CRSL (camera, m, context, list);
+		CRSL (camera, gp_abilities_list_get_abilities (al, m, &a), context, list);
 		gp_abilities_list_free (al);
 		CRSL (camera, gp_camera_set_abilities (camera, a), context, list);
 		CRSL (camera, gp_list_get_value (list, p, &port), context, list);
 		p = gp_port_info_list_lookup_path (il, port);
-		gp_port_info_list_get_info (il, p, &info);
+		CRSL (camera, p, context, list);
+		CRSL (camera, gp_port_info_list_get_info (il, p, &info), context, list);
 		CRSL (camera, gp_camera_set_port_info (camera, info), context, list);
 		gp_port_info_list_free (il);
 		gp_list_free (list);
