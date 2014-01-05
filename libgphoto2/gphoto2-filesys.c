@@ -519,7 +519,11 @@ append_folder_one (
 
 	gp_log (GP_LOG_DEBUG, "gphoto2-filesystem", "Append one folder %s", name);
 	CHECK_MEM (f = calloc(sizeof(CameraFilesystemFolder),1));
-	CHECK_MEM (f->name = strdup (name));
+	f->name = strdup (name);
+	if (!f->name) {
+		free (f);
+		return GP_ERROR_NO_MEMORY;
+	}
 	f->files_dirty = 1;
 	f->folders_dirty = 1;
 
