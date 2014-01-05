@@ -577,14 +577,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_EXIF:
-		sierra_get_size(camera, 13, n, &download_size, context);
+		CHECK_STOP (camera, sierra_get_size(camera, 13, n, &download_size, context));
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		sierra_get_size(camera, 12, n, &download_size, context);
+		CHECK_STOP (camera, sierra_get_size(camera, 12, n, &download_size, context));
 		break;
 	case GP_FILE_TYPE_AUDIO:
-		sierra_get_string_register (camera, 43, n, NULL,
-			(unsigned char *) &audio_info, &transferred, context);
+		CHECK_STOP (camera, sierra_get_string_register (camera, 43, n, NULL,
+			(unsigned char *) &audio_info, &transferred, context));
 		if (transferred == 0) 
 			download_size = 0;
 		else
