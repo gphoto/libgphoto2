@@ -308,21 +308,20 @@ static int camera_summary(Camera *camera, CameraText *summary,
     soundvision_reset(camera->pl,revision,NULL);
    
     if (camera->pl->device_type==SOUNDVISION_TIGERFASTFLICKS) {
-       
-       int mem_total,mem_free,num_pics;
-       tiger_get_mem(camera->pl,&num_pics,&mem_total,&mem_free);
+       int mem_total,mem_free,num_pics, ret;
+
+       ret = tiger_get_mem(camera->pl,&num_pics,&mem_total,&mem_free);
+       if (ret < GP_OK)
+           return ret;
        
        sprintf(summary->text, _("Firmware Revision: %8s\n"
 				"Pictures:     %i\n"
 				"Memory Total: %ikB\n"
 				"Memory Free:  %ikB\n"),
 				revision,num_pics,mem_total,mem_free);
-    }
-   
-    else {
+    } else {
 	sprintf(summary->text, _("Firmware Revision: %8s"), revision);
     }
-   
     return GP_OK;
 }
 
@@ -347,6 +346,8 @@ static int camera_capture (Camera *camera, CameraCaptureType type,
     }
     else return GP_ERROR_NOT_SUPPORTED;
 
+    if (result < GP_OK)
+       return result;
    
     soundvision_get_file_list(camera->pl);
    
@@ -356,13 +357,8 @@ static int camera_capture (Camera *camera, CameraCaptureType type,
       
     strcpy (path->name,camera->pl->file_list);
     strcpy (path->folder, "/");
-	  
-	  
 /*    gp_filesystem_append (camera->fs, path->folder,
 			  path->name, context);*/
-
-
-    
     return GP_OK;
 }
 
