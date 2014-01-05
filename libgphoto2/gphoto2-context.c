@@ -452,6 +452,8 @@ gp_context_question (GPContext *context, const char *format, ...)
 	if (context && context->question_func)
 		feedback = context->question_func (context, str, context->question_func_data);
 
+	free (str);
+
 	return feedback;
 }
 
