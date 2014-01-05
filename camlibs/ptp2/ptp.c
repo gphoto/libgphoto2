@@ -489,7 +489,7 @@ traverse_tree (PTPParams *params, int depth, xmlNodePtr node) {
 
 
 	if (!node) return 0;
-	xx = malloc(depth * 4 + 1);
+	xx = malloc (depth * 4 + 1);
 	memset (xx, ' ', depth*4);
 	xx[depth*4] = 0;
 
@@ -503,6 +503,7 @@ traverse_tree (PTPParams *params, int depth, xmlNodePtr node) {
 		fprintf(stderr,"%scontent %s\n", xx,xchar);
 		traverse_tree (params, depth+1,xmlFirstElementChild (next));
 	} while ((next = xmlNextElementSibling (next)));
+	free (xx);
 	return PTP_RC_OK;
 }
 
