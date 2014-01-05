@@ -458,6 +458,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
       fprintf(stderr,"Too few ifds, doesn't look right. Giving up\n");
     }
     *size = 0;
+    free(newimg);
     return(NULL); /* Things don't look right...*/
   }
 
@@ -481,6 +482,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
     if (dsize==-1){
       fprintf(stderr,"No Jpeg size tag for thumbnail, skipping\n");
       *size = 0;
+      free(newimg);
       return(NULL);
     }
     imagedata=exifdat->data+tmp;
@@ -494,6 +496,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   if (tmp==-1) {
     fprintf(stderr,"gpe_get_thumbnail: Tiff or jpeg data not found, skipping\n");
     *size = 0;
+    free(newimg);
     return(NULL);
   }
   imagedata=exifdat->data+tmp;
@@ -502,6 +505,7 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
   if (dataptr==-1) {
     printf("Split two\n");
     *size = 0;
+    free(newimg);
     return(NULL);
   }
 
