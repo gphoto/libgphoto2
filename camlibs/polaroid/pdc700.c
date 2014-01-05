@@ -392,7 +392,7 @@ pdc700_baud (Camera *camera, int baud, GPContext *context)
 {
 	unsigned char cmd[6];
 	unsigned char buf[2048];
-	int buf_len;
+	int buf_len = 0;
 
 	cmd[3] = PDC700_BAUD;
 	switch (baud) {
@@ -422,7 +422,7 @@ pdc700_baud (Camera *camera, int baud, GPContext *context)
 static int
 pdc700_init (Camera *camera, GPContext *context)
 {
-	int buf_len;
+	int buf_len = 0;
 	unsigned char cmd[5];
 	unsigned char buf[2048];
 
@@ -436,7 +436,7 @@ static int
 pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info,
 		GPContext *context)
 {
-	int buf_len;
+	int buf_len = 0;
 	unsigned char cmd[7];
 	unsigned char buf[2048];
 
@@ -492,7 +492,7 @@ pdc700_config (Camera *camera, PDCConf conf, unsigned char value, GPContext *con
 {
 	unsigned char cmd[12];
 	unsigned char buf[512];
-	int buf_len;
+	int buf_len = 0;
 
 	cmd[3] = PDC700_CONFIG;
 	cmd[4] = conf;
@@ -507,7 +507,7 @@ pdc700_config (Camera *camera, PDCConf conf, unsigned char value, GPContext *con
 static int
 pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 {
-	int buf_len;
+	int buf_len = 0;
 	unsigned char buf[2048];
 	unsigned char cmd[5];
 
@@ -623,7 +623,7 @@ pdc700_set_date (Camera *camera, time_t time, GPContext *context)
 {
 	unsigned char cmd[15];
 	unsigned char buf[512];
-	int buf_len;
+	int buf_len = 0;
 	struct tm *tm;
 	PDCInfo info;
 
@@ -649,7 +649,7 @@ static int
 pdc700_capture (Camera *camera, GPContext *context)
 {
         unsigned char cmd[5], buf[1024];
-        unsigned int buf_len;
+        unsigned int buf_len = 0;
 	int r = 0;
 	int try;
 	PDCInfo info;
@@ -707,7 +707,7 @@ static int
 pdc700_delete (Camera *camera, unsigned int n, GPContext *context)
 {
 	unsigned char cmd[6], buf[1024];
-	unsigned int buf_len;
+	unsigned int buf_len = 0;
 
 	cmd[3] = PDC700_DEL;
 	cmd[4] = n;
