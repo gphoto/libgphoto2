@@ -447,7 +447,10 @@ unsigned char *gpi_exif_get_thumbnail_and_size(exifparser *exifdat, long *size) 
       gpi_exif_get_field( EXIF_Model, -1, exifdat, &owner);
       printf("Camera model: %s\n",owner.data);
       printf("Comment for this picture (%d chars)",gpi_exif_get_comment( exifdat, &comment));
-      if (comment) printf(" -> %s\n",comment);
+      if (comment) { 
+          printf(" -> %s\n",comment);
+          free(comment);
+      }
       gpi_exif_get_field( EXIF_SubjectDistance, 2, exifdat, &owner);
       /*      dump_exif(exifdat);       */
   }
