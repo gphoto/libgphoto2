@@ -305,7 +305,7 @@ ax203_eeprom_device_identification(Camera *camera, char *buf)
 {
 	char cmd = SPI_EEPROM_RDID;
 
-	return ax203_send_eeprom_cmd (camera, 0, &cmd, 1, buf, 4, 0);
+	return ax203_send_eeprom_cmd (camera, 0, &cmd, 1, buf, 64, 0);
 }
 
 static int
