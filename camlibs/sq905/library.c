@@ -384,7 +384,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		GP_DEBUG ("size = %i\n", size);
 		if (comp_ratio>1) {
 			rawdata = malloc (w*h);
-			if (!rawdata) return GP_ERROR_NO_MEMORY;
+			if (!rawdata) {
+				free (ppm);
+				return GP_ERROR_NO_MEMORY;
+			}
 			sq_decompress (camera->pl->model, rawdata,
 						frame_data, w, h);
 			gp_gamma_fill_table (gtable, .65); 
@@ -397,7 +400,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		gp_file_set_mime_type (file, GP_MIME_PPM);
 		gp_file_set_data_and_size (file, (char *)ppm, size);
-		free (rawdata);
+		if (rawdata != frame_data) free (rawdata);
 
 	} else {	/* type is GP_FILE_TYPE_RAW */
 		size = w*h/comp_ratio;
