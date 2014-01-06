@@ -80,6 +80,19 @@
         }                                                               \
     } while (0)
 
+typedef enum {
+    PSLR_BUFFER_SEGMENT_LAST = 2,
+    PSLR_BUFFER_SEGMENT_INNER = 3,
+    PSLR_BUFFER_SEGMENT_OFFS = 4,
+} pslr_segment_type_t;
+
+typedef struct {
+    uint32_t a;
+    uint32_t type;
+    uint32_t addr;
+    uint32_t length;
+} pslr_buffer_segment_info;
+
 typedef struct {
     uint32_t offset;
     uint32_t addr;
@@ -552,33 +565,31 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
     while (retry < 3) {
         /* If we get response 0x82 from the camera, there is a
          * desynch. We can recover by stepping through segment infos
-         * until we get the last one (b = 2). Retry up to 3 times. */
+         * until we get the last one (type = 2). Retry up to 3 times. */
         ret = ipslr_select_buffer(p, bufno, buftype, bufres);
         if (ret == PSLR_OK)
             break;
 
         retry++;
         retry2 = 0;
-        /* Try up to 9 times to reach segment info type 2 (last
-         * segment) */
         do {
             CHECK(ipslr_buffer_segment_info(p, &info));
             CHECK(ipslr_next_segment(p));
-            DPRINT("Recover: b=%d\n", info.b);
-        } while (++retry2 < 10 && info.b != 2);
+            DPRINT("Recover: type=%d\n", info.type);
+        } while (++retry2 < 10 && info.type != PSLR_BUFFER_SEGMENT_LAST);
     }
 
     if (retry == 3)
         return ret;
-    
+
     i = 0;
     j = 0;
     do {
         CHECK(ipslr_buffer_segment_info(p, &info));
-        DPRINT("%d: addr: 0x%x len: %d B=%d\n", i, info.addr, info.length, info.b);
-        if (info.b == 4)
+        DPRINT("%d: addr: 0x%x len: %d type=%d\n", i, info.addr, info.length, info.type);
+        if (info.type == PSLR_BUFFER_SEGMENT_OFFS)
             p->segments[j].offset = info.length;
-        else if (info.b == 3) {
+        else if (info.type == PSLR_BUFFER_SEGMENT_INNER) {
             if (j == MAX_SEGMENTS) {
                 DPRINT("Too many segments.\n");
                 return PSLR_NO_MEMORY;
@@ -590,7 +601,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
         CHECK(ipslr_next_segment(p));
         buf_total += info.length;
         i++;
-    } while (i < 9 && info.b != 2);
+    } while (i < 9 && info.type != PSLR_BUFFER_SEGMENT_LAST);
     p->segment_count = j;
     p->offset = 0;
     return PSLR_OK;
@@ -1013,33 +1024,31 @@ static int ipslr_read_buffer(ipslr_handle_t *p, int bufno, int buftype, int bufr
     while (retry < 3) {
         /* If we get response 0x82 from the camera, there is a
          * desynch. We can recover by stepping through segment infos
-         * until we get the last one (b = 2). Retry up to 3 times. */
+         * until we get the last one (type = 2). Retry up to 3 times. */
         ret = ipslr_select_buffer(p, bufno, buftype, bufres);
         if (ret == PSLR_OK)
             break;
 
         retry++;
         retry2 = 0;
-        /* Try up to 9 times to reach segment info type 2 (last
-         * segment) */
         do {
             CHECK(ipslr_buffer_segment_info(p, &info[0]));
             CHECK(ipslr_next_segment(p));
-            DPRINT("Recover: b=%d\n", info[0].b);
-        } while (++retry2 < 10 && info[0].b != 2);
+            DPRINT("Recover: type=%d\n", info[0].type);
+        } while (++retry2 < 10 && info[0].type != PSLR_BUFFER_SEGMENT_LAST);
     }
 
     if (retry == 3)
         return ret;
-    
+
     i = 0;
     do {
         CHECK(ipslr_buffer_segment_info(p, &info[i]));
-        DPRINT("%d: addr: 0x%x len: %d B=%d\n", i, info[i].addr, info[i].length, info[i].b);
+        DPRINT("%d: addr: 0x%x len: %d type=%d\n", i, info[i].addr, info[i].length, info[i].type);
         CHECK(ipslr_next_segment(p));
         buf_total += info[i].length;
         i++;
-    } while (i < 9 && info[i-1].b != 2);
+    } while (i < 9 && info[i-1].type != PSLR_BUFFER_SEGMENT_LAST);
     num_info = i;
     DPRINT("Got total %d info\n", num_info);
     buf = malloc(buf_total);
@@ -1113,7 +1122,7 @@ static int ipslr_buffer_segment_info(ipslr_handle_t *p, pslr_buffer_segment_info
         return PSLR_READ_ERROR;
     CHECK(read_result(p, buf, 16));
     pInfo->a = get_uint32(&buf[0]);
-    pInfo->b = get_uint32(&buf[4]);
+    pInfo->type = get_uint32(&buf[4]);
     pInfo->addr = get_uint32(&buf[8]);
     pInfo->length = get_uint32(&buf[12]);
     return PSLR_OK;

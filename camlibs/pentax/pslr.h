@@ -184,13 +184,6 @@ typedef struct {
     uint32_t focused_af_point;             /* 0x150 */
 } pslr_status;
 
-typedef struct {
-    uint32_t a;
-    uint32_t b;
-    uint32_t addr;
-    uint32_t length;
-} pslr_buffer_segment_info;
-
 typedef void (*pslr_progress_callback_t)(uint32_t current, uint32_t total);
 
 #ifdef LIBGPHOTO2
