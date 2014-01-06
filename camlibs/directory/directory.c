@@ -374,6 +374,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				gp_context_error (context, _("Could not get information "
 							     "about '%s' (%s)."),
 						  buf, strerror(saved_errno));
+				gp_system_closedir (dir);
 				return GP_ERROR;
 			}
 			if (S_ISDIR (st.st_mode)) {
