@@ -1268,7 +1268,7 @@ static int get_status(ipslr_handle_t *p)
         CHECK(read_status(p, statusbuf));
         /*DPRINT("get_status->\n"); */
         /*hexdump(statusbuf, 8); */
-        if ((statusbuf[7] & 0x01) == 0)
+        if (!(statusbuf[7] & 0x01) || (statusbuf[7] & 0xfe))
             break;
         /*DPRINT("Waiting for ready - "); */
         /*hexdump(statusbuf, 8); */
