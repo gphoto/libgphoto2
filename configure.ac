@@ -88,8 +88,8 @@ dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
 	# CFLAGS="$CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"
-	CFLAGS="$CFLAGS -Wall -g -Wmissing-declarations -Wmissing-prototypes"
-	LDFLAGS="$LDFLAGS -g"
+	CFLAGS="$CFLAGS -Wall -Wmissing-declarations -Wmissing-prototypes"
+	LDFLAGS="$LDFLAGS"
 	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
 fi
 AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
