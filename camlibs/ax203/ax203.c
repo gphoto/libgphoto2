@@ -1754,10 +1754,10 @@ ax203_open_device(Camera *camera)
 	CHECK (ax203_eeprom_release_from_deep_powerdown (camera))
 	CHECK (ax203_eeprom_device_identification (camera, buf))
 	/*id = le32atoh((uint8_t *)buf);*/
-	id =	buf[0]		|
-		(buf[1] << 8)	|
-		(buf[2] << 16)	|
-		(buf[3] << 24);
+	id =	 (uint8_t)buf[0]	|
+		((uint8_t)buf[1] << 8)	|
+		((uint8_t)buf[2] << 16)	|
+		((uint8_t)buf[3] << 24);
 	for (i = 0; ax203_eeprom_info[i].name; i++) {
 		if (ax203_eeprom_info[i].id == id)
 			break;
