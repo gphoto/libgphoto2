@@ -248,7 +248,6 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	case 'I':
 	case 'E':
 	default:
-		camstat_str = _("Unknown (some kind of error)");
 		gp_context_error (context, _("Initial camera response '%c' unrecognized"),
 				  camstat);
                 if ( i < 0 )
