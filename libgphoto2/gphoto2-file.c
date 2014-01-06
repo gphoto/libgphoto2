@@ -235,7 +235,7 @@ gp_file_append (CameraFile *file, const char *data,
 	case GP_FILE_ACCESSTYPE_FD: {
 		unsigned long int curwritten = 0; 
 		while (curwritten < size) {
-			size_t	res = write (file->fd, data+curwritten, size-curwritten);
+			ssize_t	res = write (file->fd, data+curwritten, size-curwritten);
 			if (res == -1) {
 				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d writing to fd.", errno);
 				return GP_ERROR_IO_WRITE;
@@ -289,7 +289,7 @@ gp_file_slurp (CameraFile *file, char *data,
 	case GP_FILE_ACCESSTYPE_FD: {
 		unsigned long int curread = 0; 
 		while (curread < size) {
-			size_t	res = read (file->fd, data+curread, size-curread);
+			ssize_t	res = read (file->fd, data+curread, size-curread);
 			if (res == -1) {
 				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading from fd.", errno);
 				return GP_ERROR_IO_READ;
@@ -348,7 +348,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		file->size = size;
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
-		int curwritten = 0;
+		unsigned int curwritten = 0;
 
 		/* truncate */
 		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
@@ -360,7 +360,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 			/* might happen on pipes ... just ignore it */
 		}
 		while (curwritten < size) {
-			size_t	res = write (file->fd, data+curwritten, size-curwritten);
+			ssize_t	res = write (file->fd, data+curwritten, size-curwritten);
 			if (res == -1) {
 				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d writing to fd.", errno);
 				return GP_ERROR_IO_WRITE;
@@ -458,7 +458,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		if (!*data)
 			return GP_ERROR_NO_MEMORY;
 		while (curread < offset) {
-			unsigned int res = read (file->fd, (char*)((*data)+curread), offset-curread);
+			ssize_t res = read (file->fd, (char*)((*data)+curread), offset-curread);
 			if (res == -1) {
 				free ((char*)*data);
 				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading.", errno);
@@ -818,7 +818,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		if (!destination->data)
 			return GP_ERROR_NO_MEMORY;
 		while (curread < offset) {
-			unsigned int res = read (source->fd, destination->data+curread, offset-curread);
+			ssize_t res = read (source->fd, destination->data+curread, offset-curread);
 			if (res == -1) {
 				free (destination->data);
 				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading.", errno);
@@ -845,7 +845,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		data = malloc (65536);
 		while (1) {
 			unsigned long curwritten = 0;
-			int res;
+			ssize_t res;
 
 			res = read (source->fd, data, 65536);
 			if (res == -1) {
@@ -855,7 +855,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			if (res == 0)
 				break;
 			while (curwritten < res) {
-				int res2 = write (destination->fd, data+curwritten, res-curwritten);
+				ssize_t res2 = write (destination->fd, data+curwritten, res-curwritten);
 				if (res2 == -1) {
 					free (data);
 					return GP_ERROR_IO_WRITE;
