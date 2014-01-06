@@ -422,8 +422,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetFileInfoInBlock	0x9011
 #define PTP_OC_NIKON_Capture		0x90C0	/* 1 param,   no data */
 #define PTP_OC_NIKON_AfDrive		0x90C1	/* no params, no data */
-#define PTP_OC_NIKON_SetControlMode	0x90C2	/* 1 param,   no data */
-#define PTP_OC_NIKON_DelImageSDRAM	0x90C3	/* no params, no data */
+#define PTP_OC_NIKON_SetControlMode	0x90C2	/* 1 param,  no data */
+#define PTP_OC_NIKON_DelImageSDRAM	0x90C3	/* 1 param,  no data */
 #define PTP_OC_NIKON_GetLargeThumb	0x90C4
 #define PTP_OC_NIKON_CurveDownload	0x90C5	/* 1 param,   data in */
 #define PTP_OC_NIKON_CurveUpload	0x90C6	/* 1 param,   data out */
@@ -432,29 +432,35 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_SetPreWBData	0x90C9	/* 3 params,  data out */
 #define PTP_OC_NIKON_GetVendorPropCodes	0x90CA	/* 0 params, data in */
 #define PTP_OC_NIKON_AfCaptureSDRAM	0x90CB	/* no params, no data */
-#define PTP_OC_NIKON_GetPictCtrlData	0x90CC
-#define PTP_OC_NIKON_SetPictCtrlData	0x90CD
-#define PTP_OC_NIKON_DelCstPicCtrl	0x90CE
-#define PTP_OC_NIKON_GetPicCtrlCapability	0x90CF
+#define PTP_OC_NIKON_GetPictCtrlData	0x90CC	/* 2 params, data in */
+#define PTP_OC_NIKON_SetPictCtrlData	0x90CD	/* 2 params, data out */
+#define PTP_OC_NIKON_DelCstPicCtrl	0x90CE	/* 1 param, no data */
+#define PTP_OC_NIKON_GetPicCtrlCapability	0x90CF	/* 1 param, data in */
 
 /* Nikon Liveview stuff */
 #define PTP_OC_NIKON_GetPreviewImg	0x9200
-#define PTP_OC_NIKON_StartLiveView	0x9201
-#define PTP_OC_NIKON_EndLiveView	0x9202
-#define PTP_OC_NIKON_GetLiveViewImg	0x9203
-#define PTP_OC_NIKON_MfDrive		0x9204
-#define PTP_OC_NIKON_ChangeAfArea	0x9205
-#define PTP_OC_NIKON_AfDriveCancel	0x9206
+#define PTP_OC_NIKON_StartLiveView	0x9201	/* no params */
+#define PTP_OC_NIKON_EndLiveView	0x9202	/* no params */
+#define PTP_OC_NIKON_GetLiveViewImg	0x9203	/* no params, data in */
+#define PTP_OC_NIKON_MfDrive		0x9204	/* 2 params */
+#define PTP_OC_NIKON_ChangeAfArea	0x9205	/* 2 params */
+#define PTP_OC_NIKON_AfDriveCancel	0x9206	/* no params */
 /* 2 params:
  * 0xffffffff == No AF before,  0xfffffffe == AF before capture
  * sdram=1, card=0
  */
-#define PTP_OC_NIKON_InitiateCaptureRecInMedia	0x9207
+#define PTP_OC_NIKON_InitiateCaptureRecInMedia	0x9207	/* 1 params */
 
-#define PTP_OC_NIKON_StartMovieRecInCard	0x920a
-#define PTP_OC_NIKON_EndMovieRec	0x920b
+#define PTP_OC_NIKON_GetVendorStorageIDs	0x9209	/* no params, data in */
+
+#define PTP_OC_NIKON_StartMovieRecInCard	0x920a	/* no params, no data */
+#define PTP_OC_NIKON_EndMovieRec		0x920b	/* no params, no data */
+
+#define PTP_OC_NIKON_TerminateCapture		0x920c	/* 2 params */
 
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
+
+#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, data in */
 
 /* Casio EX-F1 (from http://code.google.com/p/exf1ctrl/ ) */
 #define PTP_OC_CASIO_STILL_START	0x9001
