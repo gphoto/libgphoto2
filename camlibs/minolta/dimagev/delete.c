@@ -124,6 +124,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		
 	switch ( char_buffer ) {
 		case DIMAGEV_ACK:
+			free(raw);
 			break;
 		case DIMAGEV_NAK:
 			GP_DEBUG( "dimagev_delete_picture::camera did not acknowledge transmission");
