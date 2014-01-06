@@ -6106,8 +6106,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 	}
 
-	if (!params->deviceinfo.DevicePropertiesSupported_len)
+	if (!params->deviceinfo.DevicePropertiesSupported_len) {
+		free (setprops);
 		return GP_OK;
+	}
 
 	/* Last menu is "Other", a generic property fallback window. */
 	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
