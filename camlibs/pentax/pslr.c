@@ -118,6 +118,7 @@ typedef struct {
     ipslr_model_info_t *model;
     char devname[256];
     ipslr_segment_t segments[MAX_SEGMENTS];
+    uint32_t buffer_len;
     uint32_t segment_count;
     uint32_t offset;
 } ipslr_handle_t;
@@ -131,7 +132,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status);
 static int ipslr_press_shutter(ipslr_handle_t *p);
 static int ipslr_select_buffer(ipslr_handle_t *p, int bufno, int buftype, int bufres);
 static int ipslr_buffer_segment_info(ipslr_handle_t *p, pslr_buffer_segment_info *pInfo);
-static int ipslr_read_buffer(ipslr_handle_t *p, int bufno, int buftype, int bufres, 
+static int ipslr_read_buffer(pslr_handle_t h, int bufno, int buftype, int bufres,
                              uint8_t **ppData, uint32_t *pLen);
 static int ipslr_next_segment(ipslr_handle_t *p);
 static int ipslr_download(ipslr_handle_t *p, uint32_t addr, uint32_t length, uint8_t *buf);
@@ -328,8 +329,7 @@ int pslr_get_status(pslr_handle_t h, pslr_status *ps)
 int pslr_get_buffer(pslr_handle_t h, int bufno, int type, int resolution, 
                     uint8_t **ppData, uint32_t *pLen)
 {
-    ipslr_handle_t *p = (ipslr_handle_t *) h;
-    CHECK(ipslr_read_buffer(p, bufno, type, resolution, ppData, pLen));
+    CHECK(ipslr_read_buffer(h, bufno, type, resolution, ppData, pLen));
     return PSLR_OK;
 }
 
@@ -605,6 +605,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
         i++;
     } while (i < 9 && info.type != PSLR_BUFFER_SEGMENT_LAST);
     p->segment_count = j;
+    p->buffer_len = buf_total;
     p->offset = 0;
     return PSLR_OK;
 }
@@ -997,86 +998,33 @@ static int ipslr_press_shutter(ipslr_handle_t *p)
     return PSLR_OK;
 }
 
-static int ipslr_read_buffer(ipslr_handle_t *p, int bufno, int buftype, int bufres, 
+static int ipslr_read_buffer(pslr_handle_t h, int bufno, int buftype, int bufres,
                              uint8_t **ppData, uint32_t *pLen)
 {
-    pslr_buffer_segment_info info[9];
-    uint16_t bufs;
-    uint32_t bufaddr;
-    uint32_t buflen = 0;
-    uint32_t buf_total = 0;
-    int i;
     uint8_t *buf = 0;
     uint8_t *buf_ptr;
-    int result;
-    int num_info;
-    int ret;
-    int retry = 0;
-    int retry2 = 0;
+    uint32_t bytes;
 
-    memset(&info, 0, sizeof(info));
+    if (!ppData || !pLen)
+        return PSLR_PARAM;
 
-    CHECK(ipslr_status_full(p, &p->status));
-    bufs = p->status.bufmask;
-    if ((bufs & (1<<bufno)) == 0) {
-        DPRINT("No buffer data (%d)\n", bufno);
-        return PSLR_OK;
-    }
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
 
-    while (retry < 3) {
-        /* If we get response 0x82 from the camera, there is a
-         * desynch. We can recover by stepping through segment infos
-         * until we get the last one (type = 2). Retry up to 3 times. */
-        ret = ipslr_select_buffer(p, bufno, buftype, bufres);
-        if (ret == PSLR_OK)
-            break;
+    CHECK(pslr_buffer_open(h, bufno, buftype, bufres));
 
-        retry++;
-        retry2 = 0;
-        do {
-            CHECK(ipslr_buffer_segment_info(p, &info[0]));
-            CHECK(ipslr_next_segment(p));
-            DPRINT("Recover: type=%d\n", info[0].type);
-        } while (++retry2 < 10 && info[0].type != PSLR_BUFFER_SEGMENT_LAST);
-    }
-
-    if (retry == 3)
-        return ret;
-
-    i = 0;
-    do {
-        CHECK(ipslr_buffer_segment_info(p, &info[i]));
-        DPRINT("%d: addr: 0x%x len: %d type=%d\n", i, info[i].addr, info[i].length, info[i].type);
-        CHECK(ipslr_next_segment(p));
-        buf_total += info[i].length;
-        i++;
-    } while (i < 9 && info[i-1].type != PSLR_BUFFER_SEGMENT_LAST);
-    num_info = i;
-    DPRINT("Got total %d info\n", num_info);
-    buf = malloc(buf_total);
+    buf = malloc(p->buffer_len);
     if (!buf)
         return PSLR_NO_MEMORY;
     buf_ptr = buf;
-    for (i=0; i<num_info; i++) {
-        bufaddr = info[i].addr;
-        buflen = info[i].length;
-        if (bufaddr && buflen) {
-            DPRINT("read %u bytes from 0x%x\n", buflen, bufaddr);
-            result = ipslr_download(p, bufaddr, buflen, buf_ptr);
-            if (result != PSLR_OK) {
-                free(buf);
-                return result;
-            }
-            buf_ptr += buflen;
-        } else {
-            DPRINT("empty segment\n");
-        }
-    }
 
-    if (ppData)
-        *ppData = buf;
-    if (pLen)
-        *pLen = buf_total;
+    do {
+        bytes = pslr_buffer_read(h, buf_ptr, p->buffer_len - (buf_ptr - buf));
+        buf_ptr += bytes;
+    } while(bytes);
+    pslr_buffer_close(h);
+    *ppData = buf;
+    *pLen = buf_ptr - buf;
+
     return PSLR_OK;
 }
 
