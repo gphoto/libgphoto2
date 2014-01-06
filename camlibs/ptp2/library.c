@@ -271,7 +271,7 @@ translate_ptp_result (short result)
 }
 
 static void
-print_debug_deviceinfo (PTPParams*params, PTPDeviceInfo *di)
+print_debug_deviceinfo (PTPDeviceInfo *di)
 {
 	unsigned int i;
 
@@ -373,7 +373,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 		gp_log (GP_LOG_DEBUG, "olympus", "Dumping Olympus Deviceinfo");
 
-		print_debug_deviceinfo (&camera->pl->params, &newdi);
+		print_debug_deviceinfo (&newdi);
 		ptp_free_DI (di);
 		memcpy (di, &newdi, sizeof(newdi));
 		return;
@@ -445,6 +445,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_nikon_get_vendorpropcodes() failed with 0x%04x", ret);
 			}
 		}
+#if 0
+		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
+			di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2));
+			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_Capture;
+			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
+			di->OperationsSupported_len+=2;
+		}
+#endif
 	}
 #if 0 /* Marcus: not regular ptp properties, not queryable via getdevicepropertyvalue */
 	if (di->VendorExtensionID == PTP_VENDOR_CANON) {
@@ -6771,7 +6779,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	fixup_cached_deviceinfo (camera,&params->deviceinfo);
 
-	print_debug_deviceinfo(params, &params->deviceinfo);
+	print_debug_deviceinfo(&params->deviceinfo);
 
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
