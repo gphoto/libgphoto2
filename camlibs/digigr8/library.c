@@ -354,25 +354,28 @@ camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context)
 						| get_size[0x43]<<24;
 	GP_DEBUG("b = 0x%x\n", b);
 	raw_data = malloc(b);
-	if(!raw_data) {
-		free(raw_data);
+
+	if(!raw_data)
 		return GP_ERROR_NO_MEMORY;
-	}
+
 	if (!((gp_port_read(camera->port, (char *)raw_data, b)==b))) {
+		free(raw_data);
 		GP_DEBUG("Error in reading data\n");
 		return GP_ERROR;
 	}
 	frame_data = malloc(w * h);
 	if (!frame_data) {
-		free(frame_data);
+		free(raw_data);
 		return GP_ERROR_NO_MEMORY;
 	}
 	digi_decompress (frame_data, raw_data, w, h);
 	free(raw_data);
 	/* Now put the data into a PPM image file. */
 	ppm = malloc (w * h * 3 + 256);
-	if (!ppm)
+	if (!ppm) {
+		free(frame_data);
 		return GP_ERROR_NO_MEMORY;
+	}
 	snprintf ((char *)ppm, 64,
 		"P6\n"
 		"# CREATOR: gphoto2, SQ905C library\n"
