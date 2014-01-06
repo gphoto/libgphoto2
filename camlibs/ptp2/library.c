@@ -3710,11 +3710,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 					continue;
 #endif
 
-				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-				if (!path)
-					return GP_ERROR_NO_MEMORY;
-				path->name[0]='\0';
-				path->folder[0]='\0';
 				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 				debug_objectinfo(params, event.Param1, &ob->oi);
 				if (ret != PTP_RC_OK) {
@@ -3722,6 +3717,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventdata = strdup ("object added not found (already deleted)");
 					break;
 				}
+
+				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+				if (!path)
+					return GP_ERROR_NO_MEMORY;
+				path->name[0]='\0';
+				path->folder[0]='\0';
+
 				ofc = ob->oi.ObjectFormat;
 				/* ob might be invalidated by get_folder_from_handle */
 
