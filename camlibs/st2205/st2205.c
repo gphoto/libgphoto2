@@ -570,6 +570,7 @@ st2205_real_write_file(Camera *camera,
 					  allow_uv_corr);
 	else
 		size = st2205_rgb24_to_rgb565 (camera->pl, rgb24, buf);
+	if (size < GP_OK) return size;
 
 	count = st2205_read_file_count (camera);
 	if (count < 0) return count;
