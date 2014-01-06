@@ -443,9 +443,6 @@ dnl ---------------------------------------------------------------------------
 if test "$GCC" = "yes"; then
 	CFLAGS="$CFLAGS -Wall"
 	CFLAGS="$CFLAGS -Wmissing-declarations -Wmissing-prototypes"
-	# FIXME: Check for --enable-debug here
-	CFLAGS="$CFLAGS -g"
-	LDFLAGS="$LDFLAGS -g"
 fi
 
 # Activate internal code
