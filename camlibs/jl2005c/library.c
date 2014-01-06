@@ -239,6 +239,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	if (!(camera->pl->data_cache)) {
 		GP_DEBUG ("no cache memory allocated!\n");
+		free (pic_buffer);
 		return GP_ERROR_NO_MEMORY;
 	}
 
@@ -256,6 +257,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (start_of_photo + b > camera->pl->total_data_in_camera) {
 		GP_DEBUG ("Photo runs past end of data. Exiting. \n");
 		GP_DEBUG ("Block size may be wrong for this camera\n");
+		free (pic_buffer);
 		return (GP_ERROR);
 	}
 	/*
@@ -352,21 +354,31 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_OK;
 #ifdef HAVE_LIBJPEG
 	} else if (type == GP_FILE_TYPE_PREVIEW) {
-		if (!camera->pl->can_do_capture)
+		if (!camera->pl->can_do_capture) {
+			free (pic_buffer);
 			return GP_ERROR_NOT_SUPPORTED;
+		}
 		outputsize = (pic_buffer[9] & 0xf0) * 192 + 256;
 		GP_DEBUG("pic_buffer[9] is 0x%02x\n", pic_buffer[9]);
 		GP_DEBUG("Thumbnail outputsize = 0x%x = %d\n", outputsize,
 								outputsize);
 		if (outputsize == 256) {
 			GP_DEBUG("Frame %d has no thumbnail.\n", k);
+			free (pic_buffer);
 			return GP_OK;
 		}
 		pic_output = calloc(outputsize, 1);
-		if (!pic_output)
+		if (!pic_output) {
+			free (pic_buffer);
 			return GP_ERROR_NO_MEMORY;
+		}
 		outputsize = jl2005bcd_decompress(pic_output, pic_buffer,
 								b + 16, 1);
+		free (pic_buffer);
+		if (outputsize < GP_OK) {
+			free (pic_output);
+			return outputsize;
+		}
 		GP_DEBUG("Thumbnail outputsize recalculated is 0x%x = %d\n",
 						outputsize, outputsize);
 		gp_file_set_mime_type(file, GP_MIME_PPM);
@@ -379,12 +391,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return GP_ERROR_NO_MEMORY;
 		outputsize = jl2005bcd_decompress(pic_output, pic_buffer,
 								b + 16, 0);
+		free (pic_buffer);
+		if (outputsize < GP_OK) {
+			free (pic_output);
+			return outputsize;
+		}
 		gp_file_set_mime_type(file, GP_MIME_PPM);
 		gp_file_set_data_and_size(file, (char *)pic_output,
 								outputsize);
 #endif
-	} else
+	} else {
+		free (pic_buffer);
 		return GP_ERROR_NOT_SUPPORTED;
+	}
 
 	return GP_OK;
 }
