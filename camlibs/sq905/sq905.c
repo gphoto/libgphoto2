@@ -98,6 +98,7 @@ sq_init (GPPort *port, CameraPrivateLibrary *priv)
 		else
 			priv->catalog = catalog;
 	} else {
+		free (catalog);
 		priv->catalog = NULL;	/* We just have freed catalog_tmp */
 	}
 
