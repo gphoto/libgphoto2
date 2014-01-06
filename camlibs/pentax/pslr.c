@@ -597,6 +597,8 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
             p->segments[j].addr = info.addr;
             p->segments[j].length = info.length;
             j++;
+        } else {
+            DPRINT("Unknown segment type %d\n", info.type);
         }
         CHECK(ipslr_next_segment(p));
         buf_total += info.length;
