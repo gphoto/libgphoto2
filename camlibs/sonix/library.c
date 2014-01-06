@@ -240,6 +240,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG( "avitype is %d\n", avitype);
 	GP_DEBUG ("height of picture %i is %i\n", k+1,h);
 	rawsize = sonix_read_data_size (camera->port, k);
+	if (rawsize < GP_OK)
+		return rawsize;
 	GP_DEBUG("rawsize = 0x%x = %i\n", rawsize, rawsize);
 	if(rawsize%0x40) 
 		buffersize = rawsize - (rawsize%0x40) + 0x40;
