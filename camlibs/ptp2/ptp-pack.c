@@ -262,14 +262,15 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, uint16_t offse
 {
 	uint32_t n, i=0;
 
+	*array = NULL;
 	n=dtoh32a(&data[offset]);
 	if (n >= UINT_MAX/sizeof(uint32_t))
 		return 0;
+	if (!n)
+		return 0;
 	*array = malloc (n*sizeof(uint32_t));
-	while (n>i) {
+	for (i=0;i<n;i++)
 		(*array)[i]=dtoh32a(&data[offset+(sizeof(uint32_t)*(i+1))]);
-		i++;
-	}
 	return n;
 }
 
@@ -290,14 +291,15 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, uint16_t offse
 {
 	uint32_t n, i=0;
 
+	*array = NULL;
 	n=dtoh32a(&data[offset]);
 	if (n >= UINT_MAX/sizeof(uint16_t))
 		return 0;
+	if (!n)
+		return 0;
 	*array = malloc (n*sizeof(uint16_t));
-	while (n>i) {
+	for (i=0;i<n;i++)
 		(*array)[i]=dtoh16a(&data[offset+(sizeof(uint16_t)*(i+2))]);
-		i++;
-	}
 	return n;
 }
 
