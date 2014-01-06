@@ -121,7 +121,7 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 		}
 
 		/* Who likes recursion? */
-		return ( p = dimagev_read_packet(dimagev));
+		return dimagev_read_packet(dimagev);
 
 	}
 
@@ -139,7 +139,7 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 		}
 
 		/* Who likes recursion? */
-		return ( p = dimagev_read_packet(dimagev));
+		return dimagev_read_packet(dimagev);
 
 	}
 
@@ -156,7 +156,7 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 		}
 		
 		/* Who likes recursion? */
-		return ( p = dimagev_read_packet(dimagev));
+		return dimagev_read_packet(dimagev);
 
 	}
 
