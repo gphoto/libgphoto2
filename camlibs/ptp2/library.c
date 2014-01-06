@@ -5057,7 +5057,7 @@ mtp_put_playlist(
 ) {
 	char 		*s = content;
 	unsigned char	data[1];
-	uint32_t	storage, objectid, playlistid;
+	uint32_t	storage = 0, objectid, playlistid;
 	uint32_t	*oids = NULL;
 	int		nrofoids = 0;
 	uint16_t	ret;
