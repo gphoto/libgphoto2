@@ -256,6 +256,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	len = ez200_get_picture_size (camera->port, n);
 	GP_DEBUG("len = %i", len);
+	if (len < GP_OK) return len;
 
 	data = (char *)malloc(len + HEADER_SIZE + 1);
 	if (!data) return GP_ERROR_NO_MEMORY;
