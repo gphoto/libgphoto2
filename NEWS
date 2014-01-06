@@ -1,5 +1,8 @@
 libgphoto2 2.5.2.2 release
 
+all:
+* Lots of Coverity fixes merged
+
 ptp2:
 * Nikon: added a new PTP capture opcode function, allows capture to card during liveview
 * Nikon: enable --trigger-capture support
@@ -30,6 +33,9 @@ directory:
 
 sierra:
 * capture fixed for Olympus C-3030
+
+pentax:
+* Various fixes from Jiri Pinka
 
 translations:
 * new czech translation by Pavel Borecki.
