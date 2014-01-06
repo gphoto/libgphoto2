@@ -81,6 +81,7 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 		if (catalog_tmp) priv->catalog = catalog_tmp;
 		else priv->catalog = catalog;
 	} else {
+		free (catalog);
 		priv->catalog = NULL;	/* We just have freed catalog_tmp */
 	}
 
