@@ -528,16 +528,17 @@ jd11_get_image_full(
 	    for (w=320;w--;) {
 		if (h&1) {
 		    /* G B G B G B G B G */
-		    *s++ = uncomp[2][(h/2)*320+w];
 		    *s++ = uncomp[0][h*320+w];
+		    *s++ = uncomp[2][(h/2)*320+w];
 		} else {
 		    /* R G R G R G R G R */
-		    *s++ = uncomp[0][h*320+w];
 		    *s++ = uncomp[1][(h/2)*320+w];
+		    *s++ = uncomp[0][h*320+w];
 		}
 	    }
 	}
-	gp_bayer_decode(bayerpre,640,480,data,BAYER_TILE_RGGB);
+	/*gp_bayer_decode(bayerpre,640,480,data,BAYER_TILE_GRBG);*/
+	gp_ahd_decode(bayerpre,640,480,data,BAYER_TILE_GRBG);
 	free(bayerpre);
     } else {
 	s=data;
