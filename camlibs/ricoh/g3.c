@@ -643,6 +643,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		strcpy(info->file.type,"text/plain");
 
 	cmd = malloc(strlen("-FDAT ")+strlen(folder)+1+strlen(filename)+1);
+	if (!cmd) return GP_ERROR_NO_MEMORY;
 	sprintf(cmd, "-FDAT %s/%s", folder,filename);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK) goto out;
@@ -683,7 +684,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 out:
 	if (reply) free(reply);
-	if (cmd) free(cmd);
+	free(cmd);
 
 	return (GP_OK);
 
