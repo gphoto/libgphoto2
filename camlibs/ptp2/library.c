@@ -972,6 +972,8 @@ static struct {
 	{"Nikon:Coolpix S2500 (PTP mode)",0x04b0, 0x0321, PTP_CAP},
 	/* Fabio <ctrlaltca@gmail.com> */
 	{"Nikon:Coolpix L23 (PTP mode)",  0x04b0, 0x0324, PTP_CAP},
+	/* Novell bugzilla 852551 */
+	{"Nikon:Coolpix S4300 (PTP mode)",0x04b0, 0x0329, PTP_CAP/*?*/},
 	/* "M.-A. DARCHE" <ma.darche@cynode.org> . gets capturecomplete events nicely */
 	{"Nikon:Coolpix S3300 (PTP mode)",0x04b0, 0x032a, PTP_CAP},
 	/* sakax <sakamotox@gmail.com> */
@@ -1355,6 +1357,9 @@ static struct {
 	{"Canon:Powershot SD1100 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
 	/* Hubert Mercier <hubert.mercier@unilim.fr> */
 	{"Canon:PowerShot SX10 IS",		0x04a9, 0x318d, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* Novell Bugzilla 852551 */
+	{"Canon:PowerShot A1000 IS",		0x04a9, 0x318e, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Paul Tinsley */
 	{"Canon:PowerShot G10",			0x04a9, 0x318f, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
