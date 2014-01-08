@@ -779,7 +779,10 @@ hwdb_camera_func (const func_params_t *params,
 
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
+			/* device class matcher ... */
 			printf("usb:v*p*d*dc%02ddsc%02dp%02d*\"\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);
+			/* interface class matcher, ptp is a interface */
+			printf("usb:v*p*d*ic%02disc%02ip%02d*\"\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);
 			has_valid_rule = 1;
 		} else {
 			if (class == 666) {
