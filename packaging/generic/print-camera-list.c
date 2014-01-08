@@ -780,9 +780,9 @@ hwdb_camera_func (const func_params_t *params,
 	if (flags & GP_USB_HOTPLUG_MATCH_INT_CLASS) {
 		if ((flags & (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) == (GP_USB_HOTPLUG_MATCH_INT_CLASS|GP_USB_HOTPLUG_MATCH_INT_SUBCLASS|GP_USB_HOTPLUG_MATCH_INT_PROTOCOL)) {
 			/* device class matcher ... */
-			printf("usb:v*p*d*dc%02ddsc%02dp%02d*\"\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);
-			/* interface class matcher, ptp is a interface */
-			printf("usb:v*p*d*ic%02disc%02ip%02d*\"\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);
+			/*printf("usb:v*p*d*dc%02ddsc%02dp%02d*\"\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);*/
+			/* but we need an interface class matcher, ptp is a interface */
+			printf("usb:v*p*d*ic%02disc%02ip%02d*\n GPHOTO2_DRIVER=PTP\n", class, subclass, proto);
 			has_valid_rule = 1;
 		} else {
 			if (class == 666) {
@@ -793,7 +793,10 @@ hwdb_camera_func (const func_params_t *params,
 		}
 	} else {
 		if (flags & GP_USB_HOTPLUG_MATCH_VENDOR_ID) {
-			printf ("usb:v%04Xp%04X*\n GPHOTO2_DRIVER=proprietary\n", usb_vendor, usb_product);
+			if (strstr(a->library, "ptp"))
+				printf ("usb:v%04Xp%04X*\n GPHOTO2_DRIVER=PTP\n", usb_vendor, usb_product);
+			else
+				printf ("usb:v%04Xp%04X*\n GPHOTO2_DRIVER=proprietary\n", usb_vendor, usb_product);
 			has_valid_rule = 1;
 		} else {
 			fprintf (stderr, "Error: Trying to output device %d/%d with incorrect match flags.\n",
@@ -1573,7 +1576,7 @@ static const output_format_t formats[] = {
 	 hwdb_begin_func,
 	 hwdb_camera_func,
 	 NULL,
-	 hwdb_camera_func,
+	 NULL,
 	 empty_end_func
 	},
 	{"html",
