@@ -150,4 +150,50 @@ Current: 1
 Sorry, your camera does not support generic capture
 ERROR: Could not capture image.
 ERROR: Could not capture.
-*** Error (-6: «Operación no soportada») ***
+ ** Error (-6: «Operación no soportada») ***
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: NEX-6
+  device version: 1.0
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0xffffffff
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002
+  0x1003
+  0x1001
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x1014
+  0x1015
+  0x1016
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+  0x9280
+  0x9281
+  0x9282
+  0x9283
+  0x9284
+  0x9285
+Events Supported:
+  0x4004
+  0x4005
+  0x4006
+Device Properties Supported:
+  0x5001
+  0xd402
+  0xd406
+  0xd407
+  0xd303
