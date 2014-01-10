@@ -1358,7 +1358,7 @@ static struct {
 	/* Hubert Mercier <hubert.mercier@unilim.fr> */
 	{"Canon:PowerShot SX10 IS",		0x04a9, 0x318d, PTPBUG_DELETE_SENDS_EVENT},
 
-	/* Novell Bugzilla 852551 */
+	/* Novell Bugzilla 852551, Dean Martin <deano_ferrari@hotmail.com> */
 	{"Canon:PowerShot A1000 IS",		0x04a9, 0x318e, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Paul Tinsley */
@@ -1473,6 +1473,9 @@ static struct {
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot G1 X",		0x04a9, 0x3233, PTPBUG_DELETE_SENDS_EVENT},
+	/* Dean Martin <deano_ferrari@hotmail.com>, Novell Bugzilla 852551 */
+	{"Canon:PowerShot SX150 IS",		0x04a9, 0x3234, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* IRC reporter */
 	{"Canon:PowerShot S100",		0x04a9, 0x3236, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
