@@ -1486,10 +1486,14 @@ static struct {
 	{"Canon:EOS 650D",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:Rebel T4i",			0x04a9, 0x323b, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS M",				0x04a9, 0x323d, 0/*PTP_CAP|PTP_CAP_PREVIEW ... might be unknown opcodes -Marcus */},
 	/* via https://bugs.kde.org/show_bug.cgi?id=311393 */
 	{"Canon:PowerShot A1300IS",		0x04a9, 0x323e, PTPBUG_DELETE_SENDS_EVENT},
+	/* https://forums.opensuse.org/showthread.php/493692-canon-usb-camera-a810-not-detected */
+	{"Canon:PowerShot A810",		0x04a9, 0x323f, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot A4000IS",		0x04a9, 0x3243, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
