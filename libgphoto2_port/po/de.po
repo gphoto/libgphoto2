@@ -516,7 +516,7 @@ msgid "Could not query kernel driver of device."
 msgstr "Konnte den Kerneltreiber des Gerätes nicht abfragen."
 
 #: usb/libusb.c:303 libusb1/libusb1.c:356
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not claim interface %d (%s). Make sure no other program (%s) or kernel "
 "module (such as %s) is using the device and you have read/write access to "
@@ -524,16 +524,16 @@ msgid ""
 msgstr ""
 "Konnte Schnittstelle %d nicht reservieren (%s). Stellen Sie sicher, dass "
 "kein\n"
-"anderes Programm oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
+"anderes Programm (%s) oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
 #: usb/libusb.c:315 libusb1/libusb1.c:367
 msgid "MacOS PTPCamera service"
-msgstr ""
+msgstr "MacOS PTPCamera Dienst"
 
 #: usb/libusb.c:317 libusb1/libusb1.c:369
 msgid "unknown libgphoto2 using program"
-msgstr ""
+msgstr "unbekanntes anderes libgphoto2 Programm"
 
 #: usb/libusb.c:335 libusb1/libusb1.c:387
 #, c-format
