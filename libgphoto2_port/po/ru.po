@@ -4,13 +4,13 @@
 #
 # Valek Filippov <frob@df.ru>, 2005.
 # Вячеслав Диконов (Vyacheslav Dikonov) <slava@altlinux.ru>, 2005.
-# Yuri Kozlov <yuray@komyakino.ru>, 2010, 2012, 2013.
+# Yuri Kozlov <yuray@komyakino.ru>, 2010, 2012, 2013, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.5.2\n"
+"Project-Id-Version: libgphoto2_port 2.5.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-05-05 21:31+0200\n"
-"PO-Revision-Date: 2013-06-10 21:00+0400\n"
+"POT-Creation-Date: 2014-01-06 14:47+0100\n"
+"PO-Revision-Date: 2014-01-11 16:00+0400\n"
 "Last-Translator: Yuri Kozlov <yuray@komyakino.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -71,7 +71,7 @@ msgstr[0] "доступна %i обычная запись."
 msgstr[1] "доступно %i обычных записи."
 msgstr[2] "доступно %i обычных записей."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "Looking for path '%s' (%i entry available)..."
 msgid_plural "Looking for path '%s' (%i entries available)..."
@@ -79,39 +79,39 @@ msgstr[0] "Поиск пути «%s» (доступна %i запись)…"
 msgstr[1] "Поиск пути «%s» (доступно %i записи)…"
 msgstr[2] "Поиск пути «%s» (доступно %i записей)…"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Начало поиска «%s» c использованием регулярного выражения…"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:402
+#: libgphoto2_port/gphoto2-port-info-list.c:403
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Проверяется «%s»…"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:423
+#: libgphoto2_port/gphoto2-port-info-list.c:424
 msgid "regcomp failed"
 msgstr "сбой regcomp"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:434
+#: libgphoto2_port/gphoto2-port-info-list.c:435
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "сбой re_match (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:442
+#: libgphoto2_port/gphoto2-port-info-list.c:443
 msgid "regexec failed"
 msgstr "сбой regexec"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:449
+#: libgphoto2_port/gphoto2-port-info-list.c:450
 msgid "Generic Port"
 msgstr "Обычный порт"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:474
+#: libgphoto2_port/gphoto2-port-info-list.c:475
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Поиск записи «%s»…"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:506
+#: libgphoto2_port/gphoto2-port-info-list.c:507
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgid_plural "Getting info of entry %i (%i available)..."
@@ -371,8 +371,8 @@ msgstr "Чтение сообщения (запрос=0x%x значение=0x%x
 msgid "No error description available"
 msgstr "Описание ошибки недоступно"
 
-#: disk/disk.c:135 disk/disk.c:136 disk/disk.c:197 disk/disk.c:198
-#: disk/disk.c:238 disk/disk.c:261
+#: disk/disk.c:145 disk/disk.c:146 disk/disk.c:216 disk/disk.c:217
+#: disk/disk.c:257 disk/disk.c:280
 #, c-format
 msgid "Media '%s'"
 msgstr "Носитель «%s»"
@@ -382,12 +382,12 @@ msgstr "Носитель «%s»"
 msgid "Could not lock device '%s'"
 msgstr "Невозможно заблокировать устройство «%s»"
 
-#: serial/unix.c:239 usbdiskdirect/linux.c:96
+#: serial/unix.c:239 usbdiskdirect/linux.c:97
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Устройство «%s» заблокировано процессом с pid %d"
 
-#: serial/unix.c:242 usbdiskdirect/linux.c:99
+#: serial/unix.c:242 usbdiskdirect/linux.c:100
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Устройство «%s» невозможно заблокировать (функция dev_lock вернула значение %d)"
@@ -397,12 +397,12 @@ msgstr "Устройство «%s» невозможно заблокирова�
 msgid "Device '%s' could not be unlocked."
 msgstr "Устройство «%s» невозможно разблокировать."
 
-#: serial/unix.c:283 usbdiskdirect/linux.c:128
+#: serial/unix.c:283 usbdiskdirect/linux.c:129
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Устройство «%s» невозможно разблокировать, так как оно заблокировано процессом с pid %d."
 
-#: serial/unix.c:287 usbdiskdirect/linux.c:132
+#: serial/unix.c:287 usbdiskdirect/linux.c:133
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Устройство «%s» невозможно разблокировать (функция dev_unlock вернула значение %d)"
@@ -412,85 +412,85 @@ msgstr "Устройство «%s» невозможно разблокиров�
 msgid "Serial Port %i"
 msgstr "Последовательный порт %i"
 
-#: serial/unix.c:461
+#: serial/unix.c:460
 #, c-format
 msgid "Failed to open '%s' (%s)."
 msgstr "Не удалось открыть «%s» (%s)."
 
-#: serial/unix.c:481
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%s)."
 msgstr "Не удалось закрыть «%s» (%s)."
 
-#: serial/unix.c:538
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%s)"
 msgstr "Не удалось записать в порт (%s)"
 
-#: serial/unix.c:616
+#: serial/unix.c:615
 msgid "Parity error."
 msgstr "Ошибка чётности."
 
-#: serial/unix.c:620
+#: serial/unix.c:619
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Неверная последовательность контроля чётности — 0xff 0x%02x"
 
-#: serial/unix.c:663
+#: serial/unix.c:662
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Неизвестный pin %i."
 
-#: serial/unix.c:686
+#: serial/unix.c:685
 #, c-format
 msgid "Could not get level of pin %i (%s)."
 msgstr "Невозможно получить уровень pin %i (%s)."
 
-#: serial/unix.c:723
+#: serial/unix.c:722
 #, c-format
 msgid "Could not set level of pin %i to %i (%s)."
 msgstr "Невозможно установить уровень pin %i в %i (%s)."
 
-#: serial/unix.c:750
+#: serial/unix.c:749
 #, c-format
 msgid "Could not flush '%s' (%s)."
 msgstr "Невозможно сбросить буферы устройства «%s» (%s)."
 
-#: serial/unix.c:864
+#: serial/unix.c:863
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Невозможно установить скорость %d"
 
-#: usbdiskdirect/linux.c:234
+#: usbdiskdirect/linux.c:236
 msgid "USB Mass Storage direct IO"
 msgstr "Прямой ввод-вывод USB Mass Storage"
 
-#: usbdiskdirect/linux.c:289 usbscsi/linux.c:261
+#: usbdiskdirect/linux.c:293 usbscsi/linux.c:277
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Не удалось открыть «%s» (%m)."
 
-#: usbdiskdirect/linux.c:303 usbscsi/linux.c:290
+#: usbdiskdirect/linux.c:307 usbscsi/linux.c:306
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Не удалось закрыть «%s» (%m)."
 
-#: usbdiskdirect/linux.c:328
+#: usbdiskdirect/linux.c:332
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
 msgstr "Не удалось перейти к смещению: %x на «%s» (%m)."
 
-#: usbdiskdirect/linux.c:351
+#: usbdiskdirect/linux.c:355
 #, c-format
 msgid "Could not write to '%s' (%m)."
 msgstr "Не удалось записать в «%s» (%m)."
 
-#: usbdiskdirect/linux.c:373
+#: usbdiskdirect/linux.c:377
 #, c-format
 msgid "Could not read from '%s' (%m)."
 msgstr "Не удалось прочитать «%s» (%m)."
 
-#: usb/libusb.c:268 libusb1/libusb1.c:322
+#: usb/libusb.c:268 libusb1/libusb1.c:323
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Невозможно открыть USB-устройство (%s)."
@@ -500,7 +500,7 @@ msgstr "Невозможно открыть USB-устройство (%s)."
 msgid "Device has driver '%s' attached."
 msgstr "Подключено устройство с драйвером «%s»."
 
-#: usb/libusb.c:281 libusb1/libusb1.c:331
+#: usb/libusb.c:281 libusb1/libusb1.c:332
 msgid "Camera is already in use."
 msgstr "Фотоаппарат уже занят."
 
@@ -514,94 +514,102 @@ msgstr "Подключён драйвер «%s». Производится от�
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Невозможно отключить драйвер ядра «%s» для устройства фотоаппарата."
 
-#: usb/libusb.c:294 libusb1/libusb1.c:347
+#: usb/libusb.c:294 libusb1/libusb1.c:348
 msgid "Could not query kernel driver of device."
 msgstr "Невозможно опросить драйвер ядра для устройства."
 
-#: usb/libusb.c:303 libusb1/libusb1.c:355
+#: usb/libusb.c:303 libusb1/libusb1.c:356
 #, c-format
-msgid "Could not claim interface %d (%s). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Невозможно захватить интерфейс %d (%s). Убедитесь, что устройство не занято другой программой или модулем ядра (таким как %s), и что у вас есть доступ к устройству по чтению и записи."
+msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Невозможно захватить интерфейс %d (%s). Убедитесь, что устройство не занято другой программой (%s) или модулем ядра (таким как %s), и что у вас есть право на чтение/запись устройства."
 
-#: usb/libusb.c:325 libusb1/libusb1.c:377
+#: usb/libusb.c:315 libusb1/libusb1.c:367
+msgid "MacOS PTPCamera service"
+msgstr "Служба MacOS PTPCamera"
+
+#: usb/libusb.c:317 libusb1/libusb1.c:369
+msgid "unknown libgphoto2 using program"
+msgstr "неизвестная программа, использующая libgphoto2"
+
+#: usb/libusb.c:335 libusb1/libusb1.c:387
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Невозможно освободить интерфейс %d (%s)."
 
-#: usb/libusb.c:340 libusb1/libusb1.c:392
+#: usb/libusb.c:350 libusb1/libusb1.c:402
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Невозможно вернуть в исходное состояние порт USB (%s)."
 
-#: usb/libusb.c:370
+#: usb/libusb.c:380
 #, c-format
 msgid "Could not close USB port (%s)."
 msgstr "Невозможно закрыть порт USB (%s)."
 
-#: usb/libusb.c:643 libusb1/libusb1.c:678
+#: usb/libusb.c:653 libusb1/libusb1.c:688
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Невозможно изменить конфигурацию %d/%d (%s)"
 
-#: usb/libusb.c:678 libusb1/libusb1.c:717
+#: usb/libusb.c:688 libusb1/libusb1.c:727
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Невозможно установить альтернативную конфигурацию из %d в %d (%s)"
 
-#: usb/libusb.c:771 libusb1/libusb1.c:891
+#: usb/libusb.c:781 libusb1/libusb1.c:905
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Неверный идентификатор производителя или продукта (0x%x,0x%x)."
 
-#: usb/libusb.c:807 libusb1/libusb1.c:930
+#: usb/libusb.c:817 libusb1/libusb1.c:944
 #, c-format
 msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
 msgstr "USB устройство (производитель 0x%x, продукт 0x%x) работает как устройство хранения данных.Программа gphoto2 не может его использовать. Смотрите: %s"
 
-#: usb/libusb.c:850 usb/libusb.c:945 libusb1/libusb1.c:861
-#: libusb1/libusb1.c:962
+#: usb/libusb.c:860 usb/libusb.c:955 libusb1/libusb1.c:873
+#: libusb1/libusb1.c:976
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Не найдено устройство USB (производитель 0x%x, продукт 0x%x). Убедитесь, что устройство подключено к компьютеру."
 
-#: usb/libusb.c:1245 libusb1/libusb1.c:1258
+#: usb/libusb.c:1259 libusb1/libusb1.c:1274
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Не найдено устройство USB (класс 0x%x, подкласс 0x%x, протокол 0x%x). Убедитесь, что устройство подключено к компьютеру."
 
-#: libusb1/libusb1.c:337
+#: libusb1/libusb1.c:338
 #, c-format
 msgid "Device has a kernel driver attached (%d), detaching it now."
 msgstr "Подключён драйвер ядра «%d». Производится отключение драйвера."
 
-#: libusb1/libusb1.c:340
+#: libusb1/libusb1.c:341
 msgid "Could not detach kernel driver of camera device."
 msgstr "Невозможно отключить драйвер ядра устройства фотоаппарата."
 
-#: libusb1/libusb1.c:403
+#: libusb1/libusb1.c:413
 msgid "Could not reattach kernel driver of camera device."
 msgstr "Невозможно отключить драйвер ядра устройства фотоаппарата."
 
-#: usbscsi/linux.c:97
+#: usbscsi/linux.c:110
 #, c-format
 msgid "Device '%s' is locked by another app."
 msgstr "Устройство «%s» заблокировано другим приложением."
 
-#: usbscsi/linux.c:102
+#: usbscsi/linux.c:115
 #, c-format
 msgid "Failed to lock '%s' (%m)."
 msgstr "Не удалось заблокировать «%s» (%m)."
 
-#: usbscsi/linux.c:119
+#: usbscsi/linux.c:132
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
 msgstr "Не удалось разблокировать «%s» (%m)."
 
-#: usbscsi/linux.c:219
+#: usbscsi/linux.c:233
 msgid "USB Mass Storage raw SCSI"
 msgstr "USB Mass Storage raw SCSI"
 
-#: usbscsi/linux.c:335
+#: usbscsi/linux.c:351
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Не удалось послать команду scsi: «%s» (%m)."
