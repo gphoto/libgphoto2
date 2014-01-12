@@ -1,3 +1,13 @@
+libgphoto2 2.5.3.1 release
+
+packaging:
+* "print-camera-list hwdb" output mode added for udev versions >= 201.
+
+  Put this to /usr/lib/udev/hwdb/20-gphoto.hwdb (your udev hwdb directory might be different)
+
+  Added a missing "i" in the PTP matcher.
+
+------------------------------------------------------------------------------
 libgphoto2 2.5.3 release
 
 packaging:
