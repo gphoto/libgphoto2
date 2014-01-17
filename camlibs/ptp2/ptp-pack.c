@@ -1807,6 +1807,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_DepthOfField:
 				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
 				case PTP_DPC_CANON_EOS_AloMode:
+				case PTP_DPC_CANON_EOS_Brightness:
 					dpd->DataType = PTP_DTC_UINT32;
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint32", i ,proptype, size-PTP_ece_Prop_Val_Data);
 					if ((size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) != 0)
