@@ -5697,7 +5697,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Reverse Command Dial"), "reversedial", PTP_DPC_NIKON_ReverseCommandDial, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8 },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_CameraOutput, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_CameraOutput, _put_Canon_CameraOutput },
 	{ N_("Camera Output"), "output", PTP_DPC_CANON_EOS_EVFOutputDevice, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_CameraOutput, _put_Canon_EOS_CameraOutput },
-	{ N_("Movie Recording"), "movierecord", PTP_DPC_CANON_EOS_EVFRecordStatus, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
+	{ N_("Recording Destination"), "movierecordtarget", PTP_DPC_CANON_EOS_EVFRecordStatus, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
 	{ N_("EVF Mode"), "evfmode", PTP_DPC_CANON_EOS_EVFMode, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_EVFMode, _put_Canon_EOS_EVFMode },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_CameraOwner, PTP_VENDOR_CANON, PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY, _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Owner Name"), "ownername", PTP_DPC_CANON_EOS_Owner, PTP_VENDOR_CANON, PTP_DTC_STR, _get_STR, _put_STR},
