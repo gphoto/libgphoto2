@@ -1467,6 +1467,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PCWhiteBalance5	0xD144
 #define PTP_DPC_CANON_EOS_MWhiteBalance		0xD145
 #define PTP_DPC_CANON_EOS_MWhiteBalanceEx	0xD146
+#define PTP_DPC_CANON_EOS_UnknownPropD14D	0xD14D  /*found in Canon EOS 5D M3*/
 #define PTP_DPC_CANON_EOS_PictureStyleStandard	0xD150
 #define PTP_DPC_CANON_EOS_PictureStylePortrait	0xD151
 #define PTP_DPC_CANON_EOS_PictureStyleLandscape	0xD152
@@ -1515,6 +1516,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_WindCut		0xD197
 #define PTP_DPC_CANON_EOS_ExtenderType		0xD198
 #define PTP_DPC_CANON_EOS_OLCInfoVersion	0xD199
+#define PTP_DPC_CANON_EOS_UnknownPropD19A	0xD19A /*found in Canon EOS 5D M3*/
+#define PTP_DPC_CANON_EOS_UnknownPropD19C	0xD19C /*found in Canon EOS 5D M3*/
+#define PTP_DPC_CANON_EOS_UnknownPropD19D	0xD19D /*found in Canon EOS 5D M3*/
 #define PTP_DPC_CANON_EOS_CustomFuncEx		0xD1a0
 #define PTP_DPC_CANON_EOS_MyMenu		0xD1a1
 #define PTP_DPC_CANON_EOS_MyMenuList		0xD1a2
