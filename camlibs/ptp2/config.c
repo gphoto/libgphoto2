@@ -1950,12 +1950,20 @@ static struct deviceproptableu16 canon_selftimer[] = {
 };
 GENERIC16TABLE(Canon_SelfTimer,canon_selftimer)
 
+/* FIXME: Canon EOS 5D Mark III has more enumerations. Need to determine
+ * what they mean.
+ */
 /* actually it is a flag value, 1 = TFT, 2 = PC */
 static struct deviceproptableu16 canon_eos_cameraoutput[] = {
-	{ N_("Undefined"),	0, 0 },
+	{ N_("Off"),		0, 0 }, /*On 5DM3, LCD/TFT is off, mirror down and optical view finder enabled */
 	{ N_("TFT"),		1, 0 },
 	{ N_("PC"), 		2, 0 },
 	{ N_("TFT + PC"), 	3, 0 },
+	/*The below show up as possible on Canon 5D MIII, but unknown what exactly they are */
+	{ N_("Setting 4"),	4, 0 },
+	{ N_("Setting 5"),	5, 0 }, /*5DM3 - Appears to be dup of enum: 1. Probably something else is also enabled. */
+	{ N_("Setting 6"),	6, 0 }, /*5DM3 - Appears to be dup of enum: 2. */
+	{ N_("Setting 7"),	7, 0 }, /*5DM3 - Appears to be dup of enum: 3. */
 };
 GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
 
@@ -1973,6 +1981,12 @@ _get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
+	/* NOTE: On 5DM3, there are 2 ways to get unexpected values.
+	 * 1 way is one the property is disable because the camera is not in movie
+	 * mode. In that case, the enumeration flag will be cleared and the value
+	 * will be 0 i.e. disabled.
+	 * When the camera is in movie mode, then the enumeration flag is set.
+	 * the 5DM3 has 3 enum values being reported 0, 3, 4. */
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 		int i;
 
@@ -1993,12 +2007,24 @@ _get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
 			default:
 				sprintf (buf, _("Unknown %d"), dpd->FORM.Enum.SupportedValue[i].u32);
 				gp_widget_add_choice (*widget, buf);
+				if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
+					gp_widget_set_value (*widget,_(buf));
+					inlist = 1;
+				}
 				break;
 			}
 		}
 	}
 	if (!inlist) {
-		sprintf(buf,_("Unknown %d"),dpd->CurrentValue.u32);
+		/* For Canon EOS 5D Mark III (and probably others),
+		 * this is not an enumeration when the mode is not active on the camera.
+		 * So we show a diferent value, disabled when the value isn't an enum
+		 * and the actual value is 0*/
+		if (dpd->CurrentValue.u32 == 0) {
+			strcpy(buf, _("Disabled"));
+		} else {
+			sprintf(buf,_("Unknown %d"),dpd->CurrentValue.u32);
+		}
 		gp_widget_add_choice (*widget, buf); 
 		gp_widget_set_value (*widget,buf);
 	}
@@ -2015,6 +2041,10 @@ _put_Canon_EOS_EVFRecordTarget(CONFIG_PUT_ARGS) {
 		return ret;
 	if (!strcmp(value,_("Card"))) {
 		propval->u32 = 4;
+		return GP_OK;
+	}
+	if (!strcmp(value,_("Disabled"))) {
+		propval->u32 = 0;
 		return GP_OK;
 	}
 	if (!strcmp(value,_("None"))) {
