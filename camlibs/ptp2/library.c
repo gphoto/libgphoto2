@@ -876,6 +876,10 @@ static struct {
 	/* Clodoaldo <clodoaldo.pinto.neto@gmail.com> via
          * https://bugs.kde.org/show_bug.cgi?id=315268 */
 	{"Nikon:Coolpix P80 (PTP mode)",  0x04b0, 0x016b, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
+	/* TJ <wxtofly@gmail.com> */
+	{"Nikon:Coolpix P80 v1.1 (PTP mode)",  0x04b0, 0x016c, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=2951663&group_id=8874&atid=358874 */
 	{"Nikon:Coolpix P6000 (PTP mode)",0x04b0, 0x016f, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/*   http://bugs.debian.org/520752 */
