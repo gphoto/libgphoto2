@@ -590,7 +590,7 @@ parse_9581_tree (xmlNodePtr node) {
 
 
 			next = xmlNextElementSibling (next);
-			free (x);
+			free (decoded);
 			continue;
 		}
 		gp_log (GP_LOG_ERROR, "olympus","9581: unhandled node type %s", next->name);
