@@ -524,7 +524,8 @@ msgid ""
 msgstr ""
 "Konnte Schnittstelle %d nicht reservieren (%s). Stellen Sie sicher, dass "
 "kein\n"
-"anderes Programm (%s) oder Kernelmodul (z.B. %s) das Gerät verwendet und Sie \n"
+"anderes Programm (%s) oder Kernelmodul (z.B. %s) das Gerät verwendet und "
+"Sie \n"
 "Lese- und Schreibrechte für das Gerät haben."
 
 #: usb/libusb.c:315 libusb1/libusb1.c:367

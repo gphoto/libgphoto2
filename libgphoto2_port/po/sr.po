@@ -1,15 +1,15 @@
 # Serbian translation of libgphoto2_port.
 # Copyright (C) 2012 Lutz Mueller and others
 # This file is distributed under the same license as the libgphoto2 package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012, 2013.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012, 2013, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port-2.5.2\n"
+"Project-Id-Version: libgphoto2_port-2.5.3\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-05-05 21:31+0200\n"
-"PO-Revision-Date: 2013-10-03 09:33+0200\n"
+"POT-Creation-Date: 2014-01-06 14:47+0100\n"
+"PO-Revision-Date: 2014-01-14 09:35+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
-"Language-Team: Serbian <gnu@prevod.org>\n"
+"Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +67,7 @@ msgstr[0] "Доступан је %i редован унос."
 msgstr[1] "Доступна су %i редовна уноса."
 msgstr[2] "Доступно је %i редовних уноса."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:380
+#: libgphoto2_port/gphoto2-port-info-list.c:381
 #, c-format
 msgid "Looking for path '%s' (%i entry available)..."
 msgid_plural "Looking for path '%s' (%i entries available)..."
@@ -75,39 +75,39 @@ msgstr[0] "Тражим путању „%s“ (%i унос је доступан
 msgstr[1] "Тражим путању „%s“ (%i уноса су доступна)..."
 msgstr[2] "Тражим путању „%s“ (%i уноса је доступно)..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:395
 #, c-format
 msgid "Starting regex search for '%s'..."
 msgstr "Покрећем претрагу регуларног израза за „%s“..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:402
+#: libgphoto2_port/gphoto2-port-info-list.c:403
 #, c-format
 msgid "Trying '%s'..."
 msgstr "Покушавам „%s“..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:423
+#: libgphoto2_port/gphoto2-port-info-list.c:424
 msgid "regcomp failed"
 msgstr "није успело „regcomp“"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:434
+#: libgphoto2_port/gphoto2-port-info-list.c:435
 #, c-format
 msgid "re_match failed (%i)"
 msgstr "није успело „re_match“ (%i)"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:442
+#: libgphoto2_port/gphoto2-port-info-list.c:443
 msgid "regexec failed"
 msgstr "није успело „regexec“"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:449
+#: libgphoto2_port/gphoto2-port-info-list.c:450
 msgid "Generic Port"
 msgstr "Општи прикључак"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:474
+#: libgphoto2_port/gphoto2-port-info-list.c:475
 #, c-format
 msgid "Looking up entry '%s'..."
 msgstr "Тражим ставку „%s“..."
 
-#: libgphoto2_port/gphoto2-port-info-list.c:506
+#: libgphoto2_port/gphoto2-port-info-list.c:507
 #, c-format
 msgid "Getting info of entry %i (%i available)..."
 msgid_plural "Getting info of entry %i (%i available)..."
@@ -367,8 +367,8 @@ msgstr "Порука читања (захтев=0x%x вредност=0x%x ин�
 msgid "No error description available"
 msgstr "Опис грешке није доступан"
 
-#: disk/disk.c:135 disk/disk.c:136 disk/disk.c:197 disk/disk.c:198
-#: disk/disk.c:238 disk/disk.c:261
+#: disk/disk.c:145 disk/disk.c:146 disk/disk.c:216 disk/disk.c:217
+#: disk/disk.c:257 disk/disk.c:280
 #, c-format
 msgid "Media '%s'"
 msgstr "Медиј „%s“"
@@ -378,12 +378,12 @@ msgstr "Медиј „%s“"
 msgid "Could not lock device '%s'"
 msgstr "Не могу да закључам уређај „%s“"
 
-#: serial/unix.c:239 usbdiskdirect/linux.c:96
+#: serial/unix.c:239 usbdiskdirect/linux.c:97
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Уређај „%s“ је закључан пидом %d"
 
-#: serial/unix.c:242 usbdiskdirect/linux.c:99
+#: serial/unix.c:242 usbdiskdirect/linux.c:100
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Уређај „%s“ не може бити закључан (закљ_уређ је вратио %d)"
@@ -393,12 +393,12 @@ msgstr "Уређај „%s“ не може бити закључан (закљ_
 msgid "Device '%s' could not be unlocked."
 msgstr "Уређај „%s“ не може бити откључан."
 
-#: serial/unix.c:283 usbdiskdirect/linux.c:128
+#: serial/unix.c:283 usbdiskdirect/linux.c:129
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Уређај „%s“ не може бити откључан јер је закључан пидом %d."
 
-#: serial/unix.c:287 usbdiskdirect/linux.c:132
+#: serial/unix.c:287 usbdiskdirect/linux.c:133
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Уређај „%s“ не може бити откључан (откљ_уређ је вратио %d)"
@@ -408,85 +408,85 @@ msgstr "Уређај „%s“ не може бити откључан (откљ_
 msgid "Serial Port %i"
 msgstr "Серијски прикључак %i"
 
-#: serial/unix.c:461
+#: serial/unix.c:460
 #, c-format
 msgid "Failed to open '%s' (%s)."
 msgstr "Нисам успео да отворим „%s“ (%s)."
 
-#: serial/unix.c:481
+#: serial/unix.c:480
 #, c-format
 msgid "Could not close '%s' (%s)."
 msgstr "Не могу да затворим „%s“ (%s)."
 
-#: serial/unix.c:538
+#: serial/unix.c:537
 #, c-format
 msgid "Could not write to port (%s)"
 msgstr "Не могу да пишем на прикључку (%s)"
 
-#: serial/unix.c:616
+#: serial/unix.c:615
 msgid "Parity error."
 msgstr "Грешка једнакости."
 
-#: serial/unix.c:620
+#: serial/unix.c:619
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Неочекиван низ одговора једнакости 0xff 0x%02x."
 
-#: serial/unix.c:663
+#: serial/unix.c:662
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Непознат пин %i."
 
-#: serial/unix.c:686
+#: serial/unix.c:685
 #, c-format
 msgid "Could not get level of pin %i (%s)."
 msgstr "Не могу да добавим ниво пина %i (%s)."
 
-#: serial/unix.c:723
+#: serial/unix.c:722
 #, c-format
 msgid "Could not set level of pin %i to %i (%s)."
 msgstr "Не могу да подесим ниво пина %i на %i (%s)."
 
-#: serial/unix.c:750
+#: serial/unix.c:749
 #, c-format
 msgid "Could not flush '%s' (%s)."
 msgstr "Не могу да преточим „%s“ (%s)."
 
-#: serial/unix.c:864
+#: serial/unix.c:863
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Не могу да подесим брзину преноса података на %d"
 
-#: usbdiskdirect/linux.c:234
+#: usbdiskdirect/linux.c:236
 msgid "USB Mass Storage direct IO"
 msgstr "Непосредни УИ УСБ масовног складишта"
 
-#: usbdiskdirect/linux.c:289 usbscsi/linux.c:261
+#: usbdiskdirect/linux.c:293 usbscsi/linux.c:277
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Нисам успео да отворим „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:303 usbscsi/linux.c:290
+#: usbdiskdirect/linux.c:307 usbscsi/linux.c:306
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Не могу да затворим „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:328
+#: usbdiskdirect/linux.c:332
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
 msgstr "Не могу да премотам на померај: %x на „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:351
+#: usbdiskdirect/linux.c:355
 #, c-format
 msgid "Could not write to '%s' (%m)."
 msgstr "Не могу да запишем у „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:373
+#: usbdiskdirect/linux.c:377
 #, c-format
 msgid "Could not read from '%s' (%m)."
 msgstr "Не могу да читам са „%s“ (%m)."
 
-#: usb/libusb.c:268 libusb1/libusb1.c:322
+#: usb/libusb.c:268 libusb1/libusb1.c:323
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Не могу да отворим УСБ уређај (%s)."
@@ -496,7 +496,7 @@ msgstr "Не могу да отворим УСБ уређај (%s)."
 msgid "Device has driver '%s' attached."
 msgstr "Уређај има прикачен управљачки програм „%s“."
 
-#: usb/libusb.c:281 libusb1/libusb1.c:331
+#: usb/libusb.c:281 libusb1/libusb1.c:332
 msgid "Camera is already in use."
 msgstr "Фото-апарат је већ у употреби."
 
@@ -510,94 +510,102 @@ msgstr "Уређај има прикачен управљачки програм
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Не могу да откачим управљачки програм језгра „%s“ фото-апарата."
 
-#: usb/libusb.c:294 libusb1/libusb1.c:347
+#: usb/libusb.c:294 libusb1/libusb1.c:348
 msgid "Could not query kernel driver of device."
 msgstr "Не могу да пропитам управљачки програм језгра за уређај."
 
-#: usb/libusb.c:303 libusb1/libusb1.c:355
+#: usb/libusb.c:303 libusb1/libusb1.c:356
 #, c-format
-msgid "Could not claim interface %d (%s). Make sure no other program or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Не могу да придобијем сучеље %d (%s). Уверите се да ниједан други програм или модул језгра (као што је %s) не користи уређај и да ви имате право на читање/писање на уређају."
+msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "Не могу да придобијем сучеље %d (%s). Уверите се да ниједан други програм (%s) или модул језгра (као што је %s) не користи уређај и да ви имате право на читање/писање на уређају."
 
-#: usb/libusb.c:325 libusb1/libusb1.c:377
+#: usb/libusb.c:315 libusb1/libusb1.c:367
+msgid "MacOS PTPCamera service"
+msgstr "Услуга ПТП фото-апарата МекОС-а"
+
+#: usb/libusb.c:317 libusb1/libusb1.c:369
+msgid "unknown libgphoto2 using program"
+msgstr "непозната библгфото2 користи програм"
+
+#: usb/libusb.c:335 libusb1/libusb1.c:387
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Не могу да отпустим сучеље %d (%s)."
 
-#: usb/libusb.c:340 libusb1/libusb1.c:392
+#: usb/libusb.c:350 libusb1/libusb1.c:402
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Не могу поново да подесим УСБ прикључак (%s)."
 
-#: usb/libusb.c:370
+#: usb/libusb.c:380
 #, c-format
 msgid "Could not close USB port (%s)."
 msgstr "Не могу да затворим УСБ прикључак (%s)."
 
-#: usb/libusb.c:643 libusb1/libusb1.c:678
+#: usb/libusb.c:653 libusb1/libusb1.c:688
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Не могу да подесим подешавања %d/%d (%s)"
 
-#: usb/libusb.c:678 libusb1/libusb1.c:717
+#: usb/libusb.c:688 libusb1/libusb1.c:727
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Не могу да подесим подешавање заустављања са %d на %d (%s)"
 
-#: usb/libusb.c:771 libusb1/libusb1.c:891
+#: usb/libusb.c:781 libusb1/libusb1.c:905
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Достављени ид продавца или производа (0x%x,0x%x) није исправан."
 
-#: usb/libusb.c:807 libusb1/libusb1.c:930
+#: usb/libusb.c:817 libusb1/libusb1.c:944
 #, c-format
 msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
 msgstr "УСБ уређај (продавац 0x%x, производ 0x%x) је уређај за масовно складиштење, и можда неће радити са гфото-ом2. Упуте: %s"
 
-#: usb/libusb.c:850 usb/libusb.c:945 libusb1/libusb1.c:861
-#: libusb1/libusb1.c:962
+#: usb/libusb.c:860 usb/libusb.c:955 libusb1/libusb1.c:873
+#: libusb1/libusb1.c:976
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Не могу да пронађем УСБ уређај (продавац 0x%x, производ 0x%x). Уверите се да је тај уређај прикључен на рачунар."
 
-#: usb/libusb.c:1245 libusb1/libusb1.c:1258
+#: usb/libusb.c:1259 libusb1/libusb1.c:1274
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Не могу да пронађем УСБ уређај (разред 0x%x, подразред 0x%x, протокол 0x%x). Уверите се да је тај уређај прикључен на рачунар."
 
-#: libusb1/libusb1.c:337
+#: libusb1/libusb1.c:338
 #, c-format
 msgid "Device has a kernel driver attached (%d), detaching it now."
 msgstr "Уређај има прикачен управљачки програм језгра (%d), откачињем га."
 
-#: libusb1/libusb1.c:340
+#: libusb1/libusb1.c:341
 msgid "Could not detach kernel driver of camera device."
 msgstr "Не могу да откачим управљачки програм језгра фото-апарата."
 
-#: libusb1/libusb1.c:403
+#: libusb1/libusb1.c:413
 msgid "Could not reattach kernel driver of camera device."
 msgstr "Не могу поново да прикачим управљачки програм језгра фото-апарата."
 
-#: usbscsi/linux.c:97
+#: usbscsi/linux.c:110
 #, c-format
 msgid "Device '%s' is locked by another app."
 msgstr "Уређај „%s“ је закључан неким другим програмом."
 
-#: usbscsi/linux.c:102
+#: usbscsi/linux.c:115
 #, c-format
 msgid "Failed to lock '%s' (%m)."
 msgstr "Нисам успео да закључам „%s“ (%m)."
 
-#: usbscsi/linux.c:119
+#: usbscsi/linux.c:132
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
 msgstr "Нисам успео да откључам „%s“ (%m)."
 
-#: usbscsi/linux.c:219
+#: usbscsi/linux.c:233
 msgid "USB Mass Storage raw SCSI"
 msgstr "Сирови СЦСИ УСБ масовног складишта"
 
-#: usbscsi/linux.c:335
+#: usbscsi/linux.c:351
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Не могу да пошаљем сцси наредбу на: „%s“ (%m)."
