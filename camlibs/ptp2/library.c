@@ -5629,7 +5629,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	/* virtual file created by Nikon special capture */
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
-		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)   ) &&
+		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) ||
+		 (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)) &&
 		!strncmp (filename, "capt", 4)
 	)
 		return GP_OK;
