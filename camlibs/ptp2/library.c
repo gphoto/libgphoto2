@@ -3236,8 +3236,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 	SET_CONTEXT_P(params, context);
 
-	strcpy (buf, "card");
-	gp_setting_get("ptp2","capturetarget",buf);
+	/* If there is no capturetarget set yet, the default is "sdram" */
+	if (GP_OK != gp_setting_get("ptp2","capturetarget",buf))
+		strcpy (buf, "sdram");
 
 	gp_log (GP_LOG_DEBUG, "ptp2/trigger_capture", "Triggering capture to %s", buf);
 
