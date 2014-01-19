@@ -2750,6 +2750,7 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 		GPContext *context)
 {
 	uint16_t	ret;
+	int		res;
 	PTPParams	*params = &camera->pl->params;
 
 	gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture\n");
@@ -2779,6 +2780,7 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 	/* 0x1a000002 object id */
 	while (1) {
 		PTPContainer event;
+		uint32_t	assochandle = 0;
 
 		ret = ptp_check_event(params);
 		if (ret != PTP_RC_OK) break;
@@ -2800,14 +2802,25 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 				 * 0x1a000002 - image within that folder
 				 */
 
-				if (oi.ObjectFormat == PTP_OFC_Association)
+				/* remember for later deletion */
+				if (oi.ObjectFormat == PTP_OFC_Association) {
+					assochandle = event.Param1;
 					continue;
+				}
 
 				if (oi.ObjectFormat == PTP_OFC_EXIF_JPEG) {
 					static int capcnt = 0;
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+					sprintf (path->folder,"/");
 					sprintf (path->name, "capt%04d.jpg", capcnt++);
-					return add_objectid_and_upload (camera, path, context, event.Param1, &oi);
+					res = add_objectid_and_upload (camera, path, context, event.Param1, &oi);
+
+					ret = ptp_deleteobject (params, event.Param1, 0);
+					if (ret != PTP_RC_OK)
+						gp_log (GP_LOG_ERROR, "olympus", "capture 2: delete image %08x, ret 0x%04x", event.Param1, ret);
+					ret = ptp_deleteobject (params, assochandle, 0);
+					if (ret != PTP_RC_OK)
+						gp_log (GP_LOG_ERROR, "olympus", "capture 2: delete folder %08x, ret 0x%04x", assochandle, ret);
+					return res;
 				}
 				gp_log (GP_LOG_ERROR, "olympus", "capture 2: unknown OFC 0x%04x for 0x%x", oi.ObjectFormat, event.Param1);
 			}
