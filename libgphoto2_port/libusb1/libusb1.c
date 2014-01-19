@@ -508,7 +508,7 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 	ret = libusb_interrupt_transfer (port->pl->dh, port->settings.usb.intep,
 			     (unsigned char*)bytes, size, &curread, timeout);
         if (ret < 0) {
-		if ((errno == EAGAIN) || (errno == ETIMEDOUT))
+		if (ret == LIBUSB_TRANSFER_TIMED_OUT)
 			return GP_ERROR_TIMEOUT;
 		return GP_ERROR_IO_READ;
 	}
