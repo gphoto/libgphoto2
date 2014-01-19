@@ -2753,7 +2753,7 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 	int		res;
 	PTPParams	*params = &camera->pl->params;
 
-	gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture\n");
+	gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus capture");
 
 	ret = ptp_olympus_capture (params, 3);
 	if (ret != PTP_RC_OK)
@@ -2814,10 +2814,10 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 					sprintf (path->name, "capt%04d.jpg", capcnt++);
 					res = add_objectid_and_upload (camera, path, context, event.Param1, &oi);
 
-					ret = ptp_deleteobject (params, event.Param1, 0);
+					ret = ptp_deleteobject (params, event.Param1, PTP_OFC_EXIF_JPEG);
 					if (ret != PTP_RC_OK)
 						gp_log (GP_LOG_ERROR, "olympus", "capture 2: delete image %08x, ret 0x%04x", event.Param1, ret);
-					ret = ptp_deleteobject (params, assochandle, 0);
+					ret = ptp_deleteobject (params, assochandle, PTP_OFC_Association);
 					if (ret != PTP_RC_OK)
 						gp_log (GP_LOG_ERROR, "olympus", "capture 2: delete folder %08x, ret 0x%04x", assochandle, ret);
 					return res;
