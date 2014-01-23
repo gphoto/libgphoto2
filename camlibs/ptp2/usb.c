@@ -397,7 +397,9 @@ retry:
 			curread += res;
 			if (usecontext && (oldsize/CONTEXT_BLOCK_SIZE < curread/CONTEXT_BLOCK_SIZE))
 				gp_context_progress_update (context, progressid, curread/CONTEXT_BLOCK_SIZE);
-			if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			/* Only cancel transfers larger than 1MB. as
+			 * canceling did not work on eos_get_viewfinder of 200kb */
+			if ((rlen > 1024*1024) && gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 				ret = PTP_ERROR_CANCEL;
 				break;
 			}
