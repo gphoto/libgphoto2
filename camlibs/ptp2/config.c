@@ -3687,6 +3687,12 @@ static struct deviceproptableu8 nikon_remotemode[] = {
 };
 GENERIC8TABLE(Nikon_RemoteMode,nikon_remotemode)
 
+static struct deviceproptableu8 nikon_applicationmode[] = {
+	{ N_("Application Mode 0"),			0, 0 },
+	{ N_("Application Mode 1"),			1, 0 },
+};
+GENERIC8TABLE(Nikon_ApplicationMode,nikon_applicationmode)
+
 static struct deviceproptableu8 nikon_saturation[] = {
 	{ N_("Normal"),		0, 0 },
 	{ N_("Moderate"),	1, 0 },
@@ -4942,6 +4948,19 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 	if (val) {
 		PTPPropertyValue	value;
 
+		if (have_prop(camera,PTP_VENDOR_NIKON,PTP_DPC_NIKON_ApplicationMode)) {
+			value.u8 = 0;
+			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8);
+			if (ret != PTP_RC_OK)
+                                return translate_ptp_result (ret);
+			if (value.u8 != 1) {
+				value.u8 = 1;
+				ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8);
+				if (ret != PTP_RC_OK)
+					return translate_ptp_result (ret);
+			}
+		}
+
                 ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
                 if (ret != PTP_RC_OK)
                         value.u8 = 0;
@@ -5912,6 +5931,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Shutter Speed"), "flashshutterspeed", PTP_DPC_NIKON_FlashShutterSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashShutterSpeed, _put_Nikon_FlashShutterSpeed },
 	{ N_("Remote Timeout"), "remotetimeout", PTP_DPC_NIKON_RemoteTimeout, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RemoteTimeout, _put_Nikon_RemoteTimeout },
 	{ N_("Remote Mode"), "remotemode", PTP_DPC_NIKON_RemoteMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RemoteMode, _put_Nikon_RemoteMode},
+	{ N_("Application Mode"), "applicationmode", PTP_DPC_NIKON_ApplicationMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ApplicationMode, _put_Nikon_ApplicationMode},
 	{ N_("Optimize Image"), "optimizeimage", PTP_DPC_NIKON_OptimizeImage, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OptimizeImage, _put_Nikon_OptimizeImage },
 	{ N_("Sharpening"), "sharpening", PTP_DPC_NIKON_ImageSharpening, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_Sharpening, _put_Nikon_Sharpening },
 	{ N_("Tone Compensation"), "tonecompensation", PTP_DPC_NIKON_ToneCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_ToneCompensation, _put_Nikon_ToneCompensation },

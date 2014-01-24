@@ -1836,6 +1836,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_FlashCommandBMode			0xD1DA
 #define PTP_DPC_NIKON_FlashCommandBCompensation		0xD1DB
 #define PTP_DPC_NIKON_FlashCommandBValue		0xD1DC
+#define PTP_DPC_NIKON_ApplicationMode			0xD1F0
 #define PTP_DPC_NIKON_ActiveSlot			0xD1F2
 #define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
 #define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
