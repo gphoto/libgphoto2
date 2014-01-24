@@ -1,0 +1,4362 @@
+gphoto2 --list-all-config
+/main/actions/uilock                                                           
+Label: UI Lock
+Type: TOGGLE
+Current: 2
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Type: TOGGLE
+Current: 0
+/main/actions/autofocusdrive
+Label: Drive Canon DSLR Autofocus
+Type: TOGGLE
+Current: 0
+/main/actions/manualfocusdrive
+Label: Drive Canon DSLR Manual focus
+Type: RADIO
+Current: None
+Choice: 0 Near 1
+Choice: 1 Near 2
+Choice: 2 Near 3
+Choice: 3 None
+Choice: 4 Far 1
+Choice: 5 Far 2
+Choice: 6 Far 3
+/main/actions/eoszoom
+Label: Canon EOS Zoom
+Type: TEXT
+Current: 0
+/main/actions/eoszoomposition
+Label: Canon EOS Zoom Position
+Type: TEXT
+Current: 0,0
+/main/actions/eosviewfinder
+Label: Canon EOS Viewfinder
+Type: TOGGLE
+Current: 2
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1390410332
+Printable: Wed 22 Jan 2014 17:05:32 UTC
+/main/settings/reviewtime
+Label: Quick Review Time
+Type: RADIO
+Current: 2 seconds
+Choice: 0 None
+Choice: 1 2 seconds
+Choice: 2 4 seconds
+Choice: 3 8 seconds
+Choice: 4 Hold
+/main/settings/output
+Label: Camera Output
+Type: RADIO
+Current: Undefined
+Choice: 0 Undefined
+Choice: 1 TFT
+Choice: 2 PC
+Choice: 3 TFT + PC
+Choice: 4 Unknown value 0004
+Choice: 5 Unknown value 0005
+Choice: 6 Unknown value 0006
+Choice: 7 Unknown value 0007
+/main/settings/movierecord
+Label: Movie Recording
+Type: TEXT
+Current: 0
+/main/settings/evfmode
+Label: EVF Mode
+Type: RADIO
+Current: 1
+Choice: 0 0
+Choice: 1 1
+/main/settings/ownername
+Label: Owner Name
+Type: TEXT
+Current: 
+/main/settings/artist
+Label: Artist
+Type: TEXT
+Current: 
+/main/settings/copyright
+Label: Copyright
+Type: TEXT
+Current: 
+/main/settings/customfuncex
+Label: Custom Functions Ex
+Type: TEXT
+Current: 10,c189,d1a3,0,
+/main/settings/autopoweroff
+Label: Auto Power Off
+Type: TEXT
+Current: 0
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Memory card
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/settings/capture
+Label: Capture
+Type: TOGGLE
+Current: 0
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: 4ff1a05e8014efd
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Canon Inc.
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: Canon EOS 5D Mark III
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 3-1.2.1
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/status/model
+Label: Camera Model
+Type: TEXT
+Current: 2147484293
+/main/status/ptpversion
+Label: PTP Version
+Type: TEXT
+Current: 256
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 100%
+/main/status/lensname
+Label: Lens Name
+Type: TEXT
+Current: EF300mm f/4L IS USM
+/main/status/eosserialnumber
+Label: Serial Number
+Type: TEXT
+Current: 022031003494
+/main/status/shuttercounter
+Label: Shutter Counter
+Type: TEXT
+Current: 52754
+/main/status/availableshots
+Label: Available Shots
+Type: TEXT
+Current: 1562
+/main/imgsettings/imageformat
+Label: Image Format
+Type: RADIO
+Current: Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
+Choice: 12 Unknown value 04d3
+Choice: 13 Unknown value 04d2
+Choice: 14 Unknown value 04e3
+Choice: 15 Unknown value 04f3
+Choice: 16 mRAW + Large Fine JPEG
+Choice: 17 mRAW + Large Normal JPEG
+Choice: 18 mRAW + Medium Fine JPEG
+Choice: 19 mRAW + Medium Normal JPEG
+Choice: 20 Unknown value 14d3
+Choice: 21 Unknown value 14d2
+Choice: 22 Unknown value 14e3
+Choice: 23 Unknown value 14f3
+Choice: 24 sRAW + Large Fine JPEG
+Choice: 25 sRAW + Large Normal JPEG
+Choice: 26 sRAW + Medium Fine JPEG
+Choice: 27 sRAW + Medium Normal JPEG
+Choice: 28 Unknown value 24d3
+Choice: 29 Unknown value 24d2
+Choice: 30 Unknown value 24e3
+Choice: 31 Unknown value 24f3
+Choice: 32 RAW
+Choice: 33 mRAW
+Choice: 34 sRAW
+/main/imgsettings/imageformatsd
+Label: Image Format SD
+Type: RADIO
+Current: Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
+Choice: 12 Unknown value 04d3
+Choice: 13 Unknown value 04d2
+Choice: 14 Unknown value 04e3
+Choice: 15 Unknown value 04f3
+Choice: 16 mRAW + Large Fine JPEG
+Choice: 17 mRAW + Large Normal JPEG
+Choice: 18 mRAW + Medium Fine JPEG
+Choice: 19 mRAW + Medium Normal JPEG
+Choice: 20 Unknown value 14d3
+Choice: 21 Unknown value 14d2
+Choice: 22 Unknown value 14e3
+Choice: 23 Unknown value 14f3
+Choice: 24 sRAW + Large Fine JPEG
+Choice: 25 sRAW + Large Normal JPEG
+Choice: 26 sRAW + Medium Fine JPEG
+Choice: 27 sRAW + Medium Normal JPEG
+Choice: 28 Unknown value 24d3
+Choice: 29 Unknown value 24d2
+Choice: 30 Unknown value 24e3
+Choice: 31 Unknown value 24f3
+Choice: 32 RAW
+Choice: 33 mRAW
+Choice: 34 sRAW
+/main/imgsettings/imageformatcf
+Label: Image Format CF
+Type: RADIO
+Current: Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 Tiny JPEG
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
+Choice: 12 Unknown value 04d3
+Choice: 13 Unknown value 04d2
+Choice: 14 Unknown value 04e3
+Choice: 15 Unknown value 04f3
+Choice: 16 mRAW + Large Fine JPEG
+Choice: 17 mRAW + Large Normal JPEG
+Choice: 18 mRAW + Medium Fine JPEG
+Choice: 19 mRAW + Medium Normal JPEG
+Choice: 20 Unknown value 14d3
+Choice: 21 Unknown value 14d2
+Choice: 22 Unknown value 14e3
+Choice: 23 Unknown value 14f3
+Choice: 24 sRAW + Large Fine JPEG
+Choice: 25 sRAW + Large Normal JPEG
+Choice: 26 sRAW + Medium Fine JPEG
+Choice: 27 sRAW + Medium Normal JPEG
+Choice: 28 Unknown value 24d3
+Choice: 29 Unknown value 24d2
+Choice: 30 Unknown value 24e3
+Choice: 31 Unknown value 24f3
+Choice: 32 RAW
+Choice: 33 mRAW
+Choice: 34 sRAW
+/main/imgsettings/iso
+Label: ISO Speed
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 100
+Choice: 2 125
+Choice: 3 160
+Choice: 4 200
+Choice: 5 250
+Choice: 6 320
+Choice: 7 400
+Choice: 8 500
+Choice: 9 640
+Choice: 10 800
+Choice: 11 1000
+Choice: 12 1250
+Choice: 13 1600
+Choice: 14 2000
+Choice: 15 2500
+Choice: 16 3200
+Choice: 17 4000
+Choice: 18 5000
+Choice: 19 6400
+Choice: 20 Unknown value 007b
+Choice: 21 Unknown value 007d
+Choice: 22 12800
+Choice: 23 Unknown value 0083
+Choice: 24 Unknown value 0085
+Choice: 25 25600
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 Daylight
+Choice: 2 Shadow
+Choice: 3 Cloudy
+Choice: 4 Tungsten
+Choice: 5 Fluorescent
+Choice: 6 Flash
+Choice: 7 Manual
+Choice: 8 Color Temperature
+/main/imgsettings/whitebalanceadjusta
+Label: WhiteBalance Adjust A
+Type: RADIO
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+/main/imgsettings/whitebalanceadjustb
+Label: WhiteBalance Adjust B
+Type: RADIO
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+/main/imgsettings/whitebalancexa
+Label: WhiteBalance X A
+Type: TEXT
+Current: 0
+/main/imgsettings/whitebalancexb
+Label: WhiteBalance X B
+Type: TEXT
+Current: 0
+/main/imgsettings/colorspace
+Label: Color Space
+Type: RADIO
+Current: sRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Type: RADIO
+Current: 0
+Choice: 0 -5
+Choice: 1 -4.6
+Choice: 2 Unknown value 00dd
+Choice: 3 -4
+Choice: 4 -3.6
+Choice: 5 -3.3
+Choice: 6 -3
+Choice: 7 -2.6
+Choice: 8 -2.3
+Choice: 9 -2
+Choice: 10 -1.6
+Choice: 11 -1.3
+Choice: 12 -1.0
+Choice: 13 -0.6
+Choice: 14 -0.3
+Choice: 15 0
+Choice: 16 0.3
+Choice: 17 0.6
+Choice: 18 1.0
+Choice: 19 1.3
+Choice: 20 1.6
+Choice: 21 2
+Choice: 22 2.3
+Choice: 23 2.6
+Choice: 24 3
+Choice: 25 3.3
+Choice: 26 3.6
+Choice: 27 4
+Choice: 28 4.3
+Choice: 29 4.6
+Choice: 30 5
+/main/capturesettings/focusmode
+Label: Focus Mode
+Type: RADIO
+Current: One Shot
+Choice: 0 One Shot
+Choice: 1 AI Focus
+Choice: 2 AI Servo
+/main/capturesettings/autoexposuremode
+Label: Canon Auto Exposure Mode
+Type: RADIO
+Current: TV
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+/main/capturesettings/drivemode
+Label: Drive Mode
+Type: RADIO
+Current: Single
+Choice: 0 Single
+Choice: 1 Continuous high speed
+Choice: 2 Continuous low speed
+Choice: 3 Single silent
+Choice: 4 Continuous silent
+Choice: 5 Timer 10 sec
+Choice: 6 Timer 2 sec
+/main/capturesettings/picturestyle
+Label: Picture Style
+Type: RADIO
+Current: Standard
+Choice: 0 Unknown value 0087
+Choice: 1 Standard
+Choice: 2 Portrait
+Choice: 3 Landscape
+Choice: 4 Neutral
+Choice: 5 Faithful
+Choice: 6 Monochrome
+Choice: 7 User defined 1
+Choice: 8 User defined 2
+Choice: 9 User defined 3
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Type: RADIO
+Current: 1/200
+Choice: 0 30
+Choice: 1 25
+Choice: 2 20
+Choice: 3 15
+Choice: 4 13
+Choice: 5 10
+Choice: 6 8
+Choice: 7 6
+Choice: 8 5
+Choice: 9 4
+Choice: 10 3.2
+Choice: 11 2.5
+Choice: 12 2
+Choice: 13 1.6
+Choice: 14 1.3
+Choice: 15 1
+Choice: 16 0.8
+Choice: 17 0.6
+Choice: 18 0.5
+Choice: 19 0.4
+Choice: 20 0.3
+Choice: 21 1/4
+Choice: 22 1/5
+Choice: 23 1/6
+Choice: 24 1/8
+Choice: 25 1/10
+Choice: 26 1/13
+Choice: 27 1/15
+Choice: 28 1/20
+Choice: 29 1/25
+Choice: 30 1/30
+Choice: 31 1/40
+Choice: 32 1/50
+Choice: 33 1/60
+Choice: 34 1/80
+Choice: 35 1/100
+Choice: 36 1/125
+Choice: 37 1/160
+Choice: 38 1/200
+Choice: 39 1/250
+Choice: 40 1/320
+Choice: 41 1/400
+Choice: 42 1/500
+Choice: 43 1/640
+Choice: 44 1/800
+Choice: 45 1/1000
+Choice: 46 1/1250
+Choice: 47 1/1600
+Choice: 48 1/2000
+Choice: 49 1/2500
+Choice: 50 1/3200
+Choice: 51 1/4000
+Choice: 52 1/5000
+Choice: 53 1/6400
+Choice: 54 1/8000
+/main/capturesettings/meteringmode
+Label: Metering Mode
+Type: RADIO
+Current: Evaluative
+Choice: 0 Evaluative
+Choice: 1 Partial
+Choice: 2 Spot
+Choice: 3 Center-weighted average
+/main/capturesettings/bracketmode
+Label: Bracket Mode
+Type: TEXT
+Current: 0
+/main/capturesettings/aeb
+Label: Auto Exposure Bracketing
+Type: RADIO
+Current: off
+Choice: 0 off
+Choice: 1 +/- 1/3
+Choice: 2 +/- 2/3
+Choice: 3 +/- 1
+Choice: 4 +/- 1 1/3
+Choice: 5 +/- 1 2/3
+Choice: 6 +/- 2
+Choice: 7 +/- 2 1/3
+Choice: 8 +/- 2 2/3
+Choice: 9 +/- 3
+/main/other/d402
+Label: PTP Property 0xd402
+Type: TEXT
+Current: Canon EOS 5D Mark III
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current: Unknown Initiator
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 100
+Choice: 0 100
+Choice: 1 0
+Choice: 2 75
+Choice: 3 0
+Choice: 4 50
+
+0.867130 PTP2/ptp2/library.c(2): Device info:
+0.868433 PTP2/ptp2/library.c(2): Manufacturer: Canon Inc.
+0.869328 PTP2/ptp2/library.c(2):   Model: Canon EOS 5D Mark III
+0.869462 PTP2/ptp2/library.c(2):   device version: 3-1.2.1
+0.869573 PTP2/ptp2/library.c(2):   serial number: '4ff1a05e8014efd'
+0.869688 PTP2/ptp2/library.c(2): Vendor extension ID: 0x0000000b
+0.870038 PTP2/ptp2/library.c(2): Vendor extension version: 100
+0.870692 PTP2/ptp2/library.c(2): Vendor extension description: (null)
+0.870860 PTP2/ptp2/library.c(2): Functional Mode: 0x0000
+0.870974 PTP2/ptp2/library.c(2): PTP Standard Version: 100
+0.871790 PTP2/ptp2/library.c(2): Supported operations:
+0.871997 PTP2/ptp2/library.c(2):   0x1001
+0.872144 PTP2/ptp2/library.c(2):   0x1002
+0.872257 PTP2/ptp2/library.c(2):   0x1003
+0.872575 PTP2/ptp2/library.c(2):   0x1014
+0.873264 PTP2/ptp2/library.c(2):   0x1015
+0.873393 PTP2/ptp2/library.c(2):   0x1016
+0.873502 PTP2/ptp2/library.c(2):   0x91d5
+0.873816 PTP2/ptp2/library.c(2):   0x9801
+0.874490 PTP2/ptp2/library.c(2):   0x9802
+0.875955 PTP2/ptp2/library.c(2):   0x9803
+0.876833 PTP2/ptp2/library.c(2):   0x9804
+0.876965 PTP2/ptp2/library.c(2):   0x9805
+0.877075 PTP2/ptp2/library.c(2):   0x1006
+0.877182 PTP2/ptp2/library.c(2):   0x1004
+0.877288 PTP2/ptp2/library.c(2):   0x9101
+0.877581 PTP2/ptp2/library.c(2):   0x1005
+0.878262 PTP2/ptp2/library.c(2):   0x9102
+0.878386 PTP2/ptp2/library.c(2):   0x1007
+0.879178 PTP2/ptp2/library.c(2):   0x1008
+0.879304 PTP2/ptp2/library.c(2):   0x9103
+0.879413 PTP2/ptp2/library.c(2):   0x1009
+0.879515 PTP2/ptp2/library.c(2):   0x9104
+0.879859 PTP2/ptp2/library.c(2):   0x100a
+0.880382 PTP2/ptp2/library.c(2):   0x101b
+0.881340 PTP2/ptp2/library.c(2):   0x9107
+0.881986 PTP2/ptp2/library.c(2):   0x100c
+0.883734 PTP2/ptp2/library.c(2):   0x100d
+0.883887 PTP2/ptp2/library.c(2):   0x100b
+0.883998 PTP2/ptp2/library.c(2):   0x9105
+0.884110 PTP2/ptp2/library.c(2):   0x100f
+0.884215 PTP2/ptp2/library.c(2):   0x9106
+0.884885 PTP2/ptp2/library.c(2):   0x9110
+0.885015 PTP2/ptp2/library.c(2):   0x9127
+0.885127 PTP2/ptp2/library.c(2):   0x910b
+0.885453 PTP2/ptp2/library.c(2):   0x9108
+0.886257 PTP2/ptp2/library.c(2):   0x9109
+0.886390 PTP2/ptp2/library.c(2):   0x910c
+0.886500 PTP2/ptp2/library.c(2):   0x910e
+0.886839 PTP2/ptp2/library.c(2):   0x910f
+0.887508 PTP2/ptp2/library.c(2):   0x9117
+0.887636 PTP2/ptp2/library.c(2):   0x9120
+0.887748 PTP2/ptp2/library.c(2):   0x91f0
+0.888107 PTP2/ptp2/library.c(2):   0x9118
+0.888781 PTP2/ptp2/library.c(2):   0x9121
+0.888907 PTP2/ptp2/library.c(2):   0x91f1
+0.889014 PTP2/ptp2/library.c(2):   0x911d
+0.889124 PTP2/ptp2/library.c(2):   0x910a
+0.889955 PTP2/ptp2/library.c(2):   0x911b
+0.890087 PTP2/ptp2/library.c(2):   0x911c
+0.890197 PTP2/ptp2/library.c(2):   0x911e
+0.890308 PTP2/ptp2/library.c(2):   0x911a
+0.890416 PTP2/ptp2/library.c(2):   0x9153
+0.890765 PTP2/ptp2/library.c(2):   0x9154
+0.891446 PTP2/ptp2/library.c(2):   0x9160
+0.891582 PTP2/ptp2/library.c(2):   0x9155
+0.891692 PTP2/ptp2/library.c(2):   0x9157
+0.891799 PTP2/ptp2/library.c(2):   0x9158
+0.892638 PTP2/ptp2/library.c(2):   0x9159
+0.892765 PTP2/ptp2/library.c(2):   0x915a
+0.892875 PTP2/ptp2/library.c(2):   0x911f
+0.892981 PTP2/ptp2/library.c(2):   0x91fe
+0.893088 PTP2/ptp2/library.c(2):   0x91ff
+0.893422 PTP2/ptp2/library.c(2):   0x9128
+0.894095 PTP2/ptp2/library.c(2):   0x9129
+0.894225 PTP2/ptp2/library.c(2):   0x912d
+0.894334 PTP2/ptp2/library.c(2):   0x912e
+0.894441 PTP2/ptp2/library.c(2):   0x912f
+0.895273 PTP2/ptp2/library.c(2):   0x912c
+0.895402 PTP2/ptp2/library.c(2):   0x9130
+0.895506 PTP2/ptp2/library.c(2):   0x9131
+0.895956 PTP2/ptp2/library.c(2):   0x9132
+0.896137 PTP2/ptp2/library.c(2):   0x9133
+0.896814 PTP2/ptp2/library.c(2):   0x9134
+0.896952 PTP2/ptp2/library.c(2):   0x912b
+0.897061 PTP2/ptp2/library.c(2):   0x9135
+0.897168 PTP2/ptp2/library.c(2):   0x9136
+0.898011 PTP2/ptp2/library.c(2):   0x9137
+0.898139 PTP2/ptp2/library.c(2):   0x9138
+0.898249 PTP2/ptp2/library.c(2):   0x9139
+0.898357 PTP2/ptp2/library.c(2):   0x913a
+0.898655 PTP2/ptp2/library.c(2):   0x913b
+0.899340 PTP2/ptp2/library.c(2):   0x913c
+0.899472 PTP2/ptp2/library.c(2):   0x913d
+0.899580 PTP2/ptp2/library.c(2):   0x913f
+0.900396 PTP2/ptp2/library.c(2):   0x91da
+0.900522 PTP2/ptp2/library.c(2):   0x91db
+0.900632 PTP2/ptp2/library.c(2):   0x91dc
+0.900734 PTP2/ptp2/library.c(2):   0x91dd
+0.901022 PTP2/ptp2/library.c(2):   0x91de
+0.901711 PTP2/ptp2/library.c(2):   0x91d8
+0.901846 PTP2/ptp2/library.c(2):   0x91d9
+0.901955 PTP2/ptp2/library.c(2):   0x91d7
+0.902062 PTP2/ptp2/library.c(2):   0x913e
+0.902861 PTP2/ptp2/library.c(2):   0x9113
+0.903013 PTP2/ptp2/library.c(2):   0x9114
+0.903124 PTP2/ptp2/library.c(2):   0x9115
+0.903230 PTP2/ptp2/library.c(2):   0x9116
+0.903336 PTP2/ptp2/library.c(2):   0x91c0
+0.903699 PTP2/ptp2/library.c(2):   0x91c1
+0.903833 PTP2/ptp2/library.c(2):   0x91c2
+0.903993 PTP2/ptp2/library.c(2):   0x91c3
+0.904718 PTP2/ptp2/library.c(2):   0x91c4
+0.904846 PTP2/ptp2/library.c(2):   0x91c5
+0.904956 PTP2/ptp2/library.c(2):   0x91c6
+0.905063 PTP2/ptp2/library.c(2):   0x91c7
+0.905167 PTP2/ptp2/library.c(2):   0x91c8
+0.906152 PTP2/ptp2/library.c(2):   0x91c9
+0.906287 PTP2/ptp2/library.c(2):   0x91ca
+0.906394 PTP2/ptp2/library.c(2):   0x91cb
+0.906501 PTP2/ptp2/library.c(2):   0x91cc
+0.906608 PTP2/ptp2/library.c(2):   0x91ce
+0.906974 PTP2/ptp2/library.c(2):   0x91cf
+0.907100 PTP2/ptp2/library.c(2):   0x91d0
+0.907210 PTP2/ptp2/library.c(2):   0x91d1
+0.907893 PTP2/ptp2/library.c(2):   0x91d2
+0.908021 PTP2/ptp2/library.c(2):   0x91e1
+0.908129 PTP2/ptp2/library.c(2):   0x91e2
+0.908236 PTP2/ptp2/library.c(2):   0x91e3
+0.909062 PTP2/ptp2/library.c(2):   0x91e4
+0.909221 PTP2/ptp2/library.c(2):   0x91e5
+0.909330 PTP2/ptp2/library.c(2):   0x91e6
+0.909436 PTP2/ptp2/library.c(2):   0x91e7
+0.909541 PTP2/ptp2/library.c(2):   0x91e8
+0.910365 PTP2/ptp2/library.c(2):   0x91e9
+0.910519 PTP2/ptp2/library.c(2):   0x91ea
+0.910629 PTP2/ptp2/library.c(2):   0x91eb
+0.910736 PTP2/ptp2/library.c(2):   0x91ec
+0.910841 PTP2/ptp2/library.c(2):   0x91ed
+0.911689 PTP2/ptp2/library.c(2):   0x91ee
+0.911826 PTP2/ptp2/library.c(2):   0x91ef
+0.911977 PTP2/ptp2/library.c(2):   0x91f8
+0.912125 PTP2/ptp2/library.c(2):   0x91f9
+0.912421 PTP2/ptp2/library.c(2):   0x91f2
+0.913099 PTP2/ptp2/library.c(2):   0x91f3
+0.913229 PTP2/ptp2/library.c(2):   0x91f4
+0.913985 PTP2/ptp2/library.c(2):   0x91f7
+0.914117 PTP2/ptp2/library.c(2):   0x91df
+0.914228 PTP2/ptp2/library.c(2):   0x91fb
+0.914556 PTP2/ptp2/library.c(2):   0x91fc
+0.915184 PTP2/ptp2/library.c(2):   0x91fd
+0.915339 PTP2/ptp2/library.c(2):   0x9122
+0.915451 PTP2/ptp2/library.c(2):   0x9123
+0.915555 PTP2/ptp2/library.c(2):   0x9124
+0.916498 PTP2/ptp2/library.c(2):   0x91f5
+0.916628 PTP2/ptp2/library.c(2):   0x91f6
+0.916739 PTP2/ptp2/library.c(2):   0x9052
+0.916849 PTP2/ptp2/library.c(2):   0x9053
+0.917146 PTP2/ptp2/library.c(2):   0x9057
+0.917831 PTP2/ptp2/library.c(2):   0x9058
+0.917965 PTP2/ptp2/library.c(2):   0x9059
+0.918080 PTP2/ptp2/library.c(2):   0x905a
+0.918188 PTP2/ptp2/library.c(2):   0x905f
+0.919009 PTP2/ptp2/library.c(2): Events Supported:
+0.919144 PTP2/ptp2/library.c(2):   0x4009
+0.919254 PTP2/ptp2/library.c(2):   0x4004
+0.919362 PTP2/ptp2/library.c(2):   0x4005
+0.919470 PTP2/ptp2/library.c(2):   0x4003
+0.919830 PTP2/ptp2/library.c(2):   0x4002
+0.920010 PTP2/ptp2/library.c(2):   0x4007
+0.920726 PTP2/ptp2/library.c(2):   0xc101
+0.920853 PTP2/ptp2/library.c(2): Device Properties Supported:
+0.920970 PTP2/ptp2/library.c(2):   0xd402
+0.921078 PTP2/ptp2/library.c(2):   0xd407
+0.921886 PTP2/ptp2/library.c(2):   0xd406
+0.922054 PTP2/ptp2/library.c(2):   0xd303
+0.922166 PTP2/ptp2/library.c(2):   0x5001
+
+0000  78 2b 00 00 02 00 16 91-0b 00 00 00 10 00 00 00  x+..............
+0010  89 c1 00 00 a3 d1 00 00-00 00 00 00 10 00 00 00  ................
+0020  89 c1 00 00 d9 d1 00 00-00 00 00 00 10 00 00 00  ................
+0030  89 c1 00 00 d5 d1 00 00-00 00 00 00 10 00 00 00  ................
+0040  89 c1 00 00 a3 d1 00 00-00 00 00 00 10 00 00 00  ................
+0050  89 c1 00 00 05 d1 00 00-01 00 00 00 10 00 00 00  ................
+0060  89 c1 00 00 08 d1 00 00-00 00 00 00 10 00 00 00  ................
+0070  89 c1 00 00 06 d1 00 00-00 00 00 00 10 00 00 00  ................
+0080  89 c1 00 00 07 d1 00 00-03 00 00 00 10 00 00 00  ................
+0090  89 c1 00 00 09 d1 00 00-00 00 00 00 10 00 00 00  ................
+00a0  89 c1 00 00 0a d1 00 00-50 14 00 00 10 00 00 00  ........P.......
+00b0  89 c1 00 00 0b d1 00 00-00 00 00 00 10 00 00 00  ................
+00c0  89 c1 00 00 0c d1 00 00-00 00 00 00 10 00 00 00  ................
+00d0  89 c1 00 00 0d d1 00 00-00 00 00 00 10 00 00 00  ................
+00e0  89 c1 00 00 0e d1 00 00-00 00 00 00 10 00 00 00  ................
+00f0  89 c1 00 00 0f d1 00 00-01 00 00 00 10 00 00 00  ................
+0100  89 c1 00 00 1b d1 00 00-19 06 00 00 10 00 00 00  ................
+0110  89 c1 00 00 14 d1 00 00-00 00 00 00 10 00 00 00  ................
+0120  89 c1 00 00 16 d1 00 00-85 02 00 80 10 00 00 00  ................
+0130  89 c1 00 00 19 d1 00 00-00 01 00 00 10 00 00 00  ................
+0140  89 c1 00 00 10 d1 00 00-81 00 00 00 10 00 00 00  ................
+0150  89 c1 00 00 01 d1 00 00-30 00 00 00 10 00 00 00  ........0.......
+0160  89 c1 00 00 02 d1 00 00-75 00 00 00 10 00 00 00  ........u.......
+0170  89 c1 00 00 03 d1 00 00-00 00 00 00 10 00 00 00  ................
+0180  89 c1 00 00 04 d1 00 00-00 00 00 00 10 00 00 00  ................
+0190  89 c1 00 00 1d d1 00 00-00 00 00 00 10 00 00 00  ................
+01a0  89 c1 00 00 11 d1 00 00-02 00 00 00 10 00 00 00  ................
+01b0  89 c1 00 00 12 d1 00 00-02 00 00 00 10 00 00 00  ................
+01c0  89 c1 00 00 13 d1 00 00-53 fb df 52 10 00 00 00  ........S..R....
+01d0  89 c1 00 00 7c d1 00 00-c3 5d e0 52 18 00 00 00  ....|....].R....
+01e0  89 c1 00 00 7d d1 00 00-0c 00 00 00 1e 00 00 00  ....}...........
+01f0  20 fe ff ff 10 00 00 00-89 c1 00 00 7e d1 00 00   ...........~...
+
+1.148370 gphoto2-port(2): Reading 10240=0x2800 bytes from port...
+1.154881 gphoto2-port(3): Hexdump of 10240 = 0x2800 bytes follows:
+0000  01 00 00 00 20 00 00 00-89 c1 00 00 20 d1 00 00  .... ....... ...
+0010  01 00 00 00 10 00 00 00-01 00 00 00 00 00 00 00  ................
+0020  03 00 00 00 20 00 00 00-89 c1 00 00 21 d1 00 00  .... .......!...
+0030  01 00 00 00 10 00 00 00-01 00 00 00 00 00 00 00  ................
+0040  03 00 00 00 20 00 00 00-89 c1 00 00 22 d1 00 00  .... ......."...
+0050  01 00 00 00 10 00 00 00-01 00 00 00 00 00 00 00  ................
+0060  03 00 00 00 28 00 00 00-89 c1 00 00 56 d1 00 00  ....(.......V...
+0070  1c 00 00 00 00 00 00 00-03 00 00 00 00 00 00 00  ................
+0080  00 00 00 00 00 00 00 00-00 00 00 00 28 00 00 00  ............(...
+0090  89 c1 00 00 50 d1 00 00-1c 00 00 00 00 00 00 00  ....P...........
+00a0  03 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+00b0  00 00 00 00 28 00 00 00-89 c1 00 00 51 d1 00 00  ....(.......Q...
+00c0  1c 00 00 00 00 00 00 00-02 00 00 00 00 00 00 00  ................
+00d0  00 00 00 00 00 00 00 00-00 00 00 00 28 00 00 00  ............(...
+00e0  89 c1 00 00 52 d1 00 00-1c 00 00 00 00 00 00 00  ....R...........
+00f0  04 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0100  00 00 00 00 28 00 00 00-89 c1 00 00 53 d1 00 00  ....(.......S...
+0110  1c 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0120  00 00 00 00 00 00 00 00-00 00 00 00 28 00 00 00  ............(...
+0130  89 c1 00 00 54 d1 00 00-1c 00 00 00 00 00 00 00  ....T...........
+0140  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0150  00 00 00 00 28 00 00 00-89 c1 00 00 55 d1 00 00  ....(.......U...
+0160  1c 00 00 00 00 00 00 00-03 00 00 00 00 00 00 00  ................
+0170  00 00 00 00 00 00 00 00-00 00 00 00 2c 00 00 00  ............,...
+0180  89 c1 00 00 60 d1 00 00-20 00 00 00 81 00 00 00  ....`... .......
+0190  00 00 00 00 03 00 00 00-00 00 00 00 00 00 00 00  ................
+01a0  00 00 00 00 00 00 00 00-2c 00 00 00 89 c1 00 00  ........,.......
+01b0  61 d1 00 00 20 00 00 00-81 00 00 00 00 00 00 00  a... ...........
+01c0  03 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+01d0  00 00 00 00 2c 00 00 00-89 c1 00 00 62 d1 00 00  ....,.......b...
+01e0  20 00 00 00 81 00 00 00-00 00 00 00 03 00 00 00   ...............
+01f0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0200  10 00 00 00 89 c1 00 00-1c d1 00 00 01 00 00 00  ................
+0210  6c 00 00 00 89 c1 00 00-a0 d1 00 00 60 00 00 00  l...........`...
+0220  01 00 00 00 01 00 00 00-54 00 00 00 06 00 00 00  ........T.......
+0230  01 01 00 00 01 00 00 00-00 00 00 00 02 01 00 00  ................
+0240  01 00 00 00 00 00 00 00-04 01 00 00 01 00 00 00  ................
+0250  00 00 00 00 05 01 00 00-01 00 00 00 00 00 00 00  ................
+0260  06 01 00 00 02 00 00 00-03 00 00 00 00 00 00 00  ................
+0270  08 01 00 00 01 00 00 00-00 00 00 00 38 00 00 00  ............8...
+0280  89 c1 00 00 a0 d1 00 00-2c 00 00 00 01 00 00 00  ........,.......
+0290  02 00 00 00 20 00 00 00-02 00 00 00 0a 04 00 00  .... ...........
+02a0  01 00 00 00 07 00 00 00-0b 04 00 00 01 00 00 00  ................
+02b0  00 00 00 00 dc 00 00 00-89 c1 00 00 a0 d1 00 00  ................
+02c0  d0 00 00 00 01 00 00 00-04 00 00 00 c4 00 00 00  ................
+02d0  05 00 00 00 0c 07 00 00-20 00 00 00 00 00 00 00  ........ .......
+02e0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+02f0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0300  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0310  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0320  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0330  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0340  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0350  00 00 00 00 07 00 00 00-03 00 00 00 06 07 00 00  ................
+0360  01 00 00 00 00 00 00 00-0f 07 00 00 02 00 00 00  ................
+0370  00 00 00 00 02 00 00 00-0e 08 00 00 01 00 00 00  ................
+0380  00 00 00 00 13 08 00 00-01 00 00 00 00 00 00 00  ................
+0390  14 00 00 00 89 c1 00 00-a1 d1 00 00 08 00 00 00  ................
+03a0  00 00 00 00 10 00 00 00-89 c1 00 00 a8 d1 00 00  ................
+03b0  01 00 00 00 34 00 00 00-89 c1 00 00 a7 d1 00 00  ....4...........
+03c0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+03d0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+03e0  00 00 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ................
+03f0  ab d1 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ................
+0400  b0 d1 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ................
+0410  b1 d1 00 00 01 00 00 00-10 00 00 00 89 c1 00 00  ................
+0420  b2 d1 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ................
+0430  b3 d1 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ................
+0440  b4 d1 00 00 00 00 00 00-3c 00 00 00 89 c1 00 00  ........<.......
+0450  b5 d1 00 00 30 00 00 00-00 00 00 00 00 ff ff ff  ....0...........
+0460  ff ff ff ff ff ff ff ff-ff ff ff ff ff ff ff ff  ................
+0470  ff ff ff ff ff ff ff ff-ff ff ff ff 00 04 00 04  ................
+0480  00 04 00 04 10 00 00 00-89 c1 00 00 b6 d1 00 00  ................
+0490  50 14 00 00 10 00 00 00-89 c1 00 00 a9 d1 00 00  P...............
+04a0  02 00 00 00 3c 00 00 00-89 c1 00 00 46 d1 00 00  ....<.......F...
+04b0  30 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  0...............
+04c0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+04d0  00 00 00 00 00 00 00 00-eb 01 00 04 00 04 7e 02  ..............~.
+04e0  10 00 00 00 89 c1 00 00-ac d1 00 00 12 ce 00 00  ................
+04f0  10 00 00 00 89 c1 00 00-aa d1 00 00 00 00 00 00  ................
+0500  10 00 00 00 89 c1 00 00-1e d1 00 00 01 00 01 00  ................
+0510  10 00 00 00 89 c1 00 00-1f d1 00 00 00 00 00 50  ...............P
+0520  10 00 00 00 89 c1 00 00-d9 d1 00 00 00 00 00 00  ................
+0530  10 00 00 00 89 c1 00 00-d5 d1 00 00 00 00 00 00  ................
+0540  10 00 00 00 89 c1 00 00-ba d1 00 00 01 00 00 00  ................
+0550  28 00 00 00 89 c1 00 00-cc d1 00 00 1c 00 00 00  (...............
+0560  00 00 00 00 00 00 00 00-1e 00 00 00 0f 00 00 00  ................
+0570  00 00 00 00 03 00 00 00-10 00 00 00 89 c1 00 00  ................
+0580  bc d1 00 00 01 00 00 00-10 00 00 00 89 c1 00 00  ................
+0590  b8 d1 00 00 00 00 00 00-22 02 00 00 89 c1 00 00  ........".......
+05a0  d3 d1 00 00 16 02 00 00-12 02 02 00 3d 00 3d 00  ............=.=.
+05b0  80 16 00 0f 80 16 00 0f-be 00 be 00 be 00 be 00  ................
+05c0  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+05d0  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+05e0  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+05f0  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+0600  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+0610  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+0620  be 00 be 00 be 00 be 00-be 00 be 00 be 00 be 00  ................
+0630  be 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+0640  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+0650  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+0660  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+0670  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+0680  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+0690  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 bc 00 bc 00  ................
+06a0  bc 00 bc 00 bc 00 bc 00-bc 00 bc 00 20 01 00 00  ............ ...
+06b0  e0 fe f0 05 d0 04 b0 03-7f 02 20 01 00 00 10 fa  .......... .....
+06c0  30 fb 50 fc 81 fd e0 fe-f0 05 d0 04 b0 03 7f 02  0.P.............
+06d0  20 01 00 00 10 fa 30 fb-50 fc 81 fd e0 fe f0 05   .....0.P.......
+06e0  d0 04 b0 03 7f 02 20 01-00 00 10 fa 30 fb 50 fc  ...... .....0.P.
+06f0  81 fd e0 fe f0 05 d0 04-b0 03 7f 02 20 01 00 00  ............ ...
+0700  10 fa 30 fb 50 fc 81 fd-e0 fe f0 05 d0 04 b0 03  ..0.P...........
+0710  7f 02 20 01 00 00 10 fa-30 fb 50 fc 81 fd e0 fe  .. .....0.P.....
+0720  20 01 00 00 e0 fe 78 fd-78 fd 78 fd 4f fe 4f fe   .....x.x.x.O.O.
+0730  4f fe 4f fe 4f fe 4f fe-4f fe 4f fe 4f fe 4f fe  O.O.O.O.O.O.O.O.
+0740  4f fe 29 ff 29 ff 29 ff-29 ff 29 ff 29 ff 29 ff  O.).).).).).).).
+0750  29 ff 29 ff 29 ff 29 ff-00 00 00 00 00 00 00 00  ).).).).........
+0760  00 00 00 00 00 00 00 00-00 00 00 00 00 00 d7 00  ................
+0770  d7 00 d7 00 d7 00 d7 00-d7 00 d7 00 d7 00 d7 00  ................
+0780  d7 00 d7 00 b1 01 b1 01-b1 01 b1 01 b1 01 b1 01  ................
+0790  b1 01 b1 01 b1 01 b1 01-b1 01 88 02 88 02 88 02  ................
+07a0  00 00 00 00 00 00 00 00-00 00 00 40 00 00 00 00  ...........@....
+07b0  00 00 00 00 00 00 00 00-ff ff 4c 00 00 00 89 c1  ..........L.....
+07c0  00 00 d8 d1 00 00 45 46-33 30 30 6d 6d 20 66 2f  ......EF300mm f/
+07d0  34 4c 20 49 53 20 55 53-4d 00 00 00 00 00 00 00  4L IS USM.......
+07e0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+07f0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0800  00 00 00 00 00 00 10 00-00 00 89 c1 00 00 b7 d1  ................
+0810  00 00 03 00 00 00 40 00-00 00 89 c1 00 00 cb d1  ......@.........
+0820  00 00 34 00 00 00 00 00-00 00 03 00 00 00 00 00  ..4.............
+0830  00 00 00 00 03 80 00 00-00 00 03 00 00 00 48 00  ..............H.
+0840  00 00 49 00 03 80 00 00-00 00 03 00 00 00 4b 00  ..I...........K.
+0850  00 00 4c 00 03 80 1a 00-00 00 89 c1 00 00 db d1  ..L.............
+0860  00 00 00 00 00 00 03 00-00 00 2f 00 00 00 28 00  ........../...(.
+0870  10 00 00 00 89 c1 00 00-dc d1 00 00 00 00 00 00  ................
+0880  10 00 00 00 89 c1 00 00-a3 d1 00 00 00 00 00 00  ................
+0890  f0 01 00 00 89 c1 00 00-a4 d1 00 00 e4 01 00 00  ................
+08a0  30 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  0...............
+08b0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+08c0  31 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  1...............
+08d0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+08e0  32 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  2...............
+08f0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0900  33 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  3...............
+0910  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0920  34 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  4...............
+0930  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0940  35 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  5...............
+0950  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0960  36 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  6...............
+0970  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0980  37 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  7...............
+0990  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+09a0  38 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  8...............
+09b0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+09c0  39 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  9...............
+09d0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+09e0  31 30 00 00 00 00 00 00-00 00 00 00 00 00 00 00  10..............
+09f0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0a00  31 31 00 00 00 00 00 00-00 00 00 00 00 00 00 00  11..............
+0a10  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0a20  31 32 00 00 00 00 00 00-00 00 00 00 00 00 00 00  12..............
+0a30  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0a40  31 33 00 00 00 00 00 00-00 00 00 00 00 00 00 00  13..............
+0a50  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0a60  31 34 00 00 00 00 00 00-00 00 00 00 00 00 00 00  14..............
+0a70  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0a80  10 00 00 00 89 c1 00 00-df d1 00 00 00 00 00 00  ................
+0a90  10 00 00 00 89 c1 00 00-bd d1 00 00 00 00 00 00  ................
+0aa0  10 00 00 00 89 c1 00 00-c1 d1 00 00 00 00 01 00  ................
+0ab0  10 00 00 00 89 c1 00 00-c0 d1 00 00 00 00 00 00  ................
+0ac0  10 00 00 00 89 c1 00 00-bf d1 00 00 00 00 00 00  ................
+0ad0  10 00 00 00 89 c1 00 00-c4 d1 00 00 00 00 00 00  ................
+0ae0  10 00 00 00 89 c1 00 00-c2 d1 00 00 00 00 00 00  ................
+0af0  10 00 00 00 89 c1 00 00-c5 d1 00 00 01 00 00 00  ................
+0b00  10 00 00 00 89 c1 00 00-94 d1 00 00 00 00 00 00  ................
+0b10  10 00 00 00 89 c1 00 00-95 d1 00 00 02 00 00 00  ................
+0b20  10 00 00 00 89 c1 00 00-96 d1 00 00 2f 00 00 00  ............/...
+0b30  10 00 00 00 89 c1 00 00-97 d1 00 00 00 00 00 00  ................
+0b40  10 00 00 00 89 c1 00 00-98 d1 00 00 ff 00 00 00  ................
+0b50  10 00 00 00 89 c1 00 00-dd d1 00 00 b1 00 00 00  ................
+0b60  10 00 00 00 89 c1 00 00-c7 d1 00 00 00 00 00 00  ................
+0b70  10 00 00 00 89 c1 00 00-99 d1 00 00 07 00 00 00  ................
+0b80  10 00 00 00 89 c1 00 00-38 d1 00 00 01 00 00 00  ........8.......
+0b90  18 00 00 00 89 c1 00 00-39 d1 00 00 00 00 00 00  ........9.......
+0ba0  00 00 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ................
+0bb0  3a d1 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  :...............
+0bc0  3b d1 00 00 00 00 00 00-10 00 00 00 89 c1 00 00  ;...............
+0bd0  3c d1 00 00 3f 00 00 00-24 00 00 00 89 c1 00 00  <...?...$.......
+0be0  3d d1 00 00 18 00 00 00-00 00 00 00 00 00 00 00  =...............
+0bf0  01 00 00 00 01 00 00 00-00 00 00 00 10 00 00 00  ................
+0c00  89 c1 00 00 4d d1 00 00-00 3c 00 00 10 00 00 00  ....M....<......
+0c10  89 c1 00 00 9a d1 00 00-00 00 00 00 10 00 00 00  ................
+0c20  89 c1 00 00 9c d1 00 00-01 00 00 00 0c 00 00 00  ................
+0c30  a4 c1 00 00 01 00 01 00-14 00 00 00 8a c1 00 00  ................
+0c40  05 d1 00 00 01 00 00 00-00 00 00 00 20 00 00 00  ............ ...
+0c50  8a c1 00 00 08 d1 00 00-03 00 00 00 03 00 00 00  ................
+0c60  00 00 00 00 02 00 00 00-01 00 00 00 30 00 00 00  ............0...
+0c70  8a c1 00 00 06 d1 00 00-03 00 00 00 07 00 00 00  ................
+0c80  00 00 00 00 04 00 00 00-05 00 00 00 13 00 00 00  ................
+0c90  14 00 00 00 10 00 00 00-11 00 00 00 24 00 00 00  ............$...
+0ca0  8a c1 00 00 07 d1 00 00-03 00 00 00 04 00 00 00  ................
+0cb0  03 00 00 00 04 00 00 00-01 00 00 00 05 00 00 00  ................
+0cc0  38 00 00 00 8a c1 00 00-09 d1 00 00 03 00 00 00  8...............
+0cd0  09 00 00 00 00 00 00 00-01 00 00 00 08 00 00 00  ................
+0ce0  02 00 00 00 03 00 00 00-04 00 00 00 05 00 00 00  ................
+0cf0  06 00 00 00 09 00 00 00-44 01 00 00 8a c1 00 00  ........D.......
+0d00  0a d1 00 00 03 00 00 00-4c 00 00 00 c4 09 00 00  ........L.......
+0d10  28 0a 00 00 8c 0a 00 00-f0 0a 00 00 54 0b 00 00  (...........T...
+0d20  b8 0b 00 00 1c 0c 00 00-80 0c 00 00 e4 0c 00 00  ................
+0d30  48 0d 00 00 ac 0d 00 00-10 0e 00 00 74 0e 00 00  H...........t...
+0d40  d8 0e 00 00 3c 0f 00 00-a0 0f 00 00 04 10 00 00  ....<...........
+0d50  68 10 00 00 cc 10 00 00-30 11 00 00 94 11 00 00  h.......0.......
+0d60  f8 11 00 00 5c 12 00 00-c0 12 00 00 24 13 00 00  ....\.......$...
+0d70  88 13 00 00 ec 13 00 00-50 14 00 00 b4 14 00 00  ........P.......
+0d80  18 15 00 00 7c 15 00 00-e0 15 00 00 44 16 00 00  ....|.......D...
+0d90  a8 16 00 00 0c 17 00 00-70 17 00 00 d4 17 00 00  ........p.......
+0da0  38 18 00 00 9c 18 00 00-00 19 00 00 64 19 00 00  8...........d...
+0db0  c8 19 00 00 2c 1a 00 00-90 1a 00 00 f4 1a 00 00  ....,...........
+0dc0  58 1b 00 00 bc 1b 00 00-20 1c 00 00 84 1c 00 00  X....... .......
+0dd0  e8 1c 00 00 4c 1d 00 00-b0 1d 00 00 14 1e 00 00  ....L...........
+0de0  78 1e 00 00 dc 1e 00 00-40 1f 00 00 a4 1f 00 00  x.......@.......
+0df0  08 20 00 00 6c 20 00 00-d0 20 00 00 34 21 00 00  . ..l ... ..4!..
+0e00  98 21 00 00 fc 21 00 00-60 22 00 00 c4 22 00 00  .!...!..`"..."..
+0e10  28 23 00 00 8c 23 00 00-f0 23 00 00 54 24 00 00  (#...#...#..T$..
+0e20  b8 24 00 00 1c 25 00 00-80 25 00 00 e4 25 00 00  .$...%...%...%..
+0e30  48 26 00 00 ac 26 00 00-10 27 00 00 60 00 00 00  H&...&...'..`...
+0e40  8a c1 00 00 0b d1 00 00-03 00 00 00 13 00 00 00  ................
+0e50  f7 ff ff ff f8 ff ff ff-f9 ff ff ff fa ff ff ff  ................
+0e60  fb ff ff ff fc ff ff ff-fd ff ff ff fe ff ff ff  ................
+0e70  ff ff ff ff 00 00 00 00-01 00 00 00 02 00 00 00  ................
+0e80  03 00 00 00 04 00 00 00-05 00 00 00 06 00 00 00  ................
+0e90  07 00 00 00 08 00 00 00-09 00 00 00 60 00 00 00  ............`...
+0ea0  8a c1 00 00 0c d1 00 00-03 00 00 00 13 00 00 00  ................
+0eb0  f7 ff ff ff f8 ff ff ff-f9 ff ff ff fa ff ff ff  ................
+0ec0  fb ff ff ff fc ff ff ff-fd ff ff ff fe ff ff ff  ................
+0ed0  ff ff ff ff 00 00 00 00-01 00 00 00 02 00 00 00  ................
+0ee0  03 00 00 00 04 00 00 00-05 00 00 00 06 00 00 00  ................
+0ef0  07 00 00 00 08 00 00 00-09 00 00 00 24 00 00 00  ............$...
+0f00  8a c1 00 00 0d d1 00 00-03 00 00 00 04 00 00 00  ................
+0f10  00 00 00 00 01 00 00 00-02 00 00 00 03 00 00 00  ................
+0f20  24 00 00 00 8a c1 00 00-0e d1 00 00 03 00 00 00  $...............
+0f30  04 00 00 00 00 00 00 00-01 00 00 00 02 00 00 00  ................
+0f40  03 00 00 00 1c 00 00 00-8a c1 00 00 0f d1 00 00  ................
+0f50  03 00 00 00 02 00 00 00-01 00 00 00 02 00 00 00  ................
+0f60  14 00 00 00 8a c1 00 00-1b d1 00 00 01 00 00 00  ................
+0f70  00 00 00 00 14 00 00 00-8a c1 00 00 14 d1 00 00  ................
+0f80  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+0f90  16 d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+0fa0  8a c1 00 00 19 d1 00 00-01 00 00 00 00 00 00 00  ................
+0fb0  14 00 00 00 8a c1 00 00-1a d1 00 00 01 00 00 00  ................
+0fc0  00 00 00 00 3c 00 00 00-8a c1 00 00 10 d1 00 00  ....<...........
+0fd0  03 00 00 00 0a 00 00 00-87 00 00 00 81 00 00 00  ................
+0fe0  82 00 00 00 83 00 00 00-84 00 00 00 85 00 00 00  ................
+0ff0  86 00 00 00 21 00 00 00-22 00 00 00 23 00 00 00  ....!..."...#...
+1000  14 00 00 00 8a c1 00 00-15 d1 00 00 07 00 00 00  ................
+1010  00 00 00 00 14 00 00 00-8a c1 00 00 01 d1 00 00  ................
+1020  03 00 00 00 00 00 00 00-f0 00 00 00 8a c1 00 00  ................
+1030  02 d1 00 00 03 00 00 00-37 00 00 00 10 00 00 00  ........7.......
+1040  13 00 00 00 15 00 00 00-18 00 00 00 1b 00 00 00  ................
+1050  1d 00 00 00 20 00 00 00-23 00 00 00 25 00 00 00  .... ...#...%...
+1060  28 00 00 00 2b 00 00 00-2d 00 00 00 30 00 00 00  (...+...-...0...
+1070  33 00 00 00 35 00 00 00-38 00 00 00 3b 00 00 00  3...5...8...;...
+1080  3d 00 00 00 40 00 00 00-43 00 00 00 45 00 00 00  =...@...C...E...
+1090  48 00 00 00 4b 00 00 00-4d 00 00 00 50 00 00 00  H...K...M...P...
+10a0  53 00 00 00 55 00 00 00-58 00 00 00 5b 00 00 00  S...U...X...[...
+10b0  5d 00 00 00 60 00 00 00-63 00 00 00 65 00 00 00  ]...`...c...e...
+10c0  68 00 00 00 6b 00 00 00-6d 00 00 00 70 00 00 00  h...k...m...p...
+10d0  73 00 00 00 75 00 00 00-78 00 00 00 7b 00 00 00  s...u...x...{...
+10e0  7d 00 00 00 80 00 00 00-83 00 00 00 85 00 00 00  }...............
+10f0  88 00 00 00 8b 00 00 00-8d 00 00 00 90 00 00 00  ................
+1100  93 00 00 00 95 00 00 00-98 00 00 00 9b 00 00 00  ................
+1110  9d 00 00 00 a0 00 00 00-7c 00 00 00 8a c1 00 00  ........|.......
+1120  03 d1 00 00 03 00 00 00-1a 00 00 00 00 00 00 00  ................
+1130  48 00 00 00 4b 00 00 00-4d 00 00 00 50 00 00 00  H...K...M...P...
+1140  53 00 00 00 55 00 00 00-58 00 00 00 5b 00 00 00  S...U...X...[...
+1150  5d 00 00 00 60 00 00 00-63 00 00 00 65 00 00 00  ]...`...c...e...
+1160  68 00 00 00 6b 00 00 00-6d 00 00 00 70 00 00 00  h...k...m...p...
+1170  73 00 00 00 75 00 00 00-78 00 00 00 7b 00 00 00  s...u...x...{...
+1180  7d 00 00 00 80 00 00 00-83 00 00 00 85 00 00 00  }...............
+1190  88 00 00 00 90 00 00 00-8a c1 00 00 04 d1 00 00  ................
+11a0  03 00 00 00 1f 00 00 00-d8 00 00 00 db 00 00 00  ................
+11b0  dd 00 00 00 e0 00 00 00-e3 00 00 00 e5 00 00 00  ................
+11c0  e8 00 00 00 eb 00 00 00-ed 00 00 00 f0 00 00 00  ................
+11d0  f3 00 00 00 f5 00 00 00-f8 00 00 00 fb 00 00 00  ................
+11e0  fd 00 00 00 00 00 00 00-03 00 00 00 05 00 00 00  ................
+11f0  08 00 00 00 0b 00 00 00-0d 00 00 00 10 00 00 00  ................
+1200  13 00 00 00 15 00 00 00-18 00 00 00 1b 00 00 00  ................
+1210  1d 00 00 00 20 00 00 00-23 00 00 00 25 00 00 00  .... ...#...%...
+1220  28 00 00 00 14 00 00 00-8a c1 00 00 1d d1 00 00  (...............
+1230  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+1240  11 d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+1250  8a c1 00 00 12 d1 00 00-01 00 00 00 00 00 00 00  ................
+1260  14 00 00 00 8a c1 00 00-13 d1 00 00 07 00 00 00  ................
+1270  00 00 00 00 14 00 00 00-8a c1 00 00 7c d1 00 00  ............|...
+1280  07 00 00 00 00 00 00 00-a0 01 00 00 8a c1 00 00  ................
+1290  7d d1 00 00 03 00 00 00-21 00 00 00 0c 00 00 00  }.......!.......
+12a0  01 00 00 00 fd 02 00 00-0c 00 00 00 02 00 00 00  ................
+12b0  d0 02 00 00 0c 00 00 00-03 00 00 00 94 02 00 00  ................
+12c0  0c 00 00 00 04 00 00 00-58 02 00 00 0c 00 00 00  ........X.......
+12d0  05 00 00 00 3a 02 00 00-0c 00 00 00 06 00 00 00  ....:...........
+12e0  1c 02 00 00 0c 00 00 00-07 00 00 00 e0 01 00 00  ................
+12f0  0c 00 00 00 08 00 00 00-a4 01 00 00 0c 00 00 00  ................
+1300  09 00 00 00 86 01 00 00-0c 00 00 00 0a 00 00 00  ................
+1310  68 01 00 00 0c 00 00 00-0b 00 00 00 59 01 00 00  h...........Y...
+1320  0c 00 00 00 0c 00 00 00-4a 01 00 00 0c 00 00 00  ........J.......
+1330  0d 00 00 00 2c 01 00 00-0c 00 00 00 0e 00 00 00  ....,...........
+1340  0e 01 00 00 0c 00 00 00-0f 00 00 00 f0 00 00 00  ................
+1350  0c 00 00 00 10 00 00 00-d2 00 00 00 0c 00 00 00  ................
+1360  11 00 00 00 b4 00 00 00-0c 00 00 00 12 00 00 00  ................
+1370  78 00 00 00 0c 00 00 00-13 00 00 00 3c 00 00 00  x...........<...
+1380  0c 00 00 00 14 00 00 00-00 00 00 00 0c 00 00 00  ................
+1390  15 00 00 00 c4 ff ff ff-0c 00 00 00 16 00 00 00  ................
+13a0  88 ff ff ff 0c 00 00 00-17 00 00 00 4c ff ff ff  ............L...
+13b0  0c 00 00 00 18 00 00 00-2e ff ff ff 0c 00 00 00  ................
+13c0  19 00 00 00 10 ff ff ff-0c 00 00 00 1a 00 00 00  ................
+13d0  10 ff ff ff 0c 00 00 00-1b 00 00 00 d4 fe ff ff  ................
+13e0  0c 00 00 00 1c 00 00 00-98 fe ff ff 0c 00 00 00  ................
+13f0  1d 00 00 00 5c fe ff ff-0c 00 00 00 1e 00 00 00  ....\...........
+1400  20 fe ff ff 0c 00 00 00-1f 00 00 00 e4 fd ff ff   ...............
+1410  0c 00 00 00 20 00 00 00-a8 fd ff ff 0c 00 00 00  .... ...........
+1420  21 00 00 00 0c 03 00 00-1c 00 00 00 8a c1 00 00  !...............
+1430  7e d1 00 00 03 00 00 00-02 00 00 00 00 00 00 00  ~...............
+1440  01 00 00 00 50 04 00 00-8a c1 00 00 20 d1 00 00  ....P....... ...
+1450  03 00 00 00 23 00 00 00-01 00 00 00 10 00 00 00  ....#...........
+1460  01 00 00 00 00 00 00 00-03 00 00 00 01 00 00 00  ................
+1470  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1480  01 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1490  03 00 00 00 01 00 00 00-10 00 00 00 01 00 00 00  ................
+14a0  01 00 00 00 02 00 00 00-01 00 00 00 10 00 00 00  ................
+14b0  01 00 00 00 0e 00 00 00-03 00 00 00 01 00 00 00  ................
+14c0  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+14d0  01 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+14e0  03 00 00 00 01 00 00 00-10 00 00 00 01 00 00 00  ................
+14f0  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1500  06 00 00 00 00 00 00 00-04 00 00 00 10 00 00 00  ................
+1510  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1520  10 00 00 00 06 00 00 00-00 00 00 00 04 00 00 00  ................
+1530  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1540  02 00 00 00 10 00 00 00-06 00 00 00 00 00 00 00  ................
+1550  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1560  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1570  00 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1580  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+1590  06 00 00 00 00 00 00 00-04 00 00 00 10 00 00 00  ................
+15a0  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+15b0  10 00 00 00 06 00 00 00-00 00 00 00 04 00 00 00  ................
+15c0  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+15d0  02 00 00 00 10 00 00 00-06 00 00 00 00 00 00 00  ................
+15e0  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+15f0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1600  00 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1610  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1620  06 00 00 00 01 00 00 00-04 00 00 00 10 00 00 00  ................
+1630  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1640  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1650  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1660  02 00 00 00 10 00 00 00-06 00 00 00 01 00 00 00  ................
+1670  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1680  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1690  01 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+16a0  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+16b0  06 00 00 00 01 00 00 00-04 00 00 00 10 00 00 00  ................
+16c0  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+16d0  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+16e0  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+16f0  02 00 00 00 10 00 00 00-06 00 00 00 01 00 00 00  ................
+1700  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1710  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1720  01 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1730  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1740  06 00 00 00 02 00 00 00-04 00 00 00 10 00 00 00  ................
+1750  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1760  10 00 00 00 06 00 00 00-02 00 00 00 04 00 00 00  ................
+1770  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1780  02 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+1790  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+17a0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+17b0  02 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+17c0  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+17d0  06 00 00 00 02 00 00 00-04 00 00 00 10 00 00 00  ................
+17e0  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+17f0  10 00 00 00 06 00 00 00-02 00 00 00 04 00 00 00  ................
+1800  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1810  02 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+1820  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1830  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1840  02 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1850  10 00 00 00 03 00 00 00-01 00 00 00 10 00 00 00  ................
+1860  06 00 00 00 00 00 00 00-04 00 00 00 01 00 00 00  ................
+1870  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1880  01 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+1890  04 00 00 00 50 04 00 00-8a c1 00 00 21 d1 00 00  ....P.......!...
+18a0  03 00 00 00 23 00 00 00-01 00 00 00 10 00 00 00  ....#...........
+18b0  01 00 00 00 00 00 00 00-03 00 00 00 01 00 00 00  ................
+18c0  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+18d0  01 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+18e0  03 00 00 00 01 00 00 00-10 00 00 00 01 00 00 00  ................
+18f0  01 00 00 00 02 00 00 00-01 00 00 00 10 00 00 00  ................
+1900  01 00 00 00 0e 00 00 00-03 00 00 00 01 00 00 00  ................
+1910  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1920  01 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1930  03 00 00 00 01 00 00 00-10 00 00 00 01 00 00 00  ................
+1940  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1950  06 00 00 00 00 00 00 00-04 00 00 00 10 00 00 00  ................
+1960  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1970  10 00 00 00 06 00 00 00-00 00 00 00 04 00 00 00  ................
+1980  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1990  02 00 00 00 10 00 00 00-06 00 00 00 00 00 00 00  ................
+19a0  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+19b0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+19c0  00 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+19d0  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+19e0  06 00 00 00 00 00 00 00-04 00 00 00 10 00 00 00  ................
+19f0  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+1a00  10 00 00 00 06 00 00 00-00 00 00 00 04 00 00 00  ................
+1a10  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1a20  02 00 00 00 10 00 00 00-06 00 00 00 00 00 00 00  ................
+1a30  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1a40  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1a50  00 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1a60  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1a70  06 00 00 00 01 00 00 00-04 00 00 00 10 00 00 00  ................
+1a80  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1a90  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1aa0  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1ab0  02 00 00 00 10 00 00 00-06 00 00 00 01 00 00 00  ................
+1ac0  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1ad0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1ae0  01 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1af0  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+1b00  06 00 00 00 01 00 00 00-04 00 00 00 10 00 00 00  ................
+1b10  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+1b20  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1b30  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1b40  02 00 00 00 10 00 00 00-06 00 00 00 01 00 00 00  ................
+1b50  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1b60  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1b70  01 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1b80  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1b90  06 00 00 00 02 00 00 00-04 00 00 00 10 00 00 00  ................
+1ba0  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1bb0  10 00 00 00 06 00 00 00-02 00 00 00 04 00 00 00  ................
+1bc0  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1bd0  02 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+1be0  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1bf0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1c00  02 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1c10  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+1c20  06 00 00 00 02 00 00 00-04 00 00 00 10 00 00 00  ................
+1c30  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+1c40  10 00 00 00 06 00 00 00-02 00 00 00 04 00 00 00  ................
+1c50  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1c60  02 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+1c70  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1c80  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1c90  02 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1ca0  10 00 00 00 03 00 00 00-01 00 00 00 10 00 00 00  ................
+1cb0  06 00 00 00 00 00 00 00-04 00 00 00 01 00 00 00  ................
+1cc0  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1cd0  01 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+1ce0  04 00 00 00 50 04 00 00-8a c1 00 00 22 d1 00 00  ....P......."...
+1cf0  03 00 00 00 23 00 00 00-01 00 00 00 10 00 00 00  ....#...........
+1d00  01 00 00 00 00 00 00 00-03 00 00 00 01 00 00 00  ................
+1d10  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1d20  01 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1d30  03 00 00 00 01 00 00 00-10 00 00 00 01 00 00 00  ................
+1d40  01 00 00 00 02 00 00 00-01 00 00 00 10 00 00 00  ................
+1d50  01 00 00 00 0e 00 00 00-03 00 00 00 01 00 00 00  ................
+1d60  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1d70  01 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1d80  03 00 00 00 01 00 00 00-10 00 00 00 01 00 00 00  ................
+1d90  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1da0  06 00 00 00 00 00 00 00-04 00 00 00 10 00 00 00  ................
+1db0  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1dc0  10 00 00 00 06 00 00 00-00 00 00 00 04 00 00 00  ................
+1dd0  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1de0  02 00 00 00 10 00 00 00-06 00 00 00 00 00 00 00  ................
+1df0  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1e00  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1e10  00 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1e20  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+1e30  06 00 00 00 00 00 00 00-04 00 00 00 10 00 00 00  ................
+1e40  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+1e50  10 00 00 00 06 00 00 00-00 00 00 00 04 00 00 00  ................
+1e60  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1e70  02 00 00 00 10 00 00 00-06 00 00 00 00 00 00 00  ................
+1e80  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1e90  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1ea0  00 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1eb0  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1ec0  06 00 00 00 01 00 00 00-04 00 00 00 10 00 00 00  ................
+1ed0  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+1ee0  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1ef0  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+1f00  02 00 00 00 10 00 00 00-06 00 00 00 01 00 00 00  ................
+1f10  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+1f20  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1f30  01 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1f40  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+1f50  06 00 00 00 01 00 00 00-04 00 00 00 10 00 00 00  ................
+1f60  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+1f70  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+1f80  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+1f90  02 00 00 00 10 00 00 00-06 00 00 00 01 00 00 00  ................
+1fa0  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+1fb0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+1fc0  01 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+1fd0  10 00 00 00 03 00 00 00-02 00 00 00 10 00 00 00  ................
+1fe0  06 00 00 00 02 00 00 00-04 00 00 00 10 00 00 00  ................
+1ff0  01 00 00 00 00 00 00 00-03 00 00 00 02 00 00 00  ................
+2000  10 00 00 00 06 00 00 00-02 00 00 00 04 00 00 00  ................
+2010  10 00 00 00 01 00 00 00-00 00 00 00 02 00 00 00  ................
+2020  02 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+2030  04 00 00 00 10 00 00 00-01 00 00 00 01 00 00 00  ................
+2040  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+2050  02 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+2060  01 00 00 00 02 00 00 00-02 00 00 00 10 00 00 00  ................
+2070  06 00 00 00 02 00 00 00-04 00 00 00 10 00 00 00  ................
+2080  01 00 00 00 0e 00 00 00-03 00 00 00 02 00 00 00  ................
+2090  10 00 00 00 06 00 00 00-02 00 00 00 04 00 00 00  ................
+20a0  10 00 00 00 01 00 00 00-0e 00 00 00 02 00 00 00  ................
+20b0  02 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+20c0  04 00 00 00 10 00 00 00-01 00 00 00 0f 00 00 00  ................
+20d0  03 00 00 00 02 00 00 00-10 00 00 00 06 00 00 00  ................
+20e0  02 00 00 00 04 00 00 00-10 00 00 00 01 00 00 00  ................
+20f0  10 00 00 00 03 00 00 00-01 00 00 00 10 00 00 00  ................
+2100  06 00 00 00 00 00 00 00-04 00 00 00 01 00 00 00  ................
+2110  10 00 00 00 06 00 00 00-01 00 00 00 04 00 00 00  ................
+2120  01 00 00 00 10 00 00 00-06 00 00 00 02 00 00 00  ................
+2130  04 00 00 00 14 00 00 00-8a c1 00 00 56 d1 00 00  ............V...
+2140  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+2150  50 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  P...............
+2160  8a c1 00 00 51 d1 00 00-07 00 00 00 00 00 00 00  ....Q...........
+2170  14 00 00 00 8a c1 00 00-52 d1 00 00 07 00 00 00  ........R.......
+2180  00 00 00 00 14 00 00 00-8a c1 00 00 53 d1 00 00  ............S...
+2190  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+21a0  54 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  T...............
+21b0  8a c1 00 00 55 d1 00 00-07 00 00 00 00 00 00 00  ....U...........
+21c0  14 00 00 00 8a c1 00 00-60 d1 00 00 07 00 00 00  ........`.......
+21d0  00 00 00 00 14 00 00 00-8a c1 00 00 61 d1 00 00  ............a...
+21e0  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+21f0  62 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  b...............
+2200  8a c1 00 00 70 d1 00 00-07 00 00 00 00 00 00 00  ....p...........
+2210  14 00 00 00 8a c1 00 00-71 d1 00 00 07 00 00 00  ........q.......
+2220  00 00 00 00 14 00 00 00-8a c1 00 00 72 d1 00 00  ............r...
+2230  07 00 00 00 00 00 00 00-20 00 00 00 8a c1 00 00  ........ .......
+2240  1c d1 00 00 03 00 00 00-03 00 00 00 01 00 00 00  ................
+2250  05 00 00 00 04 00 00 00-14 00 00 00 8a c1 00 00  ................
+2260  a0 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  ................
+2270  8a c1 00 00 a1 d1 00 00-07 00 00 00 00 00 00 00  ................
+2280  14 00 00 00 8a c1 00 00-a2 d1 00 00 07 00 00 00  ................
+2290  00 00 00 00 14 00 00 00-8a c1 00 00 a8 d1 00 00  ................
+22a0  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+22b0  a7 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  ................
+22c0  8a c1 00 00 ab d1 00 00-01 00 00 00 00 00 00 00  ................
+22d0  34 00 00 00 8a c1 00 00-b0 d1 00 00 03 00 00 00  4...............
+22e0  08 00 00 00 00 00 00 00-01 00 00 00 02 00 00 00  ................
+22f0  03 00 00 00 04 00 00 00-05 00 00 00 06 00 00 00  ................
+2300  07 00 00 00 1c 00 00 00-8a c1 00 00 b1 d1 00 00  ................
+2310  03 00 00 00 02 00 00 00-00 00 00 00 01 00 00 00  ................
+2320  14 00 00 00 8a c1 00 00-b2 d1 00 00 07 00 00 00  ................
+2330  00 00 00 00 14 00 00 00-8a c1 00 00 b3 d1 00 00  ................
+2340  07 00 00 00 00 00 00 00-3c 00 00 00 8a c1 00 00  ........<.......
+2350  b4 d1 00 00 03 00 00 00-0a 00 00 00 00 00 00 00  ................
+2360  01 00 00 00 08 00 00 00-02 00 00 00 03 00 00 00  ................
+2370  04 00 00 00 05 00 00 00-06 00 00 00 09 00 00 00  ................
+2380  00 80 00 00 14 00 00 00-8a c1 00 00 b5 d1 00 00  ................
+2390  07 00 00 00 00 00 00 00-44 01 00 00 8a c1 00 00  ........D.......
+23a0  b6 d1 00 00 03 00 00 00-4c 00 00 00 c4 09 00 00  ........L.......
+23b0  28 0a 00 00 8c 0a 00 00-f0 0a 00 00 54 0b 00 00  (...........T...
+23c0  b8 0b 00 00 1c 0c 00 00-80 0c 00 00 e4 0c 00 00  ................
+23d0  48 0d 00 00 ac 0d 00 00-10 0e 00 00 74 0e 00 00  H...........t...
+23e0  d8 0e 00 00 3c 0f 00 00-a0 0f 00 00 04 10 00 00  ....<...........
+23f0  68 10 00 00 cc 10 00 00-30 11 00 00 94 11 00 00  h.......0.......
+2400  f8 11 00 00 5c 12 00 00-c0 12 00 00 24 13 00 00  ....\.......$...
+2410  88 13 00 00 ec 13 00 00-50 14 00 00 b4 14 00 00  ........P.......
+2420  18 15 00 00 7c 15 00 00-e0 15 00 00 44 16 00 00  ....|.......D...
+2430  a8 16 00 00 0c 17 00 00-70 17 00 00 d4 17 00 00  ........p.......
+2440  38 18 00 00 9c 18 00 00-00 19 00 00 64 19 00 00  8...........d...
+2450  c8 19 00 00 2c 1a 00 00-90 1a 00 00 f4 1a 00 00  ....,...........
+2460  58 1b 00 00 bc 1b 00 00-20 1c 00 00 84 1c 00 00  X....... .......
+2470  e8 1c 00 00 4c 1d 00 00-b0 1d 00 00 14 1e 00 00  ....L...........
+2480  78 1e 00 00 dc 1e 00 00-40 1f 00 00 a4 1f 00 00  x.......@.......
+2490  08 20 00 00 6c 20 00 00-d0 20 00 00 34 21 00 00  . ..l ... ..4!..
+24a0  98 21 00 00 fc 21 00 00-60 22 00 00 c4 22 00 00  .!...!..`"..."..
+24b0  28 23 00 00 8c 23 00 00-f0 23 00 00 54 24 00 00  (#...#...#..T$..
+24c0  b8 24 00 00 1c 25 00 00-80 25 00 00 e4 25 00 00  .$...%...%...%..
+24d0  48 26 00 00 ac 26 00 00-10 27 00 00 28 00 00 00  H&...&...'..(...
+24e0  8a c1 00 00 a9 d1 00 00-03 00 00 00 05 00 00 00  ................
+24f0  00 00 00 00 02 00 00 00-04 00 00 00 08 00 00 00  ................
+2500  ff 00 00 00 14 00 00 00-8a c1 00 00 46 d1 00 00  ............F...
+2510  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+2520  ac d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+2530  8a c1 00 00 ad d1 00 00-01 00 00 00 00 00 00 00  ................
+2540  14 00 00 00 8a c1 00 00-ae d1 00 00 01 00 00 00  ................
+2550  00 00 00 00 14 00 00 00-8a c1 00 00 aa d1 00 00  ................
+2560  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+2570  1e d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+2580  8a c1 00 00 1f d1 00 00-01 00 00 00 00 00 00 00  ................
+2590  14 00 00 00 8a c1 00 00-af d1 00 00 01 00 00 00  ................
+25a0  00 00 00 00 14 00 00 00-8a c1 00 00 d0 d1 00 00  ................
+25b0  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+25c0  d1 d1 00 00 07 00 00 00-00 00 00 00 3c 00 00 00  ............<...
+25d0  8a c1 00 00 d9 d1 00 00-03 00 00 00 0a 00 00 00  ................
+25e0  00 00 00 00 03 00 00 00-05 00 00 00 08 00 00 00  ................
+25f0  0b 00 00 00 0d 00 00 00-10 00 00 00 13 00 00 00  ................
+2600  15 00 00 00 18 00 00 00-14 00 00 00 8a c1 00 00  ................
+2610  d5 d1 00 00 03 00 00 00-00 00 00 00 20 00 00 00  ............ ...
+2620  8a c1 00 00 ba d1 00 00-03 00 00 00 03 00 00 00  ................
+2630  01 00 00 00 02 00 00 00-00 00 00 00 14 00 00 00  ................
+2640  8a c1 00 00 cc d1 00 00-03 00 00 00 00 00 00 00  ................
+2650  20 00 00 00 8a c1 00 00-bc d1 00 00 03 00 00 00   ...............
+2660  03 00 00 00 01 00 00 00-00 00 00 00 03 00 00 00  ................
+2670  14 00 00 00 8a c1 00 00-b8 d1 00 00 03 00 00 00  ................
+2680  00 00 00 00 14 00 00 00-8a c1 00 00 d3 d1 00 00  ................
+2690  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+26a0  d8 d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+26b0  8a c1 00 00 7f d1 00 00-01 00 00 00 00 00 00 00  ................
+26c0  14 00 00 00 8a c1 00 00-b7 d1 00 00 01 00 00 00  ................
+26d0  00 00 00 00 14 00 00 00-8a c1 00 00 cb d1 00 00  ................
+26e0  07 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+26f0  db d1 00 00 07 00 00 00-00 00 00 00 1c 00 00 00  ................
+2700  8a c1 00 00 dc d1 00 00-03 00 00 00 02 00 00 00  ................
+2710  00 00 00 00 01 00 00 00-14 00 00 00 8a c1 00 00  ................
+2720  a3 d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+2730  8a c1 00 00 a4 d1 00 00-07 00 00 00 00 00 00 00  ................
+2740  14 00 00 00 8a c1 00 00-df d1 00 00 03 00 00 00  ................
+2750  00 00 00 00 14 00 00 00-8a c1 00 00 bd d1 00 00  ................
+2760  01 00 00 00 00 00 00 00-24 00 00 00 8a c1 00 00  ........$.......
+2770  c1 d1 00 00 03 00 00 00-04 00 00 00 00 00 00 00  ................
+2780  01 00 00 00 02 00 00 00-03 00 00 00 14 00 00 00  ................
+2790  8a c1 00 00 c0 d1 00 00-01 00 00 00 00 00 00 00  ................
+27a0  14 00 00 00 8a c1 00 00-bf d1 00 00 07 00 00 00  ................
+27b0  00 00 00 00 14 00 00 00-8a c1 00 00 c4 d1 00 00  ................
+27c0  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+27d0  c2 d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+27e0  8a c1 00 00 c5 d1 00 00-03 00 00 00 00 00 00 00  ................
+27f0  24 00 00 00 8a c1 00 00-94 d1 00 00 03 00 00 00  $...............
+
+1.201317 gphoto2-port(2): Reading 376=0x178 bytes from port...
+1.202043 gphoto2-port(3): Hexdump of 376 = 0x178 bytes follows:
+0000  04 00 00 00 00 00 00 00-02 00 00 00 07 00 00 00  ................
+0010  01 00 00 00 14 00 00 00-8a c1 00 00 95 d1 00 00  ................
+0020  03 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+0030  96 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  ................
+0040  8a c1 00 00 97 d1 00 00-03 00 00 00 00 00 00 00  ................
+0050  14 00 00 00 8a c1 00 00-98 d1 00 00 01 00 00 00  ................
+0060  00 00 00 00 14 00 00 00-8a c1 00 00 dd d1 00 00  ................
+0070  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+0080  c7 d1 00 00 07 00 00 00-00 00 00 00 14 00 00 00  ................
+0090  8a c1 00 00 99 d1 00 00-01 00 00 00 00 00 00 00  ................
+00a0  14 00 00 00 8a c1 00 00-38 d1 00 00 01 00 00 00  ........8.......
+00b0  00 00 00 00 14 00 00 00-8a c1 00 00 39 d1 00 00  ............9...
+00c0  01 00 00 00 00 00 00 00-1c 00 00 00 8a c1 00 00  ................
+00d0  3a d1 00 00 03 00 00 00-02 00 00 00 00 00 00 00  :...............
+00e0  01 00 00 00 14 00 00 00-8a c1 00 00 3b d1 00 00  ............;...
+00f0  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+0100  3c d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  <...............
+0110  8a c1 00 00 3d d1 00 00-07 00 00 00 00 00 00 00  ....=...........
+0120  14 00 00 00 8a c1 00 00-4d d1 00 00 07 00 00 00  ........M.......
+0130  00 00 00 00 14 00 00 00-8a c1 00 00 9d d1 00 00  ................
+0140  01 00 00 00 00 00 00 00-14 00 00 00 8a c1 00 00  ................
+0150  9a d1 00 00 01 00 00 00-00 00 00 00 14 00 00 00  ................
+0160  8a c1 00 00 9c d1 00 00-01 00 00 00 00 00 00 00  ................
+0170  08 00 00 00 00 00 00 00-                         ........        
+
+1.202648 ptp2/ptp_usb_getresp(2): reading response
+1.202710 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+1.202806 gphoto2-port(2): Reading 512=0x200 bytes from port...
+1.203195 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+1.204122 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-0b 00 00 00              ....... ....    
+
+1.204416 ptp(2): event 0: EOS prop d1a3 info record, datasize is 4
+1.204566 ptp(2): event 0: Unknown EOS property d1a3, datasize is 4, using uint32
+1.204688 ptp(2):     0: 0x       0
+1.207464 ptp(2): event 0: currentvalue of d1a3 is 0
+1.207833 ptp(2): event 1: EOS prop d1d9 info record, datasize is 4
+1.208044 ptp(2): event 1: currentvalue of d1d9 is 0
+1.208214 ptp(2): event 2: EOS prop d1d5 info record, datasize is 4
+1.208345 ptp(2): event 2: Unknown EOS property d1d5, datasize is 4
+1.208704 ptp(2):     0: 00
+1.208822 ptp(2):     1: 00
+1.208933 ptp(2):     2: 00
+1.209041 ptp(2):     3: 00
+1.209156 ptp(2): event 3: EOS prop d1a3 info record, datasize is 4
+1.209305 ptp(2): event 3: Unknown EOS property d1a3, datasize is 4, using uint32
+1.209421 ptp(2):     0: 0x       0
+1.209536 ptp(2): event 3: currentvalue of d1a3 is 0
+1.209653 ptp(2): event 4: EOS prop d105 info record, datasize is 4
+1.209776 ptp(2): event 4: currentvalue of d105 is 1
+1.209893 ptp(2): event 5: EOS prop d108 info record, datasize is 4
+1.210015 ptp(2): event 5: currentvalue of d108 is 0
+1.210137 ptp(2): event 6: EOS prop d106 info record, datasize is 4
+1.210259 ptp(2): event 6: currentvalue of d106 is 0
+1.210376 ptp(2): event 7: EOS prop d107 info record, datasize is 4
+1.210498 ptp(2): event 7: currentvalue of d107 is 3
+1.210616 ptp(2): event 8: EOS prop d109 info record, datasize is 4
+1.211452 ptp(2): event 8: currentvalue of d109 is 0
+1.211591 ptp(2): event 9: EOS prop d10a info record, datasize is 4
+1.211721 ptp(2): event 9: Unknown EOS property d10a, datasize is 4, using uint32
+1.211843 ptp(2):     0: 0x    1450
+1.211955 ptp(2): event 9: currentvalue of d10a is 1450
+1.212782 ptp(2): event 10: EOS prop d10b info record, datasize is 4
+1.212944 ptp(2): event 11: EOS prop d10c info record, datasize is 4
+1.213074 ptp(2): event 12: EOS prop d10d info record, datasize is 4
+1.213956 ptp(2): event 12: currentvalue of d10d is 0
+1.214099 ptp(2): event 13: EOS prop d10e info record, datasize is 4
+1.214226 ptp(2): event 13: currentvalue of d10e is 0
+1.214346 ptp(2): event 14: EOS prop d10f info record, datasize is 4
+1.215247 ptp(2): event 14: currentvalue of d10f is 1
+1.215400 ptp(2): event 15: EOS prop d11b info record, datasize is 4
+1.216375 ptp(2): event 15: currentvalue of d11b is 619
+1.216522 ptp(2): event 16: EOS prop d114 info record, datasize is 4
+1.216647 ptp(2): event 16: currentvalue of d114 is 0
+1.216767 ptp(2): event 17: EOS prop d116 info record, datasize is 4
+1.217169 ptp(2): event 17: currentvalue of d116 is 80000285
+1.217311 ptp(2): event 18: EOS prop d119 info record, datasize is 4
+1.217437 ptp(2): event 18: currentvalue of d119 is 100
+1.218177 ptp(2): event 19: EOS prop d110 info record, datasize is 4
+1.218334 ptp(2): event 19: currentvalue of d110 is 81
+1.218459 ptp(2): event 20: EOS prop d101 info record, datasize is 4
+1.218582 ptp(2): event 20: currentvalue of d101 is 30
+1.219478 ptp(2): event 21: EOS prop d102 info record, datasize is 4
+1.219642 ptp(2): event 21: currentvalue of d102 is 75
+1.219768 ptp(2): event 22: EOS prop d103 info record, datasize is 4
+1.219891 ptp(2): event 22: currentvalue of d103 is 0
+1.220014 ptp(2): event 23: EOS prop d104 info record, datasize is 4
+1.220982 ptp(2): event 23: currentvalue of d104 is 0
+1.221138 ptp(2): event 24: EOS prop d11d info record, datasize is 4
+1.221266 ptp(2): event 24: currentvalue of d11d is 0
+1.222172 ptp(2): event 25: EOS prop d111 info record, datasize is 4
+1.222332 ptp(2): event 25: currentvalue of d111 is 2
+1.222455 ptp(2): event 26: EOS prop d112 info record, datasize is 4
+1.223340 ptp(2): event 26: currentvalue of d112 is 2
+1.223512 ptp(2): event 27: EOS prop d113 info record, datasize is 4
+1.224386 ptp(2): event 27: currentvalue of d113 is 52dffb53
+1.224560 ptp(2): event 28: EOS prop d17c info record, datasize is 4
+1.224692 ptp(2): event 28: Unknown EOS property d17c, datasize is 4
+1.225012 ptp(2):     0: c3
+1.225158 ptp(2):     1: 5d
+1.225886 ptp(2):     2: e0
+1.226011 ptp(2):     3: 52
+1.226126 ptp(2): event 29: EOS prop d17d info record, datasize is 12
+1.226478 ptp(2): event 29: Unknown EOS property d17d, datasize is 12
+1.227212 ptp(2):     0: 0c
+1.227341 ptp(2):     1: 00
+1.227451 ptp(2):     2: 00
+1.227560 ptp(2):     3: 00
+1.228406 ptp(2):     4: 1e
+1.229166 ptp(2):     5: 00
+1.229295 ptp(2):     6: 00
+1.229601 ptp(2):     7: 00
+1.229747 ptp(2):     8: 20
+1.230408 ptp(2):     9: fe
+1.230539 ptp(2):     10: ff
+1.230648 ptp(2):     11: ff
+1.231496 ptp(2): event 30: EOS prop d17e info record, datasize is 4
+1.231655 ptp(2): event 30: Unknown EOS property d17e, datasize is 4
+1.231780 ptp(2):     0: 01
+1.232203 ptp(2):     1: 00
+1.232887 ptp(2):     2: 00
+1.233020 ptp(2):     3: 00
+1.233139 ptp(2): event 31: EOS prop d120 info record, datasize is 20
+1.233279 ptp(2): event 31: decoded imageformat, currentvalue of d120 is 300
+1.234185 ptp(2): event 32: EOS prop d121 info record, datasize is 20
+1.235003 ptp(2): event 32: decoded imageformat, currentvalue of d121 is 300
+1.235147 ptp(2): event 33: EOS prop d122 info record, datasize is 20
+1.235516 ptp(2): event 33: decoded imageformat, currentvalue of d122 is 300
+1.236317 ptp(2): event 34: EOS prop d156 info record, datasize is 28
+1.236474 ptp(2): event 34: Unknown EOS property d156, datasize is 28
+1.236597 ptp(2):     0: 1c
+1.236711 ptp(2):     1: 00
+1.237576 ptp(2):     2: 00
+1.237705 ptp(2):     3: 00
+1.237819 ptp(2):     4: 00
+1.237928 ptp(2):     5: 00
+1.238038 ptp(2):     6: 00
+1.238381 ptp(2):     7: 00
+1.239049 ptp(2):     8: 03
+1.239179 ptp(2):     9: 00
+1.239291 ptp(2):     10: 00
+1.240153 ptp(2):     11: 00
+1.240287 ptp(2):     12: 00
+1.240398 ptp(2):     13: 00
+1.240700 ptp(2):     14: 00
+1.240857 ptp(2):     15: 00
+1.241515 ptp(2):     16: 00
+1.241647 ptp(2):     17: 00
+1.241760 ptp(2):     18: 00
+1.241873 ptp(2):     19: 00
+1.242706 ptp(2):     20: 00
+1.242834 ptp(2):     21: 00
+1.242944 ptp(2):     22: 00
+1.243053 ptp(2):     23: 00
+1.243392 ptp(2):     24: 00
+1.244045 ptp(2):     25: 00
+1.244175 ptp(2):     26: 00
+1.244286 ptp(2):     27: 00
+1.244597 ptp(2): event 35: EOS prop d150 info record, datasize is 28
+1.245299 ptp(2): event 35: Unknown EOS property d150, datasize is 28
+1.246180 ptp(2):     0: 1c
+1.246312 ptp(2):     1: 00
+1.246623 ptp(2):     2: 00
+1.246773 ptp(2):     3: 00
+1.246886 ptp(2):     4: 00
+1.247545 ptp(2):     5: 00
+1.247675 ptp(2):     6: 00
+1.247788 ptp(2):     7: 00
+1.248672 ptp(2):     8: 03
+1.248806 ptp(2):     9: 00
+1.248918 ptp(2):     10: 00
+1.249029 ptp(2):     11: 00
+1.249358 ptp(2):     12: 00
+1.250023 ptp(2):     13: 00
+1.250150 ptp(2):     14: 00
+1.250263 ptp(2):     15: 00
+1.251104 ptp(2):     16: 00
+1.251244 ptp(2):     17: 00
+1.251355 ptp(2):     18: 00
+1.251465 ptp(2):     19: 00
+1.251573 ptp(2):     20: 00
+1.251897 ptp(2):     21: 00
+1.252564 ptp(2):     22: 00
+1.252690 ptp(2):     23: 00
+1.252802 ptp(2):     24: 00
+1.252913 ptp(2):     25: 00
+1.253244 ptp(2):     26: 00
+1.253918 ptp(2):     27: 00
+1.254054 ptp(2): event 36: EOS prop d151 info record, datasize is 28
+1.254898 ptp(2): event 36: Unknown EOS property d151, datasize is 28
+1.255037 ptp(2):     0: 1c
+1.255149 ptp(2):     1: 00
+1.255460 ptp(2):     2: 00
+1.256267 ptp(2):     3: 00
+1.256396 ptp(2):     4: 00
+1.256509 ptp(2):     5: 00
+1.256849 ptp(2):     6: 00
+1.256984 ptp(2):     7: 00
+1.257095 ptp(2):     8: 02
+1.257204 ptp(2):     9: 00
+1.257870 ptp(2):     10: 00
+1.258006 ptp(2):     11: 00
+1.258121 ptp(2):     12: 00
+1.258233 ptp(2):     13: 00
+1.259067 ptp(2):     14: 00
+1.259234 ptp(2):     15: 00
+1.259351 ptp(2):     16: 00
+1.259462 ptp(2):     17: 00
+1.259572 ptp(2):     18: 00
+1.259864 ptp(2):     19: 00
+1.260550 ptp(2):     20: 00
+1.261329 ptp(2):     21: 00
+1.261457 ptp(2):     22: 00
+1.261569 ptp(2):     23: 00
+1.261897 ptp(2):     24: 00
+1.262020 ptp(2):     25: 00
+1.262131 ptp(2):     26: 00
+1.262238 ptp(2):     27: 00
+1.262921 ptp(2): event 37: EOS prop d152 info record, datasize is 28
+1.263081 ptp(2): event 37: Unknown EOS property d152, datasize is 28
+1.263203 ptp(2):     0: 1c
+1.264119 ptp(2):     1: 00
+1.264258 ptp(2):     2: 00
+1.264370 ptp(2):     3: 00
+1.264482 ptp(2):     4: 00
+1.264844 ptp(2):     5: 00
+1.264980 ptp(2):     6: 00
+1.265096 ptp(2):     7: 00
+1.265857 ptp(2):     8: 04
+1.265992 ptp(2):     9: 00
+1.266102 ptp(2):     10: 00
+1.266212 ptp(2):     11: 00
+1.267074 ptp(2):     12: 00
+1.267207 ptp(2):     13: 00
+1.267322 ptp(2):     14: 00
+1.267437 ptp(2):     15: 00
+1.267739 ptp(2):     16: 00
+1.268427 ptp(2):     17: 00
+1.268555 ptp(2):     18: 00
+1.268668 ptp(2):     19: 00
+1.269482 ptp(2):     20: 00
+1.270289 ptp(2):     21: 00
+1.270417 ptp(2):     22: 00
+1.270755 ptp(2):     23: 00
+1.270879 ptp(2):     24: 00
+1.271528 ptp(2):     25: 00
+1.271658 ptp(2):     26: 00
+1.271770 ptp(2):     27: 00
+1.272658 ptp(2): event 38: EOS prop d153 info record, datasize is 28
+1.272820 ptp(2): event 38: Unknown EOS property d153, datasize is 28
+1.272944 ptp(2):     0: 1c
+1.273252 ptp(2):     1: 00
+1.273949 ptp(2):     2: 00
+1.274080 ptp(2):     3: 00
+1.274192 ptp(2):     4: 00
+1.274300 ptp(2):     5: 00
+1.275572 ptp(2):     6: 00
+1.276055 ptp(2):     7: 00
+1.276918 ptp(2):     8: 00
+1.278259 ptp(2):     9: 00
+1.278418 ptp(2):     10: 00
+1.278532 ptp(2):     11: 00
+1.278845 ptp(2):     12: 00
+1.278979 ptp(2):     13: 00
+1.279089 ptp(2):     14: 00
+1.279736 ptp(2):     15: 00
+1.279871 ptp(2):     16: 00
+1.280027 ptp(2):     17: 00
+1.280927 ptp(2):     18: 00
+1.281064 ptp(2):     19: 00
+1.281174 ptp(2):     20: 00
+1.281476 ptp(2):     21: 00
+1.282151 ptp(2):     22: 00
+1.282283 ptp(2):     23: 00
+1.283117 ptp(2):     24: 00
+1.283252 ptp(2):     25: 00
+1.283363 ptp(2):     26: 00
+1.283663 ptp(2):     27: 00
+1.284341 ptp(2): event 39: EOS prop d154 info record, datasize is 28
+1.284502 ptp(2): event 39: Unknown EOS property d154, datasize is 28
+1.284853 ptp(2):     0: 1c
+1.284985 ptp(2):     1: 00
+1.285747 ptp(2):     2: 00
+1.285889 ptp(2):     3: 00
+1.286005 ptp(2):     4: 00
+1.286893 ptp(2):     5: 00
+1.287030 ptp(2):     6: 00
+1.287142 ptp(2):     7: 00
+1.287253 ptp(2):     8: 00
+1.287362 ptp(2):     9: 00
+1.287720 ptp(2):     10: 00
+1.287855 ptp(2):     11: 00
+1.288583 ptp(2):     12: 00
+1.288711 ptp(2):     13: 00
+1.288824 ptp(2):     14: 00
+1.288931 ptp(2):     15: 00
+1.289040 ptp(2):     16: 00
+1.289914 ptp(2):     17: 00
+1.290692 ptp(2):     18: 00
+1.291531 ptp(2):     19: 00
+1.291666 ptp(2):     20: 00
+1.291779 ptp(2):     21: 00
+1.291889 ptp(2):     22: 00
+1.291998 ptp(2):     23: 00
+1.292864 ptp(2):     24: 00
+1.294207 ptp(2):     25: 00
+1.295029 ptp(2):     26: 00
+1.295158 ptp(2):     27: 00
+1.295471 ptp(2): event 40: EOS prop d155 info record, datasize is 28
+1.295724 ptp(2): event 40: Unknown EOS property d155, datasize is 28
+1.296501 ptp(2):     0: 1c
+1.296635 ptp(2):     1: 00
+1.296748 ptp(2):     2: 00
+1.296857 ptp(2):     3: 00
+1.297695 ptp(2):     4: 00
+1.297824 ptp(2):     5: 00
+1.297933 ptp(2):     6: 00
+1.298237 ptp(2):     7: 00
+1.298390 ptp(2):     8: 03
+1.299046 ptp(2):     9: 00
+1.299173 ptp(2):     10: 00
+1.299958 ptp(2):     11: 00
+1.300121 ptp(2):     12: 00
+1.300235 ptp(2):     13: 00
+1.300345 ptp(2):     14: 00
+1.300452 ptp(2):     15: 00
+1.300556 ptp(2):     16: 00
+1.301431 ptp(2):     17: 00
+1.302200 ptp(2):     18: 00
+1.302332 ptp(2):     19: 00
+1.302624 ptp(2):     20: 00
+1.302781 ptp(2):     21: 00
+1.303429 ptp(2):     22: 00
+1.303559 ptp(2):     23: 00
+1.303671 ptp(2):     24: 00
+1.304033 ptp(2):     25: 00
+1.304736 ptp(2):     26: 00
+1.304873 ptp(2):     27: 00
+1.304993 ptp(2): event 41: EOS prop d160 info record, datasize is 32
+1.305903 ptp(2): event 41: Unknown EOS property d160, datasize is 32
+1.306041 ptp(2):     0: 20
+1.306151 ptp(2):     1: 00
+1.306259 ptp(2):     2: 00
+1.306619 ptp(2):     3: 00
+1.307307 ptp(2):     4: 81
+1.307441 ptp(2):     5: 00
+1.307549 ptp(2):     6: 00
+1.307660 ptp(2):     7: 00
+1.307974 ptp(2):     8: 00
+1.308650 ptp(2):     9: 00
+1.309421 ptp(2):     10: 00
+1.310239 ptp(2):     11: 00
+1.310366 ptp(2):     12: 03
+1.310475 ptp(2):     13: 00
+1.310807 ptp(2):     14: 00
+1.311464 ptp(2):     15: 00
+1.311590 ptp(2):     16: 00
+1.311700 ptp(2):     17: 00
+1.311804 ptp(2):     18: 00
+1.312221 ptp(2):     19: 00
+1.312890 ptp(2):     20: 00
+1.313023 ptp(2):     21: 00
+1.313132 ptp(2):     22: 00
+1.313242 ptp(2):     23: 00
+1.314069 ptp(2):     24: 00
+1.314200 ptp(2):     25: 00
+1.314310 ptp(2):     26: 00
+1.314419 ptp(2):     27: 00
+1.314528 ptp(2):     28: 00
+1.315386 ptp(2):     29: 00
+1.315519 ptp(2):     30: 00
+1.315633 ptp(2):     31: 00
+1.316579 ptp(2): event 42: EOS prop d161 info record, datasize is 32
+1.316742 ptp(2): event 42: Unknown EOS property d161, datasize is 32
+1.316863 ptp(2):     0: 20
+1.316977 ptp(2):     1: 00
+1.317324 ptp(2):     2: 00
+1.317449 ptp(2):     3: 00
+1.317558 ptp(2):     4: 81
+1.318229 ptp(2):     5: 00
+1.318372 ptp(2):     6: 00
+1.318488 ptp(2):     7: 00
+1.319253 ptp(2):     8: 00
+1.319384 ptp(2):     9: 00
+1.319716 ptp(2):     10: 00
+1.319846 ptp(2):     11: 00
+1.319995 ptp(2):     12: 03
+1.320157 ptp(2):     13: 00
+1.320818 ptp(2):     14: 00
+1.320948 ptp(2):     15: 00
+1.321058 ptp(2):     16: 00
+1.321892 ptp(2):     17: 00
+1.322048 ptp(2):     18: 00
+1.322161 ptp(2):     19: 00
+1.322271 ptp(2):     20: 00
+1.323154 ptp(2):     21: 00
+1.323934 ptp(2):     22: 00
+1.324067 ptp(2):     23: 00
+1.324411 ptp(2):     24: 00
+1.324536 ptp(2):     25: 00
+1.324646 ptp(2):     26: 00
+1.324755 ptp(2):     27: 00
+1.325410 ptp(2):     28: 00
+1.325542 ptp(2):     29: 00
+1.326441 ptp(2):     30: 00
+1.326612 ptp(2):     31: 00
+1.326735 ptp(2): event 43: EOS prop d162 info record, datasize is 32
+1.327078 ptp(2): event 43: Unknown EOS property d162, datasize is 32
+1.327800 ptp(2):     0: 20
+1.327933 ptp(2):     1: 00
+1.328825 ptp(2):     2: 00
+1.328954 ptp(2):     3: 00
+1.329058 ptp(2):     4: 81
+1.329362 ptp(2):     5: 00
+1.329511 ptp(2):     6: 00
+1.330122 ptp(2):     7: 00
+1.330275 ptp(2):     8: 00
+1.330388 ptp(2):     9: 00
+1.330502 ptp(2):     10: 00
+1.331328 ptp(2):     11: 00
+1.331489 ptp(2):     12: 03
+1.331603 ptp(2):     13: 00
+1.332424 ptp(2):     14: 00
+1.332555 ptp(2):     15: 00
+1.332669 ptp(2):     16: 00
+1.332779 ptp(2):     17: 00
+1.332889 ptp(2):     18: 00
+1.333721 ptp(2):     19: 00
+1.333853 ptp(2):     20: 00
+1.333965 ptp(2):     21: 00
+1.334076 ptp(2):     22: 00
+1.334181 ptp(2):     23: 00
+1.334529 ptp(2):     24: 00
+1.335181 ptp(2):     25: 00
+1.335311 ptp(2):     26: 00
+1.335425 ptp(2):     27: 00
+1.335537 ptp(2):     28: 00
+1.335910 ptp(2):     29: 00
+1.337232 ptp(2):     30: 00
+1.338094 ptp(2):     31: 00
+1.338232 ptp(2): event 44: EOS prop d11c info record, datasize is 4
+1.338374 ptp(2): event 44: currentvalue of d11c is 1
+1.338764 ptp(2): event 45: EOS prop d1a0 info record, datasize is 96
+1.338986 ptp(2): event 45: decoded custom function, currentvalue of d1a0 is 10,c189,d1a3,0,
+1.339707 ptp(2): event 46: EOS prop d1a0 info record, datasize is 44
+1.339870 ptp(2): event 46: currentvalue of d1a0 is ,
+1.340015 ptp(2): event 46: decoded custom function, currentvalue of d1a0 is 10,c189,d1a3,0,
+1.340354 ptp(2): event 47: EOS prop d1a0 info record, datasize is 208
+1.341102 ptp(2): event 47: currentvalue of d1a0 is ?
+1.341260 ptp(2): event 47: decoded custom function, currentvalue of d1a0 is 10,c189,d1a3,0,
+1.342081 ptp(2): event 48: EOS prop d1a1 info record, datasize is 8
+1.342283 ptp(2): event 48: Unknown EOS property d1a1, datasize is 8
+1.342655 ptp(2):     0: 08
+1.343326 ptp(2):     1: 00
+1.343454 ptp(2):     2: 00
+1.343560 ptp(2):     3: 00
+1.343666 ptp(2):     4: 00
+1.343773 ptp(2):     5: 00
+1.344676 ptp(2):     6: 00
+1.344803 ptp(2):     7: 00
+1.344921 ptp(2): event 49: EOS prop d1a8 info record, datasize is 4
+1.345886 ptp(2): event 49: Unknown EOS property d1a8, datasize is 4, using uint32
+1.346033 ptp(2):     0: 0x       1
+1.346146 ptp(2): event 49: currentvalue of d1a8 is 1
+1.346264 ptp(2): event 50: EOS prop d1a7 info record, datasize is 40
+1.347217 ptp(2): event 50: Unknown EOS property d1a7, datasize is 40
+1.347355 ptp(2):     0: 00
+1.347465 ptp(2):     1: 00
+1.348309 ptp(2):     2: 00
+1.348437 ptp(2):     3: 00
+1.348549 ptp(2):     4: 00
+1.348660 ptp(2):     5: 00
+1.348969 ptp(2):     6: 00
+1.349676 ptp(2):     7: 00
+1.349810 ptp(2):     8: 00
+1.349922 ptp(2):     9: 00
+1.350032 ptp(2):     10: 00
+1.350884 ptp(2):     11: 00
+1.351016 ptp(2):     12: 00
+1.351132 ptp(2):     13: 00
+1.351244 ptp(2):     14: 00
+1.352136 ptp(2):     15: 00
+1.352273 ptp(2):     16: 00
+1.352385 ptp(2):     17: 00
+1.352494 ptp(2):     18: 00
+1.353313 ptp(2):     19: 00
+1.353474 ptp(2):     20: 00
+1.353589 ptp(2):     21: 00
+1.354438 ptp(2):     22: 00
+1.354572 ptp(2):     23: 00
+1.354682 ptp(2):     24: 00
+1.354793 ptp(2):     25: 00
+1.355099 ptp(2):     26: 00
+1.355866 ptp(2):     27: 00
+1.356001 ptp(2):     28: 00
+1.356111 ptp(2):     29: 00
+1.356474 ptp(2):     30: 00
+1.357152 ptp(2):     31: 00
+1.357284 ptp(2):     32: 00
+1.357396 ptp(2):     33: 00
+1.357508 ptp(2):     34: 00
+1.358346 ptp(2):     35: 00
+1.358474 ptp(2):     36: 00
+1.358587 ptp(2):     37: 00
+1.358699 ptp(2):     38: 00
+1.358806 ptp(2):     39: 00
+1.359690 ptp(2): event 51: EOS prop d1ab info record, datasize is 4
+1.359855 ptp(2): event 51: Unknown EOS property d1ab, datasize is 4, using uint32
+1.360013 ptp(2):     0: 0x       0
+1.360898 ptp(2): event 51: currentvalue of d1ab is 0
+1.361039 ptp(2): event 52: EOS prop d1b0 info record, datasize is 4
+1.361177 ptp(2): event 52: currentvalue of d1b0 is 0
+1.361297 ptp(2): event 53: EOS prop d1b1 info record, datasize is 4
+1.361423 ptp(2): event 53: currentvalue of d1b1 is 1
+1.362334 ptp(2): event 54: EOS prop d1b2 info record, datasize is 4
+1.362490 ptp(2): event 54: Unknown EOS property d1b2, datasize is 4, using uint32
+1.362614 ptp(2):     0: 0x       0
+1.363460 ptp(2): event 54: currentvalue of d1b2 is 0
+1.363599 ptp(2): event 55: EOS prop d1b3 info record, datasize is 4
+1.363738 ptp(2): event 55: Unknown EOS property d1b3, datasize is 4, using uint32
+1.364146 ptp(2):     0: 0x       0
+1.364275 ptp(2): event 55: currentvalue of d1b3 is 0
+1.364397 ptp(2): event 56: EOS prop d1b4 info record, datasize is 4
+1.365123 ptp(2): event 56: Unknown EOS property d1b4, datasize is 4, using uint32
+1.365266 ptp(2):     0: 0x       0
+1.365379 ptp(2): event 56: currentvalue of d1b4 is 0
+1.365824 ptp(2): event 57: EOS prop d1b5 info record, datasize is 48
+1.365988 ptp(2): event 57: Unknown EOS property d1b5, datasize is 48, using uint32
+1.366711 ptp(2):     0: 0x      30
+1.366842 ptp(2):     1: 0x       0
+1.366953 ptp(2):     2: 0xffffff00
+1.367060 ptp(2):     3: 0xffffffff
+1.367382 ptp(2):     4: 0xffffffff
+1.368125 ptp(2):     5: 0xffffffff
+1.368262 ptp(2):     6: 0xffffffff
+1.368374 ptp(2):     7: 0xffffffff
+1.369227 ptp(2):     8: 0xffffffff
+1.370009 ptp(2):     9: 0xffffffff
+1.370345 ptp(2):     10: 0x 4000400
+1.370495 ptp(2):     11: 0x 4000400
+1.371161 ptp(2): event 57: currentvalue of d1b5 is 30
+1.371308 ptp(2): event 58: EOS prop d1b6 info record, datasize is 4
+1.371454 ptp(2): event 58: Unknown EOS property d1b6, datasize is 4, using uint32
+1.372373 ptp(2):     0: 0x    1450
+1.372518 ptp(2): event 58: currentvalue of d1b6 is 1450
+1.372642 ptp(2): event 59: EOS prop d1a9 info record, datasize is 4
+1.373525 ptp(2): event 59: currentvalue of d1a9 is 2
+1.373677 ptp(2): event 60: EOS prop d146 info record, datasize is 48
+1.373816 ptp(2): event 60: Unknown EOS property d146, datasize is 48
+1.373936 ptp(2):     0: 30
+1.374048 ptp(2):     1: 00
+1.374430 ptp(2):     2: 00
+1.375121 ptp(2):     3: 00
+1.375260 ptp(2):     4: 00
+1.375374 ptp(2):     5: 00
+1.376296 ptp(2):     6: 00
+1.376424 ptp(2):     7: 00
+1.376537 ptp(2):     8: 00
+1.376880 ptp(2):     9: 00
+1.376995 ptp(2):     10: 00
+1.377103 ptp(2):     11: 00
+1.377759 ptp(2):     12: 00
+1.377891 ptp(2):     13: 00
+1.378004 ptp(2):     14: 00
+1.378112 ptp(2):     15: 00
+1.378217 ptp(2):     16: 00
+1.379052 ptp(2):     17: 00
+1.379182 ptp(2):     18: 00
+1.379292 ptp(2):     19: 00
+1.379400 ptp(2):     20: 00
+1.379507 ptp(2):     21: 00
+1.380336 ptp(2):     22: 00
+1.380465 ptp(2):     23: 00
+1.380575 ptp(2):     24: 00
+1.380682 ptp(2):     25: 00
+1.381017 ptp(2):     26: 00
+1.381144 ptp(2):     27: 00
+1.381256 ptp(2):     28: 00
+1.381367 ptp(2):     29: 00
+1.382056 ptp(2):     30: 00
+1.382188 ptp(2):     31: 00
+1.382302 ptp(2):     32: 00
+1.383112 ptp(2):     33: 00
+1.383275 ptp(2):     34: 00
+1.383389 ptp(2):     35: 00
+1.383501 ptp(2):     36: 00
+1.383815 ptp(2):     37: 00
+1.384565 ptp(2):     38: 00
+1.384696 ptp(2):     39: 00
+1.384805 ptp(2):     40: eb
+1.385124 ptp(2):     41: 01
+1.386471 ptp(2):     42: 00
+1.387316 ptp(2):     43: 04
+1.387447 ptp(2):     44: 00
+1.387556 ptp(2):     45: 04
+1.387934 ptp(2):     46: 7e
+1.388058 ptp(2):     47: 02
+1.388178 ptp(2): event 61: EOS prop d1ac info record, datasize is 4
+1.388875 ptp(2): event 61: currentvalue of d1ac is ce12
+1.389018 ptp(2): event 62: EOS prop d1aa info record, datasize is 4
+1.389153 ptp(2): event 62: Unknown EOS property d1aa, datasize is 4, using uint32
+1.389273 ptp(2):     0: 0x       0
+1.390134 ptp(2): event 62: currentvalue of d1aa is 0
+1.390298 ptp(2): event 63: EOS prop d11e info record, datasize is 4
+1.390448 ptp(2): event 63: currentvalue of d11e is 10001
+1.390569 ptp(2): event 64: EOS prop d11f info record, datasize is 4
+1.391461 ptp(2): event 64: currentvalue of d11f is 50000000
+1.392315 ptp(2): event 65: EOS prop d1d9 info record, datasize is 4
+1.392465 ptp(2): event 65: currentvalue of d1d9 is 0
+1.392587 ptp(2): event 66: EOS prop d1d5 info record, datasize is 4
+1.393490 ptp(2): event 66: Unknown EOS property d1d5, datasize is 4
+1.393627 ptp(2):     0: 00
+1.393738 ptp(2):     1: 00
+1.394051 ptp(2):     2: 00
+1.394726 ptp(2):     3: 00
+1.394860 ptp(2): event 67: EOS prop d1ba info record, datasize is 4
+1.395005 ptp(2): event 67: Unknown EOS property d1ba, datasize is 4, using uint32
+1.395127 ptp(2):     0: 0x       1
+1.396115 ptp(2): event 67: currentvalue of d1ba is 1
+1.396254 ptp(2): event 68: EOS prop d1cc info record, datasize is 28
+1.396396 ptp(2): event 68: Unknown EOS property d1cc, datasize is 28
+1.397305 ptp(2):     0: 1c
+1.397439 ptp(2):     1: 00
+1.397552 ptp(2):     2: 00
+1.397661 ptp(2):     3: 00
+1.397770 ptp(2):     4: 00
+1.398598 ptp(2):     5: 00
+1.398759 ptp(2):     6: 00
+1.399535 ptp(2):     7: 00
+1.399665 ptp(2):     8: 00
+1.399774 ptp(2):     9: 00
+1.400131 ptp(2):     10: 00
+1.400809 ptp(2):     11: 00
+1.400938 ptp(2):     12: 1e
+1.401049 ptp(2):     13: 00
+1.401894 ptp(2):     14: 00
+1.402030 ptp(2):     15: 00
+1.402144 ptp(2):     16: 0f
+1.402255 ptp(2):     17: 00
+1.402363 ptp(2):     18: 00
+1.402734 ptp(2):     19: 00
+1.403372 ptp(2):     20: 00
+1.403529 ptp(2):     21: 00
+1.403642 ptp(2):     22: 00
+1.404495 ptp(2):     23: 00
+1.404632 ptp(2):     24: 03
+1.404745 ptp(2):     25: 00
+1.404857 ptp(2):     26: 00
+1.404966 ptp(2):     27: 00
+1.405277 ptp(2): event 69: EOS prop d1bc info record, datasize is 4
+1.406097 ptp(2): event 69: Unknown EOS property d1bc, datasize is 4, using uint32
+1.406242 ptp(2):     0: 0x       1
+1.406358 ptp(2): event 69: currentvalue of d1bc is 1
+1.407240 ptp(2): event 70: EOS prop d1b8 info record, datasize is 4
+1.407404 ptp(2): event 70: Unknown EOS property d1b8, datasize is 4, using uint32
+1.407742 ptp(2):     0: 0x       0
+1.407892 ptp(2): event 70: currentvalue of d1b8 is 0
+1.408654 ptp(2): event 71: EOS prop d1d3 info record, datasize is 534
+1.408818 ptp(2): event 71: Unknown EOS property d1d3, datasize is 534
+1.408941 ptp(2):     0: 16
+1.409054 ptp(2):     1: 02
+1.409942 ptp(2):     2: 00
+1.410104 ptp(2):     3: 00
+1.410216 ptp(2):     4: 12
+1.411004 ptp(2):     5: 02
+1.411135 ptp(2):     6: 02
+1.411248 ptp(2):     7: 00
+1.411616 ptp(2):     8: 3d
+1.411738 ptp(2):     9: 00
+1.411848 ptp(2):     10: 3d
+1.411955 ptp(2):     11: 00
+1.412692 ptp(2):     12: 80
+1.412821 ptp(2):     13: 16
+1.412929 ptp(2):     14: 00
+1.413039 ptp(2):     15: 0f
+1.413412 ptp(2):     16: 80
+1.413534 ptp(2):     17: 16
+1.413646 ptp(2):     18: 00
+1.414312 ptp(2):     19: 0f
+1.414440 ptp(2):     20: be
+1.414554 ptp(2):     21: 00
+1.415384 ptp(2):     22: be
+1.415519 ptp(2):     23: 00
+1.415630 ptp(2):     24: be
+1.416655 ptp(2):     25: 00
+1.416784 ptp(2):     26: be
+1.416895 ptp(2):     27: 00
+1.417202 ptp(2):     28: be
+1.417873 ptp(2):     29: 00
+1.418649 ptp(2):     30: be
+1.418791 ptp(2):     31: 00
+1.418905 ptp(2):     32: be
+1.419770 ptp(2):     33: 00
+1.419901 ptp(2):     34: be
+1.420670 ptp(2):     35: 00
+1.420798 ptp(2):     36: be
+1.420910 ptp(2):     37: 00
+1.421249 ptp(2):     38: be
+1.421908 ptp(2):     39: 00
+1.422041 ptp(2):     40: be
+1.422152 ptp(2):     41: 00
+1.422260 ptp(2):     42: be
+1.423081 ptp(2):     43: 00
+1.423240 ptp(2):     44: be
+1.423352 ptp(2):     45: 00
+1.424206 ptp(2):     46: be
+1.424340 ptp(2):     47: 00
+1.424454 ptp(2):     48: be
+1.424562 ptp(2):     49: 00
+1.424670 ptp(2):     50: be
+1.425536 ptp(2):     51: 00
+1.426441 ptp(2):     52: be
+1.426577 ptp(2):     53: 00
+1.426684 ptp(2):     54: be
+1.427001 ptp(2):     55: 00
+1.427136 ptp(2):     56: be
+1.427247 ptp(2):     57: 00
+1.427354 ptp(2):     58: be
+1.427461 ptp(2):     59: 00
+1.428118 ptp(2):     60: be
+1.428253 ptp(2):     61: 00
+1.428363 ptp(2):     62: be
+1.429125 ptp(2):     63: 00
+1.429254 ptp(2):     64: be
+1.429567 ptp(2):     65: 00
+1.429711 ptp(2):     66: be
+1.430347 ptp(2):     67: 00
+1.430473 ptp(2):     68: be
+1.430583 ptp(2):     69: 00
+1.430907 ptp(2):     70: be
+1.431581 ptp(2):     71: 00
+1.431711 ptp(2):     72: be
+1.431819 ptp(2):     73: 00
+1.432691 ptp(2):     74: be
+1.433480 ptp(2):     75: 00
+1.433614 ptp(2):     76: be
+1.433922 ptp(2):     77: 00
+1.434588 ptp(2):     78: be
+1.434714 ptp(2):     79: 00
+1.434822 ptp(2):     80: be
+1.434932 ptp(2):     81: 00
+1.435852 ptp(2):     82: be
+1.436001 ptp(2):     83: 00
+1.436112 ptp(2):     84: be
+1.436224 ptp(2):     85: 00
+1.437126 ptp(2):     86: be
+1.437262 ptp(2):     87: 00
+1.438066 ptp(2):     88: be
+1.438197 ptp(2):     89: 00
+1.438306 ptp(2):     90: be
+1.438413 ptp(2):     91: 00
+1.439226 ptp(2):     92: be
+1.439384 ptp(2):     93: 00
+1.439499 ptp(2):     94: be
+1.440337 ptp(2):     95: 00
+1.440467 ptp(2):     96: be
+1.440578 ptp(2):     97: 00
+1.440684 ptp(2):     98: be
+1.441012 ptp(2):     99: 00
+1.441144 ptp(2):     100: be
+1.441254 ptp(2):     101: 00
+1.441361 ptp(2):     102: be
+1.442024 ptp(2):     103: 00
+1.442155 ptp(2):     104: be
+1.442267 ptp(2):     105: 00
+1.442376 ptp(2):     106: be
+1.443197 ptp(2):     107: 00
+1.443328 ptp(2):     108: be
+1.443436 ptp(2):     109: 00
+1.443542 ptp(2):     110: be
+1.443651 ptp(2):     111: 00
+1.444022 ptp(2):     112: be
+1.444147 ptp(2):     113: 00
+1.444257 ptp(2):     114: be
+1.444949 ptp(2):     115: 00
+1.445084 ptp(2):     116: be
+1.445195 ptp(2):     117: 00
+1.445832 ptp(2):     118: be
+1.445973 ptp(2):     119: 00
+1.446086 ptp(2):     120: be
+1.446190 ptp(2):     121: 00
+1.446294 ptp(2):     122: be
+1.446400 ptp(2):     123: 00
+1.447500 ptp(2):     124: be
+1.447658 ptp(2):     125: 00
+1.447770 ptp(2):     126: be
+1.448635 ptp(2):     127: 00
+1.448790 ptp(2):     128: be
+1.448905 ptp(2):     129: 00
+1.449013 ptp(2):     130: be
+1.449851 ptp(2):     131: 00
+1.449979 ptp(2):     132: be
+1.450090 ptp(2):     133: 00
+1.450197 ptp(2):     134: be
+1.450517 ptp(2):     135: 00
+1.451191 ptp(2):     136: be
+1.451321 ptp(2):     137: 00
+1.451431 ptp(2):     138: be
+1.451760 ptp(2):     139: 00
+1.452417 ptp(2):     140: be
+1.452545 ptp(2):     141: 00
+1.452656 ptp(2):     142: bc
+1.453495 ptp(2):     143: 00
+1.453636 ptp(2):     144: bc
+1.453748 ptp(2):     145: 00
+1.453857 ptp(2):     146: bc
+1.454156 ptp(2):     147: 00
+1.454831 ptp(2):     148: bc
+1.454961 ptp(2):     149: 00
+1.455069 ptp(2):     150: bc
+1.455987 ptp(2):     151: 00
+1.456191 ptp(2):     152: bc
+1.456521 ptp(2):     153: 00
+1.456665 ptp(2):     154: bc
+1.456778 ptp(2):     155: 00
+1.456887 ptp(2):     156: bc
+1.457557 ptp(2):     157: 00
+1.457685 ptp(2):     158: bc
+1.457795 ptp(2):     159: 00
+1.458638 ptp(2):     160: bc
+1.458775 ptp(2):     161: 00
+1.458887 ptp(2):     162: bc
+1.458997 ptp(2):     163: 00
+1.459861 ptp(2):     164: bc
+1.459989 ptp(2):     165: 00
+1.460099 ptp(2):     166: bc
+1.460208 ptp(2):     167: 00
+1.460519 ptp(2):     168: bc
+1.461190 ptp(2):     169: 00
+1.461960 ptp(2):     170: bc
+1.462114 ptp(2):     171: 00
+1.462224 ptp(2):     172: bc
+1.462551 ptp(2):     173: 00
+1.462670 ptp(2):     174: bc
+1.463310 ptp(2):     175: 00
+1.463440 ptp(2):     176: bc
+1.463549 ptp(2):     177: 00
+1.464432 ptp(2):     178: bc
+1.464565 ptp(2):     179: 00
+1.464678 ptp(2):     180: bc
+1.464788 ptp(2):     181: 00
+1.465099 ptp(2):     182: bc
+1.465878 ptp(2):     183: 00
+1.466018 ptp(2):     184: bc
+1.466129 ptp(2):     185: 00
+1.466474 ptp(2):     186: bc
+1.467157 ptp(2):     187: 00
+1.467285 ptp(2):     188: bc
+1.467396 ptp(2):     189: 00
+1.467700 ptp(2):     190: bc
+1.468376 ptp(2):     191: 00
+1.469159 ptp(2):     192: bc
+1.469980 ptp(2):     193: 00
+1.470107 ptp(2):     194: bc
+1.470221 ptp(2):     195: 00
+1.470332 ptp(2):     196: bc
+1.470707 ptp(2):     197: 00
+1.470831 ptp(2):     198: bc
+1.471490 ptp(2):     199: 00
+1.471620 ptp(2):     200: bc
+1.471732 ptp(2):     201: 00
+1.472062 ptp(2):     202: bc
+1.472768 ptp(2):     203: 00
+1.472900 ptp(2):     204: bc
+1.473625 ptp(2):     205: 00
+1.473784 ptp(2):     206: bc
+1.473895 ptp(2):     207: 00
+1.474227 ptp(2):     208: bc
+1.474351 ptp(2):     209: 00
+1.474462 ptp(2):     210: bc
+1.474571 ptp(2):     211: 00
+1.475236 ptp(2):     212: bc
+1.475365 ptp(2):     213: 00
+1.475476 ptp(2):     214: bc
+1.475586 ptp(2):     215: 00
+1.476551 ptp(2):     216: bc
+1.476677 ptp(2):     217: 00
+1.476785 ptp(2):     218: bc
+1.477621 ptp(2):     219: 00
+1.477758 ptp(2):     220: bc
+1.477870 ptp(2):     221: 00
+1.477977 ptp(2):     222: bc
+1.478081 ptp(2):     223: 00
+1.478403 ptp(2):     224: bc
+1.479067 ptp(2):     225: 00
+1.479194 ptp(2):     226: bc
+1.479307 ptp(2):     227: 00
+1.479415 ptp(2):     228: bc
+1.479738 ptp(2):     229: 00
+1.480450 ptp(2):     230: bc
+1.480578 ptp(2):     231: 00
+1.480689 ptp(2):     232: bc
+1.480796 ptp(2):     233: 00
+1.481172 ptp(2):     234: bc
+1.481297 ptp(2):     235: 00
+1.481950 ptp(2):     236: bc
+1.482083 ptp(2):     237: 00
+1.482191 ptp(2):     238: bc
+1.482301 ptp(2):     239: 00
+1.482411 ptp(2):     240: bc
+1.483288 ptp(2):     241: 00
+1.483419 ptp(2):     242: bc
+1.484195 ptp(2):     243: 00
+1.485038 ptp(2):     244: bc
+1.485169 ptp(2):     245: 00
+1.485280 ptp(2):     246: bc
+1.485389 ptp(2):     247: 00
+1.485497 ptp(2):     248: bc
+1.485982 ptp(2):     249: 00
+1.486107 ptp(2):     250: bc
+1.486783 ptp(2):     251: 00
+1.486916 ptp(2):     252: bc
+1.487028 ptp(2):     253: 00
+1.487138 ptp(2):     254: bc
+1.487948 ptp(2):     255: 00
+1.488177 ptp(2):     256: bc
+1.488295 ptp(2):     257: 00
+1.488406 ptp(2):     258: bc
+1.488515 ptp(2):     259: 00
+1.489359 ptp(2):     260: bc
+1.489488 ptp(2):     261: 00
+1.489600 ptp(2):     262: bc
+1.489707 ptp(2):     263: 00
+1.490015 ptp(2):     264: 20
+1.490686 ptp(2):     265: 01
+1.490820 ptp(2):     266: 00
+1.490931 ptp(2):     267: 00
+1.491761 ptp(2):     268: e0
+1.491895 ptp(2):     269: fe
+1.492005 ptp(2):     270: f0
+1.492117 ptp(2):     271: 05
+1.492225 ptp(2):     272: d0
+1.492517 ptp(2):     273: 04
+1.493197 ptp(2):     274: b0
+1.493325 ptp(2):     275: 03
+1.493435 ptp(2):     276: 7f
+1.494270 ptp(2):     277: 02
+1.494401 ptp(2):     278: 20
+1.494510 ptp(2):     279: 01
+1.494622 ptp(2):     280: 00
+1.494730 ptp(2):     281: 00
+1.495093 ptp(2):     282: 10
+1.495826 ptp(2):     283: fa
+1.496014 ptp(2):     284: 30
+1.496896 ptp(2):     285: fb
+1.497025 ptp(2):     286: 50
+1.497135 ptp(2):     287: fc
+1.497243 ptp(2):     288: 81
+1.497350 ptp(2):     289: fd
+1.498178 ptp(2):     290: e0
+1.498333 ptp(2):     291: fe
+1.498444 ptp(2):     292: f0
+1.498553 ptp(2):     293: 05
+1.498865 ptp(2):     294: d0
+1.499542 ptp(2):     295: 04
+1.500312 ptp(2):     296: b0
+1.501134 ptp(2):     297: 03
+1.501264 ptp(2):     298: 7f
+1.501377 ptp(2):     299: 02
+1.501671 ptp(2):     300: 20
+1.502317 ptp(2):     301: 01
+1.502482 ptp(2):     302: 00
+1.502595 ptp(2):     303: 00
+1.503437 ptp(2):     304: 10
+1.503567 ptp(2):     305: fa
+1.503676 ptp(2):     306: 30
+1.503785 ptp(2):     307: fb
+1.504662 ptp(2):     308: 50
+1.504809 ptp(2):     309: fc
+1.504922 ptp(2):     310: 81
+1.505031 ptp(2):     311: fd
+1.505992 ptp(2):     312: e0
+1.506123 ptp(2):     313: fe
+1.506236 ptp(2):     314: f0
+1.506544 ptp(2):     315: 05
+1.507223 ptp(2):     316: d0
+1.507350 ptp(2):     317: 04
+1.507459 ptp(2):     318: b0
+1.507566 ptp(2):     319: 03
+1.508415 ptp(2):     320: 7f
+1.508550 ptp(2):     321: 02
+1.508661 ptp(2):     322: 20
+1.509477 ptp(2):     323: 01
+1.509607 ptp(2):     324: 00
+1.509720 ptp(2):     325: 00
+1.510028 ptp(2):     326: 10
+1.510668 ptp(2):     327: fa
+1.510818 ptp(2):     328: 30
+1.510929 ptp(2):     329: fb
+1.511037 ptp(2):     330: 50
+1.511144 ptp(2):     331: fc
+1.511479 ptp(2):     332: 81
+1.512156 ptp(2):     333: fd
+1.512291 ptp(2):     334: e0
+1.512402 ptp(2):     335: fe
+1.513211 ptp(2):     336: f0
+1.513341 ptp(2):     337: 05
+1.513450 ptp(2):     338: d0
+1.513817 ptp(2):     339: 04
+1.513940 ptp(2):     340: b0
+1.514049 ptp(2):     341: 03
+1.514158 ptp(2):     342: 7f
+1.514823 ptp(2):     343: 02
+1.514956 ptp(2):     344: 20
+1.515068 ptp(2):     345: 01
+1.516002 ptp(2):     346: 00
+1.516138 ptp(2):     347: 00
+1.516247 ptp(2):     348: 10
+1.516633 ptp(2):     349: fa
+1.516757 ptp(2):     350: 30
+1.516868 ptp(2):     351: fb
+1.516980 ptp(2):     352: 50
+1.517088 ptp(2):     353: fc
+1.517192 ptp(2):     354: 81
+1.517870 ptp(2):     355: fd
+1.517996 ptp(2):     356: e0
+1.518107 ptp(2):     357: fe
+1.518448 ptp(2):     358: f0
+1.518574 ptp(2):     359: 05
+1.519197 ptp(2):     360: d0
+1.519357 ptp(2):     361: 04
+1.519472 ptp(2):     362: b0
+1.520345 ptp(2):     363: 03
+1.520477 ptp(2):     364: 7f
+1.520587 ptp(2):     365: 02
+1.520691 ptp(2):     366: 20
+1.521006 ptp(2):     367: 01
+1.521654 ptp(2):     368: 00
+1.521805 ptp(2):     369: 00
+1.521917 ptp(2):     370: 10
+1.522025 ptp(2):     371: fa
+1.522134 ptp(2):     372: 30
+1.522476 ptp(2):     373: fb
+1.523138 ptp(2):     374: 50
+1.523273 ptp(2):     375: fc
+1.523386 ptp(2):     376: 81
+1.523492 ptp(2):     377: fd
+1.524338 ptp(2):     378: e0
+1.524465 ptp(2):     379: fe
+1.524571 ptp(2):     380: 20
+1.524682 ptp(2):     381: 01
+1.525520 ptp(2):     382: 00
+1.525760 ptp(2):     383: 00
+1.526579 ptp(2):     384: e0
+1.526745 ptp(2):     385: fe
+1.526859 ptp(2):     386: 78
+1.526968 ptp(2):     387: fd
+1.527072 ptp(2):     388: 78
+1.527900 ptp(2):     389: fd
+1.528123 ptp(2):     390: 78
+1.528246 ptp(2):     391: fd
+1.529068 ptp(2):     392: 4f
+1.529196 ptp(2):     393: fe
+1.529303 ptp(2):     394: 4f
+1.529410 ptp(2):     395: fe
+1.529702 ptp(2):     396: 4f
+1.530345 ptp(2):     397: fe
+1.530500 ptp(2):     398: 4f
+1.530610 ptp(2):     399: fe
+1.531442 ptp(2):     400: 4f
+1.531571 ptp(2):     401: fe
+1.531682 ptp(2):     402: 4f
+1.531792 ptp(2):     403: fe
+1.531899 ptp(2):     404: 4f
+1.532751 ptp(2):     405: fe
+1.532889 ptp(2):     406: 4f
+1.533664 ptp(2):     407: fe
+1.533820 ptp(2):     408: 4f
+1.533931 ptp(2):     409: fe
+1.534040 ptp(2):     410: 4f
+1.534347 ptp(2):     411: fe
+1.535024 ptp(2):     412: 4f
+1.535156 ptp(2):     413: fe
+1.535268 ptp(2):     414: 29
+1.535376 ptp(2):     415: ff
+1.536371 ptp(2):     416: 29
+1.536528 ptp(2):     417: ff
+1.536640 ptp(2):     418: 29
+1.537448 ptp(2):     419: ff
+1.537615 ptp(2):     420: 29
+1.537728 ptp(2):     421: ff
+1.537836 ptp(2):     422: 29
+1.537941 ptp(2):     423: ff
+1.538297 ptp(2):     424: 29
+1.538977 ptp(2):     425: ff
+1.539104 ptp(2):     426: 29
+1.539215 ptp(2):     427: ff
+1.539317 ptp(2):     428: 29
+1.539633 ptp(2):     429: ff
+1.540304 ptp(2):     430: 29
+1.541640 ptp(2):     431: ff
+1.542497 ptp(2):     432: 29
+1.542627 ptp(2):     433: ff
+1.542736 ptp(2):     434: 29
+1.543042 ptp(2):     435: ff
+1.543185 ptp(2):     436: 00
+1.543833 ptp(2):     437: 00
+1.543958 ptp(2):     438: 00
+1.544148 ptp(2):     439: 00
+1.544984 ptp(2):     440: 00
+1.545113 ptp(2):     441: 00
+1.545223 ptp(2):     442: 00
+1.545327 ptp(2):     443: 00
+1.546242 ptp(2):     444: 00
+1.546374 ptp(2):     445: 00
+1.546484 ptp(2):     446: 00
+1.546591 ptp(2):     447: 00
+1.546931 ptp(2):     448: 00
+1.547060 ptp(2):     449: 00
+1.547172 ptp(2):     450: 00
+1.547280 ptp(2):     451: 00
+1.547918 ptp(2):     452: 00
+1.548068 ptp(2):     453: 00
+1.548182 ptp(2):     454: 00
+1.548295 ptp(2):     455: 00
+1.548405 ptp(2):     456: 00
+1.548728 ptp(2):     457: 00
+1.549408 ptp(2):     458: d7
+1.550165 ptp(2):     459: 00
+1.551014 ptp(2):     460: d7
+1.551146 ptp(2):     461: 00
+1.551257 ptp(2):     462: d7
+1.551605 ptp(2):     463: 00
+1.551728 ptp(2):     464: d7
+1.551841 ptp(2):     465: 00
+1.552528 ptp(2):     466: d7
+1.552681 ptp(2):     467: 00
+1.552792 ptp(2):     468: d7
+1.552901 ptp(2):     469: 00
+1.553273 ptp(2):     470: d7
+1.553408 ptp(2):     471: 00
+1.553522 ptp(2):     472: d7
+1.554189 ptp(2):     473: 00
+1.554319 ptp(2):     474: d7
+1.554432 ptp(2):     475: 00
+1.555266 ptp(2):     476: d7
+1.555402 ptp(2):     477: 00
+1.555514 ptp(2):     478: d7
+1.555624 ptp(2):     479: 00
+1.556559 ptp(2):     480: b1
+1.557345 ptp(2):     481: 01
+1.558192 ptp(2):     482: b1
+1.558322 ptp(2):     483: 01
+1.558432 ptp(2):     484: b1
+1.558763 ptp(2):     485: 01
+1.558898 ptp(2):     486: b1
+1.559011 ptp(2):     487: 01
+1.559121 ptp(2):     488: b1
+1.559783 ptp(2):     489: 01
+1.559915 ptp(2):     490: b1
+1.560070 ptp(2):     491: 01
+1.560218 ptp(2):     492: b1
+1.561055 ptp(2):     493: 01
+1.561182 ptp(2):     494: b1
+1.561291 ptp(2):     495: 01
+1.561402 ptp(2):     496: b1
+1.561512 ptp(2):     497: 01
+1.562332 ptp(2):     498: b1
+1.562460 ptp(2):     499: 01
+1.562571 ptp(2):     500: b1
+1.562680 ptp(2):     501: 01
+1.562975 ptp(2):     502: 88
+1.563618 ptp(2):     503: 02
+1.563773 ptp(2):     504: 88
+1.563885 ptp(2):     505: 02
+1.564724 ptp(2):     506: 88
+1.564856 ptp(2):     507: 02
+1.564968 ptp(2):     508: 00
+1.565075 ptp(2):     509: 00
+1.565447 ptp(2):     510: 00
+1.565575 ptp(2):     511: 00
+1.565959 ptp(2):     512: 00
+1.566680 ptp(2):     513: 00
+1.566810 ptp(2):     514: 00
+1.566924 ptp(2):     515: 00
+1.567241 ptp(2):     516: 00
+1.567947 ptp(2):     517: 00
+1.568841 ptp(2):     518: 00
+1.568971 ptp(2):     519: 40
+1.569083 ptp(2):     520: 00
+1.569424 ptp(2):     521: 00
+1.570072 ptp(2):     522: 00
+1.570203 ptp(2):     523: 00
+1.570317 ptp(2):     524: 00
+1.571151 ptp(2):     525: 00
+1.571289 ptp(2):     526: 00
+1.571403 ptp(2):     527: 00
+1.571517 ptp(2):     528: 00
+1.571628 ptp(2):     529: 00
+1.572457 ptp(2):     530: 00
+1.573327 ptp(2):     531: 00
+1.573653 ptp(2):     532: ff
+1.574318 ptp(2):     533: ff
+1.574453 ptp(2): event 72: EOS prop d1d8 info record, datasize is 64
+1.574612 ptp(2): event 72: currentvalue of d1d8 is EF300mm f/4L IS USM
+1.575484 ptp(2): event 73: EOS prop d1b7 info record, datasize is 4
+1.575729 ptp(2): event 73: Unknown EOS property d1b7, datasize is 4, using uint32
+1.575872 ptp(2):     0: 0x       3
+1.576023 ptp(2): event 73: currentvalue of d1b7 is 3
+1.576977 ptp(2): event 74: EOS prop d1cb info record, datasize is 52
+1.577793 ptp(2): event 74: Unknown EOS property d1cb, datasize is 52
+1.577957 ptp(2):     0: 34
+1.578073 ptp(2):     1: 00
+1.578428 ptp(2):     2: 00
+1.579085 ptp(2):     3: 00
+1.579211 ptp(2):     4: 00
+1.579322 ptp(2):     5: 00
+1.579652 ptp(2):     6: 00
+1.579784 ptp(2):     7: 00
+1.580396 ptp(2):     8: 03
+1.580547 ptp(2):     9: 00
+1.580659 ptp(2):     10: 00
+1.580766 ptp(2):     11: 00
+1.581586 ptp(2):     12: 00
+1.581755 ptp(2):     13: 00
+1.581869 ptp(2):     14: 00
+1.581979 ptp(2):     15: 00
+1.582085 ptp(2):     16: 00
+1.582399 ptp(2):     17: 00
+1.583079 ptp(2):     18: 03
+1.583850 ptp(2):     19: 80
+1.584021 ptp(2):     20: 00
+1.584401 ptp(2):     21: 00
+1.584535 ptp(2):     22: 00
+1.584649 ptp(2):     23: 00
+1.585313 ptp(2):     24: 03
+1.585444 ptp(2):     25: 00
+1.585557 ptp(2):     26: 00
+1.586481 ptp(2):     27: 00
+1.586610 ptp(2):     28: 48
+1.586723 ptp(2):     29: 00
+1.586832 ptp(2):     30: 00
+1.587139 ptp(2):     31: 00
+1.587290 ptp(2):     32: 49
+1.587948 ptp(2):     33: 00
+1.588080 ptp(2):     34: 03
+1.588190 ptp(2):     35: 80
+1.588977 ptp(2):     36: 00
+1.589105 ptp(2):     37: 00
+1.589417 ptp(2):     38: 00
+1.589560 ptp(2):     39: 00
+1.590208 ptp(2):     40: 03
+1.590336 ptp(2):     41: 00
+1.590448 ptp(2):     42: 00
+1.590557 ptp(2):     43: 00
+1.590894 ptp(2):     44: 4b
+1.591557 ptp(2):     45: 00
+1.591686 ptp(2):     46: 00
+1.591800 ptp(2):     47: 00
+1.592678 ptp(2):     48: 4c
+1.592809 ptp(2):     49: 00
+1.592923 ptp(2):     50: 03
+1.593032 ptp(2):     51: 80
+1.593148 ptp(2): event 75: EOS prop d1db info record, datasize is 14
+1.594024 ptp(2): event 75: Unknown EOS property d1db, datasize is 14
+1.594845 ptp(2):     0: 00
+1.595747 ptp(2):     1: 00
+1.595886 ptp(2):     2: 00
+1.595998 ptp(2):     3: 00
+1.596805 ptp(2):     4: 03
+1.596961 ptp(2):     5: 00
+1.597076 ptp(2):     6: 00
+1.597188 ptp(2):     7: 00
+1.597294 ptp(2):     8: 2f
+1.597636 ptp(2):     9: 00
+1.598303 ptp(2):     10: 00
+1.598435 ptp(2):     11: 00
+1.598547 ptp(2):     12: 28
+1.599321 ptp(2):     13: 00
+1.599490 ptp(2): event 76: EOS prop d1dc info record, datasize is 4
+1.599639 ptp(2): event 76: currentvalue of d1dc is 0
+1.600021 ptp(2): event 77: EOS prop d1a3 info record, datasize is 4
+1.600208 ptp(2): event 77: Unknown EOS property d1a3, datasize is 4, using uint32
+1.600333 ptp(2):     0: 0x       0
+1.601033 ptp(2): event 77: currentvalue of d1a3 is 0
+1.601180 ptp(2): event 78: EOS prop d1a4 info record, datasize is 484
+1.601324 ptp(2): event 78: Unknown EOS property d1a4, datasize is 484
+1.601448 ptp(2):     0: e4
+1.602358 ptp(2):     1: 01
+1.602493 ptp(2):     2: 00
+1.602608 ptp(2):     3: 00
+1.602714 ptp(2):     4: 30
+1.602821 ptp(2):     5: 00
+1.603135 ptp(2):     6: 00
+1.603821 ptp(2):     7: 00
+1.605209 ptp(2):     8: 00
+1.605368 ptp(2):     9: 00
+1.605761 ptp(2):     10: 00
+1.606453 ptp(2):     11: 00
+1.606582 ptp(2):     12: 00
+1.606695 ptp(2):     13: 00
+1.607553 ptp(2):     14: 00
+1.607685 ptp(2):     15: 00
+1.607799 ptp(2):     16: 00
+1.607910 ptp(2):     17: 00
+1.608287 ptp(2):     18: 00
+1.608409 ptp(2):     19: 00
+1.609059 ptp(2):     20: 00
+1.609189 ptp(2):     21: 00
+1.609300 ptp(2):     22: 00
+1.610169 ptp(2):     23: 00
+1.610306 ptp(2):     24: 00
+1.610419 ptp(2):     25: 00
+1.610770 ptp(2):     26: 00
+1.610903 ptp(2):     27: 00
+1.611014 ptp(2):     28: 00
+1.611663 ptp(2):     29: 00
+1.611793 ptp(2):     30: 00
+1.611905 ptp(2):     31: 00
+1.612019 ptp(2):     32: 00
+1.612866 ptp(2):     33: 00
+1.613640 ptp(2):     34: 00
+1.613995 ptp(2):     35: 00
+1.614115 ptp(2):     36: 31
+1.614750 ptp(2):     37: 00
+1.614888 ptp(2):     38: 00
+1.615000 ptp(2):     39: 00
+1.615889 ptp(2):     40: 00
+1.616066 ptp(2):     41: 00
+1.616220 ptp(2):     42: 00
+1.617071 ptp(2):     43: 00
+1.617201 ptp(2):     44: 00
+1.617313 ptp(2):     45: 00
+1.617422 ptp(2):     46: 00
+1.617530 ptp(2):     47: 00
+1.618385 ptp(2):     48: 00
+1.618544 ptp(2):     49: 00
+1.618660 ptp(2):     50: 00
+1.619480 ptp(2):     51: 00
+1.619608 ptp(2):     52: 00
+1.619720 ptp(2):     53: 00
+1.619828 ptp(2):     54: 00
+1.620142 ptp(2):     55: 00
+1.620828 ptp(2):     56: 00
+1.620957 ptp(2):     57: 00
+1.621069 ptp(2):     58: 00
+1.621907 ptp(2):     59: 00
+1.622044 ptp(2):     60: 00
+1.622158 ptp(2):     61: 00
+1.622269 ptp(2):     62: 00
+1.622380 ptp(2):     63: 00
+1.622713 ptp(2):     64: 00
+1.623370 ptp(2):     65: 00
+1.623498 ptp(2):     66: 00
+1.623612 ptp(2):     67: 00
+1.623720 ptp(2):     68: 32
+1.623824 ptp(2):     69: 00
+1.624745 ptp(2):     70: 00
+1.625553 ptp(2):     71: 00
+1.625976 ptp(2):     72: 00
+1.626124 ptp(2):     73: 00
+1.626237 ptp(2):     74: 00
+1.626905 ptp(2):     75: 00
+1.627040 ptp(2):     76: 00
+1.627153 ptp(2):     77: 00
+1.627262 ptp(2):     78: 00
+1.628095 ptp(2):     79: 00
+1.628226 ptp(2):     80: 00
+1.628335 ptp(2):     81: 00
+1.628641 ptp(2):     82: 00
+1.628786 ptp(2):     83: 00
+1.629448 ptp(2):     84: 00
+1.629580 ptp(2):     85: 00
+1.629690 ptp(2):     86: 00
+1.630525 ptp(2):     87: 00
+1.630660 ptp(2):     88: 00
+1.630772 ptp(2):     89: 00
+1.630880 ptp(2):     90: 00
+1.630989 ptp(2):     91: 00
+1.631320 ptp(2):     92: 00
+1.631963 ptp(2):     93: 00
+1.632187 ptp(2):     94: 00
+1.632305 ptp(2):     95: 00
+1.633156 ptp(2):     96: 00
+1.633292 ptp(2):     97: 00
+1.633405 ptp(2):     98: 00
+1.633515 ptp(2):     99: 00
+1.633826 ptp(2):     100: 33
+1.634501 ptp(2):     101: 00
+1.634628 ptp(2):     102: 00
+1.634743 ptp(2):     103: 00
+1.635044 ptp(2):     104: 00
+1.635786 ptp(2):     105: 00
+1.635921 ptp(2):     106: 00
+1.636033 ptp(2):     107: 00
+1.636883 ptp(2):     108: 00
+1.637012 ptp(2):     109: 00
+1.637121 ptp(2):     110: 00
+1.637229 ptp(2):     111: 00
+1.637546 ptp(2):     112: 00
+1.638223 ptp(2):     113: 00
+1.638351 ptp(2):     114: 00
+1.638462 ptp(2):     115: 00
+1.638571 ptp(2):     116: 00
+1.638681 ptp(2):     117: 00
+1.639536 ptp(2):     118: 00
+1.639671 ptp(2):     119: 00
+1.639786 ptp(2):     120: 00
+1.639893 ptp(2):     121: 00
+1.640736 ptp(2):     122: 00
+1.640899 ptp(2):     123: 00
+1.641010 ptp(2):     124: 00
+1.641120 ptp(2):     125: 00
+1.641227 ptp(2):     126: 00
+1.641333 ptp(2):     127: 00
+1.642209 ptp(2):     128: 00
+1.642376 ptp(2):     129: 00
+1.642490 ptp(2):     130: 00
+1.643264 ptp(2):     131: 00
+1.643394 ptp(2):     132: 34
+1.643503 ptp(2):     133: 00
+1.643874 ptp(2):     134: 00
+1.643998 ptp(2):     135: 00
+1.644111 ptp(2):     136: 00
+1.644215 ptp(2):     137: 00
+1.644874 ptp(2):     138: 00
+1.645002 ptp(2):     139: 00
+1.645112 ptp(2):     140: 00
+1.645221 ptp(2):     141: 00
+1.645329 ptp(2):     142: 00
+1.646282 ptp(2):     143: 00
+1.646441 ptp(2):     144: 00
+1.646554 ptp(2):     145: 00
+1.646663 ptp(2):     146: 00
+1.647528 ptp(2):     147: 00
+1.648299 ptp(2):     148: 00
+1.649187 ptp(2):     149: 00
+1.649317 ptp(2):     150: 00
+1.649427 ptp(2):     151: 00
+1.649759 ptp(2):     152: 00
+1.650419 ptp(2):     153: 00
+1.650551 ptp(2):     154: 00
+1.650662 ptp(2):     155: 00
+1.650772 ptp(2):     156: 00
+1.651616 ptp(2):     157: 00
+1.651744 ptp(2):     158: 00
+1.651855 ptp(2):     159: 00
+1.652707 ptp(2):     160: 00
+1.652839 ptp(2):     161: 00
+1.652951 ptp(2):     162: 00
+1.653061 ptp(2):     163: 00
+1.653952 ptp(2):     164: 35
+1.654083 ptp(2):     165: 00
+1.654195 ptp(2):     166: 00
+1.655033 ptp(2):     167: 00
+1.655169 ptp(2):     168: 00
+1.655281 ptp(2):     169: 00
+1.655588 ptp(2):     170: 00
+1.656394 ptp(2):     171: 00
+1.656524 ptp(2):     172: 00
+1.656636 ptp(2):     173: 00
+1.657503 ptp(2):     174: 00
+1.657642 ptp(2):     175: 00
+1.658453 ptp(2):     176: 00
+1.658585 ptp(2):     177: 00
+1.658699 ptp(2):     178: 00
+1.658808 ptp(2):     179: 00
+1.658916 ptp(2):     180: 00
+1.659781 ptp(2):     181: 00
+1.659917 ptp(2):     182: 00
+1.660030 ptp(2):     183: 00
+1.660140 ptp(2):     184: 00
+1.660963 ptp(2):     185: 00
+1.661093 ptp(2):     186: 00
+1.661203 ptp(2):     187: 00
+1.661310 ptp(2):     188: 00
+1.661417 ptp(2):     189: 00
+1.662235 ptp(2):     190: 00
+1.662395 ptp(2):     191: 00
+1.663192 ptp(2):     192: 00
+1.663322 ptp(2):     193: 00
+1.664204 ptp(2):     194: 00
+1.664336 ptp(2):     195: 00
+1.664451 ptp(2):     196: 36
+1.664806 ptp(2):     197: 00
+1.665467 ptp(2):     198: 00
+1.665598 ptp(2):     199: 00
+1.665998 ptp(2):     200: 00
+1.666709 ptp(2):     201: 00
+1.666843 ptp(2):     202: 00
+1.667691 ptp(2):     203: 00
+1.667821 ptp(2):     204: 00
+1.667930 ptp(2):     205: 00
+1.668037 ptp(2):     206: 00
+1.668368 ptp(2):     207: 00
+1.668995 ptp(2):     208: 00
+1.669153 ptp(2):     209: 00
+1.669268 ptp(2):     210: 00
+1.670100 ptp(2):     211: 00
+1.670230 ptp(2):     212: 00
+1.670340 ptp(2):     213: 00
+1.670449 ptp(2):     214: 00
+1.670756 ptp(2):     215: 00
+1.671431 ptp(2):     216: 00
+1.671561 ptp(2):     217: 00
+1.671672 ptp(2):     218: 00
+1.671783 ptp(2):     219: 00
+1.672702 ptp(2):     220: 00
+1.672838 ptp(2):     221: 00
+1.672949 ptp(2):     222: 00
+1.673058 ptp(2):     223: 00
+1.673380 ptp(2):     224: 00
+1.674062 ptp(2):     225: 00
+1.674193 ptp(2):     226: 00
+1.674974 ptp(2):     227: 00
+1.675103 ptp(2):     228: 37
+1.675409 ptp(2):     229: 00
+1.675561 ptp(2):     230: 00
+1.676311 ptp(2):     231: 00
+1.676440 ptp(2):     232: 00
+1.676553 ptp(2):     233: 00
+1.676664 ptp(2):     234: 00
+1.676773 ptp(2):     235: 00
+1.677620 ptp(2):     236: 00
+1.677780 ptp(2):     237: 00
+1.677894 ptp(2):     238: 00
+1.678707 ptp(2):     239: 00
+1.678841 ptp(2):     240: 00
+1.678948 ptp(2):     241: 00
+1.679054 ptp(2):     242: 00
+1.679346 ptp(2):     243: 00
+1.680040 ptp(2):     244: 00
+1.680214 ptp(2):     245: 00
+1.681007 ptp(2):     246: 00
+1.681137 ptp(2):     247: 00
+1.681249 ptp(2):     248: 00
+1.681358 ptp(2):     249: 00
+1.682177 ptp(2):     250: 00
+1.682330 ptp(2):     251: 00
+1.682442 ptp(2):     252: 00
+1.682548 ptp(2):     253: 00
+1.682657 ptp(2):     254: 00
+1.683502 ptp(2):     255: 00
+1.684281 ptp(2):     256: 00
+1.685101 ptp(2):     257: 00
+1.685233 ptp(2):     258: 00
+1.685342 ptp(2):     259: 00
+1.685796 ptp(2):     260: 38
+1.685926 ptp(2):     261: 00
+1.686601 ptp(2):     262: 00
+1.686733 ptp(2):     263: 00
+1.686844 ptp(2):     264: 00
+1.686955 ptp(2):     265: 00
+1.687063 ptp(2):     266: 00
+1.687411 ptp(2):     267: 00
+1.688128 ptp(2):     268: 00
+1.688265 ptp(2):     269: 00
+1.689048 ptp(2):     270: 00
+1.689180 ptp(2):     271: 00
+1.689292 ptp(2):     272: 00
+1.689603 ptp(2):     273: 00
+1.690268 ptp(2):     274: 00
+1.690407 ptp(2):     275: 00
+1.690518 ptp(2):     276: 00
+1.691331 ptp(2):     277: 00
+1.691461 ptp(2):     278: 00
+1.691573 ptp(2):     279: 00
+1.691686 ptp(2):     280: 00
+1.691981 ptp(2):     281: 00
+1.692662 ptp(2):     282: 00
+1.692796 ptp(2):     283: 00
+1.692906 ptp(2):     284: 00
+1.693734 ptp(2):     285: 00
+1.693862 ptp(2):     286: 00
+1.693971 ptp(2):     287: 00
+1.694342 ptp(2):     288: 00
+1.694467 ptp(2):     289: 00
+1.694575 ptp(2):     290: 00
+1.694682 ptp(2):     291: 00
+1.695316 ptp(2):     292: 39
+1.695469 ptp(2):     293: 00
+1.695580 ptp(2):     294: 00
+1.696018 ptp(2):     295: 00
+1.696742 ptp(2):     296: 00
+1.696869 ptp(2):     297: 00
+1.696978 ptp(2):     298: 00
+1.697860 ptp(2):     299: 00
+1.697992 ptp(2):     300: 00
+1.698101 ptp(2):     301: 00
+1.698948 ptp(2):     302: 00
+1.699078 ptp(2):     303: 00
+1.699190 ptp(2):     304: 00
+1.700020 ptp(2):     305: 00
+1.700158 ptp(2):     306: 00
+1.700274 ptp(2):     307: 00
+1.700384 ptp(2):     308: 00
+1.701210 ptp(2):     309: 00
+1.702051 ptp(2):     310: 00
+1.702184 ptp(2):     311: 00
+1.703018 ptp(2):     312: 00
+1.703178 ptp(2):     313: 00
+1.703291 ptp(2):     314: 00
+1.704161 ptp(2):     315: 00
+1.704296 ptp(2):     316: 00
+1.704408 ptp(2):     317: 00
+1.704716 ptp(2):     318: 00
+1.704856 ptp(2):     319: 00
+1.704968 ptp(2):     320: 00
+1.705624 ptp(2):     321: 00
+1.705842 ptp(2):     322: 00
+1.705957 ptp(2):     323: 00
+1.706065 ptp(2):     324: 31
+1.706951 ptp(2):     325: 30
+1.708313 ptp(2):     326: 00
+1.708470 ptp(2):     327: 00
+1.708585 ptp(2):     328: 00
+1.708918 ptp(2):     329: 00
+1.709042 ptp(2):     330: 00
+1.709155 ptp(2):     331: 00
+1.709774 ptp(2):     332: 00
+1.709932 ptp(2):     333: 00
+1.710044 ptp(2):     334: 00
+1.710832 ptp(2):     335: 00
+1.711000 ptp(2):     336: 00
+1.711115 ptp(2):     337: 00
+1.711220 ptp(2):     338: 00
+1.711330 ptp(2):     339: 00
+1.711637 ptp(2):     340: 00
+1.712346 ptp(2):     341: 00
+1.712472 ptp(2):     342: 00
+1.712583 ptp(2):     343: 00
+1.713414 ptp(2):     344: 00
+1.713548 ptp(2):     345: 00
+1.713658 ptp(2):     346: 00
+1.713957 ptp(2):     347: 00
+1.714627 ptp(2):     348: 00
+1.714753 ptp(2):     349: 00
+1.714864 ptp(2):     350: 00
+1.715171 ptp(2):     351: 00
+1.715923 ptp(2):     352: 00
+1.716057 ptp(2):     353: 00
+1.716170 ptp(2):     354: 00
+1.716473 ptp(2):     355: 00
+1.717168 ptp(2):     356: 31
+1.717302 ptp(2):     357: 31
+1.718117 ptp(2):     358: 00
+1.718248 ptp(2):     359: 00
+1.718361 ptp(2):     360: 00
+1.718467 ptp(2):     361: 00
+1.718831 ptp(2):     362: 00
+1.718964 ptp(2):     363: 00
+1.719078 ptp(2):     364: 00
+1.719741 ptp(2):     365: 00
+1.719864 ptp(2):     366: 00
+1.719973 ptp(2):     367: 00
+1.720165 ptp(2):     368: 00
+1.721003 ptp(2):     369: 00
+1.721821 ptp(2):     370: 00
+1.722657 ptp(2):     371: 00
+1.722789 ptp(2):     372: 00
+1.722902 ptp(2):     373: 00
+1.723280 ptp(2):     374: 00
+1.723407 ptp(2):     375: 00
+1.723521 ptp(2):     376: 00
+1.723630 ptp(2):     377: 00
+1.724298 ptp(2):     378: 00
+1.724430 ptp(2):     379: 00
+1.724543 ptp(2):     380: 00
+1.724654 ptp(2):     381: 00
+1.725475 ptp(2):     382: 00
+1.725609 ptp(2):     383: 00
+1.725807 ptp(2):     384: 00
+1.725923 ptp(2):     385: 00
+1.726274 ptp(2):     386: 00
+1.726952 ptp(2):     387: 00
+1.727079 ptp(2):     388: 31
+1.727190 ptp(2):     389: 32
+1.728060 ptp(2):     390: 00
+1.728234 ptp(2):     391: 00
+1.728345 ptp(2):     392: 00
+1.728456 ptp(2):     393: 00
+1.728754 ptp(2):     394: 00
+1.729433 ptp(2):     395: 00
+1.729562 ptp(2):     396: 00
+1.730308 ptp(2):     397: 00
+1.730464 ptp(2):     398: 00
+1.730578 ptp(2):     399: 00
+1.730688 ptp(2):     400: 00
+1.731000 ptp(2):     401: 00
+1.731679 ptp(2):     402: 00
+1.731810 ptp(2):     403: 00
+1.731924 ptp(2):     404: 00
+1.732036 ptp(2):     405: 00
+1.732877 ptp(2):     406: 00
+1.733007 ptp(2):     407: 00
+1.733120 ptp(2):     408: 00
+1.733225 ptp(2):     409: 00
+1.733333 ptp(2):     410: 00
+1.734205 ptp(2):     411: 00
+1.734333 ptp(2):     412: 00
+1.734445 ptp(2):     413: 00
+1.735258 ptp(2):     414: 00
+1.735388 ptp(2):     415: 00
+1.735801 ptp(2):     416: 00
+1.736523 ptp(2):     417: 00
+1.736683 ptp(2):     418: 00
+1.736799 ptp(2):     419: 00
+1.737112 ptp(2):     420: 31
+1.737796 ptp(2):     421: 33
+1.737929 ptp(2):     422: 00
+1.738731 ptp(2):     423: 00
+1.738863 ptp(2):     424: 00
+1.738973 ptp(2):     425: 00
+1.739282 ptp(2):     426: 00
+1.739953 ptp(2):     427: 00
+1.740081 ptp(2):     428: 00
+1.740194 ptp(2):     429: 00
+1.741038 ptp(2):     430: 00
+1.741172 ptp(2):     431: 00
+1.741285 ptp(2):     432: 00
+1.741584 ptp(2):     433: 00
+1.742254 ptp(2):     434: 00
+1.742384 ptp(2):     435: 00
+1.742494 ptp(2):     436: 00
+1.742836 ptp(2):     437: 00
+1.742966 ptp(2):     438: 00
+1.743612 ptp(2):     439: 00
+1.743740 ptp(2):     440: 00
+1.743846 ptp(2):     441: 00
+1.743954 ptp(2):     442: 00
+1.744363 ptp(2):     443: 00
+1.745016 ptp(2):     444: 00
+1.745154 ptp(2):     445: 00
+1.745991 ptp(2):     446: 00
+1.746861 ptp(2):     447: 00
+1.746989 ptp(2):     448: 00
+1.747095 ptp(2):     449: 00
+1.747204 ptp(2):     450: 00
+1.747540 ptp(2):     451: 00
+1.747663 ptp(2):     452: 31
+1.747772 ptp(2):     453: 34
+1.748401 ptp(2):     454: 00
+1.748558 ptp(2):     455: 00
+1.748671 ptp(2):     456: 00
+1.749473 ptp(2):     457: 00
+1.749637 ptp(2):     458: 00
+1.749751 ptp(2):     459: 00
+1.749861 ptp(2):     460: 00
+1.750706 ptp(2):     461: 00
+1.750838 ptp(2):     462: 00
+1.751706 ptp(2):     463: 00
+1.751840 ptp(2):     464: 00
+1.751953 ptp(2):     465: 00
+1.752359 ptp(2):     466: 00
+1.752486 ptp(2):     467: 00
+1.753108 ptp(2):     468: 00
+1.753268 ptp(2):     469: 00
+1.753382 ptp(2):     470: 00
+1.754159 ptp(2):     471: 00
+1.754291 ptp(2):     472: 00
+1.754404 ptp(2):     473: 00
+1.754711 ptp(2):     474: 00
+1.755353 ptp(2):     475: 00
+1.755511 ptp(2):     476: 00
+1.755625 ptp(2):     477: 00
+1.756592 ptp(2):     478: 00
+1.756731 ptp(2):     479: 00
+1.756844 ptp(2):     480: 00
+1.756955 ptp(2):     481: 00
+1.757061 ptp(2):     482: 00
+1.757950 ptp(2):     483: 00
+1.759314 ptp(2): event 79: EOS prop d1df info record, datasize is 4
+1.760276 ptp(2): event 79: Unknown EOS property d1df, datasize is 4
+1.760419 ptp(2):     0: 00
+1.760530 ptp(2):     1: 00
+1.760639 ptp(2):     2: 00
+1.760940 ptp(2):     3: 00
+1.761633 ptp(2): event 80: EOS prop d1bd info record, datasize is 4
+1.761794 ptp(2): event 80: Unknown EOS property d1bd, datasize is 4
+1.762671 ptp(2):     0: 00
+1.762805 ptp(2):     1: 00
+1.762917 ptp(2):     2: 00
+1.763026 ptp(2):     3: 00
+1.763139 ptp(2): event 81: EOS prop d1c1 info record, datasize is 4
+1.763497 ptp(2): event 81: Unknown EOS property d1c1, datasize is 4
+1.764158 ptp(2):     0: 00
+1.764313 ptp(2):     1: 00
+1.764428 ptp(2):     2: 01
+1.765209 ptp(2):     3: 00
+1.765345 ptp(2): event 82: EOS prop d1c0 info record, datasize is 4
+1.765774 ptp(2): event 82: Unknown EOS property d1c0, datasize is 4
+1.766507 ptp(2):     0: 00
+1.766636 ptp(2):     1: 00
+1.766749 ptp(2):     2: 00
+1.766859 ptp(2):     3: 00
+1.767753 ptp(2): event 83: EOS prop d1bf info record, datasize is 4
+1.767917 ptp(2): event 83: Unknown EOS property d1bf, datasize is 4
+1.768091 ptp(2):     0: 00
+1.769019 ptp(2):     1: 00
+1.769150 ptp(2):     2: 00
+1.769261 ptp(2):     3: 00
+1.769377 ptp(2): event 84: EOS prop d1c4 info record, datasize is 4
+1.770263 ptp(2): event 84: Unknown EOS property d1c4, datasize is 4
+1.771678 ptp(2):     0: 00
+1.771836 ptp(2):     1: 00
+1.772130 ptp(2):     2: 00
+1.772289 ptp(2):     3: 00
+1.772974 ptp(2): event 85: EOS prop d1c2 info record, datasize is 4
+1.773144 ptp(2): event 85: Unknown EOS property d1c2, datasize is 4
+1.773265 ptp(2):     0: 00
+1.774136 ptp(2):     1: 00
+1.774265 ptp(2):     2: 00
+1.774378 ptp(2):     3: 00
+1.774496 ptp(2): event 86: EOS prop d1c5 info record, datasize is 4
+1.774908 ptp(2): event 86: Unknown EOS property d1c5, datasize is 4
+1.775056 ptp(2):     0: 01
+1.775170 ptp(2):     1: 00
+1.775929 ptp(2):     2: 00
+1.776105 ptp(2):     3: 00
+1.776268 ptp(2): event 87: EOS prop d194 info record, datasize is 4
+1.776625 ptp(2): event 87: Unknown EOS property d194, datasize is 4
+1.777342 ptp(2):     0: 00
+1.777470 ptp(2):     1: 00
+1.778264 ptp(2):     2: 00
+1.778396 ptp(2):     3: 00
+1.778512 ptp(2): event 88: EOS prop d195 info record, datasize is 4
+1.778656 ptp(2): event 88: Unknown EOS property d195, datasize is 4
+1.779554 ptp(2):     0: 02
+1.779685 ptp(2):     1: 00
+1.779795 ptp(2):     2: 00
+1.779904 ptp(2):     3: 00
+1.780735 ptp(2): event 89: EOS prop d196 info record, datasize is 4
+1.780897 ptp(2): event 89: Unknown EOS property d196, datasize is 4
+1.781017 ptp(2):     0: 2f
+1.781128 ptp(2):     1: 00
+1.781473 ptp(2):     2: 00
+1.782152 ptp(2):     3: 00
+1.782299 ptp(2): event 90: EOS prop d197 info record, datasize is 4
+1.783090 ptp(2): event 90: Unknown EOS property d197, datasize is 4
+1.783263 ptp(2):     0: 00
+1.783377 ptp(2):     1: 00
+1.783722 ptp(2):     2: 00
+1.784479 ptp(2):     3: 00
+1.784619 ptp(2): event 91: EOS prop d198 info record, datasize is 4
+1.784766 ptp(2): event 91: Unknown EOS property d198, datasize is 4
+1.784886 ptp(2):     0: ff
+1.785830 ptp(2):     1: 00
+1.785963 ptp(2):     2: 00
+1.786073 ptp(2):     3: 00
+1.786190 ptp(2): event 92: EOS prop d1dd info record, datasize is 4
+1.787085 ptp(2): event 92: currentvalue of d1dd is b1
+1.787256 ptp(2): event 93: EOS prop d1c7 info record, datasize is 4
+1.787393 ptp(2): event 93: Unknown EOS property d1c7, datasize is 4
+1.787775 ptp(2):     0: 00
+1.788443 ptp(2):     1: 00
+1.788598 ptp(2):     2: 00
+1.788714 ptp(2):     3: 00
+1.788830 ptp(2): event 94: EOS prop d199 info record, datasize is 4
+1.789211 ptp(2): event 94: Unknown EOS property d199, datasize is 4
+1.789897 ptp(2):     0: 07
+1.790035 ptp(2):     1: 00
+1.790149 ptp(2):     2: 00
+1.790964 ptp(2):     3: 00
+1.791100 ptp(2): event 95: EOS prop d138 info record, datasize is 4
+1.791247 ptp(2): event 95: Unknown EOS property d138, datasize is 4
+1.791638 ptp(2):     0: 01
+1.791771 ptp(2):     1: 00
+1.791883 ptp(2):     2: 00
+1.792031 ptp(2):     3: 00
+1.792753 ptp(2): event 96: EOS prop d139 info record, datasize is 12
+1.792916 ptp(2): event 96: Unknown EOS property d139, datasize is 12
+1.793041 ptp(2):     0: 00
+1.793363 ptp(2):     1: 00
+1.794053 ptp(2):     2: 00
+1.794185 ptp(2):     3: 00
+1.794982 ptp(2):     4: 00
+1.795114 ptp(2):     5: 00
+1.795222 ptp(2):     6: 00
+1.795330 ptp(2):     7: 00
+1.795639 ptp(2):     8: 00
+1.796398 ptp(2):     9: 00
+1.796525 ptp(2):     10: 00
+1.796634 ptp(2):     11: 00
+1.796964 ptp(2): event 97: EOS prop d13a info record, datasize is 4
+1.797671 ptp(2): event 97: Unknown EOS property d13a, datasize is 4
+1.797809 ptp(2):     0: 00
+1.798671 ptp(2):     1: 00
+1.798806 ptp(2):     2: 00
+1.798918 ptp(2):     3: 00
+1.799035 ptp(2): event 98: EOS prop d13b info record, datasize is 4
+1.799400 ptp(2): event 98: Unknown EOS property d13b, datasize is 4
+1.799543 ptp(2):     0: 00
+1.800249 ptp(2):     1: 00
+1.800378 ptp(2):     2: 00
+1.801196 ptp(2):     3: 00
+1.801332 ptp(2): event 99: EOS prop d13c info record, datasize is 4
+1.801479 ptp(2): event 99: Unknown EOS property d13c, datasize is 4
+1.802356 ptp(2):     0: 3f
+1.802489 ptp(2):     1: 00
+1.802599 ptp(2):     2: 00
+1.802931 ptp(2):     3: 00
+1.803599 ptp(2): event 100: EOS prop d13d info record, datasize is 24
+1.803767 ptp(2): event 100: Unknown EOS property d13d, datasize is 24
+1.804626 ptp(2):     0: 18
+1.804755 ptp(2):     1: 00
+1.804867 ptp(2):     2: 00
+1.804973 ptp(2):     3: 00
+1.805288 ptp(2):     4: 00
+1.806099 ptp(2):     5: 00
+1.806230 ptp(2):     6: 00
+1.806342 ptp(2):     7: 00
+1.807231 ptp(2):     8: 00
+1.807364 ptp(2):     9: 00
+1.807473 ptp(2):     10: 00
+1.807581 ptp(2):     11: 00
+1.807922 ptp(2):     12: 01
+1.808094 ptp(2):     13: 00
+1.808249 ptp(2):     14: 00
+1.808913 ptp(2):     15: 00
+1.809050 ptp(2):     16: 01
+1.809161 ptp(2):     17: 00
+1.809273 ptp(2):     18: 00
+1.810101 ptp(2):     19: 00
+1.810229 ptp(2):     20: 00
+1.810340 ptp(2):     21: 00
+1.810449 ptp(2):     22: 00
+1.810559 ptp(2):     23: 00
+1.811385 ptp(2): event 101: EOS prop d14d info record, datasize is 4
+1.811577 ptp(2): event 101: Unknown EOS property d14d, datasize is 4
+1.812374 ptp(2):     0: 00
+1.812504 ptp(2):     1: 3c
+1.812612 ptp(2):     2: 00
+1.812924 ptp(2):     3: 00
+1.813063 ptp(2): event 102: EOS prop d19a info record, datasize is 4
+1.813209 ptp(2): event 102: Unknown EOS property d19a, datasize is 4
+1.813891 ptp(2):     0: 00
+1.814021 ptp(2):     1: 00
+1.814133 ptp(2):     2: 00
+1.814244 ptp(2):     3: 00
+1.814356 ptp(2): event 103: EOS prop d19c info record, datasize is 4
+1.814745 ptp(2): event 103: Unknown EOS property d19c, datasize is 4
+1.815438 ptp(2):     0: 01
+1.815570 ptp(2):     1: 00
+1.815776 ptp(2):     2: 00
+1.816683 ptp(2):     3: 00
+1.816821 ptp(2): event 104: unknown EOS event c1a4
+1.816939 ptp(2):     8: 01
+1.817049 ptp(2):     9: 00
+1.817158 ptp(2):     10: 01
+1.818022 ptp(2):     11: 00
+1.818158 ptp(2): event 105: EOS prop d105 desc record, datasize 0, propxtype 1
+1.818280 ptp(2): event 105: propxtype is 1 for d105, unhandled.
+1.818398 ptp(2): event 106: EOS prop d108 desc record, datasize 12, propxtype 3
+1.818789 ptp(2): event 106: propxtype is 3, prop is 0xd108, data type is 0x0004, propxcnt is 3.
+1.819500 ptp(2): event 106: suppval[0] of d108 is 0x0.
+1.819634 ptp(2): event 106: suppval[1] of d108 is 0x2.
+1.819752 ptp(2): event 106: suppval[2] of d108 is 0x1.
+1.819875 ptp(2): event 107: EOS prop d106 desc record, datasize 28, propxtype 3
+1.819996 ptp(2): event 107: propxtype is 3, prop is 0xd106, data type is 0x0004, propxcnt is 7.
+1.820893 ptp(2): event 107: suppval[0] of d106 is 0x0.
+1.821029 ptp(2): event 107: suppval[1] of d106 is 0x4.
+1.821144 ptp(2): event 107: suppval[2] of d106 is 0x5.
+1.821258 ptp(2): event 107: suppval[3] of d106 is 0x13.
+1.821370 ptp(2): event 107: suppval[4] of d106 is 0x14.
+1.821717 ptp(2): event 107: suppval[5] of d106 is 0x10.
+1.822406 ptp(2): event 107: suppval[6] of d106 is 0x11.
+1.822556 ptp(2): event 108: EOS prop d107 desc record, datasize 16, propxtype 3
+1.822682 ptp(2): event 108: propxtype is 3, prop is 0xd107, data type is 0x0002, propxcnt is 4.
+1.823490 ptp(2): event 108: suppval[0] of d107 is 0x3.
+1.823628 ptp(2): event 108: suppval[1] of d107 is 0x4.
+1.823744 ptp(2): event 108: suppval[2] of d107 is 0x1.
+1.823856 ptp(2): event 108: suppval[3] of d107 is 0x5.
+1.824271 ptp(2): event 109: EOS prop d109 desc record, datasize 36, propxtype 3
+1.824411 ptp(2): event 109: propxtype is 3, prop is 0xd109, data type is 0x0002, propxcnt is 9.
+1.825121 ptp(2): event 109: suppval[0] of d109 is 0x0.
+1.825257 ptp(2): event 109: suppval[1] of d109 is 0x1.
+1.825372 ptp(2): event 109: suppval[2] of d109 is 0x8.
+1.825487 ptp(2): event 109: suppval[3] of d109 is 0x2.
+1.825596 ptp(2): event 109: suppval[4] of d109 is 0x3.
+1.826529 ptp(2): event 109: suppval[5] of d109 is 0x4.
+1.826697 ptp(2): event 109: suppval[6] of d109 is 0x5.
+1.826818 ptp(2): event 109: suppval[7] of d109 is 0x6.
+1.826930 ptp(2): event 109: suppval[8] of d109 is 0x9.
+1.827050 ptp(2): event 110: EOS prop d10a desc record, datasize 304, propxtype 3
+1.827404 ptp(2): event 110: propxtype is 3, prop is 0xd10a, data type is 0x0006, propxcnt is 76.
+1.828146 ptp(2): event 110: suppval[0] of d10a is 0x9c4.
+1.828287 ptp(2): event 110: suppval[1] of d10a is 0xa28.
+1.828404 ptp(2): event 110: suppval[2] of d10a is 0xa8c.
+1.829233 ptp(2): event 110: suppval[3] of d10a is 0xaf0.
+1.829375 ptp(2): event 110: suppval[4] of d10a is 0xb54.
+1.829491 ptp(2): event 110: suppval[5] of d10a is 0xbb8.
+1.829601 ptp(2): event 110: suppval[6] of d10a is 0xc1c.
+1.829716 ptp(2): event 110: suppval[7] of d10a is 0xc80.
+1.830603 ptp(2): event 110: suppval[8] of d10a is 0xce4.
+1.830740 ptp(2): event 110: suppval[9] of d10a is 0xd48.
+1.830854 ptp(2): event 110: suppval[10] of d10a is 0xdac.
+1.830973 ptp(2): event 110: suppval[11] of d10a is 0xe10.
+1.831853 ptp(2): event 110: suppval[12] of d10a is 0xe74.
+1.832042 ptp(2): event 110: suppval[13] of d10a is 0xed8.
+1.832213 ptp(2): event 110: suppval[14] of d10a is 0xf3c.
+1.832339 ptp(2): event 110: suppval[15] of d10a is 0xfa0.
+1.833253 ptp(2): event 110: suppval[16] of d10a is 0x1004.
+1.833394 ptp(2): event 110: suppval[17] of d10a is 0x1068.
+1.833510 ptp(2): event 110: suppval[18] of d10a is 0x10cc.
+1.833629 ptp(2): event 110: suppval[19] of d10a is 0x1130.
+1.834510 ptp(2): event 110: suppval[20] of d10a is 0x1194.
+1.834646 ptp(2): event 110: suppval[21] of d10a is 0x11f8.
+1.834764 ptp(2): event 110: suppval[22] of d10a is 0x125c.
+1.834881 ptp(2): event 110: suppval[23] of d10a is 0x12c0.
+1.835813 ptp(2): event 110: suppval[24] of d10a is 0x1324.
+1.835954 ptp(2): event 110: suppval[25] of d10a is 0x1388.
+1.836072 ptp(2): event 110: suppval[26] of d10a is 0x13ec.
+1.836191 ptp(2): event 110: suppval[27] of d10a is 0x1450.
+1.836545 ptp(2): event 110: suppval[28] of d10a is 0x14b4.
+1.836677 ptp(2): event 110: suppval[29] of d10a is 0x1518.
+1.836796 ptp(2): event 110: suppval[30] of d10a is 0x157c.
+1.837512 ptp(2): event 110: suppval[31] of d10a is 0x15e0.
+1.837650 ptp(2): event 110: suppval[32] of d10a is 0x1644.
+1.837766 ptp(2): event 110: suppval[33] of d10a is 0x16a8.
+1.837879 ptp(2): event 110: suppval[34] of d10a is 0x170c.
+1.838767 ptp(2): event 110: suppval[35] of d10a is 0x1770.
+1.838908 ptp(2): event 110: suppval[36] of d10a is 0x17d4.
+1.839027 ptp(2): event 110: suppval[37] of d10a is 0x1838.
+1.839392 ptp(2): event 110: suppval[38] of d10a is 0x189c.
+1.840067 ptp(2): event 110: suppval[39] of d10a is 0x1900.
+1.840266 ptp(2): event 110: suppval[40] of d10a is 0x1964.
+1.840388 ptp(2): event 110: suppval[41] of d10a is 0x19c8.
+1.841233 ptp(2): event 110: suppval[42] of d10a is 0x1a2c.
+1.842051 ptp(2): event 110: suppval[43] of d10a is 0x1a90.
+1.842197 ptp(2): event 110: suppval[44] of d10a is 0x1af4.
+1.842318 ptp(2): event 110: suppval[45] of d10a is 0x1b58.
+1.843223 ptp(2): event 110: suppval[46] of d10a is 0x1bbc.
+1.844018 ptp(2): event 110: suppval[47] of d10a is 0x1c20.
+1.844153 ptp(2): event 110: suppval[48] of d10a is 0x1c84.
+1.844501 ptp(2): event 110: suppval[49] of d10a is 0x1ce8.
+1.844622 ptp(2): event 110: suppval[50] of d10a is 0x1d4c.
+1.845290 ptp(2): event 110: suppval[51] of d10a is 0x1db0.
+1.845434 ptp(2): event 110: suppval[52] of d10a is 0x1e14.
+1.845551 ptp(2): event 110: suppval[53] of d10a is 0x1e78.
+1.846500 ptp(2): event 110: suppval[54] of d10a is 0x1edc.
+1.846640 ptp(2): event 110: suppval[55] of d10a is 0x1f40.
+1.846756 ptp(2): event 110: suppval[56] of d10a is 0x1fa4.
+1.847102 ptp(2): event 110: suppval[57] of d10a is 0x2008.
+1.847232 ptp(2): event 110: suppval[58] of d10a is 0x206c.
+1.847351 ptp(2): event 110: suppval[59] of d10a is 0x20d0.
+1.847465 ptp(2): event 110: suppval[60] of d10a is 0x2134.
+1.847579 ptp(2): event 110: suppval[61] of d10a is 0x2198.
+1.848296 ptp(2): event 110: suppval[62] of d10a is 0x21fc.
+1.848461 ptp(2): event 110: suppval[63] of d10a is 0x2260.
+1.848578 ptp(2): event 110: suppval[64] of d10a is 0x22c4.
+1.848694 ptp(2): event 110: suppval[65] of d10a is 0x2328.
+1.848809 ptp(2): event 110: suppval[66] of d10a is 0x238c.
+1.849645 ptp(2): event 110: suppval[67] of d10a is 0x23f0.
+1.849817 ptp(2): event 110: suppval[68] of d10a is 0x2454.
+1.849938 ptp(2): event 110: suppval[69] of d10a is 0x24b8.
+1.850055 ptp(2): event 110: suppval[70] of d10a is 0x251c.
+1.850393 ptp(2): event 110: suppval[71] of d10a is 0x2580.
+1.851117 ptp(2): event 110: suppval[72] of d10a is 0x25e4.
+1.851258 ptp(2): event 110: suppval[73] of d10a is 0x2648.
+1.851377 ptp(2): event 110: suppval[74] of d10a is 0x26ac.
+1.851491 ptp(2): event 110: suppval[75] of d10a is 0x2710.
+1.852391 ptp(2): event 111: EOS prop d10b desc record, datasize 76, propxtype 3
+1.852535 ptp(2): event 111: propxtype is 3, prop is 0xd10b, data type is 0x0003, propxcnt is 19.
+1.853378 ptp(2): event 111: suppval[0] of d10b is 0xfff7.
+1.853515 ptp(2): event 111: suppval[1] of d10b is 0xfff8.
+1.853635 ptp(2): event 111: suppval[2] of d10b is 0xfff9.
+1.853752 ptp(2): event 111: suppval[3] of d10b is 0xfffa.
+1.854059 ptp(2): event 111: suppval[4] of d10b is 0xfffb.
+1.854769 ptp(2): event 111: suppval[5] of d10b is 0xfffc.
+1.854908 ptp(2): event 111: suppval[6] of d10b is 0xfffd.
+1.855027 ptp(2): event 111: suppval[7] of d10b is 0xfffe.
+1.855143 ptp(2): event 111: suppval[8] of d10b is 0xffff.
+1.855525 ptp(2): event 111: suppval[9] of d10b is 0x0.
+1.856356 ptp(2): event 111: suppval[10] of d10b is 0x1.
+1.856498 ptp(2): event 111: suppval[11] of d10b is 0x2.
+1.856616 ptp(2): event 111: suppval[12] of d10b is 0x3.
+1.856730 ptp(2): event 111: suppval[13] of d10b is 0x4.
+1.856849 ptp(2): event 111: suppval[14] of d10b is 0x5.
+1.857745 ptp(2): event 111: suppval[15] of d10b is 0x6.
+1.857881 ptp(2): event 111: suppval[16] of d10b is 0x7.
+1.858000 ptp(2): event 111: suppval[17] of d10b is 0x8.
+1.858113 ptp(2): event 111: suppval[18] of d10b is 0x9.
+1.858955 ptp(2): event 112: EOS prop d10c desc record, datasize 76, propxtype 3
+1.859127 ptp(2): event 112: propxtype is 3, prop is 0xd10c, data type is 0x0003, propxcnt is 19.
+1.859256 ptp(2): event 112: suppval[0] of d10c is 0xfff7.
+1.859375 ptp(2): event 112: suppval[1] of d10c is 0xfff8.
+1.859492 ptp(2): event 112: suppval[2] of d10c is 0xfff9.
+1.859812 ptp(2): event 112: suppval[3] of d10c is 0xfffa.
+1.860527 ptp(2): event 112: suppval[4] of d10c is 0xfffb.
+1.860674 ptp(2): event 112: suppval[5] of d10c is 0xfffc.
+1.862205 ptp(2): event 112: suppval[6] of d10c is 0xfffd.
+1.862372 ptp(2): event 112: suppval[7] of d10c is 0xfffe.
+1.862485 ptp(2): event 112: suppval[8] of d10c is 0xffff.
+1.862603 ptp(2): event 112: suppval[9] of d10c is 0x0.
+1.862973 ptp(2): event 112: suppval[10] of d10c is 0x1.
+1.863104 ptp(2): event 112: suppval[11] of d10c is 0x2.
+1.863219 ptp(2): event 112: suppval[12] of d10c is 0x3.
+1.863336 ptp(2): event 112: suppval[13] of d10c is 0x4.
+1.864052 ptp(2): event 112: suppval[14] of d10c is 0x5.
+1.864234 ptp(2): event 112: suppval[15] of d10c is 0x6.
+1.864994 ptp(2): event 112: suppval[16] of d10c is 0x7.
+1.865159 ptp(2): event 112: suppval[17] of d10c is 0x8.
+1.865489 ptp(2): event 112: suppval[18] of d10c is 0x9.
+1.865638 ptp(2): event 113: EOS prop d10d desc record, datasize 16, propxtype 3
+1.865857 ptp(2): event 113: propxtype is 3, prop is 0xd10d, data type is 0x0006, propxcnt is 4.
+1.866646 ptp(2): event 113: suppval[0] of d10d is 0x0.
+1.866786 ptp(2): event 113: suppval[1] of d10d is 0x1.
+1.866906 ptp(2): event 113: suppval[2] of d10d is 0x2.
+1.867023 ptp(2): event 113: suppval[3] of d10d is 0x3.
+1.867351 ptp(2): event 114: EOS prop d10e desc record, datasize 16, propxtype 3
+1.868079 ptp(2): event 114: propxtype is 3, prop is 0xd10e, data type is 0x0006, propxcnt is 4.
+1.868226 ptp(2): event 114: suppval[0] of d10e is 0x0.
+1.868350 ptp(2): event 114: suppval[1] of d10e is 0x1.
+1.869225 ptp(2): event 114: suppval[2] of d10e is 0x2.
+1.869367 ptp(2): event 114: suppval[3] of d10e is 0x3.
+1.869493 ptp(2): event 115: EOS prop d10f desc record, datasize 8, propxtype 3
+1.869619 ptp(2): event 115: propxtype is 3, prop is 0xd10f, data type is 0x0004, propxcnt is 2.
+1.869940 ptp(2): event 115: suppval[0] of d10f is 0x1.
+1.870662 ptp(2): event 115: suppval[1] of d10f is 0x2.
+1.870805 ptp(2): event 116: EOS prop d11b desc record, datasize 0, propxtype 1
+1.870930 ptp(2): event 116: propxtype is 1 for d11b, unhandled.
+1.871263 ptp(2): event 117: EOS prop d114 desc record, datasize 0, propxtype 1
+1.872029 ptp(2): event 117: propxtype is 1 for d114, unhandled.
+1.872870 ptp(2): event 118: EOS prop d116 desc record, datasize 0, propxtype 1
+1.873013 ptp(2): event 118: propxtype is 1 for d116, unhandled.
+1.873133 ptp(2): event 119: EOS prop d119 desc record, datasize 0, propxtype 1
+1.873503 ptp(2): event 119: propxtype is 1 for d119, unhandled.
+1.873647 ptp(2): event 120: EOS prop d11a desc record, datasize 0, propxtype 1
+1.874395 ptp(2): event 120: propdesc d11a, default value not found.
+1.874545 ptp(2): event 121: EOS prop d110 desc record, datasize 40, propxtype 3
+1.874674 ptp(2): event 121: propxtype is 3, prop is 0xd110, data type is 0x0002, propxcnt is 10.
+1.875529 ptp(2): event 121: suppval[0] of d110 is 0x87.
+1.875742 ptp(2): event 121: suppval[1] of d110 is 0x81.
+1.875876 ptp(2): event 121: suppval[2] of d110 is 0x82.
+1.875993 ptp(2): event 121: suppval[3] of d110 is 0x83.
+1.876914 ptp(2): event 121: suppval[4] of d110 is 0x84.
+1.877059 ptp(2): event 121: suppval[5] of d110 is 0x85.
+1.877178 ptp(2): event 121: suppval[6] of d110 is 0x86.
+1.878034 ptp(2): event 121: suppval[7] of d110 is 0x21.
+1.878181 ptp(2): event 121: suppval[8] of d110 is 0x22.
+1.878301 ptp(2): event 121: suppval[9] of d110 is 0x23.
+1.878424 ptp(2): event 122: EOS prop d115 desc record, datasize 0, propxtype 7
+1.878781 ptp(2): event 122: propdesc d115, default value not found.
+1.879513 ptp(2): event 123: EOS prop d101 desc record, datasize 0, propxtype 3
+1.879661 ptp(2): event 124: EOS prop d102 desc record, datasize 220, propxtype 3
+1.879788 ptp(2): event 124: propxtype is 3, prop is 0xd102, data type is 0x0004, propxcnt is 55.
+1.880722 ptp(2): event 124: suppval[0] of d102 is 0x10.
+1.880861 ptp(2): event 124: suppval[1] of d102 is 0x13.
+1.880977 ptp(2): event 124: suppval[2] of d102 is 0x15.
+1.881094 ptp(2): event 124: suppval[3] of d102 is 0x18.
+1.881210 ptp(2): event 124: suppval[4] of d102 is 0x1b.
+1.881553 ptp(2): event 124: suppval[5] of d102 is 0x1d.
+1.882253 ptp(2): event 124: suppval[6] of d102 is 0x20.
+1.882391 ptp(2): event 124: suppval[7] of d102 is 0x23.
+1.882508 ptp(2): event 124: suppval[8] of d102 is 0x25.
+1.882815 ptp(2): event 124: suppval[9] of d102 is 0x28.
+1.883925 ptp(2): event 124: suppval[10] of d102 is 0x2b.
+1.884927 ptp(2): event 124: suppval[11] of d102 is 0x2d.
+1.885466 ptp(2): event 124: suppval[12] of d102 is 0x30.
+1.886799 ptp(2): event 124: suppval[13] of d102 is 0x33.
+1.886957 ptp(2): event 124: suppval[14] of d102 is 0x35.
+1.887325 ptp(2): event 124: suppval[15] of d102 is 0x38.
+1.887456 ptp(2): event 124: suppval[16] of d102 is 0x3b.
+1.887572 ptp(2): event 124: suppval[17] of d102 is 0x3d.
+1.887688 ptp(2): event 124: suppval[18] of d102 is 0x40.
+1.887805 ptp(2): event 124: suppval[19] of d102 is 0x43.
+1.887921 ptp(2): event 124: suppval[20] of d102 is 0x45.
+1.888698 ptp(2): event 124: suppval[21] of d102 is 0x48.
+1.888838 ptp(2): event 124: suppval[22] of d102 is 0x4b.
+1.888959 ptp(2): event 124: suppval[23] of d102 is 0x4d.
+1.889075 ptp(2): event 124: suppval[24] of d102 is 0x50.
+1.889389 ptp(2): event 124: suppval[25] of d102 is 0x53.
+1.890121 ptp(2): event 124: suppval[26] of d102 is 0x55.
+1.890913 ptp(2): event 124: suppval[27] of d102 is 0x58.
+1.891277 ptp(2): event 124: suppval[28] of d102 is 0x5b.
+1.891410 ptp(2): event 124: suppval[29] of d102 is 0x5d.
+1.891530 ptp(2): event 124: suppval[30] of d102 is 0x60.
+1.892207 ptp(2): event 124: suppval[31] of d102 is 0x63.
+1.892347 ptp(2): event 124: suppval[32] of d102 is 0x65.
+1.892465 ptp(2): event 124: suppval[33] of d102 is 0x68.
+1.892579 ptp(2): event 124: suppval[34] of d102 is 0x6b.
+1.893479 ptp(2): event 124: suppval[35] of d102 is 0x6d.
+1.893624 ptp(2): event 124: suppval[36] of d102 is 0x70.
+1.893737 ptp(2): event 124: suppval[37] of d102 is 0x73.
+1.893851 ptp(2): event 124: suppval[38] of d102 is 0x75.
+1.894737 ptp(2): event 124: suppval[39] of d102 is 0x78.
+1.894879 ptp(2): event 124: suppval[40] of d102 is 0x7b.
+1.894994 ptp(2): event 124: suppval[41] of d102 is 0x7d.
+1.895920 ptp(2): event 124: suppval[42] of d102 is 0x80.
+1.896101 ptp(2): event 124: suppval[43] of d102 is 0x83.
+1.896260 ptp(2): event 124: suppval[44] of d102 is 0x85.
+1.896378 ptp(2): event 124: suppval[45] of d102 is 0x88.
+1.897245 ptp(2): event 124: suppval[46] of d102 is 0x8b.
+1.897383 ptp(2): event 124: suppval[47] of d102 is 0x8d.
+1.897498 ptp(2): event 124: suppval[48] of d102 is 0x90.
+1.897610 ptp(2): event 124: suppval[49] of d102 is 0x93.
+1.897723 ptp(2): event 124: suppval[50] of d102 is 0x95.
+1.898072 ptp(2): event 124: suppval[51] of d102 is 0x98.
+1.898205 ptp(2): event 124: suppval[52] of d102 is 0x9b.
+1.898899 ptp(2): event 124: suppval[53] of d102 is 0x9d.
+1.899033 ptp(2): event 124: suppval[54] of d102 is 0xa0.
+1.899158 ptp(2): event 125: EOS prop d103 desc record, datasize 104, propxtype 3
+1.899285 ptp(2): event 125: propxtype is 3, prop is 0xd103, data type is 0x0004, propxcnt is 26.
+1.899678 ptp(2): event 125: suppval[0] of d103 is 0x0.
+1.900387 ptp(2): event 125: suppval[1] of d103 is 0x48.
+1.900521 ptp(2): event 125: suppval[2] of d103 is 0x4b.
+1.900640 ptp(2): event 125: suppval[3] of d103 is 0x4d.
+1.900758 ptp(2): event 125: suppval[4] of d103 is 0x50.
+1.901633 ptp(2): event 125: suppval[5] of d103 is 0x53.
+1.901767 ptp(2): event 125: suppval[6] of d103 is 0x55.
+1.901884 ptp(2): event 125: suppval[7] of d103 is 0x58.
+1.902730 ptp(2): event 125: suppval[8] of d103 is 0x5b.
+1.903581 ptp(2): event 125: suppval[9] of d103 is 0x5d.
+1.903749 ptp(2): event 125: suppval[10] of d103 is 0x60.
+1.904640 ptp(2): event 125: suppval[11] of d103 is 0x63.
+1.904776 ptp(2): event 125: suppval[12] of d103 is 0x65.
+1.904896 ptp(2): event 125: suppval[13] of d103 is 0x68.
+1.905010 ptp(2): event 125: suppval[14] of d103 is 0x6b.
+1.905395 ptp(2): event 125: suppval[15] of d103 is 0x6d.
+1.905534 ptp(2): event 125: suppval[16] of d103 is 0x70.
+1.905726 ptp(2): event 125: suppval[17] of d103 is 0x73.
+1.906453 ptp(2): event 125: suppval[18] of d103 is 0x75.
+1.906594 ptp(2): event 125: suppval[19] of d103 is 0x78.
+1.906710 ptp(2): event 125: suppval[20] of d103 is 0x7b.
+1.906826 ptp(2): event 125: suppval[21] of d103 is 0x7d.
+1.907697 ptp(2): event 125: suppval[22] of d103 is 0x80.
+1.907838 ptp(2): event 125: suppval[23] of d103 is 0x83.
+1.907957 ptp(2): event 125: suppval[24] of d103 is 0x85.
+1.908072 ptp(2): event 125: suppval[25] of d103 is 0x88.
+1.908192 ptp(2): event 126: EOS prop d104 desc record, datasize 124, propxtype 3
+1.909063 ptp(2): event 126: propxtype is 3, prop is 0xd104, data type is 0x0002, propxcnt is 31.
+1.909235 ptp(2): event 126: suppval[0] of d104 is 0xd8.
+1.909356 ptp(2): event 126: suppval[1] of d104 is 0xdb.
+1.910236 ptp(2): event 126: suppval[2] of d104 is 0xdd.
+1.910378 ptp(2): event 126: suppval[3] of d104 is 0xe0.
+1.910490 ptp(2): event 126: suppval[4] of d104 is 0xe3.
+1.910605 ptp(2): event 126: suppval[5] of d104 is 0xe5.
+1.910718 ptp(2): event 126: suppval[6] of d104 is 0xe8.
+1.911090 ptp(2): event 126: suppval[7] of d104 is 0xeb.
+1.911783 ptp(2): event 126: suppval[8] of d104 is 0xed.
+1.911929 ptp(2): event 126: suppval[9] of d104 is 0xf0.
+1.912088 ptp(2): event 126: suppval[10] of d104 is 0xf3.
+1.912933 ptp(2): event 126: suppval[11] of d104 is 0xf5.
+1.913068 ptp(2): event 126: suppval[12] of d104 is 0xf8.
+1.913180 ptp(2): event 126: suppval[13] of d104 is 0xfb.
+1.913295 ptp(2): event 126: suppval[14] of d104 is 0xfd.
+1.913635 ptp(2): event 126: suppval[15] of d104 is 0x0.
+1.913765 ptp(2): event 126: suppval[16] of d104 is 0x3.
+1.913881 ptp(2): event 126: suppval[17] of d104 is 0x5.
+1.914568 ptp(2): event 126: suppval[18] of d104 is 0x8.
+1.914708 ptp(2): event 126: suppval[19] of d104 is 0xb.
+1.914826 ptp(2): event 126: suppval[20] of d104 is 0xd.
+1.914942 ptp(2): event 126: suppval[21] of d104 is 0x10.
+1.915919 ptp(2): event 126: suppval[22] of d104 is 0x13.
+1.916064 ptp(2): event 126: suppval[23] of d104 is 0x15.
+1.916182 ptp(2): event 126: suppval[24] of d104 is 0x18.
+1.916297 ptp(2): event 126: suppval[25] of d104 is 0x1b.
+1.916645 ptp(2): event 126: suppval[26] of d104 is 0x1d.
+1.916787 ptp(2): event 126: suppval[27] of d104 is 0x20.
+1.917502 ptp(2): event 126: suppval[28] of d104 is 0x23.
+1.917638 ptp(2): event 126: suppval[29] of d104 is 0x25.
+1.917755 ptp(2): event 126: suppval[30] of d104 is 0x28.
+1.917878 ptp(2): event 127: EOS prop d11d desc record, datasize 0, propxtype 1
+1.918763 ptp(2): event 127: propxtype is 1 for d11d, unhandled.
+1.918907 ptp(2): event 128: EOS prop d111 desc record, datasize 0, propxtype 1
+1.919030 ptp(2): event 128: propxtype is 1 for d111, unhandled.
+1.919150 ptp(2): event 129: EOS prop d112 desc record, datasize 0, propxtype 1
+1.919463 ptp(2): event 129: propxtype is 1 for d112, unhandled.
+1.920222 ptp(2): event 130: EOS prop d113 desc record, datasize 0, propxtype 7
+1.920372 ptp(2): event 130: propxtype is 7 for d113, unhandled.
+1.920497 ptp(2): event 131: EOS prop d17c desc record, datasize 0, propxtype 7
+1.920614 ptp(2): event 131: propxtype is 7 for d17c, unhandled.
+1.921493 ptp(2): event 132: EOS prop d17d desc record, datasize 396, propxtype 3
+1.921646 ptp(2): event 132: propxtype is 3, prop is 0xd17d, data type is 0x0000, propxcnt is 33.
+1.921775 ptp(2): event 132: data type 0x0000 of d17d unhandled, raw values:
+1.921894 ptp(2):       0: 0x       c
+1.922767 ptp(2):       1: 0x       1
+1.922933 ptp(2):       2: 0x     2fd
+1.923053 ptp(2):       3: 0x       c
+1.923868 ptp(2):       4: 0x       2
+1.924006 ptp(2):       5: 0x     2d0
+1.924122 ptp(2):       6: 0x       c
+1.924233 ptp(2):       7: 0x       3
+1.924613 ptp(2):       8: 0x     294
+1.924747 ptp(2):       9: 0x       c
+1.924857 ptp(2):      10: 0x       4
+1.925534 ptp(2):      11: 0x     258
+1.925742 ptp(2):      12: 0x       c
+1.925874 ptp(2):      13: 0x       5
+1.926224 ptp(2):      14: 0x     23a
+1.926908 ptp(2):      15: 0x       c
+1.927040 ptp(2):      16: 0x       6
+1.927154 ptp(2):      17: 0x     21c
+1.927488 ptp(2):      18: 0x       c
+1.927624 ptp(2):      19: 0x       7
+1.928299 ptp(2):      20: 0x     1e0
+1.928432 ptp(2):      21: 0x       c
+1.928748 ptp(2):      22: 0x       8
+1.929411 ptp(2):      23: 0x     1a4
+1.929551 ptp(2):      24: 0x       c
+1.929666 ptp(2):      25: 0x       9
+1.930491 ptp(2):      26: 0x     186
+1.930628 ptp(2):      27: 0x       c
+1.930740 ptp(2):      28: 0x       a
+1.930850 ptp(2):      29: 0x     168
+1.931186 ptp(2):      30: 0x       c
+1.931853 ptp(2):      31: 0x       b
+1.931985 ptp(2):      32: 0x     159
+1.932795 ptp(2):      33: 0x       c
+1.932930 ptp(2):      34: 0x       c
+1.933043 ptp(2):      35: 0x     14a
+1.933416 ptp(2):      36: 0x       c
+1.933547 ptp(2):      37: 0x       d
+1.933661 ptp(2):      38: 0x     12c
+1.933775 ptp(2):      39: 0x       c
+1.934452 ptp(2):      40: 0x       e
+1.934588 ptp(2):      41: 0x     10e
+1.934702 ptp(2):      42: 0x       c
+1.934814 ptp(2):      43: 0x       f
+1.935713 ptp(2):      44: 0x      f0
+1.935886 ptp(2):      45: 0x       c
+1.936782 ptp(2):      46: 0x      10
+1.936936 ptp(2):      47: 0x      d2
+1.937279 ptp(2):      48: 0x       c
+1.937415 ptp(2):      49: 0x      11
+1.937531 ptp(2):      50: 0x      b4
+1.937645 ptp(2):      51: 0x       c
+1.937757 ptp(2):      52: 0x      12
+1.937868 ptp(2):      53: 0x      78
+1.938547 ptp(2):      54: 0x       c
+1.938689 ptp(2):      55: 0x      13
+1.938805 ptp(2):      56: 0x      3c
+1.939596 ptp(2):      57: 0x       c
+1.939729 ptp(2):      58: 0x      14
+1.940031 ptp(2):      59: 0x       0
+1.940193 ptp(2):      60: 0x       c
+1.940847 ptp(2):      61: 0x      15
+1.940980 ptp(2):      62: 0xffffffc4
+1.941096 ptp(2):      63: 0x       c
+1.941953 ptp(2):      64: 0x      16
+1.942091 ptp(2):      65: 0xffffff88
+1.942205 ptp(2):      66: 0x       c
+1.942318 ptp(2):      67: 0x      17
+1.942431 ptp(2):      68: 0xffffff4c
+1.943313 ptp(2):      69: 0x       c
+1.943451 ptp(2):      70: 0x      18
+1.943568 ptp(2):      71: 0xffffff2e
+1.944484 ptp(2):      72: 0x       c
+1.944625 ptp(2):      73: 0x      19
+1.944737 ptp(2):      74: 0xffffff10
+1.944852 ptp(2):      75: 0x       c
+1.945173 ptp(2):      76: 0x      1a
+1.945953 ptp(2):      77: 0xffffff10
+1.946762 ptp(2):      78: 0x       c
+1.946894 ptp(2):      79: 0x      1b
+1.947206 ptp(2):      80: 0xfffffed4
+1.947360 ptp(2):      81: 0x       c
+1.948018 ptp(2):      82: 0x      1c
+1.948148 ptp(2):      83: 0xfffffe98
+1.948265 ptp(2):      84: 0x       c
+1.948570 ptp(2):      85: 0x      1d
+1.949256 ptp(2):      86: 0xfffffe5c
+1.949392 ptp(2):      87: 0x       c
+1.949506 ptp(2):      88: 0x      1e
+1.949614 ptp(2):      89: 0xfffffe20
+1.951058 ptp(2):      90: 0x       c
+1.951946 ptp(2):      91: 0x      1f
+1.952121 ptp(2):      92: 0xfffffde4
+1.952280 ptp(2):      93: 0x       c
+1.952611 ptp(2):      94: 0x      20
+1.953279 ptp(2):      95: 0xfffffda8
+1.953411 ptp(2):      96: 0x       c
+1.953528 ptp(2):      97: 0x      21
+1.953638 ptp(2):      98: 0x     30c
+1.953761 ptp(2): event 133: EOS prop d17e desc record, datasize 8, propxtype 3
+1.954665 ptp(2): event 133: propxtype is 3, prop is 0xd17e, data type is 0x0000, propxcnt is 2.
+1.954842 ptp(2): event 133: data type 0x0000 of d17e unhandled, raw values:
+1.954966 ptp(2):       0: 0x       0
+1.956065 ptp(2):       1: 0x       1
+1.956211 ptp(2): event 134: EOS prop d120 desc record, datasize 1084, propxtype 3
+1.956341 ptp(2): event 134: propxtype is 3, prop is 0xd120, data type is 0x0004, propxcnt is 35.
+1.956713 ptp(2): event 134: suppval[0] of d120 is 0x300.
+1.957438 ptp(2): event 134: suppval[1] of d120 is 0x200.
+1.957587 ptp(2): event 134: suppval[2] of d120 is 0x1300.
+1.957710 ptp(2): event 134: suppval[3] of d120 is 0x1200.
+1.958544 ptp(2): event 134: suppval[4] of d120 is 0xd300.
+1.958688 ptp(2): event 134: suppval[5] of d120 is 0xd200.
+1.958807 ptp(2): event 134: suppval[6] of d120 is 0xe300.
+1.958927 ptp(2): event 134: suppval[7] of d120 is 0xf300.
+1.959275 ptp(2): event 134: suppval[8] of d120 is 0x403.
+1.959410 ptp(2): event 134: suppval[9] of d120 is 0x402.
+1.959531 ptp(2): event 134: suppval[10] of d120 is 0x413.
+1.960289 ptp(2): event 134: suppval[11] of d120 is 0x412.
+1.960428 ptp(2): event 134: suppval[12] of d120 is 0x4d3.
+1.960550 ptp(2): event 134: suppval[13] of d120 is 0x4d2.
+1.961364 ptp(2): event 134: suppval[14] of d120 is 0x4e3.
+1.961511 ptp(2): event 134: suppval[15] of d120 is 0x4f3.
+1.961631 ptp(2): event 134: suppval[16] of d120 is 0x1403.
+1.961945 ptp(2): event 134: suppval[17] of d120 is 0x1402.
+1.962646 ptp(2): event 134: suppval[18] of d120 is 0x1413.
+1.962785 ptp(2): event 134: suppval[19] of d120 is 0x1412.
+1.962904 ptp(2): event 134: suppval[20] of d120 is 0x14d3.
+1.963020 ptp(2): event 134: suppval[21] of d120 is 0x14d2.
+1.963414 ptp(2): event 134: suppval[22] of d120 is 0x14e3.
+1.964144 ptp(2): event 134: suppval[23] of d120 is 0x14f3.
+1.964282 ptp(2): event 134: suppval[24] of d120 is 0x2403.
+1.964403 ptp(2): event 134: suppval[25] of d120 is 0x2402.
+1.965240 ptp(2): event 134: suppval[26] of d120 is 0x2413.
+1.965386 ptp(2): event 134: suppval[27] of d120 is 0x2412.
+1.965507 ptp(2): event 134: suppval[28] of d120 is 0x24d3.
+1.965622 ptp(2): event 134: suppval[29] of d120 is 0x24d2.
+1.966645 ptp(2): event 134: suppval[30] of d120 is 0x24e3.
+1.966792 ptp(2): event 134: suppval[31] of d120 is 0x24f3.
+1.966912 ptp(2): event 134: suppval[32] of d120 is 0x400.
+1.967779 ptp(2): event 134: suppval[33] of d120 is 0x1400.
+1.967917 ptp(2): event 134: suppval[34] of d120 is 0x2400.
+1.968088 ptp(2): event 135: EOS prop d121 desc record, datasize 1084, propxtype 3
+1.968459 ptp(2): event 135: propxtype is 3, prop is 0xd121, data type is 0x0004, propxcnt is 35.
+1.968627 ptp(2): event 135: suppval[0] of d121 is 0x300.
+1.969334 ptp(2): event 135: suppval[1] of d121 is 0x200.
+1.969476 ptp(2): event 135: suppval[2] of d121 is 0x1300.
+1.969598 ptp(2): event 135: suppval[3] of d121 is 0x1200.
+1.969715 ptp(2): event 135: suppval[4] of d121 is 0xd300.
+1.970593 ptp(2): event 135: suppval[5] of d121 is 0xd200.
+1.970738 ptp(2): event 135: suppval[6] of d121 is 0xe300.
+1.970859 ptp(2): event 135: suppval[7] of d121 is 0xf300.
+1.970976 ptp(2): event 135: suppval[8] of d121 is 0x403.
+1.971094 ptp(2): event 135: suppval[9] of d121 is 0x402.
+1.972017 ptp(2): event 135: suppval[10] of d121 is 0x413.
+1.972162 ptp(2): event 135: suppval[11] of d121 is 0x412.
+1.973014 ptp(2): event 135: suppval[12] of d121 is 0x4d3.
+1.973159 ptp(2): event 135: suppval[13] of d121 is 0x4d2.
+1.973281 ptp(2): event 135: suppval[14] of d121 is 0x4e3.
+1.973634 ptp(2): event 135: suppval[15] of d121 is 0x4f3.
+1.974311 ptp(2): event 135: suppval[16] of d121 is 0x1403.
+1.974460 ptp(2): event 135: suppval[17] of d121 is 0x1402.
+1.974582 ptp(2): event 135: suppval[18] of d121 is 0x1413.
+1.975450 ptp(2): event 135: suppval[19] of d121 is 0x1412.
+1.975598 ptp(2): event 135: suppval[20] of d121 is 0x14d3.
+1.975807 ptp(2): event 135: suppval[21] of d121 is 0x14d2.
+1.976202 ptp(2): event 135: suppval[22] of d121 is 0x14e3.
+1.976344 ptp(2): event 135: suppval[23] of d121 is 0x14f3.
+1.977050 ptp(2): event 135: suppval[24] of d121 is 0x2403.
+1.977191 ptp(2): event 135: suppval[25] of d121 is 0x2402.
+1.977311 ptp(2): event 135: suppval[26] of d121 is 0x2413.
+1.978196 ptp(2): event 135: suppval[27] of d121 is 0x2412.
+1.978339 ptp(2): event 135: suppval[28] of d121 is 0x24d3.
+1.978461 ptp(2): event 135: suppval[29] of d121 is 0x24d2.
+1.978581 ptp(2): event 135: suppval[30] of d121 is 0x24e3.
+1.979448 ptp(2): event 135: suppval[31] of d121 is 0x24f3.
+1.979588 ptp(2): event 135: suppval[32] of d121 is 0x400.
+1.979707 ptp(2): event 135: suppval[33] of d121 is 0x1400.
+1.979825 ptp(2): event 135: suppval[34] of d121 is 0x2400.
+1.980713 ptp(2): event 136: EOS prop d122 desc record, datasize 1084, propxtype 3
+1.980866 ptp(2): event 136: propxtype is 3, prop is 0xd122, data type is 0x0004, propxcnt is 35.
+1.980994 ptp(2): event 136: suppval[0] of d122 is 0x300.
+1.981115 ptp(2): event 136: suppval[1] of d122 is 0x200.
+1.981234 ptp(2): event 136: suppval[2] of d122 is 0x1300.
+1.981578 ptp(2): event 136: suppval[3] of d122 is 0x1200.
+1.982296 ptp(2): event 136: suppval[4] of d122 is 0xd300.
+1.982436 ptp(2): event 136: suppval[5] of d122 is 0xd200.
+1.982556 ptp(2): event 136: suppval[6] of d122 is 0xe300.
+1.982673 ptp(2): event 136: suppval[7] of d122 is 0xf300.
+1.982792 ptp(2): event 136: suppval[8] of d122 is 0x403.
+1.983665 ptp(2): event 136: suppval[9] of d122 is 0x402.
+1.983807 ptp(2): event 136: suppval[10] of d122 is 0x413.
+1.983929 ptp(2): event 136: suppval[11] of d122 is 0x412.
+1.984093 ptp(2): event 136: suppval[12] of d122 is 0x4d3.
+1.984487 ptp(2): event 136: suppval[13] of d122 is 0x4d2.
+1.984624 ptp(2): event 136: suppval[14] of d122 is 0x4e3.
+1.984745 ptp(2): event 136: suppval[15] of d122 is 0x4f3.
+1.985450 ptp(2): event 136: suppval[16] of d122 is 0x1403.
+1.985595 ptp(2): event 136: suppval[17] of d122 is 0x1402.
+1.985804 ptp(2): event 136: suppval[18] of d122 is 0x1413.
+1.986140 ptp(2): event 136: suppval[19] of d122 is 0x1412.
+1.986861 ptp(2): event 136: suppval[20] of d122 is 0x14d3.
+1.987667 ptp(2): event 136: suppval[21] of d122 is 0x14d2.
+1.988059 ptp(2): event 136: suppval[22] of d122 is 0x14e3.
+1.988203 ptp(2): event 136: suppval[23] of d122 is 0x14f3.
+1.988325 ptp(2): event 136: suppval[24] of d122 is 0x2403.
+1.988444 ptp(2): event 136: suppval[25] of d122 is 0x2402.
+1.989136 ptp(2): event 136: suppval[26] of d122 is 0x2413.
+1.989273 ptp(2): event 136: suppval[27] of d122 is 0x2412.
+1.989394 ptp(2): event 136: suppval[28] of d122 is 0x24d3.
+1.989513 ptp(2): event 136: suppval[29] of d122 is 0x24d2.
+1.990403 ptp(2): event 136: suppval[30] of d122 is 0x24e3.
+1.990546 ptp(2): event 136: suppval[31] of d122 is 0x24f3.
+1.990666 ptp(2): event 136: suppval[32] of d122 is 0x400.
+1.990783 ptp(2): event 136: suppval[33] of d122 is 0x1400.
+1.991644 ptp(2): event 136: suppval[34] of d122 is 0x2400.
+1.991787 ptp(2): event 137: EOS prop d156 desc record, datasize 0, propxtype 7
+1.991914 ptp(2): event 137: propxtype is 7 for d156, unhandled.
+1.992072 ptp(2): event 138: EOS prop d150 desc record, datasize 0, propxtype 7
+1.992474 ptp(2): event 138: propxtype is 7 for d150, unhandled.
+1.992613 ptp(2): event 139: EOS prop d151 desc record, datasize 0, propxtype 7
+1.993330 ptp(2): event 139: propxtype is 7 for d151, unhandled.
+1.993477 ptp(2): event 140: EOS prop d152 desc record, datasize 0, propxtype 7
+1.993602 ptp(2): event 140: propxtype is 7 for d152, unhandled.
+1.993723 ptp(2): event 141: EOS prop d153 desc record, datasize 0, propxtype 7
+1.994646 ptp(2): event 141: propxtype is 7 for d153, unhandled.
+1.994791 ptp(2): event 142: EOS prop d154 desc record, datasize 0, propxtype 7
+1.994914 ptp(2): event 142: propxtype is 7 for d154, unhandled.
+1.995032 ptp(2): event 143: EOS prop d155 desc record, datasize 0, propxtype 7
+1.995151 ptp(2): event 143: propxtype is 7 for d155, unhandled.
+1.995464 ptp(2): event 144: EOS prop d160 desc record, datasize 0, propxtype 7
+1.996297 ptp(2): event 144: propxtype is 7 for d160, unhandled.
+1.996437 ptp(2): event 145: EOS prop d161 desc record, datasize 0, propxtype 7
+1.996560 ptp(2): event 145: propxtype is 7 for d161, unhandled.
+1.996681 ptp(2): event 146: EOS prop d162 desc record, datasize 0, propxtype 7
+1.997577 ptp(2): event 146: propxtype is 7 for d162, unhandled.
+1.997723 ptp(2): event 147: EOS prop d170 desc record, datasize 0, propxtype 7
+1.997855 ptp(2): event 147: propdesc d170, default value not found.
+1.997976 ptp(2): event 148: EOS prop d171 desc record, datasize 0, propxtype 7
+1.998102 ptp(2): event 148: propdesc d171, default value not found.
+1.998496 ptp(2): event 149: EOS prop d172 desc record, datasize 0, propxtype 7
+1.999234 ptp(2): event 149: propdesc d172, default value not found.
+1.999383 ptp(2): event 150: EOS prop d11c desc record, datasize 12, propxtype 3
+1.999512 ptp(2): event 150: propxtype is 3, prop is 0xd11c, data type is 0x0006, propxcnt is 3.
+2.000363 ptp(2): event 150: suppval[0] of d11c is 0x1.
+2.000535 ptp(2): event 150: suppval[1] of d11c is 0x5.
+2.000655 ptp(2): event 150: suppval[2] of d11c is 0x4.
+2.000778 ptp(2): event 151: EOS prop d1a0 desc record, datasize 0, propxtype 7
+2.001103 ptp(2): event 151: propxtype is 7 for d1a0, unhandled.
+2.001830 ptp(2): event 152: EOS prop d1a1 desc record, datasize 0, propxtype 7
+2.001979 ptp(2): event 152: propxtype is 7 for d1a1, unhandled.
+2.002103 ptp(2): event 153: EOS prop d1a2 desc record, datasize 0, propxtype 7
+2.002232 ptp(2): event 153: propdesc d1a2, default value not found.
+2.003154 ptp(2): event 154: EOS prop d1a8 desc record, datasize 0, propxtype 1
+2.003307 ptp(2): event 154: propxtype is 1 for d1a8, unhandled.
+2.003433 ptp(2): event 155: EOS prop d1a7 desc record, datasize 0, propxtype 7
+2.003556 ptp(2): event 155: propxtype is 7 for d1a7, unhandled.
+2.003675 ptp(2): event 156: EOS prop d1ab desc record, datasize 0, propxtype 1
+2.004630 ptp(2): event 156: propxtype is 1 for d1ab, unhandled.
+2.005521 ptp(2): event 157: EOS prop d1b0 desc record, datasize 32, propxtype 3
+2.005956 ptp(2): event 157: propxtype is 3, prop is 0xd1b0, data type is 0x0004, propxcnt is 8.
+2.006684 ptp(2): event 157: suppval[0] of d1b0 is 0x0.
+2.006831 ptp(2): event 157: suppval[1] of d1b0 is 0x1.
+2.007632 ptp(2): event 157: suppval[2] of d1b0 is 0x2.
+2.007771 ptp(2): event 157: suppval[3] of d1b0 is 0x3.
+2.008106 ptp(2): event 157: suppval[4] of d1b0 is 0x4.
+2.008795 ptp(2): event 157: suppval[5] of d1b0 is 0x5.
+2.008962 ptp(2): event 157: suppval[6] of d1b0 is 0x6.
+2.009084 ptp(2): event 157: suppval[7] of d1b0 is 0x7.
+2.009954 ptp(2): event 158: EOS prop d1b1 desc record, datasize 8, propxtype 3
+2.010108 ptp(2): event 158: propxtype is 3, prop is 0xd1b1, data type is 0x0004, propxcnt is 2.
+2.010235 ptp(2): event 158: suppval[0] of d1b1 is 0x0.
+2.010352 ptp(2): event 158: suppval[1] of d1b1 is 0x1.
+2.010686 ptp(2): event 159: EOS prop d1b2 desc record, datasize 0, propxtype 7
+2.010836 ptp(2): event 159: propxtype is 7 for d1b2, unhandled.
+2.011544 ptp(2): event 160: EOS prop d1b3 desc record, datasize 0, propxtype 7
+2.011691 ptp(2): event 160: propxtype is 7 for d1b3, unhandled.
+2.011817 ptp(2): event 161: EOS prop d1b4 desc record, datasize 40, propxtype 3
+2.011944 ptp(2): event 161: propxtype is 3, prop is 0xd1b4, data type is 0x0006, propxcnt is 10.
+2.012303 ptp(2): event 161: suppval[0] of d1b4 is 0x0.
+2.012997 ptp(2): event 161: suppval[1] of d1b4 is 0x1.
+2.013136 ptp(2): event 161: suppval[2] of d1b4 is 0x8.
+2.013251 ptp(2): event 161: suppval[3] of d1b4 is 0x2.
+2.014053 ptp(2): event 161: suppval[4] of d1b4 is 0x3.
+2.014223 ptp(2): event 161: suppval[5] of d1b4 is 0x4.
+2.014345 ptp(2): event 161: suppval[6] of d1b4 is 0x5.
+2.014461 ptp(2): event 161: suppval[7] of d1b4 is 0x6.
+2.014576 ptp(2): event 161: suppval[8] of d1b4 is 0x9.
+2.015430 ptp(2): event 161: suppval[9] of d1b4 is 0x8000.
+2.015606 ptp(2): event 162: EOS prop d1b5 desc record, datasize 0, propxtype 7
+2.015827 ptp(2): event 162: propxtype is 7 for d1b5, unhandled.
+2.016776 ptp(2): event 163: EOS prop d1b6 desc record, datasize 304, propxtype 3
+2.016932 ptp(2): event 163: propxtype is 3, prop is 0xd1b6, data type is 0x0006, propxcnt is 76.
+2.017061 ptp(2): event 163: suppval[0] of d1b6 is 0x9c4.
+2.017180 ptp(2): event 163: suppval[1] of d1b6 is 0xa28.
+2.017539 ptp(2): event 163: suppval[2] of d1b6 is 0xa8c.
+2.018247 ptp(2): event 163: suppval[3] of d1b6 is 0xaf0.
+2.018390 ptp(2): event 163: suppval[4] of d1b6 is 0xb54.
+2.018510 ptp(2): event 163: suppval[5] of d1b6 is 0xbb8.
+2.018626 ptp(2): event 163: suppval[6] of d1b6 is 0xc1c.
+2.019497 ptp(2): event 163: suppval[7] of d1b6 is 0xc80.
+2.019639 ptp(2): event 163: suppval[8] of d1b6 is 0xce4.
+2.019758 ptp(2): event 163: suppval[9] of d1b6 is 0xd48.
+2.019872 ptp(2): event 163: suppval[10] of d1b6 is 0xdac.
+2.019988 ptp(2): event 163: suppval[11] of d1b6 is 0xe10.
+2.020304 ptp(2): event 163: suppval[12] of d1b6 is 0xe74.
+2.021029 ptp(2): event 163: suppval[13] of d1b6 is 0xed8.
+2.021169 ptp(2): event 163: suppval[14] of d1b6 is 0xf3c.
+2.021288 ptp(2): event 163: suppval[15] of d1b6 is 0xfa0.
+2.021403 ptp(2): event 163: suppval[16] of d1b6 is 0x1004.
+2.022295 ptp(2): event 163: suppval[17] of d1b6 is 0x1068.
+2.023098 ptp(2): event 163: suppval[18] of d1b6 is 0x10cc.
+2.023247 ptp(2): event 163: suppval[19] of d1b6 is 0x1130.
+2.024160 ptp(2): event 163: suppval[20] of d1b6 is 0x1194.
+2.024311 ptp(2): event 163: suppval[21] of d1b6 is 0x11f8.
+2.024431 ptp(2): event 163: suppval[22] of d1b6 is 0x125c.
+2.025323 ptp(2): event 163: suppval[23] of d1b6 is 0x12c0.
+2.025466 ptp(2): event 163: suppval[24] of d1b6 is 0x1324.
+2.025588 ptp(2): event 163: suppval[25] of d1b6 is 0x1388.
+2.026533 ptp(2): event 163: suppval[26] of d1b6 is 0x13ec.
+2.026675 ptp(2): event 163: suppval[27] of d1b6 is 0x1450.
+2.026796 ptp(2): event 163: suppval[28] of d1b6 is 0x14b4.
+2.027121 ptp(2): event 163: suppval[29] of d1b6 is 0x1518.
+2.027276 ptp(2): event 163: suppval[30] of d1b6 is 0x157c.
+2.027952 ptp(2): event 163: suppval[31] of d1b6 is 0x15e0.
+2.028090 ptp(2): event 163: suppval[32] of d1b6 is 0x1644.
+2.028211 ptp(2): event 163: suppval[33] of d1b6 is 0x16a8.
+2.028329 ptp(2): event 163: suppval[34] of d1b6 is 0x170c.
+2.029195 ptp(2): event 163: suppval[35] of d1b6 is 0x1770.
+2.029904 ptp(2): event 163: suppval[36] of d1b6 is 0x17d4.
+2.030042 ptp(2): event 163: suppval[37] of d1b6 is 0x1838.
+2.030161 ptp(2): event 163: suppval[38] of d1b6 is 0x189c.
+2.030476 ptp(2): event 163: suppval[39] of d1b6 is 0x1900.
+2.031160 ptp(2): event 163: suppval[40] of d1b6 is 0x1964.
+2.031963 ptp(2): event 163: suppval[41] of d1b6 is 0x19c8.
+2.032886 ptp(2): event 163: suppval[42] of d1b6 is 0x1a2c.
+2.033024 ptp(2): event 163: suppval[43] of d1b6 is 0x1a90.
+2.033142 ptp(2): event 163: suppval[44] of d1b6 is 0x1af4.
+2.033491 ptp(2): event 163: suppval[45] of d1b6 is 0x1b58.
+2.034172 ptp(2): event 163: suppval[46] of d1b6 is 0x1bbc.
+2.034309 ptp(2): event 163: suppval[47] of d1b6 is 0x1c20.
+2.034429 ptp(2): event 163: suppval[48] of d1b6 is 0x1c84.
+2.034779 ptp(2): event 163: suppval[49] of d1b6 is 0x1ce8.
+2.035492 ptp(2): event 163: suppval[50] of d1b6 is 0x1d4c.
+2.035638 ptp(2): event 163: suppval[51] of d1b6 is 0x1db0.
+2.036613 ptp(2): event 163: suppval[52] of d1b6 is 0x1e14.
+2.036761 ptp(2): event 163: suppval[53] of d1b6 is 0x1e78.
+2.036875 ptp(2): event 163: suppval[54] of d1b6 is 0x1edc.
+2.036994 ptp(2): event 163: suppval[55] of d1b6 is 0x1f40.
+2.037110 ptp(2): event 163: suppval[56] of d1b6 is 0x1fa4.
+2.038004 ptp(2): event 163: suppval[57] of d1b6 is 0x2008.
+2.038146 ptp(2): event 163: suppval[58] of d1b6 is 0x206c.
+2.038952 ptp(2): event 163: suppval[59] of d1b6 is 0x20d0.
+2.039093 ptp(2): event 163: suppval[60] of d1b6 is 0x2134.
+2.039214 ptp(2): event 163: suppval[61] of d1b6 is 0x2198.
+2.039332 ptp(2): event 163: suppval[62] of d1b6 is 0x21fc.
+2.040290 ptp(2): event 163: suppval[63] of d1b6 is 0x2260.
+2.040431 ptp(2): event 163: suppval[64] of d1b6 is 0x22c4.
+2.040552 ptp(2): event 163: suppval[65] of d1b6 is 0x2328.
+2.041376 ptp(2): event 163: suppval[66] of d1b6 is 0x238c.
+2.041552 ptp(2): event 163: suppval[67] of d1b6 is 0x23f0.
+2.041675 ptp(2): event 163: suppval[68] of d1b6 is 0x2454.
+2.041795 ptp(2): event 163: suppval[69] of d1b6 is 0x24b8.
+2.042173 ptp(2): event 163: suppval[70] of d1b6 is 0x251c.
+2.042892 ptp(2): event 163: suppval[71] of d1b6 is 0x2580.
+2.043036 ptp(2): event 163: suppval[72] of d1b6 is 0x25e4.
+2.043157 ptp(2): event 163: suppval[73] of d1b6 is 0x2648.
+2.043964 ptp(2): event 163: suppval[74] of d1b6 is 0x26ac.
+2.044129 ptp(2): event 163: suppval[75] of d1b6 is 0x2710.
+2.044254 ptp(2): event 164: EOS prop d1a9 desc record, datasize 20, propxtype 3
+2.044391 ptp(2): event 164: propxtype is 3, prop is 0xd1a9, data type is 0x0004, propxcnt is 5.
+2.044719 ptp(2): event 164: suppval[0] of d1a9 is 0x0.
+2.045435 ptp(2): event 164: suppval[1] of d1a9 is 0x2.
+2.045581 ptp(2): event 164: suppval[2] of d1a9 is 0x4.
+2.045784 ptp(2): event 164: suppval[3] of d1a9 is 0x8.
+2.046661 ptp(2): event 164: suppval[4] of d1a9 is 0xff.
+2.046805 ptp(2): event 165: EOS prop d146 desc record, datasize 0, propxtype 7
+2.046936 ptp(2): event 165: propxtype is 7 for d146, unhandled.
+2.047059 ptp(2): event 166: EOS prop d1ac desc record, datasize 0, propxtype 1
+2.047431 ptp(2): event 166: propxtype is 1 for d1ac, unhandled.
+2.048204 ptp(2): event 167: EOS prop d1ad desc record, datasize 0, propxtype 1
+2.048362 ptp(2): event 167: propdesc d1ad, default value not found.
+2.049202 ptp(2): event 168: EOS prop d1ae desc record, datasize 0, propxtype 1
+2.049358 ptp(2): event 168: propdesc d1ae, default value not found.
+2.049486 ptp(2): event 169: EOS prop d1aa desc record, datasize 0, propxtype 1
+2.049847 ptp(2): event 169: propxtype is 1 for d1aa, unhandled.
+2.050547 ptp(2): event 170: EOS prop d11e desc record, datasize 0, propxtype 1
+2.050706 ptp(2): event 170: propxtype is 1 for d11e, unhandled.
+2.050831 ptp(2): event 171: EOS prop d11f desc record, datasize 0, propxtype 1
+2.051698 ptp(2): event 171: propxtype is 1 for d11f, unhandled.
+2.051851 ptp(2): event 172: EOS prop d1af desc record, datasize 0, propxtype 1
+2.051982 ptp(2): event 172: propdesc d1af, default value not found.
+2.052108 ptp(2): event 173: EOS prop d1d0 desc record, datasize 0, propxtype 7
+2.052232 ptp(2): event 173: propdesc d1d0, default value not found.
+2.053441 ptp(2): event 174: EOS prop d1d1 desc record, datasize 0, propxtype 7
+2.053599 ptp(2): event 174: propdesc d1d1, default value not found.
+2.053723 ptp(2): event 175: EOS prop d1d9 desc record, datasize 40, propxtype 3
+2.053846 ptp(2): event 175: propxtype is 3, prop is 0xd1d9, data type is 0x0004, propxcnt is 10.
+2.053968 ptp(2): event 175: suppval[0] of d1d9 is 0x0.
+2.054084 ptp(2): event 175: suppval[1] of d1d9 is 0x3.
+2.055001 ptp(2): event 175: suppval[2] of d1d9 is 0x5.
+2.055176 ptp(2): event 175: suppval[3] of d1d9 is 0x8.
+2.055550 ptp(2): event 175: suppval[4] of d1d9 is 0xb.
+2.056529 ptp(2): event 175: suppval[5] of d1d9 is 0xd.
+2.056703 ptp(2): event 175: suppval[6] of d1d9 is 0x10.
+2.056823 ptp(2): event 175: suppval[7] of d1d9 is 0x13.
+2.056940 ptp(2): event 175: suppval[8] of d1d9 is 0x15.
+2.057290 ptp(2): event 175: suppval[9] of d1d9 is 0x18.
+2.058019 ptp(2): event 176: EOS prop d1d5 desc record, datasize 0, propxtype 3
+2.058167 ptp(2): event 177: EOS prop d1ba desc record, datasize 12, propxtype 3
+2.058302 ptp(2): event 177: propxtype is 3, prop is 0xd1ba, data type is 0x0006, propxcnt is 3.
+2.059213 ptp(2): event 177: suppval[0] of d1ba is 0x1.
+2.059358 ptp(2): event 177: suppval[1] of d1ba is 0x2.
+2.059476 ptp(2): event 177: suppval[2] of d1ba is 0x0.
+2.059597 ptp(2): event 178: EOS prop d1cc desc record, datasize 0, propxtype 3
+2.059726 ptp(2): event 179: EOS prop d1bc desc record, datasize 12, propxtype 3
+2.060060 ptp(2): event 179: propxtype is 3, prop is 0xd1bc, data type is 0x0006, propxcnt is 3.
+2.060793 ptp(2): event 179: suppval[0] of d1bc is 0x1.
+2.060931 ptp(2): event 179: suppval[1] of d1bc is 0x0.
+2.061051 ptp(2): event 179: suppval[2] of d1bc is 0x3.
+2.061857 ptp(2): event 180: EOS prop d1b8 desc record, datasize 0, propxtype 3
+2.062010 ptp(2): event 181: EOS prop d1d3 desc record, datasize 0, propxtype 7
+2.062139 ptp(2): event 181: propxtype is 7 for d1d3, unhandled.
+2.062496 ptp(2): event 182: EOS prop d1d8 desc record, datasize 0, propxtype 1
+2.063205 ptp(2): event 182: propxtype is 1 for d1d8, unhandled.
+2.063355 ptp(2): event 183: EOS prop d17f desc record, datasize 0, propxtype 1
+2.063484 ptp(2): event 183: propdesc d17f, default value not found.
+2.064360 ptp(2): event 184: EOS prop d1b7 desc record, datasize 0, propxtype 1
+2.064514 ptp(2): event 184: propxtype is 1 for d1b7, unhandled.
+2.064638 ptp(2): event 185: EOS prop d1cb desc record, datasize 0, propxtype 7
+2.064995 ptp(2): event 185: propxtype is 7 for d1cb, unhandled.
+2.065145 ptp(2): event 186: EOS prop d1db desc record, datasize 0, propxtype 7
+2.065271 ptp(2): event 186: propxtype is 7 for d1db, unhandled.
+2.065393 ptp(2): event 187: EOS prop d1dc desc record, datasize 8, propxtype 3
+2.065881 ptp(2): event 187: propxtype is 3, prop is 0xd1dc, data type is 0x0006, propxcnt is 2.
+2.066023 ptp(2): event 187: suppval[0] of d1dc is 0x0.
+2.066965 ptp(2): event 187: suppval[1] of d1dc is 0x1.
+2.067113 ptp(2): event 188: EOS prop d1a3 desc record, datasize 0, propxtype 1
+2.067235 ptp(2): event 188: propxtype is 1 for d1a3, unhandled.
+2.067638 ptp(2): event 189: EOS prop d1a4 desc record, datasize 0, propxtype 7
+2.068345 ptp(2): event 189: propxtype is 7 for d1a4, unhandled.
+2.068494 ptp(2): event 190: EOS prop d1df desc record, datasize 0, propxtype 3
+2.068623 ptp(2): event 191: EOS prop d1bd desc record, datasize 0, propxtype 1
+2.069519 ptp(2): event 191: propxtype is 1 for d1bd, unhandled.
+2.069669 ptp(2): event 192: EOS prop d1c1 desc record, datasize 16, propxtype 3
+2.069798 ptp(2): event 192: propxtype is 3, prop is 0xd1c1, data type is 0x0000, propxcnt is 4.
+2.070128 ptp(2): event 192: data type 0x0000 of d1c1 unhandled, raw values:
+2.070879 ptp(2):       0: 0x       0
+2.071019 ptp(2):       1: 0x       1
+2.071129 ptp(2):       2: 0x       2
+2.071996 ptp(2):       3: 0x       3
+2.072209 ptp(2): event 193: EOS prop d1c0 desc record, datasize 0, propxtype 1
+2.072348 ptp(2): event 193: propxtype is 1 for d1c0, unhandled.
+2.073203 ptp(2): event 194: EOS prop d1bf desc record, datasize 0, propxtype 7
+2.073376 ptp(2): event 194: propxtype is 7 for d1bf, unhandled.
+2.073504 ptp(2): event 195: EOS prop d1c4 desc record, datasize 0, propxtype 1
+2.074398 ptp(2): event 195: propxtype is 1 for d1c4, unhandled.
+2.074544 ptp(2): event 196: EOS prop d1c2 desc record, datasize 0, propxtype 1
+2.074671 ptp(2): event 196: propxtype is 1 for d1c2, unhandled.
+2.075533 ptp(2): event 197: EOS prop d1c5 desc record, datasize 0, propxtype 3
+2.075852 ptp(2): event 198: EOS prop d194 desc record, datasize 16, propxtype 3
+2.076798 ptp(2): event 198: propxtype is 3, prop is 0xd194, data type is 0x0000, propxcnt is 4.
+2.076955 ptp(2): event 198: data type 0x0000 of d194 unhandled, raw values:
+2.077076 ptp(2):       0: 0x       0
+2.077417 ptp(2):       1: 0x       2
+2.077553 ptp(2):       2: 0x       7
+2.078257 ptp(2):       3: 0x       1
+2.078401 ptp(2): event 199: EOS prop d195 desc record, datasize 0, propxtype 3
+2.078540 ptp(2): event 200: EOS prop d196 desc record, datasize 0, propxtype 7
+2.079419 ptp(2): event 200: propxtype is 7 for d196, unhandled.
+2.079565 ptp(2): event 201: EOS prop d197 desc record, datasize 0, propxtype 3
+2.079696 ptp(2): event 202: EOS prop d198 desc record, datasize 0, propxtype 1
+2.080088 ptp(2): event 202: propxtype is 1 for d198, unhandled.
+2.080271 ptp(2): event 203: EOS prop d1dd desc record, datasize 0, propxtype 1
+2.080405 ptp(2): event 203: propxtype is 1 for d1dd, unhandled.
+2.081141 ptp(2): event 204: EOS prop d1c7 desc record, datasize 0, propxtype 7
+2.081293 ptp(2): event 204: propxtype is 7 for d1c7, unhandled.
+2.081418 ptp(2): event 205: EOS prop d199 desc record, datasize 0, propxtype 1
+2.081543 ptp(2): event 205: propxtype is 1 for d199, unhandled.
+2.082437 ptp(2): event 206: EOS prop d138 desc record, datasize 0, propxtype 1
+2.082600 ptp(2): event 206: propxtype is 1 for d138, unhandled.
+2.082724 ptp(2): event 207: EOS prop d139 desc record, datasize 0, propxtype 1
+2.082849 ptp(2): event 207: propxtype is 1 for d139, unhandled.
+2.082970 ptp(2): event 208: EOS prop d13a desc record, datasize 8, propxtype 3
+2.083906 ptp(2): event 208: propxtype is 3, prop is 0xd13a, data type is 0x0000, propxcnt is 2.
+2.084059 ptp(2): event 208: data type 0x0000 of d13a unhandled, raw values:
+2.084182 ptp(2):       0: 0x       0
+2.084295 ptp(2):       1: 0x       1
+2.085164 ptp(2): event 209: EOS prop d13b desc record, datasize 0, propxtype 1
+2.085351 ptp(2): event 209: propxtype is 1 for d13b, unhandled.
+2.086298 ptp(2): event 210: EOS prop d13c desc record, datasize 0, propxtype 1
+2.086454 ptp(2): event 210: propxtype is 1 for d13c, unhandled.
+2.086783 ptp(2): event 211: EOS prop d13d desc record, datasize 0, propxtype 7
+2.086952 ptp(2): event 211: propxtype is 7 for d13d, unhandled.
+2.087082 ptp(2): event 212: EOS prop d14d desc record, datasize 0, propxtype 7
+2.087809 ptp(2): event 212: propxtype is 7 for d14d, unhandled.
+2.087954 ptp(2): event 213: EOS prop d19d desc record, datasize 0, propxtype 1
+2.088129 ptp(2): event 213: propdesc d19d, default value not found.
+2.088297 ptp(2): event 214: EOS prop d19a desc record, datasize 0, propxtype 1
+2.089215 ptp(2): event 214: propxtype is 1 for d19a, unhandled.
+2.089365 ptp(2): event 215: EOS prop d19c desc record, datasize 0, propxtype 1
+2.090207 ptp(2): event 215: propxtype is 1 for d19c, unhandled.
+
+
+2.136706 ptp2/eos_deviceinfoex(2): event: c181
+2.136827 ptp2/eos_deviceinfoex(2): event: c182
+2.137725 ptp2/eos_deviceinfoex(2): event: c183
+2.137861 ptp2/eos_deviceinfoex(2): event: c184
+2.137973 ptp2/eos_deviceinfoex(2): event: c185
+2.138476 ptp2/eos_deviceinfoex(2): event: c186
+2.138604 ptp2/eos_deviceinfoex(2): event: c187
+2.138713 ptp2/eos_deviceinfoex(2): event: c188
+2.138823 ptp2/eos_deviceinfoex(2): event: c189
+2.139510 ptp2/eos_deviceinfoex(2): event: c18a
+2.139638 ptp2/eos_deviceinfoex(2): event: c18b
+2.139748 ptp2/eos_deviceinfoex(2): event: c18d
+2.139855 ptp2/eos_deviceinfoex(2): event: c18e
+2.139963 ptp2/eos_deviceinfoex(2): event: c18f
+2.140071 ptp2/eos_deviceinfoex(2): event: c190
+2.140995 ptp2/eos_deviceinfoex(2): event: c191
+2.141127 ptp2/eos_deviceinfoex(2): event: c1a0
+2.141236 ptp2/eos_deviceinfoex(2): event: c1a1
+2.142184 ptp2/eos_deviceinfoex(2): deviceprop: d105
+2.142348 ptp2/eos_deviceinfoex(2): deviceprop: d108
+2.142464 ptp2/eos_deviceinfoex(2): deviceprop: d106
+2.142573 ptp2/eos_deviceinfoex(2): deviceprop: d107
+2.142679 ptp2/eos_deviceinfoex(2): deviceprop: d109
+2.143019 ptp2/eos_deviceinfoex(2): deviceprop: d10a
+2.143144 ptp2/eos_deviceinfoex(2): deviceprop: d10b
+2.143841 ptp2/eos_deviceinfoex(2): deviceprop: d10c
+2.143972 ptp2/eos_deviceinfoex(2): deviceprop: d10d
+2.144126 ptp2/eos_deviceinfoex(2): deviceprop: d10e
+2.144280 ptp2/eos_deviceinfoex(2): deviceprop: d10f
+2.145136 ptp2/eos_deviceinfoex(2): deviceprop: d11b
+2.145265 ptp2/eos_deviceinfoex(2): deviceprop: d114
+2.145374 ptp2/eos_deviceinfoex(2): deviceprop: d116
+2.145482 ptp2/eos_deviceinfoex(2): deviceprop: d119
+2.145587 ptp2/eos_deviceinfoex(2): deviceprop: d11a
+2.146510 ptp2/eos_deviceinfoex(2): deviceprop: d110
+2.146678 ptp2/eos_deviceinfoex(2): deviceprop: d115
+2.146792 ptp2/eos_deviceinfoex(2): deviceprop: d101
+2.147618 ptp2/eos_deviceinfoex(2): deviceprop: d102
+2.147746 ptp2/eos_deviceinfoex(2): deviceprop: d103
+2.147857 ptp2/eos_deviceinfoex(2): deviceprop: d104
+2.147965 ptp2/eos_deviceinfoex(2): deviceprop: d11d
+2.148072 ptp2/eos_deviceinfoex(2): deviceprop: d111
+2.148438 ptp2/eos_deviceinfoex(2): deviceprop: d112
+2.148566 ptp2/eos_deviceinfoex(2): deviceprop: d113
+2.148679 ptp2/eos_deviceinfoex(2): deviceprop: d17c
+2.149389 ptp2/eos_deviceinfoex(2): deviceprop: d17d
+2.149523 ptp2/eos_deviceinfoex(2): deviceprop: d17e
+2.149632 ptp2/eos_deviceinfoex(2): deviceprop: d120
+2.149742 ptp2/eos_deviceinfoex(2): deviceprop: d121
+2.150593 ptp2/eos_deviceinfoex(2): deviceprop: d122
+2.150728 ptp2/eos_deviceinfoex(2): deviceprop: d156
+2.150841 ptp2/eos_deviceinfoex(2): deviceprop: d150
+2.150951 ptp2/eos_deviceinfoex(2): deviceprop: d151
+2.151254 ptp2/eos_deviceinfoex(2): deviceprop: d152
+2.151950 ptp2/eos_deviceinfoex(2): deviceprop: d153
+2.152124 ptp2/eos_deviceinfoex(2): deviceprop: d154
+2.152278 ptp2/eos_deviceinfoex(2): deviceprop: d155
+2.153113 ptp2/eos_deviceinfoex(2): deviceprop: d160
+2.153245 ptp2/eos_deviceinfoex(2): deviceprop: d161
+2.153356 ptp2/eos_deviceinfoex(2): deviceprop: d162
+2.153464 ptp2/eos_deviceinfoex(2): deviceprop: d170
+2.153774 ptp2/eos_deviceinfoex(2): deviceprop: d171
+2.154474 ptp2/eos_deviceinfoex(2): deviceprop: d172
+2.154609 ptp2/eos_deviceinfoex(2): deviceprop: d11c
+2.155420 ptp2/eos_deviceinfoex(2): deviceprop: d1a0
+2.155551 ptp2/eos_deviceinfoex(2): deviceprop: d1a1
+2.155735 ptp2/eos_deviceinfoex(2): deviceprop: d1a2
+2.156601 ptp2/eos_deviceinfoex(2): deviceprop: d1a5
+2.156756 ptp2/eos_deviceinfoex(2): deviceprop: d1a8
+2.156869 ptp2/eos_deviceinfoex(2): deviceprop: d1a7
+2.156978 ptp2/eos_deviceinfoex(2): deviceprop: d1ab
+2.157294 ptp2/eos_deviceinfoex(2): deviceprop: d1b0
+2.158011 ptp2/eos_deviceinfoex(2): deviceprop: d1b1
+2.158149 ptp2/eos_deviceinfoex(2): deviceprop: d1b2
+2.158948 ptp2/eos_deviceinfoex(2): deviceprop: d1b3
+2.159082 ptp2/eos_deviceinfoex(2): deviceprop: d1b4
+2.159194 ptp2/eos_deviceinfoex(2): deviceprop: d1b5
+2.159304 ptp2/eos_deviceinfoex(2): deviceprop: d1b6
+2.159633 ptp2/eos_deviceinfoex(2): deviceprop: d1a9
+2.159759 ptp2/eos_deviceinfoex(2): deviceprop: d146
+2.159874 ptp2/eos_deviceinfoex(2): deviceprop: d1ac
+2.160614 ptp2/eos_deviceinfoex(2): deviceprop: d1ad
+2.160745 ptp2/eos_deviceinfoex(2): deviceprop: d1ae
+2.160856 ptp2/eos_deviceinfoex(2): deviceprop: d1aa
+2.160963 ptp2/eos_deviceinfoex(2): deviceprop: d11e
+2.161069 ptp2/eos_deviceinfoex(2): deviceprop: d11f
+2.161884 ptp2/eos_deviceinfoex(2): deviceprop: d1af
+2.162049 ptp2/eos_deviceinfoex(2): deviceprop: d1d0
+2.162161 ptp2/eos_deviceinfoex(2): deviceprop: d1d1
+2.162269 ptp2/eos_deviceinfoex(2): deviceprop: d1d9
+2.162374 ptp2/eos_deviceinfoex(2): deviceprop: d1d5
+2.162481 ptp2/eos_deviceinfoex(2): deviceprop: d1ba
+2.163344 ptp2/eos_deviceinfoex(2): deviceprop: d1cc
+2.163478 ptp2/eos_deviceinfoex(2): deviceprop: d1bc
+2.163589 ptp2/eos_deviceinfoex(2): deviceprop: d1b8
+2.163698 ptp2/eos_deviceinfoex(2): deviceprop: d1d3
+2.163807 ptp2/eos_deviceinfoex(2): deviceprop: d1d8
+2.164646 ptp2/eos_deviceinfoex(2): deviceprop: d17f
+2.164777 ptp2/eos_deviceinfoex(2): deviceprop: d1b7
+2.164887 ptp2/eos_deviceinfoex(2): deviceprop: d1cb
+2.164996 ptp2/eos_deviceinfoex(2): deviceprop: d1db
+2.165106 ptp2/eos_deviceinfoex(2): deviceprop: d1dc
+2.166072 ptp2/eos_deviceinfoex(2): deviceprop: d1a3
+2.166213 ptp2/eos_deviceinfoex(2): deviceprop: d1a4
+2.166327 ptp2/eos_deviceinfoex(2): deviceprop: d1df
+2.166438 ptp2/eos_deviceinfoex(2): deviceprop: d1bd
+2.166546 ptp2/eos_deviceinfoex(2): deviceprop: d1c1
+2.166654 ptp2/eos_deviceinfoex(2): deviceprop: d1c0
+2.167564 ptp2/eos_deviceinfoex(2): deviceprop: d1bf
+2.168389 ptp2/eos_deviceinfoex(2): deviceprop: d1c4
+2.168530 ptp2/eos_deviceinfoex(2): deviceprop: d1c2
+2.169382 ptp2/eos_deviceinfoex(2): deviceprop: d1c5
+2.169511 ptp2/eos_deviceinfoex(2): deviceprop: d194
+2.169624 ptp2/eos_deviceinfoex(2): deviceprop: d195
+2.169935 ptp2/eos_deviceinfoex(2): deviceprop: d196
+2.170653 ptp2/eos_deviceinfoex(2): deviceprop: d197
+2.171439 ptp2/eos_deviceinfoex(2): deviceprop: d198
+2.171572 ptp2/eos_deviceinfoex(2): deviceprop: d1dd
+2.171942 ptp2/eos_deviceinfoex(2): deviceprop: d1c7
+2.172068 ptp2/eos_deviceinfoex(2): deviceprop: d199
+2.172176 ptp2/eos_deviceinfoex(2): deviceprop: d138
+2.172285 ptp2/eos_deviceinfoex(2): deviceprop: d139
+2.172390 ptp2/eos_deviceinfoex(2): deviceprop: d13a
+2.173072 ptp2/eos_deviceinfoex(2): deviceprop: d13b
+2.173207 ptp2/eos_deviceinfoex(2): deviceprop: d13c
+2.173318 ptp2/eos_deviceinfoex(2): deviceprop: d13d
+2.173429 ptp2/eos_deviceinfoex(2): deviceprop: d14d
+2.174284 ptp2/eos_deviceinfoex(2): deviceprop: d19d
+2.174416 ptp2/eos_deviceinfoex(2): deviceprop: d19a
+2.174528 ptp2/eos_deviceinfoex(2): deviceprop: d19c
+2.174636 ptp2/eos_deviceinfoex(2): unk: 0000
+2.175012 ptp2/eos_deviceinfoex(2): unk: 0001
+2.175138 ptp2/eos_deviceinfoex(2): unk: 0002
+2.175249 ptp2/eos_deviceinfoex(2): unk: 0004
+2.175356 ptp2/eos_deviceinfoex(2): unk: 0008
+
+2.180226 gphoto2-port(3): Hexdump of 210 = 0xd2 bytes follows:
+0000  d2 00 00 00 02 00 16 91-12 00 00 00 0d 00 00 00  ................
+0010  89 c1 00 00 15 d1 00 00-00 4c 00 00 00 89 c1 00  .........L......
+0020  00 d0 d1 00 00 00 69 63-68 61 65 6c 20 47 6f 6e  ......ichael Gon
+0030  7a 61 6c 65 73 00 00 00-00 00 00 00 00 00 00 00  zales...........
+0040  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0050  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0060  00 00 00 00 00 4c 00 00-00 89 c1 00 00 d1 d1 00  .....L..........
+0070  00 00 41 75 64 69 62 6c-65 20 32 30 31 33 00 4d  ..Audible 2013.M
+0080  20 43 61 72 67 61 64 6f-2e 0a 41 6c 6c 20 72 69   Cargado..All ri
+0090  67 68 74 73 20 72 65 73-65 72 76 65 64 2e 00 00  ghts reserved...
+00a0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+00b0  00 19 00 00 00 89 c1 00-00 af d1 00 00 30 32 32  .............022
+00c0  30 33 31 30 30 33 34 39-34 00 08 00 00 00 00 00  031003494.......
+00d0  00 00                  -                         ..              
+
+2.197341 ptp(2): event 0: EOS prop d115 info record, datasize is 1
+2.197765 ptp(2): event 0: currentvalue of d115 is 
+2.197945 ptp(2): event 1: EOS prop d1d0 info record, datasize is 64
+2.198669 ptp(2): event 1: currentvalue of d1d0 is 
+2.198814 ptp(2): event 2: EOS prop d1d1 info record, datasize is 64
+2.199689 ptp(2): event 2: currentvalue of d1d1 is 
+2.199836 ptp(2): event 3: EOS prop d1af info record, datasize is 13
+2.199975 ptp(2): event 3: currentvalue of d1af is 022031003494
+
