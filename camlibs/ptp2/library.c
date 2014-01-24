@@ -3322,11 +3322,13 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		/* Get the initial bulk set of event data, otherwise
 		 * capture might return busy. */
-		do {
-			ret = ptp_check_eos_events (params);
-			if (ret != PTP_RC_OK)
-				break;
-		} while (params->eos_camerastatus == 1);
+		ret = ptp_check_eos_events (params);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+		if (params->eos_camerastatus == 1) {
+			gp_context_error (context, _("Canon EOS Trigger Capture failed: CameraStatus 1, busy from previous capture?"));
+			return GP_ERROR_CAMERA_BUSY;
+		}
 
 		ret = ptp_canon_eos_capture (params, &result);
 		if (ret != PTP_RC_OK) {
@@ -3352,12 +3354,11 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		}
 		/* wait until camera reports busy ... */
 		do {
-			ptp_check_eos_events (params);
+			ret = ptp_check_eos_events (params);
+			if (ret != PTP_RC_OK)
+				break;
 		} while (params->eos_camerastatus == 0);
-		/* wait until camera reports ready ... */
-		do {
-			ptp_check_eos_events (params);
-		} while (params->eos_camerastatus == 1);
+
 		return GP_OK;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
