@@ -1604,6 +1604,8 @@ static struct {
 	{"Fuji:FinePix S2980",			0x04cb, 0x027d, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix XF1",			0x04cb, 0x0288, 0},
+	/* Steve Dahl <dahl@goshawk.com> */
+	{"Fuji:FinePix S4850",			0x04cb, 0x0298, 0},
 	/* Larry D. DeMaris" <demarisld@gmail.com> */
 	{"Fuji:FinePix SL1000",			0x04cb, 0x029c, 0},
 	/* t.ludewig@gmail.com */
@@ -3163,8 +3165,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 				ret = ptp_object_find (params, handles.Handler[i], &ob);
 				if (ret == PTP_RC_OK)
 					continue;
+				add_object (camera, handles.Handler[i], context);
+				/* A directory was added, like initial DCIM/100NIKON or so. */
+				if (ob->oi.ObjectFormat == PTP_OFC_Association)
+					continue;
 				newobject = handles.Handler[i];
-				add_object (camera, newobject, context);
+				/* we found a new file */
 				break;
 			}
 			free (handles.Handler);
@@ -3172,6 +3178,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 				break;
 			sleep(1);
 		}
+		if (!newobject)
+            		GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE no new file found after 5 seconds?!?");
 		goto out;
 	}
 	/* the standard defined way ... wait for some capture related events. */
@@ -3235,9 +3243,9 @@ out:
 		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
-		CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
+		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 	}
-	return GP_OK;
+	return GP_ERROR;
 }
 
 static int
