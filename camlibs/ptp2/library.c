@@ -908,7 +908,7 @@ static struct {
 	{"Nikon:Coolpix S9100 (PTP mode)",0x04b0, 0x0186, PTP_CAP},
 
 	/* johnnolan@comcast.net */
-	{"Nikon:Coolpix AW100 (PTP mode)",0x04b0, 0x0188, PTP_CAP/*?*/},
+	{"Nikon:Coolpix AW100 (PTP mode)",0x04b0, 0x0188, PTP_CAP},
 
 	/* Dale Pontius <DEPontius@edgehp.net> */
 	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
