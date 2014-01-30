@@ -3690,7 +3690,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					CameraFilePath *path;
 
 					path = malloc(sizeof(CameraFilePath));
-					ret = camera_canon_capture (camera, GP_FILE_TYPE_NORMAL, path, context);
+					ret = camera_canon_capture (camera, GP_CAPTURE_IMAGE, path, context);
 					if (ret != GP_OK) {
 						free (path);
 						break;
