@@ -3284,12 +3284,14 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				inliveview = propval.u8;
 		}
 
-		if (!inliveview && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM))
-			ret = ptp_nikon_capture_sdram (params);
-		else
-			ret = ptp_nikon_capture (params, 0xffffffff);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
+		do {
+			if (!inliveview && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM))
+				ret = ptp_nikon_capture_sdram (params);
+			else
+				ret = ptp_nikon_capture (params, 0xffffffff);
+			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+				return translate_ptp_result (ret);
+		} while (ret == PTP_RC_DeviceBusy);
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
 		return GP_OK;
 	}
@@ -3312,9 +3314,12 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				inliveview = propval.u8;
 		}
 
-		ret = ptp_nikon_capture2 (params, !inliveview, 0);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
+		do {
+			ret = ptp_nikon_capture2 (params, !inliveview, 0);
+			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+				return translate_ptp_result (ret);
+			/* sleep a bit perhaps ? or check events? */
+		} while (ret == PTP_RC_DeviceBusy);
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
 		return GP_OK;
 	}
