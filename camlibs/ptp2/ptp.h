@@ -462,6 +462,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, data in */
 
+/* From Nikon V1 Trace */
+#define PTP_OC_NIKON_GetDevicePropEx		0x9504	/* gets device prop dataa */
+
 /* Casio EX-F1 (from http://code.google.com/p/exf1ctrl/ ) */
 #define PTP_OC_CASIO_STILL_START	0x9001
 #define PTP_OC_CASIO_STILL_STOP		0x9002
@@ -1841,6 +1844,19 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
 #define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
 
+/* Nikon V1 (or WU adapter?) Trace */
+/* d241 - gets string "Nikon_WU2_0090B5123C61" */
+#define PTP_DPC_NIKON_D241				0xD241
+/* d244 - gets a single byte 0x00 */
+#define PTP_DPC_NIKON_D244				0xD244
+/* d247 - gets 3 bytes 0x01 0x00 0x00 */
+#define PTP_DPC_NIKON_D247				0xD247
+/* d250 - gets a string "0000123C61" */
+#define PTP_DPC_NIKON_D250				0xD250
+/* d251 - gets a 0x0100000d */
+#define PTP_DPC_NIKON_D251				0xD251
+
+
 /* Fuji specific */
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
@@ -1965,6 +1981,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_PictureEffect			0xD21B
 #define PTP_DPC_SONY_ABFilter				0xD21C
 /* also seen: D2C3 D2C4 */
+
 
 /* Casio EX-F1 */
 #define PTP_DPC_CASIO_MONITOR		0xD001 
@@ -2315,6 +2332,9 @@ struct _PTPParams {
 	int			eos_captureenabled;
 	int			eos_viewfinderenabled;
 	int			eos_camerastatus;
+
+	/* PTP: Nikon specifics */
+	int			controlmode;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;

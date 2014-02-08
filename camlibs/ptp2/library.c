@@ -1069,15 +1069,15 @@ static struct {
 	{"Nikon:DSC D7100",               0x04b0, 0x0430, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
-	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP},
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
-	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP},
+	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://bugzilla.novell.com/show_bug.cgi?id=814622 Martin Caj at SUSE */
-	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP},
+	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://sourceforge.net/p/gphoto/feature-requests/432/ */
-	{"Nikon:V2",    		  0x04b0, 0x0604, PTP_CAP},
+	{"Nikon:V2",    		  0x04b0, 0x0604, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Ralph Schindler <ralph@ralphschindler.com> */
-	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP},
+	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP|PTP_CAP_PREVIEW},
 
 
 #if 0
@@ -2421,6 +2421,15 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (params->deviceinfo.VendorExtensionID!=PTP_VENDOR_NIKON)
 		return GP_ERROR_NOT_SUPPORTED;
 
+	/* Nilon V and J seem to like that */
+	if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
+		ret = ptp_nikon_setcontrolmode (params, 1);
+		if (ret != PTP_RC_OK) {
+			report_result(context, ret, params->deviceinfo.VendorExtensionID);
+			return translate_ptp_result (ret);
+		}
+	}
+
 	if (	!ptp_operation_issupported(params,PTP_OC_NIKON_Capture) &&
 		!ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM) &&
 		!ptp_operation_issupported(params,PTP_OC_NIKON_InitiateCaptureRecInMedia)
@@ -3262,6 +3271,19 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		strcpy (buf, "sdram");
 
 	gp_log (GP_LOG_DEBUG, "ptp2/trigger_capture", "Triggering capture to %s", buf);
+
+	/* Nilon V and J seem to like that */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		!params->controlmode &&
+		ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)
+	) {
+		ret = ptp_nikon_setcontrolmode (params, 1);
+		if (ret != PTP_RC_OK) {
+			report_result(context, ret, params->deviceinfo.VendorExtensionID);
+			return translate_ptp_result (ret);
+		}
+	}
+
 
 	/* Nikon */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
