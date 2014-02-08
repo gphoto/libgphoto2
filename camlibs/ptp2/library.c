@@ -2428,6 +2428,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result (ret);
 		}
+		params->controlmode = 1;
 	}
 
 	if (	!ptp_operation_issupported(params,PTP_OC_NIKON_Capture) &&
@@ -3282,6 +3283,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result (ret);
 		}
+		params->controlmode = 1;
 	}
 
 
