@@ -1,11 +1,14 @@
 libgphoto2 2.5.3.2 release
 
 ptp2:
+* Nikon V and J capture fixed?
 * new ids
   - Nikon P80 v1.1
 
 libusb1:
 * fixed timeout detection for USB interrupts
+
+Various translations updated: danish,
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.3.1 release
