@@ -1860,6 +1860,11 @@ camera_abilities (CameraAbilitiesList *list)
 				strchr(models[i].model,'D')
 			)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+			/* Also enable trigger capture for EOS capture */
+			if (	(models[i].usb_vendor == 0x4a9) &&
+				(strstr(models[i].model,"EOS") || strstr(models[i].model,"Rebel"))
+			)
+				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
 #if 0
 			/* SX 100 IS ... works in sdram, not in card mode */
 			if (	(models[i].usb_vendor == 0x4a9) &&
@@ -3361,11 +3366,10 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		 * capture might return busy. */
 		ret = ptp_check_eos_events (params);
 		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
-		if (params->eos_camerastatus == 1) {
-			gp_context_error (context, _("Canon EOS Trigger Capture failed: CameraStatus 1, busy from previous capture?"));
+			translate_ptp_result (ret);
+
+		if (params->eos_camerastatus == 1)
 			return GP_ERROR_CAMERA_BUSY;
-		}
 
 		ret = ptp_canon_eos_capture (params, &result);
 		if (ret != PTP_RC_OK) {
