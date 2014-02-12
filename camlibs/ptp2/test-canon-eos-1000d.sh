@@ -17,6 +17,26 @@ gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imageformat=0 --capture-image-and-download
 gphoto2 --set-config imageformat=6 --capture-image-and-download
 
+echo "single capture done, press return"
+read dummy
+
+echo "***  trigger capture"
+gphoto2 --set-config capturetarget=0
+gphoto2 --set-config imageformat=0 --trigger-capture --wait-event-and-download=5s
+gphoto2 --set-config imageformat=0 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
+rm capt0000.jpg
+gphoto2 --set-config imageformat=6 --trigger-capture --wait-event-and-download=5s
+gphoto2 --set-config imageformat=6 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
+rm capt0000.jpg capt0000.cr2
+gphoto2 --set-config capturetarget=1
+gphoto2 --set-config imageformat=0 --trigger-capture --wait-event-and-download=5s
+gphoto2 --set-config imageformat=0 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
+gphoto2 --set-config imageformat=6 --trigger-capture --wait-event-and-download=5s
+gphoto2 --set-config imageformat=6 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
+
+echo "trigger capture done, press return"
+read dummy
+
 echo "***  interval capture"
 gphoto2 --set-config capturetarget=0
 gphoto2 --set-config imageformat=0 --capture-image-and-download -F 3 -I 5
