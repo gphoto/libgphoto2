@@ -460,6 +460,8 @@ ptp_ptpip_init_command_ack (PTPParams* params)
 	if (hdr.type != dtoh32(PTPIP_INIT_COMMAND_ACK)) {
 		gp_log (GP_LOG_ERROR, "ptpip/init_cmd_ack", "bad type returned %d", htod32(hdr.type));
 		free (data);
+		if (hdr.type == PTPIP_INIT_FAIL) /* likely reason is permission denied */
+			return PTP_RC_AccessDenied;
 		return PTP_RC_GeneralError;
 	}
 	params->eventpipeid = dtoh32a(&data[ptpip_cmdack_idx]);
