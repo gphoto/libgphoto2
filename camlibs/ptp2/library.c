@@ -5505,10 +5505,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return ptp_mtp_render_metadata (params,oid,ob->oi.ObjectFormat,file);
 		return (GP_ERROR_NOT_SUPPORTED);
 	default: {
+		if (ob->oi.ObjectFormat == PTP_OFC_Association)
+			return GP_ERROR_NOT_SUPPORTED;
+
 		/* We do not allow downloading unknown type files as in most
-		cases they are special file (like firmware or control) which
-		sometimes _cannot_ be downloaded. doing so we avoid errors.*/
-		if (ob->oi.ObjectFormat == PTP_OFC_Association ||
+		 * cases they are special file (like firmware or control) which
+		 * sometimes _cannot_ be downloaded. doing so we avoid errors.
+		 * Allow all types from MTP devices, like phones.
+		 */
+		if (	!is_mtp_capable (camera) &&
 			(ob->oi.ObjectFormat == PTP_OFC_Undefined &&
 				((ob->oi.ThumbFormat == PTP_OFC_Undefined) ||
 				 (ob->oi.ThumbFormat == 0)
