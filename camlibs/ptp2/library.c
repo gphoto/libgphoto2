@@ -2471,6 +2471,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
 		if (ret == PTP_RC_OK)
 			inliveview = propval.u8;
+		if (inliveview) af = 0;
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
