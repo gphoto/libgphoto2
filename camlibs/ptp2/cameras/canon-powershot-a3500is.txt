@@ -219,40 +219,40 @@ Vendor extension description: (null)
 Functional Mode: 0x0000
 PTP Standard Version: 100
 Supported operations:
-  0x1014
-  0x1015
-  0x1016
-  0x1017
-  0x1001
-  0x1002
-  0x1003
-  0x9013
-  0x901f
-  0x1004
-  0x1005
-  0x1006
-  0x1007
-  0x1008
-  0x1009
-  0x100a
-  0x101b
-  0x100c
-  0x100d
-  0x100b
-  0x100f
-  0x1012
-  0x9001
-  0x9021
-  0x901b
-  0x901e
-  0x9019
-  0x9006
-  0x901c
-  0x9002
-  0x904c
-  0x9024
-  0x9025
-  0x9038
+  0x1014	PTP_OC_GetDevicePropDesc
+  0x1015	PTP_OC_GetDevicePropValue
+  0x1016	PTP_OC_SetDevicePropValue
+  0x1017	PTP_OC_ResetDevicePropValue
+  0x1001	PTP_OC_GetDeviceInfo
+  0x1002	PTP_OC_OpenSession
+  0x1003	PTP_OC_CloseSession
+  0x9013	PTP_OC_CANON_CheckEvent
+  0x901f	PTP_OC_CANON_ChangeUSBProtocol
+  0x1004	PTP_OC_GetStorageIDs
+  0x1005	PTP_OC_GetStorageInfo
+  0x1006	PTP_OC_GetNumObjects
+  0x1007	PTP_OC_GetObjectHandles
+  0x1008	PTP_OC_GetObjectInfo
+  0x1009	PTP_OC_GetObject
+  0x100a	PTP_OC_GetThumb
+  0x101b	PTP_OC_GetPartialObject
+  0x100c	PTP_OC_SendObjectInfo
+  0x100d	PTP_OC_SendObject
+  0x100b	PTP_OC_DeleteObject
+  0x100f	PTP_OC_FormatStore
+  0x1012	PTP_OC_SetObjectProtection
+  0x9001	PTP_OC_CANON_GetPartialObjectInfo
+  0x9021	PTP_OC_CANON_GetObjectInfoEx
+  0x901b	PTP_OC_CANON_GetPartialObjectEx
+  0x901e	PTP_OC_CANON_GetObjectAttributes
+  0x9019	PTP_OC_CANON_SendPartialObject
+  0x9006	PTP_OC_CANON_GetObjectHandleByName
+  0x901c	PTP_OC_CANON_SetObjectTime
+  0x9002	PTP_OC_CANON_SetObjectArchive
+  0x904c	
+  0x9024	PTP_OC_CANON_SendObjectInfoByPath
+  0x9025	PTP_OC_CANON_SendObjectByPath
+  0x9038	
   0x9039
   0x903a
   0x903b
