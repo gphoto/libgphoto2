@@ -1,0 +1,108 @@
+Camera summary:
+Sony Corporation
+Sony Digital Still Camera
+1.0 1.1
+XXXXXXXXXXXX
+0x6 (1.0)
+microsoft.com: 1.0; microsoft.com/WMPPD: 10.0; 
+
+
+JPEG
+Supported MTP Object Properties:
+dc01/StorageID dc02/ObjectFormat dc41/PersistantUniqueObjectIdentifier dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc44/Name dc03/ProtectionStatus dc09/DateModified dc08/DateCreated dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+Memory Stick
+None
+Builtin RAM
+Digital Camera Layout (DCIM)
+Read-Write
+7813988352 (7452 MB)
+7813529600 (7451 MB)
+-1
+
+Device Property Summary:
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 75% (75)
+
+/main/status/serialnumber
+Serial Number
+TEXT
+XXXXXXXXXXXX
+/main/status/manufacturer
+Camera Manufacturer
+TEXT
+Sony Corporation
+/main/status/cameramodel
+Camera Model
+TEXT
+Sony Digital Still Camera
+/main/status/deviceversion
+Device Version
+TEXT
+1.0 1.1
+/main/status/vendorextension
+Vendor Extension
+TEXT
+microsoft.com: 1.0; microsoft.com/WMPPD: 10.0; 
+/main/other/d407
+Perceived Device Type
+TEXT
+1
+/main/other/d406
+Session Initiator Info
+TEXT
+
+/main/other/5001
+Battery Level
+MENU
+75
+0 2
+1 5
+2 25
+3 50
+4 65
+5 80
+6 100
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: Sony Digital Still Camera
+  device version: 1.0 1.1
+  serial number: 'XXXXXXXXXXXX'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0; microsoft.com/WMPPD: 10.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x1014
+  0x1015
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4004
+  0x4005
+Device Properties Supported:
+  0xd407
+  0xd406
+  0x5001
