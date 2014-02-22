@@ -671,8 +671,12 @@ st2205_write_file(Camera *camera,
 	unsigned char buf[camera->pl->width * camera->pl->height * 2];
 	int shuffle;
 
+#ifdef HAVE_RAND_R
 	shuffle = (long long)rand_r(&camera->pl->rand_seed) *
 		   camera->pl->no_shuffles / (RAND_MAX + 1ll);
+#else
+	shuffle = (long long)rand() * camera->pl->no_shuffles / (RAND_MAX + 1ll);
+#endif
 
 	return st2205_real_write_file (camera, filename, rgb24, buf,
 				       shuffle, 1);

@@ -309,7 +309,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([getopt getopt_long mkdir strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statfs localtime_r lstat inet_aton])
+AC_CHECK_FUNCS([getopt getopt_long mkdir strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statfs localtime_r lstat inet_aton rand_r])
 
 dnl Find out how to get struct tm
 AC_STRUCT_TM
