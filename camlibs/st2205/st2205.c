@@ -28,7 +28,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <fcntl.h>
-#include <sys/mman.h>
+#ifdef HAVE_SYS_MMAN_H
+# include <sys/mman.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -45,6 +47,7 @@ struct image_table_entry {
    buffers, as they use O_DIRECT. */
 static char *st2205_malloc_page_aligned(int size)
 {
+#ifdef HAVE_SYS_MMAN_H
 	int fd;
 	char *aligned;
 	
@@ -54,12 +57,20 @@ static char *st2205_malloc_page_aligned(int size)
 		return NULL;
 
 	return aligned;
+#else
+	/* hope for the best */
+	return malloc(size);
+#endif
 }
 
 static void st2205_free_page_aligned(char *aligned, int size)
 {
+#ifdef HAVE_SYS_MMAN_H
 	if (aligned != NULL)
 		munmap(aligned, size);
+#else
+	free (aligned);
+#endif
 }
 
 static int
