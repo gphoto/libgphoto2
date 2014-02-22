@@ -541,12 +541,19 @@ camera_init (Camera *camera, GPContext *context)
 		  ax203_get_free_mem_size (camera));
 
 	if (camera->pl->syncdatetime) {
+		struct tm *xtm;
+#ifdef HAVE_LOCALTIME_R
 		struct tm tm;
+#endif
 		time_t t;
 
 		t = time (NULL);
-		if (localtime_r (&t , &tm)) {
-			ret = ax203_set_time_and_date (camera, &tm);
+#ifdef HAVE_LOCALTIME_R
+		if ((xtm = localtime_r (&t , &tm))) {
+#else
+		if ((xtm = localtime (&t))) {
+#endif
+			ret = ax203_set_time_and_date (camera, xtm);
 			if (ret != GP_OK) {
 				camera_exit (camera, context);
 				return ret;
