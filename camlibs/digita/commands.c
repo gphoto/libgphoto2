@@ -80,11 +80,11 @@ int digita_get_storage_status(CameraPrivateLibrary *dev, int *taken,
 	}
 
 	if (taken)
-		*taken = ntohl(ss.takencount);
+		*taken = be32toh(ss.takencount);
 	if (available)
-		*available = ntohl(ss.availablecount);
+		*available = be32toh(ss.availablecount);
 	if (rawcount)
-		*rawcount = ntohl(ss.rawcount);
+		*rawcount = be32toh(ss.rawcount);
 
 	return 0;
 }
@@ -187,7 +187,7 @@ int digita_get_file_data(CameraPrivateLibrary *dev, int thumbnail,
 		return gfdr->cmd.result;
 	}
 
-	memcpy(buffer, tbuf + sizeof(*gfdr), ntohl(gfdr->tag.length) + (thumbnail ? 16 : 0));
+	memcpy(buffer, tbuf + sizeof(*gfdr), be32toh(gfdr->tag.length) + (thumbnail ? 16 : 0));
 	memcpy(tag, &gfdr->tag, sizeof(*tag));
 
 	free(tbuf);

@@ -246,7 +246,7 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 		return NULL;
 	}
 
-	buflen = ntohl(tag.filesize);
+	buflen = be32toh(tag.filesize);
 	if (thumbnail)
 		buflen += 16;
 
@@ -256,8 +256,8 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 		return NULL;
 	}
 
-	len = ntohl(tag.filesize);
-	pos = ntohl(tag.length);
+	len = be32toh(tag.filesize);
+	pos = be32toh(tag.length);
 	id = gp_context_progress_start (context, len, _("Getting file..."));
 	while (pos < len) {
 		gp_context_progress_update (context, id, pos);
@@ -273,7 +273,7 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 			free (data);
 			return NULL;
 		}
-		pos += ntohl(tag.length);
+		pos += be32toh(tag.length);
 	}
 	gp_context_progress_stop (context, id);
 
@@ -351,9 +351,9 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 		char *ppm;
 
 		memcpy((void *)&height, data + 4, 4);
-		height = ntohl(height);
+		height = be32toh(height);
 		memcpy((void *)&width, data + 8, 4);
-		width = ntohl(width);
+		width = be32toh(width);
 
 		GP_DEBUG( "picture size %dx%d", width, height);
 		GP_DEBUG( "data size %d", buflen - 16);
