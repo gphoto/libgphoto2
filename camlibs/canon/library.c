@@ -31,7 +31,6 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <termios.h>
 #include <time.h>
 #include <ctype.h>
 
