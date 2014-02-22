@@ -127,10 +127,9 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int
 		    }
 		}
 		if (1) {
-		    struct timeval t;
-		    t.tv_usec = MDC800_USB_IRQ_INTERVAL*1000;
-		    t.tv_sec  = 0;
-		    select (1 , NULL, NULL, NULL, &t);
+
+		    GP_SYSTEM_SLEEP(MDC800_USB_IRQ_INTERVAL);
+
 		    timeout-=MDC800_USB_IRQ_INTERVAL;
 		}
 	}
