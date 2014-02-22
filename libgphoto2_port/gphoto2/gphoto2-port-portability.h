@@ -29,6 +29,8 @@
  ************************************************************************/
 
 # include <windows.h>
+/* done by mingw/wine headers ... defined to struct ... tsaes*/
+#undef interface
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <string.h>
