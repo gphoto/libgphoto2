@@ -88,6 +88,7 @@ int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char 
  * Used within serial code to signal various error conditions.
  *
  */
+#undef NOERROR /* happens in windows. is also 0 */
 typedef enum {
 	NOERROR		= 0,
 	ERROR_RECEIVED	= 1,
