@@ -160,12 +160,7 @@ AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
 dnl FIXME: Provide regex.h with the corresponding object code for 
 dnl        platforms which do not have it, e.g. Windows.
 AC_CHECK_HEADER([regex.h],
-                [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],
-		[AC_MSG_ERROR([
-*** We need regex.h and its object code to compile
-*** But we could not find it.
-])
-])
+                [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],[])
 
 dnl ---------------------------------------------------------------------------
 dnl Apple Bonjour / mDNSResponder multicast DNS queries.

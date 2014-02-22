@@ -32,7 +32,7 @@
 #ifdef HAVE_REGEX
 #include <regex.h>
 #else
-#error We need regex.h, but it has not been detected.
+#warning We need regex.h, but it has not been detected.
 #endif
 
 #include <ltdl.h>
@@ -368,10 +368,12 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 	unsigned int i;
 	int result, generic;
 	regex_t pattern;
+#ifdef HAVE_REGEX
 #ifdef HAVE_GNU_REGEX
 	const char *rv;
 #else
 	regmatch_t match;
+#endif
 #endif
 
 	CHECK_NULL (list && path);
@@ -390,6 +392,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		else if (!strcmp (list->info[i]->path, path))
 			return (i - generic);
 
+#ifdef HAVE_REGEX
 	/* Regex match? */
 	gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 		_("Starting regex search for '%s'..."), path);
@@ -452,6 +455,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		CR (result = gp_port_info_list_append (list, newinfo));
 		return result;
 	}
+#endif /* HAVE_REGEX */
 
 	return (GP_ERROR_UNKNOWN_PORT);
 }
