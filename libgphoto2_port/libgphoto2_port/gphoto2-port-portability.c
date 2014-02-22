@@ -62,7 +62,7 @@ int gp_system_mkdir (const char *dirname) {
         return (GP_OK);
 }
 
-GP_SYSTEM_DIR gp_system_opendir (const char *dirname) {
+gp_system_dir gp_system_opendir (const char *dirname) {
 
         GPPORTWINDIR *d;
         DWORD dr;
@@ -87,7 +87,7 @@ GP_SYSTEM_DIR gp_system_opendir (const char *dirname) {
         return (d);
 }
 
-GP_SYSTEM_DIRENT gp_system_readdir (GP_SYSTEM_DIR d) {
+gp_system_dirent gp_system_readdir (gp_system_dir d) {
 
         char dirn[1024];
 
@@ -122,12 +122,12 @@ GP_SYSTEM_DIRENT gp_system_readdir (GP_SYSTEM_DIR d) {
         return (&(d->search));
 }
 
-const char *gp_system_filename (GP_SYSTEM_DIRENT de) {
+const char *gp_system_filename (gp_system_dirent de) {
 
         return (de->cFileName);
 }
 
-int gp_system_closedir (GP_SYSTEM_DIR d) {
+int gp_system_closedir (gp_system_dir d) {
         FindClose(d->handle);
         free(d);
         return (1);
