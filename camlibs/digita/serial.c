@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include <termios.h>
 #include <unistd.h>
 #ifdef OS2
 #include <db.h>

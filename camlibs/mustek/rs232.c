@@ -30,7 +30,6 @@
 #include "io.h"
 
 #include <fcntl.h>
-#include <termios.h>
 #include <sys/time.h>
 
 
