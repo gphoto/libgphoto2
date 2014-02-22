@@ -62,6 +62,14 @@ int gp_system_mkdir (const char *dirname) {
         return (GP_OK);
 }
 
+int gp_system_rmdir (const char *dirname) {
+
+        if (_rmdir(dirname) < 0)
+                return (GP_ERROR);
+        return (GP_OK);
+}
+
+
 gp_system_dir gp_system_opendir (const char *dirname) {
 
         GPPORTWINDIR *d;
