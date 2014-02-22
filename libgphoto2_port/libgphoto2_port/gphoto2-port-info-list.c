@@ -367,8 +367,8 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 {
 	unsigned int i;
 	int result, generic;
-	regex_t pattern;
 #ifdef HAVE_REGEX
+	regex_t pattern;
 #ifdef HAVE_GNU_REGEX
 	const char *rv;
 #else
