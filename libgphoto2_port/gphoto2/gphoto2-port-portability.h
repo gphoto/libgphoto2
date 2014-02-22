@@ -56,7 +56,7 @@ typedef struct {
 } GPPORTWINDIR;
 
 /* Sleep functionality */
-# define GP_SYSTEM_SLEEP(_ms)	  do { Sleep(_ms) } while (0)
+# define GP_SYSTEM_SLEEP(_ms)	  do { Sleep(_ms); } while (0)
 
 /* Directory-oriented functions */
 # define gp_system_dir		  GPPORTWINDIR *
