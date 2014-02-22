@@ -41,8 +41,12 @@
 #include <sys/select.h>
 #endif
 
-#include <sys/socket.h>
-#include <netinet/in.h>
+#ifdef WIN32
+# include <winsock.h>
+#else
+# include <sys/socket.h>
+# include <netinet/in.h>
+#endif
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -532,6 +536,7 @@ ptp_ptpip_init_event_ack (PTPParams* params)
 static uint16_t
 ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 {
+#ifndef WIN32
 	fd_set		infds;
 	struct timeval	timeout;
 	int ret;
@@ -586,6 +591,10 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	free (data);
 	return PTP_RC_OK;
+#else
+	gp_log( GP_LOG_ERROR, "ptpip/event", "not supported currently on Windows");
+	return PTP_RC_OK;
+#endif
 }
 
 uint16_t
@@ -669,6 +678,8 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	gp_log (GP_LOG_DEBUG,"ptpip/connect", "connecting to %s.", address);
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
+
+#ifdef HAVE_INET_ATON
 	addr = strdup (address);
 	if (!addr)
 		return GP_ERROR_NO_MEMORY;
@@ -733,4 +744,8 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return translate_ptp_result (ret);
 	gp_log (GP_LOG_DEBUG, "ptpip/connect", "ptpip connected!");
 	return GP_OK;
+#else
+	gp_log (GP_LOG_ERROR,"ptpip/connect", "Windows currently not supported, neeeds a winsock port.");
+	return GP_ERROR_NOT_SUPPORTED;
+#endif
 }
