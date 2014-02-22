@@ -48,6 +48,10 @@
 #endif
 #include <fcntl.h>
 
+/* will happen only on Win32 */
+#ifndef HAVE_LSTAT
+#define lstat stat
+#endif
 
 #ifdef HAVE_LIBEXIF
 #include <libexif/exif-data.h>
@@ -57,6 +61,7 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port.h>
 #include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-portability.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
