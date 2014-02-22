@@ -228,9 +228,9 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 	strcpy(fn.dosname, filename);
 
 	/* How much data we're willing to accept */
-	tag.offset = htonl(0);
-	tag.length = htonl(GFD_BUFSIZE);
-	tag.filesize = htonl(0);
+	tag.offset = htobe32(0);
+	tag.length = htobe32(GFD_BUFSIZE);
+	tag.filesize = htobe32(0);
 
 	buflen = GFD_BUFSIZE;
 	data = malloc(buflen);
@@ -262,11 +262,11 @@ static unsigned char *digita_file_get(Camera *camera, const char *folder,
 	while (pos < len) {
 		gp_context_progress_update (context, id, pos);
 
-		tag.offset = htonl(pos);
+		tag.offset = htobe32(pos);
 		if ((len - pos) > GFD_BUFSIZE)
-			tag.length = htonl(GFD_BUFSIZE);
+			tag.length = htobe32(GFD_BUFSIZE);
 		else
-			tag.length = htonl(len - pos);
+			tag.length = htobe32(len - pos);
 
 		if (digita_get_file_data(camera->pl, thumbnail, &fn, &tag, data + pos) < 0) {
 			GP_DEBUG ("digita_get_file_data failed.");
