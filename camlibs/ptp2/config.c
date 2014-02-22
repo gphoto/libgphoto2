@@ -24,10 +24,14 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
-#include <sys/socket.h>
+#ifdef WIN32
+# include <winsock.h>
+#else
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+#endif
 #include <sys/types.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -5420,6 +5424,8 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 		profile.access_mode = atoi(buffer);
 
 		gp_setting_get("ptp2_wifi","ipaddr",buffer);
+/* fixme: replacement on win32 where we do not have this helper */
+#ifdef HAVE_INET_ATON
 		if (buffer[0] != 0) { /* No DHCP */
 			if (!inet_aton (buffer, &inp)) {
 				fprintf(stderr,"failed to scan for addr in %s\n", buffer);
@@ -5456,7 +5462,9 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 				profile.gateway_address = inp.s_addr;
 			}
 		}
-		else { /* DHCP */
+		else
+#endif
+		{ /* DHCP */
 			/* Never use mode 2, as mode 3 switches to mode 2
 			 * if it gets no DHCP answer. */
 			profile.address_mode = 3;
