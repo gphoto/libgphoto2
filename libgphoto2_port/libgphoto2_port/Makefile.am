@@ -43,6 +43,7 @@ libgphoto2_port_la_SOURCES =		\
 	gphoto2-port-log.c		\
 	gphoto2-port-version.c		\
 	gphoto2-port.c 			\
+	gphoto2-port-portability.h	\
 	gphoto2-port-portability.c	\
 	gphoto2-port-result.c
 
