@@ -478,16 +478,13 @@ int dc3200_cancel_get_data(Camera *camera)
 		0x00, 0x00, 0x00, 0x06, 0x04, 0x01, 0x00, 0x01, 0, 0};
 	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
-	struct timeval timeout;
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 1000;
 
 	pkt[1] = dc3200_calc_seqnum(camera);
 	pkt[18] = (camera->pl->cmd_seqnum >> 8) & 0xff;
 	pkt[19] = camera->pl->cmd_seqnum & 0xff;
 
 	/* wait a bit ... */
-	select(0, 0, 0, 0, &timeout);
+	GP_SYSTEM_SLEEP(1000);
 
 	/* clear the buffer */
 	dc3200_clear_read_buffer(camera);
