@@ -18,7 +18,6 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <termios.h>
 #include <fcntl.h>
 #include <string.h>
 #include <sys/time.h>
