@@ -515,7 +515,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_SONY_SetControlDeviceA		0x9205
 #define PTP_OC_SONY_GetControlDeviceDesc	0x9206
 #define PTP_OC_SONY_SetControlDeviceB		0x9207
-#define PTP_OC_SONY_9209			0x9209	/* gets a 4126 byte blob ?*/
+/* get all device property data at once */
+#define PTP_OC_SONY_GetAllDevicePropData	0x9209	/* gets a 4126 byte blob of device props ?*/
 
 /* Microsoft / MTP extension codes */
 
