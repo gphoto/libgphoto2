@@ -56,8 +56,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <iconv.h>
-#include <langinfo.h>
+#ifdef HAVE_ICONV
+# include <iconv.h>
+# include <langinfo.h>
+#endif
 
 #include "usb_io.h"
 #include "tf_bytes.h"
@@ -66,8 +68,10 @@
 #define GET 1
 
 static int quiet = 0;
+#ifdef HAVE_ICONV
 static iconv_t cd_locale_to_latin1;
 static iconv_t cd_latin1_to_locale;
+#endif
 
 struct _mapnames {
 	char *tfname;
@@ -86,6 +90,7 @@ backslash(char *path) {
 		*s='\\';
 }
 
+#ifdef HAVE_ICONV
 static char*
 strdup_to_latin1 (const char *str) {
 	size_t	ret, srclen, dstlen, ndstlen;
@@ -150,6 +155,10 @@ strdup_to_locale (char *str) {
 	}
 	return dest;
 }
+#else
+# define strdup_to_latin1 strdup
+# define strdup_to_locale strdup
+#endif
 
 static char*
 _convert_and_logname(Camera *camera, char *tfname) {
@@ -1184,8 +1193,10 @@ CameraFilesystemFuncs fsfuncs = {
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
+#ifdef HAVE_ICONV
 	iconv_close (cd_latin1_to_locale);
 	iconv_close (cd_locale_to_latin1);
+#endif
 	free (camera->pl->names);
 	free (camera->pl);
 	return GP_OK;
@@ -1211,12 +1222,14 @@ camera_init (Camera *camera, GPContext *context)
 	camera->pl = calloc (sizeof (CameraPrivateLibrary),1);
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 
+#ifdef HAVE_ICONV
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
 	cd_latin1_to_locale = iconv_open(curloc, "iso-8859-1");
 	if (!cd_latin1_to_locale) return GP_ERROR_NO_MEMORY;
 	cd_locale_to_latin1 = iconv_open("iso-8859-1", curloc);
 	if (!cd_locale_to_latin1) return GP_ERROR_NO_MEMORY;
+#endif
 
 	do_cmd_ready (camera, context);
 	return GP_OK;
