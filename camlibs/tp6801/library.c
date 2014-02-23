@@ -517,12 +517,19 @@ camera_init (Camera *camera, GPContext *context)
 	}
 
 	if (camera->pl->syncdatetime) {
+#ifdef HAVE_LOCALTIME_R
 		struct tm tm;
+#endif
+		struct tm *xtm;
 		time_t t;
 
 		t = time (NULL);
-		if (localtime_r (&t , &tm)) {
-			ret = tp6801_set_time_and_date (camera, &tm);
+#ifdef HAVE_LOCALTIME_R
+		if ((xtm = localtime_r (&t , &tm))) {
+#else
+		if ((xtm = localtime (&t))) {
+#endif
+			ret = tp6801_set_time_and_date (camera, xtm);
 			if (ret != GP_OK) {
 				camera_exit (camera, context);
 				return ret;
