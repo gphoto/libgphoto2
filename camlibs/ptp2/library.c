@@ -867,6 +867,8 @@ static struct {
 
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:SLT-A58",	      0x054c, 0x0736, 0},
+	/* Marcus Meissner */
+	{"Sony:SLT-A58 (Control)",    0x054c, 0x0737, PTP_CAP},
 
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:DSC-RX100M2",	      0x054c, 0x074b, 0},
