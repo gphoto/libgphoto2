@@ -2855,6 +2855,33 @@ ptp_nikon_curve_download (PTPParams* params, unsigned char **data, unsigned int 
 }
 
 /**
+ * ptp_sony_sdioconnect:
+ *
+ * This changes modes of the camera
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3) {
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned char	*xdata = NULL;
+	unsigned int 	xsize;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code	= PTP_OC_SONY_SDIOConnect;
+	ptp.Nparam	= 3;
+	ptp.Param1	= p1;
+	ptp.Param2	= p2;
+	ptp.Param3	= p3;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize); 
+	free (xdata);
+	return ret;
+}
+/**
  * ptp_sony_get_vendorpropcodes:
  *
  * This command downloads the vendor specific property codes.

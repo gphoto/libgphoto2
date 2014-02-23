@@ -2839,6 +2839,7 @@ uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsign
 uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
 uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);
 
+uint16_t ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
 uint16_t ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 /**
  * ptp_nikon_deletewifiprofile:

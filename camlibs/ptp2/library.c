@@ -466,6 +466,16 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			unsigned int	xsize;
 			uint16_t	ret;
 
+			ret = ptp_sony_sdioconnect (&camera->pl->params, 1, 0, 0);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_sdioconnect(1) failed with 0x%04x", ret);
+				return;
+			}
+			ret = ptp_sony_sdioconnect (&camera->pl->params, 2, 0, 0);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_sdioconnect(2) failed with 0x%04x", ret);
+				return;
+			}
 			ret = ptp_sony_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize);
 			if (ret != PTP_RC_OK) {
 				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_get_vendorpropcodes() failed with 0x%04x", ret);
@@ -486,6 +496,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events));
 			j = 0; k = 0; l = 0;
 			for (i=0;i<xsize;i++) {
+				gp_log (GP_LOG_ERROR, "ptp2/fixup", "sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
 				case 0x1000:
 					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
