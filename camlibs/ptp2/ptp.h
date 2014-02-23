@@ -497,8 +497,19 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CASIO_GET_THUMBNAIL	0x9026
 
 /* Sony stuff */
+/* 9201:
+ *  3 params: 1,0,0 ; IN: data 8 bytes all 0
+ * or:
+ *  3 params: 2,0,0 ; IN: data 8 bytes all 0 
+ * or
+ *  3 params: 3,0,0,: IN: data 8 butes all 0
+ */
 #define PTP_OC_SONY_SDIOConnect			0x9201
+/* 9202: 1 param, 0xc8; IN data: 
+ * 16 bit: 0xc8
+ * ptp array 32 bit: index, 16 bit values of propcodes  */
 #define PTP_OC_SONY_GetSDIOGetExtDeviceInfo	0x9202
+
 #define PTP_OC_SONY_GetDevicePropdesc		0x9203
 #define PTP_OC_SONY_GetDevicePropertyValue	0x9204
 #define PTP_OC_SONY_SetControlDeviceA		0x9205
@@ -2827,6 +2838,8 @@ uint16_t ptp_nikon_curve_download (PTPParams* params,
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
 uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);
+
+uint16_t ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 /**
  * ptp_nikon_deletewifiprofile:
  *

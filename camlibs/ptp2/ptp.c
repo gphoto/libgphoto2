@@ -2855,7 +2855,39 @@ ptp_nikon_curve_download (PTPParams* params, unsigned char **data, unsigned int 
 }
 
 /**
- * ptp_canon_get_vendorpropcodes:
+ * ptp_sony_get_vendorpropcodes:
+ *
+ * This command downloads the vendor specific property codes.
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *      unsigned char **data - pointer to data pointer
+ *      unsigned int  *size - size of data returned
+ *
+ **/
+uint16_t
+ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size) {
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned char	*xdata = NULL;
+	unsigned int 	xsize;
+
+	*props = NULL;
+	*size = 0;
+	PTP_CNT_INIT(ptp);
+	ptp.Code	= PTP_OC_SONY_GetSDIOGetExtDeviceInfo;
+	ptp.Nparam	= 1;
+	ptp.Param1	= 0xc8; /* unclear */
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize); 
+	/* first 16 bit is 0xc8 0x00, then an array of 16 bit PTP ids */
+	if (ret == PTP_RC_OK)
+        	*size = ptp_unpack_uint16_t_array(params,xdata+2,0,props);
+	free (xdata);
+	return ret;
+}
+/**
+ * ptp_nikon_get_vendorpropcodes:
  *
  * This command downloads the vendor specific property codes.
  *  

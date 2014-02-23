@@ -454,6 +454,66 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		}
 #endif
 	}
+
+	/* Sony DSLR also hide its newer opcodes behind another vendor specific query,
+	 * do that and merge it into the generic PTP deviceinfo. */
+	if (di->VendorExtensionID == PTP_VENDOR_SONY) {
+		unsigned int i;
+
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_SONY_GetSDIOGetExtDeviceInfo)) {
+			int opcodes = 0, propcodes = 0, events = 0, j,k,l;
+			uint16_t  	*xprops;
+			unsigned int	xsize;
+			uint16_t	ret;
+
+			ret = ptp_sony_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_get_vendorpropcodes() failed with 0x%04x", ret);
+				return;
+			}
+			for (i=0;i<xsize;i++) {
+				switch (xprops[i] & 0x7000) {
+				case 0x1000: opcodes++; break;
+				case 0x4000: events++; break;
+				case 0x5000: propcodes++; break;
+				default: 
+					gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_get_vendorpropcodes() unknown opcode %x", xprops[i]);
+					break;
+				}
+			}
+			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + propcodes));
+			di->OperationsSupported       = realloc(di->OperationsSupported,      sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + opcodes));
+			di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events));
+			j = 0; k = 0; l = 0;
+			for (i=0;i<xsize;i++) {
+				switch (xprops[i] & 0x7000) {
+				case 0x1000:
+					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
+					break;
+				case 0x4000:
+					di->EventsSupported[(l++)+di->EventsSupported_len] = xprops[i];
+					break;
+				case 0x5000:
+					di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i];
+					break;
+				default: 
+					break;
+				}
+			}
+			di->DevicePropertiesSupported_len += propcodes;
+			di->EventsSupported_len += events;
+			di->OperationsSupported_len += opcodes;
+			free (xprops);
+		}
+#if 0
+		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
+			di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2));
+			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_Capture;
+			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
+			di->OperationsSupported_len+=2;
+		}
+#endif
+	}
 #if 0 /* Marcus: not regular ptp properties, not queryable via getdevicepropertyvalue */
 	if (di->VendorExtensionID == PTP_VENDOR_CANON) {
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
