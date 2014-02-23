@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <fcntl.h>
-#include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #ifdef HAVE_LIBGD
