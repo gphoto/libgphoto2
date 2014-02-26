@@ -1734,6 +1734,9 @@ static struct {
 	/* Don Cohen <don-sourceforge-xxzw@isis.cs3-inc.com> */
 	{"Apple:iPhone 4S (PTP mode)",		0x05ac, 0x12a0, 0},
 
+	/* grinchdee@gmail.com */
+	{"Apple:iPhone 5 (PTP mode)",		0x05ac, 0x12a8, 0},
+
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
 
