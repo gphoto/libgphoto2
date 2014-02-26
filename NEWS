@@ -1,17 +1,28 @@
 libgphoto2 2.5.3.2 release
 
 all:
-* lots of small fixes to build with mingw32.
+* Lots of small fixes to build with mingw32.
 
 ptp2:
-* Nikon V and J capture fixed?
+* Nikon capture adjustments (always set controlmode before capture).
+* Nikon capture in "live view mode" no longer does autofocus, use "autofocusdrive".
+* Nikon "applicationmode" setting added.
+* Nikon Coolpix capture failure on empty cards fixed.
+* Some Canon EOS 5D Mark III config adjustments/additions.
+* Canon EOS: enable trigger capture 
 * new ids
+  - Sony DSC-W510, SLT-A58 (control)
   - Nikon P80 v1.1
+  - Canon A3500IS
+  - Fuji FinePix S4850
+  - Apple iPhone 5
 
 libusb1:
 * fixed timeout detection for USB interrupts
 
-Various translations updated: danish,
+Translations updates:
+* Danish, Spanish, French, Dutch, Polish, Russian, Serbian, Ukrainian,
+  Vietnamese
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.3.1 release
