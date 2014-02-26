@@ -36,24 +36,26 @@ int
 main ()
 {
 	unsigned char buf[16];
-	unsigned long long t;
+	unsigned long long u64;
+	unsigned short u16;
+	unsigned int u32;
 
-	t = swap16(0x1234);
-	CHECK(t == 0x3412);
-	t = swap32(0x12345678);
-	CHECK(t == 0x78563412);
-	t = swap64(0x0123456789abcdefULL);
-	CHECK(t == 0xefcdab8967452301ULL);
+	u16 = swap16(0x1234);
+	CHECK(u16 == 0x3412);
+	u32 = swap32(0x12345678);
+	CHECK(u32 == 0x78563412);
+	u64 = swap64(0x0123456789abcdefULL);
+	CHECK(u64 == 0xefcdab8967452301ULL);
 
-	t = htobe16(0x1234); memcpy(buf,&t,2); CHECK((buf[0]==0x12)&&(buf[1]==0x34));
-	t = htobe32(0x12345678); memcpy(buf,&t,4); CHECK((buf[0]==0x12)&&(buf[1]==0x34)&&(buf[2]==0x56)&&(buf[3]==0x78));
-	t = htobe64(0x0123456789abcdefULL); memcpy(buf,&t,8);
+	u16 = htobe16(0x1234); memcpy(buf,&u16,2); CHECK((buf[0]==0x12)&&(buf[1]==0x34));
+	u32 = htobe32(0x12345678); memcpy(buf,&u32,4); CHECK((buf[0]==0x12)&&(buf[1]==0x34)&&(buf[2]==0x56)&&(buf[3]==0x78));
+	u64 = htobe64(0x0123456789abcdefULL); memcpy(buf,&u64,8);
 	CHECK((buf[0]==0x01)&&(buf[1]==0x23)&&(buf[2]==0x45)&&(buf[3]==0x67));
 	CHECK((buf[4]==0x89)&&(buf[5]==0xab)&&(buf[6]==0xcd)&&(buf[7]==0xef));
 
-	t = htole16(0x1234); memcpy(buf,&t,2); CHECK((buf[0]==0x34)&&(buf[1]==0x12));
-	t = htole32(0x12345678); memcpy(buf,&t,4); CHECK((buf[0]==0x78)&&(buf[1]==0x56)&&(buf[2]==0x34)&&(buf[3]==0x12));
-	t = htole64(0x0123456789abcdefULL); memcpy(buf,&t,8);
+	u16 = htole16(0x1234); memcpy(buf,&u16,2); CHECK((buf[0]==0x34)&&(buf[1]==0x12));
+	u32 = htole32(0x12345678); memcpy(buf,&u32,4); CHECK((buf[0]==0x78)&&(buf[1]==0x56)&&(buf[2]==0x34)&&(buf[3]==0x12));
+	u64 = htole64(0x0123456789abcdefULL); memcpy(buf,&u64,8);
 	CHECK((buf[7]==0x01)&&(buf[6]==0x23)&&(buf[5]==0x45)&&(buf[4]==0x67));
 	CHECK((buf[3]==0x89)&&(buf[2]==0xab)&&(buf[1]==0xcd)&&(buf[0]==0xef));
 	return (0);
