@@ -24,6 +24,15 @@ AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_por
 CLEANFILES = $(check_SCRIPTS)
 
 
+noinst_PROGRAMS += test-endian
+test_endian_SOURCE = test-endian.c
+test_endian_LDADD = \
+	$(top_builddir)/libgphoto2/libgphoto2.la \
+	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(LIBLTDL) \
+	$(LIBEXIF_LIBS) \
+	$(INTLLIBS)
+
 noinst_PROGRAMS += test-gphoto2
 test_gphoto2_SOURCE = test-gphoto2.c
 test_gphoto2_LDADD = \
