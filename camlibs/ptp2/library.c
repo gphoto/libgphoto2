@@ -2927,8 +2927,8 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 		}
 	}
 	return GP_ERROR;
-
 }
+
 /* To use:
  *	gphoto2 --set-config capture=on --config --capture-image
  *	gphoto2  -f /store_80000001 -p 1
@@ -3160,6 +3160,36 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 }
 
+
+static int
+camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams	*params = &camera->pl->params;
+	uint16_t	ret;
+	PTPPropertyValue propval;
+
+	propval.u16 = 2;
+	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
+	if (ret != PTP_RC_OK) {
+		return translate_ptp_result (ret);
+	}
+
+	propval.u16 = 1;
+	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C2, &propval, PTP_DTC_UINT16 );
+	if (ret != PTP_RC_OK) {
+		return translate_ptp_result (ret);
+	}
+
+	propval.u16 = 1;
+	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
+	if (ret != PTP_RC_OK) {
+		return translate_ptp_result (ret);
+	}
+
+
+	return GP_OK;
+}
+
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
@@ -3205,6 +3235,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	) {
 		return camera_canon_eos_capture (camera, type, path, context);
 	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+	) {
+		return camera_sony_capture (camera, type, path, context);
+	}
+
 
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,

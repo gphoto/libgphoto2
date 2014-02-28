@@ -2913,6 +2913,26 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	free (xdata);
 	return ret;
 }
+
+uint16_t
+ptp_sony_setdevicecontrolvalue (PTPParams* params, uint16_t propcode,
+			PTPPropertyValue *value, uint16_t datatype)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	uint32_t size;
+	unsigned char* dpv=NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_SONY_SetControlDeviceB;
+	ptp.Param1 = propcode;
+	ptp.Nparam = 1;
+	size = ptp_pack_DPV(params, value, &dpv, datatype);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &dpv, NULL);
+	free(dpv);
+	return ret;
+}
+
 /**
  * ptp_nikon_get_vendorpropcodes:
  *
