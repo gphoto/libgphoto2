@@ -510,6 +510,8 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
         if (ret < 0) {
 		if (ret == LIBUSB_TRANSFER_TIMED_OUT)
 			return GP_ERROR_TIMEOUT;
+		if (ret == LIBUSB_ERROR_TIMEOUT)
+			return GP_ERROR_TIMEOUT;
 		return GP_ERROR_IO_READ;
 	}
         return curread;
