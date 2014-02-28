@@ -1,0 +1,43 @@
+Device info:
+Manufacturer: Apple Inc.
+  Model: Apple iPhone
+  device version: 7.0.4
+  serial number: 'ABCDEF012345'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: Device has no vendor extensions
+Functional Mode: 0x0000
+PTP Standard Version: 110
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x100b
+  0x1014
+  0x1015
+  0x101b
+  0x1023
+  0x9001
+  0x9002
+  0x9003
+  0x9004
+  0x9005
+  0x9006
+  0x9007
+  0x9008
+  0x9009
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4006
+Device Properties Supported:
+  0xd302
