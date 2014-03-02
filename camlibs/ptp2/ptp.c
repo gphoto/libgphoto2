@@ -2915,6 +2915,35 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 }
 
 uint16_t
+ptp_sony_getalldevicepropdesc (PTPParams* params)
+{
+	PTPContainer		ptp;
+	uint16_t		ret;
+	unsigned char		*data = NULL , *dpddata;
+	uint32_t		size = 0, readlen;
+	PTPDevicePropDesc	dpd;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_SONY_GetAllDevicePropData;
+	ptp.Nparam = 0;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret != PTP_RC_OK)
+		return ret;
+	ptp_debug (params, "size %d", size);
+	dpddata = data+8;
+	size -= 8;
+	while (size>0) {
+		if (!ptp_unpack_Sony_DPD (params, dpddata, &dpd, size, &readlen))
+			break;
+		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d", dpd.DevicePropertyCode, readlen);
+		dpddata += readlen;
+		size -= readlen;
+	}
+	free(data);
+	return ret;
+}
+
+uint16_t
 ptp_sony_setdevicecontrolvalue (PTPParams* params, uint16_t propcode,
 			PTPPropertyValue *value, uint16_t datatype)
 {

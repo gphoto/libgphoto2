@@ -3186,6 +3186,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		return translate_ptp_result (ret);
 	}
 
+	ret = ptp_sony_getalldevicepropdesc (params);
+	if (ret != PTP_RC_OK) {
+		return translate_ptp_result (ret);
+	}
 
 	return GP_OK;
 }
@@ -7012,9 +7016,11 @@ camera_init (Camera *camera, GPContext *context)
 		ptp_getfilesystemmanifest (params, 0x00010001, 0, 0, &data);
 	}
 #endif
+	/* hmm ...
+	ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
+	 */
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
-	ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
 	{
 		PTPStorageIDs storageids;
 
