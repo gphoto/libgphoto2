@@ -4993,6 +4993,66 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Nikon_Bulb(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_Bulb(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val, ret;
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	ret = gp_widget_get_value (widget, &val);
+	if (ret != GP_OK)
+		return ret;
+	if (val) {
+		PTPPropertyValue propval;
+		char buf[20];
+
+		ret = ptp_nikon_setcontrolmode (params, 1);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to set controlmode %04x", ret);
+			return translate_ptp_result (ret);
+		}
+		propval.u16 = 1; /* Exposure Mode to Full Manual */
+		ret = ptp_setdevicepropvalue (params, PTP_DPC_ExposureProgramMode, &propval, PTP_DTC_UINT16);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to set exposureprogramode %04x", ret);
+			return translate_ptp_result (ret);
+		}
+		propval.u32 = 0xffffffff; /* Exposure Time to bulb */
+		ret = ptp_setdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to set exposuretime to bulb %04x", ret);
+			return translate_ptp_result (ret);
+		}
+		/* If there is no capturetarget set yet, the default is "sdram" */
+		if (GP_OK != gp_setting_get("ptp2","capturetarget",buf))
+			strcpy (buf, "sdram");
+
+		ret = ptp_nikon_capture2 (params, 0/*No AF*/, !strcmp(buf,"sdram"));
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to initiate bulb capture %04x", ret);
+			return translate_ptp_result (ret);
+		}
+	} else {
+		ret = ptp_nikon_terminatecapture (params, 0, 0);
+	}
+
+	CPR(context, ret);
+	return GP_OK;
+}
+
+
+static int
 _get_Canon_EOS_Bulb(CONFIG_GET_ARGS) {
 	int val;
 
@@ -5681,6 +5741,7 @@ static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	{ N_("Focus Lock"),			"focuslock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_FocusLock, _get_Canon_FocusLock, _put_Canon_FocusLock},
 	{ N_("Bulb Mode"),			"bulb", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_BulbStart, _get_Canon_EOS_Bulb, _put_Canon_EOS_Bulb},
+	{ N_("Bulb Mode"),			"bulb", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_TerminateCapture, _get_Nikon_Bulb, _put_Nikon_Bulb},
 	{ N_("UI Lock"),			"uilock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_SetUILock, _get_Canon_EOS_UILock, _put_Canon_EOS_UILock},
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },

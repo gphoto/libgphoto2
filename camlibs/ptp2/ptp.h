@@ -2872,6 +2872,19 @@ uint16_t ptp_sony_setdevicecontrolvalue (PTPParams* params, uint16_t propcode,
  **/
 #define ptp_nikon_setcontrolmode(params,mode) ptp_generic_no_data(params,PTP_OC_NIKON_SetControlMode,1,mode)
 /**
+ * ptp_nikon_terminatecapture:
+ *
+ * This command appears to terminate a longer capture
+ *  
+ * params:      PTPParams*
+ *      uint32_t a 
+ *      uint32_t b 
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_terminatecapture(params,p1,p2) ptp_generic_no_data(params,PTP_OC_NIKON_TerminateCapture,2,p1,p2)
+/**
  * ptp_nikon_afdrive:
  *
  * This command runs (drives) the lens autofocus.
