@@ -5043,12 +5043,20 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to initiate bulb capture %04x", ret);
 			return translate_ptp_result (ret);
 		}
+		return GP_OK;
 	} else {
 		ret = ptp_nikon_terminatecapture (params, 0, 0);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to terminate bulb capture %04x", ret);
+			return translate_ptp_result (ret);
+		}
+		ret = nikon_wait_busy(params, 100, 5000);
+		if (ret != PTP_RC_OK) {
+			gp_log (GP_LOG_ERROR,"nikon/bulb", "busy wait failed %04x", ret);
+			return translate_ptp_result (ret);
+		}
+		return GP_OK;
 	}
-
-	CPR(context, ret);
-	return GP_OK;
 }
 
 
