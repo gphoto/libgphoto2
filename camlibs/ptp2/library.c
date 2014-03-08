@@ -1671,6 +1671,8 @@ static struct {
 	{"Fuji:FinePix H20EXR",			0x04cb, 0x022d, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=3556692&group_id=8874&atid=108874 */
 	{"Fuji:FinePix S2950",			0x04cb, 0x0240, 0},
+	/* https://sourceforge.net/p/gphoto/bugs/974/ */
+	{"Fuji:FinePix JX370",			0x04cb, 0x0250, 0},
 	/* Luis Arias <kaaloo@gmail.com> */
 	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
 	/* t.ludewig@gmail.com */
