@@ -3169,6 +3169,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPParams	*params = &camera->pl->params;
 	uint16_t	ret;
 	PTPPropertyValue propval;
+	unsigned int	tries = 0;
 
 	propval.u16 = 2;
 	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
@@ -3188,11 +3189,17 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		return translate_ptp_result (ret);
 	}
 
-	ret = ptp_sony_getalldevicepropdesc (params);
-	if (ret != PTP_RC_OK) {
-		return translate_ptp_result (ret);
-	}
+	for (tries = 0; tries < 100; tries++) {
+		ret = ptp_sony_getalldevicepropdesc (params);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
 
+		ret = ptp_check_event (params);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+
+		usleep(10000);
+	}
 	return GP_OK;
 }
 
@@ -4627,14 +4634,16 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				continue;
 			}
 		}
+#if 0 /* check is handled by the generic getter now */
 		if (!ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
 			n = snprintf(txt, spaceleft, _("cannot be queried.\n"));
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			continue;
 		}
+#endif
 
 		memset (&dpd, 0, sizeof (dpd));
-		ret = ptp_getdevicepropdesc (params, dpc, &dpd);
+		ret = ptp_generic_getdevicepropdesc (params, dpc, &dpd);
 		if (ret == PTP_RC_OK) {
 			n = snprintf (txt, spaceleft, "(%s) ",_get_getset(dpd.GetSet));
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;

@@ -2929,13 +2929,46 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	if (ret != PTP_RC_OK)
 		return ret;
-	ptp_debug (params, "size %d", size);
-	dpddata = data+8;
+	dpddata = data+8; /* nr of entries 32bit, 0 32bit */
 	size -= 8;
 	while (size>0) {
+		int		i;
+		uint16_t	propcode;
+
 		if (!ptp_unpack_Sony_DPD (params, dpddata, &dpd, size, &readlen))
 			break;
+
+		propcode = dpd.DevicePropertyCode;
+
+		for (i=0;i<params->nrofdeviceproperties;i++)
+			if (params->deviceproperties[i].prop == propcode)
+				break;
+
+		if (i == params->nrofdeviceproperties) {
+			if (!i)
+				params->deviceproperties = malloc(sizeof(params->deviceproperties[0]));
+			else
+				params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
+			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
+			params->nrofdeviceproperties++;
+			params->deviceproperties[i].prop = propcode;
+		}
+		params->deviceproperties[i].desc = dpd;
 		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d", dpd.DevicePropertyCode, readlen);
+		switch (dpd.DataType) {
+		case PTP_DTC_UINT8:
+			ptp_debug (params, "value %d/%x", dpd.CurrentValue.u8, dpd.CurrentValue.u8);
+			break;
+		case PTP_DTC_UINT16:
+			ptp_debug (params, "value %d/%x", dpd.CurrentValue.u16, dpd.CurrentValue.u16);
+			break;
+		case PTP_DTC_UINT32:
+			ptp_debug (params, "value %d/%x", dpd.CurrentValue.u32, dpd.CurrentValue.u32);
+			break;
+		default:
+			ptp_debug (params, "unknown type %x", dpd.DataType);
+			break;
+		}
 		dpddata += readlen;
 		size -= readlen;
 	}
@@ -2960,6 +2993,81 @@ ptp_sony_setdevicecontrolvalue (PTPParams* params, uint16_t propcode,
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &dpv, NULL);
 	free(dpv);
 	return ret;
+}
+
+/**
+ * ptp_generic_getdevicepropdesc:
+ *
+ * This command gets a propertydesc.
+ * If a vendor specific property desc query is available, it uses that.
+ * If not, it falls back to the generic PTP getdevicepropdesc.
+ *  
+ * params:	PTPParams*
+ *      uint16_t propcode 
+ *      PTPDevicePropDesc *dpd
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+/* Cache time in seconds. Should perhaps be more granular... */
+#define CACHETIME 2
+
+uint16_t
+ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePropDesc *dpd)
+{
+	unsigned int	i;
+	uint16_t	ret;
+	time_t		now;
+
+	for (i=0;i<params->nrofdeviceproperties;i++)
+		if (params->deviceproperties[i].prop == propcode)
+			break;
+	if (i == params->nrofdeviceproperties) {
+		if (!i)
+			params->deviceproperties = malloc(sizeof(params->deviceproperties[0]));
+		else
+			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
+		memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
+		params->nrofdeviceproperties++;
+		params->deviceproperties[i].prop = propcode;
+	}
+
+	if (params->deviceproperties[i].desc.DataType != PTP_DTC_UNDEF) {
+		time(&now);
+		if ((now - params->deviceproperties[i].timestamp) <= CACHETIME) {
+			duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+			return PTP_RC_OK;
+		}
+	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_GetAllDevicePropData)
+	) {
+		ret = ptp_sony_getalldevicepropdesc (params);
+		if (ret != PTP_RC_OK)
+			return ret;
+
+		for (i=0;i<params->nrofdeviceproperties;i++)
+			if (params->deviceproperties[i].prop == propcode)
+				break;
+		time(&now);
+		params->deviceproperties[i].timestamp = now;
+		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+		return PTP_RC_OK;
+	}
+
+	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
+		ret = ptp_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc);
+		if (ret != PTP_RC_OK)
+			return ret;
+
+		time(&now);
+		params->deviceproperties[i].timestamp = now;
+		duplicate_DevicePropDesc(dpd, &params->deviceproperties[i].desc);
+		return PTP_RC_OK;
+	}
+
+	return PTP_RC_OK;
 }
 
 /**

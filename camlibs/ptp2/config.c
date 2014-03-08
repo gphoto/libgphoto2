@@ -6209,7 +6209,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 					gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
-					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
+					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
@@ -6277,7 +6277,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 #endif
 
 
-		ret = ptp_getdevicepropdesc (params,propid,&dpd);
+		ret = ptp_generic_getdevicepropdesc (params,propid,&dpd);
 		if (ret != PTP_RC_OK)
 			continue;
 
@@ -6481,7 +6481,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
-					ptp_getdevicepropdesc(params,cursub->propid,&dpd);
+					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
 					} else {
