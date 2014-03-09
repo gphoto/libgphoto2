@@ -1599,7 +1599,7 @@ static struct {
 	{"Canon:PowerShot A3500IS",		0x04a9, 0x3261, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Andrés Farfán <nafraf@linuxmail.org> */
-	{"Canon:PowerShot A1400IS",		0x04a9, 0x3264, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot A1400",		0x04a9, 0x3264, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 100D",			0x04a9, 0x3270, PTP_CAP|PTP_CAP_PREVIEW},
