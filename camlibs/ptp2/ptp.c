@@ -2954,13 +2954,22 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 			params->deviceproperties[i].prop = propcode;
 		}
 		params->deviceproperties[i].desc = dpd;
-		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d", dpd.DevicePropertyCode, readlen);
+		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d, getset %d", dpd.DevicePropertyCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
+		case PTP_DTC_INT8:
+			ptp_debug (params, "value %d/%x", dpd.CurrentValue.i8, dpd.CurrentValue.i8);
+			break;
 		case PTP_DTC_UINT8:
 			ptp_debug (params, "value %d/%x", dpd.CurrentValue.u8, dpd.CurrentValue.u8);
 			break;
 		case PTP_DTC_UINT16:
 			ptp_debug (params, "value %d/%x", dpd.CurrentValue.u16, dpd.CurrentValue.u16);
+			break;
+		case PTP_DTC_INT16:
+			ptp_debug (params, "value %d/%x", dpd.CurrentValue.i16, dpd.CurrentValue.i16);
+			break;
+		case PTP_DTC_INT32:
+			ptp_debug (params, "value %d/%x", dpd.CurrentValue.i32, dpd.CurrentValue.i32);
 			break;
 		case PTP_DTC_UINT32:
 			ptp_debug (params, "value %d/%x", dpd.CurrentValue.u32, dpd.CurrentValue.u32);
