@@ -3071,6 +3071,31 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 }
 
 /**
+ * ptp_generic_setdevicepropvalue:
+ *
+ * This command sets a property value, device specific.
+ *  
+ * params:	PTPParams*
+ *      uint16_t propcode 
+ *      PTPDevicePropertyValue *value
+ *      uint16_t datatype
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+	PTPPropertyValue *value, uint16_t datatype)
+{
+	/* FIXME: change the cache? hmm */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+	)
+		return ptp_sony_setdevicecontrolvalue (params, propcode, value, datatype);
+	return ptp_setdevicepropvalue (params, propcode, value, datatype);
+}
+
+/**
  * ptp_nikon_get_vendorpropcodes:
  *
  * This command downloads the vendor specific property codes.

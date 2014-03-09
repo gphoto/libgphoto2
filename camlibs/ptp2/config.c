@@ -6489,7 +6489,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
-						ret2 = ptp_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
+						ret2 = ptp_generic_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
 						if (ret2 != PTP_RC_OK) {
 							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret2);
 							ret = translate_ptp_result (ret2);
@@ -6593,7 +6593,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		default:
 			break;
 		}
-		ret = ptp_setdevicepropvalue (params, propid, &propval, dpd.DataType);
+		ret = ptp_generic_setdevicepropvalue (params, propid, &propval, dpd.DataType);
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(label), propid, ret);
 			ret = GP_ERROR;

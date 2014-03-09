@@ -2524,6 +2524,8 @@ uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
 				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
+uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+                        	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
                         uint32_t objectformatcode, uint32_t associationOH,
                         unsigned char** data);
