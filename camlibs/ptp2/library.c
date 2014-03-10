@@ -1516,6 +1516,9 @@ static struct {
 	/* Mauricio Pasquier Juan <mauricio@pasquierjuan.com.ar> */
 	{"Canon:Rebel T2i",			0x04a9, 0x31ea, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Andrés Farfán <nafraf@linuxmail.org> */
+	{"Canon:Powershot A495",		0x04a9, 0x31ef, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* ErVito on IRC */
 	{"Canon:PowerShot A3100 IS",		0x04a9, 0x31f1, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -1605,6 +1608,9 @@ static struct {
 	{"Canon:EOS 100D",			0x04a9, 0x3270, PTP_CAP|PTP_CAP_PREVIEW},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 700D",			0x04a9, 0x3272, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Andrés Farfán <nafraf@linuxmail.org> */
+	{"Canon:PowerShot SX510 HS",		0x04a9, 0x3277, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -3173,6 +3179,17 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	uint16_t	ret;
 	PTPPropertyValue propval;
 	unsigned int	tries = 0;
+
+	propval.u16 = 1;
+	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
+	if (ret != PTP_RC_OK) {
+		return translate_ptp_result (ret);
+	}
+
+	ret = ptp_sony_getalldevicepropdesc (params);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+
 
 	propval.u16 = 2;
 	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
