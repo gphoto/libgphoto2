@@ -515,6 +515,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->EventsSupported_len += events;
 			di->OperationsSupported_len += opcodes;
 			free (xprops);
+			ret = ptp_sony_sdioconnect (&camera->pl->params, 3, 0, 0);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_sdioconnect(2) failed with 0x%04x", ret);
+				return;
+			}
 		}
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
@@ -3179,35 +3184,24 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	uint16_t	ret;
 	PTPPropertyValue propval;
 	unsigned int	tries = 0;
+	PTPContainer	event;
+	PTPObjectInfo	oi;
+	uint32_t	newobject = 0;
+	static int	capcnt = 0;
 
 	propval.u16 = 1;
 	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
-	if (ret != PTP_RC_OK) {
+	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	}
 
 	ret = ptp_sony_getalldevicepropdesc (params);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
-
 	propval.u16 = 2;
 	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
-	if (ret != PTP_RC_OK) {
+	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	}
-
-	propval.u16 = 1;
-	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C2, &propval, PTP_DTC_UINT16 );
-	if (ret != PTP_RC_OK) {
-		return translate_ptp_result (ret);
-	}
-
-	propval.u16 = 1;
-	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
-	if (ret != PTP_RC_OK) {
-		return translate_ptp_result (ret);
-	}
 
 	for (tries = 0; tries < 100; tries++) {
 		ret = ptp_sony_getalldevicepropdesc (params);
@@ -3217,10 +3211,54 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		ret = ptp_check_event (params);
 		if (ret != PTP_RC_OK)
 			return translate_ptp_result (ret);
-
+		if (ptp_get_one_event(params, &event)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "during event.code=%04x Param1=%08x", event.Code, event.Param1);
+			if (event.Code == 0xc201) {
+				newobject = event.Param1;
+				break;
+			}
+		}
 		usleep(10000);
 	}
-	return GP_OK;
+
+	propval.u16 = 1;
+	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C2, &propval, PTP_DTC_UINT16 );
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+
+	propval.u16 = 1;
+	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+
+	for (tries = 0; tries < 5; tries++) {
+		ret = ptp_sony_getalldevicepropdesc (params);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+
+		ret = ptp_check_event (params);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+		if (ptp_get_one_event(params, &event)) {
+			gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "post event.code=%04x Param1=%08x", event.Code, event.Param1);
+			if (event.Code == 0xc201) {
+				newobject = event.Param1;
+				break;
+			}
+		}
+		usleep(10000);
+	}
+
+	if (!newobject)
+		return GP_ERROR;
+
+	/* FIXME: handle multiple images (as in BurstMode) */
+	ret = ptp_getobjectinfo (params, newobject, &oi);
+	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
+
+	sprintf (path->folder,"/");
+	sprintf (path->name, "capt%04d.jpg", capcnt++);
+	return add_objectid_and_upload (camera, path, context, newobject, &oi);
 }
 
 static int
