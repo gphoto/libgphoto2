@@ -1615,6 +1615,9 @@ static struct {
 	{"Canon:EOS 700D",			0x04a9, 0x3272, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andrés Farfán <nafraf@linuxmail.org> */
+	{"Canon:PowerShot SX170 IS",		0x04a9, 0x3276, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* Andrés Farfán <nafraf@linuxmail.org> */
 	{"Canon:PowerShot SX510 HS",		0x04a9, 0x3277, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
