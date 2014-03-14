@@ -1,0 +1,183 @@
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Type: TOGGLE
+Current: 0
+/main/settings/ownername
+Label: Owner Name
+Type: TEXT
+Current: unexpected datatype 0
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/settings/capture
+Label: Capture
+Type: TOGGLE
+Current: 0
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Canon Inc.
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: Canon PowerShot SX170 IS
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1-14.0.1.0
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/status/model
+Label: Camera Model
+Type: TEXT
+Current: unexpected datatype 0
+/main/status/firmwareversion
+Label: Firmware Version
+Type: TEXT
+Current: unexpected datatype 0
+/main/other/d045
+Label: Event Emulate Mode
+Type: TEXT
+Current: (null)
+/main/other/d04a
+Label: PTP Property 0xd04a
+Type: TEXT
+Current: (null)
+/main/other/d02e
+Label: Size of Output Data from Camera
+Type: TEXT
+Current: (null)
+/main/other/d02f
+Label: Size of Input Data to Camera
+Type: TEXT
+Current: (null)
+/main/other/5001
+Label: Battery Level
+Type: TEXT
+Current: (null)
+/main/other/d002
+Label: Battery Type
+Type: TEXT
+Current: (null)
+/main/other/d003
+Label: Battery Mode
+Type: TEXT
+Current: (null)
+/main/other/d034
+Label: UNIX Time
+Type: TEXT
+Current: (null)
+/main/other/d047
+Label: Type of Slideshow
+Type: TEXT
+Current: (null)
+/main/other/d046
+Label: DPOF Version
+Type: TEXT
+Current: (null)
+/main/other/d030
+Label: Remote API Version
+Type: TEXT
+Current: (null)
+/main/other/d049
+Label: Model ID
+Type: TEXT
+Current: (null)
+/main/other/d032
+Label: Camera Model
+Type: TEXT
+Current: (null)
+/main/other/d033
+Label: Camera Owner
+Type: TEXT
+Current: (null)
+/main/other/d031
+Label: Firmware Version
+Type: TEXT
+Current: (null)
+/main/other/d050
+Label: PTP Property 0xd050
+Type: TEXT
+Current: (null)
+/main/other/d051
+Label: PTP Property 0xd051
+Type: TEXT
+Current: (null)
+/main/other/d052
+Label: PTP Property 0xd052
+Type: TEXT
+Current: (null)
+/main/other/d402
+Label: PTP Property 0xd402
+Type: TEXT
+Current: (null)
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current: (null)
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: (null)
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: (null)
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot SX170 IS
+  Version: 1-14.0.1.0
+  Serial Number: xxxxxxxxxxx
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS Wave, JPEG, Defined Type, Unknown(b103), Unknown(b982), Unknown(b105), Unknown(bf01)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 15997108224 (15256 MB)
+	Free Space (Bytes): 15989899264 (15249 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(read only) (type=0x0) Undefined
+Property 0xd04a:(read only) (type=0x0) Undefined
+Size of Output Data from Camera(0xd02e):(read only) (type=0x0) Undefined
+Size of Input Data to Camera(0xd02f):(read only) (type=0x0) Undefined
+Battery Level(0x5001):(read only) (type=0x0) 0% (Undefined)
+Battery Type(0xd002):(read only) (type=0x0) Unknown (Undefined)
+Battery Mode(0xd003):(read only) (type=0x0) Undefined (Undefined)
+UNIX Time(0xd034):(read only) (type=0x0) Undefined
+Type of Slideshow(0xd047):(read only) (type=0x0) Undefined
+DPOF Version(0xd046):(read only) (type=0x0) Undefined
+Remote API Version(0xd030):(read only) (type=0x0) Undefined
+Model ID(0xd049):(read only) (type=0x0) Undefined
+Camera Model(0xd032):(read only) (type=0x0) Undefined
+Camera Owner(0xd033):(read only) (type=0x0) Undefined
+Firmware Version(0xd031):(read only) (type=0x0) Undefined
+Property 0xd050:(read only) (type=0x0) Undefined
+Property 0xd051:(read only) (type=0x0) Undefined
+Property 0xd052:(read only) (type=0x0) Undefined
+Property 0xd402:(read only) (type=0x0) Undefined
+Property 0xd406:(read only) (type=0x0) Undefined
+Property 0xd407:(read only) (type=0x0) Undefined
+Property 0xd303:(read only) (type=0x0) Undefined
+
