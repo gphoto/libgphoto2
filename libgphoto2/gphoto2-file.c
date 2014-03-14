@@ -628,6 +628,7 @@ static const char *mime_table[] = {
     "raw",  GP_MIME_RAW,
     "mts",  GP_MIME_AVCHD,
     "m2ts", GP_MIME_AVCHD,
+    "arw",  GP_MIME_ARW,
     NULL};
 /**
  * @param file a #CameraFile
