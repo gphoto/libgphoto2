@@ -1843,6 +1843,7 @@ static struct {
 	{PTP_OFC_CANON_CRW3,		PTP_VENDOR_CANON, "image/x-canon-cr2"},
 	{PTP_OFC_CANON_MOV,		PTP_VENDOR_CANON, "video/quicktime"},
 	{PTP_OFC_CANON_CHDK_CRW,	PTP_VENDOR_CANON, "image/x-canon-cr2"},
+	{PTP_OFC_SONY_RAW,		PTP_VENDOR_SONY, "image/x-sony-arw"},
 	{0,				0, NULL}
 };
 
@@ -3191,9 +3192,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
 	static int	capcnt = 0;
+	int		dual = 0;
+	PTPDevicePropDesc	dpd;
 
 	propval.u16 = 1;
-	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
+	ret = ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
@@ -3201,8 +3204,20 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
+	ret = ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
+	gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+	if (dpd.CurrentValue.u8 == 0)
+		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
+	if (dpd.CurrentValue.u8 == 0x13) {
+		gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "expecting raw+jpeg capture");
+		dual = 1;
+	}
+
 	propval.u16 = 2;
-	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
+	ret = ptp_sony_setdevicecontrolvalueb (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
@@ -3218,6 +3233,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "during event.code=%04x Param1=%08x", event.Code, event.Param1);
 			if (event.Code == 0xc201) {
 				newobject = event.Param1;
+				if (dual)
+					ptp_add_event (params, &event);
 				break;
 			}
 		}
@@ -3225,32 +3242,14 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	}
 
 	propval.u16 = 1;
-	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C2, &propval, PTP_DTC_UINT16 );
+	ret = ptp_sony_setdevicecontrolvalueb (params, 0xD2C2, &propval, PTP_DTC_UINT16 );
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
 	propval.u16 = 1;
-	ret = ptp_sony_setdevicecontrolvalue (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
+	ret = ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16 );
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-
-	for (tries = 0; tries < 5; tries++) {
-		ret = ptp_sony_getalldevicepropdesc (params);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
-
-		ret = ptp_check_event (params);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
-		if (ptp_get_one_event(params, &event)) {
-			gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "post event.code=%04x Param1=%08x", event.Code, event.Param1);
-			if (event.Code == 0xc201) {
-				newobject = event.Param1;
-				break;
-			}
-		}
-		usleep(10000);
-	}
 
 	if (!newobject)
 		return GP_ERROR;
@@ -3260,7 +3259,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 	sprintf (path->folder,"/");
-	sprintf (path->name, "capt%04d.jpg", capcnt++);
+	if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
+		sprintf (path->name, "capt%04d.arw", capcnt++);
+	else
+		sprintf (path->name, "capt%04d.jpg", capcnt++);
 	return add_objectid_and_upload (camera, path, context, newobject, &oi);
 }
 
@@ -4132,6 +4134,38 @@ downloadnow:
 		event.Code, event.Param1
 	);
 handleregular:
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
+		switch (event.Code) {
+		case 0xc201: {
+			PTPObjectInfo	oi;
+			static int capcnt = 0;
+
+			path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
+			if (!path)
+				return GP_ERROR_NO_MEMORY;
+			ret = ptp_getobjectinfo (params, event.Param1, &oi);
+			if (ret != PTP_RC_OK) return translate_ptp_result (ret);
+
+			sprintf (path->folder,"/");
+			if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
+				sprintf (path->name, "capt%04d.arw", capcnt++);
+			else
+				sprintf (path->name, "capt%04d.jpg", capcnt++);
+
+			ret = add_objectid_and_upload (camera, path, context, event.Param1, &oi);
+			if (ret == GP_OK) {
+				*eventtype = GP_EVENT_FILE_ADDED;
+				*eventdata = path;
+				return ret;
+			}
+			return ret;
+		}
+		case 0xc203: /* same as DevicePropChanged, just go there */
+			event.Code = PTP_EC_DevicePropChanged;
+			break;
+		}
+		/*fallthrough*/
+	}
 	switch (event.Code) {
 	case PTP_EC_CaptureComplete:
 		*eventtype = GP_EVENT_CAPTURE_COMPLETE;
@@ -4547,6 +4581,12 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			}
 			if (n) {
 				n = snprintf (txt, spaceleft,"\n");
+				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			}
+			break;
+		case PTP_VENDOR_SONY:
+			if (ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)) {
+				n = snprintf (txt, spaceleft,_("Sony Capture"));
 				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
 			}
 			break;
@@ -5877,19 +5917,20 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	SET_CONTEXT_P(params, context);
 
-	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
-		return GP_ERROR_NOT_SUPPORTED;
-
 	if (!strcmp (folder, "/special"))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	/* virtual file created by Nikon special capture */
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) ||
+		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) ||
 		 (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)) &&
 		!strncmp (filename, "capt", 4)
 	)
 		return GP_OK;
+
+	if (!ptp_operation_issupported(params, PTP_OC_DeleteObject))
+		return GP_ERROR_NOT_SUPPORTED;
 
 	camera->pl->checkevents = TRUE;
 	CPR (context, ptp_check_event (params));

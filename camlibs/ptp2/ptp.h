@@ -948,6 +948,8 @@ typedef struct _PTPObjectInfo PTPObjectInfo;
 #define PTP_OFC_CANON_MOV2			0xb105
 /* CHDK specific raw mode */
 #define PTP_OFC_CANON_CHDK_CRW			0xb1ff
+/* Sony */
+#define PTP_OFC_SONY_RAW			0xb101
 /* MTP extensions */
 #define PTP_OFC_MTP_MediaCard			0xb211
 #define PTP_OFC_MTP_MediaCardGroup		0xb212
@@ -2332,7 +2334,7 @@ struct _PTPParams {
 
 	/* PTP: Device Property Caching */
 	PTPDeviceProperty	*deviceproperties;
-	int			nrofdeviceproperties;
+	unsigned int		nrofdeviceproperties;
 
 	/* PTP: Canon specific flags list */
 	PTPCanon_Property	*canon_props;
@@ -2849,7 +2851,9 @@ uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* pro
 uint16_t ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
 uint16_t ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 uint16_t ptp_sony_getalldevicepropdesc (PTPParams* params);
-uint16_t ptp_sony_setdevicecontrolvalue (PTPParams* params, uint16_t propcode,
+uint16_t ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
+                        	PTPPropertyValue* value, uint16_t datatype);
+uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 /**
  * ptp_nikon_deletewifiprofile:

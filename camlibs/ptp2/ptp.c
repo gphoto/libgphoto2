@@ -2932,7 +2932,7 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 	dpddata = data+8; /* nr of entries 32bit, 0 32bit */
 	size -= 8;
 	while (size>0) {
-		int		i;
+		unsigned int	i;
 		uint16_t	propcode;
 
 		if (!ptp_unpack_Sony_DPD (params, dpddata, &dpd, size, &readlen))
@@ -2954,6 +2954,7 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 			params->deviceproperties[i].prop = propcode;
 		}
 		params->deviceproperties[i].desc = dpd;
+#if 0
 		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d, getset %d", dpd.DevicePropertyCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
 		case PTP_DTC_INT8:
@@ -2978,6 +2979,7 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 			ptp_debug (params, "unknown type %x", dpd.DataType);
 			break;
 		}
+#endif
 		dpddata += readlen;
 		size -= readlen;
 	}
@@ -2986,7 +2988,26 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 }
 
 uint16_t
-ptp_sony_setdevicecontrolvalue (PTPParams* params, uint16_t propcode,
+ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
+			PTPPropertyValue *value, uint16_t datatype)
+{
+	PTPContainer ptp;
+	uint16_t ret;
+	uint32_t size;
+	unsigned char* dpv=NULL;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code   = PTP_OC_SONY_SetControlDeviceA;
+	ptp.Param1 = propcode;
+	ptp.Nparam = 1;
+	size = ptp_pack_DPV(params, value, &dpv, datatype);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &dpv, NULL);
+	free(dpv);
+	return ret;
+}
+
+uint16_t
+ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 			PTPPropertyValue *value, uint16_t datatype)
 {
 	PTPContainer ptp;
@@ -3100,7 +3121,7 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
 	)
-		return ptp_sony_setdevicecontrolvalue (params, propcode, value, datatype);
+		return ptp_sony_setdevicecontrolvaluea (params, propcode, value, datatype);
 	return ptp_setdevicepropvalue (params, propcode, value, datatype);
 }
 

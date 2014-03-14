@@ -1303,6 +1303,7 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
 	{ N_("Color Temperature"),	0x8012, PTP_VENDOR_NIKON },
 	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
+
 	{ N_("Fluorescent Lamp 1"),	0x8001, PTP_VENDOR_FUJI },
 	{ N_("Fluorescent Lamp 2"),	0x8002, PTP_VENDOR_FUJI },
 	{ N_("Fluorescent Lamp 3"),	0x8003, PTP_VENDOR_FUJI },
@@ -1315,6 +1316,15 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Preset Custom 3"),	0x800a, PTP_VENDOR_FUJI },
 	{ N_("Preset Custom 4"),	0x800b, PTP_VENDOR_FUJI },
 	{ N_("Preset Custom 5"),	0x800c, PTP_VENDOR_FUJI },
+
+	{ N_("Shade"),			0x8011, PTP_VENDOR_SONY },
+	{ N_("Cloudy"),			0x8010, PTP_VENDOR_SONY },
+	{ N_("Fluorescent: Warm White"),0x8001, PTP_VENDOR_SONY },
+	{ N_("Fluorescent: Cold White"),0x8002, PTP_VENDOR_SONY },
+	{ N_("Fluorescent: Day White"),	0x8003, PTP_VENDOR_SONY },
+	{ N_("Fluorescent: Daylight"),	0x8004, PTP_VENDOR_SONY },
+	{ N_("Choose Color Temperature"),0x8012, PTP_VENDOR_SONY },
+	{ N_("Preset"),			0x8023, PTP_VENDOR_SONY },
 };
 GENERIC16TABLE(WhiteBalance,whitebalance)
 
@@ -1945,6 +1955,19 @@ static struct deviceproptableu8 canon_size[] = {
 	{ N_("Small"),		0x02, 0 },
 };
 GENERIC8TABLE(Canon_Size,canon_size)
+
+static struct deviceproptableu8 sony_size[] = {
+	{ N_("Large"),		0x01, 0 },
+	{ N_("Medium"),		0x02, 0 },
+	{ N_("Small"),		0x03, 0 },
+};
+GENERIC8TABLE(Sony_ImageSize,sony_size)
+
+static struct deviceproptableu8 sony_aspectratio[] = {
+	{ N_("16:9"),		0x01, 0 },
+	{ N_("3:2"),		0x02, 0 },
+};
+GENERIC8TABLE(Sony_AspectRatio,sony_aspectratio)
 
 /* actually in 1/10s of a second, but only 3 values in use */
 static struct deviceproptableu16 canon_selftimer[] = {
@@ -2731,6 +2754,10 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Quick Response Remote"),	0x8014, PTP_VENDOR_NIKON}, /* others nikons */
 	{ N_("Delayed Remote"),		0x8015, PTP_VENDOR_NIKON}, /* d90 */
 	{ N_("Quiet Release"),		0x8016, PTP_VENDOR_NIKON}, /* d5000 */
+
+	{ N_("Continuous Low Speed"),	0x8012, PTP_VENDOR_SONY},
+	{ N_("Selftimer 2s"),		0x8005, PTP_VENDOR_SONY},
+	{ N_("Selftimer 10s"),		0x8004, PTP_VENDOR_SONY},
 /*
 	{ N_("Continuous"),		0x8001, PTP_VENDOR_CASIO},
 	{ N_("Prerecord"),		0x8002, PTP_VENDOR_CASIO},
@@ -3910,7 +3937,7 @@ static struct deviceproptableu8 nikon_d3s_compression[] = {
 };
 GENERIC8TABLE(Nikon_D3s_Compression,nikon_d3s_compression)
 
-static struct deviceproptableu8 nikon_compression[] = {
+static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
 	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
 	{ N_("JPEG Fine"),	0x02, PTP_VENDOR_NIKON },
@@ -3918,8 +3945,13 @@ static struct deviceproptableu8 nikon_compression[] = {
 	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
 	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
+
+	{ N_("Standard"),	0x02, PTP_VENDOR_SONY },
+	{ N_("Fine"),		0x03, PTP_VENDOR_SONY },
+	{ N_("RAW"),		0x10, PTP_VENDOR_SONY },
+	{ N_("RAW+JPEG"),	0x13, PTP_VENDOR_SONY },
 };
-GENERIC8TABLE(Nikon_Compression,nikon_compression)
+GENERIC8TABLE(CompressionSetting,compressionsetting)
 
 static struct deviceproptableu8 nikon_d90_highisonr[] = {
 	{ N_("Off"),	0, 0 },
@@ -5858,6 +5890,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"), "imageformat", PTP_DPC_FUJI_Quality, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ImageFormat, _put_Fuji_ImageFormat},
 	{ N_("Image Format Ext HD"), "imageformatexthd", PTP_DPC_CANON_EOS_ImageFormatExtHD, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
 	{ N_("Image Size"), "imagesize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
+	{ N_("Image Size"), "imagesize", PTP_DPC_SONY_ImageSize, PTP_VENDOR_SONY, PTP_DTC_UINT8, _get_Sony_ImageSize, _put_Sony_ImageSize},
 	{ N_("Image Size"), "imagesize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
@@ -5866,6 +5899,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_EOS_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_WhiteBalance, _put_Canon_EOS_WhiteBalance},
 	{ N_("Color Temperature"), "colortemperature", PTP_DPC_CANON_EOS_ColorTemperature, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_INT},
+	{ N_("Color Temperature"), "colortemperature", PTP_DPC_SONY_ColorTemp, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_INT, _put_INT},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
 	{ N_("WhiteBalance Adjust A") , "whitebalanceadjusta", PTP_DPC_CANON_EOS_WhiteBalanceAdjustA, PTP_VENDOR_CANON, PTP_DTC_INT16, _get_Canon_EOS_WBAdjust, _put_Canon_EOS_WBAdjust},
 	{ N_("WhiteBalance Adjust B") , "whitebalanceadjustb", PTP_DPC_CANON_EOS_WhiteBalanceAdjustB, PTP_VENDOR_CANON, PTP_DTC_INT16, _get_Canon_EOS_WBAdjust, _put_Canon_EOS_WBAdjust},
@@ -5913,7 +5947,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
 	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
 	{ N_("Flexible Program"), "flexibleprogram", PTP_DPC_NIKON_FlexibleProgram, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Range_INT8, _put_Range_INT8},
-	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, 0, PTP_DTC_UINT8, _get_Nikon_Compression, _put_Nikon_Compression},
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, 0, PTP_DTC_UINT8, _get_CompressionSetting, _put_CompressionSetting},
 	{ N_("Focus Distance"), "focusdistance", PTP_DPC_FocusDistance, 0, PTP_DTC_UINT16, _get_FocusDistance, _put_FocusDistance},
 	{ N_("Focal Length"), "focallength", PTP_DPC_FocalLength, 0, PTP_DTC_UINT32, _get_FocalLength, _put_FocalLength},
 	{ N_("Focus Mode"), "focusmode", PTP_DPC_FocusMode, 0, PTP_DTC_UINT16, _get_FocusMode, _put_FocusMode},
@@ -5924,6 +5958,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Effect Mode"), "effectmode", PTP_DPC_NIKON_EffectMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_EffectMode, _put_NIKON_EffectMode},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_ExposureProgram, _put_ExposureProgram},
 	{ N_("Scene Mode"), "scenemode", PTP_DPC_NIKON_SceneMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_NIKON_SceneMode, _put_NIKON_SceneMode},
+	{ N_("Aspect Ratio"), "aspectratio", PTP_DPC_SONY_AspectRatio, PTP_VENDOR_SONY, PTP_DTC_UINT8, _get_Sony_AspectRatio, _put_Sony_AspectRatio},
+	
 	{ N_("HDR Mode"), "hdrmode", PTP_DPC_NIKON_HDRMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("HDR High Dynamic"), "hdrhighdynamic", PTP_DPC_NIKON_HDRHighDynamic, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_HDRHighDynamic, _put_Nikon_HDRHighDynamic},
 	{ N_("HDR Smoothing"), "hdrsmoothing", PTP_DPC_NIKON_HDRSmoothing, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_HDRSmoothing, _put_Nikon_HDRSmoothing},
