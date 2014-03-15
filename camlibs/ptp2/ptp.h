@@ -800,6 +800,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_Olympus_PropertyChanged		0xC102
 #define PTP_EC_Olympus_CaptureComplete		0xC103
 
+/* Sony */
+#define PTP_EC_Sony_ObjectAdded			0xC201
+/* c202 ... unclear. also called with object id? */
+#define PTP_EC_Sony_PropertyChanged		0xC203
+
 /* MTP Event codes */
 #define PTP_EC_MTP_ObjectPropChanged		0xC801
 #define PTP_EC_MTP_ObjectPropDescChanged	0xC802
@@ -1996,7 +2001,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_ExposeIndex			0xD216
 #define PTP_DPC_SONY_PictureEffect			0xD21B
 #define PTP_DPC_SONY_ABFilter				0xD21C
+#define PTP_DPC_SONY_ISO				0xD21E /* ? */
 /* also seen: D2C3 D2C4 */
+/* semi control opcodes */
+#define PTP_DPC_SONY_Movie				0xD2C8 /* ? */
+#define PTP_DPC_SONY_StillImage				0xD2C7 /* ? */
+
 
 
 /* Casio EX-F1 */

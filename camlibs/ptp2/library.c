@@ -3217,7 +3217,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	}
 
 	propval.u16 = 2;
-	ret = ptp_sony_setdevicecontrolvalueb (params, 0xD2C7, &propval, PTP_DTC_UINT16 );
+	ret = ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &propval, PTP_DTC_UINT16 );
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
@@ -3231,7 +3231,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			return translate_ptp_result (ret);
 		if (ptp_get_one_event(params, &event)) {
 			gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "during event.code=%04x Param1=%08x", event.Code, event.Param1);
-			if (event.Code == 0xc201) {
+			if (event.Code == PTP_EC_Sony_ObjectAdded) {
 				newobject = event.Param1;
 				if (dual)
 					ptp_add_event (params, &event);
@@ -4136,7 +4136,7 @@ downloadnow:
 handleregular:
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
 		switch (event.Code) {
-		case 0xc201: {
+		case PTP_EC_Sony_ObjectAdded: {
 			PTPObjectInfo	oi;
 			static int capcnt = 0;
 
@@ -4160,7 +4160,7 @@ handleregular:
 			}
 			return ret;
 		}
-		case 0xc203: /* same as DevicePropChanged, just go there */
+		case PTP_EC_Sony_PropertyChanged: /* same as DevicePropChanged, just go there */
 			event.Code = PTP_EC_DevicePropChanged;
 			break;
 		}
