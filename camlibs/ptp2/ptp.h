@@ -1995,6 +1995,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_DPCCompensation			0xD200
 #define PTP_DPC_SONY_DRangeOptimize			0xD201
 #define PTP_DPC_SONY_ImageSize				0xD203
+#define PTP_DPC_SONY_ShutterSpeed			0xD20D
 #define PTP_DPC_SONY_ColorTemp				0xD20F
 #define PTP_DPC_SONY_CCFilter				0xD210
 #define PTP_DPC_SONY_AspectRatio			0xD211

@@ -847,7 +847,7 @@ outofmemory:
 #define PTP_dpd_Sony_DevicePropertyCode	0
 #define PTP_dpd_Sony_DataType		2
 #define PTP_dpd_Sony_GetSet		4
-#define PTP_dpd_Sony_Unknown		4
+#define PTP_dpd_Sony_Unknown		5
 #define PTP_dpd_Sony_FactoryDefaultValue	6
 
 static inline int
@@ -858,7 +858,12 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
+
+#if 0
 	dpd->GetSet=dtoh8a(&data[PTP_dpd_Sony_GetSet]);
+#endif
+	dpd->GetSet=1;
+
 	dpd->FormFlag=PTP_DPFF_None;
 
 	*poffset = PTP_dpd_Sony_FactoryDefaultValue;

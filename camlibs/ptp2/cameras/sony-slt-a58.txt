@@ -178,3 +178,700 @@ Current: 1
 Label: PTP Property 0xd303
 Type: TEXT
 Current: 1
+Kamerazusammenfassung:
+Hersteller: Sony Corporation
+Modell: SLT-A58
+  Version: 1.0
+  Seriennummer: 00000000000000008436653504538948
+Vendor Extension ID: 0x11 (1.0)
+Beschreibung der Vendor Extension: Sony PTP Extensions
+
+Aufnahmeformate: 
+Anzeigeformate: JPEG, Unknown(b301), Unknown(b101)
+
+Fähigkeiten des Geräts:
+	Dateien Download, kein Löschen von Dateien, kein Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Sony Capture
+Informationen über Speichermedium:
+
+Properties des Geräts:
+Kompressions Parameter(0x5004):(readwrite) (type=0x2) Enumeration [2,3,16,19] value: JPEG Basic (0)
+Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32785,32784,6,32769,32770,32771,32772,7,32786,32803] value: 0
+F-Nummer(0x5007):(read only) (type=0x4) Range [0 - 65535, step 1] value: f/0 (0)
+Fokusmodus(0x500a):(read only) (type=0x4) Enumeration [1,2,3,32772,32773,32775] value: 0
+Belichtungsmessmodus(0x500b):(read only) (type=0x4) Enumeration [4,1,2] value: 0
+Blitzmodus(0x500c):(read only) (type=0x4) Enumeration [2,1,4,3,5,32771,32772,32817,32818] value: Fill flash (3)
+Belichtungs Programm Modus(0x500e):(read only) (type=0x4) Enumeration [32768,32769,2,3,4,1,32848,32849,32850,32851,32833,7,32785,32789,32788,32786,32787,32790,32791,32864,32817,32819,32880] value: M (1)
+Belichtungskompensation(0x5010):(read only) (type=0x3) Enumeration [0,3000,2700,2300,2000,1700,1300,1000,700,300,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000] value: 0,0 stops (0)
+Bildaufnahme Modus(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32786,32773,32772,33591,33655,33553,33569,33585,33590,33654,33552,33568,33584,32792,32808] value: 0
+Property 0xd200:(read only) (type=0x3) Enumeration [0,2000,1700,1300,1000,700,300,-300,-700,-1000,-1300,-1700,-2000] value: 0
+Property 0xd201:(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21,32,33,34,35,36,37,38] value: 0
+Property 0xd203:(readwrite) (type=0x2) Enumeration [1,2,3] value: 0
+Property 0xd20d:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 0
+Property 0xd20e:(read only) (type=0x2) Enumeration [1,2,3,8,9,10,4,5,6,7] value: 5
+Property 0xd20f:(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 0
+Property 0xd210:(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+Property 0xd21c:(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+Property 0xd211:(readwrite) (type=0x2) Enumeration [1,2] value: 0
+Property 0xd213:(read only) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
+Property 0xd21e:(read only) (type=0x6) Enumeration [16777215,25,100,200,400,800,1600,3200,6400,12800,16000,102400,33554431,16777241,16777266,16777280,16777296,16777316,16777341,16777376,16777416,16777466,16777536,16777616,16777716,16777856,16778016,16778216,16778466,16778816,16779216,16779716,16780416,16781216,16782216,16783616,16785216,16787216,16790016,16793216,16802816] value: 0
+Property 0xd21b:(readwrite) (type=0x4) Enumeration [32768,32769,32770,32771,32772,32773,32784,32800,32801,32816,32832,32848,32849,32850,32851,32864,32880,32881,32882,32896,32897,32898,32912,32928,32929,32930,32931,32932,32933,32934] value: 32768
+Property 0xd21d:(read only) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd217:(read only) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd218:(read only) (type=0x1) Range [-1 - 100, step 1] value: 43
+Property 0xd219:(read only) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd214:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 28236800
+Property 0xd215:(read only) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd220:(read only) (type=0x0) Undefined
+
+/main/actions/movie
+Label: Film Aufnahme
+Type: TOGGLE
+Current: 2
+/main/status/serialnumber
+Label: Seriennummer
+Type: TEXT
+Current: 00000000000000008436653504538948
+/main/status/manufacturer
+Label: Kamera Hersteller
+Type: TEXT
+Current: Sony Corporation
+/main/status/cameramodel
+Label: Kameramodell
+Type: TEXT
+Current: SLT-A58
+/main/status/deviceversion
+Label: Version des Gerätes
+Type: TEXT
+Current: 1.0
+/main/status/vendorextension
+Label: Hersteller Erweiterung
+Type: TEXT
+Current: Sony PTP Extensions
+/main/imgsettings/imagesize
+Label: Bildgröße
+Type: RADIO
+Current: Groß
+Choice: 0 Groß
+Choice: 1 Mittel
+Choice: 2 Klein
+/main/imgsettings/colortemperature
+Label: Farbtemperatur
+Type: TEXT
+Current: 0
+/main/imgsettings/whitebalance
+Label: Weißabgleich
+Type: RADIO
+Current: Automatisch
+Choice: 0 Automatisch
+Choice: 1 Tageslicht
+Choice: 2 Schatten
+Choice: 3 Wolkig
+Choice: 4 Kunstlicht - Glühlampe
+Choice: 5 Fluorescent: Warm White
+Choice: 6 Fluorescent: Cold White
+Choice: 7 Fluorescent: Day White
+Choice: 8 Fluorescent: Daylight
+Choice: 9 Blitz
+Choice: 10 Wähle Farbtemperatur
+Choice: 11 Voreinstellung
+/main/capturesettings/exposurecompensation
+Label: Belichtungskompensation
+Type: RADIO
+Current: 0
+Choice: 0 0
+Choice: 1 3000
+Choice: 2 2700
+Choice: 3 2300
+Choice: 4 2000
+Choice: 5 1700
+Choice: 6 1300
+Choice: 7 1000
+Choice: 8 700
+Choice: 9 300
+Choice: 10 -300
+Choice: 11 -700
+Choice: 12 -1000
+Choice: 13 -1300
+Choice: 14 -1700
+Choice: 15 -2000
+Choice: 16 -2300
+Choice: 17 -2700
+Choice: 18 -3000
+/main/capturesettings/flashmode
+Label: Blitzmodus
+Type: RADIO
+Current: Auffüll Blitz
+Choice: 0 Blitz aus
+Choice: 1 Automatischer Blitz
+Choice: 2 automatische Rote-Augen-Vermeidung
+Choice: 3 Auffüll Blitz
+Choice: 4 Rote-Augen-Blitz Füllmodus
+Choice: 5 Unbekannter Wert 8003
+Choice: 6 Unbekannter Wert 8004
+Choice: 7 Unbekannter Wert 8031
+Choice: 8 Unbekannter Wert 8032
+/main/capturesettings/f-number
+Label: F-Nummer
+Type: RANGE
+Current: 4,5
+Bottom: 0
+Top: 655,35
+Step: 0,01
+/main/capturesettings/imagequality
+Label: Bildqualität
+Type: RADIO
+Current: Standard
+Choice: 0 Standard
+Choice: 1 Fein
+Choice: 2 RAW
+Choice: 3 RAW+JPEG
+/main/capturesettings/focusmode
+Label: Fokusmodus
+Type: RADIO
+Current: Unbekannter Wert 8005
+Choice: 0 Manuell
+Choice: 1 Automatisch
+Choice: 2 Automatischer Makro
+Choice: 3 Unbekannter Wert 8004
+Choice: 4 Unbekannter Wert 8005
+Choice: 5 Unbekannter Wert 8007
+/main/capturesettings/expprogram
+Label: Belichtungs Programm
+Type: RADIO
+Current: M
+Choice: 0 Unbekannter Wert 8000
+Choice: 1 Unbekannter Wert 8001
+Choice: 2 P
+Choice: 3 A
+Choice: 4 S
+Choice: 5 M
+Choice: 6 Unbekannter Wert 8050
+Choice: 7 Unbekannter Wert 8051
+Choice: 8 Unbekannter Wert 8052
+Choice: 9 Unbekannter Wert 8053
+Choice: 10 Unbekannter Wert 8041
+Choice: 11 Portrait
+Choice: 12 Unbekannter Wert 8011
+Choice: 13 Unbekannter Wert 8015
+Choice: 14 Unbekannter Wert 8014
+Choice: 15 Unbekannter Wert 8012
+Choice: 16 Unbekannter Wert 8013
+Choice: 17 Unbekannter Wert 8016
+Choice: 18 Unbekannter Wert 8017
+Choice: 19 Unbekannter Wert 8060
+Choice: 20 Unbekannter Wert 8031
+Choice: 21 Unbekannter Wert 8033
+Choice: 22 Unbekannter Wert 8070
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Type: RADIO
+Current: 16:9
+Choice: 0 16:9
+Choice: 1 3:2
+/main/capturesettings/capturemode
+Label: Bildaufnahme Modus
+Type: RADIO
+Current: Bracketing WB Hi
+Choice: 0 Einzelbild
+Choice: 1 Mehrbild
+Choice: 2 Kontinuierlicher Langsame Geschwindigkeit
+Choice: 3 Selftimer 2s
+Choice: 4 Selftimer 10s
+Choice: 5 Bracketing C 0.3 Steps
+Choice: 6 Bracketing C 0.7 Steps
+Choice: 7 Bracketing C 1.0 Steps
+Choice: 8 Bracketing C 2.0 Steps
+Choice: 9 Bracketing C 3.0 Steps
+Choice: 10 Bracketing S 0.3 Steps
+Choice: 11 Bracketing S 0.7 Steps
+Choice: 12 Bracketing S 1.0 Steps
+Choice: 13 Bracketing S 2.0 Steps
+Choice: 14 Bracketing S 3.0 Steps
+Choice: 15 Bracketing WB Lo
+Choice: 16 Bracketing WB Hi
+/main/capturesettings/exposuremetermode
+Label: Belichtungsmessmodus
+Type: RADIO
+Current: Durchschnitt
+Choice: 0 Zentral Punkt
+Choice: 1 Durchschnitt
+Choice: 2 Mittelpunkt/Gewichtet
+/main/other/5004
+Label: Kompressions Parameter
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 3
+Choice: 2 16
+Choice: 3 19
+/main/other/5005
+Label: Weißabgleich
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 32785
+Choice: 3 32784
+Choice: 4 6
+Choice: 5 32769
+Choice: 6 32770
+Choice: 7 32771
+Choice: 8 32772
+Choice: 9 7
+Choice: 10 32786
+Choice: 11 32803
+/main/other/5007
+Label: F-Nummer
+Type: RANGE
+Current: 450
+Bottom: 0
+Top: 65535
+Step: 1
+/main/other/500a
+Label: Fokusmodus
+Type: MENU
+Current: 32773
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 32772
+Choice: 4 32773
+Choice: 5 32775
+/main/other/500b
+Label: Belichtungsmessmodus
+Type: MENU
+Current: 1
+Choice: 0 4
+Choice: 1 1
+Choice: 2 2
+/main/other/500c
+Label: Blitzmodus
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 1
+Choice: 2 4
+Choice: 3 3
+Choice: 4 5
+Choice: 5 32771
+Choice: 6 32772
+Choice: 7 32817
+Choice: 8 32818
+/main/other/500e
+Label: Belichtungs Programm Modus
+Type: MENU
+Current: 1
+Choice: 0 32768
+Choice: 1 32769
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 1
+Choice: 6 32848
+Choice: 7 32849
+Choice: 8 32850
+Choice: 9 32851
+Choice: 10 32833
+Choice: 11 7
+Choice: 12 32785
+Choice: 13 32789
+Choice: 14 32788
+Choice: 15 32786
+Choice: 16 32787
+Choice: 17 32790
+Choice: 18 32791
+Choice: 19 32864
+Choice: 20 32817
+Choice: 21 32819
+Choice: 22 32880
+/main/other/5010
+Label: Belichtungskompensation
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 3000
+Choice: 2 2700
+Choice: 3 2300
+Choice: 4 2000
+Choice: 5 1700
+Choice: 6 1300
+Choice: 7 1000
+Choice: 8 700
+Choice: 9 300
+Choice: 10 -300
+Choice: 11 -700
+Choice: 12 -1000
+Choice: 13 -1300
+Choice: 14 -1700
+Choice: 15 -2000
+Choice: 16 -2300
+Choice: 17 -2700
+Choice: 18 -3000
+/main/other/5013
+Label: Bildaufnahme Modus
+Type: MENU
+Current: 32808
+Choice: 0 1
+Choice: 1 2
+Choice: 2 32786
+Choice: 3 32773
+Choice: 4 32772
+Choice: 5 33591
+Choice: 6 33655
+Choice: 7 33553
+Choice: 8 33569
+Choice: 9 33585
+Choice: 10 33590
+Choice: 11 33654
+Choice: 12 33552
+Choice: 13 33568
+Choice: 14 33584
+Choice: 15 32792
+Choice: 16 32808
+/main/other/d200
+Label: PTP Property 0xd200
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2000
+Choice: 2 1700
+Choice: 3 1300
+Choice: 4 1000
+Choice: 5 700
+Choice: 6 300
+Choice: 7 -300
+Choice: 8 -700
+Choice: 9 -1000
+Choice: 10 -1300
+Choice: 11 -1700
+Choice: 12 -2000
+/main/other/d201
+Label: PTP Property 0xd201
+Type: MENU
+Current: 31
+Choice: 0 1
+Choice: 1 31
+Choice: 2 17
+Choice: 3 18
+Choice: 4 19
+Choice: 5 20
+Choice: 6 21
+Choice: 7 32
+Choice: 8 33
+Choice: 9 34
+Choice: 10 35
+Choice: 11 36
+Choice: 12 37
+Choice: 13 38
+/main/other/d203
+Label: PTP Property 0xd203
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+/main/other/d20d
+Label: PTP Property 0xd20d
+Type: RANGE
+Current: 65736
+Bottom: 0
+Top: 4,29497e+09
+Step: 1
+/main/other/d20e
+Label: PTP Property 0xd20e
+Type: MENU
+Current: 5
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 8
+Choice: 4 9
+Choice: 5 10
+Choice: 6 4
+Choice: 7 5
+Choice: 8 6
+Choice: 9 7
+/main/other/d20f
+Label: PTP Property 0xd20f
+Type: RANGE
+Current: 0
+Bottom: 2500
+Top: 9900
+Step: 100
+/main/other/d210
+Label: PTP Property 0xd210
+Type: MENU
+Current: 128
+Choice: 0 121
+Choice: 1 122
+Choice: 2 123
+Choice: 3 124
+Choice: 4 125
+Choice: 5 126
+Choice: 6 127
+Choice: 7 128
+Choice: 8 129
+Choice: 9 130
+Choice: 10 131
+Choice: 11 132
+Choice: 12 133
+Choice: 13 134
+Choice: 14 135
+/main/other/d21c
+Label: PTP Property 0xd21c
+Type: MENU
+Current: 128
+Choice: 0 121
+Choice: 1 122
+Choice: 2 123
+Choice: 3 124
+Choice: 4 125
+Choice: 5 126
+Choice: 6 127
+Choice: 7 128
+Choice: 8 129
+Choice: 9 130
+Choice: 10 131
+Choice: 11 132
+Choice: 12 133
+Choice: 13 134
+Choice: 14 135
+/main/other/d211
+Label: PTP Property 0xd211
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+/main/other/d213
+Label: PTP Property 0xd213
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 5
+Choice: 4 6
+Choice: 5 7
+/main/other/d21e
+Label: PTP Property 0xd21e
+Type: MENU
+Current: 16777215
+Choice: 0 16777215
+Choice: 1 25
+Choice: 2 100
+Choice: 3 200
+Choice: 4 400
+Choice: 5 800
+Choice: 6 1600
+Choice: 7 3200
+Choice: 8 6400
+Choice: 9 12800
+Choice: 10 16000
+Choice: 11 102400
+Choice: 12 33554431
+Choice: 13 16777241
+Choice: 14 16777266
+Choice: 15 16777280
+Choice: 16 16777296
+Choice: 17 16777316
+Choice: 18 16777341
+Choice: 19 16777376
+Choice: 20 16777416
+Choice: 21 16777466
+Choice: 22 16777536
+Choice: 23 16777616
+Choice: 24 16777716
+Choice: 25 16777856
+Choice: 26 16778016
+Choice: 27 16778216
+Choice: 28 16778466
+Choice: 29 16778816
+Choice: 30 16779216
+Choice: 31 16779716
+Choice: 32 16780416
+Choice: 33 16781216
+Choice: 34 16782216
+Choice: 35 16783616
+Choice: 36 16785216
+Choice: 37 16787216
+Choice: 38 16790016
+Choice: 39 16793216
+Choice: 40 16802816
+/main/other/d21b
+Label: PTP Property 0xd21b
+Type: MENU
+Current: 32768
+Choice: 0 32768
+Choice: 1 32769
+Choice: 2 32770
+Choice: 3 32771
+Choice: 4 32772
+Choice: 5 32773
+Choice: 6 32784
+Choice: 7 32800
+Choice: 8 32801
+Choice: 9 32816
+Choice: 10 32832
+Choice: 11 32848
+Choice: 12 32849
+Choice: 13 32850
+Choice: 14 32851
+Choice: 15 32864
+Choice: 16 32880
+Choice: 17 32881
+Choice: 18 32882
+Choice: 19 32896
+Choice: 20 32897
+Choice: 21 32898
+Choice: 22 32912
+Choice: 23 32928
+Choice: 24 32929
+Choice: 25 32930
+Choice: 26 32931
+Choice: 27 32932
+Choice: 28 32933
+Choice: 29 32934
+/main/other/d21d
+Label: PTP Property 0xd21d
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+/main/other/d217
+Label: PTP Property 0xd217
+Type: MENU
+Current: 1
+Choice: 0 2
+Choice: 1 1
+/main/other/d218
+Label: PTP Property 0xd218
+Type: MENU
+Current: 43
+Choice: 0 -1
+Choice: 1 0
+Choice: 2 1
+Choice: 3 2
+Choice: 4 3
+Choice: 5 4
+Choice: 6 5
+Choice: 7 6
+Choice: 8 7
+Choice: 9 8
+Choice: 10 9
+Choice: 11 10
+Choice: 12 11
+Choice: 13 12
+Choice: 14 13
+Choice: 15 14
+Choice: 16 15
+Choice: 17 16
+Choice: 18 17
+Choice: 19 18
+Choice: 20 19
+Choice: 21 20
+Choice: 22 21
+Choice: 23 22
+Choice: 24 23
+Choice: 25 24
+Choice: 26 25
+Choice: 27 26
+Choice: 28 27
+Choice: 29 28
+Choice: 30 29
+Choice: 31 30
+Choice: 32 31
+Choice: 33 32
+Choice: 34 33
+Choice: 35 34
+Choice: 36 35
+Choice: 37 36
+Choice: 38 37
+Choice: 39 38
+Choice: 40 39
+Choice: 41 40
+Choice: 42 41
+Choice: 43 42
+Choice: 44 43
+Choice: 45 44
+Choice: 46 45
+Choice: 47 46
+Choice: 48 47
+Choice: 49 48
+Choice: 50 49
+Choice: 51 50
+Choice: 52 51
+Choice: 53 52
+Choice: 54 53
+Choice: 55 54
+Choice: 56 55
+Choice: 57 56
+Choice: 58 57
+Choice: 59 58
+Choice: 60 59
+Choice: 61 60
+Choice: 62 61
+Choice: 63 62
+Choice: 64 63
+Choice: 65 64
+Choice: 66 65
+Choice: 67 66
+Choice: 68 67
+Choice: 69 68
+Choice: 70 69
+Choice: 71 70
+Choice: 72 71
+Choice: 73 72
+Choice: 74 73
+Choice: 75 74
+Choice: 76 75
+Choice: 77 76
+Choice: 78 77
+Choice: 79 78
+Choice: 80 79
+Choice: 81 80
+Choice: 82 81
+Choice: 83 82
+Choice: 84 83
+Choice: 85 84
+Choice: 86 85
+Choice: 87 86
+Choice: 88 87
+Choice: 89 88
+Choice: 90 89
+Choice: 91 90
+Choice: 92 91
+Choice: 93 92
+Choice: 94 93
+Choice: 95 94
+Choice: 96 95
+Choice: 97 96
+Choice: 98 97
+Choice: 99 98
+Choice: 100 99
+Choice: 101 100
+/main/other/d219
+Label: PTP Property 0xd219
+Type: MENU
+Current: 1
+Choice: 0 2
+Choice: 1 1
+/main/other/d214
+Label: PTP Property 0xd214
+Type: RANGE
+Current: 2,82368e+07
+Bottom: 0
+Top: 4,29497e+09
+Step: 1
+/main/other/d215
+Label: PTP Property 0xd215
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 65535
+Step: 1
+/main/other/d220
+Label: PTP Property 0xd220
+Type: TEXT
+Current: (null)

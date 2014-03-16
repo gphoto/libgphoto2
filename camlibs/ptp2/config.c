@@ -2266,8 +2266,8 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("RAW + Tiny JPEG (S3)"),		0x04f3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Tiny JPEG (S3)"),		0x14f3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Tiny JPEG (S3)"),		0x24f3, 0 }, /*Canon EOS 5D Mark III*/
-/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
-   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
+	/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
+	   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
 };
 GENERIC16TABLE(Canon_EOS_ImageFormat,canon_eos_image_format)
 
@@ -2341,6 +2341,67 @@ _put_ISO(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Sony_ISO(CONFIG_GET_ARGS) {
+	int i;
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[50];
+
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x00ffffffU) {
+			sprintf(buf,_("Auto ISO"));
+		} else if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x01ffffffU) {
+			sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
+		} else {
+			if (dpd->FORM.Enum.SupportedValue[i].u32 & 0xff000000) {
+				sprintf(buf,_("%d Multi Frame Noise Reduction"),dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff);
+			} else {
+				sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32);
+			}
+		}
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
+			gp_widget_set_value (*widget,buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Sony_ISO(CONFIG_PUT_ARGS)
+{
+	int ret;
+	char *value;
+	unsigned int	u;
+
+	ret = gp_widget_get_value (widget, &value);
+	if (ret != GP_OK)
+		return ret;
+	if (!strcmp(value,_("Auto ISO"))) {
+		propval->u32 = 0x00ffffff;
+		return GP_OK;
+	}
+	if (!strcmp(value,_("Auto ISO Multi Frame Noise Reduction"))) {
+		propval->u32 = 0x01ffffff;
+		return GP_OK;
+	}
+
+	if (!sscanf(value, "%ud", &u))
+		return GP_ERROR;
+
+	if (strstr(value,_("Multi Frame Noise Reduction")))
+		u |= 0x10000;
+	propval->u32 = u;
+	return GP_OK;
+}
+
+
+static int
 _get_Milliseconds(CONFIG_GET_ARGS) {
 	unsigned int i, min, max;
 
@@ -2390,8 +2451,8 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 			sprintf (buf, "%0.3fs", i/1000.0);
 			gp_widget_add_choice (*widget, buf);
 			if (	((dpd->DataType == PTP_DTC_UINT32) && (dpd->CurrentValue.u32 == i)) ||
-				((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
-			)
+					((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
+			   )
 				gp_widget_set_value (*widget, buf);
 		}
 
@@ -2399,7 +2460,7 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-static int
+	static int
 _put_Milliseconds(CONFIG_PUT_ARGS)
 {
 	int ret;
@@ -2424,50 +2485,117 @@ static int
 _get_FNumber(CONFIG_GET_ARGS) {
 	int i;
 
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+	gp_log (GP_LOG_DEBUG, "ptp2/config", "get_FNumber");
+	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range)))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
 
-		sprintf(buf,"f/%g",(dpd->FORM.Enum.SupportedValue[i].u16*1.0)/100.0);
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget,buf);
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
+
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			char	buf[20];
+
+			sprintf(buf,"f/%g",(dpd->FORM.Enum.SupportedValue[i].u16*1.0)/100.0);
+			gp_widget_add_choice (*widget,buf);
+			if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
+				gp_widget_set_value (*widget,buf);
+		}
+		gp_log (GP_LOG_DEBUG, "ptp2/config", "get_FNumber via enum");
+	} else { /* Range */
+		float value_float;
+
+		gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
+		gp_widget_set_range (*widget,
+				dpd->FORM.Range.MinimumValue.u16/100.0,
+				dpd->FORM.Range.MaximumValue.u16/100.0,
+				dpd->FORM.Range.StepSize.u16/100.0
+				);
+		value_float = dpd->CurrentValue.u16/100.0;
+		gp_widget_set_value (*widget, &value_float);
+		gp_log (GP_LOG_DEBUG, "ptp2/config", "get_FNumber via float");
 	}
-	return (GP_OK);
+	return GP_OK;
 }
 
-static int
+	static int
 _put_FNumber(CONFIG_PUT_ARGS)
 {
 	int	ret, i;
-	char	*value;
-	float	f;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
-	if (strstr (value, "f/") == value)
-		value += strlen("f/");
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		char	*value;
+		float	f;
 
-        for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
+		ret = gp_widget_get_value (widget, &value);
+		if (ret != GP_OK)
+			return ret;
+		if (strstr (value, "f/") == value)
+			value += strlen("f/");
 
-		sprintf(buf,"%g",(dpd->FORM.Enum.SupportedValue[i].u16*1.0)/100.0);
-		if (!strcmp (buf, value)) {
-			propval->u16 = dpd->FORM.Enum.SupportedValue[i].u16;
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			char	buf[20];
+
+			sprintf(buf,"%g",(dpd->FORM.Enum.SupportedValue[i].u16*1.0)/100.0);
+			if (!strcmp (buf, value)) {
+				propval->u16 = dpd->FORM.Enum.SupportedValue[i].u16;
+				return GP_OK;
+			}
+		}
+		if (sscanf(value, "%g", &f)) {
+			propval->u16 = f*100;
 			return GP_OK;
 		}
-        }
-	if (sscanf(value, "%g", &f)) {
-		propval->u16 = f*100;
-		return GP_OK;
+	} else { /* RANGE uses float */
+		float fvalue;
+
+		ret = gp_widget_get_value (widget, &fvalue);
+		propval->u16 = fvalue*100;
+		return ret;
 	}
 	return GP_ERROR;
+}
+
+	static int
+_put_Sony_FNumber(CONFIG_PUT_ARGS)
+{
+	int			ret;
+	float			fvalue;
+	uint16_t		origval;
+	PTPPropertyValue	value;
+	PTPParams		*params = &(camera->pl->params);
+	GPContext 		*context = ((PTPData *) params->data)->context;
+
+	ret = gp_widget_get_value (widget, &fvalue);
+	if (ret != GP_OK) return ret;
+
+	do {
+		origval = dpd->CurrentValue.u16;
+
+		if (dpd->CurrentValue.u16 < fvalue*100)
+			value.u8 = 0x01;
+		else
+			value.u8 = 0xff;
+		CPR (context, ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_FNumber, &value, PTP_DTC_UINT8 ));
+		/* FIXME: value does not change inbetween here for some reason */
+		CPR (context, ptp_sony_getalldevicepropdesc (params));
+		CPR (context, ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
+		if (dpd->CurrentValue.u16 == fvalue*100) {
+			gp_log (GP_LOG_DEBUG, "_put_Sony_FNumber", "Value matched");
+			break;
+		}
+		/* if it did not change, better abort */
+		if (dpd->CurrentValue.u16 == origval) {
+			gp_log (GP_LOG_DEBUG, "_put_Sony_FNumber", "value did not change (%d vs target %d), guessing failure", origval, (int)(fvalue*100));
+			break;
+		}
+	} while (1);
+
+	propval->u16 = fvalue*100; /* probably not used */
+	return ret;
 }
 
 static int
@@ -2758,6 +2886,18 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Continuous Low Speed"),	0x8012, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s"),		0x8005, PTP_VENDOR_SONY},
 	{ N_("Selftimer 10s"),		0x8004, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.3 Steps"),	0x8337, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.7 Steps"),	0x8377, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 1.0 Steps"),	0x8311, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 2.0 Steps"),	0x8321, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 3.0 Steps"),	0x8331, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.3 Steps"),	0x8336, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.7 Steps"),	0x8376, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 1.0 Steps"),	0x8310, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 2.0 Steps"),	0x8320, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 3.0 Steps"),	0x8330, PTP_VENDOR_SONY},
+	{ N_("Bracketing WB Lo"),	0x8018, PTP_VENDOR_SONY},
+	{ N_("Bracketing WB Hi"),	0x8028, PTP_VENDOR_SONY},
 /*
 	{ N_("Continuous"),		0x8001, PTP_VENDOR_CASIO},
 	{ N_("Prerecord"),		0x8002, PTP_VENDOR_CASIO},
@@ -5924,6 +6064,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_EOS_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
+	{ N_("ISO Speed"), "iso", PTP_DPC_SONY_ISO, PTP_VENDOR_SONY, PTP_DTC_UINT32, _get_Sony_ISO, _put_Sony_ISO},
 	{ N_("ISO Auto"), "isoauto", PTP_DPC_NIKON_ISO_Auto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_EOS_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_WhiteBalance, _put_Canon_EOS_WhiteBalance},
@@ -5974,6 +6115,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Command B Value"), "flashcommandbvalue", PTP_DPC_NIKON_FlashCommandBValue, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_FlashCommandXValue, _put_Nikon_FlashCommandXValue},
 	{ N_("AF Area Illumination"), "af-area-illumination", PTP_DPC_NIKON_AFAreaIllumination, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_AFAreaIllum, _put_Nikon_AFAreaIllum},
 	{ N_("AF Beep Mode"), "afbeep", PTP_DPC_NIKON_BeepOff, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OffOn_UINT8, _put_Nikon_OffOn_UINT8},
+	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_FNumber, _put_Sony_FNumber},
 	{ N_("F-Number"), "f-number", PTP_DPC_FNumber, 0, PTP_DTC_UINT16, _get_FNumber, _put_FNumber},
 	{ N_("Flexible Program"), "flexibleprogram", PTP_DPC_NIKON_FlexibleProgram, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Range_INT8, _put_Range_INT8},
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, 0, PTP_DTC_UINT8, _get_CompressionSetting, _put_CompressionSetting},
