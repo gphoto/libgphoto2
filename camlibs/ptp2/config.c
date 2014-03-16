@@ -4985,7 +4985,7 @@ _put_Sony_Movie(CONFIG_PUT_ARGS)
 		value.u16 = 2;
 	else
 		value.u16 = 1;
-        CPR (context, ptp_sony_setdevicecontrolvalueb (params, 0xD2C8, &propval, PTP_DTC_UINT16 ));
+        CPR (context, ptp_sony_setdevicecontrolvalueb (params, 0xD2C8, &value, PTP_DTC_UINT16 ));
 	return GP_OK;
 }
 static int
