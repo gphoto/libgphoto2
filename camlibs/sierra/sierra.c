@@ -279,9 +279,12 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.port     = GP_PORT_SERIAL;
 		if ((sierra_cameras[x].usb_vendor  > 0) &&
 		    (sierra_cameras[x].usb_product > 0)) {
+#ifdef linux
+			/* The USB SCSI generic passthrough driver only works on Linux currently */
 			if (sierra_cameras[x].flags & (SIERRA_WRAP_USB_OLYMPUS|SIERRA_WRAP_USB_PENTAX|SIERRA_WRAP_USB_NIKON))
 			    a.port |= GP_PORT_USB_SCSI;
                         else
+#endif
 			    a.port |= GP_PORT_USB;
 		}
 		a.speed[0] = 9600;
