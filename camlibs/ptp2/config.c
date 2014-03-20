@@ -2451,7 +2451,7 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 			sprintf (buf, "%0.3fs", i/1000.0);
 			gp_widget_add_choice (*widget, buf);
 			if (	((dpd->DataType == PTP_DTC_UINT32) && (dpd->CurrentValue.u32 == i)) ||
-					((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
+				((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
 			   )
 				gp_widget_set_value (*widget, buf);
 		}
@@ -2460,7 +2460,7 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-	static int
+static int
 _put_Milliseconds(CONFIG_PUT_ARGS)
 {
 	int ret;
@@ -2521,7 +2521,7 @@ _get_FNumber(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-	static int
+static int
 _put_FNumber(CONFIG_PUT_ARGS)
 {
 	int	ret, i;
@@ -2559,7 +2559,7 @@ _put_FNumber(CONFIG_PUT_ARGS)
 	return GP_ERROR;
 }
 
-	static int
+static int
 _put_Sony_FNumber(CONFIG_PUT_ARGS)
 {
 	int			ret;
@@ -5208,7 +5208,6 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val, ret;
-	GPContext *context = ((PTPData *) params->data)->context;
 
 	ret = gp_widget_get_value (widget, &val);
 	if (ret != GP_OK)
