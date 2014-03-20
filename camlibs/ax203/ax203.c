@@ -649,6 +649,7 @@ static int ax203_read_parameter_block(Camera *camera)
 		if (i < 0) return i;
 		switch (i) {
 		case 0:
+		case 1:
 			camera->pl->width  = 320;
 			camera->pl->height = 240;
 			break;
@@ -935,6 +936,11 @@ int ax3003_read_v3_5_x_fileinfo(Camera *camera, int idx,
 			       camera->pl->fs_start +
 					AX3003_ABFS_FILE_OFFSET (idx),
 			       &raw, sizeof(raw)))
+
+	if (raw.address == 0xffff || raw.size == 0xffff) {
+		memset(fileinfo, 0, sizeof(*fileinfo));
+		return GP_OK;
+	}
 
 	fileinfo->present = raw.address && raw.size;
 	fileinfo->address = be16toh (raw.address) * 0x100;
