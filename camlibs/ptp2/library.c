@@ -2087,6 +2087,11 @@ camera_exit (Camera *camera, GPContext *context)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture (camera, context);
 		}
+		/* get the Nikon out of control mode again */
+		if (params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
+			ptp_nikon_setcontrolmode (params, 0);
+			params->controlmode = 0;
+		}
 
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
@@ -2534,7 +2539,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	/* Nilon V and J seem to like that */
 	if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
 		ret = ptp_nikon_setcontrolmode (params, 1);
-		if (ret != PTP_RC_OK) {
+		/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
+		if ((ret != PTP_RC_OK) && (ret != PTP_RC_NIKON_ChangeCameraModeFailed)) {
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result (ret);
 		}
@@ -3483,7 +3489,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)
 	) {
 		ret = ptp_nikon_setcontrolmode (params, 1);
-		if (ret != PTP_RC_OK) {
+		/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
+		if ((ret != PTP_RC_OK) && (ret != PTP_RC_NIKON_ChangeCameraModeFailed)) {
 			report_result(context, ret, params->deviceinfo.VendorExtensionID);
 			return translate_ptp_result (ret);
 		}
