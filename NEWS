@@ -4,19 +4,20 @@ all:
 * Lots of small fixes to build with mingw32.
 
 ptp2:
-* Sony SLT DSLR support: sdram capture, tethering, triggering movie capture, property reading
-* Nikon DSLR: bulb mode implemented in newer DSLRs (D600/D7100/D5200 and later).
+* Sony SLT DSLR support: SDRAM capture, Tethering, Triggering movie capture, property reading
+* Nikon DSLR: bulb mode implemented in newer DSLRs (D600/D7100/D5200 and later)
 * Nikon capture adjustments (always set controlmode before capture).
 * Nikon capture in "live view mode" no longer does autofocus, use "autofocusdrive".
 * Nikon "applicationmode" setting added.
 * Nikon Coolpix capture failure on empty cards fixed.
 * Some Canon EOS 5D Mark III config adjustments/additions.
 * Canon EOS: enable trigger capture 
+* Olympus E-series capture: some improvements.
 * ptp2: implemented device property description caching
 * New IDs
   - Sony DSC-W510, SLT-A58 (control)
   - Nikon P80 v1.1
-  - Canon A3500IS, A1400, SX170IS, SX510HS, 
+  - Canon A3500IS, A1400, SX170IS, SX510HS, A2200
   - Fuji FinePix S4850, JX370, S4850
   - Apple iPhone 5
 
