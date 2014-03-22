@@ -3562,6 +3562,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	     ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		uint32_t	result;
+		int tries = 10;
 
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
@@ -3604,7 +3605,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			ret = ptp_check_eos_events (params);
 			if (ret != PTP_RC_OK)
 				break;
-		} while (params->eos_camerastatus == 0);
+			usleep(2000);
+			gp_log (GP_LOG_DEBUG, "ptp2/eos_trigger", "eos_camerastatus is %d", params->eos_camerastatus);
+		} while (tries-- && (params->eos_camerastatus != 1));
 
 		return GP_OK;
 	}
@@ -3835,6 +3838,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS: {
 					char *x;
+
+					/* if we do capture stuff, camerastatus will turn to 0 when done */
+					if (!entry.u.status) {
+						*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+						*eventdata = NULL;
+						return;
+					}
 					x = malloc(strlen("Camera Status 123456789012345")+1);
 					if (x) {
 						sprintf (x, "Camera Status %d", entry.u.status);

@@ -271,6 +271,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "seteventmode 1 failed!");
 		return translate_ptp_result (ret);
 	}
+	params->eos_camerastatus = -1;	/* aka unknown */
 
 	/* Get the initial bulk set of event data */
 	ret = ptp_check_eos_events (params);
