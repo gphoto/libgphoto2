@@ -930,6 +930,14 @@ outofmemory:
 
 static inline void
 duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uint16_t type) {
+	if (type == PTP_DTC_STR) {
+		if (src->str)
+			dst->str = strdup(src->str);
+		else
+			dst->str = NULL;
+		return;
+	}
+
 	if (type & PTP_DTC_ARRAY_MASK) {
 		unsigned int i;
 
@@ -952,7 +960,6 @@ duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uin
 	case PTP_DTC_INT128:	dst->i128 = src->i128; break;
 	case PTP_DTC_UINT128:	dst->u128 = src->u128; break;
 #endif
-	case PTP_DTC_STR: 	dst->str = strdup(src->str); break;
 	default:		break;
 	}
 	return;
@@ -966,8 +973,8 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 	dst->DataType		= src->DataType;
 	dst->GetSet		= src->GetSet;
 	
-	duplicate_PropertyValue (&src->FactoryDefaultValue, &dst->FactoryDefaultValue, dst->DataType);
-	duplicate_PropertyValue (&src->CurrentValue, &dst->CurrentValue, dst->DataType);
+	duplicate_PropertyValue (&src->FactoryDefaultValue, &dst->FactoryDefaultValue, src->DataType);
+	duplicate_PropertyValue (&src->CurrentValue, &dst->CurrentValue, src->DataType);
 
 	dst->FormFlag		= src->FormFlag;
 	switch (src->FormFlag) {

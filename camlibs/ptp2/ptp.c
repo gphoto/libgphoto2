@@ -3093,7 +3093,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 
 		time(&now);
 		params->deviceproperties[i].timestamp = now;
-		duplicate_DevicePropDesc(dpd, &params->deviceproperties[i].desc);
+		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
 		return PTP_RC_OK;
 	}
 
