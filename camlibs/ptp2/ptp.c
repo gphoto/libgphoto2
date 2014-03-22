@@ -721,8 +721,9 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd)
 
 static int
 parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
-	xmlNodePtr next;
-	int	cnt;
+	xmlNodePtr	next;
+	int		cnt;
+	unsigned int	i;
 
 	cnt = 0;
 	next = xmlFirstElementChild (node);
@@ -743,6 +744,25 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 		ptp_debug( params, "prop %s / 0x%04x", next->name, p);
 		parse_9301_propdesc (params, xmlFirstElementChild (next), &dpd);
 		di->DevicePropertiesSupported[cnt++] = p;
+
+		/* add to cache of device propdesc */
+		for (i=0;i<params->nrofdeviceproperties;i++)
+			if (params->deviceproperties[i].prop == p)
+				break;
+		if (i == params->nrofdeviceproperties) {
+			if (!i)
+				params->deviceproperties = malloc(sizeof(params->deviceproperties[0]));
+			else
+				params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
+			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
+			params->nrofdeviceproperties++;
+			params->deviceproperties[i].prop = p;
+		}
+		/* FIXME: free old entry */
+		/* we are not using dpd, so copy it directly to the cache */
+		time( &params->deviceproperties[i].timestamp);
+		params->deviceproperties[i].desc = dpd;
+
 		next = xmlNextElementSibling (next);
 	}
 	return PTP_RC_OK;
