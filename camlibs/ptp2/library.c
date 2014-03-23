@@ -6731,6 +6731,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				}
 			}
 		}
+		free (tmp);
 	}
 	if (changed) ptp_objects_sort (params);
 
