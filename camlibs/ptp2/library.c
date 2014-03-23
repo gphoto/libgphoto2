@@ -3843,7 +3843,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if (!entry.u.status) {
 						*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 						*eventdata = NULL;
-						return;
+						return GP_OK;
 					}
 					x = malloc(strlen("Camera Status 123456789012345")+1);
 					if (x) {
