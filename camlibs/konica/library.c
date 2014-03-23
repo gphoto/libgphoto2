@@ -736,6 +736,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
                                 gp_widget_add_choice (widget, name);
                 }
                 gp_widget_set_value (widget, _("None selected"));
+                gp_system_closedir (d);
         }
 
         /* TV output format */
