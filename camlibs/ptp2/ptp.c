@@ -1078,6 +1078,7 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 		}
 	}
 	dpd->DataType = PTP_DTC_UNDEF;
+	dpd->FormFlag = PTP_DPFF_None;
 }
 
 
@@ -2983,6 +2984,8 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 			params->nrofdeviceproperties++;
 			params->deviceproperties[i].prop = propcode;
+		} else {
+			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 		}
 		params->deviceproperties[i].desc = dpd;
 #if 0
