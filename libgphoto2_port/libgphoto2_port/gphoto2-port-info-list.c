@@ -248,7 +248,9 @@ foreach_func (const char *filename, lt_ptr data)
 	}
 
 	result = lib_list (list);
+#if !defined(VALGRIND)
 	lt_dlclose (lh);
+#endif
 	if (result < 0) {
 		gp_log (GP_LOG_DEBUG, "gphoto2-port-info-list",
 			_("Could not load port driver list: '%s'."),

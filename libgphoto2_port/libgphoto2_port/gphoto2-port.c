@@ -167,8 +167,10 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		port->pc->ops = NULL;
 	}
 	if (port->pc->lh) {
+#if !defined(VALGRIND)
 		lt_dlclose (port->pc->lh);
 		lt_dlexit ();
+#endif
 	}
 
 	lt_dlinit ();
@@ -348,8 +350,10 @@ gp_port_free (GPPort *port)
 		}
 
 		if (port->pc->lh) {
+#if !defined(VALGRIND)
 			lt_dlclose (port->pc->lh);
 			lt_dlexit ();
+#endif
 			port->pc->lh = NULL;
 		}
 
