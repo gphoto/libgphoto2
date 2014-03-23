@@ -757,6 +757,8 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 			params->nrofdeviceproperties++;
 			params->deviceproperties[i].prop = p;
+		} else {
+			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 		}
 		/* FIXME: free old entry */
 		/* we are not using dpd, so copy it directly to the cache */
@@ -1075,6 +1077,7 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 			free (dpd->FORM.Enum.SupportedValue);
 		}
 	}
+	dpd->DataType = PTP_DTC_UNDEF;
 }
 
 
@@ -1137,6 +1140,11 @@ ptp_free_params (PTPParams *params) {
 	}
 	free (params->canon_props);
 	free (params->backlogentries);
+
+	for (i=0;i<params->nrofdeviceproperties;i++)
+		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
+	free (params->deviceproperties);
+
 	ptp_free_DI (&params->deviceinfo);
 }
 
@@ -2486,14 +2494,17 @@ ptp_canon_eos_getobjectinfoex (
 
 	*nrofentries = dtoh32a(data);
 	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
-	if (!*entries)
+	if (!*entries) {
+		free (data);
 		return PTP_RC_GeneralError;
+	}
 
 	xdata = data+sizeof(uint32_t);
 	for (i=0;i<*nrofentries;i++) {
 		ptp_unpack_Canon_EOS_FE (params, &xdata[4], &((*entries)[i]));
 		xdata += dtoh32a(xdata);
 	}
+	free (data);
 	return PTP_RC_OK;
 }
 
@@ -3088,6 +3099,8 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 			duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
 			return PTP_RC_OK;
 		}
+		/* free cached entry as we will refetch it. */
+		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
