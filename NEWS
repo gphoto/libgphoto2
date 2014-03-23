@@ -1,7 +1,4 @@
-libgphoto2 2.5.3.2 release
-
-all:
-* Lots of small fixes to build with mingw32.
+libgphoto2 2.5.4 release
 
 ptp2:
 * Sony SLT DSLR support: SDRAM capture, Tethering, Triggering movie capture, property reading
@@ -30,6 +27,9 @@ sierra:
 
 libusb1:
 * fixed timeout detection for USB interrupts
+
+all:
+* Lots of small fixes to build with mingw32.
 
 Translations updates:
 * Danish, Spanish, French, Dutch, Polish, Russian, Serbian, Ukrainian,
