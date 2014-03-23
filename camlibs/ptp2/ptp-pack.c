@@ -942,7 +942,7 @@ duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uin
 		unsigned int i;
 
 		dst->a.count = src->a.count;
-		dst->a.v = malloc (sizeof(src->a.v)*src->a.count);
+		dst->a.v = malloc (sizeof(src->a.v[0])*src->a.count);
 		for (i=0;i<src->a.count;i++)
 			duplicate_PropertyValue (&src->a.v[i], &dst->a.v[i], type & ~PTP_DTC_ARRAY_MASK);
 		return;
