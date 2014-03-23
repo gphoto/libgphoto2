@@ -300,8 +300,10 @@ gp_camera_exit (Camera *camera, GPContext *context)
 	memset (camera->functions, 0, sizeof (CameraFunctions));
 
 	if (camera->pc->lh) {
+#if !defined(VALGRIND)
 		lt_dlclose (camera->pc->lh);
 		lt_dlexit ();
+#endif
 		camera->pc->lh = NULL;
 	}
 

@@ -272,7 +272,10 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			continue;
 		}
 
+		/* do not free the library in valgrind mode */
+#if !defined(VALGRIND) 
 		lt_dlclose (lh);
+#endif
 
 		new_count = gp_abilities_list_count (list);
 		if (new_count < 0)
