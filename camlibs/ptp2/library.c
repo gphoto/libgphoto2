@@ -1108,6 +1108,10 @@ static struct {
 	{"Nikon:D3 (PTP mode)",		  0x04b0, 0x041c, PTP_CAP},
 	/* irc reporter Benjamin Schindler */
 	{"Nikon:DSC D60 (PTP mode)",	  0x04b0, 0x041e, PTP_CAP},
+
+	/* pbj304 pbj@ecs.soton.ac.uk */
+	{"Nikon:DSC D3x (PTP mode)",	  0x04b0, 0x0420, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Will Stephenson at SUSE and wstephenson@flickr */
 	{"Nikon:DSC D90 (PTP mode)",	  0x04b0, 0x0421, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Borrowed D700 by deckel / marcus at SUSE */
