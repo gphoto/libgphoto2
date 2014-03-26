@@ -2947,6 +2947,25 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 }
 
 uint16_t
+ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode, PTPDevicePropDesc *dpd) {
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned char	*xdata = NULL;
+	unsigned int 	xsize,len = 0;
+
+	PTP_CNT_INIT(ptp);
+	ptp.Code	= PTP_OC_SONY_GetDevicePropdesc;
+	ptp.Nparam	= 1;
+	ptp.Param1	= propcode;
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize); 
+	/* first 16 bit is 0xc8 0x00, then an array of 16 bit PTP ids */
+	if (ret == PTP_RC_OK)
+        	ret = ptp_unpack_Sony_DPD(params,xdata,dpd,xsize,&len);
+	free (xdata);
+	return ret;
+}
+
+uint16_t
 ptp_sony_getalldevicepropdesc (PTPParams* params)
 {
 	PTPContainer		ptp;
@@ -3121,6 +3140,19 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
 		return PTP_RC_OK;
 	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_GetDevicePropdesc)
+	) {
+		ret = ptp_sony_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc);
+		if (ret != PTP_RC_OK)
+			return ret;
+
+		time(&now);
+		params->deviceproperties[i].timestamp = now;
+		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+		return PTP_RC_OK;
+	}
+
 
 	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
 		ret = ptp_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc);

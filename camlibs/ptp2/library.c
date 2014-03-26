@@ -1613,6 +1613,9 @@ static struct {
 	/* Marcus Meissner */
 	{"Canon:PowerShot A3500IS",		0x04a9, 0x3261, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Canon Powershot A2600 */
+	{"Canon:PowerShot A2600",		0x04a9, 0x3262, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Andrés Farfán <nafraf@linuxmail.org> */
 	{"Canon:PowerShot A1400",		0x04a9, 0x3264, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -3213,15 +3216,13 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 
-	ret = ptp_sony_getalldevicepropdesc (params);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
-
 	ret = ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
+
 	gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
 	gp_log (GP_LOG_DEBUG, "ptp2/sony_capture", "dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+
 	if (dpd.CurrentValue.u8 == 0)
 		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
 	if (dpd.CurrentValue.u8 == 0x13) {
@@ -3235,10 +3236,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		return translate_ptp_result (ret);
 
 	for (tries = 0; tries < 100; tries++) {
-		ret = ptp_sony_getalldevicepropdesc (params);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
-
+		if (ptp_operation_issupported(params, PTP_OC_SONY_GetAllDevicePropData)) {
+			ret = ptp_sony_getalldevicepropdesc (params);
+			if (ret != PTP_RC_OK)
+				return translate_ptp_result (ret);
+		}
 		ret = ptp_check_event (params);
 		if (ret != PTP_RC_OK)
 			return translate_ptp_result (ret);
@@ -3899,7 +3901,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			CPR (context, ptp_check_event (params));
 			if (ptp_get_one_event(params, &event)) {
 				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
-				switch (event.Code) {
+			switch (event.Code) {
 				case PTP_EC_CANON_RequestObjectTransfer: {
 					CameraFilePath *path;
 					PTPObjectInfo	oi;
