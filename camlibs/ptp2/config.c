@@ -4851,7 +4851,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		ret;
 	char		*val;
 	PTPParams	*params = &(camera->pl->params);
-	/*uint32_t	output;*/
+	uint32_t	output;
 	char 		*scriptoutput;
 
 	ret = gp_widget_get_value (widget, &val);
@@ -4860,7 +4860,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	ret = ptp_chdk_switch_mode (params, 1);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-#if 0
+#if 1
 	ret = ptp_chdk_exec_lua (params, val, &output);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
