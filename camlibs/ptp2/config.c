@@ -487,8 +487,10 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 		for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
 			if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
 				continue;
-			if ((prop & 0xf000) == 0x5000) /* generic property */
-				return 1;
+			if ((prop & 0xf000) == 0x5000) { /* generic property */
+				if (!vendor || (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
+					return 1;
+			}
 			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
 				return 1;
 		}
