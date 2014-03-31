@@ -2343,6 +2343,9 @@ struct _PTPParams {
 	PTPContainer	*events;
 	int		nrofevents;
 
+	/* live view enabled */
+	int			inliveview;
+
 	/* PTP: Device Property Caching */
 	PTPDeviceProperty	*deviceproperties;
 	unsigned int		nrofdeviceproperties;
@@ -2357,7 +2360,6 @@ struct _PTPParams {
 	PTPCanon_changes_entry	*backlogentries;
 	unsigned int		nrofbacklogentries;
 	int			eos_captureenabled;
-	int			eos_viewfinderenabled;
 	int			eos_camerastatus;
 
 	/* PTP: Nikon specifics */

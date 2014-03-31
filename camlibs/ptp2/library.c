@@ -2090,7 +2090,7 @@ camera_exit (Camera *camera, GPContext *context)
 				}
 				camera->pl->checkevents = 0;
 			}
-			if (params->eos_viewfinderenabled)
+			if (params->inliveview)
 				ptp_canon_eos_end_viewfinder (params);
 			camera_unprepare_capture (camera, context);
 		}
@@ -2239,7 +2239,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if (ret != PTP_RC_OK)
 				return translate_ptp_result (ret);
 
-			params->eos_viewfinderenabled = 1;
+			params->inliveview = 1;
 			while (tries--) {
 				/* Poll for camera events, but just call
 				 * it once and do not drain the queue now */
@@ -2361,6 +2361,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				SET_CONTEXT_P(params, NULL);
 				return translate_ptp_result (ret);
 			}
+			params->inliveview = 1;
 		}
 		tries = 20;
 		while (tries--) {
@@ -2527,14 +2528,14 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
  */
 static int
 camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-		uint32_t af, GPContext *context)
+		uint32_t af, int sdram, GPContext *context)
 {
 	static int capcnt = 0;
 	PTPObjectInfo		oi;
 	PTPParams		*params = &camera->pl->params;
 	PTPDevicePropDesc	propdesc;
 	PTPPropertyValue	propval;
-	int			inliveview, i, ret, hasc101 = 0, burstnumber = 1;
+	int			i, ret, hasc101 = 0, burstnumber = 1;
 	uint32_t		newobject;
 
 	if (type != GP_CAPTURE_IMAGE)
@@ -2580,12 +2581,12 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	/* if in liveview mode, we have to run non-af capture */
-	inliveview = 0;
+	params->inliveview = 0;
 	if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
 		if (ret == PTP_RC_OK)
-			inliveview = propval.u8;
-		if (inliveview) af = 0;
+			params->inliveview = propval.u8;
+		if (params->inliveview) af = 0;
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
@@ -2595,7 +2596,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		goto capturetriggered;
 	}
 
-	if (!inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+	if (!params->inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
 		do {
 			ret = ptp_nikon_capture_sdram(params);
 		} while (ret == PTP_RC_DeviceBusy);
@@ -2649,6 +2650,10 @@ capturetriggered:
 				}
 				break;
 			case PTP_EC_CaptureComplete:
+				if (params->inliveview) {
+					gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "Capture complete ... restarting liveview");
+					ret = ptp_nikon_start_liveview (params);
+				}
 				hasc101=1;
 				break;
 			default:
@@ -3297,19 +3302,32 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	SET_CONTEXT_P(params, context);
 	camera->pl->checkevents = TRUE;
 
+	/* 3rd gen style nikon capture, can do both sdram and card */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
+	) {
+		char buf[1024];
+		int sdram = 0;
+
+		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
+			sdram = 1;
+
+		return camera_nikon_capture (camera, type, path, 1, sdram, context);
+	}
+
+	/* 1st gen, 2nd gen nikon capture only go to SDRAM */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		(ptp_operation_issupported(params, PTP_OC_NIKON_Capture) ||
-		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM) ||
-		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
+		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM)
 	)) {
 		int ret = GP_ERROR_NOT_SUPPORTED;
 		char buf[1024];
 
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
-			ret = camera_nikon_capture (camera, type, path, 1, context);
+			ret = camera_nikon_capture (camera, type, path, 1, 1, context);
 		if (ret != GP_ERROR_NOT_SUPPORTED)
 			 return ret;
-		/* for unsupported combination, fall through */
+		/* for CARD capture and unsupported combinations, fall through */
 	}
 
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
@@ -3480,12 +3498,17 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	PTPParams *params = &camera->pl->params;
 	uint16_t	ret;
 	char buf[1024];
+	int sdram = 0;
+
 
 	SET_CONTEXT_P(params, context);
 
 	/* If there is no capturetarget set yet, the default is "sdram" */
 	if (GP_OK != gp_setting_get("ptp2","capturetarget",buf))
 		strcpy (buf, "sdram");
+
+	if (!strcmp(buf,"sdram"))
+		sdram = 1;
 
 	gp_log (GP_LOG_DEBUG, "ptp2/trigger_capture", "Triggering capture to %s", buf);
 
@@ -3503,13 +3526,40 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		params->controlmode = 1;
 	}
 
+	/* Nikon 2 */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
+	) {
+		/* If in liveview mode, we have to run non-af capture */
+		int inliveview = 0;
+		PTPPropertyValue propval;
+
+		CPR (context, ptp_check_event (params));
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		CPR (context, ptp_check_event (params));
+
+		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
+			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
+			if (ret == PTP_RC_OK)
+				inliveview = propval.u8;
+		}
+
+		do {
+			ret = ptp_nikon_capture2 (params, !inliveview, sdram);
+			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+				return translate_ptp_result (ret);
+			/* sleep a bit perhaps ? or check events? */
+		} while (ret == PTP_RC_DeviceBusy);
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		return GP_OK;
+	}
 
 	/* Nikon */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		(ptp_operation_issupported(params, PTP_OC_NIKON_Capture) ||
 		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM) 
 		)
-		&& !strcmp (buf, "sdram")
+		&& sdram
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
@@ -3532,34 +3582,6 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				ret = ptp_nikon_capture (params, 0xffffffff);
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				return translate_ptp_result (ret);
-		} while (ret == PTP_RC_DeviceBusy);
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
-		return GP_OK;
-	}
-	/* Nikon 2 */
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
-		!strcmp (buf, "card")
-	) {
-		/* If in liveview mode, we have to run non-af capture */
-		int inliveview = 0;
-		PTPPropertyValue propval;
-
-		CPR (context, ptp_check_event (params));
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
-		CPR (context, ptp_check_event (params));
-
-		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
-			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
-			if (ret == PTP_RC_OK)
-				inliveview = propval.u8;
-		}
-
-		do {
-			ret = ptp_nikon_capture2 (params, !inliveview, 0);
-			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
-				return translate_ptp_result (ret);
-			/* sleep a bit perhaps ? or check events? */
 		} while (ret == PTP_RC_DeviceBusy);
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
 		return GP_OK;
@@ -3637,7 +3659,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		}
 
 		if (ptp_property_issupported(params, PTP_DPC_CANON_CaptureTransferMode)) {
-			if ((GP_OK == gp_setting_get("ptp2","capturetarget",buf)) && !strcmp(buf,"sdram"))
+			if (sdram)
 				propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 			else
 				propval.u16 = xmode = CANON_TRANSFER_CARD;
@@ -4109,6 +4131,10 @@ downloadnow:
 			}
 			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
 			case PTP_EC_CaptureComplete:
+				if (params->inliveview) {
+					gp_log (GP_LOG_DEBUG , "ptp/wait_event/nikon", "Capture complete ... restarting liveview");
+					ret = ptp_nikon_start_liveview (params);
+				}
 				*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 				*eventdata = NULL;
 				return GP_OK;

@@ -4992,13 +4992,13 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 	if (val) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
 			res = ptp_canon_eos_start_viewfinder (params);
-			params->eos_viewfinderenabled = 1;
+			params->inliveview = 1;
 			return translate_ptp_result (res);
 		}
 	} else {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder)) {
 			res = ptp_canon_eos_end_viewfinder (params);
-			params->eos_viewfinderenabled = 0;
+			params->inliveview = 0;
 			return translate_ptp_result (res);
 		}
 	}
