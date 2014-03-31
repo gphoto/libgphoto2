@@ -1,3 +1,12 @@
+libgphoto2 2.5.4.1 snapshot
+
+ptp2:
+* Fixed Sony SLT-A900v
+* Nikon liveview capture without autofocus enhanced, now also for card
+
+translations:
+* updated ukrainian, vietnamese, polish
+------------------------------------------------------------------------------
 libgphoto2 2.5.4 release
 
 ptp2:
