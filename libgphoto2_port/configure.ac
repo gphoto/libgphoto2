@@ -246,6 +246,13 @@ have_serial=true
 try_ttylock=true
 try_lockdev=true
 try_resmgr=true
+
+if test "$ac_cv_header_sgtty_h" = "no"
+then
+  have_serial=false
+  serial_msg=no
+fi
+
 AC_ARG_ENABLE([serial],
 	[AS_HELP_STRING([--disable-serial],
 			[do not compile in SERIAL support])],
