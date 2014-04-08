@@ -30,7 +30,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <sys/time.h>
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 #include <langinfo.h>
 #endif
 
@@ -2110,7 +2110,7 @@ camera_exit (Camera *camera, GPContext *context)
 		ptp_closesession (params);
 		ptp_free_params(params);
 
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 		/* close iconv converters */
 		if (params->cd_ucs2_to_locale != (iconv_t)-1) iconv_close(params->cd_ucs2_to_locale);
 		if (params->cd_locale_to_ucs2 != (iconv_t)-1) iconv_close(params->cd_locale_to_ucs2);
@@ -6955,7 +6955,7 @@ camera_init (Camera *camera, GPContext *context)
 
         gp_camera_get_abilities(camera, &a);
 
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	curloc = nl_langinfo (CODESET);
 	if (!curloc) curloc="UTF-8";
 	params->cd_ucs2_to_locale = iconv_open(curloc, camloc);

@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 # include <langinfo.h>
 #endif
 #ifdef HAVE_LIBGD
@@ -259,7 +259,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	int ret, in_width, in_height, in_x, in_y;
 	size_t inc, outc;
 	double aspect_in, aspect_out;
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	char *in, *out;
 #else
 	int i;
@@ -281,7 +281,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	}
 
 	/* Convert name to ASCII */
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	in = in_name;
 	out = out_name;
 	if (iconv (camera->pl->cd, &in, &inc, &out, &outc) == -1) {
@@ -594,7 +594,7 @@ camera_exit (Camera *camera, GPContext *context)
 		gp_setting_set ("st2205", "syncdatetime", buf);
 		gp_setting_set ("st2205", "orientation", orientation_to_string
 						(camera->pl->orientation));
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 		if (camera->pl->cd != (iconv_t) -1)
 			iconv_close (camera->pl->cd);
 #endif
@@ -609,7 +609,7 @@ int
 camera_init (Camera *camera, GPContext *context) 
 {
 	int i, j, ret;
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	char *curloc;
 #endif
 	char buf[256];
@@ -643,7 +643,7 @@ camera_init (Camera *camera, GPContext *context)
 			camera->pl->orientation = ret;
 	}
 
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	curloc = nl_langinfo (CODESET);
 	if (!curloc)
 		curloc="UTF-8";
