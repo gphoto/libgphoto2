@@ -161,6 +161,7 @@ dnl FIXME: Provide regex.h with the corresponding object code for
 dnl        platforms which do not have it, e.g. Windows.
 AC_CHECK_HEADER([regex.h],
                 [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],[])
+AC_CHECK_LIB([regex],[regexec])
 
 dnl ---------------------------------------------------------------------------
 dnl Apple Bonjour / mDNSResponder multicast DNS queries.
