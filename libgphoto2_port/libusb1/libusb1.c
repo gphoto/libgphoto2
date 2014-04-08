@@ -344,7 +344,9 @@ gp_port_usb_open (GPPort *port)
 	case 0:	/* not detached */
 		break;
 	default:
+#ifdef ENODATA
 		if (errno != ENODATA) /* ENODATA - just no driver there */
+#endif
 			gp_port_set_error (port, _("Could not query kernel driver of device."));
 	}
 
