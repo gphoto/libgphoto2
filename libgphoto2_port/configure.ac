@@ -353,7 +353,14 @@ AC_CHECK_LIB(pthread, pthread_create)
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
-	IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
+        case "$host" in
+          *-*-mingw* | *-*-cygwin* | *-*-msvc* )
+          dnl Windows itself has usb.h we mis-detect so don't set IOLIB_LIST
+          ;;
+          *)
+	  IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
+          ;;
+        esac
 ],[],
 		[default-on],
 		[http://libusb.sourceforge.net/]
@@ -365,7 +372,14 @@ dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		[libusb.h],[libusb_init],[
-	IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
+        case "$host" in
+          *-*-mingw* | *-*-cygwin* | *-*-msvc* )
+	  IOLIB_LIST="$IOLIB_LIST usb1"
+          ;;
+          *)
+	  IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
+          ;;
+        esac
 ],[],
 		[default-on],
 		[http://libusb.sourceforge.net/]
