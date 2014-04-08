@@ -38,6 +38,7 @@ extern "C" {
 #endif
 
 #ifdef WIN32
+#undef CAMLIBS
 #define CAMLIBS "."
 #endif
 
