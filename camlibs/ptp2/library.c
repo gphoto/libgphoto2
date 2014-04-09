@@ -7179,9 +7179,12 @@ camera_init (Camera *camera, GPContext *context)
 		ptp_getfilesystemmanifest (params, 0x00010001, 0, 0, &data);
 	}
 #endif
-	/* hmm ...
-	ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
-	 */
+
+	/* avoid doing this on the Sonys DSLRs in control mode, they hang. :( */
+
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
+		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
+
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	{
