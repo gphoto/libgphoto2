@@ -1607,6 +1607,9 @@ static struct {
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Canon:PowerShot G15",			0x04a9, 0x3258, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Andrés Farfán <nafraf@linuxmail.org> */
+	{"Canon:PowerShot SX160IS",		0x04a9, 0x325a, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot S110 (PTP Mode)",	0x04a9, 0x325b, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
