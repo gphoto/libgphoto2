@@ -124,7 +124,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 			return GP_ERROR_NOT_SUPPORTED;
 		} else {
 			out = malloc(thumbnail_width * thumbnail_height * 3);
-			thumb = input + 16;
+			thumb = (uint16_t *)(input + 16);
 			for (i = 0; i < thumbnail_width * thumbnail_height;
 									i++) {
 				thumb[i] = be16toh(thumb[i]);
