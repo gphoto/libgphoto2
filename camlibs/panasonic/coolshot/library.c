@@ -69,7 +69,9 @@
 
 
 static int coolshot_ack	(Camera *camera);
+#if 0
 static int coolshot_nak	(Camera *camera);
+#endif
 static int coolshot_sp	(Camera *camera);
 static int coolshot_fs( Camera *camera, int number );
 static int coolshot_write_packet (Camera *camera, char *packet);
@@ -597,6 +599,7 @@ int coolshot_ack (Camera *camera)
 	return (GP_ERROR_TIMEOUT);
 }
 
+#if 0
 static
 int coolshot_nak (Camera *camera)
 {
@@ -617,6 +620,7 @@ int coolshot_nak (Camera *camera)
 	}
 	return (GP_ERROR_TIMEOUT);
 }
+#endif
 
 int coolshot_enq (Camera *camera)
 {

@@ -87,6 +87,7 @@ void set_capturetarget(Camera *canon, GPContext *canoncontext) {
 }
 */
 
+#if 0
 static void
 capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 	int fd, retval;
@@ -114,6 +115,7 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 
 	gp_file_free(canonfile);
 }
+#endif
 
 int
 main(int argc, char **argv) {

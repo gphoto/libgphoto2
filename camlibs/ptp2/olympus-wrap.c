@@ -674,6 +674,7 @@ xnext:
 	return TRUE;
 }
 
+#if 0
 static int
 parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropertyValue *propval) {
 	switch (type) {
@@ -772,6 +773,7 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 	return PTP_RC_OK;
 }
 
+
 static int
 parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd) {
 	xmlNodePtr next;
@@ -859,7 +861,6 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 	return PTP_RC_OK;
 }
 
-#if 0
 static int
 parse_1015_tree (xmlNodePtr node, uint16_t type) {
 	PTPPropertyValue	propval;

@@ -67,7 +67,9 @@
 #define PUT 0
 #define GET 1
 
+#if 0
 static int quiet = 0;
+#endif
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 static iconv_t cd_locale_to_latin1;
 static iconv_t cd_latin1_to_locale;
@@ -287,6 +289,7 @@ do_cmd_turbo(Camera *camera, char *state, GPContext *context)
 	return GP_ERROR_IO;
 }
 
+#if 0
 static int
 do_cmd_reset(Camera *camera, GPContext *context)
 {
@@ -317,6 +320,7 @@ do_cmd_reset(Camera *camera, GPContext *context)
 	}
 	return GP_ERROR_IO;
 }
+#endif
 
 static int
 do_cmd_ready(Camera *camera, GPContext *context)
@@ -349,6 +353,7 @@ do_cmd_ready(Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+#if 0
 static int
 do_cancel(Camera *camera, GPContext *context)
 {
@@ -379,7 +384,7 @@ do_cancel(Camera *camera, GPContext *context)
 	}
 	return GP_ERROR_IO;
 }
-
+#endif
 
 static void
 decode_dir(Camera *camera, struct tf_packet *p, int listdirs, CameraList *list)
@@ -468,6 +473,7 @@ decode_and_get_info(Camera *camera, const char *folder, struct tf_packet *p, con
     }
 }
 
+#if 0
 static int
 do_hdd_rename(Camera *camera, char *srcPath, char *dstPath, GPContext *context)
 {
@@ -533,7 +539,7 @@ static void finalStats(uint64_t bytes, time_t startTime)
                 ((bytes * 8.0) / delta) / (1000.0 * 1000.0));
     }
 }
-
+#endif
 
 static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
