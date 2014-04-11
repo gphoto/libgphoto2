@@ -56,7 +56,6 @@
 #endif
 
 
-
 #define QUALITY_LO   0x56
 #define QUALITY_ME   0x58
 #define QUALITY_HI   0x45
@@ -108,7 +107,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
   
   Camera *camera = data;
   CameraFileInfo info;
-  int ret,n,i,nr_of_blocks;
+  int n,i,nr_of_blocks;
   int offset = 64;
   char *temp;
   char buffer[512];
@@ -122,7 +121,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
   }
   for (n = 0; n != nr_of_blocks; n++)
     {
-      ret = pccam600_read_data(camera->port, buffer);
+      CHECK(pccam600_read_data(camera->port, buffer));
       for (i = offset; i <= 512-32; i=i+32)
 	{
 	  memcpy(file_entry,&(buffer)[i],32);
@@ -168,7 +167,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	      info.file.permissions = GP_FILE_PERM_READ | GP_FILE_PERM_DELETE;
 	      info.file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS 
 		|GP_FILE_INFO_TYPE;
-	      ret = gp_filesystem_set_info_noop(fs, folder, file_entry->name, info, context);
+	      CHECK(gp_filesystem_set_info_noop(fs, folder, file_entry->name, info, context));
 	    }
 	}
 	offset = 0;
@@ -215,7 +214,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
   Camera *camera =  user_data;
   unsigned char *data = NULL;
-  int size,ret,index;
+  int size,index;
   size = 0;
   index = gp_filesystem_number(fs, folder, filename, context);
   if (index < 0)
@@ -223,7 +222,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
   switch(type)
     {
     case GP_FILE_TYPE_NORMAL:
-      ret=camera_get_file(camera, context, index, &data, &size);
+      CHECK(camera_get_file(camera, context, index, &data, &size));
       break;
     default:
       return GP_ERROR_NOT_SUPPORTED;
@@ -235,9 +234,8 @@ static int camera_summary(Camera *camera, CameraText *summary, GPContext *contex
 {
   int totalmem;
   int  freemem;
-  int ret;
   char summary_text[256];  
-  ret = pccam600_get_mem_info(camera->port,context,&totalmem,&freemem);
+  CHECK(pccam600_get_mem_info(camera->port,context,&totalmem,&freemem));
   snprintf(summary_text,sizeof(summary_text),
   	   (" Total memory is %8d bytes.\n Free memory is  %8d bytes."),
 	   totalmem,freemem );
@@ -254,12 +252,12 @@ static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 
 static int delete_file_func(CameraFilesystem *fs, const char *folder,
 			    const char *filename, void *data, GPContext *context){
-  int index,ret;
+  int index;
 
   Camera *camera = data;
   index = gp_filesystem_number(fs, folder, filename, context);
   gp_log(GP_LOG_DEBUG,"pccam","deleting '%s' in '%s'.. index:%d",filename, folder,index);
-  ret = pccam600_delete_file(camera->port, context, index);
+  CHECK(pccam600_delete_file(camera->port, context, index));
   return GP_OK;
 }
 
@@ -271,7 +269,6 @@ static CameraFilesystemFuncs fsfuncs = {
 
 int camera_init(Camera *camera, GPContext *context){
   GPPortSettings settings;
-  int ret = 0;
   camera->functions->exit         = camera_exit;
   camera->functions->summary      = camera_summary;
   camera->functions->about        = camera_about;
@@ -279,22 +276,19 @@ int camera_init(Camera *camera, GPContext *context){
   switch (camera->port->type) 
     {
     case GP_PORT_USB:
-      ret = gp_port_get_settings(camera->port,&settings);
-      if (ret < 0) return ret;
+      CHECK(gp_port_get_settings(camera->port,&settings));
       settings.usb.inep = 0x82;
       settings.usb.outep = 0x03;
       settings.usb.config = 1;
       settings.usb.interface = 1;
       settings.usb.altsetting = 0;
-      ret=gp_port_set_settings(camera->port,settings);
-      if (ret<0) return ret;
+      CHECK(gp_port_set_settings(camera->port,settings));
       break;
     case GP_PORT_SERIAL:
       return GP_ERROR_IO_SUPPORTED_SERIAL;
     default: 
       return GP_ERROR_NOT_SUPPORTED;
     }    
-  ret = pccam600_init(camera->port, context);
-  if (ret < 0) return ret;
+  CHECK(pccam600_init(camera->port, context));
   return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }

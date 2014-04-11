@@ -58,24 +58,23 @@
 static int
 pccam300_wait_for_status (GPPort *port)
 {
-	int ret;
 	int retries = 20;
 	unsigned char status = 1;
 
 	while (status != 0x00 && retries--) {
 		gp_port_set_timeout (port, 3000);
-		ret = gp_port_usb_msg_read (port, 0x06, 0x00, 0x00, &status, 1);
+		CHECK(gp_port_usb_msg_read (port, 0x06, 0x00, 0x00, &status, 1));
 		if (status == 0 || status == 8)
 			return GP_OK;
 		if (status == 0xb0) {
 			gp_port_set_timeout (port, 200000);
-			ret = gp_port_usb_msg_read (port, 0x06, 0x00, 0x00,
-						    &status, 1);
+			CHECK(gp_port_usb_msg_read (port, 0x06, 0x00, 0x00,
+						    &status, 1));
 		}
 		if (status == 0x40) {
 			gp_port_set_timeout (port, 400000);
-			ret = gp_port_usb_msg_read (port, 0x06, 0x00, 0x00,
-						    &status, 1);
+			CHECK(gp_port_usb_msg_read (port, 0x06, 0x00, 0x00,
+						    &status, 1));
 		}
 	}
 	return GP_ERROR;
@@ -132,13 +131,12 @@ pccam300_get_mem_info (GPPort *port, GPContext *context, int *totalmem,
                        int *freemem)
 {
 	unsigned char response[4];
-	int ret;
 
 	gp_port_set_timeout (port, 400000);
-	ret = gp_port_usb_msg_read (port, 0x60, 0x00, 0x02, response, 0x04);
+	CHECK (gp_port_usb_msg_read (port, 0x60, 0x00, 0x02, response, 0x04));
 	*totalmem = response[2] * 65536 + response[1] * 256 + response[0];
 	CHECK (pccam300_wait_for_status (port));
-	ret = gp_port_usb_msg_read (port, 0x60, 0x00, 0x03, response, 0x04);
+	CHECK (gp_port_usb_msg_read (port, 0x60, 0x00, 0x03, response, 0x04));
 	*freemem = response[2] * 65536 + response[1] * 256 + response[0];
 	CHECK (pccam300_wait_for_status (port));
 	return GP_OK;
