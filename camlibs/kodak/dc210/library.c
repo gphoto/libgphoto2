@@ -784,7 +784,7 @@ int dc210_set_speed (Camera *camera, int speed) {
 	unsigned char cmd[8];
 	GPPortSettings settings;
 
-	dc210_cmd_init(cmd, DC210_SET_SPEED);
+	dc210_cmd_init((char*)cmd, DC210_SET_SPEED);
 	
 	switch (speed) {
 	case 9600:
@@ -801,7 +801,7 @@ int dc210_set_speed (Camera *camera, int speed) {
 		return (GP_ERROR);
 	};
 
-	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
+	if (dc210_execute_command(camera, (char*)cmd) == GP_ERROR) return GP_ERROR;
 
 	gp_port_get_settings (camera->port, &settings);
 	settings.serial.speed = speed;
