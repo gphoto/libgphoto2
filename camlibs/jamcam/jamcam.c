@@ -218,9 +218,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 		size = strlen( ppm ) + ( height * width * 3 );
 
-		gp_bayer_decode(raw, width, height, ptr, BAYER_TILE_GBRG );
+		gp_bayer_decode((unsigned char *)raw, width, height,
+				(unsigned char *)ptr, BAYER_TILE_GBRG );
 		gp_gamma_fill_table( gtable, 0.5 );
-		gp_gamma_correct_single( gtable, ptr, height * width );
+		gp_gamma_correct_single( gtable, (unsigned char *)ptr, height * width );
 
 		CHECK_free (gp_file_set_mime_type (file, GP_MIME_PPM));
 		CHECK_free (gp_file_append (file, ppm, size));
@@ -241,10 +242,10 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 		size = strlen( ppm ) + ( jc_file->width * jc_file->height * 3 );
 
-		gp_bayer_decode( raw, jc_file->width, jc_file->height, ptr,
-			BAYER_TILE_GBRG );
+		gp_bayer_decode((unsigned char *)raw, jc_file->width, jc_file->height,
+				(unsigned char *)ptr, BAYER_TILE_GBRG );
 		gp_gamma_fill_table( gtable, 0.5 );
-		gp_gamma_correct_single( gtable, ptr, jc_file->width * jc_file->height );
+		gp_gamma_correct_single( gtable, (unsigned char *)ptr, jc_file->width * jc_file->height );
 
 		CHECK_free (gp_file_set_mime_type (file, GP_MIME_PPM));
 		CHECK_free (gp_file_append (file, ppm, size));

@@ -84,7 +84,7 @@ int spca50x_get_firmware_revision (CameraPrivateLibrary *lib);
 int spca50x_detect_storage_type (CameraPrivateLibrary *lib);
 int spca50x_reset (CameraPrivateLibrary * lib);
 int spca50x_capture (CameraPrivateLibrary * lib);
-int yuv2rgb (int y, int u, int v, int *r, int *g, int *b);
+int yuv2rgb (uint32_t y, uint32_t u, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b);
 void create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex,
 				   int w, int h, uint8_t format,
 				   int original_size, int *size,

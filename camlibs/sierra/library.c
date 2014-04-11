@@ -131,7 +131,8 @@ int sierra_change_folder (Camera *camera, const char *folder, GPContext *context
 
 int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPContext *context)
 {
-	int count, i, len = 0, r;
+	int count, i, r;
+	unsigned int len = 0;
 	char filename[1024];
 
 	GP_DEBUG ("Listing files in folder '%s'", folder);
@@ -168,7 +169,8 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	 * the list with dummy entries and return.
 	 */
 	GP_DEBUG ("Getting filename of first file");
-	r = sierra_get_string_register (camera, 79, 1, NULL, filename,
+	r = sierra_get_string_register (camera, 79, 1, NULL,
+					(unsigned char *)filename,
 					&len, context);
 	if ((r < 0) || (len <= 0) || !strcmp (filename, "        ")) {
 		CHECK (gp_list_populate (list, "P101%04i.JPG", count));
@@ -183,7 +185,8 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	for (i = 1; i < count; i++) {
 		GP_DEBUG ("Getting filename of file %i...", i + 1);
 		CHECK (sierra_get_string_register (camera, 79, i + 1, NULL,
-						   filename, &len, context));
+						   (unsigned char *)filename,
+						   &len, context));
 		if ((len <= 0) || !strcmp (filename, "        "))
 			snprintf (filename, sizeof (filename),
 				  "P101%04i.JPG", i + 1);
@@ -197,7 +200,8 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 			 GPContext *context)
 {
-	int i, j, count, bsize;
+	int j, count;
+	unsigned int i, bsize;
 	char buf[1024];
 
 	/* List the folders only if the camera supports them */
@@ -214,7 +218,8 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 		bsize = 1024;
 		GP_DEBUG ("*** getting name of folder %i", i + 1);
 		CHECK (sierra_get_string_register (camera, 84, 0, 
-						   NULL, buf, &bsize, context));
+						   NULL, (unsigned char *)buf,
+						   &bsize, context));
 
 		/* Remove trailing spaces */
 		for (j = strlen (buf) - 1; j >= 0 && buf[j] == ' '; j--)
@@ -549,7 +554,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		if ((camera->port->type & (GP_PORT_USB_SCSI|GP_PORT_USB)) && (camera->pl->flags & SIERRA_WRAP_USB_MASK))
 			result = usb_wrap_read_packet (camera->port,
 					(camera->pl->flags & SIERRA_WRAP_USB_MASK),
-					packet, blocksize);
+					(char *)packet, blocksize);
 		else
 			result = gp_port_read (camera->port, (char *)packet, blocksize);
 		if (result < 0) {
@@ -726,7 +731,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
 
-		result = sierra_read_packet (camera, buf, context);
+		result = sierra_read_packet (camera, (unsigned char *)buf, context);
 		if (result == GP_ERROR_TIMEOUT) {
 			if (++r > 2) {
 				gp_context_error (context, _("Transmission "
@@ -760,7 +765,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 		/* Write packet and read the answer */
 		CHECK (sierra_write_packet (camera, packet, context));
 		buf[0] = 0;
-		result = sierra_read_packet_wait (camera, buf, context);
+		result = sierra_read_packet_wait (camera, (char *)buf, context);
 		switch (result) {
 		case GP_ERROR_CORRUPTED_DATA:
 			if (++r > 2) {
@@ -891,7 +896,7 @@ sierra_init (Camera *camera, GPContext *context)
 	while (1) {
 
 		/* Send NUL */
-		CHECK (sierra_write_packet (camera, packet, context));
+		CHECK (sierra_write_packet (camera, (char *)packet, context));
 
 		/* Read the response */
 		ret = sierra_read_packet (camera, buf, context);
@@ -1065,16 +1070,16 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	GP_DEBUG ("sierra_get_int_register: register 0x%02x...", reg);
 
 	/* Build and send the packet. */
-	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, p));
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, (char *)p));
 	p[4] = 0x01;
 	p[5] = reg; 
-	CHECK (sierra_write_packet (camera, p, context));
+	CHECK (sierra_write_packet (camera, (char *)p, context));
 
 	while (1) {
 
 		/* Read the response */
 		buf[0] = 0;
-		CHECK (sierra_read_packet_wait (camera, buf, context));
+		CHECK (sierra_read_packet_wait (camera, (char *)buf, context));
 		GP_DEBUG ("Successfully read packet. Interpreting result "
 			  "(0x%02x)", buf[0]);
 		switch (buf[0]) {
@@ -1113,7 +1118,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 			CHECK (sierra_init (camera, context));
 			CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200,
 						 context));
-			CHECK (sierra_write_packet (camera, p, context));
+			CHECK (sierra_write_packet (camera, (char *)p, context));
 
 			break;
 
@@ -1229,7 +1234,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		CHECK (sierra_set_int_register (camera, 4, fnumber, context));
 
 	/* Build and send the request */
-	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, p));
+	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, (char *)p));
 	/* 
 	 * If the extended protocol is enabled, use code 0x06 so we can send
 	 * and receive 32k size packages, otherwise code 0x04 is used and
@@ -1243,7 +1248,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		min_progress_bytes = 2 * 1024;
 	}
 	p[5] = reg;
-	CHECK (sierra_write_packet (camera, p, context));
+	CHECK (sierra_write_packet (camera, (char *)p, context));
 
 	if (file && total > min_progress_bytes) {
 		id = gp_context_progress_start (context, total, _("Downloading data..."));
@@ -1340,7 +1345,7 @@ sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	CHECK (sierra_action (camera, SIERRA_ACTION_PREVIEW, context));
 
 	/* Retrieve the preview and set the MIME type */
-	CHECK (sierra_get_int_register (camera, 12, &size, context));
+	CHECK (sierra_get_int_register (camera, 12, (int *)&size, context));
 	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, &size,
 					   context));
 	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
@@ -1352,7 +1357,8 @@ int
 sierra_capture (Camera *camera, CameraCaptureType type,
 		CameraFilePath *filepath, GPContext *context)
 {
-	int n, len = 0, r;
+	int n, r;
+	unsigned int len = 0;
 	char filename[128];
 	char *folder;
 	int timeout;
@@ -1413,7 +1419,8 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		 * ignore errors from that.
 		 */
 		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
-						   filename, &len, context));
+						   (unsigned char *)filename,
+						   &len, context));
 		if ((len <= 0) || !strcmp (filename, "        "))
 			snprintf (filename, sizeof (filename), "P101%04i.JPG", n);
 		GP_DEBUG ("... done ('%s')", filename);
@@ -1488,7 +1495,8 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 		 * unsupported sierra commands return zero bytes.
 		 */
 		if ((sierra_get_string_register (camera, 43, n, NULL,
-				(unsigned char *) &audio_info, &value,
+				(unsigned char *) &audio_info,
+				(unsigned int *)&value,
 				context) == GP_OK) && (value != 0)) {
 			pic_info->size_audio = audio_info[0];
 		}

@@ -128,7 +128,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data;
 	CameraFileInfo info;
-	unsigned int tpages=0;
+	int32_t tpages=0;
 	int pcnt,ecnt;		/* pagecounter, entrycounter*/
 	struct traveler_toc_page toc;
 	int id;

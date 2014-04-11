@@ -647,7 +647,7 @@ spca500_flash_84D_get_file (CameraPrivateLibrary * pl,
 	char tbuf[260];		/*  for the file data blocks */
 	int i, j;		/*  general loop vars */
 	int blks;		/*  number of 256 byte blocks to fetch */
-	unsigned int sz;	/*  number of bytes in image */
+	int sz;			/*  number of bytes in image */
 	uint8_t *buf;		/*  buffer for the read data */
 	int type;		/*  type of image reported by header */
 	int w, h;		/*  width, height of file being read */

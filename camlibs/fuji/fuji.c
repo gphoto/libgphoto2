@@ -408,7 +408,7 @@ fuji_pic_name (Camera *camera, unsigned int i, const char **name,
 
 	memset (buf, 0, sizeof (buf));
 	CR (fuji_transmit (camera, cmd, 6, buf, &buf_len, context));
-	*name = buf;
+	*name = (char *)buf;
 
 	return (GP_OK);
 }
@@ -427,7 +427,7 @@ fuji_version (Camera *camera, const char **version, GPContext *context)
 
 	memset (buf, 0, sizeof (buf));
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
-	*version = buf;
+	*version = (char *)buf;
 
 	return (GP_OK);
 }
@@ -446,7 +446,7 @@ fuji_model (Camera *camera, const char **model, GPContext *context)
 
 	memset (buf, 0, sizeof (buf));
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
-	*model = buf;
+	*model = (char *)buf;
 
 	return (GP_OK);
 }
@@ -465,7 +465,7 @@ fuji_id_get (Camera *camera, const char **id, GPContext *context)
 
 	memset (buf, 0, sizeof (buf));
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));
-	*id = buf;
+	*id = (char *)buf;
 
 	return (GP_OK);
 }

@@ -486,7 +486,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	char buf[12];
 
 	GP_DEBUG ("*** PDC320_ID ***");
-	CR (pdc320_simple_command_reply (camera->port, PDC320_ID, 0, 12, buf));
+	CR (pdc320_simple_command_reply (camera->port, PDC320_ID, 0, 12, (unsigned char *)buf));
 	sprintf (summary->text, _("Model: %x, %x, %x, %x"), buf[8],buf[9],buf[10],buf[11]);
 	return (GP_OK);
 }

@@ -33,7 +33,7 @@
 
 /*convert to correct endianness */
 static int
-sx330z_fill_req(int8_t *buf, struct traveler_req *req)
+sx330z_fill_req(uint8_t *buf, struct traveler_req *req)
 {
  *((int16_t*)buf) = htole16(req->always1);     buf += 2;
  *((int16_t*)buf) = htole16(req->requesttype); buf += 2;
@@ -47,7 +47,7 @@ sx330z_fill_req(int8_t *buf, struct traveler_req *req)
 
 /*convert to correct endianness */
 static int
-sx330z_fill_ack(int8_t *buf, struct traveler_ack *ack)
+sx330z_fill_ack(uint8_t *buf, struct traveler_ack *ack)
 {
  ack->always3 = le32toh(*(int32_t*)buf);   buf += 4;
  ack->timestamp = le32toh(*(int32_t*)buf); buf += 4;
@@ -58,7 +58,7 @@ sx330z_fill_ack(int8_t *buf, struct traveler_ack *ack)
 
 /*convert to correct endianness */
 static int
-sx330z_fill_toc_page(int8_t *buf, struct traveler_toc_page *toc)
+sx330z_fill_toc_page(uint8_t *buf, struct traveler_toc_page *toc)
 {
  int cnt;
  toc->data0 = le32toh(*(int32_t*)buf);      buf += 4;
@@ -94,7 +94,7 @@ sx330z_init(Camera *camera, GPContext *context)
  * Read block described by req 
  */
 static int 
-sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, char *buf)
+sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, uint8_t *buf)
 {
  int ret;
  uint8_t trxbuf[0x20];
@@ -150,7 +150,7 @@ sx330z_get_toc_page(Camera *camera, GPContext *context, struct traveler_toc_page
 {
  int ret;
  struct traveler_req req;
- char tocbuf[0x200];
+ uint8_t tocbuf[0x200];
  
  req.always1 = 1;
  req.requesttype = SX330Z_REQUEST_TOC;	/* 0x03 */ 
@@ -179,7 +179,7 @@ int
 sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
    		 char **data, unsigned long int *size, int thumbnail)
 {
- char *dptr;
+ uint8_t *dptr;
  int pages, cnt, ret;
  struct traveler_req req;
  int found;
@@ -225,7 +225,7 @@ sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
   
  *size = 4096 * pages; 
  *data = malloc(*size);
- dptr = *data;
+ dptr = (uint8_t *)*data;
  /* load all parts */
  for (cnt = 0;cnt < pages;cnt++)
  {
@@ -253,7 +253,7 @@ sx330z_delete_file(Camera *camera, GPContext *context, const char *filename)
 {
  struct traveler_req req;
 /* struct traveler_ack ack;*/
- char trxbuf[0x20];
+ uint8_t trxbuf[0x20];
  int ret, id;
  req.always1 = 1;
  req.requesttype = SX330Z_REQUEST_DELETE;					/* Delete */
@@ -267,12 +267,12 @@ sx330z_delete_file(Camera *camera, GPContext *context, const char *filename)
  /* send delete request */
  sx330z_fill_req(trxbuf,&req);
  ret = gp_port_usb_msg_write(camera->port,
-    	USB_REQ_RESERVED, SX330Z_REQUEST_DELETE, 0, trxbuf, 0x20);		
+	USB_REQ_RESERVED, SX330Z_REQUEST_DELETE, 0, (char *)trxbuf, 0x20);
  if (ret != 0x20) return(GP_ERROR);						/* simple error handling */
  gp_context_progress_update(context, id, 1);				/* update context */
  /* read 16 Byte acknowledge packet */
  ret = gp_port_usb_msg_read(camera->port,
-    	USB_REQ_RESERVED, SX330Z_REQUEST_DELETE, 0, trxbuf, 0x10);
+	USB_REQ_RESERVED, SX330Z_REQUEST_DELETE, 0, (char *)trxbuf, 0x10);
  if (ret != 0x10) return(GP_ERROR);
  
  gp_context_progress_stop(context, id);					/* stop context */

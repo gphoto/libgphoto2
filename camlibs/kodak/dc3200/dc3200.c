@@ -156,7 +156,7 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera 		*camera = user_data;
 	unsigned char	*data = NULL;
-	long		data_len = 0;
+	long unsigned 	data_len = 0;
 	unsigned char	*ptr_data_buff;
 	char		filename[13], *ptr;
 	int		res, i;
@@ -237,7 +237,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera		*camera = user_data;
 	unsigned char	*data = NULL;
-	long		data_len = 0;
+	long unsigned	data_len = 0;
 	unsigned char	*ptr_data_buff;
 	char		filename[13];
 	int		res, i;
@@ -290,7 +290,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		/* add dot */
 		strcat(filename, ".");
 		/* copy extension, last 3 bytes*/
-		strncat(filename, ptr_data_buff+8, 3);
+		strncat(filename, (char *)ptr_data_buff+8, 3);
 		
 		if(!strstr(filename, ".JPG") && !strstr(filename, ".jpg")) {
 			ptr_data_buff += 20;
@@ -316,7 +316,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera		*camera = user_data;
 	unsigned char	*data = NULL;
-	long		data_len = 0;
+	long unsigned	data_len = 0;
 	int		res;
 
 	if(camera->pl->context)
@@ -372,7 +372,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera		*camera = user_data;
 	unsigned char	*data = NULL;
-	long		data_len = 0;
+	long unsigned	data_len = 0;
 	int		res;
 	char		file[1024];
 

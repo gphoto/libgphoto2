@@ -269,7 +269,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				buffer, SDSC_INFOSIZE));
 		if (is_null (buffer))
 			break;
-		gp_list_append(list, buffer, NULL);
+		gp_list_append(list, (char *)buffer, NULL);
 	}
 	return (GP_OK);
 }

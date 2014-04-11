@@ -397,7 +397,7 @@ static int dc210_read_single_block
   
     if (error) return GP_ERROR;
 
-    if (dc210_read_single_char(camera, &cs_read) < 0)
+    if (dc210_read_single_char(camera, (unsigned char *)&cs_read) < 0)
       return GP_ERROR;
 
     cs_computed = 0;
@@ -698,7 +698,7 @@ int dc210_format_callback(Camera * camera, CameraWidget * widget, GPContext * co
 
 static int dc210_check_battery (Camera *camera){
 
-  unsigned char cmd[8];
+  char cmd[8];
   dc210_cmd_init(cmd, DC210_CHECK_BATTERY);
 	
   if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
@@ -1174,7 +1174,7 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 	dc210_cmd_init(cmd, DC210_GET_STATUS);
 	
 	if (dc210_execute_command(camera, cmd) == GP_ERROR) return GP_ERROR;
-	if (dc210_read_single_block(camera, data, DC210_STATUS_SIZE) == GP_ERROR) return GP_ERROR;
+	if (dc210_read_single_block(camera, (unsigned char *)data, DC210_STATUS_SIZE) == GP_ERROR) return GP_ERROR;
 	if (dc210_wait_for_response(camera, 0, NULL) != DC210_COMMAND_COMPLETE) return GP_ERROR;
 
 #ifdef DEBUG

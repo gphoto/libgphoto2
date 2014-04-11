@@ -443,7 +443,7 @@ ricoh_get_pic_name (Camera *camera, GPContext *context, unsigned int n,
 	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
 
 	if (name && *name) {
-		*name = buf;
+		*name = (char *)buf;
 		buf[len] = '\0';
 	}
 
@@ -465,7 +465,7 @@ ricoh_get_pic_memo (Camera *camera, GPContext *context, unsigned int n,
 	CR (ricoh_transmit (camera, context, 0x95, p, 3, buf, &len));
 
 	if (memo && *memo) {
-		*memo = buf;
+		*memo = (char *)buf;
 		buf[len] = '\0';
 	}
 
@@ -772,10 +772,10 @@ ricoh_get_copyright (Camera *camera, GPContext *context, const char **copyright)
 	static char buf[1024];
 
 	p[0] = 0x0f;
-	CR (ricoh_transmit (camera, context, 0x51, p, 1, buf, &len));
+	CR (ricoh_transmit (camera, context, 0x51, p, 1, (unsigned char *)buf, &len));
 
 	if (copyright && *copyright) {
-		*copyright = buf;
+		*copyright = (char *)buf;
 		buf[len] = '\0';
 	}
 

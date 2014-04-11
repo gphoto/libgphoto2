@@ -391,7 +391,7 @@ QVstatus (Camera *camera, char *status)
         cmd[0] = 'D';
         cmd[1] = 'S';
         cmd[2] = STX;
-        CR (QVsend (camera, cmd, 3, status, 2));
+        CR (QVsend (camera, cmd, 3, (unsigned char *)status, 2));
 
         return (GP_OK);
 }

@@ -121,7 +121,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
   }
   for (n = 0; n != nr_of_blocks; n++)
     {
-      CHECK(pccam600_read_data(camera->port, buffer));
+      CHECK(pccam600_read_data(camera->port, (unsigned char *)buffer));
       for (i = offset; i <= 512-32; i=i+32)
 	{
 	  memcpy(file_entry,&(buffer)[i],32);
@@ -130,7 +130,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	      !((file_entry->state & 0x08) == 8) )
 	    {
 	      info.file.fields = 0;
-	      temp = &(file_entry->name)[5];
+	      temp = (char *)&(file_entry->name)[5];
 	      if (strncmp(temp,"JPG",3) == 0)
 		{
 		  memcpy(&(file_entry->name)[5],".jpg",4);

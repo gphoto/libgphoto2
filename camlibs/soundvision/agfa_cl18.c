@@ -142,7 +142,7 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
     }
 
     if (dev->file_list) free(dev->file_list);
-    dev->file_list = buffer;
+    dev->file_list = (char *)buffer;
    
     ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;

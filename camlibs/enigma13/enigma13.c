@@ -248,7 +248,7 @@ static int enigma13_download_img(Camera *camera, char *toc, int index, char **im
 
 	/* Offset for image informations .
 	Each image has 16 bytes for name and 16 for size, and others*/
-	p = toc + (index*2)*32;
+	p = (uint8_t *)toc + (index*2)*32;
 
 	/* real size from toc*/
 	aligned_size = file_size =

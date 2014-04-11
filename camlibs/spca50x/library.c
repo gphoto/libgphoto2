@@ -348,7 +348,8 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 
 	Camera *camera = user_data;
 	unsigned char *data = NULL;
-	int size, number, filetype, flash_file_count = 0;
+	int number, filetype, flash_file_count = 0;
+	unsigned int size;
 
 	CHECK (number =
 	       gp_filesystem_number (camera->fs, folder, filename, context));

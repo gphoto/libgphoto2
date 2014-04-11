@@ -165,7 +165,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int n, i;
+	int i;
+	unsigned int n;
 	const char *name;
 
 	/*
@@ -237,7 +238,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 		return GP_ERROR_BAD_PARAMETERS;
 	CR (gp_file_get_data_and_size (file, &d, &d_len));
 	CR (fuji_upload_init (camera, name, context));
-	return fuji_upload (camera, d, d_len, context);
+	return fuji_upload (camera, (unsigned char *)d, d_len, context);
 }
 
 static int

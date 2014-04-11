@@ -191,8 +191,8 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	}
 
 #ifdef _gphoto_exif_
-	exifdat.header = data;
-	exifdat.data = data + 12 ;
+	exifdat.header = (unsigned char *)data;
+	exifdat.data = (unsigned char *)data + 12 ;
 
 	if ( gpi_exif_stat(&exifdat) != 0 ) {
 		GP_DEBUG( "dimagev_get_picture::unable to stat EXIF tags");
@@ -352,7 +352,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 			return GP_ERROR_IO;
 	}
 
-	data = dimagev_ycbcr_to_ppm(ycrcb_data);
+	data = (char *)dimagev_ycbcr_to_ppm(ycrcb_data);
 	size = 14413;
 
 	gp_file_set_data_and_size (file, data, size);

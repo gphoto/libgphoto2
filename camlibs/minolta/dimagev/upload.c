@@ -139,14 +139,16 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 
 	for ( sent_packets = (unsigned char) 1 ; sent_packets < total_packets ; sent_packets++ ) {
 		if ( left_to_send > 993 ) {
-			if ( ( p = dimagev_make_packet(&(data[(sent_packets * 993) - 1]), 993, sent_packets) ) == NULL ) {
+			if ( ( p = dimagev_make_packet((unsigned char *)&(data[(sent_packets * 993) - 1]),
+						       993, sent_packets) ) == NULL ) {
 				GP_DEBUG( "dimagev_put_file::unable to allocate data packet");
 				free(p);
 				return GP_ERROR_NO_MEMORY;
 			}
 			left_to_send-=993;
 		} else {
-			if ( ( p = dimagev_make_packet(&(data[((sent_packets * 993) - 1)]), left_to_send, sent_packets) ) == NULL ) {
+			if ( ( p = dimagev_make_packet((unsigned char *)&(data[((sent_packets * 993) - 1)]),
+						       left_to_send, sent_packets) ) == NULL ) {
 				GP_DEBUG( "dimagev_put_file::unable to allocate data packet");
 				return GP_ERROR_NO_MEMORY;
 			}
