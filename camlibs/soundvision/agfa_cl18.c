@@ -33,9 +33,13 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     int ret,taken;
 
     ret=soundvision_send_command(SOUNDVISION_SETPC1,0,dev);
+    if (ret < 0) return ret;
     ret=soundvision_send_command(SOUNDVISION_SETPC2,0,dev);
+    if (ret < 0) return ret;
     ret=soundvision_send_command(SOUNDVISION_TAKEPIC3,0,dev);
+    if (ret < 0) return ret;
     ret=soundvision_send_command(SOUNDVISION_SETPC2,0,dev);
+    if (ret < 0) return ret;
     
     /*Not sure if this delay is necessary, but it was used in the windows driver*/
     /*delay(20); */
@@ -46,6 +50,7 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     taken = soundvision_photos_taken(dev);
     /*This seems to do some kind of reset, but does cause the camera to start responding again*/
     ret=soundvision_send_command(SOUNDVISION_GET_NAMES, 0, dev);
+    if (ret < 0) return ret;
 
     return GP_OK;
 }
