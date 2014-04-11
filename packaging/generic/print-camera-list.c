@@ -1279,7 +1279,8 @@ html_begin_func (const func_params_t *params, void **data) {
 
 static char*
 escape_html(const char *str) {
-	char *s, *newstr, *ns;
+	const char *s;
+	char *newstr, *ns;
 	int inc = 0;
 
 	s = str;
