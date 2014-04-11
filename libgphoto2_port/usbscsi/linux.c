@@ -176,7 +176,7 @@ gp_port_usbscsi_get_usb_id (const char *sg,
 {
 	FILE *f;
 	char c, *s, buf[32], path[PATH_MAX + 1];
-	char *xpath;
+	const char *xpath;
 
 	snprintf (path, sizeof (path), "/sys/class/scsi_generic/%s", sg);
 	xpath = gp_port_usbscsi_resolve_symlink(path);
