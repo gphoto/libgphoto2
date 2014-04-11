@@ -968,7 +968,6 @@ canon_serial_put_file (Camera *camera, CameraFile *file, const char *name, const
 		       GPContext *context)
 {
 	unsigned char *msg;
-	char filename[64];
 	char buf[4096];
 	int offset = 0;
 	char offset2[4];
@@ -976,17 +975,12 @@ canon_serial_put_file (Camera *camera, CameraFile *file, const char *name, const
 	char block_len2[4];
 	unsigned int sent = 0;
 	int i, j = 0;
-	unsigned int len, hdr_len;
+	unsigned int len;
 	unsigned long int size;
 	const char *data;
 	unsigned int id;
 
 	camera->pl->uploading = 1;
-	for (i = 0; name[i]; i++)
-		filename[i] = toupper (name[i]);
-	filename[i] = '\0';
-
-	hdr_len = HDR_FIXED_LEN + strlen (name) + strlen (destpath);
 
 	gp_file_get_data_and_size (file, &data, &size);
 

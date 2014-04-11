@@ -986,14 +986,11 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
 
 static int ipslr_press_shutter(ipslr_handle_t *p)
 {
-    int r;
-    uint32_t bufmask;
     CHECK(ipslr_status_full(p, &p->status));
-    bufmask = p->status.bufmask;
     DPRINT("before: mask=0x%x\n", p->status.bufmask);
     CHECK(ipslr_write_args(p, 1, 2));
     CHECK(command(p, 0x10, 0x05, 0x04));
-    r = get_status(p);
+    get_status(p);
     DPRINT("shutter result code: 0x%x\n", r);
     return PSLR_OK;
 }
@@ -1084,7 +1081,6 @@ static int ipslr_download(ipslr_handle_t *p, uint32_t addr, uint32_t length, uin
     uint32_t block;
     int n;
     int retry;
-    int r;
     uint32_t length_start = length;
 
     retry = 0;
@@ -1097,10 +1093,10 @@ static int ipslr_download(ipslr_handle_t *p, uint32_t addr, uint32_t length, uin
         /*DPRINT("Get 0x%x bytes from 0x%x\n", block, addr); */
         CHECK(ipslr_write_args(p, 2, addr, block));
         CHECK(command(p, 0x06, 0x00, 0x08));
-        r = get_status(p);
+        get_status(p);
 
         n = scsi_read(p, downloadCmd, sizeof(downloadCmd), buf, block);
-        r = get_status(p);
+	get_status(p);
 
         if (n < 0) {
             if (retry < BLOCK_RETRY) {

@@ -29,8 +29,8 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     /*FIXME: Not fully implemented according to the gphoto2 spec.*/
     /*Should also save taken picture, and then delete it from the camera*/
     /*but when I try to do that it just hangs*/
-        
-    int ret,taken;
+
+    int ret;
 
     ret=soundvision_send_command(SOUNDVISION_SETPC1,0,dev);
     if (ret < 0) return ret;
@@ -45,9 +45,9 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     /*delay(20); */
     sleep(20);
     /*Again, three times in windows driver*/
-    taken = soundvision_photos_taken(dev);
-    taken = soundvision_photos_taken(dev);
-    taken = soundvision_photos_taken(dev);
+    soundvision_photos_taken(dev);
+    soundvision_photos_taken(dev);
+    soundvision_photos_taken(dev);
     /*This seems to do some kind of reset, but does cause the camera to start responding again*/
     ret=soundvision_send_command(SOUNDVISION_GET_NAMES, 0, dev);
     if (ret < 0) return ret;

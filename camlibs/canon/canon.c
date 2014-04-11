@@ -2544,7 +2544,6 @@ int
 canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
 {
         unsigned char *msg;
-        unsigned char payload[4];
         unsigned int len;
 
         GP_DEBUG ("canon_int_set_owner_name() called, name = '%s'", name);
@@ -2561,7 +2560,6 @@ canon_int_set_owner_name (Camera *camera, const char *name, GPContext *context)
                         if ( camera->pl->md->model == CANON_CLASS_6 ) {
                                 msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN_2,
                                                           &len, (unsigned char *)name, strlen (name) + 1);
-                                htole32a ( payload, 0x0f );
                         }
                         else
                                 msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,

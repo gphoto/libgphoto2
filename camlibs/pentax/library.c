@@ -152,7 +152,6 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 {
 	int imagetype;
 	uint8_t buf[65536];
-	int length;
 	uint32_t current;
 
 	if (status->image_format != PSLR_IMAGE_FORMAT_JPEG) {
@@ -165,7 +164,6 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 	if ( pslr_buffer_open(camhandle, bufno, imagetype, status->jpeg_resolution) != PSLR_OK)
 		return GP_ERROR;
 
-	length = pslr_buffer_get_size(camhandle);
 	current = 0;
 	while (1) {
 		uint32_t bytes;

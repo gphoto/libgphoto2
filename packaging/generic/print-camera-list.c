@@ -220,7 +220,6 @@ hotplug_camera_func (const func_params_t *params,
 {
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
-	int usb_vendor = 0, usb_product = 0;
 	const char *usermap_script = 
 		((*params->argv)[0] != NULL)
 		?((*params->argv)[0])
@@ -233,8 +232,6 @@ hotplug_camera_func (const func_params_t *params,
 			proto = 0;
 			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
-			usb_vendor = a->usb_vendor;
-			usb_product = a->usb_product;
 		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			class = a->usb_class;
 			subclass = a->usb_subclass;
@@ -248,8 +245,6 @@ hotplug_camera_func (const func_params_t *params,
 				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
 			else
 				proto = 0;
-			usb_vendor = 0;
-			usb_product = 0;
 		}
 	} else {
 		/* not a USB camera */
@@ -574,7 +569,6 @@ udev_camera_func (const func_params_t *params,
 {
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
-	int usb_vendor = 0, usb_product = 0;
 	int has_valid_rule = 0;
 	udev_persistent_data_t *pdata = (udev_persistent_data_t *) data;
 	ASSERT(pdata != NULL);
@@ -588,8 +582,6 @@ udev_camera_func (const func_params_t *params,
 		proto = 0;
 		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
 			 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
-		usb_vendor = a->usb_vendor;
-		usb_product = a->usb_product;
 	} else {
 		if (a->usb_class) {
 			class = a->usb_class;
@@ -604,8 +596,6 @@ udev_camera_func (const func_params_t *params,
 				flags |= GP_USB_HOTPLUG_MATCH_INT_PROTOCOL;
 			else
 				proto = 0;
-			usb_vendor = 0;
-			usb_product = 0;
 		}
 	}
 

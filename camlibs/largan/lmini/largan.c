@@ -264,7 +264,7 @@ static CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	int ret, selected_speed = 0;
+	int ret;
 	GPPortSettings settings;
 
         /* First, set up all the function pointers */
@@ -286,7 +286,6 @@ camera_init (Camera *camera, GPContext *context)
 	case GP_PORT_SERIAL:
 
 		/* Remember the selected speed */
-		selected_speed = settings.serial.speed;
 
 		settings.serial.speed    = 19200;/* initial speed is 19200 */
 		settings.serial.bits     = 8;

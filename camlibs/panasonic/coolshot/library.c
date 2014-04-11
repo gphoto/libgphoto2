@@ -480,12 +480,10 @@ static
 int coolshot_read_packet (Camera *camera, char *packet) {
 	int r = 0, x = 0, ret, done, length=0;
 	int blocksize, bytes_read;
-	char buf[4096];
 
 	GP_DEBUG ("* coolshot_read_packet");
 
 read_packet_again:
-	buf[0] = 0;
 	packet[0] = 0;
 
 	if (r > 0)

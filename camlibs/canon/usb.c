@@ -935,75 +935,6 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, u
         return status;
 }
 
-/**
- * canon_usb_poll_interrupt_multiple:
- * @camera: Array of Camera's to work with
- * @n_cameras: Length of #camera
- * @camera_flags: array of int's corresponding to entries in #camera.
- *                Non-zero (true) if that camera is to be polled, zero
- *                (false) if that camera is to be ignored.
- * @buf: buffer to receive data read from the pipe.
- * @n_tries: number of times to try
- * @which: returns index of camera that responded
- *
- * Polls the interrupt pipes of several cameras either until one
- *  responds, or for a specified number of tries.
- *  We will return when:
- * 1. a non-zero length is returned,
- * 2. an error code is returned, or
- * 3. the number of read attempts reaches @n_tries.
- *
- * Returns:
- *  length of read, or
- *  zero if n_tries has been exceeded, or
- *  gphoto2 error code from read that results in an I/O error.
- *
- */
-static int
-canon_usb_poll_interrupt_multiple ( Camera *camera[], int n_cameras,
-                                        int camera_flags[],
-                                        unsigned char *buf, int n_tries,
-                                        int *which )
-{
-        int i = 0, status = 0, timeout;
-
-        memset ( buf, 0x81, 0x40 ); /* Put weird stuff in buffer */
-        *which = 0;                          /* Start with the first camera */
-
-        /* Read repeatedly until we get either an
-           error or a non-zero size. */
-        while ( status == 0 && i < n_tries ) {
-                while ( !camera_flags[*which] )
-                        *which = (*which+1) % n_cameras;
-
-		/*
-		 * Ideally this timeout code should be hoisted above the
-		 * while() loop.  But since this entire function is
-		 * dead code, I am loath to put a lot of effort into
-		 * it.  We should probably just remove the entire function.
-		 * -pjw
-		 */
-		gp_port_get_timeout ( camera[*which]->port, &timeout );
-		gp_port_set_timeout ( camera[*which]->port, CANON_FAST_TIMEOUT );
-
-                status = gp_port_check_int ( camera[*which]->port,
-					     (char *)buf, 0x40 );
-
-		gp_port_set_timeout ( camera[*which]->port, timeout );
-
-        }
-
-
-        if ( status <= 0 )
-                GP_DEBUG ( "canon_usb_poll_interrupt_multiple:"
-			   " interrupt read failed after %i tries, \"%s\"",
-                           i, gp_result_as_string(status) );
-        else
-                GP_DEBUG ( "canon_usb_poll_interrupt_multiple:"
-                           " interrupt packet took %d tries", i+1 );
-
-        return status;
-}
 
 int
 canon_usb_wait_for_event (Camera *camera, int timeout,
@@ -1415,7 +1346,6 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
         static unsigned char buffer[0x474];     /* used for receiving data from camera */
 	char *msg;
         int j, canon_subfunc = 0;
-        char subcmd = 0, *subfunct_descr = "";
         int additional_read_bytes = 0;
 
         /* clear this to indicate that no data is there if we abort */
@@ -1465,8 +1395,6 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 j = 0;
                 while (canon_usb_control_cmd[j].num != 0) {
                         if (canon_usb_control_cmd[j].subcmd == canon_subfunc) {
-                                subfunct_descr = canon_usb_control_cmd[j].description;
-                                subcmd = canon_usb_control_cmd[j].subcmd;
                                 additional_read_bytes = canon_usb_control_cmd[j].additional_return_length;
                                 break;
                         }

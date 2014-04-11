@@ -128,7 +128,6 @@ int
 main(int argc, char **argv) {
 	Camera		*camera;
 	int		retval, nrcapture = 0;
-	time_t		lastsec;
 	struct timeval	tval;
 	GPContext 	*context = sample_create_context();
 
@@ -139,7 +138,6 @@ main(int argc, char **argv) {
 	/*gp_log_add_func(GP_LOG_DATA, errordumper, NULL); */
 	gp_camera_new(&camera);
 
-	lastsec = time(NULL)-3;
 	retval = gp_camera_init(camera, context);
 	if (retval != GP_OK) {
 		printf("gp_camera_init: %d\n", retval);

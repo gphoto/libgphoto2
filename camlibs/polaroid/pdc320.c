@@ -275,7 +275,7 @@ pdc320_size (Camera *camera, int n)
 static int
 pdc320_0c (Camera *camera, int n)
 {
-	int size, csum, i;
+	int size, i;
 	unsigned char buf[3], *xbuf;
 	unsigned char cmd[2];
 	
@@ -295,7 +295,6 @@ pdc320_0c (Camera *camera, int n)
 		GP_DEBUG ("buf[%d]=0x%02x", i, xbuf[i]);
 	}
 	CR (gp_port_read (camera->port, buf, 2));
-	csum = (buf[0] << 8) | buf[1];
 	/* checksum is calculated from both, but i am not clear how. */
 	return GP_OK;
 }
@@ -305,7 +304,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 {
 	unsigned char cmd[2];
 	unsigned char buf[2048];
-	int remaining, f1, f2, i, len, checksum;
+	int remaining, f1, f2, i, len;
 	int chunksize=2000;
 
 	/* Get the size of the picture and allocate the memory */
@@ -349,7 +348,6 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 		
 		/* Read the checksum */
 		CR_FREE (gp_port_read (camera->port, buf, 2), *data);
-		checksum = (buf[0] << 8) + buf[1];
 	}
 
 	return (GP_OK);

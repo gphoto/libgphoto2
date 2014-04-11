@@ -24,7 +24,7 @@
 
 static void errordumper(GPLogLevel level, const char *domain, const char *str,
                  void *data) {
-  printf("%s\n", str);
+  printf("%s (data %p)\n", str,data);
 }
 
 /* This seems to have no effect on where images go
@@ -121,7 +121,7 @@ main(int argc, char **argv) {
 	int	i, retval;
 	GPContext *canoncontext = sample_create_context();
 
-	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
+	gp_log_add_func(GP_LOG_ERROR, errordumper, 0x4242424242);
 	gp_camera_new(&canon);
 
 	/* When I set GP_LOG_DEBUG instead of GP_LOG_ERROR above, I noticed that the

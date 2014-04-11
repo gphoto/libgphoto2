@@ -360,7 +360,6 @@ camera_cam_desc_set_widget (Camera *camera, CameraRegisterType *reg_p,
 			    CameraWidget *window, GPContext *context)
 {
 	int ind, vind, ret;
-	int mask;
 	union value_in {
 		char *charp;
 		int val;
@@ -373,7 +372,6 @@ camera_cam_desc_set_widget (Camera *camera, CameraRegisterType *reg_p,
 
 	for (ind = 0; ind < reg_p->reg_desc_cnt; ind++) {
 		reg_desc_p = &reg_p->reg_desc[ind];
-		mask = reg_desc_p->regs_mask;
 		GP_DEBUG ("window name is %s", reg_desc_p->regs_long_name);
 
 		if ((gp_widget_get_child_by_label (window,

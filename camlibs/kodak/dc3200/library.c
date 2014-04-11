@@ -198,7 +198,6 @@ int dc3200_get_data(Camera *camera, unsigned char **data, unsigned long *data_le
 	unsigned char ack[ACK_PACKET_LEN], resp[DEF_PACKET_LEN];
 	int ack_len = ACK_PACKET_LEN, resp_len = DEF_PACKET_LEN;
 	unsigned long num_left = 0;
-	unsigned long total = 0;
 	int data_start_pos = 0;
 	unsigned char *ptr_data = NULL;
 	unsigned int pid = 0;
@@ -370,7 +369,6 @@ int dc3200_get_data(Camera *camera, unsigned char **data, unsigned long *data_le
 			/* get the total list length from the data header */
 			*data_len = bytes_to_l(resp[34], resp[35], resp[36], resp[37]);
 			num_left = bytes_to_l(resp[12], resp[13], resp[14], resp[15]);
-			total = num_left;
 			data_start_pos = 39;
 			*data_len -= 1;
 

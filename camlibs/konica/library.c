@@ -1068,8 +1068,6 @@ localization_file_read (Camera *camera, const char *file_name,
         int f;
         unsigned char c[] = "\0\0";
         unsigned long line_number;
-        unsigned char checksum;
-        unsigned long fcs;
         unsigned int d;
         char path[1024];
 
@@ -1157,13 +1155,11 @@ localization_file_read (Camera *camera, const char *file_name,
         fclose (file);
 
         /* Calculate and check checksum. */
-        checksum = 0;
 	gp_log (GP_LOG_DEBUG, "konica", "Checksum not implemented!");
         /*FIXME: There's a checksum at (*data)[100]. I could not
           figure out how it is calculated. */
 
         /* Calculate and check frame check sequence. */
-        fcs = 0;
 
 	gp_log (GP_LOG_DEBUG, "konica", "Frame check sequence "
 		"not implemented!");

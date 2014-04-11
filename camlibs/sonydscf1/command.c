@@ -115,13 +115,12 @@ static int recvdata(GPPort *port, unsigned char *p, int len)
 char F1newstatus(GPPort *port, int verbose, char *return_buf)
 {
   unsigned char buf[34];
-  int i;
   char status_buf[1000]="";
   char tmp_buf[150]="";
   buf[0] = 0x03;
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
-  i = recvdata(port, buf, 33);
+  recvdata(port, buf, 33);
 #ifdef DEBUG
   fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
 #endif
@@ -172,12 +171,11 @@ int F1status(GPPort *port)
 {
 
   unsigned char buf[34];
-  int i;
 
   buf[0] = 0x03;
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
-  i = recvdata(port, buf, 33);
+  recvdata(port, buf, 33);
 #ifdef DEBUG
   fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
 #endif

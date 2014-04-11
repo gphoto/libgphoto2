@@ -120,13 +120,12 @@ int
 jl2005a_read_picture_data (Camera *camera, GPPort *port, 
 					unsigned char *data, unsigned int size) 
 {
-        char response;
 	unsigned char *to_read;
 	int maxdl = 0xfa00;
 	to_read=data;
-	response = (jl2005a_read_info_byte(port, 7) )&0xff;
+	jl2005a_read_info_byte(port, 7);
 	/* Always 0x80. Purpose unknown */
-	response = (jl2005a_read_info_byte(port, 0x0a) )&0xff;
+	jl2005a_read_info_byte(port, 0x0a);
 	/* Previous byte is 0x11 if what is to be downloaded is the first
 	 * frame in a clip, is 0x01 if it is any clip frame after the initial
 	 * one, and is zero if what is to be downloaded is a standalone photo.

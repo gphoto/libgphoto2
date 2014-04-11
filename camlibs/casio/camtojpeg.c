@@ -42,13 +42,11 @@ static unsigned int u32(const unsigned char *buf)
 
 int QVcamtojpeg(const unsigned char *cam, long int camSize, unsigned char **jpeg, long int *jpegSize)
 {
-  int areaNum;
   int ysize;
   int usize;
   int vsize;
   unsigned char *dst;
 
-  areaNum =  u16(cam);	/* areaNum == 0x03 */
   ysize = u16(cam + 2);
   usize = u16(cam + 4);
   vsize = u16(cam + 6);

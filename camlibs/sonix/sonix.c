@@ -67,7 +67,7 @@ SONIX_COMMAND (GPPort *port, char *command)
 
 int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 {
-	int i, command_done=1;
+	int i;
 	char c[6];
 	char status;
 	unsigned char reading[4];
@@ -94,7 +94,7 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 		}
 	}
 		
-	command_done = SONIX_COMMAND ( port, c);
+	SONIX_COMMAND ( port, c);
 
 
 	while (status !=2)

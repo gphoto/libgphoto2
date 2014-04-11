@@ -129,7 +129,7 @@ main(int argc, char **argv) {
 	int	retval;
 	GPContext *canoncontext = sample_create_context();
 
-	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
+	gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 	gp_camera_new(&canon);
 
 	/* When I set GP_LOG_DEBUG instead of GP_LOG_ERROR above, I noticed that the
@@ -146,6 +146,12 @@ main(int argc, char **argv) {
 	canon_enable_capture(canon, TRUE, canoncontext);
 	/*set_capturetarget(canon, canoncontext);*/
 	capture_to_file(canon, canoncontext, "foo.jpg");
+	capture_to_file(canon, canoncontext, "foo1.jpg");
+	capture_to_file(canon, canoncontext, "foo2.jpg");
+	capture_to_file(canon, canoncontext, "foo3.jpg");
+	capture_to_file(canon, canoncontext, "foo4.jpg");
+	capture_to_file(canon, canoncontext, "foo5.jpg");
+	capture_to_file(canon, canoncontext, "foo6.jpg");
 	gp_camera_exit(canon, canoncontext);
 	return 0;
 }

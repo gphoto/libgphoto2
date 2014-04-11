@@ -290,7 +290,6 @@ static int build_huffman_table(struct jdec_private *priv, const unsigned char *b
   unsigned int i, j, code, code_size, val, nbits;
   unsigned char huffsize[257], *hz;
   unsigned int huffcode[257], *hc;
-  int next_free_entry;
   int slowtable_used[16-HUFFMAN_HASH_NBITS];
 
   /*
@@ -329,7 +328,6 @@ static int build_huffman_table(struct jdec_private *priv, const unsigned char *b
   /*
    * Build the lookup table, and the slowtable if needed.
    */
-  next_free_entry = -1;
   for (i=0; huffsize[i]; i++)
    {
      val = vals[i];

@@ -522,7 +522,7 @@ spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	uint32_t start;
 	uint8_t *mybuf;
 	int size, o_size, file_size;
-	int w, h, ret;
+	int ret;
 
 	/* FIXME */
 	if (lib->bridge == BRIDGE_SPCA500)
@@ -539,8 +539,6 @@ spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 		(p[52] & 0xff) * 0x10000 + (p[51] & 0xff) * 0x100 +
 		(p[50] & 0xff);
 	qIndex = p[7] & 0x0f;
-	w = (int) ((p[8] & 0xFF) * 16);
-	h = (int) ((p[9] & 0xFF) * 16);
 
 	/* align */
 	if (size % 64 != 0)

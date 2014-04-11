@@ -28,7 +28,7 @@
 #define GP_MODULE "dimagev"
 
 int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
-	int length, total_packets, i;
+	int total_packets, i;
 	unsigned long size = 0;
 	dimagev_packet *p, *r;
 	unsigned char char_buffer, command_buffer[3];
@@ -101,7 +101,6 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	free(p);
 
 	total_packets = (int) r->buffer[0];
-	length = ( r->length - 1 );
 
 	/* Allocate an extra byte just in case. */
 	if ( ( data = malloc((size_t)((993 * total_packets) + 1)) ) == NULL ) {

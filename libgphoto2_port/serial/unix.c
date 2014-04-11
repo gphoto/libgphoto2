@@ -300,7 +300,7 @@ gp_port_library_list (GPPortInfoList *list)
 {
 	GPPortInfo info;
 	char path[1024], prefix[1024];
-	int x, fd;
+	int x;
 	struct stat s;
 #ifdef OS2
 	int r, fh, option;
@@ -334,25 +334,6 @@ gp_port_library_list (GPPortInfoList *list)
 		if ((stat (path, &s) == -1) && ((errno == ENOENT) || (errno == ENODEV)))
 			continue;
 
-#if 0
-		/* First of all, try to lock the device */
-		if (gp_port_serial_lock (NULL, path) < 0)
-			continue;
-			
-		/* Device locked. Try to open the device. */
-		fd = open (path, O_RDONLY | O_NONBLOCK);
-		if (fd < 0) {
-			gp_port_serial_unlock (NULL, path);
-			continue;
-		}
-
-		/*
-		 * Device locked and opened. Close it, unlock it, and add
-		 * it to the list.
-		 */
-		close (fd);
-		gp_port_serial_unlock (NULL, path);
-#endif
 		gp_port_info_new (&info);
 		gp_port_info_set_type (info, GP_PORT_SERIAL);
 		xname = malloc (strlen("serial:")+strlen(path)+1);

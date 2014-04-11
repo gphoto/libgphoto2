@@ -145,26 +145,26 @@ int
 gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 {
 	int x, y, bayer;
-	int p0, p1, p2, p3;
+	int p0, p1, p2;
 	int value, div ;
 
 	switch (tile) {
 	default:
 	case BAYER_TILE_RGGB:
 	case BAYER_TILE_RGGB_INTERLACED:
-		p0 = 0; p1 = 1; p2 = 2; p3 = 3;
+		p0 = 0; p1 = 1; p2 = 2;
 		break;
 	case BAYER_TILE_GRBG:
 	case BAYER_TILE_GRBG_INTERLACED:
-		p0 = 1; p1 = 0; p2 = 3; p3 = 2;
+		p0 = 1; p1 = 0; p2 = 3;
 		break;
 	case BAYER_TILE_BGGR:
 	case BAYER_TILE_BGGR_INTERLACED:
-		p0 = 3; p1 = 2; p2 = 1; p3 = 0;
+		p0 = 3; p1 = 2; p2 = 1;
 		break;
 	case BAYER_TILE_GBRG:
 	case BAYER_TILE_GBRG_INTERLACED:
-		p0 = 2; p1 = 3; p2 = 0; p3 = 1;
+		p0 = 2; p1 = 3; p2 = 0;
 		break;
 	}
 

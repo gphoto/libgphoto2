@@ -441,7 +441,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
 {
 	int retval;
-	char path_old[1024], path_new[1024], path[1024];
+	char path[1024];
 	Camera *camera = (Camera*)data;
 
 	retval = _get_path (camera->port, folder, file, path, sizeof(path));

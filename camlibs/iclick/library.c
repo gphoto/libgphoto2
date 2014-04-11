@@ -172,7 +172,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *ppm, *ptr;
 	unsigned char gtable[256];
 	int start;
-	int datasize, framesize, hdrsize, ppmsize;
+	int datasize, hdrsize, ppmsize;
 	int nb_frames=1;
 	unsigned char buf[0x8000];
 
@@ -238,9 +238,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		icl_read_picture_data(camera->port, buf, start - camera->pl->data_offset);
 		camera->pl->data_offset = start;
 	}
-
-	/* Retrieve frames */
-	framesize = datasize;
 
 	frame_data = malloc(datasize);
 	if (!frame_data) return GP_ERROR_NO_MEMORY;

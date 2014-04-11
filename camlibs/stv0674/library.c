@@ -100,7 +100,7 @@ static int setval(unsigned char* where,unsigned long val)
 int stv0674_get_image(GPPort *port, int image_no, CameraFile *file)
 {
     unsigned char header[0x200];/*block for header */
-    int x,y,size;
+    int size;
 
     int whole,remain;
 
@@ -140,9 +140,6 @@ int stv0674_get_image(GPPort *port, int image_no, CameraFile *file)
     gp_port_read(port, header, 0x200);
 
     size=(header[0x47]<<8) | header[0x48];
-
-    x=(header[0x49]<<8) | header[0x4a];
-    y=(header[0x4b]<<8) | header[0x4c];
 
     /*create data block */
     data=malloc(size);

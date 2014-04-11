@@ -563,12 +563,11 @@ static int wakeup_camera (Camera * camera)
 {
 	int num_pix;
 	/*	int i;*/
-	int ret;
 	
 	if (camera->port->type == GP_PORT_SERIAL) {
-		ret = set_serial_speed (camera, 4800);	/*wakes camera best*/
+		set_serial_speed (camera, 4800);	/*wakes camera best*/
 		num_pix = largan_get_num_pict (camera);	/*this wakes*/
-		ret = set_serial_speed (camera, 19200);	/*back to normal*/
+		set_serial_speed (camera, 19200);	/*back to normal*/
 		sleep (1);
 		num_pix = largan_get_num_pict (camera);	/*this wakes*/
 		if (num_pix >= 0){

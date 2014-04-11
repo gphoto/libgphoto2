@@ -820,7 +820,7 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 {
 	RicohMode mode;
 	unsigned char p[16], len, buf[0xff], block[0xff];
-	unsigned int pic_num, i, pr;
+	unsigned int i, pr;
 
 	CR (ricoh_get_mode (camera, context, &mode));
 	if (mode != RICOH_MODE_PLAY)
@@ -846,7 +846,6 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 	 * We just received the picture number of the new file. We don't 
 	 * need it.
 	 */
-	pic_num = buf[0] | (buf[1] << 8);
 
 	/* Now send the data */
 	pr = gp_context_progress_start (context, size, _("Uploading..."));
