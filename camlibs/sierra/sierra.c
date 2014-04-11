@@ -537,7 +537,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	char *jpeg_data = NULL;
 	int jpeg_size;
 	const char *data, *mime_type;
-	long int size;
+	long unsigned int size;
 	int download_size, audio_info[8], transferred;
 
 	/*
@@ -752,7 +752,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, const char *filename,
 	char *picture_folder;
 	int ret;
 	const char *data_file;
-	long data_size;
+	long unsigned int data_size;
 	int available_memory;
 
 	GP_DEBUG ("*** put_file_func");

@@ -409,7 +409,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	}
 	if (!data)
 		return GP_ERROR;
-	return gp_file_set_data_and_size (file, data, size);
+	return gp_file_set_data_and_size (file, (char *)data, size);
 }
 
 static int

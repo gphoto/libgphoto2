@@ -1289,7 +1289,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		*b_len += packlength;
 
 		if (file) {
-		    CHECK (gp_file_append (file, &p[4], packlength));
+		    CHECK (gp_file_append (file, (char *)&p[4], packlength));
 		    if (total > min_progress_bytes)
 			gp_context_progress_update (context, id, *b_len);
 		}
@@ -1431,7 +1431,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 int sierra_upload_file (Camera *camera, CameraFile *file, GPContext *context)
 {
 	const char *data;
-	long data_size;
+	long unsigned int data_size;
 
 	/* Put the "magic spell" in register 32 */
 	CHECK (sierra_set_int_register (camera, 32, 0x0FEC000E, context));

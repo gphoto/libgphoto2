@@ -221,7 +221,7 @@ int stv0680_get_image_raw(GPPort *port, int image_no, CameraFile *file)
 	data = malloc(size * 3);
 	gp_bayer_decode(raw,w,h,data,BAYER_TILE_GBRG_INTERLACED);
 	free(raw);
-	gp_file_append(file, data, size*3);
+	gp_file_append(file, (char *)data, size*3);
 	free(data);
 	return GP_OK;
 }
@@ -282,7 +282,7 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 	free(tmpdata2);
 	free(tmpdata1);
 	free(raw);
-	gp_file_append(file, data, 3*size);
+	gp_file_append(file, (char *)data, 3*size);
 	free(data);
 	return GP_OK;
 }
@@ -339,7 +339,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no, CameraFile *file)
 	else
 	    bayer_unshuffle_preview(rw, rh, scale, raw, data);
 	free(raw);
-	gp_file_append(file, data, size*3);
+	gp_file_append(file, (char *)data, size*3);
 	free(data);
 	return GP_OK;
 }

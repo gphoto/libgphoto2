@@ -160,14 +160,14 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		  info.file.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | GP_FILE_INFO_TYPE;
 		  strcpy(info.file.type, GP_MIME_RAW);
 		}
-	      gp_filesystem_append(fs,folder,file_entry->name,context);
+	      gp_filesystem_append(fs,folder,(char *)file_entry->name,context);
 	      info.preview.fields = 0;
 	      info.file.size = (file_entry->size[1]*256+
 				file_entry->size[0]) * 256;
 	      info.file.permissions = GP_FILE_PERM_READ | GP_FILE_PERM_DELETE;
 	      info.file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS 
 		|GP_FILE_INFO_TYPE;
-	      CHECK(gp_filesystem_set_info_noop(fs, folder, file_entry->name, info, context));
+	      CHECK(gp_filesystem_set_info_noop(fs, folder, (char *)file_entry->name, info, context));
 	    }
 	}
 	offset = 0;
@@ -227,7 +227,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
     default:
       return GP_ERROR_NOT_SUPPORTED;
     }
-  return gp_file_set_data_and_size(file, data, size);
+  return gp_file_set_data_and_size(file, (char *)data, size);
 }
 
 static int camera_summary(Camera *camera, CameraText *summary, GPContext *context)

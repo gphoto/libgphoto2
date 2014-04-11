@@ -222,7 +222,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		if (result < 0)
 			return result;
-		gp_file_append(file,buffer,SDSC_BLOCKSIZE);
+		gp_file_append(file,(char *)buffer,SDSC_BLOCKSIZE);
 		curread += SDSC_BLOCKSIZE;
 	        gp_context_progress_update(context, pid, curread);
 		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL)

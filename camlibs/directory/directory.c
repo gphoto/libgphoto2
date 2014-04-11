@@ -553,7 +553,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		exif_data_save_data (data, &buf, &buf_len);
 		exif_data_unref (data);
-		gp_file_set_data_and_size (file, buf, buf_len);
+		gp_file_set_data_and_size (file, (char *)buf, buf_len);
 		return (GP_OK);
 #endif /* HAVE_LIBEXIF */
 	default:
@@ -587,7 +587,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		}
 		curread += ret;
-		gp_file_append (file, buf, ret);
+		gp_file_append (file, (char *)buf, ret);
 		gp_context_progress_update (context, id, (1.0*curread/BLOCKSIZE));
 		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {

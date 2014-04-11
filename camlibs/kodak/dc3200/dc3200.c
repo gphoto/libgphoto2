@@ -358,7 +358,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR;
 	}
 
-	gp_file_append (file, data, data_len);
+	gp_file_append (file, (char *)data, data_len);
 
 	free(data);
 	camera->pl->context = NULL;

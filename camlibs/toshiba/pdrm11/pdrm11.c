@@ -224,7 +224,7 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	
 
 	gp_file_set_mime_type(file, GP_MIME_JPEG);
-	gp_file_set_data_and_size(file, image, size);
+	gp_file_set_data_and_size(file, (char *)image, size);
 
 	return(GP_OK);
 }

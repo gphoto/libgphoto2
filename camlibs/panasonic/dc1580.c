@@ -561,7 +561,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
 	Camera *camera = user_data;
         int             blocks, blocksize, i, result;
 	const char      *data;
-	long int        size;
+	long unsigned int size;
 	unsigned int id;
 
         gp_context_status(context, _("Uploading image: %s."), name);

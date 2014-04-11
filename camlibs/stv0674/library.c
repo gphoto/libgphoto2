@@ -189,7 +189,7 @@ int stv0674_get_image(GPPort *port, int image_no, CameraFile *file)
     }
 
 
-    gp_file_append(file, data, size);
+    gp_file_append(file, (char *)data, size);
     free(data);
 
     ret = gp_port_usb_msg_write (port, CMDID_FINISH_READ, 0, 0, (char *)imagno, 4);

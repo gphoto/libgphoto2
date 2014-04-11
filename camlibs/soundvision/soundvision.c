@@ -282,7 +282,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
    
     if (!data) return GP_ERROR;
 
-    gp_file_set_data_and_size (file, data, size);
+    gp_file_set_data_and_size (file, (char *)data, size);
        /* Maybe skip below if EXIF data present? */
    
        /* As far as I know we only support JPG and MOV */
@@ -385,7 +385,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
    
     Camera *camera=data;
     const char *data_file;
-    long data_size;
+    long unsigned int data_size;
    
     /*
      * Upload the file to the camera. Use gp_file_get_data_and_size, etc.

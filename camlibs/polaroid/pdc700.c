@@ -866,7 +866,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_NORMAL:
 
 		/* Files are always JPEG */
-		CRF (gp_file_set_data_and_size (file, data, size), data);
+		CRF (gp_file_set_data_and_size (file, (char *)data, size), data);
 		CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
 		break;
 
@@ -880,7 +880,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		    (data[size - 2] == 0xff) && (data[size - 1] == 0xd9)) {
 
 			/* Image is JPEG */
-			CRF (gp_file_set_data_and_size (file, data, size),
+			CRF (gp_file_set_data_and_size (file, (char *)data, size),
 			     data);
 			CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
@@ -907,7 +907,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (data);
 			CRF (gp_file_append (file, header, strlen (header)),
 			     ppm);
-			CRF (gp_file_append (file, ppm, ppm_size), ppm);
+			CRF (gp_file_append (file, (char *)ppm, ppm_size), ppm);
 			free (ppm);
 			CR (gp_file_set_mime_type (file, GP_MIME_PPM));
 
@@ -923,7 +923,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	case GP_FILE_TYPE_RAW:
 #if 1
-		CRF (gp_file_set_data_and_size (file, data, size), data);
+		CRF (gp_file_set_data_and_size (file, (char *)data, size), data);
 		CR (gp_file_set_mime_type (file, GP_MIME_RAW));
 		break;
 #endif

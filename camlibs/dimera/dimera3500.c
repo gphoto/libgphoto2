@@ -296,7 +296,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		newdata = malloc(size*3);
 		if (!newdata) return (GP_ERROR_NO_MEMORY);
 		conversion_chuck (width, height, data, newdata);
-		gp_file_append (file, newdata, size*3);
+		gp_file_append (file, (char *)newdata, size*3);
 		free (newdata);
 		free (data);
 		break;
@@ -307,7 +307,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					      context);
 		if (!data)
 			return GP_ERROR;
-		gp_file_set_data_and_size (file, data, size); /* will take over data ptr ownership */
+		gp_file_set_data_and_size (file, (char *)data, size); /* will take over data ptr ownership */
 		gp_file_set_mime_type (file, GP_MIME_RAW); 
 		gp_file_adjust_name_for_mime_type (file);
 		break;
@@ -315,7 +315,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		data = Dimera_Get_Thumbnail (num,  &size, camera);
 		if (!data)
 			return GP_ERROR;
-		gp_file_set_data_and_size (file, data, size); /* will take over data ptr ownership */
+		gp_file_set_data_and_size (file, (char *)data, size); /* will take over data ptr ownership */
 		gp_file_set_mime_type (file, GP_MIME_PGM);
 		gp_file_adjust_name_for_mime_type (file);
 		break;
@@ -397,7 +397,7 @@ static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *c
         data = Dimera_Preview( &size, camera, context);
         if (!data)
                 return GP_ERROR;
-	return gp_file_set_data_and_size (file, data, size);
+	return gp_file_set_data_and_size (file, (char *)data, size);
 }
 
 static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) {

@@ -128,7 +128,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
    if (result < 0)
      return result;
    
-   CHECK_RESULT(gp_file_set_data_and_size (file, data, size));
+   CHECK_RESULT(gp_file_set_data_and_size (file, (char *)data, size));
    
    return (GP_OK);
 }

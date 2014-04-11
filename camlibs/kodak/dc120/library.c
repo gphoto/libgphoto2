@@ -288,7 +288,7 @@ int dc120_get_status (Camera *camera, Kodak_dc120_status *status, GPContext *con
         if( retval == (GP_OK) && status != NULL )
         {
 	    const char *data;
-	    long int  lsize;
+	    long unsigned int  lsize;
 
 	    gp_file_get_data_and_size( file, &data, &lsize );
 	    if( lsize<122 ) {
@@ -361,7 +361,7 @@ int dc120_get_albums (Camera *camera, int from_card, CameraList *list, GPContext
 	char *f;
 	char *p = dc120_packet_new(0x44);
 	const char *file_data;
-	long int file_size;
+	long unsigned int file_size;
 
 	if (from_card)
 		p[1] = 0x01;
@@ -396,7 +396,7 @@ int dc120_get_filenames (Camera *camera, int from_card, int album_number, Camera
 	char *p;
 	char buf[16];
 	const char *file_data;
-	long int file_size;
+	long unsigned int file_size;
 
 	/* --- now read the files --- */
 
@@ -443,7 +443,7 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 	int x;
 	char buf[16];
 	const char *f_data;
-	long int f_size;
+	long unsigned int f_size;
 
 	*size = 15680;
 
@@ -473,7 +473,7 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
         CameraFile *size_file; /* file used to determine the filesize */
   	char *p;
 	const char *file_data;
-	long int file_size;
+	long unsigned int file_size;
 	int offset;
 
 	/* --- first read the file size --- */

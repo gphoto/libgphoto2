@@ -239,7 +239,7 @@ get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *cont
     return GP_ERROR_IO_READ;
   }
   jpegcommentlen = make_jpeg_comment(buf, jpeg_comment);
-  ret = gp_file_append (file, jpeg_comment, jpegcommentlen);
+  ret = gp_file_append (file, (char *)jpeg_comment, jpegcommentlen);
   if (ret < GP_OK) return ret;
 
   total = 126;
@@ -250,7 +250,7 @@ get_file(GPPort *port, char *name, CameraFile *file, int format, GPContext *cont
     if(len < 0)
       return GP_ERROR_IO_READ;
     total = total + len;
-    gp_file_append (file, buf, len);
+    gp_file_append (file, (char *)buf, len);
     gp_context_progress_update (context, id, total);
     if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 	ret = GP_ERROR_CANCEL;
@@ -302,7 +302,7 @@ get_thumbnail(GPPort *port,char *name, CameraFile *file, int format, int n)
   filelen = buf[12] * 0x1000000 + buf[13] * 0x10000 +
     buf[14] * 0x100 + buf[15];
 
-  return gp_file_append (file, &buf[256], filelen);
+  return gp_file_append (file, (char *)&buf[256], filelen);
 }
 
 #if 0

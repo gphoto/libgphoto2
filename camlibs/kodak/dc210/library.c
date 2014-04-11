@@ -464,9 +464,9 @@ static int dc210_read_to_file
 		  };
 		  /* append to file */
 		  if (packets == blocks - 1 && remaining)
-			  gp_file_append(f, b, remaining);
+			  gp_file_append(f, (char *)b, remaining);
 		  else
-			  gp_file_append(f, b, blocksize);
+			  gp_file_append(f, (char *)b, blocksize);
 		  /* request next packet */
 		  dc210_write_single_char(camera, DC210_CORRECT_PACKET);
 		  packet_following = dc210_wait_for_response(camera, 0, NULL);

@@ -219,7 +219,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-	CR (gp_file_set_data_and_size (file, d, size));
+	CR (gp_file_set_data_and_size (file, (char *)d, size));
 	CR (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
 	return (GP_OK);
