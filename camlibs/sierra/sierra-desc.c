@@ -67,8 +67,8 @@ camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge,
 	if ((widge == GP_WIDGET_RADIO) || (widge == GP_WIDGET_MENU)) {
 		gp_widget_add_choice (child, _(val_name_p->name));
 		GP_DEBUG ("get value %15s:\t%lld (0x%04llx)", 
-		       val_name_p->name, val_name_p->u.value,
-		       val_name_p->u.value);
+			  val_name_p->name, (long long)val_name_p->u.value,
+			  (long long unsigned) val_name_p->u.value);
 		/* XXX where is endian handled? */
 		if ((mask & *(int*) buff) == val_name_p->u.value) {
 			gp_widget_set_value (child, _(val_name_p->name));
@@ -170,7 +170,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		 * set it to the same as regs_long_name.
 		 */
 		gp_widget_set_info (child,  _(reg_desc_p->regs_long_name));
-		GP_DEBUG ("reg_value 0x%016llx", reg_p->reg_value);
+		GP_DEBUG ("reg_value 0x%016llx", (long long unsigned)reg_p->reg_value);
 		for (vind = 0; vind < reg_desc_p->reg_val_name_cnt; vind++) {
 			camera_cam_desc_get_value (&reg_desc_p->regs_value_names[vind],
 				reg_desc_p->reg_widget_type, reg_p->reg_len,
@@ -183,7 +183,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		if (((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) || 
 		     (reg_desc_p->reg_widget_type == GP_WIDGET_MENU)) && 
 		      !gp_widget_changed (child)) {
-			sprintf (buff, _("%lld (unknown)"), reg_p->reg_value);
+			sprintf (buff, _("%lld (unknown)"), (long long)reg_p->reg_value);
 			gp_widget_add_choice (child, buff);
 			gp_widget_set_value (child, buff);
 		}
