@@ -563,7 +563,7 @@ spca50x_process_thumbnail (CameraPrivateLibrary *lib,	/*  context */
 	 * This should never fail; it would be nice to have an error
 	 * code like GP_ERROR_CAMLIB_INTERNAL for cases like this.
  */
-	hdrlen = snprintf(tmp, alloc_size, "P6 %d %d 255\n", w, h);
+	hdrlen = snprintf((char*)tmp, alloc_size, "P6 %d %d 255\n", w, h);
 	true_size = w * h * 3 + hdrlen;
 	if ( true_size > alloc_size ) {
 		free (tmp);

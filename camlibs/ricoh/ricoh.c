@@ -788,7 +788,7 @@ ricoh_set_copyright (Camera *camera, GPContext *context, const char *copyright)
 	unsigned char p[21], len, buf[0xff];
 
 	p[0] = 0x0f;
-	strncpy (p + 1, copyright, 20);
+	strncpy ((char *)p + 1, copyright, 20);
 	CR (ricoh_transmit (camera, context, 0x50, p, 21, buf, &len));
 
 	return (GP_OK);
@@ -834,7 +834,7 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 		return (GP_ERROR);
 	}
 
-	strncpy (p, name, 12);
+	strncpy ((char *)p, name, 12);
 	p[12] = size << 24;
 	p[13] = size << 16;
 	p[14] = size << 8;

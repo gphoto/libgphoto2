@@ -1110,7 +1110,7 @@ static void dc210_picinfo_from_block (dc210_picture_info * picinfo, unsigned cha
 	picinfo->f_number = data[26];
 	picinfo->battery = data[27];
 	picinfo->exposure_time = data[28] * 0x1000000 + data[29] * 0x10000 + data[30] * 0x100 + data[31];
-	strncpy(picinfo->image_name, &data[32], 12);
+	strncpy(picinfo->image_name, (char *)&data[32], 12);
 	picinfo->image_name[12] = 0;
 	
 }

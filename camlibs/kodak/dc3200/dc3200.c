@@ -211,7 +211,7 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 		}
 		
 		/* copy the filename */
-		strncpy(filename, ptr_data_buff, sizeof(filename));
+		strncpy(filename, (char *)ptr_data_buff, sizeof(filename));
 
 		/* chop off the trailing spaces and null terminate */
 		ptr = strchr(filename, 0x20);
@@ -285,7 +285,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		}
 		
 		/* copy the first 8 bytes of filename */
-		strncpy(filename, ptr_data_buff, 8);
+		strncpy(filename, (char *)ptr_data_buff, 8);
 		filename[8] = 0;
 		/* add dot */
 		strcat(filename, ".");

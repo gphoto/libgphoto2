@@ -251,7 +251,7 @@ ultrapocket_getrawpicture(Camera *camera, GPContext *context,
      return (GP_ERROR_NO_MEMORY);
 
    /* Set header */
-   strcpy(outdata, ppmheader);
+   strcpy((char *)outdata, ppmheader);
 
    /* Expand the Bayer tiles */
    result = gp_bayer_expand((rawdata+imgstart), width + 4, height,
@@ -340,7 +340,7 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
    }
 
    /* Set header */
-   strcpy(outdata, ppmheader);
+   strcpy((char *)outdata, ppmheader);
 
    /* Decode and interpolate the Bayer tiles */
    result = gp_bayer_decode((rawdata+imgstart), width+4, height,

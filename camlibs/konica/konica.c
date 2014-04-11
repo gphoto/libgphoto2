@@ -690,16 +690,16 @@ k_get_information (GPPort *p, GPContext *c, KInformation *info)
 	CRF (c, l_send_receive (p, c, sb, 4, &rb, &rbs, 0, NULL, NULL), rb);
 
 	memset (info, 0, sizeof (KInformation));
-	strncpy (info->model,         &rb[ 8],  4);
-	strncpy (info->serial_number, &rb[12], 10);
+	strncpy (info->model,         (char *)&rb[ 8],  4);
+	strncpy (info->serial_number, (char *)&rb[12], 10);
 	info->hardware.major =         rb[22];
 	info->hardware.minor =         rb[23];
 	info->software.major =         rb[24];
 	info->software.minor =         rb[25];
 	info->testing.major  =         rb[26];
 	info->testing.minor  =         rb[27];
-	strncpy (info->name,          &rb[28], 22);
-	strncpy (info->manufacturer,  &rb[50], 30);
+	strncpy (info->name,          (char *)&rb[28], 22);
+	strncpy (info->manufacturer,  (char *)&rb[50], 30);
 
         free (rb);
         return (GP_OK);

@@ -725,7 +725,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 		return (GP_ERROR_NO_MEMORY);
 
 	/* Set header */
-	strcpy(outdata, ppmheader);
+	strcpy((char *)outdata, ppmheader);
 
 	/* Decode and interpolate the Bayer Mask */
 	result = gp_bayer_decode(*data, width, height,

@@ -477,7 +477,7 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info,
 	/* The meaning of buf[22] is unknown */
 
 	/* Version info */
-	strncpy (info->version, &buf[23], 6);
+	strncpy (info->version, (char *)&buf[23], 6);
 
 	/*
 	 * Now follows some picture data we have yet to reverse
@@ -548,7 +548,7 @@ pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 	}
 
 	/* Protocol version */
-	strncpy (info->version, &buf[8], 6);
+	strncpy (info->version, (char *)&buf[8], 6);
 
 	/* buf[14-15]: We don't know. Seems to be always 00 00 */
 

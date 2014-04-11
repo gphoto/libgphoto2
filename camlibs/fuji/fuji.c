@@ -643,7 +643,7 @@ fuji_date_set (Camera *camera, FujiDate date, GPContext *context)
 	cmd[1] = FUJI_CMD_DATE_SET;
 	cmd[2] = 14;
 	cmd[3] = 0;
-	sprintf (cmd + 4, "%04d%02d%02d%02d%02d%02d", date.year, date.month,
+	sprintf ((char*)cmd + 4, "%04d%02d%02d%02d%02d%02d", date.year, date.month,
 		 date.day, date.hour, date.min, date.sec);
 
 	CR (fuji_transmit (camera, cmd, 4, buf, &buf_len, context));

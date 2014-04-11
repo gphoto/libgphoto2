@@ -78,7 +78,7 @@ make_jpeg_comment(unsigned char *buf, unsigned char *jpeg_comment)
   i = 0;
   while (1) {
     if ((reso == reso_tab[i].reso_val) || (reso_tab[i].reso_val == 0)) {
-      cur = 6 + sprintf(&jpeg_comment[6], "Resolution: %s\n",
+      cur = 6 + sprintf((char*)&jpeg_comment[6], "Resolution: %s\n",
                           reso_tab[i].reso_conv);
       break;
     }
@@ -92,7 +92,7 @@ make_jpeg_comment(unsigned char *buf, unsigned char *jpeg_comment)
   while (1) {
     if ((shutter == sh_speed_tab[i].spd_val) ||
         (sh_speed_tab[i].spd_val == 0)) {
-      cur = cur + sprintf(&jpeg_comment[cur], "Shutter-speed: %s\n",
+      cur = cur + sprintf((char*)&jpeg_comment[cur], "Shutter-speed: %s\n",
                           sh_speed_tab[i].spd_conv);
       break;
     }
@@ -101,17 +101,17 @@ make_jpeg_comment(unsigned char *buf, unsigned char *jpeg_comment)
 
   /* PMP comment */
   if (*(buf+PMP_COMMENT)) {
-    cur = cur + sprintf(&jpeg_comment[cur], "Comment: %s\n",
+    cur = cur + sprintf((char*)&jpeg_comment[cur], "Comment: %s\n",
                         (char *)(buf+PMP_COMMENT));
   }
 
   /* taken date */
   if (*(buf+PMP_TAKE_YEAR) == 0xff) {
-    cur = cur + sprintf(&jpeg_comment[cur],
+    cur = cur + sprintf((char*)&jpeg_comment[cur],
                         "Date-Taken: ----/--/-- --:--:--\n");
   }
   else {
-    cur = cur + sprintf(&jpeg_comment[cur],
+    cur = cur + sprintf((char*)&jpeg_comment[cur],
                         "Date-Taken: %d/%02d/%02d %02d:%02d:%02d\n",
     2000+(*(buf+PMP_TAKE_YEAR)), *(buf+PMP_TAKE_MONTH),
     *(buf+PMP_TAKE_DATE), *(buf+PMP_TAKE_HOUR), *(buf+PMP_TAKE_MINUTE),
@@ -120,11 +120,11 @@ make_jpeg_comment(unsigned char *buf, unsigned char *jpeg_comment)
 
   /* edited date */
   if (*(buf+PMP_EDIT_YEAR) == 0xff) {
-    cur = cur + sprintf(&jpeg_comment[cur],
+    cur = cur + sprintf((char*)&jpeg_comment[cur],
                         "Date-Edited: ----/--/-- --:--:--\n");
   }
   else {
-    cur = cur + sprintf(&jpeg_comment[cur],
+    cur = cur + sprintf((char*)&jpeg_comment[cur],
                         "Date-Edited: %d/%02d/%02d %02d:%02d:%02d\n",
     2000+(*(buf+PMP_EDIT_YEAR)), *(buf+PMP_EDIT_MONTH),
     *(buf+PMP_EDIT_DATE), *(buf+PMP_EDIT_HOUR), *(buf+PMP_EDIT_MINUTE),
@@ -133,7 +133,7 @@ make_jpeg_comment(unsigned char *buf, unsigned char *jpeg_comment)
 
   /* use flash? */
   if (*(buf+PMP_FLASH) != 0) {
-    cur = cur + sprintf(&jpeg_comment[cur], "Flash: on\n");
+    cur = cur + sprintf((char*)&jpeg_comment[cur], "Flash: on\n");
   }
 
   /* insert total jpeg comment length */

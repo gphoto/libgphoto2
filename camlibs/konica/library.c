@@ -1134,7 +1134,7 @@ localization_file_read (Camera *camera, const char *file_name,
                         }
                         c[j] = (char) f;
                         if (j == 1) {
-                                if (sscanf (&c[0], "%X", &d) != 1) {
+                                if (sscanf ((char *)&c[0], "%X", &d) != 1) {
 					GP_DEBUG ("Error in localization "
 						  "file.");
                                         return (GP_ERROR_CORRUPTED_DATA);

@@ -229,7 +229,7 @@ int F1fopen(GPPort *port, char *name)
   buf[1] = 0x0A;
   buf[2] = 0x00;
   buf[3] = 0x00;
-  snprintf(&buf[4], sizeof(buf)-4, "%s", name);
+  snprintf((char*)&buf[4], sizeof(buf)-4, "%s", name);
   len = strlen(name) + 5;
   sendcommand(port,buf, len);
   recvdata(port, buf, 6);
@@ -404,7 +404,7 @@ unsigned long F1finfo(GPPort *port,char *name)
 
   buf[0] = 0x02;
   buf[1] = 0x0F;
-  snprintf(&buf[2], sizeof(buf)-2, "%s", name);
+  snprintf((char*)&buf[2], sizeof(buf)-2, "%s", name);
   len = strlen(name) + 3;
 
   sendcommand(port,buf, len);
@@ -487,7 +487,7 @@ int F1ok(GPPort*port)
 
   buf[0] = 0x01;
   buf[1] = 0x01;
-  sprintf(&buf[2],"SONY     MKY-1001         1.00");
+  sprintf((char*)&buf[2],"SONY     MKY-1001         1.00");
 
   while(retrycount--){
     sendcommand(port,buf, 32);

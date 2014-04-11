@@ -642,7 +642,7 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 	}
 
 	tmp = *buf;
-	snprintf (tmp, *len, "P6 %d %d 255\n", t_width, t_height);
+	snprintf ((char*)tmp, *len, "P6 %d %d 255\n", t_width, t_height);
 	tmp += headerlength;
 
 	yuv_p = mybuf;
@@ -891,13 +891,13 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 		} else {
 			/* its an image */
 			if (type == 0x00 || type == 0x01) {
-				snprintf (buf, 13, "Image%03d.jpg",
+				snprintf ((char*)buf, 13, "Image%03d.jpg",
 					  ++lib->num_images);
 				lib->files[file_index].mime_type =
 					SPCA50X_FILE_TYPE_IMAGE;
 			} else if ((type == 0x08) || (type == 0x03)) {
 				/* its the start of an avi */
-				snprintf (buf, 13, "Movie%03d.avi",
+				snprintf ((char*)buf, 13, "Movie%03d.avi",
 					  ++lib->num_movies);
 				lib->files[file_index].mime_type =
 					SPCA50X_FILE_TYPE_AVI;
@@ -905,7 +905,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 			lib->files[file_index].fat = p;
 			lib->files[file_index].fat_start = index;
 			lib->files[file_index].fat_end = index;
-			lib->files[file_index].name = strdup (buf);
+			lib->files[file_index].name = strdup ((char*)buf);
 			if (lib->bridge == BRIDGE_SPCA504) {
 				lib->files[file_index].width =
 					(p[8] & 0xFF) * 16;
