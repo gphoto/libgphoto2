@@ -257,7 +257,7 @@ hp_rcv_ack (Camera *cam, char *ackval)
 static int
 decode_u32(unsigned char **msg, int *msglen, unsigned int *val) {
 	unsigned int x = 0,i;
-
+	*val = 0;
 	for (i=0;i<8;i++) {
 		if (!*msglen)
 			return GP_ERROR;
@@ -273,7 +273,7 @@ decode_u32(unsigned char **msg, int *msglen, unsigned int *val) {
 static int
 decode_u16(unsigned char **msg, int *msglen, unsigned short *val) {
 	unsigned int x = 0,i;
-
+	*val = 0;
 	for (i=0;i<4;i++) {
 		if (!*msglen)
 			return GP_ERROR;
