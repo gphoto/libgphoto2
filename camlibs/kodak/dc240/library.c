@@ -239,7 +239,7 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	BUSY_RETRIES = 100
     };
     unsigned char p[8];
-    int retval;
+    int retval = 0;
     int x=0, done=0;
 
     /* Wait for command completion */
