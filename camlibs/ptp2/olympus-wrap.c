@@ -1131,7 +1131,6 @@ static char*
 generate_event_OK_xml(PTPParams *params, PTPContainer *ptp) {
 	xmlDocPtr	docout;
 	xmlChar		*output;
-	xmlNsPtr	outns;
 	int		len;
 	xmlNodePtr	x3cnode, inputnode;
 	char		buf[10];
@@ -1143,7 +1142,7 @@ generate_event_OK_xml(PTPParams *params, PTPContainer *ptp) {
 
 	docout 		= xmlNewDoc ((xmlChar*)"1.0");
 	x3cnode		= xmlNewDocNode (docout, NULL, (xmlChar*)"x3c", NULL);
-	outns 		= xmlNewNs (x3cnode,(xmlChar*)"http://www1.olympus-imaging.com/ww/x3c",NULL);
+	                  xmlNewNs (x3cnode,(xmlChar*)"http://www1.olympus-imaging.com/ww/x3c",NULL);
 	inputnode 	= xmlNewChild (x3cnode, NULL, (xmlChar*)"output", NULL);
 
 	sprintf (buf,"e%04X", ptp->Code);
@@ -1165,13 +1164,12 @@ static char*
 generate_xml(PTPParams *params, PTPContainer *ptp, unsigned char *data, int len) {
 	xmlDocPtr	docout;
 	xmlChar		*output;
-	xmlNsPtr	outns;
 	xmlNodePtr	x3cnode;
 	xmlNodePtr	inputnode;
 
 	docout 		= xmlNewDoc ((xmlChar*)"1.0");
 	x3cnode		= xmlNewDocNode (docout, NULL, (xmlChar*)"x3c", NULL);
-	outns 		= xmlNewNs (x3cnode,(xmlChar*)"http://www1.olympus-imaging.com/ww/x3c",NULL);
+	                  xmlNewNs (x3cnode,(xmlChar*)"http://www1.olympus-imaging.com/ww/x3c",NULL);
 	inputnode 	= xmlNewChild (x3cnode, NULL, (xmlChar*)"input", NULL);
 
 	/* The fun starts in here: */
