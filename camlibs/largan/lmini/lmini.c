@@ -208,7 +208,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	
 	/* the remaining 5 bytes are read here */
 
-	ret = gp_port_read (camera->port, buf, sizeof(buf));
+	ret = gp_port_read (camera->port, (char *)buf, sizeof(buf));
 	if (ret < GP_OK) {
 		return ret;
 	}
@@ -402,7 +402,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 	uint8_t packet [4];
 	uint8_t	packet_size = 0;
 	memset (packet, 0, sizeof (packet));
-	ret = gp_port_read (camera->port, packet, 1);
+	ret = gp_port_read (camera->port, (char *)packet, 1);
 	if (ret < GP_OK) {
 		return ret;
 	}
@@ -429,7 +429,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		*reply = packet[0];
 	}
 	if (packet_size >= 2) {
-		ret = gp_port_read (camera->port, &packet[1], 1);
+		ret = gp_port_read (camera->port, (char *)&packet[1], 1);
 		if (ret < GP_OK) {
 			return ret;
 		}
@@ -438,7 +438,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		}
 	}
 	if (packet_size >= 3) {
-		ret = gp_port_read (camera->port, &packet[2], 1);
+		ret = gp_port_read (camera->port, (char *)&packet[2], 1);
 		if (ret < GP_OK) {
 			return ret;
 		}
@@ -491,7 +491,7 @@ static int largan_send_command (Camera * camera, uint8_t cmd, uint8_t param1,
 		return GP_ERROR; /* unknown command */
 	}
 
-	return gp_port_write (camera->port, packet, packet_size);
+	return gp_port_write (camera->port, (char *)packet, packet_size);
 }
 
 
@@ -532,7 +532,7 @@ static int purge_camera (Camera * camera)
 
 	while (1)
 	{
-		count = gp_port_read (camera->port, buffer, 1);
+		count = gp_port_read (camera->port, (char *)buffer, 1);
 		if (count < GP_OK) 
 			return count;
 

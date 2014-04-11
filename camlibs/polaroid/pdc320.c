@@ -163,7 +163,7 @@ pdc320_command(
 	memset (newcmd, 0xe6, 4); off = 4;
 	off += pdc320_escape (cmd, cmdlen, newcmd + off);
 	off += pdc320_escape (csum, 2, newcmd + off);
-	ret = gp_port_write (port, newcmd, off);
+	ret = gp_port_write (port, (char *)newcmd, off);
 	free(newcmd);
 	return ret;
 }
@@ -180,15 +180,15 @@ pdc320_simple_reply (GPPort *port, const unsigned char expcode,
 	unsigned char csum[2];
 	int calccsum;
 
-	CR (gp_port_read (port, reply, 1));
+	CR (gp_port_read (port, (char *)reply, 1));
 	if (reply[0] != expcode) {
 		GP_DEBUG("*** reply got 0x%02x, expected 0x%02x\n",
 			reply[0], expcode
 		);
 		return GP_ERROR;
 	}
-	CR (gp_port_read (port, reply+1, replysize-1));
-	CR (gp_port_read (port, csum, 2));
+	CR (gp_port_read (port, (char *)reply+1, replysize-1));
+	CR (gp_port_read (port, (char *)csum, 2));
 	calccsum = pdc320_calc_checksum (reply, replysize);
 	if (calccsum != ((csum[1] << 8) | csum[0])) {
 		GP_DEBUG("csum %x vs %x\n",calccsum,((csum[0]<<8)|csum[1]));
@@ -218,7 +218,7 @@ pdc320_init (GPPort *port)
 	
 	/* The initial command is prefixed by 4 raw E6. */
 	memset(e6,0xe6,sizeof(e6));
-	CR (gp_port_write (port, e6, sizeof (e6) ));
+	CR (gp_port_write (port, (char *)e6, sizeof (e6) ));
 
 	GP_DEBUG ("*** PDC320_INIT ***");
 	CR (pdc320_simple_command_reply (port, PDC320_INIT, 5, 1, buf));
@@ -285,16 +285,16 @@ pdc320_0c (Camera *camera, int n)
 	/* Write the command */
 	GP_DEBUG ("*** PDC320_0c ***");
 	CR (pdc320_command (camera->port, cmd, sizeof (cmd)));
-	CR (gp_port_read (camera->port, buf, 3));
+	CR (gp_port_read (camera->port, (char *)buf, 3));
 	if (buf[0] != 7)
 		return GP_ERROR;
 	size = (buf[1] << 8) | buf[2];
 	xbuf = malloc (size);
-	CR (gp_port_read (camera->port, xbuf, size));
+	CR (gp_port_read (camera->port, (char *)xbuf, size));
 	for (i=0; i<size; i++) {
 		GP_DEBUG ("buf[%d]=0x%02x", i, xbuf[i]);
 	}
-	CR (gp_port_read (camera->port, buf, 2));
+	CR (gp_port_read (camera->port, (char *)buf, 2));
 	/* checksum is calculated from both, but i am not clear how. */
 	return GP_OK;
 }
@@ -336,7 +336,7 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 		/* Read the frame number */
 		usleep (10000);
-		CR_FREE (gp_port_read (camera->port, buf, 5), *data);
+		CR_FREE (gp_port_read (camera->port, (char *)buf, 5), *data);
 		f1 = (buf[1] << 8) + buf[2];
 		f2 = (buf[3] << 8) + buf[4];
 		GP_DEBUG ("Reading frame %d "
@@ -344,10 +344,10 @@ pdc320_pic (Camera *camera, int n, unsigned char **data, int *size)
 
 		/* Read the actual data */
 		usleep(1000);
-		CR_FREE (gp_port_read (camera->port, *data + i, len), *data);
+		CR_FREE (gp_port_read (camera->port, (char *)*data + i, len), *data);
 		
 		/* Read the checksum */
-		CR_FREE (gp_port_read (camera->port, buf, 2), *data);
+		CR_FREE (gp_port_read (camera->port, (char *)buf, 2), *data);
 	}
 
 	return (GP_OK);

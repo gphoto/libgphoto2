@@ -208,7 +208,7 @@ pdc700_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len)
 	cmd[1] = (cmd_len - 3) >> 8;
 	cmd[2] = (cmd_len - 3) & 0xff;
 	cmd[cmd_len - 1] = calc_checksum (cmd + 3, cmd_len - 1 - 3);
-	CR (gp_port_write (camera->port, cmd, cmd_len));
+	CR (gp_port_write (camera->port, (char *)cmd, cmd_len));
 
 	return (GP_OK);
 }
@@ -226,7 +226,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	 * Read the header (0x40 plus 2 bytes indicating how many bytes
 	 * will follow)
 	 */
-	CR (gp_port_read (camera->port, header, 3));
+	CR (gp_port_read (camera->port, (char *)header, 3));
 	if (header[0] != 0x40) {
 		gp_context_error (context, _("Received unexpected "
 				     "header (%i)"), header[0]);
@@ -235,7 +235,7 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 	*b_len = (header[2] << 8) | header [1];
 
 	/* Read the remaining bytes */
-	CR (gp_port_read (camera->port, b, *b_len));
+	CR (gp_port_read (camera->port, (char *)b, *b_len));
 
 	/*
 	 * The first byte indicates if this the response for our command.

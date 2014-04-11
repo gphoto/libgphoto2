@@ -45,8 +45,8 @@ QVping (Camera *camera)
 	/* Send ENQ and wait for ACK */
 	while (1) {
 		c = ENQ;
-		CR (gp_port_write (camera->port, &c, 1));
-		result = gp_port_read (camera->port, &c, 1);
+		CR (gp_port_write (camera->port, (char *)&c, 1));
+		result = gp_port_read (camera->port, (char *)&c, 1);
 
 		/* If we got ACK, everything is fine. */
 		if (result >= 0) {
@@ -78,11 +78,11 @@ QVping (Camera *camera)
 				 * ACKs, and finally with UNKNOWN1 and 
 				 * UNKNOWN2.
 				 */
-				while (gp_port_read (camera->port, &c, 1) >= 0);
+				while (gp_port_read (camera->port, (char *)&c, 1) >= 0);
 				break;
 
 			default:
-				while (gp_port_read (camera->port, &c, 1) >= 0);
+				while (gp_port_read (camera->port, (char *)&c, 1) >= 0);
 				break;
 			}
 		}
@@ -111,22 +111,22 @@ QVsend (Camera *camera, unsigned char *cmd, int cmd_len,
 	CR (QVping (camera));
 
 	/* Write the request and calculate the checksum */
-	CR (gp_port_write (camera->port, cmd, cmd_len));
+	CR (gp_port_write (camera->port, (char *)cmd, cmd_len));
 	for (cmd_end = cmd+cmd_len, checksum = 0; cmd < cmd_end; ++cmd)
 		checksum += *cmd;
 
 	/* Read the checksum */
-	CR (gp_port_read (camera->port, &c, 1));
+	CR (gp_port_read (camera->port, (char *)&c, 1));
 	if (c != (unsigned char)(~checksum))
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Send ACK */
 	c = ACK;
-	CR (gp_port_write (camera->port, &c, 1));
+	CR (gp_port_write (camera->port, (char *)&c, 1));
 
 	/* Receive the answer */
 	if (buf_len)
-		CR (gp_port_read (camera->port, buf, buf_len));
+		CR (gp_port_read (camera->port, (char *)buf, buf_len));
 
 	return (GP_OK);
 }
@@ -145,7 +145,7 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 
 	/* Send DC2 */
 	c = DC2;
-	CR (gp_port_write (camera->port, &c, 1));
+	CR (gp_port_write (camera->port, (char *)&c, 1));
 
 	while (1) {
 		unsigned char buffer[2];
@@ -154,11 +154,11 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 		unsigned char *new;
 
 		/* Read STX */
-		CR (gp_port_read (camera->port, &c, 1));
+		CR (gp_port_read (camera->port, (char *)&c, 1));
 		if (c != STX) {
 			retries++;
 			c = NAK;
-			CR (gp_port_write (camera->port, &c, 1));
+			CR (gp_port_write (camera->port, (char *)&c, 1));
 			if (retries > CASIO_QV_RETRIES)
 				return (GP_ERROR_CORRUPTED_DATA);
 			else
@@ -166,7 +166,7 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 		}
 
 		/* Read sector size */
-		CR (gp_port_read (camera->port, buffer, 2));
+		CR (gp_port_read (camera->port, (char *)buffer, 2));
 		size = (buffer[0] << 8) | buffer[1];
 		sum = buffer[0] + buffer[1];
 
@@ -180,19 +180,19 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 		*buf_len += size;
 
 		/* Get the sector */
-		CR (gp_port_read (camera->port, *buf + pos, size));
+		CR (gp_port_read (camera->port, (char *)*buf + pos, size));
 		for (i = 0; i < size; i++)
 			sum += (*buf)[i + pos];
 
 		/* Get EOT or ETX and the checksum */
-		CR (gp_port_read (camera->port, buffer, 2));
+		CR (gp_port_read (camera->port, (char *)buffer, 2));
 		sum += buffer[0];
 
 		/* Verify the checksum */
 		if ((unsigned char)(~sum) != buffer[1]) {
 			retries++;
 			c = NAK;
-			CR (gp_port_write (camera->port, &c, 1));
+			CR (gp_port_write (camera->port, (char *)&c, 1));
 			if (retries > CASIO_QV_RETRIES)
 				return (GP_ERROR_CORRUPTED_DATA);
 			else
@@ -201,7 +201,7 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 
 		/* Acknowledge and prepare for next packet */
 		c = ACK;
-		CR (gp_port_write (camera->port, &c, 1));
+		CR (gp_port_write (camera->port, (char *)&c, 1));
 		pos += size;
 
 		/* Are we done? */

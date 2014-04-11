@@ -124,7 +124,7 @@ int mdc800_rs232_waitForCommit (GPPort *port,char commandid)
 	int ret;
 
 	gp_port_set_timeout(port,mdc800_io_getCommandTimeout(commandid));
-	ret = gp_port_read(port,ch,1);
+	ret = gp_port_read(port,(char *)ch,1);
 	if (ret!=1)
 	{
 		printCError ("(mdc800_rs232_waitForCommit) Error receiving commit !\n");

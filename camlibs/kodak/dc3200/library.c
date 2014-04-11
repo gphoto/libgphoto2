@@ -633,7 +633,7 @@ int dc3200_send_packet(Camera *camera, unsigned char *data, int data_len)
 #ifdef DEBUG
 	dump_buffer(buff, buff_len, "s", 16);
 #endif
-	res = gp_port_write(camera->port, buff, data_len + 3);
+	res = gp_port_write(camera->port, (char *)buff, data_len + 3);
 	free(buff);
 	return res;
 }
@@ -665,7 +665,7 @@ int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 	 *
 	 */
 
-	res = gp_port_read(camera->port, &buff[num_read], 1);
+	res = gp_port_read(camera->port, (char *)&buff[num_read], 1);
 
 	while(res >= 0 && fails < READ_RETRIES) {
 		if(res == 0) {
@@ -685,7 +685,7 @@ int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 				break;
 			}
 		}
-		res = gp_port_read(camera->port, &buff[num_read], 1);
+		res = gp_port_read(camera->port, (char *)&buff[num_read], 1);
 	}
 
 	if(!complete) {
@@ -939,7 +939,7 @@ int dc3200_clear_read_buffer(Camera *camera)
 
 	gp_port_set_timeout(camera->port, 0);
 
-	while(gp_port_read(camera->port, &byte, 1) > 0)
+	while(gp_port_read(camera->port, (char *)&byte, 1) > 0)
 		count++;
 
 	if(count > 0)

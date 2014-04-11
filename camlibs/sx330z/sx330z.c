@@ -84,7 +84,7 @@ sx330z_init(Camera *camera, GPContext *context)
 /* struct traveler_ack ack;*/
  uint8_t trxbuf[0x10];
  int ret;
- ret = gp_port_usb_msg_read(camera->port, USB_REQ_RESERVED, SX330Z_REQUEST_INIT, 0, trxbuf, 0x10);
+ ret = gp_port_usb_msg_read(camera->port, USB_REQ_RESERVED, SX330Z_REQUEST_INIT, 0, (char *)trxbuf, 0x10);
  if (ret != 0x10) return(GP_ERROR); /* more specific about error ? */  
  return(GP_OK); 
 } /* sx330z_init */
@@ -101,13 +101,13 @@ sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, 
  /* 1. send request */
  sx330z_fill_req(trxbuf, req);
  ret = gp_port_usb_msg_write(camera->port,
-    USB_REQ_RESERVED, req->requesttype, 0, trxbuf, 0x20);
+    USB_REQ_RESERVED, req->requesttype, 0, (char *)trxbuf, 0x20);
   if (ret != 0x20) return(GP_ERROR_IO_WRITE);
  /* 2. read data */
- ret = gp_port_read(camera->port, buf, req->size);
+ ret = gp_port_read(camera->port, (char *)buf, req->size);
   if (ret != req->size)return(GP_ERROR_IO_READ);
  /* 3. read Ack */
- ret = gp_port_read(camera->port, trxbuf, 0x10);
+ ret = gp_port_read(camera->port, (char *)trxbuf, 0x10);
   if (ret != 0x10) return(GP_ERROR); 
  /* FIXME : Security check ???*/
  return(GP_OK);
@@ -125,7 +125,7 @@ sx330z_get_toc_num_pages(Camera *camera, GPContext *context, int32_t *pages)
  int ret;
 
  ret=gp_port_usb_msg_read(camera->port,
-    USB_REQ_RESERVED,SX330Z_REQUEST_TOC_SIZE, 0, trxbuf, 0x10);
+    USB_REQ_RESERVED,SX330Z_REQUEST_TOC_SIZE, 0, (char *)trxbuf, 0x10);
  if (ret != 0x10) return(GP_ERROR);
 
  sx330z_fill_ack(trxbuf, &ack); 		/* convert endianness */

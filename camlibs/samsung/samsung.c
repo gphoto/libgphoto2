@@ -61,7 +61,7 @@
 static int
 SDSC_send (GPPort *port, unsigned char command)
 {
-	CHECK_RESULT (gp_port_write (port, &command, 1));
+	CHECK_RESULT (gp_port_write (port, (char *)&command, 1));
 
 	return (GP_OK);
 }
@@ -85,7 +85,7 @@ SDSC_receive (GPPort *port, unsigned char *buf, int length)
 		}
 
 		/* Read data */
-		result = gp_port_read (port, buf, length);
+		result = gp_port_read (port, (char *)buf, length);
 		if (result < 0) {
 			CHECK_RESULT (SDSC_send (port, SDSC_RETRANSMIT));
 			continue;

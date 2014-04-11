@@ -354,7 +354,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 		 */
 		CHECK (gp_port_get_timeout (camera->port, &timeout));
 		CHECK (gp_port_set_timeout (camera->port, 20));
-		ret = gp_port_read (camera->port, &c, 1);
+		ret = gp_port_read (camera->port, (char *)&c, 1);
 		CHECK (gp_port_set_timeout (camera->port, timeout));
 		switch (ret) {
 		case GP_ERROR_TIMEOUT:
@@ -396,7 +396,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 		 * The camera sends us unexpected data. Dump it and assume
 		 * that everything's just fine.
 		 */
-		while (gp_port_read (camera->port, &c, 1) >= 0);
+		while (gp_port_read (camera->port, (char *)&c, 1) >= 0);
 		return GP_OK;
 	}
 }
@@ -551,7 +551,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 					(camera->pl->flags & SIERRA_WRAP_USB_MASK),
 					packet, blocksize);
 		else
-			result = gp_port_read (camera->port, packet, blocksize);
+			result = gp_port_read (camera->port, (char *)packet, blocksize);
 		if (result < 0) {
 			GP_DEBUG ("Read failed (%i: '%s').", result,
 				  gp_result_as_string (result));
@@ -609,7 +609,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			 */
 			gp_context_error (context, _("The first byte "
 				"received (0x%x) is not valid."), packet[0]);
-			while (gp_port_read (camera->port, packet, 1) > 0)
+			while (gp_port_read (camera->port, (char *)packet, 1) > 0)
 				;
 			sierra_clear_usb_halt(camera);
 			return (GP_ERROR_CORRUPTED_DATA);
@@ -622,7 +622,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 */
 		if (br < 4) {
 			result = gp_port_read (camera->port,
-					       packet + br, 4 - br);
+					       (char *)packet + br, 4 - br);
 			if (result < 0) {
 				sierra_clear_usb_halt(camera);
 				GP_DEBUG ("Could not read length of "
@@ -645,7 +645,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 * or an error occurred.
 		 */
 		while (br < length) {
-			result = gp_port_read (camera->port, packet + br,
+			result = gp_port_read (camera->port, (char *)packet + br,
 					       length - br);
 			if (result == GP_ERROR_TIMEOUT) {
 

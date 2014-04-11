@@ -56,7 +56,7 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
 	unsigned char xbuf[0x800];
 	int tocopy, ret, curlen;
 
-	ret = gp_port_read(port, xbuf, 0x800);
+	ret = gp_port_read(port, (char *)xbuf, 0x800);
 	if (ret < GP_OK) { 
 		gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 		return ret;
@@ -117,7 +117,7 @@ g3_channel_read_bytes(
 		rest = (rest + 9 + 3) & ~3;
 		if (rest < 0x800) rest = 0x800;
 
-		ret = gp_port_read(port, xbuf, rest);
+		ret = gp_port_read(port, (char *)xbuf, rest);
 		if (ret < GP_OK) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 			return ret;

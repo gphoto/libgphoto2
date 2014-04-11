@@ -98,7 +98,7 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	/* First, make sure there is no data coming from the camera. */
 	CR (gp_port_get_timeout (camera->port, &timeout));
 	CR (gp_port_set_timeout (camera->port, 20));
-	while (gp_port_read (camera->port, buf, 1) >= 0);
+	while (gp_port_read (camera->port, (char *)buf, 1) >= 0);
 	CR (gp_port_set_timeout (camera->port, timeout));
 
 	/* Write header */
@@ -106,7 +106,7 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	buf[1] = STX;
 	buf[2] = cmd;
 	buf[3] = len;
-	CR (gp_port_write (camera->port, buf, 4));
+	CR (gp_port_write (camera->port, (char *)buf, 4));
 	crc = updcrc (cmd, crc);
 	crc = updcrc (len, crc);
 
@@ -124,7 +124,7 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 				break;
 			}
 		}
-		CR (gp_port_write (camera->port, data + w, i - w));
+		CR (gp_port_write (camera->port, (char *)data + w, i - w));
 		if (data[i - 1] == 0x10)
 			CR (gp_port_write (camera->port, "\x10", 1));
 		w = i;
@@ -137,7 +137,7 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	buf[3] = crc >> 8;
 	buf[4] = len + 2;
 	buf[5] = number;
-	CR (gp_port_write (camera->port, buf, 6));
+	CR (gp_port_write (camera->port, (char *)buf, 6));
 
 	return (GP_OK);
 }
@@ -172,7 +172,7 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 		 * drop that and read on.
 		 */
 		for (i = 0, buf[1] = ACK; i < 4; i++) {
-			CR (gp_port_read (camera->port, buf, 2));
+			CR (gp_port_read (camera->port, (char *)buf, 2));
 			if (buf[0] != DLE) {
 				gp_context_error (context, _("We expected "
 					"0x%x but received 0x%x. Please "
@@ -195,8 +195,8 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 
-		CR (gp_port_read (camera->port, cmd, 1));
-		CR (gp_port_read (camera->port, len, 1));
+		CR (gp_port_read (camera->port, (char *)cmd, 1));
+		CR (gp_port_read (camera->port, (char *)len, 1));
 		crc = updcrc (*cmd, crc);
 		crc = updcrc (*len, crc);
 
@@ -207,7 +207,7 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 		r = 0;
 		last_dle = 0;
 		while (r < *len) {
-			CR (gp_port_read (camera->port, data + r, *len - r));
+			CR (gp_port_read (camera->port, (char *)data + r, *len - r));
 			if (last_dle) {
 				r++;
 				last_dle = 0;
@@ -236,7 +236,7 @@ ricoh_recv (Camera *camera, GPContext *context, unsigned char *cmd,
 		}
 
 		/* Get footer */
-		CR (gp_port_read (camera->port, buf, 6));
+		CR (gp_port_read (camera->port, (char *)buf, 6));
 
 		if ((buf[0] != DLE) || (buf[1] != ETX && buf[1] != ETB))
 			return (GP_ERROR_CORRUPTED_DATA);

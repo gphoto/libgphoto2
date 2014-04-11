@@ -157,7 +157,7 @@ sony_baud_to_id(long baud)
 static int
 sony_read_byte(Camera * camera, unsigned char *b)
 {
-	int n = gp_port_read(camera->port, b, 1);
+	int n = gp_port_read(camera->port, (char *)b, 1);
 	if (n != 1)
 		return GP_ERROR;
 	else
@@ -316,7 +316,7 @@ sony_packet_write(Camera * camera, Packet * p)
 	 **/
 	usleep(10000);
 
-	rc = gp_port_write(camera->port, &START_PACKET, 1);
+	rc = gp_port_write(camera->port, (char *)&START_PACKET, 1);
 
 	p->buffer[p->length] = p->checksum;
 

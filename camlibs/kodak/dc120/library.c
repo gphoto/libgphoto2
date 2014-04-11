@@ -86,7 +86,7 @@ write_again:
 
 	/* Read in the response from the camera if requested */
 	if (read_response) {
-		if (gp_port_read(camera->port, in, 1) < GP_OK)
+		if (gp_port_read(camera->port, (char *)in, 1) < GP_OK)
 			/* On error, write again */
 			goto write_again;
 

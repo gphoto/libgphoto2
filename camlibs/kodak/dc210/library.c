@@ -166,7 +166,7 @@ static int dc210_write_single_char
 	int i;
 
 	for (i=0; i< RETRIES; i++){
-		if (gp_port_write(camera->port, &response, 1) >= 0)
+		if (gp_port_write(camera->port, (char *)&response, 1) >= 0)
 			return (GP_OK);
 	};
 
@@ -185,7 +185,7 @@ static int dc210_read_single_char
 
 	for (i = 0; i < RETRIES; i++){
 
-		error = gp_port_read(camera->port, response, 1);
+		error = gp_port_read(camera->port, (char *)response, 1);
 
 		if (error < 0){
 			if (error == GP_ERROR_TIMEOUT)
@@ -238,7 +238,7 @@ static int dc210_execute_command
 		};
 
 		for (k = 0; k < RETRIES; k++){
-			error = gp_port_read(camera->port, &response, 1);
+			error = gp_port_read(camera->port, (char *)&response, 1);
 			if (error != 1){
 				if (error == GP_ERROR_TIMEOUT){
 					dc210_cmd_error = DC210_TIMEOUT_ERROR;
@@ -307,7 +307,7 @@ static int dc210_write_command_packet
 
 		/* read answer */
 
-		error = gp_port_read(camera->port, &answer, 1);
+		error = gp_port_read(camera->port, (char *)&answer, 1);
 
 		if (error < 0) return GP_ERROR;
 
@@ -388,7 +388,7 @@ static int dc210_read_single_block
 
     error = 1;
     for (k = 0; k < RETRIES; k++){
-      if (gp_port_read(camera->port, b, blocksize) < 0){
+      if (gp_port_read(camera->port, (char *)b, blocksize) < 0){
 	continue;
       };
       error = 0;
@@ -443,7 +443,7 @@ static int dc210_read_to_file
 	  fatal_error = 1;
 	  for (k = 0; k < RETRIES; k++){
 		  /* read packet */
-	          if (gp_port_read(camera->port, b, blocksize) < 0){
+	          if (gp_port_read(camera->port, (char *)b, blocksize) < 0){
 		          dc210_write_single_char(camera, DC210_ILLEGAL_PACKET);
 			  packet_following = dc210_wait_for_response(camera, 0, NULL);
 			  continue;
@@ -625,8 +625,8 @@ static int dc210_format_card (Camera * camera, char * album_name, GPContext * co
   dc210_write_command_packet(camera, data);
   if (dc210_wait_for_response(camera, 3, context) != DC210_PACKET_FOLLOWING) return GP_ERROR;
 
-  gp_port_read(camera->port, answer, 16);
-  gp_port_read(camera->port, &checksum_read, 1);
+  gp_port_read(camera->port, (char *)answer, 16);
+  gp_port_read(camera->port, (char *)&checksum_read, 1);
   checksum = 0;
 
   for (i = 0; i < 16; i++) checksum ^= answer[i];
@@ -658,8 +658,8 @@ static int dc210_get_card_status (Camera * camera, dc210_card_status * card_stat
   dc210_execute_command(camera, cmd);
   if (dc210_wait_for_response(camera, 0, NULL) != DC210_PACKET_FOLLOWING) return GP_ERROR;
 
-  gp_port_read(camera->port, answer, 16);
-  gp_port_read(camera->port, &checksum_read, 1);
+  gp_port_read(camera->port, (char *)answer, 16);
+  gp_port_read(camera->port, (char *)&checksum_read, 1);
 
   checksum = 0;
   for (i = 0; i < 16; i++) checksum ^= answer[i];

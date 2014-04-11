@@ -91,17 +91,17 @@ static int stv0680_cmd(GPPort *port, unsigned char cmd,
 
 	/* write to port */
 	printf("Writing packet to port\n");
-	if((ret = gp_port_write(port, packet, 8)) < GP_OK)
+	if((ret = gp_port_write(port, (char *)packet, 8)) < GP_OK)
 		return ret;
 
 	printf("Reading response header\n");
 	/* read response header */
-	if((ret = gp_port_read(port, rhdr, 6)) != 6)
+	if((ret = gp_port_read(port, (char *)rhdr, 6)) != 6)
 		return ret;
 
 	printf("Read response\n");
 	/* read response */
-	if((ret = gp_port_read(port, response, response_len)) != response_len)
+	if((ret = gp_port_read(port, (char *)response, response_len)) != response_len)
 	    return ret;
 
 	printf("Validating packet [0x%X,0x%X,0x%X,0x%X,0x%X,0x%X]\n",
@@ -127,9 +127,9 @@ int stv0680_try_cmd(GPPort *port, unsigned char cmd,
 	case GP_PORT_USB:
 	    /* Most significant bit set, data flows from camera->host */
 	    if (cmd & 0x80)
-		ret=gp_port_usb_msg_read(port,cmd,data,0,response,response_len);
+		ret=gp_port_usb_msg_read(port,cmd,data,0,(char *)response,response_len);
 	    else
-		ret=gp_port_usb_msg_write(port,cmd,data,0,response,response_len);
+		ret=gp_port_usb_msg_write(port,cmd,data,0,(char *)response,response_len);
 
 	    if (ret == response_len)
 		return GP_OK;
@@ -213,7 +213,7 @@ int stv0680_get_image_raw(GPPort *port, int image_no, CameraFile *file)
 	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 	raw = malloc(size);
-	if ((ret=gp_port_read(port, raw, size))<0)
+	if ((ret=gp_port_read(port, (char *)raw, size))<0)
 	    return ret;
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
@@ -258,7 +258,7 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n#flags %x sgain %d sclkdiv %d avgpix %d fine %d coarse %d\n%d %d\n255\n", imghdr.flags, imghdr.sensor_gain, imghdr.sensor_clkdiv, imghdr.avg_pixel_value, fine, coarse , w, h);
 
 	gp_file_append(file, header, strlen(header));
-	if ((ret=gp_port_read(port, raw, size))<0)
+	if ((ret=gp_port_read(port, (char *)raw, size))<0)
 	    return ret;
 
 	data = malloc(size * 3);
@@ -322,7 +322,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no, CameraFile *file)
 	}
 	raw = calloc(1, rsize);
 	if (!raw) return GP_ERROR_NO_MEMORY;
-	if ((ret=gp_port_read(port, raw, rsize))<0) {
+	if ((ret=gp_port_read(port, (char *)raw, rsize))<0) {
 		free(raw);
 		return ret;
 	}
@@ -485,7 +485,7 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 
 	*size= xsize;
 	raw = malloc(*size);
-	switch(gp_port_read(port, raw, *size)) {
+	switch(gp_port_read(port, (char *)raw, *size)) {
 	case GP_ERROR_TIMEOUT:
 		printf("read timeout\n");
 		break;

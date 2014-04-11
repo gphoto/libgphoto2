@@ -64,7 +64,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
+	if ( gp_port_write(dimagev->dev, (char *)p->buffer, p->length) < GP_OK ) {
 		GP_DEBUG( "dimagev_delete_picture::unable to send set_data packet");
 		free(p);
 		return GP_ERROR_IO;
@@ -174,7 +174,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		return GP_ERROR_IO;
 	}
 
-	if ( gp_port_write(dimagev->dev, p->buffer, p->length) < GP_OK ) {
+	if ( gp_port_write(dimagev->dev, (char *)p->buffer, p->length) < GP_OK ) {
 		GP_DEBUG( "dimagev_delete_all::unable to send set_data packet");
 		free(p);
 		return GP_ERROR_IO;

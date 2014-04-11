@@ -71,24 +71,24 @@ static int recvdata(GPPort *port, unsigned char *p, int len)
   int i;
 
   gp_log (GP_LOG_DEBUG, "recvdata", "reading %d bytes", len);
-  gp_port_read(port, &s, 1);  /* BOFL */
-  gp_port_read(port, &t, 1);  /* recvaddr */
+  gp_port_read(port, (char *)&s, 1);  /* BOFL */
+  gp_port_read(port, (char *)&t, 1);  /* recvaddr */
 
   if(t != recvaddr[address]){
     gp_log (GP_LOG_ERROR, "recvdata", "address %02x does not match %02x, draining 3 bytes", t, recvaddr[address]);
-    gp_port_read(port, &s, 1);  /* drain */
-    gp_port_read(port, &s, 1);  /* drain */
-    gp_port_read(port, &s, 1);  /* drain */
+    gp_port_read(port, (char *)&s, 1);  /* drain */
+    gp_port_read(port, (char *)&s, 1);  /* drain */
+    gp_port_read(port, (char *)&s, 1);  /* drain */
     Abort(port);
     return(-1);
   }
   i = len;
   sum = (int) t;
-  while ((GP_OK <= gp_port_read(port, &s, 1)) && (s != EOFRAME)) {
+  while ((GP_OK <= gp_port_read(port, (char *)&s, 1)) && (s != EOFRAME)) {
     sum = sum + s;
     if(i > 0) {
       if(s == CESCAPE){
-        gp_port_read(port, &s, 1);
+        gp_port_read(port, (char *)&s, 1);
         if(0x20 & s)
           s = 0xDF & s;
         else
@@ -283,7 +283,7 @@ long F1fread(GPPort *port, unsigned char *data, long len)
   buf[6] = (len >> 8) & 0xff;
   buf[7] = 0xff & len;
   sendcommand(port,buf, 8);
-  gp_port_read(port, buf, 9);
+  gp_port_read(port, (char *)buf, 9);
   if((buf[2] != 0x02) || (buf[3] != 0x0C) || (buf[4] != 0x00)){
     Abort(port);
     fprintf(stderr,"F1fread fail\n");
@@ -292,13 +292,13 @@ long F1fread(GPPort *port, unsigned char *data, long len)
 
   len2 = buf[7] * 0x100 + buf[8]; /* data size */
   if(len2 == 0) {
-    gp_port_read(port, &s, 1); /* last block checksum */
-    gp_port_read(port, &s, 1); /* last block EOFL */
+    gp_port_read(port, (char *)&s, 1); /* last block checksum */
+    gp_port_read(port, (char *)&s, 1); /* last block EOFL */
     return(0);
   }
-  while((GP_OK <= gp_port_read(port, &s, 1)) && (s != EOFRAME)){
+  while((GP_OK <= gp_port_read(port, (char *)&s, 1)) && (s != EOFRAME)){
     if(s == CESCAPE){
-      gp_port_read(port, &s, 1);
+      gp_port_read(port, (char *)&s, 1);
       if(0x20 & s)
         s = 0xDF & s;
       else
@@ -386,7 +386,7 @@ long F1fwrite(GPPort *port,unsigned char *data, long len, unsigned char b) /* th
   address ++;
   if(address >7 ) address = 0;
 
-  gp_port_read(port, buf, 7);
+  gp_port_read(port, (char *)buf, 7);
   if((buf[2] != 0x02) || (buf[3] != 0x14) || (buf[4] != 0x00)){
     Abort(port);
     fprintf(stderr,"F1fwrite fail\n");

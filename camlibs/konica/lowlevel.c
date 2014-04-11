@@ -80,8 +80,8 @@ l_ping_rec (GPPort *p, unsigned int level)
 
 	/* Write ENQ and read the response. */
 	c = ENQ;
-	CHECK (gp_port_write (p, &c, 1));
-	CHECK (gp_port_read (p, &c, 1));
+	CHECK (gp_port_write (p, (char *)&c, 1));
+	CHECK (gp_port_read (p, (char *)&c, 1));
 	switch (c) {
 	case ACK:
 		return (GP_OK);
@@ -107,9 +107,9 @@ l_ping_rec (GPPort *p, unsigned int level)
 
 		/* Write NACK.  */
 		c = NACK;
-		CHECK (gp_port_write (p, &c, 1));
+		CHECK (gp_port_write (p, (char *)&c, 1));
 		for (;;) {
-			CHECK (gp_port_read (p, &c, 1));
+			CHECK (gp_port_read (p, (char *)&c, 1));
 			switch (c) {
 			case ENQ:
 
@@ -173,7 +173,7 @@ l_esc_read (GPPort *p, unsigned char *c)
 {
 	CHECK_NULL (p && c);
 
-	CHECK (gp_port_read (p, c, 1));
+	CHECK (gp_port_read (p, (char *)c, 1));
 
 	/*
 	 * STX, ETX, ENQ, ACK, XOFF, XON, NACK, and ETB have to be masked by
@@ -202,7 +202,7 @@ l_esc_read (GPPort *p, unsigned char *c)
 		if ((*c == ETX) || (*c == ETB))
 			return (GP_ERROR_CORRUPTED_DATA);
 	} else if (*c == ESC) {
-		CHECK (gp_port_read (p, c, 1));
+		CHECK (gp_port_read (p, (char *)c, 1));
 		*c = (~*c & 0xff);
 		if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
 		    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
@@ -286,8 +286,8 @@ l_send (GPPort *p, GPContext *context, unsigned char *send_buffer,
 	for (i = 0; ; i++) {
 
 		/* Write data as above.	*/
-		CHECK_FREE (gp_port_write (p, sb, sbs), sb);
-		CHECK_FREE (gp_port_read (p, &c, 1), sb);
+		CHECK_FREE (gp_port_write (p, (char *)sb, sbs), sb);
+		CHECK_FREE (gp_port_read (p, (char *)&c, 1), sb);
 		switch (c) {
 		case ACK:
 
@@ -296,7 +296,7 @@ l_send (GPPort *p, GPContext *context, unsigned char *send_buffer,
 
 			/* Write EOT.	*/
 			c = EOT;
-			CHECK (gp_port_write (p, &c, 1));
+			CHECK (gp_port_write (p, (char *)&c, 1));
 			return (GP_OK);
 
 		case NACK:
@@ -331,7 +331,7 @@ l_receive (GPPort *p, GPContext *context,
 
 	for (i = 0; ; ) {
 		CHECK (gp_port_set_timeout (p, timeout));
-		CHECK (gp_port_read (p, &c, 1));
+		CHECK (gp_port_read (p, (char *)&c, 1));
 		CHECK (gp_port_set_timeout (p, DEFAULT_TIMEOUT));
 		switch (c) {
 		case ENQ:
@@ -366,7 +366,7 @@ l_receive (GPPort *p, GPContext *context,
 			 * error).
 			 */
 			for (;;) {
-				CHECK (gp_port_read (p, &c, 1));
+				CHECK (gp_port_read (p, (char *)&c, 1));
 				if (c == ENQ)
 					break;
 			}
@@ -387,7 +387,7 @@ l_receive (GPPort *p, GPContext *context,
 	CHECK (gp_port_write (p, "\6", 1));
 	for (*rbs = 0; ; ) {
 		for (j = 0; ; j++) {
-			CHECK (gp_port_read (p, &c, 1));
+			CHECK (gp_port_read (p, (char *)&c, 1));
 			switch (c) {
 			case STX:
 
@@ -428,7 +428,7 @@ while (read < rbs_internal) {
 	 */
 	GP_DEBUG ("Reading %i bytes (%i of %i already read)...", 
 		  rbs_internal - read, read, rbs_internal);
-	result = gp_port_read (p, &((*rb)[*rbs + read]),
+	result = gp_port_read (p, (char *)&((*rb)[*rbs + read]),
 			       rbs_internal - read);
 	if (result < 0) {
 		error_flag = 1;
@@ -457,7 +457,7 @@ while (read < rbs_internal) {
 		} else if (*c == ESC) {
 			if (i == read + r - 1) {
 				/* ESC is last char of packet */
-				CHECK (gp_port_read (p, c, 1));
+				CHECK (gp_port_read (p, (char *)c, 1));
 			} else {
 				memmove (c, c + 1, read + r - i - 1);
 				r--;
@@ -478,7 +478,7 @@ while (read < rbs_internal) {
 	read += r;
 }}
 			if (!error_flag) {
-				CHECK (gp_port_read (p, &d, 1));
+				CHECK (gp_port_read (p, (char *)&d, 1));
 				switch (d) {
 				case ETX:
 
@@ -510,7 +510,7 @@ while (read < rbs_internal) {
 					 */
 					while ((d != ETX) && (d != ETB)) {
 						CHECK (gp_port_read (p,
-								     &d, 1));
+								     (char *)&d, 1));
 					}
 					error_flag = 1;
 					break;
@@ -541,11 +541,11 @@ while (read < rbs_internal) {
 
 				/* Write NACK. */
 				c = NACK;
-				CHECK (gp_port_write (p, &c, 1));
+				CHECK (gp_port_write (p, (char *)&c, 1));
 				continue;
 			}
 		}
-		CHECK (gp_port_read (p, &c, 1));
+		CHECK (gp_port_read (p, (char *)&c, 1));
 		switch (c) {
 			case EOT:
 
@@ -576,7 +576,7 @@ while (read < rbs_internal) {
 		case ETB:
 
 			/* We expect more data. Read ENQ. */
-			CHECK (gp_port_read (p, &c, 1));
+			CHECK (gp_port_read (p, (char *)&c, 1));
 			switch (c) {
 			case ENQ:
 

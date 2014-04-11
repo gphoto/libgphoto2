@@ -108,7 +108,7 @@ ez200_get_picture_size (GPPort *port, int n) {
 
 	GP_DEBUG("Running ez200_get_picture_size");
 
-    	READ(port, PICTURE, n, 1, c, 3);
+	READ(port, PICTURE, n, 1, (char *)c, 3);
 	size = (int)c[0] + (int)c[1]*0x100 + (int)c[2]*0x10000;
 
 	GP_DEBUG(" size of picture %i is 0x%x = %i byte(s)", n, size, size);

@@ -67,9 +67,9 @@ static int
 ultrapocket_command(GPPort *port, int iswrite, unsigned char *data, int datasize) {
     int ret;
     if (iswrite)
-	ret = gp_port_write(port, data, datasize);
+	ret = gp_port_write(port, (char *)data, datasize);
     else
-        ret = gp_port_read(port, data, datasize);
+        ret = gp_port_read(port, (char *)data, datasize);
 
     return ret;
 }
@@ -415,7 +415,7 @@ ultrapocket_skip(GPPort *port, int npackets)
 
    gp_port_get_timeout(port, &old_timeout);
    gp_port_set_timeout(port, 100);
-   for (; (npackets > 0) && gp_port_read(port, retbuf, 0x1000); npackets--);
+   for (; (npackets > 0) && gp_port_read(port, (char *)retbuf, 0x1000); npackets--);
    gp_port_set_timeout(port, old_timeout);
    return GP_OK;
 }

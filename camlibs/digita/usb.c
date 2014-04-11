@@ -45,7 +45,7 @@ static int digita_usb_send(CameraPrivateLibrary *dev, void *buffer, int len)
 int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera)
 {
 	GPPortSettings settings;
-	unsigned char buffer[128];
+	char buffer[128];
 	int ret;
 
 	ret = gp_port_get_settings(camera->port, &settings);

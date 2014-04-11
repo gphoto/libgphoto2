@@ -91,13 +91,13 @@ static const unsigned char success_packet[8] = {
 ssize_t send_cancel(Camera *camera,GPContext *context)
 {
     gp_log (GP_LOG_DEBUG, "topfield", __func__);
-    return gp_port_write (camera->port, cancel_packet, 8);
+    return gp_port_write (camera->port, (char *)cancel_packet, 8);
 }
 
 ssize_t send_success(Camera *camera, GPContext *context)
 {
     gp_log (GP_LOG_DEBUG, "topfield", __func__);
-    return gp_port_write (camera->port, success_packet, 8);
+    return gp_port_write (camera->port, (char *)success_packet, 8);
 }
 
 ssize_t send_cmd_ready(Camera *camera, GPContext *context)
@@ -269,7 +269,7 @@ ssize_t send_tf_packet(Camera *camera, struct tf_packet *packet, GPContext *cont
     gp_log (GP_LOG_DEBUG, "topfield", __func__);
     put_u16(&packet->crc, get_crc(packet));
     swap_out_packet(packet);
-    return gp_port_write (camera->port, (unsigned char *) packet, byte_count);
+    return gp_port_write (camera->port, (char *) packet, byte_count);
 }
 
 /* Receive a Topfield protocol packet.
@@ -281,7 +281,7 @@ ssize_t get_tf_packet(Camera *camera, struct tf_packet * packet, GPContext *cont
     int r;
 
     gp_log (GP_LOG_DEBUG, "topfield", __func__);
-    r = gp_port_read (camera->port, buf, MAXIMUM_PACKET_SIZE);
+    r = gp_port_read (camera->port, (char *)buf, MAXIMUM_PACKET_SIZE);
     if(r < 0)
         return r;
 

@@ -65,7 +65,7 @@ spca50x_get_firmware_revision (CameraPrivateLibrary *lib)
 {
 
 	CHECK (gp_port_usb_msg_read (lib->gpdev, 0x20, 0x0, 0x0,
-				&(lib->fw_rev), 1));
+				(char *)&(lib->fw_rev), 1));
 	return GP_OK;
 }
 
@@ -79,7 +79,7 @@ spca50x_detect_storage_type (CameraPrivateLibrary *lib)
 	{
 		buf[i] = 0;  /* if no data returned, assume no capability */
 		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000, 
-					i, &buf[i], 0x01)); 
+					i, (char *)&buf[i], 0x01));
 	}
 
 	if (buf[0]) lib->storage_media_mask |= SPCA50X_SDRAM;
