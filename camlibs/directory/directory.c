@@ -227,6 +227,8 @@ _get_path (GPPort *port, const char *folder, const char *file, char *path, unsig
 		char *xpath;
 
 		ret = _get_mountpoint (port, &xpath);
+		if (ret < GP_OK)
+			return ret;
 		snprintf (path, size, "%s/%s/%s", xpath, folder, file);
 	} else {
 		/* old style access */
