@@ -589,8 +589,7 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 	int isset = FALSE, isset2 = FALSE;
 
 	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range))) {
-		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no enumeration/range in 16bit table code");
-		return (GP_ERROR);
+		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no enumeration/range in 16bit table code... going on");
 	}
 	if (dpd->DataType != PTP_DTC_UINT16) {
 		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no uint16 prop in 16bit table code");
@@ -674,10 +673,22 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 		}
 	}
 	if (!isset2) {
-		char buf[200];
-		sprintf(buf, _("Unknown value %04x"), dpd->CurrentValue.u16);
-		gp_widget_add_choice (*widget, buf);
-		gp_widget_set_value (*widget, buf);
+		for (j=0;j<tblsize;j++) {
+			if (((tbl[j].vendor_id == 0) ||
+			     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)) &&
+			     (tbl[j].value == dpd->CurrentValue.u16)
+			) {
+				gp_widget_add_choice (*widget, _(tbl[j].label));
+				isset2 = TRUE;
+				gp_widget_set_value (*widget, _(tbl[j].label));
+			}
+		}
+		if (!isset2) {
+			char buf[200];
+			sprintf(buf, _("Unknown value %04x"), dpd->CurrentValue.u16);
+			gp_widget_add_choice (*widget, buf);
+			gp_widget_set_value (*widget, buf);
+		}
 	}
 	return (GP_OK);
 }
@@ -752,7 +763,6 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 
 	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration))) {
 		gp_log (GP_LOG_DEBUG, "ptp/get_generici16", "no enumeration/range in 16bit table code");
-		return (GP_ERROR);
 	}
 	if (dpd->DataType != PTP_DTC_INT16) {
 		gp_log (GP_LOG_DEBUG, "ptp/get_generici16", "no int16 prop in 16bit table code");
@@ -833,9 +843,24 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 	}
 	if (!isset2) {
 		char buf[200];
-		sprintf(buf, _("Unknown value %04x"), dpd->CurrentValue.i16);
-		gp_widget_add_choice (*widget, buf);
-		gp_widget_set_value (*widget, buf);
+
+		/* if we are not in enum or range mode, but have a value, check our internal table */
+		for (j=0;j<tblsize;j++) {
+			if (((tbl[j].vendor_id == 0) ||
+			     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)) &&
+			     (tbl[j].value == dpd->CurrentValue.i16)
+			) {
+				isset2 = TRUE;
+				gp_widget_add_choice (*widget, _(tbl[j].label));
+				gp_widget_set_value (*widget, _(tbl[j].label));
+				break;
+			}
+		}
+		if (!isset2) {
+			sprintf(buf, _("Unknown value %04x"), dpd->CurrentValue.i16);
+			gp_widget_add_choice (*widget, buf);
+			gp_widget_set_value (*widget, buf);
+		}
 	}
 	return (GP_OK);
 }
