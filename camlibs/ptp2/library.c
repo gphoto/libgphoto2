@@ -1153,15 +1153,15 @@ static struct {
 	{"Nikon:DSC D7100",               0x04b0, 0x0430, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
-	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
-	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* https://bugzilla.novell.com/show_bug.cgi?id=814622 Martin Caj at SUSE */
-	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* https://sourceforge.net/p/gphoto/feature-requests/432/ */
-	{"Nikon:V2",    		  0x04b0, 0x0604, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:V2",    		  0x04b0, 0x0604, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Ralph Schindler <ralph@ralphschindler.com> */
-	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 
 #if 0
@@ -1203,6 +1203,7 @@ static struct {
 
         /* Olympus wrap test code */
 	{"Olympus:E series (Control)",	  0x07b4, 0x0110, PTP_OLYMPUS_XML},
+
 #if 0 /* talks PTP via SCSI vendor command backchannel, like above. */
 	{"Olympus:E-410 (UMS 2 mode)",    0x07b4, 0x0118, 0}, /* not XML wrapped */
 #endif
@@ -3307,6 +3308,16 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	SET_CONTEXT_P(params, context);
 	camera->pl->checkevents = TRUE;
 
+	/* Nikon V* and J* advertise the new Nikon stuff, but only do the generic
+	 * PTP capture. FIXME: could use flags. */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+		(params->deviceinfo.Model && (
+			strstr(params->deviceinfo.Model,"J") ||
+			strstr(params->deviceinfo.Model,"V")
+		))
+	)
+		goto standard_capture;
+
 	/* 3rd gen style nikon capture, can do both sdram and card */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
@@ -3356,7 +3367,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return camera_sony_capture (camera, type, path, context);
 	}
 
-
+standard_capture:
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
                	_("Sorry, your camera does not support generic capture"));
