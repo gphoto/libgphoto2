@@ -1,6 +1,12 @@
 /* This pseudo-C file is uploaded to Coverity for modeling. */
 /* from ptp2 */
 
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+typedef unsigned long long uint64_t;
+
+typedef void *PTPParams;
+
 uint16_t htod16p (PTPParams *params, uint16_t var) { __coverity_tainted_data_return__(); }
 uint16_t dtoh16p (PTPParams *params, uint16_t var) { __coverity_tainted_data_return__(); }
 uint16_t htole16(uint16_t var) { __coverity_tainted_data_return__(); }
