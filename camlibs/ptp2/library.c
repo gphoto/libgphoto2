@@ -3437,9 +3437,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 				if (ret == PTP_RC_OK)
 					continue;
 
-				add_object (camera, handles.Handler[i], context);
+				ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
 
-				ret = ptp_object_find (params, handles.Handler[i], &ob);
 				if (ret != PTP_RC_OK) {
 					gp_log (GP_LOG_ERROR, "nikon_broken_capture", "object added, but not found?");
 					continue;
