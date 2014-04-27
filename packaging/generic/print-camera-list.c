@@ -500,6 +500,8 @@ udev_parse_params (const func_params_t *params, void **data)
 					|| pdata->owner != NULL)) {
 		FATAL("The <script> parameter conflicts with the <mode,group,owner> parameters.");
 	}
+	if (pdata->version >= UDEV_201)
+		fprintf(stderr,"NOTE: You need to generate a hwdb too, this file just contains the scsi generic device entries.\n");
 
 	pdata->begin_string = begin_strings[pdata->version];
 	pdata->usbcam_string = usbcam_strings[pdata->version];
@@ -735,6 +737,9 @@ udev_camera_func2 (const func_params_t *params,
 static int
 hwdb_begin_func (const func_params_t *params, void **data)
 {
+	fprintf(stderr,"NOTE: You should generate a udev rules file with udev-version 201\n");
+	fprintf(stderr,"or later to support cameras that use SCSI tunneling support, like\n");
+	fprintf(stderr,"various picture frames, Olympus remote control support.\n");
 	printf ("# hardware database file for libgphoto2 devices\n");
 	return 0;
 }
