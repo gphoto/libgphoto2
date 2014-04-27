@@ -2829,12 +2829,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				break;
 			}
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+				PTPObject	*ob;
+
 				/* just add it to the filesystem, and return in CameraPath */
 				gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_capture", "Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 				newobject = entry.u.object.oid;
 				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-				ret = add_object (camera, newobject, context);
-				if (ret != GP_OK)
+				ret = ptp_object_want (params, newobject, 0, &ob);
+				if (ret != PTP_RC_OK)
 					continue;
 				strcpy  (path->name,  oi.Filename);
 				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
@@ -3119,10 +3121,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			PTPObject	*ob;
 
 			gp_log (GP_LOG_DEBUG, "ptp", "Event ObjectAdded, object handle=0x%X.", newobject);
-			ret = add_object (camera, event.Param1, context);
-			if (ret != GP_OK)
+
+			ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			if (ret != PTP_RC_OK)
 				break;
-			ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			/* this might be just the folder add, ignore that. */
 			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
 				/* new directory ... mark fs as to be refreshed */
@@ -3464,7 +3466,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	done = 0;
 	while (!done) {
 		uint16_t ret = params->event_wait(params,&event);
-		int res;
 
 		CR (gp_port_set_timeout (camera->port, normal_timeout));
 		if (ret!=PTP_RC_OK) {
@@ -3482,11 +3483,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			break;
 		case PTP_EC_ObjectAdded: {
 			PTPObject	*ob;
+
 			/* add newly created object to internal structures */
-			res = add_object (camera, event.Param1, context);
-			if (res != GP_OK)
+			ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			if (ret != PTP_RC_OK)
 				break;
-			ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+
 			/* this might be just the folder add, ignore that. */
 			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
 				/* new directory ... mark fs as to be refreshed */
