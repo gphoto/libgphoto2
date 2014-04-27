@@ -445,6 +445,21 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_nikon_get_vendorpropcodes() failed with 0x%04x", ret);
 			}
 		}
+
+		/* Nikon V* and J* advertise the new Nikon stuff, but only do the generic
+		 * PTP capture. FIXME: could use flags. */
+		if (params->deviceinfo.Model && (
+			(params->deviceinfo.Model[0]=='J') ||	/* J1 - J3 currently */
+			(params->deviceinfo.Model[0]=='V') ||	/* V1 - V3 currently */
+			(params->deviceinfo.Model[0]=='S')	/* S1 - S2 currently */
+			)
+		) {
+			if (!NIKON_1(&camera->pl->params)) {
+				gp_log (GP_LOG_ERROR,"ptp2/fixup", "if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
+				camera->pl->params.device_flags |= PTP_NIKON_1;
+			}
+		}
+
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
 			di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2));
@@ -1153,16 +1168,15 @@ static struct {
 	{"Nikon:DSC D7100",               0x04b0, 0x0430, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
-	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
-	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_NIKON_1},
 	/* https://bugzilla.novell.com/show_bug.cgi?id=814622 Martin Caj at SUSE */
-	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:J2",    		  0x04b0, 0x0603, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/p/gphoto/feature-requests/432/ */
-	{"Nikon:V2",    		  0x04b0, 0x0604, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:V2",    		  0x04b0, 0x0604, PTP_CAP|PTP_NIKON_1},
 	/* Ralph Schindler <ralph@ralphschindler.com> */
-	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP|PTP_NIKON_BROKEN_CAP},
-
+	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP|PTP_NIKON_1},
 
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
@@ -2595,6 +2609,14 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (params->inliveview) af = 0;
 	}
 
+	if (NIKON_1(params)) {
+		ret = ptp_nikon_start_liveview (params);
+		if (ret != PTP_RC_OK) {
+			gp_context_error(context, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
+			return translate_ptp_result (ret);
+		}
+	}
+
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		do {
 			ret = ptp_nikon_capture2(params,af,1);
@@ -3308,16 +3330,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	SET_CONTEXT_P(params, context);
 	camera->pl->checkevents = TRUE;
 
-	/* Nikon V* and J* advertise the new Nikon stuff, but only do the generic
-	 * PTP capture. FIXME: could use flags. */
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		(params->deviceinfo.Model && (
-			strstr(params->deviceinfo.Model,"J") ||
-			strstr(params->deviceinfo.Model,"V")
-		))
-	)
-		goto standard_capture;
-
 	/* 3rd gen style nikon capture, can do both sdram and card */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
@@ -3367,7 +3379,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return camera_sony_capture (camera, type, path, context);
 	}
 
-standard_capture:
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
                	_("Sorry, your camera does not support generic capture"));
@@ -3425,7 +3436,15 @@ standard_capture:
 				ret = ptp_object_find (params, handles.Handler[i], &ob);
 				if (ret == PTP_RC_OK)
 					continue;
+
 				add_object (camera, handles.Handler[i], context);
+
+				ret = ptp_object_find (params, handles.Handler[i], &ob);
+				if (ret != PTP_RC_OK) {
+					gp_log (GP_LOG_ERROR, "nikon_broken_capture", "object added, but not found?");
+					continue;
+				}
+
 				/* A directory was added, like initial DCIM/100NIKON or so. */
 				if (ob->oi.ObjectFormat == PTP_OFC_Association)
 					continue;

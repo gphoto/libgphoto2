@@ -232,6 +232,12 @@
 #define DEVICE_FLAG_NIKON_BROKEN_CAPTURE	0x00100000
 
 /**
+ * To distinguish the V1 series from the DSLRs and handle them
+ * (libgphoto2)
+ */
+#define DEVICE_FLAG_NIKON_1			0x00200000
+
+/**
  * Broken capture support where cameras do not send CaptureComplete events.
  * (libgphoto2)
  */
