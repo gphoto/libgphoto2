@@ -365,7 +365,8 @@ typedef enum {
 		UDEV_PRE_0_98 = 0,
 		UDEV_0_98 = 1,
 		UDEV_136 = 2,
-		UDEV_175 = 3
+		UDEV_175 = 3,
+		UDEV_201 = 4
 } udev_version_t;
 
 static const StringFlagItem udev_version_t_map[] = {
@@ -373,6 +374,7 @@ static const StringFlagItem udev_version_t_map[] = {
 	{ "0.98", UDEV_0_98 },
 	{ "136", UDEV_136 },
 	{ "175", UDEV_175 },
+	{ "201", UDEV_201 },
 	{ NULL, 0 }
 };
 
@@ -421,7 +423,11 @@ udev_parse_params (const func_params_t *params, void **data)
 		"ENV{ID_USB_INTERFACES}==\"*:08*:*\", GOTO=\"libgphoto2_usb_end\"\n"
 		/* shortcut the most common camera driver, ptp class, so we avoid parsing 1000
 		 * more rules . It will be completed in udev_begin_func() */
-		"ENV{ID_USB_INTERFACES}==\"*:060101:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\", "
+		"ENV{ID_USB_INTERFACES}==\"*:060101:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\", ",
+
+		/* UDEV_201 ... regular stuff is done via hwdb, only scsi generic here. */
+		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
+		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_usb_end\"\n"
 	};
 	static const char * const usbcam_strings[] = {
 		/* UDEV_PRE_0_98 */
@@ -431,7 +437,9 @@ udev_parse_params (const func_params_t *params, void **data)
 		/* UDEV_136 */
 		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\"",
 		/* UDEV_175 */
-		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\""
+		"ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\"",
+		/* UDEV_201 */
+		""
 	};
 	static const char * const usbdisk_strings[] = {
 		/* UDEV_PRE_0_98 */
@@ -441,6 +449,8 @@ udev_parse_params (const func_params_t *params, void **data)
 		/* UDEV_136 */
 		"KERNEL==\"%s\", ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\"",
 		/* UDEV_175 */
+		"KERNEL==\"%s\", ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\"",
+		/* UDEV_201 */
 		"KERNEL==\"%s\", ATTRS{idVendor}==\"%04x\", ATTRS{idProduct}==\"%04x\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"proprietary\""
 	};
 	udev_persistent_data_t *pdata;
@@ -575,6 +585,8 @@ udev_camera_func (const func_params_t *params,
 
 	if (!(a->port & GP_PORT_USB))
 		return 0;
+
+	if (pdata->version == UDEV_201) return 0;
 
 	if (a->usb_vendor) { /* usb product id may be zero! */
 		class = 0;
