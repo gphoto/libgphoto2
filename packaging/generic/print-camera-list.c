@@ -1619,8 +1619,7 @@ static const output_format_t formats[] = {
 	 ddb_end_func
 	},
 #endif
-	{NULL, NULL, NULL, NULL, 
-	 NULL, NULL, NULL}
+	{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}
 };
 
 
