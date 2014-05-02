@@ -123,7 +123,7 @@ main(int argc, char **argv) {
 	int	i, retval;
 	GPContext *canoncontext = sample_create_context();
 
-	gp_log_add_func(GP_LOG_ERROR, errordumper, 0x4242424242);
+	gp_log_add_func(GP_LOG_ERROR, errordumper, 0);
 	gp_camera_new(&canon);
 
 	/* When I set GP_LOG_DEBUG instead of GP_LOG_ERROR above, I noticed that the
