@@ -285,6 +285,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_PairingComplete		0x9035
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
+#define PTP_OC_CANON_GetWebServiceSpec		0x9068
+#define PTP_OC_CANON_GetWebServiceData		0x9069
+#define PTP_OC_CANON_SetWebServiceData		0x906B
+#define PTP_OC_CANON_GetRootCertificateSpec	0x906C
+#define PTP_OC_CANON_GetRootCertificateData	0x906D
+#define PTP_OC_CANON_SetRootCertificateData	0x906F
+
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
 /* 9102: 1 arg (0)
@@ -378,7 +385,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_RemoteReleaseOff	0x9129
 
 #define PTP_OC_CANON_EOS_RegistBackgroundImage	0x912A
-#define PTP_OC_CANON_EOS_ChangePhotoStadioMode	0x912B
+#define PTP_OC_CANON_EOS_ChangePhotoStudioMode	0x912B
 #define PTP_OC_CANON_EOS_GetPartialObjectEx	0x912C
 #define PTP_OC_CANON_EOS_ResetMirrorLockupState	0x9130
 #define PTP_OC_CANON_EOS_PopupBuiltinFlash	0x9131
@@ -388,28 +395,41 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_GetCTGInfo		0x9135
 #define PTP_OC_CANON_EOS_GetLensAdjust		0x9136
 #define PTP_OC_CANON_EOS_SetLensAdjust		0x9137
-#define PTP_OC_CANON_EOS_ReadyToSendMusic	0x9138
+#define PTP_OC_CANON_EOS_GetMusicInfo		0x9138
 #define PTP_OC_CANON_EOS_CreateHandle		0x9139
 #define PTP_OC_CANON_EOS_SendPartialObjectEx	0x913A
 #define PTP_OC_CANON_EOS_EndSendPartialObjectEx	0x913B
 #define PTP_OC_CANON_EOS_SetCTGInfo		0x913C
 #define PTP_OC_CANON_EOS_SetRequestOLCInfoGroup	0x913D
 #define PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel	0x913E
+#define PTP_OC_CANON_EOS_GetCameraSupport	0x913F
+#define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args */
+#define PTP_OC_CANON_EOS_RequestInnerDevelopStart	0x9141 /* 2 args: 1 type, 1 object? */
+#define PTP_OC_CANON_EOS_RequestInnerDevelopParamChange	0x9142
+#define PTP_OC_CANON_EOS_RequestInnerDevelopEnd		0x9143
+#define PTP_OC_CANON_EOS_GpsLoggingDataMode		0x9144 /* 1 arg */
+#define PTP_OC_CANON_EOS_GetGpsLogCurrentHandle		0x9145
 
 #define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151
 #define PTP_OC_CANON_EOS_TerminateViewfinder	0x9152
 #define PTP_OC_CANON_EOS_GetViewFinderData	0x9153
 #define PTP_OC_CANON_EOS_DoAf			0x9154
 #define PTP_OC_CANON_EOS_DriveLens		0x9155
-#define PTP_OC_CANON_EOS_DepthOfFieldPreview	0x9156
-#define PTP_OC_CANON_EOS_ClickWB		0x9157
-#define PTP_OC_CANON_EOS_Zoom			0x9158
-#define PTP_OC_CANON_EOS_ZoomPosition		0x9159
-#define PTP_OC_CANON_EOS_SetLiveAfFrame		0x915a
+#define PTP_OC_CANON_EOS_DepthOfFieldPreview	0x9156 /* 1 arg */
+#define PTP_OC_CANON_EOS_ClickWB		0x9157 /* 2 args: x,y */
+#define PTP_OC_CANON_EOS_Zoom			0x9158 /* 1 arg */
+#define PTP_OC_CANON_EOS_ZoomPosition		0x9159 /* 2 args: x,y */
+#define PTP_OC_CANON_EOS_SetLiveAfFrame		0x915A
+#define PTP_OC_CANON_EOS_TouchAfPosition	0x915B /* 3 args: type,x,y */
+#define PTP_OC_CANON_EOS_SetLvPcFlavoreditMode	0x915C /* 1 arg */
+#define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+#define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
 #define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8
 #define PTP_OC_CANON_EOS_AdapterTransferProgress	0x91E9
+#define PTP_OC_CANON_EOS_TransferComplete2	0x91F0
+#define PTP_OC_CANON_EOS_CancelTransfer2	0x91F1
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
 
