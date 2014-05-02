@@ -172,6 +172,28 @@ main(int argc, char **argv) {
 		if (shutterspeed < 30) {
 			printf("ISO %d has Aperture %g and Shutterspeed %g\n", iso, aperture/10.0, shutterspeed);
 			/*break;*/
+			printf("eosremoterelease release\n");
+			retval = set_config_value_string(camera,"eosremoterelease", "Press Full", context);
+
+			if (retval != GP_OK) {
+				printf("  failed pressing shutter button full: %d\n", retval);
+				exit (1);
+			}
+
+			retval = set_config_value_string(camera,"eosremoterelease", "Release Full", context);
+
+			if (retval != GP_OK) {
+				printf("  failed releasing shutter button full: %d\n", retval);
+				exit (1);
+			}
+
+
+			retval = camera_tether(camera, context);
+			if (retval != GP_OK) {
+				printf("Tether error: %d\n", retval);
+				exit (1);
+			}
+
 		}
 		iso = iso*2;
 	}
