@@ -39,7 +39,7 @@ sample_capture_SOURCES = sample-capture.c context.c samples.h config.c focus.c
 sample_trigger_capture_SOURCES = sample-trigger-capture.c context.c samples.h config.c
 sample_preview_SOURCES = preview.c samples.h context.c config.c focus.c
 sample_tether_SOURCES = samples.h sample-tether.c context.c config.c
-best_iso_SOURCES = samples.h best-iso.c context.c config.c
+best_iso_SOURCES = best-iso.c
 sample_justfocus_SOURCES = samples.h sample-justfocus.c context.c focus.c
 
 LDADD = $(top_builddir)/libgphoto2/libgphoto2.la \
