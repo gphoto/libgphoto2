@@ -15,6 +15,8 @@
 #include <string.h>
 #include <gphoto2/gphoto2.h>
 
+#define DEBUG
+
 static int aperture;
 static float shutterspeed;
 
@@ -171,21 +173,32 @@ set_config_value_string (Camera *camera, const char *key, const char *val, GPCon
         case GP_WIDGET_MENU:
         case GP_WIDGET_RADIO:
         case GP_WIDGET_TEXT:
+		/* This is the actual set call. Note that we keep
+		 * ownership of the string and have to free it if necessary.
+		 */
+		ret = gp_widget_set_value (child, val);
+		if (ret < GP_OK) {
+			fprintf (stderr, "could not set widget value: %d\n", ret);
+			goto out;
+		}
 		break;
+        case GP_WIDGET_TOGGLE: {
+		int ival;
+
+		sscanf(val,"%d",&ival);
+		ret = gp_widget_set_value (child, &ival);
+		if (ret < GP_OK) {
+			fprintf (stderr, "could not set widget value: %d\n", ret);
+			goto out;
+		}
+		break;
+	}
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);
 		ret = GP_ERROR_BAD_PARAMETERS;
 		goto out;
 	}
 
-	/* This is the actual set call. Note that we keep
-	 * ownership of the string and have to free it if necessary.
-	 */
-	ret = gp_widget_set_value (child, val);
-	if (ret < GP_OK) {
-		fprintf (stderr, "could not set widget value: %d\n", ret);
-		goto out;
-	}
 	/* This stores it on the camera again */
 	ret = gp_camera_set_config (camera, widget, context);
 	if (ret < GP_OK) {
@@ -242,7 +255,8 @@ camera_tether(Camera *camera, GPContext *context) {
 				char *val;
 				int ret;
 
-				printf("Unknown event: %s.\n", (char*)evtdata);
+				/* printf("Unknown event: %s.\n", (char*)evtdata); */
+
 				/* 3 eos properties hardcoded */
 				if (strstr(evtdata,"d103")) {
 					ret = get_config_value_string(camera,"iso",&val,context);
@@ -257,7 +271,8 @@ camera_tether(Camera *camera, GPContext *context) {
 							sscanf(val,"%d/%d",&zaehler,&nenner);
 							shutterspeed = 1.0*zaehler/nenner;
 						} else {
-							sscanf(val,"%g",&shutterspeed);
+							if (!sscanf(val,"%g",&shutterspeed))
+								shutterspeed = 0.0;
 						}
 						printf("Shutterspeed is %s (%g)\n", val, shutterspeed);
 					}
@@ -313,6 +328,15 @@ main(int argc, char **argv) {
 	shutterspeed = 0.0;
 	aperture = 0;
 
+#if 0
+	gp_file_new (&file);
+	retval = gp_camera_capture_preview (camera, file, context);
+	if (retval != GP_OK) {
+		printf("Preview capture error: %d\n", retval);
+		exit (1);
+	}
+#endif
+
 	while (1) {
 		sprintf(buf,"%d",iso);
 		printf("Setting ISO to %d\n",iso);
@@ -338,6 +362,10 @@ main(int argc, char **argv) {
 			exit (1);
 		}
 
+		if (shutterspeed < 0.000000001) {
+			printf("Camera did not report shutterspeed?\n");
+		}
+
 		printf("eosremoterelease release\n");
 		retval = set_config_value_string(camera,"eosremoterelease", "Release Half", context);
 		if (retval != GP_OK) {
@@ -357,6 +385,7 @@ main(int argc, char **argv) {
 
 	/* we can take the picture now */
 
+#if 0
 
         printf("Capturing.\n");
 
@@ -384,11 +413,11 @@ main(int argc, char **argv) {
 
         gp_file_free(file);
 
-
-#if 0
+#endif
+#if 1
 	/* SAMPLE Capture code with eosremoterelease ... normal gp_camera_capture_image also works. */
 	printf("eosremoterelease release\n");
-	retval = set_config_value_string(camera,"eosremoterelease", "Press Full", context);
+	retval = set_config_value_string(camera,"eosremoterelease", "Immediate", context);
 
 	if (retval != GP_OK) {
 		printf("  failed pressing shutter button full: %d\n", retval);
@@ -409,6 +438,13 @@ main(int argc, char **argv) {
 		exit (1);
 	}
 #endif
+	while (1) {
+		retval = camera_tether(camera, context);
+		if (retval != GP_OK) {
+			printf("Tether error: %d\n", retval);
+			exit (1);
+		}
+	}
 
 	gp_camera_exit(camera, context);
 	return 0;
