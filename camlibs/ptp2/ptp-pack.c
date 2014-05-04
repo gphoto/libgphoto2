@@ -2014,7 +2014,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			}
 			mask = dtoh16a(curdata+8+4);
 			curoff = 8+4+4;
-			if (mask & 1) {
+			if (mask & CANON_EOS_OLC_BUTTON) {
 				ptp_debug (params, "olc: mask 0<<2 not handled");
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				ce[i].u.info = malloc(strlen("Button 1234567"));
@@ -2023,7 +2023,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				curoff += 2;
 			}
 			
-			if (mask & 2) {
+			if (mask & CANON_EOS_OLC_SHUTTERSPEED) {
 				/* 6 bytes: 01 01 98 10 00 60 */
 				/* this seesm to be the shutter speed record */
 				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
@@ -2041,7 +2041,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				curoff += 6;
 				i++;
 			}
-			if (mask & 4) {
+			if (mask & CANON_EOS_OLC_APERTURE) {
 				/* 5 bytes: 01 01 5b 30 30 */
 				/* this seesm to be the aperture record */
 				proptype = PTP_DPC_CANON_EOS_Aperture;
@@ -2057,6 +2057,24 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
 				curoff += 5;
+				i++;
+			}
+			if (mask & CANON_EOS_OLC_ISO) {
+				/* 5 bytes: 01 01 00 78 */
+				/* this seesm to be the aperture record */
+				proptype = PTP_DPC_CANON_EOS_ISOSpeed;
+				for (j=0;j<params->nrofcanon_props;j++)
+					if (params->canon_props[j].proptype == proptype)
+						break;
+				if (j == params->nrofcanon_props)
+					ptp_debug (params, "event %d: shutterspeed not found yet, handle this", i);
+
+				dpd = &params->canon_props[j].dpd;
+				dpd->CurrentValue.u16 = curdata[curoff+3]; /* just use last byte */
+
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+				ce[i].u.propid = proptype;
+				curoff += 4;
 				i++;
 			}
 			/* handle more masks */
