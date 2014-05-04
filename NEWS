@@ -1,9 +1,11 @@
 libgphoto2 2.5.4.1 snapshot
 
 ptp2:
+* Nikon 1 support. Final fix to get it running by Raj Kumar of archive.org.
 * Sony: Fixed Sony SLT-A900v capture
 * Nikon: liveview capture without autofocus enhanced, now also for card
 * Nikon: restart liveview after capture
+* Canon EOS: New property reporting method (OLC Info) implemented.
 * Print read-only values in configuration table lookup (for Canon EOS mostly)
 * Bugfixes
 
