@@ -2015,7 +2015,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			mask = dtoh16a(curdata+8+4);
 			curoff = 8+4+4;
 			if (mask & CANON_EOS_OLC_BUTTON) {
-				ptp_debug (params, "olc: mask 0<<2 not handled");
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				ce[i].u.info = malloc(strlen("Button 1234567"));
 				sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
@@ -2077,6 +2076,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				curoff += 4;
 				i++;
 			}
+			/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
+			/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed */
+			/* mask 0x0040: 7 bytes, 01 01 00 00 00 00 00 observed */
+			/* mask 0x0080: 4 bytes, 00 00 00 00 observed */
+			/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and 00 00 00 00 01 00 (on focus) observed */
+			/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
+			/* mask 0x0400: 7 bytes, 00 00 00 00 00 00 00 observed */
+			/* mask 0x0800: 8 bytes, 00 00 00 00 00 00 00 00 and 19 01 00 00 00 00 00 00 and others observed */
+			/*   might be mask of focus points selected */
+			/* mask 0x1000: 1 byte, 00 observed */
 			/* handle more masks */
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			ce[i].u.info = malloc(strlen("OLCInfo event mask 0123456789"));

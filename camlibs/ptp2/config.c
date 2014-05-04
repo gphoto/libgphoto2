@@ -274,9 +274,9 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	params->eos_camerastatus = -1;	/* aka unknown */
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRequestOLCInfoGroup)) {
-		ret = ptp_canon_eos_setrequestolcinfogroup(params,0x00000fff);
+		ret = ptp_canon_eos_setrequestolcinfogroup(params,0x00001fff);
 		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setrqolcinfogroup 0xfff failed!");
+			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setrqolcinfogroup 0x1fff failed!");
 			return translate_ptp_result (ret);
 		}
 	}
