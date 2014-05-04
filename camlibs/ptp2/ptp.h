@@ -2766,6 +2766,10 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * Return values: Some PTP_RC_* code.
  *
  **/
+#define CANON_EOS_OLC_BUTTON 		0x0001
+#define CANON_EOS_OLC_SHUTTERSPEED 	0x0002
+
+#define ptp_canon_eos_setrequestolcinfogroup(params,igmask) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRequestOLCInfoGroup,1,igmask)
 #define ptp_canon_eos_requestdevicepropvalue(params,prop) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RequestDevicePropValue,1,prop)
 uint16_t ptp_canon_eos_capture (PTPParams* params, uint32_t *result);
 uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);

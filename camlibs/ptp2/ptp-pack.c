@@ -1984,6 +1984,57 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 
 				break;
 		}
+		/* one more information record handed to us */
+		case PTP_EC_CANON_EOS_OLCInfoChanged: {
+			uint32_t		len, curoff;
+			uint16_t		mask,proptype;
+			unsigned int		j;
+			PTPDevicePropDesc	*dpd;
+
+			/* unclear what OLC stands for */
+			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
+			if (size >= 0x8) {	/* event info */
+				unsigned int j;
+				for (j=8;j<size;j++)
+					ptp_debug (params, "    %d: %02x", j-8, curdata[j]);
+			}
+			len = dtoh32a(curdata+8);
+			if (len != size-8) {
+				(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ptp_debug (params, "event %d: size %d, len %d", i, size, len);
+				break;
+			}
+			mask = dtoh16a(curdata+8+4);
+			curoff = 8+4+4;
+			if (mask & 1) {
+				ptp_debug (params, "olc: mask 0<<2 not handled");
+				curoff += 2;
+			}
+			
+			if (mask & 2) {
+				/* 6 bytes: 01 01 98 10 00 60 */
+				/* this seesm to be the shutter speed record */
+				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
+				for (j=0;j<params->nrofcanon_props;j++)
+					if (params->canon_props[j].proptype == proptype)
+						break;
+				if (j == params->nrofcanon_props)
+					ptp_debug (params, "event %d: shutterspeed not found yet, handle this", i);
+
+				dpd = &params->canon_props[j].dpd;
+				dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
+
+				(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+				(*ce)[i].u.propid = proptype;
+				curoff += 6;
+				break;
+			}
+			/* handle more masks */
+			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			(*ce)[i].u.info = malloc(strlen("OLCInfo event mask 0123456789"));
+			sprintf((*ce)[i].u.info, "OLCInfo event mask=%x",  dtoh16a(curdata+8+2));
+			break;
+		}
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
 			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS;
 			(*ce)[i].u.status =  dtoh32a(curdata+8);
