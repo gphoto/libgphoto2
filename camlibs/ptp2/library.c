@@ -2619,7 +2619,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		do {
-			ret = ptp_nikon_capture2(params,af,1);
+			ret = ptp_nikon_capture2(params,af,sdram);
 		} while (ret == PTP_RC_DeviceBusy);
 		goto capturetriggered;
 	}
