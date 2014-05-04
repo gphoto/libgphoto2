@@ -27,3 +27,35 @@ uint64_t htod64p (PTPParams *params, uint64_t var) { __coverity_tainted_data_ret
 void htod64ap (PTPParams *params, unsigned char *a, uint64_t val) { __coverity_tainted_data_argument__(a); }
 void dtoh64ap (PTPParams *params, unsigned char *a, uint64_t val) { __coverity_tainted_data_argument__(a); }
 
+/* gphoto port reading from devices */
+typedef void *GPPort;
+int gp_port_read        (GPPort *port, char *data, int size) {
+	__coverity_tainted_data_argument__(data);
+}
+
+int gp_port_usb_msg_read    (GPPort *port, int request, int value, int index, char *bytes, int size) {
+	__coverity_tainted_data_argument__(bytes);
+}
+
+int gp_port_usb_msg_interface_read    (GPPort *port, int request, int value, int index, char *bytes, int size) {
+	__coverity_tainted_data_argument__(bytes);
+}
+
+int gp_port_usb_msg_class_read    (GPPort *port, int request, int value, int index, char *bytes, int size) {
+	__coverity_tainted_data_argument__(bytes);
+}
+
+int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
+                                char *cmd, int cmd_size,
+                                char *sense, int sense_size,
+                                char *data, int data_size) {
+	if (!to_dev) {
+		__coverity_tainted_data_argument__(data);
+		__coverity_tainted_data_argument__(sense);
+	}
+}
+
+void gp_log_data (const char *domain, const char *data, unsigned int size) {
+	/* considered a tainted sink ... but is not one. */
+}
+
