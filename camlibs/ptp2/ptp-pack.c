@@ -1603,10 +1603,11 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 #define PTP_ece_OA_Name		0x28
 
 static inline int
-ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **ce)
+ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **pce)
 {
 	int	i = 0, entries = 0;
 	unsigned char	*curdata = data;
+	PTPCanon_changes_entry *ce;
 
 	if (data==NULL)
 		return 0;
@@ -1614,42 +1615,49 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		uint32_t	size = dtoh32a(&curdata[PTP_ece_Size]);
 		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
 
-		curdata += size;
 		if ((size == 8) && (type == 0))
 			break;
+		if (type == PTP_EC_CANON_EOS_OLCInfoChanged) {
+			unsigned int j;
+
+			for (j=0;j<31;j++)
+				if (dtoh32a(curdata+12) & (1<<j))
+					entries++;
+		}
+		curdata += size;
 		entries++;
 	}
-	*ce = malloc (sizeof(PTPCanon_changes_entry)*(entries+1));
-	if (!*ce) return 0;
+	ce = malloc (sizeof(PTPCanon_changes_entry)*(entries+1));
+	if (!ce) return 0;
 
 	curdata = data;
 	while (curdata - data < datasize) {
 		uint32_t	size = dtoh32a(&curdata[PTP_ece_Size]);
 		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
 
-		(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-		(*ce)[i].u.info = NULL;
+		ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+		ce[i].u.info = NULL;
 		switch (type) {
 		case  PTP_EC_CANON_EOS_ObjectAddedEx:
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
-			(*ce)[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OA_ObjectID]);
-			(*ce)[i].u.object.oi.StorageID 		= dtoh32a(&curdata[PTP_ece_OA_StorageID]);
-			(*ce)[i].u.object.oi.ParentObject	= dtoh32a(&curdata[PTP_ece_OA_Parent]);
-			(*ce)[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OA_OFC]);
-			(*ce)[i].u.object.oi.ObjectCompressedSize= dtoh32a(&curdata[PTP_ece_OA_Size]);
-			(*ce)[i].u.object.oi.Filename 		= strdup(((char*)&curdata[PTP_ece_OA_Name]));
-			ptp_debug (params, "event %d: objectinfo added oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, (*ce)[i].u.object.oid, (*ce)[i].u.object.oi.ParentObject, (*ce)[i].u.object.oi.ObjectFormat, (*ce)[i].u.object.oi.ObjectCompressedSize, (*ce)[i].u.object.oi.Filename);
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
+			ce[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OA_ObjectID]);
+			ce[i].u.object.oi.StorageID 		= dtoh32a(&curdata[PTP_ece_OA_StorageID]);
+			ce[i].u.object.oi.ParentObject	= dtoh32a(&curdata[PTP_ece_OA_Parent]);
+			ce[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OA_OFC]);
+			ce[i].u.object.oi.ObjectCompressedSize= dtoh32a(&curdata[PTP_ece_OA_Size]);
+			ce[i].u.object.oi.Filename 		= strdup(((char*)&curdata[PTP_ece_OA_Name]));
+			ptp_debug (params, "event %d: objectinfo added oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			break;
 		case  PTP_EC_CANON_EOS_RequestObjectTransfer:
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER;
-			(*ce)[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
-			(*ce)[i].u.object.oi.StorageID 		= 0; /* use as marker */
-			(*ce)[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OI_OFC]);
-			(*ce)[i].u.object.oi.ParentObject	= 0; /* check, but use as marker */
-			(*ce)[i].u.object.oi.ObjectCompressedSize = dtoh32a(&curdata[PTP_ece_OI_Size]);
-			(*ce)[i].u.object.oi.Filename 		= strdup(((char*)&curdata[PTP_ece_OI_Name]));
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER;
+			ce[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
+			ce[i].u.object.oi.StorageID 		= 0; /* use as marker */
+			ce[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece_OI_OFC]);
+			ce[i].u.object.oi.ParentObject	= 0; /* check, but use as marker */
+			ce[i].u.object.oi.ObjectCompressedSize = dtoh32a(&curdata[PTP_ece_OI_Size]);
+			ce[i].u.object.oi.Filename 		= strdup(((char*)&curdata[PTP_ece_OI_Name]));
 
-			ptp_debug (params, "event %d: request object transfer oid %08lx, ofc %04x, size %d, filename %p", i, (*ce)[i].u.object.oid, (*ce)[i].u.object.oi.ObjectFormat, (*ce)[i].u.object.oi.ObjectCompressedSize, (*ce)[i].u.object.oi.Filename);
+			ptp_debug (params, "event %d: request object transfer oid %08lx, ofc %04x, size %d, filename %p", i, ce[i].u.object.oid, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			break;
 		case  PTP_EC_CANON_EOS_AvailListChanged: {	/* property desc */
 			uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
@@ -1761,8 +1769,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				}
 				dpd = &params->canon_props[j].dpd;
 
-				(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
-				(*ce)[i].u.propid = proptype;
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+				ce[i].u.propid = proptype;
 
 				/* fix GetSet value */
 				switch (proptype) {
@@ -2000,7 +2008,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			}
 			len = dtoh32a(curdata+8);
 			if (len != size-8) {
-				(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				ptp_debug (params, "event %d: size %d, len %d", i, size, len);
 				break;
 			}
@@ -2008,6 +2016,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			curoff = 8+4+4;
 			if (mask & 1) {
 				ptp_debug (params, "olc: mask 0<<2 not handled");
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ce[i].u.info = malloc(strlen("Button 1234567"));
+				sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
+				i++;
 				curoff += 2;
 			}
 			
@@ -2024,20 +2036,38 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				dpd = &params->canon_props[j].dpd;
 				dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
 
-				(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
-				(*ce)[i].u.propid = proptype;
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+				ce[i].u.propid = proptype;
 				curoff += 6;
-				break;
+				i++;
+			}
+			if (mask & 4) {
+				/* 5 bytes: 01 01 5b 30 30 */
+				/* this seesm to be the aperture record */
+				proptype = PTP_DPC_CANON_EOS_Aperture;
+				for (j=0;j<params->nrofcanon_props;j++)
+					if (params->canon_props[j].proptype == proptype)
+						break;
+				if (j == params->nrofcanon_props)
+					ptp_debug (params, "event %d: shutterspeed not found yet, handle this", i);
+
+				dpd = &params->canon_props[j].dpd;
+				dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
+
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+				ce[i].u.propid = proptype;
+				curoff += 5;
+				i++;
 			}
 			/* handle more masks */
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			(*ce)[i].u.info = malloc(strlen("OLCInfo event mask 0123456789"));
-			sprintf((*ce)[i].u.info, "OLCInfo event mask=%x",  dtoh16a(curdata+8+2));
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("OLCInfo event mask 0123456789"));
+			sprintf(ce[i].u.info, "OLCInfo event mask=%x",  mask);
 			break;
 		}
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS;
-			(*ce)[i].u.status =  dtoh32a(curdata+8);
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS;
+			ce[i].u.status =  dtoh32a(curdata+8);
 			ptp_debug (params, "event %d: EOS event CameraStatusChanged (size %d) = %d", i, size, dtoh32a(curdata+8));
 			params->eos_camerastatus = dtoh32a(curdata+8);
 			break;
@@ -2047,16 +2077,16 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "event %d: EOS event 0, but size %d", i, size);
 			break;
 		case PTP_EC_CANON_EOS_BulbExposureTime:
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			(*ce)[i].u.info = malloc(strlen("BulbExposureTime 123456789"));
-			sprintf ((*ce)[i].u.info, "BulbExposureTime %d",  dtoh32a(curdata+8));
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789"));
+			sprintf (ce[i].u.info, "BulbExposureTime %d",  dtoh32a(curdata+8));
 			break;
 		default:
 			switch (type) {
 #define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
 				ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", i, size); 	\
-				(*ce)[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 123456789)"));	\
-				sprintf ((*ce)[i].u.info, "unhandled EOS event "#x" (size %d)",  size);		\
+				ce[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 123456789)"));	\
+				sprintf (ce[i].u.info, "unhandled EOS event "#x" (size %d)",  size);		\
 				break;
 			XX(RequestGetEvent)
 			XX(ObjectRemoved)
@@ -2086,19 +2116,20 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				for (j=8;j<size;j++)
 					ptp_debug (params, "    %d: %02x", j, curdata[j]);
 			}
-			(*ce)[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			break;
 		}
 		curdata += size;
-		i++;
 		if ((size == 8) && (type == 0))
 			break;
+		i++;
 	}
-	if (!entries) {
-		free (*ce);
-		*ce = NULL;
+	if (!i) {
+		free (ce);
+		ce = NULL;
 	}
-	return entries;
+	*pce = ce;
+	return i;
 }
 
 /*
