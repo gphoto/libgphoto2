@@ -1706,7 +1706,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* special handling of ImageFormat properties */
 				for (j=0;j<propxcnt;j++) {
 					dpd->FORM.Enum.SupportedValue[j].u16 =
-							dtoh16( ptp_unpack_EOS_ImageFormat( params, &xdata ) );
+							ptp_unpack_EOS_ImageFormat( params, &xdata );
 					ptp_debug (params, "event %d: suppval[%d] of %x is 0x%x.", i, j, proptype, dpd->FORM.Enum.SupportedValue[j].u16);
 				}
 				break;
