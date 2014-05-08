@@ -2233,7 +2233,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			PTPPropertyValue	val;
 			/* FIXME: this might cause a focusing pass and take seconds. 20 was not
 			 * enough (would be 0.2 seconds, too short for the mirror up operation.). */
-			int 			tries = 100;
+			/* The EOS 100D takes 1.2 seconds */
+			int 			tries = 200;
 			PTPDevicePropDesc       dpd;
 
 			SET_CONTEXT_P(params, context);
