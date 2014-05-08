@@ -55,7 +55,7 @@
 #  define N_(String) (String)
 #endif
 
-#define CONTEXT_BLOCK_SIZE	100000
+#define CONTEXT_BLOCK_SIZE	200000
 
 #define PTP_CNT_INIT(cnt) {memset(&cnt,0,sizeof(cnt));}
 
@@ -363,7 +363,7 @@ retry:
 		data = malloc(READLEN);
 		if (!data) return PTP_RC_GeneralError;
 		bytes_to_read = len - (rlen - PTP_USB_BULK_HDR_LEN);
-		usecontext = (bytes_to_read > CONTEXT_BLOCK_SIZE);
+		usecontext = (bytes_to_read > 2*CONTEXT_BLOCK_SIZE);
 		ret = PTP_RC_OK;
 		if (usecontext)
 			progressid = gp_context_progress_start (context, (bytes_to_read/CONTEXT_BLOCK_SIZE), _("Downloading..."));
