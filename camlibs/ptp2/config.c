@@ -78,7 +78,9 @@ static int
 camera_prepare_chdk_capture(Camera *camera, GPContext *context) {
 	uint16_t 		ret;
 	PTPParams		*params = &camera->pl->params;
-	int 			scriptid = 0,status = 0,major = 0,minor = 0;
+	int 			scriptid = 0, major = 0,minor = 0;
+	unsigned int		status;
+	int			luastatus;
 	ptp_chdk_script_msg	*msg = NULL;
 	char *lua		=
 PTP_CHDK_LUA_SERIALIZE
@@ -102,10 +104,10 @@ return false,'already in rec'\n\
 	gp_log (GP_LOG_DEBUG,"prepare_chdk", "CHDK %d.%d", major, minor);
 
 	gp_log (GP_LOG_DEBUG,"prepare_chdk", "calling lua script %s", lua);
-	ret= ptp_chdk_exec_lua(params, lua, 0, &scriptid, &status);
+	ret= ptp_chdk_exec_lua(params, lua, 0, &scriptid, &luastatus);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	gp_log (GP_LOG_DEBUG,"prepare_chdk", "called script. script id %d, status %d", scriptid, status);
+	gp_log (GP_LOG_DEBUG,"prepare_chdk", "called script. script id %d, status %d", scriptid, luastatus);
 
 	while (1) {
 		ret = ptp_chdk_get_script_status(params, &status);
@@ -4963,22 +4965,15 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		ret;
 	char		*script;
 	PTPParams	*params = &(camera->pl->params);
-	uint32_t	output;
-	char 		*scriptoutput;
-	int         script_id;
-	int         status;
+	int		script_id;
+	unsigned int	status;
+	int		luastatus;
 	
 
 	ret = gp_widget_get_value (widget, &script);
 	if (ret != GP_OK)
 		return ret;
-#if 0
-	ret = ptp_chdk_switch_mode (params, 1);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
-#endif
-		
-#if 1
+
 //  Nafraf: Working on this!!!
 //
 //  gphoto: config.c   
@@ -4992,23 +4987,35 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 //                &status)
 //
 // Unfinished, I'm not sure of last 3 parameters
-    ret = ptp_chdk_exec_lua (params, script, 0, &script_id, &status);
-    printf("Return value: %d\n", ret);
-    printf("Script id   : %d\n", script_id);
-    printf("Status      : %d\n", status);    
+	gp_log(GP_LOG_DEBUG,"chkd_script","calling script: %s", script);
+	ret = ptp_chdk_exec_lua (params, script, 0, &script_id, &luastatus);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	fprintf(stderr,"output: 0x%08x\n", output);
-#endif
+	gp_log(GP_LOG_DEBUG,"chkd_script","called script, id %d, status %d", script_id, luastatus);
 
-#if 0
-	ret = ptp_chdk_get_script_output (params, &scriptoutput);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
-	fprintf(stderr,"script output: %s\n", scriptoutput);
-	return PTP_RC_OK;
-#endif	
-    return GP_OK;
+	while (1) {
+		ret = ptp_chdk_get_script_status(params, &status);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+		gp_log (GP_LOG_DEBUG, "chkd_script", "script status %x", status);
+
+		if (status & PTP_CHDK_SCRIPT_STATUS_MSG) {
+			ptp_chdk_script_msg	*msg = NULL;
+
+			ret = ptp_chdk_read_script_msg(params, &msg);
+			if (ret != PTP_RC_OK)
+				return translate_ptp_result (ret);
+
+			gp_log (GP_LOG_DEBUG,"chkd_script", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
+			gp_log (GP_LOG_DEBUG,"chkd_script", "message script %s", msg->data);
+		}
+
+		if (!(status & PTP_CHDK_SCRIPT_STATUS_RUN))
+			break;
+		usleep(100000);
+	}
+
+	return GP_OK;
 }
 
 
