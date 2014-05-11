@@ -1,7 +1,3 @@
-/*
- * Get https://trac.assembla.com/chdk/browser/trunk/core/ptp.h?format=txt
- */
-
 #ifndef __CHDK_PTP_H
 #define __CHDK_PTP_H
 
@@ -31,7 +27,8 @@ protocol version history
 #define PTP_OC_CHDK 0x9999
 
 // N.B.: unused parameters should be set to 0
-enum ptp_chdk_command {
+//enum ptp_chdk_command {
+enum PTP_CHDK_Command {
   PTP_CHDK_Version = 0,     // return param1 is major version number
                             // return param2 is minor version number
   PTP_CHDK_GetMemory,       // param2 is base address (not NULL; circumvent by taking 0xFFFFFFFF and size+1)
@@ -122,6 +119,88 @@ enum ptp_chdk_script_data_type {
 #define PTP_CHDK_SL_UBASIC 1
 #define PTP_CHDK_SL_MASK 0xFF
 
+/* standard message chdkptp sends */
+#define PTP_CHDK_LUA_SERIALIZE "\n\
+serialize_r = function(v,opts,r,seen,depth)\n\
+        local vt = type(v)\n\
+        if vt == 'nil' or  vt == 'boolean' or vt == 'number' then\n\
+                table.insert(r,tostring(v))\n\
+                return\n\
+        end\n\
+        if vt == 'string' then\n\
+                table.insert(r,string.format('%q',v))\n\
+                return\n\
+        end\n\
+        if vt == 'table' then\n\
+                if not depth then\n\
+                        depth = 1\n\
+                end\n\
+                if depth >= opts.maxdepth then\n\
+                        error('serialize: max depth')\n\
+                end\n\
+                if not seen then\n\
+                        seen={}\n\
+                elseif seen[v] then\n\
+                        if opts.err_cycle then\n\
+                                error('serialize: cycle')\n\
+                        else\n\
+                                table.insert(r,'\"cycle:'..tostring(v)..'\"')\n\
+                                return\n\
+                        end\n\
+                end\n\
+                seen[v] = true;\n\
+                table.insert(r,'{')\n\
+                for k,v1 in pairs(v) do\n\
+                        if opts.pretty then\n\
+                                table.insert(r,'\\n'..string.rep(' ',depth))\n\
+                        end\n\
+                        if type(k) == 'string' and string.match(k,'^[_%a][%a%d_]*$') then\n\
+                                table.insert(r,k)\n\
+                        else\n\
+                                table.insert(r,'[')\n\
+                                serialize_r(k,opts,r,seen,depth+1)\n\
+                                table.insert(r,']')\n\
+                        end\n\
+                        table.insert(r,'=')\n\
+                        serialize_r(v1,opts,r,seen,depth+1)\n\
+                        table.insert(r,',')\n\
+                end\n\
+                if opts.pretty then\n\
+                        table.insert(r,'\\n'..string.rep(' ',depth-1))\n\
+                end\n\
+                table.insert(r,'}')\n\
+                return\n\
+        end\n\
+        if opts.err_type then\n\
+                error('serialize: unsupported type ' .. vt, 2)\n\
+        else\n\
+                table.insert(r,'\"'..tostring(v)..'\"')\n\
+        end\n\
+end\n\
+serialize_defaults = {\n\
+        maxdepth=10,\n\
+        err_type=true,\n\
+        err_cycle=true,\n\
+        pretty=false,\n\
+}\n\
+function serialize(v,opts)\n\
+        if opts then\n\
+                for k,v in pairs(serialize_defaults) do\n\
+                        if not opts[k] then\n\
+                                opts[k]=v\n\
+                        end\n\
+                end\n\
+        else\n\
+                opts=serialize_defaults\n\
+        end\n\
+        local r={}\n\
+        serialize_r(v,opts,r)\n\
+        return table.concat(r)\n\
+end\n\
+\n\
+usb_msg_table_to_string=serialize\n"
+
+
 // bit flags for script start
 #define PTP_CHDK_SCRIPT_FL_NOKILL           0x100 // if script is running return error instead of killing
 #define PTP_CHDK_SCRIPT_FL_FLUSH_CAM_MSGS   0x200 // discard existing cam->host messages before starting
@@ -143,8 +222,7 @@ Full jpeg file. Note supported on all cameras, use Lua get_usb_capture_support t
 
 /*
 Raw framebuffer data, in camera native format.
-A subset of rows may be re
-     0K ........quested in init_usb_capture.
+A subset of rows may be requested in init_usb_capture.
 */
 #define PTP_CHDK_CAPTURE_RAW    0x2
 

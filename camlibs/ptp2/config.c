@@ -75,6 +75,102 @@
 #define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 
 static int
+camera_prepare_chdk_capture(Camera *camera, GPContext *context) {
+	uint16_t 		ret;
+	PTPParams		*params = &camera->pl->params;
+	int 			scriptid = 0,status = 0,major = 0,minor = 0;
+	ptp_chdk_script_msg	*msg = NULL;
+	char *lua		=
+PTP_CHDK_LUA_SERIALIZE
+"if not get_mode() then\n\
+        switch_mode_usb(1)\n\
+        local i=0\n\
+        while not get_mode() and i < 300 do\n\
+                sleep(10)\n\
+                i=i+1\n\
+        end\n\
+        if not get_mode() then\n\
+                return false, 'switch failed'\n\
+        end\n\
+        return true\n\
+end\n\
+return false,'already in rec'\n\
+";
+	ret = ptp_chdk_get_version (params, &major, &minor);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	gp_log (GP_LOG_DEBUG,"prepare_chdk", "CHDK %d.%d", major, minor);
+
+	gp_log (GP_LOG_DEBUG,"prepare_chdk", "calling lua script %s", lua);
+	ret= ptp_chdk_exec_lua(params, lua, 0, &scriptid, &status);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+	gp_log (GP_LOG_DEBUG,"prepare_chdk", "called script. script id %d, status %d", scriptid, status);
+
+	while (1) {
+		ret = ptp_chdk_get_script_status(params, &status);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+		gp_log (GP_LOG_DEBUG, "prepare_chdk", "script status %x", status);
+
+		if (status & PTP_CHDK_SCRIPT_STATUS_MSG) {
+			ret = ptp_chdk_read_script_msg(params, &msg);
+			if (ret != PTP_RC_OK)
+				return translate_ptp_result (ret);
+
+			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
+			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script %s", msg->data);
+		}
+
+		if (!(status & PTP_CHDK_SCRIPT_STATUS_RUN))
+			break;
+		usleep(100000);
+	}
+	return GP_OK;
+}
+
+static int
+camera_unprepare_chdk_capture(Camera *camera, GPContext *context) {
+	uint16_t 		ret;
+	PTPParams		*params = &camera->pl->params;
+	int 			scriptid = 0, status = 0;
+	ptp_chdk_script_msg	*msg = NULL;
+	char *lua		=
+PTP_CHDK_LUA_SERIALIZE
+"if get_mode() then\n\
+        switch_mode_usb(0)\n\
+        local i=0\n\
+        while get_mode() and i < 300 do\n\
+                sleep(10)\n\
+                i=i+1\n\
+        end\n\
+        if get_mode() then\n\
+                return false, 'switch failed'\n\
+        end\n\
+        return true\n\
+end\n\
+return false,'already in play'\n\
+";
+	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "calling lua script %s", lua);
+	ret= ptp_chdk_exec_lua(params, lua, 0, &scriptid, &status);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+
+	ret = ptp_chdk_read_script_msg(params, &msg);
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result (ret);
+
+	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "called script. script id %d, status %d", scriptid, status);
+	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
+	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script %s", msg->data);
+	if (!status) {
+		gp_context_error(context,_("CHDK did not leave recording mode."));
+		return GP_ERROR;
+	}
+	return GP_OK;
+}
+
+static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	PTPContainer		event;
 	PTPPropertyValue	propval;
@@ -376,6 +472,9 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CANON_InitiateReleaseControl))
 			return camera_prepare_canon_powershot_capture(camera,context);
 
+		if (ptp_operation_issupported(params, PTP_OC_CHDK))
+			return camera_prepare_chdk_capture(camera,context);
+
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
 			return camera_prepare_canon_eos_capture(camera,context);
 		gp_context_error(context, _("Sorry, your Canon camera does not support Canon capture"));
@@ -450,6 +549,9 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_TerminateReleaseControl))
 			return camera_unprepare_canon_powershot_capture (camera, context);
+
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CHDK))
+			return camera_unprepare_chdk_capture(camera,context);
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease))
 			return camera_unprepare_canon_eos_capture (camera, context);
@@ -4846,31 +4948,6 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 }
 
 static int
-_get_Canon_CHDK_Reboot(CONFIG_GET_ARGS) {
-	int val;
-
-	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	val = 2;	/* always changed, unless we can find out the state ... */
-	gp_widget_set_value  (*widget, &val);
-	return (GP_OK);
-}
-
-static int
-_put_Canon_CHDK_Reboot(CONFIG_PUT_ARGS) {
-	int val, ret;
-	PTPParams *params = &(camera->pl->params);
-
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
-	if (val != 1)
-		return GP_OK;
-	ret = ptp_chdk_reboot (params);
-	return translate_ptp_result (ret);
-}
-
-static int
 _get_Canon_CHDK_Script(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -4884,28 +4961,54 @@ _get_Canon_CHDK_Script(CONFIG_GET_ARGS) {
 static int
 _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		ret;
-	char		*val;
+	char		*script;
 	PTPParams	*params = &(camera->pl->params);
 	uint32_t	output;
 	char 		*scriptoutput;
+	int         script_id;
+	int         status;
+	
 
-	ret = gp_widget_get_value (widget, &val);
+	ret = gp_widget_get_value (widget, &script);
 	if (ret != GP_OK)
 		return ret;
+#if 0
 	ret = ptp_chdk_switch_mode (params, 1);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
+#endif
+		
 #if 1
-	ret = ptp_chdk_exec_lua (params, val, &output);
+//  Nafraf: Working on this!!!
+//
+//  gphoto: config.c   
+//  ret = ptp_chdk_exec_lua (params, val, &output);
+//
+//  chdkptp: chdkptp.c
+//    ret = ptp_chdk_exec_lua (params, 
+//                (char *)luaL_optstring(L,2,""),
+//                luaL_optnumber(L,3,0), 
+//                &ptp_cs->script_id,
+//                &status)
+//
+// Unfinished, I'm not sure of last 3 parameters
+    ret = ptp_chdk_exec_lua (params, script, 0, &script_id, &status);
+    printf("Return value: %d\n", ret);
+    printf("Script id   : %d\n", script_id);
+    printf("Status      : %d\n", status);    
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 	fprintf(stderr,"output: 0x%08x\n", output);
 #endif
+
+#if 0
 	ret = ptp_chdk_get_script_output (params, &scriptoutput);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
 	fprintf(stderr,"script output: %s\n", scriptoutput);
 	return PTP_RC_OK;
+#endif	
+    return GP_OK;
 }
 
 
@@ -5997,7 +6100,6 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Canon EOS Viewfinder"),		"eosviewfinder",    0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder, _put_Canon_EOS_ViewFinder},
 	{ N_("Nikon Viewfinder"),		"viewfinder",       0, PTP_VENDOR_NIKON, PTP_OC_NIKON_StartLiveView, _get_Nikon_ViewFinder, _put_Nikon_ViewFinder},
 	{ N_("Canon EOS Remote Release"),	"eosremoterelease",	0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_RemoteReleaseOn, _get_Canon_EOS_RemoteRelease, _put_Canon_EOS_RemoteRelease},
-	{ N_("CHDK Reboot"),			"chdk_reboot",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Reboot, _put_Canon_CHDK_Reboot},
 	{ N_("CHDK Script"),			"chdk_script",		0, PTP_VENDOR_CANON, PTP_OC_CHDK, _get_Canon_CHDK_Script, _put_Canon_CHDK_Script},
 	{ N_("Movie Capture"),			"movie",		0, PTP_VENDOR_NIKON, PTP_OC_NIKON_StartMovieRecInCard, _get_Nikon_Movie, _put_Nikon_Movie},
 	{ N_("Movie Capture"),			"movie",		0, PTP_VENDOR_SONY, PTP_OC_SONY_SDIOConnect, _get_Sony_Movie, _put_Sony_Movie},
