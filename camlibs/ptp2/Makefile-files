@@ -6,7 +6,7 @@ EXTRA_LTLIBRARIES += ptp2.la
 
 ptp2_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBXML2_CFLAGS)
 ptp2_la_SOURCES = \
-	ptp2/ptp.c ptp2/ptp.h ptp2/chdk_ptp.h ptp2/chdk_liveview.h \
+	ptp2/ptp.c ptp2/ptp.h ptp2/chdk_ptp.h ptp2/chdk_live_view.h \
 	ptp2/library.c ptp2/usb.c ptp2/ptp-bugs.h \
 	ptp2/ptp-private.h ptp2/ptpip.c ptp2/config.c \
 	ptp2/music-players.h ptp2/device-flags.h \
