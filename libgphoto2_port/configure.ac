@@ -166,7 +166,6 @@ AC_CHECK_LIB([regex],[regexec])
 dnl ---------------------------------------------------------------------------
 dnl Apple Bonjour / mDNSResponder multicast DNS queries.
 dnl ---------------------------------------------------------------------------
-with_bonjour=no
 AC_ARG_WITH([bonjour],
 	AS_HELP_STRING([--without-bonjour], [whether to exclude Bonjour PTP/IP autodetection]),
 	,with_bonjour=yes)
