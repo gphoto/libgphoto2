@@ -1607,6 +1607,8 @@ static struct {
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot A4000IS",		0x04a9, 0x3243, PTPBUG_DELETE_SENDS_EVENT},
+	/* Peter Ivanyi <ipeter88@gmail.com> */
+	{"Canon:PowerShot SX260HS",		0x04a9, 0x3244, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot SX240HS",		0x04a9, 0x3245, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
@@ -1649,6 +1651,12 @@ static struct {
 
 	/* Andrés Farfán <nafraf@linuxmail.org> */
 	{"Canon:PowerShot SX510 HS",		0x04a9, 0x3277, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* thinkgareth <thinkgareth@users.sf.net> */
+	{"Canon:EOS 1200D",			0x04a9, 0x327f, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* https://sourceforge.net/p/gphoto/feature-requests/445/ */
+	{"Canon:PowerShot Elph135",		0x04a9, 0x3288, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
