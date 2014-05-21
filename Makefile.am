@@ -103,22 +103,3 @@ endif
 # released version
 cvs-tags: Makefile
 	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed -e 's/\./_/g' -e 's/rc/-rc/g')"
-
-
-
-########################################################################
-# Compatibility for header inclusions.
-#
-# - Old code has -I/usr/include/gphoto2
-#   #include <gphoto2-camera.h>
-#
-# - New code has -I/usr/include
-#   #include <gphoto2/gphoto2-camera.h>
-
-install-data-local:
-	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2
-	$(INSTALL) -m 0755 -d $(DESTDIR)$(includedir)/gphoto2
-	$(LN_S) . $(DESTDIR)$(includedir)/gphoto2/gphoto2
-
-uninstall-local:
-	rm -f $(DESTDIR)$(includedir)/gphoto2/gphoto2
