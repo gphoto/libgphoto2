@@ -124,6 +124,11 @@ gp_port_library_list (GPPortInfoList *list)
 	int		nrofdevs = 0;
 	struct libusb_device_descriptor	*descs;
 
+	if (libusb_init (&ctx) != 0) {
+		gp_log (GP_LOG_ERROR, "libusb1", "libusb_init failed.");
+		return GP_ERROR_IO;
+	}
+
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB);
@@ -131,10 +136,6 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_set_path (info, "^usb:");
 	CHECK (gp_port_info_list_append (list, info));
 
-	if (libusb_init (&ctx) != 0) {
-		gp_log (GP_LOG_ERROR, "libusb1", "libusb_init failed.");
-		return GP_ERROR_IO;
-	}
 	nrofdevs = libusb_get_device_list (ctx, &devs);
 	descs = malloc (sizeof(descs[0])*nrofdevs);
 	for (i=0;i<nrofdevs;i++) {
@@ -615,8 +616,9 @@ gp_port_usb_update (GPPort *port)
 {
 	int ret, ifacereleased = FALSE;
 
-	if (!port)
+	if (!port || !port->pl || !port->pl->ctx)
 		return GP_ERROR_BAD_PARAMETERS;
+
 
 	gp_log (GP_LOG_DEBUG, "libusb1", "gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d) port %s",
 		port->settings.usb.interface,
