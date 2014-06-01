@@ -4502,6 +4502,52 @@ _put_UINT32_as_time(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_UINT32_as_localtime(CONFIG_GET_ARGS) {
+	time_t	camtime;
+	struct	tm *ptm;
+
+	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	camtime = dpd->CurrentValue.u32;
+	/* hack to convert from local time on camera to utc */
+	ptm = gmtime(&camtime);
+	ptm->tm_isdst = -1;
+	camtime = mktime (ptm);
+	gp_widget_set_value (*widget,&camtime);
+	return (GP_OK);
+}
+
+static int
+_put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
+	time_t	camtime,newcamtime;
+	int	ret;
+	struct	tm *ptm;
+	char	*tz;
+
+	camtime = 0;
+	ret = gp_widget_get_value (widget,&camtime);
+	if (ret != GP_OK)
+		return ret;
+	ptm = localtime(&camtime);
+
+	tz = getenv("TZ");
+	if (tz)
+		tz = strdup(tz);
+	setenv("TZ", "", 1);
+	tzset();
+	newcamtime = mktime(ptm);
+	if (tz) {
+		setenv("TZ", tz, 1);
+		free(tz);
+	} else
+		unsetenv("TZ");
+	tzset();
+
+	propval->u32 = newcamtime;
+	return (GP_OK);
+}
+
+static int
 _get_Canon_SyncTime(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -6097,6 +6143,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),			"bulb", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_TerminateCapture, _get_Nikon_Bulb, _put_Nikon_Bulb},
 	{ N_("UI Lock"),			"uilock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_SetUILock, _get_Canon_EOS_UILock, _put_Canon_EOS_UILock},
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
+	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Drive Nikon DSLR Autofocus"),	"autofocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_AfDrive, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
 	{ N_("Drive Canon DSLR Autofocus"),	"autofocusdrive", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_DoAf, _get_Canon_EOS_AFDrive, _put_Canon_EOS_AFDrive },
@@ -6157,7 +6204,7 @@ static struct submenu camera_status_menu[] = {
 static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
-	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_localtime, _put_UINT32_as_localtime },
 	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_DateTime, 0, PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
 	{ N_("Image Comment"), "imagecomment", PTP_DPC_NIKON_ImageCommentString, PTP_VENDOR_NIKON, PTP_DTC_STR, _get_STR, _put_STR },
