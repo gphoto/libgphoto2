@@ -2,13 +2,18 @@ libgphoto2 2.5.4.1 snapshot
 
 ptp2:
 * Nikon 1 support. Final fix to get it running by Raj Kumar of archive.org.
-* Sony: Fixed Sony SLT-A900v capture
 * Nikon: liveview capture without autofocus enhanced, now also for card
 * Nikon: restart liveview after capture
 * Canon EOS: New property reporting method (OLC Info) implemented.
 * Print read-only values in configuration table lookup (for Canon EOS mostly)
+* Sony: Fixed Sony SLT-A900v capture
 * Fixed the various "datetime" hooks for PTP generic, Canon Powershot and Canon EOS
   to hopefully work better.
+* CHDK: some changes
+* New ids:
+  Nikon DSC D3x
+  Canon PowerShot S95, SX260HS, SX160IS, A2600, Elph135
+  Canon EOS 1200D
 * Bugfixes
 
 all:
@@ -16,10 +21,11 @@ all:
 * fixed libgd detection and linking
 
 print-camera-list
-* add a mode to print udev rules for the non-standard USB support (usbscsi/usbdisk)
+* add a mode to print udev rules for the non-standard USB support (usbscsi/usbdisk),
+  needed additional to HWDB databases.
 
 translations:
-* updated ukrainian, vietnamese, polish, french
+* updated ukrainian, vietnamese, polish, french, finish, chinese, danish, dutch,
 ------------------------------------------------------------------------------
 libgphoto2 2.5.4 release
 
