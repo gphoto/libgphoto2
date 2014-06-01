@@ -446,6 +446,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 				di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1));
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
+				/* probably more */
 				di->OperationsSupported_len += 1;
 			}
 		}
@@ -2572,7 +2573,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPParams		*params = &camera->pl->params;
 	PTPDevicePropDesc	propdesc;
 	PTPPropertyValue	propval;
-	int			i, ret, hasc101 = 0, burstnumber = 1;
+	int			i, ret, burstnumber = 1, done, tries;
 	uint32_t		newobject;
 
 	if (type != GP_CAPTURE_IMAGE)
@@ -2668,7 +2669,8 @@ capturetriggered:
 	}
 
 	newobject = 0xffff0001;
-	while (1) {
+	done = 0; tries = 100;
+	while (done != 3) {
 		PTPContainer	event;
 		int 		checkevt;
 
@@ -2680,7 +2682,7 @@ capturetriggered:
 			gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_Nikon_ObjectAddedInSDRAM:
-				hasc101=1;
+				done |= 3;
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				break;
@@ -2693,13 +2695,15 @@ capturetriggered:
 				} else {
 					newobject = event.Param1;
 				}
+				done |= 2;
 				break;
+			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
 			case PTP_EC_CaptureComplete:
 				if (params->inliveview) {
 					gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "Capture complete ... restarting liveview");
 					ret = ptp_nikon_start_liveview (params);
 				}
-				hasc101=1;
+				done |= 1;
 				break;
 			default:
 				gp_log (GP_LOG_DEBUG , "ptp/nikon_capture", "UNHANDLED event.Code is %x / param %lx, DEFER", event.Code, (unsigned long)event.Param1);
@@ -2707,17 +2711,29 @@ capturetriggered:
 				checkevt = 1; /* avoid endless loop */
 				break;
 			}
-			if (checkevt || hasc101)
+			if (checkevt)
 				break;
 		}
-		if (hasc101)
+		/* we got both capturecomplete and objectadded ... leave */
+		if (done == 3)
 			break;
+		/* just got capturecomplete ... wait a bit for a objectadded (Nikon 1) */
+		if (done == 1) {
+			if (!tries--)
+				break;
+		}
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
 		usleep(50*1000);
 	}
 	if (!newobject) newobject = 0xffff0001;
 
+	/* This loop handles single and burst capture. 
+	 * It also handles SDRAM and also CARD capture.
+	 * In Burst/SDRAM we need to download everything at once
+	 * In all SDRAM modes we download and store it in the virtual fs.
+	 * in Burst/CARD we add just the 1st as object, but do not download it yet.
+	 */
 	for (i=0;i<burstnumber;i++) {
 		/* In Burst mode, the image is always 0xffff0001.
 		 * The firmware just gives us one after the other for the same ID
@@ -2728,31 +2744,47 @@ capturetriggered:
 			gp_log (GP_LOG_ERROR,"nikon_capture","getobjectinfo(%x) failed: %d", newobject, ret);
 			return translate_ptp_result (ret);
 		}
-		if (oi.ParentObject != 0)
+
+		debug_objectinfo(params, newobject, &oi);
+
+		if (oi.ParentObject == 0) {
 			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
-		/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
-		if (oi.StorageID == 0) {
-			strcpy (path->folder, "/");
-		} else {
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
-		}
-		if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
-			gp_log (GP_LOG_DEBUG,"nikon_capture", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
-			sprintf (path->name, "capt%04d.nef", capcnt++);
-		} else {
-			sprintf (path->name, "capt%04d.jpg", capcnt++);
-		}
-		ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
-		if (ret != GP_OK) {
-			gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
-			return ret;
-		}
-/* this does result in 0x2009 (invalid object id) with the D90 ... curiuos
-		ret = ptp_nikon_delete_sdram_image (params, newobject);
- */
-		ret = ptp_deleteobject (params, newobject, 0);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
+			/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
+			if (oi.StorageID == 0) {
+				strcpy (path->folder, "/");
+			} else {
+				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+			}
+			if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+				gp_log (GP_LOG_DEBUG,"nikon_capture", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+				sprintf (path->name, "capt%04d.nef", capcnt++);
+			} else {
+				sprintf (path->name, "capt%04d.jpg", capcnt++);
+			}
+			ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
+			if (ret != GP_OK) {
+				gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
+				return ret;
+			}
+	/* this does result in 0x2009 (invalid object id) with the D90 ... curiuos
+			ret = ptp_nikon_delete_sdram_image (params, newobject);
+	 */
+			ret = ptp_deleteobject (params, newobject, 0);
+			if (ret != PTP_RC_OK) {
+				gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
+			}
+		} else { /* capture to card branch */
+			ret = add_object (camera, newobject, context);
+			if (ret != GP_OK)
+				return ret;
+			strcpy  (path->name,  oi.Filename);
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
+			get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
+			/* delete last / or we get confused later. */
+			path->folder[ strlen(path->folder)-1 ] = '\0';
+
+			/* not doing the rest of the burst loop ... */
+			return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 		}
 	}
 	ptp_check_event (params);
@@ -3340,7 +3372,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	PTPContainer event;
 	PTPParams *params = &camera->pl->params;
 	uint32_t newobject = 0x0;
-	int done;
+	int done,tries;
 
 	/* adjust if we ever do sound or movie capture */
 	if (type != GP_CAPTURE_IMAGE)
@@ -3479,21 +3511,25 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
             		GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE no new file found after 5 seconds?!?");
 		goto out;
 	}
-	/* the standard defined way ... wait for some capture related events. */
-	done = 0;
-	while (!done) {
-		uint16_t ret = params->event_wait(params,&event);
 
-		CR (gp_port_set_timeout (camera->port, normal_timeout));
-		if (ret!=PTP_RC_OK) {
-			if ((ret == PTP_ERROR_IO) && newobject) {
-				gp_log (GP_LOG_ERROR, "ptp/capture", "Did not receive capture complete event. Going on, but please report and try adding PTP_NO_CAPTURE_COMPLETE flag.");
-				break;
-			}
-			gp_context_error (context,_("No event received, error %x."), ret);
-			/* we're not setting *path on error! */
-			return translate_ptp_result (ret);
+	CR (gp_port_set_timeout (camera->port, normal_timeout));
+
+	/* The standard defined way ... wait for some capture related events. */
+	done = 0; tries = 20;
+	while (done != 3) {
+		uint16_t ret;
+
+		CPR (context, ptp_check_event (params));
+
+		if (!ptp_get_one_event(params, &event)) {
+			usleep(1000);
+			if (done & 1) /* only wait 20 rounds for objectadded */
+				if (!tries--)
+					break;
+			continue;
 		}
+		gp_log (GP_LOG_DEBUG, "ptp2/capture_generic", "event.Code is %04x / param %08x", event.Code, event.Param1);
+
 		switch (event.Code) {
 		case PTP_EC_ObjectRemoved:
 			/* Perhaps from previous Canon based capture + delete. Ignore. */
@@ -3512,13 +3548,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 				gp_filesystem_reset (camera->fs);
 			} else {
 				newobject = event.Param1;
+				done |= 2;
 				if (NO_CAPTURE_COMPLETE(params))
-					done=1;
+					done|=1;
 			}
 			break;
 		}
 		case PTP_EC_CaptureComplete:
-			done=1;
+			done |= 1;
 			break;
 		default:
 			gp_log (GP_LOG_DEBUG,"ptp2/capture", "Received event 0x%04x, ignoring (please report).",event.Code);
@@ -3649,6 +3686,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
 		return GP_OK;
 	}
+
 	/* Canon EOS */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	     ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
