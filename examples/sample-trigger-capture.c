@@ -103,7 +103,10 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			fd = creat(queue[0].path.name, 0644);
 		else
 			fd = open(queue[0].path.name, O_RDWR, 0644);
-		if (fd == -1) perror(queue[0].path.name);
+		if (fd == -1) {
+			perror(queue[0].path.name);
+			return GP_ERROR;
+		}
 		if (-1 == lseek(fd, queue[0].offset, SEEK_SET))
 			perror("lseek");
 		if (-1 == write (fd, buffer, size)) 
