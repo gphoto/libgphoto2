@@ -2686,7 +2686,9 @@ capturetriggered:
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				break;
-			case PTP_EC_ObjectAdded:
+			case PTP_EC_ObjectAdded: {
+				PTPObject	*ob;
+
 				/* if we got one object already, put it into the queue */
 				/* e.g. for NEF+RAW capture */
 				if (newobject != 0xffff0001) {
@@ -2695,8 +2697,16 @@ capturetriggered:
 				} else {
 					newobject = event.Param1;
 				}
+				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+				if (ret != PTP_RC_OK)
+					break;
+				/* if a new directory was added, not a file ... just continue.
+				 * happens when the camera starts with an empty card. */
+				if (ob->oi.ObjectFormat == PTP_OFC_Association)
+					break;
 				done |= 2;
 				break;
+			}
 			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
 			case PTP_EC_CaptureComplete:
 				if (params->inliveview) {
@@ -2747,7 +2757,7 @@ capturetriggered:
 
 		debug_objectinfo(params, newobject, &oi);
 
-		if (oi.ParentObject == 0) {
+		if (oi.ParentObject == 0) { /* Capture to SDRAM */
 			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
 			/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
 			if (oi.StorageID == 0) {
