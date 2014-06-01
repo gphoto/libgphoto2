@@ -260,8 +260,10 @@ camera_tether(Camera *camera, GPContext *context) {
 				/* 3 eos properties hardcoded */
 				if (strstr(evtdata,"d103")) {
 					ret = get_config_value_string(camera,"iso",&val,context);
-					if (ret == GP_OK)
+					if (ret == GP_OK) {
 						printf("ISO is %s\n", val);
+						free(val);
+					}
 				}
 				if (strstr(evtdata,"d102")) {
 					ret = get_config_value_string(camera,"shutterspeed",&val,context);
@@ -275,6 +277,7 @@ camera_tether(Camera *camera, GPContext *context) {
 								shutterspeed = 0.0;
 						}
 						printf("Shutterspeed is %s (%g)\n", val, shutterspeed);
+						free(val);
 					}
 				}
 				if (strstr(evtdata,"d101")) {
@@ -285,6 +288,7 @@ camera_tether(Camera *camera, GPContext *context) {
 						sscanf(val,"%g",&ap);
 						aperture = 10*ap;
 						printf("Aperture is %s (%d)\n", val, aperture);
+						free (val);
 					}
 				}
 			} else {
