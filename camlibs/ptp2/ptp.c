@@ -1763,7 +1763,13 @@ ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
 	ptp.Nparam=1;
 	len=offset=0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &dpv, &len);
-	if (ret == PTP_RC_OK) ptp_unpack_DPV(params, dpv, &offset, len, value, datatype);
+	if (ret == PTP_RC_OK) {
+		int ret2 = ptp_unpack_DPV(params, dpv, &offset, len, value, datatype);
+		if (!ret2) {
+			ptp_debug (params, "ptp_getdevicepropvalue: unpacking DPV failed");
+			ret = PTP_RC_GeneralError;
+		}
+	}
 	free(dpv);
 	return ret;
 }
@@ -3676,8 +3682,13 @@ ptp_mtp_getobjectpropvalue (
         ptp.Param1 = oid;
         ptp.Param2 = opc;
         ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
-	if (ret == PTP_RC_OK)
-		ptp_unpack_DPV(params, data, &offset, size, value, datatype);
+	if (ret == PTP_RC_OK) {
+		int ret2 = ptp_unpack_DPV(params, data, &offset, size, value, datatype);
+		if (!ret2) {
+			ptp_debug (params, "ptp_mtp_getobjectpropvalue: unpacking DPV failed");
+			ret = PTP_RC_GeneralError;
+		}
+	}
 	free(data);
 	return ret;
 }
