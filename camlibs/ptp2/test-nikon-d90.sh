@@ -57,6 +57,20 @@ gphoto2 --set-config imagequality=2
 echo -n "interval capture done ... press return to continue"
 read dummy
 
+echo "***  fast interval capture"
+gphoto2 --set-config capturetarget=0
+gphoto2 --set-config imagequality=2 --capture-image-and-download -F 3 -I 1
+rm capt000*.*
+gphoto2 --set-config imagequality=6 --capture-image-and-download -F 3 -I 1
+rm capt000*.*
+gphoto2 --set-config capturetarget=1
+gphoto2 --set-config imagequality=2 --capture-image-and-download -F 3 -I 1
+gphoto2 --set-config imagequality=6 --capture-image-and-download -F 3 -I 1
+gphoto2 --set-config imagequality=2
+
+echo -n "fast interval capture done ... press return to continue"
+read dummy
+
 echo "***  timing capture"
 gphoto2 --set-config capturetarget=0
 rm capt000*.*
@@ -117,6 +131,9 @@ gphoto2 --set-config d090="Markus Meissner"
 gphoto2 --get-config d090|grep Markus.Meissner
 gphoto2 --set-config d090="Marcus Meissner"
 gphoto2 --get-config d090|grep Marcus.Meissner
+
+gphoto2 --get-config fnumber
+gphoto2 --set-config fnumber=f/5.6
 
 gphoto2 --get-config imagecommentenable
 gphoto2 --set-config imagecommentenable=0
