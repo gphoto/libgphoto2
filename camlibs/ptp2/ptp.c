@@ -743,11 +743,12 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 		sscanf((char*)next->name, "p%04x", &p);
 		ptp_debug( params, "prop %s / 0x%04x", next->name, p);
 		parse_9301_propdesc (params, xmlFirstElementChild (next), &dpd);
+		dpd.DevicePropertyCode = p;
 		di->DevicePropertiesSupported[cnt++] = p;
 
 		/* add to cache of device propdesc */
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].prop == p)
+			if (params->deviceproperties[i].desc.DevicePropertyCode == p)
 				break;
 		if (i == params->nrofdeviceproperties) {
 			if (!i)
@@ -756,7 +757,6 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di) {
 				params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 			params->nrofdeviceproperties++;
-			params->deviceproperties[i].prop = p;
 		} else {
 			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 		}
@@ -2992,7 +2992,7 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 		propcode = dpd.DevicePropertyCode;
 
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].prop == propcode)
+			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 				break;
 
 		if (i == params->nrofdeviceproperties) {
@@ -3002,7 +3002,6 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 				params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 			params->nrofdeviceproperties++;
-			params->deviceproperties[i].prop = propcode;
 		} else {
 			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 		}
@@ -3103,7 +3102,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 	time_t		now;
 
 	for (i=0;i<params->nrofdeviceproperties;i++)
-		if (params->deviceproperties[i].prop == propcode)
+		if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 			break;
 	if (i == params->nrofdeviceproperties) {
 		if (!i)
@@ -3112,7 +3111,6 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 		memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 		params->nrofdeviceproperties++;
-		params->deviceproperties[i].prop = propcode;
 	}
 
 	if (params->deviceproperties[i].desc.DataType != PTP_DTC_UNDEF) {
@@ -3133,7 +3131,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 			return ret;
 
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].prop == propcode)
+			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 				break;
 		time(&now);
 		params->deviceproperties[i].timestamp = now;

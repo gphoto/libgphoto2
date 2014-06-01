@@ -2313,7 +2313,6 @@ typedef struct _PTPObject PTPObject;
 
 /* The Device Property Cache */
 struct _PTPDeviceProperty {
-	uint16_t		prop;
 	time_t			timestamp;
 	PTPDevicePropDesc	desc;
 	PTPPropertyValue	value;
