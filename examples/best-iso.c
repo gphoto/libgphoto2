@@ -301,7 +301,7 @@ camera_tether(Camera *camera, GPContext *context) {
 int
 main(int argc, char **argv) {
 	Camera	*camera;
-	int	retval, iso;
+	int	retval, iso, tries;
 	char	buf[20];
 	GPContext *context = sample_create_context();
         int	fd;
@@ -328,7 +328,7 @@ main(int argc, char **argv) {
 	shutterspeed = 0.0;
 	aperture = 0;
 
-#if 0
+#if 1
 	gp_file_new (&file);
 	retval = gp_camera_capture_preview (camera, file, context);
 	if (retval != GP_OK) {
@@ -438,13 +438,23 @@ main(int argc, char **argv) {
 		exit (1);
 	}
 #endif
-	while (1) {
+
+	tries = 30; /* seconds at most, discounting events. */
+	while (tries--) {
 		retval = camera_tether(camera, context);
 		if (retval != GP_OK) {
 			printf("Tether error: %d\n", retval);
 			exit (1);
 		}
 	}
+
+#if 1
+	retval = set_config_value_string(camera,"eosviewfinder", "0", context);
+	if (retval != GP_OK) {
+		printf("setting eosviewfinder off error: %d\n", retval);
+		exit (1);
+	}
+#endif
 
 	gp_camera_exit(camera, context);
 	return 0;
