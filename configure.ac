@@ -284,8 +284,13 @@ GP_CONFIG_MSG([XML support for Olympus E series],[${have_LIBXML2}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
+dnl they call it "gdlib" ... confusing.
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBGD],[libgd],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[],[],[default-on],[http://www.libgd.org/])
+GP_CHECK_LIBRARY([LIBGD],[gdlib],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[
+	# gdlib-config --libs upstream does not include -lgd, but only the dependencies
+	LIBGD_LIBS="-lgd $LIBGD_LIBS"
+
+],[],[default-on],[http://www.libgd.org/])
 GP_CONFIG_MSG([libGD conversion support],[${have_LIBGD}])
 
 dnl ---------------------------------------------------------------------------
