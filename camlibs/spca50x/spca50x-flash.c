@@ -711,9 +711,8 @@ spca500_flash_84D_get_file (CameraPrivateLibrary * pl,
 
 		/* create a buffer to hold all the read in data */
 		buf = malloc (blks * 256);
-		if (!buf){
+		if (!buf)
 			return GP_ERROR_NO_MEMORY;
-		}
 
 		j = 0; /* k = 0; */
 		/* Now read in the image data */
