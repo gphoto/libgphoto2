@@ -5050,6 +5050,7 @@ _get_STR_as_time(CONFIG_GET_ARGS) {
 	strncpy (tmp, capture_date + 13, 2);
 	tmp[2] = 0;
 	tm.tm_sec = atoi (tmp);
+	tm.tm_isdst = -1; /* autodetect */
 	camtime = mktime(&tm);
 	gp_widget_set_value (*widget,&camtime);
 	return (GP_OK);
@@ -5070,9 +5071,10 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 	if (ret != GP_OK)
 		return ret;
 #ifdef HAVE_GMTIME_R
-	pxtm = gmtime_r (&camtime, &xtm);
+	memset(&xtm,0,sizeof(xtm));
+	pxtm = localtime_r (&camtime, &xtm);
 #else
-	pxtm = gmtime (&camtime);
+	pxtm = localtime (&camtime);
 #endif
 	/* 20020101T123400.0 is returned by the HP Photosmart */
 	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d.0",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
