@@ -7,10 +7,13 @@ ptp2:
 * Nikon: restart liveview after capture
 * Canon EOS: New property reporting method (OLC Info) implemented.
 * Print read-only values in configuration table lookup (for Canon EOS mostly)
+* Fixed the various "datetime" hooks for PTP generic, Canon Powershot and Canon EOS
+  to hopefully work better.
 * Bugfixes
 
 all:
 * various warning cleanups from David
+* fixed libgd detection and linking
 
 print-camera-list
 * add a mode to print udev rules for the non-standard USB support (usbscsi/usbdisk)
