@@ -61,3 +61,31 @@ Events Supported:
   0xc202
   0xc203
 Device Properties Supported:
+
+sony code: 5004
+sony code: 5005
+sony code: 5007
+sony code: 500a
+sony code: 500b
+sony code: 500c
+sony code: 500e
+sony code: 5010
+sony code: 5013
+sony code: d200
+sony code: d201
+sony code: d203
+sony code: d20d
+sony code: d20e
+sony code: d20f
+sony code: d210
+sony code: d211
+sony code: d212
+sony code: d213
+sony code: d214
+sony code: d215
+sony code: d216
+sony code: d217
+sony code: d218
+sony code: d219
+sony code: d21a
+
