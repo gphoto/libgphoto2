@@ -6142,7 +6142,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),			"bulb", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_BulbStart, _get_Canon_EOS_Bulb, _put_Canon_EOS_Bulb},
 	{ N_("Bulb Mode"),			"bulb", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_TerminateCapture, _get_Nikon_Bulb, _put_Nikon_Bulb},
 	{ N_("UI Lock"),			"uilock", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_SetUILock, _get_Canon_EOS_UILock, _put_Canon_EOS_UILock},
-	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
+	/*{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },*/
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Drive Nikon DSLR Autofocus"),	"autofocusdrive", 0, PTP_VENDOR_NIKON, PTP_OC_NIKON_AfDrive, _get_Nikon_AFDrive, _put_Nikon_AFDrive },
@@ -6202,8 +6202,8 @@ static struct submenu camera_status_menu[] = {
 };
 
 static struct submenu camera_settings_menu[] = {
-	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
 	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_time, _put_UINT32_as_time },
+	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_localtime, _put_UINT32_as_localtime },
 	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_UINT32_as_localtime, _put_UINT32_as_localtime },
 	{ N_("Camera Date and Time"),  "datetime", PTP_DPC_DateTime, 0, PTP_DTC_STR, _get_STR_as_time, _put_STR_as_time },
 	{ N_("Beep Mode"),  "beep",   PTP_DPC_CANON_BeepMode, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_BeepMode, _put_Canon_BeepMode },
