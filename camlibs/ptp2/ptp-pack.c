@@ -1811,6 +1811,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* set DataType */
 				switch (proptype) {
 				case PTP_DPC_CANON_EOS_CameraTime:
+				case PTP_DPC_CANON_EOS_UTCTime:
+				case PTP_DPC_CANON_EOS_Summertime: /* basical the DST flag */
 				case PTP_DPC_CANON_EOS_AvailableShots:
 				case PTP_DPC_CANON_EOS_CaptureDestination:
 				case PTP_DPC_CANON_EOS_WhiteBalanceXA:
