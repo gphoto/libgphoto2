@@ -686,6 +686,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	s = strchr (addr,':');
 	if (!s) {
 		gp_log (GP_LOG_ERROR,"ptpip/connect", "addr %s should contain a :", address);
+		free (addr);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	*s = '\0';
