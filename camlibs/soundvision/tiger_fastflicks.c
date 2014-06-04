@@ -29,6 +29,7 @@
 #ifdef OS2
 #include <db.h>
 #endif
+#include <unistd.h>
 
 #include <gphoto2/gphoto2.h>
 #include "gphoto2-endian.h"

@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <bayer.h>
+#include <unistd.h>
 #include <gphoto2/gphoto2.h>
 
 #ifdef ENABLE_NLS

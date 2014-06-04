@@ -63,6 +63,8 @@ typedef struct {
 # define gp_system_dirent	  WIN32_FIND_DATA *
 # define gp_system_dir_delim	  '\\'
 
+# define sleep(x) usleep((x) * 1000 * 1000)
+
 /************************************************************************
  * End WIN32 definitions
  ************************************************************************/

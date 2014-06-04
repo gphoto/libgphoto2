@@ -33,6 +33,7 @@
 #ifdef HAVE_LIBGD
 #include <gd.h>
 #endif
+#include <unistd.h>
 
 #include <gphoto2/gphoto2-result.h>
 #include "tp6801.h"

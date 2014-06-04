@@ -43,6 +43,7 @@
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <exif.h>
+#include <unistd.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

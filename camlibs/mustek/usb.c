@@ -38,6 +38,7 @@
 
 #include <fcntl.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 
 /*
