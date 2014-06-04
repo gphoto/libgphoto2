@@ -542,7 +542,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 				return ret;
 			}
 			/* and complete with zeros */
-			bzero(buf,DATA_BUFFER);
+			memset(buf,0,DATA_BUFFER);
 			ret = gp_port_write (camera->port, (char*)buf, (DATA_BUFFER - 
 				(len - len_sent)));
 			if (ret<GP_OK) {
