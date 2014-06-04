@@ -116,16 +116,6 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int
 			}
 		}
 		/* wait the specified time */
-		if (0) {
-		    struct timeval tv1,result;
-
-		    gettimeofday(&tv1,NULL);
-		    timersub(&tv1,&tv,&result);
-		    if ((result.tv_sec > 0) || (result.tv_usec>=timeout*1000)) {
-			fprintf(stderr,"time out\n");
-			break;
-		    }
-		}
 		if (1) {
 
 		    GP_SYSTEM_SLEEP(MDC800_USB_IRQ_INTERVAL);
