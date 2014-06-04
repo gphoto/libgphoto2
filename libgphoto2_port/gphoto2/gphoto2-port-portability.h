@@ -42,7 +42,9 @@
 # endif
 # define IOLIBS			"."
 # define strcasecmp		_stricmp
-# define snprintf		_snprintf
+# ifndef snprintf
+#  define snprintf		_snprintf
+# endif
 
 /* Work-around for readdir() */
 typedef struct {
