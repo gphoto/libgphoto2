@@ -714,7 +714,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		}
 		GP_DEBUG ("Retrying...");
 		sierra_write_nak (camera, context);
-		GP_SYSTEM_SLEEP (10);
+		usleep (10 * 1000);
 	}
 
 	sierra_clear_usb_halt(camera);
@@ -741,7 +741,7 @@ sierra_read_packet_wait (Camera *camera, char *buf, GPContext *context)
 				return GP_ERROR;
 			}
 			GP_DEBUG ("Retrying...");
-			GP_SYSTEM_SLEEP (QUICKSLEEP);
+			usleep (QUICKSLEEP * 1000);
 			continue;
 		}
 
@@ -996,7 +996,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	CHECK (gp_port_set_settings (camera->port, settings));
 	CHECK (gp_port_set_pin (camera->port, GP_PIN_DTR, GP_LEVEL_HIGH));
 
-	GP_SYSTEM_SLEEP (10);
+	usleep (10 * 1000);
 	return GP_OK;
 }
 

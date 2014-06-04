@@ -413,7 +413,7 @@ int camera_init (Camera *camera, GPContext *context) {
         gp_port_send_break (camera->port, 2);
 
         /* Wait for it to update */
-        GP_SYSTEM_SLEEP(1500);
+        usleep(1500 * 1000);
 
 	if (dc120_set_speed (camera, speed) == GP_ERROR) {
                 return (GP_ERROR);

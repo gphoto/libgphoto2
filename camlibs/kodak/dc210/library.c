@@ -747,7 +747,7 @@ int dc210_init_port (Camera *camera){
 	
 	gp_camera_set_port_speed(camera, 9600);
 	gp_port_send_break(camera->port, 300);
-	GP_SYSTEM_SLEEP(300);
+	usleep(300 * 1000);
 
 	/* Excellent. Now our dummy command should work */
 

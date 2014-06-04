@@ -118,7 +118,7 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int
 		/* wait the specified time */
 		if (1) {
 
-		    GP_SYSTEM_SLEEP(MDC800_USB_IRQ_INTERVAL);
+		    usleep(MDC800_USB_IRQ_INTERVAL * 1000);
 
 		    timeout-=MDC800_USB_IRQ_INTERVAL;
 		}

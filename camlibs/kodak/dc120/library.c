@@ -74,7 +74,7 @@ dc120_packet_write (Camera *camera, char *packet, int size, int read_response) {
 write_again:
 	/* If retry, give camera some recup time */
 	if (x > 0)
-		GP_SYSTEM_SLEEP(SLEEP_TIMEOUT);
+		usleep(SLEEP_TIMEOUT * 1000);
 
 	/* Return error if too many retries */
 	if (x++ > RETRIES) 
@@ -263,7 +263,7 @@ int dc120_set_speed (Camera *camera, int speed)
 	gp_port_set_settings (camera->port, settings);
 
 
-	GP_SYSTEM_SLEEP(300);
+	usleep(300 * 1000);
 
 	/* Speed change went OK. */
 	error = GP_OK;
@@ -464,7 +464,7 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 		gp_file_append(file, buf, strlen(buf));
 	}
 
-	GP_SYSTEM_SLEEP(1000);
+	sleep(1);
 	return (GP_OK);
 }
 

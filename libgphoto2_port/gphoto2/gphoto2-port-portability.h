@@ -57,8 +57,6 @@ typedef struct {
 	int  drive_index;
 } GPPORTWINDIR;
 
-/* Sleep functionality */
-# define GP_SYSTEM_SLEEP(_ms)	  do { Sleep(_ms); } while (0)
 
 /* Directory-oriented functions */
 # define gp_system_dir		  GPPORTWINDIR *
@@ -199,14 +197,6 @@ typedef struct {
 # include <sys/stat.h>
 # include <unistd.h>
 
-/** Sleep passed amount of milliseconds. */
-# define GP_SYSTEM_SLEEP(_ms)			      \
-  do {						      \
-    struct timespec req;			      \
-    req.tv_sec = 0;				      \
-    req.tv_nsec = 1000*1000*((long)(_ms));	      \
-    nanosleep(&req, NULL);			      \
-  } while (0)
 
 /* Directory-oriented functions */
 /** A system directory handle */

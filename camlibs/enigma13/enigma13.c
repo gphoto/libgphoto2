@@ -201,7 +201,7 @@ static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
                            response, 0x0001,
                           NULL, 0x0000));
         /* Wait until cam is ready to send the T.O.C */
-	GP_SYSTEM_SLEEP(ENIGMA13_WAIT_TOC_DELAY_MS);
+	usleep(ENIGMA13_WAIT_TOC_DELAY_MS * 1000);
 
         CHECK (gp_port_usb_msg_read (camera->port, 0x21,
                            0x0000, 0x0000,
@@ -278,7 +278,7 @@ static int enigma13_download_img(Camera *camera, char *toc, int index, char **im
 
 	CHECK_AND_FREE (gp_port_usb_msg_write (camera->port,
 	0x54, index+1, 2, NULL, 0x00), buf);
-	GP_SYSTEM_SLEEP(ENIGMA13_WAIT_IMAGE_READY_MS);
+	usleep(ENIGMA13_WAIT_IMAGE_READY_MS * 1000);
 
 	CHECK_AND_FREE (gp_port_usb_msg_read (camera->port, 0x21,
 		0x0000, 0x0000,

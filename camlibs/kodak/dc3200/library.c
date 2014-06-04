@@ -482,7 +482,7 @@ int dc3200_cancel_get_data(Camera *camera)
 	pkt[19] = camera->pl->cmd_seqnum & 0xff;
 
 	/* wait a bit ... */
-	GP_SYSTEM_SLEEP(1000);
+	sleep(1);
 
 	/* clear the buffer */
 	dc3200_clear_read_buffer(camera);

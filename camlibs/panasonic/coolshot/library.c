@@ -177,7 +177,7 @@ int coolshot_sb( Camera *camera, int speed ) {
 
 	CHECK (gp_port_set_settings (camera->port, settings));
 
-	GP_SYSTEM_SLEEP(10);
+	usleep(10 * 1000);
 	return (GP_OK);
 }
 

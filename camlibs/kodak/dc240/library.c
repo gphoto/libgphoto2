@@ -131,7 +131,7 @@ static int dc240_packet_write (Camera *camera, unsigned char *packet, int size, 
 write_again:
     /* If retry, give camera some recup time */
     if (x > 0) {
-        GP_SYSTEM_SLEEP(SLEEP_TIMEOUT);
+        usleep(SLEEP_TIMEOUT * 1000);
     }
 
     /* Return error if too many retries */
@@ -510,7 +510,7 @@ int dc240_set_speed (Camera *camera, int speed)
     if (retval != GP_OK)
         goto fail;
 
-    GP_SYSTEM_SLEEP(300);
+    usleep(300 * 1000);
     retval = dc240_wait_for_completion(camera);
     if (retval != GP_OK)
 	goto fail;

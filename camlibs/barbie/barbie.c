@@ -92,7 +92,7 @@ int barbie_exchange (GPPort *port, unsigned char *cmd, unsigned int cmd_size, un
 		if (resp[RESPONSE_BYTE] != '!')
 			return (1);
 		/* if busy, sleep 2 seconds */
-		GP_SYSTEM_SLEEP(2000);
+		sleep(2);
 	}
 	return (0);
 }
