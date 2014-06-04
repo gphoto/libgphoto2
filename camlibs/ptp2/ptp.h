@@ -25,7 +25,7 @@
 
 #include <stdarg.h>
 #include <time.h>
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 #include <iconv.h>
 #endif
 #include "gphoto2-endian.h"
@@ -2401,7 +2401,7 @@ struct _PTPParams {
 	char		*olympus_reply;
 	struct _PTPParams *outer_params;
 
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	/* PTP: iconv converters */
 	iconv_t	cd_locale_to_ucs2;
 	iconv_t cd_ucs2_to_locale;

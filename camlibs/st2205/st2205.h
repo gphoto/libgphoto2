@@ -22,7 +22,7 @@
 #include "config.h"
 
 #include <stdio.h>
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 #include <iconv.h>
 #endif
 
@@ -94,7 +94,7 @@ typedef int16_t st2205_lookup_row[8];
 
 struct _CameraPrivateLibrary {
 	/* Used by library.c glue code */
-#ifdef HAVE_ICONV
+#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	iconv_t	cd;
 #endif
 	st2205_filename filenames[ST2205_MAX_NO_FILES];
