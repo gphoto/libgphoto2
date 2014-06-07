@@ -2254,6 +2254,9 @@ ptp_check_event (PTPParams *params) {
 	PTPContainer		event;
 	uint16_t		ret;
 
+	/* Method offered by Nikon DSLR, Nikon 1, and some older Nikon Coolpix P*
+	 * The Nikon Coolpix P2 however does not return anything. So if we never get
+	 * events from here, use the ptp "interrupt" method */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
 	) {
@@ -2272,8 +2275,11 @@ ptp_check_event (PTPParams *params) {
 			memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
 			params->nrofevents += evtcnt;
 			free (xevent);
+			params->event90c7works = 1;
 		}
-		return PTP_RC_OK;
+		if (params->event90c7works)
+			return PTP_RC_OK;
+		/* fall through to generic event handling */
 	}
 	/* should not get here ... EOS has no normal PTP events and another queue handling. */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
