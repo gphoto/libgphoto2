@@ -2695,16 +2695,21 @@ capturetriggered:
 				if (newobject != 0xffff0001) {
 					ptp_add_event (params, &event);
 					checkevt = 1; /* avoid endless loop */
-				} else {
-					newobject = event.Param1;
 				}
+				/* we register the object in the internal storage, and we also need to
+				 * to find out if it is just a new directory (/DCIM/NEWENTRY/) created
+				 * during capture or the actual image. */
 				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 				if (ret != PTP_RC_OK)
 					break;
 				/* if a new directory was added, not a file ... just continue.
 				 * happens when the camera starts with an empty card. */
-				if (ob->oi.ObjectFormat == PTP_OFC_Association)
+				if (ob->oi.ObjectFormat == PTP_OFC_Association) {
+					/* libgphoto2 vfs does not notice otherwise */
+					gp_filesystem_reset (camera->fs);
 					break;
+				}
+				newobject = event.Param1;
 				done |= 2;
 				break;
 			}
@@ -2766,6 +2771,14 @@ capturetriggered:
 			} else {
 				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 			}
+			if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+				/* the Nikon Coolpix P2 says "TIFF" and gives us "JPG". weird. */
+				if (oi.Filename && strstr(oi.Filename,".JPG")) {
+					gp_log (GP_LOG_DEBUG,"nikon_capture", "rewriting %04x to JPEG %04x for %s", oi.ObjectFormat,PTP_OFC_EXIF_JPEG,oi.Filename);
+					oi.ObjectFormat = PTP_OFC_EXIF_JPEG;
+				}
+			}
+
 			if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 				gp_log (GP_LOG_DEBUG,"nikon_capture", "raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
 				sprintf (path->name, "capt%04d.nef", capcnt++);
@@ -3384,6 +3397,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	PTPParams *params = &camera->pl->params;
 	uint32_t newobject = 0x0;
 	int done,tries;
+	PTPObjectHandles	beforehandles;
 
 	/* adjust if we ever do sound or movie capture */
 	if (type != GP_CAPTURE_IMAGE)
@@ -3447,6 +3461,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
+	/* broken capture ... we detect what was captured using added objects
+	 * via the getobjecthandles array. here get the before state */
+	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(params)) {
+		uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles);
+		if (ret != PTP_RC_OK)
+			return translate_ptp_result (ret);
+	}
+
 	/* A capture may take longer than the standard 8 seconds.
 	 * The G5 for instance does, or in dark rooms ...
 	 * Even 16 seconds might not be enough. (Marcus)
@@ -3475,7 +3497,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * the camera.
 	 */
 
-	/* The Nikon way: Does not send AddObject event ... so try else */
+	/* The Nikon way: Does not send AddObject event ... so try to detect it by checking what objects
+	 * were added. */
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(params)) {
 		PTPObjectHandles	handles;
 		int tries = 5;
@@ -3493,19 +3516,21 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			 */
 			newobject = 0;
 			for (i=0;i<handles.n;i++) {
+				unsigned int 	j;
 				PTPObject	*ob;
 
-				ret = ptp_object_find (params, handles.Handler[i], &ob);
-				if (ret == PTP_RC_OK)
+				/* look if we saw the objecthandle before capture */
+				for (j=0;j<beforehandles.n;j++)
+					if (beforehandles.Handler[j] == handles.Handler[i])
+						break;
+				if (j != beforehandles.n)
 					continue;
 
 				ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
-
 				if (ret != PTP_RC_OK) {
 					gp_log (GP_LOG_ERROR, "nikon_broken_capture", "object added, but not found?");
 					continue;
 				}
-
 				/* A directory was added, like initial DCIM/100NIKON or so. */
 				if (ob->oi.ObjectFormat == PTP_OFC_Association)
 					continue;
@@ -3516,8 +3541,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			free (handles.Handler);
 			if (newobject)
 				break;
+			CPR (context, ptp_check_event (params));
 			sleep(1);
 		}
+		free (beforehandles.Handler);
 		if (!newobject)
             		GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE no new file found after 5 seconds?!?");
 		goto out;
@@ -3526,6 +3553,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	CR (gp_port_set_timeout (camera->port, normal_timeout));
 
 	/* The standard defined way ... wait for some capture related events. */
+	/* The Nikon 1 series emits ObjectAdded occasionaly after
+	 * the CaptureComplete event, while others do it the other way
+	 * round. Handle that case with some bitmask. */
 	done = 0; tries = 20;
 	while (done != 3) {
 		uint16_t ret;
