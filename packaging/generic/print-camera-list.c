@@ -428,6 +428,10 @@ udev_parse_params (const func_params_t *params, void **data)
 		/* UDEV_201 ... regular stuff is done via hwdb, only scsi generic here. */
 		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
 		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_usb_end\"\n"
+		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{builtin}=\"usb_id\"\n"
+		/* shortcut the most common camera driver, ptp class, so we avoid parsing 1000
+		 * more rules . It will be completed in udev_begin_func() */
+		"ENV{ID_USB_INTERFACES}==\"*:060101:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\", ",
 	};
 	static const char * const usbcam_strings[] = {
 		/* UDEV_PRE_0_98 */
