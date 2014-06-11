@@ -20,8 +20,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA  02110-1301  USA
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  *
  * This file is supposed to be included within a struct from both libmtp
  * and libgphoto2.
@@ -966,7 +966,6 @@
   // Reported by Chris Bagwell <chris@cnpbagwell.com>
   { "Sirius", 0x18f6, "Stiletto 2", 0x0110, DEVICE_FLAG_NONE },
 
-
   /*
    * Nokia
    * Please verify the low device IDs here, I suspect these might be for
@@ -1118,11 +1117,11 @@
   // Reported by Richard Wall <richard@the-moon.net>
   { "Qualcomm (for Nokia)", 0x05c6, "5530 Xpressmusic", 0x0229,
       DEVICE_FLAG_NONE },
-  // Reported by anonymous SourceForge user
   // One thing stated by reporter (Nokia model) another by the detect log...
   { "Qualcomm (for Nokia/Verizon)", 0x05c6, "6205 Balboa/Verizon Music Phone",
       0x3196, DEVICE_FLAG_NONE },
-  // Reported by anonymous SourceForge user
+  { "Qualcomm (for Gigabyte)", 0x05c6, "GSmart G1342",
+      0x8800, DEVICE_FLAG_NONE },
   { "Qualcomm (for Smartfren)", 0x05c6, "Andromax U",
       0x9025, DEVICE_FLAG_NONE },
 
@@ -1559,6 +1558,8 @@
    * Ah Hong <hongster@users.sourceforge.net>
    * Eowyn Carter
    */
+  { "SonyEricsson", 0x0fce,  "c1605 Xperia Dual E MTP", 0x0146,
+      DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "LT15i Xperia arc S MTP", 0x014f,
       DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "MT11i Xperia Neo MTP", 0x0156,
@@ -1688,6 +1689,8 @@
   /*
    * MTP+ADB personalities of MTP devices (see above)
    */
+  { "SonyEricsson", 0x0fce,  "c1605 Xperia Dual E MTP+ADB", 0x5146,
+      DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "LT15i Xperia Arc MTP+ADB", 0x514f,
       DEVICE_FLAG_NONE },
   { "SonyEricsson", 0x0fce, "MT11i Xperia Neo MTP+ADB", 0x5156,
@@ -1812,7 +1815,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "Droid Maxx (XT1080)", 0x2e67,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Motorola", 0x22b8, "Moto G", 0x2e82,
+  { "Motorola", 0x22b8, "Moto G (ID1)", 0x2e76,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "Moto G (ID2)", 0x2e82,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Jader Rodrigues Simoes <jadersimoes@users.sourceforge.net>
   { "Motorola", 0x22b8, "Xoom 2 Media Edition (ID2)", 0x41cf,
@@ -1849,6 +1854,8 @@
   // Reported by Rodrigo Angelo Rafael
   // Razr D1, D3
   { "Motorola", 0x22b8, "Razr D1/D3/i (MTP)", 0x64b5,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "Razr D1/D3/i (MTP+?)", 0x64b6,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Brian Dolbec <dol-sen@users.sourceforge.net>
   { "Motorola", 0x22b8, "Atrix MB860 (MTP)", 0x7088,
@@ -2117,11 +2124,19 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "ME302C MemoPad (MTP)", 0x521f,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "PadFone Infinity (MTP)", 0x5230,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "PadFone Infinity (MTP+ADB)", 0x5231,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "Memo ME172V (MTP)", 0x5400,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "Memo ME173X (MTP)", 0x5410,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "Memo ME173X (MTP+ADB)", 0x5411,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "Memo K00F (MTP)", 0x5460,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "Memo K00F (MTP+ADB)", 0x5468,
       DEVICE_FLAGS_ANDROID_BUGS },
 
 
@@ -2149,9 +2164,12 @@
   { "Lenovo", 0x17ef, "IdeaTab A2109A", 0x7542,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by rvelev@mail.bg
-  { "Lenovo", 0x17ef, "IdeaPad A3000", 0x75be,
+  { "Lenovo", 0x17ef, "IdeaPad A3000 (ID1)", 0x75bc,
       DEVICE_FLAGS_ANDROID_BUGS },
-
+  { "Lenovo", 0x17ef, "IdeaPad A3000 (ID2)", 0x75be,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Lenovo", 0x17ef, "Toga Tablet B6000-F", 0x76f2,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Huawei
@@ -2238,9 +2256,15 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "Droid DNA (MTP+UMS)", 0x0ebd,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "HTC", 0x0bb4, "HTC One (ID2)", 0x0f63,
+  { "HTC", 0x0bb4, "HTC One (MTP+ADB+CDC)", 0x0f5f,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "HTC", 0x0bb4, "HTC One (MTP+ADB)", 0x0f87,
+  { "HTC", 0x0bb4, "HTC One (MTP+CDC)", 0x0f60,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (MTP+ADB)", 0x0f63,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (MTP)", 0x0f64,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "HTC", 0x0bb4, "HTC One (MTP+ADB+?)", 0x0f87,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One (ID3)", 0x0f91,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2360,6 +2384,8 @@
    */
   { "Xiaomi", 0x2717, "Mi-3 (MTP)", 0x0368,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Xiaomi", 0x2717, "Hongmi (MTP)", 0x1240,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP+ADB)", 0x9039,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP)", 0xf003,
@@ -2424,6 +2450,30 @@
    * Jolla
    */
   { "Jolla", 0x2931, "Sailfish", 0x0a01,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * TCL? Alcatel?
+   */
+  { "TCL", 0x0451, "Alcatel one touch 986+", 0xd108,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * Garmin
+   */
+  { "Garmin", 0x091e, "Monterra", 0x2585,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * Wacom
+   */
+  { "Wacom", 0x0531, "Cintiq Companion Hybrid (MTP+ADB)", 0x2001,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * Kurio
+   */
+  { "Kurio", 0x1f3a, "7S", 0x1006,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
