@@ -1562,6 +1562,8 @@ static struct {
 	{"Canon:PowerShot SD1300 IS",		0x04a9, 0x31f4, PTPBUG_DELETE_SENDS_EVENT},
 	/* Juergen Weigert */
 	{"Canon:PowerShot SX210 IS",		0x04a9, 0x31f6, PTPBUG_DELETE_SENDS_EVENT},
+	/* name correct? https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1296275?comments=all */
+	{"Canon:Digital IXUS 300 HS",		0x04a9, 0x31f7, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3153412&group_id=8874&atid=358874 */
 	{"Canon:PowerShot SX130 IS",		0x04a9, 0x3211, PTPBUG_DELETE_SENDS_EVENT},
 	/* novell bugzilla 871944 */
@@ -1650,6 +1652,8 @@ static struct {
 
 	/* Andrés Farfán <nafraf@linuxmail.org> */
 	{"Canon:PowerShot A1400",		0x04a9, 0x3264, PTPBUG_DELETE_SENDS_EVENT},
+	/* https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1296275?comments=all  */
+	{"Canon:Digital IXUS 255HS",		0x04a9, 0x3268, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 100D",			0x04a9, 0x3270, PTP_CAP|PTP_CAP_PREVIEW},
@@ -1734,6 +1738,8 @@ static struct {
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
 	/* Gregor Voss <gregor.voss@gmx.de> */
 	{"Fuji:FinePix H20EXR",			0x04cb, 0x022d, 0},
+	/* https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1296275?comments=all  */
+	{"Fuji:FinePix T200",			0x04cb, 0x0233, 0},
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=3556692&group_id=8874&atid=108874 */
 	{"Fuji:FinePix S2950",			0x04cb, 0x0240, 0},
 	/* https://sourceforge.net/p/gphoto/bugs/974/ */
