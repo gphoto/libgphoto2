@@ -1736,6 +1736,8 @@ static struct {
 	{"Fuji:FinePix F80EXR",			0x04cb, 0x020e, 0},
 	/* salsaman <salsaman@gmail.com> */
 	{"Fuji:FinePix Z700EXR",		0x04cb, 0x020d, 0},
+	/* https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1311953 */
+	{"Fuji:FinePix AV-150",			0x04cb, 0x021b, 0},
 	/* Gregor Voss <gregor.voss@gmx.de> */
 	{"Fuji:FinePix H20EXR",			0x04cb, 0x022d, 0},
 	/* https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1296275?comments=all  */
