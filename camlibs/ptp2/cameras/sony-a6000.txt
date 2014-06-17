@@ -1,0 +1,1074 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: ILCE-6000
+  Version: 1.0
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: JPEG, Unknown(b301), Unknown(b101)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, Sony Capture
+Storage Devices Summary:
+
+Device Property Summary:
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [2,3,16,19] value: 3
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [1,2,4,32785,32784,6,32769,32770,32771,32772,7,32786,32803] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: f/5 (500)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,2,3,32772,32773,32776,32774,32775] value: 32773
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [4,1,32770] value: Average (1)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2,1,4,3,5,32769,32771,32772,32817,32818] value: Undefined (0)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [32768,32769,2,3,4,1,32848,32849,32850,32851,32852,32833,7,32785,32789,32788,32786,32787,32790,32791,32792] value: 32768
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [0,1,2,5000,4700,4500,4300,4000,3700,3500,3300,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000,-3300,-3500,-3700,-4000,-4300,-4500,-4700,-5000] value: 0.0 stops (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32789,32786,32773,32772,32776,32777] value: Single Shot (1)
+Property 0xd200:(readwrite) (type=0x3) Enumeration [0,1,2,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000] value: 0
+Property 0xd201:(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21,32,33,34,35,36,37,38] value: 31
+Property 0xd203:(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+Property 0xd20d:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 65636
+Property 0xd20e:(readwrite) (type=0x2) Enumeration [1,2,3,8,9,10,4,5,6,7] value: 6
+Property 0xd20f:(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 0
+Property 0xd210:(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+Property 0xd21c:(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+Property 0xd211:(readwrite) (type=0x2) Enumeration [1,2] value: 2
+Property 0xd213:(readwrite) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
+Property 0xd21e:(readwrite) (type=0x6) Enumeration [16777215,25,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,102400,33554431,16777241,16777266,16777280,16777296,16777316,16777341,16777376,16777416,16777466,16777536,16777616,16777716,16777856,16778016,16778216,16778466,16778816,16779216,16779716,16780416,16781216,16782216,16783616,16785216,16787216,16790016,16793216,16802816,16828416] value: 16777215
+Property 0xd21b:(readwrite) (type=0x4) Enumeration [32768] value: 32768
+Property 0xd21d:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd217:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd218:(readwrite) (type=0x1) Range [-1 - 100, step 1] value: 67
+Property 0xd219:(readwrite) (type=0x2) Enumeration [2,1] value: 2
+Property 0xd212:(readwrite) (type=0x2) Range [0 - 15, step 1] value: 0
+Property 0xd214:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 33924096
+Property 0xd215:(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd220:(read only) (type=0x0) Undefined
+
+/main/actions/movie
+Label: Movie Capture
+Type: TOGGLE
+Current: 2
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: 0000000000000000nnnnnnnnnnnnnnnn
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Sony Corporation
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: ILCE-6000
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1.0
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: Sony PTP Extensions
+/main/imgsettings/imagesize
+Label: Image Size
+Type: RADIO
+Current: Large
+Choice: 0 Large
+Choice: 1 Medium
+Choice: 2 Small
+/main/imgsettings/iso
+Label: ISO Speed
+Type: RADIO
+Current: Auto ISO
+Choice: 0 Auto ISO
+Choice: 1 25
+Choice: 2 100
+Choice: 3 125
+Choice: 4 160
+Choice: 5 200
+Choice: 6 250
+Choice: 7 320
+Choice: 8 400
+Choice: 9 500
+Choice: 10 640
+Choice: 11 800
+Choice: 12 1000
+Choice: 13 1250
+Choice: 14 1600
+Choice: 15 2000
+Choice: 16 2500
+Choice: 17 3200
+Choice: 18 4000
+Choice: 19 5000
+Choice: 20 6400
+Choice: 21 8000
+Choice: 22 10000
+Choice: 23 12800
+Choice: 24 16000
+Choice: 25 20000
+Choice: 26 25600
+Choice: 27 102400
+Choice: 28 Auto ISO Multi Frame Noise Reduction
+Choice: 29 25 Multi Frame Noise Reduction
+Choice: 30 50 Multi Frame Noise Reduction
+Choice: 31 64 Multi Frame Noise Reduction
+Choice: 32 80 Multi Frame Noise Reduction
+Choice: 33 100 Multi Frame Noise Reduction
+Choice: 34 125 Multi Frame Noise Reduction
+Choice: 35 160 Multi Frame Noise Reduction
+Choice: 36 200 Multi Frame Noise Reduction
+Choice: 37 250 Multi Frame Noise Reduction
+Choice: 38 320 Multi Frame Noise Reduction
+Choice: 39 400 Multi Frame Noise Reduction
+Choice: 40 500 Multi Frame Noise Reduction
+Choice: 41 640 Multi Frame Noise Reduction
+Choice: 42 800 Multi Frame Noise Reduction
+Choice: 43 1000 Multi Frame Noise Reduction
+Choice: 44 1250 Multi Frame Noise Reduction
+Choice: 45 1600 Multi Frame Noise Reduction
+Choice: 46 2000 Multi Frame Noise Reduction
+Choice: 47 2500 Multi Frame Noise Reduction
+Choice: 48 3200 Multi Frame Noise Reduction
+Choice: 49 4000 Multi Frame Noise Reduction
+Choice: 50 5000 Multi Frame Noise Reduction
+Choice: 51 6400 Multi Frame Noise Reduction
+Choice: 52 8000 Multi Frame Noise Reduction
+Choice: 53 10000 Multi Frame Noise Reduction
+Choice: 54 12800 Multi Frame Noise Reduction
+Choice: 55 16000 Multi Frame Noise Reduction
+Choice: 56 25600 Multi Frame Noise Reduction
+Choice: 57 51200 Multi Frame Noise Reduction
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Type: TEXT
+Current: 0
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Type: RADIO
+Current: Automatic
+Choice: 0 Manual
+Choice: 1 Automatic
+Choice: 2 Daylight
+Choice: 3 Shade
+Choice: 4 Cloudy
+Choice: 5 Tungsten
+Choice: 6 Fluorescent: Warm White
+Choice: 7 Fluorescent: Cold White
+Choice: 8 Fluorescent: Day White
+Choice: 9 Fluorescent: Daylight
+Choice: 10 Flash
+Choice: 11 Choose Color Temperature
+Choice: 12 Preset
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Type: RADIO
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 5000
+Choice: 4 4700
+Choice: 5 4500
+Choice: 6 4300
+Choice: 7 4000
+Choice: 8 3700
+Choice: 9 3500
+Choice: 10 3300
+Choice: 11 3000
+Choice: 12 2700
+Choice: 13 2500
+Choice: 14 2300
+Choice: 15 2000
+Choice: 16 1700
+Choice: 17 1500
+Choice: 18 1300
+Choice: 19 1000
+Choice: 20 700
+Choice: 21 500
+Choice: 22 300
+Choice: 23 -300
+Choice: 24 -500
+Choice: 25 -700
+Choice: 26 -1000
+Choice: 27 -1300
+Choice: 28 -1500
+Choice: 29 -1700
+Choice: 30 -2000
+Choice: 31 -2300
+Choice: 32 -2500
+Choice: 33 -2700
+Choice: 34 -3000
+Choice: 35 -3300
+Choice: 36 -3500
+Choice: 37 -3700
+Choice: 38 -4000
+Choice: 39 -4300
+Choice: 40 -4500
+Choice: 41 -4700
+Choice: 42 -5000
+/main/capturesettings/flashmode
+Label: Flash Mode
+Type: RADIO
+Current: Unknown value 0000
+Choice: 0 Flash off
+Choice: 1 Automatic Flash
+Choice: 2 Red-eye automatic
+Choice: 3 Fill flash
+Choice: 4 Red-eye fill
+Choice: 5 Unknown value 8001
+Choice: 6 Unknown value 8003
+Choice: 7 Unknown value 8004
+Choice: 8 Unknown value 8031
+Choice: 9 Unknown value 8032
+Choice: 10 Unknown value 0000
+/main/capturesettings/f-number
+Label: F-Number
+Type: RANGE
+Current: 5
+Bottom: 0
+Top: 655.35
+Step: 0.01
+/main/capturesettings/imagequality
+Label: Image Quality
+Type: RADIO
+Current: Fine
+Choice: 0 Standard
+Choice: 1 Fine
+Choice: 2 RAW
+Choice: 3 RAW+JPEG
+/main/capturesettings/focusmode
+Label: Focus Mode
+Type: RADIO
+Current: Unknown value 8005
+Choice: 0 Manual
+Choice: 1 Automatic
+Choice: 2 Automatic Macro
+Choice: 3 Unknown value 8004
+Choice: 4 Unknown value 8005
+Choice: 5 Unknown value 8008
+Choice: 6 Unknown value 8006
+Choice: 7 Unknown value 8007
+/main/capturesettings/expprogram
+Label: Exposure Program
+Type: RADIO
+Current: Unknown value 8000
+Choice: 0 Unknown value 8000
+Choice: 1 Unknown value 8001
+Choice: 2 P
+Choice: 3 A
+Choice: 4 S
+Choice: 5 M
+Choice: 6 Unknown value 8050
+Choice: 7 Unknown value 8051
+Choice: 8 Unknown value 8052
+Choice: 9 Unknown value 8053
+Choice: 10 Unknown value 8054
+Choice: 11 Unknown value 8041
+Choice: 12 Portrait
+Choice: 13 Unknown value 8011
+Choice: 14 Unknown value 8015
+Choice: 15 Unknown value 8014
+Choice: 16 Unknown value 8012
+Choice: 17 Unknown value 8013
+Choice: 18 Unknown value 8016
+Choice: 19 Unknown value 8017
+Choice: 20 Unknown value 8018
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Type: RADIO
+Current: 3:2
+Choice: 0 16:9
+Choice: 1 3:2
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Burst
+Choice: 2 Unknown value 8015
+Choice: 3 Continuous Low Speed
+Choice: 4 Selftimer 2s
+Choice: 5 Selftimer 10s
+Choice: 6 Unknown value 8008
+Choice: 7 Unknown value 8009
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Type: RADIO
+Current: Average
+Choice: 0 Center Spot
+Choice: 1 Average
+Choice: 2 Unknown value 8002
+/main/other/5004
+Label: Compression Setting
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 3
+Choice: 2 16
+Choice: 3 19
+/main/other/5005
+Label: White Balance
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 4
+Choice: 3 32785
+Choice: 4 32784
+Choice: 5 6
+Choice: 6 32769
+Choice: 7 32770
+Choice: 8 32771
+Choice: 9 32772
+Choice: 10 7
+Choice: 11 32786
+Choice: 12 32803
+/main/other/5007
+Label: F-Number
+Type: RANGE
+Current: 500
+Bottom: 0
+Top: 65535
+Step: 1
+/main/other/500a
+Label: Focus Mode
+Type: MENU
+Current: 32773
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 32772
+Choice: 4 32773
+Choice: 5 32776
+Choice: 6 32774
+Choice: 7 32775
+/main/other/500b
+Label: Exposure Metering Mode
+Type: MENU
+Current: 1
+Choice: 0 4
+Choice: 1 1
+Choice: 2 32770
+/main/other/500c
+Label: Flash Mode
+Type: MENU
+Current: 0
+Choice: 0 2
+Choice: 1 1
+Choice: 2 4
+Choice: 3 3
+Choice: 4 5
+Choice: 5 32769
+Choice: 6 32771
+Choice: 7 32772
+Choice: 8 32817
+Choice: 9 32818
+/main/other/500e
+Label: Exposure Program Mode
+Type: MENU
+Current: 32768
+Choice: 0 32768
+Choice: 1 32769
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 1
+Choice: 6 32848
+Choice: 7 32849
+Choice: 8 32850
+Choice: 9 32851
+Choice: 10 32852
+Choice: 11 32833
+Choice: 12 7
+Choice: 13 32785
+Choice: 14 32789
+Choice: 15 32788
+Choice: 16 32786
+Choice: 17 32787
+Choice: 18 32790
+Choice: 19 32791
+Choice: 20 32792
+/main/other/5010
+Label: Exposure Bias Compensation
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 5000
+Choice: 4 4700
+Choice: 5 4500
+Choice: 6 4300
+Choice: 7 4000
+Choice: 8 3700
+Choice: 9 3500
+Choice: 10 3300
+Choice: 11 3000
+Choice: 12 2700
+Choice: 13 2500
+Choice: 14 2300
+Choice: 15 2000
+Choice: 16 1700
+Choice: 17 1500
+Choice: 18 1300
+Choice: 19 1000
+Choice: 20 700
+Choice: 21 500
+Choice: 22 300
+Choice: 23 -300
+Choice: 24 -500
+Choice: 25 -700
+Choice: 26 -1000
+Choice: 27 -1300
+Choice: 28 -1500
+Choice: 29 -1700
+Choice: 30 -2000
+Choice: 31 -2300
+Choice: 32 -2500
+Choice: 33 -2700
+Choice: 34 -3000
+Choice: 35 -3300
+Choice: 36 -3500
+Choice: 37 -3700
+Choice: 38 -4000
+Choice: 39 -4300
+Choice: 40 -4500
+Choice: 41 -4700
+Choice: 42 -5000
+/main/other/5013
+Label: Still Capture Mode
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 32789
+Choice: 3 32786
+Choice: 4 32773
+Choice: 5 32772
+Choice: 6 32776
+Choice: 7 32777
+/main/other/d200
+Label: PTP Property 0xd200
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3000
+Choice: 4 2700
+Choice: 5 2500
+Choice: 6 2300
+Choice: 7 2000
+Choice: 8 1700
+Choice: 9 1500
+Choice: 10 1300
+Choice: 11 1000
+Choice: 12 700
+Choice: 13 500
+Choice: 14 300
+Choice: 15 -300
+Choice: 16 -500
+Choice: 17 -700
+Choice: 18 -1000
+Choice: 19 -1300
+Choice: 20 -1500
+Choice: 21 -1700
+Choice: 22 -2000
+Choice: 23 -2300
+Choice: 24 -2500
+Choice: 25 -2700
+Choice: 26 -3000
+/main/other/d201
+Label: PTP Property 0xd201
+Type: MENU
+Current: 31
+Choice: 0 1
+Choice: 1 31
+Choice: 2 17
+Choice: 3 18
+Choice: 4 19
+Choice: 5 20
+Choice: 6 21
+Choice: 7 32
+Choice: 8 33
+Choice: 9 34
+Choice: 10 35
+Choice: 11 36
+Choice: 12 37
+Choice: 13 38
+/main/other/d203
+Label: PTP Property 0xd203
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+/main/other/d20d
+Label: PTP Property 0xd20d
+Type: RANGE
+Current: 65636
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+/main/other/d20e
+Label: PTP Property 0xd20e
+Type: MENU
+Current: 6
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 8
+Choice: 4 9
+Choice: 5 10
+Choice: 6 4
+Choice: 7 5
+Choice: 8 6
+Choice: 9 7
+/main/other/d20f
+Label: PTP Property 0xd20f
+Type: RANGE
+Current: 0
+Bottom: 2500
+Top: 9900
+Step: 100
+/main/other/d210
+Label: PTP Property 0xd210
+Type: MENU
+Current: 128
+Choice: 0 121
+Choice: 1 122
+Choice: 2 123
+Choice: 3 124
+Choice: 4 125
+Choice: 5 126
+Choice: 6 127
+Choice: 7 128
+Choice: 8 129
+Choice: 9 130
+Choice: 10 131
+Choice: 11 132
+Choice: 12 133
+Choice: 13 134
+Choice: 14 135
+/main/other/d21c
+Label: PTP Property 0xd21c
+Type: MENU
+Current: 128
+Choice: 0 121
+Choice: 1 122
+Choice: 2 123
+Choice: 3 124
+Choice: 4 125
+Choice: 5 126
+Choice: 6 127
+Choice: 7 128
+Choice: 8 129
+Choice: 9 130
+Choice: 10 131
+Choice: 11 132
+Choice: 12 133
+Choice: 13 134
+Choice: 14 135
+/main/other/d211
+Label: PTP Property 0xd211
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+/main/other/d213
+Label: PTP Property 0xd213
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 5
+Choice: 4 6
+Choice: 5 7
+/main/other/d21e
+Label: PTP Property 0xd21e
+Type: MENU
+Current: 16777215
+Choice: 0 16777215
+Choice: 1 25
+Choice: 2 100
+Choice: 3 125
+Choice: 4 160
+Choice: 5 200
+Choice: 6 250
+Choice: 7 320
+Choice: 8 400
+Choice: 9 500
+Choice: 10 640
+Choice: 11 800
+Choice: 12 1000
+Choice: 13 1250
+Choice: 14 1600
+Choice: 15 2000
+Choice: 16 2500
+Choice: 17 3200
+Choice: 18 4000
+Choice: 19 5000
+Choice: 20 6400
+Choice: 21 8000
+Choice: 22 10000
+Choice: 23 12800
+Choice: 24 16000
+Choice: 25 20000
+Choice: 26 25600
+Choice: 27 102400
+Choice: 28 33554431
+Choice: 29 16777241
+Choice: 30 16777266
+Choice: 31 16777280
+Choice: 32 16777296
+Choice: 33 16777316
+Choice: 34 16777341
+Choice: 35 16777376
+Choice: 36 16777416
+Choice: 37 16777466
+Choice: 38 16777536
+Choice: 39 16777616
+Choice: 40 16777716
+Choice: 41 16777856
+Choice: 42 16778016
+Choice: 43 16778216
+Choice: 44 16778466
+Choice: 45 16778816
+Choice: 46 16779216
+Choice: 47 16779716
+Choice: 48 16780416
+Choice: 49 16781216
+Choice: 50 16782216
+Choice: 51 16783616
+Choice: 52 16785216
+Choice: 53 16787216
+Choice: 54 16790016
+Choice: 55 16793216
+Choice: 56 16802816
+Choice: 57 16828416
+/main/other/d21b
+Label: PTP Property 0xd21b
+Type: MENU
+Current: 32768
+Choice: 0 32768
+/main/other/d21d
+Label: PTP Property 0xd21d
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+/main/other/d217
+Label: PTP Property 0xd217
+Type: MENU
+Current: 1
+Choice: 0 2
+Choice: 1 1
+/main/other/d218
+Label: PTP Property 0xd218
+Type: MENU
+Current: 67
+Choice: 0 -1
+Choice: 1 0
+Choice: 2 1
+Choice: 3 2
+Choice: 4 3
+Choice: 5 4
+Choice: 6 5
+Choice: 7 6
+Choice: 8 7
+Choice: 9 8
+Choice: 10 9
+Choice: 11 10
+Choice: 12 11
+Choice: 13 12
+Choice: 14 13
+Choice: 15 14
+Choice: 16 15
+Choice: 17 16
+Choice: 18 17
+Choice: 19 18
+Choice: 20 19
+Choice: 21 20
+Choice: 22 21
+Choice: 23 22
+Choice: 24 23
+Choice: 25 24
+Choice: 26 25
+Choice: 27 26
+Choice: 28 27
+Choice: 29 28
+Choice: 30 29
+Choice: 31 30
+Choice: 32 31
+Choice: 33 32
+Choice: 34 33
+Choice: 35 34
+Choice: 36 35
+Choice: 37 36
+Choice: 38 37
+Choice: 39 38
+Choice: 40 39
+Choice: 41 40
+Choice: 42 41
+Choice: 43 42
+Choice: 44 43
+Choice: 45 44
+Choice: 46 45
+Choice: 47 46
+Choice: 48 47
+Choice: 49 48
+Choice: 50 49
+Choice: 51 50
+Choice: 52 51
+Choice: 53 52
+Choice: 54 53
+Choice: 55 54
+Choice: 56 55
+Choice: 57 56
+Choice: 58 57
+Choice: 59 58
+Choice: 60 59
+Choice: 61 60
+Choice: 62 61
+Choice: 63 62
+Choice: 64 63
+Choice: 65 64
+Choice: 66 65
+Choice: 67 66
+Choice: 68 67
+Choice: 69 68
+Choice: 70 69
+Choice: 71 70
+Choice: 72 71
+Choice: 73 72
+Choice: 74 73
+Choice: 75 74
+Choice: 76 75
+Choice: 77 76
+Choice: 78 77
+Choice: 79 78
+Choice: 80 79
+Choice: 81 80
+Choice: 82 81
+Choice: 83 82
+Choice: 84 83
+Choice: 85 84
+Choice: 86 85
+Choice: 87 86
+Choice: 88 87
+Choice: 89 88
+Choice: 90 89
+Choice: 91 90
+Choice: 92 91
+Choice: 93 92
+Choice: 94 93
+Choice: 95 94
+Choice: 96 95
+Choice: 97 96
+Choice: 98 97
+Choice: 99 98
+Choice: 100 99
+Choice: 101 100
+/main/other/d219
+Label: PTP Property 0xd219
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 1
+/main/other/d212
+Label: PTP Property 0xd212
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+/main/other/d214
+Label: PTP Property 0xd214
+Type: RANGE
+Current: 3.39241e+07
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+/main/other/d215
+Label: PTP Property 0xd215
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 65535
+Step: 1
+/main/other/d220
+Label: PTP Property 0xd220
+Type: TEXT
+Current: (null)
+
+0.870844 PTP2/ptp2/library.c(2): Device info:
+0.870861 PTP2/ptp2/library.c(2): Manufacturer: Sony Corporation
+0.870874 PTP2/ptp2/library.c(2):   Model: ILCE-6000
+0.870886 PTP2/ptp2/library.c(2):   device version: 1.0
+0.870899 PTP2/ptp2/library.c(2):   serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+0.870913 PTP2/ptp2/library.c(2): Vendor extension ID: 0x00000011
+0.870926 PTP2/ptp2/library.c(2): Vendor extension version: 100
+0.870943 PTP2/ptp2/library.c(2): Vendor extension description: Sony PTP Extensions
+0.870966 PTP2/ptp2/library.c(2): Functional Mode: 0x0000
+0.870981 PTP2/ptp2/library.c(2): PTP Standard Version: 100
+0.870993 PTP2/ptp2/library.c(2): Supported operations:
+0.871007 PTP2/ptp2/library.c(2):   0x1002
+0.871020 PTP2/ptp2/library.c(2):   0x1003
+0.871033 PTP2/ptp2/library.c(2):   0x1001
+0.871046 PTP2/ptp2/library.c(2):   0x1004
+0.871059 PTP2/ptp2/library.c(2):   0x1005
+0.871072 PTP2/ptp2/library.c(2):   0x1006
+0.871085 PTP2/ptp2/library.c(2):   0x1007
+0.871097 PTP2/ptp2/library.c(2):   0x1008
+0.871110 PTP2/ptp2/library.c(2):   0x1009
+0.871123 PTP2/ptp2/library.c(2):   0x100a
+0.871136 PTP2/ptp2/library.c(2):   0x101b
+0.871149 PTP2/ptp2/library.c(2):   0x9201
+0.871162 PTP2/ptp2/library.c(2):   0x9202
+0.871175 PTP2/ptp2/library.c(2):   0x9205
+0.871188 PTP2/ptp2/library.c(2):   0x9207
+0.871200 PTP2/ptp2/library.c(2):   0x9209
+0.871213 PTP2/ptp2/library.c(2): Events Supported:
+0.871226 PTP2/ptp2/library.c(2):   0xc201
+0.871239 PTP2/ptp2/library.c(2):   0xc202
+0.871251 PTP2/ptp2/library.c(2):   0xc203
+0.871264 PTP2/ptp2/library.c(2): Device Properties Supported:
+0.871277 PTP2/ptp2/library.c(2):   0x5004
+0.871290 PTP2/ptp2/library.c(2):   0x5005
+0.871303 PTP2/ptp2/library.c(2):   0x5007
+0.871316 PTP2/ptp2/library.c(2):   0x500a
+0.871328 PTP2/ptp2/library.c(2):   0x500b
+0.871341 PTP2/ptp2/library.c(2):   0x500c
+0.871355 PTP2/ptp2/library.c(2):   0x500e
+0.871367 PTP2/ptp2/library.c(2):   0x5010
+0.871380 PTP2/ptp2/library.c(2):   0x5013
+0.871393 PTP2/ptp2/library.c(2):   0xd200
+0.871406 PTP2/ptp2/library.c(2):   0xd201
+0.871419 PTP2/ptp2/library.c(2):   0xd203
+0.871449 PTP2/ptp2/library.c(2):   0xd20d
+0.871464 PTP2/ptp2/library.c(2):   0xd20e
+0.871477 PTP2/ptp2/library.c(2):   0xd20f
+0.871490 PTP2/ptp2/library.c(2):   0xd210
+0.871503 PTP2/ptp2/library.c(2):   0xd21c
+0.871516 PTP2/ptp2/library.c(2):   0xd211
+0.871529 PTP2/ptp2/library.c(2):   0xd213
+0.871542 PTP2/ptp2/library.c(2):   0xd21e
+0.871555 PTP2/ptp2/library.c(2):   0xd21b
+0.871568 PTP2/ptp2/library.c(2):   0xd21d
+0.871581 PTP2/ptp2/library.c(2):   0xd217
+0.871593 PTP2/ptp2/library.c(2):   0xd218
+0.871606 PTP2/ptp2/library.c(2):   0xd219
+0.871619 PTP2/ptp2/library.c(2):   0xd212
+0.871632 PTP2/ptp2/library.c(2):   0xd214
+0.871645 PTP2/ptp2/library.c(2):   0xd215
+0.871657 PTP2/ptp2/library.c(2):   0xd220
+
+0.898658 gphoto2-port(3): Hexdump of 1024 = 0x400 bytes follows:
+0000  1c 04 00 00 02 00 09 92-08 00 00 00 22 00 00 00  ............"...
+0010  00 00 00 00 04 50 02 00-01 01 02 03 02 04 00 02  .....P..........
+0020  03 10 13 05 50 04 00 01-00 02 00 02 00 02 0d 00  ....P...........
+0030  01 00 02 00 04 00 11 80-10 80 06 00 01 80 02 80  ................
+0040  03 80 04 80 07 00 12 80-23 80 07 50 04 00 00 02  ........#..P....
+0050  ff ff f4 01 01 00 00 ff-ff 01 00 0a 50 04 00 00  ............P...
+0060  02 01 00 05 80 02 08 00-01 00 02 00 03 00 04 80  ................
+0070  05 80 08 80 06 80 07 80-0b 50 04 00 00 00 01 00  .........P......
+0080  01 00 02 03 00 04 00 01-00 02 80 0c 50 04 00 00  ............P...
+0090  00 01 00 00 00 02 0a 00-02 00 01 00 04 00 03 00  ................
+00a0  05 00 01 80 03 80 04 80-31 80 32 80 0e 50 04 00  ........1.2..P..
+00b0  00 02 01 00 00 80 02 15-00 00 80 01 80 02 00 03  ................
+00c0  00 04 00 01 00 50 80 51-80 52 80 53 80 54 80 41  .....P.Q.R.S.T.A
+00d0  80 07 00 11 80 15 80 14-80 12 80 13 80 16 80 17  ................
+00e0  80 18 80 10 50 03 00 00-02 00 00 00 00 02 2b 00  ....P.........+.
+00f0  00 00 01 00 02 00 88 13-5c 12 94 11 cc 10 a0 0f  ........\.......
+0100  74 0e ac 0d e4 0c b8 0b-8c 0a c4 09 fc 08 d0 07  t...............
+0110  a4 06 dc 05 14 05 e8 03-bc 02 f4 01 2c 01 d4 fe  ............,...
+0120  0c fe 44 fd 18 fc ec fa-24 fa 5c f9 30 f8 04 f7  ..D.....$.\.0...
+0130  3c f6 74 f5 48 f4 1c f3-54 f2 8c f1 60 f0 34 ef  <.t.H...T...`.4.
+0140  6c ee a4 ed 78 ec 13 50-04 00 01 01 01 00 01 00  l...x..P........
+0150  02 08 00 01 00 02 00 15-80 12 80 05 80 04 80 08  ................
+0160  80 09 80 00 d2 03 00 00-02 00 00 00 00 02 1b 00  ................
+0170  00 00 01 00 02 00 b8 0b-8c 0a c4 09 fc 08 d0 07  ................
+0180  a4 06 dc 05 14 05 e8 03-bc 02 f4 01 2c 01 d4 fe  ............,...
+0190  0c fe 44 fd 18 fc ec fa-24 fa 5c f9 30 f8 04 f7  ..D.....$.\.0...
+01a0  3c f6 74 f5 48 f4 01 d2-02 00 01 00 01 1f 02 0e  <.t.H...........
+01b0  00 01 1f 11 12 13 14 15-20 21 22 23 24 25 26 03  ........ !"#$%&.
+01c0  d2 02 00 01 01 04 01 02-03 00 01 02 03 0d d2 06  ................
+01d0  00 00 02 ff ff ff ff 64-00 01 00 01 00 00 00 00  .......d........
+01e0  ff ff ff ff 01 00 00 00-0e d2 02 00 00 02 01 06  ................
+01f0  02 0a 00 01 02 03 08 09-0a 04 05 06 07 0f d2 04  ................
+0200  00 01 00 7c 15 00 00 01-c4 09 ac 26 64 00 10 d2  ...|.......&d...
+0210  02 00 01 00 80 80 01 79-87 01 1c d2 02 00 01 00  .......y........
+0220  80 80 01 79 87 01 11 d2-02 00 01 01 01 02 02 02  ...y............
+0230  00 01 02 13 d2 02 00 00-02 01 01 02 06 00 01 02  ................
+0240  03 05 06 07 1e d2 06 00-00 02 ff ff ff 00 ff ff  ................
+0250  ff 00 02 3a 00 ff ff ff-00 19 00 00 00 64 00 00  ...:.........d..
+0260  00 7d 00 00 00 a0 00 00-00 c8 00 00 00 fa 00 00  .}..............
+0270  00 40 01 00 00 90 01 00-00 f4 01 00 00 80 02 00  .@..............
+0280  00 20 03 00 00 e8 03 00-00 e2 04 00 00 40 06 00  . ...........@..
+0290  00 d0 07 00 00 c4 09 00-00 80 0c 00 00 a0 0f 00  ................
+02a0  00 88 13 00 00 00 19 00-00 40 1f 00 00 10 27 00  .........@....'.
+02b0  00 00 32 00 00 80 3e 00-00 20 4e 00 00 00 64 00  ..2...>.. N...d.
+02c0  00 00 90 01 00 ff ff ff-01 19 00 00 01 32 00 00  .............2..
+02d0  01 40 00 00 01 50 00 00-01 64 00 00 01 7d 00 00  .@...P...d...}..
+02e0  01 a0 00 00 01 c8 00 00-01 fa 00 00 01 40 01 00  .............@..
+02f0  01 90 01 00 01 f4 01 00-01 80 02 00 01 20 03 00  ............. ..
+0300  01 e8 03 00 01 e2 04 00-01 40 06 00 01 d0 07 00  .........@......
+0310  01 c4 09 00 01 80 0c 00-01 a0 0f 00 01 88 13 00  ................
+0320  01 00 19 00 01 40 1f 00-01 10 27 00 01 00 32 00  .....@....'...2.
+0330  01 80 3e 00 01 00 64 00-01 00 c8 00 01 1b d2 04  ..>...d.........
+0340  00 01 00 00 80 00 80 02-01 00 00 80 1d d2 02 00  ................
+0350  00 02 00 00 01 00 02 01-17 d2 02 00 00 02 01 01  ................
+0360  02 02 00 02 01 18 d2 01-00 00 02 ff 43 01 ff 64  ............C..d
+0370  01 19 d2 02 00 00 02 01-02 02 02 00 02 01 c1 d2  ................
+0380  04 00 81 01 01 00 01 00-02 02 00 01 00 02 00 c2  ................
+0390  d2 04 00 81 01 01 00 01-00 02 02 00 01 00 02 00  ................
+03a0  c3 d2 04 00 81 01 01 00-01 00 02 02 00 01 00 02  ................
+03b0  00 c8 d2 04 00 81 01 01-00 01 00 02 02 00 01 00  ................
+03c0  02 00 12 d2 02 00 00 01-00 00 01 00 0f 01 14 d2  ................
+03d0  06 00 00 01 ff ff ff ff-00 a4 05 02 01 00 00 00  ................
+03e0  00 ff ff ff ff 01 00 00-00 15 d2 04 00 00 01 00  ................
+03f0  00 00 00 01 00 00 ff ff-01 00 c5 d2 04 00 83 01  ................
+
+0.898769 gphoto2-port(2): Reading 28=0x1c bytes from port...
+0.898882 gphoto2-port(3): Hexdump of 28 = 0x1c bytes follows:
+0000  01 00 01 00 02 02 00 01-00 02 00 c7 d2 04 00 81  ................
+0010  01 01 00 01 00 02 02 00-01 00 02 00              ............    
+
+0.898905 ptp2/ptp_usb_getresp(2): reading response
+0.898921 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.898938 gphoto2-port(2): Reading 1024=0x400 bytes from port...
+0.899275 gphoto2-port(2): Could only read 12 out of 1024 byte(s)
+0.899300 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-08 00 00 00              ....... ....    
+
+0.899387 ptp2/sony_capture(2): dpd.CurrentValue.u8 = 3
+0.899427 ptp2/sony_capture(2): dpd.FactoryDefaultValue.u8 = 2
+0.899448 gphoto2-port(2): Writing 16=0x10 byte(s) to port...
+0.899467 gphoto2-port(3): Hexdump of 16 = 0x10 bytes follows:
+0000  10 00 00 00 01 00 07 92-09 00 00 00 c7 d2 00 00  ................
+
+0.899650 gphoto2-port(2): Writing 14=0xe byte(s) to port...
+0.899674 gphoto2-port(3): Hexdump of 14 = 0xe bytes follows:
+0000  0e 00 00 00 02 00 07 92-09 00 00 00 02 00        ..............  
+
+0.899743 ptp2/ptp_usb_getresp(2): reading response
+0.899765 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.899782 gphoto2-port(2): Reading 1024=0x400 bytes from port...
+0.916033 gphoto2-port(2): Could only read 12 out of 1024 byte(s)
+0.916067 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-09 00 00 00              ....... ....    
+
+0.916090 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.916109 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 09 92-0a 00 00 00              ............    
+
+0.916267 ptp2/ptp_usb_getdata(2): reading data
+0.916287 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.916306 gphoto2-port(2): Reading 1024=0x400 bytes from port...
+0.918404 gphoto2-port(3): Hexdump of 1024 = 0x400 bytes follows:
+0000  1c 04 00 00 02 00 09 92-0a 00 00 00 22 00 00 00  ............"...
+0010  00 00 00 00 04 50 02 00-01 01 02 03 02 04 00 02  .....P..........
+0020  03 10 13 05 50 04 00 01-00 02 00 02 00 02 0d 00  ....P...........
+0030  01 00 02 00 04 00 11 80-10 80 06 00 01 80 02 80  ................
+0040  03 80 04 80 07 00 12 80-23 80 07 50 04 00 00 02  ........#..P....
+0050  ff ff f4 01 01 00 00 ff-ff 01 00 0a 50 04 00 00  ............P...
+0060  02 01 00 05 80 02 08 00-01 00 02 00 03 00 04 80  ................
+0070  05 80 08 80 06 80 07 80-0b 50 04 00 00 00 01 00  .........P......
+0080  01 00 02 03 00 04 00 01-00 02 80 0c 50 04 00 00  ............P...
+0090  00 01 00 00 00 02 0a 00-02 00 01 00 04 00 03 00  ................
+00a0  05 00 01 80 03 80 04 80-31 80 32 80 0e 50 04 00  ........1.2..P..
+00b0  00 02 01 00 00 80 02 15-00 00 80 01 80 02 00 03  ................
+00c0  00 04 00 01 00 50 80 51-80 52 80 53 80 54 80 41  .....P.Q.R.S.T.A
+00d0  80 07 00 11 80 15 80 14-80 12 80 13 80 16 80 17  ................
+00e0  80 18 80 10 50 03 00 00-02 00 00 00 00 02 2b 00  ....P.........+.
+00f0  00 00 01 00 02 00 88 13-5c 12 94 11 cc 10 a0 0f  ........\.......
+0100  74 0e ac 0d e4 0c b8 0b-8c 0a c4 09 fc 08 d0 07  t...............
+0110  a4 06 dc 05 14 05 e8 03-bc 02 f4 01 2c 01 d4 fe  ............,...
+0120  0c fe 44 fd 18 fc ec fa-24 fa 5c f9 30 f8 04 f7  ..D.....$.\.0...
+0130  3c f6 74 f5 48 f4 1c f3-54 f2 8c f1 60 f0 34 ef  <.t.H...T...`.4.
+0140  6c ee a4 ed 78 ec 13 50-04 00 01 01 01 00 01 00  l...x..P........
+0150  02 08 00 01 00 02 00 15-80 12 80 05 80 04 80 08  ................
+0160  80 09 80 00 d2 03 00 00-02 00 00 00 00 02 1b 00  ................
+0170  00 00 01 00 02 00 b8 0b-8c 0a c4 09 fc 08 d0 07  ................
+0180  a4 06 dc 05 14 05 e8 03-bc 02 f4 01 2c 01 d4 fe  ............,...
+0190  0c fe 44 fd 18 fc ec fa-24 fa 5c f9 30 f8 04 f7  ..D.....$.\.0...
+01a0  3c f6 74 f5 48 f4 01 d2-02 00 01 00 01 1f 02 0e  <.t.H...........
+01b0  00 01 1f 11 12 13 14 15-20 21 22 23 24 25 26 03  ........ !"#$%&.
+01c0  d2 02 00 01 01 04 01 02-03 00 01 02 03 0d d2 06  ................
+01d0  00 00 02 ff ff ff ff 64-00 01 00 01 00 00 00 00  .......d........
+01e0  ff ff ff ff 01 00 00 00-0e d2 02 00 00 02 01 06  ................
+01f0  02 0a 00 01 02 03 08 09-0a 04 05 06 07 0f d2 04  ................
+0200  00 01 00 7c 15 00 00 01-c4 09 ac 26 64 00 10 d2  ...|.......&d...
+0210  02 00 01 00 80 80 01 79-87 01 1c d2 02 00 01 00  .......y........
+0220  80 80 01 79 87 01 11 d2-02 00 01 01 01 02 02 02  ...y............
+0230  00 01 02 13 d2 02 00 00-02 01 01 02 06 00 01 02  ................
+0240  03 05 06 07 1e d2 06 00-00 02 ff ff ff 00 ff ff  ................
+0250  ff 00 02 3a 00 ff ff ff-00 19 00 00 00 64 00 00  ...:.........d..
+0260  00 7d 00 00 00 a0 00 00-00 c8 00 00 00 fa 00 00  .}..............
+0270  00 40 01 00 00 90 01 00-00 f4 01 00 00 80 02 00  .@..............
+0280  00 20 03 00 00 e8 03 00-00 e2 04 00 00 40 06 00  . ...........@..
+0290  00 d0 07 00 00 c4 09 00-00 80 0c 00 00 a0 0f 00  ................
+02a0  00 88 13 00 00 00 19 00-00 40 1f 00 00 10 27 00  .........@....'.
+02b0  00 00 32 00 00 80 3e 00-00 20 4e 00 00 00 64 00  ..2...>.. N...d.
+02c0  00 00 90 01 00 ff ff ff-01 19 00 00 01 32 00 00  .............2..
+02d0  01 40 00 00 01 50 00 00-01 64 00 00 01 7d 00 00  .@...P...d...}..
+02e0  01 a0 00 00 01 c8 00 00-01 fa 00 00 01 40 01 00  .............@..
+02f0  01 90 01 00 01 f4 01 00-01 80 02 00 01 20 03 00  ............. ..
+0300  01 e8 03 00 01 e2 04 00-01 40 06 00 01 d0 07 00  .........@......
+0310  01 c4 09 00 01 80 0c 00-01 a0 0f 00 01 88 13 00  ................
+0320  01 00 19 00 01 40 1f 00-01 10 27 00 01 00 32 00  .....@....'...2.
+0330  01 80 3e 00 01 00 64 00-01 00 c8 00 01 1b d2 04  ..>...d.........
+0340  00 01 00 00 80 00 80 02-01 00 00 80 1d d2 02 00  ................
+0350  00 02 00 00 01 00 02 01-17 d2 02 00 00 02 01 01  ................
+0360  02 02 00 02 01 18 d2 01-00 00 02 ff 43 01 ff 64  ............C..d
+0370  01 19 d2 02 00 00 02 01-02 02 02 00 02 01 c1 d2  ................
+0380  04 00 81 01 01 00 01 00-02 02 00 01 00 02 00 c2  ................
+0390  d2 04 00 81 01 01 00 01-00 02 02 00 01 00 02 00  ................
+03a0  c3 d2 04 00 81 01 01 00-01 00 02 02 00 01 00 02  ................
+03b0  00 c8 d2 04 00 81 01 01-00 01 00 02 02 00 01 00  ................
+03c0  02 00 12 d2 02 00 00 01-00 00 01 00 0f 01 14 d2  ................
+03d0  06 00 00 01 ff ff ff ff-00 a4 05 02 01 00 00 00  ................
+03e0  00 ff ff ff ff 01 00 00-00 15 d2 04 00 00 01 00  ................
+03f0  00 00 00 01 00 00 ff ff-01 00 c5 d2 04 00 83 01  ................
+
+0.918493 gphoto2-port(2): Reading 28=0x1c bytes from port...
+0.918625 gphoto2-port(3): Hexdump of 28 = 0x1c bytes follows:
+0000  01 00 01 00 02 02 00 01-00 02 00 c7 d2 04 00 81  ................
+0010  01 01 00 01 00 02 02 00-01 00 02 00              ............    
+
+0.918647 ptp2/ptp_usb_getresp(2): reading response
+0.918661 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.918678 gphoto2-port(2): Reading 1024=0x400 bytes from port...
+0.918878 gphoto2-port(2): Could only read 12 out of 1024 byte(s)
+0.918905 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-0a 00 00 00              ....... ....    
+
+0.918964 gphoto2-port(2): Getting timeout...
+0.918984 gphoto2-port(2): Current timeout: 20000 milliseconds
+0.919000 gphoto2-port(2): Setting timeout to 100 millisecond(s)...
+0.919020 gphoto2-port(2): Reading 24=0x18 bytes from interrupt endpoint...
+0.923126 gphoto2-port(2): Could only read 16 out of 24 byte(s)
+0.923144 gphoto2-port(3): Hexdump of 16 = 0x10 bytes follows:
+0000  10 00 00 00 04 00 03 c2-ff ff ff ff 1d d2 00 00  ................
+
+0.923155 gphoto2-port(2): Setting timeout to 20000 millisecond(s)...
+0.923167 ptp(2): event: nparams=0x1, code=0xC203, trans_id=0xFFFFFFFF, p1=0xD21D, p2=0x0, p3=0x0
+0.923187 ptp2/sony_capture(2): during event.code=c203 Param1=0000d21d
+0.933298 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.933313 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 09 92-0b 00 00 00              ............    
