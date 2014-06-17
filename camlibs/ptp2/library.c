@@ -905,6 +905,10 @@ static struct {
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:Alpha-A3000",	      0x054c, 0x074e, 0},
 
+	/* Sascha Peilicke at SUSE */
+	{"Sony:Alpha-A6000 (MTP)",    0x054c, 0x08b7, 0},
+	{"Sony:Alpha-A6000 (Control)",0x054c, 0x094e, PTP_CAP},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
