@@ -2975,6 +2975,11 @@ static struct deviceproptableu8 nikon_scenemode[] = {
 	{ N_("Autumn colors"),		8, 0 },
 	{ N_("Food"),			9, 0 },
 	/* ? */
+	{ N_("Portrait"),		13, 0 },
+	{ N_("Landscape"),		14, 0 },
+	{ N_("Child"),			15, 0 },
+	{ N_("Sports"),			16, 0 },
+	{ N_("Close up"),		17, 0 },
 	{ N_("Night Portrait"),		18, 0 },
 
 };
@@ -2989,11 +2994,32 @@ static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 GENERIC8TABLE(Nikon_HDRHighDynamic,nikon_hdrhighdynamic);
 
 static struct deviceproptableu8 nikon_hdrsmoothing[] = {
-	{ N_("High"),	0, 0 },
-	{ N_("Normal"),	1, 0 },
-	{ N_("Low"),	1, 0 },
+	{ N_("Auto"),		3, 0 },
+	{ N_("Low"),		2, 0 },
+	{ N_("Normal"),		1, 0 },
+	{ N_("High"),		0, 0 },
+	{ N_("Extra high"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_HDRSmoothing,nikon_hdrsmoothing);
+
+static struct deviceproptableu16 nikon_d7100_exposure_program_modes[] = {
+	{ "M",			0x0001, 0 },
+	{ "P",			0x0002, 0 },
+	{ "A",			0x0003, 0 },
+	{ "S",			0x0004, 0 },
+	{ N_("Auto"),		0x8010, PTP_VENDOR_NIKON},
+	{ N_("Portrait"),	0x8011, PTP_VENDOR_NIKON},
+	{ N_("Landscape"),	0x8012, PTP_VENDOR_NIKON},
+	{ N_("Macro"),		0x8013, PTP_VENDOR_NIKON},
+	{ N_("Sports"),		0x8014, PTP_VENDOR_NIKON},
+	{ N_("No Flash"),	0x8016, PTP_VENDOR_NIKON},
+	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
+	{ N_("Scene"),		0x8018, PTP_VENDOR_NIKON},
+	{ N_("Effects"),	0x8019, PTP_VENDOR_NIKON},
+	{ N_("U1"),		0x8050, PTP_VENDOR_NIKON},
+	{ N_("U2"),		0x8051, PTP_VENDOR_NIKON},
+};
+GENERIC16TABLE(NIKON_D7100_ExposureProgram,nikon_d7100_exposure_program_modes)
 
 static struct deviceproptableu16 nikon_d5100_exposure_program_modes[] = {
 	{ "M",			0x0001, 0 },
@@ -3058,6 +3084,16 @@ static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Dynamic-area AF with closest subject priority"),0x8004, PTP_VENDOR_FUJI},
 };
 GENERIC16TABLE(FocusMetering,focus_metering)
+
+static struct deviceproptableu16 nikon_d7100_focus_metering[] = {
+	{ N_("Auto"),0x8011, PTP_VENDOR_NIKON},
+	{ N_("Single Area"),	0x8010, PTP_VENDOR_NIKON},
+	{ N_("Dynamic Area (9)"),	0x0002, 0 },
+	{ N_("Dynamic Area (21)"),  0x8013, PTP_VENDOR_NIKON},
+	{ N_("Dynamic Area (51)"),  0x8014, PTP_VENDOR_NIKON},
+	{ N_("3D Tracking"),  0x8012, PTP_VENDOR_NIKON},
+};
+GENERIC16TABLE(Nikon_D7100_FocusMetering,nikon_d7100_focus_metering)
 
 
 static struct deviceproptableu8 nikon_colormodel[] = {
@@ -3989,6 +4025,7 @@ GENERIC8TABLE(Nikon_CleanSensor,nikon_cleansensor)
 static struct deviceproptableu8 nikon_flickerreduction[] = {
 	{ N_("50 Hz"),			0, 0 },
 	{ N_("60 Hz"),			1, 0 },
+	{ N_("Auto"),			2, 0 },
 };
 GENERIC8TABLE(Nikon_FlickerReduction,nikon_flickerreduction)
 
@@ -4064,6 +4101,23 @@ static struct deviceproptableu8 nikon_d5100_moviequality[] = {
 };
 GENERIC8TABLE(Nikon_D5100_MovieQuality, nikon_d5100_moviequality);
 
+static struct deviceproptableu8 nikon_d7100_moviequality[] = {
+	{"1920x1080; 60i",     	0, 0},
+	{"1920x1080; 50i",	1, 0},
+ 	{"1920x1080; 30p",	2, 0},
+	{"1920x1080; 25p",	3, 0},
+	{"1920x1080; 24p",	4, 0},
+	{"1280x720; 60p",	5, 0},
+	{"1280x720; 50p",	6, 0},
+};
+GENERIC8TABLE(Nikon_D7100_MovieQuality, nikon_d7100_moviequality);
+
+static struct deviceproptableu8 nikon_d7100_moviequality2[] = {
+	{"Norm",     	0, 0},
+	{"High",	1, 0},
+};
+GENERIC8TABLE(Nikon_D7100_MovieQuality2, nikon_d7100_moviequality2);
+
 static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{"400",		0, 0},
 	{"800",		1, 0},
@@ -4073,6 +4127,36 @@ static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{N_("Hi 2"),	5, 0},
 };
 GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
+
+static struct deviceproptableu8 nikon_d7100_isoautohilimit[] = {
+	{"200",	   0, 0},
+	{"250",	   1, 0},
+	{"280",	   2, 0},
+	{"320",	   3, 0},
+	{"400",    4, 0},
+	{"500",   5, 0},
+	{"560",   6, 0},
+	{"640",   7, 0},
+	{"800",   8, 0},
+	{"1000",   9, 0},
+	{"1100",  10, 0},
+	{"1250",  11, 0},
+	{"1600",  12, 0},
+	{"2000",  13, 0},
+	{"2200",  14, 0},
+	{"2500",  15, 0},
+	{"3200",  16, 0},
+	{"4000",  17, 0},
+	{"4500",  18, 0},
+	{"5000", 19, 0},
+	{"6400", 20, 0},
+	{"Hi 0.3", 21, 0},
+	{"Hi 0.5", 22, 0},
+	{"Hi 0.7", 23, 0},
+	{"Hi 1", 24, 0},
+	{"Hi 2", 25, 0},
+};
+GENERIC8TABLE(Nikon_D7100_ISOAutoHiLimit, nikon_d7100_isoautohilimit);
 
 static struct deviceproptableu8 nikon_manualbracketmode[] = {
 	{N_("Flash/speed"),	0, 0},
@@ -4153,6 +4237,38 @@ static struct deviceproptableu8 nikon_d90_padvpvalue[] = {
 	{ "1",		0x17, 0 },
 };
 GENERIC8TABLE(Nikon_D90_PADVPValue,nikon_d90_padvpvalue)
+
+static struct deviceproptableu8 nikon_d7100_padvpvalue[] = {
+	{ "1/4000",	0x00, 0 },
+	{ "1/3200",	0x01, 0 },
+	{ "1/2500",	0x02, 0 },
+	{ "1/2000",	0x03, 0 },
+	{ "1/1600",	0x04, 0 },
+	{ "1/1250",	0x05, 0 },
+	{ "1/1000",	0x06, 0 },
+	{ "1/800",	0x07, 0 },
+	{ "1/640",	0x08, 0 },
+	{ "1/500",	0x09, 0 },
+	{ "1/400",	0x0a, 0 },
+	{ "1/320",	0x0b, 0 },
+	{ "1/250",	0x0c, 0 },
+	{ "1/200",	0x0d, 0 },
+	{ "1/160",	0x0e, 0 },
+	{ "1/125",	0x0f, 0 },
+	{ "1/100",	0x10, 0 },
+	{ "1/80",	0x11, 0 },
+	{ "1/60",	0x12, 0 },
+	{ "1/50",	0x13, 0 },
+	{ "1/40",	0x14, 0 },
+	{ "1/30",	0x15, 0 },
+	{ "1/15",	0x16, 0 },
+	{ "1/8",	0x17, 0 },
+        { "1/4",	0x18, 0 },
+        { "1/2",	0x19, 0 },
+        { "1",		0x1a, 0 },
+        { "Auto",	0x1b, 0 },
+};
+GENERIC8TABLE(Nikon_D7100_PADVPValue,nikon_d7100_padvpvalue)
 
 static struct deviceproptableu8 nikon_d3s_padvpvalue[] = {
 	{ "1/4000",	0x00, 0 },
@@ -4280,6 +4396,19 @@ static struct deviceproptableu8 nikon_d3s_flashsyncspeed[] = {
 };
 GENERIC8TABLE(Nikon_D3s_FlashSyncSpeed,nikon_d3s_flashsyncspeed)
 
+static struct deviceproptableu8 nikon_d7100_flashsyncspeed[] = {
+	{ N_("1/320s (Auto FP)"),	0x00, 0 },
+	{ N_("1/250s (Auto FP)"),	0x01, 0 },
+	{ N_("1/250s"),			0x02, 0 },
+	{ N_("1/200s"),			0x03, 0 },
+	{ N_("1/160s"),			0x04, 0 },
+	{ N_("1/125s"),			0x05, 0 },
+	{ N_("1/100s"),			0x06, 0 },
+	{ N_("1/80s"),			0x07, 0 },
+	{ N_("1/60s"),			0x08, 0 },
+};
+GENERIC8TABLE(Nikon_D7100_FlashSyncSpeed,nikon_d7100_flashsyncspeed)
+
 static struct deviceproptableu8 nikon_d3s_afcmodepriority[] = {
 	{ N_("Release"),	0x00, 0 },
 	{ N_("Release + Focus"),0x01, 0 },
@@ -4356,6 +4485,16 @@ static struct deviceproptableu8 nikon_d90_shootingspeed[] = {
 	{ N_("1 fps"),	0x03, 0 },
 };
 GENERIC8TABLE(Nikon_D90_ShootingSpeed,nikon_d90_shootingspeed)
+
+static struct deviceproptableu8 nikon_d7100_shootingspeed[] = {
+	{ N_("6 fps"),	0x00, 0 },
+	{ N_("5 fps"),	0x01, 0 },
+	{ N_("4 fps"),	0x02, 0 },
+	{ N_("3 fps"),	0x03, 0 },
+	{ N_("2 fps"),	0x04, 0 },
+	{ N_("1 fps"),	0x05, 0 },
+};
+GENERIC8TABLE(Nikon_D7100_ShootingSpeed,nikon_d7100_shootingspeed)
 
 static struct deviceproptableu8 nikon_d3s_shootingspeed[] = {
 	{ N_("9 fps"),	0x00, 0 },
@@ -6441,10 +6580,30 @@ static struct submenu nikon_d7000_camera_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* Nikon D7100. Daniel Wagenaar <wagenadl@uc.edu> */
+static struct submenu nikon_d7100_camera_settings[] = {
+	{ N_("Assign Func Button"), "funcbutton", PTP_DPC_NIKON_F4AssignFuncButton, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7000_FuncButton, _put_Nikon_D7000_FuncButton},
+	{ N_("Assign Preview Button"), "previewbutton", PTP_DPC_NIKON_PreviewButton, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7000_FuncButton, _put_Nikon_D7000_FuncButton},
+	{ 0,0,0,0,0,0,0 },
+};
+
 static struct submenu nikon_d5100_capture_settings[] = {
 	{ N_("Movie Quality"),  "moviequality", PTP_DPC_NIKON_MovScreenSize, 0, PTP_DTC_UINT8,  _get_Nikon_D5100_MovieQuality,    _put_Nikon_D5100_MovieQuality},
 	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_NIKON_D5100_ExposureProgram, _put_NIKON_D5100_ExposureProgram},
 	{ N_("Minimum Shutter Speed"), "minimumshutterspeed", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_PADVPValue, _put_Nikon_D90_PADVPValue},
+	{ 0,0,0,0,0,0,0 },
+};
+
+/* Nikon D7100. Daniel Wagenaar <wagenadl@uc.edu> */
+static struct submenu nikon_d7100_capture_settings[] = {
+	{ N_("Movie Resolution"),  "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_Nikon_D7100_MovieQuality,    _put_Nikon_D7100_MovieQuality},
+	{ N_("Movie Quality"),  "moviequality2", PTP_DPC_NIKON_MovQuality, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_Nikon_D7100_MovieQuality2,    _put_Nikon_D7100_MovieQuality2},
+	{ N_("Exposure Program"), "expprogram", PTP_DPC_ExposureProgramMode, 0, PTP_DTC_UINT16, _get_NIKON_D7100_ExposureProgram, _put_NIKON_D7100_ExposureProgram},
+	{ N_("Minimum Shutter Speed"), "minimumshutterspeed", PTP_DPC_NIKON_PADVPMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7100_PADVPValue, _put_Nikon_D7100_PADVPValue},
+	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7100_ShootingSpeed, _put_Nikon_D7100_ShootingSpeed},
+	{ N_("ISO Auto Hi Limit"), "isoautohilimit", PTP_DPC_NIKON_ISOAutoHiLimit, PTP_VENDOR_NIKON, PTP_DTC_INT8, _get_Nikon_D7100_ISOAutoHiLimit, _put_Nikon_D7100_ISOAutoHiLimit },
+	{ N_("Flash Sync. Speed"), "flashsyncspeed", PTP_DPC_NIKON_FlashSyncSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7100_FlashSyncSpeed, _put_Nikon_D7100_FlashSyncSpeed},
+	{ N_("Focus Metering"), "focusmetering", PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7100_FocusMetering, _put_Nikon_D7100_FocusMetering},
 	{ 0,0,0,0,0,0,0 },
 };
 static struct submenu nikon_d90_capture_settings[] = {
@@ -6507,6 +6666,7 @@ static struct menu menus[] = {
 	{ N_("Camera Actions"), "actions", 0, 0, camera_actions_menu, NULL, NULL },
 
 	{ N_("Camera Settings"), "settings", 0x4b0, 0x0428, nikon_d7000_camera_settings, NULL, NULL },
+	{ N_("Camera Settings"), "settings", 0x4b0, 0x0430, nikon_d7100_camera_settings, NULL, NULL },
 	{ N_("Camera Settings"), "settings", 0x4b0, 0x0421, nikon_d90_camera_settings, NULL, NULL },
 	{ N_("Camera Settings"), "settings", 0, 0, camera_settings_menu, NULL, NULL },
 
@@ -6517,6 +6677,7 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0421, nikon_d90_capture_settings,     NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0426, nikon_d3s_capture_settings,     NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0429, nikon_d5100_capture_settings,   NULL, NULL },
+	{ N_("Capture Settings"), "capturesettings", 0x4b0, 0x0430, nikon_d7100_capture_settings,   NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0x4b0,      0, nikon_generic_capture_settings, NULL, NULL },
 	{ N_("Capture Settings"), "capturesettings", 0, 0, capture_settings_menu, NULL, NULL },
 

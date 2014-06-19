@@ -1750,6 +1750,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_MovFileSlot			0xD0A3
 #define PTP_DPC_NIKON_MovRecProhibitCondition		0xD0A4
 #define PTP_DPC_NIKON_ManualMovieSetting		0xD0A6
+#define PTP_DPC_NIKON_MovQuality			0xD0A7
 #define PTP_DPC_NIKON_LiveViewScreenDisplaySetting	0xD0B2
 #define PTP_DPC_NIKON_MonitorOffDelay			0xD0B3
 #define PTP_DPC_NIKON_Bracketing			0xD0C0

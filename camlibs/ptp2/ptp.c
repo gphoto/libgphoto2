@@ -4831,6 +4831,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Movie Card Slot")},
 		{PTP_DPC_NIKON_ManualMovieSetting,		/* 0xD0A6 */
 		 N_("Manual Movie Setting")},
+		{PTP_DPC_NIKON_MovQuality,			/* 0xD0A7 */
+		 N_("Movie Quality")},
 		{PTP_DPC_NIKON_MonitorOffDelay,			/* 0xD0B3 */
 		 N_("Monitor Off Delay")},
 		{PTP_DPC_NIKON_Bracketing,			/* 0xD0C0 */
