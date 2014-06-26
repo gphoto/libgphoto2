@@ -3758,7 +3758,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		 * capture might return busy. */
 		ret = ptp_check_eos_events (params);
 		if (ret != PTP_RC_OK)
-			translate_ptp_result (ret);
+			return translate_ptp_result (ret);
 
 		if (params->eos_camerastatus == 1)
 			return GP_ERROR_CAMERA_BUSY;
