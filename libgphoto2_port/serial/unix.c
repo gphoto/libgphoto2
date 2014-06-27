@@ -1,13 +1,13 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /*
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
- * Copyright © 2000 Philippe Marzouk <pmarzouk@bigfoot.com>
- * Copyright © 2000 Edouard Lafargue <Edouard.Lafargue@bigfoot.com>
- * Copyright © 1999 Johannes Erdfelt <johannes@erdfelt.com>
- * Copyright © 1999 Scott Fritzinger <scottf@unr.edu>
+ * Copyright 2001 Lutz Mueller <lutz@users.sf.net>
+ * Copyright 2000 Philippe Marzouk <pmarzouk@bigfoot.com>
+ * Copyright 2000 Edouard Lafargue <Edouard.Lafargue@bigfoot.com>
+ * Copyright 1999 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright 1999 Scott Fritzinger <scottf@unr.edu>
  *
  * Based on work by:
- * Copyright © 1999 Beat Christen <spiff@longstreet.ch>
+ * Copyright 1999 Beat Christen <spiff@longstreet.ch>
  * 	for the toshiba gPhoto library.
  *                   
  *
