@@ -1,6 +1,6 @@
 /* test-port-list.c
  *
- * Copyright (C) 2002 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright (C) 2002 Lutz Mueller <lutz@users.sourceforge.net>
  * Copyright (C) 2007 Hans Ulrich Niedermann <gp@n-dimensional.de>
  *
  * This library is free software; you can redistribute it and/or
