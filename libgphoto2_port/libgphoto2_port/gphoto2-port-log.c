@@ -1,6 +1,6 @@
 /** \file
  *
- * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  *
  * \par License
  * This library is free software; you can redistribute it and/or
@@ -176,6 +176,7 @@ gp_log_remove_func (int id)
  * Takes the data and creates a formatted hexdump string. If you would like
  * to log text messages, use #gp_log instead.
  **/
+/* coverity[-tainted_sink] */
 void
 gp_log_data (const char *domain, const char *data, unsigned int size)
 {

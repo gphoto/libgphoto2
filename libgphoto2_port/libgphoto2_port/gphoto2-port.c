@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /** \file
  * 
- * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  * \author Copyright 1999 Scott Fritzinger <scottf@unr.edu>
  *
  * \par License
