@@ -1,6 +1,6 @@
 /* library.c -- copied from the template
  *
- * Copyright © 2003 David Hogue <david@jawa.gotdns.org>
+ * Copyright 2003 David Hogue <david@jawa.gotdns.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

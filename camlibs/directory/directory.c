@@ -1,6 +1,6 @@
 /* directory.c
  *
- * Copyright (c) 2001 Lutz Müller <lutz@users.sf.net>
+ * Copyright (c) 2001 Lutz Mueller <lutz@users.sf.net>
  * Copyright (c) 2005 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (c) 2007 Hubert Figuiere <hub@figuiere.net>
  *

@@ -1651,6 +1651,9 @@ static struct {
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot SX500IS",		0x04a9, 0x325c, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Andrés Farfán <nafraf@linuxmail.org> */
+	{"Canon:PowerShot SX280HS",		0x04a9, 0x325f, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Marcus Meissner */
 	{"Canon:PowerShot A3500IS",		0x04a9, 0x3261, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -5962,7 +5965,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return mtp_get_playlist (camera, file, oid, context);
 
 		size=ob->oi.ObjectCompressedSize;
-		if (size) {
+		if (1 || size) {
 			uint16_t	ret;
 			PTPDataHandler	handler;
 

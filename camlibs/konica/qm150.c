@@ -1,7 +1,7 @@
 /* qm150.c
  *
- * Copyright © 2003 Marcus Meissner <marcus@jet.franken.de>
- *                  Aurélien Croc (AP²C) <programming@ap2c.com>
+ * Copyright 2003 Marcus Meissner <marcus@jet.franken.de>
+ *                Aurelien Croc (AP2C) <programming@ap2c.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

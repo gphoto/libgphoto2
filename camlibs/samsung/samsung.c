@@ -1,8 +1,8 @@
 /* samsung.c
  *
- * Copyright © 2000 James McKenzie
- * Copyright © 2001 Lutz Müller
- * Copyright © 2002 Marcus Meissner
+ * Copyright 2000 James McKenzie
+ * Copyright 2001 Lutz Mueller
+ * Copyright 2002 Marcus Meissner
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

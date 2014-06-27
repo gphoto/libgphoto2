@@ -1,6 +1,6 @@
 /* ez200.c
  *
- * Copyright (C) 2004 Bucas Jean-François <jfbucas@tuxfamily.org>
+ * Copyright (C) 2004 Bucas Jean-Francois <jfbucas@tuxfamily.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

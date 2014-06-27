@@ -5,10 +5,10 @@
  * Made entirely w/o Soundvision's help.  They would not give
  * documentation.  Reverse-engineered from usb-traces.
  * 
- * Copyright © 2002-2003 Vince Weaver <vince@deater.net>
+ * Copyright 2002-2003 Vince Weaver <vince@deater.net>
  * 
  * Originally based on the digita driver 
- * Copyright © 1999-2000 Johannes Erdfelt, VA Linux Systems
+ * Copyright 1999-2000 Johannes Erdfelt, VA Linux Systems
  */
 
 #include "config.h"

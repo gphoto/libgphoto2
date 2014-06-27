@@ -5,7 +5,7 @@
  * Olympus 3000z code, based on data from:
  * 	Till Kamppeter <till.kamppeter@gmx.net>
  * Original code:
- *  Copyright © 2002 Patrick Mansfield <patman@aracnet.com>
+ *  Copyright 2002 Patrick Mansfield <patman@aracnet.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

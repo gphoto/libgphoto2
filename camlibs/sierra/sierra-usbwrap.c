@@ -1,6 +1,6 @@
 /* sierra_usbwrap.c
  *
- * Copyright 2002 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright 2002 Lutz Mueller <lutz@users.sourceforge.net>
  * Copyright 2012-2013 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or

@@ -3,7 +3,7 @@
  *
  * Written 1999 by Wolfgang G. Reissnegger and Werner Almesberger
  * Additions 2000 by Philippe Marzouk and Edouard Lafargue
- * USB support, 2000, by Mikael Nyström
+ * USB support, 2000, by Mikael Nystroem
  *
  * This file includes both USB and serial support for the cameras
  * manufactured by Canon. These comprise all (or at least almost all)
