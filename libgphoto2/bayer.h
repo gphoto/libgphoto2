@@ -1,6 +1,6 @@
 /** \file
  *
- * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  *
  * \note
  * This library is free software; you can redistribute it and/or
