@@ -21,7 +21,7 @@
 /* Originally written by Peter Desnoyers <pjd@fred.cambridge.ma.us>,
  * and adapted for gphoto2 by
  * Nathan Stenzel <nathanstenzel@users.sourceforge.net> and
- * Lutz Müller <lutz@users.sourceforge.net>
+ * Lutz Mueller <lutz@users.sourceforge.net>
  *
  * Maintained by Nathan Stenzel <nathanstenzel@users.sourceforge.net>
  *

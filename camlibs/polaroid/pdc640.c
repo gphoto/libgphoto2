@@ -1,6 +1,6 @@
 /* pdc640.c
  *
- * Copyright 2001 Lutz Müller <lutz@users.sourceforge.net>
+ * Copyright 2001 Lutz Mueller <lutz@users.sourceforge.net>
  * Copyright 2002 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or

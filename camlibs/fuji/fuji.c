@@ -20,10 +20,10 @@
  *
  *  Portions of this code were adapted from
  *  GDS7 v0.1 interactive digital image transfer software for DS-7 camera
- *  Copyright © 1998 Matthew G. Martin
+ *  Copyright 1998 Matthew G. Martin
 
  *  Some of which was derived from get_ds7 , a Perl Language library
- *  Copyright © 1997 Mamoru Ohno
+ *  Copyright 1997 Mamoru Ohno
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
