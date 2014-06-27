@@ -1,7 +1,7 @@
 /** \file
  *
  * \author Copyright 2000 Scott Fritzinger
- * \author Contributions Lutz Müller <lutz@users.sf.net> (2001)
+ * \author Contributions Lutz Mueller <lutz@users.sf.net> (2001)
  * \author Copyright 2009 Marcus Meissner
  *
  * \par License

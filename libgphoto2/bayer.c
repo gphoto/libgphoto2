@@ -1,7 +1,7 @@
 /** \file bayer.c
  * \brief Bayer array conversion routines.
  *
- * \author Copyright 2001 Lutz Müller <lutz@users.sf.net>
+ * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  * \author Copyright 2007 Theodore Kilgore <kilgota@auburn.edu>
  *
  * \par
