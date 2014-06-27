@@ -6,7 +6,7 @@
  *
  * \note
  * Contributions:
- * 	Lutz Müller <lutz@users.sf.net> (2001)
+ * 	Lutz Mueller <lutz@users.sf.net> (2001)
  *
  * \note
  * This library is free software; you can redistribute it and/or
