@@ -1,8 +1,8 @@
 /* print-camera-list - print libgphoto2 camera list in different formats
  *
- * Copyright © 2002,2005 Hans Ulrich Niedermann <hun@users.sourceforge.net>
- * Portions Copyright © 2002 Lutz Müller <lutz@users.sourceforge.net>
- * Portions Copyright © 2005 Julien BLACHE <jblache@debian.org>
+ * Copyright 2002,2005 Hans Ulrich Niedermann <hun@users.sourceforge.net>
+ * Portions Copyright 2002 Lutz Mueller <lutz@users.sourceforge.net>
+ * Portions Copyright 2005 Julien BLACHE <jblache@debian.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
