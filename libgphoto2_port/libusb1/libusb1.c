@@ -1,9 +1,9 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* gphoto2-port-usb.c
  *
- * Copyright © 2001 Lutz Müller <lutz@users.sf.net>
- * Copyright © 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
- * Copyright © 2011 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright 2001 Lutz Mueller <lutz@users.sf.net>
+ * Copyright 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright 2011 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
