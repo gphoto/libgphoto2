@@ -1,9 +1,9 @@
 /****************************************************************/
 /* library.c - Gphoto2 library for the Mustek gSmart 300        */
 /*                                                              */
-/* Copyright (C) 2002 Jérôme Lodewyck                           */
+/* Copyright (C) 2002 JÃ©rÃ´me Lodewyck                           */
 /*                                                              */
-/* Author: Jérôme Lodewyck <jerome.lodewyck@ens.fr>             */
+/* Author: JÃ©rÃ´me Lodewyck <jerome.lodewyck@ens.fr>             */
 /*                                                              */
 /* based on code by: Till Adam <till@adam-lilienthal.de>        */
 /*                                                              */
