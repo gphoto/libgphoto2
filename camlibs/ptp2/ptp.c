@@ -2942,8 +2942,8 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	PTPContainer	ptp;
 	uint16_t	ret;
 	unsigned char	*xdata = NULL;
-	unsigned int 	xsize, psize1, psize2;
-	uint16_t	*props1,*props2;
+	unsigned int 	xsize, psize1 = 0, psize2 = 0;
+	uint16_t	*props1 = NULL,*props2 = NULL;
 
 	*props = NULL;
 	*size = 0;
