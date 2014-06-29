@@ -2994,6 +2994,24 @@ static struct deviceproptableu8 nikon_scenemode[] = {
 };
 GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode);
 
+static struct deviceproptableu8 nikon_1_iso[] = {
+	/* values from a J3 */
+	{ N_("A6400 (160-6400)"),	0x01, 0 },
+	{ N_("A3200 (160-3200)"),	0x02, 0 },
+	{ N_("A800 (160-800)"),		0x03, 0 },
+
+	{ N_("160"),			0x0e, 0 },
+	{ N_("200"),			0x10, 0 },
+	{ N_("400"),			0x16, 0 },
+	{ N_("800"),			0x1c, 0 },
+	{ N_("1600"),			0x22, 0 },
+	{ N_("3200"),			0x28, 0 },
+	{ N_("6400"),			0x2e, 0 },
+	
+	/* more unknown values */
+};
+GENERIC8TABLE(Nikon_1_ISO,nikon_1_iso);
+
 static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 	{ N_("Auto"),	0, 0 },
 	{ N_("1 EV"),	1, 0 },
@@ -4127,6 +4145,14 @@ static struct deviceproptableu8 nikon_d7100_moviequality2[] = {
 };
 GENERIC8TABLE(Nikon_D7100_MovieQuality2, nikon_d7100_moviequality2);
 
+static struct deviceproptableu8 nikon_1_moviequality[] = {
+	{"1080/60i",    0, 0},
+ 	{"1080/30p",	1, 0},
+	{"720/60p",	3, 0},
+	{"720/30p",	4, 0},
+};
+GENERIC8TABLE(Nikon_1_MovieQuality, nikon_1_moviequality);
+
 static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{"400",		0, 0},
 	{"800",		1, 0},
@@ -4366,6 +4392,12 @@ static struct deviceproptableu8 nikon_d90_highisonr[] = {
 	{ N_("High"),	3, 0 },
 };
 GENERIC8TABLE(Nikon_D90_HighISONR,nikon_d90_highisonr)
+
+static struct deviceproptableu8 nikon_1_highisonr[] = {
+	{ N_("On"),	0, 0 },
+	{ N_("Off"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_1_HighISONR,nikon_1_highisonr)
 
 static struct deviceproptableu8 nikon_d90_meterofftime[] = {
 	{ N_("4 seconds"),	0x00, 0 },
@@ -6407,6 +6439,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"), "iso", PTP_DPC_ExposureIndex, 0, PTP_DTC_UINT16, _get_ISO, _put_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_EOS_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
 	{ N_("ISO Speed"), "iso", PTP_DPC_SONY_ISO, PTP_VENDOR_SONY, PTP_DTC_UINT32, _get_Sony_ISO, _put_Sony_ISO},
+	{ N_("ISO Speed"), "iso", PTP_DPC_NIKON_1_ISO, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_1_ISO, _put_Nikon_1_ISO},
 	{ N_("ISO Auto"), "isoauto", PTP_DPC_NIKON_ISO_Auto, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_WhiteBalance, _put_Canon_WhiteBalance},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_CANON_EOS_WhiteBalance, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_EOS_WhiteBalance, _put_Canon_EOS_WhiteBalance},
@@ -6427,6 +6460,7 @@ static struct submenu image_settings_menu[] = {
 
 static struct submenu capture_settings_menu[] = {
 	{ N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
+	{ N_("Long Exp Noise Reduction"), "longexpnr", PTP_DPC_NIKON_1_LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Auto Focus Mode 2"), "autofocusmode2", PTP_DPC_NIKON_A4AFActivation, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8, _put_Nikon_OnOff_UINT8},
 	{ N_("Zoom"), "zoom", PTP_DPC_CANON_Zoom, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ZoomRange, _put_Canon_ZoomRange},
 	{ N_("Assist Light"), "assistlight", PTP_DPC_CANON_AssistLight, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_AssistLight, _put_Canon_AssistLight},
@@ -6660,6 +6694,8 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed", PTP_DPC_NIKON_D1ShootingSpeed, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_ShootingSpeed, _put_Nikon_D90_ShootingSpeed},
 	{ N_("Maximum continuous release"), "maximumcontinousrelease", PTP_DPC_NIKON_D2MaximumShots, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Range_UINT8, _put_Range_UINT8},
 	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_MovScreenSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_MovieQuality, _put_Nikon_MovieQuality},
+	{ N_("Movie Quality"), "moviequality", PTP_DPC_NIKON_1_MovQuality, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_1_MovieQuality, _put_Nikon_1_MovieQuality},
+	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_1_HiISONoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_1_HighISONR, _put_Nikon_1_HighISONR },
 
 	{ N_("Raw Compression"), "rawcompression", PTP_DPC_NIKON_RawCompression, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RawCompression, _put_Nikon_RawCompression},
 

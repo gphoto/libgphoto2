@@ -5083,6 +5083,17 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Active Pic Ctrl Item")},
 		{PTP_DPC_NIKON_ChangePicCtrlItem,		/* 0xD201 */
 		 N_("Change Pic Ctrl Item")},
+		/* nikon 1 stuff */
+		{PTP_DPC_NIKON_1_ISO,				/* 0xf002 */
+		 N_("ISO")},
+		{PTP_DPC_NIKON_1_ImageSize,			/* 0xf00a */
+		 N_("Image Size")},
+		{PTP_DPC_NIKON_1_LongExposureNoiseReduction,    /* 0xF00D */
+		 N_("Long Exposure Noise Reduction")},
+		{PTP_DPC_NIKON_1_MovQuality,                    /* 0xF01C */
+		 N_("Movie Quality")},
+		{PTP_DPC_NIKON_1_HiISONoiseReduction,           /* 0xF00E */
+		 N_("High ISO Noise Reduction")},
 		{0,NULL}
 	};
         struct {

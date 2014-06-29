@@ -1900,8 +1900,11 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_D251				0xD251
 
 /* this is irregular, as it should be -0x5000 or 0xD000 based */
+#define PTP_DPC_NIKON_1_ISO				0xF002
 #define PTP_DPC_NIKON_1_ImageSize			0xF00A
-
+#define PTP_DPC_NIKON_1_LongExposureNoiseReduction	0xF00D
+#define PTP_DPC_NIKON_1_MovQuality			0xF01C
+#define PTP_DPC_NIKON_1_HiISONoiseReduction		0xF00E
 
 /* Fuji specific */
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
