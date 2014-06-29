@@ -5096,6 +5096,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("High ISO Noise Reduction")},
 		{PTP_DPC_NIKON_1_WhiteBalance,           	/* 0xF00C */
 		 N_("White Balance")},
+		{PTP_DPC_NIKON_1_ImageCompression,           	/* 0xF009 */
+		 N_("Image Compression")},
 		{0,NULL}
 	};
         struct {

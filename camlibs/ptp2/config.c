@@ -4362,6 +4362,15 @@ static struct deviceproptableu8 nikon_d90_activedlighting[] = {
 };
 GENERIC8TABLE(Nikon_D90_ActiveDLighting,nikon_d90_activedlighting)
 
+static struct deviceproptableu8 nikon_1_compression[] = {
+	{ N_("JPEG Normal"),	0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"),	0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Basic"),	0x02, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),	0x03, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),	0x06, PTP_VENDOR_NIKON },
+};
+GENERIC8TABLE(Nikon_1_Compression,nikon_1_compression)
+
 static struct deviceproptableu8 nikon_d90_compression[] = {
 	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
 	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
@@ -6715,6 +6724,8 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("High ISO Noise Reduction"), "highisonr", PTP_DPC_NIKON_1_HiISONoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_1_HighISONR, _put_Nikon_1_HighISONR },
 
 	{ N_("Raw Compression"), "rawcompression", PTP_DPC_NIKON_RawCompression, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_RawCompression, _put_Nikon_RawCompression},
+
+	{ N_("Image Quality 2"), "imagequality2", PTP_DPC_NIKON_1_ImageCompression, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_1_Compression, _put_Nikon_1_Compression},
 
 	/* And some D3s values */
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh", PTP_DPC_NIKON_ContinuousSpeedHigh, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D3s_ShootingSpeedHigh, _put_Nikon_D3s_ShootingSpeedHigh},
