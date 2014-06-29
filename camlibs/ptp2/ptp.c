@@ -3195,6 +3195,15 @@ uint16_t
 ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 	PTPPropertyValue *value, uint16_t datatype)
 {
+	unsigned int i;
+
+	/* reset the cache entry */
+	for (i=0;i<params->nrofdeviceproperties;i++)
+		if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+			break;
+	if (i != params->nrofdeviceproperties)
+		params->deviceproperties[i].timestamp = 0;
+
 	/* FIXME: change the cache? hmm */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)

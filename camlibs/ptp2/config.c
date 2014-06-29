@@ -596,7 +596,9 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 	if (!prop && (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
 		return 1;
 
-	if ((prop & 0x7000) == 0x5000) { /* properties */
+	if (	((prop & 0x7000) == 0x5000) ||
+		(NIKON_1(&camera->pl->params) && ((prop & 0xf000) == 0xf000))
+	) { /* properties */
 		for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
 			if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
 				continue;
@@ -2103,6 +2105,13 @@ static struct deviceproptableu8 sony_size[] = {
 	{ N_("Small"),		0x03, 0 },
 };
 GENERIC8TABLE(Sony_ImageSize,sony_size)
+
+static struct deviceproptableu8 nikon1_size[] = {
+	{ N_("Small"),		0x00, 0 },
+	{ N_("Medium"),		0x01, 0 },
+	{ N_("Large"),		0x02, 0 },
+};
+GENERIC8TABLE(Nikon1_ImageSize,nikon1_size)
 
 static struct deviceproptableu8 sony_aspectratio[] = {
 	{ N_("16:9"),		0x01, 0 },
@@ -6391,6 +6400,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"), "imageformat", PTP_DPC_FUJI_Quality, PTP_VENDOR_FUJI, PTP_DTC_UINT16, _get_Fuji_ImageFormat, _put_Fuji_ImageFormat},
 	{ N_("Image Format Ext HD"), "imageformatexthd", PTP_DPC_CANON_EOS_ImageFormatExtHD, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat, _put_Canon_EOS_ImageFormat},
 	{ N_("Image Size"), "imagesize", PTP_DPC_ImageSize, 0, PTP_DTC_STR, _get_ImageSize, _put_ImageSize},
+	{ N_("Image Size"), "imagesize", PTP_DPC_NIKON_1_ImageSize, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon1_ImageSize, _put_Nikon1_ImageSize},
 	{ N_("Image Size"), "imagesize", PTP_DPC_SONY_ImageSize, PTP_VENDOR_SONY, PTP_DTC_UINT8, _get_Sony_ImageSize, _put_Sony_ImageSize},
 	{ N_("Image Size"), "imagesize", PTP_DPC_CANON_ImageSize, PTP_VENDOR_CANON, PTP_DTC_UINT8, _get_Canon_Size, _put_Canon_Size},
 	{ N_("ISO Speed"), "iso", PTP_DPC_CANON_ISOSpeed, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_ISO, _put_Canon_ISO},
@@ -6765,7 +6775,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 						setprops[nrofsetprops++] = cursub->propid;
 				}
 				/* ok, looking good */
-				if ((cursub->propid & 0x7000) == 0x5000) {
+				if (	((cursub->propid & 0x7000) == 0x5000) ||
+					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
+				) {
 					PTPDevicePropDesc	dpd;
 
 					gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
@@ -7038,7 +7050,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			) {
 				gp_widget_changed (widget); /* clear flag */
 				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
-				if ((cursub->propid & 0x7000) == 0x5000) {
+				if (	((cursub->propid & 0x7000) == 0x5000) ||
+					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
+				){
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));

@@ -1886,6 +1886,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
 #define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
 
+
 /* Nikon V1 (or WU adapter?) Trace */
 /* d241 - gets string "Nikon_WU2_0090B5123C61" */
 #define PTP_DPC_NIKON_D241				0xD241
@@ -1897,6 +1898,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_D250				0xD250
 /* d251 - gets a 0x0100000d */
 #define PTP_DPC_NIKON_D251				0xD251
+
+/* this is irregular, as it should be -0x5000 or 0xD000 based */
+#define PTP_DPC_NIKON_1_ImageSize			0xF00A
 
 
 /* Fuji specific */
