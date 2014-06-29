@@ -5094,6 +5094,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		 N_("Movie Quality")},
 		{PTP_DPC_NIKON_1_HiISONoiseReduction,           /* 0xF00E */
 		 N_("High ISO Noise Reduction")},
+		{PTP_DPC_NIKON_1_WhiteBalance,           	/* 0xF00C */
+		 N_("White Balance")},
 		{0,NULL}
 	};
         struct {

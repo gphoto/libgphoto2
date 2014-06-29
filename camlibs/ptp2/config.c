@@ -3012,6 +3012,22 @@ static struct deviceproptableu8 nikon_1_iso[] = {
 };
 GENERIC8TABLE(Nikon_1_ISO,nikon_1_iso);
 
+static struct deviceproptableu8 nikon_1_whitebalance[] = {
+	/* values from a J3 */
+	{ N_("Auto"),			0x00, 0 },
+	{ N_("Tungsten"),		0x01, 0 },
+	{ N_("Flourescent"),		0x02, 0 },
+	{ N_("Daylight"),		0x03, 0 },
+	{ N_("Flash"),			0x04, 0 },
+	{ N_("Cloudy"),			0x05, 0 },
+	{ N_("Shade"),			0x06, 0 },
+
+	/* these are not in the enum range on the j3 ... but reported? */
+	{ N_("Whater"),			0x0a, 0 },
+	{ N_("Preset"),			0x08, 0 },
+};
+GENERIC8TABLE(Nikon_1_WhiteBalance,nikon_1_whitebalance);
+
 static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 	{ N_("Auto"),	0, 0 },
 	{ N_("1 EV"),	1, 0 },
@@ -6446,6 +6462,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Temperature"), "colortemperature", PTP_DPC_CANON_EOS_ColorTemperature, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_INT},
 	{ N_("Color Temperature"), "colortemperature", PTP_DPC_SONY_ColorTemp, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_INT, _put_INT},
 	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_WhiteBalance, 0, PTP_DTC_UINT16, _get_WhiteBalance, _put_WhiteBalance},
+	{ N_("WhiteBalance"), "whitebalance", PTP_DPC_NIKON_1_WhiteBalance, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_1_WhiteBalance, _put_Nikon_1_WhiteBalance},
 	{ N_("WhiteBalance Adjust A") , "whitebalanceadjusta", PTP_DPC_CANON_EOS_WhiteBalanceAdjustA, PTP_VENDOR_CANON, PTP_DTC_INT16, _get_Canon_EOS_WBAdjust, _put_Canon_EOS_WBAdjust},
 	{ N_("WhiteBalance Adjust B") , "whitebalanceadjustb", PTP_DPC_CANON_EOS_WhiteBalanceAdjustB, PTP_VENDOR_CANON, PTP_DTC_INT16, _get_Canon_EOS_WBAdjust, _put_Canon_EOS_WBAdjust},
 	{ N_("WhiteBalance X A") , "whitebalancexa", PTP_DPC_CANON_EOS_WhiteBalanceXA, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_INT, _put_None},
