@@ -2942,7 +2942,8 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	PTPContainer	ptp;
 	uint16_t	ret;
 	unsigned char	*xdata = NULL;
-	unsigned int 	xsize;
+	unsigned int 	xsize, psize1, psize2;
+	uint16_t	*props1,*props2;
 
 	*props = NULL;
 	*size = 0;
@@ -2952,8 +2953,21 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	ptp.Param1	= 0xc8; /* unclear */
 	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize); 
 	/* first 16 bit is 0xc8 0x00, then an array of 16 bit PTP ids */
-	if (ret == PTP_RC_OK)
-        	*size = ptp_unpack_uint16_t_array(params,xdata+2,0,props);
+	if (ret != PTP_RC_OK) {
+		free (xdata);
+		return ret;
+	}
+        psize1 = ptp_unpack_uint16_t_array(params,xdata+2,0,&props1);
+	ptp_debug (params, "xsize %d, got size %d\n", xsize, psize1*2 + 2 + 4);
+	if (psize1*2 + 2 + 4 < xsize) {
+		psize2 = ptp_unpack_uint16_t_array(params,xdata+2+psize1*2+4,0,&props2);
+	}
+	*size = psize1+psize2;
+	*props = malloc((psize1+psize2)*sizeof(uint16_t));
+	memcpy (*props, props1, psize1*sizeof(uint16_t));
+	memcpy ((*props)+psize1, props2, psize2*sizeof(uint16_t));
+	free (props1);
+	free (props2);
 	free (xdata);
 	return ret;
 }
@@ -3145,6 +3159,10 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 		for (i=0;i<params->nrofdeviceproperties;i++)
 			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 				break;
+		if (i == params->nrofdeviceproperties) {
+			ptp_debug (params, "property 0x%04x not found?\n", propcode);
+			return PTP_RC_GeneralError;
+		}
 		time(&now);
 		params->deviceproperties[i].timestamp = now;
 		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
