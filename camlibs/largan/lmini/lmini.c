@@ -247,8 +247,12 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	case LARGAN_THUMBNAIL: 
 		{
 			char * buffer = (char*)malloc(pict_size);
+
+			if (!buffer)
+				return GP_ERROR_NO_MEMORY;
 			ret = gp_port_read (camera->port, buffer, pict_size);
 			if (ret < GP_OK) {
+				free (buffer);
 				return ret;
 			}
 			largan_pict_alloc_data (pict, 19200 + sizeof(BMPheader));
