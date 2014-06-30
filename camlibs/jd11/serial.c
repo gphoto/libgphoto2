@@ -419,17 +419,22 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	}
 	ret = gp_file_append(file,(char*)thumb,sizeof(thumb));
 	if (ret != GP_OK) {
+    		free(indexbuf);
 		gp_file_free (file);
 		return ret;
 	}
 	ret = gp_filesystem_append(fs, "/", fn, context);
 	if (ret != GP_OK) {
 		/* should perhaps remove the entry again */
+    		free(indexbuf);
 		gp_file_free (file);
 		return ret;
 	}
 	ret = gp_filesystem_set_file_noop(fs, "/", fn, GP_FILE_TYPE_PREVIEW, file, context);
-	if (ret != GP_OK) return ret;
+	if (ret != GP_OK) {
+    		free(indexbuf);
+		return ret;
+	}
 
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
