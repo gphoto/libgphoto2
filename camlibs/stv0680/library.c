@@ -258,17 +258,25 @@ int stv0680_get_image(GPPort *port, int image_no, CameraFile *file)
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n#flags %x sgain %d sclkdiv %d avgpix %d fine %d coarse %d\n%d %d\n255\n", imghdr.flags, imghdr.sensor_gain, imghdr.sensor_clkdiv, imghdr.avg_pixel_value, fine, coarse , w, h);
 
 	gp_file_append(file, header, strlen(header));
-	if ((ret=gp_port_read(port, (char *)raw, size))<0)
-	    return ret;
+	if ((ret=gp_port_read(port, (char *)raw, size))<0) {
+		free (raw);
+		return ret;
+	}
 
 	data = malloc(size * 3);
+	if (!data) {
+		free (raw);
+		return GP_ERROR_NO_MEMORY;
+	}
 	tmpdata1 = malloc(size * 3);
 	if (!tmpdata1) {
+		free (raw);
 		free (data);
 		return GP_ERROR_NO_MEMORY;
 	}
 	tmpdata2 = malloc(size * 3);
 	if (!tmpdata2) {
+		free (raw);
 		free (data);
 		free (tmpdata1);
 		return GP_ERROR_NO_MEMORY;
