@@ -192,8 +192,12 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
 		/* offset 0x8 in the downloaded data contains the identifier
 		 * we need to request the correct header.
 		 */
-		CHECK(gp_port_usb_msg_read(port, 0x0b, buf[623 - 0x200 + 8],
-		                           0x3, (char *)buf, 623));
+		r = gp_port_usb_msg_read(port, 0x0b, buf[623 - 0x200 + 8],
+		                         0x3, (char *)buf, 623);
+		if (r < GP_OK) {
+			free (buf);
+			return r;
+		}
 		*type = PCCAM300_MIME_JPEG;
 	}
 	*data = buf;
