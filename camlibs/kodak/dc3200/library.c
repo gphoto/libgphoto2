@@ -698,6 +698,7 @@ int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 #endif
 
 	if(dc3200_process_packet(camera, buff, &num_read) == GP_ERROR) {
+		free(buff);
 		return GP_ERROR;
 	}
 
