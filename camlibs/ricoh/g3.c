@@ -120,15 +120,20 @@ g3_channel_read_bytes(
 		ret = gp_port_read(port, (char *)xbuf, rest);
 		if (ret < GP_OK) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+			gp_context_progress_stop (context, id);
+			free(xbuf);
 			return ret;
 		}
 		if (ret != rest) {
 			gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
+			gp_context_progress_stop (context, id);
+			free(xbuf);
 			return ret;
 		}
 
 		if ((xbuf[2] != 0xff) || (xbuf[3] != 0xff)) {
 			gp_log(GP_LOG_ERROR, "g3", "first bytes do not match.\n");
+			gp_context_progress_stop (context, id);
 			free(xbuf);
 			return GP_ERROR_IO;
 		}
