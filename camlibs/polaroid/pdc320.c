@@ -297,6 +297,7 @@ pdc320_0c (Camera *camera, int n)
 	}
 	CR (gp_port_read (camera->port, (char *)buf, 2));
 	/* checksum is calculated from both, but i am not clear how. */
+	free (xbuf);
 	return GP_OK;
 }
 
