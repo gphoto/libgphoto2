@@ -248,8 +248,10 @@ ultrapocket_getrawpicture(Camera *camera, GPContext *context,
    pmmhdr_len = strlen(ppmheader);
    outsize = ((long)width + 4) * height * 3 + pmmhdr_len;
    outdata = malloc(outsize);
-   if (!outdata)
+   if (!outdata) {
+     free(rawdata);
      return (GP_ERROR_NO_MEMORY);
+   }
 
    /* Set header */
    strcpy((char *)outdata, ppmheader);
