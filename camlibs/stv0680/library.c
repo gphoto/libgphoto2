@@ -213,12 +213,20 @@ int stv0680_get_image_raw(GPPort *port, int image_no, CameraFile *file)
 	size = (imghdr.size[0] << 24) | (imghdr.size[1] << 16) |
 	    (imghdr.size[2]<<8) | imghdr.size[3];
 	raw = malloc(size);
-	if ((ret=gp_port_read(port, (char *)raw, size))<0)
+	if (!raw)
+	    return GP_ERROR_NO_MEMORY;
+	if ((ret=gp_port_read(port, (char *)raw, size))<0) {
+	    free (raw);
 	    return ret;
+	}
 
 	sprintf(header, "P6\n# gPhoto2 stv0680 image\n%d %d\n255\n", w, h);
 	gp_file_append(file, header, strlen(header));
 	data = malloc(size * 3);
+	if (!data) {
+	    free (raw);
+	    return GP_ERROR_NO_MEMORY;
+	}
 	gp_bayer_decode(raw,w,h,data,BAYER_TILE_GBRG_INTERLACED);
 	free(raw);
 	gp_file_append(file, (char *)data, size*3);
