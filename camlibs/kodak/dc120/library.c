@@ -451,13 +451,15 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 	/* Create a file for KDC data */
 	gp_file_new(&f);
 	if (dc120_packet_read_data(camera, f, cmd_packet, size, 1024, context)==GP_ERROR) {
-		gp_file_free(file);
+		gp_file_free(f);
 		return (GP_ERROR);
 	}
 	/* Convert to PPM file for now */
 	gp_file_append(file, "P3\n80 60\n255\n", 13);
+
+	gp_file_get_data_and_size (f, &f_data, &f_size);
+
 	for (x=0; x<14400; x+=3) {
-		gp_file_get_data_and_size (f, &f_data, &f_size);
 		sprintf(buf, "%i %i %i\n",
 			(unsigned char)f_data[x+1280],
 			(unsigned char)f_data[x+1281],
@@ -465,7 +467,7 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 		gp_file_append(file, buf, strlen(buf));
 	}
 
-	sleep(1);
+	sleep(1); /* FIXME: why? */
 	return (GP_OK);
 }
 
