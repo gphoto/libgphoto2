@@ -148,6 +148,8 @@ picture_decomp_v1(unsigned char *compressed,unsigned char *uncompressed,int widt
 			*uncompressed++=xbyte;
 		}
 	}
+	free (lastline);
+	free (line);
 }
 
 /* Just blow up the picture from 6 bit uncompressed to 8 bit uncompressed */
