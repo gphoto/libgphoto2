@@ -1573,7 +1573,8 @@ static const output_format_t formats[] = {
 	 "        If you give a script parameter, the mode, owner, group parameters will be ignored.\n"
 	 "        For mode \"136\" put it into /lib/udev/rules.d/40-libgphoto2.rules;\n"
 	 "        you can still use mode/owner/group, but the preferred mode of operation\n"
-	 "        is to use udev-extras for dynamic access permissions.\n",
+	 "        is to use udev-extras for dynamic access permissions.\n"
+	"	  Available versions of the rule generator: 0.98, 136, 175, 201.\n",
 	 "[script <PATH_TO_SCRIPT>|version <version>|mode <mode>|owner <owner>|group <group>]*",
 	 udev_begin_func, 
 	 udev_camera_func,
