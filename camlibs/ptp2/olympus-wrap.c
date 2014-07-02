@@ -342,7 +342,7 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	PTPUSBBulkContainer	usbresp;
 	char			buf[64];
 	int			ret;
-	unsigned long		recvlen, written;
+	unsigned long		recvlen;
 	char			*data;
 	uw_scsicmd_t		cmd;
 	char			sense_buffer[32];
@@ -384,14 +384,10 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	/* skip away the 12 byte header */
 	if (recvlen >= 16)
 		gp_log_data ("ptp2/olympus/getdata", data + PTP_USB_BULK_HDR_LEN, recvlen - PTP_USB_BULK_HDR_LEN);
-	ret = putter->putfunc ( params, putter->priv, recvlen - PTP_USB_BULK_HDR_LEN, (unsigned char*)data + PTP_USB_BULK_HDR_LEN, &written);
+	ret = putter->putfunc ( params, putter->priv, recvlen - PTP_USB_BULK_HDR_LEN, (unsigned char*)data + PTP_USB_BULK_HDR_LEN);
 	free (data);
 	if (ret != PTP_RC_OK) {
 		GP_DEBUG( "ums_wrap_getdata FAILED to push data into put handle, ret %x", ret );
-		return PTP_ERROR_IO;
-	}
-	if (written != recvlen - PTP_USB_BULK_HDR_LEN) {
-		GP_DEBUG( "ums_wrap_getdata FAILED to push data into put handle, len %ld vs %ld", written, recvlen );
 		return PTP_ERROR_IO;
 	}
 	return PTP_RC_OK;
@@ -1338,7 +1334,6 @@ static uint16_t
 ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter) {
 	char		*resxml = NULL;
 	uint16_t	ret;
-	unsigned long	written;
 
 	if (is_outer_operation (params, ptp->Code))
 		return ums_wrap_getdata (params, ptp, putter);
@@ -1366,7 +1361,7 @@ ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 #endif
 	default:
 		/* Just put the XML blob as-is as data... It will be processed in ptp.c */
-		return putter->putfunc(params,putter->priv,strlen(resxml)+1,(unsigned char*)resxml, &written);
+		return putter->putfunc(params,putter->priv,strlen(resxml)+1,(unsigned char*)resxml);
 	}
 }
 

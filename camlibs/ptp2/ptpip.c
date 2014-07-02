@@ -312,7 +312,6 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		if (ret != PTP_RC_OK)
 			return ret;
 		if (dtoh32(hdr.type) == PTPIP_END_DATA_PACKET) {
-			unsigned long written;
 			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
 				gp_log (GP_LOG_ERROR, "ptpip/getdata",
@@ -322,19 +321,18 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				break;
 			}
 			xret = handler->putfunc (params, handler->priv,
-				datalen, xdata+ptpip_data_payload, &written
+				datalen, xdata+ptpip_data_payload
 			);
-			if (xret == -1) {
+			if (xret != PTP_RC_OK) {
 				gp_log (GP_LOG_ERROR, "ptpip/getdata",
 					"failed to putfunc of returned data");
 				break;
 			}
-			curread += written;
+			curread += datalen;
 			free (xdata); xdata = NULL;
 			continue;
 		}
 		if (dtoh32(hdr.type) == PTPIP_DATA_PACKET) {
-			unsigned long written;
 			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
 				gp_log (GP_LOG_ERROR, "ptpip/getdata",
@@ -344,14 +342,14 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				break;
 			}
 			xret = handler->putfunc (params, handler->priv,
-				datalen, xdata+ptpip_data_payload, &written
+				datalen, xdata+ptpip_data_payload
 			);
-			if (xret == -1) {
+			if (xret != PTP_RC_OK) {
 				gp_log (GP_LOG_ERROR, "ptpip/getdata",
 					"failed to putfunc of returned data");
 				break;
 			}
-			curread += written;
+			curread += datalen;
 			free (xdata); xdata = NULL;
 			continue;
 		}

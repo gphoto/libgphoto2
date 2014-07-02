@@ -250,8 +250,7 @@ memory_getfunc(PTPParams* params, void* private,
 
 static uint16_t
 memory_putfunc(PTPParams* params, void* private,
-	       unsigned long sendlen, unsigned char *data,
-	       unsigned long *putlen
+	       unsigned long sendlen, unsigned char *data
 ) {
 	PTPMemHandlerPrivate* priv = (PTPMemHandlerPrivate*)private;
 
@@ -263,7 +262,6 @@ memory_putfunc(PTPParams* params, void* private,
 	}
 	memcpy (priv->data + priv->curoff, data, sendlen);
 	priv->curoff += sendlen;
-	*putlen = sendlen;
 	return PTP_RC_OK;
 }
 
@@ -347,17 +345,14 @@ fd_getfunc(PTPParams* params, void* private,
 
 static uint16_t
 fd_putfunc(PTPParams* params, void* private,
-	       unsigned long sendlen, unsigned char *data,
-	       unsigned long *putlen
+	       unsigned long sendlen, unsigned char *data
 ) {
-	int		written;
+	ssize_t		written;
 	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)private;
 
 	written = write (priv->fd, data, sendlen);
-	if (written != -1)
-		*putlen = written;
-	else
-		return PTP_RC_GeneralError;
+	if (written != sendlen)
+		return PTP_ERROR_IO;
 	return PTP_RC_OK;
 }
 

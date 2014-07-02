@@ -240,7 +240,6 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	uint16_t ret;
 	PTPUSBBulkContainer usbdata;
 	unsigned char	*data = NULL;
-	unsigned long	written;
 	uint32_t	bytes_to_read, bytes_read;
 	Camera		*camera = ((PTPData *)params->data)->camera;
 	int		report_progress, progress_id = 0, do_retry = TRUE, res = GP_OK;
@@ -318,13 +317,9 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		params->split_header_data = 1;
 
 	/* Copy the payload bytes we already read (with the first usb packet) */
-	ret = handler->putfunc (params, handler->priv, bytes_read - PTP_USB_BULK_HDR_LEN, usbdata.payload.data, &written);
+	ret = handler->putfunc (params, handler->priv, bytes_read - PTP_USB_BULK_HDR_LEN, usbdata.payload.data);
 	if (ret != PTP_RC_OK)
 		goto exit;
-	if (written != bytes_read - PTP_USB_BULK_HDR_LEN) {
-		ret = PTP_ERROR_IO;
-		goto exit;
-	}
 
 	/* Check if we are done already... */
 	if (bytes_read >= dtoh32(usbdata.length))
@@ -366,13 +361,9 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			break;
 		} else
 			do_retry = FALSE; /* once we have succesfully read any data, don't try again */
-		ret = handler->putfunc (params, handler->priv, res, data, &written);
+		ret = handler->putfunc (params, handler->priv, res, data);
 		if (ret != PTP_RC_OK)
 			break;
-		if (written != res) {
-			ret = PTP_ERROR_IO;
-			break;
-		}
 		if (dtoh32(usbdata.length) == 0xffffffffU) {
 			/* once we have read a short packet, we are done. */
 			if (res < PTP_USB_BULK_HS_MAX_PACKET_LEN_READ)

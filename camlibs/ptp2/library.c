@@ -5689,8 +5689,7 @@ gpfile_getfunc (PTPParams *params, void *xpriv,
 
 static uint16_t
 gpfile_putfunc (PTPParams *params, void *xpriv,
-	unsigned long sendlen, unsigned char *bytes,
-	unsigned long *written
+	unsigned long sendlen, unsigned char *bytes
 ) {
 	PTPCFHandlerPrivate* priv= (PTPCFHandlerPrivate*)xpriv;
 	int ret;
@@ -5698,7 +5697,6 @@ gpfile_putfunc (PTPParams *params, void *xpriv,
 	ret = gp_file_append (priv->file, (char*)bytes, sendlen);
 	if (ret != GP_OK)
 		return PTP_ERROR_IO;
-	*written = sendlen;
 	return PTP_RC_OK;
 }
 
