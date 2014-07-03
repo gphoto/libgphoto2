@@ -1274,6 +1274,9 @@ static struct {
 	/* IRC Reporter */
 	{"Casio:EX-Z65",                  0x07cf, 0x104d, 0},
 
+	/* Juan Carlos Bretal Fernandez <juanc.bretal@gmail.com> */
+	{"Casio:EX-ZR700",                0x07cf, 0x117a, 0},
+
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode
 	 * Canon PS G3: A. Marinichev, 20 nov 2002
