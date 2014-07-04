@@ -3147,9 +3147,9 @@ uint16_t ptp_android_sendpartialobject (PTPParams *params, uint32_t handle,
 
 uint16_t ptp_olympus_getdeviceinfo (PTPParams*, PTPDeviceInfo*);
 #define ptp_olympus_setcameracontrolmode(params,p1) ptp_generic_no_data (params, PTP_OC_OLYMPUS_SetCameraControlMode, 1, p1);
-uint16_t ptp_olympus_opensession (PTPParams*, unsigned char**, unsigned long *);
+uint16_t ptp_olympus_opensession (PTPParams*, unsigned char**, unsigned int *);
 #define ptp_olympus_capture(params,p1) ptp_generic_no_data (params, PTP_OC_OLYMPUS_Capture, 1, p1);
-uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned long *);
+uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned int *);
 
 /* Non PTP protocol functions */
 static inline int
@@ -3193,7 +3193,7 @@ MTPProperties *ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofpro
 void ptp_destroy_object_prop(MTPProperties *prop);
 void ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops);
 MTPProperties *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
-void ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
+uint16_t ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_object_want (PTPParams *, uint32_t handle, unsigned int want, PTPObject**retob);
 void ptp_objects_sort (PTPParams *);

@@ -7269,7 +7269,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 		unsigned char	*data;
-		unsigned long	len;
+		unsigned int	len;
 		PTPObjectInfo	oi;
 		uint32_t	parenthandle,storagehandle, handle;
 

@@ -683,7 +683,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 
 static inline unsigned int
 ptp_unpack_DPV (
-	PTPParams *params, unsigned char* data, unsigned int *offset, int total,
+	PTPParams *params, unsigned char* data, unsigned int *offset, unsigned int total,
 	PTPPropertyValue* value, uint16_t datatype
 ) {
 	switch (datatype) {
