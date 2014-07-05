@@ -46,8 +46,6 @@
 
 #define GP_MODULE "olympus"
 
-#define CR(result) {int r = (result); if (r < 0) return (r);}
-
 /*
  * The following things are the way the are just to ensure that USB
  * wrapper packets have the correct byte-order on all types of machines.

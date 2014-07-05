@@ -33,6 +33,16 @@ void report_result (GPContext *context, short result, short vendor);
 int translate_ptp_result (short result);
 void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
+#define CPR(result) do {\
+	uint16_t r = (result);\
+	if (r != PTP_RC_OK) {\
+		report_result ((context), r, params->deviceinfo.VendorExtensionID);\
+		return translate_ptp_result (r);\
+	}\
+} while(0)
+
+#define CR(result) do { int r=(result); if(r<0) return r; } while (0)
+
 struct _CameraPrivateLibrary {
 	PTPParams params;
 	int checkevents;
