@@ -140,95 +140,15 @@ add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
 
 #define STORAGE_FOLDER_PREFIX		"store_"
 
-/* PTP error descriptions */
-static struct {
-	short n;
-	short v;
-	const char *txt;
-} ptp_errors[] = {
-	{PTP_RC_Undefined, 		0, N_("PTP Undefined Error")},
-	{PTP_RC_OK, 			0, N_("PTP OK!")},
-	{PTP_RC_GeneralError, 		0, N_("PTP General Error")},
-	{PTP_RC_SessionNotOpen, 	0, N_("PTP Session Not Open")},
-	{PTP_RC_InvalidTransactionID, 	0, N_("PTP Invalid Transaction ID")},
-	{PTP_RC_OperationNotSupported, 	0, N_("PTP Operation Not Supported")},
-	{PTP_RC_ParameterNotSupported, 	0, N_("PTP Parameter Not Supported")},
-	{PTP_RC_IncompleteTransfer, 	0, N_("PTP Incomplete Transfer")},
-	{PTP_RC_InvalidStorageId, 	0, N_("PTP Invalid Storage ID")},
-	{PTP_RC_InvalidObjectHandle, 	0, N_("PTP Invalid Object Handle")},
-	{PTP_RC_DevicePropNotSupported, 0, N_("PTP Device Prop Not Supported")},
-	{PTP_RC_InvalidObjectFormatCode, 0, N_("PTP Invalid Object Format Code")},
-	{PTP_RC_StoreFull, 		0, N_("PTP Store Full")},
-	{PTP_RC_ObjectWriteProtected, 	0, N_("PTP Object Write Protected")},
-	{PTP_RC_StoreReadOnly, 		0, N_("PTP Store Read Only")},
-	{PTP_RC_AccessDenied,		0, N_("PTP Access Denied")},
-	{PTP_RC_NoThumbnailPresent, 	0, N_("PTP No Thumbnail Present")},
-	{PTP_RC_SelfTestFailed, 	0, N_("PTP Self Test Failed")},
-	{PTP_RC_PartialDeletion, 	0, N_("PTP Partial Deletion")},
-	{PTP_RC_StoreNotAvailable, 	0, N_("PTP Store Not Available")},
-	{PTP_RC_SpecificationByFormatUnsupported,
-				0, N_("PTP Specification By Format Unsupported")},
-	{PTP_RC_NoValidObjectInfo, 	0, N_("PTP No Valid Object Info")},
-	{PTP_RC_InvalidCodeFormat, 	0, N_("PTP Invalid Code Format")},
-	{PTP_RC_UnknownVendorCode, 	0, N_("PTP Unknown Vendor Code")},
-	{PTP_RC_CaptureAlreadyTerminated,
-					0, N_("PTP Capture Already Terminated")},
-	{PTP_RC_DeviceBusy, 		0, N_("PTP Device Busy")},
-	{PTP_RC_InvalidParentObject, 	0, N_("PTP Invalid Parent Object")},
-	{PTP_RC_InvalidDevicePropFormat, 0, N_("PTP Invalid Device Prop Format")},
-	{PTP_RC_InvalidDevicePropValue, 0, N_("PTP Invalid Device Prop Value")},
-	{PTP_RC_InvalidParameter, 	0, N_("PTP Invalid Parameter")},
-	{PTP_RC_SessionAlreadyOpened, 	0, N_("PTP Session Already Opened")},
-	{PTP_RC_TransactionCanceled, 	0, N_("PTP Transaction Canceled")},
-	{PTP_RC_SpecificationOfDestinationUnsupported,
-			0, N_("PTP Specification Of Destination Unsupported")},
-	{PTP_RC_EK_FilenameRequired,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Required")},
-	{PTP_RC_EK_FilenameConflicts,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Conflicts")},
-	{PTP_RC_EK_FilenameInvalid,	PTP_VENDOR_EASTMAN_KODAK, N_("PTP EK Filename Invalid")},
-
-	{PTP_RC_NIKON_HardwareError,	PTP_VENDOR_NIKON, N_("Hardware Error")},
-	{PTP_RC_NIKON_OutOfFocus,	PTP_VENDOR_NIKON, N_("Out of Focus")},
-	{PTP_RC_NIKON_ChangeCameraModeFailed, PTP_VENDOR_NIKON, N_("Change Camera Mode Failed")},
-	{PTP_RC_NIKON_InvalidStatus,	PTP_VENDOR_NIKON, N_("Invalid Status")},
-	{PTP_RC_NIKON_SetPropertyNotSupported, PTP_VENDOR_NIKON, N_("Set Property Not Supported")},
-	{PTP_RC_NIKON_WbResetError,	PTP_VENDOR_NIKON, N_("Whitebalance Reset Error")},
-	{PTP_RC_NIKON_DustReferenceError, PTP_VENDOR_NIKON, N_("Dust Reference Error")},
-	{PTP_RC_NIKON_ShutterSpeedBulb, PTP_VENDOR_NIKON, N_("Shutter Speed Bulb")},
-	{PTP_RC_NIKON_MirrorUpSequence, PTP_VENDOR_NIKON, N_("Mirror Up Sequence")},
-	{PTP_RC_NIKON_CameraModeNotAdjustFNumber, PTP_VENDOR_NIKON, N_("Camera Mode Not Adjust FNumber")},
-	{PTP_RC_NIKON_NotLiveView,	PTP_VENDOR_NIKON, N_("Not in Liveview")},
-	{PTP_RC_NIKON_MfDriveStepEnd,	PTP_VENDOR_NIKON, N_("Mf Drive Step End")},
-	{PTP_RC_NIKON_MfDriveStepInsufficiency,	PTP_VENDOR_NIKON, N_("Mf Drive Step Insufficiency")},
-	{PTP_RC_NIKON_AdvancedTransferCancel, PTP_VENDOR_NIKON, N_("Advanced Transfer Cancel")},
-	{PTP_RC_CANON_UNKNOWN_COMMAND,	PTP_VENDOR_CANON, N_("Unknown command")},
-	{PTP_RC_CANON_OPERATION_REFUSED,PTP_VENDOR_CANON, N_("Operation refused")},
-	{PTP_RC_CANON_LENS_COVER,	PTP_VENDOR_CANON, N_("Lens cover present")},
-	{PTP_RC_CANON_BATTERY_LOW,	PTP_VENDOR_CANON, N_("Battery low")},
-	{PTP_RC_CANON_NOT_READY,	PTP_VENDOR_CANON, N_("Camera not ready")},
-
-	{PTP_ERROR_IO,		  0, N_("PTP I/O error")},
-	{PTP_ERROR_CANCEL,	  0, N_("PTP Cancel request")},
-	{PTP_ERROR_BADPARAM,	  0, N_("PTP Error: bad parameter")},
-	{PTP_ERROR_DATA_EXPECTED, 0, N_("PTP Protocol error, data expected")},
-	{PTP_ERROR_RESP_EXPECTED, 0, N_("PTP Protocol error, response expected")},
-	{PTP_ERROR_TIMEOUT,       0, N_("PTP Timeout")},
-	{0, 0, NULL}
-};
 
 void
-report_result (GPContext *context, short result, short vendor)
+report_result (GPContext *context, uint16_t result, uint16_t vendor)
 {
-	unsigned int i;
-
-	for (i = 0; ptp_errors[i].txt; i++)
-		if ((ptp_errors[i].n == result) && (
-		    (ptp_errors[i].v == 0) || (ptp_errors[i].v == vendor)
-		))
-			gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_errors[i].txt));
+	gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_strerror(result, vendor)));
 }
 
 int
-translate_ptp_result (short result)
+translate_ptp_result (uint16_t result)
 {
 	switch (result) {
 	case PTP_RC_ParameterNotSupported:
@@ -2481,7 +2401,7 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 
 	ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR, __func__, "%s", ptp_strerror(ret));
+		gp_log (GP_LOG_ERROR, __func__, "%s", ptp_strerror(ret, params->deviceinfo.VendorExtensionID));
 		return translate_ptp_result (ret);
 	}
 	ret = get_folder_from_handle (camera, storage, ob->oi.ParentObject, folder);
@@ -5529,7 +5449,7 @@ mtp_get_playlist_string(
 		do {
 			ret = ptp_object_want (params, object_id, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, __func__, "%s", ptp_strerror(ret));
+				gp_log (GP_LOG_ERROR, __func__, "%s", ptp_strerror(ret, params->deviceinfo.VendorExtensionID));
 				return translate_ptp_result (ret);
 			}
 			/* make space for new filename */

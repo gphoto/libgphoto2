@@ -743,12 +743,12 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_WFC_Version_Not_Supported	0xA122
 
 /* libptp2 extended ERROR codes */
-#define PTP_ERROR_IO			0x02FF
-#define PTP_ERROR_DATA_EXPECTED		0x02FE
-#define PTP_ERROR_RESP_EXPECTED		0x02FD
-#define PTP_ERROR_BADPARAM		0x02FC
-#define PTP_ERROR_CANCEL		0x02FB
 #define PTP_ERROR_TIMEOUT		0x02FA
+#define PTP_ERROR_CANCEL		0x02FB
+#define PTP_ERROR_BADPARAM		0x02FC
+#define PTP_ERROR_RESP_EXPECTED		0x02FD
+#define PTP_ERROR_DATA_EXPECTED		0x02FE
+#define PTP_ERROR_IO			0x02FF
 
 /* PTP Event Codes */
 
@@ -3174,8 +3174,7 @@ void ptp_free_devicepropvalue	(uint16_t, PTPPropertyValue*);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
 
-const char *ptp_strerror(uint16_t error);
-void ptp_perror			(PTPParams* params, uint16_t error);
+const char *ptp_strerror	(uint16_t ret, uint16_t vendor);
 void ptp_debug			(PTPParams *params, const char *format, ...);
 void ptp_error			(PTPParams *params, const char *format, ...);
 

@@ -970,7 +970,7 @@ ptp_generic_no_data (PTPParams* params, uint16_t code, unsigned int n_param, ...
 	unsigned int	i;
 
 	if( n_param > 5 )
-		return PTP_RC_InvalidParameter;
+		return PTP_ERROR_BADPARAM;
 
 	memset(&ptp, 0, sizeof(ptp));
 	ptp.Code=code;
@@ -3780,7 +3780,7 @@ ptp_chdk_write_script_msg(PTPParams* params, char *data, unsigned size, int targ
 	if(!size) {
 		ptp_error(params,"zero length message not allowed");
 		*status = 0;
-		return PTP_RC_InvalidParameter;
+		return PTP_ERROR_BADPARAM;
 	}
 	PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_WriteScriptMsg, target_script_id);
 	*status = 0;
@@ -3940,73 +3940,89 @@ ptp_free_object (PTPObject *ob)
 	ob->flags = 0;
 }
 
-const char *
-ptp_strerror(uint16_t error) {
+/* PTP error descriptions */
+static struct {
+	uint16_t rc;
+	uint16_t vendor;
+	const char *txt;
+} ptp_errors[] = {
+	{PTP_RC_Undefined,		0, N_("PTP Undefined Error")},
+	{PTP_RC_OK,			0, N_("PTP OK!")},
+	{PTP_RC_GeneralError,		0, N_("PTP General Error")},
+	{PTP_RC_SessionNotOpen,		0, N_("PTP Session Not Open")},
+	{PTP_RC_InvalidTransactionID,	0, N_("PTP Invalid Transaction ID")},
+	{PTP_RC_OperationNotSupported,	0, N_("PTP Operation Not Supported")},
+	{PTP_RC_ParameterNotSupported,	0, N_("PTP Parameter Not Supported")},
+	{PTP_RC_IncompleteTransfer,	0, N_("PTP Incomplete Transfer")},
+	{PTP_RC_InvalidStorageId,	0, N_("PTP Invalid Storage ID")},
+	{PTP_RC_InvalidObjectHandle,	0, N_("PTP Invalid Object Handle")},
+	{PTP_RC_DevicePropNotSupported,	0, N_("PTP Device Prop Not Supported")},
+	{PTP_RC_InvalidObjectFormatCode,0, N_("PTP Invalid Object Format Code")},
+	{PTP_RC_StoreFull,		0, N_("PTP Store Full")},
+	{PTP_RC_ObjectWriteProtected,	0, N_("PTP Object Write Protected")},
+	{PTP_RC_StoreReadOnly,		0, N_("PTP Store Read Only")},
+	{PTP_RC_AccessDenied,		0, N_("PTP Access Denied")},
+	{PTP_RC_NoThumbnailPresent,	0, N_("PTP No Thumbnail Present")},
+	{PTP_RC_SelfTestFailed,		0, N_("PTP Self Test Failed")},
+	{PTP_RC_PartialDeletion,	0, N_("PTP Partial Deletion")},
+	{PTP_RC_StoreNotAvailable,	0, N_("PTP Store Not Available")},
+	{PTP_RC_SpecificationByFormatUnsupported, 0, N_("PTP Specification By Format Unsupported")},
+	{PTP_RC_NoValidObjectInfo,	0, N_("PTP No Valid Object Info")},
+	{PTP_RC_InvalidCodeFormat,	0, N_("PTP Invalid Code Format")},
+	{PTP_RC_UnknownVendorCode,	0, N_("PTP Unknown Vendor Code")},
+	{PTP_RC_CaptureAlreadyTerminated, 0, N_("PTP Capture Already Terminated")},
+	{PTP_RC_DeviceBusy,		0, N_("PTP Device Busy")},
+	{PTP_RC_InvalidParentObject,	0, N_("PTP Invalid Parent Object")},
+	{PTP_RC_InvalidDevicePropFormat,0, N_("PTP Invalid Device Prop Format")},
+	{PTP_RC_InvalidDevicePropValue,	0, N_("PTP Invalid Device Prop Value")},
+	{PTP_RC_InvalidParameter,	0, N_("PTP Invalid Parameter")},
+	{PTP_RC_SessionAlreadyOpened,	0, N_("PTP Session Already Opened")},
+	{PTP_RC_TransactionCanceled,	0, N_("PTP Transaction Canceled")},
+	{PTP_RC_SpecificationOfDestinationUnsupported, 0, N_("PTP Specification Of Destination Unsupported")},
 
-	int i;
-	/* PTP error descriptions */
-	struct {
-		uint16_t n;
-		const char *txt;
-	} ptp_errors[] = {
-	{PTP_RC_Undefined, 		N_("PTP: Undefined Error")},
-	{PTP_RC_OK, 			N_("PTP: OK!")},
-	{PTP_RC_GeneralError, 		N_("PTP: General Error")},
-	{PTP_RC_SessionNotOpen, 	N_("PTP: Session Not Open")},
-	{PTP_RC_InvalidTransactionID, 	N_("PTP: Invalid Transaction ID")},
-	{PTP_RC_OperationNotSupported, 	N_("PTP: Operation Not Supported")},
-	{PTP_RC_ParameterNotSupported, 	N_("PTP: Parameter Not Supported")},
-	{PTP_RC_IncompleteTransfer, 	N_("PTP: Incomplete Transfer")},
-	{PTP_RC_InvalidStorageId, 	N_("PTP: Invalid Storage ID")},
-	{PTP_RC_InvalidObjectHandle, 	N_("PTP: Invalid Object Handle")},
-	{PTP_RC_DevicePropNotSupported, N_("PTP: Device Prop Not Supported")},
-	{PTP_RC_InvalidObjectFormatCode, N_("PTP: Invalid Object Format Code")},
-	{PTP_RC_StoreFull, 		N_("PTP: Store Full")},
-	{PTP_RC_ObjectWriteProtected, 	N_("PTP: Object Write Protected")},
-	{PTP_RC_StoreReadOnly, 		N_("PTP: Store Read Only")},
-	{PTP_RC_AccessDenied,		N_("PTP: Access Denied")},
-	{PTP_RC_NoThumbnailPresent, 	N_("PTP: No Thumbnail Present")},
-	{PTP_RC_SelfTestFailed, 	N_("PTP: Self Test Failed")},
-	{PTP_RC_PartialDeletion, 	N_("PTP: Partial Deletion")},
-	{PTP_RC_StoreNotAvailable, 	N_("PTP: Store Not Available")},
-	{PTP_RC_SpecificationByFormatUnsupported,
-				N_("PTP: Specification By Format Unsupported")},
-	{PTP_RC_NoValidObjectInfo, 	N_("PTP: No Valid Object Info")},
-	{PTP_RC_InvalidCodeFormat, 	N_("PTP: Invalid Code Format")},
-	{PTP_RC_UnknownVendorCode, 	N_("PTP: Unknown Vendor Code")},
-	{PTP_RC_CaptureAlreadyTerminated,
-					N_("PTP: Capture Already Terminated")},
-	{PTP_RC_DeviceBusy, 		N_("PTP: Device Busy")},
-	{PTP_RC_InvalidParentObject, 	N_("PTP: Invalid Parent Object")},
-	{PTP_RC_InvalidDevicePropFormat, N_("PTP: Invalid Device Prop Format")},
-	{PTP_RC_InvalidDevicePropValue, N_("PTP: Invalid Device Prop Value")},
-	{PTP_RC_InvalidParameter, 	N_("PTP: Invalid Parameter")},
-	{PTP_RC_SessionAlreadyOpened, 	N_("PTP: Session Already Opened")},
-	{PTP_RC_TransactionCanceled, 	N_("PTP: Transaction Canceled")},
-	{PTP_RC_SpecificationOfDestinationUnsupported,
-			N_("PTP: Specification Of Destination Unsupported")},
-	{PTP_RC_EK_FilenameRequired,	N_("PTP: EK Filename Required")},
-	{PTP_RC_EK_FilenameConflicts,	N_("PTP: EK Filename Conflicts")},
-	{PTP_RC_EK_FilenameInvalid,	N_("PTP: EK Filename Invalid")},
+	{PTP_RC_EK_FilenameRequired,	PTP_VENDOR_EASTMAN_KODAK, N_("Filename Required")},
+	{PTP_RC_EK_FilenameConflicts,	PTP_VENDOR_EASTMAN_KODAK, N_("Filename Conflicts")},
+	{PTP_RC_EK_FilenameInvalid,	PTP_VENDOR_EASTMAN_KODAK, N_("Filename Invalid")},
 
-	{PTP_ERROR_IO,		  N_("PTP: I/O error")},
-	{PTP_ERROR_BADPARAM,	  N_("PTP: Error: bad parameter")},
-	{PTP_ERROR_DATA_EXPECTED, N_("PTP: Protocol error, data expected")},
-	{PTP_ERROR_RESP_EXPECTED, N_("PTP: Protocol error, response expected")},
-	{0, NULL}
+	{PTP_RC_NIKON_HardwareError,		PTP_VENDOR_NIKON, N_("Hardware Error")},
+	{PTP_RC_NIKON_OutOfFocus,		PTP_VENDOR_NIKON, N_("Out of Focus")},
+	{PTP_RC_NIKON_ChangeCameraModeFailed,	PTP_VENDOR_NIKON, N_("Change Camera Mode Failed")},
+	{PTP_RC_NIKON_InvalidStatus,		PTP_VENDOR_NIKON, N_("Invalid Status")},
+	{PTP_RC_NIKON_SetPropertyNotSupported,	PTP_VENDOR_NIKON, N_("Set Property Not Supported")},
+	{PTP_RC_NIKON_WbResetError,		PTP_VENDOR_NIKON, N_("Whitebalance Reset Error")},
+	{PTP_RC_NIKON_DustReferenceError,	PTP_VENDOR_NIKON, N_("Dust Reference Error")},
+	{PTP_RC_NIKON_ShutterSpeedBulb,		PTP_VENDOR_NIKON, N_("Shutter Speed Bulb")},
+	{PTP_RC_NIKON_MirrorUpSequence,		PTP_VENDOR_NIKON, N_("Mirror Up Sequence")},
+	{PTP_RC_NIKON_CameraModeNotAdjustFNumber, PTP_VENDOR_NIKON, N_("Camera Mode Not Adjust FNumber")},
+	{PTP_RC_NIKON_NotLiveView,		PTP_VENDOR_NIKON, N_("Not in Liveview")},
+	{PTP_RC_NIKON_MfDriveStepEnd,		PTP_VENDOR_NIKON, N_("Mf Drive Step End")},
+	{PTP_RC_NIKON_MfDriveStepInsufficiency,	PTP_VENDOR_NIKON, N_("Mf Drive Step Insufficiency")},
+	{PTP_RC_NIKON_AdvancedTransferCancel,	PTP_VENDOR_NIKON, N_("Advanced Transfer Cancel")},
+
+	{PTP_RC_CANON_UNKNOWN_COMMAND,	PTP_VENDOR_CANON, N_("Unknown Command")},
+	{PTP_RC_CANON_OPERATION_REFUSED,PTP_VENDOR_CANON, N_("Operation Refused")},
+	{PTP_RC_CANON_LENS_COVER,	PTP_VENDOR_CANON, N_("Lens Cover Present")},
+	{PTP_RC_CANON_BATTERY_LOW,	PTP_VENDOR_CANON, N_("Battery Low")},
+	{PTP_RC_CANON_NOT_READY,	PTP_VENDOR_CANON, N_("Camera Not Ready")},
+
+	{PTP_ERROR_TIMEOUT,		0, N_("PTP Timeout")},
+	{PTP_ERROR_CANCEL,		0, N_("PTP Cancel Request")},
+	{PTP_ERROR_BADPARAM,		0, N_("PTP Invalid Parameter")},
+	{PTP_ERROR_RESP_EXPECTED,	0, N_("PTP Response Expected")},
+	{PTP_ERROR_DATA_EXPECTED,	0, N_("PTP Data Expected")},
+	{PTP_ERROR_IO,			0, N_("PTP I/O Error")},
+	{0, 0, NULL}
 };
 
-	for (i=0; ptp_errors[i].txt!=NULL; i++)
-		if (ptp_errors[i].n == error)
+const char *
+ptp_strerror(uint16_t ret, uint16_t vendor)
+{
+	int i;
+
+	for (i=0; ptp_errors[i].txt != NULL; i++)
+		if ((ptp_errors[i].rc == ret) && ((ptp_errors[i].vendor == 0) || (ptp_errors[i].vendor == vendor)))
 			return ptp_errors[i].txt;
 	return NULL;
-}
-
-void
-ptp_perror(PTPParams* params, uint16_t error) {
-	const char *txt = ptp_strerror(error);
-	if (txt != NULL)
-		ptp_error(params, txt);
 }
 
 const char*
