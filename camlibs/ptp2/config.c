@@ -5257,6 +5257,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 
 			gp_log (GP_LOG_DEBUG,"chkd_script", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
 			gp_log (GP_LOG_DEBUG,"chkd_script", "message script %s", msg->data);
+			free (msg);
 		}
 
 		if (!(status & PTP_CHDK_SCRIPT_STATUS_RUN))
