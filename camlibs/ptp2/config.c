@@ -120,6 +120,7 @@ return false,'already in rec'\n\
 
 			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
 			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script %s", msg->data);
+			free (msg);
 		}
 
 		if (!(status & PTP_CHDK_SCRIPT_STATUS_RUN))
@@ -163,6 +164,7 @@ return false,'already in play'\n\
 	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "called script. script id %d, status %d", scriptid, status);
 	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
 	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script %s", msg->data);
+	free (msg);
 	if (!status) {
 		gp_context_error(context,_("CHDK did not leave recording mode."));
 		return GP_ERROR;
