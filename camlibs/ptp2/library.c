@@ -953,7 +953,11 @@ static struct {
 	/* N CP A seems capture capable, but does not list vendor commands */
 	/* Reports 0x400d aka CaptureComplete event ... but has no 
 	 * vendor commands? yeah right ... */
-	{"Nikon:Coolpix A (PTP mode)",	  0x04b0, 0x0226, 0}, /* PTP_CAP */
+	/* It might be similar to the 1? lets try ... Marcus 20140706 */
+	{"Nikon:Coolpix A (PTP mode)",	  0x04b0, 0x0226, PTP_CAP|PTP_NIKON_1}, /* PTP_CAP */
+
+	/* Jonas Stein <news@jonasstein.de> */
+	{"Nikon:Coolpix P330 (PTP mode)", 0x04b0, 0x0227, PTP_CAP},
 
 	/* t.ludewig@gmail.com */
 	/* Also reports 0x400d aka CaptureComplete event ... but has no 
