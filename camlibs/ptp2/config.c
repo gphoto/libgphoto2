@@ -425,7 +425,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		return translate_ptp_result (ret);
 	}
 
-	CR( camera_canon_eos_update_capture_target( camera, context, -1 ) );
+	CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
 	ptp_free_DI (&params->deviceinfo);
 	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
@@ -520,7 +520,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	uint16_t		ret;
 
 	/* then emits 911b and 911c ... not done yet ... */
-	CR( camera_canon_eos_update_capture_target(camera, context, 1) );
+	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
 	/* Drain the rest set of the event data */
 	ret = ptp_check_eos_events (params);
@@ -811,13 +811,11 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 static int
 _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize) {
 	char *value;
-	int i, ret, intval, j;
+	int i, intval, j;
 	int foundvalue = 0;
 	uint16_t	u16val = 0;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget, &value));
 	for (i=0;i<tblsize;i++) {
 		if (!strcmp(_(tbl[i].label),value) &&
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
@@ -983,11 +981,9 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 static int
 _put_GenericI16Table(CONFIG_PUT_ARGS, struct deviceproptablei16* tbl, int tblsize) {
 	char *value;
-	int i, ret, intval;
+	int i, intval;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget, &value));
 	for (i=0;i<tblsize;i++) {
 		if (!strcmp(_(tbl[i].label),value) &&
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
@@ -1110,11 +1106,9 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 static int
 _put_Generic8Table(CONFIG_PUT_ARGS, struct deviceproptableu8* tbl, int tblsize) {
 	char *value;
-	int i, ret, intval;
+	int i, intval;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	for (i=0;i<tblsize;i++) {
 		if (!strcmp(_(tbl[i].label),value) &&
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID))
@@ -1181,10 +1175,8 @@ _get_STR(CONFIG_GET_ARGS) {
 static int
 _put_STR(CONFIG_PUT_ARGS) {
 	const char *string;
-	int ret;
-	ret = gp_widget_get_value (widget,&string);
-	if (ret != GP_OK)
-		return ret;
+
+	CR (gp_widget_get_value(widget, &string));
 	propval->str = strdup (string);
 	if (!propval->str)
 		return (GP_ERROR_NO_MEMORY);
@@ -1195,11 +1187,8 @@ static int
 _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	char	*value;
 	unsigned int i;
-	int	ret;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	memset(propval,0,sizeof(PTPPropertyValue));
 	/* add \0 ? */
 	propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue));
@@ -1230,11 +1219,9 @@ _get_Range_INT8(CONFIG_GET_ARGS) {
 
 static int
 _put_Range_INT8(CONFIG_PUT_ARGS) {
-	int ret;
 	float f;
-	ret = gp_widget_get_value (widget, &f);
-	if (ret != GP_OK) 
-		return ret;
+
+	CR (gp_widget_get_value(widget, &f));
 	propval->i8 = (int) f;
 	return (GP_OK);
 }
@@ -1258,11 +1245,9 @@ _get_Range_UINT8(CONFIG_GET_ARGS) {
 
 static int
 _put_Range_UINT8(CONFIG_PUT_ARGS) {
-	int ret;
 	float f;
-	ret = gp_widget_get_value (widget, &f);
-	if (ret != GP_OK) 
-		return ret;
+
+	CR (gp_widget_get_value(widget, &f));
 	propval->u8 = (int) f;
 	return (GP_OK);
 }
@@ -1305,11 +1290,9 @@ static int
 _put_INT(CONFIG_PUT_ARGS) {
 	char *value;
 	unsigned int u;
-	int i, ret;
+	int i;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 
 	switch (dpd->DataType) {
 	case PTP_DTC_UINT32:
@@ -1367,12 +1350,9 @@ _get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_OnOff_UINT8(CONFIG_PUT_ARGS) {
-	int ret;
 	char *value;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK) 
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	if(!strcmp(value,_("On"))) {
 		propval->u8 = 1;
 		return (GP_OK);
@@ -1400,12 +1380,9 @@ _get_Nikon_OffOn_UINT8(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_OffOn_UINT8(CONFIG_PUT_ARGS) {
-	int ret;
 	char *value;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK) 
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	if(!strcmp(value,_("On"))) {
 		propval->u8 = 0;
 		return (GP_OK);
@@ -1508,11 +1485,8 @@ _get_ImageSize(CONFIG_GET_ARGS) {
 static int
 _put_ImageSize(CONFIG_PUT_ARGS) {
 	char *value;
-	int ret;
 
-	ret = gp_widget_get_value (widget,&value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	propval->str = strdup (value);
 	if (!propval->str)
 		return (GP_ERROR_NO_MEMORY);
@@ -1543,11 +1517,9 @@ _get_ExpCompensation(CONFIG_GET_ARGS) {
 static int
 _put_ExpCompensation(CONFIG_PUT_ARGS) {
 	char *value;
-	int ret, x;
+	int x;
 
-	ret = gp_widget_get_value (widget,&value);
-	if(ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	if (1 != sscanf(value,"%d", &x))
 		return (GP_ERROR);
 	propval->i16 = x;
@@ -1594,11 +1566,8 @@ static int
 _put_Canon_ZoomRange(CONFIG_PUT_ARGS)
 {
 	float	f;
-	int	ret;
 
-	f = 0.0;
-	ret = gp_widget_get_value (widget,&f);
-	if (ret != GP_OK) return ret;
+	CR (gp_widget_get_value(widget, &f));
 	propval->u16 = (unsigned short)f;
 	return (GP_OK);
 }
@@ -1626,11 +1595,8 @@ static int
 _put_Nikon_WBBias(CONFIG_PUT_ARGS)
 {
 	float	f;
-	int	ret;
 
-	f = 0.0;
-	ret = gp_widget_get_value (widget,&f);
-	if (ret != GP_OK) return ret;
+	CR (gp_widget_get_value(widget, &f));
 	propval->i8 = (signed char)f;
 	return (GP_OK);
 }
@@ -1658,11 +1624,8 @@ static int
 _put_Nikon_UWBBias(CONFIG_PUT_ARGS)
 {
 	float	f;
-	int	ret;
 
-	f = 0.0;
-	ret = gp_widget_get_value (widget,&f);
-	if (ret != GP_OK) return ret;
+	CR (gp_widget_get_value(widget, &f));
 	propval->u8 = (unsigned char)f;
 	return (GP_OK);
 }
@@ -1702,11 +1665,10 @@ _get_Nikon_WBBiasPreset(CONFIG_GET_ARGS) {
 static int
 _put_Nikon_WBBiasPreset(CONFIG_PUT_ARGS) {
 	int	ret;
-	char	*x;
+	char	*val;
 
-	ret = gp_widget_get_value (widget,&x);
-	if (ret != GP_OK) return ret;
-	sscanf (x, "%u", &ret);
+	CR (gp_widget_get_value(widget, &val));
+	sscanf (val, "%u", &ret);
 	propval->u8 = ret;
 	return (GP_OK);
 }
@@ -1755,12 +1717,9 @@ _get_Nikon_HueAdjustment(CONFIG_GET_ARGS) {
 static int
 _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 {
-	int	ret;
-
 	if (dpd->FormFlag & PTP_DPFF_Range) {
 		float	f = 0.0;
-		ret = gp_widget_get_value (widget,&f);
-		if (ret != GP_OK) return ret;
+		CR (gp_widget_get_value(widget, &f));
 		propval->i8 = (signed char)f;
 		return (GP_OK);
 	}
@@ -1768,8 +1727,7 @@ _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 		char *val;
 		int ival;
 		
-		ret = gp_widget_get_value (widget, &val);
-		if (ret != GP_OK) return ret;
+		CR (gp_widget_get_value(widget, &val));
 		sscanf (val, "%d", &ival);
 		propval->i8 = ival;
 		return (GP_OK);
@@ -2209,12 +2167,11 @@ _get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_EVFRecordTarget(CONFIG_PUT_ARGS) {
-	int	ret, i;
+	int	i;
 	char	*value;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
+
 	if (!strcmp(value,_("Card"))) {
 		propval->u32 = 4;
 		return GP_OK;
@@ -2290,13 +2247,12 @@ _get_Canon_CameraOutput(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
-	int	ret, u, i;
+	int	u, i;
 	char	*value;
 	PTPParams *params = &camera->pl->params;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
+
 	u = -1;
 	if (!strcmp(value,_("LCD"))) { u = 1; }
 	if (!strcmp(value,_("Video OUT"))) { u = 2; }
@@ -2307,7 +2263,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	if ((u==1) || (u==2)) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 			if (!params->canon_viewfinder_on)  {
-				ret = ptp_canon_viewfinderon (params);
+				uint16_t ret = ptp_canon_viewfinderon (params);
 				if (ret != PTP_RC_OK)
 					gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
 				else
@@ -2318,7 +2274,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	if (u==3) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 			if (params->canon_viewfinder_on)  {
-				ret = ptp_canon_viewfinderoff (params);
+				uint16_t ret = ptp_canon_viewfinderoff (params);
 				if (ret != PTP_RC_OK)
 					gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
 				else
@@ -2474,13 +2430,10 @@ _get_ISO(CONFIG_GET_ARGS) {
 static int
 _put_ISO(CONFIG_PUT_ARGS)
 {
-	int ret;
 	char *value;
 	unsigned int	u;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 
 	if (sscanf(value, "%ud", &u)) {
 		propval->u16 = u;
@@ -2524,13 +2477,10 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 static int
 _put_Sony_ISO(CONFIG_PUT_ARGS)
 {
-	int ret;
 	char *value;
 	unsigned int	u;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	if (!strcmp(value,_("Auto ISO"))) {
 		propval->u32 = 0x00ffffff;
 		return GP_OK;
@@ -2612,13 +2562,10 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 static int
 _put_Milliseconds(CONFIG_PUT_ARGS)
 {
-	int ret;
 	char *value;
 	float	f;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 
 	if (sscanf(value, "%f", &f)) {
 		if (dpd->DataType == PTP_DTC_UINT32)
@@ -2673,15 +2620,13 @@ _get_FNumber(CONFIG_GET_ARGS) {
 static int
 _put_FNumber(CONFIG_PUT_ARGS)
 {
-	int	ret, i;
+	int i;
 
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 		char	*value;
 		float	f;
 
-		ret = gp_widget_get_value (widget, &value);
-		if (ret != GP_OK)
-			return ret;
+		CR (gp_widget_get_value(widget, &value));
 		if (strstr (value, "f/") == value)
 			value += strlen("f/");
 
@@ -2701,9 +2646,9 @@ _put_FNumber(CONFIG_PUT_ARGS)
 	} else { /* RANGE uses float */
 		float fvalue;
 
-		ret = gp_widget_get_value (widget, &fvalue);
+		CR (gp_widget_get_value (widget, &fvalue));
 		propval->u16 = fvalue*100;
-		return ret;
+		return GP_OK;
 	}
 	return GP_ERROR;
 }
@@ -2711,15 +2656,13 @@ _put_FNumber(CONFIG_PUT_ARGS)
 static int
 _put_Sony_FNumber(CONFIG_PUT_ARGS)
 {
-	int			ret;
 	float			fvalue;
 	uint16_t		origval;
 	PTPPropertyValue	value;
 	PTPParams		*params = &(camera->pl->params);
 	GPContext 		*context = ((PTPData *) params->data)->context;
 
-	ret = gp_widget_get_value (widget, &fvalue);
-	if (ret != GP_OK) return ret;
+	CR (gp_widget_get_value (widget, &fvalue));
 
 	do {
 		origval = dpd->CurrentValue.u16;
@@ -2744,7 +2687,7 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 	} while (1);
 
 	propval->u16 = fvalue*100; /* probably not used */
-	return ret;
+	return GP_OK;
 }
 
 static int
@@ -2772,14 +2715,11 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 static int
 _put_ExpTime(CONFIG_PUT_ARGS)
 {
-	int	ret;
 	unsigned int i, delta, xval, ival1, ival2, ival3;
 	float	val;
 	char	*value;
 
-	ret = gp_widget_get_value (widget, &value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget, &value));
 
 	if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
 		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d %d/%d case", ival1, ival2, ival3);
@@ -3308,13 +3248,11 @@ _get_FocalLength(CONFIG_GET_ARGS) {
 
 static int
 _put_FocalLength(CONFIG_PUT_ARGS) {
-	int ret, i;
+	int i;
 	float value_float;
 	uint32_t curdiff, newval;
 
-	ret = gp_widget_get_value (widget, &value_float);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget, &value_float));
 	propval->u32 = 100*value_float;
 	if (dpd->FormFlag & PTP_DPFF_Range)
 		return GP_OK;
@@ -3386,20 +3324,18 @@ _get_FocusDistance(CONFIG_GET_ARGS) {
 
 static int
 _put_FocusDistance(CONFIG_PUT_ARGS) {
-	int ret, val;
+	int val;
 	const char *value_str;
 
 	if (dpd->FormFlag & PTP_DPFF_Range) {
 		float value_float;
 
-		ret = gp_widget_get_value (widget, &value_float);
-		if (ret != GP_OK)
-			return ret;
+		CR (gp_widget_get_value (widget, &value_float));
 		propval->u16 = value_float;
 		return GP_OK;
 	}
 	/* else ENUMeration */
-	gp_widget_get_value (widget, &value_str);
+	CR (gp_widget_get_value (widget, &value_str));
 	if (!strcmp (value_str, _("infinite"))) {
 		propval->u16 = 0xFFFF;
 		return GP_OK;
@@ -3532,15 +3468,11 @@ _get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_FlashExposureCompensation(CONFIG_PUT_ARGS) {
-	int ret;
-	float value_float;
+	float val;
 
-	ret = gp_widget_get_value (widget, &value_float);
-	if (ret != GP_OK)
-		return ret;
-	propval->i8 = 6.0*value_float;
+	CR (gp_widget_get_value(widget, &val));
+	propval->i8 = 6.0*val;
 	return GP_OK;
-
 }
 
 static int
@@ -4636,13 +4568,10 @@ _get_BurstNumber(CONFIG_GET_ARGS) {
 
 static int
 _put_BurstNumber(CONFIG_PUT_ARGS) {
-	int ret;
-	float value_float;
+	float val;
 
-	ret = gp_widget_get_value (widget, &value_float);
-	if (ret != GP_OK)
-		return ret;
-	propval->u16 = value_float;
+	CR (gp_widget_get_value(widget, &val));
+	propval->u16 = val;
 	return GP_OK;
 }
 
@@ -4696,12 +4625,9 @@ _get_UINT32_as_time(CONFIG_GET_ARGS) {
 static int
 _put_UINT32_as_time(CONFIG_PUT_ARGS) {
 	time_t	camtime;
-	int	ret;
 
 	camtime = 0;
-	ret = gp_widget_get_value (widget,&camtime);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget,&camtime));
 	propval->u32 = camtime;
 	return (GP_OK);
 }
@@ -4725,14 +4651,11 @@ _get_UINT32_as_localtime(CONFIG_GET_ARGS) {
 static int
 _put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
 	time_t	camtime,newcamtime;
-	int	ret;
 	struct	tm *ptm;
 	char	*tz;
 
 	camtime = 0;
-	ret = gp_widget_get_value (widget,&camtime);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget, &camtime));
 	ptm = localtime(&camtime);
 
 	tz = getenv("TZ");
@@ -4812,9 +4735,7 @@ _put_Nikon_ChangeAfArea(CONFIG_PUT_ARGS) {
 	PTPParams	*params = &(camera->pl->params);
 	GPContext 	*context = ((PTPData *) params->data)->context;
 
-	ret = gp_widget_get_value(widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 
 	if (2 != sscanf(val, "%dx%d", &x, &y))
 		return GP_ERROR_BAD_PARAMETERS;
@@ -5220,10 +5141,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	unsigned int	status;
 	int		luastatus;
 	
-
-	ret = gp_widget_get_value (widget, &script);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &script));
 
 //  Nafraf: Working on this!!!
 //
@@ -5315,13 +5233,10 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 	struct tm	xtm;
 #endif
 	struct tm	*pxtm;
-	int		ret;
 	char		asctime[64];
 
 	camtime = 0;
-	ret = gp_widget_get_value (widget,&camtime);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget,&camtime));
 #ifdef HAVE_GMTIME_R
 	memset(&xtm,0,sizeof(xtm));
 	pxtm = localtime_r (&camtime, &xtm);
@@ -5354,11 +5269,9 @@ _get_Canon_CaptureMode(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_CaptureMode(CONFIG_PUT_ARGS) {
-	int val, ret;
+	int val;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val)
 		return camera_prepare_capture (camera, NULL);
 	else
@@ -5383,9 +5296,7 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 	PTPParams		*params = &(camera->pl->params);
 	PTPPropertyValue	xval;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_InitiateViewfinder)) {
 			res = ptp_canon_eos_start_viewfinder (params);
@@ -5428,7 +5339,7 @@ _get_Nikon_ViewFinder(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
-	int			val, ret;
+	int			val;
 	uint16_t		res;
 	PTPParams		*params = &(camera->pl->params);
 	GPContext 		*context = ((PTPData *) params->data)->context;
@@ -5436,9 +5347,7 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 	if (!ptp_operation_issupported(params, PTP_OC_NIKON_StartLiveView))
 		return GP_ERROR_NOT_SUPPORTED;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value (widget, &val));
 	if (val) {
 		PTPPropertyValue	value;
 
@@ -5452,11 +5361,11 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 			value.u8 = 1;
 			res = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
 			if (res != PTP_RC_OK)
-				gp_log (GP_LOG_DEBUG, "ptp2/viewfinder_on", "set recordingmedia to 1 failed with 0x%04x", ret);
+				gp_log (GP_LOG_DEBUG, "ptp2/viewfinder_on", "set recordingmedia to 1 failed with 0x%04x", res);
 
 			res = ptp_nikon_start_liveview (params);
 			if (res != PTP_RC_OK) {
-				gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
+				gp_context_error (context, _("Nikon enable liveview failed: %x"), res);
 				return translate_ptp_result (res);
 			}
 			/* Has to put the mirror up, so takes a bit. */
@@ -5469,7 +5378,7 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 			return translate_ptp_result (res);
 		}
 	}
-	return translate_ptp_result (ret);
+	return GP_OK;
 }
 
 static int
@@ -5489,9 +5398,7 @@ _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 	PTPParams *params = &(camera->pl->params);
 	int val, ret;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val)
 		ret = ptp_canon_focuslock (params);
 	else
@@ -5514,13 +5421,11 @@ static int
 _put_Sony_Movie(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	int val, ret;
+	int val;
 	PTPPropertyValue	value;
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val)
 		value.u16 = 2;
 	else
@@ -5546,9 +5451,7 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 	int val, ret;
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		PTPPropertyValue	value;
 
@@ -5608,9 +5511,7 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 	PTPParams *params = &(camera->pl->params);
 	int val, ret;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		PTPPropertyValue propval;
 		char buf[20];
@@ -5673,14 +5574,12 @@ static int
 _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	int val, ret;
+	int val;
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		ret = ptp_canon_eos_bulbstart (params);
+		int ret = ptp_canon_eos_bulbstart (params);
 		if (ret == PTP_RC_GeneralError) {
 			gp_context_error (((PTPData *) camera->pl->params.data)->context,
 			_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
@@ -5708,12 +5607,10 @@ static int
 _put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	int val, ret;
+	int val;
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	if (val)
 		CPR (ptp_canon_eos_setuilock (params));
 	else
@@ -5737,12 +5634,10 @@ _get_Nikon_FastFS(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_FastFS(CONFIG_PUT_ARGS) {
-	int val, ret;
+	int val;
 	char buf[20];
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	sprintf(buf,"%d",val);
 	gp_setting_set("ptp2","nikon.fastfilesystem",buf);
 	return GP_OK;
@@ -5775,12 +5670,10 @@ _get_CaptureTarget(CONFIG_GET_ARGS) {
 
 static int
 _put_CaptureTarget(CONFIG_PUT_ARGS) {
-	int i, ret;
+	int i;
 	char *val;
 
-	ret = gp_widget_get_value (widget, &val);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	for (i=0;i<sizeof(capturetargets)/sizeof(capturetargets[i]);i++) {
 		if (!strcmp( val, _(capturetargets[i].label))) {
 			gp_setting_set("ptp2","capturetarget",capturetargets[i].name);
@@ -5913,10 +5806,7 @@ _get_nikon_wifi_profile_prop(CONFIG_GET_ARGS) {
 static int
 _put_nikon_wifi_profile_prop(CONFIG_PUT_ARGS) {
 	char *string, *name;
-	int ret;
-	ret = gp_widget_get_value(widget,&string);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &string));
 	gp_widget_get_name(widget,(const char**)&name);
 	gp_setting_set("ptp2_wifi",name,string);
 	return (GP_OK);
@@ -5941,15 +5831,11 @@ _get_nikon_wifi_profile_channel(CONFIG_GET_ARGS) {
 
 static int
 _put_nikon_wifi_profile_channel(CONFIG_PUT_ARGS) {
-	char *string, *name;
-	int ret;
+	char *name;
 	float val;
 	char buffer[16];
-	ret = gp_widget_get_value(widget,&string);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &val));
 	gp_widget_get_name(widget,(const char**)&name);
-	gp_widget_get_value(widget, &val);
 
 	snprintf(buffer, 16, "%d", (int)val);
 	gp_setting_set("ptp2_wifi",name,buffer);
@@ -5986,12 +5872,9 @@ _get_nikon_wifi_profile_encryption(CONFIG_GET_ARGS) {
 static int
 _put_nikon_wifi_profile_encryption(CONFIG_PUT_ARGS) {
 	char *string, *name;
-	int ret;
 	int i;
 	char buffer[16];
-	ret = gp_widget_get_value(widget,&string);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &string));
 	gp_widget_get_name(widget,(const char**)&name);
 
 	for (i = 0; encryption_values[i]; i++) {
@@ -6034,12 +5917,9 @@ _get_nikon_wifi_profile_accessmode(CONFIG_GET_ARGS) {
 static int
 _put_nikon_wifi_profile_accessmode(CONFIG_PUT_ARGS) {
 	char *string, *name;
-	int ret;
 	int i;
 	char buffer[16];
-	ret = gp_widget_get_value(widget,&string);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &string));
 	gp_widget_get_name(widget,(const char**)&name);
 
 	for (i = 0; accessmode_values[i]; i++) {
@@ -6067,10 +5947,7 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 	char keypart[3];
 	char* pos, *endptr;
 	int value, i;
-	int ret;
-	ret = gp_widget_get_value(widget,&value);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_value(widget, &value));
 	if (value) {
 		struct in_addr inp;
 		PTPNIKONWifiProfile profile;
@@ -7072,9 +6949,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		ptp_check_eos_events (params);
 	}
 
-	ret = gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow);
-	if (ret != GP_OK)
-		return ret;
+	CR (gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow));
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
 		ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].label), &section);
 		if (ret != GP_OK)
@@ -7164,11 +7039,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (!params->deviceinfo.DevicePropertiesSupported_len)
 		return GP_OK;
 
-	ret = gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section);
-	if (ret != GP_OK) {
-		gp_log (GP_LOG_ERROR, "ptp2_set_config", "Other PTP Device Properties section widget not found?");
-		return ret;
-	}
+	CR (gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section));
 	/* Generic property setter */
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];

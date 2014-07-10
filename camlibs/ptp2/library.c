@@ -2124,7 +2124,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	unsigned char	*data = NULL, *jpgStartPtr = NULL, *jpgEndPtr = NULL;
 	uint32_t	size = 0;
-	int ret;
+	uint16_t	ret;
 	PTPParams *params = &camera->pl->params;
 
 	camera->pl->checkevents = TRUE;
@@ -2134,11 +2134,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 			SET_CONTEXT_P(params, context);
 			/* check if we need to prepare capture */
-			if (!params->canon_event_mode) {
-				ret = camera_prepare_capture (camera, context);
-				if (ret != GP_OK)
-					return ret;
-			}
+			if (!params->canon_event_mode)
+				CR (camera_prepare_capture (camera, context));
 			if (!params->canon_viewfinder_on) { /* enable on demand, but just once */
 				ret = ptp_canon_viewfinderon (params);
 				if (ret != PTP_RC_OK) {
@@ -2388,7 +2385,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 static int
 get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char *folder) {
-	int ret;
+	uint16_t	ret;
 	PTPObject	*ob;
 	PTPParams 	*params = &camera->pl->params;
 
@@ -2401,9 +2398,7 @@ get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char 
 		gp_log (GP_LOG_ERROR, __func__, "%s", ptp_strerror(ret, params->deviceinfo.VendorExtensionID));
 		return translate_ptp_result (ret);
 	}
-	ret = get_folder_from_handle (camera, storage, ob->oi.ParentObject, folder);
-	if (ret != GP_OK)
-		return ret;
+	CR (get_folder_from_handle (camera, storage, ob->oi.ParentObject, folder));
 	/* now ob could be invalid, since we might have reallocated params->objects */
 	ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 	strcat (folder, ob->oi.Filename);
@@ -2714,9 +2709,7 @@ capturetriggered:
 				gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
 			}
 		} else { /* capture to card branch */
-			ret = add_object (camera, newobject, context);
-			if (ret != GP_OK)
-				return ret;
+			CR (add_object (camera, newobject, context));
 			strcpy  (path->name,  oi.Filename);
 			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 			get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
@@ -3016,9 +3009,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	/* did not call --set-config capture=on, do it for user */
-	ret = camera_prepare_capture (camera, context);
-	if (ret != GP_OK)
-		return ret;
+	CR (camera_prepare_capture (camera, context));
 
 	if (!params->canon_event_mode) {
 		propval.u16 = 0;
@@ -3201,9 +3192,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (xmode != CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
 		}
-		ret = add_object (camera, newobject, context);
-		if (ret != GP_OK)
-			return ret;
+		CR (add_object (camera, newobject, context));
 		strcpy  (path->name,  oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
@@ -3704,9 +3693,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
 			/* did not call --set-config capture=on, do it for user */
-			ret = camera_prepare_capture (camera, context);
-			if (ret != GP_OK)
-				return ret;
+			CR (camera_prepare_capture (camera, context));
 			if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
 				gp_context_error (context,
 				_("Sorry, initializing your camera did not work. Please report this."));
@@ -3991,9 +3978,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if (ret != PTP_RC_OK) return translate_ptp_result (ret);
 
 					if (oi.ParentObject != 0) {
-						ret = add_object (camera, newobject, context);
-						if (ret != GP_OK)
-							return ret;
+						CR (add_object (camera, newobject, context));
 						path = malloc (sizeof(CameraFilePath));
 						strcpy  (path->name,  oi.Filename);
 						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
@@ -5551,10 +5536,9 @@ mtp_get_playlist(
 	Camera *camera, CameraFile *file, uint32_t object_id, GPContext *context
 ) {
 	char	*content;
-	int	ret, contentlen;
+	int	contentlen;
 
-	ret = mtp_get_playlist_string( camera, object_id, &content, &contentlen);
-	if (ret != GP_OK) return ret;
+	CR (mtp_get_playlist_string( camera, object_id, &content, &contentlen));
 	/* takes ownership of content */
 	return gp_file_set_data_and_size (file, content, contentlen);
 }
@@ -6174,9 +6158,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* MTP playlists have their own size calculation */
 	if (is_mtp_capable (camera) &&
 	    (ob->oi.ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist)) {
-		int ret, contentlen;
-		ret = mtp_get_playlist_string (camera, oid, NULL, &contentlen);
-		if (ret != GP_OK) return ret;
+		int contentlen;
+		CR (mtp_get_playlist_string (camera, oid, NULL, &contentlen));
 		info->file.size = contentlen;
 	}
 
