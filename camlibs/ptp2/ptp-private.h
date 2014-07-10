@@ -42,7 +42,13 @@ void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 	}\
 } while(0)
 
-#define CR(result) do { int r=(result); if(r<0) return r; } while (0)
+#define CR(RESULT) do {\
+	int r=(RESULT);\
+	if (r<0) {\
+		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (%d)", #RESULT, gp_port_result_as_string(r), r);\
+		return r;\
+	}\
+} while (0)
 
 struct _CameraPrivateLibrary {
 	PTPParams params;
