@@ -140,13 +140,6 @@ add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
 
 #define STORAGE_FOLDER_PREFIX		"store_"
 
-
-void
-report_result (GPContext *context, uint16_t result, uint16_t vendor)
-{
-	gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_strerror(result, vendor)));
-}
-
 int
 translate_ptp_result (uint16_t result)
 {
@@ -2515,10 +2508,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
 		ret = ptp_nikon_setcontrolmode (params, 1);
 		/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
-		if ((ret != PTP_RC_OK) && (ret != PTP_RC_NIKON_ChangeCameraModeFailed)) {
-			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return translate_ptp_result (ret);
-		}
+		if (ret != PTP_RC_NIKON_ChangeCameraModeFailed)
+			CPR (ret);
 		params->controlmode = 1;
 	}
 
@@ -2592,10 +2583,7 @@ capturetriggered:
 		usleep(100*1000); /* 0.1 seconds */
 	}
 
-	if (ret != PTP_RC_OK) { /* e.g. out of focus gets reported here. */
-		report_result(context, ret, params->deviceinfo.VendorExtensionID);
-		return translate_ptp_result (ret);
-	}
+	CPR (ret); /* e.g. out of focus gets reported here. */
 
 	newobject = 0xffff0001;
 	done = 0; tries = 100;
@@ -3578,10 +3566,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		ret = ptp_nikon_setcontrolmode (params, 1);
 		/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
-		if ((ret != PTP_RC_OK) && (ret != PTP_RC_NIKON_ChangeCameraModeFailed)) {
-			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return translate_ptp_result (ret);
-		}
+		if (ret != PTP_RC_NIKON_ChangeCameraModeFailed)
+			CPR (ret);
 		params->controlmode = 1;
 	}
 
@@ -4420,7 +4406,6 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 		 CameraFileType type, CameraFile *file, void *data,
 		 GPContext *context)
 {
-	uint16_t	res;
 	Camera		*camera = (Camera*)data;
 	PTPParams	*params = &camera->pl->params;
 	unsigned char	*xdata;
@@ -4430,11 +4415,8 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	SET_CONTEXT(camera, context);
 
-	res = ptp_canon_get_customize_data (params, 1, &xdata, &size);
-	if (res != PTP_RC_OK)  {
-		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return translate_ptp_result (res);
-	}
+	CPR (ptp_canon_get_customize_data (params, 1, &xdata, &size));
+
 	if (size < 42+sizeof(struct canon_theme_entry)*5)
 		return GP_ERROR_BAD_PARAMETERS;
 	ent = (struct canon_theme_entry*)(xdata+42);
@@ -4462,7 +4444,6 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	         CameraFileType type, CameraFile *file, void *data,
 		 GPContext *context)
 {
-	uint16_t	res;
 	Camera		*camera = (Camera*)data;
 	PTPParams	*params = &camera->pl->params;
 	unsigned char	*xdata;
@@ -4475,11 +4456,8 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	((PTPData *) camera->pl->params.data)->context = context;
 	SET_CONTEXT(camera, context);
 
-	res = ptp_nikon_curve_download (params, &xdata, &size);
-	if (res != PTP_RC_OK)  {
-		report_result(context, res, params->deviceinfo.VendorExtensionID);
-		return translate_ptp_result (res);
-	}
+	CPR (ptp_nikon_curve_download (params, &xdata, &size));
+
 	tonecurve = (PTPNIKONCurveData *) xdata;
 	ntcfile = malloc(2000);
 	memcpy(ntcfile,"\x9d\xdc\x7d\x00\x65\xd4\x11\xd1\x91\x94\x44\x45\x53\x54\x00\x00\xff\x05\xbb\x02\x00\x00\x01\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x9d\xdc\x7d\x03\x65\xd4\x11\xd1\x91\x94\x44\x45\x53\x54\x00\x00\x00\x00\x00\x00\xff\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\x00\x00\x00\xff\x00\x00\x00\xff\x00\x00\x00", 92);
@@ -7153,9 +7131,8 @@ camera_init (Camera *camera, GPContext *context)
 				}
 			}
 
-			/* FIXME: deviceinfo is not read yet ... */
-			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return translate_ptp_result (ret);
+			/* FIXME: deviceinfo is not read yet ... (see macro)*/
+			CPR (ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
 			gp_log (GP_LOG_ERROR, "ptp2/camera_init", "ptp_opensession returns %x", ret);
@@ -7168,9 +7145,8 @@ camera_init (Camera *camera, GPContext *context)
 				retried++;
 				continue;
 			}
-			/* FIXME: deviceinfo is not read yet ... */
-			report_result(context, ret, params->deviceinfo.VendorExtensionID);
-			return translate_ptp_result (ret);
+			/* FIXME: deviceinfo is not read yet ... (see macro) */
+			CPR (ret);
 		}
 		break;
 	}
@@ -7195,7 +7171,7 @@ camera_init (Camera *camera, GPContext *context)
 		oi.StorageID 		= 0x80000001;
 		oi.Filename 		= "XDISCVRY.X3C";
 		oi.ObjectCompressedSize	= 0;
-		CR(ptp_sendobjectinfo (params, &storagehandle, &parenthandle, &handle, &oi));
+		CPR (ptp_sendobjectinfo (params, &storagehandle, &parenthandle, &handle, &oi));
 
 		gp_log (GP_LOG_DEBUG, "ptp2/usb", "olympus getcameraid\n");
 		ptp_olympus_getcameraid (params, &data, &len);

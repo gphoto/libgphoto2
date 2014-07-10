@@ -29,14 +29,13 @@ int camera_unprepare_capture (Camera *camera, GPContext *context);
 int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value);
 
 /* library.c */
-void report_result (GPContext *context, uint16_t result, uint16_t vendor);
 int translate_ptp_result (uint16_t result);
 void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 #define CPR(result) do {\
 	uint16_t r = (result);\
 	if (r != PTP_RC_OK) {\
-		report_result ((context), r, params->deviceinfo.VendorExtensionID);\
+		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_strerror(r, params->deviceinfo.VendorExtensionID)));\
 		return translate_ptp_result (r);\
 	}\
 } while(0)

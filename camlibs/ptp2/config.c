@@ -5585,10 +5585,9 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
                                 return translate_ptp_result (ret);
                         }
                 }
-		ret = ptp_nikon_startmovie (params);
+		CPR (ptp_nikon_startmovie (params));
 	} else
-		ret = ptp_nikon_stopmovie (params);
-	CPR (ret);
+		CPR (ptp_nikon_stopmovie (params));
 	return GP_OK;
 }
 
@@ -5687,10 +5686,10 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 			_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
 			return translate_ptp_result (ret);
 		}
+		CPR (ret);
 	} else {
-		ret = ptp_canon_eos_bulbend (params);
+		CPR (ptp_canon_eos_bulbend (params));
 	}
-	CPR (ret);
 	return GP_OK;
 }
 
@@ -5716,10 +5715,9 @@ _put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
 	if (ret != GP_OK)
 		return ret;
 	if (val)
-		ret = ptp_canon_eos_setuilock (params);
+		CPR (ptp_canon_eos_setuilock (params));
 	else
-		ret = ptp_canon_eos_resetuilock (params);
-	CPR (ret);
+		CPR (ptp_canon_eos_resetuilock (params));
 	return GP_OK;
 }
 
