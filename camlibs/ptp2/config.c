@@ -245,7 +245,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	}
 	if (ret != PTP_RC_OK) {
 		gp_log (GP_LOG_DEBUG, "ptp","shooting mode resulted in 0x%04x.", ret);
-		CPR (ret);
+		C_PTP_REP (ret);
 	}
 	gp_port_get_timeout (camera->port, &oldtimeout);
 	gp_port_set_timeout (camera->port, 1000);
@@ -2671,10 +2671,10 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 			value.u8 = 0x01;
 		else
 			value.u8 = 0xff;
-		CPR (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_FNumber, &value, PTP_DTC_UINT8 ));
+		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_FNumber, &value, PTP_DTC_UINT8 ));
 		/* FIXME: value does not change inbetween here for some reason */
-		CPR (ptp_sony_getalldevicepropdesc (params));
-		CPR (ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
+		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
 		if (dpd->CurrentValue.u16 == fvalue*100) {
 			gp_log (GP_LOG_DEBUG, "_put_Sony_FNumber", "Value matched");
 			break;
@@ -5430,7 +5430,7 @@ _put_Sony_Movie(CONFIG_PUT_ARGS)
 		value.u16 = 2;
 	else
 		value.u16 = 1;
-        CPR (ptp_sony_setdevicecontrolvalueb (params, 0xD2C8, &value, PTP_DTC_UINT16 ));
+        C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C8, &value, PTP_DTC_UINT16 ));
 	return GP_OK;
 }
 static int
@@ -5488,9 +5488,9 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
                                 return translate_ptp_result (ret);
                         }
                 }
-		CPR (ptp_nikon_startmovie (params));
+		C_PTP_REP (ptp_nikon_startmovie (params));
 	} else
-		CPR (ptp_nikon_stopmovie (params));
+		C_PTP_REP (ptp_nikon_stopmovie (params));
 	return GP_OK;
 }
 
@@ -5585,9 +5585,9 @@ _put_Canon_EOS_Bulb(CONFIG_PUT_ARGS)
 			_("For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."));
 			return translate_ptp_result (ret);
 		}
-		CPR (ret);
+		C_PTP_REP (ret);
 	} else {
-		CPR (ptp_canon_eos_bulbend (params));
+		C_PTP_REP (ptp_canon_eos_bulbend (params));
 	}
 	return GP_OK;
 }
@@ -5612,9 +5612,9 @@ _put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val)
-		CPR (ptp_canon_eos_setuilock (params));
+		C_PTP_REP (ptp_canon_eos_setuilock (params));
 	else
-		CPR (ptp_canon_eos_resetuilock (params));
+		C_PTP_REP (ptp_canon_eos_resetuilock (params));
 	return GP_OK;
 }
 

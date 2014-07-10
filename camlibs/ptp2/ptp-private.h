@@ -32,11 +32,13 @@ int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, i
 int translate_ptp_result (uint16_t result);
 void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
-#define CPR(result) do {\
-	uint16_t r = (result);\
-	if (r != PTP_RC_OK) {\
-		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_strerror(r, params->deviceinfo.VendorExtensionID)));\
-		return translate_ptp_result (r);\
+#define C_PTP_REP(RESULT) do {\
+	uint16_t ret = (RESULT);\
+	if (ret != PTP_RC_OK) {\
+		const char* ptp_err_str = ptp_strerror(ret, params->deviceinfo.VendorExtensionID);\
+		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, ret);\
+		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_err_str));\
+		return translate_ptp_result (ret);\
 	}\
 } while(0)
 
