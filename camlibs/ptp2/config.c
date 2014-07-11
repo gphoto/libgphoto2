@@ -74,7 +74,6 @@
 
 static int
 camera_prepare_chdk_capture(Camera *camera, GPContext *context) {
-	uint16_t 		ret;
 	PTPParams		*params = &camera->pl->params;
 	int 			scriptid = 0, major = 0,minor = 0;
 	unsigned int		status;
@@ -96,28 +95,19 @@ PTP_CHDK_LUA_SERIALIZE
 end\n\
 return false,'already in rec'\n\
 ";
-	ret = ptp_chdk_get_version (params, &major, &minor);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
+	C_PTP (ptp_chdk_get_version (params, &major, &minor));
 	gp_log (GP_LOG_DEBUG,"prepare_chdk", "CHDK %d.%d", major, minor);
 
 	gp_log (GP_LOG_DEBUG,"prepare_chdk", "calling lua script %s", lua);
-	ret= ptp_chdk_exec_lua(params, lua, 0, &scriptid, &luastatus);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
+	C_PTP (ptp_chdk_exec_lua(params, lua, 0, &scriptid, &luastatus));
 	gp_log (GP_LOG_DEBUG,"prepare_chdk", "called script. script id %d, status %d", scriptid, luastatus);
 
 	while (1) {
-		ret = ptp_chdk_get_script_status(params, &status);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
+		C_PTP (ptp_chdk_get_script_status(params, &status));
 		gp_log (GP_LOG_DEBUG, "prepare_chdk", "script status %x", status);
 
 		if (status & PTP_CHDK_SCRIPT_STATUS_MSG) {
-			ret = ptp_chdk_read_script_msg(params, &msg);
-			if (ret != PTP_RC_OK)
-				return translate_ptp_result (ret);
-
+			C_PTP (ptp_chdk_read_script_msg(params, &msg));
 			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
 			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script %s", msg->data);
 			free (msg);
@@ -132,7 +122,6 @@ return false,'already in rec'\n\
 
 static int
 camera_unprepare_chdk_capture(Camera *camera, GPContext *context) {
-	uint16_t 		ret;
 	PTPParams		*params = &camera->pl->params;
 	int 			scriptid = 0, status = 0;
 	ptp_chdk_script_msg	*msg = NULL;
@@ -153,13 +142,8 @@ end\n\
 return false,'already in play'\n\
 ";
 	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "calling lua script %s", lua);
-	ret= ptp_chdk_exec_lua(params, lua, 0, &scriptid, &status);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
-
-	ret = ptp_chdk_read_script_msg(params, &msg);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
+	C_PTP (ptp_chdk_exec_lua(params, lua, 0, &scriptid, &status));
+	C_PTP (ptp_chdk_read_script_msg(params, &msg));
 
 	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "called script. script id %d, status %d", scriptid, status);
 	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
@@ -174,53 +158,45 @@ return false,'already in play'\n\
 
 static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
+	uint16_t		ret;
 	PTPContainer		event;
 	PTPPropertyValue	propval;
-	int 			ret;
 	PTPParams		*params = &camera->pl->params;
 	int 			found, oldtimeout;
 
         if (ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
 		gp_log (GP_LOG_DEBUG, "ptp", "Canon capture mode is already set up.");
-		ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_DEBUG, "ptp", "failed get event emulate mode");
-			return translate_ptp_result (ret);
-		}
+		C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 		gp_log (GP_LOG_DEBUG, "ptp", "Event emulate mode 0x%04x", propval.u16);
 		params->canon_event_mode = propval.u16;
 		return GP_OK;
 	}
 
 	propval.u16 = 0;
-	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp", "failed get 0xd045");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x",propval.u16);
 
 	propval.u16=1;
-	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+	C_PTP (ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	params->canon_event_mode = propval.u16;
-	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d, ret 0x%x",propval.u32, ret);
-	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d, ret 0x%x",propval.u32, ret);
+	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32));
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
+	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32));
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
 
-	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
-	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
+	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
 
-	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d, ret 0x%x",propval.u32, ret);
-	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32);
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d, ret x0%x",propval.u32,ret);
-	ret = ptp_getdeviceinfo (params, &params->deviceinfo);
+	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32));
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
+	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32));
+	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
+	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
-	ret = ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	params->canon_event_mode = propval.u16;
-	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x, ret 0x%x",propval.u16,ret);
+	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x",propval.u16);
 
 	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.");
 
@@ -235,7 +211,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
  7     No       Yes
  */
 	propval.u16 = 7;
-	ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16);
+	C_PTP (ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	params->canon_event_mode = propval.u16;
 
 	ret = ptp_canon_startshootingmode (params);
@@ -292,18 +268,13 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 int
 camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value) {
 	PTPParams		*params = &camera->pl->params;
-	uint16_t		ret;
 	char			buf[200];
 	PTPPropertyValue	ct_val;
 	PTPDevicePropDesc	dpd;
 	int			cardval = 1;
 
 	memset(&dpd,0,sizeof(dpd));
-	ret = ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target","did not get capture destination propdesc?");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd));
 	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
 		unsigned int	i;
 		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
@@ -325,13 +296,10 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		     : value;
 
 	/* otherwise we get DeviceBusy for some reason */
-	if (ct_val.u32 != dpd.CurrentValue.u32) {
-		ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "setdevicepropvalue of capturetarget to 0x%x failed!", ct_val.u32 );
-			return translate_ptp_result (ret);
-		}
-	} else
+	if (ct_val.u32 != dpd.CurrentValue.u32)
+		C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32),
+			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
+	else
 		gp_log (GP_LOG_DEBUG,"camera_canon_eos_update_capture_target", "optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
 
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
@@ -341,11 +309,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 		 */
 
-		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"camera_canon_eos_update_capture_target", "ptp_canon_eos_pchddcapacity failed!");
-			return translate_ptp_result (ret);
-		}
+		C_PTP (ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001));
 	}
 
 	return GP_OK;
@@ -354,99 +318,58 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 static int
 camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams	*params = &camera->pl->params;
-	int		ret;
 	PTPStorageIDs	sids;
 
 	gp_log (GP_LOG_DEBUG, "ptp2_prepare_eos_capture", "preparing EOS capture...");
 
-	ret = ptp_canon_eos_setremotemode(params, 1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "set remotemode 1 failed!");
-		return translate_ptp_result (ret);
-	}
-	ret = ptp_canon_eos_seteventmode(params, 1);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "seteventmode 1 failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_canon_eos_setremotemode(params, 1));
+	C_PTP (ptp_canon_eos_seteventmode(params, 1));
 	params->eos_camerastatus = -1;	/* aka unknown */
 
-	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRequestOLCInfoGroup)) {
-		ret = ptp_canon_eos_setrequestolcinfogroup(params,0x00001fff);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "setrqolcinfogroup 0x1fff failed!");
-			return translate_ptp_result (ret);
-		}
-	}
+	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRequestOLCInfoGroup))
+		C_PTP (ptp_canon_eos_setrequestolcinfogroup(params, 0x00001fff));
 
 	/* Get the initial bulk set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
+
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)) {
 		/* request additional properties */
-		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Owner);
-		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Artist);
-		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Copyright);
-		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_SerialNumber);
+		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Owner));
+		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Artist));
+		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_Copyright));
+		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_SerialNumber));
 
-/*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_DPOFVersion); */
-/*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_MyMenuList); */
-/*		ret = ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_LensAdjustParams); */
-
-		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "requesting additional properties (owner/artist/etc.) failed");
+/*		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_DPOFVersion)); */
+/*		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_MyMenuList)); */
+/*		C_PTP (ptp_canon_eos_requestdevicepropvalue (params, PTP_DPC_CANON_EOS_LensAdjustParams)); */
 	}
-	{
+	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
 		PTPCanonEOSDeviceInfo x;
 		unsigned int i;
 
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
-			ret = ptp_canon_eos_getdeviceinfo (params, &x);
-			if (ret == PTP_RC_OK) {
-				for (i=0;i<x.EventsSupported_len;i++)
-					gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
-				for (i=0;i<x.DevicePropertiesSupported_len;i++)
-					gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
-				for (i=0;i<x.unk_len;i++)
-					gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
-				ptp_free_EOS_DI (&x);
-			} else {
-				gp_log (GP_LOG_ERROR,"ptp2/eos_deviceinfoex", "getevent failed, ret %x!", ret);
-			}
-		}
+		C_PTP (ptp_canon_eos_getdeviceinfo (params, &x));
+		for (i=0;i<x.EventsSupported_len;i++)
+			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
+		for (i=0;i<x.DevicePropertiesSupported_len;i++)
+			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
+		for (i=0;i<x.unk_len;i++)
+			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
+		ptp_free_EOS_DI (&x);
 	}
+
 	/* Get the second bulk set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 
 	CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
 	ptp_free_DI (&params->deviceinfo);
-	ret = ptp_getdeviceinfo(params, &params->deviceinfo);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getdeviceinfo failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_getdeviceinfo(params, &params->deviceinfo));
 	fixup_cached_deviceinfo (camera, &params->deviceinfo);
-	ret = ptp_canon_eos_getstorageids(params, &sids);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageids failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_canon_eos_getstorageids(params, &sids));
 	if (sids.n >= 1) {
 		unsigned char *sdata;
 		unsigned int slen;
-		ret = ptp_canon_eos_getstorageinfo(params, sids.Storage[0], &sdata, &slen );
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getstorageinfo failed!");
-			return translate_ptp_result (ret);
-		}
+		C_PTP (ptp_canon_eos_getstorageinfo(params, sids.Storage[0], &sdata, &slen ));
 		free (sdata);
 	}
 	free (sids.Storage);
@@ -454,11 +377,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* FIXME: 9114 call missing here! */
 
 	/* Get the second bulk set of 0x9116 property data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_prepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 	params->eos_captureenabled = 1;
 	return GP_OK;
 }
@@ -493,11 +412,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	uint16_t	ret;
 	PTPParams		*params = &camera->pl->params;
 
-	ret = ptp_canon_endshootingmode (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp", "end shooting mode error %d", ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_canon_endshootingmode (params));
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 		if (params->canon_viewfinder_on) {
@@ -517,28 +432,14 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 static int
 camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
-	uint16_t		ret;
 
 	/* then emits 911b and 911c ... not done yet ... */
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
 	/* Drain the rest set of the event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
-
-	ret = ptp_canon_eos_setremotemode(params, 0);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "setremotemode failed!");
-		return translate_ptp_result (ret);
-	}
-	ret = ptp_canon_eos_seteventmode(params, 0);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2_unprepare_eos_capture", "seteventmode failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
+	C_PTP (ptp_canon_eos_setremotemode(params, 0));
+	C_PTP (ptp_canon_eos_seteventmode(params, 0));
 	params->eos_captureenabled = 0;
 	return GP_OK;
 }
@@ -4698,24 +4599,17 @@ _get_Nikon_AFDrive(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
 	PTPParams	*params = &(camera->pl->params);
 	GPContext 	*context = ((PTPData *) params->data)->context;
 
 	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_AfDrive)) 
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	ret = ptp_nikon_afdrive (&camera->pl->params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/nikon_afdrive", "Nikon autofocus drive failed: 0x%x", ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_nikon_afdrive (&camera->pl->params));
 	/* wait at most 5 seconds for focusing currently */
-	ret = nikon_wait_busy (params, 10, 5000);
+	C_PTP_REP (nikon_wait_busy (params, 10, 5000));
 	/* this can return PTP_RC_OK or PTP_RC_NIKON_OutOfFocus */
-	if (ret == PTP_RC_NIKON_OutOfFocus)
-		gp_context_error (context, _("Nikon autofocus drive did not focus."));
-	return translate_ptp_result (ret);
+	return GP_OK;
 }
 
 static int
@@ -4746,10 +4640,7 @@ _put_Nikon_ChangeAfArea(CONFIG_PUT_ARGS) {
 		return GP_ERROR;
 	}
 
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/changeafarea", "Nikon changeafarea failed: 0x%x", ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP_MSG (ret, "Nikon changeafarea failed");
 #if 0
 	int		tries = 0;
 	/* wait at most 5 seconds for focusing currently */
@@ -4775,23 +4666,14 @@ _get_Canon_EOS_AFDrive(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
 	PTPParams *params = &(camera->pl->params);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DoAf)) 
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	ret = ptp_canon_eos_afdrive (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_afdrive", "Canon autofocus drive failed: 0x%x", ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_canon_eos_afdrive (params));
 	/* Get the next set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_afdrive", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 	return GP_OK;
 }
 
@@ -4859,7 +4741,7 @@ _get_Nikon_ControlMode(CONFIG_GET_ARGS) {
 
 static int
 _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
+	PTPParams *params = &(camera->pl->params);
 	char*		val;
 	unsigned int	xval = 0;
 
@@ -4870,11 +4752,7 @@ _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 	if (!sscanf(val,"%d",&xval))	
 		return GP_ERROR;
 
-	ret = ptp_nikon_setcontrolmode (&camera->pl->params, xval);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/nikon_controlmode", "Nikon control mode failed: 0x%x", ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_nikon_setcontrolmode (&camera->pl->params, xval));
 	return GP_OK;
 }
 
@@ -4909,7 +4787,6 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
 	const char*	val;
 	PTPParams *params = &(camera->pl->params);
 
@@ -4917,74 +4794,41 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 		return (GP_ERROR_NOT_SUPPORTED);
 	gp_widget_get_value(widget, &val);
 
-	if (!strcmp (val, _("None"))) return GP_OK;
-
-	if (!strcmp (val, _("Press Half"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 1, 1);
-		goto leave;
-	}
-	if (!strcmp (val, _("Press Full"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 3, 1);
-		goto leave;
-	}
-	if (!strcmp (val, _("Immediate"))) {
+	if (!strcmp (val, _("None"))) {
+		return GP_OK;
+	} else if (!strcmp (val, _("Press Half"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 1));
+	} else if (!strcmp (val, _("Press Full"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 1));
+	} else if (!strcmp (val, _("Immediate"))) {
 		/* HACK by Flori Radlherr: "fire and forget" half release before release:
 		   Avoids autofocus drive while focus-switch on the lens is in AF state */
-		ret = ptp_canon_eos_remotereleaseon (params, 1, 1);
-		if (ret == PTP_RC_OK)
-			ret = ptp_canon_eos_remotereleaseon (params, 3, 1);
-		goto leave;
-	}
-/* try out others with 0 */
-	if (!strcmp (val, _("Press 1"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 1, 0);
-		goto leave;
-	}
-	if (!strcmp (val, _("Press 2"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 2, 0);
-		goto leave;
-	}
-	if (!strcmp (val, _("Press 3"))) {
-		ret = ptp_canon_eos_remotereleaseon (params, 3, 0);
-		goto leave;
-	}
-	if (!strcmp (val, _("Release 1"))) {
-		ret = ptp_canon_eos_remotereleaseoff (params, 1);
-		goto leave;
-	}
-	if (!strcmp (val, _("Release 2"))) {
-		ret = ptp_canon_eos_remotereleaseoff (params, 2);
-		goto leave;
-	}
-	if (!strcmp (val, _("Release 3"))) {
-		ret = ptp_canon_eos_remotereleaseoff (params, 3);
-		goto leave;
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 1));
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 1));
+	/* try out others with 0 */
+	} else if (!strcmp (val, _("Press 1"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 0));
+	} else if (!strcmp (val, _("Press 2"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 2, 0));
+	} else if (!strcmp (val, _("Press 3"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 0));
+	} else if (!strcmp (val, _("Release 1"))) {
+		C_PTP (ptp_canon_eos_remotereleaseoff (params, 1));
+	} else if (!strcmp (val, _("Release 2"))) {
+		C_PTP (ptp_canon_eos_remotereleaseoff (params, 2));
+	} else if (!strcmp (val, _("Release 3"))) {
+		C_PTP (ptp_canon_eos_remotereleaseoff (params, 3));
+	} else if (!strcmp (val, _("Release Half"))) {
+		C_PTP (ptp_canon_eos_remotereleaseoff (params, 1));
+	} else if (!strcmp (val, _("Release Full"))) {
+		C_PTP (ptp_canon_eos_remotereleaseoff (params, 3));
+	} else {
+		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
+		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-
-	if (!strcmp (val, _("Release Half"))) {
-		ret = ptp_canon_eos_remotereleaseoff (params, 1);
-		goto leave;
-	}
-	if (!strcmp (val, _("Release Full"))) {
-		ret = ptp_canon_eos_remotereleaseoff (params, 3);
-		goto leave;
-	}
-
-	gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
-	return GP_ERROR_NOT_SUPPORTED;
-
-leave:
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Canon EOS remote release failed: 0x%x", ret);
-		return translate_ptp_result (ret);
-	}
 	/* Get the next set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_remoterelease", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 	return GP_OK;
 }
 
@@ -5008,7 +4852,6 @@ _get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
 	const char*	val;
 	unsigned int	xval;
 	PTPParams *params = &(camera->pl->params);
@@ -5027,17 +4870,10 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 			xval |= 0x8000;
 		}
 	}
-	ret = ptp_canon_eos_drivelens (params, xval);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Canon manual focus drive 0x%x failed: 0x%x", xval, ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP_MSG (ptp_canon_eos_drivelens (params, xval),
+		   "Canon manual focus drive 0x%x failed", xval);
 	/* Get the next set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_mfdrive", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 	return GP_OK;
 }
 
@@ -5054,7 +4890,6 @@ _get_Canon_EOS_Zoom(CONFIG_GET_ARGS) {
 /* Only 1 and 5 seem to work on the EOS 1000D */
 static int
 _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
 	const char*	val;
 	unsigned int	xval;
 	PTPParams *params = &(camera->pl->params);
@@ -5067,17 +4902,11 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Could not parse %s", val);
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_zoom (params, xval);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Canon zoom 0x%x failed: 0x%x", xval, ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP_MSG (ptp_canon_eos_zoom (params, xval),
+		   "Canon zoom 0x%x failed", xval);
+
 	/* Get the next set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoom", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 	return GP_OK;
 }
 
@@ -5094,7 +4923,6 @@ _get_Canon_EOS_ZoomPosition(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
-	uint16_t	ret;
 	const char*	val;
 	unsigned int	x,y;
 	PTPParams *params = &(camera->pl->params);
@@ -5107,17 +4935,10 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Could not parse %s (expected 'x,y')", val);
 		return GP_ERROR;
 	}
-	ret = ptp_canon_eos_zoomposition (params, x,y);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Canon zoom position %d,%d failed: 0x%x", x, y, ret);
-		return translate_ptp_result (ret);
-	}
+	C_PTP_MSG (ptp_canon_eos_zoomposition (params, x,y),
+		   "Canon zoom position %d,%d failed", x, y);
 	/* Get the next set of event data */
-	ret = ptp_check_eos_events (params);
-	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_ERROR,"ptp2/canon_eos_zoomposition", "getevent failed!");
-		return translate_ptp_result (ret);
-	}
+	C_PTP (ptp_check_eos_events (params));
 	return GP_OK;
 }
 
@@ -5134,7 +4955,6 @@ _get_Canon_CHDK_Script(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
-	int		ret;
 	char		*script;
 	PTPParams	*params = &(camera->pl->params);
 	int		script_id;
@@ -5157,24 +4977,17 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 //
 // Unfinished, I'm not sure of last 3 parameters
 	gp_log(GP_LOG_DEBUG,"chkd_script","calling script: %s", script);
-	ret = ptp_chdk_exec_lua (params, script, 0, &script_id, &luastatus);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
+	C_PTP (ptp_chdk_exec_lua (params, script, 0, &script_id, &luastatus));
 	gp_log(GP_LOG_DEBUG,"chkd_script","called script, id %d, status %d", script_id, luastatus);
 
 	while (1) {
-		ret = ptp_chdk_get_script_status(params, &status);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
+		C_PTP (ptp_chdk_get_script_status(params, &status));
 		gp_log (GP_LOG_DEBUG, "chkd_script", "script status %x", status);
 
 		if (status & PTP_CHDK_SCRIPT_STATUS_MSG) {
 			ptp_chdk_script_msg	*msg = NULL;
 
-			ret = ptp_chdk_read_script_msg(params, &msg);
-			if (ret != PTP_RC_OK)
-				return translate_ptp_result (ret);
-
+			C_PTP (ptp_chdk_read_script_msg(params, &msg));
 			gp_log (GP_LOG_DEBUG,"chkd_script", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
 			gp_log (GP_LOG_DEBUG,"chkd_script", "message script %s", msg->data);
 			free (msg);
@@ -5291,7 +5104,7 @@ _get_Canon_EOS_ViewFinder(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
-	int			val, ret;
+	int			val;
 	uint16_t		res;
 	PTPParams		*params = &(camera->pl->params);
 	PTPPropertyValue	xval;
@@ -5314,10 +5127,9 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 		xval.u32 = 2;
 	else
 		xval.u32 = 0;
-	ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT32);
-	if (ret != PTP_RC_OK)
-		gp_log (GP_LOG_ERROR,"ptp2_eos_viewfinder enable", "setval of evf outputmode to %d failed, ret 0x%04x!", xval.u32, ret);
-	return translate_ptp_result (ret);
+	C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT32),
+		   "ptp2_eos_viewfinder enable", "setval of evf outputmode to %d failed", xval.u32);
+	return GP_OK;
 }
 
 static int
@@ -5363,20 +5175,15 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 			if (res != PTP_RC_OK)
 				gp_log (GP_LOG_DEBUG, "ptp2/viewfinder_on", "set recordingmedia to 1 failed with 0x%04x", res);
 
-			res = ptp_nikon_start_liveview (params);
-			if (res != PTP_RC_OK) {
-				gp_context_error (context, _("Nikon enable liveview failed: %x"), res);
-				return translate_ptp_result (res);
-			}
+			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
+				       _("Nikon enable liveview failed"));
 			/* Has to put the mirror up, so takes a bit. */
 			res = nikon_wait_busy(params, 50, 1000);
 		}
 		return translate_ptp_result (res);
 	} else {
-		if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView)) {
-			res = ptp_nikon_end_liveview (params);
-			return translate_ptp_result (res);
-		}
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
+			C_PTP (ptp_nikon_end_liveview (params));
 	}
 	return GP_OK;
 }
@@ -5396,14 +5203,14 @@ static int
 _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	int val, ret;
+	int val;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val)
-		ret = ptp_canon_focuslock (params);
+		C_PTP (ptp_canon_focuslock (params));
 	else
-		ret = ptp_canon_focusunlock (params);
-	return translate_ptp_result (ret);
+		C_PTP (ptp_canon_focusunlock (params));
+	return GP_OK;
 }
 
 static int
@@ -5457,14 +5264,10 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 
 		if (have_prop(camera,PTP_VENDOR_NIKON,PTP_DPC_NIKON_ApplicationMode)) {
 			value.u8 = 0;
-			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8);
-			if (ret != PTP_RC_OK)
-                                return translate_ptp_result (ret);
+			C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
 			if (value.u8 != 1) {
 				value.u8 = 1;
-				ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8);
-				if (ret != PTP_RC_OK)
-					return translate_ptp_result (ret);
+				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
 			}
 		}
 
@@ -5477,17 +5280,11 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
                         ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
                         if (ret != PTP_RC_OK)
                                 gp_log (GP_LOG_DEBUG, "ptp2/nikon_movie", "set recordingmedia to 1 failed with 0x%04x", ret);
-                        ret = ptp_nikon_start_liveview (params);
-                        if (ret != PTP_RC_OK) {
-                                gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
-                                return translate_ptp_result (ret);
-                        }
-			ret = nikon_wait_busy(params, 50, 1000);
-                        if (ret != PTP_RC_OK) {
-                                gp_context_error (context, _("Nikon enable liveview failed: %x"), ret);
-                                return translate_ptp_result (ret);
-                        }
-                }
+                        C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
+                                       _("Nikon enable liveview failed"));
+			C_PTP_REP_MSG (nikon_wait_busy(params, 50, 1000),
+				       _("Nikon enable liveview failed"));
+		}
 		C_PTP_REP (ptp_nikon_startmovie (params));
 	} else
 		C_PTP_REP (ptp_nikon_stopmovie (params));
@@ -5509,51 +5306,29 @@ static int
 _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	int val, ret;
+	int val;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		PTPPropertyValue propval;
 		char buf[20];
 
-		ret = ptp_nikon_setcontrolmode (params, 1);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to set controlmode %04x", ret);
-			return translate_ptp_result (ret);
-		}
+		C_PTP (ptp_nikon_setcontrolmode (params, 1));
 		propval.u16 = 1; /* Exposure Mode to Full Manual */
-		ret = ptp_setdevicepropvalue (params, PTP_DPC_ExposureProgramMode, &propval, PTP_DTC_UINT16);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to set exposureprogramode %04x", ret);
-			return translate_ptp_result (ret);
-		}
+		C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_ExposureProgramMode, &propval, PTP_DTC_UINT16));
 		propval.u32 = 0xffffffff; /* Exposure Time to bulb */
-		ret = ptp_setdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to set exposuretime to bulb %04x", ret);
-			return translate_ptp_result (ret);
-		}
+		C_PTP_MSG (ptp_setdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32),
+			   "failed to set exposuretime to bulb");
 		/* If there is no capturetarget set yet, the default is "sdram" */
 		if (GP_OK != gp_setting_get("ptp2","capturetarget",buf))
 			strcpy (buf, "sdram");
 
-		ret = ptp_nikon_capture2 (params, 0/*No AF*/, !strcmp(buf,"sdram"));
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to initiate bulb capture %04x", ret);
-			return translate_ptp_result (ret);
-		}
+		C_PTP_MSG (ptp_nikon_capture2 (params, 0/*No AF*/, !strcmp(buf,"sdram")),
+			   "failed to initiate bulb capture");
 		return GP_OK;
 	} else {
-		ret = ptp_nikon_terminatecapture (params, 0, 0);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon/bulb", "failed to terminate bulb capture %04x", ret);
-			return translate_ptp_result (ret);
-		}
-		ret = nikon_wait_busy(params, 100, 5000);
-		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"nikon/bulb", "busy wait failed %04x", ret);
-			return translate_ptp_result (ret);
-		}
+		C_PTP (ptp_nikon_terminatecapture (params, 0, 0));
+		C_PTP (nikon_wait_busy(params, 100, 5000));
 		return GP_OK;
 	}
 }
@@ -6654,9 +6429,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			camera_prepare_capture (camera, context);
 		ptp_check_eos_events (params);
 		/* Otherwise the camera will auto-shutdown */
-		ret = ptp_canon_eos_keepdeviceon (params);
-		if (ret != PTP_RC_OK)
-			return translate_ptp_result (ret);
+		C_PTP (ptp_canon_eos_keepdeviceon (params));
 	}
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
