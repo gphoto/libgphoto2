@@ -466,12 +466,15 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 {
 	uint8_t storagedescriptionlen;
 
+	if (len < 26) return;
 	si->StorageType=dtoh16a(&data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&data[PTP_si_FilesystemType]);
 	si->AccessCapability=dtoh16a(&data[PTP_si_AccessCapability]);
 	si->MaxCapability=dtoh64a(&data[PTP_si_MaxCapability]);
 	si->FreeSpaceInBytes=dtoh64a(&data[PTP_si_FreeSpaceInBytes]);
 	si->FreeSpaceInImages=dtoh32a(&data[PTP_si_FreeSpaceInImages]);
+
+	/* FIXME: check more lengths here */
 	si->StorageDescription=ptp_unpack_string(params, data,
 		PTP_si_StorageDescription, &storagedescriptionlen);
 	si->VolumeLabel=ptp_unpack_string(params, data,
@@ -617,6 +620,9 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	uint8_t capturedatelen;
 	char *capture_date;
 
+	if (len < PTP_oi_SequenceNumber)
+		return;
+	/* FIXME: also handle length with all the strings at the end */
 	oi->StorageID=dtoh32a(&data[PTP_oi_StorageID]);
 	oi->ObjectFormat=dtoh16a(&data[PTP_oi_ObjectFormat]);
 	oi->ProtectionStatus=dtoh16a(&data[PTP_oi_ProtectionStatus]);
