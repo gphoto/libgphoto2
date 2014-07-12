@@ -30,7 +30,7 @@ int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, i
 
 /* library.c */
 int translate_ptp_result (uint16_t result);
-void fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
+int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 #define C_PTP(RESULT) do {\
 	uint16_t ret = (RESULT);\

@@ -186,14 +186,14 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 
 	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
 	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
-	fixup_cached_deviceinfo (camera, &params->deviceinfo);
+	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32));
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32));
 	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
 	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
-	fixup_cached_deviceinfo (camera, &params->deviceinfo);
+	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	params->canon_event_mode = propval.u16;
 	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x",propval.u16);
@@ -257,10 +257,9 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	gp_port_set_timeout (camera->port, 1000);
 #endif
 
-
 	/* Reget device info, they change on the Canons. */
-	ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo);
-	fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo);
+	C_PTP (ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo));
+	CR (fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo));
 	gp_port_set_timeout (camera->port, oldtimeout);
 	return GP_OK;
 }
@@ -364,7 +363,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	ptp_free_DI (&params->deviceinfo);
 	C_PTP (ptp_getdeviceinfo(params, &params->deviceinfo));
-	fixup_cached_deviceinfo (camera, &params->deviceinfo);
+	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 	C_PTP (ptp_canon_eos_getstorageids(params, &sids));
 	if (sids.n >= 1) {
 		unsigned char *sdata;
@@ -424,8 +423,8 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		}
 	}
 	/* Reget device info, they change on the Canons. */
-	ptp_getdeviceinfo(params, &params->deviceinfo);
-	fixup_cached_deviceinfo (camera, &params->deviceinfo);
+	C_PTP (ptp_getdeviceinfo(params, &params->deviceinfo));
+	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 	return GP_OK;
 }
 

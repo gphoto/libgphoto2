@@ -192,11 +192,10 @@ print_debug_deviceinfo (PTPDeviceInfo *di)
 /* Changes the ptp deviceinfo with additional hidden information available,
  * or stuff that requires special tricks 
  */
-void
+int
 fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	CameraAbilities a;
 	PTPParams	*params = &camera->pl->params;
-	uint16_t	ret;
 
         gp_camera_get_abilities(camera, &a);
 
@@ -211,17 +210,13 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		 * (found in Windows USB traces) */
 
 		if (!ptp_property_issupported(params, PTP_DPC_MTP_SessionInitiatorInfo))
-			return;
+			return GP_OK;
 
 		propval.str = "Windows/6.2.9200 MTPClassDriver/6.2.9200.16384";
 
-		ret = ptp_setdevicepropvalue (params, PTP_DPC_MTP_SessionInitiatorInfo, &propval, PTP_DTC_STR);
-		if (ret != PTP_RC_OK)
-			return;
-		ret = ptp_getdeviceinfo (params, di);
-		if (ret != PTP_RC_OK)
-			return;
-		return;
+		C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_MTP_SessionInitiatorInfo, &propval, PTP_DTC_STR));
+		C_PTP (ptp_getdeviceinfo (params, di));
+		return GP_OK;
 	}
 	/* XML style Olympus E series control. internal deviceInfos is encoded in XML. */
 	if (	di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
@@ -230,14 +225,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		PTPDeviceInfo	ndi, newdi, *outerdi;
 		unsigned int	i;
 
-		ret = ptp_getdeviceinfo (params, &params->outer_deviceinfo);
-		if (ret != PTP_RC_OK)
-			return;
+		C_PTP (ptp_getdeviceinfo (params, &params->outer_deviceinfo));
 		outerdi = &params->outer_deviceinfo;
 
-		ret = ptp_olympus_getdeviceinfo (&camera->pl->params, &ndi);
-		if (ret != PTP_RC_OK)
-			return;
+		C_PTP (ptp_olympus_getdeviceinfo (&camera->pl->params, &ndi));
 
 		/* Now merge the XML (inner) and outer (PictBridge) Deviceinfo. */
 		memcpy (&newdi, outerdi, sizeof(PTPDeviceInfo));
@@ -269,7 +260,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		print_debug_deviceinfo (&newdi);
 		ptp_free_DI (di);
 		memcpy (di, &newdi, sizeof(newdi));
-		return;
+		return GP_OK;
 	}
 
 	/* for USB class matches on unknown cameras that were matches with PTP generic... */
@@ -347,18 +338,13 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 			uint16_t  	*xprops;
 			unsigned int	xsize;
-			uint16_t	ret;
 
-			ret = ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize);
-			if (ret == PTP_RC_OK) {
-				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
-				for (i=0;i<xsize;i++)
-					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
-				di->DevicePropertiesSupported_len += xsize;
-				free (xprops);
-			} else {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_nikon_get_vendorpropcodes() failed with 0x%04x", ret);
-			}
+			C_PTP (ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
+			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
+			for (i=0;i<xsize;i++)
+				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
+			di->DevicePropertiesSupported_len += xsize;
+			free (xprops);
 		}
 
 
@@ -381,23 +367,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			int opcodes = 0, propcodes = 0, events = 0, j,k,l;
 			uint16_t  	*xprops;
 			unsigned int	xsize;
-			uint16_t	ret;
 
-			ret = ptp_sony_sdioconnect (&camera->pl->params, 1, 0, 0);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_sdioconnect(1) failed with 0x%04x", ret);
-				return;
-			}
-			ret = ptp_sony_sdioconnect (&camera->pl->params, 2, 0, 0);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_sdioconnect(2) failed with 0x%04x", ret);
-				return;
-			}
-			ret = ptp_sony_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_get_vendorpropcodes() failed with 0x%04x", ret);
-				return;
-			}
+			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 1, 0, 0));
+			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 2, 0, 0));
+			C_PTP (ptp_sony_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
+
 			for (i=0;i<xsize;i++) {
 				switch (xprops[i] & 0x7000) {
 				case 0x1000: opcodes++; break;
@@ -432,11 +406,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->EventsSupported_len += events;
 			di->OperationsSupported_len += opcodes;
 			free (xprops);
-			ret = ptp_sony_sdioconnect (&camera->pl->params, 3, 0, 0);
-			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_sdioconnect(2) failed with 0x%04x", ret);
-				return;
-			}
+			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 3, 0, 0));
 		}
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
@@ -466,6 +436,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		}
 	}
 #endif
+	return GP_OK;
 }
 
 static uint16_t
@@ -2116,7 +2087,8 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 	PTPObject *ob;
 	PTPParams *params = &camera->pl->params;
 
-	return translate_ptp_result (ptp_object_want (params, handle, 0, &ob));
+	C_PTP (ptp_object_want (params, handle, 0, &ob));
+	return GP_OK;
 }
 
 static int
@@ -4679,7 +4651,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 * the available properties in capture mode.
 	 */
 	C_PTP_REP (ptp_getdeviceinfo (params, &pdi));
-	fixup_cached_deviceinfo (camera, &pdi);
+	CR (fixup_cached_deviceinfo (camera, &pdi));
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
@@ -7029,7 +7001,7 @@ camera_init (Camera *camera, GPContext *context)
 	/* get device info */
 	C_PTP_REP (ptp_getdeviceinfo(params, &params->deviceinfo));
 
-	fixup_cached_deviceinfo (camera,&params->deviceinfo);
+	CR (fixup_cached_deviceinfo (camera,&params->deviceinfo));
 
 	print_debug_deviceinfo(&params->deviceinfo);
 
