@@ -422,17 +422,12 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_GetDeviceInfoEx)) {
 			PTPCanonEOSDeviceInfo  	eosdi;
 			int i;
-			uint16_t	ret;
 
-			ret = ptp_canon_eos_getdeviceinfo (&camera->pl->params, &eosdi);
-			if (ret == PTP_RC_OK) {
-				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + eosdi.DevicePropertiesSupported_len));
-				for (i=0;i<eosdi.DevicePropertiesSupported_len;i++)
-					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = eosdi.DevicePropertiesSupported[i];
-				di->DevicePropertiesSupported_len += eosdi.DevicePropertiesSupported_len;
-			} else {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_canon_get_deviceinfoex() failed with 0x%04x", ret);
-			}
+			C_PTP (ptp_canon_eos_getdeviceinfo (&camera->pl->params, &eosdi));
+			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + eosdi.DevicePropertiesSupported_len));
+			for (i=0;i<eosdi.DevicePropertiesSupported_len;i++)
+				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = eosdi.DevicePropertiesSupported[i];
+			di->DevicePropertiesSupported_len += eosdi.DevicePropertiesSupported_len;
 		}
 	}
 #endif
