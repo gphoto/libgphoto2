@@ -2203,8 +2203,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					/* dump the rest of the blobs */
 					xdata = xdata+len;
 					while ((xdata-data) < size) {
-						uint32_t	len  = dtoh32a(xdata);
-						uint32_t	type = dtoh32a(xdata+4);
+						len  = dtoh32a(xdata);
+						type = dtoh32a(xdata+4);
 
 						gp_log (GP_LOG_DEBUG,"ptp2_capture_eos_preview", "get_viewfinder_image header: len=%d type=%d", len, type);
 						if (len > (size-(xdata-data))) {
@@ -3285,8 +3285,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	 * were added. */
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(params)) {
 		PTPObjectHandles	handles;
-		int tries = 5;
 
+		tries = 5;
             	GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
 		while (tries--) {
 			unsigned int i;
@@ -3829,7 +3829,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				gp_log (GP_LOG_DEBUG, "ptp","canon event: nparam=0x%X, C=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 			switch (event.Code) {
 				case PTP_EC_CANON_RequestObjectTransfer: {
-					CameraFilePath *path;
 					PTPObjectInfo	oi;
 
 					newobject = event.Param1;
@@ -3860,8 +3859,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				case PTP_EC_CANON_ShutterButtonPressed0:
 				case PTP_EC_CANON_ShutterButtonPressed1:
 				{
-					CameraFilePath *path;
-
 					path = malloc(sizeof(CameraFilePath));
 					ret = camera_canon_capture (camera, GP_CAPTURE_IMAGE, path, context);
 					if (ret != GP_OK) {
@@ -4086,7 +4083,6 @@ handleregular:
 		switch (event.Code) {
 		case PTP_EC_Sony_ObjectAdded: {
 			PTPObjectInfo	oi;
-			static int capcnt = 0;
 
 			path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
 			if (!path)
@@ -5674,7 +5670,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return mtp_get_playlist (camera, file, oid, context);
 
 		size=ob->oi.ObjectCompressedSize;
-		if (1 || size) {
+		if (size) {
 			uint16_t	ret;
 			PTPDataHandler	handler;
 
@@ -5872,7 +5868,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 				break;
 			if (event.Code == PTP_EC_ObjectAdded) {
 				PTPObject *ob;
-				PTPParams *params = &camera->pl->params;
 
 				ptp_object_want (params, event.Param1, 0, &ob);
 			}
@@ -6569,9 +6564,9 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		}
 		/* convert read entries into objectinfos */
 		for (i=0;i<nroftmp;i++) {
-			PTPObject	*ob = NULL;
 			PTPObject	*newobs;
 
+			ob = NULL;
 			for (j=0;j<params->nrofobjects;j++) {
 				if (params->objects[(last+j)%params->nrofobjects].oid == tmp[i].ObjectHandle)  {
 					ob = &params->objects[(last+j)%params->nrofobjects];

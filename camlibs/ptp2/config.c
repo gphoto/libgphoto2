@@ -5309,14 +5309,14 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		PTPPropertyValue propval;
+		PTPPropertyValue propval2;
 		char buf[20];
 
 		C_PTP (ptp_nikon_setcontrolmode (params, 1));
-		propval.u16 = 1; /* Exposure Mode to Full Manual */
-		C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_ExposureProgramMode, &propval, PTP_DTC_UINT16));
-		propval.u32 = 0xffffffff; /* Exposure Time to bulb */
-		C_PTP_MSG (ptp_setdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32),
+		propval2.u16 = 1; /* Exposure Mode to Full Manual */
+		C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_ExposureProgramMode, &propval2, PTP_DTC_UINT16));
+		propval2.u32 = 0xffffffff; /* Exposure Time to bulb */
+		C_PTP_MSG (ptp_setdevicepropvalue (params, PTP_DPC_ExposureTime, &propval2, PTP_DTC_UINT32),
 			   "failed to set exposuretime to bulb");
 		/* If there is no capturetarget set yet, the default is "sdram" */
 		if (GP_OK != gp_setting_get("ptp2","capturetarget",buf))

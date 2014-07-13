@@ -156,7 +156,6 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	written = 0;
 	while(bytes_left_to_transfer > 0) {
 		unsigned long readlen, toread, oldwritten = written;
-		int res;
 
 		toread = 4096;
 		if (toread > bytes_left_to_transfer)

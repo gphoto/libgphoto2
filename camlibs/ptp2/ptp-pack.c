@@ -2010,9 +2010,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			/* unclear what OLC stands for */
 			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
 			if (size >= 0x8) {	/* event info */
-				unsigned int j;
-				for (j=8;j<size;j++)
-					ptp_debug (params, "    %d: %02x", j-8, curdata[j]);
+				unsigned int k;
+				for (k=8;k<size;k++)
+					ptp_debug (params, "    %d: %02x", k-8, curdata[k]);
 			}
 			len = dtoh32a(curdata+8);
 			if (len != size-8) {
