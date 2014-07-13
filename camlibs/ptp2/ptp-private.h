@@ -33,53 +33,53 @@ int translate_ptp_result (uint16_t result);
 int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 #define C_PTP(RESULT) do {\
-	uint16_t ret = (RESULT);\
-	if (ret != PTP_RC_OK) {\
-		const char* ptp_err_str = ptp_strerror(ret, params->deviceinfo.VendorExtensionID);\
-		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, ret);\
-		return translate_ptp_result (ret);\
+	uint16_t c_ptp_ret = (RESULT);\
+	if (c_ptp_ret != PTP_RC_OK) {\
+		const char* ptp_err_str = ptp_strerror(c_ptp_ret, params->deviceinfo.VendorExtensionID);\
+		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, c_ptp_ret);\
+		return translate_ptp_result (c_ptp_ret);\
 	}\
 } while(0)
 
 #define C_PTP_MSG(RESULT, MSG, ...) do {\
-	uint16_t ret = (RESULT);\
-	if (ret != PTP_RC_OK) {\
-		const char* ptp_err_str = ptp_strerror(ret, params->deviceinfo.VendorExtensionID);\
+	uint16_t c_ptp_msg_ret = (RESULT);\
+	if (c_ptp_msg_ret != PTP_RC_OK) {\
+		const char* ptp_err_str = ptp_strerror(c_ptp_msg_ret, params->deviceinfo.VendorExtensionID);\
 		char fmt_str[256];\
 		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: '", MSG, "' (0x%x: '%s')");\
-		gp_log (GP_LOG_ERROR, __func__, fmt_str, #RESULT, ##__VA_ARGS__, ret, ptp_err_str);\
-		return translate_ptp_result (ret);\
+		gp_log (GP_LOG_ERROR, __func__, fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_msg_ret, ptp_err_str);\
+		return translate_ptp_result (c_ptp_msg_ret);\
 	}\
 } while(0)
 
 #define C_PTP_REP(RESULT) do {\
-	uint16_t ret = (RESULT);\
-	if (ret != PTP_RC_OK) {\
-		const char* ptp_err_str = ptp_strerror(ret, params->deviceinfo.VendorExtensionID);\
-		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, ret);\
+	uint16_t c_ptp_rep_ret = (RESULT);\
+	if (c_ptp_rep_ret != PTP_RC_OK) {\
+		const char* ptp_err_str = ptp_strerror(c_ptp_rep_ret, params->deviceinfo.VendorExtensionID);\
+		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, c_ptp_rep_ret);\
 		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_err_str));\
-		return translate_ptp_result (ret);\
+		return translate_ptp_result (c_ptp_rep_ret);\
 	}\
 } while(0)
 
 #define C_PTP_REP_MSG(RESULT, MSG, ...) do {\
-	uint16_t ret = (RESULT);\
-	if (ret != PTP_RC_OK) {\
-		const char* ptp_err_str = ptp_strerror(ret, params->deviceinfo.VendorExtensionID);\
+	uint16_t c_ptp_rep_msg_ret = (RESULT);\
+	if (c_ptp_rep_msg_ret != PTP_RC_OK) {\
+		const char* ptp_err_str = ptp_strerror(c_ptp_rep_msg_ret, params->deviceinfo.VendorExtensionID);\
 		char fmt_str[256];\
 		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: '", MSG, "' (0x%x: '%s')");\
-		gp_log (GP_LOG_ERROR, __func__, fmt_str, #RESULT, ##__VA_ARGS__, ret, ptp_err_str);\
+		gp_log (GP_LOG_ERROR, __func__, fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_rep_msg_ret, ptp_err_str);\
 		snprintf(fmt_str, sizeof(fmt_str), "%s%s", MSG, " (0x%x: '%s')");\
-		gp_context_error (context, fmt_str, ##__VA_ARGS__, ret, dgettext(GETTEXT_PACKAGE, ptp_err_str));\
-		return translate_ptp_result (ret);\
+		gp_context_error (context, fmt_str, ##__VA_ARGS__, c_ptp_rep_msg_ret, dgettext(GETTEXT_PACKAGE, ptp_err_str));\
+		return translate_ptp_result (c_ptp_rep_msg_ret);\
 	}\
 } while(0)
 
 #define CR(RESULT) do {\
-	int r=(RESULT);\
-	if (r<0) {\
-		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (%d)", #RESULT, gp_port_result_as_string(r), r);\
-		return r;\
+	int cr_r=(RESULT);\
+	if (cr_r<0) {\
+		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (%d)", #RESULT, gp_port_result_as_string(cr_r), cr_r);\
+		return cr_r;\
 	}\
 } while (0)
 
