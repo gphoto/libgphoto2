@@ -2057,9 +2057,11 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_CheckEvent);
 	*isevent=0;
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_EC(params, data, event, size);
-	*isevent=1;
-	free(data);
+	if (data && size) { /* check if we had a successfull call with data */
+		ptp_unpack_EC(params, data, event, size);
+		*isevent=1;
+		free(data);
+	}
 	return PTP_RC_OK;
 }
 
