@@ -68,8 +68,6 @@
 # define __unused__
 #endif
 
-#define GP_MODULE "PTP2"
-
 #define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 
 static int

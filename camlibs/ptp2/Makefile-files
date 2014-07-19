@@ -5,6 +5,7 @@ camlibdoc_DATA += ptp2/README.ptp2
 EXTRA_LTLIBRARIES += ptp2.la
 
 ptp2_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBXML2_CFLAGS)
+ptp2_la_CFLAGS = $(AM_CFLAGS) $(CFLAGS) $(LIBXML2_CFLAGS) -Wshadow
 ptp2_la_SOURCES = \
 	ptp2/ptp.c ptp2/ptp.h ptp2/chdk_ptp.h ptp2/chdk_live_view.h \
 	ptp2/library.c ptp2/usb.c ptp2/ptp-bugs.h \

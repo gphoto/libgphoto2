@@ -35,8 +35,6 @@
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-port-portability.h>
 
-#define GP_MODULE "setting"
-
 /**
  * Internal struct to store settings.
  */
@@ -137,7 +135,7 @@ verify_settings (char *settings_file)
 	unsigned int x, equals;
 
 	if ((f=fopen(settings_file, "r"))==NULL) {
-		GP_DEBUG ("Can't open settings file for reading");
+		GP_LOG_E ("Can't open settings file for reading.");
 		return(0);
 	}
 
@@ -155,7 +153,7 @@ verify_settings (char *settings_file)
 
 			if (equals < 2) {
 				fclose (f);
-				GP_DEBUG ("Incorrect settings format. resetting\n");
+				GP_LOG_E ("Incorrect settings format. Resetting.");
 				unlink(settings_file);
 				return (GP_ERROR);
 			}
@@ -173,7 +171,7 @@ load_settings (void)
 	char buf[1024], *id, *key, *value;
 
 	/* Make sure the directories are created */
-	GP_DEBUG ("Creating $HOME/.gphoto");
+	GP_LOG_D ("Creating $HOME/.gphoto");
 #ifdef WIN32
 	GetWindowsDirectory (buf, sizeof(buf));
 	strcat (buf, "\\gphoto");
@@ -193,10 +191,10 @@ load_settings (void)
 	if (verify_settings(buf) != GP_OK)
 		/* verify_settings will unlink and recreate the settings file */
 		return (GP_OK);
-	GP_DEBUG ("Loading settings from file \"%s\"", buf);
+	GP_LOG_D ("Loading settings from file '%s'.", buf);
 
 	if ((f=fopen(buf, "r"))==NULL) {
-		GP_DEBUG ("Can't open settings for reading");
+		GP_LOG_D ("Can't open settings file for reading.");
 		return(GP_ERROR);
 	}
 
@@ -237,7 +235,7 @@ save_settings (void)
 		glob_setting_count, buf);
 
 	if ((f=fopen(buf, "w+"))==NULL) {
-		GP_DEBUG ("Can't open settings file for writing");
+		GP_LOG_E ("Can't open settings file for writing.");
 		return(0);
 	}
 	rewind(f);

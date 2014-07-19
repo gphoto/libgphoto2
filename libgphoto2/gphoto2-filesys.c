@@ -62,8 +62,6 @@
 #  define N_(String) (String)
 #endif
 
-#define GP_MODULE "libgphoto2"
-
 #ifndef PATH_MAX
 # define PATH_MAX 4096
 #endif
@@ -145,7 +143,7 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
 
 	ed = exif_data_new_from_data (data, size);
 	if (!ed) {
-		GP_DEBUG ("Could not parse data for EXIF information.");
+		GP_LOG_E ("Could not parse data for EXIF information.");
 		return 0;
 	}
 
@@ -185,7 +183,7 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
 #endif
 	exif_data_unref (ed);
 	if (!t1 && !t2 && !t3) {
-		GP_DEBUG ("EXIF data has not date/time tags.");
+		GP_LOG_D ("EXIF data has not date/time tags.");
 		return 0;
 	}
 
@@ -197,7 +195,7 @@ get_exif_mtime (const unsigned char *data, unsigned long size)
 	if (t3 > t)	/* "image digitized" > max(last two) ? can not be */
 		t = t3;
 
-	GP_DEBUG ("Found time in EXIF data: '%s'.", asctime (localtime (&t)));
+	GP_LOG_D ("Found time in EXIF data: '%s'.", asctime (localtime (&t)));
 	return (t);
 }
 
@@ -222,7 +220,7 @@ gp_filesystem_get_exif_mtime (CameraFilesystem *fs, const char *folder,
 	gp_file_new (&file);
 	if (gp_filesystem_get_file (fs, folder, filename,
 				GP_FILE_TYPE_EXIF, file, NULL) != GP_OK) {
-		GP_DEBUG ("Could not get EXIF data of '%s' in folder '%s'.",
+		GP_LOG_E ("Could not get EXIF data of '%s' in folder '%s'.",
 			  filename, folder);
 		gp_file_unref (file);
 		return 0;
@@ -807,7 +805,7 @@ recursive_fs_dump (CameraFilesystemFolder *folder, int depth) {
 int
 gp_filesystem_dump (CameraFilesystem *fs)
 {
-	GP_DEBUG("Dumping Filesystem:");
+	GP_LOG_D ("Dumping Filesystem:");
 	recursive_fs_dump (fs->rootfolder, 0);
 	return (GP_OK);
 }
@@ -1548,7 +1546,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	GP_DEBUG ("Getting file '%s' from folder '%s' (type %i)...",
+	GP_LOG_D ("Getting file '%s' from folder '%s' (type %i)...",
 		  filename, folder, type);
 
 	CR (gp_file_set_name (file, filename));
@@ -1663,7 +1661,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		 * cameras hide the thumbnail in EXIF data. Check it out.
 		 */
 #ifdef HAVE_LIBEXIF
-		GP_DEBUG ("Getting previews is not supported. Trying "
+		GP_LOG_D ("Getting previews is not supported. Trying "
 			  "EXIF data...");
 		CR (gp_file_new (&efile));
 		CU (gp_filesystem_get_file_impl (fs, folder, filename,
@@ -1672,12 +1670,12 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		ed = exif_data_new_from_data ((unsigned char*)data, size);
 		gp_file_unref (efile);
 		if (!ed) {
-			GP_DEBUG ("Could not parse EXIF data of "
+			GP_LOG_E ("Could not parse EXIF data of "
 				"'%s' in folder '%s'.", filename, folder);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
 		if (!ed->data) {
-			GP_DEBUG ("EXIF data does not contain a thumbnail.");
+			GP_LOG_E ("EXIF data does not contain a thumbnail.");
 			exif_data_unref (ed);
 			return (r);
 		}
@@ -1699,7 +1697,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		CR (gp_filesystem_set_file_noop (fs, folder, filename, GP_FILE_TYPE_PREVIEW, file, context));
 		CR (gp_file_adjust_name_for_mime_type (file));
 #else
-		GP_DEBUG ("Getting previews is not supported and "
+		GP_LOG_D ("Getting previews is not supported and "
 			"libgphoto2 has been compiled without exif "
 			"support. ");
 		return (r);
@@ -1712,7 +1710,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		 * out.
 		 */
 #ifdef HAVE_LIBEXIF
-		GP_DEBUG ("Getting EXIF data is not supported. Trying "
+		GP_LOG_D ("Getting EXIF data is not supported. Trying "
 			  "thumbnail...");
 		CR (gp_file_new (&efile));
 		CU (gp_filesystem_get_file_impl (fs, folder, filename,
@@ -1721,7 +1719,7 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		ed = exif_data_new_from_data ((unsigned char*)data, size);
 		gp_file_unref (efile);
 		if (!ed) {
-			GP_DEBUG ("Could not parse EXIF data of thumbnail of "
+			GP_LOG_D ("Could not parse EXIF data of thumbnail of "
 				"'%s' in folder '%s'.", filename, folder);
 			return (GP_ERROR_CORRUPTED_DATA);
 		}
@@ -1737,12 +1735,12 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
 		CR (gp_filesystem_set_file_noop (fs, folder, filename, GP_FILE_TYPE_EXIF, file, context));
 		CR (gp_file_adjust_name_for_mime_type (file));
 #else
-		GP_DEBUG ("Getting EXIF data is not supported and libgphoto2 "
+		GP_LOG_D ("Getting EXIF data is not supported and libgphoto2 "
 			"has been compiled without EXIF support.");
 		return (r);
 #endif
 	} else if (r < 0) {
-		GP_DEBUG ("Download of '%s' from '%s' (type %i) failed. "
+		GP_LOG_D ("Download of '%s' from '%s' (type %i) failed. "
 			"Reason: '%s'", filename, folder, type,
 			gp_result_as_string (r));
 		return (r);
@@ -1876,7 +1874,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	GP_DEBUG ("Getting information about '%s' in '%s'...", filename,
+	GP_LOG_D ("Getting information about '%s' in '%s'...", filename,
 		  folder);
 
 	if (!fs->get_info_func) {
@@ -1902,7 +1900,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	 */
 #ifdef HAVE_LIBEXIF
 	if (!(file->info.file.fields & GP_FILE_INFO_MTIME)) {
-		GP_DEBUG ("Did not get mtime. Trying EXIF information...");
+		GP_LOG_D ("Did not get mtime. Trying EXIF information...");
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
 		if (t) {
 			file->info.file.mtime = t;
@@ -1920,10 +1918,10 @@ gp_filesystem_lru_clear (CameraFilesystem *fs)
 	int n = 0;
 	CameraFilesystemFile *ptr, *prev;
 
-	GP_DEBUG ("Clearing fscache LRU list...");
+	GP_LOG_D ("Clearing fscache LRU list...");
 
 	if (fs->lru_first == NULL) {
-		GP_DEBUG ("fscache LRU list already empty");
+		GP_LOG_D ("fscache LRU list already empty");
 		return (GP_OK);
 	}
 
@@ -1931,7 +1929,7 @@ gp_filesystem_lru_clear (CameraFilesystem *fs)
 	while (ptr != NULL) {
 		n++;
 		if (ptr->lru_prev != prev) {
-			GP_DEBUG ("fscache LRU list corrupted (%i)", n);
+			GP_LOG_D ("fscache LRU list corrupted (%i)", n);
 			return (GP_ERROR);
 		}
 		prev = ptr;
@@ -1945,7 +1943,7 @@ gp_filesystem_lru_clear (CameraFilesystem *fs)
 	fs->lru_last = NULL;
 	fs->lru_size = 0;
 
-	GP_DEBUG ("fscache LRU list cleared (removed %i items)", n);
+	GP_LOG_D ("fscache LRU list cleared (removed %i items)", n);
 
 	return (GP_OK);
 }
@@ -1998,7 +1996,7 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 
 	ptr = fs->lru_first;
 
-	GP_DEBUG ("Freeing cached data for file '%s'...", ptr->name);
+	GP_LOG_D ("Freeing cached data for file '%s'...", ptr->name);
 
 	/* Remove it from the list. */
 	fs->lru_first = ptr->lru_next;
@@ -2094,7 +2092,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs,
 		x = gp_filesystem_lru_count (fs);
 	}
 
-	GP_DEBUG ("Adding file '%s' from folder '%s' to the fscache LRU list "
+	GP_LOG_D ("Adding file '%s' from folder '%s' to the fscache LRU list "
 		  "(type %i)...", filename, folder, type);
 
 	/* Search folder and file */
@@ -2154,7 +2152,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs,
 	CR( gp_file_get_data_and_size (file, NULL, &size));
 	fs->lru_size += size;
 
-	GP_DEBUG ("File '%s' from folder '%s' added in fscache LRU list.",
+	GP_LOG_D ("File '%s' from folder '%s' added in fscache LRU list.",
 		  filename, folder);
 
 	return (GP_OK);
@@ -2166,10 +2164,10 @@ gp_filesystem_lru_check (CameraFilesystem *fs)
 	int n = 0;
 	CameraFilesystemFile *ptr, *prev;
 
-	GP_DEBUG ("Checking fscache LRU list integrity...");
+	GP_LOG_D ("Checking fscache LRU list integrity...");
 
 	if (fs->lru_first == NULL) {
-		GP_DEBUG ("fscache LRU list empty");
+		GP_LOG_D ("fscache LRU list empty");
 		return (GP_OK);
 	}
 
@@ -2177,14 +2175,14 @@ gp_filesystem_lru_check (CameraFilesystem *fs)
 	while (ptr != NULL) {
 		n++;
 		if (ptr->lru_prev != prev) {
-			GP_DEBUG ("fscache LRU list corrupted (%i)", n);
+			GP_LOG_E ("fscache LRU list corrupted (%i)", n);
 			return (GP_ERROR);
 		}
 		prev = ptr;
 		ptr = ptr->lru_next;
 	}
 
-	GP_DEBUG ("fscache LRU list ok with %i items (%ld bytes)", n,
+	GP_LOG_D ("fscache LRU list ok with %i items (%ld bytes)", n,
 		  fs->lru_size);
 
 	return (GP_OK);
@@ -2220,7 +2218,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 	CC (context);
 	CA (folder, context);
 
-	GP_DEBUG ("Adding file '%s' to folder '%s' (type %i)...",
+	GP_LOG_D ("Adding file '%s' to folder '%s' (type %i)...",
 		  filename, folder, type);
 
 	/* Search folder and file */
@@ -2286,7 +2284,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 	 */
 	CR (gp_file_get_mtime (file, &t));
 	if (!t) {
-		GP_DEBUG ("File does not contain mtime. Trying "
+		GP_LOG_D ("File does not contain mtime. Trying "
 			  "information on the file...");
 		r = gp_filesystem_get_info (fs, folder, filename, &info, NULL);
 		if ((r == GP_OK) && (info.file.fields & GP_FILE_INFO_MTIME))
@@ -2303,7 +2301,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 		unsigned long int size;
 		const char *data;
 
-		GP_DEBUG ("Searching data for mtime...");
+		GP_LOG_D ("Searching data for mtime...");
 		CR (gp_file_get_data_and_size (file, NULL, &size));
 		if (size < 32*1024*1024) { /* just assume stuff above 32MB is not EXIF capable */
 			CR (gp_file_get_data_and_size (file, &data, &size));
@@ -2315,7 +2313,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 	 * GP_FILE_TYPE_EXIF that includes information on the mtime.
 	 */
 	if (!t) {
-		GP_DEBUG ("Trying EXIF information...");
+		GP_LOG_D ("Trying EXIF information...");
 		t = gp_filesystem_get_exif_mtime (fs, folder, filename);
 	}
 #endif

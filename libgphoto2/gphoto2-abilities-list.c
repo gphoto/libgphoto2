@@ -56,9 +56,6 @@
 #endif
 
 /** \internal */
-#define GP_MODULE "gphoto2-abilities-list"
-
-/** \internal */
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 /** \internal */
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}

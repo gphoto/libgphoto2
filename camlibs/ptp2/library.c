@@ -64,8 +64,6 @@
 #include "ptp-pack.c"
 #include "olympus-wrap.h"
 
-#define GP_MODULE "PTP2"
-
 #define USB_START_TIMEOUT 8000
 #define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
@@ -168,25 +166,25 @@ print_debug_deviceinfo (PTPDeviceInfo *di)
 {
 	unsigned int i;
 
-	GP_DEBUG ("Device info:");
-	GP_DEBUG ("Manufacturer: %s",di->Manufacturer);
-	GP_DEBUG ("  Model: %s", di->Model);
-	GP_DEBUG ("  device version: %s", di->DeviceVersion);
-	GP_DEBUG ("  serial number: '%s'",di->SerialNumber);
-	GP_DEBUG ("Vendor extension ID: 0x%08x",di->VendorExtensionID);
-	GP_DEBUG ("Vendor extension version: %d",di->VendorExtensionVersion);
-	GP_DEBUG ("Vendor extension description: %s",di->VendorExtensionDesc);
-	GP_DEBUG ("Functional Mode: 0x%04x",di->FunctionalMode);
-	GP_DEBUG ("PTP Standard Version: %d",di->StandardVersion);
-	GP_DEBUG ("Supported operations:");
+	GP_LOG_D ("Device info:");
+	GP_LOG_D ("Manufacturer: %s",di->Manufacturer);
+	GP_LOG_D ("  Model: %s", di->Model);
+	GP_LOG_D ("  device version: %s", di->DeviceVersion);
+	GP_LOG_D ("  serial number: '%s'",di->SerialNumber);
+	GP_LOG_D ("Vendor extension ID: 0x%08x",di->VendorExtensionID);
+	GP_LOG_D ("Vendor extension version: %d",di->VendorExtensionVersion);
+	GP_LOG_D ("Vendor extension description: %s",di->VendorExtensionDesc);
+	GP_LOG_D ("Functional Mode: 0x%04x",di->FunctionalMode);
+	GP_LOG_D ("PTP Standard Version: %d",di->StandardVersion);
+	GP_LOG_D ("Supported operations:");
 	for (i=0; i<di->OperationsSupported_len; i++)
-		GP_DEBUG ("  0x%04x", di->OperationsSupported[i]);
-	GP_DEBUG ("Events Supported:");
+		GP_LOG_D ("  0x%04x", di->OperationsSupported[i]);
+	GP_LOG_D ("Events Supported:");
 	for (i=0; i<di->EventsSupported_len; i++)
-		GP_DEBUG ("  0x%04x", di->EventsSupported[i]);
-	GP_DEBUG ("Device Properties Supported:");
+		GP_LOG_D ("  0x%04x", di->EventsSupported[i]);
+	GP_LOG_D ("Device Properties Supported:");
 	for (i=0; i<di->DevicePropertiesSupported_len; i++)
-		GP_DEBUG ("  0x%04x", di->DevicePropertiesSupported[i]);
+		GP_LOG_D ("  0x%04x", di->DevicePropertiesSupported[i]);
 }
 
 /* Changes the ptp deviceinfo with additional hidden information available,
@@ -3287,7 +3285,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		PTPObjectHandles	handles;
 
 		tries = 5;
-            	GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
+            	GP_LOG_D ("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
 		while (tries--) {
 			unsigned int i;
 			uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
@@ -3330,7 +3328,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		}
 		free (beforehandles.Handler);
 		if (!newobject)
-            		GP_DEBUG("PTPBUG_NIKON_BROKEN_CAPTURE no new file found after 5 seconds?!?");
+            		GP_LOG_D ("PTPBUG_NIKON_BROKEN_CAPTURE no new file found after 5 seconds?!?");
 		goto out;
 	}
 
@@ -5469,7 +5467,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	GP_DEBUG ("Reading file off=%u size=%u", offset, size);
+	GP_LOG_D ("Reading %u bytes from file '%s' at offset %u.", size, filename, offset);
 	switch (type) {
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -5578,7 +5576,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	else
 		gp_file_set_mtime (file, ob->oi.CaptureDate);
 
-	GP_DEBUG ("Getting file.");
+	GP_LOG_D ("Getting file '%s'.", filename);
 	switch (type) {
 	case	GP_FILE_TYPE_EXIF: {
 		uint32_t offset, xlen, maxbytes;
@@ -5811,7 +5809,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return (GP_ERROR_CANCEL);
 		C_PTP_REP (ret);
 	} else {
-		GP_DEBUG ("The device does not support uploading files!");
+		GP_LOG_D ("The device does not support uploading files.");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
@@ -6091,7 +6089,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		C_PTP_REP (ptp_sendobjectinfo (params, &storage,
 			&parent, &handle, &oi));
 	} else {
-		GP_DEBUG ("The device does not support make folder!");
+		GP_LOG_D ("The device does not support creating a folder.");
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
@@ -6211,25 +6209,25 @@ storage_info_func (CameraFilesystem *fs,
 
 static void
 debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
-	GP_DEBUG ("ObjectInfo for '%s':", oi->Filename);
-	GP_DEBUG ("  Object ID: 0x%08x", oid);
-	GP_DEBUG ("  StorageID: 0x%08x", oi->StorageID);
-	GP_DEBUG ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
-	GP_DEBUG ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
-	GP_DEBUG ("  ObjectCompressedSize: %ld", (unsigned long)oi->ObjectCompressedSize);
-	GP_DEBUG ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
-	GP_DEBUG ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
-	GP_DEBUG ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
-	GP_DEBUG ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
-	GP_DEBUG ("  ImagePixWidth: %d", oi->ImagePixWidth);
-	GP_DEBUG ("  ImagePixHeight: %d", oi->ImagePixHeight);
-	GP_DEBUG ("  ImageBitDepth: %d", oi->ImageBitDepth);
-	GP_DEBUG ("  ParentObject: 0x%08x", oi->ParentObject);
-	GP_DEBUG ("  AssociationType: 0x%04x", oi->AssociationType);
-	GP_DEBUG ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
-	GP_DEBUG ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
-	GP_DEBUG ("  ModificationDate: 0x%08x", (unsigned int)oi->ModificationDate);
-	GP_DEBUG ("  CaptureDate: 0x%08x", (unsigned int)oi->CaptureDate);
+	GP_LOG_D ("ObjectInfo for '%s':", oi->Filename);
+	GP_LOG_D ("  Object ID: 0x%08x", oid);
+	GP_LOG_D ("  StorageID: 0x%08x", oi->StorageID);
+	GP_LOG_D ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
+	GP_LOG_D ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
+	GP_LOG_D ("  ObjectCompressedSize: %ld", (unsigned long)oi->ObjectCompressedSize);
+	GP_LOG_D ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
+	GP_LOG_D ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
+	GP_LOG_D ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
+	GP_LOG_D ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
+	GP_LOG_D ("  ImagePixWidth: %d", oi->ImagePixWidth);
+	GP_LOG_D ("  ImagePixHeight: %d", oi->ImagePixHeight);
+	GP_LOG_D ("  ImageBitDepth: %d", oi->ImageBitDepth);
+	GP_LOG_D ("  ParentObject: 0x%08x", oi->ParentObject);
+	GP_LOG_D ("  AssociationType: 0x%04x", oi->AssociationType);
+	GP_LOG_D ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
+	GP_LOG_D ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
+	GP_LOG_D ("  ModificationDate: 0x%08x", (unsigned int)oi->ModificationDate);
+	GP_LOG_D ("  CaptureDate: 0x%08x", (unsigned int)oi->CaptureDate);
 }
 
 #if 0
@@ -6475,12 +6473,12 @@ init_ptp_fs (Camera *camera, GPContext *context)
 	if (nroot == 0 && params->nrofobjects > 0) {
 		uint32_t	badroothandle = 0xffffffff;
 
-		GP_DEBUG("Bug workaround: Found no root directory objects, looking for some.");
+		GP_LOG_D ("Bug workaround: Found no root directory objects, looking for some.");
 		for (i = 0; i < params->nrofobjects; i++) {
 			PTPObjectInfo *oi = &params->objects[i].oi;
 
 			if (strcmp(oi->Filename, "DCIM") == 0) {
-				GP_DEBUG("Changing DCIM ParentObject ID from 0x%x to 0",
+				GP_LOG_D ("Changing DCIM ParentObject ID from 0x%x to 0",
 					 oi->ParentObject);
 				badroothandle = oi->ParentObject;
 				oi->ParentObject = 0;
@@ -6491,7 +6489,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		for (i = 0; i < params->nrofobjects; i++) {
 			PTPObjectInfo *oi = &params->objects[i].oi;
 			if (oi->ParentObject == badroothandle) {
-				GP_DEBUG("Changing %s ParentObject ID from 0x%x to 0",
+				GP_LOG_D ("Changing %s ParentObject ID from 0x%x to 0",
 					oi->Filename, oi->ParentObject);
 				oi->ParentObject = 0;
 				nroot++;
@@ -6503,7 +6501,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		 * O(n^2) search. Be careful.
 		 */
 		if (nroot == 0) {
-			GP_DEBUG("Bug workaround: Found no root dir entries and no DCIM dir, looking for some.");
+			GP_LOG_D ("Bug workaround: Found no root dir entries and no DCIM dir, looking for some.");
 			/* look for entries with parentobjects that do not exist */
 			for (i = 0; i < params->nrofobjects; i++) {
 				int j;
@@ -6963,7 +6961,7 @@ camera_init (Camera *camera, GPContext *context)
 		PTPObjectInfo	oi;
 		uint32_t	parenthandle,storagehandle, handle;
 
-		GP_DEBUG("... sending empty XDISCVRY.X3C file to camera ... "); 
+		GP_LOG_D ("Sending empty XDISCVRY.X3C file to camera ... ");
 
 		storagehandle = 0x80000001;
 		parenthandle = 0;
