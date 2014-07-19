@@ -249,7 +249,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 		ret = ptp_canon_viewfinderon (params);
 		if (ret != PTP_RC_OK)
-			GP_LOG_E (_("Canon enable viewfinder failed: %d"), ret);
+			GP_LOG_E ("Canon enable viewfinder failed: %d", ret);
 		/* ignore errors here */
 	}
 	gp_port_set_timeout (camera->port, 1000);
@@ -416,7 +416,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 			params->canon_viewfinder_on = 0;
 			ret = ptp_canon_viewfinderoff (params);
 			if (ret != PTP_RC_OK)
-				GP_LOG_E (_("Canon disable viewfinder failed: %d"), ret);
+				GP_LOG_E ("Canon disable viewfinder failed: %d", ret);
 			/* ignore errors here */
 		}
 	}
@@ -2163,7 +2163,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			if (!params->canon_viewfinder_on)  {
 				uint16_t ret = ptp_canon_viewfinderon (params);
 				if (ret != PTP_RC_OK)
-					GP_LOG_E (_("Canon enable viewfinder failed: %d"), ret);
+					GP_LOG_E ("Canon enable viewfinder failed: %d", ret);
 				else
 					params->canon_viewfinder_on=1;
 			}
@@ -2174,7 +2174,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			if (params->canon_viewfinder_on)  {
 				uint16_t ret = ptp_canon_viewfinderoff (params);
 				if (ret != PTP_RC_OK)
-					GP_LOG_E (_("Canon disable viewfinder failed: %d"), ret);
+					GP_LOG_E ("Canon disable viewfinder failed: %d", ret);
 				else
 					params->canon_viewfinder_on=0;
 			}
@@ -6473,7 +6473,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 						if (setprops[j] == cursub->propid)
 							break;
 					if (j<nrofsetprops) {
-						GP_LOG_D ("Property '%s' / 0x%04x already handled before, skipping.", _(cursub->label), cursub->propid );
+						GP_LOG_D ("Property '%s' / 0x%04x already handled before, skipping.", cursub->label, cursub->propid );
 						continue;
 					}
 					if (nrofsetprops)
@@ -6489,7 +6489,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				) {
 					PTPDevicePropDesc	dpd;
 
-					GP_LOG_D ("Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
+					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
 					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
@@ -6501,13 +6501,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					if (	((cursub->type & 0x7000) != 0x1000) ||
 						 ptp_operation_issupported(params, cursub->type)
 					) {
-						GP_LOG_D ("Getting function prop '%s' / 0x%04x", _(cursub->label), cursub->type );
+						GP_LOG_D ("Getting function prop '%s' / 0x%04x", cursub->label, cursub->type );
 						ret = cursub->getfunc (camera, &widget, cursub, NULL);
 					} else
 						continue;
 				}
 				if (ret != GP_OK) {
-					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -6516,13 +6516,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
-				GP_LOG_D ("Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
+				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
 				if (ret != GP_OK) {
-					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -6756,7 +6756,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
 			) {
 				gp_widget_changed (widget); /* clear flag */
-				GP_LOG_D ("Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
+				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid );
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
 					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
 				){
@@ -6787,7 +6787,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				PTPDevicePropDesc	dpd;
 
 				gp_widget_changed (widget); /* clear flag */
-				GP_LOG_D ("Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid);
+				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);

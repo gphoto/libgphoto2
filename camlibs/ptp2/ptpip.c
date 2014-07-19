@@ -314,9 +314,8 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		if (dtoh32(hdr.type) == PTPIP_END_DATA_PACKET) {
 			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
-				GP_LOG_E (
-					"returned data is too much, expected %ld, got %ld",
-					(toread-curread),datalen
+				GP_LOG_E ("returned data is too much, expected %ld, got %ld",
+					  (toread-curread), datalen
 				);
 				break;
 			}
@@ -324,8 +323,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				datalen, xdata+ptpip_data_payload
 			);
 			if (xret != PTP_RC_OK) {
-				GP_LOG_E (
-					"failed to putfunc of returned data");
+				GP_LOG_E ("failed to putfunc of returned data");
 				break;
 			}
 			curread += datalen;
@@ -335,9 +333,8 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		if (dtoh32(hdr.type) == PTPIP_DATA_PACKET) {
 			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
-				GP_LOG_E (
-					"returned data is too much, expected %ld, got %ld",
-					(toread-curread),datalen
+				GP_LOG_E ("returned data is too much, expected %ld, got %ld",
+					  (toread-curread), datalen
 				);
 				break;
 			}
@@ -345,8 +342,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				datalen, xdata+ptpip_data_payload
 			);
 			if (xret != PTP_RC_OK) {
-				GP_LOG_E (
-					"failed to putfunc of returned data");
+				GP_LOG_E ("failed to putfunc of returned data");
 				break;
 			}
 			curread += datalen;
