@@ -320,7 +320,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			)
 		) {
 			if (!NIKON_1(&camera->pl->params)) {
-				gp_log (GP_LOG_ERROR,"ptp2/fixup", "if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
+				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
 
@@ -376,7 +376,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				case 0x4000: events++; break;
 				case 0x5000: propcodes++; break;
 				default: 
-					gp_log (GP_LOG_ERROR, "ptp2/fixup", "ptp_sony_get_vendorpropcodes() unknown opcode %x", xprops[i]);
+					GP_LOG_E ("ptp_sony_get_vendorpropcodes() unknown opcode %x", xprops[i]);
 					break;
 				}
 			}
@@ -385,7 +385,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events));
 			j = 0; k = 0; l = 0;
 			for (i=0;i<xsize;i++) {
-				gp_log (GP_LOG_ERROR, "ptp2/fixup", "sony code: %x", xprops[i]);
+				GP_LOG_E ("sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
 				case 0x1000:
 					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
@@ -2190,7 +2190,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 					if (len > (size-(xdata-data))) {
 						len = size;
-						gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "len=%d larger than rest size %ld", len, (size-(xdata-data)));
+						GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 						break;
 					}
 					gp_file_append ( file, (char*)xdata+8, len-8 );
@@ -2207,7 +2207,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 						GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
 						if (len > (size-(xdata-data))) {
 							len = size;
-							gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview", "len=%d larger than rest size %ld", len, (size-(xdata-data)));
+							GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 							break;
 						}
 						gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
@@ -2219,7 +2219,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				}
 				return GP_ERROR;
 			}
-			gp_log (GP_LOG_ERROR,"ptp2_capture_eos_preview","get_viewfinder_image failed after all tries with ret: 0x%x\n", ret);
+			GP_LOG_E ("get_viewfinder_image failed after all tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
 			return translate_ptp_result (ret);
 		}
@@ -2596,7 +2596,7 @@ capturetriggered:
 		debug_objectinfo(params, newobject, &oi);
 
 		if (oi.ParentObject == 0) { /* Capture to SDRAM */
-			gp_log (GP_LOG_ERROR,"nikon_capture", "Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
+			GP_LOG_E ("Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
 			/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
 			if (oi.StorageID == 0) {
 				strcpy (path->folder, "/");
@@ -2619,7 +2619,7 @@ capturetriggered:
 			}
 			ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
 			if (ret != GP_OK) {
-				gp_log (GP_LOG_ERROR, "nikon_capture", "failed to add object\n");
+				GP_LOG_E ("failed to add object\n");
 				return ret;
 			}
 	/* this does result in 0x2009 (invalid object id) with the D90 ... curiuos
@@ -2627,7 +2627,7 @@ capturetriggered:
 	 */
 			ret = ptp_deleteobject (params, newobject, 0);
 			if (ret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR,"nikon_capture","deleteobject(%x) failed: %x", newobject, ret);
+				GP_LOG_E ("deleteobject(%x) failed: %x", newobject, ret);
 			}
 		} else { /* capture to card branch */
 			CR (add_object (camera, newobject, context));
@@ -2881,13 +2881,13 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 
 					ret = ptp_deleteobject (params, event.Param1, PTP_OFC_EXIF_JPEG);
 					if (ret != PTP_RC_OK)
-						gp_log (GP_LOG_ERROR, "olympus", "capture 2: delete image %08x, ret 0x%04x", event.Param1, ret);
+						GP_LOG_E ("capture 2: delete image %08x, ret 0x%04x", event.Param1, ret);
 					ret = ptp_deleteobject (params, assochandle, PTP_OFC_Association);
 					if (ret != PTP_RC_OK)
-						gp_log (GP_LOG_ERROR, "olympus", "capture 2: delete folder %08x, ret 0x%04x", assochandle, ret);
+						GP_LOG_E ("capture 2: delete folder %08x, ret 0x%04x", assochandle, ret);
 					return res;
 				}
-				gp_log (GP_LOG_ERROR, "olympus", "capture 2: unknown OFC 0x%04x for 0x%x", oi.ObjectFormat, event.Param1);
+				GP_LOG_E ("capture 2: unknown OFC 0x%04x for 0x%x", oi.ObjectFormat, event.Param1);
 			}
 		}
 	}
@@ -3310,7 +3310,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 				ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
 				if (ret != PTP_RC_OK) {
-					gp_log (GP_LOG_ERROR, "nikon_broken_capture", "object added, but not found?");
+					GP_LOG_E ("object added, but not found?");
 					continue;
 				}
 				/* A directory was added, like initial DCIM/100NIKON or so. */
@@ -4871,7 +4871,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	    /* search backwards, likely gets hits faster. */
 	    /* FIXME Marcus: This is also O(n^2) ... bad for large directories. */
 	    if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
-		gp_log (GP_LOG_ERROR, "ptp2/file_list_func",
+		GP_LOG_E (
 			"Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n",
 			ob->oi.Filename, folder);
 		continue;
@@ -4962,7 +4962,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         	GP_LOG_D ("adding 0x%x to folder", ob->oid);
 		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
 			char	*buf;
-			gp_log (GP_LOG_ERROR, "ptp2/folder_list_func",
+			GP_LOG_E (
 				"Duplicate foldername '%s' in folder '%s'. Ignoring nth entry.\n",
 				ob->oi.Filename, folder);
 			buf = malloc(strlen(ob->oi.Filename)+strlen("_012345678")+1);
@@ -5205,7 +5205,7 @@ ptp_mtp_parse_metadata (
 			continue;
 		}	
 		switch (opd.DataType) {
-		default:gp_log (GP_LOG_ERROR, "ptp2", "mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
+		default:GP_LOG_E ("mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
 			free (content); content = NULL;
 			continue;
 			break;
@@ -5343,7 +5343,7 @@ mtp_put_playlist(
 			nrofoids++;
 		} else {
 			/*fprintf (stderr,"%s/%s NOT FOUND!\n", fn, filename);*/
-			gp_log (GP_LOG_ERROR , "mtp playlist upload", "Object %s/%s not found on device.", fn, filename);
+			GP_LOG_E ("Object %s/%s not found on device.", fn, filename);
 		}
 		free (fn);
 		if (!t) break;
@@ -5448,7 +5448,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	SET_CONTEXT_P(params, context);
 	if (offset64 + *size64 > 0xffffffff) {
-		gp_log (GP_LOG_ERROR, "ptp2/read_file_func", "offset + size exceeds 32bit");
+		GP_LOG_E ("offset + size exceeds 32bit");
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
 
@@ -6005,7 +6005,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		info->file.permissions	 = GP_FILE_PERM_READ;
 		break;
 	default:
-		gp_log (GP_LOG_ERROR, "ptp2/get_info_func", "mapping protection to gp perm failed, prot is %x", ob->oi.ProtectionStatus);
+		GP_LOG_E ("mapping protection to gp perm failed, prot is %x", ob->oi.ProtectionStatus);
 		break;
 	}
 
@@ -6306,7 +6306,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 			switch (xpl->property) {
 			case PTP_OPC_ParentObject:
 				if (xpl->datatype != PTP_DTC_UINT32) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "parentobject has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("parentobject has type 0x%x???", xpl->datatype);
 					break;
 				}
 				oinfos[i].ParentObject = xpl->propval.u32;
@@ -6316,7 +6316,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				break;
 			case PTP_OPC_ObjectFormat:
 				if (xpl->datatype != PTP_DTC_UINT16) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "objectformat has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("objectformat has type 0x%x???", xpl->datatype);
 					break;
 				}
 				oinfos[i].ObjectFormat = xpl->propval.u16;
@@ -6331,14 +6331,14 @@ init_ptp_fs (Camera *camera, GPContext *context)
 					oinfos[i].ObjectCompressedSize = xpl->propval.u64;
 					break;
 				default:
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "objectsize has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("objectsize has type 0x%x???", xpl->datatype);
 					break;
 				}
 				GP_LOG_D ("objectsize %u", xpl->propval.u32);
 				break;
 			case PTP_OPC_StorageID:
 				if (xpl->datatype != PTP_DTC_UINT32) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "storageid has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("storageid has type 0x%x???", xpl->datatype);
 					break;
 				}
 				oinfos[i].StorageID = xpl->propval.u32;
@@ -6346,7 +6346,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				break;
 			case PTP_OPC_ProtectionStatus:/*UINT16*/
 				if (xpl->datatype != PTP_DTC_UINT16) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "protectionstatus has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("protectionstatus has type 0x%x???", xpl->datatype);
 					break;
 				}
 				oinfos[i].ProtectionStatus = xpl->propval.u16;
@@ -6354,7 +6354,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				break;
 			case PTP_OPC_ObjectFileName:
 				if (xpl->datatype != PTP_DTC_STR) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "filename has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("filename has type 0x%x???", xpl->datatype);
 					break;
 				}
 				if (xpl->propval.str) {
@@ -6366,7 +6366,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				break;
 			case PTP_OPC_DateCreated:
 				if (xpl->datatype != PTP_DTC_STR) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "datecreated has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("datecreated has type 0x%x???", xpl->datatype);
 					break;
 				}
 				GP_LOG_D ("capturedate %s", xpl->propval.str);
@@ -6374,7 +6374,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 				break;
 			case PTP_OPC_DateModified:
 				if (xpl->datatype != PTP_DTC_STR) {
-					gp_log (GP_LOG_ERROR, "ptp2/mtpfast", "datemodified has type 0x%x???", xpl->datatype);
+					GP_LOG_E ("datemodified has type 0x%x???", xpl->datatype);
 					break;
 				}
 				GP_LOG_D ("moddate %s", xpl->propval.str);
@@ -6417,7 +6417,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 			) {
 				params->objects[i].oi.Filename = malloc(8+1);
 				sprintf (params->objects[i].oi.Filename, "%08x", handles.Handler[i]);
-				gp_log (GP_LOG_ERROR, "ptp2/std_getobjectinfo", "Replaced empty dirname by '%08x'", handles.Handler[i]);
+				GP_LOG_E ("Replaced empty dirname by '%08x'", handles.Handler[i]);
 			}
 
 			gp_context_progress_update (context, id,
@@ -6538,7 +6538,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 
 	if (storage == 0xffffffff) {
 		if (handle != 0xffffffff)  {
-			gp_log (GP_LOG_ERROR, "ptp2/eos_directory", "storage 0x%08x, but handle 0x%08x?", storage, handle);
+			GP_LOG_E ("storage 0x%08x, but handle 0x%08x?", storage, handle);
 			handle = 0xffffffff;
 		}
 		ret = ptp_getstorageids(params, &storageids);
@@ -6811,7 +6811,7 @@ camera_init (Camera *camera, GPContext *context)
 	params->cd_locale_to_ucs2 = iconv_open(camloc, curloc);
 	if ((params->cd_ucs2_to_locale == (iconv_t) -1) ||
 	    (params->cd_locale_to_ucs2 == (iconv_t) -1)) {
-		gp_log (GP_LOG_ERROR, "iconv", "Failed to create iconv converter.");
+		GP_LOG_E ("Failed to create iconv converter.");
 		/* we can fallback */
 		/*return (GP_ERROR_OS_FAILURE);*/
 	}
@@ -6864,13 +6864,13 @@ camera_init (Camera *camera, GPContext *context)
 
 		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {
-			gp_log (GP_LOG_ERROR, "ptpip", "Failed to get port info?");
+			GP_LOG_E ("Failed to get port info?");
 			return ret;
 		}
 		gp_port_info_get_path (info, &xpath);
 		ret = ptp_ptpip_connect (params, xpath);
 		if (ret != GP_OK) {
-			gp_log (GP_LOG_ERROR, "ptpip", "Failed to connect.");
+			GP_LOG_E ("Failed to connect.");
 			return ret;
 		}
 		params->sendreq_func	= ptp_ptpip_sendreq;
@@ -6936,7 +6936,7 @@ camera_init (Camera *camera, GPContext *context)
 			C_PTP_REP (ret);
 		}
 		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR, "ptp2/camera_init", "ptp_opensession returns %x", ret);
+			GP_LOG_E ("ptp_opensession returns %x", ret);
 			if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO)) {
 				/* Try whacking PTP device */
 				if (camera->port->type == GP_PORT_USB)

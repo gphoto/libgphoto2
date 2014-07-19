@@ -131,7 +131,7 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req)
 	if (ret == -1)
 		perror ("sendreq/write to cmdfd");
 	if (ret != len) {
-		gp_log (GP_LOG_ERROR, "ptpip","ptp_ptpip_sendreq() len =%d but ret=%d", len, ret);
+		GP_LOG_E ("ptp_ptpip_sendreq() len =%d but ret=%d", len, ret);
 		return PTP_RC_OK;
 	}
 	return PTP_RC_OK;
@@ -152,25 +152,25 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 		gp_log_data ( "ptpip/generic_read", (char*)xhdr+curread, ret);
 		curread += ret;
 		if (ret == 0) {
-			gp_log (GP_LOG_ERROR, "ptpip", "End of stream after reading %d bytes of ptpipheader", ret);
+			GP_LOG_E ("End of stream after reading %d bytes of ptpipheader", ret);
 			return PTP_RC_GeneralError;
 		}
 	}
 	len = dtoh32 (hdr->length) - sizeof (PTPIPHeader);
 	if (len < 0) {
-		gp_log (GP_LOG_ERROR, "ptpip/generic_read", "len < 0, %d?", len);
+		GP_LOG_E ("len < 0, %d?", len);
 		return PTP_RC_GeneralError;
 	}
 	*data = malloc (len);
 	if (!*data) {
-		gp_log (GP_LOG_ERROR, "ptpip/generic_read", "malloc failed.");
+		GP_LOG_E ("malloc failed.");
 		return PTP_RC_GeneralError;
 	}
 	curread = 0;
 	while (curread < len) {
 		ret = read (fd, (*data)+curread, len-curread);
 		if (ret == -1) {
-			gp_log (GP_LOG_ERROR, "ptpip/generic_read", "error %d in reading PTPIP data", errno);
+			GP_LOG_E ("error %d in reading PTPIP data", errno);
 			free (*data);*data = NULL;
 			return PTP_RC_GeneralError;
 		} else {
@@ -181,7 +181,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 		curread += ret;
 	}
 	if (curread != len) {
-		gp_log (GP_LOG_ERROR, "ptpip/generic_read", "read PTPIP data, ret %d vs len %d", ret, len);
+		GP_LOG_E ("read PTPIP data, ret %d vs len %d", ret, len);
 		free (*data);*data = NULL;
 		return PTP_RC_GeneralError;
 	}
@@ -239,7 +239,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	if (ret == -1)
 		perror ("sendreq/write to cmdfd");
 	if (ret != sizeof(request)) {
-		gp_log (GP_LOG_ERROR, "ptpip/senddata", "ptp_ptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
+		GP_LOG_E ("ptp_ptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
 		return PTP_RC_GeneralError;
 	}
 	xdata = malloc(WRITE_BLOCKSIZE+8+4);
@@ -297,11 +297,11 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		return ret;
 
 	if (dtoh32(hdr.type) == PTPIP_CMD_RESPONSE) { /* might happen if we have no data transfer due to error? */
-		gp_log (GP_LOG_ERROR, "ptpip/getdata", "Unexpected ptp response, code %x", dtoh32a(&xdata[8]));
+		GP_LOG_E ("Unexpected ptp response, code %x", dtoh32a(&xdata[8]));
 		return PTP_RC_GeneralError;
 	}
 	if (dtoh32(hdr.type) != PTPIP_START_DATA_PACKET) {
-		gp_log (GP_LOG_ERROR, "ptpip/getdata", "got reply type %d\n", dtoh32(hdr.type));
+		GP_LOG_E ("got reply type %d\n", dtoh32(hdr.type));
 		return PTP_RC_GeneralError;
 	}
 	toread = dtoh32a(&xdata[ptpip_data_payload]);
@@ -314,7 +314,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		if (dtoh32(hdr.type) == PTPIP_END_DATA_PACKET) {
 			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
-				gp_log (GP_LOG_ERROR, "ptpip/getdata",
+				GP_LOG_E (
 					"returned data is too much, expected %ld, got %ld",
 					(toread-curread),datalen
 				);
@@ -324,7 +324,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				datalen, xdata+ptpip_data_payload
 			);
 			if (xret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, "ptpip/getdata",
+				GP_LOG_E (
 					"failed to putfunc of returned data");
 				break;
 			}
@@ -335,7 +335,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		if (dtoh32(hdr.type) == PTPIP_DATA_PACKET) {
 			unsigned long datalen = dtoh32(hdr.length)-8-ptpip_data_payload;
 			if (datalen > (toread-curread)) {
-				gp_log (GP_LOG_ERROR, "ptpip/getdata",
+				GP_LOG_E (
 					"returned data is too much, expected %ld, got %ld",
 					(toread-curread),datalen
 				);
@@ -345,7 +345,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 				datalen, xdata+ptpip_data_payload
 			);
 			if (xret != PTP_RC_OK) {
-				gp_log (GP_LOG_ERROR, "ptpip/getdata",
+				GP_LOG_E (
 					"failed to putfunc of returned data");
 				break;
 			}
@@ -353,7 +353,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 			free (xdata); xdata = NULL;
 			continue;
 		}
-		gp_log (GP_LOG_ERROR, "ptpip/getdata", "ret type %d", hdr.type);
+		GP_LOG_E ("ret type %d", hdr.type);
 	}
 	if (curread < toread)
 		return PTP_RC_GeneralError;
@@ -391,7 +391,7 @@ ptp_ptpip_getresp (PTPParams* params, PTPContainer* resp)
 	case 1: resp->Param1 = dtoh32a(&data[ptpip_resp_param1]);
 	case 0: break;
 	default:
-		gp_log( GP_LOG_ERROR, "ptpip/getresp", "response got %d parameters?", n);
+		GP_LOG_E ("response got %d parameters?", n);
 		break;
 	}
 	free (data);
@@ -435,9 +435,9 @@ ptp_ptpip_init_command_request (PTPParams* params)
 		perror("write init cmd request");
 		return PTP_RC_GeneralError;
 	}
-	gp_log (GP_LOG_ERROR,"ptpip/init_cmd", "return %d / len %d", ret, len);
+	GP_LOG_E ("return %d / len %d", ret, len);
 	if (ret != len) {
-		gp_log (GP_LOG_ERROR, "ptpip", "return %d vs len %d", ret, len);
+		GP_LOG_E ("return %d vs len %d", ret, len);
 		return PTP_RC_GeneralError;
 	}
 	return PTP_RC_OK;
@@ -460,7 +460,7 @@ ptp_ptpip_init_command_ack (PTPParams* params)
 	if (ret != PTP_RC_OK)
 		return ret;
 	if (hdr.type != dtoh32(PTPIP_INIT_COMMAND_ACK)) {
-		gp_log (GP_LOG_ERROR, "ptpip/init_cmd_ack", "bad type returned %d", htod32(hdr.type));
+		GP_LOG_E ("bad type returned %d", htod32(hdr.type));
 		free (data);
 		if (hdr.type == PTPIP_INIT_FAIL) /* likely reason is permission denied */
 			return PTP_RC_AccessDenied;
@@ -496,7 +496,7 @@ ptp_ptpip_init_event_request (PTPParams* params)
 		return PTP_RC_GeneralError;
 	}
 	if (ret != ptpip_eventinit_size) {
-		gp_log (GP_LOG_ERROR, "ptpip", "unexpected retsize %d, expected %d", ret, ptpip_eventinit_size);
+		GP_LOG_E ("unexpected retsize %d, expected %d", ret, ptpip_eventinit_size);
 		return PTP_RC_GeneralError;
 	}
 	return PTP_RC_OK;
@@ -514,7 +514,7 @@ ptp_ptpip_init_event_ack (PTPParams* params)
 		return ret;
 	free (data);
 	if (hdr.type != dtoh32(PTPIP_INIT_EVENT_ACK)) {
-		gp_log (GP_LOG_ERROR, "ptpip", "bad type returned %d\n", htod32(hdr.type));
+		GP_LOG_E ("bad type returned %d\n", htod32(hdr.type));
 		return PTP_RC_GeneralError;
 	}
 	return PTP_RC_OK;
@@ -572,7 +572,7 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		/* TODO: Handle cancel transaction and ping/pong
 		 * If not PTPIP_EVENT, process it and wait for next PTPIP_EVENT
 		 */
-		gp_log (GP_LOG_ERROR, "ptpip/event", "unknown/unhandled event type %d", dtoh32(hdr.type));
+		GP_LOG_E ("unknown/unhandled event type %d", dtoh32(hdr.type));
 	}
 
 	event->Code		= dtoh16a(&data[ptpip_event_code]);
@@ -584,13 +584,13 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 	case 1: event->Param1 = dtoh32a(&data[ptpip_event_param1]);
 	case 0: break;
 	default:
-		gp_log( GP_LOG_ERROR, "ptpip/event", "response got %d parameters?", n);
+		GP_LOG_E ("response got %d parameters?", n);
 		break;
 	}
 	free (data);
 	return PTP_RC_OK;
 #else
-	gp_log( GP_LOG_ERROR, "ptpip/event", "not supported currently on Windows");
+	GP_LOG_E ("not supported currently on Windows");
 	return PTP_RC_OK;
 #endif
 }
@@ -683,7 +683,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return GP_ERROR_NO_MEMORY;
 	s = strchr (addr,':');
 	if (!s) {
-		gp_log (GP_LOG_ERROR,"ptpip/connect", "addr %s should contain a :", address);
+		GP_LOG_E ("addr %s should contain a :", address);
 		free (addr);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
@@ -736,7 +736,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return translate_ptp_result (ret);
 	}
 	if (-1 == connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
-		gp_log (GP_LOG_ERROR,"ptpip/connect", "could not connect event");
+		GP_LOG_E ("could not connect event");
 		close (params->cmdfd);
 		close (params->evtfd);
 		return GP_ERROR_IO;
@@ -751,7 +751,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	GP_LOG_D ("ptpip connected!");
 	return GP_OK;
 #else
-	gp_log (GP_LOG_ERROR,"ptpip/connect", "Windows currently not supported, neeeds a winsock port.");
+	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
 	return GP_ERROR_NOT_SUPPORTED;
 #endif
 }

@@ -249,7 +249,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 		ret = ptp_canon_viewfinderon (params);
 		if (ret != PTP_RC_OK)
-			gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
+			GP_LOG_E (_("Canon enable viewfinder failed: %d"), ret);
 		/* ignore errors here */
 	}
 	gp_port_set_timeout (camera->port, 1000);
@@ -416,7 +416,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 			params->canon_viewfinder_on = 0;
 			ret = ptp_canon_viewfinderoff (params);
 			if (ret != PTP_RC_OK)
-				gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
+				GP_LOG_E (_("Canon disable viewfinder failed: %d"), ret);
 			/* ignore errors here */
 		}
 	}
@@ -744,7 +744,7 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 		return GP_OK;
 	}
 	if (!sscanf(value, _("Unknown value %04x"), &intval)) {
-		gp_log (GP_LOG_ERROR, "ptp2/config", "failed to find value %s in list", value);
+		GP_LOG_E ("failed to find value %s in list", value);
 		return (GP_ERROR);
 	}
 	propval->u16 = intval;
@@ -891,7 +891,7 @@ _put_GenericI16Table(CONFIG_PUT_ARGS, struct deviceproptablei16* tbl, int tblsiz
 		}
 	}
 	if (!sscanf(value, _("Unknown value %04d"), &intval)) {
-		gp_log (GP_LOG_ERROR, "ptp2/config", "failed to find value %s in list", value);
+		GP_LOG_E ("failed to find value %s in list", value);
 		return (GP_ERROR);
 	}
 	propval->i16 = intval;
@@ -2163,7 +2163,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			if (!params->canon_viewfinder_on)  {
 				uint16_t ret = ptp_canon_viewfinderon (params);
 				if (ret != PTP_RC_OK)
-					gp_log (GP_LOG_ERROR, "ptp", _("Canon enable viewfinder failed: %d"), ret);
+					GP_LOG_E (_("Canon enable viewfinder failed: %d"), ret);
 				else
 					params->canon_viewfinder_on=1;
 			}
@@ -2174,7 +2174,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 			if (params->canon_viewfinder_on)  {
 				uint16_t ret = ptp_canon_viewfinderoff (params);
 				if (ret != PTP_RC_OK)
-					gp_log (GP_LOG_ERROR, "ptp", _("Canon disable viewfinder failed: %d"), ret);
+					GP_LOG_E (_("Canon disable viewfinder failed: %d"), ret);
 				else
 					params->canon_viewfinder_on=0;
 			}
@@ -2626,7 +2626,7 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 		GP_LOG_D ("%d/%d case", ival1, ival2);
 		val = (float)ival1/(float)ival2;
 	} else if (!sscanf(value,_("%f"),&val)) {
-		gp_log (GP_LOG_ERROR, "ptp2/_put_ExpTime", "failed to parse: %s", value);
+		GP_LOG_E ("failed to parse: %s", value);
 		return (GP_ERROR);
 	} else
 		GP_LOG_D ("%fs case", val);

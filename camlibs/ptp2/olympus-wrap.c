@@ -517,7 +517,7 @@ redo:
 			return ret;
 		GP_LOG_D ("regular xml transfer: got new file: %s", oi.Filename);
 		if (strcmp(oi.Filename,"DRSPONSE.X3C")) {
-			gp_log (GP_LOG_ERROR,"olympus", "FIXME: regular xml transfer: got new file: %s", oi.Filename);
+			GP_LOG_E ("FIXME: regular xml transfer: got new file: %s", oi.Filename);
 			goto eventhandler;
 		}
 		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
@@ -585,7 +585,7 @@ parse_9581_tree (xmlNodePtr node) {
 			free (decoded);
 			continue;
 		}
-		gp_log (GP_LOG_ERROR, "olympus","9581: unhandled node type %s", next->name);
+		GP_LOG_E ("9581: unhandled node type %s", next->name);
 		next = xmlNextElementSibling (next);
 	}
 	/*traverse_tree (0, node);*/
@@ -659,7 +659,7 @@ parse_9302_tree (xmlNodePtr node) {
 
 			goto xnext;
 		}
-		gp_log (GP_LOG_ERROR, "olympus", "unknown node in 9301: %s", next->name);
+		GP_LOG_E ("unknown node in 9301: %s", next->name);
 xnext:
 		next = xmlNextElementSibling (next);
 	}
@@ -869,11 +869,11 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	int cmd;
 
 	if (strcmp((char*)node->name,"output")) {
-		gp_log (GP_LOG_ERROR, "olympus","node is not output, but %s.", node->name);
+		GP_LOG_E ("node is not output, but %s.", node->name);
 		return FALSE;
 	}
 	if (xmlChildElementCount(node) != 2) {
-		gp_log (GP_LOG_ERROR, "olympus","output: expected 2 childs, got %ld.", xmlChildElementCount(node));
+		GP_LOG_E ("output: expected 2 childs, got %ld.", xmlChildElementCount(node));
 		return FALSE;
 	}
 	next = xmlFirstElementChild (node);
@@ -882,14 +882,14 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		xmlChar *xchar;
 		xchar = xmlNodeGetContent (next);
 		if (!sscanf((char*)xchar,"%04x",&result))
-			gp_log (GP_LOG_ERROR, "olympus","failed scanning result from %s", xchar);
+			GP_LOG_E ("failed scanning result from %s", xchar);
 		resp->Code = result;
 		GP_LOG_D ("ptp result is 0x%04x", result);
 	
 	}
 	next = xmlNextElementSibling (next);
 	if (!sscanf ((char*)next->name, "c%04x", &cmd)) {
-		gp_log (GP_LOG_ERROR, "olympus","expected c<HEX>, have %s", next->name);
+		GP_LOG_E ("expected c<HEX>, have %s", next->name);
 		return FALSE;
 	}
 	GP_LOG_D ("cmd is 0x%04x", cmd);
@@ -927,7 +927,7 @@ traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 
 
 	if (!next) {
-		gp_log (GP_LOG_ERROR, "olympus","no nodes below input.");
+		GP_LOG_E ("no nodes below input.");
 		return FALSE;
 	}
 
@@ -960,7 +960,7 @@ traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 			}
 			default:
 				if (xmlChildElementCount(node) != 0) {
-					gp_log (GP_LOG_ERROR, "olympus", "event %s hat tree below?", (char*)next->name);
+					GP_LOG_E ("event %s hat tree below?", (char*)next->name);
 					traverse_tree (params, 0, xmlFirstElementChild(next));
 				}
 			}
@@ -973,12 +973,12 @@ traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 				if (curpar < sizeof(pars)/sizeof(pars[0]))
 					pars[curpar++] = x;
 				else
-					gp_log (GP_LOG_ERROR, "olympus", "ignore superflous argument %s/%x", (char*)xmlNodeGetContent(next), x);
+					GP_LOG_E ("ignore superflous argument %s/%x", (char*)xmlNodeGetContent(next), x);
 			}
 			next = xmlNextElementSibling (next);
 			continue;
 		}
-		gp_log (GP_LOG_ERROR, "olympus", "parsing event input node, unknown node %s", (char*)next->name);
+		GP_LOG_E ("parsing event input node, unknown node %s", (char*)next->name);
 		next = xmlNextElementSibling (next);
 	}
 	resp->Nparam = curpar;
@@ -1001,11 +1001,11 @@ traverse_x3c_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 	if (!node)
 		return FALSE;
 	if (strcmp((char*)node->name,"x3c")) {
-		gp_log (GP_LOG_ERROR, "olympus","node is not x3c, but %s.", node->name);
+		GP_LOG_E ("node is not x3c, but %s.", node->name);
 		return FALSE;
 	}
 	if (xmlChildElementCount(node) != 1) {
-		gp_log (GP_LOG_ERROR, "olympus","x3c: expected 1 child, got %ld.", xmlChildElementCount(node));
+		GP_LOG_E ("x3c: expected 1 child, got %ld.", xmlChildElementCount(node));
 		return FALSE;
 	}
 	next = xmlFirstElementChild (node);
@@ -1013,7 +1013,7 @@ traverse_x3c_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		return traverse_output_tree (params, next, resp);
 	if (!strcmp((char*)next->name, "input"))
 		return traverse_input_tree (params, next, resp); /* event */
-	gp_log (GP_LOG_ERROR, "olympus","unknown name %s below x3c.", next->name);
+	GP_LOG_E ("unknown name %s below x3c.", next->name);
 	return FALSE;
 }
 
@@ -1024,17 +1024,17 @@ traverse_x3c_event_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp)
 	if (!node)
 		return FALSE;
 	if (strcmp((char*)node->name,"x3c")) {
-		gp_log (GP_LOG_ERROR, "olympus","node is not x3c, but %s.", node->name);
+		GP_LOG_E ("node is not x3c, but %s.", node->name);
 		return FALSE;
 	}
 	if (xmlChildElementCount(node) != 1) {
-		gp_log (GP_LOG_ERROR, "olympus","x3c: expected 1 child, got %ld.", xmlChildElementCount(node));
+		GP_LOG_E ("x3c: expected 1 child, got %ld.", xmlChildElementCount(node));
 		return FALSE;
 	}
 	next = xmlFirstElementChild (node);
 	if (!strcmp((char*)next->name, "input"))
 		return traverse_input_tree (params, next, resp); /* event */
-	gp_log (GP_LOG_ERROR, "olympus","unknown name %s below x3c.", next->name);
+	GP_LOG_E ("unknown name %s below x3c.", next->name);
 	return FALSE;
 }
 
@@ -1375,7 +1375,7 @@ ums_wrap2_getresp (PTPParams* params, PTPContainer* resp) {
 		/* Do the actual handshake here. */
 		ret = olympus_xml_transfer (params, params->olympus_cmd, &params->olympus_reply);
 		if (ret != PTP_RC_OK) {
-			gp_log (GP_LOG_ERROR,"olympus", "ums_wrap2_getresp: error %x from transfer", ret);
+			GP_LOG_E ("ums_wrap2_getresp: error %x from transfer", ret);
 			return ret;
 		}
 	}
