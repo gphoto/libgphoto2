@@ -237,11 +237,11 @@ gp_file_append (CameraFile *file, const char *data,
 		while (curwritten < size) {
 			ssize_t	res = write (file->fd, data+curwritten, size-curwritten);
 			if (res == -1) {
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d writing to fd.", errno);
+				GP_LOG_E ("Encountered error %d writing to fd.", errno);
 				return GP_ERROR_IO_WRITE;
 			}
 			if (!res) { /* no progress is bad too */
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered 0 bytes written to fd.");
+				GP_LOG_E ("Encountered 0 bytes written to fd.");
 				return GP_ERROR_IO_WRITE;
 			}
 			curwritten += res;
@@ -252,13 +252,13 @@ gp_file_append (CameraFile *file, const char *data,
 		uint64_t	xsize = size;
 		/* FIXME: assume we write one blob */
 		if (!file->handler->write) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "write handler is NULL");
+			GP_LOG_E ("write handler is NULL");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
 		return file->handler->write (file->private, (unsigned char*)data, &xsize);
 	}
 	default:
-		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
+		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
         return (GP_OK);
@@ -291,11 +291,11 @@ gp_file_slurp (CameraFile *file, char *data,
 		while (curread < size) {
 			ssize_t	res = read (file->fd, data+curread, size-curread);
 			if (res == -1) {
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading from fd.", errno);
+				GP_LOG_E ("Encountered error %d reading from fd.", errno);
 				return GP_ERROR_IO_READ;
 			}
 			if (!res) { /* no progress is bad too */
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered 0 bytes reading from fd.");
+				GP_LOG_E ("Encountered 0 bytes reading from fd.");
 				return GP_ERROR_IO_READ;
 			}
 			curread += res;
@@ -309,17 +309,17 @@ gp_file_slurp (CameraFile *file, char *data,
 		int		ret;
 
 		if (!file->handler->read) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "read handler is NULL");
+			GP_LOG_E ("read handler is NULL");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
 		ret = file->handler->read (file->private, (unsigned char*)data, &xsize);
 		*readlen = xsize;
 		if (ret != GP_OK)
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "File handler read returned %d", ret);
+			GP_LOG_E ("File handler read returned %d", ret);
 		return ret;
 	}
 	default:
-		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
+		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
         return (GP_OK);
@@ -352,21 +352,21 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 
 		/* truncate */
 		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseeking to 0.", errno);
+			GP_LOG_E ("Encountered error %d lseeking to 0.", errno);
 			/* might happen on pipes ... just ignore it */
 		}
 		if (-1 == ftruncate (file->fd, 0)) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d ftruncating to 0.", errno);
+			GP_LOG_E ("Encountered error %d ftruncating to 0.", errno);
 			/* might happen on pipes ... just ignore it */
 		}
 		while (curwritten < size) {
 			ssize_t	res = write (file->fd, data+curwritten, size-curwritten);
 			if (res == -1) {
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d writing to fd.", errno);
+				GP_LOG_E ("Encountered error %d writing to fd.", errno);
 				return GP_ERROR_IO_WRITE;
 			}
 			if (!res) { /* no progress is bad too */
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered 0 bytes written to fd.");
+				GP_LOG_E ("Encountered 0 bytes written to fd.");
 				return GP_ERROR_IO_WRITE;
 			}
 			curwritten += res;
@@ -382,13 +382,13 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		int		ret;
 
 		if (!file->handler->write) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "write handler is NULL");
+			GP_LOG_E ("write handler is NULL");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
 		/* FIXME: handle multiple blob writes */
 		ret = file->handler->write (file->private, (unsigned char*)data, &xsize);
 		if (ret != GP_OK) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Handler data() returned %d", ret);
+			GP_LOG_E ("Handler data() returned %d", ret);
 			return ret;
 		}
 		/* This function takes over the responsibility for "data", aka
@@ -398,7 +398,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		return GP_OK;
 	}
 	default:
-		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
+		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
 	return (GP_OK);
@@ -443,12 +443,12 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		}
 		if (-1 == (offset = lseek (file->fd, 0, SEEK_CUR))) {
 			/* should not happen if we passed the above case */
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
+			GP_LOG_E ("Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
 		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
 			/* should not happen if we passed the above cases */
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
+			GP_LOG_E ("Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
 		if (size) *size = offset;
@@ -461,12 +461,12 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 			ssize_t res = read (file->fd, (char*)((*data)+curread), offset-curread);
 			if (res == -1) {
 				free ((char*)*data);
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading.", errno);
+				GP_LOG_E ("Encountered error %d reading.", errno);
 				return GP_ERROR_IO_READ;
 			}
 			if (res == 0) {
 				free ((char*)*data);
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "No progress during reading.");
+				GP_LOG_E ("No progress during reading.");
 				return GP_ERROR_IO_READ;
 			}
 			curread += res;
@@ -478,12 +478,12 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		int		ret;
 
 		if (!file->handler->read) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "read handler is NULL");
+			GP_LOG_E ("read handler is NULL");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
 		ret = file->handler->size (file->private, &xsize);
 		if (ret != GP_OK) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d querying size().", ret);
+			GP_LOG_E ("Encountered error %d querying size().", ret);
 			return ret;
 		}
 		if (size) *size = xsize;
@@ -494,14 +494,14 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 			return GP_ERROR_NO_MEMORY;
 		ret = file->handler->read (file->private, (unsigned char*)*data, &xsize);
 		if (ret != GP_OK) {
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d getting data().", ret);
+			GP_LOG_E ("Encountered error %d getting data().", ret);
 			free ((char*)*data);
 			*data = NULL;
 		}
 		return ret;
 	}
 	default:
-		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
+		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
 	return (GP_OK);
@@ -527,9 +527,7 @@ gp_file_save (CameraFile *file, const char *filename)
 		if (!(fp = fopen (filename, "wb")))
 			return GP_ERROR;
 		if (fwrite (file->data, (size_t)sizeof(char), (size_t)file->size, fp) != (size_t)file->size) {
-			gp_log (GP_LOG_ERROR, "libgphoto2",
-				"Not enough space on device in "
-				"order to save '%s'.", filename);
+			GP_LOG_E ("Not enough space on device in order to save '%s'.", filename);
 			fclose (fp);
 			unlink (filename);
 			return GP_ERROR;
@@ -545,12 +543,12 @@ gp_file_save (CameraFile *file, const char *filename)
 			return GP_ERROR_IO;
 		if (-1 == (offset = lseek (file->fd, 0, SEEK_CUR))) {
 			/* should not happen if we passed the above case */
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
+			GP_LOG_E ("Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
 		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
 			/* should not happen if we passed the above case */
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to BEGIN.", errno);
+			GP_LOG_E ("Encountered error %d lseekin to BEGIN.", errno);
 			return GP_ERROR_IO_READ;
 		}
 		data = malloc(65536);
@@ -574,9 +572,7 @@ gp_file_save (CameraFile *file, const char *filename)
 				return GP_ERROR_IO_READ;
 			}
 			if (fwrite (data, 1, res, fp) != res) {
-				gp_log (GP_LOG_ERROR, "libgphoto2",
-					"Not enough space on device in "
-					"order to save '%s'.", filename);
+				GP_LOG_E ("Not enough space on device in order to save '%s'.", filename);
 				free (data);
 				fclose (fp);
 				unlink (filename);
@@ -589,7 +585,7 @@ gp_file_save (CameraFile *file, const char *filename)
 		break;
 	}
 	default:
-		gp_log (GP_LOG_ERROR, "gphoto2-file", "Unknown file access type %d", file->accesstype);
+		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
 
@@ -680,7 +676,7 @@ gp_file_open (CameraFile *file, const char *filename)
 			fclose (fp);
 			break;
 		}
-		gp_log (GP_LOG_ERROR, "gp_file_open", "Needs to be initialized with fd=-1 to work");
+		GP_LOG_E ("Needs to be initialized with fd=-1 to work");
 		fclose (fp);
 		return GP_ERROR;
 	}
@@ -768,8 +764,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 {
 	CHECK_NULL (destination && source);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Copying '%s' onto '%s'...",
-		source->name, destination->name);
+	GP_LOG_D ("Copying '%s' onto '%s'...", source->name, destination->name);
 
 	/* struct members we can just copy. All generic ones, but not refcount. */
 	memcpy (destination->name, source->name, sizeof (source->name));
@@ -806,12 +801,12 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		}
 		if (-1 == (offset = lseek (source->fd, 0, SEEK_CUR))) {
 			/* should not happen if we passed the above case */
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
+			GP_LOG_E ("Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
 		if (-1 == lseek (source->fd, 0, SEEK_SET)) {
 			/* should not happen if we passed the above cases */
-			gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d lseekin to CUR.", errno);
+			GP_LOG_E ("Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
 		destination->size = offset;
@@ -822,12 +817,12 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			ssize_t res = read (source->fd, destination->data+curread, offset-curread);
 			if (res == -1) {
 				free (destination->data);
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "Encountered error %d reading.", errno);
+				GP_LOG_E ("Encountered error %d reading.", errno);
 				return GP_ERROR_IO_READ;
 			}
 			if (res == 0) {
 				free (destination->data);
-				gp_log (GP_LOG_ERROR, "gphoto2-file", "No progress during reading.");
+				GP_LOG_E ("No progress during reading.");
 				return GP_ERROR_IO_READ;
 			}
 			curread += res;
@@ -905,7 +900,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		}
 		return GP_OK;
 	}
-	gp_log (GP_LOG_ERROR, "gphoto2-file", "Unhandled cases in gp_copy_file. Bad!");
+	GP_LOG_E ("Unhandled cases in gp_copy_file. Bad!");
 	return GP_ERROR;
 }
 
@@ -1135,8 +1130,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 
 	CHECK_NULL (file);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Adjusting file name for "
-		"mime type '%s'...", file->mime_type);
+	GP_LOG_D ("Adjusting file name for mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
                 if (!strcmp (file->mime_type, table[x])) {
 
@@ -1147,8 +1141,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 			strcat (file->name, table[x + 1]);
 			break;
 		}
-	gp_log (GP_LOG_DEBUG, "gphoto2-file", "Name adjusted to '%s'.",
-		file->name);
+	GP_LOG_D ("Name adjusted to '%s'.", file->name);
 	
 	return (GP_OK);
 }

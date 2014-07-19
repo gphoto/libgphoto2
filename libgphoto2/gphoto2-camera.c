@@ -206,7 +206,7 @@
 	r6 = (result);							\
 	if (r6 < 0) {							\
 		CHECK_CLOSE (c,ctx);					\
-		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Operation failed!");\
+		GP_LOG_E ("Operation failed!");				\
 		CAMERA_UNUSED (c,ctx);                              	\
 		return (r6);						\
 	}								\
@@ -271,8 +271,7 @@ gp_camera_exit (Camera *camera, GPContext *context)
 {
 	CHECK_NULL (camera);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Exiting camera ('%s')...",
-		camera->pc->a.model);
+	GP_LOG_D ("Exiting camera ('%s')...", camera->pc->a.model);
 
 	/*
 	 * We have to postpone this operation if the camera is currently 
@@ -384,8 +383,7 @@ gp_camera_new (Camera **camera)
 int
 gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting abilities ('%s')...",
-		abilities.model);
+	GP_LOG_D ("Setting abilities ('%s')...", abilities.model);
 
 	CHECK_NULL (camera);
 
@@ -447,8 +445,7 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 
 	gp_port_info_get_name (info, &name);
 	gp_port_info_get_path (info, &path);
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Setting port info for "
-		"port '%s' at '%s'...", name, path);
+	GP_LOG_D ("Setting port info for port '%s' at '%s'...", name, path);
 	CR (camera, gp_port_set_info (camera->port, info), NULL);
 
 	return (GP_OK);
@@ -479,14 +476,12 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	CHECK_NULL (camera);
 
 	if (!camera->port) {
-		gp_log (GP_LOG_ERROR, "camera", "You need to set "
-			"a port prior trying to set the speed");
+		GP_LOG_E ("You need to set a port prior trying to set the speed");
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
 	if (camera->port->type != GP_PORT_SERIAL) {
-		gp_log (GP_LOG_ERROR, "camera", "You can specify "
-			"a speed only with serial ports");
+		GP_LOG_E ("You can specify a speed only with serial ports");
 		return (GP_ERROR_BAD_PARAMETERS);
 	}
 
@@ -556,9 +551,8 @@ gp_camera_unref (Camera *camera)
 	CHECK_NULL (camera);
 
 	if (!camera->pc->ref_count) {
-		gp_log (GP_LOG_ERROR, "gphoto2-camera", "gp_camera_unref on "
-			"a camera with ref_count == 0 should not happen "
-			"at all");
+		GP_LOG_E ("gp_camera_unref on a camera with ref_count == 0 "
+			"should not happen at all");
 		return (GP_ERROR);
 	}
 
@@ -590,7 +584,7 @@ gp_camera_free (Camera *camera)
 {
 	CHECK_NULL (camera);
 
-	gp_log (GP_LOG_DEBUG, "gp-camera", "Freeing camera...");
+	GP_LOG_D ("Freeing camera...");
 
 	/*
 	 * If the camera is currently initialized, close the connection.
@@ -715,7 +709,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 	CameraLibraryInitFunc init_func;
 	int result;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Initializing camera...");
+	GP_LOG_D ("Initializing camera...");
 
 	CHECK_NULL (camera);
 	/*
@@ -743,8 +737,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 		if (result < GP_OK)
 			return result;
 
-		gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Neither "
-			"port nor model set. Trying auto-detection...");
+		GP_LOG_D ("Neither port nor model set. Trying auto-detection...");
 
 		/* Call auto-detect and choose the first camera */
 		CRSL (camera, gp_abilities_list_new (&al), context, list);
@@ -820,8 +813,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 	}
 
 	/* Load the library. */
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Loading '%s'...",
-		camera->pc->a.library);
+	GP_LOG_D ("Loading '%s'...", camera->pc->a.library);
 	lt_dlinit ();
 	camera->pc->lh = lt_dlopenext (camera->pc->a.library);
 	if (!camera->pc->lh) {
@@ -1185,8 +1177,7 @@ int
 gp_camera_folder_list_files (Camera *camera, const char *folder, 
 			     CameraList *list, GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing files in '%s'...",
-		folder);
+	GP_LOG_D ("Listing files in '%s'...", folder);
 
 	CHECK_NULL (camera && folder && list);
 	CHECK_INIT (camera, context);
@@ -1214,8 +1205,7 @@ int
 gp_camera_folder_list_folders (Camera *camera, const char* folder, 
 			       CameraList *list, GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Listing folders in '%s'...",
-		folder);
+	GP_LOG_D ("Listing folders in '%s'...", folder);
 
 	CHECK_NULL (camera && folder && list);
 	CHECK_INIT (camera, context);
@@ -1242,8 +1232,7 @@ int
 gp_camera_folder_delete_all (Camera *camera, const char *folder,
 			     GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Deleting all files in "
-		"'%s'...", folder);
+	GP_LOG_D ("Deleting all files in '%s'...", folder);
 
 	CHECK_NULL (camera && folder);
 	CHECK_INIT (camera, context);
@@ -1271,7 +1260,7 @@ gp_camera_folder_put_file (Camera *camera,
 			   CameraFileType type,
 			   CameraFile *file, GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Uploading file into '%s'...",
+	GP_LOG_D ("Uploading file into '%s'...",
 		folder);
 
 	CHECK_NULL (camera && folder && file);
@@ -1306,8 +1295,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 	/* long int size; */
 	CameraFile *cfile;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file info for '%s' "
-		"in '%s'...", file, folder);
+	GP_LOG_D ("Getting file info for '%s' in '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && info);
 	CHECK_INIT (camera, context);
@@ -1394,8 +1382,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 		    CameraFileType type, CameraFile *camera_file,
 		    GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file '%s' in "
-		"folder '%s'...", file, folder);
+	GP_LOG_D ("Getting file '%s' in folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && camera_file);
 	CHECK_INIT (camera, context);
@@ -1439,8 +1426,7 @@ gp_camera_file_read (Camera *camera, const char *folder, const char *file,
 		    uint64_t offset, char *buf, uint64_t *size,
 		    GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Getting file '%s' in "
-		"folder '%s'...", file, folder);
+	GP_LOG_D ("Getting file '%s' in folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file && buf && size);
 	CHECK_INIT (camera, context);
@@ -1476,8 +1462,7 @@ int
 gp_camera_file_delete (Camera *camera, const char *folder, const char *file,
 		       GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "gphoto2-camera", "Deleting file '%s' in "
-		"folder '%s'...", file, folder);
+	GP_LOG_D ("Deleting file '%s' in folder '%s'...", file, folder);
 
 	CHECK_NULL (camera && folder && file);
 	CHECK_INIT (camera, context);

@@ -275,7 +275,7 @@ gp_context_error (GPContext *context, const char *format, ...)
 	va_end (args);
 
 	/* Log the error message */
-	gp_log (GP_LOG_ERROR, "context", "%s", str);
+	GP_LOG_E ("%s", str);
 
 	if (context && context->error_func)
 		context->error_func (context, str, context->error_func_data);
@@ -324,7 +324,7 @@ gp_context_status (GPContext *context, const char *format, ...)
 	va_end (args);
 
 	/* Log the status message */
-	gp_log (GP_LOG_DEBUG, "context", "%s", str);
+	GP_LOG_D ("%s", str);
 
 	if (context && context->status_func)
 		context->status_func (context, str, context->status_func_data);
@@ -386,7 +386,7 @@ gp_context_message (GPContext *context, const char *format, ...)
 	va_end (args);
 
 	/* Log the message */
-	gp_log (GP_LOG_DEBUG, "context", "%s", str);
+	GP_LOG_D ("%s", str);
 
 	if (context && context->message_func)
 		context->message_func (context, str, context->message_func_data);

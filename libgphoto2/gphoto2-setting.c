@@ -108,8 +108,7 @@ gp_setting_set (char *id, char *key, char *value)
 	if (!glob_setting_count)
 		load_settings ();
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-setting",
-		"Setting key '%s' to value '%s' (%s)", key, value, id);
+	GP_LOG_D ("Setting key '%s' to value '%s' (%s)", key, value, id);
 
         for (x=0; x<glob_setting_count; x++) {
                 if ((strcmp(glob_setting[x].id, id)==0) &&
@@ -230,9 +229,7 @@ save_settings (void)
 
 	snprintf (buf, sizeof(buf), "%s/.gphoto/settings", getenv ("HOME"));
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-setting",
-		"Saving %i setting(s) to file \"%s\"",
-		glob_setting_count, buf);
+	GP_LOG_D ("Saving %i setting(s) to file \"%s\"", glob_setting_count, buf);
 
 	if ((f=fopen(buf, "w+"))==NULL) {
 		GP_LOG_E ("Can't open settings file for writing.");
