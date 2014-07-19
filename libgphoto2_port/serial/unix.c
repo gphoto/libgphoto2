@@ -198,8 +198,6 @@
 #define GP_PORT_SERIAL_RANGE_HIGH       0
 #endif
 
-#define GP_MODULE "serial"
-
 struct _GPPortPrivateLibrary {
 	int fd;       /* Device handle */
 	int baudrate; /* Current speed */
@@ -875,13 +873,13 @@ gp_port_serial_check_speed (GPPort *dev)
 	cfsetispeed (&tio, speed);
 	cfsetospeed (&tio, speed);
         if (tcsetattr (dev->pl->fd, TCSANOW, &tio) < 0) {
-		GP_DEBUG ("Error on 'tcsetattr'.");
+		GP_LOG_E ("Error on 'tcsetattr'.");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
 
 	/* Clear O_NONBLOCK. */
         if (fcntl (dev->pl->fd, F_SETFL, 0) < 0) {
-		GP_DEBUG ("Error on 'fcntl'.");
+		GP_LOG_E ("Error on 'fcntl'.");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
 
@@ -894,12 +892,12 @@ gp_port_serial_check_speed (GPPort *dev)
 	 */
 	if (speed != B0) {
 		if (tcgetattr (dev->pl->fd, &tio)) {
-			GP_DEBUG ("Error on 'tcgetattr'.");
+			GP_LOG_E ("Error on 'tcgetattr'.");
 			return (GP_ERROR_IO_SERIAL_SPEED);
 		}
 		if ((cfgetispeed (&tio) != speed) ||
 		    (cfgetospeed (&tio) != speed)) {
-			GP_DEBUG ("Cannot set baudrate to %d...",
+			GP_LOG_E ("Cannot set baudrate to %d...",
 				  dev->settings.serial.speed);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
