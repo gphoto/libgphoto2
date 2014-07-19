@@ -172,14 +172,11 @@ gp_port_info_list_free (GPPortInfoList *list)
  * against info.path and - if successfull - will append this entry to the 
  * list.
  *
- * \note This returns index - number of generic entries, not the correct index.
- *
- * \return A non-negative number or a gphoto2 error code
+ * \return A gphoto2 error code
  **/
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
-	unsigned int generic, i;
 	GPPortInfo *new_info;
 
 	CHECK_NULL (list);
@@ -197,11 +194,7 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 
 	list->info[list->count - 1] = info;
 
-	/* Ignore generic entries */
-	for (generic = i = 0; i < list->count; i++)
-		if (!strlen (list->info[i]->name))
-			generic++;
-	return (list->count - 1 - generic);
+	return GP_OK;
 }
 
 
