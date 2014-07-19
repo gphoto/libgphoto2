@@ -94,20 +94,20 @@ end\n\
 return false,'already in rec'\n\
 ";
 	C_PTP (ptp_chdk_get_version (params, &major, &minor));
-	gp_log (GP_LOG_DEBUG,"prepare_chdk", "CHDK %d.%d", major, minor);
+	GP_LOG_D ("CHDK %d.%d", major, minor);
 
-	gp_log (GP_LOG_DEBUG,"prepare_chdk", "calling lua script %s", lua);
+	GP_LOG_D ("calling lua script %s", lua);
 	C_PTP (ptp_chdk_exec_lua(params, lua, 0, &scriptid, &luastatus));
-	gp_log (GP_LOG_DEBUG,"prepare_chdk", "called script. script id %d, status %d", scriptid, luastatus);
+	GP_LOG_D ("called script. script id %d, status %d", scriptid, luastatus);
 
 	while (1) {
 		C_PTP (ptp_chdk_get_script_status(params, &status));
-		gp_log (GP_LOG_DEBUG, "prepare_chdk", "script status %x", status);
+		GP_LOG_D ("script status %x", status);
 
 		if (status & PTP_CHDK_SCRIPT_STATUS_MSG) {
 			C_PTP (ptp_chdk_read_script_msg(params, &msg));
-			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
-			gp_log (GP_LOG_DEBUG,"prepare_chdk", "message script %s", msg->data);
+			GP_LOG_D ("message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
+			GP_LOG_D ("message script %s", msg->data);
 			free (msg);
 		}
 
@@ -139,13 +139,13 @@ PTP_CHDK_LUA_SERIALIZE
 end\n\
 return false,'already in play'\n\
 ";
-	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "calling lua script %s", lua);
+	GP_LOG_D ("calling lua script %s", lua);
 	C_PTP (ptp_chdk_exec_lua(params, lua, 0, &scriptid, &status));
 	C_PTP (ptp_chdk_read_script_msg(params, &msg));
 
-	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "called script. script id %d, status %d", scriptid, status);
-	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
-	gp_log (GP_LOG_DEBUG,"unprepare_chdk", "message script %s", msg->data);
+	GP_LOG_D ("called script. script id %d, status %d", scriptid, status);
+	GP_LOG_D ("message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
+	GP_LOG_D ("message script %s", msg->data);
 	free (msg);
 	if (!status) {
 		gp_context_error(context,_("CHDK did not leave recording mode."));
@@ -163,42 +163,42 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	int 			found, oldtimeout;
 
         if (ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
-		gp_log (GP_LOG_DEBUG, "ptp", "Canon capture mode is already set up.");
+		GP_LOG_D ("Canon capture mode is already set up.");
 		C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
-		gp_log (GP_LOG_DEBUG, "ptp", "Event emulate mode 0x%04x", propval.u16);
+		GP_LOG_D ("Event emulate mode 0x%04x", propval.u16);
 		params->canon_event_mode = propval.u16;
 		return GP_OK;
 	}
 
 	propval.u16 = 0;
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
-	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x",propval.u16);
+	GP_LOG_D ("prop 0xd045 value is 0x%04x",propval.u16);
 
 	propval.u16=1;
 	C_PTP (ptp_setdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	params->canon_event_mode = propval.u16;
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32));
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
+	GP_LOG_D ("prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32));
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
+	GP_LOG_D ("prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
 
 	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
 	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
 	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfOutputDataFromCamera, &propval, PTP_DTC_UINT32));
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
+	GP_LOG_D ("prop PTP_DPC_CANON_SizeOfOutputDataFromCamera value is %d",propval.u32);
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_SizeOfInputDataToCamera, &propval, PTP_DTC_UINT32));
-	gp_log (GP_LOG_DEBUG, "ptp", "prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
+	GP_LOG_D ("prop PTP_DPC_CANON_SizeOfInputDataToCamera value is %d",propval.u32);
 	C_PTP (ptp_getdeviceinfo (params, &params->deviceinfo));
 	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 	C_PTP (ptp_getdevicepropvalue(params, PTP_DPC_CANON_EventEmulateMode, &propval, PTP_DTC_UINT16));
 	params->canon_event_mode = propval.u16;
-	gp_log (GP_LOG_DEBUG, "ptp","prop 0xd045 value is 0x%04x",propval.u16);
+	GP_LOG_D ("prop 0xd045 value is 0x%04x",propval.u16);
 
-	gp_log (GP_LOG_DEBUG, "ptp","Magic code ends.");
+	GP_LOG_D ("Magic code ends.");
 
-	gp_log (GP_LOG_DEBUG, "ptp","Setting prop. EventEmulateMode to 7.");
+	GP_LOG_D ("Setting prop. EventEmulateMode to 7.");
 /* interrupt  9013 get event
  1     Yes      No
  2     Yes      No
@@ -218,7 +218,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		return GP_OK;
 	}
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp","shooting mode resulted in 0x%04x.", ret);
+		GP_LOG_D ("shooting mode resulted in 0x%04x.", ret);
 		C_PTP_REP (ret);
 	}
 	gp_port_get_timeout (camera->port, &oldtimeout);
@@ -233,10 +233,10 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 			break;
 
 		while (ptp_get_one_event (params, &event)) {
-			gp_log (GP_LOG_DEBUG, "ptp", "Event: 0x%x", event.Code);
+			GP_LOG_D ("Event: 0x%x", event.Code);
 			if ((event.Code==0xc00c) ||
 			    (event.Code==PTP_EC_StorageInfoChanged)) {
-				gp_log (GP_LOG_DEBUG, "ptp", "Event: Entered shooting mode.");
+				GP_LOG_D ("Event: Entered shooting mode.");
 				found = 1;
 				break;
 			}
@@ -280,7 +280,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 				break;
 			}
 		}
-		gp_log (GP_LOG_DEBUG,"camera_canon_eos_update_capture_target","Card value is %d",cardval);
+		GP_LOG_D ("Card value is %d",cardval);
 	}
 	ptp_free_devicepropdesc (&dpd);
 
@@ -297,7 +297,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32),
 			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
 	else
-		gp_log (GP_LOG_DEBUG,"camera_canon_eos_update_capture_target", "optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
+		GP_LOG_D ("optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
 
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		/* if we want to download the image from the device, we need to tell the camera
@@ -317,7 +317,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams	*params = &camera->pl->params;
 	PTPStorageIDs	sids;
 
-	gp_log (GP_LOG_DEBUG, "ptp2_prepare_eos_capture", "preparing EOS capture...");
+	GP_LOG_D ("preparing EOS capture...");
 
 	C_PTP (ptp_canon_eos_setremotemode(params, 1));
 	C_PTP (ptp_canon_eos_seteventmode(params, 1));
@@ -346,11 +346,11 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 		C_PTP (ptp_canon_eos_getdeviceinfo (params, &x));
 		for (i=0;i<x.EventsSupported_len;i++)
-			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","event: %04x", x.EventsSupported[i]);
+			GP_LOG_D ("event: %04x", x.EventsSupported[i]);
 		for (i=0;i<x.DevicePropertiesSupported_len;i++)
-			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","deviceprop: %04x", x.DevicePropertiesSupported[i]);
+			GP_LOG_D ("deviceprop: %04x", x.DevicePropertiesSupported[i]);
 		for (i=0;i<x.unk_len;i++)
-			gp_log (GP_LOG_DEBUG,"ptp2/eos_deviceinfoex","unk: %04x", x.unk[i]);
+			GP_LOG_D ("unk: %04x", x.unk[i]);
 		ptp_free_EOS_DI (&x);
 	}
 
@@ -384,7 +384,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 {
 	PTPParams		*params = &camera->pl->params;
 	
-	gp_log (GP_LOG_DEBUG, "ptp", "prepare_capture");
+	GP_LOG_D ("prepare_capture");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(params, PTP_OC_CANON_InitiateReleaseControl))
@@ -444,7 +444,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 int
 camera_unprepare_capture (Camera *camera, GPContext *context)
 {
-	gp_log (GP_LOG_DEBUG, "ptp", "Unprepare_capture");
+	GP_LOG_D ("Unprepare_capture");
 	switch (camera->pl->params.deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_TerminateReleaseControl))
@@ -601,10 +601,10 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 	int isset = FALSE, isset2 = FALSE;
 
 	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range))) {
-		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no enumeration/range in 16bit table code... going on");
+		GP_LOG_D ("no enumeration/range in 16bit table code... going on");
 	}
 	if (dpd->DataType != PTP_DTC_UINT16) {
-		gp_log (GP_LOG_DEBUG, "ptp/get_generic16", "no uint16 prop in 16bit table code");
+		GP_LOG_D ("no uint16 prop in 16bit table code");
 		return (GP_ERROR);
 	}
 
@@ -724,21 +724,21 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 			if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 				for (j = 0; j<dpd->FORM.Enum.NumberOfValues; j++) {
 					if (u16val == dpd->FORM.Enum.SupportedValue[j].u16) {
-						gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "FOUND right value for %s in the enumeration at val %d", value, u16val);
+						GP_LOG_D ("FOUND right value for %s in the enumeration at val %d", value, u16val);
 						propval->u16 = u16val;
 						return GP_OK;
 					}
 				}
-				gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "did not find the right value for %s in the enumeration at val %d... continuing", value, u16val);
+				GP_LOG_D ("did not find the right value for %s in the enumeration at val %d... continuing", value, u16val);
 				/* continue looking, but with this value as fallback */
 			} else {
-				gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "not an enumeration ... return %s as %d", value, u16val);
+				GP_LOG_D ("not an enumeration ... return %s as %d", value, u16val);
 				propval->u16 = u16val;
 				return GP_OK;
 			}
 		}
 	}
-	gp_log (GP_LOG_DEBUG, "ptp2/_put_Generic16Table", "Using fallback, not found in enum... return %s as %d", value, u16val);
+	GP_LOG_D ("Using fallback, not found in enum... return %s as %d", value, u16val);
 	if (foundvalue) {
 		propval->u16 = u16val;
 		return GP_OK;
@@ -772,10 +772,10 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 	int isset = FALSE, isset2 = FALSE;
 
 	if (!(dpd->FormFlag & (PTP_DPFF_Range|PTP_DPFF_Enumeration))) {
-		gp_log (GP_LOG_DEBUG, "ptp/get_generici16", "no enumeration/range in 16bit table code");
+		GP_LOG_D ("no enumeration/range in 16bit table code");
 	}
 	if (dpd->DataType != PTP_DTC_INT16) {
-		gp_log (GP_LOG_DEBUG, "ptp/get_generici16", "no int16 prop in 16bit table code");
+		GP_LOG_D ("no int16 prop in 16bit table code");
 		return (GP_ERROR);
 	}
 
@@ -2479,7 +2479,7 @@ static int
 _get_FNumber(CONFIG_GET_ARGS) {
 	int i;
 
-	gp_log (GP_LOG_DEBUG, "ptp2/config", "get_FNumber");
+	GP_LOG_D ("get_FNumber");
 	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range)))
 		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT16)
@@ -2497,7 +2497,7 @@ _get_FNumber(CONFIG_GET_ARGS) {
 			if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
 				gp_widget_set_value (*widget,buf);
 		}
-		gp_log (GP_LOG_DEBUG, "ptp2/config", "get_FNumber via enum");
+		GP_LOG_D ("get_FNumber via enum");
 	} else { /* Range */
 		float value_float;
 
@@ -2510,7 +2510,7 @@ _get_FNumber(CONFIG_GET_ARGS) {
 				);
 		value_float = dpd->CurrentValue.u16/100.0;
 		gp_widget_set_value (*widget, &value_float);
-		gp_log (GP_LOG_DEBUG, "ptp2/config", "get_FNumber via float");
+		GP_LOG_D ("get_FNumber via float");
 	}
 	return GP_OK;
 }
@@ -2574,12 +2574,12 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
 		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
 		if (dpd->CurrentValue.u16 == fvalue*100) {
-			gp_log (GP_LOG_DEBUG, "_put_Sony_FNumber", "Value matched");
+			GP_LOG_D ("Value matched");
 			break;
 		}
 		/* if it did not change, better abort */
 		if (dpd->CurrentValue.u16 == origval) {
-			gp_log (GP_LOG_DEBUG, "_put_Sony_FNumber", "value did not change (%d vs target %d), guessing failure", origval, (int)(fvalue*100));
+			GP_LOG_D ("value did not change (%d vs target %d), guessing failure", origval, (int)(fvalue*100));
 			break;
 		}
 	} while (1);
@@ -2620,28 +2620,28 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value (widget, &value));
 
 	if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
-		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d %d/%d case", ival1, ival2, ival3);
+		GP_LOG_D ("%d %d/%d case", ival1, ival2, ival3);
 		val = ((float)ival1) + ((float)ival2/(float)ival3);
 	} else if (sscanf(value,_("%d/%d"),&ival1,&ival2) == 2) {
-		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%d/%d case", ival1, ival2);
+		GP_LOG_D ("%d/%d case", ival1, ival2);
 		val = (float)ival1/(float)ival2;
 	} else if (!sscanf(value,_("%f"),&val)) {
 		gp_log (GP_LOG_ERROR, "ptp2/_put_ExpTime", "failed to parse: %s", value);
 		return (GP_ERROR);
 	} else
-		gp_log (GP_LOG_DEBUG, "ptp2/_put_ExpTime", "%fs case", val);
+		GP_LOG_D ("%fs case", val);
 	val = val*10000.0;
 	delta = 1000000;
 	xval = val;
 	/* match the closest value */
 	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		/*gp_log (GP_LOG_DEBUG,"ptp2/_put_ExpTime","delta is currently %d, val is %f, supval is %u, abs is %u",delta,val,dpd->FORM.Enum.SupportedValue[i].u32,abs(val - dpd->FORM.Enum.SupportedValue[i].u32));*/
+		/*GP_LOG_D ("delta is currently %d, val is %f, supval is %u, abs is %u",delta,val,dpd->FORM.Enum.SupportedValue[i].u32,abs(val - dpd->FORM.Enum.SupportedValue[i].u32));*/
 		if (abs(val - dpd->FORM.Enum.SupportedValue[i].u32)<delta) {
 			xval = dpd->FORM.Enum.SupportedValue[i].u32;
 			delta = abs(val - dpd->FORM.Enum.SupportedValue[i].u32);
 		}
 	}
-	gp_log (GP_LOG_DEBUG,"ptp2/_put_ExpTime","value %s is %f, closest match was %d",value,val,xval);
+	GP_LOG_D ("value %s is %f, closest match was %d",value,val,xval);
 	propval->u32 = xval;
 	return (GP_OK);
 }
@@ -4710,7 +4710,7 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	}
 
 	if (ret != PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/nikon_mfdrive", "Nikon manual focus drive failed: 0x%x", ret);
+		GP_LOG_D ("Nikon manual focus drive failed: 0x%x", ret);
 		return translate_ptp_result (ret);
 	}
 
@@ -4820,7 +4820,7 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 	} else if (!strcmp (val, _("Release Full"))) {
 		C_PTP (ptp_canon_eos_remotereleaseoff (params, 3));
 	} else {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_remoterelease", "Unknown value %s", val);
+		GP_LOG_D ("Unknown value %s", val);
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
@@ -4861,7 +4861,7 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 
 	if (!sscanf (val, _("Near %d"), &xval)) {
 		if (!sscanf (val, _("Far %d"), &xval)) {
-			gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_mfdrive", "Could not parse %s", val);
+			GP_LOG_D ("Could not parse %s", val);
 			return GP_ERROR;
 		} else {
 			xval |= 0x8000;
@@ -4896,7 +4896,7 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 
 	gp_widget_get_value(widget, &val);
 	if (!sscanf (val, "%d", &xval)) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoom", "Could not parse %s", val);
+		GP_LOG_D ("Could not parse %s", val);
 		return GP_ERROR;
 	}
 	C_PTP_MSG (ptp_canon_eos_zoom (params, xval),
@@ -4929,7 +4929,7 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 
 	gp_widget_get_value(widget, &val);
 	if (2!=sscanf (val, "%d,%d", &x,&y)) {
-		gp_log (GP_LOG_DEBUG, "ptp2/canon_eos_zoomposition", "Could not parse %s (expected 'x,y')", val);
+		GP_LOG_D ("Could not parse %s (expected 'x,y')", val);
 		return GP_ERROR;
 	}
 	C_PTP_MSG (ptp_canon_eos_zoomposition (params, x,y),
@@ -4973,20 +4973,20 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 //                &status)
 //
 // Unfinished, I'm not sure of last 3 parameters
-	gp_log(GP_LOG_DEBUG,"chkd_script","calling script: %s", script);
+	GP_LOG_D ("calling script: %s", script);
 	C_PTP (ptp_chdk_exec_lua (params, script, 0, &script_id, &luastatus));
-	gp_log(GP_LOG_DEBUG,"chkd_script","called script, id %d, status %d", script_id, luastatus);
+	GP_LOG_D ("called script, id %d, status %d", script_id, luastatus);
 
 	while (1) {
 		C_PTP (ptp_chdk_get_script_status(params, &status));
-		gp_log (GP_LOG_DEBUG, "chkd_script", "script status %x", status);
+		GP_LOG_D ("script status %x", status);
 
 		if (status & PTP_CHDK_SCRIPT_STATUS_MSG) {
 			ptp_chdk_script_msg	*msg = NULL;
 
 			C_PTP (ptp_chdk_read_script_msg(params, &msg));
-			gp_log (GP_LOG_DEBUG,"chkd_script", "message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
-			gp_log (GP_LOG_DEBUG,"chkd_script", "message script %s", msg->data);
+			GP_LOG_D ("message script id %d, type %d, subtype %d", msg->script_id, msg->type, msg->subtype);
+			GP_LOG_D ("message script %s", msg->data);
 			free (msg);
 		}
 
@@ -5170,7 +5170,7 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 			value.u8 = 1;
 			res = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
 			if (res != PTP_RC_OK)
-				gp_log (GP_LOG_DEBUG, "ptp2/viewfinder_on", "set recordingmedia to 1 failed with 0x%04x", res);
+				GP_LOG_D ("set recordingmedia to 1 failed with 0x%04x", res);
 
 			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
 				       _("Nikon enable liveview failed"));
@@ -5276,7 +5276,7 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
                         value.u8 = 1;
                         ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
                         if (ret != PTP_RC_OK)
-                                gp_log (GP_LOG_DEBUG, "ptp2/nikon_movie", "set recordingmedia to 1 failed with 0x%04x", ret);
+                                GP_LOG_D ("set recordingmedia to 1 failed with 0x%04x", ret);
                         C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
                                        _("Nikon enable liveview failed"));
 			C_PTP_REP_MSG (nikon_wait_busy(params, 50, 1000),
@@ -6446,7 +6446,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				(menus[menuno].usb_productid != ab.usb_product)
 			)
 				continue;
-			gp_log (GP_LOG_DEBUG, "get_config", "usb vendor/product specific path entered");
+			GP_LOG_D ("usb vendor/product specific path entered");
 		}
 
 		/* Standard menu with submenus */
@@ -6473,7 +6473,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 						if (setprops[j] == cursub->propid)
 							break;
 					if (j<nrofsetprops) {
-						gp_log (GP_LOG_DEBUG, "camera_get_config", "Property '%s' / 0x%04x already handled before, skipping.", _(cursub->label), cursub->propid );
+						GP_LOG_D ("Property '%s' / 0x%04x already handled before, skipping.", _(cursub->label), cursub->propid );
 						continue;
 					}
 					if (nrofsetprops)
@@ -6489,7 +6489,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				) {
 					PTPDevicePropDesc	dpd;
 
-					gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
+					GP_LOG_D ("Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
 					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
@@ -6501,13 +6501,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					if (	((cursub->type & 0x7000) != 0x1000) ||
 						 ptp_operation_issupported(params, cursub->type)
 					) {
-						gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting function prop '%s' / 0x%04x", _(cursub->label), cursub->type );
+						GP_LOG_D ("Getting function prop '%s' / 0x%04x", _(cursub->label), cursub->type );
 						ret = cursub->getfunc (camera, &widget, cursub, NULL);
 					} else
 						continue;
 				}
 				if (ret != GP_OK) {
-					gp_log (GP_LOG_DEBUG, "camera_get_config", "Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -6516,13 +6516,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
-				gp_log (GP_LOG_DEBUG, "camera_get_config", "Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
+				GP_LOG_D ("Getting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
 				if (ret != GP_OK) {
-					gp_log (GP_LOG_DEBUG, "camera_get_config", "Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", _(cursub->label), cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -6553,7 +6553,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				break;
 #if 0 /* enable this for suppression of generic properties for already decoded ones */
 		if (j<nrofsetprops) {
-			gp_log (GP_LOG_DEBUG, "camera_get_config", "Property 0x%04x already handled before, skipping.", propid );
+			GP_LOG_D ("Property 0x%04x already handled before, skipping.", propid );
 			continue;
 		}
 #endif
@@ -6736,7 +6736,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				(menus[menuno].usb_productid != ab.usb_product)
 			)
 				continue;
-			gp_log (GP_LOG_DEBUG, "set_config", "usb vendor/product specific path entered");
+			GP_LOG_D ("usb vendor/product specific path entered");
 		}
 
 		/* Standard menu with submenus */
@@ -6756,7 +6756,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
 			) {
 				gp_widget_changed (widget); /* clear flag */
-				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
+				GP_LOG_D ("Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid );
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
 					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
 				){
@@ -6787,7 +6787,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				PTPDevicePropDesc	dpd;
 
 				gp_widget_changed (widget); /* clear flag */
-				gp_log (GP_LOG_DEBUG, "camera_set_config", "Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid);
+				GP_LOG_D ("Setting property '%s' / 0x%04x", _(cursub->label), cursub->propid);
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);

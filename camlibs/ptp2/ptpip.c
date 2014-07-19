@@ -554,7 +554,7 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		ret = select (params->evtfd+1, &infds, NULL, NULL, &timeout);
 		if (1 != ret) {
 			if (-1 == ret) {
-				gp_log (GP_LOG_DEBUG,"ptpip/event", "select returned error, errno is %d", errno);
+				GP_LOG_D ("select returned error, errno is %d", errno);
 				return PTP_ERROR_IO;
 			}
 			return PTP_ERROR_TIMEOUT;
@@ -563,7 +563,7 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		ret = ptp_ptpip_evt_read (params, &hdr, &data);
 		if (ret != PTP_RC_OK)
 			return ret;
-		gp_log (GP_LOG_DEBUG,"ptpip/event", "hdr type %d, length %d", hdr.type, hdr.length);
+		GP_LOG_D ("hdr type %d, length %d", hdr.type, hdr.length);
 
 		if (dtoh32(hdr.type) == PTPIP_EVENT) {
 			break;
@@ -673,7 +673,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
-	gp_log (GP_LOG_DEBUG,"ptpip/connect", "connecting to %s.", address);
+	GP_LOG_D ("connecting to %s.", address);
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
 
@@ -748,7 +748,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	ret = ptp_ptpip_init_event_ack (params);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	gp_log (GP_LOG_DEBUG, "ptpip/connect", "ptpip connected!");
+	GP_LOG_D ("ptpip connected!");
 	return GP_OK;
 #else
 	gp_log (GP_LOG_ERROR,"ptpip/connect", "Windows currently not supported, neeeds a winsock port.");

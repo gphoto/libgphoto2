@@ -419,7 +419,7 @@ olympus_xml_transfer (PTPParams *params,
 			}
 			newhandle = ptp2.Param1;
 			if ((newhandle & 0xff000000) != 0x1e000000) {
-				gp_log (GP_LOG_DEBUG, "olympus", "event 0x%04x, handle 0x%08x received, no XML event, just passing on", ptp2.Code, ptp2.Param1);
+				GP_LOG_D ("event 0x%04x, handle 0x%08x received, no XML event, just passing on", ptp2.Code, ptp2.Param1);
 				ptp_add_event (params, &ptp2);
 				continue;
 			}
@@ -578,7 +578,7 @@ parse_9581_tree (xmlNodePtr node) {
 				xchars+=2;
 			}
 			*x = '\0';
-			gp_log (GP_LOG_DEBUG, "olympus", "9581: %s", decoded);
+			GP_LOG_D ("9581: %s", decoded);
 
 
 			next = xmlNextElementSibling (next);
@@ -624,14 +624,14 @@ parse_9302_tree (xmlNodePtr node) {
 			int x3cver;
 			xchar = xmlNodeGetContent (next);
 			sscanf((char*)xchar, "%04x", &x3cver);
-			gp_log (GP_LOG_DEBUG, "olympus","x3cVersion %d.%d", (x3cver>>8)&0xff, x3cver&0xff);
+			GP_LOG_D ("x3cVersion %d.%d", (x3cver>>8)&0xff, x3cver&0xff);
 			goto xnext;
 		}
 		if (!strcmp((char*)next->name, "productIDs")) {
 			char *x, *nextspace;
 			int len;
 			x = (char*)(xchar = xmlNodeGetContent (next));
-			gp_log (GP_LOG_DEBUG, "olympus", "productIDs:");
+			GP_LOG_D ("productIDs:");
 
 			do {
 				nextspace=strchr(x,' ');
@@ -651,7 +651,7 @@ parse_9302_tree (xmlNodePtr node) {
 						}
 						str[len] = 0;
 					}
-					gp_log (GP_LOG_DEBUG, "olympus" ,"\t%s", str);
+					GP_LOG_D ("\t%s", str);
 					free (str);
 				}
 				x = nextspace;
@@ -884,7 +884,7 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		if (!sscanf((char*)xchar,"%04x",&result))
 			gp_log (GP_LOG_ERROR, "olympus","failed scanning result from %s", xchar);
 		resp->Code = result;
-		gp_log (GP_LOG_DEBUG,"olympus", "ptp result is 0x%04x", result);
+		GP_LOG_D ("ptp result is 0x%04x", result);
 	
 	}
 	next = xmlNextElementSibling (next);
@@ -892,7 +892,7 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		gp_log (GP_LOG_ERROR, "olympus","expected c<HEX>, have %s", next->name);
 		return FALSE;
 	}
-	gp_log (GP_LOG_DEBUG ,"olympus", "cmd is 0x%04x", cmd);
+	GP_LOG_D ("cmd is 0x%04x", cmd);
 	switch (cmd) {
 	/* reviewed OK. */
 	case PTP_OC_OLYMPUS_Capture:	return TRUE;
@@ -1145,8 +1145,8 @@ generate_event_OK_xml(PTPParams *params, PTPContainer *ptp) {
 	xmlDocSetRootElement (docout, x3cnode);
 	xmlDocDumpMemory (docout, &output, &len);
 
-	gp_log (GP_LOG_DEBUG, "olympus", "generated xml is:");
-	gp_log (GP_LOG_DEBUG, "olympus", "%s", output);
+	GP_LOG_D ("generated xml is:");
+	GP_LOG_D ("%s", output);
 
 	/* NOTE: Windows driver generates XML with CRLF, Unix just creates XML with LF.
 	 * Olympus E-410 does not seem to care. */
@@ -1170,8 +1170,8 @@ generate_xml(PTPParams *params, PTPContainer *ptp, unsigned char *data, int len)
 	xmlDocSetRootElement (docout, x3cnode);
 	xmlDocDumpMemory (docout, &output, &len);
 
-	gp_log (GP_LOG_DEBUG, "olympus", "generated xml is:");
-	gp_log (GP_LOG_DEBUG, "olympus", "%s", output);
+	GP_LOG_D ("generated xml is:");
+	GP_LOG_D ("%s", output);
 
 	/* NOTE: Windows driver generates XML with CRLF, Unix just creates XML with LF.
 	 * Olympus E-410 does not seem to care. */
@@ -1224,7 +1224,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 		GP_LOG_D ("event: code %04x, p %08x", ptp2.Code, ptp2.Param1);
 
 		if (ptp2.Code != PTP_EC_RequestObjectTransfer) {
-			gp_log (GP_LOG_DEBUG, "olympus", "event 0x%04x received, just passing on", ptp2.Code);
+			GP_LOG_D ("event 0x%04x received, just passing on", ptp2.Code);
 			memcpy (req, &ptp2, sizeof(ptp2));
 			return PTP_RC_OK;
 		}
@@ -1232,7 +1232,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 		newhandle = ptp2.Param1;
 
 		if ((newhandle & 0xff000000) != 0x1e000000) {
-			gp_log (GP_LOG_DEBUG, "olympus", "event 0x%04x, handle 0x%08x received, no XML event, just passing on", ptp2.Code, ptp2.Param1);
+			GP_LOG_D ("event 0x%04x, handle 0x%08x received, no XML event, just passing on", ptp2.Code, ptp2.Param1);
 			ptp_add_event (params, &ptp2);
 			continue;
 		}
@@ -1242,7 +1242,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 			return ret;
 		GP_LOG_D ("event xml: got new file: %s", oi.Filename);
 		if (!strstr(oi.Filename,".X3C")) {
-			gp_log (GP_LOG_DEBUG, "olympus", "PTP_EC_RequestObjectTransfer with non XML filename %s", oi.Filename);
+			GP_LOG_D ("PTP_EC_RequestObjectTransfer with non XML filename %s", oi.Filename);
 			memcpy (req, &ptp2, sizeof(ptp2));
 			return PTP_RC_OK;
 		}
@@ -1313,7 +1313,7 @@ ums_wrap2_senddata (
 	if (is_outer_operation (params, ptp->Code))
 		return ums_wrap_senddata (params, ptp, sendlen, getter);
 
-	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_senddata");
+	GP_LOG_D ("ums_wrap2_senddata");
 	data = malloc (sendlen);
 	ret = getter->getfunc(params, getter->priv, sendlen, data, &gotlen);
 	if (ret != PTP_RC_OK) {
@@ -1334,7 +1334,7 @@ ums_wrap2_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 	if (is_outer_operation (params, ptp->Code))
 		return ums_wrap_getdata (params, ptp, putter);
 
-	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_getdata");
+	GP_LOG_D ("ums_wrap2_getdata");
 
 	/* Either send or get data, not both. olympus_cmd is NULL now */
 	params->olympus_cmd = generate_xml (params, ptp, NULL, 0);
@@ -1368,7 +1368,7 @@ ums_wrap2_getresp (PTPParams* params, PTPContainer* resp) {
 	if (is_outer_operation(params, resp->Code))
 		return ums_wrap_getresp (params, resp);
 
-	gp_log (GP_LOG_DEBUG, "olympus", "ums_wrap2_getresp");
+	GP_LOG_D ("ums_wrap2_getresp");
 	if (!params->olympus_cmd) /* no data phase at all */
 		params->olympus_cmd = generate_xml (params, resp, NULL, 0);
 	if (!params->olympus_reply) {
