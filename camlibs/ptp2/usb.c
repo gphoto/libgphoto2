@@ -72,11 +72,11 @@
 uint16_t
 ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 {
-	int res;
+	int res, towrite;
 	PTPUSBBulkContainer usbreq;
-	unsigned long towrite;
 	Camera *camera = ((PTPData *)params->data)->camera;
 
+	GP_LOG_D ("Sending PTP_OC 0x%0x request...", req->Code);
 	/* build appropriate USB container */
 	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-
 		(sizeof(uint32_t)*(5-req->Nparam)));
@@ -92,9 +92,10 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	towrite = PTP_USB_BULK_REQ_LEN-(sizeof(uint32_t)*(5-req->Nparam));
 	res = gp_port_write (camera->port, (char*)&usbreq, towrite);
 	if (res != towrite) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_sendreq",
-			"request code 0x%04x sending req result %d",
-			req->Code,res);
+		if (res < 0)
+			GP_LOG_E ("PTP_OC 0x%04x sending req failed: %s (%d)", req->Code, gp_port_result_as_string(res), res);
+		else
+			GP_LOG_E ("PTP_OC 0x%04x sending req failed: wrote only %d of %d bytes", req->Code, res, towrite);
 		return PTP_ERROR_IO;
 	}
 	return PTP_RC_OK;
@@ -114,6 +115,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	int usecontext = (size > CONTEXT_BLOCK_SIZE);
 	GPContext *context = ((PTPData *)params->data)->context;
 
+	GP_LOG_D ("Sending PTP_OC 0x%0x data...", ptp->Code);
 	/* build appropriate USB container */
 	usbdata.length	= htod32(PTP_USB_BULK_HDR_LEN+size);
 	usbdata.type	= htod16(PTP_USB_CONTAINER_DATA);
@@ -136,9 +138,10 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	}
 	res = gp_port_write (camera->port, (char*)&usbdata, wlen);
 	if (res != wlen) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_senddata",
-		"request code 0x%04x sending data error 0x%04x",
-			ptp->Code,ret);
+		if (res < 0)
+			GP_LOG_E ("PTP_OC 0x%04x sending data failed: %s (%d)", ptp->Code, gp_port_result_as_string(res), res);
+		else
+			GP_LOG_E ("PTP_OC 0x%04x sending data failed: wrote only %d of %d bytes", ptp->Code, res, wlen);
 		return PTP_ERROR_IO;
 	}
 	if (size <= datawlen) { /* nothing more to do */
@@ -198,10 +201,9 @@ ptp_usb_getpacket(PTPParams *params, PTPUSBBulkContainer *packet, uint32_t *rlen
 	int		tries = 0, result;
 	Camera		*camera = ((PTPData *)params->data)->camera;
 
-	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getpacket", "getting next ptp packet");
 	/* read the header and potentially the first data */
 	if (params->response_packet_size > 0) {
-		gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getpacket", "queuing buffered response packet");
+		GP_LOG_D ("Returning previously buffered response packet.");
 		/* If there is a buffered packet, just use it. */
 		memcpy(packet, params->response_packet, params->response_packet_size);
 		*rlen = params->response_packet_size;
@@ -222,7 +224,7 @@ retry:
 		return PTP_RC_OK;
 	}
 	if (result == GP_ERROR_IO_READ) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.");
+		GP_LOG_D ("Clearing halt on IN EP and retrying once.");
 		gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 		/* retrying only makes sense if we did not read anything yet */
 		if (tries++ < 1)
@@ -244,7 +246,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	int		report_progress, progress_id = 0, do_retry = TRUE, res = GP_OK;
 	GPContext *context = ((PTPData *)params->data)->context;
 
-	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "reading data");
+	GP_LOG_D ("Reading PTP_OC 0x%0x data...", ptp->Code);
 	PTP_CNT_INIT(usbdata);
 
 	ret = ptp_usb_getpacket (params, &usbdata, &bytes_read);
@@ -268,15 +270,13 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		/* A creative Zen device breaks down here, by leaving out
 			 * Code and Transaction ID */
 		if (MTP_ZEN_BROKEN_HEADER(params)) {
-			gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x), compensating.",
-				dtoh16(usbdata.code), ptp->Code
-				);
+			GP_LOG_D ("Read broken PTP header (Code is %04x vs %04x), compensating.",
+				  dtoh16(usbdata.code), ptp->Code);
 			usbdata.code = dtoh16(ptp->Code);
 			usbdata.trans_id = htod32(ptp->Transaction_ID);
 		} else {
-			gp_log (GP_LOG_ERROR, "ptp2/ptp_usb_getdata", "Read broken PTP header (Code is %04x vs %04x).",
-				dtoh16(usbdata.code), ptp->Code
-				);
+			GP_LOG_E ("Read broken PTP header (Code is %04x vs %04x).",
+				  dtoh16(usbdata.code), ptp->Code );
 			ret = PTP_ERROR_IO;
 			goto exit;
 		}
@@ -302,7 +302,8 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			memcpy(params->response_packet, (uint8_t *) &usbdata + dtoh32(usbdata.length), surplen);
 			params->response_packet_size = surplen;
 		} else {
-			gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getdata", "read %ld bytes too much, expect problems!", (long)(bytes_read - dtoh32(usbdata.length)));
+			GP_LOG_D ("Read %ld bytes too much, expect problems!",
+				  (long)(bytes_read - dtoh32(usbdata.length)));
 		}
 		bytes_read = dtoh32(usbdata.length);
 	}
@@ -350,7 +351,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			chunk_to_read = chunk_to_read - (chunk_to_read % params->maxpacketsize);
 		res = gp_port_read (camera->port, (char*)data, chunk_to_read);
 		if (res == GP_ERROR_IO_READ && do_retry) {
-			gp_log (GP_LOG_DEBUG, "ptp2/usbread", "Clearing halt on IN EP and retrying once.");
+			GP_LOG_D ("Clearing halt on IN EP and retrying once.");
 			gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 			/* retrying only once and only if we did not read anything yet */
 			do_retry = FALSE;
@@ -383,11 +384,10 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		gp_context_progress_stop (context, progress_id);
 
 exit:
-	if (data)
-		free (data);
+	free (data);
 
 	if ((ret!=PTP_RC_OK) && (ret!=PTP_ERROR_CANCEL)) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_getdata", "request code 0x%04x getting data error 0x%04x", ptp->Code, ret);
+		GP_LOG_E ("PTP_OC 0x%04x receiving data failed: %s (0x%04x)", ptp->Code, ptp_strerror(ret, params->deviceinfo.VendorExtensionID), ret);
 		return PTP_ERROR_IO;
 	}
 	return ret;
@@ -401,7 +401,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	PTPUSBBulkContainer	usbresp;
 	/*GPContext		*context = ((PTPData *)params->data)->context;*/
 
-	gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "reading response");
+	GP_LOG_D ("Reading PTP_OC 0x%0x response...", resp->Code);
 	PTP_CNT_INIT(usbresp);
 	/* read response, it should never be longer than sizeof(usbresp) */
 	ret = ptp_usb_getpacket(params, &usbresp, &rlen);
@@ -416,7 +416,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 		ret = dtoh16(usbresp.code);
 	}
 	if (ret!=PTP_RC_OK) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_getresp","request code 0x%04x getting resp error 0x%04x", resp->Code, ret);
+		GP_LOG_E ("PTP_OC 0x%04x receiving resp failed: %s (0x%04x)", resp->Code, ptp_strerror(ret, params->deviceinfo.VendorExtensionID), ret);
 		return ret;
 	}
 	/* build an appropriate PTPContainer */
@@ -425,8 +425,8 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	resp->Transaction_ID=dtoh32(usbresp.trans_id);
 	if (resp->Transaction_ID != params->transaction_id - 1) {
 		if (MTP_ZEN_BROKEN_HEADER(params)) {
-			gp_log (GP_LOG_DEBUG, "ptp2/ptp_usb_getresp", "Read broken PTP header (transid is %08x vs %08x), compensating.",
-				resp->Transaction_ID, params->transaction_id - 1
+			GP_LOG_D ("Read broken PTP header (transid is %08x vs %08x), compensating.",
+				  resp->Transaction_ID, params->transaction_id - 1
 			);
 			resp->Transaction_ID=params->transaction_id-1;
 		}
@@ -481,19 +481,18 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		return PTP_ERROR_BADPARAM;
 	}
 	if (result < 0) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_event", "reading event an error %d occurred", result);
+		GP_LOG_E ("Reading PTP event failed: %s (%d)", gp_port_result_as_string(result), result);
 		if (result == GP_ERROR_TIMEOUT)
 			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	if (result == 0) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_event", "reading event an 0 read occurred, assuming timeout.");
+		GP_LOG_E ("Reading PTP event failed: a 0 read occurred, assuming timeout.");
 		return PTP_ERROR_TIMEOUT;
 	}
 	rlen = result;
 	if (rlen < 8) {
-		gp_log (GP_LOG_ERROR, "ptp2/usb_event",
-			"reading event an short read of %ld bytes occurred", rlen);
+		GP_LOG_E ("Reading PTP event failed: only %ld bytes read", rlen);
 		return PTP_ERROR_IO;
 	}
 
@@ -503,7 +502,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	if (	(dtoh16(usbevent.type) == PTP_USB_CONTAINER_EVENT) &&
 		(dtoh32(usbevent.length) > rlen)
 	) {
-		gp_log (GP_LOG_DEBUG, "ptp2/usb_event","Canon incremental read (done: %ld, todo: %d)", rlen, dtoh32(usbevent.length));
+		GP_LOG_D ("Canon incremental read (done: %ld, todo: %d)", rlen, dtoh32(usbevent.length));
 		gp_port_get_timeout (camera->port, &timeout);
 		gp_port_set_timeout (camera->port, PTP2_FAST_TIMEOUT);
 		while (dtoh32(usbevent.length) > rlen) {
@@ -543,12 +542,11 @@ ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *s
 	Camera	*camera = ((PTPData *)params->data)->camera;
 	int	ret;
 
-	gp_log (GP_LOG_DEBUG, "ptp2/get_extended_event_data", "get event data");
+	GP_LOG_D ("Getting extended event data.");
 	ret = gp_port_usb_msg_class_read (camera->port, 0x65, 0x0000, 0x0000, buffer, *size);
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
 	*size = ret;
-	gp_log_data ("ptp2/get_extended_event_data", buffer, ret);
 	return PTP_RC_OK;
 }
 
@@ -557,7 +555,7 @@ ptp_usb_control_device_reset_request (PTPParams *params) {
 	Camera	*camera = ((PTPData *)params->data)->camera;
 	int	ret;
 
-	gp_log (GP_LOG_DEBUG, "ptp2/device_reset_request", "sending reset");
+	GP_LOG_D ("Sending usb device reset request.");
 	ret = gp_port_usb_msg_class_write (camera->port, 0x66, 0x0000, 0x0000, NULL, 0);
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
@@ -572,7 +570,6 @@ ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size) {
 	ret = gp_port_usb_msg_class_read (camera->port, 0x67, 0x0000, 0x0000, buffer, *size);
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
-	gp_log_data ("ptp2/get_device_status", buffer, ret);
 	*size = ret;
 	return PTP_RC_OK;
 }
