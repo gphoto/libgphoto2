@@ -205,8 +205,7 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 
 	curline = result = malloc ((HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
 	if (!result) {
-		gp_log (GP_LOG_ERROR, "gphoto2-log", _("Malloc for %i bytes "
-			"failed"), (HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
+		GP_LOG_E ("Malloc for %i bytes failed", (HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
 		return;
 	}
 
