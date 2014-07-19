@@ -328,6 +328,21 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 	va_end (args);
 }
 
+void
+gp_log_with_source_location(GPLogLevel level, const char *file, int line, const char *func, const char *format, ...)
+{
+	va_list args;
+        char domain[100];
+
+        /* Only display filename without any path/directory part */
+        file = strrchr(file, '/') ? strrchr(file, '/') + 1 : file;
+        snprintf(domain, sizeof(domain), "%s [%s:%d]", func, file, line);
+
+	va_start (args, format);
+	gp_logv (level, domain, format, args);
+	va_end (args);
+}
+
 #else /* DISABLE_DEBUGGING */
 
 /*
@@ -350,6 +365,9 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 #endif
 #ifdef gp_log
 #undef gp_log
+#endif
+#ifdef gp_log_with_source_location
+#undef gp_log_with_source_location
 #endif
 
 int
@@ -377,6 +395,11 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 
 void
 gp_log (GPLogLevel level, const char *domain, const char *format, ...)
+{
+}
+
+void
+gp_log_with_source_location(GPLogLevel level, const char *file, int line, const char *func, const char *format, ...)
 {
 }
 #endif /* DISABLE_DEBUGGING */

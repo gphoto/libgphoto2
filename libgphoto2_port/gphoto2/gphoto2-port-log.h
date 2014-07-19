@@ -72,6 +72,13 @@ void gp_log      (GPLogLevel level, const char *domain,
 	__attribute__((__format__(printf,3,4)))
 #endif
 ;
+void gp_log_with_source_location(
+		  GPLogLevel level, const char *file, int line, const char *func,
+		  const char *format, ...)
+#ifdef __GNUC__
+	__attribute__((__format__(printf,5,6)))
+#endif
+;
 void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 		  va_list args)
 #ifdef __GNUC__
@@ -80,6 +87,14 @@ void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 ;
 void gp_log_data (const char *domain, const char *data, unsigned int size);
 
+/*
+ * GP_LOG_D/E:
+ * simple helper macros for convenient and consistent logging of error
+ * and debug messages including information about the source location.
+ */
+#define GP_LOG_D(...) gp_log(GP_LOG_DEBUG, __func__, __VA_ARGS__)
+#define GP_LOG_E(...) gp_log_with_source_location(GP_LOG_ERROR, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#define GP_LOG_DATA(DATA, SIZE) gp_log_data(__func__, DATA, SIZE)
 
 /*
  * GP_DEBUG:
@@ -113,8 +128,13 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define gp_log_add_func(level, func, data) (0)
 #define gp_log_remove_func(id) (0)
 #define gp_log(level, domain, format, args...) /**/
+#define gp_log_with_source_location(level, file, line, func, format, ...)
 #define gp_logv(level, domain, format, args) /**/
 #define gp_log_data(domain, data, size) /**/
+
+#define GP_LOG_D(...) /* no-op */
+#define GP_LOG_E(...) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE) /* no-op */
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
