@@ -36,7 +36,7 @@ int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 	uint16_t c_ptp_ret = (RESULT);\
 	if (c_ptp_ret != PTP_RC_OK) {\
 		const char* ptp_err_str = ptp_strerror(c_ptp_ret, params->deviceinfo.VendorExtensionID);\
-		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, c_ptp_ret);\
+		GP_LOG_E ("'%s' failed: %s (0x%x)", #RESULT, ptp_err_str, c_ptp_ret);\
 		return translate_ptp_result (c_ptp_ret);\
 	}\
 } while(0)
@@ -46,8 +46,8 @@ int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 	if (c_ptp_msg_ret != PTP_RC_OK) {\
 		const char* ptp_err_str = ptp_strerror(c_ptp_msg_ret, params->deviceinfo.VendorExtensionID);\
 		char fmt_str[256];\
-		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: '", MSG, "' (0x%x: '%s')");\
-		gp_log (GP_LOG_ERROR, __func__, fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_msg_ret, ptp_err_str);\
+		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: ", MSG, " (0x%x: %s)");\
+		GP_LOG_E (fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_msg_ret, ptp_err_str);\
 		return translate_ptp_result (c_ptp_msg_ret);\
 	}\
 } while(0)
@@ -56,7 +56,7 @@ int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 	uint16_t c_ptp_rep_ret = (RESULT);\
 	if (c_ptp_rep_ret != PTP_RC_OK) {\
 		const char* ptp_err_str = ptp_strerror(c_ptp_rep_ret, params->deviceinfo.VendorExtensionID);\
-		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, c_ptp_rep_ret);\
+		GP_LOG_E ("'%s' failed: '%s' (0x%x)", #RESULT, ptp_err_str, c_ptp_rep_ret);\
 		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_err_str));\
 		return translate_ptp_result (c_ptp_rep_ret);\
 	}\
@@ -67,9 +67,9 @@ int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 	if (c_ptp_rep_msg_ret != PTP_RC_OK) {\
 		const char* ptp_err_str = ptp_strerror(c_ptp_rep_msg_ret, params->deviceinfo.VendorExtensionID);\
 		char fmt_str[256];\
-		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: '", MSG, "' (0x%x: '%s')");\
-		gp_log (GP_LOG_ERROR, __func__, fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_rep_msg_ret, ptp_err_str);\
-		snprintf(fmt_str, sizeof(fmt_str), "%s%s", MSG, " (0x%x: '%s')");\
+		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: ", MSG, " (0x%x: %s)");\
+		GP_LOG_E (fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_rep_msg_ret, ptp_err_str);\
+		snprintf(fmt_str, sizeof(fmt_str), "%s%s", MSG, " (0x%x: %s)");\
 		gp_context_error (context, fmt_str, ##__VA_ARGS__, c_ptp_rep_msg_ret, dgettext(GETTEXT_PACKAGE, ptp_err_str));\
 		return translate_ptp_result (c_ptp_rep_msg_ret);\
 	}\
@@ -78,7 +78,7 @@ int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 #define CR(RESULT) do {\
 	int cr_r=(RESULT);\
 	if (cr_r<0) {\
-		gp_log (GP_LOG_ERROR, __func__, "'%s' failed: '%s' (%d)", #RESULT, gp_port_result_as_string(cr_r), cr_r);\
+		GP_LOG_E ("'%s' failed: '%s' (%d)", #RESULT, gp_port_result_as_string(cr_r), cr_r);\
 		return cr_r;\
 	}\
 } while (0)
