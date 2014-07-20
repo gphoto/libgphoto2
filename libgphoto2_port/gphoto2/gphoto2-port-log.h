@@ -88,15 +88,6 @@ void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 void gp_log_data (const char *domain, const char *data, unsigned int size);
 
 /*
- * GP_LOG_D/E:
- * simple helper macros for convenient and consistent logging of error
- * and debug messages including information about the source location.
- */
-#define GP_LOG_D(...) gp_log(GP_LOG_DEBUG, __func__, __VA_ARGS__)
-#define GP_LOG_E(...) gp_log_with_source_location(GP_LOG_ERROR, __FILE__, __LINE__, __func__, __VA_ARGS__)
-#define GP_LOG_DATA(DATA, SIZE) gp_log_data(__func__, DATA, SIZE)
-
-/*
  * GP_DEBUG:
  * msg: message to log
  * params: params to message
@@ -114,11 +105,23 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #elif defined(__GNUC__) &&  __GNUC__ >= 2
 #define GP_DEBUG(msg, params...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
+/*
+ * GP_LOG_D/E:
+ * simple helper macros for convenient and consistent logging of error
+ * and debug messages including information about the source location.
+ */
+#define GP_LOG_D(...) gp_log(GP_LOG_DEBUG, __func__, __VA_ARGS__)
+#define GP_LOG_E(...) gp_log_with_source_location(GP_LOG_ERROR, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#define GP_LOG_DATA(DATA, SIZE) gp_log_data(__func__, DATA, SIZE)
+
 #else
 # ifdef __GNUC__
 #  warning Disabling GP_DEBUG because variadic macros are not allowed
 # endif
 #define GP_DEBUG (void) 
+#define GP_LOG_D(...) /* no-op */
+#define GP_LOG_E(...) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE) /* no-op */
 #endif
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
@@ -132,17 +135,23 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define gp_logv(level, domain, format, args) /**/
 #define gp_log_data(domain, data, size) /**/
 
+#ifdef _GPHOTO2_INTERNAL_CODE
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#define GP_DEBUG(...) /* no-op */
 #define GP_LOG_D(...) /* no-op */
 #define GP_LOG_E(...) /* no-op */
 #define GP_LOG_DATA(DATA, SIZE) /* no-op */
 
-#ifdef _GPHOTO2_INTERNAL_CODE
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#define GP_DEBUG(...) /* no-op */
 #elif defined(__GNUC__)
 #define GP_DEBUG(msg, params...) /* no-op */
+#define GP_LOG_D(...) /* no-op */
+#define GP_LOG_E(...) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE) /* no-op */
 #else
 #define GP_DEBUG (void)
+#define GP_LOG_D (void /* no-op */
+#define GP_LOG_E (void) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE) /* no-op */
 #endif
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
