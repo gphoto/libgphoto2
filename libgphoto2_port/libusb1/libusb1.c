@@ -72,6 +72,46 @@
 	}\
 } while(0)
 
+static int log_on_libusb_error_helper( int _r, const char* func ) {
+	if (_r < LIBUSB_SUCCESS)
+#ifdef HAVE_LIBUSB_STRERROR
+		GP_LOG_E ("'%s' failed: %s (%d)", func, libusb_strerror(_r), _r);
+#else
+		GP_LOG_E ("'%s' failed: %d", func, _r);
+#endif
+	return _r;
+}
+#define LOG_ON_LIBUSB_E( RESULT ) log_on_libusb_error_helper( (RESULT), #RESULT )
+
+#define C_LIBUSB(RESULT, DEFAULT_ERROR) do {\
+	int _r = LOG_ON_LIBUSB_E( RESULT );\
+	if (_r < LIBUSB_SUCCESS)\
+		return translate_libusb_error(_r, DEFAULT_ERROR);\
+} while (0)
+
+
+static int translate_libusb_error( int error, int default_return )
+{
+	switch (error) {
+	case LIBUSB_SUCCESS:			return GP_OK;
+	case LIBUSB_ERROR_INVALID_PARAM:	return GP_ERROR_BAD_PARAMETERS;
+	case LIBUSB_ERROR_NO_DEVICE:		return GP_ERROR_IO_USB_FIND;
+	case LIBUSB_ERROR_TIMEOUT:		return GP_ERROR_TIMEOUT;
+	case LIBUSB_ERROR_NO_MEM:		return GP_ERROR_NO_MEMORY;
+	case LIBUSB_ERROR_NOT_SUPPORTED:	return GP_ERROR_NOT_SUPPORTED;
+
+	case LIBUSB_ERROR_IO:
+	case LIBUSB_ERROR_BUSY:
+	case LIBUSB_ERROR_NOT_FOUND:
+	case LIBUSB_ERROR_ACCESS:
+	case LIBUSB_ERROR_OVERFLOW:
+	case LIBUSB_ERROR_PIPE:
+	case LIBUSB_ERROR_INTERRUPTED:
+	default:
+		return default_return; /* usually GP_ERROR_IO, but might be GP_ERROR_IO_READ/WRITE */
+	}
+}
+
 struct _GPPortPrivateLibrary {
 	libusb_context *ctx;
 	libusb_device *d;
@@ -114,12 +154,8 @@ load_devicelist (GPPortPrivateLibrary *pl) {
 
 		pl->nrofdevs = libusb_get_device_list (pl->ctx, &pl->devs);
 		C_MEM (pl->descs = malloc (sizeof(pl->descs[0])*pl->nrofdevs));
-		for (i=0;i<pl->nrofdevs;i++) {
-			int ret;
-			ret = libusb_get_device_descriptor(pl->devs[i], &pl->descs[i]);
-			if (ret)
-				gp_log (GP_LOG_ERROR, "libusb1", "libusb_get_device_descriptor(%d) returned %d", i, ret);
-		}
+		for (i=0;i<pl->nrofdevs;i++)
+			LOG_ON_LIBUSB_E (libusb_get_device_descriptor(pl->devs[i], &pl->descs[i]));
 	}
 	time (&pl->devslastchecked);
 	return pl->nrofdevs;
@@ -136,10 +172,9 @@ gp_port_library_list (GPPortInfoList *list)
 	int		nrofdevs = 0;
 	struct libusb_device_descriptor	*descs;
 
-	if (libusb_init (&ctx) != 0) {
-		gp_log (GP_LOG_ERROR, "libusb1", "libusb_init failed.");
-		return GP_ERROR_IO;
-	}
+	C_LIBUSB (libusb_init (&ctx), GP_ERROR_IO);
+
+	/* TODO: make sure libusb_exit gets called in all error paths inside this function */
 
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
 	gp_port_info_new (&info);
@@ -150,12 +185,8 @@ gp_port_library_list (GPPortInfoList *list)
 
 	nrofdevs = libusb_get_device_list (ctx, &devs);
 	C_MEM (descs = malloc (sizeof(descs[0])*nrofdevs));
-	for (i=0;i<nrofdevs;i++) {
-		int ret;
-		ret = libusb_get_device_descriptor(devs[i], &descs[i]);
-		if (ret)
-			gp_log (GP_LOG_ERROR, "libusb1", "libusb_get_device_descriptor(%d) returned %d", i, ret);
-	}
+	for (i=0;i<nrofdevs;i++)
+		LOG_ON_LIBUSB_E (libusb_get_device_descriptor(devs[i], &descs[i]));
 
 	for (d = 0; d < nrofdevs; d++) {
 		/* Devices which are definitely not cameras. */
@@ -171,10 +202,8 @@ gp_port_library_list (GPPortInfoList *list)
 		unknownint = 0;
 		for (i = 0; i < descs[d].bNumConfigurations; i++) {
 			struct libusb_config_descriptor *config;
-			int ret;
 
-			ret = libusb_get_config_descriptor (devs[d], i, &config);
-			if (ret) {
+			if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (devs[d], i, &config))) {
 				unknownint++;
 				continue;
 			}
@@ -228,11 +257,8 @@ gp_port_library_list (GPPortInfoList *list)
 		unknownint = 0;
 		for (i = 0; i < descs[d].bNumConfigurations; i++) {
 			struct libusb_config_descriptor *config;
-			int ret;
 
-			ret = libusb_get_config_descriptor (devs[d], i, &config);
-			if (ret) {
-				gp_log (GP_LOG_ERROR, "libusb1", "libusb_get_config_descriptor(%d) returned %d", d, ret);
+			if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (devs[d], i, &config))) {
 				unknownint++;
 				continue;
 			}
@@ -284,8 +310,7 @@ static int gp_port_usb_init (GPPort *port)
 
 	port->pl->config = port->pl->interface = port->pl->altsetting = -1;
 
-	if (libusb_init (&port->pl->ctx) != 0) {
-		gp_log (GP_LOG_ERROR, "libusb1", "libusb_init failed.");
+	if (LOG_ON_LIBUSB_E (libusb_init (&port->pl->ctx))) {
 		free (port->pl);
 		port->pl = NULL;
 		return GP_ERROR_IO;
@@ -322,11 +347,7 @@ gp_port_usb_open (GPPort *port)
 		C_PARAMS (port->pl->d);
 	}
 
-	ret = libusb_open (port->pl->d, &port->pl->dh);
-	if (ret) {
-		gp_log (GP_LOG_ERROR, "libusb1", "libusb_open returned %d", ret);
-		return GP_ERROR_IO;
-	}
+	C_LIBUSB (libusb_open (port->pl->d, &port->pl->dh), GP_ERROR_IO);
 	if (!port->pl->dh) {
 		int saved_errno = errno;
 		gp_port_set_error (port, _("Could not open USB device (%s)."),
@@ -358,9 +379,7 @@ gp_port_usb_open (GPPort *port)
 	}
 
 	gp_log (GP_LOG_DEBUG,"libusb1","claiming interface %d", port->settings.usb.interface);
-	ret = libusb_claim_interface (port->pl->dh,
-				   port->settings.usb.interface);
-	if (ret < 0) {
+	if (LOG_ON_LIBUSB_E (libusb_claim_interface (port->pl->dh, port->settings.usb.interface))) {
 		int saved_errno = errno;
 		gp_port_set_error (port, _("Could not claim interface %d (%s). "
 					   "Make sure no other program (%s) "
@@ -381,6 +400,7 @@ gp_port_usb_open (GPPort *port)
 				   "sdc2xx, stv680, spca50x");
 		return GP_ERROR_IO_USB_CLAIM;
 	}
+
 	return GP_OK;
 }
 
@@ -415,9 +435,7 @@ gp_port_usb_close (GPPort *port)
 	}
 #endif
 	if (port->pl->detached) {
-		int ret;
-		ret = libusb_attach_kernel_driver (port->pl->dh, port->settings.usb.interface);
-		if (ret < 0)
+		if (LOG_ON_LIBUSB_E (libusb_attach_kernel_driver (port->pl->dh, port->settings.usb.interface)))
 			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
 	}
 
@@ -429,55 +447,55 @@ gp_port_usb_close (GPPort *port)
 static int
 gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 {
-	int ret=0;
+	unsigned char internal_ep;
 
 	C_PARAMS (port && port->pl->dh);
 
 	switch (ep) {
 	case GP_PORT_USB_ENDPOINT_IN :
-		ret=libusb_clear_halt(port->pl->dh, port->settings.usb.inep);
+		internal_ep = port->settings.usb.inep;
 		break;
 	case GP_PORT_USB_ENDPOINT_OUT :
-		ret=libusb_clear_halt(port->pl->dh, port->settings.usb.outep);
+		internal_ep = port->settings.usb.outep;
 		break;
 	case GP_PORT_USB_ENDPOINT_INT :
-		ret=libusb_clear_halt(port->pl->dh, port->settings.usb.intep);
+		internal_ep = port->settings.usb.intep;
 		break;
 	default:
 		gp_port_set_error (port, "gp_port_usb_clear_halt: "
 				   "bad EndPoint argument");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	return (ret ? GP_ERROR_IO_USB_CLEAR_HALT : GP_OK);
+
+	C_LIBUSB (libusb_clear_halt(port->pl->dh, internal_ep), GP_ERROR_IO_USB_CLEAR_HALT);
+
+	return GP_OK;
 }
 
 static int
 gp_port_usb_write (GPPort *port, const char *bytes, int size)
 {
-        int ret, curwritten;
+        int curwritten;
 
 	C_PARAMS (port && port->pl->dh);
 
-	ret = libusb_bulk_transfer (port->pl->dh, port->settings.usb.outep,
-                           (unsigned char*)bytes, size, &curwritten, port->timeout);
-        if (ret < 0)
-		return (GP_ERROR_IO_WRITE);
+	C_LIBUSB (libusb_bulk_transfer (port->pl->dh, port->settings.usb.outep,
+                           (unsigned char*)bytes, size, &curwritten, port->timeout),
+                  GP_ERROR_IO_WRITE);
+
         return curwritten;
 }
 
 static int
 gp_port_usb_read(GPPort *port, char *bytes, int size)
 {
-	int ret, curread;
+	int curread;
 
 	C_PARAMS (port && port->pl->dh);
 
-	gp_log (GP_LOG_DEBUG, "libusb1", "reading with timeout %d", port->timeout);
-	ret = libusb_bulk_transfer (port->pl->dh, port->settings.usb.inep,
-			     (unsigned char*)bytes, size, &curread, port->timeout);
-	gp_log (GP_LOG_DEBUG, "libusb1", "ret = %d", ret);
-        if (ret < 0)
-		return GP_ERROR_IO_READ;
+	C_LIBUSB (libusb_bulk_transfer (port->pl->dh, port->settings.usb.inep,
+			(unsigned char*)bytes, size, &curread, port->timeout),
+		  GP_ERROR_IO_READ );
 
         return curread;
 }
@@ -485,57 +503,55 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 static int
 gp_port_usb_reset(GPPort *port)
 {
-	int ret;
-
 	C_PARAMS (port && port->pl->dh);
 
-	gp_log (GP_LOG_DEBUG, "libusb1", "reseting");
-	ret = libusb_reset_device (port->pl->dh);
-	gp_log (GP_LOG_DEBUG, "libusb1", "ret = %d", ret);
-        if (ret < 0)
-		return GP_ERROR_IO_READ;
-        return GP_OK;
+	C_LIBUSB (libusb_reset_device (port->pl->dh), GP_ERROR_IO);
+
+	return GP_OK;
 }
 
 static int
 gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
-	int ret, curread;
+	int curread;
 
 	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
-	ret = libusb_interrupt_transfer (port->pl->dh, port->settings.usb.intep,
-			     (unsigned char*)bytes, size, &curread, timeout);
-        if (ret < 0) {
-		if (ret == LIBUSB_TRANSFER_TIMED_OUT)
-			return GP_ERROR_TIMEOUT;
-		if (ret == LIBUSB_ERROR_TIMEOUT)
-			return GP_ERROR_TIMEOUT;
-		return GP_ERROR_IO_READ;
-	}
+	C_LIBUSB (libusb_interrupt_transfer (port->pl->dh, port->settings.usb.intep,
+			(unsigned char*)bytes, size, &curread, timeout),
+		  GP_ERROR_IO_READ);
+
         return curread;
+}
+
+static int
+gp_port_generic_usb_msg(GPPort *port, int request, int value, int index, char *bytes, int size, int flags, int default_error)
+{
+	C_PARAMS (port && port->pl->dh);
+
+	C_LIBUSB (libusb_control_transfer (port->pl->dh, flags, request, value, index,
+			(unsigned char*)bytes, size, port->timeout),
+		  default_error);
+
+	return GP_OK;
 }
 
 static int
 gp_port_usb_msg_write_lib(GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-	C_PARAMS (port && port->pl->dh);
-
-	return libusb_control_transfer (port->pl->dh,
-		LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
-		request, value, index, (unsigned char*)bytes, size, port->timeout);
+	return gp_port_generic_usb_msg (port, request, value, index, bytes, size,
+					LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
+					GP_ERROR_IO_WRITE);
 }
 
 static int
 gp_port_usb_msg_read_lib(GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-	C_PARAMS (port && port->pl->dh);
-
-	return libusb_control_transfer (port->pl->dh,
-		LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN,
-		request, value, index, (unsigned char*)bytes, size, port->timeout);
+	return gp_port_generic_usb_msg (port, request, value, index, bytes, size,
+					LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN,
+					GP_ERROR_IO_READ);
 }
 
 /* The next two functions support the nonstandard request types 0x41 (write) 
@@ -546,11 +562,9 @@ static int
 gp_port_usb_msg_interface_write_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	C_PARAMS (port && port->pl->dh);
-
-	return libusb_control_transfer (port->pl->dh, 
-		LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_INTERFACE,
-		request, value, index, (unsigned char*)bytes, size, port->timeout);
+	return gp_port_generic_usb_msg (port, request, value, index, bytes, size,
+					LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_INTERFACE,
+					GP_ERROR_IO_WRITE);
 }
 
 
@@ -558,11 +572,9 @@ static int
 gp_port_usb_msg_interface_read_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	C_PARAMS (port && port->pl->dh);
-
-	return libusb_control_transfer (port->pl->dh, 
-		LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_IN,
-		request, value, index, (unsigned char*)bytes, size, port->timeout);
+	return gp_port_generic_usb_msg (port, request, value, index, bytes, size,
+					LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_IN,
+					GP_ERROR_IO_READ);
 }
 
 
@@ -574,11 +586,9 @@ static int
 gp_port_usb_msg_class_write_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	C_PARAMS (port && port->pl->dh);
-
-	return libusb_control_transfer (port->pl->dh,
-		LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE,
-		request, value, index, (unsigned char*)bytes, size, port->timeout);
+	return gp_port_generic_usb_msg (port, request, value, index, bytes, size,
+					LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE,
+					GP_ERROR_IO_WRITE);
 }
 
 
@@ -586,11 +596,9 @@ static int
 gp_port_usb_msg_class_read_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	C_PARAMS (port && port->pl->dh);
-
-	return libusb_control_transfer (port->pl->dh, 
-		LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_IN,
-		request, value, index, (unsigned char*)bytes, size, port->timeout);
+	return gp_port_generic_usb_msg (port, request, value, index, bytes, size,
+					LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_INTERFACE | LIBUSB_ENDPOINT_IN,
+					GP_ERROR_IO_READ);
 }
 
 /*
@@ -606,7 +614,7 @@ gp_port_usb_msg_class_read_lib(GPPort *port, int request,
 static int
 gp_port_usb_update (GPPort *port)
 {
-	int ret, ifacereleased = FALSE;
+	int ifacereleased = FALSE;
 
 	if (!port || !port->pl || !port->pl->ctx)
 		return GP_ERROR_BAD_PARAMETERS;
@@ -645,18 +653,12 @@ gp_port_usb_update (GPPort *port)
 			port->pl->interface,
 			port->settings.usb.interface
 		);
-		if (libusb_release_interface (port->pl->dh,
-					   port->pl->interface) < 0) {
-			gp_log (GP_LOG_DEBUG, "libusb1","releasing the iface for config failed.");
+		if (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->pl->interface))) {
 			/* Not a hard error for now. -Marcus */
 		} else {
 			gp_log (GP_LOG_DEBUG,"libusb1","claiming interface %d", port->settings.usb.interface);
-			ret = libusb_claim_interface (port->pl->dh,
-						   port->settings.usb.interface);
-			if (ret < 0) {
-				gp_log (GP_LOG_DEBUG, "libusb1","reclaiming the iface for config failed.");
-				return GP_ERROR_IO_UPDATE;
-			}
+			C_LIBUSB (libusb_claim_interface (port->pl->dh, port->settings.usb.interface),
+				  GP_ERROR_IO_USB_CLAIM);
 			port->pl->interface = port->settings.usb.interface;
 		}
 	}
@@ -668,16 +670,12 @@ gp_port_usb_update (GPPort *port)
 		/* This can only be changed with the interface released. 
 		 * This is a hard requirement since 2.6.12.
 		 */
-		if (libusb_release_interface (port->pl->dh,
-					   port->settings.usb.interface) < 0) {
-			gp_log (GP_LOG_DEBUG, "libusb1","releasing the iface for config failed.");
+		if (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->settings.usb.interface))) {
 			ifacereleased = FALSE;
 		} else {
 			ifacereleased = TRUE;
 		}
-		ret = libusb_set_configuration(port->pl->dh,
-				     port->settings.usb.config);
-		if (ret < 0) {
+		if (LOG_ON_LIBUSB_E (libusb_set_configuration(port->pl->dh, port->settings.usb.config))) {
 #if 0 /* setting the configuration failure is not fatal */
 			int saved_errno = errno;
 			gp_port_set_error (port,
@@ -687,7 +685,7 @@ gp_port_usb_update (GPPort *port)
 					   strerror(saved_errno));
 			return GP_ERROR_IO_UPDATE;	
 #endif
-			gp_log (GP_LOG_ERROR, "libusb1","setting configuration from %d to %d failed with ret = %d, but continue...", port->pl->config, port->settings.usb.config, ret);
+			gp_log (GP_LOG_ERROR, "libusb1", "setting configuration from %d to %d failed, but continuing...", port->pl->config, port->settings.usb.config);
 		}
 
 		gp_log (GP_LOG_DEBUG, "libusb1",
@@ -697,11 +695,7 @@ gp_port_usb_update (GPPort *port)
 
 		if (ifacereleased) {
 			gp_log (GP_LOG_DEBUG,"libusb1","claiming interface %d", port->settings.usb.interface);
-			ret = libusb_claim_interface (port->pl->dh,
-						   port->settings.usb.interface);
-			if (ret < 0) {
-				gp_log (GP_LOG_DEBUG, "libusb1","reclaiming the iface for config failed.");
-			}
+			LOG_ON_LIBUSB_E (libusb_claim_interface (port->pl->dh, port->settings.usb.interface));
 		}
 		/*
 		 * Copy at once if something else fails so that this
@@ -712,12 +706,8 @@ gp_port_usb_update (GPPort *port)
 
 	/* This can be changed with interface claimed. (And I think it must be claimed.) */
 	if (port->settings.usb.altsetting != port->pl->altsetting) {
-		ret = libusb_set_interface_alt_setting (
-			port->pl->dh,
-			port->settings.usb.interface, 
-			port->settings.usb.altsetting
-		);
-		if (ret < 0) {
+		if (LOG_ON_LIBUSB_E (libusb_set_interface_alt_setting (port->pl->dh,
+					port->settings.usb.interface, port->settings.usb.altsetting))) {
 			int saved_errno = errno;
 			gp_port_set_error (port,
 					   _("Could not set altsetting from %d "
@@ -743,10 +733,10 @@ gp_port_usb_find_ep(libusb_device *dev, int config, int interface, int altsettin
 {
 	const struct libusb_interface_descriptor *intf;
 	struct libusb_config_descriptor *confdesc;
-	int i, ret;
+	int i;
 
-	ret = libusb_get_config_descriptor (dev, config, &confdesc);
-	if (ret) return -1;
+	if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (dev, config, &confdesc)))
+		return -1;
 
 	intf = &confdesc->interface[interface].altsetting[altsetting];
 	for (i = 0; i < intf->bNumEndpoints; i++) {
@@ -765,20 +755,17 @@ gp_port_usb_find_ep(libusb_device *dev, int config, int interface, int altsettin
 static int
 gp_port_usb_find_first_altsetting(struct libusb_device *dev, int *config, int *interface, int *altsetting)
 {
-	int i, i1, i2, ret;
+	int i, i1, i2;
 	struct libusb_device_descriptor desc;
 
-	ret = libusb_get_device_descriptor (dev, &desc);
-	if (ret) {
-		gp_log (GP_LOG_ERROR, "libusb1", "libusb_get_device_descriptor ret %d", ret);
+	if (LOG_ON_LIBUSB_E (libusb_get_device_descriptor (dev, &desc)))
 		return -1;
-	}
 
 	for (i = 0; i < desc.bNumConfigurations; i++) {
 		struct libusb_config_descriptor *confdesc;
 
-		ret = libusb_get_config_descriptor (dev, i, &confdesc);
-		if (ret) return -1;
+		if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (dev, i, &confdesc)))
+			return -1;
 
 		for (i1 = 0; i1 < confdesc->bNumInterfaces; i1++)
 			for (i2 = 0; i2 < confdesc->interface[i1].num_altsetting; i2++)
@@ -818,7 +805,6 @@ gp_port_usb_find_path_lib(GPPort *port)
 
 	for (d = 0; d < pl->nrofdevs; d++) {
 		struct libusb_config_descriptor *confdesc;
-		int ret;
 		int config = -1, interface = -1, altsetting = -1;
 
 		if (busnr != libusb_get_bus_number (pl->devs[d]))
@@ -833,8 +819,7 @@ gp_port_usb_find_path_lib(GPPort *port)
 		/* Use the first config, interface and altsetting we find */
 		gp_port_usb_find_first_altsetting(pl->devs[d], &config, &interface, &altsetting);
 
-		ret = libusb_get_config_descriptor (pl->devs[d], config, &confdesc);
-		if (ret)
+		if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (pl->devs[d], config, &confdesc)))
 			continue;
 
 		/* Set the defaults */
@@ -905,7 +890,6 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 	for (d = 0; d < pl->nrofdevs; d++) {
 		struct libusb_config_descriptor *confdesc;
-		int ret;
 		int config = -1, interface = -1, altsetting = -1;
 
 		if ((pl->descs[d].idVendor != idvendor) ||
@@ -927,8 +911,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		/* Use the first config, interface and altsetting we find */
 		gp_port_usb_find_first_altsetting(pl->devs[d], &config, &interface, &altsetting);
 
-		ret = libusb_get_config_descriptor (pl->devs[d], config, &confdesc);
-		if (ret)
+		if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (pl->devs[d], config, &confdesc)))
 			continue;
 
 		/* Set the defaults */
@@ -1127,12 +1110,12 @@ gp_port_usb_match_device_by_class(struct libusb_device *dev, int class, int subc
 {
 	int i, i1, i2;
 	struct libusb_device_descriptor desc;
-	int ret;
 
 	if (class == 666) /* Special hack for MTP devices with MS OS descriptors. */
 		return gp_port_usb_match_mtp_device (dev, configno, interfaceno, altsettingno);
 
-	ret = libusb_get_device_descriptor(dev, &desc);
+	if (LOG_ON_LIBUSB_E (libusb_get_device_descriptor(dev, &desc)))
+		return 0;
 
 	if (desc.bDeviceClass == class &&
 	    (subclass == -1 ||
@@ -1145,8 +1128,8 @@ gp_port_usb_match_device_by_class(struct libusb_device *dev, int class, int subc
 	for (i = 0; i < desc.bNumConfigurations; i++) {
 		struct libusb_config_descriptor *config;
 
-		ret = libusb_get_config_descriptor (dev, i, &config);
-		if (ret != LIBUSB_SUCCESS) continue;
+		if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (dev, i, &config)))
+			continue;
 
 		for (i1 = 0; i1 < config->bNumInterfaces; i1++) {
 			const struct libusb_interface *interface =
@@ -1226,8 +1209,8 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 			"(class 0x%x, subclass, 0x%x, protocol 0x%x)", 
 			class, subclass, protocol);
 
-		ret = libusb_get_config_descriptor (pl->devs[d], config, &confdesc);
-		if (ret) continue;
+		if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (pl->devs[d], config, &confdesc)))
+			continue;
 
 		/* Set the defaults */
 		port->settings.usb.config = confdesc->bConfigurationValue;
