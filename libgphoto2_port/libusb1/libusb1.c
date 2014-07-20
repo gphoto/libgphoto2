@@ -78,13 +78,32 @@
 	}\
 } while(0)
 
+#ifndef HAVE_LIBUSB_STRERROR
+static const char *libusb_strerror(int r)
+{
+	switch (r) {
+	case LIBUSB_SUCCESS:			return "success";
+	case LIBUSB_ERROR_INVALID_PARAM:	return "invalid parameter";
+	case LIBUSB_ERROR_NO_DEVICE:		return "no device";
+	case LIBUSB_ERROR_TIMEOUT:		return "timeout";
+	case LIBUSB_ERROR_NO_MEM:		return "no memory";
+	case LIBUSB_ERROR_NOT_SUPPORTED:	return "not supported";
+	case LIBUSB_ERROR_IO:			return "io error";
+	case LIBUSB_ERROR_BUSY:			return "busy";
+	case LIBUSB_ERROR_NOT_FOUND:		return "not found";
+	case LIBUSB_ERROR_ACCESS:		return "access";
+	case LIBUSB_ERROR_OVERFLOW:		return "overflow";
+	case LIBUSB_ERROR_PIPE:			return "pipe";
+	case LIBUSB_ERROR_INTERRUPTED:		return "interrupted";
+	default:				return "unknown, fix libusb1.c";
+	}
+}
+
+#endif
+
 static int log_on_libusb_error_helper( int _r, const char* func ) {
 	if (_r < LIBUSB_SUCCESS)
-#ifdef HAVE_LIBUSB_STRERROR
 		GP_LOG_E ("'%s' failed: %s (%d)", func, libusb_strerror(_r), _r);
-#else
-		GP_LOG_E ("'%s' failed: %d", func, _r);
-#endif
 	return _r;
 }
 #define LOG_ON_LIBUSB_E( RESULT ) log_on_libusb_error_helper( (RESULT), #RESULT )
