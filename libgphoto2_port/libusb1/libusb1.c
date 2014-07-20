@@ -58,7 +58,13 @@
 #  define N_(String) (String)
 #endif
 
-#define CHECK(result) {int r=(result); if (r<0) return (r);}
+#define C_GP(RESULT) do {\
+	int _r=(RESULT);\
+	if (_r<GP_OK) {\
+		GP_LOG_E ("'%s' failed: %s (%d)", #RESULT, gp_port_result_as_string(_r), _r);\
+		return _r;\
+	}\
+} while(0)
 #define C_PARAMS(PARAMS) do {\
 	if (!(PARAMS)) {\
 		GP_LOG_E ("Invalid parameters: '%s' is NULL/FALSE.", #PARAMS);\
@@ -177,11 +183,11 @@ gp_port_library_list (GPPortInfoList *list)
 	/* TODO: make sure libusb_exit gets called in all error paths inside this function */
 
 	/* generic matcher. This will catch passed XXX,YYY entries for instance. */
-	gp_port_info_new (&info);
+	C_GP (gp_port_info_new (&info));
 	gp_port_info_set_type (info, GP_PORT_USB);
 	gp_port_info_set_name (info, "");
 	gp_port_info_set_path (info, "^usb:");
-	CHECK (gp_port_info_list_append (list, info));
+	C_GP (gp_port_info_list_append (list, info));
 
 	nrofdevs = libusb_get_device_list (ctx, &devs);
 	C_MEM (descs = malloc (sizeof(descs[0])*nrofdevs));
@@ -279,7 +285,7 @@ gp_port_library_list (GPPortInfoList *list)
 		/* Note: We do not skip USB storage. Some devices can support both,
 		 * and the Ricoh erronously reports it.
 		 */ 
-		gp_port_info_new (&info);
+		C_GP (gp_port_info_new (&info));
 		gp_port_info_set_type (info, GP_PORT_USB);
 		gp_port_info_set_name (info, "Universal Serial Bus");
 		snprintf (path,sizeof(path), "usb:%03d,%03d",
@@ -287,16 +293,16 @@ gp_port_library_list (GPPortInfoList *list)
 			libusb_get_device_address (devs[d])
 		);
 		gp_port_info_set_path (info, path);
-		CHECK (gp_port_info_list_append (list, info));
+		C_GP (gp_port_info_list_append (list, info));
 	}
 	/* This will only be added if no other device was ever added.
 	 * Users doing "usb:" usage will enter the regular expression matcher case. */
 	if (nrofdevices == 0) {
-		gp_port_info_new (&info);
+		C_GP (gp_port_info_new (&info));
 		gp_port_info_set_type (info, GP_PORT_USB);
 		gp_port_info_set_name (info, "Universal Serial Bus");
 		gp_port_info_set_path (info, "usb:");
-		CHECK (gp_port_info_list_append (list, info));
+		C_GP (gp_port_info_list_append (list, info));
 	}
 	libusb_exit (ctx); /* should free all stuff above */
 	free (descs);
