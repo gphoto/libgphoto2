@@ -380,6 +380,12 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 	  IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
           ;;
         esac
+
+	# only in libusbx? but not in traditional libusb 1.0
+	AC_CHECK_LIB(libusb-1.0,libusb_strerror, [
+		AC_DEFINE(HAVE_LIBUSB_STRERROR,1,[Define if libusb-1.0 has libusb_strerror])
+])
+
 ],[],
 		[default-on],
 		[http://libusb.sourceforge.net/]
