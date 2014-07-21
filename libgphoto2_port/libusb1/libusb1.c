@@ -102,12 +102,13 @@ static const char *libusb_strerror(int r)
 
 #endif
 
-static int log_on_libusb_error_helper( int _r, const char* func ) {
+static int log_on_libusb_error_helper( int _r, const char* _func, const char* file, int line, const char* func ) {
 	if (_r < LIBUSB_SUCCESS)
-		GP_LOG_E ("'%s' failed: %s (%d)", func, libusb_strerror(_r), _r);
+		gp_log_with_source_location(GP_LOG_ERROR, file, line, func,
+					    "'%s' failed: %s (%d)", _func, libusb_strerror(_r), _r);
 	return _r;
 }
-#define LOG_ON_LIBUSB_E( RESULT ) log_on_libusb_error_helper( (RESULT), #RESULT )
+#define LOG_ON_LIBUSB_E( RESULT ) log_on_libusb_error_helper( (RESULT), #RESULT, __FILE__, __LINE__, __func__ )
 
 #define C_LIBUSB(RESULT, DEFAULT_ERROR) do {\
 	int _r = LOG_ON_LIBUSB_E( RESULT );\
