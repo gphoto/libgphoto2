@@ -82,20 +82,21 @@
 static const char *libusb_strerror(int r)
 {
 	switch (r) {
-	case LIBUSB_SUCCESS:			return "success";
-	case LIBUSB_ERROR_INVALID_PARAM:	return "invalid parameter";
-	case LIBUSB_ERROR_NO_DEVICE:		return "no device";
-	case LIBUSB_ERROR_TIMEOUT:		return "timeout";
-	case LIBUSB_ERROR_NO_MEM:		return "no memory";
-	case LIBUSB_ERROR_NOT_SUPPORTED:	return "not supported";
-	case LIBUSB_ERROR_IO:			return "io error";
-	case LIBUSB_ERROR_BUSY:			return "busy";
-	case LIBUSB_ERROR_NOT_FOUND:		return "not found";
-	case LIBUSB_ERROR_ACCESS:		return "access";
-	case LIBUSB_ERROR_OVERFLOW:		return "overflow";
-	case LIBUSB_ERROR_PIPE:			return "pipe";
-	case LIBUSB_ERROR_INTERRUPTED:		return "interrupted";
-	default:				return "unknown, fix libusb1.c";
+	case LIBUSB_SUCCESS:			return "Success";
+	case LIBUSB_ERROR_IO:			return "Input/Output error";
+	case LIBUSB_ERROR_INVALID_PARAM:	return "Invalid parameter";
+	case LIBUSB_ERROR_ACCESS:		return "Access denied (insufficient permissions)";
+	case LIBUSB_ERROR_NO_DEVICE:		return "No such device (it may have been disconnected)";
+	case LIBUSB_ERROR_NOT_FOUND:		return "Entity not found";
+	case LIBUSB_ERROR_BUSY:			return "Resource busy";
+	case LIBUSB_ERROR_TIMEOUT:		return "Operation timed out";
+	case LIBUSB_ERROR_OVERFLOW:		return "Overflow";
+	case LIBUSB_ERROR_PIPE:			return "Pipe error";
+	case LIBUSB_ERROR_INTERRUPTED:		return "System call interrupted (perhaps due to signal)";
+	case LIBUSB_ERROR_NO_MEM:		return "Insufficient memory";
+	case LIBUSB_ERROR_NOT_SUPPORTED:	return "Operation not supported or unimplemented on this platform";
+	case LIBUSB_ERROR_OTHER:		return "Other error";
+	default:				return "Unknown error";
 	}
 }
 
