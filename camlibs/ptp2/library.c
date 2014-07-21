@@ -2590,7 +2590,7 @@ capturetriggered:
 		debug_objectinfo(params, newobject, &oi);
 
 		if (oi.ParentObject == 0) { /* Capture to SDRAM */
-			GP_LOG_E ("Parentobject is 0x%lx now?", (unsigned long)oi.ParentObject);
+			GP_LOG_E ("Parentobject of newobject 0x%x is 0x%x now?", (unsigned int)newobject, (unsigned int)oi.ParentObject);
 			/* Happens on Nikon D70, we get Storage ID 0. So fake one. */
 			if (oi.StorageID == 0) {
 				strcpy (path->folder, "/");
