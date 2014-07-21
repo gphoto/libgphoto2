@@ -230,10 +230,8 @@ static int gp_port_usb_init (GPPort *port)
 static int
 gp_port_usb_exit (GPPort *port)
 {
-	if (port->pl) {
-		free (port->pl);
-		port->pl = NULL;
-	}
+	free (port->pl);
+	port->pl = NULL;
 
 	return (GP_OK);
 }

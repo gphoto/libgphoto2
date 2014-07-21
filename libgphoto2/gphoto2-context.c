@@ -101,9 +101,6 @@ gp_context_ref (GPContext *context)
 static void
 gp_context_free (GPContext *context)
 {
-	if (!context)
-		return;
-
 	free (context);
 }
 

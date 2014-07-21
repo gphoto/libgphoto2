@@ -307,10 +307,8 @@ static int gp_port_disk_init (GPPort *dev)
 static int
 gp_port_disk_exit (GPPort *port)
 {
-	if (port->pl) {
-		free (port->pl);
-		port->pl = NULL;
-	}
+	free (port->pl);
+	port->pl = NULL;
 
 	return GP_OK;
 }

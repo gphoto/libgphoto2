@@ -144,9 +144,9 @@ gp_list_free (CameraList *list)
 	CHECK_LIST (list);
 
 	for (i=0;i<list->used;i++) {
-		if (list->entry[i].name) free (list->entry[i].name);
+		free (list->entry[i].name);
 		list->entry[i].name = NULL;
-		if (list->entry[i].value) free (list->entry[i].value);
+		free (list->entry[i].value);
 		list->entry[i].value = NULL;
 	}
 	free (list->entry);
@@ -172,9 +172,9 @@ gp_list_reset (CameraList *list)
 	CHECK_LIST (list);
 
 	for (i=0;i<list->used;i++) {
-		if (list->entry[i].name) free (list->entry[i].name);
+		free (list->entry[i].name);
 		list->entry[i].name = NULL;
-		if (list->entry[i].value) free (list->entry[i].value);
+		free (list->entry[i].value);
 		list->entry[i].value = NULL;
 	}
 	/* keeps -> entry allocated for reuse. */
@@ -348,8 +348,7 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 	CHECK_INDEX_RANGE (list, index);
 
 	C_MEM (newval = strdup(value));
-	if (list->entry[index].value)
-		free (list->entry[index].value);
+	free (list->entry[index].value);
 	list->entry[index].value = newval;
 	return (GP_OK);
 }
@@ -372,8 +371,7 @@ gp_list_set_name (CameraList *list, int index, const char *name)
 	CHECK_INDEX_RANGE (list, index);
 
 	C_MEM (newname = strdup(name));
-	if (list->entry[index].name)
-		free (list->entry[index].name);
+	free (list->entry[index].name);
 	list->entry[index].name = newname;
 	return (GP_OK);
 }

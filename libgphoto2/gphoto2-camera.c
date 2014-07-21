@@ -590,8 +590,7 @@ gp_camera_free (Camera *camera)
 	}
 
 	if (camera->pc) {
-		if (camera->pc->timeout_ids)
-			free (camera->pc->timeout_ids);
+		free (camera->pc->timeout_ids);
 		free (camera->pc);
 		camera->pc = NULL;
 	}

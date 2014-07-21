@@ -327,8 +327,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
-		if (file->data)
-			free (file->data);
+		free (file->data);
 		file->data = (unsigned char*)data;
 		file->size = size;
 		break;
@@ -719,8 +718,7 @@ gp_file_clean (CameraFile *file)
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
-		if (file->data != NULL)
-			free(file->data);
+		free (file->data);
 		file->data = NULL;
 		file->size = 0;
 		break;
@@ -752,10 +750,8 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 
 	if ((destination->accesstype == GP_FILE_ACCESSTYPE_MEMORY) &&
 	    (source->accesstype == GP_FILE_ACCESSTYPE_MEMORY)) {
-		if (destination->data) {
-			free (destination->data);
-			destination->data = NULL;
-		}
+		free (destination->data);
+		destination->data = NULL;
 		destination->size = source->size;
 		C_MEM (destination->data = malloc (sizeof (char) * source->size));
 		memcpy (destination->data, source->data, source->size);
@@ -767,10 +763,9 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		off_t	offset;
 		unsigned long int curread = 0;
 
-		if (destination->data) {
-			free (destination->data);
-			destination->data = NULL;
-		}
+		free (destination->data);
+		destination->data = NULL;
+
 		if (-1 == lseek (source->fd, 0, SEEK_END)) {
 			if (errno == EBADF) return GP_ERROR_IO;
 			/* Might happen for pipes or sockets. Umm. Hard. */

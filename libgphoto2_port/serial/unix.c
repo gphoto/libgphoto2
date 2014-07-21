@@ -377,10 +377,8 @@ gp_port_serial_exit (GPPort *dev)
 	if (!dev)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	if (dev->pl) {
-		free (dev->pl);
-		dev->pl = NULL;
-	}
+	free (dev->pl);
+	dev->pl = NULL;
 
 	return GP_OK;
 }

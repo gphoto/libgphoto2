@@ -255,10 +255,8 @@ gp_port_usbscsi_exit (GPPort *port)
 	if (!port)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	if (port->pl) {
-		free (port->pl);
-		port->pl = NULL;
-	}
+	free (port->pl);
+	port->pl = NULL;
 
 	return GP_OK;
 }

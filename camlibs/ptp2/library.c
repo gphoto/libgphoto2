@@ -4575,8 +4575,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 			n = snprintf (txt, spaceleft,_("\tFree Space (Images): %d\n"), (unsigned int)storageinfo.FreeSpaceInImages);
 			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			if (storageinfo.StorageDescription) free (storageinfo.StorageDescription);
-			if (storageinfo.VolumeLabel) free (storageinfo.VolumeLabel);
+			free (storageinfo.StorageDescription);
+			free (storageinfo.VolumeLabel);
 		}
 		free (storageids.Storage);
 	}
@@ -6138,8 +6138,8 @@ storage_info_func (CameraFilesystem *fs,
 			sif->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
 			sif->freeimages = si.FreeSpaceInImages;
 		}
-		if (si.StorageDescription) free (si.StorageDescription);
-		if (si.VolumeLabel) free (si.VolumeLabel);
+		free (si.StorageDescription);
+		free (si.VolumeLabel);
 
 		n++;
 	}

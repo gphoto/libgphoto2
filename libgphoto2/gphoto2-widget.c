@@ -146,9 +146,7 @@ gp_widget_free (CameraWidget *widget)
 	for (x = 0; x < widget->choice_count; x++)
 		free (widget->choice[x]);
 	free (widget->choice);
-
-        if (widget->value_string)
-		free (widget->value_string);
+	free (widget->value_string);
 	free (widget);
 	return (GP_OK);
 }

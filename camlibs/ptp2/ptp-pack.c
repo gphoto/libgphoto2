@@ -371,16 +371,16 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 
 inline static void
 ptp_free_DI (PTPDeviceInfo *di) {
-	if (di->SerialNumber) free (di->SerialNumber);
-	if (di->DeviceVersion) free (di->DeviceVersion);
-	if (di->Model) free (di->Model);
-	if (di->Manufacturer) free (di->Manufacturer);
-	if (di->ImageFormats) free (di->ImageFormats);
-	if (di->CaptureFormats) free (di->CaptureFormats);
-	if (di->VendorExtensionDesc) free (di->VendorExtensionDesc);
-	if (di->OperationsSupported) free (di->OperationsSupported);
-	if (di->EventsSupported) free (di->EventsSupported);
-	if (di->DevicePropertiesSupported) free (di->DevicePropertiesSupported);
+	free (di->SerialNumber);
+	free (di->DeviceVersion);
+	free (di->Model);
+	free (di->Manufacturer);
+	free (di->ImageFormats);
+	free (di->CaptureFormats);
+	free (di->VendorExtensionDesc);
+	free (di->OperationsSupported);
+	free (di->EventsSupported);
+	free (di->DevicePropertiesSupported);
 }
 
 /* EOS Device Info unpack */
@@ -1701,7 +1701,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				   i, propxtype, proptype, dpd->DataType, propxcnt);
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = propxcnt;
-			if (dpd->FORM.Enum.SupportedValue) free (dpd->FORM.Enum.SupportedValue);
+			free (dpd->FORM.Enum.SupportedValue);
 			dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
 
 			switch (proptype) {
@@ -1963,10 +1963,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
 					dpd->CurrentValue.str		= ptp_unpack_string(params, data, 0, &len);
 #else
-					if (dpd->FactoryDefaultValue.str) free (dpd->FactoryDefaultValue.str);
+					free (dpd->FactoryDefaultValue.str);
 					dpd->FactoryDefaultValue.str	= strdup( (char*)xdata );
 
-					if (dpd->CurrentValue.str) free (dpd->CurrentValue.str);
+					free (dpd->CurrentValue.str);
 					dpd->CurrentValue.str		= strdup( (char*)xdata );
 #endif
 					ptp_debug (params,"event %d: currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
@@ -1990,8 +1990,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					break;
 				case PTP_DPC_CANON_EOS_CustomFuncEx:
 					dpd->DataType = PTP_DTC_STR;
-					if (dpd->FactoryDefaultValue.str) free (dpd->FactoryDefaultValue.str);
-					if (dpd->CurrentValue.str)	  free (dpd->CurrentValue.str);
+					free (dpd->FactoryDefaultValue.str);
+					free (dpd->CurrentValue.str);
 					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_CustomFuncEx( params, &data );
 					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
 					ptp_debug (params,"event %d: decoded custom function, currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);

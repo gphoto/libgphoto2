@@ -547,10 +547,8 @@ gp_abilities_list_reset (CameraAbilitiesList *list)
 {
 	CHECK_NULL (list);
 
-	if (list->abilities) {
-		free (list->abilities);
-		list->abilities = NULL;
-	}
+	free (list->abilities);
+	list->abilities = NULL;
 	list->count = 0;
 
 	return (GP_OK);

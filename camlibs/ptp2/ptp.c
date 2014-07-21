@@ -1036,12 +1036,10 @@ ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd)
 	case PTP_DTC_AUINT32:	case PTP_DTC_AINT32:
 	case PTP_DTC_AUINT64:	case PTP_DTC_AINT64:
 	case PTP_DTC_AUINT128:	case PTP_DTC_AINT128:
-		if (dpd->a.v)
-			free(dpd->a.v);
+		free(dpd->a.v);
 		break;
 	case PTP_DTC_STR:
-		if (dpd->str)
-			free(dpd->str);
+		free(dpd->str);
 		break;
 	}
 }
@@ -1119,8 +1117,8 @@ ptp_free_params (PTPParams *params)
 {
 	unsigned int i;
 
-	if (params->cameraname) free (params->cameraname);
-	if (params->wifi_profiles) free (params->wifi_profiles);
+	free (params->cameraname);
+	free (params->wifi_profiles);
 	for (i=0;i<params->nrofobjects;i++)
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
@@ -3154,8 +3152,7 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 
 	params->wifi_profiles_version = data[0];
 	params->wifi_profiles_number = data[1];
-	if (params->wifi_profiles)
-		free(params->wifi_profiles);
+	free(params->wifi_profiles);
 	
 	params->wifi_profiles = malloc(params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
 	memset(params->wifi_profiles, 0, params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
