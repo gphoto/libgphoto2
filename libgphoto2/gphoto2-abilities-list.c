@@ -59,8 +59,6 @@
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 /** \internal */
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-/** \internal */
-#define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
 /** \internal */
 struct _CameraAbilitiesList {
@@ -113,8 +111,7 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	 */
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 
-	CHECK_MEM (*list = malloc (sizeof (CameraAbilitiesList)));
-	memset (*list, 0, sizeof (CameraAbilitiesList));
+	C_MEM (*list = calloc (1, sizeof (CameraAbilitiesList)));
 
 	return (GP_OK);
 }
@@ -519,11 +516,10 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 	CHECK_NULL (list);
 
 	if (!list->count)
-		new_abilities = malloc (sizeof (CameraAbilities));
+		C_MEM( new_abilities = malloc (sizeof (CameraAbilities)) );
 	else
-		new_abilities = realloc (list->abilities,
-				sizeof (CameraAbilities) * (list->count + 1));
-	CHECK_MEM (new_abilities);
+		C_MEM (new_abilities = realloc (list->abilities,
+				sizeof (CameraAbilities) * (list->count + 1)));
 	list->abilities = new_abilities;
 	
 	memcpy (&(list->abilities [list->count]), &abilities,

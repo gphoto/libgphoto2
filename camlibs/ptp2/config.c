@@ -1075,9 +1075,7 @@ _put_STR(CONFIG_PUT_ARGS) {
 	const char *string;
 
 	CR (gp_widget_get_value(widget, &string));
-	propval->str = strdup (string);
-	if (!propval->str)
-		return (GP_ERROR_NO_MEMORY);
+	C_MEM (propval->str = strdup (string));
 	return (GP_OK);
 }
 
@@ -1089,9 +1087,7 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	CR (gp_widget_get_value(widget, &value));
 	memset(propval,0,sizeof(PTPPropertyValue));
 	/* add \0 ? */
-	propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue));
-	if (!propval->a.v)
-		return (GP_ERROR_NO_MEMORY);
+	C_MEM (propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue)));
 	propval->a.count = strlen(value)+1;
 	for (i=0;i<strlen(value)+1;i++)
 		propval->a.v[i].u8 = value[i];
@@ -1385,9 +1381,7 @@ _put_ImageSize(CONFIG_PUT_ARGS) {
 	char *value;
 
 	CR (gp_widget_get_value(widget, &value));
-	propval->str = strdup (value);
-	if (!propval->str)
-		return (GP_ERROR_NO_MEMORY);
+	C_MEM (propval->str = strdup (value));
 	return(GP_OK);
 }
 
@@ -4558,7 +4552,7 @@ _put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
 
 	tz = getenv("TZ");
 	if (tz)
-		tz = strdup(tz);
+		C_MEM (tz = strdup(tz));
 	setenv("TZ", "", 1);
 	tzset();
 	newcamtime = mktime(ptm);
@@ -5055,9 +5049,7 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 #endif
 	/* 20020101T123400.0 is returned by the HP Photosmart */
 	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d.0",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
-	propval->str = strdup(asctime);
-	if (!propval->str)
-		return (GP_ERROR_NO_MEMORY);
+	C_MEM (propval->str = strdup(asctime));
 	return (GP_OK);
 }
 
@@ -6477,11 +6469,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 						continue;
 					}
 					if (nrofsetprops)
-						setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1));
+						C_MEM (setprops = realloc(setprops,sizeof(setprops[0])*(nrofsetprops+1)));
 					else
-						setprops = malloc(sizeof(setprops[0]));
-					if (setprops) /* handle oom */
-						setprops[nrofsetprops++] = cursub->propid;
+						C_MEM (setprops = malloc(sizeof(setprops[0])));
+					setprops[nrofsetprops++] = cursub->propid;
 				}
 				/* ok, looking good */
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
@@ -6865,7 +6856,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		case PTP_DTC_STR: {
 			char *val;
 			gp_widget_get_value (widget, &val);
-			propval.str = strdup(val);
+			C_MEM (propval.str = strdup(val));
 			break;
 		}
 		default:

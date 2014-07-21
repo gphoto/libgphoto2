@@ -268,7 +268,6 @@ struct _CameraFilesystem {
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(result)           {int __r = (result); if (__r < 0) return (__r);}
-#define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
 #define CL(result,list)			\
 {					\
@@ -516,7 +515,7 @@ append_folder_one (
 	CameraFilesystemFolder *f;
 
 	GP_LOG_D ("Append one folder %s", name);
-	CHECK_MEM (f = calloc(sizeof(CameraFilesystemFolder),1));
+	C_MEM (f = calloc(1, sizeof(CameraFilesystemFolder)));
 	f->name = strdup (name);
 	if (!f->name) {
 		free (f);
@@ -569,7 +568,7 @@ append_to_folder (CameraFilesystemFolder *folder,
 	/* Not found ... create new folder */
 	if (s) {
 		char *x;
-		CHECK_MEM (x = calloc ((s-foldername)+1,1));
+		C_MEM (x = calloc ((s-foldername)+1,1));
 		memcpy (x, foldername, (s-foldername));
 		x[s-foldername] = 0;
 		CR (append_folder_one (folder, x, newfolder));
@@ -612,8 +611,8 @@ append_file (CameraFilesystem *fs, CameraFilesystemFolder *folder, const char *n
 	}
 	/* new now points to the location of the last ->next pointer,
 	 * if we write to it, we set last->next */
-	CHECK_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1));
-	(*new)->name = strdup (name);
+	C_MEM ((*new) = calloc (1, sizeof (CameraFilesystemFile)));
+	C_MEM ((*new)->name = strdup (name));
 	(*new)->info_dirty = 1;
 	(*new)->normal = file;
 	gp_file_ref (file);
@@ -658,9 +657,7 @@ gp_filesystem_new (CameraFilesystem **fs)
 {
 	CHECK_NULL (fs);
 
-	CHECK_MEM (*fs = malloc (sizeof (CameraFilesystem)));
-
-	memset(*fs,0,sizeof(CameraFilesystem));
+	C_MEM (*fs = calloc (1, sizeof (CameraFilesystem)));
 
 	(*fs)->rootfolder = calloc (sizeof (CameraFilesystemFolder), 1);
 	if (!(*fs)->rootfolder) {
@@ -732,7 +729,7 @@ internal_append (CameraFilesystem *fs, CameraFilesystemFolder *f,
 	if (*new)
 		return (GP_ERROR_FILE_EXISTS);
 
-	CHECK_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1))
+	C_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1));
 	(*new)->name = strdup (filename);
 	if (!(*new)->name) {
 		free (*new);
@@ -1481,7 +1478,7 @@ recursive_folder_scan (
 		char *xfolder;
 		ret = recursive_folder_scan (f, lookforfile, &xfolder);
 		if (ret == GP_OK) {
-			(*foldername) = malloc (strlen (folder->name) + 1 + strlen (xfolder) + 1);
+			C_MEM ((*foldername) = malloc (strlen (folder->name) + 1 + strlen (xfolder) + 1));
 			strcpy ((*foldername),folder->name);
 			strcat ((*foldername),"/");
 			strcat ((*foldername),xfolder);

@@ -91,17 +91,13 @@ gp_port_new (GPPort **port)
 
         GP_LOG_D ("Creating new device...");
 
-	*port = malloc (sizeof (GPPort));
-        if (!(*port))
-		return (GP_ERROR_NO_MEMORY);
-        memset (*port, 0, sizeof (GPPort));
+	C_MEM (*port = calloc (1, sizeof (GPPort)));
 
-	(*port)->pc = malloc (sizeof (GPPortPrivateCore));
+	(*port)->pc = calloc (1, sizeof (GPPortPrivateCore));
 	if (!(*port)->pc) {
 		gp_port_free (*port);
 		return (GP_ERROR_NO_MEMORY);
 	}
-	memset ((*port)->pc, 0, sizeof (GPPortPrivateCore));
 
         return (GP_OK);
 }
@@ -151,12 +147,12 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	CHECK_NULL (port);
 
 	if (port->pc->info.name) free (port->pc->info.name);
-	port->pc->info.name = strdup (info->name);
+	C_MEM (port->pc->info.name = strdup (info->name));
 	if (port->pc->info.path) free (port->pc->info.path);
-	port->pc->info.path = strdup (info->path);
+	C_MEM (port->pc->info.path = strdup (info->path));
 	port->pc->info.type = info->type;
 	if (port->pc->info.library_filename) free (port->pc->info.library_filename);
-	port->pc->info.library_filename = strdup (info->library_filename);
+	C_MEM (port->pc->info.library_filename = strdup (info->library_filename));
 
 	port->type = info->type;
 

@@ -334,12 +334,12 @@ gp_port_library_list (GPPortInfoList *list)
 
 		gp_port_info_new (&info);
 		gp_port_info_set_type (info, GP_PORT_SERIAL);
-		xname = malloc (strlen("serial:")+strlen(path)+1);
+		C_MEM (xname = malloc (strlen("serial:")+strlen(path)+1));
 		strcpy (xname, "serial:");
 		strcat (xname, path);
 		gp_port_info_set_path (info, xname);
 		free (xname);
-		xname = malloc (100);
+		C_MEM (xname = malloc (100));
 		snprintf (xname, 100, _("Serial Port %i"), x);
 		gp_port_info_set_name (info, xname);
 		free (xname);
@@ -363,10 +363,7 @@ gp_port_serial_init (GPPort *dev)
 	if (!dev)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	dev->pl = malloc (sizeof (GPPortPrivateLibrary));
-	if (!dev->pl)
-		return (GP_ERROR_NO_MEMORY);
-	memset (dev->pl, 0, sizeof (GPPortPrivateLibrary));
+	C_MEM (dev->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
 	/* There is no default speed. */
 	dev->pl->baudrate = -1;

@@ -85,10 +85,7 @@ gp_list_new (CameraList **list)
 {
 	CHECK_NULL (list);
 
-	(*list) = malloc (sizeof (CameraList));
-        if (!(*list))
-		return (GP_ERROR_NO_MEMORY);
-	memset ((*list), 0, sizeof (CameraList));
+	C_MEM (*list = calloc (1, sizeof (CameraList)));
 
 	(*list)->ref_count = 1;
 
@@ -200,26 +197,17 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 	CHECK_LIST (list);
 
 	if (list->used == list->max) {
-		struct _entry *new;
-
-		new = realloc(list->entry,(list->max+100)*sizeof(struct _entry));
-		if (!new)
-			return GP_ERROR_NO_MEMORY;
-		list->entry = new;
+		C_MEM (list->entry = realloc(list->entry,(list->max+100)*sizeof(struct _entry)));
 		list->max += 100;
 	}
 
 	if (name) {
-		list->entry[list->used].name = strdup (name);
-		if (!list->entry[list->used].name)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (list->entry[list->used].name = strdup (name));
 	} else {
 		list->entry[list->used].name = NULL;
 	}
 	if (value) {
-		list->entry[list->used].value = strdup (value);
-		if (!list->entry[list->used].value)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (list->entry[list->used].value = strdup (value));
 	} else {
 		list->entry[list->used].value = NULL;
 	}
@@ -359,9 +347,7 @@ gp_list_set_value (CameraList *list, int index, const char *value)
 	CHECK_NULL (value);
 	CHECK_INDEX_RANGE (list, index);
 
-	newval = strdup(value);
-	if (!newval)
-		return GP_ERROR_NO_MEMORY;
+	C_MEM (newval = strdup(value));
 	if (list->entry[index].value)
 		free (list->entry[index].value);
 	list->entry[index].value = newval;
@@ -385,9 +371,7 @@ gp_list_set_name (CameraList *list, int index, const char *name)
 	CHECK_NULL (name);
 	CHECK_INDEX_RANGE (list, index);
 
-	newname = strdup(name);
-	if (!newname)
-		return GP_ERROR_NO_MEMORY;
+	C_MEM (newname = strdup(name));
 	if (list->entry[index].name)
 		free (list->entry[index].name);
 	list->entry[index].name = newname;

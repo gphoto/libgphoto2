@@ -117,10 +117,7 @@ gp_port_info_list_new (GPPortInfoList **list)
 	 */
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 
-	*list = malloc (sizeof (GPPortInfoList));
-	if (!*list)
-		return (GP_ERROR_NO_MEMORY);
-	memset (*list, 0, sizeof (GPPortInfoList));
+	C_MEM (*list = calloc (1, sizeof (GPPortInfoList)));
 
 	return (GP_OK);
 }
@@ -182,12 +179,9 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	CHECK_NULL (list);
 
 	if (!list->info)
-		new_info = malloc (sizeof (GPPortInfo));
+		C_MEM (new_info = malloc (sizeof (GPPortInfo)));
 	else
-		new_info = realloc (list->info, sizeof (GPPortInfo) *
-							(list->count + 1));
-	if (!new_info)
-		return (GP_ERROR_NO_MEMORY);
+		C_MEM (new_info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
 
 	list->info = new_info;
 	list->count++;
@@ -514,7 +508,7 @@ gp_port_info_get_name (GPPortInfo info, char **name) {
  **/
 int
 gp_port_info_set_name (GPPortInfo info, const char *name) {
-	info->name = strdup (name);
+	C_MEM (info->name = strdup (name));
 	return GP_OK;
 }
 
@@ -545,7 +539,7 @@ gp_port_info_get_path (GPPortInfo info, char **path) {
  **/
 int
 gp_port_info_set_path (GPPortInfo info, const char *path) {
-	info->path = strdup (path);
+	C_MEM (info->path = strdup (path));
 	return GP_OK;
 }
 
@@ -591,8 +585,6 @@ gp_port_info_set_type (GPPortInfo info, GPPortType type) {
  **/
 int
 gp_port_info_new (GPPortInfo *info) {
-	*info = calloc (sizeof(struct _GPPortInfo),1);
-	if (!*info)
-		return GP_ERROR_NO_MEMORY;
+	C_MEM (*info = calloc (1, sizeof(struct _GPPortInfo)));
 	return GP_OK;
 }

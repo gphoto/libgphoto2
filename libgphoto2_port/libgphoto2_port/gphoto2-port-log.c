@@ -87,12 +87,10 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	if (!log_funcs)
-		new_log_funcs = malloc (sizeof (LogFunc));
+		C_MEM (new_log_funcs = malloc (sizeof (LogFunc)));
 	else
-		new_log_funcs = realloc (log_funcs, sizeof (LogFunc) * 
-					 (log_funcs_count + 1));
-	if (!new_log_funcs)
-		return (GP_ERROR_NO_MEMORY);
+		C_MEM (new_log_funcs = realloc (log_funcs, sizeof (LogFunc) *
+						(log_funcs_count + 1)));
 
 	log_funcs = new_log_funcs;
 	log_funcs_count++;

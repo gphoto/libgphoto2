@@ -123,13 +123,11 @@ static struct special_file *special_files = NULL;
 static int
 add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
 	if (nrofspecial_files)
-		special_files = realloc (special_files, sizeof(special_files[0])*(nrofspecial_files+1));
+		C_MEM (special_files = realloc (special_files, sizeof(special_files[0])*(nrofspecial_files+1)));
 	else
-		special_files = malloc (sizeof(special_files[0]));
+		C_MEM (special_files = malloc (sizeof(special_files[0])));
 
-	special_files[nrofspecial_files].name = strdup(name);
-	if (!special_files[nrofspecial_files].name)
-		return (GP_ERROR_NO_MEMORY);
+	C_MEM (special_files[nrofspecial_files].name = strdup(name));
 	special_files[nrofspecial_files].putfunc = putfunc;
 	special_files[nrofspecial_files].getfunc = getfunc;
 	nrofspecial_files++;
@@ -232,15 +230,15 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		memcpy (&newdi, outerdi, sizeof(PTPDeviceInfo));
 
 		/* dup the strings */
-		if (outerdi->VendorExtensionDesc)	newdi.VendorExtensionDesc = strdup (outerdi->VendorExtensionDesc);
-		if (outerdi->Manufacturer)		newdi.Manufacturer = strdup (outerdi->Manufacturer);
-		if (outerdi->Model)			newdi.Model = strdup (outerdi->Model);
-		if (outerdi->DeviceVersion)		newdi.DeviceVersion = strdup (outerdi->DeviceVersion);
-		if (outerdi->SerialNumber)		newdi.SerialNumber = strdup (outerdi->SerialNumber);
+		if (outerdi->VendorExtensionDesc)	C_MEM (newdi.VendorExtensionDesc = strdup (outerdi->VendorExtensionDesc));
+		if (outerdi->Manufacturer)		C_MEM (newdi.Manufacturer = strdup (outerdi->Manufacturer));
+		if (outerdi->Model)			C_MEM (newdi.Model = strdup (outerdi->Model));
+		if (outerdi->DeviceVersion)		C_MEM (newdi.DeviceVersion = strdup (outerdi->DeviceVersion));
+		if (outerdi->SerialNumber)		C_MEM (newdi.SerialNumber = strdup (outerdi->SerialNumber));
 
 		/* Dup and merge the lists */
 #define DI_MERGE(x) \
-		newdi.x = malloc(sizeof(outerdi->x[0])*(ndi.x##_len + outerdi->x##_len));	\
+		C_MEM (newdi.x = malloc(sizeof(outerdi->x[0])*(ndi.x##_len + outerdi->x##_len)));\
 		for (i = 0; i < outerdi->x##_len ; i++) 					\
 			newdi.x[i] = outerdi->x[i];						\
 		for (i = 0; i < ndi.x##_len ; i++)						\
@@ -326,7 +324,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 			/* hides some commands from us ... */
 			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
-				di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1));
+				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 				/* probably more */
 				di->OperationsSupported_len += 1;
@@ -338,7 +336,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			unsigned int	xsize;
 
 			C_PTP (ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
-			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
+			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize)));
 			for (i=0;i<xsize;i++)
 				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
 			di->DevicePropertiesSupported_len += xsize;
@@ -348,7 +346,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
-			di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2));
+			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
 			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_Capture;
 			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
 			di->OperationsSupported_len+=2;
@@ -380,9 +378,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 					break;
 				}
 			}
-			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + propcodes));
-			di->OperationsSupported       = realloc(di->OperationsSupported,      sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + opcodes));
-			di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events));
+			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + propcodes)));
+			C_MEM (di->OperationsSupported       = realloc(di->OperationsSupported,      sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + opcodes)));
+			C_MEM (di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events)));
 			j = 0; k = 0; l = 0;
 			for (i=0;i<xsize;i++) {
 				GP_LOG_E ("sony code: %x", xprops[i]);
@@ -408,7 +406,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		}
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
-			di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2));
+			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
 			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_Capture;
 			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
 			di->OperationsSupported_len+=2;
@@ -422,7 +420,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			int i;
 
 			C_PTP (ptp_canon_eos_getdeviceinfo (&camera->pl->params, &eosdi));
-			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + eosdi.DevicePropertiesSupported_len));
+			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + eosdi.DevicePropertiesSupported_len)));
 			for (i=0;i<eosdi.DevicePropertiesSupported_len;i++)
 				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = eosdi.DevicePropertiesSupported[i];
 			di->DevicePropertiesSupported_len += eosdi.DevicePropertiesSupported_len;
@@ -3697,9 +3695,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					newobject = entry.u.object.oid;
 
-					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-					if (!path)
-						return GP_ERROR_NO_MEMORY;
+					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					path->name[0]='\0';
 					strcpy (path->folder,"/");
 					ret = gp_file_new(&file);
@@ -3742,9 +3738,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					GP_LOG_D ("Found new objectinfo! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 					newobject = entry.u.object.oid;
 					add_object (camera, newobject, context);
-					path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-					if (!path)
-						return GP_ERROR_NO_MEMORY;
+					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					strcpy  (path->name,  entry.u.object.oi.Filename);
 					free (entry.u.object.oi.Filename);
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entry.u.object.oi.StorageID);
@@ -3755,30 +3749,17 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventtype = GP_EVENT_FILE_ADDED;
 					*eventdata = path;
 					return GP_OK;
-				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY: {
-					char *x;
-					x = malloc(strlen("PTP Property 0123 changed")+1);
-					if (x) {
-						sprintf (x, "PTP Property %04x changed", entry.u.propid);
-						*eventtype = GP_EVENT_UNKNOWN;
-						*eventdata = x;
-						return GP_OK;
-					}
-					break;
-				}
-				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS: {
-					char *x;
-
+				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY:
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+					sprintf (*eventdata, "PTP Property %04x changed", entry.u.propid);
+					return GP_OK;
+				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS:
 					/* if we do capture stuff, camerastatus will turn to 0 when done */
-					x = malloc(strlen("Camera Status 123456789012345")+1);
-					if (x) {
-						sprintf (x, "Camera Status %d", entry.u.status);
-						*eventtype = GP_EVENT_UNKNOWN;
-						*eventdata = x;
-						return GP_OK;
-					}
-					break;
-				}
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("Camera Status 123456789012345")+1));
+					sprintf (*eventdata, "Camera Status %d", entry.u.status);
+					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 					/* only return if interesting stuff happened */
 					if (entry.u.info) {
@@ -3836,7 +3817,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					if (oi.ParentObject != 0) {
 						CR (add_object (camera, newobject, context));
-						path = malloc (sizeof(CameraFilePath));
+						C_MEM (path = malloc (sizeof(CameraFilePath)));
 						strcpy  (path->name,  oi.Filename);
 						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
 						get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
@@ -3845,7 +3826,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						gp_filesystem_append (camera->fs, path->folder, path->name, context);
 
 					} else {
-						path = malloc (sizeof(CameraFilePath));
+						C_MEM (path = malloc (sizeof(CameraFilePath)));
 						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 						sprintf (path->name, "capt%04d.jpg", capcnt++);
 						add_objectid_and_upload (camera, path, context, newobject, &oi);
@@ -3857,7 +3838,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				case PTP_EC_CANON_ShutterButtonPressed0:
 				case PTP_EC_CANON_ShutterButtonPressed1:
 				{
-					path = malloc(sizeof(CameraFilePath));
+					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					ret = camera_canon_capture (camera, GP_CAPTURE_IMAGE, path, context);
 					if (ret != GP_OK) {
 						free (path);
@@ -3929,13 +3910,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 				debug_objectinfo(params, event.Param1, &ob->oi);
 				if (ret != PTP_RC_OK) {
 					*eventtype = GP_EVENT_UNKNOWN;
-					*eventdata = strdup ("object added not found (already deleted)");
+					C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
 					break;
 				}
 
-				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-				if (!path)
-					return GP_ERROR_NO_MEMORY;
+				C_MEM (path = malloc(sizeof(CameraFilePath)));
 				path->name[0]='\0';
 				path->folder[0]='\0';
 
@@ -3950,7 +3929,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					else
 						sprintf (path->name, "capt%04d.jpg", capcnt++);
 					free (ob->oi.Filename);
-					ob->oi.Filename = strdup (path->name);
+					C_MEM (ob->oi.Filename = strdup (path->name));
 					strcpy (path->folder,"/");
 					goto downloadnow;
 				} else {
@@ -3985,9 +3964,7 @@ downloadnow:
 				if (ret != PTP_RC_OK)
 					continue;
 				debug_objectinfo(params, newobject, &oi);
-				path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-				if (!path)
-					return GP_ERROR_NO_MEMORY;
+				C_MEM (path = malloc(sizeof(CameraFilePath)));
 				path->name[0]='\0';
 				strcpy (path->folder,"/");
 				ret = gp_file_new(&file);
@@ -4035,30 +4012,17 @@ downloadnow:
 				*eventdata = NULL;
 				return GP_OK;
 			case PTP_EC_DevicePropChanged:
-			{
-				char *x;
-				x = malloc(strlen("PTP Property 0123 changed")+1);
-				if (x) {
-					sprintf (x, "PTP Property %04x changed", event.Param1);
-					*eventtype = GP_EVENT_UNKNOWN;
-					*eventdata = x;
-					return GP_OK;
-				}
-				break;
-			}
+				*eventtype = GP_EVENT_UNKNOWN;
+				C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+				sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
+				return GP_OK;
 			/* as we can read multiple events we should retrieve a good one if possible
 			 * and not a random one.*/
-			default: {
-				char *x;
-
+			default:
 				*eventtype = GP_EVENT_UNKNOWN;
-				x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
-				if (x) {
-					sprintf (x, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
-					*eventdata = x;
-					return GP_OK;
-				}
-			}
+				C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
+				sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+				return GP_OK;
 			}
 			if (_timeout_passed (&event_start, timeout))
 				break;
@@ -4082,9 +4046,7 @@ handleregular:
 		case PTP_EC_Sony_ObjectAdded: {
 			PTPObjectInfo	oi;
 
-			path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-			if (!path)
-				return GP_ERROR_NO_MEMORY;
+			C_MEM (path = malloc(sizeof(CameraFilePath)));
 			C_PTP (ptp_getobjectinfo (params, event.Param1, &oi));
 
 			sprintf (path->folder,"/");
@@ -4113,9 +4075,7 @@ handleregular:
 		PTPObject	*ob;
 		uint16_t	ofc;
 
-		path = (CameraFilePath *)malloc(sizeof(CameraFilePath));
-		if (!path)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (path = malloc(sizeof(CameraFilePath)));
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
@@ -4140,28 +4100,15 @@ handleregular:
 		break;
 	}
 	case PTP_EC_DevicePropChanged:
-	{
-		char *x;
-		x = malloc(strlen("PTP Property 0123 changed")+1);
-		if (x) {
-			sprintf (x, "PTP Property %04x changed", event.Param1);
-			*eventtype = GP_EVENT_UNKNOWN;
-			*eventdata = x;
-			return GP_OK;
-		}
-		break;
-	}
-	default: {
-		char *x;
-
 		*eventtype = GP_EVENT_UNKNOWN;
-		x = malloc(strlen("PTP Event 0123, Param1 01234567")+1);
-		if (x) {
-			sprintf (x, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
-			*eventdata = x;
-		}
+		C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+		sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
 		break;
-	}
+	default:
+		*eventtype = GP_EVENT_UNKNOWN;
+		C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
+		sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+		break;
 	}
 	return GP_OK;
 }
@@ -4294,7 +4241,7 @@ nikon_curve_get (CameraFilesystem *fs, const char *folder, const char *filename,
 	C_PTP_REP (ptp_nikon_curve_download (params, &xdata, &size));
 
 	tonecurve = (PTPNIKONCurveData *) xdata;
-	ntcfile = malloc(2000);
+	C_MEM (ntcfile = malloc(2000));
 	memcpy(ntcfile,"\x9d\xdc\x7d\x00\x65\xd4\x11\xd1\x91\x94\x44\x45\x53\x54\x00\x00\xff\x05\xbb\x02\x00\x00\x01\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x9d\xdc\x7d\x03\x65\xd4\x11\xd1\x91\x94\x44\x45\x53\x54\x00\x00\x00\x00\x00\x00\xff\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\x00\x00\x00\xff\x00\x00\x00\xff\x00\x00\x00", 92);
 	doubleptr=(double *) &ntcfile[92];
 	*doubleptr++ = (double) tonecurve->XAxisStartPoint/255;
@@ -4965,7 +4912,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			GP_LOG_E (
 				"Duplicate foldername '%s' in folder '%s'. Ignoring nth entry.\n",
 				ob->oi.Filename, folder);
-			buf = malloc(strlen(ob->oi.Filename)+strlen("_012345678")+1);
+			C_MEM (buf = malloc(strlen(ob->oi.Filename)+strlen("_012345678")+1));
 			sprintf (buf, "%s_%08x", ob->oi.Filename, ob->oid);
 			free (ob->oi.Filename);
 			ob->oi.Filename = buf;
@@ -5188,7 +5135,7 @@ ptp_mtp_parse_metadata (
 		end = strstr (begin, propname2);
 		if (!end) continue;
 		*end = '\0';
-		content = strdup(begin);
+		C_MEM (content = strdup(begin));
 		*end = '<';
 		if (!content)
 			continue;
@@ -5272,18 +5219,19 @@ mtp_get_playlist_string(
 		len = strlen(buf);
 
 		if (content) {
-			content = realloc (content, contentlen+len+1+1);
+			C_MEM (content = realloc (content, contentlen+len+1+1));
 			strcpy (content+contentlen, buf);
 			strcpy (content+contentlen+len, "\n");
 			contentlen += len+1;
 		} else {
-			content = malloc (len+1+1);
+			C_MEM (content = malloc (len+1+1));
 			strcpy (content, buf);
 			strcpy (content+len, "\n");
 			contentlen = len+1;
 		}
 	}
-	if (!content) content = malloc(1);
+	if (!content)
+		C_MEM (content = malloc(1));
 	if (xcontent)
 		*xcontent = content;
 	else
@@ -5308,14 +5256,11 @@ mtp_put_playlist(
 		char *t = strchr(s,'\n');
 		char *fn, *filename;
 		if (t) {
-			fn = malloc (t-s+1);
-			if (!fn) return GP_ERROR_NO_MEMORY;
+			C_MEM (fn = malloc (t-s+1));
 			memcpy (fn, s, t-s);
 			fn[t-s]='\0';
 		} else {
-			fn = malloc (strlen(s)+1);
-			if (!fn) return GP_ERROR_NO_MEMORY;
-			strcpy (fn,s);
+			C_MEM (fn = strdup(s));
 		}
 		filename = strrchr (fn,'/');
 		if (!filename) {
@@ -5332,13 +5277,10 @@ mtp_put_playlist(
 		find_folder_handle(params, fn, storage, objectid);
 		objectid = find_child(params, filename, storage, objectid, NULL);
 		if (objectid != PTP_HANDLER_SPECIAL) {
-			if (nrofoids) {
-				oids = realloc(oids, sizeof(oids[0])*(nrofoids+1));
-				if (!oids) return GP_ERROR_NO_MEMORY;
-			} else {
-				oids = malloc(sizeof(oids[0]));
-				if (!oids) return GP_ERROR_NO_MEMORY;
-			}
+			if (nrofoids)
+				C_MEM (oids = realloc(oids, sizeof(oids[0])*(nrofoids+1)));
+			else
+				C_MEM (oids = malloc(sizeof(oids[0])));
 			oids[nrofoids] = objectid;
 			nrofoids++;
 		} else {
@@ -5683,7 +5625,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			/* Do not download 0 sized files.
 			 * It is not necessary and even breaks for some camera special files.
 			 */
-			ximage = malloc(1);
+			C_MEM (ximage = malloc(1));
 			CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		}
 
@@ -6115,8 +6057,7 @@ storage_info_func (CameraFilesystem *fs,
 	SET_CONTEXT_P(params, context);
 	C_PTP (ptp_getstorageids (params, &sids));
 	n = 0;
-	*sinfos = (CameraStorageInformation*)
-		calloc (sizeof (CameraStorageInformation),sids.n);
+	C_MEM (*sinfos = calloc (sids.n, sizeof (CameraStorageInformation)));
 	for (i = 0; i<sids.n; i++) {
 		sif = (*sinfos)+n;
 
@@ -6587,7 +6528,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				else
 					params->objects[params->nrofobjects].oi.ParentObject = handle;
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
-				params->objects[params->nrofobjects].oi.Filename = strdup(tmp[i].Filename);
+				C_MEM (params->objects[params->nrofobjects].oi.Filename = strdup(tmp[i].Filename));
 				params->objects[params->nrofobjects].oi.ObjectFormat = tmp[i].ObjectFormatCode;
 				params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_DPGS_Get; /* FIXME: check if ok */
 				params->objects[params->nrofobjects].oi.ObjectCompressedSize = tmp[i].ObjectSize;
@@ -6786,15 +6727,11 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->wait_for_event = camera_wait_for_event;
 
 	/* We need some data that we pass around */
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl)
-		return (GP_ERROR_NO_MEMORY);
-	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+	C_MEM (camera->pl = calloc (1, sizeof (CameraPrivateLibrary)));
 	params = &camera->pl->params;
 	params->debug_func = ptp_debug_func;
 	params->error_func = ptp_error_func;
-	params->data = malloc (sizeof (PTPData));
-	memset (params->data, 0, sizeof (PTPData));
+	C_MEM (params->data = calloc (1, sizeof (PTPData)));
 	((PTPData *) params->data)->camera = camera;
 	params->byteorder = PTP_DL_LE;
 	if (params->byteorder == PTP_DL_LE)

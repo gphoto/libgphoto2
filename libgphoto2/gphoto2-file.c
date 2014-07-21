@@ -45,7 +45,6 @@
 
 #define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
-#define CHECK_MEM(m)         {if (!(m)) return (GP_ERROR_NO_MEMORY);}
 
 /* lengt of one path component */
 #ifndef MAX_PATH
@@ -87,10 +86,7 @@ gp_file_new (CameraFile **file)
 {
 	CHECK_NULL (file);
 
-	*file = malloc (sizeof (CameraFile));
-	if (!*file)
-		return (GP_ERROR_NO_MEMORY);
-	memset (*file, 0, sizeof (CameraFile));
+	C_MEM (*file = calloc (1, sizeof (CameraFile)));
 
 	strcpy ((*file)->mime_type, "unknown/unknown");
 	(*file)->ref_count = 1;
@@ -110,10 +106,7 @@ gp_file_new_from_fd (CameraFile **file, int fd)
 {
 	CHECK_NULL (file);
 
-	*file = malloc (sizeof (CameraFile));
-	if (!*file)
-		return (GP_ERROR_NO_MEMORY);
-	memset (*file, 0, sizeof (CameraFile));
+	C_MEM (*file = calloc (1, sizeof (CameraFile)));
 
 	strcpy ((*file)->mime_type, "unknown/unknown");
 	(*file)->ref_count = 1;
@@ -134,10 +127,7 @@ gp_file_new_from_handler (CameraFile **file, CameraFileHandler* handler, void*pr
 {
 	CHECK_NULL (file);
 
-	*file = malloc (sizeof (CameraFile));
-	if (!*file)
-		return (GP_ERROR_NO_MEMORY);
-	memset (*file, 0, sizeof (CameraFile));
+	C_MEM (*file = calloc (1, sizeof (CameraFile)));
 
 	strcpy ((*file)->mime_type, "unknown/unknown");
 	(*file)->ref_count = 1;
@@ -215,19 +205,14 @@ int
 gp_file_append (CameraFile *file, const char *data, 
 		unsigned long int size)
 {
-        char *t;
-
 	CHECK_NULL (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
 		if (!file->data)
-			file->data = malloc (sizeof(char) * (size));
+			C_MEM (file->data = malloc (sizeof(char) * (size)));
 		else {
-			t = realloc (file->data, sizeof (char) * (file->size + size));
-			if (!t)
-				return GP_ERROR_NO_MEMORY;
-			file->data = (unsigned char*)t;
+			C_MEM (file->data = realloc (file->data, sizeof (char) * (file->size + size)));
 		}
 		memcpy (&file->data[file->size], data, size);
 		file->size += size;
@@ -454,9 +439,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		if (size) *size = offset;
 		if (!data) /* just the size... */
 			return GP_OK;
-		*data = malloc (offset);
-		if (!*data)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (*data = malloc (offset));
 		while (curread < offset) {
 			ssize_t res = read (file->fd, (char*)((*data)+curread), offset-curread);
 			if (res == -1) {
@@ -489,9 +472,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		if (size) *size = xsize;
 		if (!data) /* just the size... */
 			return GP_OK;
-		*data = malloc (xsize);
-		if (!*data)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (*data = malloc (xsize));
 		ret = file->handler->read (file->private, (unsigned char*)*data, &xsize);
 		if (ret != GP_OK) {
 			GP_LOG_E ("Encountered error %d getting data().", ret);
@@ -551,9 +532,7 @@ gp_file_save (CameraFile *file, const char *filename)
 			GP_LOG_E ("Encountered error %d lseekin to BEGIN.", errno);
 			return GP_ERROR_IO_READ;
 		}
-		data = malloc(65536);
-		if (!data)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (data = malloc(65536));
 		if (!(fp = fopen (filename, "wb"))) {
 			free (data);
 			return GP_ERROR;
@@ -778,9 +757,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			destination->data = NULL;
 		}
 		destination->size = source->size;
-		destination->data = malloc (sizeof (char) * source->size);
-		if (!destination->data)
-			return (GP_ERROR_NO_MEMORY);
+		C_MEM (destination->data = malloc (sizeof (char) * source->size));
 		memcpy (destination->data, source->data, source->size);
 		return (GP_OK);
 	}
@@ -810,9 +787,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			return GP_ERROR_IO_READ;
 		}
 		destination->size = offset;
-		destination->data = malloc (offset);
-		if (!destination->data)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (destination->data = malloc (offset));
 		while (curread < offset) {
 			ssize_t res = read (source->fd, destination->data+curread, offset-curread);
 			if (res == -1) {
@@ -838,7 +813,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		if (-1 == ftruncate (destination->fd, 0))
 			perror("ftruncate");
 		lseek (source->fd, 0, SEEK_SET);
-		data = malloc (65536);
+		C_MEM (data = malloc (65536));
 		while (1) {
 			unsigned long curwritten = 0;
 			ssize_t res;
@@ -948,9 +923,7 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 
 	/* the easy case, always map 1:1, if it has a suffix already. */
 	if ((type == GP_FILE_TYPE_NORMAL) && strchr(basename,'.')) {
-		*newname = strdup (basename);
-		if (!*newname)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (*newname = strdup (basename));
 		return GP_OK;
 	}
 
@@ -973,9 +946,7 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 		int xlen;
 		if (!suffix)
 			suffix = s+1;
-		new = malloc (strlen(prefix) + (s-basename+1) + strlen (suffix) + 1);
-		if (!new)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (new = malloc (strlen(prefix) + (s-basename+1) + strlen (suffix) + 1));
 		strcpy (new, prefix);
 		xlen = strlen (new);
 		memcpy (new+xlen, basename, s-basename+1);
@@ -983,9 +954,7 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 		strcat (new, suffix);
 	} else { /* no dot in basename? */
 		if (!suffix) suffix = "";
-		new = malloc (strlen(prefix) + strlen(basename) + 1 + strlen (suffix) + 1);
-		if (!new)
-			return GP_ERROR_NO_MEMORY;
+		C_MEM (new = malloc (strlen(prefix) + strlen(basename) + 1 + strlen (suffix) + 1));
 		strcpy (new, prefix);
 		strcat (new, basename);
 		if (strlen(suffix)) {

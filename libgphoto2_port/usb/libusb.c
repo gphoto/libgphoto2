@@ -216,10 +216,7 @@ gp_port_library_list (GPPortInfoList *list)
 
 static int gp_port_usb_init (GPPort *port)
 {
-	port->pl = malloc (sizeof (GPPortPrivateLibrary));
-	if (!port->pl)
-		return (GP_ERROR_NO_MEMORY);
-	memset (port->pl, 0, sizeof (GPPortPrivateLibrary));
+	C_MEM (port->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
 	port->pl->config = port->pl->interface = port->pl->altsetting = -1;
 
@@ -1268,10 +1265,9 @@ gp_port_library_operations (void)
 {
 	GPPortOperations *ops;
 
-	ops = malloc (sizeof (GPPortOperations));
+	ops = calloc (1, sizeof (GPPortOperations));
 	if (!ops)
 		return (NULL);
-	memset (ops, 0, sizeof (GPPortOperations));
 
 	ops->init   = gp_port_usb_init;
 	ops->exit   = gp_port_usb_exit;

@@ -71,12 +71,6 @@
 		return GP_ERROR_BAD_PARAMETERS;\
 	}\
 } while(0)
-#define C_MEM(MEM) do {\
-	if (!(MEM)) {\
-		GP_LOG_E ("Out of memory: '%s' failed.", #MEM);\
-		return GP_ERROR_NO_MEMORY;\
-	}\
-} while(0)
 
 #ifndef HAVE_LIBUSB_STRERROR
 static const char *libusb_strerror(int r)
@@ -1285,10 +1279,9 @@ gp_port_library_operations (void)
 {
 	GPPortOperations *ops;
 
-	ops = malloc (sizeof (GPPortOperations));
+	ops = calloc (1, sizeof (GPPortOperations));
 	if (!ops)
 		return (NULL);
-	memset (ops, 0, sizeof (GPPortOperations));
 
 	ops->init   = gp_port_usb_init;
 	ops->exit   = gp_port_usb_exit;

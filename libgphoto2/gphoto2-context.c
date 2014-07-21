@@ -75,10 +75,9 @@ gp_context_new (void)
 {
 	GPContext *context;
 
-	context = malloc (sizeof (GPContext));
+	context = calloc (1, sizeof (GPContext));
 	if (!context)
 		return (NULL);
-	memset (context, 0, sizeof (GPContext));
 
 	context->ref_count = 1;
 

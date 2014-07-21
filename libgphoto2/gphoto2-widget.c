@@ -99,8 +99,7 @@ gp_widget_new (CameraWidgetType type, const char *label,
 
 	CHECK_NULL (label && widget);
 
-	*widget = (CameraWidget*) malloc (sizeof (CameraWidget));
-	memset (*widget, 0, sizeof (CameraWidget));
+	C_MEM (*widget = calloc (1, sizeof (CameraWidget)));
 
 	(*widget)->type = type;
 	strcpy ((*widget)->label, label);
@@ -483,10 +482,9 @@ gp_widget_append (CameraWidget *widget, CameraWidget *child)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	if (widget->children_count)
-		newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1));
+		C_MEM (newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1)));
 	else
-		newlist = malloc(sizeof(CameraWidget*));
-	if (!newlist) return (GP_ERROR_NO_MEMORY);
+		C_MEM (newlist = malloc(sizeof(CameraWidget*)));
 	widget->children = newlist;
 	widget->children[widget->children_count] = child;
 	widget->children_count += 1;
@@ -518,10 +516,9 @@ gp_widget_prepend (CameraWidget *widget, CameraWidget *child)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	if (widget->children_count)
-		newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1));
+		C_MEM (newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1)));
 	else
-		newlist = malloc(sizeof(CameraWidget*));
-	if (!newlist) return (GP_ERROR_NO_MEMORY);
+		C_MEM (newlist = malloc(sizeof(CameraWidget*)));
 	widget->children = newlist;
 
 	/* Shift down 1 */
@@ -790,11 +787,10 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 		return (GP_ERROR_BAD_PARAMETERS);
 
 	if (widget->choice_count) {
-		choices = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1));
+		C_MEM (choices = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
 	} else {
-		choices = malloc (sizeof(char*));
+		C_MEM (choices = malloc (sizeof(char*)));
 	}
-	if (!choices) return (GP_ERROR_NO_MEMORY);
 
 	widget->choice = choices;
 	widget->choice[widget->choice_count] = strdup(choice);

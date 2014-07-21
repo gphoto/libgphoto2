@@ -193,7 +193,13 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
   gpi_string_list_to_flags(const char *str[], 
 			   const StringFlagItem *map);
   
-#endif /* _GPHOTO2_INTERNAL_CODE */
+#define C_MEM(MEM) do {\
+	if ((MEM) == NULL) {\
+		GP_LOG_E ("Out of memory: '%s' failed.", #MEM);\
+		return GP_ERROR_NO_MEMORY;\
+	}\
+} while(0)
 
+#endif /* _GPHOTO2_INTERNAL_CODE */
 
 #endif /* __GPHOTO2_PORT_LOG_H__ */

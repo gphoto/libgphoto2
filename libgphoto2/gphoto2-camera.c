@@ -326,42 +326,32 @@ gp_camera_new (Camera **camera)
 
 	CHECK_NULL (camera);
 
-        *camera = malloc (sizeof (Camera));
-	if (!*camera) 
-		return (GP_ERROR_NO_MEMORY);
-	memset (*camera, 0, sizeof (Camera));
+        C_MEM (*camera = calloc (1, sizeof (Camera)));
 
-        (*camera)->functions = malloc(sizeof(CameraFunctions));
-	if (!(*camera)->functions) {
-		gp_camera_free (*camera);
-		return (GP_ERROR_NO_MEMORY);
+        (*camera)->functions = calloc (1, sizeof (CameraFunctions));
+        (*camera)->pc        = calloc (1, sizeof (CameraPrivateCore));
+	if (!(*camera)->functions || !(*camera)->pc) {
+		result = GP_ERROR_NO_MEMORY;
+		goto error;
 	}
-	memset ((*camera)->functions, 0, sizeof (CameraFunctions));
-
-	(*camera)->pc = malloc (sizeof (CameraPrivateCore));
-	if (!(*camera)->pc) {
-		gp_camera_free (*camera);
-		return (GP_ERROR_NO_MEMORY);
-	}
-	memset ((*camera)->pc, 0, sizeof (CameraPrivateCore));
 
         (*camera)->pc->ref_count = 1;
 
 	/* Create the filesystem */
 	result = gp_filesystem_new (&(*camera)->fs);
-	if (result != GP_OK) {
-		gp_camera_free (*camera);
-		return (result);
-	}
+	if (result < GP_OK)
+		goto error;
 
 	/* Create the port */
 	result = gp_port_new (&(*camera)->port);
-	if (result < 0) {
-		gp_camera_free (*camera);
-		return (result);
-	}
+	if (result < GP_OK)
+		goto error;
 
         return(GP_OK);
+
+error:
+	gp_camera_free (*camera);
+	return result;
 }
 
 
@@ -1616,10 +1606,8 @@ gp_camera_start_timeout (Camera *camera, unsigned int timeout,
 	 * We remember the id here in order to automatically remove
 	 * the timeout on gp_camera_exit.
 	 */
-	ids = realloc (camera->pc->timeout_ids, sizeof (int) *
-					(camera->pc->timeout_ids_len + 1));
-	if (!ids)
-		return (GP_ERROR_NO_MEMORY);
+	C_MEM (ids = realloc (camera->pc->timeout_ids, sizeof (int) *
+					(camera->pc->timeout_ids_len + 1)));
 	camera->pc->timeout_ids = ids;
 
 	id = camera->pc->timeout_start_func (camera, timeout, func,
