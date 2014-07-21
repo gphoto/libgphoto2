@@ -763,10 +763,7 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 			if (params->deviceproperties[i].desc.DevicePropertyCode == p)
 				break;
 		if (i == params->nrofdeviceproperties) {
-			if (!i)
-				params->deviceproperties = malloc(sizeof(params->deviceproperties[0]));
-			else
-				params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
+			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 			params->nrofdeviceproperties++;
 		} else {
@@ -2066,10 +2063,7 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 uint16_t
 ptp_add_event (PTPParams *params, PTPContainer *evt)
 {
-	if (params->nrofevents)
-		params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
-	else
-		params->events = malloc(sizeof(PTPContainer)*1);
+	params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
 	memcpy (&params->events[params->nrofevents],evt,1*sizeof(PTPContainer));
 	params->nrofevents += 1;
 	return PTP_RC_OK;
@@ -2093,10 +2087,7 @@ ptp_check_event (PTPParams *params)
 		CHECK_PTP_RC(ptp_nikon_check_event(params, &xevent, &evtcnt));
 
 		if (evtcnt) {
-			if (params->nrofevents)
-				params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
-			else
-				params->events = malloc(sizeof(PTPContainer)*evtcnt);
+			params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
 			memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
 			params->nrofevents += evtcnt;
 			free (xevent);
@@ -2766,10 +2757,7 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 				break;
 
 		if (i == params->nrofdeviceproperties) {
-			if (!i)
-				params->deviceproperties = malloc(sizeof(params->deviceproperties[0]));
-			else
-				params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
+			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 			params->nrofdeviceproperties++;
 		} else {
@@ -2868,10 +2856,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 		if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 			break;
 	if (i == params->nrofdeviceproperties) {
-		if (!i)
-			params->deviceproperties = malloc(sizeof(params->deviceproperties[0]));
-		else
-			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
+		params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 		memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
 		params->nrofdeviceproperties++;
 	}
@@ -5905,11 +5890,7 @@ ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops)
 	MTPProperties *newprops;
 	MTPProperties *prop;
 
-	if (*props == NULL) {
-		newprops = malloc(sizeof(MTPProperties)*(*nrofprops+1));
-	} else {
-		newprops = realloc(*props,sizeof(MTPProperties)*(*nrofprops+1));
-	}
+	newprops = realloc(*props,sizeof(MTPProperties)*(*nrofprops+1));
 	if (newprops == NULL)
 		return NULL;
 	prop = &newprops[*nrofprops];

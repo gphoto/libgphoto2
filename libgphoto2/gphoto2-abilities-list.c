@@ -511,16 +511,10 @@ remove_colon_from_string (char *str)
 int
 gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 {
-	CameraAbilities *new_abilities;
-
 	CHECK_NULL (list);
 
-	if (!list->count)
-		C_MEM( new_abilities = malloc (sizeof (CameraAbilities)) );
-	else
-		C_MEM (new_abilities = realloc (list->abilities,
-				sizeof (CameraAbilities) * (list->count + 1)));
-	list->abilities = new_abilities;
+	C_MEM (list->abilities = realloc (list->abilities,
+					sizeof (CameraAbilities) * (list->count + 1)));
 	
 	memcpy (&(list->abilities [list->count]), &abilities,
 		sizeof (CameraAbilities));

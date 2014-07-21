@@ -1593,7 +1593,6 @@ gp_camera_start_timeout (Camera *camera, unsigned int timeout,
 			 CameraTimeoutFunc func)
 {
 	int id;
-	unsigned int *ids;
 
 	if (!camera || !camera->pc)
 		return (GP_ERROR_BAD_PARAMETERS);
@@ -1605,9 +1604,9 @@ gp_camera_start_timeout (Camera *camera, unsigned int timeout,
 	 * We remember the id here in order to automatically remove
 	 * the timeout on gp_camera_exit.
 	 */
-	C_MEM (ids = realloc (camera->pc->timeout_ids, sizeof (int) *
+	C_MEM (camera->pc->timeout_ids =
+			realloc (camera->pc->timeout_ids, sizeof (int) *
 					(camera->pc->timeout_ids_len + 1)));
-	camera->pc->timeout_ids = ids;
 
 	id = camera->pc->timeout_start_func (camera, timeout, func,
 					     camera->pc->timeout_data);

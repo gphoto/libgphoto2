@@ -122,11 +122,7 @@ static struct special_file *special_files = NULL;
 
 static int
 add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
-	if (nrofspecial_files)
-		C_MEM (special_files = realloc (special_files, sizeof(special_files[0])*(nrofspecial_files+1)));
-	else
-		C_MEM (special_files = malloc (sizeof(special_files[0])));
-
+	C_MEM (special_files = realloc (special_files, sizeof(special_files[0])*(nrofspecial_files+1)));
 	C_MEM (special_files[nrofspecial_files].name = strdup(name));
 	special_files[nrofspecial_files].putfunc = putfunc;
 	special_files[nrofspecial_files].getfunc = getfunc;
@@ -5218,17 +5214,10 @@ mtp_get_playlist_string(
 		buf[strlen(buf)]='/';
 		len = strlen(buf);
 
-		if (content) {
-			C_MEM (content = realloc (content, contentlen+len+1+1));
-			strcpy (content+contentlen, buf);
-			strcpy (content+contentlen+len, "\n");
-			contentlen += len+1;
-		} else {
-			C_MEM (content = malloc (len+1+1));
-			strcpy (content, buf);
-			strcpy (content+len, "\n");
-			contentlen = len+1;
-		}
+		C_MEM (content = realloc (content, contentlen+len+1+1));
+		strcpy (content+contentlen, buf);
+		strcpy (content+contentlen+len, "\n");
+		contentlen += len+1;
 	}
 	if (!content)
 		C_MEM (content = malloc(1));
@@ -5277,10 +5266,7 @@ mtp_put_playlist(
 		find_folder_handle(params, fn, storage, objectid);
 		objectid = find_child(params, filename, storage, objectid, NULL);
 		if (objectid != PTP_HANDLER_SPECIAL) {
-			if (nrofoids)
-				C_MEM (oids = realloc(oids, sizeof(oids[0])*(nrofoids+1)));
-			else
-				C_MEM (oids = malloc(sizeof(oids[0])));
+			C_MEM (oids = realloc(oids, sizeof(oids[0])*(nrofoids+1)));
 			oids[nrofoids] = objectid;
 			nrofoids++;
 		} else {

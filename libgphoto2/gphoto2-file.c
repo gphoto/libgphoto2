@@ -209,11 +209,7 @@ gp_file_append (CameraFile *file, const char *data,
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
-		if (!file->data)
-			C_MEM (file->data = malloc (sizeof(char) * (size)));
-		else {
-			C_MEM (file->data = realloc (file->data, sizeof (char) * (file->size + size)));
-		}
+		C_MEM (file->data = realloc (file->data, sizeof (char) * (file->size + size)));
 		memcpy (&file->data[file->size], data, size);
 		file->size += size;
 		break;

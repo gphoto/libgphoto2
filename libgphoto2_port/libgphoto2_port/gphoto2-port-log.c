@@ -81,18 +81,11 @@ static unsigned int log_funcs_count = 0;
 int
 gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 {
-	LogFunc *new_log_funcs;
-
 	if (!func)
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	if (!log_funcs)
-		C_MEM (new_log_funcs = malloc (sizeof (LogFunc)));
-	else
-		C_MEM (new_log_funcs = realloc (log_funcs, sizeof (LogFunc) *
-						(log_funcs_count + 1)));
-
-	log_funcs = new_log_funcs;
+	C_MEM (log_funcs = realloc (log_funcs, sizeof (LogFunc) *
+				(log_funcs_count + 1)));
 	log_funcs_count++;
 
 	log_funcs[log_funcs_count - 1].id = log_funcs_count;

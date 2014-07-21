@@ -471,7 +471,6 @@ gp_widget_get_value (CameraWidget *widget, void *value)
 int
 gp_widget_append (CameraWidget *widget, CameraWidget *child) 
 {
-	CameraWidget **newlist;
 	CHECK_NULL (widget && child);
 
 	/* Return if they can't have any children */
@@ -479,11 +478,7 @@ gp_widget_append (CameraWidget *widget, CameraWidget *child)
 	    (widget->type != GP_WIDGET_SECTION))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	if (widget->children_count)
-		C_MEM (newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1)));
-	else
-		C_MEM (newlist = malloc(sizeof(CameraWidget*)));
-	widget->children = newlist;
+	C_MEM (widget->children = realloc(widget->children, sizeof(CameraWidget*)*(widget->children_count+1)));
 	widget->children[widget->children_count] = child;
 	widget->children_count += 1;
 	child->parent = widget;
@@ -504,7 +499,6 @@ int
 gp_widget_prepend (CameraWidget *widget, CameraWidget *child) 
 {
 	int x;
-	CameraWidget**	newlist;
 
 	CHECK_NULL (widget && child);
 
@@ -513,11 +507,7 @@ gp_widget_prepend (CameraWidget *widget, CameraWidget *child)
 	    (widget->type != GP_WIDGET_SECTION))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	if (widget->children_count)
-		C_MEM (newlist = realloc(widget->children,sizeof(CameraWidget*)*(widget->children_count+1)));
-	else
-		C_MEM (newlist = malloc(sizeof(CameraWidget*)));
-	widget->children = newlist;
+	C_MEM (widget->children = realloc(widget->children, sizeof(CameraWidget*)*(widget->children_count+1)));
 
 	/* Shift down 1 */
 	for (x = widget->children_count; x > 0; x--)
@@ -778,19 +768,12 @@ gp_widget_get_range (CameraWidget *range, float *min, float *max,
 int
 gp_widget_add_choice (CameraWidget *widget, const char *choice) 
 {
-	char **choices;
 	CHECK_NULL (widget && choice);
 	if ((widget->type != GP_WIDGET_RADIO) &&
 	    (widget->type != GP_WIDGET_MENU))
 		return (GP_ERROR_BAD_PARAMETERS);
 
-	if (widget->choice_count) {
-		C_MEM (choices = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
-	} else {
-		C_MEM (choices = malloc (sizeof(char*)));
-	}
-
-	widget->choice = choices;
+	C_MEM (widget->choice = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
 	widget->choice[widget->choice_count] = strdup(choice);
 	widget->choice_count += 1;
 	return (GP_OK);

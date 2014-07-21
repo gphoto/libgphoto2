@@ -174,18 +174,10 @@ gp_port_info_list_free (GPPortInfoList *list)
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
-	GPPortInfo *new_info;
-
 	CHECK_NULL (list);
 
-	if (!list->info)
-		C_MEM (new_info = malloc (sizeof (GPPortInfo)));
-	else
-		C_MEM (new_info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
-
-	list->info = new_info;
+	C_MEM (list->info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
 	list->count++;
-
 	list->info[list->count - 1] = info;
 
 	return GP_OK;
