@@ -25,6 +25,10 @@ int main(int argc, char **argv) {
 	ret = gp_list_new (&list);
 	if (ret < GP_OK) return 1;
 	count = sample_autodetect (list, context);
+	if (count < GP_OK) {
+		printf("No cameras detected.\n");
+		return 1;
+	}
 
 	/* Now open all cameras we autodected for usage */
 	printf("Number of cameras: %d\n", count);
