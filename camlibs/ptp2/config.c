@@ -218,7 +218,7 @@ camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 		return GP_OK;
 	}
 	if (ret != PTP_RC_OK) {
-		GP_LOG_D ("shooting mode resulted in 0x%04x.", ret);
+		GP_LOG_E ("'ptp_canon_startshootingmode (params)' failed: 0x%04x", ret);
 		C_PTP_REP (ret);
 	}
 	gp_port_get_timeout (camera->port, &oldtimeout);
@@ -406,7 +406,6 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 
 static int
 camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
-	uint16_t	ret;
 	PTPParams		*params = &camera->pl->params;
 
 	C_PTP (ptp_canon_endshootingmode (params));
@@ -414,9 +413,7 @@ camera_unprepare_canon_powershot_capture(Camera *camera, GPContext *context) {
 	if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 		if (params->canon_viewfinder_on) {
 			params->canon_viewfinder_on = 0;
-			ret = ptp_canon_viewfinderoff (params);
-			if (ret != PTP_RC_OK)
-				GP_LOG_E ("Canon disable viewfinder failed: %d", ret);
+			LOG_ON_PTP_E (ptp_canon_viewfinderoff (params));
 			/* ignore errors here */
 		}
 	}
@@ -2153,10 +2150,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	if ((u==1) || (u==2)) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 			if (!params->canon_viewfinder_on)  {
-				uint16_t ret = ptp_canon_viewfinderon (params);
-				if (ret != PTP_RC_OK)
-					GP_LOG_E ("Canon enable viewfinder failed: %d", ret);
-				else
+				if (LOG_ON_PTP_E (ptp_canon_viewfinderon (params)) == PTP_RC_OK);
 					params->canon_viewfinder_on=1;
 			}
 		}
@@ -2164,10 +2158,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	if (u==3) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOff)) {
 			if (params->canon_viewfinder_on)  {
-				uint16_t ret = ptp_canon_viewfinderoff (params);
-				if (ret != PTP_RC_OK)
-					GP_LOG_E ("Canon disable viewfinder failed: %d", ret);
-				else
+				if (LOG_ON_PTP_E (ptp_canon_viewfinderoff (params)) == PTP_RC_OK)
 					params->canon_viewfinder_on=0;
 			}
 		}
@@ -4693,20 +4684,17 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 		flag = 0x2;
 	}
 	if (!xval) xval = 1;
-	ret = ptp_nikon_mfdrive (&camera->pl->params, flag, xval);
+	ret = LOG_ON_PTP_E (ptp_nikon_mfdrive (&camera->pl->params, flag, xval));
 	if (ret == PTP_RC_NIKON_NotLiveView) {
 		gp_context_error (context, _("Nikon manual focus works only in LiveView mode."));
 		return GP_ERROR;
 	}
-
-	if (ret != PTP_RC_OK) {
-		GP_LOG_D ("Nikon manual focus drive failed: 0x%x", ret);
-		return translate_ptp_result (ret);
-	}
+	if (ret != PTP_RC_OK)
+		return translate_ptp_result(ret);
 
 	/* The mf drive operation has started ... wait for it to
 	 * finish. */
-	ret = nikon_wait_busy (&camera->pl->params, 20, 1000);
+	ret = LOG_ON_PTP_E (nikon_wait_busy (&camera->pl->params, 20, 1000));
 	if (ret == PTP_RC_NIKON_MfDriveStepEnd) {
 		gp_context_error (context, _("Nikon manual focus at limit."));
 		return GP_ERROR_CAMERA_ERROR;
@@ -5120,14 +5108,12 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 static int
 _get_Nikon_ViewFinder(CONFIG_GET_ARGS) {
 	int			val;
-	uint16_t		ret;
 	PTPPropertyValue	value;
 	PTPParams		*params = &(camera->pl->params);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
-	if (ret != PTP_RC_OK)
+	if (LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8) != PTP_RC_OK ))
 		value.u8 = 0;
 	val = value.u8 ? 1 : 0;
 	gp_widget_set_value  (*widget, &val);
@@ -5137,7 +5123,6 @@ _get_Nikon_ViewFinder(CONFIG_GET_ARGS) {
 static int
 _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 	int			val;
-	uint16_t		res;
 	PTPParams		*params = &(camera->pl->params);
 	GPContext 		*context = ((PTPData *) params->data)->context;
 
@@ -5148,24 +5133,17 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 	if (val) {
 		PTPPropertyValue	value;
 
-		res = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
-		if (res != PTP_RC_OK) {
+		if (LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8)) != PTP_RC_OK)
 			value.u8 = 0;
-			res = PTP_RC_OK;
-		}
 
                 if (!value.u8) {
 			value.u8 = 1;
-			res = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
-			if (res != PTP_RC_OK)
-				GP_LOG_D ("set recordingmedia to 1 failed with 0x%04x", res);
-
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
 			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
 				       _("Nikon enable liveview failed"));
 			/* Has to put the mirror up, so takes a bit. */
-			res = nikon_wait_busy(params, 50, 1000);
+			C_PTP (nikon_wait_busy(params, 50, 1000));
 		}
-		return translate_ptp_result (res);
 	} else {
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
 			C_PTP (ptp_nikon_end_liveview (params));
@@ -5262,9 +5240,7 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 
                 if (!value.u8) {
                         value.u8 = 1;
-                        ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
-                        if (ret != PTP_RC_OK)
-                                GP_LOG_D ("set recordingmedia to 1 failed with 0x%04x", ret);
+                        LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
                         C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
                                        _("Nikon enable liveview failed"));
 			C_PTP_REP_MSG (nikon_wait_busy(params, 50, 1000),
@@ -6466,7 +6442,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 						continue;
 				}
 				if (ret != GP_OK) {
-					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", cursub->label, cursub->propid, ret);
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -6481,7 +6457,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
 				if (ret != GP_OK) {
-					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: ret %d", cursub->label, cursub->propid, ret);
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
 				gp_widget_append (section, widget);
@@ -6656,7 +6632,7 @@ int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget		*section, *widget, *subwindow;
-	uint16_t		ret2;
+	uint16_t		ret_ptp;
 	unsigned int		menuno, submenuno;
 	int			ret;
 	PTPParams		*params = &camera->pl->params;
@@ -6730,10 +6706,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
-						ret2 = ptp_generic_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
-						if (ret2 != PTP_RC_OK) {
-							gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret2);
-							ret = translate_ptp_result (ret2);
+						ret_ptp = LOG_ON_PTP_E (ptp_generic_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
+						if (ret_ptp != PTP_RC_OK) {
+							gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)"),
+									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
+							ret = translate_ptp_result (ret_ptp);
 						}
 					}
 					ptp_free_devicepropvalue (cursub->type, &propval);
@@ -6751,13 +6728,14 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->putfunc (camera, widget, &propval, &dpd);
 				if (ret == GP_OK) {
-					ret2 = ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type);
-					if (ret2 != PTP_RC_OK) {
-						gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(cursub->label), cursub->propid, ret2);
-						ret = translate_ptp_result (ret2);
+					ret_ptp = LOG_ON_PTP_E (ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
+					if (ret_ptp != PTP_RC_OK) {
+						gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
+								  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
+						ret = translate_ptp_result (ret_ptp);
 					}
 				} else
-					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d!"), _(cursub->label), cursub->propid, ret);
+					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
 				ptp_free_devicepropdesc(&dpd);
 				ptp_free_devicepropvalue(cursub->type, &propval);
 			}
@@ -6830,9 +6808,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		default:
 			break;
 		}
-		ret = ptp_generic_setdevicepropvalue (params, propid, &propval, dpd.DataType);
+
+		/* TODO: ret is ignored here, this is inconsistent with the code above */
+		ret = LOG_ON_PTP_E (ptp_generic_setdevicepropvalue (params, propid, &propval, dpd.DataType));
 		if (ret != PTP_RC_OK) {
-			gp_context_error (context, _("The property '%s' / 0x%04x was not set, PTP errorcode 0x%04x."), _(label), propid, ret);
+			gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
+					  _(label), propid, ret, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
 			ret = GP_ERROR;
 		}
 	}

@@ -379,7 +379,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			C_MEM (di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events)));
 			j = 0; k = 0; l = 0;
 			for (i=0;i<xsize;i++) {
-				GP_LOG_E ("sony code: %x", xprops[i]);
+				GP_LOG_D ("sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
 				case 0x1000:
 					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
@@ -2235,9 +2235,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 		if (!value.u8) {
 			value.u8 = 1;
-			ret = ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8);
-			if (ret != PTP_RC_OK)
-				GP_LOG_D ("set recordingmedia to 1 failed with 0x%04x", ret);
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
 			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
 				       _("Nikon enable liveview failed"));
 			do {
@@ -2947,9 +2945,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				free (storageids.Storage);
 			}
 		}
-		ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
-		if (ret != PTP_RC_OK)
-			GP_LOG_D ("setdevicepropvalue CaptureTransferMode failed, %x", ret);
+		LOG_ON_PTP_E (ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16));
 	}
 
 	if (params->canon_viewfinder_on) { /* disable during capture ... reenable later on. */
@@ -3589,9 +3585,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 					free (storageids.Storage);
 				}
 			}
-			ret = ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16);
-			if (ret != PTP_RC_OK)
-				GP_LOG_D ("setdevicepropvalue CaptureTransferMode failed, %x", ret);
+			LOG_ON_PTP_E (ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16));
 		}
 
 		if (params->canon_viewfinder_on) { /* disable during capture ... reenable later on. */
@@ -5028,10 +5022,8 @@ ptp_mtp_render_metadata (
 		gp_file_append (file, propname, n);
 		gp_file_append (file, ">", 1);
 
-		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
-		if (ret != PTP_RC_OK) {
-			fprintf (stderr," getobjectpropdesc returns 0x%x\n", ret);
-		} else {
+		ret = LOG_ON_PTP_E (ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd));
+		if (ret == PTP_RC_OK) {
 			PTPPropertyValue	pv;
 			ret = ptp_mtp_getobjectpropvalue (params, object_id, props[j], &pv, opd.DataType);
 			if (ret != PTP_RC_OK) {
@@ -5134,9 +5126,8 @@ ptp_mtp_parse_metadata (
 		C_MEM (content = strdup(begin));
 		*end = '<';
 		GP_LOG_D ("found tag %s, content %s", propname, content);
-		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
+		ret = LOG_ON_PTP_E (ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd));
 		if (ret != PTP_RC_OK) {
-			GP_LOG_D (" getobjectpropdesc returns 0x%x", ret);
 			free (content); content = NULL;
 			continue;
 		}
@@ -6459,7 +6450,8 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 			handle = 0xffffffff;
 		}
 		ret = ptp_getstorageids(params, &storageids);
-		if (ret != PTP_RC_OK) return ret;
+		if (ret != PTP_RC_OK)
+			return ret;
 	} else {
 		storageids.n = 1;
 		storageids.Storage = malloc(sizeof(storageids.Storage[0]));
@@ -6469,11 +6461,9 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 
 	for (k=0;k<storageids.n;k++) {
 		GP_LOG_D ("reading handle %08x directory of 0x%08x", storageids.Storage[k], handle);
-		ret = ptp_canon_eos_getobjectinfoex (
-			params, storageids.Storage[k], handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp
-		);
+		ret = LOG_ON_PTP_E (ptp_canon_eos_getobjectinfoex (
+					  params, storageids.Storage[k], handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp));
 		if (ret != PTP_RC_OK) {
-			GP_LOG_D ("reading directory failed: %04x", ret);
 			free (storageids.Storage);
 			return ret;
 		}
@@ -6945,6 +6935,7 @@ camera_init (Camera *camera, GPContext *context)
 	{
 		PTPStorageIDs storageids;
 
+		/* TODO: ret is ignored here */
 		ret = ptp_getstorageids(params, &storageids);
 		if (ret == PTP_RC_OK) {
 			unsigned int k;
