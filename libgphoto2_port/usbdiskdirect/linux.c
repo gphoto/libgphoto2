@@ -87,8 +87,7 @@ gp_port_usbdiskdirect_lock (GPPort *port, const char *path)
 #ifdef HAVE_LOCKDEV
 	int pid;
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-usbdiskdirect",
-		"Trying to lock '%s'...", path);
+	GP_LOG_D ("Trying to lock '%s'...", path);
 
 	pid = dev_lock (path);
 	if (pid) {
@@ -276,8 +275,7 @@ gp_port_usbdiskdirect_open (GPPort *port)
 			result = gp_port_usbdiskdirect_lock (port, path);
 			if (result == GP_OK)
 				break;
-			gp_log (GP_LOG_DEBUG, "gphoto2-port-usbdiskdirect",
-				"Failed to get a lock, trying again...");
+			GP_LOG_D ("Failed to get a lock, trying again...");
 			sleep (1);
 		}
 		CHECK (result)

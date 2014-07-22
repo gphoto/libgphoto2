@@ -102,10 +102,10 @@ _ptpip_resolved (
 	char		path[200];
 
 	if (errorCode != kDNSServiceErr_NoError) {
-		gp_log (GP_LOG_ERROR, "ptpip", "Error on 2nd level query.");
+		GP_LOG_E ("Error on 2nd level query.");
 		return;
 	}
-	gp_log (GP_LOG_DEBUG, "ptpip", "fullname %s, hosttarget %s, port %d", fullname, hosttarget, htons(port));
+	GP_LOG_D ("fullname %s, hosttarget %s, port %d", fullname, hosttarget, htons(port));
 	cnt = TXTRecordGetCount (txtLen, txtRecord);
 	for (i=0;i<cnt;i++) {
 		char	key[256];
@@ -114,11 +114,11 @@ _ptpip_resolved (
 
 		valuelen = 0;
 		if (kDNSServiceErr_NoError == TXTRecordGetItemAtIndex (txtLen, txtRecord, i, sizeof(key), key, &valuelen, &value))
-			gp_log (GP_LOG_DEBUG, "ptpip", "%d: %s:%s", i, key, (char*)value);
+			GP_LOG_D ("%d: %s:%s", i, key, (char*)value);
 	}
 	hent = gethostbyname (hosttarget);
 	if (!hent) {
-		gp_log (GP_LOG_ERROR, "ptpip", "Could not resolve the returned host: %s", hosttarget);
+		GP_LOG_E ("Could not resolve the returned host: %s", hosttarget);
 		return;
 	}
 	memcpy(&inaddr.s_addr,hent->h_addr_list[0],hent->h_length);
@@ -141,10 +141,10 @@ _ptpip_enumerate (
 	DNSServiceRef		sd;
 
 	if (errorCode != kDNSServiceErr_NoError) {
-		gp_log (GP_LOG_ERROR, "ptpip", "Error on _ptp._tcp query.");
+		GP_LOG_E ("Error on _ptp._tcp query.");
 		return;
 	}
-	gp_log (GP_LOG_DEBUG, "ptpip", "found %s, %s, %s", serviceName, regtype, replyDomain);
+	GP_LOG_D ("found %s, %s, %s", serviceName, regtype, replyDomain);
 	mdnsi.list = context;
 	mdnsi.name = serviceName;
 	DNSServiceResolve (&sd,

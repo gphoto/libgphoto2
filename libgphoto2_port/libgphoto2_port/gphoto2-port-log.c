@@ -177,18 +177,18 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
 	unsigned char value;
 
 	if (!data) {
-		gp_log (GP_LOG_DATA, domain, _("No hexdump (NULL buffer)"));
+		gp_log (GP_LOG_DATA, domain, "No hexdump (NULL buffer)");
 		return;
 	}
 
 	if (!size) {
-		gp_log (GP_LOG_DATA, domain, _("Empty hexdump of empty buffer"));
+		gp_log (GP_LOG_DATA, domain, "Empty hexdump of empty buffer");
 		return;
 	}
 
 	if (size > 1024*1024) {
 		/* Does not make sense for 200 MB movies */
-		gp_log (GP_LOG_DATA, domain, _("Truncating dump from %d bytes to 1MB"), size);
+		gp_log (GP_LOG_DATA, domain, "Truncating dump from %d bytes to 1MB", size);
 		size = 1024*1024;
 	}
 
@@ -224,7 +224,7 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
         }
         curline[0] = '\0';
 
-	gp_log (GP_LOG_DATA, domain, _("Hexdump of %i = 0x%x bytes follows:\n%s"),
+	gp_log (GP_LOG_DATA, domain, "Hexdump of %i = 0x%x bytes follows:\n%s",
 		size, size, result);
 	free (result);
 }

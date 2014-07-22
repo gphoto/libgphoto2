@@ -354,7 +354,7 @@ gp_port_usb_open (GPPort *port)
 {
 	int ret;
 
-	gp_log (GP_LOG_DEBUG,"libusb1","gp_port_usb_open()");
+	GP_LOG_D ("gp_port_usb_open()");
 	C_PARAMS (port);
 
 	if (!port->pl->d) {
@@ -380,7 +380,7 @@ gp_port_usb_open (GPPort *port)
 #endif
 
 	switch (ret) {
-	case 1: gp_log (GP_LOG_DEBUG,"libusb1",_("Device has a kernel driver attached (%d), detaching it now."), ret);
+	case 1: GP_LOG_D ("Device has a kernel driver attached (%d), detaching it now.", ret);
 		ret = libusb_detach_kernel_driver (port->pl->dh, port->settings.usb.interface);
 		if (ret < 0)
 			gp_port_set_error (port, _("Could not detach kernel driver of camera device."));
@@ -393,7 +393,7 @@ gp_port_usb_open (GPPort *port)
 		break;
 	}
 
-	gp_log (GP_LOG_DEBUG,"libusb1","claiming interface %d", port->settings.usb.interface);
+	GP_LOG_D ("claiming interface %d", port->settings.usb.interface);
 	if (LOG_ON_LIBUSB_E (libusb_claim_interface (port->pl->dh, port->settings.usb.interface))) {
 		int saved_errno = errno;
 		gp_port_set_error (port, _("Could not claim interface %d (%s). "
@@ -633,7 +633,7 @@ gp_port_usb_update (GPPort *port)
 
 	C_PARAMS (port && port->pl && port->pl->ctx);
 
-	gp_log (GP_LOG_DEBUG, "libusb1", "gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d) port %s",
+	GP_LOG_D ("gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d) port %s",
 		port->settings.usb.interface,
 		port->settings.usb.config,
 		port->settings.usb.altsetting,
@@ -662,24 +662,18 @@ gp_port_usb_update (GPPort *port)
 
 	/* The interface changed. release the old, claim the new ... */
 	if (port->settings.usb.interface != port->pl->interface) {
-		gp_log (GP_LOG_DEBUG, "libusb1", "changing interface %d -> %d",
-			port->pl->interface,
-			port->settings.usb.interface
-		);
+		GP_LOG_D ("changing interface %d -> %d", port->pl->interface, port->settings.usb.interface);
 		if (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->pl->interface))) {
 			/* Not a hard error for now. -Marcus */
 		} else {
-			gp_log (GP_LOG_DEBUG,"libusb1","claiming interface %d", port->settings.usb.interface);
+			GP_LOG_D ("claiming interface %d", port->settings.usb.interface);
 			C_LIBUSB (libusb_claim_interface (port->pl->dh, port->settings.usb.interface),
 				  GP_ERROR_IO_USB_CLAIM);
 			port->pl->interface = port->settings.usb.interface;
 		}
 	}
 	if (port->settings.usb.config != port->pl->config) {
-		gp_log (GP_LOG_DEBUG, "libusb1", "changing config %d -> %d",
-			port->pl->config,
-			port->settings.usb.config
-		);
+		GP_LOG_D ("changing config %d -> %d", port->pl->config, port->settings.usb.config);
 		/* This can only be changed with the interface released. 
 		 * This is a hard requirement since 2.6.12.
 		 */
@@ -698,16 +692,13 @@ gp_port_usb_update (GPPort *port)
 					   strerror(saved_errno));
 			return GP_ERROR_IO_UPDATE;	
 #endif
-			gp_log (GP_LOG_ERROR, "libusb1", "setting configuration from %d to %d failed, but continuing...", port->pl->config, port->settings.usb.config);
+			GP_LOG_E ("setting configuration from %d to %d failed, but continuing...", port->pl->config, port->settings.usb.config);
 		}
 
-		gp_log (GP_LOG_DEBUG, "libusb1",
-			"Changed usb.config from %d to %d",
-			port->pl->config,
-			port->settings.usb.config);
+		GP_LOG_D ("Changed usb.config from %d to %d", port->pl->config, port->settings.usb.config);
 
 		if (ifacereleased) {
-			gp_log (GP_LOG_DEBUG,"libusb1","claiming interface %d", port->settings.usb.interface);
+			GP_LOG_D ("claiming interface %d", port->settings.usb.interface);
 			LOG_ON_LIBUSB_E (libusb_claim_interface (port->pl->dh, port->settings.usb.interface));
 		}
 		/*
@@ -731,10 +722,7 @@ gp_port_usb_update (GPPort *port)
 			return GP_ERROR_IO_UPDATE;
 		}
 
-		gp_log (GP_LOG_DEBUG, "libusb1",
-			"Changed usb.altsetting from %d to %d",
-			port->pl->altsetting,
-			port->settings.usb.altsetting);
+		GP_LOG_D ("Changed usb.altsetting from %d to %d", port->pl->altsetting, port->settings.usb.altsetting);
 		port->pl->altsetting = port->settings.usb.altsetting;
 	}
 
@@ -1038,9 +1026,9 @@ gp_port_usb_match_mtp_device(struct libusb_device *dev,int *configno, int *inter
 					if (ret < 3)
 						continue;
 					if (strcmp((char *) buf, "MTP") == 0) {
-						gp_log (GP_LOG_DEBUG, "mtp matcher", "Configuration %d, interface %d, altsetting %d:\n", i, j, k);
-						gp_log (GP_LOG_DEBUG, "mtp matcher", "   Interface description contains the string \"MTP\"\n");
-						gp_log (GP_LOG_DEBUG, "mtp matcher", "   Device recognized as MTP, no further probing.\n");
+						GP_LOG_D ("Configuration %d, interface %d, altsetting %d:\n", i, j, k);
+						GP_LOG_D ("   Interface description contains the string \"MTP\"\n");
+						GP_LOG_D ("   Device recognized as MTP, no further probing.\n");
 						goto found;
 					}
 				}
@@ -1056,27 +1044,27 @@ gp_port_usb_match_mtp_device(struct libusb_device *dev,int *configno, int *inter
 	cmd = buf[16];
 	ret = usb_control_msg (devh, USB_ENDPOINT_IN|USB_RECIP_DEVICE|LIBUSB_REQUEST_TYPE_VENDOR, cmd, 0, 4, buf, sizeof(buf), 1000);
 	if (ret == -1) {
-		gp_log (GP_LOG_ERROR, "mtp matcher", "control message says %d\n", ret);
+		GP_LOG_E ("control message says %d\n", ret);
 		goto errout;
 	}
 	if (buf[0] != 0x28) {
-		gp_log (GP_LOG_ERROR, "mtp matcher", "ret is %d, buf[0] is %x\n", ret, buf[0]);
+		GP_LOG_E ("ret is %d, buf[0] is %x\n", ret, buf[0]);
 		goto errout;
 	}
 	if (ret > 0) gp_log_data("get_MS_ExtDesc",buf, ret);
 	if ((buf[0x12] != 'M') || (buf[0x13] != 'T') || (buf[0x14] != 'P')) {
-		gp_log (GP_LOG_ERROR, "mtp matcher", "buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
+		GP_LOG_E ("buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
 		goto errout;
 	}
 	ret = usb_control_msg (devh, USB_ENDPOINT_IN|USB_RECIP_DEVICE|LIBUSB_REQUEST_TYPE_VENDOR, cmd, 0, 5, buf, sizeof(buf), 1000);
 	if (ret == -1) goto errout;
 	if (buf[0] != 0x28) {
-		gp_log (GP_LOG_ERROR, "mtp matcher", "ret is %d, buf[0] is %x\n", ret, buf[0]);
+		GP_LOG_E ("ret is %d, buf[0] is %x\n", ret, buf[0]);
 		goto errout;
 	}
 	if (ret > 0) gp_log_data("get_MS_ExtProp",buf, ret);
 	if ((buf[0x12] != 'M') || (buf[0x13] != 'T') || (buf[0x14] != 'P')) {
-		gp_log (GP_LOG_ERROR, "mtp matcher", "buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
+		GP_LOG_E ("buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
 		goto errout;
 	}
 
@@ -1086,19 +1074,19 @@ found:
 	/* Now chose a nice interface for us to use ... Just take the first. */
 
 	if (desc.bNumConfigurations > 1)
-		gp_log (GP_LOG_ERROR, "mtp matcher", "The device has %d configurations!\n", desc.bNumConfigurations);
+		GP_LOG_E ("The device has %d configurations!\n", desc.bNumConfigurations);
 	for (i = 0; i < desc.bNumConfigurations; i++) {
 		struct usb_config_descriptor *config =
 			&dev->config[i];
 
 		if (config->bNumInterfaces > 1)
-			gp_log (GP_LOG_ERROR, "mtp matcher", "The configuration has %d interfaces!\n", config->bNumInterfaces);
+			GP_LOG_E ("The configuration has %d interfaces!\n", config->bNumInterfaces);
 		for (i1 = 0; i1 < config->bNumInterfaces; i1++) {
 			struct usb_interface *interface =
 				&config->interface[i1];
 
 			if (interface->num_altsetting > 1)
-				gp_log (GP_LOG_ERROR, "mtp matcher", "The interface has %d altsettings!\n", interface->num_altsetting);
+				GP_LOG_E ("The interface has %d altsettings!\n", interface->num_altsetting);
 			for (i2 = 0; i2 < interface->num_altsetting; i2++) {
 				*configno = i;
 				*interfaceno = i1;
@@ -1230,7 +1218,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 		port->settings.usb.outep = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_OUT, LIBUSB_TRANSFER_TYPE_BULK);
 		port->settings.usb.intep = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_INTERRUPT);
 		port->settings.usb.maxpacketsize = 0;
-		gp_log (GP_LOG_DEBUG, "libusb1", "inep to look for is %02x", port->settings.usb.inep);
+		GP_LOG_D ("inep to look for is %02x", port->settings.usb.inep);
 		for (i=0;i<confdesc->interface[interface].altsetting[altsetting].bNumEndpoints;i++) {
 			if (port->settings.usb.inep == confdesc->interface[interface].altsetting[altsetting].endpoint[i].bEndpointAddress) {
 				port->settings.usb.maxpacketsize = confdesc->interface[interface].altsetting[altsetting].endpoint[i].wMaxPacketSize;

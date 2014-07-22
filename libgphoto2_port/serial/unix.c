@@ -218,8 +218,7 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 	int pid;
 #endif
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
-		"Trying to lock '%s'...", path);
+	GP_LOG_D ("Trying to lock '%s'...", path);
 
 #if defined(HAVE_TTYLOCK)
 	if (ttylock ((char*) path)) {
@@ -395,7 +394,7 @@ gp_port_serial_open (GPPort *dev)
 	if (result < GP_OK) return result;
 	result = gp_port_info_get_path (info, &port);
 	if (result < GP_OK) return result;
-	gp_log (GP_LOG_DEBUG, "gp_port_serial_open", "opening %s", port);
+	GP_LOG_D ("opening %s", port);
 
 	/* Ports are named "serial:/dev/whatever/port" */
 	port = strchr (port, ':');
@@ -409,8 +408,7 @@ gp_port_serial_open (GPPort *dev)
 			result = gp_port_serial_lock (dev, port);
 			if (result == GP_OK)
 				break;
-			gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
-				"Failed to get a lock, trying again...");
+			GP_LOG_D ("Failed to get a lock, trying again...");
 			sleep (1);
 		}
 		CHECK (result);
@@ -775,8 +773,7 @@ gp_port_serial_baudconv (int baudrate)
 #endif
         default:
 		ret = (speed_t) baudrate;
-		gp_log (GP_LOG_DEBUG, "gphoto2-port-serial", "Baudrate %d "
-			"unknown - using as is", baudrate);
+		GP_LOG_D ("Baudrate %d unknown - using as is", baudrate);
         }
 
         return ret;
@@ -809,8 +806,7 @@ gp_port_serial_check_speed (GPPort *dev)
 	if (dev->pl->baudrate == dev->settings.serial.speed)
 		return (GP_OK);
 
-	gp_log (GP_LOG_DEBUG, "gphoto2-port-serial",
-		"Setting baudrate to %d...", dev->settings.serial.speed);
+	GP_LOG_D ("Setting baudrate to %d...", dev->settings.serial.speed);
 	speed = gp_port_serial_baudconv (dev->settings.serial.speed);
 
 #ifdef OS2
