@@ -5133,8 +5133,6 @@ ptp_mtp_parse_metadata (
 		*end = '\0';
 		C_MEM (content = strdup(begin));
 		*end = '<';
-		if (!content)
-			continue;
 		GP_LOG_D ("found tag %s, content %s", propname, content);
 		ret = ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd);
 		if (ret != PTP_RC_OK) {
