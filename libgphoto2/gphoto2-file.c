@@ -43,7 +43,6 @@
 
 #include <gphoto2/gphoto2-result.h>
 
-#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
 /* lengt of one path component */
@@ -84,7 +83,7 @@ struct _CameraFile {
 int
 gp_file_new (CameraFile **file)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	C_MEM (*file = calloc (1, sizeof (CameraFile)));
 
@@ -104,7 +103,7 @@ gp_file_new (CameraFile **file)
 int
 gp_file_new_from_fd (CameraFile **file, int fd)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	C_MEM (*file = calloc (1, sizeof (CameraFile)));
 
@@ -125,7 +124,7 @@ gp_file_new_from_fd (CameraFile **file, int fd)
 int
 gp_file_new_from_handler (CameraFile **file, CameraFileHandler* handler, void*private)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	C_MEM (*file = calloc (1, sizeof (CameraFile)));
 
@@ -146,7 +145,7 @@ gp_file_new_from_handler (CameraFile **file, CameraFileHandler* handler, void*pr
  **/
 int gp_file_free (CameraFile *file)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	CHECK_RESULT (gp_file_clean (file));
 	
@@ -166,7 +165,7 @@ int gp_file_free (CameraFile *file)
 int
 gp_file_ref (CameraFile *file)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	file->ref_count += 1;
 	
@@ -183,7 +182,7 @@ gp_file_ref (CameraFile *file)
 int
 gp_file_unref (CameraFile *file)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 	
 	file->ref_count -= 1;
 
@@ -205,7 +204,7 @@ int
 gp_file_append (CameraFile *file, const char *data, 
 		unsigned long int size)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -232,10 +231,7 @@ gp_file_append (CameraFile *file, const char *data,
 	case GP_FILE_ACCESSTYPE_HANDLER: {
 		uint64_t	xsize = size;
 		/* FIXME: assume we write one blob */
-		if (!file->handler->write) {
-			GP_LOG_E ("write handler is NULL");
-			return GP_ERROR_BAD_PARAMETERS;
-		}
+		C_PARAMS (file->handler->write);
 		return file->handler->write (file->private, (unsigned char*)data, &xsize);
 	}
 	default:
@@ -257,7 +253,7 @@ int
 gp_file_slurp (CameraFile *file, char *data, 
 	size_t size, size_t *readlen
 ) {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -289,10 +285,7 @@ gp_file_slurp (CameraFile *file, char *data,
 		uint64_t	xsize = size;
 		int		ret;
 
-		if (!file->handler->read) {
-			GP_LOG_E ("read handler is NULL");
-			return GP_ERROR_BAD_PARAMETERS;
-		}
+		C_PARAMS (file->handler->read);
 		ret = file->handler->read (file->private, (unsigned char*)data, &xsize);
 		*readlen = xsize;
 		if (ret != GP_OK)
@@ -319,7 +312,7 @@ int
 gp_file_set_data_and_size (CameraFile *file, char *data,
 			   unsigned long int size)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -361,10 +354,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		uint64_t	xsize = size;
 		int		ret;
 
-		if (!file->handler->write) {
-			GP_LOG_E ("write handler is NULL");
-			return GP_ERROR_BAD_PARAMETERS;
-		}
+		C_PARAMS (file->handler->write);
 		/* FIXME: handle multiple blob writes */
 		ret = file->handler->write (file->private, (unsigned char*)data, &xsize);
 		if (ret != GP_OK) {
@@ -403,7 +393,7 @@ int
 gp_file_get_data_and_size (CameraFile *file, const char **data,
 			   unsigned long int *size)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -455,10 +445,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		uint64_t	xsize = 0;
 		int		ret;
 
-		if (!file->handler->read) {
-			GP_LOG_E ("read handler is NULL");
-			return GP_ERROR_BAD_PARAMETERS;
-		}
+		C_PARAMS (file->handler->read);
 		ret = file->handler->size (file->private, &xsize);
 		if (ret != GP_OK) {
 			GP_LOG_E ("Encountered error %d querying size().", ret);
@@ -496,7 +483,7 @@ gp_file_save (CameraFile *file, const char *filename)
 	FILE *fp;
 	struct utimbuf u;
 
-	CHECK_NULL (file && filename);
+	C_PARAMS (file && filename);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -616,7 +603,7 @@ gp_file_open (CameraFile *file, const char *filename)
 	struct stat s;
 
 
-	CHECK_NULL (file && filename);
+	C_PARAMS (file && filename);
 
 	CHECK_RESULT (gp_file_clean (file));
 
@@ -710,7 +697,7 @@ gp_file_clean (CameraFile *file)
 	 * This is used to prep a CameraFile struct to be filled.
          */
 
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -735,7 +722,7 @@ gp_file_clean (CameraFile *file)
 int
 gp_file_copy (CameraFile *destination, CameraFile *source)
 {
-	CHECK_NULL (destination && source);
+	C_PARAMS (destination && source);
 
 	GP_LOG_D ("Copying '%s' onto '%s'...", source->name, destination->name);
 
@@ -879,7 +866,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 int
 gp_file_get_name (CameraFile *file, const char **name)
 {
-	CHECK_NULL (file && name);
+	C_PARAMS (file && name);
 
 	*name = file->name;
 
@@ -909,7 +896,7 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	const char *suffix = NULL;
 	int i;
 
-	CHECK_NULL (file && basename && newname);
+	C_PARAMS (file && basename && newname);
 	*newname = NULL;
 
 	/* the easy case, always map 1:1, if it has a suffix already. */
@@ -967,7 +954,7 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 int
 gp_file_get_mime_type (CameraFile *file, const char **mime_type)
 {
-	CHECK_NULL (file && mime_type);
+	C_PARAMS (file && mime_type);
 
 	*mime_type = file->mime_type;
 
@@ -984,7 +971,7 @@ gp_file_get_mime_type (CameraFile *file, const char **mime_type)
 int
 gp_file_set_name (CameraFile *file, const char *name)
 {
-	CHECK_NULL (file && name);
+	C_PARAMS (file && name);
 
 	strncpy (file->name, name, sizeof (file->name));
 
@@ -1001,7 +988,7 @@ gp_file_set_name (CameraFile *file, const char *name)
 int
 gp_file_set_mime_type (CameraFile *file, const char *mime_type)
 {
-	CHECK_NULL (file && mime_type);
+	C_PARAMS (file && mime_type);
 
 	strncpy (file->mime_type, mime_type, sizeof (file->mime_type));
 
@@ -1021,7 +1008,7 @@ gp_file_detect_mime_type (CameraFile *file)
 				        (char) 0x00, (char) 0x08, '\0' };
 	const char JPEG_SOI_MARKER[] = {(char) 0xFF, (char) 0xD8, '\0' };
 
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -1088,7 +1075,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_CR2,  "cr2",
 		NULL};
 
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	GP_LOG_D ("Adjusting file name for mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
@@ -1116,7 +1103,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 int
 gp_file_get_mtime (CameraFile *file, time_t *mtime)
 {
-	CHECK_NULL (file && mtime);
+	C_PARAMS (file && mtime);
 
 	*mtime = file->mtime;
 
@@ -1133,7 +1120,7 @@ gp_file_get_mtime (CameraFile *file, time_t *mtime)
 int
 gp_file_set_mtime (CameraFile *file, time_t mtime)
 {
-	CHECK_NULL (file);
+	C_PARAMS (file);
 
 	file->mtime = mtime;
 

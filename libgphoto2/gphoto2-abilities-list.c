@@ -56,8 +56,6 @@
 #endif
 
 /** \internal */
-#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
-/** \internal */
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
 /** \internal */
@@ -101,7 +99,7 @@ gp_message_codeset (const char *codeset)
 int
 gp_abilities_list_new (CameraAbilitiesList **list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	/*
 	 * We do this here because everybody needs to call this function
@@ -125,7 +123,7 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 int
 gp_abilities_list_free (CameraAbilitiesList *list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	CHECK_RESULT (gp_abilities_list_reset (list));
 
@@ -168,7 +166,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	int count;
 	lt_dlhandle lh;
 
-	CHECK_NULL (list && dir);
+	C_PARAMS (list && dir);
 
 	GP_LOG_D ("Using ltdl to load camera libraries from '%s'...", dir);
 	CHECK_RESULT (gp_list_new (&flist));
@@ -304,7 +302,7 @@ gp_abilities_list_load (CameraAbilitiesList *list, GPContext *context)
 {
 	const char *camlib_env = getenv(CAMLIBDIR_ENV);
 	const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	CHECK_RESULT (gp_abilities_list_load_dir (list, camlibs, context));
 	CHECK_RESULT (gp_abilities_list_sort (list));
@@ -407,7 +405,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 	GPPort *port;
 	int i, info_count;
 
-	CHECK_NULL (list && info_list && l);
+	C_PARAMS (list && info_list && l);
 
 	gp_list_reset (l);
 
@@ -511,7 +509,7 @@ remove_colon_from_string (char *str)
 int
 gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	C_MEM (list->abilities = realloc (list->abilities,
 					sizeof (CameraAbilities) * (list->count + 1)));
@@ -539,7 +537,7 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 int
 gp_abilities_list_reset (CameraAbilitiesList *list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	free (list->abilities);
 	list->abilities = NULL;
@@ -557,7 +555,7 @@ gp_abilities_list_reset (CameraAbilitiesList *list)
 int
 gp_abilities_list_count (CameraAbilitiesList *list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	return (list->count);
 }
@@ -573,7 +571,7 @@ cmp_abilities (const void *a, const void *b) {
 static int
 gp_abilities_list_sort (CameraAbilitiesList *list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	qsort (list->abilities, list->count, sizeof(CameraAbilities), cmp_abilities);
 	return (GP_OK);
@@ -585,7 +583,7 @@ gp_abilities_list_lookup_id (CameraAbilitiesList *list, const char *id)
 {
 	int x;
 
-	CHECK_NULL (list && id);
+	C_PARAMS (list && id);
 
 	for (x = 0; x < list->count; x++)
 		if (!strcmp (list->abilities[x].id, id))
@@ -606,7 +604,7 @@ gp_abilities_list_lookup_model (CameraAbilitiesList *list, const char *model)
 {
 	int x;
 
-	CHECK_NULL (list && model);
+	C_PARAMS (list && model);
 
 	for (x = 0; x < list->count; x++) {
 		if (!strcasecmp (list->abilities[x].model, model))
@@ -634,10 +632,8 @@ int
 gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				 CameraAbilities *abilities)
 {
-	CHECK_NULL (list && abilities);
-
-	if (index < 0 || index >= list->count)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (list && abilities);
+	C_PARAMS (0 <= index && index < list->count);
 
 	memcpy (abilities, &list->abilities[index], sizeof (CameraAbilities));
 

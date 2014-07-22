@@ -200,6 +200,20 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 	}\
 } while(0)
 
+#define C_PARAMS(PARAMS) do {\
+	if (!(PARAMS)) {\
+		GP_LOG_E ("Invalid parameters: '%s' is NULL/FALSE.", #PARAMS);\
+		return GP_ERROR_BAD_PARAMETERS;\
+	}\
+} while(0)
+
+#define C_PARAMS_MSG(PARAMS, MSG, ...) do {\
+	if (!(PARAMS)) {\
+		GP_LOG_E ("Invalid parameters: " #MSG " ('%s' is NULL/FALSE.)", ##__VA_ARGS__, #PARAMS);\
+		return GP_ERROR_BAD_PARAMETERS;\
+	}\
+} while(0)
+
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
 #endif /* __GPHOTO2_PORT_LOG_H__ */

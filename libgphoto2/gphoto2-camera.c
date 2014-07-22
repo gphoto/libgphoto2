@@ -57,8 +57,6 @@
 #  define N_(String) (String)
 #endif
 
-#define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
-
 #define CAMERA_UNUSED(c,ctx)						\
 {									\
 	(c)->pc->used--;						\
@@ -269,7 +267,7 @@ struct _CameraPrivateCore {
 int
 gp_camera_exit (Camera *camera, GPContext *context)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	GP_LOG_D ("Exiting camera ('%s')...", camera->pc->a.model);
 
@@ -324,7 +322,7 @@ gp_camera_new (Camera **camera)
 {
 	int result;
 
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
         C_MEM (*camera = calloc (1, sizeof (Camera)));
 
@@ -375,7 +373,7 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 {
 	GP_LOG_D ("Setting abilities ('%s')...", abilities.model);
 
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	/*
 	 * If the camera is currently initialized, terminate that connection.
@@ -401,7 +399,7 @@ gp_camera_set_abilities (Camera *camera, CameraAbilities abilities)
 int
 gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 {
-	CHECK_NULL (camera && abilities);
+	C_PARAMS (camera && abilities);
 
 	memcpy (abilities, &camera->pc->a, sizeof (CameraAbilities));
 
@@ -412,7 +410,7 @@ gp_camera_get_abilities (Camera *camera, CameraAbilities *abilities)
 int
 gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 {
-	CHECK_NULL (camera && info);
+	C_PARAMS (camera && info);
 
 	CR (camera, gp_port_get_info (camera->port, info), NULL);
 
@@ -424,7 +422,7 @@ int
 gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 {
 	char	*name, *path;
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	/*
 	 * If the camera is currently initialized, terminate that connection.
@@ -463,17 +461,12 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 {
 	GPPortSettings settings;
 
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
-	if (!camera->port) {
-		GP_LOG_E ("You need to set a port prior trying to set the speed");
-		return (GP_ERROR_BAD_PARAMETERS);
-	}
-
-	if (camera->port->type != GP_PORT_SERIAL) {
-		GP_LOG_E ("You can specify a speed only with serial ports");
-		return (GP_ERROR_BAD_PARAMETERS);
-	}
+	C_PARAMS_MSG (camera->port,
+		      "You need to set a port prior trying to set the speed");
+	C_PARAMS_MSG (camera->port->type == GP_PORT_SERIAL,
+		      "You can specify a speed only with serial ports");
 
 	/*
 	 * If the camera is currently initialized, terminate that connection.
@@ -501,7 +494,7 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 int
 gp_camera_get_port_speed (Camera *camera)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	return (camera->pc->speed);
 }
@@ -517,7 +510,7 @@ gp_camera_get_port_speed (Camera *camera)
 int
 gp_camera_ref (Camera *camera)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	camera->pc->ref_count += 1;
 
@@ -538,7 +531,7 @@ gp_camera_ref (Camera *camera)
 int
 gp_camera_unref (Camera *camera)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	if (!camera->pc->ref_count) {
 		GP_LOG_E ("gp_camera_unref on a camera with ref_count == 0 "
@@ -572,7 +565,7 @@ gp_camera_unref (Camera *camera)
 int
 gp_camera_free (Camera *camera)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 
 	GP_LOG_D ("Freeing camera...");
 
@@ -700,7 +693,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 
 	GP_LOG_D ("Initializing camera...");
 
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 	/*
 	 * Reset the exit_requested flag. If this flag is set, 
 	 * gp_camera_exit will be called as soon as the camera is no
@@ -868,7 +861,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 int
 gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->get_config) {
@@ -901,7 +894,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 int
 gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
-	CHECK_NULL (camera && window);
+	C_PARAMS (camera && window);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->set_config) {
@@ -933,7 +926,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 int
 gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-	CHECK_NULL (camera && summary);
+	C_PARAMS (camera && summary);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->summary) {
@@ -964,7 +957,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
 int
 gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	CHECK_NULL (camera && manual);
+	C_PARAMS (camera && manual);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->manual) {
@@ -996,7 +989,7 @@ gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
 int
 gp_camera_get_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	CHECK_NULL (camera && about);
+	C_PARAMS (camera && about);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->about) {
@@ -1030,7 +1023,7 @@ int
 gp_camera_capture (Camera *camera, CameraCaptureType type,
 		   CameraFilePath *path, GPContext *context)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->capture) {
@@ -1060,7 +1053,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 int
 gp_camera_trigger_capture (Camera *camera, GPContext *context)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->trigger_capture) {
@@ -1091,7 +1084,7 @@ int
 gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	char *xname;
-	CHECK_NULL (camera && file);
+	C_PARAMS (camera && file);
 	CHECK_INIT (camera, context);
 
 	CR (camera, gp_file_clean (file), context);
@@ -1138,7 +1131,7 @@ gp_camera_wait_for_event (Camera *camera, int timeout,
 		          CameraEventType *eventtype, void **eventdata,
 			  GPContext *context)
 {
-	CHECK_NULL (camera);
+	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->wait_for_event) {
@@ -1168,7 +1161,7 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 {
 	GP_LOG_D ("Listing files in '%s'...", folder);
 
-	CHECK_NULL (camera && folder && list);
+	C_PARAMS (camera && folder && list);
 	CHECK_INIT (camera, context);
 	CR (camera, gp_list_reset (list), context);
 
@@ -1196,7 +1189,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 {
 	GP_LOG_D ("Listing folders in '%s'...", folder);
 
-	CHECK_NULL (camera && folder && list);
+	C_PARAMS (camera && folder && list);
 	CHECK_INIT (camera, context);
 	CR (camera, gp_list_reset (list), context);
 
@@ -1223,7 +1216,7 @@ gp_camera_folder_delete_all (Camera *camera, const char *folder,
 {
 	GP_LOG_D ("Deleting all files in '%s'...", folder);
 
-	CHECK_NULL (camera && folder);
+	C_PARAMS (camera && folder);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_all (camera->fs,
@@ -1252,7 +1245,7 @@ gp_camera_folder_put_file (Camera *camera,
 	GP_LOG_D ("Uploading file into '%s'...",
 		folder);
 
-	CHECK_NULL (camera && folder && file);
+	C_PARAMS (camera && folder && file);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,
@@ -1286,7 +1279,7 @@ gp_camera_file_get_info (Camera *camera, const char *folder,
 
 	GP_LOG_D ("Getting file info for '%s' in '%s'...", file, folder);
 
-	CHECK_NULL (camera && folder && file && info);
+	C_PARAMS (camera && folder && file && info);
 	CHECK_INIT (camera, context);
 
 	memset (info, 0, sizeof (CameraFileInfo));
@@ -1344,7 +1337,7 @@ gp_camera_file_set_info (Camera *camera, const char *folder,
 			 const char *file, CameraFileInfo info,
 			 GPContext *context)
 {
-	CHECK_NULL (camera && folder && file);
+	C_PARAMS (camera && folder && file);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_set_info (camera->fs,
@@ -1373,7 +1366,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
 {
 	GP_LOG_D ("Getting file '%s' in folder '%s'...", file, folder);
 
-	CHECK_NULL (camera && folder && file && camera_file);
+	C_PARAMS (camera && folder && file && camera_file);
 	CHECK_INIT (camera, context);
 
 	CR (camera, gp_file_clean (camera_file), context);
@@ -1417,7 +1410,7 @@ gp_camera_file_read (Camera *camera, const char *folder, const char *file,
 {
 	GP_LOG_D ("Getting file '%s' in folder '%s'...", file, folder);
 
-	CHECK_NULL (camera && folder && file && buf && size);
+	C_PARAMS (camera && folder && file && buf && size);
 	CHECK_INIT (camera, context);
 
 	/* Did we get reasonable foldername/filename? */
@@ -1453,7 +1446,7 @@ gp_camera_file_delete (Camera *camera, const char *folder, const char *file,
 {
 	GP_LOG_D ("Deleting file '%s' in folder '%s'...", file, folder);
 
-	CHECK_NULL (camera && folder && file);
+	C_PARAMS (camera && folder && file);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_delete_file (
@@ -1477,7 +1470,7 @@ int
 gp_camera_folder_make_dir (Camera *camera, const char *folder,
 			   const char *name, GPContext *context)
 {
-	CHECK_NULL (camera && folder && name);
+	C_PARAMS (camera && folder && name);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_make_dir (camera->fs,
@@ -1501,7 +1494,7 @@ int
 gp_camera_folder_remove_dir (Camera *camera, const char *folder,
 			     const char *name, GPContext *context)
 {
-	CHECK_NULL (camera && folder && name);
+	C_PARAMS (camera && folder && name);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_remove_dir (camera->fs,
@@ -1537,7 +1530,7 @@ gp_camera_get_storageinfo (
 	Camera *camera, CameraStorageInformation **sifs,
 	int *nrofsifs, GPContext *context)
 {
-	CHECK_NULL (camera && sifs && nrofsifs);
+	C_PARAMS (camera && sifs && nrofsifs);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera,
@@ -1594,8 +1587,7 @@ gp_camera_start_timeout (Camera *camera, unsigned int timeout,
 {
 	int id;
 
-	if (!camera || !camera->pc)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (camera && camera->pc);
 
 	if (!camera->pc->timeout_start_func)
 		return (GP_ERROR_NOT_SUPPORTED);

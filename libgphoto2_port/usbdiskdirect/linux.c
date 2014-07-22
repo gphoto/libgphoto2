@@ -255,8 +255,7 @@ gp_port_usbdiskdirect_init (GPPort *port)
 static int
 gp_port_usbdiskdirect_exit (GPPort *port)
 {
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	free (port->pl);
 	port->pl = NULL;
@@ -316,8 +315,7 @@ static int gp_port_usbdiskdirect_seek (GPPort *port, int offset, int whence)
 {
 	off_t ret;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (!port);
 
 	/* The device needs to be opened for that operation */
 	if (port->pl->fd == -1)
@@ -339,8 +337,7 @@ gp_port_usbdiskdirect_write (GPPort *port, const char *bytes, int size)
 {
 	int ret;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	/* The device needs to be opened for that operation */
 	if (port->pl->fd == -1)
@@ -361,8 +358,7 @@ gp_port_usbdiskdirect_read (GPPort *port, char *bytes, int size)
 {
 	int ret;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	/* The device needs to be opened for that operation */
 	if (port->pl->fd == -1)
@@ -381,8 +377,7 @@ gp_port_usbdiskdirect_read (GPPort *port, char *bytes, int size)
 static int
 gp_port_usbdiskdirect_update (GPPort *port)
 {
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	memcpy (&port->settings, &port->settings_pending,
 		sizeof (port->settings));
@@ -396,12 +391,10 @@ gp_port_usbdiskdirect_find_device(GPPort *port, int idvendor, int idproduct)
 	unsigned short vendor_id, product_id;
 	const char *disk;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	disk = strrchr (port->settings.usbdiskdirect.path, '/');
-	if (!disk)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (disk);
 	disk++;
 
 	CHECK (gp_port_usbdiskdirect_get_usb_id (disk,

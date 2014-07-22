@@ -56,7 +56,6 @@
 #endif
 
 #define CHECK_RESULT(result) {int r=(result); if (r<0) return (r);}
-#define CHECK_NULL(m) {if (!(m)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_SUPP(p,t,o) {if (!(o)) {gp_port_set_error ((p), _("The operation '%s' is not supported by this device"), (t)); return (GP_ERROR_NOT_SUPPORTED);}}
 #define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
@@ -87,7 +86,7 @@ struct _GPPortPrivateCore {
 int
 gp_port_new (GPPort **port)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
         GP_LOG_D ("Creating new device...");
 
@@ -105,7 +104,7 @@ gp_port_new (GPPort **port)
 static int
 gp_port_init (GPPort *port)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	if (port->pc->ops->init)
@@ -117,7 +116,7 @@ gp_port_init (GPPort *port)
 static int
 gp_port_exit (GPPort *port)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	if (port->pc->ops->exit)
@@ -144,7 +143,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 {
 	GPPortLibraryOperations ops_func;
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
 	free (port->pc->info.name);
 	C_MEM (port->pc->info.name = strdup (info->name));
@@ -223,7 +222,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		/* Nothing in here */
 		break;
 	}
-	gp_port_set_settings (port, port->settings);
+	CHECK_RESULT (gp_port_set_settings (port, port->settings));
 
 	return (GP_OK);
 }
@@ -240,7 +239,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 int
 gp_port_get_info (GPPort *port, GPPortInfo *info)
 {
-	CHECK_NULL (port && info);
+	C_PARAMS (port && info);
 
 	*info = &port->pc->info;
 	return (GP_OK);
@@ -258,7 +257,7 @@ gp_port_get_info (GPPort *port, GPPortInfo *info)
 int
 gp_port_open (GPPort *port)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	GP_LOG_D ("Opening %s port...",
@@ -284,7 +283,7 @@ gp_port_close (GPPort *port)
 {
 	GP_LOG_D ("Closing port...");
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "close", port->pc->ops->close);
@@ -306,7 +305,7 @@ gp_port_reset (GPPort *port)
 {
 	GP_LOG_D ("Resetting port...");
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "reset", port->pc->ops->reset);
@@ -328,7 +327,7 @@ gp_port_free (GPPort *port)
 {
 	GP_LOG_D ("Freeing port...");
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
 	if (port->pc) {
 		if (port->pc->ops) {
@@ -381,7 +380,7 @@ gp_port_write (GPPort *port, const char *data, int size)
 
 	GP_LOG_D ("Writing %i=0x%x byte(s) to port...", size, size);
 
-	CHECK_NULL (port && data);
+	C_PARAMS (port && data);
 	CHECK_INIT (port);
 
 	GP_LOG_DATA (data, size);
@@ -415,7 +414,7 @@ gp_port_read (GPPort *port, char *data, int size)
 
 	GP_LOG_D ("Reading %i=0x%x bytes from port...", size, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	/* Check if we read as many bytes as expected */
@@ -450,7 +449,7 @@ gp_port_check_int (GPPort *port, char *data, int size)
 
 	GP_LOG_D ("Reading %i=0x%x bytes from interrupt endpoint...", size, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	/* Check if we read as many bytes as expected */
@@ -484,7 +483,7 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 {
         int retval;
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	/* Check if we read as many bytes as expected */
@@ -529,7 +528,7 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 int
 gp_port_set_timeout (GPPort *port, int timeout)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
         GP_LOG_D ("Setting port timeout to %i milliseconds.", timeout);
         port->timeout = timeout;
@@ -563,7 +562,7 @@ int gp_port_timeout_get (GPPort *port, int *timeout)
 int
 gp_port_get_timeout (GPPort *port, int *timeout)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
 	GP_LOG_D ("Current port timeout is %i milliseconds.", port->timeout);
         *timeout = port->timeout;
@@ -587,7 +586,7 @@ gp_port_set_settings (GPPort *port, GPPortSettings settings)
 {
 	GP_LOG_D ("Setting settings...");
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
         /*
@@ -627,7 +626,7 @@ int gp_port_settings_set (GPPort *port, GPPortSettings settings)
 int
 gp_port_get_settings (GPPort *port, GPPortSettings *settings)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
         memcpy (settings, &(port->settings), sizeof (gp_port_settings));
 
@@ -648,7 +647,7 @@ gp_port_get_pin (GPPort *port, GPPin pin, GPLevel *level)
 {
 	GP_LOG_D ("Getting level of pin %i...", pin);
 
-	CHECK_NULL (port && level);
+	C_PARAMS (port && level);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "get_pin", port->pc->ops->get_pin);
@@ -710,7 +709,7 @@ gp_port_set_pin (GPPort *port, GPPin pin, GPLevel level)
 		PinTable[i].number, PinTable[i].description_short,
 		PinTable[i].description_long, _(LevelTable[j].description));
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "set_pin", port->pc->ops->set_pin);
@@ -734,7 +733,7 @@ gp_port_send_break (GPPort *port, int duration)
 {
 	GP_LOG_D ("Sending break (%i milliseconds)...", duration);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
         CHECK_SUPP (port, "send_break", port->pc->ops->send_break);
@@ -759,7 +758,7 @@ gp_port_flush (GPPort *port, int direction)
 {
 	GP_LOG_D ("Flushing port...");
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 
 	CHECK_SUPP (port, "flush", port->pc->ops->flush);
 	CHECK_RESULT (port->pc->ops->flush (port, direction));
@@ -785,7 +784,7 @@ gp_port_flush (GPPort *port, int direction)
 int
 gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "find_device", port->pc->ops->find_device);
@@ -809,7 +808,7 @@ gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
 int
 gp_port_usb_find_device_by_class (GPPort *port, int mainclass, int subclass, int protocol)
 {
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "find_device_by_class", port->pc->ops->find_device_by_class);
@@ -833,7 +832,7 @@ gp_port_usb_clear_halt (GPPort *port, int ep)
 {
 	GP_LOG_D ("Clear USB halt...");
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "clear_halt", port->pc->ops->clear_halt);
@@ -866,7 +865,7 @@ gp_port_usb_msg_write (GPPort *port, int request, int value, int index,
 		  request, value, index, size, size);
 	GP_LOG_DATA (bytes, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_write", port->pc->ops->msg_write);
@@ -899,7 +898,7 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 	GP_LOG_D ("Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		  request, value, index, size, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_read);
@@ -941,7 +940,7 @@ gp_port_usb_msg_interface_write (GPPort *port, int request,
 		  request, value, index, size, size);
 	GP_LOG_DATA (bytes, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_build", port->pc->ops->msg_interface_write);
@@ -976,7 +975,7 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 	GP_LOG_D ("Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		  request, value, index, size, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_interface_read);
@@ -1022,7 +1021,7 @@ gp_port_usb_msg_class_write (GPPort *port, int request,
 		  request, value, index, size, size);
 	GP_LOG_DATA (bytes, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_build", port->pc->ops->msg_class_write);
@@ -1057,7 +1056,7 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 	GP_LOG_D ("Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		  request, value, index, size, size);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_class_read);
@@ -1091,7 +1090,7 @@ gp_port_seek (GPPort *port, int offset, int whence)
 
 	GP_LOG_D ("Seeking to: %d whence: %d", offset, whence);
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "seek", port->pc->ops->seek);
@@ -1133,7 +1132,7 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 		GP_LOG_DATA (data, data_size);
 	}
 
-	CHECK_NULL (port);
+	C_PARAMS (port);
 	CHECK_INIT (port);
 
 	memset (sense, 0, sense_size);
@@ -1191,8 +1190,7 @@ gp_port_set_error (GPPort *port, const char *format, ...)
 {
 	va_list args;
 
-	if (!port)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (port);
 
 	if (format) {
 		va_start (args, format);

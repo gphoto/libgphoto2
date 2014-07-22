@@ -266,7 +266,6 @@ struct _CameraFilesystem {
 #undef  MIN
 #define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 
-#define CHECK_NULL(r)        {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(result)           {int __r = (result); if (__r < 0) return (__r);}
 
 #define CL(result,list)			\
@@ -309,7 +308,7 @@ delete_all_files (CameraFilesystem *fs, CameraFilesystemFolder *folder)
 {
 	CameraFilesystemFile	*file;
 
-	CHECK_NULL (folder);
+	C_PARAMS (folder);
 	GP_LOG_D ("Delete all files in folder %p/%s", folder, folder->name);
 
 	file = folder->files;
@@ -354,7 +353,7 @@ static int
 delete_folder (CameraFilesystem *fs, CameraFilesystemFolder **folder)
 {
 	CameraFilesystemFolder *next;
-	CHECK_NULL (folder);
+	C_PARAMS (folder);
 
 	GP_LOG_D ("Delete one folder %p/%s", *folder, (*folder)->name);
 	next = (*folder)->next;
@@ -497,7 +496,7 @@ delete_all_folders (CameraFilesystem *fs, const char *foldername,
 	GP_LOG_D ("Internally deleting "
 		"all folders from '%s'...", foldername);
 
-	CHECK_NULL (fs && foldername);
+	C_PARAMS (fs && foldername);
 	CC (context);
 	CA (foldername, context);
 
@@ -586,8 +585,8 @@ append_folder (CameraFilesystem *fs,
 	GPContext *context
 ) {
 	GP_LOG_D ("Appending folder %s...", folder);
-	CHECK_NULL (fs);
-	CHECK_NULL (folder);
+	C_PARAMS (fs);
+	C_PARAMS (folder);
 	CC (context);
 	CA (folder, context);
 	return append_to_folder (fs->rootfolder, folder, newfolder);
@@ -598,7 +597,7 @@ append_file (CameraFilesystem *fs, CameraFilesystemFolder *folder, const char *n
 {
 	CameraFilesystemFile **new;
 
-	CHECK_NULL (fs && file);
+	C_PARAMS (fs && file);
 	GP_LOG_D ("Appending file %s...", name);
 
 	new = &folder->files;
@@ -655,7 +654,7 @@ gp_filesystem_reset (CameraFilesystem *fs)
 int
 gp_filesystem_new (CameraFilesystem **fs)
 {
-	CHECK_NULL (fs);
+	C_PARAMS (fs);
 
 	C_MEM (*fs = calloc (1, sizeof (CameraFilesystem)));
 
@@ -717,7 +716,7 @@ internal_append (CameraFilesystem *fs, CameraFilesystemFolder *f,
 {
 	CameraFilesystemFile **new;
 
-	CHECK_NULL (fs && f);
+	C_PARAMS (fs && f);
 
 	GP_LOG_D ("Internal append %s to folder %s", filename, f->name);
 	/* Check folder for existence, if not, create it. */
@@ -747,7 +746,7 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFolder *f;
 	int ret;
 
-	CHECK_NULL (fs && folder);
+	C_PARAMS (fs && folder);
 	CC (context);
 	CA (folder, context);
 
@@ -892,7 +891,7 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 	int r;
 	CameraFilesystemFolder *f;
 
-	CHECK_NULL (fs && folder);
+	C_PARAMS (fs && folder);
 	CC (context);
 	CA (folder, context);
 
@@ -957,7 +956,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 
 	GP_LOG_D ("Listing files in %s", folder);
 
-	CHECK_NULL (fs && list && folder);
+	C_PARAMS (fs && list && folder);
 	CC (context);
 	CA (folder, context);
 
@@ -1022,7 +1021,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 
 	GP_LOG_D ("Listing folders in %s", folder);
 
-	CHECK_NULL (fs && folder && list);
+	C_PARAMS (fs && folder && list);
 	CC (context);
 	CA (folder, context);
 
@@ -1078,7 +1077,7 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*file;
 
-	CHECK_NULL (fs && folder);
+	C_PARAMS (fs && folder);
 	CC (context);
 	CA (folder, context);
 
@@ -1114,7 +1113,7 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*file;
 
-	CHECK_NULL (fs && folder && filename);
+	C_PARAMS (fs && folder && filename);
 	CC (context);
 	CA (folder, context);
 
@@ -1158,7 +1157,7 @@ gp_filesystem_delete_file_noop (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*file;
 
-	CHECK_NULL (fs && folder && filename);
+	C_PARAMS (fs && folder && filename);
 	CC (context);
 	CA (folder, context);
 	/* Search the folder and the file */
@@ -1183,7 +1182,7 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 {
 	CameraFilesystemFolder	*f;
 
-	CHECK_NULL (fs && folder && name);
+	C_PARAMS (fs && folder && name);
 	CC (context);
 	CA (folder, context);
 
@@ -1218,7 +1217,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFolder *f;
 	CameraFilesystemFolder **prev;
 
-	CHECK_NULL (fs && folder && name);
+	C_PARAMS (fs && folder && name);
 	CC (context);
 	CA (folder, context);
 
@@ -1295,7 +1294,7 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	CameraFilesystemFolder	*f;
 	int ret;
 
-	CHECK_NULL (fs && folder && file);
+	C_PARAMS (fs && folder && file);
 	CC (context);
 	CA (folder, context);
 
@@ -1339,7 +1338,7 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*file;
 	int count;
-	CHECK_NULL (fs && folder);
+	C_PARAMS (fs && folder);
 	CC (context);
 	CA (folder, context);
 
@@ -1387,7 +1386,7 @@ gp_filesystem_number (CameraFilesystem *fs, const char *folder,
 	CameraList *list;
 	int num;
 
-	CHECK_NULL (fs && folder && filename);
+	C_PARAMS (fs && folder && filename);
 	CC (context);
 	CA (folder, context);
 
@@ -1427,7 +1426,7 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 
 	GP_LOG_D ("Scanning %s for %s...", folder, filename);
 
-	CHECK_NULL (fs && folder && filename);
+	C_PARAMS (fs && folder && filename);
 	CC (context);
 	CA (folder, context);
 
@@ -1515,7 +1514,7 @@ gp_filesystem_get_folder (CameraFilesystem *fs, const char *filename,
 {
 	int ret;
 
-	CHECK_NULL (fs && filename && folder);
+	C_PARAMS (fs && filename && folder);
 	CC (context);
 
 	CR (gp_filesystem_scan (fs, "/", filename, context));
@@ -1535,7 +1534,7 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFile	*xfile;
 	int			ret;
 
-	CHECK_NULL (fs && folder && file && filename);
+	C_PARAMS (fs && folder && file && filename);
 	CC (context);
 	CA (folder, context);
 
@@ -1772,7 +1771,7 @@ gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
 	unsigned long	xsize;
 	CameraFile	*file;
 
-	CHECK_NULL (fs && folder && filename && buf && size);
+	C_PARAMS (fs && folder && filename && buf && size);
 	CC (context);
 	CA (folder, context);
 
@@ -1821,7 +1820,7 @@ gp_filesystem_set_funcs	(CameraFilesystem *fs,
 			 CameraFilesystemFuncs *funcs,
 			 void *data)
 {
-	CHECK_NULL (fs);
+	C_PARAMS (fs);
 
 	fs->get_info_func	= funcs->get_info_func;
 	fs->set_info_func	= funcs->set_info_func;
@@ -1860,7 +1859,7 @@ gp_filesystem_get_info (CameraFilesystem *fs, const char *folder,
 	time_t t;
 #endif
 
-	CHECK_NULL (fs && folder && filename && info);
+	C_PARAMS (fs && folder && filename && info);
 	CC (context);
 	CA (folder, context);
 
@@ -1982,7 +1981,7 @@ gp_filesystem_lru_free (CameraFilesystem *fs)
 	CameraFilesystemFile *ptr;
 	unsigned long int size;
 
-	CHECK_NULL (fs && fs->lru_first);
+	C_PARAMS (fs && fs->lru_first);
 
 	ptr = fs->lru_first;
 
@@ -2047,7 +2046,7 @@ gp_filesystem_lru_update (CameraFilesystem *fs,
 	int x;
 	char cached_images[1024];
 
-	CHECK_NULL (fs && folder && file);
+	C_PARAMS (fs && folder && file);
 
 	CR (gp_file_get_data_and_size (file, NULL, &size));
 
@@ -2204,7 +2203,7 @@ gp_filesystem_set_file_noop (CameraFilesystem *fs,
 	int r;
 	time_t t;
 
-	CHECK_NULL (fs && folder && file);
+	C_PARAMS (fs && folder && file);
 	CC (context);
 	CA (folder, context);
 
@@ -2335,7 +2334,7 @@ gp_filesystem_set_info_noop (CameraFilesystem *fs,
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
 
-	CHECK_NULL (fs && folder);
+	C_PARAMS (fs && folder);
 	CC (context);
 	CA (folder, context);
 
@@ -2368,7 +2367,7 @@ gp_filesystem_set_info (CameraFilesystem *fs, const char *folder,
 	CameraFilesystemFolder	*f;
 	CameraFilesystemFile	*xfile;
 
-	CHECK_NULL (fs && folder && filename);
+	C_PARAMS (fs && folder && filename);
 	CC (context);
 	CA (folder, context);
 
@@ -2448,7 +2447,7 @@ gp_filesystem_get_storageinfo (
 	int *nrofstorageinfos,
 	GPContext *context
 ) {
-	CHECK_NULL (fs && storageinfo && nrofstorageinfos);
+	C_PARAMS (fs && storageinfo && nrofstorageinfos);
 	CC (context);
 
 	if (!fs->storage_info_func) {

@@ -245,12 +245,10 @@ gp_port_usb_open (GPPort *port)
 	char name[64];
 
 	gp_log (GP_LOG_DEBUG,"libusb","gp_port_usb_open(%p)", port);
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 	if (!port->pl->d) {
 		ret = gp_port_usb_find_path_lib(port);
-		if (!port->pl->d)
-			return GP_ERROR_BAD_PARAMETERS;
+		C_PARAMS (port->pl->d);
 	}
 
         /*
@@ -321,8 +319,7 @@ gp_port_usb_open (GPPort *port)
 static int
 gp_port_usb_close (GPPort *port)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	if (usb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
@@ -387,8 +384,7 @@ gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 {
 	int ret=0;
 
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	switch (ep) {
 	case GP_PORT_USB_ENDPOINT_IN :
@@ -413,8 +409,7 @@ gp_port_usb_write (GPPort *port, const char *bytes, int size)
 {
         int ret;
 
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+        C_PARAMS (port && port->pl->dh);
 
 	ret = usb_bulk_write (port->pl->dh, port->settings.usb.outep,
                            (char *) bytes, size, port->timeout);
@@ -429,8 +424,7 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 {
 	int ret;
 
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	ret = usb_bulk_read(port->pl->dh, port->settings.usb.inep,
 			     bytes, size, port->timeout);
@@ -446,8 +440,7 @@ gp_port_usb_reset(GPPort *port)
 	int ret;
 
 	gp_log (GP_LOG_DEBUG, "libusb", "Reseting port");
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	ret = usb_reset(port->pl->dh);
         if (ret < 0) {
@@ -462,8 +455,7 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int ret;
 
-	if (!port || !port->pl->dh || timeout < 0)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
 	ret = usb_interrupt_read(port->pl->dh, port->settings.usb.intep,
 			     bytes, size, timeout);
@@ -479,8 +471,7 @@ static int
 gp_port_usb_msg_write_lib(GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	return usb_control_msg(port->pl->dh,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE,
@@ -491,8 +482,7 @@ static int
 gp_port_usb_msg_read_lib(GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	return usb_control_msg(port->pl->dh,
 		USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN,
@@ -507,8 +497,7 @@ static int
 gp_port_usb_msg_interface_write_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	return usb_control_msg(port->pl->dh, 
 		USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
@@ -520,8 +509,7 @@ static int
 gp_port_usb_msg_interface_read_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	return usb_control_msg(port->pl->dh, 
 		USB_TYPE_VENDOR | USB_RECIP_INTERFACE | USB_ENDPOINT_IN,
@@ -537,8 +525,7 @@ static int
 gp_port_usb_msg_class_write_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	return usb_control_msg(port->pl->dh, 
 		USB_TYPE_CLASS | USB_RECIP_INTERFACE,
@@ -550,8 +537,7 @@ static int
 gp_port_usb_msg_class_read_lib(GPPort *port, int request, 
 	int value, int index, char *bytes, int size)
 {
-	if (!port || !port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port && port->pl->dh);
 
 	return usb_control_msg(port->pl->dh, 
 		USB_TYPE_CLASS | USB_RECIP_INTERFACE | USB_ENDPOINT_IN,
@@ -573,8 +559,7 @@ gp_port_usb_update (GPPort *port)
 {
 	int ret, ifacereleased = FALSE;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	gp_log (GP_LOG_DEBUG, "libusb", "gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d), port %s",
 		port->settings.usb.interface,
@@ -597,8 +582,8 @@ gp_port_usb_update (GPPort *port)
 	memcpy(&port->settings.usb.port, &port->settings_pending.usb.port,
 		sizeof(port->settings.usb.port));
 
- 	if (!port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	if (!port->pl->dh)
+		return GP_OK; /* the port might not be opened, yet. that is ok */
 
 	memcpy(&port->settings.usb, &port->settings_pending.usb,
 		sizeof(port->settings.usb));
@@ -748,8 +733,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	char *s;
 	char busname[64], devname[64];
 
-	if (!port)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (port);
 
 	s = strchr (port->settings.usb.port,':');
 	busname[0] = devname[0] = '\0';
@@ -867,28 +851,22 @@ gp_port_usb_find_path_lib(GPPort *port)
 	char *s;
 	char busname[64], devname[64];
 
-	if (!port)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (port);
 
 	s = strchr (port->settings.usb.port,':');
 	busname[0] = devname[0] = '\0';
-	if (!s || s[1] == '\0') {
-		/* generic usb: match ... can't do */
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	C_PARAMS (s && s[1] != '\0'); /* generic usb: match ... can't do */
+
 	if (s && (s[1] != '\0')) { /* usb:%d,%d */
 		strncpy(busname,s+1,sizeof(busname));
 		busname[sizeof(busname)-1] = '\0';
 
 		s = strchr(busname,',');
-		if (s) {
-			strncpy(devname, s+1,sizeof(devname));
-			devname[sizeof(devname)-1] = '\0';
-			*s = '\0';
-		} else {
-			/* generic usb: match ... can't do */
-			return GP_ERROR_BAD_PARAMETERS;
-		}
+		C_PARAMS (s); /* generic usb: match ... can't do */
+
+		strncpy(devname, s+1,sizeof(devname));
+		devname[sizeof(devname)-1] = '\0';
+		*s = '\0';
 	}
 	for (bus = usb_busses; bus; bus = bus->next) {
 		if (strcmp(busname, bus->dirname))
@@ -1162,8 +1140,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 	char *s;
 	char busname[64], devname[64];
 
-	if (!port)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (port);
 
 	busname[0] = devname[0] = '\0';
 	s = strchr (port->settings.usb.port,':');
@@ -1186,8 +1163,7 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 	 * Should the USB layer report that ? I don't know.
 	 * Better to check here.
 	 */
-	if (!class)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (class);
 
 	for (bus = usb_busses; bus; bus = bus->next) {
 		if ((busname[0] != '\0') && strcmp(busname, bus->dirname))

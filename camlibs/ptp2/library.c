@@ -4195,8 +4195,8 @@ canon_theme_get (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	C_PTP_REP (ptp_canon_get_customize_data (params, 1, &xdata, &size));
 
-	if (size < 42+sizeof(struct canon_theme_entry)*5)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (size >= 42+sizeof(struct canon_theme_entry)*5);
+
 	ent = (struct canon_theme_entry*)(xdata+42);
 	for (i=0;i<5;i++) {
 		fprintf(stderr,"entry %d: unknown1 = %x\n", i, ent[i].unknown1);
@@ -5373,13 +5373,8 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	PTPObject *ob;
 
 	SET_CONTEXT_P(params, context);
-	if (offset64 + *size64 > 0xffffffff) {
-		GP_LOG_E ("offset + size exceeds 32bit");
-		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
-	}
-
-	if (!strcmp (folder, "/special"))
-		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+	C_PARAMS_MSG (offset64 + *size64 <= 0xffffffff, "offset + size exceeds 32bit");
+	C_PARAMS_MSG (strcmp (folder, "/special"), "file not found");
 
 	if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject))
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -5676,8 +5671,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_context_error (context, _("Metadata only supported for MTP devices."));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	if (type != GP_FILE_TYPE_NORMAL)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (type == GP_FILE_TYPE_NORMAL);
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
@@ -5838,8 +5832,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	SET_CONTEXT_P(params, context);
 
-	if (!strcmp (folder, "/special"))
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (strcmp (folder, "/special"));
 
 	camera->pl->checkevents = TRUE;
 	/* compute storage ID value from folder patch */
@@ -5884,8 +5877,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	SET_CONTEXT_P(params, context);
 
-	if (!strcmp (folder, "/special"))
-		return (GP_ERROR_BAD_PARAMETERS); /* for now */
+	C_PARAMS (strcmp (folder, "/special"));
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);

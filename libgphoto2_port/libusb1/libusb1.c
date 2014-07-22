@@ -65,12 +65,6 @@
 		return _r;\
 	}\
 } while(0)
-#define C_PARAMS(PARAMS) do {\
-	if (!(PARAMS)) {\
-		GP_LOG_E ("Invalid parameters: '%s' is NULL/FALSE.", #PARAMS);\
-		return GP_ERROR_BAD_PARAMETERS;\
-	}\
-} while(0)
 
 #ifndef HAVE_LIBUSB_STRERROR
 static const char *libusb_strerror(int r)
@@ -637,9 +631,7 @@ gp_port_usb_update (GPPort *port)
 {
 	int ifacereleased = FALSE;
 
-	if (!port || !port->pl || !port->pl->ctx)
-		return GP_ERROR_BAD_PARAMETERS;
-
+	C_PARAMS (port && port->pl && port->pl->ctx);
 
 	gp_log (GP_LOG_DEBUG, "libusb1", "gp_port_usb_update(old int=%d, conf=%d, alt=%d) port %s, (new int=%d, conf=%d, alt=%d) port %s",
 		port->settings.usb.interface,
@@ -662,8 +654,8 @@ gp_port_usb_update (GPPort *port)
 	memcpy(&port->settings.usb.port, &port->settings_pending.usb.port,
 		sizeof(port->settings.usb.port));
 
- 	if (!port->pl->dh)
-		return GP_ERROR_BAD_PARAMETERS;
+	if (!port->pl->dh)
+		return GP_OK; /* the port might not be opened, yet. that is ok */
 
 	memcpy(&port->settings.usb, &port->settings_pending.usb,
 		sizeof(port->settings.usb));
@@ -815,12 +807,8 @@ gp_port_usb_find_path_lib(GPPort *port)
 	pl = port->pl;
 
 	s = strchr (port->settings.usb.port,':');
-	if (s && (s[1] != '\0')) { /* usb:%d,%d */
-		if (sscanf (s+1, "%d,%d", &busnr, &devnr) != 2)
-			return GP_ERROR_BAD_PARAMETERS;
-	} else {
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	C_PARAMS (s && (s[1] != '\0'));
+	C_PARAMS (sscanf (s+1, "%d,%d", &busnr, &devnr) == 2); /* usb:%d,%d */
 
 	pl->nrofdevs = load_devicelist (port->pl);
 

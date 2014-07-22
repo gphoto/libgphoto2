@@ -75,7 +75,6 @@ struct _GPPortInfoList {
 	unsigned int iolib_count;
 };
 
-#define CHECK_NULL(x) {if (!(x)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CR(x)         {int r=(x);if (r<0) return (r);}
 
 
@@ -109,7 +108,7 @@ gp_port_message_codeset (const char *codeset) {
 int
 gp_port_info_list_new (GPPortInfoList **list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	/*
 	 * We put this in here because everybody needs to call this function
@@ -133,7 +132,7 @@ gp_port_info_list_new (GPPortInfoList **list)
 int
 gp_port_info_list_free (GPPortInfoList *list)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	if (list->info) {
 		unsigned int i;
@@ -174,7 +173,7 @@ gp_port_info_list_free (GPPortInfoList *list)
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	C_MEM (list->info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
 	list->count++;
@@ -269,7 +268,7 @@ gp_port_info_list_load (GPPortInfoList *list)
 	const char *iolibs = (iolibs_env != NULL)?iolibs_env:IOLIBS;
 	int result;
 
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	GP_LOG_D ("Using ltdl to load io-drivers from '%s'...", iolibs);
 	lt_dlinit ();
@@ -298,7 +297,7 @@ gp_port_info_list_count (GPPortInfoList *list)
 {
 	unsigned int count, i;
 
-	CHECK_NULL (list);
+	C_PARAMS (list);
 
 	GP_LOG_D ("Counting entries (%i available)...", list->count);
 
@@ -338,7 +337,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 #endif
 #endif
 
-	CHECK_NULL (list && path);
+	C_PARAMS (list && path);
 
 	GP_LOG_D ("Looking for path '%s' (%i entries available)...", path, list->count);
 
@@ -424,7 +423,7 @@ gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name)
 {
 	unsigned int i, generic;
 
-	CHECK_NULL (list && name);
+	C_PARAMS (list && name);
 
 	GP_LOG_D ("Looking up entry '%s'...", name);
 
@@ -453,19 +452,17 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 {
 	int i;
 
-	CHECK_NULL (list && info);
+	C_PARAMS (list && info);
 
 	GP_LOG_D ("Getting info of entry %i (%i available)...", n, list->count);
 
-	if (n < 0 || n >= list->count)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (n >= 0 && n < list->count);
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
 		if (!strlen (list->info[i]->name)) {
 			n++;
-			if (n >= list->count)
-				return GP_ERROR_BAD_PARAMETERS;
+			C_PARAMS (n < list->count);
 		}
 
 	*info = list->info[n];

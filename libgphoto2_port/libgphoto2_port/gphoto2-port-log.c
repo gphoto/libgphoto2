@@ -81,8 +81,7 @@ static unsigned int log_funcs_count = 0;
 int
 gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 {
-	if (!func)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (func);
 
 	C_MEM (log_funcs = realloc (log_funcs, sizeof (LogFunc) *
 				(log_funcs_count + 1)));
@@ -107,8 +106,7 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 int
 gp_log_remove_func (int id)
 {
-	if (id < 1 || id > log_funcs_count)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (id > 0 && id <= log_funcs_count);
 
 	memmove (log_funcs + id - 1, log_funcs + id, log_funcs_count - id);
 	log_funcs_count--;

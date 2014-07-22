@@ -1192,14 +1192,12 @@ _put_INT(CONFIG_PUT_ARGS) {
 	case PTP_DTC_UINT32:
 	case PTP_DTC_UINT16:
 	case PTP_DTC_UINT8:
-		if (1 != sscanf (value, "%u", &u ))
-			return GP_ERROR_BAD_PARAMETERS;
+		C_PARAMS (1 == sscanf (value, "%u", &u ));
 		break;
 	case PTP_DTC_INT32:
 	case PTP_DTC_INT16:
 	case PTP_DTC_INT8:
-		if (1 != sscanf (value, "%d", &i ))
-			return GP_ERROR_BAD_PARAMETERS;
+		C_PARAMS (1 == sscanf (value, "%d", &i ));
 		break;
 	default:
 		return GP_ERROR;
@@ -2150,7 +2148,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	if (!strcmp(value,_("Video OUT"))) { u = 2; }
 	if (!strcmp(value,_("Off"))) { u = 3; }
 	if (sscanf(value,_("Unknown %d"),&i)) { u = i; }
-	if (u==-1) return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (u != -1);
 
 	if ((u==1) || (u==2)) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
@@ -3232,8 +3230,7 @@ _put_FocusDistance(CONFIG_PUT_ARGS) {
 		propval->u16 = 0xFFFF;
 		return GP_OK;
 	}
-	if (!sscanf(value_str, _("%d mm"), &val))
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (sscanf(value_str, _("%d mm"), &val));
 	propval->u16 = val;
 	return GP_OK;
 }
@@ -4622,8 +4619,7 @@ _put_Nikon_ChangeAfArea(CONFIG_PUT_ARGS) {
 
 	CR (gp_widget_get_value(widget, &val));
 
-	if (2 != sscanf(val, "%dx%d", &x, &y))
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (2 == sscanf(val, "%dx%d", &x, &y));
 
 	ret = ptp_nikon_changeafarea (&camera->pl->params, x, y);
 	if (ret == PTP_RC_NIKON_NotLiveView) {
@@ -5731,38 +5727,24 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 /* fixme: replacement on win32 where we do not have this helper */
 #ifdef HAVE_INET_ATON
 		if (buffer[0] != 0) { /* No DHCP */
-			if (!inet_aton (buffer, &inp)) {
-				fprintf(stderr,"failed to scan for addr in %s\n", buffer);
-				return GP_ERROR_BAD_PARAMETERS;
-			}
+			C_PARAMS_MSG (inet_aton (buffer, &inp), "failed to scan for addr in %s.", buffer);
 			profile.ip_address = inp.s_addr;
 			gp_setting_get("ptp2_wifi","netmask",buffer);
-			if (!inet_aton (buffer, &inp)) {
-				fprintf(stderr,"failed to scan for netmask in %s\n", buffer);
-				return GP_ERROR_BAD_PARAMETERS;
-			}
+			C_PARAMS_MSG (inet_aton (buffer, &inp), "failed to scan for netmask in %s.", buffer);
 			inp.s_addr = be32toh(inp.s_addr); /* Reverse bytes so we can use the code below. */
 			profile.subnet_mask = 32;
 			while (((inp.s_addr >> (32-profile.subnet_mask)) & 0x01) == 0) {
 				profile.subnet_mask--;
-				if (profile.subnet_mask <= 0) {
-					fprintf(stderr,"Invalid subnet mask %s: no zeros\n", buffer);
-					return GP_ERROR_BAD_PARAMETERS;
-				}
+				C_PARAMS_MSG (profile.subnet_mask > 0, "Invalid subnet mask %s: no zeros.", buffer);
 			}
 			/* Check there is only ones left */
-			if ((inp.s_addr | ((0x01 << (32-profile.subnet_mask)) - 1)) != 0xFFFFFFFF) {
-				fprintf(stderr,"Invalid subnet mask %s: misplaced zeros\n", buffer);
-				return GP_ERROR_BAD_PARAMETERS;
-			}
+			C_PARAMS_MSG ((inp.s_addr | ((0x01 << (32-profile.subnet_mask)) - 1)) == 0xFFFFFFFF,
+				"Invalid subnet mask %s: misplaced zeros.", buffer);
 
 			/* Gateway (never tested) */
 			gp_setting_get("ptp2_wifi","gw",buffer);
 			if (*buffer) {
-				if (!inet_aton (buffer, &inp)) {
-					fprintf(stderr,"failed to scan for gw in %s\n", buffer);
-					return GP_ERROR_BAD_PARAMETERS;
-				}
+				C_PARAMS_MSG (inet_aton (buffer, &inp), "failed to scan for gw in %s", buffer);
 				profile.gateway_address = inp.s_addr;
 			}
 		}
@@ -5787,32 +5769,18 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 			pos = buffer;
 			keypart[2] = 0;
 			while (*pos) {
-				if (!*(pos+1)) {
-					fprintf(stderr,"Bad key: '%s'\n", buffer);
-					return GP_ERROR_BAD_PARAMETERS;	
-				}
+				C_PARAMS_MSG (*(pos+1), "Bad key: '%s'", buffer);
 				keypart[0] = *(pos++);
 				keypart[1] = *(pos++);
 				profile.key[i++] = strtol(keypart, &endptr, 16);
-				if (endptr != keypart+2) {
-					fprintf(stderr,"Bad key: '%s', '%s' is not a number\n", buffer, keypart);
-					return GP_ERROR_BAD_PARAMETERS;	
-				}
+				C_PARAMS_MSG (endptr == keypart+2, "Bad key: '%s', '%s' is not a number.", buffer, keypart);
 				if (*pos == ':')
 					pos++;
 			}
-			if (profile.encryption == 1) { /* WEP 64-bit */
-				if (i != 5) { /* 5*8 = 40 bit + 24 bit (IV) = 64 bit */
-					fprintf(stderr,"Bad key: '%s', %d bit length, should be 40 bit.\n", buffer, i*8);
-					return GP_ERROR_BAD_PARAMETERS;	
-				}
-			}
-			else if (profile.encryption == 2) { /* WEP 128-bit */
-				if (i != 13) { /* 13*8 = 104 bit + 24 bit (IV) = 128 bit */
-					fprintf(stderr,"Bad key: '%s', %d bit length, should be 104 bit.\n", buffer, i*8);
-					return GP_ERROR_BAD_PARAMETERS;	
-				}
-			}
+			if (profile.encryption == 1) /* WEP 64-bit */
+				C_PARAMS_MSG (i == 5, "Bad key: '%s', %d bit length, should be 40 bit.", buffer, i*8); /* 5*8 = 40 bit + 24 bit (IV) = 64 bit */
+			else if (profile.encryption == 2) /* WEP 128-bit */
+				C_PARAMS_MSG (i == 13, "Bad key: '%s', %d bit length, should be 104 bit.", buffer, i*8); /* 13*8 = 104 bit + 24 bit (IV) = 128 bit */
 		}
 
 		ptp_nikon_writewifiprofile(&(camera->pl->params), &profile);

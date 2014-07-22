@@ -252,8 +252,7 @@ gp_port_usbscsi_init (GPPort *port)
 static int
 gp_port_usbscsi_exit (GPPort *port)
 {
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	free (port->pl);
 	port->pl = NULL;
@@ -314,8 +313,7 @@ static int gp_port_usbscsi_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
 #ifdef HAVE_SCSI_SG_H
 	sg_io_hdr_t io_hdr;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	/* The device needs to be opened for that operation */
 	if (port->pl->fd == -1)
@@ -357,8 +355,7 @@ static int gp_port_usbscsi_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
 static int
 gp_port_usbscsi_update (GPPort *port)
 {
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	memcpy (&port->settings, &port->settings_pending,
 		sizeof (port->settings));
@@ -372,12 +369,10 @@ gp_port_usbscsi_find_device(GPPort *port, int idvendor, int idproduct)
 	unsigned short vendor_id, product_id;
 	const char *sg;
 
-	if (!port)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (port);
 
 	sg = strrchr (port->settings.usbscsi.path, '/');
-	if (!sg)
-		return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (sg);
 	sg++;
 
 	CHECK (gp_port_usbscsi_get_usb_id (sg, &vendor_id, &product_id))

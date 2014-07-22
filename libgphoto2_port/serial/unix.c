@@ -360,8 +360,7 @@ gp_port_library_list (GPPortInfoList *list)
 static int
 gp_port_serial_init (GPPort *dev)
 {
-	if (!dev)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (dev);
 
 	C_MEM (dev->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
@@ -374,8 +373,7 @@ gp_port_serial_init (GPPort *dev)
 static int
 gp_port_serial_exit (GPPort *dev)
 {
-	if (!dev)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (dev);
 
 	free (dev->pl);
 	dev->pl = NULL;
@@ -462,7 +460,7 @@ gp_port_serial_close (GPPort *dev)
 
 	/* Unlock the port */
 	path = strchr (dev->settings.serial.port, ':');
-	if (!path) return GP_ERROR_BAD_PARAMETERS;
+	C_PARAMS (path);
 	path++;
 	CHECK (gp_port_serial_unlock (dev, path));
 
@@ -482,8 +480,7 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 {
 	int len, ret;
 
-	if (!dev)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (dev);
 
 	/* The device needs to be opened for that operation */
 	if (!dev->pl->fd)
@@ -536,8 +533,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
         fd_set readfs;          /* file descriptor set */
         int readen = 0, now;
 
-	if (!dev)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (dev);
 
 	/* The device needs to be opened for that operation */
 	if (!dev->pl->fd)
@@ -647,8 +643,7 @@ gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
 	int j, bit;
 #endif
 
-	if (!dev || !level)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (dev && level);
 
 	*level = 0;
 
@@ -678,8 +673,7 @@ gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
         int bit, request;
 #endif
 
-	if (!dev)
-		return (GP_ERROR_BAD_PARAMETERS);
+	C_PARAMS (dev);
 
 #ifdef HAVE_TERMIOS_H
 	CHECK (get_termios_bit (dev, pin, &bit));

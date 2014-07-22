@@ -51,7 +51,6 @@ static Setting         glob_setting[512];
 
 static int save_settings (void);
 
-#define CHECK_NULL(r)              {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
 
 static int load_settings (void);
@@ -71,7 +70,7 @@ gp_setting_get (char *id, char *key, char *value)
 {
         int x;
 
-	CHECK_NULL (id && key);
+	C_PARAMS (id && key);
 
 	if (!glob_setting_count)
 		load_settings ();
@@ -103,7 +102,7 @@ gp_setting_set (char *id, char *key, char *value)
 {
         int x;
 
-	CHECK_NULL (id && key);
+	C_PARAMS (id && key);
 
 	if (!glob_setting_count)
 		load_settings ();
