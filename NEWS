@@ -17,6 +17,9 @@ ptp2:
 * cleanup of the USB data handling
 * Bugfixes
 
+st2205:
+* add support for a new type of 240x320 picture frames
+
 all:
 * various cleanups from David Berrange for mingw32 builds.
 * fixed libgd detection and linking
