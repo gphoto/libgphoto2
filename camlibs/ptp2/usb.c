@@ -334,7 +334,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	data = malloc(READLEN);
 	if (!data) return PTP_RC_GeneralError;
 
-	report_progress = (bytes_to_read > 2*CONTEXT_BLOCK_SIZE);
+	report_progress = (bytes_to_read > 2*CONTEXT_BLOCK_SIZE) && (dtoh32(usbdata.length) != 0xffffffffU);
 	if (report_progress)
 		progress_id = gp_context_progress_start (context, (bytes_to_read/CONTEXT_BLOCK_SIZE), _("Downloading..."));
 	while (bytes_to_read > 0) {
