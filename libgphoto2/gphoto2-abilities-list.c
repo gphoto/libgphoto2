@@ -320,8 +320,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 	CHECK_RESULT (count = gp_abilities_list_count (list));
 
 	/* Detect USB cameras */
-	gp_log (GP_LOG_VERBOSE, __FILE__,
-		"Auto-detecting USB cameras...");
+	GP_LOG_D ("Auto-detecting USB cameras...");
 	*ability = -1;
 	for (i = 0; i < count; i++) {
 		int v, p, c, s;

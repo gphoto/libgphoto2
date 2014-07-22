@@ -1437,7 +1437,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
         }
 
         if ((payload_length + 0x50) > sizeof (packet)) {
-                gp_log (GP_LOG_VERBOSE, "canon/usb.c",
+                gp_log (GP_LOG_DEBUG, "canon/usb.c",
                         "canon_usb_dialogue:"
 			  " payload too big, won't fit into buffer (%i > %i)",
                         (payload_length + 0x50), (int)sizeof (packet));
@@ -1544,7 +1544,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                                   reported_length, reported_length+0x40 );
 
                         if ( reported_length > 0 && reported_length+0x40 != read_bytes ) {
-                                gp_log (GP_LOG_VERBOSE, "canon/usb.c",
+                                gp_log (GP_LOG_DEBUG, "canon/usb.c",
 					"canon_usb_dialogue:"
 					  " expected 0x%x bytes, but camera reports 0x%x",
                                          read_bytes, reported_length+0x40 );

@@ -811,7 +811,7 @@ gp_port_usb_find_path_lib(GPPort *port)
 
 		port->pl->d = pl->devs[d];
 
-		gp_log (GP_LOG_VERBOSE, "libusb1", "Found path %s", port->settings.usb.port); 
+		GP_LOG_D ("Found path %s", port->settings.usb.port);
 
 		/* Use the first config, interface and altsetting we find */
 		gp_port_usb_find_first_altsetting(pl->devs[d], &config, &interface, &altsetting);
@@ -829,11 +829,8 @@ gp_port_usb_find_path_lib(GPPort *port)
 		port->settings.usb.intep = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_INTERRUPT);
 
 		port->settings.usb.maxpacketsize = libusb_get_max_packet_size (pl->devs[d], port->settings.usb.inep);
-		gp_log (GP_LOG_VERBOSE, "libusb1",
-			"Detected defaults: config %d, "
-			"interface %d, altsetting %d, "
-			"inep %02x, outep %02x, intep %02x, "
-			"class %02x, subclass %02x",
+		GP_LOG_D ("Detected defaults: config %d, interface %d, altsetting %d, "
+			"inep %02x, outep %02x, intep %02x, class %02x, subclass %02x",
 			port->settings.usb.config,
 			port->settings.usb.interface,
 			port->settings.usb.altsetting,
@@ -900,10 +897,7 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 		port->pl->d = pl->devs[d];
 
-		gp_log (GP_LOG_VERBOSE, "libusb1",
-			"Looking for USB device "
-			"(vendor 0x%x, product 0x%x)... found.", 
-			idvendor, idproduct);
+		GP_LOG_D ("Looking for USB device (vendor 0x%x, product 0x%x)... found.", idvendor, idproduct);
 
 		/* Use the first config, interface and altsetting we find */
 		gp_port_usb_find_first_altsetting(pl->devs[d], &config, &interface, &altsetting);
@@ -914,11 +908,9 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		/* Set the defaults */
 		if (confdesc->interface[interface].altsetting[altsetting].bInterfaceClass
 		    == LIBUSB_CLASS_MASS_STORAGE) {
-			gp_log (GP_LOG_VERBOSE, "libusb1",
-				_("USB device (vendor 0x%x, product 0x%x) is a mass"
+			GP_LOG_D ("USB device (vendor 0x%x, product 0x%x) is a mass"
 				  " storage device, and might not function with gphoto2."
-				  " Reference: %s"),
-				idvendor, idproduct, URL_USB_MASSSTORAGE);
+				  " Reference: %s", idvendor, idproduct, URL_USB_MASSSTORAGE);
 		}
 		port->settings.usb.config = confdesc->bConfigurationValue;
 		port->settings.usb.interface = confdesc->interface[interface].altsetting[altsetting].bInterfaceNumber;
@@ -929,11 +921,8 @@ gp_port_usb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		port->settings.usb.intep = gp_port_usb_find_ep(pl->devs[d], config, interface, altsetting, LIBUSB_ENDPOINT_IN, LIBUSB_TRANSFER_TYPE_INTERRUPT);
 
 		port->settings.usb.maxpacketsize = libusb_get_max_packet_size (pl->devs[d], port->settings.usb.inep);
-		gp_log (GP_LOG_VERBOSE, "libusb1",
-			"Detected defaults: config %d, "
-			"interface %d, altsetting %d, "
-			"inep %02x, outep %02x, intep %02x, "
-			"class %02x, subclass %02x",
+		GP_LOG_D ("Detected defaults: config %d, interface %d, altsetting %d, "
+			  "inep %02x, outep %02x, intep %02x, class %02x, subclass %02x",
 			port->settings.usb.config,
 			port->settings.usb.interface,
 			port->settings.usb.altsetting,
@@ -1191,20 +1180,16 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 		if (devnr && (devnr != libusb_get_device_address (pl->devs[d])))
 			continue;
 
-		gp_log (GP_LOG_VERBOSE, "gphoto2-port-usb",
-			"Looking for USB device "
-			"(class 0x%x, subclass, 0x%x, protocol 0x%x)...", 
-			class, subclass, protocol);
+		GP_LOG_D ("Looking for USB device (class 0x%x, subclass, 0x%x, protocol 0x%x)...",
+			  class, subclass, protocol);
 
 		ret = gp_port_usb_match_device_by_class(pl->devs[d], class, subclass, protocol, &config, &interface, &altsetting);
 		if (!ret)
 			continue;
 
 		port->pl->d = pl->devs[d];
-		gp_log (GP_LOG_VERBOSE, "libusb1",
-			"Found USB class device "
-			"(class 0x%x, subclass, 0x%x, protocol 0x%x)", 
-			class, subclass, protocol);
+		GP_LOG_D ("Found USB class device (class 0x%x, subclass, 0x%x, protocol 0x%x)",
+			  class, subclass, protocol);
 
 		if (LOG_ON_LIBUSB_E (libusb_get_config_descriptor (pl->devs[d], config, &confdesc)))
 			continue;
@@ -1225,11 +1210,8 @@ gp_port_usb_find_device_by_class_lib(GPPort *port, int class, int subclass, int 
 				break;
 			}
 		}
-		gp_log (GP_LOG_VERBOSE, "libusb1",
-			"Detected defaults: config %d, "
-			"interface %d, altsetting %d, "
-			"idVendor ID %04x, idProduct %04x, "
-			"inep %02x, outep %02x, intep %02x",
+		GP_LOG_D ("Detected defaults: config %d, interface %d, altsetting %d, "
+			  "idVendor ID %04x, idProduct %04x, inep %02x, outep %02x, intep %02x",
 			port->settings.usb.config,
 			port->settings.usb.interface,
 			port->settings.usb.altsetting,
