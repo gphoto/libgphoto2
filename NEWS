@@ -1,4 +1,4 @@
-libgphoto2 2.5.4.2 snapshot
+libgphoto2 2.5.4.3 snapshot
 
 ptp2:
 * Nikon 1 support. Final fix to get it running by Raj Kumar of archive.org.
@@ -14,6 +14,7 @@ ptp2:
   Nikon DSC D3x, D5300
   Canon PowerShot S95, SX260HS, SX160IS, A2600, Elph135
   Canon EOS 1200D
+* Massive logging and error handling cleanup by Axel Waggershauser
 * cleanup of the USB data handling
 * Bugfixes
 
@@ -22,6 +23,7 @@ st2205:
 
 all:
 * various cleanups from David Berrange for mingw32 builds.
+* massive logging and error handling cleanup by Axel Waggershauser
 * fixed libgd detection and linking
 
 print-camera-list
