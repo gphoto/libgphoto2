@@ -6816,6 +6816,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					  _(label), propid, ret, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
 			ret = GP_ERROR;
 		}
+		ptp_free_devicepropvalue (dpd.DataType, &propval);
+		ptp_free_devicepropdesc (&dpd);
 	}
 	return GP_OK;
 }
