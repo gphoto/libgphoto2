@@ -72,7 +72,7 @@
 uint16_t
 ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 {
-	int res, towrite;
+	int res, towrite, do_retry = TRUE;
 	PTPUSBBulkContainer usbreq;
 	Camera *camera = ((PTPData *)params->data)->camera;
 
@@ -90,11 +90,18 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	usbreq.payload.params.param5=htod32(req->Param5);
 	/* send it to responder */
 	towrite = PTP_USB_BULK_REQ_LEN-(sizeof(uint32_t)*(5-req->Nparam));
+retry:
 	res = gp_port_write (camera->port, (char*)&usbreq, towrite);
 	if (res != towrite) {
-		if (res < 0)
+		if (res < 0) {
 			GP_LOG_E ("PTP_OC 0x%04x sending req failed: %s (%d)", req->Code, gp_port_result_as_string(res), res);
-		else
+			if (res == GP_ERROR_IO_WRITE && do_retry) {
+				GP_LOG_D ("Clearing halt on OUT EP and retrying once.");
+				gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_OUT);
+				do_retry = FALSE;
+				goto retry;
+			}
+		} else
 			GP_LOG_E ("PTP_OC 0x%04x sending req failed: wrote only %d of %d bytes", req->Code, res, towrite);
 		return PTP_ERROR_IO;
 	}
