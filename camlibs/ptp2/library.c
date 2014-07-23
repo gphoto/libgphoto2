@@ -136,22 +136,17 @@ int
 translate_ptp_result (uint16_t result)
 {
 	switch (result) {
-	case PTP_RC_ParameterNotSupported:
-		return (GP_ERROR_BAD_PARAMETERS);
-	case PTP_RC_OperationNotSupported:
-		return (GP_ERROR_NOT_SUPPORTED);
-	case PTP_RC_DeviceBusy:
-		return (GP_ERROR_CAMERA_BUSY);
-	case PTP_ERROR_TIMEOUT:
-		return (GP_ERROR_TIMEOUT);
-	case PTP_ERROR_CANCEL:
-		return (GP_ERROR_CANCEL);
-	case PTP_ERROR_BADPARAM:
-		return (GP_ERROR_BAD_PARAMETERS);
-	case PTP_RC_OK:
-		return (GP_OK);
-	default:
-		return (GP_ERROR);
+	case PTP_RC_OK:				return GP_OK;
+	case PTP_RC_ParameterNotSupported:	return GP_ERROR_BAD_PARAMETERS;
+	case PTP_RC_OperationNotSupported:	return GP_ERROR_NOT_SUPPORTED;
+	case PTP_RC_DeviceBusy:			return GP_ERROR_CAMERA_BUSY;
+	case PTP_ERROR_TIMEOUT:			return GP_ERROR_TIMEOUT;
+	case PTP_ERROR_CANCEL:			return GP_ERROR_CANCEL;
+	case PTP_ERROR_BADPARAM:		return GP_ERROR_BAD_PARAMETERS;
+	case PTP_ERROR_IO:
+	case PTP_ERROR_DATA_EXPECTED:
+	case PTP_ERROR_RESP_EXPECTED:		return GP_ERROR_IO;
+	default:				return GP_ERROR;
 	}
 }
 
@@ -6662,7 +6657,7 @@ camera_init (Camera *camera, GPContext *context)
 {
     	CameraAbilities a;
 	unsigned int i;
-	int ret, retried = 0;
+	int ret, tries = 0;
 	PTPParams *params;
 	char *curloc, *camloc;
 	GPPortSettings	settings;
@@ -6814,45 +6809,38 @@ camera_init (Camera *camera, GPContext *context)
 	/* Establish a connection to the camera */
 	SET_CONTEXT(camera, context);
 
-	retried = 0;
+	tries = 0;
 	sessionid = 1;
 	while (1) {
-		ret=ptp_opensession (params, sessionid);
+		ret = LOG_ON_PTP_E (ptp_opensession (params, sessionid));
+		if (ret == PTP_RC_SessionAlreadyOpened || ret == PTP_RC_OK)
+			break;
+
+		tries++;
+
 		if (ret==PTP_RC_InvalidTransactionID) {
 			sessionid++;
-			if (retried < 10) {
-				retried++;
+			/* Try a couple sessionids starting with 1 */
+			if (tries < 10)
+				continue;
+
+			if (tries < 11 && camera->port->type == GP_PORT_USB) {
+				/* Try whacking PTP device */
+				ptp_usb_control_device_reset_request (&camera->pl->params);
+				sessionid = 1;
 				continue;
 			}
-
-			if (retried < 11) {
-				retried++;
-				/* Try whacking PTP device */
-				if (camera->port->type == GP_PORT_USB) {
-					ptp_usb_control_device_reset_request (&camera->pl->params);
-					sessionid = 1;
-					continue;
-				}
-			}
-
-			/* FIXME: deviceinfo is not read yet ... (see macro)*/
-			C_PTP_REP (ret);
+		} else if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO)) {
+			/* Try whacking PTP device */
+			if (tries < 3 && camera->port->type == GP_PORT_USB)
+				ptp_usb_control_device_reset_request (params);
 		}
-		if (ret!=PTP_RC_SessionAlreadyOpened && ret!=PTP_RC_OK) {
-			GP_LOG_E ("ptp_opensession returns %x", ret);
-			if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO)) {
-				/* Try whacking PTP device */
-				if (camera->port->type == GP_PORT_USB)
-					ptp_usb_control_device_reset_request (params);
-			}
-			if (retried < 2) { /* try again */
-				retried++;
-				continue;
-			}
-			/* FIXME: deviceinfo is not read yet ... (see macro) */
-			C_PTP_REP (ret);
-		}
-		break;
+
+		if (tries < 3)
+			continue;
+
+		/* FIXME: deviceinfo is not read yet ... (see macro)*/
+		C_PTP_REP (ret);
 	}
 	/* We have cameras where a response takes 15 seconds(!), so make
 	 * post init timeouts longer */

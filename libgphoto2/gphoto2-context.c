@@ -271,7 +271,7 @@ gp_context_error (GPContext *context, const char *format, ...)
 	va_end (args);
 
 	/* Log the error message */
-	GP_LOG_E ("%s", str);
+	gp_log( GP_LOG_ERROR, __func__, "%s", str);
 
 	if (context && context->error_func)
 		context->error_func (context, str, context->error_func_data);

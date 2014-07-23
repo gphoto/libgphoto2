@@ -73,17 +73,13 @@
 	int r1 = (result);						\
 									\
 	if (r1 < 0) {							\
-									\
 		/* libgphoto2_port doesn't have a GPContext */		\
-		if (r1 > -100)						\
-			gp_context_error ((ctx), _("An error occurred "	\
-				"in the io-library ('%s'): %s"),	\
-				gp_port_result_as_string (r1),		\
-				(c) ? gp_port_get_error ((c)->port) :	\
-				      _("No additional information "	\
-				      "available."));			\
+		gp_context_error ((ctx), _("An error occurred "		\
+			"in the io-library ('%s'): %s"),		\
+			gp_port_result_as_string (r1),			\
+			gp_port_get_error ((c) ? (c)->port : NULL));	\
 		if (c)							\
-			CAMERA_UNUSED((c),(ctx));			\
+			CAMERA_UNUSED (c,ctx);				\
 		return (r1);						\
 	}								\
 }
@@ -203,8 +199,8 @@
 	CHECK_OPEN (c,ctx);						\
 	r6 = (result);							\
 	if (r6 < 0) {							\
+		GP_LOG_E ("'%s' failed: %d", #result, r6);		\
 		CHECK_CLOSE (c,ctx);					\
-		GP_LOG_E ("Operation failed!");				\
 		CAMERA_UNUSED (c,ctx);                              	\
 		return (r6);						\
 	}								\
