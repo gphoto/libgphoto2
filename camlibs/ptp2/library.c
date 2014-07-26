@@ -3176,6 +3176,11 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	SET_CONTEXT_P(params, context);
 	camera->pl->checkevents = TRUE;
 
+	/* first, draing existing events if the caller did not do it. */
+	while (ptp_get_one_event(params, &event)) {
+		GP_LOG_D ("draining unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+	}
+
 	/* 3rd gen style nikon capture, can do both sdram and card */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
