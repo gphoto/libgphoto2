@@ -83,9 +83,9 @@ gphoto2 --wait-event-and-download=10s
 echo "*** capture and wait_event  - jpg/card - 50 events"
 gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imageformat=0
-gphoto2 --wait-event-and-download=100
+gphoto2 --wait-event-and-download=200
 gphoto2 --set-config imageformat=8
-gphoto2 --wait-event-and-download=100
+gphoto2 --wait-event-and-download=200
 
 echo "*** config "
 gphoto2 --list-config
