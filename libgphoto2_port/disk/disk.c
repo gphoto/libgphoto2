@@ -130,7 +130,10 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_type,"sysfs"))||
 			    (NULL != strstr(mntent->mnt_type,"fuse"))||
 			    (NULL != strstr(mntent->mnt_type,"cifs"))||
-			    (NULL != strstr(mntent->mnt_type,"afs"))
+			    (NULL != strstr(mntent->mnt_type,"afs")) ||
+			/* mount options */
+				/* x-systemd.automount or similar */
+			    (NULL != strstr(mntent->mnt_opts,"automount"))
 )
 			) {
 				continue;
@@ -191,7 +194,9 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_type,"sysfs"))||
 			    (NULL != strstr(mntent->mnt_type,"fuse"))||
 			    (NULL != strstr(mntent->mnt_type,"cifs"))||
-			    (NULL != strstr(mntent->mnt_type,"afs"))
+			    (NULL != strstr(mntent->mnt_type,"afs")) ||
+			/* options */
+			    (NULL != strstr(mntent->mnt_opts,"automount"))
 			) {
 				continue;
 			}
