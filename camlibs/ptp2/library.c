@@ -2171,40 +2171,49 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					/* JPEG blob */
 					/* stuff */
 					GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
-					if (type != 1) {
+					switch (type) {
+					default:
+						if (len > (size-(xdata-data))) {
+							len = size;
+							GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
+						}
 						gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
 						xdata = xdata+len;
 						continue;
-					}
-
-					if (len > (size-(xdata-data))) {
-						len = size;
-						GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
-						break;
-					}
-					gp_file_append ( file, (char*)xdata+8, len-8 );
-					gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-					/* Add an arbitrary file name so caller won't crash */
-					gp_file_set_name (file, "preview.jpg");
-
-					/* dump the rest of the blobs */
-					xdata = xdata+len;
-					while ((xdata-data) < size) {
-						len  = dtoh32a(xdata);
-						type = dtoh32a(xdata+4);
-
-						GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
+					case 9:
+					case 1:
 						if (len > (size-(xdata-data))) {
 							len = size;
 							GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 							break;
 						}
-						gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
+						gp_file_append ( file, (char*)xdata+8, len-8 );
+						/* type 1 is JPEG (regular), type 9 is in movie mode */
+
+						gp_file_set_mime_type (file, (type==1) ? GP_MIME_JPEG : GP_MIME_RAW);
+
+						/* Add an arbitrary file name so caller won't crash */
+						gp_file_set_name (file, "preview.jpg");
+
+						/* dump the rest of the blobs */
 						xdata = xdata+len;
+						while ((xdata-data) < size) {
+							len  = dtoh32a(xdata);
+							type = dtoh32a(xdata+4);
+
+							GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
+							if (len > (size-(xdata-data))) {
+								len = size;
+								GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
+								break;
+							}
+							gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
+							xdata = xdata+len;
+						}
+						free (data);
+						SET_CONTEXT_P(params, NULL);
+						return GP_OK;
 					}
-					free (data);
-					SET_CONTEXT_P(params, NULL);
-					return GP_OK;
 				}
 				return GP_ERROR;
 			}
