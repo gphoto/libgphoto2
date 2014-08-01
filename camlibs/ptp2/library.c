@@ -1522,6 +1522,9 @@ static struct {
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 700D",			0x04a9, 0x3272, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* From: Gerwin Voorsluijs <g.m.voorsluijs@online.nl> */
+	{"Canon:PowerShot S120",		0x04a9, 0x3275, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Andrés Farfán <nafraf@linuxmail.org> */
 	{"Canon:PowerShot SX170 IS",		0x04a9, 0x3276, PTPBUG_DELETE_SENDS_EVENT},
 
