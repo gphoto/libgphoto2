@@ -1519,6 +1519,10 @@ static struct {
 
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 100D",			0x04a9, 0x3270, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Ronny Kalusniok <ladiko@gmail.com> */
+	{"Canon:PowerShot A2500",		0x04a9, 0x3271, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 700D",			0x04a9, 0x3272, PTP_CAP|PTP_CAP_PREVIEW},
 
