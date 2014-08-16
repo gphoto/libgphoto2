@@ -141,6 +141,8 @@ gp_port_exit (GPPort *port)
 int
 gp_port_set_info (GPPort *port, GPPortInfo info)
 {
+	int ret;
+
 	GPPortLibraryOperations ops_func;
 
 	C_PARAMS (port);
@@ -222,9 +224,11 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		/* Nothing in here */
 		break;
 	}
-	CHECK_RESULT (gp_port_set_settings (port, port->settings));
+	ret = gp_port_set_settings (port, port->settings);
+	if (ret != GP_ERROR_NOT_SUPPORTED)
+		CHECK_RESULT (ret);
 
-	return (GP_OK);
+	return GP_OK;
 }
 
 /**
