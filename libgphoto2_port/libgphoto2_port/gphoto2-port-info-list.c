@@ -168,18 +168,25 @@ gp_port_info_list_free (GPPortInfoList *list)
  * against info.path and - if successfull - will append this entry to the 
  * list.
  *
- * \return A gphoto2 error code
+ * \return A gphoto2 error code, or an index into the port list (excluding generic entries).
+ *         which can be used for gp_port_info_list_get_info.
  **/
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
+	int generic, i;
+
 	C_PARAMS (list);
 
 	C_MEM (list->info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
 	list->count++;
 	list->info[list->count - 1] = info;
 
-	return GP_OK;
+	/* Ignore generic entries */
+	for (generic = i = 0; i < list->count; i++)
+		if (!strlen (list->info[i]->name))
+			generic++;
+        return (list->count - 1 - generic);
 }
 
 
