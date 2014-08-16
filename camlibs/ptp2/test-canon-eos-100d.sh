@@ -12,7 +12,7 @@ gphoto2 --set-config capturetarget=0
 gphoto2 --set-config imageformat=0 --capture-image-and-download
 rm capt0000.jpg
 gphoto2 --set-config imageformat=8 --capture-image-and-download
-rm capt0000.jpg capt0000.cr2
+rm capt0000.jpg capt0001.cr2
 gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imageformat=0 --capture-image-and-download
 gphoto2 --set-config imageformat=8 --capture-image-and-download
@@ -27,7 +27,7 @@ gphoto2 --set-config imageformat=0 --trigger-capture --trigger-capture --trigger
 rm capt0000.jpg
 gphoto2 --set-config imageformat=8 --trigger-capture --wait-event-and-download=5s
 gphoto2 --set-config imageformat=8 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
-rm capt0000.jpg capt0000.cr2
+rm capt0000.jpg capt0001.cr2
 gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imageformat=0 --trigger-capture --wait-event-and-download=5s
 gphoto2 --set-config imageformat=0 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
@@ -95,6 +95,11 @@ gphoto2 --set-config ownername="Markus Meissner"
 gphoto2 --get-config ownername|grep Markus.Meissner
 gphoto2 --set-config ownername="Marcus Meissner"
 gphoto2 --get-config ownername|grep Marcus.Meissner
+
+gphoto2 --get-config datetime
+date
+gphoto2 --set-config datetime=now
+gphoto2 --get-config datetime
 
 echo "*** DONE"
 echo rm -rf $dir
