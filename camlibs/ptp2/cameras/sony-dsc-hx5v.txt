@@ -1,0 +1,88 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: Sony Digital Still Camera
+  Version: (null)
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x6 (1.0)
+
+Capture Formats: 
+Display Formats: JPEG
+Supported MTP Object Properties:
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc05/AssociationType dc06/AssociationDesc dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0a/Keywords dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00030001:
+	StorageDescription: Memory Card
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Only
+	Maximum Capability: 7952400384 (7584 MB)
+	Free Space (Bytes): 7383842816 (7041 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: 0000000000000000nnnnnnnnnnnnnnnn
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Sony Corporation
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: Sony Digital Still Camera
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: None
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/other/d407
+Label: Perceived Device Type
+Type: TEXT
+Current: 1
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: Sony Digital Still Camera
+  device version: (null)
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001
+  0x1002
+  0x1003
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x1014
+  0x1015
+  0x101b
+  0x9801
+  0x9802
+  0x9803
+  0x9805
+Events Supported:
+  0x4004
+  0x4005
+Device Properties Supported:
+  0xd407
