@@ -83,5 +83,12 @@ gphoto2 --get-config ownername|grep Marcus.Meissner
 echo "*** MTP property"
 gphoto2 --get-config d402
 
+echo "*** Date & Time"
+gphoto2 --get-config datetime
+date
+gphoto2 --set-config datetime=now
+gphoto2 --get-config datetime
+
+
 echo "*** DONE"
 echo rm -rf $dir
