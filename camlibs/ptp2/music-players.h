@@ -2451,12 +2451,6 @@
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
-   * Jolla
-   */
-  { "Jolla", 0x2931, "Sailfish", 0x0a01,
-      DEVICE_FLAGS_ANDROID_BUGS },
-
-  /*
    * TCL? Alcatel?
    */
   { "TCL", 0x0451, "Alcatel one touch 986+", 0xd108,
