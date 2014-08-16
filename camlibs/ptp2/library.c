@@ -327,7 +327,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			unsigned int	xsize;
 
 			C_PTP (ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
-			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize)));
+			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
+			if (!di->DevicePropertiesSupported) {
+				free (xprops);
+				C_MEM (di->DevicePropertiesSupported);
+			}
 			for (i=0;i<xsize;i++)
 				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
 			di->DevicePropertiesSupported_len += xsize;
