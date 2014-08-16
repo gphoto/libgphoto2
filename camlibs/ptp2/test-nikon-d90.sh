@@ -132,8 +132,14 @@ gphoto2 --get-config d090|grep Markus.Meissner
 gphoto2 --set-config d090="Marcus Meissner"
 gphoto2 --get-config d090|grep Marcus.Meissner
 
-gphoto2 --get-config fnumber
-gphoto2 --set-config fnumber=f/5.6
+echo "*** needs to be in A or M mode"
+gphoto2 --get-config f-number
+gphoto2 --set-config f-number=f/5.6
+
+gphoto2 --get-config datetime
+date
+gphoto2 --set-config datetime=now
+gphoto2 --get-config datetime
 
 gphoto2 --get-config imagecommentenable
 gphoto2 --set-config imagecommentenable=0
