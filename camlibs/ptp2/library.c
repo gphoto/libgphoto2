@@ -5141,7 +5141,11 @@ ptp_mtp_parse_metadata (
 		end = strstr (begin, propname2);
 		if (!end) continue;
 		*end = '\0';
-		C_MEM (content = strdup(begin));
+		content = strdup(begin);
+		if (!content) {
+			free (props);
+			C_MEM (content);
+		}
 		*end = '<';
 		GP_LOG_D ("found tag %s, content %s", propname, content);
 		ret = LOG_ON_PTP_E (ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd));
