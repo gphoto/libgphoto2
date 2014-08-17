@@ -2822,13 +2822,13 @@ static struct deviceproptableu8 nikon_1_iso[] = {
 	{ N_("A3200 (160-3200)"),	0x02, 0 },
 	{ N_("A800 (160-800)"),		0x03, 0 },
 
-	{ N_("160"),			0x0e, 0 },
-	{ N_("200"),			0x10, 0 },
-	{ N_("400"),			0x16, 0 },
-	{ N_("800"),			0x1c, 0 },
-	{ N_("1600"),			0x22, 0 },
-	{ N_("3200"),			0x28, 0 },
-	{ N_("6400"),			0x2e, 0 },
+	{ "160",			0x0e, 0 },
+	{ "200",			0x10, 0 },
+	{ "400",			0x16, 0 },
+	{ "800",			0x1c, 0 },
+	{ "1600",			0x22, 0 },
+	{ "3200",			0x28, 0 },
+	{ "6400",			0x2e, 0 },
 	
 	/* more unknown values */
 };
@@ -2845,7 +2845,7 @@ static struct deviceproptableu8 nikon_1_whitebalance[] = {
 	{ N_("Shade"),			0x06, 0 },
 
 	/* these are not in the enum range on the j3 ... but reported? */
-	{ N_("Whater"),			0x0a, 0 },
+	{ N_("Water"),			0x0a, 0 },
 	{ N_("Preset"),			0x08, 0 },
 };
 GENERIC8TABLE(Nikon_1_WhiteBalance,nikon_1_whitebalance);
