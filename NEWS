@@ -1,4 +1,4 @@
-libgphoto2 2.5.4.3 snapshot
+libgphoto2 2.5.5 release
 
 ptp2:
 * Nikon 1 support. Final fix to get it running by Raj Kumar of archive.org.
@@ -8,12 +8,16 @@ ptp2:
 * Print read-only values in configuration table lookup (for Canon EOS mostly)
 * Sony: Fixed Sony SLT-A900v capture
 * Fixed the various "datetime" hooks for PTP generic, Canon Powershot and Canon EOS
-  to hopefully work better.
+  to hopefully work better. --set-config datetime=now sets the camera to the current time.
 * CHDK: some changes
 * New ids:
   Nikon DSC D3x, D5300
-  Canon PowerShot S95, SX260HS, SX160IS, A2600, Elph135
+  Nikon Coolpix P330
+  Canon PowerShot S95, S120, SX260HS, SX280HS, SX160IS, A2500, A2600, Elph135, IXUS 300HS, IXUS 255HS
   Canon EOS 1200D
+  Sony DSC-A900, Alpha 6000, DSC-HX5V
+  Casio EX-ZR700, 
+  Fuji FinePix AV-150, T200
 * Massive logging and error handling cleanup by Axel Waggershauser
 * cleanup of the USB data handling
 * Bugfixes
@@ -22,9 +26,9 @@ st2205:
 * add support for a new type of 240x320 picture frames
 
 all:
-* various cleanups from David Berrange for mingw32 builds.
-* massive logging and error handling cleanup by Axel Waggershauser
-* fixed libgd detection and linking
+* Massive logging and error handling cleanup by Axel Waggershauser.
+* Various cleanups from David Berrange for mingw32 builds.
+* fixed libgd detection and linking.
 
 print-camera-list
 * add a mode to print udev rules for the non-standard USB support (usbscsi/usbdisk),
