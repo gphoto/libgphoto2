@@ -760,6 +760,10 @@ static struct {
 
 	/* Sascha Peilicke at SUSE */
 	{"Sony:Alpha-A6000 (MTP)",    0x054c, 0x08b7, 0},
+
+	/* https://sourceforge.net/p/gphoto/feature-requests/442/ */
+	{"Sony:Alpha-A7r (Control)",  0x054c, 0x094d, PTP_CAP},
+
 	{"Sony:Alpha-A6000 (Control)",0x054c, 0x094e, PTP_CAP},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
