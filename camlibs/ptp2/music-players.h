@@ -2093,6 +2093,10 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "TF700 Transformer (MTP+ADB)", 0x4c91,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "TF701T Transformer Pad (MTP)", 0x4ca0,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Asus", 0x0b05, "TF701T Transformer Pad (MTP+ADB)", 0x4ca1,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "ME301T MeMo Pad Smart 10 (MTP)", 0x4cd0,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "ME301T MeMo Pad Smart 10 (MTP+ADB)", 0x4cd1,
@@ -2447,7 +2451,13 @@
   /*
    * MediaTek Inc.
    */
-  { "MediaTek Inc", 0x0e8d, "MT510R", 0x0050,
+  { "MediaTek Inc", 0x0e8d, "MT5xx and MT6xx SoCs", 0x0050,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+   * Jolla
+   */
+  { "Jolla", 0x2931, "Sailfish", 0x0a01,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2477,7 +2487,7 @@
   /* In update 4 the order of devices was changed for
      better OS X / Windows suport and another device-id
      got assigned for the MTP */
-  { "Jolla", 0x2931, "Sailfish", 0x0a05,
+  { "Jolla (2nd)", 0x2931, "Sailfish", 0x0a05,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
