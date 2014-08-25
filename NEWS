@@ -1,7 +1,11 @@
 libgphoto2 2.5.5.1 development
 
+ptp2:
+* fixed all Nikon S* coolpix that are not Nikon 1
+
 translations:
 * updated polish, ukrainian, vietnamese
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.5 release
 
