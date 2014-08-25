@@ -308,7 +308,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			(params->deviceinfo.Model[0]=='S')	/* S1 - S2 currently */
 			)
 		) {
-			if (!NIKON_1(&camera->pl->params)) {
+			if (	!NIKON_1(&camera->pl->params) &&
+				ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CheckEvent)
+			) {
 				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
