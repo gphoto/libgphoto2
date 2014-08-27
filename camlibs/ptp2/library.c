@@ -308,15 +308,15 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			(params->deviceinfo.Model[0]=='S')	/* S1 - S2 currently */
 			)
 		) {
-			if (	!NIKON_1(&camera->pl->params) &&
-				ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CheckEvent)
-			) {
+			if (!NIKON_1(&camera->pl->params)) {
 				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
 
-			/* hides some commands from us ... */
-			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
+			/* The 1 hides some commands from us ... */
+			if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CheckEvent) &&
+			    !ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)
+			) {
 				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 				/* probably more */
@@ -328,16 +328,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			uint16_t  	*xprops;
 			unsigned int	xsize;
 
-			C_PTP (ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
-			di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
-			if (!di->DevicePropertiesSupported) {
+			if (PTP_RC_OK == LOG_ON_PTP_E (ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize))) {
+				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
+				if (!di->DevicePropertiesSupported) {
+					free (xprops);
+					C_MEM (di->DevicePropertiesSupported);
+				}
+				for (i=0;i<xsize;i++)
+					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
+				di->DevicePropertiesSupported_len += xsize;
 				free (xprops);
-				C_MEM (di->DevicePropertiesSupported);
 			}
-			for (i=0;i<xsize;i++)
-				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
-			di->DevicePropertiesSupported_len += xsize;
-			free (xprops);
 		}
 
 
