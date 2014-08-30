@@ -2494,20 +2494,23 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			       _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
+		int loops = 100;
 		do {
 			ret = ptp_nikon_capture2(params,af,sdram);
-		} while (ret == PTP_RC_DeviceBusy);
+		} while ((ret == PTP_RC_DeviceBusy) && loops--);
 		goto capturetriggered;
 	}
 
 	if (!params->inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+		int loops = 100;
 		do {
 			ret = ptp_nikon_capture_sdram(params);
-		} while (ret == PTP_RC_DeviceBusy);
+		} while ((ret == PTP_RC_DeviceBusy) && (loops--));
 	} else {
+		int loops = 100;
 		do {
 			ret = ptp_nikon_capture(params, 0xffffffff);
-		} while (ret == PTP_RC_DeviceBusy);
+		} while ((ret == PTP_RC_DeviceBusy) && (loops--));
 	}
 
 capturetriggered:
