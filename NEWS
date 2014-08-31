@@ -1,4 +1,9 @@
-libgphoto2 2.5.5.1 development
+libgphoto2 2.5.5.1 snapshot
+
+------------------------------------------------------------------------------
+libgphoto2 2.5.5.1 release
+
+This is a regression fix release.
 
 ptp2:
 * fixed all Nikon S* coolpix that are not Nikon 1
