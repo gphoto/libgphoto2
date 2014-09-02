@@ -102,6 +102,16 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
+
+/*
+ * GP_LOG_D/E:
+ * simple helper macros for convenient and consistent logging of error
+ * and debug messages including information about the source location.
+ */
+#define GP_LOG_D(...) gp_log(GP_LOG_DEBUG, __func__, __VA_ARGS__)
+#define GP_LOG_E(...) gp_log_with_source_location(GP_LOG_ERROR, __FILE__, __LINE__, __func__, __VA_ARGS__)
+#define GP_LOG_DATA(DATA, SIZE) gp_log_data(__func__, DATA, SIZE)
+
 #elif defined(__GNUC__) &&  __GNUC__ >= 2
 #define GP_DEBUG(msg, params...) \
         gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
