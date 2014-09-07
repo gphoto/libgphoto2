@@ -1852,6 +1852,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_EVFMode:
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case PTP_DPC_CANON_EOS_AutoPowerOff:
+				case PTP_DPC_CANON_EOS_EVFRecordStatus:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
@@ -1908,7 +1909,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_EVFWBMode:
 				case PTP_DPC_CANON_EOS_EVFClickWBCoeffs:
 				case PTP_DPC_CANON_EOS_EVFColorTemp:
-				case PTP_DPC_CANON_EOS_EVFRecordStatus:
 				case PTP_DPC_CANON_EOS_ExposureSimMode:
 				case PTP_DPC_CANON_EOS_LvAfSystem:
 				case PTP_DPC_CANON_EOS_MovSize:

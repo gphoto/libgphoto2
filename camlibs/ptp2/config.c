@@ -1990,96 +1990,11 @@ static struct deviceproptableu16 canon_eos_cameraoutput[] = {
 };
 GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
 
-static int
-_get_Canon_EOS_EVFRecordTarget(CONFIG_GET_ARGS) {
-	char buf[20];
-	int inlist = 0;
-
-/*	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-*/
-	if (dpd->DataType != PTP_DTC_UINT32)
-		return (GP_ERROR);
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-
-	/* NOTE: On 5DM3, there are 2 ways to get unexpected values.
-	 * 1 way is one the property is disable because the camera is not in movie
-	 * mode. In that case, the enumeration flag will be cleared and the value
-	 * will be 0 i.e. disabled.
-	 * When the camera is in movie mode, then the enumeration flag is set.
-	 * the 5DM3 has 3 enum values being reported 0, 3, 4. */
-	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
-		int i;
-
-		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-			switch (dpd->FORM.Enum.SupportedValue[i].u32) {
-			case 0: gp_widget_add_choice (*widget, _("None"));
-				if (dpd->CurrentValue.u32 == 0) {
-					gp_widget_set_value (*widget,_("None"));
-					inlist = 1;
-				}
-				break;
-			case 4: gp_widget_add_choice (*widget, _("Card"));
-				if (dpd->CurrentValue.u32 == 4) {
-					gp_widget_set_value (*widget,_("Card"));
-					inlist = 1;
-				}
-				break;
-			default:
-				sprintf (buf, _("Unknown %d"), dpd->FORM.Enum.SupportedValue[i].u32);
-				gp_widget_add_choice (*widget, buf);
-				if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
-					gp_widget_set_value (*widget,_(buf));
-					inlist = 1;
-				}
-				break;
-			}
-		}
-	}
-	if (!inlist) {
-		/* For Canon EOS 5D Mark III (and probably others),
-		 * this is not an enumeration when the mode is not active on the camera.
-		 * So we show a diferent value, disabled when the value isn't an enum
-		 * and the actual value is 0*/
-		if (dpd->CurrentValue.u32 == 0) {
-			strcpy(buf, _("Disabled"));
-		} else {
-			sprintf(buf,_("Unknown %d"),dpd->CurrentValue.u32);
-		}
-		gp_widget_add_choice (*widget, buf); 
-		gp_widget_set_value (*widget,buf);
-	}
-	return GP_OK;
-}
-
-static int
-_put_Canon_EOS_EVFRecordTarget(CONFIG_PUT_ARGS) {
-	int	i;
-	char	*value;
-
-	CR (gp_widget_get_value(widget, &value));
-
-	if (!strcmp(value,_("Card"))) {
-		propval->u32 = 4;
-		return GP_OK;
-	}
-	if (!strcmp(value,_("Disabled"))) {
-		propval->u32 = 0;
-		return GP_OK;
-	}
-	if (!strcmp(value,_("None"))) {
-		propval->u32 = 0;
-		return GP_OK;
-	}
-	if (!sscanf(value, _("Unknown %d"), &i))
-		return GP_ERROR;
-	propval->u32 = i;
-	return GP_OK;
-}
-
-
+static struct deviceproptableu16 canon_eos_evfrecordtarget[] = {
+	{ N_("None"),		0, 0 },
+	{ N_("Card"),		4, 0 },
+};
+GENERIC16TABLE(Canon_EOS_EVFRecordTarget,canon_eos_evfrecordtarget)
 
 /* values currently unknown */
 static struct deviceproptableu16 canon_eos_evfmode[] = {
@@ -6008,7 +5923,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Reverse Command Dial"),   "reversedial",          PTP_DPC_NIKON_ReverseCommandDial,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("Camera Output"),          "output",               PTP_DPC_CANON_CameraOutput,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_CameraOutput,        _put_Canon_CameraOutput },
 	{ N_("Camera Output"),          "output",               PTP_DPC_CANON_EOS_EVFOutputDevice,  PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_CameraOutput,    _put_Canon_EOS_CameraOutput },
-	{ N_("Recording Destination"),  "movierecordtarget",    PTP_DPC_CANON_EOS_EVFRecordStatus,  PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
+	{ N_("Recording Destination"),  "movierecordtarget",    PTP_DPC_CANON_EOS_EVFRecordStatus,  PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_EVFRecordTarget, _put_Canon_EOS_EVFRecordTarget },
 	{ N_("EVF Mode"),               "evfmode",              PTP_DPC_CANON_EOS_EVFMode,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_EVFMode,         _put_Canon_EOS_EVFMode },
 	{ N_("Owner Name"),             "ownername",            PTP_DPC_CANON_CameraOwner,          PTP_VENDOR_CANON,   PTP_DTC_AUINT8, _get_AUINT8_as_CHAR_ARRAY,      _put_AUINT8_as_CHAR_ARRAY },
 	{ N_("Owner Name"),             "ownername",            PTP_DPC_CANON_EOS_Owner,            PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
