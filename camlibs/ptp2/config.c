@@ -6709,7 +6709,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						ret_ptp = LOG_ON_PTP_E (ptp_generic_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
 						if (ret_ptp != PTP_RC_OK) {
 							gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)"),
-									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
+									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
 							ret = translate_ptp_result (ret_ptp);
 						}
 					}
@@ -6731,7 +6731,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					ret_ptp = LOG_ON_PTP_E (ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
 					if (ret_ptp != PTP_RC_OK) {
 						gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
-								  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
+								  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
 						ret = translate_ptp_result (ret_ptp);
 					}
 				} else
