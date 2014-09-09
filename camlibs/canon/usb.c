@@ -1431,10 +1431,8 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
                 return NULL;
         }
 
-        if (payload_length) {
-                GP_DEBUG ("Payload :");
-                gp_log_data ("canon", (char *)payload, (long)payload_length);
-        }
+        if (payload_length)
+                GP_LOG_DATA ((char *)payload, (long)payload_length, "Payload:");
 
         if ((payload_length + 0x50) > sizeof (packet)) {
                 gp_log (GP_LOG_DEBUG, "canon/usb.c",

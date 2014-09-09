@@ -2201,7 +2201,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 							len = size;
 							GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 						}
-						gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
+						GP_LOG_DATA ((char*)xdata, len, "get_viewfinder_image header:");
 						xdata = xdata+len;
 						continue;
 					case 9:
@@ -2225,13 +2225,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 							len  = dtoh32a(xdata);
 							type = dtoh32a(xdata+4);
 
-							GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
 							if (len > (size-(xdata-data))) {
 								len = size;
 								GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 								break;
 							}
-							gp_log_data ("ptp2_capture_eos_preview", (char*)xdata, len);
+							GP_LOG_DATA ((char*)xdata, len, "get_viewfinder_image header:");
 							xdata = xdata+len;
 						}
 						free (data);

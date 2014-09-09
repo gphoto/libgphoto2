@@ -371,8 +371,7 @@ hp_send_command_and_receive_blob(
 		memcpy (*msg, msgbuf+5, replydatalen-2);
 	}
 	gp_log (GP_LOG_DEBUG, "hp215", "Read Blob: retcode is %04x", *retcode);
-	gp_log (GP_LOG_DEBUG, "hp215", "Read Blob: argument block is:");
-	gp_log_data ("hp215", (char*)*msg, *msglen);
+	GP_LOG_DATA ((char*)*msg, *msglen, "Read Blob: argument block is:");
 	return GP_OK;
 }
 

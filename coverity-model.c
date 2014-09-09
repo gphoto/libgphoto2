@@ -55,7 +55,7 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 	}
 }
 
-void gp_log_data (const char *domain, const char *data, unsigned int size) {
+void gp_log_data (const char *domain, const char *data, unsigned int size, const char* format, ...) {
 	/* considered a tainted sink ... but is not one. */
 }
 

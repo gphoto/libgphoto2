@@ -338,11 +338,7 @@ canon_serial_recv_frame (Camera *camera, int *len)
 		*p++ = c;
 	}
 
-	/* If you don't want to see the data dumped, change the frontend to
-	 * set a lower debug level
-	 */
-	gp_log (GP_LOG_DATA, "canon", "RECV (without CANON_FBEG and CANON_FEND bytes)");
-	gp_log_data ("canon", (char *)buffer, p - buffer);
+	GP_LOG_DATA ((char *)buffer, p - buffer, "RECV (without CANON_FBEG and CANON_FEND bytes)");
 
 	if (len)
 		*len = p - buffer;
@@ -1139,11 +1135,9 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		return GP_ERROR;
 	}
 
-	/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
-	gp_log (GP_LOG_DATA, "canon",
-		"canon_serial_get_dirents: "
-		"dirent packet received from canon_serial_dialogue:");
-	gp_log_data ("canon", (char *)p, *dirents_length);
+	GP_LOG_DATA ((char *)p, *dirents_length,
+				 "canon_serial_get_dirents: "
+				 "dirent packet received from canon_serial_dialogue:");
 
 	/* the first five bytes is only for the RS232 implementation
 	 * of this command, we do not need to copy them so therefore
@@ -1180,11 +1174,9 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			return GP_ERROR;
 		}
 
-		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
-		gp_log (GP_LOG_DATA, "canon",
-			"canon_serial_get_dirents: "
-			"dirent packet received from canon_serial_recv_msg:");
-		gp_log_data ("canon", (char *)p, *dirents_length);
+		GP_LOG_DATA ((char *)p, *dirents_length,
+					 "canon_serial_get_dirents: "
+					 "dirent packet received from canon_serial_recv_msg:");
 
 		/* the first five bytes is only for the RS232 implementation,
 		 * don't count them when checking dirent size

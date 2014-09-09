@@ -998,7 +998,7 @@ gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfac
 	}
 	/* get string descriptor at 0xEE */
 	ret = usb_get_descriptor (devh, 0x03, 0xee, buf, sizeof(buf));
-	if (ret > 0) gp_log_data("get_MS_OSD",buf, ret);
+	if (ret > 0) GP_LOG_DATA (buf, ret, "get_MS_OSD");
 	if (ret < 10) goto errout;
 	if (!((buf[2] == 'M') && (buf[4]=='S') && (buf[6]=='F') && (buf[8]=='T')))
 		goto errout;
@@ -1012,7 +1012,7 @@ gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfac
 		GP_LOG_E ("ret is %d, buf[0] is %x\n", ret, buf[0]);
 		goto errout;
 	}
-	if (ret > 0) gp_log_data("get_MS_ExtDesc",buf, ret);
+	if (ret > 0) GP_LOG_DATA (buf, ret, "get_MS_ExtDesc");
 	if ((buf[0x12] != 'M') || (buf[0x13] != 'T') || (buf[0x14] != 'P')) {
 		GP_LOG_E ("buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
 		goto errout;
@@ -1023,7 +1023,7 @@ gp_port_usb_match_mtp_device(struct usb_device *dev,int *configno, int *interfac
 		GP_LOG_E ("ret is %d, buf[0] is %x\n", ret, buf[0]);
 		goto errout;
 	}
-	if (ret > 0) gp_log_data("get_MS_ExtProp",buf, ret);
+	if (ret > 0) GP_LOG_DATA (buf, ret, "get_MS_ExtProp");
 	if ((buf[0x12] != 'M') || (buf[0x13] != 'T') || (buf[0x14] != 'P')) {
 		GP_LOG_E ("buf at 0x12 is %02x%02x%02x\n", buf[0x12], buf[0x13], buf[0x14]);
 		goto errout;

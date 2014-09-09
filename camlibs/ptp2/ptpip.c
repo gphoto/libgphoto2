@@ -125,7 +125,7 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req)
 	default:
 		break;
 	}
-	gp_log_data ( "ptpip/oprequest", (char*)request, len);
+	GP_LOG_DATA ( (char*)request, len, "ptpip/oprequest data:");
 	ret = write (params->cmdfd, request, len);
 	free (request);
 	if (ret == -1)
@@ -149,7 +149,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 			perror ("read PTPIPHeader");
 			return PTP_RC_GeneralError;
 		}
-		gp_log_data ( "ptpip/generic_read", (char*)xhdr+curread, ret);
+		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read data:");
 		curread += ret;
 		if (ret == 0) {
 			GP_LOG_E ("End of stream after reading %d bytes of ptpipheader", ret);
@@ -174,7 +174,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 			free (*data);*data = NULL;
 			return PTP_RC_GeneralError;
 		} else {
-			gp_log_data ( "ptpip/generic_read", (char*)((*data)+curread), ret);
+			GP_LOG_DATA ((char*)((*data)+curread), ret, "ptpip/generic_read data:");
 		}
 		if (ret == 0)
 			break;
@@ -234,7 +234,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod32a(&request[ptpip_startdata_transid  + 8],ptp->Transaction_ID);
 	htod32a(&request[ptpip_startdata_totallen + 8],size);
 	htod32a(&request[ptpip_startdata_unknown  + 8],0);
-	gp_log_data ( "ptpip/senddata", (char*)request, sizeof(request));
+	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
 	ret = write (params->cmdfd, request, sizeof(request));
 	if (ret == -1)
 		perror ("sendreq/write to cmdfd");
@@ -267,7 +267,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		htod32a(&xdata[ptpip_type], type);
 		htod32a(&xdata[ptpip_len], towrite2);
 		htod32a(&xdata[ptpip_data_transid+8], ptp->Transaction_ID);
-		gp_log_data("ptpip/senddata", (char*)xdata, towrite2);
+		GP_LOG_DATA ((char*)xdata, towrite2, "ptpip/senddata data:");
 		written = 0;
 		while (written < towrite2) {
 			ret = write (params->cmdfd, xdata+written, towrite2-written);
@@ -424,7 +424,7 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2],PTPIP_VERSION_MINOR);
 	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MAJOR);
 
-	gp_log_data ( "ptpip/init_cmd", (char*)cmdrequest, len);
+	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
 	ret = write (params->cmdfd, cmdrequest, len);
 	free (cmdrequest);
 	if (ret == -1) {
@@ -485,7 +485,7 @@ ptp_ptpip_init_event_request (PTPParams* params)
 	htod32a(&evtrequest[ptpip_len],ptpip_eventinit_size);
 	htod32a(&evtrequest[ptpip_eventinit_idx],params->eventpipeid);
 
-	gp_log_data ( "ptpip/init_event", (char*)evtrequest, ptpip_eventinit_size);
+	GP_LOG_DATA ((char*)evtrequest, ptpip_eventinit_size, "ptpip/init_event data:");
 	ret = write (params->evtfd, evtrequest, ptpip_eventinit_size);
 	if (ret == -1) {
 		perror("write init evt request");

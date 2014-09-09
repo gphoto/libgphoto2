@@ -85,7 +85,12 @@ void gp_logv     (GPLogLevel level, const char *domain, const char *format,
 	__attribute__((__format__(printf,3,0)))
 #endif
 ;
-void gp_log_data (const char *domain, const char *data, unsigned int size);
+void gp_log_data (const char *domain, const char *data, unsigned int size,
+		  const char *format, ...)
+#ifdef __GNUC__
+__attribute__((__format__(printf,4,5)))
+#endif
+;
 
 /*
  * GP_DEBUG:
@@ -110,7 +115,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  */
 #define GP_LOG_D(...) gp_log(GP_LOG_DEBUG, __func__, __VA_ARGS__)
 #define GP_LOG_E(...) gp_log_with_source_location(GP_LOG_ERROR, __FILE__, __LINE__, __func__, __VA_ARGS__)
-#define GP_LOG_DATA(DATA, SIZE) gp_log_data(__func__, DATA, SIZE)
+#define GP_LOG_DATA(DATA, SIZE, MSG, ...) gp_log_data(__func__, DATA, SIZE, MSG, ##__VA_ARGS__)
 
 #elif defined(__GNUC__) &&  __GNUC__ >= 2
 #define GP_DEBUG(msg, params...) \
@@ -122,7 +127,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
  */
 #define GP_LOG_D(...) gp_log(GP_LOG_DEBUG, __func__, __VA_ARGS__)
 #define GP_LOG_E(...) gp_log_with_source_location(GP_LOG_ERROR, __FILE__, __LINE__, __func__, __VA_ARGS__)
-#define GP_LOG_DATA(DATA, SIZE) gp_log_data(__func__, DATA, SIZE)
+#define GP_LOG_DATA(DATA, SIZE, MSG, ...) gp_log_data(__func__, DATA, SIZE, MSG, ##__VA_ARGS__)
 
 #else
 # ifdef __GNUC__
@@ -131,7 +136,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define GP_DEBUG (void) 
 #define GP_LOG_D(...) /* no-op */
 #define GP_LOG_E(...) /* no-op */
-#define GP_LOG_DATA(DATA, SIZE) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE, ...) /* no-op */
 #endif
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
@@ -150,18 +155,18 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
 #define GP_DEBUG(...) /* no-op */
 #define GP_LOG_D(...) /* no-op */
 #define GP_LOG_E(...) /* no-op */
-#define GP_LOG_DATA(DATA, SIZE) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE, ...) /* no-op */
 
 #elif defined(__GNUC__)
 #define GP_DEBUG(msg, params...) /* no-op */
 #define GP_LOG_D(...) /* no-op */
 #define GP_LOG_E(...) /* no-op */
-#define GP_LOG_DATA(DATA, SIZE) /* no-op */
+#define GP_LOG_DATA(DATA, SIZE, ...) /* no-op */
 #else
 #define GP_DEBUG (void)
 #define GP_LOG_D (void /* no-op */
 #define GP_LOG_E (void) /* no-op */
-#define GP_LOG_DATA(DATA, SIZE) /* no-op */
+#define GP_LOG_DATA(void) /* no-op */
 #endif
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
@@ -202,7 +207,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size);
   unsigned int 
   gpi_string_list_to_flags(const char *str[], 
 			   const StringFlagItem *map);
-  
+
 #define C_MEM(MEM) do {\
 	if ((MEM) == NULL) {\
 		GP_LOG_E ("Out of memory: '%s' failed.", #MEM);\

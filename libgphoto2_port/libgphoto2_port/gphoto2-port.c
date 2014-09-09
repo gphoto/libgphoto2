@@ -59,6 +59,13 @@
 #define CHECK_SUPP(p,t,o) {if (!(o)) {gp_port_set_error ((p), _("The operation '%s' is not supported by this device"), (t)); return (GP_ERROR_NOT_SUPPORTED);}}
 #define CHECK_INIT(p) {if (!(p)->pc->ops) {gp_port_set_error ((p), _("The port has not yet been initialized")); return (GP_ERROR_BAD_PARAMETERS);}}
 
+#define LOG_DATA(DATA, SIZE, EXPECTED, MSG_PRE, MSG_POST, ...) \
+	if (SIZE != EXPECTED) \
+		GP_LOG_DATA (DATA, SIZE, MSG_PRE " %i = 0x%x out of %i bytes " MSG_POST, SIZE, SIZE, EXPECTED, ##__VA_ARGS__); \
+	else \
+		GP_LOG_DATA (DATA, SIZE, MSG_PRE " %i = 0x%x bytes " MSG_POST, SIZE, SIZE, ##__VA_ARGS__)
+
+
 /**
  * \brief Internal private libgphoto2_port data.
  * This structure contains private data.
@@ -382,19 +389,20 @@ gp_port_write (GPPort *port, const char *data, int size)
 {
 	int retval;
 
-	GP_LOG_D ("Writing %i=0x%x byte(s) to port...", size, size);
+        gp_log (GP_LOG_DATA, __func__, "Writing %i = 0x%x bytes to port...", size, size);
 
-	C_PARAMS (port && data);
+ 	C_PARAMS (port && data);
 	CHECK_INIT (port);
-
-	GP_LOG_DATA (data, size);
 
 	/* Check if we wrote all bytes */
 	CHECK_SUPP (port, "write", port->pc->ops->write);
 	retval = port->pc->ops->write (port, data, size);
-	CHECK_RESULT (retval);
-	if ((port->type != GP_PORT_SERIAL) && (retval != size))
-		GP_LOG_D ("Could only write %i out of %i bytes.", retval, size);
+	if (retval < 0) {
+		GP_LOG_E ("Writing %i = 0x%x bytes to port failed: %s (%d)",
+			  size, size, gp_port_result_as_string(retval), retval);
+		return retval;
+	}
+	LOG_DATA (data, retval, size, "Wrote  ", "to port:");
 
 	return (retval);
 }
@@ -416,7 +424,7 @@ gp_port_read (GPPort *port, char *data, int size)
 {
         int retval;
 
-	GP_LOG_D ("Reading %i=0x%x bytes from port...", size, size);
+	gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from port...", size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -424,11 +432,12 @@ gp_port_read (GPPort *port, char *data, int size)
 	/* Check if we read as many bytes as expected */
 	CHECK_SUPP (port, "read", port->pc->ops->read);
 	retval = port->pc->ops->read (port, data, size);
-	CHECK_RESULT (retval);
-	if (retval != size)
-		GP_LOG_D ("Could only read %i out of %i bytes.", retval, size);
-
-	GP_LOG_DATA (data, retval);
+	if (retval < 0) {
+		GP_LOG_E ("Reading %i = 0x%x bytes from port failed: %s (%d)",
+			  size, size, gp_port_result_as_string(retval), retval);
+		return retval;
+	}
+	LOG_DATA (data, retval, size, "Read   ", "from port:");
 
 	return (retval);
 }
@@ -451,7 +460,7 @@ gp_port_check_int (GPPort *port, char *data, int size)
 {
         int retval;
 
-	GP_LOG_D ("Reading %i=0x%x bytes from interrupt endpoint...", size, size);
+	gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from interrupt endpoint...", size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -460,10 +469,7 @@ gp_port_check_int (GPPort *port, char *data, int size)
 	CHECK_SUPP (port, "check_int", port->pc->ops->check_int);
 	retval = port->pc->ops->check_int (port, data, size, port->timeout);
 	CHECK_RESULT (retval);
-	if (retval != size)
-		GP_LOG_D ("Could only read %i out of %i bytes.", retval, size);
-
-	GP_LOG_DATA (data, retval);
+	LOG_DATA (data, retval, size, "Read   ", "from interrupt endpoint:");
 
 	return (retval);
 }
@@ -487,6 +493,8 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 {
         int retval;
 
+        gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from interrupt endpoint...", size, size);
+
 	C_PARAMS (port);
 	CHECK_INIT (port);
 
@@ -496,23 +504,12 @@ gp_port_check_int_fast (GPPort *port, char *data, int size)
 	CHECK_RESULT (retval);
 
 #ifdef IGNORE_EMPTY_INTR_READS
-	if (retval != size && retval != 0 )
-#else
-	if (retval != size )
+	/* For Canon cameras, we will make lots of
+	   reads that will return zero length. Don't
+	   bother to log them as errors. */
+	if (retval != 0 )
 #endif
-		GP_LOG_D ("Could only read %i out of %i bytes.", retval, size);
-
-#ifdef IGNORE_EMPTY_INTR_READS
-	if ( retval != 0 ) {
-#endif
-		/* For Canon cameras, we will make lots of
-		   reads that will return zero length. Don't
-		   bother to log them as errors. */
-		GP_LOG_D ("Reading %i=0x%x bytes from interrupt endpoint (fast)...", size, size);
-		GP_LOG_DATA (data, retval);
-#ifdef IGNORE_EMPTY_INTR_READS
-	}
-#endif
+		LOG_DATA (data, retval, size, "Read   ", "from interrupt endpoint (fast):");
 
 	return (retval);
 }
@@ -865,9 +862,8 @@ gp_port_usb_msg_write (GPPort *port, int request, int value, int index,
 {
         int retval;
 
-	GP_LOG_D ("Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
-		  request, value, index, size, size);
-	GP_LOG_DATA (bytes, size);
+	GP_LOG_DATA (bytes, size, "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x):",
+		     request, value, index, size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -899,8 +895,8 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 {
         int retval;
 
-	GP_LOG_D ("Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
-		  request, value, index, size, size);
+	gp_log (GP_LOG_DATA, __func__, "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -909,10 +905,9 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
         retval = port->pc->ops->msg_read (port, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-	if (retval != size)
-		GP_LOG_D ("Could only read %i out of %i bytes.", retval, size);
+	LOG_DATA (bytes, retval, size, "Read", "USB message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)",
+		  request, value, index, size, size);
 
-	GP_LOG_DATA (bytes, retval);
         return (retval);
 }
 
@@ -940,9 +935,8 @@ gp_port_usb_msg_interface_write (GPPort *port, int request,
 {
         int retval;
 
-	GP_LOG_D ("Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
-		  request, value, index, size, size);
-	GP_LOG_DATA (bytes, size);
+	GP_LOG_DATA (bytes, size, "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		     request, value, index, size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -976,8 +970,8 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 {
         int retval;
 
-	GP_LOG_D ("Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
-		  request, value, index, size, size);
+	gp_log (GP_LOG_DATA, __func__, "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -987,10 +981,8 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
         		value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-	if (retval != size)
-		GP_LOG_D ("Could only read %i out of %i bytes.", retval, size);
-
-	GP_LOG_DATA (bytes, retval);
+	LOG_DATA (bytes, retval, size, "Read", "USB message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)",
+		  request, value, index, size, size);
 
         return (retval);
 }
@@ -1021,9 +1013,8 @@ gp_port_usb_msg_class_write (GPPort *port, int request,
 {
         int retval;
 
-	GP_LOG_D ("Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
-		  request, value, index, size, size);
-	GP_LOG_DATA (bytes, size);
+	GP_LOG_DATA (bytes, size, "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x):",
+		     request, value, index, size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -1057,8 +1048,8 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 {
         int retval;
 
-	GP_LOG_D ("Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
-		  request, value, index, size, size);
+	gp_log (GP_LOG_DATA, __func__, "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
+		request, value, index, size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -1068,10 +1059,8 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
         		value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-	if (retval != size)
-		GP_LOG_D ("Could only read %i out of %i bytes.", retval, size);
-
-	GP_LOG_DATA (bytes, retval);
+	LOG_DATA (bytes, retval, size, "Read", "USB message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)",
+		  request, value, index, size, size);
 
         return (retval);
 }
@@ -1129,12 +1118,9 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 {
 	int retval;
 
-	GP_LOG_D ("Sending scsi cmd:");
-	GP_LOG_DATA (cmd, cmd_size);
-	if (to_dev && data_size) {
-		GP_LOG_D ("with scsi cmd data:");
-		GP_LOG_DATA (data, data_size);
-	}
+	GP_LOG_DATA (cmd, cmd_size, "Sending scsi cmd:");
+	if (to_dev && data_size)
+		GP_LOG_DATA (data, data_size, "with scsi cmd data:");
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -1147,8 +1133,7 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 	GP_LOG_D ("scsi cmd result: %d", retval);
 
 	if (sense[0] != 0) {
-		GP_LOG_D ("sense data:");
-		GP_LOG_DATA (sense, sense_size);
+		GP_LOG_DATA (sense, sense_size, "sense data:");
 		/* https://secure.wikimedia.org/wikipedia/en/wiki/Key_Code_Qualifier */
 		GP_LOG_D ("sense decided:");
 		if ((sense[0]&0x7f)!=0x70) {
@@ -1171,10 +1156,8 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 		}
 	}
 
-	if (!to_dev && data_size) {
-		GP_LOG_D ("scsi cmd data:");
-		GP_LOG_DATA (data, data_size);
-	}
+	if (!to_dev && data_size)
+		GP_LOG_DATA (data, data_size, "scsi cmd data:");
 
 	return retval;
 }

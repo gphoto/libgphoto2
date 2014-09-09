@@ -95,6 +95,36 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 	return (log_funcs_count);
 }
 
+
+static char*
+gpi_vsnprintf (const char* format, va_list args)
+{
+	va_list xargs;
+	int strsize;
+	char *str;
+
+#ifdef HAVE_VA_COPY
+	va_copy (xargs, args);
+#else
+	/* according to 'the web', the only interesting compiler without va_copy is MSVC
+	 * and there a simple assignment is the way to go */
+	xargs = args;
+#endif
+
+	/* query the size necessary for the string, add the terminating '\0' */
+	strsize = vsnprintf (NULL, 0, format, xargs) + 1;
+	va_end (xargs);
+
+	str = malloc(strsize);
+	if (!str)
+		return NULL;
+
+	/* actually print the string into the buffer */
+	vsnprintf (str, strsize, format, args);
+
+	return str;
+}
+
 /**
  * \brief Remove a logging receiving function
  * \param id an id (return value of #gp_log_add_func)
@@ -167,35 +197,43 @@ gp_log_remove_func (int id)
  **/
 /* coverity[-tainted_sink] */
 void
-gp_log_data (const char *domain, const char *data, unsigned int size)
+gp_log_data (const char *domain, const char *data, unsigned int size, const char *format, ...)
 {
+	va_list args;
 	static const char hexchars[16] = "0123456789abcdef";
-	char *curline, *result;
+	char *curline, *result = 0, *msg = 0;
 	int x = HEXDUMP_INIT_X;
 	int y = HEXDUMP_INIT_Y;
-	unsigned int index;
+	unsigned int index, original_size = size;
 	unsigned char value;
 
+	va_start (args, format);
+	msg = gpi_vsnprintf(format, args);
+	va_end (args);
+	if (!msg) {
+		GP_LOG_E ("Malloc for expanding format string '%s' failed.", format);
+		goto exit;
+	}
+
 	if (!data) {
-		gp_log (GP_LOG_DATA, domain, "No hexdump (NULL buffer)");
-		return;
+		gp_log (GP_LOG_DATA, domain, "%s (no hexdump, NULL buffer)", msg);
+		goto exit;
 	}
 
 	if (!size) {
-		gp_log (GP_LOG_DATA, domain, "Empty hexdump of empty buffer");
-		return;
+		gp_log (GP_LOG_DATA, domain, "%s (empty hexdump of empty buffer)", msg);
+		goto exit;
 	}
 
 	if (size > 1024*1024) {
 		/* Does not make sense for 200 MB movies */
-		gp_log (GP_LOG_DATA, domain, "Truncating dump from %d bytes to 1MB", size);
 		size = 1024*1024;
 	}
 
 	curline = result = malloc ((HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
 	if (!result) {
 		GP_LOG_E ("Malloc for %i bytes failed", (HEXDUMP_LINE_WIDTH+1)*(((size-1)/16)+1)+1);
-		return;
+		goto exit;
 	}
 
 	for (index = 0; index < size; ++index) {
@@ -224,8 +262,13 @@ gp_log_data (const char *domain, const char *data, unsigned int size)
         }
         curline[0] = '\0';
 
-	gp_log (GP_LOG_DATA, domain, "Hexdump of %i = 0x%x bytes follows:\n%s",
-		size, size, result);
+        if (size == original_size)
+                gp_log (GP_LOG_DATA, domain, "%s (hexdump of %d bytes)\n%s", msg, size, result);
+        else
+                gp_log (GP_LOG_DATA, domain, "%s (hexdump of the first %d of %d bytes)\n%s", msg, size, original_size, result);
+
+exit:
+	free (msg);
 	free (result);
 }
 
@@ -252,44 +295,17 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 	 va_list args)
 {
 	unsigned int i;
-#ifdef HAVE_VA_COPY
-	va_list xargs;
-#else
-#define xargs args
-#endif
-	int strsize = 1000;
-	char *str;
-	int n;
+	char *str = 0;
 
 	if (!log_funcs_count)
 		return;
 
-	str = malloc(strsize);
-	if (!str) return;
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#endif
-	n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-	va_end(xargs);
-#endif
-	if (n+1>strsize) {
-		free (str);
-		str = malloc(n+1);
-		if (!str) {
-			va_end(args);
-			return;
-		}
-		strsize = n+1;
-#ifdef HAVE_VA_COPY
-		va_copy (xargs, args);
-#endif
-		n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-		va_end(xargs);
-#endif
+	str = gpi_vsnprintf(format, args);
+	if (!str) {
+		GP_LOG_E ("Malloc for expanding format string '%s' failed.", format);
+		return;
 	}
-	va_end(args);
+
 	for (i = 0; i < log_funcs_count; i++)
 		if (log_funcs[i].level >= level)
 			log_funcs[i].func (level, domain, str, log_funcs[i].data);
@@ -371,7 +387,7 @@ gp_log_remove_func (int id)
 }
 
 void
-gp_log_data (const char *domain, const char *data, unsigned int size)
+gp_log_data (const char *domain, const char *data, unsigned int size, const char *format, ...)
 {
 }
 
