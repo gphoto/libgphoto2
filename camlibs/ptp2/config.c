@@ -2818,6 +2818,21 @@ static struct deviceproptableu16 nikon_d5100_exposure_program_modes[] = {
 };
 GENERIC16TABLE(NIKON_D5100_ExposureProgram,nikon_d5100_exposure_program_modes)
 
+static struct deviceproptableu8 nikon_1_exposure_program_modes[] = {
+	{ "P",			0x00, 0 },
+	{ "S",			0x01, 0 },
+	{ "A",			0x02, 0 },
+	{ "M",			0x03, 0 },
+	{ N_("Night Landscape"),0x04, 0 },
+	{ N_("Night Portrait"),	0x05, 0 },
+	{ N_("Back Light"),	0x06, 0 },
+	{ N_("Panorama"),	0x07, 0 },
+	{ N_("Smoothing"),	0x08, 0 },
+	{ N_("Tilt-Shift"),	0x09, 0 },
+	{ N_("Select Color"),	0x0a, 0 },
+};
+GENERIC8TABLE(NIKON_1_ExposureProgram,nikon_1_exposure_program_modes)
+
 static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Single Shot"),		0x0001, 0 },
 	{ N_("Burst"),			0x0002, 0 },
@@ -6029,6 +6044,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Effect Mode"),                    "effectmode",               PTP_DPC_EffectMode,                     0,                  PTP_DTC_UINT16, _get_EffectMode,                    _put_EffectMode },
 	{ N_("Effect Mode"),                    "effectmode",               PTP_DPC_NIKON_EffectMode,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_EffectMode,              _put_NIKON_EffectMode },
 	{ N_("Exposure Program"),               "expprogram",               PTP_DPC_ExposureProgramMode,            0,                  PTP_DTC_UINT16, _get_ExposureProgram,               _put_ExposureProgram },
+	{ N_("Exposure Program"),               "expprogram2",              PTP_DPC_NIKON_1_Mode,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_1_ExposureProgram,       _put_NIKON_1_ExposureProgram },
 	{ N_("Scene Mode"),                     "scenemode",                PTP_DPC_NIKON_SceneMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_SceneMode,               _put_NIKON_SceneMode },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_SONY_AspectRatio,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_AspectRatio,              _put_Sony_AspectRatio },
 	

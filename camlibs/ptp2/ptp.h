@@ -1666,6 +1666,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_RemoteMode			0xD035
 #define PTP_DPC_NIKON_VideoMode				0xD036
 #define PTP_DPC_NIKON_EffectMode			0xD037
+#define PTP_DPC_NIKON_1_Mode				0xD038
 #define PTP_DPC_NIKON_CSMMenuBankSelect			0xD040
 #define PTP_DPC_NIKON_MenuBankNameA			0xD041
 #define PTP_DPC_NIKON_MenuBankNameB			0xD042
