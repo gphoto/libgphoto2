@@ -96,7 +96,7 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 }
 
 
-static char*
+char*
 gpi_vsnprintf (const char* format, va_list args)
 {
 	va_list xargs;

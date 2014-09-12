@@ -208,6 +208,12 @@ __attribute__((__format__(printf,4,5)))
   gpi_string_list_to_flags(const char *str[], 
 			   const StringFlagItem *map);
 
+  /* Allocates a sufficiently large buffer and interpolates the format
+   * string with the proveded va_list args. The returned memory has to
+   * be freed by the caller. */
+  char*
+  gpi_vsnprintf (const char* format, va_list args);
+
 #define C_MEM(MEM) do {\
 	if ((MEM) == NULL) {\
 		GP_LOG_E ("Out of memory: '%s' failed.", #MEM);\

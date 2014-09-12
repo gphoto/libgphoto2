@@ -156,50 +156,20 @@ gp_context_progress_start (GPContext *context, float target,
 			   const char *format, ...)
 {
 	va_list args;
-	unsigned int id;
-#ifdef HAVE_VA_COPY
-	va_list xargs;
-#else
-#define xargs args
-#endif
-	int strsize = 1000;
 	char *str;
-	int n;
+	unsigned int id;
 
 	if (!context)
 		return (0);
 	if (!context->progress_start_func)
 		return (0);
 
-	str = malloc(strsize);
-	if (!str) {
-		return 0;
-	}
 	va_start (args, format);
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#endif
-	n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-	va_end (xargs);
-#endif
-	if (n+1>strsize) {
-		free (str);
-		str = malloc(n+1);
-		if (!str) { 
-			va_end (args);
-			return 0;
-		}
-		strsize = n+1;
-#ifdef HAVE_VA_COPY
-		va_copy (xargs, args);
-#endif
-		n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-		va_end (xargs);
-#endif
-	}
+	str = gpi_vsnprintf(format, args);
 	va_end (args);
+
+	if (!str)
+		return 0;
 
 	id = context->progress_start_func (context, target, str,
 				context->progress_func_data);
@@ -233,42 +203,14 @@ void
 gp_context_error (GPContext *context, const char *format, ...)
 {
 	va_list args;
-#ifdef HAVE_VA_COPY
-	va_list xargs;
-#endif
-	int strsize = 1000;
 	char *str;
-	int n;
 
-	str = malloc(strsize);
-	if (!str) {
-		return;
-	}
 	va_start (args, format);
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#endif
-	n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-	va_end (xargs);
-#endif
-	if (n+1>strsize) {
-		free (str);
-		str = malloc(n+1);
-		if (!str) { 
-			va_end (args);
-			return;
-		}
-		strsize = n+1;
-#ifdef HAVE_VA_COPY
-		va_copy (xargs, args);
-#endif
-		n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-		va_end (xargs);
-#endif
-	}
+	str = gpi_vsnprintf(format, args);
 	va_end (args);
+
+	if (!str)
+		return;
 
 	/* Log the error message */
 	gp_log( GP_LOG_ERROR, __func__, "%s", str);
@@ -282,42 +224,14 @@ void
 gp_context_status (GPContext *context, const char *format, ...)
 {
 	va_list args;
-#ifdef HAVE_VA_COPY
-	va_list xargs;
-#endif
-	int strsize = 1000;
 	char *str;
-	int n;
 
-	str = malloc(strsize);
-	if (!str) {
-		return;
-	}
 	va_start (args, format);
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#endif
-	n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-	va_end (xargs);
-#endif
-	if (n+1>strsize) {
-		free (str);
-		str = malloc(n+1);
-		if (!str) { 
-			va_end (args);
-			return;
-		}
-		strsize = n+1;
-#ifdef HAVE_VA_COPY
-		va_copy (xargs, args);
-#endif
-		n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-		va_end (xargs);
-#endif
-	}
+	str = gpi_vsnprintf(format, args);
 	va_end (args);
+
+	if (!str)
+		return;
 
 	/* Log the status message */
 	GP_LOG_D ("%s", str);
@@ -343,43 +257,14 @@ void
 gp_context_message (GPContext *context, const char *format, ...)
 {
 	va_list args;
-#ifdef HAVE_VA_COPY
-	va_list xargs;
-#endif
-	int strsize = 1000;
 	char *str;
-	int n;
 
-	str = malloc(strsize);
-	if (!str) {
-		va_end (xargs);
-		return;
-	}
 	va_start (args, format);
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#endif
-	n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-	va_end (xargs);
-#endif
-	if (n+1>strsize) {
-		free (str);
-		str = malloc(n+1);
-		if (!str) { 
-			va_end (args);
-			return;
-		}
-		strsize = n+1;
-#ifdef HAVE_VA_COPY
-		va_copy (xargs, args);
-#endif
-		n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-		va_end (xargs);
-#endif
-	}
+	str = gpi_vsnprintf(format, args);
 	va_end (args);
+
+	if (!str)
+		return;
 
 	/* Log the message */
 	GP_LOG_D ("%s", str);
@@ -407,42 +292,14 @@ gp_context_question (GPContext *context, const char *format, ...)
 {
 	GPContextFeedback feedback;
 	va_list args;
-#ifdef HAVE_VA_COPY
-	va_list xargs;
-#endif
-	int strsize = 1000;
 	char *str;
-	int n;
 
-	str = malloc(strsize);
-	if (!str) {
-		return GP_CONTEXT_FEEDBACK_OK;
-	}
 	va_start (args, format);
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#endif
-	n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-	va_end (xargs);
-#endif
-	if (n+1>strsize) {
-		free (str);
-		str = malloc(n+1);
-		if (!str) { 
-			va_end (args);
-			return GP_CONTEXT_FEEDBACK_OK;
-		}
-		strsize = n+1;
-#ifdef HAVE_VA_COPY
-		va_copy (xargs, args);
-#endif
-		n = vsnprintf (str, strsize, format, xargs);
-#ifdef HAVE_VA_COPY
-		va_end (xargs);
-#endif
-	}
+	str = gpi_vsnprintf(format, args);
 	va_end (args);
+
+	if (!str)
+		return GP_CONTEXT_FEEDBACK_OK;
 
 	feedback = GP_CONTEXT_FEEDBACK_OK;
 	if (context && context->question_func)
