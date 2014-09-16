@@ -1698,6 +1698,9 @@ static struct {
 	/* grinchdee@gmail.com */
 	{"Apple:iPhone 5 (PTP mode)",		0x05ac, 0x12a8, 0},
 
+	/* chase.thunderstrike@gmail.com */
+	{"Apple:iPad Air",			0x05ac, 0x12ab, 0},
+
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1869653&group_id=158745&atid=809061 */
 	{"Pioneer:DVR-LX60D",			0x08e4, 0x0142, 0},
 
