@@ -1,0 +1,290 @@
+Bus 002 Device 006: ID 04a9:3289 Canon, Inc
+USB PTP Class Camera           usb:002,006
+
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot ELPH 340 HS
+  Version: 1-14.0.1.0
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS Wave, JPEG,
+Defined Type, Unknown(b103), Unknown(b982), Unknown(b105),
+Unknown(bf01)
+
+Device Capabilities:
+    File Download, File Deletion, File Upload
+    No Image Capture, No Open Capture, Canon EOS Shutter Button
+
+Storage Devices Summary:
+store_00010001:
+    StorageDescription: SD
+    VolumeLabel: None
+    Storage Type: Removable RAM (memory card)
+    Filesystemtype: Digital Camera Layout (DCIM)
+    Access Capability: Read-Write
+    Maximum Capability: 15923183616 (15185 MB)
+    Free Space (Bytes): 11403264 (10 MB)
+    Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 524288
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 524288
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3] value: 3% (3)
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+UNIX Time(0xd034):(readwrite) (type=0x6) 1410844432
+Type of Slideshow(0xd047):(read only) (type=0x4) 0
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Model ID(0xd049):(read only) (type=0x6) 57671680
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot ELPH 340 HS'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0]
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 0
+Property 0xd051:(read only) (type=0x4004) a[2] 14337,47490
+Property 0xd052:(read only) (type=0x2) 0
+Property 0xd1b0:(readwrite) (type=0x2) 0
+Property 0xd055:(readwrite) (type=0x2) 0
+Property 0xd056:(readwrite) (type=0x2) 0
+Property 0xd106:(readwrite) (type=0x2) 0
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot ELPH 340 HS'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Type: TOGGLE
+Current: 0
+/main/actions/eosviewfinder
+Label: Canon EOS Viewfinder
+Type: TOGGLE
+Current: 2
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+Choice: 5 Immediate
+Choice: 6 Press 1
+Choice: 7 Press 2
+Choice: 8 Press 3
+Choice: 9 Release 1
+Choice: 10 Release 2
+Choice: 11 Release 3
+/main/settings/ownername
+Label: Owner Name
+Type: TEXT
+Current:
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Memory card
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/settings/capture
+Label: Capture
+Type: TOGGLE
+Current: 0
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Canon Inc.
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: Canon PowerShot ELPH 340 HS
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1-14.0.1.0
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/status/model
+Label: Camera Model
+Type: TEXT
+Current: Canon PowerShot ELPH 340 HS
+/main/status/firmwareversion
+Label: Firmware Version
+Type: TEXT
+Current: 1.0.0.0
+/main/other/d045
+Label: Event Emulate Mode
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+/main/other/d04a
+Label: PTP Property 0xd04a
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+/main/other/d02e
+Label: Size of Output Data from Camera
+Type: TEXT
+Current: 524288
+/main/other/d02f
+Label: Size of Input Data to Camera
+Type: TEXT
+Current: 524288
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+/main/other/d002
+Label: Battery Type
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+/main/other/d003
+Label: Battery Mode
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+/main/other/d034
+Label: UNIX Time
+Type: TEXT
+Current: 1410844546
+/main/other/d047
+Label: Type of Slideshow
+Type: TEXT
+Current: 0
+/main/other/d046
+Label: DPOF Version
+Type: TEXT
+Current: 257
+/main/other/d030
+Label: Remote API Version
+Type: TEXT
+Current: 256
+/main/other/d049
+Label: Model ID
+Type: TEXT
+Current: 57671680
+/main/other/d032
+Label: Camera Model
+Type: TEXT
+Current: Canon PowerShot ELPH 340 HS
+/main/other/d033
+Label: Camera Owner
+Type: TEXT
+Current: (null)
+/main/other/d031
+Label: Firmware Version
+Type: TEXT
+Current: 16777216
+/main/other/d050
+Label: PTP Property 0xd050
+Type: TEXT
+Current: 0
+/main/other/d051
+Label: PTP Property 0xd051
+Type: TEXT
+Current: (null)
+/main/other/d052
+Label: PTP Property 0xd052
+Type: TEXT
+Current: 0
+/main/other/d1b0
+Label: PTP Property 0xd1b0
+Type: TEXT
+Current: 0
+/main/other/d055
+Label: PTP Property 0xd055
+Type: TEXT
+Current: 0
+/main/other/d056
+Label: PTP Property 0xd056
+Type: TEXT
+Current: 0
+/main/other/d106
+Label: PTP Property 0xd106
+Type: TEXT
+Current: 0
+/main/other/d402
+Label: PTP Property 0xd402
+Type: TEXT
+Current: Canon PowerShot ELPH 340 HS
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current: Windows
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+
+
+>gphoto2 --capture-image
+
+*** Error ***
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***
+
+
+
+-- 
+.
+Reed M. Johnson
+Assistant Professor
+Department of Entomology
+The Ohio State University
+Ohio Agriculture Research and Development Center
+118 Thorne Hall
+1680 Madison Avenue
+Wooster, OH 44691
+(330) 202-3523 (office)
+(330) 439-8295 (cell)
+(330) 263-3686 (fax)
+
+------------------------------------------------------------------------------
+Want excitement?
+Manually upgrade your production database.
+When you want reliability, choose Perforce
+Perforce version control. Predictably reliable.
+http://pubads.g.doubleclick.net/gampad/clk?id=157508191&iu=/4140/ostg.clktrk
+_______________________________________________
+Gphoto-devel mailing list
+Gphoto-devel@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/gphoto-devel
+
