@@ -1447,6 +1447,29 @@ ptp_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset,
 }
 
 /**
+ * ptp_getpartialobject_to_handler:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		offset			- Offset into object
+ *		maxbytes		- Maximum of bytes to read
+ *		handler			- a ptp data handler
+ *
+ * Get object 'handle' from device and send the data to the
+ * data handler. Start from offset and read at most maxbytes.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getpartialobject_to_handler (PTPParams* params, uint32_t handle, uint32_t offset,
+			uint32_t maxbytes, PTPDataHandler *handler)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_GetPartialObject, handle, offset, maxbytes);
+	return ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, handler);
+}
+
+/**
  * ptp_getthumb:
  * params:	PTPParams*
  *		handle			- Object handle
