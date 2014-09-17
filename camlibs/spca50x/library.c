@@ -192,7 +192,7 @@ camera_capture (Camera *camera, CameraCaptureType type,
 
 	/* Not all our cameras support capture */
 	gp_camera_get_abilities (camera, &a);
-	if (!a.operations & GP_OPERATION_CAPTURE_IMAGE)
+	if (!(a.operations & GP_OPERATION_CAPTURE_IMAGE))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	if (cam_has_flash(camera->pl))
