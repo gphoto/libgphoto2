@@ -1558,6 +1558,9 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/feature-requests/445/ */
 	{"Canon:PowerShot Elph135",		0x04a9, 0x3288, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Reed Johnson <rmjohns1@gmail.com> */
+	{"Canon:PowerShot Elph340HS",		0x04a9, 0x3289, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
