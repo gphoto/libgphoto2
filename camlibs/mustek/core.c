@@ -661,12 +661,12 @@ int mdc800_getRemainFreeImageCount (Camera *camera,int* h,int* s,int *e)
 		return ret;
 	}
 
-	if (h != 0)
-		(*h)=(int)((data[0]/16)*1000)+((data[0]%16)*100)+((data[1]/16)*10)+(data[1]%16);
-	if (s != 0)
-		(*s)=(int)((data[2]/16)*1000)+((data[2]%16)*100)+((data[3]/16)*10)+(data[3]%16);
-	if (e != 0)
-		(*e)=(int)((data[4]/16)*1000)+((data[4]%16)*100)+((data[5]/16)*10)+(data[5]%16);
+	if (h)
+		*h=(int)((data[0]/16)*1000)+((data[0]%16)*100)+((data[1]/16)*10)+(data[1]%16);
+	if (s)
+		*s=(int)((data[2]/16)*1000)+((data[2]%16)*100)+((data[3]/16)*10)+(data[3]%16);
+	if (e)
+		*e=(int)((data[4]/16)*1000)+((data[4]%16)*100)+((data[5]/16)*10)+(data[5]%16);
 	return GP_OK;
 }
 
