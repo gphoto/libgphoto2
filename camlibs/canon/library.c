@@ -956,9 +956,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 #endif /* HAVE_LIBEXIF */
 		default:
-			/* this case should've been caught above anyway */
-			if (data)
-				free (data);
+			free (data);
 			data = NULL;
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
