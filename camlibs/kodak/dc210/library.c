@@ -340,14 +340,14 @@ static int dc210_wait_for_response
 	int counter = 0;
 	int progress_id = 0;
 
-	if (context != NULL)
+	if (context)
 	  progress_id = gp_context_progress_start (context, expect_busy, _("Waiting..."));
 
 	while (1){
 
 	  error = dc210_read_single_char(camera, &response);
 	  if (error < 0){
-	          if (context != 0)
+	          if (context)
 			  gp_context_progress_stop (context, progress_id);
 		  return error;
 	  };
@@ -355,17 +355,17 @@ static int dc210_wait_for_response
 	  switch (response){
 	  case DC210_BUSY:
 		  /* wait a little bit longer */
-		  if (context != NULL && counter <= expect_busy)
+		  if (context && counter <= expect_busy)
 			  gp_context_progress_update (context, progress_id, counter++);
 		  break;
 	  case DC210_COMMAND_COMPLETE:
 	  case DC210_PACKET_FOLLOWING:
-		  if (context != 0)
+		  if (context)
 			  gp_context_progress_stop (context, progress_id);
 		  return response;
 		  break;
 	  default:
-		  if (context != 0)
+		  if (context)
 			  gp_context_progress_stop (context, progress_id);
 		  DC210_DEBUG("Command terminated with errorcode 0x%02X.\n", response);
 		  return GP_ERROR;
@@ -432,7 +432,7 @@ static int dc210_read_to_file
 
   if (remaining) blocks++;
 
-  if (context != NULL)
+  if (context)
 	  progress_id = gp_context_progress_start (context, blocks, _("Getting data..."));
 
   fatal_error = 0;
@@ -471,7 +471,7 @@ static int dc210_read_to_file
 		  dc210_write_single_char(camera, DC210_CORRECT_PACKET);
 		  packet_following = dc210_wait_for_response(camera, 0, NULL);
 		  fatal_error = 0;
-		  if (context != NULL)
+		  if (context)
 			  gp_context_progress_update (context, progress_id, packets);
 		  packets++;
 		  break;
@@ -482,7 +482,7 @@ static int dc210_read_to_file
   if (packet_following < 0)
 	  fatal_error = 1;
 
-  if (context != 0)
+  if (context)
 	  gp_context_progress_stop (context, progress_id);
 
   free(b);
