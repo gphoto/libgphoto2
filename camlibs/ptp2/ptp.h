@@ -1908,6 +1908,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_1_WhiteBalance			0xF00C
 #define PTP_DPC_NIKON_1_LongExposureNoiseReduction	0xF00D
 #define PTP_DPC_NIKON_1_HiISONoiseReduction		0xF00E
+#define PTP_DPC_NIKON_1_ActiveDLighting			0xF00F
 #define PTP_DPC_NIKON_1_MovQuality			0xF01C
 
 /* Fuji specific */
@@ -2477,6 +2478,16 @@ uint16_t ptp_transaction (PTPParams* params, PTPContainer* ptp,
  * Return values: Some PTP_RC_* code.
  **/
 #define ptp_closesession(params) ptp_generic_no_data(params,PTP_OC_CloseSession,0)
+
+/**
+ * ptp_powerdown:
+ * params:      PTPParams*
+ *
+ * Powers down device.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+#define ptp_powerdown(params) ptp_generic_no_data(params,PTP_OC_PowerDown,0)
 /**
  * ptp_resetdevice:
  * params:      PTPParams*
@@ -2583,6 +2594,7 @@ uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 
 
 uint16_t ptp_check_event (PTPParams *params);
+uint16_t ptp_wait_event (PTPParams *params);
 uint16_t ptp_add_event (PTPParams *params, PTPContainer *evt);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
 uint16_t ptp_check_eos_events (PTPParams *params);

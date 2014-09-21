@@ -2731,21 +2731,122 @@ static struct deviceproptableu8 nikon_scenemode[] = {
 };
 GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode);
 
-static struct deviceproptableu8 nikon_1_iso[] = {
+/* Nikon 1 S1 specials in here */
+static struct deviceproptableu8 nikon_1_j3_iso[] = {
 	/* values from a J3 */
 	{ N_("A6400 (160-6400)"),	0x01, 0 },
 	{ N_("A3200 (160-3200)"),	0x02, 0 },
 	{ N_("A800 (160-800)"),		0x03, 0 },
 
-	{ "160",			0x0e, 0 },
-	{ "200",			0x10, 0 },
-	{ "400",			0x16, 0 },
-	{ "800",			0x1c, 0 },
-	{ "1600",			0x22, 0 },
-	{ "3200",			0x28, 0 },
-	{ "6400",			0x2e, 0 },
-	
+	/* these same same for all 1 */
+	{ "100",	0x0a, 0 },
+	{ "110",	0x0b, 0 },
+	{ "125",	0x0c, 0 },
+	{ "140",	0x0d, 0 },
+	{ "160",	0x0e, 0 },
+	{ "180",	0x0f, 0 },
+	{ "200",	0x10, 0 },
+	{ "220",	0x11, 0 },
+	{ "250",	0x12, 0 },
+	{ "280",	0x13, 0 },
+	{ "320",	0x14, 0 },
+	{ "360",	0x15, 0 },
+	{ "400",	0x16, 0 },
+	{ "400",	0x16, 0 },
+	{ "450",	0x17, 0 },
+	{ "500",	0x18, 0 },
+	{ "560",	0x19, 0 },
+	{ "640",	0x1a, 0 },
+	{ "720",	0x1b, 0 },
+	{ "800",	0x1c, 0 },
+	{ "900",	0x1d, 0 },
+	{ "1000",	0x1e, 0 },
+	{ "1100",	0x1f, 0 },
+	{ "1250",	0x20, 0 },
+	{ "1400",	0x21, 0 },
+	{ "1600",	0x22, 0 },
+	{ "1800",	0x23, 0 },
+	{ "2000",	0x24, 0 },
+	{ "2200",	0x25, 0 },
+	{ "2500",	0x26, 0 },
+	{ "2800",	0x27, 0 },
+	{ "3200",	0x28, 0 },
+	{ "6400",	0x2e, 0 },
 	/* more unknown values */
+};
+GENERIC8TABLE(Nikon_1_J3_ISO,nikon_1_j3_iso);
+
+/* Nikon 1 S1 specials in here */
+static struct deviceproptableu8 nikon_1_s1_iso[] = {
+	{ "100",	0x0a, 0 },
+	{ "110",	0x0b, 0 },
+	{ "125",	0x0c, 0 },
+	{ "140",	0x0d, 0 },
+	{ "160",	0x0e, 0 },
+	{ "180",	0x0f, 0 },
+	{ "200",	0x10, 0 },
+	{ "220",	0x11, 0 },
+	{ "250",	0x12, 0 },
+	{ "280",	0x13, 0 },
+	{ "320",	0x14, 0 },
+	{ "360",	0x15, 0 },
+	{ "400",	0x16, 0 },
+	{ "450",	0x17, 0 },
+	{ "500",	0x18, 0 },
+	{ "560",	0x19, 0 },
+	{ "640",	0x1a, 0 },
+	{ "720",	0x1b, 0 },
+	{ "800",	0x1c, 0 },
+	{ "900",	0x1d, 0 },
+	{ "1000",	0x1e, 0 },
+	{ "1100",	0x1f, 0 },
+	{ "1250",	0x20, 0 },
+	{ "1400",	0x21, 0 },
+	{ "1600",	0x22, 0 },
+	{ "1800",	0x23, 0 },
+	{ "2000",	0x24, 0 },
+	{ "2200",	0x25, 0 },
+	{ "2500",	0x26, 0 },
+	{ "2800",	0x27, 0 },
+	{ "3200",	0x28, 0 },
+	{ "6400",	0x2e, 0 },
+};
+GENERIC8TABLE(Nikon_1_S1_ISO,nikon_1_s1_iso);
+
+/* Generic Nikon 1 ISO */
+static struct deviceproptableu8 nikon_1_iso[] = {
+	{ "100",	0x0a, 0 },
+	{ "110",	0x0b, 0 },
+	{ "125",	0x0c, 0 },
+	{ "140",	0x0d, 0 },
+	{ "160",	0x0e, 0 },
+	{ "180",	0x0f, 0 },
+	{ "200",	0x10, 0 },
+	{ "220",	0x11, 0 },
+	{ "250",	0x12, 0 },
+	{ "280",	0x13, 0 },
+	{ "320",	0x14, 0 },
+	{ "360",	0x15, 0 },
+	{ "400",	0x16, 0 },
+	{ "450",	0x17, 0 },
+	{ "500",	0x18, 0 },
+	{ "560",	0x19, 0 },
+	{ "640",	0x1a, 0 },
+	{ "720",	0x1b, 0 },
+	{ "800",	0x1c, 0 },
+	{ "900",	0x1d, 0 },
+	{ "1000",	0x1e, 0 },
+	{ "1100",	0x1f, 0 },
+	{ "1250",	0x20, 0 },
+	{ "1400",	0x21, 0 },
+	{ "1600",	0x22, 0 },
+	{ "1800",	0x23, 0 },
+	{ "2000",	0x24, 0 },
+	{ "2200",	0x25, 0 },
+	{ "2500",	0x26, 0 },
+	{ "2800",	0x27, 0 },
+	{ "3200",	0x28, 0 },
+	{ "6400",	0x2e, 0 },
 };
 GENERIC8TABLE(Nikon_1_ISO,nikon_1_iso);
 
@@ -5109,6 +5210,29 @@ _put_Canon_FocusLock(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_PowerDown(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_PowerDown(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val)
+		C_PTP (ptp_powerdown (params));
+	return GP_OK;
+}
+
+static int
 _get_Sony_Movie(CONFIG_GET_ARGS) {
 	int val;
 
@@ -5863,6 +5987,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
+	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
@@ -5977,6 +6102,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_ISOSpeed,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  0,                  PTP_DTC_UINT16, _get_ISO,                       _put_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
@@ -6151,6 +6277,14 @@ static struct submenu capture_settings_menu[] = {
 /* Nikon camera specific values, as unfortunately the values are handled differently
  * A generic fallback for the "rest" of the Nikons is in the main menu.
  */
+static struct submenu nikon_1_j3_camera_settings[] = {
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_J3_ISO,            _put_Nikon_1_J3_ISO },
+	{ 0,0,0,0,0,0,0 },
+};
+static struct submenu nikon_1_s1_camera_settings[] = {
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_S1_ISO,            _put_Nikon_1_S1_ISO },
+	{ 0,0,0,0,0,0,0 },
+};
 /* Nikon D90. Marcus Meissner <marcus@jet.franken.de> */
 static struct submenu nikon_d90_camera_settings[] = {
 	{ N_("Meter Off Time"),         "meterofftime",         PTP_DPC_NIKON_MeterOff,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_MeterOffTime,        _put_Nikon_D90_MeterOffTime },
@@ -6256,6 +6390,8 @@ static struct menu menus[] = {
 	{ N_("Camera Settings"),            "settings",         0x4b0,  0x0428, nikon_d7000_camera_settings,    NULL,   NULL },
 	{ N_("Camera Settings"),            "settings",         0x4b0,  0x0430, nikon_d7100_camera_settings,    NULL,   NULL },
 	{ N_("Camera Settings"),            "settings",         0x4b0,  0x0421, nikon_d90_camera_settings,      NULL,   NULL },
+	{ N_("Camera Settings"),            "settings",         0x4b0,  0x0606, nikon_1_s1_camera_settings,     NULL,   NULL },
+	{ N_("Camera Settings"),            "settings",         0x4b0,  0x0605, nikon_1_j3_camera_settings,     NULL,   NULL },
 	{ N_("Camera Settings"),            "settings",         0,      0,      camera_settings_menu,           NULL,   NULL },
 
 	{ N_("Camera Status Information"),  "status",           0,      0,      camera_status_menu,             NULL,   NULL },

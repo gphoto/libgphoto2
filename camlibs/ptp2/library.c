@@ -3373,7 +3373,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	while (done != 3) {
 		uint16_t ret;
 
-		C_PTP_REP (ptp_check_event (params));
+		C_PTP_REP (ptp_wait_event (params));
 
 		if (!ptp_get_one_event(params, &event)) {
 			usleep(1000);
