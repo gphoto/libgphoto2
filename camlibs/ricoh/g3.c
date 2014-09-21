@@ -485,8 +485,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		ret = GP_ERROR;
 	}
 out:
-	if (cmd) free(cmd);
-	if (reply) free(reply);
+	free(cmd);
+	free(reply);
 	return (GP_OK);
 }
 
@@ -513,8 +513,8 @@ rmdir_func (CameraFilesystem *fs, const char *folder,
 		ret = GP_ERROR;
 	}
 out:
-	if (cmd) free(cmd);
-	if (reply) free(reply);
+	free(cmd);
+	free(reply);
 	return (GP_OK);
 }
 
@@ -541,8 +541,8 @@ mkdir_func (CameraFilesystem *fs, const char *folder,
 		ret = GP_ERROR;
 	}
 out:
-	if (cmd) free(cmd);
-	if (reply) free(reply);
+	free(cmd);
+	free(reply);
 	return (GP_OK);
 }
 
@@ -606,7 +606,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 			sprintf(t+strlen(t), _("Internal memory: %d MB total, %d MB free.\n"), space/1024/1024, sfree/1024/1024);
 		}
 	}
-	if (buf) free (buf);
+	free (buf);
 	return (GP_OK);
 }
 
@@ -688,7 +688,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 	}
 out:
-	if (reply) free(reply);
+	free(reply);
 	free(cmd);
 
 	return (GP_OK);
