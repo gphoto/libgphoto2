@@ -920,6 +920,9 @@ static struct {
 	/* Jonas Stein <news@jonasstein.de> */
 	{"Nikon:Coolpix P330 (PTP mode)", 0x04b0, 0x0227, PTP_CAP},
 
+	/* Malcolm Lee <mallee@mallee45.ukfsn.org> */
+	{"Nikon:Coolpix P7800 (PTP mode)", 0x04b0, 0x0229, 0},
+
 	/* t.ludewig@gmail.com */
 	/* Also reports 0x400d aka CaptureComplete event ... but has no 
 	 * vendor commands? yeah right... */
