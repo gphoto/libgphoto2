@@ -5065,7 +5065,12 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 	pxtm = localtime (&camtime);
 #endif
 	/* 20020101T123400.0 is returned by the HP Photosmart */
-	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d.0",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
+	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
+
+	/* if the camera reported fractional seconds, also add it */
+	if (strchr(dpd->CurrentValue.str,'.'))
+		strcat(asctime,".0");
+
 	C_MEM (propval->str = strdup(asctime));
 	return (GP_OK);
 }
