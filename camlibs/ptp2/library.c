@@ -1499,6 +1499,8 @@ static struct {
 	/* https://forums.opensuse.org/showthread.php/493692-canon-usb-camera-a810-not-detected */
 	{"Canon:PowerShot A810",		0x04a9, 0x323f, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Giulio Fidente <gfidente@gmail.com> */
+	{"Canon:IXUS 125HS",			0x04a9, 0x3241, PTPBUG_DELETE_SENDS_EVENT},
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:PowerShot A4000IS",		0x04a9, 0x3243, PTPBUG_DELETE_SENDS_EVENT},
 	/* Peter Ivanyi <ipeter88@gmail.com> */
