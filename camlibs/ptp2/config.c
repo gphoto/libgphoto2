@@ -300,13 +300,18 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		GP_LOG_D ("optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
 
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
+		uint16_t	ret;
+
 		/* if we want to download the image from the device, we need to tell the camera
 		 * that we have enough space left. */
 		/* this might be a trigger value for "no space" -Marcus
 		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 		 */
 
-		C_PTP (ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001));
+		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
+		/* not so bad if its just busy, would also fail later. */
+		if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
+		C_PTP (ret);
 	}
 
 	return GP_OK;
