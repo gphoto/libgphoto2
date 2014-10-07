@@ -4828,8 +4828,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     GP_LOG_D ("after list folder");
 
     hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
-    for (i = 0; i < params->nrofobjects; i++) {
-        PTPObject *ob;
+    /* traverse the object list from the back, as we could remove entries */
+    for (i = params->nrofobjects; i-- ;) {
+	PTPObject	*ob;
+	uint16_t	ret;
+
 	/* not our parent -> next */
 	C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob));
 
@@ -4841,7 +4844,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		(params->objects[i].oi.StorageID != storage)))
 		continue;
 
-	C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+	ret = ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+	if (ret != PTP_RC_OK) {
+		/* we might raced another delete or ongoing addition, seen on a D810 */
+		if (ret == PTP_RC_InvalidObjectHandle) {
+			GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", params->objects[i].oid);
+			/* remove it for now, we will readd it later if we see it again. */
+			ptp_remove_object_from_cache(params, params->objects[i].oid);
+			continue;
+		}
+		C_PTP_REP (ret);
+	}
 	/* Is a directory -> next */
 	if (ob->oi.ObjectFormat == PTP_OFC_Association)
 		continue;
@@ -4933,7 +4946,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	 */
 	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
 	for (i = 0; i < params->nrofobjects; i++) {
-		PTPObject *ob;
+		PTPObject	*ob;
+		uint16_t	ret;
 
 		C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED, &ob));
 
@@ -4942,7 +4956,17 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (hasgetstorageids && (params->objects[i].oi.StorageID != storage))
 			continue;
 
-		C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+		ret = ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+		if (ret != PTP_RC_OK) {
+			/* we might raced another delete or ongoing addition, seen on a D810 */
+			if (ret == PTP_RC_InvalidObjectHandle) {
+				GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", params->objects[i].oid);
+				/* remove it for now, we will readd it later if we see it again. */
+				ptp_remove_object_from_cache(params, params->objects[i].oid);
+				continue;
+			}
+			C_PTP_REP (ret);
+		}
 		if (ob->oi.ObjectFormat!=PTP_OFC_Association)
 			continue;
         	GP_LOG_D ("adding 0x%x to folder", ob->oid);
