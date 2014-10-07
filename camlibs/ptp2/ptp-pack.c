@@ -1608,6 +1608,32 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 #define PTP_ece_OA_Parent	0x20
 #define PTP_ece_OA_Name		0x28
 
+static PTPDevicePropDesc*
+_lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
+{
+	unsigned int j;
+
+	for (j=0;j<params->nrofcanon_props;j++)
+		if (params->canon_props[j].proptype == proptype)
+			break;
+	if (j<params->nrofcanon_props)
+		return &params->canon_props[j].dpd;
+
+	if (j)
+		params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
+	else
+		params->canon_props = malloc(sizeof(params->canon_props[0]));
+	params->canon_props[j].proptype = proptype;
+	params->canon_props[j].size = 0;
+	params->canon_props[j].data = NULL;
+	memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
+	params->canon_props[j].dpd.GetSet = 1;
+	params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
+	params->nrofcanon_props = j+1;
+	return &params->canon_props[j].dpd;
+}
+
+
 static inline int
 ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **pce)
 {
@@ -1763,7 +1789,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 						params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
 					else
 						params->canon_props = malloc(sizeof(params->canon_props[0]));
-					params->canon_props[j].type = type;
 					params->canon_props[j].proptype = proptype;
 					params->canon_props[j].size = size;
 					params->canon_props[j].data = malloc(size-PTP_ece_Prop_Val_Data);
@@ -2004,7 +2029,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
 			uint16_t		mask,proptype;
-			unsigned int		j;
 			PTPDevicePropDesc	*dpd;
 
 			/* unclear what OLC stands for */
@@ -2034,13 +2058,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* 6 bytes: 01 01 98 10 00 60 */
 				/* this seesm to be the shutter speed record */
 				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
-				for (j=0;j<params->nrofcanon_props;j++)
-					if (params->canon_props[j].proptype == proptype)
-						break;
-				if (j == params->nrofcanon_props)
-					ptp_debug (params, "event %d: shutterspeed not found yet, handle this", i);
-
-				dpd = &params->canon_props[j].dpd;
+				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
@@ -2052,13 +2070,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* 5 bytes: 01 01 5b 30 30 */
 				/* this seesm to be the aperture record */
 				proptype = PTP_DPC_CANON_EOS_Aperture;
-				for (j=0;j<params->nrofcanon_props;j++)
-					if (params->canon_props[j].proptype == proptype)
-						break;
-				if (j == params->nrofcanon_props)
-					ptp_debug (params, "event %d: shutterspeed not found yet, handle this", i);
-
-				dpd = &params->canon_props[j].dpd;
+				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
@@ -2070,13 +2082,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* 5 bytes: 01 01 00 78 */
 				/* this seesm to be the aperture record */
 				proptype = PTP_DPC_CANON_EOS_ISOSpeed;
-				for (j=0;j<params->nrofcanon_props;j++)
-					if (params->canon_props[j].proptype == proptype)
-						break;
-				if (j == params->nrofcanon_props)
-					ptp_debug (params, "event %d: shutterspeed not found yet, handle this", i);
-
-				dpd = &params->canon_props[j].dpd;
+				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				dpd->CurrentValue.u16 = curdata[curoff+3]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
