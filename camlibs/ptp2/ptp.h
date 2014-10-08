@@ -3017,6 +3017,17 @@ uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
  **/
 #define ptp_canon_eos_afdrive(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_DoAf,0)
 /**
+ * ptp_canon_eos_afcancel:
+ *
+ * This command cancels the lens autofocus.
+ *  
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_afcancel(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_AfCancel,0)
+/**
  * ptp_canon_eos_zoom:
  *
  * This command runs (drives) the lens autofocus.
