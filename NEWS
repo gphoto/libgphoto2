@@ -1,5 +1,11 @@
 libgphoto2 2.5.5.2 snapshot
 
+ptp2:
+(WIP * "exposurecompensation" was changed to be a float range, matching the "steps" value.)
+* Canon EOS: crash on 700D fixed
+* Nikon DSLR: race condition on object addition handled better
+* various bugfixes
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.5.1 release
 
