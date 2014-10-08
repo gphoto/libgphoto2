@@ -434,6 +434,9 @@ static int
 camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 
+	/* just in case we had autofocus running */
+	CR (ptp_canon_eos_afcancel(params));
+
 	/* then emits 911b and 911c ... not done yet ... */
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
@@ -4694,6 +4697,26 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_EOS_AFCancel(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_AFCancel(CONFIG_PUT_ARGS) {
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_AfCancel)) 
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	C_PTP (ptp_canon_eos_afcancel (params));
+	/* Get the next set of event data */
+	C_PTP (ptp_check_eos_events (params));
+	return GP_OK;
+}
+
+static int
 _get_Nikon_MFDrive(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -6008,6 +6031,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Set Nikon Autofocus area"),       "changeafarea",     0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeAfArea,          _get_Nikon_ChangeAfArea,        _put_Nikon_ChangeAfArea },
 	{ N_("Set Nikon Control Mode"),         "controlmode",      0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_SetControlMode,        _get_Nikon_ControlMode,         _put_Nikon_ControlMode },
 	{ N_("Drive Canon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DriveLens,         _get_Canon_EOS_MFDrive,         _put_Canon_EOS_MFDrive },
+	{ N_("Cancel Canon DSLR Autofocus"),    "cancelautofocus",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_AfCancel,          _get_Canon_EOS_AFCancel,        _put_Canon_EOS_AFCancel },
 	{ N_("Canon EOS Zoom"),                 "eoszoom",          0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_Zoom,              _get_Canon_EOS_Zoom,            _put_Canon_EOS_Zoom },
 	{ N_("Canon EOS Zoom Position"),        "eoszoomposition",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_ZoomPosition,      _get_Canon_EOS_ZoomPosition,    _put_Canon_EOS_ZoomPosition },
 	{ N_("Canon EOS Viewfinder"),           "eosviewfinder",    0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },
