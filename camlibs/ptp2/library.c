@@ -2725,19 +2725,18 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		return translate_ptp_result (result);
 	}
 	GP_LOG_D ("result is %d", result);
-	if (result == 1) {
-		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+	switch (result) {
+	case 0: /* OK */
+		break;
+	case 1: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
 		return GP_ERROR;
-	}
-	if (result == 3) {
-		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps mirror up?"));
+	case 3: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps mirror up?"));
 		return GP_ERROR;
-	}
-	if (result == 7) {
-		gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
+	case 7: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
 		return GP_ERROR_NO_MEMORY;
-	}
-	if (result) {
+	case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
+		return GP_ERROR_NO_MEMORY;
+	default:
 		gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
 		return GP_ERROR;
 	}
