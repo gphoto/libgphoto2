@@ -138,6 +138,11 @@ main(int argc, char **argv) {
 		exit (1);
 	}
 	canon_enable_capture(canon, TRUE, canoncontext);
+	retval = camera_eosviewfinder(canon,canoncontext,1);
+	if (retval != GP_OK) {
+		fprintf(stderr,"camera_eosviewfinder(1): %d\n", retval);
+		exit(1);
+	}
 	/*set_capturetarget(canon, canoncontext);*/
 	printf("Taking 100 previews and saving them to snapshot-XXX.jpg ...\n");
 	for (i=0;i<100;i++) {
@@ -153,7 +158,9 @@ main(int argc, char **argv) {
 
 		/* autofocus every 10 shots */
 		if (i%10 == 9) {
-			camera_auto_focus (canon, canoncontext);
+			camera_auto_focus (canon, canoncontext, 1);
+			/* FIXME: wait a bit and/or poll events ? */
+			camera_auto_focus (canon, canoncontext, 0);
 		} else {
 			camera_manual_focus (canon, (i/10-5)/2, canoncontext);
 		}
@@ -183,6 +190,13 @@ main(int argc, char **argv) {
 	        capture_to_file(canon, canoncontext, output_file);
 	*/
 	}
+	retval = camera_eosviewfinder(canon,canoncontext,0);
+	if (retval != GP_OK) {
+		fprintf(stderr,"camera_eosviewfinder(0): %d\n", retval);
+		exit(1);
+	}
+
+	sleep(10);
 	gp_camera_exit(canon, canoncontext);
 	return 0;
 }

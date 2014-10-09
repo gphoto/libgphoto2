@@ -22,7 +22,61 @@ _lookup_widget(CameraWidget*widget, const char *key, CameraWidget **child) {
 
 /* calls the Nikon DSLR or Canon DSLR autofocus method. */
 int
-camera_auto_focus(Camera *camera, GPContext *context) {
+camera_eosviewfinder(Camera *camera, GPContext *context, int onoff) {
+	CameraWidget		*widget = NULL, *child = NULL;
+	CameraWidgetType	type;
+	int			ret,val;
+
+	ret = gp_camera_get_config (camera, &widget, context);
+	if (ret < GP_OK) {
+		fprintf (stderr, "camera_get_config failed: %d\n", ret);
+		return ret;
+	}
+	ret = _lookup_widget (widget, "eosviewfinder", &child);
+	if (ret < GP_OK) {
+		fprintf (stderr, "lookup 'eosviewfinder' failed: %d\n", ret);
+		goto out;
+	}
+
+	/* check that this is a toggle */
+	ret = gp_widget_get_type (child, &type);
+	if (ret < GP_OK) {
+		fprintf (stderr, "widget get type failed: %d\n", ret);
+		goto out;
+	}
+	switch (type) {
+        case GP_WIDGET_TOGGLE:
+		break;
+	default:
+		fprintf (stderr, "widget has bad type %d\n", type);
+		ret = GP_ERROR_BAD_PARAMETERS;
+		goto out;
+	}
+
+	ret = gp_widget_get_value (child, &val);
+	if (ret < GP_OK) {
+		fprintf (stderr, "could not get widget value: %d\n", ret);
+		goto out;
+	}
+	val = onoff;
+	ret = gp_widget_set_value (child, &val);
+	if (ret < GP_OK) {
+		fprintf (stderr, "could not set widget value to 1: %d\n", ret);
+		goto out;
+	}
+
+	ret = gp_camera_set_config (camera, widget, context);
+	if (ret < GP_OK) {
+		fprintf (stderr, "could not set config tree to eosviewfinder: %d\n", ret);
+		goto out;
+	}
+out:
+	gp_widget_free (widget);
+	return ret;
+}
+
+int
+camera_auto_focus(Camera *camera, GPContext *context, int onoff) {
 	CameraWidget		*widget = NULL, *child = NULL;
 	CameraWidgetType	type;
 	int			ret,val;
@@ -58,7 +112,9 @@ camera_auto_focus(Camera *camera, GPContext *context) {
 		fprintf (stderr, "could not get widget value: %d\n", ret);
 		goto out;
 	}
-	val++;
+
+	val = onoff;
+
 	ret = gp_widget_set_value (child, &val);
 	if (ret < GP_OK) {
 		fprintf (stderr, "could not set widget value to 1: %d\n", ret);
