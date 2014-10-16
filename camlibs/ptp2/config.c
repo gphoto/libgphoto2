@@ -6110,6 +6110,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Flicker Reduction"),      "flickerreduction",     PTP_DPC_NIKON_FlickerReduction,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlickerReduction,    _put_Nikon_FlickerReduction },
 	{ N_("Custom Functions Ex"),    "customfuncex",         PTP_DPC_CANON_EOS_CustomFuncEx,     PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Auto Power Off"),         "autopoweroff",         PTP_DPC_CANON_EOS_AutoPowerOff,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Depth of Field"),         "depthoffield",         PTP_DPC_CANON_EOS_DepthOfFieldPreview, PTP_VENDOR_CANON,PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Menus and Playback"),     "menusandplayback",     PTP_DPC_NIKON_MenusAndPlayback,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MenusAndPlayback,    _put_Nikon_MenusAndPlayback },
 
 /* virtual */
