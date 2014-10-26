@@ -32,7 +32,7 @@
 struct _GPPortInfo {
 	GPPortType type;	/**< \brief The type of this port. */
 	char *name;		/**< \brief The name of this port (usb:) */
-	char *path;		/**< \brief The path of this port (whatever is after the :) */
+	char *path;		/**< \brief The path of this port (usb:001,023) */
 
 	/* Private */
 	char *library_filename;	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
