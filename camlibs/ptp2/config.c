@@ -4685,12 +4685,17 @@ _get_Canon_EOS_AFDrive(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
-	PTPParams *params = &(camera->pl->params);
+	int		val;
+	PTPParams	*params = &(camera->pl->params);
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DoAf)) 
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	C_PTP (ptp_canon_eos_afdrive (params));
+	CR (gp_widget_get_value(widget, &val));
+	if (val)
+		C_PTP (ptp_canon_eos_afdrive (params));
+	else
+		C_PTP (ptp_canon_eos_afcancel (params));
 	/* Get the next set of event data */
 	C_PTP (ptp_check_eos_events (params));
 	return GP_OK;
