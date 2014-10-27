@@ -1051,6 +1051,9 @@ static struct {
 	/* Kirill Bogdanenk <kirill.bogdanenko@gmail.com> via kde bug 336523 */
 	{"Nikon:DSC D5300",               0x04b0, 0x0431, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://sourceforge.net/p/gphoto/feature-requests/449/ */
+	{"Nikon:DSC D3300",               0x04b0, 0x0433, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Jeremie FROLI <jfroli@webmail.alten.fr> */
 	{"Nikon:DSC D810",                0x04b0, 0x0436, PTP_CAP|PTP_CAP_PREVIEW},
 
