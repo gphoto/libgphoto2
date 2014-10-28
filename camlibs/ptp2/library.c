@@ -1729,6 +1729,9 @@ static struct {
 
 	/* This is a camera ... reported by TAN JIAN QI <JQTAN1@e.ntu.edu.sg */
 	{"Samsung:EK-GC100",			0x04e8,	0x6866, 0},
+
+	/* Bernhard Wagner <me@bernhardwagner.net> */
+	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
 };
 
 #include "device-flags.h"
