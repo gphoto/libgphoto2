@@ -210,6 +210,9 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 		CHECK_PTP_RC(ret);
 
 		if (ptp->Transaction_ID < params->transaction_id-1) {
+			/* The Leica uses Transaction ID 0 on result from CloseSession. */
+			if (cmd == PTP_OC_CloseSession)
+				break;
 			tries++;
 			ptp_debug (params,
 				"PTP: Sequence number mismatch %d vs expected %d, suspecting old reply.",
