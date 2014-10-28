@@ -1,83 +1,80 @@
-Device info:
+Camera summary:
 Manufacturer: Leica Camera AG
-  Model: M9 Digital Camera
-  device version: 1.196
-  serial number: '0nnnnnnn'
-Vendor extension ID: 0x00000000
-Vendor extension version: 0
-Vendor extension description: (null)
-Functional Mode: 0x0000
-PTP Standard Version: 100
-Supported operations:
-  0x1003
-  0x100e
-  0x101c
-  0x1018
-  0x1001
-  0x1002
-  0x1004
-  0x1005
-  0x1006
-  0x1007
-  0x1008
-  0x1009
-  0x100a
-  0x100b
-  0x100c
-  0x100d
-  0x1014
-  0x1015
-  0x1016
-  0x1017
-  0x9015
-  0x9016
-  0x9103
-  0x9104
-  0x9105
-  0x9101
-  0x9102
-  0x9106
-  0x9107
-  0x9108
-  0x9109
-  0x910a
-  0x910b
-Events Supported:
-  0x4002
-  0x400d
-  0x4006
-Device Properties Supported:
-  0xd00a
-  0x5003
-  0xd00b
-  0x5005
-  0xd002
-  0x5012
-  0x5010
-  0x500f
-  0x5001
-  0xd001
-  0xd004
-  0xd006
-  0xd100
-  0xd104
-  0xd106
-  0xd11a
-  0xd11b
-  0xd11c
-  0xd11d
-  0xd130
-  0xd131
-  0xd134
-  0xd138
-  0xd139
-  0xd152
-  0xd155
-  0xd158
-  0xd159
-  0xd15e
-  0xd15f
-  0xd160
-  0xd161
-  0xd162
-  0xd164
+Model: M9 Digital Camera
+  Version: 1.196
+  Serial Number: [removed for privacy reasons]
+
+Capture Formats: JPEG TIFF EP Unknown(b001)
+Display Formats: JPEG, TIFF EP, Unknown(b001)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: RamDisk
+	VolumeLabel:
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 37748736 (36 MB)
+	Free Space (Bytes): 37748736 (36 MB)
+	Free Space (Images): 1
+store_00010001:
+	StorageDescription: SD-Card
+	VolumeLabel:
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 15911788544 (15174 MB)
+	Free Space (Bytes): 15490260992 (14772 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
+Property 0xd00a:(readwrite) (type=0x5) Range [-196608 - 786432, step 32768] value: -2147483648
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'5216x3472',
+	'3840x2592',
+	'2592x1728',
+	'1728x1152',
+	'1280x864'
+] value: '5216x3472'
+Property 0xd00b:(readwrite) (type=0x4) Enumeration [0,1,2,3] value: 0
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,6,5,32771,4,7,32769,32770,1,51152,51252,51352,51452,51552,51652,51752,51852,51952,52052,52152,52252,52352,52452,52552,52652,52752,52852,52952,53052,53152,53252,53352,53452,53552,53652,53752,53852,53952,54052,54152,54352,54552,54752,54952,55152,55352,55552,55752,55952,56152,56352,56552,56752,56952,57152,57452,57752,58052,58352,58652,58952,59252,59552,59852,60152,60452,60752,61052,61352,61652,61952,62252] value: Automatic (2)
+Property 0xd002:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Pre-Capture Delay(0x5012):(readwrite) (type=0x6) Enumeration [0,12000,2000] value: 12.0s (12000)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-3000,-2667,-2333,-2000,-1667,-1333,-1000,-667,-333,0,333,667,1000,1333,1667,2000,2333,2667,3000] value: 0.0 stops (0)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [80,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,65535] value: ISO 160 (160)
+Battery Level(0x5001):(read only) (type=0x1) Range [0 - 100, step 1] value: 0% (0)
+Property 0xd001:(readwrite) (type=0xffff) Enumeration [
+'DNG',
+'JPG fine',
+'JPG basic',
+'DNG+JPG fine',
+'DNG+JPG basic'
+] value: 'DNG'
+Property 0xd004:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Property 0xd006:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd100:(read only) (type=0x4) Range [0 - 1816, step 1] value: 0
+Property 0xd104:(read only) (type=0x4) Range [0 - 3, step 1] value: 0
+Property 0xd106:(read only) (type=0x4) Range [0 - 3, step 1] value: 0
+Property 0xd11a:(read only) (type=0x4) Range [0 - 0, step 1] value: 0
+Property 0xd11b:(read only) (type=0x4) Range [0 - 0, step 1] value: 0
+Property 0xd11c:(read only) (type=0x4) Range [33024 - 49956, step 1] value: 0
+Property 0xd11d:(read only) (type=0x4) Range [18 - 23, step 1] value: 0
+Property 0xd130:(read only) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd131:(read only) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd134:(read only) (type=0x4) Range [0 - 255, step 1] value: 0
+Property 0xd138:(read only) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd139:(read only) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd152:(read only) (type=0x4) Range [0 - 0, step 1] value: 0
+Property 0xd155:(read only) (type=0x4) Range [1 - 241, step 1] value: 0
+Property 0xd158:(read only) (type=0x4) Range [3 - 3, step 1] value: 0
+Property 0xd159:(read only) (type=0x4) Range [0 - 0, step 1] value: 0
+Property 0xd15e:(read only) (type=0x4) Range [1 - 241, step 1] value: 0
+Property 0xd15f:(read only) (type=0x4) Range [14370 - 14370, step 1] value: 0
+Property 0xd160:(read only) (type=0x4) Range [1 - 241, step 1] value: 0
+Property 0xd161:(read only) (type=0x4) Range [19 - 19, step 1] value: 0
+Property 0xd162:(read only) (type=0x4) Range [1 - 241, step 1] value: 0
+Property 0xd164:(read only) (type=0x4) Range [35 - 35, step 1] value: 0
