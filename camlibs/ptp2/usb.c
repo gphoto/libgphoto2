@@ -61,7 +61,8 @@
 
 /* PTP2_FAST_TIMEOUT: how long (in milliseconds) we should wait for
  * an URB to come back on an interrupt endpoint */
-#define PTP2_FAST_TIMEOUT       100
+/* 100 is not enough for various cameras types. 150 seems to work better */
+#define PTP2_FAST_TIMEOUT       150
 
 /* Pack / unpack functions */
 
