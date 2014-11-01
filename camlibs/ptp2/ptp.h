@@ -396,6 +396,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_GetLensAdjust		0x9136
 #define PTP_OC_CANON_EOS_SetLensAdjust		0x9137
 #define PTP_OC_CANON_EOS_GetMusicInfo		0x9138
+/* 3 paramaeters, no data, OFC, size, unknown */
 #define PTP_OC_CANON_EOS_CreateHandle		0x9139
 #define PTP_OC_CANON_EOS_SendPartialObjectEx	0x913A
 #define PTP_OC_CANON_EOS_EndSendPartialObjectEx	0x913B
