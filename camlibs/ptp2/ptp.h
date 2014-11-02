@@ -646,6 +646,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_ANDROID_BeginEditObject			0x95C4
 #define PTP_OC_ANDROID_EndEditObject			0x95C5
 
+/* Leica opcodes, from Lightroom tether plugin */
+#define PTP_OC_LEICA_SetCameraSettings			0x9001
+#define PTP_OC_LEICA_GetCameraSettings			0x9002
+#define PTP_OC_LEICA_GetLensParameter			0x9003
+#define PTP_OC_LEICA_Release				0x9004
+#define PTP_OC_LEICA_OpenLESession			0x9005
+#define PTP_OC_LEICA_CloseLESession			0x9006
+#define PTP_OC_LEICA_RequestObjectTransferReady		0x9007
+
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
 #define PTP_OC_EXTENSION                0x9000
