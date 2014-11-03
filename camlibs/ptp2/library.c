@@ -299,6 +299,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	 * do that and merge it into the generic PTP deviceinfo. */
 	if (di->VendorExtensionID == PTP_VENDOR_NIKON) {
 		unsigned int i;
+		unsigned int nikond;
 
 		/* Nikon V* and J* advertise the new Nikon stuff, but only do the generic
 		 * PTP capture. FIXME: could use flags. */
@@ -321,6 +322,62 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 				/* probably more */
 				di->OperationsSupported_len += 1;
+			}
+		}
+		if (params->deviceinfo.Model && (sscanf(params->deviceinfo.Model,"D%d", &nikond)))
+		{
+			if ((nikond >= 3000) && (nikond < 3199)) {
+				GP_LOG_D("The D3xxx series hides commands from us ... adding all D3000 ones");
+				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
+					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 15)));
+					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
+					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_CheckEvent;
+					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_Capture;
+					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_AfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_SetControlMode;
+					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_DeviceReady;
+					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
+					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
+
+					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_GetPreviewImg;
+					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_StartLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_EndLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_GetLiveViewImg;
+					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_MfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_ChangeAfArea;
+					di->OperationsSupported[di->OperationsSupported_len+14] = PTP_OC_NIKON_AfDriveCancel;
+					/* only opcodes up to 9206 ... I think. */
+					di->OperationsSupported_len += 15;
+				}
+			}
+			if ((nikond >= 3200) && (nikond < 3999)) {
+				GP_LOG_D("The D3xxx series hides commands from us ... adding all D7100 ones");
+				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
+					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 19)));
+					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
+					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_CheckEvent;
+					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_Capture;
+					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_AfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_SetControlMode;
+					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_DeviceReady;
+					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
+					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
+
+					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_GetPreviewImg;
+					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_StartLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_EndLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_GetLiveViewImg;
+					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_MfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_ChangeAfArea;
+					di->OperationsSupported[di->OperationsSupported_len+14] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+					di->OperationsSupported[di->OperationsSupported_len+15] = PTP_OC_NIKON_AfDriveCancel;
+					di->OperationsSupported[di->OperationsSupported_len+15] = PTP_OC_NIKON_AfDriveCancel;
+					di->OperationsSupported[di->OperationsSupported_len+16] = PTP_OC_NIKON_StartMovieRecInCard;
+					di->OperationsSupported[di->OperationsSupported_len+17] = PTP_OC_NIKON_EndMovieRec;
+					di->OperationsSupported[di->OperationsSupported_len+18] = PTP_OC_NIKON_TerminateCapture;
+					/* probably more */
+					di->OperationsSupported_len += 19;
+				}
 			}
 		}
 
@@ -1052,7 +1109,7 @@ static struct {
 	{"Nikon:DSC D5300",               0x04b0, 0x0431, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/449/ */
-	{"Nikon:DSC D3300",               0x04b0, 0x0433, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:DSC D3300",               0x04b0, 0x0433, PTP_CAP|PTP_CAP_PREVIEW|PTP_NIKON_BROKEN_CAP},
 
 	/* Jeremie FROLI <jfroli@webmail.alten.fr> */
 	{"Nikon:DSC D810",                0x04b0, 0x0436, PTP_CAP|PTP_CAP_PREVIEW},
