@@ -650,6 +650,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_SetCameraSettings			0x9001
 #define PTP_OC_LEICA_GetCameraSettings			0x9002
 #define PTP_OC_LEICA_GetLensParameter			0x9003
+/* probably 2 arguments.
+ * generic: releaseStage, stepSize
+ * Release(releasestage) = (releasestage,0)
+ * Release() = (0,0)
+ * AEStart() = (1,0)
+ * Autofocusrelease() = (2,0)
+ * AutofocusPush() = (1,0) ... same as AEStart?
+ * KeepCameraActive() = (0xe,0)
+ */
 #define PTP_OC_LEICA_Release				0x9004
 #define PTP_OC_LEICA_OpenLESession			0x9005
 #define PTP_OC_LEICA_CloseLESession			0x9006
