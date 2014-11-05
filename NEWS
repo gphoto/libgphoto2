@@ -1,7 +1,7 @@
-libgphoto2 2.5.5.2 snapshot
+libgphoto2 2.5.5.3 snapshot
 
 ptp2:
-(WIP * "exposurecompensation" was changed to be a float range, matching the "steps" value.)
+* Nikon DSLR: make sure we make a pause a bit during polling after capture.
 * Nikon D3xxx: it hides the "good" capture opcodes from the DeviceInfo. Override and add
   them. If you see capture bugs, please report with debuglogfile.
 * Canon EOS: crash on 700D fixed
