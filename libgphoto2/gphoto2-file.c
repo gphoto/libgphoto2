@@ -586,6 +586,7 @@ static const char *mime_table[] = {
     "mts",  GP_MIME_AVCHD,
     "m2ts", GP_MIME_AVCHD,
     "arw",  GP_MIME_ARW,
+    "txt",  GP_MIME_TXT,
     NULL};
 /**
  * @param file a #CameraFile
@@ -1073,6 +1074,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_AVI,  "avi",
 		GP_MIME_CRW,  "crw",
 		GP_MIME_CR2,  "cr2",
+		GP_MIME_TXT,  "txt",
 		NULL};
 
 	C_PARAMS (file);

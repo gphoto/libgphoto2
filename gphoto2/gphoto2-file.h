@@ -33,6 +33,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#define GP_MIME_TXT       "text/plain"
 #define GP_MIME_WAV       "audio/wav"
 #define GP_MIME_RAW       "image/x-raw"
 #define GP_MIME_PNG       "image/png"

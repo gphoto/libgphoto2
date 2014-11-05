@@ -1587,8 +1587,8 @@ gp_filesystem_get_file_impl (CameraFilesystem *fs, const char *folder,
 		return GP_OK;
 	}
 
-	gp_context_status (context, _("Downloading '%s' from folder '%s'..."),
-			   filename, folder);
+	GP_LOG_D ("Downloading '%s' from folder '%s'...", filename, folder);
+
 	CR (fs->get_file_func (fs, folder, filename, type, file,
 			       fs->data, context));
 
