@@ -1397,16 +1397,16 @@ _get_ExpCompensation(CONFIG_GET_ARGS) {
 	char buf[10];
 
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return(GP_ERROR);
+		return GP_ERROR;
 	if (dpd->DataType != PTP_DTC_INT16)
-		return(GP_ERROR);
+		return GP_ERROR;
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
-		sprintf(buf, "%d", dpd->FORM.Enum.SupportedValue[j].i16);
+		sprintf(buf, "%g", dpd->FORM.Enum.SupportedValue[j].i16/1000.0);
 		gp_widget_add_choice (*widget,buf);
 	}
-	sprintf(buf, "%d", dpd->CurrentValue.i16);
+	sprintf(buf, "%g", dpd->CurrentValue.i16/1000.0);
 	gp_widget_set_value (*widget,buf);
 	return GP_OK;
 }
@@ -1414,13 +1414,13 @@ _get_ExpCompensation(CONFIG_GET_ARGS) {
 static int
 _put_ExpCompensation(CONFIG_PUT_ARGS) {
 	char *value;
-	int x;
+	float x;
 
 	CR (gp_widget_get_value(widget, &value));
-	if (1 != sscanf(value,"%d", &x))
-		return (GP_ERROR);
-	propval->i16 = x;
-	return(GP_OK);
+	if (1 != sscanf(value,"%g", &x))
+		return GP_ERROR;
+	propval->i16 = x*1000.0;
+	return GP_OK ;
 }
 
 
