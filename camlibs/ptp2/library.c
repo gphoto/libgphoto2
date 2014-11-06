@@ -1811,7 +1811,7 @@ static struct {
 	{PTP_OFC_Association,		0, "application/x-association"},
 	{PTP_OFC_Script,		0, "application/x-script"},
 	{PTP_OFC_Executable,		0, "application/octet-stream"},
-	{PTP_OFC_Text,			0, "text/plain"},
+	{PTP_OFC_Text,			0, GP_MIME_TXT},
 	{PTP_OFC_HTML,			0, "text/html"},
 	{PTP_OFC_DPOF,			0, "text/plain"},
 	{PTP_OFC_AIFF,			0, "audio/x-aiff"},
@@ -3568,7 +3568,12 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				return translate_ptp_result (ret);
 			/* sleep a bit perhaps ? or check events? */
 		} while (ret == PTP_RC_DeviceBusy);
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params)) {
+			gp_context_idle (context);
+			/* do not drain all of the DSLRs compute time */
+			usleep(100*1000); /* 0.1 seconds */
+		}
 		return GP_OK;
 	}
 
@@ -3601,7 +3606,13 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				return translate_ptp_result (ret);
 		} while (ret == PTP_RC_DeviceBusy);
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+
+		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params)) {
+			gp_context_idle (context);
+			/* do not drain all of the DSLRs compute time */
+			usleep(100*1000); /* 0.1 seconds */
+		}
+
 		return GP_OK;
 	}
 
