@@ -6039,7 +6039,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Cancel Canon DSLR Autofocus"),    "cancelautofocus",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_AfCancel,          _get_Canon_EOS_AFCancel,        _put_Canon_EOS_AFCancel },
 	{ N_("Canon EOS Zoom"),                 "eoszoom",          0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_Zoom,              _get_Canon_EOS_Zoom,            _put_Canon_EOS_Zoom },
 	{ N_("Canon EOS Zoom Position"),        "eoszoomposition",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_ZoomPosition,      _get_Canon_EOS_ZoomPosition,    _put_Canon_EOS_ZoomPosition },
-	{ N_("Canon EOS Viewfinder"),           "eosviewfinder",    0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },
+	{ N_("Canon EOS Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },
 	{ N_("Nikon Viewfinder"),               "viewfinder",       0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartLiveView,         _get_Nikon_ViewFinder,          _put_Nikon_ViewFinder },
 	{ N_("Canon EOS Remote Release"),       "eosremoterelease", 0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_RemoteReleaseOn,   _get_Canon_EOS_RemoteRelease,   _put_Canon_EOS_RemoteRelease },
 	{ N_("CHDK Script"),                    "chdk_script",      0,  PTP_VENDOR_CANON,   PTP_OC_CHDK,                        _get_Canon_CHDK_Script,         _put_Canon_CHDK_Script },
