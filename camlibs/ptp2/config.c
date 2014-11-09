@@ -3326,6 +3326,84 @@ _put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
+	int x,y;
+	char buf[20];
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	x = dpd->CurrentValue.u32>>16;
+	y = dpd->CurrentValue.u32&0xffff;
+	if (y == 1)
+		sprintf (buf, "%d",x);
+	else
+		sprintf (buf, "%d/%d",x,y);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+_put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
+	int			x,y;
+	const char		*val;
+	float 			old,new;
+	PTPPropertyValue	value;
+	uint32_t		new32, origval;
+	PTPParams		*params = &(camera->pl->params);
+	GPContext 		*context = ((PTPData *) params->data)->context;
+
+	CR (gp_widget_get_value (widget, &val));
+
+	x = dpd->CurrentValue.u32>>16;
+	y = dpd->CurrentValue.u32&0xffff;
+	old = ((float)x)/(float)y;
+
+	if (2!=sscanf(val, "%d/%d", &x, &y)) {
+		if (1==sscanf(val,"%d", &x)) {
+			y = 1;
+		} else {
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+	}
+	new32 = (x<<16)|y;
+	new = ((float)x)/(float)y;
+	do {
+		origval = dpd->CurrentValue.u32;
+		if (old > new)
+			value.u8 = 0x01;
+		else
+			value.u8 = 0xff;
+		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterSpeed, &value, PTP_DTC_UINT8 ));
+		/* FIXME: there is a bit of time between setting this and it getting active... don't know how long to wait. */
+		/* so just check for events */
+		ptp_check_event (params);
+		usleep(300*1000);
+		/* FIXME: value does not change inbetween here for some reason */
+		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed, dpd));
+
+		GP_LOG_D ("shutterspeed value is (0x%x vs target 0x%x)", origval, new32);
+
+		if (dpd->CurrentValue.u32 == new) {
+			GP_LOG_D ("Value matched!");
+			break;
+		}
+		/* if it did not change, better abort */
+		if (dpd->CurrentValue.u32 == origval) {
+			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), guessing failure", dpd->CurrentValue.u32, origval, new32);
+			break;
+		}
+	} while (1);
+	propval->u32 = new;
+	return GP_OK;
+}
+
+
 
 static int
 _get_Nikon_FocalLength(CONFIG_GET_ARGS) {
@@ -6239,6 +6317,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed 2"),                "shutterspeed2",            PTP_DPC_NIKON_ExposureTime,             PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
+	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_INT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_MeteringMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_EOS_MeteringMode,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("AF Distance"),                    "afdistance",               PTP_DPC_CANON_AFDistance,               PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_AFDistance,              _put_Canon_AFDistance },
