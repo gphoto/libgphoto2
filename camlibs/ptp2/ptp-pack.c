@@ -1982,6 +1982,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->CurrentValue.u8		= dtoh8a(xdata);
 					ptp_debug (params,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.u8);
 					break;
+				case PTP_DTC_INT8:
+					dpd->FactoryDefaultValue.i8	= dtoh8a(xdata);
+					dpd->CurrentValue.i8		= dtoh8a(xdata);
+					ptp_debug (params,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.i8);
+					break;
 				case PTP_DTC_STR: {
 #if 0 /* 5D MII and 400D aktually store plain ASCII in their string properties */
 					uint8_t len = 0;
