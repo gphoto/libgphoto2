@@ -1883,10 +1883,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_PictureStyle:
 				case PTP_DPC_CANON_EOS_WhiteBalance:
 				case PTP_DPC_CANON_EOS_MeteringMode:
-					dpd->DataType = PTP_DTC_UINT8;
-					break;
 				case PTP_DPC_CANON_EOS_ExpCompensation:
-					dpd->DataType = PTP_DTC_INT8;
+					dpd->DataType = PTP_DTC_UINT8;
 					break;
 				case PTP_DPC_CANON_EOS_Owner:
 				case PTP_DPC_CANON_EOS_Artist:
