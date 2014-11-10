@@ -3389,7 +3389,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 		GP_LOG_D ("shutterspeed value is (0x%x vs target 0x%x)", origval, new32);
 
-		if (dpd->CurrentValue.u32 == new) {
+		if (dpd->CurrentValue.u32 == new32) {
 			GP_LOG_D ("Value matched!");
 			break;
 		}
