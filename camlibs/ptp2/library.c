@@ -242,7 +242,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		DI_MERGE(CaptureFormats);
 		DI_MERGE(ImageFormats);
 
+		/* libgphoto2 specific for usage in config trees */
+		newdi.VendorExtensionID = PTP_VENDOR_GP_OLYMPUS;
+
 		GP_LOG_D ("Dumping Olympus Deviceinfo");
+
 
 		print_debug_deviceinfo (&newdi);
 		ptp_free_DI (di);

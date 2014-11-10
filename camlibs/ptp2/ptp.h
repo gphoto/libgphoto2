@@ -175,6 +175,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Vendor extension ID used for MTP (occasionaly, usualy 6 is used) */
 #define PTP_VENDOR_MTP			0xffffffff  
 
+/* gphoto overrides */
+#define PTP_VENDOR_GP_OLYMPUS		0xfffffffe
+
 /* Operation Codes */
 
 /* PTP v1.0 operation codes */
