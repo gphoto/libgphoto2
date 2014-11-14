@@ -3020,7 +3020,7 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
 	)
-		return ptp_sony_setdevicecontrolvaluea (params, propcode, value, datatype);
+		return ptp_sony_setdevicecontrolvalueb (params, propcode, value, datatype);
 	return ptp_setdevicepropvalue (params, propcode, value, datatype);
 }
 
