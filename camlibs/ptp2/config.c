@@ -3349,13 +3349,14 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 
 static int
 _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
-	int			x,y;
+	int			x,y,a,b;
 	const char		*val;
 	float 			old,new;
 	PTPPropertyValue	value;
 	uint32_t		new32, origval;
 	PTPParams		*params = &(camera->pl->params);
 	GPContext 		*context = ((PTPData *) params->data)->context;
+	time_t			start,end;
 
 	CR (gp_widget_get_value (widget, &val));
 
@@ -3378,31 +3379,55 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			value.u8 = 0x01;
 		else
 			value.u8 = 0xff;
+		a = dpd->CurrentValue.u32>>16;
+		b = dpd->CurrentValue.u32&0xffff;
 		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterSpeed, &value, PTP_DTC_UINT8 ));
-		/* FIXME: there is a bit of time between setting this and it getting active... don't know how long to wait. */
-		/* so just check for events */
-		ptp_check_event (params);
-		usleep(300*1000);
-		/* FIXME: value does not change inbetween here for some reason */
-		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
-		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed, dpd));
 
 		GP_LOG_D ("shutterspeed value is (0x%x vs target 0x%x)", origval, new32);
+
+		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */
+		time(&start);
+		do {
+			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+			C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed, dpd));
+
+			if (dpd->CurrentValue.u32 == new32) {
+				GP_LOG_D ("Value matched!");
+				break;
+			}
+			a = dpd->CurrentValue.u32>>16;
+			b = dpd->CurrentValue.u32&0xffff;
+			if (a*y == b*x) {
+				GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
+				break;
+			}
+
+			if (dpd->CurrentValue.u32 != origval) {
+				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd->CurrentValue.u32, origval, new32);
+				break;
+			}
+
+			usleep(200*1000);
+
+			time(&end);
+		} while (end-start <= 3);
 
 		if (dpd->CurrentValue.u32 == new32) {
 			GP_LOG_D ("Value matched!");
 			break;
 		}
-		/* if it did not change, better abort */
+		if (a*y == b*x) {
+			GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
+			break;
+		}
 		if (dpd->CurrentValue.u32 == origval) {
-			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), guessing failure", dpd->CurrentValue.u32, origval, new32);
+			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd->CurrentValue.u32, origval, new32);
 			break;
 		}
 	} while (1);
 	propval->u32 = new;
 	return GP_OK;
 }
-
 
 
 static int
