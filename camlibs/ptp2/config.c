@@ -2463,6 +2463,7 @@ static int
 _put_Sony_FNumber(CONFIG_PUT_ARGS)
 {
 	float			fvalue;
+	time_t			start,end;
 	uint16_t		origval;
 	PTPPropertyValue	value;
 	PTPParams		*params = &(camera->pl->params);
@@ -2478,9 +2479,21 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 		else
 			value.u8 = 0xff;
 		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_FNumber, &value, PTP_DTC_UINT8 ));
-		/* FIXME: value does not change inbetween here for some reason */
-		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
-		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
+		time(&start);
+		do { 
+			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+			C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
+			if (dpd->CurrentValue.u16 == fvalue*100) {
+				GP_LOG_D ("Value matched");
+				break;
+			}
+			if (dpd->CurrentValue.u16 != origval) {
+				GP_LOG_D ("value changed (%d vs target %d), proceeding", origval, (int)(fvalue*100));
+				break;
+			}
+			usleep(200*1000);
+			time(&end);
+		} while (end-start <= 3);
 		if (dpd->CurrentValue.u16 == fvalue*100) {
 			GP_LOG_D ("Value matched");
 			break;
