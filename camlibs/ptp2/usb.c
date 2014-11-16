@@ -76,8 +76,11 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
 	int res, towrite, do_retry = TRUE;
 	PTPUSBBulkContainer usbreq;
 	Camera *camera = ((PTPData *)params->data)->camera;
+	char buf[100];
 
-	GP_LOG_D ("Sending PTP_OC 0x%0x request...", req->Code);
+	ptp_render_opcode(params, req->Code, sizeof(buf),buf);
+	GP_LOG_D ("Sending PTP_OC 0x%0x / %s request...", req->Code, buf);
+
 	/* build appropriate USB container */
 	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-
 		(sizeof(uint32_t)*(5-req->Nparam)));
@@ -122,8 +125,10 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 	int progressid = 0;
 	int usecontext = (size > CONTEXT_BLOCK_SIZE);
 	GPContext *context = ((PTPData *)params->data)->context;
+	char buf[100];
 
-	GP_LOG_D ("Sending PTP_OC 0x%0x data...", ptp->Code);
+	ptp_render_opcode(params, ptp->Code, sizeof(buf),buf);
+	GP_LOG_D ("Sending PTP_OC 0x%0x / %s data...", ptp->Code, buf);
 	/* build appropriate USB container */
 	usbdata.length	= htod32(PTP_USB_BULK_HDR_LEN+size);
 	usbdata.type	= htod16(PTP_USB_CONTAINER_DATA);
@@ -253,8 +258,10 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	Camera		*camera = ((PTPData *)params->data)->camera;
 	int		report_progress, progress_id = 0, do_retry = TRUE, res = GP_OK;
 	GPContext *context = ((PTPData *)params->data)->context;
+	char buf[100];
 
-	GP_LOG_D ("Reading PTP_OC 0x%0x data...", ptp->Code);
+	ptp_render_opcode(params, ptp->Code, sizeof(buf),buf);
+	GP_LOG_D ("Reading PTP_OC 0x%0x / %s data...", ptp->Code, buf);
 	PTP_CNT_INIT(usbdata);
 
 	ret = ptp_usb_getpacket (params, &usbdata, &bytes_read);
