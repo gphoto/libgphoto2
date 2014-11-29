@@ -1558,6 +1558,7 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
  * 16 bit array width[focus_points_in_struct]
  * 16 bit array offsetheight[focus_points_in_struct] middle is 0
  * 16 bit array offsetwidth[focus_points_in_struct] middle is ?
+ * bitfield of selected focus points, starting with 0 [size focus_points_in_struct in bits]
  * unknown stuff , likely which are active
  * 16 bit 0xffff
  *
@@ -1616,8 +1617,14 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 		if (i<focus_points_in_use-1)
 			p += sprintf(p,",");
 	}
+	p += sprintf(p,"},select={");
+	for (i=0;i<focus_points_in_use;i++) {
+		if ((1<<(i%7)) & ((*data)[focus_points_in_struct*8+20+i/8]))
+			p+=sprintf(p,"%d,", i);
+	}
+
 	p += sprintf(p,"},unknown={");
-	for (i = focus_points_in_struct*8+20 ; i<size; i++) {
+	for (i=focus_points_in_struct*8+(focus_points_in_struct+7)/8+20;i<size;i++) {
 		p+=sprintf(p,"%02x", (*data)[i]);
 	}
 	p += sprintf(p,"}");
