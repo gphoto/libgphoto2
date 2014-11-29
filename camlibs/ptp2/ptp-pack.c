@@ -1547,22 +1547,6 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
 	return s;
 }
 
-static inline char*
-ptp_unpack_EOS_CustomFuncEx (PTPParams* params, unsigned char** data )
-{
-	uint32_t s = dtoh32a( *data );
-	uint32_t n = s/4, i;
-	char* str = (char*)malloc( s*2+s/4+1 ); /* n is size in uint32, maximum %x len is 8 chars and \0*/
-	if (!str)
-		return str;
-	char* p = str;
-
-	for (i=0; i < n; ++i)
-		p += sprintf(p, "%x,", dtoh32a( *data + 4*i ));
-
-	return str;
-}
-
 /* 32 bit size
  * 16 bit subsize
  * 16 bit version (?)
@@ -1582,7 +1566,7 @@ ptp_unpack_EOS_CustomFuncEx (PTPParams* params, unsigned char** data )
 static inline char*
 ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 {
-	uint32_t size = dtoh32a( *data );
+	uint32_t size 			= dtoh32a( *data );
 	uint32_t halfsize		= dtoh16a( (*data) + 4);
 	uint32_t version		= dtoh16a( (*data) + 6);
 	uint32_t focus_points_in_struct	= dtoh16a( (*data) + 8);
@@ -1600,27 +1584,34 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 	 * FIXME: check selected when we decode it */
 	maxlen = focus_points_in_use*6*4 + focus_points_in_use + 100;
 	if (halfsize != size-4) {
-		ptp_error(params, "halfsize %d is not expected %d\n", halfsize, size-4);
+		ptp_error(params, "halfsize %d is not expected %d", halfsize, size-4);
 		return NULL;
 	}
-	if (focus_points_in_struct*2*4 + 32 + 8 > halfsize) {
-		ptp_error(params, "size %d is too small for fp in struct %d\n", focus_points_in_struct);
+	if (focus_points_in_struct*2*4 + 20 + 8 > halfsize) {
+		ptp_error(params, "size %d is too large for fp in struct %d", focus_points_in_struct*2*4 + 20 + 8, halfsize);
 		return NULL;
 	}
+#if 0
+	ptp_debug(params,"d1d3 content:");
+	for (i=0;i<size;i+=2)
+		ptp_debug(params,"%d: %02x %02x", i, (*data)[i], (*data)[i+1]);
+#endif
+	ptp_debug(params,"d1d3 version", version);
+	ptp_debug(params,"d1d3 focus points in struct %d, in use %d", focus_points_in_struct, focus_points_in_use);
 
 	str = (char*)malloc( maxlen );
 	if (!str)
 		return str;
 	p = str;
 
-	p += sprintf(p,"eosversion=%d,size=%dx%d, size2=%dx%d,points={", version, sizeX, sizeY, size2X, size2Y);
+	p += sprintf(p,"eosversion=%d,size=%dx%d,size2=%dx%d,points={", version, sizeX, sizeY, size2X, size2Y);
 	for (i=0;i<focus_points_in_use;i++) {
-		uint32_t x = dtoh16a((*data) + focus_points_in_struct*4 + 20 + 2*i);
-		uint32_t y = dtoh16a((*data) + focus_points_in_struct*6 + 20 + 2*i);
-		uint32_t w = dtoh16a((*data) + focus_points_in_struct*2 + 20 + 2*i);
-		uint32_t h = dtoh16a((*data) + focus_points_in_struct*0 + 20 + 2*i);
+		int16_t x = dtoh16a((*data) + focus_points_in_struct*4 + 20 + 2*i);
+		int16_t y = dtoh16a((*data) + focus_points_in_struct*6 + 20 + 2*i);
+		int16_t w = dtoh16a((*data) + focus_points_in_struct*2 + 20 + 2*i);
+		int16_t h = dtoh16a((*data) + focus_points_in_struct*0 + 20 + 2*i);
 
-		p += sprintf(p,"%dx%dx%d%d",x,y,w,h);
+		p += sprintf(p,"{%d,%d,%d,%d}",x,y,w,h);
 
 		if (i<focus_points_in_use-1)
 			p += sprintf(p,",");
@@ -1633,6 +1624,22 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 	return str;
 }
 
+
+static inline char*
+ptp_unpack_EOS_CustomFuncEx (PTPParams* params, unsigned char** data )
+{
+	uint32_t s = dtoh32a( *data );
+	uint32_t n = s/4, i;
+	char* str = (char*)malloc( s*2+s/4+1 ); /* n is size in uint32, maximum %x len is 8 chars and \0*/
+	if (!str)
+		return str;
+	char* p = str;
+
+	for (i=0; i < n; ++i)
+		p += sprintf(p, "%x,", dtoh32a( *data + 4*i ));
+
+	return str;
+}
 
 static inline uint32_t
 ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
@@ -2094,7 +2101,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_STR;
 					free (dpd->FactoryDefaultValue.str);
 					free (dpd->CurrentValue.str);
-					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_CustomFuncEx( params, &data );
+					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_CustomFuncEx( params, &xdata );
 					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
 					ptp_debug (params,"event %d: decoded custom function, currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
 					break;
@@ -2102,7 +2109,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_STR;
 					free (dpd->FactoryDefaultValue.str);
 					free (dpd->CurrentValue.str);
-					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &data );
+					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &xdata );
 					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
 					ptp_debug (params,"event %d: decoded focus info, currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
 					break;
