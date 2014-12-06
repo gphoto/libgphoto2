@@ -2281,19 +2281,74 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 }
 
 static int
+_set_sony_value_u32 (PTPParams*params, uint16_t prop, uint32_t value) {
+	GPContext 		*context = ((PTPData *) params->data)->context;
+	PTPDevicePropDesc	dpd;
+	PTPPropertyValue	propval;
+	uint32_t		origval;
+	time_t			start,end;
+
+	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);
+
+	/* FIXME: if it is a enum, go in direction of the enum order (ISO) */
+	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
+	do {
+		origval = dpd.CurrentValue.u32;
+		if (value > origval)
+			propval.u8 = 0x01;
+		else
+			propval.u8 = 0xff;
+		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));
+
+		GP_LOG_D ("value is (0x%x vs target 0x%x)", origval, value);
+
+		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */
+		time(&start);
+		do {
+			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
+
+			if (dpd.CurrentValue.u32 == value) {
+				GP_LOG_D ("Value matched!");
+				break;
+			}
+			if (dpd.CurrentValue.u32 != origval) {
+				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u32, origval, value);
+				break;
+			}
+
+			usleep(200*1000);
+
+			time(&end);
+		} while (end-start <= 3);
+
+		if (dpd.CurrentValue.u32 == value) {
+			GP_LOG_D ("Value matched!");
+			break;
+		}
+		if (dpd.CurrentValue.u32 == origval) {
+			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u32, origval, value);
+			break;
+		}
+	} while (1);
+	return GP_OK;
+}
+
+static int
 _put_Sony_ISO(CONFIG_PUT_ARGS)
 {
-	char *value;
-	unsigned int	u;
+	char 		*value;
+	uint32_t	u;
+	PTPParams	*params = &(camera->pl->params);
 
 	CR (gp_widget_get_value(widget, &value));
 	if (!strcmp(value,_("Auto ISO"))) {
-		propval->u32 = 0x00ffffff;
-		return GP_OK;
+		u = 0x00ffffff;
+		goto setiso;
 	}
 	if (!strcmp(value,_("Auto ISO Multi Frame Noise Reduction"))) {
-		propval->u32 = 0x01ffffff;
-		return GP_OK;
+		u = 0x01ffffff;
+		goto setiso;
 	}
 
 	if (!sscanf(value, "%ud", &u))
@@ -2301,8 +2356,10 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 
 	if (strstr(value,_("Multi Frame Noise Reduction")))
 		u |= 0x10000;
+
+setiso:
 	propval->u32 = u;
-	return GP_OK;
+	return _set_sony_value_u32(params, PTP_DPC_SONY_ISO, u);
 }
 
 
@@ -6260,7 +6317,6 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_ISOSpeed,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  0,                  PTP_DTC_UINT16, _get_ISO,                       _put_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
-	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
