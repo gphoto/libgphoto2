@@ -313,6 +313,7 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_info_set_path (info, "usb:");
 		C_GP (gp_port_info_list_append (list, info));
 	}
+	libusb_free_device_list (devs, 1);
 	libusb_exit (ctx); /* should free all stuff above */
 	free (descs);
 	return (GP_OK);
@@ -341,6 +342,8 @@ gp_port_usb_exit (GPPort *port)
 {
 	if (port->pl) {
 		free (port->pl->descs);
+		if (port->pl->nrofdevs)
+			libusb_free_device_list (port->pl->devs, 1);
 		libusb_exit (port->pl->ctx);
 		free (port->pl);
 		port->pl = NULL;
