@@ -2290,14 +2290,35 @@ _set_sony_value_u32 (PTPParams*params, uint16_t prop, uint32_t value) {
 
 	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);
 
-	/* FIXME: if it is a enum, go in direction of the enum order (ISO) */
 	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
 	do {
 		origval = dpd.CurrentValue.u32;
-		if (value > origval)
-			propval.u8 = 0x01;
-		else
-			propval.u8 = 0xff;
+		/* if it is a ENUM, the camera will walk through the ENUM */
+		if (dpd.FormFlag & PTP_DPFF_Enumeration) {
+			int i, posorig = -1, posnew = -1;
+
+			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
+				if (origval == dpd.FORM.Enum.SupportedValue[i].u32)
+					posorig = i;
+				if (value == dpd.FORM.Enum.SupportedValue[i].u32)
+					posnew = i;
+				if ((posnew != -1) && (posorig != -1))
+					break;
+			}
+			if (posnew == -1) {
+				gp_context_error (context, _("Target value is not in enumeration."));
+				return GP_ERROR_BAD_PARAMETERS;
+			}
+			if (posnew > posorig)
+				propval.u8 = 0x01;
+			else
+				propval.u8 = 0xff;
+		} else {
+			if (value > origval)
+				propval.u8 = 0x01;
+			else
+				propval.u8 = 0xff;
+		}
 		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));
 
 		GP_LOG_D ("value is (0x%x vs target 0x%x)", origval, value);
