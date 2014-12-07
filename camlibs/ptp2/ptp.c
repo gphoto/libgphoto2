@@ -4775,6 +4775,27 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{0,NULL}
         };
 
+        struct {
+		uint16_t dpc;
+		const char *txt;
+        } ptp_device_properties_SONY[] = {
+		{PTP_DPC_SONY_DPCCompensation, ("DOC Compensation")},	/* 0xD200 */
+		{PTP_DPC_SONY_DRangeOptimize, ("DRangeOptimize")},	/* 0xD201 */
+		{PTP_DPC_SONY_ImageSize, N_("Image size")},		/* 0xD203 */
+		{PTP_DPC_SONY_ShutterSpeed, N_("Shutter speed")},	/* 0xD20D */
+		{PTP_DPC_SONY_ColorTemp, N_("Color temperature")},	/* 0xD20F */
+		{PTP_DPC_SONY_CCFilter, ("CC Filter")},			/* 0xD210 */
+		{PTP_DPC_SONY_AspectRatio, N_("Aspect Ratio")}, 	/* 0xD211 */
+		{PTP_DPC_SONY_ExposeIndex, N_("Expose Index")},		/* 0xD216 */
+		{PTP_DPC_SONY_PictureEffect, N_("Picture Effect")},	/* 0xD21B */
+		{PTP_DPC_SONY_ABFilter, N_("AB Filter")},		/* 0xD21C */
+		{PTP_DPC_SONY_ISO, N_("ISO")},				/* 0xD21E */
+		{PTP_DPC_SONY_Movie, N_("Movie")},			/* 0xD2C8 */
+		{PTP_DPC_SONY_StillImage, N_("Still Image")},		/* 0xD2C7 */
+		{0,NULL}
+        };
+
+
 	for (i=0; ptp_device_properties[i].txt!=NULL; i++)
 		if (ptp_device_properties[i].dpc==dpc)
 			return (ptp_device_properties[i].txt);
@@ -4804,6 +4825,11 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		for (i=0; ptp_device_properties_FUJI[i].txt!=NULL; i++)
 			if (ptp_device_properties_FUJI[i].dpc==dpc)
 				return (ptp_device_properties_FUJI[i].txt);
+
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_SONY)
+		for (i=0; ptp_device_properties_SONY[i].txt!=NULL; i++)
+			if (ptp_device_properties_SONY[i].dpc==dpc)
+				return (ptp_device_properties_SONY[i].txt);
 
 	return NULL;
 }
