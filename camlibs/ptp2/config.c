@@ -2280,80 +2280,84 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-static int
-_set_sony_value_u32 (PTPParams*params, uint16_t prop, uint32_t value) {
-	GPContext 		*context = ((PTPData *) params->data)->context;
-	PTPDevicePropDesc	dpd;
-	PTPPropertyValue	propval;
-	uint32_t		origval;
-	time_t			start,end;
-
-	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);
-
-	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
-	do {
-		origval = dpd.CurrentValue.u32;
-		/* if it is a ENUM, the camera will walk through the ENUM */
-		if (dpd.FormFlag & PTP_DPFF_Enumeration) {
-			int i, posorig = -1, posnew = -1;
-
-			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
-				if (origval == dpd.FORM.Enum.SupportedValue[i].u32)
-					posorig = i;
-				if (value == dpd.FORM.Enum.SupportedValue[i].u32)
-					posnew = i;
-				if ((posnew != -1) && (posorig != -1))
-					break;
-			}
-			if (posnew == -1) {
-				gp_context_error (context, _("Target value is not in enumeration."));
-				return GP_ERROR_BAD_PARAMETERS;
-			}
-			if (posnew > posorig)
-				propval.u8 = 0x01;
-			else
-				propval.u8 = 0xff;
-		} else {
-			if (value > origval)
-				propval.u8 = 0x01;
-			else
-				propval.u8 = 0xff;
-		}
-		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));
-
-		GP_LOG_D ("value is (0x%x vs target 0x%x)", origval, value);
-
-		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */
-		time(&start);
-		do {
-			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
-			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
-
-			if (dpd.CurrentValue.u32 == value) {
-				GP_LOG_D ("Value matched!");
-				break;
-			}
-			if (dpd.CurrentValue.u32 != origval) {
-				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u32, origval, value);
-				break;
-			}
-
-			usleep(200*1000);
-
-			time(&end);
-		} while (end-start <= 3);
-
-		if (dpd.CurrentValue.u32 == value) {
-			GP_LOG_D ("Value matched!");
-			break;
-		}
-		if (dpd.CurrentValue.u32 == origval) {
-			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u32, origval, value);
-			break;
-		}
-	} while (1);
-	return GP_OK;
+#define PUT_SONY_VALUE_(bits) 								\
+static int										\
+_put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value) {	\
+	GPContext 		*context = ((PTPData *) params->data)->context;		\
+	PTPDevicePropDesc	dpd;							\
+	PTPPropertyValue	propval;						\
+	uint32_t		origval;						\
+	time_t			start,end;						\
+											\
+	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
+											\
+	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));			\
+	do {										\
+		origval = dpd.CurrentValue.u##bits;					\
+		/* if it is a ENUM, the camera will walk through the ENUM */		\
+		if (dpd.FormFlag & PTP_DPFF_Enumeration) {				\
+			int i, posorig = -1, posnew = -1;				\
+											\
+			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
+				if (origval == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
+					posorig = i;					\
+				if (value == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
+					posnew = i;					\
+				if ((posnew != -1) && (posorig != -1))			\
+					break;						\
+			}								\
+			if (posnew == -1) {						\
+				gp_context_error (context, _("Target value is not in enumeration."));\
+				return GP_ERROR_BAD_PARAMETERS;				\
+			}								\
+			if (posnew > posorig)						\
+				propval.u8 = 0x01;					\
+			else								\
+				propval.u8 = 0xff;					\
+		} else {								\
+			if (value > origval)						\
+				propval.u8 = 0x01;					\
+			else								\
+				propval.u8 = 0xff;					\
+		}									\
+		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));\
+											\
+		GP_LOG_D ("value is (0x%x vs target 0x%x)", origval, value);		\
+											\
+		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */	\
+		time(&start);								\
+		do {									\
+			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));		\
+			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));	\
+											\
+			if (dpd.CurrentValue.u##bits == value) {			\
+				GP_LOG_D ("Value matched!");				\
+				break;							\
+			}								\
+			if (dpd.CurrentValue.u##bits != origval) {			\
+				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u##bits, origval, value);\
+				break;							\
+			}								\
+											\
+			usleep(200*1000);						\
+											\
+			time(&end);							\
+		} while (end-start <= 3);						\
+											\
+		if (dpd.CurrentValue.u##bits == value) {				\
+			GP_LOG_D ("Value matched!");					\
+			break;								\
+		}									\
+		if (dpd.CurrentValue.u##bits == origval) {				\
+			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u##bits, origval, value);\
+			break;								\
+		}									\
+	} while (1);									\
+	return GP_OK;									\
 }
+
+PUT_SONY_VALUE_(16) /* _put_sony_value_u16 */
+PUT_SONY_VALUE_(32) /* _put_sony_value_u32 */
 
 static int
 _put_Sony_ISO(CONFIG_PUT_ARGS)
@@ -2380,7 +2384,7 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 
 setiso:
 	propval->u32 = u;
-	return _set_sony_value_u32(params, PTP_DPC_SONY_ISO, u);
+	return _put_sony_value_u32(params, PTP_DPC_SONY_ISO, u);
 }
 
 
@@ -2541,50 +2545,12 @@ static int
 _put_Sony_FNumber(CONFIG_PUT_ARGS)
 {
 	float			fvalue;
-	time_t			start,end;
-	uint16_t		origval;
-	PTPPropertyValue	value;
 	PTPParams		*params = &(camera->pl->params);
-	GPContext 		*context = ((PTPData *) params->data)->context;
 
 	CR (gp_widget_get_value (widget, &fvalue));
 
-	do {
-		origval = dpd->CurrentValue.u16;
-
-		if (dpd->CurrentValue.u16 < fvalue*100)
-			value.u8 = 0x01;
-		else
-			value.u8 = 0xff;
-		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_FNumber, &value, PTP_DTC_UINT8 ));
-		time(&start);
-		do { 
-			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
-			C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FNumber, dpd));
-			if (dpd->CurrentValue.u16 == fvalue*100) {
-				GP_LOG_D ("Value matched");
-				break;
-			}
-			if (dpd->CurrentValue.u16 != origval) {
-				GP_LOG_D ("value changed (%d vs target %d), proceeding", origval, (int)(fvalue*100));
-				break;
-			}
-			usleep(200*1000);
-			time(&end);
-		} while (end-start <= 3);
-		if (dpd->CurrentValue.u16 == fvalue*100) {
-			GP_LOG_D ("Value matched");
-			break;
-		}
-		/* if it did not change, better abort */
-		if (dpd->CurrentValue.u16 == origval) {
-			GP_LOG_D ("value did not change (%d vs target %d), guessing failure", origval, (int)(fvalue*100));
-			break;
-		}
-	} while (1);
-
 	propval->u16 = fvalue*100; /* probably not used */
-	return GP_OK;
+	return _put_sony_value_u16 (params, PTP_DPC_FNumber, fvalue*100);
 }
 
 static int
