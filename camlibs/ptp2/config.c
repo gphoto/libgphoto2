@@ -1293,6 +1293,86 @@ _put_Nikon_OffOn_UINT8(CONFIG_PUT_ARGS) {
 	return (GP_ERROR);
 }
 
+#define PUT_SONY_VALUE_(bits) 								\
+static int										\
+_put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value,int useenumorder) {	\
+	GPContext 		*context = ((PTPData *) params->data)->context;		\
+	PTPDevicePropDesc	dpd;							\
+	PTPPropertyValue	propval;						\
+	uint32_t		origval;						\
+	time_t			start,end;						\
+											\
+	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
+											\
+	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));			\
+	do {										\
+		origval = dpd.CurrentValue.u##bits;					\
+		/* if it is a ENUM, the camera will walk through the ENUM */		\
+		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {				\
+			int i, posorig = -1, posnew = -1;				\
+											\
+			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
+				if (origval == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
+					posorig = i;					\
+				if (value == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
+					posnew = i;					\
+				if ((posnew != -1) && (posorig != -1))			\
+					break;						\
+			}								\
+			if (posnew == -1) {						\
+				gp_context_error (context, _("Target value is not in enumeration."));\
+				return GP_ERROR_BAD_PARAMETERS;				\
+			}								\
+			GP_LOG_D("posnew %d, posorig %d, value %d", posnew, posorig, value);	\
+			if (posnew > posorig)						\
+				propval.u8 = 0x01;					\
+			else								\
+				propval.u8 = 0xff;					\
+		} else {								\
+			if (value > origval)						\
+				propval.u8 = 0x01;					\
+			else								\
+				propval.u8 = 0xff;					\
+		}									\
+		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));\
+											\
+		GP_LOG_D ("value is (0x%x vs target 0x%x)", origval, value);		\
+											\
+		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */	\
+		time(&start);								\
+		do {									\
+			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));		\
+			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));	\
+											\
+			if (dpd.CurrentValue.u##bits == value) {			\
+				GP_LOG_D ("Value matched!");				\
+				break;							\
+			}								\
+			if (dpd.CurrentValue.u##bits != origval) {			\
+				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u##bits, origval, value);\
+				break;							\
+			}								\
+											\
+			usleep(200*1000);						\
+											\
+			time(&end);							\
+		} while (end-start <= 3);						\
+											\
+		if (dpd.CurrentValue.u##bits == value) {				\
+			GP_LOG_D ("Value matched!");					\
+			break;								\
+		}									\
+		if (dpd.CurrentValue.u##bits == origval) {				\
+			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u##bits, origval, value);\
+			break;								\
+		}									\
+	} while (1);									\
+	return GP_OK;									\
+}
+
+PUT_SONY_VALUE_(16) /* _put_sony_value_u16 */
+PUT_SONY_VALUE_(32) /* _put_sony_value_u32 */
+
 static int
 _get_CANON_FirmwareVersion(CONFIG_GET_ARGS) {
 	char value[64];
@@ -1421,6 +1501,15 @@ _put_ExpCompensation(CONFIG_PUT_ARGS) {
 		return GP_ERROR;
 	propval->i16 = x*1000.0;
 	return GP_OK ;
+}
+
+static int
+_put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
+	int ret;
+
+	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
+	if (ret != GP_OK) return ret;
+	return _put_sony_value_u16 (&camera->pl->params, PTP_DPC_ExposureBiasCompensation, propval->i16, 0);
 }
 
 
@@ -2250,7 +2339,8 @@ _put_ISO(CONFIG_PUT_ARGS)
 
 static int
 _get_Sony_ISO(CONFIG_GET_ARGS) {
-	int i;
+	int	i,isset=0;
+	char	buf[50];
 
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return GP_ERROR;
@@ -2260,8 +2350,6 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[50];
-
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x00ffffffU) {
 			sprintf(buf,_("Auto ISO"));
 		} else if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x01ffffffU) {
@@ -2274,90 +2362,27 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 			}
 		}
 		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32) {
+			isset=1;
 			gp_widget_set_value (*widget,buf);
+		}
+	}
+	if (!isset) {
+		if (dpd->CurrentValue.u32 == 0x00ffffffU)
+			sprintf(buf,_("Auto ISO"));
+		else if (dpd->CurrentValue.u32 == 0x01ffffffU)
+			sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
+		else {
+			if (dpd->CurrentValue.u32 & 0xff000000) {
+				sprintf(buf,_("%d Multi Frame Noise Reduction"),dpd->CurrentValue.u32 & 0xffff);
+			} else {
+				sprintf(buf,"%d",dpd->CurrentValue.u32);
+			}
+		}
+		gp_widget_set_value (*widget,buf);
 	}
 	return GP_OK;
 }
-
-#define PUT_SONY_VALUE_(bits) 								\
-static int										\
-_put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value) {	\
-	GPContext 		*context = ((PTPData *) params->data)->context;		\
-	PTPDevicePropDesc	dpd;							\
-	PTPPropertyValue	propval;						\
-	uint32_t		origval;						\
-	time_t			start,end;						\
-											\
-	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
-											\
-	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));			\
-	do {										\
-		origval = dpd.CurrentValue.u##bits;					\
-		/* if it is a ENUM, the camera will walk through the ENUM */		\
-		if (dpd.FormFlag & PTP_DPFF_Enumeration) {				\
-			int i, posorig = -1, posnew = -1;				\
-											\
-			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
-				if (origval == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
-					posorig = i;					\
-				if (value == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
-					posnew = i;					\
-				if ((posnew != -1) && (posorig != -1))			\
-					break;						\
-			}								\
-			if (posnew == -1) {						\
-				gp_context_error (context, _("Target value is not in enumeration."));\
-				return GP_ERROR_BAD_PARAMETERS;				\
-			}								\
-			if (posnew > posorig)						\
-				propval.u8 = 0x01;					\
-			else								\
-				propval.u8 = 0xff;					\
-		} else {								\
-			if (value > origval)						\
-				propval.u8 = 0x01;					\
-			else								\
-				propval.u8 = 0xff;					\
-		}									\
-		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));\
-											\
-		GP_LOG_D ("value is (0x%x vs target 0x%x)", origval, value);		\
-											\
-		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */	\
-		time(&start);								\
-		do {									\
-			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));		\
-			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));	\
-											\
-			if (dpd.CurrentValue.u##bits == value) {			\
-				GP_LOG_D ("Value matched!");				\
-				break;							\
-			}								\
-			if (dpd.CurrentValue.u##bits != origval) {			\
-				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u##bits, origval, value);\
-				break;							\
-			}								\
-											\
-			usleep(200*1000);						\
-											\
-			time(&end);							\
-		} while (end-start <= 3);						\
-											\
-		if (dpd.CurrentValue.u##bits == value) {				\
-			GP_LOG_D ("Value matched!");					\
-			break;								\
-		}									\
-		if (dpd.CurrentValue.u##bits == origval) {				\
-			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u##bits, origval, value);\
-			break;								\
-		}									\
-	} while (1);									\
-	return GP_OK;									\
-}
-
-PUT_SONY_VALUE_(16) /* _put_sony_value_u16 */
-PUT_SONY_VALUE_(32) /* _put_sony_value_u32 */
 
 static int
 _put_Sony_ISO(CONFIG_PUT_ARGS)
@@ -2384,7 +2409,7 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 
 setiso:
 	propval->u32 = u;
-	return _put_sony_value_u32(params, PTP_DPC_SONY_ISO, u);
+	return _put_sony_value_u32(params, PTP_DPC_SONY_ISO, u, 1);
 }
 
 
@@ -2550,7 +2575,7 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value (widget, &fvalue));
 
 	propval->u16 = fvalue*100; /* probably not used */
-	return _put_sony_value_u16 (params, PTP_DPC_FNumber, fvalue*100);
+	return _put_sony_value_u16 (params, PTP_DPC_FNumber, fvalue*100, 0);
 }
 
 static int
@@ -3172,6 +3197,16 @@ static struct deviceproptableu16 flash_mode[] = {
 };
 GENERIC16TABLE(FlashMode,flash_mode)
 
+static int
+_put_Sony_FlashMode(CONFIG_PUT_ARGS) {
+	int ret;
+
+	ret = _put_FlashMode(CONFIG_PUT_NAMES);
+	if (ret != GP_OK) return ret;
+	return _put_sony_value_u16 (&camera->pl->params, PTP_DPC_FlashMode, propval->u16, 0);
+}
+
+
 static struct deviceproptableu16 effect_modes[] = {
 	{ N_("Standard"),	0x0001, 0 },
 	{ N_("Black & White"),	0x0002, 0 },
@@ -3454,7 +3489,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			}
 			a = dpd->CurrentValue.u32>>16;
 			b = dpd->CurrentValue.u32&0xffff;
-			if (a*y == b*x) {
+			if ((a*y != 0) && (a*y == b*x)) {
 				GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
 				break;
 			}
@@ -3829,6 +3864,9 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("AF-A"),		0x8012, PTP_VENDOR_NIKON },
 	{ N_("Single-Servo AF"),0x8001, PTP_VENDOR_FUJI },
 	{ N_("Continuous-Servo AF"),0x8002, PTP_VENDOR_FUJI },
+
+	{ N_("AF-A"),		0x8005, PTP_VENDOR_SONY },
+	{ N_("AF-C"),		0x8004, PTP_VENDOR_SONY },
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
@@ -6334,6 +6372,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Rotation Flag"),                  "autorotation",             PTP_DPC_CANON_RotationScene,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_AutoRotation,            _put_Canon_AutoRotation },
 	{ N_("Self Timer"),                     "selftimer",                PTP_DPC_CANON_SelfTime,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_SelfTimer,               _put_Canon_SelfTimer },
 	{ N_("Assist Light"),                   "assistlight",              PTP_DPC_NIKON_AFAssist,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
+	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       0,                  PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_EOS_ExpCompensation,      PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation2,        _put_Canon_ExpCompensation2 },
@@ -6342,6 +6381,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Compensation"),             "flashcompensation",        PTP_DPC_CANON_FlashCompensation,        PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("AEB Exposure Compensation"),      "aebexpcompensation",       PTP_DPC_CANON_AEBExposureCompensation,  PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_CANON_FlashMode,                PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_FlashMode,               _put_Canon_FlashMode },
+	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_FlashMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FlashMode,                     _put_Sony_FlashMode },
 	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_FlashMode,                      0,                  PTP_DTC_UINT16, _get_FlashMode,                     _put_FlashMode },
 	{ N_("Nikon Flash Mode"),               "nikonflashmode",           PTP_DPC_NIKON_FlashMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_InternalFlashMode,       _put_Nikon_InternalFlashMode },
 	{ N_("Flash Commander Mode"),           "flashcommandermode",       PTP_DPC_NIKON_FlashCommanderMode,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashCommanderMode,      _put_Nikon_FlashCommanderMode },
@@ -6695,7 +6735,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
-					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
+					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
