@@ -3017,12 +3017,11 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 		params->deviceproperties[i].timestamp = 0;
 
 	/* FIXME: change the cache? hmm */
-	/* setting it again seems to confuse the camera, it only works by using the other method */
+	/* this works for some methods, but not for all */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
-		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceA)
 	)
-		/*return ptp_sony_setdevicecontrolvalueb (params, propcode, value, datatype);*/
-		return PTP_RC_OK;
+		return ptp_sony_setdevicecontrolvaluea (params, propcode, value, datatype);
 	return ptp_setdevicepropvalue (params, propcode, value, datatype);
 }
 
