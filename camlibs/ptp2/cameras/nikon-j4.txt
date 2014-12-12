@@ -1,0 +1,66 @@
+$ gphoto2 --summary
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: J4
+  Version: Ver.1.0011
+  Serial Number: 000000000000000000000000nnnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: Undefined Type, Association/Directory, Script, DPOF, Apple Quicktime, JPEG, TIFF
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture 1, Nikon Capture 3 
+
+Storage Devices Summary:
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
+Compression Setting(0x5004):(read only) (type=0x2) Enumeration [0,1,2,4,7] value: JPEG Norm (1)
+F-Number(0x5007):(read only) (type=0x4) Enumeration [100,110,120,130,140,150,160,170,180,190,200,220,240,250,270,280,300,320,350,380,400,420,450,480,500,530,560,600,630,670,710,760,800,850,900,950,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2400,2500,2760,2900,3000,3200,0] value: f/5.6 (560)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [32784,32785,32786,32787,32788] value: Auto (32784)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20140103T225857'
+Property 0xd303:(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
+Live View AF Area(0xd05d):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Bracketing Enable(0xd0c0):(read only) (type=0x2) Range [0 - 0, step 1] value: Off (0)
+Lens Sort(0xd0e1):(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xd038:(readwrite) (type=0x2) Enumeration [0,1,2,3,7,8,9,10,11,12,13,14] value: 12
+Nikon Exposure Time(0xd100):(read only) (type=0x6) Enumeration [4294967295,1966081,1638401,1310721,983041,851969,655361,524289,393217,327681,262145,196609,1638410,131073,1048586,983050,851978,65537,655373,655375,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65581,65586,65596,65616,65626,65636,65661,65696,65716,65736,65786,65856,65886,65936,66036,66176,66286,66336,66536,66786,67036,67136,67536,68036,68536,68736,69536,70536,71536,71936,73536,74536,75536,78036,78536,80536,81536] value: 65786
+AC Power(0xd101):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Warning Status(0xd102):(read only) (type=0x2) 0
+Flash Open(0xd1c0):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Live View Status(0xd1a2):(read only) (type=0x2) Range [0 - 1, step 1] value: Yes (1)
+Live View Prohibit Condition(0xd1a4):(read only) (type=0x6) 8912896
+Property 0xf001:(readwrite) (type=0x2) Enumeration [0,1,2,3,4] value: 0
+ISO(0xf002):(readwrite) (type=0x2) Range [0 - 52, step 1] value: 1
+Property 0xf003:(readwrite) (type=0x2) Range [0 - 60, step 1] value: 0
+Property 0xf004:(readwrite) (type=0x2) Range [224 - 84, step 1] value: 0
+Property 0xf005:(read only) (type=0x2) Range [30 - 72, step 1] value: 0
+Property 0xf006:(readwrite) (type=0x2) Range [0 - 60, step 1] value: 0
+Property 0xf007:(readwrite) (type=0x2) Range [224 - 84, step 1] value: 0
+Property 0xf008:(read only) (type=0x2) Range [30 - 60, step 1] value: 0
+Image Compression(0xf009):(readwrite) (type=0x2) Enumeration [0,1,2,3,6] value: 1
+Image Size(0xf00a):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 2
+White Balance(0xf00c):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,9] value: 0
+Long Exposure Noise Reduction(0xf00d):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+High ISO Noise Reduction(0xf00e):(readwrite) (type=0x2) Enumeration [0,3] value: 0
+Active D-Lighting(0xf00f):(readwrite) (type=0x2) Enumeration [0,5] value: 5
+Property 0xf010:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xf011:(read only) (type=0x4) Enumeration [4,1,2,0] value: 3
+Property 0xf012:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xf013:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xf015:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xf016:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xf018:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31] value: 3
+Property 0xf019:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Property 0xf01a:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xf01b:(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5] value: 0
+Movie Quality(0xf01c):(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 1
+Property 0xf00b:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xf014:(readwrite) (type=0x2) Range [1 - 254, step 1] value: 51
+Property 0xd0ab:(read only) (type=0x4) 24670
+
