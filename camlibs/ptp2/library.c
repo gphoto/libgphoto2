@@ -1136,7 +1136,9 @@ static struct {
 	{"Nikon:J3",    		  0x04b0, 0x0605, PTP_CAP|PTP_NIKON_1},
 	/* Markus Karlhuber <markus.karlhuber@gmail.com> */
 	{"Nikon:S1",    		  0x04b0, 0x0606, PTP_CAP|PTP_NIKON_1},
-
+	/* Raj Kumar <raj@archive.org> */
+	{"Nikon:J4",    		  0x04b0, 0x0609, PTP_CAP|PTP_NIKON_1},
+	
 #if 0
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	/* this was reported as not working, mass storage only:
