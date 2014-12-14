@@ -860,13 +860,19 @@ static inline int
 ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
 {
 	unsigned int ret;
+#if 0
+	unsigned int unk1, unk2;
+#endif
 
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
 
 #if 0
-	dpd->GetSet=dtoh8a(&data[PTP_dpd_Sony_GetSet]);
+	/* get set ? */
+	unk1 = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
+	unk2 = dtoh8a(&data[PTP_dpd_Sony_Unknown]);
+	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, unk1 %d unk2 %d", dpd->DevicePropertyCode, dpd->DataType, unk1, unk2);
 #endif
 	dpd->GetSet=1;
 
