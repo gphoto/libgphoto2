@@ -745,8 +745,8 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 			}
 		}
 	}
-	GP_LOG_D ("Using fallback, not found in enum... return %s as %d", value, u16val);
 	if (foundvalue) {
+		GP_LOG_D ("Using fallback, not found in enum... return %s as %d", value, u16val);
 		propval->u16 = u16val;
 		return GP_OK;
 	}
@@ -754,6 +754,7 @@ _put_Generic16Table(CONFIG_PUT_ARGS, struct deviceproptableu16* tbl, int tblsize
 		GP_LOG_E ("failed to find value %s in list", value);
 		return (GP_ERROR);
 	}
+	GP_LOG_D ("Using fallback, not found in enum... return %s as %d", value, u16val);
 	propval->u16 = intval;
 	return GP_OK;
 }
@@ -1511,7 +1512,6 @@ _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 	if (ret != GP_OK) return ret;
 	return _put_sony_value_u16 (&camera->pl->params, PTP_DPC_ExposureBiasCompensation, propval->i16, 0);
 }
-
 
 static struct deviceproptableu16 canon_assistlight[] = {
 	{ N_("On"),	0x0000, PTP_VENDOR_CANON },
@@ -2796,6 +2796,21 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Night Landscape"),0x8016, PTP_VENDOR_NIKON},
 	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
 	{ N_("Automatic (No Flash)"),	0x8018, PTP_VENDOR_NIKON},
+
+	{ N_("Intelligent Auto"),		0x8000, PTP_VENDOR_SONY},
+	{ N_("Superior Auto"),			0x8001, PTP_VENDOR_SONY},
+	{ N_("Movie"),				0x8050, PTP_VENDOR_SONY},
+	{ N_("Tele-zoom Cont. Priority AE"),	0x8031, PTP_VENDOR_SONY},
+	{ N_("Sweep Panorama"),			0x8041, PTP_VENDOR_SONY},
+	{ N_("Intelligent Auto Flash Off"),	0x8060, PTP_VENDOR_SONY},
+	{ N_("Sports Action"),			0x8011, PTP_VENDOR_SONY},
+	{ N_("Macro"),				0x8015, PTP_VENDOR_SONY},
+	{ N_("Landscape"),			0x8014, PTP_VENDOR_SONY},
+	{ N_("Sunset"),				0x8012, PTP_VENDOR_SONY},
+	{ N_("Night Scene"),			0x8013, PTP_VENDOR_SONY},
+	{ N_("Hand-held Twilight"),		0x8016, PTP_VENDOR_SONY},
+	{ N_("Night Portrait"),			0x8017, PTP_VENDOR_SONY},
+	{ N_("Picture Effect"),			0x8070, PTP_VENDOR_SONY},
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
@@ -3194,18 +3209,12 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Slow sync"),				0x8004, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain with slow sync"),		0x8005, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain sync"),			0x8006, PTP_VENDOR_FUJI},
+	
+	{ N_("Rear Curtain Sync"),			0x8003, PTP_VENDOR_SONY},
+	{ N_("Wireless Sync"),				0x8004, PTP_VENDOR_SONY},
+	{ N_("Slow Sync"),				0x8032, PTP_VENDOR_SONY},
 };
 GENERIC16TABLE(FlashMode,flash_mode)
-
-static int
-_put_Sony_FlashMode(CONFIG_PUT_ARGS) {
-	int ret;
-
-	ret = _put_FlashMode(CONFIG_PUT_NAMES);
-	if (ret != GP_OK) return ret;
-	return _put_sony_value_u16 (&camera->pl->params, PTP_DPC_FlashMode, propval->u16, 0);
-}
-
 
 static struct deviceproptableu16 effect_modes[] = {
 	{ N_("Standard"),	0x0001, 0 },
@@ -6381,7 +6390,6 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Compensation"),             "flashcompensation",        PTP_DPC_CANON_FlashCompensation,        PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("AEB Exposure Compensation"),      "aebexpcompensation",       PTP_DPC_CANON_AEBExposureCompensation,  PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_CANON_FlashMode,                PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_FlashMode,               _put_Canon_FlashMode },
-	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_FlashMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FlashMode,                     _put_Sony_FlashMode },
 	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_FlashMode,                      0,                  PTP_DTC_UINT16, _get_FlashMode,                     _put_FlashMode },
 	{ N_("Nikon Flash Mode"),               "nikonflashmode",           PTP_DPC_NIKON_FlashMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_InternalFlashMode,       _put_Nikon_InternalFlashMode },
 	{ N_("Flash Commander Mode"),           "flashcommandermode",       PTP_DPC_NIKON_FlashCommanderMode,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashCommanderMode,      _put_Nikon_FlashCommanderMode },
