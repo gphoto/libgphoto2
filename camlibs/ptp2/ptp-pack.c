@@ -2225,13 +2225,15 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				i++;
 			}
 			if (mask & 0x0040) {
+				int	value = (signed char)curdata[curoff+2];
 				/* mask 0x0040: 7 bytes, 01 01 00 00 00 00 00 observed */
+				/* exposure indicator */
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0040 content 0123456789abcd")+1); 
-				sprintf(ce[i].u.info,"OLCInfo event 0x0040 content %02x%02x%02x%02x%02x%02x%02x",
+				ce[i].u.info = malloc(strlen("OLCInfo exposure indicator 012345678901234567890123456789abcd")+1); 
+				sprintf(ce[i].u.info,"OLCInfo exposure indicator %d,%d,%d.%d (%02x%02x%02x%02x)",
 					curdata[curoff],
 					curdata[curoff+1],
-					curdata[curoff+2],
+					value/10,abs(value)%10,
 					curdata[curoff+3],
 					curdata[curoff+4],
 					curdata[curoff+5],
