@@ -1,15 +1,29 @@
 libgphoto2 2.5.5.3 snapshot
 
 ptp2:
-* Nikon D3xxx: it hides the "good" capture opcodes from the DeviceInfo. Override and add
-  them. If you see capture bugs, please report with debuglogfile.
-* Canon EOS: added "focusinfo" variable that outputs the focus information of the camera
-* Nikon DSLR: race condition on object addition handled better
-* Canon EOS: autofocusdrive=0 and cancelautofocus=1 added to cancel autofocusing, to avoid
-  blocking the camera.
+* Nikon D3000/D3100/D3200: It hides the "good" capture opcodes from the
+  DeviceInfo. Override and add them. If you see capture bugs, please report
+  with debuglogfile.
+* "exposurecompensation" now in correct size (-3.0 <-> 3.0 usually)
+* Canon EOS: decode and report "focusinfo" variable that outputs the focus information of the camera.
+* Canon EOS: autofocusdrive=0 and cancelautofocus=1 added to cancel autofocusing,
+  to avoid blocking the camera.
+* Canon EOS: "eosviewfinder" renamed to "viewfinder"
+* Sony SLT: Make property setting work for "iso", "exposurecompensation",
+  "f-number", "shutterspeed"
 * Canon EOS: crash on 700D fixed
+* Nikon DSLR: race condition on object addition handled better
 * Nikon DSLR: make sure we make a pause a bit during polling after capture.
+* IDs added:
+  Nikon: Coolpix P7800, S1, J4
+  Nikon: D3300, D610, D4s, D810, D750
+  Canon: IXUS 125HS, PowerShot Elph340HS
+  Leica M9
 * various bugfixes
+
+libgphoto2_port/usb1:
+* fixed a memory leak
+* api changed for gp_log_data to make smaller debuglogs possible
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.5.1 release
