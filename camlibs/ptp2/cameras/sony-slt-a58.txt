@@ -894,40 +894,45 @@ Informationen über Speichermedium:
 
 Properties des Geräts:
 Kompressions Parameter(0x5004):(readwrite) (type=0x2) Enumeration [2,3,16,19] value: JPEG Fine (2)
-	works
+	works, controla
 	1 - 1
 Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32785,32784,6,32769,32770,32771,32772,7,32786,32803] value: Automatic (2)
-	works
+	works, controla
 	1 - 1
 F-Nummer(0x5007):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: f/5 (500)
-	works
+	works, controlb
 	0 - 1
 Fokusmodus(0x500a):(readwrite) (type=0x4) Enumeration [1,2,3,32772,32773,32775] value: 32773
-	works
+	works, controla
 	0 - 2
 Belichtungsmessmodus(0x500b):(readwrite) (type=0x4) Enumeration [4,1,2] value: Average (1)
-	works
+	works, controla
 	0 - 2
 Blitzmodus(0x500c):(readwrite) (type=0x4) Enumeration [2,1,4,3,5,32771,32772,32817,32818] value: Fill flash (3)
 	only some are reachable, works with controla, some work only with flash popped open. weird.
 	0 - 0
 
 Belichtungs Programm Modus(0x500e):(readwrite) (type=0x4) Enumeration [32768,32769,2,3,4,1,32848,32849,32850,32851,32833,7,32785,32789,32788,32786,32787,32790,32791,32864,32817,32819,32880] value: 32768
-	0 - 2	
+	not fully done, weird
+	0 - 2
 
 Belichtungskompensation(0x5010):(readwrite) (type=0x3) Enumeration [0,3000,2700,2300,2000,1700,1300,1000,700,300,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000] value: 0,0 stops (0)
+	works, controlb
 	0 - 1
 
 Bildaufnahme Modus(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32786,32773,32772] value: Single Shot (1)
+	works, controla
 	1 - 1
 
 Property 0xd200:(readwrite) (type=0x3) Enumeration [0,2000,1700,1300,1000,700,300,-300,-700,-1000,-1300,-1700,-2000] value: 0
 	0 - 1
 Property 0xd201:(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21,32,33,34,35,36,37,38] value: 31
 	1 - 1
-Property 0xd203:(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+ImageSize 0xd203:(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+	works, controlA
 	1 - 1
-Property 0xd20d:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 65596
+Shutterspeed 0xd20d:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 65596
+	Works, controlB
 	0 - 1
 Property 0xd20e:(readwrite) (type=0x2) Enumeration [1,2,3,8,9,10,4,5,6,7] value: 7
 	0 - 2
@@ -938,7 +943,8 @@ Property 0xd210:(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
 Property 0xd21c:(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
 Property 0xd211:(readwrite) (type=0x2) Enumeration [1,2] value: 1
 Property 0xd213:(readwrite) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
-Property 0xd21e:(readwrite) (type=0x6) Enumeration [16777215,25,100,200,400,800,1600,3200,6400,12800,16000,102400,33554431,16777241,16777266,16777280,16777296,16777316,16777341,16777376,16777416,16777466,16777536,16777616,16777716,16777856,16778016,16778216,16778466,16778816,16779216,16779716,16780416,16781216,16782216,16783616,16785216,16787216,16790016,16793216,16802816] value: 16777215
+ISO 0xd21e:(readwrite) (type=0x6) Enumeration [16777215,25,100,200,400,800,1600,3200,6400,12800,16000,102400,33554431,16777241,16777266,16777280,16777296,16777316,16777341,16777376,16777416,16777466,16777536,16777616,16777716,16777856,16778016,16778216,16778466,16778816,16779216,16779716,16780416,16781216,16782216,16783616,16785216,16787216,16790016,16793216,16802816] value: 16777215
+	works, controlB
 Property 0xd21b:(readwrite) (type=0x4) Enumeration [32768] value: 32768
 Property 0xd21d:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
 Property 0xd217:(readwrite) (type=0x2) Enumeration [2,1] value: 1
