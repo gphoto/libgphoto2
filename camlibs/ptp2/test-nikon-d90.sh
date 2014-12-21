@@ -28,10 +28,10 @@ read dummy
 
 echo "***  trigger capture"
 gphoto2 --set-config capturetarget=0
-gphoto2 --set-config imagequality=2 --trigger-capture --wait-event-and-download=5s
+gphoto2 --set-config imagequality=2 --trigger-capture --wait-event-and-download=CAPTURECOMPLETE
 echo FIXME: gphoto2 --set-config imagequality=2 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
 rm capt*jpg
-gphoto2 --set-config imagequality=6 --trigger-capture --wait-event-and-download=5s 
+gphoto2 --set-config imagequality=6 --trigger-capture --wait-event-and-download=CAPTURECOMPLETE 
 echo FIXME: gphoto2 --set-config imagequality=6 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=10s
 rm capt*
 gphoto2 --set-config capturetarget=1
