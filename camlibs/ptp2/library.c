@@ -2236,13 +2236,23 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if (!params->eos_captureenabled)
 				camera_prepare_capture (camera, context);
 			memset (&dpd,0,sizeof(dpd));
+
+			/* do not set it everytime, it will cause delays */
+			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFMode, &dpd);
+			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u16 != 1)) {
+				/* 0 means off, 1 means on */
+				val.u16 = 1;
+				C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFMode, &val, PTP_DTC_UINT16),
+					   "setval of evf enable to 1 failed (curval is %d)!", dpd.CurrentValue.u16);
+			}
+			ptp_free_devicepropdesc (&dpd);
 			/* do not set it everytime, it will cause delays */
 			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
 			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
 				/* 2 means PC, 1 means TFT */
 				val.u32 = 2;
 				C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32),
-					   "setval of evf outputmode to 2 failed!");
+					   "setval of evf outputmode to 2 failed (curval is %d)!", dpd.CurrentValue.u32);
 			}
 			ptp_free_devicepropdesc (&dpd);
 
