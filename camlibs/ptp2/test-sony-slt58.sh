@@ -41,5 +41,10 @@ echo "*** config "
 gphoto2 --list-config
 gphoto2 --list-all-config
 
+gphoto2 --get-config iso
+gphoto2 --set-config iso=200
+gphoto2 --get-config iso
+gphoto2 --set-config iso="Auto ISO"
+
 echo "*** DONE"
 echo rm -rf $dir
