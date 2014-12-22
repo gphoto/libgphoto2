@@ -1,4 +1,4 @@
-libgphoto2 2.5.5.3 snapshot
+libgphoto2 2.5.6 release
 
 ptp2:
 * Nikon D3000/D3100/D3200: It hides the "good" capture opcodes from the
