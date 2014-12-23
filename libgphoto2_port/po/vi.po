@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port-2.5.5\n"
+"Project-Id-Version: libgphoto2_port 2.5.6\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-08-16 15:39+0200\n"
-"PO-Revision-Date: 2014-08-23 14:28+0700\n"
+"POT-Creation-Date: 2014-12-18 19:19+0100\n"
+"PO-Revision-Date: 2014-12-23 07:43+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
 "Language: vi\n"
@@ -25,7 +25,7 @@ msgstr ""
 
 #: libgphoto2_port/gphoto2-port-info-list.c:409
 msgid "Generic Port"
-msgstr "Cổng Chung"
+msgstr "Cổng chung"
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
@@ -49,7 +49,7 @@ msgstr "Thao tác không được hỗ trợ"
 
 #: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Fixed limit exceeded"
-msgstr "Cố định vượt quá giới hạn"
+msgstr "Giới hạn cứng đã bị vượt quá"
 
 #: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Timeout reading from or writing to the port"
@@ -109,7 +109,7 @@ msgstr "Không thể quyền đòi thiết bị USB"
 
 #: libgphoto2_port/gphoto2-port-result.c:98
 msgid "Could not lock the device"
-msgstr "Không thể khoá thiết bị"
+msgstr "Không thể khóa thiết bị"
 
 #: libgphoto2_port/gphoto2-port-result.c:100
 msgid "libhal error"
@@ -126,17 +126,17 @@ msgstr "Thao tác “%s” không được hỗ trợ bởi thiết bị này"
 
 #: libgphoto2_port/gphoto2-port.c:60
 msgid "The port has not yet been initialized"
-msgstr "Chưa khởi tạo cổng đó"
+msgstr "Cổng còn chưa được khởi tạo"
 
-#: libgphoto2_port/gphoto2-port.c:685
+#: libgphoto2_port/gphoto2-port.c:682
 msgid "low"
 msgstr "thấp"
 
-#: libgphoto2_port/gphoto2-port.c:686
+#: libgphoto2_port/gphoto2-port.c:683
 msgid "high"
 msgstr "cao"
 
-#: libgphoto2_port/gphoto2-port.c:1228
+#: libgphoto2_port/gphoto2-port.c:1211
 msgid "No error description available"
 msgstr "Không có sẵn mô tả lỗi"
 
@@ -144,17 +144,17 @@ msgstr "Không có sẵn mô tả lỗi"
 #: disk/disk.c:260 disk/disk.c:283
 #, c-format
 msgid "Media '%s'"
-msgstr "Media “%s”"
+msgstr "Đa phương tiện “%s”"
 
 #: serial/unix.c:226
 #, c-format
 msgid "Could not lock device '%s'"
-msgstr "Không thể khoá thiết bị “%s”"
+msgstr "Không thể khóa thiết bị “%s”"
 
 #: serial/unix.c:236 usbdiskdirect/linux.c:96
 #, c-format
 msgid "Device '%s' is locked by pid %d"
-msgstr "Thiết bị “%s” bị khoá bởi tiến trình có mã số (PID) %d"
+msgstr "Thiết bị “%s” bị khóa bởi tiến trình có mã số (PID) %d"
 
 #: serial/unix.c:239 usbdiskdirect/linux.c:99
 #, c-format
@@ -169,12 +169,12 @@ msgstr "Không thể mở khóa thiết bị “%s”"
 #: serial/unix.c:280 usbdiskdirect/linux.c:128
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Không thể mở khoá thiết bị “%s” bởi vì nó bị PID %d khoá."
+msgstr "Không thể mở khóa thiết bị “%s” bởi vì nó bị PID %d khóa."
 
 #: serial/unix.c:284 usbdiskdirect/linux.c:132
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Không thể mở khoá thiết bị “%s” (dev_unlock [mở khoá thiết bị] đã trả về %d)"
+msgstr "Không thể mở khóa thiết bị “%s” (dev_unlock [mở khóa thiết bị] đã trả về %d)"
 
 #: serial/unix.c:342
 #, c-format
@@ -259,12 +259,12 @@ msgstr "Không thể ghi vào “%s” (%m)."
 msgid "Could not read from '%s' (%m)."
 msgstr "Không thể đọc từ “%s” (%m)."
 
-#: usb/libusb.c:261 libusb1/libusb1.c:368
+#: usb/libusb.c:261 libusb1/libusb1.c:371
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Không thể mở thiết bị USB (%s)."
 
-#: usb/libusb.c:274 libusb1/libusb1.c:377
+#: usb/libusb.c:274 libusb1/libusb1.c:380
 msgid "Camera is already in use."
 msgstr "Máy ảnh đã được được dùng rồi."
 
@@ -273,29 +273,29 @@ msgstr "Máy ảnh đã được được dùng rồi."
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Không thể gỡ ra trình điều khiển hạt nhân “%s” của thiết bị máy ảnh."
 
-#: usb/libusb.c:287 libusb1/libusb1.c:392
+#: usb/libusb.c:287 libusb1/libusb1.c:395
 msgid "Could not query kernel driver of device."
 msgstr "Không thể truy vấn trình điều khiển hạt nhân của thiết bị."
 
-#: usb/libusb.c:296 libusb1/libusb1.c:399
+#: usb/libusb.c:296 libusb1/libusb1.c:402
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Không thể yêu cầu giao diện %d (%s). Kiểm tra xem không có chương trình khác (%s) hoặc mô-đun hạt nhân (v.d. %s) đang sử dụng thiết bị và bạn có quyền đọc/ghi vào thiết bị này."
 
-#: usb/libusb.c:308 libusb1/libusb1.c:410
+#: usb/libusb.c:308 libusb1/libusb1.c:413
 msgid "MacOS PTPCamera service"
 msgstr "Dịch vụ MacOS PTPCamera"
 
-#: usb/libusb.c:310 libusb1/libusb1.c:412
+#: usb/libusb.c:310 libusb1/libusb1.c:415
 msgid "unknown libgphoto2 using program"
 msgstr "không hiểu chương trình dùng libgphoto2"
 
-#: usb/libusb.c:327 libusb1/libusb1.c:430
+#: usb/libusb.c:327 libusb1/libusb1.c:433
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Không thể thả giao diện %d (%s)."
 
-#: usb/libusb.c:342 libusb1/libusb1.c:445
+#: usb/libusb.c:342 libusb1/libusb1.c:448
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Không thể đặt lại cổng USB (%s)."
@@ -305,54 +305,54 @@ msgstr "Không thể đặt lại cổng USB (%s)."
 msgid "Could not close USB port (%s)."
 msgstr "Không thể đóng cổng USB (%s)."
 
-#: usb/libusb.c:633 libusb1/libusb1.c:689
+#: usb/libusb.c:633 libusb1/libusb1.c:692
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Không thể đặt cấu hình %d/%d (%s)"
 
-#: usb/libusb.c:664 libusb1/libusb1.c:717
+#: usb/libusb.c:664 libusb1/libusb1.c:720
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Không thể đặt altsetting (cài đặt xen kẽ) từ %d thành %d (%s)"
 
-#: usb/libusb.c:753 libusb1/libusb1.c:878
+#: usb/libusb.c:753 libusb1/libusb1.c:881
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Mã sản phẩm hay mã nhà sản xuất (0x%x, 0x%x) không phải hợp lệ."
 
-#: usb/libusb.c:824 usb/libusb.c:910 libusb1/libusb1.c:847
-#: libusb1/libusb1.c:939
+#: usb/libusb.c:824 usb/libusb.c:910 libusb1/libusb1.c:850
+#: libusb1/libusb1.c:942
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (nhà sản xuất 0x%x, sản phẩm 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: usb/libusb.c:1203 libusb1/libusb1.c:1228
+#: usb/libusb.c:1203 libusb1/libusb1.c:1231
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Không tìm thấy thiết bị USB (hạng 0x%x, lớp con 0x%x, giao thức 0x%x). Kiểm tra xem thiết bị này được kết nối đến máy tính."
 
-#: libusb1/libusb1.c:386
+#: libusb1/libusb1.c:389
 msgid "Could not detach kernel driver of camera device."
 msgstr "Không thể gỡ ra trình điều khiển hạt nhân của thiết bị máy ảnh."
 
-#: libusb1/libusb1.c:454
+#: libusb1/libusb1.c:457
 msgid "Could not reattach kernel driver of camera device."
 msgstr "Không thể gỡ kết nối lại trình điều khiển hạt nhân của thiết bị máy ảnh."
 
 #: usbscsi/linux.c:109
 #, c-format
 msgid "Device '%s' is locked by another app."
-msgstr "Thiết bị “%s” bị khoá bởi ứng dụng khác."
+msgstr "Thiết bị “%s” bị khóa bởi ứng dụng khác."
 
 #: usbscsi/linux.c:114
 #, c-format
 msgid "Failed to lock '%s' (%m)."
-msgstr "Gặp lỗi khi khoá “%s” (%m)."
+msgstr "Gặp lỗi khi khóa “%s” (%m)."
 
 #: usbscsi/linux.c:130
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
-msgstr "Gặp lỗi khi bỏ khoá “%s” (%m)."
+msgstr "Gặp lỗi khi mở khóa “%s” (%m)."
 
 #: usbscsi/linux.c:231
 msgid "USB Mass Storage raw SCSI"
@@ -382,11 +382,11 @@ msgstr "Không thể gửi câu lệnh scsi đến: “%s” (%m)."
 #~ msgstr "Đã tải “%s” (“%s”) từ “%s”."
 
 #~ msgid "Using ltdl to load io-drivers from '%s'..."
-#~ msgstr "Đang dùng ltdl để tải các trình điều khiển V/R từ “%s”..."
+#~ msgstr "Đang dùng ltdl để tải các trình điều khiển V/R từ “%s”…"
 
 #~ msgid "Counting entries (%i available)..."
 #~ msgid_plural "Counting entries (%i available)..."
-#~ msgstr[0] "Đang đếm số lượng mục tin (có %i sẵn sàng)..."
+#~ msgstr[0] "Đang đếm số lượng mục tin (có %i sẵn sàng)…"
 
 #~ msgid "%i regular entry available."
 #~ msgid_plural "%i regular entries available."
@@ -394,13 +394,13 @@ msgstr "Không thể gửi câu lệnh scsi đến: “%s” (%m)."
 
 #~ msgid "Looking for path '%s' (%i entry available)..."
 #~ msgid_plural "Looking for path '%s' (%i entries available)..."
-#~ msgstr[0] "Đang tìm cho đường đẫn “%s” (%i mục sẵn sàng)..."
+#~ msgstr[0] "Đang tìm cho đường đẫn “%s” (%i mục sẵn sàng)…"
 
 #~ msgid "Starting regex search for '%s'..."
-#~ msgstr "Đang bắt đầu quá trình tìm kiếm bằng biểu thức chính quy cho “%s”..."
+#~ msgstr "Đang bắt đầu quá trình tìm kiếm bằng biểu thức chính quy cho “%s”…"
 
 #~ msgid "Trying '%s'..."
-#~ msgstr "Đang thử “%s”..."
+#~ msgstr "Đang thử “%s”…"
 
 #~ msgid "regcomp failed"
 #~ msgstr "regcomp gặp lỗi"
@@ -412,14 +412,14 @@ msgstr "Không thể gửi câu lệnh scsi đến: “%s” (%m)."
 #~ msgstr "regexec (thực hiện biểu thức chính quy) gặp lỗi"
 
 #~ msgid "Looking up entry '%s'..."
-#~ msgstr "Tìm kiếm mục “%s”... "
+#~ msgstr "Tìm kiếm mục “%s”… "
 
 #~ msgid "Getting info of entry %i (%i available)..."
 #~ msgid_plural "Getting info of entry %i (%i available)..."
-#~ msgstr[0] "Đang lấy dữ liệu của mục %i (có %i sẵn sàng)..."
+#~ msgstr[0] "Đang lấy dữ liệu của mục %i (có %i sẵn sàng)…"
 
 #~ msgid "Creating new device..."
-#~ msgstr "Đang tạo thiết bị mới..."
+#~ msgstr "Đang tạo thiết bị mới…"
 
 #~ msgid "Could not load '%s' ('%s')."
 #~ msgstr "Không thể tải “%s” (“%s”)."
@@ -428,19 +428,19 @@ msgstr "Không thể gửi câu lệnh scsi đến: “%s” (%m)."
 #~ msgstr "Không tìm thấy “gp_port_library_operations” (các thao tác thư viện cổng gp) tại “%s” (”%s”)"
 
 #~ msgid "Opening %s port..."
-#~ msgstr "Đang mở cổng %s..."
+#~ msgstr "Đang mở cổng %s…"
 
 #~ msgid "Closing port..."
-#~ msgstr "Đang đóng cổng..."
+#~ msgstr "Đang đóng cổng…"
 
 #~ msgid "Resetting port..."
-#~ msgstr "Đang đặt lại cổng..."
+#~ msgstr "Đang đặt lại cổng…"
 
 #~ msgid "Freeing port..."
-#~ msgstr "Đang giải phóng cổng..."
+#~ msgstr "Đang giải phóng cổng…"
 
 #~ msgid "Writing %i=0x%x byte(s) to port..."
-#~ msgstr "Đang ghi %i=0x%x byte ra cổng..."
+#~ msgstr "Đang ghi %i=0x%x byte ra cổng…"
 
 #~ msgid "Could only write %i out of %i byte"
 #~ msgid_plural "Could only write %i out of %i bytes"
@@ -448,7 +448,7 @@ msgstr "Không thể gửi câu lệnh scsi đến: “%s” (%m)."
 
 #~ msgid "Reading %i=0x%x byte from port..."
 #~ msgid_plural "Reading %i=0x%x bytes from port..."
-#~ msgstr[0] "Đang đọc %i=0x%x byte từ cổng..."
+#~ msgstr[0] "Đang đọc %i=0x%x byte từ cổng…"
 
 #~ msgid "Could only read %i out of %i byte"
 #~ msgid_plural "Could only read %i out of %i byte(s)"
@@ -456,50 +456,50 @@ msgstr "Không thể gửi câu lệnh scsi đến: “%s” (%m)."
 
 #~ msgid "Reading %i=0x%x byte from interrupt endpoint..."
 #~ msgid_plural "Reading %i=0x%x bytes from interrupt endpoint..."
-#~ msgstr[0] "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị ngắt..."
+#~ msgstr[0] "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị ngắt…"
 
 #~ msgid "Could only read %i out of %i byte(s)"
 #~ msgstr "Chỉ đọc được %i trong số %i byte"
 
 #~ msgid "Reading %i=0x%x byte from interrupt endpoint (fast)..."
 #~ msgid_plural "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
-#~ msgstr[0] "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị ngắt (nhanh)..."
+#~ msgstr[0] "Đang đọc %i=0x%x byte từ thời điểm cuối cùng bị ngắt (nhanh)…"
 
 #~ msgid "Setting timeout to %i millisecond(s)..."
-#~ msgstr "Đang đặt thời gian chờ tối đa thành %i mi-li-giây..."
+#~ msgstr "Đang đặt thời gian chờ tối đa thành %i mi-li-giây…"
 
 #~ msgid "Getting timeout..."
-#~ msgstr "Đang lấy thời gian chờ tối đa..."
+#~ msgstr "Đang lấy thời gian chờ tối đa…"
 
 #~ msgid "Current timeout: %i milliseconds"
 #~ msgstr "Thời gian chờ tối đa hiện thời: %i mi-li-giây"
 
 #~ msgid "Setting settings..."
-#~ msgstr "Đang cài đặt các cài đặt...."
+#~ msgstr "Đang cài đặt các cài đặt…."
 
 #~ msgid "Getting level of pin %i..."
-#~ msgstr "Đang lấy mức của chân %i..."
+#~ msgstr "Đang lấy mức của chân %i…"
 
 #~ msgid "Level of pin %i: %i"
 #~ msgstr "Mức của chân %i: %i"
 
 #~ msgid "Setting pin %i (%s: '%s') to '%s'..."
-#~ msgstr "Đăng đặt chân %i (%s: “%s”) thành “%s”... "
+#~ msgstr "Đăng đặt chân %i (%s: “%s”) thành “%s”… "
 
 #~ msgid "Sending break (%i milliseconds)..."
-#~ msgstr "Đang gửi lệnh ngắt (%i mi-li-giây)..."
+#~ msgstr "Đang gửi lệnh ngắt (%i mi-li-giây)…"
 
 #~ msgid "Flushing port..."
-#~ msgstr "Đang đẩy dữ liệu lên cổng..."
+#~ msgstr "Đang đẩy dữ liệu lên cổng…"
 
 #~ msgid "Clear halt..."
-#~ msgstr "Thoát khỏi trạng thái bị ngừng..."
+#~ msgstr "Thoát khỏi trạng thái bị ngừng…"
 
 #~ msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-#~ msgstr "Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
+#~ msgstr "Đang ghi thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)…"
 
 #~ msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-#~ msgstr "Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)..."
+#~ msgstr "Đang đọc thông điệp (yêu cầu=0x%x giá trị=0x%x chỉ mục=0x%x kích cỡ=%i=0x%x)…"
 
 #~ msgid "Device has driver '%s' attached."
 #~ msgstr "Trình điều khiển “%s” được gắn nối."
