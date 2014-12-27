@@ -943,6 +943,9 @@ static struct {
 	/* Dale Pontius <DEPontius@edgehp.net> */
 	{"Nikon:Coolpix P7100 (PTP mode)",0x04b0, 0x018b, PTP_CAP},
 
+	/* "Dr. Ing. Dieter Jurzitza" <dieter.jurzitza@t-online.de> */
+	{"Nikon:Coolpix 9400  (PTP mode)",0x04b0, 0x0191, PTP_CAP},
+
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix L820  (PTP mode)",0x04b0, 0x0192, PTP_CAP},
 	/* https://sourceforge.net/p/gphoto/feature-requests/429/ */
