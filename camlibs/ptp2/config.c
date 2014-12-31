@@ -5391,7 +5391,7 @@ _get_Nikon_ViewFinder(CONFIG_GET_ARGS) {
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	if (LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8) != PTP_RC_OK ))
+	if (LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8)) != PTP_RC_OK )
 		value.u8 = 0;
 	val = value.u8 ? 1 : 0;
 	gp_widget_set_value  (*widget, &val);
