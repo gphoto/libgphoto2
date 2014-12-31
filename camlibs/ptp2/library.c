@@ -1079,13 +1079,13 @@ static struct {
 	/* Stephan Barth at SUSE */
 	{"Nikon:DSC D5000 (PTP mode)",    0x04b0, 0x0423, PTP_CAP|PTP_CAP_PREVIEW},
 	/* IRC reporter */
-	{"Nikon:DSC D3000 (PTP mode)",    0x04b0, 0x0424, PTP_CAP},
+	{"Nikon:DSC D3000 (PTP mode)",    0x04b0, 0x0424, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Andreas Dielacher <andreas.dielacher@gmail.com> */
 	{"Nikon:DSC D300s (PTP mode)",    0x04b0, 0x0425, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Matthias Blaicher <blaicher@googlemail.com> */
 	{"Nikon:DSC D3s (PTP mode)",      0x04b0, 0x0426, PTP_CAP|PTP_CAP_PREVIEW},
 	/* SWPLinux IRC reporter... does not have liveview -lowend model. */
-	{"Nikon:DSC D3100 (PTP mode)",	  0x04b0, 0x0427, PTP_CAP},
+	{"Nikon:DSC D3100 (PTP mode)",	  0x04b0, 0x0427, PTP_CAP|PTP_CAP_PREVIEW},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3140014&group_id=8874 */
 	{"Nikon:DSC D7000 (PTP mode)",    0x04b0, 0x0428, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1099,8 +1099,7 @@ static struct {
 	{"Nikon:DSC D4",	          0x04b0, 0x042b, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Lihuijun <lihuiplus@hotmail.com> */
-	/* cheap version, but perhaps has hidden commands */
-	{"Nikon:DSC D3200",	          0x04b0, 0x042c, PTP_CAP/*|PTP_CAP_PREVIEW*/},
+	{"Nikon:DSC D3200",	          0x04b0, 0x042c, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:DSC D600",	          0x04b0, 0x042d, PTP_CAP|PTP_CAP_PREVIEW},
@@ -1116,7 +1115,7 @@ static struct {
 	{"Nikon:DSC D5300",               0x04b0, 0x0431, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/449/ */
-	{"Nikon:DSC D3300",               0x04b0, 0x0433, PTP_CAP|PTP_CAP_PREVIEW|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:DSC D3300",               0x04b0, 0x0433, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl> */
 	{"Nikon:DSC D610",                0x04b0, 0x0434, PTP_CAP|PTP_CAP_PREVIEW},
