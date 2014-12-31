@@ -1553,17 +1553,18 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
 	return s;
 }
 
-/* 32 bit size
- * 16 bit subsize
- * 16 bit version (?)
- * 16 bit focus_points_in_struct
- * 16 bit focus_points_in_use
- * 16 bit sizex, 16 bit sizey
- * 16 bit othersizex, 16 bit othersizey
- * 16 bit array height[focus_points_in_struct]
- * 16 bit array width[focus_points_in_struct]
- * 16 bit array offsetheight[focus_points_in_struct] middle is 0
- * 16 bit array offsetwidth[focus_points_in_struct] middle is ?
+/* 00: 32 bit size
+ * 04: 16 bit subsize
+ * 08: 16 bit version (?)
+ * 0c: 16 bit focus_points_in_struct
+ * 10: 16 bit focus_points_in_use
+ * 14: variable arrays:
+ * 	16 bit sizex, 16 bit sizey
+ * 	16 bit othersizex, 16 bit othersizey
+ * 	16 bit array height[focus_points_in_struct]
+ * 	16 bit array width[focus_points_in_struct]
+ * 	16 bit array offsetheight[focus_points_in_struct] middle is 0
+ * 	16 bit array offsetwidth[focus_points_in_struct] middle is ?
  * bitfield of selected focus points, starting with 0 [size focus_points_in_struct in bits]
  * unknown stuff , likely which are active
  * 16 bit 0xffff
@@ -1592,11 +1593,11 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 	maxlen = focus_points_in_use*6*4 + focus_points_in_use + 100;
 	if (halfsize != size-4) {
 		ptp_error(params, "halfsize %d is not expected %d", halfsize, size-4);
-		return NULL;
+		return "bad size";
 	}
-	if (focus_points_in_struct*2*4 + 20 + 8 > halfsize) {
-		ptp_error(params, "size %d is too large for fp in struct %d", focus_points_in_struct*2*4 + 20 + 8, halfsize);
-		return NULL;
+	if (20 + focus_points_in_struct*8 + (focus_points_in_struct+7)/8 > size) {
+		ptp_error(params, "size %d is too large for fp in struct %d", focus_points_in_struct*8 + 20 + (focus_points_in_struct+7)/8, size);
+		return "bad size 2";
 	}
 #if 0
 	ptp_debug(params,"d1d3 content:");
@@ -1608,7 +1609,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 
 	str = (char*)malloc( maxlen );
 	if (!str)
-		return str;
+		return NULL;
 	p = str;
 
 	p += sprintf(p,"eosversion=%d,size=%dx%d,size2=%dx%d,points={", version, sizeX, sizeY, size2X, size2Y);
