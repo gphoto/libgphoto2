@@ -157,16 +157,25 @@ static int
 save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *status)
 {
 	int imagetype;
+	int image_resolution;
 	uint8_t buf[65536];
 	uint32_t current;
 
-	if (status->image_format != PSLR_IMAGE_FORMAT_JPEG) {
-		gp_log (GP_LOG_ERROR, "pentax", "Sorry, don't know how to make capture work with RAW format yet :(\n");
-		return GP_ERROR_NOT_SUPPORTED;
+	switch (status->image_format) {
+		case PSLR_IMAGE_FORMAT_JPEG:
+			imagetype = status->jpeg_quality + 1;
+			image_resolution = status->jpeg_resolution;
+		break;
+		case PSLR_IMAGE_FORMAT_RAW:
+			imagetype = 0;
+			image_resolution = 0;
+		break;
+		default:
+			gp_log (GP_LOG_ERROR, "pentax", "Sorry, only JPEG and PEF RAW files are supported\n");
+			return GP_ERROR;
 	}
-	imagetype = status->jpeg_quality + 1;
-	GP_DEBUG("get buffer %d type %d res %d\n", bufno, imagetype, status->jpeg_resolution);
 
+	GP_DEBUG("get buffer %d type %d res %d\n", bufno, imagetype, image_resolution);
 	if ( pslr_buffer_open(camhandle, bufno, imagetype, status->jpeg_resolution) != PSLR_OK)
 		return GP_ERROR;
 
@@ -199,12 +208,22 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	pslr_shutter (p);
 
 	strcpy (path->folder, "/");
-	sprintf (path->name, "capt%04d.jpg", capcnt++);
+	const char *mime;
+	if (status.image_format == PSLR_IMAGE_FORMAT_JPEG) {
+		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		mime = GP_MIME_JPEG;
+	} else if (status.image_format == PSLR_IMAGE_FORMAT_RAW &&
+			status.raw_format == PSLR_RAW_FORMAT_PEF) {
+		sprintf (path->name, "capt%04d.pef", capcnt++);
+		mime = GP_MIME_RAW;
+	} else {
+		return GP_ERROR;
+	}
 
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
 	gp_file_set_mtime (file, time(NULL));
-	gp_file_set_mime_type (file, GP_MIME_JPEG);
+	gp_file_set_mime_type (file, mime);
 
 	while (1) {
 		length = save_buffer( p, (int)0, file, &status);
@@ -281,14 +300,24 @@ camera_wait_for_event (Camera *camera, int timeout,
 				break;
 		if (bufno == 16) goto next;
 
+		const char *mime;
 		path = malloc(sizeof(CameraFilePath));
 		strcpy (path->folder, "/");
-		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		if (status.image_format == PSLR_IMAGE_FORMAT_JPEG) {
+			sprintf (path->name, "capt%04d.jpg", capcnt++);
+			mime = GP_MIME_JPEG;
+		} else if (status.image_format == PSLR_IMAGE_FORMAT_RAW &&
+				status.raw_format == PSLR_RAW_FORMAT_PEF) {
+			sprintf (path->name, "capt%04d.pef", capcnt++);
+			mime = GP_MIME_RAW;
+		} else {
+			return GP_ERROR;
+		}
 
 		ret = gp_file_new(&file);
 		if (ret!=GP_OK) return ret;
 		gp_file_set_mtime (file, time(NULL));
-		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		gp_file_set_mime_type (file, mime);
 
 		while (1) {
 			length = save_buffer( p, bufno, file, &status);

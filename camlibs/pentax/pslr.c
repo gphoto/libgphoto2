@@ -47,7 +47,7 @@
 
 #include "pslr.h"
 
-#define MAX_SEGMENTS 4
+#define MAX_SEGMENTS 20
 #define MAX_RESOLUTIONS 4
 #define POLL_INTERVAL 100000 /* Number of us to wait when polling */
 #define BLKSZ 65536 /* Block size for downloads; if too big, we get
@@ -590,7 +590,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
             CHECK(ipslr_buffer_segment_info(p, &info));
             CHECK(ipslr_next_segment(p));
             DPRINT("Recover: type=%d\n", info.type);
-        } while (++retry2 < 10 && info.type != PSLR_BUFFER_SEGMENT_LAST);
+        } while (++retry2 < 100 && info.type != PSLR_BUFFER_SEGMENT_LAST);
     }
 
     if (retry == 3)
@@ -617,7 +617,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, int buftype, int bufres)
         CHECK(ipslr_next_segment(p));
         buf_total += info.length;
         i++;
-    } while (i < 9 && info.type != PSLR_BUFFER_SEGMENT_LAST);
+    } while (i < 100 && info.type != PSLR_BUFFER_SEGMENT_LAST);
     p->segment_count = j;
     p->buffer_len = buf_total;
     p->offset = 0;
@@ -981,6 +981,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
         CHECK(read_result(p, buf, n));
         memset(status, 0, sizeof(*status));
 
+        status->bufmask = get_uint32(&buf[0x10]);
         status->image_format = PSLR_IMAGE_FORMAT_RAW;
         status->raw_format = PSLR_RAW_FORMAT_PEF;
 
