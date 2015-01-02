@@ -85,6 +85,11 @@ camera_abilities (CameraAbilitiesList *list)
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
 		return ret;
 
+	strcpy (a.model, "Pentax:K100DS");
+	a.usb_product		= 0x00a1;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
 	strcpy (a.model, "Pentax:K200D");
 	a.usb_product		= 0x0093;
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))

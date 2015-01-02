@@ -43,6 +43,8 @@
 #define PSLR_ID2_K110D   0x1ac
 #define PSLR_ID1_K100D   0x12b9c
 #define PSLR_ID2_K100D   0x189
+#define PSLR_ID1_K100DS  0x12ba2
+#define PSLR_ID2_K100DS  0x189
 #define PSLR_ID1_IST_D   0x12994
 #define PSLR_ID2_IST_D   0x141
 #define PSLR_ID1_IST_DS  0x12aa2

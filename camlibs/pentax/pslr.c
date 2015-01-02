@@ -159,6 +159,7 @@ static uint32_t get_uint32(uint8_t *buf);
 static bool is_k10d(ipslr_handle_t *p);
 static bool is_k20d(ipslr_handle_t *p);
 static bool is_k30(ipslr_handle_t *p);
+static bool is_k100ds(ipslr_handle_t *p);
 static bool is_istds(ipslr_handle_t *p);
 
 static pslr_progress_callback_t progress_callback = NULL;
@@ -169,6 +170,7 @@ static ipslr_model_info_t camera_models[] = {
     { PSLR_ID1_K10D, PSLR_ID2_K10D, "K10D", { "10", "6", "2" } },
     { PSLR_ID1_K110D, PSLR_ID2_K110D, "K110D", { "6", "4", "2" } },
     { PSLR_ID1_K100D, PSLR_ID2_K100D, "K100D", { "6", "4", "2" } },
+    { PSLR_ID1_K100DS, PSLR_ID2_K100DS, "K100DS", {} },
     { PSLR_ID1_IST_DS2, PSLR_ID2_IST_DS2, "*ist DS2", { "6", "4", "2" } },
     { PSLR_ID1_IST_DL, PSLR_ID2_IST_DL, "*ist DL", { "6", "4", "2" } },
     { PSLR_ID1_IST_DS, PSLR_ID2_IST_DS, "*ist DS", { "6", "4", "2" } },
@@ -268,7 +270,7 @@ int pslr_connect(pslr_handle_t h)
     CHECK(ipslr_identify(p));
     CHECK(ipslr_status_full(p, &p->status));
     DPRINT("init bufmask=0x%x\n", p->status.bufmask);
-    if (is_k10d(p) || is_k20d(p) || is_k30(p))
+    if (is_k10d(p) || is_k20d(p) || is_k30(p) || is_k100ds(p))
         CHECK(ipslr_cmd_00_09(p, 2));
     CHECK(ipslr_status_full(p, &p->status));
     CHECK(ipslr_cmd_10_0a(p, 1));
@@ -957,6 +959,22 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status)
         return PSLR_OK;
     }
 
+    if (p->model && is_k100ds(p)) {
+        /* K100DS (Super) status block */
+        if (n != 264)  {
+            DPRINT("only got %d bytes\n", n);
+            return PSLR_READ_ERROR;
+        }
+
+        CHECK(read_result(p, buf, n));
+        memset(status, 0, sizeof(*status));
+
+        status->image_format = PSLR_IMAGE_FORMAT_RAW;
+        status->raw_format = PSLR_RAW_FORMAT_PEF;
+
+        return PSLR_OK;
+    }
+
     if (p->model && is_istds(p)) {
         /* *ist DS status block */
         if (n != 0x108) {
@@ -1456,6 +1474,15 @@ static bool is_k30(ipslr_handle_t *p)
     if (p->model && p->model->id1 == PSLR_ID1_K30
         && p->model->id2 == PSLR_ID2_K30)
         return true;
+    return false;
+}
+
+static bool is_k100ds(ipslr_handle_t *p)
+{
+    if (p->model && p->model->id1 == PSLR_ID1_K100DS
+        && p->model->id2 == PSLR_ID2_K100DS)
+        return true;
+
     return false;
 }
 
