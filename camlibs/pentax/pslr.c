@@ -1082,7 +1082,7 @@ static int ipslr_next_segment(ipslr_handle_t *p)
     int r;
     CHECK(ipslr_write_args(p, 1, 0));
     CHECK(command(p, 0x04, 0x01, 0x04));
-    usleep(100000); /* needed !! 100 too short, 1000 not short enough for PEF */
+    usleep(10000); /* needed !! 100 too short, 1000 not short enough for PEF */
     r = get_status(p);
     if (r == 0)
         return PSLR_OK;
