@@ -222,6 +222,7 @@ int pslr_set_jpeg_contrast(pslr_handle_t h, int32_t contrast);
 int pslr_set_jpeg_saturation(pslr_handle_t h, int32_t saturation);
 
 int pslr_set_image_format(pslr_handle_t h, pslr_image_format_t format);
+int pslr_is_image_format_supported(pslr_handle_t h, pslr_image_format_t format);
 int pslr_set_raw_format(pslr_handle_t h, pslr_raw_format_t format);
 
 int pslr_delete_buffer(pslr_handle_t h, int bufno);

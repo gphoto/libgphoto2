@@ -366,30 +366,50 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
-
-	gp_widget_new (GP_WIDGET_RADIO, _("Image Size"), &t);
-	gp_widget_set_name (t, "imgsize");
-	for (i = 0; i < PSLR_MAX_RESOLUTIONS; i++)
-	{
-		gp_widget_add_choice (t, available_resolutions[i]);
+	gp_widget_new (GP_WIDGET_RADIO, _("Image format"), &t);
+	gp_widget_set_name (t, "img_format");
+	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_JPEG))
+		gp_widget_add_choice (t, "JPEG");
+	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_RAW))
+		gp_widget_add_choice (t, "RAW");
+	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_RAW_PLUS))
+		gp_widget_add_choice (t, "RAW+");
+	switch (status.image_format) {
+		case PSLR_IMAGE_FORMAT_JPEG: gp_widget_set_value (t, "JPEG"); break;
+		case PSLR_IMAGE_FORMAT_RAW: gp_widget_set_value (t, "RAW"); break;
+		case PSLR_IMAGE_FORMAT_RAW_PLUS: gp_widget_set_value (t, "RAW+"); break;
+		default:
+			sprintf(buf, _("Unknown format %d"), status.image_format);
+			gp_widget_set_value (t, buf);
+		break;
 	}
-
-        if (status.jpeg_resolution > 0 && status.jpeg_resolution < PSLR_MAX_RESOLUTIONS)
-		gp_widget_set_value (t, available_resolutions[status.jpeg_resolution]);
-        else
-		gp_widget_set_value (t, _("Unknown"));
-
 	gp_widget_append (section, t);
 
-	gp_widget_new (GP_WIDGET_RADIO, _("Image Quality"), &t);
-	gp_widget_set_name (t, "imgquality");
-	gp_widget_add_choice (t, "4");
-	gp_widget_add_choice (t, "3");
-	gp_widget_add_choice (t, "2");
-	gp_widget_add_choice (t, "1");
-	sprintf (buf,"%d",status.jpeg_quality);
-	gp_widget_set_value (t, buf);
-	gp_widget_append (section, t);
+	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_JPEG)) {
+		gp_widget_new (GP_WIDGET_RADIO, _("Image Size"), &t);
+		gp_widget_set_name (t, "imgsize");
+		for (i = 0; i < PSLR_MAX_RESOLUTIONS && available_resolutions[i]; i++)
+		{
+			gp_widget_add_choice (t, available_resolutions[i]);
+		}
+
+		if (status.jpeg_resolution > 0 && status.jpeg_resolution < PSLR_MAX_RESOLUTIONS)
+			gp_widget_set_value (t, available_resolutions[status.jpeg_resolution]);
+		else
+			gp_widget_set_value (t, _("Unknown"));
+
+		gp_widget_append (section, t);
+
+		gp_widget_new (GP_WIDGET_RADIO, _("Image Quality"), &t);
+		gp_widget_set_name (t, "imgquality");
+		gp_widget_add_choice (t, "4");
+		gp_widget_add_choice (t, "3");
+		gp_widget_add_choice (t, "2");
+		gp_widget_add_choice (t, "1");
+		sprintf (buf,"%d",status.jpeg_quality);
+		gp_widget_set_value (t, buf);
+		gp_widget_append (section, t);
+	}
 
 	gp_widget_new (GP_WIDGET_RADIO, _("ISO"), &t);
 	gp_widget_set_name (t, "iso");

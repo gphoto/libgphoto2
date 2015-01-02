@@ -80,6 +80,10 @@
         }                                                               \
     } while (0)
 
+#define PSLR_SUPPORTED_IMAGE_FORMAT_JPEG (1 << PSLR_IMAGE_FORMAT_JPEG)
+#define PSLR_SUPPORTED_IMAGE_FORMAT_RAW (1 << PSLR_IMAGE_FORMAT_RAW)
+#define PSLR_SUPPORTED_IMAGE_FORMAT_RAW_PLUS (1 << PSLR_IMAGE_FORMAT_RAW_PLUS)
+
 typedef enum {
     PSLR_BUFFER_SEGMENT_LAST = 2,
     PSLR_BUFFER_SEGMENT_INNER = 3,
@@ -104,6 +108,7 @@ typedef struct {
     uint32_t id2;
     const char *name;
     const char *resolution_steps[MAX_RESOLUTIONS];
+    int supported_formats;
 } ipslr_model_info_t;
 
 typedef struct {
@@ -165,18 +170,18 @@ static bool is_istds(ipslr_handle_t *p);
 static pslr_progress_callback_t progress_callback = NULL;
 
 static ipslr_model_info_t camera_models[] = {
-    { PSLR_ID1_K30, PSLR_ID2_K30, "K30", { "16", "12", "8", "5" } },
-    { PSLR_ID1_K20D, PSLR_ID2_K20D, "K20D", { "14", "10", "6", "2" } },
-    { PSLR_ID1_K10D, PSLR_ID2_K10D, "K10D", { "10", "6", "2" } },
-    { PSLR_ID1_K110D, PSLR_ID2_K110D, "K110D", { "6", "4", "2" } },
-    { PSLR_ID1_K100D, PSLR_ID2_K100D, "K100D", { "6", "4", "2" } },
-    { PSLR_ID1_K100DS, PSLR_ID2_K100DS, "K100DS", {} },
-    { PSLR_ID1_IST_DS2, PSLR_ID2_IST_DS2, "*ist DS2", { "6", "4", "2" } },
-    { PSLR_ID1_IST_DL, PSLR_ID2_IST_DL, "*ist DL", { "6", "4", "2" } },
-    { PSLR_ID1_IST_DS, PSLR_ID2_IST_DS, "*ist DS", { "6", "4", "2" } },
-    { PSLR_ID1_IST_D, PSLR_ID2_IST_D, "*ist D", { "6", "4", "2" } },
-    { PSLR_ID1_GX10, PSLR_ID2_GX10, "GX10", { "10", "6", "2" } },
-    { PSLR_ID1_GX20, PSLR_ID2_GX20, "GX20", { "14", "10", "6", "2" } },
+    { PSLR_ID1_K30, PSLR_ID2_K30, "K30", { "16", "12", "8", "5" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_K20D, PSLR_ID2_K20D, "K20D", { "14", "10", "6", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_K10D, PSLR_ID2_K10D, "K10D", { "10", "6", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_K110D, PSLR_ID2_K110D, "K110D", { "6", "4", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_K100D, PSLR_ID2_K100D, "K100D", { "6", "4", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_K100DS, PSLR_ID2_K100DS, "K100DS", {}, PSLR_SUPPORTED_IMAGE_FORMAT_RAW },
+    { PSLR_ID1_IST_DS2, PSLR_ID2_IST_DS2, "*ist DS2", { "6", "4", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_IST_DL, PSLR_ID2_IST_DL, "*ist DL", { "6", "4", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_IST_DS, PSLR_ID2_IST_DS, "*ist DS", { "6", "4", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_IST_D, PSLR_ID2_IST_D, "*ist D", { "6", "4", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_GX10, PSLR_ID2_GX10, "GX10", { "10", "6", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
+    { PSLR_ID1_GX20, PSLR_ID2_GX20, "GX20", { "14", "10", "6", "2" }, PSLR_SUPPORTED_IMAGE_FORMAT_JPEG },
 };
 
 #ifndef LIBGPHOTO2
@@ -484,6 +489,13 @@ int pslr_set_image_format(pslr_handle_t h, pslr_image_format_t format)
     return PSLR_OK;
 }
 
+int pslr_is_image_format_supported(pslr_handle_t h, pslr_image_format_t format)
+{
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    if (format < 0 || format >= PSLR_IMAGE_FORMAT_MAX || !p->model)
+        return false;
+    return (1 << format) & p->model->supported_formats;
+}
 
 int pslr_set_raw_format(pslr_handle_t h, pslr_raw_format_t format)
 {
