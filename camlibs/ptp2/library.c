@@ -1039,6 +1039,10 @@ static struct {
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S02",  		  0x04b0, 0x0346, PTP_CAP},
 
+	/* t.ludewig@gmail.com */
+	/* seems not to report events? but has full liveview caps_ */
+	{"Nikon:Coolpix S9700", 	  0x04b0, 0x034b, PTP_CAP|PTP_CAP_PREVIEW|PTP_NIKON_BROKEN_CAP},
+
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
