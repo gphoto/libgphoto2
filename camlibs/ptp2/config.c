@@ -6301,6 +6301,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Date and Time"),   "datetime",             PTP_DPC_DateTime,                   0,                  PTP_DTC_STR,    _get_STR_as_time,               _put_STR_as_time },
 	{ N_("Beep Mode"),              "beep",                 PTP_DPC_CANON_BeepMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_BeepMode,            _put_Canon_BeepMode },
 	{ N_("Image Comment"),          "imagecomment",         PTP_DPC_NIKON_ImageCommentString,   PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
+	{ N_("WLAN GUID"),          	"guid",         	PTP_DPC_NIKON_GUID,   		    PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Enable Image Comment"),   "imagecommentenable",   PTP_DPC_NIKON_ImageCommentEnable,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("LCD Off Time"),           "lcdofftime",           PTP_DPC_NIKON_MonitorOff,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LCDOffTime,          _put_Nikon_LCDOffTime },
 	{ N_("Recording Media"),        "recordingmedia",       PTP_DPC_NIKON_RecordingMedia,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RecordingMedia,      _put_Nikon_RecordingMedia },

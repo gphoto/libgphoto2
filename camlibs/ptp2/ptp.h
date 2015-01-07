@@ -1917,6 +1917,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_D244				0xD244
 /* d247 - gets 3 bytes 0x01 0x00 0x00 */
 #define PTP_DPC_NIKON_D247				0xD247
+/* S9700 */
+#define PTP_DPC_NIKON_GUID				0xD24F
 /* d250 - gets a string "0000123C61" */
 #define PTP_DPC_NIKON_D250				0xD250
 /* d251 - gets a 0x0100000d */
