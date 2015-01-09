@@ -492,7 +492,7 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 	return res;
 }
 
-static int
+int
 have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 	unsigned int i;
 

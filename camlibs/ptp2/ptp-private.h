@@ -27,6 +27,8 @@ int camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 int camera_prepare_capture (Camera *camera, GPContext *context);
 int camera_unprepare_capture (Camera *camera, GPContext *context);
 int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value);
+int have_prop(Camera *camera, uint16_t vendor, uint16_t prop);
+
 
 /* library.c */
 int translate_ptp_result (uint16_t result);
