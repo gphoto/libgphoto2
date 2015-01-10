@@ -1765,6 +1765,9 @@ static struct {
 	/* Stephan Barth at SUSE */
 	{"Pentax:Optio W90",                    0x0a17, 0x00f7, 0},
 
+	/* gphoto:feature-requests 452. yes, weird vendor. */
+	{"Pentax:K3 (PTP Mode)",		0x25fb, 0x0165, 0},
+
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
 	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
