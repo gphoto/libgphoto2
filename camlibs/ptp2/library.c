@@ -2384,6 +2384,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 			params->inliveview = 1;
+			/* do one startup shot. on Nikon S9700 the first image is bad */
+			ret = ptp_nikon_get_liveview_image (params , &data, &size);
+			if (ret == PTP_RC_OK)
+				free (data);
 		}
 		tries = 20;
 		while (tries--) {
