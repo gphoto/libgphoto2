@@ -2359,7 +2359,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_NIKON: {
 		PTPPropertyValue	value;
-		int 			tries;
+		int 			tries, firstimage = 0;
 
 		if (!ptp_operation_issupported(params, PTP_OC_NIKON_StartLiveView)) {
 			gp_context_error (context,
@@ -2384,15 +2384,18 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 			params->inliveview = 1;
-			/* do one startup shot. on Nikon S9700 the first image is bad */
-			ret = ptp_nikon_get_liveview_image (params , &data, &size);
-			if (ret == PTP_RC_OK)
-				free (data);
+			firstimage = 1;
 		}
 		tries = 20;
 		while (tries--) {
 			ret = ptp_nikon_get_liveview_image (params , &data, &size);
 			if (ret == PTP_RC_OK) {
+				if (firstimage) {
+					/* the first image on the S9700 is corrupted. so just skip the first image */
+					firstimage = 0;
+					free (data);
+					continue;
+				}
 				/* look for the JPEG SOI marker (0xFFD8) in data */
 				jpgStartPtr = (unsigned char*)memchr(data, 0xff, size);
 				while(jpgStartPtr && ((jpgStartPtr+1) < (data + size))) {
