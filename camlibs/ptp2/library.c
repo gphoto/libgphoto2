@@ -4027,7 +4027,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 				if (_timeout_passed (&event_start, timeout))
 					break;
-				/* incremental backoff wait ... including this wait loop */
+				/* incremental backoff wait ... including this wait loop, will go up to 200ms. */
 				for (i=sleepcnt;i--;) {
 					int resttime;
 					struct timeval curtime;
@@ -4035,12 +4035,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_context_idle (context);
 					gettimeofday (&curtime, 0);
 					resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
-					if (resttime < 20)
+					if (resttime <= 0)
 						break;
-					usleep(20*1000); /* 20 ms */
+					if (resttime > 50)
+						resttime = 50;
+					usleep(resttime*1000); /* at most 50 ms */
 				}
 				sleepcnt++; /* incremental back off */
-				if (sleepcnt>10) sleepcnt=10;
+				if (sleepcnt>4) sleepcnt = 4;
 				continue;
 			}
 			sleepcnt = 1;
