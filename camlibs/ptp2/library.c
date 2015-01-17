@@ -4907,6 +4907,8 @@ folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32
 	if (c != NULL) {
 		*c = 0;
 		parent = find_child (params, folder, storage, parent, retob);
+		if (parent == PTP_HANDLER_SPECIAL) 
+			GP_LOG_D("not found???");
 		return folder_to_handle(params, c+1, storage, parent, retob);
 	} else  {
 		return find_child (params, folder, storage, parent, retob);
@@ -4922,6 +4924,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     uint32_t parent, storage=0x0000000;
     unsigned int i, hasgetstorageids;
     SET_CONTEXT_P(params, context);
+    int	lastnrofobjects = params->nrofobjects, redoneonce = 0;
 
     GP_LOG_D ("file_list_func(%s)", folder);
 
@@ -4945,29 +4948,31 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     GP_LOG_D ("after list folder");
 
     hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
-    /* traverse the object list from the back, as we could remove entries */
-    for (i = params->nrofobjects; i-- ;) {
+
+retry:
+    for (i = 0; i < params->nrofobjects; i++) {
 	PTPObject	*ob;
 	uint16_t	ret;
 
 	/* not our parent -> next */
 	C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob));
 
-	if (params->objects[i].oi.ParentObject!=parent)
+	/* DANGER DANGER: i is now invalid as objects might have been inserted in the list! */
+
+	if (ob->oi.ParentObject!=parent)
 		continue;
 
 	/* not on our storage devices -> next */
-	if (	(hasgetstorageids &&
-		(params->objects[i].oi.StorageID != storage)))
+	if ((hasgetstorageids && (ob->oi.StorageID != storage)))
 		continue;
 
-	ret = ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+	ret = ptp_object_want (params, ob->oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 	if (ret != PTP_RC_OK) {
 		/* we might raced another delete or ongoing addition, seen on a D810 */
 		if (ret == PTP_RC_InvalidObjectHandle) {
-			GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", params->objects[i].oid);
+			GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", ob->oid);
 			/* remove it for now, we will readd it later if we see it again. */
-			ptp_remove_object_from_cache(params, params->objects[i].oid);
+			ptp_remove_object_from_cache(params, ob->oid);
 			continue;
 		}
 		C_PTP_REP (ret);
@@ -4976,7 +4981,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (ob->oi.ObjectFormat == PTP_OFC_Association)
 		continue;
 
-	debug_objectinfo(params, params->objects[i].oid, &ob->oi);
+	debug_objectinfo(params, ob->oid, &ob->oi);
 
 	if (!ob->oi.Filename)
 	    continue;
@@ -4994,6 +4999,17 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	    }
 	}
 	CR(gp_list_append (list, ob->oi.Filename, NULL));
+    }
+
+    /* Did we change the object tree list during our traversal? if yes, redo the scan. */
+    if (params->nrofobjects != lastnrofobjects) {
+	if (redoneonce++) {
+		GP_LOG_E("after second pass still a object number change?");
+		return GP_OK;
+	}
+	lastnrofobjects = params->nrofobjects;
+	gp_list_reset(list);
+	goto retry;
     }
     return GP_OK;
 }
