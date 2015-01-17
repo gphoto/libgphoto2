@@ -3946,12 +3946,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 				if (resttime <= 0)
 					break;
 				/* Try not to sleep for more than 20ms at a time */
-				if (resttime > 20)
-				  	resttime = 20;
+				if (resttime > 50)
+				  	resttime = 50;
 				usleep(resttime*1000);
 			}
 			sleepcnt++; /* incremental back off */
-			if (sleepcnt>10) sleepcnt=10;
+			if (sleepcnt>4) sleepcnt=4;
 		}
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
