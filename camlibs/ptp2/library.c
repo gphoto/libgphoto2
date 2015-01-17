@@ -5006,7 +5006,7 @@ retry:
     /* Did we change the object tree list during our traversal? if yes, redo the scan. */
     if (params->nrofobjects != lastnrofobjects) {
 	if (redoneonce++) {
-		GP_LOG_E("after second pass still a object number change?");
+		GP_LOG_E("list changed again on second pass, returning anyway");
 		return GP_OK;
 	}
 	lastnrofobjects = params->nrofobjects;
@@ -5023,6 +5023,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	PTPParams *params = &((Camera *)data)->pl->params;
 	unsigned int i, hasgetstorageids;
 	uint32_t handler,storage;
+	int redoneonce = 0, lastnrofobjects = params->nrofobjects;
 
 	SET_CONTEXT_P(params, context);
 	GP_LOG_D ("folder_list_func(%s)", folder);
@@ -5080,24 +5081,27 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	 * Currently we specify *any* PTP association as directory.
 	 */
 	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
+retry:
 	for (i = 0; i < params->nrofobjects; i++) {
 		PTPObject	*ob;
 		uint16_t	ret;
+		uint32_t	handle;
 
 		C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED, &ob));
 
-		if (params->objects[i].oi.ParentObject != handler)
+		if (ob->oi.ParentObject != handler)
 			continue;
-		if (hasgetstorageids && (params->objects[i].oi.StorageID != storage))
+		if (hasgetstorageids && (ob->oi.StorageID != storage))
 			continue;
 
-		ret = ptp_object_want (params, params->objects[i].oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+		handle = ob->oid;
+		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 		if (ret != PTP_RC_OK) {
 			/* we might raced another delete or ongoing addition, seen on a D810 */
 			if (ret == PTP_RC_InvalidObjectHandle) {
-				GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", params->objects[i].oid);
+				GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", handle);
 				/* remove it for now, we will readd it later if we see it again. */
-				ptp_remove_object_from_cache(params, params->objects[i].oid);
+				ptp_remove_object_from_cache(params, handle);
 				continue;
 			}
 			C_PTP_REP (ret);
@@ -5117,7 +5121,16 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		}
 		CR (gp_list_append (list, ob->oi.Filename, NULL));
 	}
-	return (GP_OK);
+	if (lastnrofobjects != params->nrofobjects) {
+		if (redoneonce++) {
+			GP_LOG_E("list changed again on second pass, returning anyway");
+			return GP_OK;
+		}
+		lastnrofobjects = params->nrofobjects;
+		gp_list_reset (list);
+		goto retry;
+	}
+	return GP_OK;
 }
 
 /* To avoid roundtrips for querying prop desc
