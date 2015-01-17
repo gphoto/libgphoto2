@@ -3277,8 +3277,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &propval, PTP_DTC_UINT16));
 
 	for (tries = 0; tries < 100; tries++) {
-		if (ptp_operation_issupported(params, PTP_OC_SONY_GetAllDevicePropData))
-			C_PTP (ptp_sony_getalldevicepropdesc (params));
 		C_PTP (ptp_check_event (params));
 		if (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
@@ -3289,7 +3287,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				break;
 			}
 		}
-		usleep(10000);
+		usleep(10*1000);
 	}
 
 	propval.u16 = 1;
