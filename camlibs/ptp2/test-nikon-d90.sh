@@ -35,9 +35,9 @@ gphoto2 --set-config imagequality=6 --trigger-capture --wait-event-and-download=
 echo FIXME: gphoto2 --set-config imagequality=6 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=30s
 rm capt*
 gphoto2 --set-config capturetarget=1
-gphoto2 --set-config imagequality=2 --trigger-capture --wait-event-and-download=10s
+gphoto2 --set-config imagequality=2 --trigger-capture --wait-event-and-download=20s
 gphoto2 --set-config imagequality=2 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=30s
-gphoto2 --set-config imagequality=6 --trigger-capture --wait-event-and-download=10s
+gphoto2 --set-config imagequality=6 --trigger-capture --wait-event-and-download=20s
 gphoto2 --set-config imagequality=6 --trigger-capture --trigger-capture --trigger-capture --wait-event-and-download=30s
 
 echo -n "trigger capture done ... press return to continue"
