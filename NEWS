@@ -1,12 +1,12 @@
-libgphoto2 2.5.6.1 bugfix release
+libgphoto2 2.5.7 release
 
 ptp2:
-* Canon EOS focusinfo crasher fixed
-* Canon EOS wait_for_event sleep backoff increased
+* Canon EOS focusinfo crash fixed (affected all config operations)
+* wait_for_event sleep backoff increased (50 - 100 - 150 - 200ms)
 * Nikon: fixes to make Nikon Coolpix S9700 over PTPIP work better
 * Nikon: WLAN GUID setting
 * Sony: tighten event loop to avoid loss of objectadded events
-* USB ids: Nikon Coolpix 9400, Nikon S9700, Pentax K3 (in PTP).
+* New USB ids: Nikon Coolpix 9400, Nikon S9700, Pentax K3 (in PTP).
 
 pentax:
 * added Pentax K100Ds
