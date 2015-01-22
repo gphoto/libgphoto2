@@ -3,7 +3,6 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 VERSION=@VERSION@
-driverdir=@camlibdir@
 
 Name: libgphoto2_port
 Description: Device-independent access to serial, USB, and other ports
