@@ -3250,13 +3250,14 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 {
 	PTPParams	*params = &camera->pl->params;
 	PTPPropertyValue propval;
-	unsigned int	tries = 0;
 	PTPContainer	event;
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
 	static int	capcnt = 0;
 	int		dual = 0;
 	PTPDevicePropDesc	dpd;
+	struct timeval	event_start;
+	int 		resttime;
 
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16));
@@ -3276,7 +3277,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &propval, PTP_DTC_UINT16));
 
-	for (tries = 0; tries < 100; tries++) {
+	gettimeofday (&event_start, NULL);
+	do {
+		struct timeval curtime;
+
 		C_PTP (ptp_check_event (params));
 		if (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
@@ -3287,8 +3291,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				break;
 			}
 		}
-		usleep(10*1000);
-	}
+		gettimeofday (&curtime, NULL);
+		resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
+		/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
+	} while (resttime < 35000);
 
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C2, &propval, PTP_DTC_UINT16));
@@ -3296,9 +3302,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16));
 
-	if (!newobject)
-		return GP_ERROR;
-
+	if (!newobject) {
+		GP_LOG_E("no object found during event polling. try the 0xffffc001 object id");
+		newobject = 0xffffc001;
+	}
 	/* FIXME: handle multiple images (as in BurstMode) */
 	C_PTP (ptp_getobjectinfo (params, newobject, &oi));
 
