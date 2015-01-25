@@ -117,6 +117,7 @@ If you want to install only one or two specific camlibs, run something like
 
     $ make CAMLIBS="canon.la ptp2.la" install-camlibs
 
+On Linux, the installed libtool .la files are not needed and can be removed.
 
 ====================================================
 Step 4: Installation is finished - now what do I do?
