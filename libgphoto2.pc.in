@@ -9,6 +9,6 @@ Name: libgphoto2
 Description: Library for easy access to digital cameras
 URL: http://gphoto.org/proj/libgphoto2/
 Version: @VERSION@
-Requires: libgphoto2_port >= 0.10.0, @REQUIREMENTS_FOR_LIBEXIF@
+Requires: libgphoto2_port >= 0.10.0 @REQUIREMENTS_FOR_LIBEXIF@
 Libs: -L${libdir} -lgphoto2 -lm
 Cflags: -I${includedir}/gphoto2
