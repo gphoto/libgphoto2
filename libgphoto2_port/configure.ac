@@ -163,24 +163,6 @@ AC_CHECK_HEADER([regex.h],
                 [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],[])
 AC_CHECK_LIB([regex],[regexec])
 
-dnl ---------------------------------------------------------------------------
-dnl Apple Bonjour / mDNSResponder multicast DNS queries.
-dnl ---------------------------------------------------------------------------
-AC_ARG_WITH([bonjour],
-	AS_HELP_STRING([--without-bonjour], [whether to exclude Bonjour PTP/IP autodetection]),
-	,with_bonjour=yes)
-
-MDNS_LIBS=
-if test "x$with_bonjour" = "xyes"; then
-	AC_CHECK_HEADER([dns_sd.h],[
-		AC_CHECK_LIB(dns_sd,DNSServiceResolve,[
-			MDNS_LIBS="-ldns_sd"
-			AC_DEFINE(HAVE_MDNS_BONJOUR,1,[Define if you have Bonjour/mDNSResponder.])
-		])
-	])
-fi
-AC_SUBST(MDNS_LIBS)
-
 AC_MSG_CHECKING([for asm .symver support])
 AC_COMPILE_IFELSE([dnl
 	AC_LANG_PROGRAM([[]],[[
