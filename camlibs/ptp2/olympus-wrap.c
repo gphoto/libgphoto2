@@ -873,7 +873,7 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		return FALSE;
 	}
 	if (xmlChildElementCount(node) != 2) {
-		GP_LOG_E ("output: expected 2 childs, got %ld.", xmlChildElementCount(node));
+		GP_LOG_E ("output: expected 2 children, got %ld.", xmlChildElementCount(node));
 		return FALSE;
 	}
 	next = xmlFirstElementChild (node);
@@ -973,7 +973,7 @@ traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 				if (curpar < sizeof(pars)/sizeof(pars[0]))
 					pars[curpar++] = x;
 				else
-					GP_LOG_E ("ignore superflous argument %s/%x", (char*)xmlNodeGetContent(next), x);
+					GP_LOG_E ("ignore superfluous argument %s/%x", (char*)xmlNodeGetContent(next), x);
 			}
 			next = xmlNextElementSibling (next);
 			continue;
