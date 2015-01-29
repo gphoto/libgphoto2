@@ -2777,6 +2777,10 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	*size = 0;
 	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0xc8 /* unclear */);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
+	if (xsize == 0) {
+		ptp_debug (params, "No special operations sent?");
+		return PTP_RC_OK;
+	}
 
 	psize1 = ptp_unpack_uint16_t_array(params,xdata+2,0,&props1);
 	ptp_debug (params, "xsize %d, got size %d\n", xsize, psize1*2 + 2 + 4);
