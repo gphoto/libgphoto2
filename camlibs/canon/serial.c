@@ -388,6 +388,8 @@ canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq,
 	if (type == PKT_EOT || type == PKT_ACK || type == PKT_NACK)
 		len = 2;	/* @@@ hack */
 	crc = canon_psa50_gen_crc (hdr, len + PKT_HDR_LEN);
+	if (crc == -1)
+		return GP_ERROR;
 	pkt[len] = crc & 0xff;
 	pkt[len + 1] = crc >> 8;
 
@@ -720,10 +722,8 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, u
 			if (msg_pos + len > msg_size || !msg) {
 				msg_size *= 2;
 				msg = realloc (msg, msg_size);
-				if (!msg) {
-					perror ("realloc");
-					exit (1);
-				}
+				if (!msg)
+					return NULL;
 			}
 			memcpy (msg + msg_pos, frag, len);
 			msg_pos += len;
