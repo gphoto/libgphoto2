@@ -2107,10 +2107,12 @@ ptp_check_event (PTPParams *params)
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
 	) {
-		unsigned int evtcnt;
+		unsigned int evtcnt = 0;
 		PTPContainer *xevent = NULL;
 
-		CHECK_PTP_RC(ptp_nikon_check_event(params, &xevent, &evtcnt));
+		ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
+		if (ret != PTP_RC_OperationNotSupported)
+			CHECK_PTP_RC(ret);
 
 		if (evtcnt) {
 			params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
