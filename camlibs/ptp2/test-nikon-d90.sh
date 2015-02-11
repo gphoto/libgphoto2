@@ -13,9 +13,12 @@ gphoto2 --set-config imagequality=2 --capture-image-and-download
 rm capt0000.jpg
 gphoto2 --set-config imagequality=6 --capture-image-and-download
 rm capt0000.jpg capt0001.nef
+gphoto2 --set-config imagequality=6 --capture-image-and-download --keep-raw
+rm capt0000.jpg
 gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imagequality=2 --capture-image-and-download
 gphoto2 --set-config imagequality=6 --capture-image-and-download
+gphoto2 --set-config imagequality=6 --capture-image-and-download --keep-raw
 echo -n "remove SDCARD and press return: " 
 read dummy
 gphoto2 --set-config capturetarget=0
@@ -110,12 +113,14 @@ gphoto2 --set-config imagequality=2
 gphoto2 --wait-event-and-download=10s
 gphoto2 --set-config imagequality=6
 gphoto2 --wait-event-and-download=10s
+gphoto2 --wait-event-and-download=10s --keep-raw
 echo "*** capture and wait_event  - jpg/card - 50 events"
 gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imagequality=2
 gphoto2 --wait-event-and-download=50
 gphoto2 --set-config imagequality=6
 gphoto2 --wait-event-and-download=50
+gphoto2 --wait-event-and-download=50 --keep-raw
 gphoto2 --set-config imagequality=2
 
 echo "*** config "
