@@ -151,7 +151,7 @@ translate_ptp_result (uint16_t result)
 }
 
 static void
-print_debug_deviceinfo (PTPDeviceInfo *di)
+print_debug_deviceinfo (PTPParams *params, PTPDeviceInfo *di)
 {
 	unsigned int i;
 
@@ -166,8 +166,12 @@ print_debug_deviceinfo (PTPDeviceInfo *di)
 	GP_LOG_D ("Functional Mode: 0x%04x",di->FunctionalMode);
 	GP_LOG_D ("PTP Standard Version: %d",di->StandardVersion);
 	GP_LOG_D ("Supported operations:");
-	for (i=0; i<di->OperationsSupported_len; i++)
-		GP_LOG_D ("  0x%04x", di->OperationsSupported[i]);
+	for (i=0; i<di->OperationsSupported_len; i++) {
+		char buf[200];
+
+		ptp_render_opcode (params, di->OperationsSupported[i], sizeof(buf), buf);
+		GP_LOG_D ("  0x%04x (%s)", di->OperationsSupported[i], buf);
+	}
 	GP_LOG_D ("Events Supported:");
 	for (i=0; i<di->EventsSupported_len; i++)
 		GP_LOG_D ("  0x%04x", di->EventsSupported[i]);
@@ -248,7 +252,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		GP_LOG_D ("Dumping Olympus Deviceinfo");
 
 
-		print_debug_deviceinfo (&newdi);
+		print_debug_deviceinfo (params, &newdi);
 		ptp_free_DI (di);
 		memcpy (di, &newdi, sizeof(newdi));
 		return GP_OK;
@@ -2672,6 +2676,8 @@ capturetriggered:
 				if (newobject != 0xffff0001) {
 					ptp_add_event (params, &event);
 					checkevt = 1; /* avoid endless loop */
+					done = 3;
+					break;
 				}
 				/* we register the object in the internal storage, and we also need to
 				 * to find out if it is just a new directory (/DCIM/NEWENTRY/) created
@@ -4072,12 +4078,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 #endif
 
 				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-				debug_objectinfo(params, event.Param1, &ob->oi);
 				if (ret != PTP_RC_OK) {
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
 					break;
 				}
+				debug_objectinfo(params, event.Param1, &ob->oi);
 
 				C_MEM (path = malloc(sizeof(CameraFilePath)));
 				path->name[0]='\0';
@@ -7119,7 +7125,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	CR (fixup_cached_deviceinfo (camera,&params->deviceinfo));
 
-	print_debug_deviceinfo(&params->deviceinfo);
+	print_debug_deviceinfo(params, &params->deviceinfo);
 
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_CANON:
