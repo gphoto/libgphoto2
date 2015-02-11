@@ -1,6 +1,6 @@
 dir=`mktemp -d /tmp/camera.XXXXXX`
 cd $dir
-echo -n "Attach Canon EOS 1000D and press return: "
+echo -n "Attach Canon EOS 100D and press return: "
 read dummy 
 set -x -v
 echo "***  standard actions"
@@ -16,6 +16,7 @@ rm capt0000.jpg capt0001.cr2
 gphoto2 --set-config capturetarget=1
 gphoto2 --set-config imageformat=0 --capture-image-and-download
 gphoto2 --set-config imageformat=8 --capture-image-and-download
+gphoto2 --set-config imageformat=8 --capture-image-and-download --keep-raw
 
 echo "single capture done, press return"
 read dummy
@@ -86,6 +87,7 @@ gphoto2 --set-config imageformat=0
 gphoto2 --wait-event-and-download=200
 gphoto2 --set-config imageformat=8
 gphoto2 --wait-event-and-download=200
+gphoto2 --wait-event-and-download=200 --keep-raw
 
 echo "*** config "
 gphoto2 --list-config
