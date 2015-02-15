@@ -21,7 +21,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
@@ -2371,6 +2371,16 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			return GP_ERROR_NOT_SUPPORTED;
 		}
 		SET_CONTEXT_P(params, context);
+
+		/* Nilon V and J seem to like that */
+		if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
+			ret = ptp_nikon_setcontrolmode (params, 1);
+			/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
+			if (ret != PTP_RC_NIKON_ChangeCameraModeFailed)
+				C_PTP_REP (ret);
+			params->controlmode = 1;
+		}
+
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
 		if (ret != PTP_RC_OK)
 			value.u8 = 0;
@@ -2389,6 +2399,18 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 			params->inliveview = 1;
 			firstimage = 1;
+		}
+		/* nikon 1 special */
+		if (value.u8 && !params->inliveview) {
+			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
+				       _("Nikon enable liveview failed"));
+			do {
+				ret = ptp_nikon_device_ready(params);
+				usleep(20*1000);
+			} while (ret == PTP_RC_DeviceBusy);
+
+			C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
+			params->inliveview = 1;
 		}
 		tries = 20;
 		while (tries--) {
@@ -5560,7 +5582,7 @@ gpfile_putfunc (PTPParams *params, void *xpriv,
 	return PTP_RC_OK;
 }
 
-static uint16_t
+uint16_t
 ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
 	PTPCFHandlerPrivate* priv = malloc (sizeof(PTPCFHandlerPrivate));
 	if (!priv) return PTP_RC_GeneralError;
@@ -5571,7 +5593,7 @@ ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file) {
 	return PTP_RC_OK;
 }
 
-static uint16_t
+uint16_t
 ptp_exit_camerafile_handler (PTPDataHandler *handler) {
 	free (handler->priv);
 	return PTP_RC_OK;
@@ -7138,6 +7160,13 @@ camera_init (Camera *camera, GPContext *context)
 			add_special_file("selftimer.wav",	canon_theme_get, canon_theme_put);
 		}
 #endif
+
+#if 0
+		/* this will go and overwrite the function tables again */
+		if (ptp_operation_issupported(params, PTP_OC_CHDK))
+			return chdk_init (camera, context);
+#endif
+
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode))
 			C_PTP (ptp_canon_eos_setremotemode(params, 1));
 		break;
@@ -7180,5 +7209,5 @@ camera_init (Camera *camera, GPContext *context)
 		}
 	}
 	SET_CONTEXT(camera, NULL);
-	return (GP_OK);
+	return GP_OK;
 }

@@ -3660,6 +3660,18 @@ ptp_chdk_set_memory_long(PTPParams* params, int addr, int val)
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 4, &buf, NULL);
 }
 
+uint16_t
+ptp_chdk_download(PTPParams* params, char *remote_fn, PTPDataHandler *handler)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_TempData, 0);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_SENDDATA, strlen(remote_fn), (unsigned char**)&remote_fn, NULL));
+
+	PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_DownloadFile);
+	return ptp_transaction_new (params, &ptp, PTP_DP_GETDATA, 0, handler);
+}
+
 #if 0
 int ptp_chdk_upload(PTPParams* params, char *local_fn, char *remote_fn)
 {
@@ -3703,55 +3715,6 @@ int ptp_chdk_upload(PTPParams* params, char *local_fn, char *remote_fn)
   return 1;
 }
 
-static uint16_t gd_to_file(PTPParams* params, PTPGetdataParams *gdparams, unsigned len, unsigned char *bytes) {
-	FILE *f = (FILE *)gdparams->handler_data;
-	size_t count=fwrite(bytes,1,len,f);
-	if(count != len) {
-		return PTP_ERROR_IO;
-	}
-	return PTP_RC_OK;
-}
-
-int ptp_chdk_download(PTPParams* params, char *remote_fn, char *local_fn)
-{
-  uint16_t ret;
-  PTPContainer ptp;
-  PTPGetdataParams gdparams;
-  FILE *f;
-
-  f = fopen(local_fn,"wb");
-  if ( f == NULL )
-  {
-    ptp_error(params,"could not open file \'%s\'",local_fn);
-    return 0;
-  }
-
-  PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_TempData, 0);
-  ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, strlen(remote_fn), &remote_fn, NULL);
-  if ( ret != PTP_RC_OK )
-  {
-    ptp_error(params,"unexpected return code 0x%x",ret);
-	fclose(f);
-    return 0;
-  }
-
-  PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_DownloadFile);
-
-  PTP_CNT_INIT(gdparams);
-
-  gdparams.handler = gd_to_file;
-  gdparams.block_size = 0; // default
-  gdparams.handler_data = f;
-  ret=ptp_getdata_transaction(params, &ptp, &gdparams);
-  fclose(f);
-  if ( ret != PTP_RC_OK )
-  {
-    ptp_error(params,"unexpected return code 0x%x",ret);
-    return 0;
-  }
-  
-  return 1;
-}
 #endif
 
 /*

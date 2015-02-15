@@ -34,6 +34,12 @@ int have_prop(Camera *camera, uint16_t vendor, uint16_t prop);
 int translate_ptp_result (uint16_t result);
 int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
+int chdk_init(Camera*,GPContext*);
+uint16_t ptp_init_camerafile_handler (PTPDataHandler *handler, CameraFile *file);
+uint16_t ptp_exit_camerafile_handler (PTPDataHandler *handler);
+
+
+
 inline static int log_on_ptp_error_helper( int _r, const char* _func, const char* file, int line, const char* func, int vendor ) {
 	if (_r != PTP_RC_OK) {
 		const char* ptp_err_str = ptp_strerror(_r, vendor);

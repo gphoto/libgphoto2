@@ -21,7 +21,7 @@
  * XDISCVRY.X3C file sent on start, empty.
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 

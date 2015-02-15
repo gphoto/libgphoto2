@@ -3297,7 +3297,7 @@ typedef struct {
 uint16_t ptp_chdk_get_memory(PTPParams* params, int start, int num, unsigned char **);
 uint16_t ptp_chdk_set_memory_long(PTPParams* params, int addr, int val);
 int ptp_chdk_upload(PTPParams* params, char *local_fn, char *remote_fn);
-int ptp_chdk_download(PTPParams* params, char *remote_fn, char *local_fn);
+uint16_t ptp_chdk_download(PTPParams* params, char *remote_fn, PTPDataHandler *handler);
 
 /* remote capture */
 uint16_t ptp_chdk_rcisready(PTPParams* params, int *isready,int *imgnum);
