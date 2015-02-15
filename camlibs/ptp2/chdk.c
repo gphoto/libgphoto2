@@ -103,10 +103,10 @@ chdk_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	char			*t, *table = NULL;
 	char			*xfolder;
 
+	/* strip leading / of folders, except for the root folder */
 	xfolder=strdup(folder);
-	if (xfolder[strlen(xfolder)] == '/') {
-		xfolder[strlen(xfolder)] = '\0';
-	}
+	if (strlen(folder)>2 && (xfolder[strlen(xfolder)-1] == '/'))
+		xfolder[strlen(xfolder)-1] = '\0';
         /*Camera *camera = data;*/
 
 	C_MEM (lua = malloc(strlen(luascript)+strlen(xfolder)+1));
