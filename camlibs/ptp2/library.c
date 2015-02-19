@@ -2385,6 +2385,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		if (ret != PTP_RC_OK)
 			value.u8 = 0;
 
+enable_liveview:
 		if (!value.u8) {
 			value.u8 = 1;
 			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_NIKON_RecordingMedia))
@@ -2415,6 +2416,12 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		tries = 20;
 		while (tries--) {
 			ret = ptp_nikon_get_liveview_image (params , &data, &size);
+			if (ret == PTP_RC_NIKON_NotLiveView) {
+				/* this happens on the D7000 after 14000 frames... reenable liveview */
+				params->inliveview = 0;
+				value.u8 = 0;
+				goto enable_liveview;
+			}
 			if (ret == PTP_RC_OK) {
 				if (firstimage) {
 					/* the first image on the S9700 is corrupted. so just skip the first image */
