@@ -467,14 +467,6 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			free (xprops);
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 3, 0, 0));
 		}
-#if 0
-		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
-			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
-			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_Capture;
-			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
-			di->OperationsSupported_len+=2;
-		}
-#endif
 	}
 #if 0 /* Marcus: not regular ptp properties, not queryable via getdevicepropertyvalue */
 	if (di->VendorExtensionID == PTP_VENDOR_CANON) {
