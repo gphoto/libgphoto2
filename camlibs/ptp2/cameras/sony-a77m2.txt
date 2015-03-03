@@ -1,0 +1,169 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: ILCA-77M2
+  Version: 1.0
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: JPEG, Unknown(b301), Unknown(b101)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, Sony Capture
+Storage Devices Summary:
+
+Device Property Summary:
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [2,3,4,16,19] value: 3
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [1,2,4,32785,32784,6,32769,32770,32771,32772,7,32786,32800,32801,32802] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: f/4 (400)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,2,3,32772,32773,32776,32774,32775] value: Automatic (2)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [4,1,32770] value: Average (1)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2,1,4,3,5,32769,32771,32772,32817,32818] value: Flash off (2)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [32768,32769,2,3,4,1,32848,32849,32850,32851,32852,32833,7,32785,32789,32788,32786,32787,32790,32791,32792] value: 32768
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [0,1,2,5000,4700,4500,4300,4000,3700,3500,3300,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000,-3300,-3500,-3700,-4000,-4300,-4500,-4700,-5000] value: 0.0 stops (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32786,32773,32772,32776,32777] value: Single Shot (1)
+DOC Compensation(0xd200):(readwrite) (type=0x3) Enumeration [0,1,2,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000] value: 0
+DRangeOptimize(0xd201):(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21,32,33,34,35,36,37,38] value: 31
+Image size(0xd203):(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+Shutter speed(0xd20d):(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 65696
+Property 0xd20e:(readwrite) (type=0x2) Enumeration [1,2,3,8,9,10,4,5,6,7] value: 7
+Color temperature(0xd20f):(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 0
+CC Filter(0xd210):(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+AB Filter(0xd21c):(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+Aspect Ratio(0xd211):(readwrite) (type=0x2) Enumeration [1,2] value: 2
+Property 0xd213:(readwrite) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
+ISO(0xd21e):(readwrite) (type=0x6) Enumeration [16777215,25,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,102400,33554431,16777241,16777266,16777280,16777296,16777316,16777341,16777376,16777416,16777466,16777536,16777616,16777716,16777856,16778016,16778216,16778466,16778816,16779216,16779716,16780416,16781216,16782216,16783616,16785216,16787216,16790016,16793216,16802816,16828416,50331647,33554532,33554632,33554832,33555232,33556032,33557632,33560832,33567232,33580032,33605632] value: 16777215
+Picture Effect(0xd21b):(readwrite) (type=0x4) Enumeration [32768] value: 32768
+Property 0xd21d:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd21f:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd217:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd218:(readwrite) (type=0x1) Range [-1 - 100, step 1] value: 100
+Property 0xd219:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd212:(readwrite) (type=0x2) Range [0 - 15, step 1] value: 0
+Property 0xd221:(readwrite) (type=0x2) Enumeration [0,1,2] value: 1
+Property 0xd214:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 33922048
+Property 0xd215:(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd220: error 2002 on query.
+Property 0xd2c1:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c2:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c4:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c3:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c9:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Movie(0xd2c8):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c5:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Still Image(0xd2c7):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+
+
+sony code: 5004
+sony code: 5005
+sony code: 5007
+sony code: 500a
+sony code: 500b
+sony code: 500c
+sony code: 500e
+sony code: 5010
+sony code: 5013
+sony code: d200
+sony code: d201
+sony code: d203
+sony code: d20d
+sony code: d20e
+sony code: d20f
+sony code: d210
+sony code: d21c
+sony code: d211
+sony code: d213
+sony code: d21e
+sony code: d21b
+sony code: d21d
+sony code: d21f
+sony code: d217
+sony code: d218
+sony code: d219
+sony code: d212
+sony code: d221
+sony code: d214
+sony code: d215
+sony code: d220
+sony code: d2c1
+sony code: d2c2
+sony code: d2c4
+sony code: d2c3
+sony code: d2c9
+sony code: d2c8
+sony code: d2c5
+sony code: d2c7
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: ILCA-77M2
+  device version: 1.0
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000011
+Vendor extension version: 100
+Vendor extension description: Sony PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002
+  0x1003
+  0x1001
+  0x1004
+  0x1005
+  0x1006
+  0x1007
+  0x1008
+  0x1009
+  0x100a
+  0x101b
+  0x9201
+  0x9202
+  0x9205
+  0x9207
+  0x9209
+Events Supported:
+  0xc201
+  0xc202
+  0xc203
+Device Properties Supported:
+  0x5004
+  0x5005
+  0x5007
+  0x500a
+  0x500b
+  0x500c
+  0x500e
+  0x5010
+  0x5013
+  0xd200
+  0xd201
+  0xd203
+  0xd20d
+  0xd20e
+  0xd20f
+  0xd210
+  0xd21c
+  0xd211
+  0xd213
+  0xd21e
+  0xd21b
+  0xd21d
+  0xd21f
+  0xd217
+  0xd218
+  0xd219
+  0xd212
+  0xd221
+  0xd214
+  0xd215
+  0xd220
+  0xd2c1
+  0xd2c2
+  0xd2c4
+  0xd2c3
+  0xd2c9
+  0xd2c8
+  0xd2c5
+  0xd2c7
