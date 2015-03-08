@@ -547,8 +547,11 @@ gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 
 	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
-	ret = libusb_handle_events(NULL);
-	GP_LOG_D("libusb_handle_events: %d", ret);
+	/* Queue a shortlived interrupt URB and poll for that? */
+	if (0) { /* not yet working */
+		ret = libusb_handle_events(port->pl->ctx);
+		GP_LOG_D("libusb_handle_events: %d", ret);
+	}
 
 	C_LIBUSB (libusb_interrupt_transfer (port->pl->dh, port->settings.usb.intep,
 			(unsigned char*)bytes, size, &curread, timeout),
