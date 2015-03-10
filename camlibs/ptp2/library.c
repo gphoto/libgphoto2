@@ -832,6 +832,9 @@ static struct {
 	/* Nick Clarke <nick.clarke@gmail.com> */
 	{"Sony:Alpha-A77 M2 (Control)",0x054c, 0x0953, PTP_CAP},
 
+	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
+	{"Sony:Alpha-A7S (Control)",  0x054c, 0x0954, PTP_CAP},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
