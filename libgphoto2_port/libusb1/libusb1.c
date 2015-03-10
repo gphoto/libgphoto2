@@ -563,13 +563,14 @@ gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 static int
 gp_libusb1_msg(GPPort *port, int request, int value, int index, char *bytes, int size, int flags, int default_error)
 {
+	int handled = 0;
 	C_PARAMS (port && port->pl->dh);
 
-	C_LIBUSB (libusb_control_transfer (port->pl->dh, flags, request, value, index,
+	C_LIBUSB (handled = libusb_control_transfer (port->pl->dh, flags, request, value, index,
 			(unsigned char*)bytes, size, port->timeout),
 		  default_error);
 
-	return GP_OK;
+	return handled;
 }
 
 static int
