@@ -145,6 +145,9 @@ struct _GPPortPrivateLibrary {
 
 #define INTERRUPT_TRANSFERS 10
 	struct libusb_transfer		*transfers[INTERRUPT_TRANSFERS];
+	int 				nrofirqs;
+	unsigned char			**irqs;
+	int 				*irqlens;
 };
 
 GPPortType
@@ -344,6 +347,25 @@ static int
 gp_libusb1_exit (GPPort *port)
 {
 	if (port->pl) {
+		int i, onecanceled = 0;
+
+		for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
+			if (port->pl->transfers[i]) {
+				libusb_cancel_transfer(port->pl->transfers[i]);
+				onecanceled = 1;
+			}
+		}
+#if 0
+		if (onecanceled)
+			libusb_handle_events(port->pl->ctx); /* more than 1 call? */
+		/* we will probably need to call it more often */
+
+		for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++)
+			if (port->pl->transfers[i])
+				libusb_free_transfer(port->pl->transfers[i]);
+#endif
+		free (port->pl->irqs);
+		free (port->pl->irqlens);
 		free (port->pl->descs);
 		if (port->pl->nrofdevs)
 			libusb_free_device_list (port->pl->devs, 1);
@@ -351,7 +373,7 @@ gp_libusb1_exit (GPPort *port)
 		free (port->pl);
 		port->pl = NULL;
 	}
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int gp_libusb1_find_path_lib(GPPort *port);
@@ -540,24 +562,110 @@ gp_libusb1_reset(GPPort *port)
 	return GP_OK;
 }
 
+static void LIBUSB_CALL
+_cb_irq(struct libusb_transfer *transfer)
+{
+	struct _GPPortPrivateLibrary *pl = transfer->user_data;
+
+	if (transfer->status == LIBUSB_TRANSFER_TIMED_OUT) {
+		int i;
+		/* Only requeue the global transfers, not temporary ones */
+		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers); i++) {
+			if (pl->transfers[i] == transfer) {
+				libusb_submit_transfer(transfer);
+				return;
+			}
+		}
+		return;
+	}
+	if (transfer->status == LIBUSB_TRANSFER_CANCELLED)
+		return;
+
+	if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
+		GP_LOG_D("transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
+		return;
+	}
+	GP_LOG_DATA ((char*)transfer->buffer, transfer->actual_length, "interrupt");
+
+	pl->irqs 	= realloc(pl->irqs, sizeof(pl->irqs[0])*(pl->nrofirqs+1));
+	pl->irqlens	= realloc(pl->irqlens, sizeof(pl->irqlens[0])*(pl->nrofirqs+1));
+
+	pl->irqlens[pl->nrofirqs] = transfer->actual_length;
+	pl->irqs[pl->nrofirqs] = malloc(transfer->actual_length);
+	memcpy(pl->irqs[pl->nrofirqs],transfer->buffer,transfer->actual_length);
+	pl->nrofirqs++;
+
+	libusb_submit_transfer(transfer);
+}
+
+static int
+gp_libusb1_queue_interrupt_urbs (GPPort *port)
+{
+	unsigned int i;
+
+	/*return 0;*/ /* not working yet */
+
+	GP_LOG_D("interrupt is at 0x%02x", port->settings.usb.intep);
+
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
+		unsigned char *buf;
+		port->pl->transfers[i] = libusb_alloc_transfer(0);
+
+		buf = malloc(256); /* FIXME: safe size? */
+		libusb_fill_interrupt_transfer(port->pl->transfers[i], port->pl->dh, port->settings.usb.intep,
+			buf, 256, _cb_irq, port->pl, 0
+		);
+		libusb_submit_transfer (port->pl->transfers[i]);
+	}
+	return GP_OK;
+}
+
 static int
 gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
-	int curread, ret;
+	int ret;
+	struct libusb_transfer		*transfer;
+	unsigned char *buf;
 
 	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
-	/* Queue a shortlived interrupt URB and poll for that? */
-	if (0) { /* not yet working */
+	if (port->pl->nrofirqs)
+		goto handleirq;
+
+	transfer = libusb_alloc_transfer(0);
+
+	buf = malloc(256); /* FIXME: safe size? */
+	libusb_fill_interrupt_transfer(transfer, port->pl->dh, port->settings.usb.intep,
+		buf, 256, _cb_irq, port->pl, timeout
+	);
+	libusb_submit_transfer (transfer);
+
+	/* This will at most wait timeout. it might be shorter. */
+	ret = libusb_handle_events(port->pl->ctx);
+
+	libusb_cancel_transfer (transfer);
+	do {
 		ret = libusb_handle_events(port->pl->ctx);
-		GP_LOG_D("libusb_handle_events: %d", ret);
-	}
+		if (transfer->status == LIBUSB_TRANSFER_CANCELLED)
+			break;
+		if (transfer->status == LIBUSB_TRANSFER_TIMED_OUT)
+			break;
+	} while (ret >= 0);
+	libusb_free_transfer (transfer);
 
-	C_LIBUSB (libusb_interrupt_transfer (port->pl->dh, port->settings.usb.intep,
-			(unsigned char*)bytes, size, &curread, timeout),
-		  GP_ERROR_IO_READ);
+	free(buf);
+	if (!port->pl->nrofirqs)
+		return GP_ERROR_TIMEOUT;
 
-        return curread;
+handleirq:
+	if (size > port->pl->irqlens[0])
+		size = port->pl->irqlens[0];
+	memcpy(bytes, port->pl->irqs[0], size);
+
+	memmove(port->pl->irqs,port->pl->irqs+1,sizeof(port->pl->irqs[0])*(port->pl->nrofirqs-1));
+	memmove(port->pl->irqlens,port->pl->irqlens+1,sizeof(port->pl->irqlens[0])*(port->pl->nrofirqs-1));
+	port->pl->nrofirqs--;
+        return size;
 }
 
 static int
@@ -638,39 +746,6 @@ gp_libusb1_msg_class_read_lib(GPPort *port, int request,
 					GP_ERROR_IO_READ);
 }
 
-static void LIBUSB_CALL
-_cb_irq(struct libusb_transfer *transfer)
-{
-	GP_LOG_D("status %d\n", transfer->status);
-
-	if (transfer->status != LIBUSB_TRANSFER_COMPLETED)
-		GP_LOG_D("transfer should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer->status);
-	/* now handle the data */
-	/* resubmit it */
-	libusb_submit_transfer(transfer);
-}
-
-static int
-gp_libusb1_queue_interrupt_urbs (GPPort *port)
-{
-	unsigned int i;
-
-	return 0; /* not working yet */
-
-	GP_LOG_D("interrupt is at 0x%02x", port->settings.usb.intep);
-
-	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
-		unsigned char *buf;
-		port->pl->transfers[i] = libusb_alloc_transfer(0);
-
-		buf = malloc(256); /* FIXME: safe size? */
-		libusb_fill_interrupt_transfer(port->pl->transfers[i], port->pl->dh, port->settings.usb.intep,
-			buf, 256, _cb_irq, NULL, 0
-		);
-		libusb_submit_transfer (port->pl->transfers[i]);
-	}
-	return GP_OK;
-}
 /*
  * This function applys changes to the device.
  *
