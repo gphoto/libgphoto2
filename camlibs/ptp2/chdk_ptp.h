@@ -122,83 +122,81 @@ enum ptp_chdk_script_data_type {
 /* standard message chdkptp sends */
 #define PTP_CHDK_LUA_SERIALIZE "\n\
 serialize_r = function(v,opts,r,seen,depth)\n\
-        local vt = type(v)\n\
-        if vt == 'nil' or  vt == 'boolean' or vt == 'number' then\n\
-                table.insert(r,tostring(v))\n\
-                return\n\
-        end\n\
-        if vt == 'string' then\n\
-                table.insert(r,string.format('%%q',v))\n\
-                return\n\
-        end\n\
-        if vt == 'table' then\n\
-                if not depth then\n\
-                        depth = 1\n\
-                end\n\
-                if depth >= opts.maxdepth then\n\
-                        error('serialize: max depth')\n\
-                end\n\
-                if not seen then\n\
-                        seen={}\n\
-                elseif seen[v] then\n\
-                        if opts.err_cycle then\n\
-                                error('serialize: cycle')\n\
-                        else\n\
-                                table.insert(r,'\"cycle:'..tostring(v)..'\"')\n\
-                                return\n\
-                        end\n\
-                end\n\
-                seen[v] = true;\n\
-                table.insert(r,'{')\n\
-                for k,v1 in pairs(v) do\n\
-                        if opts.pretty then\n\
-                                table.insert(r,'\\n'..string.rep(' ',depth))\n\
-                        end\n\
-                        if type(k) == 'string' and string.match(k,'^[_%%a][%%a%%d_]*$') then\n\
-                                table.insert(r,k)\n\
-                        else\n\
-                                table.insert(r,'[')\n\
-                                serialize_r(k,opts,r,seen,depth+1)\n\
-                                table.insert(r,']')\n\
-                        end\n\
-                        table.insert(r,'=')\n\
-                        serialize_r(v1,opts,r,seen,depth+1)\n\
-                        table.insert(r,',')\n\
-                end\n\
-                if opts.pretty then\n\
-                        table.insert(r,'\\n'..string.rep(' ',depth-1))\n\
-                end\n\
-                table.insert(r,'}')\n\
-                return\n\
-        end\n\
-        if opts.err_type then\n\
-                error('serialize: unsupported type ' .. vt, 2)\n\
-        else\n\
-                table.insert(r,'\"'..tostring(v)..'\"')\n\
-        end\n\
+	local vt = type(v)\n\
+	if vt == 'nil' or  vt == 'boolean' or vt == 'number' then\n\
+		table.insert(r,tostring(v))\n\
+		return\n\
+	end\n\
+	if vt == 'string' then\n\
+		table.insert(r,string.format('%%q',v))\n\
+		return\n\
+	end\n\
+	if vt == 'table' then\n\
+		if not depth then\n\
+			depth = 1\n\
+		end\n\
+		if depth >= opts.maxdepth then\n\
+			error('serialize: max depth')\n\
+		end\n\
+		if not seen then\n\
+			seen={}\n\
+		elseif seen[v] then\n\
+			if opts.err_cycle then\n\
+				error('serialize: cycle')\n\
+			else\n\
+				table.insert(r,'\"cycle:'..tostring(v)..'\"')\n\
+				return\n\
+			end\n\
+		end\n\
+		seen[v] = true;\n\
+		table.insert(r,'{')\n\
+		for k,v1 in pairs(v) do\n\
+			if opts.pretty then\n\
+				table.insert(r,'\\n'..string.rep(' ',depth))\n\
+			end\n\
+			if type(k) == 'string' and string.match(k,'^[_%%a][%%a%%d_]*$') then\n\
+				table.insert(r,k)\n\
+			else\n\
+				table.insert(r,'[')\n\
+				serialize_r(k,opts,r,seen,depth+1)\n\
+				table.insert(r,']')\n\
+			end\n\
+			table.insert(r,'=')\n\
+			serialize_r(v1,opts,r,seen,depth+1)\n\
+			table.insert(r,',')\n\
+		end\n\
+		if opts.pretty then\n\
+			table.insert(r,'\\n'..string.rep(' ',depth-1))\n\
+		end\n\
+		table.insert(r,'}')\n\
+		return\n\
+	end\n\
+	if opts.err_type then\n\
+		error('serialize: unsupported type ' .. vt, 2)\n\
+	else\n\
+		table.insert(r,'\"'..tostring(v)..'\"')\n\
+	end\n\
 end\n\
 serialize_defaults = {\n\
-        maxdepth=10,\n\
-        err_type=true,\n\
-        err_cycle=true,\n\
-        pretty=false,\n\
+	maxdepth=10,\n\
+	err_type=true,\n\
+	err_cycle=true,\n\
+	pretty=false,\n\
 }\n\
 function serialize(v,opts)\n\
-        if opts then\n\
-                for k,v in pairs(serialize_defaults) do\n\
-                        if not opts[k] then\n\
-                                opts[k]=v\n\
-                        end\n\
-                end\n\
-        else\n\
-                opts=serialize_defaults\n\
-        end\n\
-        local r={}\n\
-        serialize_r(v,opts,r)\n\
-        return table.concat(r)\n\
-end\n\
-\n\
-usb_msg_table_to_string=serialize\n"
+	if opts then\n\
+		for k,v in pairs(serialize_defaults) do\n\
+			if not opts[k] then\n\
+				opts[k]=v\n\
+			end\n\
+		end\n\
+	else\n\
+		opts=serialize_defaults\n\
+	end\n\
+	local r={}\n\
+	serialize_r(v,opts,r)\n\
+	return table.concat(r)\n\
+end\n"
 
 #define PTP_CHDK_LUA_SERIALIZE_MSGS \
 PTP_CHDK_LUA_SERIALIZE\
@@ -207,191 +205,268 @@ PTP_CHDK_LUA_SERIALIZE\
 #define PTP_CHDK_LUA_EXTEND_TABLE \
 "function extend_table(target,source,deep)\n\
 	if type(target) ~= 'table' then\n\
-                error('extend_table: target not table')\n\
-        end\n\
-        if source == nil then\n\
-                return target\n\
-        end\n\
-        if type(source) ~= 'table' then \n\
-                error('extend_table: source not table')\n\
-        end\n\
-        if source == target then\n\
-                error('extend_table: source == target')\n\
-        end\n\
-        if deep then\n\
-                return extend_table_r(target, source)\n\
-        else \n\
-                for k,v in pairs(source) do\n\
-                        target[k]=v\n\
-                end\n\
-                return target\n\
-        end\n\
+		error('extend_table: target not table')\n\
+	end\n\
+	if source == nil then\n\
+		return target\n\
+	end\n\
+	if type(source) ~= 'table' then \n\
+		error('extend_table: source not table')\n\
+	end\n\
+	if source == target then\n\
+		error('extend_table: source == target')\n\
+	end\n\
+	if deep then\n\
+		return extend_table_r(target, source)\n\
+	else \n\
+		for k,v in pairs(source) do\n\
+			target[k]=v\n\
+		end\n\
+		return target\n\
+	end\n\
 end\n"
 
 #define PTP_CHDK_LUA_MSG_BATCHER	\
 PTP_CHDK_LUA_SERIALIZE_MSGS \
 PTP_CHDK_LUA_EXTEND_TABLE \
 "function msg_batcher(opts)\n\
-        local t = extend_table({\n\
-                batchsize=50,\n\
-                batchgc='step',\n\
-                timeout=100000,\n\
-        },opts)\n\
-        t.data={}\n\
-        t.n=0\n\
-        if t.dbgmem then\n\
-                t.init_free = get_meminfo().free_block_max_size\n\
-                t.init_count = collectgarbage('count')\n\
-        end\n\
-        t.write=function(self,val)\n\
-                self.n = self.n+1\n\
-                self.data[self.n]=val\n\
-                if self.n >= self.batchsize then\n\
-                        return self:flush()\n\
-                end\n\
-                return true\n\
-        end\n\
-        t.flush = function(self)\n\
-                if self.n > 0 then\n\
-                        if self.dbgmem then\n\
-                                local count=collectgarbage('count')\n\
-                                local free=get_meminfo().free_block_max_size\n\
-                                self.data._dbg=string.format(\"count %%d (%%d) free %%d (%%d)\",\n\
-                                        count, count - self.init_count, free, self.init_free-free)\n\
-                        end\n\
-                        if not write_usb_msg(self.data,self.timeout) then\n\
-                                return false\n\
-                        end\n\
-                        self.data={}\n\
-                        self.n=0\n\
-                        if self.batchgc then\n\
-                                collectgarbage(self.batchgc)\n\
-                        end\n\
-                        if self.batchpause then\n\
-                                sleep(self.batchpause)\n\
-                        end\n\
-                end\n\
-                return true\n\
-        end\n\
-        return t\n\
+	local t = extend_table({\n\
+		batchsize=50,\n\
+		batchgc='step',\n\
+		timeout=100000,\n\
+	},opts)\n\
+	t.data={}\n\
+	t.n=0\n\
+	if t.dbgmem then\n\
+		t.init_free = get_meminfo().free_block_max_size\n\
+		t.init_count = collectgarbage('count')\n\
+	end\n\
+	t.write=function(self,val)\n\
+		self.n = self.n+1\n\
+		self.data[self.n]=val\n\
+		if self.n >= self.batchsize then\n\
+			return self:flush()\n\
+		end\n\
+		return true\n\
+	end\n\
+	t.flush = function(self)\n\
+		if self.n > 0 then\n\
+			if self.dbgmem then\n\
+				local count=collectgarbage('count')\n\
+				local free=get_meminfo().free_block_max_size\n\
+				self.data._dbg=string.format(\"count %%d (%%d) free %%d (%%d)\",\n\
+					count, count - self.init_count, free, self.init_free-free)\n\
+			end\n\
+			if not write_usb_msg(self.data,self.timeout) then\n\
+				return false\n\
+			end\n\
+			self.data={}\n\
+			self.n=0\n\
+			if self.batchgc then\n\
+				collectgarbage(self.batchgc)\n\
+			end\n\
+			if self.batchpause then\n\
+				sleep(self.batchpause)\n\
+			end\n\
+		end\n\
+		return true\n\
+	end\n\
+	return t\n\
 end\n"
 
 #define PTP_CHDK_LUA_LS_SIMPLE \
 PTP_CHDK_LUA_MSG_BATCHER  \
 "function ls_simple(path)\n\
-        local b=msg_batcher()\n\
-        local t,err=os.listdir(path)\n\
-        if not t then\n\
-                return false,err\n\
-        end\n\
-        for i,v in ipairs(t) do\n\
-                if not b:write(v) then\n\
-                        return false\n\
-                end\n\
-        end\n\
-        return b:flush()\n\
+	local b=msg_batcher()\n\
+	local t,err=os.listdir(path)\n\
+	if not t then\n\
+		return false,err\n\
+	end\n\
+	for i,v in ipairs(t) do\n\
+		if not b:write(v) then\n\
+			return false\n\
+		end\n\
+	end\n\
+	return b:flush()\n\
 end\n"
 
 #define PTP_CHDK_LUA_JOINPATH \
 "function joinpath(...)\n\
-        local parts={...}\n\
-        if #parts < 2 then\n\
-                error('joinpath requires at least 2 parts',2)\n\
-        end\n\
-        local r=parts[1]\n\
-        for i = 2, #parts do\n\
-                local v = string.gsub(parts[i],'^/','')\n\
-                if not string.match(r,'/$') then\n\
-                        r=r..'/'\n\
-                end\n\
-                r=r..v\n\
-        end\n\
-        return r\n\
+	local parts={...}\n\
+	if #parts < 2 then\n\
+		error('joinpath requires at least 2 parts',2)\n\
+	end\n\
+	local r=parts[1]\n\
+	for i = 2, #parts do\n\
+		local v = string.gsub(parts[i],'^/','')\n\
+		if not string.match(r,'/$') then\n\
+			r=r..'/'\n\
+		end\n\
+		r=r..v\n\
+	end\n\
+	return r\n\
 end\n"
 
 #define PTP_CHDK_LUA_LS \
 PTP_CHDK_LUA_MSG_BATCHER \
 PTP_CHDK_LUA_JOINPATH \
 "function ls_single(opts,b,path,v)\n\
-        if not opts.match or string.match(v,opts.match) then\n\
-                if opts.stat then\n\
-                        local st,msg=os.stat(joinpath(path,v))\n\
-                        if not st then\n\
-                                return false,msg\n\
-                        end\n\
-                        if opts.stat == '/' then\n\
-                                if st.is_dir then\n\
-                                        b:write(v .. '/')\n\
-                                else\n\
-                                        b:write(v)\n\
-                                end\n\
-                        elseif opts.stat == '*' then\n\
-                                st.name=v\n\
-                                b:write(st)\n\
-                        end\n\
-                else\n\
-                        b:write(v)\n\
-                end\n\
-        end\n\
-        return true\n\
+	if not opts.match or string.match(v,opts.match) then\n\
+		if opts.stat then\n\
+			local st,msg=os.stat(joinpath(path,v))\n\
+			if not st then\n\
+				return false,msg\n\
+			end\n\
+			if opts.stat == '/' then\n\
+				if st.is_dir then\n\
+					b:write(v .. '/')\n\
+				else\n\
+					b:write(v)\n\
+				end\n\
+			elseif opts.stat == '*' then\n\
+				st.name=v\n\
+				b:write(st)\n\
+			end\n\
+		else\n\
+			b:write(v)\n\
+		end\n\
+	end\n\
+	return true\n\
 end\n\
 \n\
 function ls(path,opts_in)\n\
-        local opts={\n\
-                msglimit=50,\n\
-                msgtimeout=100000,\n\
-                dirsonly=true\n\
-        }\n\
-        if opts_in then\n\
-                for k,v in pairs(opts_in) do\n\
-                        opts[k]=v\n\
-                end\n\
-        end\n\
-        local st, err = os.stat(path)\n\
-        if not st then\n\
-                return false, err\n\
-        end\n\
+	local opts={\n\
+		msglimit=50,\n\
+		msgtimeout=100000,\n\
+		dirsonly=true\n\
+	}\n\
+	if opts_in then\n\
+		for k,v in pairs(opts_in) do\n\
+			opts[k]=v\n\
+		end\n\
+	end\n\
+	local st, err = os.stat(path)\n\
+	if not st then\n\
+		return false, err\n\
+	end\n\
+	\n\
+	local b=msg_batcher{\n\
+		batchsize=opts.msglimit,\n\
+		timeout=opts.msgtimeout\n\
+	}\n\
+	\n\
+	if not st.is_dir then\n\
+		if opts.dirsonly then\n\
+			return false, 'not a directory'\n\
+		end\n\
+		if opts.stat == '*' then\n\
+			st.name=path\n\
+			b:write(st)\n\
+		else\n\
+			b:write(path)\n\
+		end\n\
+		b:flush()\n\
+		return true\n\
+	end\n\
+	\n\
+	if os.idir then\n\
+		for v in os.idir(path,opts.listall) do\n\
+			local status,err=ls_single(opts,b,path,v)\n\
+			if not status then\n\
+				return false, err\n\
+			end\n\
+		end\n\
+	else\n\
+		local t,msg=os.listdir(path,opts.listall)\n\
+		if not t then\n\
+			return false,msg\n\
+		end\n\
+		for i,v in ipairs(t) do\n\
+			local status,err=ls_single(opts,b,path,v)\n\
+			if not status then\n\
+				return false, err\n\
+			end\n\
+		end\n\
+	end\n\
+	b:flush()\n\
+	return true\n\
+end\n"
+
+#define PTP_CHDK_LUA_RLIB_SHOOT_COMMON \
+"function rlib_shoot_init_exp(opts)	\n\
+	if opts.tv then\n\
+		set_tv96_direct(opts.tv)\n\
+	end\n\
+	if opts.sv then\n\
+		set_sv96(opts.sv)\n\
+	end\n\
+	if opts.svm then\n\
+		if type(sv96_market_to_real) ~= 'function' then\n\
+			error('svm not supported')\n\
+		end\n\
+		set_sv96(sv96_market_to_real(opts.svm))\n\
+	end\n\
+	if opts.isomode then\n\
+		set_iso_mode(opts.isomode)\n\
+	end\n\
+	if opts.av then\n\
+		set_av96_direct(opts.av)\n\
+	end\n\
+	if opts.nd then\n\
+		set_nd_filter(opts.nd)\n\
+	end\n\
+	if opts.sd then\n\
+		set_focus(opts.sd)\n\
+	end\n\
+end\n"
+
+#define PTP_CHDK_LUA_RLIB_SHOOT \
+PTP_CHDK_LUA_RLIB_SHOOT_COMMON \
+"function rlib_shoot(opts)\n\
+	local rec,vid = get_mode()\n\
+	if not rec then\n\
+		return false,'not in rec mode'\n\
+	end\n\
 \n\
-        local b=msg_batcher{\n\
-                batchsize=opts.msglimit,\n\
-                timeout=opts.msgtimeout\n\
-        }\n\
+	rlib_shoot_init_exp(opts)\n\
 \n\
-        if not st.is_dir then\n\
-                if opts.dirsonly then\n\
-                        return false, 'not a directory'\n\
-                end\n\
-                if opts.stat == '*' then\n\
-                        st.name=path\n\
-                        b:write(st)\n\
-                else\n\
-                        b:write(path)\n\
-                end\n\
-                b:flush()\n\
-                return true\n\
-        end\n\
-\n\
-        if os.idir then\n\
-                for v in os.idir(path,opts.listall) do\n\
-                        local status,err=ls_single(opts,b,path,v)\n\
-                        if not status then\n\
-                                return false, err\n\
-                        end\n\
-                end\n\
-        else\n\
-                local t,msg=os.listdir(path,opts.listall)\n\
-                if not t then\n\
-                        return false,msg\n\
-                end\n\
-                for i,v in ipairs(t) do\n\
-                        local status,err=ls_single(opts,b,path,v)\n\
-                        if not status then\n\
-                                return false, err\n\
-                        end\n\
-                end\n\
-        end\n\
-        b:flush()\n\
-        return true\n\
+	local save_raw\n\
+	if opts.raw then\n\
+		save_raw=get_raw()\n\
+		set_raw(opts.raw)\n\
+	end\n\
+	local save_dng\n\
+	if opts.dng then\n\
+		save_dng=get_config_value(226)\n\
+		set_config_value(226,opts.dng)\n\
+	end\n\
+	shoot()\n\
+	local r\n\
+	if opts.info then\n\
+		r = {\n\
+			dir=get_image_dir(),\n\
+			exp=get_exp_count(),\n\
+			raw=(get_raw() == 1),\n\
+		}\n\
+		if r.raw then\n\
+			r.raw_in_dir = (get_config_value(35) == 1)\n\
+			r.raw_pfx = get_config_value(36)\n\
+			r.raw_ext = get_config_value(37)\n\
+			r.dng = (get_config_value(226) == 1)\n\
+			if r.dng then\n\
+				r.use_dng_ext = (get_config_value(234) == 1)\n\
+			end\n\
+		end\n\
+	else\n\
+		r=true\n\
+	end\n\
+	if save_raw then\n\
+		set_raw(save_raw)\n\
+	end\n\
+	if save_dng then\n\
+		set_config_value(226,save_dng)\n\
+	end\n\
+	return r\n\
 end\n"
 
 
