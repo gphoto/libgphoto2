@@ -21,14 +21,12 @@
 #include "config.h"
 
 #include <stdlib.h>
+#include <math.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 #include <sys/time.h>
-#if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
-#include <langinfo.h>
-#endif
 #include <unistd.h>
 
 #include <gphoto2/gphoto2-library.h>
@@ -95,6 +93,11 @@ chdk_generic_script_run (
 	unsigned int		status;
 	int			luastatus;
 	ptp_chdk_script_msg	*msg = NULL;
+	char			*xtable = NULL;
+	int			xint = -1;
+
+	if (!table) table = &xtable;
+	if (!retint) retint = &xint;
 
 	GP_LOG_D ("calling lua script %s", luascript);
 	C_PTP (ptp_chdk_exec_lua(params, (char*)luascript, 0, &scriptid, &luastatus));
@@ -122,7 +125,7 @@ chdk_generic_script_run (
 					break;
 				case PTP_CHDK_TYPE_INTEGER:
 					GP_LOG_D("int %02x %02x %02x %02x", msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
-					*retint = (msg->data[0]) | (msg->data[1] << 8) | (msg->data[2] << 16) | (msg->data[3] << 24);
+					*retint = le32atoh((unsigned char*)msg->data);
 					break;
 				case PTP_CHDK_TYPE_STRING: GP_LOG_D("string %s", msg->data);break;
 				case PTP_CHDK_TYPE_TABLE:
@@ -154,6 +157,10 @@ chdk_generic_script_run (
 		if (status & PTP_CHDK_SCRIPT_STATUS_RUN)
 			usleep(100*1000); /* 100 ms */
 	}
+	if (xtable)
+		GP_LOG_E("a string return was unexpected, returned value: %s", xtable);
+	if (xint != -1)
+		GP_LOG_E("a int return was unexpected, returned value: %d", xint);
 	return GP_OK;
 }
 
@@ -347,6 +354,23 @@ chdk_get_info_func (CameraFilesystem *fs, const char *folder, const char *filena
 }
 
 static int
+chdk_delete_file_func (CameraFilesystem *fs, const char *folder,
+                        const char *filename, void *data, GPContext *context)
+{
+	Camera *camera = (Camera *)data;
+	PTPParams		*params = &camera->pl->params;
+	int			ret;
+	const char 		*luascript = "\nreturn os.remove('A%s/%s')";
+	char 			*lua = NULL;
+
+	C_MEM (lua = malloc(strlen(luascript)+strlen(folder)+strlen(filename)+1));
+	sprintf(lua,luascript,folder,filename);
+	ret = chdk_generic_script_run (params, lua, NULL, NULL, context);
+	free (lua);
+	return ret;
+}
+
+static int
 chdk_get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
                CameraFileType type, CameraFile *file, void *data,
                GPContext *context)
@@ -375,10 +399,10 @@ static CameraFilesystemFuncs chdk_fsfuncs = {
 	.folder_list_func       = chdk_folder_list_func,
 	.get_info_func          = chdk_get_info_func,
 	.get_file_func          = chdk_get_file_func,
+	.del_file_func          = chdk_delete_file_func,
 /*
 	.set_info_func          = chdk_set_info_func,
 	.read_file_func         = chdk_read_file_func,
-	.del_file_func          = chdk_delete_file_func,
 	.put_file_func          = chdk_put_file_func,
 	.make_dir_func          = chdk_make_dir_func,
 	.remove_dir_func        = chdk_remove_dir_func,
@@ -461,21 +485,342 @@ chdk_camera_summary (Camera *camera, CameraText *text, GPContext *context)
 	PTPParams	*params = &camera->pl->params;
 	int 		ret;
 	char 		*s = text->text;
-	char		*table;
 	int		major, minor, retint;
 
 	C_PTP (ptp_chdk_get_version (params, &major, &minor));
         sprintf (s, _("CHDK %d.%d Status:\n"), major, minor ); s += strlen(s);
-	ret = chdk_generic_script_run (params, "return get_mode()", &table, &retint, context);
+
+	ret = chdk_generic_script_run (params, "return get_mode()", NULL, &retint, context);
 	sprintf (s, _("Mode: %d\n"), retint); s += strlen(s);
-	ret = chdk_generic_script_run (params, "return get_sv96()", &table, &retint, context);
-	sprintf (s, _("SV96: %d\n"), retint); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_sv96()", NULL, &retint, context);
+	sprintf (s, _("SV96: %d, ISO: %d\n"), retint, (int)(exp2(retint/96.0)*3.125)); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_tv96()", NULL, &retint, context);
+	sprintf (s, _("TV96: %d, Shutterspeed: %f\n"), retint, 1.0/exp2(retint/96.0)); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_av96()", NULL, &retint, context);
+	sprintf (s, _("AV96: %d, Aperture: %f\n"), retint, sqrt(exp2(retint/96.0))); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_focus()", NULL, &retint, context);
+	sprintf (s, _("Focus: %d\n"), retint); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_iso_mode()", NULL, &retint, context);
+	sprintf (s, _("ISO Mode: %d\n"), retint); s += strlen(s);
+
+	ret = chdk_generic_script_run (params, "return get_zoom()", NULL, &retint, context);
+	sprintf (s, _("Zoom: %d\n"), retint); s += strlen(s);
         return ret;
+/* 
+Mode: 256
+SV96: 603, ISO: 243
+TV96: 478, Shutterspeed: 0
+AV96: 294, Aperture: 2,890362
+ND Filter: -1
+Focus: 166
+ISO Mode: 0
+
+*/
+
+}
+
+struct submenu;
+typedef int (*get_func) (PTPParams *, struct submenu*, CameraWidget **, GPContext *);
+#define CONFIG_GET_ARGS PTPParams *params, struct submenu *menu, CameraWidget **widget, GPContext *context
+typedef int (*put_func) (PTPParams *, CameraWidget *, GPContext *);
+#define CONFIG_PUT_ARGS PTPParams *params, CameraWidget *widget, GPContext *context
+
+struct submenu {
+	char		*label;
+	char		*name;
+        get_func	getfunc;
+        put_func	putfunc;
+};
+
+static int
+chdk_get_iso(CONFIG_GET_ARGS) {
+	int retint = 0, iso = 0;
+	char buf[20];
+
+	CR (chdk_generic_script_run (params, "return get_iso_mode()", NULL, &retint, context));
+	if (!retint) {
+		CR(chdk_generic_script_run (params, "return get_sv96()", NULL, &retint, context));
+		iso = (int)(exp2(retint/96.0)*3.125);
+	} else {
+		iso = retint;
+	}
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf,"%d", iso);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_iso(CONFIG_PUT_ARGS) {
+	int iso = 0;
+	char *val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	if (!sscanf(val, "%d", &iso))
+		return GP_ERROR_BAD_PARAMETERS;
+
+	sprintf(lua,"return set_iso_mode(%d)\n", iso);
+	CR (chdk_generic_script_run (params, lua, NULL, NULL, context));
+	return GP_OK;
+}
+
+static int
+chdk_get_av(CONFIG_GET_ARGS) {
+	int retint = 0;
+	char buf[20];
+	float f;
+
+	CR (chdk_generic_script_run (params, "return get_av96()", NULL, &retint, context));
+	f = sqrt(exp2(retint/96.0));
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf, "%d.%d", (int)f,((int)f*10)%10);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_av(CONFIG_PUT_ARGS) {
+	char *val;
+	int av1,av2,sqav;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	if (2 != sscanf(val, "%d.%d", &av1,&av2)) {
+		if (!sscanf(val, "%d", &av1)) {
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		av2 = 0;
+	}
+
+	/* av96 = 96*log2(f^2) */
+	sqav = (av1*1.0+av2/10.0)*(av1*1.0+av2/10.0);
+	sprintf(lua,"return set_av96(%d)\n", (int)(96.0*log2(sqav)));
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+static int
+chdk_get_tv(CONFIG_GET_ARGS) {
+	int retint = 0;
+	char buf[20];
+
+	CR (chdk_generic_script_run (params, "return get_tv96()", NULL, &retint, context));
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf, "%f", 1.0/exp2(retint/96.0));
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_tv(CONFIG_PUT_ARGS) {
+	char *val;
+	float	f;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	if (!sscanf(val, "%f", &f))
+		return GP_ERROR_BAD_PARAMETERS;
+
+	sprintf(lua,"return set_tv96(%d)\n", (int)(96.0*(-log2(f))));
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+static int
+chdk_get_focus(CONFIG_GET_ARGS) {
+	int retint = 0;
+	char buf[20];
+
+	CR (chdk_generic_script_run (params, "return get_focus()", NULL, &retint, context));
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	sprintf(buf, "%dmm", retint);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_focus(CONFIG_PUT_ARGS) {
+	char *val;
+	int focus;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	if (!sscanf(val, "%dmm", &focus))
+		return GP_ERROR_BAD_PARAMETERS;
+
+	sprintf(lua,"return set_focus(%d)\n", focus);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+static int
+chdk_get_zoom(CONFIG_GET_ARGS) {
+	int retint = 0;
+	char buf[20];
+
+	CR (chdk_generic_script_run (params, "return get_zoom()", NULL, &retint, context));
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	sprintf(buf, "%d", retint);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_zoom(CONFIG_PUT_ARGS) {
+	char *val;
+	int zoom;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	if (!sscanf(val, "%d", &zoom))
+		return GP_ERROR_BAD_PARAMETERS;
+
+	sprintf(lua,"return set_zoom(%d)\n", zoom);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+static void
+add_buttons(CameraWidget *widget) {
+	gp_widget_add_choice(widget, "shoot_half");
+	gp_widget_add_choice(widget, "shoot_full");
+	gp_widget_add_choice(widget, "shoot_full_only");
+}
+
+static int
+chdk_get_press(CONFIG_GET_ARGS) {
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
+	gp_widget_set_value (*widget, "chdk buttonname");
+	add_buttons(*widget);
+	return GP_OK;
+}
+
+static int
+chdk_put_press(CONFIG_PUT_ARGS) {
+	char *val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"press('%s')\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+static int
+chdk_get_release(CONFIG_GET_ARGS) {
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
+	gp_widget_set_value (*widget, "chdk buttonname");
+	add_buttons(*widget);
+	return GP_OK;
+}
+
+static int
+chdk_put_release(CONFIG_PUT_ARGS) {
+	char *val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"release('%s')\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+static int
+chdk_get_click(CONFIG_GET_ARGS) {
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
+	gp_widget_set_value (*widget, "chdk buttonname");
+	gp_widget_add_choice(*widget, "erase");
+	gp_widget_add_choice(*widget, "up");
+	gp_widget_add_choice(*widget, "print");
+	gp_widget_add_choice(*widget, "left");
+	gp_widget_add_choice(*widget, "set");
+	gp_widget_add_choice(*widget, "right");
+	gp_widget_add_choice(*widget, "disp");
+	gp_widget_add_choice(*widget, "down");
+	gp_widget_add_choice(*widget, "menu");
+	gp_widget_add_choice(*widget, "zoom_in");
+	gp_widget_add_choice(*widget, "zoom_out");
+	gp_widget_add_choice(*widget, "video");
+	gp_widget_add_choice(*widget, "shoot_full");
+	gp_widget_add_choice(*widget, "shoot_full_only");
+	return GP_OK;
+}
+
+static int
+chdk_put_click(CONFIG_PUT_ARGS) {
+	char *val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"click('%s')\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+struct submenu imgsettings[] = {
+	{ N_("ISO"),		"iso",		chdk_get_iso,	chdk_put_iso},
+	{ N_("Aperture"),	"aperture",	chdk_get_av,	chdk_put_av},
+	{ N_("Shutterspeed"),	"shutterspeed",	chdk_get_tv,	chdk_put_tv},
+	{ N_("Focus"),		"focus",	chdk_get_focus,	chdk_put_focus},
+	{ N_("Zoom"),		"zoom",		chdk_get_zoom,	chdk_put_zoom},
+	{ N_("Press"),		"press",	chdk_get_press,	chdk_put_press},
+	{ N_("Release"),	"release",	chdk_get_release,chdk_put_release},
+	{ N_("Click"),		"click",	chdk_get_click,	chdk_put_click},
+	{ NULL,			NULL,		NULL, 		NULL},
+};
+
+/* We have way less options than regular PTP now, but try to keep the same structure */
+static int
+chdk_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	PTPParams	*params = &(camera->pl->params);
+	CameraWidget	*menu, *child;
+	int		i, ret;
+
+	CR(camera_prepare_chdk_capture(camera, context));
+
+        gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
+	gp_widget_set_name (*window, "main");
+	gp_widget_new (GP_WIDGET_SECTION, _("Image Settings"), &menu);
+	gp_widget_set_name (menu, "imgsettings");
+	gp_widget_append(*window, menu);
+
+	for (i=0;imgsettings[i].name;i++) {
+		ret = imgsettings[i].getfunc(params,&imgsettings[i],&child,context);
+		if (ret != GP_OK) {
+			GP_LOG_E("error getting %s menu", imgsettings[i].name);
+			continue;
+		}
+		gp_widget_set_name (child, imgsettings[i].name);
+		gp_widget_append (menu, child);
+	}
+	return GP_OK;
+}
+
+static int
+chdk_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
+{
+	PTPParams	*params = &(camera->pl->params);
+	int		i, ret;
+
+	for (i=0;imgsettings[i].name;i++) {
+		CameraWidget *widget;
+
+		ret = gp_widget_get_child_by_label (window, _(imgsettings[i].label), &widget);
+		if (ret != GP_OK)
+			continue;
+		if (!gp_widget_changed (widget))
+			continue;
+		ret = imgsettings[i].putfunc(params,widget,context);
+		if (ret != GP_OK) {
+			GP_LOG_E("error putting %s menu", imgsettings[i].name);
+			continue;
+		}
+	}
+	return GP_OK;
 }
 
 static int
 chdk_camera_exit (Camera *camera, GPContext *context) 
 {
+	camera_unprepare_chdk_capture(camera, context);
         return GP_OK;
 }
 
@@ -530,11 +875,11 @@ chdk_init(Camera *camera, GPContext *context) {
         camera->functions->exit = chdk_camera_exit;
         camera->functions->capture = chdk_camera_capture;
         camera->functions->summary = chdk_camera_summary;
+        camera->functions->get_config = chdk_camera_get_config;
+        camera->functions->set_config = chdk_camera_set_config;
 /*
         camera->functions->trigger_capture = camera_trigger_capture;
         camera->functions->capture_preview = camera_capture_preview;
-        camera->functions->get_config = camera_get_config;
-        camera->functions->set_config = camera_set_config;
         camera->functions->wait_for_event = camera_wait_for_event;
 */
 
