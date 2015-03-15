@@ -1,0 +1,1115 @@
+ Device info:
+ Manufacturer: Canon Inc.
+   Model: Canon EOS 7D Mark II
+   device version: 3-1.0.2
+   serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+ Vendor extension ID: 0x0000000b
+ Vendor extension version: 100
+ Vendor extension description: (null)
+ Functional Mode: 0x0000
+ PTP Standard Version: 100
+ Supported operations:
+   0x1001
+   0x1002
+   0x1003
+   0x1014
+   0x1015
+   0x1016
+   0x91d5
+   0x9801
+   0x9802
+   0x9803
+   0x9804
+   0x9805
+   0x1006
+   0x1004
+   0x9101
+   0x1005
+   0x9102
+   0x1007
+   0x1008
+   0x9103
+   0x1009
+   0x9104
+   0x100a
+   0x101b
+   0x9107
+   0x100c
+   0x100d
+   0x100b
+   0x9105
+   0x100f
+   0x9106
+   0x9110
+   0x9127
+   0x910b
+   0x9108
+   0x9109
+   0x910c
+   0x910e
+   0x910f
+   0x9117
+   0x9120
+   0x91f0
+   0x9118
+   0x9121
+   0x91f1
+   0x911d
+   0x910a
+   0x911b
+   0x911c
+   0x911e
+   0x911a
+   0x9141
+   0x9142
+   0x9143
+   0x9144
+   0x9145
+   0x9140
+   0x9153
+   0x9154
+   0x9160
+   0x9155
+   0x9157
+   0x9158
+   0x9159
+   0x915a
+   0x915b
+   0x915c
+   0x915d
+   0x911f
+   0x91fe
+   0x91ff
+   0x9128
+   0x9129
+   0x912d
+   0x912e
+   0x912f
+   0x912c
+   0x9130
+   0x9131
+   0x9132
+   0x9133
+   0x9134
+   0x912b
+   0x9135
+   0x9136
+   0x9137
+   0x9138
+   0x9139
+   0x913a
+   0x913b
+   0x913c
+   0x913d
+   0x913f
+   0x91da
+   0x91db
+   0x91dc
+   0x91dd
+   0x91de
+   0x91d8
+   0x91d9
+   0x91d7
+   0x913e
+   0x9113
+   0x9114
+   0x9115
+   0x9116
+   0x91c0
+   0x91c1
+   0x91c2
+   0x91c3
+   0x91c4
+   0x91c5
+   0x91c6
+   0x91c7
+   0x91c8
+   0x91c9
+   0x91ca
+   0x91cb
+   0x91cc
+   0x91ce
+   0x91cf
+   0x91d0
+   0x91d1
+   0x91d2
+   0x91e1
+   0x91e2
+   0x91e3
+   0x91e4
+   0x91e5
+   0x91e6
+   0x91e7
+   0x91e8
+   0x91e9
+   0x91ea
+   0x91eb
+   0x91ec
+   0x91ed
+   0x91ee
+   0x91ef
+   0x91f8
+   0x91f9
+   0x91f2
+   0x91f3
+   0x91f4
+   0x91f7
+   0x91fb
+   0x91fc
+   0x91fd
+   0x9122
+   0x9123
+   0x9124
+   0x91f5
+   0x91f6
+   0x9033
+   0x9068
+   0x9069
+   0x906a
+   0x906b
+   0x906c
+   0x906d
+   0x906e
+   0x906f
+   0x902f
+   0x9050
+   0x9051
+   0x905c
+   0x905d
+   0x9052
+   0x9053
+   0x9057
+   0x9058
+   0x9059
+   0x905a
+   0x905b
+   0x905f
+ Events Supported:
+   0x4009
+   0x4004
+   0x4005
+   0x4003
+   0x4002
+   0x4007
+   0xc101
+   0xc1af
+   0xc19a
+   0xc19b
+ Device Properties Supported:
+   0xd049
+   0xd402
+   0xd407
+   0xd406
+   0xd303
+   0x5001
+
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon EOS 7D Mark II
+  Version: 3-1.0.2
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type, Unknown(b104), Unknown(b105), Unknown(b982)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, Canon EOS Capture, Canon EOS Shutter Button
+	Canon Wifi support
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: SD
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 31902400512 (30424 MB)
+	Free Space (Bytes): 28801433600 (27467 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Model ID(0xd049):(read only) (type=0x6) 2147484297
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS 7D Mark II'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+Property 0xd303:(read only) (type=0x2) 1
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 77% (77)
+
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Type: TOGGLE
+Current: 0
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Type: TOGGLE
+Current: 0
+/main/actions/uilock
+Label: UI Lock
+Type: TOGGLE
+Current: 2
+/main/actions/autofocusdrive
+Label: Drive Canon DSLR Autofocus
+Type: TOGGLE
+Current: 0
+/main/actions/manualfocusdrive
+Label: Drive Canon DSLR Manual focus
+Type: RADIO
+Current: None
+Choice: 0 Near 1
+Choice: 1 Near 2
+Choice: 2 Near 3
+Choice: 3 None
+Choice: 4 Far 1
+Choice: 5 Far 2
+Choice: 6 Far 3
+/main/actions/cancelautofocus
+Label: Cancel Canon DSLR Autofocus
+Type: TOGGLE
+Current: 0
+/main/actions/eoszoom
+Label: Canon EOS Zoom
+Type: TEXT
+Current: 0
+/main/actions/eoszoomposition
+Label: Canon EOS Zoom Position
+Type: TEXT
+Current: 0,0
+/main/actions/viewfinder
+Label: Canon EOS Viewfinder
+Type: TOGGLE
+Current: 2
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+Choice: 5 Immediate
+Choice: 6 Press 1
+Choice: 7 Press 2
+Choice: 8 Press 3
+Choice: 9 Release 1
+Choice: 10 Release 2
+Choice: 11 Release 3
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1426449817
+Printable: Sun 15 Mar 2015 09:03:37 PM CET
+Help: Use 'now' as the current time when setting.
+
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1426449817
+Printable: Sun 15 Mar 2015 09:03:37 PM CET
+Help: Use 'now' as the current time when setting.
+
+/main/settings/reviewtime
+Label: Quick Review Time
+Type: RADIO
+Current: 2 seconds
+Choice: 0 None
+Choice: 1 2 seconds
+Choice: 2 4 seconds
+Choice: 3 8 seconds
+Choice: 4 Hold
+/main/settings/output
+Label: Camera Output
+Type: RADIO
+Current: Off
+Choice: 0 Off
+Choice: 1 TFT
+Choice: 2 PC
+Choice: 3 TFT + PC
+Choice: 4 Setting 4
+Choice: 5 Setting 5
+Choice: 6 Setting 6
+Choice: 7 Setting 7
+Choice: 8 Unknown value 0008
+Choice: 9 Unknown value 0009
+Choice: 10 Unknown value 000a
+Choice: 11 Unknown value 000b
+/main/settings/movierecordtarget
+Label: Recording Destination
+Type: RADIO
+Current: None
+Choice: 0 None
+/main/settings/evfmode
+Label: EVF Mode
+Type: RADIO
+Current: 1
+Choice: 0 1
+Choice: 1 0
+/main/settings/ownername
+Label: Owner Name
+Type: TEXT
+Current: 
+/main/settings/artist
+Label: Artist
+Type: TEXT
+Current: 
+/main/settings/copyright
+Label: Copyright
+Type: TEXT
+Current: 
+/main/settings/customfuncex
+Label: Custom Functions Ex
+Type: TEXT
+Current: 148,1,4,13c,5,70c,3e,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,fe,ff,0,3,70,30,0,0,0,0,0,0,0,0,0,0,0,14,50,0,0,0,7,3,0,ff,ff,ff,0,ff,ff,ff,706,1,0,70f,2,0,2,80e,1,0,813,1,0,
+/main/settings/focusinfo
+Label: Focus Info
+Type: TEXT
+Current: eosversion=4,size=5472x3648,size2=5472x3648,points={{279,776,243,243},{0,776,243,243},{-279,776,243,243},{-559,776,243,243},{-1093,631,243,243},{-1397,631,243,243},{-1700,631,243,243},{-2004,631,243,243},{-1397,315,243,243},{-1700,315,243,243},{-2004,315,243,243},{2004,631,243,243},{1700,631,243,243},{1397,631,243,243},{1093,631,243,243},{559,776,243,243},{1397,315,243,243},{1093,315,243,243},{559,388,243,243},{279,388,243,243},{0,388,243,243},{-279,388,243,243},{-559,388,243,243},{-1093,315,243,243},{-279,0,243,243},{-559,0,243,243},{-1093,0,243,243},{-1397,0,243,243},{-1700,0,243,243},{-2004,0,243,243},{2004,315,243,243},{1700,315,243,243},{-2004,-315,243,243},{2004,0,243,243},{1700,0,243,243},{1397,0,243,243},{1093,0,243,243},{559,0,243,243},{279,0,243,243},{0,0,243,243},{559,-388,243,243},{279,-388,243,243},{0,-388,243,243},{-279,-388,243,243},{-559,-388,243,243},{-1093,-315,243,243},{-1397,-315,243,243},{-1700,-315,243,243},{-1093,-631,243,243},{-1397,-631,243,243},{-1700,-631,243,243},{-2004,-631,243,243},{2004,-315,243,243},{1700,-315,243,243},{1397,-315,243,243},{1093,-315,243,243},{1700,-631,243,243},{1397,-631,243,243},{1093,-631,243,243},{559,-776,243,243},{279,-776,243,243},{0,-776,243,243},{-279,-776,243,243},{-559,-776,243,243},{2004,-631,243,243}},select={},unknown={00ffffffffffffffff010000000000000000000000ffff}
+/main/settings/focusarea
+Label: Focus Area
+Type: TEXT
+Current: 127
+/main/settings/autopoweroff
+Label: Auto Power Off
+Type: TEXT
+Current: 60
+/main/settings/depthoffield
+Label: Depth of Field
+Type: TEXT
+Current: 0
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/settings/capture
+Label: Capture
+Type: TOGGLE
+Current: 0
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Canon Inc.
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: Canon EOS 7D Mark II
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 3-1.0.2
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/status/model
+Label: Camera Model
+Type: TEXT
+Current: 2147484297
+/main/status/ptpversion
+Label: PTP Version
+Type: TEXT
+Current: 256
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 100%
+/main/status/lensname
+Label: Lens Name
+Type: TEXT
+Current: 18-300mm
+/main/status/eosserialnumber
+Label: Serial Number
+Type: TEXT
+Current: 043021008974
+/main/status/shuttercounter
+Label: Shutter Counter
+Type: TEXT
+Current: 213
+/main/status/availableshots
+Label: Available Shots
+Type: TEXT
+Current: 10183
+/main/imgsettings/imageformat
+Label: Image Format
+Type: RADIO
+Current: RAW
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG  (S1 Fine)
+Choice: 5 Small Normal JPEG (S1 Normal)
+Choice: 6 Smaller JPEG (S2)
+Choice: 7 Tiny JPEG (S3)
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
+Choice: 12 RAW + Small Fine JPEG (S1 Fine)
+Choice: 13 RAW + Small Normal JPEG (S1 Normal)
+Choice: 14 RAW + Smaller JPEG (S2)
+Choice: 15 RAW + Tiny JPEG (S3)
+Choice: 16 mRAW + Large Fine JPEG
+Choice: 17 mRAW + Large Normal JPEG
+Choice: 18 mRAW + Medium Fine JPEG
+Choice: 19 mRAW + Medium Normal JPEG
+Choice: 20 mRAW + Small Fine JPEG (S1 Fine)
+Choice: 21 mRAW + Small Normal JPEG (S1 Normal)
+Choice: 22 mRAW + Smaller JPEG (S2)
+Choice: 23 mRAW + Tiny JPEG (S3)
+Choice: 24 sRAW + Large Fine JPEG
+Choice: 25 sRAW + Large Normal JPEG
+Choice: 26 sRAW + Medium Fine JPEG
+Choice: 27 sRAW + Medium Normal JPEG
+Choice: 28 sRAW + Small Fine JPEG (S1 Fine)
+Choice: 29 sRAW + Small Normal JPEG (S1 Normal)
+Choice: 30 sRAW + Smaller JPEG (S2)
+Choice: 31 sRAW + Tiny JPEG (S3)
+Choice: 32 RAW
+Choice: 33 mRAW
+Choice: 34 sRAW
+/main/imgsettings/imageformatsd
+Label: Image Format SD
+Type: RADIO
+Current: RAW
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG  (S1 Fine)
+Choice: 5 Small Normal JPEG (S1 Normal)
+Choice: 6 Smaller JPEG (S2)
+Choice: 7 Tiny JPEG (S3)
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
+Choice: 12 RAW + Small Fine JPEG (S1 Fine)
+Choice: 13 RAW + Small Normal JPEG (S1 Normal)
+Choice: 14 RAW + Smaller JPEG (S2)
+Choice: 15 RAW + Tiny JPEG (S3)
+Choice: 16 mRAW + Large Fine JPEG
+Choice: 17 mRAW + Large Normal JPEG
+Choice: 18 mRAW + Medium Fine JPEG
+Choice: 19 mRAW + Medium Normal JPEG
+Choice: 20 mRAW + Small Fine JPEG (S1 Fine)
+Choice: 21 mRAW + Small Normal JPEG (S1 Normal)
+Choice: 22 mRAW + Smaller JPEG (S2)
+Choice: 23 mRAW + Tiny JPEG (S3)
+Choice: 24 sRAW + Large Fine JPEG
+Choice: 25 sRAW + Large Normal JPEG
+Choice: 26 sRAW + Medium Fine JPEG
+Choice: 27 sRAW + Medium Normal JPEG
+Choice: 28 sRAW + Small Fine JPEG (S1 Fine)
+Choice: 29 sRAW + Small Normal JPEG (S1 Normal)
+Choice: 30 sRAW + Smaller JPEG (S2)
+Choice: 31 sRAW + Tiny JPEG (S3)
+Choice: 32 RAW
+Choice: 33 mRAW
+Choice: 34 sRAW
+/main/imgsettings/imageformatcf
+Label: Image Format CF
+Type: RADIO
+Current: RAW
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG  (S1 Fine)
+Choice: 5 Small Normal JPEG (S1 Normal)
+Choice: 6 Smaller JPEG (S2)
+Choice: 7 Tiny JPEG (S3)
+Choice: 8 RAW + Large Fine JPEG
+Choice: 9 RAW + Large Normal JPEG
+Choice: 10 RAW + Medium Fine JPEG
+Choice: 11 RAW + Medium Normal JPEG
+Choice: 12 RAW + Small Fine JPEG (S1 Fine)
+Choice: 13 RAW + Small Normal JPEG (S1 Normal)
+Choice: 14 RAW + Smaller JPEG (S2)
+Choice: 15 RAW + Tiny JPEG (S3)
+Choice: 16 mRAW + Large Fine JPEG
+Choice: 17 mRAW + Large Normal JPEG
+Choice: 18 mRAW + Medium Fine JPEG
+Choice: 19 mRAW + Medium Normal JPEG
+Choice: 20 mRAW + Small Fine JPEG (S1 Fine)
+Choice: 21 mRAW + Small Normal JPEG (S1 Normal)
+Choice: 22 mRAW + Smaller JPEG (S2)
+Choice: 23 mRAW + Tiny JPEG (S3)
+Choice: 24 sRAW + Large Fine JPEG
+Choice: 25 sRAW + Large Normal JPEG
+Choice: 26 sRAW + Medium Fine JPEG
+Choice: 27 sRAW + Medium Normal JPEG
+Choice: 28 sRAW + Small Fine JPEG (S1 Fine)
+Choice: 29 sRAW + Small Normal JPEG (S1 Normal)
+Choice: 30 sRAW + Smaller JPEG (S2)
+Choice: 31 sRAW + Tiny JPEG (S3)
+Choice: 32 RAW
+Choice: 33 mRAW
+Choice: 34 sRAW
+/main/imgsettings/iso
+Label: ISO Speed
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 100
+Choice: 2 125
+Choice: 3 160
+Choice: 4 200
+Choice: 5 250
+Choice: 6 320
+Choice: 7 400
+Choice: 8 500
+Choice: 9 640
+Choice: 10 800
+Choice: 11 1000
+Choice: 12 1250
+Choice: 13 1600
+Choice: 14 2000
+Choice: 15 2500
+Choice: 16 3200
+Choice: 17 4000
+Choice: 18 5000
+Choice: 19 6400
+Choice: 20 8000
+Choice: 21 10000
+Choice: 22 12800
+Choice: 23 16000
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 Daylight
+Choice: 2 Shadow
+Choice: 3 Cloudy
+Choice: 4 Tungsten
+Choice: 5 Fluorescent
+Choice: 6 Flash
+Choice: 7 Manual
+Choice: 8 Color Temperature
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Type: TEXT
+Current: 5200
+/main/imgsettings/whitebalanceadjusta
+Label: WhiteBalance Adjust A
+Type: RADIO
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+/main/imgsettings/whitebalanceadjustb
+Label: WhiteBalance Adjust B
+Type: RADIO
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+/main/imgsettings/whitebalancexa
+Label: WhiteBalance X A
+Type: TEXT
+Current: 0
+/main/imgsettings/whitebalancexb
+Label: WhiteBalance X B
+Type: TEXT
+Current: 0
+/main/imgsettings/colorspace
+Label: Color Space
+Type: RADIO
+Current: AdobeRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Type: RADIO
+Current: 0
+Choice: 0 -5
+Choice: 1 -4.6
+Choice: 2 -4.3
+Choice: 3 -4
+Choice: 4 -3.6
+Choice: 5 -3.3
+Choice: 6 -3
+Choice: 7 -2.6
+Choice: 8 -2.3
+Choice: 9 -2
+Choice: 10 -1.6
+Choice: 11 -1.3
+Choice: 12 -1.0
+Choice: 13 -0.6
+Choice: 14 -0.3
+Choice: 15 0
+Choice: 16 0.3
+Choice: 17 0.6
+Choice: 18 1.0
+Choice: 19 1.3
+Choice: 20 1.6
+Choice: 21 2
+Choice: 22 2.3
+Choice: 23 2.6
+Choice: 24 3
+Choice: 25 3.3
+Choice: 26 3.6
+Choice: 27 4
+Choice: 28 4.3
+Choice: 29 4.6
+Choice: 30 5
+/main/capturesettings/focusmode
+Label: Focus Mode
+Type: RADIO
+Current: One Shot
+Choice: 0 One Shot
+Choice: 1 AI Focus
+Choice: 2 AI Servo
+/main/capturesettings/autoexposuremode
+Label: Canon Auto Exposure Mode
+Type: RADIO
+Current: P
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+/main/capturesettings/drivemode
+Label: Drive Mode
+Type: RADIO
+Current: Single
+Choice: 0 Single
+Choice: 1 Continuous high speed
+Choice: 2 Continuous low speed
+Choice: 3 Single silent
+Choice: 4 Continuous silent
+Choice: 5 Timer 10 sec
+Choice: 6 Timer 2 sec
+/main/capturesettings/picturestyle
+Label: Picture Style
+Type: RADIO
+Current: Standard
+Choice: 0 Auto
+Choice: 1 Standard
+Choice: 2 Portrait
+Choice: 3 Landscape
+Choice: 4 Neutral
+Choice: 5 Faithful
+Choice: 6 Monochrome
+Choice: 7 User defined 1
+Choice: 8 User defined 2
+Choice: 9 User defined 3
+/main/capturesettings/aperture
+Label: Aperture
+Type: RADIO
+Current: Unknown value 0000
+Choice: 0 Unknown value 0000
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Type: RADIO
+Current: auto
+Choice: 0 auto
+/main/capturesettings/meteringmode
+Label: Metering Mode
+Type: RADIO
+Current: Evaluative
+Choice: 0 Evaluative
+Choice: 1 Partial
+Choice: 2 Spot
+Choice: 3 Center-weighted average
+/main/capturesettings/bracketmode
+Label: Bracket Mode
+Type: TEXT
+Current: 0
+/main/capturesettings/aeb
+Label: Auto Exposure Bracketing
+Type: RADIO
+Current: off
+Choice: 0 off
+Choice: 1 +/- 1/3
+Choice: 2 +/- 2/3
+Choice: 3 +/- 1
+Choice: 4 +/- 1 1/3
+Choice: 5 +/- 1 2/3
+Choice: 6 +/- 2
+Choice: 7 +/- 2 1/3
+Choice: 8 +/- 2 2/3
+Choice: 9 +/- 3
+/main/other/d049
+Label: Model ID
+Type: TEXT
+Current: -2147482999
+/main/other/d402
+Label: PTP Property 0xd402
+Type: TEXT
+Current: Canon EOS 7D Mark II
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current: Unknown Initiator
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 77
+Choice: 0 100
+Choice: 1 0
+Choice: 2 75
+Choice: 3 0
+Choice: 4 50
+Waiting for 5 seconds for events from camera. Press Ctrl-C to abort.
+UNKNOWN PTP Property d105 changed
+UNKNOWN PTP Property d108 changed
+UNKNOWN PTP Property d106 changed
+UNKNOWN PTP Property d107 changed
+UNKNOWN PTP Property d109 changed
+UNKNOWN PTP Property d10a changed
+UNKNOWN PTP Property d10b changed
+UNKNOWN PTP Property d10c changed
+UNKNOWN PTP Property d10d changed
+UNKNOWN PTP Property d10e changed
+UNKNOWN PTP Property d10f changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d114 changed
+UNKNOWN PTP Property d116 changed
+UNKNOWN PTP Property d119 changed
+UNKNOWN PTP Property d110 changed
+UNKNOWN PTP Property d101 changed
+UNKNOWN PTP Property d102 changed
+UNKNOWN PTP Property d103 changed
+UNKNOWN PTP Property d104 changed
+UNKNOWN PTP Property d11d changed
+UNKNOWN PTP Property d111 changed
+UNKNOWN PTP Property d112 changed
+UNKNOWN PTP Property d113 changed
+UNKNOWN PTP Property d17c changed
+UNKNOWN PTP Property d17d changed
+UNKNOWN PTP Property d17e changed
+UNKNOWN PTP Property d120 changed
+UNKNOWN PTP Property d121 changed
+UNKNOWN PTP Property d122 changed
+UNKNOWN PTP Property d156 changed
+UNKNOWN PTP Property d150 changed
+UNKNOWN PTP Property d151 changed
+UNKNOWN PTP Property d152 changed
+UNKNOWN PTP Property d153 changed
+UNKNOWN PTP Property d154 changed
+UNKNOWN PTP Property d155 changed
+UNKNOWN PTP Property d160 changed
+UNKNOWN PTP Property d161 changed
+UNKNOWN PTP Property d162 changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a1 changed
+UNKNOWN PTP Property d1a8 changed
+UNKNOWN PTP Property d1a7 changed
+UNKNOWN PTP Property d1ab changed
+UNKNOWN PTP Property d1b0 changed
+UNKNOWN PTP Property d1b1 changed
+UNKNOWN PTP Property d1b2 changed
+UNKNOWN PTP Property d1b3 changed
+UNKNOWN PTP Property d1b4 changed
+UNKNOWN PTP Property d1b5 changed
+UNKNOWN PTP Property d1b6 changed
+UNKNOWN PTP Property d1a9 changed
+UNKNOWN PTP Property d146 changed
+UNKNOWN PTP Property d1ac changed
+UNKNOWN PTP Property d1aa changed
+UNKNOWN PTP Property d11e changed
+UNKNOWN PTP Property d11f changed
+UNKNOWN PTP Property d1d9 changed
+UNKNOWN PTP Property d1d5 changed
+UNKNOWN PTP Property d1ba changed
+UNKNOWN PTP Property d1cd changed
+UNKNOWN PTP Property d1bc changed
+UNKNOWN PTP Property d1b8 changed
+UNKNOWN PTP Property d1d3 changed
+UNKNOWN PTP Property d1d8 changed
+UNKNOWN PTP Property d1b7 changed
+UNKNOWN PTP Property d1cb changed
+UNKNOWN PTP Property d1db changed
+UNKNOWN PTP Property d1dc changed
+UNKNOWN PTP Property d1a3 changed
+UNKNOWN PTP Property d1a4 changed
+UNKNOWN PTP Property d1df changed
+UNKNOWN PTP Property d1bd changed
+UNKNOWN PTP Property d1c1 changed
+UNKNOWN PTP Property d1c0 changed
+UNKNOWN PTP Property d1bf changed
+UNKNOWN PTP Property d1c4 changed
+UNKNOWN PTP Property d1c2 changed
+UNKNOWN PTP Property d1c5 changed
+UNKNOWN PTP Property d194 changed
+UNKNOWN PTP Property d195 changed
+UNKNOWN PTP Property d196 changed
+UNKNOWN PTP Property d197 changed
+UNKNOWN PTP Property d198 changed
+UNKNOWN PTP Property d1dd changed
+UNKNOWN PTP Property d1c7 changed
+UNKNOWN PTP Property d199 changed
+UNKNOWN PTP Property d138 changed
+UNKNOWN PTP Property d139 changed
+UNKNOWN PTP Property d13a changed
+UNKNOWN PTP Property d13b changed
+UNKNOWN PTP Property d13c changed
+UNKNOWN PTP Property d13d changed
+UNKNOWN PTP Property d14d changed
+UNKNOWN PTP Property d19a changed
+UNKNOWN PTP Property d19c changed
+UNKNOWN PTP Property d177 changed
+UNKNOWN PTP Property d178 changed
+UNKNOWN PTP Property d179 changed
+UNKNOWN PTP Property d17a changed
+UNKNOWN PTP Property d17b changed
+UNKNOWN PTP Property d1c9 changed
+UNKNOWN PTP Property d19f changed
+UNKNOWN PTP Property d175 changed
+UNKNOWN PTP Property d14c changed
+UNKNOWN PTP Property d14b changed
+UNKNOWN PTP Property d13e changed
+UNKNOWN PTP Property d1c6 changed
+UNKNOWN Button 1
+UNKNOWN PTP Property d102 changed
+UNKNOWN PTP Property d101 changed
+UNKNOWN PTP Property d103 changed
+UNKNOWN OLCInfo event 0x0010 content 04010353
+UNKNOWN OLCInfo event 0x0020 content 000000000000
+UNKNOWN OLCInfo exposure indicator 1,1,0.0 (00000000)
+UNKNOWN OLCInfo event 0x0080 content 00000000
+UNKNOWN OLCInfo event 0x0100 content 000000000000
+UNKNOWN OLCInfo event 0x0200 content 00000000000000
+UNKNOWN OLCInfo event 0x0400 content 00000000000000
+UNKNOWN OLCInfo event 0x0800 content 0000000000000008
+UNKNOWN OLCInfo event 0x1000 content 00
+UNKNOWN OLCInfo event mask=1fff
+UNKNOWN PTP Property d115 changed
+UNKNOWN PTP Property d1d0 changed
+UNKNOWN PTP Property d1d1 changed
+UNKNOWN PTP Property d1af changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d194 changed
+UNKNOWN PTP Property d1a3 changed
+UNKNOWN PTP Property d1c3 changed
+UNKNOWN PTP Property d101 changed
+UNKNOWN PTP Property d1c7 changed
+UNKNOWN PTP Property d1bf changed
+UNKNOWN PTP Property d1d3 changed
+UNKNOWN PTP Property d1c0 changed
+UNKNOWN PTP Property d1d3 changed
+UNKNOWN PTP Property d105 changed
+UNKNOWN PTP Property d108 changed
+UNKNOWN PTP Property d106 changed
+UNKNOWN PTP Property d107 changed
+UNKNOWN PTP Property d109 changed
+UNKNOWN PTP Property d10a changed
+UNKNOWN PTP Property d10b changed
+UNKNOWN PTP Property d10c changed
+UNKNOWN PTP Property d10d changed
+UNKNOWN PTP Property d10e changed
+UNKNOWN PTP Property d10f changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d114 changed
+UNKNOWN PTP Property d116 changed
+UNKNOWN PTP Property d119 changed
+UNKNOWN PTP Property d110 changed
+UNKNOWN PTP Property d101 changed
+UNKNOWN PTP Property d102 changed
+UNKNOWN PTP Property d103 changed
+UNKNOWN PTP Property d104 changed
+UNKNOWN PTP Property d11d changed
+UNKNOWN PTP Property d111 changed
+UNKNOWN PTP Property d112 changed
+UNKNOWN PTP Property d113 changed
+UNKNOWN PTP Property d17c changed
+UNKNOWN PTP Property d17d changed
+UNKNOWN PTP Property d17e changed
+UNKNOWN PTP Property d120 changed
+UNKNOWN PTP Property d121 changed
+UNKNOWN PTP Property d122 changed
+UNKNOWN PTP Property d156 changed
+UNKNOWN PTP Property d150 changed
+UNKNOWN PTP Property d151 changed
+UNKNOWN PTP Property d152 changed
+UNKNOWN PTP Property d153 changed
+UNKNOWN PTP Property d154 changed
+UNKNOWN PTP Property d155 changed
+UNKNOWN PTP Property d160 changed
+UNKNOWN PTP Property d161 changed
+UNKNOWN PTP Property d162 changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a0 changed
+UNKNOWN PTP Property d1a1 changed
+UNKNOWN PTP Property d1a8 changed
+UNKNOWN PTP Property d1a7 changed
+UNKNOWN PTP Property d1ab changed
+UNKNOWN PTP Property d1b0 changed
+UNKNOWN PTP Property d1b1 changed
+UNKNOWN PTP Property d1b2 changed
+UNKNOWN PTP Property d1b3 changed
+UNKNOWN PTP Property d1b4 changed
+UNKNOWN PTP Property d1b5 changed
+UNKNOWN PTP Property d1b6 changed
+UNKNOWN PTP Property d1a9 changed
+UNKNOWN PTP Property d146 changed
+UNKNOWN PTP Property d1ac changed
+UNKNOWN PTP Property d1aa changed
+UNKNOWN PTP Property d11e changed
+UNKNOWN PTP Property d11f changed
+UNKNOWN PTP Property d1d9 changed
+UNKNOWN PTP Property d1d5 changed
+UNKNOWN PTP Property d1ba changed
+UNKNOWN PTP Property d1cd changed
+UNKNOWN PTP Property d1bc changed
+UNKNOWN PTP Property d1b8 changed
+UNKNOWN PTP Property d1d3 changed
+UNKNOWN PTP Property d1d8 changed
+UNKNOWN PTP Property d1b7 changed
+UNKNOWN PTP Property d1cb changed
+UNKNOWN PTP Property d1db changed
+UNKNOWN PTP Property d1dc changed
+UNKNOWN PTP Property d1a3 changed
+UNKNOWN PTP Property d1a4 changed
+UNKNOWN PTP Property d1df changed
+UNKNOWN PTP Property d1bd changed
+UNKNOWN PTP Property d1c1 changed
+UNKNOWN PTP Property d1c0 changed
+UNKNOWN PTP Property d1bf changed
+UNKNOWN PTP Property d1c4 changed
+UNKNOWN PTP Property d1c2 changed
+UNKNOWN PTP Property d1c5 changed
+UNKNOWN PTP Property d194 changed
+UNKNOWN PTP Property d195 changed
+UNKNOWN PTP Property d196 changed
+UNKNOWN PTP Property d197 changed
+UNKNOWN PTP Property d198 changed
+UNKNOWN PTP Property d1dd changed
+UNKNOWN PTP Property d1c7 changed
+UNKNOWN PTP Property d199 changed
+UNKNOWN PTP Property d138 changed
+UNKNOWN PTP Property d139 changed
+UNKNOWN PTP Property d13a changed
+UNKNOWN PTP Property d13b changed
+UNKNOWN PTP Property d13c changed
+UNKNOWN PTP Property d13d changed
+UNKNOWN PTP Property d14d changed
+UNKNOWN PTP Property d19a changed
+UNKNOWN PTP Property d19c changed
+UNKNOWN PTP Property d177 changed
+UNKNOWN PTP Property d178 changed
+UNKNOWN PTP Property d179 changed
+UNKNOWN PTP Property d17a changed
+UNKNOWN PTP Property d17b changed
+UNKNOWN PTP Property d1c9 changed
+UNKNOWN PTP Property d19f changed
+UNKNOWN PTP Property d175 changed
+UNKNOWN PTP Property d14c changed
+UNKNOWN PTP Property d14b changed
+UNKNOWN PTP Property d13e changed
+UNKNOWN PTP Property d1c6 changed
+UNKNOWN Button 1
+UNKNOWN PTP Property d102 changed
+UNKNOWN PTP Property d101 changed
+UNKNOWN PTP Property d103 changed
+UNKNOWN OLCInfo event 0x0010 content 04010353
+UNKNOWN OLCInfo event 0x0020 content 000000000000
+UNKNOWN OLCInfo exposure indicator 1,1,0.0 (00000000)
+UNKNOWN OLCInfo event 0x0080 content 00000000
+UNKNOWN OLCInfo event 0x0100 content 000000000000
+UNKNOWN OLCInfo event 0x0200 content 00000000000000
+UNKNOWN OLCInfo event 0x0400 content 00000000000000
+UNKNOWN OLCInfo event 0x0800 content 0000000000000008
+UNKNOWN OLCInfo event 0x1000 content 00
+UNKNOWN OLCInfo event mask=1fff
+UNKNOWN PTP Property d115 changed
+UNKNOWN PTP Property d1d0 changed
+UNKNOWN PTP Property d1d1 changed
+UNKNOWN PTP Property d1af changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d120 changed
+UNKNOWN PTP Property d11e changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d120 changed
+UNKNOWN PTP Property d11e changed
+UNKNOWN PTP Property d11c changed
+UNKNOWN PTP Property d11f changed
+UNKNOWN PTP Property d11b changed
+UNKNOWN OLCInfo event 0x0010 content 0401ffff
+UNKNOWN OLCInfo event mask=10
+UNKNOWN OLCInfo event 0x0010 content 04010353
+UNKNOWN OLCInfo event mask=10
+New file is in location /store_00020001/DCIM/100EOS7D/_X4A0189.CR2 on the camera
+Bus 001 Device 002: ID 0c45:63e4 Microdia 
+Bus 001 Device 004: ID 04a9:326f Canon, Inc. 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 005 Device 002: ID 413c:02b0 Dell Computer Corp. 
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
+Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub
