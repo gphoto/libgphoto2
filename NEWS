@@ -1,5 +1,11 @@
 libgphoto2 2.5.7.1 development snapshot
 
+ptp2:
+* Canon Powershot/IXUS CHDK support
+
+libgphoto2_port/libusb1:
+* asynchronous interrupt handling, to avoid losing usb interrupts.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.7 release
 
