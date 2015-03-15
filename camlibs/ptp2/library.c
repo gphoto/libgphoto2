@@ -1629,6 +1629,9 @@ static struct {
 	/* https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1296275?comments=all  */
 	{"Canon:Digital IXUS 255HS",		0x04a9, 0x3268, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* t.ludewig@gmail.com */
+	{"Canon:EOS 7D MarkII",			0x04a9, 0x326f, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 100D",			0x04a9, 0x3270, PTP_CAP|PTP_CAP_PREVIEW},
 
