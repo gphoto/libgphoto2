@@ -3,7 +3,7 @@
  *
  * Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  * Copyright 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
- * Copyright 2011 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright 2011,2015 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -347,25 +347,6 @@ static int
 gp_libusb1_exit (GPPort *port)
 {
 	if (port->pl) {
-		int i, onecanceled = 0;
-
-		for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
-			if (port->pl->transfers[i]) {
-				libusb_cancel_transfer(port->pl->transfers[i]);
-				onecanceled = 1;
-			}
-		}
-#if 0
-		if (onecanceled)
-			libusb_handle_events(port->pl->ctx); /* more than 1 call? */
-		/* we will probably need to call it more often */
-
-		for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++)
-			if (port->pl->transfers[i])
-				libusb_free_transfer(port->pl->transfers[i]);
-#endif
-		free (port->pl->irqs);
-		free (port->pl->irqlens);
 		free (port->pl->descs);
 		if (port->pl->nrofdevs)
 			libusb_free_device_list (port->pl->devs, 1);
@@ -454,6 +435,7 @@ static int
 gp_libusb1_close (GPPort *port)
 {
 	int ret;
+	int i, onecanceled = 0;
 
 	C_PARAMS (port && port->pl->dh);
 
@@ -491,6 +473,26 @@ gp_libusb1_close (GPPort *port)
 		if (LOG_ON_LIBUSB_E (libusb_attach_kernel_driver (port->pl->dh, port->settings.usb.interface)))
 			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
 	}
+
+	/* cancel the interrupt transfers */
+
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
+		if (port->pl->transfers[i]) {
+			libusb_cancel_transfer(port->pl->transfers[i]);
+			onecanceled = 1;
+		}
+	}
+#if 0
+	if (onecanceled)
+		libusb_handle_events(port->pl->ctx); /* more than 1 call? */
+	/* we will probably need to call it more often */
+
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++)
+		if (port->pl->transfers[i])
+			libusb_free_transfer(port->pl->transfers[i]);
+#endif
+	free (port->pl->irqs);
+	free (port->pl->irqlens);
 
 	libusb_close (port->pl->dh);
 	port->pl->dh = NULL;
@@ -623,40 +625,24 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 static int
 gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
-	int ret;
-	struct libusb_transfer		*transfer;
-	unsigned char *buf;
+	int 		ret, retsize;
 
 	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
 	if (port->pl->nrofirqs)
 		goto handleirq;
 
-	transfer = libusb_alloc_transfer(0);
+	LOG_ON_LIBUSB_E(ret = libusb_interrupt_transfer(port->pl->dh, port->settings.usb.intep, (unsigned char*)bytes, size, &retsize, timeout));
 
-	buf = malloc(256); /* FIXME: safe size? */
-	libusb_fill_interrupt_transfer(transfer, port->pl->dh, port->settings.usb.intep,
-		buf, 256, _cb_irq, port->pl, timeout
-	);
-	libusb_submit_transfer (transfer);
+	/* We might have got an interrupt from this transfer, or from on of the queued ones.
+	 * If we timed out, but the queue got one, return the one from the queue. */
+	if ((ret == LIBUSB_ERROR_TIMEOUT) && (port->pl->nrofirqs))
+		goto handleirq;
 
-	/* This will at most wait timeout. it might be shorter. */
-	ret = libusb_handle_events(port->pl->ctx);
+	if (ret < LIBUSB_SUCCESS)
+		return translate_libusb_error(ret, GP_ERROR_IO_READ);
 
-	libusb_cancel_transfer (transfer);
-	do {
-		ret = libusb_handle_events(port->pl->ctx);
-		if (transfer->status == LIBUSB_TRANSFER_CANCELLED)
-			break;
-		if (transfer->status == LIBUSB_TRANSFER_TIMED_OUT)
-			break;
-	} while (ret >= 0);
-	libusb_free_transfer (transfer);
-
-	free(buf);
-	if (!port->pl->nrofirqs)
-		return GP_ERROR_TIMEOUT;
-
+	return retsize;
 handleirq:
 	if (size > port->pl->irqlens[0])
 		size = port->pl->irqlens[0];
