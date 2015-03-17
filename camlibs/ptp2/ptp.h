@@ -1884,6 +1884,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_LiveViewStatus			0xD1A2
 #define PTP_DPC_NIKON_LiveViewImageZoomRatio		0xD1A3
 #define PTP_DPC_NIKON_LiveViewProhibitCondition		0xD1A4
+#define PTP_DPC_NIKON_MovieShutterSpeed			0xD1A8
+#define PTP_DPC_NIKON_MovieFNumber			0xD1A9
+#define PTP_DPC_NIKON_MovieISO				0xD1AA
 #define PTP_DPC_NIKON_LiveViewMovieMode			0xD1AC /* ? */
 #define PTP_DPC_NIKON_ExposureDisplayStatus		0xD1B0
 #define PTP_DPC_NIKON_ExposureIndicateStatus		0xD1B1
@@ -1908,6 +1911,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ActiveSlot			0xD1F2
 #define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
 #define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
+#define PTP_DPC_NIKON_MovieNrHighISO			0xD236
 
 
 /* Nikon V1 (or WU adapter?) Trace */

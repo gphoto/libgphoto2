@@ -2338,6 +2338,43 @@ _put_ISO(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_ISO32(CONFIG_GET_ARGS) {
+	int i;
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[20];
+
+		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32);
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
+			gp_widget_set_value (*widget,buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_ISO32(CONFIG_PUT_ARGS)
+{
+	char *value;
+	unsigned int	u;
+
+	CR (gp_widget_get_value(widget, &value));
+
+	if (sscanf(value, "%ud", &u)) {
+		propval->u32 = u;
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+
+static int
 _get_Sony_ISO(CONFIG_GET_ARGS) {
 	int	i,isset=0;
 	char	buf[50];
@@ -6351,6 +6388,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_CANON_ImageSize,                PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Size,                _put_Canon_Size },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_ISOSpeed,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  0,                  PTP_DTC_UINT16, _get_ISO,                       _put_ISO },
+	{ N_("Movie ISO Speed"),        "movieiso",             PTP_DPC_NIKON_MovieISO,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_ISO32,                     _put_ISO32 },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
@@ -6409,6 +6447,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Beep Mode"),                   "afbeep",                   PTP_DPC_NIKON_BeepOff,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_Sony_FNumber },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
+	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             0,                  PTP_DTC_UINT8,  _get_CompressionSetting,            _put_CompressionSetting },
 	{ N_("Focus Distance"),                 "focusdistance",            PTP_DPC_FocusDistance,                  0,                  PTP_DTC_UINT16, _get_FocusDistance,                 _put_FocusDistance },
@@ -6447,6 +6486,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_ShutterSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
 	{ N_("Shutter Speed 2"),                "shutterspeed2",            PTP_DPC_NIKON_ExposureTime,             PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
+	{ N_("Movie Shutter Speed 2"),          "movieshutterspeed",        PTP_DPC_NIKON_MovieShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_INT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
@@ -6616,6 +6656,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",           PTP_DPC_NIKON_ISOAutoHiLimit,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ISOAutoHiLimit,      _put_Nikon_D90_ISOAutoHiLimit },
 	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ActiveDLighting,     _put_Nikon_D90_ActiveDLighting },
 	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_NIKON_NrHighISO,                PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_HighISONR,           _put_Nikon_D90_HighISONR },
+	{ N_("Movie High ISO Noise Reduction"), "moviehighisonr",           PTP_DPC_NIKON_MovieNrHighISO,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_HighISONR,           _put_Nikon_D90_HighISONR },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",            PTP_DPC_NIKON_D1ShootingSpeed,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ShootingSpeed,       _put_Nikon_D90_ShootingSpeed },
 	{ N_("Maximum continuous release"),     "maximumcontinousrelease",  PTP_DPC_NIKON_D2MaximumShots,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Range_UINT8,                   _put_Range_UINT8 },
 	{ N_("Movie Quality"),                  "moviequality",             PTP_DPC_NIKON_MovScreenSize,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MovieQuality,            _put_Nikon_MovieQuality },
