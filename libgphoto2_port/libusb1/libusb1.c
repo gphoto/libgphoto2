@@ -434,15 +434,7 @@ gp_libusb1_open (GPPort *port)
 static int
 gp_libusb1_close (GPPort *port)
 {
-	int ret;
-	int i, onecanceled = 0;
-
 	C_PARAMS (port && port->pl->dh);
-
-	if (0) { /* not working yet */
-		ret = libusb_handle_events(port->pl->ctx);
-		GP_LOG_D("libusb_handle_events: %d", ret);
-	}
 
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
@@ -474,27 +466,13 @@ gp_libusb1_close (GPPort *port)
 			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
 	}
 
-	/* cancel the interrupt transfers */
+	/* This will also cancel the queued transfers */
+	libusb_close (port->pl->dh);
 
-	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
-		if (port->pl->transfers[i]) {
-			libusb_cancel_transfer(port->pl->transfers[i]);
-			onecanceled = 1;
-		}
-	}
-#if 0
-	if (onecanceled)
-		libusb_handle_events(port->pl->ctx); /* more than 1 call? */
-	/* we will probably need to call it more often */
+	/* FIXME: free the transfers */
 
-	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++)
-		if (port->pl->transfers[i])
-			libusb_free_transfer(port->pl->transfers[i]);
-#endif
 	free (port->pl->irqs);
 	free (port->pl->irqlens);
-
-	libusb_close (port->pl->dh);
 	port->pl->dh = NULL;
 	return GP_OK;
 }
@@ -569,33 +547,35 @@ _cb_irq(struct libusb_transfer *transfer)
 {
 	struct _GPPortPrivateLibrary *pl = transfer->user_data;
 
-	if (transfer->status == LIBUSB_TRANSFER_TIMED_OUT) {
+	if (transfer->status == LIBUSB_TRANSFER_CANCELLED) {
 		int i;
 		/* Only requeue the global transfers, not temporary ones */
 		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers); i++) {
 			if (pl->transfers[i] == transfer) {
-				libusb_submit_transfer(transfer);
+				free(pl->transfers[i]->buffer);
+				libusb_free_transfer (transfer);
+				pl->transfers[i] = NULL;
 				return;
 			}
 		}
 		return;
 	}
-	if (transfer->status == LIBUSB_TRANSFER_CANCELLED)
-		return;
 
 	if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
 		GP_LOG_D("transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
 		return;
 	}
-	GP_LOG_DATA ((char*)transfer->buffer, transfer->actual_length, "interrupt");
+	if (transfer->actual_length) {
+		GP_LOG_DATA ((char*)transfer->buffer, transfer->actual_length, "interrupt");
 
-	pl->irqs 	= realloc(pl->irqs, sizeof(pl->irqs[0])*(pl->nrofirqs+1));
-	pl->irqlens	= realloc(pl->irqlens, sizeof(pl->irqlens[0])*(pl->nrofirqs+1));
+		pl->irqs 	= realloc(pl->irqs, sizeof(pl->irqs[0])*(pl->nrofirqs+1));
+		pl->irqlens	= realloc(pl->irqlens, sizeof(pl->irqlens[0])*(pl->nrofirqs+1));
 
-	pl->irqlens[pl->nrofirqs] = transfer->actual_length;
-	pl->irqs[pl->nrofirqs] = malloc(transfer->actual_length);
-	memcpy(pl->irqs[pl->nrofirqs],transfer->buffer,transfer->actual_length);
-	pl->nrofirqs++;
+		pl->irqlens[pl->nrofirqs] = transfer->actual_length;
+		pl->irqs[pl->nrofirqs] = malloc(transfer->actual_length);
+		memcpy(pl->irqs[pl->nrofirqs],transfer->buffer,transfer->actual_length);
+		pl->nrofirqs++;
+	}
 
 	libusb_submit_transfer(transfer);
 }
