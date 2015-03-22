@@ -1751,6 +1751,8 @@ static struct {
 	{"Fuji:FinePix SL1000",			0x04cb, 0x029c, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix X20",			0x04cb, 0x02a6, 0},
+	/* https://sourceforge.net/p/libmtp/bugs/1040/ */
+	{"Fuji:Fujifilm X-E2",			0x04cb, 0x02b5, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
