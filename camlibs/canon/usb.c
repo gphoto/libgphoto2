@@ -1026,6 +1026,13 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
         if (return_length)
                 *return_length = 0;
 
+	/* for later wait_event */
+	if (!camera->pl->directory_state) {
+		unsigned int directory_state_len;
+
+		status = canon_usb_list_all_dirs ( camera, &camera->pl->directory_state, &directory_state_len, context );
+	}
+
         GP_DEBUG ("canon_usb_capture_dialogue()");
 
 	*photo_status = 0; /* This should only be checked by the caller 
