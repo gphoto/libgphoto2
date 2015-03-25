@@ -818,6 +818,8 @@ static struct {
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:Alpha-A3000",	      0x054c, 0x074e, 0},
 
+	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
+	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
 	/* Sascha Peilicke at SUSE */
 	{"Sony:Alpha-A6000 (MTP)",    0x054c, 0x08b7, 0},
 
