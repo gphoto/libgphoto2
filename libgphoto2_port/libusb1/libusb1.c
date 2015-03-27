@@ -434,7 +434,10 @@ gp_libusb1_open (GPPort *port)
 static int
 gp_libusb1_close (GPPort *port)
 {
-	C_PARAMS (port && port->pl->dh);
+	C_PARAMS (port);
+
+	if (port->pl->dh == NULL)
+		return GP_OK;
 
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
