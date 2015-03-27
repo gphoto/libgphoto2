@@ -133,7 +133,7 @@ verify_settings (char *settings_file)
 	unsigned int x, equals;
 
 	if ((f=fopen(settings_file, "r"))==NULL) {
-		GP_LOG_E ("Can't open settings file for reading.");
+		GP_LOG_D ("Can't open settings file '%s' for reading.", settings_file);
 		return(0);
 	}
 
@@ -169,13 +169,13 @@ load_settings (void)
 	char buf[1024], *id, *key, *value;
 
 	/* Make sure the directories are created */
-	GP_LOG_D ("Creating $HOME/.gphoto");
 #ifdef WIN32
 	GetWindowsDirectory (buf, sizeof(buf));
 	strcat (buf, "\\gphoto");
 #else
 	snprintf (buf, sizeof(buf), "%s/.gphoto", getenv ("HOME"));
 #endif
+	GP_LOG_D ("Creating gphoto config directory ('%s')", buf);
 	(void)gp_system_mkdir (buf);
 
 	glob_setting_count = 0;
@@ -192,7 +192,7 @@ load_settings (void)
 	GP_LOG_D ("Loading settings from file '%s'.", buf);
 
 	if ((f=fopen(buf, "r"))==NULL) {
-		GP_LOG_D ("Can't open settings file for reading.");
+		GP_LOG_D ("Can't open settings file '%s' for reading.", buf);
 		return(GP_ERROR);
 	}
 
