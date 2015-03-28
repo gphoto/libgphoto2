@@ -1964,7 +1964,7 @@
   { "Motorola", 0x22b8, "Moto G (XT1032)", 0x2e84,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Jader Rodrigues Simoes <jadersimoes@users.sourceforge.net>
-  { "Motorola", 0x22b8, "Xoom 2 Media Edition (ID2)", 0x41cf,
+  { "Motorola", 0x22b8, "Xoom 2 Media Edition (ID3)", 0x41cf,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Steven Roemen <sdroemen@users.sourceforge.net>
   { "Motorola", 0x22b8, "Droid X/MB525 (Defy)", 0x41d6,
@@ -2256,7 +2256,7 @@
   /* https://sourceforge.net/p/libmtp/support-requests/135/ */
   { "Asus", 0x0b05, "ME302KL MeMo Pad FHD10 (MTP)", 0x4cc0,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Asus", 0x0b05, "ME302KL MeMo Pad FHD10 (MTP)", 0x4cc1,
+  { "Asus", 0x0b05, "ME302KL MeMo Pad FHD10 (MTP+ADB)", 0x4cc1,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Asus", 0x0b05, "ME301T MeMo Pad Smart 10 (MTP)", 0x4cd0,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2798,7 +2798,7 @@
   /*
    * Jolla
    */
-  { "Jolla", 0x2931, "Sailfish", 0x0a01,
+  { "Jolla", 0x2931, "Sailfish (ID1)", 0x0a01,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2831,7 +2831,7 @@
   /* In update 4 the order of devices was changed for
      better OS X / Windows suport and another device-id
      got assigned for the MTP */
-  { "Jolla", 0x2931, "Sailfish", 0x0a05,
+  { "Jolla", 0x2931, "Sailfish (ID2)", 0x0a05,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
