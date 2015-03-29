@@ -434,6 +434,7 @@ gp_libusb1_open (GPPort *port)
 static int
 gp_libusb1_close (GPPort *port)
 {
+	int i, haveone;
 	C_PARAMS (port);
 
 	if (port->pl->dh == NULL)
@@ -469,10 +470,24 @@ gp_libusb1_close (GPPort *port)
 			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
 	}
 
-	/* This will also cancel the queued transfers */
-	libusb_close (port->pl->dh);
 
 	/* FIXME: free the transfers */
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++)
+		if (port->pl->transfers[i])
+			libusb_cancel_transfer(port->pl->transfers[i]);
+	haveone = 1;
+	while (haveone) {
+		haveone = 0;
+		for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++)
+			if (port->pl->transfers[i])	
+				haveone = 1;
+		if (haveone)
+			if (libusb_handle_events(port->pl->ctx) < 0)
+				break;
+	}
+	
+
+	libusb_close (port->pl->dh);
 
 	free (port->pl->irqs);
 	free (port->pl->irqlens);
@@ -552,10 +567,10 @@ _cb_irq(struct libusb_transfer *transfer)
 
 	if (transfer->status == LIBUSB_TRANSFER_CANCELLED) {
 		int i;
+
 		/* Only requeue the global transfers, not temporary ones */
-		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers); i++) {
+		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers[0]); i++) {
 			if (pl->transfers[i] == transfer) {
-				free(pl->transfers[i]->buffer);
 				libusb_free_transfer (transfer);
 				pl->transfers[i] = NULL;
 				return;
@@ -588,10 +603,6 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 {
 	unsigned int i;
 
-	/*return 0;*/ /* not working yet */
-
-	GP_LOG_D("interrupt is at 0x%02x", port->settings.usb.intep);
-
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		unsigned char *buf;
 		port->pl->transfers[i] = libusb_alloc_transfer(0);
@@ -600,6 +611,7 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 		libusb_fill_interrupt_transfer(port->pl->transfers[i], port->pl->dh, port->settings.usb.intep,
 			buf, 256, _cb_irq, port->pl, 0
 		);
+		port->pl->transfers[i]->flags |= LIBUSB_TRANSFER_FREE_BUFFER;
 		libusb_submit_transfer (port->pl->transfers[i]);
 	}
 	return GP_OK;
