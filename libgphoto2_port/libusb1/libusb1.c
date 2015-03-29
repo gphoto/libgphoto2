@@ -592,7 +592,7 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 
 	GP_LOG_D("interrupt is at 0x%02x", port->settings.usb.intep);
 
-	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers); i++) {
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		unsigned char *buf;
 		port->pl->transfers[i] = libusb_alloc_transfer(0);
 
