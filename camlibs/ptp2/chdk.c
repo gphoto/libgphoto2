@@ -754,6 +754,40 @@ chdk_put_click(CONFIG_PUT_ARGS) {
 	return chdk_generic_script_run (params, lua, NULL, NULL, context);
 }
 
+static int
+chdk_get_capmode(CONFIG_GET_ARGS) {
+	char *table = NULL;
+	int retint = 0;
+	const char *lua = 
+"capmode=require'capmode'\n"
+"local l={}\n"
+"local i=1\n"
+"for id,name in ipairs(capmode.mode_to_name) do\n"
+"	if capmode.valid(id) then\n"
+"		l[i] = {name=name,id=id}\n"
+"		i = i + 1\n"
+"	end\n"
+"end\n"
+"return l,capmode.get()\n";
+
+	CR (chdk_generic_script_run (params,lua,&table,&retint,context));
+
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
+
+	return GP_OK;
+}
+
+static int
+chdk_put_capmode(CONFIG_PUT_ARGS) {
+	char *val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	/* integer? */
+	sprintf(lua,"set_capture_mode('%s')\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
 struct submenu imgsettings[] = {
 	{ N_("ISO"),		"iso",		chdk_get_iso,	chdk_put_iso},
 	{ N_("Aperture"),	"aperture",	chdk_get_av,	chdk_put_av},
@@ -763,6 +797,7 @@ struct submenu imgsettings[] = {
 	{ N_("Press"),		"press",	chdk_get_press,	chdk_put_press},
 	{ N_("Release"),	"release",	chdk_get_release,chdk_put_release},
 	{ N_("Click"),		"click",	chdk_get_click,	chdk_put_click},
+	{ N_("Capture Mode"),	"capmode",	chdk_get_capmode,chdk_put_capmode},
 	{ NULL,			NULL,		NULL, 		NULL},
 };
 
