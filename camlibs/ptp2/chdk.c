@@ -750,7 +750,12 @@ chdk_put_click(CONFIG_PUT_ARGS) {
 	char lua[100];
 
 	gp_widget_get_value (widget, &val);
-	sprintf(lua,"click('%s')\n", val);
+	if (!strcmp(val,"wheel l"))
+		strcpy(lua,"post_levent_to_ui(\"RotateJogDialLeft\",1)\n");
+	else if (!strcmp(val,"wheel r"))
+		strcpy(lua,"post_levent_to_ui(\"RotateJogDialRight\",1)\n");
+	else
+		sprintf(lua,"click('%s')\n", val);
 	return chdk_generic_script_run (params, lua, NULL, NULL, context);
 }
 
@@ -758,7 +763,9 @@ static int
 chdk_get_capmode(CONFIG_GET_ARGS) {
 	char *table = NULL;
 	int retint = 0;
-	const char *lua = 
+	char *lua;
+	const char *luascript = 
+PTP_CHDK_LUA_SERIALIZE \
 "capmode=require'capmode'\n"
 "local l={}\n"
 "local i=1\n"
@@ -768,12 +775,16 @@ chdk_get_capmode(CONFIG_GET_ARGS) {
 "		i = i + 1\n"
 "	end\n"
 "end\n"
-"return l,capmode.get()\n";
+"return serialize(l),capmode.get()\n";
+
+	lua = malloc(strlen(luascript));
+	sprintf(lua,luascript); /* changes the %% in the serializer to % */
 
 	CR (chdk_generic_script_run (params,lua,&table,&retint,context));
 
-	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
+	/* {[1]={name="AUTO",id=1,},[2]={name="P",id=2,},[3]={name="PORTRAIT",id=6,},[4]={name="NIGHT_SCENE",id=7,},[5]={name="SCN_UNDERWATER",id=17,},[6]={name="LONG_SHUTTER",id=19,},[7]={name="SCN_BEACH",id=23,},[8]={name="SCN_FIREWORK",id=24,},[9]={name="SCN_KIDS_PETS",id=33,},[10]={name="INDOOR",id=34,},[11]={name="SCN_SUNSET",id=55,},} */
 
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
 	return GP_OK;
 }
 
