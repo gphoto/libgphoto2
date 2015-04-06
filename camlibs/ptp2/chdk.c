@@ -505,6 +505,15 @@ chdk_camera_summary (Camera *camera, CameraText *text, GPContext *context)
 
 	ret = chdk_generic_script_run (params, "return get_zoom()", NULL, &retint, context);
 	sprintf (s, _("Zoom: %d\n"), retint); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_temperature(0)", NULL, &retint, context);
+	sprintf (s, _("Optical Temperature: %d\n"), retint); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_temperature(1)", NULL, &retint, context);
+	sprintf (s, _("CCD Temperature: %d\n"), retint); s += strlen(s);
+	ret = chdk_generic_script_run (params, "return get_temperature(2)", NULL, &retint, context);
+	sprintf (s, _("Battery Temperature: %d\n"), retint); s += strlen(s);
+
+	ret = chdk_generic_script_run (params, "return get_flash_mode()", NULL, &retint, context);
+	sprintf (s, _("Flash Mode: %d\n"), retint); s += strlen(s);
         return ret;
 /* 
 Mode: 256
@@ -715,6 +724,23 @@ chdk_put_zoom(CONFIG_PUT_ARGS) {
 }
 
 static int
+chdk_get_orientation(CONFIG_GET_ARGS) {
+	int retint = 0;
+	char buf[20];
+
+	CR (chdk_generic_script_run (params, "return get_orientation()", NULL, &retint, context));
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	sprintf(buf, "%d'", retint);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_none(CONFIG_PUT_ARGS) {
+	return GP_ERROR_NOT_SUPPORTED;
+}
+
+static int
 chdk_get_ev(CONFIG_GET_ARGS) {
 	int retint = 0;
 	float val;
@@ -745,6 +771,38 @@ add_buttons(CameraWidget *widget) {
 	gp_widget_add_choice(widget, "shoot_half");
 	gp_widget_add_choice(widget, "shoot_full");
 	gp_widget_add_choice(widget, "shoot_full_only");
+	gp_widget_add_choice(widget, "erase");
+	gp_widget_add_choice(widget, "up");
+	gp_widget_add_choice(widget, "print");
+	gp_widget_add_choice(widget, "left");
+	gp_widget_add_choice(widget, "set");
+	gp_widget_add_choice(widget, "right");
+	gp_widget_add_choice(widget, "disp");
+	gp_widget_add_choice(widget, "down");
+	gp_widget_add_choice(widget, "menu");
+	gp_widget_add_choice(widget, "zoom_in");
+	gp_widget_add_choice(widget, "zoom_out");
+	gp_widget_add_choice(widget, "video");
+	gp_widget_add_choice(widget, "shoot_full");
+	gp_widget_add_choice(widget, "shoot_full_only");
+	gp_widget_add_choice(widget, "wheel l");
+	gp_widget_add_choice(widget, "wheel r");
+	gp_widget_add_choice(widget, "zoom in");
+	gp_widget_add_choice(widget, "zoom out");
+	gp_widget_add_choice(widget, "iso");
+	gp_widget_add_choice(widget, "flash");
+	gp_widget_add_choice(widget, "mf");
+	gp_widget_add_choice(widget, "macro");
+	gp_widget_add_choice(widget, "video");
+	gp_widget_add_choice(widget, "timer");
+	gp_widget_add_choice(widget, "expo_corr");
+	gp_widget_add_choice(widget, "fe");
+	gp_widget_add_choice(widget, "face");
+	gp_widget_add_choice(widget, "zoom_assist");
+	gp_widget_add_choice(widget, "ae_lock");
+	gp_widget_add_choice(widget, "metering_mode");
+	gp_widget_add_choice(widget, "playback");
+	gp_widget_add_choice(widget, "help");
 }
 
 static int
@@ -787,22 +845,7 @@ static int
 chdk_get_click(CONFIG_GET_ARGS) {
 	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
 	gp_widget_set_value (*widget, "chdk buttonname");
-	gp_widget_add_choice(*widget, "erase");
-	gp_widget_add_choice(*widget, "up");
-	gp_widget_add_choice(*widget, "print");
-	gp_widget_add_choice(*widget, "left");
-	gp_widget_add_choice(*widget, "set");
-	gp_widget_add_choice(*widget, "right");
-	gp_widget_add_choice(*widget, "disp");
-	gp_widget_add_choice(*widget, "down");
-	gp_widget_add_choice(*widget, "menu");
-	gp_widget_add_choice(*widget, "zoom_in");
-	gp_widget_add_choice(*widget, "zoom_out");
-	gp_widget_add_choice(*widget, "video");
-	gp_widget_add_choice(*widget, "shoot_full");
-	gp_widget_add_choice(*widget, "shoot_full_only");
-	gp_widget_add_choice(*widget, "wheel l");
-	gp_widget_add_choice(*widget, "wheel r");
+	add_buttons(*widget);
 	return GP_OK;
 }
 
@@ -934,6 +977,7 @@ struct submenu imgsettings[] = {
 	{ N_("AF Lock"),	"aflock",	chdk_get_aflock,	chdk_put_aflock},
 	{ N_("MF Lock"),	"mflock",	chdk_get_mflock,	chdk_put_mflock},
 	{ N_("Exposure Compensation"),	"exposurecompensation",	chdk_get_ev, chdk_put_ev},
+	{ N_("Orientation"),	"orientation",	chdk_get_orientation,	chdk_put_none},
 	{ NULL,			NULL,		NULL, 		NULL},
 };
 
