@@ -680,6 +680,32 @@ chdk_put_zoom(CONFIG_PUT_ARGS) {
 	return chdk_generic_script_run (params, lua, NULL, NULL, context);
 }
 
+static int
+chdk_get_ev(CONFIG_GET_ARGS) {
+	int retint = 0;
+	float val;
+
+	CR (chdk_generic_script_run (params, "return get_ev()", NULL, &retint, context));
+	CR (gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget));
+        gp_widget_set_range (*widget,
+                -5.0,
+                5.0,
+                1.0/6.0
+        );
+	val = retint/96.0;
+	return gp_widget_set_value (*widget, &val);
+}
+
+static int
+chdk_put_ev(CONFIG_PUT_ARGS) {
+	float val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"return set_ev(%d)\n", (int)(val*96.0));
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
 static void
 add_buttons(CameraWidget *widget) {
 	gp_widget_add_choice(widget, "shoot_half");
@@ -741,6 +767,8 @@ chdk_get_click(CONFIG_GET_ARGS) {
 	gp_widget_add_choice(*widget, "video");
 	gp_widget_add_choice(*widget, "shoot_full");
 	gp_widget_add_choice(*widget, "shoot_full_only");
+	gp_widget_add_choice(*widget, "wheel l");
+	gp_widget_add_choice(*widget, "wheel r");
 	return GP_OK;
 }
 
@@ -763,22 +791,21 @@ static int
 chdk_get_capmode(CONFIG_GET_ARGS) {
 	char *table = NULL;
 	int retint = 0;
-	char *lua;
-	const char *luascript = 
+	const char *lua = 
 PTP_CHDK_LUA_SERIALIZE \
 "capmode=require'capmode'\n"
+"str=''\n"
 "local l={}\n"
 "local i=1\n"
 "for id,name in ipairs(capmode.mode_to_name) do\n"
 "	if capmode.valid(id) then\n"
+"		str = str .. name\n"
 "		l[i] = {name=name,id=id}\n"
 "		i = i + 1\n"
 "	end\n"
 "end\n"
-"return serialize(l),capmode.get()\n";
-
-	lua = malloc(strlen(luascript));
-	sprintf(lua,luascript); /* changes the %% in the serializer to % */
+"str = str .. capmode.get_name()\n"
+"return str,capmode.get_name()\n";
 
 	CR (chdk_generic_script_run (params,lua,&table,&retint,context));
 
@@ -794,21 +821,84 @@ chdk_put_capmode(CONFIG_PUT_ARGS) {
 	char lua[100];
 
 	gp_widget_get_value (widget, &val);
-	/* integer? */
+	/* integer? should actually work ... according to CHDK/TEST/isobase.lua */
 	sprintf(lua,"set_capture_mode('%s')\n", val);
 	return chdk_generic_script_run (params, lua, NULL, NULL, context);
 }
 
+static int
+chdk_get_aelock(CONFIG_GET_ARGS) {
+	int val = 2;
+	CR (gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget));
+	gp_widget_set_value (*widget, &val);
+	add_buttons(*widget);
+	return GP_OK;
+}
+
+static int
+chdk_put_aelock(CONFIG_PUT_ARGS) {
+	int val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"set_aelock(%d)\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+
+static int
+chdk_get_aflock(CONFIG_GET_ARGS) {
+	int val = 2;
+	CR (gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget));
+	gp_widget_set_value (*widget, &val);
+	add_buttons(*widget);
+	return GP_OK;
+}
+
+static int
+chdk_put_aflock(CONFIG_PUT_ARGS) {
+	int val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"set_aflock(%d)\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
+
+static int
+chdk_get_mflock(CONFIG_GET_ARGS) {
+	int val = 2;
+	CR (gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget));
+	gp_widget_set_value (*widget, &val);
+	add_buttons(*widget);
+	return GP_OK;
+}
+
+static int
+chdk_put_mflock(CONFIG_PUT_ARGS) {
+	int val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	sprintf(lua,"set_mf(%d)\n", val);
+	return chdk_generic_script_run (params, lua, NULL, NULL, context);
+}
+
 struct submenu imgsettings[] = {
-	{ N_("ISO"),		"iso",		chdk_get_iso,	chdk_put_iso},
-	{ N_("Aperture"),	"aperture",	chdk_get_av,	chdk_put_av},
-	{ N_("Shutterspeed"),	"shutterspeed",	chdk_get_tv,	chdk_put_tv},
-	{ N_("Focus"),		"focus",	chdk_get_focus,	chdk_put_focus},
-	{ N_("Zoom"),		"zoom",		chdk_get_zoom,	chdk_put_zoom},
-	{ N_("Press"),		"press",	chdk_get_press,	chdk_put_press},
+	{ N_("ISO"),		"iso",		chdk_get_iso,	 chdk_put_iso},
+	{ N_("Aperture"),	"aperture",	chdk_get_av,	 chdk_put_av},
+	{ N_("Shutterspeed"),	"shutterspeed",	chdk_get_tv,	 chdk_put_tv},
+	{ N_("Focus"),		"focus",	chdk_get_focus,	 chdk_put_focus},
+	{ N_("Zoom"),		"zoom",		chdk_get_zoom,	 chdk_put_zoom},
+	{ N_("Press"),		"press",	chdk_get_press,	 chdk_put_press},
 	{ N_("Release"),	"release",	chdk_get_release,chdk_put_release},
-	{ N_("Click"),		"click",	chdk_get_click,	chdk_put_click},
+	{ N_("Click"),		"click",	chdk_get_click,	 chdk_put_click},
 	{ N_("Capture Mode"),	"capmode",	chdk_get_capmode,chdk_put_capmode},
+	{ N_("AE Lock"),	"aelock",	chdk_get_aelock, chdk_put_aelock},
+	{ N_("AF Lock"),	"aflock",	chdk_get_aflock, chdk_put_aflock},
+	{ N_("MF Lock"),	"mflock",	chdk_get_mflock, chdk_put_mflock},
+	{ N_("Exposure Compensation"),	"exposurecompensation",	chdk_get_ev, chdk_put_ev},
 	{ NULL,			NULL,		NULL, 		NULL},
 };
 
