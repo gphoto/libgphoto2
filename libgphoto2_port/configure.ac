@@ -364,9 +364,13 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
         esac
 
 	# only in libusbx? but not in traditional libusb 1.0
-	AC_CHECK_LIB(usb-1.0,libusb_strerror, [
+	# note that the library is not always named libusb-1.0.so , e.g. on freebsd it is not.
+	save_LIBS="$LIBS"
+	LIBS="$LIBS $LIBUSB1_LIBS"
+	AC_CHECK_FUNC(libusb_strerror, [
 		AC_DEFINE(HAVE_LIBUSB_STRERROR,1,[Define if libusb-1.0 has libusb_strerror])
-])
+	])
+	LIBS="$save_LIBS"
 
 ],[],
 		[default-on],
