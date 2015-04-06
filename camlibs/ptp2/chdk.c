@@ -567,6 +567,40 @@ chdk_put_iso(CONFIG_PUT_ARGS) {
 }
 
 static int
+chdk_get_iso_market(CONFIG_GET_ARGS) {
+	int retint = 0, iso = 0;
+	char buf[20];
+
+	CR (chdk_generic_script_run (params, "return get_iso_market()", NULL, &retint, context));
+	if (!retint) {
+		CR(chdk_generic_script_run (params, "return iso_real_to_market(get_sv96())", NULL, &retint, context));
+		iso = (int)(exp2(retint/96.0)*3.125);
+	} else {
+		iso = retint;
+	}
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf,"%d", iso);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+chdk_put_iso_market(CONFIG_PUT_ARGS) {
+	int iso = 0;
+	char *val;
+	char lua[100];
+
+	gp_widget_get_value (widget, &val);
+	if (!sscanf(val, "%d", &iso))
+		return GP_ERROR_BAD_PARAMETERS;
+
+	sprintf(lua,"return set_iso_real(iso_market_to_real(%d))\n", iso);
+	CR (chdk_generic_script_run (params, lua, NULL, NULL, context));
+	return GP_OK;
+}
+
+static int
 chdk_get_av(CONFIG_GET_ARGS) {
 	int retint = 0;
 	char buf[20];
@@ -886,18 +920,19 @@ chdk_put_mflock(CONFIG_PUT_ARGS) {
 }
 
 struct submenu imgsettings[] = {
-	{ N_("ISO"),		"iso",		chdk_get_iso,	 chdk_put_iso},
-	{ N_("Aperture"),	"aperture",	chdk_get_av,	 chdk_put_av},
-	{ N_("Shutterspeed"),	"shutterspeed",	chdk_get_tv,	 chdk_put_tv},
-	{ N_("Focus"),		"focus",	chdk_get_focus,	 chdk_put_focus},
-	{ N_("Zoom"),		"zoom",		chdk_get_zoom,	 chdk_put_zoom},
-	{ N_("Press"),		"press",	chdk_get_press,	 chdk_put_press},
-	{ N_("Release"),	"release",	chdk_get_release,chdk_put_release},
-	{ N_("Click"),		"click",	chdk_get_click,	 chdk_put_click},
-	{ N_("Capture Mode"),	"capmode",	chdk_get_capmode,chdk_put_capmode},
-	{ N_("AE Lock"),	"aelock",	chdk_get_aelock, chdk_put_aelock},
-	{ N_("AF Lock"),	"aflock",	chdk_get_aflock, chdk_put_aflock},
-	{ N_("MF Lock"),	"mflock",	chdk_get_mflock, chdk_put_mflock},
+	{ N_("Raw ISO"),	"rawiso",	chdk_get_iso,	 	chdk_put_iso},
+	{ N_("ISO"),		"iso",		chdk_get_iso_market,	chdk_put_iso_market},
+	{ N_("Aperture"),	"aperture",	chdk_get_av,		chdk_put_av},
+	{ N_("Shutterspeed"),	"shutterspeed",	chdk_get_tv,		chdk_put_tv},
+	{ N_("Focus"),		"focus",	chdk_get_focus,		chdk_put_focus},
+	{ N_("Zoom"),		"zoom",		chdk_get_zoom,		chdk_put_zoom},
+	{ N_("Press"),		"press",	chdk_get_press,		chdk_put_press},
+	{ N_("Release"),	"release",	chdk_get_release,	chdk_put_release},
+	{ N_("Click"),		"click",	chdk_get_click,		chdk_put_click},
+	{ N_("Capture Mode"),	"capmode",	chdk_get_capmode,	chdk_put_capmode},
+	{ N_("AE Lock"),	"aelock",	chdk_get_aelock,	chdk_put_aelock},
+	{ N_("AF Lock"),	"aflock",	chdk_get_aflock,	chdk_put_aflock},
+	{ N_("MF Lock"),	"mflock",	chdk_get_mflock,	chdk_put_mflock},
 	{ N_("Exposure Compensation"),	"exposurecompensation",	chdk_get_ev, chdk_put_ev},
 	{ NULL,			NULL,		NULL, 		NULL},
 };
