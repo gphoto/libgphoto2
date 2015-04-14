@@ -920,11 +920,20 @@ PTP_CHDK_LUA_SERIALIZE \
 static int
 chdk_put_capmode(CONFIG_PUT_ARGS) {
 	char *val;
-	char lua[100];
+	char lua[200];
+	const char *luastr = 
+"capmode=require'capmode'\n"
+"str='%s'\n"
+"for id,name in ipairs(capmode.mode_to_name) do\n"
+"	if capmode.valid(id) and str == name then\n"
+"		set_capture_mode(id)\n"
+"	end\n"
+"end\n"
+"return\n";
 
 	gp_widget_get_value (widget, &val);
 	/* integer? should actually work ... according to CHDK/TEST/isobase.lua */
-	sprintf(lua,"set_capture_mode('%s')\n", val);
+	sprintf(lua, luastr, val);
 	return chdk_generic_script_run (params, lua, NULL, NULL, context);
 }
 
