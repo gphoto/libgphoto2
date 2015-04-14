@@ -332,22 +332,6 @@ dnl but newer Linux systems need it on startup, not later. So link libgphoto2_po
 dnl against libpthread
 AC_CHECK_LIB(pthread, pthread_create)
 
-GP_CONFIG_MSG([USB ports])
-GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
-		[usb.h],[usb_open],[
-        case "$host" in
-          *-*-mingw* | *-*-cygwin* | *-*-msvc* )
-          dnl Windows itself has usb.h we mis-detect so don't set IOLIB_LIST
-          ;;
-          *)
-	  IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
-          ;;
-        esac
-],[],
-		[default-on],
-		[http://libusb.sourceforge.net/]
-)
-
 dnl ---------------------------------------------------------------------------
 dnl libusb1
 dnl ---------------------------------------------------------------------------
@@ -372,6 +356,25 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 	])
 	LIBS="$save_LIBS"
 
+],[],
+		[default-on],
+		[http://libusb.sourceforge.net/]
+)
+# We select the old libusb 0 only if we are not doing libusb1
+GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
+		[usb.h],[usb_open],[
+	case "$host" in
+	  *-*-mingw* | *-*-cygwin* | *-*-msvc* )
+	  dnl Windows itself has usb.h we mis-detect so don't set IOLIB_LIST
+	  ;;
+	  *)
+	  if test "x$have_LIBUSB1" != xyes; then
+		IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
+          else
+		GP_CONFIG_MSG([libusb0 support],[detected, but disabled (libusb1 support is enabled)])
+          fi
+	  ;;
+	esac
 ],[],
 		[default-on],
 		[http://libusb.sourceforge.net/]
