@@ -89,6 +89,7 @@ chdk_generic_script_run (
 	PTPParams *params, const char *luascript,
 	char **table, int *retint, GPContext *context
 ) {
+	int			ret = GP_OK;
 	int 			scriptid = 0;
 	unsigned int		status;
 	int			luastatus;
@@ -127,7 +128,15 @@ chdk_generic_script_run (
 					GP_LOG_D("int %02x %02x %02x %02x", msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
 					*retint = le32atoh((unsigned char*)msg->data);
 					break;
-				case PTP_CHDK_TYPE_STRING: GP_LOG_D("string %s", msg->data);break;
+				case PTP_CHDK_TYPE_STRING:
+					GP_LOG_D("string %s", msg->data);
+					if (*table) {
+						*table = realloc(*table,strlen(*table)+strlen(msg->data)+1);
+						strcat(*table,msg->data);
+					} else { 
+						*table = strdup(msg->data);
+					}
+					break;
 				case PTP_CHDK_TYPE_TABLE:
 					GP_LOG_D("table %s", msg->data);
 					if (*table) {
@@ -142,6 +151,8 @@ chdk_generic_script_run (
 				break;
 			case PTP_CHDK_S_MSGTYPE_ERR:
 				GP_LOG_D ("error %d, message %s", msg->subtype, msg->data);
+				gp_context_error(context, _("CHDK lua engine reports error: %s"), msg->data);
+				ret = GP_ERROR_BAD_PARAMETERS;
 				break;
 			default:
 				GP_LOG_E ("unknown msg->type %d", msg->type);
@@ -161,7 +172,7 @@ chdk_generic_script_run (
 		GP_LOG_E("a string return was unexpected, returned value: %s", xtable);
 	if (xint != -1)
 		GP_LOG_E("a int return was unexpected, returned value: %d", xint);
-	return GP_OK;
+	return ret;
 }
 
 
@@ -728,7 +739,7 @@ chdk_get_orientation(CONFIG_GET_ARGS) {
 	int retint = 0;
 	char buf[20];
 
-	CR (chdk_generic_script_run (params, "return get_orientation()", NULL, &retint, context));
+	CR (chdk_generic_script_run (params, "return get_orientation_sensor()", NULL, &retint, context));
 	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
 	sprintf(buf, "%d'", retint);
 	gp_widget_set_value (*widget, buf);
@@ -866,7 +877,7 @@ chdk_put_click(CONFIG_PUT_ARGS) {
 
 static int
 chdk_get_capmode(CONFIG_GET_ARGS) {
-	char *table = NULL;
+	char *s , *table = NULL;
 	int retint = 0;
 	const char *lua = 
 PTP_CHDK_LUA_SERIALIZE \
@@ -876,19 +887,33 @@ PTP_CHDK_LUA_SERIALIZE \
 "local i=1\n"
 "for id,name in ipairs(capmode.mode_to_name) do\n"
 "	if capmode.valid(id) then\n"
-"		str = str .. name\n"
+"		str = str .. name .. '\\n'\n"
 "		l[i] = {name=name,id=id}\n"
 "		i = i + 1\n"
 "	end\n"
 "end\n"
 "str = str .. capmode.get_name()\n"
-"return str,capmode.get_name()\n";
+"return str\n";
+
+	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
 
 	CR (chdk_generic_script_run (params,lua,&table,&retint,context));
 
-	/* {[1]={name="AUTO",id=1,},[2]={name="P",id=2,},[3]={name="PORTRAIT",id=6,},[4]={name="NIGHT_SCENE",id=7,},[5]={name="SCN_UNDERWATER",id=17,},[6]={name="LONG_SHUTTER",id=19,},[7]={name="SCN_BEACH",id=23,},[8]={name="SCN_FIREWORK",id=24,},[9]={name="SCN_KIDS_PETS",id=33,},[10]={name="INDOOR",id=34,},[11]={name="SCN_SUNSET",id=55,},} */
+	s = table;
+	GP_LOG_D("table is %s", table);
+	while (*s) {
+		char *x = strchr(s,'\n');
 
-	CR (gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget));
+		if (x) *x = 0;
+		GP_LOG_D("line is %s", s);
+		gp_widget_add_choice (*widget, s);
+		if (!x || !strlen(x+1))
+			gp_widget_set_value (*widget, s);
+		if (!x)
+			break;
+		s = x+1;
+	}
+	free (table);
 	return GP_OK;
 }
 
@@ -908,7 +933,6 @@ chdk_get_aelock(CONFIG_GET_ARGS) {
 	int val = 2;
 	CR (gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget));
 	gp_widget_set_value (*widget, &val);
-	add_buttons(*widget);
 	return GP_OK;
 }
 
@@ -928,7 +952,6 @@ chdk_get_aflock(CONFIG_GET_ARGS) {
 	int val = 2;
 	CR (gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget));
 	gp_widget_set_value (*widget, &val);
-	add_buttons(*widget);
 	return GP_OK;
 }
 
@@ -948,7 +971,6 @@ chdk_get_mflock(CONFIG_GET_ARGS) {
 	int val = 2;
 	CR (gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget));
 	gp_widget_set_value (*widget, &val);
-	add_buttons(*widget);
 	return GP_OK;
 }
 
