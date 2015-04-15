@@ -2486,7 +2486,10 @@
   { "HTC", 0x0bb4, "Windows Phone 8X ID2", 0x0ba2,
       DEVICE_FLAG_NONE },
 
-#if 0
+#if 1
+  /* after some review I commented it back in. There was apparently
+   * only one or two devices misbehaving (having this ID in mass storage mode),
+   * but more seem to use it regulary as MTP devices. Marcus 20150401 */
   /*
    * This had to be commented out - the same VID+PID is used also for
    * other modes than MTP, so we need to let mtp-probe do its job on this
@@ -2562,7 +2565,10 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "HTC", 0x0bb4, "HTC One M8 (MTP+ADB+UMS)", 0x0fb4,
       DEVICE_FLAGS_ANDROID_BUGS },
-#if 0
+#if 1
+  /* after some review I commented it back in. There was apparently
+   * only one or two devices misbehaving (having this ID in mass storage mode),
+   * but more seem to use it regulary as MTP devices. Marcus 20150401 */
   /*
    * This had to be commented out - the same VID+PID is used also for
    * other modes than MTP, so we need to let mtp-probe do its job on this
@@ -2725,6 +2731,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1164/ */
   { "Redmi", 0x2717, "HM 1S (MTP)", 0x1268,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/discussion/535190/ */
+  { "Xiaomi", 0x2717, "HM NOTE 1LTEW MIUI (MTP)", 0x1368,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP+ADB)", 0x9039,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Mi-2 (MTP)", 0xf003,
@@ -2772,8 +2781,9 @@
   /*
    * Kyocera
    */
-  { "Kyocera", 0x0482, "Rise", 0x0571,
-      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Kyocera", 0x0482, "Rise", 0x0571, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/discussion/535190/thread/6270f5ce/ */
+  { "Kyocera", 0x0482, "KYL22", 0x0810, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * HiSense
@@ -2884,6 +2894,8 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1229/ */
   { "Yota", 0x2916, "Phone 2", 0x914d, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1267/ */
+  { "Yota", 0x2916, "Phone 2 (ID2)", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1212/ */
   { "Fly", 0x2970, "Evo Tech 4", 0x2008, DEVICE_FLAGS_ANDROID_BUGS },
@@ -2895,6 +2907,15 @@
   { "Fly", 0x2970, "iq4415 era style 3", 0x0c02, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1082/ */
   { "Fly", 0x1782, "iq449", 0x4001, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*
+  * YU Yureka.
+  */
+  { "YU Yureka", 0x1ebf, "Vodafone smart turbo 4", 0x7f29, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1314/ */
+  { "BenQ", 0x1d45, "F5", 0x459d, DEVICE_FLAGS_ANDROID_BUGS },
+
   /*
    * Other strange stuff.
    */
