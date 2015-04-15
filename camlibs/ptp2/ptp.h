@@ -278,6 +278,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* 902c: no parms, read 3 uint32 in data, no response parms */
 #define PTP_OC_CANON_902C			0x902C
 #define PTP_OC_CANON_GetDirectory		0x902D
+#define PTP_OC_CANON_902E			0x902E
 
 #define PTP_OC_CANON_SetPairingInfo		0x9030
 #define PTP_OC_CANON_GetPairingInfo		0x9031
@@ -1264,6 +1265,8 @@ typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 #define PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER	2
 #define PTP_CANON_EOS_CHANGES_TYPE_PROPERTY		3
 #define PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS		4
+#define PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO		5
+#define PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK		6
 
 struct _PTPCanon_New_Object {
 	uint32_t	oid;

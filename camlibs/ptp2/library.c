@@ -2865,29 +2865,75 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	/* Get the initial bulk set of event data, otherwise
 	 * capture might return busy. */
 	ptp_check_eos_events (params);
+	while (ptp_get_one_eos_event (params, &entry))
+		GP_LOG_D("discarding event type %d", entry.type);
 
-	C_PTP_REP_MSG (ptp_canon_eos_capture (params, &result),
-		       _("Canon EOS Capture failed"));
+	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
+		int oneloop;
 
-	if ((result & 0x7000) == 0x2000) { /* also happened */
-		gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
-		return translate_ptp_result (result);
-	}
-	GP_LOG_D ("result is %d", result);
-	switch (result) {
-	case 0: /* OK */
-		break;
-	case 1: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
-		return GP_ERROR;
-	case 3: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps mirror up?"));
-		return GP_ERROR;
-	case 7: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
-		return GP_ERROR_NO_MEMORY;
-	case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
-		return GP_ERROR_NO_MEMORY;
-	default:
-		gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
-		return GP_ERROR;
+		ret = GP_OK;
+		/* half press now - initiate focusing and wait for result */
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
+
+		do {
+			int foundfocusinfo = 0;
+			C_PTP_REP_MSG (ptp_check_eos_events (params),
+			       _("Canon EOS Get Changes failed"));
+			oneloop = 0;
+			while (ptp_get_one_eos_event (params, &entry)) {
+				oneloop = 1;
+				GP_LOG_D("focusing - read event type %d", entry.type);
+				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO) {
+					GP_LOG_D("focusinfo content: %s", entry.u.info);
+					foundfocusinfo = 1;
+					if (strstr(entry.u.info,"0000200")) {
+						gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+						ret = GP_ERROR;
+					}
+				}
+			}
+			if (foundfocusinfo)
+				break;
+		} while (oneloop);
+
+		if (ret != GP_OK) {
+			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
+			return ret;
+		}
+		/* full press now */
+
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 2, 0), _("Canon EOS Full-Press failed"));
+		/* no event check between */
+		/* full release now */
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 2), _("Canon EOS Full-Release failed"));
+		ptp_check_eos_events (params);
+
+		/* half release now */
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
+	} else {
+		C_PTP_REP_MSG (ptp_canon_eos_capture (params, &result),
+			       _("Canon EOS Capture failed"));
+
+		if ((result & 0x7000) == 0x2000) { /* also happened */
+			gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
+			return translate_ptp_result (result);
+		}
+		GP_LOG_D ("result is %d", result);
+		switch (result) {
+		case 0: /* OK */
+			break;
+		case 1: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+			return GP_ERROR;
+		case 3: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps mirror up?"));
+			return GP_ERROR;
+		case 7: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
+			return GP_ERROR_NO_MEMORY;
+		case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
+			return GP_ERROR_NO_MEMORY;
+		default:
+			gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
+			return GP_ERROR;
+		}
 	}
 
 	newobject = 0;
@@ -2899,11 +2945,12 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			       _("Canon EOS Get Changes failed"));
 		while (ptp_get_one_eos_event (params, &entry)) {
 			sleepcnt = 1;
-			GP_LOG_D ("entry type %04x", entry.type);
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN) {
+				GP_LOG_D ("entry unknown: %s", entry.u.info);
 				free (entry.u.info);
 				continue; /* in loop ... do not poll while draining the queue */
 			}
+			GP_LOG_D ("entry type %04x", entry.type);
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 				newobject = entry.u.object.oid;
@@ -3966,6 +4013,16 @@ camera_wait_for_event (Camera *camera, int timeout,
 					C_MEM (*eventdata = malloc(strlen("Camera Status 123456789012345")+1));
 					sprintf (*eventdata, "Camera Status %d", entry.u.status);
 					return GP_OK;
+				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO:
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("Focus Info 12345678901234567890123456789")+1));
+					sprintf (*eventdata, "Focus Info %s", entry.u.info);
+					break;
+				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK:
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("Focus Mask 12345678901234567890123456789")+1));
+					sprintf (*eventdata, "Focus Mask %s", entry.u.info);
+					break;
 				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 					/* only return if interesting stuff happened */
 					if (entry.u.info) {

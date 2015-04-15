@@ -2258,9 +2258,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			}
 			if (mask & 0x0100) {
 				/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and 00 00 00 00 01 00 (on focus) observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0100 content 0123456789ab")+1); 
-				sprintf(ce[i].u.info,"OLCInfo event 0x0100 content %02x%02x%02x%02x%02x%02x",
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO;
+				ce[i].u.info = malloc(strlen("0123456789ab")+1); 
+				sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x",
 					curdata[curoff],
 					curdata[curoff+1],
 					curdata[curoff+2],
@@ -2273,9 +2273,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			}
 			if (mask & 0x0200) {
 				/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0200 content 0123456789abcd")+1); 
-				sprintf(ce[i].u.info,"OLCInfo event 0x0200 content %02x%02x%02x%02x%02x%02x%02x",
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK;
+				ce[i].u.info = malloc(strlen("0123456789abcd0123456789abcdef")+1); 
+				sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x%02x",
 					curdata[curoff],
 					curdata[curoff+1],
 					curdata[curoff+2],
