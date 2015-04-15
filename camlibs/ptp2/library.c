@@ -1904,7 +1904,7 @@ static struct {
 };
 
 static int
-set_mimetype (Camera *camera, CameraFile *file, uint16_t vendorcode, uint16_t ofc)
+set_mimetype (CameraFile *file, uint16_t vendorcode, uint16_t ofc)
 {
 	int i;
 
@@ -2527,7 +2527,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) return ret;
 	gp_file_set_mtime (file, time(NULL));
-	set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
+	set_mimetype (file, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	C_PTP_REP (ptp_getobject(params, newobject, &ximage));
 
 	GP_LOG_D ("setting size");
@@ -5878,7 +5878,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		))
 			return GP_ERROR_NOT_SUPPORTED;
 		C_PTP_REP (ptp_getthumb(params, oid, &ximage, &xlen));
-		set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
+		set_mimetype (file, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
 		CR (gp_file_set_data_and_size (file, (char*)ximage, xlen));
 		break;
 	}
@@ -5942,7 +5942,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	}
 	}
-	return set_mimetype (camera, file, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
+	return set_mimetype (file, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
 }
 
 static int
