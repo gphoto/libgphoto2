@@ -2930,8 +2930,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			return GP_ERROR_NO_MEMORY;
 		case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
 			return GP_ERROR_NO_MEMORY;
-		default:
-			gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
+		default:gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
 			return GP_ERROR;
 		}
 	}
