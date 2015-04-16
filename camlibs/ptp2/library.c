@@ -3753,6 +3753,68 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	}
 
 	/* Canon EOS */
+	/* Newer EOS starting with 100D, 1200D, 600D, 5d MarkII+, 60D, 70D, 6D ... and newer */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	     ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
+		int 		oneloop;
+
+		if (!params->eos_captureenabled)
+			camera_prepare_capture (camera, context);
+		else
+			CR( camera_canon_eos_update_capture_target(camera, context, -1));
+
+		/* Get the initial bulk set of event data, otherwise
+		 * capture might return busy. */
+		C_PTP (ptp_check_eos_events (params));
+
+		if (params->eos_camerastatus == 1)
+			return GP_ERROR_CAMERA_BUSY;
+
+		ret = GP_OK;
+		/* half press now - initiate focusing and wait for result */
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
+
+		do {
+			PTPCanon_changes_entry	entry;
+			int foundfocusinfo = 0;
+
+			C_PTP_REP_MSG (ptp_check_eos_events (params),
+			       _("Canon EOS Get Changes failed"));
+			oneloop = 0;
+			while (ptp_get_one_eos_event (params, &entry)) {
+				oneloop = 1;
+				GP_LOG_D("focusing - read event type %d", entry.type);
+				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO) {
+					GP_LOG_D("focusinfo content: %s", entry.u.info);
+					foundfocusinfo = 1;
+					if (strstr(entry.u.info,"0000200")) {
+						gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+						ret = GP_ERROR;
+					}
+				}
+			}
+			if (foundfocusinfo)
+				break;
+		} while (oneloop);
+
+		if (ret != GP_OK) {
+			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
+			return ret;
+		}
+		/* full press now */
+
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 2, 0), _("Canon EOS Full-Press failed"));
+		/* no event check between */
+		/* full release now */
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 2), _("Canon EOS Full-Release failed"));
+		ptp_check_eos_events (params);
+
+		/* half release now */
+		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
+
+		return GP_OK;
+	}
+	/* Slightly older EOS, EOS 400D */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	     ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		uint32_t	result;
@@ -3789,8 +3851,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			return GP_ERROR_NO_MEMORY;
 		case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
 			return GP_ERROR_NO_MEMORY;
-		default:
-			gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
+		default:gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
 			return GP_ERROR;
 		}
 
