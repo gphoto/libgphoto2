@@ -332,6 +332,15 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				di->OperationsSupported_len += 1;
 			}
 		}
+		if (!strcmp(params->deviceinfo.Model,"COOLPIX A")) {
+			/* The A also hides some commands from us ... */
+			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
+				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
+				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
+				/* probably more */
+				di->OperationsSupported_len += 1;
+			}
+		}
 		if (params->deviceinfo.Model && (sscanf(params->deviceinfo.Model,"D%d", &nikond)))
 		{
 			if ((nikond >= 3000) && (nikond < 3199)) {
