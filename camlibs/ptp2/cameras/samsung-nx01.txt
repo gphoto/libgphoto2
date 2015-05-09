@@ -1,0 +1,753 @@
+localhost: ~$ uname -a
+Linux 2.6.35.7-xeno15 #1 SMP Wed Jan 26 12:08:04 EST 2011 x86_64 GNU/Linux
+
+############################################################################
+
+localhost: ~$ gphoto2 -v
+gphoto2 2.5.2
+
+Copyright (c) 2000-2013 Lutz Mueller and others
+
+gphoto2 comes with NO WARRANTY, to the extent permitted by law. You may
+redistribute copies of gphoto2 under the terms of the GNU General Public
+License. For more information about these matters, see the files named COPYING.
+
+This version of gphoto2 is using the following software versions and options:
+gphoto2         2.5.2          gcc, popt(m), no exif, no cdk, no aa, jpeg, no readline
+libgphoto2      2.5.2          all camlibs, gcc, ltdl, no EXIF
+libgphoto2_port 0.10.0         gcc, ltdl, USB, serial without locking
+
+
+############################################################################
+
+localhost: ~$ lsusb | grep -i samsung
+Bus 005 Device 007: ID 04e8:140c Samsung Electronics Co., Ltd 
+
+#############################################################################
+
+localhost: ~$ lsusb -v
+Bus 005 Device 007: ID 04e8:140c Samsung Electronics Co., Ltd 
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               2.10
+  bDeviceClass          239 Miscellaneous Device
+  bDeviceSubClass         2 ?
+  bDeviceProtocol         1 Interface Association
+  bMaxPacketSize0        64
+  idVendor           0x04e8 Samsung Electronics Co., Ltd
+  idProduct          0x140c 
+  bcdDevice            2.34
+  iManufacturer           1 Samsung
+  iProduct                2 SAMSUNG
+  iSerial                 0 
+  bNumConfigurations      2
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           39
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower               96mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass         6 Imaging
+      bInterfaceSubClass      1 Still Image Capture
+      bInterfaceProtocol      1 Picture Transfer Protocol (PIMA 15470)
+      iInterface              5 Samsung MTP
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               6
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           39
+    bNumInterfaces          1
+    bConfigurationValue     2
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower               96mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           3
+      bInterfaceClass         6 Imaging
+      bInterfaceSubClass      1 Still Image Capture
+      bInterfaceProtocol      1 Picture Transfer Protocol (PIMA 15470)
+      iInterface              5 Samsung MTP
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x81  EP 1 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0200  1x 512 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               6
+Device Qualifier (for other device speed):
+  bLength                10
+  bDescriptorType         6
+  bcdUSB               2.10
+  bDeviceClass          239 Miscellaneous Device
+  bDeviceSubClass         2 ?
+  bDeviceProtocol         1 Interface Association
+  bMaxPacketSize0        64
+  bNumConfigurations      2
+Device Status:     0x0001
+  Self Powered
+
+#############################################################################
+
+localhost: ~$ gphoto2 --auto-detect
+Model                          Port                                            
+----------------------------------------------------------
+USB PTP Class Camera           usb:005,007     
+
+#############################################################################
+
+localhost: ~$ gphoto2 --summary >summary.txt
+
+Camera summary:
+Manufacturer: SAMSUNG Electronics Co. Ltd. 
+Model: SAMSUNG NX1
+  Version: V1.0
+
+Capture Formats: Unknown(0000)
+Display Formats: Unknown(b984), Unknown(b982), MP3, Unknown(b901), Unknown(b981), JPEG, Association/Directory, Unknown(ba05), Unknown(b906), Undefined Type, GIF, BMP, PNG, MS Wave, MS AVI, MPEG, ASF, Unknown(ba03)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: Card
+	VolumeLabel: -20001
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 15923150848 (15185 MB)
+	Free Space (Bytes): 15464103936 (14747 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):cannot be queried.
+Property 0xd401:cannot be queried.
+Property 0xd402:cannot be queried.
+Property 0xd404:cannot be queried.
+Property 0xd407:cannot be queried.
+
+#############################################################################
+
+localhost: ~$ gphoto2 --list-all-config > config.txt
+Segmentation fault
+
+#############################################################################
+
+localhost: ~$ gphoto2 --summary --debug-logfile=summary.log --debug
+Camera summary:                                                                
+Manufacturer: SAMSUNG Electronics Co. Ltd. 
+Model: SAMSUNG NX1
+  Version: V1.0
+
+Capture Formats: Unknown(0000)
+Display Formats: Unknown(b984), Unknown(b982), MP3, Unknown(b901), Unknown(b981), JPEG, Association/Directory, Unknown(ba05), Unknown(b906), Undefined Type, GIF, BMP, PNG, MS Wave, MS AVI, MPEG, ASF, Unknown(ba03)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: Card
+	VolumeLabel: -20001
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 15923150848 (15185 MB)
+	Free Space (Bytes): 15464103936 (14747 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):cannot be queried.
+Property 0xd401:cannot be queried.
+Property 0xd402:cannot be queried.
+Property 0xd404:cannot be queried.
+Property 0xd407:cannot be queried.
+
+############################################################################
+localhost: ~$ cat summary.log
+
+0.000021 main(2): ALWAYS INCLUDE THE FOLLOWING LINES WHEN SENDING DEBUG MESSAGES TO THE MAILING LIST:
+0.000044 main(2): gphoto2 2.5.2
+0.000047 main(2): gphoto2 has been compiled with the following options:
+0.000049 main(2):  + gcc (C compiler used)
+0.000051 main(2):  + popt (mandatory, for handling command-line parameters)
+0.000052 main(2):  + no exif (for displaying EXIF information)
+0.000054 main(2):  + no cdk (for accessing configuration options)
+0.000056 main(2):  + no aa (for displaying live previews)
+0.000057 main(2):  + jpeg (for displaying live previews in JPEG format)
+0.000059 main(2):  + no readline (for easy navigation in the shell)
+0.000063 main(2): libgphoto2 2.5.2
+0.000065 main(2): libgphoto2 has been compiled with the following options:
+0.000067 main(2):  + all camlibs
+0.000068 main(2):  + gcc (C compiler used)
+0.000070 main(2):  + ltdl (for portable loading of camlibs)
+0.000072 main(2):  + no EXIF (for special handling of EXIF files)
+0.000074 main(2): libgphoto2_port 0.10.0
+0.000076 main(2): libgphoto2_port has been compiled with the following options:
+0.000078 main(2):  + gcc (C compiler used)
+0.000080 main(2):  + ltdl (for portable loading of camlibs)
+0.000081 main(2):  + USB (libusb0, for USB cameras)
+0.000083 main(2):  + serial (for serial cameras)
+0.000084 main(2):  + no resmgr (serial port access and locking)
+0.000086 main(2):  + no ttylock (serial port locking)
+0.000087 main(2):  + no lockdev (serial port locking)
+0.000089 main(2): CAMLIBS env var not set, using compile-time default instead
+0.000090 main(2): IOLIBS env var not set, using compile-time default instead
+0.000110 setting/gphoto2-setting.c(2): Creating $HOME/.gphoto
+0.000137 setting/gphoto2-setting.c(2): Loading settings from file "/home/boboka/.gphoto/settings"
+0.000335 main(2): The user has not specified both a model and a port. Try to figure them out.
+0.000358 gphoto2-port-info-list(2): Using ltdl to load io-drivers from '/usr/local/lib/libgphoto2_port/0.10.0'...
+0.000407 gphoto2-port-info-list(2): Called for filename '/usr/local/lib/libgphoto2_port/0.10.0/disk'.
+0.000530 gphoto2-port/disk(2): found fstab fsname proc
+0.000536 gphoto2-port/disk(2): found fstab fsname /dev/md2
+0.000544 gphoto2-port/disk(2): found fstab fsname /dev/md1
+0.000550 gphoto2-port/disk(2): found fstab fsname /dev/md3
+0.000555 gphoto2-port/disk(2): found fstab fsname /dev/md5
+0.000561 gphoto2-port/disk(2): found fstab fsname /dev/md6
+0.000566 gphoto2-port/disk(2): found fstab fsname /dev/md7
+0.000572 gphoto2-port/disk(2): found fstab fsname /dev/md8
+0.000590 gphoto2-port/disk(2): found mtab fsname /dev/md2
+0.000596 gphoto2-port/disk(2): found mtab fsname tmpfs
+0.000604 gphoto2-port/disk(2): found mtab fsname proc
+0.000607 gphoto2-port/disk(2): found mtab fsname sysfs
+0.000610 gphoto2-port/disk(2): found mtab fsname udev
+0.000616 gphoto2-port/disk(2): found mtab fsname tmpfs
+0.000622 gphoto2-port/disk(2): found mtab fsname devpts
+0.000625 gphoto2-port/disk(2): found mtab fsname /dev/md1
+0.000630 gphoto2-port/disk(2): found mtab fsname /dev/md5
+0.000635 gphoto2-port/disk(2): found mtab fsname /dev/md6
+0.000640 gphoto2-port/disk(2): found mtab fsname /dev/md7
+0.000645 gphoto2-port/disk(2): found mtab fsname /dev/md8
+0.000650 gphoto2-port/disk(2): found mtab fsname rpc_pipefs
+0.000660 gphoto2-port/disk(2): found mtab fsname fusectl
+0.000662 gphoto2-port/disk(2): found mtab fsname nfsd
+0.000665 gphoto2-port/disk(2): found mtab fsname binfmt_misc
+0.000696 gphoto2-port-info-list(2): Could not load port driver list: 'Unspecified error'.
+0.000700 gphoto2-port-info-list(2): Loaded '' ('^disk:') from '/usr/local/lib/libgphoto2_port/0.10.0/disk'.
+0.000703 gphoto2-port-info-list(2): Called for filename '/usr/local/lib/libgphoto2_port/0.10.0/ptpip'.
+0.000762 gphoto2-port-info-list(2): Loaded 'PTP/IP Connection' ('ptpip:') from '/usr/local/lib/libgphoto2_port/0.10.0/ptpip'.
+0.000766 gphoto2-port-info-list(2): Loaded '' ('^ptpip:') from '/usr/local/lib/libgphoto2_port/0.10.0/ptpip'.
+0.000768 gphoto2-port-info-list(2): Called for filename '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000890 gphoto2-port-info-list(2): Loaded 'Serial Port 0' ('serial:/dev/ttyS0') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000894 gphoto2-port-info-list(2): Loaded 'Serial Port 1' ('serial:/dev/ttyS1') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000897 gphoto2-port-info-list(2): Loaded 'Serial Port 2' ('serial:/dev/ttyS2') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000900 gphoto2-port-info-list(2): Loaded 'Serial Port 3' ('serial:/dev/ttyS3') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000903 gphoto2-port-info-list(2): Loaded 'Serial Port 4' ('serial:/dev/ttyS4') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000905 gphoto2-port-info-list(2): Loaded 'Serial Port 5' ('serial:/dev/ttyS5') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000908 gphoto2-port-info-list(2): Loaded 'Serial Port 6' ('serial:/dev/ttyS6') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000911 gphoto2-port-info-list(2): Loaded 'Serial Port 7' ('serial:/dev/ttyS7') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000913 gphoto2-port-info-list(2): Loaded 'Serial Port 8' ('serial:/dev/ttyS8') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000916 gphoto2-port-info-list(2): Loaded 'Serial Port 9' ('serial:/dev/ttyS9') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000919 gphoto2-port-info-list(2): Loaded 'Serial Port 10' ('serial:/dev/ttyS10') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000922 gphoto2-port-info-list(2): Loaded 'Serial Port 11' ('serial:/dev/ttyS11') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000925 gphoto2-port-info-list(2): Loaded 'Serial Port 12' ('serial:/dev/ttyS12') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000927 gphoto2-port-info-list(2): Loaded 'Serial Port 13' ('serial:/dev/ttyS13') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000930 gphoto2-port-info-list(2): Loaded '' ('^serial:') from '/usr/local/lib/libgphoto2_port/0.10.0/serial'.
+0.000933 gphoto2-port-info-list(2): Called for filename '/usr/local/lib/libgphoto2_port/0.10.0/usb'.
+0.001319 gphoto2-port-info-list(2): Loaded '' ('^usb:') from '/usr/local/lib/libgphoto2_port/0.10.0/usb'.
+0.001325 gphoto2-port-info-list(2): Loaded 'Universal Serial Bus' ('usb:005,007') from '/usr/local/lib/libgphoto2_port/0.10.0/usb'.
+0.001328 gphoto2-port-info-list(2): Loaded 'Universal Serial Bus' ('usb:005,005') from '/usr/local/lib/libgphoto2_port/0.10.0/usb'.
+0.001330 gphoto2-port-info-list(2): Called for filename '/usr/local/lib/libgphoto2_port/0.10.0/usbdiskdirect'.
+0.001516 gphoto2-port-info-list(2): Called for filename '/usr/local/lib/libgphoto2_port/0.10.0/usbscsi'.
+0.001588 gphoto2-port-info-list(2): Counting entries (21 available)...
+0.001592 gphoto2-port-info-list(2): 17 regular entries available.
+0.001601 gphoto2-abilities-list(2): Using ltdl to load camera libraries from '/usr/local/lib/libgphoto2/2.5.2'...
+0.001793 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/adc65'.
+0.001798 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/agfa_cl20'.
+0.001800 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/aox'.
+0.001802 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/ax203'.
+0.001804 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/barbie'.
+0.001806 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/canon'.
+0.001808 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/casio_qv'.
+0.001810 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/clicksmart310'.
+0.001812 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/digigr8'.
+0.001814 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/digita'.
+0.001816 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/dimagev'.
+0.001818 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/dimera3500'.
+0.001819 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/directory'.
+0.001821 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/enigma13'.
+0.001827 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/fuji'.
+0.001829 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/gsmart300'.
+0.001831 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/hp215'.
+0.001833 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/iclick'.
+0.001835 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/jamcam'.
+0.001837 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/jd11'.
+0.001838 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/jl2005a'.
+0.001840 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/jl2005c'.
+0.001842 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/kodak_dc120'.
+0.001844 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/kodak_dc210'.
+0.001846 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/kodak_dc240'.
+0.001848 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/kodak_dc3200'.
+0.001850 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/kodak_ez200'.
+0.001852 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/konica'.
+0.001853 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/konica_qm150'.
+0.001855 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/largan'.
+0.001857 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/lg_gsm'.
+0.001859 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/mars'.
+0.001861 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/mustek'.
+0.001862 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/panasonic_coolshot'.
+0.001864 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/panasonic_dc1000'.
+0.001866 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/panasonic_dc1580'.
+0.001868 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/panasonic_l859'.
+0.001870 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/pccam300'.
+0.001872 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/pccam600'.
+0.001873 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/pentax'.
+0.001875 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/polaroid_pdc320'.
+0.001877 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/polaroid_pdc640'.
+0.001879 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/polaroid_pdc700'.
+0.001881 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/ptp2'.
+0.001882 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/ricoh'.
+0.001884 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/ricoh_g3'.
+0.001886 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/samsung'.
+0.001888 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sierra'.
+0.001889 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sipix_blink2'.
+0.001891 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sipix_web2'.
+0.001893 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/smal'.
+0.001895 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sonix'.
+0.001897 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sony_dscf1'.
+0.001898 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sony_dscf55'.
+0.001900 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/soundvision'.
+0.001902 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/spca50x'.
+0.001904 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sq905'.
+0.001906 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/st2205'.
+0.001907 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/stv0674'.
+0.001909 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/stv0680'.
+0.001911 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/sx330z'.
+0.001915 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/topfield'.
+0.001917 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/toshiba_pdrm11'.
+0.001919 gphoto2-abilities-list(2): Found '/usr/local/lib/libgphoto2/2.5.2/tp6801'.
+0.001923 gp-abilities-list(2): Found 64 camera drivers.
+0.012277 gphoto2-port-info-list(2): Counting entries (21 available)...
+0.012290 gphoto2-port-info-list(2): 17 regular entries available.
+0.012293 gphoto2-port(2): Creating new device...
+0.012298 gphoto2-port-info-list(2): Getting info of entry 0 (21 available)...
+0.012371 gphoto2-port(2): Setting settings...
+0.012377 gphoto2-port-info-list(2): Getting info of entry 1 (21 available)...
+0.012435 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012439 gphoto2-port(2): Setting settings...
+0.012442 gphoto2-port-info-list(2): Getting info of entry 2 (21 available)...
+0.012495 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012499 gphoto2-port(2): Setting settings...
+0.012502 gphoto2-port-info-list(2): Getting info of entry 3 (21 available)...
+0.012553 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012556 gphoto2-port(2): Setting settings...
+0.012559 gphoto2-port-info-list(2): Getting info of entry 4 (21 available)...
+0.012610 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012613 gphoto2-port(2): Setting settings...
+0.012616 gphoto2-port-info-list(2): Getting info of entry 5 (21 available)...
+0.012666 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012669 gphoto2-port(2): Setting settings...
+0.012672 gphoto2-port-info-list(2): Getting info of entry 6 (21 available)...
+0.012722 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012726 gphoto2-port(2): Setting settings...
+0.012729 gphoto2-port-info-list(2): Getting info of entry 7 (21 available)...
+0.012779 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012782 gphoto2-port(2): Setting settings...
+0.012785 gphoto2-port-info-list(2): Getting info of entry 8 (21 available)...
+0.012835 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012838 gphoto2-port(2): Setting settings...
+0.012841 gphoto2-port-info-list(2): Getting info of entry 9 (21 available)...
+0.012891 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012894 gphoto2-port(2): Setting settings...
+0.012897 gphoto2-port-info-list(2): Getting info of entry 10 (21 available)...
+0.012947 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.012951 gphoto2-port(2): Setting settings...
+0.012954 gphoto2-port-info-list(2): Getting info of entry 11 (21 available)...
+0.013004 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.013008 gphoto2-port(2): Setting settings...
+0.013011 gphoto2-port-info-list(2): Getting info of entry 12 (21 available)...
+0.013061 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.013065 gphoto2-port(2): Setting settings...
+0.013068 gphoto2-port-info-list(2): Getting info of entry 13 (21 available)...
+0.013118 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.013121 gphoto2-port(2): Setting settings...
+0.013124 gphoto2-port-info-list(2): Getting info of entry 14 (21 available)...
+0.013174 gphoto2-port(2): Setting timeout to 500 millisecond(s)...
+0.013178 gphoto2-port(2): Setting settings...
+0.013181 gphoto2-port-info-list(2): Getting info of entry 15 (21 available)...
+0.013529 gphoto2-port(2): Setting timeout to 5000 millisecond(s)...
+0.013533 gphoto2-port(2): Setting settings...
+0.013537 libusb(2): gp_port_usb_update(old int=0, conf=-1, alt=-1) port usb:005,007, (new int=0, conf=-1, alt=-1), port usb:005,007
+0.013540 gphoto2-abilities-list.c(1): Auto-detecting USB cameras...
+0.013901 gphoto2-port-usb(1): Looking for USB device (class 0x29a, subclass, 0xffffffff, protocol 0xffffffff)...
+0.014251 gphoto2-port-usb(1): Looking for USB device (class 0x6, subclass, 0x1, protocol 0x1)...
+0.014254 libusb(1): Found USB class device (class 0x6, subclass, 0x1, protocol 0x1)
+0.014256 libusb(2): inep to look for is 81
+0.014259 libusb(1): Detected defaults: config 1, interface 0, altsetting 0, idVendor ID 04e8, idProduct 140c, inep 81, outep 01, intep 82
+0.014269 gphoto2-abilities-list.c(2): Found 'USB PTP Class Camera' (0x6,0x1,0x1)
+0.014274 gphoto2-port-info-list(2): Getting info of entry 16 (21 available)...
+0.014620 gphoto2-port(2): Setting timeout to 5000 millisecond(s)...
+0.014626 gphoto2-port(2): Setting settings...
+0.014629 libusb(2): gp_port_usb_update(old int=0, conf=-1, alt=-1) port usb:005,005, (new int=0, conf=-1, alt=-1), port usb:005,005
+0.014632 gphoto2-abilities-list.c(1): Auto-detecting USB cameras...
+0.014993 gphoto2-port-usb(1): Looking for USB device (class 0x29a, subclass, 0xffffffff, protocol 0xffffffff)...
+0.015285 gphoto2-port-usb(1): Looking for USB device (class 0x6, subclass, 0x1, protocol 0x1)...
+0.015299 gphoto2-port(2): Freeing port...
+0.015303 gphoto2-port(2): Closing port...
+0.015377 gphoto2-camera(2): Setting abilities ('USB PTP Class Camera')...
+0.015382 gphoto2-setting(2): Setting key 'model' to value 'USB PTP Class Camera' (gphoto2)
+0.015386 gphoto2-setting(2): Saving 3 setting(s) to file "/home/boboka/.gphoto/settings"
+0.031861 gphoto2-port-info-list(2): Looking for path 'usb:005,007' (21 entries available)...
+0.031871 gphoto2-port-info-list(2): Getting info of entry 15 (21 available)...
+0.031875 gphoto2-camera(2): Setting port info for port 'Universal Serial Bus' at 'usb:005,007'...
+0.032263 gphoto2-port(2): Setting timeout to 5000 millisecond(s)...
+0.032268 gphoto2-port(2): Setting settings...
+0.032272 libusb(2): gp_port_usb_update(old int=0, conf=-1, alt=-1) port usb:005,007, (new int=0, conf=-1, alt=-1), port usb:005,007
+0.032276 gphoto2-setting(2): Setting key 'port' to value 'usb:005,007' (gphoto2)
+0.032279 gphoto2-setting(2): Saving 3 setting(s) to file "/home/boboka/.gphoto/settings"
+0.070507 gphoto2-camera(2): Initializing camera...
+0.070527 gphoto2-port(0): The supplied vendor or product id (0x0,0x0) is not valid.
+0.070531 gphoto2-port-usb(1): Looking for USB device (class 0x6, subclass, 0x1, protocol 0x1)...
+0.070533 libusb(1): Found USB class device (class 0x6, subclass, 0x1, protocol 0x1)
+0.070535 libusb(2): inep to look for is 81
+0.070538 libusb(1): Detected defaults: config 1, interface 0, altsetting 0, idVendor ID 04e8, idProduct 140c, inep 81, outep 01, intep 82
+0.070540 gphoto2-camera(2): Loading '/usr/local/lib/libgphoto2/2.5.2/ptp2'...
+0.070711 gphoto2-port(2): Opening USB port...
+0.070717 libusb(2): gp_port_usb_open(0x1b57830)
+0.070736 libusb(2): claiming interface 0
+0.070766 ptp2(2): maxpacketsize 512
+0.070773 gphoto2-port(2): Setting timeout to 8000 millisecond(s)...
+0.070778 ptp(2): PTP: Opening session
+0.070783 gphoto2-port(2): Writing 16=0x10 byte(s) to port...
+0.070787 gphoto2-port(3): Hexdump of 16 = 0x10 bytes follows:
+0000  10 00 00 00 01 00 02 10-00 00 00 00 01 00 00 00  ................
+
+0.070975 ptp2/ptp_usb_getresp(2): reading response
+0.070983 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.070992 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.113964 gphoto2-port(2): Could only read 16 out of 512 byte(s)
+0.113973 gphoto2-port(3): Hexdump of 16 = 0x10 bytes follows:
+0000  10 00 00 00 03 00 1e 20-00 00 00 00 01 00 00 00  ....... ........
+
+0.113975 ptp2/usb_getresp(2): request code 0x1002 getting resp error 0x201e
+0.113979 gphoto2-port(2): Setting timeout to 20000 millisecond(s)...
+0.113985 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.113988 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 01 10-01 00 00 00              ............    
+
+0.114076 ptp2/ptp_usb_getdata(2): reading data
+0.114078 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.114081 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.155580 gphoto2-port(2): Could only read 239 out of 512 byte(s)
+0.155593 gphoto2-port(3): Hexdump of 239 = 0xef bytes follows:
+0000  ef 00 00 00 02 00 01 10-01 00 00 00 64 00 00 00  ............d...
+0010  00 00 00 00 00 00 00 15-00 00 00 01 10 02 10 03  ................
+0020  10 04 10 05 10 06 10 07-10 08 10 09 10 0b 10 0c  ................
+0030  10 0d 10 0f 10 1b 10 0a-10 10 10 11 10 00 90 02  ................
+0040  91 03 91 04 91 04 00 00-00 02 40 03 40 04 40 05  ..........@.@.@.
+0050  40 05 00 00 00 01 50 01-d4 02 d4 04 d4 07 d4 01  @.....P.........
+0060  00 00 00 00 00 12 00 00-00 84 b9 82 b9 09 30 01  ..............0.
+0070  b9 81 b9 01 38 01 30 05-ba 06 b9 00 30 07 38 04  ....8.0.....0.8.
+0080  38 0b 38 08 30 0a 30 0b-30 0c 30 03 ba 1e 53 00  8.8.0.0.0.0...S.
+0090  41 00 4d 00 53 00 55 00-4e 00 47 00 20 00 45 00  A.M.S.U.N.G. .E.
+00a0  6c 00 65 00 63 00 74 00-72 00 6f 00 6e 00 69 00  l.e.c.t.r.o.n.i.
+00b0  63 00 73 00 20 00 43 00-6f 00 2e 00 20 00 4c 00  c.s. .C.o... .L.
+00c0  74 00 64 00 2e 00 20 00-00 00 0c 53 00 41 00 4d  t.d... ....S.A.M
+00d0  00 53 00 55 00 4e 00 47-00 20 00 4e 00 58 00 31  .S.U.N.G. .N.X.1
+00e0  00 00 00 05 56 00 31 00-2e 00 30 00 00 00 00     ....V.1...0.... 
+
+0.155606 ptp2/ptp_usb_getresp(2): reading response
+0.155608 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.155612 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.155695 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.155699 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-01 00 00 00              ....... ....    
+
+0.155716 PTP2/ptp2/library.c(2): Device info:
+0.155718 PTP2/ptp2/library.c(2): Manufacturer: SAMSUNG Electronics Co. Ltd. 
+0.155720 PTP2/ptp2/library.c(2):   Model: SAMSUNG NX1
+0.155722 PTP2/ptp2/library.c(2):   device version: V1.0
+0.155724 PTP2/ptp2/library.c(2):   serial number: '(null)'
+0.155726 PTP2/ptp2/library.c(2): Vendor extension ID: 0x00000000
+0.155727 PTP2/ptp2/library.c(2): Vendor extension version: 0
+0.155730 PTP2/ptp2/library.c(2): Vendor extension description: (null)
+0.155732 PTP2/ptp2/library.c(2): Functional Mode: 0x0000
+0.155734 PTP2/ptp2/library.c(2): PTP Standard Version: 100
+0.155735 PTP2/ptp2/library.c(2): Supported operations:
+0.155737 PTP2/ptp2/library.c(2):   0x1001
+0.155738 PTP2/ptp2/library.c(2):   0x1002
+0.155740 PTP2/ptp2/library.c(2):   0x1003
+0.155742 PTP2/ptp2/library.c(2):   0x1004
+0.155743 PTP2/ptp2/library.c(2):   0x1005
+0.155745 PTP2/ptp2/library.c(2):   0x1006
+0.155746 PTP2/ptp2/library.c(2):   0x1007
+0.155748 PTP2/ptp2/library.c(2):   0x1008
+0.155749 PTP2/ptp2/library.c(2):   0x1009
+0.155751 PTP2/ptp2/library.c(2):   0x100b
+0.155752 PTP2/ptp2/library.c(2):   0x100c
+0.155754 PTP2/ptp2/library.c(2):   0x100d
+0.155755 PTP2/ptp2/library.c(2):   0x100f
+0.155757 PTP2/ptp2/library.c(2):   0x101b
+0.155758 PTP2/ptp2/library.c(2):   0x100a
+0.155760 PTP2/ptp2/library.c(2):   0x1010
+0.155761 PTP2/ptp2/library.c(2):   0x1011
+0.155763 PTP2/ptp2/library.c(2):   0x9000
+0.155765 PTP2/ptp2/library.c(2):   0x9102
+0.155766 PTP2/ptp2/library.c(2):   0x9103
+0.155768 PTP2/ptp2/library.c(2):   0x9104
+0.155769 PTP2/ptp2/library.c(2): Events Supported:
+0.155771 PTP2/ptp2/library.c(2):   0x4002
+0.155772 PTP2/ptp2/library.c(2):   0x4003
+0.155774 PTP2/ptp2/library.c(2):   0x4004
+0.155775 PTP2/ptp2/library.c(2):   0x4005
+0.155777 PTP2/ptp2/library.c(2): Device Properties Supported:
+0.155778 PTP2/ptp2/library.c(2):   0x5001
+0.155780 PTP2/ptp2/library.c(2):   0xd401
+0.155782 PTP2/ptp2/library.c(2):   0xd402
+0.155783 PTP2/ptp2/library.c(2):   0xd404
+0.155785 PTP2/ptp2/library.c(2):   0xd407
+0.155790 ptp_list_folder(2): (storage=0xffffffff, handle=0xffffffff)
+0.155792 ptp_list_folder(2): Listing ... 
+0.155797 gphoto2-port(2): Writing 24=0x18 byte(s) to port...
+0.155800 gphoto2-port(3): Hexdump of 24 = 0x18 bytes follows:
+0000  18 00 00 00 01 00 07 10-02 00 00 00 ff ff ff ff  ................
+0010  00 00 00 00 ff ff ff ff-                         ........        
+
+0.155944 ptp2/ptp_usb_getdata(2): reading data
+0.155946 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.155949 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.156583 gphoto2-port(2): Could only read 40 out of 512 byte(s)
+0.156591 gphoto2-port(3): Hexdump of 40 = 0x28 bytes follows:
+0000  28 00 00 00 02 00 07 10-02 00 00 00 06 00 00 00  (...............
+0010  01 00 00 00 02 00 00 00-03 00 00 00 04 00 00 00  ................
+0020  05 00 00 00 06 00 00 00-                         ........        
+
+0.156599 ptp2/ptp_usb_getresp(2): reading response
+0.156601 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.156604 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.156695 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.156698 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-02 00 00 00              ....... ....    
+
+0.156701 ptp_list_folder(2): adding new objectid 0x00000001 (nrofobs=0,j=0)
+0.156703 ptp_list_folder(2):   parenthandle 0x00000000
+0.156705 ptp_list_folder(2): adding new objectid 0x00000002 (nrofobs=1,j=1)
+0.156707 ptp_list_folder(2):   parenthandle 0x00000000
+0.156709 ptp_list_folder(2): adding new objectid 0x00000003 (nrofobs=2,j=2)
+0.156711 ptp_list_folder(2):   parenthandle 0x00000000
+0.156713 ptp_list_folder(2): adding new objectid 0x00000004 (nrofobs=3,j=3)
+0.156715 ptp_list_folder(2):   parenthandle 0x00000000
+0.156716 ptp_list_folder(2): adding new objectid 0x00000005 (nrofobs=4,j=4)
+0.156718 ptp_list_folder(2):   parenthandle 0x00000000
+0.156720 ptp_list_folder(2): adding new objectid 0x00000006 (nrofobs=5,j=5)
+0.156721 ptp_list_folder(2):   parenthandle 0x00000000
+0.156730 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.156733 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 04 10-03 00 00 00              ............    
+
+0.156818 ptp2/ptp_usb_getdata(2): reading data
+0.156820 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.156823 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.157320 gphoto2-port(2): Could only read 20 out of 512 byte(s)
+0.157324 gphoto2-port(3): Hexdump of 20 = 0x14 bytes follows:
+0000  14 00 00 00 02 00 04 10-03 00 00 00 01 00 00 00  ................
+0010  01 00 02 00            -                         ....            
+
+0.157326 ptp2/ptp_usb_getresp(2): reading response
+0.157328 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.157330 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.157444 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.157447 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-03 00 00 00              ....... ....    
+
+0.157450 ptp_list_folder(2): (storage=0x00020001, handle=0xffffffff)
+0.157452 ptp_list_folder(2): Listing ... 
+0.157455 gphoto2-port(2): Writing 24=0x18 byte(s) to port...
+0.157458 gphoto2-port(3): Hexdump of 24 = 0x18 bytes follows:
+0000  18 00 00 00 01 00 07 10-04 00 00 00 01 00 02 00  ................
+0010  00 00 00 00 ff ff ff ff-                         ........        
+
+0.157568 ptp2/ptp_usb_getdata(2): reading data
+0.157570 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.157573 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.160713 gphoto2-port(2): Could only read 24 out of 512 byte(s)
+0.160720 gphoto2-port(3): Hexdump of 24 = 0x18 bytes follows:
+0000  18 00 00 00 02 00 07 10-04 00 00 00 02 00 00 00  ................
+0010  07 00 00 00 08 00 00 00-                         ........        
+
+0.160723 ptp2/ptp_usb_getresp(2): reading response
+0.160725 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.160727 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.160819 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.160822 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-04 00 00 00              ....... ....    
+
+0.160825 ptp_list_folder(2): adding new objectid 0x00000007 (nrofobs=6,j=6)
+0.160827 ptp_list_folder(2):   parenthandle 0x00000000
+0.160829 ptp_list_folder(2):   storage 0x00020001
+0.160830 ptp_list_folder(2): adding new objectid 0x00000008 (nrofobs=7,j=7)
+0.160832 ptp_list_folder(2):   parenthandle 0x00000000
+0.160834 ptp_list_folder(2):   storage 0x00020001
+0.160896 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.160900 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 04 10-05 00 00 00              ............    
+
+0.161067 ptp2/ptp_usb_getdata(2): reading data
+0.161069 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.161072 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.161693 gphoto2-port(2): Could only read 20 out of 512 byte(s)
+0.161697 gphoto2-port(3): Hexdump of 20 = 0x14 bytes follows:
+0000  14 00 00 00 02 00 04 10-05 00 00 00 01 00 00 00  ................
+0010  01 00 02 00            -                         ....            
+
+0.161699 ptp2/ptp_usb_getresp(2): reading response
+0.161701 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.161703 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.161818 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.161821 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-05 00 00 00              ....... ....    
+
+0.161827 gphoto2-port(2): Writing 16=0x10 byte(s) to port...
+0.161830 gphoto2-port(3): Hexdump of 16 = 0x10 bytes follows:
+0000  10 00 00 00 01 00 05 10-06 00 00 00 01 00 02 00  ................
+
+0.161941 ptp2/ptp_usb_getdata(2): reading data
+0.161943 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.161946 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.162704 gphoto2-port(2): Could only read 64 out of 512 byte(s)
+0.162712 gphoto2-port(3): Hexdump of 64 = 0x40 bytes follows:
+0000  40 00 00 00 02 00 05 10-06 00 00 00 04 00 02 00  @...............
+0010  00 00 00 00 18 b5 03 00-00 00 00 80 bb 99 03 00  ................
+0020  00 00 ff ff ff ff 05 43-00 61 00 72 00 64 00 00  .......C.a.r.d..
+0030  00 07 2d 00 32 00 30 00-30 00 30 00 31 00 00 00  ..-.2.0.0.0.1...
+
+0.162715 ptp2/ptp_usb_getresp(2): reading response
+0.162717 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.162719 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.162818 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.162822 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-06 00 00 00              ....... ....    
+
+0.162839 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.162842 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 01 10-07 00 00 00              ............    
+
+0.162942 ptp2/ptp_usb_getdata(2): reading data
+0.162944 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.162947 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.203959 gphoto2-port(2): Could only read 239 out of 512 byte(s)
+0.203971 gphoto2-port(3): Hexdump of 239 = 0xef bytes follows:
+0000  ef 00 00 00 02 00 01 10-07 00 00 00 64 00 00 00  ............d...
+0010  00 00 00 00 00 00 00 15-00 00 00 01 10 02 10 03  ................
+0020  10 04 10 05 10 06 10 07-10 08 10 09 10 0b 10 0c  ................
+0030  10 0d 10 0f 10 1b 10 0a-10 10 10 11 10 00 90 02  ................
+0040  91 03 91 04 91 04 00 00-00 02 40 03 40 04 40 05  ..........@.@.@.
+0050  40 05 00 00 00 01 50 01-d4 02 d4 04 d4 07 d4 01  @.....P.........
+0060  00 00 00 00 00 12 00 00-00 84 b9 82 b9 09 30 01  ..............0.
+0070  b9 81 b9 01 38 01 30 05-ba 06 b9 00 30 07 38 04  ....8.0.....0.8.
+0080  38 0b 38 08 30 0a 30 0b-30 0c 30 03 ba 1e 53 00  8.8.0.0.0.0...S.
+0090  41 00 4d 00 53 00 55 00-4e 00 47 00 20 00 45 00  A.M.S.U.N.G. .E.
+00a0  6c 00 65 00 63 00 74 00-72 00 6f 00 6e 00 69 00  l.e.c.t.r.o.n.i.
+00b0  63 00 73 00 20 00 43 00-6f 00 2e 00 20 00 4c 00  c.s. .C.o... .L.
+00c0  74 00 64 00 2e 00 20 00-00 00 0c 53 00 41 00 4d  t.d... ....S.A.M
+00d0  00 53 00 55 00 4e 00 47-00 20 00 4e 00 58 00 31  .S.U.N.G. .N.X.1
+00e0  00 00 00 05 56 00 31 00-2e 00 30 00 00 00 00     ....V.1...0.... 
+
+0.203975 ptp2/ptp_usb_getresp(2): reading response
+0.203977 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.203980 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.204061 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.204065 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-07 00 00 00              ....... ....    
+
+0.204318 gp-camera(2): Freeing camera...
+0.204322 gphoto2-camera(2): Exiting camera ('USB PTP Class Camera')...
+0.204327 gphoto2-port(2): Writing 12=0xc byte(s) to port...
+0.204330 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 01 00 03 10-08 00 00 00              ............    
+
+0.204436 ptp2/ptp_usb_getresp(2): reading response
+0.204443 ptp2/ptp_usb_getpacket(2): getting next ptp packet
+0.204447 gphoto2-port(2): Reading 512=0x200 bytes from port...
+0.204936 gphoto2-port(2): Could only read 12 out of 512 byte(s)
+0.204940 gphoto2-port(3): Hexdump of 12 = 0xc bytes follows:
+0000  0c 00 00 00 03 00 01 20-08 00 00 00              ....... ....    
+
+0.204948 gphoto2-port(2): Closing port...
+0.204988 gphoto2-filesystem(2): resetting filesystem
+0.204991 libgphoto2/gphoto2-filesys.c(2): Clearing fscache LRU list...
+0.204994 libgphoto2/gphoto2-filesys.c(2): fscache LRU list already empty
+0.204995 gphoto2-filesystem(2): Internally deleting all folders from '/'...
+0.204997 gphoto2-filesystem(2): Lookup folder '/'...
+0.204999 gphoto2-filesystem(2): Found! / is 0x1b56400
+0.205001 gphoto2-filesystem(2): Recurse delete folder 0x1b56400//
+0.205005 gphoto2-port(2): Freeing port...
+0.205007 gphoto2-port(2): Closing port...
+0.205028 gphoto2-filesystem(2): resetting filesystem
+0.205030 libgphoto2/gphoto2-filesys.c(2): Clearing fscache LRU list...
+0.205032 libgphoto2/gphoto2-filesys.c(2): fscache LRU list already empty
+0.205033 gphoto2-filesystem(2): Internally deleting all folders from '/'...
+0.205035 gphoto2-filesystem(2): Lookup folder '/'...
+0.205037 gphoto2-filesystem(2): Found! / is 0x1b56400
+0.205038 gphoto2-filesystem(2): Recurse delete folder 0x1b56400//
+
