@@ -417,6 +417,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151
 #define PTP_OC_CANON_EOS_TerminateViewfinder	0x9152
+/* EOS M2 wlan: 2 params, 0x00200000 0x01000000 */
 #define PTP_OC_CANON_EOS_GetViewFinderData	0x9153
 #define PTP_OC_CANON_EOS_DoAf			0x9154
 #define PTP_OC_CANON_EOS_DriveLens		0x9155
