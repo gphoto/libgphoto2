@@ -1824,6 +1824,8 @@ static struct {
 	/* https://sourceforge.net/tracker/index.php?func=detail&aid=1680029&group_id=8874&atid=108874 */
 	{"Nokia:N73",				0x0421, 0x0488, 0},
 
+	/* gbakos@astro.princeton.edu */
+	{"Samsung:NX1",				0x04e8,	0x140c, 0},
 	/* IRC reporter */
 	{"Samsung:S5620",			0x04e8,	0x684a, 0},
 
