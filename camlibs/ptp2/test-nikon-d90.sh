@@ -12,7 +12,7 @@ gphoto2 --set-config capturetarget=0
 gphoto2 --set-config imagequality=2 --capture-image-and-download
 rm capt0000.jpg
 gphoto2 --set-config imagequality=6 --capture-image-and-download
-rm capt0000.jpg capt0001.nef
+rm capt0000.jpg capt0000.nef
 gphoto2 --set-config imagequality=6 --capture-image-and-download --keep-raw
 rm capt0000.jpg
 gphoto2 --set-config capturetarget=1
@@ -25,7 +25,7 @@ gphoto2 --set-config capturetarget=0
 gphoto2 --set-config imagequality=2 --capture-image-and-download
 rm capt0000.jpg
 gphoto2 --set-config imagequality=6 --capture-image-and-download
-rm capt0000.jpg capt0001.nef
+rm capt0000.jpg capt0000.nef
 echo -n "replugin SDCARD and press return: " 
 read dummy
 
