@@ -627,11 +627,12 @@ gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 	if (port->pl->nrofirqs)
 		goto handleirq;
 
-	LOG_ON_LIBUSB_E(ret = libusb_interrupt_transfer(port->pl->dh, port->settings.usb.intep, (unsigned char*)bytes, size, &retsize, timeout));
+	ret = libusb_interrupt_transfer(port->pl->dh, port->settings.usb.intep, (unsigned char*)bytes, size, &retsize, timeout);
+	if (ret != LIBUSB_ERROR_TIMEOUT) LOG_ON_LIBUSB_E(ret);
 
 	/* We might have got an interrupt from this transfer, or from on of the queued ones.
 	 * If we timed out, but the queue got one, return the one from the queue. */
-	if ((ret == LIBUSB_ERROR_TIMEOUT) && (port->pl->nrofirqs))
+	if ((ret == LIBUSB_ERROR_TIMEOUT) && port->pl->nrofirqs)
 		goto handleirq;
 
 	if (ret < LIBUSB_SUCCESS)
