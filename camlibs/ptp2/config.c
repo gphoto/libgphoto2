@@ -5117,6 +5117,39 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Canon_EOS_ContinousAF(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	gp_widget_add_choice (*widget, _("Off"));
+	gp_widget_add_choice (*widget, _("On"));
+	switch (dpd->CurrentValue.u32) {
+	case 0: gp_widget_set_value (*widget, _("Off")); break;
+	case 1: gp_widget_set_value (*widget, _("On")); break;
+	default: {
+		char buf[200];
+		sprintf(buf,"Unknown value 0x%08x", dpd->CurrentValue.u32);
+		gp_widget_set_value (*widget, buf);
+		break;
+	}
+	}
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_ContinousAF(CONFIG_PUT_ARGS) {
+	char *val;
+	unsigned int ival;
+
+	CR(gp_widget_get_value (widget, &val));
+	if (!strcmp(val,_("Off"))) { propval->u32 = 0; return GP_OK; }
+	if (!strcmp(val,_("On"))) { propval->u32 = 1; return GP_OK; }
+	if (!sscanf(val,"Unknown value 0x%08x",&ival))
+		return GP_ERROR_BAD_PARAMETERS;
+	propval->u32 = ival;
+	return GP_OK;
+}
 
 static int
 _get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
@@ -6456,6 +6489,7 @@ static struct submenu capture_settings_menu[] = {
 	/* Nikon DSLR have both PTP focus mode and Nikon specific focus mode */
 	{ N_("Focus Mode 2"),                   "focusmode2",               PTP_DPC_NIKON_AutofocusMode,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AFMode,                  _put_Nikon_AFMode },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_CANON_EOS_FocusMode,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_FocusMode,           _put_Canon_EOS_FocusMode },
+	{ N_("Continuous AF"),                  "continuousaf",             PTP_DPC_CANON_EOS_ContinousAFMode,      PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_ContinousAF,         _put_Canon_EOS_ContinousAF },
 	{ N_("Effect Mode"),                    "effectmode",               PTP_DPC_EffectMode,                     0,                  PTP_DTC_UINT16, _get_EffectMode,                    _put_EffectMode },
 	{ N_("Effect Mode"),                    "effectmode",               PTP_DPC_NIKON_EffectMode,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_EffectMode,              _put_NIKON_EffectMode },
 	{ N_("Exposure Program"),               "expprogram",               PTP_DPC_ExposureProgramMode,            0,                  PTP_DTC_UINT16, _get_ExposureProgram,               _put_ExposureProgram },
