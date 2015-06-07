@@ -319,7 +319,7 @@ usb_wrap_RDY(gp_port* dev, unsigned int type)
    	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
    if (ret<GP_OK)
       GP_DEBUG( "usb_wrap_RDY *** FAILED" );
-   return GP_OK;
+   return ret;
 }
 
 static int
@@ -344,9 +344,7 @@ usb_wrap_STAT(gp_port* dev, unsigned int type)
    if (ret < GP_OK)
    {
       GP_DEBUG( "usb_wrap_STAT *** FAILED" );
-      if (ret < GP_OK)
-	return ret;
-      return GP_ERROR;
+      return ret;
    }
 
    xlen = uw_value(sizeof(msg));
