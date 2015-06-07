@@ -332,7 +332,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				di->OperationsSupported_len += 1;
 			}
 		}
-		if (!strcmp(params->deviceinfo.Model,"COOLPIX A")) {
+		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
 			/* The A also hides some commands from us ... */
 			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
