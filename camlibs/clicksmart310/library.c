@@ -80,10 +80,7 @@ camera_abilities (CameraAbilitiesList *list)
        		a.speed[0] = 0;
        		a.usb_vendor = models[i].idVendor;
        		a.usb_product= models[i].idProduct;
-       		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
-			a.operations = GP_OPERATION_NONE;
-		else
-			a.operations = GP_OPERATION_NONE;
+		a.operations = GP_OPERATION_NONE;
        		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 ;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW
