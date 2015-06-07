@@ -422,9 +422,7 @@ usb_wrap_SIZE(gp_port* dev, unsigned int type, uw32_t* size)
    if (ret < GP_OK)
    {
       GP_DEBUG( "usb_wrap_SIZE *** FAILED" );
-      if (ret < GP_OK)
-	return ret;
-      return GP_ERROR;
+      return ret;
    }
    xlen = uw_value(sizeof(msg));
    if (!UW_EQUAL(msg.length, xlen) || !UW_EQUAL(msg.packet_type, UW_PACKET_DATA))
