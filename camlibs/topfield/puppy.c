@@ -343,7 +343,6 @@ do_cmd_ready(Camera *camera, GPContext *context)
 
 	case FAIL:
 		gp_log (GP_LOG_ERROR, "topfield", "ERROR: Device reports %s\n", decode_error(&reply));
-		get_u32(&reply.data);
 		break;
 
 	default:
