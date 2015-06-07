@@ -234,6 +234,8 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
         i = gp_port_usb_msg_read (camera->port, 0x0c, 0x55, 0, (char *)msg, 1);
         if (i != 1) {
                 gp_context_error (context, _("Could not establish initial contact with camera"));
+		if (i < GP_OK)
+			return i;
                 return GP_ERROR_CORRUPTED_DATA;
         }
         camstat = msg[0];
@@ -249,10 +251,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 	default:
 		gp_context_error (context, _("Initial camera response '%c' unrecognized"),
 				  camstat);
-                if ( i < 0 )
-                        return GP_ERROR_OS_FAILURE;
-                else
-                        return GP_ERROR_CORRUPTED_DATA;
+		return GP_ERROR_CORRUPTED_DATA;
         }
 
         GP_DEBUG ("canon_usb_camera_init() initial camera response: %c/'%s'",
