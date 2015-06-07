@@ -367,7 +367,7 @@ canon_serial_send_packet (Camera *camera, unsigned char type, unsigned char seq,
 			  unsigned char *pkt, int len)
 {
 	unsigned char *hdr = pkt - PKT_HDR_LEN;
-	unsigned short crc;
+	int crc;
 
 	hdr[PKT_TYPE] = type;
 	hdr[PKT_SEQ] = seq;
