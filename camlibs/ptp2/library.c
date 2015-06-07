@@ -5833,7 +5833,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			ptp_operation_issupported(params,PTP_OC_CANON_SetObjectArchive)
 		) {
 			/* seems just a byte (0x20 - new) */
-			ptp_canon_setobjectarchive (params, oid, ob->canon_flags & ~0x20);
+			C_PTP_REP (ptp_canon_setobjectarchive (params, oid, ob->canon_flags & ~0x20));
 			ob->canon_flags &= ~0x20;
 		}
 		}
