@@ -93,7 +93,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 	if ((info[0] == 0xff)&& (info[1] == 0)&&(info[2]==0xff))
 		memmove(info, info + 16, 0x1ff0); /* Saving config */
 	else
-		memcpy(info, info + 144, 0x1f70); /* Saving config */
+		memmove(info, info + 144, 0x1f70); /* Saving config */
 
 	GP_DEBUG("Leaving mars_init\n");
         return GP_OK;
