@@ -435,19 +435,41 @@ static int
 gp_libusb1_close (GPPort *port)
 {
 	int i, haveone;
+
 	C_PARAMS (port);
 
 	if (port->pl->dh == NULL)
 		return GP_OK;
 
+	/* Cancel and free the async transfers */
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
+		GP_LOG_D("canceling transfer %d:%p (status %d)",i, port->pl->transfers[i], port->pl->transfers[i]->status);
+		if (port->pl->transfers[i]) {
+			/* this happens if the transfer is completed for instance, but not reaped. we cannot cancel it. */
+			if (LOG_ON_LIBUSB_E(libusb_cancel_transfer(port->pl->transfers[i])) < 0) {
+				libusb_free_transfer (port->pl->transfers[i]);
+				port->pl->transfers[i] = NULL;
+			}
+		}
+	}
+	/* Do just one loop ... this should be sufficient and avoids endless loops. */
+	haveone = 0;
+	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
+		if (port->pl->transfers[i]) {
+			GP_LOG_D("checking: transfer %d:%p status %d",i, port->pl->transfers[i], port->pl->transfers[i]->status);
+			haveone = 1;
+		}
+	}
+	if (haveone)
+		LOG_ON_LIBUSB_E (libusb_handle_events(port->pl->ctx));
+
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
 		int saved_errno = errno;
-		gp_port_set_error (port, _("Could not release "
-					   "interface %d (%s)."),
+		gp_port_set_error (port, _("Could not release interface %d (%s)."),
 				   port->settings.usb.interface,
 				   strerror(saved_errno));
-		return (GP_ERROR_IO);
+		return GP_ERROR_IO;
 	}
 
 #if 0
@@ -469,23 +491,6 @@ gp_libusb1_close (GPPort *port)
 		if (LOG_ON_LIBUSB_E (libusb_attach_kernel_driver (port->pl->dh, port->settings.usb.interface)))
 			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
 	}
-
-
-	/* FIXME: free the transfers */
-	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++)
-		if (port->pl->transfers[i])
-			libusb_cancel_transfer(port->pl->transfers[i]);
-	haveone = 1;
-	while (haveone) {
-		haveone = 0;
-		for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++)
-			if (port->pl->transfers[i])	
-				haveone = 1;
-		if (haveone)
-			if (libusb_handle_events(port->pl->ctx) < 0)
-				break;
-	}
-	
 
 	libusb_close (port->pl->dh);
 
@@ -564,10 +569,14 @@ static void LIBUSB_CALL
 _cb_irq(struct libusb_transfer *transfer)
 {
 	struct _GPPortPrivateLibrary *pl = transfer->user_data;
+	int i;
 
-	if (transfer->status == LIBUSB_TRANSFER_CANCELLED) {
-		int i;
+	GP_LOG_D("%p with status %d", transfer, transfer->status);
 
+	if (	(transfer->status == LIBUSB_TRANSFER_CANCELLED) ||
+		(transfer->status == LIBUSB_TRANSFER_TIMED_OUT) || /* on close */
+		(transfer->status == LIBUSB_TRANSFER_NO_DEVICE) /* on removing camera */
+	) {
 		/* Only requeue the global transfers, not temporary ones */
 		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers[0]); i++) {
 			if (pl->transfers[i] == transfer) {
@@ -595,7 +604,9 @@ _cb_irq(struct libusb_transfer *transfer)
 		pl->nrofirqs++;
 	}
 
-	libusb_submit_transfer(transfer);
+	GP_LOG_D("requeuing complete transfer %p", transfer);
+	LOG_ON_LIBUSB_E(libusb_submit_transfer(transfer));
+	return;
 }
 
 static int
@@ -612,7 +623,8 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 			buf, 256, _cb_irq, port->pl, 0
 		);
 		port->pl->transfers[i]->flags |= LIBUSB_TRANSFER_FREE_BUFFER;
-		libusb_submit_transfer (port->pl->transfers[i]);
+		LOG_ON_LIBUSB_E(libusb_submit_transfer (port->pl->transfers[i]));
+		
 	}
 	return GP_OK;
 }
