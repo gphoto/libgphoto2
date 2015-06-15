@@ -435,16 +435,20 @@ static int
 gp_libusb1_close (GPPort *port)
 {
 	int i, haveone;
+	struct timeval tv;
 
 	C_PARAMS (port);
 
 	if (port->pl->dh == NULL)
 		return GP_OK;
 
+	tv.tv_sec = 0;
+	tv.tv_usec = 1000;
+	LOG_ON_LIBUSB_E (libusb_handle_events_timeout(port->pl->ctx, &tv));
 	/* Cancel and free the async transfers */
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
-		GP_LOG_D("canceling transfer %d:%p (status %d)",i, port->pl->transfers[i], port->pl->transfers[i]->status);
 		if (port->pl->transfers[i]) {
+			GP_LOG_D("canceling transfer %d:%p (status %d)",i, port->pl->transfers[i], port->pl->transfers[i]->status);
 			/* this happens if the transfer is completed for instance, but not reaped. we cannot cancel it. */
 			if (LOG_ON_LIBUSB_E(libusb_cancel_transfer(port->pl->transfers[i])) < 0) {
 				libusb_free_transfer (port->pl->transfers[i]);
@@ -632,25 +636,27 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 static int
 gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
-	int 		ret, retsize;
+	int 		ret;
+	struct timeval	tv;
 
 	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
 	if (port->pl->nrofirqs)
 		goto handleirq;
 
-	ret = libusb_interrupt_transfer(port->pl->dh, port->settings.usb.intep, (unsigned char*)bytes, size, &retsize, timeout);
-	if (ret != LIBUSB_ERROR_TIMEOUT) LOG_ON_LIBUSB_E(ret);
+	tv.tv_sec = timeout/1000;
+	tv.tv_usec = (timeout%1000)*1000;
 
-	/* We might have got an interrupt from this transfer, or from on of the queued ones.
-	 * If we timed out, but the queue got one, return the one from the queue. */
-	if ((ret == LIBUSB_ERROR_TIMEOUT) && port->pl->nrofirqs)
+	ret = LOG_ON_LIBUSB_E (libusb_handle_events_timeout(port->pl->ctx, &tv));
+
+	if (port->pl->nrofirqs)
 		goto handleirq;
 
 	if (ret < LIBUSB_SUCCESS)
 		return translate_libusb_error(ret, GP_ERROR_IO_READ);
 
-	return retsize;
+	return GP_ERROR_TIMEOUT;
+
 handleirq:
 	if (size > port->pl->irqlens[0])
 		size = port->pl->irqlens[0];
