@@ -2675,6 +2675,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		int loops = 100;
 		do {
 			ret = ptp_nikon_capture2(params,af,sdram);
+			if (ret == PTP_RC_DeviceBusy) usleep(2000);
 		} while ((ret == PTP_RC_DeviceBusy) && loops--);
 		goto capturetriggered;
 	}
@@ -2837,6 +2838,8 @@ capturetriggered:
 			get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
 			/* delete last / or we get confused later. */
 			path->folder[ strlen(path->folder)-1 ] = '\0';
+
+			ptp_free_objectinfo(&oi);
 
 			/* not doing the rest of the burst loop ... */
 			return gp_filesystem_append (camera->fs, path->folder, path->name, context);
@@ -3718,6 +3721,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			ret = ptp_nikon_capture2 (params, !inliveview, sdram);
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				return translate_ptp_result (ret);
+			if (ret == PTP_RC_DeviceBusy) usleep(2000);
 			/* sleep a bit perhaps ? or check events? */
 		} while (ret == PTP_RC_DeviceBusy);
 
