@@ -622,6 +622,9 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 
 	if (len < PTP_oi_SequenceNumber)
 		return;
+
+	oi->Filename = oi->Keywords = NULL;
+
 	/* FIXME: also handle length with all the strings at the end */
 	oi->StorageID=dtoh32a(&data[PTP_oi_StorageID]);
 	oi->ObjectFormat=dtoh16a(&data[PTP_oi_ObjectFormat]);
