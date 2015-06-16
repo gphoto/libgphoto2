@@ -442,10 +442,11 @@ gp_libusb1_close (GPPort *port)
 	if (port->pl->dh == NULL)
 		return GP_OK;
 
+	/* Catch up on pending ones */
 	tv.tv_sec = 0;
 	tv.tv_usec = 1000;
 	LOG_ON_LIBUSB_E (libusb_handle_events_timeout(port->pl->ctx, &tv));
-	/* Cancel and free the async transfers */
+	/* Now cancel and free the async transfers */
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		if (port->pl->transfers[i]) {
 			GP_LOG_D("canceling transfer %d:%p (status %d)",i, port->pl->transfers[i], port->pl->transfers[i]->status);
@@ -456,7 +457,7 @@ gp_libusb1_close (GPPort *port)
 			}
 		}
 	}
-	/* Do just one loop ... this should be sufficient and avoids endless loops. */
+	/* Do just one round ... this should be sufficient and avoids endless loops. */
 	haveone = 0;
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		if (port->pl->transfers[i]) {
@@ -466,6 +467,7 @@ gp_libusb1_close (GPPort *port)
 	}
 	if (haveone)
 		LOG_ON_LIBUSB_E (libusb_handle_events(port->pl->ctx));
+
 
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
