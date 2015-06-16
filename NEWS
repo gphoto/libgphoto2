@@ -1,10 +1,33 @@
 libgphoto2 2.5.7.1 development snapshot
 
+all:
+* Missing COPYRIGHT headers added.
+* Bug fixes for issues detected by Coverity.
+
 ptp2:
 * Canon Powershot/IXUS CHDK support
+  Install the CHDK firmware and then use "gphoto2 --set-config chdk=On" to enable.
+* Canon EOS: Implemented new capture method for new Canon EOS to avoid hangs.
+
+* Canon EOS: New config: continuousaf
+* Canon EOS: event output for focusinfo / focusmask
+* Nikon DSLR: New config: movieiso, movieshutterspeed, moviehighisonr
+* Nikon Coolpix A: also manually add opcodes for capture
+* New USB ids:
+  Sony: DSC-HX60V, Alpha-A7S, Alpha-A77 M2
+  Panasonic: DMC-LS2
+  Canon EOS 7D Mark II, Canon EOS M3
+  Canon Powershot SX520 HS
+  Fuji Fujifilm X-E2
+  Samsung NX1
+
+* Synced with libmtp id database.
+* Lots of bugfixes.
 
 libgphoto2_port/libusb1:
-* asynchronous interrupt handling, to avoid losing usb interrupts.
+* Prefer libusb1 over libusb0 if both are present.
+* Asynchronous interrupt handling, to avoid losing usb interrupts during other
+  operations.
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.7 release
