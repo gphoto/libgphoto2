@@ -2869,25 +2869,31 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	PTPObjectInfo		oi;
 	int			sleepcnt = 1;
 	uint32_t		result;
-	time_t                  capture_start=time(NULL);
+	time_t                  capture_start;
+	int 			remotereleasesupported;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		gp_context_error (context,
 		_("Sorry, your Canon camera does not support Canon EOS Capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+
 	if (!params->eos_captureenabled)
 		camera_prepare_capture (camera, context);
-	else
-		CR( camera_canon_eos_update_capture_target(camera, context, -1));
+	/* We had this code here, but it does not seem to be needed, capture tyarget should be fine already.
+	 * else
+	 *  CR( camera_canon_eos_update_capture_target(camera, context, -1));
+	 */
 
 	/* Get the initial bulk set of event data, otherwise
 	 * capture might return busy. */
 	ptp_check_eos_events (params);
+
 	while (ptp_get_one_eos_event (params, &entry))
 		GP_LOG_D("discarding event type %d", entry.type);
 
-	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
+	remotereleasesupported = ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn);
+	if (remotereleasesupported) {
 		int oneloop;
 
 		ret = GP_OK;
@@ -2896,8 +2902,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 		do {
 			int foundfocusinfo = 0;
-			C_PTP_REP_MSG (ptp_check_eos_events (params),
-			       _("Canon EOS Get Changes failed"));
+			C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 			oneloop = 0;
 			while (ptp_get_one_eos_event (params, &entry)) {
 				oneloop = 1;
@@ -2920,9 +2925,10 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			return ret;
 		}
 		/* full press now */
-
 		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 2, 0), _("Canon EOS Full-Press failed"));
+
 		/* no event check between */
+
 		/* full release now */
 		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 2), _("Canon EOS Full-Release failed"));
 		ptp_check_eos_events (params);
@@ -2930,30 +2936,11 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		/* half release now */
 		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
 	} else {
-		C_PTP_REP_MSG (ptp_canon_eos_capture (params, &result),
-			       _("Canon EOS Capture failed"));
-
-		if ((result & 0x7000) == 0x2000) { /* also happened */
-			gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
-			return translate_ptp_result (result);
-		}
+		C_PTP_REP_MSG (ptp_canon_eos_capture (params, &result), _("Canon EOS Capture failed"));
 		GP_LOG_D ("result is %d", result);
-		switch (result) {
-		case 0: /* OK */
-			break;
-		case 1: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
-			return GP_ERROR;
-		case 3: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps mirror up?"));
-			return GP_ERROR;
-		case 7: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
-			return GP_ERROR_NO_MEMORY;
-		case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
-			return GP_ERROR_NO_MEMORY;
-		default:gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
-			return GP_ERROR;
-		}
 	}
 
+	capture_start = time (NULL);
 	newobject = 0;
 	memset (&oi, 0, sizeof(oi));
 	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
@@ -3011,8 +2998,33 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		/* not really proven to help keep it on */
 		C_PTP_REP (ptp_canon_eos_keepdeviceon (params));
 	}
-	if (newobject == 0)
+
+	/* In case where the capture worked, we have to try to get the Image from the camera so check the result after */
+	if (!remotereleasesupported) {
+		if ((result & 0x7000) == 0x2000) { /* also happened */
+			gp_context_error (context, _("Canon EOS Capture failed: %x"), result);
+			return translate_ptp_result (result);
+		}
+		switch (result) {
+		case 0: /* OK */
+			break;
+		case 1: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+			return GP_ERROR;
+		case 3: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps mirror up?"));
+			return GP_ERROR;
+		case 7: gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no more memory on card?"));
+			return GP_ERROR_NO_MEMORY;
+		case 8: gp_context_error (context, _("Canon EOS Capture failed to release: Card read-only?"));
+			return GP_ERROR_NO_MEMORY;
+		default:gp_context_error (context, _("Canon EOS Capture failed to release: Unknown error %d, please report."), result);
+			return GP_ERROR;
+		}
+	}
+
+	if (newobject == 0) {
+		gp_context_error (context, _("Canon EOS Capture failed to release: Could not get file object.") );
 		return GP_ERROR;
+	}
 	GP_LOG_D ("object has OFC 0x%x", oi.ObjectFormat);
 
 	if (oi.StorageID) /* all done above */
