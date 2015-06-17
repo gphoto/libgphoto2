@@ -269,25 +269,23 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	PTPPropertyValue	ct_val;
 	PTPDevicePropDesc	dpd;
 	int			cardval = 1;
-	uint32_t 		curdest;
 
 	memset(&dpd,0,sizeof(dpd));
 	C_PTP (ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd));
-	if (value == 1) {
-		if (dpd.FormFlag == PTP_DPFF_Enumeration) {
-			unsigned int	i;
-			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
-				if (dpd.FORM.Enum.SupportedValue[i].u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
-					cardval = dpd.FORM.Enum.SupportedValue[i].u32;
-					break;
-				}
+	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
+		unsigned int	i;
+		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
+			if (dpd.FORM.Enum.SupportedValue[i].u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
+				cardval = dpd.FORM.Enum.SupportedValue[i].u32;
+				break;
 			}
-			GP_LOG_D ("Card value is %d",cardval);
 		}
-		value = cardval;
+		GP_LOG_D ("Card value is %d",cardval);
 	}
-	curdest = dpd.CurrentValue.u32;
 	ptp_free_devicepropdesc (&dpd);
+
+	if (value == 1)
+		value = cardval;
 
 	/* -1 == use setting from config-file, 1 == card, 4 == ram*/
 	ct_val.u32 = (value == -1)
@@ -295,7 +293,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		     : value;
 
 	/* otherwise we get DeviceBusy for some reason */
-	if (ct_val.u32 != curdest)
+	if (ct_val.u32 != dpd.CurrentValue.u32)
 		C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32),
 			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
 	else
@@ -304,15 +302,13 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 		uint16_t	ret;
 
-		/* If we want to download the image from the device, we need to tell the camera
-		 * that we have enough space left on this _computer_ (PC HDD free space). */
+		/* if we want to download the image from the device, we need to tell the camera
+		 * that we have enough space left. */
 		/* this might be a trigger value for "no space" -Marcus
 		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
-                 * we had this for a while, was also not helping ...
-		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
 		 */
 
-		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
+		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
 		/* not so bad if its just busy, would also fail later. */
 		if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 		C_PTP (ret);
