@@ -993,6 +993,47 @@ chdk_put_mflock(CONFIG_PUT_ARGS) {
 	return chdk_generic_script_run (params, lua, NULL, NULL, context);
 }
 
+static struct {
+        char    *name;
+        char    *label;
+} chdkonoff[] = {
+        {"on", N_("On") },
+        {"off", N_("Off") },
+};
+
+static int
+chdk_get_onoff(CONFIG_GET_ARGS) {
+        int i;
+        char buf[1024];
+
+        gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+        gp_widget_set_name (*widget, menu->name);
+        if (GP_OK != gp_setting_get("ptp2","chdk", buf))
+                strcpy(buf,"off");
+        for (i=0;i<sizeof (chdkonoff)/sizeof (chdkonoff[i]);i++) {
+                gp_widget_add_choice (*widget, _(chdkonoff[i].label));
+                if (!strcmp (buf,chdkonoff[i].name))
+                        gp_widget_set_value (*widget, _(chdkonoff[i].label));
+        }
+        return GP_OK;
+}
+
+static int
+chdk_put_onoff(CONFIG_PUT_ARGS) {
+        int i;
+        char *val;
+
+        CR (gp_widget_get_value(widget, &val));
+        for (i=0;i<sizeof(chdkonoff)/sizeof(chdkonoff[i]);i++) {
+                if (!strcmp( val, _(chdkonoff[i].label))) {
+                        gp_setting_set("ptp2","chdk",chdkonoff[i].name);
+                        break;
+                }
+        }
+        return GP_OK;
+}
+
+
 struct submenu imgsettings[] = {
 	{ N_("Raw ISO"),	"rawiso",	chdk_get_iso,	 	chdk_put_iso},
 	{ N_("ISO"),		"iso",		chdk_get_iso_market,	chdk_put_iso_market},
@@ -1009,6 +1050,7 @@ struct submenu imgsettings[] = {
 	{ N_("MF Lock"),	"mflock",	chdk_get_mflock,	chdk_put_mflock},
 	{ N_("Exposure Compensation"),	"exposurecompensation",	chdk_get_ev, chdk_put_ev},
 	{ N_("Orientation"),	"orientation",	chdk_get_orientation,	chdk_put_none},
+	{ N_("CHDK"),		"chdk",		chdk_get_onoff,		chdk_put_onoff},
 	{ NULL,			NULL,		NULL, 		NULL},
 };
 
