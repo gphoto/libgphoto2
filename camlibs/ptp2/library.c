@@ -7313,11 +7313,12 @@ camera_init (Camera *camera, GPContext *context)
 		}
 #endif
 
-#if 0
-		/* this will go and overwrite the function tables again */
-		if (ptp_operation_issupported(params, PTP_OC_CHDK))
+		/* If CHDK is present and enabled, this will go and overwrite the function tables again */
+		if (	ptp_operation_issupported(params, PTP_OC_CHDK) &&
+			(GP_OK == gp_setting_get("ptp2","chdk",buf)) &&
+			!strcmp(buf,"on")
+		)
 			return chdk_init (camera, context);
-#endif
 
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode))
 			C_PTP (ptp_canon_eos_setremotemode(params, 1));
