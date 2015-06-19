@@ -1842,6 +1842,9 @@ static struct {
 
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
+
+	/* Tomas Zigo <tomas.zigo@slovanet.sk> */
+	{"GoPro:HERO3+",			0x2672,	0x0011, 0},
 };
 
 #include "device-flags.h"
