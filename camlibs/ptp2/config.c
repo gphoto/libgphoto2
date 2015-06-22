@@ -268,21 +268,28 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	char			buf[200];
 	PTPPropertyValue	ct_val;
 	PTPDevicePropDesc	dpd;
-	int			cardval = 1;
+	int			cardval = -1;
 
 	memset(&dpd,0,sizeof(dpd));
 	C_PTP (ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd));
-	if (dpd.FormFlag == PTP_DPFF_Enumeration) {
-		unsigned int	i;
-		for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
-			if (dpd.FORM.Enum.SupportedValue[i].u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
-				cardval = dpd.FORM.Enum.SupportedValue[i].u32;
-				break;
+
+	/* Look for the correct value of the card mode */
+	if (value != PTP_CANON_EOS_CAPTUREDEST_HD) {
+		if (dpd.FormFlag == PTP_DPFF_Enumeration) {
+			unsigned int	i;
+			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
+				if (dpd.FORM.Enum.SupportedValue[i].u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
+					cardval = dpd.FORM.Enum.SupportedValue[i].u32;
+					break;
+				}
 			}
+			GP_LOG_D ("Card value is %d",cardval);
 		}
-		GP_LOG_D ("Card value is %d",cardval);
+		if (cardval == -1) {
+			GP_LOG_D ("NO Card found - falling back to SDRAM!");
+			cardval = PTP_CANON_EOS_CAPTUREDEST_HD;
+		}
 	}
-	ptp_free_devicepropdesc (&dpd);
 
 	if (value == 1)
 		value = cardval;
@@ -293,27 +300,27 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		     : value;
 
 	/* otherwise we get DeviceBusy for some reason */
-	if (ct_val.u32 != dpd.CurrentValue.u32)
+	if (ct_val.u32 != dpd.CurrentValue.u32) {
 		C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_CaptureDestination, &ct_val, PTP_DTC_UINT32),
 			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
-	else
+		if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
+			uint16_t	ret;
+
+			/* if we want to download the image from the device, we need to tell the camera
+			 * that we have enough space left. */
+			/* this might be a trigger value for "no space" -Marcus
+			ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
+			 */
+
+			ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
+			/* not so bad if its just busy, would also fail later. */
+			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
+			C_PTP (ret);
+		}
+	} else {
 		GP_LOG_D ("optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
-
-	if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
-		uint16_t	ret;
-
-		/* if we want to download the image from the device, we need to tell the camera
-		 * that we have enough space left. */
-		/* this might be a trigger value for "no space" -Marcus
-		ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
-		 */
-
-		ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
-		/* not so bad if its just busy, would also fail later. */
-		if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
-		C_PTP (ret);
 	}
-
+	ptp_free_devicepropdesc (&dpd);
 	return GP_OK;
 }
 
@@ -5767,12 +5774,13 @@ _get_CaptureTarget(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 	if (GP_OK != gp_setting_get("ptp2","capturetarget", buf))
 		strcpy(buf,"sdram");
+
 	for (i=0;i<sizeof (capturetargets)/sizeof (capturetargets[i]);i++) {
 		gp_widget_add_choice (*widget, _(capturetargets[i].label));
 		if (!strcmp (buf,capturetargets[i].name))
 			gp_widget_set_value (*widget, _(capturetargets[i].label));
 	}
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
