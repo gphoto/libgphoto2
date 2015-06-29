@@ -1675,6 +1675,9 @@ static struct {
 	/* pravsripad@gmail.com */
 	{"Canon:PowerShot SX520 HS",		0x04a9, 0x329b, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Kiss Tamas <kisst@bgk.bme.hu> */
+	{"Canon:IXUS 165",			0x04a9, 0x32a9, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
