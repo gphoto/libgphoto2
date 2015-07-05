@@ -607,6 +607,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1251/ */
   { "Acer", 0x0502, "E39", 0x3643,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1369/ */
+  { "Acer", 0x0502, "liquid e700", 0x3644,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Acer", 0x0502, "One 7", 0x3657,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1341/ */
@@ -1254,6 +1257,9 @@
   // Reported by anonymous SourceForge user
   { "Medion", 0x066f, "MD8333 (ID2)", 0x8588,
     DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
+  /* https://sourceforge.net/p/libmtp/bugs/1359/ */
+  { "Verizon", 0x0408, "Ellipsis 7", 0x3899,
+    DEVICE_FLAGS_ANDROID_BUGS },
   // The vendor ID is "Quanta Computer, Inc."
   // same as Olivetti Olipad 110
   // Guessing on device flags
@@ -2404,6 +2410,9 @@
   /*
    * Lenovo
    */
+  /* https://sourceforge.net/p/libmtp/support-requests/178/ */
+  { "Lenovo", 0x17ef, "P70-A", 0x0c02,
+      DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Richard Körber <shredzone@users.sourceforge.net>
   { "Lenovo", 0x17ef, "K1", 0x740a,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2468,6 +2477,9 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/125/ */
   { "Lenovo", 0x17ef, "Vibe Z2", 0x77ea,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1360/ */
+  { "Lenovo", 0x17ef, "K3 Note", 0x7883,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Huawei
@@ -2476,6 +2488,9 @@
   { "Huawei", 0x12d1, "MTP device (ID1)", 0x1051,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Huawei", 0x12d1, "MTP device (ID2)", 0x1052,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1361/ */
+  { "Huawei", 0x12d1, "Ascend P8 ", 0x1082,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Huawei", 0x12d1, "Mediapad (mode 0)", 0x360f,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2837,6 +2852,8 @@
    * Kyocera
    */
   { "Kyocera", 0x0482, "Rise", 0x0571, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/134/ */
+  { "Kyocera", 0x0482, "Torque Model E6715", 0x0059a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/discussion/535190/thread/6270f5ce/ */
   { "Kyocera", 0x0482, "KYL22", 0x0810, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1345/ */
@@ -2854,6 +2871,9 @@
   { "Hewlett-Packard", 0x03f0, "Slate 7 4600", 0x5c1d,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Hewlett-Packard", 0x03f0, "Slate 7 2800", 0x5d1d,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1366/ */
+  { "Hewlett-Packard", 0x03f0, "Slate 10 HD", 0x7e1d,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2973,6 +2993,8 @@
   /* https://sourceforge.net/p/libmtp/bugs/1314/ */
   { "BenQ", 0x1d45, "F5", 0x459d, DEVICE_FLAGS_ANDROID_BUGS },
 
+  /* https://sourceforge.net/p/libmtp/bugs/1362/ */
+  { "TomTom", 0x1390, "Rider 40", 0x5455, DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * Other strange stuff.
    */
