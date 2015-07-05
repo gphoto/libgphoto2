@@ -4,8 +4,8 @@ AC_PREREQ(2.59)
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
-dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.8 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.5.7.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.9 at least or higher!
+AC_INIT([libgphoto2 photo camera library], [2.5.8], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
