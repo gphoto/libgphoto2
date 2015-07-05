@@ -8,11 +8,10 @@ ptp2:
 * Canon Powershot/IXUS CHDK support
   Install the CHDK firmware and then use "gphoto2 --set-config chdk=On" to enable.
 * Canon EOS: Implemented new capture method for new Canon EOS to avoid hangs.
-
-* Canon EOS: New config: continuousaf
+* Canon EOS: New configuration variable: continuousaf
 * Canon EOS: event output for focusinfo / focusmask
-* Nikon DSLR: New config: movieiso, movieshutterspeed, moviehighisonr
-* Nikon Coolpix A: also manually add opcodes for capture
+* Nikon DSLR: New configuration variables: movieiso, movieshutterspeed, moviehighisonr
+* Nikon Coolpix A: also manually add override opcodes for capture (please report if it works)
 * New USB ids:
   Sony: DSC-HX60V, Alpha-A7S, Alpha-A77 M2, Alpha A5100
   Panasonic: DMC-LS2
@@ -20,8 +19,7 @@ ptp2:
   Canon Powershot SX520 HS
   Fuji Fujifilm X-E2
   Samsung NX1
-
-* Synced with libmtp id database.
+* Media Player IDs synced with the libmtp ID database.
 * Lots of bugfixes.
 
 libgphoto2_port/libusb1:
