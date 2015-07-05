@@ -830,13 +830,18 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
 	{"Sony:Alpha-A5000",	      0x054c, 0x07c6, PTP_CAP},
 
+
 	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
 	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
+
 	/* Sascha Peilicke at SUSE */
 	{"Sony:Alpha-A6000 (MTP)",    0x054c, 0x08b7, 0},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/456/ */
 	{"Sony:Alpha-A7S (MTP)",      0x054c, 0x08e2, 0},
+
+	/* Markus Oertel */
+	{"Sony:Alpha-A5100 (MTP)",    0x054c, 0x08e7, 0},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/442/ */
 	{"Sony:Alpha-A7r (Control)",  0x054c, 0x094d, PTP_CAP},
@@ -845,6 +850,9 @@ static struct {
 
 	/* Nick Clarke <nick.clarke@gmail.com> */
 	{"Sony:Alpha-A77 M2 (Control)",0x054c, 0x0953, PTP_CAP},
+
+	/* Markus Oertel */
+	{"Sony:Alpha-A5100 (Control)",0x054c, 0x0957, PTP_CAP},
 
 	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
 	{"Sony:Alpha-A7S (Control)",  0x054c, 0x0954, PTP_CAP},
