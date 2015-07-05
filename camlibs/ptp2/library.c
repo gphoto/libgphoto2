@@ -828,8 +828,7 @@ static struct {
 	{"Sony:Alpha-A3000",	      0x054c, 0x074e, 0},
 
 	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
-	{"Sony:Alpha-A5000",	      0x054c, 0x07c6, PTP_CAP},
-
+	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
 
 	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
 	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
