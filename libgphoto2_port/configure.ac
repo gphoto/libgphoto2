@@ -12,7 +12,7 @@ dnl The generated Makefile rule fails to remove the absolute part at
 dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
 dnl before determining the string length. However, the only relevant
 dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
-AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news])
+AM_INIT_AUTOMAKE([-Wall gnu 1.9 dist-bzip2 check-news subdir-objects])
 
 AC_LANG(C)
 
