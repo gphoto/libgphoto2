@@ -1,0 +1,54 @@
+Camera summary:
+
+Manufacturer: Sony Corporation
+Model: ILCE-5000
+Version: 1.0
+Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats:
+Display Formats: JPEG, Unknown(b301), Unknown(b101)
+
+Device Capabilities:
+File Download, No File Deletion, No File Upload
+No Image Capture, No Open Capture, Sony Capture
+Storage Devices Summary:
+
+Device Property Summary:
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [2,3,16,19] value: 16
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32785,32784,6,32769,32770,32771,32772,7,32786,32803] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: f/3.5 (350)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,2,3,32772,32773,32776,32774,32775] value: Manual Focus (1)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [4,1,32770] value: Average (1)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2,1,4,3,5,32769,32771,32817,32818] value: Undefined (0)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [32768,32769,2,3,4,1,32848,32849,32850,32851,32852,32833,7,32785,32789,32788,32786,32787,32790,32791,32792] value: M (1)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [0,1,2,5000,4700,4500,4300,4000,3700,3500,3300,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000,-3300,-3500,-3700,-4000,-4300,-4500,-4700,-5000] value: 0.0 stops (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,32787,32788,32773,32772,32776,32777,33591,33655,33553,33569,33585,33590,33654,33552,33568,33584,32792,32808,32793,32809] value: 32773
+DOC Compensation(0xd200):(readwrite) (type=0x3) Enumeration [0,1,2,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000] value: 0
+DRangeOptimize(0xd201):(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21] value: 31
+Image size(0xd203):(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+Shutter speed(0xd20d):(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 6553610
+Property 0xd20e:(readwrite) (type=0x2) Enumeration [1,2,3,8,9,10,4,5,6,7] value: 4
+Color temperature(0xd20f):(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 0
+CC Filter(0xd210):(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+AB Filter(0xd21c):(readwrite) (type=0x2) Range [121 - 135, step 1] value: 128
+Aspect Ratio(0xd211):(readwrite) (type=0x2) Enumeration [1,2] value: 1
+Property 0xd213:(readwrite) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
+ISO(0xd21e):(readwrite) (type=0x6) Enumeration [16777215,25,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,102400,16787216] value: 100
+Picture Effect(0xd21b):(readwrite) (type=0x4) Enumeration [32768] value: 32768
+Property 0xd21d:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Property 0xd217:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd218:(readwrite) (type=0x1) Range [-1 - 100, step 1] value: 19
+Property 0xd219:(readwrite) (type=0x2) Enumeration [2,1] value: 2
+Property 0xd212:(readwrite) (type=0x2) Range [0 - 15, step 1] value: 0
+Property 0xd214:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 28267520
+Property 0xd215:(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd220: error 2002 on query.
+Property 0xd2c1:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c2:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c3:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Movie(0xd2c8):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2c5:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Still Image(0xd2c7):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+
