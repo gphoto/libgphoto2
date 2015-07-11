@@ -1119,18 +1119,14 @@ chdk_camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	int		ret, retint;
 	char		*table, *s;
 	PTPParams	*params = &camera->pl->params;
-	char		*lua;
-	const char	*luascript =	PTP_CHDK_LUA_SERIALIZE_MSGS \
+	const char	*luascript = PTP_CHDK_LUA_SERIALIZE_MSGS_SIMPLEQUOTE \
 				PTP_CHDK_LUA_RLIB_SHOOT	\
 				"return rlib_shoot({info=true});\n";
 
 	ret =  camera_prepare_chdk_capture(camera, context);
 	if (ret != GP_OK) return ret;
 
-	lua = malloc(strlen(luascript)+1);
-	sprintf(lua,luascript); /* This expands the %q inside the string too ... do not optimize away. */
-	ret = chdk_generic_script_run (params, lua, &table, &retint, context);
-	free (lua);
+	ret = chdk_generic_script_run (params, luascript, &table, &retint, context);
 	GP_LOG_D("rlib_shoot returned table %s, retint %d\n", table, retint);
 	s = strstr(table, "exp=");
 	if (s) {
