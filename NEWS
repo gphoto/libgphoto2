@@ -1,4 +1,8 @@
 libgphoto2 2.5.8.1 development
+
+translations:
+* updated ukrainian, vietnamese
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.8 release
 
