@@ -237,7 +237,7 @@ static const ValueNameType ep3000z_reg_53_val_names[] = {
 	{ { 0x06 }, N_("Italian") },
 	{ { 0x07 }, N_("Japanese") },
 	{ { 0x08 }, N_("Spanish") },
-	{ { 0x09 }, N_("Portugese") },
+	{ { 0x09 }, N_("Portuguese") },
 
 };
 static const RegisterDescriptorType ep3000z_reg_53[] = {

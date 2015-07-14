@@ -1686,7 +1686,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 		gp_widget_add_choice (child, _("Italian"));
 		gp_widget_add_choice (child, _("Japanese"));
 		gp_widget_add_choice (child, _("Spanish"));
-		gp_widget_add_choice (child, _("Portugese"));
+		gp_widget_add_choice (child, _("Portuguese"));
                 switch (value) {
                 case 1: strcpy (t, _("Korean"));
                         break;
@@ -1702,7 +1702,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 			break;
 		case 8: strcpy (t, _("Spanish"));
 			break;
-		case 9: strcpy (t, _("Portugese"));
+		case 9: strcpy (t, _("Portuguese"));
 			break;
                 default:
                         sprintf (t, _("%i (unknown)"), value);
@@ -1879,7 +1879,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			i = 7;
 		} else if (strcmp (value, _("Spanish")) == 0) {
 			i = 8;
-		} else if (strcmp (value, _("Portugese")) == 0) {
+		} else if (strcmp (value, _("Portuguese")) == 0) {
 			i = 9;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
