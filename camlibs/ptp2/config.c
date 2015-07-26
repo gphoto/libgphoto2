@@ -2239,10 +2239,10 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("Medium Normal JPEG"),		0x1200, 0 },
 	{ N_("Small Fine JPEG"),		0x2300, 0 },
 	{ N_("Small Normal JPEG"),		0x2200, 0 },
-	{ N_("Small Fine JPEG  (S1 Fine)"),	0xd300, 0 },
-	{ N_("Small Normal JPEG (S1 Normal)"),	0xd200, 0 },
-	{ N_("Smaller JPEG (S2)"),		0xe300, 0 },
-	{ N_("Tiny JPEG (S3)"),			0xf300, 0 },
+	{ N_("Small Fine JPEG"),		0xd300, 0 },
+	{ N_("Small Normal JPEG"),		0xd200, 0 },
+	{ N_("Smaller JPEG"),			0xe300, 0 },
+	{ N_("Tiny JPEG"),			0xf300, 0 },
 	{ N_("RAW + Large Fine JPEG"),		0x0403, 0 },
 	{ N_("mRAW + Large Fine JPEG"),		0x1403, 0 },
 	{ N_("sRAW + Large Fine JPEG"),		0x2403, 0 },
@@ -2250,11 +2250,11 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("mRAW + Medium Fine JPEG"),	0x1413, 0 },
 	{ N_("sRAW + Medium Fine JPEG"),	0x2413, 0 },
 	{ N_("RAW + Small Fine JPEG"),		0x0423, 0 },
-	{ N_("RAW + Small Fine JPEG (S1 Fine)"),0x04d3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("RAW + Small Fine JPEG"),		0x04d3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Small Fine JPEG"),		0x1423, 0 },
-	{ N_("mRAW + Small Fine JPEG (S1 Fine)"),0x14d3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("mRAW + Small Fine JPEG"),		0x14d3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Small Fine JPEG"),		0x2423, 0 },
-	{ N_("sRAW + Small Fine JPEG (S1 Fine)"), 0x24d3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("sRAW + Small Fine JPEG"),		0x24d3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("RAW + Large Normal JPEG"),	0x0402, 0 },
 	{ N_("mRAW + Large Normal JPEG"),	0x1402, 0 },
 	{ N_("sRAW + Large Normal JPEG"),	0x2402, 0 },
@@ -2262,17 +2262,17 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("mRAW + Medium Normal JPEG"),	0x1412, 0 },
 	{ N_("sRAW + Medium Normal JPEG"),	0x2412, 0 },
 	{ N_("RAW + Small Normal JPEG"),	0x0422, 0 },
-	{ N_("RAW + Small Normal JPEG (S1 Normal)"),	0x04d2, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("RAW + Small Normal JPEG"),	0x04d2, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Small Normal JPEG"),	0x1422, 0 },
-	{ N_("mRAW + Small Normal JPEG (S1 Normal)"),0x14d2, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("mRAW + Small Normal JPEG"),	0x14d2, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Small Normal JPEG"),	0x2422, 0 },
-	{ N_("sRAW + Small Normal JPEG (S1 Normal)"), 0x24d2, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("RAW + Smaller JPEG (S2)"),	0x04e3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("mRAW + Smaller JPEG (S2)"),	0x14e3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("sRAW + Smaller JPEG (S2)"),	0x24e3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("RAW + Tiny JPEG (S3)"),		0x04f3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("mRAW + Tiny JPEG (S3)"),		0x14f3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("sRAW + Tiny JPEG (S3)"),		0x24f3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("sRAW + Small Normal JPEG"),	0x24d2, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("RAW + Smaller JPEG"),		0x04e3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("mRAW + Smaller JPEG"),		0x14e3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("sRAW + Smaller JPEG"),		0x24e3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("RAW + Tiny JPEG"),		0x04f3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("mRAW + Tiny JPEG"),		0x14f3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("sRAW + Tiny JPEG"),		0x24f3, 0 }, /*Canon EOS 5D Mark III*/
 	/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
 	   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
 };
@@ -3125,7 +3125,7 @@ static struct deviceproptableu16 focus_metering[] = {
 	{ N_("Group Dynamic"),  0x8012, PTP_VENDOR_NIKON},
 	{ N_("Single-area AF"),	0x8001, PTP_VENDOR_FUJI},
 	{ N_("Dynamic-area AF"),0x8002, PTP_VENDOR_FUJI},
-	{ N_("Group-dyamic AF"),0x8003, PTP_VENDOR_FUJI},
+	{ N_("Group-dynamic AF"),0x8003, PTP_VENDOR_FUJI},
 	{ N_("Dynamic-area AF with closest subject priority"),0x8004, PTP_VENDOR_FUJI},
 };
 GENERIC16TABLE(FocusMetering,focus_metering)
