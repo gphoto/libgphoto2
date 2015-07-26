@@ -5647,12 +5647,14 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 	return snprintf (txt, spaceleft,_("Unknown(%04x)"), ofc);
 }
 
-struct {
+typedef struct {
 	uint16_t opcode;
 	const char *name;
-} ptp_opcode_trans[] = {
+} ptp_opcode_trans_t;
+
+ptp_opcode_trans_t ptp_opcode_trans[] = {
 	{PTP_OC_Undefined,N_("Undefined")},
-	{PTP_OC_GetDeviceInfo,N_("get device info")},
+	{PTP_OC_GetDeviceInfo,N_("Get device info")},
 	{PTP_OC_OpenSession,N_("Open session")},
 	{PTP_OC_CloseSession,N_("Close session")},
 	{PTP_OC_GetStorageIDs,N_("Get storage IDs")},
@@ -5682,10 +5684,7 @@ struct {
 	{PTP_OC_InitiateOpenCapture,N_("Initiate open capture")}
 };
 
-struct {
-	uint16_t opcode;
-	const char *name;
-} ptp_opcode_mtp_trans[] = {
+ptp_opcode_trans_t ptp_opcode_mtp_trans[] = {
 	{PTP_OC_MTP_GetObjectPropsSupported,N_("Get object properties supported")},
 	{PTP_OC_MTP_GetObjectPropDesc,N_("Get object property description")},
 	{PTP_OC_MTP_GetObjectPropValue,N_("Get object property value")},
@@ -5749,10 +5748,7 @@ struct {
 	{PTP_OC_ANDROID_EndEditObject,N_("End Edit Object")},
 };
 
-struct {
-	uint16_t opcode;
-	const char *name;
-} ptp_opcode_nikon_trans[] = {
+ptp_opcode_trans_t ptp_opcode_nikon_trans[] = {
 	{PTP_OC_NIKON_GetProfileAllData,"PTP_OC_NIKON_GetProfileAllData"},
 	{PTP_OC_NIKON_SendProfileData,"PTP_OC_NIKON_SendProfileData"},
 	{PTP_OC_NIKON_DeleteProfile,"PTP_OC_NIKON_DeleteProfile"},
@@ -5792,10 +5788,7 @@ struct {
 	{PTP_OC_NIKON_GetDevicePropEx,"PTP_OC_NIKON_GetDevicePropEx"},
 };
 
-struct {
-	uint16_t opcode;
-	const char *name;
-} ptp_opcode_canon_trans[] = {
+ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 	{PTP_OC_CANON_GetPartialObjectInfo,"PTP_OC_CANON_GetPartialObjectInfo"},
 	{PTP_OC_CANON_SetObjectArchive,"PTP_OC_CANON_SetObjectArchive"},
 	{PTP_OC_CANON_KeepDeviceOn,"PTP_OC_CANON_KeepDeviceOn"},
@@ -5941,10 +5934,7 @@ struct {
 	{PTP_OC_CANON_EOS_FAPIMessageRX,"PTP_OC_CANON_EOS_FAPIMessageRX"},
 };
 
-struct {
-	uint16_t opcode;
-	const char *name;
-} ptp_opcode_sony_trans[] = {
+ptp_opcode_trans_t ptp_opcode_sony_trans[] = {
 	{PTP_OC_SONY_SDIOConnect,"PTP_OC_SONY_SDIOConnect"},
 	{PTP_OC_SONY_GetSDIOGetExtDeviceInfo,"PTP_OC_SONY_GetSDIOGetExtDeviceInfo"},
 	{PTP_OC_SONY_GetDevicePropdesc,"PTP_OC_SONY_GetDevicePropdesc"},
@@ -5955,42 +5945,33 @@ struct {
 	{PTP_OC_SONY_GetAllDevicePropData,"PTP_OC_SONY_GetAllDevicePropData"},
 };
 
-int
-ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt)
+const char*
+ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 {
-	unsigned int i;
+#define RETURN_NAME_FROM_TABLE(TABLE, OPCODE) \
+{ \
+	unsigned int i; \
+	for (i=0; i<sizeof(TABLE)/sizeof(TABLE[0]); i++) \
+		if (OPCODE == TABLE[i].opcode) \
+			return _(TABLE[i].name); \
+	return _("Unknown PTP_OC"); \
+}
 
-	if (!(opcode & 0x8000)) {
-		for (i=0;i<sizeof(ptp_opcode_trans)/sizeof(ptp_opcode_trans[0]);i++)
-			if (opcode == ptp_opcode_trans[i].opcode)
-				return snprintf(txt, spaceleft, "%s", _(ptp_opcode_trans[i].name));
-	} else {
-		switch (params->deviceinfo.VendorExtensionID) {
-		case PTP_VENDOR_MICROSOFT:
-		case PTP_VENDOR_MTP:
-			for (i=0;i<sizeof(ptp_opcode_mtp_trans)/sizeof(ptp_opcode_mtp_trans[0]);i++)
-				if (opcode == ptp_opcode_mtp_trans[i].opcode)
-					return snprintf(txt, spaceleft, "%s", _(ptp_opcode_mtp_trans[i].name));
-			break;
-		case PTP_VENDOR_NIKON:
-			for (i=0;i<sizeof(ptp_opcode_nikon_trans)/sizeof(ptp_opcode_nikon_trans[0]);i++)
-				if (opcode == ptp_opcode_nikon_trans[i].opcode)
-					return snprintf(txt, spaceleft, "%s", ptp_opcode_nikon_trans[i].name);
-			break;
-		case PTP_VENDOR_CANON:
-			for (i=0;i<sizeof(ptp_opcode_canon_trans)/sizeof(ptp_opcode_canon_trans[0]);i++)
-				if (opcode == ptp_opcode_canon_trans[i].opcode)
-					return snprintf(txt, spaceleft, "%s", ptp_opcode_canon_trans[i].name);
-			break;
-		case PTP_VENDOR_SONY:
-			for (i=0;i<sizeof(ptp_opcode_sony_trans)/sizeof(ptp_opcode_sony_trans[0]);i++)
-				if (opcode == ptp_opcode_sony_trans[i].opcode)
-					return snprintf(txt, spaceleft, "%s", ptp_opcode_sony_trans[i].name);
-			break;
-		default:break;
-		}
+	if (!(opcode & 0x8000))
+		RETURN_NAME_FROM_TABLE(ptp_opcode_trans, opcode);
+
+	switch (params->deviceinfo.VendorExtensionID) {
+	case PTP_VENDOR_MICROSOFT:
+	case PTP_VENDOR_MTP:	RETURN_NAME_FROM_TABLE(ptp_opcode_mtp_trans, opcode);
+	case PTP_VENDOR_NIKON:	RETURN_NAME_FROM_TABLE(ptp_opcode_nikon_trans, opcode);
+	case PTP_VENDOR_CANON:	RETURN_NAME_FROM_TABLE(ptp_opcode_canon_trans, opcode);
+	case PTP_VENDOR_SONY:	RETURN_NAME_FROM_TABLE(ptp_opcode_sony_trans, opcode);
+	default:
+		break;
 	}
-	return snprintf (txt, spaceleft,_("Unknown (%04x)"), opcode);
+#undef RETURN_NAME_FROM_TABLE
+
+	return _("Unknown VendorExtensionID");
 }
 
 

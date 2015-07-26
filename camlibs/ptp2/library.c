@@ -166,12 +166,8 @@ print_debug_deviceinfo (PTPParams *params, PTPDeviceInfo *di)
 	GP_LOG_D ("Functional Mode: 0x%04x",di->FunctionalMode);
 	GP_LOG_D ("PTP Standard Version: %d",di->StandardVersion);
 	GP_LOG_D ("Supported operations:");
-	for (i=0; i<di->OperationsSupported_len; i++) {
-		char buf[200];
-
-		ptp_render_opcode (params, di->OperationsSupported[i], sizeof(buf), buf);
-		GP_LOG_D ("  0x%04x (%s)", di->OperationsSupported[i], buf);
-	}
+	for (i=0; i<di->OperationsSupported_len; i++)
+		GP_LOG_D ("  0x%04x (%s)", di->OperationsSupported[i], ptp_get_opcode_name (params, di->OperationsSupported[i]));
 	GP_LOG_D ("Events Supported:");
 	for (i=0; i<di->EventsSupported_len; i++)
 		GP_LOG_D ("  0x%04x", di->EventsSupported[i]);

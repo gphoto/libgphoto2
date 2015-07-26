@@ -3238,14 +3238,14 @@ void ptp_debug			(PTPParams *params, const char *format, ...);
 void ptp_error			(PTPParams *params, const char *format, ...);
 
 
-const char*
-ptp_get_property_description(PTPParams* params, uint16_t dpc);
+const char* ptp_get_property_description(PTPParams* params, uint16_t dpc);
+
+const char* ptp_get_opcode_name(PTPParams* params, uint16_t opcode);
 
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
                           PTPDevicePropDesc *dpd, unsigned int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
-int ptp_render_opcode(PTPParams* params, uint16_t opcode, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
 MTPProperties *ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops);
 void ptp_destroy_object_prop(MTPProperties *prop);
