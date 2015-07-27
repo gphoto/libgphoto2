@@ -1672,6 +1672,9 @@ static struct {
 	/* thinkgareth <thinkgareth@users.sf.net> */
 	{"Canon:EOS 1200D",			0x04a9, 0x327f, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Iain Paton <ipaton0@gmail.com> */
+	{"Canon:EOS 760D",			0x04a9, 0x3280, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://sourceforge.net/p/gphoto/feature-requests/445/ */
 	{"Canon:PowerShot Elph135",		0x04a9, 0x3288, PTPBUG_DELETE_SENDS_EVENT},
 
