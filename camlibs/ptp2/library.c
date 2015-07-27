@@ -790,10 +790,12 @@ static struct {
 	{"Sony:DSC-RX1 (PTP mode)",   0x054c, 0x052b, 0},
 	/* Maptz <m13.maptz@gmail.com> */
 	{"Sony:DSC-W510 (PTP mode)",  0x054c, 0x053c, 0},
-	/* t.ludewig@gmail.com */
-	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Rudi */
 	{"Sony:DSC-HX100V (PTP mode)",0x054c, 0x0543, 0},
+	/* t.ludewig@gmail.com */
+	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
+	/* Irina Iakovleva <irina.bunger@gmail.com> */
+	{"Sony:SLT-A77 (PTP mode)",   0x054c, 0x0577, 0},
 
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
