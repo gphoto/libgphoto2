@@ -795,7 +795,7 @@ static struct {
 	/* t.ludewig@gmail.com */
 	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Irina Iakovleva <irina.bunger@gmail.com> */
-	{"Sony:SLT-A77 (PTP mode)",   0x054c, 0x0577, 0},
+	{"Sony:SLT-A77V (PTP mode)",  0x054c, 0x0577, 0},
 
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
