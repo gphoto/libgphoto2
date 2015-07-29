@@ -83,3 +83,76 @@ scanner.
 
 Hans de Goede <hdegoede@redhat.com>
 ST2205 Picture Frame support (and usbdiskdirect port driver).
+
+=========================================================================
+git migration authors
+
+ap2c=Aurelien Croc (AP262C) <programming@ap2c.com>
+asl=Arnaud Launay <asl@launay.org>
+barbe=Christophe Barbe <christophe@ufies.org>
+bellet=Fabrice Bellet <fabrice@gnu.org>
+berrange=Daniel P. Berrange <dan@berrange.com>
+cmarqu=Colin Marquardt <colin@marquardt-home.de>
+cpinkham=Chris Pinkham <cpinkham@infi.net>
+cweinholz=Carsten Weinholz <c.weinholz@netcologne.de>
+deater=Vince Weaver <vince@deater.net>
+dfandrich=Dan Fandrich <dan@coneharvesters.com>
+donn=Donn Morrison <dmorriso@gulf.uvic.ca>
+dotsphinx=Raymond Penners <raymond@dotsphinx.com>
+ggrandou=Gilles Grandou <gilles@grandou.net>
+gus_hartmann=Gus Hartmann <gphoto@gus-the-cat.org>
+hfiguiere=Hubert Figuiere <hub@figuiere.net>
+hun=Hans Ulrich Niedermann <gp@n-dimensional.de>
+ikonst=Ilya Konstantinov <future@shiny.co.il>
+ingram=Greg Ingram <ingram@symsys.com>
+jerdfelt=Johannes Erdfelt <johannes@erdfelt.com>
+jgangemi=Jae Gangemi <jgangemi@users.sourceforge.net>
+jwrdegoede=Hans de Goede <hdegoede@redhat.com>
+kil3r=Mariusz Woloszyn <emsi@ipartners.pl>
+kilgota=Theodore Kilgore <kilgota@auburn.edu> 
+kinimod=Dominik Kuhlen <kinimod@users.sourceforge.net>
+koltan=Michael Koltan <koltan@gmx.de>
+leibnitz27=Lee Benfield <lee@benf.org>
+lodewyck=Jerome Lodewyck <lodewyck@clipper.ens.fr>
+lutz=Lutz Mueller <lutz@users.sourceforge.net> 
+marcusmeissner=Marcus Meissner <marcus@jet.franken.de>
+mariusz=Mariusz Zynel <mariusz@mizar.org>
+mattmartin=Matt Martin <matt.martin@ieee.org>
+mrensing=Michael Rensing <mrensing@users.sourceforge.net>
+nathanstenzel=Nathan Stenzel <nathanstenzel@users.sourceforge.net>
+ofauchon=Olivier Fauchon <olivier@aixmarseille.com>
+patmans=Patrick Mansfield <patman@aracnet.com>
+pbk2513=Peter Kajberg <pbk@odense.kollegienet.dk>
+philm=Philippe Marzouk <philm@users.sourceforge.net>
+polesworth=Miah Gregory <mace@darksilence.net>
+scottf=Scott Fritzinger <scottf@unr.edu>
+sean_bruno=Sean Bruno <sean.bruno@dsl-only.net>
+steph-c=Stephane Castejon <scastejo@club-internet.fr>
+swestin=Stephen H. Westin <swestin@earthlink.net>
+tillsan=Till Adam <till@adam-lilienthal.de>
+trawny99=Michael Trawny <trawny99@users.sourceforge.net>
+twaugh=Tim Waugh <twaugh@redhat.com>
+womprat=David Hogue <david@jawa.gotdns.org>
+ole=Ole Aamot <ole@gnu.org>
+phillh= PhillH <phillh@users.sourceforge.net>
+(no author)=No author known <nobody@gphoto.org>
+pauljenn=Paul Jenner <psj@mustec.eu.org>
+gdr=Gary Ross <gdr@hooked.net>
+bpaauwe=Bob Paauwe <bpaauwe@bobsplace.com>
+mmartin=Matt Martin <matt.martin@ieee.org>
+scottr=Randy D. Scott <scottr@wwa.com>
+hartmann=Gus Hartmann <hartmann@cs.wisc.edu>
+elegowsk=Ed Legowski <edlegowski@pobox.com>
+kmaraas=Kjartan Maraas <kmaraas@online.no>
+pablo=Pablo Saratxaga <pablo@madnrakesoft.com>
+ahyden=Andreas Hyden <a.hyden@cyberpoint.se>
+frob=Valek Filippov <frob@df.ru>
+simpson2=bvl <simpson2@users.sourceforge.net>
+bratislav=Benedikt Roth <Benedikt.Roth@gmx.net>
+rasta=Yuri Syrota <rasta@renome.rovno.ua>
+minmax=Andraz Tori <andraz.tori1@guest.arnes.si>
+ke=Karl Eichwalder <ke@suse.de>
+cgabriel=Christopher R. Gabriel  <cgabriel@softwarelibero.org>
+bansz=Unknown <bansz@users.sourceforge.net>
+root=Root <root@users.sourceforge.net>
+kail=Kai Lahmann <kailahmann@01019freenet.de>
