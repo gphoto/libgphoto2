@@ -481,7 +481,7 @@ libgphoto2_port-uninstalled.pc
 gphoto2-port-config
 test/Makefile
 doc/Makefile
-m4/Makefile
+gphoto-m4/Makefile
 ])
 AC_OUTPUT
 
