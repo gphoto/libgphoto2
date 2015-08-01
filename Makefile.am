@@ -79,7 +79,7 @@ install-camlibs:
 # are required in the top level Makefile.am for the automatic 
 # re-building of the build system files.
 
-ACLOCAL_AMFLAGS = -I auto-m4 -I m4m
+ACLOCAL_AMFLAGS = -I auto-m4 -I gphoto-m4
 
 
 ########################################################################
