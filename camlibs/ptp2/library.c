@@ -2885,8 +2885,8 @@ capturetriggered:
 	return GP_OK;
 }
 
-/* 60 seconds timeout ... (for long cycles) */
-#define EOS_CAPTURE_TIMEOUT 60
+/* 60 seconds timeout in ms ... (for long cycles) */
+#define EOS_CAPTURE_TIMEOUT (60*1000)
 
 /* This is currently the capture method used by the EOS 400D
  * ... in development.
@@ -2905,7 +2905,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	PTPObjectInfo		oi;
 	int			sleepcnt = 1;
 	uint32_t		result;
-	time_t                  capture_start=time(NULL);
+	struct timeval          capture_start;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		gp_context_error (context,
@@ -2922,6 +2922,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	ptp_check_eos_events (params);
 	while (ptp_get_one_eos_event (params, &entry))
 		GP_LOG_D("discarding event type %d", entry.type);
+
+	capture_start = time_now();
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
 		int oneloop;
@@ -2991,7 +2993,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	newobject = 0;
 	memset (&oi, 0, sizeof(oi));
-	while ((time(NULL)-capture_start)<=EOS_CAPTURE_TIMEOUT) {
+	while (time_since (capture_start) <= EOS_CAPTURE_TIMEOUT) {
 		int i;
 
 		C_PTP_REP_MSG (ptp_check_eos_events (params),
