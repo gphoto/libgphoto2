@@ -176,6 +176,22 @@ print_debug_deviceinfo (PTPParams *params, PTPDeviceInfo *di)
 		GP_LOG_D ("  0x%04x", di->DevicePropertiesSupported[i]);
 }
 
+/* struct timeval is simply two long int values, so passing it by value is not expensive.
+ * It is most likely going to be inlined anyway and therefore 'free'. Passing it by value
+ * leads to a cleaner interface. */
+static struct timeval
+time_now() {
+	struct timeval curtime;
+	gettimeofday (&curtime, NULL);
+	return curtime;
+}
+
+static int
+time_since (const struct timeval start) {
+	struct timeval curtime = time_now();
+	return ((curtime.tv_sec - start.tv_sec)*1000)+((curtime.tv_usec - start.tv_usec)/1000);
+}
+
 /* Changes the ptp deviceinfo with additional hidden information available,
  * or stuff that requires special tricks 
  */
@@ -3073,14 +3089,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 }
 
 static int
-_timeout_passed(struct timeval *start, int timeout) {
-	struct timeval curtime;
-
-	gettimeofday (&curtime, NULL);
-	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
-}
-
-static int
 camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
@@ -3241,12 +3249,12 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		       _("Canon Capture failed"));
 	sawcapturecomplete = 0;
 	/* Checking events in stack. */
-	gettimeofday (&event_start, NULL);
+	event_start = time_now();
 	found = FALSE;
 
 	gp_port_get_timeout (camera->port, &timeout);
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
-	while (!_timeout_passed(&event_start, capture_timeout)) {
+	while (time_since (event_start) < capture_timeout) {
 		gp_context_idle (context);
 		/* Make sure we do not poll USB interrupts after the capture complete event.
 		 * MacOS libusb 1 has non-timing out interrupts so we must avoid event reads that will not
@@ -3384,7 +3392,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	int		dual = 0;
 	PTPDevicePropDesc	dpd;
 	struct timeval	event_start;
-	int 		resttime;
 
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16));
@@ -3404,10 +3411,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &propval, PTP_DTC_UINT16));
 
-	gettimeofday (&event_start, NULL);
+	event_start = time_now();
 	do {
-		struct timeval curtime;
-
 		C_PTP (ptp_check_event (params));
 		if (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
@@ -3418,10 +3423,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				break;
 			}
 		}
-		gettimeofday (&curtime, NULL);
-		resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
-		/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
-	} while (resttime < 35000);
+	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
+	} while (time_since (event_start) < 35000);
 
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C2, &propval, PTP_DTC_UINT16));
@@ -4022,7 +4025,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		ptp_olympus_setcameracontrolmode (params, 2);
 	}
 
-	gettimeofday (&event_start,NULL);
+	event_start = time_now();
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
 	) {
@@ -4136,17 +4139,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 					break;
 				}
 			}
-			if (_timeout_passed (&event_start, timeout))
+			if (time_since (event_start) >= timeout)
 				break;
 			/* incremental backoff of polling ... but only if we do not pass the wait time */
 			for (i=sleepcnt;i--;) {
 				int resttime;
-				struct timeval curtime;
 
 				gp_context_idle (context);
-				gettimeofday (&curtime, 0);
-				resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
-				resttime = timeout - resttime;
+				resttime = timeout - time_since (event_start);
 				if (resttime <= 0)
 					break;
 				/* Try not to sleep for more than 20ms at a time */
@@ -4215,7 +4215,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				goto handleregular;
 			}
-			if (_timeout_passed (&event_start, timeout))
+			if (time_since (event_start) >= timeout)
 				break;
 			gp_context_idle (context);
 		}
@@ -4231,16 +4231,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 			if (!ptp_get_one_event (params, &event)) {
 				int i;
 
-				if (_timeout_passed (&event_start, timeout))
+				if (time_since (event_start) >= timeout)
 					break;
 				/* incremental backoff wait ... including this wait loop, will go up to 200ms. */
 				for (i=sleepcnt;i--;) {
 					int resttime;
-					struct timeval curtime;
 
 					gp_context_idle (context);
-					gettimeofday (&curtime, 0);
-					resttime = ((curtime.tv_sec - event_start.tv_sec)*1000)+((curtime.tv_usec - event_start.tv_usec)/1000);
+					resttime = timeout - time_since (event_start);
 					if (resttime <= 0)
 						break;
 					if (resttime > 50)
@@ -4388,7 +4386,7 @@ downloadnow:
 				sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
 				return GP_OK;
 			}
-			if (_timeout_passed (&event_start, timeout))
+			if (time_since (event_start) >= timeout)
 				break;
 		} while (1);
 		*eventtype = GP_EVENT_TIMEOUT;
