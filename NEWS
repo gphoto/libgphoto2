@@ -1,7 +1,10 @@
 libgphoto2 2.5.8.1 development
 
+ptp2:
+* fixed a timeout bug on Canon EOS wait_event.
+
 translations:
-* updated ukrainian, vietnamese, polish
+* updated ukrainian, vietnamese, polish, italian
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.8 release
