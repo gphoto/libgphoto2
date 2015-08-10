@@ -447,6 +447,8 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* then emits 911b and 911c ... not done yet ... */
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
+	C_PTP (ptp_canon_eos_resetuilock (params));
+
 	/* Drain the rest set of the event data */
 	C_PTP (ptp_check_eos_events (params));
 	C_PTP (ptp_canon_eos_setremotemode(params, 0));
