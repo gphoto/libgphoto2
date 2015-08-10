@@ -992,7 +992,7 @@ static struct {
 	{"Nikon:Coolpix S9500 (PTP mode)",0x04b0, 0x0193, PTP_CAP},
 
 	/* LeChuck <ofernandez84@gmail.com> */
-	{"Nikon:Coolpix AW110 (PTP mode)",0x04b0, 0x0194, PTP_CAP},
+	{"Nikon:Coolpix AW110 (PTP mode)",0x04b0, 0x0194, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202, 0},
 	/* lars marowski bree, 16.8.2004 */
@@ -3474,6 +3474,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GP_LOG_D ("draining unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 	}
 
+	/* Do not use the enhanced capture methods for now. */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(params))
+		goto fallback;
+
 	/* 3rd gen style nikon capture, can do both sdram and card */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		 ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)
@@ -3529,6 +3533,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
+fallback:
 	/* broken capture ... we detect what was captured using added objects
 	 * via the getobjecthandles array. here get the before state */
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(params))
