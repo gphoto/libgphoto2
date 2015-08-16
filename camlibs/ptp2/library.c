@@ -192,6 +192,19 @@ time_since (const struct timeval start) {
 	return ((curtime.tv_sec - start.tv_sec)*1000)+((curtime.tv_usec - start.tv_usec)/1000);
 }
 
+static int
+waiting_for_timeout (int *current_wait, struct timeval start, int timeout) {
+        int time_to_timeout = timeout - time_since (start);
+        *current_wait += 50; /* increase sleep time by 50ms per cycle */
+        if (*current_wait > 200)
+                *current_wait = 200; /* 200ms is the maximum sleep time */
+        if (*current_wait > time_to_timeout)
+                *current_wait = time_to_timeout; /* never sleep 'into' the timeout */
+        if (*current_wait > 0)
+                usleep (*current_wait * 1000);
+        return *current_wait > 0;
+}
+
 /* Changes the ptp deviceinfo with additional hidden information available,
  * or stuff that requires special tricks 
  */
@@ -2906,7 +2919,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	unsigned char		*ximage = NULL;
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
-	int			sleepcnt = 1;
+	int			back_off_wait = 0;
 	uint32_t		result;
 	struct timeval          capture_start;
 
@@ -2996,13 +3009,12 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	newobject = 0;
 	memset (&oi, 0, sizeof(oi));
-	while (time_since (capture_start) <= EOS_CAPTURE_TIMEOUT) {
-		int i;
-
+	do {
 		C_PTP_REP_MSG (ptp_check_eos_events (params),
 			       _("Canon EOS Get Changes failed"));
 		while (ptp_get_one_eos_event (params, &entry)) {
-			sleepcnt = 1;
+			/* if we got at least one event from the last event polling, we reset our back_off_wait counter */
+			back_off_wait = 0;
 			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN) {
 				GP_LOG_D ("entry unknown: %s", entry.u.info);
 				free (entry.u.info);
@@ -3039,18 +3051,12 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		}
 		if (newobject)
 			break;
-		/* Nothing done ... do wait backoff ... if we poll too fast, the camera will spend
-		 * all time serving the polling. */
-		for (i=sleepcnt;i--;) {
-			gp_context_idle (context);
-			usleep(20*1000); /* 20 ms */
-		}
-		sleepcnt++; /* incremental back off */
-		if (sleepcnt>10) sleepcnt=10;
 
 		/* not really proven to help keep it on */
 		C_PTP_REP (ptp_canon_eos_keepdeviceon (params));
-	}
+		gp_context_idle (context);
+	} while (waiting_for_timeout (&back_off_wait, capture_start, EOS_CAPTURE_TIMEOUT));
+
 	if (newobject == 0)
 		return GP_ERROR;
 	GP_LOG_D ("object has OFC 0x%x", oi.ObjectFormat);
@@ -4022,7 +4028,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	struct timeval	event_start;
 	CameraFile	*file;
 	char		*ximage;
-	int		sleepcnt = 1;
+	int		back_off_wait = 0;
 
 	SET_CONTEXT(camera, context);
 	GP_LOG_D ("waiting for events timeout %d ms", timeout);
@@ -4041,8 +4047,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
-		while (1) {
-			int i;
+		do {
 			PTPCanon_changes_entry	entry;
 
 			/* keep device alive */
@@ -4051,7 +4056,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			C_PTP_REP_MSG (ptp_check_eos_events (params),
 				       _("Canon EOS Get Changes failed"));
 			while (ptp_get_one_eos_event (params, &entry)) {
-				sleepcnt = 1;
+				back_off_wait = 0;
 				GP_LOG_D ("entry type %04x", entry.type);
 				switch (entry.type) {
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
@@ -4149,24 +4154,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 					break;
 				}
 			}
-			if (time_since (event_start) >= timeout)
-				break;
-			/* incremental backoff of polling ... but only if we do not pass the wait time */
-			for (i=sleepcnt;i--;) {
-				int resttime;
 
-				gp_context_idle (context);
-				resttime = timeout - time_since (event_start);
-				if (resttime <= 0)
-					break;
-				/* Try not to sleep for more than 20ms at a time */
-				if (resttime > 50)
-				  	resttime = 50;
-				usleep(resttime*1000);
-			}
-			sleepcnt++; /* incremental back off */
-			if (sleepcnt>4) sleepcnt=4;
-		}
+			gp_context_idle (context);
+		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
+
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
@@ -4238,167 +4229,148 @@ camera_wait_for_event (Camera *camera, int timeout,
 	) {
 		do {
 			C_PTP_REP (ptp_check_event (params));
-			if (!ptp_get_one_event (params, &event)) {
-				int i;
+			while (ptp_get_one_event (params, &event)) {
+				back_off_wait = 0;
+				GP_LOG_D ("event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
+				switch (event.Code) {
+				case PTP_EC_ObjectAdded: {
+					PTPObject	*ob;
+					uint16_t	ofc;
 
-				if (time_since (event_start) >= timeout)
-					break;
-				/* incremental backoff wait ... including this wait loop, will go up to 200ms. */
-				for (i=sleepcnt;i--;) {
-					int resttime;
-
-					gp_context_idle (context);
-					resttime = timeout - time_since (event_start);
-					if (resttime <= 0)
-						break;
-					if (resttime > 50)
-						resttime = 50;
-					usleep(resttime*1000); /* at most 50 ms */
-				}
-				sleepcnt++; /* incremental back off */
-				if (sleepcnt>4) sleepcnt = 4;
-				continue;
-			}
-			sleepcnt = 1;
-
-			GP_LOG_D ("event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
-			switch (event.Code) {
-			case PTP_EC_ObjectAdded: {
-				PTPObject	*ob;
-				uint16_t	ofc;
-
-				if (!event.Param1 || (event.Param1 == 0xffff0001))
-					goto downloadnow;
+					if (!event.Param1 || (event.Param1 == 0xffff0001))
+						goto downloadnow;
 
 #if 0
-				/* if we have the object already loaded, no need to add it here */
-				/* but in dual mode capture at empty startup we can
-				 * encounter that the second image is not loaded */
-				if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
-					continue;
+					/* if we have the object already loaded, no need to add it here */
+					/* but in dual mode capture at empty startup we can
+					 * encounter that the second image is not loaded */
+					if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
+						continue;
 #endif
 
-				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-				if (ret != PTP_RC_OK) {
-					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
+					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+					if (ret != PTP_RC_OK) {
+						*eventtype = GP_EVENT_UNKNOWN;
+						C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
+						break;
+					}
+					debug_objectinfo(params, event.Param1, &ob->oi);
+
+					C_MEM (path = malloc(sizeof(CameraFilePath)));
+					path->name[0]='\0';
+					path->folder[0]='\0';
+
+					ofc = ob->oi.ObjectFormat;
+					/* ob might be invalidated by get_folder_from_handle */
+
+					if (ob->oi.StorageID == 0) {
+						/* We would always get the same filename,
+					 * which will confuse the frontends */
+						if (strstr(ob->oi.Filename,".NEF"))
+							sprintf (path->name, "capt%04d.nef", capcnt++);
+						else
+							sprintf (path->name, "capt%04d.jpg", capcnt++);
+						free (ob->oi.Filename);
+						C_MEM (ob->oi.Filename = strdup (path->name));
+						strcpy (path->folder,"/");
+						goto downloadnow;
+					} else {
+						strcpy  (path->name,  ob->oi.Filename);
+						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+						get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+						path->folder[ strlen(path->folder)-1 ] = '\0';
+					}
+					/* ob pointer can be invalid now! */
+					/* delete last / or we get confused later. */
+					if (ofc == PTP_OFC_Association) { /* new folder! */
+						*eventtype = GP_EVENT_FOLDER_ADDED;
+						*eventdata = path;
+						gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
+						/* if this was the last current event ... stop and return the folder add */
+						return GP_OK;
+					} else {
+						CR (gp_filesystem_append (camera->fs, path->folder,
+						path->name, context));
+						*eventtype = GP_EVENT_FILE_ADDED;
+						*eventdata = path;
+						return GP_OK;
+					}
 					break;
 				}
-				debug_objectinfo(params, event.Param1, &ob->oi);
-
-				C_MEM (path = malloc(sizeof(CameraFilePath)));
-				path->name[0]='\0';
-				path->folder[0]='\0';
-
-				ofc = ob->oi.ObjectFormat;
-				/* ob might be invalidated by get_folder_from_handle */
-
-				if (ob->oi.StorageID == 0) {
-					/* We would always get the same filename,
-					 * which will confuse the frontends */
-					if (strstr(ob->oi.Filename,".NEF"))
-						sprintf (path->name, "capt%04d.nef", capcnt++);
-					else
-						sprintf (path->name, "capt%04d.jpg", capcnt++);
-					free (ob->oi.Filename);
-					C_MEM (ob->oi.Filename = strdup (path->name));
+				case PTP_EC_Nikon_ObjectAddedInSDRAM: {
+					PTPObjectInfo	oi;
+downloadnow:
+					newobject = event.Param1;
+					if (!newobject) newobject = 0xffff0001;
+					ret = ptp_getobjectinfo (params, newobject, &oi);
+					if (ret != PTP_RC_OK)
+						continue;
+					debug_objectinfo(params, newobject, &oi);
+					C_MEM (path = malloc(sizeof(CameraFilePath)));
+					path->name[0]='\0';
 					strcpy (path->folder,"/");
-					goto downloadnow;
-				} else {
-					strcpy  (path->name,  ob->oi.Filename);
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-					path->folder[ strlen(path->folder)-1 ] = '\0';
-				}
-				/* ob pointer can be invalid now! */
-				/* delete last / or we get confused later. */
-				if (ofc == PTP_OFC_Association) { /* new folder! */
-					*eventtype = GP_EVENT_FOLDER_ADDED;
-					*eventdata = path;
-					gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
-					/* if this was the last current event ... stop and return the folder add */
-					return GP_OK;
-				} else {
-					CR (gp_filesystem_append (camera->fs, path->folder,
-								  path->name, context));
+					ret = gp_file_new(&file);
+					if (ret!=GP_OK) return ret;
+					if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+						GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+						sprintf (path->name, "capt%04d.nef", capcnt++);
+						gp_file_set_mime_type (file, "image/x-nikon-nef"); /* FIXME */
+					} else {
+						sprintf (path->name, "capt%04d.jpg", capcnt++);
+						gp_file_set_mime_type (file, GP_MIME_JPEG);
+					}
+					gp_file_set_mtime (file, time(NULL));
+
+					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+					C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
+					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
 					*eventtype = GP_EVENT_FILE_ADDED;
 					*eventdata = path;
+					/* We have now handed over the file, disclaim responsibility by unref. */
+					gp_file_unref (file);
 					return GP_OK;
 				}
-				break;
-			}
-			case PTP_EC_Nikon_ObjectAddedInSDRAM: {
-				PTPObjectInfo	oi;
-downloadnow:
-				newobject = event.Param1;
-				if (!newobject) newobject = 0xffff0001;
-				ret = ptp_getobjectinfo (params, newobject, &oi);
-				if (ret != PTP_RC_OK)
-					continue;
-				debug_objectinfo(params, newobject, &oi);
-				C_MEM (path = malloc(sizeof(CameraFilePath)));
-				path->name[0]='\0';
-				strcpy (path->folder,"/");
-				ret = gp_file_new(&file);
-				if (ret!=GP_OK) return ret;
-				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
-					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
-					sprintf (path->name, "capt%04d.nef", capcnt++);
-					gp_file_set_mime_type (file, "image/x-nikon-nef"); /* FIXME */
-				} else {
-					sprintf (path->name, "capt%04d.jpg", capcnt++);
-					gp_file_set_mime_type (file, GP_MIME_JPEG);
+				case PTP_EC_Nikon_CaptureCompleteRecInSdram:
+				case PTP_EC_CaptureComplete:
+					if (params->inliveview) {
+						GP_LOG_D ("Capture complete ... restarting liveview");
+						ret = ptp_nikon_start_liveview (params);
+					}
+					*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+					*eventdata = NULL;
+					return GP_OK;
+				case PTP_EC_DevicePropChanged:
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+					sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
+					return GP_OK;
+					/* as we can read multiple events we should retrieve a good one if possible
+					 * and not a random one.*/
+				default:
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
+					sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+					return GP_OK;
 				}
-				gp_file_set_mtime (file, time(NULL));
+			}
 
-				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
-				C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
-				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				*eventtype = GP_EVENT_FILE_ADDED;
-				*eventdata = path;
-				/* We have now handed over the file, disclaim responsibility by unref. */
-				gp_file_unref (file);
-				return GP_OK;
-			}
-			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
-			case PTP_EC_CaptureComplete:
-				if (params->inliveview) {
-					GP_LOG_D ("Capture complete ... restarting liveview");
-					ret = ptp_nikon_start_liveview (params);
-				}
-				*eventtype = GP_EVENT_CAPTURE_COMPLETE;
-				*eventdata = NULL;
-				return GP_OK;
-			case PTP_EC_DevicePropChanged:
-				*eventtype = GP_EVENT_UNKNOWN;
-				C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-				sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
-				return GP_OK;
-			/* as we can read multiple events we should retrieve a good one if possible
-			 * and not a random one.*/
-			default:
-				*eventtype = GP_EVENT_UNKNOWN;
-				C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
-				sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
-				return GP_OK;
-			}
-			if (time_since (event_start) >= timeout)
-				break;
-		} while (1);
+			gp_context_idle (context);
+		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
+
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
