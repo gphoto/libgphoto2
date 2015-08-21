@@ -7,7 +7,7 @@ os:
 env:
  - EXTRALIBS=""
  - EXTRALIBS="libusb-dev"
- - EXTRALIBS="libusb-1.0-0-dev gd-dev"
+ - EXTRALIBS="libusb-1.0-0-dev libgd-dev"
 
 before_install:
  - sudo apt-get update -qq
