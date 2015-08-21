@@ -4,16 +4,16 @@ os:
  - linux
  - osx
 
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install autopoint
+
 compiler:
  - clang
  - gcc
 
 script:
- - aclocal --force -I gphoto-m4
- - libtoolize --copy --force
- - autoconf
- - autoheader
- - automake --add-missing --copy --force-missing
+ - autoreconf -i -f
  - ./configure && make && make test
 
 notifications:
