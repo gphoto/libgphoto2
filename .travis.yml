@@ -9,7 +9,7 @@ compiler:
  - gcc
 
 script:
- - aclocal --force -I auto-m4 -I gphoto-m4
+ - aclocal --force -I gphoto-m4
  - libtoolize --copy --force
  - autoconf
  - autoheader
