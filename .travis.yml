@@ -9,7 +9,11 @@ compiler:
  - gcc
 
 script:
- - autoreconf -i -f
+ - aclocal --force -I auto-m4 -I gphoto-m4
+ - libtoolize --copy --force
+ - autoconf
+ - autoheader
+ - automake --add-missing --copy --force-missing
  - ./configure && make && make test
 
 notifications:
