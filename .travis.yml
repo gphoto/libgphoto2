@@ -4,9 +4,13 @@ os:
  - linux
  - osx
 
+env:
+ - LIBUSB=""
+ - LIBUSB="libusb-1.0-0-dev"
+
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install autopoint
+ - sudo apt-get install autopoint $LIBUSB
 
 compiler:
  - clang
@@ -14,7 +18,7 @@ compiler:
 
 script:
  - autoreconf -i -f
- - ./configure && make && make test
+ - ./configure && make && make check
 
 notifications:
   recipient:
