@@ -5,8 +5,9 @@ os:
  - osx
 
 env:
- - LIBUSB=""
- - LIBUSB="libusb-1.0-0-dev"
+ - EXTRALIBS=""
+ - EXTRALIBS="libusb-dev"
+ - EXTRALIBS="libusb-1.0-0-dev gd-dev"
 
 before_install:
  - sudo apt-get update -qq
