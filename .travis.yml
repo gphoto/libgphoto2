@@ -9,6 +9,7 @@ compiler:
  - gcc
 
 script:
+ - autoreconf -i -f
  - ./configure && make && make test
 
 notifications:
