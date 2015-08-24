@@ -1598,6 +1598,8 @@ static struct {
 	{"Canon:Rebel T3",			0x04a9, 0x3217, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3310995&group_id=8874 */
 	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
+	/* us alias from Andre Crone <andre@elysia.nl> */
+	{"Canon:Rebel T3i",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Brian L Murphy <brian.l.murphy@gmail.com> */
 	{"Canon:EOS 1D X",			0x04a9, 0x3219, PTP_CAP|PTP_CAP_PREVIEW},
