@@ -149,7 +149,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 			perror ("read PTPIPHeader");
 			return PTP_RC_GeneralError;
 		}
-		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read data:");
+		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read header:");
 		curread += ret;
 		if (ret == 0) {
 			GP_LOG_E ("End of stream after reading %d bytes of ptpipheader", ret);
@@ -297,8 +297,8 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		return ret;
 
 	if (dtoh32(hdr.type) == PTPIP_CMD_RESPONSE) { /* might happen if we have no data transfer due to error? */
-		GP_LOG_E ("Unexpected ptp response, code %x", dtoh32a(&xdata[8]));
-		return PTP_RC_GeneralError;
+		GP_LOG_E ("Unexpected ptp response, ptp code %x", dtoh16a(&xdata[0]));
+		return dtoh16a(&xdata[0]);
 	}
 	if (dtoh32(hdr.type) != PTPIP_START_DATA_PACKET) {
 		GP_LOG_E ("got reply type %d\n", dtoh32(hdr.type));
@@ -376,18 +376,31 @@ ptp_ptpip_getresp (PTPParams* params, PTPContainer* resp)
 	if (ret != PTP_RC_OK)
 		return ret;
 
-	resp->Code		= dtoh16a(&data[ptpip_resp_code]);
-	resp->Transaction_ID	= dtoh32a(&data[ptpip_resp_transid]);
-	n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_resp_param1)/sizeof(uint32_t);
-	switch (n) {
-	case 5: resp->Param5 = dtoh32a(&data[ptpip_resp_param5]);
-	case 4: resp->Param4 = dtoh32a(&data[ptpip_resp_param4]);
-	case 3: resp->Param3 = dtoh32a(&data[ptpip_resp_param3]);
-	case 2: resp->Param2 = dtoh32a(&data[ptpip_resp_param2]);
-	case 1: resp->Param1 = dtoh32a(&data[ptpip_resp_param1]);
-	case 0: break;
+	switch (dtoh32(hdr.type)) {
+	case PTPIP_END_DATA_PACKET:
+		GP_LOG_D("PTPIP_END_DATA_PACKET");
+		resp->Code = PTP_RC_OK;
+		resp->Transaction_ID	= dtoh32a(&data[0]);
+		break;
+	case PTPIP_CMD_RESPONSE:
+		GP_LOG_D("PTPIP_CMD_RESPONSE");
+		resp->Code		= dtoh16a(&data[ptpip_resp_code]);
+		resp->Transaction_ID	= dtoh32a(&data[ptpip_resp_transid]);
+		n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_resp_param1)/sizeof(uint32_t);
+		switch (n) {
+		case 5: resp->Param5 = dtoh32a(&data[ptpip_resp_param5]);
+		case 4: resp->Param4 = dtoh32a(&data[ptpip_resp_param4]);
+		case 3: resp->Param3 = dtoh32a(&data[ptpip_resp_param3]);
+		case 2: resp->Param2 = dtoh32a(&data[ptpip_resp_param2]);
+		case 1: resp->Param1 = dtoh32a(&data[ptpip_resp_param1]);
+		case 0: break;
+		default:
+			GP_LOG_E ("response got %d parameters?", n);
+			break;
+		}
+		break;
 	default:
-		GP_LOG_E ("response got %d parameters?", n);
+		GP_LOG_E ("response type %d packet?", dtoh32(hdr.type));
 		break;
 	}
 	free (data);
