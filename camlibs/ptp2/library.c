@@ -3736,10 +3736,12 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	}
 
 	/* On Nikon 1 series, the liveview must be enabled before capture works */
-	if (NIKON_1(params))
-		C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
-			       _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
-
+	if (NIKON_1(params)) {
+		ret = LOG_ON_PTP_E (ptp_nikon_start_liveview (params));
+		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
+		/* OK or busy, try to proceed ... */
+	}
 
 	/* Nikon 2 */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
