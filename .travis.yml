@@ -11,14 +11,14 @@ env:
 
 before_install:
  - sudo apt-get update -qq || brew update
- - sudo apt-get install autopoint $EXTRALIBS || brew install gettext $EXTRALIBS
+ - sudo apt-get install autopoint $EXTRALIBS || brew install gettext
 
 compiler:
  - clang
  - gcc
 
 script:
- - autoreconf -i -f
+ - export PATH=/usr/local/opt/gettext/bin:$PATH:. autoreconf -i -f
  - ./configure && make && make check
 
 notifications:
