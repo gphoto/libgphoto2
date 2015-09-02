@@ -10,8 +10,8 @@ env:
  - EXTRALIBS="libusb-1.0-0-dev libgd2-xpm-dev"
 
 before_install:
- - sudo apt-get update -qq
- - sudo apt-get install autopoint $EXTRALIBS
+ - sudo apt-get update -qq || brew update
+ - sudo apt-get install autopoint $EXTRALIBS || brew install autopoint $EXTRALIBS
 
 compiler:
  - clang
