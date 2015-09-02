@@ -11,7 +11,7 @@ env:
 
 before_install:
  - sudo apt-get update -qq || brew update
- - sudo apt-get install autopoint $EXTRALIBS || brew install autopoint $EXTRALIBS
+ - sudo apt-get install autopoint $EXTRALIBS || true # brew install autopoint $EXTRALIBS
 
 compiler:
  - clang
