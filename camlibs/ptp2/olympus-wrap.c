@@ -223,7 +223,7 @@ scsi_wrap_cmd(
 #define PTP_DP_DATA_MASK        0x00ff  /* data phase mask */
 
 static uint16_t
-ums_wrap_sendreq (PTPParams* params, PTPContainer* req) {
+ums_wrap_sendreq (PTPParams* params, PTPContainer* req, int dataphase) {
 	Camera			*camera = ((PTPData *)params->data)->camera;
 	PTPUSBBulkContainer	usbreq;
 	char			buf[64];
@@ -1291,11 +1291,11 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 }
 
 static uint16_t
-ums_wrap2_sendreq (PTPParams* params, PTPContainer* req)
+ums_wrap2_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 {
 	GP_LOG_D ("ums_wrap2_sendreq");
 	if (is_outer_operation (params,req->Code))
-		return ums_wrap_sendreq (params,req);
+		return ums_wrap_sendreq (params,req,dataphase);
 	/* We do stuff in either senddata, getdata or getresp, not here. */
 	params->olympus_cmd   = NULL;
 	params->olympus_reply = NULL;

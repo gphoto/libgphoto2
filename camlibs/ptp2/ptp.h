@@ -2317,7 +2317,7 @@ typedef struct _PTPDataHandler {
  * This functions take PTP oriented arguments and send them over an
  * appropriate data layer doing byteorder conversion accordingly.
  */
-typedef uint16_t (* PTPIOSendReq)	(PTPParams* params, PTPContainer* req);
+typedef uint16_t (* PTPIOSendReq)	(PTPParams* params, PTPContainer* req, int dataphase);
 typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 					 uint64_t size, PTPDataHandler*getter);
 
@@ -2362,6 +2362,12 @@ struct _PTPDeviceProperty {
 	PTPPropertyValue	value;
 };
 typedef struct _PTPDeviceProperty PTPDeviceProperty;
+
+/* Transaction data phase description, internal flags to sendreq / transaction driver. */
+#define PTP_DP_NODATA           0x0000  /* no data phase */
+#define PTP_DP_SENDDATA         0x0001  /* sending data */
+#define PTP_DP_GETDATA          0x0002  /* receiving data */
+#define PTP_DP_DATA_MASK        0x00ff  /* data phase mask */
 
 struct _PTPParams {
 	/* device flags */
@@ -2460,7 +2466,7 @@ struct _PTPParams {
 };
 
 /* last, but not least - ptp functions */
-uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req);
+uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req, int dataphase);
 uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				 uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
@@ -2476,7 +2482,7 @@ uint16_t ptp_usb_control_cancel_request (PTPParams *params, uint32_t transid);
 
 
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
-uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req);
+uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req, int dataphase);
 uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);

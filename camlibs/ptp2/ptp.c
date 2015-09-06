@@ -124,12 +124,6 @@ ptp_error (PTPParams *params, const char *format, ...)
 
 /* major PTP functions */
 
-/* Transaction data phase description */
-#define PTP_DP_NODATA		0x0000	/* no data phase */
-#define PTP_DP_SENDDATA		0x0001	/* sending data */
-#define PTP_DP_GETDATA		0x0002	/* receiving data */
-#define PTP_DP_DATA_MASK	0x00ff	/* data phase mask */
-
 /**
  * ptp_transaction:
  * params:	PTPParams*
@@ -173,7 +167,7 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 	ptp->Transaction_ID=params->transaction_id++;
 	ptp->SessionID=params->session_id;
 	/* send request */
-	CHECK_PTP_RC(params->sendreq_func (params, ptp));
+	CHECK_PTP_RC(params->sendreq_func (params, ptp, flags));
 	/* is there a dataphase? */
 	switch (flags&PTP_DP_DATA_MASK) {
 	case PTP_DP_SENDDATA:

@@ -71,7 +71,7 @@
 /* send / receive functions */
 
 uint16_t
-ptp_usb_sendreq (PTPParams* params, PTPContainer* req)
+ptp_usb_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 {
 	int res, towrite, do_retry = TRUE;
 	PTPUSBBulkContainer usbreq;

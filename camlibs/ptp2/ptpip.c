@@ -101,7 +101,7 @@ static uint16_t ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wai
 
 /* send / receive functions */
 uint16_t
-ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req)
+ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 {
 	int		ret;
 	int		len = 18+req->Nparam*4;
@@ -111,7 +111,11 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req)
 
 	htod32a(&request[ptpip_type],PTPIP_CMD_REQUEST);
 	htod32a(&request[ptpip_len],len);
-	htod32a(&request[ptpip_cmd_dataphase],1);	/* FIXME: dataphase handling */
+	/* sending data = 2, receiving data or no data = 1 */
+	if ((dataphase&PTP_DP_DATA_MASK) == PTP_DP_SENDDATA)
+		htod32a(&request[ptpip_cmd_dataphase],2);
+	else
+		htod32a(&request[ptpip_cmd_dataphase],1);
 	htod16a(&request[ptpip_cmd_code],req->Code);
 	htod32a(&request[ptpip_cmd_transid],req->Transaction_ID);
 
