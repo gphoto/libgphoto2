@@ -1718,6 +1718,8 @@ static struct {
 	/* Reed Johnson <rmjohns1@gmail.com> */
 	{"Canon:PowerShot Elph340HS",		0x04a9, 0x3289, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Andre Crone <andre@elysia.nl */
+	{"Canon:EOS 5DS",			0x04a9, 0x3299, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Nykhedimus S <nykhedimus@gmail.com> */
 	{"Canon:EOS M3",			0x04a9, 0x3299, PTPBUG_DELETE_SENDS_EVENT},
 	/* pravsripad@gmail.com */
@@ -1725,6 +1727,9 @@ static struct {
 
 	/* Kiss Tamas <kisst@bgk.bme.hu> */
 	{"Canon:IXUS 165",			0x04a9, 0x32a9, PTPBUG_DELETE_SENDS_EVENT},
+
+	/* Andre Crone <andre@elysia.nl */
+	{"Canon:EOS 5DS R",			0x04a9, 0x32a9, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
