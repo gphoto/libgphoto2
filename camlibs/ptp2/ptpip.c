@@ -376,6 +376,7 @@ ptp_ptpip_getresp (PTPParams* params, PTPContainer* resp)
 	uint16_t 	ret;
 	int		n;
 
+retry:
 	ret = ptp_ptpip_cmd_read (params, &hdr, &data);
 	if (ret != PTP_RC_OK)
 		return ret;
@@ -383,9 +384,8 @@ ptp_ptpip_getresp (PTPParams* params, PTPContainer* resp)
 	switch (dtoh32(hdr.type)) {
 	case PTPIP_END_DATA_PACKET:
 		GP_LOG_D("PTPIP_END_DATA_PACKET");
-		resp->Code = PTP_RC_OK;
 		resp->Transaction_ID	= dtoh32a(&data[0]);
-		break;
+		goto retry;
 	case PTPIP_CMD_RESPONSE:
 		GP_LOG_D("PTPIP_CMD_RESPONSE");
 		resp->Code		= dtoh16a(&data[ptpip_resp_code]);
