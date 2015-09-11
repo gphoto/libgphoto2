@@ -1837,6 +1837,9 @@ static struct {
 	/* Gerald Pfeifer at SUSE */
 	{"Sea & Sea:2G (PTP mode)",		0x05ca, 0x0353, 0},
 
+	/* Marcus Meissner */
+	{"Ricoh:Theta m15 (PTP mode)",		0x05ca, 0x0365, 0},
+
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
 
