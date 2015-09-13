@@ -2398,6 +2398,9 @@ struct _PTPParams {
 	/* ptp session ID */
 	uint32_t	session_id;
 
+	/* used for open capture */
+	uint32_t	opencapture_transid;
+
 	/* PTP IO: if we have MTP style split header/data transfers */
 	int		split_header_data;
 	int		ocs64; /* 64bit objectsize */
@@ -2613,6 +2616,9 @@ uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint6
  * Return values: Some PTP_RC_* code.
  **/
 #define ptp_initiatecapture(params,storageid,ofc) ptp_generic_no_data(params,PTP_OC_InitiateCapture,2,storageid,ofc)
+
+#define ptp_initiateopencapture(params,storageid,ofc)	ptp_generic_no_data(params,PTP_OC_InitiateOpenCapture,2,storageid,ofc)
+#define ptp_terminateopencapture(params,transid)	ptp_generic_no_data(params,PTP_OC_TerminateOpenCapture,1,transid)
 
 uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);

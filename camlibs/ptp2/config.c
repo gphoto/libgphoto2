@@ -5676,6 +5676,35 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 
 
 static int
+_get_OpenCapture(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_OpenCapture(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val;
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		C_PTP_REP (ptp_initiateopencapture (params, 0x0, 0x0)); /* so far use only defaults for storage and ofc */
+		params->opencapture_transid = params->transaction_id;
+	} else {
+		C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
+	}
+	return GP_OK;
+}
+
+
+static int
 _get_Canon_EOS_Bulb(CONFIG_GET_ARGS) {
 	int val;
 
@@ -6370,6 +6399,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Nikon Viewfinder"),               "viewfinder",       0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartLiveView,         _get_Nikon_ViewFinder,          _put_Nikon_ViewFinder },
 	{ N_("Canon EOS Remote Release"),       "eosremoterelease", 0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_RemoteReleaseOn,   _get_Canon_EOS_RemoteRelease,   _put_Canon_EOS_RemoteRelease },
 	{ N_("CHDK Script"),                    "chdk_script",      0,  PTP_VENDOR_CANON,   PTP_OC_CHDK,                        _get_Canon_CHDK_Script,         _put_Canon_CHDK_Script },
+	{ N_("Movie Capture"),                  "movie",            0,  0,                  PTP_OC_InitiateOpenCapture,         _get_OpenCapture,               _put_OpenCapture },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartMovieRecInCard,   _get_Nikon_Movie,               _put_Nikon_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIOConnect,            _get_Sony_Movie,                _put_Sony_Movie },
 	{ 0,0,0,0,0,0,0 },
