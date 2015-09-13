@@ -5675,7 +5675,17 @@ ptp_opcode_trans_t ptp_opcode_trans[] = {
 	{PTP_OC_MoveObject,N_("Move object")},
 	{PTP_OC_CopyObject,N_("Copy object")},
 	{PTP_OC_GetPartialObject,N_("Get partial object")},
-	{PTP_OC_InitiateOpenCapture,N_("Initiate open capture")}
+	{PTP_OC_InitiateOpenCapture,N_("Initiate open capture")},
+	/* PTP v1.1 operation codes */
+	{PTP_OC_StartEnumHandles,N_("Start Enumerate Handles")},
+	{PTP_OC_EnumHandles,N_("Enumerate Handles")},
+	{PTP_OC_StopEnumHandles,N_("Stop Enumerate Handles")},
+	{PTP_OC_GetVendorExtensionMaps,N_("Get Vendor Extension Maps")},
+	{PTP_OC_GetVendorDeviceInfo,N_("Get Vendor Device Info")},
+	{PTP_OC_GetResizedImageObject,N_("Get Resized Image Object")},
+	{PTP_OC_GetFilesystemManifest,N_("Get Filesystem Manifest")},
+	{PTP_OC_GetStreamInfo,N_("Get Stream Info")},
+	{PTP_OC_GetStream,N_("Get Stream")},
 };
 
 ptp_opcode_trans_t ptp_opcode_mtp_trans[] = {
