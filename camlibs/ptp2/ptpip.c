@@ -682,7 +682,7 @@ ptp_nikon_getptpipguid (unsigned char* guid) {
 int
 ptp_ptpip_connect (PTPParams* params, const char *address) {
 	char 		*addr, *s, *p;
-	int		port;
+	int		port, tries;
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
@@ -748,16 +748,24 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		close (params->evtfd);
 		return translate_ptp_result (ret);
 	}
-	if (-1 == connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
+	/* seen on Ricoh Theta, camera is not immediately ready. try again two times. */
+	tries = 2;
+	do {
+		if (-1 != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+			break;
+		if ((errno == ECONNREFUSED) && (tries--)) {
+			GP_LOG_D ("event connect failed, retrying after short wait");
+			usleep(100*1000);
+			continue;
+		}
 		GP_LOG_E ("could not connect event");
 		close (params->cmdfd);
 		close (params->evtfd);
 		return GP_ERROR_IO;
-	}
+	} while (1);
 	ret = ptp_ptpip_init_event_request (params);
-	if (ret != PTP_RC_OK) {
+	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
-	}
 	ret = ptp_ptpip_init_event_ack (params);
 	if (ret != PTP_RC_OK)
 		return translate_ptp_result (ret);
