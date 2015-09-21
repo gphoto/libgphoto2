@@ -1192,6 +1192,9 @@ static struct {
 	/*Jürgen Blumenschein <blumenschein@huntington-info.eu> */
 	{"Nikon:DSC D750",                0x04b0, 0x0437, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Jeffrey Wilson <colgs3b@gmail.com> */
+	{"Nikon:DSC D5500",		  0x04b0, 0x0438, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
