@@ -1079,6 +1079,8 @@ static struct {
 	{"Nikon:Coolpix S4300 (PTP mode)",0x04b0, 0x0329, PTP_CAP/*?*/},
 	/* "M.-A. DARCHE" <ma.darche@cynode.org> . gets capturecomplete events nicely */
 	{"Nikon:Coolpix S3300 (PTP mode)",0x04b0, 0x032a, PTP_CAP},
+	/* Mdasoh Kyaeppd at IRC */
+	{"Nikon:Coolpix S6300 (PTP mode)",0x04b0, 0x032c, PTP_CAP},
 	/* sakax <sakamotox@gmail.com> */
 	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP},
 
