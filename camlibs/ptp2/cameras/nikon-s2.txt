@@ -3,8 +3,47 @@ Manufacturer: Nikon Corporation
 Model: S2
   Version: Ver.1.0100
   Serial Number: 000000000000000000000000nnnnnnnn
-Vendor Extension ID: 0xa (1.0)
-Vendor Extension Description: microsoft.com: 1.0
+Vendor extension ID: 0x0000000a
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x90c0 (PTP_OC_NIKON_Capture)
+  0x90c1 (PTP_OC_NIKON_AfDrive)
+  0x90c2 (PTP_OC_NIKON_SetControlMode)
+  0x90c3 (PTP_OC_NIKON_DelImageSDRAM)
+  0x90c4 (PTP_OC_NIKON_GetLargeThumb)
+  0x90c7 (PTP_OC_NIKON_CheckEvent)
+  0x90c8 (PTP_OC_NIKON_DeviceReady)
+  0x9201 (PTP_OC_NIKON_StartLiveView)
+  0x9202 (PTP_OC_NIKON_EndLiveView)
+  0x9203 (PTP_OC_NIKON_GetLiveViewImg)
+  0x9207 (PTP_OC_NIKON_InitiateCaptureRecInMedia)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+  0x90ca (PTP_OC_NIKON_GetVendorPropCodes)
 
 Capture Formats: JPEG Undefined Type
 Display Formats: Undefined Type, Association/Directory, Script, DPOF, Apple Quicktime, JPEG, TIFF
