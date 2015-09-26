@@ -2743,9 +2743,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (params->inliveview) af = 0;
 	}
 
-	if (NIKON_1(params))
-		C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
-			       _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
+	if (NIKON_1(params)) {
+		LOG_ON_PTP_E (ptp_nikon_start_liveview (params));
+	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		int loops = 100;
