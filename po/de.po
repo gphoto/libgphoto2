@@ -2777,7 +2777,7 @@ msgid ""
 msgstr ""
 "Diese Bibliothek wurde mit einer Kodak DC 215 Zoom getestet. Sie könnte auch "
 "mit der DC 200 und DC 210 funktionieren. Wenn Sie eine solche Kamera "
-"besitzen, dann lassen Sie mich unter <koltan@gmx.de> wissen, ob alles "
+"besitzen, dann lassen Sie mich unter koltan@gmx.de wissen, ob alles "
 "funktioniert oder ob Sie irgendwelche Probleme haben."
 
 #: camlibs/kodak/dc210/dc210.c:644
