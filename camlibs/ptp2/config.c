@@ -2626,7 +2626,8 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 
 static int
 _get_ExpTime(CONFIG_GET_ARGS) {
-	int i;
+	int		i;
+	PTPParams	*params = &(camera->pl->params);
 
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
@@ -2638,7 +2639,18 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		char	buf[20];
 
+		if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+			if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xffffffff) {
+				sprintf(buf,_("Bulb"));
+				goto choicefound;
+			}
+			if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffd) {
+				sprintf(buf,_("Time"));
+				goto choicefound;
+			}
+		}
 		sprintf (buf,_("%0.4fs"), (1.0*dpd->FORM.Enum.SupportedValue[i].u32)/10000.0);
+choicefound:
 		gp_widget_add_choice (*widget,buf);
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
 			gp_widget_set_value (*widget,buf);
@@ -2649,11 +2661,23 @@ _get_ExpTime(CONFIG_GET_ARGS) {
 static int
 _put_ExpTime(CONFIG_PUT_ARGS)
 {
-	unsigned int i, delta, xval, ival1, ival2, ival3;
-	float	val;
-	char	*value;
+	unsigned int	i, delta, xval, ival1, ival2, ival3;
+	float		val;
+	char		*value;
+	PTPParams	*params = &(camera->pl->params);
 
 	CR (gp_widget_get_value (widget, &value));
+
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+		if (!strcmp(value,_("Bulb"))) {
+			propval->u32 = 0xffffffff;
+			return GP_OK;
+		}
+		if (!strcmp(value,_("Time"))) {
+			propval->u32 = 0xfffffffd;
+			return GP_OK;
+		}
+	}
 
 	if (sscanf(value,_("%d %d/%d"),&ival1,&ival2,&ival3) == 3) {
 		GP_LOG_D ("%d %d/%d case", ival1, ival2, ival3);
@@ -3429,6 +3453,18 @@ _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xffffffff) {
+			sprintf(buf,_("Bulb"));
+			goto choicefound;
+		}
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffe) {
+			sprintf(buf,_("x 200"));
+			goto choicefound;
+		}
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffd) {
+			sprintf(buf,_("Time"));
+			goto choicefound;
+		}
 		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
 		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
 		if (y == 1) { /* x/1 */
@@ -3436,6 +3472,7 @@ _get_Nikon_ShutterSpeed(CONFIG_GET_ARGS) {
 		} else {
 			sprintf (buf, "%d/%d",x,y);
 		}
+choicefound:
 		gp_widget_add_choice (*widget,buf);
 		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
 			gp_widget_set_value (*widget, buf);
@@ -3461,6 +3498,20 @@ _put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
 	const char *value_str;
 
 	gp_widget_get_value (widget, &value_str);
+
+	if (!strcmp(value_str,_("Bulb"))) {
+		propval->u32 = 0xffffffff;
+		return GP_OK;
+	}
+	if (!strcmp(value_str,_("x 200"))) {
+		propval->u32 = 0xfffffffe;
+		return GP_OK;
+	}
+	if (!strcmp(value_str,_("Time"))) {
+		propval->u32 = 0xfffffffd;
+		return GP_OK;
+	}
+
 	if (strchr(value_str, '/')) {
 		if (2 != sscanf (value_str, "%d/%d", &x, &y))
 			return GP_ERROR;
