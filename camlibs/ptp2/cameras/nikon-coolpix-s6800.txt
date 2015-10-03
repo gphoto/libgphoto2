@@ -1,0 +1,276 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: S6800
+  Version: COOLPIX S6800 V1.1
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com/deviceservices: 1.0;
+
+Capture Formats: JPEG
+Display Formats: Undefined Type, Association/Directory, Defined Type, JPEG, DPOF, MS AVI, Apple Quicktime, MS Wave
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: S6800
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 7939817472 (7572 MB)
+	Free Space (Bytes): 5271584768 (5027 MB)
+	Free Space (Images): 596
+
+Device Property Summary:
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5,6,7] value: 7
+Date & Time(0x5011):(readwrite) (type=0xffff) '20150928T152048'
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Flash off (2)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Focal Length(0x5008):(read only) (type=0x6) Enumeration [3500,4600,5300,6100,7300,8600,10500] value: 35 mm (3500)
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1443424884
+Printable: Mon Sep 28 15:21:24 2015
+Help: Use 'now' as the current time when setting.
+
+/main/settings/fastfs
+Label: Fast Filesystem
+Type: TOGGLE
+Current: 1
+/main/settings/capturetarget
+Label: Capture Target
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: None
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Nikon Corporation
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: S6800
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: COOLPIX S6800 V1.1
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: microsoft.com/deviceservices: 1.0;
+/main/capturesettings/flashmode
+Label: Flash Mode
+Type: RADIO
+Current: Flash off
+Choice: 0 Automatic Flash
+Choice: 1 Flash off
+Choice: 2 Fill flash
+Choice: 3 Red-eye automatic
+/main/capturesettings/focallength
+Label: Focal Length
+Type: RANGE
+Current: 35
+Bottom: 35
+Top: 105
+Step: 1
+/main/capturesettings/focusmode
+Label: Focus Mode
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Automatic Macro
+/main/wifiprofiles/new/name
+Label: Profile name
+Type: TEXT
+Current:
+/main/wifiprofiles/new/essid
+Label: WIFI ESSID
+Type: TEXT
+Current:
+/main/wifiprofiles/new/ipaddr
+Label: IP address (empty for DHCP)
+Type: TEXT
+Current:
+/main/wifiprofiles/new/netmask
+Label: Network mask
+Type: TEXT
+Current:
+/main/wifiprofiles/new/gw
+Label: Default gateway
+Type: TEXT
+Current:
+/main/wifiprofiles/new/accessmode
+Label: Access mode
+Type: RADIO
+Current: Managed
+Choice: 0 Managed
+Choice: 1 Ad-hoc
+/main/wifiprofiles/new/channel
+Label: WIFI channel
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 11
+Step: 1
+/main/wifiprofiles/new/encryption
+Label: Encryption
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 WEP 64-bit
+Choice: 2 WEP 128-bit
+/main/wifiprofiles/new/key
+Label: Encryption key (hex)
+Type: TEXT
+Current:
+/main/wifiprofiles/new/write
+Label: Write
+Type: TOGGLE
+Current: 0
+/main/other/d407
+Label: PTP Property 0xd407
+Type: TEXT
+Current: 1
+/main/other/d406
+Label: PTP Property 0xd406
+Type: TEXT
+Current:
+/main/other/d002
+Label: PTP Property 0xd002
+Type: MENU
+Current: 7
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+/main/other/5011
+Label: Date & Time
+Type: TEXT
+Current: 20150928T152124
+/main/other/500c
+Label: Flash Mode
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+/main/other/500a
+Label: Focus Mode
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 3
+/main/other/5008
+Label: Focal Length
+Type: MENU
+Current: 3500
+Choice: 0 3500
+Choice: 1 4600
+Choice: 2 5300
+Choice: 3 6100
+Choice: 4 7300
+Choice: 5 8600
+Choice: 6 10500
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 100
+Choice: 0 2
+Choice: 1 5
+Choice: 2 25
+Choice: 3 50
+Choice: 4 65
+Choice: 5 80
+Choice: 6 100
+/main/other/d303
+Label: PTP Property 0xd303
+Type: TEXT
+Current: 1
+
+Hi
+
+I have been able to connect a Nikon Coolpix s6800 successfully and the
+relevant information is below/attached.
+
+I discovered the PTP propert 0xd002 is image mode with values and output as
+follows;
+
+7 - Scene mode - AUTO, Quality - FINE, Compression 1/4, Size - 4608x3456 -
+16MP (approx. 7MB)
+
+6 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 4608x3456 -
+16MP (approx. 3.6MB)
+
+5 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 3264x2448 -
+8MP (approx. 2MB)
+
+4 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 2272x1704 -
+4MP (approx. 1MB)
+
+3 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 1600x1200 -
+2M (approx. 530kB)
+
+2 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 640x480
+-VGA (approx. 140kB)
+
+1 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 4608x2592 -
+12MP (approx. 2.9MB)
+
+0 - Scene mode - AUTO, Quality - NORMAL, Compression 1/8, Size - 4608x2592 -
+12MP (approx. 2.9MB)
+
+Do you know what these properties could be for?
+
+Property 0xd407:(read only) (type=0x6) 1
+
+Property 0xd406:(readwrite) (type=0xffff) ''
+
+------------------------------
+
+Nikon Coolpix s6800
+
+> lsusb
+
+Bus 001 Device 008: ID 04b0:0350 Nikon Corp.
+
+> sudo gphoto2 --auto-detect
+
+Model                          Port
+
+----------------------------------------------------------
+
+USB PTP Class Camera           usb:001,008
+
+See attached for summary and config details.
+
+However, I have not been as successful with a Nikon Coolpix s3700 so I will
+post this as a ticket.
+
+Finally I have not been able to find out if an Olympus DMD E-M10 can be
+controlled completely by gphoto (ie image resolution and quality). Do you
+know how I can find this out as it is rather expensive to purchase one and
+fail.
+
+Thanks for your support.
+
+Thanks,
+
+David4x

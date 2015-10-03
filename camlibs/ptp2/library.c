@@ -1107,6 +1107,9 @@ static struct {
 	/* David Shawcross <david@sitevisuals.com> */
 	{"Nikon:Coolpix S6800", 	  0x04b0, 0x0350, PTP_CAP},
 
+	/* David Shawcross <david@sitevisuals.com> */
+	{"Nikon:Coolpix S3700", 	  0x04b0, 0x035c, PTP_CAP},
+
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
