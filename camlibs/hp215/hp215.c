@@ -353,17 +353,28 @@ hp_send_command_and_receive_blob(
 		if (ret < GP_OK)
 			return ret;
 		ret = gp_port_read (camera->port, &eot, 1);
-		if (ret < GP_OK)
+		if (ret < GP_OK) {
+			free (*msg);
+			*msg = NULL;
 			return ret;
-		if (ret != 1)
+		}
+		if (ret != 1) {
+			free (*msg);
+			*msg = NULL;
 			return GP_ERROR_IO;
+		}
 		if (eot != EOT) {
+			free (*msg);
+			*msg = NULL;
 			gp_log (GP_LOG_ERROR, "hp215", "read %02x instead of expected 04", eot);
 			return GP_ERROR_IO;
 		}
 		ackret = hp_send_ack (camera);
-		if (ackret < GP_OK)
+		if (ackret < GP_OK) {
+			free (*msg);
+			*msg = NULL;
 			return ackret;
+		}
 	} else {
 		/* short reply - normal mode, do not copy E0 E0  */
 		*msg = malloc (replydatalen-2);
