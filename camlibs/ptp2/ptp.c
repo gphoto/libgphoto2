@@ -2464,12 +2464,12 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		break;
 	default:
 		if (datatype != PTP_DTC_STR) {
-			data = calloc(sizeof(uint32_t),3);
+			data = calloc(3,sizeof(uint32_t));
 			if (!data) return PTP_RC_GeneralError;
 			size = sizeof(uint32_t)*3;
 		} else {
 			size = strlen(value->str) + 1 + 8;
-			data = calloc(sizeof(char),size);
+			data = calloc(size,sizeof(char));
 			if (!data) return PTP_RC_GeneralError;
 		}
 		switch (datatype) {

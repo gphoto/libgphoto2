@@ -6751,7 +6751,7 @@ init_ptp_fs (Camera *camera, GPContext *context)
 		int i;
 
 		C_PTP_REP (ptp_getobjecthandles (params, 0xffffffff, 0x000000, 0x000000, &handles));
-		params->objects = calloc(sizeof(PTPObject),handles.n);
+		params->objects = calloc(handles.n,sizeof(PTPObject));
 		if (!params->objects)
 			return PTP_RC_GeneralError;
 		gp_context_progress_update (context, id, 10);
