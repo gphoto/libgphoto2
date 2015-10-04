@@ -1,0 +1,100 @@
+Camera summary:
+Manufacturer: Panasonic
+Model: DMC-GH4
+  Version: 2.2
+  Serial Number: 0000000000000000001Xnnnnnnnnnn
+Vendor Extension ID: 0x6 (1.0)
+
+Capture Formats: 
+Display Formats: Association/Directory, DPOF, Apple Quicktime, Defined Type, JPEG
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc05/AssociationType dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 128025886720 (122095 MB)
+	Free Space (Bytes): 127919587328 (121993 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) 'Windows/6.2.9200 MTPClassDriver/6.2.9200.16384'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3200,2900,2500,2200,2000,1800,1600,1400,1300,1100,1000,900,800,710,630,560,500,450,400,350,320,280,250,220,200,180,160,140,120,110,100,3500,3500,3500,3500,3500] value: f/8 (800)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [2,53253,53252,1] value: Automatic (2)
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [4294967295,600000,500000,400000,300000,250000,200000,150000,130000,100000,80000,60000,50000,40000,32000,25000,20000,16000,13000,10000,7692,6250,5000,4000,3125,2500,2000,1666,1250,1000,769,666,500,400,333,250,200,166,125,100,80,62,50,40,31,25,20,15,12,10,7,6,5,4,3,2,2,1,1,40,40,40] value: 1e-05 sec (1)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [2,3,4,1,53256,53256,53257,53257,53257,53257,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504,53504] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [65535,53249,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600] value: ISO 100 (100)
+Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [0,1,2,53252,53253,3] value: Single Shot (1)
+Property 0xd001:(readwrite) (type=0x6) Enumeration [4294967295,2147543648,2147533648,2147523648,2147513648,2147508648,2147503648,2147498648,2147496648,2147493648,2147491648,2147489648,2147488648,2147487648,2147486848,2147486148,2147485648,2147485248,2147484948,2147484648,1300,1600,2000,2500,3200,4000,5000,6000,8000,10000,13000,15000,20000,25000,30000,40000,50000,60000,80000,100000,125000,160000,200000,250000,320000,400000,500000,640000,800000,1000000,1300000,1600000,2000000,2500000,3200000,4000000,5000000,6400000,8000000,10000000,13000000,16000000] value: 8000000
+Property 0xd002:(read only) (type=0x4) Enumeration [1,2] value: 1
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 10] value: 20% (20)
+
+Device info:
+Manufacturer: Panasonic
+  Model: DMC-GH4
+  device version: 2.2
+  serial number: '0000000000000000001Xnnnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x101c (Initiate open capture)
+  0x1018 (Terminate open capture)
+  0x100f (Format storage)
+  0x1010 (Reset device)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9805 (Get object property list)
+Events Supported:
+  0x4004
+  0x4005
+  0x4002
+  0x400d
+  0x4006
+  0x4008
+  0x4009
+  0x400c
+Device Properties Supported:
+  0xd406
+  0xd407
+  0x5007
+  0x500a
+  0x500d
+  0x500e
+  0x500f
+  0x5013
+  0xd001
+  0xd002
+  0x5001
