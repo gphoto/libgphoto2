@@ -2511,12 +2511,6 @@ enable_liveview:
 				LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
 
 			ret = ptp_nikon_start_liveview (params);
-			{
-				PTPDeviceInfo di;
-
-				C_PTP_REP (ptp_getdeviceinfo (params, &di));
-				print_debug_deviceinfo(params, &di);
-			}
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 
@@ -2532,12 +2526,6 @@ enable_liveview:
 		/* nikon 1 special */
 		if (value.u8 && !params->inliveview) {
 			ret = ptp_nikon_start_liveview (params);
-			{
-				PTPDeviceInfo di;
-
-				C_PTP_REP (ptp_getdeviceinfo (params, &di));
-				print_debug_deviceinfo(params, &di);
-			}
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 
