@@ -351,10 +351,19 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CheckEvent) &&
 			    !ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)
 			) {
-				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
+				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
+				di->OperationsSupported_len++;
+
+				/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
+				/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
+				if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
+					 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
+				) {
+					di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+					di->OperationsSupported_len++;
+				}
 				/* probably more */
-				di->OperationsSupported_len += 1;
 			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
@@ -2500,8 +2509,17 @@ enable_liveview:
 			value.u8 = 1;
 			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_NIKON_RecordingMedia))
 				LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
-			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
-				       _("Nikon enable liveview failed"));
+
+			ret = ptp_nikon_start_liveview (params);
+			{
+				PTPDeviceInfo di;
+
+				C_PTP_REP (ptp_getdeviceinfo (params, &di));
+				print_debug_deviceinfo(params, &di);
+			}
+			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
+
 			do {
 				ret = ptp_nikon_device_ready(params);
 				usleep(20*1000);
@@ -2513,8 +2531,16 @@ enable_liveview:
 		}
 		/* nikon 1 special */
 		if (value.u8 && !params->inliveview) {
-			C_PTP_REP_MSG (ptp_nikon_start_liveview (params),
-				       _("Nikon enable liveview failed"));
+			ret = ptp_nikon_start_liveview (params);
+			{
+				PTPDeviceInfo di;
+
+				C_PTP_REP (ptp_getdeviceinfo (params, &di));
+				print_debug_deviceinfo(params, &di);
+			}
+			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
+
 			do {
 				ret = ptp_nikon_device_ready(params);
 				usleep(20*1000);
@@ -2702,6 +2728,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPPropertyValue	propval;
 	int			i, ret, burstnumber = 1, done, tries;
 	uint32_t		newobject;
+	int			back_off_wait = 0;
+	struct timeval          capture_start;
+
 
 	if (type != GP_CAPTURE_IMAGE)
 		return GP_ERROR_NOT_SUPPORTED;
@@ -2753,7 +2782,10 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (NIKON_1(params)) {
-		LOG_ON_PTP_E (ptp_nikon_start_liveview (params));
+		ret = ptp_nikon_start_liveview (params);
+		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
+		/* OK or busy, try to proceed ... */
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
@@ -2792,10 +2824,13 @@ capturetriggered:
 
 	newobject = 0xffff0001;
 	done = 0; tries = 100;
-	while (done != 3) {
+	capture_start = time_now();
+	do {
 		PTPContainer	event;
 		int 		checkevt;
 
+		if (done == 3)
+			break;
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
 		C_PTP_REP (ptp_check_event (params));
@@ -2863,8 +2898,8 @@ capturetriggered:
 		}
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-		usleep(50*1000);
-	}
+	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 50*100)); /* 50 seconds */
+
 	if (!newobject) newobject = 0xffff0001;
 
 	/* This loop handles single and burst capture. 
@@ -2915,6 +2950,9 @@ capturetriggered:
 			ret = ptp_deleteobject (params, newobject, 0);
 			if (ret != PTP_RC_OK) {
 				GP_LOG_E ("deleteobject(%x) failed: %x", newobject, ret);
+				ret = ptp_nikon_delete_sdram_image (params, newobject);
+				if (ret != PTP_RC_OK)
+					GP_LOG_E ("deleteobjectinsdram(%x) failed too: %x", newobject, ret);
 			}
 		} else { /* capture to card branch */
 			CR (add_object (camera, newobject, context));
@@ -3766,7 +3804,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 	/* On Nikon 1 series, the liveview must be enabled before capture works */
 	if (NIKON_1(params)) {
-		ret = LOG_ON_PTP_E (ptp_nikon_start_liveview (params));
+		ret = ptp_nikon_start_liveview (params);
 		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
 		/* OK or busy, try to proceed ... */
@@ -4189,7 +4227,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 					break;
 				}
 			}
-
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
@@ -4402,7 +4439,6 @@ downloadnow:
 					return GP_OK;
 				}
 			}
-
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
