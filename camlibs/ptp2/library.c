@@ -3001,18 +3001,17 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	capture_start = time_now();
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
-		int oneloop;
+		int tries;
 
 		ret = GP_OK;
 		/* half press now - initiate focusing and wait for result */
 		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
 
+		tries = 20;
 		do {
 			int foundfocusinfo = 0;
 			C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
-			oneloop = 0;
 			while (ptp_get_one_eos_event (params, &entry)) {
-				oneloop = 1;
 				GP_LOG_D("focusing - read event type %d", entry.type);
 				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO) {
 					GP_LOG_D("focusinfo content: %s", entry.u.info);
@@ -3025,7 +3024,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			}
 			if (foundfocusinfo)
 				break;
-		} while (oneloop);
+		} while (tries--);
 
 		if (ret != GP_OK) {
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
