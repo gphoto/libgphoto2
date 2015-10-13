@@ -6967,7 +6967,13 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
 				C_MEM (params->objects[params->nrofobjects].oi.Filename = strdup(tmp[i].Filename));
 				params->objects[params->nrofobjects].oi.ObjectFormat = tmp[i].ObjectFormatCode;
-				params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_DPGS_Get; /* FIXME: check if ok */
+
+				GP_LOG_D ("   flags %x", tmp[i].Flags);
+				if (tmp[i].Flags & 0x1)
+					params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_PS_ReadOnly;
+				else
+					params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_PS_NoProtection;
+				params->objects[params->nrofobjects].canon_flags = tmp[i].Flags;
 				params->objects[params->nrofobjects].oi.ObjectCompressedSize = tmp[i].ObjectSize;
 				params->objects[params->nrofobjects].oi.CaptureDate = tmp[i].Time;
 				params->objects[params->nrofobjects].oi.ModificationDate = tmp[i].Time;

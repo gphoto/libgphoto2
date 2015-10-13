@@ -1424,7 +1424,8 @@ ObjectInfo for 'IMG_0199.JPG':
 0014  72 0c 74 92  OID
 0018  01 00 02 00  StorageID
 001c  01 38 00 00  OFC
-0020  00 00 00 00 00 00 00 00  ? 
+0020  00 00 00 00 ??
+0024  21 00 00 00  flags (4 bytes? 1 byte?)
 0028  19 d5 21 00  Size
 002c  00 00 74 92  ?
 0030  70 0c 74 92  OID
@@ -1437,7 +1438,7 @@ ObjectInfo for 'IMG_0199.JPG':
 #define PTP_cefe_ObjectHandle		0
 #define PTP_cefe_StorageID		4
 #define PTP_cefe_ObjectFormatCode	8
-#define PTP_cefe_Flags			12
+#define PTP_cefe_Flags			16
 #define PTP_cefe_ObjectSize		20
 #define PTP_cefe_Filename		32
 #define PTP_cefe_Time			48
