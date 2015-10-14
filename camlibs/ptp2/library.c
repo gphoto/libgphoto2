@@ -3008,6 +3008,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		/* half press now - initiate focusing and wait for result */
 		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
 
+		focus_start = time_now();
 		do {
 			C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 			while (ptp_get_one_eos_event (params, &entry)) {
