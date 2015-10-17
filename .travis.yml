@@ -12,7 +12,6 @@ env:
 before_install:
  - sudo apt-get update -qq || brew update
  - sudo apt-get install autopoint $EXTRALIBS || brew install gettext 
- - brew link gettext || true
 
 compiler:
  - clang
@@ -20,7 +19,7 @@ compiler:
 
 script:
  - PATH=/usr/local/opt/gettext/bin:$PATH:. autoreconf -i -f
- - ./configure && make && make distcheck
+ - ./configure && make && make check
 
 notifications:
   recipient:
