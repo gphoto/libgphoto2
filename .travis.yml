@@ -12,7 +12,7 @@ env:
 before_install:
  - sudo apt-get update -qq || brew update
  - sudo apt-get install autopoint $EXTRALIBS || brew install gettext 
- - brew link gettext || :
+ - brew link gettext || true
 
 compiler:
  - clang
