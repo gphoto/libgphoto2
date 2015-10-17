@@ -19,7 +19,7 @@ compiler:
 
 script:
  - PATH=/usr/local/opt/gettext/bin:$PATH:. autoreconf -i -f
- - ./configure && make && make check
+ - ./configure && make && make distcheck
 
 notifications:
   recipient:
