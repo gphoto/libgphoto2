@@ -7395,6 +7395,10 @@ camera_init (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))
 			add_special_file("curve.ntc", nikon_curve_get, nikon_curve_put);
 		break;
+	case PTP_VENDOR_SONY:
+		if (ptp_operation_issupported(params, 0x9280))
+			C_PTP (ptp_sony_9280(params, 0x4));
+		break;
 	default:
 		break;
 	}
