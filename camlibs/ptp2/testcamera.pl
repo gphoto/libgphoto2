@@ -9,11 +9,11 @@ my %camera = ();
 $camera{'havecapture'} 		= 1;
 $camera{'havecapturetarget'} 	= 1;
 $camera{'havecapturetarget'} 	= 1;
-my %formats = {
+my %formats = (
 	"jpg" => "imageformat=0",
 	"raw" => "imageformat=9",
 	"both" => "imageformat=8",
-};
+);
 
 $camera{'imageformats'} = \%formats;
 
@@ -54,10 +54,8 @@ sub remove_all_files {
 	}
 }
 
-sub run_gphoto2_capture_target(@) {
-	my $text = pop;
-	my $nrimages = pop;
-	my @cmd = @_;
+sub run_gphoto2_capture_target($$@) {
+	my ($nrimages,$text,@cmd) = @_;
 
 	ok(&run_gphoto2(@cmd),"$text: " . join(" ",@cmd));
 
@@ -68,20 +66,49 @@ sub run_gphoto2_capture_target(@) {
 	&remove_all_files();
 }
 
-sub run_gphoto2_capture(@) {
-	my @cmd = @_;
+sub run_gphoto2_capture($$@) {
+	my ($nrimages,$text,@cmd) = @_;
 	my @newcmd = @cmd;
 
 	if ($camera{'havecapturetarget'}) {
 		my @newcmd = @cmd;
 		unshift @newcmd,"--set-config-index","capturetarget=0";
-		&run_gphoto2_capture_target(@newcmd);
+		&run_gphoto2_capture_target($nrimages,$text,@newcmd);
 
 		@newcmd = @cmd;
 		unshift @newcmd,"--set-config-index","capturetarget=1";
-		&run_gphoto2_capture_target(@newcmd);
+		&run_gphoto2_capture_target($nrimages,$text,@newcmd);
 	} else {
-		&run_gphoto2_capture_target(@newcmd);
+		&run_gphoto2_capture_target($nrimages,$text,@newcmd);
+	}
+}
+
+sub run_gphoto2_capture_formats($$@) {
+	my ($nrimages,$text,@cmd) = @_;
+
+	if ($camera{'imageformats'}) {
+		my @newcmd = @cmd;
+		my %formats = %{$camera{'imageformats'}};
+
+		foreach my $format (sort keys %formats) {
+			print "testing image $format\n";
+			@newcmd = @cmd;
+			unshift @newcmd,"--set-config-index",$formats{$format};
+
+			if ($format eq "jpg") {
+				&run_gphoto2_capture_target($nrimages,$text,@newcmd);
+			} elsif ($format eq "both") {
+				&run_gphoto2_capture_target($nrimages*2,$text,@newcmd);
+				unshift @newcmd,"--keep-raw";
+				&run_gphoto2_capture_target($nrimages,$text,@newcmd);
+			} elsif ($format eq "raw") {
+				&run_gphoto2_capture_target($nrimages,$text,@newcmd);
+				unshift @newcmd,"--keep-raw";
+				&run_gphoto2_capture_target(0,$text,@newcmd);
+			}
+		}
+	} else {
+		&run_gphoto2_capture_target($nrimages,$text,@cmd);
 	}
 }
 
@@ -107,6 +134,6 @@ ok(run_gphoto2("--list-all-config"),"testing --list-all-config");
 ok(run_gphoto2("--list-config"),"testing --list-config");
 
 if ($camera{'havecapture'}) {
-	run_gphoto2_capture("--capture-image-and-download",1,"simple capture and download");
-	run_gphoto2_capture("--capture-image-and-download","-F 5","-I 3",5,"simple capture and download");
+	run_gphoto2_capture_formats(1,"simple capture and download","--capture-image-and-download");
+	run_gphoto2_capture_formats(5,"simple capture and download","--capture-image-and-download","-F 5","-I 3");
 }
