@@ -198,7 +198,7 @@ foreach (@allconfig) {
 		next;
 	}
 	# Take first jpeg format as default
-	if (/^Choice: (\d*) .*JPEG/) {
+	if (/^Choice: (\d*) .*(JPEG|Standard|Fine)/) {
 		$jpgformat = $1 if (!defined($jpgformat));
 		next;
 	}
