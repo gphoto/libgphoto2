@@ -5,24 +5,16 @@ $ENV{'LANG'} = 'C';
 
 my $gphoto2 = "gphoto2";
 
-my %eos100d = ();
-
-my %formats = (
-	"jpg" => "imageformat=0",
-	"raw" => "imageformat=9",
-	"both" => "imageformat=8",
-);
-$eos100d{'imageformats'} = \%formats;
-
-my %camera = %eos100d;
 
 ##################################################
 
 # auto configured
+my $imageformat = 0;
 my $havecapture = 0;
 my $havetriggercapture = 0;
 my $havepreview = 0;
 my $havecapturetarget = 0;
+my %formats = ();
 
 my @lastresult = ();
 # returns TRUE on success, FALSE on fail
@@ -62,6 +54,7 @@ sub remove_all_files {
 	foreach my $file (@files) {
 		next if ($file =~ /logfile/);
 		print STDERR "deleting $file\n";
+		print LOGFILE "deleting $file\n";
 		unlink $file;
 	}
 }
@@ -73,7 +66,8 @@ sub run_gphoto2_capture_target($$@) {
 
 	my @files = <*>;
 	if ($nrimages+1 != @files) {
-		print STDERR "*** expected $nrimages files, got $@files\n";
+		print STDERR "*** expected $nrimages files, got " . @files . "\n";
+		print LOGFILE "*** expected $nrimages files, got " . @files . "\n";
 	}
 	&remove_all_files();
 }
@@ -82,7 +76,6 @@ sub run_gphoto2_capture($$@) {
 	my ($nrimages,$text,@cmd) = @_;
 	my @newcmd = @cmd;
 
-	print "run_gphoto2_capture: havecapturetarget $havecapturetarget\n";
 	if ($havecapturetarget) {
 		my @newcmd = @cmd;
 		unshift @newcmd,"--set-config-index","capturetarget=0";
@@ -99,9 +92,8 @@ sub run_gphoto2_capture($$@) {
 sub run_gphoto2_capture_formats($$@) {
 	my ($nrimages,$text,@cmd) = @_;
 
-	if ($camera{'imageformats'}) {
+	if (%formats) {
 		my @newcmd = @cmd;
-		my %formats = %{$camera{'imageformats'}};
 
 		foreach my $format (sort keys %formats) {
 			print "testing image $format\n";
@@ -149,32 +141,89 @@ ok(run_gphoto2("-l"),"testing -l");
 ok(run_gphoto2("-a"),"testing -a");
 my @abilities = @lastresult;
 
-$havecapture = 1 if (grep (/Capture/,@abilities));
+$havecapture = 1        if (grep (/Capture/,@abilities));
 $havetriggercapture = 1 if (grep (/Trigger Capture/,@abilities));
-$havepreview = 1 if (grep (/Preview/,@abilities));
+$havepreview = 1        if (grep (/Preview/,@abilities));
 
 ok(run_gphoto2("--summary"),"testing --summary");
-ok(run_gphoto2("--list-all-config"),"testing --list-all-config");
+ok(run_gphoto2("--list-config"),"testing --list-config");
 
 # Autodetect if some config variables are present
 
-ok(run_gphoto2("--list-config"),"testing --list-config");
+ok(run_gphoto2("--list-all-config"),"testing --list-all-config");
 my @allconfig = @lastresult;
 
 $havecapturetarget = 1 if (grep(/capturetarget/,@allconfig));
 
-my $havedatetime = 1 if (grep(/datetime/,@allconfig));
-if ($havedatetime) {
+if (grep(/datetime/,@allconfig)) {
 	ok(run_gphoto2("--get-config","datetime"),"testing --get-config datetime before setting");
 	ok(run_gphoto2("--set-config","datetime=now"),"testing --set-config datetime=now");
 	ok(run_gphoto2("--get-config","datetime"),"testing --get-config datetime after setting");
+}
+if (grep(/artist/,@allconfig)) {
+	ok(run_gphoto2("--get-config","artist"),"testing --get-config artist before setting");
+	my $artist;
+	foreach (@lastresult) {
+		$artist = $1 if (/Current: (.*)/);
+	}
+	$artist = 0 if ($artist eq "(null)");
+	ok(run_gphoto2("--set-config","artist=GPHOTO"),"testing --set-config artist=GPHOTO");
+	ok(run_gphoto2("--get-config","artist"),"testing --get-config artist after setting");
+	# restore artist
+	if ($artist) {
+		ok(run_gphoto2("--set-config","artist=$artist"),"testing --set-config artist=$artist");
+	}
+}
+
+my $inimageformat = 0;
+my $jpgformat;
+my $rawformat;
+my $bothformat;
+foreach (@allconfig) {
+	$inimageformat = 0 if (/^Label:/);
+	if (/^Label: Image Quality/) {	# Nikon
+		$imageformat = "imagequality";
+		$inimageformat = 1;
+		next;
+	}
+	if (/^Label: Image Format/) {	# Canon
+		$imageformat = "imageformat";
+		$inimageformat = 1;
+	}
+	next unless ($inimageformat);
+
+	# save only 1 RAW + JPEG format, it always has a "+" inside
+	if (/^Choice: (\d*) .*\+.*/) {
+		$bothformat = $1 if (!defined($bothformat));
+		next;
+	}
+	# Take first jpeg format as default
+	if (/^Choice: (\d*) .*JPEG/) {
+		$jpgformat = $1 if (!defined($jpgformat));
+		next;
+	}
+	if (/^Choice: (\d*) .*(RAW|NEF)/) {
+		$rawformat = $1 if (!defined($rawformat));
+		next;
+	}
+}
+
+if ($imageformat)  {
+	die "no jpgformat found" unless (defined($jpgformat));
+	die "no bothformat found" unless (defined($bothformat));
+	die "no rawformat found" unless (defined($rawformat));
+	$formats{'jpg'} = "$imageformat=$jpgformat";
+	$formats{'both'} = "$imageformat=$bothformat";
+	$formats{'raw'} = "$imageformat=$rawformat";
+} else {
+	print "NO imageformat ... just jpeg?\n";
 }
 
 # Capture stuff lots of it
 
 if ($havecapture) {
 	run_gphoto2_capture_formats(1,"simple capture and download","--capture-image-and-download");
-	run_gphoto2_capture_formats(3,"multiframe capture and download","--capture-image-and-download","-F 3","-I 2");
+	run_gphoto2_capture_formats(3,"multiframe capture and download","--capture-image-and-download","-F 3","-I 3");
 	run_gphoto2_capture_formats(1,"waitevent","--wait-event-and-download=10s");
 }
 if ($havetriggercapture) {
