@@ -365,7 +365,8 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[usb.h],[usb_open],[
 	case "$host" in
 	  *-*-mingw* | *-*-cygwin* | *-*-msvc* )
-	  dnl Windows itself has usb.h we mis-detect so don't set IOLIB_LIST
+	  dnl Windows itself has usb.h we mis-detect, in that case remove access to the other usb.h
+	  IOLIB_LIST="$IOLIB_LIST usb"
 	  ;;
 	  *)
 	  if test "x$have_LIBUSB1" != xyes; then
