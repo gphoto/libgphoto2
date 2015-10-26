@@ -5,7 +5,6 @@ $ENV{'LANG'} = 'C';
 
 my $gphoto2 = "gphoto2";
 
-$gphoto2 .= join (" ", @ARGV);
 
 ##################################################
 
@@ -23,12 +22,11 @@ sub run_gphoto2(@) {
 	my @cmdline = @_;
 
 	@lastresult = ();
-	print STDERR "running: " . join(" ",$gphoto2,@cmdline) . "\n";
+	print STDERR "running: " . join(" ",$gphoto2,@ARGV,@cmdline) . "\n";
 
-	print LOGFILE "running: " . join(" ",$gphoto2,@cmdline) . "\n";
-	open(GPHOTO,'-|',$gphoto2,@cmdline)||die "open $gphoto2";
+	print LOGFILE "running: " . join(" ",$gphoto2,@ARGV,@cmdline) . "\n";
+	open(GPHOTO,'-|',$gphoto2,@ARGV,@cmdline)||die "open $gphoto2";
 	while (<GPHOTO>) {
-		push @lastresult, $_;
 		print;
 		print LOGFILE;
 		chomp;
@@ -198,6 +196,7 @@ foreach (@allconfig) {
 	if (/^Label: Image Format/) {	# Canon
 		$imageformat = "imageformat";
 		$inimageformat = 1;
+		next;
 	}
 	next unless ($inimageformat);
 
