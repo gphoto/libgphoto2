@@ -9,7 +9,7 @@ my $gphoto2 = "gphoto2";
 ##################################################
 
 # auto configured
-my $imageformat = 0;
+my $imageformat;
 my $havecapture = 0;
 my $havetriggercapture = 0;
 my $havepreview = 0;
@@ -180,7 +180,15 @@ my $jpgformat;
 my $rawformat;
 my $bothformat;
 foreach (@allconfig) {
-	$inimageformat = 0 if (/^Label:/);
+	if (/^Label:/) {
+		last if ($imageformat);
+		$inimageformat = 0;
+	}
+	if (/^Label: Image Quality 2/) { # Nikon 1
+		$imageformat = "imagequality2";
+		$inimageformat = 1;
+		next;
+	}
 	if (/^Label: Image Quality/) {	# Nikon
 		$imageformat = "imagequality";
 		$inimageformat = 1;
@@ -198,7 +206,11 @@ foreach (@allconfig) {
 		next;
 	}
 	# Take first jpeg format as default
-	if (/^Choice: (\d*) .*(JPEG|Standard|Fine)/) {
+	if (/^Choice: (\d*) .*JPEG/) {
+		$jpgformat = $1 if (!defined($jpgformat));
+		next;
+	}
+	if (/^Choice: (\d*) .*Fine/) {
 		$jpgformat = $1 if (!defined($jpgformat));
 		next;
 	}
@@ -209,9 +221,9 @@ foreach (@allconfig) {
 }
 
 if ($imageformat)  {
-	die "no jpgformat found" unless (defined($jpgformat));
-	die "no bothformat found" unless (defined($bothformat));
-	die "no rawformat found" unless (defined($rawformat));
+	die "no jpgformat found in $imageformat" unless (defined($jpgformat));
+	die "no bothformat found in $imageformat" unless (defined($bothformat));
+	die "no rawformat found in $imageformat" unless (defined($rawformat));
 	$formats{'jpg'} = "$imageformat=$jpgformat";
 	$formats{'both'} = "$imageformat=$bothformat";
 	$formats{'raw'} = "$imageformat=$rawformat";
