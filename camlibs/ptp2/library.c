@@ -835,6 +835,9 @@ static struct {
 	/* Irina Iakovleva <irina.bunger@gmail.com> */
 	{"Sony:SLT-A77V (PTP mode)",  0x054c, 0x0577, 0},
 
+	/* https://sourceforge.net/p/libmtp/bugs/1459/ */
+	{"Sony:HDR-PJ260VE (PTP mode)",0x054c, 0x0603, 0},
+
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
 
