@@ -1941,6 +1941,17 @@ static struct {
 	{"GoPro:HERO 3+",			0x2672,	0x0011, 0},
 };
 
+static struct {
+	const char *model;
+	unsigned long device_flags;
+} ptpip_models[] = {
+	{"PTP/IP Camera"	, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Ricoh Theta (WLAN)"	, PTP_CAP},
+	{"Nikon DSLR (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon 1 (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon EOS (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
+};
+
 #include "device-flags.h"
 static struct {
 	const char *vendor;
@@ -2204,20 +2215,24 @@ camera_abilities (CameraAbilitiesList *list)
 	a.device_type       = GP_DEVICE_AUDIO_PLAYER;
 	CR (gp_abilities_list_append (list, a));
 
-	memset(&a, 0, sizeof(a));
-	strcpy(a.model, "PTP/IP Camera");
-	a.status = GP_DRIVER_STATUS_TESTING;
-	a.port   = GP_PORT_PTPIP;
-	a.operations 	=	GP_OPERATION_CAPTURE_IMAGE | /*GP_OPERATION_TRIGGER_CAPTURE |*/
-				GP_OPERATION_CAPTURE_PREVIEW |
-				GP_OPERATION_CONFIG;
-	a.file_operations   =	GP_FILE_OPERATION_PREVIEW	|
-				GP_FILE_OPERATION_DELETE;
-	a.folder_operations =	GP_FOLDER_OPERATION_PUT_FILE	|
-				GP_FOLDER_OPERATION_MAKE_DIR	|
-				GP_FOLDER_OPERATION_REMOVE_DIR;
-	a.device_type       = GP_DEVICE_STILL_CAMERA;
-	CR (gp_abilities_list_append (list, a));
+	for (i = 0; i < sizeof(ptpip_models)/sizeof(ptpip_models[0]); i++) {
+		memset(&a, 0, sizeof(a));
+		strcpy(a.model, ptpip_models[i].model);
+		a.status 		= GP_DRIVER_STATUS_TESTING;
+		a.port   		= GP_PORT_PTPIP;
+		a.operations 		= GP_OPERATION_CONFIG;
+		if (ptpip_models[i].device_flags & PTP_CAP)
+			a.operations 	|= GP_OPERATION_CAPTURE_IMAGE;
+		if (ptpip_models[i].device_flags & PTP_CAP_PREVIEW)
+			a.operations 	|= GP_OPERATION_CAPTURE_PREVIEW;
+		a.file_operations   =	GP_FILE_OPERATION_PREVIEW	|
+					GP_FILE_OPERATION_DELETE;
+		a.folder_operations =	GP_FOLDER_OPERATION_PUT_FILE	|
+					GP_FOLDER_OPERATION_MAKE_DIR	|
+					GP_FOLDER_OPERATION_REMOVE_DIR;
+		a.device_type       = GP_DEVICE_STILL_CAMERA;
+		CR (gp_abilities_list_append (list, a));
+	}
 
 	return (GP_OK);
 }
