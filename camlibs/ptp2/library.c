@@ -7352,13 +7352,13 @@ camera_init (Camera *camera, GPContext *context)
 		C_PTP_REP (ptp_sendobjectinfo (params, &storagehandle, &parenthandle, &handle, &oi));
 
 		GP_LOG_D ("olympus getcameraid\n");
-		ptp_olympus_getcameraid (params, &data, &len);
+		C_PTP_REP (ptp_olympus_getcameraid (params, &data, &len));
 
 		GP_LOG_D ("olympus setcameracontrolmode\n");
-		ptp_olympus_setcameracontrolmode (params, 1);
+		C_PTP_REP (ptp_olympus_setcameracontrolmode (params, 1));
 
 		GP_LOG_D ("olympus opensession\n");
-		ptp_olympus_opensession (params, &data, &len);
+		C_PTP_REP (ptp_olympus_opensession (params, &data, &len));
 	}
 
 	/* Seems HP does not like getdevinfo outside of session

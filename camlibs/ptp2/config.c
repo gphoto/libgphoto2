@@ -5930,6 +5930,7 @@ _put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
 	int value;
 	char* endptr;
 	long val;
+	PTPParams *params = &(camera->pl->params);
 
 	if (camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_NIKON)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -5944,7 +5945,7 @@ _put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
 			/* FIXME: far from elegant way to get ID back... */
 			val = strtol(name, &endptr, 0);
 			if (!*endptr) {
-				ptp_nikon_deletewifiprofile(&(camera->pl->params), val);
+				C_PTP (ptp_nikon_deletewifiprofile(&(camera->pl->params), val));
 				gp_widget_set_value(child2, 0);
 			}
 		}
