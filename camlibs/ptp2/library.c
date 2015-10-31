@@ -4102,7 +4102,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 		GP_LOG_D ("olympus setcameracontrolmode 2\n");
-		ptp_olympus_setcameracontrolmode (params, 2);
+		C_PTP_REP (ptp_olympus_setcameracontrolmode (params, 2));
 	}
 
 	event_start = time_now();
