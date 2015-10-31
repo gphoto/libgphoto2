@@ -4094,6 +4094,19 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_UploadURL,		N_("Upload URL")},
 		{PTP_DPC_Artist,		N_("Artist")},
 		{PTP_DPC_CopyrightInfo,		N_("Copyright Info")},
+		{PTP_DPC_SupportedStreams,	N_("Supported Streams")},
+		{PTP_DPC_EnabledStreams,	N_("Enabled Streams")},
+		{PTP_DPC_VideoFormat,		N_("Video Format")},
+		{PTP_DPC_VideoResolution,	N_("Video Resolution")},
+		{PTP_DPC_VideoQuality,		N_("Video Quality")},
+		{PTP_DPC_VideoFrameRate,	N_("Video Framerate")},
+		{PTP_DPC_VideoContrast,		N_("Video Contrast")},
+		{PTP_DPC_VideoBrightness,	N_("Video Brightness")},
+		{PTP_DPC_AudioFormat,		N_("Audio Format")},
+		{PTP_DPC_AudioBitrate,		N_("Audio Bitrate")},
+		{PTP_DPC_AudioSamplingRate,	N_("Audio Samplingrate")},
+		{PTP_DPC_AudioBitPerSample,	N_("Audio Bits per sample")},
+		{PTP_DPC_AudioVolume,		N_("Audio Volume")},
 		{0,NULL}
 	};
 	struct {
