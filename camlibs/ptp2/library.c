@@ -2208,7 +2208,8 @@ camera_abilities (CameraAbilitiesList *list)
 	strcpy(a.model, "PTP/IP Camera");
 	a.status = GP_DRIVER_STATUS_TESTING;
 	a.port   = GP_PORT_PTPIP;
-	a.operations        =	GP_CAPTURE_IMAGE		|
+	a.operations 	=	GP_OPERATION_CAPTURE_IMAGE | /*GP_OPERATION_TRIGGER_CAPTURE |*/
+				GP_OPERATION_CAPTURE_PREVIEW |
 				GP_OPERATION_CONFIG;
 	a.file_operations   =	GP_FILE_OPERATION_PREVIEW	|
 				GP_FILE_OPERATION_DELETE;
