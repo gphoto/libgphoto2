@@ -2820,8 +2820,6 @@ capturetriggered:
 		PTPContainer	event;
 		int 		checkevt;
 
-		if (done == 3)
-			break;
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
 		C_PTP_REP (ptp_check_event (params));
