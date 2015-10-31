@@ -385,6 +385,8 @@ retry:
 	case PTPIP_END_DATA_PACKET:
 		GP_LOG_D("PTPIP_END_DATA_PACKET");
 		resp->Transaction_ID	= dtoh32a(&data[0]);
+		free (data);
+		data = NULL;
 		goto retry;
 	case PTPIP_CMD_RESPONSE:
 		GP_LOG_D("PTPIP_CMD_RESPONSE");
