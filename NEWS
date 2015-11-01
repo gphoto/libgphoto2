@@ -1,7 +1,26 @@
 libgphoto2 2.5.8.1 development
 
+Now maintained (source and issue tracker) in GIT at https://github.com/gphoto/libgphoto2 
+
 ptp2:
-* fixed a timeout bug on Canon EOS wait_event
+* PTP/IP: fixes to support Ricoh Theta and Sony Alpha over WLAN better
+* unification of timeout with backoff handling
+* Canon EOS: fixed a timeout bug on wait_event
+* Canon EOS: report protection status correctly
+* Canon EOS: unlock the ui on close
+* Hook up PTP OpenCapture opcode
+* Nikon J5 support. Nikon now hides prop and opcodes even differently.
+* Added USB IDs:
+  - Sony SLT A77V, A7R2, HDR-PJ260VE
+  - Nikon DSLR D5500
+  - Canon EOS 760D, 5Ds, 5Ds R
+  - Nikon Coolpix AW110, S6300, S6800, S3700, S2900
+  - Nikon 1 S2, J5
+  - Ricoh Theta m15 (USB and WLAN)
+  - GoProp Hero 4
+
+canon:
+* readd old Canon IXUS 30.
 
 translations:
 * updated ukrainian, vietnamese, polish, italian
