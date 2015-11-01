@@ -278,11 +278,14 @@ const struct canonCamModelData models[] = {
         {"Canon:PowerShot A95 (normal mode)",   CANON_CLASS_5,  0x04A9, 0x30bb, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         /* 0x30bf is PowerShot SD300/Digital IXUS 40 in PTP mode */
+#endif
         /* Another block of cameras that share the ID for PTP and Canon modes */
+	/* keep these enabled as the PTP variant does not support capture */
         {"Canon:PowerShot SD200 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 30 (normal mode)", CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 40 (normal mode)",  CANON_CLASS_6,  0x04A9, 0x30c0, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
+#if 0
         {"Canon:PowerShot SD400 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:Digital IXUS 50 (normal mode)", CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         {"Canon:IXY Digital 55 (normal mode)",  CANON_CLASS_4,  0x04A9, 0x30c1, CAP_NON, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
