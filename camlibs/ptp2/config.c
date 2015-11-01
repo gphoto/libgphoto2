@@ -4566,6 +4566,26 @@ static struct deviceproptableu8 compressionsetting[] = {
 };
 GENERIC8TABLE(CompressionSetting,compressionsetting)
 
+/* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
+static int
+_put_Sony_CompressionSetting(CONFIG_PUT_ARGS) {
+	PTPParams		*params = &(camera->pl->params);
+	GPContext 		*context = ((PTPData *) params->data)->context;
+	int 			ret;
+	PTPDevicePropDesc	dpd2;
+
+	ret = _put_CompressionSetting(CONFIG_PUT_NAMES);
+	if (ret != GP_OK) return ret;
+	C_PTP_REP (ptp_generic_setdevicepropvalue (params, PTP_DPC_CompressionSetting, propval, PTP_DTC_UINT8));
+	while (1) {
+		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd2));
+		if (dpd2.CurrentValue.u8 == propval->u8)
+			break;
+	}
+	return GP_OK;
+}
+
 static struct deviceproptableu8 nikon_d90_highisonr[] = {
 	{ N_("Off"),	0, 0 },
 	{ N_("Low"),	1, 0 },
@@ -6615,6 +6635,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
+	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_CompressionSetting,            _put_Sony_CompressionSetting },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             0,                  PTP_DTC_UINT8,  _get_CompressionSetting,            _put_CompressionSetting },
 	{ N_("Focus Distance"),                 "focusdistance",            PTP_DPC_FocusDistance,                  0,                  PTP_DTC_UINT16, _get_FocusDistance,                 _put_FocusDistance },
 	{ N_("Focal Length"),                   "focallength",              PTP_DPC_FocalLength,                    0,                  PTP_DTC_UINT32, _get_FocalLength,                   _put_FocalLength },
