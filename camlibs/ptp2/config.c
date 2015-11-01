@@ -4573,15 +4573,22 @@ _put_Sony_CompressionSetting(CONFIG_PUT_ARGS) {
 	GPContext 		*context = ((PTPData *) params->data)->context;
 	int 			ret;
 	PTPDevicePropDesc	dpd2;
+	time_t			start,end;
 
 	ret = _put_CompressionSetting(CONFIG_PUT_NAMES);
 	if (ret != GP_OK) return ret;
+	start = time(NULL);
 	C_PTP_REP (ptp_generic_setdevicepropvalue (params, PTP_DPC_CompressionSetting, propval, PTP_DTC_UINT8));
 	while (1) {
 		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
 		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd2));
 		if (dpd2.CurrentValue.u8 == propval->u8)
 			break;
+		end = time(NULL);
+		if (end-start >= 2) {
+			GP_LOG_E("failed to change variable to %d (current %d)\n", propval->u8, dpd2.CurrentValue.u8);
+			break;
+		}
 	}
 	return GP_OK;
 }
