@@ -846,7 +846,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Sony */
 #define PTP_EC_Sony_ObjectAdded			0xC201
-/* c202 ... unclear. also called with object id? */
+#define PTP_EC_Sony_ObjectRemoved		0xC202
 #define PTP_EC_Sony_PropertyChanged		0xC203
 
 /* MTP Event codes */
