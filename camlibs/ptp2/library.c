@@ -4575,9 +4575,11 @@ _value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt, int spaceleft) {
 			return snprintf (txt, spaceleft, "%d", data->i32);
 		case PTP_DTC_UINT32:
 			return snprintf (txt, spaceleft, "%u", data->u32);
+		case PTP_DTC_INT64:
+			return snprintf (txt, spaceleft, "%lu", data->u64);
+		case PTP_DTC_UINT64:
+			return snprintf (txt, spaceleft, "%ld", data->i64);
 	/*
-		PTP_DTC_INT64
-		PTP_DTC_UINT64
 		PTP_DTC_INT128
 		PTP_DTC_UINT128
 	*/
