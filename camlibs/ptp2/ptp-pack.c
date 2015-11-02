@@ -2358,6 +2358,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789"));
 			sprintf (ce[i].u.info, "BulbExposureTime %d",  dtoh32a(curdata+8));
 			break;
+		case PTP_EC_CANON_EOS_ObjectRemoved:
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED;
+			ce[i].u.object.oid = dtoh32a(curdata+8);
+			break;
 		default:
 			switch (type) {
 #define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
@@ -2366,7 +2370,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				sprintf (ce[i].u.info, "unhandled EOS event "#x" (size %d)",  size);		\
 				break;
 			XX(RequestGetEvent)
-			XX(ObjectRemoved)
 			XX(RequestGetObjectInfoEx)
 			XX(StorageStatusChanged)
 			XX(StorageInfoChanged)

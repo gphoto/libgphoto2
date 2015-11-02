@@ -2851,6 +2851,10 @@ capturetriggered:
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				break;
+			case PTP_EC_ObjectRemoved:
+				ptp_remove_object_from_cache(params, event.Param1);
+				gp_filesystem_reset (camera->fs);
+				break;
 			case PTP_EC_ObjectAdded: {
 				PTPObject	*ob;
 
@@ -3096,19 +3100,22 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		while (ptp_get_one_eos_event (params, &entry)) {
 			/* if we got at least one event from the last event polling, we reset our back_off_wait counter */
 			back_off_wait = 0;
-			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN) {
+			GP_LOG_D ("entry type %04x", entry.type);
+			switch (entry.type) {
+			case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 				GP_LOG_D ("entry unknown: %s", entry.u.info);
 				free (entry.u.info);
 				continue; /* in loop ... do not poll while draining the queue */
-			}
-			GP_LOG_D ("entry type %04x", entry.type);
-			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER) {
+			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 				newobject = entry.u.object.oid;
 				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
 				break;
-			}
-			if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) {
+			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED:
+				ptp_remove_object_from_cache(params, entry.u.object.oid);
+				gp_filesystem_reset (camera->fs);
+				break;
+			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO: {
 				PTPObject	*ob;
 
 				/* just add it to the filesystem, and return in CameraPath */
@@ -3126,6 +3133,10 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				gp_filesystem_append (camera->fs, path->folder, path->name, context);
 				break;/* for RAW+JPG mode capture, we just return the first image for now, and
 				       * let wait_for_event get the rest. */
+			default:
+				GP_LOG_D("unhandled eos change: %d\n", entry.type);
+				break;
+			}
 			}
 			if (newobject)
 				break;
@@ -3363,6 +3374,10 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 		GP_LOG_D ("Event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		switch (event.Code) {
+		case PTP_EC_ObjectRemoved:
+			ptp_remove_object_from_cache(params, event.Param1);
+			gp_filesystem_reset (camera->fs);
+			break;
 		case PTP_EC_ObjectAdded: {
 			/* add newly created object to internal structures. this hopefully just is a new folder */
 			PTPObject	*ob;
@@ -3730,7 +3745,8 @@ fallback:
 
 		switch (event.Code) {
 		case PTP_EC_ObjectRemoved:
-			/* Perhaps from previous Canon based capture + delete. Ignore. */
+			ptp_remove_object_from_cache(params, event.Param1);
+			gp_filesystem_reset (camera->fs);
 			break;
 		case PTP_EC_ObjectAdded: {
 			PTPObject	*ob;
@@ -4232,6 +4248,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					/* continue otherwise */
 					break;
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED:
+					ptp_remove_object_from_cache(params, event.Param1);
+					gp_filesystem_reset (camera->fs);
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("Object Removed")+1));
+					sprintf (*eventdata, "ObjectRemoved");
+					return GP_OK;
 				default:
 					GP_LOG_D ("Unhandled EOS event 0x%04x", entry.type);
 					break;
@@ -4442,6 +4465,13 @@ downloadnow:
 					return GP_OK;
 					/* as we can read multiple events we should retrieve a good one if possible
 					 * and not a random one.*/
+				case PTP_EC_ObjectRemoved:
+					ptp_remove_object_from_cache(params, event.Param1);
+					gp_filesystem_reset (camera->fs);
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("PTP ObjectRemoved, Param1 01234567")+1));
+					sprintf (*eventdata, "PTP ObjectRemoved, Param1 %08x", event.Param1);
+					break;
 				default:
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
@@ -4528,6 +4558,13 @@ handleregular:
 		*eventtype = GP_EVENT_UNKNOWN;
 		C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
 		sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
+		break;
+	case PTP_EC_ObjectRemoved:
+		ptp_remove_object_from_cache(params, event.Param1);
+		gp_filesystem_reset (camera->fs);
+		*eventtype = GP_EVENT_UNKNOWN;
+		C_MEM (*eventdata = malloc(strlen("PTP ObjectRemoved, Param1 01234567")+1));
+		sprintf (*eventdata, "PTP ObjectRemoved, Param1 %08x", event.Param1);
 		break;
 	default:
 		*eventtype = GP_EVENT_UNKNOWN;
