@@ -5160,10 +5160,15 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 static int
 _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 	const char*	val;
-	PTPParams *params = &(camera->pl->params);
+	PTPParams	*params = &(camera->pl->params);
+	GPContext 	*context = ((PTPData *) params->data)->context;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) 
 		return (GP_ERROR_NOT_SUPPORTED);
+
+	/* If someone has set the capture target inbetween */
+	CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
+
 	gp_widget_get_value(widget, &val);
 
 	if (!strcmp (val, _("None"))) {
@@ -5894,8 +5899,10 @@ _get_CaptureTarget(CONFIG_GET_ARGS) {
 
 static int
 _put_CaptureTarget(CONFIG_PUT_ARGS) {
-	int i;
-	char *val;
+	int		i;
+	char		*val;
+	PTPParams	*params = &(camera->pl->params);
+	GPContext	*context = ((PTPData *) params->data)->context;
 
 	CR (gp_widget_get_value(widget, &val));
 	for (i=0;i<sizeof(capturetargets)/sizeof(capturetargets[i]);i++) {
@@ -5904,6 +5911,12 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 			break;
 		}
 	}
+	/* Also update it in the live Canon EOS camera. (Nikon and Canon Powershot just use different opcodes.) */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
+	)
+		CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
+
 	return GP_OK;
 }
 
