@@ -2907,6 +2907,37 @@ ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 	return ret;
 }
 
+uint16_t
+ptp_sony_9280 (PTPParams* params, uint32_t param1,
+	uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4)
+{
+	PTPContainer	ptp;
+	unsigned char 	buf[16];
+	unsigned char	*buffer;
+
+	PTP_CNT_INIT(ptp, 0x9280, param1);
+
+	htod32a(&buf[0], data1);
+	htod32a(&buf[4], data2);
+	htod32a(&buf[8], data3);
+	htod32a(&buf[12], data4);
+	buffer=buf;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(buf), &buffer, NULL);
+}
+
+uint16_t
+ptp_sony_9281 (PTPParams* params, uint32_t param1) {
+	PTPContainer	ptp;
+	unsigned int	size = 0;
+	unsigned char	*buffer = NULL;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, 0x9281, param1);
+	ret =  ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &buffer, &size);
+	free (buffer);
+	return ret;
+}
+
 /**
  * ptp_generic_getdevicepropdesc:
  *

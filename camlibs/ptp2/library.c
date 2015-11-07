@@ -2255,33 +2255,47 @@ camera_exit (Camera *camera, GPContext *context)
 		PTPParams *params = &camera->pl->params;
 		PTPContainer event;
 		SET_CONTEXT_P(params, context);
-		/* Disable EOS capture now, also end viewfinder mode. */
-		if (params->eos_captureenabled) {
-			if (camera->pl->checkevents) {
-				PTPCanon_changes_entry entry;
 
-				ptp_check_eos_events (params);
-				while (ptp_get_one_eos_event (params, &entry)) {
-					GP_LOG_D ("missed EOS ptp type %d", entry.type);
-					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
-						free (entry.u.info);
+		switch (params->deviceinfo.VendorExtensionID) {
+		case PTP_VENDOR_CANON:
+			/* Disable EOS capture now, also end viewfinder mode. */
+			if (params->eos_captureenabled) {
+				if (camera->pl->checkevents) {
+					PTPCanon_changes_entry entry;
+
+					ptp_check_eos_events (params);
+					while (ptp_get_one_eos_event (params, &entry)) {
+						GP_LOG_D ("missed EOS ptp type %d", entry.type);
+						if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
+							free (entry.u.info);
+					}
+					camera->pl->checkevents = 0;
 				}
-				camera->pl->checkevents = 0;
+				if (params->inliveview)
+					ptp_canon_eos_end_viewfinder (params);
+				camera_unprepare_capture (camera, context);
 			}
-			if (params->inliveview)
-				ptp_canon_eos_end_viewfinder (params);
-			camera_unprepare_capture (camera, context);
-		}
-		/* get the Nikon out of control mode again */
-		if (params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
-			ptp_nikon_setcontrolmode (params, 0);
-			params->controlmode = 0;
+			break;
+		case PTP_VENDOR_NIKON:
+			/* get the Nikon out of control mode again */
+			if (params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
+				ptp_nikon_setcontrolmode (params, 0);
+				params->controlmode = 0;
+			}
+			break;
+		case PTP_VENDOR_SONY:
+			if (ptp_operation_issupported(params, 0x9280)) {
+				C_PTP (ptp_sony_9281(params, 0x4));
+				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0));
+			}
+			break;
 		}
 
 		if (camera->pl->checkevents)
 			ptp_check_event (params);
 		while (ptp_get_one_event (params, &event))
 			GP_LOG_D ("missed ptp event 0x%x (param1=%x)", event.Code, event.Param1);
+
 		/* close ptp session */
 		ptp_closesession (params);
 		ptp_free_params(params);
@@ -7455,8 +7469,15 @@ camera_init (Camera *camera, GPContext *context)
 			add_special_file("curve.ntc", nikon_curve_get, nikon_curve_put);
 		break;
 	case PTP_VENDOR_SONY:
-		if (ptp_operation_issupported(params, 0x9280))
-			C_PTP (ptp_sony_9280(params, 0x4));
+		if (ptp_operation_issupported(params, 0x9280)) {
+			C_PTP (ptp_sony_9280(params, 0x1,0,0,0,0));
+			C_PTP (ptp_sony_9281(params, 0x1));	/* no data sent back */
+			C_PTP (ptp_sony_9280(params, 0x1,0,0,0,0));
+			C_PTP (ptp_sony_9281(params, 0x1));	/* no data sent back */
+
+			C_PTP (ptp_sony_9280(params, 0x4,0,1,0,0));
+			C_PTP (ptp_sony_9281(params, 0x4));	/* gets big data blob? */
+		}
 		break;
 	default:
 		break;
