@@ -3131,6 +3131,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
 				break;
 			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED:
+				GP_LOG_D ("Found removed object. OID 0x%x", (unsigned int)entry.u.object.oid);
 				ptp_remove_object_from_cache(params, entry.u.object.oid);
 				gp_filesystem_reset (camera->fs);
 				break;
@@ -4268,7 +4269,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* continue otherwise */
 					break;
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED:
-					ptp_remove_object_from_cache(params, event.Param1);
+					ptp_remove_object_from_cache(params, entry.u.object.oid);
 					gp_filesystem_reset (camera->fs);
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = malloc(strlen("Object Removed")+1));
