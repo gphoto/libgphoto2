@@ -2290,8 +2290,8 @@ camera_exit (Camera *camera, GPContext *context)
 			break;
 		case PTP_VENDOR_SONY:
 			if (ptp_operation_issupported(params, 0x9280)) {
-				C_PTP (ptp_sony_9281(params, 0x4));
 				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0));
+				C_PTP (ptp_sony_9281(params, 0x4));
 			}
 			break;
 		}
