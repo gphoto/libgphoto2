@@ -460,6 +460,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 #endif
 	}
 
+	/* Mostly for PTP/IP mode */
+	if (di->VendorExtensionID == PTP_VENDOR_MTP && di->Manufacturer && !strcmp(di->Manufacturer,"Sony Corporation")) {
+		di->VendorExtensionID = PTP_VENDOR_SONY;
+	}
+
 	/* Sony DSLR also hide its newer opcodes behind another vendor specific query,
 	 * do that and merge it into the generic PTP deviceinfo. */
 	if (di->VendorExtensionID == PTP_VENDOR_SONY) {
