@@ -2969,7 +2969,7 @@ uint16_t ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
-uint16_t ptp_sony_9280 (PTPParams* params, uint32_t param1, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4);
+uint16_t ptp_sony_9280 (PTPParams* params, uint32_t additional, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint8_t x, uint8_t y);
 uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
 /**
  * ptp_nikon_deletewifiprofile:

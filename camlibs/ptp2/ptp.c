@@ -2909,20 +2909,27 @@ ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 
 uint16_t
 ptp_sony_9280 (PTPParams* params, uint32_t param1,
-	uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4)
+	uint32_t additional, uint32_t data2, uint32_t data3, uint32_t data4, uint8_t x, uint8_t y)
 {
 	PTPContainer	ptp;
-	unsigned char 	buf[16];
+	unsigned char 	buf[18];
 	unsigned char	*buffer;
 
 	PTP_CNT_INIT(ptp, 0x9280, param1);
 
-	htod32a(&buf[0], data1);
+	if ((additional != 0) && (additional != 2))
+		return PTP_RC_GeneralError;
+
+	htod32a(&buf[0], additional);
 	htod32a(&buf[4], data2);
 	htod32a(&buf[8], data3);
 	htod32a(&buf[12], data4);
+
+	/* only sent in the case where additional is 2 */
+	buf[15]= x; buf[16]= y;
+
 	buffer=buf;
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(buf), &buffer, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16+additional, &buffer, NULL);
 }
 
 uint16_t

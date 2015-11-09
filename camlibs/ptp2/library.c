@@ -2290,8 +2290,7 @@ camera_exit (Camera *camera, GPContext *context)
 			break;
 		case PTP_VENDOR_SONY:
 			if (ptp_operation_issupported(params, 0x9280)) {
-				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0));
-				C_PTP (ptp_sony_9281(params, 0x4));
+				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
 			}
 			break;
 		}
@@ -7476,6 +7475,7 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	case PTP_VENDOR_SONY:
 		if (ptp_operation_issupported(params, 0x9280)) {
+#if 0
 			C_PTP (ptp_sony_9280(params, 0x1,0,1,0,0));
 			C_PTP (ptp_sony_9281(params, 0x1));	/* no data sent back */
 
@@ -7484,15 +7484,13 @@ camera_init (Camera *camera, GPContext *context)
 
 			C_PTP (ptp_sony_9280(params, 0x4,0,1,0,0));
 			C_PTP (ptp_sony_9281(params, 0x4));	/* gets big data blob? */
-
-			/* tries this multiple times , but gets back 2006 error 
+			/* also tries this multiple times , but gets back 2006 error 
 			ptp_sony_9280(params, 0x5,0,1,0,0); 
 			*/
-			/* also sends at one point:
-
-			C_PTP (ptp_sony_9280(params, 0x4,2,2,0,0, 0x01,0x01));
-			(18 byte datablob instead of 16)
-			*/
+#endif
+			/* This combination seems to reportedly work */
+			C_PTP (ptp_sony_9280(params, 0x4, 2,2,0,0, 0x01,0x01));
+			C_PTP (ptp_sony_9281(params, 0x4));
 		}
 		break;
 	default:
