@@ -5795,6 +5795,41 @@ _put_OpenCapture(CONFIG_PUT_ARGS)
 	return GP_OK;
 }
 
+static int
+_get_Sony_Bulb(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Sony_Bulb(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val;
+	PTPPropertyValue xpropval;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		xpropval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &xpropval, PTP_DTC_UINT16));
+
+		xpropval.u16 = 2;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &xpropval, PTP_DTC_UINT16));
+	} else {
+		xpropval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C2, &xpropval, PTP_DTC_UINT16));
+
+		xpropval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &xpropval, PTP_DTC_UINT16));
+	}
+	return GP_OK;
+}
+
 
 static int
 _get_Canon_EOS_Bulb(CONFIG_GET_ARGS) {
@@ -6484,6 +6519,7 @@ static struct submenu camera_actions_menu[] = {
 
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
+	{ N_("Bulb Mode"),                      "bulb",             0xd2c1,  PTP_VENDOR_SONY,   0,                              _get_Sony_Bulb,                 _put_Sony_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
