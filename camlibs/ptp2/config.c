@@ -3535,12 +3535,16 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	x = dpd->CurrentValue.u32>>16;
-	y = dpd->CurrentValue.u32&0xffff;
-	if (y == 1)
-		sprintf (buf, "%d",x);
-	else
-		sprintf (buf, "%d/%d",x,y);
+	if (dpd->CurrentValue.u32 == 0xffffffff) {
+		strcpy(buf,_("Bulb"));
+	} else {
+		x = dpd->CurrentValue.u32>>16;
+		y = dpd->CurrentValue.u32&0xffff;
+		if (y == 1)
+			sprintf (buf, "%d",x);
+		else
+			sprintf (buf, "%d/%d",x,y);
+	}
 	gp_widget_set_value (*widget, buf);
 	return GP_OK;
 }
@@ -3557,6 +3561,11 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	time_t			start,end;
 
 	CR (gp_widget_get_value (widget, &val));
+
+	if (!strcmp(val,_("Bulb"))) {
+		propval->u32 = 0xffffffff;
+		return GP_OK;
+	}
 
 	x = dpd->CurrentValue.u32>>16;
 	y = dpd->CurrentValue.u32&0xffff;
