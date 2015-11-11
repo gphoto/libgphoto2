@@ -3535,7 +3535,7 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	if (dpd->CurrentValue.u32 == 0xffffffff) {
+	if (dpd->CurrentValue.u32 == 0) {
 		strcpy(buf,_("Bulb"));
 	} else {
 		x = dpd->CurrentValue.u32>>16;
@@ -3562,23 +3562,23 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 	CR (gp_widget_get_value (widget, &val));
 
-	if (!strcmp(val,_("Bulb"))) {
-		propval->u32 = 0xffffffff;
-		return GP_OK;
-	}
-
 	x = dpd->CurrentValue.u32>>16;
 	y = dpd->CurrentValue.u32&0xffff;
 	old = ((float)x)/(float)y;
 
-	if (2!=sscanf(val, "%d/%d", &x, &y)) {
-		if (1==sscanf(val,"%d", &x)) {
-			y = 1;
-		} else {
-			return GP_ERROR_BAD_PARAMETERS;
+	if (!strcmp(val,_("Bulb"))) {
+		new32 = 0;
+		x = 65536; y = 1;
+	} else {
+		if (2!=sscanf(val, "%d/%d", &x, &y)) {
+			if (1==sscanf(val,"%d", &x)) {
+				y = 1;
+			} else {
+				return GP_ERROR_BAD_PARAMETERS;
+			}
 		}
+		new32 = (x<<16)|y;
 	}
-	new32 = (x<<16)|y;
 	new = ((float)x)/(float)y;
 	do {
 		origval = dpd->CurrentValue.u32;
@@ -3623,7 +3623,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			GP_LOG_D ("Value matched!");
 			break;
 		}
-		if (a*y == b*x) {
+		if ((a*y != 0) && (a*y == b*x)) {
 			GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
 			break;
 		}
