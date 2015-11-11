@@ -2926,7 +2926,7 @@ ptp_sony_9280 (PTPParams* params, uint32_t param1,
 	htod32a(&buf[12], data4);
 
 	/* only sent in the case where additional is 2 */
-	buf[15]= x; buf[16]= y;
+	buf[16]= x; buf[17]= y;
 
 	buffer=buf;
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16+additional, &buffer, NULL);
