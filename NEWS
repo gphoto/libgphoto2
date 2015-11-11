@@ -8,6 +8,7 @@ ptp2:
 * Canon EOS: fixed a timeout bug on wait_event
 * Canon EOS: report protection status correctly
 * Canon EOS: unlock the ui on close
+* Sony: bulb mode support (in manual mode, shutterspeed and bulb option)
 * Hook up PTP OpenCapture opcode
 * Nikon J5 support. Nikon now hides prop and opcodes even differently.
 * Added USB IDs:
