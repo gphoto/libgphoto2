@@ -473,9 +473,6 @@ _close_async_interrupts(GPPort *port)
 static int
 gp_libusb1_close (GPPort *port)
 {
-	int i, haveone;
-	struct timeval tv;
-
 	C_PARAMS (port);
 
 	if (port->pl->dh == NULL)
