@@ -432,7 +432,7 @@ gp_libusb1_open (GPPort *port)
 }
 
 static int
-gp_libusb1_close (GPPort *port)
+_close_async_interrupts(GPPort *port)
 {
 	int i, haveone;
 	struct timeval tv;
@@ -467,7 +467,21 @@ gp_libusb1_close (GPPort *port)
 	}
 	if (haveone)
 		LOG_ON_LIBUSB_E (libusb_handle_events(port->pl->ctx));
+	return GP_OK;
+}
 
+static int
+gp_libusb1_close (GPPort *port)
+{
+	int i, haveone;
+	struct timeval tv;
+
+	C_PARAMS (port);
+
+	if (port->pl->dh == NULL)
+		return GP_OK;
+
+	_close_async_interrupts(port);
 
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
@@ -565,6 +579,9 @@ static int
 gp_libusb1_reset(GPPort *port)
 {
 	C_PARAMS (port && port->pl->dh);
+
+	/* earlier libusb 1 versions get crashes otherwise */
+	_close_async_interrupts(port);
 
 	C_LIBUSB (libusb_reset_device (port->pl->dh), GP_ERROR_IO);
 
