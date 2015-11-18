@@ -4532,7 +4532,8 @@ static struct deviceproptableu8 nikon_1_compression[] = {
 	{ N_("JPEG Fine"),	0x01, PTP_VENDOR_NIKON },
 	{ N_("JPEG Basic"),	0x02, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x03, PTP_VENDOR_NIKON },
-	{ N_("NEF (Raw)"),	0x06, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),	0x04, PTP_VENDOR_NIKON }, /* for j5 */
+	{ N_("NEF (Raw)"),	0x06, PTP_VENDOR_NIKON }, /* for j3 */
 };
 GENERIC8TABLE(Nikon_1_Compression,nikon_1_compression)
 

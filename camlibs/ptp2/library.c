@@ -448,7 +448,23 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				free (xprops);
 			}
 		}
-
+		/* For nikon 1 j5, they have blanked this space */
+		if (camera->pl->params.device_flags & PTP_NIKON_1) {
+			for (i=0;i<di->DevicePropertiesSupported_len;i++)
+				if ((di->DevicePropertiesSupported[i] & 0xf000) == 0xf000)
+					break;
+			/* The J5 so far goes up to 0xf01c */
+#define NIKON_1_ADDITIONAL_DEVPROPS 29
+			if (i==di->DevicePropertiesSupported_len) {
+				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + NIKON_1_ADDITIONAL_DEVPROPS));
+				if (!di->DevicePropertiesSupported) {
+					C_MEM (di->DevicePropertiesSupported);
+				}
+				for (i=0;i<NIKON_1_ADDITIONAL_DEVPROPS;i++)
+					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xf000 | i;
+				di->DevicePropertiesSupported_len += NIKON_1_ADDITIONAL_DEVPROPS;
+			}
+		}
 
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
