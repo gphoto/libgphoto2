@@ -5650,6 +5650,52 @@ _put_PowerDown(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Generic_OPCode(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	gp_widget_set_value  (*widget, "0x1001,0xparam1,0xparam2");
+	return GP_OK;
+}
+
+static int
+_put_Generic_OPCode(CONFIG_PUT_ARGS)
+{
+	PTPParams		*params = &(camera->pl->params);
+	char			*val, *x;
+	int			opcode;
+	int			nparams;
+	uint32_t		xparams[5];
+	uint16_t		ret;
+	PTPContainer		ptp;
+
+	CR (gp_widget_get_value(widget, &val));
+
+	if (!sscanf(val,"0x%x", &opcode))
+		return GP_ERROR_BAD_PARAMETERS;
+	nparams = 0; x = val;
+	while ((x = strchr(x,',')) && (nparams<5)) {
+		if (!sscanf(val,"0x%x", &xparams[nparams]))
+			return GP_ERROR_BAD_PARAMETERS;
+		nparams++;
+	}
+	ptp.Code = opcode;
+	ptp.Nparam = nparams;
+	ptp.Param1 = xparams[0];
+	ptp.Param2 = xparams[1];
+	ptp.Param3 = xparams[2];
+	ptp.Param4 = xparams[3];
+	ptp.Param5 = xparams[4];
+
+	/* FIXME: handle in data */
+
+	ret = ptp_transaction (params, &ptp, 0, 0, NULL, NULL);
+
+	/* FIXME: handle out data (store locally?) */
+
+	return translate_ptp_result (ret);
+}
+
+static int
 _get_Sony_Movie(CONFIG_GET_ARGS) {
 	int val;
 
@@ -6540,6 +6586,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  0,                  PTP_OC_InitiateOpenCapture,         _get_OpenCapture,               _put_OpenCapture },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartMovieRecInCard,   _get_Nikon_Movie,               _put_Nikon_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIOConnect,            _get_Sony_Movie,                _put_Sony_Movie },
+	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
 };
 
