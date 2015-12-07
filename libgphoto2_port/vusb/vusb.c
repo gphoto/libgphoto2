@@ -259,6 +259,9 @@ static int
 gp_port_vusb_find_device_by_class_lib(GPPort *port, int class, int subclass, int protocol)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%02x,0x%02x,0x%02x)", class, subclass, protocol);
+
+	if ((class == 6) && (subclass == 1) && (protocol == 1))
+		return GP_OK;
         return GP_ERROR_IO_USB_FIND;
 }
 
