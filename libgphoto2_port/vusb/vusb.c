@@ -24,6 +24,8 @@
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 
+#include "vcamera.h"
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -62,6 +64,7 @@
 
 struct _GPPortPrivateLibrary {
 	int	isopen;
+	vcamera	*vcamera;
 };
 
 GPPortType
@@ -90,6 +93,9 @@ static int gp_port_vusb_init (GPPort *dev)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	C_MEM (dev->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
+	dev->pl->vcamera = vcamera_new();
+	dev->pl->vcamera->init(dev->pl->vcamera);
+
 	return GP_OK;
 }
 
@@ -97,8 +103,11 @@ static int
 gp_port_vusb_exit (GPPort *port)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	port->pl->vcamera->exit(port->pl->vcamera);
+	free (port->pl->vcamera);
 	free (port->pl);
 	port->pl = NULL;
+
 
 	return GP_OK;
 }
@@ -109,6 +118,7 @@ gp_port_vusb_open (GPPort *port)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	if (port->pl->isopen)
 		return GP_ERROR;
+	port->pl->vcamera->open(port->pl->vcamera);
 	port->pl->isopen = 1;
 	return GP_OK;
 }
@@ -119,6 +129,7 @@ gp_port_vusb_close (GPPort *port)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	if (!port->pl->isopen)
 		return GP_ERROR;
+	port->pl->vcamera->close(port->pl->vcamera);
 	port->pl->isopen = 0;
 	return GP_OK;
 }

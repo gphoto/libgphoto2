@@ -23,8 +23,13 @@
 #define __VCAMERA_H__
 
 typedef struct vcamera {
+	int (*init)(struct vcamera*);
+	int (*exit)(struct vcamera*);
 	int (*open)(struct vcamera*);
 	int (*close)(struct vcamera*);
+
+	int (*read)(struct vcamera*,  int ep, char *data, int bytes);
+	int (*write)(struct vcamera*, int ep, char *data, int bytes);
 } vcamera;
 
 vcamera *vcamera_new(void);

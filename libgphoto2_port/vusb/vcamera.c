@@ -60,7 +60,42 @@
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
+static int vcam_init(vcamera*c) {
+	return GP_OK;
+}
+static int vcam_exit(vcamera*c) {
+	return GP_OK;
+}
+
+static int vcam_open(vcamera*c) {
+	return GP_OK;
+}
+static int vcam_close(vcamera*c) {
+	return GP_OK;
+}
+
+static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
+	return bytes;
+}
+
+static int vcam_write(vcamera*cam, int ep, char *data, int bytes) {
+	return bytes;
+}
+
 vcamera*
 vcamera_new(void) {
-	return calloc(sizeof(vcamera),1);
+	vcamera *cam;
+
+	cam = calloc(sizeof(vcamera),1);
+	if (!cam) return NULL;
+
+	cam->init = vcam_init;
+	cam->exit = vcam_exit;
+	cam->open = vcam_open;
+	cam->close = vcam_close;
+
+	cam->read = vcam_read;
+	cam->write = vcam_write;
+
+	return cam;
 }
