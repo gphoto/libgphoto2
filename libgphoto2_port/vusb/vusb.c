@@ -271,8 +271,17 @@ gp_port_vusb_find_device_by_class_lib(GPPort *port, int class, int subclass, int
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%02x,0x%02x,0x%02x)", class, subclass, protocol);
 
-	if ((class == 6) && (subclass == 1) && (protocol == 1))
+	if ((class == 6) && (subclass == 1) && (protocol == 1)) {
+                port->settings.usb.config	= 1;
+                port->settings.usb.interface	= 1;
+                port->settings.usb.altsetting	= 1;
+
+                port->settings.usb.inep  = 0x81;
+                port->settings.usb.outep = 0x02;
+                port->settings.usb.intep = 0x83;
+                port->settings.usb.maxpacketsize = 512;
 		return GP_OK;
+	}
         return GP_ERROR_IO_USB_FIND;
 }
 

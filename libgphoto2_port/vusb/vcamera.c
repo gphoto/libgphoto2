@@ -60,25 +60,50 @@
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
-static int vcam_init(vcamera*c) {
-	return GP_OK;
-}
-static int vcam_exit(vcamera*c) {
+static int vcam_init(vcamera* cam) {
 	return GP_OK;
 }
 
-static int vcam_open(vcamera*c) {
+static int vcam_exit(vcamera* cam) {
 	return GP_OK;
 }
-static int vcam_close(vcamera*c) {
+
+static int vcam_open(vcamera* cam) {
 	return GP_OK;
+}
+
+static int vcam_close(vcamera* cam) {
+	return GP_OK;
+}
+
+static
+vcam_process_input(vcamera *cam) {
 }
 
 static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
-	return bytes;
+	int	toread = bytes;
+
+	/* Read stuff to buffer */
+	if (cam->nrinbulk > toread)
+		toread = cam->nrinbulk;
+	memcpy(data, cam->inbulk, toread);
+	memmove(cam->inbulk + toread, cam->inbulk, (cam->nrinbulk - toread));
+	cam->nrinbulk -= toread;
+	return toread;
 }
 
 static int vcam_write(vcamera*cam, int ep, char *data, int bytes) {
+	/* push stuff to buffer */
+	if (!cam->outbulk) {
+		cam->outbulk = malloc(bytes);
+	} else {
+		cam->outbulk = realloc(cam->outbulk,cam->nroutbulk + bytes);
+	}
+	memcpy(cam->outbulk + cam->nroutbulk, data, bytes);
+	cam->nroutbulk += bytes;
+
+	vcam_process_input(cam);
+
 	return bytes;
 }
 

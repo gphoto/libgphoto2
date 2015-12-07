@@ -30,6 +30,11 @@ typedef struct vcamera {
 
 	int (*read)(struct vcamera*,  int ep, char *data, int bytes);
 	int (*write)(struct vcamera*, int ep, char *data, int bytes);
+
+	char	*inbulk;
+	int	nrinbulk;
+	char	*outbulk;
+	int	nroutbulk;
 } vcamera;
 
 vcamera *vcamera_new(void);
