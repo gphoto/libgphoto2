@@ -1,0 +1,13 @@
+# -*- Makefile -*-
+
+EXTRA_LTLIBRARIES += vusb.la
+
+vusb_la_LDFLAGS = $(iolib_ldflags)
+vusb_la_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	$(INTL_CFLAGS) \
+	$(CPPFLAGS)
+vusb_la_DEPENDENCIES = $(iolib_dependencies)
+vusb_la_LIBADD = $(iolib_libadd)
+vusb_la_LIBADD += $(INTLLIBS)
+vusb_la_SOURCES = vusb/vusb.c

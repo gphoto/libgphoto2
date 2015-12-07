@@ -401,6 +401,8 @@ if test "x$enable_ptpip" = "xyes"; then
 	IOLIB_LIST="$IOLIB_LIST ptpip"
 fi
 
+IOLIB_LIST="$IOLIB_LIST vusb"
+
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
 # ----------------------------------------------------------------------

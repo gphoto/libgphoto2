@@ -55,6 +55,7 @@ include usb/Makefile-files
 include libusb1/Makefile-files
 include usbdiskdirect/Makefile-files
 include usbscsi/Makefile-files
+include vusb/Makefile-files
 
 
 ########################################################################
