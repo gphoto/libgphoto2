@@ -32,6 +32,7 @@
 #include <sys/param.h>
 #endif
 #include <string.h>
+#include <stdint.h>
 
 #include "vcamera.h"
 
@@ -76,8 +77,23 @@ static int vcam_close(vcamera* cam) {
 	return GP_OK;
 }
 
-static
-vcam_process_input(vcamera *cam) {
+static uint32_t get_32bit_le(unsigned char *data) {
+	return	data[0]	| (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
+}
+static uint16_t get_16bit_le(unsigned char *data) {
+	return	data[0]	| (data[1] << 8);
+}
+
+static void
+vcam_process_output(vcamera *cam) {
+	int size;
+	if (cam->nroutbulk < 4)
+		return;
+	size = get_32bit_le(cam->outbulk);
+	if (size > cam->nroutbulk)
+		return;
+	/* ptp:  4 byte size, 2 byte opcode, 2 byte type, 4 byte serial number */
+
 }
 
 static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
@@ -102,7 +118,7 @@ static int vcam_write(vcamera*cam, int ep, char *data, int bytes) {
 	memcpy(cam->outbulk + cam->nroutbulk, data, bytes);
 	cam->nroutbulk += bytes;
 
-	vcam_process_input(cam);
+	vcam_process_output(cam);
 
 	return bytes;
 }
