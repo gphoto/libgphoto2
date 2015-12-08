@@ -81,6 +81,14 @@ static void put_16bit_le(unsigned char *data, uint16_t x) {
 	data[1] = (x>>8) & 0xff;
 }
 
+static int put_string(unsigned char *data, char *x) {
+	if (strlen(x)>255)
+		gp_log(GP_LOG_ERROR,"put_string", "string length is longer than 255 characters");
+	data[0] = strlen(x);
+	memcpy(data+1,x,strlen(x));
+	return strlen(x)+1;
+}
+
 static void
 ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	unsigned char	*offset;
@@ -101,24 +109,67 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	cam->seqnr++;
 }
 
-#define PTP_RC_OK 		0x2001
-#define PTP_RC_GeneralError 	0x2002
-#define PTP_RC_InvalidParameter	0x201d
+#define PTP_RC_OK 			0x2001
+#define PTP_RC_GeneralError 		0x2002
+#define PTP_RC_InvalidParameter		0x201D
+#define PTP_RC_SessionAlreadyOpened     0x201E
+
+#define CHECK_PARAM_COUNT(x)											\
+	if (ptp->nparams != x) {										\
+		gp_log (GP_LOG_ERROR,"ptp_deviceinfo_write","params should be %d, but is %d", x, ptp->nparams);	\
+		ptp_response(cam, PTP_RC_GeneralError, 0);							\
+		return 1;											\
+	}
+
+#define CHECK_SEQUENCE_NUMBER()											\
+	if (ptp->seqnr != cam->seqnr) {										\
+		/* not clear if normal cameras react like this */						\
+		gp_log (GP_LOG_ERROR,"vcam_process_output", "seqnr %d was sent, expected was %d", ptp.seqnr, cam->seqnr);\
+		ptp_response(cam,PTP_RC_GeneralError,0);							\
+		return;												\
+	}\
 
 static int
 ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
-	if (ptp->nparams != 1) {
-		gp_log (GP_LOG_ERROR,"ptp_opensession_write","params should be 1, is %d", ptp->nparams);
-		ptp_response(cam, PTP_RC_GeneralError, 0);
-		return 1;
-	}
+	CHECK_PARAM_COUNT(1);
+
 	if (ptp->params[0] == 0) {
 		gp_log (GP_LOG_ERROR,"ptp_opensession_write","session must not be 0, is %d", ptp->params[0]);
 		ptp_response(cam, PTP_RC_InvalidParameter, 0);
 		return 1;
 	}
+	if (cam->session) {
+		gp_log (GP_LOG_ERROR,"ptp_opensession_write","session is already open");
+		ptp_response(cam, PTP_RC_SessionAlreadyOpened, 0);
+		return 1;
+	}
 	cam->session = ptp->params[0];
 	ptp_response(cam,PTP_RC_OK,0);
+	return 1;
+}
+
+static int
+ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char *data;
+	int	x;
+	CHECK_PARAM_COUNT(0);
+
+	/* Session does not need to be open for GetDeviceInfo */
+
+	/* Getdeviceinfo is special. it can be called with transid 0 outside of the session. */
+	if ((ptp->seqnr != 0) && (ptp->seqnr != cam->seqnr)) {
+		/* not clear if normal cameras react like this */						\
+		gp_log (GP_LOG_ERROR,"vcam_process_output", "seqnr %d was sent, expected was %d", ptp->seqnr, cam->seqnr);\
+		ptp_response(cam,PTP_RC_GeneralError,0);							\
+		return 1;
+	}
+	data = malloc(2000);
+
+	put_16bit_le(data+0,100);	/* StandardVersion */
+	put_32bit_le(data+2,0);		/* VendorExtensionID */
+	put_16bit_le(data+6,0);		/* VendorExtensionVersion */
+	x = 6 + put_string(data+6,"Marcus: 1.0,");
+
 	return 1;
 }
 
@@ -127,6 +178,7 @@ struct ptp_function {
 	int	(*write)(vcamera *cam, ptpcontainer *ptp);
 } ptp_functions[] = {
 	{0x1002,	ptp_opensession_write },
+	{0x1001,	ptp_deviceinfo_write },
 };
 
 static int vcam_init(vcamera* cam) {
@@ -205,14 +257,6 @@ vcam_process_output(vcamera *cam) {
 	ptp.nparams = (ptp.size - 12)/4;
 	for (i=0;i<ptp.nparams;i++)
 		ptp.params[i] = get_32bit_le(cam->outbulk+12+i*4);
-	if (ptp.seqnr != cam->seqnr) {
-		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "seqnr %d was sent, expected was %d", ptp.seqnr, cam->seqnr);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
-		cam->nroutbulk -= ptp.size;
-		return;
-	}
 
 	cam->nroutbulk -= ptp.size;
 
