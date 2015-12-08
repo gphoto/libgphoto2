@@ -97,6 +97,8 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	put_16bit_le(offset+6,code);
 	put_32bit_le(offset+8,cam->seqnr);
 	/* FIXME: put params */
+
+	cam->seqnr++;
 }
 
 #define PTP_RC_OK 		0x2001
@@ -108,16 +110,15 @@ ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
 	if (ptp->nparams != 1) {
 		gp_log (GP_LOG_ERROR,"ptp_opensession_write","params should be 1, is %d", ptp->nparams);
 		ptp_response(cam, PTP_RC_GeneralError, 0);
-		return 0;
+		return 1;
 	}
 	if (ptp->params[0] == 0) {
 		gp_log (GP_LOG_ERROR,"ptp_opensession_write","session must not be 0, is %d", ptp->params[0]);
 		ptp_response(cam, PTP_RC_InvalidParameter, 0);
-		return 0;
+		return 1;
 	}
 	cam->session = ptp->params[0];
 	ptp_response(cam,PTP_RC_OK,0);
-	cam->seqnr++;
 	return 1;
 }
 
@@ -203,7 +204,15 @@ vcam_process_output(vcamera *cam) {
 	}
 	ptp.nparams = (ptp.size - 12)/4;
 	for (i=0;i<ptp.nparams;i++)
-		ptp.params[i] = ptp.seqnr = get_32bit_le(cam->outbulk+12+i*4);
+		ptp.params[i] = get_32bit_le(cam->outbulk+12+i*4);
+	if (ptp.seqnr != cam->seqnr) {
+		/* not clear if normal cameras react like this */
+		gp_log (GP_LOG_ERROR,"vcam_process_output", "seqnr %d was sent, expected was %d", ptp.seqnr, cam->seqnr);
+		ptp_response(cam,PTP_RC_GeneralError,0);
+		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
+		cam->nroutbulk -= ptp.size;
+		return;
+	}
 
 	cam->nroutbulk -= ptp.size;
 
@@ -257,6 +266,8 @@ vcamera_new(void) {
 
 	cam->read = vcam_read;
 	cam->write = vcam_write;
+
+	cam->seqnr = 0;
 
 	return cam;
 }
