@@ -22,6 +22,15 @@
 #ifndef __VCAMERA_H__
 #define __VCAMERA_H__
 
+typedef struct ptpcontainer {
+	unsigned int size;
+	unsigned int type;
+	unsigned int code;
+	unsigned int seqnr;
+	unsigned int nparams;
+	unsigned int params[6];
+} ptpcontainer;
+
 typedef struct vcamera {
 	int (*init)(struct vcamera*);
 	int (*exit)(struct vcamera*);
@@ -29,12 +38,16 @@ typedef struct vcamera {
 	int (*close)(struct vcamera*);
 
 	int (*read)(struct vcamera*,  int ep, char *data, int bytes);
-	int (*write)(struct vcamera*, int ep, char *data, int bytes);
+	int (*write)(struct vcamera*, int ep, const char *data, int bytes);
 
 	unsigned char	*inbulk;
 	int		nrinbulk;
 	unsigned char	*outbulk;
 	int		nroutbulk;
+
+	unsigned int	seqnr;
+
+	unsigned int	session;
 } vcamera;
 
 vcamera *vcamera_new(void);

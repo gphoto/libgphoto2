@@ -105,6 +105,7 @@ gp_port_vusb_exit (GPPort *port)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	port->pl->vcamera->exit(port->pl->vcamera);
 	free (port->pl->vcamera);
+	port->pl->vcamera = NULL;
 	free (port->pl);
 	port->pl = NULL;
 
@@ -138,14 +139,16 @@ static int
 gp_port_vusb_write (GPPort *port, const char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        return GP_OK;
+
+	C_PARAMS (port && port->pl && port->pl->vcamera);
+	return port->pl->vcamera->write(port->pl->vcamera, 0x02, bytes, size);
 }
 
 static int
 gp_port_vusb_read(GPPort *port, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        return GP_OK;
+	return port->pl->vcamera->read(port->pl->vcamera, 0x81, bytes, size);
 }
 
 static int
