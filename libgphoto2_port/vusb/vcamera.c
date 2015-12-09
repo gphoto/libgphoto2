@@ -147,8 +147,10 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 
 #define PTP_RC_OK 			0x2001
 #define PTP_RC_GeneralError 		0x2002
+#define PTP_RC_SessionNotOpen           0x2003
 #define PTP_RC_InvalidParameter		0x201D
 #define PTP_RC_SessionAlreadyOpened     0x201E
+
 
 #define CHECK_PARAM_COUNT(x)											\
 	if (ptp->nparams != x) {										\
@@ -185,10 +187,25 @@ ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
 }
 
 static int
+ptp_closesession_write(vcamera *cam, ptpcontainer *ptp) {
+	CHECK_PARAM_COUNT(0);
+
+	if (!cam->session) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__,"session is not open");
+		ptp_response(cam, PTP_RC_SessionAlreadyOpened, 0);
+		return 1;
+	}
+	cam->session = 0;
+	ptp_response(cam,PTP_RC_OK,0);
+	return 1;
+}
+
+
+static int
 ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char	*data;
 	int		x = 0;
-	uint16_t	opcodes[2];
+	uint16_t	opcodes[3];
 
 	CHECK_PARAM_COUNT(0);
 
@@ -211,7 +228,8 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 
 	opcodes[0] = 0x1001;
 	opcodes[1] = 0x1002;
-	x += put_16bit_le_array(data+x,opcodes,2);	/* OperationsSupported */
+	opcodes[2] = 0x1003;
+	x += put_16bit_le_array(data+x,opcodes,3);	/* OperationsSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* EventsSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* DevicePropertiesSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* CaptureFormats */
@@ -223,7 +241,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_string(data+x,"1");			/* SerialNumber */
 
 	ptp_senddata(cam,0x1001,data,x);
-	ptp_response(cam,0x2001,0);
+	ptp_response(cam,PTP_RC_OK,0);
 	return 1;
 }
 
@@ -231,8 +249,9 @@ struct ptp_function {
 	int	code;
 	int	(*write)(vcamera *cam, ptpcontainer *ptp);
 } ptp_functions[] = {
-	{0x1002,	ptp_opensession_write },
 	{0x1001,	ptp_deviceinfo_write },
+	{0x1002,	ptp_opensession_write },
+	{0x1003,	ptp_closesession_write },
 };
 
 static int vcam_init(vcamera* cam) {
