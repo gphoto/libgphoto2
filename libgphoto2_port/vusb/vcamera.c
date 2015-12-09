@@ -69,6 +69,18 @@ static uint16_t get_16bit_le(unsigned char *data) {
 	return	data[0]	| (data[1] << 8);
 }
 
+static int put_64bit_le(unsigned char *data, uint64_t x) {
+	data[0] = x & 0xff;
+	data[1] = (x>>8) & 0xff;
+	data[2] = (x>>16) & 0xff;
+	data[3] = (x>>24) & 0xff;
+	data[4] = (x>>32) & 0xff;
+	data[5] = (x>>40) & 0xff;
+	data[6] = (x>>48) & 0xff;
+	data[7] = (x>>56) & 0xff;
+	return 8;
+}
+
 static int put_32bit_le(unsigned char *data, uint32_t x) {
 	data[0] = x & 0xff;
 	data[1] = (x>>8) & 0xff;
@@ -105,6 +117,15 @@ static int put_16bit_le_array(unsigned char *data, uint16_t *arr, int cnt) {
 	return x;
 }
 
+static int put_32bit_le_array(unsigned char *data, uint32_t *arr, int cnt) {
+	int x = 0, i;
+
+	x += put_32bit_le (data,cnt);
+	for (i=0;i<cnt;i++)
+		x += put_32bit_le (data+x, arr[i]);
+	return x;
+}
+
 static void
 ptp_senddata(vcamera *cam, uint16_t code, unsigned char *data, int bytes) {
 	unsigned char	*offset;
@@ -124,6 +145,7 @@ ptp_senddata(vcamera *cam, uint16_t code, unsigned char *data, int bytes) {
 	put_32bit_le(offset+8,cam->seqnr);
 	memcpy(offset+12,data,bytes);
 }
+
 static void
 ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	unsigned char	*offset;
@@ -148,47 +170,76 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 #define PTP_RC_OK 			0x2001
 #define PTP_RC_GeneralError 		0x2002
 #define PTP_RC_SessionNotOpen           0x2003
+#define PTP_RC_OperationNotSupported    0x2005
+#define PTP_RC_InvalidStorageId         0x2008
 #define PTP_RC_InvalidParameter		0x201D
 #define PTP_RC_SessionAlreadyOpened     0x201E
 
 
 #define CHECK_PARAM_COUNT(x)											\
 	if (ptp->nparams != x) {										\
-		gp_log (GP_LOG_ERROR,"ptp_deviceinfo_write","params should be %d, but is %d", x, ptp->nparams);	\
-		ptp_response(cam, PTP_RC_GeneralError, 0);							\
+		gp_log (GP_LOG_ERROR, __FUNCTION__,"params should be %d, but is %d", x, ptp->nparams);		\
+		ptp_response (cam, PTP_RC_GeneralError, 0);							\
 		return 1;											\
 	}
 
 #define CHECK_SEQUENCE_NUMBER()											\
 	if (ptp->seqnr != cam->seqnr) {										\
 		/* not clear if normal cameras react like this */						\
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "seqnr %d was sent, expected was %d", ptp.seqnr, cam->seqnr);\
-		ptp_response(cam,PTP_RC_GeneralError,0);							\
-		return;												\
-	}\
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "seqnr %d was sent, expected was %d", ptp->seqnr, cam->seqnr);\
+		ptp_response (cam,PTP_RC_GeneralError,0);							\
+		return 1;												\
+	}
+
+#define CHECK_SESSION()								\
+	if (!cam->session) {							\
+		gp_log (GP_LOG_ERROR,__FUNCTION__,"session is not open");	\
+		ptp_response(cam, PTP_RC_SessionNotOpen, 0);			\
+		return 1;							\
+	}
+
+static int ptp_opensession_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_closesession_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getobjecthandles_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
+
+struct ptp_function {
+	int	code;
+	int	(*write)(vcamera *cam, ptpcontainer *ptp);
+} ptp_functions[] = {
+	{0x1001,	ptp_deviceinfo_write		},
+	{0x1002,	ptp_opensession_write		},
+	{0x1003,	ptp_closesession_write		},
+	{0x1004,	ptp_getstorageids_write		},
+	{0x1005,	ptp_getstorageinfo_write	},
+	{0x1007,	ptp_getobjecthandles_write	},
+};
 
 static int
 ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
 	CHECK_PARAM_COUNT(1);
 
 	if (ptp->params[0] == 0) {
-		gp_log (GP_LOG_ERROR,"ptp_opensession_write","session must not be 0, is %d", ptp->params[0]);
-		ptp_response(cam, PTP_RC_InvalidParameter, 0);
+		gp_log (GP_LOG_ERROR,__FUNCTION__,"session must not be 0, is %d", ptp->params[0]);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
 		return 1;
 	}
 	if (cam->session) {
-		gp_log (GP_LOG_ERROR,"ptp_opensession_write","session is already open");
-		ptp_response(cam, PTP_RC_SessionAlreadyOpened, 0);
+		gp_log (GP_LOG_ERROR,__FUNCTION__,"session is already open");
+		ptp_response (cam, PTP_RC_SessionAlreadyOpened, 0);
 		return 1;
 	}
 	cam->session = ptp->params[0];
-	ptp_response(cam,PTP_RC_OK,0);
+	ptp_response (cam,PTP_RC_OK,0);
 	return 1;
 }
 
 static int
 ptp_closesession_write(vcamera *cam, ptpcontainer *ptp) {
 	CHECK_PARAM_COUNT(0);
+	CHECK_SEQUENCE_NUMBER();
 
 	if (!cam->session) {
 		gp_log (GP_LOG_ERROR,__FUNCTION__,"session is not open");
@@ -200,12 +251,11 @@ ptp_closesession_write(vcamera *cam, ptpcontainer *ptp) {
 	return 1;
 }
 
-
 static int
 ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char	*data;
-	int		x = 0;
-	uint16_t	opcodes[3];
+	int		x = 0, i;
+	uint16_t	*opcodes;
 
 	CHECK_PARAM_COUNT(0);
 
@@ -226,10 +276,10 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_string(data+x,"GPhoto-VirtualCamera: 1.0;");	/* VendorExtensionDesc */
 	x += put_16bit_le(data+x,0);		/* FunctionalMode */
 
-	opcodes[0] = 0x1001;
-	opcodes[1] = 0x1002;
-	opcodes[2] = 0x1003;
-	x += put_16bit_le_array(data+x,opcodes,3);	/* OperationsSupported */
+	opcodes = malloc(sizeof(ptp_functions)/sizeof(ptp_functions[0])*sizeof(uint16_t));
+	for (i=0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++)
+		opcodes[i] = ptp_functions[i].code;
+	x += put_16bit_le_array(data+x,opcodes,sizeof(ptp_functions)/sizeof(ptp_functions[0]));	/* OperationsSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* EventsSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* DevicePropertiesSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* CaptureFormats */
@@ -241,18 +291,88 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_string(data+x,"1");			/* SerialNumber */
 
 	ptp_senddata(cam,0x1001,data,x);
+	free (data);
 	ptp_response(cam,PTP_RC_OK,0);
 	return 1;
 }
 
-struct ptp_function {
-	int	code;
-	int	(*write)(vcamera *cam, ptpcontainer *ptp);
-} ptp_functions[] = {
-	{0x1001,	ptp_deviceinfo_write },
-	{0x1002,	ptp_opensession_write },
-	{0x1003,	ptp_closesession_write },
-};
+static int
+ptp_getobjecthandles_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char 	*data;
+	int		x = 0;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+
+	if (ptp->nparams < 1) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "parameter count %d", ptp->nparams);
+		ptp_response(cam,PTP_RC_InvalidParameter,0);
+		return 1;
+	}
+
+	data = malloc(200);
+	x = put_32bit_le_array(data,NULL,0);
+
+	ptp_senddata(cam,0x1007,data,x);
+	free (data);
+	ptp_response(cam,PTP_RC_OK,0);
+	return 1;
+}
+
+static int
+ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char 	*data;
+	int		x = 0;
+	uint32_t	sids[1];
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(0);
+
+	data = malloc(200);
+
+	sids[0] = 0x00010001;
+	x = put_32bit_le_array (data, sids, 1);
+
+	ptp_senddata (cam, 0x1004, data, x);
+	free (data);
+	ptp_response(cam,PTP_RC_OK,0);
+	return 1;
+}
+
+static int
+ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char 	*data;
+	int		x = 0;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	data = malloc(200);
+
+	if (ptp->params[0] != 0x00010001) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid storage id 0x%08x", ptp->params[1]);
+		ptp_response(cam,PTP_RC_InvalidStorageId,0);
+		return 1;
+	}
+
+	x += put_16bit_le (data+x, 3);	/* StorageType: Fixed RAM */
+	x += put_16bit_le (data+x, 3);	/* FileSystemType: Generic Hierarchical */
+	x += put_16bit_le (data+x, 2);	/* AccessCapability: R/O with object deletion */
+	x += put_64bit_le (data+x, 0x42424242);	/* MaxCapacity */
+	x += put_64bit_le (data+x, 0x21212121);	/* FreeSpaceInBytes */
+	x += put_32bit_le (data+x, 1000);	/* FreeSpaceInImages */
+	x += put_string (data+x, "GPhoto Virtual Camera Storage");	/* StorageDescription */
+	x += put_string (data+x, "GPhoto Virtual Camera Storage Label");	/* VolumeLabel */
+
+	ptp_senddata (cam, 0x1005, data, x);
+	free (data);
+	ptp_response(cam,PTP_RC_OK,0);
+	return 1;
+}
+
+/********************************************************************************************/
 
 static int vcam_init(vcamera* cam) {
 	return GP_OK;
@@ -338,9 +458,10 @@ vcam_process_output(vcamera *cam) {
 	for (i=0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++) {
 		if (ptp_functions[i].code == ptp.code) {
 			ptp_functions[i].write(cam,&ptp);
-			break;
+			return;
 		}
 	}
+	ptp_response(cam,PTP_RC_OperationNotSupported,0);
 }
 
 static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
