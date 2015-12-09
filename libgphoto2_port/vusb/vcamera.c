@@ -95,6 +95,11 @@ static int put_16bit_le(unsigned char *data, uint16_t x) {
 	return 2;
 }
 
+static int put_8bit_le(unsigned char *data, uint8_t x) {
+	data[0] = x;
+	return 1;
+}
+
 static int put_string(unsigned char *data, char *str) {
 	int i;
 
@@ -173,6 +178,7 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 #define PTP_RC_OperationNotSupported    		0x2005
 #define PTP_RC_InvalidStorageId				0x2008
 #define PTP_RC_InvalidObjectHandle			0x2009
+#define PTP_RC_DevicePropNotSupported			0x200A
 #define PTP_RC_SpecificationByFormatUnsupported         0x2014
 #define PTP_RC_InvalidParentObject			0x201A
 #define PTP_RC_InvalidParameter				0x201D
@@ -208,8 +214,10 @@ static int ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobject_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
 
-struct ptp_function {
+static struct ptp_function {
 	int	code;
 	int	(*write)(vcamera *cam, ptpcontainer *ptp);
 } ptp_functions[] = {
@@ -221,6 +229,68 @@ struct ptp_function {
 	{0x1007,	ptp_getobjecthandles_write	},
 	{0x1008,	ptp_getobjectinfo_write		},
 	{0x1009,	ptp_getobject_write		},
+	{0x1014,	ptp_getdevicepropdesc_write	},
+	{0x1015,	ptp_getdevicepropvalue_write	},
+};
+
+typedef union _PTPPropertyValue {
+	char            *str;   /* common string, malloced */
+	uint8_t         u8;
+	int8_t          i8;
+	uint16_t        u16;
+	int16_t         i16;
+	uint32_t        u32;
+	int32_t         i32;
+	uint64_t        u64;
+	int64_t         i64;
+	/* XXXX: 128 bit signed and unsigned missing */
+	struct array {
+		uint32_t        count;
+		union _PTPPropertyValue *v;     /* malloced, count elements */
+	} a;
+} PTPPropertyValue;
+
+struct _PTPPropDescRangeForm {
+        PTPPropertyValue        MinimumValue;
+        PTPPropertyValue        MaximumValue;
+        PTPPropertyValue        StepSize;
+};
+typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
+
+/* Property Describing Dataset, Enum Form */
+
+struct _PTPPropDescEnumForm {
+        uint16_t                NumberOfValues;
+        PTPPropertyValue        *SupportedValue;        /* malloced */
+};
+typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
+
+/* Device Property Describing Dataset (DevicePropDesc) */
+
+struct _PTPDevicePropDesc {
+        uint16_t                DevicePropertyCode;
+        uint16_t                DataType;
+        uint8_t                 GetSet;
+        PTPPropertyValue        FactoryDefaultValue;
+        PTPPropertyValue        CurrentValue;
+        uint8_t                 FormFlag;
+        union   {
+                PTPPropDescEnumForm     Enum;
+                PTPPropDescRangeForm    Range;
+        } FORM;
+};
+typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
+
+static int ptp_battery_getdesc(vcamera*,PTPDevicePropDesc*);
+static int ptp_battery_getvalue(vcamera*,PTPPropertyValue*);
+
+static struct ptp_property {
+	int	code;
+	int	(*getdesc )(vcamera *cam, PTPDevicePropDesc*);
+	int	(*getvalue)(vcamera *cam, PTPPropertyValue*);
+	int	(*setvalue)(vcamera *cam, PTPPropertyValue*);
+} ptp_properties[] = {
+	{0x5001,	ptp_battery_getdesc, ptp_battery_getvalue, NULL },
 };
 
 struct ptp_dirent {
@@ -268,6 +338,8 @@ read_directories(char *path, struct ptp_dirent *parent) {
 
 static void
 read_tree(char *path) {
+	if (first_dirent)
+		return;
 	first_dirent = malloc(sizeof(struct ptp_dirent));
 	first_dirent->name = strdup("");
 	first_dirent->fsname = strdup(path);
@@ -314,7 +386,7 @@ static int
 ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char	*data;
 	int		x = 0, i;
-	uint16_t	*opcodes;
+	uint16_t	*opcodes, *devprops;
 	uint16_t	imageformats[1];
 
 	CHECK_PARAM_COUNT(0);
@@ -324,7 +396,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	/* Getdeviceinfo is special. it can be called with transid 0 outside of the session. */
 	if ((ptp->seqnr != 0) && (ptp->seqnr != cam->seqnr)) {
 		/* not clear if normal cameras react like this */						\
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "seqnr %d was sent, expected was %d", ptp->seqnr, cam->seqnr);\
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "seqnr %d was sent, expected was %d", ptp->seqnr, cam->seqnr);\
 		ptp_response(cam,PTP_RC_GeneralError,0);							\
 		return 1;
 	}
@@ -341,7 +413,11 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 		opcodes[i] = ptp_functions[i].code;
 	x += put_16bit_le_array(data+x,opcodes,sizeof(ptp_functions)/sizeof(ptp_functions[0]));	/* OperationsSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* EventsSupported */
-	x += put_16bit_le_array(data+x,NULL,0);		/* DevicePropertiesSupported */
+
+	devprops = malloc(sizeof(ptp_properties)/sizeof(ptp_properties[0])*sizeof(uint16_t));
+	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++)
+		devprops[i] = ptp_properties[i].code;
+	x += put_16bit_le_array(data+x,devprops,sizeof(ptp_properties)/sizeof(ptp_properties[0]));/* DevicePropertiesSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* CaptureFormats */
 
 	imageformats[0] = 0x3801;
@@ -623,6 +699,115 @@ ptp_getobject_write(vcamera *cam, ptpcontainer *ptp) {
 	ptp_senddata (cam, 0x1009, data, cur->stbuf.st_size);
 	free (data);
 	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+static int 
+put_propval (unsigned char *data, uint16_t type, PTPPropertyValue *val) {
+	switch (type) {
+	case 0x1:	return put_8bit_le (data, val->i8);
+	case 0x2:	return put_8bit_le (data, val->u8);
+	default:	gp_log (GP_LOG_ERROR, __FUNCTION__, "unhandled datatype %d", type);
+			return 0;
+	}
+	return 0;
+}
+
+static int
+ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
+	int			i, x = 0;
+	unsigned char		*data;
+	PTPDevicePropDesc	desc;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	for (i=0;i<sizeof (ptp_properties)/sizeof (ptp_properties[0]);i++) {
+		if (ptp_properties[i].code == ptp->params[0])
+			break;
+	}
+	if (i == sizeof (ptp_properties)/sizeof (ptp_properties[0])) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "deviceprop 0x%04x not found", ptp->params[0]);
+		ptp_response (cam, PTP_RC_DevicePropNotSupported, 0);
+		return 1;
+	}
+	data = malloc(2000);
+	ptp_properties[i].getdesc (cam, &desc);
+
+	x += put_16bit_le (data+x, desc.DevicePropertyCode);
+	x += put_16bit_le (data+x, desc.DataType);
+	x += put_8bit_le  (data+x, desc.GetSet);
+	x += put_propval  (data+x, desc.DataType, &desc.FactoryDefaultValue);
+	x += put_propval  (data+x, desc.DataType, &desc.CurrentValue);
+	x += put_8bit_le  (data+x, desc.FormFlag);
+	switch (desc.FormFlag) {
+	case 0:	break;
+	case 1:	/* range */
+		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MinimumValue);
+		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MaximumValue);
+		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.StepSize);
+	case 2:	/* ENUM */;
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "enum not yet handled\n");
+		break;
+	}
+
+	ptp_senddata (cam, 0x1014, data, x);
+	free (data);
+	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+static int
+ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char*		data;
+	int			i, x = 0;
+	PTPPropertyValue	val;
+	PTPDevicePropDesc	desc;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++) {
+		if (ptp_properties[i].code == ptp->params[0])
+			break;
+	}
+	if (i == sizeof (ptp_properties)/sizeof (ptp_properties[0])) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "deviceprop 0x%04x not found", ptp->params[0]);
+		ptp_response (cam, PTP_RC_DevicePropNotSupported, 0);
+		return 1;
+	}
+	data = malloc(2000);
+	ptp_properties[i].getdesc (cam, &desc);
+	ptp_properties[i].getvalue (cam, &val);
+	x = put_propval (data+x, desc.DataType, &val);
+
+	ptp_senddata (cam, 0x1015, data, x);
+	free (data);
+
+	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+/**************************  Properties *****************************************************/
+static int
+ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
+	desc->DevicePropertyCode	= 0x5001;
+	desc->DataType			= 2;	/* uint8 */
+	desc->GetSet			= 0;	/* Get only */
+	desc->FactoryDefaultValue.u8	= 50;
+	desc->CurrentValue.u8		= 50;
+        desc->FormFlag			= 0x01; /* range */
+	desc->FORM.Range.MinimumValue.u8= 0;
+	desc->FORM.Range.MaximumValue.u8= 100;
+	desc->FORM.Range.StepSize.u8	= 1;
+	return 1;
+}
+
+static int
+ptp_battery_getvalue (vcamera* cam, PTPPropertyValue *val) {
+	val->u8 = 50;
 	return 1;
 }
 
