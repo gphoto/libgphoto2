@@ -69,29 +69,65 @@ static uint16_t get_16bit_le(unsigned char *data) {
 	return	data[0]	| (data[1] << 8);
 }
 
-static void put_32bit_le(unsigned char *data, uint32_t x) {
+static int put_32bit_le(unsigned char *data, uint32_t x) {
 	data[0] = x & 0xff;
 	data[1] = (x>>8) & 0xff;
 	data[2] = (x>>16) & 0xff;
 	data[3] = (x>>24) & 0xff;
+	return 4;
 }
 
-static void put_16bit_le(unsigned char *data, uint16_t x) {
+static int put_16bit_le(unsigned char *data, uint16_t x) {
 	data[0] = x & 0xff;
 	data[1] = (x>>8) & 0xff;
+	return 2;
 }
 
-static int put_string(unsigned char *data, char *x) {
-	if (strlen(x)>255)
-		gp_log(GP_LOG_ERROR,"put_string", "string length is longer than 255 characters");
-	data[0] = strlen(x);
-	memcpy(data+1,x,strlen(x));
-	return strlen(x)+1;
+static int put_string(unsigned char *data, char *str) {
+	int i;
+
+	if (strlen(str)>255)
+		gp_log (GP_LOG_ERROR, "put_string", "string length is longer than 255 characters");
+
+	data[0] = strlen (str);
+	for (i=0;i<data[0];i++)
+		put_16bit_le(data+1+2*i,str[i]);
+
+	return 1+strlen(str)*2;
+}
+
+static int put_16bit_le_array(unsigned char *data, uint16_t *arr, int cnt) {
+	int x = 0, i;
+
+	x += put_32bit_le (data,cnt);
+	for (i=0;i<cnt;i++)
+		x += put_16bit_le (data+x, arr[i]);
+	return x;
 }
 
 static void
+ptp_senddata(vcamera *cam, uint16_t code, unsigned char *data, int bytes) {
+	unsigned char	*offset;
+	int size = bytes + 12;
+
+	if (!cam->inbulk) {
+		cam->inbulk = malloc(size);
+	} else {
+		cam->inbulk = realloc(cam->inbulk,cam->nrinbulk+size);
+	}
+	offset = cam->inbulk + cam->nrinbulk;
+	cam->nrinbulk += size;
+
+	put_32bit_le(offset,size);
+	put_16bit_le(offset+4,0x2);
+	put_16bit_le(offset+6,code);
+	put_32bit_le(offset+8,cam->seqnr);
+	memcpy(offset+12,data,bytes);
+}
+static void
 ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	unsigned char	*offset;
+	int 		x = 0;
 
 	if (!cam->inbulk) {
 		cam->inbulk = malloc(12 + nparams*4);
@@ -100,10 +136,10 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	}
 	offset = cam->inbulk + cam->nrinbulk;
 	cam->nrinbulk += 12+nparams*4;
-	put_32bit_le(offset,12+nparams*4);
-	put_16bit_le(offset+4,0x3);
-	put_16bit_le(offset+6,code);
-	put_32bit_le(offset+8,cam->seqnr);
+	x += put_32bit_le(offset+x,12+nparams*4);
+	x += put_16bit_le(offset+x,0x3);
+	x += put_16bit_le(offset+x,code);
+	x += put_32bit_le(offset+x,cam->seqnr);
 	/* FIXME: put params */
 
 	cam->seqnr++;
@@ -150,8 +186,10 @@ ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
 
 static int
 ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
-	unsigned char *data;
-	int	x;
+	unsigned char	*data;
+	int		x = 0;
+	uint16_t	opcodes[2];
+
 	CHECK_PARAM_COUNT(0);
 
 	/* Session does not need to be open for GetDeviceInfo */
@@ -165,11 +203,27 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	}
 	data = malloc(2000);
 
-	put_16bit_le(data+0,100);	/* StandardVersion */
-	put_32bit_le(data+2,0);		/* VendorExtensionID */
-	put_16bit_le(data+6,0);		/* VendorExtensionVersion */
-	x = 6 + put_string(data+6,"Marcus: 1.0,");
+	x += put_16bit_le(data+x,100);		/* StandardVersion */
+	x += put_32bit_le(data+x,0);		/* VendorExtensionID */
+	x += put_16bit_le(data+x,0);		/* VendorExtensionVersion */
+	x += put_string(data+x,"GPhoto-VirtualCamera: 1.0;");	/* VendorExtensionDesc */
+	x += put_16bit_le(data+x,0);		/* FunctionalMode */
 
+	opcodes[0] = 0x1001;
+	opcodes[1] = 0x1002;
+	x += put_16bit_le_array(data+x,opcodes,2);	/* OperationsSupported */
+	x += put_16bit_le_array(data+x,NULL,0);		/* EventsSupported */
+	x += put_16bit_le_array(data+x,NULL,0);		/* DevicePropertiesSupported */
+	x += put_16bit_le_array(data+x,NULL,0);		/* CaptureFormats */
+	x += put_16bit_le_array(data+x,NULL,0);		/* ImageFormats */
+	x += put_string(data+x,"GPhoto");		/* Manufacturer */
+	x += put_string(data+x,"VirtualCamera");	/* Model */
+	x += put_string(data+x,"2.5.9");		/* DeviceVersion */
+	x += put_string(data+x,"0.1");			/* DeviceVersion */
+	x += put_string(data+x,"1");			/* SerialNumber */
+
+	ptp_senddata(cam,0x1001,data,x);
+	ptp_response(cam,0x2001,0);
 	return 1;
 }
 
