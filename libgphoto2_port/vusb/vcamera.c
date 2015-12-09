@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -167,14 +167,16 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	cam->seqnr++;
 }
 
-#define PTP_RC_OK 			0x2001
-#define PTP_RC_GeneralError 		0x2002
-#define PTP_RC_SessionNotOpen           0x2003
-#define PTP_RC_OperationNotSupported    0x2005
-#define PTP_RC_InvalidStorageId         0x2008
-#define PTP_RC_InvalidParameter		0x201D
-#define PTP_RC_SessionAlreadyOpened     0x201E
-
+#define PTP_RC_OK					0x2001
+#define PTP_RC_GeneralError 				0x2002
+#define PTP_RC_SessionNotOpen          		 	0x2003
+#define PTP_RC_OperationNotSupported    		0x2005
+#define PTP_RC_InvalidStorageId				0x2008
+#define PTP_RC_InvalidObjectHandle			0x2009
+#define PTP_RC_SpecificationByFormatUnsupported         0x2014
+#define PTP_RC_InvalidParentObject			0x201A
+#define PTP_RC_InvalidParameter				0x201D
+#define PTP_RC_SessionAlreadyOpened     		0x201E
 
 #define CHECK_PARAM_COUNT(x)											\
 	if (ptp->nparams != x) {										\
@@ -204,6 +206,7 @@ static int ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobjecthandles_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp);
 
 struct ptp_function {
 	int	code;
@@ -215,7 +218,61 @@ struct ptp_function {
 	{0x1004,	ptp_getstorageids_write		},
 	{0x1005,	ptp_getstorageinfo_write	},
 	{0x1007,	ptp_getobjecthandles_write	},
+	{0x1008,	ptp_getobjectinfo_write		},
 };
+
+struct ptp_dirent {
+	uint32_t		id;
+	char 			*name;
+	char 			*fsname;
+	struct stat		stbuf;
+	struct ptp_dirent 	*parent;
+	struct ptp_dirent 	*next;
+};
+
+static struct ptp_dirent *first_dirent = NULL;
+static uint32_t	ptp_objectid = 0;
+
+static void
+read_directories(char *path, struct ptp_dirent *parent) {
+	struct ptp_dirent	*cur;
+	DIR			*dir;
+	struct dirent		*de;
+
+	dir = opendir(path);
+	if (!dir) return;
+	while ((de=readdir(dir))) {
+		if (!strcmp(de->d_name,".")) continue;
+		if (!strcmp(de->d_name,"..")) continue;
+
+		cur = malloc(sizeof(struct ptp_dirent));
+		if (!cur) break;
+		cur->name = strdup(de->d_name);
+		cur->fsname = malloc(strlen(path)+1+strlen(de->d_name)+1);
+		strcpy(cur->fsname,path);
+		strcat(cur->fsname,"/");
+		strcat(cur->fsname,de->d_name);
+		cur->id = ptp_objectid++;
+		cur->next = first_dirent;
+		cur->parent = parent;
+		first_dirent = cur;
+		if (-1 == stat(cur->fsname, &cur->stbuf))
+			continue;
+		if (S_ISDIR(cur->stbuf.st_mode))
+			read_directories(cur->fsname, cur); /* recurse! */
+	}
+	closedir(dir);
+}
+
+static void
+read_tree(char *path) {
+	first_dirent = malloc(sizeof(struct ptp_dirent));
+	first_dirent->name = strdup("");
+	first_dirent->fsname = strdup(path);
+	first_dirent->id = ptp_objectid++;
+	first_dirent->next = NULL;
+	read_directories(path,first_dirent);
+}
 
 static int
 ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
@@ -298,21 +355,93 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 
 static int
 ptp_getobjecthandles_write(vcamera *cam, ptpcontainer *ptp) {
-	unsigned char 	*data;
-	int		x = 0;
+	unsigned char 		*data;
+	int			x = 0, cnt;
+	struct ptp_dirent	*cur;
+	uint32_t		mode = 0;
 
 	CHECK_SEQUENCE_NUMBER();
 	CHECK_SESSION();
 
 	if (ptp->nparams < 1) {
 		gp_log (GP_LOG_ERROR,__FUNCTION__, "parameter count %d", ptp->nparams);
-		ptp_response(cam,PTP_RC_InvalidParameter,0);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
 		return 1;
 	}
+	if ((ptp->params[0] != 0xffffffff) && (ptp->params[0] != 0x00010001)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "storage id 0x%08x unknown", ptp->params[0]);
+		ptp_response (cam, PTP_RC_InvalidStorageId, 0);
+		return 1;
+	}
+	if (ptp->nparams >= 2) {
+		if (ptp->params[1] != 0) {
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "currently can not handle OFC selection (0x%04x)", ptp->params[1]);
+			ptp_response (cam, PTP_RC_SpecificationByFormatUnsupported, 0);
+			return 1;
+		}
+	}
+	if (ptp->nparams >= 3) {
+		mode = ptp->params[2];
+		if ((mode != 0) && (mode != 0xffffffff)) {
+			cur = first_dirent;
+			while (cur) {
+				if (cur->id == mode) break;
+				cur = cur->next;
+			}
+			if (!cur) {
+				gp_log (GP_LOG_ERROR,__FUNCTION__, "requested subtree of (0x%08x), but no such handle", mode);
+				ptp_response (cam, PTP_RC_InvalidObjectHandle, 0);
+				return 1;
+			}
+			if (!S_ISDIR(cur->stbuf.st_mode)) {
+				gp_log (GP_LOG_ERROR,__FUNCTION__, "requested subtree of (0x%08x), but this is no asssocation", mode);
+				ptp_response (cam, PTP_RC_InvalidParentObject, 0);
+				return 1;
+			}
+		}
+	}
 
-	data = malloc(200);
-	x = put_32bit_le_array(data,NULL,0);
+	cnt = 0; cur = first_dirent;
+	while (cur) {
+		if (cur->id) { /* do not include 0 entry */
+			switch (mode) {
+			case 0:	/* all objects recursive on device */
+				cnt++;
+				break;
+			case 0xffffffff: /* only root dir */
+				if (cur->parent->id == 0)
+					cnt++;
+				break;
+			default: /* single level directory below this handle */
+				if (cur->parent->id == mode)
+					cnt++;
+				break;
+			}
+		}
+		cur = cur->next;
+	}
 
+	data = malloc(4+4*cnt);
+	x = put_32bit_le(data + x,cnt);
+	cur = first_dirent;
+	while (cur) {
+		if (cur->id) { /* do not include 0 entry */
+			switch (mode) {
+			case 0:	/* all objects recursive on device */
+				x += put_32bit_le(data+x, cur->id);
+				break;
+			case 0xffffffff: /* only root dir */
+				if (cur->parent->id == 0)
+					x += put_32bit_le(data+x, cur->id);
+				break;
+			default: /* single level directory below this handle */
+				if (cur->parent->id == mode)
+					x += put_32bit_le(data+x, cur->id);
+				break;
+			}
+		}
+		cur = cur->next;
+	}
 	ptp_senddata(cam,0x1007,data,x);
 	free (data);
 	ptp_response(cam,PTP_RC_OK,0);
@@ -368,7 +497,83 @@ ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp) {
 
 	ptp_senddata (cam, 0x1005, data, x);
 	free (data);
-	ptp_response(cam,PTP_RC_OK,0);
+	ptp_response(cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+static int
+ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
+	struct ptp_dirent	*cur;
+	unsigned char		*data;
+	int			x = 0;
+	uint16_t 		ofc;
+	struct tm		*tm;
+	time_t			xtime;
+	char			xdate[40];
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	cur = first_dirent;
+	while (cur) {
+		if (cur->id == ptp->params[0])
+			break;
+		cur = cur->next;
+	}
+	if (!cur) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[1]);
+		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
+		return 1;
+	}
+	data = malloc(2000);
+	x += put_32bit_le (data+x, 0x00010001);	/* StorageID */
+	/* ObjectFormatCode */
+	ofc = 0x3000;
+	if (S_ISDIR(cur->stbuf.st_mode)) {
+		ofc = 0x3001;
+	} else {
+		if (strstr(cur->name,".JPG") || strstr(cur->name,".jpg"))
+			ofc = 0x3801;
+		else
+			ofc = 0x3000;
+	}
+	x += put_16bit_le (data+x, ofc);
+	x += put_16bit_le (data+x, 0); 	/* ProtectionStatus, no protection */
+	x += put_32bit_le (data+x, cur->stbuf.st_size); 	/* ObjectCompressedSize */
+	x += put_16bit_le (data+x, 0); 	/* ThumbFormat */
+	x += put_32bit_le (data+x, 0); 	/* ThumbCompressedSize */
+	x += put_32bit_le (data+x, 0); 	/* ThumbPixWidth */
+	x += put_32bit_le (data+x, 0); 	/* ThumbPixHeight */
+	x += put_32bit_le (data+x, 0); 	/* ImagePixWidth */
+	x += put_32bit_le (data+x, 0); 	/* ImagePixHeight */
+	x += put_32bit_le (data+x, 0); 	/* ImageBitDepth */
+	x += put_32bit_le (data+x, cur->parent->id); 	/* ParentObject */
+	/* AssociationType */
+	if (S_ISDIR(cur->stbuf.st_mode)) {
+		x += put_16bit_le (data+x, 1); /* GenericFolder */
+		x += put_32bit_le (data+x, 0); /* unused */
+	} else {
+		x += put_16bit_le (data+x, 0); /* Undefined */
+		x += put_32bit_le (data+x, 0); /* Undefined */
+	}
+	x += put_32bit_le (data+x, 0); 		/* SequenceNumber */
+	x += put_string (data+x, cur->name); 	/* Filename */
+
+	xtime = cur->stbuf.st_ctime;
+	tm = gmtime(&xtime);
+	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	x += put_string (data+x, xdate);	/* CreationDate */
+	xtime = cur->stbuf.st_mtime;
+	tm = gmtime(&xtime);
+	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	x += put_string (data+x, xdate);	/* ModificatioDate */
+
+	x += put_string (data+x, "keyword");	/* Keywords */
+
+	ptp_senddata (cam, 0x1008, data, x);
+	free (data);
+	ptp_response(cam, PTP_RC_OK, 0);
 	return 1;
 }
 
@@ -496,6 +701,8 @@ vcamera_new(void) {
 
 	cam = calloc(1,sizeof(vcamera));
 	if (!cam) return NULL;
+
+	read_tree("/usr/share/libgphoto2/vcamera");
 
 	cam->init = vcam_init;
 	cam->exit = vcam_exit;
