@@ -207,6 +207,7 @@ static int ptp_getobjecthandles_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getobject_write(vcamera *cam, ptpcontainer *ptp);
 
 struct ptp_function {
 	int	code;
@@ -219,6 +220,7 @@ struct ptp_function {
 	{0x1005,	ptp_getstorageinfo_write	},
 	{0x1007,	ptp_getobjecthandles_write	},
 	{0x1008,	ptp_getobjectinfo_write		},
+	{0x1009,	ptp_getobject_write		},
 };
 
 struct ptp_dirent {
@@ -313,6 +315,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char	*data;
 	int		x = 0, i;
 	uint16_t	*opcodes;
+	uint16_t	imageformats[1];
 
 	CHECK_PARAM_COUNT(0);
 
@@ -340,7 +343,10 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_16bit_le_array(data+x,NULL,0);		/* EventsSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* DevicePropertiesSupported */
 	x += put_16bit_le_array(data+x,NULL,0);		/* CaptureFormats */
-	x += put_16bit_le_array(data+x,NULL,0);		/* ImageFormats */
+
+	imageformats[0] = 0x3801;
+	x += put_16bit_le_array(data+x,imageformats,1);	/* ImageFormats */
+
 	x += put_string(data+x,"GPhoto");		/* Manufacturer */
 	x += put_string(data+x,"VirtualCamera");	/* Model */
 	x += put_string(data+x,"2.5.9");		/* DeviceVersion */
@@ -522,7 +528,7 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 		cur = cur->next;
 	}
 	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[1]);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
@@ -577,6 +583,50 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	return 1;
 }
 
+static int
+ptp_getobject_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char 		*data;
+	struct ptp_dirent	*cur;
+	int fd;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	cur = first_dirent;
+	while (cur) {
+		if (cur->id == ptp->params[0]) break;
+		cur = cur->next;
+	}
+	if (!cur) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
+		return 1;
+	}
+	data = malloc(cur->stbuf.st_size);
+	fd =  open(cur->fsname,O_RDONLY);
+	if (fd == -1) {
+		free (data);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
+		ptp_response(cam,PTP_RC_GeneralError,0);
+		return 1;
+	}
+	if (cur->stbuf.st_size != read(fd, data, cur->stbuf.st_size)) {
+		free (data);
+		close (fd);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
+		ptp_response(cam,PTP_RC_GeneralError,0);
+		return 1;
+	}
+	close (fd);
+
+	ptp_senddata (cam, 0x1009, data, cur->stbuf.st_size);
+	free (data);
+	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+
 /********************************************************************************************/
 
 static int vcam_init(vcamera* cam) {
@@ -603,70 +653,71 @@ vcam_process_output(vcamera *cam) {
 	if (cam->nroutbulk < 4)
 		return; /* wait for more data */
 
-	ptp.size = get_32bit_le(cam->outbulk);
+	ptp.size = get_32bit_le (cam->outbulk);
 	if (ptp.size > cam->nroutbulk)
 		return; /* wait for more data */
 
 	if (ptp.size < 12) {	/* No ptp command can be less than 12 bytes */
 		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "input size was %d, minimum is 12", ptp.size);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "input size was %d, minimum is 12", ptp.size);
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
 		cam->nroutbulk -= ptp.size;
 		return;
 	}
 	/* ptp:  4 byte size, 2 byte opcode, 2 byte type, 4 byte serial number */
-	ptp.type  = get_16bit_le(cam->outbulk+4);
-	ptp.code  = get_16bit_le(cam->outbulk+6);
-	ptp.seqnr = get_32bit_le(cam->outbulk+8);
-
+	ptp.type  = get_16bit_le (cam->outbulk+4);
+	ptp.code  = get_16bit_le (cam->outbulk+6);
+	ptp.seqnr = get_32bit_le (cam->outbulk+8);
+ 
 	if ((ptp.type != 1) && (ptp.type != 2)) { /* We want either CMD or DATA phase. */
 		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "expected CMD or DATA, but type was %d", ptp.type);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "expected CMD or DATA, but type was %d", ptp.type);
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
 		cam->nroutbulk -= ptp.size;
 		return;
 	}
 	if ((ptp.code & 0x7000) != 0x1000) {
 		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "OPCODE 0x%04x does not start with 0x1 or 0x9", ptp.code);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "OPCODE 0x%04x does not start with 0x1 or 0x9", ptp.code);
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
 		cam->nroutbulk -= ptp.size;
 		return;
 	}
 	if ((ptp.size - 12) % 4) {
 		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "SIZE-12 is not divisible by 4, but is %d", ptp.size-12);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "SIZE-12 is not divisible by 4, but is %d", ptp.size-12);
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
 		cam->nroutbulk -= ptp.size;
 		return;
 	}
 	if ((ptp.size - 12) / 4 >= 6) {
 		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR,"vcam_process_output", "(SIZE-12)/4 is %d, exceeds maximum arguments", (ptp.size-12)/4);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		memmove(cam->outbulk,cam->outbulk+ptp.size,cam->nroutbulk-ptp.size);
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "(SIZE-12)/4 is %d, exceeds maximum arguments", (ptp.size-12)/4);
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
 		cam->nroutbulk -= ptp.size;
 		return;
 	}
 	ptp.nparams = (ptp.size - 12)/4;
 	for (i=0;i<ptp.nparams;i++)
-		ptp.params[i] = get_32bit_le(cam->outbulk+12+i*4);
+		ptp.params[i] = get_32bit_le (cam->outbulk+12+i*4);
 
 	cam->nroutbulk -= ptp.size;
 
 	/* call the opcode handler */
 
-	for (i=0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++) {
+	for (i=0;i<sizeof (ptp_functions) / sizeof (ptp_functions[0]);i++) {
 		if (ptp_functions[i].code == ptp.code) {
-			ptp_functions[i].write(cam,&ptp);
+			ptp_functions[i].write (cam,&ptp);
 			return;
 		}
 	}
-	ptp_response(cam,PTP_RC_OperationNotSupported,0);
+	gp_log (GP_LOG_ERROR,__FUNCTION__,"received an unsupported opcode 0x%04x", ptp.code);
+	ptp_response (cam, PTP_RC_OperationNotSupported, 0);
 }
 
 static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
@@ -674,8 +725,8 @@ static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
 
 	if (toread > cam->nrinbulk)
 		toread = cam->nrinbulk;
-	memcpy(data, cam->inbulk, toread);
-	memmove(cam->inbulk + toread, cam->inbulk, (cam->nrinbulk - toread));
+	memcpy (data, cam->inbulk, toread);
+	memmove (cam->inbulk, cam->inbulk + toread, (cam->nrinbulk - toread));
 	cam->nrinbulk -= toread;
 	return toread;
 }
