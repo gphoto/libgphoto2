@@ -1261,7 +1261,7 @@ vcamera_new(void) {
 	cam = calloc(1,sizeof(vcamera));
 	if (!cam) return NULL;
 
-	read_tree("/usr/share/libgphoto2/vcamera");
+	read_tree(VCAMERADIR);
 
 	cam->init = vcam_init;
 	cam->exit = vcam_exit;
