@@ -717,8 +717,24 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	} else {
 		if (strstr(cur->name,".JPG") || strstr(cur->name,".jpg"))
 			ofc = 0x3801;
-		else
-			ofc = 0x3000;
+		if (strstr(cur->name,".GIF") || strstr(cur->name,".gif"))
+			ofc = 0x3807;
+		if (strstr(cur->name,".PNG") || strstr(cur->name,".png"))
+			ofc = 0x380B;
+		if (strstr(cur->name,".DNG") || strstr(cur->name,".dng"))
+			ofc = 0x3811;
+		if (strstr(cur->name,".TXT") || strstr(cur->name,".txt"))
+			ofc = 0x3004;
+		if (strstr(cur->name,".HTML") || strstr(cur->name,".html"))
+			ofc = 0x3005;
+		if (strstr(cur->name,".MP3") || strstr(cur->name,".mp3"))
+			ofc = 0x3009;
+		if (strstr(cur->name,".AVI") || strstr(cur->name,".avi"))
+			ofc = 0x300A;
+		if (	strstr(cur->name,".MPG") || strstr(cur->name,".mpg") ||
+			strstr(cur->name,".MPEG") || strstr(cur->name,".mpeg")
+		)
+			ofc = 0x300B;
 	}
 
 #ifdef HAVE_LIBEXIF
