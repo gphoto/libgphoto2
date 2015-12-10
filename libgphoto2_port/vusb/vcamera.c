@@ -22,6 +22,10 @@
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 
+#ifdef HAVE_LIBEXIF
+#  include <libexif/exif-data.h>
+#endif
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -179,6 +183,7 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 #define PTP_RC_InvalidStorageId				0x2008
 #define PTP_RC_InvalidObjectHandle			0x2009
 #define PTP_RC_DevicePropNotSupported			0x200A
+#define PTP_RC_NoThumbnailPresent			0x2010
 #define PTP_RC_SpecificationByFormatUnsupported         0x2014
 #define PTP_RC_InvalidParentObject			0x201A
 #define PTP_RC_InvalidParameter				0x201D
@@ -214,6 +219,7 @@ static int ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobject_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
 
@@ -229,6 +235,7 @@ static struct ptp_function {
 	{0x1007,	ptp_getobjecthandles_write	},
 	{0x1008,	ptp_getobjectinfo_write		},
 	{0x1009,	ptp_getobject_write		},
+	{0x100A,	ptp_getthumb_write		},
 	{0x1014,	ptp_getdevicepropdesc_write	},
 	{0x1015,	ptp_getdevicepropvalue_write	},
 };
@@ -588,7 +595,9 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	struct ptp_dirent	*cur;
 	unsigned char		*data;
 	int			x = 0;
-	uint16_t 		ofc;
+	uint16_t 		ofc, thumbofc = 0;
+	int			thumbwidth = 0, thumbheight = 0, thumbsize = 0;
+	int			imagewidth = 0, imageheight = 0, imagebitdepth = 0;
 	struct tm		*tm;
 	time_t			xtime;
 	char			xdate[40];
@@ -620,16 +629,67 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 		else
 			ofc = 0x3000;
 	}
+
+#ifdef HAVE_LIBEXIF
+	if (ofc == 0x3801) {			/* We are jpeg ... look into the exif data */
+		ExifData	*ed;
+		ExifEntry	*e;
+		int		fd;
+		unsigned char	*filedata;
+
+		filedata = malloc(cur->stbuf.st_size);
+		fd =  open(cur->fsname,O_RDONLY);
+		if (fd == -1) {
+			free (filedata);
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
+			ptp_response(cam,PTP_RC_GeneralError,0);
+			return 1;
+		}
+		if (cur->stbuf.st_size != read(fd, filedata, cur->stbuf.st_size)) {
+			free (filedata);
+			close (fd);
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
+			ptp_response(cam,PTP_RC_GeneralError,0);
+			return 1;
+		}
+		close (fd);
+
+		ed = exif_data_new_from_data ((unsigned char*)filedata, cur->stbuf.st_size);
+		if (ed) {
+			if (ed->data) {
+				thumbofc = 0x3808;
+				thumbsize = ed->size;
+			}
+			e = exif_data_get_entry (ed, EXIF_TAG_PIXEL_X_DIMENSION);
+			if (e) {
+				gp_log (GP_LOG_DEBUG, __FUNCTION__ , "pixel x dim format is %d", e->format);
+				if (e->format == EXIF_FORMAT_SHORT) {
+					imagewidth = exif_get_short (e->data, exif_data_get_byte_order (ed));
+				}
+			}
+			e = exif_data_get_entry (ed, EXIF_TAG_PIXEL_Y_DIMENSION);
+			if (e) {
+				gp_log (GP_LOG_DEBUG, __FUNCTION__ , "pixel y dim format is %d", e->format);
+				if (e->format == EXIF_FORMAT_SHORT) {
+					imageheight = exif_get_short (e->data, exif_data_get_byte_order (ed));
+				}
+			}
+			/* FIXME: potentially could find out more about thumbnail too */
+		}
+		exif_data_unref (ed);
+		free (filedata);
+	}
+#endif
 	x += put_16bit_le (data+x, ofc);
-	x += put_16bit_le (data+x, 0); 	/* ProtectionStatus, no protection */
-	x += put_32bit_le (data+x, cur->stbuf.st_size); 	/* ObjectCompressedSize */
-	x += put_16bit_le (data+x, 0); 	/* ThumbFormat */
-	x += put_32bit_le (data+x, 0); 	/* ThumbCompressedSize */
-	x += put_32bit_le (data+x, 0); 	/* ThumbPixWidth */
-	x += put_32bit_le (data+x, 0); 	/* ThumbPixHeight */
-	x += put_32bit_le (data+x, 0); 	/* ImagePixWidth */
-	x += put_32bit_le (data+x, 0); 	/* ImagePixHeight */
-	x += put_32bit_le (data+x, 0); 	/* ImageBitDepth */
+	x += put_16bit_le (data+x, 0); 			/* ProtectionStatus, no protection */
+	x += put_32bit_le (data+x, cur->stbuf.st_size); /* ObjectCompressedSize */
+	x += put_16bit_le (data+x, thumbofc); 		/* ThumbFormat */
+	x += put_32bit_le (data+x, thumbsize); 		/* ThumbCompressedSize */
+	x += put_32bit_le (data+x, thumbwidth); 	/* ThumbPixWidth */
+	x += put_32bit_le (data+x, thumbheight);	/* ThumbPixHeight */
+	x += put_32bit_le (data+x, imagewidth); 	/* ImagePixWidth */
+	x += put_32bit_le (data+x, imageheight);	/* ImagePixHeight */
+	x += put_32bit_le (data+x, imagebitdepth); 	/* ImageBitDepth */
 	x += put_32bit_le (data+x, cur->parent->id); 	/* ParentObject */
 	/* AssociationType */
 	if (S_ISDIR(cur->stbuf.st_mode)) {
@@ -701,6 +761,78 @@ ptp_getobject_write(vcamera *cam, ptpcontainer *ptp) {
 	ptp_response (cam, PTP_RC_OK, 0);
 	return 1;
 }
+
+static int
+ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
+	unsigned char 		*data;
+	struct ptp_dirent	*cur;
+	int			fd;
+#ifdef HAVE_LIBEXIF
+        ExifData		*ed;
+#endif
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	cur = first_dirent;
+	while (cur) {
+		if (cur->id == ptp->params[0]) break;
+		cur = cur->next;
+	}
+	if (!cur) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
+		return 1;
+	}
+	data = malloc(cur->stbuf.st_size);
+	fd =  open(cur->fsname,O_RDONLY);
+	if (fd == -1) {
+		free (data);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
+		ptp_response(cam,PTP_RC_GeneralError,0);
+		return 1;
+	}
+	if (cur->stbuf.st_size != read(fd, data, cur->stbuf.st_size)) {
+		free (data);
+		close (fd);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
+		ptp_response(cam,PTP_RC_GeneralError,0);
+		return 1;
+	}
+	close (fd);
+
+#ifdef HAVE_LIBEXIF
+	ed = exif_data_new_from_data ((unsigned char*)data, cur->stbuf.st_size);
+	if (!ed) {
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "Could not parse EXIF data");
+		free (data);
+		ptp_response(cam,PTP_RC_NoThumbnailPresent,0);
+		return 1;
+	}
+	if (!ed->data) {
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "EXIF data does not contain a thumbnail");
+		free (data);
+		ptp_response(cam,PTP_RC_NoThumbnailPresent,0);
+		exif_data_unref (ed);
+		return 1;
+	}
+	/*
+	 * We found a thumbnail in EXIF data! Those
+	 * thumbnails are always JPEG. Set up the file.
+	 */
+	ptp_senddata (cam, 0x100A, ed->data, ed->size);
+	exif_data_unref (ed);
+
+	ptp_response (cam, PTP_RC_OK, 0);
+#else
+	gp_log (GP_LOG_ERROR, __FUNCTION__, "Cannot get thumbnail without libexif, lying about missing thumbnail");
+	ptp_response(cam,PTP_RC_NoThumbnailPresent,0);
+#endif
+	free (data);
+	return 1;
+}
+
 
 static int 
 put_propval (unsigned char *data, uint16_t type, PTPPropertyValue *val) {
