@@ -80,6 +80,13 @@ gp_port_library_list (GPPortInfoList *list)
 	GPPortInfo info;
 
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+
+        CHECK (gp_port_info_new (&info));
+        gp_port_info_set_type (info, GP_PORT_USB);
+        gp_port_info_set_name (info, "");
+        gp_port_info_set_path (info, "^usb:");
+        CHECK (gp_port_info_list_append (list, info));
+
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB);
 	gp_port_info_set_name (info, "Universal Serial Bus");
