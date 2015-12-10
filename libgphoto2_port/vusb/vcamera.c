@@ -297,6 +297,8 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
 static int ptp_battery_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_battery_getvalue(vcamera*,PTPPropertyValue*);
+static int ptp_datetime_getdesc(vcamera*,PTPDevicePropDesc*);
+static int ptp_datetime_getvalue(vcamera*,PTPPropertyValue*);
 
 static struct ptp_property {
 	int	code;
@@ -305,6 +307,7 @@ static struct ptp_property {
 	int	(*setvalue)(vcamera *cam, PTPPropertyValue*);
 } ptp_properties[] = {
 	{0x5001,	ptp_battery_getdesc, ptp_battery_getvalue, NULL },
+	{0x5011,	ptp_datetime_getdesc, ptp_datetime_getvalue, NULL },
 };
 
 struct ptp_dirent {
@@ -917,6 +920,7 @@ put_propval (unsigned char *data, uint16_t type, PTPPropertyValue *val) {
 	switch (type) {
 	case 0x1:	return put_8bit_le (data, val->i8);
 	case 0x2:	return put_8bit_le (data, val->u8);
+	case 0xffff:	return put_string (data, val->str);
 	default:	gp_log (GP_LOG_ERROR, __FUNCTION__, "unhandled datatype %d", type);
 			return 0;
 	}
@@ -1018,6 +1022,38 @@ ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 static int
 ptp_battery_getvalue (vcamera* cam, PTPPropertyValue *val) {
 	val->u8 = 50;
+	return 1;
+}
+
+
+static int
+ptp_datetime_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
+	struct tm		*tm;
+	time_t			xtime;
+	char			xdate[40];
+
+	desc->DevicePropertyCode	= 0x5011;
+	desc->DataType			= 0xffff;	/* string */
+	desc->GetSet			= 0;		/* get only */
+	time(&xtime);
+	tm = gmtime(&xtime);
+	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	desc->FactoryDefaultValue.str	= strdup (xdate);
+	desc->CurrentValue.str		= strdup (xdate);
+        desc->FormFlag			= 0; /* no form */
+	return 1;
+}
+
+static int
+ptp_datetime_getvalue (vcamera* cam, PTPPropertyValue *val) {
+	struct tm		*tm;
+	time_t			xtime;
+	char			xdate[40];
+
+	time(&xtime);
+	tm = gmtime(&xtime);
+	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	val->str = strdup (xdate);
 	return 1;
 }
 
