@@ -188,6 +188,7 @@ ptp_response(vcamera *cam, uint16_t code, int nparams, ...) {
 #define PTP_RC_InvalidStorageId				0x2008
 #define PTP_RC_InvalidObjectHandle			0x2009
 #define PTP_RC_DevicePropNotSupported			0x200A
+#define PTP_RC_ObjectWriteProtected			0x200D
 #define PTP_RC_NoThumbnailPresent			0x2010
 #define PTP_RC_SpecificationByFormatUnsupported         0x2014
 #define PTP_RC_InvalidParentObject			0x201A
@@ -226,6 +227,7 @@ static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobject_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
 
@@ -243,6 +245,7 @@ static struct ptp_function {
 	{0x1008,	ptp_getobjectinfo_write		},
 	{0x1009,	ptp_getobject_write		},
 	{0x100A,	ptp_getthumb_write		},
+	{0x100B,	ptp_deleteobject_write		},
 	{0x1014,	ptp_getdevicepropdesc_write	},
 	{0x1015,	ptp_getdevicepropvalue_write	},
 };
@@ -351,6 +354,13 @@ read_directories(char *path, struct ptp_dirent *parent) {
 			read_directories(cur->fsname, cur); /* recurse! */
 	}
 	closedir(dir);
+}
+
+static void
+free_dirent(struct ptp_dirent *ent) {
+	free (ent->name);
+	free (ent->fsname);
+	free (ent);
 }
 
 static void
@@ -913,6 +923,73 @@ ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
 	free (data);
 	return 1;
 }
+
+static int
+ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp) {
+	struct ptp_dirent	*cur, *xcur;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+
+	if (ptp->nparams < 1) {
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "parameter count %d", ptp->nparams);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
+		return 1;
+	}
+	if (ptp->params[0] == 0xffffffff) { /* delete all mode */
+		gp_log (GP_LOG_DEBUG, __FUNCTION__, "delete all");
+		cur = first_dirent;
+
+		while (cur) {
+			xcur = cur->next;
+			free_dirent(cur);
+			cur = xcur;
+		}
+		first_dirent = NULL;
+		ptp_response (cam, PTP_RC_OK, 0);
+		return 1;
+	}
+
+	if ((ptp->nparams == 2) && (ptp->params[1] != 0)) {
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "single object delete, but ofc is 0x%08x", ptp->params[1]);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
+		return 1;
+	}
+	/* for associations this even means recursive deletion */
+
+	cur = first_dirent;
+	while (cur) {
+		if (cur->id == ptp->params[0]) break;
+		cur = cur->next;
+	}
+	if (!cur) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
+		return 1;
+	}
+	if (S_ISDIR(cur->stbuf.st_mode)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "FIXME: not yet deleting directories");
+		ptp_response(cam,PTP_RC_ObjectWriteProtected,0);
+		return 1;
+	}
+	if (cur == first_dirent) {
+		first_dirent = cur->next;
+		free_dirent (cur);
+	} else {
+		xcur = first_dirent;
+		while (xcur) {
+			if (xcur->next == cur) {
+				xcur->next = xcur->next->next;
+				free_dirent (cur);
+				break;
+			}
+			xcur = xcur->next;
+		}
+	}
+	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
 
 
 static int 
