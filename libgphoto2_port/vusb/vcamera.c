@@ -156,9 +156,10 @@ ptp_senddata(vcamera *cam, uint16_t code, unsigned char *data, int bytes) {
 }
 
 static void
-ptp_response(vcamera *cam, uint16_t code, int nparams) {
+ptp_response(vcamera *cam, uint16_t code, int nparams, ...) {
 	unsigned char	*offset;
-	int 		x = 0;
+	int 		i, x = 0;
+	va_list		args;
 
 	if (!cam->inbulk) {
 		cam->inbulk = malloc(12 + nparams*4);
@@ -171,7 +172,11 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 	x += put_16bit_le(offset+x,0x3);
 	x += put_16bit_le(offset+x,code);
 	x += put_32bit_le(offset+x,cam->seqnr);
-	/* FIXME: put params */
+
+	va_start(args, nparams);
+	for (i=0;i<nparams;i++)
+		x += put_32bit_le (offset+x, va_arg(args, uint32_t));
+	va_end(args);
 
 	cam->seqnr++;
 }
@@ -214,6 +219,7 @@ ptp_response(vcamera *cam, uint16_t code, int nparams) {
 static int ptp_opensession_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_closesession_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_getnumobjects_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getobjecthandles_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageids_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp);
@@ -232,6 +238,7 @@ static struct ptp_function {
 	{0x1003,	ptp_closesession_write		},
 	{0x1004,	ptp_getstorageids_write		},
 	{0x1005,	ptp_getstorageinfo_write	},
+	{0x1006,	ptp_getnumobjects_write		},
 	{0x1007,	ptp_getobjecthandles_write	},
 	{0x1008,	ptp_getobjectinfo_write		},
 	{0x1009,	ptp_getobject_write		},
@@ -439,6 +446,77 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	ptp_senddata(cam,0x1001,data,x);
 	free (data);
 	ptp_response(cam,PTP_RC_OK,0);
+	return 1;
+}
+
+static int
+ptp_getnumobjects_write(vcamera *cam, ptpcontainer *ptp) {
+	int			cnt;
+	struct ptp_dirent	*cur;
+	uint32_t		mode = 0;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+
+	if (ptp->nparams < 1) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "parameter count %d", ptp->nparams);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
+		return 1;
+	}
+	if ((ptp->params[0] != 0xffffffff) && (ptp->params[0] != 0x00010001)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "storage id 0x%08x unknown", ptp->params[0]);
+		ptp_response (cam, PTP_RC_InvalidStorageId, 0);
+		return 1;
+	}
+	if (ptp->nparams >= 2) {
+		if (ptp->params[1] != 0) {
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "currently can not handle OFC selection (0x%04x)", ptp->params[1]);
+			ptp_response (cam, PTP_RC_SpecificationByFormatUnsupported, 0);
+			return 1;
+		}
+	}
+	if (ptp->nparams >= 3) {
+		mode = ptp->params[2];
+		if ((mode != 0) && (mode != 0xffffffff)) {
+			cur = first_dirent;
+			while (cur) {
+				if (cur->id == mode) break;
+				cur = cur->next;
+			}
+			if (!cur) {
+				gp_log (GP_LOG_ERROR,__FUNCTION__, "requested subtree of (0x%08x), but no such handle", mode);
+				ptp_response (cam, PTP_RC_InvalidObjectHandle, 0);
+				return 1;
+			}
+			if (!S_ISDIR(cur->stbuf.st_mode)) {
+				gp_log (GP_LOG_ERROR,__FUNCTION__, "requested subtree of (0x%08x), but this is no asssocation", mode);
+				ptp_response (cam, PTP_RC_InvalidParentObject, 0);
+				return 1;
+			}
+		}
+	}
+
+	cnt = 0; cur = first_dirent;
+	while (cur) {
+		if (cur->id) { /* do not include 0 entry */
+			switch (mode) {
+			case 0:	/* all objects recursive on device */
+				cnt++;
+				break;
+			case 0xffffffff: /* only root dir */
+				if (cur->parent->id == 0)
+					cnt++;
+				break;
+			default: /* single level directory below this handle */
+				if (cur->parent->id == mode)
+					cnt++;
+				break;
+			}
+		}
+		cur = cur->next;
+	}
+
+	ptp_response (cam, PTP_RC_OK, 1, cnt);
 	return 1;
 }
 
