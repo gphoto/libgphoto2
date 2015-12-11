@@ -65,6 +65,8 @@
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
+static int ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint16_t param1, uint32_t transid);
+
 static uint32_t get_32bit_le(unsigned char *data) {
 	return	data[0]	| (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
 }
@@ -1109,12 +1111,14 @@ ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->FORM.Range.MinimumValue.u8= 0;
 	desc->FORM.Range.MaximumValue.u8= 100;
 	desc->FORM.Range.StepSize.u8	= 1;
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5001, 0xffffffff);
 	return 1;
 }
 
 static int
 ptp_battery_getvalue (vcamera* cam, PTPPropertyValue *val) {
 	val->u8 = 50;
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5001, 0xffffffff);
 	return 1;
 }
 
@@ -1271,9 +1275,104 @@ static int vcam_write(vcamera*cam, int ep, const char *data, int bytes) {
 	return bytes;
 }
 
+struct ptp_interrupt {
+	unsigned char		*data;
+	int 			size;
+	struct timeval		triggertime;
+	struct ptp_interrupt	*next;
+};
+
+static struct ptp_interrupt *first_interrupt;
+
+static int
+ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint16_t param1, uint32_t transid) {
+	struct ptp_interrupt	*interrupt, **pint;
+	struct timeval		now;
+	unsigned char		*data;
+	int			x = 0;
+
+	gettimeofday (&now, NULL);
+	now.tv_usec += (when % 1000)*1000;
+	now.tv_sec += when / 1000;
+	if (now.tv_usec > 1000000) {
+		now.tv_usec -= 1000000;
+		now.tv_sec++;
+	}
+
+	data = malloc (0x10);
+	x += put_32bit_le (data+x, 0x10);
+	x += put_16bit_le (data+x, 4);
+	x += put_16bit_le (data+x, code);
+	x += put_32bit_le (data+x, transid);
+	x += put_32bit_le (data+x, param1);
+
+	interrupt = malloc (sizeof(struct ptp_interrupt));
+	interrupt->data		= data;
+	interrupt->size		= x;
+	interrupt->triggertime	= now;
+	interrupt->next		= NULL;
+
+	/* Insert into list, sorted by trigger time, next triggering one first */
+	pint = &first_interrupt;
+	while (*pint) {
+		if (now.tv_sec > (*pint)->triggertime.tv_sec) {
+			pint = &((*pint)->next);
+			continue;
+		}
+		if (	(now.tv_sec == (*pint)->triggertime.tv_sec) &&
+			(now.tv_usec > (*pint)->triggertime.tv_usec)) {
+			pint = &((*pint)->next);
+			continue;
+		}
+		interrupt->next = *pint;
+		*pint = interrupt;
+		break;
+	}
+	if (!*pint) /* single entry */
+		*pint = interrupt;
+	return 1;
+}
+
 static int
 vcam_readint(vcamera*cam, char *data, int bytes, int timeout) {
-	return 0;
+	struct timeval		now, end;
+	int 			newtimeout, tocopy;
+	struct ptp_interrupt	*pint;
+
+	if (!first_interrupt) {
+		usleep (timeout*1000);
+		return GP_ERROR_TIMEOUT;
+	}
+	gettimeofday (&now, NULL);
+	end = now;
+	end.tv_usec += (timeout % 1000)*1000;
+	end.tv_sec += timeout / 1000;
+	if (end.tv_usec > 1000000) {
+		end.tv_usec -= 1000000;
+		end.tv_sec++;
+	}
+	if (first_interrupt->triggertime.tv_sec > end.tv_sec) {
+		usleep (1000*timeout);
+		return GP_ERROR_TIMEOUT;
+	}
+	if (	(first_interrupt->triggertime.tv_sec == end.tv_sec) &&
+		(first_interrupt->triggertime.tv_usec > end.tv_usec)
+	) {
+		usleep (1000*timeout);
+		return GP_ERROR_TIMEOUT;
+	}
+	newtimeout = (first_interrupt->triggertime.tv_sec - now.tv_sec)*1000 + (first_interrupt->triggertime.tv_usec - now.tv_usec)/1000;
+	if (newtimeout > timeout)
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "miscalculated? %d vs %d", timeout, newtimeout);
+	tocopy = first_interrupt->size;
+	if (tocopy > bytes)
+		tocopy = bytes;
+	memcpy (data, first_interrupt->data, tocopy);
+	pint = first_interrupt;
+	first_interrupt = first_interrupt->next;
+	free (pint->data);
+	free (pint);
+	return tocopy;
 }
 
 vcamera*
