@@ -1056,6 +1056,7 @@ ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
 		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MinimumValue);
 		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MaximumValue);
 		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.StepSize);
+		break;
 	case 2:	/* ENUM */;
 		gp_log (GP_LOG_ERROR, __FUNCTION__, "enum not yet handled\n");
 		break;
@@ -1138,6 +1139,7 @@ ptp_datetime_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->FactoryDefaultValue.str	= strdup (xdate);
 	desc->CurrentValue.str		= strdup (xdate);
         desc->FormFlag			= 0; /* no form */
+	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
 	return 1;
 }
 
@@ -1151,6 +1153,7 @@ ptp_datetime_getvalue (vcamera* cam, PTPPropertyValue *val) {
 	tm = gmtime(&xtime);
 	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
 	val->str = strdup (xdate);
+	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
 	return 1;
 }
 
