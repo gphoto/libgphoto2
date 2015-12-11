@@ -65,7 +65,7 @@
 
 #define CHECK(result) {int r=(result); if (r<0) return (r);}
 
-static int ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint16_t param1, uint32_t transid);
+static int ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint32_t param1, uint32_t transid);
 
 static uint32_t get_32bit_le(unsigned char *data) {
 	return	data[0]	| (data[1] << 8) | (data[2] << 16) | (data[3] << 24);
@@ -232,6 +232,7 @@ static int ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp);
 
 static struct ptp_function {
 	int	code;
@@ -248,6 +249,7 @@ static struct ptp_function {
 	{0x1009,	ptp_getobject_write		},
 	{0x100A,	ptp_getthumb_write		},
 	{0x100B,	ptp_deleteobject_write		},
+	{0x100E,	ptp_initiatecapture_write	},
 	{0x1014,	ptp_getdevicepropdesc_write	},
 	{0x1015,	ptp_getdevicepropvalue_write	},
 };
@@ -417,6 +419,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	int		x = 0, i;
 	uint16_t	*opcodes, *devprops;
 	uint16_t	imageformats[1];
+	uint16_t	events[2];
 
 	CHECK_PARAM_COUNT(0);
 
@@ -441,7 +444,10 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	for (i=0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++)
 		opcodes[i] = ptp_functions[i].code;
 	x += put_16bit_le_array(data+x,opcodes,sizeof(ptp_functions)/sizeof(ptp_functions[0]));	/* OperationsSupported */
-	x += put_16bit_le_array(data+x,NULL,0);		/* EventsSupported */
+
+	events[0] = 0x4002;
+	events[1] = 0x4006;
+	x += put_16bit_le_array(data+x,events,sizeof(events)/sizeof(events[0]));	/* EventsSupported */
 
 	devprops = malloc(sizeof(ptp_properties)/sizeof(ptp_properties[0])*sizeof(uint16_t));
 	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++)
@@ -943,6 +949,42 @@ ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
 }
 
 static int
+ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
+	struct ptp_dirent	*cur, *newcur;
+	static int		capcnt = 0;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(2);
+
+	cur = first_dirent;
+	while (cur) {
+		if (strstr (cur->name, ".jpg") || strstr (cur->name, ".JPG"))
+			break;
+		cur = cur->next;
+	}
+	if (!cur) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		return 1;
+	}
+	newcur = malloc (sizeof(struct ptp_dirent));
+	newcur->id	= ++ptp_objectid;
+	newcur->fsname	= strdup(cur->fsname);
+	newcur->stbuf	= cur->stbuf;
+	newcur->parent	= cur->parent;
+	newcur->next	= first_dirent;
+	newcur->name	= malloc(8+3+1+1);
+	sprintf(newcur->name,"GPH_%04d.JPG", capcnt++);
+	first_dirent = newcur;
+
+	ptp_inject_interrupt (cam, 100, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
+	ptp_inject_interrupt (cam, 120, 0x400d, 0, 0, cam->seqnr);		/* capturecomplete */
+	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+static int
 ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp) {
 	struct ptp_dirent	*cur, *xcur;
 
@@ -1288,7 +1330,7 @@ struct ptp_interrupt {
 static struct ptp_interrupt *first_interrupt;
 
 static int
-ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint16_t param1, uint32_t transid) {
+ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint32_t param1, uint32_t transid) {
 	struct ptp_interrupt	*interrupt, **pint;
 	struct timeval		now;
 	unsigned char		*data;
