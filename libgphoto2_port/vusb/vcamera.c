@@ -1244,7 +1244,8 @@ vcam_process_output(vcamera *cam) {
 	ptp_response (cam, PTP_RC_OperationNotSupported, 0);
 }
 
-static int vcam_read(vcamera*cam, int ep, char *data, int bytes) {
+static int
+vcam_read(vcamera*cam, int ep, char *data, int bytes) {
 	int	toread = bytes;
 
 	if (toread > cam->nrinbulk)
@@ -1270,6 +1271,11 @@ static int vcam_write(vcamera*cam, int ep, const char *data, int bytes) {
 	return bytes;
 }
 
+static int
+vcam_readint(vcamera*cam, char *data, int bytes, int timeout) {
+	return 0;
+}
+
 vcamera*
 vcamera_new(void) {
 	vcamera *cam;
@@ -1285,6 +1291,7 @@ vcamera_new(void) {
 	cam->close = vcam_close;
 
 	cam->read = vcam_read;
+	cam->readint = vcam_readint;
 	cam->write = vcam_write;
 
 	cam->seqnr = 0;

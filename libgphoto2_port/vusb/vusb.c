@@ -173,7 +173,7 @@ gp_port_vusb_check_int (GPPort *port, char *bytes, int size, int timeout)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
         C_PARAMS (port && port->pl && timeout >= 0);
 
-        return GP_ERROR_TIMEOUT;
+	return port->pl->vcamera->readint(port->pl->vcamera, bytes, size, timeout);
 }
 
 static int

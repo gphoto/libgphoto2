@@ -38,6 +38,7 @@ typedef struct vcamera {
 	int (*close)(struct vcamera*);
 
 	int (*read)(struct vcamera*,  int ep, char *data, int bytes);
+	int (*readint)(struct vcamera*,  char *data, int bytes, int timeout);
 	int (*write)(struct vcamera*, int ep, const char *data, int bytes);
 
 	unsigned char	*inbulk;
