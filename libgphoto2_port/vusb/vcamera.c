@@ -419,7 +419,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	int		x = 0, i;
 	uint16_t	*opcodes, *devprops;
 	uint16_t	imageformats[1];
-	uint16_t	events[2];
+	uint16_t	events[3];
 
 	CHECK_PARAM_COUNT(0);
 
@@ -447,13 +447,16 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 
 	events[0] = 0x4002;
 	events[1] = 0x4006;
+	events[2] = 0x400d;
 	x += put_16bit_le_array(data+x,events,sizeof(events)/sizeof(events[0]));	/* EventsSupported */
 
 	devprops = malloc(sizeof(ptp_properties)/sizeof(ptp_properties[0])*sizeof(uint16_t));
 	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++)
 		devprops[i] = ptp_properties[i].code;
 	x += put_16bit_le_array(data+x,devprops,sizeof(ptp_properties)/sizeof(ptp_properties[0]));/* DevicePropertiesSupported */
-	x += put_16bit_le_array(data+x,NULL,0);		/* CaptureFormats */
+
+	imageformats[0] = 0x3801;
+	x += put_16bit_le_array(data+x,imageformats,1);		/* CaptureFormats */
 
 	imageformats[0] = 0x3801;
 	x += put_16bit_le_array(data+x,imageformats,1);	/* ImageFormats */
