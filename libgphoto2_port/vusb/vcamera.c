@@ -190,8 +190,10 @@ ptp_response(vcamera *cam, uint16_t code, int nparams, ...) {
 #define PTP_RC_InvalidStorageId				0x2008
 #define PTP_RC_InvalidObjectHandle			0x2009
 #define PTP_RC_DevicePropNotSupported			0x200A
+#define PTP_RC_InvalidObjectFormatCode			0x200B
 #define PTP_RC_ObjectWriteProtected			0x200D
 #define PTP_RC_NoThumbnailPresent			0x2010
+#define PTP_RC_StoreNotAvailable			0x2013
 #define PTP_RC_SpecificationByFormatUnsupported         0x2014
 #define PTP_RC_InvalidParentObject			0x201A
 #define PTP_RC_InvalidParameter				0x201D
@@ -456,7 +458,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_16bit_le_array(data+x,devprops,sizeof(ptp_properties)/sizeof(ptp_properties[0]));/* DevicePropertiesSupported */
 
 	imageformats[0] = 0x3801;
-	x += put_16bit_le_array(data+x,imageformats,1);		/* CaptureFormats */
+	x += put_16bit_le_array(data+x,imageformats,1);	/* CaptureFormats */
 
 	imageformats[0] = 0x3801;
 	x += put_16bit_le_array(data+x,imageformats,1);	/* ImageFormats */
@@ -959,6 +961,17 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 	CHECK_SEQUENCE_NUMBER();
 	CHECK_SESSION();
 	CHECK_PARAM_COUNT(2);
+
+	if ((ptp->params[0] != 0) && (ptp->params[0] != 0x00010001)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid storage id 0x%08x", ptp->params[0]);
+		ptp_response (cam, PTP_RC_StoreNotAvailable, 0);
+		return 1;
+	}
+	if ((ptp->params[1] != 0) && (ptp->params[1] != 0x3801)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid objectformat code id 0x%04x", ptp->params[1]);
+		ptp_response (cam, PTP_RC_InvalidObjectFormatCode, 0);
+		return 1;
+	}
 
 	cur = first_dirent;
 	while (cur) {
