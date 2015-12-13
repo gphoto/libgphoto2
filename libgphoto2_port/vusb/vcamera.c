@@ -1057,7 +1057,7 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		/* Emit ObjectAdded event for the created folder */
 		ptp_inject_interrupt (cam, 80, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
 	}
-	if (capcnt == 150) {
+	if (capcnt++ == 150) {
 		/* The start of the operation succeeds, but the memory runs full during it. */
 		ptp_inject_interrupt (cam, 100, 0x400A, 1, ptp_objectid, cam->seqnr);	/* storefull */
 		ptp_response (cam, PTP_RC_OK, 0);
