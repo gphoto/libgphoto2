@@ -191,6 +191,7 @@ ptp_response(vcamera *cam, uint16_t code, int nparams, ...) {
 #define PTP_RC_InvalidObjectHandle			0x2009
 #define PTP_RC_DevicePropNotSupported			0x200A
 #define PTP_RC_InvalidObjectFormatCode			0x200B
+#define PTP_RC_StoreFull				0x200C
 #define PTP_RC_ObjectWriteProtected			0x200D
 #define PTP_RC_NoThumbnailPresent			0x2010
 #define PTP_RC_StoreNotAvailable			0x2013
@@ -442,7 +443,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	int		x = 0, i;
 	uint16_t	*opcodes, *devprops;
 	uint16_t	imageformats[1];
-	uint16_t	events[3];
+	uint16_t	events[4];
 
 	CHECK_PARAM_COUNT(0);
 
@@ -470,7 +471,8 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 
 	events[0] = 0x4002;
 	events[1] = 0x4006;
-	events[2] = 0x400d;
+	events[2] = 0x400a;
+	events[3] = 0x400d;
 	x += put_16bit_le_array(data+x,events,sizeof(events)/sizeof(events[0]));	/* EventsSupported */
 
 	devprops = malloc(sizeof(ptp_properties)/sizeof(ptp_properties[0])*sizeof(uint16_t));
@@ -705,7 +707,7 @@ ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_16bit_le (data+x, 2);	/* AccessCapability: R/O with object deletion */
 	x += put_64bit_le (data+x, 0x42424242);	/* MaxCapacity */
 	x += put_64bit_le (data+x, 0x21212121);	/* FreeSpaceInBytes */
-	x += put_32bit_le (data+x, 1000);	/* FreeSpaceInImages */
+	x += put_32bit_le (data+x, 150);	/* FreeSpaceInImages ... around 150 */
 	x += put_string (data+x, "GPhoto Virtual Camera Storage");	/* StorageDescription */
 	x += put_string (data+x, "GPhoto Virtual Camera Storage Label");	/* VolumeLabel */
 
@@ -994,6 +996,29 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response (cam, PTP_RC_InvalidObjectFormatCode, 0);
 		return 1;
 	}
+	if (capcnt > 150) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "Declaring store full at picture 151");
+		ptp_response (cam, PTP_RC_StoreFull, 0);
+		return 1;
+	}
+
+	cur = first_dirent;
+	while (cur) {
+		if (strstr (cur->name, ".jpg") || strstr (cur->name, ".JPG"))
+			break;
+		cur = cur->next;
+	}
+	if (!cur) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
+		ptp_response (cam, PTP_RC_GeneralError, 0);
+		return 1;
+	}
+	dir = first_dirent;
+	while (dir) {
+		if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
+			dcim = dir;
+		dir = dir->next;
+	}
 
 	cur = first_dirent;
 	while (cur) {
@@ -1031,6 +1056,12 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		first_dirent	= dir;
 		/* Emit ObjectAdded event for the created folder */
 		ptp_inject_interrupt (cam, 80, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
+	}
+	if (capcnt == 150) {
+		/* The start of the operation succeeds, but the memory runs full during it. */
+		ptp_inject_interrupt (cam, 100, 0x400A, 1, ptp_objectid, cam->seqnr);	/* storefull */
+		ptp_response (cam, PTP_RC_OK, 0);
+		return 1;
 	}
 
 	newcur 		= malloc (sizeof(struct ptp_dirent));
