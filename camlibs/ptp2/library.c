@@ -3807,6 +3807,9 @@ fallback:
 			}
 			break;
 		}
+		case PTP_EC_StoreFull:
+			gp_context_error (context, _("Camera memorycard ran full during capture."));
+			return GP_ERROR_NO_MEMORY;
 		case PTP_EC_CaptureComplete:
 			done |= 1;
 			break;
