@@ -339,7 +339,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (params->deviceinfo.Model && (
 			(params->deviceinfo.Model[0]=='J') ||	/* J1 - J3 currently */
 			(params->deviceinfo.Model[0]=='V') ||	/* V1 - V3 currently */
-			(params->deviceinfo.Model[0]=='S')	/* S1 - S2 currently */
+			((params->deviceinfo.Model[0]=='S') && strlen(params->deviceinfo.Model) < 3)	/* S1 - S2 currently */
+				/* but not S7000 */
 			)
 		) {
 			if (!NIKON_1(&camera->pl->params)) {
