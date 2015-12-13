@@ -371,14 +371,35 @@ free_dirent(struct ptp_dirent *ent) {
 
 static void
 read_tree(char *path) {
+	struct	ptp_dirent *root = NULL, *dir, *dcim = NULL;
+
 	if (first_dirent)
 		return;
+
 	first_dirent = malloc(sizeof(struct ptp_dirent));
 	first_dirent->name = strdup("");
 	first_dirent->fsname = strdup(path);
 	first_dirent->id = ptp_objectid++;
 	first_dirent->next = NULL;
+	root = first_dirent;
 	read_directories(path,first_dirent);
+
+	/* See if we have a DCIM directory, if not, create one. */
+	dir = first_dirent;
+	while (dir) {
+		if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
+			dcim = dir;
+		dir = dir->next;
+	}
+	if (!dcim) {
+		dcim = malloc(sizeof(struct ptp_dirent));
+		dcim->name = strdup("");
+		dcim->fsname = strdup(path);
+		dcim->id = ptp_objectid++;
+		dcim->next = first_dirent;
+		dcim->parent = root;
+		first_dirent = dcim;
+	}
 }
 
 static int
@@ -955,8 +976,9 @@ ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
 
 static int
 ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
-	struct ptp_dirent	*cur, *newcur;
-	static int		capcnt = 0;
+	struct ptp_dirent	*cur, *newcur, *dir, *dcim = NULL;
+	static int		capcnt = 98;
+	char			buf[9];
 
 	CHECK_SEQUENCE_NUMBER();
 	CHECK_SESSION();
@@ -984,15 +1006,42 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response (cam, PTP_RC_GeneralError, 0);
 		return 1;
 	}
-	newcur = malloc (sizeof(struct ptp_dirent));
+	dir = first_dirent;
+	while (dir) {
+		if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
+			dcim = dir;
+		dir = dir->next;
+	}
+	/* nnnGPHOT directories, where nnn is 100-999. (See DCIM standard.) */
+	sprintf(buf, "%03dGPHOT", 100 + ((capcnt / 100) % 900));
+	dir = first_dirent;
+	while (dir) {
+		if (!strcmp (dir->name, buf) && (dir->parent == dcim))
+			break;
+		dir = dir->next;
+	}
+	if (!dir) {
+		dir 		= malloc (sizeof(struct ptp_dirent));
+		dir->id		= ++ptp_objectid;
+		dir->fsname	= "virtual";
+		dir->stbuf	= dcim->stbuf; /* only the S_ISDIR flag is used */
+		dir->parent	= dcim;
+		dir->next	= first_dirent;
+		dir->name	= strdup (buf);
+		first_dirent	= dir;
+		/* Emit ObjectAdded event for the created folder */
+		ptp_inject_interrupt (cam, 80, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
+	}
+
+	newcur 		= malloc (sizeof(struct ptp_dirent));
 	newcur->id	= ++ptp_objectid;
 	newcur->fsname	= strdup(cur->fsname);
 	newcur->stbuf	= cur->stbuf;
-	newcur->parent	= cur->parent;
+	newcur->parent	= dir;
 	newcur->next	= first_dirent;
 	newcur->name	= malloc(8+3+1+1);
 	sprintf(newcur->name,"GPH_%04d.JPG", capcnt++);
-	first_dirent = newcur;
+	first_dirent	= newcur;
 
 	ptp_inject_interrupt (cam, 100, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
 	ptp_inject_interrupt (cam, 120, 0x400d, 0, 0, cam->seqnr);		/* capturecomplete */
