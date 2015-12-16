@@ -6570,7 +6570,7 @@ _get_PTP_Manufacturer_STR(CONFIG_GET_ARGS) {
 static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	/*{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },*/
-	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
+	{ N_("Synchronize camera date and time with PC"),"syncdatetimeutc", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
@@ -6639,7 +6639,7 @@ static struct submenu camera_status_menu[] = {
 };
 
 static struct submenu camera_settings_menu[] = {
-	{ N_("Camera Date and Time"),   "datetime",             PTP_DPC_CANON_EOS_UTCTime,          PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_UINT32_as_time,            _put_UINT32_as_time },
+	{ N_("Camera Date and Time"),   "datetimeutc",          PTP_DPC_CANON_EOS_UTCTime,          PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_UINT32_as_time,            _put_UINT32_as_time },
 	{ N_("Camera Date and Time"),   "datetime",             PTP_DPC_CANON_UnixTime,             PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_UINT32_as_localtime,       _put_UINT32_as_localtime },
 	{ N_("Camera Date and Time"),   "datetime",             PTP_DPC_CANON_EOS_CameraTime,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_UINT32_as_localtime,       _put_UINT32_as_localtime },
 	{ N_("Camera Date and Time"),   "datetime",             PTP_DPC_DateTime,                   0,                  PTP_DTC_STR,    _get_STR_as_time,               _put_STR_as_time },
