@@ -2044,7 +2044,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					if ((size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) != 0)
 						ptp_debug (params, "event %d: Warning: datasize modulo sizeof(uint32) is not 0: ", i, (size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) );
 					for (j=0;j<(size-PTP_ece_Prop_Val_Data)/sizeof(uint32_t);j++)
-						ptp_debug (params, "    %d: 0x%8x", j, ((uint32_t*)xdata)[j]);
+						ptp_debug (params, "    %d: 0x%8x", j, dtoh32a(xdata+j*4));
 					break;
 				/* ImageFormat properties have to be ignored here, see special handling below */
 				case PTP_DPC_CANON_EOS_ImageFormat:
