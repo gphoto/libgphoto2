@@ -299,7 +299,7 @@ ptp_pack_uint32_t_array(PTPParams *params, uint32_t *array, uint32_t arraylen, u
 }
 
 static inline uint32_t
-ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, uint16_t offset, uint16_t **array)
+ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int offset, unsigned int datalen, uint16_t **array)
 {
 	uint32_t n, i=0;
 
@@ -308,6 +308,10 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, uint16_t offse
 	if (n >= UINT_MAX/sizeof(uint16_t))
 		return 0;
 	if (!n)
+		return 0;
+	if (offset + sizeof(uint32_t) > datalen)
+		return 0;
+	if (offset + sizeof(uint32_t)*(n+1) > datalen)
 		return 0;
 	*array = malloc (n*sizeof(uint16_t));
 	for (i=0;i<n;i++)
@@ -345,23 +349,28 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		dtoh16a(&data[PTP_di_FunctionalMode+totallen]);
 	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&di->OperationsSupported);
 	totallen=totallen+di->OperationsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->EventsSupported_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&di->EventsSupported);
 	totallen=totallen+di->EventsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->DevicePropertiesSupported_len =
 		ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&di->DevicePropertiesSupported);
 	totallen=totallen+di->DevicePropertiesSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->CaptureFormats_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&di->CaptureFormats);
 	totallen=totallen+di->CaptureFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->ImageFormats_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&di->ImageFormats);
 	totallen=totallen+di->ImageFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->Manufacturer = ptp_unpack_string(params, data,

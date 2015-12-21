@@ -2596,10 +2596,11 @@ ptp_canon_getchanges (PTPParams* params, uint16_t** props, uint32_t* propnum)
 {
 	PTPContainer	ptp;
 	unsigned char	*data;
+	unsigned int	size;
 	
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetChanges);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
-	*propnum=ptp_unpack_uint16_t_array(params,data,0,props);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	*propnum=ptp_unpack_uint16_t_array(params,data,0,size,props);
 	free(data);
 	return PTP_RC_OK;
 }
@@ -2778,10 +2779,10 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 		return PTP_RC_OK;
 	}
 
-	psize1 = ptp_unpack_uint16_t_array(params,xdata+2,0,&props1);
+	psize1 = ptp_unpack_uint16_t_array (params, xdata+2, 0, xsize, &props1);
 	ptp_debug (params, "xsize %d, got size %d\n", xsize, psize1*2 + 2 + 4);
 	if (psize1*2 + 2 + 4 < xsize) {
-		psize2 = ptp_unpack_uint16_t_array(params,xdata+2+psize1*2+4,0,&props2);
+		psize2 = ptp_unpack_uint16_t_array(params,xdata+2+psize1*2+4, 0, xsize, &props2);
 	}
 	*size = psize1+psize2;
 	*props = malloc((psize1+psize2)*sizeof(uint16_t));
@@ -3079,13 +3080,14 @@ uint16_t
 ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
+	unsigned int	xsize = 0;
 
 	*props = NULL;
 	*size = 0;
 	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetVendorPropCodes);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
-	*size = ptp_unpack_uint16_t_array(params,data,0,props);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &xsize));
+	*size = ptp_unpack_uint16_t_array(params,data,0,xsize,props);
 	free (data);
 	return PTP_RC_OK;
 }
@@ -3442,11 +3444,12 @@ ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc,
 		 uint32_t *propnum, uint16_t **props
 ) {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
+	unsigned int	xsize = 0;
 
         PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropsSupported, ofc);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
-       	*propnum=ptp_unpack_uint16_t_array(params,data,0,props);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &xsize));
+	*propnum=ptp_unpack_uint16_t_array (params, data, 0, xsize, props);
 	free(data);
 	return PTP_RC_OK;
 }
@@ -3554,7 +3557,7 @@ ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohAr
 		*arraylen = 0;
 		*ohArray = NULL;
 	} else {
-		*arraylen = ptp_unpack_uint32_t_array(params, data , 0, ohArray);
+		*arraylen = ptp_unpack_uint32_t_array(params, data , 0, size, ohArray);
 	}
 	free(data);
 	return PTP_RC_OK;
