@@ -258,9 +258,15 @@ ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size
 }
 
 static inline uint32_t
-ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, uint16_t offset, uint32_t **array)
+ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, unsigned int offset, unsigned int datalen, uint32_t **array)
 {
 	uint32_t n, i=0;
+
+	if (offset >= datalen)
+		return 0;
+
+	if (offset + sizeof(uint32_t) > datalen)
+		return 0;
 
 	*array = NULL;
 	n=dtoh32a(&data[offset]);
@@ -268,6 +274,12 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, uint16_t offse
 		return 0;
 	if (!n)
 		return 0;
+
+	if (offset + sizeof(uint32_t)*(n+1) > datalen) {
+		ptp_debug (params ,"array runs over datalen bufferend (%d vs %d)", offset + sizeof(uint32_t)*(n+1) , datalen);
+		return 0;
+	}
+
 	*array = malloc (n*sizeof(uint32_t));
 	for (i=0;i<n;i++)
 		(*array)[i]=dtoh32a(&data[offset+(sizeof(uint32_t)*(i+1))]);
@@ -394,19 +406,19 @@ ptp_unpack_EOS_DI (PTPParams *params, unsigned char* data, PTPCanonEOSDeviceInfo
 
 	/* uint32_t struct len - ignore */
 	di->EventsSupported_len = ptp_unpack_uint32_t_array(params, data,
-		totallen, &di->EventsSupported);
+		totallen, datalen, &di->EventsSupported);
 	if (!di->EventsSupported) return;
 	totallen += di->EventsSupported_len*sizeof(uint32_t)+4;
 	if (totallen >= datalen) return;
 
 	di->DevicePropertiesSupported_len = ptp_unpack_uint32_t_array(params, data,
-		totallen, &di->DevicePropertiesSupported);
+		totallen, datalen, &di->DevicePropertiesSupported);
 	if (!di->DevicePropertiesSupported) return;
 	totallen += di->DevicePropertiesSupported_len*sizeof(uint32_t)+4;
 	if (totallen >= datalen) return;
 
 	di->unk_len = ptp_unpack_uint32_t_array(params, data,
-		totallen, &di->unk);
+		totallen, datalen, &di->unk);
 	if (!di->unk) return;
 	totallen += di->unk_len*sizeof(uint32_t)+4;
 	return;
@@ -428,7 +440,7 @@ static inline void
 ptp_unpack_OH (PTPParams *params, unsigned char* data, PTPObjectHandles *oh, unsigned int len)
 {
 	if (len) {
-		oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, &oh->Handler);
+		oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, len, &oh->Handler);
 	} else {
 		oh->n = 0;
 		oh->Handler = NULL;
@@ -447,8 +459,7 @@ ptp_unpack_SIDs (PTPParams *params, unsigned char* data, PTPStorageIDs *sids, un
 		sids->Storage = NULL;
 		return;
         }
-	sids->n = ptp_unpack_uint32_t_array(params, data, PTP_sids,
-	&sids->Storage);
+	sids->n = ptp_unpack_uint32_t_array(params, data, PTP_sids, len, &sids->Storage);
 }
 
 /* StorageInfo pack/unpack */
