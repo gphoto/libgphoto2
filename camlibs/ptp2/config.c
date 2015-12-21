@@ -4923,24 +4923,30 @@ static int
 _put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
 	time_t	camtime,newcamtime;
 	struct	tm *ptm;
+#if HAVE_SETENV
 	char	*tz;
+#endif
 
 	camtime = 0;
 	CR (gp_widget_get_value (widget, &camtime));
 	ptm = localtime(&camtime);
 
+#if HAVE_SETENV
 	tz = getenv("TZ");
 	if (tz)
 		C_MEM (tz = strdup(tz));
 	setenv("TZ", "", 1);
 	tzset();
+#endif
 	newcamtime = mktime(ptm);
+#if HAVE_SETENV
 	if (tz) {
 		setenv("TZ", tz, 1);
 		free(tz);
 	} else
 		unsetenv("TZ");
 	tzset();
+#endif
 
 	propval->u32 = newcamtime;
 	return (GP_OK);
