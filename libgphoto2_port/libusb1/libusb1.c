@@ -509,7 +509,10 @@ gp_libusb1_close (GPPort *port)
 	libusb_close (port->pl->dh);
 
 	free (port->pl->irqs);
+	port->pl->irqs = NULL;
 	free (port->pl->irqlens);
+	port->pl->irqlens = NULL;
+	port->pl->nrofirqs = 0;
 	port->pl->dh = NULL;
 	return GP_OK;
 }
