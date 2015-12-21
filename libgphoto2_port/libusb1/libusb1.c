@@ -66,8 +66,7 @@
 	}\
 } while(0)
 
-#ifndef HAVE_LIBUSB_STRERROR
-static const char *libusb_strerror(int r)
+static const char *my_libusb_strerror(int r)
 {
 	switch (r) {
 	case LIBUSB_SUCCESS:			return "Success";
@@ -88,12 +87,10 @@ static const char *libusb_strerror(int r)
 	}
 }
 
-#endif
-
 static int log_on_libusb_error_helper( int _r, const char* _func, const char* file, int line, const char* func ) {
 	if (_r < LIBUSB_SUCCESS)
 		gp_log_with_source_location(GP_LOG_ERROR, file, line, func,
-					    "'%s' failed: %s (%d)", _func, libusb_strerror(_r), _r);
+					    "'%s' failed: %s (%d)", _func, my_libusb_strerror(_r), _r);
 	return _r;
 }
 #define LOG_ON_LIBUSB_E( RESULT ) log_on_libusb_error_helper( (RESULT), #RESULT, __FILE__, __LINE__, __func__ )
