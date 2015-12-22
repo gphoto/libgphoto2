@@ -311,8 +311,10 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 		return 0;
 	if (offset + sizeof(uint32_t) > datalen)
 		return 0;
-	if (offset + sizeof(uint32_t)*(n+1) > datalen)
+	if (offset + sizeof(uint32_t)+sizeof(uint16_t)*n > datalen) {
+		ptp_debug (params ,"array runs over datalen bufferend (%d vs %d)", offset + sizeof(uint32_t)+n*sizeof(uint16_t) , datalen);
 		return 0;
+	}
 	*array = malloc (n*sizeof(uint16_t));
 	for (i=0;i<n;i++)
 		(*array)[i]=dtoh16a(&data[offset+(sizeof(uint16_t)*(i+2))]);
