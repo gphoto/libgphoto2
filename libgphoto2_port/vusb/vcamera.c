@@ -264,6 +264,7 @@ static int ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_setdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_setdevicepropvalue_write_data(vcamera *cam, ptpcontainer *ptp, unsigned char*data, unsigned int len);
 static int ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_vusb_write(vcamera *cam, ptpcontainer *ptp);
 
 static struct ptp_function {
 	int	code;
@@ -285,6 +286,7 @@ static struct ptp_function {
 	{0x1014,	ptp_getdevicepropdesc_write, 	NULL			},
 	{0x1015,	ptp_getdevicepropvalue_write, 	NULL			},
 	{0x1016,	ptp_setdevicepropvalue_write, 	ptp_setdevicepropvalue_write_data	},
+	{0x9999,	ptp_vusb_write, 		NULL	},
 };
 
 typedef union _PTPPropertyValue {
@@ -1311,6 +1313,116 @@ ptp_setdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp) {
 		return 1;
 	}
 	/* so ... we wait for the data phase */
+	return 1;
+}
+
+/* magic opcode for our driver, to inject commands */
+static int
+ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
+	static int		capcnt = 98;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	switch (ptp->params[0]) {
+	case 0:	{/* add a new image after 1 second */
+		struct ptp_dirent	*cur, *newcur, *dir, *dcim = NULL;
+		char			buf[9];
+
+		cur = first_dirent;
+		while (cur) {
+			if (strstr (cur->name, ".jpg") || strstr (cur->name, ".JPG"))
+				break;
+			cur = cur->next;
+		}
+		if (!cur) {
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
+			ptp_response (cam, PTP_RC_GeneralError, 0);
+			return 1;
+		}
+		dir = first_dirent;
+		while (dir) {
+			if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
+				dcim = dir;
+			dir = dir->next;
+		}
+
+		cur = first_dirent;
+		while (cur) {
+			if (strstr (cur->name, ".jpg") || strstr (cur->name, ".JPG"))
+				break;
+			cur = cur->next;
+		}
+		if (!cur) {
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
+			ptp_response (cam, PTP_RC_GeneralError, 0);
+			return 1;
+		}
+		dir = first_dirent;
+		while (dir) {
+			if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
+				dcim = dir;
+			dir = dir->next;
+		}
+		/* nnnGPHOT directories, where nnn is 100-999. (See DCIM standard.) */
+		sprintf(buf, "%03dGPHOT", 100 + ((capcnt / 100) % 900));
+		dir = first_dirent;
+		while (dir) {
+			if (!strcmp (dir->name, buf) && (dir->parent == dcim))
+				break;
+			dir = dir->next;
+		}
+		if (!dir) {
+			dir 		= malloc (sizeof(struct ptp_dirent));
+			dir->id		= ++ptp_objectid;
+			dir->fsname	= "virtual";
+			dir->stbuf	= dcim->stbuf; /* only the S_ISDIR flag is used */
+			dir->parent	= dcim;
+			dir->next	= first_dirent;
+			dir->name	= strdup (buf);
+			first_dirent	= dir;
+			/* Emit ObjectAdded event for the created folder */
+			ptp_inject_interrupt (cam, 80, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
+		}
+
+		newcur 		= malloc (sizeof(struct ptp_dirent));
+		newcur->id	= ++ptp_objectid;
+		newcur->fsname	= strdup(cur->fsname);
+		newcur->stbuf	= cur->stbuf;
+		newcur->parent	= dir;
+		newcur->next	= first_dirent;
+		newcur->name	= malloc(8+3+1+1);
+		sprintf(newcur->name,"GPH_%04d.JPG", capcnt++);
+		first_dirent	= newcur;
+
+		ptp_inject_interrupt (cam, 100, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
+		ptp_response (cam, PTP_RC_OK, 0);
+		break;
+	}
+	case 1:	{/* remove 1 image from directory */
+		struct ptp_dirent	**pcur;
+		pcur = &first_dirent;
+		while (*pcur) {
+			if (strstr ((*pcur)->name, ".jpg") || strstr ((*pcur)->name, ".JPG"))
+				break;
+			pcur = &((*pcur)->next);
+		}
+		if (!*pcur) {
+			gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
+			ptp_response (cam, PTP_RC_GeneralError, 0);
+			return 1;
+		}
+		ptp_inject_interrupt (cam, 0, 0x4003, 1, (*pcur)->id, cam->seqnr);	/* objectremoved */
+		*pcur = (*pcur)->next;
+		ptp_response (cam, PTP_RC_OK, 0);
+		break;
+	}
+	default:
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "unknown action %d", ptp->params[0]);
+		ptp_response (cam, PTP_RC_OK, 0);
+		break;
+	}
 	return 1;
 }
 
