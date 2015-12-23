@@ -286,7 +286,7 @@ static struct ptp_function {
 	{0x1014,	ptp_getdevicepropdesc_write, 	NULL			},
 	{0x1015,	ptp_getdevicepropvalue_write, 	NULL			},
 	{0x1016,	ptp_setdevicepropvalue_write, 	ptp_setdevicepropvalue_write_data	},
-	{0x9999,	ptp_vusb_write, 		NULL	},
+	{0x9999,	ptp_vusb_write, 		NULL			},
 };
 
 typedef union _PTPPropertyValue {
