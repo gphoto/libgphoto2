@@ -5682,6 +5682,8 @@ _put_Generic_OPCode(CONFIG_PUT_ARGS)
 	uint32_t		xparams[5];
 	uint16_t		ret;
 	PTPContainer		ptp;
+	unsigned char		*data = NULL;
+	unsigned int		size = 0;
 
 	CR (gp_widget_get_value(widget, &val));
 
@@ -5704,7 +5706,7 @@ _put_Generic_OPCode(CONFIG_PUT_ARGS)
 
 	/* FIXME: handle in data */
 
-	ret = ptp_transaction (params, &ptp, 0, 0, NULL, NULL);
+	ret = ptp_transaction (params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 
 	/* FIXME: handle out data (store locally?) */
 
