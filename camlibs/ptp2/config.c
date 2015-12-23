@@ -5689,7 +5689,8 @@ _put_Generic_OPCode(CONFIG_PUT_ARGS)
 		return GP_ERROR_BAD_PARAMETERS;
 	nparams = 0; x = val;
 	while ((x = strchr(x,',')) && (nparams<5)) {
-		if (!sscanf(val,"0x%x", &xparams[nparams]))
+		x++;
+		if (!sscanf(x,"0x%x", &xparams[nparams]))
 			return GP_ERROR_BAD_PARAMETERS;
 		nparams++;
 	}
