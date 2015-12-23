@@ -75,6 +75,15 @@ static uint16_t get_16bit_le(unsigned char *data) {
 	return	data[0]	| (data[1] << 8);
 }
 
+static uint8_t get_8bit_le(unsigned char *data) {
+	return data[0];
+}
+
+static int8_t get_i8bit_le(unsigned char *data) {
+	return data[0];
+}
+
+
 static int put_64bit_le(unsigned char *data, uint64_t x) {
 	data[0] = x & 0xff;
 	data[1] = (x>>8) & 0xff;
@@ -118,6 +127,21 @@ static int put_string(unsigned char *data, char *str) {
 
 	return 1+strlen(str)*2;
 }
+
+static char * get_string(unsigned char *data) {
+	int	i, len;
+	char	*x;
+
+	len = data[0];
+	x = malloc(len+1);
+	x[len] = 0;
+
+	for (i=0;i<len;i++)
+		x[i] = get_16bit_le(data+1+2*i);
+
+	return x;
+}
+
 
 static int put_16bit_le_array(unsigned char *data, uint16_t *arr, int cnt) {
 	int x = 0, i;
@@ -193,10 +217,12 @@ ptp_response(vcamera *cam, uint16_t code, int nparams, ...) {
 #define PTP_RC_InvalidObjectFormatCode			0x200B
 #define PTP_RC_StoreFull				0x200C
 #define PTP_RC_ObjectWriteProtected			0x200D
+#define PTP_RC_AccessDenied				0x200F
 #define PTP_RC_NoThumbnailPresent			0x2010
 #define PTP_RC_StoreNotAvailable			0x2013
 #define PTP_RC_SpecificationByFormatUnsupported         0x2014
 #define PTP_RC_InvalidParentObject			0x201A
+#define PTP_RC_InvalidDevicePropFormat			0x201B
 #define PTP_RC_InvalidParameter				0x201D
 #define PTP_RC_SessionAlreadyOpened     		0x201E
 
@@ -235,26 +261,30 @@ static int ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_setdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_setdevicepropvalue_write_data(vcamera *cam, ptpcontainer *ptp, unsigned char*data, unsigned int len);
 static int ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp);
 
 static struct ptp_function {
 	int	code;
 	int	(*write)(vcamera *cam, ptpcontainer *ptp);
+	int	(*write_data)(vcamera *cam, ptpcontainer *ptp, unsigned char *data, unsigned int size);
 } ptp_functions[] = {
-	{0x1001,	ptp_deviceinfo_write		},
-	{0x1002,	ptp_opensession_write		},
-	{0x1003,	ptp_closesession_write		},
-	{0x1004,	ptp_getstorageids_write		},
-	{0x1005,	ptp_getstorageinfo_write	},
-	{0x1006,	ptp_getnumobjects_write		},
-	{0x1007,	ptp_getobjecthandles_write	},
-	{0x1008,	ptp_getobjectinfo_write		},
-	{0x1009,	ptp_getobject_write		},
-	{0x100A,	ptp_getthumb_write		},
-	{0x100B,	ptp_deleteobject_write		},
-	{0x100E,	ptp_initiatecapture_write	},
-	{0x1014,	ptp_getdevicepropdesc_write	},
-	{0x1015,	ptp_getdevicepropvalue_write	},
+	{0x1001,	ptp_deviceinfo_write, 		NULL			},
+	{0x1002,	ptp_opensession_write, 		NULL			},
+	{0x1003,	ptp_closesession_write, 	NULL			},
+	{0x1004,	ptp_getstorageids_write, 	NULL			},
+	{0x1005,	ptp_getstorageinfo_write, 	NULL			},
+	{0x1006,	ptp_getnumobjects_write, 	NULL			},
+	{0x1007,	ptp_getobjecthandles_write, 	NULL			},
+	{0x1008,	ptp_getobjectinfo_write, 	NULL			},
+	{0x1009,	ptp_getobject_write, 		NULL			},
+	{0x100A,	ptp_getthumb_write, 		NULL			},
+	{0x100B,	ptp_deleteobject_write, 	NULL			},
+	{0x100E,	ptp_initiatecapture_write, 	NULL			},
+	{0x1014,	ptp_getdevicepropdesc_write, 	NULL			},
+	{0x1015,	ptp_getdevicepropvalue_write, 	NULL			},
+	{0x1016,	ptp_setdevicepropvalue_write, 	ptp_setdevicepropvalue_write_data	},
 };
 
 typedef union _PTPPropertyValue {
@@ -309,6 +339,7 @@ static int ptp_battery_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_battery_getvalue(vcamera*,PTPPropertyValue*);
 static int ptp_datetime_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_datetime_getvalue(vcamera*,PTPPropertyValue*);
+static int ptp_datetime_setvalue(vcamera*,PTPPropertyValue*);
 
 static struct ptp_property {
 	int	code;
@@ -317,7 +348,7 @@ static struct ptp_property {
 	int	(*setvalue)(vcamera *cam, PTPPropertyValue*);
 } ptp_properties[] = {
 	{0x5001,	ptp_battery_getdesc, ptp_battery_getvalue, NULL },
-	{0x5011,	ptp_datetime_getdesc, ptp_datetime_getvalue, NULL },
+	{0x5011,	ptp_datetime_getdesc, ptp_datetime_getvalue, ptp_datetime_setvalue },
 };
 
 struct ptp_dirent {
@@ -1147,8 +1178,7 @@ ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp) {
 }
 
 
-
-static int 
+static int
 put_propval (unsigned char *data, uint16_t type, PTPPropertyValue *val) {
 	switch (type) {
 	case 0x1:	return put_8bit_le (data, val->i8);
@@ -1158,6 +1188,31 @@ put_propval (unsigned char *data, uint16_t type, PTPPropertyValue *val) {
 			return 0;
 	}
 	return 0;
+}
+
+static int
+get_propval (unsigned char *data, unsigned int len, uint16_t type, PTPPropertyValue *val) {
+#define CHECK_SIZE(x) if (len < x) return 0;
+	switch (type) {
+	case 0x1:	CHECK_SIZE(1);
+			val->i8 = get_i8bit_le (data);
+			return 1;
+	case 0x2:	CHECK_SIZE(1);
+			val->u8 =  get_8bit_le (data);
+			return 1;
+	case 0xffff:	{
+			int slen;
+			CHECK_SIZE(1);
+			slen = get_8bit_le (data);
+			CHECK_SIZE(1+slen*2);
+			val->str = get_string (data);
+			return 1+slen*2;
+			}
+	default:	gp_log (GP_LOG_ERROR, __FUNCTION__, "unhandled datatype %d", type);
+			return 0;
+	}
+	return 0;
+#undef CHECK_SIZE
 }
 
 static int
@@ -1238,6 +1293,63 @@ ptp_getdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp) {
 	return 1;
 }
 
+static int
+ptp_setdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp) {
+	int			i;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++) {
+		if (ptp_properties[i].code == ptp->params[0])
+			break;
+	}
+	if (i == sizeof (ptp_properties)/sizeof (ptp_properties[0])) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "deviceprop 0x%04x not found", ptp->params[0]);
+		ptp_response (cam, PTP_RC_DevicePropNotSupported, 0);
+		return 1;
+	}
+	/* so ... we wait for the data phase */
+	return 1;
+}
+
+static int
+ptp_setdevicepropvalue_write_data(vcamera *cam, ptpcontainer *ptp, unsigned char *data, unsigned int len) {
+	int			i;
+	PTPPropertyValue	val;
+	PTPDevicePropDesc	desc;
+
+	CHECK_SEQUENCE_NUMBER();
+	CHECK_SESSION();
+	CHECK_PARAM_COUNT(1);
+
+	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++) {
+		if (ptp_properties[i].code == ptp->params[0])
+			break;
+	}
+	if (i == sizeof (ptp_properties)/sizeof (ptp_properties[0])) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "deviceprop 0x%04x not found", ptp->params[0]);
+		/* we emitted the response already in _write */
+		return 1;
+	}
+	if (!ptp_properties[i].setvalue) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "deviceprop 0x%04x is not settable", ptp->params[0]);
+		ptp_response (cam, PTP_RC_AccessDenied, 0);
+		return 1;
+	}
+	ptp_properties[i].getdesc(cam, &desc);
+	if (!get_propval (data, len, desc.DataType, &val)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "deviceprop 0x%04x is not retrievable", ptp->params[0]);
+		ptp_response (cam, PTP_RC_InvalidDevicePropFormat, 0);
+		return 1;
+	}
+	ptp_properties[i].setvalue (cam, &val);
+	ptp_response (cam, PTP_RC_OK, 0);
+	return 1;
+}
+
+
 /**************************  Properties *****************************************************/
 static int
 ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
@@ -1270,7 +1382,7 @@ ptp_datetime_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 
 	desc->DevicePropertyCode	= 0x5011;
 	desc->DataType			= 0xffff;	/* string */
-	desc->GetSet			= 0;		/* get only */
+	desc->GetSet			= 1;		/* get only */
 	time(&xtime);
 	tm = gmtime(&xtime);
 	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
@@ -1292,6 +1404,13 @@ ptp_datetime_getvalue (vcamera* cam, PTPPropertyValue *val) {
 	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
 	val->str = strdup (xdate);
 	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
+	return 1;
+}
+
+
+static int
+ptp_datetime_setvalue (vcamera* cam, PTPPropertyValue *val) {
+	gp_log (GP_LOG_DEBUG, __FUNCTION__, "got %s as value", val->str);
 	return 1;
 }
 
@@ -1338,7 +1457,7 @@ vcam_process_output(vcamera *cam) {
 	ptp.type  = get_16bit_le (cam->outbulk+4);
 	ptp.code  = get_16bit_le (cam->outbulk+6);
 	ptp.seqnr = get_32bit_le (cam->outbulk+8);
- 
+
 	if ((ptp.type != 1) && (ptp.type != 2)) { /* We want either CMD or DATA phase. */
 		/* not clear if normal cameras react like this */
 		gp_log (GP_LOG_ERROR, __FUNCTION__, "expected CMD or DATA, but type was %d", ptp.type);
@@ -1355,25 +1474,27 @@ vcam_process_output(vcamera *cam) {
 		cam->nroutbulk -= ptp.size;
 		return;
 	}
-	if ((ptp.size - 12) % 4) {
-		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR, __FUNCTION__, "SIZE-12 is not divisible by 4, but is %d", ptp.size-12);
-		ptp_response (cam, PTP_RC_GeneralError, 0);
-		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
-		cam->nroutbulk -= ptp.size;
-		return;
+	if (ptp.type == 1) {
+		if ((ptp.size - 12) % 4) {
+			/* not clear if normal cameras react like this */
+			gp_log (GP_LOG_ERROR, __FUNCTION__, "SIZE-12 is not divisible by 4, but is %d", ptp.size-12);
+			ptp_response (cam, PTP_RC_GeneralError, 0);
+			memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
+			cam->nroutbulk -= ptp.size;
+			return;
+		}
+		if ((ptp.size - 12) / 4 >= 6) {
+			/* not clear if normal cameras react like this */
+			gp_log (GP_LOG_ERROR, __FUNCTION__, "(SIZE-12)/4 is %d, exceeds maximum arguments", (ptp.size-12)/4);
+			ptp_response (cam, PTP_RC_GeneralError, 0);
+			memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
+			cam->nroutbulk -= ptp.size;
+			return;
+		}
+		ptp.nparams = (ptp.size - 12)/4;
+		for (i=0;i<ptp.nparams;i++)
+			ptp.params[i] = get_32bit_le (cam->outbulk+12+i*4);
 	}
-	if ((ptp.size - 12) / 4 >= 6) {
-		/* not clear if normal cameras react like this */
-		gp_log (GP_LOG_ERROR, __FUNCTION__, "(SIZE-12)/4 is %d, exceeds maximum arguments", (ptp.size-12)/4);
-		ptp_response (cam, PTP_RC_GeneralError, 0);
-		memmove (cam->outbulk, cam->outbulk+ptp.size, cam->nroutbulk-ptp.size);
-		cam->nroutbulk -= ptp.size;
-		return;
-	}
-	ptp.nparams = (ptp.size - 12)/4;
-	for (i=0;i<ptp.nparams;i++)
-		ptp.params[i] = get_32bit_le (cam->outbulk+12+i*4);
 
 	cam->nroutbulk -= ptp.size;
 
@@ -1381,7 +1502,17 @@ vcam_process_output(vcamera *cam) {
 
 	for (i=0;i<sizeof (ptp_functions) / sizeof (ptp_functions[0]);i++) {
 		if (ptp_functions[i].code == ptp.code) {
-			ptp_functions[i].write (cam,&ptp);
+			if (ptp.type == 1) {
+				ptp_functions[i].write (cam, &ptp);
+				memcpy(&cam->ptpcmd, &ptp, sizeof(ptp));
+			} else {
+				if (ptp_functions[i].write_data == NULL) {
+					gp_log (GP_LOG_ERROR, __FUNCTION__, "opcode 0x%04x received with dataphase, but no dataphase expected", ptp.code);
+					ptp_response (cam, PTP_RC_GeneralError, 0);
+				} else {
+					ptp_functions[i].write_data (cam, &cam->ptpcmd, cam->outbulk+12, ptp.size-12);
+				}
+			}
 			return;
 		}
 	}

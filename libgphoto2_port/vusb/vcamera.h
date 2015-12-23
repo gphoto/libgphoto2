@@ -49,6 +49,7 @@ typedef struct vcamera {
 	unsigned int	seqnr;
 
 	unsigned int	session;
+	ptpcontainer	ptpcmd;
 } vcamera;
 
 vcamera *vcamera_new(void);
