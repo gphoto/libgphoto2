@@ -3002,12 +3002,19 @@ capturetriggered:
 	/* this does result in 0x2009 (invalid object id) with the D90 ... curiuos
 			ret = ptp_nikon_delete_sdram_image (params, newobject);
 	 */
-			ret = ptp_deleteobject (params, newobject, 0);
-			if (ret != PTP_RC_OK) {
-				GP_LOG_E ("deleteobject(%x) failed: %x", newobject, ret);
-				ret = ptp_nikon_delete_sdram_image (params, newobject);
-				if (ret != PTP_RC_OK)
-					GP_LOG_E ("deleteobjectinsdram(%x) failed too: %x", newobject, ret);
+			if (!params->deletesdramfails) {
+				ret = ptp_deleteobject (params, newobject, 0);
+				if (ret != PTP_RC_OK) {
+					GP_LOG_E ("deleteobject(%x) failed: %x", newobject, ret);
+					if (ret == PTP_RC_InvalidObjectHandle)
+						params->deletesdramfails = 1;
+					else
+						ret = ptp_nikon_delete_sdram_image (params, newobject);
+					if (ret != PTP_RC_OK)
+						GP_LOG_E ("deleteobjectinsdram(%x) failed too: %x", newobject, ret);
+					if (ret == PTP_RC_InvalidObjectHandle)
+						params->deletesdramfails = 1;
+				}
 			}
 		} else { /* capture to card branch */
 			CR (add_object (camera, newobject, context));
