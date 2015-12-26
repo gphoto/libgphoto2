@@ -2440,6 +2440,7 @@ struct _PTPParams {
 	/* PTP: Nikon specifics */
 	int			controlmode;
 	int			event90c7works;
+	int			deletesdramfails;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;
