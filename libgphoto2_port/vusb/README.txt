@@ -13,6 +13,11 @@ of this README (standard location is: /usr/share/libgphoto2_port/<version>/ )
 
 Special functions:
 
+Doing an image capture will duplicate an existing JPEG and report it as
+being captured.
+
+Doing a deletion is virtual and does not affect the filesystem content.
+
 PTP Opcode 0x9999 can be used to emit PTP Events
 First argment is the type, second argument is the delay of the interrupt in 1/1000 seconds
 
