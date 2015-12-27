@@ -1419,6 +1419,10 @@ ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response (cam, PTP_RC_OK, 0);
 		break;
 	}
+	case 2:	/* capture complete */
+		ptp_inject_interrupt (cam, 0, 0x400d, 2, 0, cam->seqnr);	/* capturecomplete */
+		ptp_response (cam, PTP_RC_OK, 0);
+		break;
 	default:
 		gp_log (GP_LOG_ERROR, __FUNCTION__, "unknown action %d", ptp->params[0]);
 		ptp_response (cam, PTP_RC_OK, 0);
