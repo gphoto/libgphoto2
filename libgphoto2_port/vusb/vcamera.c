@@ -1321,10 +1321,20 @@ ptp_setdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp) {
 static int
 ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 	static int		capcnt = 98;
+	static int		timeout = 1;
 
 	CHECK_SEQUENCE_NUMBER();
 	CHECK_SESSION();
-	CHECK_PARAM_COUNT(1);
+	if (ptp->nparams < 1) {
+		gp_log (GP_LOG_ERROR, __FUNCTION__, "parameter count %d", ptp->nparams);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
+		return 1;
+	}
+	if (ptp->nparams >= 2) {
+		timeout = ptp->params[1];
+		gp_log (GP_LOG_DEBUG, __FUNCTION__, "new timeout %d", timeout);
+	} else
+		timeout++;
 
 	switch (ptp->params[0]) {
 	case 0:	{/* add a new image after 1 second */
@@ -1397,7 +1407,7 @@ ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 		sprintf(newcur->name,"GPH_%04d.JPG", capcnt++);
 		first_dirent	= newcur;
 
-		ptp_inject_interrupt (cam, 100, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
+		ptp_inject_interrupt (cam, timeout, 0x4002, 1, ptp_objectid, cam->seqnr);	/* objectadded */
 		ptp_response (cam, PTP_RC_OK, 0);
 		break;
 	}
@@ -1414,13 +1424,13 @@ ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 			ptp_response (cam, PTP_RC_GeneralError, 0);
 			return 1;
 		}
-		ptp_inject_interrupt (cam, 0, 0x4003, 1, (*pcur)->id, cam->seqnr);	/* objectremoved */
+		ptp_inject_interrupt (cam, timeout, 0x4003, 1, (*pcur)->id, cam->seqnr);	/* objectremoved */
 		*pcur = (*pcur)->next;
 		ptp_response (cam, PTP_RC_OK, 0);
 		break;
 	}
 	case 2:	/* capture complete */
-		ptp_inject_interrupt (cam, 0, 0x400d, 2, 0, cam->seqnr);	/* capturecomplete */
+		ptp_inject_interrupt (cam, timeout, 0x400d, 0, 0, cam->seqnr);	/* capturecomplete */
 		ptp_response (cam, PTP_RC_OK, 0);
 		break;
 	default:
@@ -1679,6 +1689,8 @@ ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint32_t
 	struct timeval		now;
 	unsigned char		*data;
 	int			x = 0;
+
+	gp_log (GP_LOG_DEBUG, __FUNCTION__, "generate interrupt 0x%04x, %d params, param1 0x%08x, timeout=%d", code, nparams, param1, when);
 
 	gettimeofday (&now, NULL);
 	now.tv_usec += (when % 1000)*1000;
