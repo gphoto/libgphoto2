@@ -107,6 +107,8 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	int		len = 18+req->Nparam*4;
 	unsigned char 	*request = malloc(len);
 
+	GP_LOG_D ("Sending PTP_OC 0x%0x (%s) request...", req->Code, ptp_get_opcode_name(params, req->Code));
+
 	ptp_ptpip_check_event (params);
 
 	htod32a(&request[ptpip_type],PTPIP_CMD_REQUEST);
@@ -233,6 +235,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	int		ret;
 	unsigned char*	xdata;
 
+	GP_LOG_D ("Sending PTP_OC 0x%0x (%s) data...", ptp->Code, ptp_get_opcode_name(params, ptp->Code));
 	htod32a(&request[ptpip_type],PTPIP_START_DATA_PACKET);
 	htod32a(&request[ptpip_len],sizeof(request));
 	htod32a(&request[ptpip_startdata_transid  + 8],ptp->Transaction_ID);
@@ -296,6 +299,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 	unsigned long		toread, curread;
 	int			xret;
 
+	GP_LOG_D ("Reading PTP_OC 0x%0x (%s) data...", ptp->Code, ptp_get_opcode_name(params, ptp->Code));
 	ret = ptp_ptpip_cmd_read (params, &hdr, &xdata);
 	if (ret != PTP_RC_OK)
 		return ret;
@@ -376,6 +380,7 @@ ptp_ptpip_getresp (PTPParams* params, PTPContainer* resp)
 	uint16_t 	ret;
 	int		n;
 
+	GP_LOG_D ("Reading PTP_OC 0x%0x (%s) response...", resp->Code, ptp_get_opcode_name(params, resp->Code));
 retry:
 	ret = ptp_ptpip_cmd_read (params, &hdr, &data);
 	if (ret != PTP_RC_OK)
