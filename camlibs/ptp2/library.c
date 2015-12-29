@@ -3076,9 +3076,18 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	capture_start = time_now();
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
-		struct timeval focus_start;
-		int foundfocusinfo = 0;
+		struct timeval		focus_start;
+		int 			foundfocusinfo = 0;
+		PTPDevicePropDesc	dpd;
 
+		/* are we in manual focus mode ... value would be 3 */
+		if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusMode, &dpd)) {
+			if ((dpd.DataType == PTP_DTC_UINT16) && (dpd.CurrentValue.u16 == 3)) {
+				foundfocusinfo = 1;
+				/* will do 1 pass through the focusing loop for good measure */
+				GP_LOG_D("detected manual focus. skipping focus detection logic");
+			}
+		}
 		ret = GP_OK;
 		/* half press now - initiate focusing and wait for result */
 		C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
