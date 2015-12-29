@@ -2954,7 +2954,7 @@ capturetriggered:
 		}
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 50*100)); /* 50 seconds */
+	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 50*1000)); /* 50 seconds */
 
 	if (!newobject) newobject = 0xffff0001;
 
