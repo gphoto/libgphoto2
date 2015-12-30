@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.5.9\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-11-18 21:16+0100\n"
-"PO-Revision-Date: 2015-12-27 16:31+0100\n"
+"PO-Revision-Date: 2015-12-30 03:11+0100\n"
 "Last-Translator: Sebastian Rasmussen <sebras@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -35,13 +35,13 @@ msgid ""
 "Camera appears to not be using CompactFlash storage\n"
 "Unfortunately we do not support that at the moment :-(\n"
 msgstr ""
-"Kamera verkar inte använda CompactFlash-lagring\n"
+"Kameran verkar inte använda CompactFlash-lagring\n"
 "Tyvärr saknar vi stöd för detta för tillfället :-(\n"
 
 #: camlibs/agfa-cl20/agfa_cl20.c:531
 #, c-format
 msgid "Camera has taken %d pictures, and is using CompactFlash storage.\n"
-msgstr "Kamera har tagit %d bilder, och använder CompactFlash-lagring.\n"
+msgstr "Kameran har tagit %d bilder, och använder CompactFlash-lagring.\n"
 
 #: camlibs/agfa-cl20/agfa_cl20.c:539
 msgid ""
@@ -222,7 +222,7 @@ msgstr "NULL-parameter ”%s” i %s rad %i"
 #: camlibs/canon/canon.h:638
 #, c-format
 msgid "Don't know how to handle camera->port->type value %i aka 0x%x in %s line %i."
-msgstr "Vet inte hur camera->port->typ värde %i aka 0x%x på %s rad %i ska hanteras."
+msgstr "Vet inte hur camera->port->type-värde %i aka 0x%x på %s rad %i ska hanteras."
 
 #: camlibs/canon/crc.c:234
 #, c-format
@@ -237,7 +237,7 @@ msgstr "kan ej gissa initialt CRC-värde\n"
 #: camlibs/canon/crc.c:274
 #, c-format
 msgid "warning: CRC not checked (add len %d, value 0x%04x) #########################\n"
-msgstr "varning: CRC ej kontrollera (lägg till längd %d, värde 0x%04x) #########################\n"
+msgstr "varning: CRC ej kontrollerad (lägg till längd %d, värde 0x%04x) #########################\n"
 
 #: camlibs/canon/library.c:97 camlibs/canon/library.c:1616
 msgid "Compatibility Mode"
@@ -249,7 +249,7 @@ msgstr "Miniatyrbild"
 
 #: camlibs/canon/library.c:99
 msgid "Full Image"
-msgstr "Fullständig Bild"
+msgstr "Fullständig bild"
 
 #: camlibs/canon/library.c:123 camlibs/canon/library.c:266
 #: camlibs/ptp2/config.c:1758 camlibs/ptp2/config.c:1769
@@ -568,7 +568,7 @@ msgstr "Fel vid fotografering"
 #: camlibs/canon/library.c:677 camlibs/canon/library.c:1110
 #, c-format
 msgid "Could not get disk name: %s"
-msgstr "Kunde inte få tag på disk namn: %s"
+msgstr "Kunde inte få tag på disknamn: %s"
 
 #: camlibs/canon/library.c:678 camlibs/canon/library.c:1111
 msgid "No reason available"
@@ -597,8 +597,8 @@ msgid ""
 "  %11s bytes available"
 msgstr ""
 "  Enhet %s\n"
-"  %11s bytes totalt\n"
-"  %11s bytes tillgängliga"
+"  %11s byte totalt\n"
+"  %11s byte tillgängliga"
 
 #: camlibs/canon/library.c:1041 camlibs/canon/library.c:1047
 #: camlibs/canon/library.c:1948 camlibs/canon/library.c:1954
@@ -612,11 +612,11 @@ msgstr "på batteri"
 
 #: camlibs/canon/library.c:1043 camlibs/canon/library.c:1950
 msgid "power OK"
-msgstr "kraft OK"
+msgstr "ström OK"
 
 #: camlibs/canon/library.c:1043 camlibs/canon/library.c:1950
 msgid "power bad"
-msgstr "kraft dålig"
+msgstr "ström dålig"
 
 #: camlibs/canon/library.c:1051
 #, c-format
@@ -648,7 +648,7 @@ msgstr ""
 "  Modell: %s\n"
 "  Ägare: %s\n"
 "\n"
-"Kraftstatus: %s\n"
+"Strömstatus: %s\n"
 "\n"
 "Flashdisk-information:\n"
 "%s\n"
@@ -673,7 +673,7 @@ msgstr ""
 " Edouard Lafargue,\n"
 " Philippe Marzouk,\n"
 "A5-tillägg av Ole W. Saastad\n"
-"Ytterligare förvättringar av\n"
+"Ytterligare förbättringar av\n"
 " Holger Klemm\n"
 " Stephen H. Westin"
 
@@ -742,7 +742,7 @@ msgstr "Bildstorleksklass"
 #: camlibs/ptp2/config.c:6830 camlibs/ptp2/ptp.c:4195
 #: camlibs/sierra/olympus-desc.c:881 camlibs/sierra/olympus-desc.c:899
 msgid "ISO Speed"
-msgstr "ISO hastighet"
+msgstr "ISO-hastighet"
 
 #: camlibs/canon/library.c:1657 camlibs/canon/library.c:1658
 #: camlibs/canon/library.c:1684 camlibs/canon/library.c:1685
@@ -816,7 +816,7 @@ msgstr "Fokusläge"
 #: camlibs/sierra/sierra.c:1323 camlibs/sierra/sierra.c:1532
 #: camlibs/sierra/sierra.c:1763
 msgid "Flash Mode"
-msgstr "Blixt Läge"
+msgstr "Blixtläge"
 
 #: camlibs/canon/library.c:1873 camlibs/canon/library.c:2234
 #: camlibs/konica/library.c:668 camlibs/konica/library.c:883
@@ -831,7 +831,7 @@ msgstr "Kameraåtgärder"
 #: camlibs/canon/library.c:1908 camlibs/canon/library.c:2340
 #: camlibs/ptp2/config.c:6518 camlibs/ptp2/config.c:6519
 msgid "Synchronize camera date and time with PC"
-msgstr "Synkroniserad kameradatum och -tid med PC"
+msgstr "Synkronisera kameradatum och -tid med PC"
 
 #: camlibs/canon/library.c:1915 camlibs/ptp2/config.c:6943
 msgid "Camera Status Information"
@@ -1134,7 +1134,7 @@ msgstr "Ej igenkänd respons"
 #: camlibs/canon/serial.c:1376
 #, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr "Detekterade ett ”%s”, också känt som ”%s”"
+msgstr "Detektera ett ”%s”, också känt som ”%s”"
 
 #: camlibs/canon/serial.c:1384
 #, c-format
@@ -1143,7 +1143,7 @@ msgstr "Okänd modell ”%s”"
 
 #: camlibs/canon/serial.c:1405
 msgid "Bad EOT"
-msgstr "Dålig EOT"
+msgstr "Felaktig EOT"
 
 #: camlibs/canon/serial.c:1411
 msgid "Communication error 2"
@@ -1556,7 +1556,7 @@ msgstr "Blixt"
 #: camlibs/dimera/dimera3500.c:466 camlibs/ptp2/config.c:3071
 #: camlibs/ptp2/config.c:3090
 msgid "No Flash"
-msgstr "Ingen Blixt"
+msgstr "Ingen blixt"
 
 #: camlibs/dimera/dimera3500.c:468
 msgid "Dual Iris"
@@ -1568,11 +1568,11 @@ msgstr "Ingen dubbelbländare"
 
 #: camlibs/dimera/dimera3500.c:470
 msgid "Resolution Switch"
-msgstr "Upplösnings byte"
+msgstr "Upplösningsknapp"
 
 #: camlibs/dimera/dimera3500.c:470
 msgid "No Resolution Switch"
-msgstr "Ingen upplösningsbrytare"
+msgstr "Ingen upplösningsknapp"
 
 #: camlibs/dimera/dimera3500.c:472
 msgid "No Power Light"
@@ -1778,7 +1778,7 @@ msgstr "Hämtningsprogram för Digital Dream Enigma 1.3. av <olivier@aixmarseill
 #: camlibs/fuji/fuji.c:86
 #, c-format
 msgid "The camera sent only %i byte(s), but we need at least %i."
-msgstr "Kameran skickade bara %i byte(s), men vi behöver minst %i."
+msgstr "Kameran skickade bara %i byte, men vi behöver minst %i."
 
 #: camlibs/fuji/fuji.c:129 camlibs/ricoh/library.c:560
 msgid "Could not contact camera."
@@ -1792,22 +1792,22 @@ msgstr "Mottog oväntat data (0x%02x, 0x%02x)."
 #: camlibs/fuji/fuji.c:217
 #, c-format
 msgid "Wrong escape sequence: expected 0x%02x, got 0x%02x."
-msgstr "Fel utbrytnings sekvens: förväntade 0x%02x, fick 0x%02x."
+msgstr "Fel kontrollsekvens: förväntade 0x%02x, fick 0x%02x."
 
 #: camlibs/fuji/fuji.c:234
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x."
-msgstr "Dåliga data - fick 0x%02x, förväntade 0x%02x."
+msgstr "Felaktig data - fick 0x%02x, förväntade 0x%02x."
 
 #: camlibs/fuji/fuji.c:247
 #, c-format
 msgid "Bad data - got 0x%02x, expected 0x%02x or 0x%02x."
-msgstr "Dåliga data - fick 0x%02x, förväntade 0x%02x eller 0x%02x."
+msgstr "Felaktig data - fick 0x%02x, förväntade 0x%02x eller 0x%02x."
 
 #: camlibs/fuji/fuji.c:254
 #, c-format
 msgid "Bad checksum - got 0x%02x, expected 0x%02x."
-msgstr "Dålig kontrollsumma - fick 0x%02x, förväntade 0x%02x."
+msgstr "Felaktig kontrollsumma - fick 0x%02x, förväntade 0x%02x."
 
 #: camlibs/fuji/fuji.c:292 camlibs/fuji/fuji.c:731
 msgid "Camera rejected the command."
@@ -1830,12 +1830,12 @@ msgstr "Hämtar…"
 #: camlibs/fuji/fuji.c:541
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the thumbnail."
-msgstr "Kunde inte allokera %i byte(s) för hämtning av miniatyrbild."
+msgstr "Kunde inte allokera %i byte för hämtning av miniatyrbild."
 
 #: camlibs/fuji/fuji.c:575
 #, c-format
 msgid "Could not allocate %i byte(s) for downloading the picture."
-msgstr "Kunde inte allokera %i byte(s) för hämtning av bilden."
+msgstr "Kunde inte allokera %i byte för hämtning av bilden."
 
 #: camlibs/fuji/fuji.c:674
 #, c-format
@@ -1896,7 +1896,7 @@ msgstr "Modell: "
 
 #: camlibs/fuji/library.c:453
 msgid "Available memory: "
-msgstr "Tillgängligt Minne: "
+msgstr "Tillgängligt minne: "
 
 #: camlibs/gsmart300/library.c:166
 msgid ""
@@ -1918,7 +1918,7 @@ msgstr ""
 #: camlibs/gsmart300/library.c:210 camlibs/spca50x/library.c:566
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
-msgstr "Porttypen stöds ej: %d. Denna drivrutin fungerar bara med USB kameror.\n"
+msgstr "Porttypen stöds ej: %d. Denna drivrutin fungerar bara med USB-kameror.\n"
 
 #: camlibs/gsmart300/library.c:227 camlibs/spca50x/library.c:624
 msgid "Could not reset camera.\n"
@@ -1938,7 +1938,7 @@ msgid ""
 "Free space (Images): %d\n"
 "Battery level: %d %%."
 msgstr ""
-"Aktuell kamera tid:  %04d-%02d-%02d  %02d:%02d\n"
+"Aktuell kameratid:  %04d-%02d-%02d  %02d:%02d\n"
 "Ledigt minne på kort: %d\n"
 "Bilder på kort: %d\n"
 "Ledigt utrymme (Bilder): %d\n"
@@ -2028,8 +2028,8 @@ msgstr ""
 "Ett RS232-gränssnitt @ 115 kbit krävs för bildöverföring.\n"
 "Drivrutinen tillåter dig att få\n"
 "\n"
-"   - miniatyrbilder (64x48 PGM format)\n"
-"   - hela bilder (640x480 PPM format)\n"
+"   - miniatyrbilder (64x48 PGM-format)\n"
+"   - hela bilder (640x480 PPM-format)\n"
 
 #: camlibs/jd11/jd11.c:173
 msgid ""
@@ -2190,7 +2190,7 @@ msgstr "FlashPix"
 
 #: camlibs/kodak/dc210/dc210.c:202 camlibs/kodak/dc210/dc210.c:367
 msgid "File resolution"
-msgstr "Fil upplösning"
+msgstr "Filupplösning"
 
 #: camlibs/kodak/dc210/dc210.c:204 camlibs/kodak/dc210/dc210.c:209
 #: camlibs/ricoh/library.c:318
@@ -2244,7 +2244,7 @@ msgstr "29 mm"
 
 #: camlibs/kodak/dc210/dc210.c:261 camlibs/kodak/dc210/dc210.c:420
 msgid "Exposure compensation"
-msgstr "Exponerings kompensation"
+msgstr "Exponeringskompensation"
 
 #: camlibs/kodak/dc210/dc210.c:271 camlibs/kodak/dc210/dc210.c:277
 #: camlibs/konica/library.c:771 camlibs/konica/library.c:787
@@ -2321,7 +2321,7 @@ msgstr "Ingen"
 
 #: camlibs/kodak/dc210/dc210.c:285 camlibs/kodak/dc210/dc210.c:438
 msgid "Red eye flash"
-msgstr "Röda ögon reduktion"
+msgstr "Röda ögon-reduktion"
 
 #: camlibs/kodak/dc210/dc210.c:287 camlibs/kodak/dc210/dc210.c:291
 #: camlibs/konica/library.c:670 camlibs/konica/library.c:677
@@ -2555,7 +2555,7 @@ msgstr "Exponeringskompensation: %s\n"
 #: camlibs/kodak/dc210/dc210.c:588
 #, c-format
 msgid "Exposure compensation: %d\n"
-msgstr "Exponerings kompensation: %d\n"
+msgstr "Exponeringskompensation: %d\n"
 
 #: camlibs/kodak/dc210/dc210.c:593
 #, c-format
@@ -2780,7 +2780,7 @@ msgstr "Blixtfel."
 
 #: camlibs/konica/konica.c:71
 msgid "EEPROM checksum error."
-msgstr "EEPROM kontrollsumma fel."
+msgstr "Fel i EEPROM-kontrollsumma."
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
@@ -2816,7 +2816,7 @@ msgstr "Kortet är skrivskyddat."
 
 #: camlibs/konica/konica.c:98
 msgid "No space left on card."
-msgstr "Inge plats kvar på kortet."
+msgstr "Ingen plats kvar på kortet."
 
 #: camlibs/konica/konica.c:101
 msgid "Image protected."
@@ -2828,7 +2828,7 @@ msgstr "Ljuset för mörkt."
 
 #: camlibs/konica/konica.c:107
 msgid "Autofocus error."
-msgstr "Autofokus fel."
+msgstr "Autofokusfel."
 
 #: camlibs/konica/konica.c:110
 msgid "System error."
@@ -2852,7 +2852,7 @@ msgstr "Lokaliseringsdata korrupt."
 
 #: camlibs/konica/konica.c:125
 msgid "Unsupported command."
-msgstr "Ej stött kommando."
+msgstr "Kommando stöds ej."
 
 #: camlibs/konica/konica.c:128
 msgid "Other command executing."
@@ -2860,7 +2860,7 @@ msgstr "Annat kommando utförs redan."
 
 #: camlibs/konica/konica.c:131
 msgid "Command order error."
-msgstr "Kommando ordnings fel."
+msgstr "Kommandoordningsfel."
 
 #: camlibs/konica/konica.c:134
 msgid "Unknown error."
@@ -2928,7 +2928,7 @@ msgstr "Konica konfiguration"
 #: camlibs/konica/library.c:650 camlibs/konica/library.c:862
 #: camlibs/konica/qm150.c:754
 msgid "Persistent Settings"
-msgstr "Ihållande Inställningar"
+msgstr "Persistenta inställningar"
 
 #: camlibs/konica/library.c:680
 msgid "Shall the camera beep when taking a picture?"
@@ -2941,7 +2941,7 @@ msgstr "Självutlösningstid"
 #: camlibs/konica/library.c:691 camlibs/konica/library.c:903
 #: camlibs/konica/qm150.c:763
 msgid "Auto Off Time"
-msgstr "Auto Av tid"
+msgstr "Auto av tid"
 
 #: camlibs/konica/library.c:698 camlibs/konica/library.c:911
 msgid "Slide Show Interval"
@@ -2987,7 +2987,7 @@ msgstr "Inget valt"
 
 #: camlibs/konica/library.c:743 camlibs/konica/library.c:965
 msgid "TV Output Format"
-msgstr "TV Utdata format"
+msgstr "TV utdataformat"
 
 #: camlibs/konica/library.c:745 camlibs/konica/library.c:969
 #: camlibs/ptp2/config.c:1912
@@ -3001,7 +3001,7 @@ msgstr "PAL"
 
 #: camlibs/konica/library.c:747 camlibs/konica/library.c:973
 msgid "Do not display TV menu"
-msgstr "Visa inte TV menyn"
+msgstr "Visa inte TV-menyn"
 
 #: camlibs/konica/library.c:751 camlibs/konica/library.c:983
 #: camlibs/konica/qm150.c:823
@@ -3026,18 +3026,18 @@ msgstr "År/Månad/Dag"
 #: camlibs/konica/library.c:761 camlibs/konica/library.c:1003
 #: camlibs/konica/qm150.c:843
 msgid "Session-persistent Settings"
-msgstr "Residenta Inställningar"
+msgstr "Sessionspersistenta inställningar"
 
 #: camlibs/konica/library.c:770 camlibs/konica/library.c:781
 #: camlibs/konica/library.c:1014 camlibs/konica/qm150.c:852
 #: camlibs/konica/qm150.c:862
 msgid "On, red-eye reduction"
-msgstr "På, röda-ögon-reduktion"
+msgstr "På, röda ögon-reduktion"
 
 #: camlibs/konica/library.c:772 camlibs/konica/library.c:784
 #: camlibs/konica/qm150.c:854 camlibs/konica/qm150.c:869
 msgid "Auto, red-eye reduction"
-msgstr "Auto, röda-ögon reduktion"
+msgstr "Auto, röda ögon-reduktion"
 
 #: camlibs/konica/library.c:799 camlibs/konica/library.c:1033
 #: camlibs/konica/qm150.c:935 camlibs/ptp2/config.c:4674
@@ -3353,10 +3353,10 @@ msgstr ""
 "Om Konica Q-M150:\n"
 "Denna kamera tillåter inte några ändringar\n"
 "utifrån. Så i konfigurationen kan du bara\n"
-"se vad som konfigurerat på kameran\n"
+"se vad som konfigurerats på kameran\n"
 "men du kan inte ändra något.\n"
 "\n"
-"Om du har några problem med denna drivrutinen, skicka e-post till dess upphovsmän.\n"
+"Om du har några problem med denna drivrutin, skicka e-post till dess upphovsmän.\n"
 
 #: camlibs/largan/lmini/largan.c:228
 msgid ""
@@ -3623,7 +3623,7 @@ msgstr ""
 
 #: camlibs/mustek/core.c:575
 msgid "FlashLight : Auto (RedEye Reduction)"
-msgstr "Blixt : Auto (röda-ögon reduktion)"
+msgstr "Blixt : Auto (röda ögon-reduktion)"
 
 #: camlibs/mustek/core.c:577
 msgid "FlashLight : Auto"
@@ -3631,7 +3631,7 @@ msgstr "Blixt : Auto"
 
 #: camlibs/mustek/core.c:579
 msgid "FlashLight : On (RedEye Reduction)"
-msgstr "Blixt : På (röda-ögon reduktion)"
+msgstr "Blixt : På (röda ögon-reduktion)"
 
 #: camlibs/mustek/core.c:581
 msgid "FlashLight : On"
@@ -3782,7 +3782,7 @@ msgid ""
 msgstr ""
 "Kända problem:\n"
 "\n"
-"Om kommunikationsproblem uppstår, nollställ kameran och starta om applikationen. Drivrutinen kan ännu inte hantera dessa situationer, speciellt om problem uppstår och kameran inte är korrekt avstängd vid hastigheter över 9600 bps."
+"Om kommunikationsproblem uppstår, nollställ kameran och starta om programmet. Drivrutinen kan ännu inte hantera dessa situationer, speciellt om problem uppstår och kameran inte är korrekt avstängd vid hastigheter över 9600 bps."
 
 #: camlibs/panasonic/l859/l859.c:614
 msgid ""
@@ -3982,7 +3982,7 @@ msgstr "Begärde informationen om bild %i (= 0x%x), men fick information om bild
 #: camlibs/polaroid/pdc700.c:916
 #, c-format
 msgid "%i bytes of an unknown image format have been received. Please write to %s and ask for assistance."
-msgstr "%i bytes från ett okänd bildformat har mottagits. Skriv till %s och be om hjälp."
+msgstr "%i byte från ett okänd bildformat har mottagits. Skriv till %s och be om hjälp."
 
 #: camlibs/polaroid/pdc700.c:941
 msgid "Download program for Polaroid DC700 camera. Originally written by Ryan Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz Mueller <lutz@users.sf.net>."
@@ -4030,8 +4030,8 @@ msgstr ""
 "Information: %s\n"
 "Timer: %s\n"
 "LCD: %s\n"
-"Auto kraft av: %i minuter\n"
-"Kraftkälla: %s"
+"Auto avstängning: %i minuter\n"
+"Strömkälla: %s"
 
 #: camlibs/polaroid/pdc700.c:1235
 #, c-format
@@ -4208,7 +4208,7 @@ msgstr "JPEG detaljerad"
 #: camlibs/ptp2/config.c:4542 camlibs/ptp2/config.c:4553
 #: camlibs/ptp2/config.c:4565
 msgid "JPEG Normal"
-msgstr "JPEG Normal"
+msgstr "JPEG normal"
 
 #: camlibs/ptp2/config.c:1443
 msgid "RAW + JPEG Fine"
@@ -4236,7 +4236,7 @@ msgstr "Självutlösare"
 
 #: camlibs/ptp2/config.c:1453
 msgid "Mup Mirror up"
-msgstr "Sup Spegel upp"
+msgstr "Sup spegel upp"
 
 #: camlibs/ptp2/config.c:1735
 msgid "undefined"
@@ -4573,75 +4573,75 @@ msgstr "Liten JPEG"
 
 #: camlibs/ptp2/config.c:2249
 msgid "mRAW + Large Fine JPEG"
-msgstr "mRAW + Stor detaljerad JPEG"
+msgstr "mRAW + stor detaljerad JPEG"
 
 #: camlibs/ptp2/config.c:2250
 msgid "sRAW + Large Fine JPEG"
-msgstr "sRAW + Stor detaljerad JPEG"
+msgstr "sRAW + stor detaljerad JPEG"
 
 #: camlibs/ptp2/config.c:2252
 msgid "mRAW + Medium Fine JPEG"
-msgstr "mRAW + Medium detaljerad JPEG"
+msgstr "mRAW + medium detaljerad JPEG"
 
 #: camlibs/ptp2/config.c:2253
 msgid "sRAW + Medium Fine JPEG"
-msgstr "sRAW + Medium detaljerad JPEG"
+msgstr "sRAW + medium detaljerad JPEG"
 
 #: camlibs/ptp2/config.c:2256 camlibs/ptp2/config.c:2257
 msgid "mRAW + Small Fine JPEG"
-msgstr "mRAW + Liten detaljerad JPEG"
+msgstr "mRAW + liten detaljerad JPEG"
 
 #: camlibs/ptp2/config.c:2258 camlibs/ptp2/config.c:2259
 msgid "sRAW + Small Fine JPEG"
-msgstr "sRAW + Liten detaljerad JPEG"
+msgstr "sRAW + liten detaljerad JPEG"
 
 #: camlibs/ptp2/config.c:2261
 msgid "mRAW + Large Normal JPEG"
-msgstr "mRAW + Stor normal JPEG"
+msgstr "mRAW + stor normal JPEG"
 
 #: camlibs/ptp2/config.c:2262
 msgid "sRAW + Large Normal JPEG"
-msgstr "sRAW + Stor normal JPEG"
+msgstr "sRAW + stor normal JPEG"
 
 #: camlibs/ptp2/config.c:2264
 msgid "mRAW + Medium Normal JPEG"
-msgstr "mRAW + Medium normal JPEG"
+msgstr "mRAW + medium normal JPEG"
 
 #: camlibs/ptp2/config.c:2265
 msgid "sRAW + Medium Normal JPEG"
-msgstr "sRAW + Medium normal JPEG"
+msgstr "sRAW + medium normal JPEG"
 
 #: camlibs/ptp2/config.c:2268 camlibs/ptp2/config.c:2269
 msgid "mRAW + Small Normal JPEG"
-msgstr "mRAW + Liten normal JPEG"
+msgstr "mRAW + liten normal JPEG"
 
 #: camlibs/ptp2/config.c:2270 camlibs/ptp2/config.c:2271
 msgid "sRAW + Small Normal JPEG"
-msgstr "sRAW + Liten normal JPEG"
+msgstr "sRAW + liten normal JPEG"
 
 #: camlibs/ptp2/config.c:2272
 msgid "RAW + Smaller JPEG"
-msgstr "RAW + Mindre JPEG"
+msgstr "RAW + mindre JPEG"
 
 #: camlibs/ptp2/config.c:2273
 msgid "mRAW + Smaller JPEG"
-msgstr "mRAW + Mindre JPEG"
+msgstr "mRAW + mindre JPEG"
 
 #: camlibs/ptp2/config.c:2274
 msgid "sRAW + Smaller JPEG"
-msgstr "sRAW + Mindre JPEG"
+msgstr "sRAW + mindre JPEG"
 
 #: camlibs/ptp2/config.c:2275
 msgid "RAW + Tiny JPEG"
-msgstr "RAW + Liten JPEG"
+msgstr "RAW + liten JPEG"
 
 #: camlibs/ptp2/config.c:2276
 msgid "mRAW + Tiny JPEG"
-msgstr "mRAW + Liten JPEG"
+msgstr "mRAW + liten JPEG"
 
 #: camlibs/ptp2/config.c:2277
 msgid "sRAW + Tiny JPEG"
-msgstr "sRAW + Liten JPEG"
+msgstr "sRAW + liten JPEG"
 
 #: camlibs/ptp2/config.c:2302 camlibs/ptp2/ptp.c:5435
 msgid "Continuous"
@@ -4943,51 +4943,51 @@ msgstr "Självutlösare 10s"
 
 #: camlibs/ptp2/config.c:3127
 msgid "Bracketing C 0.3 Steps"
-msgstr "Alternativexponering C 0.3 Steg"
+msgstr "Gaffling C 0.3 steg"
 
 #: camlibs/ptp2/config.c:3128
 msgid "Bracketing C 0.7 Steps"
-msgstr "Alternativexponering C 0.7 Steg"
+msgstr "Gaffling C 0.7 steg"
 
 #: camlibs/ptp2/config.c:3129
 msgid "Bracketing C 1.0 Steps"
-msgstr "Alternativexponering C 1.0 Steg"
+msgstr "Gaffling C 1.0 steg"
 
 #: camlibs/ptp2/config.c:3130
 msgid "Bracketing C 2.0 Steps"
-msgstr "Alternativexponering C 2.0 Steg"
+msgstr "Gaffling C 2.0 steg"
 
 #: camlibs/ptp2/config.c:3131
 msgid "Bracketing C 3.0 Steps"
-msgstr "Alternativexponering C 3.0 Steg"
+msgstr "Gaffling C 3.0 steg"
 
 #: camlibs/ptp2/config.c:3132
 msgid "Bracketing S 0.3 Steps"
-msgstr "Alternativexponering S 0.3 Steg"
+msgstr "Gaffling S 0.3 steg"
 
 #: camlibs/ptp2/config.c:3133
 msgid "Bracketing S 0.7 Steps"
-msgstr "Alternativexponering S 0.7 Steg"
+msgstr "Gaffling S 0.7 steg"
 
 #: camlibs/ptp2/config.c:3134
 msgid "Bracketing S 1.0 Steps"
-msgstr "Alternativexponering S 1.0 Steg"
+msgstr "Gaffling S 1.0 steg"
 
 #: camlibs/ptp2/config.c:3135
 msgid "Bracketing S 2.0 Steps"
-msgstr "Alternativexponering S 2.0 Steg"
+msgstr "Gaffling S 2.0 steg"
 
 #: camlibs/ptp2/config.c:3136
 msgid "Bracketing S 3.0 Steps"
-msgstr "Alternativexponering S 3.0 Steg"
+msgstr "Gaffling S 3.0 steg"
 
 #: camlibs/ptp2/config.c:3137
 msgid "Bracketing WB Lo"
-msgstr "Alternativexponering WB Låg"
+msgstr "Gaffling WB låg"
 
 #: camlibs/ptp2/config.c:3138
 msgid "Bracketing WB Hi"
-msgstr "Alternativexponering WB Hög"
+msgstr "Gaffling WB hög"
 
 #: camlibs/ptp2/config.c:3147 camlibs/ptp2/ptp.c:4995
 msgid "Centre-spot"
@@ -5110,7 +5110,7 @@ msgstr "Röda ögon-automatisk"
 
 #: camlibs/ptp2/config.c:3270
 msgid "Red-eye fill"
-msgstr "Röda-ögon-upplättning"
+msgstr "Röda ögon-upplättning"
 
 #: camlibs/ptp2/config.c:3271 camlibs/ptp2/ptp.c:4971
 msgid "External sync"
@@ -5126,7 +5126,7 @@ msgstr "Bakre ridå synk + långsam synk"
 
 #: camlibs/ptp2/config.c:3275 camlibs/ptp2/ptp.c:4975
 msgid "Red-eye Reduction + Slow Sync"
-msgstr "Röda ögon-reduktion + Långsam synk"
+msgstr "Röda ögon-reduktion + långsam synk"
 
 #: camlibs/ptp2/config.c:3276
 msgid "Front-curtain sync"
@@ -5165,7 +5165,7 @@ msgstr "Trådlös synk"
 #: camlibs/sierra/sierra.c:1335 camlibs/sierra/sierra.c:1537
 #: camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1774
 msgid "Slow Sync"
-msgstr "Långsam Synk"
+msgstr "Långsam synk"
 
 #: camlibs/ptp2/config.c:3291 camlibs/ricoh/library.c:330
 #: camlibs/sierra/epson-desc.c:137
@@ -5257,11 +5257,11 @@ msgstr "Endast AF-Lås"
 
 #: camlibs/ptp2/config.c:3796 camlibs/ptp2/ptp.c:5054
 msgid "AF Lock Hold"
-msgstr "AF-Lås Håll"
+msgstr "AF-lås håll"
 
 #: camlibs/ptp2/config.c:3797 camlibs/ptp2/ptp.c:5055
 msgid "AF On"
-msgstr "AF På"
+msgstr "AF på"
 
 #: camlibs/ptp2/config.c:3798
 msgid "Flash Level Lock"
@@ -6826,11 +6826,11 @@ msgstr "Tagningsläge för stillbilder"
 
 #: camlibs/ptp2/config.c:6725
 msgid "Canon Shooting Mode"
-msgstr "Canon Bildtagningsläge"
+msgstr "Canon bildtagningsläge"
 
 #: camlibs/ptp2/config.c:6726
 msgid "Canon Auto Exposure Mode"
-msgstr "Canon Autoexponeringsläge"
+msgstr "Canon autoexponeringsläge"
 
 #: camlibs/ptp2/config.c:6727 camlibs/ptp2/ptp.c:4181
 msgid "Drive Mode"
@@ -7140,17 +7140,17 @@ msgstr "Filmupplösning"
 #: camlibs/ptp2/config.c:6866 camlibs/ptp2/config.c:6878
 #: camlibs/ptp2/config.c:6886 camlibs/ptp2/config.c:6914
 msgid "Continuous Shooting Speed Slow"
-msgstr "Kontinuerlig Bildtagning Hastighet Långsam"
+msgstr "Kontinuerlig bildtagning hastighet långsam"
 
 #: camlibs/ptp2/config.c:6867 camlibs/ptp2/config.c:6874
 #: camlibs/ptp2/config.c:6885 camlibs/ptp2/config.c:6910
 msgid "ISO Auto Hi Limit"
-msgstr "ISO Auto Hög Gräns"
+msgstr "ISO auto hög gräns"
 
 #: camlibs/ptp2/config.c:6868 camlibs/ptp2/config.c:6888
 #: camlibs/ptp2/config.c:6926 camlibs/ptp2/ptp.c:4426
 msgid "Flash Sync. Speed"
-msgstr "Blixt synk-hastighet"
+msgstr "Blixt synk.-hastighet"
 
 #: camlibs/ptp2/config.c:6869
 msgid "Focus Metering"
@@ -7160,11 +7160,11 @@ msgstr "Fokusmätning"
 #: camlibs/ptp2/config.c:6912 camlibs/ptp2/config.c:6918
 #: camlibs/ptp2/ptp.c:4745
 msgid "High ISO Noise Reduction"
-msgstr "Hög ISO Brusreducering"
+msgstr "Hög ISO-brusreducering"
 
 #: camlibs/ptp2/config.c:6887 camlibs/ptp2/config.c:6925
 msgid "Continuous Shooting Speed High"
-msgstr "Kontinuerlig Bildtagning Hastighet Hög"
+msgstr "Kontinuerlig bildtagning hastighet hög"
 
 #: camlibs/ptp2/config.c:6891 camlibs/ptp2/ptp.c:4314
 msgid "JPEG Compression Policy"
@@ -7188,7 +7188,7 @@ msgstr "Dynamiskt-AF-område"
 
 #: camlibs/ptp2/config.c:6896 camlibs/ptp2/ptp.c:4358
 msgid "AF Lock On"
-msgstr "AF-lås På"
+msgstr "AF-lås på"
 
 #: camlibs/ptp2/config.c:6897 camlibs/ptp2/ptp.c:4469
 msgid "AF Area Point"
@@ -7196,11 +7196,11 @@ msgstr "AF-områdespunkt"
 
 #: camlibs/ptp2/config.c:6898
 msgid "AF On Button"
-msgstr "AF På-knapp"
+msgstr "AF på-knapp"
 
 #: camlibs/ptp2/config.c:6913
 msgid "Movie High ISO Noise Reduction"
-msgstr "Film Hög ISO Brusreducering"
+msgstr "Film hög ISO-brusreducering"
 
 #: camlibs/ptp2/config.c:6915
 msgid "Maximum continuous release"
@@ -7426,7 +7426,7 @@ msgstr "  Serienummer: %s\n"
 #: camlibs/ptp2/library.c:4809
 #, c-format
 msgid "Vendor Extension ID: 0x%x (%d.%d)\n"
-msgstr "Tillverkarutökning ID: 0x%x (%d.%d)\n"
+msgstr "Tillverkarutöknings-ID: 0x%x (%d.%d)\n"
 
 #: camlibs/ptp2/library.c:4816
 #, c-format
@@ -7669,7 +7669,7 @@ msgstr "\tLedigt utrymme (byte): %llu (%lu MB)\n"
 #: camlibs/ptp2/library.c:5075
 #, c-format
 msgid "\tFree Space (Images): %d\n"
-msgstr "\tLedig utrymme (Images): %d\n"
+msgstr "\tLedig utrymme (bilder): %d\n"
 
 #: camlibs/ptp2/library.c:5083
 #, c-format
@@ -7761,7 +7761,7 @@ msgstr "PTP ofullständig överföring"
 
 #: camlibs/ptp2/ptp.c:4021
 msgid "PTP Invalid Storage ID"
-msgstr "PTP ogiltig lagrings ID"
+msgstr "PTP ogiltig lagrings-ID"
 
 #: camlibs/ptp2/ptp.c:4022
 msgid "PTP Invalid Object Handle"
@@ -7813,11 +7813,11 @@ msgstr "PTP specifikation av format stöds ej"
 
 #: camlibs/ptp2/ptp.c:4034
 msgid "PTP No Valid Object Info"
-msgstr "PTP ingen giltig objekt information"
+msgstr "PTP ingen giltig objektinformation"
 
 #: camlibs/ptp2/ptp.c:4035
 msgid "PTP Invalid Code Format"
-msgstr "PTP ogiltig format kod"
+msgstr "PTP ogiltigt kodformat"
 
 #: camlibs/ptp2/ptp.c:4036
 msgid "PTP Unknown Vendor Code"
@@ -7833,15 +7833,15 @@ msgstr "PTP-enhet upptagen"
 
 #: camlibs/ptp2/ptp.c:4039
 msgid "PTP Invalid Parent Object"
-msgstr "PTP ogiltigt förändra objekt"
+msgstr "PTP ogiltigt föräldraobjekt"
 
 #: camlibs/ptp2/ptp.c:4040
 msgid "PTP Invalid Device Prop Format"
-msgstr "PTP ogiltig enhets parameter format"
+msgstr "PTP ogiltigt format för enhetsparameter"
 
 #: camlibs/ptp2/ptp.c:4041
 msgid "PTP Invalid Device Prop Value"
-msgstr "PTP ogiltigt enhets parameter värde"
+msgstr "PTP ogiltigt enhetsparametervärde"
 
 #: camlibs/ptp2/ptp.c:4042 camlibs/ptp2/ptp.c:4074
 msgid "PTP Invalid Parameter"
@@ -8019,7 +8019,7 @@ msgstr "Kontrast"
 #: camlibs/ptp2/ptp.c:4125 camlibs/sierra/nikon-desc.c:553
 #: camlibs/sierra/nikon-desc.c:576
 msgid "Digital Zoom"
-msgstr "Digital Zoom"
+msgstr "Digital zoom"
 
 #: camlibs/ptp2/ptp.c:4129
 msgid "Timelapse Number"
@@ -8127,7 +8127,7 @@ msgstr "Filformat för fullständig vy"
 
 #: camlibs/ptp2/ptp.c:4176
 msgid "Self Time"
-msgstr "Self Time"
+msgstr "Självutlösare"
 
 #: camlibs/ptp2/ptp.c:4179 camlibs/ptp2/ptp.c:4312
 msgid "Shooting Mode"
@@ -8163,11 +8163,11 @@ msgstr "Parameterinställning"
 
 #: camlibs/ptp2/ptp.c:4201
 msgid "Av Open"
-msgstr "Av Öppen"
+msgstr "Av öppen"
 
 #: camlibs/ptp2/ptp.c:4202
 msgid "Av Max"
-msgstr "Av Max"
+msgstr "Av max"
 
 #: camlibs/ptp2/ptp.c:4204 camlibs/ptp2/ptp.c:4228
 msgid "Focal Length Tele"
@@ -8223,15 +8223,15 @@ msgstr "Kamerahus-ID"
 
 #: camlibs/ptp2/ptp.c:4221
 msgid "Disp Av"
-msgstr "Skärm Av"
+msgstr "Skärm av"
 
 #: camlibs/ptp2/ptp.c:4222
 msgid "Av Open Apex"
-msgstr "Av Öppen Topp"
+msgstr "Av öppen topp"
 
 #: camlibs/ptp2/ptp.c:4223
 msgid "Digital Zoom Magnification"
-msgstr "Digital Zoom-förstoring"
+msgstr "Digital zoom-förstoring"
 
 #: camlibs/ptp2/ptp.c:4224
 msgid "Ml Spot Position"
@@ -8239,11 +8239,11 @@ msgstr "Ml punktposition"
 
 #: camlibs/ptp2/ptp.c:4225
 msgid "Disp Av Max"
-msgstr "Skärm Av Max"
+msgstr "Skärm av max"
 
 #: camlibs/ptp2/ptp.c:4226
 msgid "Av Max Apex"
-msgstr "Av Max Topp"
+msgstr "Av max topp"
 
 #: camlibs/ptp2/ptp.c:4227
 msgid "EZoom Start Position"
@@ -8387,7 +8387,7 @@ msgstr "Återställ menybank"
 
 #: camlibs/ptp2/ptp.c:4356
 msgid "Vertical AF On"
-msgstr "Vertikal AF På"
+msgstr "Vertikal AF på"
 
 #: camlibs/ptp2/ptp.c:4360
 msgid "Focus Area Zone"
@@ -8403,7 +8403,7 @@ msgstr "Exponering ISO-steg"
 
 #: camlibs/ptp2/ptp.c:4368
 msgid "Exposure Step"
-msgstr "Exponerings steg"
+msgstr "Exponeringssteg"
 
 #: camlibs/ptp2/ptp.c:4370
 msgid "Exposure Compensation (EV)"
@@ -8431,7 +8431,7 @@ msgstr "Livevisning AF-område"
 
 #: camlibs/ptp2/ptp.c:4390
 msgid "Auto Meter Off Time"
-msgstr "Auto mätning Av tid"
+msgstr "Auto mätning av tid"
 
 #: camlibs/ptp2/ptp.c:4392
 msgid "Self Timer Delay"
@@ -8443,7 +8443,7 @@ msgstr "Bildkonfigurationstid"
 
 #: camlibs/ptp2/ptp.c:4398
 msgid "Auto Off Timers"
-msgstr "Auto Av tidsutlösare"
+msgstr "Auto av tidsutlösare"
 
 #: camlibs/ptp2/ptp.c:4400
 msgid "Angle Level"
@@ -8467,7 +8467,7 @@ msgstr "LCD-belysning"
 
 #: camlibs/ptp2/ptp.c:4418
 msgid "High ISO noise reduction"
-msgstr "Hög ISO brusreducering"
+msgstr "Hög ISO-brusreducering"
 
 #: camlibs/ptp2/ptp.c:4420
 msgid "On screen tips"
@@ -8543,7 +8543,7 @@ msgstr "Funktionsknapp 2"
 
 #: camlibs/ptp2/ptp.c:4471
 msgid "Normal AF On"
-msgstr "Normal AF På"
+msgstr "Normal AF på"
 
 #: camlibs/ptp2/ptp.c:4473
 msgid "Clean Image Sensor"
@@ -9030,7 +9030,7 @@ msgstr "%.0f mm"
 
 #: camlibs/ptp2/ptp.c:4940
 msgid "JPEG Norm"
-msgstr "JPEG Norm"
+msgstr "JPEG norm"
 
 #: camlibs/ptp2/ptp.c:4943
 msgid "RAW + JPEG Basic"
@@ -9059,11 +9059,11 @@ msgstr "Automatisk blixt"
 
 #: camlibs/ptp2/ptp.c:4969
 msgid "Automatic Red-eye Reduction"
-msgstr "Automatisk röda-ögon-reduktion"
+msgstr "Automatisk röda ögon-reduktion"
 
 #: camlibs/ptp2/ptp.c:4970
 msgid "Red-eye fill flash"
-msgstr "Röda-ögon upplättningsblixt"
+msgstr "Röda ögon-upplättningsblixt"
 
 #: camlibs/ptp2/ptp.c:4988
 msgid "Power Wind"
@@ -9183,7 +9183,7 @@ msgstr "Låghastighetssynkronisering"
 
 #: camlibs/ptp2/ptp.c:5345
 msgid "Auto + Red Eye Suppression"
-msgstr "Auto + röda-ögon-reduktion"
+msgstr "Auto + röda ögon-reduktion"
 
 #: camlibs/ptp2/ptp.c:5346
 msgid "On + Red Eye Suppression"
@@ -9223,15 +9223,15 @@ msgstr "Kontinuerlig Bildtagning"
 
 #: camlibs/ptp2/ptp.c:5376
 msgid "Timer (Single) Shooting"
-msgstr "Självutlösande (Enkel) Bildtagning"
+msgstr "Självutlösande (enkel) bildtagning"
 
 #: camlibs/ptp2/ptp.c:5377
 msgid "Continuous Low-speed Shooting"
-msgstr "Kontinuerlig Långsam Bildtagning"
+msgstr "Kontinuerlig långsam bildtagning"
 
 #: camlibs/ptp2/ptp.c:5378
 msgid "Continuous High-speed Shooting"
-msgstr "Kontinuerlig Höghastighet Bildtagning"
+msgstr "Kontinuerlig höghastighet bildtagning"
 
 #: camlibs/ptp2/ptp.c:5381 camlibs/ricoh/library.c:377
 #: camlibs/sierra/sierra.c:1163 camlibs/sierra/sierra.c:1169
@@ -9388,7 +9388,7 @@ msgstr "Abstrakt videoalbum"
 
 #: camlibs/ptp2/ptp.c:5622
 msgid "Abstract Audio Video Playlist"
-msgstr "Abstrakt Audio/Video-spellista"
+msgstr "Abstrakt audio/video-spellista"
 
 #: camlibs/ptp2/ptp.c:5623
 msgid "Abstract Contact Group"
@@ -9845,15 +9845,15 @@ msgstr "Skicka partiellt objekt"
 
 #: camlibs/ptp2/ptp.c:5801
 msgid "Truncate Object"
-msgstr "Trunkera Objekt"
+msgstr "Trunkera objekt"
 
 #: camlibs/ptp2/ptp.c:5802
 msgid "Begin Edit Object"
-msgstr "Börja Redigera Objekt"
+msgstr "Börja redigera objekt"
 
 #: camlibs/ptp2/ptp.c:5803
 msgid "End Edit Object"
-msgstr "Sluta Redigera Objekt"
+msgstr "Sluta redigera objekt"
 
 #: camlibs/ptp2/ptp.c:6012
 msgid "Unknown PTP_OC"
@@ -9910,7 +9910,7 @@ msgstr "Kameratid: %s %s\n"
 #: camlibs/ricoh/g3.c:576 camlibs/sierra/sierra.c:1954
 #, c-format
 msgid "Camera ID: %s\n"
-msgstr "Kamera ID: %s\n"
+msgstr "Kamera-ID: %s\n"
 
 #: camlibs/ricoh/g3.c:582
 #, c-format
@@ -9920,7 +9920,7 @@ msgstr "Inget SD-kort isatt.\n"
 #: camlibs/ricoh/g3.c:585
 #, c-format
 msgid "SD Card ID: %s\n"
-msgstr "SD-kort ID: %s\n"
+msgstr "SD-korts-ID: %s\n"
 
 #: camlibs/ricoh/g3.c:593
 #, c-format
@@ -9973,7 +9973,7 @@ msgid ""
 "Memory: %d byte(s) of %d available"
 msgstr ""
 "Modell: %s\n"
-"Minne: %d byte(s) av %d tillgängliga"
+"Minne: %d byte av %d tillgängliga"
 
 #: camlibs/ricoh/library.c:302
 msgid "-2.0"
@@ -10113,12 +10113,12 @@ msgstr "Förväntade %i byte, fick %i. Rapportera detta felet till %s."
 #: camlibs/ricoh/ricoh.c:178 camlibs/ricoh/ricoh.c:192
 #, c-format
 msgid "We expected 0x%x but received 0x%x. Please contact %s."
-msgstr "Vi Förväntade 0x%x men mottog 0x%x. Kontakta %s."
+msgstr "Vi förväntade 0x%x men mottog 0x%x. Kontakta %s."
 
 #: camlibs/ricoh/ricoh.c:221
 #, c-format
 msgid "Bad characters (0x%x, 0x%x). Please contact %s."
-msgstr "Dåliga tecken (0x%x 0x%x). Kontakta %s."
+msgstr "Felaktiga tecken (0x%x 0x%x). Kontakta %s."
 
 #: camlibs/ricoh/ricoh.c:262 camlibs/ricoh/ricoh.c:337
 #, c-format
@@ -10187,7 +10187,7 @@ msgstr "Färgläge"
 #: camlibs/sierra/sierra.c:1536 camlibs/sierra/sierra.c:1545
 #: camlibs/sierra/sierra.c:1772
 msgid "Red-eye Reduction"
-msgstr "Röda-Ögon Reduktion"
+msgstr "Röda ögon-reduktion"
 
 #: camlibs/sierra/epson-desc.c:160 camlibs/sierra/nikon-desc.c:243
 #: camlibs/sierra/olympus-desc.c:506 camlibs/sierra/olympus-desc.c:525
@@ -10197,11 +10197,11 @@ msgstr "Blixtinställningar"
 
 #: camlibs/sierra/epson-desc.c:193 camlibs/sierra/olympus-desc.c:709
 msgid "Host power save (seconds)"
-msgstr "Värd kraft besparing (sekunder)"
+msgstr "Värd strömbesparing (sekunder)"
 
 #: camlibs/sierra/epson-desc.c:209 camlibs/sierra/olympus-desc.c:694
 msgid "Camera power save (seconds)"
-msgstr "Kamera kraft besparing (skrivskyddad)"
+msgstr "Kamera strömbesparing (sekunder)"
 
 #: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1114
 #: camlibs/sierra/sierra.c:1387 camlibs/sierra/sierra.c:1586
@@ -10299,7 +10299,7 @@ msgstr "Kan inte hämta hur mycket tillgängligt minne som finns kvar"
 
 #: camlibs/sierra/library.c:391
 msgid "Camera refused 3 times to keep a connection open."
-msgstr "Kameran 3 gånger att hålla förbindelsen öppen."
+msgstr "Kameran vägrade att hålla förbindelsen öppen tre gånger."
 
 #: camlibs/sierra/library.c:616
 #, c-format
@@ -10365,7 +10365,7 @@ msgstr "Kunde inte hämta strängregister %i. Kontakta %s."
 #: camlibs/sierra/library.c:1519
 #, c-format
 msgid "Expected 32 bytes, got %i. Please contact %s."
-msgstr "Förväntade 32 bytes, fick %i.  Kontakta %s."
+msgstr "Förväntade 32 byte, fick %i.  Kontakta %s."
 
 #: camlibs/sierra/nikon-desc.c:162 camlibs/sierra/olympus-desc.c:361
 msgid "Shutter Speed microseconds (0 auto)"
@@ -10442,11 +10442,11 @@ msgstr "Operationsläge"
 #: camlibs/sierra/nikon-desc.c:392 camlibs/sierra/olympus-desc.c:680
 #: camlibs/sierra/sierra.c:1220 camlibs/sierra/sierra.c:1459
 msgid "LCD Brightness"
-msgstr "LCD Ljusstyrka"
+msgstr "LCD-ljusstyrka"
 
 #: camlibs/sierra/nikon-desc.c:407 camlibs/sierra/olympus-desc.c:722
 msgid "LCD Auto Shut Off (seconds)"
-msgstr "LCD Automatisk avstängning (sekunder)"
+msgstr "LCD automatisk avstängning (sekunder)"
 
 #: camlibs/sierra/nikon-desc.c:491
 msgid "Center-Weighted"
@@ -10562,7 +10562,7 @@ msgstr "Långsam"
 
 #: camlibs/sierra/olympus-desc.c:540
 msgid "Anti-redeye Fill"
-msgstr "Anti-röda-ögon-utfyllnad"
+msgstr "Anti-röda ögon-utfyllnad"
 
 #: camlibs/sierra/olympus-desc.c:596
 msgid "Fluorescent-1-home-6700K"
@@ -11336,7 +11336,7 @@ msgstr "Tillverkar-ID: %02x%02x\n"
 #: camlibs/stv0680/library.c:588
 #, c-format
 msgid "Product ID: %02x%02x\n"
-msgstr "Produkt ID: %02x%02x\n"
+msgstr "Produkt-ID: %02x%02x\n"
 
 #: camlibs/stv0680/library.c:595
 #, c-format
