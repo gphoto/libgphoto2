@@ -204,17 +204,17 @@ gp_port_usbdiskdirect_get_usb_id (const char *disk,
 int
 gp_port_library_list (GPPortInfoList *list)
 {
-	DIR *dir;
-	struct dirent *dirent;
+	gp_system_dir dir;
+	gp_system_dirent dirent;
 	GPPortInfo info;
 	int ret;
 	unsigned short vendor_id, product_id;
 
-	dir = opendir ("/sys/block");
+	dir = gp_system_opendir ("/sys/block");
 	if (dir == NULL)
 		return GP_OK;
 
-	while ((dirent = readdir (dir))) {
+	while ((dirent = gp_system_readdir (dir))) {
 		char path[4096];
 		if (dirent->d_name[0] != 's' ||
 		    dirent->d_name[1] != 'd' ||
@@ -237,7 +237,7 @@ gp_port_library_list (GPPortInfoList *list)
 		if (ret < GP_OK)
 			break;
 	}
-	closedir (dir);
+	gp_system_closedir (dir);
 	return GP_OK;
 }
 
