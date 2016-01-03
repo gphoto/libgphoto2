@@ -206,17 +206,17 @@ gp_port_usbscsi_get_usb_id (const char *sg,
 int
 gp_port_library_list (GPPortInfoList *list)
 {
-	DIR *dir;
-	struct dirent *dirent;
-	int ret;
-	GPPortInfo info;
-	unsigned short vendor_id, product_id;
+	gp_system_dir		dir;
+	gp_system_dirent	dirent;
+	int 			ret;
+	GPPortInfo		info;
+	unsigned short		vendor_id, product_id;
 
-	dir = opendir ("/sys/class/scsi_generic");
+	dir = gp_system_opendir ("/sys/class/scsi_generic");
 	if (dir == NULL)
 		return GP_OK;
 
-	while ((dirent = readdir (dir))) {
+	while ((dirent = gp_system_readdir (dir))) {
 		char path[4096];
 		if (gp_port_usbscsi_get_usb_id (dirent->d_name,
 				&vendor_id, &product_id) != GP_OK)
@@ -233,7 +233,7 @@ gp_port_library_list (GPPortInfoList *list)
 		if (ret < GP_OK) /* can only be out of memory */
 			break;
 	}
-	closedir (dir);
+	gp_system_closedir (dir);
 	return GP_OK;
 }
 
