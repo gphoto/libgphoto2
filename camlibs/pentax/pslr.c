@@ -189,10 +189,10 @@ static ipslr_handle_t pslr;
 
 pslr_handle_t pslr_init()
 {
-    gp_system_dir *d;
+    gp_system_dir d;
     char nmbuf[256];
     char infobuf[64];
-    gp_system_dirent *ent;
+    gp_system_dirent ent;
     int fd;
 
     memset(&pslr.devname, 0, sizeof(pslr.devname));
