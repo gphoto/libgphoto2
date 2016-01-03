@@ -40,7 +40,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"no ltdl",
 #endif
-#ifdef HAVE_LIBUSB
+#if defined(HAVE_LIBUSB) || defined(HAVE_LIBUSB1) || defined(HAVE_LIBUSB_WIN32)
 			"USB",
 #else
 			"no USB",
