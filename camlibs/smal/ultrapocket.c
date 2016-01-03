@@ -31,7 +31,6 @@
 #include <gphoto2/gphoto2-result.h>
 #include <bayer.h>
 #include <gamma.h>
-#include <unistd.h>
 
 #include "ultrapocket.h"
 #include "smal.h"

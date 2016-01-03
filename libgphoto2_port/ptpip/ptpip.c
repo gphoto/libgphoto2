@@ -23,7 +23,6 @@
 #include <gphoto2/gphoto2-port-library.h>
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
 #ifdef HAVE_FCNTL_H
 # include <fcntl.h>

@@ -26,7 +26,6 @@
 #include <gphoto2/gphoto2-port-library.h>
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
