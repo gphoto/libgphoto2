@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2_port 2.5.8\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2015-06-17 23:53+0200\n"
-"PO-Revision-Date: 2015-12-27 16:14+0100\n"
+"PO-Revision-Date: 2015-12-31 01:58+0100\n"
 "Last-Translator: Sebastian Rasmussen <sebras@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -157,7 +157,7 @@ msgstr "Enheten ”%s” är låst av pid %d"
 #: serial/unix.c:239 usbdiskdirect/linux.c:99
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Enheten ”%s” kunde inte låsas (dev_lock returnerade %d)"
+msgstr "Enheten ”%s” kunde inte låsas (dev_unlock returnerade %d)"
 
 #: serial/unix.c:268
 #, c-format
@@ -261,7 +261,7 @@ msgstr "Kunde inte läsa från ”%s” (%m)."
 #: usb/libusb.c:261 libusb1/libusb1.c:378
 #, c-format
 msgid "Could not open USB device (%s)."
-msgstr "Kunde inte öppna USB-enhet (%s)"
+msgstr "Kunde inte öppna USB-enhet (%s)."
 
 #: usb/libusb.c:274 libusb1/libusb1.c:387
 msgid "Camera is already in use."
@@ -279,7 +279,7 @@ msgstr "Kunde inte fråga kärndrivrutinen efter enheten."
 #: usb/libusb.c:296 libusb1/libusb1.c:409
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Kunde inte göra anspråk på gränssnittet %d (%s). Kontrollera att inget annat program (%s) eller kärnmodul (såsom %s) använder enheten och att du du har skriv-/läsrättigheter för enheten."
+msgstr "Kunde inte göra anspråk på gränssnittet %d (%s). Kontrollera att inget annat program (%s) eller kärnmodul (såsom %s) använder enheten och att du har skriv-/läsrättigheter för enheten."
 
 #: usb/libusb.c:308 libusb1/libusb1.c:420
 msgid "MacOS PTPCamera service"
@@ -317,7 +317,7 @@ msgstr "Kunde inte ställa in alternativinställning från %d till %d (%s)"
 #: usb/libusb.c:753 libusb1/libusb1.c:1018
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Den angivna tillverkare- eller produktidentiteten (0x%x,0x%x) är inte giltig."
+msgstr "Den angivna tillverkar- eller produktidentiteten (0x%x,0x%x) är inte giltig."
 
 #: usb/libusb.c:824 usb/libusb.c:910 libusb1/libusb1.c:987
 #: libusb1/libusb1.c:1079
@@ -328,7 +328,7 @@ msgstr "Kunde inte finna USB-enheten (tillverkare 0x%x, produkt 0x%x). Kontrolle
 #: usb/libusb.c:1203 libusb1/libusb1.c:1368
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
-msgstr "Kunde inte finna USB-enheten  (klass 0x%x, underklass 0x%x, protokoll 0x%x). Kontrollera att enheten är ansluten till datorn."
+msgstr "Kunde inte finna USB-enheten (klass 0x%x, underklass 0x%x, protokoll 0x%x). Kontrollera att enheten är ansluten till datorn."
 
 #: libusb1/libusb1.c:396
 msgid "Could not detach kernel driver of camera device."
@@ -360,7 +360,7 @@ msgstr "USB-masslagring rå SCSI"
 #: usbscsi/linux.c:342
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
-msgstr "Kunde inte ställa in scsi-kommando till: ”%s” (%m)"
+msgstr "Kunde inte skicka scsi-kommando till: ”%s” (%m)."
 
 #~ msgid "Called for filename '%s'."
 #~ msgstr "Frågade efter filnamnet \"%s\"."
