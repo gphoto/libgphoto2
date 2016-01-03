@@ -189,21 +189,21 @@ static ipslr_handle_t pslr;
 
 pslr_handle_t pslr_init()
 {
-    DIR *d;
+    gp_system_dir *d;
     char nmbuf[256];
     char infobuf[64];
-    struct dirent *ent;
+    gp_system_dirent *ent;
     int fd;
 
     memset(&pslr.devname, 0, sizeof(pslr.devname));
 
-    d = opendir("/sys/class/scsi_generic");
+    d = gp_system_opendir("/sys/class/scsi_generic");
 
     if (!d)
         return NULL;
 
     while (1) {
-        ent = readdir(d);
+        ent = gp_system_readdir(d);
         if (!ent)
             break;
         if (strcmp(ent->d_name, ".")==0 || strcmp(ent->d_name, "..") == 0)
@@ -243,7 +243,7 @@ pslr_handle_t pslr_init()
 
     }
 
-    closedir(d);
+    gp_system_closedir(d);
     if (pslr.devname[0] == '\0')
         return NULL;
 
