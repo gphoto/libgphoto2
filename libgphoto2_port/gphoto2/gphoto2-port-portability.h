@@ -46,6 +46,10 @@
 #  define snprintf		_snprintf
 # endif
 
+#define __func__ __FUNCTION__
+
+typedef SSIZE_T ssize_t;
+
 /* Work-around for readdir() */
 typedef struct {
 	HANDLE handle;
@@ -64,6 +68,8 @@ typedef struct {
 # define gp_system_dir_delim	  '\\'
 
 # define sleep(x) usleep((x) * 1000 * 1000)
+
+
 
 /************************************************************************
  * End WIN32 definitions
