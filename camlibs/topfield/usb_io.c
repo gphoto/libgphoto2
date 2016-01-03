@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>
 #include "usb_io.h"
 #include "tf_bytes.h"
 #include "crc16.h"

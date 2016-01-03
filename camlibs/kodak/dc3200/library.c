@@ -39,7 +39,6 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>
-#include <unistd.h>
 #include <errno.h>
 
 #include "dc3200.h"

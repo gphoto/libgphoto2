@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <unistd.h>
 #include <ctype.h>
 
 #ifdef TM_IN_SYS_TIME

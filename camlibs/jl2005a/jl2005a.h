@@ -21,7 +21,9 @@
 #ifndef __jl2005a_H__
 #define __jl2005a_H__
 
-#include <unistd.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 #include <gphoto2/gphoto2-port.h>
 
 struct _CameraPrivateLibrary {

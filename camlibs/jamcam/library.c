@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <gphoto2/gphoto2.h>
 #include <time.h>
-#include <unistd.h>
 #include <math.h>
 
 #include "library.h"

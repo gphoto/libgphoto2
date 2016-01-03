@@ -27,7 +27,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <unistd.h>
 #include <stdbool.h>
 
 #ifndef LIBGPHOTO2

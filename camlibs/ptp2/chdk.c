@@ -27,7 +27,6 @@
 #include <stdarg.h>
 #include <time.h>
 #include <sys/time.h>
-#include <unistd.h>
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>

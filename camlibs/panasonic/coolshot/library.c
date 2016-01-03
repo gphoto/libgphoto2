@@ -34,7 +34,6 @@
 #include <gphoto2/gphoto2.h>
 #include <time.h>
 #include "library.h"
-#include <unistd.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

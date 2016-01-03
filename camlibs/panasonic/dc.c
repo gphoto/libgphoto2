@@ -25,7 +25,6 @@
 #include <stdarg.h>
 #include <sys/time.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <string.h>
 #ifdef HAVE_MEMORY_H
 #include <memory.h>

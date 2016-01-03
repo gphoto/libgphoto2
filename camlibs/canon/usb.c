@@ -14,7 +14,6 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
-#include <unistd.h>
 #include <ctype.h>
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 /* For filestat to get file time for upload */

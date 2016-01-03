@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #ifdef HAVE_MEMORY_H
 #include <memory.h>
 #endif

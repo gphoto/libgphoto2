@@ -35,7 +35,6 @@
 #include "io.h"
 #include <string.h>
 #include <sys/time.h>
-#include <unistd.h>
 #include "print.h"
 #include "rs232.h"
 #include "usb.h"

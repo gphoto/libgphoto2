@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/stat.h>
-#include <unistd.h>
 
 void main (int argc, char **argv)
 {

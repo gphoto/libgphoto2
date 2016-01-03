@@ -30,7 +30,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <utime.h>
-#include <unistd.h>
 #ifdef HAVE_SYS_STATVFS_H
 # include <sys/statvfs.h>
 #endif

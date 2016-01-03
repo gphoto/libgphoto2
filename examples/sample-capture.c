@@ -12,7 +12,6 @@
  * and condensed into simple capture sample
  */
 
-#include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>

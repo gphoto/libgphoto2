@@ -21,7 +21,9 @@
 #ifndef __mars_H__
 #define __mars_H__
 
-#include <unistd.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 #include <gphoto2/gphoto2-port.h>
 
 typedef unsigned char Info;

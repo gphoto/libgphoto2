@@ -63,7 +63,6 @@
 #include <sys/types.h>
 
 #include <fcntl.h>
-#include <unistd.h>
 #include <stdlib.h>
 
 #include <gphoto2/gphoto2-port-log.h>

@@ -25,7 +25,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 
 #include <gphoto2/gphoto2.h>

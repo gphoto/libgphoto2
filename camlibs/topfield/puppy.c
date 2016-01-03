@@ -53,7 +53,6 @@
 #include <utime.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <fcntl.h>
 
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
