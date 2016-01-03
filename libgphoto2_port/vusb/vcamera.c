@@ -21,6 +21,7 @@
 
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
+#include <gphoto2/gphoto2-port-portability.h>
 
 #ifdef HAVE_LIBEXIF
 #  include <libexif/exif-data.h>
@@ -368,12 +369,12 @@ static uint32_t	ptp_objectid = 0;
 static void
 read_directories(char *path, struct ptp_dirent *parent) {
 	struct ptp_dirent	*cur;
-	DIR			*dir;
-	struct dirent		*de;
+	gp_system_dir		dir;
+	gp_system_dirent	de;
 
-	dir = opendir(path);
+	dir = gp_system_opendir(path);
 	if (!dir) return;
-	while ((de=readdir(dir))) {
+	while ((de=gp_system_readdir(dir))) {
 		if (!strcmp(de->d_name,".")) continue;
 		if (!strcmp(de->d_name,"..")) continue;
 
@@ -393,7 +394,7 @@ read_directories(char *path, struct ptp_dirent *parent) {
 		if (S_ISDIR(cur->stbuf.st_mode))
 			read_directories(cur->fsname, cur); /* recurse! */
 	}
-	closedir(dir);
+	gp_system_closedir(dir);
 }
 
 static void
