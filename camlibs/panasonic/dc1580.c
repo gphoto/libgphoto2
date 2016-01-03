@@ -24,7 +24,6 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include <sys/time.h>
 #include <sys/stat.h>
 #ifdef HAVE_MEMORY_H
 #include <memory.h>
