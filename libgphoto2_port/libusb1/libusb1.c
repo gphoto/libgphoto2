@@ -27,7 +27,6 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <sys/time.h>
 #include <string.h>
 
 #include <libusb.h>
