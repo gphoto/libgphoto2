@@ -450,6 +450,9 @@ _close_async_interrupts(GPPort *port)
 			}
 		}
 	}
+	tv.tv_sec = 0;
+	tv.tv_usec = 0;
+	LOG_ON_LIBUSB_E (libusb_handle_events_timeout(port->pl->ctx, &tv));
 	/* Do just one round ... this should be sufficient and avoids endless loops. */
 	haveone = 0;
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
