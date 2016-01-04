@@ -167,7 +167,7 @@ load_devicelist (GPPortPrivateLibrary *pl) {
 		int 	i;
 
 		pl->nrofdevs = libusb_get_device_list (pl->ctx, &pl->devs);
-		C_MEM (pl->descs = malloc (sizeof(pl->descs[0])*pl->nrofdevs));
+		C_MEM (pl->descs = calloc (pl->nrofdevs, sizeof(pl->descs[0])));
 		for (i=0;i<pl->nrofdevs;i++)
 			LOG_ON_LIBUSB_E (libusb_get_device_descriptor(pl->devs[i], &pl->descs[i]));
 	}
@@ -198,7 +198,7 @@ gp_port_library_list (GPPortInfoList *list)
 	C_GP (gp_port_info_list_append (list, info));
 
 	nrofdevs = libusb_get_device_list (ctx, &devs);
-	C_MEM (descs = malloc (sizeof(descs[0])*nrofdevs));
+	C_MEM (descs = calloc (nrofdevs, sizeof(descs[0])));
 	for (i=0;i<nrofdevs;i++)
 		LOG_ON_LIBUSB_E (libusb_get_device_descriptor(devs[i], &descs[i]));
 
