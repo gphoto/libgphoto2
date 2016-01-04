@@ -1891,6 +1891,8 @@ static struct {
 	{"Fuji:Fujifilm X-E2",			0x04cb, 0x02b5, 0},
 	/* Vladimir K <enewsletters@inbox.ru> */
 	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/32 */
+	{"Fuji:Fujifilm X-T10",			0x04cb, 0x02c8, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
