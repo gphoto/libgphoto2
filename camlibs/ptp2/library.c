@@ -890,6 +890,9 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
 	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
 
+	/* Andre Crone <andre@elysia.nl> */
+	{"Sony:Alpha-A7S II (Control)",0x054c,0x0804, PTP_CAP},
+
 	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
 	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
 
@@ -1716,6 +1719,8 @@ static struct {
 
 	/* "François G." <francois@webcampak.com> */
 	{"Canon:EOS 6D",			0x04a9, 0x3250, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Andre Crone <andre@elysia.nl> */
+	{"Canon:EOS 1D C",			0x04a9, 0x3252, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Canon:EOS 70D",			0x04a9, 0x3253, PTP_CAP|PTP_CAP_PREVIEW},
 
