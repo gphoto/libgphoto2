@@ -6207,9 +6207,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			(ob->canon_flags & 0x20) &&
 			ptp_operation_issupported(params,PTP_OC_CANON_SetObjectArchive)
 		) {
+			uint16_t	ret;
+
 			/* seems just a byte (0x20 - new) */
-			C_PTP_REP (ptp_canon_setobjectarchive (params, oid, ob->canon_flags &~0x20));
-			ob->canon_flags &= ~0x20;
+			/* can fail on some models, like S5. Ignore errors. */
+			ret = LOG_ON_PTP_E (ptp_canon_setobjectarchive (params, oid, ob->canon_flags & ~0x20));
+			if (ret == PTP_RC_OK)
+				ob->canon_flags &= ~0x20;
 		}
 		break;
 	}
