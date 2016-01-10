@@ -820,12 +820,14 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 		fd =  open(cur->fsname,O_RDONLY);
 		if (fd == -1) {
 			free (filedata);
+			free (data);
 			gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
 			ptp_response(cam,PTP_RC_GeneralError,0);
 			return 1;
 		}
 		if (cur->stbuf.st_size != read(fd, filedata, cur->stbuf.st_size)) {
 			free (filedata);
+			free (data);
 			close (fd);
 			gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
 			ptp_response(cam,PTP_RC_GeneralError,0);
