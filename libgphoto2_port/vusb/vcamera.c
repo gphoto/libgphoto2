@@ -730,14 +730,13 @@ ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	CHECK_SESSION();
 	CHECK_PARAM_COUNT(1);
 
-	data = malloc(200);
-
 	if (ptp->params[0] != 0x00010001) {
 		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid storage id 0x%08x", ptp->params[1]);
 		ptp_response(cam,PTP_RC_InvalidStorageId,0);
 		return 1;
 	}
 
+	data = malloc(200);
 	x += put_16bit_le (data+x, 3);	/* StorageType: Fixed RAM */
 	x += put_16bit_le (data+x, 3);	/* FileSystemType: Generic Hierarchical */
 	x += put_16bit_le (data+x, 2);	/* AccessCapability: R/O with object deletion */
