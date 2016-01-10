@@ -501,6 +501,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	for (i=0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++)
 		opcodes[i] = ptp_functions[i].code;
 	x += put_16bit_le_array(data+x,opcodes,sizeof(ptp_functions)/sizeof(ptp_functions[0]));	/* OperationsSupported */
+	free (opcodes);
 
 	events[0] = 0x4002;
 	events[1] = 0x4003;
@@ -513,6 +514,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++)
 		devprops[i] = ptp_properties[i].code;
 	x += put_16bit_le_array(data+x,devprops,sizeof(ptp_properties)/sizeof(ptp_properties[0]));/* DevicePropertiesSupported */
+	free (devprops);
 
 	imageformats[0] = 0x3801;
 	x += put_16bit_le_array(data+x,imageformats,1);	/* CaptureFormats */
