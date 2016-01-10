@@ -602,6 +602,9 @@
   /* https://sourceforge.net/p/libmtp/support-requests/188/ */
   { "Acer", 0x0502, "Liquid Z220", 0x3750,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1478/ */
+  { "Acer", 0x0502, "Liquid Z330", 0x3750,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1469/ */
   { "Acer", 0x0502, "Z530", 0x3822,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -968,6 +971,7 @@
   { "Archos", 0x0e79, "101 XS", 0x1548, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "70it2 (ID 1)", 0x1568, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "70it2 (ID 2)", 0x1569, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Archos", 0x0e79, "70 Cobalt", 0x15ba, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "50c", 0x2008, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "C40", 0x31ab, DEVICE_FLAGS_ANDROID_BUGS },
   /* via libmtp-discuss Tonton <to.tonton@gmail.com> */
@@ -1238,6 +1242,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/137/ */
   { "Fujitsu, Ltd", 0x04c5, "F02-E", 0x1378,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1495/ */
+  { "Fujitsu, Ltd", 0x04c5, "Arrows 202F", 0x13dd,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2063,6 +2070,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1030/, PTP Id */
   { "Motorola", 0x22b8, "Moto G (XT1032)", 0x2e84,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1477/ */
+  { "Motorola", 0x22b8, "Moto Maxx (XT1225)", 0x2ea4,
+      DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Jader Rodrigues Simoes <jadersimoes@users.sourceforge.net>
   { "Motorola", 0x22b8, "Xoom 2 Media Edition (ID3)", 0x41cf,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2190,7 +2200,7 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Google Inc (for LG Electronics/Samsung)", 0x18d1,
       "Nexus 4/5/7/10 (MTP)", 0x4ee1,
-      DEVICE_FLAGS_ANDROID_BUGS },
+      (DEVICE_FLAGS_ANDROID_BUGS | DEVICE_FLAG_PROPLIST_OVERRIDES_OI) & ~DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
   { "Google Inc (for LG Electronics/Samsung)", 0x18d1,
       "Nexus 4/5/7/10 (MTP+ADB)", 0x4ee2,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2568,8 +2578,20 @@
   /* https://sourceforge.net/p/libmtp/bugs/1360/ */
   { "Lenovo", 0x17ef, "K3 Note", 0x7883,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1488/ */
+  { "Lenovo", 0x17ef, "A10-70F", 0x789a,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1497/ */
+  { "Lenovo", 0x17ef, "A10-70L", 0x789b,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1480/ */
+  { "Medion", 0x17ef, "P8312 Tablet", 0x78ae,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1465/ */
   { "Lenovo", 0x17ef, "A1000 Smartphone", 0x7928,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1465/ */
+  { "Lenovo", 0x17ef, "A1000 Smartphone ADB", 0x7929,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2627,6 +2649,12 @@
   /* https://sourceforge.net/p/libmtp/bugs/1221/ */
   { "HTC", 0x0bb4, "One M8 Google Play Edition (MTP+ADB)", 0x060b,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/bugs/1500/ */
+  { "HTC", 0x0bb4, "One Mini 2 (MTP)", 0x0629,
+      DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/support-requests/200/ */
+  { "HTC", 0x0bb4, "HTC Desire 520", 0x0670,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/153/ */
   { "HTC", 0x0bb4, "HTC6515LVW/One Remix", 0x07d8,
       DEVICE_FLAG_NONE },
@@ -2706,6 +2734,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1182/ */
   { "HTC", 0x0bb4, "Desire 310 (MTP)", 0x0ec6,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1481/ */
+  { "HTC", 0x0bb4, "Desire 310 (2nd id) (MTP)", 0x0ec7,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1420/ */
   { "HTC", 0x0bb4, "Desire 816G (MTP)", 0x0edb,
@@ -2838,6 +2869,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1448/ */
   { "Amazon", 0x1949, "Kindle Fire 7", 0x0221,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1491/ */
+  { "Amazon", 0x1949, "Kindle Fire 5", 0x0222,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Fire Phone", 0x0800,
       DEVICE_FLAGS_ANDROID_BUGS },
 
@@ -2904,6 +2938,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1149/ */
   { "Xiaomi", 0x2717, "MiPad (MTP)", 0x0660,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1489/ */
+  { "Xiaomi", 0x2717, "MiPad (MTP+ADB)", 0x0668,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Xiaomi", 0x2717, "Hongmi (MTP+ADB)", 0x1240,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2985,12 +3022,16 @@
    * Kyocera
    */
   { "Kyocera", 0x0482, "Rise", 0x0571, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1492/ */
+  { "Kyocera", 0x0482, "Event", 0x0591, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/134/ */
   { "Kyocera", 0x0482, "Torque Model E6715", 0x0059a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/discussion/535190/thread/6270f5ce/ */
   { "Kyocera", 0x0482, "KYL22", 0x0810, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1345/ */
   { "Kyocera", 0x0482, "DuraForce", 0x0979, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1476/ */
+  { "Kyocera", 0x0482, "KC-S701", 0x09cb, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * HiSense
@@ -3164,12 +3205,14 @@
   /*
    * GoPro Action Cams.
    */
-  { "HERO3+ Black", 0x2672, "Action Cam", 0x0011, DEVICE_FLAG_NONE },
-  { "HERO", 0x2672, "Action Cam", 0x000c, DEVICE_FLAG_NONE },  
-  { "HERO4 Silver", 0x2672, "Action Cam", 0x000d, DEVICE_FLAG_NONE },
-  { "HERO4 Black", 0x2672, "Action Cam", 0x000e, DEVICE_FLAG_NONE },
-  { "HERO4 Session", 0x2672, "Action Cam", 0x000f, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO3+ Black", 0x0011, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO", 0x000c, DEVICE_FLAG_NONE },  
+  { "GoPro" , 0x2672, "HERO4 Silver", 0x000d, DEVICE_FLAG_NONE },
+  { "Gopro" , 0x2672, "HERO4 Black", 0x000e, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO4 Session", 0x000f, DEVICE_FLAG_NONE },
 
+  /* https://sourceforge.net/p/libmtp/bugs/1490/ */
+  { "Marshall" , 0x2ad9, "London", 0x000b, DEVICE_FLAG_NONE },
   /*
    * Other strange stuff.
    */
