@@ -445,7 +445,7 @@ _close_async_interrupts(GPPort *port)
 			GP_LOG_D("canceling transfer %d:%p (status %d)",i, port->pl->transfers[i], port->pl->transfers[i]->status);
 			/* this happens if the transfer is completed for instance, but not reaped. we cannot cancel it. */
 			if (LOG_ON_LIBUSB_E(libusb_cancel_transfer(port->pl->transfers[i])) < 0) {
-				libusb_free_transfer (port->pl->transfers[i]);
+				/* do not libusb_free_transfer (port->pl->transfers[i]); causes crashes */
 				port->pl->transfers[i] = NULL;
 			}
 		}
