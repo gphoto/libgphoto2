@@ -1415,7 +1415,8 @@ ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 		break;
 	}
 	case 1:	{/* remove 1 image from directory */
-		struct ptp_dirent	**pcur;
+		struct ptp_dirent	**pcur, *cur;
+
 		pcur = &first_dirent;
 		while (*pcur) {
 			if (strstr ((*pcur)->name, ".jpg") || strstr ((*pcur)->name, ".JPG"))
@@ -1428,7 +1429,11 @@ ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 			return 1;
 		}
 		ptp_inject_interrupt (cam, timeout, 0x4003, 1, (*pcur)->id, cam->seqnr);	/* objectremoved */
+		cur = *pcur;
 		*pcur = (*pcur)->next;
+		free (cur->name);
+		free (cur->fsname);
+		free (cur);
 		ptp_response (cam, PTP_RC_OK, 0);
 		break;
 	}
