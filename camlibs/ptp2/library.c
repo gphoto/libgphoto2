@@ -1145,7 +1145,7 @@ static struct {
 	{"Nikon:Coolpix S6800", 	  0x04b0, 0x0350, PTP_CAP},
 
 	/* Laurence Praties <laurence.praties@i-abra.com> */
-	{"Nikon:Coolpix L840",		  0x04b0, 0x035c, PTP_CAP},
+	{"Nikon:Coolpix L840",		  0x04b0, 0x035a, PTP_CAP|PTP_NO_CAPTURE_COMPLETE},
 
 	/* David Shawcross <david@sitevisuals.com> */
 	{"Nikon:Coolpix S3700", 	  0x04b0, 0x035c, PTP_CAP},
