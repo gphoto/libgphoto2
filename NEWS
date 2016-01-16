@@ -1,5 +1,9 @@
 libgphoto2 2.5.9.1 development tree
 
+libgphoto2_port/vusb:
+* Implemented a virtual PTP camera for test purposes.
+
+
 translations:
 * updated swedish, brazilian portuguese, danish
 
