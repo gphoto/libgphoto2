@@ -10,8 +10,7 @@ env:
  - EXTRALIBS="libusb-1.0-0-dev libgd2-xpm-dev"
 
 before_install:
- - sudo apt-get update -qq || brew update
- - sudo apt-get install autopoint $EXTRALIBS || brew install gettext 
+ - sh .travis-before-install $EXTRALIBS
 
 compiler:
  - clang

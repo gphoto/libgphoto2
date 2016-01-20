@@ -1,0 +1,60 @@
+#!/bin/sh
+
+set -e
+
+# Calling us with ECHO=echo makes this script dry-run with debug
+# output for testing this script.
+
+# Convert package names from Ubuntu packages to OSX brew packages
+ubuntu2osx() {
+    case "$1" in
+	libusb-dev)       echo "libusb-compat" ;;
+	libusb-1.0-0-dev) echo "libusb" ;;
+	libgd2-xpm-dev)   echo "gd" ;;
+	*)
+	    echo "Unknown package name: '$1'" >&2
+	    exit 2 ;;
+    esac
+}
+
+case "$TRAVIS_OS_NAME" in
+    linux)
+	$ECHO sudo apt-get update -qq
+	accu="autopoint"
+	for pkg in "$@"; do
+	    accu="$accu $pkg"
+	done
+	$ECHO sudo apt-get install -y $accu
+	;;
+    osx)
+	$ECHO brew update
+	accu="gettext"
+	for pkg in "$@"; do
+	    pkg="$(ubuntu2osx "$pkg")"
+	    accu="$accu $pkg"
+	done
+	$ECHO brew install $accu
+	;;
+    *)
+	echo "Unknown Travis CI build OS: $TRAVIS_OS_NAME" >&2
+	exit 1
+esac
+
+exit 0
+
+# Test this script.
+#
+# Usage: Type ( into a shell, paste test code, type ) and press Enter.
+true <<EOF
+export ECHO=echo
+for SH in "bash" "busybox sh"; do
+  for os in linux osx; do
+    for EXTRALIBS in "" "libusb-dev" "libusb-1.0-0-dev libgd2-xpm-dev"; do
+      echo "### SHELL: $SH OS: $os EXTRALIBS: '$EXTRALIBS' ###"
+      env TRAVIS_OS_NAME=$os $SH .travis-before-install $EXTRALIBS
+      echo "### Status: $?"
+      echo
+    done
+  done
+done
+EOF
