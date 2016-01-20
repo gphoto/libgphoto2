@@ -18,12 +18,10 @@ compiler:
  - gcc
 
 script:
- - PATH=/usr/local/opt/gettext/bin:$PATH:. autoreconf -i -f
+ - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f
  - ./configure && make && make check
 
 notifications:
-  recipient:
-   - marcus@jet.franken.de
   email:
     on_success: change
     on_failure: always
