@@ -2,8 +2,11 @@
 
 set -e
 
-# Calling us with ECHO=echo makes this script dry-run with debug
+# Calling us with DRY_RUN=true makes this script dry-run with debug
 # output for testing this script.
+if test "x$DRY_RUN" = "x"; then
+    DRY_RUN="false"
+fi
 
 # Convert package names from Ubuntu packages to OSX brew packages
 ubuntu2osx() {
@@ -12,28 +15,40 @@ ubuntu2osx() {
 	libusb-1.0-0-dev) echo "libusb" ;;
 	libgd2-xpm-dev)   echo "gd" ;;
 	*)
-	    echo "Unknown package name: '$1'" >&2
+	    echo "Error: Unknown package name: '$1'" >&2
 	    exit 2 ;;
     esac
 }
 
+# Execute a command
+cmd() {
+    echo "$@"
+    if "$DRY_RUN"; then
+	# Do nothing
+	true
+    else
+	# Execute the command
+	"$@"
+    fi
+}
+
 case "$TRAVIS_OS_NAME" in
     linux)
-	$ECHO sudo apt-get update -qq
+	cmd sudo apt-get update -qq
 	accu="autopoint"
 	for pkg in "$@"; do
 	    accu="$accu $pkg"
 	done
-	$ECHO sudo apt-get install -y $accu
+	cmd sudo apt-get install -y $accu
 	;;
     osx)
-	$ECHO brew update
+	cmd brew update
 	accu="gettext"
 	for pkg in "$@"; do
 	    pkg="$(ubuntu2osx "$pkg")"
 	    accu="$accu $pkg"
 	done
-	$ECHO brew install $accu
+	cmd brew install $accu
 	;;
     *)
 	echo "Unknown Travis CI build OS: $TRAVIS_OS_NAME" >&2
@@ -46,10 +61,10 @@ exit 0
 #
 # Usage: Type ( into a shell, paste test code, type ) and press Enter.
 true <<EOF
-export ECHO=echo
+export DRY_RUN=true
 for SH in "bash" "busybox sh"; do
   for os in linux osx; do
-    for EXTRALIBS in "" "libusb-dev" "libusb-1.0-0-dev libgd2-xpm-dev"; do
+    for EXTRALIBS in "" "libusb-dev" "libusb-1.0-0-dev libgd2-xpm-dev" "moo"; do
       echo "### SHELL: $SH OS: $os EXTRALIBS: '$EXTRALIBS' ###"
       env TRAVIS_OS_NAME=$os $SH .travis-before-install $EXTRALIBS
       echo "### Status: $?"
