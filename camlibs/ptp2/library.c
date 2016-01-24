@@ -919,6 +919,9 @@ static struct {
 	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
 	{"Sony:Alpha-A7S (Control)",  0x054c, 0x0954, PTP_CAP},
 
+	/* titan232@gmail.com */
+	{"Sony:ILCE-7M2 (Control)",  0x054c, 0x0a6a, PTP_CAP},
+
 	/* Andre Crone, andre@elysia.nl */
 	{"Sony:Alpha-A7r II (Control)",  0x054c, 0x0a6b, PTP_CAP},
 
