@@ -581,15 +581,16 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 static int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
-	CameraWidget *w;
-	char *sval;
-	pslr_status		status;
+	CameraWidget	*w = NULL;
+	char		*sval;
+	pslr_status	status;
+	int		ret;
 
 	pslr_get_status(camera->pl, &status);
 
 	GP_DEBUG ("*** camera_set_config");
-	gp_widget_get_child_by_label (window, _("Image Size"), &w);
-	if (gp_widget_changed (w)) {
+	ret = gp_widget_get_child_by_label (window, _("Image Size"), &w);
+	if ((ret == GP_OK) && (gp_widget_changed (w))) {
 		int i, resolution = -1;
 		const char **valid_resolutions;
 
@@ -610,8 +611,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		}
 	}
 
-	gp_widget_get_child_by_label (window, _("Shooting Mode"), &w);
-	if (gp_widget_changed (w)) {
+	ret = gp_widget_get_child_by_label (window, _("Shooting Mode"), &w);
+	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_exposure_mode_t exposuremode;
 		gp_widget_get_value (w, &sval);
 
@@ -633,8 +634,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode exposuremode %s", sval);
 	}
 
-	gp_widget_get_child_by_label (window, _("ISO"), &w);
-	if (gp_widget_changed (w)) {
+	ret = gp_widget_get_child_by_label (window, _("ISO"), &w);
+	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		int iso;
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &iso)) {
@@ -660,8 +661,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image quality %s", sval);
 	}
 
-	gp_widget_get_child_by_label (window, _("Shutter Speed"), &w);
-	if (gp_widget_changed (w)) {
+	ret = gp_widget_get_child_by_label (window, _("Shutter Speed"), &w);
+	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_rational_t speed;
 
 		gp_widget_get_value (w, &sval);
@@ -681,8 +682,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		/* parse more? */
 	}
 
-	gp_widget_get_child_by_label (window, _("Aperture"), &w);
-	if (gp_widget_changed (w)) {
+	ret = gp_widget_get_child_by_label (window, _("Aperture"), &w);
+	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_rational_t aperture;
 		int apt1,apt2;
 
