@@ -486,7 +486,8 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 		gp_file_append(file, buf, strlen(buf));
 	}
 
-	sleep(1); /* FIXME: why? */
+	gp_file_free(f);
+	/* sleep(1); */ /* FIXME: why?  ... Marcus: removed it for now.*/
 	return (GP_OK);
 }
 
