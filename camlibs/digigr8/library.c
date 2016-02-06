@@ -289,6 +289,7 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 	p_data = malloc(w * h);
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
+		free (ppm);
 		goto end;
 	}
 	if(comp_ratio) {
