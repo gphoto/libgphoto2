@@ -303,6 +303,11 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_info_set_path (info, path);
 		C_GP (gp_port_info_list_append (list, info));
 	}
+
+	libusb_free_device_list (devs, 1);
+	libusb_exit (ctx); /* should free all stuff above */
+	free (descs);
+
 	/* This will only be added if no other device was ever added.
 	 * Users doing "usb:" usage will enter the regular expression matcher case. */
 	if (nrofdevices == 0) {
@@ -312,9 +317,6 @@ gp_port_library_list (GPPortInfoList *list)
 		gp_port_info_set_path (info, "usb:");
 		C_GP (gp_port_info_list_append (list, info));
 	}
-	libusb_free_device_list (devs, 1);
-	libusb_exit (ctx); /* should free all stuff above */
-	free (descs);
 	return (GP_OK);
 }
 
