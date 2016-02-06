@@ -557,6 +557,7 @@ traverse_tree (PTPParams *params, int depth, xmlNodePtr node) {
 		ptp_debug(params,"%scontent %s", xx, xchar);
 		traverse_tree (params, depth+1,xmlFirstElementChild (next));
 	} while ((next = xmlNextElementSibling (next)));
+	free (xx);
 	return TRUE;
 }
 
