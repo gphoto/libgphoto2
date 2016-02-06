@@ -392,8 +392,8 @@ static struct {
 	unsigned int __i;						\
 									\
 	CR (gp_widget_new (GP_WIDGET_RADIO, _(Name), &__w));		\
-	CR (gp_widget_set_name (__w, (Name)));				\
-	CR (gp_widget_append ((s), __w));				\
+	CRW (gp_widget_set_name (__w, (Name)), __w);			\
+	CRW (gp_widget_append ((s), __w), __w);				\
 	CR (ricoh_get_##n ((ca), (co), &__v));				\
 	for (__i = 0; __i < N_ELEMENTS (ricoh_##n##s); __i++) {		\
 		CR (gp_widget_add_choice (__w, _(ricoh_##n##s[__i].name)));	\
