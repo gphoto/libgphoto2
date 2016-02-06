@@ -206,6 +206,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 	case GP_FILE_TYPE_EXIF:
+		free (data);
 		return (GP_ERROR_FILE_EXISTS);
 
 	case GP_FILE_TYPE_PREVIEW:
@@ -214,6 +215,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_detect_mime_type (file); /* Detected as "raw"*/
 			gp_file_set_data_and_size (file, (char *)data, len);
 			gp_file_adjust_name_for_mime_type (file);
+			break;
 		}
 		if ((w == 640)){
 			/* Stripping useless header */
@@ -258,6 +260,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
     			gp_file_append (file, header, header_len);
 			gp_file_append (file, (char *)output, 3*w*h);
 		}
+		free (data);
 		free (output);
 		return GP_OK;
 	case GP_FILE_TYPE_RAW:
@@ -266,10 +269,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_adjust_name_for_mime_type(file);
 		break;
 	default:
+		free (data);
 		return (GP_ERROR_NOT_SUPPORTED); 	
-
 	}
-
 	return GP_OK;
 }
 
