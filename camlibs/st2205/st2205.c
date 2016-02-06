@@ -53,9 +53,9 @@ static char *st2205_malloc_page_aligned(int size)
 	
 	fd = open ("/dev/zero", O_RDWR);
 	aligned = mmap (0, size, PROT_READ|PROT_WRITE,MAP_PRIVATE, fd, 0);
+	close (fd);
 	if (aligned == MAP_FAILED)
 		return NULL;
-
 	return aligned;
 #else
 	/* hope for the best */
