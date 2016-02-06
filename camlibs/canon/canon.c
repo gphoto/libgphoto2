@@ -1502,8 +1502,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
                 if (!camera->pl->remote_control) {
                         status = canon_int_start_remote_control (camera, context);
-                        if ( status < 0 )
+                        if ( status < 0 ) {
+				free ( initial_state );
                                 return status;
+			}
                 }
 
                 /*
@@ -1522,6 +1524,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                        0x04, transfermode);
                 if ( status < 0 ) {
                         canon_int_end_remote_control (camera, context);
+			free ( initial_state );
                         return status;
                 }
 
@@ -1535,6 +1538,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                        0x00, 0);
                 if ( status < 0 ) {
                         canon_int_end_remote_control (camera, context);
+			free ( initial_state );
                         return status;
                 }
 
@@ -1551,8 +1555,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                                       desc );
                         result_block = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
                                                             &result_len, payload, payload_len );
-                        if ( result_block == NULL )
+                        if ( result_block == NULL ) {
+				free ( initial_state );
                                 return GP_ERROR;
+			}
 
                         memset ( payload, 0, sizeof(payload) );
                         params = payload+0x08;
@@ -1568,8 +1574,10 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                         params[7] = 0;             /* Beep off */
                         result_block = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_CONTROL_CAMERA,
                                                             &result_len, payload, 0x38 );
-                        if ( result_block == NULL )
+                        if ( result_block == NULL ) {
+				free ( initial_state );
                                 return GP_ERROR;
+			}
                 }
 #endif /* DEBUG_TINY_IMAGES */
 
@@ -1578,6 +1586,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                                        0x04, transfermode);
                 if ( status < 0 ) {
                         canon_int_end_remote_control (camera, context);
+			free ( initial_state );
                         return status;
                 }
 
@@ -1587,6 +1596,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                         if ( status < 0 ) {
                                 gp_context_error (context, _("lock keys failed."));
                                 canon_int_end_remote_control (camera, context);
+				free ( initial_state );
                                 return status;
                         }
                 }
@@ -1600,6 +1610,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                         /* Try to leave camera in a usable state. */
                         canon_int_end_remote_control (camera, context);
 
+			free ( initial_state );
                         /* XXX It would be nice if we had a way to 
                            decode the camera error state for the caller
                            application.  For example, 
@@ -1621,6 +1632,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                                            _("canon_int_capture_image:"
                                              " final canon_usb_list_all_dirs() failed with status %i"),
                                            status );
+			free ( initial_state );
                         return status;
                 }
 
