@@ -387,8 +387,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	} else if (type == GP_FILE_TYPE_NORMAL) {
 		outputsize = 3 * w * h + 256;
 		pic_output = calloc(outputsize, 1);
-		if (!pic_output)
+		if (!pic_output) {
+			free (pic_buffer);
 			return GP_ERROR_NO_MEMORY;
+		}
 		outputsize = jl2005bcd_decompress(pic_output, pic_buffer,
 								b + 16, 0);
 		free (pic_buffer);
