@@ -439,6 +439,8 @@
   { "Microsoft/Sharp/nVidia", 0x045e, "Kin TwoM", 0x0641, DEVICE_FLAG_NONE },
   // Reported by Farooq Zaman (used for all Zunes)
   { "Microsoft", 0x045e, "Zune", 0x0710, DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/feature-requests/155/ */
+  { "Microsoft", 0x045e, "Lumia 950 XL Dual SIM (RM-1116)", 0x0a00, DEVICE_FLAG_NONE },
   // Reported by Olegs Jeremejevs
   { "Microsoft/HTC", 0x045e, "HTC 8S", 0xf0ca, DEVICE_FLAG_NONE },
 
@@ -1203,6 +1205,9 @@
   { "Qualcomm (for PhiComm)", 0x05c6, "C230w (MTP)",
       0x9039, DEVICE_FLAGS_ANDROID_BUGS },
 
+  /* https://sourceforge.net/p/libmtp/bugs/1513/ */
+  { "Qualcomm (for OnePlus)", 0x05c6, "One Plus 2 (A2003) (MTP)",
+      0xf003, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1284/ */
   { "Qualcomm (for Highscreen)", 0x05c6, "Omega Prime S",
       0xf003, DEVICE_FLAGS_ANDROID_BUGS },
@@ -1766,6 +1771,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia Z2 MTP", 0x01af,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia Z3v MTP", 0x01b0,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "SONY", 0x0fce, "Xperia Z2 Tablet MTP", 0x01b1,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "SONY", 0x0fce, "Xperia Z Ultra MTP", 0x01b6,
@@ -1787,6 +1794,8 @@
   { "SONY", 0x0fce, "XPeria Z3+ MTP", 0x01c9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria E4g MTP", 0x01cb,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria Z5 MTP", 0x01d9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP", 0x01da,
       DEVICE_FLAG_NONE },
@@ -1859,6 +1868,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia Z2 MTP+CDROM", 0x41af,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia Z3v MTP+CDROM", 0x41b0,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "SONY", 0x0fce, "Xperia Z2 Tablet MTP+CDROM", 0x41b1,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "SONY", 0x0fce, "Xperia Z Ultra MTP+CDROM", 0x41b6,
@@ -1880,6 +1891,8 @@
   { "SONY", 0x0fce, "XPeria Z3+ MTP+CDROM", 0x41c9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria E4g MTP+CDROM", 0x41cb,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria Z5 MTP+CDROM", 0x41d9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP+CDROM", 0x41da,
       DEVICE_FLAG_NONE },
@@ -1975,6 +1988,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia Z2 MTP+ADB", 0x51af,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia Z3v MTP+ADB", 0x51b0,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "SONY", 0x0fce, "Xperia Z2 Tablet MTP+ADB", 0x51b1,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "SONY", 0x0fce, "Xperia Z Ultra MTP+ADB", 0x51b6,
@@ -1996,6 +2011,8 @@
   { "SONY", 0x0fce, "XPeria Z3+ MTP+ADB", 0x51c9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce,  "XPeria E4g MTP+ADB", 0x51cb,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria Z5 MTP+ADB", 0x51d9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP+ADB", 0x51da,
       DEVICE_FLAG_NONE },
@@ -2587,6 +2604,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1480/ */
   { "Medion", 0x17ef, "P8312 Tablet", 0x78ae,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/201/ */
+  { "Lenovo", 0x17ef, "Lifetab S1034X", 0x78b0,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1465/ */
   { "Lenovo", 0x17ef, "A1000 Smartphone", 0x7928,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2601,6 +2621,9 @@
   { "Huawei", 0x12d1, "MTP device (ID1)", 0x1051,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Huawei", 0x12d1, "MTP device (ID2)", 0x1052,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1507/ */
+  { "Huawei", 0x12d1, "Honor 7", 0x1074,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1381/ */
   { "Huawei", 0x12d1, "H60-L11", 0x1079,
@@ -2651,6 +2674,9 @@
       DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/bugs/1500/ */
   { "HTC", 0x0bb4, "One Mini 2 (MTP)", 0x0629,
+      DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/bugs/1508/ */
+  { "HTC", 0x0bb4, "One M9 (MTP)", 0x065c,
       DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/support-requests/200/ */
   { "HTC", 0x0bb4, "HTC Desire 520", 0x0670,
@@ -2882,6 +2908,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Barnes&Noble", 0x2080, "Nook HD", 0x0006,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1504/ */
+  { "Barnes&Noble", 0x2080, "Nook Glowlight+", 0x000a,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Viewpia, bq, YiFang
@@ -3023,7 +3052,7 @@
    */
   { "Kyocera", 0x0482, "Rise", 0x0571, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1492/ */
-  { "Kyocera", 0x0482, "Event", 0x0591, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Kyocera", 0x0482, "Event", 0x0591, DEVICE_FLAGS_ANDROID_BUGS  & ~DEVICE_FLAG_FORCE_RESET_ON_CLOSE },
   /* https://sourceforge.net/p/libmtp/feature-requests/134/ */
   { "Kyocera", 0x0482, "Torque Model E6715", 0x0059a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/discussion/535190/thread/6270f5ce/ */
@@ -3213,6 +3242,12 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1490/ */
   { "Marshall" , 0x2ad9, "London", 0x000b, DEVICE_FLAG_NONE },
+
+  /* https://sourceforge.net/p/libmtp/support-requests/202/ */
+  { "Fairphone" , 0x2ae5, "Fairphone 2", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /*  https://sourceforge.net/p/libmtp/bugs/1512/ */
+  { "Allview" , 0x271d, "Energy P5", 0x4016, DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * Other strange stuff.
    */
