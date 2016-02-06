@@ -349,8 +349,11 @@ hp_send_command_and_receive_blob(
 		*msglen = replydatalen;
 		*msg = malloc (replydatalen);
 		ret = gp_port_read (camera->port, (char*)*msg, replydatalen);
-		if (ret < GP_OK)
+		if (ret < GP_OK) {
+			free (*msg);
+			*msg = NULL;
 			return ret;
+		}
 		ret = gp_port_read (camera->port, &eot, 1);
 		if (ret < GP_OK) {
 			free (*msg);
