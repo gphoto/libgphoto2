@@ -206,11 +206,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	/* Now get ready to put the data into a PPM image file. */
-	p_data = malloc( w*h );
-	if (!p_data) {
-		status =  GP_ERROR_NO_MEMORY;
-		goto end;
-	}
 	image_start=data+5;
 	if (w == 176) {
 		for (i=1; i < h; i +=4){
