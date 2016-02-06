@@ -217,15 +217,21 @@ st2205_detect_mem_size(Camera *camera)
 	}
 
 	ret = st2205_read_block(camera, 0, buf0);
-	if (ret)
+	if (ret) {
+		st2205_free_page_aligned(buf0, ST2205_BLOCK_SIZE);
+		st2205_free_page_aligned(buf1, ST2205_BLOCK_SIZE);
 		return ret;
+	}
 
 	for (i = 0; i < 3; i++) {
 		ret = st2205_read_block(camera,
 					(524288 / ST2205_BLOCK_SIZE) << i,
 					buf1);
-		if (ret)
+		if (ret) {
+			st2205_free_page_aligned(buf0, ST2205_BLOCK_SIZE);
+			st2205_free_page_aligned(buf1, ST2205_BLOCK_SIZE);
 			return ret;
+		}
 		if (memcmp(buf0, buf1, ST2205_BLOCK_SIZE) == 0)
 			break;
 	}
