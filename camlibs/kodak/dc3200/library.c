@@ -671,9 +671,8 @@ int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 	unsigned char *buff = NULL;
 
 	buff = malloc(sizeof(unsigned char) * (*data_len + 3));
-	if(buff == NULL) {
+	if(buff == NULL)
 		return GP_ERROR;
-	}
 
 	memset(buff, 0, *data_len + 3);
 
@@ -708,6 +707,7 @@ int dc3200_recv_packet(Camera *camera, unsigned char *data, int *data_len)
 
 	if(!complete) {
 		/* packet incomplete */
+		free(buff);
 		return GP_ERROR;
 	}
 
