@@ -115,23 +115,29 @@ gp_port_library_list (GPPortInfoList *list)
                             (NULL != strstr(mntent->mnt_fsname,"devtmpfs"))||
                             (NULL != strstr(mntent->mnt_fsname,"devpts"))||
                             (NULL != strstr(mntent->mnt_fsname,"sysfs"))||
-			    (NULL != strstr(mntent->mnt_fsname,"gphotofs")||
+			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))||
 			/* fstype based */
 			    (NULL != strstr(mntent->mnt_type,"autofs"))	||
 			    (NULL != strstr(mntent->mnt_type,"nfs"))	||
 			    (NULL != strstr(mntent->mnt_type,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_type,"proc"))||
 			    (NULL != strstr(mntent->mnt_type,"sysfs"))||
-			    (NULL != strstr(mntent->mnt_type,"fuse"))||
 			    (NULL != strstr(mntent->mnt_type,"cifs"))||
 			    (NULL != strstr(mntent->mnt_type,"afs")) ||
 			/* mount options */
 				/* x-systemd.automount or similar */
 			    (NULL != strstr(mntent->mnt_opts,"automount"))
-)
 			) {
 				continue;
 			}
+
+			/* Whitelist some fuse based filesystems, e.g. to help exfat mounts */
+			/* In general, if we are backed by a device, it is probably good(tm) */
+			if (NULL != strstr(mntent->mnt_type,"fuse")) {
+				if (!strstr(mntent->mnt_fsname,"/dev/"))
+					continue;
+			}
+
 			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
 			if (-1 == stat(path, &stbuf)) {
 				snprintf (path, sizeof(path), "%s/dcim", mntent->mnt_dir);
@@ -186,13 +192,18 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_type,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_type,"proc"))||
 			    (NULL != strstr(mntent->mnt_type,"sysfs"))||
-			    (NULL != strstr(mntent->mnt_type,"fuse"))||
 			    (NULL != strstr(mntent->mnt_type,"cifs"))||
 			    (NULL != strstr(mntent->mnt_type,"afs")) ||
 			/* options */
 			    (NULL != strstr(mntent->mnt_opts,"automount"))
 			) {
 				continue;
+			}
+			/* Whitelist some fuse based filesystems, e.g. to help exfat mounts */
+			/* In general, if we are backed by a device, it is probably good(tm) */
+			if (NULL != strstr(mntent->mnt_type,"fuse")) {
+				if (!strstr(mntent->mnt_fsname,"/dev/"))
+					continue;
 			}
 
 			snprintf (path, sizeof(path), "%s/DCIM", mntent->mnt_dir);
