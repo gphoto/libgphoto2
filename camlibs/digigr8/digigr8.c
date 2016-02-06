@@ -63,7 +63,9 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 	for (i=0; i<0x4000 && catalog[i]; i+=16);
 	priv->nb_entries = i>>4;
 	catalog_tmp = realloc(catalog, i+16);
-	memset (catalog_tmp+i, 0, 16);
+	if (!catalog_tmp) return GP_ERROR_NO_MEMORY;
+	catalog = catalog_tmp;
+	memset (catalog+i, 0, 16);
 	if (i) {
 		/*
 		 * 0x913c cameras allow individual photo deletion. This causes 
@@ -73,13 +75,12 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 		 */
 
 		for (j=0; j<i; j+=16) {
-			if ((!catalog[j])||(catalog_tmp[j] == 0x64)) {
-				memcpy(catalog_tmp+j, catalog_tmp+j+16, i+16-j);
+			if ((!catalog[j]) || (catalog[j] == 0x64)) {
+				memmove(catalog+j, catalog+j+16, i+16-j);
 				priv->nb_entries -- ;
 			}
 		}
-		if (catalog_tmp) priv->catalog = catalog_tmp;
-		else priv->catalog = catalog;
+		priv->catalog = catalog;
 	} else {
 		free (catalog);
 		priv->catalog = NULL;	/* We just have freed catalog_tmp */
