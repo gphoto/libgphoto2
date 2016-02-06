@@ -1137,6 +1137,7 @@ localization_file_read (Camera *camera, const char *file_name,
                                 if (sscanf ((char *)&c[0], "%X", &d) != 1) {
 					GP_DEBUG ("Error in localization "
 						  "file.");
+                                	fclose (file);
                                         return (GP_ERROR_CORRUPTED_DATA);
                                 }
                                 (*data)[*data_size] = d;
@@ -1145,7 +1146,7 @@ localization_file_read (Camera *camera, const char *file_name,
                                         gp_context_error (context,
 						_("Localization file too long!"));
                                         fclose (file);
-                                        return (FALSE);
+                                        return (GP_ERROR_CORRUPTED_DATA);
                                 }
                         }
                         j = 1 - j;
