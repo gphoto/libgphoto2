@@ -84,7 +84,7 @@ gp_port_library_list (GPPortInfoList *list)
         gp_port_info_set_type (info, GP_PORT_USB);
         gp_port_info_set_name (info, "");
         gp_port_info_set_path (info, "^usb:");
-        CHECK (gp_port_info_list_append (list, info));
+        gp_port_info_list_append (list, info); /* do not check, might be -1 */
 
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB);

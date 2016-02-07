@@ -348,9 +348,16 @@ gp_port_library_list (GPPortInfoList *list)
 	 */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_SERIAL);
+	gp_port_info_set_path (info, "serial:");
+	gp_port_info_set_name (info, _("Serial Port Device"));
+	CHECK (gp_port_info_list_append (list, info));
+
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_SERIAL);
 	gp_port_info_set_path (info, "^serial:");
 	gp_port_info_set_name (info, "");
-	return gp_port_info_list_append (list, info);
+	gp_port_info_list_append (list, info); /* do not check */
+	return GP_OK;
 }
 
 static int
