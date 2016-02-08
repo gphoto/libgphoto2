@@ -1,0 +1,275 @@
+Dear,
+
+Could you have a look at the support for the Olympus TG620? I'm trying to
+capture an image and, while it is recognised with the "MTP" setting, it
+doesn't work. Neither with the pictbridge" setting.
+Many thanks,
+Jonas
+
+
+
+*pi@photobooth:~ $ lsusb*
+Bus 001 Device 011: ID 07b4:0125 Olympus Optical Co., Ltd
+Bus 001 Device 003: ID 0424:ec00 Standard Microsystems Corp. SMSC9512/9514
+Fast Ethernet Adapter
+Bus 001 Device 002: ID 0424:9512 Standard Microsystems Corp. LAN9500
+Ethernet 10/100 Adapter / SMSC9512/9514 Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+
+
+*pi@photobooth:~ $ gphoto2 --auto-detect*
+Model                          Port
+----------------------------------------------------------
+USB PTP Class Camera           usb:001,011
+
+
+*pi@photobooth:~ $ cat summary.txt*
+Camera summary:
+Manufacturer: OLYMPUS
+Model: TG-620
+  Version: 1.00
+  Serial Number: XXXXXXXXX
+Vendor Extension ID: 0x6 (1.0)
+
+Capture Formats: MS Wave Undefined Video Defined Type JPEG Unknown(b101)
+Display Formats: Undefined Type, Association/Directory, DPOF, MS Wave,
+Undefined Video, Defined Type, JPEG, Unknown(b101)
+Supported MTP Object Properties:
+        Undefined Type/3000: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+        Association/Directory/3001: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+        DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+        MS Wave/3008: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name dc89/Duration
+de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+        Undefined Video/b980: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize
+dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth
+dc86/RepresentativeSampleData dc87/Width dc88/Height dc89/Duration
+de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+        Defined Type/3800: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize
+dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth
+dc86/RepresentativeSampleData dc88/Height dc87/Width dcd3/ImageBitDepth
+        JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize
+dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth
+dc86/RepresentativeSampleData dc88/Height dc87/Width dcd3/ImageBitDepth
+        Unknown(b101)/b101: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize
+dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth
+dc86/RepresentativeSampleData dc88/Height dc87/Width dcd3/ImageBitDepth
+
+Device Capabilities:
+        File Download, File Deletion, No File Upload
+        No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+        StorageDescription: None
+        VolumeLabel: None
+        Storage Type: Builtin RAM
+        Filesystemtype: Digital Camera Layout (DCIM)
+        Access Capability: Read-Write
+        Maximum Capability: 49348608 (47 MB)
+        Free Space (Bytes): 47173632 (44 MB)
+        Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [1 - 100, step 1] value:
+100% (100)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20160208T151948'
+Device Icon(0xd405):(read only) (type=0x4002)
+Session Initiator Info(0xd406):(readwrite) (type=0xffff)
+'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
+
+
+*pi@photobooth:~ $ cat config.txt*
+/main/settings/datetime
+Label: Camera Date and Time
+Type: DATE
+Current: 1454944842
+Printable: Mon Feb  8 15:20:42 2016
+Help: Use 'now' as the current time when setting.
+
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: XXXXXXXXX
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: OLYMPUS
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: TG-620
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1.00
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: None
+/main/status/batterylevel
+Label: Battery Level
+Type: TEXT
+Current: 100%
+/main/other/5001
+Label: Battery Level
+Type: MENU
+Current: 100
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+Choice: 20 21
+Choice: 21 22
+Choice: 22 23
+Choice: 23 24
+Choice: 24 25
+Choice: 25 26
+Choice: 26 27
+Choice: 27 28
+Choice: 28 29
+Choice: 29 30
+Choice: 30 31
+Choice: 31 32
+Choice: 32 33
+Choice: 33 34
+Choice: 34 35
+Choice: 35 36
+Choice: 36 37
+Choice: 37 38
+Choice: 38 39
+Choice: 39 40
+Choice: 40 41
+Choice: 41 42
+Choice: 42 43
+Choice: 43 44
+Choice: 44 45
+Choice: 45 46
+Choice: 46 47
+Choice: 47 48
+Choice: 48 49
+Choice: 49 50
+Choice: 50 51
+Choice: 51 52
+Choice: 52 53
+Choice: 53 54
+Choice: 54 55
+Choice: 55 56
+Choice: 56 57
+Choice: 57 58
+Choice: 58 59
+Choice: 59 60
+Choice: 60 61
+Choice: 61 62
+Choice: 62 63
+Choice: 63 64
+Choice: 64 65
+Choice: 65 66
+Choice: 66 67
+Choice: 67 68
+Choice: 68 69
+Choice: 69 70
+Choice: 70 71
+Choice: 71 72
+Choice: 72 73
+Choice: 73 74
+Choice: 74 75
+Choice: 75 76
+Choice: 76 77
+Choice: 77 78
+Choice: 78 79
+Choice: 79 80
+Choice: 80 81
+Choice: 81 82
+Choice: 82 83
+Choice: 83 84
+Choice: 84 85
+Choice: 85 86
+Choice: 86 87
+Choice: 87 88
+Choice: 88 89
+Choice: 89 90
+Choice: 90 91
+Choice: 91 92
+Choice: 92 93
+Choice: 93 94
+Choice: 94 95
+Choice: 95 96
+Choice: 96 97
+Choice: 97 98
+Choice: 98 99
+Choice: 99 100
+/main/other/5011
+Label: Date & Time
+Type: TEXT
+Current: 20160208T152042
+/main/other/d405
+Label: Device Icon
+Type: TEXT
+Current: (null)
+/main/other/d406
+Label: Session Initiator Info
+Type: TEXT
+Current: Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0
+/main/other/d407
+Label: Perceived Device Type
+Type: TEXT
+Current: 1
+
+
+*pi@photobooth:~ $ gphoto2 --capture-image*
+
+*** Error ***
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***
+
+For debugging messages, please use the --debug option.
+Debugging messages may help finding a solution to your problem.
+If you intend to send any error or debug messages to the gphoto
+developer mailing list <gphoto-devel@lists.sourceforge.net>, please run
+gphoto2 as follows:
+
+    env LANG=C gphoto2 --debug --debug-logfile=my-logfile.txt
+--capture-image
+
+Please make sure there is sufficient quoting around the arguments.
