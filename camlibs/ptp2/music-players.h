@@ -3057,6 +3057,8 @@
   { "Kyocera", 0x0482, "Torque Model E6715", 0x0059a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/discussion/535190/thread/6270f5ce/ */
   { "Kyocera", 0x0482, "KYL22", 0x0810, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1518/ */
+  { "Kyocera", 0x0482, "302KC", 0x09fc, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1345/ */
   { "Kyocera", 0x0482, "DuraForce", 0x0979, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1476/ */
