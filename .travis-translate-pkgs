@@ -8,6 +8,9 @@ ubuntu2osx() {
 	libusb-dev)       echo "libusb-compat" ;;
 	libusb-1.0-0-dev) echo "libusb" ;;
 	libgd2-xpm-dev)   echo "gd" ;;
+	libcdk5-dev)      echo "cdk" ;;
+	libaa1-dev)       echo "aalib" ;;
+	libpopt-dev)      echo "popt" ;;
 	*)
 	    echo "Error: Unknown package name: '$1'" >&2
 	    exit 2 ;;
@@ -39,7 +42,7 @@ exit 0
 true <<EOF
 for SH in "bash" "busybox sh"; do
   for os in linux osx no-os; do
-    for EXTRALIBS in "" "libusb-dev" "libusb-1.0-0-dev libgd2-xpm-dev" "nosuchlib"; do
+    for EXTRALIBS in "" "libusb-dev" "libusb-1.0-0-dev libgd2-xpm-dev" "libpopt-dev" "libaa1-dev" "libcdk5-dev" "nosuchlib"; do
       echo "### SHELL: $SH OS: $os EXTRALIBS: '$EXTRALIBS' ###"
       env TRAVIS_OS_NAME=$os $SH .travis-translate-pkgs $EXTRALIBS
       echo "### Status: $?"
