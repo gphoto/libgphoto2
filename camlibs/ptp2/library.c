@@ -1334,6 +1334,9 @@ static struct {
 	{"Olympus:X920",                  0x07b4, 0x0116, 0},
 	{"Olympus:X925",                  0x07b4, 0x0116, 0},
 
+	/* Jonas Rani Hatem <jr@hatem.be> */
+	{"Olympus:TG-620",                0x07b4, 0x0125, 0},
+
 	/* t.ludewig@gmail.com */
 	{"Olympus:SP-720UZ",		  0x07b4, 0x012f, 0},
 	{"Olympus:E-PL5",		  0x07b4, 0x012f, 0},
