@@ -295,12 +295,6 @@ gp_port_library_list (GPPortInfoList *list)
 	}
 #  endif
 # endif
-	gp_port_info_new (&info);
-	gp_port_info_set_type (info, GP_PORT_DISK);
-	gp_port_info_set_name (info, _("Mountpoint of Media"));
-	gp_port_info_set_path (info, "disk:");
-	CHECK (gp_port_info_list_append (list, info));
-
 	/* generic disk:/xxx/ matcher */
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_DISK);
