@@ -23,8 +23,9 @@ before_install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y $(sh .travis-translate-pkgs $EXTRALIBS); fi
 
 script:
- - autoreconf -i -f
- - ./configure && make && make check
+  - autoreconf -v -i -f
+  - ./configure --prefix=$PWD/_i
+  - make && make check && make install && make installcheck
 
 notifications:
   email:
