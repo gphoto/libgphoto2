@@ -79,48 +79,51 @@ store_00010001:
 	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
 	Zugriffsmöglichkeiten: Lesen und Schreiben
 	Maximale Kapazität: 3983540224 (3799 MB)
-	Freier Platz (Bytes): 3931313152 (3749 MB)
-	Freier Speicher (Bilder): 1199
+	Freier Platz (Bytes): 3944420352 (3761 MB)
+	Freier Speicher (Bilder): 1203
 
 Properties des Geräts:
 Batterie Ladezustand(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
 Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32769,32770,6,32800,32771,32772,32773,32774] value: Automatic (2)
-Belichtungs Index (nach ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,65535] value: ISO 65535 (65535)
-Belichtungskompensation(0x5010):(readwrite) (type=0x3) Enumeration [2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000] value: 0,0 stops (0)
-Datum und Zeit(0x5011):(readwrite) (type=0xffff) '20150911T211107'
+Belichtungsindex (ISO-Filmempfindlichkeit)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,65535] value: ISO 65535 (65535)
+Belichtungskorrektur(0x5010):(readwrite) (type=0x3) Enumeration [2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000] value: 0,0 stops (0)
+Datum und Zeit(0x5011):(readwrite) (type=0xffff) '20160211T205832'
 Bildaufnahme Modus(0x5013):(readwrite) (type=0x4) Enumeration [0,1,3] value: Single Shot (1)
 Zeitraffer Nummer(0x501a):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
 Zeitraffer Intervall(0x501b):(readwrite) (type=0x6) Range [5000 - 3600000, step 1000] value: 5000
-Property 0x502c:(readwrite) (type=0x6) Range [0 - 100, step 1] value: 100
+Audio Volume(0x502c):(readwrite) (type=0x6) Range [0 - 100, step 1] value: 100
 Property 0xd006:(read only) (type=0x6) 0
-Property 0xd00f:(readwrite) (type=0x8) Enumeration [Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8,Unknown 8] value: Unknown 8
+Property 0xd00f:(readwrite) (type=0x8) Enumeration [0,34359738368001,27487790694401,21474836480001,17179869184001,13743895347201,10737418240001,8589934592001,6871947673601,5368709120001,4294967296001,3435973836801,2748779069441,2147483648001,1717986918401,1374389534721,1073741824001,858993459201,687194767361,536870912001,429496729601,343597383681,257698037761,214748364801,171798691841,128849018881,107374182401,85899345921,64424509441,55834574849,42949672961,322122547210] value: 536870912001
 Property 0xd801:(readwrite) (type=0xffff) ''
 Property 0xd802:(readwrite) (type=0x2) Range [0 - 30, step 1] value: 10
 Property 0xd803:(readwrite) (type=0x4) Range [0 - 1800, step 1] value: 300
 Property 0xd805:(readwrite) (type=0xffff) 'THETAXN00116563'
-Property 0xd806:(readwrite) (type=0xffff) 'wlanpassword'
-Property 0xd807:(readwrite) (type=0x2) Enumeration [0,1,6,11] value: 0
+Property 0xd806:(readwrite) (type=0xffff) 'kie0hohB'
+Property 0xd807:(readwrite) (type=0x2) Enumeration [0,1,6,11] value: 1
 Property 0xd808:(read only) (type=0x2) Enumeration [0,1] value: 0
 Property 0xd809:(read only) (type=0x4) Range [0 - 179, step 1] value: 0
 Property 0xd80a:(read only) (type=0x4) Range [0 - 180, step 1] value: 0
-
 
 Warte 1 Sekunden auf Events von der Kamera. Drücke Ctrl-C zum abbrechen.
 /main/actions/movie
 Label: Film Aufnahme
 Type: TOGGLE
 Current: 2
+/main/actions/opcode
+Label: PTP Opcode
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
 /main/settings/datetime
 Label: Kamera Datum und Zeit
 Type: DATE
-Current: 1442152129
-Printable: So 13 Sep 2015 15:48:49 CEST
+Current: 1455220673
+Printable: Do 11 Feb 2016 20:57:53 CET
 Help: Use 'now' as the current time when setting.
 
 /main/status/serialnumber
 Label: Seriennummer
 Type: TEXT
-Current: nnnnnnnn
+Current: 00116563
 /main/status/manufacturer
 Label: Kamera Hersteller
 Type: TEXT
@@ -142,7 +145,7 @@ Label: Batterie Ladezustand
 Type: TEXT
 Current: 100%
 /main/imgsettings/iso
-Label: ISO-Geschwindigkeit
+Label: ISO-Empfindlichkeit
 Type: RADIO
 Current: 65535
 Choice: 0 100
@@ -174,7 +177,7 @@ Choice: 7 Unbekannter Wert 8004
 Choice: 8 Unbekannter Wert 8005
 Choice: 9 Unbekannter Wert 8006
 /main/capturesettings/exposurecompensation
-Label: Belichtungskompensation
+Label: Belichtungskorrektur
 Type: RADIO
 Current: 0
 Choice: 0 2
@@ -317,7 +320,7 @@ Choice: 7 32772
 Choice: 8 32773
 Choice: 9 32774
 /main/other/500f
-Label: Belichtungs Index (nach ISO)
+Label: Belichtungsindex (ISO-Filmempfindlichkeit)
 Type: MENU
 Current: 65535
 Choice: 0 100
@@ -335,7 +338,7 @@ Choice: 11 1250
 Choice: 12 1600
 Choice: 13 65535
 /main/other/5010
-Label: Belichtungskompensation
+Label: Belichtungskorrektur
 Type: MENU
 Current: 0
 Choice: 0 2000
@@ -354,7 +357,7 @@ Choice: 12 -2000
 /main/other/5011
 Label: Datum und Zeit
 Type: TEXT
-Current: 20150913T154849
+Current: 20160211T205753
 /main/other/5013
 Label: Bildaufnahme Modus
 Type: MENU
@@ -377,7 +380,7 @@ Bottom: 5000
 Top: 3,6e+06
 Step: 1000
 /main/other/502c
-Label: PTP Property 0x502c
+Label: Audio Volume
 Type: MENU
 Current: 100
 Choice: 0 0
@@ -546,7 +549,7 @@ Current: kie0hohB
 /main/other/d807
 Label: PTP Property 0xd807
 Type: MENU
-Current: 0
+Current: 1
 Choice: 0 0
 Choice: 1 1
 Choice: 2 6
