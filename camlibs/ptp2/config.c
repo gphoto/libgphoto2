@@ -3547,7 +3547,7 @@ _get_Ricoh_ShutterSpeed(CONFIG_GET_ARGS) {
 		if (y == 1) {
 			sprintf (buf, "1/%d", x);
 		} else {
-			sprintf (buf, "%d/%d",x,y);
+			sprintf (buf, "%d/%d",y,x);
 		}
 choicefound:
 		gp_widget_add_choice (*widget,buf);
@@ -3562,7 +3562,7 @@ choicefound:
 		if (y == 1) {
 			sprintf (buf, "1/%d",x);
 		} else {
-			sprintf (buf, "%d/%d",x,y);
+			sprintf (buf, "%d/%d",y,x);
 		}
 		gp_widget_set_value (*widget, buf);
 	}
@@ -3582,7 +3582,7 @@ _put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
 	}
 
 	if (strchr(value_str, '/')) {
-		if (2 != sscanf (value_str, "%d/%d", &x, &y))
+		if (2 != sscanf (value_str, "%d/%d", &y, &x))
 			return GP_ERROR;
 	} else {
 		if (!sscanf (value_str, "%d", &x))
@@ -7301,9 +7301,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				if (type == GP_WIDGET_RANGE) {					\
 					gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
 				} else {							\
-					int k;							\
+					long k;							\
 					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
-						sprintf (buf, "%d", k); 			\
+						sprintf (buf, "%ld", k); 			\
 						gp_widget_add_choice (widget, buf);		\
 					}							\
 				} 								\
@@ -7315,28 +7315,32 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		X(PTP_DTC_UINT16,u16)
 		X(PTP_DTC_INT32,i32)
 		X(PTP_DTC_UINT32,u32)
+		X(PTP_DTC_INT64,i64)
+		X(PTP_DTC_UINT64,u64)
 #undef X
 			default:break;
 			}
 			break;
 		case PTP_DPFF_Enumeration:
 			switch (dpd.DataType) {
-#define X(dtc,val) 									\
+#define X(dtc,val,fmt) 									\
 			case dtc: { 							\
 				int k;							\
 				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++) {		\
-					sprintf (buf, "%d", dpd.FORM.Enum.SupportedValue[k].val); \
+					sprintf (buf, fmt, dpd.FORM.Enum.SupportedValue[k].val); \
 					gp_widget_add_choice (widget, buf);		\
 				}							\
 				break;							\
 			}
 
-		X(PTP_DTC_INT8,i8)
-		X(PTP_DTC_UINT8,u8)
-		X(PTP_DTC_INT16,i16)
-		X(PTP_DTC_UINT16,u16)
-		X(PTP_DTC_INT32,i32)
-		X(PTP_DTC_UINT32,u32)
+		X(PTP_DTC_INT8,i8,"%d")
+		X(PTP_DTC_UINT8,u8,"%d")
+		X(PTP_DTC_INT16,i16,"%d")
+		X(PTP_DTC_UINT16,u16,"%d")
+		X(PTP_DTC_INT32,i32,"%d")
+		X(PTP_DTC_UINT32,u32,"%d")
+		X(PTP_DTC_INT64,i64,"%ld")
+		X(PTP_DTC_UINT64,u64,"%ld")
 #undef X
 			case PTP_DTC_STR: {
 				int k;
