@@ -1,6 +1,6 @@
 /* config.c
  *
- * Copyright (C) 2003-2015 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2016 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -3524,6 +3524,76 @@ _put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Ricoh_ShutterSpeed(CONFIG_GET_ARGS) {
+	int i, valset = 0;
+	char buf[200];
+	int x,y;
+
+	if (dpd->DataType != PTP_DTC_UINT64)
+		return GP_ERROR;
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		if (dpd->FORM.Enum.SupportedValue[i].u64 == 0) {
+			sprintf(buf,_("Auto"));
+			goto choicefound;
+		}
+		x = dpd->FORM.Enum.SupportedValue[i].u64>>32;
+		y = dpd->FORM.Enum.SupportedValue[i].u64&0xffffffff;
+		if (y == 1) {
+			sprintf (buf, "1/%d", x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
+choicefound:
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->CurrentValue.u64 == dpd->FORM.Enum.SupportedValue[i].u64) {
+			gp_widget_set_value (*widget, buf);
+			valset = 1;
+		}
+	}
+	if (!valset) {
+		x = dpd->CurrentValue.u64>>32;
+		y = dpd->CurrentValue.u64&0xffffffff;
+		if (y == 1) {
+			sprintf (buf, "1/%d",x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
+		gp_widget_set_value (*widget, buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
+	int x,y;
+	const char *value_str;
+
+	gp_widget_get_value (widget, &value_str);
+
+	if (!strcmp(value_str,_("Auto"))) {
+		propval->u64 = 0;
+		return GP_OK;
+	}
+
+	if (strchr(value_str, '/')) {
+		if (2 != sscanf (value_str, "%d/%d", &x, &y))
+			return GP_ERROR;
+	} else {
+		if (!sscanf (value_str, "%d", &x))
+			return GP_ERROR;
+		y = 1;
+	}
+	propval->u64 = ((unsigned long)x<<32) | y;
+	return GP_OK;
+}
+
+static int
 _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	int x,y;
 	char buf[20];
@@ -6808,6 +6878,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_INT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
+	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_RICOH_ShutterSpeed,             PTP_VENDOR_PENTAX,  PTP_DTC_UINT64, _get_Ricoh_ShutterSpeed,            _put_Ricoh_ShutterSpeed },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_MeteringMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_EOS_MeteringMode,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("AF Distance"),                    "afdistance",               PTP_DPC_CANON_AFDistance,               PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_AFDistance,              _put_Canon_AFDistance },
@@ -7278,23 +7349,25 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			break;
 		}
 		switch (dpd.DataType) {
-#define X(dtc,val) 							\
+#define X(dtc,val,fmt) 							\
 		case dtc:						\
 			if (type == GP_WIDGET_RANGE) {			\
 				float f = dpd.CurrentValue.val;		\
 				gp_widget_set_value (widget, &f);	\
 			} else {					\
-				sprintf (buf, "%d", dpd.CurrentValue.val);	\
+				sprintf (buf, fmt, dpd.CurrentValue.val);	\
 				gp_widget_set_value (widget, buf);	\
 			}\
 			break;
 
-		X(PTP_DTC_INT8,i8)
-		X(PTP_DTC_UINT8,u8)
-		X(PTP_DTC_INT16,i16)
-		X(PTP_DTC_UINT16,u16)
-		X(PTP_DTC_INT32,i32)
-		X(PTP_DTC_UINT32,u32)
+		X(PTP_DTC_INT8,i8,"%d")
+		X(PTP_DTC_UINT8,u8,"%d")
+		X(PTP_DTC_INT16,i16,"%d")
+		X(PTP_DTC_UINT16,u16,"%d")
+		X(PTP_DTC_INT32,i32,"%d")
+		X(PTP_DTC_UINT32,u32,"%d")
+		X(PTP_DTC_INT64,i64,"%ld")
+		X(PTP_DTC_UINT64,u64,"%ld")
 #undef X
 		case PTP_DTC_STR:
 			gp_widget_set_value (widget, dpd.CurrentValue.str);
@@ -7481,6 +7554,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		X(PTP_DTC_UINT16,u16)
 		X(PTP_DTC_INT32,i32)
 		X(PTP_DTC_UINT32,u32)
+		X(PTP_DTC_INT64,i64)
+		X(PTP_DTC_UINT64,u64)
 #undef X
 		case PTP_DTC_STR: {
 			char *val;

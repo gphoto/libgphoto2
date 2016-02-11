@@ -2106,6 +2106,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CASIO_UNKNOWN_17	0xD030
 #define PTP_DPC_CASIO_UNKNOWN_18	0xD080
 
+#define PTP_DPC_RICOH_ShutterSpeed	0xD00F
+
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
 #define PTP_OPC_ObjectFormat				0xDC02
