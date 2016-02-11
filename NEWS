@@ -1,11 +1,37 @@
 libgphoto2 2.5.9.1 development tree
 
+ptp2:
+* allow generic opcode commands with parameters, config variable "opcode"
+* fixed pretending that Nikon Coolpix S series is a Nikon 1 S.
+* Nikon: fixed problem with SDRAM capture
+* Canon EOS: handle "no focus" during capture
+* Canon Powershot: handle lack of object protection setting
+* added size checking for unpacking primitives
+* New ids:
+  * Imported Media Players and Android phones from libmtp
+  * Sony Alpha A7S II, ILCE 7M2
+  * Nikon Coolpix L840
+  * Olympus TG-620
+  * Canon EOS 1D C, 750D
+  * Fuji Film X-T1, X-T10, 
+
+
+pentax:
+* fixed some crashes on non-existing config variables
+* use portable directory api (helps Visual Studio)
+
 libgphoto2_port/vusb:
 * Implemented a virtual PTP camera for test purposes.
 
+libgphoto2_port/disk:
+* Support exfat fuse filesystems.
+
+all:
+* fixed various issues found by Coverity static analyzer
+* removed unistd.h headers where not needed to help Visual Studio
 
 translations:
-* updated swedish, brazilian portuguese, danish
+* updated swedish, brazilian portuguese, danish, polish, ukrainian, vietnamese
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.9 release
