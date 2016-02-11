@@ -1638,8 +1638,13 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
 
                 /* Find new file name in camera directory */
                 canon_int_find_new_image ( camera, initial_state, final_state, path );
+
+		/* Save this state to the camera directory state */
+		if (camera->pl->directory_state)
+			free (camera->pl->directory_state);
+		camera->pl->directory_state = final_state;
+
                 free ( initial_state );
-                free ( final_state );
                 break;
         case GP_PORT_SERIAL:
                 return GP_ERROR_NOT_SUPPORTED;
