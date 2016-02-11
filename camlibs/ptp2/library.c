@@ -1833,6 +1833,8 @@ static struct {
 	{"Fuji:FinePix F40fd",			0x04cb, 0x01c5, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1800289&group_id=8874&atid=358874 */
 	{"Fuji:FinePix A820",			0x04cb, 0x01c6, 0},
+	/* Louis Byrne <louisbyrneca@hotmail.com> */
+	{"Fuji:FinePix A610",			0x04cb, 0x01d0, 0},
 	/* g4@catking.net */
 	{"Fuji:FinePix A800",			0x04cb, 0x01d2, 0},
 	/* Gerhard Schmidt <gerd@dg4fac.de> */
