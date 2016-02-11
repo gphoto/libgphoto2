@@ -1,0 +1,87 @@
+lsusb 04cb:01d0 Fuji Photo Film Co., Ltd
+gphoto2 Model USB PTP Class Camera  Port usb:003,002
+
+Summary
+Camera summary:
+Manufacturer: FUJIFILM
+Model: FinePix A610
+  Version: 1.00
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: 
+Display Formats: JPEG, JFIF
+Supported MTP Object Properties:
+    JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+    JFIF/3808: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+    File Download, File Deletion, File Upload
+    No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+    StorageDescription: External Memory
+    VolumeLabel: ..
+    Storage Type: Removable RAM (memory card)
+    Filesystemtype: Digital Camera Layout (DCIM)
+    Access Capability: Read Only with Object deletion
+    Maximum Capability: 523837440 (499 MB)
+    Free Space (Bytes): 523509760 (499 MB)
+    Free Space (Images): -1
+
+Device Property Summary:
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
+
+Config
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: FUJIFILM
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: FinePix A610
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 1.00
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: fujifilm.co.jp: 1.0; 
+/main/other/d406
+Label: Session Initiator Info
+Type: TEXT
+Current: 
+/main/other/d407
+Label: Perceived Device Type
+Type: TEXT
+Current: 1
+
+
+
+Error
+Sorry your camera does not support generic capture
+ERROR Could not capture image
+
+(-6 Unsupported operation)
+For debugging messages, please use the --debug option.
+Debugging messages may help finding a solution to your problem.
+If you intend to send any error or debug messages to the gphoto
+developer mailing list <gphoto-devel@lists.sourceforge.net>, please run
+gphoto2 as follows:
+
+    env LANG=C gphoto2 --debug --debug-logfile=my-logfile.txt --capture-image
+
+Please make sure there is sufficient quoting around the arguments.
+
+
+ 		 	   		  
