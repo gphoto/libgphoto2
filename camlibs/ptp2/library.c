@@ -1342,6 +1342,8 @@ static struct {
 	{"Olympus:E-PL5",		  0x07b4, 0x012f, 0},
 	/* Rafał Bryndza <abigor82@gmail.com> */
 	{"Olympus:E-M5",		  0x07b4, 0x012f, 0},
+	/* Richard Wonka <richard.wonka@gmail.com> */
+	{"Olympus:E-M5 Mark II",	  0x07b4, 0x0130, 0},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
