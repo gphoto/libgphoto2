@@ -7998,6 +7998,7 @@ camera_set_single_config (Camera *camera, const char *confname, CameraWidget *wi
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL);
 				}
+				return ret;
 			}
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
@@ -8018,8 +8019,9 @@ camera_set_single_config (Camera *camera, const char *confname, CameraWidget *wi
 					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
 				ptp_free_devicepropdesc(&dpd);
 				ptp_free_devicepropvalue(cursub->type, &propval);
+				return ret;
 			}
-			return ret;
+			/* can continue, we might not be with right camera vendor */
 		}
 	}
 	if (!params->deviceinfo.DevicePropertiesSupported_len)
