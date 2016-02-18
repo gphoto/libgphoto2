@@ -7389,7 +7389,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 }
 
 int
-camera_get_config_list (Camera *camera, CameraList *list, GPContext *context) {
+camera_list_config (Camera *camera, CameraList *list, GPContext *context) {
 	unsigned int	menuno, submenuno;
 	int		i;
 	PTPParams	*params = &camera->pl->params;
@@ -7479,6 +7479,7 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 	PTPParams	*params = &camera->pl->params;
 	CameraAbilities	ab;
 
+	*widget = NULL;
 	SET_CONTEXT(camera, context);
 	memset (&ab, 0, sizeof(ab));
 	gp_camera_get_abilities (camera, &ab);
@@ -7509,7 +7510,6 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
-			*widget = NULL;
 
 			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
 				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
@@ -7520,7 +7520,7 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 				) {
 					PTPDevicePropDesc	dpd;
 
-					if (strcmp (cursub->label, confname))
+					if (strcmp (cursub->name, confname))
 						continue;
 
 					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
@@ -7530,15 +7530,17 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (*widget, 1);
 					ptp_free_devicepropdesc(&dpd);
+					return GP_OK;
 				} else {
 					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
 					if (	((cursub->type & 0x7000) != 0x1000) ||
 						 ptp_operation_issupported(params, cursub->type)
 					) {
-						if (strcmp (cursub->label, confname))
+						if (strcmp (cursub->name, confname))
 							continue;
 						GP_LOG_D ("Getting function prop '%s' / 0x%04x", cursub->label, cursub->type );
 						ret = cursub->getfunc (camera, widget, cursub, NULL);
+						return GP_OK;
 					} else
 						continue;
 				}
@@ -7551,7 +7553,7 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
-				if (strcmp (cursub->label, confname))
+				if (strcmp (cursub->name, confname))
 					continue;
 				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 				memset(&dpd,0,sizeof(dpd));
@@ -7562,7 +7564,7 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
-				continue;
+				return GP_OK;
 			}
 		}
 	}

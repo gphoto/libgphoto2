@@ -27,6 +27,7 @@ int camera_get_config_list (Camera *camera, CameraList *list, GPContext *context
 int camera_get_single_config (Camera *camera, const char *confname, CameraWidget **window, GPContext *context);
 int camera_set_config (Camera *camera, CameraWidget *window, GPContext *context);
 int camera_set_single_config (Camera *camera, const char *confname, CameraWidget *window, GPContext *context);
+int camera_list_config (Camera *camera, CameraList *list, GPContext *context);
 int camera_prepare_capture (Camera *camera, GPContext *context);
 int camera_unprepare_capture (Camera *camera, GPContext *context);
 int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value);
