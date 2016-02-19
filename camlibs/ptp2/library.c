@@ -7312,7 +7312,10 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->capture_preview = camera_capture_preview;
 	camera->functions->summary = camera_summary;
 	camera->functions->get_config = camera_get_config;
+	camera->functions->get_single_config = camera_get_single_config;
+	camera->functions->set_single_config = camera_set_single_config;
 	camera->functions->set_config = camera_set_config;
+	camera->functions->list_config = camera_list_config;
 	camera->functions->wait_for_event = camera_wait_for_event;
 
 	/* We need some data that we pass around */
