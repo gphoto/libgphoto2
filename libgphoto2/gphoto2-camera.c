@@ -876,6 +876,71 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 
 /**
+ * Retrieve a single configuration \c widget for the \c camera.
+ *
+ * @param camera a #Camera
+ * @param name the name of a configuration widget
+ * @param widget a #CameraWidget
+ * @param context a #GPContext
+ * @return gphoto2 error code
+ *
+ * This \c widget will then contain the current and the possible values and the type.
+ *
+ */
+int
+gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **widget, GPContext *context)
+{
+	C_PARAMS (camera);
+	CHECK_INIT (camera, context);
+
+	if (!camera->functions->get_single_config) {
+		gp_context_error (context, _("This camera does "
+			"not provide any configuration options."));
+		CAMERA_UNUSED (camera, context);
+                return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_single_config (
+					camera, name, widget, context), context);
+
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
+
+/**
+ * Retrieve a configuration \c list for the \c camera.
+ *
+ * @param camera a #Camera
+ * @param list a #CameraList
+ * @param context a #GPContext
+ * @return gphoto2 error code
+ *
+ * The names in list can be used for the single set and get configuration calls.
+ *
+ */
+int
+gp_camera_list_config (Camera *camera, CameraList *list, GPContext *context)
+{
+	C_PARAMS (camera);
+	CHECK_INIT (camera, context);
+
+	if (!camera->functions->list_config) {
+		gp_context_error (context, _("This camera does "
+			"not provide any configuration options."));
+		CAMERA_UNUSED (camera, context);
+                return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->list_config (
+					camera, list, context), context);
+
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
+
+/**
  * Sets the configuration.
  *
  * @param camera a #Camera
@@ -906,6 +971,39 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	CAMERA_UNUSED (camera, context);
 	return (GP_OK);
 }
+
+/**
+ * Set a single configuration \c widget for the \c camera.
+ *
+ * @param camera a #Camera
+ * @param name the name of a configuration widget
+ * @param widget a #CameraWidget
+ * @param context a #GPContext
+ * @return gphoto2 error code
+ *
+ * This \c widget contains the new value of the widget to set.
+ *
+ */
+int
+gp_camera_set_single_config (Camera *camera, const char *name, CameraWidget *widget, GPContext *context)
+{
+	C_PARAMS (camera);
+	CHECK_INIT (camera, context);
+
+	if (!camera->functions->set_single_config) {
+		gp_context_error (context, _("This camera does "
+			"not provide any configuration options."));
+		CAMERA_UNUSED (camera, context);
+                return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_single_config (
+					camera, name, widget, context), context);
+
+	CAMERA_UNUSED (camera, context);
+	return (GP_OK);
+}
+
 
 /**
  * Retrieves a camera summary.

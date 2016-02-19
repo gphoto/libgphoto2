@@ -1,5 +1,9 @@
 libgphoto2 2.5.9.1 development tree
 
+libgphoto2:
+* added gp_camera_list_config, gp_camera_get_single_config, gp_camera_set_single_config
+  additional configuration APIs for faster access to single configuration values
+
 ptp2:
 * allow generic opcode commands with parameters, config variable "opcode"
 * fixed pretending that Nikon Coolpix S series is a Nikon 1 S.
