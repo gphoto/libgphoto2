@@ -890,21 +890,108 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 int
 gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **widget, GPContext *context)
 {
+	CameraWidget		*rootwidget, *child;
+	CameraWidgetType	type;
+	const char		*label;
+	int			ret, ro;
+
 	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
-	if (!camera->functions->get_single_config) {
-		gp_context_error (context, _("This camera does "
-			"not provide any configuration options."));
+	if (camera->functions->get_single_config) {
+		CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_single_config (
+						camera, name, widget, context), context);
+
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return GP_OK;
 	}
 
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_single_config (
-					camera, name, widget, context), context);
+	if (!camera->functions->get_config) {
+		gp_context_error (context, _("This camera does not provide any configuration options."));
+		CAMERA_UNUSED (camera, context);
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	/* emulate it ... */
+	CHECK_OPEN (camera, context);
 
+	ret = camera->functions->get_config ( camera, &rootwidget, context);
+	if (ret != GP_OK) {
+		CHECK_CLOSE (camera, context);
+		CAMERA_UNUSED (camera, context);
+		return ret;
+	}
+	ret = gp_widget_get_child_by_name (rootwidget, name, &child);
+	if (ret != GP_OK) {
+		gp_widget_free (rootwidget);
+		CHECK_CLOSE (camera, context);
+		CAMERA_UNUSED (camera, context);
+		return ret;
+	}
+
+	/* We need to duplicate the widget, as we will free the widgettree */
+	gp_widget_get_type (child, &type);
+	gp_widget_get_label (child, &label);
+	gp_widget_get_readonly (child, &ro);
+
+	ret = gp_widget_new (type, label, widget);
+	if (ret != GP_OK)
+		goto out;
+	gp_widget_set_name (*widget, name);
+	gp_widget_set_readonly (*widget, ro);
+
+	switch (type) {
+        case GP_WIDGET_MENU:
+        case GP_WIDGET_RADIO: {
+		char *value;
+		int i, nrofchoices;
+
+		nrofchoices = gp_widget_count_choices (child);
+		for (i = 0; i < nrofchoices; i++) {
+			const char *choice;
+
+			gp_widget_get_choice (child, i, &choice);
+			gp_widget_add_choice (*widget, choice);
+		}
+		gp_widget_get_value (child, &value);
+		gp_widget_set_value (*widget, value);
+		break;
+	}
+        case GP_WIDGET_TEXT: {
+		char *value;
+
+		gp_widget_get_value (child, &value);
+		gp_widget_set_value (*widget, value);
+		break;
+	}
+        case GP_WIDGET_RANGE: {
+		float value, rmin, rmax, rstep;
+
+		gp_widget_get_range (child, &rmin, &rmax, &rstep);
+		gp_widget_set_range (*widget, rmin, rmax, rstep);
+		gp_widget_get_value (child, &value);
+		gp_widget_set_value (*widget, &value);
+                break;
+	}
+        case GP_WIDGET_TOGGLE:
+        case GP_WIDGET_DATE: {
+		int value;
+
+		gp_widget_get_value (child, &value);
+		gp_widget_set_value (*widget, &value);
+                break;
+	}
+        case GP_WIDGET_BUTTON:
+        case GP_WIDGET_SECTION:
+        case GP_WIDGET_WINDOW:
+        default:
+                ret = GP_ERROR_BAD_PARAMETERS;
+		break;
+	}
+out:
+	gp_widget_free (rootwidget);
+	CHECK_CLOSE (camera, context);
 	CAMERA_UNUSED (camera, context);
-	return (GP_OK);
+	return ret;
 }
 
 
@@ -919,24 +1006,83 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
  * The names in list can be used for the single set and get configuration calls.
  *
  */
+
+static void
+_get_widget_names (CameraWidget *widget, CameraList *list)
+{
+	CameraWidgetType	type;
+
+	gp_widget_get_type (widget, &type);
+	switch (type) {
+        case GP_WIDGET_MENU:
+        case GP_WIDGET_RADIO:
+        case GP_WIDGET_TEXT:
+        case GP_WIDGET_RANGE:
+        case GP_WIDGET_TOGGLE:
+        case GP_WIDGET_DATE: {
+		const char *name;
+
+		gp_widget_get_name (widget, &name);
+		gp_list_append (list, name, NULL);
+                break;
+	}
+        case GP_WIDGET_SECTION:
+        case GP_WIDGET_WINDOW: {
+		int i, nrofchildren;
+
+		nrofchildren = gp_widget_count_children (widget);
+		for (i = 0; i < nrofchildren; i++) {
+			CameraWidget *child;
+
+			gp_widget_get_child (widget, i, &child);
+			_get_widget_names (child, list);
+		}
+		break;
+	}
+        case GP_WIDGET_BUTTON:
+        default:
+		break;
+	}
+
+}
+
 int
 gp_camera_list_config (Camera *camera, CameraList *list, GPContext *context)
 {
+	CameraWidget		*rootwidget;
+	int			ret;
 	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
-	if (!camera->functions->list_config) {
-		gp_context_error (context, _("This camera does "
-			"not provide any configuration options."));
+	if (camera->functions->list_config) {
+		CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->list_config (
+						camera, list, context), context);
+
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return GP_OK;
+	}
+	if (!camera->functions->get_config) {
+		gp_context_error (context, _("This camera does not provide any configuration options."));
+		CAMERA_UNUSED (camera, context);
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	/* emulate it ... */
+	CHECK_OPEN (camera, context);
+
+	ret = camera->functions->get_config ( camera, &rootwidget, context);
+	if (ret != GP_OK) {
+		CHECK_CLOSE (camera, context);
+		CAMERA_UNUSED (camera, context);
+		return ret;
 	}
 
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->list_config (
-					camera, list, context), context);
+	_get_widget_names (rootwidget, list);
 
+
+	gp_widget_free (rootwidget);
+	CHECK_CLOSE (camera, context);
 	CAMERA_UNUSED (camera, context);
-	return (GP_OK);
+	return ret;
 }
 
 
@@ -987,21 +1133,85 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 int
 gp_camera_set_single_config (Camera *camera, const char *name, CameraWidget *widget, GPContext *context)
 {
+	CameraWidget		*rootwidget, *child;
+	CameraWidgetType	type;
+	int			ret;
+
 	C_PARAMS (camera);
 	CHECK_INIT (camera, context);
 
-	if (!camera->functions->set_single_config) {
-		gp_context_error (context, _("This camera does "
-			"not provide any configuration options."));
+	if (camera->functions->set_single_config) {
+		CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_single_config (
+						camera, name, widget, context), context);
+
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return GP_OK;
 	}
 
-	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_single_config (
-					camera, name, widget, context), context);
+	if (!camera->functions->set_config) {
+		gp_context_error (context, _("This camera does not provide any configuration options."));
+		CAMERA_UNUSED (camera, context);
+		return GP_ERROR_NOT_SUPPORTED;
+	}
+	/* emulate single config with the full tree */
+	CHECK_OPEN (camera, context);
 
+	ret = camera->functions->get_config ( camera, &rootwidget, context);
+	if (ret != GP_OK) {
+		CHECK_CLOSE (camera, context);
+		CAMERA_UNUSED (camera, context);
+		return ret;
+	}
+	ret = gp_widget_get_child_by_name (rootwidget, name, &child);
+	if (ret != GP_OK) {
+		gp_widget_free (rootwidget);
+		CHECK_CLOSE (camera, context);
+		CAMERA_UNUSED (camera, context);
+		return ret;
+	}
+
+	gp_widget_get_type (child, &type);
+	ret = GP_OK;
+	switch (type) {
+        case GP_WIDGET_MENU:
+        case GP_WIDGET_RADIO:
+        case GP_WIDGET_TEXT: {
+		char *value;
+
+		gp_widget_get_value (widget, &value);
+		gp_widget_set_value (child, value);
+		break;
+	}
+        case GP_WIDGET_RANGE: {
+		float value;
+
+		gp_widget_get_value (widget, &value);
+		gp_widget_set_value (child, &value);
+                break;
+	}
+        case GP_WIDGET_TOGGLE:
+        case GP_WIDGET_DATE: {
+		int value;
+
+		gp_widget_get_value (widget, &value);
+		gp_widget_set_value (child, &value);
+                break;
+	}
+        case GP_WIDGET_BUTTON:
+        case GP_WIDGET_SECTION:
+        case GP_WIDGET_WINDOW:
+        default:
+                ret = GP_ERROR_BAD_PARAMETERS;
+		break;
+	}
+	gp_widget_set_changed (child, 1);
+
+	if (ret == GP_OK)
+		ret = camera->functions->set_config (camera, rootwidget, context);
+	gp_widget_free (rootwidget);
+	CHECK_CLOSE (camera, context);
 	CAMERA_UNUSED (camera, context);
-	return (GP_OK);
+	return ret;
 }
 
 
