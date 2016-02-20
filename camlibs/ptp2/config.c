@@ -7221,6 +7221,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					ptp_free_devicepropdesc(&dpd);
 					if (mode == MODE_SINGLE_GET) {
 						*outwidget = widget;
+						free (setprops);
 						return GP_OK;
 					}
 				} else {
@@ -7239,6 +7240,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 						ret = cursub->getfunc (camera, &widget, cursub, NULL);
 						if (mode == MODE_SINGLE_GET) {
 							*outwidget = widget;
+							free (setprops);
 							return GP_OK;
 						}
 					} else
@@ -7272,6 +7274,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 				}
 				if (mode == MODE_SINGLE_GET) {
 					*outwidget = widget;
+					free (setprops);
 					return GP_OK;
 				}
 				if (mode == MODE_GET)
