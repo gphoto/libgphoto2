@@ -7095,16 +7095,29 @@ static struct menu menus[] = {
 	{ N_("WIFI profiles"),              "wifiprofiles",     0,      0,      NULL,                           _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
-int
-camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+static int
+_get_config (Camera *camera, const char *confname, CameraWidget **outwidget, CameraList *list, GPContext *context)
 {
-	CameraWidget	*section, *widget;
+	CameraWidget	*section, *widget, *window;
 	unsigned int	menuno, submenuno;
 	int 		ret;
 	uint16_t	*setprops = NULL;
 	int		i, nrofsetprops = 0;
 	PTPParams	*params = &camera->pl->params;
 	CameraAbilities	ab;
+
+	enum {
+		MODE_GET,
+		MODE_LIST,
+		MODE_SINGLE_GET
+	} mode = MODE_GET;
+
+	if (confname)
+		mode = MODE_SINGLE_GET;
+	if (list) {
+		gp_list_reset (list);
+		mode = MODE_LIST;
+	}
 
 	SET_CONTEXT(camera, context);
 	memset (&ab, 0, sizeof(ab));
@@ -7119,14 +7132,20 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		C_PTP (ptp_canon_eos_keepdeviceon (params));
 	}
 
-	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
-	gp_widget_set_name (*window, "main");
+	if (mode == MODE_GET) {
+		gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), &window);
+		gp_widget_set_name (window, "main");
+		*outwidget = window;
+	}
+
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
 		if (!menus[menuno].submenus) { /* Custom menu */
-			struct menu *cur = menus+menuno;
-			ret = cur->getfunc(camera, &section, cur);
-			if (ret == GP_OK)
-				gp_widget_append(*window, section);
+			if (mode == MODE_GET) {
+				struct menu *cur = menus+menuno;
+				ret = cur->getfunc(camera, &section, cur);
+				if (ret == GP_OK)
+					gp_widget_append(window, section);
+			} /* else ... not supported in single get and list */
 			continue;
 		}
 		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
@@ -7139,12 +7158,14 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			GP_LOG_D ("usb vendor/product specific path entered");
 		}
 
-		/* Standard menu with submenus */
-		ret = gp_widget_get_child_by_label (*window, _(menus[menuno].label), &section);
-		if (ret != GP_OK) {
-			gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].label), &section);
-			gp_widget_set_name (section, menus[menuno].name);
-			gp_widget_append (*window, section);
+		if (mode == MODE_GET) {
+			/* Standard menu with submenus */
+			ret = gp_widget_get_child_by_label (window, _(menus[menuno].label), &section);
+			if (ret != GP_OK) {
+				gp_widget_new (GP_WIDGET_SECTION, _(menus[menuno].label), &section);
+				gp_widget_set_name (section, menus[menuno].name);
+				gp_widget_append (window, section);
+			}
 		}
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
@@ -7178,6 +7199,13 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 				) {
 					PTPDevicePropDesc	dpd;
 
+					if ((mode == MODE_SINGLE_GET) && strcmp (cursub->name, confname))
+						continue;
+					if (mode == MODE_LIST) {
+						gp_list_append (list, cursub->name, NULL);
+						continue;
+					}
+
 					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
 					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
@@ -7185,13 +7213,28 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
 					ptp_free_devicepropdesc(&dpd);
+					if (mode == MODE_SINGLE_GET) {
+						*outwidget = widget;
+						return GP_OK;
+					}
 				} else {
 					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
 					if (	((cursub->type & 0x7000) != 0x1000) ||
 						 ptp_operation_issupported(params, cursub->type)
 					) {
+						if ((mode == MODE_SINGLE_GET) && strcmp (cursub->name, confname))
+							continue;
+						if (mode == MODE_LIST) {
+							gp_list_append (list, cursub->name, NULL);
+							continue;
+						}
+
 						GP_LOG_D ("Getting function prop '%s' / 0x%04x", cursub->label, cursub->type );
 						ret = cursub->getfunc (camera, &widget, cursub, NULL);
+						if (mode == MODE_SINGLE_GET) {
+							*outwidget = widget;
+							return GP_OK;
+						}
 					} else
 						continue;
 				}
@@ -7199,12 +7242,19 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
-				gp_widget_append (section, widget);
+				if (mode == MODE_GET)
+					gp_widget_append (section, widget);
 				continue;
 			}
 			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
+				if ((mode == MODE_SINGLE_GET) && strcmp (cursub->name, confname))
+					continue;
+				if (mode == MODE_LIST) {
+					gp_list_append (list, cursub->name, NULL);
+					continue;
+				}
 				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
@@ -7214,7 +7264,12 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
-				gp_widget_append (section, widget);
+				if (mode == MODE_SINGLE_GET) {
+					*outwidget = widget;
+					return GP_OK;
+				}
+				if (mode == MODE_GET)
+					gp_widget_append (section, widget);
 				continue;
 			}
 		}
@@ -7225,28 +7280,38 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		return GP_OK;
 	}
 
-	/* Last menu is "Other", a generic property fallback window. */
-	gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
-	gp_widget_set_name (section, "other");
-	gp_widget_append (*window, section);
+	if (mode == MODE_GET) {
+		/* Last menu is "Other", a generic property fallback window. */
+		gp_widget_new (GP_WIDGET_SECTION, _("Other PTP Device Properties"), &section);
+		gp_widget_set_name (section, "other");
+		gp_widget_append (window, section);
+	}
 
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
 		char			buf[20], *label;
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
+
+#if 0 /* enable this for suppression of generic properties for already decoded ones */
 		int j;
 
 		for (j=0;j<nrofsetprops;j++)
 			if (setprops[j] == propid)
 				break;
-#if 0 /* enable this for suppression of generic properties for already decoded ones */
 		if (j<nrofsetprops) {
 			GP_LOG_D ("Property 0x%04x already handled before, skipping.", propid );
 			continue;
 		}
 #endif
 
+		sprintf(buf,"%04x", propid);
+		if ((mode == MODE_SINGLE_GET) && strcmp (buf, confname))
+			continue;
+		if (mode == MODE_LIST) {
+			gp_list_append (list, buf, NULL);
+			continue;
+		}
 
 		ret = ptp_generic_getdevicepropdesc (params,propid,&dpd);
 		if (ret != PTP_RC_OK)
@@ -7291,7 +7356,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 			break;
 		}
 		gp_widget_new (type, _(label), &widget);
-		sprintf(buf,"%04x", propid); gp_widget_set_name (widget, buf);
+		sprintf(buf,"%04x", propid);
+		gp_widget_set_name (widget, buf);
 		switch (dpd.FormFlag) {
 		case PTP_DPFF_None: break;
 		case PTP_DPFF_Range:
@@ -7381,346 +7447,40 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		if (dpd.GetSet == PTP_DPGS_Get)
 			gp_widget_set_readonly (widget, 1);
-		gp_widget_append (section, widget);
 		ptp_free_devicepropdesc(&dpd);
+		if (mode == MODE_GET)
+			gp_widget_append (section, widget);
+		if (mode == MODE_SINGLE_GET) {
+			*outwidget = widget;
+			free (setprops);
+			return GP_OK;
+		}
 	}
 	free (setprops);
+	if (mode == MODE_SINGLE_GET) {
+		/* if we get here, we have not found anything */
+		gp_context_error (context, _("Property '%s' not found."), confname);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 	return GP_OK;
+} 
+
+int
+camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
+{
+	return _get_config (camera, NULL, window, NULL, context);
 }
 
 int
-camera_list_config (Camera *camera, CameraList *list, GPContext *context) {
-	unsigned int	menuno, submenuno;
-	int		i;
-	PTPParams	*params = &camera->pl->params;
-	CameraAbilities	ab;
-
-	gp_list_reset (list);
-
-	SET_CONTEXT(camera, context);
-	memset (&ab, 0, sizeof(ab));
-	gp_camera_get_abilities (camera, &ab);
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
-	) {
-		if (!params->eos_captureenabled)
-			camera_prepare_capture (camera, context);
-		ptp_check_eos_events (params);
-		/* Otherwise the camera will auto-shutdown */
-		C_PTP (ptp_canon_eos_keepdeviceon (params));
-	}
-
-	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
-		if (!menus[menuno].submenus) { /* Custom menu */
-			/* FIXME: not implemented */
-			continue;
-		}
-		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
-			if (menus[menuno].usb_vendorid != ab.usb_vendor)
-				continue;
-			if (	menus[menuno].usb_productid &&
-				(menus[menuno].usb_productid != ab.usb_product)
-			)
-				continue;
-			GP_LOG_D ("usb vendor/product specific path entered");
-		}
-
-		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
-			struct submenu *cursub = menus[menuno].submenus+submenuno;
-
-			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
-				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
-			) {
-				/* ok, looking good */
-				if (	((cursub->propid & 0x7000) == 0x5000) ||
-					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
-				) {
-					gp_list_append (list, cursub->name, NULL);
-					continue;
-				} else {
-					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
-					if (	((cursub->type & 0x7000) != 0x1000) ||
-						 ptp_operation_issupported(params, cursub->type)
-					) {
-						gp_list_append (list, cursub->name, NULL);
-					} else
-						continue;
-				}
-				gp_list_append (list, cursub->name, NULL);
-				continue;
-			}
-			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
-				gp_list_append (list, cursub->name, NULL);
-				continue;
-			}
-		}
-	}
-
-	if (!params->deviceinfo.DevicePropertiesSupported_len)
-		return GP_OK;
-
-	/* Last menu is "Other", a generic property fallback window. */
-	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
-		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		char			buf[20];
-
-		sprintf(buf,"%04x", propid);
-		gp_list_append (list, buf, NULL);
-	}
-	return GP_OK;
+camera_list_config (Camera *camera, CameraList *list, GPContext *context)
+{
+	return _get_config (camera, NULL, NULL, list, context);
 }
 
 int
 camera_get_single_config (Camera *camera, const char *confname, CameraWidget **widget, GPContext *context)
 {
-	unsigned int	menuno, submenuno;
-	int 		ret;
-	int		i;
-	PTPParams	*params = &camera->pl->params;
-	CameraAbilities	ab;
-
-	*widget = NULL;
-	SET_CONTEXT(camera, context);
-	memset (&ab, 0, sizeof(ab));
-	gp_camera_get_abilities (camera, &ab);
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
-	) {
-		if (!params->eos_captureenabled)
-			camera_prepare_capture (camera, context);
-		ptp_check_eos_events (params);
-		/* Otherwise the camera will auto-shutdown */
-		C_PTP (ptp_canon_eos_keepdeviceon (params));
-	}
-
-	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
-		if (!menus[menuno].submenus) { /* Custom menu */
-			/* FIXME: not implemented */
-			continue;
-		}
-		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
-			if (menus[menuno].usb_vendorid != ab.usb_vendor)
-				continue;
-			if (	menus[menuno].usb_productid &&
-				(menus[menuno].usb_productid != ab.usb_product)
-			)
-				continue;
-			GP_LOG_D ("usb vendor/product specific path entered");
-		}
-
-		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
-			struct submenu *cursub = menus[menuno].submenus+submenuno;
-
-			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
-				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
-			) {
-				/* ok, looking good */
-				if (	((cursub->propid & 0x7000) == 0x5000) ||
-					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
-				) {
-					PTPDevicePropDesc	dpd;
-
-					if (strcmp (cursub->name, confname))
-						continue;
-
-					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
-					memset(&dpd,0,sizeof(dpd));
-					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
-					ret = cursub->getfunc (camera, widget, cursub, &dpd);
-					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
-						gp_widget_set_readonly (*widget, 1);
-					ptp_free_devicepropdesc(&dpd);
-					return GP_OK;
-				} else {
-					/* if it is a OPC, check for its presence. Otherwise just create the widget. */
-					if (	((cursub->type & 0x7000) != 0x1000) ||
-						 ptp_operation_issupported(params, cursub->type)
-					) {
-						if (strcmp (cursub->name, confname))
-							continue;
-						GP_LOG_D ("Getting function prop '%s' / 0x%04x", cursub->label, cursub->type );
-						ret = cursub->getfunc (camera, widget, cursub, NULL);
-						return GP_OK;
-					} else
-						continue;
-				}
-				if (ret != GP_OK) {
-					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
-					continue;
-				}
-				continue;
-			}
-			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
-				PTPDevicePropDesc	dpd;
-
-				if (strcmp (cursub->name, confname))
-					continue;
-				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
-				memset(&dpd,0,sizeof(dpd));
-				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
-				ret = cursub->getfunc (camera, widget, cursub, &dpd);
-				ptp_free_devicepropdesc(&dpd);
-				if (ret != GP_OK) {
-					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
-					continue;
-				}
-				return GP_OK;
-			}
-		}
-	}
-
-	if (!params->deviceinfo.DevicePropertiesSupported_len)
-		return GP_OK;
-
-	/* Last menu is "Other", a generic property fallback window. */
-	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
-		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		char			buf[20], *label;
-		PTPDevicePropDesc	dpd;
-		CameraWidgetType	type;
-
-		sprintf(buf,"%04x", propid);
-		if (strcmp (confname, buf))
-			continue;
-
-		ret = ptp_generic_getdevicepropdesc (params,propid,&dpd);
-		if (ret != PTP_RC_OK)
-			continue;
-
-		label = (char*)ptp_get_property_description(params, propid);
-		if (!label) {
-			sprintf (buf, N_("PTP Property 0x%04x"), propid);
-			label = buf;
-		}
-		switch (dpd.FormFlag) {
-		case PTP_DPFF_None:
-			type = GP_WIDGET_TEXT;
-			break;
-		case PTP_DPFF_Range:
-			type = GP_WIDGET_RANGE;
-			switch (dpd.DataType) {
-			/* simple ranges might just be enumerations */
-#define X(dtc,val) 							\
-			case dtc: 					\
-				if (	((dpd.FORM.Range.MaximumValue.val - dpd.FORM.Range.MinimumValue.val) < 128) &&	\
-					(dpd.FORM.Range.StepSize.val == 1)) {						\
-					type = GP_WIDGET_MENU;								\
-				} \
-				break;
-
-		X(PTP_DTC_INT8,i8)
-		X(PTP_DTC_UINT8,u8)
-		X(PTP_DTC_INT16,i16)
-		X(PTP_DTC_UINT16,u16)
-		X(PTP_DTC_INT32,i32)
-		X(PTP_DTC_UINT32,u32)
-#undef X
-			default:break;
-			}
-			break;
-		case PTP_DPFF_Enumeration:
-			type = GP_WIDGET_MENU;
-			break;
-		default:
-			type = GP_WIDGET_TEXT;
-			break;
-		}
-
-		gp_widget_new (type, _(label), widget);
-		gp_widget_set_name (*widget, buf);
-
-		switch (dpd.FormFlag) {
-		case PTP_DPFF_None: break;
-		case PTP_DPFF_Range:
-			switch (dpd.DataType) {
-#define X(dtc,val) 										\
-			case dtc: 								\
-				if (type == GP_WIDGET_RANGE) {					\
-					gp_widget_set_range ( *widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
-				} else {							\
-					long k;							\
-					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
-						sprintf (buf, "%ld", k); 			\
-						gp_widget_add_choice (*widget, buf);		\
-					}							\
-				} 								\
-				break;
-
-		X(PTP_DTC_INT8,i8)
-		X(PTP_DTC_UINT8,u8)
-		X(PTP_DTC_INT16,i16)
-		X(PTP_DTC_UINT16,u16)
-		X(PTP_DTC_INT32,i32)
-		X(PTP_DTC_UINT32,u32)
-		X(PTP_DTC_INT64,i64)
-		X(PTP_DTC_UINT64,u64)
-#undef X
-			default:break;
-			}
-			break;
-		case PTP_DPFF_Enumeration:
-			switch (dpd.DataType) {
-#define X(dtc,val,fmt) 									\
-			case dtc: { 							\
-				int k;							\
-				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++) {		\
-					sprintf (buf, fmt, dpd.FORM.Enum.SupportedValue[k].val); \
-					gp_widget_add_choice (*widget, buf);		\
-				}							\
-				break;							\
-			}
-
-		X(PTP_DTC_INT8,i8,"%d")
-		X(PTP_DTC_UINT8,u8,"%d")
-		X(PTP_DTC_INT16,i16,"%d")
-		X(PTP_DTC_UINT16,u16,"%d")
-		X(PTP_DTC_INT32,i32,"%d")
-		X(PTP_DTC_UINT32,u32,"%d")
-		X(PTP_DTC_INT64,i64,"%ld")
-		X(PTP_DTC_UINT64,u64,"%ld")
-#undef X
-			case PTP_DTC_STR: {
-				int k;
-				for (k=0;k<dpd.FORM.Enum.NumberOfValues;k++)
-					gp_widget_add_choice (*widget, dpd.FORM.Enum.SupportedValue[k].str);
-				break;
-			}
-			default:break;
-			}
-			break;
-		}
-		switch (dpd.DataType) {
-#define X(dtc,val,fmt) 							\
-		case dtc:						\
-			if (type == GP_WIDGET_RANGE) {			\
-				float f = dpd.CurrentValue.val;		\
-				gp_widget_set_value (*widget, &f);	\
-			} else {					\
-				sprintf (buf, fmt, dpd.CurrentValue.val);	\
-				gp_widget_set_value (*widget, buf);	\
-			}\
-			break;
-
-		X(PTP_DTC_INT8,i8,"%d")
-		X(PTP_DTC_UINT8,u8,"%d")
-		X(PTP_DTC_INT16,i16,"%d")
-		X(PTP_DTC_UINT16,u16,"%d")
-		X(PTP_DTC_INT32,i32,"%d")
-		X(PTP_DTC_UINT32,u32,"%d")
-		X(PTP_DTC_INT64,i64,"%ld")
-		X(PTP_DTC_UINT64,u64,"%ld")
-#undef X
-		case PTP_DTC_STR:
-			gp_widget_set_value (*widget, dpd.CurrentValue.str);
-			break;
-		default:
-			break;
-		}
-		if (dpd.GetSet == PTP_DPGS_Get)
-			gp_widget_set_readonly (*widget, 1);
-		ptp_free_devicepropdesc(&dpd);
-	}
-	return GP_OK;
+	return _get_config (camera, confname, widget, NULL, context);
 }
 
 
