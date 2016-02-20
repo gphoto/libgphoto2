@@ -7095,6 +7095,12 @@ static struct menu menus[] = {
 	{ N_("WIFI profiles"),              "wifiprofiles",     0,      0,      NULL,                           _get_wifi_profiles_menu, _put_wifi_profiles_menu },
 };
 
+/*
+ * Can do 3 things:
+ * - get the whole widget dialog tree (confname = NULL, list = NULL, widget = rootwidget)
+ * - get the named single widget  (confname = the specified property, widget = property widget, list = NULL)
+ * - get a flat ascii list of configuration names (confname = NULL, widget = NULL, list = list to fill in)
+ */
 static int
 _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, CameraList *list, GPContext *context)
 {
