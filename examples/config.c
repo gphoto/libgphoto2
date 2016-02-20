@@ -36,15 +36,21 @@ get_config_value_string (Camera *camera, const char *key, char **str, GPContext 
 	int			ret;
 	char			*val;
 
-	ret = gp_camera_get_config (camera, &widget, context);
-	if (ret < GP_OK) {
-		fprintf (stderr, "camera_get_config failed: %d\n", ret);
-		return ret;
-	}
-	ret = _lookup_widget (widget, key, &child);
-	if (ret < GP_OK) {
-		fprintf (stderr, "lookup widget failed: %d\n", ret);
-		goto out;
+	ret = gp_camera_get_single_config (camera, key, &child, context);
+	if (ret == GP_OK) {
+		if (!child) fprintf(stderr,"child is NULL?\n");
+		widget = child;
+	} else {
+		ret = gp_camera_get_config (camera, &widget, context);
+		if (ret < GP_OK) {
+			fprintf (stderr, "camera_get_config failed: %d\n", ret);
+			return ret;
+		}
+		ret = _lookup_widget (widget, key, &child);
+		if (ret < GP_OK) {
+			fprintf (stderr, "lookup widget failed: %d\n", ret);
+			goto out;
+		}
 	}
 
 	/* This type check is optional, if you know what type the label
@@ -132,11 +138,14 @@ set_config_value_string (Camera *camera, const char *key, const char *val, GPCon
 		fprintf (stderr, "could not set widget value: %d\n", ret);
 		goto out;
 	}
-	/* This stores it on the camera again */
-	ret = gp_camera_set_config (camera, widget, context);
-	if (ret < GP_OK) {
-		fprintf (stderr, "camera_set_config failed: %d\n", ret);
-		return ret;
+	ret = gp_camera_set_single_config (camera, key, child, context);
+	if (ret != GP_OK) {
+		/* This stores it on the camera again */
+		ret = gp_camera_set_config (camera, widget, context);
+		if (ret < GP_OK) {
+			fprintf (stderr, "camera_set_config failed: %d\n", ret);
+			return ret;
+		}
 	}
 out:
 	gp_widget_free (widget);
@@ -156,15 +165,10 @@ canon_enable_capture (Camera *camera, int onoff, GPContext *context) {
 	CameraWidgetType	type;
 	int			ret;
 
-	ret = gp_camera_get_config (camera, &widget, context);
+	ret = gp_camera_get_single_config (camera, "capture", &widget, context);
 	if (ret < GP_OK) {
 		fprintf (stderr, "camera_get_config failed: %d\n", ret);
 		return ret;
-	}
-	ret = _lookup_widget (widget, "capture", &child);
-	if (ret < GP_OK) {
-		/*fprintf (stderr, "lookup widget failed: %d\n", ret);*/
-		goto out;
 	}
 
 	ret = gp_widget_get_type (child, &type);
@@ -187,7 +191,7 @@ canon_enable_capture (Camera *camera, int onoff, GPContext *context) {
 		goto out;
 	}
 	/* OK */
-	ret = gp_camera_set_config (camera, widget, context);
+	ret = gp_camera_set_single_config (camera, "capture", widget, context);
 	if (ret < GP_OK) {
 		fprintf (stderr, "camera_set_config failed: %d\n", ret);
 		return ret;
