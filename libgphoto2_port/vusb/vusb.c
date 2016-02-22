@@ -122,10 +122,10 @@ gp_port_vusb_exit (GPPort *port)
 static int
 gp_port_vusb_open (GPPort *port)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(%s)", port->settings.usb.port);
 	if (port->pl->isopen)
 		return GP_ERROR;
-	port->pl->vcamera->open(port->pl->vcamera);
+	port->pl->vcamera->open(port->pl->vcamera, port->settings.usb.port);
 	port->pl->isopen = 1;
 	return GP_OK;
 }

@@ -34,7 +34,7 @@ typedef struct ptpcontainer {
 typedef struct vcamera {
 	int (*init)(struct vcamera*);
 	int (*exit)(struct vcamera*);
-	int (*open)(struct vcamera*);
+	int (*open)(struct vcamera*, const char*port);
 	int (*close)(struct vcamera*);
 
 	int (*read)(struct vcamera*,  int ep, char *data, int bytes);
@@ -50,6 +50,8 @@ typedef struct vcamera {
 
 	unsigned int	session;
 	ptpcontainer	ptpcmd;
+
+	int		fuzzfd;
 } vcamera;
 
 vcamera *vcamera_new(void);

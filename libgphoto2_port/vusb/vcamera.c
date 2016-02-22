@@ -1560,11 +1560,21 @@ static int vcam_exit(vcamera* cam) {
 	return GP_OK;
 }
 
-static int vcam_open(vcamera* cam) {
+static int vcam_open(vcamera* cam, const char *port) {
+	char *s = strchr(port,':');
+
+	if (s) {
+		cam->fuzzfd = open(s+1,O_RDONLY);
+		if (cam->fuzzfd == -1) perror(s+1);
+	}
 	return GP_OK;
 }
 
 static int vcam_close(vcamera* cam) {
+	if (cam->fuzzfd) {
+		close (cam->fuzzfd);
+		cam->fuzzfd = 0;
+	}
 	return GP_OK;
 }
 
@@ -1661,7 +1671,16 @@ vcam_read(vcamera*cam, int ep, char *data, int bytes) {
 
 	if (toread > cam->nrinbulk)
 		toread = cam->nrinbulk;
-	memcpy (data, cam->inbulk, toread);
+	if (cam->fuzzfd) {
+		int i;
+
+		memset(data,0,toread);
+		read(cam->fuzzfd, data, toread);
+		for (i=0;i<toread;i++)
+			data[i] ^= cam->inbulk[i];
+	} else {
+		memcpy (data, cam->inbulk, toread);
+	}
 	memmove (cam->inbulk, cam->inbulk + toread, (cam->nrinbulk - toread));
 	cam->nrinbulk -= toread;
 	return toread;
