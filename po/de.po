@@ -4837,14 +4837,12 @@ msgid "Bracketing S 3.0 Steps"
 msgstr "Belichtungsreihe Anzahl und Schritte"
 
 #: camlibs/ptp2/config.c:3067
-#, fuzzy
 msgid "Bracketing WB Lo"
-msgstr "Abstufung"
+msgstr "Belichtungsreihe Whitebalance Low"
 
 #: camlibs/ptp2/config.c:3068
-#, fuzzy
 msgid "Bracketing WB Hi"
-msgstr "Abstufung"
+msgstr "Belichtungsreihe Whitebalance High"
 
 #: camlibs/ptp2/config.c:3077 camlibs/ptp2/ptp.c:4981
 msgid "Centre-spot"
@@ -5919,9 +5917,8 @@ msgid "Active D-Lighting"
 msgstr "Aktives D-Lighting"
 
 #: camlibs/ptp2/config.c:4663
-#, fuzzy
 msgid "1 step spd/aperture"
-msgstr "Blitz/Belichtungszeit/Blende"
+msgstr "1 Schritt Blitz/Blende"
 
 #: camlibs/ptp2/config.c:4664
 msgid "Choose non-CPU lens number"
@@ -6000,34 +5997,28 @@ msgid "Immediate"
 msgstr "Sofort"
 
 #: camlibs/ptp2/config.c:5020 camlibs/ptp2/config.c:5057
-#, fuzzy
 msgid "Press 1"
-msgstr "Halb durchdrücken"
+msgstr "Drücke 1"
 
 #: camlibs/ptp2/config.c:5021 camlibs/ptp2/config.c:5059
-#, fuzzy
 msgid "Press 2"
-msgstr "Halb durchdrücken"
+msgstr "Drücke 2"
 
 #: camlibs/ptp2/config.c:5022 camlibs/ptp2/config.c:5061
-#, fuzzy
 msgid "Press 3"
-msgstr "Halb durchdrücken"
+msgstr "Drücke 3"
 
 #: camlibs/ptp2/config.c:5023 camlibs/ptp2/config.c:5063
-#, fuzzy
 msgid "Release 1"
-msgstr "Auslösen"
+msgstr "Loslassen 1"
 
 #: camlibs/ptp2/config.c:5024 camlibs/ptp2/config.c:5065
-#, fuzzy
 msgid "Release 2"
-msgstr "Auslösen"
+msgstr "Loslassen 2"
 
 #: camlibs/ptp2/config.c:5025 camlibs/ptp2/config.c:5067
-#, fuzzy
 msgid "Release 3"
-msgstr "Auslösen"
+msgstr "Loslassen 3"
 
 #: camlibs/ptp2/config.c:5089
 msgid "Near 1"
@@ -9217,63 +9208,52 @@ msgid "Unknown(%04x)"
 msgstr "Unbekannt (%04x)"
 
 #: camlibs/ptp2/ptp.c:5686
-#, fuzzy
 msgid "get device info"
-msgstr "Get Device Info"
+msgstr "Device Informationen abfragen"
 
 #: camlibs/ptp2/ptp.c:5687
-#, fuzzy
 msgid "Open session"
-msgstr "Open Session"
+msgstr "Sitzung öffnen"
 
 #: camlibs/ptp2/ptp.c:5688
-#, fuzzy
 msgid "Close session"
-msgstr "Close Session"
+msgstr "Sitzung schließen"
 
 #: camlibs/ptp2/ptp.c:5689
-#, fuzzy
 msgid "Get storage IDs"
-msgstr "Get storage IDs"
+msgstr "Speicher IDs abfragen"
 
 #: camlibs/ptp2/ptp.c:5690
-#, fuzzy
 msgid "Get storage info"
-msgstr "Get storage info"
+msgstr "Speicher Information abfragen"
 
 #: camlibs/ptp2/ptp.c:5691
-#, fuzzy
 msgid "Get number of objects"
-msgstr "Get number of objects"
+msgstr "Anzahl an Objekten abfragen"
 
 #: camlibs/ptp2/ptp.c:5692
-#, fuzzy
 msgid "Get object handles"
-msgstr "Get object handles"
+msgstr "Objekt Handles holen"
 
 #: camlibs/ptp2/ptp.c:5693
-#, fuzzy
 msgid "Get object info"
-msgstr "Get object info"
+msgstr "Objekt Information holen"
 
 #: camlibs/ptp2/ptp.c:5694
-#, fuzzy
 msgid "Get object"
-msgstr "Get object"
+msgstr "Objekt holen"
 
 #: camlibs/ptp2/ptp.c:5695
-#, fuzzy
 msgid "Get thumbnail"
-msgstr "Get thumbnail"
+msgstr "Thumbnail holen"
 
 #: camlibs/ptp2/ptp.c:5696
 msgid "Delete object"
 msgstr "Objekt löschen"
 
 #: camlibs/ptp2/ptp.c:5697
-#, fuzzy
 msgid "Send object info"
-msgstr "Send object info"
+msgstr "Objekt Information senden"
 
 #: camlibs/ptp2/ptp.c:5698
 msgid "Send object"
@@ -9296,38 +9276,32 @@ msgid "Self test device"
 msgstr "Geräteselbsttest"
 
 #: camlibs/ptp2/ptp.c:5703
-#, fuzzy
 msgid "Set object protection"
-msgstr "Set object protection"
+msgstr "Objektschutz setzen"
 
 #: camlibs/ptp2/ptp.c:5704
 msgid "Power down device"
 msgstr "Gerät ausschalten"
 
 #: camlibs/ptp2/ptp.c:5705
-#, fuzzy
 msgid "Get device property description"
-msgstr "Get device property description"
+msgstr "Device Property Beschreibung abfragen"
 
 #: camlibs/ptp2/ptp.c:5706
-#, fuzzy
 msgid "Get device property value"
-msgstr "Get device property value"
+msgstr "Device Property Wert abfragen"
 
 #: camlibs/ptp2/ptp.c:5707
-#, fuzzy
 msgid "Set device property value"
-msgstr "Set device property value"
+msgstr "Device Property Wert setzen"
 
 #: camlibs/ptp2/ptp.c:5708
-#, fuzzy
 msgid "Reset device property value"
-msgstr "Reset device property value"
+msgstr "Device Property Wert zurücksetzen"
 
 #: camlibs/ptp2/ptp.c:5709
-#, fuzzy
 msgid "Terminate open capture"
-msgstr "Terminate open capture"
+msgstr "Open Capture beenden"
 
 #: camlibs/ptp2/ptp.c:5710
 msgid "Move object"
@@ -9338,64 +9312,52 @@ msgid "Copy object"
 msgstr "Objekt kopieren"
 
 #: camlibs/ptp2/ptp.c:5712
-#, fuzzy
 msgid "Get partial object"
-msgstr "Get partial object"
+msgstr "Teilobjekt holen"
 
 #: camlibs/ptp2/ptp.c:5713
-#, fuzzy
 msgid "Initiate open capture"
-msgstr "Initiate open capture"
+msgstr "Open Capture starten"
 
 #: camlibs/ptp2/ptp.c:5720
-#, fuzzy
 msgid "Get object properties supported"
-msgstr "Get object properties supported"
+msgstr "Unterstützte Objekt Properties abfragen"
 
 #: camlibs/ptp2/ptp.c:5721
-#, fuzzy
 msgid "Get object property description"
-msgstr "Get object property description"
+msgstr "Objekt Property Beschreibung abfragen"
 
 #: camlibs/ptp2/ptp.c:5722
-#, fuzzy
 msgid "Get object property value"
-msgstr "Get object property value"
+msgstr "Objekt Property Wert abfragen"
 
 #: camlibs/ptp2/ptp.c:5723
-#, fuzzy
 msgid "Set object property value"
-msgstr "Setze Object Property Wert"
+msgstr "Objekt Property Wert setzen"
 
 #: camlibs/ptp2/ptp.c:5724
-#, fuzzy
 msgid "Get object property list"
-msgstr "Hole Object Property Liste"
+msgstr "Objekt Property Liste abfragen"
 
 #: camlibs/ptp2/ptp.c:5725
-#, fuzzy
 msgid "Set object property list"
-msgstr "Setze Object Property Liste"
+msgstr "Objekt Property Liste setzen"
 
 #: camlibs/ptp2/ptp.c:5726
-#, fuzzy
 msgid "Get interdependent property description"
-msgstr "Get interdependent property description"
+msgstr "Interdependent Property Beschreibungen abfragen"
 
 #: camlibs/ptp2/ptp.c:5727
-#, fuzzy
 msgid "Send object property list"
-msgstr "Sende Object Property Liste"
+msgstr "Objekt Property Liste senden"
 
 #: camlibs/ptp2/ptp.c:5728
-#, fuzzy
 msgid "Get object references"
-msgstr "Hole Object References"
+msgstr "Objekt Referenzen abfragen"
 
 #: camlibs/ptp2/ptp.c:5729
-#, fuzzy
 msgid "Set object references"
-msgstr "Setze object references"
+msgstr "Objekt Referenzen setzen"
 
 #: camlibs/ptp2/ptp.c:5730
 msgid "Update device firmware"
@@ -9403,51 +9365,51 @@ msgstr "Firmware des Geräts aktualisieren"
 
 #: camlibs/ptp2/ptp.c:5731
 msgid "Skip to next position in playlist"
-msgstr "Skip zur nächsten Position in der Wiedergabeliste"
+msgstr "Zur nächsten Position in der Wiedergabeliste skippen"
 
 #: camlibs/ptp2/ptp.c:5734
 msgid "Get secure time challenge"
-msgstr "Hole Secure Time Challenge"
+msgstr "Secure Time Challenge holen"
 
 #: camlibs/ptp2/ptp.c:5735
 msgid "Get secure time response"
-msgstr "Hole Secure Time Anfrage"
+msgstr "Secure Time Anfrage holen"
 
 #: camlibs/ptp2/ptp.c:5736
 msgid "Set license response"
-msgstr "Setze Lizenz Antwort"
+msgstr "Lizenz Antwort setzen"
 
 #: camlibs/ptp2/ptp.c:5737
 msgid "Get sync list"
-msgstr "Hole Sync List"
+msgstr "Sync List holen"
 
 #: camlibs/ptp2/ptp.c:5738
 msgid "Send meter challenge query"
-msgstr "Sende Meter Challenge Anfrage"
+msgstr "Meter Challenge Anfrage senden"
 
 #: camlibs/ptp2/ptp.c:5739
 msgid "Get meter challenge"
-msgstr "Hole Meter Challenge"
+msgstr "Meter Challenge holen"
 
 #: camlibs/ptp2/ptp.c:5740
 msgid "Get meter response"
-msgstr "Hole Meter Response"
+msgstr "Meter Response holen"
 
 #: camlibs/ptp2/ptp.c:5741
 msgid "Clean data store"
-msgstr "Lösche Daten Store"
+msgstr "Daten Store löschen"
 
 #: camlibs/ptp2/ptp.c:5742
 msgid "Get license state"
-msgstr "Hole Lizenz Status"
+msgstr "Lizenz Status holen"
 
 #: camlibs/ptp2/ptp.c:5743
 msgid "Send WMDRM-PD Command"
-msgstr "Sende WMDRM-PD Kommando"
+msgstr "WMDRM-PD Kommando senden"
 
 #: camlibs/ptp2/ptp.c:5744
 msgid "Send WMDRM-PD Request"
-msgstr "Sende WMDRM-PD Anfrage"
+msgstr "WMDRM-PD Anfrage senden"
 
 #: camlibs/ptp2/ptp.c:5747
 msgid "Report Added/Deleted Items"
@@ -9467,19 +9429,19 @@ msgstr "WMDRM-PD Applikationsanfrage senden"
 
 #: camlibs/ptp2/ptp.c:5753
 msgid "Get WMDRM-PD Application Response"
-msgstr "Hole WMDRM-PD Applikations Antwort"
+msgstr "WMDRM-PD Applikations Antwort holen"
 
 #: camlibs/ptp2/ptp.c:5754
 msgid "Enable trusted file operations"
-msgstr "Schalte Trusted File Operationen an"
+msgstr "Trusted File Operationen anschalten"
 
 #: camlibs/ptp2/ptp.c:5755
 msgid "Disable trusted file operations"
-msgstr "Schalte Trusted File Operations aus"
+msgstr "Trusted File Operations ausschalten"
 
 #: camlibs/ptp2/ptp.c:5756
 msgid "End trusted application session"
-msgstr "Beende Trusted Application Sitzung"
+msgstr "Trusted Application Sitzung beenden"
 
 #: camlibs/ptp2/ptp.c:5759
 msgid "Open Media Session"
@@ -9491,41 +9453,39 @@ msgstr "Media-Sitzung schließen"
 
 #: camlibs/ptp2/ptp.c:5761
 msgid "Get Next Data Block"
-msgstr "Hole nächsten Daten Block"
+msgstr "Nächsten Daten Block holen"
 
 #: camlibs/ptp2/ptp.c:5762
 msgid "Set Current Time Position"
-msgstr "Setze derzeitige Zeitposition"
+msgstr "Derzeitige Zeitposition setzen"
 
 #: camlibs/ptp2/ptp.c:5765
 msgid "Send Registration Request"
-msgstr "Sende Registrierungs Request"
+msgstr "Registrierungs Request sende"
 
 #: camlibs/ptp2/ptp.c:5766
 msgid "Get Registration Response"
-msgstr "Hole Registrierungsantwort"
+msgstr "Registrierungsantwort holen"
 
 #: camlibs/ptp2/ptp.c:5767
-#, fuzzy
 msgid "Get Proximity Challenge"
-msgstr "Hole Proximity Challenge"
+msgstr "Proximity Challenge holen"
 
 #: camlibs/ptp2/ptp.c:5768
-#, fuzzy
 msgid "Send Proximity Response"
-msgstr "Sende Proximity Challenge"
+msgstr "Proximity Challenge senden"
 
 #: camlibs/ptp2/ptp.c:5769
 msgid "Send WMDRM-ND License Request"
-msgstr "Sende WMDRM-ND Lizenz Anfrage"
+msgstr "WMDRM-ND Lizenz Anfrage senden"
 
 #: camlibs/ptp2/ptp.c:5770
 msgid "Get WMDRM-ND License Response"
-msgstr "Hole WMDRM-ND Lizenz Antwort"
+msgstr "WMDRM-ND Lizenz Antwort holen"
 
 #: camlibs/ptp2/ptp.c:5773
 msgid "Process WFC Object"
-msgstr "Bearbeite WFC Objekt"
+msgstr "WFC Objekt bearbeiten"
 
 #: camlibs/ptp2/ptp.c:5776
 #, fuzzy
@@ -9533,24 +9493,20 @@ msgid "Get Partial Object (64bit Offset)"
 msgstr "Get partial object (64bit Offset)"
 
 #: camlibs/ptp2/ptp.c:5777
-#, fuzzy
 msgid "Send Partial Object"
-msgstr "Send partial object"
+msgstr "Partielles Objekt senden"
 
 #: camlibs/ptp2/ptp.c:5778
-#, fuzzy
 msgid "Truncate Object"
-msgstr "Truncate Objekt"
+msgstr "Objekt verkürzen"
 
 #: camlibs/ptp2/ptp.c:5779
-#, fuzzy
 msgid "Begin Edit Object"
-msgstr "Begin Edit Object"
+msgstr "Edit Objekt beginnen"
 
 #: camlibs/ptp2/ptp.c:5780
-#, fuzzy
 msgid "End Edit Object"
-msgstr "End Edit Object"
+msgstr "Edit Objekt beenden"
 
 #: camlibs/ptp2/ptp.c:5803
 #, c-format
