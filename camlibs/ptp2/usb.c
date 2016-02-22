@@ -1,7 +1,7 @@
 /* usb.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2014 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2016 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
@@ -262,8 +262,19 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		goto exit;
 	if (dtoh16(usbdata.type) != PTP_USB_CONTAINER_DATA) {
 		/* We might have got a response instead. On error for instance. */
-		/* TODO: check if bytes_read == usbdata.length */
 		if (dtoh16(usbdata.type) == PTP_USB_CONTAINER_RESPONSE) {
+			/* responses are short and we should have it as-is right now */
+			if (bytes_read != dtoh32(usbdata.length)) {
+				GP_LOG_E ("Read broken ptp response in data phase, read %d vs %d", bytes_read, dtoh32(usbdata.length));
+				ret = PTP_ERROR_IO;
+				goto exit;
+			}
+			if (dtoh32(usbdata.length) > sizeof(usbdata)) {
+				GP_LOG_E ("Read too large ptp response in data phase, packet %d bytes large", dtoh32(usbdata.length));
+				ret = PTP_ERROR_IO;
+				goto exit;
+			}
+			/* FIXME: maximum size of response packet perhaps ? */
 			params->response_packet = malloc(dtoh32(usbdata.length));
 			if (!params->response_packet) return PTP_RC_GeneralError;
 			memcpy(params->response_packet, (uint8_t *) &usbdata, dtoh32(usbdata.length));
