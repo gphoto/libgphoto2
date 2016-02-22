@@ -168,14 +168,14 @@ Type: RADIO
 Current: Automatisch
 Choice: 0 Automatisch
 Choice: 1 Tageslicht
-Choice: 2 Unbekannter Wert 8001
-Choice: 3 Unbekannter Wert 8002
-Choice: 4 Kunstlicht - Glühlampe
-Choice: 5 Unbekannter Wert 8020
-Choice: 6 Unbekannter Wert 8003
-Choice: 7 Unbekannter Wert 8004
-Choice: 8 Unbekannter Wert 8005
-Choice: 9 Unbekannter Wert 8006
+Choice: 2 Unbekannter Wert 8001		schatten
+Choice: 3 Unbekannter Wert 8002		wolken
+Choice: 4 Kunstlicht - Glühlampe	gluehlampe
+Choice: 5 Unbekannter Wert 8020		gluehlampe 2
+Choice: 6 Unbekannter Wert 8003		leuchtstoffroehre tageslicht
+Choice: 7 Unbekannter Wert 8004		leuchtstoffroehre natuerlich weiss
+Choice: 8 Unbekannter Wert 8005		leuchtstoffroehre weiss
+Choice: 9 Unbekannter Wert 8006		leuchtstoffroehre gluehlampenfarben
 /main/capturesettings/exposurecompensation
 Label: Belichtungskorrektur
 Type: RADIO
