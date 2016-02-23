@@ -1628,6 +1628,11 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropDesc, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 
+	if (!data) {
+		ptp_debug (params, "no data received for getdevicepropdesc");
+		return PTP_RC_InvalidDevicePropFormat;
+	}
+
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 #ifdef HAVE_LIBXML2
 		xmlNodePtr	code;
