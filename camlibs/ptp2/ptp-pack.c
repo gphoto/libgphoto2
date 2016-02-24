@@ -281,6 +281,8 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, unsigned int o
 	}
 
 	*array = malloc (n*sizeof(uint32_t));
+	if (!*array)
+		return 0;
 	for (i=0;i<n;i++)
 		(*array)[i]=dtoh32a(&data[offset+(sizeof(uint32_t)*(i+1))]);
 	return n;
@@ -292,6 +294,8 @@ ptp_pack_uint32_t_array(PTPParams *params, uint32_t *array, uint32_t arraylen, u
 	uint32_t i=0;
 
 	*data = malloc ((arraylen+1)*sizeof(uint32_t));
+	if (!*data)
+		return 0;
 	htod32a(&(*data)[0],arraylen);
 	for (i=0;i<arraylen;i++)
 		htod32a(&(*data)[sizeof(uint32_t)*(i+1)], array[i]);
@@ -316,6 +320,8 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 		return 0;
 	}
 	*array = malloc (n*sizeof(uint16_t));
+	if (!*array)
+		return 0;
 	for (i=0;i<n;i++)
 		(*array)[i]=dtoh16a(&data[offset+(sizeof(uint16_t)*(i+2))]);
 	return n;
