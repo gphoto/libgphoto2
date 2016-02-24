@@ -1,7 +1,7 @@
 /* ptp-pack.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2014 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2016 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2008 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2007 Tero Saarni <tero.saarni@gmail.com>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
@@ -807,6 +807,8 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	unsigned int offset = 0, ret;
 
 	memset (dpd, 0, sizeof(*dpd));
+	if (dpdlen <= 5)
+		return 0;
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_DataType]);
 	dpd->GetSet=dtoh8a(&data[PTP_dpd_GetSet]);
