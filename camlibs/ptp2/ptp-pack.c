@@ -489,12 +489,12 @@ ptp_unpack_SIDs (PTPParams *params, unsigned char* data, PTPStorageIDs *sids, un
 #define PTP_si_FreeSpaceInImages	22
 #define PTP_si_StorageDescription	26
 
-static inline void
+static inline int
 ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsigned int len)
 {
 	uint8_t storagedescriptionlen;
 
-	if (len < 26) return;
+	if (len < 26) return 0;
 	si->StorageType=dtoh16a(&data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&data[PTP_si_FilesystemType]);
 	si->AccessCapability=dtoh16a(&data[PTP_si_AccessCapability]);
@@ -508,6 +508,7 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 	si->VolumeLabel=ptp_unpack_string(params, data,
 		PTP_si_StorageDescription+storagedescriptionlen*2+1,
 		&storagedescriptionlen);
+	return 1;
 }
 
 /* ObjectInfo pack/unpack */

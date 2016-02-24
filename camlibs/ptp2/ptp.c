@@ -1175,7 +1175,12 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStorageInfo, storageid);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_SI(params, data, storageinfo, size);
+	if (!data || !size)
+		return PTP_RC_GeneralError;
+	if (!ptp_unpack_SI(params, data, storageinfo, size)) {
+		free(data);
+		return PTP_RC_GeneralError;
+	}
 	free(data);
 	return PTP_RC_OK;
 }
