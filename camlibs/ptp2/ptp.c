@@ -2817,6 +2817,7 @@ ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode, PTPDevicePropD
 
 	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetDevicePropdesc, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data) return PTP_RC_GeneralError;
 	/* first 16 bit is 0xc8 0x00, then an array of 16 bit PTP ids */
 	ret = ptp_unpack_Sony_DPD(params,data,dpd,size,&len) ? PTP_RC_OK : PTP_RC_GeneralError;
 	free (data);
