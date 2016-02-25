@@ -1177,6 +1177,7 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data || !size)
 		return PTP_RC_GeneralError;
+	memset(storageinfo, 0, sizeof(*storageinfo));
 	if (!ptp_unpack_SI(params, data, storageinfo, size)) {
 		free(data);
 		return PTP_RC_GeneralError;
@@ -2832,6 +2833,12 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 
 	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetAllDevicePropData);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data)
+		return PTP_RC_GeneralError;
+	if (size <= 8) {
+		free (data);
+		return PTP_RC_GeneralError;
+	}
 	dpddata = data+8; /* nr of entries 32bit, 0 32bit */
 	size -= 8;
 	while (size>0) {
