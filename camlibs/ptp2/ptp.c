@@ -3469,6 +3469,7 @@ ptp_mtp_getobjectpropssupported (PTPParams* params, uint16_t ofc,
 
         PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropsSupported, ofc);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &xsize));
+	if (!data) return PTP_RC_GeneralError;
 	*propnum=ptp_unpack_uint16_t_array (params, data, 0, xsize, props);
 	free(data);
 	return PTP_RC_OK;
