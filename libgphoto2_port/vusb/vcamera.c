@@ -339,6 +339,8 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
 static int ptp_battery_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_battery_getvalue(vcamera*,PTPPropertyValue*);
+static int ptp_imagesize_getdesc(vcamera*,PTPDevicePropDesc*);
+static int ptp_imagesize_getvalue(vcamera*,PTPPropertyValue*);
 static int ptp_datetime_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_datetime_getvalue(vcamera*,PTPPropertyValue*);
 static int ptp_datetime_setvalue(vcamera*,PTPPropertyValue*);
@@ -350,6 +352,7 @@ static struct ptp_property {
 	int	(*setvalue)(vcamera *cam, PTPPropertyValue*);
 } ptp_properties[] = {
 	{0x5001,	ptp_battery_getdesc, ptp_battery_getvalue, NULL },
+	{0x5003,	ptp_imagesize_getdesc, ptp_imagesize_getvalue, NULL },
 	{0x5011,	ptp_datetime_getdesc, ptp_datetime_getvalue, ptp_datetime_setvalue },
 };
 
@@ -1256,8 +1259,10 @@ ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
 		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MaximumValue);
 		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.StepSize);
 		break;
-	case 2:	/* ENUM */;
-		gp_log (GP_LOG_ERROR, __FUNCTION__, "enum not yet handled\n");
+	case 2:	/* ENUM */
+		x += put_16bit_le (data+x, desc.FORM.Enum.NumberOfValues);
+		for (i=0;i<desc.FORM.Enum.NumberOfValues;i++)
+			x += put_propval (data+x, desc.DataType, &desc.FORM.Enum.SupportedValue[i]);
 		break;
 	}
 
@@ -1505,6 +1510,31 @@ static int
 ptp_battery_getvalue (vcamera* cam, PTPPropertyValue *val) {
 	val->u8 = 50;
 	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5001, 0xffffffff);
+	return 1;
+}
+
+static int
+ptp_imagesize_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
+	desc->DevicePropertyCode		= 0x5003;
+	desc->DataType				= 0xffff;	/* STR */
+	desc->GetSet				= 0;		/* Get only */
+	desc->FactoryDefaultValue.str		= strdup("640x480");
+	desc->CurrentValue.str			= strdup("640x480");
+        desc->FormFlag				= 0x02; /* enum */
+	desc->FORM.Enum.NumberOfValues 		= 3;
+	desc->FORM.Enum.SupportedValue 		= malloc(3*sizeof(desc->FORM.Enum.SupportedValue[0]));
+	desc->FORM.Enum.SupportedValue[0].str	= strdup("640x480");
+	desc->FORM.Enum.SupportedValue[1].str	= strdup("1024x768");
+	desc->FORM.Enum.SupportedValue[2].str	= strdup("2048x1536");
+
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5003, 0xffffffff);
+	return 1;
+}
+
+static int
+ptp_imagesize_getvalue (vcamera* cam, PTPPropertyValue *val) {
+	val->str = strdup("640x480");
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5003, 0xffffffff);
 	return 1;
 }
 
