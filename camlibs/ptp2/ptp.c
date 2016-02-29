@@ -2797,8 +2797,12 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	if (psize1*2 + 2 + 4 < xsize) {
 		psize2 = ptp_unpack_uint16_t_array(params,xdata+2+psize1*2+4, 0, xsize, &props2);
 	}
+	*props = calloc(psize1+psize2, sizeof(uint16_t));
+	if (!*props) {
+		ptp_debug (params, "oom during malloc?");
+		return PTP_RC_OK;
+	}
 	*size = psize1+psize2;
-	*props = malloc((psize1+psize2)*sizeof(uint16_t));
 	memcpy (*props, props1, psize1*sizeof(uint16_t));
 	memcpy ((*props)+psize1, props2, psize2*sizeof(uint16_t));
 	free (props1);
