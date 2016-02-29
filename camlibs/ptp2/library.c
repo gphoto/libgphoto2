@@ -3066,12 +3066,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	uint32_t		newobject = 0x0;
 	PTPCanon_changes_entry	entry;
 	CameraFile		*file = NULL;
+	CameraFileInfo		info;
 	unsigned char		*ximage = NULL;
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
 	int			back_off_wait = 0;
 	uint32_t		result;
 	struct timeval          capture_start;
+	char			*mime;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
 		gp_context_error (context,
@@ -3237,9 +3239,11 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	sprintf (path->name, "capt%04d.", capcnt++);
 	CR (gp_file_new(&file));
 	if (oi.ObjectFormat == PTP_OFC_CANON_CRW || oi.ObjectFormat == PTP_OFC_CANON_CRW3) {
+		mime = GP_MIME_CRW;
 		strcat(path->name, "cr2");
 		gp_file_set_mime_type (file, GP_MIME_CRW);
 	} else {
+		mime = GP_MIME_JPEG;
 		strcat(path->name, "jpg");
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
 	}
@@ -3263,6 +3267,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_file_free (file);
 		return ret;
 	}
+	memset(&info, 0, sizeof(info));
+	/* We also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+	strcpy (info.file.type, mime);
+	info.file.size		= oi.ObjectCompressedSize;
+	info.file.mtime		= time(NULL);
+
+	gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 	/* We have now handed over the file, disclaim responsibility by unref. */
 	gp_file_unref (file);
 	return GP_OK;
@@ -4206,7 +4218,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 	uint16_t	ret;
 	struct timeval	event_start;
 	CameraFile	*file;
-	char		*ximage;
+	CameraFileInfo	info;
+	char		*ximage, *mime;
 	int		back_off_wait = 0;
 
 	SET_CONTEXT(camera, context);
@@ -4253,9 +4266,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if ((entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
 						strcat(path->name, "cr2");
 						gp_file_set_mime_type (file, GP_MIME_CRW);
+						mime = GP_MIME_CRW;
 					} else {
 						strcat(path->name, "jpg");
 						gp_file_set_mime_type (file, GP_MIME_JPEG);
+						mime = GP_MIME_JPEG;
 					}
 					gp_file_set_mtime (file, time(NULL));
 
@@ -4277,6 +4292,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 						gp_file_free (file);
 						return ret;
 					}
+					memset(&info, 0, sizeof(info));
+					/* We also get the fs info for free, so just set it */
+					info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+					strcpy (info.file.type, mime);
+					info.file.size		= entry.u.object.oi.ObjectCompressedSize;
+					info.file.mtime		= time(NULL);
+
+					gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 					*eventtype = GP_EVENT_FILE_ADDED;
 					*eventdata = path;
 					/* We have now handed over the file, disclaim responsibility by unref. */
