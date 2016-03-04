@@ -127,7 +127,7 @@ dtoh64ap (PTPParams *params, const unsigned char *a)
 
 
 static inline char*
-ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8_t *len)
+ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint32_t total, uint8_t *len)
 {
 	uint8_t length;
 	uint16_t string[PTP_MAXSTRLEN+1];
@@ -136,10 +136,16 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint8
 	size_t nconv, srclen, destlen;
 	char *src, *dest;
 
+	if (offset + 1 >= total)
+		return NULL;
+
 	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
 	*len = length;
 	if (length == 0)		/* nothing to do? */
-		return(NULL);
+		return NULL;
+
+	if (offset + 1 + length*sizeof(string[0]) >= total)
+		return NULL;
 
 	/* copy to string[] to ensure correct alignment for iconv(3) */
 	memcpy(string, &data[offset+1], length * sizeof(string[0]));
@@ -356,7 +362,9 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		dtoh16a(&data[PTP_di_VendorExtensionVersion]);
 	di->VendorExtensionDesc = 
 		ptp_unpack_string(params, data,
-		PTP_di_VendorExtensionDesc, &len); 
+		PTP_di_VendorExtensionDesc,
+		datalen,
+		&len); 
 	totallen=len*2+1;
 	di->FunctionalMode = 
 		dtoh16a(&data[PTP_di_FunctionalMode+totallen]);
@@ -388,18 +396,22 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 	totallen=totallen+di->ImageFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
 	di->Manufacturer = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&len);
 	totallen+=len*2+1;
 	di->Model = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&len);
 	totallen+=len*2+1;
 	di->DeviceVersion = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&len);
 	totallen+=len*2+1;
 	di->SerialNumber = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
+		datalen,
 		&len);
 }
 
@@ -509,9 +521,12 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 
 	/* FIXME: check more lengths here */
 	si->StorageDescription=ptp_unpack_string(params, data,
-		PTP_si_StorageDescription, &storagedescriptionlen);
+		PTP_si_StorageDescription,
+		len,
+		&storagedescriptionlen);
 	si->VolumeLabel=ptp_unpack_string(params, data,
 		PTP_si_StorageDescription+storagedescriptionlen*2+1,
+		len,
 		&storagedescriptionlen);
 	return 1;
 }
@@ -682,10 +697,10 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	oi->AssociationDesc=dtoh32a(&data[PTP_oi_AssociationDesc]);
 	oi->SequenceNumber=dtoh32a(&data[PTP_oi_SequenceNumber]);
 
-	oi->Filename= ptp_unpack_string(params, data, PTP_oi_filenamelen, &filenamelen);
+	oi->Filename= ptp_unpack_string(params, data, PTP_oi_filenamelen, len, &filenamelen);
 
 	capture_date = ptp_unpack_string(params, data,
-		PTP_oi_filenamelen+filenamelen*2+1, &capturedatelen);
+		PTP_oi_filenamelen+filenamelen*2+1, len, &capturedatelen);
 	/* subset of ISO 8601, without '.s' tenths of second and 
 	 * time zone
 	 */
@@ -695,7 +710,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	/* now the modification date ... */
 	capture_date = ptp_unpack_string(params, data,
 		PTP_oi_filenamelen+filenamelen*2
-		+capturedatelen*2+2,&capturedatelen);
+		+capturedatelen*2+2, len, &capturedatelen);
 	oi->ModificationDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 }
@@ -729,6 +744,9 @@ ptp_unpack_DPV (
 	PTPParams *params, unsigned char* data, unsigned int *offset, unsigned int total,
 	PTPPropertyValue* value, uint16_t datatype
 ) {
+	if (*offset >= total)	/* we are at the end or over the end of the buffer */
+		return 0;
+
 	switch (datatype) {
 	case PTP_DTC_INT8:
 		CTVAL(value->i8,dtoh8a);
@@ -795,7 +813,11 @@ ptp_unpack_DPV (
 	case PTP_DTC_STR: {
 		uint8_t len;
 		/* XXX: max size */
-		value->str = ptp_unpack_string(params,data,*offset,&len);
+
+		if (*offset >= total+1)
+			return 0;
+
+		value->str = ptp_unpack_string(params,data,*offset,total,&len);
 		*offset += len*2+1;
 		if (!value->str)
 			return 1;
