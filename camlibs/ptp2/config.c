@@ -7223,6 +7223,11 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
 					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
+					if (cursub->type != dpd.DataType) {
+						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
+						ptp_free_devicepropdesc(&dpd);
+						continue;
+					}
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
@@ -7587,6 +7592,11 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 					memset(&dpd,0,sizeof(dpd));
 					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
+					if (cursub->type != dpd.DataType) {
+						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
+						ptp_free_devicepropdesc(&dpd);
+						continue;
+					}
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
 					} else {
