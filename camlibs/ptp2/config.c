@@ -7225,8 +7225,12 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
 					if (cursub->type != dpd.DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
-						ptp_free_devicepropdesc(&dpd);
-						continue;
+						/* str is incompatible to all others */
+						if ((PTP_DTC_STR == cursub->type) || (PTP_DTC_STR == dpd.DataType))
+							continue;
+						/* array is not compatible to non-array */
+						if (((cursub->type ^ dpd.DataType) & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
+							continue;
 					}
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
@@ -7594,8 +7598,12 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
 					if (cursub->type != dpd.DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
-						ptp_free_devicepropdesc(&dpd);
-						continue;
+						/* str is incompatible to all others */
+						if ((PTP_DTC_STR == cursub->type) || (PTP_DTC_STR == dpd.DataType))
+							continue;
+						/* array is not compatible to non-array */
+						if (((cursub->type ^ dpd.DataType) & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
+							continue;
 					}
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
