@@ -6351,14 +6351,7 @@ static int _cmp_ob (const void *a, const void *b)
 void
 ptp_objects_sort (PTPParams *params)
 {
-	int i;
-
 	qsort (params->objects, params->nrofobjects, sizeof(PTPObject), _cmp_ob);
-
-	for (i=0;i<params->nrofobjects-1;i++) {
-		if (params->objects[i].oid > params->objects[i+1].oid)
-			ptp_error(params, "wrong object sort order! %08x vs %08x at position %d\n", params->objects[i].oid, params->objects[i+1].oid, i);
-	}
 }
 
 /* Binary search in objects. Needs "objects" to be a sorted by objectid list!  */
