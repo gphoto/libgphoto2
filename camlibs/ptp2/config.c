@@ -935,8 +935,10 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 	int isset = FALSE, isset2 = FALSE;
 
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
-		if ((dpd->DataType != PTP_DTC_UINT8) && (dpd->DataType != PTP_DTC_INT8))
-			return (GP_ERROR);
+		if ((dpd->DataType != PTP_DTC_UINT8) && (dpd->DataType != PTP_DTC_INT8)) {
+			GP_LOG_D ("no int8 prop in 8bit table code");
+			return GP_ERROR;
+		}
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
 		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
@@ -972,8 +974,10 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 		return (GP_OK);
 	}
 	if (dpd->FormFlag & PTP_DPFF_Range) {
-		if (dpd->DataType != PTP_DTC_UINT8)
-			return (GP_ERROR);
+		if (dpd->DataType != PTP_DTC_UINT8) {
+			GP_LOG_D ("no int8 prop in 8bit table code");
+			return GP_ERROR;
+		}
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
 		for (	i = dpd->FORM.Range.MinimumValue.u8;
