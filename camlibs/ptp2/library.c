@@ -5517,7 +5517,7 @@ retry:
 		}
 		if (ob->oi.ObjectFormat!=PTP_OFC_Association)
 			continue;
-        	GP_LOG_D ("adding 0x%x to folder", ob->oid);
+		GP_LOG_D ("adding 0x%x / ob=%p to folder", ob->oid, ob);
 		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
 			char	*buf;
 			GP_LOG_E (
