@@ -6340,7 +6340,12 @@ static int _cmp_ob (const void *a, const void *b)
 	PTPObject *oa = (PTPObject*)a;
 	PTPObject *ob = (PTPObject*)b;
 
-	return oa->oid - ob->oid;
+	/* Do not subtract the oids and return ...
+	 * the unsigned int -> int conversion will overflow in cases
+	 * like 0xfffc0000 vs 0x0004000. */
+	if (oa->oid > ob->oid) return 1;
+	if (oa->oid < ob->oid) return -1;
+	return 0;
 }
 	
 void
