@@ -5519,14 +5519,8 @@ retry:
 			continue;
 		GP_LOG_D ("adding 0x%x / ob=%p to folder", ob->oid, ob);
 		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
-			char	*buf;
-			GP_LOG_E (
-				"Duplicate foldername '%s' in folder '%s'. Ignoring nth entry.\n",
-				ob->oi.Filename, folder);
-			C_MEM (buf = malloc(strlen(ob->oi.Filename)+strlen("_012345678")+1));
-			sprintf (buf, "%s_%08x", ob->oi.Filename, ob->oid);
-			free (ob->oi.Filename);
-			ob->oi.Filename = buf;
+			GP_LOG_E ( "Duplicated foldername '%s' in folder '%s'. should not happen!\n", ob->oi.Filename, folder);
+			continue;
 		}
 		CR (gp_list_append (list, ob->oi.Filename, NULL));
 	}
