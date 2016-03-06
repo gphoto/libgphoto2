@@ -1302,7 +1302,9 @@ static struct {
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
-	{"Leica:D-LUX 2",                 0x04da, 0x2375, 0},
+	{"Leica:D-LUX 2",		  0x04da, 0x2375, 0},
+	/* Graham White <g.graham.white@gmail.com> */
+	{"Leica:SL",			  0x04da, 0x2041, 0},
 
 	/* http://callendor.zongo.be/wiki/OlympusMju500 */
 	{"Olympus:mju 500",               0x07b4, 0x0113, 0},
