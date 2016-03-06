@@ -892,7 +892,7 @@ gp_file_get_name (CameraFile *file, const char **name)
 int
 gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType type, char **newname)
 {
-	char *prefix = NULL, *s, *new;
+	char *prefix = NULL, *s, *new, *slash = NULL;
 	const char *suffix = NULL;
 	int i;
 
@@ -912,6 +912,9 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 		}
 	}
 	s = strrchr(basename,'.');
+	slash = strrchr(basename,'/');
+	if (slash > s)	/* --filename foo.bar/foo */
+		s = NULL;
 	switch (type) {
 	case GP_FILE_TYPE_RAW:		prefix = "raw_";break;
 	case GP_FILE_TYPE_EXIF:		prefix = "exif_";break;
@@ -922,19 +925,34 @@ gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType
 	}
 	if (s) {
 		int xlen;
+
 		if (!suffix)
 			suffix = s+1;
-		C_MEM (new = malloc (strlen(prefix) + (s-basename+1) + strlen (suffix) + 1));
-		strcpy (new, prefix);
-		xlen = strlen (new);
-		memcpy (new+xlen, basename, s-basename+1);
+
+		C_MEM (new = calloc (strlen(prefix) + (s-basename+1) + strlen (suffix) + 1, 1));
+
+		xlen = strlen (prefix);
+		if (slash) {
+			memcpy (new, basename, slash-basename+1);
+			strcat (new, prefix);
+			memcpy (new + strlen (new), slash+1, s-slash+1);
+		} else {
+			strcpy (new, prefix);
+			memcpy (new + strlen (new), basename, s-basename+1);
+		}
 		new[xlen+(s-basename)+1]='\0';
 		strcat (new, suffix);
 	} else { /* no dot in basename? */
 		if (!suffix) suffix = "";
-		C_MEM (new = malloc (strlen(prefix) + strlen(basename) + 1 + strlen (suffix) + 1));
-		strcpy (new, prefix);
-		strcat (new, basename);
+		C_MEM (new = calloc (strlen(prefix) + strlen(basename) + 1 + strlen (suffix) + 1, 1));
+		if (slash) {
+			memcpy (new, basename, slash-basename+1); /* with / */
+			strcat (new, prefix);
+			strcat (new, slash+1);
+		} else {
+			strcpy (new, prefix);
+			strcat (new, basename);
+		}
 		if (strlen(suffix)) {
 			strcat (new, ".");
 			strcat (new, suffix);
