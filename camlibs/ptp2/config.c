@@ -4941,7 +4941,12 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	start = dpd->FORM.Range.MinimumValue.u8;
 	end = dpd->FORM.Range.MaximumValue.u8;
 	value_float = dpd->CurrentValue.u8;
-	sprintf (buffer, "%d%%", (int)((value_float-start+1)*100/(end-start+1)));
+	if (start == end) {
+		/* avoid division by 0 */
+		sprintf (buffer, "broken");
+	} else {
+		sprintf (buffer, "%d%%", (int)((value_float-start+1)*100/(end-start+1)));
+	}
 	gp_widget_set_value(*widget, buffer);
 	return (GP_OK);
 }
