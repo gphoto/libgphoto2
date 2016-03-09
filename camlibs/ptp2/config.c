@@ -4941,7 +4941,7 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	start = dpd->FORM.Range.MinimumValue.u8;
 	end = dpd->FORM.Range.MaximumValue.u8;
 	value_float = dpd->CurrentValue.u8;
-	if (start == end) {
+	if (0 == end - start + 1) {
 		/* avoid division by 0 */
 		sprintf (buffer, "broken");
 	} else {
