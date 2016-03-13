@@ -528,8 +528,16 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	data = malloc(2000);
 
 	x += put_16bit_le(data+x,100);		/* StandardVersion */
-	x += put_32bit_le(data+x,0);		/* VendorExtensionID */
-	x += put_16bit_le(data+x,0);		/* VendorExtensionVersion */
+	switch (cam->type) {
+	case NIKON_D750:
+		x += put_32bit_le(data+x,0xa);		/* VendorExtensionID */
+		x += put_16bit_le(data+x,100);		/* VendorExtensionVersion */
+		break;
+	default:
+		x += put_32bit_le(data+x,0);		/* VendorExtensionID */
+		x += put_16bit_le(data+x,0);		/* VendorExtensionVersion */
+		break;
+	}
 	x += put_string(data+x,"GPhoto-VirtualCamera: 1.0;");	/* VendorExtensionDesc */
 	x += put_16bit_le(data+x,0);		/* FunctionalMode */
 
