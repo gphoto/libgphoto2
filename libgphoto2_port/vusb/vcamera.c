@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* camera.c
  *
- * Copyright (c) 2015 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (c) 2015,2016 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -265,12 +265,13 @@ static int ptp_setdevicepropvalue_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_setdevicepropvalue_write_data(vcamera *cam, ptpcontainer *ptp, unsigned char*data, unsigned int len);
 static int ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp);
 static int ptp_vusb_write(vcamera *cam, ptpcontainer *ptp);
+static int ptp_nikon_setcontrolmode_write(vcamera *cam, ptpcontainer *ptp);
 
 static struct ptp_function {
 	int	code;
 	int	(*write)(vcamera *cam, ptpcontainer *ptp);
 	int	(*write_data)(vcamera *cam, ptpcontainer *ptp, unsigned char *data, unsigned int size);
-} ptp_functions[] = {
+} ptp_functions_generic[] = {
 	{0x1001,	ptp_deviceinfo_write, 		NULL			},
 	{0x1002,	ptp_opensession_write, 		NULL			},
 	{0x1003,	ptp_closesession_write, 	NULL			},
@@ -287,6 +288,19 @@ static struct ptp_function {
 	{0x1015,	ptp_getdevicepropvalue_write, 	NULL			},
 	{0x1016,	ptp_setdevicepropvalue_write, 	ptp_setdevicepropvalue_write_data	},
 	{0x9999,	ptp_vusb_write, 		NULL			},
+};
+
+static struct ptp_function ptp_functions_nikon_dslr[] = {
+	{0x90c2,	ptp_nikon_setcontrolmode_write, NULL			},
+};
+
+static struct ptp_map_functions {
+	vcameratype		type;
+	struct ptp_function	*functions;
+	unsigned int		nroffunctions;
+} ptp_functions[] = {
+	{GENERIC_PTP,	ptp_functions_generic,		sizeof(ptp_functions_generic)/sizeof(ptp_functions_generic[0])},
+	{NIKON_D750,	ptp_functions_nikon_dslr,	sizeof(ptp_functions_nikon_dslr)/sizeof(ptp_functions_nikon_dslr[0])},
 };
 
 typedef union _PTPPropertyValue {
@@ -440,6 +454,25 @@ read_tree(char *path) {
 }
 
 static int
+ptp_nikon_setcontrolmode_write(vcamera *cam, ptpcontainer *ptp) {
+	CHECK_PARAM_COUNT(1);
+
+	if ((ptp->params[0] != 0) && (ptp->params[0] != 1)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__,"controlmode must not be 0 or 1, is %d", ptp->params[0]);
+		ptp_response (cam, PTP_RC_InvalidParameter, 0);
+		return 1;
+	}
+	if (cam->session) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__,"session is already open");
+		ptp_response (cam, PTP_RC_SessionAlreadyOpened, 0);
+		return 1;
+	}
+	cam->session = ptp->params[0];
+	ptp_response (cam,PTP_RC_OK,0);
+	return 1;
+}
+
+static int
 ptp_opensession_write(vcamera *cam, ptpcontainer *ptp) {
 	CHECK_PARAM_COUNT(1);
 
@@ -476,7 +509,7 @@ ptp_closesession_write(vcamera *cam, ptpcontainer *ptp) {
 static int
 ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char	*data;
-	int		x = 0, i;
+	int		x = 0, i, cnt, vendor;
 	uint16_t	*opcodes, *devprops;
 	uint16_t	imageformats[1];
 	uint16_t	events[5];
@@ -500,10 +533,28 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_string(data+x,"GPhoto-VirtualCamera: 1.0;");	/* VendorExtensionDesc */
 	x += put_16bit_le(data+x,0);		/* FunctionalMode */
 
-	opcodes = malloc(sizeof(ptp_functions)/sizeof(ptp_functions[0])*sizeof(uint16_t));
-	for (i=0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++)
-		opcodes[i] = ptp_functions[i].code;
-	x += put_16bit_le_array(data+x,opcodes,sizeof(ptp_functions)/sizeof(ptp_functions[0]));	/* OperationsSupported */
+	cnt = 0;
+	for (i = 0;i<sizeof(ptp_functions)/sizeof(ptp_functions[0]);i++) {
+		if (ptp_functions[i].type == GENERIC_PTP) {
+			cnt += ptp_functions[i].nroffunctions;
+			continue;
+		}
+		if (ptp_functions[i].type == cam->type) {
+			vendor = i;
+			cnt += ptp_functions[i].nroffunctions;
+		}
+	}
+	opcodes = malloc(cnt*sizeof(uint16_t));
+
+	for (i=0;i<ptp_functions[0].nroffunctions;i++)
+		opcodes[i] = ptp_functions[0].functions[i].code;
+
+	if (cam->type != GENERIC_PTP) {
+		for (i=0;i<ptp_functions[vendor].nroffunctions;i++)
+			opcodes[i+ptp_functions[0].nroffunctions] = ptp_functions[vendor].functions[i].code;
+	}
+
+	x += put_16bit_le_array(data+x,opcodes,cnt);	/* OperationsSupported */
 	free (opcodes);
 
 	events[0] = 0x4002;
@@ -1611,7 +1662,7 @@ static int vcam_close(vcamera* cam) {
 static void
 vcam_process_output(vcamera *cam) {
 	ptpcontainer	ptp;
-	int		i;
+	int		i, j;
 
 	if (cam->nroutbulk < 4)
 		return; /* wait for more data */
@@ -1674,21 +1725,27 @@ vcam_process_output(vcamera *cam) {
 	cam->nroutbulk -= ptp.size;
 
 	/* call the opcode handler */
+	for (j=0;j<sizeof(ptp_functions)/sizeof(ptp_functions[0]);j++) {
+		struct ptp_function *funcs = ptp_functions[j].functions;
 
-	for (i=0;i<sizeof (ptp_functions) / sizeof (ptp_functions[0]);i++) {
-		if (ptp_functions[i].code == ptp.code) {
-			if (ptp.type == 1) {
-				ptp_functions[i].write (cam, &ptp);
-				memcpy(&cam->ptpcmd, &ptp, sizeof(ptp));
-			} else {
-				if (ptp_functions[i].write_data == NULL) {
-					gp_log (GP_LOG_ERROR, __FUNCTION__, "opcode 0x%04x received with dataphase, but no dataphase expected", ptp.code);
-					ptp_response (cam, PTP_RC_GeneralError, 0);
+		if ((ptp_functions[j].type != GENERIC_PTP) && (ptp_functions[j].type != cam->type))
+			continue;
+
+		for (i=0;i<ptp_functions[j].nroffunctions;i++) {
+			if (funcs[i].code == ptp.code) {
+				if (ptp.type == 1) {
+					funcs[i].write (cam, &ptp);
+					memcpy(&cam->ptpcmd, &ptp, sizeof(ptp));
 				} else {
-					ptp_functions[i].write_data (cam, &cam->ptpcmd, cam->outbulk+12, ptp.size-12);
+					if (funcs[i].write_data == NULL) {
+						gp_log (GP_LOG_ERROR, __FUNCTION__, "opcode 0x%04x received with dataphase, but no dataphase expected", ptp.code);
+						ptp_response (cam, PTP_RC_GeneralError, 0);
+					} else {
+						funcs[i].write_data (cam, &cam->ptpcmd, cam->outbulk+12, ptp.size-12);
+					}
 				}
+				return;
 			}
-			return;
 		}
 	}
 	gp_log (GP_LOG_ERROR,__FUNCTION__,"received an unsupported opcode 0x%04x", ptp.code);
@@ -1834,7 +1891,7 @@ vcam_readint(vcamera*cam, char *data, int bytes, int timeout) {
 }
 
 vcamera*
-vcamera_new(void) {
+vcamera_new(vcameratype type) {
 	vcamera *cam;
 
 	cam = calloc(1,sizeof(vcamera));
@@ -1851,6 +1908,7 @@ vcamera_new(void) {
 	cam->readint = vcam_readint;
 	cam->write = vcam_write;
 
+	cam->type = type;
 	cam->seqnr = 0;
 
 	return cam;
