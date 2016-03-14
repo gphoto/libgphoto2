@@ -99,7 +99,7 @@ static int gp_port_vusb_init (GPPort *dev)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	C_MEM (dev->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
-	dev->pl->vcamera = vcamera_new();
+	dev->pl->vcamera = vcamera_new(GENERIC_PTP);
 	dev->pl->vcamera->init(dev->pl->vcamera);
 
 	return GP_OK;
@@ -271,7 +271,18 @@ gp_port_vusb_msg_read_lib(GPPort *port, int request, int value, int index,
 static int
 gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct);
+	if ((idvendor == 0x04b0) && (idproduct == 0x0437)) { /* Nikon D750 */
+                port->settings.usb.config	= 1;
+                port->settings.usb.interface	= 1;
+                port->settings.usb.altsetting	= 1;
+
+                port->settings.usb.inep  = 0x81;
+                port->settings.usb.outep = 0x02;
+                port->settings.usb.intep = 0x83;
+                port->settings.usb.maxpacketsize = 512;
+		return GP_OK;
+	}
+	/* gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct); */
         return GP_ERROR_IO_USB_FIND;
 }
 

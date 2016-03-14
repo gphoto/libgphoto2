@@ -31,6 +31,11 @@ typedef struct ptpcontainer {
 	unsigned int params[6];
 } ptpcontainer;
 
+typedef enum vcameratype {
+	GENERIC_PTP,
+	NIKON_D750
+} vcameratype;
+
 typedef struct vcamera {
 	int (*init)(struct vcamera*);
 	int (*exit)(struct vcamera*);
@@ -41,6 +46,7 @@ typedef struct vcamera {
 	int (*readint)(struct vcamera*,  char *data, int bytes, int timeout);
 	int (*write)(struct vcamera*, int ep, const char *data, int bytes);
 
+	vcameratype	type;
 	unsigned char	*inbulk;
 	int		nrinbulk;
 	unsigned char	*outbulk;
@@ -54,6 +60,6 @@ typedef struct vcamera {
 	int		fuzzfd;
 } vcamera;
 
-vcamera *vcamera_new(void);
+vcamera *vcamera_new(vcameratype);
 
 #endif
