@@ -714,6 +714,8 @@ static struct {
 	{"Kodak:M531",   0x040a, 0x0600, 0},
 	/* rschweikert@novell.com */
 	{"Kodak:C183",   0x040a, 0x060b, 0},
+	/* Oleh Malyi <astroclubzp@gmail.com> */
+	{"Kodak:Z990",   0x040a, 0x0613, 0},
 	/* ra4veiV6@lavabit.com */
 	{"Kodak:C1530",  0x040a, 0x0617, 0},
 
