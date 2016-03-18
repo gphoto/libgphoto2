@@ -2924,6 +2924,7 @@ uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, 
  *
  **/
 #define ptp_canon_setobjectarchive(params,oid,flags) ptp_generic_no_data(params,PTP_OC_CANON_SetObjectArchive,2,oid,flags)
+#define ptp_canon_eos_setobjectattributes(params,oid,flags) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetObjectAttributes,2,oid,flags)
 uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char**, unsigned int*);
