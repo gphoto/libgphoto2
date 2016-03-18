@@ -6067,6 +6067,15 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			ret = LOG_ON_PTP_E (ptp_canon_setobjectarchive (params, oid, ob->canon_flags & ~0x20));
 			if (ret == PTP_RC_OK)
 				ob->canon_flags &= ~0x20;
+		} else if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			(ob->canon_flags & 0x20) &&
+			ptp_operation_issupported(params,PTP_OC_CANON_EOS_SetObjectAttributes)
+		) {
+			/* seems just a byte (0x20 - new) */
+			/* can fail on some models, like S5. Ignore errors. */
+			ret = LOG_ON_PTP_E (ptp_canon_eos_setobjectattributes(params, oid, ob->canon_flags & ~0x20));
+			if (ret == PTP_RC_OK)
+				ob->canon_flags &= ~0x20;
 		}
 		}
 		break;
@@ -6249,6 +6258,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			/* seems just a byte (0x20 - new) */
 			/* can fail on some models, like S5. Ignore errors. */
 			ret = LOG_ON_PTP_E (ptp_canon_setobjectarchive (params, oid, ob->canon_flags & ~0x20));
+			if (ret == PTP_RC_OK)
+				ob->canon_flags &= ~0x20;
+		} else if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			(ob->canon_flags & 0x20) &&
+			ptp_operation_issupported(params,PTP_OC_CANON_EOS_SetObjectAttributes)
+		) {
+			uint16_t	ret;
+
+			/* seems just a byte (0x20 - new) */
+			/* can fail on some models, like S5. Ignore errors. */
+			ret = LOG_ON_PTP_E (ptp_canon_eos_setobjectattributes(params, oid, ob->canon_flags & ~0x20));
 			if (ret == PTP_RC_OK)
 				ob->canon_flags &= ~0x20;
 		}
