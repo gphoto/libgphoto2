@@ -64,6 +64,10 @@ main (int argc, char **argv)
 		printf ("id3 not found?\n");
 		return 1;
 	}
+	if (GP_ERROR_BAD_PARAMETERS != gp_log_remove_func (id3)) {
+		printf ("id3 was found?\n");
+		return 1;
+	}
 
 	gp_log_add_func (GP_LOG_DATA, log_func, NULL);
 
