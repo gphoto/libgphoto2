@@ -81,18 +81,19 @@ static unsigned int log_funcs_count = 0;
 int
 gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 {
-	C_PARAMS (func);
+	static int logfuncid = 0;
 
+	C_PARAMS (func);
 	C_MEM (log_funcs = realloc (log_funcs, sizeof (LogFunc) *
 				(log_funcs_count + 1)));
 	log_funcs_count++;
 
-	log_funcs[log_funcs_count - 1].id = log_funcs_count;
+	log_funcs[log_funcs_count - 1].id = ++logfuncid;
 	log_funcs[log_funcs_count - 1].level = level;
 	log_funcs[log_funcs_count - 1].func = func;
 	log_funcs[log_funcs_count - 1].data = data;
 
-	return (log_funcs_count);
+	return logfuncid;
 }
 
 
@@ -136,12 +137,16 @@ gpi_vsnprintf (const char* format, va_list args)
 int
 gp_log_remove_func (int id)
 {
-	C_PARAMS (id > 0 && id <= log_funcs_count);
+	int i;
 
-	memmove (log_funcs + id - 1, log_funcs + id, log_funcs_count - id);
-	log_funcs_count--;
-
-	return (GP_OK);
+	for (i=0;i<log_funcs_count;i++) {
+		if (log_funcs[i].id == id) {
+			memmove (log_funcs + i - 1, log_funcs + i, log_funcs_count - i);
+			log_funcs_count--;
+			return GP_OK;
+		}
+	}
+	return GP_ERROR_BAD_PARAMETERS;
 }
 
 /**
