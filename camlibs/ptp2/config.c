@@ -7231,7 +7231,10 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 
 					GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
 					memset(&dpd,0,sizeof(dpd));
-					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
+					ret = LOG_ON_PTP_E(ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
+					if (ret != PTP_RC_OK)
+						continue;
+
 					if (cursub->type != dpd.DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
 						/* str is incompatible to all others */
@@ -7604,7 +7607,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
-					ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd);
+					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
 					if (cursub->type != dpd.DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
 						/* str is incompatible to all others */
