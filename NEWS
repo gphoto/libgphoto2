@@ -1,22 +1,28 @@
-libgphoto2 2.5.9.1 development tree
+libgphoto2 2.5.10 release
 
 libgphoto2:
 * added gp_camera_list_config, gp_camera_get_single_config, gp_camera_set_single_config
-  additional configuration APIs for faster access to single configuration values
+  additional configuration APIs for faster access to single configuration values.
 
 ptp2:
 * allow generic opcode commands with parameters, config variable "opcode"
 * fixed pretending that Nikon Coolpix S series is a Nikon 1 S.
 * Nikon: fixed problem with SDRAM capture
 * Canon EOS: handle "no focus" during capture
+* Canon EOS: handle --new correctly
 * Canon Powershot: handle lack of object protection setting
-* added size checking for unpacking primitives
+* Ricoh Theta: support shutterspeed configuration
+* added size checking to PTP unpacking primitives
+* various bugfixes
 * New ids:
   * Imported Media Players and Android phones from libmtp
   * Sony Alpha A7S II, ILCE 7M2
-  * Nikon Coolpix L840
-  * Olympus TG-620
+  * Kodak Z990
+  * Nikon Coolpix L840, S3600
+  * Leica SL
+  * Olympus TG-620, E-M5 Mark 2
   * Canon EOS 1D C, 750D
+  * Canon IXUS 160
   * Fuji Film X-T1, X-T10, A-610
 
 
