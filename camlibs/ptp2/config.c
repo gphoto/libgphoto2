@@ -1476,7 +1476,7 @@ _put_sony_value_u16 (PTPParams*params, uint16_t prop, uint16_t original_desired_
                 }
         } while (1);
         return GP_OK;
-
+}
 
 
 static int
