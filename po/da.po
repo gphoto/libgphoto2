@@ -6453,7 +6453,7 @@ msgstr "DPOF-version"
 
 #: camlibs/ptp2/config.c:6709 camlibs/ptp2/ptp.c:4566
 msgid "AC Power"
-msgstr "AC-strøm"
+msgstr "Vekselstrøm"
 
 #: camlibs/ptp2/config.c:6710
 msgid "External Flash"
@@ -7353,7 +7353,7 @@ msgstr "Canon EOS hent ændringer fejlede"
 #: camlibs/ptp2/library.c:3132 camlibs/ptp2/library.c:3170
 #: camlibs/ptp2/library.c:4050 camlibs/ptp2/library.c:4105
 msgid "Canon EOS Capture failed to release: Perhaps no focus?"
-msgstr "Canon EOS optagning fejlede udløsning: Måske ikke i fokus?"
+msgstr "Canon EOS-optagelse fejlede udløsning: Måske ikke i fokus?"
 
 #: camlibs/ptp2/library.c:3145 camlibs/ptp2/library.c:3157
 #: camlibs/ptp2/library.c:4060 camlibs/ptp2/library.c:4072
@@ -7370,29 +7370,29 @@ msgstr "Canon EOS Full-Release fejlede"
 
 #: camlibs/ptp2/library.c:3160
 msgid "Canon EOS Capture failed"
-msgstr "Canon EOS-optagning fejlede"
+msgstr "Canon EOS-optagelse fejlede"
 
 #: camlibs/ptp2/library.c:3163
 #, c-format
 msgid "Canon EOS Capture failed: %x"
-msgstr "Canon EOS-optagning fejlede: %x"
+msgstr "Canon EOS-optagelse fejlede: %x"
 
 #: camlibs/ptp2/library.c:3172 camlibs/ptp2/library.c:4107
 msgid "Canon EOS Capture failed to release: Perhaps mirror up?"
-msgstr "Canon EOS optagning fejlede udløsning: Er spejlet oppe?"
+msgstr "Canon EOS-optagelse fejlede udløsning: Er spejlet oppe?"
 
 #: camlibs/ptp2/library.c:3174 camlibs/ptp2/library.c:4109
 msgid "Canon EOS Capture failed to release: Perhaps no more memory on card?"
-msgstr "Canon EOS optagning fejlede udløsning: Måske ikke mere hukommelsesplads på kort?"
+msgstr "Canon EOS-optagelse fejlede udløsning: Måske ikke mere hukommelsesplads på kort?"
 
 #: camlibs/ptp2/library.c:3176 camlibs/ptp2/library.c:4111
 msgid "Canon EOS Capture failed to release: Card read-only?"
-msgstr "Canon EOS-optagning fejlede udløsning: Er kortet skrivebeskyttet?"
+msgstr "Canon EOS-optagelse fejlede udløsning: Er kortet skrivebeskyttet?"
 
 #: camlibs/ptp2/library.c:3178 camlibs/ptp2/library.c:4113
 #, c-format
 msgid "Canon EOS Capture failed to release: Unknown error %d, please report."
-msgstr "Canon EOS optagning fejlede udløsning: Ukendt fejl %d, rapportér."
+msgstr "Canon EOS-optagelse fejlede udløsning: Ukendt fejl %d, rapportér."
 
 #: camlibs/ptp2/library.c:3396
 msgid "Sorry, your Canon camera does not support Canon Capture initiation"
@@ -7409,7 +7409,7 @@ msgstr "Canonoptagelse fejlede"
 
 #: camlibs/ptp2/library.c:3733 camlibs/ptp2/library.c:4212
 msgid "Sorry, your camera does not support generic capture"
-msgstr "Beklager, dit kamera understøtter ikke almen optagning"
+msgstr "Beklager, dit kamera understøtter ikke almen optagelse"
 
 #: camlibs/ptp2/library.c:3871
 msgid "Camera memorycard ran full during capture."
@@ -7533,27 +7533,27 @@ msgstr "Ingen filoplægning\n"
 #: camlibs/ptp2/library.c:4993
 #, c-format
 msgid "\tGeneric Image Capture, "
-msgstr "\tAlmen billedoptagning, "
+msgstr "\tAlmen billedoptagelse, "
 
 #: camlibs/ptp2/library.c:4995
 #, c-format
 msgid "\tNo Image Capture, "
-msgstr "\tIngen billedoptagning, "
+msgstr "\tIngen billedoptagelse, "
 
 #: camlibs/ptp2/library.c:4998
 #, c-format
 msgid "Open Capture, "
-msgstr "Åben optagning, "
+msgstr "Åben optagelse, "
 
 #: camlibs/ptp2/library.c:5000
 #, c-format
 msgid "No Open Capture, "
-msgstr "Ingen åben optagning, "
+msgstr "Ingen åben optagelse, "
 
 #: camlibs/ptp2/library.c:5007
 #, c-format
 msgid "Canon Capture"
-msgstr "Canon optagning"
+msgstr "Canonoptagelse"
 
 #: camlibs/ptp2/library.c:5011
 #, c-format
@@ -7583,7 +7583,7 @@ msgstr "%sNikon-optagelse 3"
 #: camlibs/ptp2/library.c:5043
 #, c-format
 msgid "Sony Capture"
-msgstr "Sony optagning"
+msgstr "Sonyoptagelse"
 
 #: camlibs/ptp2/library.c:5050
 #, c-format
@@ -7593,7 +7593,7 @@ msgstr "Olympus E XML optagelse\n"
 #: camlibs/ptp2/library.c:5056
 #, c-format
 msgid "No vendor specific capture\n"
-msgstr "Ingen fremstillerspecifik optagning\n"
+msgstr "Ingen fremstillerspecifik optagelse\n"
 
 #: camlibs/ptp2/library.c:5063
 #, c-format
@@ -7854,7 +7854,7 @@ msgstr "PTP ukendt fremstillerkode"
 
 #: camlibs/ptp2/ptp.c:4065
 msgid "PTP Capture Already Terminated"
-msgstr "PTP optagning allerede afbrudt"
+msgstr "PTP-optagelse allerede afbrudt"
 
 #: camlibs/ptp2/ptp.c:4066
 msgid "PTP Device Busy"
@@ -11108,7 +11108,7 @@ msgstr ""
 "   - hele billeder i PPM format\n"
 "   - sletning af alle billeder\n"
 "   - slet seneste billede (virker måske ikke på alle Sonix kameraer)\n"
-"   - billedoptagning til kamera (\t\tditto\t\t)\n"
+"   - billedoptagelse til kamera (\t\tditto\t\t)\n"
 "Hvis der er videoklip i kameraet, nedhentes video clip rammer som\n"
 "sammenhængende still-billeder eller som AVI filer, afhængigt af model.\n"
 "Miniaturer for AVI'er er still-billeder dannet fra første ramme.\n"
