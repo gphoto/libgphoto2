@@ -6422,10 +6422,9 @@ msgstr "CHDK Script"
 msgid "Movie Capture"
 msgstr "Filoptagelse"
 
-# valgt at holde det uoversat
 #: camlibs/ptp2/config.c:6693
 msgid "PTP Opcode"
-msgstr "PTP Opcode"
+msgstr "PTP-operationskode"
 
 #: camlibs/ptp2/config.c:6698 camlibs/ptp2/config.c:6720
 msgid "Serial Number"
@@ -7418,7 +7417,7 @@ msgstr "Kameraets hukommelseskort blev fyldt op under optagelse."
 #: camlibs/ptp2/library.c:4095 camlibs/ptp2/library.c:4098
 #, c-format
 msgid "Canon EOS Trigger Capture failed: 0x%x"
-msgstr "Canon EOS-udløseroptagning fejlede: 0x%x"
+msgstr "Canon EOS-udløseroptagelse fejlede: 0x%x"
 
 #: camlibs/ptp2/library.c:4140
 msgid "Sorry, initializing your camera did not work. Please report this."
