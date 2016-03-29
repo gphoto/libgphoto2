@@ -1383,8 +1383,101 @@ _put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value,i
 	return GP_OK;									\
 }
 
+#if 0
 PUT_SONY_VALUE_(16) /* _put_sony_value_u16 */
+#endif
 PUT_SONY_VALUE_(32) /* _put_sony_value_u32 */
+
+/*
+2016-03-23: David Cary at Lamar Systems:
+tweak to get positive and negative exposure compensation values working.
+Replaces "PUT_SONY_VALUE_(16)"
+*/
+static int
+_put_sony_value_u16 (PTPParams*params, uint16_t prop, uint16_t original_desired_value, int useenumorder) {
+        GPContext               *context = ((PTPData *) params->data)->context;
+        PTPDevicePropDesc       dpd;
+        PTPPropertyValue        propval;
+        uint32_t                origval;
+        uint32_t                value = (int32_t)(int16_t)original_desired_value;
+        time_t                  start,end;
+
+        GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);
+        GP_LOG_D("setting 0x%04x to %i", prop, value);
+
+        C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
+        do {
+                origval = (int32_t)((int16_t)(dpd.CurrentValue.u16));
+                /* if it is a ENUM, the camera will walk through the ENUM */
+                if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {
+                        GP_LOG_D("enumeration ...");
+                        int i, posorig = -1, posnew = -1;
+
+                        for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {
+                                if (origval == dpd.FORM.Enum.SupportedValue[i].u16)
+                                        posorig = i;
+                                if (value == dpd.FORM.Enum.SupportedValue[i].u16)
+                                        posnew = i;
+                                if ((posnew != -1) && (posorig != -1))
+                                        break;
+                        }
+                        if (posnew == -1) {
+                                gp_context_error (context, _("Target value is not in enumeration."));
+                                return GP_ERROR_BAD_PARAMETERS;
+                        }
+                        GP_LOG_D("posnew %d, posorig %d, value %d", posnew, posorig, value);
+                        if (posnew > posorig)
+                                propval.u8 = 0x01;
+                        else
+                                propval.u8 = 0xff;
+                } else {
+                        // if (value > origval){
+                        if ( (int)value > (int)origval){
+                                GP_LOG_D("increment");
+                                propval.u8 = 0x01;
+                        }else{
+                                GP_LOG_D("decrement");
+                                propval.u8 = 0xff;
+                        };
+                }
+                C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, prop, &propval, PTP_DTC_UINT8 ));
+
+                GP_LOG_D ("value is (0x%x vs target 0x%x)", (int)origval, (int)value);
+                GP_LOG_D ("value is (%i vs target %i)", (int)origval, (int)value);
+
+                /* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */
+                time(&start);
+                do {
+                        C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+                        C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));
+
+                        if (dpd.CurrentValue.u16== (uint16_t)value) {
+                                GP_LOG_D ("Value matched!(smaller loop)");
+                                break;
+                        }
+                        if (dpd.CurrentValue.u16!= (uint16_t)origval) {
+                                GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u16, origval, value);
+                                GP_LOG_D ("value changed (%i vs %i vs target %i), next step....", (int)(int16_t)dpd.CurrentValue.u16, (int)origval, (int)value);
+                                break;
+                        }
+
+                        usleep(200*1000);
+
+                        time(&end);
+                } while (end-start <= 3);
+
+                if (dpd.CurrentValue.u16 == (uint16_t)value) {
+                        GP_LOG_D ("Value matched!(big loop)");
+                        break;
+                }
+                if (dpd.CurrentValue.u16 == (uint16_t)origval) {
+                        GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u16, origval, value);
+                        break;
+                }
+        } while (1);
+        return GP_OK;
+}
+
 
 static int
 _get_CANON_FirmwareVersion(CONFIG_GET_ARGS) {
