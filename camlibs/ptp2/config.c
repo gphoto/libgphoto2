@@ -1306,28 +1306,28 @@ _put_Nikon_OffOn_UINT8(CONFIG_PUT_ARGS) {
 	return (GP_ERROR);
 }
 
-#define PUT_SONY_VALUE_(bits) 								\
+#define PUT_SONY_VALUE_(bits,inttype) 								\
 static int										\
-_put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value,int useenumorder) {	\
+_put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useenumorder) {	\
 	GPContext 		*context = ((PTPData *) params->data)->context;		\
 	PTPDevicePropDesc	dpd;							\
 	PTPPropertyValue	propval;						\
-	uint32_t		origval;						\
+	inttype			origval;						\
 	time_t			start,end;						\
 											\
 	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
 											\
 	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));			\
 	do {										\
-		origval = dpd.CurrentValue.u##bits;					\
+		origval = dpd.CurrentValue.bits;					\
 		/* if it is a ENUM, the camera will walk through the ENUM */		\
 		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {				\
 			int i, posorig = -1, posnew = -1;				\
 											\
 			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
-				if (origval == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
+				if (origval == dpd.FORM.Enum.SupportedValue[i].bits)	\
 					posorig = i;					\
-				if (value == dpd.FORM.Enum.SupportedValue[i].u##bits)	\
+				if (value == dpd.FORM.Enum.SupportedValue[i].bits)	\
 					posnew = i;					\
 				if ((posnew != -1) && (posorig != -1))			\
 					break;						\
@@ -1357,12 +1357,12 @@ _put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value,i
 			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));		\
 			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));	\
 											\
-			if (dpd.CurrentValue.u##bits == value) {			\
+			if (dpd.CurrentValue.bits == value) {				\
 				GP_LOG_D ("Value matched!");				\
 				break;							\
 			}								\
-			if (dpd.CurrentValue.u##bits != origval) {			\
-				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.u##bits, origval, value);\
+			if (dpd.CurrentValue.bits != origval) {				\
+				GP_LOG_D ("value changed (0x%x vs 0x%x vs target 0x%x), next step....", dpd.CurrentValue.bits, origval, value);\
 				break;							\
 			}								\
 											\
@@ -1371,20 +1371,21 @@ _put_sony_value_u##bits (PTPParams*params, uint16_t prop, uint##bits##_t value,i
 			time(&end);							\
 		} while (end-start <= 3);						\
 											\
-		if (dpd.CurrentValue.u##bits == value) {				\
+		if (dpd.CurrentValue.bits == value) {					\
 			GP_LOG_D ("Value matched!");					\
 			break;								\
 		}									\
-		if (dpd.CurrentValue.u##bits == origval) {				\
-			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.u##bits, origval, value);\
+		if (dpd.CurrentValue.bits == origval) {					\
+			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.bits, origval, value);\
 			break;								\
 		}									\
 	} while (1);									\
 	return GP_OK;									\
 }
 
-PUT_SONY_VALUE_(16) /* _put_sony_value_u16 */
-PUT_SONY_VALUE_(32) /* _put_sony_value_u32 */
+PUT_SONY_VALUE_(u16,uint16_t) /* _put_sony_value_u16 */
+PUT_SONY_VALUE_(i16,int16_t) /* _put_sony_value_i16 */
+PUT_SONY_VALUE_(u32,uint32_t) /* _put_sony_value_u32 */
 
 static int
 _get_CANON_FirmwareVersion(CONFIG_GET_ARGS) {
@@ -1530,7 +1531,7 @@ _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 
 	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
 	if (ret != GP_OK) return ret;
-	return _put_sony_value_u16 (&camera->pl->params, PTP_DPC_ExposureBiasCompensation, propval->i16, 0);
+	return _put_sony_value_i16 (&camera->pl->params, PTP_DPC_ExposureBiasCompensation, propval->i16, 0);
 }
 
 static struct deviceproptableu16 canon_assistlight[] = {
