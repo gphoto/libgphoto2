@@ -2070,7 +2070,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
 			while (shootingModeStateArray[i].label) {
-				if (strcmp (shootingModeStateArray[i].label, wvalue) == 0) {
+				if (strcmp (_(shootingModeStateArray[i].label), wvalue) == 0) {
 					shooting_mode = shootingModeStateArray[i].value;
 					break;
 				}
@@ -2127,7 +2127,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
 			while (apertureStateArray[i].label) {
-				if (strcmp (apertureStateArray[i].label, wvalue) == 0) {
+				if (strcmp (_(apertureStateArray[i].label), wvalue) == 0) {
 					aperture = apertureStateArray[i].value;
 					break;
 				}
@@ -2155,7 +2155,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
 			while (exposureBiasStateArray[i].label) {
-				if (strcmp (exposureBiasStateArray[i].label, wvalue) == 0) {
+				if (strcmp (_(exposureBiasStateArray[i].label), wvalue) == 0) {
 					expbias = exposureBiasStateArray[i].value;
 					break;
 				}
@@ -2183,7 +2183,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
 			while (imageFormatStateArray[i].label) {
-				if (strcmp (imageFormatStateArray[i].label, wvalue) == 0)
+				if (strcmp (_(imageFormatStateArray[i].label), wvalue) == 0)
 					break;
 				
 				i++;
@@ -2211,7 +2211,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			/* Map the menu option setting to the camera binary value */
 			i = 0;
 			while (focusModeStateArray[i].label) {
-				if (strcmp (focusModeStateArray[i].label, wvalue) == 0) {
+				if (strcmp (_(focusModeStateArray[i].label), wvalue) == 0) {
 					focus_mode = focusModeStateArray[i].value;
 					break;
 				}
