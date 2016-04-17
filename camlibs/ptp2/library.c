@@ -3105,13 +3105,13 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
 		struct timeval		focus_start;
-		int 			foundfocusinfo = 0;
+		int 			manualfocus = 0, foundfocusinfo = 0;
 		PTPDevicePropDesc	dpd;
 
 		/* are we in manual focus mode ... value would be 3 */
 		if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusMode, &dpd)) {
 			if ((dpd.DataType == PTP_DTC_UINT16) && (dpd.CurrentValue.u16 == 3)) {
-				foundfocusinfo = 1;
+				manualfocus = 1;
 				/* will do 1 pass through the focusing loop for good measure */
 				GP_LOG_D("detected manual focus. skipping focus detection logic");
 			}
@@ -3122,8 +3122,11 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 		focus_start = time_now();
 		do {
+			int foundevents = 0;
+
 			C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 			while (ptp_get_one_eos_event (params, &entry)) {
+				foundevents = 1;
 				GP_LOG_D("focusing - read event type %d", entry.type);
 				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO) {
 					GP_LOG_D("focusinfo content: %s", entry.u.info);
@@ -3134,11 +3137,15 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 					}
 				}
 			}
+			/* We found focus information, so half way pressing has finished! */
 			if (foundfocusinfo)
+				break;
+			/* for manual focus, at least wait until we get events */
+			if (manualfocus && foundevents)
 				break;
 		} while (waiting_for_timeout (&back_off_wait, focus_start, 2*1000)); /* wait 2 seconds for focus */
 
-		if (!foundfocusinfo) {
+		if (!foundfocusinfo && !manualfocus) {
 			GP_LOG_E("no focus info?\n");
 		}
 		if (ret != GP_OK) {
