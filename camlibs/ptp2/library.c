@@ -3607,7 +3607,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	struct timeval	event_start;
 
 	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
@@ -3622,7 +3622,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	}
 
 	propval.u16 = 2;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
 	event_start = time_now();
 	do {
@@ -3640,10 +3640,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	} while (time_since (event_start) < 35000);
 
 	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C2, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
-	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &propval, PTP_DTC_UINT16));
+	/* stop pre-focus */
+	propval.u16 = 2;
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
 
 	if (!newobject) {
 		GP_LOG_E("no object found during event polling. try the 0xffffc001 object id");
