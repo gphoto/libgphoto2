@@ -5994,16 +5994,16 @@ _put_Sony_Bulb(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		xpropval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
 
 		xpropval.u16 = 2;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &xpropval, PTP_DTC_UINT16));
 	} else {
 		xpropval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C2, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &xpropval, PTP_DTC_UINT16));
 
 		xpropval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C1, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
 	}
 	return GP_OK;
 }
