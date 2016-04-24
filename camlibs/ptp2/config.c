@@ -1515,13 +1515,24 @@ _get_ExpCompensation(CONFIG_GET_ARGS) {
 
 static int
 _put_ExpCompensation(CONFIG_PUT_ARGS) {
-	char *value;
-	float x;
+	char	*value;
+	float	x;
+	int16_t	val, targetval;
+	int	mindist = 65535, j;
 
 	CR (gp_widget_get_value(widget, &value));
 	if (1 != sscanf(value,"%g", &x))
 		return GP_ERROR;
-	propval->i16 = x*1000.0;
+
+	/* float processing is not always hitting the right values, but close */
+	val = x*1000.0;
+	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
+		if (abs(dpd->FORM.Enum.SupportedValue[j].i16 - val) < mindist) {
+			mindist = abs(dpd->FORM.Enum.SupportedValue[j].i16 - val);
+			targetval = dpd->FORM.Enum.SupportedValue[j].i16;
+		}
+	}
+	propval->i16 = targetval;
 	return GP_OK ;
 }
 
