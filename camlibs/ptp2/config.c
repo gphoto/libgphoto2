@@ -4067,6 +4067,34 @@ static struct deviceproptableu16 focusmodes[] = {
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
+/* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
+static int
+_put_Sony_FocusMode(CONFIG_PUT_ARGS) {
+	PTPParams		*params = &(camera->pl->params);
+	GPContext 		*context = ((PTPData *) params->data)->context;
+	int 			ret;
+	PTPDevicePropDesc	dpd2;
+	time_t			start,end;
+
+	ret = _put_FocusMode(CONFIG_PUT_NAMES);
+	if (ret != GP_OK) return ret;
+	start = time(NULL);
+	C_PTP_REP (ptp_generic_setdevicepropvalue (params, PTP_DPC_FocusMode, propval, PTP_DTC_UINT16));
+	while (1) {
+		C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
+		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd2));
+		if (dpd2.CurrentValue.u16 == propval->u16)
+			break;
+		end = time(NULL);
+		if (end-start >= 3) {
+			GP_LOG_E("failed to change variable to %d (current %d)\n", propval->u16, dpd2.CurrentValue.u16);
+			break;
+		}
+	}
+	return GP_OK;
+}
+
+
 static struct deviceproptableu16 eos_focusmodes[] = {
 	{ N_("One Shot"),	0x0000, 0 },
 	{ N_("AI Servo"),	0x0001, 0 },
@@ -6884,6 +6912,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             0,                  PTP_DTC_UINT8,  _get_CompressionSetting,            _put_CompressionSetting },
 	{ N_("Focus Distance"),                 "focusdistance",            PTP_DPC_FocusDistance,                  0,                  PTP_DTC_UINT16, _get_FocusDistance,                 _put_FocusDistance },
 	{ N_("Focal Length"),                   "focallength",              PTP_DPC_FocalLength,                    0,                  PTP_DTC_UINT32, _get_FocalLength,                   _put_FocalLength },
+	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FocusMode,                     _put_Sony_FocusMode },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      0,                  PTP_DTC_UINT16, _get_FocusMode,                     _put_FocusMode },
 	/* Nikon DSLR have both PTP focus mode and Nikon specific focus mode */
 	{ N_("Focus Mode 2"),                   "focusmode2",               PTP_DPC_NIKON_AutofocusMode,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AFMode,                  _put_Nikon_AFMode },
