@@ -1413,7 +1413,7 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 
 /**
- * Wait for an event from the camera.
+ * Wait and retrieve an event from the camera.
  *
  * @param camera a Camera
  * @param timeout amount of time to wait in 1/1000 seconds
@@ -1423,12 +1423,16 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
  * @return gphoto2 error code
  *
  * This function blocks and waits for an event to come from the camera.  If
- * timeout occurs before an event is received then
- * *eventtype==GP_EVENT_TIMEOUT and eventdata is left unchanged.
+ * a timeout occurs before an event is received then
+ * eventtype will be GP_EVENT_TIMEOUT and eventdata is left unchanged.
+ *
  * If an event is received then eventtype is set to the type of event, and
  * eventdata is set to event specific data.  See the CameraEventType enum
- * to see which eventtype's match to which types of eventdata.
- *
+ * to see which eventtypes match to which types of eventdata.
+ * 
+ * Note that this function will return one event after each other, you need
+ * to be able to call it multiple times, e.g. in a loop, when waiting for specific
+ * events.
  */
 int
 gp_camera_wait_for_event (Camera *camera, int timeout,
