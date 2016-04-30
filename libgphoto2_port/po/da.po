@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2_port 2.5.10\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-02-22 21:02+0100\n"
-"PO-Revision-Date: 2016-03-26 15:15+0100\n"
+"PO-Revision-Date: 2016-04-28 15:15+0100\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -179,7 +179,7 @@ msgstr "Seriel-port %i"
 
 #: serial/unix.c:352
 msgid "Serial Port Device"
-msgstr "Seriel portenhed"
+msgstr "Enhed for serielport"
 
 #: serial/unix.c:434
 #, c-format
