@@ -1797,6 +1797,8 @@ static struct {
 	/* Reed Johnson <rmjohns1@gmail.com> */
 	{"Canon:PowerShot Elph340HS",		0x04a9, 0x3289, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Jesper Pedersen <jesper.pedersen@comcast.net */
+	{"Canon:EOS 1D X MarkII",		0x04a9, 0x3292, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS",			0x04a9, 0x3295, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Nykhedimus S <nykhedimus@gmail.com> */
