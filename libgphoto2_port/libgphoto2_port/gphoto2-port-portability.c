@@ -178,8 +178,7 @@ int gp_system_is_dir (const char *dirname) {
  * \return a gphoto error code
  */
 int gp_system_mkdir (const char *dirname) {
-
-        if (mkdir(dirname, 0700)<0)
+        if (mkdir(dirname, 0777)<0)
                 return (GP_ERROR);
         return (GP_OK);
 }
