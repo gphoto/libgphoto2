@@ -99,7 +99,7 @@ static int gp_port_vusb_init (GPPort *dev)
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	C_MEM (dev->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
-	dev->pl->vcamera = vcamera_new(GENERIC_PTP);
+	dev->pl->vcamera = vcamera_new(NIKON_D750);
 	dev->pl->vcamera->init(dev->pl->vcamera);
 
 	return GP_OK;
