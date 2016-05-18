@@ -1517,7 +1517,7 @@ static int
 _put_ExpCompensation(CONFIG_PUT_ARGS) {
 	char	*value;
 	float	x;
-	int16_t	val, targetval;
+	int16_t	val, targetval = 0;
 	int	mindist = 65535, j;
 
 	CR (gp_widget_get_value(widget, &value));
@@ -6013,6 +6013,32 @@ _put_Sony_Autofocus(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Sony_Capture(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Sony_Capture(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val;
+	PTPPropertyValue xpropval;
+
+	CR (gp_widget_get_value(widget, &val));
+	xpropval.u16 = val ? 2 : 1;
+
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &xpropval, PTP_DTC_UINT16));
+
+	return GP_OK;
+}
+
+static int
 _get_Sony_Bulb(CONFIG_GET_ARGS) {
 	int val;
 
@@ -6734,7 +6760,8 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC"),"syncdatetimeutc", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
-	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_AutoFocus,  PTP_VENDOR_SONY,   0,              _get_Sony_Autofocus,            _put_Sony_Autofocus },
+	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_AutoFocus, PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Autofocus,            _put_Sony_Autofocus },
+	{ N_("Capture"),                        "capture",          PTP_DPC_SONY_Capture,   PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Capture,              _put_Sony_Capture },
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
 	{ N_("Bulb Mode"),                      "bulb",             0xd2c1,  PTP_VENDOR_SONY,   0,                              _get_Sony_Bulb,                 _put_Sony_Bulb },
