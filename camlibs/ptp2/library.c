@@ -1808,6 +1808,8 @@ static struct {
 
 	/* Jesper Pedersen <jesper.pedersen@comcast.net */
 	{"Canon:EOS 1D X MarkII",		0x04a9, 0x3292, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/60 */
+	{"Canon:EOS 80D",			0x04a9, 0x3294, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS",			0x04a9, 0x3295, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Nykhedimus S <nykhedimus@gmail.com> */
