@@ -76,7 +76,16 @@ ptp_usb_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	PTPUSBBulkContainer usbreq;
 	Camera *camera = ((PTPData *)params->data)->camera;
 
-	GP_LOG_D ("Sending PTP_OC 0x%0x (%s) request...", req->Code, ptp_get_opcode_name(params, req->Code));
+	switch (req->Nparam) {
+	default:
+	case 0: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) request...", req->Code, ptp_get_opcode_name(params, req->Code));
+		break;
+	case 1: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) (0x%x) request...", req->Code, ptp_get_opcode_name(params, req->Code), req->Param1);
+		break;
+	case 2: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) (0x%x,0x%x) request...", req->Code, ptp_get_opcode_name(params, req->Code), req->Param1, req->Param2);
+	case 3: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) (0x%x,0x%x,0x%x) request...", req->Code, ptp_get_opcode_name(params, req->Code), req->Param1, req->Param2, req->Param3);
+		break;
+	}
 
 	/* build appropriate USB container */
 	usbreq.length=htod32(PTP_USB_BULK_REQ_LEN-

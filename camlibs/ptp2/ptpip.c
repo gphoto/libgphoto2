@@ -107,7 +107,16 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	int		len = 18+req->Nparam*4;
 	unsigned char 	*request = malloc(len);
 
-	GP_LOG_D ("Sending PTP_OC 0x%0x (%s) request...", req->Code, ptp_get_opcode_name(params, req->Code));
+	switch (req->Nparam) {
+	default:
+	case 0: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) request...", req->Code, ptp_get_opcode_name(params, req->Code));
+		break;
+	case 1: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) (0x%x) request...", req->Code, ptp_get_opcode_name(params, req->Code), req->Param1);
+		break;
+	case 2: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) (0x%x,0x%x) request...", req->Code, ptp_get_opcode_name(params, req->Code), req->Param1, req->Param2);
+	case 3: GP_LOG_D ("Sending PTP_OC 0x%0x (%s) (0x%x,0x%x,0x%x) request...", req->Code, ptp_get_opcode_name(params, req->Code), req->Param1, req->Param2, req->Param3);
+		break;
+	}
 
 	ptp_ptpip_check_event (params);
 
