@@ -3243,7 +3243,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				break;/* for RAW+JPG mode capture, we just return the first image for now, and
 				       * let wait_for_event get the rest. */
 			default:
-				GP_LOG_D("unhandled eos change: %d\n", entry.type);
+				GP_LOG_D("unhandled eos change: %d", entry.type);
 				break;
 			}
 			}
