@@ -2479,8 +2479,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u16 != 1)) {
 				/* 0 means off, 1 means on */
 				val.u16 = 1;
-				C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFMode, &val, PTP_DTC_UINT16),
-					   "setval of evf enable to 1 failed (curval is %d)!", dpd.CurrentValue.u16);
+				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFMode, &val, PTP_DTC_UINT16);
+				/* in movie mode we get busy, but can proceed */
+				if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+					C_PTP_MSG (ret, "setval of evf enable to 1 failed (curval is %d)!", dpd.CurrentValue.u16);
 			}
 			ptp_free_devicepropdesc (&dpd);
 			/* do not set it everytime, it will cause delays */
