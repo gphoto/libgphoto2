@@ -315,6 +315,14 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			/* not so bad if its just busy, would also fail later. */
 			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 			C_PTP (ret);
+			/* Tricky ... eos1200d seems to take a while to register this change and the first capture
+			 * when it is still switching might be going down the drain. */
+			while (1) {
+				C_PTP (ptp_check_eos_events (params));
+				C_PTP (ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_AvailableShots, &dpd));
+				if (dpd.CurrentValue.u32 > 0)
+					break;
+			}
 		}
 	} else {
 		GP_LOG_D ("optimized ... setdevicepropvalue of capturetarget to 0x%x not done as it was set already.", ct_val.u32 );
