@@ -1,13 +1,13 @@
 # Serbian translation of libgphoto2_port.
 # Copyright (C) 2012 Lutz Mueller and others
 # This file is distributed under the same license as the libgphoto2 package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012, 2013, 2014.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port-2.5.3\n"
+"Project-Id-Version: libgphoto2_port-2.5.10\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-01-06 14:47+0100\n"
-"PO-Revision-Date: 2014-01-14 09:35+0200\n"
+"POT-Creation-Date: 2016-02-22 21:02+0100\n"
+"PO-Revision-Date: 2016-05-29 20:27+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
@@ -16,104 +16,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:220
-#, c-format
-msgid "Called for filename '%s'."
-msgstr "Позвах назив датотеке „%s“."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:225
-#, c-format
-msgid "Could not load '%s': '%s'."
-msgstr "Не могу да учитам „%s“: „%s“."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:233
-#, c-format
-msgid "Could not find some functions in '%s': '%s'."
-msgstr "Не могу да пронађем неке функције у „%s“: „%s“."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:245
-#, c-format
-msgid "'%s' already loaded"
-msgstr "„%s“ је већ учитан"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:254
-#, c-format
-msgid "Could not load port driver list: '%s'."
-msgstr "Не могу да учитам списак управљачких програма прикључка: „%s“."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:267
-#, c-format
-msgid "Loaded '%s' ('%s') from '%s'."
-msgstr "Учитан је „%s“ („%s“) из „%s“."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:300
-#, c-format
-msgid "Using ltdl to load io-drivers from '%s'..."
-msgstr "Користим лтдл да учитам уи управљачке програме из „%s“..."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:333
-#, c-format
-msgid "Counting entries (%i available)..."
-msgid_plural "Counting entries (%i available)..."
-msgstr[0] "Бројим уносе (%i доступан)..."
-msgstr[1] "Бројим уносе (%i доступна)..."
-msgstr[2] "Бројим уносе (%i доступних)..."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:346
-#, c-format
-msgid "%i regular entry available."
-msgid_plural "%i regular entries available."
-msgstr[0] "Доступан је %i редован унос."
-msgstr[1] "Доступна су %i редовна уноса."
-msgstr[2] "Доступно је %i редовних уноса."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:381
-#, c-format
-msgid "Looking for path '%s' (%i entry available)..."
-msgid_plural "Looking for path '%s' (%i entries available)..."
-msgstr[0] "Тражим путању „%s“ (%i унос је доступан)..."
-msgstr[1] "Тражим путању „%s“ (%i уноса су доступна)..."
-msgstr[2] "Тражим путању „%s“ (%i уноса је доступно)..."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:395
-#, c-format
-msgid "Starting regex search for '%s'..."
-msgstr "Покрећем претрагу регуларног израза за „%s“..."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:403
-#, c-format
-msgid "Trying '%s'..."
-msgstr "Покушавам „%s“..."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:424
-msgid "regcomp failed"
-msgstr "није успело „regcomp“"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:435
-#, c-format
-msgid "re_match failed (%i)"
-msgstr "није успело „re_match“ (%i)"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:443
-msgid "regexec failed"
-msgstr "није успело „regexec“"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:450
+#: libgphoto2_port/gphoto2-port-info-list.c:409
 msgid "Generic Port"
 msgstr "Општи прикључак"
-
-#: libgphoto2_port/gphoto2-port-info-list.c:475
-#, c-format
-msgid "Looking up entry '%s'..."
-msgstr "Тражим ставку „%s“..."
-
-#: libgphoto2_port/gphoto2-port-info-list.c:507
-#, c-format
-msgid "Getting info of entry %i (%i available)..."
-msgid_plural "Getting info of entry %i (%i available)..."
-msgstr[0] "Добављам податке ставке „%i“ (%i доступна)..."
-msgstr[1] "Добављам податке ставке „%i“ (%i доступне)..."
-msgstr[2] "Добављам податке ставке „%i“ (%i доступних)..."
 
 #: libgphoto2_port/gphoto2-port-result.c:58
 msgid "No error"
@@ -207,405 +112,418 @@ msgstr "грешка хал библиотеке"
 msgid "Unknown error"
 msgstr "Непозната грешка"
 
-#: libgphoto2_port/gphoto2-port.c:60
+#: libgphoto2_port/gphoto2-port.c:59
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Радња „%s“ није подржана овим уређајем"
 
-#: libgphoto2_port/gphoto2-port.c:61
+#: libgphoto2_port/gphoto2-port.c:60
 msgid "The port has not yet been initialized"
 msgstr "Прикључак још увек није покренут"
 
-#: libgphoto2_port/gphoto2-port.c:92
-msgid "Creating new device..."
-msgstr "Стварам нови уређај..."
-
-#: libgphoto2_port/gphoto2-port.c:177
-#, c-format
-msgid "Could not load '%s' ('%s')."
-msgstr "Не могу да учитам „%s“ („%s“)."
-
-#: libgphoto2_port/gphoto2-port.c:187
-#, c-format
-msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
-msgstr "Не могу да пронађем „gp_port_library_operations“ у „%s“ („%s“)"
-
-#: libgphoto2_port/gphoto2-port.c:269
-#, c-format
-msgid "Opening %s port..."
-msgstr "Отварам %s прикључак..."
-
-#: libgphoto2_port/gphoto2-port.c:291
-msgid "Closing port..."
-msgstr "Затварам прикључак..."
-
-#: libgphoto2_port/gphoto2-port.c:313
-msgid "Resetting port..."
-msgstr "Поништавам прикључак..."
-
-#: libgphoto2_port/gphoto2-port.c:335
-msgid "Freeing port..."
-msgstr "Ослобађам прикључак..."
-
-#: libgphoto2_port/gphoto2-port.c:386
-#, c-format
-msgid "Writing %i=0x%x byte(s) to port..."
-msgstr "Записујем %i=0x%x бајт(а) на прикључак..."
-
-#: libgphoto2_port/gphoto2-port.c:399
-#, c-format
-msgid "Could only write %i out of %i byte"
-msgid_plural "Could only write %i out of %i bytes"
-msgstr[0] "Не могу да запишем %i од %i бајта"
-msgstr[1] "Не могу да запишем %i од %i бајта"
-msgstr[2] "Не могу да запишем %i од %i бајтова"
-
-#: libgphoto2_port/gphoto2-port.c:421
-#, c-format
-msgid "Reading %i=0x%x byte from port..."
-msgid_plural "Reading %i=0x%x bytes from port..."
-msgstr[0] "Читам %i=0x%x бајт са прикључка..."
-msgstr[1] "Читам %i=0x%x бајта са прикључка..."
-msgstr[2] "Читам %i=0x%x бајтова са прикључка..."
-
-#: libgphoto2_port/gphoto2-port.c:433 libgphoto2_port/gphoto2-port.c:514
-#: libgphoto2_port/gphoto2-port.c:946 libgphoto2_port/gphoto2-port.c:1030
-#: libgphoto2_port/gphoto2-port.c:1116
-#, c-format
-msgid "Could only read %i out of %i byte"
-msgid_plural "Could only read %i out of %i byte(s)"
-msgstr[0] "Не могу да прочитам %i од %i бајта"
-msgstr[1] "Не могу да прочитам %i од %i бајта"
-msgstr[2] "Не могу да прочитам %i од %i бајтова"
-
-#: libgphoto2_port/gphoto2-port.c:461
-#, c-format
-msgid "Reading %i=0x%x byte from interrupt endpoint..."
-msgid_plural "Reading %i=0x%x bytes from interrupt endpoint..."
-msgstr[0] "Читам %i=0x%x бајт са крајње тачке прекида..."
-msgstr[1] "Читам %i=0x%x бајта са крајње тачке прекида..."
-msgstr[2] "Читам %i=0x%x бајтова са крајње тачке прекида..."
-
-#: libgphoto2_port/gphoto2-port.c:473
-#, c-format
-msgid "Could only read %i out of %i byte(s)"
-msgstr "Могу да прочитам само %i од %i бајта"
-
-#: libgphoto2_port/gphoto2-port.c:527
-#, c-format
-msgid "Reading %i=0x%x byte from interrupt endpoint (fast)..."
-msgid_plural "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
-msgstr[0] "Читам %i=0x%x бајт са крајње тачке прекида (брзо)..."
-msgstr[1] "Читам %i=0x%x бајта са крајње тачке прекида (брзо)..."
-msgstr[2] "Читам %i=0x%x бајтова са крајње тачке прекида (брзо)..."
-
-#: libgphoto2_port/gphoto2-port.c:555
-#, c-format
-msgid "Setting timeout to %i millisecond(s)..."
-msgstr "Подешавам време истека на %i милисекунду(е)..."
-
-#: libgphoto2_port/gphoto2-port.c:591
-msgid "Getting timeout..."
-msgstr "Добављам време истека..."
-
-#: libgphoto2_port/gphoto2-port.c:595
-#, c-format
-msgid "Current timeout: %i milliseconds"
-msgstr "Текуће време истека: %i милисекунде"
-
-#: libgphoto2_port/gphoto2-port.c:617
-msgid "Setting settings..."
-msgstr "Подешавам подешавања..."
-
-#: libgphoto2_port/gphoto2-port.c:678
-#, c-format
-msgid "Getting level of pin %i..."
-msgstr "Добављам ниво пина %i..."
-
-#: libgphoto2_port/gphoto2-port.c:687
-#, c-format
-msgid "Level of pin %i: %i"
-msgstr "Ниво пина %i: %i"
-
-#: libgphoto2_port/gphoto2-port.c:713
+#: libgphoto2_port/gphoto2-port.c:682
 msgid "low"
 msgstr "низак"
 
-#: libgphoto2_port/gphoto2-port.c:714
+#: libgphoto2_port/gphoto2-port.c:683
 msgid "high"
 msgstr "висок"
 
-#: libgphoto2_port/gphoto2-port.c:740
-#, c-format
-msgid "Setting pin %i (%s: '%s') to '%s'..."
-msgstr "Подешавам пин %i (%s: „%s“) на „%s“..."
-
-#: libgphoto2_port/gphoto2-port.c:767
-#, c-format
-msgid "Sending break (%i milliseconds)..."
-msgstr "Шаљем прекид (%i милисекунде)..."
-
-#: libgphoto2_port/gphoto2-port.c:793
-msgid "Flushing port..."
-msgstr "Претачем прикључак..."
-
-#: libgphoto2_port/gphoto2-port.c:867
-msgid "Clear halt..."
-msgstr "Чистим застој..."
-
-#: libgphoto2_port/gphoto2-port.c:898
-#, c-format
-msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Порука записивања (захтев=0x%x вредност=0x%x индекс=0x%x величина=%i=0x%x)..."
-
-#: libgphoto2_port/gphoto2-port.c:933
-#, c-format
-msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
-msgstr "Порука читања (захтев=0x%x вредност=0x%x индекс=0x%x величина=%i=0x%x)..."
-
-#: libgphoto2_port/gphoto2-port.c:1277
+#: libgphoto2_port/gphoto2-port.c:1211
 msgid "No error description available"
 msgstr "Опис грешке није доступан"
 
-#: disk/disk.c:145 disk/disk.c:146 disk/disk.c:216 disk/disk.c:217
-#: disk/disk.c:257 disk/disk.c:280
+#: disk/disk.c:147 disk/disk.c:148 disk/disk.c:224 disk/disk.c:225
+#: disk/disk.c:265 disk/disk.c:288
 #, c-format
 msgid "Media '%s'"
 msgstr "Медиј „%s“"
 
-#: serial/unix.c:229
+#: serial/unix.c:223
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Не могу да закључам уређај „%s“"
 
-#: serial/unix.c:239 usbdiskdirect/linux.c:97
+#: serial/unix.c:233 usbdiskdirect/linux.c:95
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Уређај „%s“ је закључан пидом %d"
 
-#: serial/unix.c:242 usbdiskdirect/linux.c:100
+#: serial/unix.c:236 usbdiskdirect/linux.c:98
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
 msgstr "Уређај „%s“ не може бити закључан (закљ_уређ је вратио %d)"
 
-#: serial/unix.c:271
+#: serial/unix.c:265
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Уређај „%s“ не може бити откључан."
 
-#: serial/unix.c:283 usbdiskdirect/linux.c:129
+#: serial/unix.c:277 usbdiskdirect/linux.c:127
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Уређај „%s“ не може бити откључан јер је закључан пидом %d."
 
-#: serial/unix.c:287 usbdiskdirect/linux.c:133
+#: serial/unix.c:281 usbdiskdirect/linux.c:131
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
 msgstr "Уређај „%s“ не може бити откључан (откљ_уређ је вратио %d)"
 
-#: serial/unix.c:364
+#: serial/unix.c:339
 #, c-format
 msgid "Serial Port %i"
 msgstr "Серијски прикључак %i"
 
-#: serial/unix.c:460
+#: serial/unix.c:352
+msgid "Serial Port Device"
+msgstr "Уређај серијског прикључка"
+
+#: serial/unix.c:434
 #, c-format
 msgid "Failed to open '%s' (%s)."
 msgstr "Нисам успео да отворим „%s“ (%s)."
 
-#: serial/unix.c:480
+#: serial/unix.c:454
 #, c-format
 msgid "Could not close '%s' (%s)."
 msgstr "Не могу да затворим „%s“ (%s)."
 
-#: serial/unix.c:537
+#: serial/unix.c:510
 #, c-format
 msgid "Could not write to port (%s)"
 msgstr "Не могу да пишем на прикључку (%s)"
 
-#: serial/unix.c:615
+#: serial/unix.c:587
 msgid "Parity error."
 msgstr "Грешка једнакости."
 
-#: serial/unix.c:619
+#: serial/unix.c:591
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Неочекиван низ одговора једнакости 0xff 0x%02x."
 
-#: serial/unix.c:662
+#: serial/unix.c:634
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Непознат пин %i."
 
-#: serial/unix.c:685
+#: serial/unix.c:656
 #, c-format
 msgid "Could not get level of pin %i (%s)."
 msgstr "Не могу да добавим ниво пина %i (%s)."
 
-#: serial/unix.c:722
+#: serial/unix.c:692
 #, c-format
 msgid "Could not set level of pin %i to %i (%s)."
 msgstr "Не могу да подесим ниво пина %i на %i (%s)."
 
-#: serial/unix.c:749
+#: serial/unix.c:719
 #, c-format
 msgid "Could not flush '%s' (%s)."
 msgstr "Не могу да преточим „%s“ (%s)."
 
-#: serial/unix.c:863
+#: serial/unix.c:831
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Не могу да подесим брзину преноса података на %d"
 
-#: usbdiskdirect/linux.c:236
+#: usbdiskdirect/linux.c:234
 msgid "USB Mass Storage direct IO"
 msgstr "Непосредни УИ УСБ масовног складишта"
 
-#: usbdiskdirect/linux.c:293 usbscsi/linux.c:277
+#: usbdiskdirect/linux.c:285 usbscsi/linux.c:269
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Нисам успео да отворим „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:307 usbscsi/linux.c:306
+#: usbdiskdirect/linux.c:299 usbscsi/linux.c:297
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Не могу да затворим „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:332
+#: usbdiskdirect/linux.c:323
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
 msgstr "Не могу да премотам на померај: %x на „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:355
+#: usbdiskdirect/linux.c:345
 #, c-format
 msgid "Could not write to '%s' (%m)."
 msgstr "Не могу да запишем у „%s“ (%m)."
 
-#: usbdiskdirect/linux.c:377
+#: usbdiskdirect/linux.c:366
 #, c-format
 msgid "Could not read from '%s' (%m)."
 msgstr "Не могу да читам са „%s“ (%m)."
 
-#: usb/libusb.c:268 libusb1/libusb1.c:323
+#: usb/libusb.c:260 libusb1/libusb1.c:373
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Не могу да отворим УСБ уређај (%s)."
 
-#: usb/libusb.c:278
-#, c-format
-msgid "Device has driver '%s' attached."
-msgstr "Уређај има прикачен управљачки програм „%s“."
-
-#: usb/libusb.c:281 libusb1/libusb1.c:332
+#: usb/libusb.c:273 libusb1/libusb1.c:382
 msgid "Camera is already in use."
 msgstr "Фото-апарат је већ у употреби."
 
-#: usb/libusb.c:286
-#, c-format
-msgid "Device has driver '%s' attached, detaching it now."
-msgstr "Уређај има прикачен управљачки програм „%s“, откачињем га."
-
-#: usb/libusb.c:289
+#: usb/libusb.c:281
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Не могу да откачим управљачки програм језгра „%s“ фото-апарата."
 
-#: usb/libusb.c:294 libusb1/libusb1.c:348
+#: usb/libusb.c:286 libusb1/libusb1.c:397
 msgid "Could not query kernel driver of device."
 msgstr "Не могу да пропитам управљачки програм језгра за уређај."
 
-#: usb/libusb.c:303 libusb1/libusb1.c:356
+#: usb/libusb.c:295 libusb1/libusb1.c:404
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Не могу да придобијем сучеље %d (%s). Уверите се да ниједан други програм (%s) или модул језгра (као што је %s) не користи уређај и да ви имате право на читање/писање на уређају."
 
-#: usb/libusb.c:315 libusb1/libusb1.c:367
+#: usb/libusb.c:307 libusb1/libusb1.c:415
 msgid "MacOS PTPCamera service"
 msgstr "Услуга ПТП фото-апарата МекОС-а"
 
-#: usb/libusb.c:317 libusb1/libusb1.c:369
+#: usb/libusb.c:309 libusb1/libusb1.c:417
 msgid "unknown libgphoto2 using program"
 msgstr "непозната библгфото2 користи програм"
 
-#: usb/libusb.c:335 libusb1/libusb1.c:387
+#: usb/libusb.c:326 libusb1/libusb1.c:484
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Не могу да отпустим сучеље %d (%s)."
 
-#: usb/libusb.c:350 libusb1/libusb1.c:402
+#: usb/libusb.c:341 libusb1/libusb1.c:498
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Не могу поново да подесим УСБ прикључак (%s)."
 
-#: usb/libusb.c:380
+#: usb/libusb.c:371
 #, c-format
 msgid "Could not close USB port (%s)."
 msgstr "Не могу да затворим УСБ прикључак (%s)."
 
-#: usb/libusb.c:653 libusb1/libusb1.c:688
+#: usb/libusb.c:632 libusb1/libusb1.c:839
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Не могу да подесим подешавања %d/%d (%s)"
 
-#: usb/libusb.c:688 libusb1/libusb1.c:727
+#: usb/libusb.c:663 libusb1/libusb1.c:868
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Не могу да подесим подешавање заустављања са %d на %d (%s)"
 
-#: usb/libusb.c:781 libusb1/libusb1.c:905
+#: usb/libusb.c:752 libusb1/libusb1.c:1033
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Достављени ид продавца или производа (0x%x,0x%x) није исправан."
 
-#: usb/libusb.c:817 libusb1/libusb1.c:944
-#, c-format
-msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
-msgstr "УСБ уређај (продавац 0x%x, производ 0x%x) је уређај за масовно складиштење, и можда неће радити са гфото-ом2. Упуте: %s"
-
-#: usb/libusb.c:860 usb/libusb.c:955 libusb1/libusb1.c:873
-#: libusb1/libusb1.c:976
+#: usb/libusb.c:823 usb/libusb.c:909 libusb1/libusb1.c:1002
+#: libusb1/libusb1.c:1094
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Не могу да пронађем УСБ уређај (продавац 0x%x, производ 0x%x). Уверите се да је тај уређај прикључен на рачунар."
 
-#: usb/libusb.c:1259 libusb1/libusb1.c:1274
+#: usb/libusb.c:1202 libusb1/libusb1.c:1383
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Не могу да пронађем УСБ уређај (разред 0x%x, подразред 0x%x, протокол 0x%x). Уверите се да је тај уређај прикључен на рачунар."
 
-#: libusb1/libusb1.c:338
-#, c-format
-msgid "Device has a kernel driver attached (%d), detaching it now."
-msgstr "Уређај има прикачен управљачки програм језгра (%d), откачињем га."
-
-#: libusb1/libusb1.c:341
+#: libusb1/libusb1.c:391
 msgid "Could not detach kernel driver of camera device."
 msgstr "Не могу да откачим управљачки програм језгра фото-апарата."
 
-#: libusb1/libusb1.c:413
+#: libusb1/libusb1.c:507
 msgid "Could not reattach kernel driver of camera device."
 msgstr "Не могу поново да прикачим управљачки програм језгра фото-апарата."
 
-#: usbscsi/linux.c:110
+#: usbscsi/linux.c:108
 #, c-format
 msgid "Device '%s' is locked by another app."
 msgstr "Уређај „%s“ је закључан неким другим програмом."
 
-#: usbscsi/linux.c:115
+#: usbscsi/linux.c:113
 #, c-format
 msgid "Failed to lock '%s' (%m)."
 msgstr "Нисам успео да закључам „%s“ (%m)."
 
-#: usbscsi/linux.c:132
+#: usbscsi/linux.c:129
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
 msgstr "Нисам успео да откључам „%s“ (%m)."
 
-#: usbscsi/linux.c:233
+#: usbscsi/linux.c:230
 msgid "USB Mass Storage raw SCSI"
 msgstr "Сирови СЦСИ УСБ масовног складишта"
 
-#: usbscsi/linux.c:351
+#: usbscsi/linux.c:341
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Не могу да пошаљем сцси наредбу на: „%s“ (%m)."
+
+#~ msgid "Called for filename '%s'."
+#~ msgstr "Позвах назив датотеке „%s“."
+
+#~ msgid "Could not load '%s': '%s'."
+#~ msgstr "Не могу да учитам „%s“: „%s“."
+
+#~ msgid "Could not find some functions in '%s': '%s'."
+#~ msgstr "Не могу да пронађем неке функције у „%s“: „%s“."
+
+#~ msgid "'%s' already loaded"
+#~ msgstr "„%s“ је већ учитан"
+
+#~ msgid "Could not load port driver list: '%s'."
+#~ msgstr "Не могу да учитам списак управљачких програма прикључка: „%s“."
+
+#~ msgid "Loaded '%s' ('%s') from '%s'."
+#~ msgstr "Учитан је „%s“ („%s“) из „%s“."
+
+#~ msgid "Using ltdl to load io-drivers from '%s'..."
+#~ msgstr "Користим лтдл да учитам уи управљачке програме из „%s“..."
+
+#~ msgid "Counting entries (%i available)..."
+#~ msgid_plural "Counting entries (%i available)..."
+#~ msgstr[0] "Бројим уносе (%i доступан)..."
+#~ msgstr[1] "Бројим уносе (%i доступна)..."
+#~ msgstr[2] "Бројим уносе (%i доступних)..."
+
+#~ msgid "%i regular entry available."
+#~ msgid_plural "%i regular entries available."
+#~ msgstr[0] "Доступан је %i редован унос."
+#~ msgstr[1] "Доступна су %i редовна уноса."
+#~ msgstr[2] "Доступно је %i редовних уноса."
+
+#~ msgid "Looking for path '%s' (%i entry available)..."
+#~ msgid_plural "Looking for path '%s' (%i entries available)..."
+#~ msgstr[0] "Тражим путању „%s“ (%i унос је доступан)..."
+#~ msgstr[1] "Тражим путању „%s“ (%i уноса су доступна)..."
+#~ msgstr[2] "Тражим путању „%s“ (%i уноса је доступно)..."
+
+#~ msgid "Starting regex search for '%s'..."
+#~ msgstr "Покрећем претрагу регуларног израза за „%s“..."
+
+#~ msgid "Trying '%s'..."
+#~ msgstr "Покушавам „%s“..."
+
+#~ msgid "regcomp failed"
+#~ msgstr "није успело „regcomp“"
+
+#~ msgid "re_match failed (%i)"
+#~ msgstr "није успело „re_match“ (%i)"
+
+#~ msgid "regexec failed"
+#~ msgstr "није успело „regexec“"
+
+#~ msgid "Looking up entry '%s'..."
+#~ msgstr "Тражим ставку „%s“..."
+
+#~ msgid "Getting info of entry %i (%i available)..."
+#~ msgid_plural "Getting info of entry %i (%i available)..."
+#~ msgstr[0] "Добављам податке ставке „%i“ (%i доступна)..."
+#~ msgstr[1] "Добављам податке ставке „%i“ (%i доступне)..."
+#~ msgstr[2] "Добављам податке ставке „%i“ (%i доступних)..."
+
+#~ msgid "Creating new device..."
+#~ msgstr "Стварам нови уређај..."
+
+#~ msgid "Could not load '%s' ('%s')."
+#~ msgstr "Не могу да учитам „%s“ („%s“)."
+
+#~ msgid "Could not find 'gp_port_library_operations' in '%s' ('%s')"
+#~ msgstr "Не могу да пронађем „gp_port_library_operations“ у „%s“ („%s“)"
+
+#~ msgid "Opening %s port..."
+#~ msgstr "Отварам %s прикључак..."
+
+#~ msgid "Closing port..."
+#~ msgstr "Затварам прикључак..."
+
+#~ msgid "Resetting port..."
+#~ msgstr "Поништавам прикључак..."
+
+#~ msgid "Freeing port..."
+#~ msgstr "Ослобађам прикључак..."
+
+#~ msgid "Writing %i=0x%x byte(s) to port..."
+#~ msgstr "Записујем %i=0x%x бајт(а) на прикључак..."
+
+#~ msgid "Could only write %i out of %i byte"
+#~ msgid_plural "Could only write %i out of %i bytes"
+#~ msgstr[0] "Не могу да запишем %i од %i бајта"
+#~ msgstr[1] "Не могу да запишем %i од %i бајта"
+#~ msgstr[2] "Не могу да запишем %i од %i бајтова"
+
+#~ msgid "Reading %i=0x%x byte from port..."
+#~ msgid_plural "Reading %i=0x%x bytes from port..."
+#~ msgstr[0] "Читам %i=0x%x бајт са прикључка..."
+#~ msgstr[1] "Читам %i=0x%x бајта са прикључка..."
+#~ msgstr[2] "Читам %i=0x%x бајтова са прикључка..."
+
+#~ msgid "Could only read %i out of %i byte"
+#~ msgid_plural "Could only read %i out of %i byte(s)"
+#~ msgstr[0] "Не могу да прочитам %i од %i бајта"
+#~ msgstr[1] "Не могу да прочитам %i од %i бајта"
+#~ msgstr[2] "Не могу да прочитам %i од %i бајтова"
+
+#~ msgid "Reading %i=0x%x byte from interrupt endpoint..."
+#~ msgid_plural "Reading %i=0x%x bytes from interrupt endpoint..."
+#~ msgstr[0] "Читам %i=0x%x бајт са крајње тачке прекида..."
+#~ msgstr[1] "Читам %i=0x%x бајта са крајње тачке прекида..."
+#~ msgstr[2] "Читам %i=0x%x бајтова са крајње тачке прекида..."
+
+#~ msgid "Could only read %i out of %i byte(s)"
+#~ msgstr "Могу да прочитам само %i од %i бајта"
+
+#~ msgid "Reading %i=0x%x byte from interrupt endpoint (fast)..."
+#~ msgid_plural "Reading %i=0x%x bytes from interrupt endpoint (fast)..."
+#~ msgstr[0] "Читам %i=0x%x бајт са крајње тачке прекида (брзо)..."
+#~ msgstr[1] "Читам %i=0x%x бајта са крајње тачке прекида (брзо)..."
+#~ msgstr[2] "Читам %i=0x%x бајтова са крајње тачке прекида (брзо)..."
+
+#~ msgid "Setting timeout to %i millisecond(s)..."
+#~ msgstr "Подешавам време истека на %i милисекунду(е)..."
+
+#~ msgid "Getting timeout..."
+#~ msgstr "Добављам време истека..."
+
+#~ msgid "Current timeout: %i milliseconds"
+#~ msgstr "Текуће време истека: %i милисекунде"
+
+#~ msgid "Setting settings..."
+#~ msgstr "Подешавам подешавања..."
+
+#~ msgid "Getting level of pin %i..."
+#~ msgstr "Добављам ниво пина %i..."
+
+#~ msgid "Level of pin %i: %i"
+#~ msgstr "Ниво пина %i: %i"
+
+#~ msgid "Setting pin %i (%s: '%s') to '%s'..."
+#~ msgstr "Подешавам пин %i (%s: „%s“) на „%s“..."
+
+#~ msgid "Sending break (%i milliseconds)..."
+#~ msgstr "Шаљем прекид (%i милисекунде)..."
+
+#~ msgid "Flushing port..."
+#~ msgstr "Претачем прикључак..."
+
+#~ msgid "Clear halt..."
+#~ msgstr "Чистим застој..."
+
+#~ msgid "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+#~ msgstr "Порука записивања (захтев=0x%x вредност=0x%x индекс=0x%x величина=%i=0x%x)..."
+
+#~ msgid "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)..."
+#~ msgstr "Порука читања (захтев=0x%x вредност=0x%x индекс=0x%x величина=%i=0x%x)..."
+
+#~ msgid "Device has driver '%s' attached."
+#~ msgstr "Уређај има прикачен управљачки програм „%s“."
+
+#~ msgid "Device has driver '%s' attached, detaching it now."
+#~ msgstr "Уређај има прикачен управљачки програм „%s“, откачињем га."
+
+#~ msgid "USB device (vendor 0x%x, product 0x%x) is a mass storage device, and might not function with gphoto2. Reference: %s"
+#~ msgstr "УСБ уређај (продавац 0x%x, производ 0x%x) је уређај за масовно складиштење, и можда неће радити са гфото-ом2. Упуте: %s"
+
+#~ msgid "Device has a kernel driver attached (%d), detaching it now."
+#~ msgstr "Уређај има прикачен управљачки програм језгра (%d), откачињем га."
