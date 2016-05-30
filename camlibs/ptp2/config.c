@@ -4980,23 +4980,26 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	unsigned char value_float , start, end;
 	char	buffer[20];
 
-	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
 	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
+		return GP_ERROR;
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	start = dpd->FORM.Range.MinimumValue.u8;
-	end = dpd->FORM.Range.MaximumValue.u8;
-	value_float = dpd->CurrentValue.u8;
-	if (0 == end - start + 1) {
-		/* avoid division by 0 */
-		sprintf (buffer, "broken");
-	} else {
-		sprintf (buffer, "%d%%", (int)((value_float-start+1)*100/(end-start+1)));
+
+	if (dpd->FormFlag == PTP_DPFF_Range) {
+		gp_widget_set_name (*widget, menu->name);
+		start = dpd->FORM.Range.MinimumValue.u8;
+		end = dpd->FORM.Range.MaximumValue.u8;
+		value_float = dpd->CurrentValue.u8;
+		if (0 == end - start + 1) {
+			/* avoid division by 0 */
+			sprintf (buffer, "broken");
+		} else {
+			sprintf (buffer, "%d%%", (int)((value_float-start+1)*100/(end-start+1)));
+		}
+		return gp_widget_set_value(*widget, buffer);
 	}
-	gp_widget_set_value(*widget, buffer);
-	return (GP_OK);
+	/* Enumeration is also valid on EOS, but this will be just be the % value */
+	sprintf (buffer, "%d%%", dpd->CurrentValue.u8);
+	return gp_widget_set_value(*widget, buffer);
 }
 
 static int
