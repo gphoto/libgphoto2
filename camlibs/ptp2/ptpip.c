@@ -699,7 +699,7 @@ ptp_nikon_getptpipguid (unsigned char* guid) {
 int
 ptp_ptpip_connect (PTPParams* params, const char *address) {
 	char 		*addr, *s, *p;
-	int		port, tries;
+	int		port, eventport, tries;
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
@@ -719,13 +719,22 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	}
 	*s = '\0';
 	p = strchr (s+1,':');
-	port = 15740;
+	eventport = port = 15740;
 	if (p) {
 		*p = '\0';
 		if (!sscanf (p+1,"%d",&port)) {
 			fprintf(stderr,"failed to scan for port in %s\n", p+1);
 			free (addr);
 			return GP_ERROR_BAD_PARAMETERS;
+		}
+		/* different event port ? */
+		p = strchr (p+1,':');
+		if (p) {
+			if (!sscanf (p+1,"%d",&eventport)) {
+				fprintf(stderr,"failed to scan for eventport in %s\n", p+1);
+				free (addr);
+				return GP_ERROR_BAD_PARAMETERS;
+			}
 		}
 	}
 	if (!inet_aton (s+1,  &saddr.sin_addr)) {
@@ -767,6 +776,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	}
 	/* seen on Ricoh Theta, camera is not immediately ready. try again two times. */
 	tries = 2;
+	saddr.sin_port		= htons(eventport);
 	do {
 		if (-1 != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
