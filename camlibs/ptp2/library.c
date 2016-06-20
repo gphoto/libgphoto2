@@ -3157,6 +3157,15 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 						ret = GP_ERROR;
 					}
 				}
+				if (	(entry.type == PTP_CANON_EOS_CHANGES_TYPE_PROPERTY) &&
+					(entry.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx)
+				) {
+					if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
+						GP_LOG_D("focusinfo prop content: %s", dpd.CurrentValue.str);
+						foundfocusinfo = 1;
+						/* FIXME: detect no focus? */
+					}
+				}
 			}
 			/* We found focus information, so half way pressing has finished! */
 			if (foundfocusinfo)
