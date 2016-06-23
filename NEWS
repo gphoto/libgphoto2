@@ -1,17 +1,19 @@
 libgphoto2 2.5.10.1 development
 
 canon:
-* not experimental
+* not experimental anymore, for some years
 
 ptp2:
 * sony: exposure compensation setting fixed
 * sony: capture and autofocus configurations, similar to eosremoterelease
+* fixed serialnumber retrieval
 * new ids reported:
   - Sony Alpha 7, DSC-RX100M4
   - Nikon DSC Df
   - Canon EOS 1Dx Mark 3, 80D
 
-translations: updated svensk, ukrainian, polish, finnish, russian, danish, polish, brazilian, serbian, brazilian, serbian
+translations:
+* updated svensk, ukrainian, polish, finnish, russian, danish, polish, brazilian, serbian, brazilian, serbian
 ------------------------------------------------------------------------------
 libgphoto2 2.5.10 release
 
