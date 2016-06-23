@@ -144,7 +144,7 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint3
 	if (length == 0)		/* nothing to do? */
 		return NULL;
 
-	if (offset + 1 + length*sizeof(string[0]) >= total)
+	if (offset + 1 + length*sizeof(string[0]) > total)
 		return NULL;
 
 	/* copy to string[] to ensure correct alignment for iconv(3) */
