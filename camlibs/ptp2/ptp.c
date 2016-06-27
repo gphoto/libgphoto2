@@ -1,7 +1,7 @@
 /* ptp.c
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2012 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2016 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2008 Linus Walleij <triad@df.lth.se>
  * Copyright (C) 2007 Tero Saarni <tero.saarni@gmail.com>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
@@ -2102,6 +2102,27 @@ ptp_add_event (PTPParams *params, PTPContainer *evt)
 	return PTP_RC_OK;
 }
 
+static void
+handle_event_internal (PTPParams *params, PTPContainer *event)
+{
+	/* handle some PTP stack internal events */
+	switch (event->Code) {
+	case PTP_EC_DevicePropChanged: {
+		unsigned int i;
+
+		/* mark the property for a forced refresh on the next query */
+		for (i=0;i<params->nrofdeviceproperties;i++)
+			if (params->deviceproperties[i].desc.DevicePropertyCode == event->Param1) {
+				params->deviceproperties[i].timestamp = 0;
+				break;
+			}
+		break;
+	}
+	default: /* check if we should handle it internally too */
+		break;
+	}
+}
+
 uint16_t
 ptp_check_event (PTPParams *params)
 {
@@ -2114,7 +2135,7 @@ ptp_check_event (PTPParams *params)
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
 	) {
-		unsigned int evtcnt = 0;
+		unsigned int evtcnt = 0, i;
 		PTPContainer *xevent = NULL;
 
 		ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
@@ -2122,6 +2143,8 @@ ptp_check_event (PTPParams *params)
 			CHECK_PTP_RC(ret);
 
 		if (evtcnt) {
+			for (i = 0; i < evtcnt; i++)
+				handle_event_internal (params, &xevent[i]);
 			params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
 			memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
 			params->nrofevents += evtcnt;
@@ -2170,22 +2193,8 @@ store_event:
 		ptp_debug (params, "event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		ptp_add_event (params, &event);
 
-		/* handle some PTP stack internal events */
-		switch (event.Code) {
-		case PTP_EC_DevicePropChanged: {
-			unsigned int i;
+		handle_event_internal (params, &event);
 
-			/* mark the property for a forced refresh on the next query */
-			for (i=0;i<params->nrofdeviceproperties;i++)
-				if (params->deviceproperties[i].desc.DevicePropertyCode == event.Param1) {
-					params->deviceproperties[i].timestamp = 0;
-					break;
-				}
-			break;
-		}
-		default: /* check if we should handle it internally too */
-			break;
-		}
 	
 	}
 	if (ret == PTP_ERROR_TIMEOUT) /* ok, just new events */
