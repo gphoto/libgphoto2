@@ -2204,7 +2204,7 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	if ((u==1) || (u==2)) {
 		if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
 			if (!params->canon_viewfinder_on)  {
-				if (LOG_ON_PTP_E (ptp_canon_viewfinderon (params)) == PTP_RC_OK);
+				if (LOG_ON_PTP_E (ptp_canon_viewfinderon (params)) == PTP_RC_OK)
 					params->canon_viewfinder_on=1;
 			}
 		}
