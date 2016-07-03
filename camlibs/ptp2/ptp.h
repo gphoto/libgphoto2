@@ -2426,6 +2426,9 @@ struct _PTPParams {
 	/* live view enabled */
 	int			inliveview;
 
+	/* PTP: caching time for properties, default 2 */
+	int			cachetime;
+
 	/* PTP: Device Property Caching */
 	PTPDeviceProperty	*deviceproperties;
 	unsigned int		nrofdeviceproperties;
