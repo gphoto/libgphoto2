@@ -2996,12 +2996,6 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
 /* Cache time in seconds. Should perhaps be more granular... */
 
 uint16_t
-ptp_generic_setpropertycachetime (PTPParams *params, int cachetime)
-{
-	params->cachetime = cachetime;
-}
-
-uint16_t
 ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePropDesc *dpd)
 {
 	unsigned int	i;
@@ -3018,7 +3012,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 
 	if (params->deviceproperties[i].desc.DataType != PTP_DTC_UNDEF) {
 		time(&now);
-		if ((now - params->deviceproperties[i].timestamp) <= params->cachetime) {
+		if (params->deviceproperties[i].timestamp + params->cachetime > now) {
 			duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
 			return PTP_RC_OK;
 		}

@@ -7522,9 +7522,12 @@ camera_init (Camera *camera, GPContext *context)
 		CR (gp_port_set_timeout (camera->port, start_timeout));
 	}
 #undef XT
-	if ((GP_OK == gp_setting_get("ptp2","cachetime",buf)))	\
-		sscanf(buf, "%d", &params->cachetime);		\
-	if (!params->cachetime) params->cachetime = 2; /* 2 seconds */
+	if ((GP_OK == gp_setting_get("ptp2","cachetime",buf))) {
+		sscanf(buf, "%d", &params->cachetime);
+		GP_LOG_D("read cachetime %d", params->cachetime);
+	} else {
+		params->cachetime = 2; /* 2 seconds */
+	}
 
 	/* Establish a connection to the camera */
 	SET_CONTEXT(camera, context);
