@@ -6257,6 +6257,47 @@ _put_CHDK(CONFIG_PUT_ARGS) {
 	}
 	return GP_OK;
 }
+
+static struct {
+	char	*name;
+	char	*label;
+} afonoff[] = {
+	{"on", N_("On") },
+	{"off", N_("Off") },
+};
+
+static int
+_get_Autofocus(CONFIG_GET_ARGS) {
+	int i;
+	char buf[1024];
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	if (GP_OK != gp_setting_get("ptp2","autofocus", buf))
+		strcpy(buf,"on");
+	for (i=0;i<sizeof (afonoff)/sizeof (afonoff[i]);i++) {
+		gp_widget_add_choice (*widget, _(afonoff[i].label));
+		if (!strcmp (buf,afonoff[i].name))
+			gp_widget_set_value (*widget, _(afonoff[i].label));
+	}
+	return GP_OK;
+}
+
+static int
+_put_Autofocus(CONFIG_PUT_ARGS) {
+	int i;
+	char *val;
+
+	CR (gp_widget_get_value(widget, &val));
+	for (i=0;i<sizeof(afonoff)/sizeof(afonoff[i]);i++) {
+		if (!strcmp( val, _(afonoff[i].label))) {
+			gp_setting_set("ptp2","autofocus",afonoff[i].name);
+			break;
+		}
+	}
+	return GP_OK;
+}
+
 /* Wifi profiles functions */
 
 static int
@@ -6875,6 +6916,7 @@ static struct submenu camera_settings_menu[] = {
 /* virtual */
 	{ N_("Fast Filesystem"),	"fastfs",	0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_FastFS,      _put_Nikon_FastFS },
 	{ N_("Capture Target"),		"capturetarget",0,  PTP_VENDOR_NIKON,   0,  _get_CaptureTarget,     _put_CaptureTarget },
+	{ N_("Autofocus"),		"autofocus",    0,  PTP_VENDOR_NIKON,   0,  _get_Autofocus,         _put_Autofocus },
 	{ N_("Capture Target"),		"capturetarget",0,  PTP_VENDOR_CANON,   0,  _get_CaptureTarget,     _put_CaptureTarget },
 	{ N_("CHDK"),     		"chdk",		PTP_OC_CHDK,  PTP_VENDOR_CANON,   0,  _get_CHDK,     _put_CHDK },
 	{ N_("Capture"),		"capture",	0,  PTP_VENDOR_CANON,   0,  _get_Canon_CaptureMode, _put_Canon_CaptureMode },

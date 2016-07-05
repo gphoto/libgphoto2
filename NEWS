@@ -7,6 +7,7 @@ ptp2:
 * sony: exposure compensation setting fixed
 * sony: capture and autofocus configurations, similar to eosremoterelease
 * fixed serialnumber retrieval
+* Nikon: "autofocus" for global autofocus enable/disable (default on, default liveview off)
 * new ids reported:
   - Sony Alpha 7, DSC-RX100M4
   - Nikon DSC Df

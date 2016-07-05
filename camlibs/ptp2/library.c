@@ -3723,11 +3723,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	) {
 		char buf[1024];
 		int sdram = 0;
+		int af = 1;
 
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			sdram = 1;
+		if ((GP_OK != gp_setting_get("ptp2","autofocus",buf)) || !strcmp(buf,"off"))
+			af = 0;
 
-		return camera_nikon_capture (camera, type, path, 1, sdram, context);
+		return camera_nikon_capture (camera, type, path, af, sdram, context);
 	}
 
 	/* 1st gen, 2nd gen nikon capture only go to SDRAM */
@@ -3737,9 +3740,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	)) {
 		int ret = GP_ERROR_NOT_SUPPORTED;
 		char buf[1024];
+		int af = 1;
 
+		if ((GP_OK != gp_setting_get("ptp2","autofocus",buf)) || !strcmp(buf,"off"))
+			af = 0;
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
-			ret = camera_nikon_capture (camera, type, path, 1, 1, context);
+			ret = camera_nikon_capture (camera, type, path, af, 1, context);
 		if (ret != GP_ERROR_NOT_SUPPORTED)
 			 return ret;
 		/* for CARD capture and unsupported combinations, fall through */
@@ -3943,6 +3949,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	uint16_t	ret;
 	char buf[1024];
 	int sdram = 0;
+	int af = 1;
 
 
 	SET_CONTEXT_P(params, context);
@@ -3954,7 +3961,10 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	if (!strcmp(buf,"sdram"))
 		sdram = 1;
 
-	GP_LOG_D ("Triggering capture to %s", buf);
+	if ((GP_OK != gp_setting_get("ptp2","autofocus",buf)) || !strcmp(buf,"off"))
+		af = 0;
+
+	GP_LOG_D ("Triggering capture to %s, autofocus=%d", buf, af);
 
 	/* Nilon V and J seem to like that */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
@@ -3992,10 +4002,12 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
 			if (ret == PTP_RC_OK)
 				inliveview = propval.u8;
+
+			if (inliveview) af = 0;
 		}
 
 		do {
-			ret = ptp_nikon_capture2 (params, !inliveview, sdram);
+			ret = ptp_nikon_capture2 (params, af, sdram);
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				return translate_ptp_result (ret);
 			if (ret == PTP_RC_DeviceBusy) usleep(2000);
