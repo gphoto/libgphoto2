@@ -58,7 +58,7 @@ static int load_settings (void);
  * \brief Retrieve a specific gphoto setting.
  * \param id the frontend id of the caller
  * \param key the key the frontend queries
- * \param value retrieved value
+ * \param value changed value
  * \return GPhoto error code
  *
  * This function retrieves the setting key for a specific frontend
@@ -90,7 +90,7 @@ gp_setting_get (char *id, char *key, char *value)
  *
  * \param id the frontend id of the caller
  * \param key the key the frontend queries
- * \param value retrieved value
+ * \param value new value
  * \return GPhoto error code
  *
  * This function sets the setting key for a specific frontend
