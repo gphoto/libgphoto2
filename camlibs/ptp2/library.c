@@ -892,8 +892,8 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
 	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
 
-	/* Andre Crone <andre@elysia.nl> */
-	{"Sony:Alpha-A7S II (Control)",0x054c,0x0804, PTP_CAP},
+	/* Andre Crone <andre@elysia.nl>, adjusted */
+	{"Sony:Alpha-A7S II (Control)",0x054c,0x0a71, PTP_CAP},
 
 	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
 	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
