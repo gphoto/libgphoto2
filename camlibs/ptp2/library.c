@@ -1263,6 +1263,9 @@ static struct {
 	/* Jeffrey Wilson <colgs3b@gmail.com> */
 	{"Nikon:DSC D5500",		  0x04b0, 0x0438, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Laurent Zylberman <l.zylberman@graphix-images.com> */
+	{"Nikon:DSC D5",		  0x04b0, 0x043a, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Andre Crone <andre@elysia.nl> */
 	{"Nikon:DSC D810A",               0x04b0, 0x043b, PTP_CAP|PTP_CAP_PREVIEW},
 
