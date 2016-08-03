@@ -2482,8 +2482,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			/* FIXME: this might cause a focusing pass and take seconds. 20 was not
 			 * enough (would be 0.2 seconds, too short for the mirror up operation.). */
 			/* The EOS 100D takes 1.2 seconds */
-			int 			tries = 200;
 			PTPDevicePropDesc       dpd;
+			int			back_off_wait = 0;
+			struct timeval		event_start;
 
 			SET_CONTEXT_P(params, context);
 
@@ -2516,7 +2517,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			C_PTP (ptp_canon_eos_keepdeviceon (params));
 
 			params->inliveview = 1;
-			while (tries--) {
+			event_start = time_now();
+			do {
 				unsigned char	*xdata;
 				/* Poll for camera events, but just call
 				 * it once and do not drain the queue now */
@@ -2524,14 +2526,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
-					/* frames/second rate vs compute power drainage ... polling
-					 * makes the camera too busy to do other tasks and they take
-					 * longer. */
-					if (tries < 98)
-						usleep (2000);
-					else
-						usleep (1300);
-					continue;
+					/* wait 3 seconds at most */
+					if (waiting_for_timeout (&back_off_wait, event_start, 3*1000))
+						continue;
 				}
 				C_PTP_MSG (ret, "get_viewfinder_image failed");
 
@@ -2597,7 +2594,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					}
 				}
 				return GP_ERROR;
-			}
+			} while (1);
 			GP_LOG_E ("get_viewfinder_image failed after all tries with ret: 0x%x\n", ret);
 			SET_CONTEXT_P(params, NULL);
 			return translate_ptp_result (ret);
