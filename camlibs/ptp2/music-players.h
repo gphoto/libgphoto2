@@ -3222,6 +3222,16 @@
   { "Jolla", 0x2931, "Sailfish (ID1)", 0x0a01,
       DEVICE_FLAGS_ANDROID_BUGS },
 
+  /* In update 4 the order of devices was changed for
+     better OS X / Windows suport and another device-id
+     got assigned for the MTP */
+  { "Jolla", 0x2931, "Sailfish (ID2)", 0x0a05,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* In a later version, the ID changed again. */
+  { "Jolla", 0x2931, "Sailfish (ID3)", 0x0a07,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
   /*
    * TCL? Alcatel?
    */
@@ -3250,12 +3260,6 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1245/ */
   { "DigiLand", 0x1f3a, "DL701Q", 0x0c02,
-      DEVICE_FLAGS_ANDROID_BUGS },
-
-  /* In update 4 the order of devices was changed for
-     better OS X / Windows suport and another device-id
-     got assigned for the MTP */
-  { "Jolla", 0x2931, "Sailfish (ID2)", 0x0a05,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -3325,6 +3329,8 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/115/ */
   { "Pegatron", 0x1d4d, "Hudl 2", 0x504a, DEVICE_FLAGS_ANDROID_BUGS },
 
+  /* https://sourceforge.net/p/libmtp/support-requests/127/ */
+  { "Yota", 0x2916, "Phone C9660", 0x9039, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1229/ */
   { "Yota", 0x2916, "Phone 2", 0x914d, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1267/ */
@@ -3365,6 +3371,9 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1383/ */
   { "BLU", 0x0e8d, "Studio HD", 0x2008, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/feature-requests/161/ */
+  { "Cubot", 0x0e8d, "X17", 0x201d, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1423/ */
   { "OnePlus", 0x2a70, "ONE A2001", 0x9011, DEVICE_FLAGS_ANDROID_BUGS },
