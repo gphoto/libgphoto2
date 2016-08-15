@@ -1828,6 +1828,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		ce[i].u.info = NULL;
 		switch (type) {
 		case  PTP_EC_CANON_EOS_ObjectAddedEx:
+        case  PTP_EC_CANON_EOS_ObjectAddedUnknown:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
 			ce[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OA_ObjectID]);
 			ce[i].u.object.oi.StorageID	= dtoh32a(&curdata[PTP_ece_OA_StorageID]);
