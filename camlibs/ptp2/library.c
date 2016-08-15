@@ -2561,6 +2561,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 						continue;
 					case 9:
 					case 1:
+                    case 11:
 						if (len > (size-(xdata-data))) {
 							len = size;
 							GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
