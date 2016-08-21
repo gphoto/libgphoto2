@@ -982,7 +982,7 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 		return (GP_OK);
 	}
 	if (dpd->FormFlag & PTP_DPFF_Range) {
-		if (dpd->DataType != PTP_DTC_UINT8) {
+		if ((dpd->DataType != PTP_DTC_UINT8) && (dpd->DataType != PTP_DTC_INT8)) {
 			GP_LOG_D ("no int8 prop in 8bit table code");
 			return GP_ERROR;
 		}
