@@ -61,6 +61,7 @@
 /** \internal */
 struct _CameraAbilitiesList {
 	int count;
+	int maxcount;
 	CameraAbilities *abilities;
 };
 
@@ -510,9 +511,12 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 {
 	C_PARAMS (list);
 
-	C_MEM (list->abilities = realloc (list->abilities,
-					sizeof (CameraAbilities) * (list->count + 1)));
-	
+	if (list->count == list->maxcount) {
+	    C_MEM (list->abilities = realloc (list->abilities,
+				sizeof (CameraAbilities) * (list->maxcount + 50)));
+	    list->maxcount += 50;
+	}
+
 	memcpy (&(list->abilities [list->count]), &abilities,
 		sizeof (CameraAbilities));
 
@@ -541,6 +545,7 @@ gp_abilities_list_reset (CameraAbilitiesList *list)
 	free (list->abilities);
 	list->abilities = NULL;
 	list->count = 0;
+	list->maxcount = 0;
 
 	return (GP_OK);
 }
