@@ -11,10 +11,11 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.5.10\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2016-03-21 20:21+0100\n"
-"PO-Revision-Date: 2016-03-24 19:37+0100\n"
+"PO-Revision-Date: 2016-04-09 23:00+0200\n"
 "Last-Translator: Sebastian Rasmussen <sebras@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3542,7 +3543,7 @@ msgstr ""
 "Minsta kapacitet kvar:\t%d\n"
 "Upptagen:\t\t%s\n"
 "Blixten laddar:\t\t%s\n"
-"Linsstatus:\t\t"
+"Objektivsstatus:\t\t"
 
 #: camlibs/minolta/dimagev/dimagev.c:354
 msgid "Not Full"
@@ -3579,17 +3580,17 @@ msgstr "Normal\n"
 #: camlibs/minolta/dimagev/dimagev.c:372
 #, c-format
 msgid "Lens direction does not match flash light\n"
-msgstr "Linsriktningen överensstämmer inte med blixtljuset\n"
+msgstr "Objektivriktningen överensstämmer inte med blixtljuset\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:375
 #, c-format
 msgid "Lens is not connected\n"
-msgstr "Linsen är inte ansluten\n"
+msgstr "Objektivet är inte anslutet\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:378
 #, c-format
 msgid "Bad value for lens status %d\n"
-msgstr "Felaktigt värde för linsstatus %d\n"
+msgstr "Felaktigt värde för objektivstatus %d\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:387
 #, c-format
@@ -3775,7 +3776,7 @@ msgid ""
 msgstr ""
 "Panasonic PV-L859-K/PV-L779-K Palmcorder\n"
 "\n"
-"Panasonic introducerade en bildtagningsteknik som kallas PHOTOSHOT för första gången i denna serie av Palmcorders. Bilderna sparas i JPEG-format på ett internt flash-kort och kan överföras till en dator genom den inbyggda serieporten. Bilder sparas i endera av två upplösningar: NORMAL är 320x240 och FIN är 640x480. CCD-enheten som tar bilderna från linsen är endast 300K och producerar därför endast bilder med låg kvalité."
+"Panasonic introducerade en bildtagningsteknik som kallas PHOTOSHOT för första gången i denna serie av Palmcorders. Bilderna sparas i JPEG-format på ett internt flash-kort och kan överföras till en dator genom den inbyggda serieporten. Bilder sparas i endera av två upplösningar: NORMAL är 320x240 och FIN är 640x480. CCD-enheten som tar bilderna från objektivet är endast 300K och producerar därför endast bilder med låg kvalité."
 
 #: camlibs/panasonic/l859/l859.c:600
 msgid ""
@@ -4101,7 +4102,7 @@ msgstr "En-trycks-automatisk"
 #: camlibs/sierra/sierra.c:1086 camlibs/sierra/sierra.c:1095
 #: camlibs/sierra/sierra.c:1374
 msgid "Fluorescent"
-msgstr "Fluorescerande"
+msgstr "Lysrör"
 
 #: camlibs/ptp2/config.c:1411 camlibs/ptp2/config.c:3042
 #: camlibs/ptp2/config.c:4091 camlibs/ptp2/config.c:4110
@@ -6122,7 +6123,7 @@ msgstr "1 steg hast./bländare"
 
 #: camlibs/ptp2/config.c:4888
 msgid "Choose non-CPU lens number"
-msgstr "Använd icke-CPU linsnummer"
+msgstr "Använd icke-CPU objektivnummer"
 
 #: camlibs/ptp2/config.c:4889
 msgid "Viewfinder virtual horizont"
@@ -6409,11 +6410,11 @@ msgstr "Canon EOS zoomposition"
 
 #: camlibs/ptp2/config.c:6686
 msgid "Canon EOS Viewfinder"
-msgstr "Canon EOS sökare"
+msgstr "Canon EOS-sökare"
 
 #: camlibs/ptp2/config.c:6687
 msgid "Nikon Viewfinder"
-msgstr "Nikon sökare"
+msgstr "Nikon-sökare"
 
 #: camlibs/ptp2/config.c:6688
 msgid "Canon EOS Remote Release"
@@ -6484,7 +6485,7 @@ msgstr "Blixt laddad"
 
 #: camlibs/ptp2/config.c:6718 camlibs/ptp2/config.c:6719
 msgid "Lens Name"
-msgstr "Linsnamn"
+msgstr "Objektivnamn"
 
 #: camlibs/ptp2/config.c:6721
 msgid "Shutter Counter"
@@ -6624,7 +6625,7 @@ msgstr "Automatisk avstängning"
 
 #: camlibs/ptp2/config.c:6767
 msgid "Depth of Field"
-msgstr "Fokusdjup"
+msgstr "Skärpedjup"
 
 #: camlibs/ptp2/config.c:6768 camlibs/ptp2/ptp.c:4487
 msgid "Menus and Playback"
@@ -7006,7 +7007,7 @@ msgstr "Auto vitbalansnivå"
 #: camlibs/ptp2/config.c:6931 camlibs/ptp2/config.c:6939
 #: camlibs/ptp2/ptp.c:4292
 msgid "Tungsten White Balance Bias"
-msgstr "Volfram vitbalansnivå"
+msgstr "Glödlampa vitbalansnivå"
 
 #: camlibs/ptp2/config.c:6932 camlibs/ptp2/config.c:6940
 #: camlibs/ptp2/ptp.c:4294
@@ -7968,7 +7969,7 @@ msgstr "Operation avböjd"
 
 #: camlibs/ptp2/ptp.c:4096
 msgid "Lens Cover Present"
-msgstr "Linsskydd närvarande"
+msgstr "Objektivskydd närvarande"
 
 #: camlibs/ptp2/ptp.c:4097
 msgid "Battery Low"
@@ -8386,11 +8387,11 @@ msgstr "Vitbalans förinställningsvärde 4"
 
 #: camlibs/ptp2/ptp.c:4336
 msgid "Lens Focal Length (Non CPU)"
-msgstr "Linsbrännvidd (icke-CPU)"
+msgstr "Objektivbrännvidd (icke-CPU)"
 
 #: camlibs/ptp2/ptp.c:4338
 msgid "Lens Maximum Aperture (Non CPU)"
-msgstr "Lins maximal bländare (icke-CPU)"
+msgstr "Objektiv maximal bländare (icke-CPU)"
 
 #: camlibs/ptp2/ptp.c:4346
 msgid "Auto DX Crop"
@@ -8594,7 +8595,7 @@ msgstr "Bildrotation"
 
 #: camlibs/ptp2/ptp.c:4509
 msgid "Manual Set Lens Number"
-msgstr "Manuell inställning av linsnummer"
+msgstr "Manuell inställning av objektivnummer"
 
 #: camlibs/ptp2/ptp.c:4511
 msgid "Movie Screen Size"
@@ -8642,15 +8643,15 @@ msgstr "Vitbalans gafflingsprogram"
 
 #: camlibs/ptp2/ptp.c:4535
 msgid "Lens ID"
-msgstr "Lins-ID"
+msgstr "Objektiv-ID"
 
 #: camlibs/ptp2/ptp.c:4537
 msgid "Lens Sort"
-msgstr "Lins-sortering"
+msgstr "Objektivsortering"
 
 #: camlibs/ptp2/ptp.c:4539
 msgid "Lens Type"
-msgstr "Linstyp"
+msgstr "Objektivtyp"
 
 #: camlibs/ptp2/ptp.c:4541
 msgid "Min. Focal Length"
@@ -9070,7 +9071,7 @@ msgstr "RAW + JPEG grundläggande"
 #: camlibs/ptp2/ptp.c:4977 camlibs/ricoh/library.c:329
 #: camlibs/sierra/nikon-desc.c:284
 msgid "Incandescent"
-msgstr "Bländande"
+msgstr "Glödlampa"
 
 #: camlibs/ptp2/ptp.c:4985
 msgid "Automatic Macro (close-up)"
@@ -10238,7 +10239,7 @@ msgstr "Kamera strömbesparing (sekunder)"
 #: camlibs/sierra/sierra.c:1387 camlibs/sierra/sierra.c:1586
 #: camlibs/sierra/sierra.c:1799
 msgid "Lens Mode"
-msgstr "Linsläge"
+msgstr "Objektivläge"
 
 #: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1682
 #: camlibs/sierra/sierra.c:1691 camlibs/sierra/sierra.c:1868
@@ -10520,7 +10521,7 @@ msgstr "Bred"
 
 #: camlibs/sierra/nikon-desc.c:558
 msgid "Misc exposure/lens settings"
-msgstr "Diverse exponerings-/linsinställningar"
+msgstr "Diverse exponerings-/objektivinställningar"
 
 #: camlibs/sierra/nikon-desc.c:581
 msgid "Auto exposure lock"
