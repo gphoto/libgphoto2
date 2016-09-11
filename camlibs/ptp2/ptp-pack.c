@@ -732,6 +732,8 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 							\
 	if (n >= UINT_MAX/sizeof(val->a.v[0]))		\
 		return 0;				\
+	if (n > (total - (*offset))/sizeof(val->a.v[0]))\
+		return 0;				\
 	val->a.count = n;				\
 	val->a.v = malloc(sizeof(val->a.v[0])*n);	\
 	if (!val->a.v) return 0;			\
