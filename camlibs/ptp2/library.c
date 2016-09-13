@@ -3651,9 +3651,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPDevicePropDesc	dpd;
 	struct timeval	event_start;
 
-	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
-
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
 	GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
@@ -3666,30 +3663,36 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		dual = 1;
 	}
 
+	/* half-press */
+	propval.u16 = 2;
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+
+	/* full-press */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
-	event_start = time_now();
-	do {
-		C_PTP (ptp_check_event (params));
-		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-			if (event.Code == PTP_EC_Sony_ObjectAdded) {
-				newobject = event.Param1;
-				if (dual)
-					ptp_add_event (params, &event);
-				break;
-			}
-		}
-	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
-	} while (time_since (event_start) < 35000);
+	/* keep the shutter held for only 50ms so we don't take more than one photo in high-speed mode */
+	usleep(50000);
 
+	/* release full-press */
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
-	/* stop pre-focus */
-	propval.u16 = 2;
+	/* release half-press */
+	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+
+
+	event_start = time_now();
+	do {
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
+		GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
+
+		/* if prop 0xd215 > 0x8000, the object in RAM is available at location 0xffffc001 */
+		if(dpd.CurrentValue.u16 > 0x8000) break;
+
+	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
+	} while (time_since (event_start) < 35000);
 
 	if (!newobject) {
 		GP_LOG_E("no object found during event polling. try the 0xffffc001 object id");
