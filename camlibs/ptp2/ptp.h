@@ -2068,6 +2068,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_ColorTemp				0xD20F
 #define PTP_DPC_SONY_CCFilter				0xD210
 #define PTP_DPC_SONY_AspectRatio			0xD211
+#define PTP_DPC_SONY_ObjectInMemory     	0xD215 /* used to signal when to retrieve new object */
 #define PTP_DPC_SONY_ExposeIndex			0xD216
 #define PTP_DPC_SONY_PictureEffect			0xD21B
 #define PTP_DPC_SONY_ABFilter				0xD21C
