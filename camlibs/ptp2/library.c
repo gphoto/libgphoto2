@@ -584,6 +584,7 @@ static struct {
 	unsigned short usb_product;
 	unsigned long device_flags;
 } models[] = {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	/*
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
@@ -2035,6 +2036,7 @@ static struct {
 	{"GoPro:HERO 4",			0x2672,	0x000e, 0},
 	/* Tomas Zigo <tomas.zigo@slovanet.sk> */
 	{"GoPro:HERO 3+",			0x2672,	0x0011, 0},
+#endif
 };
 
 static struct {
@@ -2056,7 +2058,9 @@ static struct {
 	unsigned short usb_product;
 	unsigned long flags;
 } mtp_models[] = {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 #include "music-players.h"
+#endif
 };
 
 static struct {
