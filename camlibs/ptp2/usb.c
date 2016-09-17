@@ -438,6 +438,12 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
 	} else
+	if (rlen < 12) {
+		ret = PTP_ERROR_IO;
+	} else
+	if (rlen != dtoh32(usbresp.length)) {
+		ret = PTP_ERROR_IO;
+	} else
 	if (dtoh16(usbresp.type)!=PTP_USB_CONTAINER_RESPONSE) {
 		ret = PTP_ERROR_RESP_EXPECTED;
 	} else
