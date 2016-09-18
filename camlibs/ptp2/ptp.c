@@ -224,7 +224,9 @@ ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
 				"PTP: Sequence number mismatch %d vs expected %d.",
 				ptp->Transaction_ID, params->transaction_id-1
 			);
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 			return PTP_ERROR_BADPARAM;
+#endif
 		}
 		break;
 	}
@@ -463,12 +465,16 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 	PTPContainer	ptp;
 	unsigned char	*data;
 	unsigned int	size;
+	int		ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDeviceInfo);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_DI(params, data, deviceinfo, size);
+	ret = ptp_unpack_DI(params, data, deviceinfo, size);
 	free(data);
-	return PTP_RC_OK;
+	if (ret)
+		return PTP_RC_OK;
+	else
+		return PTP_ERROR_IO;
 }
 
 uint16_t
