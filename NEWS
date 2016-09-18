@@ -13,6 +13,9 @@ ptp2:
   - Nikon DSC Df
   - Canon EOS 1Dx Mark 3, 80D
 
+libgphoto2:
+* speed up initial startup
+
 translations:
 * updated svensk, ukrainian, polish, finnish, russian, danish, polish, brazilian, serbian, brazilian, serbian
 ------------------------------------------------------------------------------
