@@ -347,14 +347,14 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 #define PTP_di_FunctionalMode		 8
 #define PTP_di_OperationsSupported	10
 
-static inline void
+static inline int
 ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsigned int datalen)
 {
 	uint8_t len;
 	unsigned int totallen;
 
-	if (!data) return;
-	if (datalen < 12) return;
+	if (!data) return 0;
+	if (datalen < 12) return 0;
 	di->StandardVersion = dtoh16a(&data[PTP_di_StandardVersion]);
 	di->VendorExtensionID =
 		dtoh32a(&data[PTP_di_VendorExtensionID]);
@@ -413,6 +413,7 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&len);
+	return 1;
 }
 
 inline static void
