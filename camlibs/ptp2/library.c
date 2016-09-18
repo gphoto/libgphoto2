@@ -870,6 +870,8 @@ static struct {
 	/* https://sourceforge.net/p/libmtp/bugs/1459/ */
 	{"Sony:HDR-PJ260VE (PTP mode)",0x054c, 0x0603, 0},
 
+	/* Jean-Christophe Clavier <jcclavier@free.fr> */
+	{"Sony:DSC-HX20V (PTP mode)", 0x054c, 0x061c, 0},
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
 
