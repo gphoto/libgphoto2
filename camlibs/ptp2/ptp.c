@@ -483,12 +483,16 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 	PTPContainer	ptp;
 	unsigned char	*data;
 	unsigned int	size;
+	int		ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetDeviceInfoEx);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_EOS_DI(params, data, di, size);
+	ret = ptp_unpack_EOS_DI(params, data, di, size);
 	free (data);
-	return PTP_RC_OK;
+	if (ret)
+		return PTP_RC_OK;
+	else
+		return PTP_ERROR_IO;
 }
 
 #ifdef HAVE_LIBXML2
