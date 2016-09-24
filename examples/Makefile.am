@@ -28,9 +28,11 @@ noinst_PROGRAMS += \
 	sample-owner \
 	sample-preview \
 	sample-tether \
+	sample-afl \
 	best-iso \
 	sample-capture sample-trigger-capture sample-justfocus
 
+sample_afl_SOURCES = sample-afl.c samples.h context.c
 sample_autodetect_SOURCES = sample-autodetect.c samples.h context.c config.c
 sample_owner_SOURCES = sample-owner.c samples.h context.c config.c
 sample_multi_detect_SOURCES = sample-multi-detect.c samples.h autodetect.c context.c config.c
