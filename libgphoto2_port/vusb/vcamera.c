@@ -1653,16 +1653,22 @@ static int vcam_open(vcamera* cam, const char *port) {
 	char *s = strchr(port,':');
 
 	if (s) {
-		cam->fuzzfd = open(s+1,O_RDONLY);
-		if (cam->fuzzfd == -1) perror(s+1);
+		if (s[1] == '>') { /* record mode */
+			cam->fuzzf = fopen(s+2,"wb");
+			cam->fuzzmode = FUZZMODE_PROTOCOL;
+		} else {
+			cam->fuzzf = fopen(s+1,"rb");
+			cam->fuzzmode = FUZZMODE_NORMAL;
+		}
+		if (cam->fuzzf == NULL) perror(s+1);
 	}
 	return GP_OK;
 }
 
 static int vcam_close(vcamera* cam) {
-	if (cam->fuzzfd) {
-		close (cam->fuzzfd);
-		cam->fuzzfd = 0;
+	if (cam->fuzzf) {
+		fclose (cam->fuzzf);
+		cam->fuzzf = NULL;
 	}
 	return GP_OK;
 }
@@ -1766,14 +1772,24 @@ vcam_read(vcamera*cam, int ep, char *data, int bytes) {
 
 	if (toread > cam->nrinbulk)
 		toread = cam->nrinbulk;
-	if (cam->fuzzfd) {
-		int i;
+	if (cam->fuzzf) {
+		int i, hasread;
 
 		memset(data,0,toread);
-		read(cam->fuzzfd, data, toread);
-		for (i=0;i<toread;i++)
-			data[i] ^= cam->inbulk[i];
-	} else {
+		if (cam->fuzzmode == FUZZMODE_PROTOCOL) {
+			fwrite(cam->inbulk[i], 1, toread, cam->fuzzf);
+		} else {
+			hasread = fread(data, 1, toread, cam->fuzzf);
+
+#if 0
+			for (i=0;i<toread;i++)
+				data[i] ^= cam->inbulk[i];
+#endif
+			toread = hasread;
+		}
+	}
+	else
+	{
 		memcpy (data, cam->inbulk, toread);
 	}
 	memmove (cam->inbulk, cam->inbulk + toread, (cam->nrinbulk - toread));

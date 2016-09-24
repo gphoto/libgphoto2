@@ -22,6 +22,8 @@
 #ifndef __VCAMERA_H__
 #define __VCAMERA_H__
 
+#include <stdio.h>
+
 typedef struct ptpcontainer {
 	unsigned int size;
 	unsigned int type;
@@ -57,7 +59,10 @@ typedef struct vcamera {
 	unsigned int	session;
 	ptpcontainer	ptpcmd;
 
-	int		fuzzfd;
+	int		fuzzmode;
+#define FUZZMODE_PROTOCOL	0
+#define FUZZMODE_NORMAL		1
+	FILE*		fuzzf;
 } vcamera;
 
 vcamera *vcamera_new(vcameratype);
