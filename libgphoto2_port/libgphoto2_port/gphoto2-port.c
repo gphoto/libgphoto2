@@ -208,6 +208,10 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 		gp_port_set_timeout (port, 500);
 		break;
 	case GP_PORT_USB:
+		if (sizeof (port->settings.usb.port) <= strlen(info->path)) {
+			GP_LOG_E ("Path is too long for static buffer '%s'.", info->path);
+			return GP_ERROR_LIBRARY;
+		}
 		strncpy (port->settings.usb.port, info->path,
 			 sizeof (port->settings.usb.port));
 		port->settings.usb.inep = -1;
