@@ -7645,7 +7645,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 	free (setprops);
 	if (mode == MODE_SINGLE_GET) {
 		/* if we get here, we have not found anything */
-		gp_context_error (context, _("Property '%s' not found."), confname);
+		/*gp_context_error (context, _("Property '%s' not found."), confname);*/
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	return GP_OK;
