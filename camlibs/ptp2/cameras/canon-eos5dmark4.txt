@@ -1,0 +1,23 @@
+ Camera summary:
+
+Manufacturer: Canon.Inc
+Model: Canon EOS 5D Mark IV
+Version: 3-1.0.1
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type, Unknown(b104), Unknown(b105)
+
+Device Capabilities:
+File Download, File Deletion, File Upload
+No Image Capture, No Open Capture, Canon EOS Capture, Canon EOS Shutter Button
+Canon Wifi support
+
+Storage Devices Summary:
+
+Device Property Summary:
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS 5D Mark IV'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+Property 0xd303:(read only) (type=0x2) 1
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 78% (78)
