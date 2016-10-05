@@ -195,8 +195,13 @@ ax203_decode_yuv_delta(char *src, int **dest, int width, int height);
 void
 ax203_encode_yuv_delta(int **src, char *dest, int width, int height);
 
+
+#if defined(HAVE_LIBGD) && defined(HAVE_LIBJPEG)
+
 int
 ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	int width, int height);
+
+#endif
 
 #endif

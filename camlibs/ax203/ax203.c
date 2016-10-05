@@ -1220,10 +1220,14 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 					camera->pl->height);
 		return size;
 	case AX206_COMPRESSION_JPEG:
+#if defined(HAVE_LIBGD) && defined(HAVE_LIBJPEG)
 		return ax206_compress_jpeg (camera, src,
 					    (uint8_t *)dest, dest_size,
 					    camera->pl->width,
 					    camera->pl->height);
+#else
+		return GP_ERROR_NOT_SUPPORTED;
+#endif
 	case AX3003_COMPRESSION_JPEG:
 #ifdef HAVE_LIBJPEG
 		cinfo.err = jpeg_std_error (&jcerr);
