@@ -5003,6 +5003,37 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 }
 
 static int
+_get_SONY_BatteryLevel(CONFIG_GET_ARGS) {
+	unsigned char value_float , start, end;
+	char	buffer[20];
+
+	if (dpd->DataType != PTP_DTC_INT8)
+		return GP_ERROR;
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+
+	if (dpd->FormFlag == PTP_DPFF_Range) {
+		gp_widget_set_name (*widget, menu->name);
+		start = dpd->FORM.Range.MinimumValue.i8;
+		if (start == -1) start = 0; /* -1 might be special for unknown? */
+		end = dpd->FORM.Range.MaximumValue.i8;
+		value_float = dpd->CurrentValue.i8;
+		if (0 == end - start + 1) {
+			/* avoid division by 0 */
+			sprintf (buffer, "broken");
+		} else {
+			sprintf (buffer, "%d%%", (int)((value_float-start+1)*100/(end-start+1)));
+		}
+		return gp_widget_set_value(*widget, buffer);
+	}
+	/* Enumeration is also valid on EOS, but this will be just be the % value */
+	if (dpd->CurrentValue.i8 == -1)
+		sprintf (buffer, _("Unknown"));
+	else
+		sprintf (buffer, "%d%%", dpd->CurrentValue.i8);
+	return gp_widget_set_value(*widget, buffer);
+}
+
+static int
 _get_Canon_EOS_BatteryLevel(CONFIG_GET_ARGS) {
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
@@ -6856,6 +6887,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("External Flash"),         "externalflash",    PTP_DPC_NIKON_ExternalFlashAttached,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_BatteryLevel,                   0,                  PTP_DTC_UINT8,  _get_BatteryLevel,              _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_CANON_EOS_BatteryPower,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel,    _put_None },
+	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_SONY_BatteryLevel,              PTP_VENDOR_SONY,    PTP_DTC_INT8,   _get_SONY_BatteryLevel,         _put_None },
 	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_NIKON_CameraOrientation,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CameraOrientation,   _put_None },
 	{ N_("Camera Orientation"),     "orientation2",     PTP_DPC_NIKON_AngleLevel,               PTP_VENDOR_NIKON,   PTP_DTC_INT32,  _get_Nikon_AngleLevel,          _put_None },
 	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_CANON_RotationAngle,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_CameraOrientation,   _put_None },

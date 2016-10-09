@@ -4874,7 +4874,10 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_ColorTemp, N_("Color temperature")},	/* 0xD20F */
 		{PTP_DPC_SONY_CCFilter, ("CC Filter")},			/* 0xD210 */
 		{PTP_DPC_SONY_AspectRatio, N_("Aspect Ratio")}, 	/* 0xD211 */
+		{PTP_DPC_SONY_FocusFound, N_("Focus status")},		/* 0xD213 */
+		{PTP_DPC_SONY_ObjectInMemory, N_("Objects in memory")},	/* 0xD215 */
 		{PTP_DPC_SONY_ExposeIndex, N_("Expose Index")},		/* 0xD216 */
+		{PTP_DPC_SONY_BatteryLevel, N_("Battery Level")},	/* 0xD218 */
 		{PTP_DPC_SONY_PictureEffect, N_("Picture Effect")},	/* 0xD21B */
 		{PTP_DPC_SONY_ABFilter, N_("AB Filter")},		/* 0xD21C */
 		{PTP_DPC_SONY_ISO, N_("ISO")},				/* 0xD21E */
