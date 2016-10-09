@@ -3031,6 +3031,8 @@ capturetriggered:
 
 	if (!newobject) newobject = 0xffff0001;
 
+	CR (gp_port_set_timeout (camera->port, normal_timeout));
+
 	/* This loop handles single and burst capture. 
 	 * It also handles SDRAM and also CARD capture.
 	 * In Burst/SDRAM we need to download everything at once
@@ -3682,8 +3684,38 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
-	/* keep the shutter held for only 50ms so we don't take more than one photo in high-speed mode */
-	usleep(50000);
+	/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
+	 * get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
+	 */
+
+	GP_LOG_D ("holding down shutterbutton");
+	event_start = time_now();
+	do {
+		/* needed on older cameras like the a58, check for events ... */
+		C_PTP (ptp_check_event (params));
+		if (ptp_get_one_event(params, &event)) {
+			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+			if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
+				(event.Param1 == PTP_DPC_SONY_FocusFound)
+			) {
+				GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
+				break;
+			}
+		}
+
+		/* Alternative code in case we miss the event */
+
+		C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
+		GP_LOG_D ("DEBUG== 0xd213 after shutter press = %d", dpd.CurrentValue.u8);
+		/* if prop 0xd213 = 2, the focus seems to be achieved */
+		if (dpd.CurrentValue.u8 == 2) {
+			GP_LOG_D ("SONY Property change seen, 0xd213... ending press");
+			break;
+		}
+
+	} while (time_since (event_start) < 1000);
+	GP_LOG_D ("releasing shutterbutton");
 
 	/* release full-press */
 	propval.u16 = 1;
@@ -3693,17 +3725,35 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	propval.u16 = 1;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
 
-
+	GP_LOG_D ("waiting for image availability");
 	event_start = time_now();
 	do {
+		/* needed on older cameras like the a58, check for events ... */
+		C_PTP (ptp_check_event (params));
+		if (ptp_get_one_event(params, &event)) {
+			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+			if (event.Code == PTP_EC_Sony_ObjectAdded) {
+				newobject = event.Param1;
+				if (dual)
+					ptp_add_event (params, &event);
+				GP_LOG_D ("SONY ObjectAdded received, ending wait");
+				break;
+			}
+		}
+
+		C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
 		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
 		GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
 
 		/* if prop 0xd215 > 0x8000, the object in RAM is available at location 0xffffc001 */
-		if(dpd.CurrentValue.u16 > 0x8000) break;
+		if (dpd.CurrentValue.u16 > 0x8000) {
+			GP_LOG_D ("SONY ObjectInMemory count change seen, ending wait");
+			break;
+		}
 
 	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
 	} while (time_since (event_start) < 35000);
+	GP_LOG_D ("ending image availability");
 
 	if (!newobject) {
 		GP_LOG_E("no object found during event polling. try the 0xffffc001 object id");

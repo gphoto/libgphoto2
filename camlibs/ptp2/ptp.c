@@ -2878,6 +2878,35 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 				break;
 
+		/* debug output to see what changes */
+		if (i != params->nrofdeviceproperties) {
+			switch (dpd.DataType) {
+			case PTP_DTC_INT8:
+#define CHECK_CHANGED(type) \
+				if (params->deviceproperties[i].desc.CurrentValue.type != dpd.CurrentValue.type) \
+					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %04x: value %d -> %d", propcode, params->deviceproperties[i].desc.CurrentValue.type, dpd.CurrentValue.type);
+				CHECK_CHANGED(i8);
+				break;
+			case PTP_DTC_UINT8:
+				CHECK_CHANGED(u8);
+				break;
+			case PTP_DTC_UINT16:
+				CHECK_CHANGED(u16);
+				break;
+			case PTP_DTC_INT16:
+				CHECK_CHANGED(i16);
+				break;
+			case PTP_DTC_INT32:
+				CHECK_CHANGED(i32);
+				break;
+			case PTP_DTC_UINT32:
+				CHECK_CHANGED(u32);
+				break;
+			default:
+				break;
+			}
+		}
+
 		if (i == params->nrofdeviceproperties) {
 			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
 			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
