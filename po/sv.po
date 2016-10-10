@@ -1136,7 +1136,7 @@ msgstr "Ej igenkänd respons"
 #: camlibs/canon/serial.c:1375
 #, c-format
 msgid "Detected a \"%s\" aka \"%s\""
-msgstr "Detektera ett ”%s”, också känt som ”%s”"
+msgstr "Detekterade ett ”%s”, också känt som ”%s”"
 
 #: camlibs/canon/serial.c:1383
 #, c-format
