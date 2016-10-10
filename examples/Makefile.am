@@ -26,6 +26,7 @@ noinst_PROGRAMS += \
 	sample-autodetect sample-multi-detect \
 	lunkwill-canon-capture  \
 	sample-owner \
+	sample-photobooth \
 	sample-preview \
 	sample-tether \
 	sample-afl \
@@ -39,6 +40,7 @@ sample_multi_detect_SOURCES = sample-multi-detect.c samples.h autodetect.c conte
 lunkwill_canon_capture_SOURCES = lunkwill-canon-capture.c context.c samples.h config.c
 sample_capture_SOURCES = sample-capture.c context.c samples.h config.c focus.c
 sample_trigger_capture_SOURCES = sample-trigger-capture.c context.c samples.h config.c
+sample_photobooth_SOURCES = sample-photobooth.c samples.h context.c
 sample_preview_SOURCES = preview.c samples.h context.c config.c focus.c
 sample_tether_SOURCES = samples.h sample-tether.c context.c config.c
 best_iso_SOURCES = best-iso.c
