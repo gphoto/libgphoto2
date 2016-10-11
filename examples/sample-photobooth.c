@@ -113,11 +113,17 @@ main(int argc, char **argv) {
 		if (capture_now) {
 			capture_now = 0;
 			sprintf(output_file, "image-%04d.jpg", capturecnt++);
-			capture_to_file(camera, context, output_file);
+			retval = capture_to_file(camera, context, output_file);
+			if (retval == GP_OK)
+				fprintf (stderr, "captured to %s\n", output_file);
 		}
 
 		/*
 		 * Read configuration changes from "config.txt".
+		 * Expected are key=value pairs where value is the value seen in "--get-config key", e.g.
+		 * 	iso=Auto
+		 * 	iso=200
+		 * 	shutterspeed=1/200
 		 */
 		if (read_config) {
 			FILE	*config;
@@ -129,6 +135,14 @@ main(int argc, char **argv) {
 			while (fgets (buf, sizeof(buf), config)) {
 				char	*s;
 
+				/* kill linefeeds */
+				s = strchr(buf,'\r');
+				if (s)
+					*s=0;
+				s = strchr(buf,'\n');
+				if (s)
+					*s=0;
+
 				s = strchr(buf,'=');
 				if (!s) continue;
 
@@ -136,6 +150,8 @@ main(int argc, char **argv) {
 				retval = set_config_value_string (camera, buf, s+1, context);
 				if (retval < GP_OK)
 					fprintf (stderr, "setting configuration '%s' to '%s' failed with %d.\n", buf, s+1, retval);
+				else
+					fprintf (stderr, "changed configuration '%s' to '%s'\n", buf, s+1);
 			}
 			fclose (config);
 		}
@@ -179,8 +195,6 @@ main(int argc, char **argv) {
 				char	*t;
 
 				path = (CameraFilePath*)evtdata;
-				printf("File added on the camera: %s/%s\n", path->folder, path->name);
-
 				t = strrchr (path->name, '.');
 				if (t && (strlen(t+1) == 3)) {
 					sprintf(output_file, "image-%04d.%s", capturecnt++, t+1);
@@ -196,6 +210,7 @@ main(int argc, char **argv) {
 				retval = gp_camera_file_delete(camera, path->folder, path->name, context);
 				gp_file_free(file);
 				free (evtdata);
+				fprintf (stderr, "saved to %s\n", output_file);
 				break;
 			}
 			case GP_EVENT_FOLDER_ADDED:
