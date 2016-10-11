@@ -31,9 +31,17 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 	int fd, retval;
 	CameraFile *file;
 	CameraFilePath camera_file_path;
+	char	*s, *t;
 
 	retval = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
 	if (retval < GP_OK) return retval;
+
+	s = strrchr (fn, '.');
+	t = strrchr (camera_file_path.name, '.');
+	/* replace the suffix by the one sent by the camera .. for RAW capture */
+	if (t && s && (strlen(t+1) == 3) && (strlen(s+1) == 3)) {
+		strcpy (s+1, t+1);
+	}
 
 	fd = open(fn, O_CREAT | O_WRONLY, 0644);
 	retval = gp_file_new_from_fd(&file, fd);
@@ -104,7 +112,7 @@ main(int argc, char **argv) {
 		 */
 		if (capture_now) {
 			capture_now = 0;
-			sprintf(output_file, "image-%03d.jpg", capturecnt++);
+			sprintf(output_file, "image-%04d.jpg", capturecnt++);
 			capture_to_file(camera, context, output_file);
 		}
 
@@ -167,11 +175,18 @@ main(int argc, char **argv) {
 			retval = gp_camera_wait_for_event (camera, 1, &evttype, &evtdata, context);
 			if (retval != GP_OK) break;
 			switch (evttype) {
-			case GP_EVENT_FILE_ADDED:
+			case GP_EVENT_FILE_ADDED: {
+				char	*t;
+
 				path = (CameraFilePath*)evtdata;
 				printf("File added on the camera: %s/%s\n", path->folder, path->name);
 
-				sprintf(output_file, "image-%03d.jpg", capturecnt++);
+				t = strrchr (path->name, '.');
+				if (t && (strlen(t+1) == 3)) {
+					sprintf(output_file, "image-%04d.%s", capturecnt++, t+1);
+				} else {
+					sprintf(output_file, "image-%04d.jpg", capturecnt++);
+				}
 
 				fd = open(output_file, O_CREAT | O_WRONLY, 0644);
 				retval = gp_file_new_from_fd(&file, fd);
@@ -182,6 +197,7 @@ main(int argc, char **argv) {
 				gp_file_free(file);
 				free (evtdata);
 				break;
+			}
 			case GP_EVENT_FOLDER_ADDED:
 				path = (CameraFilePath*)evtdata;
 				printf("Folder added on camera: %s / %s\n", path->folder, path->name);
