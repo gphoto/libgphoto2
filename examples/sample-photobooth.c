@@ -14,6 +14,9 @@
 
 #include "samples.h"
 
+#define CONFIG_FILE	"config.txt"
+#define PREVIEW		"preview.jpg"
+
 static void errordumper(GPLogLevel level, const char *domain, const char *str,
                  void *data) {
 /*	printf("%s (data %p)\n", str,data);*/
@@ -106,6 +109,28 @@ main(int argc, char **argv) {
 		}
 
 		/*
+		 * Read configuration changes from "config.txt".
+		 */
+		if (read_config) {
+			FILE	*config;
+			char	buf[512];
+
+			config = fopen (CONFIG_FILE, "r");
+			while (fgets (buf, sizeof(buf), config)) {
+				char	*s;
+
+				s = strchr(buf,'=');
+				if (!s) continue;
+
+				*s=0;
+				retval = set_config_value_string (camera, buf, s+1, context);
+				if (retval < GP_OK)
+					fprintf (stderr, "setting configuration '%s' to '%s' failed with %d.\n", buf, s+1, retval);
+			}
+			fclose (config);
+		}
+
+		/*
 		 * Capture a preview on every loop. Save as preview.jpg.
 		 */
 		retval = gp_file_new(&file);
@@ -119,7 +144,7 @@ main(int argc, char **argv) {
 			fprintf(stderr,"gp_camera_capture_preview failed: %d\n", retval);
 			exit(1);
 		}
-		retval = gp_file_save(file, "preview.jpg");
+		retval = gp_file_save(file, PREVIEW);
 		if (retval != GP_OK) {
 			fprintf(stderr,"saving preview failed: %d\n", retval);
 			exit(1);
