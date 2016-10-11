@@ -3728,6 +3728,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	GP_LOG_D ("waiting for image availability");
 	event_start = time_now();
 	do {
+#if 0
 		/* needed on older cameras like the a58, check for events ... */
 		C_PTP (ptp_check_event (params));
 		if (ptp_get_one_event(params, &event)) {
@@ -3740,6 +3741,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				break;
 			}
 		}
+#endif
 
 		C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
 		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
