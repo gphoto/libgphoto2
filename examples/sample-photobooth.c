@@ -115,6 +115,8 @@ main(int argc, char **argv) {
 			FILE	*config;
 			char	buf[512];
 
+			read_config = 0;
+
 			config = fopen (CONFIG_FILE, "r");
 			while (fgets (buf, sizeof(buf), config)) {
 				char	*s;
