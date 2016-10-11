@@ -96,12 +96,18 @@ main(int argc, char **argv) {
 		CameraFile *file;
 		char output_file[32];
 
+		/*
+		 * Capture a full picture on demand. Use unique filenames.
+		 */
 		if (capture_now) {
 			capture_now = 0;
 			sprintf(output_file, "image-%03d.jpg", capturecnt++);
 			capture_to_file(camera, context, output_file);
 		}
 
+		/*
+		 * Capture a preview on every loop. Save as preview.jpg.
+		 */
 		retval = gp_file_new(&file);
 		if (retval != GP_OK) {
 			fprintf(stderr,"gp_file_new: %d\n", retval);
@@ -119,6 +125,61 @@ main(int argc, char **argv) {
 			exit(1);
 		}
 		gp_file_unref(file);
+		/*
+		 * Check and drain the event queue.
+		 * 	Download newly captured images.
+		 *	Ignore the rest events.
+		 */
+		while (1) {
+			CameraEventType	evttype;
+			CameraFilePath	*path;
+			void    	*evtdata;
+			int		fd;
+
+			evtdata = NULL;
+			retval = gp_camera_wait_for_event (camera, 1, &evttype, &evtdata, context);
+			if (retval != GP_OK) break;
+			switch (evttype) {
+			case GP_EVENT_FILE_ADDED:
+				path = (CameraFilePath*)evtdata;
+				printf("File added on the camera: %s/%s\n", path->folder, path->name);
+
+				sprintf(output_file, "image-%03d.jpg", capturecnt++);
+
+				fd = open(output_file, O_CREAT | O_WRONLY, 0644);
+				retval = gp_file_new_from_fd(&file, fd);
+				retval = gp_camera_file_get(camera, path->folder, path->name,
+					     GP_FILE_TYPE_NORMAL, file, context);
+
+				retval = gp_camera_file_delete(camera, path->folder, path->name, context);
+				gp_file_free(file);
+				free (evtdata);
+				break;
+			case GP_EVENT_FOLDER_ADDED:
+				path = (CameraFilePath*)evtdata;
+				printf("Folder added on camera: %s / %s\n", path->folder, path->name);
+				free (evtdata);
+				break;
+			case GP_EVENT_CAPTURE_COMPLETE:
+				printf("Capture Complete.\n");
+				break;
+			case GP_EVENT_TIMEOUT:
+				break;
+			case GP_EVENT_UNKNOWN:
+				if (evtdata) {
+					printf("Unknown event: %s.\n", (char*)evtdata);
+					free (evtdata);
+				} else {
+					printf("Unknown event.\n");
+				}
+				break;
+			default:
+				printf("Type %d?\n", evttype);
+				break;
+			}
+			if (evttype == GP_EVENT_TIMEOUT)
+				break;
+		}
 	}
 	gp_camera_exit(camera, context);
 	return 0;
