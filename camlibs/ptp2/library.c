@@ -902,8 +902,14 @@ static struct {
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:Alpha-A3000",	      0x054c, 0x074e, 0},
 
+	/* https://github.com/gphoto/libgphoto2/issues/70 */
+	{"Sony:Alpha-A6300 (MTP)",    0x054c, 0x077a, 0},
+
 	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
 	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
+
+	/* https://github.com/gphoto/libgphoto2/issues/70 */
+	{"Sony:Alpha-A6300 (Control)",0x054c, 0x079c, PTP_CAP},
 
 	/* Andre Crone <andre@elysia.nl>, adjusted */
 	{"Sony:Alpha-A7S II (Control)",0x054c,0x0a71, PTP_CAP},
