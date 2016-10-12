@@ -6,12 +6,15 @@ canon:
 ptp2:
 * sony: exposure compensation setting fixed
 * sony: capture and autofocus configurations, similar to eosremoterelease
+* sony: tethering implemented
 * fixed serialnumber retrieval
-* Nikon: "autofocus" for global autofocus enable/disable (default on, default liveview off)
+* nikon: "autofocus" config variable for global autofocus enable/disable (default on, default liveview off)
+* various bugs fixed, stability improved
 * new ids reported:
-  - Sony Alpha 7, DSC-RX100M4
-  - Nikon DSC Df
-  - Canon EOS 1Dx Mark 3, 80D
+  - Sony Alpha 7, DSC-RX100M4, NEX-7, DSC-HX20V, Alpha 6300, A7S II, A7, 
+  - Nikon DSC Df, D7200, D5, D810A
+  - Canon EOS 1Dx Mark 3, 80D, 5D Mark IV
+  - Canon Digital IXUS 180
 
 libgphoto2:
 * speed up initial startup
