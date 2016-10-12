@@ -806,7 +806,6 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Canon EOS events */
 #define PTP_EC_CANON_EOS_RequestGetEvent		0xc101
 #define PTP_EC_CANON_EOS_ObjectAddedEx			0xc181
-#define PTP_EC_CANON_EOS_ObjectAddedUnknown     0xc1a7
 #define PTP_EC_CANON_EOS_ObjectRemoved			0xc182
 #define PTP_EC_CANON_EOS_RequestGetObjectInfoEx		0xc183
 #define PTP_EC_CANON_EOS_StorageStatusChanged		0xc184
@@ -830,6 +829,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_AfResult			0xc1a3
 #define PTP_EC_CANON_EOS_CTGInfoCheckComplete		0xc1a4
 #define PTP_EC_CANON_EOS_OLCInfoChanged			0xc1a5
+#define PTP_EC_CANON_EOS_ObjectAddedUnknown		0xc1a7
 #define PTP_EC_CANON_EOS_ObjectAddedNew			0xc1a9
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
