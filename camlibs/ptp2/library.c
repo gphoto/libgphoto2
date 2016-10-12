@@ -3666,7 +3666,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
 	static int	capcnt = 0;
-	int		dual = 0;
 	PTPDevicePropDesc	dpd;
 	struct timeval	event_start;
 
@@ -3679,7 +3678,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
 	if (dpd.CurrentValue.u8 == 0x13) {
 		GP_LOG_D ("expecting raw+jpeg capture");
-		dual = 1;
 	}
 
 	/* half-press */
@@ -4735,6 +4733,72 @@ downloadnow:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+	) {
+		PTPObjectInfo		oi;
+		PTPDevicePropDesc	dpd;
+
+		/* Synthesize file added events by checking if we have pending images */
+
+		C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
+		GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
+
+		/* if prop 0xd215 > 0x8000, the object in RAM is available at location 0xffffc001 */
+		if (dpd.CurrentValue.u16 <= 0x8000)
+			goto sonyout;
+
+		GP_LOG_D ("SONY ObjectInMemory count change seen, retrieving file");
+
+		newobject = 0xffffc001;
+		ret = ptp_getobjectinfo (params, newobject, &oi);
+		if (ret != PTP_RC_OK)
+			goto sonyout;
+		debug_objectinfo(params, newobject, &oi);
+		C_MEM (path = malloc(sizeof(CameraFilePath)));
+		path->name[0]='\0';
+		strcpy (path->folder,"/");
+		ret = gp_file_new(&file);
+		if (ret!=GP_OK)
+			return ret;
+		if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+			GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+			sprintf (path->name, "capt%04d.arw", capcnt++);
+			gp_file_set_mime_type (file, "image/x-sony-arw"); /* FIXME */
+		} else {
+			sprintf (path->name, "capt%04d.jpg", capcnt++);
+			gp_file_set_mime_type (file, GP_MIME_JPEG);
+		}
+		gp_file_set_mtime (file, time(NULL));
+
+		GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+		C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
+		ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		*eventtype = GP_EVENT_FILE_ADDED;
+		*eventdata = path;
+		/* We have now handed over the file, disclaim responsibility by unref. */
+		gp_file_unref (file);
+		return GP_OK;
+		/* do regular events */
+	}
+sonyout:
+
 	C_PTP_REP (ptp_check_event(params));
 	if (!ptp_get_one_event (params, &event)) {
 		/* FIXME: Might be another error, but usually is a timeout */
@@ -4748,7 +4812,10 @@ downloadnow:
 handleregular:
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
 		switch (event.Code) {
+		/* We are handling this in the above sony case. events might
+		 * come to early and retrieving the image might reboot the camera. */
 		case PTP_EC_Sony_ObjectAdded: {
+#if 0
 			PTPObjectInfo	oi;
 
 			C_MEM (path = malloc(sizeof(CameraFilePath)));
@@ -4764,6 +4831,8 @@ handleregular:
 			*eventtype = GP_EVENT_FILE_ADDED;
 			*eventdata = path;
 			return GP_OK;
+#endif
+			break;
 		}
 		case PTP_EC_Sony_PropertyChanged: /* same as DevicePropChanged, just go there */
 			event.Code = PTP_EC_DevicePropChanged;
