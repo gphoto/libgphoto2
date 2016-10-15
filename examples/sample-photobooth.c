@@ -43,7 +43,7 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 		strcpy (s+1, t+1);
 	}
 
-	fd = open(fn, O_CREAT | O_WRONLY, 0644);
+	fd = open(fn, O_CREAT | O_WRONLY | O_BINARY, 0644);
 	retval = gp_file_new_from_fd(&file, fd);
 	if (retval < GP_OK) {
 		close(fd);
@@ -67,15 +67,19 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 static void
 sig_handler_capture_now (int sig_num)
 {
-        signal (SIGUSR1, sig_handler_capture_now);
+        #if !defined (WIN32)
+		signal (SIGUSR1, sig_handler_capture_now);
         capture_now = 1;
+		#endif //!defined (WIN32)
 }
 
 static void
 sig_handler_read_config (int sig_num)
 {
-        signal (SIGUSR2, sig_handler_read_config);
+        #if !defined (WIN32)
+		signal (SIGUSR2, sig_handler_read_config);
         read_config = 1;
+		#endif //!defined (WIN32)
 }
 
 int
@@ -91,9 +95,11 @@ main(int argc, char **argv) {
 	printf("kill -USR2 %d to read the 'config.txt'.\n", getpid());
 	printf("kill -TERM %d to finish.\n", getpid());
 
+	#if !defined (WIN32)
         signal (SIGUSR1, sig_handler_capture_now);
         signal (SIGUSR2, sig_handler_read_config);
-
+	#endif //!defined (WIN32)
+	
 	gp_log_add_func(GP_LOG_ERROR, errordumper, 0);
 	gp_camera_new(&camera);
 
@@ -202,7 +208,7 @@ main(int argc, char **argv) {
 					sprintf(output_file, "image-%04d.jpg", capturecnt++);
 				}
 
-				fd = open(output_file, O_CREAT | O_WRONLY, 0644);
+				fd = open(output_file, O_CREAT | O_WRONLY | O_BINARY, 0644);
 				retval = gp_file_new_from_fd(&file, fd);
 				retval = gp_camera_file_get(camera, path->folder, path->name,
 					     GP_FILE_TYPE_NORMAL, file, context);

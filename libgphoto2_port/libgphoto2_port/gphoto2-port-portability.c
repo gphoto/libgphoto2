@@ -44,11 +44,14 @@ void gp_port_win_convert_path (char *path) {
                 /* already converted */
                 return;
 
-        if (path[0] != '.') {
+        //What was the purpose of this?
+        //copying the second character to the first place if path does not start with "."?
+/*        if (path[0] != '.') {
                 path[0] = path[1];
                 path[1] = ':';
                 path[2] = '\\';
         }
+*/
 
         for (x=0; x<strlen(path); x++)
                 if (path[x] == '/')

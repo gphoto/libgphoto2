@@ -141,8 +141,9 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
   char tmp_buf[150]="";
   buf[0] = 0x03;
   buf[1] = 0x02;
+  int i=0;
   sendcommand(port,buf, 2);
-  recvdata(port, buf, 33);
+  i=recvdata(port, buf, 33);
 #ifdef DEBUG
   fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
 #endif
@@ -196,8 +197,9 @@ int F1status(GPPort *port)
 
   buf[0] = 0x03;
   buf[1] = 0x02;
+  int i=0;
   sendcommand(port,buf, 2);
-  recvdata(port, buf, 33);
+  i=recvdata(port, buf, 33);
 #ifdef DEBUG
   fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
 #endif
@@ -437,6 +439,7 @@ unsigned long F1finfo(GPPort *port,char *name)
   }
 
 #ifdef DEBUG
+  int i=0;
   fprintf(stderr,"info:");
   for(i = 0; i < len ; i++)
     fprintf(stderr,"%02x ", buf[i]);
