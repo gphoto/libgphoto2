@@ -14,7 +14,12 @@
 #include <string.h>
 #include <gphoto2/gphoto2.h>
 
-#define DEBUG
+#if !defined (O_BINARY)
+    //To have portable open() on *nix and on Windows
+    #define O_BINARY 0
+#endif
+
+//#define DEBUG
 
 static int aperture;
 static float shutterspeed;
