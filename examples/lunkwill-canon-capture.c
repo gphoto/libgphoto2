@@ -107,7 +107,7 @@ capture_to_file(Camera *canon, GPContext *canoncontext, char *fn) {
 
 	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
 
-	fd = open(fn, O_CREAT | O_WRONLY, 0644);
+	fd = open(fn, O_CREAT | O_WRONLY | O_BINARY, 0644);
 	retval = gp_file_new_from_fd(&canonfile, fd);
 	printf("  Retval: %d\n", retval);
 	retval = gp_camera_file_get(canon, camera_file_path.folder, camera_file_path.name,

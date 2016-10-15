@@ -34,6 +34,10 @@
 #include <dirent.h>
 #include <string.h>
 
+#ifndef ENODATA
+#   define ENODATA	120	/* No data available */
+#endif
+
 #include <usb.h>
 
 #include <gphoto2/gphoto2-port.h>
