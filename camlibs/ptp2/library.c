@@ -2260,6 +2260,9 @@ camera_abilities (CameraAbilitiesList *list)
 				(strstr(models[i].model,"EOS") || strstr(models[i].model,"Rebel"))
 			)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+			/* Sony Alpha are also trigger capture capable */
+			if (	models[i].usb_vendor == 0x54c)
+				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
 #if 0
 			/* SX 100 IS ... works in sdram, not in card mode */
 			if (	(models[i].usb_vendor == 0x4a9) &&
@@ -4260,6 +4263,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		return GP_OK;
 	}
+	/* Canon Powershot */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)
 	) {
@@ -4333,7 +4337,67 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		GP_LOG_D ("Canon Powershot capture triggered...");
 		return GP_OK;
 	}
-	
+
+	/* Sony Alpha */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+	) {
+		PTPPropertyValue	propval;
+		struct timeval		event_start;
+		PTPContainer		event;
+		PTPDevicePropDesc	dpd;
+
+		/* half-press */
+		propval.u16 = 2;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+
+		/* full-press */
+		propval.u16 = 2;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+
+		/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
+		 * get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
+		 */
+
+		GP_LOG_D ("holding down shutterbutton");
+		event_start = time_now();
+		do {
+			/* needed on older cameras like the a58, check for events ... */
+			C_PTP (ptp_check_event (params));
+			if (ptp_get_one_event(params, &event)) {
+				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
+					(event.Param1 == PTP_DPC_SONY_FocusFound)
+				) {
+					GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
+					break;
+				}
+			}
+
+			/* Alternative code in case we miss the event */
+
+			C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+			C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
+			GP_LOG_D ("DEBUG== 0xd213 after shutter press = %d", dpd.CurrentValue.u8);
+			/* if prop 0xd213 = 2, the focus seems to be achieved */
+			if (dpd.CurrentValue.u8 == 2) {
+				GP_LOG_D ("SONY Property change seen, 0xd213... ending press");
+				break;
+			}
+
+		} while (time_since (event_start) < 1000);
+		GP_LOG_D ("releasing shutterbutton");
+
+		/* release full-press */
+		propval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+
+		/* release half-press */
+		propval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+
+		return GP_OK;
+	}
 
 #if 0
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
