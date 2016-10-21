@@ -3036,7 +3036,9 @@ capturetriggered:
 		}
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 50*1000)); /* 50 seconds */
+	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
+	/* Maximum image time is 30 seconds, but NR processing might take 25 seconds ... so wait longer. 
+	 * see https://github.com/gphoto/libgphoto2/issues/94 */
 
 	if (!newobject) newobject = 0xffff0001;
 
