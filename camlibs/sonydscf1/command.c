@@ -144,7 +144,7 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
   sendcommand(port,buf, 2);
   recvdata(port, buf, 33);
 #ifdef DEBUG
-  fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
+  fprintf(stderr,"Status: %02x%02x:%02x\n", buf[0], buf[1], buf[2]);
 #endif
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
     Abort(port);
@@ -199,7 +199,7 @@ int F1status(GPPort *port)
   sendcommand(port,buf, 2);
   recvdata(port, buf, 33);
 #ifdef DEBUG
-  fprintf(stderr,"Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
+  fprintf(stderr,"Status: %02x%02x:%02x\n", buf[0], buf[1], buf[2]);
 #endif
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
     Abort(port);
@@ -435,13 +435,6 @@ unsigned long F1finfo(GPPort *port,char *name)
     Abort(port);
     return(0);
   }
-
-#ifdef DEBUG
-  fprintf(stderr,"info:");
-  for(i = 0; i < len ; i++)
-    fprintf(stderr,"%02x ", buf[i]);
-  fprintf(stderr,"len = %d\n", len);
-#endif
 
   flen = buf[33] * 0x1000000 + buf[34] * 0x10000 +
     buf[35] * 0x100 + buf[36];

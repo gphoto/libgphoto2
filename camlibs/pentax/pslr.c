@@ -1021,7 +1021,7 @@ static int ipslr_press_shutter(ipslr_handle_t *p)
     CHECK(ipslr_write_args(p, 1, 2));
     CHECK(command(p, 0x10, 0x05, 0x04));
     get_status(p);
-    DPRINT("shutter result code: 0x%x\n", r);
+    DPRINT("shutter result code: 0x%x\n", p->status);
     return PSLR_OK;
 }
 
