@@ -830,7 +830,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_CTGInfoCheckComplete		0xc1a4
 #define PTP_EC_CANON_EOS_OLCInfoChanged			0xc1a5
 #define PTP_EC_CANON_EOS_ObjectAddedUnknown		0xc1a7
-#define PTP_EC_CANON_EOS_ObjectAddedNew			0xc1a9
+#define PTP_EC_CANON_EOS_RequestObjectTransferNew	0xc1a9
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
 /* Nikon extension Event Codes */
