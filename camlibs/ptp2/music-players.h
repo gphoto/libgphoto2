@@ -607,8 +607,11 @@
   /* https://sourceforge.net/p/libmtp/bugs/1341/ */
   { "Acer", 0x0502, "Liquid S56", 0x3725,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/228/ */
+  { "Acer", 0x0502, "Liquid Z220 (ID1)", 0x374f,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/188/ */
-  { "Acer", 0x0502, "Liquid Z220", 0x3750,
+  { "Acer", 0x0502, "Liquid Z220 (ID2)", 0x3750,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1478/ */
   { "Acer", 0x0502, "Liquid Z330", 0x3750,
@@ -1838,6 +1841,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP", 0x01da,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "F5321 MTP", 0x01e8,
+      DEVICE_FLAG_NONE },
 
 
   /*
@@ -1940,6 +1945,8 @@
   { "SONY", 0x0fce, "XPeria Z5 MTP+CDROM", 0x41d9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP+CDROM", 0x41da,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "F5321 MTP+CDROM", 0x41e8,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2067,6 +2074,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP+ADB", 0x51da,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "F5321 MTP+ADB", 0x41e8,
+      DEVICE_FLAG_NONE },
 
   /*
    * MTP+UMS modes
@@ -2143,6 +2152,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1477/ */
   { "Motorola", 0x22b8, "Moto Maxx (XT1225)", 0x2ea4,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/189/ */
+  { "Motorola", 0x22b8, "MB632", 0x2dff,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Jader Rodrigues Simoes <jadersimoes@users.sourceforge.net>
   { "Motorola", 0x22b8, "Xoom 2 Media Edition (ID3)", 0x41cf,
@@ -2631,6 +2643,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Lenovo", 0x17ef, "IdeaPad A3000 (ID2)", 0x75be,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/232/ */
+  { "Lenovo", 0x17ef, "A706", 0x7614,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Lenovo", 0x17ef, "IdeaTab S5000", 0x76e8,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Lenovo", 0x17ef, "Toga Tablet B6000-F", 0x76f2,
@@ -2731,6 +2746,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1418/ */
   { "Huawei", 0x12d1, "Honor 3C", 0x2012,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/186/ */
+  { "Huawei", 0x12d1, "Y360-U61", 0x2567,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/227/ */
   { "Huawei", 0x12d1, "Y560-L01", 0x259c,
