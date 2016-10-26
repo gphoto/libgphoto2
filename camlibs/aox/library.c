@@ -211,13 +211,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_NORMAL:
-		if ((w == 320)) {
+		if (w == 320) {
 			gp_file_detect_mime_type (file); /* Detected as "raw"*/
 			gp_file_set_data_and_size (file, (char *)data, len);
 			gp_file_adjust_name_for_mime_type (file);
 			break;
 		}
-		if ((w == 640)){
+		if (w == 640) {
 			/* Stripping useless header */
 			p_data = data + 0x98;
 			/* Picture is mirror-imaged.*/
