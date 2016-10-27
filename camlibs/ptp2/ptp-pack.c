@@ -2231,9 +2231,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					ptp_debug (params, "    %d: %02x", k-8, curdata[k]);
 			}
 			len = dtoh32a(curdata+8);
-			if (len != size-8) {
+			if ((len != size-8) && (len != size-4)) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ptp_debug (params, "event %d: size %d, len %d", i, size, len);
+				ptp_debug (params, "event %d: OLC unexpected size %d for blob len %d (not -4 nor -8)", i, size, len);
 				break;
 			}
 			mask = dtoh16a(curdata+8+4);
