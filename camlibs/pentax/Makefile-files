@@ -1,18 +1,5 @@
 # -*- Makefile -*-
 
-# If you use this as pentax for a real camlib (say 'foobar.la'),
-# make sure to change the "noinst_" at the beginning of the following
-# lines:
-#   * "noinst_DATA" into "camlibdoc_DATA"
-#   * "noinst_LTLIBRARIES" into "EXTRA_LTLIBRARIES"
-#
-# Additionally, you must add add an include line to the Makefile-files
-# of the new camlib to camlibs/Makefile.am:
-#   * "include my-new-camlib/Makefile-files"
-#
-# And as the last step, you need to add it to configure.ac:
-#   * GP_CAMLIB([foobar])dnl
-
 EXTRA_DIST += pentax/README.pentax pentax/ChangeLog
 
 camlibdoc_DATA += pentax/README.pentax
