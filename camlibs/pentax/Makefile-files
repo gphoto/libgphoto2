@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 # If you use this as pentax for a real camlib (say 'foobar.la'),
 # make sure to change the "noinst_" at the beginning of the following
 # lines:

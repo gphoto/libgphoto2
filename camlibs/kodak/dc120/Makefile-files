@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += kodak_dc120.la
 EXTRA_DIST += kodak/dc120/ChangeLog
 

@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += pccam600/README.pccam600 pccam600/ChangeLog
 camlibdoc_DATA += pccam600/README.pccam600
 

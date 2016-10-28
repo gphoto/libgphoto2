@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += samsung.la
 EXTRA_DIST += samsung/ChangeLog
 

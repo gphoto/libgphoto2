@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += adc65/README.adc65 adc65/TODO adc65/Changelog
 camlibdoc_DATA += adc65/README.adc65
 

@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += tp6801/README.tp6801 tp6801/tp6801-dump.c
 camlibdoc_DATA += tp6801/README.tp6801
 

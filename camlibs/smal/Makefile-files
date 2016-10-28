@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += smal/README.smal smal/ChangeLog
 camlibdoc_DATA += smal/README.smal
 

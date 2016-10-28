@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += clicksmart310/README.clicksmart310
 camlibdoc_DATA += clicksmart310/README.clicksmart310
 

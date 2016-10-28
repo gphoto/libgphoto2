@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += st2205/README.st2205-compression st2205/README.st2205
 camlibdoc_DATA += st2205/README.st2205-compression st2205/README.st2205
 

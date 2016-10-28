@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += ricoh/g3.txt ricoh/ChangeLog
 
 

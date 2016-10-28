@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += mustek/AUTHOR  mustek/README.mustek mustek/ChangeLog mustek/STATUS
 camlibdoc_DATA += mustek/README.mustek
 

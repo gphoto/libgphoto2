@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += directory.la
 EXTRA_DIST += directory/ChangeLog
 

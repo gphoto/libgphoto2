@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += sonydscf1/README.sonydscf1 sonydscf1/ChangeLog
 camlibdoc_DATA += sonydscf1/README.sonydscf1
 

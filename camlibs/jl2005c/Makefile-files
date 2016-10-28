@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression jl2005c/ChangeLog
 camlibdoc_DATA += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression
 

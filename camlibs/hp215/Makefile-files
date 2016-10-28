@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += hp215.la
 EXTRA_DIST += hp215/ChangeLog hp215/PROTOCOL
 

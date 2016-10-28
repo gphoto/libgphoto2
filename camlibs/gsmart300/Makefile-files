@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += gsmart300/README.gsmart300 gsmart300/ChangeLog
 camlibdoc_DATA += gsmart300/README.gsmart300
 

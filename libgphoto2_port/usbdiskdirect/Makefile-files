@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 ## Compile the IO library into a libtool module shared library
 EXTRA_LTLIBRARIES += usbdiskdirect.la
 

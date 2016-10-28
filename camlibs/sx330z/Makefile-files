@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += sx330z.la
 EXTRA_DIST += sx330z/ChangeLog
 

@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += soundvision/README.soundvision soundvision/BUGS soundvision/ChangeLog
 camlibdoc_DATA += soundvision/README.soundvision
 

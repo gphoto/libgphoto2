@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += topfield.la
 EXTRA_DIST += topfield/ChangeLog
 topfield_la_SOURCES =  topfield/crc16.c topfield/crc16.h topfield/tf_bytes.c topfield/tf_bytes.h topfield/mjd.c topfield/mjd.h \

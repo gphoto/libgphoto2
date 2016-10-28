@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += fuji/PROTOCOL fuji/ChangeLog
 
 EXTRA_LTLIBRARIES += fuji.la

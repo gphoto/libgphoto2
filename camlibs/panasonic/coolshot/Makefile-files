@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += panasonic/coolshot/README.panasonic-coolshot panasonic/coolshot/ChangeLog
 camlibdoc_DATA += panasonic/coolshot/README.panasonic-coolshot
 

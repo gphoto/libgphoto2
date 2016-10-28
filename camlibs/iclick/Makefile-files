@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += iclick/README.iclick iclick/ChangeLog
 camlibdoc_DATA += iclick/README.iclick
 

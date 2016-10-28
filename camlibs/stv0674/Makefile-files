@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += stv0674/Protocol stv0674/Changelog
 
 EXTRA_LTLIBRARIES += stv0674.la

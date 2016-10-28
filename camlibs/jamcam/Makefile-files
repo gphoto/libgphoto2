@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += jamcam/README.jamcam jamcam/ChangeLog
 camlibdoc_DATA += jamcam/README.jamcam
 

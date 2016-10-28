@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += kodak_dc210.la
 EXTRA_DIST += kodak/dc210/ChangeLog kodak/dc210/TODO
 

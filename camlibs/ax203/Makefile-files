@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += ax203/README.ax203-compression ax203/README.ax203
 camlibdoc_DATA += ax203/README.ax203-compression ax203/README.ax203
 

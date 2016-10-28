@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += \
 	stv0680/CREDITS stv0680/ChangeLog stv0680/LICENCE \
 	stv0680/README.pdf \

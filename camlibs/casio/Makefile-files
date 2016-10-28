@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += casio/PROTOCOL.txt casio/ChangeLog
 
 EXTRA_LTLIBRARIES += casio_qv.la

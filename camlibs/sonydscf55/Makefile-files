@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_LTLIBRARIES += sony_dscf55.la
 EXTRA_DIST += sonydscf55/ChangeLog sonydscf55/TODO
 

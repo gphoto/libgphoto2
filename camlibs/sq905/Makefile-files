@@ -1,3 +1,5 @@
+# -*- Makefile -*-
+
 EXTRA_DIST += sq905/README.913C sq905/README.sq905 sq905/ChangeLog sq905/TODO
 camlibdoc_DATA += sq905/README.913C sq905/README.sq905
 
