@@ -15,7 +15,7 @@
  */
 
 #ifndef __SPCA50X_FLASH_H__
-#define __SPCA50X_FLASH_H_
+#define __SPCA50X_FLASH_H__
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
