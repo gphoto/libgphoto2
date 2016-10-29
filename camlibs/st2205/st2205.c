@@ -810,7 +810,7 @@ st2205_commit(Camera *camera)
 static int
 st2205_init(Camera *camera)
 {
-	uint8_t *shuffle_src;
+	const uint8_t *shuffle_src;
 	int x, y, i, j, shuffle_size, checksum;
 	int is240x320 = 0;
 	const struct {
