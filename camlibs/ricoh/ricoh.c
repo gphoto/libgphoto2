@@ -98,7 +98,9 @@ ricoh_send (Camera *camera, GPContext *context, unsigned char cmd,
 	/* First, make sure there is no data coming from the camera. */
 	CR (gp_port_get_timeout (camera->port, &timeout));
 	CR (gp_port_set_timeout (camera->port, 20));
-	while (gp_port_read (camera->port, (char *)buf, 1) >= 0);
+	while (gp_port_read (camera->port, (char *)buf, 1) >= 0) {
+	  /* do nothing */
+	}
 	CR (gp_port_set_timeout (camera->port, timeout));
 
 	/* Write header */
