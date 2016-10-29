@@ -136,6 +136,11 @@ struct _GPPortPrivateLibrary {
 	struct libusb_device_descriptor	*descs;
 	libusb_device			**devs;
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	/* for dumping the read usb content */
+	int				logfd;
+#endif
+
 #define INTERRUPT_TRANSFERS 10
 	struct libusb_transfer		*transfers[INTERRUPT_TRANSFERS];
 	int 				nrofirqs;
@@ -332,6 +337,10 @@ static int gp_libusb1_init (GPPort *port)
 		port->pl = NULL;
 		return GP_ERROR_IO;
 	}
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	unlink("usblog.raw");
+	port->pl->logfd = open("usblog.raw",O_CREAT|O_WRONLY,0644);
+#endif
 #if 0
 	libusb_set_debug (port->pl->ctx, 255);
 #endif
@@ -343,6 +352,9 @@ gp_libusb1_exit (GPPort *port)
 {
 	if (port->pl) {
 		free (port->pl->descs);
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+		if (port->pl->logfd >=0 ) close (port->pl->logfd);
+#endif
 		if (port->pl->nrofdevs)
 			libusb_free_device_list (port->pl->devs, 1);
 		libusb_exit (port->pl->ctx);
@@ -570,6 +582,9 @@ gp_libusb1_read(GPPort *port, char *bytes, int size)
 			(unsigned char*)bytes, size, &curread, port->timeout),
 		  GP_ERROR_IO_READ );
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	write(port->pl->logfd, bytes, curread);
+#endif
         return curread;
 }
 
