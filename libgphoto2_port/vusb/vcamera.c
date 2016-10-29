@@ -1775,13 +1775,13 @@ vcam_process_output(vcamera *cam) {
 
 static int
 vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
-	int	toread = bytes;
+	unsigned int	toread = bytes;
 
 	if (toread > cam->nrinbulk)
 		toread = cam->nrinbulk;
 
 	if (cam->fuzzf) {
-		int hasread;
+		unsigned int hasread;
 
 		memset(data,0,toread);
 		if (cam->fuzzmode == FUZZMODE_PROTOCOL) {

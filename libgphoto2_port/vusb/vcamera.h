@@ -63,7 +63,7 @@ typedef struct vcamera {
 #define FUZZMODE_PROTOCOL	0
 #define FUZZMODE_NORMAL		1
 	FILE*		fuzzf;
-	int		fuzzpending;
+	unsigned int	fuzzpending;
 } vcamera;
 
 vcamera *vcamera_new(vcameratype);
