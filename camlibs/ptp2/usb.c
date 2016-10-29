@@ -214,7 +214,7 @@ finalize:
 }
 
 static uint16_t
-ptp_usb_getpacket(PTPParams *params, PTPUSBBulkContainer *packet, uint32_t *rlen)
+ptp_usb_getpacket(PTPParams *params, PTPUSBBulkContainer *packet, uint32_t maxsize, uint32_t *rlen)
 {
 	int		tries = 0, result;
 	Camera		*camera = ((PTPData *)params->data)->camera;
@@ -223,6 +223,10 @@ ptp_usb_getpacket(PTPParams *params, PTPUSBBulkContainer *packet, uint32_t *rlen
 	if (params->response_packet_size > 0) {
 		GP_LOG_D ("Returning previously buffered response packet.");
 		/* If there is a buffered packet, just use it. */
+
+		if (params->response_packet_size > maxsize)
+			params->response_packet_size = maxsize;
+
 		memcpy(packet, params->response_packet, params->response_packet_size);
 		*rlen = params->response_packet_size;
 		free(params->response_packet);
@@ -267,7 +271,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	GP_LOG_D ("Reading PTP_OC 0x%0x (%s) data...", ptp->Code, ptp_get_opcode_name(params, ptp->Code));
 	PTP_CNT_INIT(usbdata);
 
-	ret = ptp_usb_getpacket (params, &usbdata, &bytes_read);
+	ret = ptp_usb_getpacket (params, &usbdata, sizeof(usbdata), &bytes_read);
 	if (ret != PTP_RC_OK)
 		goto exit;
 	if (dtoh16(usbdata.type) != PTP_USB_CONTAINER_DATA) {
@@ -433,7 +437,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	GP_LOG_D ("Reading PTP_OC 0x%0x (%s) response...", resp->Code, ptp_get_opcode_name(params, resp->Code));
 	PTP_CNT_INIT(usbresp);
 	/* read response, it should never be longer than sizeof(usbresp) */
-	ret = ptp_usb_getpacket(params, &usbresp, &rlen);
+	ret = ptp_usb_getpacket(params, &usbresp, sizeof(usbresp), &rlen);
 
 	if (ret!=PTP_RC_OK) {
 		ret = PTP_ERROR_IO;
