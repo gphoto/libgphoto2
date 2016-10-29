@@ -94,7 +94,7 @@ void gpi_jpeg_chunk_print(chunk *mychunk)
 /*    printf("Size=%i\n", mychunk->size); */
     nullpointerabortvoid(mychunk, "Chunk");
     for (x=0; x<mychunk->size; x++)
-        printf("%hX ", mychunk->data[x]);
+        printf("%hhX ", mychunk->data[x]);
     printf("\n");
 }
 
