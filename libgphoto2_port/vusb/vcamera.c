@@ -1763,7 +1763,12 @@ vcam_process_output(vcamera *cam) {
 		}
 	}
 	gp_log (GP_LOG_ERROR,__FUNCTION__,"received an unsupported opcode 0x%04x", ptp.code);
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+	/* in fuzzing mode, be less strict with unknown opcodes */
 	ptp_response (cam, PTP_RC_OperationNotSupported, 0);
+#else
+	ptp_response (cam, PTP_RC_OK, 0);
+#endif
 }
 
 static int
@@ -1773,11 +1778,12 @@ vcam_read(vcamera*cam, int ep, char *data, int bytes) {
 	if (toread > cam->nrinbulk)
 		toread = cam->nrinbulk;
 	if (cam->fuzzf) {
-		int i, hasread;
+		int hasread;
 
 		memset(data,0,toread);
 		if (cam->fuzzmode == FUZZMODE_PROTOCOL) {
-			fwrite(cam->inbulk[i], 1, toread, cam->fuzzf);
+			fwrite(cam->inbulk, 1, toread, cam->fuzzf);
+			memcpy (data, cam->inbulk, toread);
 		} else {
 			hasread = fread(data, 1, toread, cam->fuzzf);
 
