@@ -44,9 +44,9 @@ typedef struct vcamera {
 	int (*open)(struct vcamera*, const char*port);
 	int (*close)(struct vcamera*);
 
-	int (*read)(struct vcamera*,  int ep, char *data, int bytes);
-	int (*readint)(struct vcamera*,  char *data, int bytes, int timeout);
-	int (*write)(struct vcamera*, int ep, const char *data, int bytes);
+	int (*read)(struct vcamera*,  int ep, unsigned char *data, int bytes);
+	int (*readint)(struct vcamera*,  unsigned char *data, int bytes, int timeout);
+	int (*write)(struct vcamera*, int ep, const unsigned char *data, int bytes);
 
 	vcameratype	type;
 	unsigned char	*inbulk;
@@ -63,6 +63,7 @@ typedef struct vcamera {
 #define FUZZMODE_PROTOCOL	0
 #define FUZZMODE_NORMAL		1
 	FILE*		fuzzf;
+	int		fuzzpending;
 } vcamera;
 
 vcamera *vcamera_new(vcameratype);

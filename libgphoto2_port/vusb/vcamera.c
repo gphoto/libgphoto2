@@ -1658,6 +1658,7 @@ static int vcam_open(vcamera* cam, const char *port) {
 			cam->fuzzmode = FUZZMODE_PROTOCOL;
 		} else {
 			cam->fuzzf = fopen(s+1,"rb");
+			cam->fuzzpending = 0;
 			cam->fuzzmode = FUZZMODE_NORMAL;
 		}
 		if (cam->fuzzf == NULL) perror(s+1);
@@ -1669,6 +1670,7 @@ static int vcam_close(vcamera* cam) {
 	if (cam->fuzzf) {
 		fclose (cam->fuzzf);
 		cam->fuzzf = NULL;
+		cam->fuzzpending = 0;
 	}
 	return GP_OK;
 }
@@ -1772,38 +1774,60 @@ vcam_process_output(vcamera *cam) {
 }
 
 static int
-vcam_read(vcamera*cam, int ep, char *data, int bytes) {
+vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 	int	toread = bytes;
 
 	if (toread > cam->nrinbulk)
 		toread = cam->nrinbulk;
+
 	if (cam->fuzzf) {
 		int hasread;
 
 		memset(data,0,toread);
 		if (cam->fuzzmode == FUZZMODE_PROTOCOL) {
 			fwrite(cam->inbulk, 1, toread, cam->fuzzf);
-			memcpy (data, cam->inbulk, toread);
+			/* fallthrough */
 		} else {
-			hasread = fread(data, 1, toread, cam->fuzzf);
+			/* for reading fuzzer data */
+			if (cam->fuzzpending) {
+				toread = cam->fuzzpending;
+				if (toread > bytes) toread = bytes;
+				cam->fuzzpending -= toread;
+				hasread = fread (data, 1, toread, cam->fuzzf);
+			} else {
+				hasread = fread (data, 1, 4, cam->fuzzf);
+				if (hasread != 4)
+					return 0;
 
+				toread = data[0] | (data[1]<<8) | (data[2]<<16) | (data[3]<<24);
+
+				if (toread > bytes) {
+					cam->fuzzpending = toread - bytes;
+					toread = bytes;
+				}
+				toread -= 4;
+
+				hasread = fread(data + 4, 1, toread, cam->fuzzf);
+
+				hasread += 4; /* readd size */
+			}
 #if 0
 			for (i=0;i<toread;i++)
 				data[i] ^= cam->inbulk[i];
 #endif
 			toread = hasread;
+
+			return toread;
 		}
 	}
-	else
-	{
-		memcpy (data, cam->inbulk, toread);
-	}
+
+	memcpy (data, cam->inbulk, toread);
 	memmove (cam->inbulk, cam->inbulk + toread, (cam->nrinbulk - toread));
 	cam->nrinbulk -= toread;
 	return toread;
 }
 
-static int vcam_write(vcamera*cam, int ep, const char *data, int bytes) {
+static int vcam_write(vcamera*cam, int ep, const unsigned char *data, int bytes) {
 	/*gp_log_data("vusb", data, bytes, "data, vcam_write");*/
 	if (!cam->outbulk) {
 		cam->outbulk = malloc(bytes);
@@ -1879,7 +1903,7 @@ ptp_inject_interrupt(vcamera*cam, int when, uint16_t code, int nparams, uint32_t
 }
 
 static int
-vcam_readint(vcamera*cam, char *data, int bytes, int timeout) {
+vcam_readint(vcamera*cam, unsigned char *data, int bytes, int timeout) {
 	struct timeval		now, end;
 	int 			newtimeout, tocopy;
 	struct ptp_interrupt	*pint;
