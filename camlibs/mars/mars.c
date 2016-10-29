@@ -74,7 +74,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 	 */ 
 
     	m_read(port, c, 16); 	
-	if ( (c[0] == 0x02 ) ) {
+	if (c[0] == 0x02) {
 		gp_port_write(port, "\x19", 1);
 		gp_port_read(port, c, 16);
 	}

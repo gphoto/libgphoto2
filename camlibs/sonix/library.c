@@ -482,7 +482,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		free(camera->pl);
 		return ret;
 	}
-	if ((camera->pl->fwversion[1] == 0x0a))
+	if (camera->pl->fwversion[1] == 0x0a)
 		return GP_ERROR_NOT_SUPPORTED;
 	k = gp_filesystem_number (camera->fs, "/", filename, context);
 	if (k+1 != camera->pl->num_pics) {
