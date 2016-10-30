@@ -1944,6 +1944,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DTC_UINT8:	XX( u8,  dtoh8a );
 #undef XX
 				default:
+					free (dpd->FORM.Enum.SupportedValue);
+					dpd->FORM.Enum.SupportedValue = NULL;
+					dpd->FORM.Enum.NumberOfValues = 0;
 					ptp_debug (params ,"event %d: data type 0x%04x of %x unhandled, raw values:", i, dpd->DataType, proptype, dtoh32a(xdata));
 					for (j=0;j<(size-PTP_ece_Prop_Desc_Data)/4;j++, xdata+=4) /* 4 is good for propxtype 3 */
 						ptp_debug (params, "    %3d: 0x%8x", j, dtoh32a(xdata));
