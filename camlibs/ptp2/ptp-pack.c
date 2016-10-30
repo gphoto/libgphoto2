@@ -1671,11 +1671,11 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 	maxlen = focus_points_in_use*6*4 + focus_points_in_use + 100;
 	if (halfsize != size-4) {
 		ptp_error(params, "halfsize %d is not expected %d", halfsize, size-4);
-		return "bad size";
+		return strdup("bad size");
 	}
 	if (20 + focus_points_in_struct*8 + (focus_points_in_struct+7)/8 > size) {
 		ptp_error(params, "size %d is too large for fp in struct %d", focus_points_in_struct*8 + 20 + (focus_points_in_struct+7)/8, size);
-		return "bad size 2";
+		return strdup("bad size 2");
 	}
 #if 0
 	ptp_debug(params,"d1d3 content:");
