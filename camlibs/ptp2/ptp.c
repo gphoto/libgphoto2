@@ -2405,6 +2405,11 @@ ptp_canon_eos_getobjectinfoex (
 		return PTP_RC_OK;
 	}
 
+	if (size < 4) {
+		ret = PTP_RC_GeneralError;
+		goto exit;
+	}
+
 	*nrofentries = dtoh32a(data);
 	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
 	if (!*entries) {
@@ -2414,6 +2419,14 @@ ptp_canon_eos_getobjectinfoex (
 
 	xdata = data+sizeof(uint32_t);
 	for (i=0;i<*nrofentries;i++) {
+		if ((dtoh32a(xdata) + (xdata-data)) > size) {
+			ptp_debug (params, "reading canon FEs run over read data size?\n");
+			free (*entries);
+			*entries = NULL;
+			*nrofentries = 0;
+			ret = PTP_RC_GeneralError;
+			goto exit;
+		}
 		ptp_unpack_Canon_EOS_FE (params, &xdata[4], &((*entries)[i]));
 		xdata += dtoh32a(xdata);
 	}
