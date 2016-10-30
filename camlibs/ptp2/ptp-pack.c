@@ -1817,13 +1817,19 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 
 	if (data==NULL)
 		return 0;
-	while (curdata - data < datasize) {
+	while (curdata - data + 8 < datasize) {
 		uint32_t	size = dtoh32a(&curdata[PTP_ece_Size]);
 		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
 
 		if ((size == 8) && (type == 0))
 			break;
-		if (type == PTP_EC_CANON_EOS_OLCInfoChanged) {
+		if (curdata - data + size >= datasize) {
+			ptp_debug (params, "canon eos event decoder ran over supplied data, skipping entries");
+			break;
+		}
+		if (	(type == PTP_EC_CANON_EOS_OLCInfoChanged)  &&
+			(curdata - data + 12 > datasize)
+		) {
 			unsigned int j;
 
 			for (j=0;j<31;j++)
@@ -1837,7 +1843,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 	if (!ce) return 0;
 
 	curdata = data;
-	while (curdata - data < datasize) {
+	while (curdata - data  + 8 < datasize) {
 		uint32_t	size = dtoh32a(&curdata[PTP_ece_Size]);
 		uint32_t	type = dtoh32a(&curdata[PTP_ece_Type]);
 
