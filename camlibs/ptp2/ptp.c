@@ -2409,6 +2409,11 @@ ptp_canon_eos_getobjectinfoex (
 		ret = PTP_RC_GeneralError;
 		goto exit;
 	}
+	/* check for integer overflow */
+	if (dtoh32a(data) >= INT_MAX/sizeof(PTPCANONFolderEntry))  {
+		ret = PTP_RC_GeneralError;
+		goto exit;
+	}
 
 	*nrofentries = dtoh32a(data);
 	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
