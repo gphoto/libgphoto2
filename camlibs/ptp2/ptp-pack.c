@@ -441,6 +441,7 @@ ptp_free_DI (PTPDeviceInfo *di) {
 	free (di->OperationsSupported);
 	free (di->EventsSupported);
 	free (di->DevicePropertiesSupported);
+	memset(di, 0, sizeof(*di));
 }
 
 /* EOS Device Info unpack */
