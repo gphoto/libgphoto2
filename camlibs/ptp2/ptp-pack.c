@@ -1977,6 +1977,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					if (	(params->canon_props[j].size != size) ||
 						(memcmp(params->canon_props[j].data,xdata,size-PTP_ece_Prop_Val_Data))) {
 						params->canon_props[j].data = realloc(params->canon_props[j].data,size-PTP_ece_Prop_Val_Data);
+						params->canon_props[j].size = size;
 						memcpy (params->canon_props[j].data,xdata,size-PTP_ece_Prop_Val_Data);
 					}
 				} else {
