@@ -274,6 +274,13 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	ret = ptp_usb_getpacket (params, &usbdata, sizeof(usbdata), &bytes_read);
 	if (ret != PTP_RC_OK)
 		goto exit;
+
+	if (bytes_read < PTP_USB_BULK_HDR_LEN) {
+		GP_LOG_E ("Read short bulk packet in data phase %d vs %d vs min len %d", bytes_read, dtoh32(usbdata.length), PTP_USB_BULK_HDR_LEN);
+		ret = PTP_ERROR_IO;
+		goto exit;
+	}
+
 	if (dtoh16(usbdata.type) != PTP_USB_CONTAINER_DATA) {
 		/* We might have got a response instead. On error for instance. */
 		if (dtoh16(usbdata.type) == PTP_USB_CONTAINER_RESPONSE) {
