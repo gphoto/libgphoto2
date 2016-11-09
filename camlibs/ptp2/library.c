@@ -1307,6 +1307,8 @@ static struct {
 	{"Nikon:S2",              0x04b0, 0x0608, PTP_CAP|PTP_NIKON_1},
 	/* Raj Kumar <raj@archive.org> */
 	{"Nikon:J4",    		  0x04b0, 0x0609, PTP_CAP|PTP_NIKON_1},
+	/* Alexander Smith <a.smith@precisionhawk.com> */
+	{"Nikon:V3",    		  0x04b0, 0x060a, PTP_CAP|PTP_NIKON_1},
 
 	/* Wolfgang Goetz <Wolfgang.ztoeG@web.de> */
 	{"Nikon:J5",    		  0x04b0, 0x060b, PTP_CAP|PTP_NIKON_1},
