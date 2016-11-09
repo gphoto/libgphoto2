@@ -4100,7 +4100,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		do {
 			ret = ptp_nikon_capture2 (params, af, sdram);
-			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+			/* OK is goodl, busy means wait and the invalid status might go away */
+			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy) && (ret != PTP_RC_NIKON_InvalidStatus))
 				return translate_ptp_result (ret);
 			if (ret == PTP_RC_DeviceBusy) usleep(2000);
 			/* sleep a bit perhaps ? or check events? */
