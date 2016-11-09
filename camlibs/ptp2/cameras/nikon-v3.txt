@@ -1,0 +1,118 @@
+Device info:
+Manufacturer: Nikon Corporation
+  Model: V3
+  device version: Ver.1.1101
+  serial number: '(null)'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x90c1 (PTP_OC_NIKON_AfDrive)
+  0x90c2 (PTP_OC_NIKON_SetControlMode)
+  0x90c3 (PTP_OC_NIKON_DelImageSDRAM)
+  0x90c4 (PTP_OC_NIKON_GetLargeThumb)
+  0x90c7 (PTP_OC_NIKON_CheckEvent)
+  0x90c8 (PTP_OC_NIKON_DeviceReady)
+  0x90c9 (PTP_OC_NIKON_SetPreWBData)
+  0x9201 (PTP_OC_NIKON_StartLiveView)
+  0x9202 (PTP_OC_NIKON_EndLiveView)
+  0x9203 (PTP_OC_NIKON_GetLiveViewImg)
+  0x9204 (PTP_OC_NIKON_MfDrive)
+  0x9205 (PTP_OC_NIKON_ChangeAfArea)
+  0x9206 (PTP_OC_NIKON_AfDriveCancel)
+  0x9207 (PTP_OC_NIKON_InitiateCaptureRecInMedia)
+  0x920a (PTP_OC_NIKON_StartMovieRecInCard)
+  0x920b (PTP_OC_NIKON_EndMovieRec)
+  0x920c (PTP_OC_NIKON_TerminateCapture)
+  0x9400 (PTP_OC_NIKON_GetPartialObjectHiSpeed)
+  0x941e (Unknown PTP_OC)
+  0x941f (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+  0x90ca (PTP_OC_NIKON_GetVendorPropCodes)
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc101
+  0xc102
+  0xc105
+  0xc112
+Device Properties Supported:
+  0x5001
+  0x5004
+  0x5007
+  0x500e
+  0x5011
+  0xd303
+  0xd406
+  0xd407
+  0xd038
+  0xd05d
+  0xd0c0
+  0xd0e1
+  0xd100
+  0xd101
+  0xd102
+  0xd1c0
+  0xd1a2
+  0xd1a4
+  0xf001
+  0xf002
+  0xf003
+  0xf004
+  0xf005
+  0xf006
+  0xf007
+  0xf008
+  0xf009
+  0xf00a
+  0xf00c
+  0xf00d
+  0xf00e
+  0xf00f
+  0xf010
+  0xf011
+  0xf012
+  0xf013
+  0xf015
+  0xf016
+  0xf018
+  0xf019
+  0xf01a
+  0xf01b
+  0xf01c
+  0xf00b
+  0xf014
+  0xd0ab
