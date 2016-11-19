@@ -5014,7 +5014,10 @@ _get_SONY_BatteryLevel(CONFIG_GET_ARGS) {
 	if (dpd->FormFlag == PTP_DPFF_Range) {
 		gp_widget_set_name (*widget, menu->name);
 		start = dpd->FORM.Range.MinimumValue.i8;
-		if (start == -1) start = 0; /* -1 might be special for unknown? */
+		if (dpd->FORM.Range.MinimumValue.i8 == -1)
+			start = 0; /* -1 might be special for unknown? */
+		else
+			start = dpd->FORM.Range.MinimumValue.i8;
 		end = dpd->FORM.Range.MaximumValue.i8;
 		value_float = dpd->CurrentValue.i8;
 		if (0 == end - start + 1) {
