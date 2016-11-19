@@ -441,8 +441,12 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	unsigned char	guid[16];
 	
 	ptp_nikon_getptpipguid(guid);
+#if !defined (WIN32)
 	if (gethostname (hostname, sizeof(hostname)))
 		return PTP_RC_GeneralError;
+#else
+	strcpy (hostname, "gpwindows");
+#endif
 	len = ptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
 
 	cmdrequest = malloc(len);
