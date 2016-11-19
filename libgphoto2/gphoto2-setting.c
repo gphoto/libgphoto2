@@ -21,7 +21,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 #include <gphoto2/gphoto2-setting.h>
@@ -33,6 +33,10 @@
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-port-portability.h>
+
+#ifdef WIN32
+#include <Shlobj.h>
+#endif
 
 /**
  * Internal struct to store settings.
@@ -169,8 +173,8 @@ load_settings (void)
 
 	/* Make sure the directories are created */
 #ifdef WIN32
-	GetWindowsDirectory (buf, sizeof(buf));
-	strcat (buf, "\\gphoto");
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
+	strcat (buf, "\\.gphoto");
 #else
 	snprintf (buf, sizeof(buf), "%s/.gphoto", getenv ("HOME"));
 #endif
@@ -179,8 +183,8 @@ load_settings (void)
 
 	glob_setting_count = 0;
 #ifdef WIN32
-	GetWindowsDirectory(buf, sizeof(buf));
-	strcat(buf, "\\gphoto\\settings");
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
+	strcat(buf, "\\.gphoto\\settings");
 #else
 	snprintf(buf, sizeof(buf), "%s/.gphoto/settings", getenv("HOME"));
 #endif
@@ -225,7 +229,13 @@ save_settings (void)
 	char buf[1024];
 	int x=0;
 
+#ifdef WIN32
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
+	strcat(buf, "\\.gphoto\\settings");
+#else
 	snprintf (buf, sizeof(buf), "%s/.gphoto/settings", getenv ("HOME"));
+#endif
+
 
 	GP_LOG_D ("Saving %i setting(s) to file \"%s\"", glob_setting_count, buf);
 
