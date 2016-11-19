@@ -36,6 +36,10 @@
 
 #include <usb.h>
 
+#ifndef ENODATA
+#	define ENODATA     120     /* No data available */
+#endif
+
 #include <gphoto2/gphoto2-port.h>
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-log.h>
