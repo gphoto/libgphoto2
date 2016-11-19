@@ -84,12 +84,12 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 		     GP_FILE_TYPE_NORMAL, file, context);
 	printf("  Retval: %d\n", retval);
 
+	gp_file_free(file);
+
 	printf("Deleting.\n");
 	retval = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name,
 			context);
 	printf("  Retval: %d\n", retval);
-
-	gp_file_free(file);
 }
 
 int
