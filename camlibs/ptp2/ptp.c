@@ -2816,7 +2816,7 @@ uint16_t
 ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size)
 {
 	PTPContainer	ptp;
-	unsigned char	*xdata;
+	unsigned char	*xdata = NULL;
 	unsigned int 	xsize, psize1 = 0, psize2 = 0;
 	uint16_t	*props1 = NULL,*props2 = NULL;
 
@@ -2837,6 +2837,9 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	*props = calloc(psize1+psize2, sizeof(uint16_t));
 	if (!*props) {
 		ptp_debug (params, "oom during malloc?");
+		free (props1);
+		free (props2);
+		free (xdata);
 		return PTP_RC_OK;
 	}
 	*size = psize1+psize2;
