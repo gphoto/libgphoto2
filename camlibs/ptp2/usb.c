@@ -276,7 +276,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		goto exit;
 
 	if (bytes_read < PTP_USB_BULK_HDR_LEN) {
-		GP_LOG_E ("Read short bulk packet in data phase %d vs %d vs min len %d", bytes_read, dtoh32(usbdata.length), PTP_USB_BULK_HDR_LEN);
+		GP_LOG_E ("Read short bulk packet in data phase %d vs %d vs min len %d", bytes_read, dtoh32(usbdata.length), (uint32_t)PTP_USB_BULK_HDR_LEN);
 		ret = PTP_ERROR_IO;
 		goto exit;
 	}
