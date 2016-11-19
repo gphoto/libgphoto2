@@ -43,7 +43,7 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 		strcpy (s+1, t+1);
 	}
 
-	fd = open(fn, O_CREAT | O_WRONLY, 0644);
+	fd = open (fn, O_CREAT | O_WRONLY | O_BINARY, 0644);
 	if (fd == -1)
 		return GP_ERROR;
 
@@ -205,7 +205,7 @@ main(int argc, char **argv) {
 					sprintf(output_file, "image-%04d.jpg", capturecnt++);
 				}
 
-				fd = open(output_file, O_CREAT | O_WRONLY, 0644);
+				fd = open (output_file, O_CREAT | O_WRONLY | O_BINARY, 0644);
 				retval = gp_file_new_from_fd(&file, fd);
 				retval = gp_camera_file_get(camera, path->folder, path->name,
 					     GP_FILE_TYPE_NORMAL, file, context);

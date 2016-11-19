@@ -14,6 +14,11 @@
 #include <string.h>
 #include <gphoto2/gphoto2.h>
 
+#if !defined (O_BINARY)
+	/*To have portable binary open() on *nix and on Windows */
+	#define O_BINARY 0
+#endif
+
 #define DEBUG
 
 static int aperture;
@@ -229,7 +234,7 @@ camera_tether(Camera *camera, GPContext *context) {
 			path = (CameraFilePath*)evtdata;
 			printf("File added on the camera: %s/%s\n", path->folder, path->name);
 
-			fd = open(path->name, O_CREAT | O_WRONLY, 0644);
+			fd = open(path->name, O_CREAT | O_WRONLY | O_BINARY, 0644);
 			retval = gp_file_new_from_fd(&file, fd);
 			printf("  Downloading %s...\n", path->name);
 			retval = gp_camera_file_get(camera, path->folder, path->name,
@@ -400,7 +405,7 @@ main(int argc, char **argv) {
 
         printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
 
-        fd = open("capture.jpg", O_CREAT | O_WRONLY, 0644);
+        fd = open("capture.jpg", O_CREAT | O_WRONLY | O_BINARY, 0644);
 
         retval = gp_file_new_from_fd(&file, fd);
         if (retval != GP_OK) printf("  gp_file_new failed: %d\n", retval);

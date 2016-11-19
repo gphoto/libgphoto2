@@ -101,7 +101,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		if (-1 == stat(queue[0].path.name, &stbuf))
 			fd = creat(queue[0].path.name, 0644);
 		else
-			fd = open(queue[0].path.name, O_RDWR, 0644);
+			fd = open(queue[0].path.name, O_RDWR | O_BINARY, 0644);
 		if (fd == -1) {
 			perror(queue[0].path.name);
 			return GP_ERROR;

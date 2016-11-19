@@ -41,7 +41,7 @@ camera_tether(Camera *camera, GPContext *context) {
 			path = (CameraFilePath*)evtdata;
 			printf("File added on the camera: %s/%s\n", path->folder, path->name);
 
-			fd = open(path->name, O_CREAT | O_WRONLY, 0644);
+			fd = open (path->name, O_CREAT | O_WRONLY | O_BINARY, 0644);
 			retval = gp_file_new_from_fd(&file, fd);
 			printf("  Downloading %s...\n", path->name);
 			retval = gp_camera_file_get(camera, path->folder, path->name,
