@@ -44,6 +44,9 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 	}
 
 	fd = open(fn, O_CREAT | O_WRONLY, 0644);
+	if (fd == -1)
+		return GP_ERROR;
+
 	retval = gp_file_new_from_fd(&file, fd);
 	if (retval < GP_OK) {
 		close(fd);
