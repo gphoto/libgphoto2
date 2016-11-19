@@ -4822,55 +4822,53 @@ downloadnow:
 			GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
 
 			/* if prop 0xd215 > 0x8000, the object in RAM is available at location 0xffffc001 */
-			if (dpd.CurrentValue.u16 <= 0x8000)
-				goto sonyout;
+			if (dpd.CurrentValue.u16 > 0x8000) {
+				GP_LOG_D ("SONY ObjectInMemory count change seen, retrieving file");
 
-			GP_LOG_D ("SONY ObjectInMemory count change seen, retrieving file");
+				newobject = 0xffffc001;
+				ret = ptp_getobjectinfo (params, newobject, &oi);
+				if (ret != PTP_RC_OK)
+					goto sonyout;
+				debug_objectinfo(params, newobject, &oi);
+				C_MEM (path = malloc(sizeof(CameraFilePath)));
+				path->name[0]='\0';
+				strcpy (path->folder,"/");
+				ret = gp_file_new(&file);
+				if (ret!=GP_OK)
+					return ret;
+				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+					sprintf (path->name, "capt%04d.arw", capcnt++);
+					gp_file_set_mime_type (file, "image/x-sony-arw"); /* FIXME */
+				} else {
+					sprintf (path->name, "capt%04d.jpg", capcnt++);
+					gp_file_set_mime_type (file, GP_MIME_JPEG);
+				}
+				gp_file_set_mtime (file, time(NULL));
 
-			newobject = 0xffffc001;
-			ret = ptp_getobjectinfo (params, newobject, &oi);
-			if (ret != PTP_RC_OK)
-				goto sonyout;
-			debug_objectinfo(params, newobject, &oi);
-			C_MEM (path = malloc(sizeof(CameraFilePath)));
-			path->name[0]='\0';
-			strcpy (path->folder,"/");
-			ret = gp_file_new(&file);
-			if (ret!=GP_OK)
-				return ret;
-			if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
-				GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
-				sprintf (path->name, "capt%04d.arw", capcnt++);
-				gp_file_set_mime_type (file, "image/x-sony-arw"); /* FIXME */
-			} else {
-				sprintf (path->name, "capt%04d.jpg", capcnt++);
-				gp_file_set_mime_type (file, GP_MIME_JPEG);
+				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+				C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
+				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				*eventtype = GP_EVENT_FILE_ADDED;
+				*eventdata = path;
+				/* We have now handed over the file, disclaim responsibility by unref. */
+				gp_file_unref (file);
+				return GP_OK;
 			}
-			gp_file_set_mtime (file, time(NULL));
-
-			GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
-			C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
-			ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
-			if (ret != GP_OK) {
-				gp_file_free (file);
-				return ret;
-			}
-			ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-			if (ret != GP_OK) {
-				gp_file_free (file);
-				return ret;
-			}
-			ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-			if (ret != GP_OK) {
-				gp_file_free (file);
-				return ret;
-			}
-			*eventtype = GP_EVENT_FILE_ADDED;
-			*eventdata = path;
-			/* We have now handed over the file, disclaim responsibility by unref. */
-			gp_file_unref (file);
-			return GP_OK;
-			/* do regular events */
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
