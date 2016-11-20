@@ -2930,8 +2930,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		int loops = 100;
 		do {
 			ret = ptp_nikon_capture2(params,af,sdram);
-			if (ret == PTP_RC_DeviceBusy) usleep(2000);
-		} while ((ret == PTP_RC_DeviceBusy) && loops--);
+			if (	(ret == PTP_RC_DeviceBusy) ||
+				/* this is seen on Nikon V3 */
+				(ret == PTP_RC_NIKON_InvalidStatus)
+			)  usleep(2000);
+		} while (((ret == PTP_RC_DeviceBusy) || (ret ==  PTP_RC_NIKON_InvalidStatus)) && loops--);
 		goto capturetriggered;
 	}
 
@@ -4084,6 +4087,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
+		int tries = 200;
 		PTPPropertyValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
@@ -4100,12 +4104,16 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		do {
 			ret = ptp_nikon_capture2 (params, af, sdram);
-			/* OK is goodl, busy means wait and the invalid status might go away */
-			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy) && (ret != PTP_RC_NIKON_InvalidStatus))
+			if (ret == PTP_RC_OK)
+				break;
+
+			/* busy means wait and the invalid status might go away */
+			if ((ret != PTP_RC_DeviceBusy) && (ret != PTP_RC_NIKON_InvalidStatus))
 				return translate_ptp_result (ret);
-			if (ret == PTP_RC_DeviceBusy) usleep(2000);
+
+			usleep(2000);
 			/* sleep a bit perhaps ? or check events? */
-		} while (ret == PTP_RC_DeviceBusy);
+		} while (tries--);
 
 		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params)) {
 			gp_context_idle (context);
