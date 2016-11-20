@@ -871,6 +871,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Exposure level on preview"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		camera->pl->exposure = MAX(MIN_EXPOSURE,MIN(MAX_EXPOSURE,atoi(wvalue)));
 		gp_setting_set ("dimera3500", "exposure", wvalue);
@@ -879,6 +880,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Automatic exposure adjustment on preview"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &val);
 		camera->pl->auto_exposure = val;
 		sprintf(str, "%d", val);
@@ -888,6 +890,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Automatic flash on capture"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &val);
 		camera->pl->auto_flash = val;
 		sprintf(str, "%d", val);

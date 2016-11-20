@@ -1254,6 +1254,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
@@ -1273,6 +1274,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, 
 		_("Shutter Speed (microseconds, 0 auto)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &float_value);
 		i = float_value;
 		CHECK_STOP (camera, sierra_set_int_register (camera, 3, i, context));
@@ -1283,6 +1285,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
@@ -1302,6 +1305,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Color Mode"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Normal")) == 0) {
 			i = 0;
@@ -1323,6 +1327,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Flash Mode"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
@@ -1345,6 +1350,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Brightness/Contrast"), 
 		&child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Normal")) == 0) {
 			i = 0;
@@ -1366,6 +1372,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("White Balance"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
@@ -1387,6 +1394,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Lens Mode"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
                 if (strcmp (value, _("Macro")) == 0) {
 			i = 1;
@@ -1405,6 +1413,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Spot Metering Mode"), 
 		&child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("On")) == 0) {
 			i = 3;
@@ -1420,6 +1429,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Zoom"), &child) 
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, "1x") == 0) {
 			i = 0;
@@ -1439,6 +1449,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (host) "
 					  "(in seconds)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
                 CHECK_STOP (camera, sierra_set_int_register (camera, 23, i, context));
         }
@@ -1449,6 +1460,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (field) "
 		"(in seconds)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i, context));
 	}
@@ -1458,6 +1470,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, 
 		_("LCD Brightness"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 35, i, context));
 	}
@@ -1467,6 +1480,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	if ((gp_widget_get_child_by_label (window, 
 		_("LCD Auto Off (in seconds)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 38, i, context));
         }
@@ -1738,6 +1752,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	GP_DEBUG ("*** setting aperture");
 	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
 	     >= 0) && gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("F2")) == 0) {
 			i = 0;
@@ -1762,6 +1777,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	GP_DEBUG ("*** setting flash mode");
 	if ((gp_widget_get_child_by_label (window, _("Flash Mode"), &child)
 	     >= 0) && gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
@@ -1782,6 +1798,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	GP_DEBUG ("*** setting white balance");
 	if ((gp_widget_get_child_by_label (window, _("White Balance"), &child)
 	     >= 0) && gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Auto")) == 0) {
 			i = 0;
@@ -1799,6 +1816,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	if ((gp_widget_get_child_by_label (window, _("Lens Mode"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
                 if (strcmp (value, _("Macro")) == 0) {
 			i = 1;
@@ -1813,6 +1831,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	GP_DEBUG ("*** setting resolution");
 	if ((gp_widget_get_child_by_label (window, _("Resolution"), &child)
 	     >= 0) && gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("standard")) == 0) {
 			i = 1;
@@ -1831,6 +1850,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	GP_DEBUG ("*** setting color mode");
 	if ((gp_widget_get_child_by_label (window, _("Color Mode"), &child)
 	     >= 0) && gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("color")) == 0) {
 			i = 1;
@@ -1846,6 +1866,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (host) "
 					  "(in seconds)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
                 CHECK_STOP (camera, sierra_set_int_register (camera, 23, i, context));
         }
@@ -1856,6 +1877,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	if ((gp_widget_get_child_by_label (window, _("Auto Off (field) "
 		"(in seconds)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 24, i, context));
 	}
@@ -1864,6 +1886,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	GP_DEBUG ("*** setting language");
 	if ((gp_widget_get_child_by_label (window, _("Language"), &child)
 	     >= 0) && gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
 		if (strcmp (value, _("Korean")) == 0) {
 			i = 1;
@@ -1891,6 +1914,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 	if ((gp_widget_get_child_by_label (window, _("Date & Time"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
+	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 2, i, context));
 	}

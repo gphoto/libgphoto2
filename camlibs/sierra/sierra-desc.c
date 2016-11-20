@@ -183,6 +183,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		if (((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) || 
 		     (reg_desc_p->reg_widget_type == GP_WIDGET_MENU)) && 
 		      !gp_widget_changed (child)) {
+	                gp_widget_set_changed (child, FALSE);
 			sprintf (buff, _("%lld (unknown)"), (long long)reg_p->reg_value);
 			gp_widget_add_choice (child, buff);
 			gp_widget_set_value (child, buff);
@@ -377,6 +378,7 @@ camera_cam_desc_set_widget (Camera *camera, CameraRegisterType *reg_p,
 		if ((gp_widget_get_child_by_label (window,
 		     _(reg_desc_p->regs_long_name), &child) >= 0) &&
 		     gp_widget_changed (child)) {
+	                gp_widget_set_changed (child, FALSE);
 			gp_widget_get_value (child, &value_in);
 			for (vind = 0; vind < reg_desc_p->reg_val_name_cnt;
 			     vind++) {

@@ -1037,6 +1037,7 @@ which_radio_button (CameraWidget *window, const char *label,
 	if (!gp_widget_changed (child))
 		return -1;
 
+	gp_widget_set_changed (child, FALSE);
 	gp_widget_get_value (child, &value);
 
 	for (i = 0; opt[i]; i++)
@@ -1080,6 +1081,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Auto poweroff */
 	r = gp_widget_get_child_by_label (window, AUTO_POWEROFF, &child);
 	if ((r == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &range);
 		CR (pdc700_config (camera, PDC_CONF_POWEROFF,
 				   (unsigned char) range, context));
@@ -1088,6 +1090,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Date and time */
 	r = gp_widget_get_child_by_label (window, _("Date and Time"), &child);
 	if ((r == GP_OK) && gp_widget_changed (child)) {
+		gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &i);
 		if (i != -1)
 		  pdc700_set_date(camera, (time_t) i, context);

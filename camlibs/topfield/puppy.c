@@ -587,6 +587,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		const char* val;
 		int ival;
 
+	        gp_widget_set_changed (turbo, FALSE);
 		ret = gp_widget_get_value (turbo, &val);
 		if (ret == GP_OK) {
 			ival = !strcmp (val, _("On"));

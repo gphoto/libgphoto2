@@ -868,6 +868,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                 time_t xtime;
 
                 gp_widget_get_value (widget, &i);
+	        gp_widget_set_changed (widget, 0);
                 xtime = i;
                 tm_struct = localtime (&xtime);
                 date.year   = tm_struct->tm_year - 100;
@@ -883,6 +884,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Beep"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &c);
+	        gp_widget_set_changed (widget, 0);
                 if (strcmp (c, _("Off")) == 0)
                         beep = 0;
                 else
@@ -895,6 +897,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Self Timer Time"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
+	        gp_widget_set_changed (widget, 0);
                 C(k_set_preference (camera->port, context,
                         K_PREFERENCE_SELF_TIMER_TIME, (int) f));
         }
@@ -903,6 +906,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Auto Off Time"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
+	        gp_widget_set_changed (widget, 0);
                 C(k_set_preference (camera->port, context,
                                         K_PREFERENCE_AUTO_OFF_TIME, (int) f));
         }
@@ -912,6 +916,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                                       &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &f);
+	        gp_widget_set_changed (widget, 0);
                 C(k_set_preference (camera->port, context,
                                 K_PREFERENCE_SLIDE_SHOW_INTERVAL, (int) f));
         }
@@ -920,6 +925,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         gp_widget_get_child_by_label (section, _("Resolution"), &widget);
         if (gp_widget_changed (widget)) {
                 gp_widget_get_value (widget, &c);
+	        gp_widget_set_changed (widget, 0);
                 if (!strcmp (c, _("High (1152 x 872)")))
                         j = 1;
                 else if (!strcmp (c, _("Low (576 x 436)")))
@@ -939,6 +945,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         C(gp_widget_get_child_by_label (section, _("Language"), &widget));
 	C(result = gp_widget_changed (widget));
 	if (result) {
+	        gp_widget_set_changed (widget, 0);
 		C(gp_widget_get_value (widget, &c));
                 if (strcmp (c, _("None selected"))) {
                         data = NULL;
@@ -964,6 +971,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         /* TV Output Format */
         gp_widget_get_child_by_label (section, _("TV Output Format"), &widget);
         if (gp_widget_changed (widget)) {
+	        gp_widget_set_changed (widget, 0);
                 gp_widget_get_value (widget, &c);
                 if (strcmp (c, _("None selected"))) {
                         if (!strcmp (c, _("NTSC")))
@@ -982,6 +990,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         /* Date Format */
         gp_widget_get_child_by_label (section, _("Date Format"), &widget);
         if (gp_widget_changed (widget)) {
+	        gp_widget_set_changed (widget, 0);
                 gp_widget_get_value (widget, &c);
                 if (strcmp (c, _("None selected"))) {
                         if (!strcmp (c, _("Month/Day/Year")))
@@ -1006,6 +1015,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         /* Flash */
         gp_widget_get_child_by_label (section, _("Flash"), &widget);
         if (gp_widget_changed (widget)) {
+	        gp_widget_set_changed (widget, 0);
                 gp_widget_get_value (widget, &c);
                 if (!strcmp (c, _("Off")))
                         j = 0;
@@ -1024,6 +1034,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
         /* Exposure */
         gp_widget_get_child_by_label (section, _("Exposure"), &widget);
         if (gp_widget_changed (widget)) {
+	        gp_widget_set_changed (widget, 0);
                 gp_widget_get_value (widget, &f);
                 C(k_set_preference (camera->port, context,
                                         K_PREFERENCE_EXPOSURE, (int) f));
@@ -1042,6 +1053,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
                                       &widget_self_timer);
         if (gp_widget_changed (widget_focus) &&
             gp_widget_changed (widget_self_timer)) {
+	        gp_widget_set_changed (widget_focus, 0);
+	        gp_widget_set_changed (widget_self_timer, 0);
                 gp_widget_get_value (widget_focus, &c);
                 if (!strcmp (c, _("Auto")))
                         focus_self_timer = 2;

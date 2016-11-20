@@ -1094,6 +1094,7 @@ chdk_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context
 			continue;
 		if (!gp_widget_changed (widget))
 			continue;
+	        gp_widget_set_changed (widget, FALSE);
 		ret = imgsettings[i].putfunc(params,widget,context);
 		if (ret != GP_OK) {
 			GP_LOG_E("error putting %s menu", imgsettings[i].name);

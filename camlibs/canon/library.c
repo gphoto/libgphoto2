@@ -1987,6 +1987,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Owner Name"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2000,6 +2001,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Capture Size Class"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 
 		i = 0;
@@ -2026,6 +2028,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("ISO Speed"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2055,6 +2058,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Shooting mode"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2084,6 +2088,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Shutter Speed"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2112,6 +2117,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Aperture"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2140,6 +2146,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	gp_widget_get_child_by_label (window, _("Exposure Compensation"), &w);
 	if (gp_widget_changed (w)) {
 		unsigned char expbias;
+
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2168,6 +2176,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Image Format"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2196,6 +2205,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Focus Mode"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2225,6 +2235,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Beep */
 	gp_widget_get_child_by_label (window, _("Beep"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2258,6 +2269,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		gp_widget_get_child_by_label (window, _("Zoom"), &w);
 		if (gp_widget_changed (w)) {
 			float zoom;
+
+	        	gp_widget_set_changed (w, 0);
 			gp_widget_get_value (w, &zoom);
 			if (!check_readiness (camera, context)) {
 				gp_context_status (context, _("Camera unavailable"));
@@ -2273,6 +2286,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Aperture */
 	gp_widget_get_child_by_label (window, _("Aperture"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2302,6 +2316,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* Flash mode */
 	gp_widget_get_child_by_label (window, _("Flash Mode"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2331,6 +2346,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Synchronize camera date and time with PC"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (!check_readiness (camera, context)) {
 			gp_context_status (context, _("Camera unavailable"));
@@ -2346,6 +2362,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	gp_widget_get_child_by_label (window, _("List all files"), &w);
 	if (gp_widget_changed (w)) {
 		/* XXXXX mark CameraFS as dirty */
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &val);
 		camera->pl->list_all_files = val;
 		sprintf (str, "%d", val);
@@ -2358,6 +2375,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
 		GP_DEBUG ("New config value for \"Keep filename on upload\": %i",
 			  camera->pl->upload_keep_filename);

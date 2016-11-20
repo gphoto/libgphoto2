@@ -405,6 +405,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if ((gp_widget_get_child_by_label (window, _("Date & Time"),
 					   &widget) >= 0) &&
 	     gp_widget_changed (widget)) {
+	        gp_widget_set_changed (widget, 0);
 		CR (gp_widget_get_value (widget, &t));
 		tm = localtime (&t);
 		date.year  = tm->tm_year;
@@ -419,6 +420,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* ID */
 	if ((gp_widget_get_child_by_label (window, _("ID"), &widget) >= 0) &&
 	    gp_widget_changed (widget)) {
+	        gp_widget_set_changed (widget, 0);
 		CR (gp_widget_get_value (widget, &id));
 		CR (fuji_id_set (camera, id, context));
 	}

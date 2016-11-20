@@ -6729,6 +6729,8 @@ _put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
 		if (!gp_widget_changed (subwidget))
 			continue;
 
+	        gp_widget_set_changed (subwidget, FALSE);
+
 		ret = cursub->putfunc (camera, subwidget, NULL, NULL);
 	}
 
@@ -7782,7 +7784,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
 
-				gp_widget_changed (widget); /* clear flag */
+				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid );
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
 					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
@@ -7827,7 +7829,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
-				gp_widget_changed (widget); /* clear flag */
+				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
 				memset(&dpd,0,sizeof(dpd));
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
@@ -7878,6 +7880,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				continue;
 			if (!gp_widget_changed (widget))
 				continue;
+			gp_widget_set_changed (widget, FALSE);
 		}
 
 		gp_widget_get_type (widget, &type);

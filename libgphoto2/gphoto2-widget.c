@@ -815,18 +815,14 @@ gp_widget_get_choice (CameraWidget *widget, int choice_number,
  * @return a gphoto2 error code or changed flag.
  *
  * Returns 1 if the state of the #CameraWidget has been changed or 0 if not.
- * In addition, it resets the changed flag to 0.
+ *
+ * Note: this formerly cleared the changed state. It no longer does with 2.5.11.
  *
  **/
 int
 gp_widget_changed (CameraWidget *widget) 
 {
-        int val;
-
 	C_PARAMS (widget);
 
-        val = widget->changed;
-        widget->changed = 0;
-
-        return (val);
+        return widget->changed;
 }

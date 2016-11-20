@@ -594,6 +594,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		int i, resolution = -1;
 		const char **valid_resolutions;
 
+	        gp_widget_set_changed (w, 0);
 		valid_resolutions = pslr_camera_resolution_steps (camera->pl);
 
 		gp_widget_get_value (w, &sval);
@@ -614,6 +615,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	ret = gp_widget_get_child_by_label (window, _("Shooting Mode"), &w);
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_exposure_mode_t exposuremode;
+
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 
 		exposuremode = PSLR_EXPOSURE_MODE_MAX;
@@ -637,6 +640,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	ret = gp_widget_get_child_by_label (window, _("ISO"), &w);
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		int iso;
+
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &iso)) {
 			pslr_set_iso(camera->pl, iso);
@@ -653,6 +658,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		/* FIXME: decoding is strange. the UI shows number of stars
 		 * on k20d: 4 stars = 3, 3 stars = 0, 2 stars = 1, 1 star = 2
 		 */
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &qual)) {
 			pslr_set_jpeg_quality (camera->pl, qual);
@@ -665,6 +671,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_rational_t speed;
 
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d/%d", &speed.nom, &speed.denom)) {
 			pslr_set_shutter(camera->pl, speed);
@@ -687,6 +694,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		pslr_rational_t aperture;
 		int apt1,apt2;
 
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d.%d", &apt1, &apt2)) {
 			if (apt1<11) {

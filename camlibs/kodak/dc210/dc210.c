@@ -357,6 +357,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("File type"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		if (wvalue[0] == 'J')
 			dc210_set_file_type(camera, DC210_FILE_TYPE_JPEG);
@@ -366,6 +367,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("File resolution"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		switch(wvalue[0]){
 		case '6':
@@ -379,6 +381,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("File compression"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		switch(wvalue[0]){
 		case 'L':
@@ -394,6 +397,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Zoom"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		switch(wvalue[0]){
 		case '5':
@@ -419,6 +423,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Exposure compensation"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		for (i = 0; i < sizeof(exp_comp)/sizeof(*exp_comp); i++){
 			if (strncmp(wvalue, exp_comp[i], 4) == 0){
@@ -430,6 +435,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Port speed"), &w);
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		dc210_set_speed(camera, atoi(wvalue));
 	};
@@ -437,6 +443,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	gp_widget_get_child_by_label (window, _("Flash"), &w);
 	gp_widget_get_child_by_label (window, _("Red eye flash"), &w2);
 	if (gp_widget_changed (w) || gp_widget_changed(w2)) {
+	        gp_widget_set_changed (w, 0);
+	        gp_widget_set_changed (w2, 0);
 		gp_widget_get_value (w, &wvalue);
 		gp_widget_get_value (w2, &w2value);
 		switch(wvalue[0]){

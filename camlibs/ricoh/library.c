@@ -412,6 +412,7 @@ static struct {
 									\
         CR (gp_widget_get_child_by_name (wi, Name, &__w));		\
 	if (gp_widget_changed (__w)) {					\
+	        gp_widget_set_changed (__w, 0);				\
 		CR (gp_widget_get_value (__w, &__v));			\
 		for (__i = 0; __i < N_ELEMENTS (ricoh_##n##s); __i++)	\
 			if (!strcmp (__v, _(ricoh_##n##s[__i].name))) {	\
@@ -482,6 +483,7 @@ camera_set_config (Camera *c, CameraWidget *window, GPContext *co)
 	/* Copyright */
 	CR (gp_widget_get_child_by_name (window, "copyright", &w));
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		CR (gp_widget_get_value (w, &v_char));
 		CR (ricoh_set_copyright (c, co, v_char));
 	}
@@ -489,6 +491,7 @@ camera_set_config (Camera *c, CameraWidget *window, GPContext *co)
 	/* Date */
 	CR (gp_widget_get_child_by_name (window, "date", &w));
 	if (gp_widget_changed (w)) {
+	        gp_widget_set_changed (w, 0);
 		CR (gp_widget_get_value (w, &time));
 		CR (ricoh_set_date (c, co, time));
 	}
