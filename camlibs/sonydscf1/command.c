@@ -145,7 +145,7 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
   i = recvdata(port, buf, 33);
-  gp_log (GP_LOG_DEBUG, "sonydscf1", "Status: %02x%02x:%02x(len = %d)", buf[0], buf[1], buf[2], i);
+  gp_log (GP_LOG_DEBUG, "F1newstatus", "Status: %02x%02x:%02x(len = %d)", buf[0], buf[1], buf[2], i);
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
     Abort(port);
     return(-1);
@@ -198,7 +198,7 @@ int F1status(GPPort *port)
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
   i = recvdata(port, buf, 33);
-  gp_log (GP_LOG_DEBUG, "sonydscf1", "Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
+  gp_log (GP_LOG_DEBUG, "F1status", "Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
     Abort(port);
     return(-1);
@@ -273,7 +273,7 @@ int F1fclose(GPPort*port)
   buf[3] = 0x00;
   sendcommand(port,buf, 4);
   i = recvdata(port, buf, 3);
-  gp_log (GP_LOG_DEBUG, "sonydscf1", "Fclose: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
+  gp_log (GP_LOG_DEBUG, "F1fclose", "Fclose: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
   if((buf[0] != 0x02) || (buf[1] != 0x0B) || (buf[2] != 0x00)){
     fprintf(stderr,"F1fclose fail\n");
     Abort(port);
@@ -435,7 +435,7 @@ unsigned long F1finfo(GPPort *port,char *name)
 
   flen = buf[33] * 0x1000000 + buf[34] * 0x10000 +
     buf[35] * 0x100 + buf[36];
-  gp_log (GP_LOG_DEBUG ,"inf len = %ld %02x %02x %02x %02x\n", flen,
+  gp_log (GP_LOG_DEBUG , "F1finfo", "inf len = %ld %02x %02x %02x %02x\n", flen,
           buf[33], buf[34], buf[35], buf[36]);
 
   if(buf[2] != 0) return(0);
@@ -502,7 +502,7 @@ int F1ok(GPPort*port)
   while(retrycount--){
     sendcommand(port,buf, 32);
     recvdata(port, buf, 32);
-    gp_log (GP_LOG_DEBUG, "OK:%02x%02x:%c%c%c%c\n", buf[0], buf[1],
+    gp_log (GP_LOG_DEBUG, "F1ok", "OK:%02x%02x:%c%c%c%c\n", buf[0], buf[1],
             buf[3],buf[4],buf[5],buf[6]);
     if((buf[0] != 0x01) || (buf[1] != 0x01) || (buf[2] != 0x00) ){
       Abort(port);
@@ -523,8 +523,8 @@ F1reset(GPPort *port)
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
   recvdata(port, buf, 3);
-  gp_log (GP_LOG_DEBUG, "Reset: %02x%02x:%02x\n", buf[0], buf[1], buf[2]);
-  if(!((buf[0] == 0x01 ) && (buf[1] == 0x02) && buf[2] == 0x00))
+  gp_log (GP_LOG_DEBUG, "F1reset", "Reset: %02x%02x:%02x\n", buf[0], buf[1], buf[2]);
+  if(!((buf[0] == 0x01 ) && (buf[1] == 0x02) && (buf[2] == 0x00)))
     goto retryreset;
   return (int) buf[2];          /*ok*/
 }
