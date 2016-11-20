@@ -21,7 +21,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #include "config.h"
 
 #include <stdio.h>
@@ -145,7 +145,7 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
   i = recvdata(port, buf, 33);
-  gp_log (GP_LOG_DEBUG, "Status: %02x%02x:%02x(len = %d)", buf[0], buf[1], buf[2], i);
+  gp_log (GP_LOG_DEBUG, "sonydscf1", "Status: %02x%02x:%02x(len = %d)", buf[0], buf[1], buf[2], i);
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
     Abort(port);
     return(-1);
@@ -198,7 +198,7 @@ int F1status(GPPort *port)
   buf[1] = 0x02;
   sendcommand(port,buf, 2);
   i = recvdata(port, buf, 33);
-  gp_log (GP_LOG_DEBUG, "Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
+  gp_log (GP_LOG_DEBUG, "sonydscf1", "Status: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
   if((buf[0] != 0x03) || (buf[1] != 0x02) ||(buf[2] != 0)){
     Abort(port);
     return(-1);
@@ -273,7 +273,7 @@ int F1fclose(GPPort*port)
   buf[3] = 0x00;
   sendcommand(port,buf, 4);
   i = recvdata(port, buf, 3);
-  gp_log (GP_LOG_DEBUG, "Fclose: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
+  gp_log (GP_LOG_DEBUG, "sonydscf1", "Fclose: %02x%02x:%02x(len = %d)\n", buf[0], buf[1], buf[2], i);
   if((buf[0] != 0x02) || (buf[1] != 0x0B) || (buf[2] != 0x00)){
     fprintf(stderr,"F1fclose fail\n");
     Abort(port);
