@@ -198,7 +198,6 @@ static int camera_config_get (Camera *camera, CameraWidget **window,
 	/* this is a write only capability */
 	value_float = 1;
 	gp_widget_set_value (widget, &value_float);
-	gp_widget_set_changed (widget, 0);
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Color Settings"), &section);
 	gp_widget_append (*window, section);
