@@ -1348,6 +1348,11 @@ html_camera_func (
 		op &= ~GP_OPERATION_CAPTURE_IMAGE;
 		if (op) printf (", ");
 	}
+	if (op & GP_OPERATION_TRIGGER_CAPTURE) {
+		printf ("Trigger Capture");
+		op &= ~GP_OPERATION_TRIGGER_CAPTURE;
+		if (op) printf (", ");
+	}
 	if (op & GP_OPERATION_CAPTURE_PREVIEW) {
 		printf ("Liveview");
 		op &= ~GP_OPERATION_CAPTURE_PREVIEW;
