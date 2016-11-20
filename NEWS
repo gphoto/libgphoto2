@@ -2,28 +2,37 @@ libgphoto2 2.5.10.1 development
 
 canon:
 * not experimental anymore, for some years
+* some bugfixes in configuration handling
 
 ptp2:
+* canon: EOS capture improvements, also supporting new EOS
+* sony: tethering and trigger capture implemented, capture stability improvements
 * sony: exposure compensation setting fixed
 * sony: capture and autofocus configurations, similar to eosremoterelease
-* sony: tethering implemented
-* fixed serialnumber retrieval
+* generic: fixed serialnumber retrieval
 * nikon: "autofocus" config variable for global autofocus enable/disable (default on, default liveview off)
 * various bugs fixed, stability improved
+* ptpip: allow different event ports. --port ptpip:IP:dataport:eventport
 * New ids reported:
   - Sony Alpha 7, DSC-RX100M4, NEX-7, DSC-HX20V, Alpha 6300, A7S II, A7, 
-  - Nikon DSC Df, D7200, D5, D810A
+  - Nikon DSC Df, D7200, D5, D810A, 1 V3
   - Canon EOS 1Dx Mark 3, 80D, 5D Mark IV
   - Canon Digital IXUS 180
   - various music players / android phones imported from libmtp 
 
 libgphoto2:
-* speed up initial startup
+* Speed up initial startup.
+* Win32: store settings in the "User Profile\.gphoto\settings" and not in C:\\Windows anymore.
 * gp_widget_changed() no longer clears the "changed" state to make this API more consistent.
   Use gp_widget_set_changed(widget,FALSE) to do so.
 
+examples:
+* sample-photobooth: a sample program handling tethering, SIGUSR1 driven capture and SIGUSR2
+  based configuration reading.
+* sample-afl: code to inject afl fuzzing data
+
 translations:
-* updated svensk, ukrainian, polish, finnish, russian, danish, polish, brazilian, serbian, brazilian, serbian
+* updated swedish, ukrainian, polish, finnish, russian, danish, polish, brazilian, serbian, dutch, chinese
 ------------------------------------------------------------------------------
 libgphoto2 2.5.10 release
 
