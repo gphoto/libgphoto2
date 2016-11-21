@@ -883,22 +883,14 @@ ddb_delayed_head(const func_params_t *params,
 	printf("device \"%s\" {\n", a->model);
 
 	printf("    device_type");
-	first = 1;
-	gpi_enum_to_string(a->device_type, 
-			   gpi_gphoto_device_type_map,
-			   ddb_list_out_func,
-			   (void *) &first);
-	printf(";\n");
+	printf(" %s;\n", gpi_enum_to_string(a->device_type,
+					    gpi_gphoto_device_type_map);
 
 	printf("    driver \"%s\";\n", camlib_basename);
 
 	printf("    driver_status");
-	first = 1;
-	gpi_enum_to_string(a->status, 
-			   gpi_camera_driver_status_map,
-			   ddb_list_out_func,
-			   (void *) &first);
-	printf(";\n");
+	printf(" %s;\n", gpi_enum_to_string(a->status,
+					    gpi_camera_driver_status_map);
 
 	printf("    operations");
 	first = 1;
