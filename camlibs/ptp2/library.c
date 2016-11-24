@@ -2933,7 +2933,14 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		int loops = 100;
 		do {
-			ret = ptp_nikon_capture2(params,af,sdram);
+			ret = ptp_nikon_capture2 (params, af, sdram);
+			/* Nikon 1 ... if af is 0, it reports PTP_RC_NIKON_InvalidStatus */
+			if (!af && ((ret == PTP_RC_NIKON_InvalidStatus))) {
+				ret = ptp_nikon_capture2 (params, 1, sdram);
+				if (ret == PTP_RC_OK)
+					break;
+			}
+
 			if (	(ret == PTP_RC_DeviceBusy) ||
 				/* this is seen on Nikon V3 */
 				(ret == PTP_RC_NIKON_InvalidStatus)
@@ -4110,6 +4117,13 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			ret = ptp_nikon_capture2 (params, af, sdram);
 			if (ret == PTP_RC_OK)
 				break;
+
+			/* Nikon 1 ... if af is 0, it reports PTP_RC_NIKON_InvalidStatus */
+			if (!af && ((ret == PTP_RC_NIKON_InvalidStatus))) {
+				ret = ptp_nikon_capture2 (params, 1, sdram);
+				if (ret == PTP_RC_OK)
+					break;
+			}
 
 			/* busy means wait and the invalid status might go away */
 			if ((ret != PTP_RC_DeviceBusy) && (ret != PTP_RC_NIKON_InvalidStatus))
