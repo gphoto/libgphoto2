@@ -7830,21 +7830,26 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
 				gp_widget_set_changed (widget, FALSE); /* clear flag */
-				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
-				memset(&dpd,0,sizeof(dpd));
-				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
-				ret = cursub->putfunc (camera, widget, &propval, &dpd);
-				if (ret == GP_OK) {
-					ret_ptp = LOG_ON_PTP_E (ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
-					if (ret_ptp != PTP_RC_OK) {
-						gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
-								  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
-						ret = translate_ptp_result (ret_ptp);
-					}
-				} else
-					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
-				ptp_free_devicepropdesc(&dpd);
-				ptp_free_devicepropvalue(cursub->type, &propval);
+				if ((cursub->propid & 0x7000) == 0x5000) {
+					GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
+					memset(&dpd,0,sizeof(dpd));
+					ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
+					ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					if (ret == GP_OK) {
+						ret_ptp = LOG_ON_PTP_E (ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
+						if (ret_ptp != PTP_RC_OK) {
+							gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
+									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
+							ret = translate_ptp_result (ret_ptp);
+						}
+						ptp_free_devicepropvalue(cursub->type, &propval);
+					} else
+						gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
+					ptp_free_devicepropdesc(&dpd);
+				} else {
+					GP_LOG_D ("Setting virtual property '%s' / 0x%04x", cursub->label, cursub->propid);
+					ret = cursub->putfunc (camera, widget, &propval, &dpd);
+				}
 				if (mode == MODE_SINGLE_SET)
 					return GP_OK;
 			}
