@@ -744,6 +744,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_RC_CANON_A009			0xA009
 
+#define PTP_RC_CANON_EOS_UnknownCommand		0xA001
+#define PTP_RC_CANON_EOS_OperationRefused	0xA005
+#define PTP_RC_CANON_EOS_LensCoverClosed	0xA006
+#define PTP_RC_CANON_EOS_LowBattery		0xA101
+#define PTP_RC_CANON_EOS_ObjectNotReady		0xA102
+#define PTP_RC_CANON_EOS_CannotMakeObject	0xA104
+#define PTP_RC_CANON_EOS_MemoryStatusNotReady	0xA106
+
+
 /* Microsoft/MTP specific codes */
 #define PTP_RC_MTP_Undefined			0xA800
 #define PTP_RC_MTP_Invalid_ObjectPropCode	0xA801
