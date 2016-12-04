@@ -293,6 +293,12 @@
 #define DEVICE_FLAG_PROPLIST_OVERRIDES_OI	0x40000000
 
 /**
+ * On 2016 EOS cameras, do not close the session on exiting,
+ * as the device will only report ptp errors afterwards.
+ */
+#define DEVICE_FLAG_DONT_CLOSE_SESSION		0x80000000
+
+/**
  * All these bug flags need to be set on SONY NWZ Walkman
  * players, and will be autodetected on unknown devices
  * by detecting the vendor extension descriptor "sony.net"

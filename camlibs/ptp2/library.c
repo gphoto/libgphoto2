@@ -1831,7 +1831,7 @@ static struct {
 	{"Canon:EOS 760D",			0x04a9, 0x3280, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://github.com/gphoto/libgphoto2/issues/92 */
-	{"Canon:EOS 5D Mark IV",		0x04a9, 0x3281, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 5D Mark IV",		0x04a9, 0x3281, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/445/ */
 	{"Canon:PowerShot Elph135",		0x04a9, 0x3288, PTPBUG_DELETE_SENDS_EVENT},
@@ -1842,7 +1842,8 @@ static struct {
 	/* Jesper Pedersen <jesper.pedersen@comcast.net */
 	{"Canon:EOS 1D X MarkII",		0x04a9, 0x3292, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/60 */
-	{"Canon:EOS 80D",			0x04a9, 0x3294, PTP_CAP|PTP_CAP_PREVIEW},
+	/* needs dont close session */
+	{"Canon:EOS 80D",			0x04a9, 0x3294, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS",			0x04a9, 0x3295, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Nykhedimus S <nykhedimus@gmail.com> */
@@ -2410,8 +2411,11 @@ camera_exit (Camera *camera, GPContext *context)
 		while (ptp_get_one_event (params, &event))
 			GP_LOG_D ("missed ptp event 0x%x (param1=%x)", event.Code, event.Param1);
 
-		/* close ptp session */
-		ptp_closesession (params);
+		/* 2016 EOS cameras do not like that and report 0x2005 on all following opcodes */
+		if (!DONT_CLOSE_SESSION(params)) {
+			/* close ptp session */
+			ptp_closesession (params);
+		}
 		ptp_free_params(params);
 
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
