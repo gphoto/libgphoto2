@@ -5047,16 +5047,6 @@ snprintf_ptp_property (char *txt, int spaceleft, PTPPropertyValue *data, uint16_
 	return 0;
 }
 
-static const char *
-_get_getset(uint8_t gs) {
-	switch (gs) {
-	case PTP_DPGS_Get: return N_("read only");
-	case PTP_DPGS_GetSet: return N_("readwrite");
-	default: return N_("Unknown");
-	}
-	return N_("Unknown");
-}
-
 #if 0 /* leave out ... is confusing -P downloads */
 #pragma pack(1)
 struct canon_theme_entry {
@@ -5431,7 +5421,11 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		memset (&dpd, 0, sizeof (dpd));
 		ret = ptp_generic_getdevicepropdesc (params, dpc, &dpd);
 		if (ret == PTP_RC_OK) {
-			APPEND_TXT ("(%s) ",_get_getset(dpd.GetSet));
+			switch (dpd.GetSet) {
+			case PTP_DPGS_Get:    APPEND_TXT ("(%s) ", N_("read only")); break;
+			case PTP_DPGS_GetSet: APPEND_TXT ("(%s) ", N_("readwrite")); break;
+			default:              APPEND_TXT ("(%s) ", N_("Unknown"));
+			}
 			APPEND_TXT ("(type=0x%x) ",dpd.DataType);
 			switch (dpd.FormFlag) {
 			case PTP_DPFF_None:	break;
