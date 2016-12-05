@@ -5278,36 +5278,38 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_CANON:
 			if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn))
-				APPEND_TXT (_("Canon Capture"));
+				APPEND_TXT (_("Canon Capture, "));
 			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
-				APPEND_TXT (_("Canon EOS Capture"));
+				APPEND_TXT (_("Canon EOS Capture, "));
 			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
-				APPEND_TXT (_("%sCanon EOS Shutter Button"),txt_marker != txt?", ":"");
-			if (txt_marker != txt)
-				APPEND_TXT ("\n");
+				APPEND_TXT (_("Canon EOS Shutter Button, "));
 			break;
 		case PTP_VENDOR_NIKON:
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture))
-				APPEND_TXT (_("Nikon Capture 1"));
+				APPEND_TXT (_("Nikon Capture 1, "));
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM))
-				APPEND_TXT (_("%sNikon Capture 2"),txt_marker != txt?", ":"");
+				APPEND_TXT (_("Nikon Capture 2, "));
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia))
-				APPEND_TXT (_("%sNikon Capture 3 "),txt_marker != txt?", ":"");
-			if (txt_marker != txt)
-				APPEND_TXT ("\n");
+				APPEND_TXT (_("Nikon Capture 3, "));
 			break;
 		case PTP_VENDOR_SONY:
 			if (ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB))
-				APPEND_TXT (_("Sony Capture"));
+				APPEND_TXT (_("Sony Capture, "));
 			break;
 		default:
 			/* does not belong to good vendor ... needs another detection */
 			if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
-				APPEND_TXT (_("Olympus E XML Capture\n"));
+				APPEND_TXT (_("Olympus E XML Capture, "));
 			break;
 		}
 		if (txt_marker == txt)
 			APPEND_TXT (_("No vendor specific capture\n"));
+		else
+		{
+			/* replace the trailing ", " with a "\n" */
+			txt -= 2;
+			APPEND_TXT ("\n");
+		}
 
 	/* Third line for Wifi support, but just leave it out if not there. */
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
