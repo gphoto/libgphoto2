@@ -5170,225 +5170,161 @@ static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
 	unsigned int i, j;
-	int n;
 	uint16_t ret;
-	int spaceleft;
-	char *txt;
+	char *txt, *txt_marker;
 	PTPParams *params = &(camera->pl->params);
 	PTPDeviceInfo pdi;
 	PTPStorageIDs storageids;
 
 	SET_CONTEXT(camera, context);
 
-	spaceleft = sizeof(summary->text);
 	txt = summary->text;
 
-	n = snprintf (txt, spaceleft,_("Manufacturer: %s\n"),params->deviceinfo.Manufacturer);
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-	n = snprintf (txt, spaceleft,_("Model: %s\n"),params->deviceinfo.Model);
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-	n = snprintf (txt, spaceleft,_("  Version: %s\n"),params->deviceinfo.DeviceVersion);
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-	if (params->deviceinfo.SerialNumber) {
-		n = snprintf (txt, spaceleft,_("  Serial Number: %s\n"),params->deviceinfo.SerialNumber);
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-	}
+#define SPACE_LEFT (summary->text + sizeof (summary->text) - txt)
+#define APPEND_TXT( ... ) txt += snprintf (txt, SPACE_LEFT, __VA_ARGS__)
+
+	APPEND_TXT (_("Manufacturer: %s\n"),params->deviceinfo.Manufacturer);
+	APPEND_TXT (_("Model: %s\n"),params->deviceinfo.Model);
+	APPEND_TXT (_("  Version: %s\n"),params->deviceinfo.DeviceVersion);
+	if (params->deviceinfo.SerialNumber)
+		APPEND_TXT (_("  Serial Number: %s\n"),params->deviceinfo.SerialNumber);
 	if (params->deviceinfo.VendorExtensionID) {
-		n = snprintf (txt, spaceleft,_("Vendor Extension ID: 0x%x (%d.%d)\n"),
+		APPEND_TXT (_("Vendor Extension ID: 0x%x (%d.%d)\n"),
 			params->deviceinfo.VendorExtensionID,
 			params->deviceinfo.VendorExtensionVersion/100,
 			params->deviceinfo.VendorExtensionVersion%100
 		);
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		if (params->deviceinfo.VendorExtensionDesc) {
-			n = snprintf (txt, spaceleft,_("Vendor Extension Description: %s\n"),params->deviceinfo.VendorExtensionDesc);
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		}
+		if (params->deviceinfo.VendorExtensionDesc)
+			APPEND_TXT (_("Vendor Extension Description: %s\n"),params->deviceinfo.VendorExtensionDesc);
 	}
-	if (params->deviceinfo.StandardVersion != 100) {
-		n = snprintf (txt, spaceleft,_("PTP Standard Version: %d.%d\n"),
+	if (params->deviceinfo.StandardVersion != 100)
+		APPEND_TXT (_("PTP Standard Version: %d.%d\n"),
 			params->deviceinfo.StandardVersion/100,
 			params->deviceinfo.StandardVersion%100
 		);
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-	}
-	if (params->deviceinfo.FunctionalMode) {
-		n = snprintf (txt, spaceleft,_("Functional Mode: 0x%04x\n"),params->deviceinfo.FunctionalMode);
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-	}
+	if (params->deviceinfo.FunctionalMode)
+		APPEND_TXT (_("Functional Mode: 0x%04x\n"),params->deviceinfo.FunctionalMode);
 
 /* Dump Formats */
-	n = snprintf (txt, spaceleft,_("\nCapture Formats: "));
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	APPEND_TXT (_("\nCapture Formats: "));
 
 	for (i=0;i<params->deviceinfo.CaptureFormats_len;i++) {
-		n = ptp_render_ofc (params, params->deviceinfo.CaptureFormats[i], spaceleft, txt);
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		if (i<params->deviceinfo.CaptureFormats_len-1) {
-			n = snprintf (txt, spaceleft," ");
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		}
+		txt += ptp_render_ofc (params, params->deviceinfo.CaptureFormats[i], SPACE_LEFT, txt);
+		if (i<params->deviceinfo.CaptureFormats_len-1)
+			APPEND_TXT (" ");
 	}
-	n = snprintf (txt, spaceleft,"\n");
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	APPEND_TXT ("\n");
 
-	n = snprintf (txt, spaceleft,_("Display Formats: "));
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	APPEND_TXT (_("Display Formats: "));
 	for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
-		n = ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], spaceleft, txt);
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		if (i<params->deviceinfo.ImageFormats_len-1) {
-			n = snprintf (txt, spaceleft,", ");
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		}
+		txt += ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], SPACE_LEFT, txt);
+		if (i<params->deviceinfo.ImageFormats_len-1)
+			APPEND_TXT (", ");
 	}
-	n = snprintf (txt, spaceleft,"\n");
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	APPEND_TXT ("\n");
 
 	if (is_mtp_capable (camera) &&
 	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 	) {
-		n = snprintf (txt, spaceleft,_("Supported MTP Object Properties:\n"));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		APPEND_TXT (_("Supported MTP Object Properties:\n"));
 		for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
 			uint16_t *props = NULL;
 			uint32_t propcnt = 0;
 
-			n = snprintf (txt, spaceleft,"\t");
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			n = ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], spaceleft, txt);
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			n = snprintf (txt, spaceleft,"/%04x:", params->deviceinfo.ImageFormats[i]);
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			APPEND_TXT ("\t");
+			txt += ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], SPACE_LEFT, txt);
+			APPEND_TXT ("/%04x:", params->deviceinfo.ImageFormats[i]);
 
 			ret = ptp_mtp_getobjectpropssupported (params, params->deviceinfo.ImageFormats[i], &propcnt, &props);
 			if (ret != PTP_RC_OK) {
-				n = snprintf (txt, spaceleft,_(" PTP error %04x on query"), ret);
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+				APPEND_TXT (_(" PTP error %04x on query"), ret);
 			} else {
 				for (j=0;j<propcnt;j++) {
-					n = snprintf (txt, spaceleft," %04x/",props[j]);
-					if (n >= spaceleft) { free (props); return GP_OK;}  spaceleft -= n; txt += n;
-					n = ptp_render_mtp_propname(props[j],spaceleft,txt);
-					if (n >= spaceleft) { free (props); return GP_OK;} spaceleft -= n; txt += n;
+					APPEND_TXT (" %04x/",props[j]);
+					txt += ptp_render_mtp_propname(props[j],SPACE_LEFT,txt);
 				}
 				free(props);
 			}
-			n = snprintf (txt, spaceleft,"\n");
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			APPEND_TXT ("\n");
 		}
 	}
 
 /* Dump out dynamic capabilities */
-	n = snprintf (txt, spaceleft,_("\nDevice Capabilities:\n"));
-	if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+	APPEND_TXT (_("\nDevice Capabilities:\n"));
 
 	/* First line for file operations */
-		n = snprintf (txt, spaceleft,_("\tFile Download, "));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		APPEND_TXT (_("\tFile Download, "));
 		if (ptp_operation_issupported(params,PTP_OC_DeleteObject))
-			n = snprintf (txt, spaceleft,_("File Deletion, "));
+			APPEND_TXT (_("File Deletion, "));
 		else
-			n = snprintf (txt, spaceleft,_("No File Deletion, "));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			APPEND_TXT (_("No File Deletion, "));
 
 		if (ptp_operation_issupported(params,PTP_OC_SendObject))
-			n = snprintf (txt, spaceleft,_("File Upload\n"));
+			APPEND_TXT (_("File Upload\n"));
 		else
-			n = snprintf (txt, spaceleft,_("No File Upload\n"));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			APPEND_TXT (_("No File Upload\n"));
 
 	/* Second line for capture */
 		if (ptp_operation_issupported(params,PTP_OC_InitiateCapture))
-			n = snprintf (txt, spaceleft,_("\tGeneric Image Capture, "));
+			APPEND_TXT (_("\tGeneric Image Capture, "));
 		else
-			n = snprintf (txt, spaceleft,_("\tNo Image Capture, "));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			APPEND_TXT (_("\tNo Image Capture, "));
 		if (ptp_operation_issupported(params,PTP_OC_InitiateOpenCapture))
-			n = snprintf (txt, spaceleft,_("Open Capture, "));
+			APPEND_TXT (_("Open Capture, "));
 		else
-			n = snprintf (txt, spaceleft,_("No Open Capture, "));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+			APPEND_TXT (_("No Open Capture, "));
 
-		n = 0;
+		txt_marker = txt;
 		switch (params->deviceinfo.VendorExtensionID) {
 		case PTP_VENDOR_CANON:
-			if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn)) {
-				n = snprintf (txt, spaceleft,_("Canon Capture"));
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
-				n = snprintf (txt, spaceleft,_("Canon EOS Capture"));
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
-				n = snprintf (txt, spaceleft,_("%sCanon EOS Shutter Button"),n?", ":"");
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
-			if (n) {
-				n = snprintf (txt, spaceleft,"\n");
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
+			if (ptp_operation_issupported(params, PTP_OC_CANON_ViewfinderOn))
+				APPEND_TXT (_("Canon Capture"));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+				APPEND_TXT (_("Canon EOS Capture"));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
+				APPEND_TXT (_("%sCanon EOS Shutter Button"),txt_marker != txt?", ":"");
+			if (txt_marker != txt)
+				APPEND_TXT ("\n");
 			break;
 		case PTP_VENDOR_NIKON:
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture)) {
-				n = snprintf (txt, spaceleft,_("Nikon Capture 1"));
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM)) {
-				n = snprintf (txt, spaceleft,_("%sNikon Capture 2"),n?", ":"");
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
-				n = snprintf (txt, spaceleft,_("%sNikon Capture 3 "),n?", ":"");
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
-			if (n) {
-				n = snprintf (txt, spaceleft,"\n");
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture))
+				APPEND_TXT (_("Nikon Capture 1"));
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM))
+				APPEND_TXT (_("%sNikon Capture 2"),txt_marker != txt?", ":"");
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia))
+				APPEND_TXT (_("%sNikon Capture 3 "),txt_marker != txt?", ":"");
+			if (txt_marker != txt)
+				APPEND_TXT ("\n");
 			break;
 		case PTP_VENDOR_SONY:
-			if (ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)) {
-				n = snprintf (txt, spaceleft,_("Sony Capture"));
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
+			if (ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB))
+				APPEND_TXT (_("Sony Capture"));
 			break;
 		default:
 			/* does not belong to good vendor ... needs another detection */
-			if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
-				n = snprintf (txt, spaceleft,_("Olympus E XML Capture\n"));
-				if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-			}
+			if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
+				APPEND_TXT (_("Olympus E XML Capture\n"));
 			break;
 		}
-		if (!n) {
-			n = snprintf (txt, spaceleft,_("No vendor specific capture\n"));
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		}
+		if (txt_marker == txt)
+			APPEND_TXT (_("No vendor specific capture\n"));
 
 	/* Third line for Wifi support, but just leave it out if not there. */
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		     ptp_operation_issupported(params, PTP_OC_NIKON_GetProfileAllData)) {
-			n = snprintf (txt, spaceleft,_("\tNikon Wifi support\n"));
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		}
+		     ptp_operation_issupported(params, PTP_OC_NIKON_GetProfileAllData))
+			APPEND_TXT (_("\tNikon Wifi support\n"));
 
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		     ptp_operation_issupported(params, PTP_OC_CANON_GetMACAddress)) {
-			n = snprintf (txt, spaceleft,_("\tCanon Wifi support\n"));
-			if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
-		}
+		     ptp_operation_issupported(params, PTP_OC_CANON_GetMACAddress))
+			APPEND_TXT (_("\tCanon Wifi support\n"));
 
 /* Dump storage information */
 
 	if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs) &&
 	    ptp_operation_issupported(params,PTP_OC_GetStorageInfo)
 	) {
-		C_PTP_REP (ptp_getstorageids(params,
-			&storageids));
-		n = snprintf (txt, spaceleft,_("\nStorage Devices Summary:\n"));
-		if (n >= spaceleft) return GP_OK; spaceleft -= n; txt += n;
+		C_PTP_REP (ptp_getstorageids(params, &storageids));
+		APPEND_TXT (_("\nStorage Devices Summary:\n"));
 
 		for (i=0; i<storageids.n; i++) {
 			char tmpname[20], *s;
@@ -5398,19 +5334,15 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			if ((storageids.Storage[i]&0x0000ffff)==0)
 				continue;
 
-			n = snprintf (txt, spaceleft,"store_%08x:\n",(unsigned int)storageids.Storage[i]);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT ("store_%08x:\n",(unsigned int)storageids.Storage[i]);
 
-			C_PTP_REP (ptp_getstorageinfo(params,
-				storageids.Storage[i], &storageinfo));
-			n = snprintf (txt, spaceleft,_("\tStorageDescription: %s\n"),
+			C_PTP_REP (ptp_getstorageinfo(params, storageids.Storage[i], &storageinfo));
+			APPEND_TXT (_("\tStorageDescription: %s\n"),
 				storageinfo.StorageDescription?storageinfo.StorageDescription:_("None")
 			);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft,_("\tVolumeLabel: %s\n"),
+			APPEND_TXT (_("\tVolumeLabel: %s\n"),
 				storageinfo.VolumeLabel?storageinfo.VolumeLabel:_("None")
 			);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 
 			switch (storageinfo.StorageType) {
 			case PTP_ST_Undefined: s = _("Undefined"); break;
@@ -5423,8 +5355,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				s = tmpname;
 				break;
 			}
-			n = snprintf (txt, spaceleft,_("\tStorage Type: %s\n"), s);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT (_("\tStorage Type: %s\n"), s);
 
 			switch (storageinfo.FilesystemType) {
 			case PTP_FST_Undefined: s = _("Undefined"); break;
@@ -5436,8 +5367,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				s = tmpname;
 				break;
 			}
-			n = snprintf (txt, spaceleft,_("\tFilesystemtype: %s\n"), s);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT (_("\tFilesystemtype: %s\n"), s);
 
 			switch (storageinfo.AccessCapability) {
 			case PTP_AC_ReadWrite: s = _("Read-Write"); break;
@@ -5448,28 +5378,23 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				s = tmpname;
 				break;
 			}
-			n = snprintf (txt, spaceleft,_("\tAccess Capability: %s\n"), s);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft,_("\tMaximum Capability: %llu (%lu MB)\n"),
+			APPEND_TXT (_("\tAccess Capability: %s\n"), s);
+			APPEND_TXT (_("\tMaximum Capability: %llu (%lu MB)\n"),
 				(unsigned long long)storageinfo.MaxCapability,
 				(unsigned long)(storageinfo.MaxCapability/1024/1024)
 			);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft,_("\tFree Space (Bytes): %llu (%lu MB)\n"),
+			APPEND_TXT (_("\tFree Space (Bytes): %llu (%lu MB)\n"),
 				(unsigned long long)storageinfo.FreeSpaceInBytes,
 				(unsigned long)(storageinfo.FreeSpaceInBytes/1024/1024)
 			);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft,_("\tFree Space (Images): %d\n"), (unsigned int)storageinfo.FreeSpaceInImages);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT (_("\tFree Space (Images): %d\n"), (unsigned int)storageinfo.FreeSpaceInImages);
 			free (storageinfo.StorageDescription);
 			free (storageinfo.VolumeLabel);
 		}
 		free (storageids.Storage);
 	}
 
-	n = snprintf (txt, spaceleft,_("\nDevice Property Summary:\n"));
-	if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+	APPEND_TXT (_("\nDevice Property Summary:\n"));
 	/* The information is cached. However, the canon firmware changes
 	 * the available properties in capture mode.
 	 */
@@ -5482,11 +5407,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 		if (propname) {
 			/* string registered for i18n in ptp.c. */
-			n = snprintf(txt, spaceleft, "%s(0x%04x):", _(propname), dpc);
+			APPEND_TXT ("%s(0x%04x):", _(propname), dpc);
 		} else {
-			n = snprintf(txt, spaceleft, "Property 0x%04x:", dpc);
+			APPEND_TXT ("Property 0x%04x:", dpc);
 		}
-		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
 
 
 		/* Do not read the 0xd201 property (found on Creative Zen series).
@@ -5494,15 +5418,13 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		 */
 		if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) {
 			if (dpc == 0xd201) {
-				n = snprintf(txt, spaceleft, _(" not read out.\n"));
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				APPEND_TXT (_(" not read out.\n"));
 				continue;
 			}
 		}
 #if 0 /* check is handled by the generic getter now */
 		if (!ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
-			n = snprintf(txt, spaceleft, _("cannot be queried.\n"));
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT (_("cannot be queried.\n"));
 			continue;
 		}
 #endif
@@ -5510,79 +5432,56 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		memset (&dpd, 0, sizeof (dpd));
 		ret = ptp_generic_getdevicepropdesc (params, dpc, &dpd);
 		if (ret == PTP_RC_OK) {
-			n = snprintf (txt, spaceleft, "(%s) ",_get_getset(dpd.GetSet));
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			n = snprintf (txt, spaceleft, "(type=0x%x) ",dpd.DataType);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT ("(%s) ",_get_getset(dpd.GetSet));
+			APPEND_TXT ("(type=0x%x) ",dpd.DataType);
 			switch (dpd.FormFlag) {
 			case PTP_DPFF_None:	break;
 			case PTP_DPFF_Range: {
-				n = snprintf (txt, spaceleft, "Range [");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n = _value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt, spaceleft);
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n = snprintf (txt, spaceleft, " - ");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n= _value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt, spaceleft);
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n = snprintf (txt, spaceleft, ", step ");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n= _value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt, spaceleft);
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n = snprintf (txt, spaceleft, "] value: ");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				APPEND_TXT ("Range [");
+				txt += _value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt, SPACE_LEFT);
+				APPEND_TXT (" - ");
+				txt += _value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt, SPACE_LEFT);
+				APPEND_TXT (", step ");
+				txt += _value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt, SPACE_LEFT);
+				APPEND_TXT ("] value: ");
 				break;
 			}
 			case PTP_DPFF_Enumeration:
-				n = snprintf (txt, spaceleft, "Enumeration [");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-					n = snprintf (txt, spaceleft, "\n\t");
-					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				}
+				APPEND_TXT ("Enumeration [");
+				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
+					APPEND_TXT ("\n\t");
 				for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
-					n = _value_to_str(dpd.FORM.Enum.SupportedValue+j,dpd.DataType,txt, spaceleft);
-					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+					txt += _value_to_str (dpd.FORM.Enum.SupportedValue+j, dpd.DataType, txt, SPACE_LEFT);
 					if (j != dpd.FORM.Enum.NumberOfValues-1) {
-						n = snprintf (txt, spaceleft, ",");
-						if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-						if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-							n = snprintf (txt, spaceleft, "\n\t");
-							if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-						}
+						APPEND_TXT (",");
+						if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
+							APPEND_TXT ("\n\t");
 					}
 				}
-				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)  {
-					n = snprintf (txt, spaceleft, "\n\t");
-					if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				}
-				n = snprintf (txt, spaceleft, "] value: ");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
+					APPEND_TXT ("\n\t");
+				APPEND_TXT ("] value: ");
 				break;
 			}
-			n = ptp_render_property_value(params, dpc, &dpd, sizeof(summary->text) - strlen(summary->text) - 1, txt);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-			if (n) {
-				n = snprintf(txt, spaceleft, " (");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
-				n = snprintf(txt, spaceleft, ")");
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			txt_marker = txt;
+			txt += ptp_render_property_value(params, dpc, &dpd, SPACE_LEFT, txt);
+			if (txt != txt_marker) {
+				APPEND_TXT (" (");
+				txt += _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, SPACE_LEFT);
+				APPEND_TXT (")");
 			} else {
-				n = _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, spaceleft);
-				if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+				txt += _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, SPACE_LEFT);
 			}
 		} else {
-			n = snprintf (txt, spaceleft, _(" error %x on query."), ret);
-			if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+			APPEND_TXT (_(" error %x on query."), ret);
 		}
-		n = snprintf(txt, spaceleft, "\n");
-		if (n>=spaceleft) return GP_OK;spaceleft-=n;txt+=n;
+		APPEND_TXT ("\n");
 		ptp_free_devicepropdesc (&dpd);
         }
 	ptp_free_DI (&pdi);
 	return (GP_OK);
+#undef SPACE_LEFT
+#undef APPEND_TXT
 }
 
 static uint32_t
