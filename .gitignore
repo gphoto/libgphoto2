@@ -58,11 +58,13 @@ doc/doxygen-output/
 doc/libgphoto2-api.html.stamp
 examples/best-iso
 examples/lunkwill-canon-capture
+examples/sample-afl
 examples/sample-autodetect
 examples/sample-capture
 examples/sample-justfocus
 examples/sample-multi-detect
 examples/sample-owner
+examples/sample-photobooth
 examples/sample-preview
 examples/sample-tether
 examples/sample-trigger-capture
