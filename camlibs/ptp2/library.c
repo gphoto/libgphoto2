@@ -4999,26 +4999,23 @@ handleregular:
 }
 
 static int
-_value_to_str(PTPPropertyValue *data, uint16_t dt, char *txt, int spaceleft) {
-	int	n;
-	char	*origtxt = txt;
-
+snprintf_ptp_property (char *txt, int spaceleft, PTPPropertyValue *data, uint16_t dt)
+{
 	if (dt == PTP_DTC_STR)
 		return snprintf (txt, spaceleft, "'%s'", data->str);
 	if (dt & PTP_DTC_ARRAY_MASK) {
 		unsigned int i;
+		const char *origtxt = txt;
+#define SPACE_LEFT (origtxt + spaceleft - txt)
 
-		n = snprintf (txt, spaceleft, "a[%d] ", data->a.count);
-		if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
+		txt += snprintf (txt, SPACE_LEFT, "a[%d] ", data->a.count);
 		for ( i=0; i<data->a.count; i++) {
-			n = _value_to_str(&data->a.v[i], dt & ~PTP_DTC_ARRAY_MASK, txt, spaceleft);
-			if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
-			if (i!=data->a.count-1) {
-				n = snprintf (txt, spaceleft, ",");
-				if (n >= spaceleft) return 0; spaceleft -= n; txt += n;
-			}
+			txt += snprintf_ptp_property (txt, SPACE_LEFT, &data->a.v[i], dt & ~PTP_DTC_ARRAY_MASK);
+			if (i!=data->a.count-1)
+				txt += snprintf (txt, SPACE_LEFT, ",");
 		}
 		return txt - origtxt;
+#undef SPACE_LEFT
 	} else {
 		switch (dt) {
 		case PTP_DTC_UNDEF:
@@ -5440,11 +5437,11 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			case PTP_DPFF_None:	break;
 			case PTP_DPFF_Range: {
 				APPEND_TXT ("Range [");
-				txt += _value_to_str (&dpd.FORM.Range.MinimumValue, dpd.DataType, txt, SPACE_LEFT);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MinimumValue, dpd.DataType);
 				APPEND_TXT (" - ");
-				txt += _value_to_str (&dpd.FORM.Range.MaximumValue, dpd.DataType, txt, SPACE_LEFT);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MaximumValue, dpd.DataType);
 				APPEND_TXT (", step ");
-				txt += _value_to_str (&dpd.FORM.Range.StepSize, dpd.DataType, txt, SPACE_LEFT);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.StepSize, dpd.DataType);
 				APPEND_TXT ("] value: ");
 				break;
 			}
@@ -5453,7 +5450,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 					APPEND_TXT ("\n\t");
 				for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
-					txt += _value_to_str (dpd.FORM.Enum.SupportedValue+j, dpd.DataType, txt, SPACE_LEFT);
+					txt += snprintf_ptp_property (txt, SPACE_LEFT, dpd.FORM.Enum.SupportedValue+j, dpd.DataType);
 					if (j != dpd.FORM.Enum.NumberOfValues-1) {
 						APPEND_TXT (",");
 						if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
@@ -5469,10 +5466,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			txt += ptp_render_property_value(params, dpc, &dpd, SPACE_LEFT, txt);
 			if (txt != txt_marker) {
 				APPEND_TXT (" (");
-				txt += _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, SPACE_LEFT);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.CurrentValue, dpd.DataType);
 				APPEND_TXT (")");
 			} else {
-				txt += _value_to_str (&dpd.CurrentValue, dpd.DataType, txt, SPACE_LEFT);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.CurrentValue, dpd.DataType);
 			}
 		} else {
 			APPEND_TXT (_(" error %x on query."), ret);
