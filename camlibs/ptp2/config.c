@@ -5779,10 +5779,12 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 				       _("Nikon enable liveview failed"));
 			/* Has to put the mirror up, so takes a bit. */
 			C_PTP (nikon_wait_busy(params, 50, 1000));
+			params->inliveview = 1;
 		}
 	} else {
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
 			C_PTP (ptp_nikon_end_liveview (params));
+		params->inliveview = 0;
 	}
 	return GP_OK;
 }
