@@ -1805,6 +1805,9 @@ vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 					cam->fuzzpending = toread - bytes;
 					toread = bytes;
 				}
+				if (toread <= 4)
+					return toread;
+
 				toread -= 4;
 
 				hasread = fread(data + 4, 1, toread, cam->fuzzf);
