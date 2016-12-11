@@ -538,7 +538,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 		x += put_16bit_le(data+x,0);		/* VendorExtensionVersion */
 		break;
 	}
-	x += put_string(data+x,"GPhoto-VirtualCamera: 1.0;");	/* VendorExtensionDesc */
+	x += put_string(data+x,"G-V: 1.0;");	/* VendorExtensionDesc */
 	x += put_16bit_le(data+x,0);		/* FunctionalMode */
 
 	cnt = 0;
@@ -584,11 +584,11 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	imageformats[0] = 0x3801;
 	x += put_16bit_le_array(data+x,imageformats,1);	/* ImageFormats */
 
-	x += put_string(data+x,"GPhoto");		/* Manufacturer */
-	x += put_string(data+x,"VirtualCamera");	/* Model */
-	x += put_string(data+x,"2.5.9");		/* DeviceVersion */
-	x += put_string(data+x,"0.1");			/* DeviceVersion */
-	x += put_string(data+x,"1");			/* SerialNumber */
+	x += put_string(data+x,"GP");	/* Manufacturer */
+	x += put_string(data+x,"VC");	/* Model */
+	x += put_string(data+x,"2.5.11");/* DeviceVersion */
+	x += put_string(data+x,"0.1");	/* DeviceVersion */
+	x += put_string(data+x,"1");	/* SerialNumber */
 
 	ptp_senddata(cam,0x1001,data,x);
 	free (data);
@@ -805,8 +805,8 @@ ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_64bit_le (data+x, 0x42424242);	/* MaxCapacity */
 	x += put_64bit_le (data+x, 0x21212121);	/* FreeSpaceInBytes */
 	x += put_32bit_le (data+x, 150);	/* FreeSpaceInImages ... around 150 */
-	x += put_string (data+x, "GPhoto Virtual Camera Storage");	/* StorageDescription */
-	x += put_string (data+x, "GPhoto Virtual Camera Storage Label");	/* VolumeLabel */
+	x += put_string (data+x, "GPVC Storage");	/* StorageDescription */
+	x += put_string (data+x, "GPVCS Label");	/* VolumeLabel */
 
 	ptp_senddata (cam, 0x1005, data, x);
 	free (data);
