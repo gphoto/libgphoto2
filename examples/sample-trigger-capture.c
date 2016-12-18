@@ -71,28 +71,22 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		break;
 	}
 	if (nrofqueue) {
-		uint64_t	size = buffersize;
+		unsigned long	size = buffersize;
 		int		fd;
 		struct stat	stbuf;
+		CameraFile	*file;
 
-		if (queue[0].offset == 0)
-			fprintf(stderr,"starting download %d (queuelength = %d)\n", ++nrdownloads,
-				nrofqueue
-			);
-		fprintf(stderr,"camera readfile of %s / %s at offset %d\n",
+		retval = gp_file_new(&file);
+
+		fprintf(stderr,"camera getfile of %s / %s\n",
 			queue[0].path.folder,
-			queue[0].path.name,
-			queue[0].offset
+			queue[0].path.name
 		);
-		retval = gp_camera_file_read (camera,
-			queue[0].path.folder,
-			queue[0].path.name,
-			GP_FILE_TYPE_NORMAL,
-			queue[0].offset,
-			buffer,
-			&size,
-			context
-		);
+		retval = gp_camera_file_get(camera, queue[0].path.folder, queue[0].path.name,
+			GP_FILE_TYPE_NORMAL, file, context);
+
+		gp_file_get_data_and_size (file, &buffer, &size);
+
 		/*fprintf(stderr,"done camera readfile size was %d\n", size);*/
 		if (retval != GP_OK) {
 			fprintf (stderr,"gp_camera_file_read failed: %d\n", retval);
@@ -106,22 +100,16 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			perror(queue[0].path.name);
 			return GP_ERROR;
 		}
-		if (-1 == lseek(fd, queue[0].offset, SEEK_SET))
+		if (-1 == lseek(fd, 0, SEEK_SET))
 			perror("lseek");
 		if (-1 == write (fd, buffer, size)) 
 			perror("write");
 		close (fd);
-		queue[0].offset += size;
-		if (size != buffersize) {
-			fprintf(stderr, "%s/%s is at end of file (read %d of %d bytes)\n",
-				queue[0].path.folder, queue[0].path.name, 
-				(int)size, buffersize
-			);
-			fprintf(stderr,"ending download %d, deleting file.\n", nrdownloads);
-			retval = gp_camera_file_delete(camera, queue[0].path.folder, queue[0].path.name, context);
-			memmove(&queue[0],&queue[1],sizeof(queue[0])*(nrofqueue-1));
-			nrofqueue--;
-		}
+
+		fprintf(stderr,"ending download %d, deleting file.\n", nrdownloads);
+		retval = gp_camera_file_delete(camera, queue[0].path.folder, queue[0].path.name, context);
+		memmove(&queue[0],&queue[1],sizeof(queue[0])*(nrofqueue-1));
+		nrofqueue--;
 	}
 	return GP_OK;
 }
