@@ -25,8 +25,7 @@ static struct queue_entry {
 static int nrofqueue=0;
 static int nrdownloads=0;
 
-static char *buffer;
-static int buffersize = 256*1024;
+static const char *buffer;
 
 static int
 wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
@@ -71,7 +70,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		break;
 	}
 	if (nrofqueue) {
-		unsigned long	size = buffersize;
+		unsigned long	size;
 		int		fd;
 		struct stat	stbuf;
 		CameraFile	*file;
@@ -84,12 +83,18 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		);
 		retval = gp_camera_file_get(camera, queue[0].path.folder, queue[0].path.name,
 			GP_FILE_TYPE_NORMAL, file, context);
-
-		gp_file_get_data_and_size (file, &buffer, &size);
-
-		/*fprintf(stderr,"done camera readfile size was %d\n", size);*/
 		if (retval != GP_OK) {
-			fprintf (stderr,"gp_camera_file_read failed: %d\n", retval);
+			fprintf (stderr,"gp_camera_file_get failed: %d\n", retval);
+			gp_file_free (file);
+			return retval;
+		}
+
+		/* buffer is returned as pointer, not as a copy */
+		retval = gp_file_get_data_and_size (file, &buffer, &size);
+
+		if (retval != GP_OK) {
+			fprintf (stderr,"gp_file_get_data_and_size failed: %d\n", retval);
+			gp_file_free (file);
 			return retval;
 		}
 		if (-1 == stat(queue[0].path.name, &stbuf))
@@ -106,6 +111,8 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			perror("write");
 		close (fd);
 
+		gp_file_free (file); /* Note: this invalidates buffer. */
+
 		fprintf(stderr,"ending download %d, deleting file.\n", nrdownloads);
 		retval = gp_camera_file_delete(camera, queue[0].path.folder, queue[0].path.name, context);
 		memmove(&queue[0],&queue[1],sizeof(queue[0])*(nrofqueue-1));
@@ -120,9 +127,6 @@ main(int argc, char **argv) {
 	int		retval, nrcapture = 0;
 	struct timeval	tval;
 	GPContext 	*context = sample_create_context();
-
-	buffer = malloc(buffersize);
-	if (!buffer) exit(1);
 
 	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
 	/*gp_log_add_func(GP_LOG_DATA, errordumper, NULL); */
