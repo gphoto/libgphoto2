@@ -33,41 +33,54 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 	CameraFilePath	*path;
 	void		*data;
 	int		retval;
+        struct timeval	start, curtime;
 
+        gettimeofday (&start, NULL);
 	data = NULL;
 	if (nrofqueue)
 		waittime = 10; /* just drain the event queue */
-        retval = gp_camera_wait_for_event(camera, waittime, &evtype, &data, context);
-	if (retval != GP_OK) {
-		fprintf (stderr, "return from waitevent in trigger sample with %d\n", retval);
-		return retval;
-	}
-	path = data;
-	switch (evtype) {
-	case GP_EVENT_CAPTURE_COMPLETE:
-		fprintf (stderr, "wait for event CAPTURE_COMPLETE\n");
-		break;
-	case GP_EVENT_UNKNOWN:
-	case GP_EVENT_TIMEOUT:
-		break;
-	case GP_EVENT_FOLDER_ADDED:
-		fprintf (stderr, "wait for event FOLDER_ADDED\n");
-		break;
-	case GP_EVENT_FILE_ADDED:
-		fprintf (stderr, "File %s / %s added to queue.\n", path->folder, path->name);
-		if (nrofqueue) {
-			struct queue_entry *q;
-			q = realloc(queue, sizeof(struct queue_entry)*(nrofqueue+1));
-			if (!q) return GP_ERROR_NO_MEMORY;
-			queue = q;
-		} else {
-			queue = malloc (sizeof(struct queue_entry));
-			if (!queue) return GP_ERROR_NO_MEMORY;
+
+	while (1) {
+		unsigned int timediff;
+
+	        gettimeofday (&curtime, NULL);
+
+		timediff = ((curtime.tv_sec - start.tv_sec)*1000)+((curtime.tv_usec - start.tv_usec)/1000);
+		if (timediff >= waittime) 
+			break;
+
+		retval = gp_camera_wait_for_event(camera, waittime - timediff, &evtype, &data, context);
+		if (retval != GP_OK) {
+			fprintf (stderr, "return from waitevent in trigger sample with %d\n", retval);
+			return retval;
 		}
-		memcpy (&queue[nrofqueue].path, path, sizeof(CameraFilePath));
-		queue[nrofqueue].offset = 0;
-		nrofqueue++;
-		break;
+		path = data;
+		switch (evtype) {
+		case GP_EVENT_CAPTURE_COMPLETE:
+			fprintf (stderr, "wait for event CAPTURE_COMPLETE\n");
+			break;
+		case GP_EVENT_UNKNOWN:
+		case GP_EVENT_TIMEOUT:
+			break;
+		case GP_EVENT_FOLDER_ADDED:
+			fprintf (stderr, "wait for event FOLDER_ADDED\n");
+			break;
+		case GP_EVENT_FILE_ADDED:
+			fprintf (stderr, "File %s / %s added to queue.\n", path->folder, path->name);
+			if (nrofqueue) {
+				struct queue_entry *q;
+				q = realloc(queue, sizeof(struct queue_entry)*(nrofqueue+1));
+				if (!q) return GP_ERROR_NO_MEMORY;
+				queue = q;
+			} else {
+				queue = malloc (sizeof(struct queue_entry));
+				if (!queue) return GP_ERROR_NO_MEMORY;
+			}
+			memcpy (&queue[nrofqueue].path, path, sizeof(CameraFilePath));
+			queue[nrofqueue].offset = 0;
+			nrofqueue++;
+			break;
+		}
 	}
 	if (nrofqueue) {
 		unsigned long	size;
