@@ -4807,7 +4807,7 @@ downloadnow:
 				case PTP_EC_DevicePropChanged:
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-					sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
+					sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
 					return GP_OK;
 					/* as we can read multiple events we should retrieve a good one if possible
 					 * and not a random one.*/
@@ -4983,7 +4983,7 @@ handleregular:
 	case PTP_EC_DevicePropChanged:
 		*eventtype = GP_EVENT_UNKNOWN;
 		C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-		sprintf (*eventdata, "PTP Property %04x changed", event.Param1);
+		sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
 		break;
 	case PTP_EC_ObjectRemoved:
 		ptp_remove_object_from_cache(params, event.Param1);
