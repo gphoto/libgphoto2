@@ -670,6 +670,22 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_CloseLESession			0x9006
 #define PTP_OC_LEICA_RequestObjectTransferReady		0x9007
 
+#define PTP_OC_PARROT_GetSunshineValues		0x9201
+#define PTP_OC_PARROT_GetTemperatureValues	0x9202
+#define PTP_OC_PARROT_GetAngleValues		0x9203
+#define PTP_OC_PARROT_GetGpsValues		0x9204
+#define PTP_OC_PARROT_GetGyroscopeValues	0x9205
+#define PTP_OC_PARROT_GetAccelerometerValues	0x9206
+#define PTP_OC_PARROT_GetMagnetometerValues	0x9207
+#define PTP_OC_PARROT_GetImuValues		0x9208
+#define PTP_OC_PARROT_GetStatusMask		0x9209
+#define PTP_OC_PARROT_EjectStorage		0x920A
+#define PTP_OC_PARROT_StartMagnetoCalib		0x9210
+#define PTP_OC_PARROT_StopMagnetoCalib		0x9211
+#define PTP_OC_PARROT_MagnetoCalibStatus	0x9212
+#define PTP_OC_PARROT_SendFirmwareUpdate	0x9213
+
+
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
 #define PTP_OC_EXTENSION                0x9000
@@ -865,6 +881,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_MTP_ObjectPropChanged		0xC801
 #define PTP_EC_MTP_ObjectPropDescChanged	0xC802
 #define PTP_EC_MTP_ObjectReferencesChanged	0xC803
+
+#define PTP_EC_PARROT_Status			0xC201
+#define PTP_EC_PARROT_MagnetoCalibrationStatus	0xC202
+
 
 /* constants for GetObjectHandles */
 #define PTP_GOH_ALL_STORAGE 0xffffffff
@@ -2124,6 +2144,32 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CASIO_UNKNOWN_18	0xD080
 
 #define PTP_DPC_RICOH_ShutterSpeed	0xD00F
+
+/* https://github.com/Parrot-Developers/sequoia-ptpy */
+#define PTP_DPC_PARROT_PhotoSensorEnableMask			0xD201
+#define PTP_DPC_PARROT_PhotoSensorsKeepOn			0xD202
+#define PTP_DPC_PARROT_MultispectralImageSize			0xD203
+#define PTP_DPC_PARROT_MainBitDepth				0xD204
+#define PTP_DPC_PARROT_MultispectralBitDepth			0xD205
+#define PTP_DPC_PARROT_HeatingEnable				0xD206
+#define PTP_DPC_PARROT_WifiStatus				0xD207
+#define PTP_DPC_PARROT_WifiSSID					0xD208
+#define PTP_DPC_PARROT_WifiEncryptionType			0xD209
+#define PTP_DPC_PARROT_WifiPassphrase				0xD20A
+#define PTP_DPC_PARROT_WifiChannel				0xD20B
+#define PTP_DPC_PARROT_Localization				0xD20C
+#define PTP_DPC_PARROT_WifiMode					0xD20D
+#define PTP_DPC_PARROT_AntiFlickeringFrequency			0xD210
+#define PTP_DPC_PARROT_DisplayOverlayMask			0xD211
+#define PTP_DPC_PARROT_GPSInterval				0xD212
+#define PTP_DPC_PARROT_MultisensorsExposureMeteringMode		0xD213
+#define PTP_DPC_PARROT_MultisensorsExposureTime			0xD214
+#define PTP_DPC_PARROT_MultisensorsExposureProgramMode		0xD215
+#define PTP_DPC_PARROT_MultisensorsExposureIndex		0xD216
+#define PTP_DPC_PARROT_MultisensorsIrradianceGain		0xD217
+#define PTP_DPC_PARROT_MultisensorsIrradianceIntegrationTime	0xD218
+#define PTP_DPC_PARROT_OverlapRate				0xD219
+
 
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
