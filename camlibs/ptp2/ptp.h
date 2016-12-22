@@ -172,6 +172,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* not from standards papers, but from traces: */
 #define PTP_VENDOR_SONY			0x00000011 /* observed in the A900 */
 #define PTP_VENDOR_SAMSUNG		0x0000001a /* observed in the Samsung NX1000 */
+#define PTP_VENDOR_PARROT		0x0000001b /* observed in the Parrot Sequoia */
 /* Vendor extension ID used for MTP (occasionaly, usualy 6 is used) */
 #define PTP_VENDOR_MTP			0xffffffff  
 
