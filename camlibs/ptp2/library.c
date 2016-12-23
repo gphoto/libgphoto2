@@ -5159,6 +5159,11 @@ nikon_curve_put (CameraFilesystem *fs, const char *folder, CameraFile *file,
 	return (GP_OK);
 }
 
+static int ptp_max(int a, int b) {
+	if (a > b) return a;
+	return b;
+}
+
 static int
 camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 {
@@ -5173,7 +5178,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 	txt = summary->text;
 
-#define SPACE_LEFT max(0, summary->text + sizeof (summary->text) - txt)
+#define SPACE_LEFT ptp_max(0, summary->text + sizeof (summary->text) - txt)
 #define APPEND_TXT( ... ) txt += snprintf (txt, SPACE_LEFT, __VA_ARGS__)
 
 	APPEND_TXT (_("Manufacturer: %s\n"),params->deviceinfo.Manufacturer);
