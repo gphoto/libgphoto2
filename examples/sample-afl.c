@@ -62,6 +62,15 @@ int main(int argc, char **argv) {
 	}
 #endif
 	printf ("OK, %s\n", summary.text);
+	while (1) {
+		CameraEventType evttype;
+		void *data = NULL;
+
+		ret = gp_camera_wait_for_event(camera, 1, &evttype, &data, context);
+		if (ret < GP_OK) break;
+		if (data) free (data);
+		if (evttype == GP_EVENT_TIMEOUT) break;
+	}
 
 	/* AFL PART ENDS HERE */
 out:
