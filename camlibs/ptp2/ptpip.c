@@ -28,7 +28,7 @@
  *
  * Nikon WU-1* adapters might use 0011223344556677 as GUID always...
  */
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
