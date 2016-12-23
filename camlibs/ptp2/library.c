@@ -5173,7 +5173,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 	txt = summary->text;
 
-#define SPACE_LEFT (summary->text + sizeof (summary->text) - txt)
+#define SPACE_LEFT max(0, summary->text + sizeof (summary->text) - txt)
 #define APPEND_TXT( ... ) txt += snprintf (txt, SPACE_LEFT, __VA_ARGS__)
 
 	APPEND_TXT (_("Manufacturer: %s\n"),params->deviceinfo.Manufacturer);
