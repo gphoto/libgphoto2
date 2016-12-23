@@ -2529,8 +2529,10 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	if (len < PTP_nikon_ec_Code)
 		return;
 	*cnt = dtoh16a(&data[PTP_nikon_ec_Length]);
-	if (*cnt > (len-PTP_nikon_ec_Code)/PTP_nikon_ec_Size) /* broken cnt? */
+	if (*cnt > (len-PTP_nikon_ec_Code)/PTP_nikon_ec_Size) { /* broken cnt? */
+		*cnt = 0;
 		return;
+	}
 	if (!*cnt)
 		return;
 
