@@ -4907,6 +4907,36 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{0,NULL}
         };
 
+        struct {
+		uint16_t dpc;
+		const char *txt;
+        } ptp_device_properties_PARROT[] = {
+		{PTP_DPC_PARROT_PhotoSensorEnableMask,		"PhotoSensorEnableMask"}, /* 0xD201 */
+		{PTP_DPC_PARROT_PhotoSensorsKeepOn,		"PhotoSensorsKeepOn"}, /* 0xD202 */
+		{PTP_DPC_PARROT_MultispectralImageSize,		"MultispectralImageSize"}, /* 0xD203 */
+		{PTP_DPC_PARROT_MainBitDepth,			"MainBitDepth"}, /* 0xD204 */
+		{PTP_DPC_PARROT_MultispectralBitDepth,		"MultispectralBitDepth"}, /* 0xD205 */
+		{PTP_DPC_PARROT_HeatingEnable,			"HeatingEnable"}, /* 0xD206 */
+		{PTP_DPC_PARROT_WifiStatus,			"WifiStatus"}, /* 0xD207 */
+		{PTP_DPC_PARROT_WifiSSID,			"WifiSSID"}, /* 0xD208 */
+		{PTP_DPC_PARROT_WifiEncryptionType,		"WifiEncryptionType"}, /* 0xD209 */
+		{PTP_DPC_PARROT_WifiPassphrase,			"WifiPassphrase"}, /* 0xD20A */
+		{PTP_DPC_PARROT_WifiChannel,			"WifiChannel"}, /* 0xD20B */
+		{PTP_DPC_PARROT_Localization,			"Localization"}, /* 0xD20C */
+		{PTP_DPC_PARROT_WifiMode,			"WifiMode"}, /* 0xD20D */
+		{PTP_DPC_PARROT_AntiFlickeringFrequency,	"AntiFlickeringFrequency"}, /* 0xD210 */
+		{PTP_DPC_PARROT_DisplayOverlayMask,		"DisplayOverlayMask"}, /* 0xD211 */
+		{PTP_DPC_PARROT_GPSInterval,			"GPSInterval"}, /* 0xD212 */
+		{PTP_DPC_PARROT_MultisensorsExposureMeteringMode,"MultisensorsExposureMeteringMode"}, /* 0xD213 */
+		{PTP_DPC_PARROT_MultisensorsExposureTime,	"MultisensorsExposureTime"}, /* 0xD214 */
+		{PTP_DPC_PARROT_MultisensorsExposureProgramMode,"MultisensorsExposureProgramMode"}, /* 0xD215 */
+		{PTP_DPC_PARROT_MultisensorsExposureIndex,	"MultisensorsExposureIndex"}, /* 0xD216 */
+		{PTP_DPC_PARROT_MultisensorsIrradianceGain,	"MultisensorsIrradianceGain"}, /* 0xD217 */
+		{PTP_DPC_PARROT_MultisensorsIrradianceIntegrationTime,"MultisensorsIrradianceIntegrationTime"}, /* 0xD218 */
+		{PTP_DPC_PARROT_OverlapRate,			"OverlapRate"}, /* 0xD219 */
+		{0,NULL}
+        };
+
 
 	for (i=0; ptp_device_properties[i].txt!=NULL; i++)
 		if (ptp_device_properties[i].dpc==dpc)
@@ -4942,6 +4972,11 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		for (i=0; ptp_device_properties_SONY[i].txt!=NULL; i++)
 			if (ptp_device_properties_SONY[i].dpc==dpc)
 				return (ptp_device_properties_SONY[i].txt);
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_PARROT)
+		for (i=0; ptp_device_properties_PARROT[i].txt!=NULL; i++)
+			if (ptp_device_properties_PARROT[i].dpc==dpc)
+				return (ptp_device_properties_PARROT[i].txt);
+
 
 	return NULL;
 }
@@ -6099,6 +6134,23 @@ ptp_opcode_trans_t ptp_opcode_sony_trans[] = {
 	{PTP_OC_SONY_GetAllDevicePropData,"PTP_OC_SONY_GetAllDevicePropData"},
 };
 
+ptp_opcode_trans_t ptp_opcode_parrot_trans[] = {
+	{PTP_OC_PARROT_GetSunshineValues,"PTP_OC_PARROT_GetSunshineValues"},
+	{PTP_OC_PARROT_GetTemperatureValues,"PTP_OC_PARROT_GetTemperatureValues"},
+	{PTP_OC_PARROT_GetAngleValues,"PTP_OC_PARROT_GetAngleValues"},
+	{PTP_OC_PARROT_GetGpsValues,"PTP_OC_PARROT_GetGpsValues"},
+	{PTP_OC_PARROT_GetGyroscopeValues,"PTP_OC_PARROT_GetGyroscopeValues"},
+	{PTP_OC_PARROT_GetAccelerometerValues,"PTP_OC_PARROT_GetAccelerometerValues"},
+	{PTP_OC_PARROT_GetMagnetometerValues,"PTP_OC_PARROT_GetMagnetometerValues"},
+	{PTP_OC_PARROT_GetImuValues,"PTP_OC_PARROT_GetImuValues"},
+	{PTP_OC_PARROT_GetStatusMask,"PTP_OC_PARROT_GetStatusMask"},
+	{PTP_OC_PARROT_EjectStorage,"PTP_OC_PARROT_EjectStorage"},
+	{PTP_OC_PARROT_StartMagnetoCalib,"PTP_OC_PARROT_StartMagnetoCalib"},
+	{PTP_OC_PARROT_StopMagnetoCalib,"PTP_OC_PARROT_StopMagnetoCalib"},
+	{PTP_OC_PARROT_MagnetoCalibStatus,"PTP_OC_PARROT_MagnetoCalibStatus"},
+	{PTP_OC_PARROT_SendFirmwareUpdate,"PTP_OC_PARROT_SendFirmwareUpdate"},
+};
+
 const char*
 ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 {
@@ -6120,6 +6172,7 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 	case PTP_VENDOR_NIKON:	RETURN_NAME_FROM_TABLE(ptp_opcode_nikon_trans, opcode);
 	case PTP_VENDOR_CANON:	RETURN_NAME_FROM_TABLE(ptp_opcode_canon_trans, opcode);
 	case PTP_VENDOR_SONY:	RETURN_NAME_FROM_TABLE(ptp_opcode_sony_trans, opcode);
+	case PTP_VENDOR_PARROT:	RETURN_NAME_FROM_TABLE(ptp_opcode_parrot_trans, opcode);
 	default:
 		break;
 	}
