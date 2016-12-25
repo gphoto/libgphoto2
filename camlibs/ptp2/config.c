@@ -2764,7 +2764,10 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 		for (i=min;i<=max; i+=s) {
 			char buf[20];
 
-			sprintf (buf, "%d%%", (i-min)*100/(max-min));
+			if (max != min)
+				sprintf (buf, "%d%%", (i-min)*100/(max-min));
+			else
+				strcpy (buf, "range max=min?");
 			gp_widget_add_choice (*widget, buf);
 			if (	((dpd->DataType == PTP_DTC_UINT8) && (dpd->CurrentValue.u8 == i)) ||
 				((dpd->DataType == PTP_DTC_INT8)  && (dpd->CurrentValue.i8 == i))
@@ -2802,7 +2805,10 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 			else
 				x = dpd->FORM.Enum.SupportedValue[i].i8;
 
-			sprintf (buf, "%d%%", (x-min)*100/(max-min));
+			if (max != min)
+				sprintf (buf, "%d%%", (x-min)*100/(max-min));
+			else
+				strcpy (buf, "range max=min?");
 			gp_widget_add_choice (*widget, buf);
 			if (t == x)
 				gp_widget_set_value (*widget, buf);
