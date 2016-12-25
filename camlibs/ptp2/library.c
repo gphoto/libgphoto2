@@ -2054,10 +2054,15 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/105 */
 	{"Parrot:Sequoia",			0x19cf,	0x5039, PTP_CAP},
 
+	{"GoPro:HERO" ,				0x2672, 0x000c, 0},  
+	{"GoPro:HERO4 Silver" , 		0x2672, 0x000d, 0 },
+
 	/* https://sourceforge.net/p/gphoto/support-requests/130/ */
 	{"GoPro:HERO 4",			0x2672,	0x000e, 0},
 	/* Tomas Zigo <tomas.zigo@slovanet.sk> */
 	{"GoPro:HERO 3+",			0x2672,	0x0011, 0},
+	/* https://sourceforge.net/u/drzap/libmtp/ci/39841e9a15ed250a0121ae4a139b2a950a07f08c/ */
+	{"GoPro:HERO +",			0x2672,	0x0021, 0},
 #endif
 };
 
