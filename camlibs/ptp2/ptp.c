@@ -5665,9 +5665,14 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		switch (dpc) {
 		case PTP_DPC_MTP_SynchronizationPartner:
 		case PTP_DPC_MTP_DeviceFriendlyName:
-			return snprintf(out, length, "%s", dpd->CurrentValue.str);
+			if (dpd->DataType == PTP_DTC_STR)
+				return snprintf(out, length, "%s", dpd->CurrentValue.str);
+			else
+				return snprintf(out, length, "invalid type, expected STR");
 		case PTP_DPC_MTP_SecureTime:
 		case PTP_DPC_MTP_DeviceCertificate: {
+			if (dpd->DataType != PTP_DTC_AUINT16)
+				return snprintf(out, length, "invalid type, expected AUINT16");
 			/* FIXME: Convert to use unicode demux functions */
 			for (i=0;(i<dpd->CurrentValue.a.count) && (i<length);i++)
 				out[i] = dpd->CurrentValue.a.v[i].u16;
