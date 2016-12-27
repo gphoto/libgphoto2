@@ -2,6 +2,7 @@ libgphoto2 2.5.11.1 development tree
 
 ptp2:
 * canon eos: more fixes for Canon EOS 5D Mark IV and Canon EOS 80D.
+* Parrot Sequoia support and property decoding
 * nikon 1: Fixed Nikon 1 capture
 * bugfixes and cleanups
 
