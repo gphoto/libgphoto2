@@ -1684,6 +1684,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 		ptp_debug(params,"%d: %02x %02x", i, (*data)[i], (*data)[i+1]);
 #endif
 	ptp_debug(params,"d1d3 version %d", version);
+	ptp_debug(params,"d1d3 size %d", size);
 	ptp_debug(params,"d1d3 focus points in struct %d, in use %d", focus_points_in_struct, focus_points_in_use);
 
 	str = (char*)malloc( maxlen );
@@ -1711,6 +1712,8 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 
 	p += sprintf(p,"},unknown={");
 	for (i=focus_points_in_struct*8+(focus_points_in_struct+7)/8+20;i<size;i++) {
+		if ((p-str) >= maxlen - 4)
+			break;
 		p+=sprintf(p,"%02x", (*data)[i]);
 	}
 	p += sprintf(p,"}");
