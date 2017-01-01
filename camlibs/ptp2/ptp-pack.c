@@ -1945,8 +1945,12 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* 'normal' enumerated types */
 				switch (dpd->DataType) {
 #define XX( TYPE, CONV )\
-					for (j=0;j<propxcnt;j++) { \
-						dpd->FORM.Enum.SupportedValue[j].TYPE = CONV(xdata); \
+					if (sizeof(dpd->FORM.Enum.SupportedValue[j].TYPE)*propxcnt + PTP_ece_Prop_Desc_Data > size) {	\
+						ptp_debug (params, "size %d does not match needed %d", sizeof(dpd->FORM.Enum.SupportedValue[j].TYPE)*propxcnt + PTP_ece_Prop_Desc_Data, size);	\
+						break;							\
+					}								\
+					for (j=0;j<propxcnt;j++) { 					\
+						dpd->FORM.Enum.SupportedValue[j].TYPE = CONV(xdata); 	\
 						ptp_debug (params, "event %d: suppval[%d] of %x is 0x%x.", i, j, proptype, CONV(xdata)); \
 						xdata += 4; /* might only be for propxtype 3 */ \
 					} \
