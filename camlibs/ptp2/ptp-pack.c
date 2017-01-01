@@ -1862,6 +1862,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "size %d is larger than datasize %d", size, datasize);
 			break;
 		}
+		if (size < 8) {
+			ptp_debug (params, "size %d is smaller than 8", size);
+			break;
+		}
 		if ((curdata - data) + size >= datasize) {
 			ptp_debug (params, "canon eos event decoder ran over supplied data, skipping entries");
 			break;
@@ -1872,6 +1876,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		switch (type) {
 		case PTP_EC_CANON_EOS_ObjectAddedEx:
         	case PTP_EC_CANON_EOS_ObjectAddedUnknown:	/* FIXME: review if the data used is correct */
+			if (size < PTP_ece_OA_Name+1) {
+				ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_OA_Name+1);
+				break;
+			}
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO;
 			ce[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OA_ObjectID]);
 			ce[i].u.object.oi.StorageID	= dtoh32a(&curdata[PTP_ece_OA_StorageID]);
@@ -1883,6 +1891,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			break;
 		case PTP_EC_CANON_EOS_RequestObjectTransfer:
 		case PTP_EC_CANON_EOS_RequestObjectTransferNew: /* FIXME: confirm */
+			if (size < PTP_ece_OI_Name+1) {
+				ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_OI_Name+1);
+				break;
+			}
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER;
 			ce[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OI_ObjectID]);
 			ce[i].u.object.oi.StorageID 	= 0; /* use as marker */
@@ -1901,6 +1913,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			unsigned int	j;
 			PTPDevicePropDesc	*dpd;
 
+			if (size < PTP_ece_Prop_Desc_Data) {
+				ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_Prop_Desc_Data);
+				break;
+			}
+
 			ptp_debug (params, "event %d: EOS prop %04x desc record, datasize %d, propxtype %d", i, proptype, size-PTP_ece_Prop_Desc_Data, propxtype);
 			for (j=0;j<params->nrofcanon_props;j++)
 				if (params->canon_props[j].proptype == proptype)
@@ -1915,7 +1932,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			 * 7 - string?
 			 */
 			if (propxtype != 3) {
-				ptp_debug (params, "event %d: propxtype is %x for %04x, unhandled.", i, propxtype, proptype);
+				ptp_debug (params, "event %d: propxtype is %x for %04x, unhandled, size %d", i, propxtype, proptype, size);
 				for (j=0;j<size-PTP_ece_Prop_Desc_Data;j++)
 					ptp_debug (params, "    %d: %02x", j, xdata[j]);
 				break;
@@ -1968,7 +1985,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					free (dpd->FORM.Enum.SupportedValue);
 					dpd->FORM.Enum.SupportedValue = NULL;
 					dpd->FORM.Enum.NumberOfValues = 0;
-					ptp_debug (params ,"event %d: data type 0x%04x of %x unhandled, raw values:", i, dpd->DataType, proptype, dtoh32a(xdata));
+					ptp_debug (params ,"event %d: data type 0x%04x of %x unhandled, size %d, raw values:", i, dpd->DataType, proptype, dtoh32a(xdata), size);
 					for (j=0;j<(size-PTP_ece_Prop_Desc_Data)/4;j++, xdata+=4) /* 4 is good for propxtype 3 */
 						ptp_debug (params, "    %3d: 0x%8x", j, dtoh32a(xdata));
 					break;
@@ -1983,6 +2000,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				unsigned char	*xdata = &curdata[PTP_ece_Prop_Val_Data];
 				PTPDevicePropDesc	*dpd;
 
+				if (size < PTP_ece_Prop_Val_Data) {
+					ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_Prop_Val_Data);
+					break;
+				}
 				ptp_debug (params, "event %d: EOS prop %04x info record, datasize is %d", i, proptype, size-PTP_ece_Prop_Val_Data);
 				for (j=0;j<params->nrofcanon_props;j++)
 					if (params->canon_props[j].proptype == proptype)
