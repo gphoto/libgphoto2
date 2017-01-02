@@ -2335,8 +2335,10 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Continuous"),		0x0001, 0 },
 	{ N_("Continuous high speed"),	0x0004, 0 },
 	{ N_("Continuous low speed"),	0x0005, 0 },
+	{ N_("Single: Silent shooting"),0x0006, 0 },
 	{ N_("Timer 10 sec"),		0x0010, 0 },
 	{ N_("Timer 2 sec"),		0x0011, 0 },
+	{ N_("Super high speed continuous shooting"),		0x0012, 0 },
 	{ N_("Single silent"),		0x0013, 0 },
 	{ N_("Continuous silent"),	0x0014, 0 },
 };
@@ -2762,6 +2764,10 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 			min = dpd->FORM.Range.MinimumValue.i8;
 			max = dpd->FORM.Range.MaximumValue.i8;
 			s = dpd->FORM.Range.StepSize.i8;
+		}
+		if (!s) {
+			gp_widget_set_value (*widget, "invalid range, stepping 0");
+			return GP_OK;
 		}
 		for (i=min;i<=max; i+=s) {
 			char buf[20];
@@ -4172,6 +4178,10 @@ static struct deviceproptableu8 canon_eos_whitebalance[] = {
 	{ N_("Color Temperature"),9, 0 }, /* from eos 40d / 5D Mark II dump */
 	{ "Unknown 10",		10, 0 },
 	{ "Unknown 11",		11, 0 },
+	{ N_("Custom WB 2"),	15, 0 },
+	{ N_("Custom WB 3"),	16, 0 },
+	{ N_("Custom WB 4"),	18, 0 },
+	{ N_("Custom WB 5"),	19, 0 },
 };
 GENERIC8TABLE(Canon_EOS_WhiteBalance,canon_eos_whitebalance)
 
@@ -4260,6 +4270,7 @@ GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
 
 static struct deviceproptableu16 canon_aperture[] = {
+	{ N_("implicit auto"),	0x0, 0 },
 	{ N_("auto"),	0xffff, 0 },
 	{ "1",		0x0008, 0 },
 	{ "1.1",	0x000b, 0 },
