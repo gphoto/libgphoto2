@@ -793,7 +793,7 @@ ptp_getstorageinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	CHECK_PARAM_COUNT(1);
 
 	if (ptp->params[0] != 0x00010001) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid storage id 0x%08x", ptp->params[1]);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid storage id 0x%08x", ptp->params[0]);
 		ptp_response(cam,PTP_RC_InvalidStorageId,0);
 		return 1;
 	}
