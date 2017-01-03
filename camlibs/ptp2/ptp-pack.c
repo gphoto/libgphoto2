@@ -1651,7 +1651,7 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
  * size=NxN,size2=NxN,points={NxNxNxN,NxNxNxN,...},selected={0,1,2}
  */
 static inline char*
-ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
+ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t datasize )
 {
 	uint32_t size 			= dtoh32a( *data );
 	uint32_t halfsize		= dtoh16a( (*data) + 4);
@@ -1666,10 +1666,14 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data )
 	uint32_t maxlen;
 	char	*str, *p;
 
-	/* every focuspoint gets 4 (16 bit number and a x) and a ,*/
+	if ((size >= datasize) || (size < 20)) {
+		return strdup("bad size");
+	}
+	/* every focuspoint gets 4 (16 bit number possible "-" sign and a x) and a ,*/
 	/* inital things around lets say 100 chars at most. 
-	 * FIXME: check selected when we decode it */
-	maxlen = focus_points_in_use*6*4 + focus_points_in_use + 100;
+	 * FIXME: check selected when we decode it
+	 */
+	maxlen = focus_points_in_use*32 + 100 + (size - focus_points_in_struct*8)*2;
 	if (halfsize != size-4) {
 		ptp_error(params, "halfsize %d is not expected %d", halfsize, size-4);
 		return strdup("bad size");
@@ -2264,7 +2268,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					dpd->DataType = PTP_DTC_STR;
 					free (dpd->FactoryDefaultValue.str);
 					free (dpd->CurrentValue.str);
-					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &xdata );
+					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &xdata, size );
 					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
 					ptp_debug (params,"event %d: decoded focus info, currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
 					break;
