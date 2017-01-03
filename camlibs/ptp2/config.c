@@ -1329,7 +1329,7 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 	do {										\
 		origval = dpd.CurrentValue.bits;					\
 		/* if it is a ENUM, the camera will walk through the ENUM */		\
-		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {				\
+		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {		\
 			int i, posorig = -1, posnew = -1;				\
 											\
 			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
@@ -1387,6 +1387,32 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 			GP_LOG_D ("value did not change (0x%x vs 0x%x vs target 0x%x), not good ...", dpd.CurrentValue.bits, origval, value);\
 			break;								\
 		}									\
+		/* We did not get there. Did we hit 0? */				\
+		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {		\
+			int i, posnow = -1;						\
+											\
+			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
+				if (dpd.CurrentValue.bits == dpd.FORM.Enum.SupportedValue[i].bits) {	\
+					posnow = i;					\
+					break;						\
+				}							\
+			}								\
+			if (posnow == -1) {						\
+				gp_context_error (context, _("Now value is not in enumeration."));\
+				return GP_ERROR_BAD_PARAMETERS;				\
+			}								\
+			GP_LOG_D("posnow %d, value %d", posnow, dpd.CurrentValue.bits);	\
+			if ((posnow == 0) && (propval.u8 == 0xff)) {			\
+				gp_context_error (context, _("Sony was not able to set the new value, is it valid?"));	\
+				GP_LOG_D ("hit bottom of enumeration, not good.");	\
+				return GP_ERROR;					\
+			}								\
+			if ((posnow == dpd.FORM.Enum.NumberOfValues-1) && (propval.u8 == 0x01)) {			\
+				GP_LOG_D ("hit top of enumeration, not good.");		\
+				gp_context_error (context, _("Sony was not able to set the new value, is it valid?"));	\
+				return GP_ERROR;					\
+			}								\
+		} 									\
 	} while (1);									\
 	return GP_OK;									\
 }
