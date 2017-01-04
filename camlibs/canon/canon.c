@@ -2050,7 +2050,8 @@ canon_int_set_zoom (Camera *camera, unsigned char zoom_level,
  * @zoom_max: pointer to hold zoom upper bound
  * @context: context for error reporting
  *
- * Gets the camera's zoom. Only tested for G1 via USB.
+ * Gets the camera's zoom.
+ * Tested only for G1 and S45 via USB.
  *
  * Returns: gphoto2 error code
  *
@@ -2088,7 +2089,7 @@ canon_int_get_zoom (Camera *camera,
                 msg = canon_usb_dialogue ( camera,
                                            CANON_USB_FUNCTION_CONTROL_CAMERA,
                                            &datalen, payload, payloadlen );
-        if ( msg == NULL  || datalen != 0x1c) {
+        if ( msg == NULL  || datalen < 15) {
                 /* ERROR */
                 GP_DEBUG ("%s datalen=%x",
                           desc, datalen);
