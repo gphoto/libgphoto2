@@ -2494,7 +2494,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			break;
 		case PTP_EC_CANON_EOS_BulbExposureTime:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789"));
+			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789012345678"));
 			sprintf (ce[i].u.info, "BulbExposureTime %d",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
