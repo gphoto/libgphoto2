@@ -1912,7 +1912,9 @@ vcam_readint(vcamera*cam, unsigned char *data, int bytes, int timeout) {
 	struct ptp_interrupt	*pint;
 
 	if (!first_interrupt) {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		usleep (timeout*1000);
+#endif
 		return GP_ERROR_TIMEOUT;
 	}
 	gettimeofday (&now, NULL);
@@ -1924,13 +1926,17 @@ vcam_readint(vcamera*cam, unsigned char *data, int bytes, int timeout) {
 		end.tv_sec++;
 	}
 	if (first_interrupt->triggertime.tv_sec > end.tv_sec) {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		usleep (1000*timeout);
+#endif
 		return GP_ERROR_TIMEOUT;
 	}
 	if (	(first_interrupt->triggertime.tv_sec == end.tv_sec) &&
 		(first_interrupt->triggertime.tv_usec > end.tv_usec)
 	) {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		usleep (1000*timeout);
+#endif
 		return GP_ERROR_TIMEOUT;
 	}
 	newtimeout = (first_interrupt->triggertime.tv_sec - now.tv_sec)*1000 + (first_interrupt->triggertime.tv_usec - now.tv_usec)/1000;
