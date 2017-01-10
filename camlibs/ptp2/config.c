@@ -1326,6 +1326,10 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
 											\
 	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));			\
+	if (value == dpd.CurrentValue.bits) {						\
+		GP_LOG_D("value is already 0x%08x", value);				\
+		return GP_OK;								\
+	}										\
 	do {										\
 		origval = dpd.CurrentValue.bits;					\
 		/* if it is a ENUM, the camera will walk through the ENUM */		\
@@ -1345,11 +1349,15 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 				return GP_ERROR_BAD_PARAMETERS;				\
 			}								\
 			GP_LOG_D("posnew %d, posorig %d, value %d", posnew, posorig, value);	\
+			if (posnew == posorig)						\
+				break;							\
 			if (posnew > posorig)						\
 				propval.u8 = 0x01;					\
 			else								\
 				propval.u8 = 0xff;					\
 		} else {								\
+			if (value == origval)						\
+				break;							\
 			if (value > origval)						\
 				propval.u8 = 0x01;					\
 			else								\
@@ -2123,8 +2131,8 @@ static struct deviceproptableu8 nikon1_size[] = {
 GENERIC8TABLE(Nikon1_ImageSize,nikon1_size)
 
 static struct deviceproptableu8 sony_aspectratio[] = {
-	{ N_("16:9"),		0x01, 0 },
-	{ N_("3:2"),		0x02, 0 },
+	{ N_("3:2"),		0x01, 0 },
+	{ N_("16:9"),		0x02, 0 },
 };
 GENERIC8TABLE(Sony_AspectRatio,sony_aspectratio)
 
@@ -3703,8 +3711,12 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 	CR (gp_widget_get_value (widget, &val));
 
-	x = dpd->CurrentValue.u32>>16;
-	y = dpd->CurrentValue.u32&0xffff;
+	if (dpd->CurrentValue.u32 == 0) {
+		x = 65536; y = 1;
+	} else {
+		x = dpd->CurrentValue.u32>>16;
+		y = dpd->CurrentValue.u32&0xffff;
+	}
 	old = ((float)x)/(float)y;
 
 	if (!strcmp(val,_("Bulb"))) {
@@ -3723,6 +3735,8 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	new = ((float)x)/(float)y;
 	do {
 		origval = dpd->CurrentValue.u32;
+		if (old == new)
+			break;
 		if (old > new)
 			value.u8 = 0x01;
 		else
