@@ -1392,6 +1392,27 @@ ptp_getobject (PTPParams* params, uint32_t handle, unsigned char** object)
 }
 
 /**
+ * ptp_getobject_with_size:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		object			- pointer to data area
+ *		size			- pointer to uint, returns size of object
+ *
+ * Get object 'handle' from device and store the data in newly
+ * allocated 'object'.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_getobject_with_size (PTPParams* params, uint32_t handle, unsigned char** object, unsigned int *size)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_GetObject, handle);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, size);
+}
+
+/**
  * ptp_getobject_to_handler:
  * params:	PTPParams*
  *		handle			- Object handle
