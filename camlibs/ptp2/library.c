@@ -2777,6 +2777,53 @@ enable_liveview:
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
+	case PTP_VENDOR_SONY: {
+		uint32_t	preview_object = 0xffffc002; /* this is where the liveview image is accessed */
+
+		unsigned char *ximage = NULL;
+
+		C_PTP_REP (ptp_getobject_with_size(params, preview_object, &ximage, &size));
+
+		/* look for the JPEG SOI marker (0xFFD8) in data */
+		jpgStartPtr = (unsigned char*)memchr(ximage, 0xff, size);
+		while(jpgStartPtr && ((jpgStartPtr+1) < (ximage + size))) {
+			if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
+				break;
+			} else { /* go on looking (starting at next byte) */
+				jpgStartPtr++;
+				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
+			}
+		}
+		if(!jpgStartPtr) { /* no SOI -> no JPEG */
+			gp_context_error (context, _("Sorry, your Sony camera does not seem to return a JPEG image in LiveView mode"));
+			return GP_ERROR;
+		}
+		/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
+		   (just to be sure we will not go beyond the end of the data array) */
+		jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, ximage+size-jpgStartPtr-1);
+		while(jpgEndPtr && ((jpgEndPtr+1) < (ximage + size))) {
+			if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
+				jpgEndPtr += 2;
+				break;
+			} else { /* go on looking (starting at next byte) */
+				jpgEndPtr++;
+				jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, ximage + size - jpgEndPtr);
+			}
+		}
+		if(!jpgEndPtr) { /* no EOI -> no JPEG */
+			gp_context_error (context, _("Sorry, your Sony camera does not seem to return a JPEG image in LiveView mode"));
+			return GP_ERROR;
+		}
+		gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
+		free (ximage); /* FIXME: perhaps handle the 128 byte header data too. */
+
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		gp_file_set_name (file, "sony_preview.jpg");
+		gp_file_set_mtime (file, time(NULL));
+
+		SET_CONTEXT_P(params, NULL);
+		return GP_OK;
+	}
 	default:
 		break;
 	}
@@ -3730,6 +3777,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	 * get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
 	 */
 
+#if 0
 	GP_LOG_D ("holding down shutterbutton");
 	event_start = time_now();
 	do {
@@ -3757,6 +3805,9 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		}
 
 	} while (time_since (event_start) < 1000);
+#endif
+	usleep(100);
+
 	GP_LOG_D ("releasing shutterbutton");
 
 	/* release full-press */
@@ -3813,7 +3864,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
 	return add_objectid_and_upload (camera, path, context, newobject, &oi);
 }
-
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
