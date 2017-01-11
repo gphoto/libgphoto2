@@ -4900,13 +4900,10 @@ downloadnow:
 		PTPDevicePropDesc	dpd;
 
 		do {
-			C_PTP_REP (ptp_check_event(params));
-			if (ptp_get_one_event (params, &event))
-				goto handleregular;
+			/* Check if the captured image counter was bumped before checking events to
+			 * avoid the timeout ... */
 
-			/* If we have no events right now, try to synthesize objectadded event
-			 * by checking if we have pending images for download. */
-
+			/* Check if there are pending images for download. If yes, synthesize a FILE ADDED event */
 			C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
 			C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
 			GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
@@ -4959,6 +4956,12 @@ downloadnow:
 				gp_file_unref (file);
 				return GP_OK;
 			}
+
+			/* If not, check for events and handle them */
+			C_PTP_REP (ptp_check_event(params));
+			if (ptp_get_one_event (params, &event))
+				goto handleregular;
+
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
