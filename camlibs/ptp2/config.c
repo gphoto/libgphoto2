@@ -4259,9 +4259,11 @@ GENERIC8TABLE(Canon_ExpCompensation,canon_expcompensation)
 static struct deviceproptableu8 canon_expcompensation2[] = {
 	{ "5",		0x28, 0 },
 	{ "4.6",	0x25, 0 },
+	{ "4.5",	0x24, 0 },
 	{ "4.3",	0x23, 0 },
 	{ "4",		0x20, 0 },
 	{ "3.6",	0x1d, 0 },
+	{ "3.5",	0x1c, 0 },
 	{ "3.3",	0x1b, 0 },
 	{ "3",		0x18, 0 },
 	{ "2.6",	0x15, 0 },
@@ -4291,9 +4293,11 @@ static struct deviceproptableu8 canon_expcompensation2[] = {
 	{ "-2.6",	0xeb, 0 },
 	{ "-3",		0xe8, 0 },
 	{ "-3.3",	0xe5, 0 },
+	{ "-3.5",	0xe4, 0 },
 	{ "-3.6",	0xe3, 0 },
 	{ "-4",		0xe0, 0 },
 	{ "-4.3",	0xdd, 0 }, /*Canon EOS 5D Mark III*/
+	{ "-4.5",	0xdc, 0 },
 	{ "-4.6",	0xdb, 0 },
 	{ "-5",		0xd8, 0 },
 };
