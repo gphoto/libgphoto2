@@ -67,8 +67,8 @@ static char* enigma13_static_toc=NULL;
 static int enigma13_about (Camera *camera, CameraText *about, GPContext *context)
 {
         strcpy (about->text, _("Download program for Digital Dream Enigma 1.3. "
-                "by <olivier@aixmarseille.com>, and adapted from spca50x driver."
-                "Thanks you, spca50x team, it was easy to port your driver on this cam! "));
+                "by <olivier@aixmarseille.com>, and adapted from spca50x driver. "
+                "Thank you, spca50x team, it was easy to port your driver on this cam! "));
         return (GP_OK);
 }
 
