@@ -2410,6 +2410,10 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			break;
 		case PTP_VENDOR_NIKON:
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
+				C_PTP (ptp_nikon_end_liveview (params));
+			params->inliveview = 0;
+
 			/* get the Nikon out of control mode again */
 			if (params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
 				ptp_nikon_setcontrolmode (params, 0);
