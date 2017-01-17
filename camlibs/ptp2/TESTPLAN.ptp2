@@ -1,5 +1,12 @@
 Testplan ptp2 driver
 
+
+I now use tests/testcamera.pl in the "gphoto2" repository for testing.
+
+
+
+--------------------------- OLD -------------------------------------------------
+
 (Card capture with 16MB reference SD card.)
 
 Canon Powershot series (currently: Powershot SX100IS)
