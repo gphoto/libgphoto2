@@ -414,7 +414,9 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CHDK))
 			return camera_prepare_chdk_capture(camera,context);
 
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		    ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn) ||
+		)
 			return camera_prepare_canon_eos_capture(camera,context);
 		gp_context_error(context, _("Sorry, your Canon camera does not support Canon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -476,7 +478,9 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CHDK))
 			return camera_unprepare_chdk_capture(camera,context);
 
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease))
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		    ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn) ||
+		)
 			return camera_unprepare_canon_eos_capture (camera, context);
 
 		gp_context_error(context,
@@ -6312,7 +6316,9 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 	}
 	/* Also update it in the live Canon EOS camera. (Nikon and Canon Powershot just use different opcodes.) */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
+		(ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn) ||
+		)
 	)
 		CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
@@ -7398,7 +7404,9 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 	memset (&ab, 0, sizeof(ab));
 	gp_camera_get_abilities (camera, &ab);
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
+		(ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn) ||
+		)
 	) {
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
@@ -7797,7 +7805,9 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 	camera->pl->checkevents = TRUE;
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_RemoteRelease)
+		(ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn) ||
+		)
 	) {
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);

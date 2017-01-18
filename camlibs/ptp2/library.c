@@ -3229,7 +3229,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	struct timeval          capture_start;
 	char			*mime;
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
+	if (!	(ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
+	) {
 		gp_context_error (context,
 		_("Sorry, your Canon camera does not support Canon EOS Capture"));
 		return GP_ERROR_NOT_SUPPORTED;
@@ -3935,7 +3937,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
+		(	ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+			ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)
+		)
 	) {
 		return camera_canon_eos_capture (camera, type, path, context);
 	}
@@ -4312,7 +4316,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	}
 	/* Slightly older EOS, EOS 400D */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-	     ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)) {
+	     (	ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+	     	ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
+	) {
 		uint32_t	result;
 		int tries = 10;
 
@@ -4543,7 +4549,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 	event_start = time_now();
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease)
+	        (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+	     	 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
 	) {
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
@@ -5345,7 +5352,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease))
 				APPEND_TXT (_("Canon EOS Capture, "));
 			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
-				APPEND_TXT (_("Canon EOS Shutter Button, "));
+				APPEND_TXT (_("Canon EOS Capture 2, "));
 			break;
 		case PTP_VENDOR_NIKON:
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture))
