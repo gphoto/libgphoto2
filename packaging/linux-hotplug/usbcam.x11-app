@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
@@ -69,7 +69,7 @@ then
     if [ "${USER}" != "root" ]
     then
 	# we don't want to run this as root. definitely not.
-	cd "${DIRECTORY}"
+	cd "${DIRECTORY}" || exit 1
 	usrhome=~${USER}
 	"${SU}" "${USER}" -c "${ENV} DISPLAY=${DISPLAY} HOME=${usrhome} ${X11_APP}"
     fi

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
@@ -20,13 +20,13 @@ INTERFACE="${1:-06/01/01}"
 
 BASENAME=${DEVPATH##*/}
 for d in /sys/${DEVPATH}/${BASENAME}:*; do
-	[[ -d ${d} ]] || continue
-	INTERFACEID="$(< ${d}/bInterfaceClass)"
-	INTERFACEID="${INTERFACEID}/$(< ${d}/bInterfaceSubClass)"
-	INTERFACEID="${INTERFACEID}/$(< ${d}/bInterfaceProtocol)"
+	[ -d "${d}" ] || continue
+	INTERFACEID="$(cat "${d}"/bInterfaceClass)"
+	INTERFACEID="${INTERFACEID}/$(cat "${d}"/bInterfaceSubClass)"
+	INTERFACEID="${INTERFACEID}/$(cat "${d}"/bInterfaceProtocol)"
 
 	#echo ${d}: ${INTERFACEID}
-	if [[ ${INTERFACE} == ${INTERFACEID} ]]; then
+	if [ "${INTERFACE}" = "${INTERFACEID}" ]; then
 		# Found interface
 		exit 0
 	fi
