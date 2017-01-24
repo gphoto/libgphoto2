@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
@@ -50,7 +50,7 @@ then
         /var/lock/console.lock
     do
         if [ -f "$conlock" ]; then
-	    CONSOLEOWNER=`cat $conlock`
+            CONSOLEOWNER=$(cat $conlock)
         fi
     done
     if [ -n "$CONSOLEOWNER" ]
