@@ -1,0 +1,58 @@
+0.066445 print_debug_deviceinfo      (2): Device info:
+0.066448 print_debug_deviceinfo      (2): Manufacturer: FUJIFILM
+0.066451 print_debug_deviceinfo      (2):   Model: X-T2
+0.066453 print_debug_deviceinfo      (2):   device version: 1.00
+0.066455 print_debug_deviceinfo      (2):   serial number: 'nnnnnnnnnnnnnnnnnnnBnnnnnnnnnn'
+0.066457 print_debug_deviceinfo      (2): Vendor extension ID: 0x0000000e
+0.066459 print_debug_deviceinfo      (2): Vendor extension version: 100
+0.066462 print_debug_deviceinfo      (2): Vendor extension description: fujifilm.co.jp: 1.0; 
+0.066464 print_debug_deviceinfo      (2): Functional Mode: 0x0000
+0.066466 print_debug_deviceinfo      (2): PTP Standard Version: 100
+0.066468 print_debug_deviceinfo      (2): Supported operations:
+0.066473 print_debug_deviceinfo      (2):   0x1001 (Get device info)
+0.066476 print_debug_deviceinfo      (2):   0x1002 (Open session)
+0.066479 print_debug_deviceinfo      (2):   0x1003 (Close session)
+0.066482 print_debug_deviceinfo      (2):   0x1004 (Get storage IDs)
+0.066484 print_debug_deviceinfo      (2):   0x1005 (Get storage info)
+0.066487 print_debug_deviceinfo      (2):   0x1006 (Get number of objects)
+0.066489 print_debug_deviceinfo      (2):   0x1007 (Get object handles)
+0.066492 print_debug_deviceinfo      (2):   0x1008 (Get object info)
+0.066494 print_debug_deviceinfo      (2):   0x1009 (Get object)
+0.066497 print_debug_deviceinfo      (2):   0x100a (Get thumbnail)
+0.066500 print_debug_deviceinfo      (2):   0x100b (Delete object)
+0.066502 print_debug_deviceinfo      (2):   0x100c (Send object info)
+0.066505 print_debug_deviceinfo      (2):   0x100d (Send object)
+0.066507 print_debug_deviceinfo      (2):   0x100f (Format storage)
+0.066510 print_debug_deviceinfo      (2):   0x1014 (Get device property description)
+0.066513 print_debug_deviceinfo      (2):   0x1015 (Get device property value)
+0.066516 print_debug_deviceinfo      (2):   0x1016 (Set device property value)
+0.066518 print_debug_deviceinfo      (2):   0x101b (Get partial object)
+0.066521 print_debug_deviceinfo      (2):   0x900c (Unknown VendorExtensionID)
+0.066524 print_debug_deviceinfo      (2):   0x900d (Unknown VendorExtensionID)
+0.066526 print_debug_deviceinfo      (2):   0x901d (Unknown VendorExtensionID)
+0.066529 print_debug_deviceinfo      (2):   0x9801 (Unknown VendorExtensionID)
+0.066532 print_debug_deviceinfo      (2):   0x9802 (Unknown VendorExtensionID)
+0.066534 print_debug_deviceinfo      (2):   0x9803 (Unknown VendorExtensionID)
+0.066537 print_debug_deviceinfo      (2):   0x9805 (Unknown VendorExtensionID)
+0.066539 print_debug_deviceinfo      (2): Events Supported:
+0.066541 print_debug_deviceinfo      (2):   0x4002 
+0.066542 print_debug_deviceinfo      (2):   0x4003
+0.066544 print_debug_deviceinfo      (2):   0x4004
+0.066546 print_debug_deviceinfo      (2):   0x4005
+0.066547 print_debug_deviceinfo      (2):   0x4006
+0.066549 print_debug_deviceinfo      (2):   0x4008
+0.066551 print_debug_deviceinfo      (2):   0x4009
+0.066552 print_debug_deviceinfo      (2): Device Properties Supported:
+0.066554 print_debug_deviceinfo      (2):   0x5001
+0.066556 print_debug_deviceinfo      (2):   0xd303
+0.066558 print_debug_deviceinfo      (2):   0xd406
+0.066559 print_debug_deviceinfo      (2):   0xd407
+
+0x4002 ObjectAdded
+0x4003 ObjectRemoved
+0x4004 StoreAdded
+0x4005 StoreRemoved
+0x4006 DevicePropChanged
+0x4007 ObjectInfoChanged
+0x4008 DeviceInfoChanged
+0x4009 RequestObjectTransfer 
