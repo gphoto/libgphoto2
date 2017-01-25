@@ -1980,7 +1980,8 @@ static struct {
 	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/32 */
 	{"Fuji:Fujifilm X-T10",			0x04cb, 0x02c8, 0},
-	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, 0},
+	/* with new updated firmware 1.1 */
+	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, PTP_CAP},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
