@@ -6096,7 +6096,7 @@ _put_OpenCapture(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		C_PTP_REP (ptp_initiateopencapture (params, 0x0, 0x0)); /* so far use only defaults for storage and ofc */
-		params->opencapture_transid = params->transaction_id;
+		params->opencapture_transid = params->transaction_id-1; /* transid will be incremented already */
 	} else {
 		C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
 	}
