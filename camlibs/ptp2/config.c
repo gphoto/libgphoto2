@@ -408,6 +408,19 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	
 	GP_LOG_D ("prepare_capture");
 	switch (params->deviceinfo.VendorExtensionID) {
+	case PTP_VENDOR_FUJI:	{
+		PTPPropertyValue	propval;
+
+		if (!have_prop(camera, PTP_VENDOR_FUJI, 0xd207))
+			break;
+		if (!have_prop(camera, PTP_VENDOR_FUJI, 0xd208))
+			break;
+		propval.u16 = 0x0002;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+		propval.u16 = 0x0200;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+		break;
+	}
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(params, PTP_OC_CANON_InitiateReleaseControl))
 			return camera_prepare_canon_powershot_capture(camera,context);

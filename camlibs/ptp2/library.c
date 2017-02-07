@@ -7910,6 +7910,9 @@ camera_init (Camera *camera, GPContext *context)
 			C_PTP (ptp_sony_9281(params, 0x4));
 		}
 		break;
+	case PTP_VENDOR_FUJI:
+		CR (camera_prepare_capture (camera, context));
+		break;
 	default:
 		break;
 	}
