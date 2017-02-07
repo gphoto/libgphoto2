@@ -1,0 +1,737 @@
+$ gphoto2 --list-all-configur
+          
+/main/actions/autofocusdrive
+Drive Nikon DSLR Autofocus
+TOGGLE
+0
+/main/actions/changeafarea
+Set Nikon Autofocus area
+TEXT
+0x0
+/main/actions/controlmode
+Set Nikon Control Mode
+TEXT
+0
+/main/actions/viewfinder
+Nikon Viewfinder
+TOGGLE
+0
+/main/actions/movie
+Movie Capture
+TOGGLE
+2
+/main/actions/opcode
+PTP Opcode
+TEXT
+0x1001,0xparam1,0xparam2
+/main/settings/datetime
+Camera Date and Time
+DATE
+1485189475
+lun. 23 janv. 2017 17:37:55 CET
+Use 'now' as the current time when setting.
+
+/main/settings/fastfs
+Fast Filesystem
+TOGGLE
+1
+/main/settings/capturetarget
+Capture Target
+RADIO
+Internal RAM
+0 Internal RAM
+1 Memory card
+/main/status/serialnumber
+Serial Number
+TEXT
+None
+/main/status/manufacturer
+Camera Manufacturer
+TEXT
+Nikon Corporation
+/main/status/cameramodel
+Camera Model
+TEXT
+KeyMission 360
+/main/status/deviceversion
+Device Version
+TEXT
+KeyMission 360 Ver.1.2
+/main/status/vendorextension
+Vendor Extension
+TEXT
+microsoft.com: 1.0; microsoft.com/DeviceServices:1.0;
+/main/status/batterylevel
+Battery Level
+TEXT
+1000%
+/main/imgsettings/iso
+ISO Speed
+RADIO
+500
+0 100
+1 125
+2 160
+3 200
+4 250
+5 320
+6 400
+7 500
+8 640
+9 800
+10 1000
+11 1250
+12 1600
+13 2000
+14 2500
+15 3200
+16 4000
+17 5000
+18 6400
+19 8000
+20 10000
+21 12800
+22 16000
+23 20000
+24 25600
+/main/imgsettings/whitebalance
+WhiteBalance
+RADIO
+Automatic
+0 Automatic
+1 Daylight
+2 Fluorescent
+3 Tungsten
+4 Unknown value 1001
+/main/capturesettings/exposurecompensation
+Exposure Compensation
+RADIO
+0
+0 0
+1 0,333
+2 0,666
+3 1
+4 1,333
+5 1,666
+6 2
+7 -0,333
+8 -0,666
+9 -1
+10 -1,333
+11 -1,666
+12 -2
+/main/capturesettings/expprogram
+Exposure Program
+RADIO
+Unknown value 8201
+0 M
+1 P
+2 A
+3 S
+4 Auto
+5 Automatic (No Flash)
+6 Unknown value 8200
+7 Unknown value 8201
+8 Unknown value 8202
+/main/capturesettings/shutterspeed2
+Shutter Speed 2
+RADIO
+1/100
+0 30
+1 25
+2 20
+3 15
+4 13
+5 13
+6 13
+7 13
+8 13
+9 4
+10 3
+11 2
+12 2
+13 1
+14 1
+15 1
+16 1
+17 1
+18 1/2
+19 1/2
+20 1/3
+21 1/4
+22 1/5
+23 1/6
+24 1/8
+25 1/10
+26 1/13
+27 1/15
+28 1/20
+29 1/25
+30 1/30
+31 1/40
+32 1/50
+33 1/60
+34 1/80
+35 1/100
+36 1/125
+37 1/160
+38 1/200
+39 1/250
+40 1/320
+41 1/400
+42 1/500
+43 1/641
+44 1/800
+45 1/1000
+46 1/1250
+47 1/1600
+48 1/2000
+49 1/2500
+50 1/3200
+51 1/4000
+52 1/5000
+53 1/6400
+54 1/8000
+55 1/10000
+56 1/13000
+57 1/16000
+58 1/20000
+59 1/26000
+60 1/32000
+/main/capturesettings/liveviewafmode
+Live View AF Mode
+RADIO
+Face-priority AF
+0 Face-priority AF
+1 Wide-area AF
+/main/other/5001
+Battery Level
+RANGE
+100
+1
+10
+20
+/main/other/5005
+White Balance
+MENU
+2
+0 2
+1 4
+2 5
+3 6
+4 4097
+/main/other/500e
+Exposure Program Mode
+MENU
+33281
+0 1
+1 2
+2 3
+3 4
+4 32784
+5 32792
+6 33280
+7 33281
+8 33282
+/main/other/500f
+Exposure Index (film speed ISO)
+MENU
+500
+0 100
+1 125
+2 160
+3 200
+4 250
+5 320
+6 400
+7 500
+8 640
+9 800
+10 1000
+11 1250
+12 1600
+13 2000
+14 2500
+15 3200
+16 4000
+17 5000
+18 6400
+19 8000
+20 10000
+21 12800
+22 16000
+23 20000
+24 25600
+/main/other/5010
+Exposure Bias Compensation
+MENU
+0
+0 0
+1 333
+2 666
+3 1000
+4 1333
+5 1666
+6 2000
+7 -333
+8 -666
+9 -1000
+10 -1333
+11 -1666
+12 -2000
+/main/other/5011
+Date & Time
+TEXT
+20170123T173755
+/main/other/501f
+Copyright Info
+TEXT
+
+/main/other/d05d
+Live View AF Area
+MENU
+0
+0 0
+1 1
+/main/other/d0aa
+PTP Property 0xd0aa
+MENU
+0
+0 0
+1 1
+/main/other/d320
+PTP Property 0xd320
+MENU
+0
+0 0
+1 1
+2 2
+3 3
+/main/other/d321
+PTP Property 0xd321
+MENU
+0
+0 0
+1 1
+/main/other/d304
+PTP Property 0xd304
+MENU
+0
+0 0
+1 1
+2 2
+3 3
+/main/other/d322
+PTP Property 0xd322
+MENU
+60
+0 20
+1 40
+2 60
+3 100
+4 150
+/main/other/d323
+PTP Property 0xd323
+MENU
+50
+0 50
+1 100
+2 300
+3 600
+/main/other/d324
+PTP Property 0xd324
+MENU
+50
+0 20
+1 50
+2 100
+3 300
+4 -1
+/main/other/d0a0
+Movie Screen Size
+MENU
+80
+0 10
+1 20
+2 40
+3 80
+4 90
+/main/other/d325
+PTP Property 0xd325
+MENU
+1
+0 0
+1 1
+/main/other/d326
+PTP Property 0xd326
+MENU
+20
+0 10
+1 20
+/main/other/d327
+PTP Property 0xd327
+MENU
+0
+0 0
+1 1
+/main/other/d328
+PTP Property 0xd328
+MENU
+0
+0 0
+1 1
+2 2
+/main/other/d329
+PTP Property 0xd329
+MENU
+1
+0 0
+1 1
+/main/other/d331
+PTP Property 0xd331
+MENU
+300
+0 20
+1 50
+2 300
+3 600
+4 3000
+/main/other/d332
+PTP Property 0xd332
+MENU
+20
+0 0
+1 10
+2 20
+3 30
+/main/other/d333
+PTP Property 0xd333
+MENU
+1
+0 0
+1 1
+/main/other/d334
+PTP Property 0xd334
+MENU
+0
+0 0
+1 1
+/main/other/d335
+PTP Property 0xd335
+MENU
+1
+0 0
+1 1
+/main/other/d338
+PTP Property 0xd338
+TEXT
+KM360_40001545
+/main/other/d339
+PTP Property 0xd339
+MENU
+1
+0 0
+1 1
+/main/other/d340
+PTP Property 0xd340
+TEXT
+NikonKeyMission
+/main/other/d341
+PTP Property 0xd341
+MENU
+6
+0 1
+1 2
+2 3
+3 4
+4 5
+5 6
+6 7
+7 8
+8 9
+9 10
+10 11
+/main/other/d342
+PTP Property 0xd342
+TEXT
+192.168.0.10
+/main/other/d343
+PTP Property 0xd343
+TEXT
+255.255.255.0
+/main/other/d344
+PTP Property 0xd344
+MENU
+0
+0 0
+1 1
+/main/other/d344
+PTP Property 0xd344
+MENU
+0
+0 0
+1 1
+/main/other/d345
+PTP Property 0xd345
+MENU
+1
+0 0
+1 1
+2 2
+/main/other/d347
+PTP Property 0xd347
+MENU
+1
+0 0
+1 1
+/main/other/d349
+PTP Property 0xd349
+MENU
+0
+0 0
+1 1
+/main/other/df52
+PTP Property 0xdf52
+MENU
+0
+0 0
+1 1
+/main/other/df64
+PTP Property 0xdf64
+TEXT
+
+/main/other/df53
+PTP Property 0xdf53
+MENU
+0
+0 0
+1 1
+/main/other/df54
+PTP Property 0xdf54
+TEXT
+
+/main/other/df63
+PTP Property 0xdf63
+MENU
+0
+0 1
+1 2
+2 3
+/main/other/d100
+Nikon Exposure Time
+MENU
+65636
+0 1966081
+1 1638401
+2 1310721
+3 983041
+4 851969
+5 851969
+6 851969
+7 851969
+8 851969
+9 262145
+10 196609
+11 131073
+12 131073
+13 65537
+14 65537
+15 65537
+16 65537
+17 65537
+18 65538
+19 65538
+20 65539
+21 65540
+22 65541
+23 65542
+24 65544
+25 65546
+26 65549
+27 65551
+28 65556
+29 65561
+30 65566
+31 65576
+32 65586
+33 65596
+34 65616
+35 65636
+36 65661
+37 65696
+38 65736
+39 65786
+40 65856
+41 65936
+42 66036
+43 66177
+44 66336
+45 66536
+46 66786
+47 67136
+48 67536
+49 68036
+50 68736
+51 69536
+52 70536
+53 71936
+54 73536
+55 75536
+56 78536
+57 81536
+58 85536
+59 91536
+60 97536
+/main/other/d1a2
+Live View Status
+MENU
+0
+0 0
+1 1
+/main/other/d1a4
+Live View Prohibit Condition
+TEXT
+8388608
+/main/other/d1f1
+PTP Property 0xd1f1
+RANGE
+258
+0
+65535
+1
+/main/other/d407
+PTP Property 0xd407
+TEXT
+1
+/main/other/d303
+PTP Property 0xd303
+TEXT
+1
+
+
+Device info:
+Manufacturer: Nikon Corporation
+  Model: KeyMission 360
+  device version: KeyMission 360 Ver.1.2
+  serial number: '(null)'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0; microsoft.com/DeviceServices:1.0;
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x90c1 (PTP_OC_NIKON_AfDrive)
+  0x90c2 (PTP_OC_NIKON_SetControlMode)
+  0x90c4 (PTP_OC_NIKON_GetLargeThumb)
+  0x941c (Unknown PTP_OC)
+  0x90c8 (PTP_OC_NIKON_DeviceReady)
+  0x9201 (PTP_OC_NIKON_StartLiveView)
+  0x9202 (PTP_OC_NIKON_EndLiveView)
+  0x9203 (PTP_OC_NIKON_GetLiveViewImg)
+  0x9205 (PTP_OC_NIKON_ChangeAfArea)
+  0x9207 (PTP_OC_NIKON_InitiateCaptureRecInMedia)
+  0x941e (Unknown PTP_OC)
+  0x9520 (Unknown PTP_OC)
+  0x9521 (Unknown PTP_OC)
+  0x9522 (Unknown PTP_OC)
+  0x9601 (Unknown PTP_OC)
+  0x9602 (Unknown PTP_OC)
+  0x9603 (Unknown PTP_OC)
+  0x9604 (Unknown PTP_OC)
+  0x9605 (Unknown PTP_OC)
+  0x9606 (Unknown PTP_OC)
+  0x9607 (Unknown PTP_OC)
+  0x9608 (Unknown PTP_OC)
+  0x920b (PTP_OC_NIKON_EndMovieRec)
+  0x920a (PTP_OC_NIKON_StartMovieRecInCard)
+  0x9609 (Unknown PTP_OC)
+  0x9610 (Unknown PTP_OC)
+  0x9611 (Unknown PTP_OC)
+  0x9f01 (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+Events Supported:
+  0x4001
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4007
+  0x4008
+  0x4009
+  0x400a
+  0x400c
+  0x400d
+  0xc105
+  0xc700
+Device Properties Supported:
+  0x5001
+  0x5005
+  0x500e
+  0x500f
+  0x5010
+  0x5011
+  0x501f
+  0xd05d
+  0xd0aa
+  0xd320
+  0xd321
+  0xd304
+  0xd322
+  0xd323
+  0xd324
+  0xd0a0
+  0xd325
+  0xd326
+  0xd327
+  0xd328
+  0xd329
+  0xd331
+  0xd332
+  0xd333
+  0xd334
+  0xd335
+  0xd338
+  0xd339
+  0xd340
+  0xd341
+  0xd342
+  0xd343
+  0xd344
+  0xd344
+  0xd345
+  0xd347
+  0xd349
+  0xdf52
+  0xdf64
+  0xdf53
+  0xdf54
+  0xdf63
+  0xd100
+  0xd1a2
+  0xd1a4
+  0xd1f1
+  0xd407
+  0xd303
