@@ -280,6 +280,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_902C			0x902C
 #define PTP_OC_CANON_GetDirectory		0x902D
 #define PTP_OC_CANON_902E			0x902E
+#define PTP_OC_CANON_902F			0x902F	/* used during camera init */
 
 #define PTP_OC_CANON_SetPairingInfo		0x9030
 #define PTP_OC_CANON_GetPairingInfo		0x9031
@@ -408,6 +409,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetCTGInfo		0x913C
 #define PTP_OC_CANON_EOS_SetRequestOLCInfoGroup	0x913D
 #define PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel	0x913E
+/* 3 args, 0x21201020, 0x110, 0x1000000 (potentially reverse order) */
 #define PTP_OC_CANON_EOS_GetCameraSupport	0x913F
 #define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopStart	0x9141 /* 2 args: 1 type, 1 object? */
@@ -439,6 +441,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_CancelTransfer2	0x91F1
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
+
+/* A1E8 ... also seen? is an error code? */
 
 /* Nikon extension Operation Codes */
 #define PTP_OC_NIKON_GetProfileAllData	0x9006
