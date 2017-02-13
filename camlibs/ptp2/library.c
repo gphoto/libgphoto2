@@ -880,6 +880,9 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/feature-requests/424/ */
 	{"Sony:SLT-A57", 	      0x054c, 0x0669, 0},
 
+	/* Abhishek Anand <ajaxor1@gmail.com> */
+	{"Sony:SLT-A37", 	      0x054c, 0x0669, 0},
+
 	/* Mike Breeuwer <info@mikebreeuwer.com> */
 	{"Sony:SLT-A99v", 	      0x054c, 0x0675, 0},
 
