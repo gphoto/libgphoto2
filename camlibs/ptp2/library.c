@@ -912,7 +912,7 @@ static struct {
 	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
 
 	/* https://github.com/gphoto/libgphoto2/issues/70 */
-	{"Sony:Alpha-A6300 (Control)",0x054c, 0x079c, PTP_CAP},
+	{"Sony:Alpha-A6300 (Control)",0x054c, 0x079c, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl>, adjusted */
 	{"Sony:Alpha-A7S II (Control)",0x054c,0x0a71, PTP_CAP},
