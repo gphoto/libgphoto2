@@ -193,6 +193,7 @@ time_since (const struct timeval start) {
 
 static int
 waiting_for_timeout (int *current_wait, struct timeval start, int timeout) {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
         int time_to_timeout = timeout - time_since (start);
         *current_wait += 50; /* increase sleep time by 50ms per cycle */
         if (*current_wait > 200)
@@ -202,6 +203,10 @@ waiting_for_timeout (int *current_wait, struct timeval start, int timeout) {
         if (*current_wait > 0)
                 usleep (*current_wait * 1000);
         return *current_wait > 0;
+#else
+	/* Wait always timeout during fuzzing! */
+	return 0;
+#endif
 }
 
 /* Changes the ptp deviceinfo with additional hidden information available,
