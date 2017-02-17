@@ -1,9 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* vusb.c
  *
- * Copyright (c) 2001 Lutz Mueller <lutz@users.sf.net>
- * Copyright (c) 1999-2000 Johannes Erdfelt <johannes@erdfelt.com>
- * Copyright (c) 2005, 2007 Hubert Figuiere <hub@figuiere.net>
+ * Copyright (c) 2015,2016 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

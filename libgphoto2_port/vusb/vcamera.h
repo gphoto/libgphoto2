@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 8; tab-width: 8 -*- */
 /* vcamera.h
  *
- * Copyright (c) 2015 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (c) 2015,2016 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
