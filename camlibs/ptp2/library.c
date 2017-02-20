@@ -3009,6 +3009,10 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
 		/* OK or busy, try to proceed ... */
+		do {
+			ret = ptp_nikon_device_ready(params);
+			usleep(20*1000);
+		} while (ret == PTP_RC_DeviceBusy);
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
