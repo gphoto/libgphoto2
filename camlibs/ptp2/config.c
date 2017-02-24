@@ -4201,6 +4201,7 @@ static struct deviceproptableu16 focusmodes[] = {
 
 	{ N_("AF-A"),		0x8005, PTP_VENDOR_SONY },
 	{ N_("AF-C"),		0x8004, PTP_VENDOR_SONY },
+	{ N_("DMF"),		0x8006, PTP_VENDOR_SONY },
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
