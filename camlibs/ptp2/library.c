@@ -955,7 +955,7 @@ static struct {
 	{"Sony:ILCE-7M2 (Control)",   0x054c, 0x0a6a, PTP_CAP},
 
 	/* Andre Crone, andre@elysia.nl */
-	{"Sony:Alpha-A7r II (Control)",  0x054c, 0x0a6b, PTP_CAP},
+	{"Sony:Alpha-A7r II (Control)",  0x054c, 0x0a6b, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl> */
 	{"Sony:DSC-RX100M4",          0x054c, 0x0a6d, 0},
@@ -2796,10 +2796,16 @@ enable_liveview:
 	}
 	case PTP_VENDOR_SONY: {
 		uint32_t	preview_object = 0xffffc002; /* this is where the liveview image is accessed */
+		unsigned char	*ximage = NULL;
+		int		tries = 20;
 
-		unsigned char *ximage = NULL;
-
-		C_PTP_REP (ptp_getobject_with_size(params, preview_object, &ximage, &size));
+		do {
+			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
+			if (ret == PTP_RC_OK)
+				break;
+			if (ret != PTP_RC_AccessDenied) /* we get those when we are too fast */
+				C_PTP (ret);
+		} while (tries--);
 
 		/* look for the JPEG SOI marker (0xFFD8) in data */
 		jpgStartPtr = (unsigned char*)memchr(ximage, 0xff, size);
