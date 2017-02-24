@@ -4796,6 +4796,7 @@ static struct deviceproptableu8 compressionsetting[] = {
 
 	{ N_("Standard"),	0x02, PTP_VENDOR_SONY },
 	{ N_("Fine"),		0x03, PTP_VENDOR_SONY },
+	{ N_("Extra Fine"),	0x04, PTP_VENDOR_SONY },
 	{ N_("RAW"),		0x10, PTP_VENDOR_SONY },
 	{ N_("RAW+JPEG"),	0x13, PTP_VENDOR_SONY },
 };
