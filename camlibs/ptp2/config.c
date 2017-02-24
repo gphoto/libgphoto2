@@ -3233,7 +3233,7 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Selftimer 2s 3 Pictures"),0x800e, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s 5 Pictures"),0x800f, PTP_VENDOR_SONY},
 
-	{ N_("Bracketing C 0.3 Steps 3 Pictures"),	0x8377, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.3 Steps 3 Pictures"),	0x8337, PTP_VENDOR_SONY},
 	{ N_("Bracketing C 0.3 Steps 5 Pictures"),	0x8537, PTP_VENDOR_SONY},
 	{ N_("Bracketing C 0.3 Steps 9 Pictures"),	0x8937, PTP_VENDOR_SONY},
 
