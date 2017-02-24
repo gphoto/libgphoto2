@@ -938,21 +938,21 @@ static struct {
 	{"Sony:Alpha-A7 (Control)",   0x054c, 0x094c, PTP_CAP},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/442/ */
-	{"Sony:Alpha-A7r (Control)",  0x054c, 0x094d, PTP_CAP},
+	{"Sony:Alpha-A7r (Control)",  0x054c, 0x094d, PTP_CAP|PTP_CAP_PREVIEW},
 
-	{"Sony:Alpha-A6000 (Control)",0x054c, 0x094e, PTP_CAP},
+	{"Sony:Alpha-A6000 (Control)",0x054c, 0x094e, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Nick Clarke <nick.clarke@gmail.com> */
-	{"Sony:Alpha-A77 M2 (Control)",0x054c, 0x0953, PTP_CAP},
+	{"Sony:Alpha-A77 M2 (Control)",0x054c, 0x0953, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Markus Oertel */
-	{"Sony:Alpha-A5100 (Control)",0x054c, 0x0957, PTP_CAP},
+	{"Sony:Alpha-A5100 (Control)",0x054c, 0x0957, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
-	{"Sony:Alpha-A7S (Control)",  0x054c, 0x0954, PTP_CAP},
+	{"Sony:Alpha-A7S (Control)",  0x054c, 0x0954, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* titan232@gmail.com */
-	{"Sony:ILCE-7M2 (Control)",   0x054c, 0x0a6a, PTP_CAP},
+	{"Sony:ILCE-7M2 (Control)",   0x054c, 0x0a6a, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone, andre@elysia.nl */
 	{"Sony:Alpha-A7r II (Control)",  0x054c, 0x0a6b, PTP_CAP|PTP_CAP_PREVIEW},
