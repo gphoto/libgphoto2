@@ -3278,7 +3278,7 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Bracketing WB Lo"),	0x8018, PTP_VENDOR_SONY},
 	{ N_("Bracketing DRO Lo"),	0x8019, PTP_VENDOR_SONY},
 	{ N_("Bracketing WB Hi"),	0x8028, PTP_VENDOR_SONY},
-	{ N_("Bracketing DRO Hi"),	0x8028, PTP_VENDOR_SONY},
+	{ N_("Bracketing DRO Hi"),	0x8029, PTP_VENDOR_SONY},
 /*
 	{ N_("Continuous"),		0x8001, PTP_VENDOR_CASIO},
 	{ N_("Prerecord"),		0x8002, PTP_VENDOR_CASIO},
