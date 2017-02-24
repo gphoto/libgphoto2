@@ -1496,7 +1496,11 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Fluorescent: Day White"),	0x8003, PTP_VENDOR_SONY },
 	{ N_("Fluorescent: Daylight"),	0x8004, PTP_VENDOR_SONY },
 	{ N_("Choose Color Temperature"),0x8012, PTP_VENDOR_SONY },
+	{ N_("Preset 1"),		0x8020, PTP_VENDOR_SONY },
+	{ N_("Preset 2"),		0x8021, PTP_VENDOR_SONY },
+	{ N_("Preset 3"),		0x8022, PTP_VENDOR_SONY },
 	{ N_("Preset"),			0x8023, PTP_VENDOR_SONY },
+	{ N_("Underwater: Auto"),	0x8030, PTP_VENDOR_SONY },
 
 	{ N_("Shade"),			0x8001, PTP_VENDOR_PENTAX },
 	{ N_("Cloudy"),			0x8002, PTP_VENDOR_PENTAX },
