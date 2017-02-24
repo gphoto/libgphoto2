@@ -3224,19 +3224,61 @@ static struct deviceproptableu16 capture_mode[] = {
 
 	{ N_("Continuous Low Speed"),	0x8012, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s"),		0x8005, PTP_VENDOR_SONY},
+	{ N_("Selftimer 5s"),		0x8003, PTP_VENDOR_SONY},
 	{ N_("Selftimer 10s"),		0x8004, PTP_VENDOR_SONY},
-	{ N_("Bracketing C 0.3 Steps"),	0x8337, PTP_VENDOR_SONY},
-	{ N_("Bracketing C 0.7 Steps"),	0x8377, PTP_VENDOR_SONY},
-	{ N_("Bracketing C 1.0 Steps"),	0x8311, PTP_VENDOR_SONY},
-	{ N_("Bracketing C 2.0 Steps"),	0x8321, PTP_VENDOR_SONY},
-	{ N_("Bracketing C 3.0 Steps"),	0x8331, PTP_VENDOR_SONY},
-	{ N_("Bracketing S 0.3 Steps"),	0x8336, PTP_VENDOR_SONY},
-	{ N_("Bracketing S 0.7 Steps"),	0x8376, PTP_VENDOR_SONY},
-	{ N_("Bracketing S 1.0 Steps"),	0x8310, PTP_VENDOR_SONY},
-	{ N_("Bracketing S 2.0 Steps"),	0x8320, PTP_VENDOR_SONY},
-	{ N_("Bracketing S 3.0 Steps"),	0x8330, PTP_VENDOR_SONY},
+	{ N_("Selftimer 10s 3 Pictures"),0x8008, PTP_VENDOR_SONY},
+	{ N_("Selftimer 10s 5 Pictures"),0x8009, PTP_VENDOR_SONY},
+	{ N_("Selftimer 5s 3 Pictures"),0x800c, PTP_VENDOR_SONY},
+	{ N_("Selftimer 5s 5 Pictures"),0x800d, PTP_VENDOR_SONY},
+	{ N_("Selftimer 2s 3 Pictures"),0x800e, PTP_VENDOR_SONY},
+	{ N_("Selftimer 2s 5 Pictures"),0x800f, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing C 0.3 Steps 3 Pictures"),	0x8377, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.3 Steps 5 Pictures"),	0x8537, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.3 Steps 9 Pictures"),	0x8937, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing C 0.5 Steps 3 Pictures"),	0x8357, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.5 Steps 5 Pictures"),	0x8557, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.5 Steps 9 Pictures"),	0x8957, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing C 0.7 Steps 3 Pictures"),	0x8377, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.7 Steps 5 Pictures"),	0x8577, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 0.7 Steps 9 Pictures"),	0x8977, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing C 1.0 Steps 3 Pictures"),	0x8311, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 1.0 Steps 5 Pictures"),	0x8511, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 1.0 Steps 9 Pictures"),	0x8911, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing C 2.0 Steps 3 Pictures"),	0x8321, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 2.0 Steps 5 Pictures"),	0x8521, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing C 3.0 Steps 3 Pictures"),	0x8331, PTP_VENDOR_SONY},
+	{ N_("Bracketing C 3.0 Steps 5 Pictures"),	0x8531, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing S 0.3 Steps 3 Pictures"),	0x8336, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.3 Steps 5 Pictures"),	0x8536, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.3 Steps 9 Pictures"),	0x8936, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing S 0.5 Steps 3 Pictures"),	0x8356, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.5 Steps 5 Pictures"),	0x8556, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.5 Steps 9 Pictures"),	0x8956, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing S 0.7 Steps 3 Pictures"),	0x8376, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.7 Steps 5 Pictures"),	0x8576, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 0.7 Steps 9 Pictures"),	0x8976, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing S 1.0 Steps 3 Pictures"),	0x8310, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 1.0 Steps 5 Pictures"),	0x8510, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 1.0 Steps 9 Pictures"),	0x8910, PTP_VENDOR_SONY},
+
+	{ N_("Bracketing S 2.0 Steps 3 Pictures"),	0x8320, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 2.0 Steps 5 Pictures"),	0x8520, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 3.0 Steps 3 Pictures"),	0x8330, PTP_VENDOR_SONY},
+	{ N_("Bracketing S 3.0 Steps 5 Pictures"),	0x8530, PTP_VENDOR_SONY},
 	{ N_("Bracketing WB Lo"),	0x8018, PTP_VENDOR_SONY},
+	{ N_("Bracketing DRO Lo"),	0x8019, PTP_VENDOR_SONY},
 	{ N_("Bracketing WB Hi"),	0x8028, PTP_VENDOR_SONY},
+	{ N_("Bracketing DRO Hi"),	0x8028, PTP_VENDOR_SONY},
 /*
 	{ N_("Continuous"),		0x8001, PTP_VENDOR_CASIO},
 	{ N_("Prerecord"),		0x8002, PTP_VENDOR_CASIO},
