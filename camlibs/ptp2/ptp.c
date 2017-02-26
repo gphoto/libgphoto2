@@ -1220,6 +1220,9 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	unsigned char	*data;
 	unsigned int	size;
 
+	objecthandles->Handler = NULL;
+	objecthandles->n = 0;
+
 	PTP_CNT_INIT(ptp, PTP_OC_GetObjectHandles, storage, objectformatcode, associationOH);
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	if (ret == PTP_RC_OK) {
