@@ -1667,21 +1667,29 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 	uint32_t maxlen;
 	char	*str, *p;
 
-	if ((size >= datasize) || (size < 20)) {
-		return strdup("bad size");
-	}
+	if ((size >= datasize) || (size < 20))
+		return strdup("bad size 1");
 	/* every focuspoint gets 4 (16 bit number possible "-" sign and a x) and a ,*/
 	/* inital things around lets say 100 chars at most. 
 	 * FIXME: check selected when we decode it
 	 */
+	if (size < focus_points_in_struct*8) {
+		ptp_error(params, "focus_points_in_struct %d is too large vs size %d", focus_points_in_struct, size);
+		return strdup("bad size 2");
+	}
+	if (focus_points_in_use > focus_points_in_struct) {
+		ptp_error(params, "focus_points_in_use %d is larger than focus_points_in_struct %d", focus_points_in_use, focus_points_in_struct);
+		return strdup("bad size 3");
+	}
+
 	maxlen = focus_points_in_use*32 + 100 + (size - focus_points_in_struct*8)*2;
 	if (halfsize != size-4) {
 		ptp_error(params, "halfsize %d is not expected %d", halfsize, size-4);
-		return strdup("bad size");
+		return strdup("bad size 4");
 	}
 	if (20 + focus_points_in_struct*8 + (focus_points_in_struct+7)/8 > size) {
 		ptp_error(params, "size %d is too large for fp in struct %d", focus_points_in_struct*8 + 20 + (focus_points_in_struct+7)/8, size);
-		return strdup("bad size 2");
+		return strdup("bad size 5");
 	}
 #if 0
 	ptp_debug(params,"d1d3 content:");
