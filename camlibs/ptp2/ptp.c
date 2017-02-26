@@ -3984,6 +3984,10 @@ ptp_chdk_read_script_msg(PTPParams* params, ptp_chdk_script_msg **msg)
 
 	/* camera will always send data, otherwise getdata will cause problems */
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
+	if (!data) {
+		ptp_error(params,"no data received");
+		return PTP_ERROR_BADPARAM;
+	}
 
 	/* for convenience, always allocate an extra byte and null it*/
 	*msg = malloc(sizeof(ptp_chdk_script_msg) + ptp.Param4 + 1);
