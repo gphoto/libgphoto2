@@ -1855,6 +1855,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "size %d is larger than datasize %d", size, datasize);
 			break;
 		}
+		if (size < 8) {
+			ptp_debug (params, "size %d is smaller than 8.", size);
+			break;
+		}
 		if ((size == 8) && (type == 0))
 			break;
 		if (curdata - data + size >= datasize) {
