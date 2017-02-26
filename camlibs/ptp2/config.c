@@ -723,6 +723,10 @@ _get_Generic16Table(CONFIG_GET_ARGS, struct deviceproptableu16* tbl, int tblsize
 					gp_widget_set_value (*widget, buf);
 				}
 			}
+
+			/* device might report stepsize 0. but we do at least 1 round */
+			if (dpd->FORM.Range.StepSize.u16 == 0)
+				break;
 		}
 	}
 	if (!isset2) {
@@ -891,6 +895,10 @@ _get_GenericI16Table(CONFIG_GET_ARGS, struct deviceproptablei16* tbl, int tblsiz
 					gp_widget_set_value (*widget, buf);
 				}
 			}
+
+			/* device might report stepsize 0. but we do at least 1 round */
+			if (dpd->FORM.Range.StepSize.i16 == 0)
+				break;
 		}
 	}
 	if (!isset2) {
@@ -1034,6 +1042,10 @@ _get_Generic8Table(CONFIG_GET_ARGS, struct deviceproptableu8* tbl, int tblsize) 
 					gp_widget_set_value (*widget, buf);
 				}
 			}
+
+			/* device might report stepsize 0. but we do at least 1 round */
+			if (dpd->FORM.Range.StepSize.i16 == 0)
+				break;
 		}
 		if (!isset2) {
 			char buf[200];
@@ -2603,6 +2615,10 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 				((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
 			   )
 				gp_widget_set_value (*widget, buf);
+
+			/* device might report stepsize 0. but we do at least 1 round */
+			if (s == 0)
+				break;
 		}
 
 	}
@@ -2825,7 +2841,7 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 			gp_widget_set_value (*widget, "invalid range, stepping 0");
 			return GP_OK;
 		}
-		for (i=min;i<=max; i+=s) {
+		for (i=min; i<=max; i+=s) {
 			char buf[20];
 
 			if (max != min)
@@ -2837,6 +2853,9 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 				((dpd->DataType == PTP_DTC_INT8)  && (dpd->CurrentValue.i8 == i))
 			)
 				gp_widget_set_value (*widget, buf);
+
+			/* malicious device might report stepsize 0 ... but lets do 1 cycle through the loop */
+			if (s == 0) break;
 		}
 	}
 
@@ -2937,8 +2956,11 @@ _put_Sharpness(CONFIG_PUT_ARGS) {
 			char buf[20];
 
 			sprintf (buf, "%d%%", (i-min)*100/(max-min));
-			if (strcmp (buf, val))
+			if (strcmp (buf, val)) {
+				if (s == 0)
+					break;
 				continue;
+			}
 			if (dpd->DataType == PTP_DTC_UINT8)
 				propval->u8 = i;
 			else
@@ -7731,6 +7753,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
 						sprintf (buf, "%ld", k); 			\
 						gp_widget_add_choice (widget, buf);		\
+						if (dpd.FORM.Range.StepSize.val == 0) break;	\
 					}							\
 				} 								\
 				break;
