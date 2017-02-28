@@ -1869,11 +1869,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			unsigned int j;
 
 			entries++;
-			if (size < 12+2)
-				break;
-			for (j=0;j<31;j++)
-				if (dtoh16a(curdata+12) & (1<<j))
-					entries++;
+			if (size >= 12+2) {
+				for (j=0;j<31;j++)
+					if (dtoh16a(curdata+12) & (1<<j))
+						entries++;
+			}
 		}
 		curdata += size;
 		entries++;
@@ -2334,12 +2334,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			len = dtoh32a(curdata+8);
 			if ((len != size-8) && (len != size-4)) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ce[i].u.info = strdup("OLC size unexpected");
 				ptp_debug (params, "event %d: OLC unexpected size %d for blob len %d (not -4 nor -8)", i, size, len);
 				break;
 			}
 			mask = dtoh16a(curdata+8+4);
 			if (size < 14) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ce[i].u.info = strdup("OLC size too small");
 				ptp_debug (params, "event %d: OLC unexpected size %d", i, size);
 				break;
 			}
