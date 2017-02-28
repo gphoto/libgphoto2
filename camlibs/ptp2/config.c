@@ -2614,7 +2614,7 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 			if (	((dpd->DataType == PTP_DTC_UINT32) && (dpd->CurrentValue.u32 == i)) ||
 				((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
 			   )
-				gp_widget_set_value (*widget, buf);
+				CR (gp_widget_set_value (*widget, buf));
 
 			/* device might report stepsize 0. but we do at least 1 round */
 			if (s == 0)
