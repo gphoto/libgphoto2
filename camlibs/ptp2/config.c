@@ -1799,7 +1799,7 @@ _get_Nikon_HueAdjustment(CONFIG_GET_ARGS) {
 				isset = TRUE;
 			}
 		}
-		if (!isset) {
+		if (!isset && (dpd->FORM.Enum.NumberOfValues > 0)) {
 			sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[0].i8);
 			gp_widget_set_value (*widget, buf);
 		}
