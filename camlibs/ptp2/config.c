@@ -2610,7 +2610,7 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 			char buf[20];
 
 			sprintf (buf, "%0.3fs", i/1000.0);
-			gp_widget_add_choice (*widget, buf);
+			CR (gp_widget_add_choice (*widget, buf));
 			if (	((dpd->DataType == PTP_DTC_UINT32) && (dpd->CurrentValue.u32 == i)) ||
 				((dpd->DataType == PTP_DTC_UINT16) && (dpd->CurrentValue.u16 == i))
 			   )
