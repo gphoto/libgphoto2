@@ -1868,6 +1868,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		if (type == PTP_EC_CANON_EOS_OLCInfoChanged) {
 			unsigned int j;
 
+			entries++;
 			for (j=0;j<31;j++)
 				if (dtoh32a(curdata+12) & (1<<j))
 					entries++;
