@@ -1861,7 +1861,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		}
 		if ((size == 8) && (type == 0))
 			break;
-		if (curdata - data + size >= datasize) {
+		if ((curdata - data) + size >= datasize) {
 			ptp_debug (params, "canon eos event decoder ran over supplied data, skipping entries");
 			break;
 		}
@@ -1869,8 +1869,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			unsigned int j;
 
 			entries++;
+			if (size < 12+2)
+				break;
 			for (j=0;j<31;j++)
-				if (dtoh32a(curdata+12) & (1<<j))
+				if (dtoh16a(curdata+12) & (1<<j))
 					entries++;
 		}
 		curdata += size;
@@ -2336,6 +2338,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 			}
 			mask = dtoh16a(curdata+8+4);
+			if (size < 14) {
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ptp_debug (params, "event %d: OLC unexpected size %d", i, size);
+				break;
+			}
 			curoff = 8+4+4;
 			if (mask & CANON_EOS_OLC_BUTTON) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
