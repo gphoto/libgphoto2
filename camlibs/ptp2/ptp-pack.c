@@ -2578,6 +2578,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		if ((size == 8) && (type == 0))
 			break;
 		i++;
+		if (i >= entries) {
+			ptp_debug (params, "BAD: i %d, entries %d", i, entries);
+		}
 	}
 	if (!i) {
 		free (ce);
