@@ -1892,6 +1892,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "size %d is smaller than 8", size);
 			break;
 		}
+
+		if ((size == 8) && (type == 0))
+			break;
+
 		if ((curdata - data) + size >= datasize) {
 			ptp_debug (params, "canon eos event decoder ran over supplied data, skipping entries");
 			break;
@@ -2576,8 +2580,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			break;
 		}
 		curdata += size;
-		if ((size == 8) && (type == 0))
-			break;
 		i++;
 		if (i >= entries) {
 			ptp_debug (params, "BAD: i %d, entries %d", i, entries);
