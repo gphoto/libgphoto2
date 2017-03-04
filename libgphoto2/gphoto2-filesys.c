@@ -483,7 +483,7 @@ recurse_delete_folder (CameraFilesystem *fs, CameraFilesystemFolder *folder) {
 		recurse_delete_folder (fs, *f);
 		delete_folder (fs, f); /* will also advance to next */
 	}
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
@@ -500,6 +500,7 @@ delete_all_folders (CameraFilesystem *fs, const char *foldername,
 	CA (foldername, context);
 
 	folder = lookup_folder (fs, fs->rootfolder, foldername, context);
+	if (!folder) return GP_OK;
 	return recurse_delete_folder (fs, folder);
 }
 
