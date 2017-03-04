@@ -4649,7 +4649,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 					newobject = entry.u.object.oid;
 					add_object (camera, newobject, context);
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					strcpy  (path->name,  entry.u.object.oi.Filename);
+					path->name[sizeof(path->name)-1] = '\0';
+					strncpy  (path->name,  entry.u.object.oi.Filename, sizeof (path->name)-1);
 					free (entry.u.object.oi.Filename);
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entry.u.object.oi.StorageID);
 					get_folder_from_handle (camera, entry.u.object.oi.StorageID, entry.u.object.oi.ParentObject, path->folder);
