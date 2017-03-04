@@ -2710,23 +2710,36 @@ ptp_canon_getobjectinfo (PTPParams* params, uint32_t store, uint32_t p2,
 	PTPContainer	ptp;
 	uint16_t	ret;
 	unsigned char	*data;
-	unsigned int	i;
+	unsigned int	i, size;
 	
+	*entnum = 0;
+	*entries = NULL;
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetObjectInfoEx, store, p2, parent, handle);
+	data = NULL;
+	size = 0;
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL);
 	if (ret != PTP_RC_OK)
 		goto exit;
-
-	*entnum=ptp.Param1;
-	*entries=calloc(*entnum, sizeof(PTPCANONFolderEntry));
-	if (*entries==NULL) {
-		ret=PTP_RC_GeneralError;
+	if (!data)
+		return ret;
+	if (ptp.Param1 > size/PTP_CANON_FolderEntryLen) {
+		ptp_debug (params, "param1 is %d, size is only %d", ptp.Param1, size);
+		ret = PTP_RC_GeneralError;
 		goto exit;
 	}
-	for(i=0; i<(*entnum); i++)
+
+	*entnum = ptp.Param1;
+	*entries= calloc(*entnum, sizeof(PTPCANONFolderEntry));
+	if (*entries == NULL) {
+		ret = PTP_RC_GeneralError;
+		goto exit;
+	}
+	for(i=0; i<(*entnum); i++) {
+		if (size < i*PTP_CANON_FolderEntryLen) break;
 		ptp_unpack_Canon_FE(params,
 				    data+i*PTP_CANON_FolderEntryLen,
 				    &((*entries)[i]) );
+	}
 
 exit:
 	free (data);
