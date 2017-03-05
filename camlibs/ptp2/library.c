@@ -7738,6 +7738,7 @@ camera_init (Camera *camera, GPContext *context)
 		params->getdata_func	= ptp_usb_getdata;
 		params->event_wait	= ptp_usb_event_wait;
 		params->event_check	= ptp_usb_event_check;
+		params->event_check_queue	= ptp_usb_event_check_queue;
 		params->cancelreq_func	= ptp_usb_control_cancel_request;
 		params->maxpacketsize 	= settings.usb.maxpacketsize;
 		GP_LOG_D ("maxpacketsize %d", settings.usb.maxpacketsize);
@@ -7772,6 +7773,7 @@ camera_init (Camera *camera, GPContext *context)
 		params->getdata_func	= ptp_ptpip_getdata;
 		params->event_wait	= ptp_ptpip_event_wait;
 		params->event_check	= ptp_ptpip_event_check;
+		params->event_check_queue	= ptp_ptpip_event_check_queue;
 		break;
 	}
 	default:

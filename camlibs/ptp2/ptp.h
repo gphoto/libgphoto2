@@ -2455,6 +2455,7 @@ struct _PTPParams {
 	PTPIOGetResp	getresp_func;
 	PTPIOGetData	getdata_func;
 	PTPIOGetResp	event_check;
+	PTPIOGetResp	event_check_queue;
 	PTPIOGetResp	event_wait;
 	PTPIOCancelReq	cancelreq_func;
 
@@ -2551,8 +2552,9 @@ uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
 	                         PTPDataHandler *handler);
-uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
+uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
+uint16_t ptp_usb_event_check_queue	(PTPParams* params, PTPContainer* event);
 
 uint16_t ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *size);
 uint16_t ptp_usb_control_device_reset_request (PTPParams *params);
@@ -2569,6 +2571,7 @@ uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp,
 	                         PTPDataHandler *handler);
 uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
+uint16_t ptp_ptpip_event_check_queue	(PTPParams* params, PTPContainer* event);
 
 uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 

@@ -630,6 +630,12 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 }
 
 uint16_t
+ptp_ptpip_event_check_queue (PTPParams* params, PTPContainer* event) {
+	/* the fast check just takes 1ms, so lets keep it */
+	return ptp_ptpip_event (params, event, PTP_EVENT_CHECK_FAST);
+}
+
+uint16_t
 ptp_ptpip_event_check (PTPParams* params, PTPContainer* event) {
 	return ptp_ptpip_event (params, event, PTP_EVENT_CHECK_FAST);
 }

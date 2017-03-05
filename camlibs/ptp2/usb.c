@@ -492,6 +492,7 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 /* PTP Events wait for or check mode */
 #define PTP_EVENT_CHECK			0x0000	/* waits for */
 #define PTP_EVENT_CHECK_FAST		0x0001	/* checks */
+#define PTP_EVENT_CHECK_QUEUE		0x0002	/* just looks in the queue */
 
 static inline uint16_t
 ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
@@ -521,6 +522,12 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		gp_port_set_timeout (camera->port, fasttimeout);
 		result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
 		if (result <= 0) result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
+		gp_port_set_timeout (camera->port, timeout);
+		break;
+	case PTP_EVENT_CHECK_QUEUE:
+		gp_port_get_timeout (camera->port, &timeout);
+		gp_port_set_timeout (camera->port, 0); /* indicates no waiting at all */
+		result = gp_port_check_int (camera->port, (char*)&usbevent, sizeof(usbevent));
 		gp_port_set_timeout (camera->port, timeout);
 		break;
 	default:
@@ -569,6 +576,12 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	event->Param2 = dtoh32(usbevent.param2);
 	event->Param3 = dtoh32(usbevent.param3);
 	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_usb_event_queue_check (PTPParams* params, PTPContainer* event) {
+
+	return ptp_usb_event (params, event, PTP_EVENT_CHECK_QUEUE);
 }
 
 uint16_t
