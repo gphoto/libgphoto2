@@ -3891,6 +3891,19 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 }
 
 static int
+check_ptp_filesystem (Camera *camera) {
+	PTPParams *params = &camera->pl->params;
+
+	ptp_check_event_queue(params);
+	if (params->storagechanged) {
+		params->storagechanged = 0;
+		gp_filesystem_reset (camera->fs);
+	}
+	return GP_OK;
+}
+
+
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
@@ -4900,25 +4913,8 @@ downloadnow:
 					*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 					*eventdata = NULL;
 					return GP_OK;
-				case PTP_EC_DevicePropChanged:
-					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-					sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
-					return GP_OK;
-					/* as we can read multiple events we should retrieve a good one if possible
-					 * and not a random one.*/
-				case PTP_EC_ObjectRemoved:
-					ptp_remove_object_from_cache(params, event.Param1);
-					gp_filesystem_reset (camera->fs);
-					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("PTP ObjectRemoved, Param1 01234567")+1));
-					sprintf (*eventdata, "PTP ObjectRemoved, Param1 %08x", event.Param1);
-					break;
 				default:
-					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
-					sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
-					return GP_OK;
+					goto handleregular;
 				}
 			}
 			gp_context_idle (context);
@@ -5090,6 +5086,18 @@ handleregular:
 		*eventtype = GP_EVENT_UNKNOWN;
 		C_MEM (*eventdata = malloc(strlen("PTP ObjectRemoved, Param1 01234567")+1));
 		sprintf (*eventdata, "PTP ObjectRemoved, Param1 %08x", event.Param1);
+		break;
+	case PTP_EC_StoreAdded:
+		gp_filesystem_reset (camera->fs);
+		*eventtype = GP_EVENT_UNKNOWN;
+		C_MEM (*eventdata = malloc(strlen("PTP StoreAdded, Param1 01234567")+1));
+		sprintf (*eventdata, "PTP StoreAdded, Param1 %08x", event.Param1);
+		break;
+	case PTP_EC_StoreRemoved:
+		gp_filesystem_reset (camera->fs);
+		*eventtype = GP_EVENT_UNKNOWN;
+		C_MEM (*eventdata = malloc(strlen("PTP StoreRemoved, Param1 01234567")+1));
+		sprintf (*eventdata, "PTP StoreRemoved, Param1 %08x", event.Param1);
 		break;
 	default:
 		*eventtype = GP_EVENT_UNKNOWN;

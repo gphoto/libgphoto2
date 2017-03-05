@@ -2494,6 +2494,10 @@ struct _PTPParams {
 	/* PTP: caching time for properties, default 2 */
 	int			cachetime;
 
+	/* PTP: Storage Caching */
+	PTPStorageIDs		storageids;
+	int			storagechanged;
+
 	/* PTP: Device Property Caching */
 	PTPDeviceProperty	*deviceproperties;
 	unsigned int		nrofdeviceproperties;
@@ -2718,6 +2722,7 @@ uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 
 
 uint16_t ptp_check_event (PTPParams *params);
+uint16_t ptp_check_event_queue (PTPParams *params);
 uint16_t ptp_wait_event (PTPParams *params);
 uint16_t ptp_add_event (PTPParams *params, PTPContainer *evt);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);

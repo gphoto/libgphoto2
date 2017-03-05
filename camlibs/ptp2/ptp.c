@@ -1128,6 +1128,7 @@ ptp_free_params (PTPParams *params)
 	for (i=0;i<params->nrofobjects;i++)
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
+	free (params->storageids.Storage);
 	free (params->events);
 	for (i=0;i<params->nrofcanon_props;i++) {
 		free (params->canon_props[i].data);
@@ -2152,9 +2153,51 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 			}
 		break;
 	}
+	case PTP_EC_StoreAdded:
+	case PTP_EC_StoreRemoved: {
+		int i;
+
+		/* refetch storage IDs and also invalidate whole object tree */
+		free (params->storageids.Storage);
+		params->storageids.Storage	= NULL;
+		params->storageids.n 		= 0;
+		ptp_getstorageids (params, &params->storageids);
+
+		/* free object storage as it might be associated with the storage ids */
+		/* FIXME: enhance and just delete the ones from the storage */
+		for (i=0;i<params->nrofobjects;i++)
+			ptp_free_object (&params->objects[i]);
+		free (params->objects);
+		params->objects 		= NULL;
+		params->nrofobjects 		= 0;
+
+		params->storagechanged		= 1;
+		break;
+	}
 	default: /* check if we should handle it internally too */
 		break;
 	}
+}
+
+uint16_t
+ptp_check_event_queue (PTPParams *params)
+{
+	PTPContainer	event;
+	uint16_t	ret;
+
+	/* We try to do a event check without I/O */
+	/* Basically this means just looking at the meanwhile queued events */
+
+	ret = params->event_check_queue(params,&event);
+
+	if (ret == PTP_RC_OK) {
+		ptp_debug (params, "event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		ptp_add_event (params, &event);
+		handle_event_internal (params, &event);
+	}
+	if (ret == PTP_ERROR_TIMEOUT) /* ok, just new events */
+		ret = PTP_RC_OK;
+	return ret;
 }
 
 uint16_t
