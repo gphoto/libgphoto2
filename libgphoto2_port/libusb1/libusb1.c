@@ -676,6 +676,9 @@ gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 	if (port->pl->nrofirqs)
 		goto handleirq;
 
+	if (!timeout)
+		return GP_ERROR_TIMEOUT;
+
 	tv.tv_sec = timeout/1000;
 	tv.tv_usec = (timeout%1000)*1000;
 
