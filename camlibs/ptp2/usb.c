@@ -579,7 +579,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 }
 
 uint16_t
-ptp_usb_event_queue_check (PTPParams* params, PTPContainer* event) {
+ptp_usb_event_check_queue (PTPParams* params, PTPContainer* event) {
 
 	return ptp_usb_event (params, event, PTP_EVENT_CHECK_QUEUE);
 }
