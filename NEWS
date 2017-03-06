@@ -1,4 +1,8 @@
 libgphoto2 2.5.12.1 development release
+
+ptp2:
+* Sony Alpha Live View support.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.12 release
 

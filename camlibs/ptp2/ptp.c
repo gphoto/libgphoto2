@@ -5903,6 +5903,14 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 				break;
 			}
 			break;
+		case PTP_VENDOR_SONY:
+			switch (ofc) {
+			case PTP_OFC_SONY_RAW:
+				return snprintf (txt, spaceleft,"ARW");
+			default:
+				break;
+			}
+			break;
 		case PTP_VENDOR_MICROSOFT:
 		case PTP_VENDOR_MTP:		  
 			for (i=0;i<sizeof(ptp_ofc_mtp_trans)/sizeof(ptp_ofc_mtp_trans[0]);i++)
