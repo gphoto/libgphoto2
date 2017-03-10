@@ -7982,7 +7982,11 @@ camera_init (Camera *camera, GPContext *context)
 		gp_port_get_timeout (camera->port, &timeout);
 		gp_port_set_timeout (camera->port, 3000);
 		while (tries--) {
-			if (params->storageids.n && ((params->storageids.Storage[0] & 0xffff0000) != 0x00010000))
+			/* 0xfeedface and 0x00000000 seem bad storageid values for iPhones */
+			if (params->storageids.n && (
+				(params->storageids.Storage[0] != 0xfeedface) &&
+				(params->storageids.Storage[0] != 0x00000000)
+			))
 				break;
 			C_PTP_REP (ptp_wait_event (params));
 			while (ptp_get_one_event (params, &event)) {
