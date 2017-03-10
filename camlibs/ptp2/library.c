@@ -7960,11 +7960,6 @@ camera_init (Camera *camera, GPContext *context)
 	}
 #endif
 
-	/* avoid doing this on the Sonys DSLRs in control mode, they hang. :( */
-
-	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
-		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
-
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 
@@ -7996,6 +7991,12 @@ camera_init (Camera *camera, GPContext *context)
 		}
 		gp_port_set_timeout (camera->port, timeout);
 	}
+
+	/* avoid doing this on the Sonys DSLRs in control mode, they hang. :( */
+
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
+		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
+
 
 	{
 		unsigned int k;
