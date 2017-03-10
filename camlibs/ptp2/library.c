@@ -7951,6 +7951,7 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		break;
 	}
+
 #if 0
 	/* new ptp 1.1 command, implemented in the newer iphone firmware */
 	{
@@ -7966,22 +7967,42 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* read the root directory to avoid the "DCIM WRONG ROOT" bugs */
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
-	{
-		PTPStorageIDs storageids;
 
-		/* TODO: ret is ignored here */
-		ret = ptp_getstorageids(params, &storageids);
-		if (ret == PTP_RC_OK) {
-			unsigned int k;
+	/* initialize the storage ids in Params */
+	if ((!params->storageids.n) && (ptp_operation_issupported(params, PTP_OC_GetStorageIDs)))
+		ptp_getstorageids(params, &params->storageids);
 
-			for (k=0;k<storageids.n;k++) {
-				if (!(storageids.Storage[k] & 0xffff)) continue;
-				if (storageids.Storage[k] == 0x80000001) continue;
-				ptp_list_folder (params, storageids.Storage[k], PTP_HANDLER_SPECIAL);
+	if (a.usb_vendor == 0x05ac) {	/* Apple iOS 10.2 hack */
+		int 		timeout;
+		PTPContainer	event;
+
+		/* Wait for a valid storage id , starting with 0x0001???? */
+		/* wait for 3 events or 9 seconds at most */
+		tries = 3;
+		gp_port_get_timeout (camera->port, &timeout);
+		gp_port_set_timeout (camera->port, 3000);
+		while (tries--) {
+			if (params->storageids.n && ((params->storageids.Storage[0] & 0xffff0000) != 0x00010000))
+				break;
+			C_PTP_REP (ptp_wait_event (params));
+			while (ptp_get_one_event (params, &event)) {
+				GP_LOG_D ("Initial ptp event 0x%x (param1=%x)", event.Code, event.Param1);
+				/* the ptp stack should refresh the storage array */
 			}
-			free (storageids.Storage);
+		}
+		gp_port_set_timeout (camera->port, timeout);
+	}
+
+	{
+		unsigned int k;
+
+		for (k=0;k<params->storageids.n;k++) {
+			if (!(params->storageids.Storage[k] & 0xffff)) continue;
+			if (params->storageids.Storage[k] == 0x80000001) continue;
+			ptp_list_folder (params, params->storageids.Storage[k], PTP_HANDLER_SPECIAL);
 		}
 	}
+
 	SET_CONTEXT(camera, NULL);
 	return GP_OK;
 }
