@@ -1719,7 +1719,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 	}
 	p += sprintf(p,"},select={");
 	for (i=0;i<focus_points_in_use;i++) {
-		if ((1<<(i%7)) & ((*data)[focus_points_in_struct*8+20+i/8]))
+		if ((1<<(i%8)) & ((*data)[focus_points_in_struct*8+20+i/8]))
 			p+=sprintf(p,"%d,", i);
 	}
 
