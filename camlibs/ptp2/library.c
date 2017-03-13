@@ -5279,7 +5279,6 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	char *txt, *txt_marker;
 	PTPParams *params = &(camera->pl->params);
 	PTPDeviceInfo pdi;
-	PTPStorageIDs storageids;
 
 	SET_CONTEXT(camera, context);
 
@@ -5430,20 +5429,19 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs) &&
 	    ptp_operation_issupported(params,PTP_OC_GetStorageInfo)
 	) {
-		C_PTP_REP (ptp_getstorageids(params, &storageids));
 		APPEND_TXT (_("\nStorage Devices Summary:\n"));
 
-		for (i=0; i<storageids.n; i++) {
+		for (i=0; i<params->storageids.n; i++) {
 			char tmpname[20], *s;
 
 			PTPStorageInfo storageinfo;
 			/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
-			if ((storageids.Storage[i]&0x0000ffff)==0)
+			if ((params->storageids.Storage[i]&0x0000ffff)==0)
 				continue;
 
-			APPEND_TXT ("store_%08x:\n",(unsigned int)storageids.Storage[i]);
+			APPEND_TXT ("store_%08x:\n",(unsigned int)params->storageids.Storage[i]);
 
-			C_PTP_REP (ptp_getstorageinfo(params, storageids.Storage[i], &storageinfo));
+			C_PTP_REP (ptp_getstorageinfo(params, params->storageids.Storage[i], &storageinfo));
 			APPEND_TXT (_("\tStorageDescription: %s\n"),
 				storageinfo.StorageDescription?storageinfo.StorageDescription:_("None")
 			);
@@ -5498,7 +5496,6 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			free (storageinfo.StorageDescription);
 			free (storageinfo.VolumeLabel);
 		}
-		free (storageids.Storage);
 	}
 
 	APPEND_TXT (_("\nDevice Property Summary:\n"));
@@ -5776,25 +5773,23 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	GP_LOG_D ("folder_list_func(%s)", folder);
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
+		/* use the cached storageids. they should be valid after camera_init */
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
-			PTPStorageIDs storageids;
 			char fname[PTP_MAXSTRLEN];
 
-			C_PTP_REP (ptp_getstorageids(params, &storageids));
-			if (!storageids.n) {
+			if (!params->storageids.n) {
 				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x",0x00010001);
 				CR (gp_list_append (list, fname, NULL));
 			}
-			for (i=0; i<storageids.n; i++) {
+			for (i=0; i<params->storageids.n; i++) {
 
 				/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
-				if ((storageids.Storage[i]&0x0000ffff)==0) continue;
+				if ((params->storageids.Storage[i]&0x0000ffff)==0) continue;
 				snprintf(fname, sizeof(fname),
 					STORAGE_FOLDER_PREFIX"%08x",
-					storageids.Storage[i]);
+					params->storageids.Storage[i]);
 				CR (gp_list_append (list, fname, NULL));
 			}
-			free (storageids.Storage);
 		} else {
 			char fname[PTP_MAXSTRLEN];
 			snprintf(fname, sizeof(fname),
@@ -5822,7 +5817,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* list this directory */
 	C_PTP_REP (ptp_list_folder (params, storage, handler));
 
-        GP_LOG_D ("after list folder");
+        GP_LOG_D ("after list folder (storage=0x%08x, handler=0x08%x)", storage, handler);
 
 	/* Look for objects we can present as directories.
 	 * Currently we specify *any* PTP association as directory.
