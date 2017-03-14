@@ -18,7 +18,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 
@@ -27,6 +27,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/time.h>
 #include <stdbool.h>
 
@@ -49,6 +50,8 @@
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
+
+bool debug = true;
 
 int
 camera_id (CameraText *id)
@@ -116,6 +119,36 @@ camera_abilities (CameraAbilitiesList *list)
 
 }
 
+int scsi_write(GPPort *port, uint8_t *cmd, uint32_t cmdLen,
+               uint8_t *buf, uint32_t bufLen) {
+        int ret;
+        char sense_buffer[32];
+
+        ret = gp_port_send_scsi_cmd (port, 1, (char*)cmd, cmdLen,
+                sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
+        if (ret == GP_OK) return PSLR_OK;
+        return PSLR_SCSI_ERROR;
+}
+
+int scsi_read(GPPort *port, uint8_t *cmd, uint32_t cmdLen,
+              uint8_t *buf, uint32_t bufLen)
+{
+        int ret;
+        char sense_buffer[32];
+
+        ret = gp_port_send_scsi_cmd (port, 0, (char*)cmd, cmdLen,
+                sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
+        if (ret == GP_OK) return bufLen;
+        return -PSLR_SCSI_ERROR;
+}
+
+void close_drive(GPPort **port) {
+	/* is going to be closed by other means */
+	return;
+}
+
+
+
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
@@ -180,7 +213,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 			return GP_ERROR;
 	}
 
-	GP_DEBUG("get buffer %d type %d res %d\n", bufno, imagetype, image_resolution);
+	gp_log(GP_LOG_DEBUG, "pentax", "get buffer %d type %d res %d\n", bufno, imagetype, image_resolution);
 	if ( pslr_buffer_open(camhandle, bufno, imagetype, status->jpeg_resolution) != PSLR_OK)
 		return GP_ERROR;
 
@@ -237,14 +270,25 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 	strcpy (path->folder, "/");
 	const char *mime;
-	if (status.image_format == PSLR_IMAGE_FORMAT_JPEG) {
+	switch (status.image_format) {
+	case PSLR_IMAGE_FORMAT_JPEG:
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
 		mime = GP_MIME_JPEG;
-	} else if (status.image_format == PSLR_IMAGE_FORMAT_RAW &&
-			status.raw_format == PSLR_RAW_FORMAT_PEF) {
-		sprintf (path->name, "capt%04d.pef", capcnt++);
-		mime = GP_MIME_RAW;
-	} else {
+		break;
+	case PSLR_IMAGE_FORMAT_RAW:;
+		switch (status.raw_format) {
+		case PSLR_RAW_FORMAT_PEF:
+			sprintf (path->name, "capt%04d.pef", capcnt++);
+			mime = GP_MIME_RAW;
+			break;
+		case PSLR_RAW_FORMAT_DNG:
+			sprintf (path->name, "capt%04d.dng", capcnt++);
+			mime = "image/x-adobe-dng";
+			break;
+		default:
+			return GP_ERROR;
+		}
+	default:
 		return GP_ERROR;
 	}
 
@@ -392,6 +436,7 @@ next:
 	return GP_OK;
 }
 
+#if 1
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
@@ -399,16 +444,16 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	const char	*model;
 	pslr_status	status;
 	char		buf[20];
-	const char      **available_resolutions;
-	int i;
+	int		*available_resolutions;
+	int		i;
 
 	pslr_get_status (camera->pl, &status);
 
 	model = pslr_camera_name (camera->pl);
 
-	available_resolutions = pslr_camera_resolution_steps (camera->pl);
+	available_resolutions = pslr_get_model_jpeg_resolutions (camera->pl);
 
-	GP_DEBUG ("*** camera_get_config");
+	gp_log (GP_LOG_DEBUG, "pentax", "*** camera_get_config");
 
 	gp_widget_new (GP_WIDGET_WINDOW, _("Camera and Driver Configuration"), window);
 	gp_widget_set_name (*window, "main");
@@ -425,12 +470,10 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	gp_widget_new (GP_WIDGET_RADIO, _("Image format"), &t);
 	gp_widget_set_name (t, "img_format");
-	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_JPEG))
-		gp_widget_add_choice (t, "JPEG");
-	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_RAW))
-		gp_widget_add_choice (t, "RAW");
-	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_RAW_PLUS))
-		gp_widget_add_choice (t, "RAW+");
+	/* it seems the upstream code seems to have it always available? */
+	gp_widget_add_choice (t, "JPEG");
+	gp_widget_add_choice (t, "RAW");
+	gp_widget_add_choice (t, "RAW+");
 	switch (status.image_format) {
 		case PSLR_IMAGE_FORMAT_JPEG: gp_widget_set_value (t, "JPEG"); break;
 		case PSLR_IMAGE_FORMAT_RAW: gp_widget_set_value (t, "RAW"); break;
@@ -442,31 +485,35 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	}
 	gp_widget_append (section, t);
 
-	if (pslr_is_image_format_supported(camera->pl, PSLR_IMAGE_FORMAT_JPEG)) {
-		gp_widget_new (GP_WIDGET_RADIO, _("Image Size"), &t);
-		gp_widget_set_name (t, "imgsize");
-		for (i = 0; i < PSLR_MAX_RESOLUTIONS && available_resolutions[i]; i++)
-		{
-			gp_widget_add_choice (t, available_resolutions[i]);
-		}
+	gp_widget_new (GP_WIDGET_RADIO, _("Image Size"), &t);
+	gp_widget_set_name (t, "imgsize");
+	for (i = 0; i < MAX_RESOLUTION_SIZE && available_resolutions[i]; i++)
+	{
+		char buf[20];
 
-		if (status.jpeg_resolution > 0 && status.jpeg_resolution < PSLR_MAX_RESOLUTIONS)
-			gp_widget_set_value (t, available_resolutions[status.jpeg_resolution]);
-		else
-			gp_widget_set_value (t, _("Unknown"));
-
-		gp_widget_append (section, t);
-
-		gp_widget_new (GP_WIDGET_RADIO, _("Image Quality"), &t);
-		gp_widget_set_name (t, "imgquality");
-		gp_widget_add_choice (t, "4");
-		gp_widget_add_choice (t, "3");
-		gp_widget_add_choice (t, "2");
-		gp_widget_add_choice (t, "1");
-		sprintf (buf,"%d",status.jpeg_quality);
-		gp_widget_set_value (t, buf);
-		gp_widget_append (section, t);
+		sprintf(buf,"%d", available_resolutions[i]);
+		gp_widget_add_choice (t, buf);
 	}
+
+	if (status.jpeg_resolution > 0 && status.jpeg_resolution < MAX_RESOLUTION_SIZE) {
+		char buf[20];
+
+		sprintf(buf, "%d", status.jpeg_resolution);
+		gp_widget_set_value (t, buf);
+	} else
+		gp_widget_set_value (t, _("Unknown"));
+
+	gp_widget_append (section, t);
+
+	gp_widget_new (GP_WIDGET_RADIO, _("Image Quality"), &t);
+	gp_widget_set_name (t, "imgquality");
+	gp_widget_add_choice (t, "4");
+	gp_widget_add_choice (t, "3");
+	gp_widget_add_choice (t, "2");
+	gp_widget_add_choice (t, "1");
+	sprintf (buf,"%d",status.jpeg_quality);
+	gp_widget_set_value (t, buf);
+	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_RADIO, _("ISO"), &t);
 	gp_widget_set_name (t, "iso");
@@ -588,19 +635,22 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	pslr_get_status(camera->pl, &status);
 
-	GP_DEBUG ("*** camera_set_config");
+	gp_log (GP_LOG_DEBUG, "pentax", "*** camera_set_config");
 	ret = gp_widget_get_child_by_label (window, _("Image Size"), &w);
 	if ((ret == GP_OK) && (gp_widget_changed (w))) {
 		int i, resolution = -1;
-		const char **valid_resolutions;
+		int *valid_resolutions;
 
 	        gp_widget_set_changed (w, 0);
-		valid_resolutions = pslr_camera_resolution_steps (camera->pl);
+		valid_resolutions = pslr_get_model_jpeg_resolutions (camera->pl);
 
 		gp_widget_get_value (w, &sval);
-		for (i = 0; i < PSLR_MAX_RESOLUTIONS; i++)
+		for (i = 0; i < MAX_RESOLUTION_SIZE; i++)
 	        {
-			if (!strcmp(sval,valid_resolutions[i]))
+			int foo;
+
+			sscanf(sval, "%d", &foo);
+			if (foo != valid_resolutions[i])
 				resolution = i;
 		}
 	
@@ -644,7 +694,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &iso)) {
-			pslr_set_iso(camera->pl, iso);
+			/* pslr_set_iso(camera->pl, iso); */
+			pslr_set_iso(camera->pl, iso, 0, 0); /* FIXME: check if 0 is ok */
 			pslr_get_status(camera->pl, &status);
 			// FIXME: K-30 iso doesn't get updated immediately
 		} else
@@ -661,7 +712,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &qual)) {
-			pslr_set_jpeg_quality (camera->pl, qual);
+			pslr_set_jpeg_stars (camera->pl, qual);
 			pslr_get_status (camera->pl, &status);
 		} else
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image quality %s", sval);
@@ -724,6 +775,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	return GP_OK;
 }
+#endif
 
 static int
 camera_exit (Camera *camera, GPContext *context) 
@@ -733,13 +785,32 @@ camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
+char **
+get_drives(int *driveNum) {
+	/* should not be called */
+	return NULL;
+}
+
+pslr_result get_drive_info(char* driveName, FDTYPE* hDevice,
+                           char* vendorId, int vendorIdSizeMax,
+                           char* productId, int productIdSizeMax) {
+	/* should not be called */
+	return PSLR_NO_MEMORY;
+}
+
+
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	const char *model;
-	camera->pl = pslr_init (camera->port);
-	if (camera->pl == NULL) return GP_ERROR_NO_MEMORY;
-	pslr_connect (camera->pl);
+	ipslr_handle_t	*pslr;
+
+	/* pslr = pslr_init (model, device); ... but it basically just opens the fd */
+	pslr = malloc(sizeof(struct ipslr_handle));
+	pslr->fd = camera->port;
+
+	camera->pl = (CameraPrivateLibrary*)pslr;
+
+	pslr_connect (pslr);
 
 	camera->functions->exit = camera_exit;
 	camera->functions->summary = camera_summary;
@@ -747,7 +818,5 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->set_config = camera_set_config;
 	camera->functions->capture = camera_capture;
 	camera->functions->wait_for_event = camera_wait_for_event;
-	model = pslr_camera_name (camera->pl);
-	gp_log (GP_LOG_DEBUG, "pentax", "reported camera model is %s\n", model);
 	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }
