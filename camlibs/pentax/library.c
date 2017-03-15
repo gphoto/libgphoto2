@@ -104,6 +104,12 @@ camera_abilities (CameraAbilitiesList *list)
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
 		return ret;
 
+	strcpy (a.model, "Pentax:K50D");
+        // same usb vendor like Pentax K5D
+	a.usb_product		= 0x0160;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
         strcpy (a.model, "Pentax:K30");
         // same usb vendor like Pentax K5D
         a.usb_product           = 0x0132;
