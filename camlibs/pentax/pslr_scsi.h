@@ -39,8 +39,8 @@ extern void write_debug( const char* message, ... );
 #include <android/log.h>
 #define DPRINT(...) __android_log_print(ANDROID_LOG_DEBUG, "PkTriggerCord", __VA_ARGS__)
 #else
-#ifdef LIBGPHOTO
-#include <gphoto2/gphoto2-log.h>
+#ifdef LIBGPHOTO2
+#include <gphoto2/gphoto2-library.h>
 #define DPRINT(x...) gp_log (GP_LOG_DEBUG, "pentax", x)
 #else
 #define DPRINT(x...) write_debug(x)
