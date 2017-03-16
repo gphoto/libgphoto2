@@ -461,7 +461,6 @@ next:
 	return GP_OK;
 }
 
-#if 1
 static int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
@@ -810,11 +809,13 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &bulb);
 		pslr_bulb (camera->pl, bulb);
+
+		if (bulb)	/* also press the shutter */
+			pslr_shutter (camera->pl);
 	}
 
 	return GP_OK;
 }
-#endif
 
 static int
 camera_exit (Camera *camera, GPContext *context) 
