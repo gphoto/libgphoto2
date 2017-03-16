@@ -374,6 +374,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		if (status.bufmask == 0)
 			goto next;
+		gp_log (GP_LOG_ERROR, "pentax", "wait_for_event: new image found! mask 0x%x", status.bufmask);
 		/* New image on camera! */
 		for (bufno=0;bufno<16;bufno++)
 			if (status.bufmask & (1<<bufno))
