@@ -628,6 +628,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	}
 	gp_widget_append (section, t);
 
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Bulb"), &t);
+	gp_widget_set_name (t, "bulb");
+	gp_widget_set_value (t, "2");
+	gp_widget_append (section, t);
+
 	return GP_OK;
 }
 
@@ -777,6 +782,15 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		} else {
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode aperture %s", sval);
 		}
+	}
+
+	ret = gp_widget_get_child_by_label (window, _("Bulb"), &w);
+	if ((ret == GP_OK) && gp_widget_changed (w)) {
+		int bulb;
+
+	        gp_widget_set_changed (w, 0);
+		gp_widget_get_value (w, &bulb);
+		pslr_bulb (camera->pl, bulb);
 	}
 
 	return GP_OK;
