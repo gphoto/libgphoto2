@@ -297,6 +297,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
 			return GP_ERROR;
 		}
+		break;
 	default:
 		gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x (raw=0x%x)", status.image_format, status.raw_format);
 		return GP_ERROR;
@@ -406,6 +407,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
 				return GP_ERROR;
 			}
+			break;
 		default:
 			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x (raw=0x%x)", status.image_format, status.raw_format);
 			return GP_ERROR;
