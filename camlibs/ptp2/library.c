@@ -4591,6 +4591,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	        (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
 	     	 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
 	) {
+
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
 		do {
@@ -5004,16 +5005,18 @@ downloadnow:
 	}
 sonyout:
 
-	C_PTP_REP (ptp_check_event(params));
-	if (!ptp_get_one_event (params, &event)) {
+	do {
+		C_PTP_REP (ptp_check_event(params));
+
 		/* FIXME: Might be another error, but usually is a timeout */
-		GP_LOG_D ("no events received.");
-		*eventtype = GP_EVENT_TIMEOUT;
-		return GP_OK;
-	}
-	GP_LOG_D ("code=0x%04x, param1 0x%08x",
-		event.Code, event.Param1
-	);
+		if (ptp_get_one_event (params, &event)) {
+			goto handleregular;
+		}
+
+	} while (waiting_for_timeout(&back_off_wait, event_start, timeout));
+
+	*eventtype = GP_EVENT_TIMEOUT;
+	return GP_OK;
 handleregular:
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
 		switch (event.Code) {
