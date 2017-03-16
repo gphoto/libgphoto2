@@ -206,17 +206,21 @@ save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *s
 	uint32_t current;
 
 	switch (status->image_format) {
-		case PSLR_IMAGE_FORMAT_JPEG:
-			imagetype = status->jpeg_quality + 1;
-			image_resolution = status->jpeg_resolution;
+	case PSLR_IMAGE_FORMAT_JPEG:
+		imagetype = status->jpeg_quality + 1;
+		image_resolution = status->jpeg_resolution;
 		break;
-		case PSLR_IMAGE_FORMAT_RAW:
-			imagetype = 0;
-			image_resolution = 0;
+	case PSLR_IMAGE_FORMAT_RAW:
+		imagetype = 0;
+		image_resolution = 0;
 		break;
-		default:
-			gp_log (GP_LOG_ERROR, "pentax", "Sorry, only JPEG and PEF RAW files are supported\n");
-			return GP_ERROR;
+	case PSLR_IMAGE_FORMAT_RAW_PLUS:
+		imagetype = status->jpeg_quality + 1;
+		image_resolution = status->jpeg_resolution;
+		break;
+	default:
+		gp_log (GP_LOG_ERROR, "pentax", "Sorry, only JPEG and PEF RAW files are supported\n");
+		return GP_ERROR;
 	}
 
 	gp_log(GP_LOG_DEBUG, "pentax", "get buffer %d type %d res %d\n", bufno, imagetype, image_resolution);
@@ -270,6 +274,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int			ret, length;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
+	int			bufno;
 	const char 		*mime;
 
 	pslr_get_status (p, &status);
@@ -308,14 +313,23 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	gp_file_set_mtime (file, time(NULL));
 	gp_file_set_mime_type (file, mime);
 
+	if (status.bufmask == 0) {
+		gp_log (GP_LOG_ERROR, "pentax", "no buffer available for download");
+		return GP_ERROR;
+	}
+	for (bufno=0;bufno<16;bufno++)
+		if (status.bufmask & (1 << bufno))
+			break;
+	/* we will have found one if bufmask != 0 */
+
 	while (1) {
-		length = save_buffer( p, (int)0, file, &status);
+		length = save_buffer( p, bufno, file, &status);
 		if (length == GP_ERROR_NOT_SUPPORTED) return length;
 		if (length >= GP_OK)
 			break;
 		usleep(100000);
 	}
-	pslr_delete_buffer(p, (int)0 );
+	pslr_delete_buffer(p, bufno );
 
 	gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
 	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
@@ -370,7 +384,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 	gettimeofday (&event_start, 0);
 	while (1) {
 		pslr_status	status;
-		int bufno;
+		int 		bufno;
+		const char	*mime;
 
 		if (PSLR_OK != pslr_get_status (camera->pl, &status))
 			break;
@@ -384,7 +399,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 				break;
 		if (bufno == 16) goto next;
 
-		const char *mime;
 		path = malloc(sizeof(CameraFilePath));
 		strcpy (path->folder, "/");
 		switch (status.image_format) {
