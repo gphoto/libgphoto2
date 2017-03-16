@@ -270,12 +270,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int			ret, length;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
+	const char 		*mime;
 
 	pslr_get_status (p, &status);
 	pslr_shutter (p);
 
 	strcpy (path->folder, "/");
-	const char *mime;
 	switch (status.image_format) {
 	case PSLR_IMAGE_FORMAT_JPEG:
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
@@ -292,9 +292,11 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			mime = "image/x-adobe-dng";
 			break;
 		default:
+			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
 			return GP_ERROR;
 		}
 	default:
+		gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x (raw=0x%x)", status.image_format, status.raw_format);
 		return GP_ERROR;
 	}
 
@@ -389,6 +391,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			sprintf (path->name, "capt%04d.pef", capcnt++);
 			mime = GP_MIME_RAW;
 		} else {
+			gp_log (GP_LOG_ERROR, "pentax", "waitevent unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
 			return GP_ERROR;
 		}
 
