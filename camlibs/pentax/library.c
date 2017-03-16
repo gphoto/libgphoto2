@@ -276,12 +276,14 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	pslr_shutter (p);
 
 	strcpy (path->folder, "/");
+	gp_log (GP_LOG_ERROR, "pentax", "image format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
 	switch (status.image_format) {
 	case PSLR_IMAGE_FORMAT_JPEG:
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
 		mime = GP_MIME_JPEG;
 		break;
-	case PSLR_IMAGE_FORMAT_RAW:;
+	case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
+	case PSLR_IMAGE_FORMAT_RAW:
 		switch (status.raw_format) {
 		case PSLR_RAW_FORMAT_PEF:
 			sprintf (path->name, "capt%04d.pef", capcnt++);
@@ -384,15 +386,28 @@ camera_wait_for_event (Camera *camera, int timeout,
 		const char *mime;
 		path = malloc(sizeof(CameraFilePath));
 		strcpy (path->folder, "/");
-		if (status.image_format == PSLR_IMAGE_FORMAT_JPEG) {
+		switch (status.image_format) {
+		case PSLR_IMAGE_FORMAT_JPEG:
 			sprintf (path->name, "capt%04d.jpg", capcnt++);
 			mime = GP_MIME_JPEG;
-		} else if (status.image_format == PSLR_IMAGE_FORMAT_RAW &&
-				status.raw_format == PSLR_RAW_FORMAT_PEF) {
-			sprintf (path->name, "capt%04d.pef", capcnt++);
-			mime = GP_MIME_RAW;
-		} else {
-			gp_log (GP_LOG_ERROR, "pentax", "waitevent unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
+			break;
+		case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
+		case PSLR_IMAGE_FORMAT_RAW:
+			switch (status.raw_format) {
+			case PSLR_RAW_FORMAT_PEF:
+				sprintf (path->name, "capt%04d.pef", capcnt++);
+				mime = GP_MIME_RAW;
+				break;
+			case PSLR_RAW_FORMAT_DNG:
+				sprintf (path->name, "capt%04d.dng", capcnt++);
+				mime = "image/x-adobe-dng";
+				break;
+			default:
+				gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
+				return GP_ERROR;
+			}
+		default:
+			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x (raw=0x%x)", status.image_format, status.raw_format);
 			return GP_ERROR;
 		}
 
