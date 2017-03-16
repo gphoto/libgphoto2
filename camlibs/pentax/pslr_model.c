@@ -722,10 +722,10 @@ ipslr_model_info_t *find_model_by_id( uint32_t id ) {
     int i;
     for ( i = 0; i<sizeof (camera_models) / sizeof (camera_models[0]); i++) {
         if ( camera_models[i].id == id ) {
-            //    DPRINT("found %d\n",i);
+            DPRINT("found %d\n",i);
             return &camera_models[i];
         }
     }
-    //    DPRINT("not found\n");
+    DPRINT("not found\n");
     return NULL;
 }
