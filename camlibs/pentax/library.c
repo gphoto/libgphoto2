@@ -313,6 +313,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	gp_file_set_mtime (file, time(NULL));
 	gp_file_set_mime_type (file, mime);
 
+	/* get status again */
+	pslr_get_status (p, &status);
+
 	if (status.bufmask == 0) {
 		gp_log (GP_LOG_ERROR, "pentax", "no buffer available for download");
 		return GP_ERROR;
