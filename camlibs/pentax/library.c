@@ -158,10 +158,18 @@ void close_drive(GPPort **port) {
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
+	char		*statusinfo;
+	pslr_status	status;
+
+	pslr_get_status (camera->pl, &status);
+
+	statusinfo = collect_status_info( camera->pl, status );
+
 	sprintf (summary->text, _(
 		"Pentax K DSLR capture driver.\n"
-		"Based on pkremote by Pontus Lidman.\n"
-	));
+		"Using code from pktriggercord by Andras Salamon.\n"
+		"Collected Statatus Information:\n%s"
+	), statusinfo);
 	return GP_OK;
 }
 
@@ -277,6 +285,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int			bufno;
 	const char 		*mime;
 
+	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
+
 	pslr_get_status (p, &status);
 	pslr_shutter (p);
 
@@ -380,6 +390,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 	int		ret, length;
 	CameraFile	*file = NULL;
 	CameraFileInfo	info;
+
+	gp_log (GP_LOG_DEBUG, "pentax", "camera_wait_for_event %d ms", timeout);
 
 	*eventtype = GP_EVENT_TIMEOUT;
 	*eventdata = NULL;
