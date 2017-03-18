@@ -4574,6 +4574,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	CameraFileInfo	info;
 	char		*ximage, *mime;
 	int		back_off_wait = 0;
+	int		oldtimeout;
 
 	SET_CONTEXT(camera, context);
 	GP_LOG_D ("waiting for events timeout %d ms", timeout);
@@ -4992,6 +4993,7 @@ downloadnow:
 				return GP_OK;
 			}
 
+sonyout:
 			/* If not, check for events and handle them */
 			C_PTP_REP (ptp_check_event(params));
 			if (ptp_get_one_event (params, &event))
@@ -5003,20 +5005,21 @@ downloadnow:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
-sonyout:
 
-	do {
-		C_PTP_REP (ptp_check_event(params));
+	/* Wait for the whole timeout period */
+	CR (gp_port_get_timeout (camera->port, &oldtimeout));
+	CR (gp_port_set_timeout (camera->port, timeout));
+	C_PTP_REP (ptp_wait_event(params));
+	CR (gp_port_set_timeout (camera->port, oldtimeout));
 
-		/* FIXME: Might be another error, but usually is a timeout */
-		if (ptp_get_one_event (params, &event)) {
-			goto handleregular;
-		}
-
-	} while (waiting_for_timeout(&back_off_wait, event_start, timeout));
+	/* FIXME: Might be another error, but usually is a timeout */
+	if (ptp_get_one_event (params, &event)) {
+		goto handleregular;
+	}
 
 	*eventtype = GP_EVENT_TIMEOUT;
 	return GP_OK;
+
 handleregular:
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
 		switch (event.Code) {
