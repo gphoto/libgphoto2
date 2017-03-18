@@ -534,7 +534,8 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 		return PTP_ERROR_BADPARAM;
 	}
 	if (result < 0) {
-		GP_LOG_E ("Reading PTP event failed: %s (%d)", gp_port_result_as_string(result), result);
+		if ((result != GP_ERROR_TIMEOUT) || (wait != PTP_EVENT_CHECK_FAST))
+			GP_LOG_E ("Reading PTP event failed: %s (%d)", gp_port_result_as_string(result), result);
 		if (result == GP_ERROR_TIMEOUT)
 			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
