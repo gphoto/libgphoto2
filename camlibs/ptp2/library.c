@@ -2088,6 +2088,9 @@ static struct {
 	{"GoPro:HERO 3+",			0x2672,	0x0011, 0},
 	/* https://sourceforge.net/u/drzap/libmtp/ci/39841e9a15ed250a0121ae4a139b2a950a07f08c/ */
 	{"GoPro:HERO +",			0x2672,	0x0021, 0},
+	/* from libmtp */
+	{"GoPro:HERO5 Black",			0x2672, 0x0027, 0},
+
 #endif
 };
 
