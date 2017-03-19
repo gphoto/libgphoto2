@@ -1,6 +1,6 @@
 /* Pentax K series library
  *
- * Copyright (c) 2011 Marcus Meissner <meissner@suse.de>
+ * Copyright (c) 2011,2017 Marcus Meissner <meissner@suse.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -206,12 +206,11 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 static int
-save_buffer(pslr_handle_t camhandle, int bufno, CameraFile *file, pslr_status *status)
+save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type imagetype, CameraFile *file, pslr_status *status)
 {
-	int imagetype;
-	int image_resolution;
-	uint8_t buf[65536];
-	uint32_t current;
+	int			image_resolution;
+	uint8_t			buf[65536];
+	uint32_t		current;
 
 	switch (status->image_format) {
 	case PSLR_IMAGE_FORMAT_JPEG:
@@ -284,6 +283,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	CameraFileInfo		info;
 	int			bufno;
 	const char 		*mime;
+	pslr_buffer_type	buftype;
 
 	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
 
@@ -296,6 +296,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	case PSLR_IMAGE_FORMAT_JPEG:
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
 		mime = GP_MIME_JPEG;
+		buftype = status.jpeg_quality + 1;
 		break;
 	case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
 	case PSLR_IMAGE_FORMAT_RAW:
@@ -303,10 +304,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		case PSLR_RAW_FORMAT_PEF:
 			sprintf (path->name, "capt%04d.pef", capcnt++);
 			mime = GP_MIME_RAW;
+			buftype = PSLR_BUF_PEF;
 			break;
 		case PSLR_RAW_FORMAT_DNG:
 			sprintf (path->name, "capt%04d.dng", capcnt++);
 			mime = "image/x-adobe-dng";
+			buftype = PSLR_BUF_DNG;
 			break;
 		default:
 			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
@@ -336,7 +339,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	/* we will have found one if bufmask != 0 */
 
 	while (1) {
-		length = save_buffer( p, bufno, file, &status);
+		length = save_buffer( p, bufno, buftype, file, &status);
 		if (length == GP_ERROR_NOT_SUPPORTED) return length;
 		if (length >= GP_OK)
 			break;
@@ -401,6 +404,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		pslr_status	status;
 		int 		bufno;
 		const char	*mime;
+		pslr_buffer_type	buftype;
 
 		if (PSLR_OK != pslr_get_status (camera->pl, &status))
 			break;
@@ -420,6 +424,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		case PSLR_IMAGE_FORMAT_JPEG:
 			sprintf (path->name, "capt%04d.jpg", capcnt++);
 			mime = GP_MIME_JPEG;
+			buftype = status.jpeg_quality + 1;
 			break;
 		case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
 		case PSLR_IMAGE_FORMAT_RAW:
@@ -427,10 +432,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 			case PSLR_RAW_FORMAT_PEF:
 				sprintf (path->name, "capt%04d.pef", capcnt++);
 				mime = GP_MIME_RAW;
+				buftype = PSLR_BUF_PEF;
 				break;
 			case PSLR_RAW_FORMAT_DNG:
 				sprintf (path->name, "capt%04d.dng", capcnt++);
 				mime = "image/x-adobe-dng";
+				buftype = PSLR_BUF_DNG;
 				break;
 			default:
 				gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
@@ -448,7 +455,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		gp_file_set_mime_type (file, mime);
 
 		while (1) {
-			length = save_buffer( p, bufno, file, &status);
+			length = save_buffer( p, bufno, buftype, file, &status);
 			if (length == GP_ERROR_NOT_SUPPORTED) return length;
 			if (length >= GP_OK)
 				break;
