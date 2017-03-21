@@ -2,6 +2,7 @@
  *
  * Copyright (C) 2001-2004 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2016 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2017 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2006-2007 Linus Walleij <triad@df.lth.se>
  *
  * This library is free software; you can redistribute it and/or
