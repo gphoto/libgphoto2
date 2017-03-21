@@ -1,7 +1,18 @@
 libgphoto2 2.5.12.1 development release
 
 ptp2:
+* iPhone iOS 10.2 storage handling fixed, added dynamic storage handling
 * Sony Alpha Live View support.
+* Canon EOS M series capture enabled. (might not fully work yet)
+* Various crashes and endless loops fixed that were found by the AFL fuzzer.
+* Various bugfixes in Nikon, Canon capture
+* New USB Ids:
+  * Sony: SLT A37, DSC-RX100M5
+  * Nikon KeyMission 360
+  * Canon PowerShot G16
+  * Canon EOS M5
+  * Fuji Fujifilm XT-2
+  * GoPro Hero 5 Black
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.12 release
