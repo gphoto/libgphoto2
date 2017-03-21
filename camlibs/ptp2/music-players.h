@@ -1030,8 +1030,13 @@
   { "Archos", 0x0e79, "Diamond S", 0x5305, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1587/ */
   { "Archos", 0x0e79, "50d neon", 0x5371, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1660/ */
+  { "Archos", 0x0e79, "70b neon", 0x5395, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1637/ */
   { "Archos", 0x0e79, "101b Oxygen", 0x542f, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/feature-requests/209/ */
+  { "Archos", 0x0e79, "55 diamond Selfie", 0x5465, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Dunlop (OEM of EGOMAN ltd?) reported by Nanomad
@@ -1851,6 +1856,11 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP", 0x01da,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/bugs/1649/ */
+  { "SONY", 0x0fce, "XPeria XA MTP", 0x01de,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XZ MTP", 0x01e7,
+      DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "F5321 MTP", 0x01e8,
       DEVICE_FLAG_NONE },
 
@@ -1955,6 +1965,10 @@
   { "SONY", 0x0fce, "XPeria Z5 MTP+CDROM", 0x41d9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP+CDROM", 0x41da,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XA MTP+CDROM", 0x41de,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XZ MTP+CDROM", 0x41e7,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "F5321 MTP+CDROM", 0x41e8,
       DEVICE_FLAG_NONE },
@@ -2084,7 +2098,11 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria Z5 Compact MTP+ADB", 0x51da,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "F5321 MTP+ADB", 0x41e8,
+  { "SONY", 0x0fce, "XPeria XA MTP+ADB", 0x51de,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XZ MTP+ADB", 0x51e7,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "F5321 MTP+ADB", 0x51e8,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2400,6 +2418,9 @@
   { "RIM", 0x0fca, "BlackBerry Priv", 0x8031, DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_SWITCH_MODE_BLACKBERRY | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
 
+  /* https://sourceforge.net/p/libmtp/bugs/1658/ */
+  { "RIM", 0x0fca, "BlackBerry Dtek 60", 0x8041, DEVICE_FLAGS_ANDROID_BUGS },
+
   /*
    * Nextar
    */
@@ -2443,6 +2464,8 @@
   // Reported by: Jim Hanrahan <goshawkjim@users.sourceforge.net>
   { "Pantech", 0x106c, "Crux", 0xf003, DEVICE_FLAG_NONE },
 
+  /* https://sourceforge.net/p/libmtp/feature-requests/208/ */
+  { "Asus", 0x0b05, "Zenfone Go (ZC500TG)", 0x2008, DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * Asus
    * Pattern of PIDs on Android devices seem to be:
@@ -2587,6 +2610,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1364/ */
   { "Asus", 0x0b05, "Zenfone 2 ZE551ML (MTP)", 0x5f03,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1642/ */
+  { "Asus", 0x0b05, "ME581CL", 0x7770,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1232/ */
   { "Asus", 0x0b05, "MemoPad 7 (ME572CL)", 0x7772,
@@ -2734,7 +2760,15 @@
   /* https://sourceforge.net/p/libmtp/bugs/1465/ */
   { "Lenovo", 0x17ef, "A1000 Smartphone ADB", 0x7929,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/204/ */
+  { "Lenovo", 0x17ef, "TAB 2 A10-30", 0x7949,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Lenovo", 0x17ef, "K5", 0x7993,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Lenovo", 0x17ef, "Vibe K5 Note", 0x7999,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1664/ */
+  { "Lenovo", 0x17ef, "Vibe K4", 0x79b7,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1624/ */
   { "Lenovo", 0x17ef, "B Smartphone", 0x7a18,
@@ -2775,6 +2809,9 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/186/ */
   { "Huawei", 0x12d1, "Y360-U61", 0x2567,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/205/ */
+  { "Huawei", 0x12d1, "Y360-U03", 0x256b,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/227/ */
   { "Huawei", 0x12d1, "Y560-L01", 0x259c,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2797,6 +2834,8 @@
   { "ZTE", 0x19d2, "V985", 0x0383, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1328/ */
   { "ZTE", 0x19d2, "V5", 0xffce, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1646/ */
+  { "ZTE", 0x19d2, "Z9 Max", 0xffcf, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * HTC (High Tech Computer Corp)
@@ -3406,6 +3445,8 @@
 
   /* https://sourceforge.net/p/libmtp/support-requests/127/ */
   { "Yota", 0x2916, "Phone C9660", 0x9039, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1661/ */
+  { "Yota", 0x2916, "Phone", 0x9139, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1229/ */
   { "Yota", 0x2916, "Phone 2", 0x914d, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1267/ */
@@ -3468,6 +3509,7 @@
   { "Gopro" , 0x2672, "HERO4 Black", 0x000e, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO4 Session", 0x000f, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO+", 0x0021, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO5 Black", 0x0027, DEVICE_FLAG_NONE },
 #endif
 
   /* https://sourceforge.net/p/libmtp/bugs/1490/ */
@@ -3512,6 +3554,9 @@
   { "Recon Instruments" , 0x2523, "Jet", 0xd209, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1571/ */
   { "Recon Instruments" , 0x2523, "Snow2 HUD", 0xd109, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1663/ */
+  { "Nextbit" , 0x2c3f, "Robin", 0x0001, DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * Other strange stuff.
    */
