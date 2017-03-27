@@ -686,7 +686,7 @@ void ipslr_status_parse_k200d(ipslr_handle_t *p, pslr_status *status) {
 ipslr_model_info_t camera_models[] = {
     { 0x12aa2, "*ist DS",     1, 1, 0, 264, 3, {6, 4, 2},       5, 4000, 200, 3200, 200,  3200,  PSLR_JPEG_IMAGE_TONE_BRIGHT,        0, 11, ipslr_status_parse_istds },
     { 0x12cd2, "K20D",        0, 1, 0, 412, 4, {14, 10, 6, 2},  7, 4000, 100, 3200, 100,  6400,  PSLR_JPEG_IMAGE_TONE_MONOCHROME,    1, 11, ipslr_status_parse_k20d  },
-    { 0x12c1e, "K10D",        0, 1, 0, 392, 3, {10, 6, 2},      7, 4000, 100, 1600, 100,  1600,  PSLR_JPEG_IMAGE_TONE_BRIGHT,        0, 11, ipslr_status_parse_k10d  },
+    { 0x12c1e, "K10D",        0, 1, 0, 288, 3, {10, 6, 2},      7, 4000, 100, 1600, 100,  1600,  PSLR_JPEG_IMAGE_TONE_BRIGHT,        0, 11, ipslr_status_parse_k10d  },
     { 0x12c20, "GX10",        0, 1, 0, 392, 3, {10, 6, 2},      7, 4000, 100, 1600, 100,  1600,  PSLR_JPEG_IMAGE_TONE_BRIGHT,        0, 11, ipslr_status_parse_k10d  },
     { 0x12cd4, "GX20",        0, 1, 0, 412, 4, {14, 10, 6, 2},  7, 4000, 100, 3200, 100,  6400,  PSLR_JPEG_IMAGE_TONE_MONOCHROME,    1, 11, ipslr_status_parse_k20d  },
     { 0x12dfe, "K-x",         0, 1, 0, 436, 3, {12, 10, 6, 2},  9, 6000, 200, 6400, 100, 12800,  PSLR_JPEG_IMAGE_TONE_MONOCHROME,    1, 11, ipslr_status_parse_kx    }, //muted: bug
