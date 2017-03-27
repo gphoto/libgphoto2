@@ -1091,6 +1091,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/116 */
 	{"Nikon:Coolpix AW130 (PTP mode)",0x04b0, 0x0198, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
+	/* https://github.com/gphoto/libgphoto2/issues/150 */
+	{"Nikon:Coolpix P900 (PTP mode)", 0x04b0, 0x019c, PTP_CAP|PTP_NIKON_BROKEN_CAP},
+
 	/* https://github.com/gphoto/libgphoto2/issues/138 */
 	{"Nikon:KeyMission 360 (PTP mode)",0x04b0, 0x019f, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
