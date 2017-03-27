@@ -1,0 +1,87 @@
+ Device info:
+ Manufacturer: Nikon Corporation
+   Model: P900
+   device version: COOLPIX P900   V1.3
+   serial number: 'SERIAL_DELETED_FOR_DISCRETION'
+ Vendor extension ID: 0x0000000a
+ Vendor extension version: 100
+ Vendor extension description: microsoft.com: 1.0; microsoft.com/DeviceServices:1.0;
+ Functional Mode: 0x0000
+ PTP Standard Version: 100
+ Supported operations:
+   0x1001 (Get device info)
+   0x1002 (Open session)
+   0x1003 (Close session)
+   0x1004 (Get storage IDs)
+   0x1005 (Get storage info)
+   0x1006 (Get number of objects)
+   0x1007 (Get object handles)
+   0x1008 (Get object info)
+   0x1009 (Get object)
+   0x100a (Get thumbnail)
+   0x100b (Delete object)
+   0x100c (Send object info)
+   0x100d (Send object)
+   0x100e (Initiate capture)
+   0x100f (Format storage)
+   0x1014 (Get device property description)
+   0x1015 (Get device property value)
+   0x1016 (Set device property value)
+   0x101b (Get partial object)
+   0x9002 (Unknown PTP_OC)
+   0x9003 (Unknown PTP_OC)
+   0x90c1 (PTP_OC_NIKON_AfDrive)
+   0x90c2 (PTP_OC_NIKON_SetControlMode)
+   0x90c4 (PTP_OC_NIKON_GetLargeThumb)
+   0x90c7 (PTP_OC_NIKON_CheckEvent)
+   0x90c8 (PTP_OC_NIKON_DeviceReady)
+   0x9016 (Unknown PTP_OC)
+   0x9201 (PTP_OC_NIKON_StartLiveView)
+   0x9202 (PTP_OC_NIKON_EndLiveView)
+   0x9203 (PTP_OC_NIKON_GetLiveViewImg)
+   0x9207 (PTP_OC_NIKON_InitiateCaptureRecInMedia)
+   0x9407 (Unknown PTP_OC)
+   0x9408 (Unknown PTP_OC)
+   0x9409 (Unknown PTP_OC)
+   0x940a (Unknown PTP_OC)
+   0x9501 (Unknown PTP_OC)
+   0x9504 (PTP_OC_NIKON_GetDevicePropEx)
+   0x9505 (Unknown PTP_OC)
+   0x9801 (Unknown PTP_OC)
+   0x9802 (Unknown PTP_OC)
+   0x9803 (Unknown PTP_OC)
+   0x9805 (Unknown PTP_OC)
+ Events Supported:
+   0x4001
+   0x4002
+   0x4004
+   0x4005
+   0x4006
+   0x4007
+   0x4008
+   0x4009
+   0x400a
+   0x400c
+   0x400d
+ Device Properties Supported:
+   0x5001
+   0x5004
+   0x5007
+   0x5008
+   0x500a
+   0x500c
+   0x500e
+   0x5011
+   0xd002
+   0xd280
+   0xd05d
+   0xd0e1
+   0xd100
+   0xd1a2
+   0xd1a4
+   0xd1ac
+   0xd24f
+   0xd250
+   0xd251
+   0xd407
+   0xd303
