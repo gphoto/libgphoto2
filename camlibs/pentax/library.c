@@ -883,7 +883,7 @@ camera_init (Camera *camera, GPContext *context)
 	ipslr_handle_t	*pslr;
 
 	/* pslr = pslr_init (model, device); ... but it basically just opens the fd */
-	pslr = malloc(sizeof(struct ipslr_handle));
+	pslr = calloc(sizeof(struct ipslr_handle),1);
 	pslr->fd = camera->port;
 
 	camera->pl = (CameraPrivateLibrary*)pslr;
