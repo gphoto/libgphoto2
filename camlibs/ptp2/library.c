@@ -1879,14 +1879,17 @@ static struct {
 	/* pravsripad@gmail.com */
 	{"Canon:PowerShot SX520 HS",		0x04a9, 0x329b, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Marcus Meissner <marcus@jet.franken.de> */
+	{"Canon:EOS M10",			0x04a9, 0x32a0, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Johannes Goecke <jg-ml@web.de> */
+	{"Canon:EOS 750D",			0x04a9, 0x32a1, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Kiss Tamas <kisst@bgk.bme.hu> */
 	{"Canon:IXUS 165",			0x04a9, 0x32a9, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Gong <elainegong2010@gmail.com> */
 	{"Canon:IXUS 160",			0x04a9, 0x32aa, PTPBUG_DELETE_SENDS_EVENT},
-
-	/* Johannes Goecke <jg-ml@web.de> */
-	{"Canon:EOS 750D",			0x04a9, 0x32a1, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS R",			0x04a9, 0x32af, PTP_CAP|PTP_CAP_PREVIEW},
