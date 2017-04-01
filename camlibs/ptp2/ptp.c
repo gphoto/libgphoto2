@@ -4096,7 +4096,8 @@ ptp_android_getpartialobject64 (PTPParams* params, uint32_t handle, uint64_t off
 {
 	PTPContainer ptp;
 
-	PTP_CNT_INIT(ptp, PTP_OC_ANDROID_GetPartialObject64, handle, offset & 0xFFFFFFFF, offset >> 32, maxbytes);
+	/* casts due to varargs otherwise pushing 64bit values on the stack */
+	PTP_CNT_INIT(ptp, PTP_OC_ANDROID_GetPartialObject64, handle, ((uint32_t)offset & 0xFFFFFFFF), (uint32_t)(offset >> 32), maxbytes);
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, len);
 }
 
