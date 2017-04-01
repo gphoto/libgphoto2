@@ -4108,7 +4108,7 @@ ptp_android_sendpartialobject (PTPParams* params, uint32_t handle, uint64_t offs
 	PTPContainer	ptp;
 	uint16_t	ret;
 
-	PTP_CNT_INIT(ptp, PTP_OC_ANDROID_SendPartialObject, handle, offset & 0xFFFFFFFF, offset >> 32, len);
+	PTP_CNT_INIT(ptp, PTP_OC_ANDROID_SendPartialObject, handle, (uint32_t)(offset & 0xFFFFFFFF), (uint32_t)(offset >> 32), len);
 
 	/*
 	 * MtpServer.cpp is buggy: it uses write() without offset
