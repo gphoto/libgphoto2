@@ -386,8 +386,8 @@
       DEVICE_FLAG_FLAC_IS_UNKNOWN },
   { "Samsung", 0x04e8,
       "Galaxy models (MTP)", 0x6860,
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      /*DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |*/
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_LONG_TIMEOUT |
       DEVICE_FLAG_PROPLIST_OVERRIDES_OI |
@@ -1861,7 +1861,7 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ MTP", 0x01e7,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "F5321 MTP", 0x01e8,
+  { "SONY", 0x0fce, "XPeria X Compact MTP", 0x01e8,
       DEVICE_FLAG_NONE },
 
 
@@ -1970,7 +1970,7 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ MTP+CDROM", 0x41e7,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "F5321 MTP+CDROM", 0x41e8,
+  { "SONY", 0x0fce, "XPeria X Compact MTP+CDROM", 0x41e8,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2102,7 +2102,7 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ MTP+ADB", 0x51e7,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "F5321 MTP+ADB", 0x51e8,
+  { "SONY", 0x0fce, "XPeria X Compact MTP+ADB", 0x51e8,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2174,7 +2174,7 @@
   { "Motorola", 0x22b8, "Moto G (ID1)", 0x2e76,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "Moto G (ID2)", 0x2e82,
-      DEVICE_FLAGS_ANDROID_BUGS },
+      DEVICE_FLAGS_ANDROID_BUGS & ~(DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL|DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST)},
   /* https://sourceforge.net/p/libmtp/bugs/1030/, PTP Id */
   { "Motorola", 0x22b8, "Moto G (XT1032)", 0x2e84,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2309,14 +2309,14 @@
   // Reported by Michael Hess <mhess126@gmail.com>
   { "Google Inc (for Asus)", 0x18d1, "Nexus 7 (MTP+ADB)", 0x4e42,
       DEVICE_FLAGS_ANDROID_BUGS },
-  { "Google Inc (for LG Electronics/Samsung)", 0x18d1,
-      "Nexus 4/5/7/10 (MTP)", 0x4ee1,
+  { "Google Inc", 0x18d1, "Nexus/Pixel (MTP)", 0x4ee1,
       (DEVICE_FLAGS_ANDROID_BUGS | DEVICE_FLAG_PROPLIST_OVERRIDES_OI) & ~DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
-  { "Google Inc (for LG Electronics/Samsung)", 0x18d1,
-      "Nexus 4/5/7/10 (MTP+ADB)", 0x4ee2,
+  { "Google Inc", 0x18d1, "Nexus/Pixel (MTP+ADB)", 0x4ee2,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1255/ */
-  { "Google", 0x18d1, "Nexus 5 (MTP)", 0x4ee5,
+  { "Google Inc", 0x18d1, "Nexus/Pixel (PTP)", 0x4ee5,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Google Inc", 0x18d1, "Nexus/Pixel (PTP+ADB)", 0x4ee6,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1444/ */
   { "Google", 0x18d1, "Pixel C (MTP)", 0x5202,
@@ -2688,6 +2688,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1155/ */
   { "Lenovo", 0x17ef, "Yoga Tablet 10 B8000-H", 0x76ff,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1673/ */
+  { "Lenovo", 0x17ef, "S960", 0x770a,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1597/ */
   { "Lenovo", 0x17ef, "K910SS", 0x7713,
@@ -3158,6 +3161,9 @@
    * Intel
    * Also sold rebranded as Orange products
    */
+  /* https://sourceforge.net/p/libmtp/feature-requests/215/ */
+  { "Intel", 0x8087, "Point of View TAB-I847", 0x092a, DEVICE_FLAGS_ANDROID_BUGS },
+
   { "Intel", 0x8087, "Xolo 900/AZ210A", 0x09fb, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1256/ */
   { "Intel", 0x8087, "Noblex T7A21", 0x0a16, DEVICE_FLAGS_ANDROID_BUGS },
@@ -3504,12 +3510,13 @@
    * GoPro Action Cams.
    */
   { "GoPro" , 0x2672, "HERO3+ Black", 0x0011, DEVICE_FLAG_NONE },
-  { "GoPro" , 0x2672, "HERO", 0x000c, DEVICE_FLAG_NONE },  
+  { "GoPro" , 0x2672, "HERO", 0x000c, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO4 Silver", 0x000d, DEVICE_FLAG_NONE },
   { "Gopro" , 0x2672, "HERO4 Black", 0x000e, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO4 Session", 0x000f, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO+", 0x0021, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO5 Black", 0x0027, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO5 Session", 0x0029, DEVICE_FLAG_NONE },
 #endif
 
   /* https://sourceforge.net/p/libmtp/bugs/1490/ */
