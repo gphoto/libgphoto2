@@ -168,7 +168,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	sprintf (summary->text, _(
 		"Pentax K DSLR capture driver.\n"
 		"Using code from pktriggercord by Andras Salamon.\n"
-		"Collected Statatus Information:\n%s"
+		"Collected Status Information:\n%s"
 	), statusinfo);
 	return GP_OK;
 }
@@ -212,6 +212,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type imagetype, Came
 	uint8_t			buf[65536];
 	uint32_t		current;
 
+	gp_log(GP_LOG_DEBUG, "pentax", "imageformat %d\n", status->image_format);
 	switch (status->image_format) {
 	case PSLR_IMAGE_FORMAT_JPEG:
 		imagetype = status->jpeg_quality + 1;
@@ -420,6 +421,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		path = malloc(sizeof(CameraFilePath));
 		strcpy (path->folder, "/");
+		gp_log (GP_LOG_ERROR, "pentax", "wait_for_event: imageformat %d", status.image_format);
 		switch (status.image_format) {
 		case PSLR_IMAGE_FORMAT_JPEG:
 			sprintf (path->name, "capt%04d.jpg", capcnt++);
