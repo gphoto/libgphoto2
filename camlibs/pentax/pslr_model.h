@@ -80,7 +80,7 @@ typedef struct {
     uint32_t custom_ev_steps;
     uint32_t custom_sensitivity_steps;
     uint32_t exposure_mode;
-    uint32_t exposure_submode;
+    uint32_t scene_mode;
     uint32_t user_mode_flag;
     uint32_t ae_metering_mode;
     uint32_t af_mode;
@@ -162,5 +162,6 @@ typedef int32_t (*get_int32_func)(uint8_t *buf);
 char *shexdump(uint8_t *buf, uint32_t bufLen);
 void hexdump(uint8_t *buf, uint32_t bufLen);
 void hexdump_debug(uint8_t *buf, uint32_t bufLen);
+const char* int_to_binary( uint16_t x );
 
 #endif

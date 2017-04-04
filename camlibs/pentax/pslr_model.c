@@ -117,7 +117,7 @@ void set_uint32_be(uint32_t v, uint8_t *buf) {
 }
 
 char *shexdump(uint8_t *buf, uint32_t bufLen) {
-    char *ret = malloc(2000);
+    char *ret = malloc(4*bufLen);
     uint32_t i;
     sprintf(ret,"%s","");
     for (i = 0; i < bufLen; i++) {
@@ -149,6 +149,21 @@ void hexdump_debug(uint8_t *buf, uint32_t bufLen) {
     DPRINT("%s",dmp);
     free(dmp);
 }
+
+
+// based on http://stackoverflow.com/a/657202/21348
+
+const char* int_to_binary( uint16_t x ) {
+    static char b[sizeof(uint16_t)*8+1] = {0};
+    int y;
+    long long z;
+    for (z=(1LL<<sizeof(uint16_t)*8)-1,y=0; z>0; z>>=1,y++) {
+        b[y] = ( ((x & z) == z) ? '1' : '0');
+    }
+    b[y] = 0;
+    return b;
+}
+
 
 int _get_user_jpeg_stars( ipslr_model_info_t *model, int hwqual ) {
     if ( model->id == 0x12f71 ) {
@@ -348,7 +363,7 @@ void ipslr_status_parse_common(ipslr_handle_t *p, pslr_status *status, int shift
     status->custom_ev_steps = (*get_uint32_func_ptr)(&buf[0xA4 + shift]);
     status->custom_sensitivity_steps = (*get_uint32_func_ptr)(&buf[0xa8 + shift]);
     status->exposure_mode = (*get_uint32_func_ptr)(&buf[0xb4 + shift]);
-    status->exposure_submode = (*get_uint32_func_ptr)(&buf[0xb8 + shift]);
+    status->scene_mode = (*get_uint32_func_ptr)(&buf[0xb8 + shift]);
     status->ae_metering_mode = (*get_uint32_func_ptr)(&buf[0xbc + shift]); // same as cc
     status->af_mode = (*get_uint32_func_ptr)(&buf[0xC0 + shift]);
     status->af_point_select = (*get_uint32_func_ptr)(&buf[0xc4 + shift]);
@@ -616,7 +631,11 @@ void ipslr_status_parse_k70(ipslr_handle_t *p, pslr_status *status) {
     status->lens_max_aperture.denom = get_uint32_le(&buf[0x154]);
     status->manual_mode_ev = get_uint32_le(&buf[0x160]); // ?
     status->focused_af_point = get_uint32_le(&buf[0x16c]); // ?
-    // battery fields?
+
+    status->battery_1 = get_uint32_le(&buf[0x174]);
+    status->battery_2 = get_uint32_le(&buf[0x178]);
+    status->battery_3 = 0;
+    status->battery_4 = 0;
 
     // selected_af_point is invalid
     status->selected_af_point = 0;
@@ -703,7 +722,7 @@ ipslr_model_info_t camera_models[] = {
     { 0x12fb6, "K-50",        0, 1, 0, 452,  4, {16, 12, 8, 5}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS, 1, 11, ipslr_status_parse_k50   },
     { 0x12fc0, "K-3"        , 0, 1, 1, 452,  4, {24, 14, 6, 2}, 9, 8000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS, 1, 27, ipslr_status_parse_k3    },
     { 0x1309c, "K-3II"      , 0, 1, 1, 452,  4, {24, 14, 6, 2}, 9, 8000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS, 1, 27, ipslr_status_parse_k3    },
-    { 0x12fca, "K-500",       0, 1, 0, 452,  3, {16, 12, 8, 5}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_RADIANT,       1, 11, ipslr_status_parse_k500  },
+    { 0x12fca, "K-500",       0, 1, 0, 452,  3, {16, 12, 8, 5}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, 1, 11, ipslr_status_parse_k500  },
     // only limited support from here
     { 0x12994, "*ist D",      1, 1, 0, 0,   3, {6, 4, 2}, 3, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_NONE  , 0, 11, NULL}, // buffersize: 264
     { 0x12b60, "*ist DS2",    1, 1, 0, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, 0, 11, NULL},
@@ -712,20 +731,20 @@ ipslr_model_info_t camera_models[] = {
     { 0x12b9d, "K110D",       0, 1, 0, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, 0, 11, NULL},
     { 0x12b9c, "K100D",       1, 1, 0, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, 0, 11, NULL},
     { 0x12ba2, "K100D Super", 1, 1, 0, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, 0, 11, NULL},
-    { 0x1301a, "K-S1",        0, 1, 1, 452,  3, {20, 12, 6, 2}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS, 1, 11, ipslr_status_parse_ks1   },
-    { 0x13024, "K-S2",        0, 1, 1, 452,  3, {20, 12, 6, 2}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS, 1, 11, ipslr_status_parse_k3    },
-    { 0x13092, "K-1",         0, 1, 1, 456,  3, {36, 22, 12, 2}, 9, 8000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_RADIANT, 1, 33, ipslr_status_parse_k1      },
-    { 0x13222, "K-70",        0, 1, 1, 456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_RADIANT, 1, 11, ipslr_status_parse_k70 }
+    { 0x1301a, "K-S1",        0, 1, 1, 452,  3, {20, 12, 6, 2}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, 1, 11, ipslr_status_parse_ks1   },
+    { 0x13024, "K-S2",        0, 1, 1, 452,  3, {20, 12, 6, 2}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, 1, 11, ipslr_status_parse_k3    },
+    { 0x13092, "K-1",         0, 1, 1, 456,  3, {36, 22, 12, 2}, 9, 8000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_FLAT, 1, 33, ipslr_status_parse_k1      },
+    { 0x13222, "K-70",        0, 1, 1, 456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_AUTO, 1, 11, ipslr_status_parse_k70 }
 };
 
 ipslr_model_info_t *find_model_by_id( uint32_t id ) {
     int i;
     for ( i = 0; i<sizeof (camera_models) / sizeof (camera_models[0]); i++) {
         if ( camera_models[i].id == id ) {
-            DPRINT("found %d\n",i);
+            //    DPRINT("found %d\n",i);
             return &camera_models[i];
         }
     }
-    DPRINT("not found\n");
+    //    DPRINT("not found\n");
     return NULL;
 }

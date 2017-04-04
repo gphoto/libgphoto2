@@ -188,22 +188,28 @@ typedef enum {
 
 /* a different write_args function needs to be done with slightly changed */
 /* command sequence. Original function was ipslr_write_args(). */
-/*static int ipslr_write_args_special(ipslr_handle_t *p, int n, ...) {
-    va_list ap;
-    int args[n];
-    int i;
-    for( i = 0; i < 4; ++i ) {
-    args[i] = 0;
-    }
-    va_start(ap, n);
-    for (i = 0; i < n; i++) {
-    args[i] = va_arg(ap, int);
-    }
-    va_end(ap);
-    return _ipslr_write_args(4, p, n, args);
-    }*/
 
-/* Commands in form 23 XX YY. I know it si stupid, but ipslr_cmd functions  */
+int pslr_get_buffer_status(pslr_handle_t *h, uint32_t *x, uint32_t *y) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    DPRINT("[C]\t\tipslr_get_buffer_status()\n");
+    uint8_t buf[800];
+    int n;
+
+    CHECK(command(p->fd, 0x02, 0x00, 0));
+    n = get_result(p->fd);
+    DPRINT("[C]\t\tipslr_get_buffer_status() bytes: %d\n",n);
+    if (n!= 8) {
+        return PSLR_READ_ERROR;
+    }
+    CHECK(read_result(p->fd, buf, n));
+    int i;
+    for (i=0; i<n; ++i) {
+        DPRINT("[C]\t\tbuf[%d]=%02x\n",i,buf[i]);
+    }
+    return PSLR_OK;
+}
+
+/* Commands in form 23 XX YY. I know it is stupid, but ipslr_cmd functions  */
 /* are sooooo handy.                                                        */
 static int ipslr_cmd_23_XX(ipslr_handle_t *p, char XX, char YY, uint32_t mode) {
     DPRINT("[C]\t\tipslr_cmd_23_XX(%x, %x, mode=%x)\n", XX, YY, mode);
@@ -469,6 +475,10 @@ int pslr_get_status(pslr_handle_t h, pslr_status *ps) {
     memset( ps, 0, sizeof( pslr_status ));
     CHECK(ipslr_status_full(p, &p->status));
     memcpy(ps, &p->status, sizeof (pslr_status));
+
+//    uint32_t x, y;
+//    pslr_get_buffer_status(h, &x, &y);
+
     return PSLR_OK;
 }
 
@@ -532,7 +542,8 @@ char *collect_status_info( pslr_handle_t h, pslr_status status ) {
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ec", format_rational( status.ec, "%.2f" ) );
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "custom ev steps", get_pslr_custom_ev_steps_str(status.custom_ev_steps));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "custom sensitivity steps", status.custom_sensitivity_steps);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %d (%s)\n", "exposure mode", status.exposure_mode, get_pslr_exposure_submode_str(status.exposure_submode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "exposure mode", status.exposure_mode);
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "scene mode", get_pslr_scene_mode_str(status.scene_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "user mode flag", status.user_mode_flag);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ae metering mode", get_pslr_ae_metering_str(status.ae_metering_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af mode", get_pslr_af_mode_str(status.af_mode));
@@ -552,6 +563,7 @@ char *collect_status_info( pslr_handle_t h, pslr_status status ) {
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %.2f\n", "manual mode ev", (1.0 * status.manual_mode_ev / 10));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens", get_lens_name(status.lens_id1, status.lens_id2));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %.2fV %.2fV %.2fV %.2fV\n", "battery", 0.01 * status.battery_1, 0.01 * status.battery_2, 0.01 * status.battery_3, 0.01 * status.battery_4);
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "buffer mask", int_to_binary(status.bufmask));
     return strbuffer;
 }
 
@@ -1351,6 +1363,104 @@ static int ipslr_identify(ipslr_handle_t *p) {
     return PSLR_OK;
 }
 
+int pslr_read_datetime(pslr_handle_t *h, int *year, int *month, int *day, int *hour, int *min, int *sec) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    DPRINT("[C]\t\tipslr_read_datetime()\n");
+    uint8_t idbuf[800];
+    int n;
+
+    CHECK(command(p->fd, 0x20, 0x06, 0));
+    n = get_result(p->fd);
+    DPRINT("[C]\t\tipslr_read_datetime() bytes: %d\n",n);
+    if (n!= 24) {
+        return PSLR_READ_ERROR;
+    }
+    CHECK(read_result(p->fd, idbuf, n));
+    get_uint32_func get_uint32_func_ptr;
+
+    if (p->model->is_little_endian) {
+        get_uint32_func_ptr = get_uint32_le;
+    } else {
+        get_uint32_func_ptr = get_uint32_be;
+    }
+    *year = (*get_uint32_func_ptr)(idbuf);
+    *month = (*get_uint32_func_ptr)(idbuf+4);
+    *day = (*get_uint32_func_ptr)(idbuf+8);
+    *hour = (*get_uint32_func_ptr)(idbuf+12);
+    *min = (*get_uint32_func_ptr)(idbuf+16);
+    *sec = (*get_uint32_func_ptr)(idbuf+20);
+    return PSLR_OK;
+}
+
+int pslr_read_dspinfo(pslr_handle_t *h, char* firmware) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    DPRINT("[C]\t\tipslr_read_dspinfo()\n");
+    uint8_t buf[4];
+    int n;
+
+    CHECK(command(p->fd, 0x01, 0x01, 0));
+    n = get_result(p->fd);
+    DPRINT("[C]\t\tipslr_read_dspinfo() bytes: %d\n",n);
+    if (n!= 4) {
+        return PSLR_READ_ERROR;
+    }
+    CHECK(read_result(p->fd, buf, n));
+    if (p->model->is_little_endian) {
+        snprintf( firmware, 16, "%d.%02d.%02d.%02d", buf[3], buf[2], buf[1], buf[0]);
+    } else {
+        snprintf( firmware, 16, "%d.%02d.%02d.%02d", buf[0], buf[1], buf[2], buf[3]);
+    }
+    return PSLR_OK;
+}
+
+int pslr_read_setting(pslr_handle_t *h, int offset, uint32_t *value) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    DPRINT("[C]\t\tipslr_read_setting(%d)\n", offset);
+    uint8_t buf[4];
+    int n;
+
+    CHECK(ipslr_write_args(p, 1, offset));
+    CHECK(command(p->fd, 0x20, 0x09, 4));
+    n = get_result(p->fd);
+    DPRINT("[C]\t\tipslr_read_setting() bytes: %d\n",n);
+    if (n!= 4) {
+        return PSLR_READ_ERROR;
+    }
+    CHECK(read_result(p->fd, buf, n));
+    get_uint32_func get_uint32_func_ptr;
+    if (p->model->is_little_endian) {
+        get_uint32_func_ptr = get_uint32_le;
+    } else {
+        get_uint32_func_ptr = get_uint32_be;
+    }
+    *value = (*get_uint32_func_ptr)(buf);
+    return PSLR_OK;
+}
+
+int pslr_write_setting(pslr_handle_t *h, int offset, uint32_t value) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    DPRINT("[C]\t\tipslr_write_setting(%d)=%d\n", offset, value);
+    CHECK(ipslr_cmd_00_09(p, 1));
+    CHECK(ipslr_write_args(p, 2, offset, value));
+    CHECK(command(p->fd, 0x20, 0x08, 8));
+    CHECK(ipslr_cmd_00_09(p, 2));
+    return PSLR_OK;
+}
+
+int pslr_read_settings(pslr_handle_t *h, int offset, int length, uint8_t *buf) {
+    int index=offset;
+    uint32_t value;
+    int ret;
+    while (index<offset+length) {
+        if ( (ret = pslr_read_setting(h, index, &value)) != PSLR_OK ) {
+            return ret;
+        }
+        buf[index] = value;
+        ++index;
+    }
+    return PSLR_OK;
+}
+
 static int _ipslr_write_args(uint8_t cmd_2, ipslr_handle_t *p, int n, ...) {
     va_list ap;
     uint8_t cmd[8] = {0xf0, 0x4f, cmd_2, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -1450,16 +1560,14 @@ static int get_status(FDTYPE fd) {
     memset(statusbuf,0,8);
 
     while (1) {
-        //usleep(POLL_INTERVAL);
         CHECK(read_status(fd, statusbuf));
-        if ((statusbuf[7] & 0x01) == 0) {
+        DPRINT("[R]\t\t\t\t => ERROR: 0x%02X\n", statusbuf[7]);
+        if (statusbuf[7] != 0x01) {
             break;
         }
-        //DPRINT("Waiting for ready - ");
-        DPRINT("[R]\t\t\t\t => ERROR: 0x%02X\n", statusbuf[7]);
         usleep(POLL_INTERVAL);
     }
-    if ((statusbuf[7] & 0xff) != 0) {
+    if (statusbuf[7] != 0) {
         DPRINT("\tERROR: 0x%x\n", statusbuf[7]);
     }
     return statusbuf[7];

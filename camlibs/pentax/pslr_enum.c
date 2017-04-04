@@ -37,6 +37,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 const char* pslr_color_space_str[PSLR_COLOR_SPACE_MAX] = {
     "sRGB",
@@ -95,7 +96,10 @@ const char* pslr_jpeg_image_tone_str[PSLR_JPEG_IMAGE_TONE_MAX] = {
     "Muted",
     "ReversalFilm",
     "BleachBypass",
-    "Radiant"
+    "Radiant",
+    "CrossProcessing",
+    "Flat",
+    "Auto"
 };
 
 const char* pslr_white_balance_mode_str[PSLR_WHITE_BALANCE_MODE_MAX] = {
@@ -108,14 +112,15 @@ const char* pslr_white_balance_mode_str[PSLR_WHITE_BALANCE_MODE_MAX] = {
     "Fluorescent_W",
     "Tungsten",
     "Flash",
-    "Manual",
-    "0x0A", // ??
-    "0x0B", // ??
-    "0x0C", // ?? exif: set color temp1
-    "0x0D", // ?? exif: set color temp2
-    "0xOE", // ?? exif: set color temp3
+    "Manual", // sometimes called Manual1
+    "Manual2",
+    "Manual3",
+    "Kelvin1",
+    "Kelvin2",
+    "Kelvin3",
     "Fluorescent_L",
-    "CTE"
+    "CTE",
+    "MultiAuto"
 };
 
 const char* pslr_custom_ev_steps_str[PSLR_CUSTOM_EV_STEPS_MAX] = {
@@ -134,7 +139,7 @@ const char* pslr_raw_format_str[PSLR_RAW_FORMAT_MAX] = {
     "DNG"
 };
 
-const char* pslr_exposure_submode_str[PSLR_EXPOSURE_SUBMODE_MAX] = {
+const char* pslr_scene_mode_str[PSLR_SCENE_MODE_MAX] = {
     "NONE",
     "HISPEED",
     "DOF",
@@ -145,7 +150,7 @@ const char* pslr_exposure_submode_str[PSLR_EXPOSURE_SUBMODE_MAX] = {
     "MACRO",
     "SPORT",
     "NIGHTSCENEPORTRAIT",
-    "NOFLASH",
+    "NOFLASH",//10
     "NIGHTSCENE",
     "SURFANDSNOW",
     "TEXT",
@@ -154,10 +159,17 @@ const char* pslr_exposure_submode_str[PSLR_EXPOSURE_SUBMODE_MAX] = {
     "PET",
     "CANDLELIGHT",
     "MUSEUM",
+    "19", // ?
     "FOOD",
     "STAGE",
     "NIGHTSNAP",
-    "SWALLOWDOF"
+    "SWALLOWDOF",
+    "24", // ?
+    "NIGHTSCENEHDR",
+    "BLUESKY",
+    "FOREST",
+    "28", // ?
+    "BLACKLIGHTSILHOUETTE"
 };
 
 
@@ -199,12 +211,23 @@ int find_in_array( const char** array, int length, char* str ) {
     return found_index;
 }
 
+const char *get_pslr_str( const char** array, int length, int value ) {
+    if (value >=0 && value < length) {
+        return array[value];
+    } else {
+        char *ret = malloc(128);
+        sprintf (ret, "Unknown value: %d", value);
+        return ret;
+    }
+}
+
+
 pslr_color_space_t get_pslr_color_space( char *str ) {
     return find_in_array( pslr_color_space_str, sizeof(pslr_color_space_str)/sizeof(pslr_color_space_str[0]),str);
 }
 
 const char *get_pslr_color_space_str( pslr_color_space_t value ) {
-    return pslr_color_space_str[value];
+    return get_pslr_str( pslr_color_space_str, sizeof(pslr_color_space_str)/sizeof(pslr_color_space_str[0]),value);
 }
 
 pslr_af_mode_t get_pslr_af_mode( char *str ) {
@@ -212,7 +235,7 @@ pslr_af_mode_t get_pslr_af_mode( char *str ) {
 }
 
 const char *get_pslr_af_mode_str( pslr_af_mode_t value ) {
-    return pslr_af_mode_str[value];
+    return get_pslr_str( pslr_af_mode_str, sizeof(pslr_af_mode_str)/sizeof(pslr_af_mode_str[0]),value);
 }
 
 pslr_ae_metering_t get_pslr_ae_metering( char *str ) {
@@ -220,7 +243,7 @@ pslr_ae_metering_t get_pslr_ae_metering( char *str ) {
 }
 
 const char *get_pslr_ae_metering_str( pslr_ae_metering_t value ) {
-    return pslr_ae_metering_str[value];
+    return get_pslr_str( pslr_ae_metering_str, sizeof(pslr_ae_metering_str)/sizeof(pslr_ae_metering_str[0]),value);
 }
 
 pslr_flash_mode_t get_pslr_flash_mode( char *str ) {
@@ -228,7 +251,7 @@ pslr_flash_mode_t get_pslr_flash_mode( char *str ) {
 }
 
 const char *get_pslr_flash_mode_str( pslr_flash_mode_t value ) {
-    return pslr_flash_mode_str[value];
+    return get_pslr_str( pslr_flash_mode_str, sizeof(pslr_flash_mode_str)/sizeof(pslr_flash_mode_str[0]),value);
 }
 
 pslr_drive_mode_t get_pslr_drive_mode( char *str ) {
@@ -236,7 +259,7 @@ pslr_drive_mode_t get_pslr_drive_mode( char *str ) {
 }
 
 const char *get_pslr_drive_mode_str( pslr_drive_mode_t value ) {
-    return pslr_drive_mode_str[value];
+    return get_pslr_str( pslr_drive_mode_str, sizeof(pslr_drive_mode_str)/sizeof(pslr_drive_mode_str[0]),value);
 }
 
 pslr_af_point_sel_t get_pslr_af_point_sel( char *str ) {
@@ -244,7 +267,7 @@ pslr_af_point_sel_t get_pslr_af_point_sel( char *str ) {
 }
 
 const char *get_pslr_af_point_sel_str( pslr_af_point_sel_t value ) {
-    return pslr_af_point_sel_str[value];
+    return get_pslr_str( pslr_af_point_sel_str, sizeof(pslr_af_point_sel_str)/sizeof(pslr_af_point_sel_str[0]),value);
 }
 
 pslr_jpeg_image_tone_t get_pslr_jpeg_image_tone( char *str ) {
@@ -252,7 +275,7 @@ pslr_jpeg_image_tone_t get_pslr_jpeg_image_tone( char *str ) {
 }
 
 const char *get_pslr_jpeg_image_tone_str( pslr_jpeg_image_tone_t value ) {
-    return pslr_jpeg_image_tone_str[value];
+    return get_pslr_str( pslr_jpeg_image_tone_str, sizeof(pslr_jpeg_image_tone_str)/sizeof(pslr_jpeg_image_tone_str[0]),value);
 }
 
 pslr_white_balance_mode_t get_pslr_white_balance_mode( char *str ) {
@@ -260,21 +283,21 @@ pslr_white_balance_mode_t get_pslr_white_balance_mode( char *str ) {
 }
 
 const char *get_pslr_white_balance_mode_str( pslr_white_balance_mode_t value ) {
-    return pslr_white_balance_mode_str[value];
+    return get_pslr_str( pslr_white_balance_mode_str, sizeof(pslr_white_balance_mode_str)/sizeof(pslr_white_balance_mode_str[0]),value);
 }
 
 const char *get_pslr_custom_ev_steps_str( pslr_custom_ev_steps_t value ) {
-    return pslr_custom_ev_steps_str[value];
+    return get_pslr_str( pslr_custom_ev_steps_str, sizeof(pslr_custom_ev_steps_str)/sizeof(pslr_custom_ev_steps_str[0]),value);
 }
 
 const char *get_pslr_image_format_str( pslr_image_format_t value ) {
-    return pslr_image_format_str[value];
+    return get_pslr_str( pslr_image_format_str, sizeof(pslr_image_format_str)/sizeof(pslr_image_format_str[0]),value);
 }
 
 const char *get_pslr_raw_format_str( pslr_raw_format_t value ) {
-    return pslr_raw_format_str[value];
+    return get_pslr_str( pslr_raw_format_str, sizeof(pslr_raw_format_str)/sizeof(pslr_raw_format_str[0]),value);
 }
 
-const char *get_pslr_exposure_submode_str( pslr_exposure_submode_t value ) {
-    return pslr_exposure_submode_str[value];
+const char *get_pslr_scene_mode_str( pslr_scene_mode_t value ) {
+    return get_pslr_str( pslr_scene_mode_str, sizeof(pslr_scene_mode_str)/sizeof(pslr_scene_mode_str[0]),value);
 }
