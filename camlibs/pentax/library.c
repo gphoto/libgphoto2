@@ -266,10 +266,10 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int			ret, length;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
-	int			bufno;
-	const char 		*mime;
-	int 			buftype1 = -1, buftype2 = -1;
-	uint32_t		jpegres1 = 0, jpegres2 = 0;
+	int			bufno, i;
+	const char		*mimes[2];
+	int			buftypes[2], jpegres[2], nrofdownloads = 1;
+	char			*fns[2];
 
 	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
 
@@ -281,26 +281,34 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	switch (status.image_format) {
 	case PSLR_IMAGE_FORMAT_JPEG:
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
-		mime = GP_MIME_JPEG;
-		buftype1 = status.jpeg_quality + 1;
-		jpegres1 = status.jpeg_resolution;
+		mimes[0] = GP_MIME_JPEG;
+		buftypes[0] = status.jpeg_quality + 1;
+		jpegres[0] = status.jpeg_resolution;
+		fns[0] = strdup(path->name);
 		break;
 	case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
-		buftype2 = status.jpeg_quality + 1;
-		jpegres2 = status.jpeg_resolution;
+		buftypes[1] = status.jpeg_quality + 1;
+		jpegres[1] = status.jpeg_resolution;
+		mimes[1] = GP_MIME_JPEG;
+		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		fns[1] = strdup(path->name);
+		camera->pl->lastfn = strdup (fns[1]);
+		nrofdownloads = 2;
 		/* FALLTHROUGH */
 	case PSLR_IMAGE_FORMAT_RAW:
-		jpegres1 = 0;
+		jpegres[0] = 0;
 		switch (status.raw_format) {
 		case PSLR_RAW_FORMAT_PEF:
 			sprintf (path->name, "capt%04d.pef", capcnt++);
-			mime = GP_MIME_RAW;
-			buftype1 = PSLR_BUF_PEF;
+			fns[0] = strdup (path->name);
+			mimes[0] = GP_MIME_RAW;
+			buftypes[0] = PSLR_BUF_PEF;
 			break;
 		case PSLR_RAW_FORMAT_DNG:
 			sprintf (path->name, "capt%04d.dng", capcnt++);
-			mime = "image/x-adobe-dng";
-			buftype1 = PSLR_BUF_DNG;
+			fns[0] = strdup (path->name);
+			mimes[0] = "image/x-adobe-dng";
+			buftypes[0] = PSLR_BUF_DNG;
 			break;
 		default:
 			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
@@ -311,12 +319,6 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x (raw=0x%x)", status.image_format, status.raw_format);
 		return GP_ERROR;
 	}
-
-	ret = gp_file_new(&file);
-	if (ret!=GP_OK) return ret;
-	gp_file_set_mtime (file, time(NULL));
-	gp_file_set_mime_type (file, mime);
-
 	/* get status again */
 	pslr_get_status (p, &status);
 
@@ -329,48 +331,48 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			break;
 	/* we will have found one if bufmask != 0 */
 
-	if (buftype2 != -1) {
+	for (i = 0; i<nrofdownloads; i++ ) {
+		ret = gp_file_new(&file);
+		if (ret!=GP_OK) return ret;
+		gp_file_set_mtime (file, time(NULL));
+		gp_file_set_mime_type (file, mimes[i]);
+
 		while (1) {
-			length = save_buffer( p, bufno, buftype2, jpegres2, file);
+			length = save_buffer( p, bufno, buftypes[i], jpegres[i], file);
 			if (length == GP_ERROR_NOT_SUPPORTED) return length;
 			if (length >= GP_OK)
 				break;
 			usleep(100000);
 		}
+
+		gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
+		ret = gp_filesystem_append(camera->fs, path->folder, fns[i], context);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
+		ret = gp_filesystem_set_file_noop(camera->fs, path->folder, fns[i], GP_FILE_TYPE_NORMAL, file, context);
+		if (ret != GP_OK) {
+			gp_file_free (file);
+			return ret;
+		}
+		/* We have now handed over the file, disclaim responsibility by unref. */
+		gp_file_unref (file);
+		/* we also get the fs info for free, so just set it */
+		info.file.fields = GP_FILE_INFO_TYPE |
+				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+		strcpy (info.file.type, GP_MIME_JPEG);
+		info.file.size		= length;
+		info.file.mtime		= time(NULL);
+
+		info.preview.fields = 0;
+		gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
+		ret = gp_filesystem_set_info_noop(camera->fs, path->folder, fns[i], info, context);
+		free (fns[i]);
 	}
-	while (1) {
-		length = save_buffer( p, bufno, buftype1, jpegres1, file);
-		if (length == GP_ERROR_NOT_SUPPORTED) return length;
-		if (length >= GP_OK)
-			break;
-		usleep(100000);
-	}
+
 	pslr_delete_buffer(p, bufno );
-
-	gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
-	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-	if (ret != GP_OK) {
-		gp_file_free (file);
-		return ret;
-	}
-	gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
-	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-	if (ret != GP_OK) {
-		gp_file_free (file);
-		return ret;
-	}
-	/* We have now handed over the file, disclaim responsibility by unref. */
-	gp_file_unref (file);
-	/* we also get the fs info for free, so just set it */
-	info.file.fields = GP_FILE_INFO_TYPE |
-			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-	strcpy (info.file.type, GP_MIME_JPEG);
-	info.file.size		= length;
-	info.file.mtime		= time(NULL);
-
-	info.preview.fields = 0;
-	gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
-	ret = gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 	return ret;
 }
 
