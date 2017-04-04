@@ -1,4 +1,4 @@
-/* Pentax K series library
+ /* Pentax K series library
  *
  * Copyright (c) 2011,2017 Marcus Meissner <meissner@suse.de>
  *
@@ -52,6 +52,11 @@
 #endif
 
 bool debug = true;
+
+struct _CameraPrivateLibrary {
+	ipslr_handle_t	pslr;
+	char		*lastfn;
+};
 
 int
 camera_id (CameraText *id)
@@ -161,9 +166,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	char		*statusinfo;
 	pslr_status	status;
 
-	pslr_get_status (camera->pl, &status);
+	pslr_get_status (&camera->pl->pslr, &status);
 
-	statusinfo = collect_status_info( camera->pl, status );
+	statusinfo = collect_status_info( &camera->pl->pslr, status );
 
 	sprintf (summary->text, _(
 		"Pentax K DSLR capture driver.\n"
@@ -206,33 +211,13 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 static int
-save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type imagetype, CameraFile *file, pslr_status *status)
+save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type buftype, uint32_t jpegres, CameraFile *file)
 {
-	int			image_resolution;
 	uint8_t			buf[65536];
 	uint32_t		current;
 
-	gp_log(GP_LOG_DEBUG, "pentax", "imageformat %d\n", status->image_format);
-	switch (status->image_format) {
-	case PSLR_IMAGE_FORMAT_JPEG:
-		imagetype = status->jpeg_quality + 1;
-		image_resolution = status->jpeg_resolution;
-		break;
-	case PSLR_IMAGE_FORMAT_RAW:
-		imagetype = 0;
-		image_resolution = 0;
-		break;
-	case PSLR_IMAGE_FORMAT_RAW_PLUS:
-		imagetype = status->jpeg_quality + 1;
-		image_resolution = status->jpeg_resolution;
-		break;
-	default:
-		gp_log (GP_LOG_ERROR, "pentax", "Sorry, only JPEG and PEF RAW files are supported\n");
-		return GP_ERROR;
-	}
-
-	gp_log(GP_LOG_DEBUG, "pentax", "get buffer %d type %d res %d\n", bufno, imagetype, image_resolution);
-	if ( pslr_buffer_open(camhandle, bufno, imagetype, status->jpeg_resolution) != PSLR_OK)
+	gp_log(GP_LOG_DEBUG, "pentax", "save_buffer: get buffer %d type %d res %d\n", bufno, buftype, jpegres);
+	if ( pslr_buffer_open(camhandle, bufno, buftype, jpegres) != PSLR_OK)
 		return GP_ERROR;
 
 	current = 0;
@@ -242,8 +227,7 @@ save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type imagetype, Came
 		if (bytes == 0)
 			break;
 		// PEF file got from K100D Super have broken header, WTF?
-		if (current == 0 && status->image_format == PSLR_IMAGE_FORMAT_RAW &&
-				status->raw_format == PSLR_RAW_FORMAT_PEF) {
+		if (current == 0 && (buftype == PSLR_BUF_PEF)) {
 			const unsigned char correct_header[92] =
 			{
 				0x4d, 0x4d, 0x00, 0x2a, 0x00, 0x00, 0x00, 0x08,
@@ -277,14 +261,15 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	pslr_handle_t		p = camera->pl;
+	pslr_handle_t		p = &camera->pl->pslr;
 	pslr_status		status;
 	int			ret, length;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
 	int			bufno;
 	const char 		*mime;
-	pslr_buffer_type	buftype;
+	int 			buftype1 = -1, buftype2 = -1;
+	uint32_t		jpegres1 = 0, jpegres2 = 0;
 
 	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
 
@@ -297,20 +282,25 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	case PSLR_IMAGE_FORMAT_JPEG:
 		sprintf (path->name, "capt%04d.jpg", capcnt++);
 		mime = GP_MIME_JPEG;
-		buftype = status.jpeg_quality + 1;
+		buftype1 = status.jpeg_quality + 1;
+		jpegres1 = status.jpeg_resolution;
 		break;
 	case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
+		buftype2 = status.jpeg_quality + 1;
+		jpegres2 = status.jpeg_resolution;
+		/* FALLTHROUGH */
 	case PSLR_IMAGE_FORMAT_RAW:
+		jpegres1 = 0;
 		switch (status.raw_format) {
 		case PSLR_RAW_FORMAT_PEF:
 			sprintf (path->name, "capt%04d.pef", capcnt++);
 			mime = GP_MIME_RAW;
-			buftype = PSLR_BUF_PEF;
+			buftype1 = PSLR_BUF_PEF;
 			break;
 		case PSLR_RAW_FORMAT_DNG:
 			sprintf (path->name, "capt%04d.dng", capcnt++);
 			mime = "image/x-adobe-dng";
-			buftype = PSLR_BUF_DNG;
+			buftype1 = PSLR_BUF_DNG;
 			break;
 		default:
 			gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
@@ -339,8 +329,17 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 			break;
 	/* we will have found one if bufmask != 0 */
 
+	if (buftype2 != -1) {
+		while (1) {
+			length = save_buffer( p, bufno, buftype2, jpegres2, file);
+			if (length == GP_ERROR_NOT_SUPPORTED) return length;
+			if (length >= GP_OK)
+				break;
+			usleep(100000);
+		}
+	}
 	while (1) {
-		length = save_buffer( p, bufno, buftype, file, &status);
+		length = save_buffer( p, bufno, buftype1, jpegres1, file);
 		if (length == GP_ERROR_NOT_SUPPORTED) return length;
 		if (length >= GP_OK)
 			break;
@@ -390,7 +389,7 @@ camera_wait_for_event (Camera *camera, int timeout,
                        GPContext *context) {
         struct timeval  event_start;
 	CameraFilePath	*path;
-	pslr_handle_t	p = camera->pl;
+	pslr_handle_t	p = &camera->pl->pslr;
 	int		ret, length;
 	CameraFile	*file = NULL;
 	CameraFileInfo	info;
@@ -400,14 +399,26 @@ camera_wait_for_event (Camera *camera, int timeout,
 	*eventtype = GP_EVENT_TIMEOUT;
 	*eventdata = NULL;
 
+	if (camera->pl->lastfn) {
+		path = malloc(sizeof(CameraFilePath));
+		strcpy (path->folder, "/");
+		strcpy (path->name, camera->pl->lastfn);
+		free (camera->pl->lastfn);
+		camera->pl->lastfn = NULL;
+		*eventtype = GP_EVENT_FILE_ADDED;
+		*eventdata = path;
+		return GP_OK;
+	}
+
 	gettimeofday (&event_start, 0);
 	while (1) {
 		pslr_status	status;
-		int 		bufno;
-		const char	*mime;
-		pslr_buffer_type	buftype;
+		int 		i, bufno;
+		const char	*mimes[2];
+		int		buftypes[2], jpegres[2], nrofdownloads = 1;
+		char		*fns[2];
 
-		if (PSLR_OK != pslr_get_status (camera->pl, &status))
+		if (PSLR_OK != pslr_get_status (&camera->pl->pslr, &status))
 			break;
 
 		if (status.bufmask == 0)
@@ -421,25 +432,39 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 		path = malloc(sizeof(CameraFilePath));
 		strcpy (path->folder, "/");
-		gp_log (GP_LOG_ERROR, "pentax", "wait_for_event: imageformat %d", status.image_format);
+		gp_log (GP_LOG_ERROR, "pentax", "wait_for_event: imageformat %d / rawformat %d", status.image_format, status.raw_format);
 		switch (status.image_format) {
 		case PSLR_IMAGE_FORMAT_JPEG:
 			sprintf (path->name, "capt%04d.jpg", capcnt++);
-			mime = GP_MIME_JPEG;
-			buftype = status.jpeg_quality + 1;
+			mimes[0] = GP_MIME_JPEG;
+			buftypes[0] = status.jpeg_quality + 1;
+			jpegres[0] = status.jpeg_resolution;
+			fns[0] = strdup (path->name);
 			break;
 		case PSLR_IMAGE_FORMAT_RAW_PLUS: /* FIXME: the same as _RAW ? */
+			mimes[1] = GP_MIME_JPEG;
+			buftypes[1] = status.jpeg_quality + 1;
+			jpegres[1] = status.jpeg_resolution;
+			nrofdownloads = 2;
+			sprintf (path->name, "capt%04d.jpg", capcnt++);
+			fns[1] = strdup (path->name);
+			/* we pass back the secondary file via the private struct, and return the first */
+			camera->pl->lastfn = strdup (fns[1]);
+			/* FALLTHROUGH */
 		case PSLR_IMAGE_FORMAT_RAW:
+			jpegres[0] = 0;
 			switch (status.raw_format) {
 			case PSLR_RAW_FORMAT_PEF:
 				sprintf (path->name, "capt%04d.pef", capcnt++);
-				mime = GP_MIME_RAW;
-				buftype = PSLR_BUF_PEF;
+				fns[0] = strdup (path->name);
+				mimes[0] = GP_MIME_RAW;
+				buftypes[0] = PSLR_BUF_PEF;
 				break;
 			case PSLR_RAW_FORMAT_DNG:
 				sprintf (path->name, "capt%04d.dng", capcnt++);
-				mime = "image/x-adobe-dng";
-				buftype = PSLR_BUF_DNG;
+				fns[0] = strdup (path->name);
+				mimes[0] = "image/x-adobe-dng";
+				buftypes[0] = PSLR_BUF_DNG;
 				break;
 			default:
 				gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
@@ -451,44 +476,48 @@ camera_wait_for_event (Camera *camera, int timeout,
 			return GP_ERROR;
 		}
 
-		ret = gp_file_new(&file);
-		if (ret!=GP_OK) return ret;
-		gp_file_set_mtime (file, time(NULL));
-		gp_file_set_mime_type (file, mime);
+		for (i = 0; i < nrofdownloads; i++) {
+			ret = gp_file_new(&file);
+			if (ret!=GP_OK) return ret;
+			gp_file_set_mtime (file, time(NULL));
+			gp_file_set_mime_type (file, mimes[i]);
 
-		while (1) {
-			length = save_buffer( p, bufno, buftype, file, &status);
-			if (length == GP_ERROR_NOT_SUPPORTED) return length;
-			if (length >= GP_OK)
-				break;
-			usleep(100000);
-		}
-		pslr_delete_buffer(p, bufno );
+			while (1) {
+				length = save_buffer( p, bufno, buftypes[i], jpegres[i], file);
+				if (length == GP_ERROR_NOT_SUPPORTED) return length;
+				if (length >= GP_OK)
+					break;
+				usleep(100000);
+			}
 
-		gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
-		ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-		if (ret != GP_OK) {
-			gp_file_free (file);
-			return ret;
-		}
-		gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
-		ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-		if (ret != GP_OK) {
-			gp_file_free (file);
-			return ret;
-		}
-		/* We have now handed over the file, disclaim responsibility by unref. */
-		gp_file_unref (file);
-		/* we also get the fs info for free, so just set it */
-		info.file.fields = GP_FILE_INFO_TYPE |
-				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-		strcpy (info.file.type, GP_MIME_JPEG);
-		info.file.size		= length;
-		info.file.mtime		= time(NULL);
 
-		info.preview.fields = 0;
-		gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
-		ret = gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+			gp_log (GP_LOG_DEBUG, "pentax", "append image to fs");
+			ret = gp_filesystem_append(camera->fs, path->folder, fns[i], context);
+			if (ret != GP_OK) {
+				gp_file_free (file);
+				return ret;
+			}
+			gp_log (GP_LOG_DEBUG, "pentax", "adding filedata to fs");
+			ret = gp_filesystem_set_file_noop(camera->fs, path->folder, fns[i], GP_FILE_TYPE_NORMAL, file, context);
+			if (ret != GP_OK) {
+				gp_file_free (file);
+				return ret;
+			}
+			/* We have now handed over the file, disclaim responsibility by unref. */
+			gp_file_unref (file);
+			/* we also get the fs info for free, so just set it */
+			info.file.fields = GP_FILE_INFO_TYPE |
+					GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+			strcpy (info.file.type, GP_MIME_JPEG);
+			info.file.size		= length;
+			info.file.mtime		= time(NULL);
+
+			info.preview.fields = 0;
+			gp_log (GP_LOG_DEBUG, "pentax", "setting fileinfo in fs");
+			ret = gp_filesystem_set_info_noop(camera->fs, path->folder, fns[i], info, context);
+			free (fns[i]);
+		}
+		pslr_delete_buffer (p, bufno);
 		*eventtype = GP_EVENT_FILE_ADDED;
 		*eventdata = path;
 		return GP_OK;
@@ -511,11 +540,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	int		*available_resolutions;
 	int		i;
 
-	pslr_get_status (camera->pl, &status);
+	pslr_get_status (&camera->pl->pslr, &status);
 
-	model = pslr_camera_name (camera->pl);
+	model = pslr_camera_name (&camera->pl->pslr);
 
-	available_resolutions = pslr_get_model_jpeg_resolutions (camera->pl);
+	available_resolutions = pslr_get_model_jpeg_resolutions (&camera->pl->pslr);
 
 	gp_log (GP_LOG_DEBUG, "pentax", "*** camera_get_config");
 
@@ -702,7 +731,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	pslr_status	status;
 	int		ret;
 
-	pslr_get_status(camera->pl, &status);
+	pslr_get_status(&camera->pl->pslr, &status);
 
 	gp_log (GP_LOG_DEBUG, "pentax", "*** camera_set_config");
 	ret = gp_widget_get_child_by_label (window, _("Image Size"), &w);
@@ -711,7 +740,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		int *valid_resolutions;
 
 	        gp_widget_set_changed (w, 0);
-		valid_resolutions = pslr_get_model_jpeg_resolutions (camera->pl);
+		valid_resolutions = pslr_get_model_jpeg_resolutions (&camera->pl->pslr);
 
 		gp_widget_get_value (w, &sval);
 		for (i = 0; i < MAX_RESOLUTION_SIZE; i++)
@@ -726,8 +755,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (resolution == -1) {
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image size %s", sval);
 		} else {
-			pslr_set_jpeg_resolution(camera->pl, resolution);
-			pslr_get_status(camera->pl, &status);
+			pslr_set_jpeg_resolution(&camera->pl->pslr, resolution);
+			pslr_get_status(&camera->pl->pslr, &status);
 		}
 	}
 
@@ -749,8 +778,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(sval,_("TAV")))	exposuremode = PSLR_EXPOSURE_MODE_TAV;
 		if (!strcmp(sval,_("X")))	exposuremode = PSLR_EXPOSURE_MODE_TAV;
 		if (exposuremode != PSLR_EXPOSURE_MODE_MAX) {
-			pslr_set_exposure_mode(camera->pl, exposuremode);
-			pslr_get_status(camera->pl, &status);
+			pslr_set_exposure_mode(&camera->pl->pslr, exposuremode);
+			pslr_get_status(&camera->pl->pslr, &status);
 		} else {
 		}
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode exposuremode %s", sval);
@@ -763,9 +792,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &iso)) {
-			/* pslr_set_iso(camera->pl, iso); */
-			pslr_set_iso(camera->pl, iso, 0, 0); /* FIXME: check if 0 is ok */
-			pslr_get_status(camera->pl, &status);
+			/* pslr_set_iso(&camera->pl->pslr, iso); */
+			pslr_set_iso(&camera->pl->pslr, iso, 0, 0); /* FIXME: check if 0 is ok */
+			pslr_get_status(&camera->pl->pslr, &status);
 			// FIXME: K-30 iso doesn't get updated immediately
 		} else
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode iso %s", sval);
@@ -781,8 +810,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &qual)) {
-			pslr_set_jpeg_stars (camera->pl, qual);
-			pslr_get_status (camera->pl, &status);
+			pslr_set_jpeg_stars (&camera->pl->pslr, qual);
+			pslr_get_status (&camera->pl->pslr, &status);
 		} else
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image quality %s", sval);
 	}
@@ -794,14 +823,14 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d/%d", &speed.nom, &speed.denom)) {
-			pslr_set_shutter(camera->pl, speed);
-			pslr_get_status(camera->pl, &status);
+			pslr_set_shutter(&camera->pl->pslr, speed);
+			pslr_get_status(&camera->pl->pslr, &status);
 		} else {
 			char c;
 			if (sscanf(sval, "%d%c", &speed.nom, &c) && (c=='s')) {
 				speed.denom = 1;
-				pslr_set_shutter(camera->pl, speed);
-				pslr_get_status(camera->pl, &status);
+				pslr_set_shutter(&camera->pl->pslr, speed);
+				pslr_get_status(&camera->pl->pslr, &status);
 			} else {
 				gp_log (GP_LOG_ERROR, "pentax", "Could not decode shutterspeed %s", sval);
 			}
@@ -825,8 +854,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				aperture.nom = apt1;
 				aperture.denom = 1;
 			}
-			pslr_set_aperture(camera->pl, aperture);
-			pslr_get_status(camera->pl, &status);
+			pslr_set_aperture(&camera->pl->pslr, aperture);
+			pslr_get_status(&camera->pl->pslr, &status);
 		} else if (sscanf(sval, "%d", &apt1)) {
 			if (apt1<11) {
 				aperture.nom = apt1*10;
@@ -835,8 +864,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 				aperture.nom = apt1;
 				aperture.denom = 1;
 			}
-			pslr_set_aperture(camera->pl, aperture);
-			pslr_get_status(camera->pl, &status);
+			pslr_set_aperture(&camera->pl->pslr, aperture);
+			pslr_get_status(&camera->pl->pslr, &status);
 		} else {
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode aperture %s", sval);
 		}
@@ -848,10 +877,10 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &bulb);
-		pslr_bulb (camera->pl, bulb);
+		pslr_bulb (&camera->pl->pslr, bulb);
 
 		if (bulb)	/* also press the shutter */
-			pslr_shutter (camera->pl);
+			pslr_shutter (&camera->pl->pslr);
 	}
 
 	return GP_OK;
@@ -860,7 +889,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
-	pslr_disconnect (camera->pl);
+	pslr_disconnect (&camera->pl->pslr);
 	free (camera->pl);
 	return GP_OK;
 }
@@ -882,15 +911,15 @@ pslr_result get_drive_info(char* driveName, FDTYPE* hDevice,
 int
 camera_init (Camera *camera, GPContext *context) 
 {
-	ipslr_handle_t	*pslr;
+	CameraPrivateLibrary	*cpl;
 
+	cpl = calloc (sizeof (CameraPrivateLibrary), 1);
 	/* pslr = pslr_init (model, device); ... but it basically just opens the fd */
-	pslr = calloc(sizeof(struct ipslr_handle),1);
-	pslr->fd = camera->port;
+	cpl->pslr.fd = camera->port;
 
-	camera->pl = (CameraPrivateLibrary*)pslr;
+	camera->pl = cpl;
 
-	pslr_connect (pslr);
+	pslr_connect (&cpl->pslr);
 
 	camera->functions->exit = camera_exit;
 	camera->functions->summary = camera_summary;
