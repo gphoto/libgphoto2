@@ -290,7 +290,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		buftypes[1] = status.jpeg_quality + 1;
 		jpegres[1] = status.jpeg_resolution;
 		mimes[1] = GP_MIME_JPEG;
-		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		sprintf (path->name, "capt%04d.jpg", capcnt);
 		fns[1] = strdup(path->name);
 		camera->pl->lastfn = strdup (fns[1]);
 		nrofdownloads = 2;
@@ -373,6 +373,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	}
 
 	pslr_delete_buffer(p, bufno );
+	pslr_get_status (&camera->pl->pslr, &status);	/* wait until busy is gone */
+
 	return ret;
 }
 
@@ -448,7 +450,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			buftypes[1] = status.jpeg_quality + 1;
 			jpegres[1] = status.jpeg_resolution;
 			nrofdownloads = 2;
-			sprintf (path->name, "capt%04d.jpg", capcnt++);
+			sprintf (path->name, "capt%04d.jpg", capcnt);
 			fns[1] = strdup (path->name);
 			/* we pass back the secondary file via the private struct, and return the first */
 			camera->pl->lastfn = strdup (fns[1]);
@@ -520,6 +522,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 			free (fns[i]);
 		}
 		pslr_delete_buffer (p, bufno);
+		pslr_get_status (&camera->pl->pslr, &status);	/* wait until busy is gone */
+
 		*eventtype = GP_EVENT_FILE_ADDED;
 		*eventdata = path;
 		return GP_OK;
