@@ -269,7 +269,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int			bufno, i;
 	const char		*mimes[2];
 	int			buftypes[2], jpegres[2], nrofdownloads = 1;
-	char			*fns[2];
+	char			*fns[2], *lastfn = NULL;
 
 	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
 
@@ -292,7 +292,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		mimes[1] = GP_MIME_JPEG;
 		sprintf (path->name, "capt%04d.jpg", capcnt);
 		fns[1] = strdup(path->name);
-		camera->pl->lastfn = strdup (fns[1]);
+		lastfn = strdup (fns[1]);
 		nrofdownloads = 2;
 		/* FALLTHROUGH */
 	case PSLR_IMAGE_FORMAT_RAW:
@@ -319,11 +319,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		gp_log (GP_LOG_ERROR, "pentax", "unknown format image=0x%x (raw=0x%x)", status.image_format, status.raw_format);
 		return GP_ERROR;
 	}
-	/* get status again */
+	/* get status again, also waits until not busy */
 	pslr_get_status (p, &status);
 
 	if (status.bufmask == 0) {
 		gp_log (GP_LOG_ERROR, "pentax", "no buffer available for download");
+		free (lastfn);
 		return GP_ERROR;
 	}
 	for (bufno=0;bufno<16;bufno++)
@@ -371,6 +372,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		ret = gp_filesystem_set_info_noop(camera->fs, path->folder, fns[i], info, context);
 		free (fns[i]);
 	}
+	camera->pl->lastfn = lastfn;
 
 	pslr_delete_buffer(p, bufno );
 	pslr_get_status (&camera->pl->pslr, &status);	/* wait until busy is gone */
