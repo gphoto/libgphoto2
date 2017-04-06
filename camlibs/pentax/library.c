@@ -79,7 +79,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.speed[0]		= 0;
 	a.usb_vendor		= 0x0a17;
 	a.usb_product		= 0x0091;
-	a.operations 		= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
+	a.operations 		= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG | GP_OPERATION_TRIGGER_CAPTURE;
 	a.folder_operations	= GP_FOLDER_OPERATION_NONE;
 	a.file_operations	= GP_FILE_OPERATION_DELETE;
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
@@ -257,6 +257,14 @@ save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type buftype, uint32
 }
 
 static int
+_timeout_passed(struct timeval *start, int timeout) {
+	struct timeval curtime;
+
+	gettimeofday (&curtime, NULL);
+	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
+}
+
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
@@ -269,6 +277,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	const char		*mimes[2];
 	int			buftypes[2], jpegres[2], nrofdownloads = 1;
 	char			*fns[2], *lastfn = NULL;
+        struct timeval  	event_start;
 
 	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
 
@@ -321,8 +330,17 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	/* get status again, also waits until not busy */
 	pslr_get_status (p, &status);
 
+	gettimeofday (&event_start, 0);
+	while (1) {
+		if (status.bufmask != 0)
+			break;
+		if (_timeout_passed (&event_start, 30*1000))
+			break;
+		usleep(100*1000); /* 100 ms */
+		pslr_get_status (p, &status);
+	}
 	if (status.bufmask == 0) {
-		gp_log (GP_LOG_ERROR, "pentax", "no buffer available for download");
+		gp_log (GP_LOG_ERROR, "pentax", "no buffer available for download after 30 seconds.");
 		free (lastfn);
 		return GP_ERROR;
 	}
@@ -380,11 +398,19 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 }
 
 static int
-_timeout_passed(struct timeval *start, int timeout) {
-	struct timeval curtime;
+camera_trigger_capture (Camera *camera, GPContext *context)
+{
+	pslr_handle_t		p = &camera->pl->pslr;
+	pslr_status		status;
 
-	gettimeofday (&curtime, NULL);
-	return ((curtime.tv_sec - start->tv_sec)*1000)+((curtime.tv_usec - start->tv_usec)/1000) >= timeout;
+	gp_log (GP_LOG_DEBUG, "pentax", "camera_trigger_capture");
+
+	pslr_get_status (p, &status);
+	pslr_shutter (p);
+	/* get status again, also waits until not busy */
+	pslr_get_status (p, &status);
+
+	return GP_OK;
 }
 
 
@@ -933,6 +959,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->get_config = camera_get_config;
 	camera->functions->set_config = camera_set_config;
 	camera->functions->capture = camera_capture;
+	camera->functions->trigger_capture = camera_trigger_capture;
 	camera->functions->wait_for_event = camera_wait_for_event;
 	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }
