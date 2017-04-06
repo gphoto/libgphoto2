@@ -33,9 +33,6 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	dimagev_packet *p, *r;
 	unsigned char char_buffer, command_buffer[3];
 	char *data;
-#ifdef _gphoto_exif_
-	exifparser exifdat;
-#endif
 
 	if ( dimagev->data->host_mode != (unsigned char) 1 ) {
 
@@ -189,20 +186,6 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			free(data);
 			return GP_ERROR_IO;
 	}
-
-#ifdef _gphoto_exif_
-	exifdat.header = (unsigned char *)data;
-	exifdat.data = (unsigned char *)data + 12 ;
-
-	if ( gpi_exif_stat(&exifdat) != 0 ) {
-		GP_DEBUG( "dimagev_get_picture::unable to stat EXIF tags");
-		free(data);
-		return GP_OK;
-	}
-
-/*	gpi_exif_dump(&exifdat); */
-
-#endif
 
 	gp_file_set_data_and_size (file, data, size);
 
