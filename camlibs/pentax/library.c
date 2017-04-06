@@ -56,6 +56,7 @@ bool debug = true;
 struct _CameraPrivateLibrary {
 	ipslr_handle_t	pslr;
 	char		*lastfn;
+	int		capcnt;
 };
 
 int
@@ -255,8 +256,6 @@ save_buffer(pslr_handle_t camhandle, int bufno, pslr_buffer_type buftype, uint32
 	return current;
 }
 
-static int 		capcnt = 0;
-
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
@@ -280,7 +279,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	gp_log (GP_LOG_ERROR, "pentax", "image format image=0x%x, raw=0x%x", status.image_format, status.raw_format);
 	switch (status.image_format) {
 	case PSLR_IMAGE_FORMAT_JPEG:
-		sprintf (path->name, "capt%04d.jpg", capcnt++);
+		sprintf (path->name, "capt%04d.jpg", camera->pl->capcnt++);
 		mimes[0] = GP_MIME_JPEG;
 		buftypes[0] = status.jpeg_quality + 1;
 		jpegres[0] = status.jpeg_resolution;
@@ -290,7 +289,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		buftypes[1] = status.jpeg_quality + 1;
 		jpegres[1] = status.jpeg_resolution;
 		mimes[1] = GP_MIME_JPEG;
-		sprintf (path->name, "capt%04d.jpg", capcnt);
+		sprintf (path->name, "capt%04d.jpg", camera->pl->capcnt);
 		fns[1] = strdup(path->name);
 		lastfn = strdup (fns[1]);
 		nrofdownloads = 2;
@@ -299,13 +298,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		jpegres[0] = 0;
 		switch (status.raw_format) {
 		case PSLR_RAW_FORMAT_PEF:
-			sprintf (path->name, "capt%04d.pef", capcnt++);
+			sprintf (path->name, "capt%04d.pef", camera->pl->capcnt++);
 			fns[0] = strdup (path->name);
 			mimes[0] = GP_MIME_RAW;
 			buftypes[0] = PSLR_BUF_PEF;
 			break;
 		case PSLR_RAW_FORMAT_DNG:
-			sprintf (path->name, "capt%04d.dng", capcnt++);
+			sprintf (path->name, "capt%04d.dng", camera->pl->capcnt++);
 			fns[0] = strdup (path->name);
 			mimes[0] = "image/x-adobe-dng";
 			buftypes[0] = PSLR_BUF_DNG;
@@ -441,7 +440,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 		gp_log (GP_LOG_ERROR, "pentax", "wait_for_event: imageformat %d / rawformat %d", status.image_format, status.raw_format);
 		switch (status.image_format) {
 		case PSLR_IMAGE_FORMAT_JPEG:
-			sprintf (path->name, "capt%04d.jpg", capcnt++);
+			sprintf (path->name, "capt%04d.jpg", camera->pl->capcnt++);
 			mimes[0] = GP_MIME_JPEG;
 			buftypes[0] = status.jpeg_quality + 1;
 			jpegres[0] = status.jpeg_resolution;
@@ -452,7 +451,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			buftypes[1] = status.jpeg_quality + 1;
 			jpegres[1] = status.jpeg_resolution;
 			nrofdownloads = 2;
-			sprintf (path->name, "capt%04d.jpg", capcnt);
+			sprintf (path->name, "capt%04d.jpg", camera->pl->capcnt);
 			fns[1] = strdup (path->name);
 			/* we pass back the secondary file via the private struct, and return the first */
 			camera->pl->lastfn = strdup (fns[1]);
@@ -461,13 +460,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 			jpegres[0] = 0;
 			switch (status.raw_format) {
 			case PSLR_RAW_FORMAT_PEF:
-				sprintf (path->name, "capt%04d.pef", capcnt++);
+				sprintf (path->name, "capt%04d.pef", camera->pl->capcnt++);
 				fns[0] = strdup (path->name);
 				mimes[0] = GP_MIME_RAW;
 				buftypes[0] = PSLR_BUF_PEF;
 				break;
 			case PSLR_RAW_FORMAT_DNG:
-				sprintf (path->name, "capt%04d.dng", capcnt++);
+				sprintf (path->name, "capt%04d.dng", camera->pl->capcnt++);
 				fns[0] = strdup (path->name);
 				mimes[0] = "image/x-adobe-dng";
 				buftypes[0] = PSLR_BUF_DNG;
