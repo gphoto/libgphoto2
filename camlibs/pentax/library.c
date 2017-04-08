@@ -572,6 +572,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	char		buf[20];
 	int		*available_resolutions;
 	int		i;
+	float		fval;
 
 	pslr_get_status (&camera->pl->pslr, &status);
 
@@ -713,11 +714,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
-	gp_widget_new (GP_WIDGET_TEXT, _("EC"), &t);
-	gp_widget_set_name (t, "ec");
-	sprintf(buf,"%d/%d",status.ec.nom,status.ec.denom);
-	gp_widget_set_value (t, buf);
-	gp_widget_set_readonly (t, 1);
+	gp_widget_new (GP_WIDGET_RANGE, _("Exposure Compensation"), &t);
+	gp_widget_set_name (t, "exposurecompensation");
+	fval = 1.0*status.ec.nom/status.ec.denom;
+	gp_widget_set_range (t, -3.0, 3.0, (status.custom_ev_steps == PSLR_CUSTOM_EV_STEPS_1_2)? 0.5:0.333333);
+	gp_widget_set_value (t, &fval);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_RADIO, _("Shooting Mode"), &t);
@@ -831,6 +832,19 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			// FIXME: K-30 iso doesn't get updated immediately
 		} else
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode iso %s", sval);
+	}
+
+	gp_widget_get_child_by_label (window, _("Exposure Compensation"), &w);
+	if (gp_widget_changed (w)) {
+		float		fval;
+		pslr_rational_t	rational;
+
+		gp_widget_get_value (w, &fval);
+		rational.denom = 10;
+		rational.nom = (int)(10 * fval);
+
+		pslr_set_ec (&camera->pl->pslr, rational);
+
 	}
 
 	gp_widget_get_child_by_label (window, _("Image Quality"), &w);
