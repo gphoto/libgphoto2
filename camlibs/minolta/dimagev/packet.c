@@ -23,6 +23,8 @@
 
 #include "config.h"
 
+#include <stdio.h>
+
 #include "dimagev.h"
 
 #define GP_MODULE "dimagev"
