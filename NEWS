@@ -1,9 +1,13 @@
 libgphoto2 2.5.12.1 development release
 
+pentax:
+* Now using the pktriggercord codebase
+* lots of improvements
+
 ptp2:
-* iPhone iOS 10.2 storage handling fixed, added dynamic storage handling
+* iPhone iOS 10.2 and later storage handling fixed, added dynamic storage handling
 * Sony Alpha Live View support.
-* Canon EOS M series capture enabled. (might not fully work yet)
+* Canon EOS M series capture enabled. (not fully working yet)
 * Various crashes and endless loops fixed that were found by the AFL fuzzer.
 * Various bugfixes in Nikon, Canon capture
 * New USB Ids:
