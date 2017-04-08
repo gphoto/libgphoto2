@@ -595,7 +595,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
-	gp_widget_new (GP_WIDGET_RADIO, _("Image format"), &t);
+	gp_widget_new (GP_WIDGET_RADIO, _("Image Format"), &t);
 	gp_widget_set_name (t, "imageformat");
 	/* it seems the upstream code seems to have it always available? */
 	gp_widget_add_choice (t, "JPEG");
