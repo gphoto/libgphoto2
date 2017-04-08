@@ -3905,18 +3905,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	return add_objectid_and_upload (camera, path, context, newobject, &oi);
 }
 
-static int
-check_ptp_filesystem (Camera *camera) {
-	PTPParams *params = &camera->pl->params;
-
-	ptp_check_event_queue(params);
-	if (params->storagechanged) {
-		params->storagechanged = 0;
-		gp_filesystem_reset (camera->fs);
-	}
-	return GP_OK;
-}
-
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
