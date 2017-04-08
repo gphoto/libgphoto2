@@ -596,11 +596,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_RADIO, _("Image format"), &t);
-	gp_widget_set_name (t, "img_format");
+	gp_widget_set_name (t, "imageformat");
 	/* it seems the upstream code seems to have it always available? */
 	gp_widget_add_choice (t, "JPEG");
 	gp_widget_add_choice (t, "RAW");
-	gp_widget_add_choice (t, "RAW+");
+	gp_widget_add_choice (t, "RAW+JPEG");
 	switch (status.image_format) {
 		case PSLR_IMAGE_FORMAT_JPEG: gp_widget_set_value (t, "JPEG"); break;
 		case PSLR_IMAGE_FORMAT_RAW: gp_widget_set_value (t, "RAW"); break;
