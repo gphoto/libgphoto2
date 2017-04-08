@@ -343,7 +343,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *d;
 	int image_number, image_no, len, ret;
 	CameraFileInfo file_info;
+#ifdef HAVE_LIBEXIF
 	ExifData *ed;
+#endif
 
 	GP_DEBUG ("*** ENTER: get_file_func ***");
 
