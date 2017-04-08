@@ -2096,7 +2096,7 @@ static struct {
 	{"GoPro:HERO +",			0x2672,	0x0021, 0},
 	/* from libmtp */
 	{"GoPro:HERO5 Black",			0x2672, 0x0027, 0},
-
+	{"GoPro:HERO5 Session",			0x2672, 0x0029, 0},
 #endif
 };
 
