@@ -571,7 +571,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	pslr_status	status;
 	char		buf[20];
 	int		*available_resolutions;
-	int		i;
+	int		i, ival;
 	float		fval;
 
 	pslr_get_status (&camera->pl->pslr, &status);
@@ -751,7 +751,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Bulb"), &t);
 	gp_widget_set_name (t, "bulb");
-	gp_widget_set_value (t, "2");
+	ival = 2;
+	gp_widget_set_value (t, &ival);
 	gp_widget_append (section, t);
 
 	return GP_OK;
