@@ -33,16 +33,22 @@
  * information header and use this number with all functions !!
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>
-#include <exif.h>
+
+#ifdef HAVE_LIBEXIF
+#  include <libexif/exif-data.h>
+#  include <libexif/exif-utils.h>
+#endif
+
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -334,11 +340,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
 	       GPContext *context)
 {
-	unsigned char *d,*thumbnail;
+	unsigned char *d;
 	int image_number, image_no, len, ret;
-	long long_len;
 	CameraFileInfo file_info;
-	exifparser exifdat;
+	ExifData *ed;
+
 	GP_DEBUG ("*** ENTER: get_file_func ***");
 
         image_no = gp_filesystem_number(fs, folder, filename, context);
@@ -366,7 +372,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			len = file_info.preview.size;
-			long_len = (long)len;
 			if (!(d = (unsigned char *)malloc(len)))
 				return (GP_ERROR_NO_MEMORY);
 			ret = k_getdata(image_no, GP_FILE_TYPE_PREVIEW, len, 
@@ -375,13 +380,23 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				free(d);
 				return ret;
 			}
-			exifdat.header = d;
-			exifdat.data = d+12;
-			thumbnail = gpi_exif_get_thumbnail_and_size(&exifdat,
-				&long_len);
+#ifdef HAVE_LIBEXIF
+			ed = exif_data_new_from_data ((unsigned char*)d, len);
+			if (ed->data) {
+				gp_file_set_mime_type (file, GP_MIME_JPEG);
+				ret = gp_file_append(file, (char*)ed->data, ed->size);
+				exif_data_unref (ed);
+				free (d);
+				return GP_OK;
+			}
+			exif_data_unref (ed);
 			free(d);
-			d = thumbnail;
-			break;
+			return GP_ERROR_NOT_SUPPORTED;
+#else
+			gp_context_error(context, _("Compiled without EXIF support, no thumbnails available."));
+			free(d);
+			return GP_ERROR_NOT_SUPPORTED;
+#endif
 		case GP_FILE_TYPE_EXIF:
 			len = file_info.preview.size;
 			if (!(d = (unsigned char *)malloc(len)))
