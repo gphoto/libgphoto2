@@ -45,8 +45,6 @@
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
 
-#include <exif.h>
-
 #define DIMAGEV_VERSION "$Revision$"
 
 /* These are the repsonse codes. */
