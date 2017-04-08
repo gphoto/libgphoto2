@@ -1,8 +1,9 @@
-libgphoto2 2.5.12.1 development release
+libgphoto2 2.5.13 release
 
 pentax:
 * Now using the pktriggercord codebase
 * lots of improvements
+* Please report missing Pentax K USB ids that are supported by pktriggercord!
 
 ptp2:
 * iPhone iOS 10.2 and later storage handling fixed, added dynamic storage handling
@@ -14,7 +15,7 @@ ptp2:
   * Sony: SLT A37, DSC-RX100M5
   * Nikon KeyMission 360
   * Canon PowerShot G16
-  * Canon EOS M5
+  * Canon EOS M5, EOS M10
   * Fuji Fujifilm XT-2
   * GoPro Hero 5 Black
 
