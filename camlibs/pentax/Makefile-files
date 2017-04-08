@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-EXTRA_DIST += pentax/README.pentax pentax/ChangeLog
+EXTRA_DIST += pentax/README.pentax pentax/ChangeLog pentax/exiftool_pentax_lens.txt
 
 camlibdoc_DATA += pentax/README.pentax
 EXTRA_LTLIBRARIES += pentax.la
