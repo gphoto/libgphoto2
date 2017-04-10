@@ -2814,6 +2814,7 @@ enable_liveview:
 		unsigned char	*ximage = NULL;
 		int		tries = 20;
 
+		ptp_check_event (params);	/* will stall for some reason */
 		do {
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
