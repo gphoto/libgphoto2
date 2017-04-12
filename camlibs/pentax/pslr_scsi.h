@@ -60,7 +60,6 @@ typedef enum {
 
 /* This also could be used to specify FDTYPE HANDLE for Win32, but this seems tricky with includes */
 #ifdef LIBGPHOTO2
-typedef struct _GPPort GPPort;
 #define FDTYPE GPPort*
 #else
 /* classic UNIX style handle */
