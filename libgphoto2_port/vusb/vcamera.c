@@ -364,6 +364,9 @@ static int ptp_shutterspeed_setvalue(vcamera*,PTPPropertyValue*);
 static int ptp_fnumber_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_fnumber_getvalue(vcamera*,PTPPropertyValue*);
 static int ptp_fnumber_setvalue(vcamera*,PTPPropertyValue*);
+static int ptp_exposurebias_getdesc(vcamera*,PTPDevicePropDesc*);
+static int ptp_exposurebias_getvalue(vcamera*,PTPPropertyValue*);
+static int ptp_exposurebias_setvalue(vcamera*,PTPPropertyValue*);
 
 static struct ptp_property {
 	int	code;
@@ -374,6 +377,7 @@ static struct ptp_property {
 	{0x5001,	ptp_battery_getdesc, ptp_battery_getvalue, NULL },
 	{0x5003,	ptp_imagesize_getdesc, ptp_imagesize_getvalue, NULL },
 	{0x5007,	ptp_fnumber_getdesc, ptp_fnumber_getvalue, ptp_fnumber_setvalue },
+	{0x5010,	ptp_exposurebias_getdesc, ptp_exposurebias_getvalue, ptp_exposurebias_setvalue },
 	{0x500d,	ptp_shutterspeed_getdesc, ptp_shutterspeed_getvalue, ptp_shutterspeed_setvalue },
 	{0x5011,	ptp_datetime_getdesc, ptp_datetime_getvalue, ptp_datetime_setvalue },
 };
@@ -1261,6 +1265,7 @@ put_propval (unsigned char *data, uint16_t type, PTPPropertyValue *val) {
 	switch (type) {
 	case 0x1:	return put_8bit_le (data, val->i8);
 	case 0x2:	return put_8bit_le (data, val->u8);
+	case 0x3:	return put_16bit_le (data, val->i16);
 	case 0x4:	return put_16bit_le (data, val->u16);
 	case 0x6:	return put_32bit_le (data, val->u32);
 	case 0xffff:	return put_string (data, val->str);
@@ -1279,6 +1284,9 @@ get_propval (unsigned char *data, unsigned int len, uint16_t type, PTPPropertyVa
 			return 1;
 	case 0x2:	CHECK_SIZE(1);
 			val->u8 =  get_8bit_le (data);
+			return 1;
+	case 0x3:	CHECK_SIZE(2);
+			val->i16 =  get_16bit_le (data);
 			return 1;
 	case 0x4:	CHECK_SIZE(2);
 			val->u16 =  get_16bit_le (data);
@@ -1660,7 +1668,7 @@ ptp_fnumber_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DevicePropertyCode		= 0x5007;
 	desc->DataType				= 0x0004;	/* UINT16 */
 	desc->GetSet				= 1;		/* Get/Set */
-	if (!cam->shutterspeed) cam->fnumber = 280; /* 2.8 * 100 */
+	if (!cam->fnumber) cam->fnumber = 280; /* 2.8 * 100 */
 	desc->FactoryDefaultValue.u16		= cam->fnumber;
 	desc->CurrentValue.u16			= cam->fnumber;
         desc->FormFlag				= 0x02; /* enum */
@@ -1701,6 +1709,50 @@ ptp_fnumber_setvalue (vcamera* cam, PTPPropertyValue *val) {
 	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5007, 0xffffffff);
 	gp_log (GP_LOG_DEBUG, __FUNCTION__, "got %d as value", val->u16);
 	cam->fnumber = val->u16;
+	return 1;
+}
+
+static int
+ptp_exposurebias_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
+	desc->DevicePropertyCode		= 0x5010;
+	desc->DataType				= 0x0003;	/* INT16 */
+	desc->GetSet				= 1;		/* Get/Set */
+	if (!cam->exposurebias) cam->exposurebias = 0; /* 0.0 */
+	desc->FactoryDefaultValue.i16		= cam->exposurebias;
+	desc->CurrentValue.i16			= cam->exposurebias;
+        desc->FormFlag				= 0x02; /* enum */
+	desc->FORM.Enum.NumberOfValues 		= 13;
+	desc->FORM.Enum.SupportedValue 		= malloc(desc->FORM.Enum.NumberOfValues*sizeof(desc->FORM.Enum.SupportedValue[0]));
+	desc->FORM.Enum.SupportedValue[0].i16	= -3000;
+	desc->FORM.Enum.SupportedValue[1].i16	= -2500;
+	desc->FORM.Enum.SupportedValue[2].i16	= -2000;
+	desc->FORM.Enum.SupportedValue[3].i16	= -1500;
+	desc->FORM.Enum.SupportedValue[4].i16	= -1000;
+	desc->FORM.Enum.SupportedValue[5].i16	= -500;
+	desc->FORM.Enum.SupportedValue[6].i16	= 0;
+	desc->FORM.Enum.SupportedValue[7].i16	= 500;
+	desc->FORM.Enum.SupportedValue[8].i16	= 1000;
+	desc->FORM.Enum.SupportedValue[9].i16	= 1500;
+	desc->FORM.Enum.SupportedValue[10].i16	= 2000;
+	desc->FORM.Enum.SupportedValue[11].i16	= 2500;
+	desc->FORM.Enum.SupportedValue[12].i16	= 3000;
+
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5010, 0xffffffff);
+	return 1;
+}
+
+static int
+ptp_exposurebias_getvalue (vcamera* cam, PTPPropertyValue *val) {
+	val->i16 = cam->exposurebias;
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5010, 0xffffffff);
+	return 1;
+}
+
+static int
+ptp_exposurebias_setvalue (vcamera* cam, PTPPropertyValue *val) {
+	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5010, 0xffffffff);
+	gp_log (GP_LOG_DEBUG, __FUNCTION__, "got %d as value", val->i16);
+	cam->exposurebias = val->i16;
 	return 1;
 }
 

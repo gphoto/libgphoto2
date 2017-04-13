@@ -59,6 +59,7 @@ typedef struct vcamera {
 	unsigned int	session;
 	ptpcontainer	ptpcmd;
 
+	int		exposurebias;
 	unsigned int	shutterspeed;
 	unsigned int	fnumber;
 
