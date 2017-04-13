@@ -432,6 +432,7 @@ read_tree(char *path) {
 	first_dirent->fsname = strdup(path);
 	first_dirent->id = ptp_objectid++;
 	first_dirent->next = NULL;
+	stat(first_dirent->fsname, &first_dirent->stbuf); /* assuming it works */
 	root = first_dirent;
 	read_directories(path,first_dirent);
 
@@ -449,6 +450,7 @@ read_tree(char *path) {
 		dcim->id = ptp_objectid++;
 		dcim->next = first_dirent;
 		dcim->parent = root;
+		stat(dcim->fsname, &dcim->stbuf); /* assuming it works */
 		first_dirent = dcim;
 	}
 }
