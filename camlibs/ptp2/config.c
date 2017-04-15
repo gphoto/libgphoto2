@@ -69,6 +69,57 @@
 
 #define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 
+int
+have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
+	unsigned int i;
+
+	/* prop 0 matches */
+	if (!prop && (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
+		return 1;
+
+	if (	((prop & 0x7000) == 0x5000) ||
+		(NIKON_1(&camera->pl->params) && ((prop & 0xf000) == 0xf000))
+	) { /* properties */
+		for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
+			if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
+				continue;
+			if ((prop & 0xf000) == 0x5000) { /* generic property */
+				if (!vendor || (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
+					return 1;
+			}
+			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
+				return 1;
+		}
+	}
+	if ((prop & 0x7000) == 0x1000) { /* commands */
+		for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
+			if (prop != camera->pl->params.deviceinfo.OperationsSupported[i])
+				continue;
+			if ((prop & 0xf000) == 0x1000) /* generic property */
+				return 1;
+			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
+				return 1;
+		}
+	}
+	return 0;
+}
+
+static int
+have_eos_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
+	unsigned int i;
+
+	/* The special Canon EOS property set gets special treatment. */
+	if ((camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) ||
+	    (vendor != PTP_VENDOR_CANON)
+	)
+		return 0;
+	for (i=0;i<camera->pl->params.nrofcanon_props;i++)
+		if (camera->pl->params.canon_props[i].proptype == prop)
+			return 1;
+	return 0;
+}
+
+
 static int
 camera_prepare_chdk_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
@@ -270,6 +321,10 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	int			cardval = -1;
 
 	memset(&dpd,0,sizeof(dpd));
+	if (!have_eos_prop(camera, PTP_VENDOR_CANON, PTP_DPC_CANON_EOS_CaptureDestination) ) {
+		GP_LOG_D ("No CaptureDestination property?");
+		return GP_OK;
+	}
 	C_PTP (ptp_canon_eos_getdevicepropdesc (params,PTP_DPC_CANON_EOS_CaptureDestination, &dpd));
 
 	/* Look for the correct value of the card mode */
@@ -524,56 +579,6 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 		if (waitms) usleep(waitms*1000)/*wait a bit*/;
 	} while (tries--);
 	return res;
-}
-
-int
-have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
-	unsigned int i;
-
-	/* prop 0 matches */
-	if (!prop && (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
-		return 1;
-
-	if (	((prop & 0x7000) == 0x5000) ||
-		(NIKON_1(&camera->pl->params) && ((prop & 0xf000) == 0xf000))
-	) { /* properties */
-		for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
-			if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
-				continue;
-			if ((prop & 0xf000) == 0x5000) { /* generic property */
-				if (!vendor || (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
-					return 1;
-			}
-			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
-				return 1;
-		}
-	}
-	if ((prop & 0x7000) == 0x1000) { /* commands */
-		for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
-			if (prop != camera->pl->params.deviceinfo.OperationsSupported[i])
-				continue;
-			if ((prop & 0xf000) == 0x1000) /* generic property */
-				return 1;
-			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
-				return 1;
-		}
-	}
-	return 0;
-}
-
-static int
-have_eos_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
-	unsigned int i;
-
-	/* The special Canon EOS property set gets special treatment. */
-	if ((camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) ||
-	    (vendor != PTP_VENDOR_CANON)
-	)
-		return 0;
-	for (i=0;i<camera->pl->params.nrofcanon_props;i++)
-		if (camera->pl->params.canon_props[i].proptype == prop)
-			return 1;
-	return 0;
 }
 
 struct submenu;
