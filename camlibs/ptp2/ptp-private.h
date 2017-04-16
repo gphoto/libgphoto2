@@ -21,6 +21,8 @@
 /* ptp2 camlib private functions */
 #include <gphoto2/gphoto2-library.h>
 
+#include <string.h>
+
 /* config.c */
 int camera_get_config (Camera *camera, CameraWidget **window, GPContext *context);
 int camera_get_config_list (Camera *camera, CameraList *list, GPContext *context);
@@ -106,6 +108,13 @@ inline static int log_on_ptp_error_helper( int _r, const char* _func, const char
 		return cr_r;\
 	}\
 } while (0)
+
+static inline int
+is_canon_eos_m(PTPParams *params) {
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) return 0;
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) return 0;
+	return strchr(params->deviceinfo.Model, 'M') != NULL;
+}
 
 
 struct _CameraPrivateLibrary {

@@ -453,6 +453,20 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* Get the second bulk set of 0x9116 property data */
 	C_PTP (ptp_check_eos_events (params));
 	params->eos_captureenabled = 1;
+
+	if (is_canon_eos_m (params)) {
+		PTPPropertyValue    ct_val;
+
+		GP_LOG_D ("EOS M detected");
+
+		C_PTP (ptp_canon_eos_seteventmode(params, 2));
+		ct_val.u16 = 0x0008;
+		C_PTP (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &ct_val, PTP_DTC_UINT16));
+
+		usleep(1000*1000); /* 1 second */
+
+		C_PTP (ptp_check_eos_events (params));
+	}
 	return GP_OK;
 }
 
@@ -521,6 +535,13 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* just in case we had autofocus running */
 	CR (ptp_canon_eos_afcancel(params));
+
+	if (is_canon_eos_m (params)) {
+		PTPPropertyValue    ct_val;
+
+		ct_val.u16 = 0x0000;
+		C_PTP (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &ct_val, PTP_DTC_UINT16));
+	}
 
 	/* then emits 911b and 911c ... not done yet ... */
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
