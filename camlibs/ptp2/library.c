@@ -1873,7 +1873,7 @@ static struct {
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS",			0x04a9, 0x3295, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Nykhedimus S <nykhedimus@gmail.com> */
-	{"Canon:EOS M3",			0x04a9, 0x3299, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:EOS M3",			0x04a9, 0x3299, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	/* Shaul Badusa <shaulikoo@gmail.com> */
 	{"Canon:PowerShot SX60HS",		0x04a9, 0x329a, PTPBUG_DELETE_SENDS_EVENT},
 	/* pravsripad@gmail.com */
