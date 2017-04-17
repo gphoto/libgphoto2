@@ -113,7 +113,7 @@ static inline int
 is_canon_eos_m(PTPParams *params) {
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) return 0;
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) return 0;
-	return strchr(params->deviceinfo.Model, 'M') != NULL;
+	return strstr(params->deviceinfo.Model, "EOS M") != NULL;
 }
 
 
