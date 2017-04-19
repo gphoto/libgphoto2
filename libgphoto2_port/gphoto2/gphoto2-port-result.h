@@ -119,7 +119,15 @@
  */
 #define GP_ERROR_HAL                    -70
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 const char *gp_port_result_as_string (int result);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __GPHOTO2_PORT_RESULT_H__ */
 
