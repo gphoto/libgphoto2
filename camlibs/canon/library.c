@@ -20,7 +20,7 @@
  *
  ****************************************************************************/
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 
@@ -2549,10 +2549,9 @@ camera_init (Camera *camera, GPContext *context)
 
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
-		return (GP_ERROR_NO_MEMORY);
-	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
+		return GP_ERROR_NO_MEMORY;
 	camera->pl->first_init = 1;
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
