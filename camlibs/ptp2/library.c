@@ -7477,6 +7477,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 
 	for (k=0;k<storageids.n;k++) {
 		GP_LOG_D ("reading handle %08x directory of 0x%08x", storageids.Storage[k], handle);
+		tmp = NULL;
 		ret = LOG_ON_PTP_E (ptp_canon_eos_getobjectinfoex (
 					  params, storageids.Storage[k], handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp));
 		if (ret != PTP_RC_OK) {
