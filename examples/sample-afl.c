@@ -16,6 +16,79 @@ static void errordumper(GPLogLevel level, const char *domain, const char *str,
 	fprintf(stderr, "%s\n", str);
 }
 
+static int 
+recursive_directory(Camera *camera, const char *folder, GPContext *context, int *foundfile) {
+	int		i, ret;
+	CameraList	*list;
+
+	gp_list_new (&list);
+
+	ret = gp_camera_folder_list_folders (camera, folder, list, context);
+	if (ret < GP_OK) {
+		printf ("Could not list folders.\n");
+		return ret;
+	}
+	gp_list_sort (list);
+
+	for (i = 0; i < gp_list_count (list); i++) {
+		const char *newfolder;
+		char *buf;
+		int havefile = 0;
+
+		gp_list_get_name (list, i, &newfolder);
+
+		buf = malloc (strlen(folder) + 1 + strlen(newfolder) + 1);
+		strcpy(buf, folder);
+		if (strcmp(folder,"/"))		/* avoid double / */
+			strcat(buf, "/");
+		strcat(buf, newfolder);
+
+		ret = recursive_directory (camera, buf, context, &havefile);
+		free (buf);
+		if (ret != GP_OK) {
+			printf ("Failed to recursively list folders.\n");
+			return ret;
+		}
+		if (havefile) /* only look for the first directory with a file */
+			break;
+	}
+	gp_list_reset (list);
+
+	ret = gp_camera_folder_list_files (camera, folder, list, context);
+	if (ret < GP_OK) {
+		printf ("Could not list files.\n");
+		return ret;
+	}
+	gp_list_sort (list);
+	for (i = 0; i < gp_list_count (list); i++) {
+		const char	*newfile;
+		CameraFileInfo	fileinfo;
+		CameraFile	*file;
+
+		gp_list_get_name (list, i, &newfile);
+		ret = gp_camera_file_get_info (camera, folder, newfile, &fileinfo, context);
+		if (ret != GP_OK) {
+			printf ("Could not get file info.\n");
+			return ret;
+		}
+	
+		/* Trigger the ptp things */
+		gp_file_new (&file);
+		ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_METADATA, file, context);
+		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+			printf ("Could not get file metadata.\n");
+			return ret;
+		}
+		gp_file_free (file);
+
+		if (foundfile) *foundfile = 1;
+
+		break;	/* Just process the first file, then return */
+	}
+	gp_list_free (list);
+	return GP_OK;
+}
+
 
 int main(int argc, char **argv) {
 	Camera		*camera = NULL;
@@ -24,7 +97,6 @@ int main(int argc, char **argv) {
 	CameraWidget	*rootwidget;
 	char		buf[200];
 	CameraText	summary;
-	CameraList	*list;
 
         gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
@@ -50,22 +122,11 @@ int main(int argc, char **argv) {
 
 	/* AFL PART STARTS HERE */
 
-	gp_list_new (&list);
-	ret = gp_camera_folder_list_files (camera, "/", list, context);
+	ret = recursive_directory(camera, "/", context, NULL);
 	if (ret < GP_OK) {
-		printf ("Could not list files.\n");
+		printf ("Could not recursive list files.\n");
 		goto out;
 	}
-	gp_list_sort (list);
-
-	gp_list_reset (list);
-	ret = gp_camera_folder_list_folders (camera, "/", list, context);
-	if (ret < GP_OK) {
-		printf ("Could not list files.\n");
-		goto out;
-	}
-	gp_list_sort (list);
-	gp_list_free (list);
 
 	ret = gp_camera_get_summary (camera, &summary, context);
 	if (ret < GP_OK) {
