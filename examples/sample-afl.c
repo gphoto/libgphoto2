@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
 	CameraWidget	*rootwidget;
 	char		buf[200];
 	CameraText	summary;
+	CameraList	*list;
 
         gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
@@ -48,6 +49,24 @@ int main(int argc, char **argv) {
 	}
 
 	/* AFL PART STARTS HERE */
+
+	gp_list_new (&list);
+	ret = gp_camera_folder_list_files (camera, "/", list, context);
+	if (ret < GP_OK) {
+		printf ("Could not list files.\n");
+		goto out;
+	}
+	gp_list_sort (list);
+
+	gp_list_reset (list);
+	ret = gp_camera_folder_list_folders (camera, "/", list, context);
+	if (ret < GP_OK) {
+		printf ("Could not list files.\n");
+		goto out;
+	}
+	gp_list_sort (list);
+	gp_list_free (list);
+
 	ret = gp_camera_get_summary (camera, &summary, context);
 	if (ret < GP_OK) {
 		printf ("Could not get summary.\n");
