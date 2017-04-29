@@ -1096,6 +1096,10 @@ ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, 
 	unsigned int offset=0, ret;
 
 	memset (opd, 0, sizeof(*opd));
+
+	if (opdlen < 5)
+		return 0;
+
 	opd->ObjectPropertyCode=dtoh16a(&data[PTP_opd_ObjectPropertyCode]);
 	opd->DataType=dtoh16a(&data[PTP_opd_DataType]);
 	opd->GetSet=dtoh8a(&data[PTP_opd_GetSet]);
