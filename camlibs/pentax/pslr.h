@@ -199,6 +199,7 @@ int pslr_bulb(pslr_handle_t h, bool on );
 
 int pslr_buffer_open(pslr_handle_t h, int bufno, pslr_buffer_type type, int resolution);
 uint32_t pslr_buffer_read(pslr_handle_t h, uint8_t *buf, uint32_t size);
+uint32_t pslr_fullmemory_read(pslr_handle_t h, uint8_t *buf, uint32_t offset, uint32_t size);
 void pslr_buffer_close(pslr_handle_t h);
 uint32_t pslr_buffer_get_size(pslr_handle_t h);
 
