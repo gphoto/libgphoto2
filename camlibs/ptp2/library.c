@@ -943,7 +943,8 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/feature-requests/442/ */
 	{"Sony:Alpha-A7r (Control)",  0x054c, 0x094d, PTP_CAP|PTP_CAP_PREVIEW},
 
-	{"Sony:Alpha-A6000 (Control)",0x054c, 0x094e, PTP_CAP|PTP_CAP_PREVIEW},
+	/* preview was confirmed not to work. */
+	{"Sony:Alpha-A6000 (Control)",0x054c, 0x094e, PTP_CAP},
 
 	/* Nick Clarke <nick.clarke@gmail.com> */
 	{"Sony:Alpha-A77 M2 (Control)",0x054c, 0x0953, PTP_CAP|PTP_CAP_PREVIEW},
