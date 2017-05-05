@@ -62,15 +62,17 @@ libgphoto2_port_la_LDFLAGS      += -version-info @LIBGPHOTO2_PORT_VERSION_INFO@
 libgphoto2_port_la_CPPFLAGS     += $(LTDLINCL)
 libgphoto2_port_la_LIBADD       += $(LIBLTDL)
 
-libgphoto2_port_la_LIBADD       += $(INTLLIBS)
+libgphoto2_port_la_LIBADD       += $(INTLLIBS)                                                                                                              
 
 libgphoto2_port_la_SOURCES      += gphoto2-port-info-list.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-info.h
 libgphoto2_port_la_SOURCES      += gphoto2-port-log.c
+libgphoto2_port_la_SOURCES      += gphoto2-port-mutex.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-version.c
 libgphoto2_port_la_SOURCES      += gphoto2-port.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-portability.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-result.c
 
+libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-mutex.h
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-version.h
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-library.h

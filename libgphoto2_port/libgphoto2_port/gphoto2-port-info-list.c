@@ -44,6 +44,7 @@
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-mutex.h>
 
 #include "libgphoto2_port/gphoto2-port-info.h"
 #include "libgphoto2_port/i18n.h"
@@ -315,10 +316,12 @@ gp_port_info_list_load (GPPortInfoList *list)
 	C_PARAMS (list);
 
 	GP_LOG_D ("Using ltdl to load io-drivers from '%s'...", iolibs);
+	pthread_mutex_lock(&gpi_libltdl_mutex);
 	lt_dlinit ();
 	lt_dladdsearchdir (iolibs);
 	result = lt_dlforeachfile (iolibs, foreach_func, list);
 	lt_dlexit ();
+	pthread_mutex_unlock(&gpi_libltdl_mutex);
 	if (result < 0)
 		return (result);
 	if (list->iolib_count == 0) {

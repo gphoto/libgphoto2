@@ -37,6 +37,7 @@
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-mutex.h>
 
 #include "libgphoto2_port/gphoto2-port-info.h"
 
@@ -159,26 +160,36 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 	}
 	if (port->pc->lh) {
 #if !defined(VALGRIND)
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		lt_dlclose (port->pc->lh);
 		lt_dlexit ();
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 #endif
 	}
 
+	pthread_mutex_lock(&gpi_libltdl_mutex);
 	lt_dlinit ();
 	port->pc->lh = lt_dlopenext (info->library_filename);
+	pthread_mutex_unlock(&gpi_libltdl_mutex);
 	if (!port->pc->lh) {
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		GP_LOG_E ("Could not load '%s' ('%s').", info->library_filename, lt_dlerror ());
 		lt_dlexit ();
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 		return (GP_ERROR_LIBRARY);
 	}
 
 	/* Load the operations */
+	pthread_mutex_lock(&gpi_libltdl_mutex);
 	ops_func = lt_dlsym (port->pc->lh, "gp_port_library_operations");
+	pthread_mutex_unlock(&gpi_libltdl_mutex);
 	if (!ops_func) {
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		GP_LOG_E ("Could not find 'gp_port_library_operations' in '%s' ('%s')",
 			  info->library_filename, lt_dlerror ());
 		lt_dlclose (port->pc->lh);
 		lt_dlexit ();
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 		port->pc->lh = NULL;
 		return (GP_ERROR_LIBRARY);
 	}
@@ -344,8 +355,10 @@ gp_port_free (GPPort *port)
 
 		if (port->pc->lh) {
 #if !defined(VALGRIND)
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			lt_dlclose (port->pc->lh);
 			lt_dlexit ();
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 #endif
 			port->pc->lh = NULL;
 		}

@@ -58,7 +58,8 @@ dnl A:R:C=7:0:7 libgphoto2_port-0.7.0 libgphoto2-2.3
 dnl A:R:C=7:1:7 libgphoto2_port-0.7.1 libgphoto2-2.3.x
 dnl A:R:C=8:0:8 libgphoto2_port-0.8.0 libgphoto2-2.4.x
 dnl A:R:C=9:1:9 libgphoto2_port-0.10.0 libgphoto2-2.5.x
-dnl A:R:C=1:0:13  libgphoto2-2.5.XXX	(added gp_port_init_localedir ... )
+dnl A:R:C=1:0:13  libgphoto2-2.5.30	(added gp_port_init_localedir ... )
+dnl A:R:C=2:0:14  libgphoto2-2.5.31	(added gpi_libltdl_mutex ... )
 AC_SUBST([LIBGPHOTO2_PORT_AGE],      [1])
 AC_SUBST([LIBGPHOTO2_PORT_REVISION], [0])
 AC_SUBST([LIBGPHOTO2_PORT_CURRENT],  [13])

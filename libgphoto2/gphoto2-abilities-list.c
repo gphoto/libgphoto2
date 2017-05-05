@@ -36,6 +36,7 @@
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-port-mutex.h>
 
 #include "libgphoto2/i18n.h"
 
@@ -212,10 +213,12 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	if (1) { /* a new block in which we can define a temporary variable */
 		foreach_data_t foreach_data = { NULL, GP_OK };
 		foreach_data.list = flist;
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		lt_dlinit ();
 		lt_dladdsearchdir (dir);
 		ret = lt_dlforeachfile (dir, foreach_func, &foreach_data);
 		lt_dlexit ();
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 		if (ret != 0) {
 			gp_list_free (flist);
 			GP_LOG_E ("Internal error looking for camlibs (%d)", ret);
@@ -231,7 +234,9 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		return ret;
 	}
 	GP_LOG_D ("Found %i camera drivers.", count);
+	pthread_mutex_lock(&gpi_libltdl_mutex);
 	lt_dlinit ();
+	pthread_mutex_unlock(&gpi_libltdl_mutex);
 	p = gp_context_progress_start (context, count,
 		_("Loading camera drivers from '%s'..."), dir);
 	for (i = 0; i < count; i++) {
@@ -240,20 +245,28 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			gp_list_free (flist);
 			return ret;
 		}
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		lh = lt_dlopenext (filename);
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 		if (!lh) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			GP_LOG_D ("Failed to load '%s': %s.", filename,
 				lt_dlerror ());
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 
 		/* camera_id */
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		id = lt_dlsym (lh, "camera_id");
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 		if (!id) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			GP_LOG_D ("Library '%s' does not seem to "
 				"contain a camera_id function: %s",
 				filename, lt_dlerror ());
 			lt_dlclose (lh);
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 
@@ -262,40 +275,53 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		 * loaded yet.
 		 */
 		if (id (&text) != GP_OK) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			lt_dlclose (lh);
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 		if (gp_abilities_list_lookup_id (list, text.text) >= 0) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			lt_dlclose (lh);
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 
 		/* camera_abilities */
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		ab = lt_dlsym (lh, "camera_abilities");
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 		if (!ab) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			GP_LOG_D ("Library '%s' does not seem to "
 				"contain a camera_abilities function: "
 				"%s", filename, lt_dlerror ());
 			lt_dlclose (lh);
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 
 		old_count = gp_abilities_list_count (list);
 		if (old_count < 0) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			lt_dlclose (lh);
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 
 		if (ab (list) != GP_OK) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			lt_dlclose (lh);
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			continue;
 		}
 
 		/* do not free the library in valgrind mode */
 #if !defined(VALGRIND)
+		pthread_mutex_lock(&gpi_libltdl_mutex);
 		lt_dlclose (lh);
+		pthread_mutex_unlock(&gpi_libltdl_mutex);
 #endif
-
 		new_count = gp_abilities_list_count (list);
 		if (new_count < 0)
 			continue;
@@ -308,13 +334,17 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 
 		gp_context_progress_update (context, p, i);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+			pthread_mutex_lock(&gpi_libltdl_mutex);
 			lt_dlexit ();
+			pthread_mutex_unlock(&gpi_libltdl_mutex);
 			gp_list_free (flist);
 			return (GP_ERROR_CANCEL);
 		}
 	}
 	gp_context_progress_stop (context, p);
+	pthread_mutex_lock(&gpi_libltdl_mutex);
 	lt_dlexit ();
+	pthread_mutex_unlock(&gpi_libltdl_mutex);
 	gp_list_free (flist);
 
 	return (GP_OK);
