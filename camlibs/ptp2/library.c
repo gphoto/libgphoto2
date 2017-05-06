@@ -3918,6 +3918,112 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	return add_objectid_and_upload (camera, path, context, newobject, &oi);
 }
 
+static int
+camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams		*params = &camera->pl->params;
+	PTPPropertyValue	propval;
+	PTPObjectHandles	handles, beforehandles;
+	int			tries;
+	uint32_t		newobject;
+
+	GP_LOG_D ("camera_fuji_capture");
+
+	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
+
+	/* ask camera to listen to tethering commands instead of button */
+	propval.u16 = 0x0002;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+
+	/* focus */
+	propval.u16 = 0x0200;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	/* poll camera until it is ready */
+	propval.u16 = 0x0001;
+	while (propval.u16 == 0x0001) {
+		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
+		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
+	}
+
+	/* shoot */
+	propval.u16 = 0x0304;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	/* poll camera until it is ready */
+	propval.u16 = 0x0000;
+	while (propval.u16 == 0x0000) {
+		ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64);
+		GP_LOG_D ("XXX Ready after shooting? %lx", propval.u64);
+	}
+
+	/* duplicate the nikon broken capture, as we do not know how to get events yet */
+
+	tries = 5;
+	GP_LOG_D ("missing fuji objectadded events workaround");
+	while (tries--) {
+		unsigned int i;
+		uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
+		if (ret != PTP_RC_OK)
+			break;
+
+		/* if (handles.n == params->handles.n)
+		 *	continue;
+		 * While this is a potential optimization, lets skip it for now.
+		 */
+		newobject = 0;
+		for (i=0;i<handles.n;i++) {
+			unsigned int 	j;
+			PTPObject	*ob;
+
+			/* look if we saw the objecthandle before capture */
+			for (j=0;j<beforehandles.n;j++)
+				if (beforehandles.Handler[j] == handles.Handler[i])
+					break;
+			if (j != beforehandles.n)
+				continue;
+
+			ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			if (ret != PTP_RC_OK) {
+				GP_LOG_E ("object added, but not found?");
+				continue;
+			}
+			/* A directory was added, like initial DCIM/100NIKON or so. */
+			if (ob->oi.ObjectFormat == PTP_OFC_Association)
+				continue;
+			newobject = handles.Handler[i];
+			/* we found a new file */
+			break;
+		}
+		free (handles.Handler);
+		if (newobject)
+			break;
+		C_PTP_REP (ptp_check_event (params));
+		sleep(1);
+	}
+	free (beforehandles.Handler);
+	if (!newobject)
+		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
+
+	/* clear path, so we get defined results even without object info */
+	path->name[0]='\0';
+	path->folder[0]='\0';
+
+	if (newobject != 0) {
+		PTPObject	*ob;
+
+		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+		strcpy  (path->name,  ob->oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
+	}
+	return GP_ERROR;
+}
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
@@ -4001,6 +4107,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	) {
 		return camera_sony_capture (camera, type, path, context);
 	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
+	) {
+		return camera_fuji_capture (camera, type, path, context);
+	}
+
 
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
@@ -4563,6 +4676,39 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
 
 		return GP_OK;
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
+	) {
+		PTPPropertyValue	propval;
+
+		/* ask camera to listen to tethering commands instead of button */
+		propval.u16 = 0x0002;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+
+		/* focus */
+		propval.u16 = 0x0200;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+		C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+		/* poll camera until it is ready */
+		propval.u16 = 0x0001;
+		while (propval.u16 == 0x0001) {
+			ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
+			GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
+		}
+
+		/* shoot */
+		propval.u16 = 0x0304;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+		C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+		/* poll camera until it is ready */
+		propval.u16 = 0x0000;
+		while (propval.u16 == 0x0000) {
+			ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64);
+			GP_LOG_D ("XXX Ready after shooting? %lx", propval.u64);
+		}
 	}
 
 #if 0
