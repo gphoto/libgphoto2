@@ -5,9 +5,9 @@ os:
  - osx
 
 env:
- - EXTRALIBS=""
- - EXTRALIBS="libusb-dev"
- - EXTRALIBS="libusb-1.0-0-dev libgd2-xpm-dev"
+ - EXTRALIBS="gettext"
+ - EXTRALIBS="gettext libusb-dev"
+ - EXTRALIBS="gettext libusb-1.0-0-dev libgd2-xpm-dev"
 
 # Note: Keep the sudo commands in .travis.yml - they do not work from
 #       a helper shell script.
