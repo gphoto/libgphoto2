@@ -5,6 +5,7 @@ set -e
 # Translate package names from Ubuntu packages to OSX brew packages
 ubuntu2osx() {
     case "$1" in
+	gettext)       echo "gettext" ;;
 	libusb-dev)       echo "libusb-compat" ;;
 	libusb-1.0-0-dev) echo "libusb" ;;
 	libgd2-xpm-dev)   echo "gd" ;;
