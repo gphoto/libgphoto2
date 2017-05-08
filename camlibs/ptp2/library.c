@@ -1906,6 +1906,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/84 */
 	{"Canon:Digital Ixus 180",		0x04a9, 0x32c0, 0},
 
+	/* Daniel Muller, jednatel SourcePaint s.r.o. <dan@sourcepaint.cz> */
+	{"Canon:EOS 77D",			0x04a9, 0x32cb, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
