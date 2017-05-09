@@ -2,6 +2,7 @@ libgphoto2 2.5.13.1 development release
 
 ptp2:
 * Canon EOS M capture support (M3, M5, M10 ... not the original EOS M currently)
+* Canon EOS 77D added, bug fixed.
 
 pentax:
 * Added Pentax K5-II
