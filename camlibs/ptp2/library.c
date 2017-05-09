@@ -3926,17 +3926,20 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 {
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
+#if 0
 	PTPObjectHandles	handles, beforehandles;
 	int			tries;
+#endif
+	PTPContainer		event;
 	uint32_t		newobject;
+	struct timeval		event_start;
+	int			back_off_wait = 0;
 
 	GP_LOG_D ("camera_fuji_capture");
 
+#if 0
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
-
-	/* ask camera to listen to tethering commands instead of button */
-	propval.u16 = 0x0002;
-	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+#endif
 
 	/* focus */
 	propval.u16 = 0x0200;
@@ -3958,14 +3961,35 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* poll camera until it is ready */
 	propval.u16 = 0x0000;
 	while (propval.u16 == 0x0000) {
-		ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64);
+		C_PTP_REP (ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64));
 		GP_LOG_D ("XXX Ready after shooting? %lx", propval.u64);
+		C_PTP_REP (ptp_check_event (params));
 	}
 
-	/* duplicate the nikon broken capture, as we do not know how to get events yet */
+	/* there is a ObjectAdded event being sent */
+	do {
+		C_PTP_REP (ptp_check_event (params));
+
+		while (ptp_get_one_event(params, &event)) {
+			switch (event.Code) {
+			case PTP_EC_ObjectAdded:
+				newobject = event.Param1;
+				goto downloadfile;
+			default:
+				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+				break;
+			}
+		}
+	}  while (waiting_for_timeout (&back_off_wait, event_start, 2000)); /* wait for 2 more seconds after busy is no longer signaled */
+
+	return GP_ERROR;
+
+
+#if 0
+	/* If we got no event in 2 seconds duplicate the nikon broken capture, as we do not know how to get events yet */
 
 	tries = 5;
-	GP_LOG_D ("missing fuji objectadded events workaround");
+	GP_LOG_D ("XXXX missing fuji objectadded events workaround");
 	while (tries--) {
 		unsigned int i;
 		uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
@@ -4009,7 +4033,9 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	free (beforehandles.Handler);
 	if (!newobject)
 		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
+#endif
 
+downloadfile:
 	/* clear path, so we get defined results even without object info */
 	path->name[0]='\0';
 	path->folder[0]='\0';
@@ -4685,10 +4711,6 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		PTPPropertyValue	propval;
 
-		/* ask camera to listen to tethering commands instead of button */
-		propval.u16 = 0x0002;
-		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
-
 		/* focus */
 		propval.u16 = 0x0200;
 		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
@@ -4697,8 +4719,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* poll camera until it is ready */
 		propval.u16 = 0x0001;
 		while (propval.u16 == 0x0001) {
-			ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
-			GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
+			C_PTP_REP (ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16));
 		}
 
 		/* shoot */
@@ -4709,8 +4730,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* poll camera until it is ready */
 		propval.u16 = 0x0000;
 		while (propval.u16 == 0x0000) {
-			ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64);
-			GP_LOG_D ("XXX Ready after shooting? %lx", propval.u64);
+			C_PTP_REP (ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64));
 		}
 	}
 
