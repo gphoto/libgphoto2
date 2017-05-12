@@ -3929,10 +3929,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 {
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
-#if 0
 	PTPObjectHandles	handles, beforehandles;
 	int			tries;
-#endif
 	PTPContainer		event;
 	uint32_t		newobject;
 	struct timeval		event_start;
@@ -3940,9 +3938,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	GP_LOG_D ("camera_fuji_capture");
 
-#if 0
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
-#endif
 
 	/* focus */
 	propval.u16 = 0x0200;
@@ -3983,12 +3979,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				break;
 			}
 		}
-	}  while (waiting_for_timeout (&back_off_wait, event_start, 2000)); /* wait for 2 more seconds after busy is no longer signaled */
+	}  while (waiting_for_timeout (&back_off_wait, event_start, 500)); /* wait for 0.5 seconds after busy is no longer signaled */
 
-	return GP_ERROR;
-
-
-#if 0
 	/* If we got no event in 2 seconds duplicate the nikon broken capture, as we do not know how to get events yet */
 
 	tries = 5;
@@ -4036,7 +4028,6 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	free (beforehandles.Handler);
 	if (!newobject)
 		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
-#endif
 
 downloadfile:
 	/* clear path, so we get defined results even without object info */
