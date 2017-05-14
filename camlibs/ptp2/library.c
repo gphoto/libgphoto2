@@ -1318,6 +1318,9 @@ static struct {
 	/* Chris P <cpeace@gmail.com> */
 	{"Nikon:DSC D3400",               0x04b0, 0x043d, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Phil Stephenson <filstephenson@gmail.com> */
+	{"Nikon:DSC D5600",               0x04b0, 0x043f, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
@@ -3922,6 +3925,129 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	return add_objectid_and_upload (camera, path, context, newobject, &oi);
 }
 
+static int
+camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams		*params = &camera->pl->params;
+	PTPPropertyValue	propval;
+	PTPObjectHandles	handles, beforehandles;
+	int			tries;
+	PTPContainer		event;
+	uint32_t		newobject;
+	struct timeval		event_start;
+	int			back_off_wait = 0;
+
+	GP_LOG_D ("camera_fuji_capture");
+
+	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
+
+	/* focus */
+	propval.u16 = 0x0200;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	/* poll camera until it is ready */
+	propval.u16 = 0x0001;
+	while (propval.u16 == 0x0001) {
+		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
+		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
+	}
+
+	/* shoot */
+	propval.u16 = 0x0304;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	/* poll camera until it is ready */
+	propval.u16 = 0x0000;
+	while (propval.u16 == 0x0000) {
+		C_PTP_REP (ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64));
+		GP_LOG_D ("XXX Ready after shooting? %lx", propval.u64);
+		C_PTP_REP (ptp_check_event (params));
+	}
+
+	/* there is a ObjectAdded event being sent */
+	do {
+		C_PTP_REP (ptp_check_event (params));
+
+		while (ptp_get_one_event(params, &event)) {
+			switch (event.Code) {
+			case PTP_EC_ObjectAdded:
+				newobject = event.Param1;
+				goto downloadfile;
+			default:
+				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+				break;
+			}
+		}
+	}  while (waiting_for_timeout (&back_off_wait, event_start, 500)); /* wait for 0.5 seconds after busy is no longer signaled */
+
+	/* If we got no event in 2 seconds duplicate the nikon broken capture, as we do not know how to get events yet */
+
+	tries = 5;
+	GP_LOG_D ("XXXX missing fuji objectadded events workaround");
+	while (tries--) {
+		unsigned int i;
+		uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
+		if (ret != PTP_RC_OK)
+			break;
+
+		/* if (handles.n == params->handles.n)
+		 *	continue;
+		 * While this is a potential optimization, lets skip it for now.
+		 */
+		newobject = 0;
+		for (i=0;i<handles.n;i++) {
+			unsigned int 	j;
+			PTPObject	*ob;
+
+			/* look if we saw the objecthandle before capture */
+			for (j=0;j<beforehandles.n;j++)
+				if (beforehandles.Handler[j] == handles.Handler[i])
+					break;
+			if (j != beforehandles.n)
+				continue;
+
+			ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			if (ret != PTP_RC_OK) {
+				GP_LOG_E ("object added, but not found?");
+				continue;
+			}
+			/* A directory was added, like initial DCIM/100NIKON or so. */
+			if (ob->oi.ObjectFormat == PTP_OFC_Association)
+				continue;
+			newobject = handles.Handler[i];
+			/* we found a new file */
+			break;
+		}
+		free (handles.Handler);
+		if (newobject)
+			break;
+		C_PTP_REP (ptp_check_event (params));
+		sleep(1);
+	}
+	free (beforehandles.Handler);
+	if (!newobject)
+		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
+
+downloadfile:
+	/* clear path, so we get defined results even without object info */
+	path->name[0]='\0';
+	path->folder[0]='\0';
+
+	if (newobject != 0) {
+		PTPObject	*ob;
+
+		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+		strcpy  (path->name,  ob->oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
+	}
+	return GP_ERROR;
+}
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
@@ -4005,6 +4131,13 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	) {
 		return camera_sony_capture (camera, type, path, context);
 	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
+	) {
+		return camera_fuji_capture (camera, type, path, context);
+	}
+
 
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
@@ -4567,6 +4700,33 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
 
 		return GP_OK;
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
+	) {
+		PTPPropertyValue	propval;
+
+		/* focus */
+		propval.u16 = 0x0200;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+		C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+		/* poll camera until it is ready */
+		propval.u16 = 0x0001;
+		while (propval.u16 == 0x0001) {
+			C_PTP_REP (ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16));
+		}
+
+		/* shoot */
+		propval.u16 = 0x0304;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+		C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+		/* poll camera until it is ready */
+		propval.u16 = 0x0000;
+		while (propval.u16 == 0x0000) {
+			C_PTP_REP (ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64));
+		}
 	}
 
 #if 0
