@@ -7983,6 +7983,8 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					PTPDevicePropDesc dpd;
 
 					memset(&dpd,0,sizeof(dpd));
+					memset(&propval,0,sizeof(propval));
+
 					C_PTP (ptp_generic_getdevicepropdesc(params,cursub->propid,&dpd));
 					if (cursub->type != dpd.DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd.DataType );
@@ -8006,8 +8008,8 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
 							ret = translate_ptp_result (ret_ptp);
 						}
+						ptp_free_devicepropvalue (cursub->type, &propval);
 					}
-					ptp_free_devicepropvalue (cursub->type, &propval);
 					ptp_free_devicepropdesc(&dpd);
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL);
