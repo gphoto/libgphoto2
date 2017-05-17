@@ -2463,6 +2463,9 @@ camera_exit (Camera *camera, GPContext *context)
 				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
 			}
 			break;
+		case PTP_VENDOR_FUJI:
+			CR (camera_unprepare_capture (camera, context));
+			break;
 		}
 
 		if (camera->pl->checkevents)
@@ -3966,6 +3969,9 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		C_PTP_REP (ptp_check_event (params));
 	}
 
+#if 0
+	/* FIXME: Marcus ... I need to review this when I get hands on a camera ... the objecthandles loop needs to go */
+	/* Reporter in https://github.com/gphoto/libgphoto2/issues/133 says only 1 event ever is sent, so this does not work */
 	/* there is a ObjectAdded event being sent */
 	do {
 		C_PTP_REP (ptp_check_event (params));
@@ -3982,7 +3988,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		}
 	}  while (waiting_for_timeout (&back_off_wait, event_start, 500)); /* wait for 0.5 seconds after busy is no longer signaled */
 
-	/* If we got no event in 2 seconds duplicate the nikon broken capture, as we do not know how to get events yet */
+	/* If we got no event seconds duplicate the nikon broken capture, as we do not know how to get events yet */
+#endif
 
 	tries = 5;
 	GP_LOG_D ("XXXX missing fuji objectadded events workaround");

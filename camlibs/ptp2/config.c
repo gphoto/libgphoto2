@@ -483,7 +483,8 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 			PTPPropertyValue propval;
 
 			propval.u16 = 0x0002;
-			return ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16);
+			C_PTP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+			return GP_OK;
 		}
 		break;
 	case PTP_VENDOR_CANON:
@@ -572,6 +573,16 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 		gp_context_error(context,
 		_("Sorry, your Canon camera does not support Canon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
+	case PTP_VENDOR_FUJI:
+		{
+			PTPPropertyValue propval;
+			PTPParams *params = &camera->pl->params;
+
+			propval.u16 = 0x0001;
+			C_PTP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+			return GP_OK;
+		}
+		break;
 	default:
 		/* generic capture does not need unpreparation */
 		return GP_OK;
