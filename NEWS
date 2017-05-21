@@ -11,7 +11,7 @@ libgphoto2_port/vusb:
 * support f-number, shutterspeed, and exposurebias in the virtual PTP camera
 
 translations:
-* updated ukrainian, polish, vietnamese
+* updated ukrainian, polish, vietnamese, french
 ------------------------------------------------------------------------------
 libgphoto2 2.5.13 release
 
