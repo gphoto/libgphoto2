@@ -3938,10 +3938,12 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPPropertyValue	propval;
 	PTPObjectHandles	handles, beforehandles;
 	int			tries;
-	PTPContainer		event;
 	uint32_t		newobject;
+#if 0
+	PTPContainer		event;
 	struct timeval		event_start;
 	int			back_off_wait = 0;
+#endif
 
 	GP_LOG_D ("camera_fuji_capture");
 
@@ -4040,7 +4042,9 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (!newobject)
 		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
 
+#if 0
 downloadfile:
+#endif
 	/* clear path, so we get defined results even without object info */
 	path->name[0]='\0';
 	path->folder[0]='\0';
