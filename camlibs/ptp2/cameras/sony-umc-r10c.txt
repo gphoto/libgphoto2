@@ -1,0 +1,70 @@
+Lsusb: 
+Bus 001 Device 002: ID 054c:0a79 Sony Corp. 
+
+gphoto2 --auto-detect:
+USB PTP Class Camera           usb:001,002
+
+LANG=C gphoto2 --summary >summary.txt:
+Camera summary:
+Manufacturer: Sony Corporation
+Model: UMC-R10C
+  Version: 2.00
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: Association/Directory, MPEG, JPEG, Unknown(b982), Unknown(b301), Undefined Type, Unknown(b101), Unknown(b310)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+
+LANG=C gphoto2 --list-all-config >config.txt:
+/main/actions/opcode
+Label: PTP Opcode
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+/main/status/serialnumber
+Label: Serial Number
+Type: TEXT
+Current: 0000000000000000nnnnnnnnnnnnnnnn
+/main/status/manufacturer
+Label: Camera Manufacturer
+Type: TEXT
+Current: Sony Corporation
+/main/status/cameramodel
+Label: Camera Model
+Type: TEXT
+Current: UMC-R10C
+/main/status/deviceversion
+Label: Device Version
+Type: TEXT
+Current: 2.00
+/main/status/vendorextension
+Label: Vendor Extension
+Type: TEXT
+Current: Sony PTP Extensions
+
+gphoto2 --capture-image:
+                                                                               
+*** Error ***              
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***       
+
+For debugging messages, please use the --debug option.
+Debugging messages may help finding a solution to your problem.
+If you intend to send any error or debug messages to the gphoto
+developer mailing list <gphoto-devel@lists.sourceforge.net>, please run
+gphoto2 as follows:
+
+    env LANG=C gphoto2 --debug --debug-logfile=my-logfile.txt --capture-image
+
+Please make sure there is sufficient quoting around the arguments.
+

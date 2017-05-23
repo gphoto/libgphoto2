@@ -967,6 +967,9 @@ static struct {
 	/* Andre Crone <andre@elysia.nl>, adjusted */
 	{"Sony:Alpha-A7S II (Control)",0x054c,0x0a71, PTP_CAP},
 
+	/* Demo7up <demo7up@gmail.com> */
+	{"Sony:UMC-R10C",		0x054c,0x0a79, 0},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
