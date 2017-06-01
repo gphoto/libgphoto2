@@ -1605,7 +1605,7 @@ _put_ImageSize(CONFIG_PUT_ARGS) {
 static int
 _get_ExpCompensation(CONFIG_GET_ARGS) {
 	int j;
-	char buf[10];
+	char buf[13];
 
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return GP_ERROR;
@@ -7710,7 +7710,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 
 	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
 		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
-		char			buf[20], *label;
+		char			buf[21], *label;
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
 
