@@ -1093,7 +1093,7 @@ static int
 ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 	struct ptp_dirent	*cur, *newcur, *dir, *dcim = NULL;
 	static int		capcnt = 98;
-	char			buf[9];
+	char			buf[10];
 
 	CHECK_SEQUENCE_NUMBER();
 	CHECK_SESSION();
@@ -1432,7 +1432,7 @@ ptp_vusb_write(vcamera *cam, ptpcontainer *ptp) {
 	switch (ptp->params[0]) {
 	case 0:	{/* add a new image after 1 second */
 		struct ptp_dirent	*cur, *newcur, *dir, *dcim = NULL;
-		char			buf[9];
+		char			buf[10];
 
 		cur = first_dirent;
 		while (cur) {
