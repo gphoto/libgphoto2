@@ -516,7 +516,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	n=camera->pl->num_pics;
 	sonix_capture_image(camera->port);
 	snprintf(name, 16, "sonix%03i.ppm",n+1);
-	snprintf(path->folder,1,"/");
+	sprintf(path->folder,"/");
 	snprintf(path->name,16,"sonix%03i.ppm",n+1);
 	gp_filesystem_append(camera->fs, "/", name, context);
 	return GP_OK;
