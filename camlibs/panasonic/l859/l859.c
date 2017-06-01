@@ -446,7 +446,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		if (size == 0)
 			return GP_OK;
 
-		if (!(filename = (char*)malloc(30))) {
+		if (!(filename = (char*)malloc(31))) {
 			GP_DEBUG ("Unable to allocate memory for filename.");
 			return GP_ERROR_NO_MEMORY;
 		}
