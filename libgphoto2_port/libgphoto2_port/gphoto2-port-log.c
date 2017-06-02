@@ -141,7 +141,7 @@ gp_log_remove_func (int id)
 
 	for (i=0;i<log_funcs_count;i++) {
 		if (log_funcs[i].id == id) {
-			memmove (log_funcs + i - 1, log_funcs + i, log_funcs_count - i);
+			memmove (log_funcs + i, log_funcs + i + 1, sizeof(LogFunc) * (log_funcs_count - i - 1));
 			log_funcs_count--;
 			return GP_OK;
 		}
