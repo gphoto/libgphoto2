@@ -2022,6 +2022,9 @@ static struct {
 	/* with new updated firmware 1.1 */
 	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, PTP_CAP},
 
+	/* https://github.com/gphoto/libgphoto2/issues/170 */
+	{"Fuji:Fujifilm X-T20",			0x04cb, 0x02d4, 0},
+
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
 	{"Sea & Sea:5000G (PTP mode)",		0x05ca, 0x0327, 0},
