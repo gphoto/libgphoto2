@@ -148,6 +148,7 @@ main ()
 	const char *name;
 	char *foldername;
 	GPContext *context;
+	int logid;
 
 #ifdef HAVE_MCHECK_H
 	mtrace();
@@ -155,7 +156,7 @@ main ()
 
 	CHECK (gp_list_new(&list));
 
-	gp_log_add_func (GP_LOG_DEBUG, log_func, NULL);
+	logid = gp_log_add_func (GP_LOG_DEBUG, log_func, NULL);
 	context = gp_context_new ();
 	gp_context_set_error_func (context, error_func, NULL);
 
@@ -291,6 +292,7 @@ main ()
 #ifdef HAVE_MCHECK_H
 	muntrace();
 #endif
+	gp_log_remove_func (logid);
 
 	return (0);
 }
