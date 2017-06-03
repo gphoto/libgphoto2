@@ -184,13 +184,13 @@ main (int argc, char *argv[])
 	int count;
 	const char *fmt_str = NULL;
 	char lastmodel[200];
+	int logid = -1;
 
 	parse_command_line (argc, argv);
 
 	if (do_debug) {
 		gettimeofday (&glob_tv_zero, NULL);
-		CHECK (gp_log_add_func (GP_LOG_ALL, debug_func, NULL));
-		
+		CHECK (logid = gp_log_add_func (GP_LOG_ALL, debug_func, NULL));
 		gp_log (GP_LOG_DEBUG, "main", "test-camera-list start");
 	}
 
@@ -309,6 +309,7 @@ main (int argc, char *argv[])
 	}
 	
 	CHECK (gp_abilities_list_free (al));
+	gp_log_remove_func (logid);
 	return (0);
 }
 
