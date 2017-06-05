@@ -592,7 +592,8 @@ void ipslr_status_parse_k1(ipslr_handle_t *p, pslr_status *status) {
     status->lens_max_aperture.denom = get_uint32_le(&buf[0x154]);
     status->manual_mode_ev = get_uint32_le(&buf[0x160]); // ?
     status->focused_af_point = get_uint32_le(&buf[0x16c]); // ?
-    // battery fields?
+    status->battery_1 = get_uint32_le(&buf[0x174]);
+    status->battery_2 = get_uint32_le(&buf[0x178]);
 
     // selected_af_point is invalid
     status->selected_af_point = 0;
