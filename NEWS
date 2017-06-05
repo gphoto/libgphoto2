@@ -1,14 +1,31 @@
 libgphoto2 2.5.13.1 development release
 
 ptp2:
-* Canon EOS M capture support (M3, M5, M10 ... not the original EOS M currently)
-* Canon EOS 77D added, bug fixed.
+* Canon EOS M remote control / capture support (M3, M5, M10 ... but not the original EOS M currently)
+* fix for Canon EOS camera crash bug introduced in 2.5.13.
+* Fuji XT-2 capture support (firmware update needed, might work for other Fuji XT too)
+* Canon EOS 77D added.
+* various bugfixes
+* added USB IDs:
+  * Sony DSC-RX10M3, DSC-HX90V
+  * Sony UMC-R10C
+  * Nikon D5600,
+  * Canon EOS 77D
+  * Fuji XT-20
+* synced MTP device ids from libmtp
+* more issues fixed that were found by the AFL fuzzer
 
 pentax:
-* Added Pentax K5-II
+* Added Pentax K5-II, Pentax K3-II
+
+libgphoto2_port:
+* fixed gp_log_remove_func
 
 libgphoto2_port/vusb:
 * support f-number, shutterspeed, and exposurebias in the virtual PTP camera
+
+all:
+* several issues found by gcc 7 fixed
 
 translations:
 * updated ukrainian, polish, vietnamese, french, swedish
