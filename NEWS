@@ -1,4 +1,6 @@
-libgphoto2 2.5.14 development release
+libgphoto2 2.5.14.1 development version
+------------------------------------------------------------------------------
+libgphoto2 2.5.14 release
 
 ptp2:
 * Canon EOS M remote control / capture support (M3, M5, M10 ... but not the original EOS M currently)
