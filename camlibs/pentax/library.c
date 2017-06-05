@@ -188,6 +188,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		"Using code from pktriggercord by Andras Salamon.\n"
 		"Collected Status Information:\n%s"
 	), statusinfo);
+	free (statusinfo);
 	return GP_OK;
 }
 
