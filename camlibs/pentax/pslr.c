@@ -1520,6 +1520,7 @@ static int _ipslr_write_args(uint8_t cmd_2, ipslr_handle_t *p, int n, ...) {
 
         res = scsi_write(fd, cmd, sizeof (cmd), buf, 4 * n);
         if (res != PSLR_OK) {
+            va_end(ap);
             return res;
         }
     } else {
@@ -1537,6 +1538,7 @@ static int _ipslr_write_args(uint8_t cmd_2, ipslr_handle_t *p, int n, ...) {
             cmd[2] = i * 4;
             res = scsi_write(fd, cmd, sizeof (cmd), buf, 4);
             if (res != PSLR_OK) {
+                va_end(ap);
                 return res;
             }
         }
