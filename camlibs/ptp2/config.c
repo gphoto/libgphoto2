@@ -2891,9 +2891,6 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 				((dpd->DataType == PTP_DTC_INT8)  && (dpd->CurrentValue.i8 == i))
 			)
 				gp_widget_set_value (*widget, buf);
-
-			/* malicious device might report stepsize 0 ... but lets do 1 cycle through the loop */
-			if (s == 0) break;
 		}
 	}
 
