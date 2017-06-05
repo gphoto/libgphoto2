@@ -20,12 +20,20 @@ static int
 recursive_directory(Camera *camera, const char *folder, GPContext *context, int *foundfile) {
 	int		i, ret;
 	CameraList	*list;
+	const char	*newfile;
+	CameraFileInfo	fileinfo;
+	CameraFile	*file;
 
-	gp_list_new (&list);
+	ret = gp_list_new (&list);
+	if (ret < GP_OK) {
+		printf ("Could not allocate list.\n");
+		return ret;
+	}
 
 	ret = gp_camera_folder_list_folders (camera, folder, list, context);
 	if (ret < GP_OK) {
 		printf ("Could not list folders.\n");
+		gp_list_free (list);
 		return ret;
 	}
 	gp_list_sort (list);
@@ -46,6 +54,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 		ret = recursive_directory (camera, buf, context, &havefile);
 		free (buf);
 		if (ret != GP_OK) {
+			gp_list_free (list);
 			printf ("Failed to recursively list folders.\n");
 			return ret;
 		}
@@ -56,35 +65,34 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 	ret = gp_camera_folder_list_files (camera, folder, list, context);
 	if (ret < GP_OK) {
+		gp_list_free (list);
 		printf ("Could not list files.\n");
 		return ret;
 	}
 	gp_list_sort (list);
-	for (i = 0; i < gp_list_count (list); i++) {
-		const char	*newfile;
-		CameraFileInfo	fileinfo;
-		CameraFile	*file;
-
-		gp_list_get_name (list, i, &newfile);
-		ret = gp_camera_file_get_info (camera, folder, newfile, &fileinfo, context);
-		if (ret != GP_OK) {
-			printf ("Could not get file info.\n");
-			return ret;
-		}
-	
-		/* Trigger the ptp things */
-		gp_file_new (&file);
-		ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_METADATA, file, context);
-		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-			printf ("Could not get file metadata.\n");
-			return ret;
-		}
-		gp_file_free (file);
-
-		if (foundfile) *foundfile = 1;
-
-		break;	/* Just process the first file, then return */
+	if (gp_list_count (list) <= 0) {
+		gp_list_free (list);
+		return GP_OK;
 	}
+
+	gp_list_get_name (list, 0, &newfile); /* only entry 0 needed */
+	ret = gp_camera_file_get_info (camera, folder, newfile, &fileinfo, context);
+	if (ret != GP_OK) {
+		gp_list_free (list);
+		printf ("Could not get file info.\n");
+		return ret;
+	}
+
+	/* Trigger the ptp things */
+	gp_file_new (&file);
+	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_METADATA, file, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		gp_list_free (list);
+		printf ("Could not get file metadata.\n");
+		return ret;
+	}
+	gp_file_free (file);
+	if (foundfile) *foundfile = 1;
 	gp_list_free (list);
 	return GP_OK;
 }
