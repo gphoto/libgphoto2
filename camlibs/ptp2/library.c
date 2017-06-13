@@ -1324,6 +1324,9 @@ static struct {
 	/* Andre Crone <andre@elysia.nl> */
 	{"Nikon:DSC D810A",               0x04b0, 0x043b, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* bob@360degreeviews.com */
+	{"Nikon:DSC D500",                0x04b0, 0x043c, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Chris P <cpeace@gmail.com> */
 	{"Nikon:DSC D3400",               0x04b0, 0x043d, PTP_CAP|PTP_CAP_PREVIEW},
 
