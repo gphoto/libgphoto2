@@ -925,6 +925,9 @@ static struct {
 	/* Anja Stock at SUSE */
 	{"Sony:DSC-RX10M3 (Control)",  	0x054c, 0x079d, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://sourceforge.net/p/libmtp/support-requests/246/ */
+	{"Sony:DSC-HX400V (MTP)",      0x054c, 0x08ac, 0},
+
 	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
 	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
 
