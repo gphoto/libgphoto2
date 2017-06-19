@@ -482,6 +482,10 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 		{
 			PTPPropertyValue propval;
 
+			/* without the firmware update ... not an error... */
+			if (!have_prop (camera, PTP_VENDOR_FUJI, 0xd207))
+				return GP_OK;
+
 			propval.u16 = 0x0002;
 			C_PTP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
 			return GP_OK;
