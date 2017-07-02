@@ -100,7 +100,8 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	while (status !=2)
 		SONIX_READ(port, &status);	
 		
-		SONIX_READ(port, &status);			
+	/* FIXME(Marcus): was indented at above level, unclear if it is needed this way ... */
+	SONIX_READ(port, &status);
 
 	skip_a_step:
 	
