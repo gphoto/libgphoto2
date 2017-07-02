@@ -1910,6 +1910,9 @@ static struct {
 	/* Gong <elainegong2010@gmail.com> */
 	{"Canon:IXUS 160",			0x04a9, 0x32aa, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Gerald Leung <gerald@geraldleung.ca> */
+	{"Canon:PowerShot ELPH 350 HS",		0x04a9, 0x32ab, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS R",			0x04a9, 0x32af, PTP_CAP|PTP_CAP_PREVIEW},
 
