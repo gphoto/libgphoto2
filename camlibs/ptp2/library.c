@@ -1421,6 +1421,7 @@ static struct {
 	{"Olympus:FE4000",                0x07b4, 0x0116, 0},
 	{"Olympus:X920",                  0x07b4, 0x0116, 0},
 	{"Olympus:X925",                  0x07b4, 0x0116, 0},
+	{"Olympus:VR360",                 0x07b4, 0x0116, 0},
 
 	/* Jonas Rani Hatem <jr@hatem.be> */
 	{"Olympus:TG-620",                0x07b4, 0x0125, 0},
