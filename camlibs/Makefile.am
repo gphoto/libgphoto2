@@ -7,7 +7,7 @@
 #     ( cd camlibs && make agfa_cl20.la )
 #
 # If you only want to install a single camlib or two, run
-#     make DRIVERS="canon.la agfa_cl20.la" install
+#     make BUILD_THESE_CAMLIBS="canon.la agfa_cl20.la" install
 # in the camlibs/ subdir or in the libgphoto2 top-level directory.
 ########################################################################
 
