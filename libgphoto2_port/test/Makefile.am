@@ -4,7 +4,7 @@ check_PROGRAMS =
 noinst_PROGRAMS =
 
 # When we build all our iolibs in one directory, we can run our checks
-# with IOLIBS set to the camlib build directory.
+# with IOLIBS set to the iolib build directory.
 TESTS_ENVIRONMENT = env \
 	IOLIBS="$(top_builddir)"
 

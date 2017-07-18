@@ -72,9 +72,9 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"unknown (C compiler used)",
 #endif
 #ifdef HAVE_LTDL
-			"ltdl (for portable loading of camlibs)",
+			"ltdl (for portable loading of iolibs)",
 #else
-			"no ltdl (for portable loading of camlibs)",
+			"no ltdl (for portable loading of iolibs)",
 #endif
 #ifdef HAVE_LIBUSB_WIN32
 			"USB (libusb-win32, for USB cameras)",

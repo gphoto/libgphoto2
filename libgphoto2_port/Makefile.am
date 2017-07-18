@@ -5,7 +5,7 @@
 #     gmake usb.la
 # or  make usb.la
 #
-# If you only want to install a single camlib or two, run
+# If you only want to install a single iolib or two, run
 #     make IOLIB_LTLIST="usb.la ptpip.la" install-iolibLTLIBRARIES
 ########################################################################
 
