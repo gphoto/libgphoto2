@@ -64,8 +64,34 @@ if test "x$POPT_CFLAGS" = "x" && test "x$POPT_LIBS" = "x"; then
 	# try to find options to compile popt.h
 	CPPFLAGS_save="$CPPFLAGS"
 	popth_found=no
-	for popt_prefix in "" /usr /usr/local
-	do
+        case "$MSYSTEM" in
+         MINGW32)
+		if test -n "/mingw32"; then
+			:
+		elif test -d "/mingw32/include"; then
+			CPPFLAGS="-I/mingw32/include ${CPPFLAGS}"
+		else
+			continue
+		fi
+		ac_cv_header_popt_h=""
+		unset ac_cv_header_popt_h
+		AC_CHECK_HEADER([popt.h], [popth_found=yes])
+         ;;
+         MINGW64)
+		if test -n "${popt_prefix}"; then
+			:
+		elif test -d "/mingw64/include"; then
+			CPPFLAGS="-I/mingw64/include ${CPPFLAGS}"
+		else
+			continue
+		fi
+		ac_cv_header_popt_h=""
+		unset ac_cv_header_popt_h
+		AC_CHECK_HEADER([popt.h], [popth_found=yes])
+         ;;
+         *)
+           for popt_prefix in "" /usr /usr/local
+           do
 		if test -n "${popt_prefix}"; then
 			:
 		elif test -d "${popt_prefix}/include"; then
@@ -77,7 +103,9 @@ if test "x$POPT_CFLAGS" = "x" && test "x$POPT_LIBS" = "x"; then
 		unset ac_cv_header_popt_h
 		AC_CHECK_HEADER([popt.h], [popth_found=yes])
 		if test "$popth_found" = yes; then break; fi
-	done
+	   done
+         ;;
+        esac
 	CPPFLAGS="$CPPFLAGS_save"
 	if test "$popth_found" = "yes"; then
 		if test "$popt_prefix" = ""; then
@@ -96,7 +124,38 @@ if test "x$POPT_CFLAGS" = "x" && test "x$POPT_LIBS" = "x"; then
 	# try to find options to link against popt
 	LDFLAGS_save="$LDFLAGS"
 	popt_links=no
-	for popt_prefix in /usr "" /usr/local; do
+        case "$MSYSTEM" in
+         MINGW32)
+#		for ldir in "" lib; do
+			popt_libdir="/mingw32/lib"
+			if test "${popt_libdir}" = "/"; then
+				popt_libdir=""
+			elif test -d "${popt_libdir}"; then
+				LDFLAGS="-L${popt_libdir} ${LDFLAGS}"
+			else
+				continue
+			fi
+			# Avoid caching of results
+			ac_cv_lib_popt_poptStuffArgs=""
+			unset ac_cv_lib_popt_poptStuffArgs
+			AC_CHECK_LIB([popt], [poptStuffArgs], [popt_links=yes])
+         ;;
+         MINGW64)
+			popt_libdir="/mingw64/lib"
+			if test "${popt_libdir}" = "/"; then
+				popt_libdir=""
+			elif test -d "${popt_libdir}"; then
+				LDFLAGS="-L${popt_libdir} ${LDFLAGS}"
+			else
+				continue
+			fi
+			# Avoid caching of results
+			ac_cv_lib_popt_poptStuffArgs=""
+			unset ac_cv_lib_popt_poptStuffArgs
+			AC_CHECK_LIB([popt], [poptStuffArgs], [popt_links=yes])
+          ;;
+         *)
+	    for popt_prefix in /usr "" /usr/local; do
 		# We could have "/usr" and "lib64" at the beginning of the
 		# lists. Then the first tested location would
 		# incidentally be the right one on 64bit systems, and
@@ -124,7 +183,9 @@ if test "x$POPT_CFLAGS" = "x" && test "x$POPT_LIBS" = "x"; then
 			if test "$popt_links" = yes; then break; fi
 		done
 		if test "$popt_links" = yes; then break; fi
-	done
+	  done
+         ;;
+        esac
 	LDFLAGS="$LDFLAGS_save"
 	if test "$popt_links" = "yes"; then
 		if test "$popt_libdir" = ""; then

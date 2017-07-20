@@ -1,0 +1,31 @@
+# -*- Makefile -*-
+
+EXTRA_DIST += %reldir%/README.md
+EXTRA_DIST += %reldir%/gphoto-m4-sync
+
+EXTRA_DIST += %reldir%/gp-byteorder.m4
+EXTRA_DIST += %reldir%/gp-camlibs.m4
+EXTRA_DIST += %reldir%/gp-check-doxygen.m4
+EXTRA_DIST += %reldir%/gp-check-library.m4
+EXTRA_DIST += %reldir%/gp-check-popt.m4
+EXTRA_DIST += %reldir%/gp-check-shell-environment.m4
+EXTRA_DIST += %reldir%/gp-config-msg.m4
+EXTRA_DIST += %reldir%/gp-documentation.m4
+EXTRA_DIST += %reldir%/gp-dynamic-libraries.m4
+EXTRA_DIST += %reldir%/gp-gettext-hack.m4
+EXTRA_DIST += %reldir%/gp-internal-docs.m4
+EXTRA_DIST += %reldir%/gp-libltdl.m4
+EXTRA_DIST += %reldir%/gp-manual-docbook-xml.m4
+EXTRA_DIST += %reldir%/gp-manual-documentation.m4
+EXTRA_DIST += %reldir%/gp-manual-fig2dev.m4
+EXTRA_DIST += %reldir%/gp-manual-graphviz.m4
+EXTRA_DIST += %reldir%/gp-manual-gtk-doc.m4
+EXTRA_DIST += %reldir%/gp-manual-pstoimg.m4
+EXTRA_DIST += %reldir%/gp-manual-w3m.m4
+EXTRA_DIST += %reldir%/gp-packaging.m4
+EXTRA_DIST += %reldir%/gp-pkg-config.m4
+EXTRA_DIST += %reldir%/gp-references.m4
+EXTRA_DIST += %reldir%/gp-stdint.m4
+EXTRA_DIST += %reldir%/gp-subpackage.m4
+EXTRA_DIST += %reldir%/gp-udev.m4
+EXTRA_DIST += %reldir%/gp-va-copy.m4
