@@ -429,6 +429,19 @@ if test "x$enable_disk" = "xyes"; then
 	IOLIB_LIST="$IOLIB_LIST disk"
 fi
 
+AC_ARG_ENABLE([vusb],
+	AS_HELP_STRING([--enable-vusb], [enable the 'vusb' virtual USB port driver]),
+	,[
+		enable_vusb=no
+		GP_CONFIG_MSG([virtual USB support],[disabled, no virtual PTP test camera])
+	]
+)
+
+dnl disk port also works everywhere, but it's not really necessary
+if test "x$enable_vusb" = "xyes"; then
+	IOLIB_LIST="$IOLIB_LIST vusb"
+fi
+
 AC_ARG_ENABLE([ptpip],
 	AS_HELP_STRING([--disable-ptpip], [disable the 'ptpip' port driver for TCP/IP connected PTP cameras]),
 	,enable_ptpip=yes)
@@ -436,8 +449,6 @@ dnl ptpip - works 'everywhere' with TCP/IP stack.
 if test "x$enable_ptpip" = "xyes"; then
 	IOLIB_LIST="$IOLIB_LIST ptpip"
 fi
-
-IOLIB_LIST="$IOLIB_LIST vusb"
 
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
