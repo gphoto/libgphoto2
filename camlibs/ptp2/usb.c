@@ -115,7 +115,7 @@ retry:
 			}
 		} else
 			GP_LOG_E ("PTP_OC 0x%04x sending req failed: wrote only %d of %d bytes", req->Code, res, towrite);
-		return PTP_ERROR_IO;
+		return translate_gp_result_to_ptp(res);
 	}
 	return PTP_RC_OK;
 }
@@ -161,7 +161,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 			GP_LOG_E ("PTP_OC 0x%04x sending data failed: %s (%d)", ptp->Code, gp_port_result_as_string(res), res);
 		else
 			GP_LOG_E ("PTP_OC 0x%04x sending data failed: wrote only %d of %d bytes", ptp->Code, res, wlen);
-		return PTP_ERROR_IO;
+		return translate_gp_result_to_ptp(res);
 	}
 	if (size <= datawlen) { /* nothing more to do */
 		written = wlen;
@@ -187,7 +187,7 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 			break;
 		res = gp_port_write (camera->port, (char*)bytes, readlen);
 		if (res < 0) {
-			ret = PTP_ERROR_IO;
+			ret = translate_gp_result_to_ptp(res);
 			break;
 		}
 		bytes_left_to_transfer -= res;
@@ -253,7 +253,7 @@ retry:
 		if (tries++ < 1)
 			goto retry;
 	}
-	return PTP_ERROR_IO;
+	return translate_gp_result_to_ptp(result);
 }
 
 #define READLEN 512*1024 /* read blob size, mostly to avoid reading all of it at once. */
@@ -398,7 +398,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			do_retry = FALSE;
 			continue;
 		} else if (res <= 0) {
-			ret = PTP_ERROR_IO;
+			ret = translate_gp_result_to_ptp(res);
 			break;
 		} else
 			do_retry = FALSE; /* once we have succesfully read any data, don't try again */
@@ -537,9 +537,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	if (result < 0) {
 		if ((result != GP_ERROR_TIMEOUT) || (wait != PTP_EVENT_CHECK_FAST))
 			GP_LOG_E ("Reading PTP event failed: %s (%d)", gp_port_result_as_string(result), result);
-		if (result == GP_ERROR_TIMEOUT)
-			return PTP_ERROR_TIMEOUT;
-		return PTP_ERROR_IO;
+		return translate_gp_result_to_ptp(result);
 	}
 	if (result == 0) {
 		GP_LOG_E ("Reading PTP event failed: a 0 read occurred, assuming timeout.");

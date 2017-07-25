@@ -4235,6 +4235,7 @@ static struct {
 	{PTP_RC_CANON_BATTERY_LOW,	PTP_VENDOR_CANON, N_("Battery Low")},
 	{PTP_RC_CANON_NOT_READY,	PTP_VENDOR_CANON, N_("Camera Not Ready")},
 
+	{PTP_ERROR_NODEVICE,		0, N_("PTP No Device")},
 	{PTP_ERROR_TIMEOUT,		0, N_("PTP Timeout")},
 	{PTP_ERROR_CANCEL,		0, N_("PTP Cancel Request")},
 	{PTP_ERROR_BADPARAM,		0, N_("PTP Invalid Parameter")},

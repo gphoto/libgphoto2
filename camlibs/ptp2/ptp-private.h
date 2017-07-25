@@ -38,6 +38,7 @@ int have_prop(Camera *camera, uint16_t vendor, uint16_t prop);
 
 /* library.c */
 int translate_ptp_result (uint16_t result);
+uint16_t translate_gp_result_to_ptp (int gp_result);
 int fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo*);
 
 int chdk_init(Camera*,GPContext*);

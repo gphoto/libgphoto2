@@ -797,6 +797,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_WFC_Version_Not_Supported	0xA122
 
 /* libptp2 extended ERROR codes */
+#define PTP_ERROR_NODEVICE		0x02F9
 #define PTP_ERROR_TIMEOUT		0x02FA
 #define PTP_ERROR_CANCEL		0x02FB
 #define PTP_ERROR_BADPARAM		0x02FC
