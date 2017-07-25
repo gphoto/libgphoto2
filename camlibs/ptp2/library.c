@@ -139,6 +139,7 @@ translate_ptp_result (uint16_t result)
 	case PTP_RC_ParameterNotSupported:	return GP_ERROR_BAD_PARAMETERS;
 	case PTP_RC_OperationNotSupported:	return GP_ERROR_NOT_SUPPORTED;
 	case PTP_RC_DeviceBusy:			return GP_ERROR_CAMERA_BUSY;
+	case PTP_ERROR_NODEVICE:		return GP_ERROR_IO_USB_FIND;
 	case PTP_ERROR_TIMEOUT:			return GP_ERROR_TIMEOUT;
 	case PTP_ERROR_CANCEL:			return GP_ERROR_CANCEL;
 	case PTP_ERROR_BADPARAM:		return GP_ERROR_BAD_PARAMETERS;
@@ -146,6 +147,22 @@ translate_ptp_result (uint16_t result)
 	case PTP_ERROR_DATA_EXPECTED:
 	case PTP_ERROR_RESP_EXPECTED:		return GP_ERROR_IO;
 	default:				return GP_ERROR;
+	}
+}
+
+uint16_t
+translate_gp_result_to_ptp (int gp_result)
+{
+	switch (gp_result) {
+	case GP_OK:				return PTP_RC_OK;
+	case GP_ERROR_BAD_PARAMETERS:		return PTP_RC_ParameterNotSupported;
+	case GP_ERROR_NOT_SUPPORTED:		return PTP_RC_OperationNotSupported;
+	case GP_ERROR_CAMERA_BUSY:		return PTP_RC_DeviceBusy;
+	case GP_ERROR_IO_USB_FIND:		return PTP_ERROR_NODEVICE;
+	case GP_ERROR_TIMEOUT:			return PTP_ERROR_TIMEOUT;
+	case GP_ERROR_CANCEL:			return PTP_ERROR_CANCEL;
+	case GP_ERROR_IO:			return PTP_ERROR_IO;
+	default:				return PTP_RC_GeneralError;
 	}
 }
 
