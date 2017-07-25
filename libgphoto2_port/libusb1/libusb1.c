@@ -120,6 +120,17 @@ static int translate_libusb_error( int error, int default_return )
 	}
 }
 
+struct _PrivateIrqCompleted {
+	struct _PrivateIrqCompleted	*next;
+	enum libusb_transfer_status	status;
+	int							data_len;
+	unsigned char				*data;
+};
+
+#define NB_INTERRUPT_TRANSFERS 10
+/* FIXME: safe size? */
+#define INTERRUPT_BUFFER_SIZE 256
+
 struct _GPPortPrivateLibrary {
 	libusb_context *ctx;
 	libusb_device *d;
@@ -141,11 +152,10 @@ struct _GPPortPrivateLibrary {
 	int				logfd;
 #endif
 
-#define INTERRUPT_TRANSFERS 10
-	struct libusb_transfer		*transfers[INTERRUPT_TRANSFERS];
-	int 				nrofirqs;
-	unsigned char			**irqs;
-	int 				*irqlens;
+	struct libusb_transfer		*transfers[NB_INTERRUPT_TRANSFERS];
+	int				nrofactiveinttransfers;
+	struct _PrivateIrqCompleted	*irqs_head;
+	struct _PrivateIrqCompleted	*irqs_tail;
 };
 
 GPPortType
@@ -433,7 +443,9 @@ gp_libusb1_open (GPPort *port)
 		return GP_ERROR_IO_USB_CLAIM;
 	}
 
-	gp_libusb1_queue_interrupt_urbs (port);
+	ret = gp_libusb1_queue_interrupt_urbs (port);
+	if (ret)
+		return ret;
 
 	return GP_OK;
 }
@@ -521,11 +533,19 @@ gp_libusb1_close (GPPort *port)
 
 	libusb_close (port->pl->dh);
 
-	free (port->pl->irqs);
-	port->pl->irqs = NULL;
-	free (port->pl->irqlens);
-	port->pl->irqlens = NULL;
-	port->pl->nrofirqs = 0;
+	struct _PrivateIrqCompleted *irq_iter;
+	struct _PrivateIrqCompleted *irq_next;
+
+	irq_iter=port->pl->irqs_head;
+	while (irq_iter != NULL) {
+		if (irq_iter->data)
+			free(irq_iter->data);
+		irq_next = irq_iter->next;
+		free(irq_iter);
+		irq_iter = irq_next;
+	}
+	port->pl->irqs_head = NULL;
+	port->pl->irqs_tail = NULL;
 	port->pl->dh = NULL;
 	return GP_OK;
 }
@@ -604,44 +624,66 @@ gp_libusb1_reset(GPPort *port)
 static void LIBUSB_CALL
 _cb_irq(struct libusb_transfer *transfer)
 {
+	struct _PrivateIrqCompleted *irq_new = NULL;
 	struct _GPPortPrivateLibrary *pl = transfer->user_data;
 	int i;
+	int ret;
 
 	GP_LOG_D("%p with status %d", transfer, transfer->status);
 
+	if ((transfer->status != LIBUSB_TRANSFER_CANCELLED) &&
+		(transfer->status != LIBUSB_TRANSFER_TIMED_OUT)
+	) {
+		irq_new = (struct _PrivateIrqCompleted *) calloc(1, sizeof (struct _PrivateIrqCompleted));
+		irq_new->status = transfer->status;
+
+		/* Add the irq to the list */
+		if (pl->irqs_tail)
+			pl->irqs_tail->next = irq_new;
+		pl->irqs_tail = irq_new;
+		if (!pl->irqs_head)
+			pl->irqs_head = irq_new;
+	}
+
 	if (	(transfer->status == LIBUSB_TRANSFER_CANCELLED) ||
 		(transfer->status == LIBUSB_TRANSFER_TIMED_OUT) || /* on close */
-		(transfer->status == LIBUSB_TRANSFER_NO_DEVICE) /* on removing camera */
+		(transfer->status == LIBUSB_TRANSFER_NO_DEVICE) || /* on removing camera */
+		(transfer->status != LIBUSB_TRANSFER_COMPLETED) /* any error */
 	) {
+		if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
+			/* So far we don't requeue for any error, previous behavior, maybe we should?
+			 * Note: some times in case of device removed, libusb encounter an
+			 * errno == -71, that results in a LIBUSB_TRANSFER_ERROR (1)
+			 */
+			GP_LOG_D("Transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
+		}
 		/* Only requeue the global transfers, not temporary ones */
 		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers[0]); i++) {
 			if (pl->transfers[i] == transfer) {
 				libusb_free_transfer (transfer);
 				pl->transfers[i] = NULL;
+				pl->nrofactiveinttransfers--;
 				return;
 			}
 		}
 		return;
 	}
 
-	if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
-		GP_LOG_D("transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
-		return;
-	}
 	if (transfer->actual_length) {
 		GP_LOG_DATA ((char*)transfer->buffer, transfer->actual_length, "interrupt");
 
-		pl->irqs 	= realloc(pl->irqs, sizeof(pl->irqs[0])*(pl->nrofirqs+1));
-		pl->irqlens	= realloc(pl->irqlens, sizeof(pl->irqlens[0])*(pl->nrofirqs+1));
-
-		pl->irqlens[pl->nrofirqs] = transfer->actual_length;
-		pl->irqs[pl->nrofirqs] = malloc(transfer->actual_length);
-		memcpy(pl->irqs[pl->nrofirqs],transfer->buffer,transfer->actual_length);
-		pl->nrofirqs++;
+		irq_new->data_len = transfer->actual_length;
+		// Steal the transfer buffer and replace it with a new one for reusing the transfer
+		irq_new->data = transfer->buffer;
+		transfer->buffer = malloc(INTERRUPT_BUFFER_SIZE);
+		transfer->length = INTERRUPT_BUFFER_SIZE;
 	}
 
-	GP_LOG_D("requeuing complete transfer %p", transfer);
-	LOG_ON_LIBUSB_E(libusb_submit_transfer(transfer));
+	GP_LOG_D("Requeuing completed transfer %p", transfer);
+	ret = LOG_ON_LIBUSB_E(libusb_submit_transfer (transfer));
+	if (ret < LIBUSB_SUCCESS) {
+		pl->nrofactiveinttransfers--;
+	}
 	return;
 }
 
@@ -649,18 +691,25 @@ static int
 gp_libusb1_queue_interrupt_urbs (GPPort *port)
 {
 	unsigned int i;
+	int ret = 0;
 
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		unsigned char *buf;
+		if (port->pl->transfers[i] != NULL)
+			continue;
 		port->pl->transfers[i] = libusb_alloc_transfer(0);
-
-		buf = malloc(256); /* FIXME: safe size? */
+		buf = malloc(INTERRUPT_BUFFER_SIZE);
 		libusb_fill_interrupt_transfer(port->pl->transfers[i], port->pl->dh, port->settings.usb.intep,
-			buf, 256, _cb_irq, port->pl, 0
+			buf, INTERRUPT_BUFFER_SIZE, _cb_irq, port->pl, 0
 		);
 		port->pl->transfers[i]->flags |= LIBUSB_TRANSFER_FREE_BUFFER;
-		LOG_ON_LIBUSB_E(libusb_submit_transfer (port->pl->transfers[i]));
-		
+		ret = LOG_ON_LIBUSB_E(libusb_submit_transfer (port->pl->transfers[i]));
+		if (ret < LIBUSB_SUCCESS) {
+			libusb_free_transfer (port->pl->transfers[i]);
+			port->pl->transfers[i] = NULL;
+			return translate_libusb_error(ret, GP_ERROR_IO);
+		}
+		port->pl->nrofactiveinttransfers++;
 	}
 	return GP_OK;
 }
@@ -670,21 +719,32 @@ gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	int 		ret;
 	struct timeval	tv;
+	struct _PrivateIrqCompleted *irq_cur = NULL;
 
 	C_PARAMS (port && port->pl->dh && timeout >= 0);
 
-	if (port->pl->nrofirqs)
+	if (port->pl->irqs_head != NULL)
 		goto handleirq;
 
 	if (!timeout)
 		return GP_ERROR_TIMEOUT;
+
+	/* If we have lost all the queued transfers, we should probably restart them
+	 * if there are long running error, like "no more device". That would be
+	 * reported upstream, so upstream can take care of that.
+	 */
+	if (port->pl->nrofactiveinttransfers < NB_INTERRUPT_TRANSFERS) {
+		ret = gp_libusb1_queue_interrupt_urbs(port);
+		if (ret != GP_OK)
+			return ret;
+	}
 
 	tv.tv_sec = timeout/1000;
 	tv.tv_usec = (timeout%1000)*1000;
 
 	ret = LOG_ON_LIBUSB_E (libusb_handle_events_timeout(port->pl->ctx, &tv));
 
-	if (port->pl->nrofirqs)
+	if (port->pl->irqs_head != NULL)
 		goto handleirq;
 
 	if (ret < LIBUSB_SUCCESS)
@@ -693,14 +753,57 @@ gp_libusb1_check_int (GPPort *port, char *bytes, int size, int timeout)
 	return GP_ERROR_TIMEOUT;
 
 handleirq:
-	if (size > port->pl->irqlens[0])
-		size = port->pl->irqlens[0];
-	memcpy(bytes, port->pl->irqs[0], size);
+	irq_cur = port->pl->irqs_head;
 
-	memmove(port->pl->irqs,port->pl->irqs+1,sizeof(port->pl->irqs[0])*(port->pl->nrofirqs-1));
-	memmove(port->pl->irqlens,port->pl->irqlens+1,sizeof(port->pl->irqlens[0])*(port->pl->nrofirqs-1));
-	port->pl->nrofirqs--;
-        return size;
+	switch (irq_cur->status) {
+	case LIBUSB_TRANSFER_COMPLETED:
+		ret = GP_OK;
+		break;
+	case LIBUSB_TRANSFER_NO_DEVICE:
+		ret = GP_ERROR_IO_USB_FIND;
+		/* Agglomerate similar errors to only report once. */
+		while ((irq_cur->next) &&
+			   (irq_cur->next->status == LIBUSB_TRANSFER_NO_DEVICE)
+		) {
+			port->pl->irqs_head = irq_cur->next;
+			if (irq_cur->data)
+				free(irq_cur->data);
+			free(irq_cur);
+			irq_cur = port->pl->irqs_head;
+		}
+		break;
+	default:
+		ret = GP_ERROR_IO;
+		/* Agglomerate similar errors to only report once. */
+		while ((irq_cur->next) &&
+			   (irq_cur->next->status != LIBUSB_TRANSFER_COMPLETED) &&
+			   (irq_cur->next->status != LIBUSB_TRANSFER_NO_DEVICE)
+        ) {
+			port->pl->irqs_head = irq_cur->next;
+			if (irq_cur->data)
+				free(irq_cur->data);
+			free(irq_cur);
+			irq_cur = port->pl->irqs_head;
+		}
+		break;
+	}
+
+	if (size > irq_cur->data_len)
+		size = irq_cur->data_len;
+	if (irq_cur->data) {
+		if (size > 0)
+			memcpy(bytes, irq_cur->data, size);
+		free(irq_cur->data);
+	}
+	port->pl->irqs_head = irq_cur->next;
+	if (port->pl->irqs_head == NULL)
+		port->pl->irqs_tail = NULL;
+	free(irq_cur);
+
+	if (ret != GP_OK)
+		return ret;
+
+	return size;
 }
 
 static int
