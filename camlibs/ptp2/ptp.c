@@ -2476,9 +2476,19 @@ ptp_canon_eos_getobjectinfoex (
 
 	xdata = data+sizeof(uint32_t);
 	for (i=0;i<*nrofentries;i++) {
-		unsigned int entrysize = dtoh32a(xdata);
+		unsigned int entrysize;
+
+		if (4 + (xdata - data) > size) {
+			ptp_debug (params, "reading canon FEs run over read data size? (1)\n");
+			free (*entries);
+			*entries = NULL;
+			*nrofentries = 0;
+			ret = PTP_RC_GeneralError;
+			goto exit;
+		}
+		entrysize = dtoh32a(xdata);
 		if ((entrysize + (xdata-data)) > size) {
-			ptp_debug (params, "reading canon FEs run over read data size?\n");
+			ptp_debug (params, "reading canon FEs run over read data size? (2)\n");
 			free (*entries);
 			*entries = NULL;
 			*nrofentries = 0;
