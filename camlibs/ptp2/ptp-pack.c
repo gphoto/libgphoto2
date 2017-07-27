@@ -319,7 +319,11 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 	if (!data)
 		return 0;
 	*array = NULL;
+
+	if (datalen - offset < sizeof(uint32_t))
+		return 0;
 	n=dtoh32a(&data[offset]);
+
 	if (n >= UINT_MAX/sizeof(uint16_t))
 		return 0;
 	if (!n)
