@@ -883,7 +883,7 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	   values). In both cases Form Flag should be set to 0x00 and FORM is
 	   not present. */
 
-	if (offset==PTP_dpd_FactoryDefaultValue)
+	if (offset + sizeof(uint8_t) > dpdlen)
 		return 1;
 
 	dpd->FormFlag=dtoh8a(&data[offset]);
@@ -901,6 +901,9 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	case PTP_DPFF_Enumeration: {
 		int i;
 #define N	dpd->FORM.Enum.NumberOfValues
+
+		if (offset + sizeof(uint16_t) > dpdlen) goto outofmemory;
+
 		N = dtoh16a(&data[offset]);
 		offset+=sizeof(uint16_t);
 		dpd->FORM.Enum.SupportedValue = malloc(N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
