@@ -2493,8 +2493,8 @@ ptp_canon_eos_getobjectinfoex (
 			ret = PTP_RC_GeneralError;
 			goto exit;
 		}
-		ptp_unpack_Canon_EOS_FE (params, &xdata[4], dtoh32a(xdata) - 4, &((*entries)[i]));
-		xdata += dtoh32a(xdata);
+		ptp_unpack_Canon_EOS_FE (params, &xdata[4], entrysize - 4, &((*entries)[i]));
+		xdata += entrysize;
 	}
 exit:
 	free (data);
