@@ -1542,9 +1542,11 @@ ObjectInfo for 'IMG_0199.JPG':
 #define PTP_cefe_Time			48
 
 static inline void
-ptp_unpack_Canon_EOS_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry *fe)
+ptp_unpack_Canon_EOS_FE (PTPParams *params, unsigned char* data, unsigned int size, PTPCANONFolderEntry *fe)
 {
 	int i;
+
+	if (size < PTP_cefe_Time + 4) return;
 
 	fe->ObjectHandle=dtoh32a(&data[PTP_cefe_ObjectHandle]);
 	fe->ObjectFormatCode=dtoh16a(&data[PTP_cefe_ObjectFormatCode]);

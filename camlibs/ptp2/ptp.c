@@ -2476,7 +2476,8 @@ ptp_canon_eos_getobjectinfoex (
 
 	xdata = data+sizeof(uint32_t);
 	for (i=0;i<*nrofentries;i++) {
-		if ((dtoh32a(xdata) + (xdata-data)) > size) {
+		unsigned int entrysize = dtoh32a(xdata);
+		if ((entrysize + (xdata-data)) > size) {
 			ptp_debug (params, "reading canon FEs run over read data size?\n");
 			free (*entries);
 			*entries = NULL;
@@ -2484,7 +2485,15 @@ ptp_canon_eos_getobjectinfoex (
 			ret = PTP_RC_GeneralError;
 			goto exit;
 		}
-		ptp_unpack_Canon_EOS_FE (params, &xdata[4], &((*entries)[i]));
+		if (entrysize < 4 + 48 + 4)  {
+			ptp_debug (params, "%d entry size %d does not match expected 56\n", i, entrysize);
+			free (*entries);
+			*entries = NULL;
+			*nrofentries = 0;
+			ret = PTP_RC_GeneralError;
+			goto exit;
+		}
+		ptp_unpack_Canon_EOS_FE (params, &xdata[4], dtoh32a(xdata) - 4, &((*entries)[i]));
 		xdata += dtoh32a(xdata);
 	}
 exit:
