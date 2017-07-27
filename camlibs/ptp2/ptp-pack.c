@@ -140,12 +140,13 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint3
 		return NULL;
 
 	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
-	*len = length;
 	if (length == 0)		/* nothing to do? */
 		return NULL;
 
 	if (offset + 1 + length*sizeof(string[0]) > total)
 		return NULL;
+
+	*len = length;
 
 	/* copy to string[] to ensure correct alignment for iconv(3) */
 	memcpy(string, &data[offset+1], length * sizeof(string[0]));
@@ -840,9 +841,9 @@ ptp_unpack_DPV (
 			return 0;
 
 		value->str = ptp_unpack_string(params,data,*offset,total,&len);
-		*offset += len*2+1;
 		if (!value->str)
-			return 1;
+			return 0;
+		*offset += len*2+1;
 		break;
 	}
 	default:
