@@ -1116,9 +1116,11 @@ ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, 
 	ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FactoryDefaultValue, opd->DataType);
 	if (!ret) goto outofmemory;
 
+	if (offset + sizeof(uint32_t) > opdlen) goto outofmemory;
 	opd->GroupCode=dtoh32a(&data[offset]);
 	offset+=sizeof(uint32_t);
 
+	if (offset + sizeof(uint8_t) > opdlen) goto outofmemory;
 	opd->FormFlag=dtoh8a(&data[offset]);
 	offset+=sizeof(uint8_t);
 
@@ -1134,8 +1136,11 @@ ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, 
 	case PTP_OPFF_Enumeration: {
 		unsigned int i;
 #define N	opd->FORM.Enum.NumberOfValues
+
+		if (offset + sizeof(uint16_t) > opdlen) goto outofmemory;
 		N = dtoh16a(&data[offset]);
 		offset+=sizeof(uint16_t);
+
 		opd->FORM.Enum.SupportedValue = malloc(N*sizeof(opd->FORM.Enum.SupportedValue[0]));
 		if (!opd->FORM.Enum.SupportedValue)
 			goto outofmemory;
