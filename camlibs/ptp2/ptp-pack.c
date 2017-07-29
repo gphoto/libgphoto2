@@ -372,7 +372,7 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		datalen,
 		&len);
 	totallen=len*2+1;
-	if (datalen <= totallen) return 0;
+	if (datalen <= totallen + PTP_di_FunctionalMode + sizeof(uint16_t)) return 0;
 	di->FunctionalMode =
 		dtoh16a(&data[PTP_di_FunctionalMode+totallen]);
 	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, data,
