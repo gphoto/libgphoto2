@@ -5858,27 +5858,28 @@ find_child (PTPParams *params,const char *file,uint32_t storage,uint32_t handle,
 
 	for (i = 0; i < params->nrofobjects; i++) {
 		PTPObject	*ob = &params->objects[i];
+		uint32_t	oid = ob->oid;
 
 		ret = PTP_RC_OK;
 		if ((ob->flags & (PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED)) != (PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED))
-			ret = ptp_object_want (params, params->objects[i].oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob);
+			ret = ptp_object_want (params, oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob);
 		if (ret != PTP_RC_OK) {
-			GP_LOG_D("failed getting info of oid 0x%08x?", params->objects[i].oid);
+			/* NOTE: the "i" array entry might now be invalid, as object_want can remove objects from the list */
+			GP_LOG_D("failed getting info of oid 0x%08x?", oid);
 			/* could happen if file gets removed inbetween */
-			/* FIXME: should remove, but then we irritate our list */
 			continue;
 		}
 		if ((ob->oi.StorageID==storage) && (ob->oi.ParentObject==handle)) {
-			ret = ptp_object_want (params, ob->oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			ret = ptp_object_want (params, oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			if (ret != PTP_RC_OK) {
-				GP_LOG_D("failed getting info of oid 0x%08x?", params->objects[i].oid);
+				GP_LOG_D("failed getting info of oid 0x%08x?", oid);
 				/* could happen if file gets removed inbetween */
 				/* FIXME: should remove, but then we irritate our list */
 				continue;
 			}
 			if (!strcmp (ob->oi.Filename,file)) {
 				if (retob) *retob = ob;
-				return ob->oid;
+				return oid;
 			}
 		}
 	}
