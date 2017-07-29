@@ -705,6 +705,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	if ((data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
 		params->ocs64 = 1;
 		data += 4;
+		len -= 4;
 	}
 	oi->ThumbFormat=dtoh16a(&data[PTP_oi_ThumbFormat]);
 	oi->ThumbCompressedSize=dtoh32a(&data[PTP_oi_ThumbCompressedSize]);
