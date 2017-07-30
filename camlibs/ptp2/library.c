@@ -4933,9 +4933,14 @@ camera_wait_for_event (Camera *camera, int timeout,
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS:
 					/* if we do capture stuff, camerastatus will turn to 0 when done */
-					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("Camera Status 123456789012345")+1));
-					sprintf (*eventdata, "Camera Status %d", entry.u.status);
+					if (entry.u.status == 0) {
+						*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+						*eventdata = NULL;
+					} else {
+						*eventtype = GP_EVENT_UNKNOWN;
+						C_MEM (*eventdata = malloc(strlen("Camera Status 123456789012345")+1));
+						sprintf (*eventdata, "Camera Status %d", entry.u.status);
+					}
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO:
 					*eventtype = GP_EVENT_UNKNOWN;
