@@ -262,8 +262,8 @@ static int
 gp_port_vusb_msg_read_lib(GPPort *port, int request, int value, int index,
         char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-	return GP_OK; /* bytes */
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(req=%x, value=%x, index=%x, size=%d)", request, value, index, size);
+	return port->pl->vcamera->read(port->pl->vcamera, index, (unsigned char*)bytes, size);
 }
 
 static int

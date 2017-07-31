@@ -1936,9 +1936,6 @@ static int
 vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 	unsigned int	toread = bytes;
 
-	if (toread > cam->nrinbulk)
-		toread = cam->nrinbulk;
-
 	if (cam->fuzzf) {
 		unsigned int hasread;
 
@@ -1982,6 +1979,11 @@ vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 			return toread;
 		}
 	}
+
+	/* Emulated PTP camera stuff */
+
+	if (toread > cam->nrinbulk)
+		toread = cam->nrinbulk;
 
 	memcpy (data, cam->inbulk, toread);
 	memmove (cam->inbulk, cam->inbulk + toread, (cam->nrinbulk - toread));
