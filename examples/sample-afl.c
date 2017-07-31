@@ -13,7 +13,7 @@
 static void errordumper(GPLogLevel level, const char *domain, const char *str,
                  void *data) {
 	/* Do not log ... but let it appear here so we discover debug paths */
-	fprintf(stderr, "%s\n", str);
+	fprintf(stderr, "%s:%s\n", domain, str);
 }
 
 static int 
