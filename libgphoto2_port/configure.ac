@@ -464,6 +464,8 @@ AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
 
 sorted_iolib_list="$(echo "${IOLIB_LIST}" | tr ' ' '\n' | sort | ${SED} '/^$/d' | tr '\n' ' ' | ${SED} 's/ $//')"
 AC_DEFINE_UNQUOTED([IOLIB_LIST], ["${sorted_iolib_list}"], [Define as string containing a list of the iolibs])
+GP_CONFIG_MSG([General])
+GP_CONFIG_MSG([IOLIBs], [${sorted_iolib_list}])
 
 
 dnl --------------------------------------------------------------------
