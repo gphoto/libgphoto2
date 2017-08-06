@@ -1875,9 +1875,6 @@ static struct {
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 100D",			0x04a9, 0x3270, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* "Lacy Rhoades" <lacy@colordeaf.net> */
-	{"Canon:EOS 200D",          0x04a9, 0x32cc, PTP_CAP|PTP_CAP_PREVIEW},
-
 	/* Ronny Kalusniok <ladiko@gmail.com> */
 	{"Canon:PowerShot A2500",		0x04a9, 0x3271, PTPBUG_DELETE_SENDS_EVENT},
 
@@ -1952,8 +1949,15 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/84 */
 	{"Canon:Digital Ixus 180",		0x04a9, 0x32c0, 0},
 
+	/* Viktors Berstis <gpjm@berstis.com> */
+	{"Canon:EOS Rebel T7i",			0x04a9, 0x32c9, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Daniel Muller, jednatel SourcePaint s.r.o. <dan@sourcepaint.cz> */
 	{"Canon:EOS 77D",			0x04a9, 0x32cb, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* "Lacy Rhoades" <lacy@colordeaf.net> */
+	{"Canon:EOS 200D",          		0x04a9, 0x32cc, PTP_CAP|PTP_CAP_PREVIEW},
+
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
