@@ -95,6 +95,8 @@ gp_file_new (CameraFile **file)
 
 /*! Create new #CameraFile object from a UNIX filedescriptor.
  *
+ * This function takes ownership of the filedescriptor and will close it when closing the CameraFile.
+ *
  * \param file a pointer to a #CameraFile
  * \param fd a UNIX filedescriptor
  * \return a gphoto2 error code.
