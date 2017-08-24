@@ -4022,7 +4022,7 @@ _get_Canon_EOS_WBAdjust(CONFIG_GET_ARGS) {
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 		sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[i].i32);
 		gp_widget_add_choice (*widget,buf);
-		if (dpd->CurrentValue.i16 == dpd->FORM.Enum.SupportedValue[i].i32) {
+		if (dpd->CurrentValue.i32 == dpd->FORM.Enum.SupportedValue[i].i32) {
 			gp_widget_set_value (*widget, buf);
 			valset = 1;
 		}
