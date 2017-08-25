@@ -6584,16 +6584,25 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 */
 	uint32_t oid;
 	uint32_t storage;
-	uint32_t xsize;
+	uint64_t xsize;
 	uint32_t offset = offset64, size = *size64;
 	PTPObject *ob;
 
 	SET_CONTEXT_P(params, context);
+
+	C_PARAMS_MSG (*size64 >= 0xffffffff, "size exceeds 32bit");
+	/*
 	C_PARAMS_MSG (offset64 + *size64 <= 0xffffffff, "offset + size exceeds 32bit");
+	*/
+
 	C_PARAMS_MSG (strcmp (folder, "/special"), "file not found");
 
-	if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject))
-		return (GP_ERROR_NOT_SUPPORTED);
+	if (	!ptp_operation_issupported(params, PTP_OC_GetPartialObject) &&
+		!(	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
+		)
+	)
+		return GP_ERROR_NOT_SUPPORTED;
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
@@ -6631,13 +6640,20 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		    (ob->oi.ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
 			return (GP_ERROR_NOT_SUPPORTED);
 
-		xsize=ob->oi.ObjectCompressedSize;
+		xsize = ob->oi.ObjectCompressedSize;
 		if (!xsize)
-			return (GP_ERROR_NOT_SUPPORTED);
+			return GP_ERROR_NOT_SUPPORTED;
 
-		if (size+offset > xsize)
-			size = xsize - offset;
-		ret = ptp_getpartialobject(params, oid, offset, size, &xdata, &size);
+		if (size + offset64 > xsize)
+			size = xsize - offset64;
+
+		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
+		) {
+			ret = ptp_android_getpartialobject64(params, oid, offset64, size, &xdata, &size);
+		} else {
+			ret = ptp_getpartialobject(params, oid, offset, size, &xdata, &size);
+		}
 		if (ret == PTP_ERROR_CANCEL)
 			return GP_ERROR_CANCEL;
 		C_PTP_REP (ret);
