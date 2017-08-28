@@ -4019,11 +4019,10 @@ _get_Canon_EOS_WBAdjust(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (i = 0; i<19 /*dpd->FORM.Enum.NumberOfValues*/; i++) {
-        int supval = i-9;  /* dpd->FORM.Enum.SupportedValue[i].i32; */
-		sprintf (buf, "%d", supval);
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[i].i32);
 		gp_widget_add_choice (*widget,buf);
-		if (dpd->CurrentValue.i32 == supval) {
+		if (dpd->CurrentValue.i32 == dpd->FORM.Enum.SupportedValue[i].i32) {
 			gp_widget_set_value (*widget, buf);
 			valset = 1;
 		}
