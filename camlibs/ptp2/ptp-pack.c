@@ -2216,7 +2216,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					break;
 				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustA:
 				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustB:
-					dpd->DataType = PTP_DTC_INT16;
+					dpd->DataType = PTP_DTC_INT32;
 					break;
 				/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
 				case PTP_DPC_CANON_EOS_DPOFVersion:

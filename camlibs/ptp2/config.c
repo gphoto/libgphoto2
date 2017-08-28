@@ -4011,7 +4011,7 @@ _get_Canon_EOS_WBAdjust(CONFIG_GET_ARGS) {
 	int i, valset = 0;
 	char buf[200];
 
-	if (dpd->DataType != PTP_DTC_INT16)
+	if (dpd->DataType != PTP_DTC_INT32)
 		return (GP_ERROR);
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return (GP_ERROR);
@@ -4019,16 +4019,17 @@ _get_Canon_EOS_WBAdjust(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-		sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[i].i16);
+	for (i = 0; i<19 /*dpd->FORM.Enum.NumberOfValues*/; i++) {
+        int supval = i-9;  /* dpd->FORM.Enum.SupportedValue[i].i32; */
+		sprintf (buf, "%d", supval);
 		gp_widget_add_choice (*widget,buf);
-		if (dpd->CurrentValue.i16 == dpd->FORM.Enum.SupportedValue[i].i16) {
+		if (dpd->CurrentValue.i32 == supval) {
 			gp_widget_set_value (*widget, buf);
 			valset = 1;
 		}
 	}
 	if (!valset) {
-		sprintf (buf, "%d",dpd->CurrentValue.i16);
+		sprintf (buf, "%d",dpd->CurrentValue.i32);
 		gp_widget_set_value (*widget, buf);
 	}
 	return GP_OK;
@@ -4042,7 +4043,7 @@ _put_Canon_EOS_WBAdjust(CONFIG_PUT_ARGS) {
 	gp_widget_get_value (widget, &value_str);
 	if (!sscanf (value_str, "%d", &x))
 		return GP_ERROR;
-	propval->i16 = x;
+	propval->i32 = x;
 	return GP_OK;
 }
 
@@ -7182,10 +7183,10 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Temperature"),      "colortemperature",     PTP_DPC_SONY_ColorTemp,                 PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_WhiteBalance,                   0,                  PTP_DTC_UINT16, _get_WhiteBalance,              _put_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_NIKON_1_WhiteBalance,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_WhiteBalance,      _put_Nikon_1_WhiteBalance },
-	{ N_("WhiteBalance Adjust A"),  "whitebalanceadjusta",  PTP_DPC_CANON_EOS_WhiteBalanceAdjustA,  PTP_VENDOR_CANON,   PTP_DTC_INT16,  _get_Canon_EOS_WBAdjust,        _put_Canon_EOS_WBAdjust },
-	{ N_("WhiteBalance Adjust B"),  "whitebalanceadjustb",  PTP_DPC_CANON_EOS_WhiteBalanceAdjustB,  PTP_VENDOR_CANON,   PTP_DTC_INT16,  _get_Canon_EOS_WBAdjust,        _put_Canon_EOS_WBAdjust },
+	{ N_("WhiteBalance Adjust A"),  "whitebalanceadjusta",  PTP_DPC_CANON_EOS_WhiteBalanceAdjustA,  PTP_VENDOR_CANON,   PTP_DTC_INT32,  _get_Canon_EOS_WBAdjust,        _put_Canon_EOS_WBAdjust },
+	{ N_("WhiteBalance Adjust B"),  "whitebalanceadjustb",  PTP_DPC_CANON_EOS_WhiteBalanceAdjustB,  PTP_VENDOR_CANON,   PTP_DTC_INT32,  _get_Canon_EOS_WBAdjust,        _put_Canon_EOS_WBAdjust },
 	{ N_("WhiteBalance X A"),       "whitebalancexa",       PTP_DPC_CANON_EOS_WhiteBalanceXA,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
-	{ N_("WhiteBalance X B"),       "whitebalancexb",       PTP_DPC_CANON_EOS_WhiteBalanceXA,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("WhiteBalance X B"),       "whitebalancexb",       PTP_DPC_CANON_EOS_WhiteBalanceXB,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Photo Effect"),           "photoeffect",          PTP_DPC_CANON_PhotoEffect,              PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_PhotoEffect,         _put_Canon_PhotoEffect },
 	{ N_("Color Model"),            "colormodel",           PTP_DPC_NIKON_ColorModel,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorModel,          _put_Nikon_ColorModel },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
