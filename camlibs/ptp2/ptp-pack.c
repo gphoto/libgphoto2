@@ -2061,9 +2061,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					break;
 
 				case PTP_DTC_INT16:	XX( i16, dtoh16a );
-				case PTP_DTC_UINT32:	XX( u32, dtoh32a );
 				case PTP_DTC_UINT16:	XX( u16, dtoh16a );
+				case PTP_DTC_UINT32:	XX( u32, dtoh32a );
+				case PTP_DTC_INT32:	XX( i32, dtoh32a );
 				case PTP_DTC_UINT8:	XX( u8,  dtoh8a );
+				case PTP_DTC_INT8:	XX( i8,  dtoh8a );
 #undef XX
 				default:
 					free (dpd->FORM.Enum.SupportedValue);
