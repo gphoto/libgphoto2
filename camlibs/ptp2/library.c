@@ -6584,25 +6584,29 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 */
 	uint32_t oid;
 	uint32_t storage;
-	uint64_t xsize;
-	uint32_t offset = offset64, size = *size64;
+	uint64_t obj_size;
+	uint32_t offset32 = offset64, size32 = *size64;
 	PTPObject *ob;
 
 	SET_CONTEXT_P(params, context);
 
-	C_PARAMS_MSG (*size64 >= 0xffffffff, "size exceeds 32bit");
-	/*
-	C_PARAMS_MSG (offset64 + *size64 <= 0xffffffff, "offset + size exceeds 32bit");
-	*/
+    C_PARAMS_MSG (*size64 <= 0xffffffff, "size exceeds 32bit");
 
 	C_PARAMS_MSG (strcmp (folder, "/special"), "file not found");
 
-	if (	!ptp_operation_issupported(params, PTP_OC_GetPartialObject) &&
-		!(	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
-			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
-		)
-	)
-		return GP_ERROR_NOT_SUPPORTED;
+    if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject) &&
+    	!(	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+    		ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
+    	)
+    )
+        return GP_ERROR_NOT_SUPPORTED;
+
+    if (!(  (params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64))
+        && (offset64 > 0xffffffff) ) {
+        GP_LOG_E ("Invalid parameters: offset exceeds 32 bits but the device doesn't support GetPartialObject64.");
+        return GP_ERROR_NOT_SUPPORTED;
+    }
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
@@ -6613,10 +6617,10 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	GP_LOG_D ("Reading %u bytes from file '%s' at offset %u.", size, filename, offset);
+	GP_LOG_D ("Reading %u bytes from file '%s' at offset %lu.", size32, filename, offset64);
 	switch (type) {
 	default:
-		return (GP_ERROR_NOT_SUPPORTED);
+		return GP_ERROR_NOT_SUPPORTED;
 	case GP_FILE_TYPE_NORMAL: {
 		uint16_t	ret;
 		unsigned char	*xdata;
@@ -6640,25 +6644,29 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		    (ob->oi.ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
 			return (GP_ERROR_NOT_SUPPORTED);
 
-		xsize = ob->oi.ObjectCompressedSize;
-		if (!xsize)
+		obj_size = ob->oi.ObjectCompressedSize;
+		if (!obj_size)
 			return GP_ERROR_NOT_SUPPORTED;
 
-		if (size + offset64 > xsize)
-			size = xsize - offset64;
+		if (offset64 >= obj_size) {
+			*size64 = 0;
+			return GP_OK;
+		} else if (size32 + offset64 > obj_size) {
+			size32 = obj_size - offset64;
+		}
 
-		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
 			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
 		) {
-			ret = ptp_android_getpartialobject64(params, oid, offset64, size, &xdata, &size);
+			ret = ptp_android_getpartialobject64(params, oid, offset64, size32, &xdata, &size32);
 		} else {
-			ret = ptp_getpartialobject(params, oid, offset, size, &xdata, &size);
+			ret = ptp_getpartialobject(params, oid, offset32, size32, &xdata, &size32);
 		}
 		if (ret == PTP_ERROR_CANCEL)
 			return GP_ERROR_CANCEL;
 		C_PTP_REP (ret);
-		*size64 = size;
-		memcpy (buf, xdata, size);
+		*size64 = size32;
+		memcpy (buf, xdata, size32);
 		free (xdata);
 		/* clear the "new" flag on Canons */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&

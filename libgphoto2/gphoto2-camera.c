@@ -1705,7 +1705,7 @@ gp_camera_file_get (Camera *camera, const char *folder, const char *file,
  * @param type the #CameraFileType
  * @param offset the offset into the camera file
  * @param data the buffer receiving the data
- * @param size the size to be read and that was read
+ * @param size the size to be read and that was read. (Note: size should not exceed 32 bits)
  * @param context a #GPContext
  * @return a gphoto2 error code
  *
