@@ -6590,23 +6590,21 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	SET_CONTEXT_P(params, context);
 
-    C_PARAMS_MSG (*size64 <= 0xffffffff, "size exceeds 32bit");
-
+	C_PARAMS_MSG (*size64 <= 0xffffffff, "size exceeds 32bit");
 	C_PARAMS_MSG (strcmp (folder, "/special"), "file not found");
 
-    if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject) &&
-    	!(	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
-    		ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
-    	)
-    )
-        return GP_ERROR_NOT_SUPPORTED;
+	if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject) &&
+		!(	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)
+		)
+	)
+		return GP_ERROR_NOT_SUPPORTED;
 
-    if (!(  (params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
-			ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64))
-        && (offset64 > 0xffffffff) ) {
-        GP_LOG_E ("Invalid parameters: offset exceeds 32 bits but the device doesn't support GetPartialObject64.");
-        return GP_ERROR_NOT_SUPPORTED;
-    }
+	if (!(  (params->deviceinfo.VendorExtensionID == PTP_VENDOR_MTP) &&
+		ptp_operation_issupported(params, PTP_OC_ANDROID_GetPartialObject64)) && (offset64 > 0xffffffff) ) {
+		GP_LOG_E ("Invalid parameters: offset exceeds 32 bits but the device doesn't support GetPartialObject64.");
+		return GP_ERROR_NOT_SUPPORTED;
+	}
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
