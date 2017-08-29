@@ -1780,8 +1780,10 @@ gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
 			offset, buf, size, fs->data, context);
 		if (r == GP_OK)
 			return r;
+	} else {
+		return GP_ERROR_NOT_SUPPORTED;
 	}
-	return GP_ERROR_NOT_SUPPORTED;
+	return r;
 	/* fallback code */
 	CR (gp_file_new (&file));
 	CR (gp_filesystem_get_file (fs, folder, filename, type,
