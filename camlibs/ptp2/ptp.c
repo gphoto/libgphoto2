@@ -6765,10 +6765,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 					break;
 				case PTP_OPC_ObjectSize:
 					if (prop->datatype == PTP_DTC_UINT64) {
-						if (prop->propval.u64 > 0xFFFFFFFFU)
-							ob->oi.ObjectCompressedSize = 0xFFFFFFFFU;
-						else
-							ob->oi.ObjectCompressedSize = (uint32_t)prop->propval.u64;
+						ob->oi.ObjectCompressedSize = prop->propval.u64;
 					} else if (prop->datatype == PTP_DTC_UINT32) {
 						ob->oi.ObjectCompressedSize = prop->propval.u32;
 					}
