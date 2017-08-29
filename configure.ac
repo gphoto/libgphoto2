@@ -162,9 +162,6 @@ else
 fi
 GP_CONFIG_MSG([GP2DDB support], [${gp_msg_gp2ddb} (EXPERIMENTAL)])
 
-GP_PKG_CONFIG
-
-
 dnl check for/set up libtool and libltdl
 dnl AC_DISABLE_STATIC
 dnl AC_DISABLE_SHARED

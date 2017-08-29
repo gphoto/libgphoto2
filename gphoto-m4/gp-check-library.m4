@@ -106,7 +106,7 @@ m4_ifval([$9],[dnl
 # ----------------------------------------------------------------------
 dnl
 AC_REQUIRE([GP_CONFIG_MSG])dnl
-AC_REQUIRE([GP_PKG_CONFIG])dnl
+AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 AC_REQUIRE([_GP_CHECK_LIBRARY_SOEXT])dnl
 # Use _CFLAGS and _LIBS given to configure.
 # This makes it possible to set these vars in a configure script
