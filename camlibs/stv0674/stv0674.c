@@ -104,7 +104,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
     result = stv0674_file_count(camera->port, &count);
     if (result < GP_OK)
     {
-	GP_DEBUG("file count returnd %d\n",result);
+	GP_DEBUG("file count returned %d\n",result);
 	return result;
     }
 

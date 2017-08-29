@@ -651,7 +651,7 @@ static int dc210_format_card (Camera * camera, char * album_name, GPContext * co
   for (i = 0; i < 16; i++) checksum ^= answer[i];
   if (checksum_read != checksum) return GP_ERROR;
 
-  DC210_DEBUG("Flash card formated.\n");
+  DC210_DEBUG("Flash card formatted.\n");
 
   if (dc210_write_single_char(camera, DC210_CORRECT_PACKET) == GP_ERROR) return GP_ERROR;
   if (dc210_wait_for_response(camera, 0, NULL) != DC210_COMMAND_COMPLETE) return GP_ERROR;

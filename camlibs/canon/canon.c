@@ -405,7 +405,7 @@ replace_filename_extension(const char *filename, const char __unused__ *newext)
                 return buf;
         } else {
                 GP_DEBUG ("replace_filename_extension: "
-                          "New name for filename '%s' doesnt fit in %s line %i.",
+                          "New name for filename '%s' doesn't fit in %s line %i.",
                           filename, __FILE__, __LINE__);
                 return NULL;
         }
@@ -457,7 +457,7 @@ filename_to_audio(const char *filename, const char __unused__ *newext)
                 return buf;
         } else {
                 GP_DEBUG ("filename_to_audio: "
-                          "New name for filename '%s' doesnt fit in %s line %i.",
+                          "New name for filename '%s' doesn't fit in %s line %i.",
                           filename, __FILE__, __LINE__);
                 return NULL;
         }
