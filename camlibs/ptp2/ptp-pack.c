@@ -703,6 +703,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 
 	/* Stupid Samsung Galaxy developers emit a 64bit objectcompressedsize */
 	if ((data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
+		ptp_debug (params, "objectsize 64bit detected!");
 		params->ocs64 = 1;
 		data += 4;
 		len -= 4;
