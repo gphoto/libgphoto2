@@ -6176,8 +6176,9 @@ ptp_mtp_render_metadata (
 				if (uninteresting_props[i] == xpl->property)
 					break;
 			/* Is uninteresting. */
-			if (i == sizeof(uninteresting_props)/sizeof(uninteresting_props[0]))
+			if (i != sizeof(uninteresting_props)/sizeof(uninteresting_props[0]))
 				continue;
+
 			for(i=0;i<propcnt;i++) {
 				/* Mark handled property as 0 */
 				if (props[i] == xpl->property) {
@@ -6197,6 +6198,9 @@ ptp_mtp_render_metadata (
 			case PTP_DTC_STR:
 				snprintf (text, sizeof(text), "%s", xpl->propval.str?xpl->propval.str:"");
 				break;
+			case PTP_DTC_INT64:
+				sprintf (text, "%ld", xpl->propval.i64);
+				break;
 			case PTP_DTC_INT32:
 				sprintf (text, "%d", xpl->propval.i32);
 				break;
@@ -6205,6 +6209,9 @@ ptp_mtp_render_metadata (
 				break;
 			case PTP_DTC_INT8:
 				sprintf (text, "%d", xpl->propval.i8);
+				break;
+			case PTP_DTC_UINT64:
+				sprintf (text, "%lu", xpl->propval.u64);
 				break;
 			case PTP_DTC_UINT32:
 				sprintf (text, "%u", xpl->propval.u32);
@@ -6256,6 +6263,9 @@ ptp_mtp_render_metadata (
 				case PTP_DTC_STR:
 					snprintf (text, sizeof(text), "%s", pv.str?pv.str:"");
 					break;
+				case PTP_DTC_INT64:
+					sprintf (text, "%ld", pv.i64);
+					break;
 				case PTP_DTC_INT32:
 					sprintf (text, "%d", pv.i32);
 					break;
@@ -6264,6 +6274,9 @@ ptp_mtp_render_metadata (
 					break;
 				case PTP_DTC_INT8:
 					sprintf (text, "%d", pv.i8);
+					break;
+				case PTP_DTC_UINT64:
+					sprintf (text, "%lu", pv.u64);
 					break;
 				case PTP_DTC_UINT32:
 					sprintf (text, "%u", pv.u32);
