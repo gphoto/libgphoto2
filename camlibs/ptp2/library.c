@@ -1356,6 +1356,9 @@ static struct {
 	/* Phil Stephenson <filstephenson@gmail.com> */
 	{"Nikon:DSC D5600",               0x04b0, 0x043f, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Satoshi Kubota */
+	{"Nikon:DSC D7500",               0x04b0, 0x0440, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
