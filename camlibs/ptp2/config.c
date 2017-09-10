@@ -2444,6 +2444,11 @@ static struct deviceproptableu16 canon_eos_aeb[] = {
 };
 GENERIC16TABLE(Canon_EOS_AEB,canon_eos_aeb)
 
+static struct deviceproptableu16 canon_eos_alomode[] = {
+	/* needs decoding, seems to composed of flags */
+};
+GENERIC16TABLE(Canon_EOS_AloMode,canon_eos_alomode)
+
 static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Single"),			0x0000, 0 },
 	{ N_("Continuous"),		0x0001, 0 },
@@ -7358,6 +7363,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Saturation"),                     "saturation",               PTP_DPC_NIKON_Saturation,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_Saturation,              _put_Nikon_Saturation },
 	{ N_("Hue Adjustment"),                 "hueadjustment",            PTP_DPC_NIKON_HueAdjustment,            PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_HueAdjustment,           _put_Nikon_HueAdjustment },
 	{ N_("Auto Exposure Bracketing"),       "aeb",                      PTP_DPC_CANON_EOS_AEB,                  PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AEB,                 _put_Canon_EOS_AEB },
+	{ N_("Auto Lighting Optimization"),     "alomode",                  PTP_DPC_CANON_EOS_AloMode,              PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AloMode,             _put_Canon_EOS_AloMode },
 	{ N_("Movie Sound"),                    "moviesound",               PTP_DPC_NIKON_MovVoice,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Manual Movie Setting"),           "manualmoviesetting",       PTP_DPC_NIKON_ManualMovieSetting,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Microphone"),                     "microphone",               PTP_DPC_NIKON_MovMicrophone,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_Microphone,              _put_Nikon_Microphone },
