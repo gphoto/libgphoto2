@@ -286,16 +286,31 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetPairingInfo		0x9031
 #define PTP_OC_CANON_DeletePairingInfo		0x9032
 #define PTP_OC_CANON_GetMACAddress		0x9033 /* no args */
+/*
+0000  12 00 00 00 02 00 33 90-1a 00 00 00 2c 9e fc c8  ......3.....,...
+0010  33 e3                  -                         3.              
+ */
+
 /* 9034: 1 param, no parms returned */
 #define PTP_OC_CANON_SetDisplayMonitor		0x9034
 #define PTP_OC_CANON_PairingComplete		0x9035
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
 #define PTP_OC_CANON_GetWebServiceSpec		0x9068 /* no args */
+/* data returned:
+0000  1e 00 00 00 02 00 68 90-1a 00 00 00 00 01 08 00  ......h.........
+0010  14 00 bc ce 00 00 78 00-78 00 00 14 00 00        ......x.x.....  
+*/
+
 #define PTP_OC_CANON_GetWebServiceData		0x9069 /* no args */
 #define PTP_OC_CANON_SetWebServiceData		0x906B
 #define PTP_OC_CANON_GetRootCertificateSpec	0x906C /* no args */
+/*
+0000  12 00 00 00 02 00 6c 90-1a 00 00 00 00 01 6c 30  ......l.......l0
+0010  00 00                  -                         ..
+*/
 #define PTP_OC_CANON_GetRootCertificateData	0x906D /* no args */
+/* empty data on test */
 #define PTP_OC_CANON_SetRootCertificateData	0x906F
 
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
