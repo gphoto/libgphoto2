@@ -285,17 +285,17 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_SetPairingInfo		0x9030
 #define PTP_OC_CANON_GetPairingInfo		0x9031
 #define PTP_OC_CANON_DeletePairingInfo		0x9032
-#define PTP_OC_CANON_GetMACAddress		0x9033
+#define PTP_OC_CANON_GetMACAddress		0x9033 /* no args */
 /* 9034: 1 param, no parms returned */
 #define PTP_OC_CANON_SetDisplayMonitor		0x9034
 #define PTP_OC_CANON_PairingComplete		0x9035
 #define PTP_OC_CANON_GetWirelessMAXChannel	0x9036
 
-#define PTP_OC_CANON_GetWebServiceSpec		0x9068
-#define PTP_OC_CANON_GetWebServiceData		0x9069
+#define PTP_OC_CANON_GetWebServiceSpec		0x9068 /* no args */
+#define PTP_OC_CANON_GetWebServiceData		0x9069 /* no args */
 #define PTP_OC_CANON_SetWebServiceData		0x906B
-#define PTP_OC_CANON_GetRootCertificateSpec	0x906C
-#define PTP_OC_CANON_GetRootCertificateData	0x906D
+#define PTP_OC_CANON_GetRootCertificateSpec	0x906C /* no args */
+#define PTP_OC_CANON_GetRootCertificateData	0x906D /* no args */
 #define PTP_OC_CANON_SetRootCertificateData	0x906F
 
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
@@ -373,13 +373,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetUILock		0x911B
 /* 911c: no cmd args, no data, no resp args */
 #define PTP_OC_CANON_EOS_ResetUILock		0x911C
-#define PTP_OC_CANON_EOS_KeepDeviceOn		0x911D
-#define PTP_OC_CANON_EOS_SetNullPacketMode	0x911E
+#define PTP_OC_CANON_EOS_KeepDeviceOn		0x911D /* no arg */
+#define PTP_OC_CANON_EOS_SetNullPacketMode	0x911E /* 1 param */
 #define PTP_OC_CANON_EOS_UpdateFirmware		0x911F
 #define PTP_OC_CANON_EOS_TransferCompleteDT	0x9120
 #define PTP_OC_CANON_EOS_CancelTransferDT	0x9121
 #define PTP_OC_CANON_EOS_SetWftProfile		0x9122
-#define PTP_OC_CANON_EOS_GetWftProfile		0x9123
+#define PTP_OC_CANON_EOS_GetWftProfile		0x9123 /* 2 args: setnum, configid */
 #define PTP_OC_CANON_EOS_SetProfileToWft	0x9124
 #define PTP_OC_CANON_EOS_BulbStart		0x9125
 #define PTP_OC_CANON_EOS_BulbEnd		0x9126
@@ -393,11 +393,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_RegistBackgroundImage	0x912A
 #define PTP_OC_CANON_EOS_ChangePhotoStudioMode	0x912B
 #define PTP_OC_CANON_EOS_GetPartialObjectEx	0x912C
-#define PTP_OC_CANON_EOS_ResetMirrorLockupState	0x9130
+#define PTP_OC_CANON_EOS_ResetMirrorLockupState	0x9130 /* no args */
 #define PTP_OC_CANON_EOS_PopupBuiltinFlash	0x9131
 #define PTP_OC_CANON_EOS_EndGetPartialObjectEx	0x9132
-#define PTP_OC_CANON_EOS_MovieSelectSWOn	0x9133
-#define PTP_OC_CANON_EOS_MovieSelectSWOff	0x9134
+#define PTP_OC_CANON_EOS_MovieSelectSWOn	0x9133 /* no args */
+#define PTP_OC_CANON_EOS_MovieSelectSWOff	0x9134 /* no args */
 #define PTP_OC_CANON_EOS_GetCTGInfo		0x9135
 #define PTP_OC_CANON_EOS_GetLensAdjust		0x9136
 #define PTP_OC_CANON_EOS_SetLensAdjust		0x9137
@@ -411,14 +411,17 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel	0x913E
 /* 3 args, 0x21201020, 0x110, 0x1000000 (potentially reverse order) */
 #define PTP_OC_CANON_EOS_GetCameraSupport	0x913F
-#define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args */
+#define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args, objectid, rating? */
+#define PTP_OC_CANON_EOS_GetRawDispImage		0x914A /* ? 2 args ? */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopStart	0x9141 /* 2 args: 1 type, 1 object? */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopParamChange	0x9142
 #define PTP_OC_CANON_EOS_RequestInnerDevelopEnd		0x9143
 #define PTP_OC_CANON_EOS_GpsLoggingDataMode		0x9144 /* 1 arg */
 #define PTP_OC_CANON_EOS_GetGpsLogCurrentHandle		0x9145
+#define PTP_OC_CANON_EOS_GetPresetLensAdjustParam	0x9149 /* no arg */
+#define PTP_OC_CANON_EOS_RequestBLE			0x914C /* 2? args? */
 
-#define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151
+#define PTP_OC_CANON_EOS_InitiateViewfinder	0x9151	/* no arg */
 #define PTP_OC_CANON_EOS_TerminateViewfinder	0x9152
 /* EOS M2 wlan: 2 params, 0x00200000 0x01000000 */
 #define PTP_OC_CANON_EOS_GetViewFinderData	0x9153
@@ -426,17 +429,25 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_DriveLens		0x9155
 #define PTP_OC_CANON_EOS_DepthOfFieldPreview	0x9156 /* 1 arg */
 #define PTP_OC_CANON_EOS_ClickWB		0x9157 /* 2 args: x,y */
-#define PTP_OC_CANON_EOS_Zoom			0x9158 /* 1 arg */
+#define PTP_OC_CANON_EOS_Zoom			0x9158 /* 1 arg: zoom */
 #define PTP_OC_CANON_EOS_ZoomPosition		0x9159 /* 2 args: x,y */
 #define PTP_OC_CANON_EOS_SetLiveAfFrame		0x915A
 #define PTP_OC_CANON_EOS_TouchAfPosition	0x915B /* 3 args: type,x,y */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditMode	0x915C /* 1 arg */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+#define PTP_OC_CANON_EOS_GetObjectInfo64	0x9170	/* 1 arg: oid */
+#define PTP_OC_CANON_EOS_GetObject64		0x9171	/* 1 arg: oid */
+#define PTP_OC_CANON_EOS_GetPartialObject64	0x9172	/* args: oid, offset, maxbyte */
+#define PTP_OC_CANON_EOS_GetObjectInfoEx64	0x9173	/* 2 args: storageid, oid  ? */
+#define PTP_OC_CANON_EOS_GetPartialObjectEX64	0x9174	/* args: oid, offset 64bit, maxbyte */
+#define PTP_OC_CANON_EOS_NotifyEstimateNumberofImport		0x9182 /* 1 arg: importnumber */
+#define PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer	0x9184 /* 4 args: filesizelow, filesizehigh, downloadsizelow, downloadsizehigh */
+#define PTP_OC_CANON_EOS_NotifyFinish		0x9185 /* 1 arg: reason */
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
-#define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8
-#define PTP_OC_CANON_EOS_AdapterTransferProgress	0x91E9
+#define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8 /* 1 arg: errorcode */
+#define PTP_OC_CANON_EOS_AdapterTransferProgress		0x91E9
 #define PTP_OC_CANON_EOS_TransferComplete2	0x91F0
 #define PTP_OC_CANON_EOS_CancelTransfer2	0x91F1
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
