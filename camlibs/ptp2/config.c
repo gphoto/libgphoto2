@@ -4937,6 +4937,17 @@ _put_Sony_CompressionSetting(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static struct deviceproptableu16 canon_eos_highisonr[] = {
+	/* 6d values */
+	{ N_("Off"),		0, 0 },
+	{ N_("Low"),		1, 0 },
+	{ N_("Normal"),		2, 0 },
+	{ N_("High"),		3, 0 },
+	{ N_("Multi-Shot"),	4, 0 },
+};
+
+GENERIC16TABLE(Canon_EOS_HighIsoNr,canon_eos_highisonr)
+
 static struct deviceproptableu8 nikon_d90_highisonr[] = {
 	{ N_("Off"),	0, 0 },
 	{ N_("Low"),	1, 0 },
@@ -7253,7 +7264,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Scene Mode"),                     "scenemode",                PTP_DPC_NIKON_SceneMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_SceneMode,               _put_NIKON_SceneMode },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_SONY_AspectRatio,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_AspectRatio,              _put_Sony_AspectRatio },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_CANON_EOS_MultiAspect,          PTP_VENDOR_CANON,   PTP_DTC_UINT32,  _get_Canon_EOS_AspectRatio,        _put_Canon_EOS_AspectRatio },
-	
+	{ N_("High ISO Noise Reduction"),       "highisonr",		    PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_HighIsoNr,     _put_Canon_EOS_HighIsoNr },
 	{ N_("HDR Mode"),                       "hdrmode",                  PTP_DPC_NIKON_HDRMode,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("HDR High Dynamic"),               "hdrhighdynamic",           PTP_DPC_NIKON_HDRHighDynamic,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRHighDynamic,          _put_Nikon_HDRHighDynamic },
 	{ N_("HDR Smoothing"),                  "hdrsmoothing",             PTP_DPC_NIKON_HDRSmoothing,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRSmoothing,            _put_Nikon_HDRSmoothing },
