@@ -2207,8 +2207,12 @@ static struct deviceproptableu8 sony_aspectratio[] = {
 };
 GENERIC8TABLE(Sony_AspectRatio,sony_aspectratio)
 
+/* values are from 6D */
 static struct deviceproptableu16 canon_eos_aspectratio[] = {
-	/* FIXME: fill */
+	{ "3:2",	0x0000, 0},
+	{ "1:1",	0x0001, 0},
+	{ "4:3",	0x0002, 0},
+	{ "16:9",	0x0007, 0},
 };
 GENERIC16TABLE(Canon_EOS_AspectRatio,canon_eos_aspectratio)
 
