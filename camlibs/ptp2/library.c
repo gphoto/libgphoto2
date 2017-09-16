@@ -6987,8 +6987,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 */
 	gp_file_get_data_and_size (file, NULL, &intsize);
 	oi.ObjectCompressedSize = intsize;
-	if (intsize > 0xffffffff)
-		intsize = 0xffffffff;
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_EASTMAN_KODAK) &&
 		(ptp_operation_issupported(params, PTP_OC_EK_SendFileObject)))
 	{
