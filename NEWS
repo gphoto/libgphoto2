@@ -1,4 +1,4 @@
-libgphoto2 2.5.14.1 development version
+libgphoto2 2.5.15 release
 
 ptp2:
 * fuji: Fix cameras without new capture properties.
