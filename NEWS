@@ -1,4 +1,24 @@
 libgphoto2 2.5.14.1 development version
+
+ptp2:
+* fuji: Fix cameras without new capture properties.
+* Canon EOS: config aspectratio, highisonr
+* Canon EOS: emit CAPTURECOMPLETE event
+* Canon EOS: whitebalanaceadjustment is 32bit signed, not 16bit signed
+* usb: better error feedback
+* fixed some bugs found by AFL fuzzing
+* Added USB ids:
+  * Sony: A6500, HX400V
+  * Nikon: D500, D7500
+  * Olympus: VR360
+  * Canon PowerShot: ELPH 350 HS
+  * Canon EOS: 200D, Rebel T7i
+  * Fuji: GFX 50 S
+  * Ricoh Theta S, Theta SC
+
+libgphoto2_port/vusb:
+* now default disabled as it confused people, enable with --enable-vusb
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.14 release
 
