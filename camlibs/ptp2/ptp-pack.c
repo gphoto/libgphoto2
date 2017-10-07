@@ -372,7 +372,10 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		datalen,
 		&len);
 	totallen=len*2+1;
-	if (datalen <= totallen + PTP_di_FunctionalMode + sizeof(uint16_t)) return 0;
+	if (datalen <= totallen + PTP_di_FunctionalMode + sizeof(uint16_t)) {
+		ptp_debug (params, "datalen %d <= totallen + PTP_di_FunctionalMode + sizeof(uint16_t) %d", datalen, totallen + PTP_di_FunctionalMode + sizeof(uint16_t));
+		return 0;
+	}
 	di->FunctionalMode =
 		dtoh16a(&data[PTP_di_FunctionalMode+totallen]);
 	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, data,
@@ -380,53 +383,77 @@ ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsign
 		datalen,
 		&di->OperationsSupported);
 	totallen=totallen+di->OperationsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 0;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 1", datalen, totallen+PTP_di_OperationsSupported); 
+		return 0;
+	}
 	di->EventsSupported_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&di->EventsSupported);
 	totallen=totallen+di->EventsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 0;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 2", datalen, totallen+PTP_di_OperationsSupported); 
+		return 0;
+	}
 	di->DevicePropertiesSupported_len =
 		ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&di->DevicePropertiesSupported);
 	totallen=totallen+di->DevicePropertiesSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 0;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 3", datalen, totallen+PTP_di_OperationsSupported); 
+		return 0;
+	}
 	di->CaptureFormats_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&di->CaptureFormats);
 	totallen=totallen+di->CaptureFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 0;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 4", datalen, totallen+PTP_di_OperationsSupported); 
+		return 0;
+	}
 	di->ImageFormats_len = ptp_unpack_uint16_t_array(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&di->ImageFormats);
 	totallen=totallen+di->ImageFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 0;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 5", datalen, totallen+PTP_di_OperationsSupported); 
+		return 0;
+	}
 	di->Manufacturer = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&len);
 	totallen+=len*2+1;
 	/* be more relaxed ... as these are optional its ok if they are not here */
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 1;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 6", datalen, totallen+PTP_di_OperationsSupported); 
+		return 1;
+	}
 	di->Model = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&len);
 	totallen+=len*2+1;
 	/* be more relaxed ... as these are optional its ok if they are not here */
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 1;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 7", datalen, totallen+PTP_di_OperationsSupported); 
+		return 1;
+	}
 	di->DeviceVersion = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
 		&len);
 	totallen+=len*2+1;
 	/* be more relaxed ... as these are optional its ok if they are not here */
-	if (datalen <= totallen+PTP_di_OperationsSupported) return 1;
+	if (datalen <= totallen+PTP_di_OperationsSupported) {
+		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 8", datalen, totallen+PTP_di_OperationsSupported); 
+		return 1;
+	}
 	di->SerialNumber = ptp_unpack_string(params, data,
 		PTP_di_OperationsSupported+totallen,
 		datalen,
