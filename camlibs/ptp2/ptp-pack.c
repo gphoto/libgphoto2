@@ -136,12 +136,16 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint3
 	size_t nconv, srclen, destlen;
 	char *src, *dest;
 
+	*len = 0;
+
 	if (offset + 1 >= total)
 		return NULL;
 
 	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
-	if (length == 0)		/* nothing to do? */
+	if (length == 0) {		/* nothing to do? */
+		*len = 0;
 		return NULL;
+	}
 
 	if (offset + 1 + length*sizeof(string[0]) > total)
 		return NULL;
