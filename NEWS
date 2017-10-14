@@ -1,4 +1,7 @@
-libgphoto2 2.5.15.1 development
+libgphoto2 2.5.16 release
+
+ptp2:
+* A hardening fix broke the string unpacking for 0 length strings which broke Canon EOS
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.15 release
