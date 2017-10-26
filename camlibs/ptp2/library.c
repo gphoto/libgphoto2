@@ -1955,6 +1955,9 @@ static struct {
 	/* Viktors Berstis <gpjm@berstis.com> */
 	{"Canon:EOS Rebel T7i",			0x04a9, 0x32c9, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Thomas Schaaf <thomas.schaaf@komola.de> */
+	{"Canon:EOS 6d Mark II",		0x04a9, 0x32ca, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Daniel Muller, jednatel SourcePaint s.r.o. <dan@sourcepaint.cz> */
 	{"Canon:EOS 77D",			0x04a9, 0x32cb, PTP_CAP|PTP_CAP_PREVIEW},
 
