@@ -5269,6 +5269,32 @@ _get_Canon_EOS_BatteryLevel(CONFIG_GET_ARGS) {
 }
 
 static int
+_get_Canon_EOS_StorageID(CONFIG_GET_ARGS) {
+	char buf[16];
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	sprintf(buf,"%08x",dpd->CurrentValue.u32);
+	gp_widget_set_value(*widget, buf);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_StorageID(CONFIG_PUT_ARGS) {
+	char		*val = NULL;
+	unsigned int	x = 0;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (!sscanf(val,"%x",&x))
+		return GP_ERROR_BAD_PARAMETERS;
+	propval->u32 = x;
+	return GP_OK;
+}
+
+
+static int
 _get_UINT32_as_time(CONFIG_GET_ARGS) {
 	time_t	camtime;
 
@@ -7272,6 +7298,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Scene Mode"),                     "scenemode",                PTP_DPC_NIKON_SceneMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_SceneMode,               _put_NIKON_SceneMode },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_SONY_AspectRatio,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_AspectRatio,              _put_Sony_AspectRatio },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_CANON_EOS_MultiAspect,          PTP_VENDOR_CANON,   PTP_DTC_UINT32,  _get_Canon_EOS_AspectRatio,        _put_Canon_EOS_AspectRatio },
+	{ N_("Storage Device"),                 "storageid",                PTP_DPC_CANON_EOS_CurrentStorage,       PTP_VENDOR_CANON,   PTP_DTC_UINT32,  _get_Canon_EOS_StorageID  ,        _put_Canon_EOS_StorageID },
 	{ N_("High ISO Noise Reduction"),       "highisonr",		    PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_HighIsoNr,     _put_Canon_EOS_HighIsoNr },
 	{ N_("HDR Mode"),                       "hdrmode",                  PTP_DPC_NIKON_HDRMode,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("HDR High Dynamic"),               "hdrhighdynamic",           PTP_DPC_NIKON_HDRHighDynamic,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRHighDynamic,          _put_Nikon_HDRHighDynamic },
