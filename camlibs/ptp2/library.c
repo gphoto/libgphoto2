@@ -2168,6 +2168,9 @@ static struct {
 	/* from libmtp */
 	{"GoPro:HERO5 Black",			0x2672, 0x0027, 0},
 	{"GoPro:HERO5 Session",			0x2672, 0x0029, 0},
+
+	/* https://sourceforge.net/p/libmtp/feature-requests/239/ */
+	{"GoPro:HERO6 Black",			0x2672, 0x0037, 0},
 #endif
 };
 
