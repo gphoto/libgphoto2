@@ -487,7 +487,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 				return GP_OK;
 
 			propval.u16 = 0x0002;
-			C_PTP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
 			return GP_OK;
 		}
 		break;
