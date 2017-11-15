@@ -4141,6 +4141,42 @@ ptp_android_sendpartialobject (PTPParams* params, uint32_t handle, uint64_t offs
 	return ret;
 }
 
+uint16_t
+ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
+{
+	PTPContainer	ptp;
+	unsigned char	*data;
+	unsigned int	size;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropValue, 0xd212);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	ptp_debug(params, "ptp_fuji_getevents");
+	*count = 0;
+        if(size >= 2)
+        {
+                count = dtoh16a(data);
+                ptp_debug(params, "event count: %d", *count);
+                *events = calloc(*count, sizeof(uint16_t));
+                if(size >= 2 + *count * 6)
+                {
+			uint16_t	param;
+			uint32_t	value;
+			int		i;
+
+			for(i = 0; i < *count; i++)
+			{
+				param = dtoh16a(&data[2 + 6 * i]);
+				value = dtoh32a(&data[2 + 6 * i + 2]);
+				*events[i] = param;
+				ptp_debug(params, "param: %02x, value: %d ", param, value);
+			}
+		}
+	}
+	free(data);
+	return PTP_RC_OK;        
+}
+
 
 /* Non PTP protocol functions */
 /* devinfo testing functions */
