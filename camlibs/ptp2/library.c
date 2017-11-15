@@ -4015,6 +4015,30 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
 	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
+{
+	/* poll camera until it is ready */        
+	propval.u16 = 0x0000;
+	int loops = 0, i;
+	uint16_t *events;
+	uint16_t count, ready = 0;  
+	while (loops < 3300) { // loop for about 33 seconds max
+		ptp_fuji_getevents (params, &events, &count);
+		if(count > 0) {
+			for(i = 0; i < count; i++) {
+				if(events[i] == 0xd20d) {
+					ready = 1;
+					break;        
+				}
+			}                   
+			free(events);
+			if(ready) break;
+		}
+		C_PTP_REP (ptp_check_event (params));
+		usleep(10000);       
+		i++;              
+	}
+}
+
 	/* poll camera until it is ready */
 	propval.u16 = 0x0001;
 	while (propval.u16 == 0x0001) {

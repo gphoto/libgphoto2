@@ -3469,6 +3469,9 @@ uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret
 /*uint16_t ptp_chdk_get_script_output(PTPParams* params, char **output ); */
 /*uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);*/
 
+uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count);
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

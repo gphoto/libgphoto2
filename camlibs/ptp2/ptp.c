@@ -4147,7 +4147,6 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 	PTPContainer	ptp;
 	unsigned char	*data;
 	unsigned int	size;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropValue, 0xd212);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -4155,7 +4154,7 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 	*count = 0;
         if(size >= 2)
         {
-                count = dtoh16a(data);
+                *count = dtoh16a(data);
                 ptp_debug(params, "event count: %d", *count);
                 *events = calloc(*count, sizeof(uint16_t));
                 if(size >= 2 + *count * 6)
