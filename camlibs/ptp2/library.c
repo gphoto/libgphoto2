@@ -1242,6 +1242,9 @@ static struct {
 	/* David Shawcross <david@sitevisuals.com> */
 	{"Nikon:Coolpix S2900", 	  0x04b0, 0x035e, PTP_CAP},
 
+	/* https://sourceforge.net/p/libmtp/bugs/1743/ */
+	{"Nikon:Coolpix L340", 	  	  0x04b0, 0x0361, PTP_CAP},
+
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
 	/* D2H SLR in PTP mode from Steve Drew <stevedrew@gmail.com> */
@@ -4015,29 +4018,30 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
 	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
-{
-	/* poll camera until it is ready */        
-	propval.u16 = 0x0000;
-	int loops = 0, i;
-	uint16_t *events;
-	uint16_t count, ready = 0;  
-	while (loops < 3300) { // loop for about 33 seconds max
-		ptp_fuji_getevents (params, &events, &count);
-		if(count > 0) {
-			for(i = 0; i < count; i++) {
-				if(events[i] == 0xd20d) {
-					ready = 1;
-					break;        
-				}
-			}                   
-			free(events);
-			if(ready) break;
+	/* debug code currently. not working as-is */
+	if (0) {
+		/* poll camera until it is ready */        
+		propval.u16 = 0x0000;
+		int loops = 0, i;
+		uint16_t *events;
+		uint16_t count, ready = 0;  
+		while (loops < 3300) { // loop for about 33 seconds max
+			ptp_fuji_getevents (params, &events, &count);
+			if(count > 0) {
+				for(i = 0; i < count; i++) {
+					if(events[i] == 0xd20d) {
+						ready = 1;
+						break;        
+					}
+				}                   
+				free(events);
+				if(ready) break;
+			}
+			C_PTP_REP (ptp_check_event (params));
+			usleep(10000);       
+			i++;              
 		}
-		C_PTP_REP (ptp_check_event (params));
-		usleep(10000);       
-		i++;              
 	}
-}
 
 	/* poll camera until it is ready */
 	propval.u16 = 0x0001;
