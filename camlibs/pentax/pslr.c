@@ -548,8 +548,8 @@ char *collect_status_info( pslr_handle_t h, pslr_status status ) {
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "raw format", get_pslr_raw_format_str(status.raw_format));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "light meter flags", status.light_meter_flags);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ec", format_rational( status.ec, "%.2f" ) );
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "custom ev steps", get_pslr_custom_ev_steps_str(status.custom_ev_steps));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "custom sensitivity steps", status.custom_sensitivity_steps);
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s EV steps\n", "custom ev steps", get_pslr_custom_ev_steps_str(status.custom_ev_steps));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s EV steps\n", "custom sensitivity steps", get_pslr_custom_sensitivity_steps_str(status.custom_sensitivity_steps));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "exposure mode", status.exposure_mode);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "scene mode", get_pslr_scene_mode_str(status.scene_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "user mode flag", status.user_mode_flag);
@@ -575,6 +575,45 @@ char *collect_status_info( pslr_handle_t h, pslr_status status ) {
     return strbuffer;
 }
 
+char *get_hardwired_setting_bool_info( pslr_bool_setting setting) {
+    char *strbuffer = malloc(32);
+    sprintf(strbuffer,"%-32s", setting.pslr_setting_status == PSLR_SETTING_STATUS_HARDWIRED ? "\t[hardwired]" : "");
+    return strbuffer;
+}
+
+char *get_special_setting_info( pslr_setting_status_t setting_status) {
+    char *strbuffer = malloc(32);
+    switch ( setting_status ) {
+        case PSLR_SETTING_STATUS_NA:
+            sprintf(strbuffer,"N/A");
+            break;
+        case PSLR_SETTING_STATUS_UNKNOWN:
+            sprintf(strbuffer,"Unknown");
+            break;
+        default:
+            return NULL;
+    }
+    return strbuffer;
+}
+
+char *get_hardwired_setting_uint16_info( pslr_uint16_setting setting) {
+    char *strbuffer = malloc(32);
+    sprintf(strbuffer,"%-32s", setting.pslr_setting_status == PSLR_SETTING_STATUS_HARDWIRED ? "\t[hardwired]" : "");
+    return strbuffer;
+}
+
+char *collect_settings_info( pslr_handle_t h, pslr_settings settings ) {
+    char *strbuffer = malloc(8192);
+    sprintf(strbuffer,"%-32s: %-8s%s\n", "one push bracketing", get_special_setting_info(settings.one_push_bracketing.pslr_setting_status) ?: settings.one_push_bracketing.value ? "on" : "off", get_hardwired_setting_bool_info(settings.one_push_bracketing));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s%s\n", "bulb mode", get_special_setting_info(settings.bulb_mode_press_press.pslr_setting_status) ?: settings.bulb_mode_press_press.value ? "press-press" : "press-hold", get_hardwired_setting_bool_info(settings.bulb_mode_press_press));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "bulb timer", get_special_setting_info(settings.bulb_timer.pslr_setting_status) ?: settings.bulb_timer.value ? "on" : "off", get_hardwired_setting_bool_info(settings.bulb_timer));
+    char *bulb_timer_sec = malloc(32);
+    sprintf(bulb_timer_sec, "%d s", settings.bulb_timer_sec.value);
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s%s\n", "bulb timer sec", get_special_setting_info(settings.bulb_timer_sec.pslr_setting_status) ?: bulb_timer_sec, get_hardwired_setting_uint16_info(settings.bulb_timer_sec));
+    return strbuffer;
+}
+
+
 int pslr_get_status_buffer(pslr_handle_t h, uint8_t *st_buf) {
     DPRINT("[C]\tpslr_get_status_buffer()\n");
     ipslr_handle_t *p = (ipslr_handle_t *) h;
@@ -582,6 +621,14 @@ int pslr_get_status_buffer(pslr_handle_t h, uint8_t *st_buf) {
 //    CHECK(ipslr_status_full(p, &p->status));
 //    ipslr_status_full(p, &p->status);
     memcpy(st_buf, p->status_buffer, MAX_STATUS_BUF_SIZE);
+    return PSLR_OK;
+}
+
+int pslr_get_settings_buffer(pslr_handle_t h, uint8_t *st_buf) {
+    DPRINT("[C]\tpslr_get_settings_buffer()\n");
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    memset( st_buf, 0, SETTINGS_BUFFER_SIZE);
+    memcpy(st_buf, p->settings_buffer, SETTINGS_BUFFER_SIZE);
     return PSLR_OK;
 }
 
@@ -930,7 +977,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, pslr_buffer_type buftype, int b
     bufs = p->status.bufmask;
     DPRINT("\tp->status.bufmask = %x\n", p->status.bufmask);
 
-    if ( p->model->parser_function && (bufs & (1 << bufno)) == 0) {
+    if ( p->model->status_parser_function && (bufs & (1 << bufno)) == 0) {
         // do not check this for limited support cameras
         DPRINT("\tNo buffer data (%d)\n", bufno);
         return PSLR_READ_ERROR;
@@ -1085,7 +1132,7 @@ int *pslr_get_model_jpeg_resolutions(pslr_handle_t h) {
 
 bool pslr_get_model_only_limited(pslr_handle_t h) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    return p->model->buffer_size == 0 && !p->model->parser_function;
+    return p->model->buffer_size == 0 && !p->model->status_parser_function;
 }
 
 bool pslr_get_model_has_jpeg_hue(pslr_handle_t h) {
@@ -1131,6 +1178,16 @@ pslr_jpeg_image_tone_t pslr_get_model_max_supported_image_tone(pslr_handle_t h) 
 int pslr_get_model_af_point_num(pslr_handle_t h) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     return p->model->af_point_num;
+}
+
+bool pslr_get_model_old_bulb_mode(pslr_handle_t h) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    return p->model->old_bulb_mode;
+}
+
+bool pslr_get_model_has_settings_parser(pslr_handle_t h) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    return p->model->setting_defs != NULL;
 }
 
 const char *pslr_camera_name(pslr_handle_t h) {
@@ -1224,7 +1281,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status) {
 
     CHECK(read_result(p->fd, p->status_buffer, n > MAX_STATUS_BUF_SIZE ? MAX_STATUS_BUF_SIZE: n));
 
-    if ( expected_bufsize == 0 || !p->model->parser_function ) {
+    if ( expected_bufsize == 0 || !p->model->status_parser_function ) {
         // limited support only
         return PSLR_OK;
     } else if ( expected_bufsize > 0 && expected_bufsize != n ) {
@@ -1232,7 +1289,7 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status) {
         return PSLR_READ_ERROR;
     } else {
         // everything OK
-        (*p->model->parser_function)(p, status);
+        (*p->model->status_parser_function)(p, status);
         if ( p->model->need_exposure_mode_conversion ) {
             status->exposure_mode = exposure_mode_conversion( status->exposure_mode );
         }
@@ -1468,19 +1525,55 @@ int pslr_write_setting(pslr_handle_t *h, int offset, uint32_t value) {
     return PSLR_OK;
 }
 
-int pslr_read_settings(pslr_handle_t *h, int offset, int length, uint8_t *buf) {
-    int index=offset;
+int pslr_write_setting_by_name(pslr_handle_t *h, char *name, uint32_t value) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    pslr_setting_def_t *setting_def = find_setting_by_name(p->model->setting_defs, p->model->setting_defs_length, name);
+    if (setting_def != NULL) {
+        if (setting_def->length == 1) {
+            pslr_write_setting(h, setting_def->address, value);
+        } else if (setting_def->length == 2) {
+            pslr_write_setting(h, setting_def->address, value >> 8);
+            pslr_write_setting(h, setting_def->address+1, value & 0xff);
+        }
+    }
+    return PSLR_OK;
+}
+
+int pslr_read_settings(pslr_handle_t *h) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    int index=0;
     uint32_t value;
     int ret;
-    while (index<offset+length) {
+    while (index<SETTINGS_BUFFER_SIZE) {
         if ( (ret = pslr_read_setting(h, index, &value)) != PSLR_OK ) {
             return ret;
         }
-        buf[index] = value;
+        p->settings_buffer[index] = value;
         ++index;
     }
     return PSLR_OK;
 }
+
+int pslr_get_settings(pslr_handle_t h, pslr_settings *ps) {
+    DPRINT("[C]\tpslr_get_settings()\n");
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    memset( ps, 0, sizeof( pslr_settings ));
+    CHECK(pslr_read_settings(h));
+    if ( !p->model->setting_defs ) {
+        // no settings parser
+        return PSLR_OK;
+    } else {
+        if (!p->model->settings_parser_function) {
+            ipslr_settings_parser_generic(p, &p->settings);
+        } else {
+            (*p->model->settings_parser_function)(p, &p->settings);
+        }
+    }
+
+    memcpy(ps, &p->settings, sizeof (pslr_settings));
+    return PSLR_OK;
+}
+
 
 static int _ipslr_write_args(uint8_t cmd_2, ipslr_handle_t *p, int n, ...) {
     va_list ap;
@@ -1661,9 +1754,6 @@ PK-Remote (C) 2008 Pontus Lidman \n\n");
     return ret;
 }
 
-/* -----------------------------------------------------------------------
- write_debug
------------------------------------------------------------------------ */
 void write_debug( const char* message, ... ) {
 
     // Be sure debug is really on as DPRINT doesn't know

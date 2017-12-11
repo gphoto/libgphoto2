@@ -40,6 +40,7 @@
 
 #define MAX_RESOLUTION_SIZE 4
 #define MAX_STATUS_BUF_SIZE 456
+#define SETTINGS_BUFFER_SIZE 1024
 #define MAX_SEGMENTS 4
 
 typedef struct ipslr_handle ipslr_handle_t;
@@ -106,12 +107,46 @@ typedef struct {
     uint32_t battery_4;
 } pslr_status;
 
+typedef enum {
+    PSLR_SETTING_STATUS_READ,
+    PSLR_SETTING_STATUS_HARDWIRED,
+    PSLR_SETTING_STATUS_NA,
+    PSLR_SETTING_STATUS_UNKNOWN,
+} pslr_setting_status_t;
+
+typedef struct {
+    pslr_setting_status_t pslr_setting_status;
+    bool value;
+} pslr_bool_setting;
+
+typedef struct {
+    pslr_setting_status_t pslr_setting_status;
+    uint16_t value;
+} pslr_uint16_setting;
+
+typedef struct {
+    pslr_bool_setting one_push_bracketing;
+    pslr_bool_setting bulb_mode_press_press;
+    pslr_bool_setting bulb_timer;
+    pslr_uint16_setting bulb_timer_sec;
+} pslr_settings;
+
+typedef struct {
+    const char *name;
+    int address;
+    int length;
+} pslr_setting_def_t;
+
 typedef void (*ipslr_status_parse_t)(ipslr_handle_t *p, pslr_status *status);
+typedef void (*ipslr_settings_parse_t)(ipslr_handle_t *p, pslr_settings *settings);
+void ipslr_settings_parser_generic(ipslr_handle_t *p, pslr_settings *settings);
+pslr_setting_def_t *find_setting_by_name (pslr_setting_def_t *array, int array_length, char *name);
 
 typedef struct {
     uint32_t id;                                     // Pentax model ID
     const char *name;                                // name
-    bool old_scsi_command;                           // 1 for *ist cameras, 0 for the newer cameras
+    bool old_scsi_command;                           // true for *ist cameras, false for the newer cameras
+    bool old_bulb_mode;                              // true for older cameras
     bool need_exposure_mode_conversion;              // is exposure_mode_conversion required
     bool is_little_endian;                           // whether the return value should be parsed as little-endian
     int buffer_size;                                 // buffer size in bytes
@@ -126,7 +161,10 @@ typedef struct {
     pslr_jpeg_image_tone_t max_supported_image_tone; // last supported jpeg image tone
     bool has_jpeg_hue;                               // camera has jpeg hue setting
     int af_point_num;                                // number of AF points
-    ipslr_status_parse_t parser_function;            // parse function for status buffer
+    ipslr_status_parse_t status_parser_function;     // parse function for status buffer
+    pslr_setting_def_t *setting_defs;
+    int setting_defs_length;
+    ipslr_settings_parse_t settings_parser_function; // parse function for setting buffer
 } ipslr_model_info_t;
 
 typedef struct {
@@ -138,12 +176,14 @@ typedef struct {
 struct ipslr_handle {
     FDTYPE fd;
     pslr_status status;
+    pslr_settings settings;
     uint32_t id;
     ipslr_model_info_t *model;
     ipslr_segment_t segments[MAX_SEGMENTS];
     uint32_t segment_count;
     uint32_t offset;
     uint8_t status_buffer[MAX_STATUS_BUF_SIZE];
+    uint8_t settings_buffer[SETTINGS_BUFFER_SIZE];
 };
 
 ipslr_model_info_t *find_model_by_id( uint32_t id );
