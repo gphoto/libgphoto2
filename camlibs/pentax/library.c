@@ -111,31 +111,38 @@ camera_abilities (CameraAbilitiesList *list)
 		return ret;
 
 	strcpy (a.model, "Pentax:K50D");
-        // same usb vendor like Pentax K5D
+	a.usb_vendor		= 0x25fb;
 	a.usb_product		= 0x0160;
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
 		return ret;
 
         strcpy (a.model, "Pentax:K30");
-        // same usb vendor like Pentax K5D
+	a.usb_vendor		= 0x25fb;
         a.usb_product           = 0x0132;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
 
         strcpy (a.model, "Pentax:K5II");
-        // same usb vendor like Pentax K5D
+	a.usb_vendor		= 0x25fb;
         a.usb_product           = 0x0148;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
 
+	/* TommyLimKW @ Twitter */
+        strcpy (a.model, "Pentax:K5IIs");
+	a.usb_vendor		= 0x25fb;
+        a.usb_product           = 0x014a;
+        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+                return ret;
+
         strcpy (a.model, "Pentax:K3");
-        // same usb vendor like Pentax K5D
+	a.usb_vendor		= 0x25fb;
         a.usb_product           = 0x0164;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
 
         strcpy (a.model, "Pentax:K3II");
-        // same usb vendor like Pentax K5D
+	a.usb_vendor		= 0x25fb;
         a.usb_product           = 0x017a;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
