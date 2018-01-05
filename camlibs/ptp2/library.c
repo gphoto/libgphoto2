@@ -2071,6 +2071,8 @@ static struct {
 	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/32 */
 	{"Fuji:Fujifilm X-T10",			0x04cb, 0x02c8, 0},
+	/* with new updated firmware 4.0, https://github.com/gphoto/libgphoto2/issues/220 */
+	{"Fuji:Fujifilm X-Pro2",		0x04cb, 0x02cb, PTP_CAP},
 	/* with new updated firmware 1.1 */
 	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, PTP_CAP},
 
