@@ -106,6 +106,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_fsname,"cifs"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_fsname,"afs"))	||
+			    (NULL != strstr(mntent->mnt_fsname,"davfs"))||
 			    (NULL != strstr(mntent->mnt_fsname,"autofs"))||
                             (NULL != strstr(mntent->mnt_fsname,"cgroup"))||
                             (NULL != strstr(mntent->mnt_fsname,"systemd"))||
@@ -118,6 +119,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))||
 			/* fstype based */
 			    (NULL != strstr(mntent->mnt_type,"autofs"))	||
+			    (NULL != strstr(mntent->mnt_type,"davfs"))	||
 			    (NULL != strstr(mntent->mnt_type,"nfs"))	||
 			    (NULL != strstr(mntent->mnt_type,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_type,"proc"))||
@@ -177,6 +179,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_fsname,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_fsname,"afs"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"autofs"))||
+			    (NULL != strstr(mntent->mnt_fsname,"davfs"))||
                             (NULL != strstr(mntent->mnt_fsname,"cgroup"))||
                             (NULL != strstr(mntent->mnt_fsname,"systemd"))||
                             (NULL != strstr(mntent->mnt_fsname,"mqueue"))||
@@ -188,6 +191,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_fsname,"gphotofs"))||
 			/* fstype based */
 			    (NULL != strstr(mntent->mnt_type,"autofs"))	||
+			    (NULL != strstr(mntent->mnt_type,"davfs"))	||
 			    (NULL != strstr(mntent->mnt_type,"nfs"))	||
 			    (NULL != strstr(mntent->mnt_type,"smbfs"))||
 			    (NULL != strstr(mntent->mnt_type,"proc"))||
