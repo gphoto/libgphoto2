@@ -1962,6 +1962,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/84 */
 	{"Canon:Digital Ixus 180",		0x04a9, 0x32c0, 0},
 
+	/* https://github.com/gphoto/libgphoto2/issues/235 */
+	{"Canon:EOS M6",			0x04a9, 0x32c5, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Viktors Berstis <gpjm@berstis.com> */
 	{"Canon:EOS Rebel T7i",			0x04a9, 0x32c9, PTP_CAP|PTP_CAP_PREVIEW},
 
