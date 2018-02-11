@@ -37,10 +37,9 @@
 # include <stdio.h>
 # include <direct.h>
 
-# ifdef IOLIBS
-# undef IOLIBS
+# ifndef IOLIBS
+#  define IOLIBS			"."
 # endif
-# define IOLIBS			"."
 # define strcasecmp		_stricmp
 # ifndef snprintf
 #  define snprintf		_snprintf
