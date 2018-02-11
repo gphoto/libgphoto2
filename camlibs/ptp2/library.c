@@ -3452,10 +3452,28 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
 		} else {
 			/* Canon EOS M series */
+			int button, eos_m_af_success = 0;
+
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 3, 0), _("Canon EOS M Full-Press failed"));
-			/* full release now */
+			/* check if the capture was successful (the result is reported as a set of OLCInfoChanged events) */
+			ptp_check_eos_events (params);
+    			while (ptp_get_one_eos_event (params, &entry)) {
+    				GP_LOG_D ("entry type %04x", entry.type);
+    				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && sscanf (entry.u.info, "Button %d", &button)) {
+    					if (button == 4) {
+    						eos_m_af_success = 1;
+    					} else {
+    						eos_m_af_success = 0;
+    						gp_context_error (context, _("Canon EOS Capture failed: Perhaps no focus?"));
+    					}
+					break;
+    				}
+    			}
+			/* full release now (even if the press has failed) */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 3), _("Canon EOS M Full-Release failed"));
 			ptp_check_eos_events (params);
+			if (!eos_m_af_success)
+				return GP_ERROR;
 		}
 	} else {
 		C_PTP_REP_MSG (ptp_canon_eos_capture (params, &result),
