@@ -1977,6 +1977,8 @@ static struct {
 	/* "Lacy Rhoades" <lacy@colordeaf.net> */
 	{"Canon:EOS 200D",          		0x04a9, 0x32cc, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Geza Lore <gezalore@gmail.com> */
+	{"Canon:EOS M100",          		0x04a9, 0x32d1, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
