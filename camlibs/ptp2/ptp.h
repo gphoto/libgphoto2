@@ -3403,6 +3403,7 @@ uint16_t ptp_object_want (PTPParams *, uint32_t handle, unsigned int want, PTPOb
 void ptp_objects_sort (PTPParams *);
 uint16_t ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob);
 uint16_t ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob);
+uint16_t ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle);
 /* ptpip.c */
 void ptp_nikon_getptpipguid (unsigned char* guid);
 
@@ -3470,6 +3471,7 @@ uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret
 /*uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);*/
 
 uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count);
+
 
 
 #ifdef __cplusplus
