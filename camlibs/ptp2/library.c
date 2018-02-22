@@ -8117,6 +8117,13 @@ camera_init (Camera *camera, GPContext *context)
 		int 		timeout;
 		PTPContainer	event;
 
+		/* Background:
+		 * Untrusted computer gets a storage id of 0xfeedface.
+		 * Once the ipad user allows / trusts the computer in a popup dialog,
+		 * this storage removed and the actual storage is being addded
+		 * StoreRemoved 0xfeedface and StoreAdded 0x.... events are seen.
+		 */
+
 		/* Wait for a valid storage id , starting with 0x0001???? */
 		/* wait for 3 events or 9 seconds at most */
 		tries = 3;
@@ -8124,6 +8131,8 @@ camera_init (Camera *camera, GPContext *context)
 		gp_port_set_timeout (camera->port, 3000);
 		while (tries--) {
 			/* 0xfeedface and 0x00000000 seem bad storageid values for iPhones */
+			/* The event handling code in ptp.c will refresh the storage list if
+			 * it sees the correct events */
 			if (params->storageids.n && (
 				(params->storageids.Storage[0] != 0xfeedface) &&
 				(params->storageids.Storage[0] != 0x00000000)
@@ -8133,6 +8142,8 @@ camera_init (Camera *camera, GPContext *context)
 			while (ptp_get_one_event (params, &event)) {
 				GP_LOG_D ("Initial ptp event 0x%x (param1=%x)", event.Code, event.Param1);
 				/* the ptp stack should refresh the storage array */
+				if (event.Code == PTP_EC_StoreAdded)
+					break;
 			}
 		}
 		gp_port_set_timeout (camera->port, timeout);
