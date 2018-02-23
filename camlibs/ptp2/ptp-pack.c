@@ -2889,3 +2889,58 @@ ptp_unpack_canon_directory (
 #undef ISOBJECT
 	return PTP_RC_OK;
 }
+
+static inline int
+ptp_unpack_ptp11_manifest (
+	PTPParams		*params,
+	unsigned char		*data,
+	unsigned int 		datalen,
+	uint64_t		*numoifs,
+	PTPObjectFilesystemInfo	**oifs
+) {
+	uint64_t		numberoifs, i;
+	unsigned int		curoffset;
+	PTPObjectFilesystemInfo	*xoifs;
+
+	if (datalen < 8)
+		return 0;
+	numberoifs = dtoh64ap(params,data);
+	curoffset = 8;
+	xoifs = calloc(sizeof(PTPObjectFilesystemInfo),numberoifs);
+	if (!xoifs)
+		return 0;
+
+	for (i = 0; i < numberoifs; i++) {
+		uint8_t len,dlen;
+		char *modify_date;
+		PTPObjectFilesystemInfo *oif = xoifs+i;
+
+		if (curoffset + 32 + 2 > datalen)
+			goto tooshort;
+
+		oif->ObjectHandle		= dtoh32ap(params,data+curoffset);
+		oif->StorageID 			= dtoh32ap(params,data+curoffset+4);
+		oif->ObjectFormat 		= dtoh16ap(params,data+curoffset+8);
+		oif->ProtectionStatus 		= dtoh16ap(params,data+curoffset+10);
+		oif->ObjectCompressedSize64 	= dtoh64ap(params,data+curoffset+12);
+		oif->ParentObject 		= dtoh32ap(params,data+curoffset+20);
+		oif->AssociationType 		= dtoh16ap(params,data+curoffset+24);
+		oif->AssociationDesc 		= dtoh16ap(params,data+curoffset+26);
+		oif->SequenceNumber 		= dtoh32ap(params,data+curoffset+28);
+		oif->Filename 			= ptp_unpack_string(params, data, curoffset+32, datalen, &len);
+		if (curoffset+32+len+1 > datalen)
+			goto tooshort;
+		modify_date			= ptp_unpack_string(params, data, curoffset+len+32, datalen, &dlen);
+		oif->ModificationDate 		= ptp_unpack_PTPTIME(modify_date);
+		free(modify_date);
+		curoffset += 32+len+dlen;
+	}
+	*numoifs = numberoifs;
+	*oifs = xoifs;
+	return 1;
+tooshort:
+	for (i = 0; i < numberoifs; i++)
+		if (xoifs[i].Filename) free (xoifs[i].Filename);
+	free (xoifs);
+	return 0;
+}

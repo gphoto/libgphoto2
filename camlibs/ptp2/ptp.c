@@ -1247,13 +1247,17 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 
 uint16_t
 ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
-			uint32_t objectformatcode, uint32_t associationOH,
-			unsigned char** data)
-{
-	PTPContainer ptp;
+	uint32_t objectformatcode, uint32_t associationOH,
+        uint64_t *numoifs, PTPObjectFilesystemInfo **oifs
+) {
+	PTPContainer	ptp;
+	unsigned int	size;
+	unsigned char	*data;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetFilesystemManifest, storage, objectformatcode, associationOH);
-	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, NULL);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	ptp_unpack_ptp11_manifest (params, data, size, numoifs, oifs);
+	return PTP_RC_OK;
 }
 
 /**

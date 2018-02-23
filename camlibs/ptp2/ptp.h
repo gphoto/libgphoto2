@@ -1024,6 +1024,21 @@ struct _PTPObjectInfo {
 };
 typedef struct _PTPObjectInfo PTPObjectInfo;
 
+struct _PTPObjectFilesystemInfo {
+	uint32_t ObjectHandle;
+	uint32_t StorageID;
+	uint16_t ObjectFormat;
+	uint16_t ProtectionStatus;
+	uint64_t ObjectCompressedSize64;
+	uint32_t ParentObject;
+	uint16_t AssociationType;
+	uint32_t AssociationDesc;
+	uint32_t SequenceNumber;
+	char 	*Filename;
+	time_t	ModificationDate;
+};
+typedef struct _PTPObjectFilesystemInfo PTPObjectFilesystemInfo;
+
 /* max ptp string length INCLUDING terminating null character */
 
 #define PTP_MAXSTRLEN				255
@@ -2762,7 +2777,7 @@ uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
                         uint32_t objectformatcode, uint32_t associationOH,
-                        unsigned char** data);
+        		uint64_t *numoifs, PTPObjectFilesystemInfo **oifs);
 
 
 
