@@ -2918,27 +2918,19 @@ ptp_unpack_ptp11_manifest (
 		if (curoffset + 34 + 2 > datalen)
 			goto tooshort;
 
-		ptp_debug (params, "entry %d", i);
 		oif->ObjectHandle		= dtoh32ap(params,data+curoffset);
-		ptp_debug (params, "  handle %08x", oif->ObjectHandle);
 		oif->StorageID 			= dtoh32ap(params,data+curoffset+4);
-		ptp_debug (params, "  storageid %08x", oif->StorageID);
 		oif->ObjectFormat 		= dtoh16ap(params,data+curoffset+8);
-		ptp_debug (params, "  ofc %04x", oif->ObjectFormat);
 		oif->ProtectionStatus 		= dtoh16ap(params,data+curoffset+10);
-		ptp_debug (params, "  prot %04x", oif->ProtectionStatus);
 		oif->ObjectCompressedSize64 	= dtoh64ap(params,data+curoffset+12);
 		oif->ParentObject 		= dtoh32ap(params,data+curoffset+20);
 		oif->AssociationType 		= dtoh16ap(params,data+curoffset+24);
 		oif->AssociationDesc 		= dtoh32ap(params,data+curoffset+26);
-		ptp_debug (params, "  assocdesc %08x", oif->AssociationDesc);
 		oif->SequenceNumber 		= dtoh32ap(params,data+curoffset+30);
 		oif->Filename 			= ptp_unpack_string(params, data, curoffset+34, datalen, &len);
-		ptp_debug (params, "  fn %s", oif->Filename);
 		if (curoffset+34+len*2+1 > datalen)
 			goto tooshort;
 		modify_date			= ptp_unpack_string(params, data, curoffset+len*2+1+34, datalen, &dlen);
-		ptp_debug (params, "  date %s", modify_date);
 		oif->ModificationDate 		= ptp_unpack_PTPTIME(modify_date);
 		free(modify_date);
 		curoffset += 34+len*2+dlen*2+2;
