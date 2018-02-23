@@ -6990,12 +6990,21 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 			return ret;
 		}
 		if (!ob->oi.Filename) ob->oi.Filename=strdup("<none>");
-		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED)
+		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED) {
+			if (ob->oi.ParentObject != saveparent)
+				ptp_debug (params, "saved parent %08x is not the same as read via getobjectinfo %08x", ob->oi.ParentObject, saveparent);
 			ob->oi.ParentObject = saveparent;
+		}
 
 		/* Second EOS issue, 0x20000000 has 0x20000000 as parent */
 		if (ob->oi.ParentObject == handle)
 			ob->oi.ParentObject = 0;
+
+		/* Apple iOS X does that for the root folder. */
+		if (ob->oi.ParentObject == ob->oi.StorageID) {
+			ptp_debug (params, "parent %08x of %s has same id as storage id. rewriting to 0.", ob->oi.ParentObject, ob->oi.Filename);
+			ob->oi.ParentObject = 0;
+		}
 
 		/* Read out the canon special flags */
 		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
