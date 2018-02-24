@@ -1254,6 +1254,8 @@ ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 	unsigned int	size;
 	unsigned char	*data;
 
+	*oifs = NULL;
+	*numoifs = 0;
 	PTP_CNT_INIT(ptp, PTP_OC_GetFilesystemManifest, storage, objectformatcode, associationOH);
 	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	ptp_unpack_ptp11_manifest (params, data, size, numoifs, oifs);
@@ -2294,6 +2296,71 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
 		/*debug_objectinfo(params, handle, &ob->oi);*/
 	}
+
+	if (ptp_operation_issupported(params, PTP_OC_GetFilesystemManifest)) {
+		uint64_t		numoifs = 0;
+		PTPObjectFilesystemInfo	*oifs = NULL;
+
+		if (storage == PTP_HANDLER_SPECIAL) storage = 0;
+		ret = ptp_getfilesystemmanifest (params, storage, 0, handle, &numoifs, &oifs);
+		if (ret != PTP_RC_OK || !numoifs)
+			goto fallback;
+
+		last = changed = 0;
+		for (i=0;i<numoifs;i++) {
+			PTPObject	*ob;
+			unsigned int	j;
+
+			ob = NULL;
+			for (j=0;j<params->nrofobjects;j++) {
+				if (params->objects[(last+j)%params->nrofobjects].oid == oifs[i].ObjectHandle)  {
+					ob = &params->objects[(last+j)%params->nrofobjects];
+					break;
+				}
+			}
+			if (j == params->nrofobjects) {
+				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->nrofobjects,j);
+				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
+				if (!newobs) return PTP_RC_GeneralError;
+				params->objects = newobs;
+				memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
+				params->objects[params->nrofobjects].oid = oifs[i].ObjectHandle;
+				params->objects[params->nrofobjects].flags = 0;
+				ob = &params->objects[params->nrofobjects];
+				params->nrofobjects++;
+				changed = 1;
+			} else {
+				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->nrofobjects,j);
+				ob = &params->objects[(last+j)%params->nrofobjects];
+				/* for speeding up search */
+				last = (last+j)%params->nrofobjects;
+			}
+
+			ob->oi.StorageID 		= oifs[i].StorageID;
+			ob->oi.ObjectFormat 		= oifs[i].ObjectFormat;
+			ob->oi.ProtectionStatus 	= oifs[i].ProtectionStatus;
+			ob->oi.ObjectCompressedSize	= oifs[i].ObjectCompressedSize64;
+			ob->oi.ParentObject		= oifs[i].ParentObject;
+
+			/* bad iOS, returns StorageID instead of 0x0 */
+			if (ob->oi.ParentObject == oifs[i].StorageID) {
+				ptp_debug (params, "objectid 0x%08x aka %s has parent %08x, rewriting to 0", oifs[i].ObjectHandle, oifs[i].Filename, oifs[i].ParentObject);
+				ob->oi.ParentObject = 0;
+			}
+
+			ob->oi.AssociationType		= oifs[i].AssociationType;
+			ob->oi.AssociationDesc		= oifs[i].AssociationDesc;
+			ob->oi.SequenceNumber		= oifs[i].SequenceNumber;
+			ob->oi.Filename			= oifs[i].Filename; /* hand over memory ownership */
+			ob->oi.ModificationDate		= oifs[i].ModificationDate;
+			/* FIXME: most of it ... but not the image sizes */
+			ob->flags			|= PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED;
+		}
+		free (oifs);
+		if (changed) ptp_objects_sort (params);
+		return PTP_RC_OK;
+	}
+fallback:
 	ptp_debug (params, "Listing ... ");
 	if (handle == 0) xhandle = PTP_HANDLER_SPECIAL; /* 0 would mean all */
 	ret = ptp_getobjecthandles (params, storage, 0, xhandle, &handles);
