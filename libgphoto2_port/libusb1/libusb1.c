@@ -693,6 +693,11 @@ gp_libusb1_queue_interrupt_urbs (GPPort *port)
 	unsigned int i;
 	int ret = 0;
 
+	/* no interrupt endpoint */
+	if (port->settings.usb.intep == -1)
+		return GP_OK;
+
+
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		unsigned char *buf;
 		if (port->pl->transfers[i] != NULL)
