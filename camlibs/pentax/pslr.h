@@ -1,6 +1,6 @@
 /*
     pkTriggerCord
-    Copyright (C) 2011-2017 Andras Salamon <andras.salamon@melda.info>
+    Copyright (C) 2011-2018 Andras Salamon <andras.salamon@melda.info>
     Remote control of Pentax DSLR cameras.
 
     Support for K200D added by Jens Dreyer <jens.dreyer@udo.edu> 04/2011
@@ -142,6 +142,7 @@ int pslr_focus(pslr_handle_t h);
 int pslr_get_status(pslr_handle_t h, pslr_status *sbuf);
 int pslr_get_status_buffer(pslr_handle_t h, uint8_t *st_buf);
 int pslr_get_settings(pslr_handle_t h, pslr_settings *ps);
+int pslr_get_settings_json(pslr_handle_t h, pslr_settings *ps);
 int pslr_get_settings_buffer(pslr_handle_t h, uint8_t *st_buf);
 
 char *collect_status_info( pslr_handle_t h, pslr_status status );
@@ -206,7 +207,7 @@ int pslr_select_af_point(pslr_handle_t h, uint32_t point);
 const char *pslr_camera_name(pslr_handle_t h);
 int pslr_get_model_max_jpeg_stars(pslr_handle_t h);
 int pslr_get_model_jpeg_property_levels(pslr_handle_t h);
-int pslr_get_model_buffer_size(pslr_handle_t h);
+int pslr_get_model_status_buffer_size(pslr_handle_t h);
 int pslr_get_model_fastest_shutter_speed(pslr_handle_t h);
 int pslr_get_model_base_iso_min(pslr_handle_t h);
 int pslr_get_model_base_iso_max(pslr_handle_t h);
@@ -220,6 +221,7 @@ pslr_jpeg_image_tone_t pslr_get_model_max_supported_image_tone(pslr_handle_t h);
 bool pslr_get_model_has_settings_parser(pslr_handle_t h);
 int pslr_get_model_af_point_num(pslr_handle_t h);
 bool pslr_get_model_old_bulb_mode(pslr_handle_t h);
+bool pslr_get_model_bufmask_single(pslr_handle_t h);
 
 pslr_buffer_type pslr_get_jpeg_buffer_type(pslr_handle_t h, int quality);
 int pslr_get_jpeg_resolution(pslr_handle_t h, int hwres);
@@ -231,6 +233,7 @@ int pslr_read_dspinfo(pslr_handle_t *h, char *firmware);
 int pslr_read_setting(pslr_handle_t *h, int offset, uint32_t *value);
 int pslr_write_setting(pslr_handle_t *h, int offset, uint32_t value);
 int pslr_write_setting_by_name(pslr_handle_t *h, char *name, uint32_t value);
+bool pslr_has_setting_by_name(pslr_handle_t *h, char *name);
 int pslr_read_settings(pslr_handle_t *h);
 
 pslr_gui_exposure_mode_t exposure_mode_conversion( pslr_exposure_mode_t exp );
@@ -238,7 +241,7 @@ char *format_rational( pslr_rational_t rational, char * fmt );
 
 int pslr_test( pslr_handle_t h, bool cmd9_wrap, int subcommand, int argnum,  int arg1, int arg2, int arg3, int arg4);
 
-char *copyright();
+char *copyright(void);
 
 void write_debug( const char* message, ... );
 

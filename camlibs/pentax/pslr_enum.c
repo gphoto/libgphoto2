@@ -1,6 +1,6 @@
 /*
     pkTriggerCord
-    Copyright (C) 2011-2017 Andras Salamon <andras.salamon@melda.info>
+    Copyright (C) 2011-2018 Andras Salamon <andras.salamon@melda.info>
     Remote control of Pentax DSLR cameras.
 
     Support for K200D added by Jens Dreyer <jens.dreyer@udo.edu> 04/2011
@@ -216,6 +216,7 @@ int find_in_array( const char** array, int length, char* str ) {
     return found_index;
 }
 
+static
 const char *get_pslr_str( const char** array, int length, int value ) {
     if (value >=0 && value < length) {
         return array[value];
