@@ -390,6 +390,7 @@ static int
 camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams	*params = &camera->pl->params;
 	PTPStorageIDs	sids;
+	int		tries;
 
 	GP_LOG_D ("preparing EOS capture...");
 
@@ -430,8 +431,14 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		ptp_free_EOS_DI (&x);
 	}
 
-	/* Get the second bulk set of event data */
+	/* The new EOS occasionaly returned an empty event set ... likely because we are too fast. try again some times. */
 	C_PTP (ptp_check_eos_events (params));
+	tries = 10;
+	while (--tries && !have_eos_prop(camera,PTP_VENDOR_CANON,PTP_DPC_CANON_EOS_EVFOutputDevice)) {
+		GP_LOG_D("evfoutput device not found, retrying");
+		usleep(50*1000);
+		C_PTP (ptp_check_eos_events (params));
+	}
 
 	CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
