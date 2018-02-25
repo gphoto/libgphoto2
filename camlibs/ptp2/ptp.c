@@ -2154,7 +2154,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	PTPStorageIDs	storageids;
 	PTPObject	*ob;
 
-	if (handle != 0xffffffff) {
+	if ((handle != 0xffffffff) && (handle != 0)) {
 		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 		if ((ret == PTP_RC_OK) && (ob->flags & PTPOBJECT_DIRECTORY_LOADED))
 			return PTP_RC_OK;

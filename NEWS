@@ -1,5 +1,15 @@
 libgphoto2 2.5.16.1 development
 
+ptp2:
+* Apple iOSX: handle root directory objects that have ParentObject==StorageID instead of 0
+* implement PTP 1.1 Manifest reading and hook into filesystem. currently only supported
+  by Apple iOS.
+* Canon EOS: prepare capture needs to wait a bit on a crucial place to get all events.
+  might fix some PTP Device Busy reports.
+
+pentax:
+* Code updates imported from pkremote
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.16 release
 
