@@ -2688,7 +2688,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			ptp_free_devicepropdesc (&dpd);
 
 			/* Otherwise the camera will auto-shutdown */
-			if (ptp_operation_issupported(params, PTP_OC_CANON_KeepDeviceOn)) C_PTP (ptp_canon_eos_keepdeviceon (params));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) C_PTP (ptp_canon_eos_keepdeviceon (params));
 
 			params->inliveview = 1;
 			event_start = time_now();
@@ -3555,7 +3555,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			break;
 
 		/* not really proven to help keep it on */
-		if (ptp_operation_issupported(params, PTP_OC_CANON_KeepDeviceOn)) C_PTP_REP (ptp_canon_eos_keepdeviceon (params));
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) C_PTP_REP (ptp_canon_eos_keepdeviceon (params));
 		gp_context_idle (context);
 	} while (waiting_for_timeout (&back_off_wait, capture_start, EOS_CAPTURE_TIMEOUT));
 
@@ -4919,7 +4919,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 			PTPCanon_changes_entry	entry;
 
 			/* keep device alive */
-			if (ptp_operation_issupported(params, PTP_OC_CANON_KeepDeviceOn)) C_PTP (ptp_canon_eos_keepdeviceon (params));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) C_PTP (ptp_canon_eos_keepdeviceon (params));
 
 			C_PTP_REP_MSG (ptp_check_eos_events (params),
 				       _("Canon EOS Get Changes failed"));
