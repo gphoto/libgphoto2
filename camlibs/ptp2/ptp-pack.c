@@ -1740,6 +1740,14 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 
 	if ((size >= datasize) || (size < 20))
 		return strdup("bad size 1");
+	/* If data is zero-filled, then it is just a placeholder, so nothing
+	   useful, but also not an error */
+	for (i=4; i<size && !(*data)[i]; i++);
+	if (i == size) {
+		ptp_debug(params,"skipped FocusInfoEx data (zero filled)");
+		return strdup("zero filled");
+	}
+
 	/* every focuspoint gets 4 (16 bit number possible "-" sign and a x) and a ,*/
 	/* inital things around lets say 100 chars at most. 
 	 * FIXME: check selected when we decode it

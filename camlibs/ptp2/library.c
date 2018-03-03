@@ -1893,6 +1893,9 @@ static struct {
 	/* "T. Ludewig" <t.ludewig@gmail.com> */
 	{"Canon:EOS 700D",			0x04a9, 0x3272, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Alexey Kryukov <amkryukov@gmail.com> */
+	{"Canon:EOS M2",			0x04a9, 0x3273, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Harald Krause <haraldkrause@gmx.com> */
 	{"Canon:PowerShot G16",			0x04a9, 0x3274, 0},
 
@@ -3460,12 +3463,12 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			ptp_check_eos_events (params);
     			while (ptp_get_one_eos_event (params, &entry)) {
     				GP_LOG_D ("entry type %04x", entry.type);
-    				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && sscanf (entry.u.info, "Button %d", &button)) {
+    				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && entry.u.info && sscanf (entry.u.info, "Button %d", &button)) {
     					if (button == 4) {
     						eos_m_af_success = 1;
     					} else {
     						eos_m_af_success = 0;
-    						gp_context_error (context, _("Canon EOS Capture failed: Perhaps no focus?"));
+    						gp_context_error (context, _("Canon EOS M Capture failed: Perhaps no focus?"));
     					}
 					break;
     				}
@@ -8062,6 +8065,12 @@ camera_init (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
 			if (is_canon_eos_m(params)) {
 				C_PTP (ptp_canon_eos_setremotemode(params, 0x15));
+
+				/* Setting remote mode changes device info on EOS M2,
+				   so have to reget it */
+				C_PTP (ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo));
+				CR (fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo));
+				print_debug_deviceinfo(params, &params->deviceinfo);
 			} else {
 				C_PTP (ptp_canon_eos_setremotemode(params, 1));
 			}
