@@ -4583,7 +4583,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	/* Newer EOS starting with 100D, 1200D, 600D, 5d MarkII+, 60D, 70D, 6D ... and newer */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	     ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
-		int 		oneloop;
+		int 			oneloop;
+		PTPCanon_changes_entry	entry;
 
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
@@ -4593,6 +4594,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* Get the initial bulk set of event data, otherwise
 		 * capture might return busy. */
 		C_PTP (ptp_check_eos_events (params));
+		while (ptp_get_one_eos_event (params, &entry))
+			GP_LOG_D("discarding event type %d", entry.type);
 
 		if (params->eos_camerastatus == 1)
 			return GP_ERROR_CAMERA_BUSY;
@@ -4604,7 +4607,6 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
 
 			do {
-				PTPCanon_changes_entry	entry;
 				int foundfocusinfo = 0;
 
 				C_PTP_REP_MSG (ptp_check_eos_events (params),
@@ -4641,10 +4643,30 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			/* half release now */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
 		} else {
+			/* Canon EOS M series */
+			int button, eos_m_af_success = 0;
+
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 3, 0), _("Canon EOS M Full-Press failed"));
-			/* full release now */
+			/* check if the capture was successful (the result is reported as a set of OLCInfoChanged events) */
+			ptp_check_eos_events (params);
+			while (ptp_get_one_eos_event (params, &entry)) {
+				GP_LOG_D ("entry type %04x", entry.type);
+				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && entry.u.info && sscanf (entry.u.info, "Button %d", &button)) {
+					if (button == 4) {
+						eos_m_af_success = 1;
+					} else {
+						eos_m_af_success = 0;
+						gp_context_error (context, _("Canon EOS M Capture failed: Perhaps no focus?"));
+					}
+					break;
+				}
+			}
+			/* full release now (even if the press has failed) */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 3), _("Canon EOS M Full-Release failed"));
 			ptp_check_eos_events (params);
+			if (!eos_m_af_success)
+				return GP_ERROR;
+
 		}
 
 		return GP_OK;
