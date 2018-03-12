@@ -118,4 +118,104 @@ Property 0xd402:(read only) (type=0xffff) 'Canon EOS M'
 Property 0xd407:(read only) (type=0x6) 1
 Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
 Property 0xd303:(read only) (type=0x2) 1
-Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 100% (100)
+ attery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 100% (100)
+
+
+print_debug_deviceinfo      (2): Device info:
+print_debug_deviceinfo      (2): Manufacturer: Canon Inc.
+print_debug_deviceinfo      (2):   Model: Canon EOS M
+print_debug_deviceinfo      (2):   device version: 3-2.0.2
+print_debug_deviceinfo      (2):   serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+print_debug_deviceinfo      (2): Vendor extension ID: 0x0000000b
+print_debug_deviceinfo      (2): Vendor extension version: 200
+print_debug_deviceinfo      (2): Vendor extension description: (null)
+print_debug_deviceinfo      (2): Functional Mode: 0x0000
+print_debug_deviceinfo      (2): PTP Standard Version: 100
+print_debug_deviceinfo      (2): Supported operations:
+print_debug_deviceinfo      (2):   0x1001 (Get device info)
+print_debug_deviceinfo      (2):   0x1002 (Open session)
+print_debug_deviceinfo      (2):   0x1003 (Close session)
+print_debug_deviceinfo      (2):   0x1004 (Get storage IDs)
+print_debug_deviceinfo      (2):   0x1005 (Get storage info)
+print_debug_deviceinfo      (2):   0x1006 (Get number of objects)
+print_debug_deviceinfo      (2):   0x1007 (Get object handles)
+print_debug_deviceinfo      (2):   0x1008 (Get object info)
+print_debug_deviceinfo      (2):   0x1009 (Get object)
+print_debug_deviceinfo      (2):   0x100a (Get thumbnail)
+print_debug_deviceinfo      (2):   0x100b (Delete object)
+print_debug_deviceinfo      (2):   0x100c (Send object info)
+print_debug_deviceinfo      (2):   0x100d (Send object)
+print_debug_deviceinfo      (2):   0x100f (Format storage)
+print_debug_deviceinfo      (2):   0x1014 (Get device property description)
+print_debug_deviceinfo      (2):   0x1015 (Get device property value)
+print_debug_deviceinfo      (2):   0x1016 (Set device property value)
+print_debug_deviceinfo      (2):   0x91d5 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x101b (Get partial object)
+print_debug_deviceinfo      (2):   0x9101 (PTP_OC_CANON_EOS_GetStorageIDs)
+print_debug_deviceinfo      (2):   0x9102 (PTP_OC_CANON_EOS_GetStorageInfo)
+print_debug_deviceinfo      (2):   0x9103 (PTP_OC_CANON_EOS_GetObjectInfo)
+print_debug_deviceinfo      (2):   0x9104 (PTP_OC_CANON_EOS_GetObject)
+print_debug_deviceinfo      (2):   0x9105 (PTP_OC_CANON_EOS_DeleteObject)
+print_debug_deviceinfo      (2):   0x9106 (PTP_OC_CANON_EOS_FormatStore)
+print_debug_deviceinfo      (2):   0x9107 (PTP_OC_CANON_EOS_GetPartialObject)
+print_debug_deviceinfo      (2):   0x9108 (PTP_OC_CANON_EOS_GetDeviceInfoEx)
+print_debug_deviceinfo      (2):   0x9109 (PTP_OC_CANON_EOS_GetObjectInfoEx)
+print_debug_deviceinfo      (2):   0x910a (PTP_OC_CANON_EOS_GetThumbEx)
+print_debug_deviceinfo      (2):   0x910b (PTP_OC_CANON_EOS_SendPartialObject)
+print_debug_deviceinfo      (2):   0x910c (PTP_OC_CANON_EOS_SetObjectAttributes)
+print_debug_deviceinfo      (2):   0x910e (PTP_OC_CANON_EOS_SetObjectTime)
+print_debug_deviceinfo      (2):   0x9110 (PTP_OC_CANON_EOS_SetDevicePropValueEx)
+print_debug_deviceinfo      (2):   0x9113 (PTP_OC_CANON_EOS_GetRemoteMode)
+print_debug_deviceinfo      (2):   0x9114 (PTP_OC_CANON_EOS_SetRemoteMode)
+print_debug_deviceinfo      (2):   0x9115 (PTP_OC_CANON_EOS_SetEventMode)
+print_debug_deviceinfo      (2):   0x9116 (PTP_OC_CANON_EOS_GetEvent)
+print_debug_deviceinfo      (2):   0x9117 (PTP_OC_CANON_EOS_TransferComplete)
+print_debug_deviceinfo      (2):   0x9118 (PTP_OC_CANON_EOS_CancelTransfer)
+print_debug_deviceinfo      (2):   0x911b (PTP_OC_CANON_EOS_SetUILock)
+print_debug_deviceinfo      (2):   0x911c (PTP_OC_CANON_EOS_ResetUILock)
+print_debug_deviceinfo      (2):   0x911d (PTP_OC_CANON_EOS_KeepDeviceOn)
+print_debug_deviceinfo      (2):   0x911e (PTP_OC_CANON_EOS_SetNullPacketMode)
+print_debug_deviceinfo      (2):   0x911f (PTP_OC_CANON_EOS_UpdateFirmware)
+print_debug_deviceinfo      (2):   0x9127 (PTP_OC_CANON_EOS_RequestDevicePropValue)
+print_debug_deviceinfo      (2):   0x912c (PTP_OC_CANON_EOS_GetPartialObjectEx)
+print_debug_deviceinfo      (2):   0x9132 (PTP_OC_CANON_EOS_EndGetPartialObjectEx)
+print_debug_deviceinfo      (2):   0x9135 (PTP_OC_CANON_EOS_GetCTGInfo)
+print_debug_deviceinfo      (2):   0x9136 (PTP_OC_CANON_EOS_GetLensAdjust)
+print_debug_deviceinfo      (2):   0x9137 (PTP_OC_CANON_EOS_SetLensAdjust)
+print_debug_deviceinfo      (2):   0x9138 (PTP_OC_CANON_EOS_GetMusicInfo)
+print_debug_deviceinfo      (2):   0x9139 (PTP_OC_CANON_EOS_CreateHandle)
+print_debug_deviceinfo      (2):   0x913a (PTP_OC_CANON_EOS_SendPartialObjectEx)
+print_debug_deviceinfo      (2):   0x913b (PTP_OC_CANON_EOS_EndSendPartialObjectEx)
+print_debug_deviceinfo      (2):   0x913c (PTP_OC_CANON_EOS_SetCTGInfo)
+print_debug_deviceinfo      (2):   0x913f (PTP_OC_CANON_EOS_GetCameraSupport)
+print_debug_deviceinfo      (2):   0x913d (PTP_OC_CANON_EOS_SetRequestOLCInfoGroup)
+print_debug_deviceinfo      (2):   0x91da (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91db (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91dc (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91dd (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91de (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91d8 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91d9 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x91d7 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x913e (PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel)
+print_debug_deviceinfo      (2):   0x9052 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x9053 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x9057 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x9058 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x9059 (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x905a (Unknown PTP_OC)
+print_debug_deviceinfo      (2):   0x905f (Unknown PTP_OC)
+print_debug_deviceinfo      (2): Events Supported:
+print_debug_deviceinfo      (2):   0x4009
+print_debug_deviceinfo      (2):   0x4004
+print_debug_deviceinfo      (2):   0x4005
+print_debug_deviceinfo      (2):   0x4003
+print_debug_deviceinfo      (2):   0x4002
+print_debug_deviceinfo      (2):   0x4007
+print_debug_deviceinfo      (2):   0xc101
+print_debug_deviceinfo      (2): Device Properties Supported:
+print_debug_deviceinfo      (2):   0xd402
+print_debug_deviceinfo      (2):   0xd407
+print_debug_deviceinfo      (2):   0xd406
+print_debug_deviceinfo      (2):   0xd303
+print_debug_deviceinfo      (2):   0x5001
