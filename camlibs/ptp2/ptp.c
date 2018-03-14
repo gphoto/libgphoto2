@@ -2161,10 +2161,8 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	}
 
 	if (storage == 0xffffffff) {
-		if (handle != 0xffffffff)  {
-			ptp_error (params, "storage 0x%08x, but handle 0x%08x?", storage, handle);
+		if (handle != 0xffffffff)
 			handle = 0xffffffff;
-		}
 		ret = ptp_getstorageids(params, &storageids);
 		if (ret != PTP_RC_OK)
 			return ret;
