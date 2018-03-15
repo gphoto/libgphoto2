@@ -3385,9 +3385,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	capture_start = time_now();
 
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
+		struct timeval		focus_start;
 		if (!is_canon_eos_m (params)) {
 			/* Regular EOS */
-			struct timeval		focus_start;
 			int 			manualfocus = 0, foundfocusinfo = 0;
 			PTPDevicePropDesc	dpd;
 
@@ -3456,27 +3456,42 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
 		} else {
 			/* Canon EOS M series */
-			int button, eos_m_af_success = 0;
+			int button = 0, eos_m_focus_done = 0;
 
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 3, 0), _("Canon EOS M Full-Press failed"));
+			focus_start = time_now();
 			/* check if the capture was successful (the result is reported as a set of OLCInfoChanged events) */
-			ptp_check_eos_events (params);
-    			while (ptp_get_one_eos_event (params, &entry)) {
-    				GP_LOG_D ("entry type %04x", entry.type);
-    				if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && entry.u.info && sscanf (entry.u.info, "Button %d", &button)) {
-    					if (button == 4) {
-    						eos_m_af_success = 1;
-    					} else {
-    						eos_m_af_success = 0;
-    						gp_context_error (context, _("Canon EOS M Capture failed: Perhaps no focus?"));
+			do {
+				ptp_check_eos_events (params);
+				while (ptp_get_one_eos_event (params, &entry)) {
+					GP_LOG_D ("entry type %04x", entry.type);
+					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && entry.u.info && sscanf (entry.u.info, "Button %d", &button)) {
+						GP_LOG_D ("Button %d", button);
+						switch (button) {
+							/* Indicates a successful Half-Press(?) on M2, where it
+							 * would precede any other value (unless in MF mode).
+							 * So skip it and look for another button reported */
+							case 2:
+								continue;
+							/* Full-Press successful */
+							case 4:
+								eos_m_focus_done = 1;
+								break;
+							/* 3 indicates a Full-Press fail on M2 */
+							/* 1 is a "normal" state, reported after a release.
+							   On M10 also indicates a Full-Press fail */
+							default:
+								eos_m_focus_done = 1;
+								gp_context_error (context, _("Canon EOS M Capture failed: Perhaps no focus?"));
+						}
+						break;
     					}
-					break;
     				}
-    			}
+			} while (!eos_m_focus_done && waiting_for_timeout (&back_off_wait, focus_start, 2*1000)); /* wait 2 seconds for focus */
 			/* full release now (even if the press has failed) */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 3), _("Canon EOS M Full-Release failed"));
 			ptp_check_eos_events (params);
-			if (!eos_m_af_success)
+			if (button < 4)
 				return GP_ERROR;
 		}
 	} else {
