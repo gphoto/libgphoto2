@@ -2486,7 +2486,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				i++;
 			}
 			if (mask & 0x0020) {
-				/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed */
+				/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed.
+				 * This seems to be the self-timer record: when active,
+				 * has the form of 00 00 01 00 XX XX, where the last two bytes
+				 * stand for the number of seconds remaining until the shot */
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				ce[i].u.info = malloc(strlen("OLCInfo event 0x0020 content 0123456789ab")+1); 
 				sprintf(ce[i].u.info,"OLCInfo event 0x0020 content %02x%02x%02x%02x%02x%02x",
