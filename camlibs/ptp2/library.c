@@ -3356,7 +3356,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	PTPCanon_changes_entry	entry;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
-	unsigned char		*ximage = NULL;
 	static int		capcnt = 0;
 	PTPObjectInfo		oi;
 	int			back_off_wait = 0;
@@ -3599,13 +3598,37 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	gp_file_set_mtime (file, time(NULL));
 
 	GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
-	C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));
+
+#define BLOBSIZE 5*1024*1024
+	/* Trying to read this in 1 block might be the cause of crashes of newer EOS */
+	{
+		uint32_t	offset = 0;
+
+		while (offset < oi.ObjectCompressedSize) {
+			uint32_t	xsize = oi.ObjectCompressedSize - offset;
+			unsigned char	*ximage = NULL;
+
+			if (xsize > BLOBSIZE)
+				xsize = BLOBSIZE;
+			ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &ximage);
+			gp_file_append (file, (char*)ximage, xsize);
+			free (ximage);
+			offset += xsize;
+		}
+	}
+	/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));*/
+#undef BLOBSIZE
+
+
 	C_PTP_REP (ptp_canon_eos_transfercomplete (params, newobject));
+/*
+	old:
 	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
 	}
+*/
 	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 	if (ret != GP_OK) {
 		gp_file_free (file);
@@ -4991,13 +5014,37 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_set_mtime (file, time(NULL));
 
 					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)entry.u.object.oi.ObjectCompressedSize);
-					C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, entry.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));
+
+#define BLOBSIZE 5*1024*1024
+					/* Trying to read this in 1 block might be the cause of crashes of newer EOS */
+					{
+						uint32_t	offset = 0;
+
+						while (offset < entry.u.object.oi.ObjectCompressedSize) {
+							uint32_t	xsize = entry.u.object.oi.ObjectCompressedSize - offset;
+							unsigned char	*yimage = NULL;
+
+							if (xsize > BLOBSIZE)
+								xsize = BLOBSIZE;
+							ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &yimage);
+							gp_file_append (file, (char*)yimage, xsize);
+							free (yimage);
+							offset += xsize;
+						}
+					}
+					/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));*/
+					/* C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, entry.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));*/
+#undef BLOBSIZE
 					C_PTP_REP (ptp_canon_eos_transfercomplete (params, newobject));
+
+/*
 					ret = gp_file_set_data_and_size(file, (char*)ximage, entry.u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
 						gp_file_free (file);
 						return ret;
 					}
+*/
+
 					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 					if (ret != GP_OK) {
 						gp_file_free (file);
@@ -6959,6 +7006,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return mtp_get_playlist (camera, file, oid, context);
 
 		size=ob->oi.ObjectCompressedSize;
+/* EOS software uses 1MB blobs */
+#define BLOBSIZE 5*1024*1024
+		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			(ptp_operation_issupported(params,PTP_OC_CANON_EOS_GetPartialObjectEx)) &&
+			(size > BLOBSIZE)
+		) {
+				unsigned char	*ximage = NULL;
+				uint32_t 	offset = 0;
+
+				while (offset < size) {
+					uint32_t	xsize = size - offset;
+
+					if (xsize > BLOBSIZE)
+						xsize = BLOBSIZE;
+					ptp_canon_eos_getpartialobjectex (params, oid, offset, xsize, &ximage);
+					gp_file_append (file, (char*)ximage, xsize);
+					free (ximage);
+					ximage = NULL;
+					offset += xsize;
+				}
+				goto done;
+		}
+#undef BLOBSIZE
 		if (size) {
 			uint16_t	ret;
 			PTPDataHandler	handler;
@@ -6977,6 +7047,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			C_MEM (ximage = malloc(1));
 			CR (gp_file_set_data_and_size (file, (char*)ximage, size));
 		}
+done:
 
 		/* clear the "new" flag on Canons */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&

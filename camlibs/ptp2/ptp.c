@@ -2893,6 +2893,33 @@ ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t offset
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, NULL);
 }
 
+/**
+ * ptp_canon_eos_getpartialobjectex:
+ * 
+ * This retrieves a part of an PTP object which you specify as object id.
+ * The id originates from 0x9116 call.
+ * After finishing it, we seem to need to call ptp_canon_eos_enddirecttransfer.
+ *
+ * params:	PTPParams*
+ * 		oid		Object ID
+ * 		offset		The offset where to start the data transfer 
+ *		xsize		Size in bytes of the transfer to do
+ *		data		Pointer that receives the malloc()ed memory of the transfer.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ */
+uint16_t
+ptp_canon_eos_getpartialobjectex (PTPParams* params, uint32_t oid, uint32_t offset, uint32_t xsize, unsigned char**data)
+{
+	PTPContainer	ptp;
+
+/* 5bf19091  00008001  00001000  00000000  */
+/* objectid  offset    size      ? 64bit part ? */
+	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetPartialObjectEx, oid, offset, xsize, 0);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, NULL);
+}
+
 uint16_t
 ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size)
 {
