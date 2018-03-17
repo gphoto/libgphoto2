@@ -1558,6 +1558,53 @@ ptp_deleteobject (PTPParams* params, uint32_t handle, uint32_t ofc)
 }
 
 /**
+ * ptp_moveobject:
+ * params:	PTPParams*
+ *		handle			- source ObjectHandle
+ *		storage			- destination StorageID
+ *		parent			- destination parent ObjectHandle
+ *
+ * Move an object to a new location under the specified parent.
+ * Note that unlike most calls, 0 must be passed for the parent if the destination
+ * is the Storage root.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_moveobject (PTPParams* params, uint32_t handle, uint32_t storage, uint32_t parent)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_MoveObject, handle, storage, parent);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
+	/* If the object is cached and could be removed, cleanse cache. */
+	ptp_remove_object_from_cache(params, handle);
+	return PTP_RC_OK;
+}
+
+/**
+ * ptp_copyobject:
+ * params:	PTPParams*
+ *		handle			- source ObjectHandle
+ *		storage			- destination StorageID
+ *		parent			- destination parent ObjectHandle
+ *
+ * Copy an object to a new location under the specified parent.
+ * Note that unlike most calls, 0 must be passed for the parent if the destination
+ * is the Storage root.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_copyobject (PTPParams* params, uint32_t handle, uint32_t storage, uint32_t parent)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_CopyObject, handle, storage, parent);
+	return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+}
+
+/**
  * ptp_sendobjectinfo:
  * params:	PTPParams*
  *		uint32_t* store		- destination StorageID on Responder

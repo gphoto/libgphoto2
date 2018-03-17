@@ -2728,6 +2728,12 @@ uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
 uint16_t ptp_deleteobject	(PTPParams* params, uint32_t handle,
 				uint32_t ofc);
 
+uint16_t ptp_moveobject		(PTPParams* params, uint32_t handle,
+				uint32_t storage, uint32_t parent);
+
+uint16_t ptp_copyobject		(PTPParams* params, uint32_t handle,
+				uint32_t storage, uint32_t parent);
+
 uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
 				uint32_t* parenthandle, uint32_t* handle,
 				PTPObjectInfo* objectinfo);
