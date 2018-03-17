@@ -3471,6 +3471,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 							 * would precede any other value (unless in MF mode).
 							 * So skip it and look for another button reported */
 							case 2:
+							/* Reported in the self-timer mode during the delay
+							 * period. May be followed by 1, 3 or 4 */
+							case 7:
 								continue;
 							/* Full-Press successful */
 							case 4:
@@ -3490,6 +3493,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			/* full release now (even if the press has failed) */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 3), _("Canon EOS M Full-Release failed"));
 			ptp_check_eos_events (params);
+			/* NB: no error is returned in case of button == 7, which means
+			 * the timer is still working, but no AF fail has been reported */
 			if (button < 4)
 				return GP_ERROR;
 		}
