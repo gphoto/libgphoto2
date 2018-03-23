@@ -2954,3 +2954,37 @@ tooshort:
 	free (xoifs);
 	return 0;
 }
+
+static inline void
+ptp_unpack_chdk_lv_data_header (PTPParams *params, unsigned char* data, lv_data_header *header)
+{
+	int off = 0;
+	if (data==NULL)
+		return;
+	header->version_major = dtoh32a(&data[off]);
+	header->version_minor = dtoh32a(&data[off+=4]);
+	header->lcd_aspect_ratio = dtoh32a(&data[off+=4]);
+	header->palette_type = dtoh32a(&data[off+=4]);
+	header->palette_data_start = dtoh32a(&data[off+=4]);
+	header->vp_desc_start = dtoh32a(&data[off+=4]);
+	header->bm_desc_start = dtoh32a(&data[off+=4]);
+	if (header->version_minor > 1)
+		header->bmo_desc_start = dtoh32a(&data[off+=4]);
+}
+
+static inline void
+ptp_unpack_chdk_lv_framebuffer_desc (PTPParams *params, unsigned char* data, lv_framebuffer_desc *fd)
+{
+	int off = 0;
+	if (data==NULL)
+		return;
+	fd->fb_type = dtoh32a(&data[off]);
+	fd->data_start = dtoh32a(&data[off+=4]);
+	fd->buffer_width = dtoh32a(&data[off+=4]);
+	fd->visible_width = dtoh32a(&data[off+=4]);
+	fd->visible_height = dtoh32a(&data[off+=4]);
+	fd->margin_left = dtoh32a(&data[off+=4]);
+	fd->margin_top = dtoh32a(&data[off+=4]);
+	fd->margin_right = dtoh32a(&data[off+=4]);
+	fd->margin_bot = dtoh32a(&data[off+=4]);
+}

@@ -27,6 +27,10 @@
 #include <stdarg.h>
 #include <time.h>
 
+#ifdef HAVE_LIBJPEG
+#  include <jpeglib.h>
+#endif
+
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-setting.h>
@@ -1152,6 +1156,228 @@ chdk_camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
         return ret;
 }
 
+#ifdef HAVE_LIBJPEG
+static void yuv_live_to_jpeg(unsigned char *p_yuv,
+			     int buf_width, int width, int height,
+			     int fb_type, CameraFile *file
+) {
+	struct		jpeg_compress_struct cinfo;
+	struct		jpeg_error_mgr jerr;
+	JSAMPROW	row_ptr[1];
+	uint8_t		*outbuf = NULL, *tmprowbuf = NULL;
+	uint64_t	outlen = 0;
+	unsigned int	row_inc;
+	int		sshift, dshift, xshift, skip;
+
+	/* Pre-Digic 6 cameras: 8 bit per element UYVYYY,
+	 * 6 bytes used to encode 4 pixels, need 12 bytes raw YUV data for jpeg encoding */
+	if (fb_type == LV_FB_YUV8) {
+		row_inc = buf_width*1.5;
+		sshift = 6;
+		dshift = (width/height > 2) ? 6 : 12;
+		xshift = 4;
+	/* Digic 6 cameras: 8 bit per element UYVY,
+	 * 4 bytes used to encode 2 pixels, need 6 bytes raw YUV data for jpeg encoding */
+	} else {
+		row_inc = buf_width*2;
+		sshift = 4;
+		dshift = 6;
+		xshift = 2;
+	}
+	/* Encode only 2 pixels from each UV pair either if it is a UYVY data
+	 * (for Digic 6 cameras) or if the width to height ratio provided
+	 * by camera is too large (typically width 720 for height 240), so that
+	 * the resulting image would be stretched too much in the horizontal
+	 * direction if all 4 Y values were used. */
+	skip  = (fb_type > LV_FB_YUV8) || (width/height > 2);
+
+	cinfo.err = jpeg_std_error (&jerr);
+	jpeg_create_compress (&cinfo);
+
+	cinfo.image_width = (width/height > 2) ? (width/2) & -1 : width & -1;
+	cinfo.image_height = height & -1;
+	cinfo.input_components = 3;
+	cinfo.in_color_space = JCS_YCbCr; // input color space
+
+	jpeg_mem_dest (&cinfo, &outbuf, &outlen);
+	jpeg_set_defaults (&cinfo);
+	cinfo.dct_method = JDCT_IFAST; // DCT method
+	jpeg_set_quality (&cinfo, 70, TRUE);
+
+	jpeg_start_compress (&cinfo, TRUE);
+
+	tmprowbuf = malloc (cinfo.image_width * 3);
+	row_ptr[0] = &tmprowbuf[0];
+
+	while (cinfo.next_scanline < cinfo.image_height) {
+		unsigned int x, i, j;
+		/* offset to the correct row */
+		unsigned int offset = cinfo.next_scanline * row_inc;
+
+		for (x = 0, i = 0, j = 0; x < width; i += sshift, j += dshift, x += xshift) {
+			int8_t u = (int8_t) p_yuv[offset + i + 0];
+			int8_t v = (int8_t) p_yuv[offset + i + 2];
+			if (fb_type == LV_FB_YUV8) {
+				u += 0x80;
+				v += 0x80;
+			}
+
+			tmprowbuf[j + 0] = p_yuv[offset + i + 1];
+			tmprowbuf[j + 1] = u;
+			tmprowbuf[j + 2] = v;
+			tmprowbuf[j + 3] = p_yuv[offset + i + 3];
+			tmprowbuf[j + 4] = u;
+			tmprowbuf[j + 5] = v;
+
+			if (!skip) {
+				tmprowbuf[j + 6] = p_yuv[offset + i + 4];
+				tmprowbuf[j + 7] = u;
+				tmprowbuf[j + 8] = v;
+				tmprowbuf[j + 9] = p_yuv[offset + i + 5];
+				tmprowbuf[j +10] = u;
+				tmprowbuf[j +11] = v;
+			}
+		}
+		jpeg_write_scanlines (&cinfo, row_ptr, 1);
+	}
+	jpeg_finish_compress (&cinfo);
+	jpeg_destroy_compress (&cinfo);
+
+	gp_file_append (file, (char*)outbuf, outlen);
+      	gp_file_set_mime_type (file, GP_MIME_JPEG);
+      	gp_file_set_name (file, "chdk_preview.jpg");
+
+	free (outbuf);
+	free (tmprowbuf);
+}
+
+#else
+static inline uint8_t clip_yuv (int v) {
+	if (v<0) return 0;
+	if (v>255) return 255;
+	return v;
+}
+
+static inline uint8_t yuv_to_r (uint8_t y, int8_t v) {
+	return clip_yuv (((y<<12) +          v*5743 + 2048)>>12);
+}
+
+static inline uint8_t yuv_to_g (uint8_t y, int8_t u, int8_t v) {
+	return clip_yuv (((y<<12) - u*1411 - v*2925 + 2048)>>12);
+}
+
+static inline uint8_t yuv_to_b (uint8_t y, int8_t u) {
+	return clip_yuv (((y<<12) + u*7258          + 2048)>>12);
+}
+
+static void yuv_live_to_ppm (unsigned char *p_yuv,
+			     int buf_width, int width, int height,
+			     int fb_type, CameraFile *file
+) {
+	const unsigned char  *p_row = p_yuv;
+	const unsigned char  *p;
+	unsigned int	      row, x;
+	unsigned int	      row_inc;
+	int		      pshift, xshift, skip;
+	char		      ppm_header[32];
+	uint8_t		      rgb[6];
+
+	/* Pre-Digic 6 cameras:
+	 * 8 bit per element UYVYYY, 6 bytes used to encode 4 rgb values */
+	if (fb_type == LV_FB_YUV8) {
+		row_inc = buf_width*1.5;
+		pshift = 6;
+		xshift = 4;
+	/* Digic 6 cameras:
+	 * 8 bit per element UYVY, 4 bytes used to encode 2 rgb values */
+	} else {
+		row_inc = buf_width*2;
+		pshift = 4;
+		xshift = 2;
+	}
+	/* Encode only 2 pixels from each UV pair either if it is a UYVY data
+	 * (for Digic 6 cameras) or if the width to height ratio provided
+	 * by camera is too large (typically width 720 for height 240), so that
+	 * the resulting image would be stretched too much in the horizontal
+	 * direction if all 4 Y values were used. */
+	skip  = (fb_type > LV_FB_YUV8) || (width/height > 2);
+
+	sprintf (ppm_header, "P6 %d %d 255\n", (width/height > 2) ? width/2 : width, height);
+	gp_file_append (file, ppm_header, strlen (ppm_header));
+
+	for (row=0; row<height; row++, p_row += row_inc) {
+		for (x=0, p=p_row; x<width; x+=xshift, p+=pshift) {
+			/* these are signed unlike the Y values */
+			int8_t u = (int8_t) p[0];
+			int8_t v = (int8_t) p[2];
+			/* See for example
+			 * https://chdk.setepontos.com/index.php?topic=12692.msg130137#msg130137 */
+			if (fb_type > LV_FB_YUV8) {
+				u -= 0x80;
+				v -= 0x80;
+			}
+			rgb[0] = yuv_to_r (p[1], v);
+			rgb[1] = yuv_to_g (p[1], u, v);
+			rgb[2] = yuv_to_b (p[1], u);
+
+			rgb[3] = yuv_to_r (p[3], v);
+			rgb[4] = yuv_to_g (p[3], u, v);
+			rgb[5] = yuv_to_b (p[3], u);
+			gp_file_append (file, (char*)rgb, 6);
+
+			if (!skip) {
+				rgb[0] = yuv_to_r (p[4], v);
+				rgb[1] = yuv_to_g (p[4], u, v);
+				rgb[2] = yuv_to_b (p[4], u);
+
+				rgb[3] = yuv_to_r (p[5], v);
+				rgb[4] = yuv_to_g (p[5], u, v);
+				rgb[5] = yuv_to_b (p[5], u);
+				gp_file_append (file, (char*)rgb, 6);
+			}
+		}
+	}
+      	gp_file_set_mime_type (file, GP_MIME_PPM);
+      	gp_file_set_name (file, "chdk_preview.ppm");
+}
+#endif
+
+static int
+chdk_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
+{
+	unsigned char	*data = NULL;
+	uint32_t	size = 0;
+	PTPParams	*params = &camera->pl->params;
+	unsigned int	flags = LV_TFR_VIEWPORT;
+
+	lv_data_header header;
+	lv_framebuffer_desc vpd;
+	lv_framebuffer_desc bmd;
+
+	memset (&header, 0, sizeof (header));
+	memset (&vpd, 0, sizeof (vpd));
+	memset (&vpd, 0, sizeof (bmd));
+
+	CR (camera_prepare_chdk_capture (camera, context));
+      	C_PTP_REP_MSG (ptp_chdk_get_live_data (params, flags, &data, &size),
+      		       _("CHDK get live data failed"));
+	if (ptp_chdk_parse_live_data (params, data, size, &header, &vpd, &bmd) != PTP_RC_OK) {
+		gp_context_error (context, _("CHDK get live data failed: incomplete data (%d bytes) returned"), size);
+		return GP_ERROR;
+	}
+#ifdef HAVE_LIBJPEG
+	yuv_live_to_jpeg(data+vpd.data_start, vpd.buffer_width, vpd.visible_width,
+			 vpd.visible_height, vpd.fb_type, file);
+#else
+	yuv_live_to_ppm (data+vpd.data_start, vpd.buffer_width, vpd.visible_width,
+			 vpd.visible_height, vpd.fb_type, file);
+#endif
+
+      	free (data);
+      	gp_file_set_mtime (file, time (NULL));
+      	return GP_OK;
+}
+
 int
 chdk_init(Camera *camera, GPContext *context) {
         camera->functions->about = chdk_camera_about;
@@ -1160,9 +1386,9 @@ chdk_init(Camera *camera, GPContext *context) {
         camera->functions->summary = chdk_camera_summary;
         camera->functions->get_config = chdk_camera_get_config;
         camera->functions->set_config = chdk_camera_set_config;
+        camera->functions->capture_preview = chdk_camera_capture_preview;
 /*
         camera->functions->trigger_capture = camera_trigger_capture;
-        camera->functions->capture_preview = camera_capture_preview;
         camera->functions->wait_for_event = camera_wait_for_event;
 */
 

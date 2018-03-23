@@ -3487,6 +3487,8 @@ uint16_t ptp_chdk_get_script_status(PTPParams* params, unsigned *status);
 uint16_t ptp_chdk_write_script_msg(PTPParams* params, char *data, unsigned size, int target_script_id, int *status);
 uint16_t ptp_chdk_read_script_msg(PTPParams* params, ptp_chdk_script_msg **msg);
 uint16_t ptp_chdk_get_live_data(PTPParams* params, unsigned flags, unsigned char **data, unsigned int *data_size);
+uint16_t ptp_chdk_parse_live_data (PTPParams* params, unsigned char *data, unsigned int data_size,
+				   lv_data_header *header, lv_framebuffer_desc *vpd, lv_framebuffer_desc *bmd);
 uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret);
 
 /*uint16_t ptp_chdk_get_script_output(PTPParams* params, char **output ); */

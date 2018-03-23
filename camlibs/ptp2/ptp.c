@@ -4469,7 +4469,29 @@ ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret)
 	return PTP_RC_OK;
 }
 
+uint16_t
+ptp_chdk_parse_live_data (PTPParams* params, unsigned char *data, unsigned int data_size,
+			  lv_data_header *header,
+			  lv_framebuffer_desc *vpd, lv_framebuffer_desc *bmd
+) {
+	int byte_w;
 
+	if (data_size < sizeof (*header))
+		return PTP_ERROR_IO;
+	ptp_unpack_chdk_lv_data_header (params, data, header);
+	if (data_size < (header->vp_desc_start + sizeof (*vpd)) || data_size < (header->bm_desc_start + sizeof (*bmd)))
+		return PTP_ERROR_IO;
+	ptp_unpack_chdk_lv_framebuffer_desc (params, data+header->vp_desc_start, vpd);
+	ptp_unpack_chdk_lv_framebuffer_desc (params, data+header->vp_desc_start, bmd);
+
+	/* The buffer_width field corresponds to the number of Y values in a row,
+	 * so the actual number of bytes would be either one and a half times
+	 * or (for Digic 6 cameras) twice so large */
+	byte_w = (vpd->fb_type == LV_FB_YUV8) ? vpd->buffer_width * 1.5 : vpd->buffer_width * 2;
+	if (data_size < (vpd->data_start + (byte_w * vpd->visible_height)))
+		return PTP_ERROR_IO;
+	return PTP_RC_OK;
+}
 
 
 /**
