@@ -6,6 +6,16 @@ ptp2:
   by Apple iOS.
 * Canon EOS: prepare capture needs to wait a bit on a crucial place to get all events.
   might fix some PTP Device Busy reports.
+* Canon EOS: split bulk downloads into pieces of partial downloads. This might cure the Error 70.
+* Canon CHDK: live preview capture support added
+* Canon EOS: Improved EOS M capture
+* Added USB IDs:
+  * Sony A7r III
+  * Nikon CoolPix L430
+  * Nikon D850
+  * Canon EOS M2, M6, M100
+  * Canon EOS 6D Mark II
+  * Fuji Film X-Pro 2
 
 pentax:
 * Code updates imported from pkremote
