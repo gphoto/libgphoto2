@@ -849,6 +849,10 @@
   { "iRiver", 0x4102, "E30", 0x1167,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
+  /* https://sourceforge.net/p/libmtp/bugs/1766/ */
+  { "iRiver", 0x4102, "AK380", 0x1195,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
+    DEVICE_FLAG_OGG_IS_UNKNOWN },
   /* https://sourceforge.net/p/libmtp/bugs/1634/ 
    * copying flags from above */
   { "iRiver", 0x4102, "AK70", 0x1200,
@@ -1904,11 +1908,17 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria X Compact MTP", 0x01e8,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/feature-requests/252/ */
+  { "SONY", 0x0fce, "XPeria G3123", 0x01eb,
+      DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/support-requests/247/ */
   { "SONY", 0x0fce, "XPeria XZ", 0x01ed,
       DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/support-requests/251/ */
   { "SONY", 0x0fce, "XPeria XZ Premium", 0x01f1,
+      DEVICE_FLAG_NONE },
+  /* Nicholas O'Connor <lavacano@lavacano.net> on libmtp-discuss */
+  { "SONY", 0x0fce, "XPeria XZ1", 0x01f3,
       DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/support-requests/252/ */
   { "SONY", 0x0fce, "XPeria XZ1 Compact", 0x01f4,
@@ -2030,9 +2040,13 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria X Compact MTP+CDROM", 0x41e8,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria G3123 MTP+CDROM", 0x41eb,
+      DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ CDROM", 0x41ed,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ Premium MTP+CDROM", 0x41f1,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XZ1 MTP+CDROM", 0x41f3,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ1 Compact MTP+CDROM", 0x41f4,
       DEVICE_FLAG_NONE },
@@ -2176,9 +2190,13 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria X Compact MTP+ADB", 0x51e8,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria G3123 MTP+ADB", 0x51eb,
+      DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ ADB", 0x51ed,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ Premium MTP+ADB", 0x51f1,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XZ1 ADB", 0x51f3,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ1 Compact MTP+ADB", 0x51f4,
       DEVICE_FLAG_NONE },
@@ -3701,6 +3719,8 @@
   /* https://sourceforge.net/p/libmtp/bugs/1490/ */
   { "Marshall" , 0x2ad9, "London", 0x000b, DEVICE_FLAG_NONE },
 
+  /* https://sourceforge.net/p/libmtp/feature-requests/257/ */
+  { "Fairphone" , 0x2ae5, "Fairphone 2 (ID2)", 0x6764, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/202/ */
   { "Fairphone" , 0x2ae5, "Fairphone 2", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/214/ */
@@ -3738,6 +3758,8 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1716/ */
   { "Letv" , 0x2b0e, "Le Max2", 0x1840, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1768/ */
+  { "Letv" , 0x2b0e, "Le Max2 (ID2)", 0x1844, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1606/ */
   { "TP-Link" , 0x2357, "Neffos C5 (MTP)", 0x0314, DEVICE_FLAGS_ANDROID_BUGS },
