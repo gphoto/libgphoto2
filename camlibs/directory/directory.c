@@ -516,7 +516,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int result = GP_OK;
 	struct stat stbuf;
 	int fd, id;
-	unsigned int curread, toread;
+	off_t curread, toread;
 	unsigned char *buf;
 #ifdef HAVE_LIBEXIF
 	ExifData *data;
