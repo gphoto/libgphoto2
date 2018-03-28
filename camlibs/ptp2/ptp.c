@@ -2221,6 +2221,10 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	last = changed = 0;
 
 	for (k=0;k<storageids.n;k++) {
+		if ((storageids.Storage[k] & 0xffff) == 0) {
+			ptp_debug (params, "reading directory, storage 0x%08x skipped (invalid)", storageids.Storage[k]);
+			continue;
+		}
 		ptp_debug (params, "reading handle %08x directory of 0x%08x", storageids.Storage[k], handle);
 		tmp = NULL;
 		ret = ptp_canon_eos_getobjectinfoex (
