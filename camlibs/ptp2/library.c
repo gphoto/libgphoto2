@@ -1943,6 +1943,8 @@ static struct {
 	/* Johannes Goecke <jg-ml@web.de> */
 	{"Canon:EOS 750D",			0x04a9, 0x32a1, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Tomas.Linden@helsinki.fi */
+	{"Canon:PowerShot G3 X",		0x04a9, 0x32a8, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Kiss Tamas <kisst@bgk.bme.hu> */
 	{"Canon:IXUS 165",			0x04a9, 0x32a9, PTPBUG_DELETE_SENDS_EVENT},
 
