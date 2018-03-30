@@ -272,6 +272,9 @@ EOF
 #ifndef htole32
 # define htole32(x)      swap32(x)
 #endif
+#ifndef htole64
+# define htole64(x)      swap64(x)
+#endif
 #ifndef le16toh
 # define le16toh(x)      swap16(x)
 #endif
@@ -291,6 +294,7 @@ EOF
 
 #define HTOLE16(x)      (x) = htole16(x)
 #define HTOLE32(x)      (x) = htole32(x)
+#define HTOLE64(x)      (x) = htole64(x)
 #define LE16TOH(x)      (x) = le16toh(x)
 #define LE32TOH(x)      (x) = le32toh(x)
 #define LE64TOH(x)      (x) = le64toh(x)
