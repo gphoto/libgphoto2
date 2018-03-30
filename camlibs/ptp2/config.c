@@ -8156,7 +8156,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 		memset (&dpd,0,sizeof(dpd));
 		memset (&propval,0,sizeof(propval));
-		ret = ptp_getdevicepropdesc (params,propid,&dpd);
+		ret = ptp_generic_getdevicepropdesc (params,propid,&dpd);
 		if (ret != PTP_RC_OK)
 			continue;
 		if (dpd.GetSet != PTP_DPGS_GetSet) {
