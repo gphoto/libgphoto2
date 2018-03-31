@@ -1963,6 +1963,8 @@ static struct {
 	/* Jim Howard <jh.xsnrg@gmail.com> */
 	{"Canon:EOS M5",			0x04a9, 0x32bb, PTP_CAP|PTP_CAP_PREVIEW},
 
+	{"Canon:PowerShot G7 X Mark II",        0x04a9, 0x32bc, 0},
+
 	/* https://github.com/gphoto/libgphoto2/issues/84 */
 	{"Canon:Digital Ixus 180",		0x04a9, 0x32c0, 0},
 
@@ -2255,12 +2257,12 @@ static struct {
 	{PTP_OFC_JP2,			0, "image/x-jpeg2000bff"},
 	{PTP_OFC_JPX,			0, "image/x-jpeg2000eff"},
 	{PTP_OFC_DNG,			0, "image/x-adobe-dng"},
+	{PTP_OFC_MTP_MP4,		0, "video/mp4"},
 
 	{PTP_OFC_MTP_OGG,		PTP_VENDOR_MICROSOFT, "application/ogg"},
 	{PTP_OFC_MTP_FLAC,		PTP_VENDOR_MICROSOFT, "audio/x-flac"},
 	{PTP_OFC_MTP_MP2,		PTP_VENDOR_MICROSOFT, "video/mpeg"},
 	{PTP_OFC_MTP_M4A,		PTP_VENDOR_MICROSOFT, "audio/x-m4a"},
-	{PTP_OFC_MTP_MP4,		PTP_VENDOR_MICROSOFT, "video/mp4"},
 	{PTP_OFC_MTP_3GP,		PTP_VENDOR_MICROSOFT, "audio/3gpp"},
 	{PTP_OFC_MTP_WMV,		PTP_VENDOR_MICROSOFT, "video/x-wmv"},
 	{PTP_OFC_MTP_WMA,		PTP_VENDOR_MICROSOFT, "audio/x-wma"},
