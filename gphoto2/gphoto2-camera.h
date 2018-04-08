@@ -106,6 +106,7 @@ typedef enum {
 	GP_EVENT_FILE_ADDED,	/**< CameraFilePath* = file path on camfs */
 	GP_EVENT_FOLDER_ADDED,	/**< CameraFilePath* = folder on camfs */
 	GP_EVENT_CAPTURE_COMPLETE	/**< last capture is complete */
+	GP_EVENT_FILE_CHANGED,	/**< CameraFilePath* = file path on camfs */
 } CameraEventType;
 
 /**

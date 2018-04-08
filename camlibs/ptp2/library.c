@@ -4959,6 +4959,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					gp_file_unref (file);
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE:
 					/* just add it to the filesystem, and return in CameraPath */
 					GP_LOG_D ("Found new objectinfo! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 					newobject = entry.u.object.oid;
