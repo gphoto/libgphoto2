@@ -4973,7 +4973,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* delete last / or we get confused later. */
 					path->folder[ strlen(path->folder)-1 ] = '\0';
 					gp_filesystem_append (camera->fs, path->folder, path->name, context);
-					*eventtype = GP_EVENT_FILE_ADDED;
+					*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
 					*eventdata = path;
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY:
