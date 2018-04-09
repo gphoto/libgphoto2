@@ -7,8 +7,8 @@ ptp2:
 * Canon EOS: prepare capture needs to wait a bit on a crucial place to get all events.
   might fix some PTP Device Busy reports.
 * Canon EOS: split bulk downloads into pieces of partial downloads. This might cure the Error 70.
-* Canon CHDK: live preview capture support added
 * Canon EOS: Improved EOS M capture
+* Canon CHDK: live preview capture support added
 * Added USB IDs:
   * Sony A7r III
   * Nikon CoolPix L430
@@ -19,6 +19,9 @@ ptp2:
 
 pentax:
 * Code updates imported from pkremote
+
+libgphoto2:
+* report file changes via GP_EVENT_FILE_CHANGED (hooked up for Canon EOS currently)
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.16 release
