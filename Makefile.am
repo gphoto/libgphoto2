@@ -21,8 +21,8 @@ EXTRA_DIST += INSTALL
 doc_DATA = AUTHORS COPYING NEWS
 doc_DATA += ABOUT-NLS ChangeLog
 
-EXTRA_DIST += README.in README
-doc_DATA   += README
+EXTRA_DIST += README.md
+doc_DATA   += README.md
 
 EXTRA_DIST += README.packaging
 doc_DATA   += README.packaging
