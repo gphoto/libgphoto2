@@ -7,7 +7,7 @@ ubuntu2osx() {
     case "$1" in
 	gettext)       echo "gettext" ;;
 	libusb-dev)       echo "libusb-compat" ;;
-	libusb-1.0-0-dev) echo "libusb" ;;
+	libusb-1.0-0-dev) echo "" ;;	# libusb1 default installed on MacOSX currently, formerly was libusb
 	libgd2-xpm-dev)   echo "gd" ;;
 	*)
 	    echo "Error: Unknown package name: '$1'" >&2
