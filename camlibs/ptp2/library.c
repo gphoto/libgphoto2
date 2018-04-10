@@ -6831,7 +6831,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free (ximage);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
-		if (!((ximage[2] == 0xff) && (ximage[3] == 0xe1))) {	/* App0 */
+		if (!((ximage[2] == 0xff) && (ximage[3] == 0xe1))) {	/* App1 */
 			free (ximage);
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
@@ -6840,7 +6840,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return (GP_ERROR_NOT_SUPPORTED);
 		}
 		offset = 2;
-		maxbytes = (ximage[4] << 8 ) + ximage[5];
+		maxbytes = (ximage[4] << 8) + ximage[5] + 2;
 		free (ximage);
 		ximage = NULL;
 		C_PTP_REP (ptp_getpartialobject (params,
