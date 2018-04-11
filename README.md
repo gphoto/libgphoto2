@@ -68,6 +68,18 @@ libgphoto2 should compile and run on pretty much all Unix-like platforms.
 libgphoto2 has _not_ (yet?) been ported to any operating system from MicroSoft.
 
 
+## Bindings
+
+- Java: [gphoto2-java](https://github.com/mvysny/gphoto2-java), [libgphoto2-jna](https://github.com/angryelectron/libgphoto2-jna)
+- Python: [python-gphoto2](https://github.com/jim-easterbrook/python-gphoto2), [gphoto2-cffi](https://github.com/jbaiter/gphoto2-cffi)
+- C#: [libgphoto2-sharp](https://github.com/gphoto/libgphoto2-sharp)
+- Go: [go-gphoto2](https://github.com/aqiank/go-gphoto2)
+- Rust: [gphoto-rs](https://github.com/dcuddeback/gphoto-rs)
+- Node.js: [node-gphoto2](https://github.com/lwille/node-gphoto2)
+- Ruby: [ffi-gphoto2](https://github.com/zaeleus/ffi-gphoto2)
+- Crystal: [gphoto2.cr](https://github.com/sija/gphoto2.cr)
+
+
 ## How to set up libgphoto2
 
 For information on how to set up libgphoto2 and its frontends, see
