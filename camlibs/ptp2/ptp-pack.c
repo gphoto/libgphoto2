@@ -1984,6 +1984,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 		ce[i].u.info = NULL;
 		switch (type) {
+		case PTP_EC_CANON_EOS_ObjectContentChanged:
+			if (size < PTP_ece_OA_ObjectID+1) {
+				ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_OA_ObjectID+1);
+				break;
+			}
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTCONTENT_CHANGE;
+			ce[i].u.object.oid    		= dtoh32a(&curdata[PTP_ece_OA_ObjectID]);
+			break;
 		case PTP_EC_CANON_EOS_ObjectInfoChangedEx:	
 		case PTP_EC_CANON_EOS_ObjectAddedEx:
 			if (size < PTP_ece_OA_Name+1) {
