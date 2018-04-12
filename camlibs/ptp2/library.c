@@ -4958,6 +4958,27 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* We have now handed over the file, disclaim responsibility by unref. */
 					gp_file_unref (file);
 					return GP_OK;
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTCONTENT_CHANGE:
+					GP_LOG_D ("Found object content changed! OID 0x%x", (unsigned int)entry.u.object.oid);
+					newobject = entry.u.object.oid;
+					PTPObject *ob;
+					PTPObjectInfo *oi;
+					ptp_object_want(params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+					oi = &ob->oi;
+					debug_objectinfo(params, newobject, oi);
+
+					C_MEM (path = malloc(sizeof(CameraFilePath)));
+					path->name[sizeof(path->name)-1] = '\0';
+					strncpy  (path->name, (*oi).Filename, sizeof (path->name)-1);
+
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)(*oi).StorageID);
+					get_folder_from_handle (camera, (*oi).StorageID, (*oi).ParentObject, path->folder);
+					/* delete last / or we get confused later. */
+					path->folder[ strlen(path->folder)-1 ] = '\0';
+					
+					*eventtype = GP_EVENT_FILE_CHANGED;
+					*eventdata = path;
+					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE:
 					/* just add it to the filesystem, and return in CameraPath */
