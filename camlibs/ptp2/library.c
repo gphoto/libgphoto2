@@ -3408,9 +3408,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 				/* just add it to the filesystem, and return in CameraPath */
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				newobject = entry.u.object.oid;
 				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-				ret = ptp_object_want (params, newobject, 0, &ob);
+				ret = ptp_object_want (params, entry.u.object.oid, 0, &ob);
 				if (ret != PTP_RC_OK)
 					continue;
 				strcpy  (path->name,  oi.Filename);
@@ -3419,6 +3418,10 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				/* delete last / or we get confused later. */
 				path->folder[ strlen(path->folder)-1 ] = '\0';
 				gp_filesystem_append (camera->fs, path->folder, path->name, context);
+				/* The camera might have rotated the folder from NNNCANON to NNN+1CANON , image probably comes next ... */
+				if  (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)
+					continue;
+				newobject = entry.u.object.oid;
 				break;/* for RAW+JPG mode capture, we just return the first image for now, and
 				       * let wait_for_event get the rest. */
 			default:
@@ -4994,7 +4997,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* delete last / or we get confused later. */
 					path->folder[ strlen(path->folder)-1 ] = '\0';
 					gp_filesystem_append (camera->fs, path->folder, path->name, context);
-					*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
+					if (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)	/* not sure if we would get folder changed */
+						*eventtype = GP_EVENT_FOLDER_ADDED;
+					else
+						*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
 					*eventdata = path;
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY:
