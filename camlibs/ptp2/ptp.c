@@ -2248,7 +2248,10 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 			if (j == params->nrofobjects) {
 				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->nrofobjects,j);
 				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
-				if (!newobs) return PTP_RC_GeneralError;
+				if (!newobs) {
+					free (tmp);
+					return PTP_RC_GeneralError;
+				}
 				params->objects = newobs;
 				memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
 				params->objects[params->nrofobjects].oid   = tmp[i].ObjectHandle;
@@ -2589,9 +2592,9 @@ ptp_check_event (PTPParams *params)
 			params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
 			memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
 			params->nrofevents += evtcnt;
-			free (xevent);
 			params->event90c7works = 1;
 		}
+		free (xevent);
 		if (params->event90c7works)
 			return PTP_RC_OK;
 		/* fall through to generic event handling */
