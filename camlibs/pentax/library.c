@@ -653,7 +653,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_RADIO, _("Image Quality"), &t);
-	gp_widget_set_name (t, "imgquality");
+	gp_widget_set_name (t, "imagequality");
 	gp_widget_add_choice (t, "4");
 	gp_widget_add_choice (t, "3");
 	gp_widget_add_choice (t, "2");
