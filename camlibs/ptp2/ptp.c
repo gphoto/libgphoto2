@@ -1251,8 +1251,8 @@ ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
         uint64_t *numoifs, PTPObjectFilesystemInfo **oifs
 ) {
 	PTPContainer	ptp;
-	unsigned int	size;
-	unsigned char	*data;
+	unsigned int	size = 0;
+	unsigned char	*data = NULL;
 
 	*oifs = NULL;
 	*numoifs = 0;
@@ -4555,8 +4555,8 @@ uint16_t
 ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
-	unsigned int	size;
+	unsigned char	*data = NULL;
+	unsigned int	size = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropValue, 0xd212);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
