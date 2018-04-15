@@ -463,7 +463,7 @@ uint16_t
 ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 	int		ret;
 
@@ -481,7 +481,7 @@ uint16_t
 ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 	int		ret;
 
@@ -916,7 +916,7 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 #ifdef HAVE_LIBXML2
 	PTPContainer	ptp;
 	uint16_t 	ret;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 	xmlNodePtr	code;
 
@@ -1156,7 +1156,7 @@ uint16_t
 ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStorageIDs);
@@ -1181,7 +1181,7 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 			PTPStorageInfo* storageinfo)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStorageInfo, storageid);
@@ -1218,7 +1218,7 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	objecthandles->Handler = NULL;
@@ -1371,7 +1371,7 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 			PTPObjectInfo* objectinfo)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetObjectInfo, handle);
@@ -1716,7 +1716,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 {
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropDesc, propcode);
@@ -1764,7 +1764,7 @@ ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
 			PTPPropertyValue* value, uint16_t datatype)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size, offset = 0;
 	uint16_t	ret;
 
@@ -2050,7 +2050,7 @@ ptp_canon_get_directory (PTPParams* params,
 	uint32_t		**flags		/* size(handles->n) */
 ) {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetDirectory);
@@ -2121,7 +2121,7 @@ ptp_canon_gettreesize (PTPParams* params,
 {
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
-	unsigned char	*data, *cur;
+	unsigned char	*data = NULL, *cur;
 	unsigned int	size, i;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetTreeSize);
@@ -2167,7 +2167,7 @@ uint16_t
 ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 	
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_CheckEvent);
@@ -2691,7 +2691,7 @@ uint16_t
 ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int 	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetEvent);
@@ -2781,7 +2781,7 @@ uint16_t
 ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetStorageIDs);
@@ -2808,7 +2808,7 @@ ptp_canon_eos_getobjectinfoex (
 ) {
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
-	unsigned char	*data, *xdata;
+	unsigned char	*data = NULL, *xdata;
 	unsigned int	size, i;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetObjectInfoEx, storageid, oid, unk);
@@ -3042,7 +3042,7 @@ ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetPartialObjectEx, handle, offset, size, pos);
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL);
@@ -3104,7 +3104,7 @@ uint16_t
 ptp_canon_getchanges (PTPParams* params, uint16_t** props, uint32_t* propnum)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 	
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetChanges);
@@ -3144,7 +3144,7 @@ ptp_canon_getobjectinfo (PTPParams* params, uint32_t store, uint32_t p2,
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	i, size;
 	
 	*entnum = 0;
@@ -3265,7 +3265,7 @@ uint16_t
 ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIOConnect, p1, p2, p3);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
@@ -3327,7 +3327,7 @@ uint16_t
 ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode, PTPDevicePropDesc *dpd)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int 	size, len = 0;
 	uint16_t	ret;
 
@@ -3344,7 +3344,7 @@ uint16_t
 ptp_sony_getalldevicepropdesc (PTPParams* params)
 {
 	PTPContainer		ptp;
-	unsigned char		*data, *dpddata;
+	unsigned char		*data = NULL, *dpddata;
 	unsigned int		size, readlen;
 	PTPDevicePropDesc	dpd;
 
@@ -3758,7 +3758,7 @@ uint16_t
 ptp_nikon_check_event (PTPParams* params, PTPContainer** event, unsigned int* evtcnt)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_NIKON_CheckEvent);
@@ -3805,7 +3805,7 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size, pos, profn, n;
 	char		*buffer;
 	uint8_t		len;
@@ -4036,7 +4036,7 @@ ptp_mtp_getobjectpropdesc (
 	PTPParams* params, uint16_t opc, uint16_t ofc, PTPObjectPropDesc *opd
 ) {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
         PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropDesc, opc, ofc);
@@ -4065,7 +4065,7 @@ ptp_mtp_getobjectpropvalue (
 ) {
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size, offset = 0;
         
         PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropValue, oid, opc);
@@ -4111,7 +4111,7 @@ uint16_t
 ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectReferences, handle);
@@ -4147,7 +4147,7 @@ uint16_t
 ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjPropList, handle,
@@ -4166,7 +4166,7 @@ uint16_t
 ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjPropList, handle,
@@ -4424,7 +4424,7 @@ uint16_t
 ptp_chdk_read_script_msg(PTPParams* params, ptp_chdk_script_msg **msg)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
+	unsigned char	*data = NULL;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_ReadScriptMsg);
 
