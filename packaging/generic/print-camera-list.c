@@ -1019,6 +1019,8 @@ fdi_begin_func (const func_params_t *params, void **data)
 	printf("<deviceinfo version=\"0.2\">\n");
 	printf(" <device>\n");
 	printf("  <match key=\"info.subsystem\" string=\"usb\">\n");
+	printf("   <!-- skip USB Mass Storage Devices -->\n");
+	printf("   <match key=\"usb.interface.class\" compare_ne=\"8\">\n");
 	return 0;
 }
 
@@ -1058,62 +1060,62 @@ fdi_camera_func (const func_params_t *params,
 			return 0;
 		}
 		if (a->usb_vendor) { /* usb product id might be 0! */
-			printf("   <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
-			printf("    <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
+			printf("    <match key=\"usb.vendor_id\" int=\"%d\">\n", a->usb_vendor);
+			printf("     <match key=\"usb.product_id\" int=\"%d\">\n", a->usb_product);
 			if (a->usb_vendor == 0x05ac) { /* Apple iPhone, PTP user. */
-				printf("     <match key=\"usb.interface.class\" int=\"6\">\n");
-				printf("      <match key=\"usb.interface.subclass\" int=\"1\">\n");
-				printf("       <match key=\"usb.interface.protocol\" int=\"1\">\n");
+				printf("      <match key=\"usb.interface.class\" int=\"6\">\n");
+				printf("       <match key=\"usb.interface.subclass\" int=\"1\">\n");
+				printf("        <match key=\"usb.interface.protocol\" int=\"1\">\n");
 			}
 			if (a->device_type & GP_DEVICE_AUDIO_PLAYER) {
-				printf("     <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
-				printf("     <addset key=\"info.capabilities\" type=\"strlist\">portable_audio_player</addset>\n");
-				printf("     <merge key=\"portable_audio_player.access_method\" type=\"string\">user</merge>\n");
-				printf("     <merge key=\"portable_audio_player.type\" type=\"string\">mtp</merge>\n");
+				printf("      <merge key=\"info.category\" type=\"string\">portable_audio_player</merge>\n");
+				printf("      <addset key=\"info.capabilities\" type=\"strlist\">portable_audio_player</addset>\n");
+				printf("      <merge key=\"portable_audio_player.access_method\" type=\"string\">user</merge>\n");
+				printf("      <merge key=\"portable_audio_player.type\" type=\"string\">mtp</merge>\n");
 				
 				/* FIXME: needs true formats ... But all of them can do MP3 */
-				printf("     <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
+				printf("      <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
 			} else {
-				printf("     <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-				printf("     <addset key=\"info.capabilities\" type=\"strlist\">camera</addset>\n");
+				printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
+				printf("      <addset key=\"info.capabilities\" type=\"strlist\">camera</addset>\n");
 
 				/* HACK alert ... but the HAL / gnome-volume-manager guys want that */
 				if (NULL!=strstr(a->library,"ptp"))
-					printf("     <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+					printf("      <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
 				else
-					printf("     <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+					printf("      <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
 			}
 			/* leave them here even for audio players */
-			printf("     <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
-			printf("     <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
-			if (a->usb_vendor == 0x05ac) { /* Apple iPhone */
-				printf("       </match>\n");
-				printf("      </match>\n");
-				printf("     </match>\n");
-			}
-			printf("    </match>\n");
-			printf("   </match>\n");
-			
-		} else if ((a->usb_class) && (a->usb_class != 666)) {
-			printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
-			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
-			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
-			printf("      <merge key=\"info.category\" type=\"string\">camera</merge>\n");
-			printf("      <addset key=\"info.capabilities\" type=\"strlist\">camera</addset>\n");
-			if (a->usb_class == 6) {
-				printf("      <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
-			} else {
-				if (a->usb_class == 8) {
-					printf("      <merge key=\"camera.access_method\" type=\"string\">storage</merge>\n");
-				} else {
-					printf("      <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
-				}
-			}
 			printf("      <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
 			printf("      <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
+			if (a->usb_vendor == 0x05ac) { /* Apple iPhone */
+				printf("        </match>\n");
+				printf("       </match>\n");
+				printf("      </match>\n");
+			}
 			printf("     </match>\n");
 			printf("    </match>\n");
-			printf("   </match>\n");
+			
+		} else if ((a->usb_class) && (a->usb_class != 666)) {
+			printf("    <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
+			printf("     <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
+			printf("      <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
+			printf("       <merge key=\"info.category\" type=\"string\">camera</merge>\n");
+			printf("       <addset key=\"info.capabilities\" type=\"strlist\">camera</addset>\n");
+			if (a->usb_class == 6) {
+				printf("       <merge key=\"camera.access_method\" type=\"string\">ptp</merge>\n");
+			} else {
+				if (a->usb_class == 8) {
+					printf("       <merge key=\"camera.access_method\" type=\"string\">storage</merge>\n");
+				} else {
+					printf("       <merge key=\"camera.access_method\" type=\"string\">proprietary</merge>\n");
+				}
+			}
+			printf("       <merge key=\"camera.libgphoto2.name\" type=\"string\">%s</merge>\n", model);
+			printf("       <merge key=\"camera.libgphoto2.support\" type=\"bool\">true</merge>\n");
+			printf("      </match>\n");
+			printf("     </match>\n");
+			printf("    </match>\n");
 		}
 	} /* camera has USB connection */
 	return 0;
@@ -1122,6 +1124,7 @@ fdi_camera_func (const func_params_t *params,
 static int
 fdi_end_func (const func_params_t *params, void *data)
 {
+	printf("   </match>\n");
 	printf("  </match>\n");
 	printf(" </device>\n");
 	printf("</deviceinfo>\n");
@@ -1148,6 +1151,8 @@ fdi_device_begin_func (const func_params_t *params, void **data)
 	printf("<deviceinfo version=\"0.2\">\n");
 	printf(" <device>\n");
 	printf("  <match key=\"info.subsystem\" string=\"usb\">\n");
+	printf("   <!-- skip USB Mass Storage Devices -->\n");
+	printf("   <match key=\"usb.interface.class\" compare_ne=\"8\">\n");
 	return 0;
 }
 
@@ -1191,28 +1196,28 @@ fdi_device_camera_func (const func_params_t *params,
 			/* do not set category. We don't really know what this device really is.
 			 * But we do now that is capable of being a camera, so add to capabilities
 			 */
-			printf("   <match key=\"usb_device.vendor_id\" int=\"%d\">\n", a->usb_vendor);
-			printf("    <match key=\"usb_device.product_id\" int=\"%d\">\n", a->usb_product);
+			printf("    <match key=\"usb_device.vendor_id\" int=\"%d\">\n", a->usb_vendor);
+			printf("     <match key=\"usb_device.product_id\" int=\"%d\">\n", a->usb_product);
 			if (params->add_comments) {
 				printf("     <!-- %s -->\n", a->model);
 			}
 			if (a->device_type & GP_DEVICE_AUDIO_PLAYER)
-				printf("     <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
+				printf("      <append key=\"info.capabilities\" type=\"strlist\">portable_audio_player</append>\n");
 			else
-				printf("     <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+				printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("     </match>\n");
 			printf("    </match>\n");
-			printf("   </match>\n");
 		}
 #if 0
 		/* would need to be able to merge upwards ... but cannot currently */
 		else if ((a->usb_class) && (a->usb_class != 666)) {
-			printf("   <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
-			printf("    <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
-			printf("     <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
-			printf("      <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("    <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
+			printf("     <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
+			printf("      <match key=\"usb.interface.protocol\" int=\"%d\">\n", a->usb_protocol);
+			printf("       <append key=\"info.capabilities\" type=\"strlist\">camera</append>\n");
+			printf("      </match>\n");
 			printf("     </match>\n");
 			printf("    </match>\n");
-			printf("   </match>\n");
 		}
 #endif
 	}
@@ -1222,6 +1227,7 @@ fdi_device_camera_func (const func_params_t *params,
 static int
 fdi_device_end_func (const func_params_t *params, void *data)
 {
+	printf("   </match>\n");
 	printf("  </match>\n");
 	printf(" </device>\n");
 	printf("</deviceinfo>\n");
