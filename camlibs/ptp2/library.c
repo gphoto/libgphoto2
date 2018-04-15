@@ -4961,31 +4961,39 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* We have now handed over the file, disclaim responsibility by unref. */
 					gp_file_unref (file);
 					return GP_OK;
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTCONTENT_CHANGE:
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTCONTENT_CHANGE: {
+					PTPObject *ob;
+
 					GP_LOG_D ("Found object content changed! OID 0x%x", (unsigned int)entry.u.object.oid);
 					newobject = entry.u.object.oid;
-					PTPObject *ob;
-					PTPObjectInfo *oi;
 					ptp_object_want(params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-					oi = &ob->oi;
-					debug_objectinfo(params, newobject, oi);
+					debug_objectinfo(params, newobject, &ob->oi);
 
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					path->name[sizeof(path->name)-1] = '\0';
-					strncpy  (path->name, (*oi).Filename, sizeof (path->name)-1);
+					strncpy  (path->name, ob->oi.Filename, sizeof (path->name)-1);
 
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)(*oi).StorageID);
-					get_folder_from_handle (camera, (*oi).StorageID, (*oi).ParentObject, path->folder);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
 					/* delete last / or we get confused later. */
 					path->folder[ strlen(path->folder)-1 ] = '\0';
 					
 					*eventtype = GP_EVENT_FILE_CHANGED;
 					*eventdata = path;
 					return GP_OK;
+					}
 				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE:
+				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE: {
+					PTPObject	*ob;
+
 					/* just add it to the filesystem, and return in CameraPath */
 					GP_LOG_D ("Found new objectinfo! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
+					if (	(entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE) &&
+						(PTP_RC_OK != ptp_object_find (params, entry.u.object.oid, &ob))
+					) {
+						GP_LOG_D ("not found in cache, assuming deleted already.");
+						break;
+					}
 					newobject = entry.u.object.oid;
 					add_object (camera, newobject, context);
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
@@ -5003,6 +5011,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
 					*eventdata = path;
 					return GP_OK;
+				}
 				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY:
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
