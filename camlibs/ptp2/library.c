@@ -4966,7 +4966,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					GP_LOG_D ("Found object content changed! OID 0x%x", (unsigned int)entry.u.object.oid);
 					newobject = entry.u.object.oid;
-					ptp_object_want(params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+					/* It might have gone away in the meantime */
+					if (PTP_RC_OK != ptp_object_want(params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob))
+						break;
 					debug_objectinfo(params, newobject, &ob->oi);
 
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
