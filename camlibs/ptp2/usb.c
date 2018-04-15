@@ -376,6 +376,22 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 	if (!data) return PTP_RC_GeneralError;
 
 	report_progress = (bytes_to_read > 2*CONTEXT_BLOCK_SIZE) && (dtoh32(usbdata.length) != 0xffffffffU);
+
+	/* On partial reads, do not report progress, this might lead to flickering progress bars.
+	 * FIXME: would be better to pass in a flag
+	 */
+	if (	(ptp->Code == PTP_OC_GetPartialObject) 					||
+		(	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON)	&&
+			(	(ptp->Code == PTP_OC_CANON_EOS_GetPartialObject)	||
+				(ptp->Code == PTP_OC_CANON_EOS_GetPartialObject64)	||
+				(ptp->Code == PTP_OC_CANON_EOS_GetPartialObjectEx)	||
+				(ptp->Code == PTP_OC_CANON_EOS_GetPartialObjectEX64)
+			)
+		)									||
+		(ptp->Code == PTP_OC_ANDROID_GetPartialObject64)
+	)
+		report_progress = 0;
+
 	if (report_progress)
 		progress_id = gp_context_progress_start (context, (bytes_to_read/CONTEXT_BLOCK_SIZE), _("Downloading..."));
 	while (bytes_to_read > 0) {
