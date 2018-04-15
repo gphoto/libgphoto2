@@ -6595,6 +6595,7 @@ mtp_put_playlist(
 	C_PTP_MSG (ptp_sendobject(&camera->pl->params, (unsigned char*)data, 1),
 		   "failed dummy sendobject of playlist.");
 	C_PTP (ptp_mtp_setobjectreferences (&camera->pl->params, playlistid, oids, nrofoids));
+	free (oids);
 	/* update internal structures */
 	return add_object(camera, playlistid, context);
 }
