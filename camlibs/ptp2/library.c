@@ -185,10 +185,12 @@ print_debug_deviceinfo (PTPParams *params, PTPDeviceInfo *di)
 		GP_LOG_D ("  0x%04x (%s)", di->OperationsSupported[i], ptp_get_opcode_name (params, di->OperationsSupported[i]));
 	GP_LOG_D ("Events Supported:");
 	for (i=0; i<di->EventsSupported_len; i++)
-		GP_LOG_D ("  0x%04x", di->EventsSupported[i]);
+		GP_LOG_D ("  0x%04x (%s)", di->EventsSupported[i], ptp_get_event_code_name (params, di->EventsSupported[i]));
 	GP_LOG_D ("Device Properties Supported:");
-	for (i=0; i<di->DevicePropertiesSupported_len; i++)
-		GP_LOG_D ("  0x%04x", di->DevicePropertiesSupported[i]);
+	for (i=0; i<di->DevicePropertiesSupported_len; i++) {
+		const char *ptpname = ptp_get_property_description (params, di->DevicePropertiesSupported[i]);
+		GP_LOG_D ("  0x%04x (%s)", di->DevicePropertiesSupported[i], ptpname ? ptpname : "Unknown DPC code");
+	}
 }
 
 /* struct timeval is simply two long int values, so passing it by value is not expensive.
