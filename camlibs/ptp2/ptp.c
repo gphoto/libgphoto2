@@ -6757,6 +6757,43 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 
 
 struct {
+	uint16_t code;
+	const char *name;
+} ptp_event_codes[] = {
+	{PTP_EC_Undefined, "Undefined"},
+	{PTP_EC_CancelTransaction, "CancelTransaction"},
+	{PTP_EC_ObjectAdded, "ObjectAdded"},
+	{PTP_EC_ObjectRemoved, "ObjectRemoved"},
+	{PTP_EC_StoreAdded, "StoreAdded"},
+	{PTP_EC_StoreRemoved, "StoreRemoved"},
+	{PTP_EC_DevicePropChanged, "DevicePropChanged"},
+	{PTP_EC_ObjectInfoChanged, "ObjectInfoChanged"},
+	{PTP_EC_DeviceInfoChanged, "DeviceInfoChanged"},
+	{PTP_EC_RequestObjectTransfer, "RequestObjectTransfer"},
+	{PTP_EC_StoreFull, "StoreFull"},
+	{PTP_EC_DeviceReset, "DeviceReset"},
+	{PTP_EC_StorageInfoChanged, "StorageInfoChanged"},
+	{PTP_EC_CaptureComplete, "CaptureComplete"},
+	{PTP_EC_UnreportedStatus, "UnreportedStatus"},
+
+	{PTP_EC_MTP_ObjectPropChanged, "ObjectPropChanged"},
+	{PTP_EC_MTP_ObjectPropDescChanged, "ObjectPropDescChanged"},
+	{PTP_EC_MTP_ObjectReferencesChanged, "ObjectReferencesChanged"},
+};
+
+
+const char*
+ptp_get_event_code_name(PTPParams* params, uint16_t event_code)
+{
+	unsigned int i;
+	for (i=0; i<sizeof(ptp_event_codes)/sizeof(ptp_event_codes[0]); i++)
+		if (event_code == ptp_event_codes[i].code)
+			return _(ptp_event_codes[i].name);
+	return _("Unknown Event");
+}
+
+
+struct {
 	uint16_t id;
 	const char *name;
 } ptp_opc_trans[] = {

@@ -3411,6 +3411,7 @@ void ptp_error			(PTPParams *params, const char *format, ...);
 const char* ptp_get_property_description(PTPParams* params, uint16_t dpc);
 
 const char* ptp_get_opcode_name(PTPParams* params, uint16_t opcode);
+const char* ptp_get_event_code_name(PTPParams* params, uint16_t event_code);
 
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
