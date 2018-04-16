@@ -50,10 +50,17 @@ camera_tether(Camera *camera, GPContext *context) {
 			printf("  Deleting %s on camera...\n", path->name);
 			retval = gp_camera_file_delete(camera, path->folder, path->name, context);
 			gp_file_free(file);
+			free(evtdata);
 			break;
 		case GP_EVENT_FOLDER_ADDED:
 			path = (CameraFilePath*)evtdata;
 			printf("Folder added on camera: %s / %s\n", path->folder, path->name);
+			free(evtdata);
+			break;
+		case GP_EVENT_FILE_CHANGED:
+			path = (CameraFilePath*)evtdata;
+			printf("File changed on camera: %s / %s\n", path->folder, path->name);
+			free(evtdata);
 			break;
 		case GP_EVENT_CAPTURE_COMPLETE:
 			printf("Capture Complete.\n");

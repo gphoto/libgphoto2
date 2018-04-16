@@ -221,6 +221,11 @@ main(int argc, char **argv) {
 				fprintf (stderr, "saved to %s\n", output_file);
 				break;
 			}
+			case GP_EVENT_FILE_CHANGED:
+				path = (CameraFilePath*)evtdata;
+				printf("File changed on camera: %s / %s\n", path->folder, path->name);
+				free (evtdata);
+				break;
 			case GP_EVENT_FOLDER_ADDED:
 				path = (CameraFilePath*)evtdata;
 				printf("Folder added on camera: %s / %s\n", path->folder, path->name);

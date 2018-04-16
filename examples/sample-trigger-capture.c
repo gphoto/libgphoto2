@@ -64,6 +64,11 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			break;
 		case GP_EVENT_FOLDER_ADDED:
 			fprintf (stderr, "wait for event FOLDER_ADDED\n");
+			free(data);
+			break;
+		case GP_EVENT_FILE_CHANGED:
+			fprintf (stderr, "wait for event FILE_CHANGED\n");
+			free(data);
 			break;
 		case GP_EVENT_FILE_ADDED:
 			fprintf (stderr, "File %s / %s added to queue.\n", path->folder, path->name);
@@ -79,6 +84,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			memcpy (&queue[nrofqueue].path, path, sizeof(CameraFilePath));
 			queue[nrofqueue].offset = 0;
 			nrofqueue++;
+			free(data);
 			break;
 		}
 	}
