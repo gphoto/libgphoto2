@@ -312,7 +312,7 @@ static int gp_port_usbdiskdirect_seek (GPPort *port, int offset, int whence)
 {
 	off_t ret;
 
-	C_PARAMS (!port);
+	C_PARAMS (port);
 
 	/* The device needs to be opened for that operation */
 	if (port->pl->fd == -1)
