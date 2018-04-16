@@ -1,4 +1,4 @@
-libgphoto2 2.5.16.1 development
+libgphoto2 2.5.17 release
 
 ptp2:
 * Apple iOSX: handle root directory objects that have ParentObject==StorageID instead of 0
