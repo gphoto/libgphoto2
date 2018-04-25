@@ -2130,6 +2130,8 @@ static struct {
 
 	/* gphoto:feature-requests 452. yes, weird vendor. */
 	{"Pentax:K3 (PTP Mode)",		0x25fb, 0x0165, 0},
+	/* Keld Henningsen <drawsacircle@hotmail.com */
+	{"Pentax:K70 (PTP Mode)",		0x25fb, 0x017d, 0},
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 
