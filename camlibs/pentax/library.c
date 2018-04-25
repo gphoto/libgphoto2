@@ -153,6 +153,13 @@ camera_abilities (CameraAbilitiesList *list)
         a.usb_product           = 0x017a;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
+
+	/* Keld Henningsen <drawsacircle@hotmail.com> */
+        strcpy (a.model, "Pentax:K70");
+	a.usb_vendor		= 0x25fb;
+        a.usb_product           = 0x017c;
+        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+                return ret;
 	return GP_OK;
 
 }
