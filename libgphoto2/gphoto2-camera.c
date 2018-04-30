@@ -604,7 +604,7 @@ gp_camera_free (Camera *camera)
  *
  * @param list a #CameraList that receives the autodetected cameras
  * @param context a #GPContext
- * @return a gphoto2 error code
+ * @return the number of cameras detected (0 to n) or a gphoto2 error code (<0)
  *
  * This camera will autodetected all cameras that can be autodetected.
  * This will for instance detect all USB cameras.
