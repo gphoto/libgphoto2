@@ -1,4 +1,10 @@
-libgphoto2 2.5.17.1 development
+libgphoto2 2.5.18 release
+
+ptp2:
+* Canon EOS: Fixed file download on several EOS brands, broken by 2.5.17 release.
+
+pentax:
+* Added K01 and K70 models.
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.17 release
