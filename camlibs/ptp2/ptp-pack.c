@@ -2011,7 +2011,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ptp_debug (params, "event %d: objectinfo changed oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			}
 			break;
-		case PTP_EC_CANON_EOS_ObjectAddedUnknown:	/* FIXME: review if the data used is correct */
+		case PTP_EC_CANON_EOS_ObjectAddedEx64:	/* FIXME: review if the data used is correct */
 			if (size < PTP_ece2_OA_Name+1) {
 				ptp_debug (params, "size %d is smaller than %d", size, PTP_ece2_OA_Name+1);
 				break;
@@ -2026,7 +2026,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			ptp_debug (params, "event %d: objectinfo added oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			break;
 		case PTP_EC_CANON_EOS_RequestObjectTransfer:
-		case PTP_EC_CANON_EOS_RequestObjectTransferNew: /* FIXME: confirm */
+		case PTP_EC_CANON_EOS_RequestObjectTransfer64:
 			if (size < PTP_ece_OI_Name+1) {
 				ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_OI_Name+1);
 				break;

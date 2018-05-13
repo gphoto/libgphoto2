@@ -874,6 +874,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_StartDirectTransfer	0xC011
 #define PTP_EC_CANON_StopDirectTransfer		0xC013
 
+#define PTP_EC_CANON_TranscodeProgress		0xC01B /* EOS ? */
+
 /* Canon EOS events */
 #define PTP_EC_CANON_EOS_RequestGetEvent		0xc101
 #define PTP_EC_CANON_EOS_ObjectAddedEx			0xc181
@@ -896,12 +898,24 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_StoreRemoved			0xc193
 #define PTP_EC_CANON_EOS_BulbExposureTime		0xc194
 #define PTP_EC_CANON_EOS_RecordingTime			0xc195
+#define PTP_EC_CANON_EOS_InnerDevelopParam		0xc196
+#define PTP_EC_CANON_EOS_RequestObjectTransferDevelop	0xc197
+#define PTP_EC_CANON_EOS_GPSLogOutputProgress		0xc198
+#define PTP_EC_CANON_EOS_GPSLogOutputComplete		0xc199
+#define PTP_EC_CANON_EOS_TouchTrans			0xc19a
+#define PTP_EC_CANON_EOS_RequestObjectTransferExInfo	0xc19b
+#define PTP_EC_CANON_EOS_PowerZoomInfoChanged		0xc19d
+#define PTP_EC_CANON_EOS_RequestPushMode		0xc19f
 #define PTP_EC_CANON_EOS_RequestObjectTransferTS	0xc1a2
 #define PTP_EC_CANON_EOS_AfResult			0xc1a3
 #define PTP_EC_CANON_EOS_CTGInfoCheckComplete		0xc1a4
 #define PTP_EC_CANON_EOS_OLCInfoChanged			0xc1a5
-#define PTP_EC_CANON_EOS_ObjectAddedUnknown		0xc1a7
-#define PTP_EC_CANON_EOS_RequestObjectTransferNew	0xc1a9
+#define PTP_EC_CANON_EOS_ObjectAddedEx64		0xc1a7
+#define PTP_EC_CANON_EOS_ObjectInfoChangedEx64		0xc1a8
+#define PTP_EC_CANON_EOS_RequestObjectTransfer64	0xc1a9
+#define PTP_EC_CANON_EOS_RequestObjectTransferFTP64	0xc1ab
+#define PTP_EC_CANON_EOS_ImportError			0xc1af
+#define PTP_EC_CANON_EOS_BlePairing			0xc1b0
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
 /* Nikon extension Event Codes */
@@ -1581,6 +1595,11 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_AverageFilesizes	0xD048
 #define PTP_DPC_CANON_ModelID		0xD049
 
+#define PTP_DPC_CANON_EOS_PowerZoomPosition	0xD055
+#define PTP_DPC_CANON_EOS_StrobeSettingSimple	0xD056
+#define PTP_DPC_CANON_EOS_ConnectTrigger	0xD058
+#define PTP_DPC_CANON_EOS_ChangeCameraMode	0xD059
+
 /* From EOS 400D trace. */
 #define PTP_DPC_CANON_EOS_Aperture		0xD101
 #define PTP_DPC_CANON_EOS_ShutterSpeed		0xD102
@@ -1616,16 +1635,25 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_ImageFormatCF		0xD121	/* file setting CF */
 #define PTP_DPC_CANON_EOS_ImageFormatSD		0xD122	/* file setting SD */
 #define PTP_DPC_CANON_EOS_ImageFormatExtHD	0xD123	/* file setting exthd */
+#define PTP_DPC_CANON_EOS_RefocusState		0xD124
+#define PTP_DPC_CANON_EOS_CameraNickname	0xD125
+#define PTP_DPC_CANON_EOS_SpecialAcc		0xD12F
 #define PTP_DPC_CANON_EOS_CompressionS		0xD130
 #define PTP_DPC_CANON_EOS_CompressionM1		0xD131
 #define PTP_DPC_CANON_EOS_CompressionM2		0xD132
 #define PTP_DPC_CANON_EOS_CompressionL		0xD133
+#define PTP_DPC_CANON_EOS_IntervalShootSetting	0xD134
+#define PTP_DPC_CANON_EOS_IntervalShootState	0xD135
+#define PTP_DPC_CANON_EOS_PushMode		0xD136
+#define PTP_DPC_CANON_EOS_LvCFilterKind		0xD137
 #define PTP_DPC_CANON_EOS_AEModeDial		0xD138
 #define PTP_DPC_CANON_EOS_AEModeCustom		0xD139
 #define PTP_DPC_CANON_EOS_MirrorUpSetting	0xD13A
 #define PTP_DPC_CANON_EOS_HighlightTonePriority	0xD13B
 #define PTP_DPC_CANON_EOS_AFSelectFocusArea	0xD13C
 #define PTP_DPC_CANON_EOS_HDRSetting		0xD13D
+#define PTP_DPC_CANON_EOS_TimeShootSetting	0xD13E
+#define PTP_DPC_CANON_EOS_NFCApplicationInfo	0xD13F
 #define PTP_DPC_CANON_EOS_PCWhiteBalance1	0xD140
 #define PTP_DPC_CANON_EOS_PCWhiteBalance2	0xD141
 #define PTP_DPC_CANON_EOS_PCWhiteBalance3	0xD142
@@ -1633,6 +1661,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PCWhiteBalance5	0xD144
 #define PTP_DPC_CANON_EOS_MWhiteBalance		0xD145
 #define PTP_DPC_CANON_EOS_MWhiteBalanceEx	0xD146
+#define PTP_DPC_CANON_EOS_PowerZoomSpeed	0xD149
+#define PTP_DPC_CANON_EOS_NetworkServerRegion	0xD14A
+#define PTP_DPC_CANON_EOS_GPSLogCtrl		0xD14B
+#define PTP_DPC_CANON_EOS_GPSLogListNum		0xD14C
 #define PTP_DPC_CANON_EOS_UnknownPropD14D	0xD14D  /*found in Canon EOS 5D M3*/
 #define PTP_DPC_CANON_EOS_PictureStyleStandard	0xD150
 #define PTP_DPC_CANON_EOS_PictureStylePortrait	0xD151
@@ -1641,12 +1673,31 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PictureStyleFaithful	0xD154
 #define PTP_DPC_CANON_EOS_PictureStyleBlackWhite	0xD155
 #define PTP_DPC_CANON_EOS_PictureStyleAuto	0xD156
+#define PTP_DPC_CANON_EOS_PictureStyleExStandard	0xD157
+#define PTP_DPC_CANON_EOS_PictureStyleExPortrait	0xD158
+#define PTP_DPC_CANON_EOS_PictureStyleExLandscape	0xD159
+#define PTP_DPC_CANON_EOS_PictureStyleExNeutral		0xD15A
+#define PTP_DPC_CANON_EOS_PictureStyleExFaithful	0xD15B
+#define PTP_DPC_CANON_EOS_PictureStyleExBlackWhite	0xD15C
+#define PTP_DPC_CANON_EOS_PictureStyleExAuto		0xD15D
+#define PTP_DPC_CANON_EOS_PictureStyleExFineDetail	0xD15E
 #define PTP_DPC_CANON_EOS_PictureStyleUserSet1	0xD160
 #define PTP_DPC_CANON_EOS_PictureStyleUserSet2	0xD161
 #define PTP_DPC_CANON_EOS_PictureStyleUserSet3	0xD162
+#define PTP_DPC_CANON_EOS_PictureStyleExUserSet1	0xD163
+#define PTP_DPC_CANON_EOS_PictureStyleExUserSet2	0xD164
+#define PTP_DPC_CANON_EOS_PictureStyleExUserSet3	0xD165
+#define PTP_DPC_CANON_EOS_AvailableImageSize	0xD168
+#define PTP_DPC_CANON_EOS_ErrorHistory		0xD169
+#define PTP_DPC_CANON_EOS_LensExchangeHistory	0xD16A
+#define PTP_DPC_CANON_EOS_StroboExchangeHistory	0xD16B
 #define PTP_DPC_CANON_EOS_PictureStyleParam1	0xD170
 #define PTP_DPC_CANON_EOS_PictureStyleParam2	0xD171
 #define PTP_DPC_CANON_EOS_PictureStyleParam3	0xD172
+#define PTP_DPC_CANON_EOS_MovieRecordVolumeLine	0xD174
+#define PTP_DPC_CANON_EOS_NetworkCommunicationMode	0xD175
+#define PTP_DPC_CANON_EOS_CanonLogGamma			0xD176
+#define PTP_DPC_CANON_EOS_SmartphoneShowImageConfig	0xD177
 #define PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction	0xD178
 #define PTP_DPC_CANON_EOS_MovieServoAF		0xD179
 #define PTP_DPC_CANON_EOS_ContinuousAFValid	0xD17A
@@ -1685,6 +1736,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_UnknownPropD19A	0xD19A /*found in Canon EOS 5D M3*/
 #define PTP_DPC_CANON_EOS_UnknownPropD19C	0xD19C /*found in Canon EOS 5D M3*/
 #define PTP_DPC_CANON_EOS_UnknownPropD19D	0xD19D /*found in Canon EOS 5D M3*/
+#define PTP_DPC_CANON_EOS_GPSDeviceActive	0xD19F
 #define PTP_DPC_CANON_EOS_CustomFuncEx		0xD1a0
 #define PTP_DPC_CANON_EOS_MyMenu		0xD1a1
 #define PTP_DPC_CANON_EOS_MyMenuList		0xD1a2
