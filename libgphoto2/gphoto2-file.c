@@ -386,8 +386,12 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
  *
  * Both data and size can be NULL and will then be ignored.
  *
- * The pointer to data that is returned is still owned by libgphoto2
- * and its lifetime is the same as the #file.
+ * For regular CameraFiles, the pointer to data that is returned is
+ * still owned by libgphoto2 and its lifetime is the same as the #file.
+ * 
+ * For filedescriptor or handler based CameraFile types, the returned 
+ * data pointer is owned by the caller and needs to be free()d to avoid
+ * memory leaks.
  *
  **/
 int
