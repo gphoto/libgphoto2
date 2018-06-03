@@ -2415,17 +2415,26 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				break;
 		}
 		/* one more information record handed to us */
+		/* Versions seen: (d199)
+		 * 100D: 	7 (original reference)
+		 * 5d Mark 3:	7
+		 * 650D:	7
+		 * 6D:		7
+		 * M10:		8
+		 * 70D:		8
+		 * 200D: 	f
+		 */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
 			uint16_t		mask,proptype;
 			PTPDevicePropDesc	*dpd;
-			PTPPropertyValue	val;
-			int			olcver;
+			int			olcver = 0;
 
-			val.u32 = 0;
-			ptp_getdevicepropvalue (params, PTP_DPC_CANON_EOS_OLCInfoVersion, &val, PTP_DTC_UINT32);
-			ptp_debug (params, "olcinfoversion is %d", val.u32);
-			olcver = val.u32;
+			dpd = _lookup_or_allocate_canon_prop(params, PTP_DPC_CANON_EOS_OLCInfoVersion);
+			if (dpd) {
+				ptp_debug (params, "olcinfoversion is %d", dpd->CurrentValue.u32);
+				olcver = dpd->CurrentValue.u32;
+			}
 
 			/* unclear what OLC stands for */
 			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
@@ -2454,7 +2463,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ce[i].u.info = malloc(strlen("Button 1234567"));
 				sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
 				i++;
-				curoff += 2;
+				curoff += 2; /* 7, 8 , f */
 			}
 			
 			if (mask & CANON_EOS_OLC_SHUTTERSPEED) {
@@ -2470,10 +2479,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
 				/* hack to differ between older EOS and EOS 200D newer */
-				if (olcver >= 0xf) {
-					curoff += 7;
+				if (olcver >= 8) {
+					curoff += 7;	/* f (200D), 8 (M10) */
 				} else {
-					curoff += 6;
+					curoff += 6;	/* 7 */
 				}
 				i++;
 			}
@@ -2490,9 +2499,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
 				if (olcver >= 0xf) {
-					curoff += 6;
+					curoff += 6;	/* f */
 				} else {
-					curoff += 5;
+					curoff += 5;	/* 7, 8 */
 				}
 				i++;
 			}
