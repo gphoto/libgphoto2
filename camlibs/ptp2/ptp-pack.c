@@ -2226,6 +2226,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_AFSelectFocusArea:
 				case PTP_DPC_CANON_EOS_ContinousAFMode:
 				case PTP_DPC_CANON_EOS_MirrorUpSetting:
+				case PTP_DPC_CANON_EOS_OLCInfoVersion:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
@@ -2418,6 +2419,13 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			uint32_t		len, curoff;
 			uint16_t		mask,proptype;
 			PTPDevicePropDesc	*dpd;
+			PTPPropertyValue	val;
+			int			olcver;
+
+			val.u32 = 0;
+			ptp_getdevicepropvalue (params, PTP_DPC_CANON_EOS_OLCInfoVersion, &val, PTP_DTC_UINT32);
+			ptp_debug (params, "olcinfoversion is %d", val.u32);
+			olcver = val.u32;
 
 			/* unclear what OLC stands for */
 			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
@@ -2452,29 +2460,44 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			if (mask & CANON_EOS_OLC_SHUTTERSPEED) {
 				/* 6 bytes: 01 01 98 10 00 60 */
 				/* this seesm to be the shutter speed record */
+				/* EOS 200D seems to have 7 bytes here, sample:
+				 * 7 bytes: 01 03 98 10 00 70 00 
+				 */
 				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
-				curoff += 6;
+				/* hack to differ between older EOS and EOS 200D newer */
+				if (olcver >= 0xf) {
+					curoff += 7;
+				} else {
+					curoff += 6;
+				}
 				i++;
 			}
 			if (mask & CANON_EOS_OLC_APERTURE) {
 				/* 5 bytes: 01 01 5b 30 30 */
 				/* this seesm to be the aperture record */
+				/* EOS 200D seems to have 6 bytes here?
+				 * 6 bytes: 01 01 50 20 20 00 *
+				 */
 				proptype = PTP_DPC_CANON_EOS_Aperture;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
-				curoff += 5;
+				if (olcver >= 0xf) {
+					curoff += 6;
+				} else {
+					curoff += 5;
+				}
 				i++;
 			}
 			if (mask & CANON_EOS_OLC_ISO) {
-				/* 5 bytes: 01 01 00 78 */
+				/* 4 bytes: 01 01 00 78 */
 				/* this seesm to be the aperture record */
 				proptype = PTP_DPC_CANON_EOS_ISOSpeed;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
