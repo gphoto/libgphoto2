@@ -1,4 +1,8 @@
 libgphoto2 2.5.18.1 development branch
+
+ptp2:
+* Canon EOS: handle OLC versions of newer models
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.18 release
 
