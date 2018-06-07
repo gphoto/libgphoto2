@@ -2922,13 +2922,17 @@ enable_liveview:
 		unsigned char	*ximage = NULL;
 		int		tries = 20;
 
-		ptp_check_event (params);	/* will stall for some reason */
+#if 0
+		/* this times out, with 0.3 seconds wait ... bad */
+		ptp_check_event (params); 	/* will stall for some reason */
+#endif
 		do {
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
 				break;
 			if (ret != PTP_RC_AccessDenied) /* we get those when we are too fast */
 				C_PTP (ret);
+			usleep(10*1000);
 		} while (tries--);
 
 		/* look for the JPEG SOI marker (0xFFD8) in data */
