@@ -2088,8 +2088,12 @@ static struct {
 	{"Fuji:FinePix X20",			0x04cb, 0x02a6, 0},
 	/* https://sourceforge.net/p/libmtp/bugs/1040/ */
 	{"Fuji:Fujifilm X-E2",			0x04cb, 0x02b5, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/281 */
+	{"Fuji:Fujifilm X70",			0x04cb, 0x02ba, 0},
 	/* Vladimir K <enewsletters@inbox.ru> */
 	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/281 */
+	{"Fuji:Fujifilm X30",			0x04cb, 0x02c1, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/32 */
 	{"Fuji:Fujifilm X-T10",			0x04cb, 0x02c8, 0},
 	/* with new updated firmware 4.0, https://github.com/gphoto/libgphoto2/issues/220 */
