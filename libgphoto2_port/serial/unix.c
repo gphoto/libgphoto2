@@ -27,7 +27,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 /* Solaris needs this */
 #define __EXTENSIONS__
 
