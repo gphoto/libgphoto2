@@ -25,7 +25,7 @@
 /****************************************************************/
 
 #define _POSIX_C_SOURCE 199309L
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 

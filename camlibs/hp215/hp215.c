@@ -53,7 +53,7 @@
      0x03 = Endcode   for a command
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 

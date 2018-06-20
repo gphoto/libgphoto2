@@ -15,7 +15,7 @@
  * and usb.c, keeping the common protocols/busses support in this
  * file.
  */
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 #include "config.h"
 
 #include <stdlib.h>

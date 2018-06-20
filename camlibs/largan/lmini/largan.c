@@ -24,7 +24,7 @@
  * Currently only largan lmini is supported
  */
 
-#define _BSD_SOURCE
+#define _DEFAULT_SOURCE
 
 #include "config.h"
 
