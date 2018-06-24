@@ -356,7 +356,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data; 
 	int i, count, present;
-	char buf[16];
+	char buf[30];
 
 	count = tp6801_max_filecount (camera);
 	if (count < 0) return count;

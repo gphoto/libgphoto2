@@ -836,7 +836,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	unsigned int index = 0;
 	unsigned int file_index = 0;
 	uint8_t *p = NULL;
-	uint8_t buf[14];
+	uint8_t buf[30];
 
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
@@ -891,13 +891,13 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 		} else {
 			/* its an image */
 			if (type == 0x00 || type == 0x01) {
-				snprintf ((char*)buf, 13, "Image%03d.jpg",
+				snprintf (buf, sizeof(buf), "Image%03d.jpg",
 					  ++lib->num_images);
 				lib->files[file_index].mime_type =
 					SPCA50X_FILE_TYPE_IMAGE;
 			} else if ((type == 0x08) || (type == 0x03)) {
 				/* its the start of an avi */
-				snprintf ((char*)buf, 13, "Movie%03d.avi",
+				snprintf (buf, sizeof(buf), "Movie%03d.avi",
 					  ++lib->num_movies);
 				lib->files[file_index].mime_type =
 					SPCA50X_FILE_TYPE_AVI;

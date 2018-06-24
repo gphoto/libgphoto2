@@ -332,7 +332,7 @@ spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 {
 	uint8_t *p;
 	if (pl->bridge == BRIDGE_SPCA500) {
-		char p[14];
+		char p[30];
 		int w, h, type, size;
 
 		memset (p, 0, sizeof(p));

@@ -500,7 +500,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
 	int ret = 0, n;
-	char name[16];
+	char name[30];
 	if(!camera->pl->sonix_init_done) 
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
@@ -515,9 +515,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return GP_ERROR_NO_MEMORY;
 	n=camera->pl->num_pics;
 	sonix_capture_image(camera->port);
-	snprintf(name, 16, "sonix%03i.ppm",n+1);
+	snprintf(name, sizeof(name), "sonix%03i.ppm",n+1);
 	sprintf(path->folder,"/");
-	snprintf(path->name,16,"sonix%03i.ppm",n+1);
+	snprintf(path->name,sizeof(path->name),"sonix%03i.ppm",n+1);
 	gp_filesystem_append(camera->fs, "/", name, context);
 	return GP_OK;
 }

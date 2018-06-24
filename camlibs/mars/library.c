@@ -163,7 +163,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
         Camera *camera = data; 
 	int i = 0, n;
-	char name[16];
+	char name[30];
 
 	n = mars_get_num_pics(camera->pl->info);
 	for (i=0; i < n; i++) {

@@ -134,7 +134,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int num_lo_pics = aox_get_num_lo_pics (camera->pl->info);
 	int num_hi_pics = aox_get_num_hi_pics (camera->pl->info);
 	int n = num_hi_pics + num_lo_pics;
-	char name[20];
+	char name[30];
 	int i;	
 	/* Low-resolution pictures are always downloaded first. We do not know 
 	 * yet how to process them, so they will remain in RAW format. */

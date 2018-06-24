@@ -362,7 +362,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
 	Camera *camera = data; 
 	int i, count, present;
-	char buf[16];
+	char buf[30];
 
 	count = ax203_read_filecount (camera);
 	if (count < 0) return count;
