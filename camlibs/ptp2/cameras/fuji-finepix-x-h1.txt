@@ -1,0 +1,433 @@
+Device info:
+Manufacturer: FUJIFILM
+  Model: X-H1
+  device version: 1.10
+  serial number: 'nnnnnnnnnnnnnnnnnnnnnnnnnnnFnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: fujifilm.co.jp: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1018 (Terminate open capture)
+  0x101b (Get partial object)
+  0x101c (Initiate open capture)
+  0x900c (Unknown PTP_OC)
+  0x900d (Unknown PTP_OC)
+  0x901d (Unknown PTP_OC)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9805 (Get object property list)
+Events Supported:
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x400d
+  0xc006
+Device Properties Supported:
+  0x5001
+  0x5003
+  0x5005
+  0x500a
+  0x500b
+  0x500c
+  0x500e
+  0x500f
+  0x5011
+  0x5012
+  0x5015
+  0x5018
+  0x5019
+  0x501c
+  0xd001
+  0xd002
+  0xd003
+  0xd004
+  0xd005
+  0xd007
+  0xd008
+  0xd009
+  0xd00a
+  0xd00b
+  0xd00c
+  0xd00d
+  0xd00e
+  0xd00f
+  0xd010
+  0xd011
+  0xd012
+  0xd013
+  0xd014
+  0xd015
+  0xd016
+  0xd017
+  0xd018
+  0xd019
+  0xd01a
+  0xd01b
+  0xd01c
+  0xd100
+  0xd101
+  0xd102
+  0xd103
+  0xd104
+  0xd105
+  0xd106
+  0xd107
+  0xd108
+  0xd109
+  0xd10a
+  0xd10b
+  0xd10c
+  0xd10d
+  0xd10e
+  0xd10f
+  0xd110
+  0xd111
+  0xd112
+  0xd113
+  0xd114
+  0xd115
+  0xd116
+  0xd117
+  0xd118
+  0xd119
+  0xd11a
+  0xd11b
+  0xd11c
+  0xd11d
+  0xd11e
+  0xd11f
+  0xd120
+  0xd121
+  0xd122
+  0xd123
+  0xd124
+  0xd125
+  0xd126
+  0xd127
+  0xd128
+  0xd129
+  0xd12a
+  0xd12b
+  0xd12c
+  0xd12d
+  0xd12e
+  0xd12f
+  0xd130
+  0xd131
+  0xd132
+  0xd133
+  0xd134
+  0xd135
+  0xd136
+  0xd137
+  0xd138
+  0xd139
+  0xd13a
+  0xd13b
+  0xd13c
+  0xd13d
+  0xd13e
+  0xd13f
+  0xd140
+  0xd141
+  0xd142
+  0xd143
+  0xd144
+  0xd145
+  0xd146
+  0xd147
+  0xd148
+  0xd149
+  0xd14a
+  0xd14b
+  0xd14c
+  0xd14d
+  0xd14e
+  0xd14f
+  0xd150
+  0xd151
+  0xd152
+  0xd153
+  0xd154
+  0xd155
+  0xd157
+  0xd158
+  0xd159
+  0xd15a
+  0xd15b
+  0xd15c
+  0xd15d
+  0xd15e
+  0xd15f
+  0xd160
+  0xd161
+  0xd200
+  0xd201
+  0xd202
+  0xd203
+  0xd204
+  0xd205
+  0xd206
+  0xd207
+  0xd208
+  0xd209
+  0xd20a
+  0xd20b
+  0xd20c
+  0xd20d
+  0xd20e
+  0xd20f
+  0xd210
+  0xd211
+  0xd212
+  0xd213
+  0xd214
+  0xd215
+  0xd216
+  0xd217
+  0xd218
+  0xd219
+  0xd21a
+  0xd21b
+  0xd406
+  0xd407
+
+Camera summary:
+Manufacturer: FUJIFILM
+Model: X-H1
+  Version: 1.10
+  Serial Number: nnnnnnnnnnnnnnnnnnnnnnnnnnnFnn
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: Defined Type JPEG Unknown(b103)
+Display Formats: Defined Type, JPEG, Unknown(b103)
+Supported MTP Object Properties:
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Still
+	VolumeLabel: nnnnnnnnnnnnnnnnnnnnnnnnnnnnFnn
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: nnnnnnnnnnnnnnnnnnnnnnnnnnnnFnn
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001): error 200a on query.
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'3008x2000',
+	'3008x1688',
+	'2000x2000',
+	'4240x2832',
+	'4240x2384',
+	'2832x2832',
+	'6000x4000',
+	'6000x3376',
+	'4000x4000'
+	] value: '6000x4000'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,8,32769,32770,32771,32774,32775,32776,32777,32778] value: Daylight (4)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,32769,32770] value: 32769
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Multi-spot (3)
+Flash Mode(0x500c): error 200a on query.
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: A (3)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,-1,-2,-3] value: ISO 200 (200)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20180708T113000'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [10000,2000,0] value: 0.0s (0)
+Sharpness(0x5015):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Burst Number(0x5018): error 200a on query.
+Burst Interval(0x5019): error 200a on query.
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771] value: 32770
+Property 0xd001:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] value: 1
+Property 0xd002: error 200a on query.
+Property 0xd003: error 200a on query.
+Property 0xd004: error 200a on query.
+Property 0xd005: error 200a on query.
+Property 0xd007:(readwrite) (type=0x4) Enumeration [65535,100,200,400] value: 100
+Property 0xd008:(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Property 0xd009: error 200a on query.
+Property 0xd00a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd00b:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+Property 0xd00c:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+Property 0xd00d: error 200a on query.
+Property 0xd00e: error 200a on query.
+Property 0xd00f: error 200a on query.
+Property 0xd010: error 200a on query.
+Property 0xd011: error 200a on query.
+Property 0xd012: error 200a on query.
+Property 0xd013: error 200a on query.
+Property 0xd014: error 200a on query.
+Property 0xd015: error 200a on query.
+Property 0xd016: error 200a on query.
+Property 0xd017:(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 10000
+Property 0xd018:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
+Property 0xd019: error 200a on query.
+Property 0xd01a: error 200a on query.
+Property 0xd01b:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd01c:(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+Property 0xd100:(readwrite) (type=0xffff) ''
+Secure Time(0xd101): error 200a on query.
+Device Certificate(0xd102): error 200a on query.
+Revocation Info(0xd103): error 200a on query.
+Property 0xd104: error 200a on query.
+Property 0xd105: error 200a on query.
+Property 0xd106:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd107: error 200a on query.
+Property 0xd108: error 200a on query.
+Property 0xd109: error 200a on query.
+Property 0xd10a:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd10b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10c: error 200a on query.
+Property 0xd10d: error 200a on query.
+Property 0xd10e: error 200a on query.
+Property 0xd10f: error 200a on query.
+Property 0xd110: error 200a on query.
+Property 0xd111: error 200a on query.
+Property 0xd112:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd113: error 200a on query.
+Property 0xd114: error 200a on query.
+Property 0xd115: error 200a on query.
+Property 0xd116: error 200a on query.
+Property 0xd117: error 200a on query.
+Property 0xd118: error 200a on query.
+Property 0xd119: error 200a on query.
+Property 0xd11a: error 200a on query.
+Property 0xd11b: error 200a on query.
+Property 0xd11c: error 200a on query.
+Property 0xd11d: error 200a on query.
+Property 0xd11e: error 200a on query.
+Property 0xd11f: error 200a on query.
+Property 0xd120: error 200a on query.
+Property 0xd121: error 200a on query.
+Property 0xd122: error 200a on query.
+Property 0xd123: error 200a on query.
+Property 0xd124: error 200a on query.
+Property 0xd125: error 200a on query.
+Property 0xd126: error 200a on query.
+Property 0xd127: error 200a on query.
+Property 0xd128: error 200a on query.
+Property 0xd129: error 200a on query.
+Property 0xd12a: error 200a on query.
+Property 0xd12b: error 200a on query.
+Property 0xd12c: error 200a on query.
+Property 0xd12d: error 200a on query.
+Property 0xd12e: error 200a on query.
+Property 0xd12f: error 200a on query.
+Property 0xd130: error 200a on query.
+PlaysForSure ID(0xd131): error 200a on query.
+Property 0xd132: error 200a on query.
+Property 0xd133: error 200a on query.
+Property 0xd134: error 200a on query.
+Property 0xd135: error 200a on query.
+Property 0xd136:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd137: error 200a on query.
+Property 0xd138: error 200a on query.
+Property 0xd139: error 200a on query.
+Property 0xd13a: error 200a on query.
+Property 0xd13b: error 200a on query.
+Property 0xd13c: error 200a on query.
+Property 0xd13d: error 200a on query.
+Property 0xd13e: error 200a on query.
+Property 0xd13f: error 200a on query.
+Property 0xd140: error 200a on query.
+Property 0xd141: error 200a on query.
+Property 0xd142: error 200a on query.
+Property 0xd143: error 200a on query.
+Property 0xd144: error 200a on query.
+Property 0xd145:(readwrite) (type=0xffff) '0000'
+Property 0xd146: error 200a on query.
+Property 0xd147: error 200a on query.
+Property 0xd148: error 200a on query.
+Property 0xd149: error 200a on query.
+Property 0xd14a: error 200a on query.
+Property 0xd14b: error 200a on query.
+Property 0xd14c: error 200a on query.
+Property 0xd14d: error 200a on query.
+Property 0xd14e: error 200a on query.
+Property 0xd14f: error 200a on query.
+Property 0xd150: error 200a on query.
+Property 0xd151: error 200a on query.
+Property 0xd152: error 200a on query.
+Property 0xd153:(read only) (type=0x4) 272
+Property 0xd154:(read only) (type=0x6) 125632512
+Property 0xd155:(read only) (type=0x6) 0
+Property 0xd157: error 200a on query.
+Property 0xd158: error 200a on query.
+Property 0xd159: error 200a on query.
+Property 0xd15a: error 200a on query.
+Property 0xd15b: error 200a on query.
+Property 0xd15c: error 200a on query.
+Property 0xd15d: error 200a on query.
+Property 0xd15e: error 200a on query.
+Property 0xd15f: error 200a on query.
+Property 0xd160: error 200a on query.
+Property 0xd161: error 200a on query.
+Property 0xd200: error 200a on query.
+Property 0xd201: not read out.
+Property 0xd202: error 200a on query.
+Property 0xd203: error 200a on query.
+Property 0xd204: error 200a on query.
+Property 0xd205: error 200a on query.
+Property 0xd206: error 200a on query.
+Property 0xd207:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,40960,6,36864,2,37120,1,37632,5] value: 772
+Property 0xd209:(read only) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd20a: error 200a on query.
+Property 0xd20b:(readwrite) (type=0xffff) ''
+Property 0xd20c:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 4
+Property 0xd20d:(read only) (type=0xffff) '0,16,123746560,9,0,16,123906048,9'
+Property 0xd20e:(read only) (type=0x4) Range [0 - 1, step 1] value: 18
+Property 0xd20f: error 200a on query.
+Property 0xd210: error 200a on query.
+Property 0xd211:(read only) (type=0x4) Range [0 - 65535, step 1] value: 257
+Property 0xd212:(read only) (type=0x0) Undefined
+Property 0xd213: error 200a on query.
+Property 0xd214: error 200a on query.
+Property 0xd215:(readwrite) (type=0xffff) ''
+Property 0xd216:(readwrite) (type=0xffff) ''
+Property 0xd217: error 200a on query.
+Property 0xd218: error 200a on query.
+Property 0xd219: error 200a on query.
+Property 0xd21a: error 200a on query.
+Property 0xd21b: error 200a on query.
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
