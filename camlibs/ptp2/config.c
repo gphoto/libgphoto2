@@ -1399,6 +1399,7 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 											\
 	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
 											\
+	C_PTP_REP (ptp_sony_getalldevicepropdesc (params));				\
 	C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));			\
 	if (value == dpd.CurrentValue.bits) {						\
 		GP_LOG_D("value is already 0x%08x", value);				\
