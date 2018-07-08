@@ -844,6 +844,25 @@ parse_9301_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 	return PTP_RC_OK;
 }
 
+uint16_t
+ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_LiveviewImage);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer	ptp;
+	uint32_t 	param1 = 1;
+
+	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_GetLiveViewImage, param1);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
 static uint16_t
 ptp_olympus_parse_output_xml(PTPParams* params, char*data, int len, xmlNodePtr *code)
 {

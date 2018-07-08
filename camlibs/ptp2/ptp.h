@@ -180,7 +180,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_VENDOR_MTP			0xffffffff  
 
 /* gphoto overrides */
-#define PTP_VENDOR_GP_OLYMPUS		0xfffffffe
+#define PTP_VENDOR_GP_OLYMPUS          0x0000fffe
+#define PTP_VENDOR_GP_OLYMPUS_OMD      0x0000fffd
+
 
 /* Operation Codes */
 
@@ -537,7 +539,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, data in */
 
 /* From Nikon V1 Trace */
-#define PTP_OC_NIKON_GetDevicePropEx		0x9504	/* gets device prop dataa */
+#define PTP_OC_NIKON_GetDevicePropEx		0x9504	/* gets device prop data */
 
 /* Casio EX-F1 (from http://code.google.com/p/exf1ctrl/ ) */
 #define PTP_OC_CASIO_STILL_START	0x9001
@@ -675,8 +677,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* WiFi Provisioning MTP Extension Codes (microsoft.com/WPDWCN: 1.0) */
 #define PTP_OC_MTP_WPDWCN_ProcessWFCObject		0x9122
 
+/* Olympus OMD series commands */
+#define PTP_OC_OLYMPUS_OMD_Capture			0x9481
+#define PTP_OC_OLYMPUS_OMD_MFDrive			0x9487
+
 
 /* Olympus E series commands */
+
 #define PTP_OC_OLYMPUS_Capture				0x9101
 #define PTP_OC_OLYMPUS_SelfCleaning			0x9103
 #define PTP_OC_OLYMPUS_SetRGBGain			0x9106
@@ -691,6 +698,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_OLYMPUS_GetDateTime			0x9482
 #define PTP_OC_OLYMPUS_SetCameraID			0x9501
 #define PTP_OC_OLYMPUS_GetCameraID			0x9581
+
+#define PTP_OC_OLYMPUS_GetLiveViewImage			0x9484
+
 
 /* Android Random I/O Extensions Codes */
 #define PTP_OC_ANDROID_GetPartialObject64		0x95C1
@@ -731,6 +741,16 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PARROT_StopMagnetoCalib		0x9211
 #define PTP_OC_PARROT_MagnetoCalibStatus	0x9212
 #define PTP_OC_PARROT_SendFirmwareUpdate	0x9213
+
+#define PTP_OC_PANASONIC_GetProperty		0x9402
+#define PTP_OC_PANASONIC_SetProperty		0x9403
+#define PTP_OC_PANASONIC_ListProperty		0x9108
+#define PTP_OC_PANASONIC_9401			0x9401
+#define PTP_OC_PANASONIC_InitiateCapture	0x9404
+#define PTP_OC_PANASONIC_9101			0x9101
+#define PTP_OC_PANASONIC_Liveview		0x9412
+#define PTP_OC_PANASONIC_LiveviewImage		0x9706
+
 
 
 /* Proprietary vendor extension operations mask */
@@ -2123,6 +2143,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_MTP_Zune_UnknownVersion			0xD181
 
 /* Olympus */
+#define PTP_DPC_OLYMPUS_LiveViewModeOM			0xD06D
+
 #define PTP_DPC_OLYMPUS_ResolutionMode			0xD102
 #define PTP_DPC_OLYMPUS_FocusPriority			0xD103
 #define PTP_DPC_OLYMPUS_DriveMode			0xD104
@@ -3436,6 +3458,9 @@ uint16_t ptp_olympus_opensession (PTPParams*, unsigned char**, unsigned int *);
 #define ptp_olympus_capture(params,p1) ptp_generic_no_data (params, PTP_OC_OLYMPUS_Capture, 1, p1)
 uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned int *);
 
+uint16_t ptp_olympus_omd_capture (PTPParams* params);
+uint16_t ptp_olympus_omd_move_focus (PTPParams* params, uint32_t direction, uint32_t step_size);
+
 /* Non PTP protocol functions */
 static inline int
 ptp_operation_issupported(PTPParams* params, uint16_t operation)
@@ -3554,6 +3579,10 @@ uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret
 /*uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);*/
 
 uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count);
+
+#define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable)
+uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 
 
 
