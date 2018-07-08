@@ -2108,7 +2108,7 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
 	{"Fuji:Fujifilm X100F",			0x04cb, 0x02d1, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/133 */
-	{"Fuji:GFX 50 S",			0x04cb, 0x02d3, 0},
+	{"Fuji:GFX 50 S",			0x04cb, 0x02d3, PTP_CAP},
 	/* https://github.com/gphoto/libgphoto2/issues/170 */
 	{"Fuji:Fujifilm X-T20",			0x04cb, 0x02d4, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
