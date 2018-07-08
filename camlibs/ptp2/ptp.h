@@ -3582,6 +3582,13 @@ uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* cou
 
 #define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable)
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
+
+uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, unsigned char *value, uint16_t valuesize);
+uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
+uint16_t ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength);
+
+
+
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 
 

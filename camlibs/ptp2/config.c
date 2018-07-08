@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -1899,7 +1899,7 @@ static struct deviceproptableu8 canon_shootmode[] = {
 	{ N_("A_DEP"),		0x05, 0 },
 	{ N_("M_DEP"),		0x06, 0 },
 	{ N_("Bulb"),		0x07, 0 },
-	/* Marcus: The SDK has more listed, but I have never seen them 
+	/* Marcus: The SDK has more listed, but I have never seen them
 	 * enumerated by the cameras. Lets leave them out for now. */
 };
 GENERIC8TABLE(Canon_ShootMode,canon_shootmode)
@@ -3572,7 +3572,7 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 	propval->u32 = 100*value_float;
 	if (dpd->FormFlag & PTP_DPFF_Range)
 		return GP_OK;
-	/* If FocalLength is enumerated, we need to hit the 
+	/* If FocalLength is enumerated, we need to hit the
 	 * values exactly, otherwise nothing will happen.
 	 * (problem encountered on my Nikon P2)
 	 */
@@ -5397,7 +5397,7 @@ _put_Nikon_AFDrive(CONFIG_PUT_ARGS) {
 	PTPParams	*params = &(camera->pl->params);
 	GPContext 	*context = ((PTPData *) params->data)->context;
 
-	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_AfDrive)) 
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_AfDrive))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	C_PTP (ptp_nikon_afdrive (&camera->pl->params));
@@ -5463,7 +5463,7 @@ _put_Canon_EOS_AFDrive(CONFIG_PUT_ARGS) {
 	int		val;
 	PTPParams	*params = &(camera->pl->params);
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DoAf)) 
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DoAf))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	CR (gp_widget_get_value(widget, &val));
@@ -5487,7 +5487,7 @@ static int
 _put_Canon_EOS_AFCancel(CONFIG_PUT_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_AfCancel)) 
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_AfCancel))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	C_PTP (ptp_canon_eos_afcancel (params));
@@ -5513,7 +5513,7 @@ _put_Nikon_MFDrive(CONFIG_PUT_ARGS) {
 	PTPParams	*params = &(camera->pl->params);
 	GPContext 	*context = ((PTPData *) params->data)->context;
 
-	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_MfDrive)) 
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_MfDrive))
 		return (GP_ERROR_NOT_SUPPORTED);
 	gp_widget_get_value(widget, &val);
 
@@ -5561,7 +5561,7 @@ _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 	char*		val;
 	unsigned int	xval = 0;
 
-	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_SetControlMode)) 
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_SetControlMode))
 		return GP_ERROR_NOT_SUPPORTED;
 	gp_widget_get_value(widget, &val);
 
@@ -5607,7 +5607,7 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 	PTPParams	*params = &(camera->pl->params);
 	GPContext 	*context = ((PTPData *) params->data)->context;
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) 
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* If someone has set the capture target inbetween */
@@ -5710,7 +5710,7 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 	unsigned int	xval;
 	PTPParams *params = &(camera->pl->params);
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DriveLens)) 
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_DriveLens))
 		return (GP_ERROR_NOT_SUPPORTED);
 	gp_widget_get_value(widget, &val);
 
@@ -5733,6 +5733,55 @@ _put_Canon_EOS_MFDrive(CONFIG_PUT_ARGS) {
 
 
 static int
+_get_Olympus_OMD_MFDrive(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	gp_widget_add_choice (*widget, _("Near 1"));
+	gp_widget_add_choice (*widget, _("Near 2"));
+	gp_widget_add_choice (*widget, _("Near 3"));
+	gp_widget_add_choice (*widget, _("None"));
+	gp_widget_add_choice (*widget, _("Far 1"));
+	gp_widget_add_choice (*widget, _("Far 2"));
+	gp_widget_add_choice (*widget, _("Far 3"));
+
+	gp_widget_set_value (*widget, _("None"));
+	return (GP_OK);
+}
+
+static int
+_put_Olympus_OMD_MFDrive(CONFIG_PUT_ARGS) {
+	const char*	val;
+	unsigned int	xval;
+	uint32_t direction = 0x01;
+	uint32_t step_size = 0x0e;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_OLYMPUS_OMD_MFDrive))
+		return (GP_ERROR_NOT_SUPPORTED);
+	gp_widget_get_value(widget, &val);
+
+	if (!strcmp (val, _("None"))) return GP_OK;
+
+	if (!sscanf (val, _("Near %d"), &xval)) {
+		if (!sscanf (val, _("Far %d"), &xval)) {
+			GP_LOG_D ("Could not parse %s", val);
+			return GP_ERROR;
+		} else {
+			direction = 0x02;
+		}
+	}
+	if(xval == 1) step_size = 0x03;
+	if(xval == 2) step_size = 0x0e;
+	if(xval == 3) step_size = 0x3c;
+
+	C_PTP_MSG (ptp_olympus_omd_move_focus (params, direction, step_size),
+		   "Olympus manual focus drive 0x%x failed", xval);
+	return GP_OK;
+}
+
+
+static int
 _get_Canon_EOS_Zoom(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -5748,7 +5797,7 @@ _put_Canon_EOS_Zoom(CONFIG_PUT_ARGS) {
 	unsigned int	xval;
 	PTPParams *params = &(camera->pl->params);
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_Zoom)) 
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_Zoom))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	gp_widget_get_value(widget, &val);
@@ -5781,7 +5830,7 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 	unsigned int	x,y;
 	PTPParams *params = &(camera->pl->params);
 
-	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_ZoomPosition)) 
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_ZoomPosition))
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	gp_widget_get_value(widget, &val);
@@ -5819,13 +5868,13 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 
 //  Nafraf: Working on this!!!
 //
-//  gphoto: config.c   
+//  gphoto: config.c
 //  ret = ptp_chdk_exec_lua (params, val, &output);
 //
 //  chdkptp: chdkptp.c
-//    ret = ptp_chdk_exec_lua (params, 
+//    ret = ptp_chdk_exec_lua (params,
 //                (char *)luaL_optstring(L,2,""),
-//                luaL_optnumber(L,3,0), 
+//                luaL_optnumber(L,3,0),
 //                &ptp_cs->script_id,
 //                &status)
 //
@@ -5987,6 +6036,34 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 	C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT32),
 		   "ptp2_eos_viewfinder enable", "setval of evf outputmode to %d failed", xval.u32);
 	return GP_OK;
+}
+
+static int
+_get_Panasonic_ViewFinder(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	val = 2;	/* always changed, unless we can find out the state ... */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Panasonic_ViewFinder(CONFIG_PUT_ARGS) {
+	int			val;
+	uint16_t		res;
+	PTPParams		*params = &(camera->pl->params);
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		res = ptp_panasonic_liveview (params, 1);
+		params->inliveview = 1;
+	} else {
+		res = ptp_panasonic_liveview (params, 0);
+		params->inliveview = 0;
+	}
+	return translate_ptp_result (res);
 }
 
 static int
@@ -6308,6 +6385,54 @@ _put_Sony_Autofocus(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Sony_ManualFocus(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_range(*widget, -7.0, 7.0, 1.0);
+	gp_widget_set_name (*widget,menu->name);
+	val = 0.0; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Sony_ManualFocus(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	float val;
+	PTPPropertyValue xpropval;
+
+	CR (gp_widget_get_value(widget, &val));
+
+	if(val != 0.0) {
+		xpropval.u16 = 2;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
+		if(val <= -7) xpropval.u16 = 0xFFFF - 6;
+		else if(val <= -6.0) xpropval.u16 = 0xFFFF - 5;
+		else if(val <= -5.0) xpropval.u16 = 0xFFFF - 4;
+		else if(val <= -4.0) xpropval.u16 = 0xFFFF - 3;
+		else if(val <= -3.0) xpropval.u16 = 0xFFFF - 2;
+		else if(val <= -2.0) xpropval.u16 = 0xFFFF - 1;
+		else if(val <= -1.0) xpropval.u16 = 0xFFFF;
+		else if(val <= 1.0) xpropval.u16 = 1;
+		else if(val <= 2.0) xpropval.u16 = 2;
+		else if(val <= 3.0) xpropval.u16 = 3;
+		else if(val <= 4.0) xpropval.u16 = 4;
+		else if(val <= 5.0) xpropval.u16 = 5;
+		else if(val <= 6.0) xpropval.u16 = 6;
+		else if(val <= 7.0) xpropval.u16 = 7;
+		else xpropval.u16 = 0;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d1, &xpropval, PTP_DTC_UINT16));
+	} else {
+		xpropval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
+	}
+
+	return GP_OK;
+}
+
+static int
 _get_Sony_Capture(CONFIG_GET_ARGS) {
 	int val;
 
@@ -6368,6 +6493,258 @@ _put_Sony_Bulb(CONFIG_PUT_ARGS)
 	return GP_OK;
 }
 
+static int
+_put_Panasonic_Shutter(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	char *xval;
+	uint32_t val;
+	float f;
+
+	CR (gp_widget_get_value(widget, &xval));
+	if(xval[0] == 'b' || xval[0] == 'B') {
+		val = 0xFFFFFFFF;
+	} else if(xval[1] == '/') {
+		sscanf (xval, "1/%f", &f);
+		f *= 1000;
+		val = (uint32_t) f;
+	} else {
+		sscanf (xval, "%f", &f);
+		f *= 1000;
+		val = (uint32_t) f;
+		val |= 0x80000000;
+	}
+
+	//printf("setting shutterspeed to %lu (%s)\n", val, xval);
+
+	return ptp_panasonic_setdeviceproperty(params, 0x2000031, (unsigned char*)&val, 4);
+}
+
+static int
+_get_Panasonic_Shutter(CONFIG_GET_ARGS) {
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+
+	PTPParams *params = &(camera->pl->params);
+	ptp_panasonic_getdevicepropertydesc(params, 0x2000030, 4, &currentVal, &list, &listCount);
+
+	//printf("retrieved %lu property values\n", listCount);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	uint32_t i;
+	float f;
+	char buf[16];
+	for (i = 0; i < listCount; i++) {
+		if(currentVal == 0xFFFFFFFF) {
+			sprintf (buf, "bulb");
+		} else if(list[i] & 0x80000000) {
+			list[i] &= ~0x80000000;
+			f = (float) list[i];
+			f /= 1000;
+			if(list[i] % 1000 == 0) {
+				sprintf (buf, "%.0f", f);
+			} else {
+				sprintf (buf, "%.1f", f);
+			}
+		} else {
+			f = (float) list[i];
+			f /= 1000;
+			if(list[i] % 1000 == 0) {
+				sprintf (buf, "1/%.0f", f);
+			} else {
+				sprintf (buf, "1/%.1f", f);
+			}
+		}
+		gp_widget_add_choice (*widget, buf);
+	}
+
+	if(currentVal == 0) {
+		uint16_t valuesize;
+		ptp_panasonic_getdeviceproperty(params, 0x2000030, &valuesize, &currentVal);
+	}
+
+	if(currentVal == 0xFFFFFFFF) {
+		sprintf (buf, "bulb");
+	} else if(currentVal & 0x80000000) {
+		currentVal &= ~0x80000000;
+		f = (float) currentVal;
+		f /= 1000;
+		if(currentVal % 1000 == 0) {
+			sprintf (buf, "%.0f", f);
+		} else {
+			sprintf (buf, "%.1f", f);
+		}
+	} else {
+		f = (float) currentVal;
+		f /= 1000;
+		if(currentVal % 1000 == 0) {
+			sprintf (buf, "1/%.0f", f);
+		} else {
+			sprintf (buf, "1/%.1f", f);
+		}
+	}
+
+	gp_widget_set_value (*widget, &buf);
+
+	free(list);
+
+	return GP_OK;
+}
+
+static int
+_put_Panasonic_ISO(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	char *xval;
+	unsigned int ival;
+	uint32_t val;
+
+	CR (gp_widget_get_value(widget, &xval));
+	sscanf (xval, "%d", &ival);
+	val = ival;
+
+	//printf("setting ISO to %lu (%s)\n", val, xval);
+
+	return ptp_panasonic_setdeviceproperty(params, 0x2000021, (unsigned char*)&val, 4);
+}
+
+static int
+_get_Panasonic_ISO(CONFIG_GET_ARGS) {
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+
+	PTPParams *params = &(camera->pl->params);
+	ptp_panasonic_getdevicepropertydesc(params, 0x2000020, 4, &currentVal, &list, &listCount);
+
+	//printf("retrieved %lu property values\n", listCount);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	uint32_t i;
+	char buf[16];
+	for (i = 0; i < listCount; i++) {
+		sprintf (buf, "%d", (unsigned int)list[i]);
+		gp_widget_add_choice (*widget, buf);
+	}
+
+	sprintf (buf, "%d", (unsigned int)currentVal);
+	gp_widget_set_value (*widget, buf);
+
+	free(list);
+
+	return GP_OK;
+}
+
+static int
+_put_Panasonic_FNumber(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	char *xval;
+	uint32_t val;
+
+	CR (gp_widget_get_value(widget, &xval));
+	float f;
+	sscanf (xval, "%f", &f);
+	val = (uint32_t) (f*10);
+
+	//printf("setting ISO to %lu (%s)\n", val, xval);
+
+	return ptp_panasonic_setdeviceproperty(params, 0x2000041, (unsigned char*)&val, 2);
+}
+
+static int
+_get_Panasonic_FNumber(CONFIG_GET_ARGS) {
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+
+	PTPParams *params = &(camera->pl->params);
+	ptp_panasonic_getdevicepropertydesc(params, 0x2000040, 2, &currentVal, &list, &listCount);
+
+	//printf("retrieved %lu property values\n", listCount);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	uint32_t i;
+	float f;
+	char buf[16];
+	for (i = 0; i < listCount; i++) {
+		f = (float) list[i];
+		f /= 10.0;
+		if(list[i] % 10 == 0) {
+			sprintf (buf, "%.0f", f);
+		} else {
+			sprintf (buf, "%.1f", f);
+		}
+		gp_widget_add_choice (*widget, buf);
+	}
+
+	f = (float) currentVal;
+	f /= 10.0;
+	if(currentVal % 10 == 0) {
+		sprintf (buf, "%.0f", f);
+	} else {
+		sprintf (buf, "%.1f", f);
+	}
+
+	gp_widget_set_value (*widget, &buf);
+
+	free(list);
+
+	return GP_OK;
+}
+
+static int
+_put_Panasonic_ImageFormat(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	char *xval;
+	uint32_t val;
+	unsigned int uval;
+
+	CR (gp_widget_get_value(widget, &xval));
+
+	sscanf (xval, "%u", &uval);
+	val = uval;
+	//printf("setting ImageFormat to %lu (%s)\n", val, xval);
+
+	return ptp_panasonic_setdeviceproperty(params, 0x20000A2, (unsigned char*)&val, 2);
+}
+
+static int
+_get_Panasonic_ImageFormat(CONFIG_GET_ARGS) {
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+
+	PTPParams *params = &(camera->pl->params);
+	ptp_panasonic_getdevicepropertydesc(params, 0x20000A2, 2, &currentVal, &list, &listCount);
+
+	//printf("retrieved %lu property values\n", listCount);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	uint32_t i;
+	char buf[16];
+	for (i = 0; i < listCount; i++) {
+		sprintf (buf, "%u", (unsigned int)list[i]);
+		gp_widget_add_choice (*widget, buf);
+	}
+
+	sprintf (buf, "%u", (unsigned int)currentVal);
+	gp_widget_set_value (*widget, buf);
+
+	free(list);
+
+	return GP_OK;
+}
 
 static int
 _get_Canon_EOS_Bulb(CONFIG_GET_ARGS) {
@@ -7101,6 +7478,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
 	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_AutoFocus, PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Autofocus,            _put_Sony_Autofocus },
+	{ N_("Manual-Focus"),                   "manualfocus",      0xd2d2, PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_ManualFocus,            _put_Sony_ManualFocus },
 	{ N_("Capture"),                        "capture",          PTP_DPC_SONY_Capture,   PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Capture,              _put_Sony_Capture },
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
@@ -7115,9 +7493,11 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Set Nikon Control Mode"),         "controlmode",      0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_SetControlMode,        _get_Nikon_ControlMode,         _put_Nikon_ControlMode },
 	{ N_("Drive Canon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DriveLens,         _get_Canon_EOS_MFDrive,         _put_Canon_EOS_MFDrive },
 	{ N_("Cancel Canon DSLR Autofocus"),    "cancelautofocus",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_AfCancel,          _get_Canon_EOS_AFCancel,        _put_Canon_EOS_AFCancel },
+	{ N_("Drive Olympus OMD Manual focus"), "manualfocusdrive", 0,  PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_MFDrive,         _get_Olympus_OMD_MFDrive,       _put_Olympus_OMD_MFDrive },
 	{ N_("Canon EOS Zoom"),                 "eoszoom",          0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_Zoom,              _get_Canon_EOS_Zoom,            _put_Canon_EOS_Zoom },
 	{ N_("Canon EOS Zoom Position"),        "eoszoomposition",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_ZoomPosition,      _get_Canon_EOS_ZoomPosition,    _put_Canon_EOS_ZoomPosition },
 	{ N_("Canon EOS Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },
+	{ N_("Panasonic Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_PANASONIC, 0, 								_get_Panasonic_ViewFinder,      _put_Panasonic_ViewFinder },
 	{ N_("Nikon Viewfinder"),               "viewfinder",       0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartLiveView,         _get_Nikon_ViewFinder,          _put_Nikon_ViewFinder },
 	{ N_("Canon EOS Remote Release"),       "eosremoterelease", 0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_RemoteReleaseOn,   _get_Canon_EOS_RemoteRelease,   _put_Canon_EOS_RemoteRelease },
 	{ N_("CHDK Script"),                    "chdk_script",      0,  PTP_VENDOR_CANON,   PTP_OC_CHDK,                        _get_Canon_CHDK_Script,         _put_Canon_CHDK_Script },
@@ -7220,6 +7600,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format SD"),        "imageformatsd",        PTP_DPC_CANON_EOS_ImageFormatSD,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format CF"),        "imageformatcf",        PTP_DPC_CANON_EOS_ImageFormatCF,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_FUJI_Quality,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ImageFormat,          _put_Fuji_ImageFormat },
+	{ N_("Image Format"),           "imageformat",          0,					PTP_VENDOR_PANASONIC,PTP_DTC_UINT16, _get_Panasonic_ImageFormat,    _put_Panasonic_ImageFormat },
 	{ N_("Image Format Ext HD"),    "imageformatexthd",     PTP_DPC_CANON_EOS_ImageFormatExtHD,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_ImageSize,                      0,                  PTP_DTC_STR,    _get_ImageSize,                 _put_ImageSize },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_NIKON_1_ImageSize,              PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon1_ImageSize,          _put_Nikon1_ImageSize },
@@ -7231,6 +7612,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
+	{ N_("ISO Speed"),              "iso",             	0,         		    		PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,     _put_Panasonic_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_WhiteBalance,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_WhiteBalance,        _put_Canon_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_EOS_WhiteBalance,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_WhiteBalance,    _put_Canon_EOS_WhiteBalance },
@@ -7286,6 +7668,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Beep Mode"),                   "afbeep",                   PTP_DPC_NIKON_BeepOff,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_Sony_FNumber },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
+	{ N_("F-Number"),                  		"f-number",             	0,         		    					PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_FNumber,          _put_Panasonic_FNumber },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_CompressionSetting,            _put_Sony_CompressionSetting },
@@ -7328,6 +7711,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Capture Delay"),                  "capturedelay",             PTP_DPC_CaptureDelay,                   0,                  PTP_DTC_UINT32, _get_Milliseconds,                  _put_Milliseconds },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_ExposureTime,                   0,                  PTP_DTC_UINT32, _get_ExpTime,                       _put_ExpTime },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_ShutterSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
+	{ N_("Shutter Speed"),                  "shutterspeed",             0,						PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Shutter,         _put_Panasonic_Shutter },
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
 	{ N_("Shutter Speed 2"),                "shutterspeed2",            PTP_DPC_NIKON_ExposureTime,             PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Movie Shutter Speed 2"),          "movieshutterspeed",        PTP_DPC_NIKON_MovieShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
@@ -7946,7 +8330,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	return GP_OK;
-} 
+}
 
 int
 camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)

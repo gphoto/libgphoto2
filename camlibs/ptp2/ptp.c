@@ -863,6 +863,109 @@ ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned in
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
+uint16_t
+ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
+			unsigned char *value, uint16_t valuesize)
+{
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned char	*data;
+	uint32_t 	size = 4 + 4 + valuesize;
+
+	data = calloc(size, sizeof(unsigned char));
+
+	htod32a(data, propcode); /* memcpy(data, &propcode, 4); */
+	htod16a(&data[4], valuesize); /* memcpy(&data[4], &valuesize, 2); */
+
+	memcpy(&data[8], value, valuesize);	/* perhaps check if one of the DPV packagers work? */
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetProperty, propcode);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	free(data);
+	return ret;
+}
+
+uint16_t
+ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength)
+{
+	PTPContainer	ptp;
+	unsigned char	*data;
+	unsigned int 	size;
+	uint16_t	ret = 0;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data) return PTP_RC_GeneralError;
+
+
+	if (size < 4) return PTP_RC_GeneralError;
+	uint32_t headerLength 		= dtoh32a( (data) + 4 );
+	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
+	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
+	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
+
+	if(valuesize == 2) {
+		*currentValue 		= (uint32_t) dtoh16a( (data) + headerLength * 4 + 2 * 4 );
+	} else if(valuesize == 4) {
+		*currentValue 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 );
+	} else {
+		return PTP_RC_GeneralError;
+	}
+	if (size < headerLength * 4 + 2 * 4 + valuesize) return PTP_RC_GeneralError;
+	*propertyValueListLength 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 + valuesize);
+
+	//printf("header: %lu, code: %lu, value: %lu, count: %lu\n", headerLength, propertyCode, *currentValue, *propertyValueListLength);
+
+	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) return PTP_RC_GeneralError;
+
+	*propertyValueList = calloc(*propertyValueListLength, sizeof(uint32_t));
+
+	uint16_t i;
+	for(i = 0; i < *propertyValueListLength; i++) {
+		if(valuesize == 2) {
+			(*propertyValueList)[i] = (uint32_t) dtoh16a( (data) + headerLength * 4 + 3 * 4 + valuesize + i * valuesize);
+		} else if(valuesize == 4) {
+			(*propertyValueList)[i] = dtoh32a( (data) + headerLength * 4 + 3 * 4 + valuesize + i * valuesize);
+		}
+		//printf("Property: %lu\n", (*propertyValueList)[i]);
+	}
+
+	free (data);
+	return ret;
+}
+
+
+uint16_t
+ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue)
+{
+	PTPContainer	ptp;
+	unsigned char	*data;
+	unsigned int 	size;
+	uint16_t	ret = PTP_RC_OK;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetProperty, propcode);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data) return PTP_RC_GeneralError;
+
+	if(size < 8) return PTP_RC_GeneralError;
+	*valuesize = dtoh32a( (data + 4) );
+
+
+	if(size < 8 + (*valuesize)) return PTP_RC_GeneralError;
+	if(*valuesize == 4) {
+		*currentValue = dtoh32a( (data + 8) );
+	} else if(*valuesize == 2) {
+		*currentValue = (uint32_t) dtoh16a( (data + 8) );
+	} else {
+		return PTP_RC_GeneralError;
+	}
+	//printf("ptp_panasonic_getdeviceproperty: size: %lu, valuesize: %d, currentValue: %lu\n", size, *valuesize, *currentValue);
+
+	free (data);
+	return ret;
+}
+
+
 static uint16_t
 ptp_olympus_parse_output_xml(PTPParams* params, char*data, int len, xmlNodePtr *code)
 {
