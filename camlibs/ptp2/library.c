@@ -1461,6 +1461,9 @@ static struct {
 	/* Constantin B <klochto@gmail.com> */
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 
+	{"Panasonic:DC-GH5",		  0x04da, 0x2382, 0},
+
+
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
 	{"Leica:D-LUX 2",		  0x04da, 0x2375, 0},
 	/* Graham White <g.graham.white@gmail.com> */
