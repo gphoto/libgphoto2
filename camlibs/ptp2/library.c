@@ -350,6 +350,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_FUJI;
 	}
 
+	if (    di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") && !strncmp(di->Model,"E-M",3)  ) {
+		GP_LOG_D ("Setting Olympus VendorExtensionID to PTP_VENDOR_GP_OLYMPUS_OMD");
+		di->VendorExtensionID = PTP_VENDOR_GP_OLYMPUS_OMD;
+	}
+
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
 		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 5)));
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
@@ -359,6 +364,22 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+4] = 0xd21c;	/* Needed for X-T2? */
 		di->DevicePropertiesSupported_len += 5;
 	}
+
+	/* Panasonic GH5 */
+	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_product == 0x2382)
+	) {
+		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
+		di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_PANASONIC_GetProperty;
+		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
+		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
+		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
+		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_Liveview;
+		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_LiveviewImage;
+		di->OperationsSupported_len += 6;
+	}
+
 	/* Nikon DSLR hide its newer opcodes behind another vendor specific query,
 	 * do that and merge it into the generic PTP deviceinfo. */
 	if (di->VendorExtensionID == PTP_VENDOR_NIKON) {
