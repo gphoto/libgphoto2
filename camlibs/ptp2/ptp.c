@@ -845,6 +845,27 @@ parse_9301_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 }
 
 uint16_t
+ptp_olympus_omd_capture (PTPParams* params)
+{
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned int	size = 0;
+	unsigned char	*buffer = NULL;
+
+	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x3); // initiate capture
+	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x6); // initiate capture
+	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+
+	usleep(500);
+
+	PTP_CNT_INIT(ptp, 0x9486); // initiate capture
+	ret =  ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &buffer, &size);
+	free (buffer);
+	return ret;
+}
+
+uint16_t
 ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer    ptp;
