@@ -979,6 +979,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/70 */
 	{"Sony:Alpha-A6300 (Control)",0x054c, 0x079c, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Elijah Parker <mail@timelapseplus.com> */
+	{"Sony:Alpha-A99 M2 (Control)", 0x054c, 0x079e, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Anja Stock at SUSE */
 	{"Sony:DSC-RX10M3 (Control)",  	0x054c, 0x079d, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1016,6 +1019,9 @@ static struct {
 	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
 	{"Sony:Alpha-A7S (Control)",    0x054c, 0x0954, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Elijah Parker, mail@timelapseplus.com */
+	{"Sony:Alpha-A7III (Control)",  0x054c, 0x0994, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://sourceforge.net/p/gphoto/feature-requests/472/ */
 	{"Sony:DSC-HX90V (MTP)",        0x054c, 0x09e8, 0},
 
@@ -1036,6 +1042,12 @@ static struct {
 
 	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	{"Sony:Alpha-A7R III (MTP mode)",0x054c,0x0c00, 0},
+
+	/* Elijah Parker, mail@timelapseplus.com */
+	{"Sony:Alpha-A9 (Control)",     0x054c, 0x0c2a, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* https://github.com/gphoto/libgphoto2/issues/230 */
+	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:Alpha-A7R III (Control)", 0x054c,0x0c33, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
