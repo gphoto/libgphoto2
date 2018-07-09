@@ -4354,6 +4354,210 @@ downloadfile:
 }
 
 static int
+camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams	*params = &camera->pl->params;
+	PTPContainer	event;
+	uint32_t	newobject = 0;
+	struct timeval	event_start;
+	int		back_off_wait = 0;
+
+	//C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
+
+	//GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
+	//GP_LOG_D ("dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+
+	//if (dpd.CurrentValue.u8 == 0)
+	//	dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
+	//if (dpd.CurrentValue.u8 == 0x13) {
+	//	GP_LOG_D ("expecting raw+jpeg capture");
+	//}
+
+	uint32_t currentVal;
+	uint16_t valuesize;
+	uint32_t waitMS = 1000;
+
+	ptp_panasonic_getdeviceproperty(params, 0x2000030, &valuesize, &currentVal);
+
+	float f;
+	if(currentVal == 0xFFFFFFFF) {
+		waitMS = 1000;
+	} else if(currentVal & 0x80000000) {
+		currentVal &= ~0x80000000;
+		f = (float) currentVal;
+		waitMS = (uint32_t)f + 1000;
+	} else {
+		waitMS = 1000;
+	}
+
+
+	// clear out old events
+	GP_LOG_D ("**** GH5: checking old events...");
+	C_PTP_REP (ptp_check_event (params));
+	GP_LOG_D ("**** GH5: draining old events...");
+	while (ptp_get_one_event(params, &event));
+
+	GP_LOG_D ("**** GH5: trigger capture...");
+	C_PTP_REP (ptp_panasonic_capture(params));
+
+	usleep(waitMS * 1000);
+
+	event_start = time_now();
+
+	do {
+		GP_LOG_D ("**** GH5: checking for new object...");
+		C_PTP_REP (ptp_check_event (params));
+
+		while (ptp_get_one_event(params, &event)) {
+			switch (event.Code) {
+			case 0xC101:
+			case 0xC107:
+				//event_start = time_now(); // still working...
+				break;
+			case 0xC108:
+				newobject = event.Param1;
+				if((newobject & 0x18000000) == 0x18000000) goto downloadfile; // sometimes an object starting with 0x11 is reported, but we need to wait for another
+				// might be a new folder ...
+				break;
+			default:
+				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+				break;
+			}
+		}
+	}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 66 seconds after busy is no longer signaled */
+
+	downloadfile:
+
+	usleep(50000); // it seems there can be an error if the object is accessed too soon
+
+	path->name[0]='\0';
+	path->folder[0]='\0';
+
+	if (newobject != 0) {
+		PTPObject	*ob;
+
+		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
+		strcpy  (path->name,  ob->oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+
+		CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
+
+		/* we also get the fs info for free, so just set it */
+		CameraFileInfo info;
+		info.file.fields = GP_FILE_INFO_TYPE |
+				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+		strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
+		info.file.width		= ob->oi.ImagePixWidth;
+		info.file.height	= ob->oi.ImagePixHeight;
+		info.file.size		= ob->oi.ObjectCompressedSize;
+		info.file.mtime		= time(NULL);
+
+		info.preview.fields = GP_FILE_INFO_TYPE |
+				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+				GP_FILE_INFO_SIZE;
+		strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
+		info.preview.width	= ob->oi.ThumbPixWidth;
+		info.preview.height	= ob->oi.ThumbPixHeight;
+		info.preview.size	= ob->oi.ThumbCompressedSize;
+		GP_LOG_D ("setting fileinfo in fs");
+		return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+	}
+	return GP_ERROR;
+}
+
+static int
+camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams	*params = &camera->pl->params;
+	PTPContainer	event;
+	uint32_t	newobject = 0;
+	struct timeval	event_start;
+	int		back_off_wait = 0;
+
+	// clear out old events
+	//C_PTP_REP (ptp_check_event (params));
+	//while (ptp_get_one_event(params, &event));
+
+	C_PTP_REP (ptp_olympus_omd_capture(params));
+
+	usleep(100);
+
+	event_start = time_now();
+
+	do {
+		C_PTP_REP (ptp_check_event (params));
+
+		while (ptp_get_one_event(params, &event)) {
+			switch (event.Code) {
+			case 0xc002:
+			case PTP_EC_ObjectAdded:
+				newobject = event.Param1;
+				goto downloadfile;
+			default:
+				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+				break;
+			}
+		}
+	}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 0.5 seconds after busy is no longer signaled */
+
+	//do {
+	//	C_PTP_REP (ptp_olympus_omd_check_new_objects(params, &objects, &length));
+	//	if(length > 0) {
+	//		newobject = objects[0];
+	//		free(*objects);
+	//		break;
+	//	}
+	//}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 66 seconds after busy is no longer signaled */
+
+	downloadfile:
+
+	path->name[0]='\0';
+	path->folder[0]='\0';
+
+	if (newobject != 0) {
+		PTPObject	*ob;
+
+		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
+		strcpy  (path->name,  ob->oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+
+		CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
+
+		/* we also get the fs info for free, so just set it */
+		CameraFileInfo info;
+		info.file.fields = GP_FILE_INFO_TYPE |
+				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+		strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
+		info.file.width		= ob->oi.ImagePixWidth;
+		info.file.height	= ob->oi.ImagePixHeight;
+		info.file.size		= ob->oi.ObjectCompressedSize;
+		info.file.mtime		= time(NULL);
+
+		info.preview.fields = GP_FILE_INFO_TYPE |
+				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+				GP_FILE_INFO_SIZE;
+		strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
+		info.preview.width	= ob->oi.ThumbPixWidth;
+		info.preview.height	= ob->oi.ThumbPixHeight;
+		info.preview.size	= ob->oi.ThumbCompressedSize;
+		GP_LOG_D ("setting fileinfo in fs");
+		return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+	}
+	return GP_ERROR;
+}
+
+
+static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
@@ -4413,6 +4617,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		/* for CARD capture and unsupported combinations, fall through */
 	}
 
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD)
+		return camera_olympus_omd_capture (camera, type, path, context);
+
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
 		return camera_olympus_xml_capture (camera, type, path, context);
 
@@ -4440,6 +4647,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
 	) {
 		return camera_fuji_capture (camera, type, path, context);
+	}
+
+	if (    (params->deviceinfo.VendorExtensionID == PTP_VENDOR_PANASONIC) &&
+		ptp_operation_issupported(params, PTP_OC_PANASONIC_InitiateCapture)
+	) {
+		return camera_panasonic_capture (camera, type, path, context);
 	}
 
 
