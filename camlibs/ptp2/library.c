@@ -2149,7 +2149,7 @@ static struct {
 	/* with new updated firmware 4.0, https://github.com/gphoto/libgphoto2/issues/220 */
 	{"Fuji:Fujifilm X-Pro2",		0x04cb, 0x02cb, PTP_CAP},
 	/* with new updated firmware 1.1 */
-	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, PTP_CAP},
+	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
 	{"Fuji:Fujifilm X100F",			0x04cb, 0x02d1, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/133 */
@@ -3036,19 +3036,35 @@ enable_liveview:
 		PTPObjectInfo	oi;
 		uint32_t	preview_object = 0x80000001; /* this is where the liveview image is accessed */
 		unsigned char	*ximage = NULL;
-		int		tries = 20;
+		int		tries = 10;
 
-		ret = ptp_getobjectinfo (params, preview_object, &oi);
+		while (tries--) {
+			ret = ptp_getobjectinfo (params, preview_object, &oi);
+			if (ret == PTP_RC_OK) break;
+			if (ret == PTP_RC_InvalidObjectHandle) {
+				usleep(1000);
+				continue;
+			}
+			C_PTP_REP (ret);
+		}
 
 		if(ret != PTP_RC_OK) {
 			C_PTP_REP(ptp_initiateopencapture(params, 0x00000000, 0x00000000));
+			params->opencapture_transid = params->transaction_id-1;
+			params->inliveview = 1;
 			usleep(100000);
 		}
 
+		tries = 20;
 		do {
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
 				break;
+			if(ret == PTP_RC_DeviceBusy) {
+				usleep(1000);
+				continue;
+			}
+
 			if (ret != PTP_RC_AccessDenied) /* we get those when we are too fast */ /* priobably pasted from nikon, check? */
 				C_PTP (ret);
 		} while (tries--);
@@ -4211,6 +4227,10 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 #endif
 
 	GP_LOG_D ("camera_fuji_capture");
+	if (params->inliveview) {
+		params->inliveview = 0;
+		C_PTP (ptp_terminateopencapture (params,params->opencapture_transid));
+	}
 
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
 
