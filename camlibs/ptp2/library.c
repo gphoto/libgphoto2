@@ -4219,8 +4219,25 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
 	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
+	/* poll camera until it is ready */
+	propval.u16 = 0x0001;
+	while (propval.u16 == 0x0001) {
+		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
+		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
+	}
+	/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
+	if (propval.u16 == 3) { /* reported on out of focus */
+		gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+		return GP_ERROR;
+	}
+
+	/* shoot */
+	propval.u16 = 0x0304;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
 	/* debug code currently. not working as-is */
-	if (0) {
+	if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"X-T1")) { // X-T1 needs this
 		/* poll camera until it is ready */        
 		propval.u16 = 0x0000;
 		int loops = 0, i;
@@ -4244,25 +4261,22 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		}
 	}
 
-	/* poll camera until it is ready */
-	propval.u16 = 0x0001;
-	while (propval.u16 == 0x0001) {
-		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
-		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
-	}
-
-	/* shoot */
-	propval.u16 = 0x0304;
-	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
-	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
 	/* poll camera until it is ready */
-	propval.u16 = 0x0000;
-	while (propval.u16 == 0x0000) {
-		C_PTP_REP (ptp_getdevicepropvalue (params, 0xd212, &propval, PTP_DTC_UINT64));
-		GP_LOG_D ("XXX Ready after shooting? %lx", propval.u64);
+	do {
+		uint16_t ret, count = 0;
+		uint16_t *events = NULL;
+
+		ret = ptp_fuji_getevents (params, &events, &count);
+		if (ret != PTP_RC_OK)  {
+			GP_LOG_D ("XXX d212 property did not work, error 0x%04x, bypassing.", ret);
+			break;
+		}
+		GP_LOG_D ("XXX Ready after shooting? count = %d", count);
+		free (events);
 		C_PTP_REP (ptp_check_event (params));
-	}
+		if (count) break;
+	} while (1);
 
 #if 0
 	/* FIXME: Marcus ... I need to review this when I get hands on a camera ... the objecthandles loop needs to go */
@@ -4273,12 +4287,12 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 		while (ptp_get_one_event(params, &event)) {
 			switch (event.Code) {
-			case PTP_EC_ObjectAdded:
-				newobject = event.Param1;
-				goto downloadfile;
-			default:
-				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
-				break;
+				case PTP_EC_ObjectAdded:
+					newobject = event.Param1;
+					goto downloadfile;
+				default:
+					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+					break;
 			}
 		}
 	}  while (waiting_for_timeout (&back_off_wait, event_start, 500)); /* wait for 0.5 seconds after busy is no longer signaled */
@@ -4286,7 +4300,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* If we got no event seconds duplicate the nikon broken capture, as we do not know how to get events yet */
 #endif
 
-	tries = 5;
+	tries = 35;
 	GP_LOG_D ("XXXX missing fuji objectadded events workaround");
 	while (tries--) {
 		unsigned int i;
