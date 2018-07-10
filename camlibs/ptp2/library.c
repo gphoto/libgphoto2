@@ -375,8 +375,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
 		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
 		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
-		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_Liveview;
-		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_LiveviewImage;
+		di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_PANASONIC_Liveview;
+		di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
 		di->OperationsSupported_len += 6;
 	}
 
