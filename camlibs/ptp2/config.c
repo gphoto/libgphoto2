@@ -589,6 +589,11 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 			PTPPropertyValue propval;
 			PTPParams *params = &camera->pl->params;
 
+			if (params->inliveview) {
+				C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
+				params->inliveview = 0;
+			}
+
 			propval.u16 = 0x0001;
 			C_PTP (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
 			return GP_OK;

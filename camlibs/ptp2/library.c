@@ -2147,7 +2147,7 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/32 */
 	{"Fuji:Fujifilm X-T10",			0x04cb, 0x02c8, 0},
 	/* with new updated firmware 4.0, https://github.com/gphoto/libgphoto2/issues/220 */
-	{"Fuji:Fujifilm X-Pro2",		0x04cb, 0x02cb, PTP_CAP},
+	{"Fuji:Fujifilm X-Pro2",		0x04cb, 0x02cb, PTP_CAP|PTP_CAP_PREVIEW},
 	/* with new updated firmware 1.1 */
 	{"Fuji:Fujifilm X-T2",			0x04cb, 0x02cd, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
@@ -2157,7 +2157,7 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/170 */
 	{"Fuji:Fujifilm X-T20",			0x04cb, 0x02d4, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
-	{"Fuji:Fujifilm X-H1",			0x04cb, 0x02d7, PTP_CAP},
+	{"Fuji:Fujifilm X-H1",			0x04cb, 0x02d7, PTP_CAP|PTP_CAP_PREVIEW},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
