@@ -2120,6 +2120,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
 #define PTP_DPC_FUJI_FocusAreas				0xD206
 #define PTP_DPC_FUJI_AELock				0xD213
+#define PTP_DPC_FUJI_Copyright				0xD215
 #define PTP_DPC_FUJI_Aperture				0xD218
 #define PTP_DPC_FUJI_ShutterSpeed			0xD219
 
