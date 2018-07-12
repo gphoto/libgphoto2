@@ -2141,7 +2141,7 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/281 */
 	{"Fuji:Fujifilm X70",			0x04cb, 0x02ba, 0},
 	/* Vladimir K <enewsletters@inbox.ru>, https://github.com/gphoto/libgphoto2/issues/283 */
-	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, PTP_CAP},
+	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/281 */
 	{"Fuji:Fujifilm X30",			0x04cb, 0x02c1, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/32 */
