@@ -4295,6 +4295,11 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	tries = 35;
 	GP_LOG_D ("XXXX missing fuji objectadded events workaround");
+
+	/* clear path, so we get defined results even without object info */
+	path->name[0]='\0';
+	path->folder[0]='\0';
+
 	while (tries--) {
 		unsigned int i;
 		uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
@@ -4328,37 +4333,38 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				GP_LOG_D ("new object 0x%08x is a directory, continuing", handles.Handler[i]);
 				continue;
 			}
+			if (newobject) {
+				/* we already got one image ... means a secondary image in RAW+JPG. Push this to the event queue. */
+				event.Code = PTP_EC_ObjectAdded;
+				event.Param1 = newobject;
+				ptp_add_event (params, &event);
+			}
 			newobject = handles.Handler[i];
 			GP_LOG_D ("newobject 0x%08x, newobject2 0x%08x", newobject, newobject2);
 			/* we found a new file */
-			break;
+			strcpy  (path->name,  ob->oi.Filename);
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+			get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+			/* delete last / or we get confused later. */
+			path->folder[ strlen(path->folder)-1 ] = '\0';
+			add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
+			/* we need to proceed to download all images, in cases of RAW+JPG capture */
 		}
+
 		free (handles.Handler);
+		C_PTP_REP (ptp_check_event (params));
 		if (newobject)
 			break;
-		C_PTP_REP (ptp_check_event (params));
 		usleep(1000*1000); /* wait 1 second for image to appear */
 	}
 	free (beforehandles.Handler);
-	if (!newobject)
+
+	if (!newobject) {
 		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
-
-	/* clear path, so we get defined results even without object info */
-	path->name[0]='\0';
-	path->folder[0]='\0';
-
-	if (newobject != 0) {
-		PTPObject	*ob;
-
-		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-		strcpy  (path->name,  ob->oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
-		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
+		return GP_ERROR;
 	}
-	return GP_ERROR;
+
+	return GP_OK;
 }
 
 static int
@@ -7625,6 +7631,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	/* virtual file created by Nikon special capture */
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) ||
+		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) ||
 		 (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)) &&
 		!strncmp (filename, "capt", 4)
@@ -7642,7 +7649,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	find_folder_handle(params, folder, storage, oid);
 	oid = find_child(params, filename, storage, oid, NULL);
 
-	C_PTP_REP (ptp_deleteobject(params, oid, 0));
+	/* in some cases we return errors ... just ignore them for now */ 
+	LOG_ON_PTP_E (ptp_deleteobject(params, oid, 0));
 
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
