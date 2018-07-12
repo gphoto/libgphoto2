@@ -1473,7 +1473,7 @@ static struct {
 	/* Constantin B <klochto@gmail.com> */
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 
-	{"Panasonic:DC-GH5",		  0x04da, 0x2382, 0},
+	{"Panasonic:DC-GH5",		  0x04da, 0x2382, PTP_CAP|PTP_CAP_PREVIEW},
 
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
@@ -3049,7 +3049,7 @@ enable_liveview:
 		}
 
 		if(ret != PTP_RC_OK) {
-			tries = 100;
+			tries = 5;
 			while (tries--) {
 				ret = ptp_initiateopencapture(params, 0x00000000, 0x00000000);
 				if (ret == PTP_RC_OK) {
