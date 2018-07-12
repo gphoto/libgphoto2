@@ -3049,10 +3049,17 @@ enable_liveview:
 		}
 
 		if(ret != PTP_RC_OK) {
-			C_PTP_REP(ptp_initiateopencapture(params, 0x00000000, 0x00000000));
-			params->opencapture_transid = params->transaction_id-1;
-			params->inliveview = 1;
-			usleep(100000);
+			tries = 100;
+			while (tries--) {
+				ret = ptp_initiateopencapture(params, 0x00000000, 0x00000000);
+				if (ret == PTP_RC_OK) {
+					params->opencapture_transid = params->transaction_id-1;
+					params->inliveview = 1;
+					usleep(100*1000); /* this basically waits until the first object is there. */
+					break;
+				}
+				usleep(200*1000);
+			}
 		}
 
 		tries = 20;
@@ -3070,38 +3077,9 @@ enable_liveview:
 		} while (tries--);
 		C_PTP_REP (ptp_deleteobject(params, preview_object, 0));
 
-		/* look for the JPEG SOI marker (0xFFD8) in data */
-		jpgStartPtr = (unsigned char*)memchr(ximage, 0xff, size);
-		while(jpgStartPtr && ((jpgStartPtr+1) < (ximage + size))) {
-			if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
-				break;
-			} else { /* go on looking (starting at next byte) */
-				jpgStartPtr++;
-				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
-			}
-		}
-		if(!jpgStartPtr) { /* no SOI -> no JPEG */
-			gp_context_error (context, _("Sorry, your Fuji camera does not seem to return a JPEG image in LiveView mode"));
-			return GP_ERROR;
-		}
-		/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
-		   (just to be sure we will not go beyond the end of the data array) */
-		jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, ximage+size-jpgStartPtr-1);
-		while(jpgEndPtr && ((jpgEndPtr+1) < (ximage + size))) {
-			if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
-				jpgEndPtr += 2;
-				break;
-			} else { /* go on looking (starting at next byte) */
-				jpgEndPtr++;
-				jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, ximage + size - jpgEndPtr);
-			}
-		}
-		if(!jpgEndPtr) { /* no EOI -> no JPEG */
-			gp_context_error (context, _("Sorry, your Fuji camera does not seem to return a JPEG image in LiveView mode"));
-			return GP_ERROR;
-		}
-		gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
-		free (ximage); /* FIXME: perhaps handle the 128 byte header data too. */
+		/* Fuji Liveview returns FF D8 ... FF D9 ... so no meta data wrapped around the jpeg data */
+		gp_file_append (file, (char*)ximage, size);
+		free (ximage);
 
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
 		gp_file_set_name (file, "sony_preview.jpg");
@@ -4219,15 +4197,12 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPPropertyValue	propval;
 	PTPObjectHandles	handles, beforehandles;
 	int			tries;
-	uint32_t		newobject;
-#if 0
+	uint32_t		newobject = 0, newobject2 = 0;
 	PTPContainer		event;
-	struct timeval		event_start;
-	int			back_off_wait = 0;
-#endif
 
 	GP_LOG_D ("camera_fuji_capture");
 	if (params->inliveview) {
+		GP_LOG_D ("terminating running liveview");
 		params->inliveview = 0;
 		C_PTP (ptp_terminateopencapture (params,params->opencapture_transid));
 	}
@@ -4298,27 +4273,25 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		if (count) break;
 	} while (1);
 
-#if 0
 	/* FIXME: Marcus ... I need to review this when I get hands on a camera ... the objecthandles loop needs to go */
 	/* Reporter in https://github.com/gphoto/libgphoto2/issues/133 says only 1 event ever is sent, so this does not work */
 	/* there is a ObjectAdded event being sent */
-	do {
-		C_PTP_REP (ptp_check_event (params));
 
-		while (ptp_get_one_event(params, &event)) {
-			switch (event.Code) {
-				case PTP_EC_ObjectAdded:
-					newobject = event.Param1;
-					goto downloadfile;
-				default:
-					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
-					break;
-			}
+	/* Marcus: X-Pro2 in current setup also sends just 1 event for the first capture, then none. 
+	 * We might be missing something after capture.
+	 * But we need to drain the event queue, otherwise wait_event will see this ObjectAdded event again. */
+	C_PTP_REP (ptp_check_event (params));
+
+	while (ptp_get_one_event(params, &event)) {
+		switch (event.Code) {
+			case PTP_EC_ObjectAdded:
+				newobject2 = event.Param1;
+			default:
+				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+				break;
 		}
-	}  while (waiting_for_timeout (&back_off_wait, event_start, 500)); /* wait for 0.5 seconds after busy is no longer signaled */
-
+	}
 	/* If we got no event seconds duplicate the nikon broken capture, as we do not know how to get events yet */
-#endif
 
 	tries = 35;
 	GP_LOG_D ("XXXX missing fuji objectadded events workaround");
@@ -4343,6 +4316,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 					break;
 			if (j != beforehandles.n)
 				continue;
+			GP_LOG_D ("new object 0x%08x found", handles.Handler[i]);
 
 			ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			if (ret != PTP_RC_OK) {
@@ -4350,9 +4324,12 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				continue;
 			}
 			/* A directory was added, like initial DCIM/100NIKON or so. */
-			if (ob->oi.ObjectFormat == PTP_OFC_Association)
+			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
+				GP_LOG_D ("new object 0x%08x is a directory, continuing", handles.Handler[i]);
 				continue;
+			}
 			newobject = handles.Handler[i];
+			GP_LOG_D ("newobject 0x%08x, newobject2 0x%08x", newobject, newobject2);
 			/* we found a new file */
 			break;
 		}
@@ -4360,15 +4337,12 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		if (newobject)
 			break;
 		C_PTP_REP (ptp_check_event (params));
-		sleep(1);
+		usleep(1000*1000); /* wait 1 second for image to appear */
 	}
 	free (beforehandles.Handler);
 	if (!newobject)
 		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
 
-#if 0
-downloadfile:
-#endif
 	/* clear path, so we get defined results even without object info */
 	path->name[0]='\0';
 	path->folder[0]='\0';
@@ -8005,10 +7979,14 @@ storage_info_func (CameraFilesystem *fs,
 			sif->fstype = GP_STORAGEINFO_FST_DCF;
 			break;
 		}
-		sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
-		sif->capacitykbytes = si.MaxCapability / 1024;
-		sif->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
-		sif->freekbytes = si.FreeSpaceInBytes / 1024;
+		if (si.MaxCapability != -1) {
+			sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
+			sif->capacitykbytes = si.MaxCapability / 1024;
+		}
+		if (si.FreeSpaceInBytes != -1) {
+			sif->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
+			sif->freekbytes = si.FreeSpaceInBytes / 1024;
+		}
 		if (si.FreeSpaceInImages != -1) {
 			sif->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
 			sif->freeimages = si.FreeSpaceInImages;
