@@ -922,7 +922,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	if (size < 4) return PTP_RC_GeneralError;
 	uint32_t headerLength 		= dtoh32a( (data) + 4 );
 	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
-	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
+	/* uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 ); */
 	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
 
 	if(valuesize == 2) {
