@@ -1540,6 +1540,7 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
 	{ N_("Color Temperature"),	0x8012, PTP_VENDOR_NIKON },
 	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
+	{ N_("Natural light auto"),	0x8016, PTP_VENDOR_NIKON },
 
 	{ N_("Fluorescent Lamp 1"),	0x8001, PTP_VENDOR_FUJI },
 	{ N_("Fluorescent Lamp 2"),	0x8002, PTP_VENDOR_FUJI },
@@ -8243,6 +8244,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash White Balance Bias"),       "flashwhitebias",           PTP_DPC_NIKON_WhiteBalanceFlashBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,                 _put_Nikon_UWBBias },
 	{ N_("Cloudy White Balance Bias"),      "cloudywhitebias",          PTP_DPC_NIKON_WhiteBalanceCloudyBias,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,                 _put_Nikon_UWBBias },
 	{ N_("Shady White Balance Bias"),       "shadewhitebias",           PTP_DPC_NIKON_WhiteBalanceShadeBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,                 _put_Nikon_UWBBias },
+	{ N_("Natural light auto White Balance Bias"),	"naturallightautowhitebias",	PTP_DPC_NIKON_WhiteBalanceNaturalLightAutoBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,	_put_Nikon_UWBBias },
 	/* older Nikons have INT8 ranges */
 	{ N_("Auto White Balance Bias"),        "autowhitebias",            PTP_DPC_NIKON_WhiteBalanceAutoBias,     PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_WBBias,                  _put_Nikon_WBBias },
 	{ N_("Tungsten White Balance Bias"),    "tungstenwhitebias",        PTP_DPC_NIKON_WhiteBalanceTungstenBias, PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_WBBias,                  _put_Nikon_WBBias },

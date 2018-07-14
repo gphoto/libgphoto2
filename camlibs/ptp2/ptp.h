@@ -2064,6 +2064,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_TunePreset2			0xD153
 #define PTP_DPC_NIKON_TunePreset3			0xD154
 #define PTP_DPC_NIKON_TunePreset4			0xD155
+#define PTP_DPC_NIKON_WhiteBalanceNaturalLightAutoBias	0xD15E /* Only encountered in D850? */
 #define PTP_DPC_NIKON_BeepOff				0xD160
 #define PTP_DPC_NIKON_AutofocusMode			0xD161
 #define PTP_DPC_NIKON_AFAssist				0xD163
