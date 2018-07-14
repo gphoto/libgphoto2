@@ -5167,6 +5167,16 @@ static struct deviceproptableu8 nikon_d90_activedlighting[] = {
 };
 GENERIC8TABLE(Nikon_D90_ActiveDLighting,nikon_d90_activedlighting)
 
+static struct deviceproptableu8 nikon_d850_activedlighting[] = {
+	{ N_("Auto"), 		0x00,   0 },
+	{ N_("Off"),       	0x01,   0 },
+	{ N_("Low"),     	0x02,   0 },
+	{ N_("Normal"),     0x03,   0 },
+	{ N_("High"),       0x04,   0 },
+	{ N_("Extra high"), 0x05,   0 },
+};
+GENERIC8TABLE(Nikon_D850_ActiveDLighting,nikon_d850_activedlighting)
+
 static struct deviceproptableu8 nikon_1_compression[] = {
 	{ N_("JPEG Normal"),	0x00, PTP_VENDOR_NIKON },
 	{ N_("JPEG Fine"),	0x01, PTP_VENDOR_NIKON },
@@ -8323,6 +8333,8 @@ static struct submenu nikon_d40_capture_settings[] = {
 
 static struct submenu nikon_d850_capture_settings[] = {
 	{ N_("Image Quality"),          "imagequality",         PTP_DPC_CompressionSetting,         PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,         _put_Nikon_D850_Compression },
+	{ N_("Image Rotation Flag"),            "imagerotationflag",        PTP_DPC_NIKON_ImageRotation,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
+	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,         _put_Nikon_D850_ActiveDLighting },
 	{ 0,0,0,0,0,0,0 },
 };
 
