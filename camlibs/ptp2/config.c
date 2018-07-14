@@ -3556,6 +3556,17 @@ static struct deviceproptableu16 nikon_d7100_focus_metering[] = {
 };
 GENERIC16TABLE(Nikon_D7100_FocusMetering,nikon_d7100_focus_metering)
 
+static struct deviceproptableu16 nikon_d850_focus_metering[] = {
+	{ N_("Dynamic-area AF (25 points)"),0x0002, PTP_VENDOR_NIKON},
+	{ N_("Single-point AF"),0x8010, PTP_VENDOR_NIKON},
+	{ N_("Auto-area AF"),	0x8011, PTP_VENDOR_NIKON},
+	{ N_("3D-tracking"),	0x8012, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (72 points)"),0x8013, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (153 points)"),	0x8014, PTP_VENDOR_NIKON},
+	{ N_("Group-area AF"),	0x8015, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (9 points)"),	0x8016, PTP_VENDOR_NIKON},	
+};
+GENERIC16TABLE(Nikon_D850_FocusMetering,nikon_d850_focus_metering)
 
 static struct deviceproptableu8 nikon_colormodel[] = {
 	{ N_("sRGB (portrait)"),0x00, 0 },
@@ -8380,6 +8391,7 @@ static struct submenu nikon_d850_capture_settings[] = {
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
 	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },	
 	{ N_("Center Weight Area"),             "centerweightsize",     PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_CenterWeight,      _put_Nikon_D850_CenterWeight },
+	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,		PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_FocusMetering },
 	{ 0,0,0,0,0,0,0 },
 };
 
