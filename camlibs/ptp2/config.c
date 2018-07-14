@@ -4935,6 +4935,26 @@ static struct deviceproptableu8 nikon_moviequality[] = {
 };
 GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality);
 
+static struct deviceproptableu8 nikon_d850_moviequality[] = {
+ 	{"3840x2160; 30p",	0, 0},
+	{"3840x2160; 25p",	1, 0},
+	{"3840x2160; 24p",	2, 0},
+	
+ 	{"1920x1080; 60p",	3, 0},
+	{"1920x1080; 50p",	4, 0},
+	{"1920x1080; 30p",	5, 0},
+	{"1920x1080; 25p",	6, 0},
+	{"1920x1080; 24p",	7, 0},
+	
+	{"1280x720; 60p",	8, 0},
+	{"1280x720; 50p",	9, 0},
+	
+	{"1920x1080; 30p x4 (slow-mo)", 10, 0},
+	{"1920x1080; 25p x4 (slow-mo)",	11, 0},
+	{"1920x1080; 24p x5 (slow-mo)",	12, 0},
+};
+GENERIC8TABLE(Nikon_D850_MovieQuality, nikon_d850_moviequality);
+
 static struct deviceproptableu8 nikon_d5100_moviequality[] = {
 	{"640x424; 25fps; normal",		0, 0},
 	{"640x424; 25fps; high quality",	1, 0},
@@ -8344,10 +8364,11 @@ static struct submenu nikon_d40_capture_settings[] = {
 };
 
 static struct submenu nikon_d850_capture_settings[] = {
-	{ N_("Image Quality"),          "imagequality",         PTP_DPC_CompressionSetting,         PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,         _put_Nikon_D850_Compression },
-	{ N_("Image Rotation Flag"),            "imagerotationflag",        PTP_DPC_NIKON_ImageRotation,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
-	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,         _put_Nikon_D850_ActiveDLighting },
+	{ N_("Image Quality"),          		"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
+	{ N_("Image Rotation Flag"),            "imagerotationflag",    PTP_DPC_NIKON_ImageRotation,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,            _put_Nikon_OffOn_UINT8 },
+	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,   _put_Nikon_D850_ActiveDLighting },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
+	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },	
 	{ 0,0,0,0,0,0,0 },
 };
 
