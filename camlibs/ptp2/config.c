@@ -5457,6 +5457,18 @@ static struct deviceproptableu8 nikon_d3s_shootingspeed[] = {
 };
 GENERIC8TABLE(Nikon_D3s_ShootingSpeed,nikon_d3s_shootingspeed)
 
+static struct deviceproptableu8 nikon_d850_shootingspeed[] = {
+	{ N_("8 fps"),	0x01, 0 },
+	{ N_("7 fps"),	0x02, 0 },
+	{ N_("6 fps"),	0x03, 0 },
+	{ N_("5 fps"),	0x04, 0 },
+	{ N_("4 fps"),	0x05, 0 },
+	{ N_("3 fps"),	0x06, 0 },
+	{ N_("2 fps"),	0x07, 0 },
+	{ N_("1 fps"),	0x08, 0 },
+};
+GENERIC8TABLE(Nikon_D850_ShootingSpeed,nikon_d850_shootingspeed)
+
 static struct deviceproptableu8 nikon_d3s_shootingspeedhigh[] = {
 	{ N_("11 fps"),	0x00, 0 },
 	{ N_("10 fps"),	0x01, 0 },
@@ -8335,6 +8347,7 @@ static struct submenu nikon_d850_capture_settings[] = {
 	{ N_("Image Quality"),          "imagequality",         PTP_DPC_CompressionSetting,         PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,         _put_Nikon_D850_Compression },
 	{ N_("Image Rotation Flag"),            "imagerotationflag",        PTP_DPC_NIKON_ImageRotation,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,         _put_Nikon_D850_ActiveDLighting },
+	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
 	{ 0,0,0,0,0,0,0 },
 };
 
