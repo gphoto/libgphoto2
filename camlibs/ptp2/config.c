@@ -4429,6 +4429,15 @@ static struct deviceproptableu8 nikon_centerweight[] = {
 };
 GENERIC8TABLE(Nikon_CenterWeight,nikon_centerweight)
 
+static struct deviceproptableu8 nikon_d850_centerweight[] = {
+	{ N_("8 mm"),	0x00, 0 },
+	{ N_("12 mm"),	0x01, 0 },
+	{ N_("15 mm"),	0x02, 0 },
+	{ N_("20 mm"),	0x03, 0 },
+	{ N_("Average"),0x04, 0 },
+};
+GENERIC8TABLE(Nikon_D850_CenterWeight,nikon_d850_centerweight)
+
 static struct deviceproptableu8 nikon_flashshutterspeed[] = {
 	{ N_("1/60"),	0x00, 0 },
 	{ N_("1/30"),	0x01, 0 },
@@ -8370,6 +8379,7 @@ static struct submenu nikon_d850_capture_settings[] = {
 	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,   _put_Nikon_D850_ActiveDLighting },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
 	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },	
+	{ N_("Center Weight Area"),             "centerweightsize",     PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_CenterWeight,      _put_Nikon_D850_CenterWeight },
 	{ 0,0,0,0,0,0,0 },
 };
 
