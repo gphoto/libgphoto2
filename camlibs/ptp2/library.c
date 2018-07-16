@@ -237,6 +237,21 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
         gp_camera_get_abilities(camera, &a);
 
+	/* Panasonic GH5 */
+	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_product == 0x2382)
+	) {
+		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
+		di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_PANASONIC_GetProperty;
+		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
+		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
+		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
+		di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_PANASONIC_Liveview;
+		di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
+		di->OperationsSupported_len += 6;
+	}
+
 	/* Panasonic hack */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
@@ -363,21 +378,6 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+3] = 0xd171;	/* Focus control */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+4] = 0xd21c;	/* Needed for X-T2? */
 		di->DevicePropertiesSupported_len += 5;
-	}
-
-	/* Panasonic GH5 */
-	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
-		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_product == 0x2382)
-	) {
-		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
-		di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_PANASONIC_GetProperty;
-		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
-		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
-		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
-		di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_PANASONIC_Liveview;
-		di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
-		di->OperationsSupported_len += 6;
 	}
 
 	/* Nikon DSLR hide its newer opcodes behind another vendor specific query,
@@ -3100,9 +3100,8 @@ enable_liveview:
 
 		for (;;) {
 			tries--;
-			if(tries <= 0) {
-				return ret;
-			}
+			if(tries <= 0)
+				return translate_ptp_result (ret);
 			ret = ptp_panasonic_liveview_image (params, &ximage, &size);
 			if(ret == PTP_RC_DeviceBusy) {
 				usleep(40000);
@@ -3111,7 +3110,6 @@ enable_liveview:
 				break;
 			}
 		}
-
 		/* look for the JPEG SOI marker (0xFFD8) in data */
 		jpgStartPtr = (unsigned char*)memchr(ximage, 0xff, size);
 		while(jpgStartPtr && ((jpgStartPtr+1) < (ximage + size))) {
@@ -4375,6 +4373,7 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
 	int		back_off_wait = 0;
+	PTPObject	*ob = NULL;
 
 	//C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
@@ -4428,10 +4427,14 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			case 0xC107:
 				//event_start = time_now(); // still working...
 				break;
-			case 0xC108:
+			case PTP_EC_PANASONIC_ObjectAdded:
 				newobject = event.Param1;
-				if((newobject & 0x18000000) == 0x18000000) goto downloadfile; // sometimes an object starting with 0x11 is reported, but we need to wait for another
-				// might be a new folder ...
+				C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
+				if (ob->oi.ObjectFormat != PTP_OFC_Association)
+					goto downloadfile;
+				newobject = 0;
+				/* new folder ... wait a bit longer */
 				break;
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
@@ -4440,7 +4443,7 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		}
 	}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 66 seconds after busy is no longer signaled */
 
-	downloadfile:
+downloadfile:
 
 	usleep(50000); // it seems there can be an error if the object is accessed too soon
 
@@ -4448,8 +4451,6 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	path->folder[0]='\0';
 
 	if (newobject != 0) {
-		PTPObject	*ob;
-
 		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
 		strcpy  (path->name,  ob->oi.Filename);
@@ -5854,6 +5855,14 @@ sonyout:
 	return GP_OK;
 
 handleregular:
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_PANASONIC) {
+		switch (event.Code) {
+		case PTP_EC_PANASONIC_ObjectAdded:
+			GP_LOG_D ("PANASONIC_ObjectAdded -> PTP_EC_ObjectAdded");
+			event.Code = PTP_EC_ObjectAdded;
+			break;
+		}
+	}
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
 		switch (event.Code) {
 		/* We are handling this in the above sony case. events might

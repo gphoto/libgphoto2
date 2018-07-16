@@ -907,6 +907,19 @@ ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 }
 
 uint16_t
+ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode)
+{
+	PTPContainer	ptp;
+	unsigned char	*data;
+	unsigned int	size;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9107, propcode, 0, 0);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+
+	return PTP_RC_OK;
+}
+
+uint16_t
 ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength)
 {
 	PTPContainer	ptp;

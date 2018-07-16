@@ -744,6 +744,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_OC_PANASONIC_GetProperty		0x9402
 #define PTP_OC_PANASONIC_SetProperty		0x9403
+#define PTP_OC_PANASONIC_9107			0x9107	/* getsize? */
 #define PTP_OC_PANASONIC_ListProperty		0x9108
 #define PTP_OC_PANASONIC_9401			0x9401
 #define PTP_OC_PANASONIC_InitiateCapture	0x9404
@@ -966,6 +967,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_EC_PARROT_Status			0xC201
 #define PTP_EC_PARROT_MagnetoCalibrationStatus	0xC202
+
+#define PTP_EC_PANASONIC_ObjectAdded		0xC108
 
 
 /* constants for GetObjectHandles */
@@ -2310,6 +2313,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PARROT_MultisensorsIrradianceIntegrationTime	0xD218
 #define PTP_DPC_PARROT_OverlapRate				0xD219
 
+/* Panasonic does not have regular device properties, they use some 32bit values */
+#define PTP_DPC_PANASONIC_ISO				0x2000020
+#define PTP_DPC_PANASONIC_ShutterSpeed			0x2000030
+#define PTP_DPC_PANASONIC_Aperture			0x2000040
+#define PTP_DPC_PANASONIC_ImageFormat			0x20000A2
+
 
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
@@ -3581,12 +3590,14 @@ uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret
 
 uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count);
 
-#define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable)
+#define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable?0xD000010:0xD000011)
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 
 uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, unsigned char *value, uint16_t valuesize);
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
 uint16_t ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength);
+uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode);
+
 
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
