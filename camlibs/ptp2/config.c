@@ -6646,21 +6646,117 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
+static
+struct {
+	char*	str;
+	uint16_t val;
+} panasonic_wbtable[] = {
+	{ N_("Automatic"),	0x0002	},
+	{ N_("Daylight"),	0x0004	},
+	{ N_("Cloudy"),		32776	},
+	{ N_("Tungsten"),	0x0006	},
+	{ N_("Flash"),		0x0007	},
+	{ N_("Preset 1"),	32779	},
+	{ N_("Preset 2"),	32780	},
+	{ N_("Preset 3"),	32781	},
+	{ N_("Preset 4"),	32782	},
+	{ N_("Shadow"),		32783	},
+	{ N_("Temperature 1"),	32784	},
+	{ N_("Temperature 2"),	32785	},
+	{ N_("Temperature 3"),	32786	},
+	{ N_("Temperature 4"),	32787	},
+	{ N_("Automatic C"), 	32788	},
+};
+
+static int
+_put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	char *xval;
+	uint32_t val = 0;
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+	int i,ival;
+
+	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount);
+
+	CR (gp_widget_get_value(widget, &xval));
+
+	if (sscanf(xval,_("Unknown 0x%04x"), &ival))
+		val = ival;
+
+	for (i = 0; i < listCount; i++) {
+		int j;
+
+		for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
+			if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
+				val = panasonic_wbtable[j].val;
+				break;
+			}
+		}
+	}
+	free(list);
+	GP_LOG_D("setting whitebalance to 0x%04x", val);
+	return ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance, (unsigned char*)&val, 2);
+}
+
+static int
+_get_Panasonic_Whitebalance(CONFIG_GET_ARGS) {
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+	uint32_t i,j;
+	int	valset = 0;
+	char	buf[32];
+	PTPParams *params = &(camera->pl->params);
+
+	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount);
+
+	//printf("retrieved %lu property values\n", listCount);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0; i < listCount; i++) {
+		sprintf(buf,_("Unknown 0x%04x"), list[i]);
+		for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
+			if (panasonic_wbtable[j].val == list[i]) {
+				strcpy(buf,_(panasonic_wbtable[j].str));
+				break;
+			}
+		}
+		if (list[i] == currentVal) {
+			gp_widget_set_value (*widget, buf);
+			valset = 1;
+		}
+
+		gp_widget_add_choice (*widget, buf);
+	}
+	free(list);
+	if (!valset) {
+		sprintf(buf,_("Unknown 0x%04x"), currentVal);
+		gp_widget_set_value (*widget, buf);
+	}
+	return GP_OK;
+}
 static int
 _put_Panasonic_Exposure(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	char *xval;
 	uint32_t val;
+	float f;
 
 	CR (gp_widget_get_value(widget, &xval));
-	float f;
+
 	sscanf (xval, "%f", &f);
-	val = (uint32_t) f*3;
 
-	//printf("setting ISO to %lu (%s)\n", val, xval);
-
-	return ptp_panasonic_setdeviceproperty(params, 0x2000060, (unsigned char*)&val, 2);
+	if (f < 0)
+		val = (uint32_t)(0x8000 | (int)(((-f)*3)));
+	else
+		val = (uint32_t) (f*3);
+	return ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_Exposure, (unsigned char*)&val, 2);
 }
 
 static int
@@ -6672,7 +6768,7 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 	char	buf[16];
 	PTPParams *params = &(camera->pl->params);
 
-	ptp_panasonic_getdevicepropertydesc(params, 0x2000060, 2, &currentVal, &list, &listCount);
+	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_Exposure, 2, &currentVal, &list, &listCount);
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -7701,6 +7797,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_EOS_ExpCompensation,      PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation2,        _put_Canon_ExpCompensation2 },
 	{ N_("Exposure Compensation"),		"exposurecompensation",	    0, 					    PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Exposure,         _put_Panasonic_Exposure },
+	{ N_("White Balance"),			"whitebalance",	    0, 					    	PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Whitebalance,         _put_Panasonic_Whitebalance },
 	/* these cameras also have PTP_DPC_ExposureBiasCompensation, avoid overlap */
 	{ N_("Exposure Compensation"),          "exposurecompensation2",    PTP_DPC_NIKON_ExposureCompensation,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Compensation"),             "flashcompensation",        PTP_DPC_CANON_FlashCompensation,        PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
