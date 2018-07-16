@@ -2317,7 +2317,11 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PANASONIC_ISO				0x2000020
 #define PTP_DPC_PANASONIC_ShutterSpeed			0x2000030
 #define PTP_DPC_PANASONIC_Aperture			0x2000040
+#define PTP_DPC_PANASONIC_WhiteBalance			0x2000050
+#define PTP_DPC_PANASONIC_AFArea			0x2000070
+#define PTP_DPC_PANASONIC_CameraMode			0x2000080
 #define PTP_DPC_PANASONIC_ImageFormat			0x20000A2
+#define PTP_DPC_PANASONIC_BurstBracket			0x2000140
 
 
 /* MTP specific Object Properties */

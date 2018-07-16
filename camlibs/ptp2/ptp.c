@@ -915,6 +915,15 @@ ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode)
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9107, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data) return PTP_RC_GeneralError;
+
+	if (size < 4) return PTP_RC_GeneralError;
+	uint32_t headerLength 		= dtoh32a( (data) + 4 );
+	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
+	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
+	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
+
+	ptp_debug(params, "header: %lu, code: %lu\n", headerLength, propertyCode);
 
 	return PTP_RC_OK;
 }
@@ -935,7 +944,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	if (size < 4) return PTP_RC_GeneralError;
 	uint32_t headerLength 		= dtoh32a( (data) + 4 );
 	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
-	/* uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 ); */
+	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
 	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
 
 	if(valuesize == 2) {
@@ -948,7 +957,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	if (size < headerLength * 4 + 2 * 4 + valuesize) return PTP_RC_GeneralError;
 	*propertyValueListLength 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 + valuesize);
 
-	//printf("header: %lu, code: %lu, value: %lu, count: %lu\n", headerLength, propertyCode, *currentValue, *propertyValueListLength);
+	ptp_debug(params, "header: %lu, code: 0x%lx, value: %lu, count: %lu", headerLength, propertyCode, *currentValue, *propertyValueListLength);
 
 	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) return PTP_RC_GeneralError;
 
@@ -5640,7 +5649,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 			return (ptp_device_properties[i].txt);
 
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
-	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP)
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_PANASONIC)
 		for (i=0; ptp_device_properties_MTP[i].txt!=NULL; i++)
 			if (ptp_device_properties_MTP[i].dpc==dpc)
 				return (ptp_device_properties_MTP[i].txt);
@@ -6358,7 +6368,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		}
 	}
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
-	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP) {
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_PANASONIC) {
 		switch (dpc) {
 		case PTP_DPC_MTP_SynchronizationPartner:
 		case PTP_DPC_MTP_DeviceFriendlyName:
@@ -6898,6 +6909,7 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_MICROSOFT:
+	case PTP_VENDOR_PANASONIC:
 	case PTP_VENDOR_MTP:	RETURN_NAME_FROM_TABLE(ptp_opcode_mtp_trans, opcode);
 	case PTP_VENDOR_NIKON:	RETURN_NAME_FROM_TABLE(ptp_opcode_nikon_trans, opcode);
 	case PTP_VENDOR_CANON:	RETURN_NAME_FROM_TABLE(ptp_opcode_canon_trans, opcode);
