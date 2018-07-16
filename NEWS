@@ -4,6 +4,7 @@ ptp2:
 * Canon EOS: handle OLC versions of newer models
 * Fuji X series capture improvements
 * Fuji X series live view support added
+* Panasonic GH5 liveview and capture support. (Needs camera firmware 2.3+)
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.18 release
