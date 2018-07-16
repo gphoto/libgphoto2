@@ -6647,6 +6647,54 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 }
 
 static int
+_put_Panasonic_Exposure(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	char *xval;
+	uint32_t val;
+
+	CR (gp_widget_get_value(widget, &xval));
+	float f;
+	sscanf (xval, "%f", &f);
+	val = (uint32_t) f*3;
+
+	//printf("setting ISO to %lu (%s)\n", val, xval);
+
+	return ptp_panasonic_setdeviceproperty(params, 0x2000060, (unsigned char*)&val, 2);
+}
+
+static int
+_get_Panasonic_Exposure(CONFIG_GET_ARGS) {
+	uint32_t currentVal;
+	uint32_t listCount;
+	uint32_t *list;
+	uint32_t i;
+	char	buf[16];
+	PTPParams *params = &(camera->pl->params);
+
+	ptp_panasonic_getdevicepropertydesc(params, 0x2000060, 2, &currentVal, &list, &listCount);
+
+	//printf("retrieved %lu property values\n", listCount);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0; i < listCount; i++) {
+		int val = (int)list[i];
+
+		if (val & 0x8000)
+			val = -(val & 0x7fff);
+		sprintf (buf, "%f", val/3.0);
+		gp_widget_add_choice (*widget, buf);
+	}
+	free(list);
+
+	sprintf (buf, "%f", (float)currentVal);
+	gp_widget_set_value (*widget, &buf);
+	return GP_OK;
+}
+
+static int
 _put_Panasonic_FNumber(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
@@ -7652,6 +7700,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       0,                  PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_EOS_ExpCompensation,      PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation2,        _put_Canon_ExpCompensation2 },
+	{ N_("Exposure Compensation"),		"exposurecompensation",	    0, 					    PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Exposure,         _put_Panasonic_Exposure },
 	/* these cameras also have PTP_DPC_ExposureBiasCompensation, avoid overlap */
 	{ N_("Exposure Compensation"),          "exposurecompensation2",    PTP_DPC_NIKON_ExposureCompensation,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Compensation"),             "flashcompensation",        PTP_DPC_CANON_FlashCompensation,        PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
@@ -7675,7 +7724,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Beep Mode"),                   "afbeep",                   PTP_DPC_NIKON_BeepOff,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_Sony_FNumber },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
-	{ N_("F-Number"),                  		"f-number",             	0,         		    					PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_FNumber,          _put_Panasonic_FNumber },
+	{ N_("F-Number"),			"f-number",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_FNumber,             _put_Panasonic_FNumber },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_CompressionSetting,            _put_Sony_CompressionSetting },
