@@ -6622,6 +6622,7 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
+	uint16_t valsize;
 
 	PTPParams *params = &(camera->pl->params);
 	ptp_panasonic_getdevicepropertydesc(params, 0x2000020, 4, &currentVal, &list, &listCount);
@@ -6637,6 +6638,7 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 		sprintf (buf, "%d", (unsigned int)list[i]);
 		gp_widget_add_choice (*widget, buf);
 	}
+	ptp_panasonic_getdeviceproperty(params, 0x2000021, &valsize, &currentVal);
 
 	sprintf (buf, "%d", (unsigned int)currentVal);
 	gp_widget_set_value (*widget, buf);
@@ -6764,6 +6766,7 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
+	uint16_t valsize;
 	uint32_t i;
 	char	buf[16];
 	PTPParams *params = &(camera->pl->params);
@@ -6811,6 +6814,7 @@ static int
 _get_Panasonic_FNumber(CONFIG_GET_ARGS) {
 	uint32_t currentVal;
 	uint32_t listCount;
+	uint16_t valsize;
 	uint32_t *list;
 
 	PTPParams *params = &(camera->pl->params);
@@ -6834,6 +6838,7 @@ _get_Panasonic_FNumber(CONFIG_GET_ARGS) {
 		}
 		gp_widget_add_choice (*widget, buf);
 	}
+	ptp_panasonic_getdeviceproperty(params, 0x2000041, &valsize, &currentVal);
 
 	f = (float) currentVal;
 	f /= 10.0;
