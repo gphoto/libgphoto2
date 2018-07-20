@@ -3711,6 +3711,8 @@ uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propco
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)
 uint16_t ptp_olympus_omd_capture (PTPParams* params);
+uint16_t ptp_olympus_init_pc_mode (PTPParams* params);
+
 
 #define ptp_panasonic_capture(params) ptp_generic_no_data(params,PTP_OC_PANASONIC_InitiateCapture,1,0x3000011)
 

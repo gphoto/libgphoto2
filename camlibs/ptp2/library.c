@@ -8419,7 +8419,6 @@ camera_init (Camera *camera, GPContext *context)
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
 		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
 
-
 	{
 		unsigned int k;
 
@@ -8429,6 +8428,36 @@ camera_init (Camera *camera, GPContext *context)
 			ptp_list_folder (params, params->storageids.Storage[k], PTP_HANDLER_SPECIAL);
 		}
 	}
+	/* moved down here in case the filesystem needs to first be initialized as the Olympus app does */
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
+		GP_LOG_D ("Initializing Olympus ... ");
+		ptp_olympus_init_pc_mode(params);
+
+		/*
+		if(params->storageids.n > 0) { // Olympus app gets storage info for first item, so emulating here
+			PTPStorageInfo storageinfo;
+			ptp_getstorageinfo(params, params->storageids.Storage[0], &storageinfo);
+		}
+
+		PTPPropertyValue        propval;
+		if (!strncmp(params->deviceinfo.Model,"E-M5",4)) {
+			ptp_olympus_init_pc_mode(params);
+		}
+		ptp_olympus_omd_init(params);
+		propval.u16 = 2;
+		ptp_setdevicepropvalue(params, 0xD078, &propval, PTP_DTC_UINT16);
+		if (!strncmp(params->deviceinfo.Model,"E-M1",4)) {
+			propval.u16 = 2; // save to camera's card
+			ptp_setdevicepropvalue(params, 0xD0DC, &propval, PTP_DTC_UINT16);
+			//propval.u16 = 1;
+			//ptp_setdevicepropvalue(params, 0xD052, &propval, PTP_DTC_UINT16);
+			ptp_check_event_handle (params, 0);
+			ptp_olympus_init_pc_mode(params);
+		}
+		*/
+	}
+
+
 
 	SET_CONTEXT(camera, NULL);
 	return GP_OK;

@@ -875,6 +875,34 @@ ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned 
 }
 
 uint16_t
+ptp_olympus_init_pc_mode (PTPParams* params)
+{
+	uint16_t		ret;
+	PTPPropertyValue	propval;
+	PTPContainer    	event;
+	int			i;
+
+	ptp_debug (params,"PTP: (Olympus Init) switching to PC mode...");
+
+	propval.u16 = 1;
+	ret = ptp_setdevicepropvalue (params, 0xD052, &propval, PTP_DTC_UINT16);
+	usleep(100000);
+
+	for(i = 0; i < 2; i++) {
+		ptp_debug (params,"PTP: (Olympus Init) checking events...");
+		/* Just busy loop until the camera is ready again. */
+		ptp_check_event (params);
+		if (ptp_get_one_event(params, &event)) break;
+		usleep(100000);
+	}
+	//ptp_debug (params,"PTP: (Olympus Init) getting response...");
+	//gp_port_set_timeout (camera->port, timeout);
+	//ret=ptp_transaction(params, &ptp, PTP_DP_RESPONSEONLY, size, &data, NULL);
+	//if(data) free(data);
+	return ret;
+}
+
+uint16_t
 ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer	ptp;
@@ -992,7 +1020,6 @@ ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t 
 
 	if(size < 8) return PTP_RC_GeneralError;
 	*valuesize = dtoh32a( (data + 4) );
-
 
 	if(size < 8 + (*valuesize)) return PTP_RC_GeneralError;
 	if(*valuesize == 4) {
