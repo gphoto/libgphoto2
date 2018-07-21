@@ -4058,6 +4058,37 @@ _get_Nikon_ApertureAtFocalLength(CONFIG_GET_ARGS) {
 }
 
 static int
+_get_Olympus_Aperture(CONFIG_GET_ARGS) {
+	char	len[20];
+	int	i;
+
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		sprintf (len, "%.1f", dpd->FORM.Enum.SupportedValue[i].u16 * 0.1);
+		gp_widget_add_choice (*widget, len);
+	}
+	sprintf (len, "%.1f", dpd->CurrentValue.u16 * 0.1);
+	gp_widget_set_value (*widget, len);
+	return GP_OK;
+}
+
+static int
+_put_Olympus_Aperture(CONFIG_PUT_ARGS) {
+	char	*val;
+	float	f;
+
+	gp_widget_get_value (widget, &val);
+	sscanf (val, "%f", &f);
+	propval->u16 = 10*f;
+	return GP_OK;
+}
+
+static int
 _get_Nikon_LightMeter(CONFIG_GET_ARGS) {
 	char	meter[20];
 
@@ -7950,6 +7981,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Picture Style"),                  "picturestyle",             PTP_DPC_CANON_EOS_PictureStyle,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_PictureStyle,        _put_Canon_EOS_PictureStyle },
 	{ N_("Focus Metering Mode"),            "focusmetermode",           PTP_DPC_FocusMeteringMode,              0,                  PTP_DTC_UINT16, _get_FocusMetering,                 _put_FocusMetering },
 	{ N_("Exposure Metering Mode"),         "exposuremetermode",        PTP_DPC_ExposureMeteringMode,           0,                  PTP_DTC_UINT16, _get_ExposureMetering,              _put_ExposureMetering },
+	{ N_("Aperture"),                       "aperture",                 PTP_DPC_OLYMPUS_Aperture,               PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16, _get_Olympus_Aperture,     _put_Olympus_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_CANON_Aperture,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_FUJI_Aperture,                  PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_Aperture,                 _put_Fuji_Aperture },
 	{ N_("AV Open"),                        "avopen",                   PTP_DPC_CANON_AvOpen,                   PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
