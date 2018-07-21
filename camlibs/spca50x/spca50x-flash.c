@@ -351,7 +351,7 @@ spca50x_flash_get_file_name (CameraPrivateLibrary *pl, int index, char *name)
 		else{
 			snprintf (p, sizeof(p), "Unknown");
 		}
-		memcpy (name, p, sizeof(p) );
+		strcpy (name, p);
 	} else {
 		if (pl->fw_rev == 1) {
 			p = pl->flash_toc + index*2*32;
