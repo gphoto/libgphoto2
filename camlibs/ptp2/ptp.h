@@ -2185,6 +2185,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 /* Olympus */
 #define PTP_DPC_OLYMPUS_ISO				0xD007
+#define PTP_DPC_OLYMPUS_ExposureCompensation		0xD008
 #define PTP_DPC_OLYMPUS_LiveViewModeOM			0xD06D
 
 #define PTP_DPC_OLYMPUS_ResolutionMode			0xD102

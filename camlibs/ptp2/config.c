@@ -1618,7 +1618,6 @@ _put_ImageSize(CONFIG_PUT_ARGS) {
 	return(GP_OK);
 }
 
-
 static int
 _get_ExpCompensation(CONFIG_GET_ARGS) {
 	int j;
@@ -1670,6 +1669,50 @@ _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 	if (ret != GP_OK) return ret;
 	return _put_sony_value_i16 (&camera->pl->params, PTP_DPC_ExposureBiasCompensation, propval->i16, 0);
 }
+
+static int
+_get_Olympus_ExpCompensation(CONFIG_GET_ARGS) {
+	int j;
+	char buf[13];
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
+		sprintf(buf, "%g", dpd->FORM.Enum.SupportedValue[j].i16/1000.0);
+		gp_widget_add_choice (*widget,buf);
+	}
+	sprintf(buf, "%g", dpd->CurrentValue.i16/1000.0);
+	gp_widget_set_value (*widget,buf);
+	return GP_OK;
+}
+
+static int
+_put_Olympus_ExpCompensation(CONFIG_PUT_ARGS) {
+	char	*value;
+	float	x;
+	int16_t	val, targetval = 0;
+	int	mindist = 65535, j;
+
+	CR (gp_widget_get_value(widget, &value));
+	if (1 != sscanf(value,"%g", &x))
+		return GP_ERROR;
+
+	/* float processing is not always hitting the right values, but close */
+	val = x*1000.0;
+	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
+		if (abs(dpd->FORM.Enum.SupportedValue[j].i16 - val) < mindist) {
+			mindist = abs(dpd->FORM.Enum.SupportedValue[j].i16 - val);
+			targetval = dpd->FORM.Enum.SupportedValue[j].i16;
+		}
+	}
+	propval->i16 = targetval;
+	return GP_OK ;
+}
+
 
 static struct deviceproptableu16 canon_assistlight[] = {
 	{ N_("On"),	0x0000, PTP_VENDOR_CANON },
@@ -7844,6 +7887,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Rotation Flag"),                  "autorotation",             PTP_DPC_CANON_RotationScene,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_AutoRotation,            _put_Canon_AutoRotation },
 	{ N_("Self Timer"),                     "selftimer",                PTP_DPC_CANON_SelfTime,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_SelfTimer,               _put_Canon_SelfTimer },
 	{ N_("Assist Light"),                   "assistlight",              PTP_DPC_NIKON_AFAssist,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
+	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_OLYMPUS_ExposureCompensation,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ExpCompensation,_put_Olympus_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       0,                  PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
