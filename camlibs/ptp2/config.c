@@ -2348,7 +2348,6 @@ _put_Canon_CameraOutput(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
-
 static struct deviceproptableu16 canon_isospeed[] = {
 	{ N_("Factory Default"),0xffff, 0 },
 	{ "6",			0x0028, 0 },
@@ -2508,6 +2507,53 @@ _put_ISO(CONFIG_PUT_ARGS)
 	unsigned int	u;
 
 	CR (gp_widget_get_value(widget, &value));
+
+	if (sscanf(value, "%ud", &u)) {
+		propval->u16 = u;
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+
+static int
+_get_Olympus_ISO(CONFIG_GET_ARGS) {
+	int i;
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[20];
+
+		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u16);
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0xffff) { strcpy(buf,_("Auto")); }
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0xfffd) { strcpy(buf,_("Low")); }
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget,buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Olympus_ISO(CONFIG_PUT_ARGS)
+{
+	char *value;
+	unsigned int	u;
+
+	CR (gp_widget_get_value(widget, &value));
+	if (!strcmp(value,_("Auto"))) {
+		propval->u16 = 0xffff;
+		return GP_OK;
+	}
+	if (!strcmp(value,_("Low"))) {
+		propval->u16 = 0xfffd;
+		return GP_OK;
+	}
 
 	if (sscanf(value, "%ud", &u)) {
 		propval->u16 = u;
@@ -7768,7 +7814,8 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
-	{ N_("ISO Speed"),              "iso",             	0,         		    		PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,     _put_Panasonic_ISO },
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO,                    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ISO,       _put_Olympus_ISO },
+	{ N_("ISO Speed"),              "iso",             	0,         		    		PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,         _put_Panasonic_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_WhiteBalance,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_WhiteBalance,        _put_Canon_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_EOS_WhiteBalance,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_WhiteBalance,    _put_Canon_EOS_WhiteBalance },
