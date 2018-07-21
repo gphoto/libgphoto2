@@ -3857,6 +3857,7 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+/* Nikon... replace with Olympus values
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xffffffff) {
 			sprintf(buf,_("Bulb"));
 			goto choicefound;
@@ -3869,14 +3870,22 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 			sprintf(buf,_("Time"));
 			goto choicefound;
 		}
+*/
 		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
 		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
+
+		if (((y % 10) == 0) && ((x % 10) == 0)) {
+			y /= 10;
+			x /= 10;
+		}
 		if (y == 1) { /* x/1 */
 			sprintf (buf, "%d", x);
 		} else {
 			sprintf (buf, "%d/%d",x,y);
 		}
+/*
 choicefound:
+*/
 		gp_widget_add_choice (*widget,buf);
 		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
 			gp_widget_set_value (*widget, buf);
@@ -3903,6 +3912,7 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 	gp_widget_get_value (widget, &value_str);
 
+/* Nikon... replace with Olympus values
 	if (!strcmp(value_str,_("Bulb"))) {
 		propval->u32 = 0xffffffff;
 		return GP_OK;
@@ -3915,6 +3925,7 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 		propval->u32 = 0xfffffffd;
 		return GP_OK;
 	}
+*/
 
 	if (strchr(value_str, '/')) {
 		if (2 != sscanf (value_str, "%d/%d", &x, &y))
@@ -6888,9 +6899,9 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 	uint32_t *list;
 	int i,ival;
 
-	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount);
-
 	CR (gp_widget_get_value(widget, &xval));
+
+	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount);
 
 	if (sscanf(xval,_("Unknown 0x%04x"), &ival))
 		val = ival;
@@ -8084,7 +8095,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed 2"),                "shutterspeed2",            PTP_DPC_NIKON_ExposureTime,             PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Movie Shutter Speed 2"),          "movieshutterspeed",        PTP_DPC_NIKON_MovieShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	/* olympus uses also a 16 bit/16bit seperation */
-	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_OLYMPUS_Shutterspeed,           PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
+	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_OLYMPUS_Shutterspeed,           PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_UINT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
