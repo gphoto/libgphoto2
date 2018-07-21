@@ -1521,7 +1521,10 @@ static struct {
 	/* Rafał Bryndza <abigor82@gmail.com> */
 	{"Olympus:E-M5",		  0x07b4, 0x012f, 0},
 	/* Richard Wonka <richard.wonka@gmail.com> */
-	{"Olympus:E-M5 Mark II",	  0x07b4, 0x0130, 0},
+	{"Olympus:E-M5 Mark II",	  0x07b4, 0x0130, PTP_CAP|PTP_CAP_PREVIEW},
+	/* same id also on E-M1 */
+	{"Olympus:E-M1 Mark II",	  0x07b4, 0x0130, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Olympus:E-M1",	  	  0x07b4, 0x0130, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},

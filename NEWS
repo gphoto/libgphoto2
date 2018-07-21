@@ -5,6 +5,7 @@ ptp2:
 * Fuji X series capture improvements
 * Fuji X series live view support added
 * Panasonic GH5 liveview and capture support. (Needs camera firmware 2.3+)
+* Olympus E-M1 / E-M5 Mark II liveview and capture support added.
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.18 release
