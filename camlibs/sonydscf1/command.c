@@ -177,11 +177,11 @@ char F1newstatus(GPPort *port, int verbose, char *return_buf)
       break;
     }
     sprintf(tmp_buf, "Total Pictures: %02d\n", pic_num);
-    strncat(status_buf, tmp_buf, sizeof(status_buf));
+    strcat(status_buf, tmp_buf);
     sprintf(tmp_buf, "Date: %02d/%02d/%02d\n", month, date, year);
-    strncat(status_buf, tmp_buf, sizeof(status_buf));
+    strcat(status_buf, tmp_buf);
     sprintf(tmp_buf, "Time: %02d:%02d\n",hour, minutes);
-    strncat(status_buf, tmp_buf, sizeof(status_buf));
+    strcat(status_buf, tmp_buf);
   }
 
     strcpy(return_buf, status_buf);
