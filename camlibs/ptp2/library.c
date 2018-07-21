@@ -4494,16 +4494,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 		}
 	}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 0.5 seconds after busy is no longer signaled */
 
-	//do {
-	//	C_PTP_REP (ptp_olympus_omd_check_new_objects(params, &objects, &length));
-	//	if(length > 0) {
-	//		newobject = objects[0];
-	//		free(*objects);
-	//		break;
-	//	}
-	//}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 66 seconds after busy is no longer signaled */
-
-	downloadfile:
+downloadfile:
 
 	path->name[0]='\0';
 	path->folder[0]='\0';

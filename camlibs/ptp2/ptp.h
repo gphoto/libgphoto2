@@ -679,8 +679,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Olympus OMD series commands */
 #define PTP_OC_OLYMPUS_OMD_Capture			0x9481
+#define PTP_OC_OLYMPUS_GetLiveViewImage			0x9484
+#define PTP_OC_OLYMPUS_OMD_ChangedProperties		0x9486
 #define PTP_OC_OLYMPUS_OMD_MFDrive			0x9487
-
+#define PTP_OC_OLYMPUS_OMD_SetProperties		0x9489 /* Sends to the device a PTP list of all 16 bit device properties , count 32bit, then 16bit vals */
 
 /* Olympus E series commands */
 
@@ -698,8 +700,6 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_OLYMPUS_GetDateTime			0x9482
 #define PTP_OC_OLYMPUS_SetCameraID			0x9501
 #define PTP_OC_OLYMPUS_GetCameraID			0x9581
-
-#define PTP_OC_OLYMPUS_GetLiveViewImage			0x9484
 
 
 /* Android Random I/O Extensions Codes */
