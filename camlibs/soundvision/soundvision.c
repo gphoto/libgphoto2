@@ -119,20 +119,20 @@ int camera_abilities(CameraAbilitiesList *list) {
        a.speed[0] = 0;
        a.usb_vendor = models[i].idVendor;
        a.usb_product= models[i].idProduct;
-       
+
           /* All should support image capture */
        a.operations     = 	GP_OPERATION_CAPTURE_IMAGE;
-       
+
           /* Folders not supported on any */
        a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
-       
-          /* Dshot compat can upload files */
-       if (models[i].idVendor==0x0919) {
-          a.file_operations|=GP_FOLDER_OPERATION_PUT_FILE;	    
-       }       
-       
+  
        a.file_operations   = 	GP_FILE_OPERATION_PREVIEW | 
 				GP_FILE_OPERATION_DELETE;
+         /* Dshot compat can upload files */
+       if (models[i].idVendor == 0x0919) {
+          a.file_operations|=GP_FOLDER_OPERATION_PUT_FILE;	    
+       }       
+
 
        gp_abilities_list_append(list, a);
     }
