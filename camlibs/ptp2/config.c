@@ -3843,6 +3843,93 @@ _put_Nikon_ShutterSpeed(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
+	int i, valset = 0;
+	char buf[200];
+	int x,y;
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return (GP_ERROR);
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return (GP_ERROR);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xffffffff) {
+			sprintf(buf,_("Bulb"));
+			goto choicefound;
+		}
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffe) {
+			sprintf(buf,_("x 200"));
+			goto choicefound;
+		}
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffd) {
+			sprintf(buf,_("Time"));
+			goto choicefound;
+		}
+		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
+		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
+		if (y == 1) { /* x/1 */
+			sprintf (buf, "%d", x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
+choicefound:
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
+			gp_widget_set_value (*widget, buf);
+			valset = 1;
+		}
+	}
+	if (!valset) {
+		x = dpd->CurrentValue.u32>>16;
+		y = dpd->CurrentValue.u32&0xffff;
+		if (y == 1) {
+			sprintf (buf, "%d",x);
+		} else {
+			sprintf (buf, "%d/%d",x,y);
+		}
+		gp_widget_set_value (*widget, buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
+	int x,y;
+	const char *value_str;
+
+	gp_widget_get_value (widget, &value_str);
+
+	if (!strcmp(value_str,_("Bulb"))) {
+		propval->u32 = 0xffffffff;
+		return GP_OK;
+	}
+	if (!strcmp(value_str,_("x 200"))) {
+		propval->u32 = 0xfffffffe;
+		return GP_OK;
+	}
+	if (!strcmp(value_str,_("Time"))) {
+		propval->u32 = 0xfffffffd;
+		return GP_OK;
+	}
+
+	if (strchr(value_str, '/')) {
+		if (2 != sscanf (value_str, "%d/%d", &x, &y))
+			return GP_ERROR;
+	} else {
+		if (!sscanf (value_str, "%d", &x))
+			return GP_ERROR;
+		y = 1;
+	}
+	propval->u32 = (x<<16) | y;
+	return GP_OK;
+}
+
+
+static int
 _get_Ricoh_ShutterSpeed(CONFIG_GET_ARGS) {
 	int i, valset = 0;
 	char buf[200];
@@ -7996,6 +8083,8 @@ static struct submenu capture_settings_menu[] = {
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
 	{ N_("Shutter Speed 2"),                "shutterspeed2",            PTP_DPC_NIKON_ExposureTime,             PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Movie Shutter Speed 2"),          "movieshutterspeed",        PTP_DPC_NIKON_MovieShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
+	/* olympus uses also a 16 bit/16bit seperation */
+	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_OLYMPUS_Shutterspeed,           PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_UINT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
