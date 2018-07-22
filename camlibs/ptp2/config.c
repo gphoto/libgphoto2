@@ -1583,6 +1583,19 @@ static struct deviceproptableu16 fuji_imageformat[] = {
 };
 GENERIC16TABLE(Fuji_ImageFormat,fuji_imageformat)
 
+static struct deviceproptableu16 olympus_imageformat[] = {
+	{ N_("RAW"),			0x020,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Fine JPEG"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Normal JPEG"),	0x102,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium Normal JPEG"),	0x103,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small Normal JPEG"),	0x104,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Fine JPEG+RAW"),	0x121,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Normal JPEG+RAW"),	0x122,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium Normal JPEG+RAW"),	0x123,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small Normal JPEG+RAW"),	0x124,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_Imageformat,olympus_imageformat)
+
 static struct deviceproptableu16 fuji_releasemode[] = {
 	{ N_("Single frame"),		1,	PTP_VENDOR_FUJI },
 	{ N_("Continuous low speed"),	2,	PTP_VENDOR_FUJI },
@@ -7969,6 +7982,7 @@ static struct submenu camera_settings_menu[] = {
 /* think of this as properties of the "film" */
 static struct submenu image_settings_menu[] = {
 	{ N_("Image Quality"),          "imagequality",         PTP_DPC_CANON_ImageQuality,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Quality,             _put_Canon_Quality },
+	{ N_("Image Format"),           "imageformat",          PTP_DPC_OLYMPUS_ImageFormat,            PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16,  _get_Olympus_Imageformat, _put_Olympus_Imageformat },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_CANON_FullViewFileFormat,       PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Capture_Format,      _put_Canon_Capture_Format },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_CANON_EOS_ImageFormat,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format SD"),        "imageformatsd",        PTP_DPC_CANON_EOS_ImageFormatSD,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
