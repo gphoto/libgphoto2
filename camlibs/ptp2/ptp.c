@@ -932,6 +932,15 @@ ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned in
 }
 
 uint16_t
+ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_GetImage);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
 ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 			unsigned char *value, uint16_t valuesize)
 {

@@ -2188,8 +2188,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_Aperture			0xD002
 #define PTP_DPC_OLYMPUS_ISO				0xD007
 #define PTP_DPC_OLYMPUS_ExposureCompensation		0xD008
+#define PTP_DPC_OLYMPUS_ImageFormat			0xD00D
 #define PTP_DPC_OLYMPUS_Shutterspeed			0xD01C
 #define PTP_DPC_OLYMPUS_LiveViewModeOM			0xD06D
+#define PTP_DPC_OLYMPUS_CaptureTarget			0xD0DC
 
 #define PTP_DPC_OLYMPUS_ResolutionMode			0xD102
 #define PTP_DPC_OLYMPUS_FocusPriority			0xD103
@@ -3717,6 +3719,8 @@ uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, un
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)
 uint16_t ptp_olympus_omd_capture (PTPParams* params);
 uint16_t ptp_olympus_init_pc_mode (PTPParams* params);
+uint16_t ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsigned int *size);
+
 
 
 #define ptp_panasonic_capture(params) ptp_generic_no_data(params,PTP_OC_PANASONIC_InitiateCapture,1,0x3000011)

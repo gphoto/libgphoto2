@@ -4466,18 +4466,19 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 	PTPContainer	event;
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
-	int		back_off_wait = 0;
+	int	     	back_off_wait = 0;
+	PTPPropertyValue propval;
 
 	// clear out old events
 	//C_PTP_REP (ptp_check_event (params));
 	//while (ptp_get_one_event(params, &event));
 
+	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_OLYMPUS_CaptureTarget, &propval, PTP_DTC_UINT16));
 	C_PTP_REP (ptp_olympus_omd_capture(params));
 
 	usleep(100);
 
 	event_start = time_now();
-
 	do {
 		C_PTP_REP (ptp_check_event (params));
 
@@ -4487,6 +4488,45 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 			case PTP_EC_ObjectAdded:
 				newobject = event.Param1;
 				goto downloadfile;
+			case 0xc003:
+#if 0
+			{ /* we seem to receive the event when ready ... not sure if this is the right trigger, as it has unrelated parameters */
+				static int	capcnt = 0;
+				CameraFile	*file;
+				unsigned char	*data = NULL;
+				unsigned int	size = 0;
+				CameraFileInfo	info;
+				int		ret;
+
+				C_PTP_REP (ptp_olympus_sdram_image(params, &data, &size));
+
+				gp_file_new (&file);
+				gp_file_set_data_and_size (file, (char*)data, size);
+
+				sprintf(path->folder, "/store_deadbeef");
+				sprintf(path->name, "capt%04d.jpg", capcnt++);
+
+				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				memset(&info, 0, sizeof(info));
+				/* We also get the fs info for free, so just set it */
+				info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+				strcpy (info.file.type, GP_MIME_JPEG);
+				info.file.size		= size;
+				info.file.mtime		= time(NULL);
+
+				gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+				return GP_OK;
+			}
+#endif
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				break;
@@ -7606,6 +7646,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (	((params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) ||
+		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) ||
 		 (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)) &&
 		!strncmp (filename, "capt", 4)
