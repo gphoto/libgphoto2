@@ -2193,6 +2193,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_ExposureCompensation		0xD008
 #define PTP_DPC_OLYMPUS_OMD_DriveMode			0xD009
 #define PTP_DPC_OLYMPUS_ImageFormat			0xD00D
+#define PTP_DPC_OLYMPUS_FaceDetection			0xD01A
 #define PTP_DPC_OLYMPUS_AspectRatio			0xD01B
 #define PTP_DPC_OLYMPUS_Shutterspeed			0xD01C
 #define PTP_DPC_OLYMPUS_WhiteBalance			0xD01E
