@@ -1574,6 +1574,23 @@ static struct deviceproptableu16 whitebalance[] = {
 };
 GENERIC16TABLE(WhiteBalance,whitebalance)
 
+static struct deviceproptableu16 olympus_whitebalance[] = {
+	{ N_("Automatic"),		0x0001, 0 },
+	{ N_("Daylight"),		0x0002, 0 },
+	{ N_("Shade"),			0x0003, 0 },
+	{ N_("Cloudy"),			0x0004, 0 },
+	{ N_("Tungsten"),		0x0005, 0 },
+	{ N_("Fluorescent"),		0x0006, 0 },
+	{ N_("Underwater"),		0x0007, 0 },
+	{ N_("Flash"),			0x0008, 0 },
+	{ N_("Preset 1"),		0x0009, 0 },
+	{ N_("Preset 2"),		0x000a, 0 },
+	{ N_("Preset 3"),		0x000b, 0 },
+	{ N_("Preset 4"),		0x000c, 0 },
+	{ N_("Custom"),			0x000d, 0 },
+};
+GENERIC16TABLE(Olympus_WhiteBalance,olympus_whitebalance)
+
 static struct deviceproptableu16 fuji_imageformat[] = {
 	{ N_("RAW"),			1,	PTP_VENDOR_FUJI },
 	{ N_("JPEG Fine"),		2,	PTP_VENDOR_FUJI },
@@ -8046,6 +8063,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO,                    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ISO,       _put_Olympus_ISO },
 	{ N_("ISO Speed"),              "iso",             	0,         		    		PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,         _put_Panasonic_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
+	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_OLYMPUS_WhiteBalance,           PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_WhiteBalance, _put_Olympus_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_WhiteBalance,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_WhiteBalance,        _put_Canon_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_EOS_WhiteBalance,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_WhiteBalance,    _put_Canon_EOS_WhiteBalance },
 	{ N_("Color Temperature"),      "colortemperature",     PTP_DPC_CANON_EOS_ColorTemperature,     PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },

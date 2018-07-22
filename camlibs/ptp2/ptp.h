@@ -2195,6 +2195,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_ImageFormat			0xD00D
 #define PTP_DPC_OLYMPUS_AspectRatio			0xD01B
 #define PTP_DPC_OLYMPUS_Shutterspeed			0xD01C
+#define PTP_DPC_OLYMPUS_WhiteBalance			0xD01E
 #define PTP_DPC_OLYMPUS_LiveViewModeOM			0xD06D
 #define PTP_DPC_OLYMPUS_CaptureTarget			0xD0DC
 
