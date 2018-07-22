@@ -4516,9 +4516,13 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("Single-Servo AF"),0x8001, PTP_VENDOR_FUJI },
 	{ N_("Continuous-Servo AF"),0x8002, PTP_VENDOR_FUJI },
 
+	{ N_("C-AF"),		0x8002, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("S-AF+MF"),	0x8001, PTP_VENDOR_GP_OLYMPUS_OMD },
+
 	{ N_("AF-A"),		0x8005, PTP_VENDOR_SONY },
 	{ N_("AF-C"),		0x8004, PTP_VENDOR_SONY },
 	{ N_("DMF"),		0x8006, PTP_VENDOR_SONY },
+
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
@@ -8069,6 +8073,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focal Length"),                   "focallength",              PTP_DPC_FocalLength,                    0,                  PTP_DTC_UINT32, _get_FocalLength,                   _put_FocalLength },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FocusMode,                     _put_Sony_FocusMode },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      0,                  PTP_DTC_UINT16, _get_FocusMode,                     _put_FocusMode },
+	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_OLYMPUS_FocusMode,              PTP_VENDOR_GP_OLYMPUS_OMD,  PTP_DTC_UINT16, _get_FocusMode,             _put_FocusMode },
 	/* Nikon DSLR have both PTP focus mode and Nikon specific focus mode */
 	{ N_("Focus Mode 2"),                   "focusmode2",               PTP_DPC_NIKON_AutofocusMode,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AFMode,                  _put_Nikon_AFMode },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_CANON_EOS_FocusMode,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_FocusMode,           _put_Canon_EOS_FocusMode },
