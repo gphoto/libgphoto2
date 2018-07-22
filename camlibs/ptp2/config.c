@@ -3589,9 +3589,11 @@ static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("Multi Spot"),	0x0003, 0 },
 	{ N_("Center Spot"),	0x0004, 0 },
 	{ N_("Spot"),		0x8001, PTP_VENDOR_FUJI },
+	{ N_("ESP"),		0x8001, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Spot+Highlights"),0x8011, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Spot+Shadows"),	0x8012, PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(ExposureMetering,exposure_metering)
-
 
 static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Automatic Flash"),		0x0001, 0 },
@@ -8097,6 +8099,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Drive Mode"),                     "drivemode",                PTP_DPC_CANON_EOS_DriveMode,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_DriveMode,           _put_Canon_EOS_DriveMode },
 	{ N_("Picture Style"),                  "picturestyle",             PTP_DPC_CANON_EOS_PictureStyle,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_PictureStyle,        _put_Canon_EOS_PictureStyle },
 	{ N_("Focus Metering Mode"),            "focusmetermode",           PTP_DPC_FocusMeteringMode,              0,                  PTP_DTC_UINT16, _get_FocusMetering,                 _put_FocusMetering },
+	{ N_("Focus Metering Mode"),            "exposuremetermode",        PTP_DPC_OLYMPUS_ExposureMeteringMode,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_ExposureMetering,       _put_ExposureMetering },
 	{ N_("Exposure Metering Mode"),         "exposuremetermode",        PTP_DPC_ExposureMeteringMode,           0,                  PTP_DTC_UINT16, _get_ExposureMetering,              _put_ExposureMetering },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_OLYMPUS_Aperture,               PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16, _get_Olympus_Aperture,     _put_Olympus_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_CANON_Aperture,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
