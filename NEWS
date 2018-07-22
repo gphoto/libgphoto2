@@ -1,4 +1,4 @@
-libgphoto2 2.5.18.1 development branch
+libgphoto2 2.5.19 release
 
 ptp2:
 * Canon EOS: handle OLC versions of newer models, which gave incorrect aperture/shutterspeed values
@@ -12,6 +12,9 @@ ptp2:
   * Panasonic GH5
   * Olympus E-M1 Mark 2
   * Fuji X-H1, X-M1, X70, X30
+
+all:
+* various fixes for warnings from compilers and the coverity scanner
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.18 release
