@@ -679,7 +679,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Olympus OMD series commands */
 #define PTP_OC_OLYMPUS_OMD_Capture			0x9481
-#define PTP_OC_OLYMPUS_GetLiveViewImage			0x9484
+#define PTP_OC_OLYMPUS_GetLiveViewImage			0x9484	/* liveview */
+#define PTP_OC_OLYMPUS_OMD_GetImage			0x9485	/* gets an JPEG image (from the capture? SDRAM style?) */
 #define PTP_OC_OLYMPUS_OMD_ChangedProperties		0x9486
 #define PTP_OC_OLYMPUS_OMD_MFDrive			0x9487
 #define PTP_OC_OLYMPUS_OMD_SetProperties		0x9489 /* Sends to the device a PTP list of all 16 bit device properties , count 32bit, then 16bit vals */
