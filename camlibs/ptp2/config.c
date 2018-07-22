@@ -7057,7 +7057,6 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
-	uint16_t valsize;
 	uint32_t i;
 	char	buf[16];
 	PTPParams *params = &(camera->pl->params);
