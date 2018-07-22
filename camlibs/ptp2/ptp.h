@@ -2185,16 +2185,20 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_MTP_Zune_UnknownVersion			0xD181
 
 /* Olympus */
+/* these are from OMD E-M1 Mark 2 */
 #define PTP_DPC_OLYMPUS_Aperture			0xD002
 #define PTP_DPC_OLYMPUS_FocusMode			0xD003
 #define PTP_DPC_OLYMPUS_ExposureMeteringMode		0xD004
 #define PTP_DPC_OLYMPUS_ISO				0xD007
 #define PTP_DPC_OLYMPUS_ExposureCompensation		0xD008
+#define PTP_DPC_OLYMPUS_OMD_DriveMode			0xD009
 #define PTP_DPC_OLYMPUS_ImageFormat			0xD00D
+#define PTP_DPC_OLYMPUS_AspectRatio			0xD01B
 #define PTP_DPC_OLYMPUS_Shutterspeed			0xD01C
 #define PTP_DPC_OLYMPUS_LiveViewModeOM			0xD06D
 #define PTP_DPC_OLYMPUS_CaptureTarget			0xD0DC
 
+/* unsure where these were from */
 #define PTP_DPC_OLYMPUS_ResolutionMode			0xD102
 #define PTP_DPC_OLYMPUS_FocusPriority			0xD103
 #define PTP_DPC_OLYMPUS_DriveMode			0xD104

@@ -2730,6 +2730,43 @@ setiso:
 	return _put_sony_value_u32(params, PTP_DPC_SONY_ISO, u, 1);
 }
 
+static int
+_get_Olympus_AspectRatio(CONFIG_GET_ARGS) {
+	int i;
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[20];
+
+		sprintf(buf,"%d:%d",(dpd->FORM.Enum.SupportedValue[i].u32 >> 16), dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff);
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
+			gp_widget_set_value (*widget,buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Olympus_AspectRatio(CONFIG_PUT_ARGS)
+{
+	char		*value;
+	unsigned int	x,y;
+
+	CR (gp_widget_get_value(widget, &value));
+
+	if (2 == sscanf(value, "%d:%d", &x, &y)) {
+		propval->u32 = (x<<16) | y;
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+
 
 static int
 _get_Milliseconds(CONFIG_GET_ARGS) {
@@ -8086,6 +8123,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Program"),               "expprogram2",              PTP_DPC_NIKON_1_Mode,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_1_ExposureProgram,       _put_NIKON_1_ExposureProgram },
 	{ N_("Scene Mode"),                     "scenemode",                PTP_DPC_NIKON_SceneMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_SceneMode,               _put_NIKON_SceneMode },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_SONY_AspectRatio,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_AspectRatio,              _put_Sony_AspectRatio },
+	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_OLYMPUS_AspectRatio,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32,  _get_Olympus_AspectRatio,   _put_Olympus_AspectRatio },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_CANON_EOS_MultiAspect,          PTP_VENDOR_CANON,   PTP_DTC_UINT32,  _get_Canon_EOS_AspectRatio,        _put_Canon_EOS_AspectRatio },
 	{ N_("Storage Device"),                 "storageid",                PTP_DPC_CANON_EOS_CurrentStorage,       PTP_VENDOR_CANON,   PTP_DTC_UINT32,  _get_Canon_EOS_StorageID  ,        _put_Canon_EOS_StorageID },
 	{ N_("High ISO Noise Reduction"),       "highisonr",		    PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_HighIsoNr,     _put_Canon_EOS_HighIsoNr },
