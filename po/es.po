@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.5.13\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2017-04-08 18:04+0200\n"
-"PO-Revision-Date: 2018-04-09 11:15+0200\n"
+"PO-Revision-Date: 2018-04-18 21:58+0200\n"
 "Last-Translator: Francisco Javier Serrador <fserrador@gmail.com>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
 "Language: es\n"
@@ -21,6 +21,7 @@ msgstr ""
 "X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: JPEG\n"
 
 #: camlibs/adc65/adc65.c:242
 msgid ""
@@ -1256,7 +1257,7 @@ msgid "canon_usb_unlock_keys: Unexpected length returned (%i bytes, expected %i)
 msgstr "canon_usb_get_body_id: Se ha devuelto una cantidad de datos no esperada (%i bytes, se esperaba %i)"
 
 #: camlibs/canon/usb.c:834 camlibs/canon/usb.c:853
-#, fuzzy, c-format
+#, c-format
 msgid "canon_usb_get_body_id: Unexpected data length returned (%i bytes, expected %i)"
 msgstr "canon_usb_get_body_id: Se ha devuelto una cantidad de datos no esperada (%i bytes, se esperaba %i)"
 
@@ -4394,7 +4395,7 @@ msgstr ""
 #: camlibs/ptp2/config.c:2034
 #, fuzzy
 msgid "Multi spot"
-msgstr "Punteo"
+msgstr "Multipunto"
 
 #: camlibs/ptp2/config.c:2043
 msgid "Faithful"
@@ -4554,7 +4555,7 @@ msgstr "Menor JPEG"
 #, fuzzy
 #| msgid "JPEG"
 msgid "Tiny JPEG"
-msgstr "JPEG"
+msgstr "Crudo + Enano JPEG"
 
 #: camlibs/ptp2/config.c:2350
 #, fuzzy
@@ -4577,9 +4578,8 @@ msgid "sRAW + Medium Fine JPEG"
 msgstr "Crudo + Mediano Fino JPEG"
 
 #: camlibs/ptp2/config.c:2357 camlibs/ptp2/config.c:2358
-#, fuzzy
 msgid "mRAW + Small Fine JPEG"
-msgstr "Crudo + Pequeño Fino JPEG"
+msgstr "Crudo mRAW + Pequeño Fino JPEG"
 
 #: camlibs/ptp2/config.c:2359 camlibs/ptp2/config.c:2360
 #, fuzzy
@@ -4587,14 +4587,12 @@ msgid "sRAW + Small Fine JPEG"
 msgstr "Crudo + Pequeño Fino JPEG"
 
 #: camlibs/ptp2/config.c:2362
-#, fuzzy
 msgid "mRAW + Large Normal JPEG"
-msgstr "Crudo + Grande Común JPEG"
+msgstr "Crudo mRAW + Grande Común JPEG"
 
 #: camlibs/ptp2/config.c:2363
-#, fuzzy
 msgid "sRAW + Large Normal JPEG"
-msgstr "Crudo + Grande Común JPEG"
+msgstr "Crudo sRAW + Grande Común JPEG"
 
 #: camlibs/ptp2/config.c:2365
 #, fuzzy
@@ -4617,9 +4615,8 @@ msgid "sRAW + Small Normal JPEG"
 msgstr "Crudo + Pequeño Común JPEG"
 
 #: camlibs/ptp2/config.c:2373
-#, fuzzy
 msgid "RAW + Smaller JPEG"
-msgstr "CRUDO+JPEG"
+msgstr "Crudo + JPEG pequeño"
 
 #: camlibs/ptp2/config.c:2374
 #, fuzzy
@@ -4632,19 +4629,18 @@ msgid "sRAW + Smaller JPEG"
 msgstr "Menor JPEG"
 
 #: camlibs/ptp2/config.c:2376
-#, fuzzy
 msgid "RAW + Tiny JPEG"
-msgstr "Crudo + Pequeño Común JPEG"
+msgstr "Crudo + Enano JPEG"
 
 #: camlibs/ptp2/config.c:2377
 #, fuzzy
 msgid "mRAW + Tiny JPEG"
-msgstr "mRAW"
+msgstr "Crudo + Enano JPEG"
 
 #: camlibs/ptp2/config.c:2378
 #, fuzzy
 msgid "sRAW + Tiny JPEG"
-msgstr "sRAW"
+msgstr "Crudo + Enano JPEG"
 
 #: camlibs/ptp2/config.c:2403 camlibs/ptp2/ptp.c:5639
 msgid "Continuous"
@@ -4653,7 +4649,7 @@ msgstr "Contínuo"
 #: camlibs/ptp2/config.c:2406
 #, fuzzy
 msgid "Single: Silent shooting"
-msgstr "Modo disparador modificado"
+msgstr "Única"
 
 #: camlibs/ptp2/config.c:2407
 msgid "Timer 10 sec"
@@ -4775,7 +4771,7 @@ msgstr "Panorámico"
 #: camlibs/ptp2/config.c:2998
 #, fuzzy
 msgid "Intelligent Auto Flash Off"
-msgstr "Flash auto"
+msgstr "Flash apagado"
 
 #: camlibs/ptp2/config.c:2999
 #, fuzzy
@@ -4800,12 +4796,12 @@ msgstr " [retenido]"
 #, fuzzy
 #| msgid "Picture Settings"
 msgid "Picture Effect"
-msgstr "Opciones de la imagen"
+msgstr "Modo Efecto"
 
 #: camlibs/ptp2/config.c:3011
 #, fuzzy
 msgid "Night landscape"
-msgstr "Apaisado"
+msgstr "Apaisado Nocturno"
 
 #: camlibs/ptp2/config.c:3012
 #, fuzzy
@@ -4930,8 +4926,9 @@ msgid "Single Shot"
 msgstr "Configuración de la toma"
 
 #: camlibs/ptp2/config.c:3237
+#, fuzzy
 msgid "Burst"
-msgstr ""
+msgstr "Número Quemado"
 
 #: camlibs/ptp2/config.c:3238 camlibs/ptp2/ptp.c:5193
 #, fuzzy
@@ -5174,7 +5171,7 @@ msgstr "Centro"
 #: camlibs/ptp2/config.c:3313 camlibs/ptp2/ptp.c:5167 camlibs/ptp2/ptp.c:5200
 #, fuzzy
 msgid "Multi-spot"
-msgstr "Punteo"
+msgstr "Multipunto"
 
 #: camlibs/ptp2/config.c:3314 camlibs/ptp2/config.c:3326
 #: camlibs/ptp2/ptp.c:5201
@@ -5189,12 +5186,12 @@ msgstr "<sin asunto>"
 #: camlibs/ptp2/config.c:3316 camlibs/ptp2/ptp.c:5203
 #, fuzzy
 msgid "Group Dynamic"
-msgstr "** dinámico"
+msgstr "** grupo"
 
 #: camlibs/ptp2/config.c:3317
 #, fuzzy
 msgid "Single-area AF"
-msgstr "Área Única"
+msgstr "Área Dinámica AF"
 
 #: camlibs/ptp2/config.c:3318
 #, fuzzy
@@ -5389,7 +5386,7 @@ msgstr "Modo Efecto"
 #: camlibs/ptp2/config.c:3465
 #, fuzzy
 msgid "Selective color"
-msgstr "Acceso selectivo no esá activado para este directorio"
+msgstr "Color"
 
 #: camlibs/ptp2/config.c:3466
 msgid "Silhouette"
@@ -5399,7 +5396,7 @@ msgstr ""
 #, fuzzy
 #| msgid "High"
 msgid "High key"
-msgstr "CLAVE"
+msgstr "Palabra Clave"
 
 #: camlibs/ptp2/config.c:3468
 msgid "Low key"
@@ -5439,7 +5436,7 @@ msgstr "Área Dinámica AF"
 #: camlibs/ptp2/config.c:4014
 #, fuzzy
 msgid "Subject-tracking AF"
-msgstr "Asunto:"
+msgstr "AF-A"
 
 #: camlibs/ptp2/config.c:4019
 #, fuzzy
@@ -5824,10 +5821,8 @@ msgid "Softer"
 msgstr "Suave"
 
 #: camlibs/ptp2/config.c:4166 camlibs/ptp2/ptp.c:5383
-#, fuzzy
-#| msgid "Directory exists"
 msgid "Direct Print"
-msgstr "Débito Directo"
+msgstr "Imprimir Directo"
 
 #: camlibs/ptp2/config.c:4177 camlibs/ptp2/config.c:4188
 #: camlibs/ptp2/ptp.c:5210 camlibs/ptp2/ptp.c:5218
@@ -5909,7 +5904,7 @@ msgstr "Autofocus: servicio IA"
 #: camlibs/ptp2/config.c:4222
 #, fuzzy
 msgid "Continuous-Servo AF"
-msgstr "AF-A"
+msgstr "AF Continuo"
 
 #: camlibs/ptp2/config.c:4226
 msgid "DMF"
@@ -5951,17 +5946,17 @@ msgstr "Fluorescente H"
 #: camlibs/ptp2/config.c:4285 camlibs/ptp2/ptp.c:5624
 #, fuzzy
 msgid "Custom Whitebalance PC-1"
-msgstr "Balanceo Blanco X A"
+msgstr "Personalizada"
 
 #: camlibs/ptp2/config.c:4286 camlibs/ptp2/ptp.c:5625
 #, fuzzy
 msgid "Custom Whitebalance PC-2"
-msgstr "Balanceo Blanco X A"
+msgstr "Personalizada"
 
 #: camlibs/ptp2/config.c:4287 camlibs/ptp2/ptp.c:5626
 #, fuzzy
 msgid "Custom Whitebalance PC-3"
-msgstr "Balanceo Blanco X A"
+msgstr "Personalizada"
 
 #: camlibs/ptp2/config.c:4288 camlibs/ptp2/ptp.c:5627
 msgid "Missing Number"
@@ -5976,25 +5971,25 @@ msgstr "¡se llamó shadow_funcs() dos veces!"
 #, fuzzy
 #| msgid "Custom"
 msgid "Custom WB 2"
-msgstr "_Personalizado"
+msgstr "Preconfigurar Adaptación 2"
 
 #: camlibs/ptp2/config.c:4309
 #, fuzzy
 #| msgid "Custom"
 msgid "Custom WB 3"
-msgstr "_3×3"
+msgstr "Preconfigurar Adaptación 3"
 
 #: camlibs/ptp2/config.c:4310
 #, fuzzy
 #| msgid "Custom"
 msgid "Custom WB 4"
-msgstr "Personalizada"
+msgstr "Preconfigurar Adaptación 4"
 
 #: camlibs/ptp2/config.c:4311
 #, fuzzy
 #| msgid "Custom"
 msgid "Custom WB 5"
-msgstr "_Personalizado"
+msgstr "Preconfigurar Adaptación 5"
 
 #: camlibs/ptp2/config.c:4398
 #, fuzzy
@@ -6006,9 +6001,8 @@ msgid "Black & white"
 msgstr "Blanco y negro"
 
 #: camlibs/ptp2/config.c:4406
-#, fuzzy
 msgid "implicit auto"
-msgstr "AUTO"
+msgstr "autoimplícito"
 
 #: camlibs/ptp2/config.c:4498 camlibs/ptp2/ptp.c:5303
 #, fuzzy
@@ -6041,12 +6035,8 @@ msgid "Startup"
 msgstr "Despliegue"
 
 #: camlibs/ptp2/config.c:4509
-#, fuzzy
 msgid "Shutdown"
-msgstr ""
-"Problemas conocidos:\n"
-"\n"
-"Si se producen problemas de comunicaciones, reinicialice la cámara y vuelva a iniciar la aplicación. El controlador no es lo suficientemente robusto como para recuperarse de estas situaciones, especialmente si se produce un problema y la cámara no se apaga adecuadamente a velocidades mayores a 9600."
+msgstr "Apagar"
 
 #: camlibs/ptp2/config.c:4510
 #, fuzzy
@@ -6120,7 +6110,7 @@ msgstr "Sensibilidad"
 #: camlibs/ptp2/config.c:4568
 #, fuzzy
 msgid "Microphone off"
-msgstr "INACTIVO"
+msgstr "Micrófono Película"
 
 #: camlibs/ptp2/config.c:4623
 msgid "Hi 1"
@@ -6149,7 +6139,7 @@ msgstr "Flash/apertura"
 #: camlibs/ptp2/config.c:4854 camlibs/ptp2/ptp.c:5143
 #, fuzzy
 msgid "JPEG Basic"
-msgstr "JPEG"
+msgstr "Libro _Básico"
 
 #: camlibs/ptp2/config.c:4815 camlibs/ptp2/config.c:4828
 #: camlibs/ptp2/config.c:4840 camlibs/ptp2/config.c:4860
@@ -6208,7 +6198,7 @@ msgstr "30 minutos"
 
 #: camlibs/ptp2/config.c:4926 camlibs/ptp2/ptp.c:5343 camlibs/ptp2/ptp.c:5527
 msgid "Lossless"
-msgstr ""
+msgstr "Sin pérdida"
 
 #: camlibs/ptp2/config.c:4927 camlibs/ptp2/ptp.c:5344
 msgid "Lossy"
@@ -6237,7 +6227,7 @@ msgstr "Versiones"
 #: camlibs/ptp2/config.c:4964
 #, fuzzy
 msgid "Release + Focus"
-msgstr "Error de autofocus: Foco IA"
+msgstr "Versiones"
 
 #: camlibs/ptp2/config.c:4976
 msgid "9 points"
@@ -6394,10 +6384,8 @@ msgid "Spot metering"
 msgstr "Modo de medición de punteo"
 
 #: camlibs/ptp2/config.c:5083
-#, fuzzy
-#| msgid "Play"
 msgid "Playback"
-msgstr "_Repetir"
+msgstr "Repetir"
 
 #: camlibs/ptp2/config.c:5084
 msgid "Access top item in MY MENU"
@@ -6630,7 +6618,7 @@ msgstr "Máscara de red"
 #: camlibs/ptp2/config.c:6844
 #, fuzzy
 msgid "Default gateway"
-msgstr "Estándar"
+msgstr "predeterminado"
 
 #: camlibs/ptp2/config.c:6845
 msgid "Access mode"
@@ -6639,7 +6627,7 @@ msgstr "Modo de acceso"
 #: camlibs/ptp2/config.c:6846
 #, fuzzy
 msgid "WIFI channel"
-msgstr "WIFI ESSID"
+msgstr "Perfiles WIFI"
 
 #: camlibs/ptp2/config.c:6847
 msgid "Encryption"
@@ -6657,7 +6645,7 @@ msgstr "Escritura"
 #, fuzzy
 #| msgid "List all files"
 msgid "List Wifi profiles"
-msgstr "WIFI ESSID"
+msgstr "Perfiles WIFI"
 
 #: camlibs/ptp2/config.c:6900
 msgid "Create Wifi profile"
@@ -7000,7 +6988,7 @@ msgstr "Formato de Imagen"
 #, fuzzy
 #| msgid "Date Format"
 msgid "Image Format Ext HD"
-msgstr "Opción de formato de imagen inválido"
+msgstr "Imagen de formato BE8 de salida"
 
 #: camlibs/ptp2/config.c:7135
 #, fuzzy
@@ -7058,7 +7046,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Focus Mode"
 msgid "Auto Focus Mode 2"
-msgstr "Autofoco"
+msgstr "Error de autofocus: Foco IA"
 
 #: camlibs/ptp2/config.c:7163 camlibs/ptp2/config.c:7166
 #: camlibs/ptp2/ptp.c:4397
@@ -7086,7 +7074,7 @@ msgstr "Compensación de Exposición"
 #, fuzzy
 #| msgid "Flash Mode"
 msgid "Nikon Flash Mode"
-msgstr "Establecer modo de control Nikon"
+msgstr "Modo Flash"
 
 #: camlibs/ptp2/config.c:7178 camlibs/ptp2/ptp.c:4808
 #, fuzzy
@@ -7102,7 +7090,7 @@ msgstr "Comandante"
 #: camlibs/ptp2/config.c:7180 camlibs/ptp2/ptp.c:4878
 #, fuzzy
 msgid "Flash Command Channel"
-msgstr "tipo: {fichero | syslog}> <canal: cadena"
+msgstr "Flash encendido"
 
 #: camlibs/ptp2/config.c:7181 camlibs/ptp2/ptp.c:4880
 #, fuzzy
@@ -7149,7 +7137,7 @@ msgstr "%B: orden de carga desconocida %#x"
 #: camlibs/ptp2/config.c:7189 camlibs/ptp2/ptp.c:4896
 #, fuzzy
 msgid "Flash Command B Value"
-msgstr "%B: orden de carga desconocida %#x"
+msgstr "%B: No se reconoce la orden .directive: %s"
 
 #: camlibs/ptp2/config.c:7190 camlibs/ptp2/ptp.c:4804
 #, fuzzy
@@ -7159,7 +7147,7 @@ msgstr "Área Dinámica AF"
 #: camlibs/ptp2/config.c:7191 camlibs/ptp2/ptp.c:4794
 #, fuzzy
 msgid "AF Beep Mode"
-msgstr "Modo de Aviso"
+msgstr "Modo AF"
 
 #: camlibs/ptp2/config.c:7192 camlibs/ptp2/config.c:7193
 #: camlibs/ptp2/ptp.c:4274
@@ -7174,7 +7162,7 @@ msgstr "Número-F"
 #: camlibs/ptp2/config.c:7195 camlibs/ptp2/ptp.c:4716
 #, fuzzy
 msgid "Flexible Program"
-msgstr "PROGRAMA"
+msgstr "Compatibilidad bibliográfica flexible"
 
 #: camlibs/ptp2/config.c:7198 camlibs/ptp2/ptp.c:4276
 msgid "Focus Distance"
@@ -7191,9 +7179,8 @@ msgid "Focus Mode 2"
 msgstr "Modo del enfoque"
 
 #: camlibs/ptp2/config.c:7205
-#, fuzzy
 msgid "Continuous AF"
-msgstr "AF-A"
+msgstr "AF Continuo"
 
 #: camlibs/ptp2/config.c:7206 camlibs/ptp2/config.c:7207
 #: camlibs/ptp2/ptp.c:4292 camlibs/ptp2/ptp.c:4492
@@ -7254,7 +7241,7 @@ msgstr "Modo Controlador"
 #, fuzzy
 #| msgid "Picture Settings"
 msgid "Picture Style"
-msgstr "[=ESTILO]"
+msgstr "Opciones de la imagen"
 
 # Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/ptp2/config.c:7222 camlibs/ptp2/ptp.c:4297
@@ -7346,7 +7333,7 @@ msgstr "Forzar Modelando"
 #: camlibs/ptp2/config.c:7254
 #, fuzzy
 msgid "Viewfinder Grid"
-msgstr "Buscador de Visor Canon EOS"
+msgstr "Cuadrícula"
 
 #: camlibs/ptp2/config.c:7255 camlibs/ptp2/ptp.c:4802
 #, fuzzy
@@ -7370,7 +7357,7 @@ msgstr "Configuración del modo flash inválido"
 #: camlibs/ptp2/config.c:7259
 #, fuzzy
 msgid "Auto Focus Area"
-msgstr "Error de autofocus: Foco IA"
+msgstr "Autofoco"
 
 #: camlibs/ptp2/config.c:7260 camlibs/ptp2/ptp.c:4754
 #, fuzzy
@@ -7398,14 +7385,12 @@ msgid "Bracket Order"
 msgstr "Orden de Corchete"
 
 #: camlibs/ptp2/config.c:7267 camlibs/ptp2/ptp.c:4293
-#, fuzzy
 msgid "Burst Number"
-msgstr "Número en:\n"
+msgstr "Número Quemado"
 
 #: camlibs/ptp2/config.c:7268 camlibs/ptp2/ptp.c:4294
-#, fuzzy
 msgid "Burst Interval"
-msgstr "Intervalo:"
+msgstr "Intervalo Quemado"
 
 #: camlibs/ptp2/config.c:7269 camlibs/ptp2/ptp.c:4570 camlibs/ptp2/ptp.c:4707
 #, fuzzy
@@ -7428,7 +7413,7 @@ msgstr "Color de Temperatura de Balance Blanco"
 #: camlibs/ptp2/ptp.c:4432
 #, fuzzy
 msgid "Fluorescent White Balance Bias"
-msgstr "Color de Temperatura de Balance Blanco"
+msgstr "Balance de blancos"
 
 #: camlibs/ptp2/config.c:7275 camlibs/ptp2/config.c:7283
 #: camlibs/ptp2/ptp.c:4434
@@ -7536,7 +7521,7 @@ msgstr "Ajuste de la imagen"
 #: camlibs/ptp2/config.c:7305
 #, fuzzy
 msgid "Auto Exposure Bracketing"
-msgstr "Encorchetando"
+msgstr "Modo Exposición Canon Automático"
 
 #: camlibs/ptp2/config.c:7306
 #, fuzzy
@@ -7550,8 +7535,9 @@ msgid "Manual Movie Setting"
 msgstr "Película"
 
 #: camlibs/ptp2/config.c:7308
+#, fuzzy
 msgid "Microphone"
-msgstr ""
+msgstr "Micrófono Película"
 
 #: camlibs/ptp2/config.c:7309
 msgid "Reverse Indicators"
@@ -7568,7 +7554,7 @@ msgstr "Modo Vídeo"
 #: camlibs/ptp2/config.c:7329
 #, fuzzy
 msgid "Meter Off Time"
-msgstr "Metrónomo"
+msgstr "Hora de apagado automático"
 
 #: camlibs/ptp2/config.c:7335 camlibs/ptp2/config.c:7342
 #, fuzzy
@@ -7590,7 +7576,7 @@ msgstr "Calidad Película"
 #: camlibs/ptp2/config.c:7408
 #, fuzzy
 msgid "Minimum Shutter Speed"
-msgstr "Velocidad Obturador"
+msgstr "Configuración de velocidad de obturador inválida"
 
 #: camlibs/ptp2/config.c:7361
 #, fuzzy
@@ -7613,7 +7599,7 @@ msgstr "ISO Auto Límite Superior"
 #: camlibs/ptp2/config.c:7425 camlibs/ptp2/ptp.c:4592
 #, fuzzy
 msgid "Flash Sync. Speed"
-msgstr "Flash encendido"
+msgstr "Sincr. Externa"
 
 # Translation thanks to Martin Kroeker. [Colin]
 #: camlibs/ptp2/config.c:7368
@@ -7677,10 +7663,8 @@ msgid "Maximum continuous release"
 msgstr "Contínuo"
 
 #: camlibs/ptp2/config.c:7419 camlibs/ptp2/ptp.c:4426
-#, fuzzy
-#| msgid "Compression"
 msgid "Raw Compression"
-msgstr "Crudo"
+msgstr "Compresión Cruda"
 
 #: camlibs/ptp2/config.c:7421
 msgid "Image Quality 2"
@@ -7689,7 +7673,7 @@ msgstr "Calidad de Imagen 2"
 #: camlibs/ptp2/config.c:7443
 #, fuzzy
 msgid "Image Settings"
-msgstr "Imagen"
+msgstr "No Configurado"
 
 #: camlibs/ptp2/config.c:7446 camlibs/ptp2/config.c:7447
 #: camlibs/ptp2/config.c:7448 camlibs/ptp2/config.c:7449
@@ -7699,9 +7683,8 @@ msgid "Capture Settings"
 msgstr "Opciones de Captura"
 
 #: camlibs/ptp2/config.c:7454
-#, fuzzy
 msgid "WIFI profiles"
-msgstr "WIFI ESSID"
+msgstr "Perfiles WIFI"
 
 #: camlibs/ptp2/config.c:7667 camlibs/ptp2/config.c:8026
 #, fuzzy
@@ -7927,7 +7910,7 @@ msgstr "Descripción de Extensión de Proveedor: %s\n"
 #, fuzzy, c-format
 #| msgid "Firmware version: %d.%02d\n"
 msgid "PTP Standard Version: %d.%d\n"
-msgstr " versión apt %d.%d.%d\n"
+msgstr "Versión: %d.%d\n"
 
 #: camlibs/ptp2/library.c:5316
 #, c-format
@@ -7949,7 +7932,7 @@ msgstr "Formatos de Pantalla:  "
 #: camlibs/ptp2/library.c:5339
 #, fuzzy
 msgid "Supported MTP Object Properties:\n"
-msgstr "el formato del fichero objeto no admite la reubicación %d"
+msgstr ".linkonce no admitió en este formato de fichero objeto"
 
 #: camlibs/ptp2/library.c:5350
 #, c-format
@@ -8101,7 +8084,7 @@ msgstr "Jerarquía Genérica"
 #: camlibs/ptp2/library.c:5475
 #, fuzzy
 msgid "Digital Camera Layout (DCIM)"
-msgstr "Capturar imágenes desde la cámara digital"
+msgstr "Diseño de cámara (DCIM)"
 
 #: camlibs/ptp2/library.c:5481
 #, c-format
@@ -8387,7 +8370,7 @@ msgstr "Velocidad Obturador"
 #: camlibs/ptp2/ptp.c:4225
 #, fuzzy
 msgid "Mirror Up Sequence"
-msgstr "Act Espejo Remoto"
+msgstr "Subir Espejo Mup"
 
 #: camlibs/ptp2/ptp.c:4226
 msgid "Camera Mode Not Adjust FNumber"
@@ -8438,7 +8421,7 @@ msgstr "Control de Tiempo Remoto"
 #: camlibs/ptp2/ptp.c:4239
 #, fuzzy
 msgid "PTP Cancel Request"
-msgstr "Versión PTP"
+msgstr "_Cancelar"
 
 #: camlibs/ptp2/ptp.c:4241
 #, fuzzy
@@ -8643,9 +8626,8 @@ msgid "Slow Shutter Setting"
 msgstr "Disparador lento"
 
 #: camlibs/ptp2/ptp.c:4354
-#, fuzzy
 msgid "AF Mode"
-msgstr "Modo Prioridad AF-C "
+msgstr "Modo AF"
 
 #: camlibs/ptp2/ptp.c:4355
 msgid "Image Stabilization"
@@ -8766,7 +8748,7 @@ msgstr "Longitud Focal Tele"
 #: camlibs/ptp2/ptp.c:4398
 #, fuzzy
 msgid "Flash Quantity Count"
-msgstr "Flash encendido"
+msgstr "_Inventario"
 
 #: camlibs/ptp2/ptp.c:4399
 #, fuzzy
@@ -8776,7 +8758,7 @@ msgstr "Ángulo de rotación"
 #: camlibs/ptp2/ptp.c:4400
 #, fuzzy
 msgid "Rotation Scene"
-msgstr "Escena"
+msgstr "_Rotación"
 
 #: camlibs/ptp2/ptp.c:4401
 #, fuzzy
@@ -8906,7 +8888,7 @@ msgstr "Restablecer Menú Banco"
 #: camlibs/ptp2/ptp.c:4522
 #, fuzzy
 msgid "Vertical AF On"
-msgstr "AF-ON"
+msgstr "Espaciado Vertical"
 
 #: camlibs/ptp2/ptp.c:4526
 msgid "Focus Area Zone"
@@ -8919,7 +8901,7 @@ msgstr "Activar Copyright"
 #: camlibs/ptp2/ptp.c:4532
 #, fuzzy
 msgid "Exposure ISO Step"
-msgstr "ISO"
+msgstr "Exposición"
 
 #: camlibs/ptp2/ptp.c:4534
 #, fuzzy
@@ -9056,7 +9038,7 @@ msgstr ""
 #: camlibs/ptp2/ptp.c:4615
 #, fuzzy
 msgid "Photo Info. Playback"
-msgstr "_Repetir"
+msgstr "Repetir"
 
 #: camlibs/ptp2/ptp.c:4617
 #, fuzzy
@@ -9128,14 +9110,12 @@ msgid "Movie Screen Size"
 msgstr "Película"
 
 #: camlibs/ptp2/ptp.c:4651
-#, fuzzy
 msgid "Movie Voice"
-msgstr "Voz"
+msgstr "Voz Película"
 
 #: camlibs/ptp2/ptp.c:4653
-#, fuzzy
 msgid "Movie Microphone"
-msgstr "Película"
+msgstr "Micrófono Película"
 
 #: camlibs/ptp2/ptp.c:4655
 #, fuzzy
@@ -9145,7 +9125,7 @@ msgstr "Película"
 #: camlibs/ptp2/ptp.c:4661
 #, fuzzy
 msgid "Monitor Off Delay"
-msgstr "APAGADA"
+msgstr "Desativado"
 
 #: camlibs/ptp2/ptp.c:4663
 msgid "Bracketing Enable"
@@ -9187,7 +9167,7 @@ msgstr "Nombre de Lente"
 #, fuzzy
 #| msgid "Lens Mode"
 msgid "Lens Sort"
-msgstr "Nombre de Lente"
+msgstr "_Ordenar por…"
 
 #: camlibs/ptp2/ptp.c:4677
 msgid "Lens Type"
@@ -9405,7 +9385,7 @@ msgstr ""
 #: camlibs/ptp2/ptp.c:4816
 #, fuzzy
 msgid "Viewfinder Grid Display"
-msgstr "Buscador de Visor Canon EOS"
+msgstr "Cuadrícula"
 
 #: camlibs/ptp2/ptp.c:4820
 #, fuzzy
@@ -9419,7 +9399,7 @@ msgstr "Auto FP"
 #: camlibs/ptp2/ptp.c:4826
 #, fuzzy
 msgid "Warning Display"
-msgstr "Aviso"
+msgstr "Pantalla"
 
 #: camlibs/ptp2/ptp.c:4828
 msgid "Battery Cell Kind"
@@ -9439,7 +9419,7 @@ msgstr "Velocidad alta continua"
 #, fuzzy
 #| msgid "Flash Setting"
 msgid "Info Disp Setting"
-msgstr "Preferencias"
+msgstr "Disp Av"
 
 #: camlibs/ptp2/ptp.c:4838
 #, fuzzy
@@ -9474,9 +9454,7 @@ msgstr "Encorchetando Marcos y Pasos"
 #: camlibs/ptp2/ptp.c:4850
 #, fuzzy
 msgid "Live View Mode"
-msgstr ""
-"\n"
-"      --list-live        lista de rutas live"
+msgstr "Vivo:"
 
 #: camlibs/ptp2/ptp.c:4852
 #, fuzzy
@@ -9486,9 +9464,7 @@ msgstr "Modo Controlador"
 #: camlibs/ptp2/ptp.c:4854
 #, fuzzy
 msgid "Live View Status"
-msgstr ""
-"\n"
-"      --list-live        lista de rutas live"
+msgstr "Vivo:"
 
 #: camlibs/ptp2/ptp.c:4856
 msgid "Live View Image Zoom Ratio"
@@ -9525,7 +9501,7 @@ msgstr "Flash encendido"
 #: camlibs/ptp2/ptp.c:4874
 #, fuzzy
 msgid "Flash MRepeat Count"
-msgstr "CUENTA"
+msgstr "CONTADOR"
 
 #: camlibs/ptp2/ptp.c:4876
 #, fuzzy
@@ -9551,7 +9527,7 @@ msgstr "Compresión de Imagen"
 #: camlibs/ptp2/ptp.c:4924
 #, fuzzy
 msgid "Secure Time"
-msgstr "_No, esta vez"
+msgstr "Obtiene comprobación de tiempo seguro"
 
 #: camlibs/ptp2/ptp.c:4925
 msgid "Device Certificate"
@@ -9593,7 +9569,7 @@ msgstr "tipo de dispositivo inválido %s"
 #: camlibs/ptp2/ptp.c:4935
 #, fuzzy
 msgid "Playback Rate"
-msgstr "_Repetir"
+msgstr "Tipo"
 
 #: camlibs/ptp2/ptp.c:4936
 #, fuzzy
@@ -9616,10 +9592,8 @@ msgid "PlaysForSure ID"
 msgstr "  ID:       "
 
 #: camlibs/ptp2/ptp.c:4948
-#, fuzzy
-#| msgid "Image Quality"
 msgid "Quality"
-msgstr "Baja (la mejor calidad)"
+msgstr "Calidad"
 
 #: camlibs/ptp2/ptp.c:4949
 msgid "Release Mode"
@@ -9666,16 +9640,14 @@ msgid "AB Filter"
 msgstr "Filtro AB"
 
 #: camlibs/ptp2/ptp.c:4976
-#, fuzzy
-#| msgid "Image"
 msgid "Still Image"
-msgstr "¡¡Ella sigue dentro!!"
+msgstr "Imagen Mantenida"
 
 #: camlibs/ptp2/ptp.c:5118 camlibs/ptp2/ptp.c:5124 camlibs/ptp2/ptp.c:5125
 #: camlibs/ptp2/ptp.c:5132
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f stops"
-msgstr "  - ~h (~,1f%) diferido~%"
+msgstr "%.1f detenidas"
 
 #: camlibs/ptp2/ptp.c:5126
 #, c-format
@@ -9683,9 +9655,8 @@ msgid "%.0f mm"
 msgstr "%.0f mm"
 
 #: camlibs/ptp2/ptp.c:5144
-#, fuzzy
 msgid "JPEG Norm"
-msgstr " NORM"
+msgstr "JPEG Norm"
 
 #: camlibs/ptp2/ptp.c:5147
 #, fuzzy
@@ -9711,7 +9682,7 @@ msgstr "Promedio Ponderado"
 #, fuzzy
 #| msgid "Center-Weighted"
 msgid "Center-spot"
-msgstr "Centro"
+msgstr "Punto Central"
 
 #: camlibs/ptp2/ptp.c:5170
 msgid "Automatic flash"
@@ -9737,7 +9708,7 @@ msgstr "Energía"
 #: camlibs/ptp2/ptp.c:5198
 #, fuzzy
 msgid "Timer + Remote"
-msgstr "Temporizador"
+msgstr "Remota"
 
 #: camlibs/ptp2/ptp.c:5256
 #, fuzzy
@@ -9759,9 +9730,8 @@ msgid "Highlight active focus point"
 msgstr "Brillo Punto Foco"
 
 #: camlibs/ptp2/ptp.c:5313
-#, fuzzy
 msgid "Unused"
-msgstr "Mostrar cuentas _no utilizadas"
+msgstr "Sin Uso"
 
 #: camlibs/ptp2/ptp.c:5358
 #, fuzzy
@@ -9891,7 +9861,7 @@ msgstr ""
 #: camlibs/ptp2/ptp.c:5574
 #, fuzzy
 msgid "Pan Focus"
-msgstr "Foco"
+msgstr "moneda"
 
 #: camlibs/ptp2/ptp.c:5578
 #, fuzzy
@@ -9950,7 +9920,7 @@ msgstr "Modo de medición de punteo"
 #, fuzzy
 #| msgid "Exposure Metering"
 msgid "Average Metering"
-msgstr "Medida de Exposición"
+msgstr "MEDIA"
 
 #: camlibs/ptp2/ptp.c:5592
 #, fuzzy
@@ -10060,33 +10030,32 @@ msgstr "Firmware"
 #: camlibs/ptp2/ptp.c:5813
 #, fuzzy
 msgid "Windows Image Format"
-msgstr "Opción de formato de imagen inválido"
+msgstr "Ven_tanas"
 
 #: camlibs/ptp2/ptp.c:5814
 #, fuzzy
 #| msgid "PTP Undefined Error"
 msgid "Undefined Audio"
-msgstr "                                        : Sonido\n"
+msgstr "                                        : Audio\n"
 
 #: camlibs/ptp2/ptp.c:5818
+#, fuzzy
 msgid "Audible.com Codec"
-msgstr ""
+msgstr "Código JPEG 2000"
 
 #: camlibs/ptp2/ptp.c:5820
 #, fuzzy
 msgid "Samsung Playlist"
-msgstr "Listado reproducción de Sonido Abstracto"
+msgstr "listado aleatorio"
 
 #: camlibs/ptp2/ptp.c:5821
-#, fuzzy
-#| msgid "PTP Undefined Error"
 msgid "Undefined Video"
-msgstr "                                        : Vídeo\n"
+msgstr "Indefinió Vídeo"
 
 #: camlibs/ptp2/ptp.c:5826
 #, fuzzy
 msgid "Undefined Collection"
-msgstr "$<sin definir>"
+msgstr "Colección de compiladores GNU"
 
 #: camlibs/ptp2/ptp.c:5827
 #, fuzzy
@@ -10124,7 +10093,7 @@ msgstr "Mensaje Abstracto"
 #: camlibs/ptp2/ptp.c:5834
 #, fuzzy
 msgid "Abstract Chaptered Production"
-msgstr "Mensaje Abstracto"
+msgstr "Producción de entorno musical"
 
 #: camlibs/ptp2/ptp.c:5835
 msgid "Abstract Audio Playlist"
@@ -10142,32 +10111,32 @@ msgstr "Mensaje Abstracto"
 #: camlibs/ptp2/ptp.c:5838
 #, fuzzy
 msgid "WPL Playlist"
-msgstr "Listado reproducción de Sonido Abstracto"
+msgstr "listado aleatorio"
 
 #: camlibs/ptp2/ptp.c:5839
 #, fuzzy
 msgid "M3U Playlist"
-msgstr "Crear ficheros .m3u"
+msgstr "Opciones de lista de reproducción\n"
 
 #: camlibs/ptp2/ptp.c:5840
 #, fuzzy
 msgid "MPL Playlist"
-msgstr "Listado reproducción de Sonido Abstracto"
+msgstr "listado aleatorio"
 
 #: camlibs/ptp2/ptp.c:5841
 #, fuzzy
 msgid "ASX Playlist"
-msgstr "Listado reproducción de Sonido Abstracto"
+msgstr "listado aleatorio"
 
 #: camlibs/ptp2/ptp.c:5842
 #, fuzzy
 msgid "PLS Playlist"
-msgstr "Listado reproducción de Sonido Abstracto"
+msgstr "listado aleatorio"
 
 #: camlibs/ptp2/ptp.c:5843
 #, fuzzy
 msgid "Undefined Document"
-msgstr "$<sin definir>"
+msgstr "para el documento"
 
 #: camlibs/ptp2/ptp.c:5844
 #, fuzzy
@@ -10205,7 +10174,7 @@ msgstr "Mensaje Abstracto"
 #: camlibs/ptp2/ptp.c:5852
 #, fuzzy
 msgid "Undefined Contact"
-msgstr "sin definir"
+msgstr "Contacto"
 
 #: camlibs/ptp2/ptp.c:5853
 msgid "Abstract Contact"
@@ -10237,14 +10206,13 @@ msgid "vCalendar2"
 msgstr "vCalendar2"
 
 #: camlibs/ptp2/ptp.c:5860
-#, fuzzy
 msgid "Undefined Windows Executable"
-msgstr "ejecutable"
+msgstr "Ventanas Ejecutables Indefinidas"
 
 #: camlibs/ptp2/ptp.c:5861
 #, fuzzy
 msgid "Media Cast"
-msgstr "Tarjeta Media"
+msgstr "reparto:"
 
 #: camlibs/ptp2/ptp.c:5862
 msgid "Section"
@@ -10285,17 +10253,17 @@ msgstr "Obtiene número de objetos"
 #: camlibs/ptp2/ptp.c:5925
 #, fuzzy
 msgid "Get object handles"
-msgstr "Obtener Objeto de Imagen Redimensionado"
+msgstr "Manipulaciones Enumeradas"
 
 #: camlibs/ptp2/ptp.c:5926
 #, fuzzy
 msgid "Get object info"
-msgstr "No hay información válida PTP del objeto PTP"
+msgstr "Obtén información sobre la aldea"
 
 #: camlibs/ptp2/ptp.c:5927
 #, fuzzy
 msgid "Get object"
-msgstr "Error Docman: incapaz de obtener carpeta de objeto"
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5928
 msgid "Get thumbnail"
@@ -10336,17 +10304,16 @@ msgstr "Falló la auto-comprobación PTP"
 #: camlibs/ptp2/ptp.c:5936
 #, fuzzy
 msgid "Set object protection"
-msgstr " Cambiar Protección (%u entradas):\n"
+msgstr "La calidad-de-protección solicitada no pudo ser provista"
 
 #: camlibs/ptp2/ptp.c:5937
-#, fuzzy
 msgid "Power down device"
-msgstr "Apagar"
+msgstr "Apagar dispositivo"
 
 #: camlibs/ptp2/ptp.c:5938
 #, fuzzy
 msgid "Get device property description"
-msgstr "Restablecer valor propietario de dispositivo"
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5939
 #, fuzzy
@@ -10419,7 +10386,7 @@ msgstr "S.ficheros"
 #: camlibs/ptp2/ptp.c:5955
 #, fuzzy
 msgid "Get Stream Info"
-msgstr "FLUJO"
+msgstr "Obtén información sobre la aldea"
 
 #: camlibs/ptp2/ptp.c:5956
 #, fuzzy
@@ -10434,7 +10401,7 @@ msgstr "No se pudo acceder al objeto complemento"
 #: camlibs/ptp2/ptp.c:5961
 #, fuzzy
 msgid "Get object property description"
-msgstr "Obtener Objeto de Imagen Redimensionado"
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5962
 msgid "Get object property value"
@@ -10443,26 +10410,27 @@ msgstr "Obtener objeto de valor propietario"
 #: camlibs/ptp2/ptp.c:5963
 #, fuzzy
 msgid "Set object property value"
-msgstr "Establece valor propietario del dispositivo"
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5964
 #, fuzzy
 msgid "Get object property list"
-msgstr "Obtener Objeto de Imagen Redimensionado"
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5965
 #, fuzzy
 msgid "Set object property list"
-msgstr "Establece valor propietario del dispositivo"
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5966
+#, fuzzy
 msgid "Get interdependent property description"
-msgstr ""
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5967
 #, fuzzy
 msgid "Send object property list"
-msgstr "Lista los contenidos de un árbol de objeto."
+msgstr "Obtener objeto de valor propietario"
 
 #: camlibs/ptp2/ptp.c:5968
 #, fuzzy
@@ -10484,14 +10452,13 @@ msgid "Skip to next position in playlist"
 msgstr "Omitir al siguiente posición en listado reproductor"
 
 #: camlibs/ptp2/ptp.c:5974
-#, fuzzy
 msgid "Get secure time challenge"
-msgstr "Fallado al obtener la hora actual\n"
+msgstr "Obtiene comprobación de tiempo seguro"
 
 #: camlibs/ptp2/ptp.c:5975
 #, fuzzy
 msgid "Get secure time response"
-msgstr "Tiempo de Respuesta"
+msgstr "Obtiene comprobación de tiempo seguro"
 
 #: camlibs/ptp2/ptp.c:5976
 #, fuzzy
@@ -10556,18 +10523,18 @@ msgid "Get WMDRM-PD Application Response"
 msgstr ""
 
 #: camlibs/ptp2/ptp.c:5994
+#, fuzzy
 msgid "Enable trusted file operations"
-msgstr ""
+msgstr "Desactiva operaciones de fichero confiados"
 
 #: camlibs/ptp2/ptp.c:5995
-#, fuzzy
 msgid "Disable trusted file operations"
-msgstr "desactiva fichero automático \"deduplicarción\" en el almacén"
+msgstr "Desactiva operaciones de fichero confiados"
 
 #: camlibs/ptp2/ptp.c:5996
 #, fuzzy
 msgid "End trusted application session"
-msgstr "(Final de sesión.)"
+msgstr "Gestor aplicando sonido de sesión"
 
 #: camlibs/ptp2/ptp.c:5999
 #, fuzzy
@@ -10590,7 +10557,7 @@ msgstr "La hora actual es ~a."
 #: camlibs/ptp2/ptp.c:6005
 #, fuzzy
 msgid "Send Registration Request"
-msgstr "Aplicaciónde Registración"
+msgstr "Registro Aplicación"
 
 #: camlibs/ptp2/ptp.c:6006
 #, fuzzy
@@ -10600,12 +10567,12 @@ msgstr "Obtiene respuesta"
 #: camlibs/ptp2/ptp.c:6007
 #, fuzzy
 msgid "Get Proximity Challenge"
-msgstr "desafío no coincidente\n"
+msgstr "Obtiene comprobación de tiempo seguro"
 
 #: camlibs/ptp2/ptp.c:6008
 #, fuzzy
 msgid "Send Proximity Response"
-msgstr "Enviar"
+msgstr "Respuesta"
 
 #: camlibs/ptp2/ptp.c:6009
 msgid "Send WMDRM-ND License Request"
@@ -10628,12 +10595,12 @@ msgstr ""
 #, fuzzy
 #| msgid "PTP Invalid Parent Object"
 msgid "Send Partial Object"
-msgstr "Parcial"
+msgstr "Enviar"
 
 #: camlibs/ptp2/ptp.c:6018
 #, fuzzy
 msgid "Truncate Object"
-msgstr "Objeto Asociado"
+msgstr "Referencias a objetos"
 
 #: camlibs/ptp2/ptp.c:6019
 msgid "Begin Edit Object"
@@ -11041,8 +11008,6 @@ msgstr "Castellano"
 
 #: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1703
 #: camlibs/sierra/sierra.c:1719 camlibs/sierra/sierra.c:1905
-#, fuzzy
-#| msgid "Portugese"
 msgid "Portuguese"
 msgstr "Portugués"
 
@@ -11113,7 +11078,7 @@ msgstr "No pudo transmitir el paquete incluso después de varios intentos."
 #, fuzzy, c-format
 #| msgid "Packet got rejected by camera. Please contact %s."
 msgid "Packet was rejected by camera. Please contact %s."
-msgstr "Cámara ocupada. Si el problema persiste, por favor contacte con %s."
+msgstr "La cámara no ha aceptado los parámetros. Por favor, contacte con %s."
 
 #: camlibs/sierra/library.c:815
 #, c-format
@@ -12056,7 +12021,7 @@ msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Controlador genérico sq905C\n"
+"sq905C como controlador genérico\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/st2205/library.c:83
