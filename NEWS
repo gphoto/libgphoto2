@@ -1,11 +1,17 @@
 libgphoto2 2.5.18.1 development branch
 
 ptp2:
-* Canon EOS: handle OLC versions of newer models
-* Fuji X series capture improvements
-* Fuji X series live view support added
-* Panasonic GH5 liveview and capture support. (Needs camera firmware 2.3+)
-* Olympus E-M1 / E-M5 Mark II liveview and capture support added.
+* Canon EOS: handle OLC versions of newer models, which gave incorrect aperture/shutterspeed values
+* Fuji X series capture improvements.
+* Fuji X series live view support added.
+* Panasonic GH5 liveview and capture support. (Needs camera firmware 2.3 or newer)
+* Olympus E-M5 Mark II and E-M1 Mark II liveview and capture support added.
+* USB IDs added:
+  * Sony Alpha A99 M2, A7 III, A9
+  * Nikon Coolpix A900
+  * Panasonic GH5
+  * Olympus E-M1 Mark 2
+  * Fuji X-H1, X-M1, X70, X30
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.18 release
