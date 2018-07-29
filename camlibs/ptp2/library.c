@@ -7459,7 +7459,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 					if (xsize > BLOBSIZE)
 						xsize = BLOBSIZE;
-					C_PTP_RET (ptp_canon_eos_getpartialobject (params, oid, offset, xsize, &ximage));
+					C_PTP_REP (ptp_canon_eos_getpartialobject (params, oid, offset, xsize, &ximage));
 					gp_file_append (file, (char*)ximage, xsize);
 					free (ximage);
 					ximage = NULL;
