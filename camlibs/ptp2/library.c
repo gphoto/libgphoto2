@@ -4923,6 +4923,9 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 				/* for manual focus, at least wait until we get events */
 				if (manualfocus && foundevents)
 					break;
+				/* when doing manual focus, wait at most 0.1 seconds */
+				if (manualfocus && (time_since (focus_start) >= 100))
+					break;
 			} while (waiting_for_timeout (&back_off_wait, focus_start, 2*1000)); /* wait 2 seconds for focus */
 
 			if (!foundfocusinfo && !manualfocus) {
