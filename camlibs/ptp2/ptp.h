@@ -155,6 +155,7 @@ struct _PTPIPHeader {
 typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Vendor IDs */
+/* List is linked from here: http://www.imaging.org/site/IST/Standards/PTP_Standards.aspx */
 #define PTP_VENDOR_EASTMAN_KODAK		0x00000001
 #define PTP_VENDOR_SEIKO_EPSON			0x00000002
 #define PTP_VENDOR_AGILENT			0x00000003
