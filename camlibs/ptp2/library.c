@@ -3704,7 +3704,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 			if (xsize > BLOBSIZE)
 				xsize = BLOBSIZE;
-			ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &ximage);
+			C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &ximage));
 			gp_file_append (file, (char*)ximage, xsize);
 			free (ximage);
 			offset += xsize;
@@ -5420,7 +5420,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 							if (xsize > BLOBSIZE)
 								xsize = BLOBSIZE;
-							ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &yimage);
+							C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &yimage));
 							gp_file_append (file, (char*)yimage, xsize);
 							free (yimage);
 							offset += xsize;
@@ -7459,7 +7459,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 					if (xsize > BLOBSIZE)
 						xsize = BLOBSIZE;
-					ptp_canon_eos_getpartialobject (params, oid, offset, xsize, &ximage);
+					C_PTP_RET (ptp_canon_eos_getpartialobject (params, oid, offset, xsize, &ximage));
 					gp_file_append (file, (char*)ximage, xsize);
 					free (ximage);
 					ximage = NULL;
