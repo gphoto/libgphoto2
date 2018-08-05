@@ -2422,6 +2422,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		 * 6D:		7
 		 * M10:		8
 		 * 70D:		8
+		 * 5Dsr:	b
 		 * 200D: 	f
 		 */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
@@ -2479,10 +2480,18 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
 				/* hack to differ between older EOS and EOS 200D newer */
-				if (olcver >= 8) {
+				switch (olcver) {
+				case 0x8:
+				case 0xf:
 					curoff += 7;	/* f (200D), 8 (M10) */
-				} else {
-					curoff += 6;	/* 7 */
+					break;
+				case 0x7:
+				case 0xb:
+					curoff += 6;	/* 7 , b (5ds) */
+					break;
+				default:
+					curoff += 6;
+					break;
 				}
 				i++;
 			}
@@ -2501,7 +2510,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				if (olcver >= 0xf) {
 					curoff += 6;	/* f */
 				} else {
-					curoff += 5;	/* 7, 8 */
+					curoff += 5;	/* 7, 8, b */
 				}
 				i++;
 			}
@@ -2514,7 +2523,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
-				curoff += 4;
+				curoff += 4;	/* 7, 8, b, f*/
 				i++;
 			}
 			if (mask & 0x0010) {
