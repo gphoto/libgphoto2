@@ -843,6 +843,7 @@ parse_9301_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 	/*traverse_tree (0, node);*/
 	return PTP_RC_OK;
 }
+#endif
 
 uint16_t
 ptp_olympus_omd_capture (PTPParams* params)
@@ -1063,7 +1064,7 @@ ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t 
 	return ret;
 }
 
-
+#ifdef HAVE_LIBXML2
 static uint16_t
 ptp_olympus_parse_output_xml(PTPParams* params, char*data, int len, xmlNodePtr *code)
 {
