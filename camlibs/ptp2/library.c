@@ -3380,7 +3380,8 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 			if (	(ret == PTP_RC_DeviceBusy) ||
 				/* this is seen on Nikon V3 */
-				(ret == PTP_RC_NIKON_InvalidStatus)
+				(ret == PTP_RC_NIKON_InvalidStatus) ||
+				(ret == 0xa207)	/* on Nikon D850 */
 			)  usleep(2000);
 		} while (((ret == PTP_RC_DeviceBusy) || (ret ==  PTP_RC_NIKON_InvalidStatus)) && loops--);
 		goto capturetriggered;
@@ -5096,7 +5097,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			}
 
 			/* busy means wait and the invalid status might go away */
-			if ((ret != PTP_RC_DeviceBusy) && (ret != PTP_RC_NIKON_InvalidStatus))
+			if ((ret != PTP_RC_DeviceBusy) && (ret != PTP_RC_NIKON_InvalidStatus) && (ret != 0xa207)) /* a207 on Nikon D850 */
 				return translate_ptp_result (ret);
 
 			usleep(2000);
