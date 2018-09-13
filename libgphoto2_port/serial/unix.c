@@ -186,6 +186,13 @@
 #define GP_PORT_SERIAL_RANGE_HIGH     11
 #endif
 
+/* MidnightBSD */
+#ifdef __MidnightBSD__
+#define GP_PORT_SERIAL_PREFIX   "/dev/cuad%x"
+#define GP_PORT_SERIAL_RANGE_LOW        0
+#define GP_PORT_SERIAL_RANGE_HIGH       (0xf)
+#endif
+
 /* Others? */
 
 /* Default */
@@ -419,7 +426,7 @@ gp_port_serial_open (GPPort *dev)
 	}
 	dev->pl->fd = -1;
 
-#if defined(__FreeBSD__) || defined(__APPLE__) || defined(__DragonFly__)
+#if defined(__FreeBSD__) || defined(__APPLE__) || defined(__DragonFly__) || defined(__MidnightBSD__)
 	dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 #elif OS2
 	fd = open (port, O_RDWR | O_BINARY);
