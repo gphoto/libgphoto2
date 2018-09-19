@@ -1046,6 +1046,9 @@ static struct {
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:Alpha-A9 (Control)",     0x054c, 0x0c2a, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Richard Brown at SUSE */
+	{"Sony:Alpha-RX10M4 (Control)", 0x054c,0x0c2f, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:Alpha-A7R III (Control)", 0x054c,0x0c33, PTP_CAP|PTP_CAP_PREVIEW},
