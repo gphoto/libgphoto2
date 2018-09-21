@@ -2164,6 +2164,8 @@ static struct {
 	{"Fuji:Fujifilm X-T20",			0x04cb, 0x02d4, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
 	{"Fuji:Fujifilm X-H1",			0x04cb, 0x02d7, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Stefan Weiberg at SUSE */
+	{"Fuji:Fujifilm X-T3",			0x04cb, 0x02dd, PTP_CAP|PTP_CAP_PREVIEW},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
