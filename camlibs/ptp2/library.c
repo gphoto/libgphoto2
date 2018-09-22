@@ -3373,6 +3373,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
+		/* we assume for modern cameras this event method works to avoid longer waits */
+		params->event90c7works = 1;
+
 		int loops = 100;
 		do {
 			ret = ptp_nikon_capture2 (params, af, sdram);
