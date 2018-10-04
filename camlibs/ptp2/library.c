@@ -2046,6 +2046,9 @@ static struct {
 	/* Geza Lore <gezalore@gmail.com> */
 	{"Canon:EOS M100",          		0x04a9, 0x32d1, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://github.com/gphoto/libgphoto2/issues/58 */
+	{"Canon:EOS M50",          		0x04a9, 0x32d2, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
