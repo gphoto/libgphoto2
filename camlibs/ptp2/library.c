@@ -1740,6 +1740,8 @@ static struct {
 	{"Canon:PowerShot A470",		0x04a9, 0x317a, PTPBUG_DELETE_SENDS_EVENT},
 	/* Michael Plucik <michaelplucik@googlemail.com> */
 	{"Canon:EOS 1000D",			0x04a9, 0x317b, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+    /* Jasem Mutlaq <mutlaqja@ikarustech.com> */
+	{"Canon:EOS 4000D",			0x04a9, 0x32d9, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=1910010&group_id=8874 */
 	{"Canon:Digital IXUS 80 IS",		0x04a9, 0x3184, PTPBUG_DELETE_SENDS_EVENT},
