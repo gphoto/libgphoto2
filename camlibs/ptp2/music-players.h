@@ -1026,6 +1026,8 @@
   { "Archos", 0x0e79, "45 Neon", 0x31f3, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1352/ */
   { "Archos", 0x0e79, "50 Diamond", 0x3229, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/241 */
+  { "Archos", 0x0e79, "50 Diamond (2nd ID)", 0x322a, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "101 G4", 0x4002, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos (for Tesco)", 0x0e79, "Hudl (ID1)", 0x5008, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos (for Tesco)", 0x0e79, "Hudl (ID2)", 0x5009, DEVICE_FLAGS_ANDROID_BUGS },
@@ -1053,6 +1055,8 @@
 
   /* https://sourceforge.net/p/libmtp/support-requests/245/ */
   { "Archos", 0x0e79, "55B Platinum", 0x544a, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1799/ */
+  { "Archos", 0x0e79, "50F Helium", 0x545c, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/209/ */
   { "Archos", 0x0e79, "55 diamond Selfie", 0x5465, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/262/ */
@@ -1932,6 +1936,9 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact", 0x01f7,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/bugs/1804/ */
+  { "SONY", 0x0fce, "Xperia XZ2 Compact Dual Sim", 0x01f9,
+      DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/bugs/1775/ */
   { "SONY", 0x0fce, "Xperia XZ2 (H8266)", 0x01fa,
       DEVICE_FLAG_NONE },
@@ -2063,6 +2070,8 @@
   { "SONY", 0x0fce, "XPeria XZ1 Compact MTP+CDROM", 0x41f4,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact MTP+CDROM", 0x41f7,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia XZ2 Compact Dual Sim MTP+CDROM", 0x41f9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia XZ2 (H8266) MTP+CDROM", 0x41fa,
       DEVICE_FLAG_NONE },
@@ -2217,6 +2226,8 @@
   { "SONY", 0x0fce, "XPeria XZ1 Compact MTP+ADB", 0x51f4,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact MTP+ADB", 0x51f7,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia XZ2 Compact Dual Sim MTP+ADB", 0x51f9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia XZ2 (H8266) MTP+ADB", 0x51fa,
       DEVICE_FLAG_NONE },
@@ -2861,6 +2872,12 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/125/ */
   { "Lenovo", 0x17ef, "Vibe Z2", 0x77ea,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1793/ */
+  { "Lenovo", 0x17ef, "S60-a", 0x7802,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/272/ */
+  { "Lenovo", 0x17ef, "A7-30HC", 0x7852,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/253/ */
   { "Lenovo", 0x17ef, "A7000-A Smartphone", 0x7882,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3323,6 +3340,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1718/ */
   { "Amazon", 0x1949, "Kindle Fire 8 (2nd ID)", 0x0261,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1776/ */
+  { "Amazon", 0x1949, "Kindle Fire 7 (2nd ID)", 0x0271,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Fire Phone", 0x0800,
       DEVICE_FLAGS_ANDROID_BUGS },
 
@@ -3503,6 +3523,8 @@
   { "Kyocera", 0x0482, "Hydro Elite C6750", 0x073c, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/discussion/535190/thread/6270f5ce/ */
   { "Kyocera", 0x0482, "KYL22", 0x0810, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/270/ */
+  { "Kyocera", 0x0482, "Hydro Icon", 0x085e, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1518/ */
   { "Kyocera", 0x0482, "302KC", 0x09fc, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1345/ */
@@ -3799,6 +3821,8 @@
   { "Letv" , 0x2b0e, "X5001s", 0x1700, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/210/ */
   { "Letv" , 0x2b0e, "1s", 0x1704, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1805/ */
+  { "LeMobile" , 0x2b0e, "Le 2", 0x1714, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/241/ */
   { "Letv" , 0x2b0e, "Leeco Le 1s", 0x1768, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/241/ */
@@ -3847,6 +3871,9 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1786/ */
   { "Niteto" , 0x16c0, "ADF-Drive", 0x0489, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1786/ */
+  { "Longcheer" , 0x1c9e, "D", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * Other strange stuff.
    */
