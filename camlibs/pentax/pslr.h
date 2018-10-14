@@ -42,25 +42,13 @@
 
 #define PSLR_LIGHT_METER_AE_LOCK 0x8
 
-#define PSLR_AF_POINT_TOP_LEFT   0x1
-#define PSLR_AF_POINT_TOP_MID    0x2
-#define PSLR_AF_POINT_TOP_RIGHT  0x4
-#define PSLR_AF_POINT_FAR_LEFT   0x8
-#define PSLR_AF_POINT_MID_LEFT   0x10
-#define PSLR_AF_POINT_MID_MID    0x20
-#define PSLR_AF_POINT_MID_RIGHT  0x40
-#define PSLR_AF_POINT_FAR_RIGHT  0x80
-#define PSLR_AF_POINT_BOT_LEFT   0x100
-#define PSLR_AF_POINT_BOT_MID    0x200
-#define PSLR_AF_POINT_BOT_RIGHT  0x400
-
 typedef enum {
     PSLR_BUF_PEF,
     PSLR_BUF_DNG,
-    PSLR_BUF_JPEG_4, // only for cameras supporting 4* mode ?
-    PSLR_BUF_JPEG_3,
-    PSLR_BUF_JPEG_2,
-    PSLR_BUF_JPEG_1,
+    PSLR_BUF_JPEG_MAX,
+    PSLR_BUF_JPEG_MAX_M1,
+    PSLR_BUF_JPEG_MAX_M2,
+    PSLR_BUF_JPEG_MAX_M3,
     PSLR_BUF_PREVIEW = 8,
     PSLR_BUF_THUMBNAIL = 9 // 7 works also
 } pslr_buffer_type;

@@ -60,7 +60,7 @@ typedef struct {
     pslr_rational_t set_shutter_speed;
     pslr_rational_t set_aperture;
     pslr_rational_t max_shutter_speed;
-    uint32_t auto_bracket_mode; // 1: on, 0: off
+    uint32_t auto_bracket_mode;
     pslr_rational_t auto_bracket_ev;
     uint32_t auto_bracket_picture_count;
     uint32_t auto_bracket_picture_counter;
@@ -96,8 +96,8 @@ typedef struct {
     uint32_t white_balance_adjust_mg;
     uint32_t white_balance_adjust_ba;
     uint32_t flash_mode;
-    int32_t flash_exposure_compensation; // 1/256
-    int32_t manual_mode_ev; // 1/10
+    int32_t flash_exposure_compensation; /* 1/256 */
+    int32_t manual_mode_ev; /* 1/10 */
     uint32_t color_space;
     uint32_t lens_id1;
     uint32_t lens_id2;
