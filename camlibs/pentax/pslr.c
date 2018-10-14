@@ -521,6 +521,17 @@ char *get_white_balance_adjust_str( uint32_t adjust_mg, uint32_t adjust_ba ) {
     return ret;
 }
 
+char *pslr_get_af_name(pslr_handle_t h, uint32_t af_point) {
+    ipslr_handle_t *p = (ipslr_handle_t *) h;
+    if (p->model->af_point_num==11) {
+        return get_pslr_af11_point_str(af_point);
+    } else {
+        char *raw = malloc(11);
+        sprintf(raw, "%d", af_point);
+        return raw;
+    }
+}
+
 char *collect_status_info( pslr_handle_t h, pslr_status status ) {
     char *strbuffer = malloc(8192);
     sprintf(strbuffer,"%-32s: %d\n", "current iso", status.current_iso);
@@ -555,8 +566,8 @@ char *collect_status_info( pslr_handle_t h, pslr_status status ) {
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ae metering mode", get_pslr_ae_metering_str(status.ae_metering_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af mode", get_pslr_af_mode_str(status.af_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af point select", get_pslr_af_point_sel_str(status.af_point_select));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "selected af point", status.selected_af_point);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "focused af point", status.focused_af_point);
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "selected af point", pslr_get_af_name( h, status.selected_af_point));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "focused af point", pslr_get_af_name( h, status.focused_af_point));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "drive mode", get_pslr_drive_mode_str(status.drive_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "auto bracket mode", status.auto_bracket_mode > 0 ? "on" : "off");
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "auto bracket picture count", status.auto_bracket_picture_count);
@@ -657,9 +668,19 @@ int pslr_get_buffer(pslr_handle_t h, int bufno, pslr_buffer_type type, int resol
         return PSLR_NO_MEMORY;
     }
 
-    uint32_t bytes = pslr_buffer_read(h, buf, size);
-
-    if ( bytes != size ) {
+    uint32_t bufpos = 0;
+    while (true) {
+        uint32_t nextread = size - bufpos > 65536 ? 65536 : size - bufpos;
+        if (nextread == 0) {
+            break;
+        }
+        uint32_t bytes = pslr_buffer_read(h, buf+bufpos, nextread);
+        if (bytes == 0) {
+            break;
+        }
+        bufpos += bytes;
+    }
+    if ( bufpos != size ) {
         return PSLR_READ_ERROR;
     }
     pslr_buffer_close(h);
@@ -875,7 +896,7 @@ int pslr_set_jpeg_saturation(pslr_handle_t h, int32_t saturation) {
 int pslr_set_image_format(pslr_handle_t h, pslr_image_format_t format) {
     DPRINT("[C]\tpslr_set_image_format(%X)\n", format);
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    if (format < 0 || format > PSLR_IMAGE_FORMAT_MAX) {
+    if (format >= PSLR_IMAGE_FORMAT_MAX) {
         return PSLR_PARAM;
     }
     return ipslr_handle_command_x18( p, true, X18_IMAGE_FORMAT, 2, 1, format, 0);
@@ -884,7 +905,7 @@ int pslr_set_image_format(pslr_handle_t h, pslr_image_format_t format) {
 int pslr_set_raw_format(pslr_handle_t h, pslr_raw_format_t format) {
     DPRINT("[C]\tpslr_set_raw_format(%X)\n", format);
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    if (format < 0 || format > PSLR_RAW_FORMAT_MAX) {
+    if (format >= PSLR_RAW_FORMAT_MAX) {
         return PSLR_PARAM;
     }
     return ipslr_handle_command_x18( p, true, X18_RAW_FORMAT, 2, 1, format, 0);
@@ -893,7 +914,7 @@ int pslr_set_raw_format(pslr_handle_t h, pslr_raw_format_t format) {
 int pslr_set_color_space(pslr_handle_t h, pslr_color_space_t color_space) {
     DPRINT("[C]\tpslr_set_raw_format(%X)\n", color_space);
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    if (color_space < 0 || color_space > PSLR_COLOR_SPACE_MAX) {
+    if (color_space >= PSLR_COLOR_SPACE_MAX) {
         return PSLR_PARAM;
     }
     return ipslr_handle_command_x18( p, true, X18_COLOR_SPACE, 1, color_space, 0, 0);
@@ -965,7 +986,7 @@ int pslr_set_exposure_mode(pslr_handle_t h, pslr_exposure_mode_t mode) {
     DPRINT("[C]\tpslr_set_exposure_mode(%X)\n", mode);
     ipslr_handle_t *p = (ipslr_handle_t *) h;
 
-    if (mode < 0 || mode >= PSLR_EXPOSURE_MODE_MAX) {
+    if (mode >= PSLR_EXPOSURE_MODE_MAX) {
         return PSLR_PARAM;
     }
     return ipslr_handle_command_x18( p, true, X18_EXPOSURE_MODE, 2, 1, mode, 0);
@@ -1236,8 +1257,6 @@ pslr_buffer_type pslr_get_jpeg_buffer_type(pslr_handle_t h, int jpeg_stars) {
     return 2 + get_hw_jpeg_quality( p->model, jpeg_stars );
 }
 
-/* ----------------------------------------------------------------------- */
-
 static int ipslr_set_mode(ipslr_handle_t *p, uint32_t mode) {
     DPRINT("[C]\t\tipslr_set_mode(0x%x)\n", mode);
     CHECK(ipslr_write_args(p, 1, mode));
@@ -1319,8 +1338,9 @@ static int ipslr_status_full(ipslr_handle_t *p, pslr_status *status) {
             int ret;
 
             ret = pslr_get_buffer_status(p, &x, &y);
-            if (ret != PSLR_OK)
+            if (ret != PSLR_OK) {
                 return ret;
+            }
             status->bufmask = x;
         }
         return PSLR_OK;
@@ -1679,8 +1699,6 @@ static int _ipslr_write_args(uint8_t cmd_2, ipslr_handle_t *p, int n, ...) {
     va_end(ap);
     return PSLR_OK;
 }
-
-/* ----------------------------------------------------------------------- */
 
 static int command(FDTYPE fd, int a, int b, int c) {
     DPRINT("[C]\t\t\tcommand(fd=%x, %x, %x, %x)\n", fd, a, b, c);

@@ -65,12 +65,12 @@ const char* pslr_flash_mode_str[PSLR_FLASH_MODE_MAX] = {
     "TrailingCurtain",
     "Auto",
     "Auto-RedEye",
-    "TrailingCurtain", // maybe in manual mode??
+    "TrailingCurtain", /* maybe in manual mode?? */
     "Wireless"
 };
 
 const char* pslr_drive_mode_str[PSLR_DRIVE_MODE_MAX] = {
-    "Single", // Bracketing also returns Single
+    "Single", /* Bracketing also returns Single */
     "Continuous-HI",
     "SelfTimer-12",
     "SelfTimer-2",
@@ -83,7 +83,22 @@ const char*  pslr_af_point_sel_str[PSLR_AF_POINT_SEL_MAX] = {
     "Auto-5",
     "Select",
     "Spot",
-    "Auto-11"
+    "Auto-11",
+    "Expanded"
+};
+
+const char*  pslr_af11_point_str[11] = {
+    "topleft",
+    "topmiddle",
+    "topright",
+    "farleft",
+    "middleleft",
+    "middlemiddle",
+    "middleright",
+    "farright",
+    "bottomleft",
+    "bottommiddle",
+    "bottomright"
 };
 
 const char* pslr_jpeg_image_tone_str[PSLR_JPEG_IMAGE_TONE_MAX] = {
@@ -112,7 +127,7 @@ const char* pslr_white_balance_mode_str[PSLR_WHITE_BALANCE_MODE_MAX] = {
     "Fluorescent_W",
     "Tungsten",
     "Flash",
-    "Manual", // sometimes called Manual1
+    "Manual", /* sometimes called Manual1 */
     "Manual2",
     "Manual3",
     "Kelvin1",
@@ -155,7 +170,7 @@ const char* pslr_scene_mode_str[PSLR_SCENE_MODE_MAX] = {
     "MACRO",
     "SPORT",
     "NIGHTSCENEPORTRAIT",
-    "NOFLASH",//10
+    "NOFLASH",
     "NIGHTSCENE",
     "SURFANDSNOW",
     "TEXT",
@@ -164,22 +179,21 @@ const char* pslr_scene_mode_str[PSLR_SCENE_MODE_MAX] = {
     "PET",
     "CANDLELIGHT",
     "MUSEUM",
-    "19", // ?
+    "19",
     "FOOD",
     "STAGE",
     "NIGHTSNAP",
     "SWALLOWDOF",
-    "24", // ?
+    "24",
     "NIGHTSCENEHDR",
     "BLUESKY",
     "FOREST",
-    "28", // ?
+    "28",
     "BLACKLIGHTSILHOUETTE"
 };
 
 
-// case insenstive comparison
-// strnicmp
+/* case insenstive comparison - strnicmp */
 int str_comparison_i (const char *s1, const char *s2, int n) {
     if ( s1 == NULL ) {
         return s2 == NULL ? 0 : -(*s2);
@@ -275,6 +289,27 @@ pslr_af_point_sel_t get_pslr_af_point_sel( char *str ) {
 const char *get_pslr_af_point_sel_str( pslr_af_point_sel_t value ) {
     return get_pslr_str( pslr_af_point_sel_str, sizeof(pslr_af_point_sel_str)/sizeof(pslr_af_point_sel_str[0]),value);
 }
+
+char *get_pslr_af11_point_str( uint32_t value ) {
+    if (value==0) {
+        return "none";
+    }
+    int bitidx=0;
+    char *ret = malloc(1024);
+    sprintf(ret, "%s", "");
+    while (value>0 && bitidx<11) {
+        if ((value & 0x01) == 1) {
+            sprintf(ret, "%s%s%s", ret, strlen(ret) == 0 ? "" : ",", pslr_af11_point_str[bitidx]);
+        }
+        value >>= 1;
+        ++bitidx;
+    }
+    if (value>0) {
+        sprintf(ret, "%s", "invalid");
+    }
+    return ret;
+}
+
 
 pslr_jpeg_image_tone_t get_pslr_jpeg_image_tone( char *str ) {
     return find_in_array( pslr_jpeg_image_tone_str, sizeof(pslr_jpeg_image_tone_str)/sizeof(pslr_jpeg_image_tone_str[0]),str);

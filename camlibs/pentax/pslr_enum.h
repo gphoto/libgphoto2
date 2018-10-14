@@ -29,6 +29,8 @@
 #ifndef PSLR_ENUM_H
 #define PSLR_ENUM_H
 
+#include <stdint.h>
+
 typedef enum {
     PSLR_COLOR_SPACE_SRGB,
     PSLR_COLOR_SPACE_ADOBERGB,
@@ -58,7 +60,7 @@ typedef enum {
     PSLR_FLASH_MODE_TRAILING_CURTAIN = 4,
     PSLR_FLASH_MODE_AUTO = 5,
     PSLR_FLASH_MODE_AUTO_REDEYE = 6,
-    // 7 not used
+    /* 7 not used */
     PSLR_FLASH_MODE_WIRELESS = 8,
     PSLR_FLASH_MODE_MAX = 9
 } pslr_flash_mode_t;
@@ -78,9 +80,24 @@ typedef enum {
     PSLR_AF_POINT_SEL_AUTO_5,
     PSLR_AF_POINT_SEL_SELECT,
     PSLR_AF_POINT_SEL_SPOT,
-    PSLR_AF_POINT_SEL_AUTO_11, // maybe not for all cameras
+    PSLR_AF_POINT_SEL_AUTO_11, /* maybe not for all cameras */
+    PSLR_AF_POINT_SEL_EXPANDED, /* only for newer */
     PSLR_AF_POINT_SEL_MAX
 } pslr_af_point_sel_t;
+
+typedef enum {
+    PSLR_AF11_POINT_TOP_LEFT  = 0x01,
+    PSLR_AF11_POINT_TOP_MID   = 0x2,
+    PSLR_AF11_POINT_TOP_RIGHT = 0x4,
+    PSLR_AF11_POINT_FAR_LEFT  = 0x8,
+    PSLR_AF11_POINT_MID_LEFT  = 0x10,
+    PSLR_AF11_POINT_MID_MID   = 0x20,
+    PSLR_AF11_POINT_MID_RIGHT = 0x40,
+    PSLR_AF11_POINT_FAR_RIGHT = 0x80,
+    PSLR_AF11_POINT_BOT_LEFT  = 0x100,
+    PSLR_AF11_POINT_BOT_MID   = 0x200,
+    PSLR_AF11_POINT_BOT_RIGHT = 0x400
+} pslr_af11_point_t;
 
 typedef enum {
     PSLR_JPEG_IMAGE_TONE_NONE = -1,
@@ -202,13 +219,15 @@ const char *get_pslr_drive_mode_str( pslr_drive_mode_t value );
 pslr_af_point_sel_t get_pslr_af_point_sel( char *str );
 const char *get_pslr_af_point_sel_str( pslr_af_point_sel_t value );
 
+char *get_pslr_af11_point_str( uint32_t value );
+
 pslr_jpeg_image_tone_t get_pslr_jpeg_image_tone( char *str );
 const char *get_pslr_jpeg_image_tone_str( pslr_jpeg_image_tone_t value );
 
 pslr_white_balance_mode_t get_pslr_white_balance_mode( char *str );
 const char *get_pslr_white_balance_mode_str( pslr_white_balance_mode_t value );
 
-//pslr_custom_ev_steps_t get_pslr_custom_ev_steps( char *str );
+/* pslr_custom_ev_steps_t get_pslr_custom_ev_steps( char *str ); */
 const char *get_pslr_custom_ev_steps_str( pslr_custom_ev_steps_t value );
 
 const char *get_pslr_custom_sensitivity_steps_str( pslr_custom_sensitivity_steps_t value );

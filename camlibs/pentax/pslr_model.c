@@ -150,7 +150,7 @@ char *shexdump(uint8_t *buf, uint32_t bufLen) {
 
 void hexdump(uint8_t *buf, uint32_t bufLen) {
     char *dmp = shexdump(buf, bufLen);
-    DPRINT("%s",dmp);
+    DPRINTF("%s",dmp);
     free(dmp);
 }
 
@@ -424,6 +424,7 @@ void ipslr_status_parse_kx(ipslr_handle_t *p, pslr_status *status) {
     status->focus = get_int32_be(&buf[0x1A0]);
     status->lens_id1 = (get_uint32_be( &buf[0x188])) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x194]);
+    // selected_af_point: cannot find the field, 0xc8 is always zero
 }
 
 // Vince: K-r support 2011-06-22
@@ -621,8 +622,12 @@ void ipslr_status_parse_k1(ipslr_handle_t *p, pslr_status *status) {
     status->battery_1 = get_uint32_le(&buf[0x174]);
     status->battery_2 = get_uint32_le(&buf[0x178]);
 
-    // selected_af_point is invalid
-    status->selected_af_point = 0;
+    // selected_af_point
+    // toprow left: 0x04000000
+    // toprow leftmiddle: 0x02000000
+    // toprow middle: 0x01000000
+    // toprow rightmiddle: 0x00800000
+    // bottomright: 0x00000004
 
     status->bufmask = get_uint16_le( &buf[0x0C]);
     status->zoom.nom = get_uint32_le(&buf[0x1A4]);
@@ -660,13 +665,38 @@ void ipslr_status_parse_k70(ipslr_handle_t *p, pslr_status *status) {
     status->manual_mode_ev = get_uint32_le(&buf[0x160]); // ?
     status->focused_af_point = get_uint32_le(&buf[0x16c]); // ?
 
+    switch ( status->af_point_select) {
+        case 0:
+            status->af_point_select=PSLR_AF_POINT_SEL_SPOT;
+            break;
+        case 1:
+            status->af_point_select=PSLR_AF_POINT_SEL_SELECT;
+            break;
+        case 2:
+            status->af_point_select=PSLR_AF_POINT_SEL_EXPANDED;
+            break;
+        case 5:
+            status->af_point_select=PSLR_AF_POINT_SEL_AUTO_5;
+            break;
+        case 6:
+            status->af_point_select=PSLR_AF_POINT_SEL_AUTO_11;
+            break;
+    }
+
     status->battery_1 = get_uint32_le(&buf[0x174]);
     status->battery_2 = get_uint32_le(&buf[0x178]);
     status->battery_3 = 0;
     status->battery_4 = 0;
 
-    // selected_af_point is invalid
-    status->selected_af_point = 0;
+    uint32_t converted_selected_af_point=0;
+    int convert_bit_index[11] = { 26, 24, 22, 1, 16, 14, 12, 0, 6, 4, 2};
+    int bitidx=0;
+    for (bitidx=0; bitidx<11; ++bitidx) {
+        if (status->selected_af_point & 1<<convert_bit_index[bitidx]) {
+            converted_selected_af_point |= 1 << bitidx;
+        }
+    }
+    status->selected_af_point = converted_selected_af_point;
 
     status->bufmask = get_uint16_le( &buf[0x0C]);
     status->zoom.nom = get_uint32_le(&buf[0x1A4]);
@@ -759,7 +789,7 @@ char *read_json_file(int *jsonsize) {
     lseek(jsonfd, 0, SEEK_SET);
     char *jsontext=malloc(*jsonsize);
     read(jsonfd, jsontext, *jsonsize);
-    DPRINT("json text:\n%s\n", jsontext);
+    DPRINT("json text:\n%.*s\n", *jsonsize, jsontext);
     return jsontext;
 }
 
@@ -772,12 +802,12 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
     size_t json_part_length;
     const char *json_part;
     if (!(json_part = js0n(cameraid, strlen(cameraid), jsontext, jsonsize, &json_part_length))) {
-        fprintf(stderr, "JSON error\n");
+        fprintf(stderr, "JSON: Cannot find camera model\n");
         return NULL;
     }
 
     if (!(json_part = js0n("fields", strlen("fields"), json_part, json_part_length, &json_part_length))) {
-        fprintf(stderr, "No fields defined for the camera\n");
+        fprintf(stderr, "JSON: No fields defined for the camera model\n");
         return NULL;
     }
     int ai=0;
@@ -933,9 +963,10 @@ ipslr_model_info_t camera_models[] = {
     { 0x12ba2, "K100D Super", true,  true,  true,  false, false, false, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, false, 11, NULL},
     { 0x1301a, "K-S1",        false, true,  true,  false, false, true,  452,  3, {20, 12, 6, 2}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, true,  11, ipslr_status_parse_ks1},
     { 0x13024, "K-S2",        false, true,  true,  false, false, true,  452,  3, {20, 12, 6, 2}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, true,  11, ipslr_status_parse_k3},
-    { 0x13092, "K-1",         false, false, true,  false, false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
-    { 0x13222, "K-70",        false, false, true,  true,  true,  true,  456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_AUTO, true,  11, ipslr_status_parse_k70}
-
+    { 0x13092, "K-1",         false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
+    { 0x13240, "K-1 II",      false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
+    { 0x13222, "K-70",        false, false, true,  true,  true,  true,  456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_AUTO, true,  11, ipslr_status_parse_k70},
+    { 0x1322c, "KP",          false, false, true,  true,  false, true,  0,   3, {24, 14, 6, 2}, 9, 6000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_AUTO, true,  27, NULL}
 };
 
 ipslr_model_info_t *find_model_by_id( uint32_t id ) {
