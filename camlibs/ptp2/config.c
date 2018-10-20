@@ -6817,7 +6817,7 @@ _put_Panasonic_Shutter(CONFIG_PUT_ARGS)
 
 	//printf("setting shutterspeed to %lu (%s)\n", val, xval);
 
-	return ptp_panasonic_setdeviceproperty(params, 0x2000031, (unsigned char*)&val, 4);
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000031, (unsigned char*)&val, 4));
 }
 
 static int
@@ -6825,9 +6825,10 @@ _get_Panasonic_Shutter(CONFIG_GET_ARGS) {
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
-
 	PTPParams *params = &(camera->pl->params);
-	ptp_panasonic_getdevicepropertydesc(params, 0x2000030, 4, &currentVal, &list, &listCount);
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000030, 4, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -6908,7 +6909,7 @@ _put_Panasonic_ISO(CONFIG_PUT_ARGS)
 
 	//printf("setting ISO to %lu (%s)\n", val, xval);
 
-	return ptp_panasonic_setdeviceproperty(params, 0x2000021, (unsigned char*)&val, 4);
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000021, (unsigned char*)&val, 4));
 }
 
 static int
@@ -6917,9 +6918,10 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 	uint32_t listCount;
 	uint32_t *list;
 	uint16_t valsize;
-
 	PTPParams *params = &(camera->pl->params);
-	ptp_panasonic_getdevicepropertydesc(params, 0x2000020, 4, &currentVal, &list, &listCount);
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000020, 4, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -6968,6 +6970,7 @@ static int
 _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
+	GPContext *context = ((PTPData *) params->data)->context;
 	char *xval;
 	uint32_t val = 0;
 	uint32_t currentVal;
@@ -6977,7 +6980,7 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &xval));
 
-	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount);
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount));
 
 	if (sscanf(xval,_("Unknown 0x%04x"), &ival))
 		val = ival;
@@ -6994,7 +6997,7 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 	}
 	free(list);
 	GP_LOG_D("setting whitebalance to 0x%04x", val);
-	return ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance, (unsigned char*)&val, 2);
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance, (unsigned char*)&val, 2));
 }
 
 static int
@@ -7006,8 +7009,9 @@ _get_Panasonic_Whitebalance(CONFIG_GET_ARGS) {
 	int	valset = 0;
 	char	buf[32];
 	PTPParams *params = &(camera->pl->params);
+	GPContext *context = ((PTPData *) params->data)->context;
 
-	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount);
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -7052,7 +7056,7 @@ _put_Panasonic_Exposure(CONFIG_PUT_ARGS)
 		val = (uint32_t)(0x8000 | (int)(((-f)*3)));
 	else
 		val = (uint32_t) (f*3);
-	return ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_Exposure, (unsigned char*)&val, 2);
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_Exposure, (unsigned char*)&val, 2));
 }
 
 static int
@@ -7063,8 +7067,9 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 	uint32_t i;
 	char	buf[16];
 	PTPParams *params = &(camera->pl->params);
+	GPContext *context = ((PTPData *) params->data)->context;
 
-	ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_Exposure, 2, &currentVal, &list, &listCount);
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_Exposure, 2, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -7100,7 +7105,7 @@ _put_Panasonic_FNumber(CONFIG_PUT_ARGS)
 
 	//printf("setting ISO to %lu (%s)\n", val, xval);
 
-	return ptp_panasonic_setdeviceproperty(params, 0x2000041, (unsigned char*)&val, 2);
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000041, (unsigned char*)&val, 2));
 }
 
 static int
@@ -7109,9 +7114,10 @@ _get_Panasonic_FNumber(CONFIG_GET_ARGS) {
 	uint32_t listCount;
 	uint16_t valsize;
 	uint32_t *list;
-
 	PTPParams *params = &(camera->pl->params);
-	ptp_panasonic_getdevicepropertydesc(params, 0x2000040, 2, &currentVal, &list, &listCount);
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000040, 2, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -7162,7 +7168,7 @@ _put_Panasonic_ImageFormat(CONFIG_PUT_ARGS)
 	val = uval;
 	//printf("setting ImageFormat to %lu (%s)\n", val, xval);
 
-	return ptp_panasonic_setdeviceproperty(params, 0x20000A2, (unsigned char*)&val, 2);
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x20000A2, (unsigned char*)&val, 2));
 }
 
 static int
