@@ -7170,9 +7170,10 @@ _get_Panasonic_ImageFormat(CONFIG_GET_ARGS) {
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
-
 	PTPParams *params = &(camera->pl->params);
-	ptp_panasonic_getdevicepropertydesc(params, 0x20000A2, 2, &currentVal, &list, &listCount);
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x20000A2, 2, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
