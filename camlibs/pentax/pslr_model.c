@@ -150,7 +150,7 @@ char *shexdump(uint8_t *buf, uint32_t bufLen) {
 
 void hexdump(uint8_t *buf, uint32_t bufLen) {
     char *dmp = shexdump(buf, bufLen);
-    DPRINTF("%s",dmp);
+    DPRINT("%s",dmp);
     free(dmp);
 }
 
