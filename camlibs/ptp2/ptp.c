@@ -2570,6 +2570,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 		/*debug_objectinfo(params, handle, &ob->oi);*/
 	}
 
+#if 0 /* apple devices report it, but the conrtent they have does not match the standard somehow. Neesd further debugging */
 	if (ptp_operation_issupported(params, PTP_OC_GetFilesystemManifest)) {
 		uint64_t		numoifs = 0;
 		PTPObjectFilesystemInfo	*oifs = NULL;
@@ -2636,6 +2637,8 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 		if (changed) ptp_objects_sort (params);
 		return PTP_RC_OK;
 	}
+#endif
+
 fallback:
 	ptp_debug (params, "Listing ... ");
 	if (handle == 0) xhandle = PTP_HANDLER_SPECIAL; /* 0 would mean all */
