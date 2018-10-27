@@ -1,4 +1,6 @@
-libgphoto2 2.5.20 development
+libgphoto2 2.5.20.1 development
+------------------------------------------------------------------------------
+libgphoto2 2.5.20 release
 
 ptp2:
 * Canon EOS: fixed regression for some EOS series in OLC decoding
