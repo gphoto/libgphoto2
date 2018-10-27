@@ -1,7 +1,17 @@
 libgphoto2 2.5.19.1 development
 
 ptp2:
-* Canon EOS: fixed regression for some EOS series in OLC reading
+* Canon EOS: fixed regression for some EOS series in OLC decoding
+* Apple iPhone: disabled PTP Manifest reading again, as IOS seems not to follow the standard
+* bugfixes
+* new IDs added:
+  * Sony Alpha-RX10M4
+  * Canon EOS M50, 4000D
+  * Fuji XT-3
+  * synced new MTP ids from libmtp
+
+pentax:
+* refreshed from pktriggercord
 
 translations:
 * updated polish, ukrainian, swedish, danish
