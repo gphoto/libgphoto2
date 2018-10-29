@@ -238,10 +238,10 @@ ptp_usb_getpacket(PTPParams *params, PTPUSBBulkContainer *packet, uint32_t maxsi
 	}
 retry:
 	/* A packet should come in a single read always. */
-	result = gp_port_read (camera->port, (char*)packet, sizeof(*packet));
+	result = gp_port_read (camera->port, (char*)packet, maxsize);
 	/* This might be a left over zero-write of the device at the end of the previous transmission */
 	if (result == 0)
-		result = gp_port_read (camera->port, (char*)packet, sizeof(*packet));
+		result = gp_port_read (camera->port, (char*)packet, maxsize);
 	if (result > 0) {
 		*rlen = result;
 		return PTP_RC_OK;
