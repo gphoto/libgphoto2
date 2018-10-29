@@ -68,7 +68,7 @@ libraries' and/or command-line client's functionality if present:
 
 	gettext (ver. >= 0.10.40) -- internationalization using shared library
 
-	gtk-doc -- documentation built in doc/api/
+	gtk-doc-tools -- documentation built in doc/api/
 
 	libexif - EXIF tag support
 	    <URL:http://www.sourceforge.net/projects/libexif>
