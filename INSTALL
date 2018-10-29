@@ -32,7 +32,7 @@ For autoreconf to succeed, you require the following tools:
 
 	automake
 	autoconf
-	pkgconfig (to detect additional library dependencies)
+	pkg-config (to detect additional library dependencies)
 	autopoint (needed if installing from github)
 	gettext  (possibly from -dev or -devel package)
 	libtool  (possibly from -dev or -devel package)
