@@ -2028,6 +2028,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/84 */
 	{"Canon:Digital Ixus 180",		0x04a9, 0x32c0, 0},
 
+	/* https://github.com/gphoto/libgphoto2/issues/316 */
+	{"Canon:SX 720HS",			0x04a9, 0x32c2, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://github.com/gphoto/libgphoto2/issues/235 */
 	{"Canon:EOS M6",			0x04a9, 0x32c5, PTP_CAP|PTP_CAP_PREVIEW},
 
