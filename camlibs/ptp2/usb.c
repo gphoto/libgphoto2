@@ -318,7 +318,38 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		} else {
 			GP_LOG_E ("Read broken PTP header (Code is %04x vs %04x).",
 				  dtoh16(usbdata.code), ptp->Code );
+
 			ret = PTP_ERROR_IO;
+
+			/* if this is a valid packet that came late, drain it to allow reestablishing */
+
+			if (bytes_read >= dtoh32(usbdata.length))
+				goto exit;
+
+			bytes_to_read = dtoh32(usbdata.length) - bytes_read;
+			bytes_read -= PTP_USB_BULK_HDR_LEN;
+
+			data = malloc(READLEN);
+			if (!data) goto exit;
+			while (bytes_to_read > 0) {
+				unsigned long chunk_to_read = bytes_to_read;
+
+				/* if in read-until-short-packet mode, read one packet at a time */
+				/* else read in large blobs */
+				/* else read all but the last short packet depending on EP packetsize. */
+				if (chunk_to_read > READLEN)
+					chunk_to_read = READLEN;
+				else if (chunk_to_read > params->maxpacketsize)
+					chunk_to_read = chunk_to_read - (chunk_to_read % params->maxpacketsize);
+				res = gp_port_read (camera->port, (char*)data, chunk_to_read);
+				if (res == GP_ERROR_IO_READ)
+					break;
+				if (res <= 0)
+					break;
+				bytes_to_read -= res;
+				bytes_read += res;
+			}
+			free (data);
 			goto exit;
 		}
 	}
