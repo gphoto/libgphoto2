@@ -394,7 +394,11 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	GP_LOG_D ("preparing EOS capture...");
 
-	C_PTP (ptp_canon_eos_setremotemode(params, 1));
+	if (is_canon_eos_m(params)) {
+		C_PTP (ptp_canon_eos_setremotemode(params, 0x15));
+	} else {
+		C_PTP (ptp_canon_eos_setremotemode(params, 1));
+	}
 	C_PTP (ptp_canon_eos_seteventmode(params, 1));
 	params->eos_camerastatus = -1;	/* aka unknown */
 
