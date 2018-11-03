@@ -2052,6 +2052,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/58 */
 	{"Canon:EOS M50",          		0x04a9, 0x32d2, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Marcus Meissner */
+	{"Canon:Digital IXUS 185",          	0x04a9, 0x32d4, 0},
+
 	/* Jasem Mutlaq <mutlaqja@ikarustech.com> */
 	{"Canon:EOS 4000D",			0x04a9, 0x32d9, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
