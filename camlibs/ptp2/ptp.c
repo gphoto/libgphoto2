@@ -3382,7 +3382,7 @@ ptp_canon_getobjectinfo (PTPParams* params, uint32_t store, uint32_t p2,
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetObjectInfoEx, store, p2, parent, handle);
 	data = NULL;
 	size = 0;
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL);
+	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	if (ret != PTP_RC_OK)
 		goto exit;
 	if (!data)
