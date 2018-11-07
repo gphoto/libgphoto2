@@ -2015,7 +2015,7 @@ static struct {
 	{"Canon:PowerShot ELPH 350 HS",		0x04a9, 0x32ab, PTPBUG_DELETE_SENDS_EVENT},
 
 	/* Andre Crone <andre@elysia.nl */
-	{"Canon:EOS 5DS R",			0x04a9, 0x32af, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 5DS R",			0x04a9, 0x32af, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* Barney Livingston <barney.livingston@lobsterpictures.tv> */
 	{"Canon:EOS 1300D",			0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
