@@ -8547,7 +8547,8 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 			camera_prepare_capture (camera, context);
 		ptp_check_eos_events (params);
 		/* Otherwise the camera will auto-shutdown */
-		C_PTP (ptp_canon_eos_keepdeviceon (params));
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn))
+			C_PTP (ptp_canon_eos_keepdeviceon (params));
 	}
 
 	if (mode == MODE_GET) {
