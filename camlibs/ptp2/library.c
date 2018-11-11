@@ -338,7 +338,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	/* Newer Canons say that they are MTP devices. Restore Canon vendor extid. */
-	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT)  || 
+			(di->VendorExtensionID == PTP_VENDOR_MTP)
+		) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4a9)
 	) {
@@ -347,7 +349,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	/* Newer Nikons (D40) say that they are MTP devices. Restore Nikon vendor extid. */
-	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (	(	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) ||
+			(di->VendorExtensionID == PTP_VENDOR_MTP)
+		) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x4b0)
 	) {
