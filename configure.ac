@@ -250,6 +250,9 @@ dnl Replace `main' with a function in -libs:
 dnl ---------------------------------------------------------------------------
 AC_CHECK_LIB(ibs, main)
 
+dnl we use some libm functions in some drivers, so just add -lm
+AC_CHECK_LIB(m, sqrt)
+
 
 dnl ---------------------------------------------------------------------------
 dnl check for libjpeg
