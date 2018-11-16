@@ -21,7 +21,7 @@ konica_la_LIBADD = $(camlib_libadd)
 EXTRA_LTLIBRARIES += konica_qm150.la
 
 konica_qm150_la_SOURCES = konica/qm150.c
-konica_qm150_la_CPPFLAGS = $(AM_CPPFLAGS) $(konica_defs) $(CPPFLAGS)
+konica_qm150_la_CPPFLAGS = $(AM_CPPFLAGS) $(konica_defs) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
 konica_qm150_la_LDFLAGS = $(camlib_ldflags)
 konica_qm150_la_DEPENDENCIES = $(camlib_dependencies)
-konica_qm150_la_LIBADD = $(camlib_libadd)
+konica_qm150_la_LIBADD = $(camlib_libadd) $(LIBEXIF_LIBS)
