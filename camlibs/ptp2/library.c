@@ -2032,6 +2032,9 @@ static struct {
 
 	{"Canon:PowerShot G7 X Mark II",        0x04a9, 0x32bc, 0},
 
+	/* https://github.com/gphoto/libgphoto2/issues/325 */
+	{"Canon:PowerShot SX540 HS",		0x04a9, 0x32be, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://github.com/gphoto/libgphoto2/issues/84 */
 	{"Canon:Digital Ixus 180",		0x04a9, 0x32c0, 0},
 
