@@ -230,11 +230,26 @@ Choice: 8 Unknown value 8031
 Choice: 9 Slow Sync
 /main/capturesettings/f-number
 Label: F-Number
-Type: RANGE
+Type: RADIO
 Current: 0
-Bottom: 0
-Top: 655.35
-Step: 0.01
+Choice : 0 3.5
+Choice: 1 4
+Choice: 2 4.5
+Choice: 3 5
+Choice: 4 5.6
+Choice: 5 6.3
+Choice: 6 7.1
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 13
+Choice: 12 14
+Choice: 13 16
+Choice: 14 18
+Choice: 15 20
+Choice: 16 22
+END
 /main/capturesettings/imagequality
 Label: Image Quality
 Type: RADIO
