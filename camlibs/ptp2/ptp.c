@@ -2471,6 +2471,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
 				if (!newobs) {
 					free (tmp);
+					free (storageids.Storage);
 					return PTP_RC_GeneralError;
 				}
 				params->objects = newobs;
