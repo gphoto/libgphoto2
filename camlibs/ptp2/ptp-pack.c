@@ -1783,7 +1783,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 		return NULL;
 	p = str;
 
-	p += sprintf(p,"eosversion=%d,size=%dx%d,size2=%dx%d,points={", version, sizeX, sizeY, size2X, size2Y);
+	p += sprintf(p,"eosversion=%u,size=%ux%u,size2=%ux%u,points={", version, sizeX, sizeY, size2X, size2Y);
 	for (i=0;i<focus_points_in_use;i++) {
 		int16_t x = dtoh16a((*data) + focus_points_in_struct*4 + 20 + 2*i);
 		int16_t y = dtoh16a((*data) + focus_points_in_struct*6 + 20 + 2*i);
@@ -1798,7 +1798,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 	p += sprintf(p,"},select={");
 	for (i=0;i<focus_points_in_use;i++) {
 		if ((1<<(i%8)) & ((*data)[focus_points_in_struct*8+20+i/8]))
-			p+=sprintf(p,"%d,", i);
+			p+=sprintf(p,"%u,", i);
 	}
 
 	p += sprintf(p,"},unknown={");
@@ -2102,12 +2102,12 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				switch (dpd->DataType) {
 #define XX( TYPE, CONV )\
 					if (sizeof(dpd->FORM.Enum.SupportedValue[j].TYPE)*propxcnt + PTP_ece_Prop_Desc_Data > size) {	\
-						ptp_debug (params, "size %d does not match needed %d", sizeof(dpd->FORM.Enum.SupportedValue[j].TYPE)*propxcnt + PTP_ece_Prop_Desc_Data, size);	\
+						ptp_debug (params, "size %lu does not match needed %u", sizeof(dpd->FORM.Enum.SupportedValue[j].TYPE)*propxcnt + PTP_ece_Prop_Desc_Data, size);	\
 						break;							\
 					}								\
 					for (j=0;j<propxcnt;j++) { 					\
 						dpd->FORM.Enum.SupportedValue[j].TYPE = CONV(xdata); 	\
-						ptp_debug (params, "event %d: suppval[%d] of %x is 0x%x.", i, j, proptype, CONV(xdata)); \
+						ptp_debug (params, "event %u: suppval[%u] of %x is 0x%x.", i, j, proptype, CONV(xdata)); \
 						xdata += 4; /* might only be for propxtype 3 */ \
 					} \
 					break;
@@ -2684,7 +2684,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		case PTP_EC_CANON_EOS_BulbExposureTime:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789012345678"));
-			sprintf (ce[i].u.info, "BulbExposureTime %d",  dtoh32a(curdata+8));
+			sprintf (ce[i].u.info, "BulbExposureTime %u",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED;
@@ -2693,9 +2693,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		default:
 			switch (type) {
 #define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
-				ptp_debug (params, "event %d: unhandled EOS event "#x" (size %d)", i, size); 	\
+				ptp_debug (params, "event %u: unhandled EOS event "#x" (size %u)", i, size); 	\
 				ce[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 123456789)"));	\
-				sprintf (ce[i].u.info, "unhandled EOS event "#x" (size %d)",  size);		\
+				sprintf (ce[i].u.info, "unhandled EOS event "#x" (size %u)",  size);		\
 				break;
 			XX(RequestGetEvent)
 			XX(RequestGetObjectInfoEx)
