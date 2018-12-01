@@ -2027,6 +2027,9 @@ static struct {
 	/* Andre Crone <andre@elysia.nl */
 	{"Canon:EOS 5DS R",			0x04a9, 0x32af, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
+	/* Erwin.Segerer@gmx.de */
+	{"Canon:PowerShot G5X",			0x04a9, 0x32b3, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Barney Livingston <barney.livingston@lobsterpictures.tv> */
 	{"Canon:EOS 1300D",			0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
 
