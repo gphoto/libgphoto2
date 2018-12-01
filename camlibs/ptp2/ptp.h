@@ -2667,6 +2667,7 @@ typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
 	                                 PTPDataHandler *putter);
 typedef uint16_t (* PTPIOCancelReq)	(PTPParams* params, uint32_t transaction_id);
+typedef uint16_t (* PTPIODevStatReq) (PTPParams* params);
 
 /* debug functions */
 typedef void (* PTPErrorFunc) (void *data, const char *format, va_list args)
@@ -2728,6 +2729,7 @@ struct _PTPParams {
 	PTPIOGetResp	event_check_queue;
 	PTPIOGetResp	event_wait;
 	PTPIOCancelReq	cancelreq_func;
+	PTPIODevStatReq	devstatreq_func;
 
 	/* Custom error and debug function */
 	PTPErrorFunc	error_func;
@@ -2838,6 +2840,7 @@ uint16_t ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffe
 uint16_t ptp_usb_control_device_reset_request (PTPParams *params);
 uint16_t ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size);
 uint16_t ptp_usb_control_cancel_request (PTPParams *params, uint32_t transid);
+uint16_t ptp_usb_control_device_status_request (PTPParams *params);
 
 
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
