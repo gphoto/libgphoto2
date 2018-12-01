@@ -3569,6 +3569,10 @@ static struct deviceproptableu16 nikon_d850_focus_metering[] = {
 	{ N_("Dynamic-area AF (153 points)"),	0x8014, PTP_VENDOR_NIKON},
 	{ N_("Group-area AF"),	0x8015, PTP_VENDOR_NIKON},
 	{ N_("Dynamic-area AF (9 points)"),	0x8016, PTP_VENDOR_NIKON},	
+
+	{ N_("Pinpoint AF"),		0x8017, PTP_VENDOR_NIKON}, /* on Z */
+	{ N_("Wide-area AF (S)"),	0x8018, PTP_VENDOR_NIKON}, /* on Z */
+	{ N_("Wide-area AF (L)"),	0x8019, PTP_VENDOR_NIKON}, /* on Z */
 };
 GENERIC16TABLE(Nikon_D850_FocusMetering,nikon_d850_focus_metering)
 
@@ -8390,13 +8394,19 @@ static struct submenu nikon_d40_capture_settings[] = {
 };
 
 static struct submenu nikon_d850_capture_settings[] = {
-	{ N_("Image Quality"),          		"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
+	{ N_("Image Quality"),          	"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
 	{ N_("Image Rotation Flag"),            "imagerotationflag",    PTP_DPC_NIKON_ImageRotation,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,            _put_Nikon_OffOn_UINT8 },
 	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,   _put_Nikon_D850_ActiveDLighting },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
 	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },	
 	{ N_("Center Weight Area"),             "centerweightsize",     PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_CenterWeight,      _put_Nikon_D850_CenterWeight },
-	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,		PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_FocusMetering },
+	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_Nikon_D850_FocusMetering },
+	{ 0,0,0,0,0,0,0 },
+};
+
+static struct submenu nikon_z6_capture_settings[] = {
+	{ N_("Image Quality"),          	"imagequality",		PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
+	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_Nikon_D850_FocusMetering },
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -8500,6 +8510,8 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0414, nikon_d40_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0441, nikon_d850_capture_settings,    NULL,   NULL },
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0442, nikon_z6_capture_settings,      NULL,   NULL },	/* Z7 */
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0443, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0,      nikon_generic_capture_settings, NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0,      0,      capture_settings_menu,          NULL,   NULL },
 
