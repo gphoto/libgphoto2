@@ -121,6 +121,9 @@ is_canon_eos_m(PTPParams *params) {
 	/* we encountered Powershot SX models that seem to have EOS M firmware, see https://github.com/gphoto/libgphoto2/issues/316 */
 	if (!strncmp(params->deviceinfo.Model, "Canon PowerShot SX", strlen("Canon PowerShot SX")))
 		return 1;
+	/* also the G5 X seems to have it */
+	if (!strncmp(params->deviceinfo.Model, "Canon PowerShot G", strlen("Canon PowerShot G")))
+		return 1;
 	return 0;
 }
 
