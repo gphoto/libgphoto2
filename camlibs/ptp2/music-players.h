@@ -1946,6 +1946,9 @@
   { "SONY", 0x0fce, "Xperia XZ2 (H8266)", 0x01fa,
       DEVICE_FLAG_NONE },
 
+  /* https://bugs.kde.org/show_bug.cgi?id=387454 ... probably not in the ADB/CDROM method? */
+  { "SONY", 0x0fce, "Xperia XA2 (Jolla Sailfish)", 0x0a07,
+      DEVICE_FLAG_NONE },
 
   /*
    * MTP+UMS personalities of MTP devices (see above)
