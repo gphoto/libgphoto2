@@ -2496,9 +2496,9 @@ camera_abilities (CameraAbilitiesList *list)
 		if (models[i].device_flags & PTP_CAP) {
 			a.operations |= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CONFIG;
 
-			/* Only Nikon *D* cameras for now -Marcus */
+			/* Only Nikon *D* and *Z* cameras for now -Marcus */
 			if (	(models[i].usb_vendor == 0x4b0) &&
-				strchr(models[i].model,'D')
+				(strchr(models[i].model,'D') || strchr(models[i].model,'Z'))
 			)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
 			/* Also enable trigger capture for EOS capture */
