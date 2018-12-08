@@ -115,15 +115,17 @@ is_canon_eos_m(PTPParams *params) {
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) return 0;
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) return 0;
 	if (!params->deviceinfo.Model) return 0;
+
 	/* classic EOS M */
 	if (!strncmp(params->deviceinfo.Model, "Canon EOS M", strlen("Canon EOS M")))
 		return 1;
-	/* we encountered Powershot SX models that seem to have EOS M firmware, see https://github.com/gphoto/libgphoto2/issues/316 */
-	if (!strncmp(params->deviceinfo.Model, "Canon PowerShot SX", strlen("Canon PowerShot SX")))
-		return 1;
-	/* also the G5 X seems to have it */
-	if (!strncmp(params->deviceinfo.Model, "Canon PowerShot G", strlen("Canon PowerShot G")))
-		return 1;
+
+	/* We encountered newer Powershot SX models that seem to have EOS M like firmware, see https://github.com/gphoto/libgphoto2/issues/316 */
+	if (	!strncmp(params->deviceinfo.Model, "Canon PowerShot SX", strlen("Canon PowerShot SX"))	||
+		!strncmp(params->deviceinfo.Model, "Canon PowerShot G",  strlen("Canon PowerShot G"))	||
+		!strncmp(params->deviceinfo.Model, "Canon Digital IXUS", strlen("Canon Digital IXUS"))
+	)
+		return ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn);
 	return 0;
 }
 
