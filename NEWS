@@ -1,4 +1,15 @@
 libgphoto2 2.5.20.1 development
+
+ptp2:
+* Nikon Z series support added
+* New Canon Powershot SX / GX also support capture, ALPHA support added
+* Canon EOS bugfixes
+* imported IDs from libmtp
+* Added:
+  * Nikon Z6, Z7
+  * Canon Powershot SX720HS, G5X
+  * Canon IXUS 185
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.20 release
 
