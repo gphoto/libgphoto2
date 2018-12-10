@@ -1,4 +1,8 @@
 libgphoto2 2.5.21.1 development
+
+translations:
+* updated polish, ukrainian
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.21 release
 
