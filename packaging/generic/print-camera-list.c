@@ -399,13 +399,13 @@ udev_parse_params (const func_params_t *params, void **data)
 	 */
 	static const char * const begin_strings[] = {
 		/* UDEV_PRE_0_98 */
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add|bind\", GOTO=\"libgphoto2_rules_end\"\n"
 		"BUS!=\"usb_device\", GOTO=\"libgphoto2_usb_end\"\n\n",
 		/* UDEV_0_98 */
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add|bind\", GOTO=\"libgphoto2_rules_end\"\n"
 		"SUBSYSTEM!=\"usb|usb_device\", GOTO=\"libgphoto2_usb_end\"\n\n",
 		/* UDEV_136 */
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add|bind\", GOTO=\"libgphoto2_rules_end\"\n"
 		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_usb_end\"\n"
 		"ENV{DEVTYPE}!=\"usb_device\", GOTO=\"libgphoto2_usb_end\"\n\n"
 		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{program}=\"usb_id --export %%p\"\n"
@@ -415,7 +415,7 @@ udev_parse_params (const func_params_t *params, void **data)
 		 * more rules . It will be completed in udev_begin_func() */
 		"ENV{ID_USB_INTERFACES}==\"*:060101:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\", ",
 		/* UDEV_175 */
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add|bind\", GOTO=\"libgphoto2_rules_end\"\n"
 		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_usb_end\"\n"
 		"ENV{DEVTYPE}!=\"usb_device\", GOTO=\"libgphoto2_usb_end\"\n\n"
 		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{builtin}=\"usb_id\"\n"
@@ -426,7 +426,7 @@ udev_parse_params (const func_params_t *params, void **data)
 		"ENV{ID_USB_INTERFACES}==\"*:060101:*\", ENV{ID_GPHOTO2}=\"1\", ENV{GPHOTO2_DRIVER}=\"PTP\", ",
 
 		/* UDEV_201 ... regular stuff is done via hwdb, only scsi generic here. */
-		"ACTION!=\"add\", GOTO=\"libgphoto2_rules_end\"\n"
+		"ACTION!=\"add|bind\", GOTO=\"libgphoto2_rules_end\"\n"
 		"SUBSYSTEM!=\"usb\", GOTO=\"libgphoto2_usb_end\"\n"
 		"ENV{ID_USB_INTERFACES}==\"\", IMPORT{builtin}=\"usb_id\"\n"
 		/* shortcut the most common camera driver, ptp class, so we avoid parsing 1000
