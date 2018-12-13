@@ -1417,6 +1417,7 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 		GP_LOG_D("value is already 0x%08x", value);				\
 		return GP_OK;								\
 	}										\
+fallback:										\
 	do {										\
 		origval = dpd.CurrentValue.bits;					\
 		/* if it is a ENUM, the camera will walk through the ENUM */		\
@@ -1493,8 +1494,9 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 				}							\
 			}								\
 			if (posnow == -1) {						\
-				gp_context_error (context, _("Now value is not in enumeration."));\
-				return GP_ERROR_BAD_PARAMETERS;				\
+				GP_LOG_D ("Now value is not in enumeration, falling back to ordered tries.");\
+				useenumorder = 0;					\
+				goto fallback;						\
 			}								\
 			GP_LOG_D("posnow %d, value %d", posnow, dpd.CurrentValue.bits);	\
 			if ((posnow == 0) && (propval.u8 == 0xff)) {			\
