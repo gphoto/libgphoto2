@@ -551,11 +551,8 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	if (is_canon_eos_m (params)) {
 		PTPPropertyValue    ct_val;
 
-/*
- * Marcus: This was originalluy added ... but it gives a delya on the EOS M10 on closing ... weird
 		ct_val.u16 = 0x0000;
 		C_PTP (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &ct_val, PTP_DTC_UINT16));
-*/
 	}
 
 	/* then emits 911b and 911c ... not done yet ... */
