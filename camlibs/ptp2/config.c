@@ -2748,7 +2748,7 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 		return GP_ERROR;
 
 	if (strstr(value,_("Multi Frame Noise Reduction")))
-		u |= 0x10000;
+		u |= 0x1000000;
 
 setiso:
 	propval->u32 = u;
