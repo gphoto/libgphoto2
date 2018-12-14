@@ -417,3 +417,760 @@ Device Properties Supported:
   0xd406
   0xd407
   0xd303
+
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon EOS M3
+  device version: 3-14.0.1.0
+  serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x9013 (PTP_OC_CANON_CheckEvent)
+  0x901f (PTP_OC_CANON_ChangeUSBProtocol)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x101b (Get partial object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100b (Delete object)
+  0x100f (Format storage)
+  0x1012 (Set object protection)
+  0x9001 (PTP_OC_CANON_GetPartialObjectInfo)
+  0x9021 (PTP_OC_CANON_GetObjectInfoEx)
+  0x901b (PTP_OC_CANON_GetPartialObjectEx)
+  0x901e (PTP_OC_CANON_GetObjectAttributes)
+  0x9019 (PTP_OC_CANON_SendPartialObject)
+  0x9006 (PTP_OC_CANON_GetObjectHandleByName)
+  0x901c (PTP_OC_CANON_SetObjectTime)
+  0x9002 (PTP_OC_CANON_SetObjectArchive)
+  0x904c (Unknown PTP_OC)
+  0x9024 (PTP_OC_CANON_SendObjectInfoByPath )
+  0x9025 (PTP_OC_CANON_SendObjectByPath )
+  0x9038 (Unknown PTP_OC)
+  0x9039 (Unknown PTP_OC)
+  0x903a (Unknown PTP_OC)
+  0x903b (Unknown PTP_OC)
+  0x904b (Unknown PTP_OC)
+  0x9060 (Unknown PTP_OC)
+  0x9062 (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9804 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+  0x9116 (PTP_OC_CANON_EOS_GetEvent)
+  0x9101 (PTP_OC_CANON_EOS_GetStorageIDs)
+  0x9102 (PTP_OC_CANON_EOS_GetStorageInfo)
+  0x9103 (PTP_OC_CANON_EOS_GetObjectInfo)
+  0x9105 (PTP_OC_CANON_EOS_DeleteObject)
+  0x9106 (PTP_OC_CANON_EOS_FormatStore)
+  0x9107 (PTP_OC_CANON_EOS_GetPartialObject)
+  0x9109 (PTP_OC_CANON_EOS_GetObjectInfoEx)
+  0x910a (PTP_OC_CANON_EOS_GetThumbEx)
+  0x910c (PTP_OC_CANON_EOS_SetObjectAttributes)
+  0x9117 (PTP_OC_CANON_EOS_TransferComplete)
+  0x9118 (PTP_OC_CANON_EOS_CancelTransfer)
+  0x912c (PTP_OC_CANON_EOS_GetPartialObjectEx)
+  0x9132 (PTP_OC_CANON_EOS_EndGetPartialObjectEx)
+  0x9135 (PTP_OC_CANON_EOS_GetCTGInfo)
+  0x9140 (PTP_OC_CANON_EOS_SetRating)
+  0x9141 (PTP_OC_CANON_EOS_RequestInnerDevelopStart)
+  0x9143 (PTP_OC_CANON_EOS_RequestInnerDevelopEnd)
+  0x911a (PTP_OC_CANON_EOS_PCHDDCapacity)
+  0x913f (PTP_OC_CANON_EOS_GetCameraSupport)
+  0x9115 (PTP_OC_CANON_EOS_SetEventMode)
+  0x911b (PTP_OC_CANON_EOS_SetUILock)
+  0x911c (PTP_OC_CANON_EOS_ResetUILock)
+  0x911d (PTP_OC_CANON_EOS_KeepDeviceOn)
+  0x913d (PTP_OC_CANON_EOS_SetRequestOLCInfoGroup)
+  0x9136 (PTP_OC_CANON_EOS_GetLensAdjust)
+  0x9137 (PTP_OC_CANON_EOS_SetLensAdjust)
+  0x9114 (PTP_OC_CANON_EOS_SetRemoteMode)
+  0x9153 (PTP_OC_CANON_EOS_GetViewFinderData)
+  0x9128 (PTP_OC_CANON_EOS_RemoteReleaseOn)
+  0x9129 (PTP_OC_CANON_EOS_RemoteReleaseOff)
+  0x9158 (PTP_OC_CANON_EOS_Zoom)
+  0x9159 (PTP_OC_CANON_EOS_ZoomPosition)
+  0x9154 (PTP_OC_CANON_EOS_DoAf)
+  0x9160 (PTP_OC_CANON_EOS_AfCancel)
+  0x9155 (PTP_OC_CANON_EOS_DriveLens)
+  0x915b (PTP_OC_CANON_EOS_TouchAfPosition)
+  0x902f (Unknown PTP_OC)
+  0x9110 (PTP_OC_CANON_EOS_SetDevicePropValueEx)
+  0x9127 (PTP_OC_CANON_EOS_RequestDevicePropValue)
+  0x9182 (PTP_OC_CANON_EOS_NotifyEstimateNumberofImport)
+  0x9183 (PTP_OC_CANON_EOS_NotifyNumberofImported)
+  0x9184 (PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer)
+  0x9185 (PTP_OC_CANON_EOS_NotifyFinish)
+  0x9050 (Unknown PTP_OC)
+  0x9051 (Unknown PTP_OC)
+  0x905c (Unknown PTP_OC)
+  0x905d (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400b (DeviceReset)
+  0x400c (StorageInfoChanged)
+  0x400e (UnreportedStatus)
+  0xc001 (Unknown Event)
+  0xc005 (Unknown Event)
+  0xc00a (Unknown Event)
+  0xc101 (Unknown Event)
+Device Properties Supported:
+  0xd045 (Event Emulate Mode)
+  0xd04a (Unknown DPC code)
+  0xd02e (Size of Output Data from Camera)
+  0xd02f (Size of Input Data to Camera)
+  0x5001 (Battery Level)
+  0xd002 (Battery Type)
+  0xd003 (Battery Mode)
+  0xd034 (UNIX Time)
+  0xd047 (Type of Slideshow)
+  0xd046 (DPOF Version)
+  0xd030 (Remote API Version)
+  0xd049 (Model ID)
+  0xd032 (Camera Model)
+  0xd033 (Camera Owner)
+  0xd031 (Firmware Version)
+  0xd050 (Unknown DPC code)
+  0xd051 (Unknown DPC code)
+  0xd052 (Unknown DPC code)
+  0xd053 (Unknown DPC code)
+  0xd054 (Unknown DPC code)
+  0xd057 (Unknown DPC code)
+  0xd402 (Unknown DPC code)
+  0xd406 (Unknown DPC code)
+  0xd407 (Unknown DPC code)
+  0xd303 (Unknown DPC code)
+
+0000  07 07 00 00 02 00 16 91-0b 00 00 00 15 00 00 00  ................
+0010  a5 c1 00 00 0d 00 00 00-04 00 00 00 00 01 00 00  ................
+0020  18 16 00 00 00 a5 c1 00-00 0e 00 00 00 02 00 00  ................
+0030  00 00 01 00 00 00 0c 14-00 00 00 a5 c1 00 00 0c  ................
+0040  00 00 00 08 00 00 00 00-01 00 60 10 00 00 00 89  ..........`.....
+0050  c1 00 00 16 d1 00 00 00-00 74 03 10 00 00 00 89  .........t......
+0060  c1 00 00 11 d1 00 00 02-00 00 00 10 00 00 00 89  ................
+0070  c1 00 00 12 d1 00 00 02-00 00 00 10 00 00 00 89  ................
+0080  c1 00 00 75 d1 00 00 07-00 00 00 10 00 00 00 89  ...u............
+0090  c1 00 00 b1 d1 00 00 01-00 00 00 10 00 00 00 89  ................
+00a0  c1 00 00 99 d1 00 00 08-00 00 00 24 00 00 00 89  ...........$....
+00b0  c1 00 00 77 d1 00 00 18-00 00 00 04 0e d6 b1 00  ...w............
+00c0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 10  ................
+00d0  00 00 00 89 c1 00 00 b0-d1 00 00 08 00 00 00 10  ................
+00e0  00 00 00 89 c1 00 00 a8-d1 00 00 01 00 00 00 10  ................
+00f0  00 00 00 89 c1 00 00 08-d1 00 00 03 00 00 00 10  ................
+0100  00 00 00 89 c1 00 00 05-d1 00 00 07 00 00 00 10  ................
+0110  00 00 00 89 c1 00 00 09-d1 00 00 01 00 00 00 10  ................
+0120  00 00 00 89 c1 00 00 07-d1 00 00 05 00 00 00 10  ................
+0130  00 00 00 89 c1 00 00 06-d1 00 00 00 00 00 00 30  ...............0
+0140  00 00 00 89 c1 00 00 20-d1 00 00 02 00 00 00 10  ....... ........
+0150  00 00 00 06 00 00 00 00-00 00 00 04 00 00 00 10  ................
+0160  00 00 00 01 00 00 00 00-00 00 00 03 00 00 00 10  ................
+0170  00 00 00 89 c1 00 00 ba-d1 00 00 01 00 00 00 10  ................
+0180  00 00 00 89 c1 00 00 01-d1 00 00 18 00 00 00 10  ................
+0190  00 00 00 89 c1 00 00 02-d1 00 00 0c 00 00 00 10  ................
+01a0  00 00 00 89 c1 00 00 03-d1 00 00 60 00 00 00 10  ...........`....
+01b0  00 00 00 89 c1 00 00 04-d1 00 00 00 00 00 00 10  ................
+01c0  00 00 00 89 c1 00 00 1e-d1 00 00 01 00 01 00 10  ................
+01d0  00 00 00 89 c1 00 00 7c-d1 00 00 42 a7 10 5c 10  .......|...B..\.
+01e0  00 00 00 89 c1 00 00 38-d1 00 00 b0 01 40 03 10  .......8.....@..
+01f0  00 00 00 89 c1 00 00 94-d1 00 00 00 00 00 00 10  ................
+0200  00 00 00 89 c1 00 00 c9-d1 00 00 01 00 00 00 10  ................
+0210  00 00 00 89 c1 00 00 b2-d1 00 00 00 00 00 00 48  ...............H
+0220  00 00 00 89 c1 00 00 3f-d1 00 00 01 00 00 00 6a  .......?.......j
+0230  70 2e 63 6f 2e 63 61 6e-6f 6e 2e 69 63 2e 65 6f  p.co.canon.ic.eo
+0240  73 2e 65 6f 73 72 65 6d-6f 74 65 00 00 00 00 00  s.eosremote.....
+0250  00 00 00 00 00 00 00 63-61 6e 6f 6e 2d 61 30 31  .......canon-a01
+0260  2d 65 72 00 00 00 00 2c-00 00 00 89 c1 00 00 60  -er....,.......`
+0270  d1 00 00 20 00 00 00 87-00 00 00 00 00 00 00 03  ... ............
+0280  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0290  00 00 00 2c 00 00 00 89-c1 00 00 61 d1 00 00 20  ...,.......a... 
+02a0  00 00 00 87 00 00 00 00-00 00 00 03 00 00 00 00  ................
+02b0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 2c  ...............,
+02c0  00 00 00 89 c1 00 00 62-d1 00 00 20 00 00 00 87  .......b... ....
+02d0  00 00 00 00 00 00 00 03-00 00 00 00 00 00 00 00  ................
+02e0  00 00 00 00 00 00 00 00-00 00 00 4c 00 00 00 89  ...........L....
+02f0  c1 00 00 d8 d1 00 00 45-46 2d 4d 32 32 6d 6d 20  .......EF-M22mm 
+0300  66 2f 32 20 53 54 4d 00-00 00 00 00 00 00 00 00  f/2 STM.........
+0310  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0320  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0330  00 00 00 00 00 00 00 10-00 00 00 89 c1 00 00 dd  ................
+0340  d1 00 00 31 10 00 00 1c-00 00 00 8a c1 00 00 b0  ...1............
+0350  d1 00 00 03 00 00 00 02-00 00 00 00 00 00 00 08  ................
+0360  00 00 00 14 00 00 00 8a-c1 00 00 08 d1 00 00 00  ................
+0370  00 00 00 00 00 00 00 14-00 00 00 8a c1 00 00 05  ................
+0380  d1 00 00 00 00 00 00 00-00 00 00 14 00 00 00 8a  ................
+0390  c1 00 00 07 d1 00 00 00-00 00 00 00 00 00 00 14  ................
+03a0  00 00 00 8a c1 00 00 11-d1 00 00 00 00 00 00 00  ................
+03b0  00 00 00 14 00 00 00 8a-c1 00 00 12 d1 00 00 00  ................
+03c0  00 00 00 00 00 00 00 14-00 00 00 8a c1 00 00 16  ................
+03d0  d1 00 00 00 00 00 00 00-00 00 00 14 00 00 00 8a  ................
+03e0  c1 00 00 1b d1 00 00 00-00 00 00 00 00 00 00 14  ................
+03f0  00 00 00 8a c1 00 00 1e-d1 00 00 00 00 00 00 00  ................
+
+0.218709 gp_port_read                (3): Reading 512 = 0x200 bytes from port...
+0.218844 gp_port_read                (3): Read    512 = 0x200 bytes from port: (hexdump of 512 bytes)
+0000  00 00 00 14 00 00 00 8a-c1 00 00 20 d1 00 00 00  ........... ....
+0010  00 00 00 00 00 00 00 14-00 00 00 8a c1 00 00 38  ...............8
+0020  d1 00 00 00 00 00 00 00-00 00 00 14 00 00 00 8a  ................
+0030  c1 00 00 77 d1 00 00 00-00 00 00 00 00 00 00 14  ...w............
+0040  00 00 00 8a c1 00 00 7c-d1 00 00 00 00 00 00 00  .......|........
+0050  00 00 00 14 00 00 00 8a-c1 00 00 94 d1 00 00 00  ................
+0060  00 00 00 00 00 00 00 14-00 00 00 8a c1 00 00 a8  ................
+0070  d1 00 00 00 00 00 00 00-00 00 00 14 00 00 00 8a  ................
+0080  c1 00 00 b1 d1 00 00 00-00 00 00 00 00 00 00 6c  ...............l
+0090  00 00 00 8a c1 00 00 01-d1 00 00 03 00 00 00 16  ................
+00a0  00 00 00 18 00 00 00 1b-00 00 00 1d 00 00 00 20  ............... 
+00b0  00 00 00 23 00 00 00 25-00 00 00 28 00 00 00 2b  ...#...%...(...+
+00c0  00 00 00 2d 00 00 00 30-00 00 00 33 00 00 00 35  ...-...0...3...5
+00d0  00 00 00 38 00 00 00 3b-00 00 00 3d 00 00 00 40  ...8...;...=...@
+00e0  00 00 00 43 00 00 00 45-00 00 00 48 00 00 00 4b  ...C...E...H...K
+00f0  00 00 00 4d 00 00 00 50-00 00 00 e8 00 00 00 8a  ...M...P........
+0100  c1 00 00 02 d1 00 00 03-00 00 00 35 00 00 00 0c  ...........5....
+0110  00 00 00 10 00 00 00 13-00 00 00 15 00 00 00 18  ................
+0120  00 00 00 1b 00 00 00 1d-00 00 00 20 00 00 00 23  ........... ...#
+0130  00 00 00 25 00 00 00 28-00 00 00 2b 00 00 00 2d  ...%...(...+...-
+0140  00 00 00 30 00 00 00 33-00 00 00 35 00 00 00 38  ...0...3...5...8
+0150  00 00 00 3b 00 00 00 3d-00 00 00 40 00 00 00 43  ...;...=...@...C
+0160  00 00 00 45 00 00 00 48-00 00 00 4b 00 00 00 4d  ...E...H...K...M
+0170  00 00 00 50 00 00 00 53-00 00 00 55 00 00 00 58  ...P...S...U...X
+0180  00 00 00 5b 00 00 00 5d-00 00 00 60 00 00 00 63  ...[...]...`...c
+0190  00 00 00 65 00 00 00 68-00 00 00 6b 00 00 00 6d  ...e...h...k...m
+01a0  00 00 00 70 00 00 00 73-00 00 00 75 00 00 00 78  ...p...s...u...x
+01b0  00 00 00 7b 00 00 00 7d-00 00 00 80 00 00 00 83  ...{...}........
+01c0  00 00 00 85 00 00 00 88-00 00 00 8b 00 00 00 8d  ................
+01d0  00 00 00 90 00 00 00 93-00 00 00 95 00 00 00 98  ................
+01e0  00 00 00 70 00 00 00 8a-c1 00 00 03 d1 00 00 03  ...p............
+01f0  00 00 00 17 00 00 00 00-00 00 00 48 00 00 00 4b  ...........H...K
+
+0.218865 gp_port_read                (3): Reading 263 = 0x107 bytes from port...
+0.218983 gp_port_read                (3): Read    263 = 0x107 bytes from port: (hexdump of 263 bytes)
+0000  00 00 00 4d 00 00 00 50-00 00 00 53 00 00 00 55  ...M...P...S...U
+0010  00 00 00 58 00 00 00 5b-00 00 00 5d 00 00 00 60  ...X...[...]...`
+0020  00 00 00 63 00 00 00 65-00 00 00 68 00 00 00 6b  ...c...e...h...k
+0030  00 00 00 6d 00 00 00 70-00 00 00 73 00 00 00 75  ...m...p...s...u
+0040  00 00 00 78 00 00 00 7b-00 00 00 7d 00 00 00 80  ...x...{...}....
+0050  00 00 00 14 00 00 00 8a-c1 00 00 04 d1 00 00 03  ................
+0060  00 00 00 00 00 00 00 14-00 00 00 8a c1 00 00 ba  ................
+0070  d1 00 00 03 00 00 00 00-00 00 00 14 00 00 00 8a  ................
+0080  c1 00 00 c9 d1 00 00 00-00 00 00 00 00 00 00 14  ................
+0090  00 00 00 8a c1 00 00 60-d1 00 00 00 00 00 00 00  .......`........
+00a0  00 00 00 14 00 00 00 8a-c1 00 00 61 d1 00 00 00  ...........a....
+00b0  00 00 00 00 00 00 00 14-00 00 00 8a c1 00 00 62  ...............b
+00c0  d1 00 00 00 00 00 00 00-00 00 00 14 00 00 00 8a  ................
+00d0  c1 00 00 d8 d1 00 00 00-00 00 00 00 00 00 00 14  ................
+00e0  00 00 00 8a c1 00 00 dd-d1 00 00 00 00 00 00 00  ................
+00f0  00 00 00 0c 00 00 00 a4-c1 00 00 01 00 01 00 08  ................
+0100  00 00 00 00 00 00 00   -                         .......         
+
+0.219515 ptp                         (2): olcinfoversion is 0
+0.219529 ptp                         (2): event 0: EOS event OLCInfoChanged (size 21)
+0.219542 ptp                         (2):     0: 0d
+0.219554 ptp                         (2):     1: 00
+0.219565 ptp                         (2):     2: 00
+0.219576 ptp                         (2):     3: 00
+0.219588 ptp                         (2):     4: 04
+0.219599 ptp                         (2):     5: 00
+0.219610 ptp                         (2):     6: 00
+0.219621 ptp                         (2):     7: 00
+0.219632 ptp                         (2):     8: 00
+0.219643 ptp                         (2):     9: 01
+0.219654 ptp                         (2):     10: 00
+0.219666 ptp                         (2):     11: 00
+0.219678 ptp                         (2):     12: 18
+0.219712 ptp                         (2): olcinfoversion is 0
+0.219724 ptp                         (2): event 2: EOS event OLCInfoChanged (size 22)
+0.219736 ptp                         (2):     0: 0e
+0.219747 ptp                         (2):     1: 00
+0.219759 ptp                         (2):     2: 00
+0.219770 ptp                         (2):     3: 00
+0.219781 ptp                         (2):     4: 02
+0.219793 ptp                         (2):     5: 00
+0.219804 ptp                         (2):     6: 00
+0.219815 ptp                         (2):     7: 00
+0.219826 ptp                         (2):     8: 00
+0.219837 ptp                         (2):     9: 01
+0.219848 ptp                         (2):     10: 00
+0.219859 ptp                         (2):     11: 00
+0.219870 ptp                         (2):     12: 00
+0.219882 ptp                         (2):     13: 0c
+0.219897 ptp                         (2): olcinfoversion is 0
+0.219909 ptp                         (2): event 4: EOS event OLCInfoChanged (size 20)
+0.219921 ptp                         (2):     0: 0c
+0.219932 ptp                         (2):     1: 00
+0.219943 ptp                         (2):     2: 00
+0.219954 ptp                         (2):     3: 00
+0.219965 ptp                         (2):     4: 08
+0.219976 ptp                         (2):     5: 00
+0.219987 ptp                         (2):     6: 00
+0.219999 ptp                         (2):     7: 00
+0.220009 ptp                         (2):     8: 00
+0.220021 ptp                         (2):     9: 01
+0.220032 ptp                         (2):     10: 00
+0.220043 ptp                         (2):     11: 60
+0.220058 ptp                         (2): event 6: EOS prop d116 info record, datasize is 4
+0.220072 ptp                         (2): event 6: currentvalue of d116 is 3740000
+0.220085 ptp                         (2): event 7: EOS prop d111 info record, datasize is 4
+0.220098 ptp                         (2): event 7: currentvalue of d111 is 2
+0.220110 ptp                         (2): event 8: EOS prop d112 info record, datasize is 4
+0.220123 ptp                         (2): event 8: currentvalue of d112 is 2
+0.220136 ptp                         (2): event 9: EOS prop d175 info record, datasize is 4
+0.220149 ptp                         (2): event 9: Unknown EOS property d175, datasize is 4
+0.220163 ptp                         (2):     0: 07
+0.220174 ptp                         (2):     1: 00
+0.220186 ptp                         (2):     2: 00
+0.220197 ptp                         (2):     3: 00
+0.220209 ptp                         (2): event 10: EOS prop d1b1 info record, datasize is 4
+0.220222 ptp                         (2): event 10: currentvalue of d1b1 is 1
+0.220236 ptp                         (2): event 11: EOS prop d199 info record, datasize is 4
+0.220248 ptp                         (2): event 11: currentvalue of d199 is 8
+0.220261 ptp                         (2): event 12: EOS prop d177 info record, datasize is 24
+0.220274 ptp                         (2): event 12: Unknown EOS property d177, datasize is 24
+0.220299 ptp                         (2):     0: 18
+0.220311 ptp                         (2):     1: 00
+0.220322 ptp                         (2):     2: 00
+0.220333 ptp                         (2):     3: 00
+0.220344 ptp                         (2):     4: 04
+0.220355 ptp                         (2):     5: 0e
+0.220366 ptp                         (2):     6: d6
+0.220377 ptp                         (2):     7: b1
+0.220388 ptp                         (2):     8: 00
+0.220398 ptp                         (2):     9: 00
+0.220409 ptp                         (2):     10: 00
+0.220421 ptp                         (2):     11: 00
+0.220432 ptp                         (2):     12: 00
+0.220443 ptp                         (2):     13: 00
+0.220454 ptp                         (2):     14: 00
+0.220465 ptp                         (2):     15: 00
+0.220477 ptp                         (2):     16: 00
+0.220488 ptp                         (2):     17: 00
+0.220499 ptp                         (2):     18: 00
+0.220510 ptp                         (2):     19: 00
+0.220521 ptp                         (2):     20: 00
+0.220532 ptp                         (2):     21: 00
+0.220544 ptp                         (2):     22: 00
+0.220555 ptp                         (2):     23: 00
+0.220568 ptp                         (2): event 13: EOS prop d1b0 info record, datasize is 4
+0.220581 ptp                         (2): event 13: currentvalue of d1b0 is 8
+0.220593 ptp                         (2): event 14: EOS prop d1a8 info record, datasize is 4
+0.220607 ptp                         (2): event 14: Unknown EOS property d1a8, datasize is 4, using uint32
+0.220619 ptp                         (2):     0: 0x       1
+0.220632 ptp                         (2): event 14: currentvalue of d1a8 is 1
+0.220644 ptp                         (2): event 15: EOS prop d108 info record, datasize is 4
+0.220657 ptp                         (2): event 15: currentvalue of d108 is 3
+0.220670 ptp                         (2): event 16: EOS prop d105 info record, datasize is 4
+0.220683 ptp                         (2): event 16: currentvalue of d105 is 7
+0.220696 ptp                         (2): event 17: EOS prop d109 info record, datasize is 4
+0.220709 ptp                         (2): event 17: currentvalue of d109 is 1
+0.220722 ptp                         (2): event 18: EOS prop d107 info record, datasize is 4
+0.220735 ptp                         (2): event 18: currentvalue of d107 is 5
+0.220747 ptp                         (2): event 19: EOS prop d106 info record, datasize is 4
+0.220760 ptp                         (2): event 19: currentvalue of d106 is 0
+0.220773 ptp                         (2): event 20: EOS prop d120 info record, datasize is 36
+0.220788 ptp                         (2): event 20: decoded imageformat, currentvalue of d120 is 403
+0.220801 ptp                         (2): event 21: EOS prop d1ba info record, datasize is 4
+0.220815 ptp                         (2): event 21: Unknown EOS property d1ba, datasize is 4, using uint32
+0.220827 ptp                         (2):     0: 0x       1
+0.220839 ptp                         (2): event 21: currentvalue of d1ba is 1
+0.220852 ptp                         (2): event 22: EOS prop d101 info record, datasize is 4
+0.220864 ptp                         (2): event 22: currentvalue of d101 is 18
+0.220877 ptp                         (2): event 23: EOS prop d102 info record, datasize is 4
+0.220889 ptp                         (2): event 23: currentvalue of d102 is c
+0.220902 ptp                         (2): event 24: EOS prop d103 info record, datasize is 4
+0.220915 ptp                         (2): event 24: currentvalue of d103 is 60
+0.220927 ptp                         (2): event 25: EOS prop d104 info record, datasize is 4
+0.220941 ptp                         (2): event 25: currentvalue of d104 is 0
+0.220954 ptp                         (2): event 26: EOS prop d11e info record, datasize is 4
+0.220967 ptp                         (2): event 26: currentvalue of d11e is 10001
+0.220980 ptp                         (2): event 27: EOS prop d17c info record, datasize is 4
+0.220999 ptp                         (2): event 27: currentvalue of d17c is 5c10a742
+0.221013 ptp                         (2): event 28: EOS prop d138 info record, datasize is 4
+0.221027 ptp                         (2): event 28: Unknown EOS property d138, datasize is 4
+0.221040 ptp                         (2):     0: b0
+0.221051 ptp                         (2):     1: 01
+0.221062 ptp                         (2):     2: 40
+0.221074 ptp                         (2):     3: 03
+0.221086 ptp                         (2): event 29: EOS prop d194 info record, datasize is 4
+0.221099 ptp                         (2): event 29: currentvalue of d194 is 0
+0.221111 ptp                         (2): event 30: EOS prop d1c9 info record, datasize is 4
+0.221125 ptp                         (2): event 30: currentvalue of d1c9 is 1
+0.221137 ptp                         (2): event 31: EOS prop d1b2 info record, datasize is 4
+0.221152 ptp                         (2): event 31: Unknown EOS property d1b2, datasize is 4, using uint32
+0.221165 ptp                         (2):     0: 0x       0
+0.221177 ptp                         (2): event 31: currentvalue of d1b2 is 0
+0.221190 ptp                         (2): event 32: EOS prop d13f info record, datasize is 60
+0.221204 ptp                         (2): event 32: Unknown EOS property d13f, datasize is 60
+0.221216 ptp                         (2):     0: 01
+0.221235 ptp                         (2):     1: 00
+0.221247 ptp                         (2):     2: 00
+0.221258 ptp                         (2):     3: 00
+0.221269 ptp                         (2):     4: 6a
+0.221280 ptp                         (2):     5: 70
+0.221291 ptp                         (2):     6: 2e
+0.221302 ptp                         (2):     7: 63
+0.221313 ptp                         (2):     8: 6f
+0.221324 ptp                         (2):     9: 2e
+0.221335 ptp                         (2):     10: 63
+0.221346 ptp                         (2):     11: 61
+0.221357 ptp                         (2):     12: 6e
+0.221368 ptp                         (2):     13: 6f
+0.221379 ptp                         (2):     14: 6e
+0.221390 ptp                         (2):     15: 2e
+0.221401 ptp                         (2):     16: 69
+0.221412 ptp                         (2):     17: 63
+0.221423 ptp                         (2):     18: 2e
+0.221434 ptp                         (2):     19: 65
+0.221445 ptp                         (2):     20: 6f
+0.221456 ptp                         (2):     21: 73
+0.221467 ptp                         (2):     22: 2e
+0.221478 ptp                         (2):     23: 65
+0.221489 ptp                         (2):     24: 6f
+0.221500 ptp                         (2):     25: 73
+0.221511 ptp                         (2):     26: 72
+0.221522 ptp                         (2):     27: 65
+0.221533 ptp                         (2):     28: 6d
+0.221545 ptp                         (2):     29: 6f
+0.221556 ptp                         (2):     30: 74
+0.221567 ptp                         (2):     31: 65
+0.221578 ptp                         (2):     32: 00
+0.221589 ptp                         (2):     33: 00
+0.221600 ptp                         (2):     34: 00
+0.221611 ptp                         (2):     35: 00
+0.221622 ptp                         (2):     36: 00
+0.221633 ptp                         (2):     37: 00
+0.221644 ptp                         (2):     38: 00
+0.221655 ptp                         (2):     39: 00
+0.221667 ptp                         (2):     40: 00
+0.221678 ptp                         (2):     41: 00
+0.221689 ptp                         (2):     42: 00
+0.221700 ptp                         (2):     43: 00
+0.221711 ptp                         (2):     44: 63
+0.221722 ptp                         (2):     45: 61
+0.221733 ptp                         (2):     46: 6e
+0.221744 ptp                         (2):     47: 6f
+0.221755 ptp                         (2):     48: 6e
+0.221766 ptp                         (2):     49: 2d
+0.221776 ptp                         (2):     50: 61
+0.221798 ptp                         (2):     51: 30
+0.221810 ptp                         (2):     52: 31
+0.221821 ptp                         (2):     53: 2d
+0.221832 ptp                         (2):     54: 65
+0.221842 ptp                         (2):     55: 72
+0.221854 ptp                         (2):     56: 00
+0.221865 ptp                         (2):     57: 00
+0.221876 ptp                         (2):     58: 00
+0.221887 ptp                         (2):     59: 00
+0.221899 ptp                         (2): event 33: EOS prop d160 info record, datasize is 32
+0.221913 ptp                         (2): event 33: Unknown EOS property d160, datasize is 32
+0.221925 ptp                         (2):     0: 20
+0.221936 ptp                         (2):     1: 00
+0.221948 ptp                         (2):     2: 00
+0.221958 ptp                         (2):     3: 00
+0.221969 ptp                         (2):     4: 87
+0.221980 ptp                         (2):     5: 00
+0.221991 ptp                         (2):     6: 00
+0.222003 ptp                         (2):     7: 00
+0.222014 ptp                         (2):     8: 00
+0.222025 ptp                         (2):     9: 00
+0.222036 ptp                         (2):     10: 00
+0.222047 ptp                         (2):     11: 00
+0.222058 ptp                         (2):     12: 03
+0.222069 ptp                         (2):     13: 00
+0.222081 ptp                         (2):     14: 00
+0.222092 ptp                         (2):     15: 00
+0.222103 ptp                         (2):     16: 00
+0.222114 ptp                         (2):     17: 00
+0.222125 ptp                         (2):     18: 00
+0.222136 ptp                         (2):     19: 00
+0.222147 ptp                         (2):     20: 00
+0.222158 ptp                         (2):     21: 00
+0.222169 ptp                         (2):     22: 00
+0.222181 ptp                         (2):     23: 00
+0.222192 ptp                         (2):     24: 00
+0.222203 ptp                         (2):     25: 00
+0.222214 ptp                         (2):     26: 00
+0.222225 ptp                         (2):     27: 00
+0.222236 ptp                         (2):     28: 00
+0.222247 ptp                         (2):     29: 00
+0.222258 ptp                         (2):     30: 00
+0.222269 ptp                         (2):     31: 00
+0.222281 ptp                         (2): event 34: EOS prop d161 info record, datasize is 32
+0.222295 ptp                         (2): event 34: Unknown EOS property d161, datasize is 32
+0.222306 ptp                         (2):     0: 20
+0.222318 ptp                         (2):     1: 00
+0.222329 ptp                         (2):     2: 00
+0.222339 ptp                         (2):     3: 00
+0.222350 ptp                         (2):     4: 87
+0.222361 ptp                         (2):     5: 00
+0.222372 ptp                         (2):     6: 00
+0.222383 ptp                         (2):     7: 00
+0.222394 ptp                         (2):     8: 00
+0.222405 ptp                         (2):     9: 00
+0.222416 ptp                         (2):     10: 00
+0.222427 ptp                         (2):     11: 00
+0.222439 ptp                         (2):     12: 03
+0.222450 ptp                         (2):     13: 00
+0.222461 ptp                         (2):     14: 00
+0.222472 ptp                         (2):     15: 00
+0.222483 ptp                         (2):     16: 00
+0.222494 ptp                         (2):     17: 00
+0.222505 ptp                         (2):     18: 00
+0.222516 ptp                         (2):     19: 00
+0.222527 ptp                         (2):     20: 00
+0.222539 ptp                         (2):     21: 00
+0.222551 ptp                         (2):     22: 00
+0.222562 ptp                         (2):     23: 00
+0.222573 ptp                         (2):     24: 00
+0.222584 ptp                         (2):     25: 00
+0.222595 ptp                         (2):     26: 00
+0.222606 ptp                         (2):     27: 00
+0.222617 ptp                         (2):     28: 00
+0.222637 ptp                         (2):     29: 00
+0.222649 ptp                         (2):     30: 00
+0.222660 ptp                         (2):     31: 00
+0.222673 ptp                         (2): event 35: EOS prop d162 info record, datasize is 32
+0.222687 ptp                         (2): event 35: Unknown EOS property d162, datasize is 32
+0.222698 ptp                         (2):     0: 20
+0.222709 ptp                         (2):     1: 00
+0.222720 ptp                         (2):     2: 00
+0.222731 ptp                         (2):     3: 00
+0.222742 ptp                         (2):     4: 87
+0.222753 ptp                         (2):     5: 00
+0.222764 ptp                         (2):     6: 00
+0.222775 ptp                         (2):     7: 00
+0.222787 ptp                         (2):     8: 00
+0.222798 ptp                         (2):     9: 00
+0.222809 ptp                         (2):     10: 00
+0.222820 ptp                         (2):     11: 00
+0.222831 ptp                         (2):     12: 03
+0.222842 ptp                         (2):     13: 00
+0.222853 ptp                         (2):     14: 00
+0.222864 ptp                         (2):     15: 00
+0.222875 ptp                         (2):     16: 00
+0.222887 ptp                         (2):     17: 00
+0.222897 ptp                         (2):     18: 00
+0.222908 ptp                         (2):     19: 00
+0.222920 ptp                         (2):     20: 00
+0.222931 ptp                         (2):     21: 00
+0.222942 ptp                         (2):     22: 00
+0.222953 ptp                         (2):     23: 00
+0.222964 ptp                         (2):     24: 00
+0.222975 ptp                         (2):     25: 00
+0.222986 ptp                         (2):     26: 00
+0.222997 ptp                         (2):     27: 00
+0.223008 ptp                         (2):     28: 00
+0.223019 ptp                         (2):     29: 00
+0.223030 ptp                         (2):     30: 00
+0.223042 ptp                         (2):     31: 00
+0.223054 ptp                         (2): event 36: EOS prop d1d8 info record, datasize is 64
+0.223068 ptp                         (2): event 36: currentvalue of d1d8 is EF-M22mm f/2 STM
+0.223081 ptp                         (2): event 37: EOS prop d1dd info record, datasize is 4
+0.223094 ptp                         (2): event 37: currentvalue of d1dd is 1031
+0.223108 ptp                         (2): event 38: EOS prop d1b0 desc record, datasize 8, propxtype 3
+0.223123 ptp                         (2): event 38: propxtype is 3, prop is 0xd1b0, data type is 0x0004, propxcnt is 2.
+0.223136 ptp                         (2): event 38: suppval[0] of d1b0 is 0x0.
+0.223149 ptp                         (2): event 38: suppval[1] of d1b0 is 0x8.
+0.223163 ptp                         (2): event 39: EOS prop d108 desc record, datasize 0, propxtype 0
+0.223177 ptp                         (2): event 39: propxtype is 0 for d108, unhandled, size 20
+0.223190 ptp                         (2): event 40: EOS prop d105 desc record, datasize 0, propxtype 0
+0.223203 ptp                         (2): event 40: propxtype is 0 for d105, unhandled, size 20
+0.223216 ptp                         (2): event 41: EOS prop d107 desc record, datasize 0, propxtype 0
+0.223229 ptp                         (2): event 41: propxtype is 0 for d107, unhandled, size 20
+0.223242 ptp                         (2): event 42: EOS prop d111 desc record, datasize 0, propxtype 0
+0.223255 ptp                         (2): event 42: propxtype is 0 for d111, unhandled, size 20
+0.223268 ptp                         (2): event 43: EOS prop d112 desc record, datasize 0, propxtype 0
+0.223281 ptp                         (2): event 43: propxtype is 0 for d112, unhandled, size 20
+0.223295 ptp                         (2): event 44: EOS prop d116 desc record, datasize 0, propxtype 0
+0.223308 ptp                         (2): event 44: propxtype is 0 for d116, unhandled, size 20
+0.223321 ptp                         (2): event 45: EOS prop d11b desc record, datasize 0, propxtype 0
+0.223333 ptp                         (2): event 45: propdesc d11b, default value not found.
+0.223356 ptp                         (2): event 46: EOS prop d11e desc record, datasize 0, propxtype 0
+0.223370 ptp                         (2): event 46: propxtype is 0 for d11e, unhandled, size 20
+0.223383 ptp                         (2): event 47: EOS prop d120 desc record, datasize 0, propxtype 0
+0.223396 ptp                         (2): event 47: propxtype is 0 for d120, unhandled, size 20
+0.223409 ptp                         (2): event 48: EOS prop d138 desc record, datasize 0, propxtype 0
+0.223423 ptp                         (2): event 48: propxtype is 0 for d138, unhandled, size 20
+0.223436 ptp                         (2): event 49: EOS prop d177 desc record, datasize 0, propxtype 0
+0.223449 ptp                         (2): event 49: propxtype is 0 for d177, unhandled, size 20
+0.223462 ptp                         (2): event 50: EOS prop d17c desc record, datasize 0, propxtype 0
+0.223475 ptp                         (2): event 50: propxtype is 0 for d17c, unhandled, size 20
+0.223489 ptp                         (2): event 51: EOS prop d194 desc record, datasize 0, propxtype 0
+0.223502 ptp                         (2): event 51: propxtype is 0 for d194, unhandled, size 20
+0.223515 ptp                         (2): event 52: EOS prop d1a8 desc record, datasize 0, propxtype 0
+0.223528 ptp                         (2): event 52: propxtype is 0 for d1a8, unhandled, size 20
+0.223542 ptp                         (2): event 53: EOS prop d1b1 desc record, datasize 0, propxtype 0
+0.223555 ptp                         (2): event 53: propxtype is 0 for d1b1, unhandled, size 20
+0.223568 ptp                         (2): event 54: EOS prop d101 desc record, datasize 88, propxtype 3
+0.223583 ptp                         (2): event 54: propxtype is 3, prop is 0xd101, data type is 0x0004, propxcnt is 22.
+0.223597 ptp                         (2): event 54: suppval[0] of d101 is 0x18.
+0.223609 ptp                         (2): event 54: suppval[1] of d101 is 0x1b.
+0.223622 ptp                         (2): event 54: suppval[2] of d101 is 0x1d.
+0.223635 ptp                         (2): event 54: suppval[3] of d101 is 0x20.
+0.223647 ptp                         (2): event 54: suppval[4] of d101 is 0x23.
+0.223660 ptp                         (2): event 54: suppval[5] of d101 is 0x25.
+0.223673 ptp                         (2): event 54: suppval[6] of d101 is 0x28.
+0.223685 ptp                         (2): event 54: suppval[7] of d101 is 0x2b.
+0.223698 ptp                         (2): event 54: suppval[8] of d101 is 0x2d.
+0.223710 ptp                         (2): event 54: suppval[9] of d101 is 0x30.
+0.223723 ptp                         (2): event 54: suppval[10] of d101 is 0x33.
+0.223735 ptp                         (2): event 54: suppval[11] of d101 is 0x35.
+0.223748 ptp                         (2): event 54: suppval[12] of d101 is 0x38.
+0.223760 ptp                         (2): event 54: suppval[13] of d101 is 0x3b.
+0.223773 ptp                         (2): event 54: suppval[14] of d101 is 0x3d.
+0.223785 ptp                         (2): event 54: suppval[15] of d101 is 0x40.
+0.223798 ptp                         (2): event 54: suppval[16] of d101 is 0x43.
+0.223811 ptp                         (2): event 54: suppval[17] of d101 is 0x45.
+0.223823 ptp                         (2): event 54: suppval[18] of d101 is 0x48.
+0.223836 ptp                         (2): event 54: suppval[19] of d101 is 0x4b.
+0.223849 ptp                         (2): event 54: suppval[20] of d101 is 0x4d.
+0.223861 ptp                         (2): event 54: suppval[21] of d101 is 0x50.
+0.223874 ptp                         (2): event 55: EOS prop d102 desc record, datasize 212, propxtype 3
+0.223889 ptp                         (2): event 55: propxtype is 3, prop is 0xd102, data type is 0x0004, propxcnt is 53.
+0.223902 ptp                         (2): event 55: suppval[0] of d102 is 0xc.
+0.223916 ptp                         (2): event 55: suppval[1] of d102 is 0x10.
+0.223928 ptp                         (2): event 55: suppval[2] of d102 is 0x13.
+0.223951 ptp                         (2): event 55: suppval[3] of d102 is 0x15.
+0.223964 ptp                         (2): event 55: suppval[4] of d102 is 0x18.
+0.223976 ptp                         (2): event 55: suppval[5] of d102 is 0x1b.
+0.223989 ptp                         (2): event 55: suppval[6] of d102 is 0x1d.
+0.224001 ptp                         (2): event 55: suppval[7] of d102 is 0x20.
+0.224014 ptp                         (2): event 55: suppval[8] of d102 is 0x23.
+0.224026 ptp                         (2): event 55: suppval[9] of d102 is 0x25.
+0.224039 ptp                         (2): event 55: suppval[10] of d102 is 0x28.
+0.224052 ptp                         (2): event 55: suppval[11] of d102 is 0x2b.
+0.224064 ptp                         (2): event 55: suppval[12] of d102 is 0x2d.
+0.224077 ptp                         (2): event 55: suppval[13] of d102 is 0x30.
+0.224089 ptp                         (2): event 55: suppval[14] of d102 is 0x33.
+0.224102 ptp                         (2): event 55: suppval[15] of d102 is 0x35.
+0.224114 ptp                         (2): event 55: suppval[16] of d102 is 0x38.
+0.224127 ptp                         (2): event 55: suppval[17] of d102 is 0x3b.
+0.224139 ptp                         (2): event 55: suppval[18] of d102 is 0x3d.
+0.224152 ptp                         (2): event 55: suppval[19] of d102 is 0x40.
+0.224165 ptp                         (2): event 55: suppval[20] of d102 is 0x43.
+0.224178 ptp                         (2): event 55: suppval[21] of d102 is 0x45.
+0.224190 ptp                         (2): event 55: suppval[22] of d102 is 0x48.
+0.224203 ptp                         (2): event 55: suppval[23] of d102 is 0x4b.
+0.224215 ptp                         (2): event 55: suppval[24] of d102 is 0x4d.
+0.224228 ptp                         (2): event 55: suppval[25] of d102 is 0x50.
+0.224240 ptp                         (2): event 55: suppval[26] of d102 is 0x53.
+0.224253 ptp                         (2): event 55: suppval[27] of d102 is 0x55.
+0.224266 ptp                         (2): event 55: suppval[28] of d102 is 0x58.
+0.224278 ptp                         (2): event 55: suppval[29] of d102 is 0x5b.
+0.224291 ptp                         (2): event 55: suppval[30] of d102 is 0x5d.
+0.224304 ptp                         (2): event 55: suppval[31] of d102 is 0x60.
+0.224316 ptp                         (2): event 55: suppval[32] of d102 is 0x63.
+0.224329 ptp                         (2): event 55: suppval[33] of d102 is 0x65.
+0.224341 ptp                         (2): event 55: suppval[34] of d102 is 0x68.
+0.224353 ptp                         (2): event 55: suppval[35] of d102 is 0x6b.
+0.224366 ptp                         (2): event 55: suppval[36] of d102 is 0x6d.
+0.224379 ptp                         (2): event 55: suppval[37] of d102 is 0x70.
+0.224391 ptp                         (2): event 55: suppval[38] of d102 is 0x73.
+0.224403 ptp                         (2): event 55: suppval[39] of d102 is 0x75.
+0.224417 ptp                         (2): event 55: suppval[40] of d102 is 0x78.
+0.224429 ptp                         (2): event 55: suppval[41] of d102 is 0x7b.
+0.224442 ptp                         (2): event 55: suppval[42] of d102 is 0x7d.
+0.224454 ptp                         (2): event 55: suppval[43] of d102 is 0x80.
+0.224467 ptp                         (2): event 55: suppval[44] of d102 is 0x83.
+0.224479 ptp                         (2): event 55: suppval[45] of d102 is 0x85.
+0.224492 ptp                         (2): event 55: suppval[46] of d102 is 0x88.
+0.224504 ptp                         (2): event 55: suppval[47] of d102 is 0x8b.
+0.224517 ptp                         (2): event 55: suppval[48] of d102 is 0x8d.
+0.224529 ptp                         (2): event 55: suppval[49] of d102 is 0x90.
+0.224543 ptp                         (2): event 55: suppval[50] of d102 is 0x93.
+0.224555 ptp                         (2): event 55: suppval[51] of d102 is 0x95.
+0.224568 ptp                         (2): event 55: suppval[52] of d102 is 0x98.
+0.224581 ptp                         (2): event 56: EOS prop d103 desc record, datasize 92, propxtype 3
+0.224606 ptp                         (2): event 56: propxtype is 3, prop is 0xd103, data type is 0x0004, propxcnt is 23.
+0.224621 ptp                         (2): event 56: suppval[0] of d103 is 0x0.
+0.224633 ptp                         (2): event 56: suppval[1] of d103 is 0x48.
+0.224646 ptp                         (2): event 56: suppval[2] of d103 is 0x4b.
+0.224659 ptp                         (2): event 56: suppval[3] of d103 is 0x4d.
+0.224671 ptp                         (2): event 56: suppval[4] of d103 is 0x50.
+0.224684 ptp                         (2): event 56: suppval[5] of d103 is 0x53.
+0.224696 ptp                         (2): event 56: suppval[6] of d103 is 0x55.
+0.224709 ptp                         (2): event 56: suppval[7] of d103 is 0x58.
+0.224721 ptp                         (2): event 56: suppval[8] of d103 is 0x5b.
+0.224734 ptp                         (2): event 56: suppval[9] of d103 is 0x5d.
+0.224746 ptp                         (2): event 56: suppval[10] of d103 is 0x60.
+0.224759 ptp                         (2): event 56: suppval[11] of d103 is 0x63.
+0.224771 ptp                         (2): event 56: suppval[12] of d103 is 0x65.
+0.224784 ptp                         (2): event 56: suppval[13] of d103 is 0x68.
+0.224797 ptp                         (2): event 56: suppval[14] of d103 is 0x6b.
+0.224809 ptp                         (2): event 56: suppval[15] of d103 is 0x6d.
+0.224822 ptp                         (2): event 56: suppval[16] of d103 is 0x70.
+0.224834 ptp                         (2): event 56: suppval[17] of d103 is 0x73.
+0.224847 ptp                         (2): event 56: suppval[18] of d103 is 0x75.
+0.224859 ptp                         (2): event 56: suppval[19] of d103 is 0x78.
+0.224872 ptp                         (2): event 56: suppval[20] of d103 is 0x7b.
+0.224884 ptp                         (2): event 56: suppval[21] of d103 is 0x7d.
+0.224897 ptp                         (2): event 56: suppval[22] of d103 is 0x80.
+0.224909 ptp                         (2): event 57: EOS prop d104 desc record, datasize 0, propxtype 3
+0.224923 ptp                         (2): event 58: EOS prop d1ba desc record, datasize 0, propxtype 3
+0.224937 ptp                         (2): event 59: EOS prop d1c9 desc record, datasize 0, propxtype 0
+0.224950 ptp                         (2): event 59: propxtype is 0 for d1c9, unhandled, size 20
+0.224963 ptp                         (2): event 60: EOS prop d160 desc record, datasize 0, propxtype 0
+0.224976 ptp                         (2): event 60: propxtype is 0 for d160, unhandled, size 20
+0.224989 ptp                         (2): event 61: EOS prop d161 desc record, datasize 0, propxtype 0
+0.225003 ptp                         (2): event 61: propxtype is 0 for d161, unhandled, size 20
+0.225016 ptp                         (2): event 62: EOS prop d162 desc record, datasize 0, propxtype 0
+0.225029 ptp                         (2): event 62: propxtype is 0 for d162, unhandled, size 20
+0.225042 ptp                         (2): event 63: EOS prop d1d8 desc record, datasize 0, propxtype 0
+0.225055 ptp                         (2): event 63: propxtype is 0 for d1d8, unhandled, size 20
+0.225069 ptp                         (2): event 64: EOS prop d1dd desc record, datasize 0, propxtype 0
+0.225082 ptp                         (2): event 64: propxtype is 0 for d1dd, unhandled, size 20
+0.225095 ptp                         (2): event 65: unknown EOS event c1a4
+0.225108 ptp                         (2):     8: 01
+0.225119 ptp                         (2):     9: 00
+0.225130 ptp                         (2):     10: 01
+0.225141 ptp                         (2):     11: 00
+
+0000  04 01 00 00 02 00 16 91-11 00 00 00 2c 00 00 00  ............,...
+0010  89 c1 00 00 15 d1 00 00-00 00 00 00 00 00 00 00  ................
+0020  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0030  00 00 00 00 00 00 00 00-4c 00 00 00 89 c1 00 00  ........L.......
+0040  d0 d1 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0050  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0060  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0070  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+0080  00 00 00 00 4c 00 00 00-89 c1 00 00 d1 d1 00 00  ....L...........
+0090  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+00a0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+00b0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+00c0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+00d0  2c 00 00 00 89 c1 00 00-af d1 00 00 34 36 38 30  ,...........4680
+00e0  33 37 30 30 30 31 34 34-00 00 00 00 00 00 00 00  37000144........
+00f0  00 00 00 00 00 00 00 00-00 00 00 00 08 00 00 00  ................
+0100  00 00 00 00            -                         ....            
+
+0.247020 ptp                         (2): event 0: EOS prop d115 info record, datasize is 32
+0.247042 ptp                         (2): event 0: currentvalue of d115 is 
+0.247056 ptp                         (2): event 1: EOS prop d1d0 info record, datasize is 64
+0.247072 ptp                         (2): event 1: currentvalue of d1d0 is 
+0.247085 ptp                         (2): event 2: EOS prop d1d1 info record, datasize is 64
+0.247100 ptp                         (2): event 2: currentvalue of d1d1 is 
+0.247113 ptp                         (2): event 3: EOS prop d1af info record, datasize is 32
+0.247127 ptp                         (2): event 3: currentvalue of d1af is 468037000144
