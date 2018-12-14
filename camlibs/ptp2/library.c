@@ -6970,7 +6970,7 @@ ptp_mtp_parse_metadata (
 	C_PTP (ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props));
 
 	for (j=0;j<propcnt;j++) {
-		char			propname[256],propname2[256];
+		char			propname[256],propname2[256+4];
 		char			*begin, *end, *content;
 		PTPObjectPropDesc	opd;
 		int 			i;
