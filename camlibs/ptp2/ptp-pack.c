@@ -2694,7 +2694,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			switch (type) {
 #define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
 				ptp_debug (params, "event %u: unhandled EOS event "#x" (size %u)", i, size); 	\
-				ce[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 123456789)"));	\
+				ce[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 12345678901)")+1);	\
 				sprintf (ce[i].u.info, "unhandled EOS event "#x" (size %u)",  size);		\
 				break;
 			XX(RequestGetEvent)
@@ -2714,6 +2714,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 			XX(RecordingTime)
 			XX(RequestObjectTransferTS)
 			XX(AfResult)
+			XX(PowerZoomInfoChanged)
+			XX(CTGInfoCheckComplete)
 #undef XX
 			default:
 				ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
