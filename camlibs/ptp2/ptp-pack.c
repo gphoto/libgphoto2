@@ -2228,6 +2228,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_MirrorUpSetting:
 				case PTP_DPC_CANON_EOS_OLCInfoVersion:
 				case PTP_DPC_CANON_EOS_PowerZoomPosition:
+				case PTP_DPC_CANON_EOS_PowerZoomSpeed:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
