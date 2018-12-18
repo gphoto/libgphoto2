@@ -1,0 +1,1478 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: DSC-RX0
+  Version: 3.00
+  Serial Number: 00000000000000000nnnnnnnnnnnnnnn
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats:
+Display Formats: Association/Directory, MPEG, JPEG, Unknown(b982), Unknown(b301), Undefined Type, ARW, Unknown(b310)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, Sony Capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [2,3,4,16,19] value: RAW (4)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [1,2,4,32785,32784,6,32769,32770,32771,32772,32816,32786,32800,32801,32802] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: f/4 (400)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,2] value: Manual Focus (1)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [4,32769,32770] value: 32769
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [32768,32769,2,1,32848,32851,32852,32896,32899] value: 32768
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [0,0,5000,4700,4500,4300,4000,3700,3500,3300,3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,0,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000,-3300,-3500,-3700,-4000,-4300,-4500,-4700,-5000] value: 0.0 stops (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,32787,32788,32772,32771,32773,32776,32777,32780,32781,32782,32783] value: Single Shot (1)
+DOC Compensation(0xd200):(readwrite) (type=0x3) Enumeration [3000,2700,2500,2300,2000,1700,1500,1300,1000,700,500,300,-300,-500,-700,-1000,-1300,-1500,-1700,-2000,-2300,-2500,-2700,-3000] value: 0
+DRangeOptimize(0xd201):(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21,32,33,34,35,36,37,38] value: 31
+Image size(0xd203):(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+Shutter speed(0xd20d):(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 65586
+Property 0xd20e:(readwrite) (type=0x2) Enumeration [1,2,3,11,8,9,10,4,12,5,13,6,14,7,15] value: 15
+Color temperature(0xd20f):(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 0
+CC Filter(0xd210):(readwrite) (type=0x2) Range [164 - 220, step 1] value: 192
+Aspect Ratio(0xd211):(readwrite) (type=0x2) Enumeration [1,2,3,4] value: 1
+Property 0xd212:(readwrite) (type=0x2) Range [0 - 7, step 1] value: 0
+Focus status(0xd213):(readwrite) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
+Property 0xd217:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd219:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Picture Effect(0xd21b):(readwrite) (type=0x4) Enumeration [32768] value: 32768
+AB Filter(0xd21c):(readwrite) (type=0x2) Range [164 - 220, step 2] value: 192
+Property 0xd21d:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+ISO(0xd21e):(readwrite) (type=0x6) Enumeration [16777215,25,50,64,80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400,128000,160000,204800,256000,320000,409600,33554431,16777241,16777266,16777280,16777296,16777316,16777341,16777376,16777416,16777466,16777536,16777616,16777716,16777856,16778016,16778216,16778466,16778816,16779216,16779716,16780416,16781216,16782216,16783616,16785216,16787216,16790016,16793216,16802816,16828416,16879616,16982016,17186816,50331647,33554532,33554632,33554832,33555232,33556032,33557632,33560832,33567232,33580032,33605632,33656832,33759232,33964032] value: 16777215
+Property 0xd220: error 2002 on query.
+Property 0xd221:(readwrite) (type=0x2) Enumeration [0,1,2] value: 1
+Property 0xd222:(readwrite) (type=0x4) Enumeration [1,17] value: 1
+Property 0xd224:(readwrite) (type=0x3) Enumeration [3000,2700,2300,2000,1700,1300,1000,700,300,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000] value: 0
+Property 0xd226:(readwrite) (type=0x6) Enumeration [33554431,16777416,16777616,16778016,16778816,16780416,16783616,16790016,16802816,50331647,33554632,33554832,33555232,33556032,33557632,33560832,33567232,33580032,16777215,80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,512000,640000,819200] value: 16777215
+Property 0xd227:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd229:(readwrite) (type=0x6) Enumeration [65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336,81536,85536,91136,97536] value: 65586
+Property 0xd22a:(readwrite) (type=0x2) Enumeration [1,2,3,4,5,6] value: 1
+Property 0xd22b:(readwrite) (type=0x2) Enumeration [1,0] value: 0
+Property 0xd23e:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd23f:(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,7] value: 0
+Property 0xd240:(readwrite) (type=0x2) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] value: 1
+Property 0xd241:(readwrite) (type=0x2) Enumeration [4,9,3] value: 9
+Property 0xd242:(readwrite) (type=0x4) Enumeration [4,5] value: 4
+Property 0xd243:(readwrite) (type=0x4) Enumeration [2,4] value: 2
+Property 0xd244:(readwrite) (type=0x4) Enumeration [2,4,6] value: 2
+Property 0xd245:(readwrite) (type=0x2) Enumeration [1,2] value: 1
+Property 0xd246:(readwrite) (type=0x2) Enumeration [1,2] value: 1
+Property 0xd247:(readwrite) (type=0x2) Enumeration [0,1,2,3,17,18,19,20] value: 0
+Property 0xd248:(readwrite) (type=0x2) Enumeration [1,2,3,4] value: 0
+Property 0xd249:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 0
+Property 0xd24a:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 0
+Property 0xd24b:(readwrite) (type=0x2) Enumeration [1,0] value: 0
+Property 0xd24c:(readwrite) (type=0x2) Range [0 - 100, step 1] value: 8
+Property 0xd2d1:(readwrite) (type=0x3) Range [-7 - 7, step 1] value: 0
+Objects in memory(0xd215):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd220: error 2002 on query.
+Property 0xd2c5:(readwrite) (type=0x4) Enumeration [] value: 0
+Property 0xd228:(readwrite) (type=0x2) Enumeration [4,5] value: 5
+Property 0xd2c1:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2c2:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2c3:(readwrite) (type=0x4) Enumeration [] value: 1
+Movie(0xd2c8):(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2ca:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2d5:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2d6:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2d7:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd2d8:(readwrite) (type=0x4) Enumeration [] value: 1
+Still Image(0xd2c7): error 2002 on query.
+Property 0xd223: error 2002 on query.
+Property 0xd24d:(readwrite) (type=0x2) Enumeration [0,1,2,3,4] value: 0
+
+/main/actions/autofocus
+Label: Auto-Focus
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/capture
+Label: Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 00000000000000000nnnnnnnnnnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Sony Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: DSC-RX0
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 3.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: Sony PTP Extensions
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: Large
+Choice: 0 Large
+Choice: 1 Medium
+Choice: 2 Small
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: Auto ISO
+Choice: 0 Auto ISO
+Choice: 1 25
+Choice: 2 50
+Choice: 3 64
+Choice: 4 80
+Choice: 5 100
+Choice: 6 125
+Choice: 7 160
+Choice: 8 200
+Choice: 9 250
+Choice: 10 320
+Choice: 11 400
+Choice: 12 500
+Choice: 13 640
+Choice: 14 800
+Choice: 15 1000
+Choice: 16 1250
+Choice: 17 1600
+Choice: 18 2000
+Choice: 19 2500
+Choice: 20 3200
+Choice: 21 4000
+Choice: 22 5000
+Choice: 23 6400
+Choice: 24 8000
+Choice: 25 10000
+Choice: 26 12800
+Choice: 27 16000
+Choice: 28 20000
+Choice: 29 25600
+Choice: 30 32000
+Choice: 31 40000
+Choice: 32 51200
+Choice: 33 64000
+Choice: 34 80000
+Choice: 35 102400
+Choice: 36 128000
+Choice: 37 160000
+Choice: 38 204800
+Choice: 39 256000
+Choice: 40 320000
+Choice: 41 409600
+Choice: 42 Auto ISO Multi Frame Noise Reduction
+Choice: 43 25 Multi Frame Noise Reduction
+Choice: 44 50 Multi Frame Noise Reduction
+Choice: 45 64 Multi Frame Noise Reduction
+Choice: 46 80 Multi Frame Noise Reduction
+Choice: 47 100 Multi Frame Noise Reduction
+Choice: 48 125 Multi Frame Noise Reduction
+Choice: 49 160 Multi Frame Noise Reduction
+Choice: 50 200 Multi Frame Noise Reduction
+Choice: 51 250 Multi Frame Noise Reduction
+Choice: 52 320 Multi Frame Noise Reduction
+Choice: 53 400 Multi Frame Noise Reduction
+Choice: 54 500 Multi Frame Noise Reduction
+Choice: 55 640 Multi Frame Noise Reduction
+Choice: 56 800 Multi Frame Noise Reduction
+Choice: 57 1000 Multi Frame Noise Reduction
+Choice: 58 1250 Multi Frame Noise Reduction
+Choice: 59 1600 Multi Frame Noise Reduction
+Choice: 60 2000 Multi Frame Noise Reduction
+Choice: 61 2500 Multi Frame Noise Reduction
+Choice: 62 3200 Multi Frame Noise Reduction
+Choice: 63 4000 Multi Frame Noise Reduction
+Choice: 64 5000 Multi Frame Noise Reduction
+Choice: 65 6400 Multi Frame Noise Reduction
+Choice: 66 8000 Multi Frame Noise Reduction
+Choice: 67 10000 Multi Frame Noise Reduction
+Choice: 68 12800 Multi Frame Noise Reduction
+Choice: 69 16000 Multi Frame Noise Reduction
+Choice: 70 25600 Multi Frame Noise Reduction
+Choice: 71 51200 Multi Frame Noise Reduction
+Choice: 72 36864 Multi Frame Noise Reduction
+Choice: 73 8192 Multi Frame Noise Reduction
+Choice: 74 16384 Multi Frame Noise Reduction
+Choice: 75 65535 Multi Frame Noise Reduction
+Choice: 76 100 Multi Frame Noise Reduction
+Choice: 77 200 Multi Frame Noise Reduction
+Choice: 78 400 Multi Frame Noise Reduction
+Choice: 79 800 Multi Frame Noise Reduction
+Choice: 80 1600 Multi Frame Noise Reduction
+Choice: 81 3200 Multi Frame Noise Reduction
+Choice: 82 6400 Multi Frame Noise Reduction
+Choice: 83 12800 Multi Frame Noise Reduction
+Choice: 84 25600 Multi Frame Noise Reduction
+Choice: 85 51200 Multi Frame Noise Reduction
+Choice: 86 36864 Multi Frame Noise Reduction
+Choice: 87 8192 Multi Frame Noise Reduction
+Choice: 88 16384 Multi Frame Noise Reduction
+END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Manual
+Choice: 1 Automatic
+Choice: 2 Daylight
+Choice: 3 Shade
+Choice: 4 Cloudy
+Choice: 5 Tungsten
+Choice: 6 Fluorescent: Warm White
+Choice: 7 Fluorescent: Cold White
+Choice: 8 Fluorescent: Day White
+Choice: 9 Fluorescent: Daylight
+Choice: 10 Underwater: Auto
+Choice: 11 Choose Color Temperature
+Choice: 12 Preset 1
+Choice: 13 Preset 2
+Choice: 14 Preset 3
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 0
+Choice: 1 0
+Choice: 2 5
+Choice: 3 4.7
+Choice: 4 4.5
+Choice: 5 4.3
+Choice: 6 4
+Choice: 7 3.7
+Choice: 8 3.5
+Choice: 9 3.3
+Choice: 10 3
+Choice: 11 2.7
+Choice: 12 2.5
+Choice: 13 2.3
+Choice: 14 2
+Choice: 15 1.7
+Choice: 16 1.5
+Choice: 17 1.3
+Choice: 18 1
+Choice: 19 0.7
+Choice: 20 0.5
+Choice: 21 0.3
+Choice: 22 0
+Choice: 23 -0.3
+Choice: 24 -0.5
+Choice: 25 -0.7
+Choice: 26 -1
+Choice: 27 -1.3
+Choice: 28 -1.5
+Choice: 29 -1.7
+Choice: 30 -2
+Choice: 31 -2.3
+Choice: 32 -2.5
+Choice: 33 -2.7
+Choice: 34 -3
+Choice: 35 -3.3
+Choice: 36 -3.5
+Choice: 37 -3.7
+Choice: 38 -4
+Choice: 39 -4.3
+Choice: 40 -4.5
+Choice: 41 -4.7
+Choice: 42 -5
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 0
+Type: RANGE
+Current: 4
+Bottom: 0
+Top: 655.35
+Step: 0.01
+END
+/main/capturesettings/imagequality
+Label: Image Quality
+Readonly: 0
+Type: RADIO
+Current: Extra Fine
+Choice: 0 Standard
+Choice: 1 Fine
+Choice: 2 Extra Fine
+Choice: 3 RAW
+Choice: 4 RAW+JPEG
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: Manual
+Choice: 0 Manual
+Choice: 1 Automatic
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 0
+Type: RADIO
+Current: Intelligent Auto
+Choice: 0 Intelligent Auto
+Choice: 1 Superior Auto
+Choice: 2 P
+Choice: 3 M
+Choice: 4 Movie
+Choice: 5 Unknown value 8053
+Choice: 6 Unknown value 8054
+Choice: 7 Unknown value 8080
+Choice: 8 Unknown value 8083
+END
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Readonly: 0
+Type: RADIO
+Current: 3:2
+Choice: 0 3:2
+Choice: 1 16:9
+Choice: 2 Unknown value 0003
+Choice: 3 Unknown value 0004
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Unknown value 8013
+Choice: 2 Unknown value 8014
+Choice: 3 Selftimer 10s
+Choice: 4 Selftimer 5s
+Choice: 5 Selftimer 2s
+Choice: 6 Selftimer 10s 3 Pictures
+Choice: 7 Selftimer 10s 5 Pictures
+Choice: 8 Selftimer 5s 3 Pictures
+Choice: 9 Selftimer 5s 5 Pictures
+Choice: 10 Selftimer 2s 3 Pictures
+Choice: 11 Selftimer 2s 5 Pictures
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Unknown value 8001
+Choice: 0 Center Spot
+Choice: 1 Unknown value 8001
+Choice: 2 Unknown value 8002
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 0
+Type: RADIO
+Current: 1/50
+END
+/main/other/5004
+Label: Compression Setting
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 16
+Choice: 4 19
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 4
+Choice: 3 32785
+Choice: 4 32784
+Choice: 5 6
+Choice: 6 32769
+Choice: 7 32770
+Choice: 8 32771
+Choice: 9 32772
+Choice: 10 32816
+Choice: 11 32786
+Choice: 12 32800
+Choice: 13 32801
+Choice: 14 32802
+END
+/main/other/5007
+Label: F-Number
+Readonly: 0
+Type: RANGE
+Current: 400
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 4
+Choice: 1 32769
+Choice: 2 32770
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 0
+Type: MENU
+Current: 32768
+Choice: 0 32768
+Choice: 1 32769
+Choice: 2 2
+Choice: 3 1
+Choice: 4 32848
+Choice: 5 32851
+Choice: 6 32852
+Choice: 7 32896
+Choice: 8 32899
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 0
+Choice: 2 5000
+Choice: 3 4700
+Choice: 4 4500
+Choice: 5 4300
+Choice: 6 4000
+Choice: 7 3700
+Choice: 8 3500
+Choice: 9 3300
+Choice: 10 3000
+Choice: 11 2700
+Choice: 12 2500
+Choice: 13 2300
+Choice: 14 2000
+Choice: 15 1700
+Choice: 16 1500
+Choice: 17 1300
+Choice: 18 1000
+Choice: 19 700
+Choice: 20 500
+Choice: 21 300
+Choice: 22 0
+Choice: 23 -300
+Choice: 24 -500
+Choice: 25 -700
+Choice: 26 -1000
+Choice: 27 -1300
+Choice: 28 -1500
+Choice: 29 -1700
+Choice: 30 -2000
+Choice: 31 -2300
+Choice: 32 -2500
+Choice: 33 -2700
+Choice: 34 -3000
+Choice: 35 -3300
+Choice: 36 -3500
+Choice: 37 -3700
+Choice: 38 -4000
+Choice: 39 -4300
+Choice: 40 -4500
+Choice: 41 -4700
+Choice: 42 -5000
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 32787
+Choice: 2 32788
+Choice: 3 32772
+Choice: 4 32771
+Choice: 5 32773
+Choice: 6 32776
+Choice: 7 32777
+Choice: 8 32780
+Choice: 9 32781
+Choice: 10 32782
+Choice: 11 32783
+END
+/main/other/d200
+Label: DOC Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 3000
+Choice: 1 2700
+Choice: 2 2500
+Choice: 3 2300
+Choice: 4 2000
+Choice: 5 1700
+Choice: 6 1500
+Choice: 7 1300
+Choice: 8 1000
+Choice: 9 700
+Choice: 10 500
+Choice: 11 300
+Choice: 12 -300
+Choice: 13 -500
+Choice: 14 -700
+Choice: 15 -1000
+Choice: 16 -1300
+Choice: 17 -1500
+Choice: 18 -1700
+Choice: 19 -2000
+Choice: 20 -2300
+Choice: 21 -2500
+Choice: 22 -2700
+Choice: 23 -3000
+END
+/main/other/d201
+Label: DRangeOptimize
+Readonly: 0
+Type: MENU
+Current: 31
+Choice: 0 1
+Choice: 1 31
+Choice: 2 17
+Choice: 3 18
+Choice: 4 19
+Choice: 5 20
+Choice: 6 21
+Choice: 7 32
+Choice: 8 33
+Choice: 9 34
+Choice: 10 35
+Choice: 11 36
+Choice: 12 37
+Choice: 13 38
+END
+/main/other/d203
+Label: Image size
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d20d
+Label: Shutter speed
+Readonly: 0
+Type: RANGE
+Current: 65586
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d20e
+Label: PTP Property 0xd20e
+Readonly: 0
+Type: MENU
+Current: 15
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 11
+Choice: 4 8
+Choice: 5 9
+Choice: 6 10
+Choice: 7 4
+Choice: 8 12
+Choice: 9 5
+Choice: 10 13
+Choice: 11 6
+Choice: 12 14
+Choice: 13 7
+Choice: 14 15
+END
+/main/other/d20f
+Label: Color temperature
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 2500
+Top: 9900
+Step: 100
+END
+/main/other/d210
+Label: CC Filter
+Readonly: 0
+Type: MENU
+Current: 192
+Choice: 0 164
+Choice: 1 165
+Choice: 2 166
+Choice: 3 167
+Choice: 4 168
+Choice: 5 169
+Choice: 6 170
+Choice: 7 171
+Choice: 8 172
+Choice: 9 173
+Choice: 10 174
+Choice: 11 175
+Choice: 12 176
+Choice: 13 177
+Choice: 14 178
+Choice: 15 179
+Choice: 16 180
+Choice: 17 181
+Choice: 18 182
+Choice: 19 183
+Choice: 20 184
+Choice: 21 185
+Choice: 22 186
+Choice: 23 187
+Choice: 24 188
+Choice: 25 189
+Choice: 26 190
+Choice: 27 191
+Choice: 28 192
+Choice: 29 193
+Choice: 30 194
+Choice: 31 195
+Choice: 32 196
+Choice: 33 197
+Choice: 34 198
+Choice: 35 199
+Choice: 36 200
+Choice: 37 201
+Choice: 38 202
+Choice: 39 203
+Choice: 40 204
+Choice: 41 205
+Choice: 42 206
+Choice: 43 207
+Choice: 44 208
+Choice: 45 209
+Choice: 46 210
+Choice: 47 211
+Choice: 48 212
+Choice: 49 213
+Choice: 50 214
+Choice: 51 215
+Choice: 52 216
+Choice: 53 217
+Choice: 54 218
+Choice: 55 219
+Choice: 56 220
+END
+/main/other/d211
+Label: Aspect Ratio
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d212
+Label: PTP Property 0xd212
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+END
+/main/other/d213
+Label: Focus status
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 5
+Choice: 4 6
+Choice: 5 7
+END
+/main/other/d217
+Label: PTP Property 0xd217
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 2
+Choice: 1 1
+END
+/main/other/d219
+Label: PTP Property 0xd219
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 2
+Choice: 1 1
+END
+/main/other/d21b
+Label: Picture Effect
+Readonly: 0
+Type: MENU
+Current: 32768
+Choice: 0 32768
+END
+/main/other/d21c
+Label: AB Filter
+Readonly: 0
+Type: RANGE
+Current: 192
+Bottom: 164
+Top: 220
+Step: 2
+END
+/main/other/d21d
+Label: PTP Property 0xd21d
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d21e
+Label: ISO
+Readonly: 0
+Type: MENU
+Current: 16777215
+Choice: 0 16777215
+Choice: 1 25
+Choice: 2 50
+Choice: 3 64
+Choice: 4 80
+Choice: 5 100
+Choice: 6 125
+Choice: 7 160
+Choice: 8 200
+Choice: 9 250
+Choice: 10 320
+Choice: 11 400
+Choice: 12 500
+Choice: 13 640
+Choice: 14 800
+Choice: 15 1000
+Choice: 16 1250
+Choice: 17 1600
+Choice: 18 2000
+Choice: 19 2500
+Choice: 20 3200
+Choice: 21 4000
+Choice: 22 5000
+Choice: 23 6400
+Choice: 24 8000
+Choice: 25 10000
+Choice: 26 12800
+Choice: 27 16000
+Choice: 28 20000
+Choice: 29 25600
+Choice: 30 32000
+Choice: 31 40000
+Choice: 32 51200
+Choice: 33 64000
+Choice: 34 80000
+Choice: 35 102400
+Choice: 36 128000
+Choice: 37 160000
+Choice: 38 204800
+Choice: 39 256000
+Choice: 40 320000
+Choice: 41 409600
+Choice: 42 33554431
+Choice: 43 16777241
+Choice: 44 16777266
+Choice: 45 16777280
+Choice: 46 16777296
+Choice: 47 16777316
+Choice: 48 16777341
+Choice: 49 16777376
+Choice: 50 16777416
+Choice: 51 16777466
+Choice: 52 16777536
+Choice: 53 16777616
+Choice: 54 16777716
+Choice: 55 16777856
+Choice: 56 16778016
+Choice: 57 16778216
+Choice: 58 16778466
+Choice: 59 16778816
+Choice: 60 16779216
+Choice: 61 16779716
+Choice: 62 16780416
+Choice: 63 16781216
+Choice: 64 16782216
+Choice: 65 16783616
+Choice: 66 16785216
+Choice: 67 16787216
+Choice: 68 16790016
+Choice: 69 16793216
+Choice: 70 16802816
+Choice: 71 16828416
+Choice: 72 16879616
+Choice: 73 16982016
+Choice: 74 17186816
+Choice: 75 50331647
+Choice: 76 33554532
+Choice: 77 33554632
+Choice: 78 33554832
+Choice: 79 33555232
+Choice: 80 33556032
+Choice: 81 33557632
+Choice: 82 33560832
+Choice: 83 33567232
+Choice: 84 33580032
+Choice: 85 33605632
+Choice: 86 33656832
+Choice: 87 33759232
+Choice: 88 33964032
+END
+/main/other/d221
+Label: PTP Property 0xd221
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d222
+Label: PTP Property 0xd222
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 17
+END
+/main/other/d224
+Label: PTP Property 0xd224
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 3000
+Choice: 1 2700
+Choice: 2 2300
+Choice: 3 2000
+Choice: 4 1700
+Choice: 5 1300
+Choice: 6 1000
+Choice: 7 700
+Choice: 8 300
+Choice: 9 -300
+Choice: 10 -700
+Choice: 11 -1000
+Choice: 12 -1300
+Choice: 13 -1700
+Choice: 14 -2000
+Choice: 15 -2300
+Choice: 16 -2700
+Choice: 17 -3000
+END
+/main/other/d226
+Label: PTP Property 0xd226
+Readonly: 0
+Type: MENU
+Current: 16777215
+Choice: 0 33554431
+Choice: 1 16777416
+Choice: 2 16777616
+Choice: 3 16778016
+Choice: 4 16778816
+Choice: 5 16780416
+Choice: 6 16783616
+Choice: 7 16790016
+Choice: 8 16802816
+Choice: 9 50331647
+Choice: 10 33554632
+Choice: 11 33554832
+Choice: 12 33555232
+Choice: 13 33556032
+Choice: 14 33557632
+Choice: 15 33560832
+Choice: 16 33567232
+Choice: 17 33580032
+Choice: 18 16777215
+Choice: 19 80
+Choice: 20 100
+Choice: 21 125
+Choice: 22 160
+Choice: 23 200
+Choice: 24 250
+Choice: 25 320
+Choice: 26 400
+Choice: 27 500
+Choice: 28 640
+Choice: 29 800
+Choice: 30 1000
+Choice: 31 1250
+Choice: 32 1600
+Choice: 33 2000
+Choice: 34 2500
+Choice: 35 3200
+Choice: 36 4000
+Choice: 37 5000
+Choice: 38 6400
+Choice: 39 8000
+Choice: 40 10000
+Choice: 41 12800
+Choice: 42 512000
+Choice: 43 640000
+Choice: 44 819200
+END
+/main/other/d227
+Label: PTP Property 0xd227
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d229
+Label: PTP Property 0xd229
+Readonly: 0
+Type: MENU
+Current: 65586
+Choice: 0 65540
+Choice: 1 65541
+Choice: 2 65542
+Choice: 3 65544
+Choice: 4 65546
+Choice: 5 65549
+Choice: 6 65551
+Choice: 7 65556
+Choice: 8 65561
+Choice: 9 65566
+Choice: 10 65576
+Choice: 11 65586
+Choice: 12 65596
+Choice: 13 65616
+Choice: 14 65636
+Choice: 15 65661
+Choice: 16 65696
+Choice: 17 65736
+Choice: 18 65786
+Choice: 19 65856
+Choice: 20 65936
+Choice: 21 66036
+Choice: 22 66176
+Choice: 23 66336
+Choice: 24 66536
+Choice: 25 66786
+Choice: 26 67136
+Choice: 27 67536
+Choice: 28 68036
+Choice: 29 68736
+Choice: 30 69536
+Choice: 31 70536
+Choice: 32 71936
+Choice: 33 73536
+Choice: 34 75536
+Choice: 35 78336
+Choice: 36 81536
+Choice: 37 85536
+Choice: 38 91136
+Choice: 39 97536
+END
+/main/other/d22a
+Label: PTP Property 0xd22a
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d22b
+Label: PTP Property 0xd22b
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 1
+Choice: 1 0
+END
+/main/other/d23e
+Label: PTP Property 0xd23e
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d23f
+Label: PTP Property 0xd23f
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+END
+/main/other/d240
+Label: PTP Property 0xd240
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+END
+/main/other/d241
+Label: PTP Property 0xd241
+Readonly: 0
+Type: MENU
+Current: 9
+Choice: 0 4
+Choice: 1 9
+Choice: 2 3
+END
+/main/other/d242
+Label: PTP Property 0xd242
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 4
+Choice: 1 5
+END
+/main/other/d243
+Label: PTP Property 0xd243
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+END
+/main/other/d244
+Label: PTP Property 0xd244
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 6
+END
+/main/other/d245
+Label: PTP Property 0xd245
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d246
+Label: PTP Property 0xd246
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d247
+Label: PTP Property 0xd247
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 17
+Choice: 5 18
+Choice: 6 19
+Choice: 7 20
+END
+/main/other/d248
+Label: PTP Property 0xd248
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d249
+Label: PTP Property 0xd249
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d24a
+Label: PTP Property 0xd24a
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d24b
+Label: PTP Property 0xd24b
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 1
+Choice: 1 0
+END
+/main/other/d24c
+Label: PTP Property 0xd24c
+Readonly: 0
+Type: MENU
+Current: 8
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+Choice: 41 41
+Choice: 42 42
+Choice: 43 43
+Choice: 44 44
+Choice: 45 45
+Choice: 46 46
+Choice: 47 47
+Choice: 48 48
+Choice: 49 49
+Choice: 50 50
+Choice: 51 51
+Choice: 52 52
+Choice: 53 53
+Choice: 54 54
+Choice: 55 55
+Choice: 56 56
+Choice: 57 57
+Choice: 58 58
+Choice: 59 59
+Choice: 60 60
+Choice: 61 61
+Choice: 62 62
+Choice: 63 63
+Choice: 64 64
+Choice: 65 65
+Choice: 66 66
+Choice: 67 67
+Choice: 68 68
+Choice: 69 69
+Choice: 70 70
+Choice: 71 71
+Choice: 72 72
+Choice: 73 73
+Choice: 74 74
+Choice: 75 75
+Choice: 76 76
+Choice: 77 77
+Choice: 78 78
+Choice: 79 79
+Choice: 80 80
+Choice: 81 81
+Choice: 82 82
+Choice: 83 83
+Choice: 84 84
+Choice: 85 85
+Choice: 86 86
+Choice: 87 87
+Choice: 88 88
+Choice: 89 89
+Choice: 90 90
+Choice: 91 91
+Choice: 92 92
+Choice: 93 93
+Choice: 94 94
+Choice: 95 95
+Choice: 96 96
+Choice: 97 97
+Choice: 98 98
+Choice: 99 99
+Choice: 100 100
+END
+/main/other/d2d1
+Label: PTP Property 0xd2d1
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -7
+Choice: 1 -6
+Choice: 2 -5
+Choice: 3 -4
+Choice: 4 -3
+Choice: 5 -2
+Choice: 6 -1
+Choice: 7 0
+Choice: 8 1
+Choice: 9 2
+Choice: 10 3
+Choice: 11 4
+Choice: 12 5
+Choice: 13 6
+Choice: 14 7
+END
+/main/other/d215
+Label: Objects in memory
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d2c5
+Label: PTP Property 0xd2c5
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d228
+Label: PTP Property 0xd228
+Readonly: 0
+Type: MENU
+Current: 5
+Choice: 0 4
+Choice: 1 5
+END
+/main/other/d2c1
+Label: PTP Property 0xd2c1
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2c2
+Label: PTP Property 0xd2c2
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2c3
+Label: PTP Property 0xd2c3
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2c8
+Label: Movie
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2ca
+Label: PTP Property 0xd2ca
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2d5
+Label: PTP Property 0xd2d5
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2d6
+Label: PTP Property 0xd2d6
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2d7
+Label: PTP Property 0xd2d7
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d2d8
+Label: PTP Property 0xd2d8
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d24d
+Label: PTP Property 0xd24d
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+END
+
+1.050947 ptp_usb_getresp             (2): Reading PTP_OC 0x9202 (PTP_OC_SONY_GetSDIOGetExtDeviceInfo) response...
+1.050957 gp_port_read                (3): Reading 1024 = 0x400 bytes from port...
+1.051542 gp_port_read                (3): Read    12 = 0xc out of 1024 bytes from port: (hexdump of 12 bytes)
+0000  0c 00 00 00 03 00 01 20-0a 00 00 00              ....... ....
+
+1.051573 ptp                         (2): xsize 140, got size 112
+
+1.051587 fixup_cached_deviceinfo     (2): sony code: 5004
+1.051594 fixup_cached_deviceinfo     (2): sony code: 5005
+1.051600 fixup_cached_deviceinfo     (2): sony code: 5007
+1.051605 fixup_cached_deviceinfo     (2): sony code: 500a
+1.051611 fixup_cached_deviceinfo     (2): sony code: 500b
+1.051617 fixup_cached_deviceinfo     (2): sony code: 500e
+1.051627 fixup_cached_deviceinfo     (2): sony code: 5010
+1.051636 fixup_cached_deviceinfo     (2): sony code: 5013
+1.051644 fixup_cached_deviceinfo     (2): sony code: d200
+1.051652 fixup_cached_deviceinfo     (2): sony code: d201
+1.051657 fixup_cached_deviceinfo     (2): sony code: d203
+1.051665 fixup_cached_deviceinfo     (2): sony code: d20d
+1.051671 fixup_cached_deviceinfo     (2): sony code: d20e
+1.051679 fixup_cached_deviceinfo     (2): sony code: d20f
+1.051684 fixup_cached_deviceinfo     (2): sony code: d210
+1.051693 fixup_cached_deviceinfo     (2): sony code: d211
+1.051698 fixup_cached_deviceinfo     (2): sony code: d212
+1.051706 fixup_cached_deviceinfo     (2): sony code: d213
+1.051711 fixup_cached_deviceinfo     (2): sony code: d217
+1.051719 fixup_cached_deviceinfo     (2): sony code: d219
+1.051727 fixup_cached_deviceinfo     (2): sony code: d21b
+1.051735 fixup_cached_deviceinfo     (2): sony code: d21c
+1.051742 fixup_cached_deviceinfo     (2): sony code: d21d
+1.051752 fixup_cached_deviceinfo     (2): sony code: d21e
+1.051760 fixup_cached_deviceinfo     (2): sony code: d220
+1.051768 fixup_cached_deviceinfo     (2): sony code: d221
+1.051776 fixup_cached_deviceinfo     (2): sony code: d222
+1.051784 fixup_cached_deviceinfo     (2): sony code: d224
+1.051792 fixup_cached_deviceinfo     (2): sony code: d226
+1.051799 fixup_cached_deviceinfo     (2): sony code: d227
+1.051807 fixup_cached_deviceinfo     (2): sony code: d229
+1.051816 fixup_cached_deviceinfo     (2): sony code: d22a
+1.051824 fixup_cached_deviceinfo     (2): sony code: d22b
+1.051832 fixup_cached_deviceinfo     (2): sony code: d23e
+1.051840 fixup_cached_deviceinfo     (2): sony code: d23f
+1.051847 fixup_cached_deviceinfo     (2): sony code: d240
+1.051855 fixup_cached_deviceinfo     (2): sony code: d241
+1.051863 fixup_cached_deviceinfo     (2): sony code: d242
+1.051871 fixup_cached_deviceinfo     (2): sony code: d243
+1.051879 fixup_cached_deviceinfo     (2): sony code: d244
+1.051886 fixup_cached_deviceinfo     (2): sony code: d245
+1.051894 fixup_cached_deviceinfo     (2): sony code: d246
+1.051902 fixup_cached_deviceinfo     (2): sony code: d247
+1.051910 fixup_cached_deviceinfo     (2): sony code: d248
+1.051918 fixup_cached_deviceinfo     (2): sony code: d249
+1.051926 fixup_cached_deviceinfo     (2): sony code: d24a
+1.051933 fixup_cached_deviceinfo     (2): sony code: d24b
+1.051942 fixup_cached_deviceinfo     (2): sony code: d24c
+1.051949 fixup_cached_deviceinfo     (2): sony code: d2d1
+1.051958 fixup_cached_deviceinfo     (2): sony code: d215
+1.051965 fixup_cached_deviceinfo     (2): sony code: d220
+1.051973 fixup_cached_deviceinfo     (2): sony code: d2c5
+1.051981 fixup_cached_deviceinfo     (2): sony code: d228
+1.051989 fixup_cached_deviceinfo     (2): sony code: d2c1
+1.051997 fixup_cached_deviceinfo     (2): sony code: d2c2
+1.052005 fixup_cached_deviceinfo     (2): sony code: d2c3
+1.052013 fixup_cached_deviceinfo     (2): sony code: d2c8
+1.052021 fixup_cached_deviceinfo     (2): sony code: d2ca
+1.052029 fixup_cached_deviceinfo     (2): sony code: d2d5
+1.052037 fixup_cached_deviceinfo     (2): sony code: d2d6
+1.052044 fixup_cached_deviceinfo     (2): sony code: d2d7
+1.052052 fixup_cached_deviceinfo     (2): sony code: d2d8
+1.052060 fixup_cached_deviceinfo     (2): sony code: d2c7
+1.052068 fixup_cached_deviceinfo     (2): sony code: d223
+1.052076 fixup_cached_deviceinfo     (2): sony code: d24d
