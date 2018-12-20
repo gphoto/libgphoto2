@@ -2040,7 +2040,8 @@ static struct {
 	/* Jim Howard <jh.xsnrg@gmail.com> */
 	{"Canon:EOS M5",			0x04a9, 0x32bb, PTP_CAP|PTP_CAP_PREVIEW},
 
-	{"Canon:PowerShot G7 X Mark II",        0x04a9, 0x32bc, 0},
+	/* Hubert F */
+	{"Canon:PowerShot G7 X Mark II",        0x04a9, 0x32bc, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://github.com/gphoto/libgphoto2/issues/325 */
 	{"Canon:PowerShot SX540 HS",		0x04a9, 0x32be, PTP_CAP|PTP_CAP_PREVIEW},
