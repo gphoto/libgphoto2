@@ -1044,6 +1044,8 @@ static struct {
 	/* Demo7up <demo7up@gmail.com> */
 	{"Sony:UMC-R10C",		0x054c,0x0a79, 0},
 
+	{"Sony:DSC-RX0 (MTP)", 0x054c, 0x0bfd, 0},
+
 	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	{"Sony:Alpha-A7R III (MTP mode)",0x054c,0x0c00, 0},
 
@@ -1052,6 +1054,8 @@ static struct {
 
 	/* Richard Brown at SUSE */
 	{"Sony:Alpha-RX10M4 (Control)", 0x054c,0x0c2f, PTP_CAP|PTP_CAP_PREVIEW},
+
+	{"Sony:DSC-RX0 (PC Control)", 0x054c, 0x0c32, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	/* Elijah Parker, mail@timelapseplus.com */
