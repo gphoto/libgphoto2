@@ -163,6 +163,7 @@ int main(int argc, char **argv) {
 	/* AFL PART ENDS HERE */
 out:
 	gp_camera_exit (camera, context);
+	gp_context_unref (context);
 	gp_camera_free (camera);
 	return 0;
 }
