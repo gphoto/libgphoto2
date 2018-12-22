@@ -4903,7 +4903,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	int			back_off_wait = 0;
 	uint32_t		result;
 	struct timeval		focus_start;
-
+	PTPDevicePropDesc	dpd;
 
 	GP_LOG_D ("camera_trigger_canon_eos_capture");
 
@@ -4921,11 +4921,18 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	if (params->eos_camerastatus == 1)
 		return GP_ERROR_CAMERA_BUSY;
 
+	if (have_eos_prop(params, PTP_VENDOR_CANON, PTP_DPC_CANON_EOS_CaptureDestination)) {
+                C_PTP (ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_CaptureDestination, &dpd));
+                if (dpd.CurrentValue.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
+			/* Tell the camera we have enough free space on the PC */
+			LOG_ON_PTP_E (ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001));
+		}
+	}
+
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
 		if (!is_canon_eos_m (params)) {
 			/* Regular EOS */
 			int 			manualfocus = 0, foundfocusinfo = 0;
-			PTPDevicePropDesc	dpd;
 
 			/* are we in manual focus mode ... value would be 3 */
 			if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusMode, &dpd)) {

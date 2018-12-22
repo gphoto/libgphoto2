@@ -105,22 +105,6 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 }
 
 static int
-have_eos_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
-	unsigned int i;
-
-	/* The special Canon EOS property set gets special treatment. */
-	if ((camera->pl->params.deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) ||
-	    (vendor != PTP_VENDOR_CANON)
-	)
-		return 0;
-	for (i=0;i<camera->pl->params.nrofcanon_props;i++)
-		if (camera->pl->params.canon_props[i].proptype == prop)
-			return 1;
-	return 0;
-}
-
-
-static int
 camera_prepare_chdk_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 	int 			scriptid = 0, major = 0,minor = 0;
@@ -321,7 +305,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 	int			cardval = -1;
 
 	memset(&dpd,0,sizeof(dpd));
-	if (!have_eos_prop(camera, PTP_VENDOR_CANON, PTP_DPC_CANON_EOS_CaptureDestination) ) {
+	if (!have_eos_prop(params, PTP_VENDOR_CANON, PTP_DPC_CANON_EOS_CaptureDestination) ) {
 		GP_LOG_D ("No CaptureDestination property?");
 		return GP_OK;
 	}
@@ -438,7 +422,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* The new EOS occasionaly returned an empty event set ... likely because we are too fast. try again some times. */
 	C_PTP (ptp_check_eos_events (params));
 	tries = 10;
-	while (--tries && !have_eos_prop(camera,PTP_VENDOR_CANON,PTP_DPC_CANON_EOS_EVFOutputDevice)) {
+	while (--tries && !have_eos_prop(params,PTP_VENDOR_CANON,PTP_DPC_CANON_EOS_EVFOutputDevice)) {
 		GP_LOG_D("evfoutput device not found, retrying");
 		usleep(50*1000);
 		C_PTP (ptp_check_eos_events (params));
@@ -8693,7 +8677,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					gp_widget_append (section, widget);
 				continue;
 			}
-			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
+			if (have_eos_prop(params,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
 				if ((mode == MODE_SINGLE_GET) && strcmp (cursub->name, confname))
@@ -9054,7 +9038,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				if (mode == MODE_SINGLE_SET)
 					return GP_OK;
 			}
-			if (have_eos_prop(camera,cursub->vendorid,cursub->propid)) {
+			if (have_eos_prop(params,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
