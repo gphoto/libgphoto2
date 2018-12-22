@@ -1405,6 +1405,7 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 	PTPPropertyValue	propval;						\
 	inttype			origval;						\
 	time_t			start,end;						\
+	int			tries = 100;	/* 100 steps allowed towards the new value */	\
 											\
 	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
 											\
@@ -1507,7 +1508,7 @@ fallback:										\
 				return GP_ERROR;					\
 			}								\
 		} 									\
-	} while (1);									\
+	} while (tries--);/* occasionaly we fail, make an escape path */		\
 	return GP_OK;									\
 }
 
