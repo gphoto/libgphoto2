@@ -1,0 +1,1539 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: D3500
+  Version: V1.00
+  Serial Number: 0000000000000000000000000nnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: Microsoft.com/DeviceServices: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: JPEG, Undefined Type, Association/Directory, TIFF, DPOF, Script, Apple Quicktime
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture 1, Nikon Capture 2, Nikon Capture 3
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: None
+	VolumeLabel:  [Slot 1]
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 31902400512 (30424 MB)
+	Free Space (Bytes): 31827001344 (30352 MB)
+	Free Space (Images): 3651
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [1 - 100, step 1] value: 100% (100)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'6000x4000',
+	'4496x3000',
+	'2992x2000'
+	] value: '6000x4000'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,1,2,4,7] value: JPEG Norm (1)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32787] value: Automatic (2)
+F-Number(0x5007):(read only) (type=0x4) Enumeration [100,110,120,140,160,180,200,220,250,280,320,350,380,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200,2500] value: f/3.8 (380)
+Focal Length(0x5008):(read only) (type=0x6) Range [1800 - 5500, step 1] value: 22 mm (2200)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785,32786,32787] value: AF-A (32786)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4] value: Multi-spot (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2,4,32784] value: Auto (32784)
+Exposure Time(0x500d):(read only) (type=0x6) Enumeration [2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000,4294967295,4294967293] value: 0.0004 sec (40)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32785,32787,32788,32789,32790,32793] value: Auto (32784)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,200,400,800,1600,3200,6400,12800,25600] value: ISO 100 (100)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20181221T133512'
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32785,32790] value: Single Shot (1)
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 100, step 1] value: 1
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [2,32784,32785,32786] value: Closest Subject (32785)
+Artist(0x501e):(read only) (type=0xffff) ''
+Copyright Info(0x501f):(read only) (type=0xffff) ''
+Property 0xd303:(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
+Reset Bank 0(0xd015):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+White Balance Preset Number(0xd01f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Color Space(0xd032):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Effect Mode(0xd037):(readwrite) (type=0x2) Range [0 - 11, step 1] value: 11
+Auto ISO(0xd054):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+Live View AF Area(0xd05d):(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Live View AF Focus(0xd061):(readwrite) (type=0x2) Enumeration [0,2,3,4] value: 0
+Long Exposure Noise Reduction(0xd06b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+No CF Card Release(0xd08a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (1)
+Property 0xd09c:(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Movie Screen Size(0xd0a0):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 0
+Property 0xd0a4:(read only) (type=0x6) 0
+Property 0xd0b5:(read only) (type=0x6) 800
+Lens ID(0xd0e0):(read only) (type=0x4) 928
+Lens Sort(0xd0e1):(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Lens Type(0xd0e2):(read only) (type=0x8) 0
+Min. Focal Length(0xd0e3):(read only) (type=0x6) 18 mm (1800)
+Max. Focal Length(0xd0e4):(read only) (type=0x6) 55 mm (5500)
+Nikon Exposure Time(0xd100):(read only) (type=0x6) Enumeration [69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,65538,655376,655373,65537,851978,1048586,131073,1638410,196609,262145,327681,393217,524289,655361,851969,983041,1310721,1638401,1966081,4294967295,4294967293] value: 65786
+AC Power(0xd101):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Warning Status(0xd102):(read only) (type=0x2) 0
+Recording Media(0xd10b):(readwrite) (type=0x2) Range [0 - 2, step 1] value: Card (0)
+Active D-Lighting(0xd14e):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+Autofocus Mode(0xd161):(readwrite) (type=0x2) Range [0 - 4, step 1] value: AF-A (2)
+AF Assist Lamp(0xd163):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (0)
+ISO Auto(0xd16a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Live View Status(0xd1a2):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Live View Image Zoom Ratio(0xd1a3):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 0
+Live View Prohibit Condition(0xd1a4):(read only) (type=0x6) 2147483648
+Property 0xd1ac:(readwrite) (type=0x2) Enumeration [1,2] value: 2
+Property 0xd1b5:(read only) (type=0x4) Enumeration [0,32784,32785,32786,32787,32800] value: 0
+Property 0xd1dd:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd1f0:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd1f1:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 3651
+Active Pic Ctrl Item(0xd200):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 1
+Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Nikon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/manualfocusdrive
+Label: Drive Nikon DSLR Manual focus
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -32767
+Top: 32767
+Step: 1
+END
+/main/actions/changeafarea
+Label: Set Nikon Autofocus area
+Readonly: 0
+Type: TEXT
+Current: 0x0
+END
+/main/actions/controlmode
+Label: Set Nikon Control Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/actions/viewfinder
+Label: Nikon Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1545420920
+Printable: Fri 21 Dec 2018 01:35:20 PM CST
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/recordingmedia
+Label: Recording Media
+Readonly: 0
+Type: RADIO
+Current: Card
+Choice: 0 Card
+Choice: 1 SDRAM
+Choice: 2 Unknown value 0002
+END
+/main/settings/fastfs
+Label: Fast Filesystem
+Readonly: 0
+Type: TOGGLE
+Current: 1
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Memory card
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/autofocus
+Label: Autofocus
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 0000000000000000000000000nnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Nikon Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: D3500
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: V1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: Microsoft.com/DeviceServices: 1.0
+END
+/main/status/acpower
+Label: AC Power
+Readonly: 1
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/status/minfocallength
+Label: Focal Length Minimum
+Readonly: 1
+Type: TEXT
+Current: 18 mm
+END
+/main/status/maxfocallength
+Label: Focal Length Maximum
+Readonly: 1
+Type: TEXT
+Current: 55 mm
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: 6000x4000
+Choice: 0 6000x4000
+Choice: 1 4496x3000
+Choice: 2 2992x2000
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: 100
+Choice: 0 100
+Choice: 1 200
+Choice: 2 400
+Choice: 3 800
+Choice: 4 1600
+Choice: 5 3200
+Choice: 6 6400
+Choice: 7 12800
+Choice: 8 25600
+END
+/main/imgsettings/isoauto
+Label: ISO Auto
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Fluorescent
+Choice: 3 Tungsten
+Choice: 4 Flash
+Choice: 5 Cloudy
+Choice: 6 Shade
+Choice: 7 Preset
+END
+/main/imgsettings/colorspace
+Label: Color Space
+Readonly: 0
+Type: RADIO
+Current: sRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+END
+/main/imgsettings/autoiso
+Label: Auto ISO
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/longexpnr
+Label: Long Exp Noise Reduction
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/assistlight
+Label: Assist Light
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -5
+Choice: 1 -4.666
+Choice: 2 -4.333
+Choice: 3 -4
+Choice: 4 -3.666
+Choice: 5 -3.333
+Choice: 6 -3
+Choice: 7 -2.666
+Choice: 8 -2.333
+Choice: 9 -2
+Choice: 10 -1.666
+Choice: 11 -1.333
+Choice: 12 -1
+Choice: 13 -0.666
+Choice: 14 -0.333
+Choice: 15 0
+Choice: 16 0.333
+Choice: 17 0.666
+Choice: 18 1
+Choice: 19 1.333
+Choice: 20 1.666
+Choice: 21 2
+Choice: 22 2.333
+Choice: 23 2.666
+Choice: 24 3
+Choice: 25 3.333
+Choice: 26 3.666
+Choice: 27 4
+Choice: 28 4.333
+Choice: 29 4.666
+Choice: 30 5
+END
+/main/capturesettings/flashmode
+Label: Flash Mode
+Readonly: 0
+Type: RADIO
+Current: Auto
+Choice: 0 Flash off
+Choice: 1 Red-eye automatic
+Choice: 2 Auto
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 1
+Type: RADIO
+Current: f/3.8
+Choice: 0 f/1
+Choice: 1 f/1.1
+Choice: 2 f/1.2
+Choice: 3 f/1.4
+Choice: 4 f/1.6
+Choice: 5 f/1.8
+Choice: 6 f/2
+Choice: 7 f/2.2
+Choice: 8 f/2.5
+Choice: 9 f/2.8
+Choice: 10 f/3.2
+Choice: 11 f/3.5
+Choice: 12 f/3.8
+Choice: 13 f/4
+Choice: 14 f/4.5
+Choice: 15 f/5
+Choice: 16 f/5.6
+Choice: 17 f/6.3
+Choice: 18 f/7.1
+Choice: 19 f/8
+Choice: 20 f/9
+Choice: 21 f/10
+Choice: 22 f/11
+Choice: 23 f/13
+Choice: 24 f/14
+Choice: 25 f/16
+Choice: 26 f/18
+Choice: 27 f/20
+Choice: 28 f/22
+Choice: 29 f/25
+END
+/main/capturesettings/imagequality
+Label: Image Quality
+Readonly: 0
+Type: RADIO
+Current: JPEG Normal
+Choice: 0 JPEG Basic
+Choice: 1 JPEG Normal
+Choice: 2 JPEG Fine
+Choice: 3 NEF (Raw)
+Choice: 4 NEF+Fine
+END
+/main/capturesettings/focallength
+Label: Focal Length
+Readonly: 1
+Type: RANGE
+Current: 22
+Bottom: 18
+Top: 55
+Step: 0.01
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 1
+Type: RADIO
+Current: AF-A
+Choice: 0 Manual
+Choice: 1 AF-S
+Choice: 2 AF-C
+Choice: 3 AF-A
+Choice: 4 Unknown value 8013
+END
+/main/capturesettings/focusmode2
+Label: Focus Mode 2
+Readonly: 0
+Type: RADIO
+Current: AF-A
+Choice: 0 AF-S
+Choice: 1 AF-C
+Choice: 2 AF-A
+Choice: 3 MF (fixed)
+Choice: 4 MF (selection)
+END
+/main/capturesettings/effectmode
+Label: Effect Mode
+Readonly: 0
+Type: RADIO
+Current: Unknown value 000b
+Choice: 0 Night Vision
+Choice: 1 Color sketch
+Choice: 2 Miniature effect
+Choice: 3 Selective color
+Choice: 4 Silhouette
+Choice: 5 High key
+Choice: 6 Low key
+Choice: 7 Unknown value 0007
+Choice: 8 Unknown value 0008
+Choice: 9 Unknown value 0009
+Choice: 10 Unknown value 000a
+Choice: 11 Unknown value 000b
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 1
+Type: RADIO
+Current: Auto
+Choice: 0 M
+Choice: 1 P
+Choice: 2 A
+Choice: 3 S
+Choice: 4 Auto
+Choice: 5 Portrait
+Choice: 6 Macro
+Choice: 7 Sports
+Choice: 8 Night Portrait
+Choice: 9 Night Landscape
+Choice: 10 Unknown value 8019
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Burst
+Choice: 2 Timer
+Choice: 3 Quiet Release
+END
+/main/capturesettings/focusmetermode
+Label: Focus Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Closest Subject
+Choice: 0 Multi-spot
+Choice: 1 Single Area
+Choice: 2 Closest Subject
+Choice: 3 Group Dynamic
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Multi Spot
+Choice: 0 Center Weighted
+Choice: 1 Multi Spot
+Choice: 2 Center Spot
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 1
+Type: RADIO
+Current: 0.0040s
+Choice: 0 0.0002s
+Choice: 1 0.0003s
+Choice: 2 0.0004s
+Choice: 3 0.0005s
+Choice: 4 0.0006s
+Choice: 5 0.0008s
+Choice: 6 0.0010s
+Choice: 7 0.0012s
+Choice: 8 0.0015s
+Choice: 9 0.0020s
+Choice: 10 0.0025s
+Choice: 11 0.0031s
+Choice: 12 0.0040s
+Choice: 13 0.0050s
+Choice: 14 0.0062s
+Choice: 15 0.0080s
+Choice: 16 0.0100s
+Choice: 17 0.0125s
+Choice: 18 0.0166s
+Choice: 19 0.0200s
+Choice: 20 0.0250s
+Choice: 21 0.0333s
+Choice: 22 0.0400s
+Choice: 23 0.0500s
+Choice: 24 0.0666s
+Choice: 25 0.0769s
+Choice: 26 0.1000s
+Choice: 27 0.1250s
+Choice: 28 0.1666s
+Choice: 29 0.2000s
+Choice: 30 0.2500s
+Choice: 31 0.3333s
+Choice: 32 0.4000s
+Choice: 33 0.5000s
+Choice: 34 0.6250s
+Choice: 35 0.7692s
+Choice: 36 1.0000s
+Choice: 37 1.3000s
+Choice: 38 1.6000s
+Choice: 39 2.0000s
+Choice: 40 2.5000s
+Choice: 41 3.0000s
+Choice: 42 4.0000s
+Choice: 43 5.0000s
+Choice: 44 6.0000s
+Choice: 45 8.0000s
+Choice: 46 10.0000s
+Choice: 47 13.0000s
+Choice: 48 15.0000s
+Choice: 49 20.0000s
+Choice: 50 25.0000s
+Choice: 51 30.0000s
+Choice: 52 Bulb
+Choice: 53 Time
+END
+/main/capturesettings/shutterspeed2
+Label: Shutter Speed 2
+Readonly: 1
+Type: RADIO
+Current: 1/250
+Choice: 0 1/4000
+Choice: 1 1/3200
+Choice: 2 1/2500
+Choice: 3 1/2000
+Choice: 4 1/1600
+Choice: 5 1/1250
+Choice: 6 1/1000
+Choice: 7 1/800
+Choice: 8 1/640
+Choice: 9 1/500
+Choice: 10 1/400
+Choice: 11 1/320
+Choice: 12 1/250
+Choice: 13 1/200
+Choice: 14 1/160
+Choice: 15 1/125
+Choice: 16 1/100
+Choice: 17 1/80
+Choice: 18 1/60
+Choice: 19 1/50
+Choice: 20 1/40
+Choice: 21 1/30
+Choice: 22 1/25
+Choice: 23 1/20
+Choice: 24 1/15
+Choice: 25 1/13
+Choice: 26 1/10
+Choice: 27 1/8
+Choice: 28 1/6
+Choice: 29 1/5
+Choice: 30 1/4
+Choice: 31 1/3
+Choice: 32 10/25
+Choice: 33 1/2
+Choice: 34 10/16
+Choice: 35 10/13
+Choice: 36 1
+Choice: 37 13/10
+Choice: 38 16/10
+Choice: 39 2
+Choice: 40 25/10
+Choice: 41 3
+Choice: 42 4
+Choice: 43 5
+Choice: 44 6
+Choice: 45 8
+Choice: 46 10
+Choice: 47 13
+Choice: 48 15
+Choice: 49 20
+Choice: 50 25
+Choice: 51 30
+Choice: 52 Bulb
+Choice: 53 Time
+END
+/main/capturesettings/liveviewafmode
+Label: Live View AF Mode
+Readonly: 0
+Type: RADIO
+Current: Face-priority AF
+Choice: 0 Face-priority AF
+Choice: 1 Wide-area AF
+Choice: 2 Normal-area AF
+Choice: 3 Subject-tracking AF
+END
+/main/capturesettings/liveviewaffocus
+Label: Live View AF Focus
+Readonly: 0
+Type: RADIO
+Current: Single-servo AF
+Choice: 0 Single-servo AF
+Choice: 1 Full-time-servo AF
+Choice: 2 Unknown value 0003
+Choice: 3 Manual Focus
+END
+/main/capturesettings/nocfcardrelease
+Label: Release without CF card
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/burstnumber
+Label: Burst Number
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 100
+Step: 1
+END
+/main/capturesettings/whitebiaspresetno
+Label: White Balance Bias Preset Nr
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 0
+END
+/main/capturesettings/applicationmode
+Label: Application Mode
+Readonly: 0
+Type: RADIO
+Current: Application Mode 0
+Choice: 0 Application Mode 0
+Choice: 1 Application Mode 1
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+Choice: 20 21
+Choice: 21 22
+Choice: 22 23
+Choice: 23 24
+Choice: 24 25
+Choice: 25 26
+Choice: 26 27
+Choice: 27 28
+Choice: 28 29
+Choice: 29 30
+Choice: 30 31
+Choice: 31 32
+Choice: 32 33
+Choice: 33 34
+Choice: 34 35
+Choice: 35 36
+Choice: 36 37
+Choice: 37 38
+Choice: 38 39
+Choice: 39 40
+Choice: 40 41
+Choice: 41 42
+Choice: 42 43
+Choice: 43 44
+Choice: 44 45
+Choice: 45 46
+Choice: 46 47
+Choice: 47 48
+Choice: 48 49
+Choice: 49 50
+Choice: 50 51
+Choice: 51 52
+Choice: 52 53
+Choice: 53 54
+Choice: 54 55
+Choice: 55 56
+Choice: 56 57
+Choice: 57 58
+Choice: 58 59
+Choice: 59 60
+Choice: 60 61
+Choice: 61 62
+Choice: 62 63
+Choice: 63 64
+Choice: 64 65
+Choice: 65 66
+Choice: 66 67
+Choice: 67 68
+Choice: 68 69
+Choice: 69 70
+Choice: 70 71
+Choice: 71 72
+Choice: 72 73
+Choice: 73 74
+Choice: 74 75
+Choice: 75 76
+Choice: 76 77
+Choice: 77 78
+Choice: 78 79
+Choice: 79 80
+Choice: 80 81
+Choice: 81 82
+Choice: 82 83
+Choice: 83 84
+Choice: 84 85
+Choice: 85 86
+Choice: 86 87
+Choice: 87 88
+Choice: 88 89
+Choice: 89 90
+Choice: 90 91
+Choice: 91 92
+Choice: 92 93
+Choice: 93 94
+Choice: 94 95
+Choice: 95 96
+Choice: 96 97
+Choice: 97 98
+Choice: 98 99
+Choice: 99 100
+END
+/main/other/5003
+Label: Image Size
+Readonly: 0
+Type: MENU
+Current: 6000x4000
+Choice: 0 6000x4000
+Choice: 1 4496x3000
+Choice: 2 2992x2000
+END
+/main/other/5004
+Label: Compression Setting
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 4
+Choice: 4 7
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 5
+Choice: 3 6
+Choice: 4 7
+Choice: 5 32784
+Choice: 6 32785
+Choice: 7 32787
+END
+/main/other/5007
+Label: F-Number
+Readonly: 1
+Type: MENU
+Current: 380
+Choice: 0 100
+Choice: 1 110
+Choice: 2 120
+Choice: 3 140
+Choice: 4 160
+Choice: 5 180
+Choice: 6 200
+Choice: 7 220
+Choice: 8 250
+Choice: 9 280
+Choice: 10 320
+Choice: 11 350
+Choice: 12 380
+Choice: 13 400
+Choice: 14 450
+Choice: 15 500
+Choice: 16 560
+Choice: 17 630
+Choice: 18 710
+Choice: 19 800
+Choice: 20 900
+Choice: 21 1000
+Choice: 22 1100
+Choice: 23 1300
+Choice: 24 1400
+Choice: 25 1600
+Choice: 26 1800
+Choice: 27 2000
+Choice: 28 2200
+Choice: 29 2500
+END
+/main/other/5008
+Label: Focal Length
+Readonly: 1
+Type: RANGE
+Current: 2200
+Bottom: 1800
+Top: 5500
+Step: 1
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 1
+Type: MENU
+Current: 32786
+Choice: 0 1
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32786
+Choice: 4 32787
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+END
+/main/other/500c
+Label: Flash Mode
+Readonly: 0
+Type: MENU
+Current: 32784
+Choice: 0 2
+Choice: 1 4
+Choice: 2 32784
+END
+/main/other/500d
+Label: Exposure Time
+Readonly: 1
+Type: MENU
+Current: 40
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 5
+Choice: 4 6
+Choice: 5 8
+Choice: 6 10
+Choice: 7 12
+Choice: 8 15
+Choice: 9 20
+Choice: 10 25
+Choice: 11 31
+Choice: 12 40
+Choice: 13 50
+Choice: 14 62
+Choice: 15 80
+Choice: 16 100
+Choice: 17 125
+Choice: 18 166
+Choice: 19 200
+Choice: 20 250
+Choice: 21 333
+Choice: 22 400
+Choice: 23 500
+Choice: 24 666
+Choice: 25 769
+Choice: 26 1000
+Choice: 27 1250
+Choice: 28 1666
+Choice: 29 2000
+Choice: 30 2500
+Choice: 31 3333
+Choice: 32 4000
+Choice: 33 5000
+Choice: 34 6250
+Choice: 35 7692
+Choice: 36 10000
+Choice: 37 13000
+Choice: 38 16000
+Choice: 39 20000
+Choice: 40 25000
+Choice: 41 30000
+Choice: 42 40000
+Choice: 43 50000
+Choice: 44 60000
+Choice: 45 80000
+Choice: 46 100000
+Choice: 47 130000
+Choice: 48 150000
+Choice: 49 200000
+Choice: 50 250000
+Choice: 51 300000
+Choice: 52 -1
+Choice: 53 -3
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 1
+Type: MENU
+Current: 32784
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 32784
+Choice: 5 32785
+Choice: 6 32787
+Choice: 7 32788
+Choice: 8 32789
+Choice: 9 32790
+Choice: 10 32793
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: 100
+Choice: 0 100
+Choice: 1 200
+Choice: 2 400
+Choice: 3 800
+Choice: 4 1600
+Choice: 5 3200
+Choice: 6 6400
+Choice: 7 12800
+Choice: 8 25600
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -5000
+Choice: 1 -4666
+Choice: 2 -4333
+Choice: 3 -4000
+Choice: 4 -3666
+Choice: 5 -3333
+Choice: 6 -3000
+Choice: 7 -2666
+Choice: 8 -2333
+Choice: 9 -2000
+Choice: 10 -1666
+Choice: 11 -1333
+Choice: 12 -1000
+Choice: 13 -666
+Choice: 14 -333
+Choice: 15 0
+Choice: 16 333
+Choice: 17 666
+Choice: 18 1000
+Choice: 19 1333
+Choice: 20 1666
+Choice: 21 2000
+Choice: 22 2333
+Choice: 23 2666
+Choice: 24 3000
+Choice: 25 3333
+Choice: 26 3666
+Choice: 27 4000
+Choice: 28 4333
+Choice: 29 4666
+Choice: 30 5000
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20181221T133520
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 32785
+Choice: 3 32790
+END
+/main/other/5018
+Label: Burst Number
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+Choice: 20 21
+Choice: 21 22
+Choice: 22 23
+Choice: 23 24
+Choice: 24 25
+Choice: 25 26
+Choice: 26 27
+Choice: 27 28
+Choice: 28 29
+Choice: 29 30
+Choice: 30 31
+Choice: 31 32
+Choice: 32 33
+Choice: 33 34
+Choice: 34 35
+Choice: 35 36
+Choice: 36 37
+Choice: 37 38
+Choice: 38 39
+Choice: 39 40
+Choice: 40 41
+Choice: 41 42
+Choice: 42 43
+Choice: 43 44
+Choice: 44 45
+Choice: 45 46
+Choice: 46 47
+Choice: 47 48
+Choice: 48 49
+Choice: 49 50
+Choice: 50 51
+Choice: 51 52
+Choice: 52 53
+Choice: 53 54
+Choice: 54 55
+Choice: 55 56
+Choice: 56 57
+Choice: 57 58
+Choice: 58 59
+Choice: 59 60
+Choice: 60 61
+Choice: 61 62
+Choice: 62 63
+Choice: 63 64
+Choice: 64 65
+Choice: 65 66
+Choice: 66 67
+Choice: 67 68
+Choice: 68 69
+Choice: 69 70
+Choice: 70 71
+Choice: 71 72
+Choice: 72 73
+Choice: 73 74
+Choice: 74 75
+Choice: 75 76
+Choice: 76 77
+Choice: 77 78
+Choice: 78 79
+Choice: 79 80
+Choice: 80 81
+Choice: 81 82
+Choice: 82 83
+Choice: 83 84
+Choice: 84 85
+Choice: 85 86
+Choice: 86 87
+Choice: 87 88
+Choice: 88 89
+Choice: 89 90
+Choice: 90 91
+Choice: 91 92
+Choice: 92 93
+Choice: 93 94
+Choice: 94 95
+Choice: 95 96
+Choice: 96 97
+Choice: 97 98
+Choice: 98 99
+Choice: 99 100
+END
+/main/other/501c
+Label: Focus Metering Mode
+Readonly: 0
+Type: MENU
+Current: 32785
+Choice: 0 2
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32786
+END
+/main/other/501e
+Label: Artist
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/501f
+Label: Copyright Info
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d015
+Label: Reset Bank 0
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d01f
+Label: White Balance Preset Number
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d032
+Label: Color Space
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d037
+Label: Effect Mode
+Readonly: 0
+Type: MENU
+Current: 11
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+END
+/main/other/d054
+Label: Auto ISO
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d05d
+Label: Live View AF Area
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d061
+Label: Live View AF Focus
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d06b
+Label: Long Exposure Noise Reduction
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d08a
+Label: No CF Card Release
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d09c
+Label: PTP Property 0xd09c
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0a0
+Label: Movie Screen Size
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+END
+/main/other/d0a4
+Label: PTP Property 0xd0a4
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d0b5
+Label: PTP Property 0xd0b5
+Readonly: 1
+Type: TEXT
+Current: 800
+END
+/main/other/d0e0
+Label: Lens ID
+Readonly: 1
+Type: TEXT
+Current: 928
+END
+/main/other/d0e1
+Label: Lens Sort
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0e2
+Label: Lens Type
+Readonly: 1
+Type: TEXT
+Current: 383
+END
+/main/other/d0e3
+Label: Min. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 1800
+END
+/main/other/d0e4
+Label: Max. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 5500
+END
+/main/other/d100
+Label: Nikon Exposure Time
+Readonly: 1
+Type: MENU
+Current: 65786
+Choice: 0 69536
+Choice: 1 68736
+Choice: 2 68036
+Choice: 3 67536
+Choice: 4 67136
+Choice: 5 66786
+Choice: 6 66536
+Choice: 7 66336
+Choice: 8 66176
+Choice: 9 66036
+Choice: 10 65936
+Choice: 11 65856
+Choice: 12 65786
+Choice: 13 65736
+Choice: 14 65696
+Choice: 15 65661
+Choice: 16 65636
+Choice: 17 65616
+Choice: 18 65596
+Choice: 19 65586
+Choice: 20 65576
+Choice: 21 65566
+Choice: 22 65561
+Choice: 23 65556
+Choice: 24 65551
+Choice: 25 65549
+Choice: 26 65546
+Choice: 27 65544
+Choice: 28 65542
+Choice: 29 65541
+Choice: 30 65540
+Choice: 31 65539
+Choice: 32 655385
+Choice: 33 65538
+Choice: 34 655376
+Choice: 35 655373
+Choice: 36 65537
+Choice: 37 851978
+Choice: 38 1048586
+Choice: 39 131073
+Choice: 40 1638410
+Choice: 41 196609
+Choice: 42 262145
+Choice: 43 327681
+Choice: 44 393217
+Choice: 45 524289
+Choice: 46 655361
+Choice: 47 851969
+Choice: 48 983041
+Choice: 49 1310721
+Choice: 50 1638401
+Choice: 51 1966081
+Choice: 52 -1
+Choice: 53 -3
+END
+/main/other/d101
+Label: AC Power
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d102
+Label: Warning Status
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d10b
+Label: Recording Media
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d14e
+Label: Active D-Lighting
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d161
+Label: Autofocus Mode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+END
+/main/other/d163
+Label: AF Assist Lamp
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d16a
+Label: ISO Auto
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1a2
+Label: Live View Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1a3
+Label: Live View Image Zoom Ratio
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+END
+/main/other/d1a4
+Label: Live View Prohibit Condition
+Readonly: 1
+Type: TEXT
+Current: -2147483648
+END
+/main/other/d1ac
+Label: PTP Property 0xd1ac
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d1b5
+Label: PTP Property 0xd1b5
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32786
+Choice: 4 32787
+Choice: 5 32800
+END
+/main/other/d1dd
+Label: PTP Property 0xd1dd
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1f0
+Label: PTP Property 0xd1f0
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1f1
+Label: PTP Property 0xd1f1
+Readonly: 1
+Type: RANGE
+Current: 3651
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d200
+Label: Active Pic Ctrl Item
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d201
+Label: Change Pic Ctrl Item
+Readonly: 1
+Type: MENU
+Current: 0
+END
