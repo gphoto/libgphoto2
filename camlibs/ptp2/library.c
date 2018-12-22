@@ -2076,6 +2076,9 @@ static struct {
 	/* Marcus Meissner */
 	{"Canon:Digital IXUS 185",          	0x04a9, 0x32d4, 0},
 
+	/* Elijah Parker <mail@timelapseplus.com> */
+	{"Canon:EOS R",          		0x04a9, 0x32da, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
+
 	/* https://github.com/gphoto/libgphoto2/issues/316 */
 	{"Canon:PowerShot SX740 HS",		0x04a9, 0x32e4, PTP_CAP|PTP_CAP_PREVIEW},
 
