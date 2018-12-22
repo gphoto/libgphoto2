@@ -129,6 +129,18 @@ is_canon_eos_m(PTPParams *params) {
 	return 0;
 }
 
+static inline int
+have_eos_prop(PTPParams *params, uint16_t vendor, uint16_t prop) {
+	unsigned int i;
+
+	/* The special Canon EOS property set gets special treatment. */
+	if ((params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) || (vendor != PTP_VENDOR_CANON))
+		return 0;
+	for (i=0;i<params->nrofcanon_props;i++)
+		if (params->canon_props[i].proptype == prop)
+			return 1;
+	return 0;
+}
 
 struct _CameraPrivateLibrary {
 	PTPParams params;
