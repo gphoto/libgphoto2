@@ -4087,6 +4087,64 @@ _put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+/* This list is taken from Sony A58... fill in more if your Sony has more */
+static struct sonyshutter {
+	int div, nom;
+} sony_shuttertable[] = {
+	{30,1},
+	{25,1},
+	{20,1},
+	{15,1},
+	{13,1},
+	{10,1},
+	{8,1},
+	{6,1},
+	{5,1},
+	{4,1},
+	{32,10},
+	{25,10},
+	{2,1},
+	{16,10},
+	{13,10},
+	{1,1},
+	{8,10},
+	{6,10},
+	{5,10},
+	{4,10},
+	{1,3},
+	{1,4},
+	{1,5},
+	{1,6},
+	{1,8},
+	{1,10},
+	{1,13},
+	{1,15},
+	{1,20},
+	{1,25},
+	{1,30},
+	{1,40},
+	{1,50},
+	{1,60},
+	{1,80},
+	{1,100},
+	{1,125},
+	{1,160},
+	{1,200},
+	{1,250},
+	{1,320},
+	{1,400},
+	{1,500},
+	{1,640},
+	{1,800},
+	{1,1000},
+	{1,1250},
+	{1,1600},
+	{1,2000},
+	{1,2500},
+	{1,3200},
+	{1,4000},
+};
+
 static int
 _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	int x,y;
@@ -4094,63 +4152,26 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return GP_ERROR;
-/*
-30 
-25
-20
-15
-13
-10
-8
-6
-5
-4
-3.2
-2.5
-2
-1.6
-1.3
-1
-0.8
-0.6
-0.5
-0.4
-1/3
-1/4
-1/5
-1/6
-1/8
-1/10
-1/13
-1/15
-1/20
-1/25
-1/30
-1/40
-1/50
-1/60
-1/80
-1/100
-1/125
-1/160
-1/200
-1/250
-1/320
-1/400
-1/500
-1/640
-1/800
-1/1000
-1/1250
-1/1600  
-1/2000
-1/2500
-1/3200
-1/4000
-*/
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		GP_LOG_E("there is a enum, support it! ... report to gphoto-devel list!\n");
+	} else {
+		int i;
+		/* use our static table */
+		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+			x=sony_shuttertable[i].div;
+			y=sony_shuttertable[i].nom;
+			if (y == 1)
+				sprintf (buf, "%d",x);
+			else
+				sprintf (buf, "%d/%d",x,y);
+			gp_widget_add_choice (*widget, buf);
+		}
+		gp_widget_add_choice (*widget, _("Bulb"));
+	}
 
 	if (dpd->CurrentValue.u32 == 0) {
 		strcpy(buf,_("Bulb"));
