@@ -350,7 +350,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 			 */
 
-			ret = ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001);
+			ret = ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001);
 			/* not so bad if its just busy, would also fail later. */
 			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 			C_PTP (ret);

@@ -4926,8 +4926,11 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	if (have_eos_prop(params, PTP_VENDOR_CANON, PTP_DPC_CANON_EOS_CaptureDestination)) {
                 C_PTP (ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_CaptureDestination, &dpd));
                 if (dpd.CurrentValue.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
-			/* Tell the camera we have enough free space on the PC */
-			LOG_ON_PTP_E (ptp_canon_eos_pchddcapacity(params, 0x04ffffff, 0x00001000, 0x00000001));
+			C_PTP (ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_AvailableShots, &dpd));
+			if (dpd.CurrentValue.u32 < 100) {
+				/* Tell the camera we have enough free space on the PC */
+				LOG_ON_PTP_E (ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001));
+			}
 		}
 	}
 
