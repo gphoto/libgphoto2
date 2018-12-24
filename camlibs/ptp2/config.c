@@ -4089,7 +4089,7 @@ _put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 /* This list is taken from Sony A58... fill in more if your Sony has more */
 static struct sonyshutter {
-	int div, nom;
+	int dividend, divisor;
 } sony_shuttertable[] = {
 	{30,1},
 	{25,1},
@@ -4159,11 +4159,11 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 		GP_LOG_E("there is a enum, support it! ... report to gphoto-devel list!\n");
 	} else {
-		int i;
+		unsigned int i;
 		/* use our static table */
 		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
-			x=sony_shuttertable[i].div;
-			y=sony_shuttertable[i].nom;
+			x = sony_shuttertable[i].dividend;
+			y = sony_shuttertable[i].divisor;
 			if (y == 1)
 				sprintf (buf, "%d",x);
 			else
