@@ -1055,7 +1055,11 @@ static struct {
 	/* Richard Brown at SUSE */
 	{"Sony:Alpha-RX10M4 (Control)", 0x054c,0x0c2f, PTP_CAP|PTP_CAP_PREVIEW},
 
-	{"Sony:DSC-RX0 (PC Control)", 0x054c, 0x0c32, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:DSC-RX0 (PC Control)",	0x054c, 0x0c32, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Mikael Ståldal <mikael@staldal.nu> */
+	{"Sony:DSC-RX100M5A (MTP)",		0x054c, 0x0cb1, 0},
+	{"Sony:DSC-RX100M5A (PC Control)",	0x054c, 0x0cb2, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	/* Elijah Parker, mail@timelapseplus.com */
