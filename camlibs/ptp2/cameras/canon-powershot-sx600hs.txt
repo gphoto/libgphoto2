@@ -1,0 +1,471 @@
+Kamerazusammenfassung:
+Hersteller: Canon Inc.
+Modell: Canon PowerShot SX600 HS
+  Version: 1-14.0.1.0
+  Seriennummer: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Aufnahmeformate: JPEG
+Anzeigeformate: Association/Directory, Script, DPOF, MS Wave, JPEG, Defined Type, Unknown(b103), Unknown(b982), Unknown(b105), Unknown(bf01)
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, Hochladen von Dateien
+	Keine Aufnahme von Bildern, keine Offene Aufnahme, Canon EOS Capture 2
+
+Informationen über Speichermedium:
+store_00010001:
+	Beschreibung des Speichergeräts: SD
+	Label des Speichergerätes: Keine
+	Speichertyp: Entfernbarer Speicher (Karte)
+	Typ des Dateisystems: Standard Digital Kamera Layout (DCIM)
+	Zugriffsmöglichkeiten: Lesen und Schreiben
+	Maximale Kapazität: 32316096512 (30819 MB)
+	Freier Platz (Bytes): 30082203648 (28688 MB)
+	Freier Speicher (Bilder): -1
+
+Properties des Geräts:
+Event Emulations Modus(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Datengröße beim Transfer von der Kamera(0xd02e):(read only) (type=0x6) 524288
+Datengröße beim Transfer zur Kamera(0xd02f):(read only) (type=0x6) 524288
+Batterie Ladezustand(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3] value: 3% (3)
+Batterietyp(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Batteriemodus(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+UNIX Zeit(0xd034):(readwrite) (type=0x6) 1545822075
+Art der Slideshow(0xd047):(read only) (type=0x4) 0
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Kamera API Version(0xd030):(read only) (type=0x6) 256
+Modell ID(0xd049):(read only) (type=0x6) 57081856
+Kameramodell(0xd032):(read only) (type=0xffff) 'Canon PowerShot SX600 HS'
+Kamerabesitzer(0xd033):(readwrite) (type=0x4002) a[0] 
+Firmware-Version(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 0
+Property 0xd051:(read only) (type=0x0) Undefined
+Property 0xd052:(read only) (type=0x2) 0
+Property 0xd1b0:(readwrite) (type=0x2) 0
+Property 0xd055:(readwrite) (type=0x2) 0
+Property 0xd056:(readwrite) (type=0x2) 0
+Property 0xd106:(readwrite) (type=0x2) 0
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot SX600 HS'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/actions/viewfinder
+Label: Canon EOS Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/eosremoterelease
+Label: Canon EOS Auslöser
+Readonly: 0
+Type: RADIO
+Current: Keine
+Choice: 0 Keine
+Choice: 1 Halb durchdrücken
+Choice: 2 Voll durchdrücken
+Choice: 3 Halb durchdrücken
+Choice: 4 Voll auslösen
+Choice: 5 Sofort
+Choice: 6 Drücke 1
+Choice: 7 Drücke 2
+Choice: 8 Drücke 3
+Choice: 9 Loslassen 1
+Choice: 10 Loslassen 2
+Choice: 11 Loslassen 3
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Kamera Datum und Zeit
+Readonly: 0
+Type: DATE
+Current: 1545818487
+Printable: Mi 26 Dez 2018 11:01:27 CET
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/ownername
+Label: Eigentümername
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/capturetarget
+Label: Aufnahmeziel
+Readonly: 0
+Type: RADIO
+Current: Speicherkarte
+Choice: 0 interner Speicher
+Choice: 1 Speicherkarte
+END
+/main/settings/capture
+Label: Aufnahme
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/status/serialnumber
+Label: Seriennummer
+Readonly: 0
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+END
+/main/status/manufacturer
+Label: Kamera Hersteller
+Readonly: 0
+Type: TEXT
+Current: Canon Inc.
+END
+/main/status/cameramodel
+Label: Kameramodell
+Readonly: 0
+Type: TEXT
+Current: Canon PowerShot SX600 HS
+END
+/main/status/deviceversion
+Label: Version des Gerätes
+Readonly: 0
+Type: TEXT
+Current: 1-14.0.1.0
+END
+/main/status/vendorextension
+Label: Hersteller Erweiterung
+Readonly: 0
+Type: TEXT
+Current: Keine
+END
+/main/status/model
+Label: Kameramodell
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot SX600 HS
+END
+/main/status/model
+Label: Kameramodell
+Readonly: 0
+Type: TEXT
+Current: 57081856
+END
+/main/status/firmwareversion
+Label: Firmware-Version
+Readonly: 1
+Type: TEXT
+Current: 1.0.0.0
+END
+/main/status/Batterie Ladezustand
+Label: Batterie Ladezustand
+Readonly: 1
+Type: TEXT
+Current: 3%
+END
+/main/capturesettings/zoom
+Label: Zoom
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d045
+Label: Event Emulations Modus
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d04a
+Label: PTP Property 0xd04a
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d02e
+Label: Datengröße beim Transfer von der Kamera
+Readonly: 1
+Type: TEXT
+Current: 524288
+END
+/main/other/d02f
+Label: Datengröße beim Transfer zur Kamera
+Readonly: 1
+Type: TEXT
+Current: 524288
+END
+/main/other/5001
+Label: Batterie Ladezustand
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d002
+Label: Batterietyp
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+END
+/main/other/d003
+Label: Batteriemodus
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d034
+Label: UNIX Zeit
+Readonly: 0
+Type: TEXT
+Current: 1545822087
+END
+/main/other/d047
+Label: Art der Slideshow
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d046
+Label: DPOF Version
+Readonly: 1
+Type: TEXT
+Current: 257
+END
+/main/other/d030
+Label: Kamera API Version
+Readonly: 1
+Type: TEXT
+Current: 256
+END
+/main/other/d049
+Label: Modell ID
+Readonly: 1
+Type: TEXT
+Current: 57081856
+END
+/main/other/d032
+Label: Kameramodell
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot SX600 HS
+END
+/main/other/d033
+Label: Kamerabesitzer
+Readonly: 0
+Type: TEXT
+Current: (null)
+END
+/main/other/d031
+Label: Firmware-Version
+Readonly: 1
+Type: TEXT
+Current: 16777216
+END
+/main/other/d050
+Label: PTP Property 0xd050
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d051
+Label: PTP Property 0xd051
+Readonly: 1
+Type: TEXT
+Current: (null)
+END
+/main/other/d052
+Label: PTP Property 0xd052
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d1b0
+Label: PTP Property 0xd1b0
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d055
+Label: PTP Property 0xd055
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d056
+Label: PTP Property 0xd056
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d106
+Label: PTP Property 0xd106
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d402
+Label: PTP Property 0xd402
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot SX600 HS
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon PowerShot SX600 HS
+  device version: 1-14.0.1.0
+  serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x9110 (PTP_OC_CANON_EOS_SetDevicePropValueEx)
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x9013 (PTP_OC_CANON_CheckEvent)
+  0x901f (PTP_OC_CANON_ChangeUSBProtocol)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x101b (Get partial object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100b (Delete object)
+  0x100f (Format storage)
+  0x1012 (Set object protection)
+  0x9001 (PTP_OC_CANON_GetPartialObjectInfo)
+  0x9021 (PTP_OC_CANON_GetObjectInfoEx)
+  0x901b (PTP_OC_CANON_GetPartialObjectEx)
+  0x901e (PTP_OC_CANON_GetObjectAttributes)
+  0x9019 (PTP_OC_CANON_SendPartialObject)
+  0x9006 (PTP_OC_CANON_GetObjectHandleByName)
+  0x901c (PTP_OC_CANON_SetObjectTime)
+  0x9002 (PTP_OC_CANON_SetObjectArchive)
+  0x904c (Unknown PTP_OC)
+  0x9024 (PTP_OC_CANON_SendObjectInfoByPath )
+  0x9025 (PTP_OC_CANON_SendObjectByPath )
+  0x9038 (Unknown PTP_OC)
+  0x9039 (Unknown PTP_OC)
+  0x903a (Unknown PTP_OC)
+  0x903b (Unknown PTP_OC)
+  0x904b (Unknown PTP_OC)
+  0x9060 (Unknown PTP_OC)
+  0x9062 (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9804 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+  0x9101 (PTP_OC_CANON_EOS_GetStorageIDs)
+  0x9102 (PTP_OC_CANON_EOS_GetStorageInfo)
+  0x9107 (PTP_OC_CANON_EOS_GetPartialObject)
+  0x9103 (PTP_OC_CANON_EOS_GetObjectInfo)
+  0x9114 (PTP_OC_CANON_EOS_SetRemoteMode)
+  0x9115 (PTP_OC_CANON_EOS_SetEventMode)
+  0x9116 (PTP_OC_CANON_EOS_GetEvent)
+  0x9153 (PTP_OC_CANON_EOS_GetViewFinderData)
+  0x910a (PTP_OC_CANON_EOS_GetThumbEx)
+  0x9128 (PTP_OC_CANON_EOS_RemoteReleaseOn)
+  0x9129 (PTP_OC_CANON_EOS_RemoteReleaseOff)
+  0x9050 (Unknown PTP_OC)
+  0x9051 (Unknown PTP_OC)
+  0x905c (Unknown PTP_OC)
+  0x905d (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400b (DeviceReset)
+  0x400c (StorageInfoChanged)
+  0x400e (UnreportedStatus)
+  0xc001 (Unknown Event)
+  0xc005 (Unknown Event)
+  0xc00a (Unknown Event)
+  0xc101 (Unknown Event)
+Device Properties Supported:
+  0xd045 (Event Emulate Mode)
+  0xd04a (Unknown DPC code)
+  0xd02e (Size of Output Data from Camera)
+  0xd02f (Size of Input Data to Camera)
+  0x5001 (Battery Level)
+  0xd002 (Battery Type)
+  0xd003 (Battery Mode)
+  0xd034 (UNIX Time)
+  0xd047 (Type of Slideshow)
+  0xd046 (DPOF Version)
+  0xd030 (Remote API Version)
+  0xd049 (Model ID)
+  0xd032 (Camera Model)
+  0xd033 (Camera Owner)
+  0xd031 (Firmware Version)
+  0xd050 (Unknown DPC code)
+  0xd051 (Unknown DPC code)
+  0xd052 (Unknown DPC code)
+  0xd1b0 (Unknown DPC code)
+  0xd055 (Unknown DPC code)
+  0xd056 (Unknown DPC code)
+  0xd106 (Unknown DPC code)
+  0xd402 (Unknown DPC code)
+  0xd406 (Unknown DPC code)
+  0xd407 (Unknown DPC code)
+  0xd303 (Unknown DPC code)
