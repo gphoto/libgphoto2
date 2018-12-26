@@ -1997,6 +1997,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/92 */
 	{"Canon:EOS 5D Mark IV",		0x04a9, 0x3281, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
+	/* Marcus parents */
+	{"Canon:PowerShot SX600 HS",		0x04a9, 0x3286, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* https://sourceforge.net/p/gphoto/feature-requests/445/ */
 	{"Canon:PowerShot Elph135",		0x04a9, 0x3288, PTPBUG_DELETE_SENDS_EVENT},
 
