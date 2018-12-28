@@ -1,5 +1,18 @@
 libgphoto2 2.5.21.1 development
 
+ptp2:
+* Canon EOS M / PowerShot capture problem solved
+* Sony shutterspeed - provide a static list as the camera does not provide one, you can set also different values
+* Canon SDRAM capture, try to support more than 500MB of images at once
+* New USB Ids added:
+  * Canon EOS R, 800D
+  * Canon PowerShot SX600HS, SX740HS
+  * Sony DSC RX0, RX100-M5A
+  * Nikon DSC D3500
+
+generic:
+* handle new "bind" udev event in udev rule generator.
+
 translations:
 * updated polish, ukrainian
 
