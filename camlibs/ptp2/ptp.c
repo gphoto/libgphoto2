@@ -4375,18 +4375,13 @@ ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArr
 }
 
 uint16_t
-ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPProperties **props, int *nrofprops)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int	size;
 
-	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjPropList, handle,
-		     0x00000000U,  /* 0x00000000U should be "all formats" */
-		     0xFFFFFFFFU,  /* 0xFFFFFFFFU should be "all properties" */
-		     0x00000000U,
-		     0xFFFFFFFFU  /* means - return full tree below the Param1 handle */
-	);
+	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjPropList, handle, formats, properties, propertygroups, level);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	*nrofprops = ptp_unpack_OPL(params, data, props, size);
 	free(data);
@@ -4394,22 +4389,29 @@ ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **p
 }
 
 uint16_t
-ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t level, MTPProperties **props, int *nrofprops)
 {
-	PTPContainer	ptp;
-	unsigned char	*data = NULL;
-	unsigned int	size;
-
-	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjPropList, handle,
+	return ptp_mtp_getobjectproplist_generic (params, handle,
 		     0x00000000U,  /* 0x00000000U should be "all formats" */
 		     0xFFFFFFFFU,  /* 0xFFFFFFFFU should be "all properties" */
-		     0x00000000U,
-		     0x00000000U  /* means - return single tree below the Param1 handle */
+		     0,
+		     level,
+		     props,
+		     nrofprops
 	);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	*nrofprops = ptp_unpack_OPL(params, data, props, size);
-	free(data);
-	return PTP_RC_OK;
+}
+
+
+uint16_t
+ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+{
+	return ptp_mtp_getobjectproplist_level(params, handle, 0xFFFFFFFFU, props, nrofprops);
+}
+
+uint16_t
+ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+{
+	return ptp_mtp_getobjectproplist_level(params, handle, 0, props, nrofprops);
 }
 
 uint16_t
