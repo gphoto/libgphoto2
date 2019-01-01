@@ -2728,7 +2728,7 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
 	   "\n"
-	   "Enjoy!"), 2018);
+	   "Enjoy!"), 2019);
 	return (GP_OK);
 }
 
