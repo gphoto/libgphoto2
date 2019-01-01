@@ -631,6 +631,9 @@
   /* Reported by Jocelyn Mayer <l_indien@magic.fr> */
   { "Acer", 0x0502, "Iconia One 10", 0x3841,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/279/ */
+  { "Acer", 0x0502, "B3-A20", 0x3841,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1733/ */
   { "Acer", 0x0502, "Liquid Zest 4G", 0x38a5,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -1562,6 +1565,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1294/ */
   { "LG Electronics Inc.", 0x1004, "LG G Flex 2", 0x633e,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/280/ */
+  { "LG Electronics Inc.", 0x1004, "LG G3 f460s", 0x633f,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -2946,6 +2952,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Lenovo", 0x17ef, "Vibe K5 Note", 0x7999,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1820/ */
+  { "Lenovo", 0x17ef, "YB1-X90F", 0x79af,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1664/ */
   { "Lenovo", 0x17ef, "Vibe K4", 0x79b7,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3617,6 +3626,9 @@
   /* https://github.com/libmtp/libmtp/issues/15 */
   { "Garmin", 0x091e, "Fenix 5S Plus", 0x4b54,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/271/ */
+  { "Garmin", 0x091e, "Vivoactive 3", 0x4bac,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Wacom
@@ -3802,7 +3814,11 @@
   { "GoPro" , 0x2672, "HERO+", 0x0021, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO5 Black", 0x0027, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO5 Session", 0x0029, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO 2018", 0x002d, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "FUSION (back)", 0x0032, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "FUSION (front)", 0x0035, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO6 Black", 0x0037, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO7 Black", 0x0047, DEVICE_FLAG_NONE },
 #endif
 
   /* https://sourceforge.net/p/libmtp/bugs/1490/ */
@@ -3900,4 +3916,7 @@
   /*
    * Other strange stuff.
    */
-  { "Isabella", 0x0b20, "Her Prototype", 0xddee, DEVICE_FLAG_NONE }
+  { "Isabella", 0x0b20, "Her Prototype", 0xddee, DEVICE_FLAG_NONE },
+
+  /* qemu 3.0.0 hw/usb/dev-mtp.c */
+  { "QEMU", 0x46f4, "Virtual MTP", 0x0004, DEVICE_FLAG_NONE }
