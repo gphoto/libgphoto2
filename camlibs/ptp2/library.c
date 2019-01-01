@@ -2200,6 +2200,8 @@ static struct {
 	{"Fuji:Fujifilm X-T1",			0x04cb, 0x02bf, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/281 */
 	{"Fuji:Fujifilm X30",			0x04cb, 0x02c1, 0},
+	/* https://sourceforge.net/p/gphoto/feature-requests/464/ */
+	{"Fuji:Fujifilm X-A2",			0x04cb, 0x02c6, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/32 */
 	{"Fuji:Fujifilm X-T10",			0x04cb, 0x02c8, 0},
 	/* with new updated firmware 4.0, https://github.com/gphoto/libgphoto2/issues/220 */
