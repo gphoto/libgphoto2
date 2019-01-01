@@ -1,0 +1,42 @@
+Device info:
+Manufacturer: Sony Corporation
+  Model: SLT-A65V
+  device version: 1.0
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000011
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1001 (Get device info)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9282 (Unknown PTP_OC)
+  0x9280 (Unknown PTP_OC)
+  0x9281 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+Events Supported:
+  0x4004
+  0x4005
+  0x4006
+Device Properties Supported:
+  0x5001
+  0xd402
+  0xd406
+  0xd407
+  0xd303
