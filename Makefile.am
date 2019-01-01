@@ -24,6 +24,9 @@ doc_DATA += ABOUT-NLS ChangeLog
 EXTRA_DIST += README.md
 doc_DATA   += README.md
 
+EXTRA_DIST += RELEASE-HOWTO.md
+doc_DATA   += RELEASE-HOWTO.md
+
 EXTRA_DIST += README.packaging
 doc_DATA   += README.packaging
 
