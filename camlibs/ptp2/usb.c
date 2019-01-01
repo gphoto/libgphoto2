@@ -350,6 +350,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 				bytes_read += res;
 			}
 			free (data);
+			data = NULL;
 			goto exit;
 		}
 	}
