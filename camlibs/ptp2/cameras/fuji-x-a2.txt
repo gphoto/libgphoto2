@@ -1,0 +1,49 @@
+Device info:
+Manufacturer: FUJIFILM
+  Model: X-A2
+  device version: 1.10
+  serial number: 'nnnnnnnnnnnnnnnnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: fujifilm.co.jp: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x900c (Unknown PTP_OC)
+  0x900d (Unknown PTP_OC)
+  0x901d (Unknown PTP_OC)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9805 (Get object property list)
+Events Supported:
+  0x4002
+  0x4003
+  0x4004
+  0x4005
+  0x4006
+  0x4008
+  0x4009
+Device Properties Supported:
+  0x5001
+  0xd303
+  0xd406
+  0xd407
