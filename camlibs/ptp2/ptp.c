@@ -2357,7 +2357,8 @@ ptp_canon_gettreesize (PTPParams* params,
 	for (i=0;i<*cnt;i++) {
 		unsigned char len;
 		(*entries)[i].oid = dtoh32a(cur);
-		(*entries)[i].str = ptp_unpack_string(params, cur, 4, size-(cur-data-4), &len);
+		if (!ptp_unpack_string(params, cur, 4, size-(cur-data-4), &len, &(*entries)[i].str))
+			break;
 		cur += 4+(cur[4]*2+1);
 	}
 exit:
@@ -4076,14 +4077,16 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 		params->wifi_profiles[profn].device_type = data[pos++];
 		params->wifi_profiles[profn].icon_type = data[pos++];
 
-		buffer = ptp_unpack_string(params, data, pos, size, &len);
+		if (!ptp_unpack_string(params, data, pos, size, &len, &buffer))
+			goto exit;
 		strncpy(params->wifi_profiles[profn].creation_date, buffer, sizeof(params->wifi_profiles[profn].creation_date));
 		free (buffer);
 		pos += (len*2+1);
 		if (pos+1 >= size)
 			goto exit;
 		/* FIXME: check if it is really last usage date */
-		buffer = ptp_unpack_string(params, data, pos, size, &len);
+		if (!ptp_unpack_string(params, data, pos, size, &len, &buffer))
+			goto exit;
 		strncpy(params->wifi_profiles[profn].lastusage_date, buffer, sizeof(params->wifi_profiles[profn].lastusage_date));
 		free (buffer);
 		pos += (len*2+1);
