@@ -213,6 +213,9 @@ static int
 waiting_for_timeout (int *current_wait, struct timeval start, int timeout) {
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
         int time_to_timeout = timeout - time_since (start);
+
+	if (time_to_timeout <= 0) /* we timed out already ... */
+		return 0;
         *current_wait += 50; /* increase sleep time by 50ms per cycle */
         if (*current_wait > 200)
                 *current_wait = 200; /* 200ms is the maximum sleep time */
