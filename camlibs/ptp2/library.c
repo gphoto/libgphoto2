@@ -5908,10 +5908,17 @@ downloadnow:
 
 sonyout:
 			/* If not, check for events and handle them */
-			C_PTP_REP (ptp_check_event(params));
+			if (time_since(event_start) > timeout-100) {
+				/* if there is less than 0.1 seconds, just check the
+				 * queue. with libusb1 this can still make progress,
+				 * as above bulk calls will check and queue new ptp events
+				 * async */
+				C_PTP_REP (ptp_check_event_queue(params));
+			} else {
+				C_PTP_REP (ptp_check_event(params));
+			}
 			if (ptp_get_one_event (params, &event))
 				goto handleregular;
-
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
