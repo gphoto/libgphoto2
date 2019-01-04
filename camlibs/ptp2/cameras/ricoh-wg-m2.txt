@@ -1,0 +1,202 @@
+Hi, I will put the things below
+
+Arda KAAN
+*****************************************
+
+
+
+Bus 002 Device 002: ID 8087:8000 Intel Corp.
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 002: ID 8087:8008 Intel Corp.
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 119: ID 04f2:b3fd Chicony Electronics Co., Ltd
+Bus 003 Device 003: ID 8087:07dc Intel Corp.
+Bus 003 Device 002: ID 046d:c52b Logitech, Inc. Unifying Receiver
+Bus 003 Device 018: ID 25fb:210b
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+
+
+
+
+gphoto2 --auto-detect
+Model                          Port
+
+----------------------------------------------------------
+USB PTP Class Camera           usb:003,018
+
+
+gphoto2 --abilities
+Abilities for camera             : USB PTP Class Camera
+
+Serial port support              : no
+USB support                      : yes
+Capture choices                  :
+                                 : Image
+                                 : Preview
+Configuration support            : yes
+Delete selected files on camera  : yes
+Delete all files on camera       : no
+File preview (thumbnail) support : yes
+File upload support              : yes
+
+
+
+
+
+gphoto2 --summary
+Camera summary:
+
+Manufacturer: RICOH IMAGING COMPANY, LTD.
+Model: RICOH WG-M2
+  Version: Ver 1.00
+  Serial Number: 00000nnnnnnn
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: microsoft.com: 1.0;
+microsoft.com/DeviceServices:1.0;
+
+Capture Formats:
+Display Formats: Undefined Type, Association/Directory, Script, DPOF, JPEG,
+Undefined Video
+Supported MTP Object Properties:
+Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+Association/Directory/3001: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+Script/3002: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+dcd3/ImageBitDepth
+Undefined Video/b980: dc01/StorageID dc02/ObjectFormat
+dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth
+de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+
+Device Capabilities:
+File Download, File Deletion, File Upload
+No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+StorageDescription: None
+VolumeLabel: None
+Storage Type: Removable RAM (memory card)
+Filesystemtype: Digital Camera Layout (DCIM)
+Access Capability: Read-Write
+Maximum Capability: 71467008 (68 MB)
+Free Space (Bytes): 6438912 (6 MB)
+Free Space (Images): 0
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration
+[2,5,25,50,65,80,100] value: 100% (100)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20190103T231049'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Session Initiator Info(0xd406):(readwrite) (type=0x0) Undefined
+Property 0xd303:(read only) (type=0x2) 1
+
+
+
+
+
+
+gphoto2 --list-all-config
+/main/actions/opcode
+
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1546546304
+Printable: Prş 03 Oca 2019 23:11:44 +03
+Help: Use 'now' as the current time when setting.
+
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 00000nnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: RICOH IMAGING COMPANY, LTD.
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: RICOH WG-M2
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: Ver 1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: microsoft.com: 1.0; microsoft.com/DeviceServices:1.0;
+END
+/main/status/Battery Level
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 2
+Choice: 1 5
+Choice: 2 25
+Choice: 3 50
+Choice: 4 65
+Choice: 5 80
+Choice: 6 100
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20190103T231144
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: Session Initiator Info
+Readonly: 0
+Type: TEXT
+Current: (null)
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
