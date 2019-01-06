@@ -1026,39 +1026,42 @@ static struct {
 	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
 	{"Sony:Alpha-A7S (Control)",    0x054c, 0x0954, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* Elijah Parker, mail@timelapseplus.com */
-	{"Sony:Alpha-A7III (Control)",  0x054c, 0x0994, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/343  */
+	{"Sony:Alpha-A7III (Control)",  0x054c, 0x096f, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/472/ */
-	{"Sony:DSC-HX90V (MTP)",        0x054c, 0x09e8, 0},
+	{"Sony:DSC-HX90V (MTP)",        	0x054c, 0x09e8, 0},
 
 	/* titan232@gmail.com */
-	{"Sony:ILCE-7M2 (Control)",     0x054c, 0x0a6a, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:ILCE-7M2 (Control)",     	0x054c, 0x0a6a, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone, andre@elysia.nl */
-	{"Sony:Alpha-A7r II (Control)",	0x054c, 0x0a6b, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:Alpha-A7r II (Control)",		0x054c, 0x0a6b, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl> */
-	{"Sony:DSC-RX100M4",          	0x054c, 0x0a6d, 0},
+	{"Sony:DSC-RX100M4",          		0x054c, 0x0a6d, 0},
 
 	/* Andre Crone <andre@elysia.nl>, adjusted */
-	{"Sony:Alpha-A7S II (Control)",0x054c,0x0a71, PTP_CAP},
+	{"Sony:Alpha-A7S II (Control)",		0x054c,0x0a71, PTP_CAP},
 
 	/* Demo7up <demo7up@gmail.com> */
-	{"Sony:UMC-R10C",		0x054c,0x0a79, 0},
+	{"Sony:UMC-R10C",			0x054c,0x0a79, 0},
 
-	{"Sony:DSC-RX0 (MTP)", 0x054c, 0x0bfd, 0},
+	{"Sony:DSC-RX0 (MTP)", 			0x054c, 0x0bfd, 0},
 
 	/* https://github.com/gphoto/libgphoto2/issues/230 */
-	{"Sony:Alpha-A7R III (MTP mode)",0x054c,0x0c00, 0},
+	{"Sony:Alpha-A7R III (MTP mode)",	0x054c,0x0c00, 0},
+
+	/* https://github.com/gphoto/libgphoto2/issues/343 */
+	{"Sony:Alpha-A7 III (MTP mode)",	0x054c,0x0c03, 0},
 
 	/* Elijah Parker, mail@timelapseplus.com */
-	{"Sony:Alpha-A9 (Control)",     0x054c, 0x0c2a, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:Alpha-A9 (Control)",     	0x054c, 0x0c2a, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Richard Brown at SUSE */
-	{"Sony:Alpha-RX10M4 (Control)", 0x054c,0x0c2f, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:Alpha-RX10M4 (Control)", 	0x054c,0x0c2f, PTP_CAP|PTP_CAP_PREVIEW},
 
-	{"Sony:DSC-RX0 (PC Control)",	0x054c, 0x0c32, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:DSC-RX0 (PC Control)",		0x054c, 0x0c32, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Mikael Ståldal <mikael@staldal.nu> */
 	{"Sony:DSC-RX100M5A (MTP)",		0x054c, 0x0cb1, 0},
