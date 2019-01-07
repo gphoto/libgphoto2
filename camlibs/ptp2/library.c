@@ -7554,6 +7554,27 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				}
 				goto done;
 		}
+		/* We also need this for Nikon D850 and very big RAWs (>40 MB) */
+		if (	(ptp_operation_issupported(params,PTP_OC_GetPartialObject)) &&
+			(size > BLOBSIZE)
+		) {
+				unsigned char	*ximage = NULL;
+				uint32_t 	offset = 0;
+
+				while (offset < size) {
+					uint32_t	xsize = size - offset;
+					uint32_t	xlen;
+
+					if (xsize > BLOBSIZE)
+						xsize = BLOBSIZE;
+					C_PTP_REP (ptp_getpartialobject (params, oid, offset, xsize, &ximage, &xlen));
+					gp_file_append (file, (char*)ximage, xlen);
+					free (ximage);
+					ximage = NULL;
+					offset += xlen;
+				}
+				goto done;
+		}
 #undef BLOBSIZE
 		if (size) {
 			uint16_t	ret;
