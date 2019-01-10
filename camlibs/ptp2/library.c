@@ -985,6 +985,9 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
 	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
 
+	/* bertrand.chambon@free.fr */
+	{"Sony:Alpha-A68 (Control)",  0x054c, 0x079b, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://github.com/gphoto/libgphoto2/issues/70 */
 	{"Sony:Alpha-A6300 (Control)",0x054c, 0x079c, PTP_CAP|PTP_CAP_PREVIEW},
 
