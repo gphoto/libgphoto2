@@ -35,7 +35,10 @@
 #include <gphoto2/gphoto2-port-portability.h>
 
 #ifdef WIN32
+/* Win32 headers may use interface as a define; temporarily correct this */
+#define interface struct
 #include <Shlobj.h>
+#undef interface
 #endif
 
 /**
