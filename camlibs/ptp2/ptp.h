@@ -2707,6 +2707,19 @@ struct _PTPDeviceProperty {
 };
 typedef struct _PTPDeviceProperty PTPDeviceProperty;
 
+struct _MTPPropertyDesc {
+	uint16_t	opc;
+	PTPObjectPropDesc	opd;
+};
+typedef struct _MTPPropertyDesc MTPPropertyDesc;
+
+struct _MTPObjectFormat {
+	uint16_t	ofc;
+	unsigned int	nrofpds;
+	MTPPropertyDesc	*pds;
+};
+typedef struct _MTPObjectFormat MTPObjectFormat;
+
 /* Transaction data phase description, internal flags to sendreq / transaction driver. */
 #define PTP_DP_NODATA           0x0000  /* no data phase */
 #define PTP_DP_SENDDATA         0x0001  /* sending data */
@@ -2750,6 +2763,9 @@ struct _PTPParams {
 	/* PTP IO: if we have MTP style split header/data transfers */
 	int		split_header_data;
 	int		ocs64; /* 64bit objectsize */
+
+	int		nrofobjectformats;
+	MTPObjectFormat	*objectformats;
 
 	/* PTP: internal structures used by ptp driver */
 	PTPObject	*objects;
