@@ -4199,8 +4199,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
 			if (event.Code == PTP_EC_Sony_ObjectAdded) {
 				newobject = event.Param1;
-				if (dual)
-					ptp_add_event (params, &event);
 				GP_LOG_D ("SONY ObjectAdded received, ending wait");
 				break;
 			}
@@ -4473,10 +4471,12 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		while (ptp_get_one_event(params, &event)) {
 			switch (event.Code) {
 			case 0xC101:
+				ptp_panasonic_9401(params, event.Param1); // not sure if this is needed or what this does (following LUMIXTether)
 			case 0xC107:
 				//event_start = time_now(); // still working...
 				break;
 			case PTP_EC_PANASONIC_ObjectAdded:
+			case PTP_EC_PANASONIC_ObjectAddedSDRAM: /* marcus: check if this works */
 				newobject = event.Param1;
 				C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
