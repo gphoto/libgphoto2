@@ -769,7 +769,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_9408			0x9408
 #define PTP_OC_PANASONIC_9409			0x9409	/* 1 arg */
 #define PTP_OC_PANASONIC_940A			0x940A	/* 1 arg, e.g. 0x08000010 */
-#define PTP_OC_PANASONIC_940B			0x940B	/* 1 arg, e.g. 0x08000010 */
+#define PTP_OC_PANASONIC_SetCaptureTarget	0x940B	/* 1 arg, e.g. 0x08000010 */
 #define PTP_OC_PANASONIC_MoveRecControl		0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
 #define PTP_OC_PANASONIC_PowerControl		0x940D	/* 1 arg: 0x0A000011 power off, 0x0a00012 device reset, 0x0a00013 device restart */
 #define PTP_OC_PANASONIC_PlayControl		0x940E	/* 2 arg? 0x05000011 current=0, next=1, prev=0xffffffff */
@@ -777,8 +777,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_9410			0x9410	/* Rec Ctrl Other */
 #define PTP_OC_PANASONIC_SetGPSDataInfo		0x9411
 #define PTP_OC_PANASONIC_Liveview		0x9412	/* 0d000010 start, 0d000011 stop */
-#define PTP_OC_PANASONIC_9414			0x9414	/* 1 arg e.g 12000020 */
-#define PTP_OC_PANASONIC_9416			0x9416	/* Rec Ctrl Mf Assist, Rec Ctrl Backup Req ... 1 arg */
+#define PTP_OC_PANASONIC_PollEvents		0x9414	/* ? 1 arg e.g 12000020 */
+#define PTP_OC_PANASONIC_ManualFocusDrive	0x9416	/* Rec Ctrl Mf Assist, Rec Ctrl Backup Req ... 1 arg */
 
 #define PTP_OC_PANASONIC_ChangeEvent		0x9603	/* 2 args ... e.g. 0x4002, new (change object added event) */
 #define PTP_OC_PANASONIC_GetFromEventInfo	0x9605	/* 1 arg, e.g. 0x41000013 , 15c00021: setup exec menu save comp, 15c00022: setup exec pixel refresh comp */
@@ -1008,6 +1008,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_PARROT_MagnetoCalibrationStatus	0xC202
 
 #define PTP_EC_PANASONIC_ObjectAdded		0xC108
+#define PTP_EC_PANASONIC_ObjectAddedSDRAM	0xC109
 
 
 /* constants for GetObjectHandles */
@@ -3727,8 +3728,9 @@ uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, 
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
 uint16_t ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength);
 uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode);
-
-
+uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t mode);
+uint16_t ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode);
+uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)

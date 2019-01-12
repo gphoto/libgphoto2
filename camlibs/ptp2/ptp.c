@@ -942,6 +942,20 @@ ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsigned int *
 }
 
 uint16_t
+ptp_panasonic_9401 (PTPParams* params, uint32_t param1)
+{
+        PTPContainer    ptp;
+	uint16_t	ret;
+	unsigned int	*size = 0;
+	unsigned char   *data = NULL;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9401, param1);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, size);
+	free(data);
+	return ret;
+}
+
+uint16_t
 ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 			unsigned char *value, uint16_t valuesize)
 {
@@ -983,6 +997,41 @@ ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode)
 	ptp_debug(params, "header: %lu, code: %lu\n", headerLength, propertyCode);
 
 	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
+{
+	PTPContainer   	ptp;
+	unsigned char  	data[10];
+	unsigned char	*xdata = data;
+	uint32_t 	propcode = 0x03010011;
+	uint32_t 	type = 2;
+
+	htod32a(data, propcode);	/* memcpy(data, &propcode, 4); */
+	htod32a(&data[4], type);	/* memcpy(&data[4], &type, 4); */
+	htod16a(&data[8], mode);	/* memcpy(&data[8], &mode, 2); */
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ManualFocusDrive, propcode);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+}
+
+uint16_t
+ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 == RAM, mode == 0 == SD
+{
+	PTPContainer    ptp;
+	unsigned char	data[10];
+	uint32_t	propcode = 0x00000000;
+	uint32_t	propcodedata = 0x08000091;
+	uint32_t	type = 2;
+	unsigned char	*xdata = (unsigned char*)data;
+
+	htod32a(data, propcodedata); /* memcpy(data, &propcodedata, 4); */
+	htod32a(&data[4], type); /* memcpy(&data[4], &type, 4); */
+	htod16a(&data[8], mode); /* memcpy(&data[8], &mode, 2); */
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, propcode);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
 }
 
 uint16_t
