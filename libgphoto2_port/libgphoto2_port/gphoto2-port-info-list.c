@@ -31,6 +31,8 @@
 #include <stdio.h>
 #ifdef HAVE_REGEX
 #include <regex.h>
+#elif defined(_MSC_VER)
+#pragma message("We need regex.h, but it has not been detected.")
 #else
 #warning We need regex.h, but it has not been detected.
 #endif
