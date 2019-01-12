@@ -2960,12 +2960,8 @@ enable_liveview:
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 
-			do {
-				ret = ptp_nikon_device_ready(params);
-				usleep(20*1000);
-			} while (ret == PTP_RC_DeviceBusy);
-
-			C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
+			/* wait up to 1 second */
+			C_PTP_REP_MSG (nikon_wait_busy(params,20,1000), _("Nikon enable liveview failed"));
 			params->inliveview = 1;
 			firstimage = 1;
 		}
@@ -2975,12 +2971,7 @@ enable_liveview:
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
 
-			do {
-				ret = ptp_nikon_device_ready(params);
-				usleep(20*1000);
-			} while (ret == PTP_RC_DeviceBusy);
-
-			C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
+			C_PTP_REP_MSG (nikon_wait_busy(params,20,1000), _("Nikon enable liveview failed"));
 			params->inliveview = 1;
 		}
 		tries = 20;
@@ -3380,6 +3371,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	uint32_t		newobject;
 	int			back_off_wait = 0;
 	struct timeval          capture_start;
+	int			loops;
 
 
 	if (type != GP_CAPTURE_IMAGE)
@@ -3436,17 +3428,14 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
 		/* OK or busy, try to proceed ... */
-		do {
-			ret = ptp_nikon_device_ready(params);
-			usleep(20*1000);
-		} while (ret == PTP_RC_DeviceBusy);
+		C_PTP_REP_MSG (nikon_wait_busy(params,20,1000), _("Nikon enable liveview failed"));
 	}
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		/* we assume for modern cameras this event method works to avoid longer waits */
 		params->event90c7works = 1;
 
-		int loops = 100;
+		loops = 100;
 		do {
 			ret = ptp_nikon_capture2 (params, af, sdram);
 			/* Nikon 1 ... if af is 0, it reports PTP_RC_NIKON_InvalidStatus */
@@ -3466,12 +3455,12 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 	if (!params->inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
-		int loops = 100;
+		loops = 100;
 		do {
 			ret = ptp_nikon_capture_sdram(params);
 		} while ((ret == PTP_RC_DeviceBusy) && (loops--));
 	} else {
-		int loops = 100;
+		loops = 100;
 		do {
 			ret = ptp_nikon_capture(params, 0xffffffff);
 		} while ((ret == PTP_RC_DeviceBusy) && (loops--));
@@ -3482,13 +3471,7 @@ capturetriggered:
 
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 
-	while ((ret = ptp_nikon_device_ready(params)) == PTP_RC_DeviceBusy) {
-		gp_context_idle (context);
-		/* do not drain all of the DSLRs compute time */
-		usleep(100*1000); /* 0.1 seconds */
-	}
-
-	C_PTP_REP (ret); /* e.g. out of focus gets reported here. */
+	C_PTP_REP (nikon_wait_busy (params, 100, 5000)); /* lets wait 5 seconds */
 
 	newobject = 0xffff0001;
 	done = 0; tries = 100;
@@ -5157,11 +5140,11 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
-		int tries = 200;
+		int tries;
 		PTPPropertyValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params));
+		C_PTP_REP (nikon_wait_busy (params, 100, 1000)); /* lets wait 1 second */
 		C_PTP_REP (ptp_check_event (params));
 
 		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
@@ -5172,6 +5155,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			if (inliveview) af = 0;
 		}
 
+		tries = 200;
 		do {
 			ret = ptp_nikon_capture2 (params, af, sdram);
 			if (ret == PTP_RC_OK)
@@ -5192,11 +5176,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			/* sleep a bit perhaps ? or check events? */
 		} while (tries--);
 
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params)) {
-			gp_context_idle (context);
-			/* do not drain all of the DSLRs compute time */
-			usleep(100*1000); /* 0.1 seconds */
-		}
+		C_PTP_REP (nikon_wait_busy (params, 100, 1000)); /* lets wait 1 second */
 		return GP_OK;
 	}
 
@@ -5209,6 +5189,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
+		int tries;
 		PTPPropertyValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
@@ -5230,12 +5211,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				return translate_ptp_result (ret);
 		} while (ret == PTP_RC_DeviceBusy);
 
-		while (PTP_RC_DeviceBusy == ptp_nikon_device_ready (params)) {
-			gp_context_idle (context);
-			/* do not drain all of the DSLRs compute time */
-			usleep(100*1000); /* 0.1 seconds */
-		}
-
+		C_PTP_REP (nikon_wait_busy (params, 100, 5000)); /* lets wait 5 seconds */
 		return GP_OK;
 	}
 
