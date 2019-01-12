@@ -8446,8 +8446,10 @@ camera_init (Camera *camera, GPContext *context)
 
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
 			if (is_canon_eos_m(params)) {
-				C_PTP (ptp_canon_eos_setremotemode(params, 0x15));
+				int mode = 0x15;	/* default for EOS M and newer Powershot SX */
 
+				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
+				C_PTP (ptp_canon_eos_setremotemode(params, mode));
 				/* Setting remote mode changes device info on EOS M2,
 				   so have to reget it */
 				C_PTP (ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo));
