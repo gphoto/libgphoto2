@@ -5189,7 +5189,6 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
-		int tries;
 		PTPPropertyValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
