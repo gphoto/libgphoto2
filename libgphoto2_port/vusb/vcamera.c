@@ -1957,7 +1957,7 @@ vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 			} else {
 				hasread = fread (data, 1, 4, cam->fuzzf);
 				if (hasread != 4)
-					return 0;
+					return GP_ERROR_IO_READ;
 
 				toread = data[0] | (data[1]<<8) | (data[2]<<16) | (data[3]<<24);
 
