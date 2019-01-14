@@ -118,10 +118,14 @@ static int put_8bit_le(unsigned char *data, uint8_t x) {
 static int put_string(unsigned char *data, char *str) {
 	int i;
 
-	if (strlen(str)>255)
+	if (!str) {	/* empty string, just has length 0 */
+		data[0] = 0;
+		return 1;
+	}
+	if (strlen(str)+1>255)
 		gp_log (GP_LOG_ERROR, "put_string", "string length is longer than 255 characters");
 
-	data[0] = strlen (str);
+	data[0] = strlen (str)+1;
 	for (i=0;i<data[0];i++)
 		put_16bit_le(data+1+2*i,str[i]);
 
