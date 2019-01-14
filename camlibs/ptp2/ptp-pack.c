@@ -146,7 +146,7 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint3
 	*len = 0;
 	*retstr = NULL;
 
-	if (offset + 1 >= total)
+	if (offset + 1 > total)
 		return 0;
 
 	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
@@ -603,11 +603,15 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 	)
 		return 0;
 
-	return ptp_unpack_string(params, data,
+	if (!ptp_unpack_string(params, data,
 		PTP_si_StorageDescription+storagedescriptionlen*2+1,
 		len,
 		&storagedescriptionlen,
-		&si->VolumeLabel);
+		&si->VolumeLabel)) {
+		ptp_debug(params, "could not unpack storage description");
+		return 0;
+	}
+	return 1;
 }
 
 /* ObjectInfo pack/unpack */
