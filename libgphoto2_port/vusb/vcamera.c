@@ -480,12 +480,6 @@ ptp_nikon_setcontrolmode_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response (cam, PTP_RC_InvalidParameter, 0);
 		return 1;
 	}
-	if (cam->session) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__,"session is already open");
-		ptp_response (cam, PTP_RC_SessionAlreadyOpened, 0);
-		return 1;
-	}
-	cam->session = ptp->params[0];
 	ptp_response (cam,PTP_RC_OK,0);
 	return 1;
 }
