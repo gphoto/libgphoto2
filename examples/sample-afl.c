@@ -45,11 +45,15 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 		gp_list_get_name (list, i, &newfolder);
 
+		if (!strlen(newfolder)) continue;
+
 		buf = malloc (strlen(folder) + 1 + strlen(newfolder) + 1);
 		strcpy(buf, folder);
 		if (strcmp(folder,"/"))		/* avoid double / */
 			strcat(buf, "/");
 		strcat(buf, newfolder);
+
+		fprintf(stderr,"newfolder=%s\n", newfolder);
 
 		ret = recursive_directory (camera, buf, context, &havefile);
 		free (buf);
@@ -83,6 +87,33 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 		return ret;
 	}
 
+	/* get file */
+	gp_file_new (&file);
+	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_NORMAL, file, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		gp_list_free (list);
+		printf ("Could not get file.\n");
+		return ret;
+	}
+	gp_file_free (file);
+	/* get preview */
+	gp_file_new (&file);
+	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_PREVIEW, file, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		gp_list_free (list);
+		printf ("Could not get file preview.\n");
+		return ret;
+	}
+	gp_file_free (file);
+	/* get exif */
+	gp_file_new (&file);
+	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_EXIF, file, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		gp_list_free (list);
+		printf ("Could not get file preview.\n");
+		return ret;
+	}
+	gp_file_free (file);
 	/* Trigger the ptp things */
 	gp_file_new (&file);
 	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_METADATA, file, context);
@@ -100,11 +131,14 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 int main(int argc, char **argv) {
 	Camera		*camera = NULL;
-	int		ret;
+	int		ret, storagecnt;
+	CameraStorageInformation	*storageinfo;
 	GPContext	*context;
 	CameraWidget	*rootwidget;
 	char		buf[200];
 	CameraText	summary;
+	CameraFile	*file;
+	CameraFilePath	path;
 
         gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
@@ -137,7 +171,7 @@ int main(int argc, char **argv) {
 	}
 
 	ret = gp_camera_get_summary (camera, &summary, context);
-	if (ret < GP_OK) {
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
 		printf ("Could not get summary.\n");
 		goto out;
 	}
@@ -150,6 +184,20 @@ int main(int argc, char **argv) {
 	}
 #endif
 	printf ("OK, %s\n", summary.text);
+
+	ret = gp_camera_get_storageinfo (camera, &storageinfo, &storagecnt, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		printf ("Could not get storage info.\n");
+		goto out;
+	}
+
+
+	ret = gp_camera_trigger_capture (camera, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		printf ("Could not trigger capture.\n");
+		goto out;
+	}
+
 	while (1) {
 		CameraEventType evttype;
 		void *data = NULL;
@@ -158,6 +206,21 @@ int main(int argc, char **argv) {
 		if (ret < GP_OK) break;
 		if (data) free (data);
 		if (evttype == GP_EVENT_TIMEOUT) break;
+	}
+
+	gp_file_new (&file);
+	ret = gp_camera_capture_preview (camera, file, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		gp_file_free (file);
+		printf ("Could not capture preview.\n");
+		goto out;
+	}
+	gp_file_free (file);
+
+	ret = gp_camera_capture (camera, GP_CAPTURE_IMAGE, &path, context);
+	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		printf ("Could not capture preview.\n");
+		goto out;
 	}
 
 	/* AFL PART ENDS HERE */
