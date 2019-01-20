@@ -129,7 +129,7 @@ static int put_string(unsigned char *data, char *str) {
 	for (i=0;i<data[0];i++)
 		put_16bit_le(data+1+2*i,str[i]);
 
-	return 1+strlen(str)*2;
+	return 1+(strlen(str)+1)*2;
 }
 
 static char * get_string(unsigned char *data) {
