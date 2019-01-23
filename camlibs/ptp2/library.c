@@ -4152,6 +4152,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
 				break;
 			}
+			if (event.Code == PTP_EC_Sony_ObjectAdded) {
+				newobject = event.Param1;
+				GP_LOG_D ("SONY ObjectAdded received, ending wait");
+				break;
+			}
 		}
 
 		/* Alternative code in case we miss the event */
@@ -4179,6 +4184,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	GP_LOG_D ("waiting for image availability");
 	event_start = time_now();
 	do {
+		/* break if we got it from above focus wait already for some reason, seen on A6000 */
+		if (newobject) break;
 #if 0
 		/* needed on older cameras like the a58, check for events ... */
 		C_PTP (ptp_check_event_queue (params));
