@@ -1,6 +1,6 @@
 /*
     pkTriggerCord
-    Copyright (C) 2011-2018 Andras Salamon <andras.salamon@melda.info>
+    Copyright (C) 2011-2019 Andras Salamon <andras.salamon@melda.info>
     Remote control of Pentax DSLR cameras.
 
     Support for K200D added by Jens Dreyer <jens.dreyer@udo.edu> 04/2011
@@ -618,17 +618,17 @@ char *get_hardwired_setting_uint16_info( pslr_uint16_setting setting) {
 char *collect_settings_info( pslr_handle_t h, pslr_settings settings ) {
     char *strbuffer = malloc(8192);
     sprintf(strbuffer,"%-32s: %-8s%s\n", "one push bracketing", get_special_setting_info(settings.one_push_bracketing.pslr_setting_status) ?: settings.one_push_bracketing.value ? "on" : "off", get_hardwired_setting_bool_info(settings.one_push_bracketing));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s%s\n", "bulb mode", get_special_setting_info(settings.bulb_mode_press_press.pslr_setting_status) ?: settings.bulb_mode_press_press.value ? "press-press" : "press-hold", get_hardwired_setting_bool_info(settings.bulb_mode_press_press));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "bulb mode", get_special_setting_info(settings.bulb_mode_press_press.pslr_setting_status) ?: settings.bulb_mode_press_press.value ? "press-press" : "press-hold", get_hardwired_setting_bool_info(settings.bulb_mode_press_press));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "bulb timer", get_special_setting_info(settings.bulb_timer.pslr_setting_status) ?: settings.bulb_timer.value ? "on" : "off", get_hardwired_setting_bool_info(settings.bulb_timer));
     char *bulb_timer_sec = malloc(32);
     sprintf(bulb_timer_sec, "%d s", settings.bulb_timer_sec.value);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s%s\n", "bulb timer sec", get_special_setting_info(settings.bulb_timer_sec.pslr_setting_status) ?: bulb_timer_sec, get_hardwired_setting_uint16_info(settings.bulb_timer_sec));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "bulb timer sec", get_special_setting_info(settings.bulb_timer_sec.pslr_setting_status) ?: bulb_timer_sec, get_hardwired_setting_uint16_info(settings.bulb_timer_sec));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "using aperture ring", get_special_setting_info(settings.using_aperture_ring.pslr_setting_status) ?: settings.using_aperture_ring.value ? "on" : "off", get_hardwired_setting_bool_info(settings.using_aperture_ring));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "shake reduction", get_special_setting_info(settings.shake_reduction.pslr_setting_status) ?: settings.shake_reduction.value ? "on" : "off", get_hardwired_setting_bool_info(settings.shake_reduction));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "astrotracer", get_special_setting_info(settings.astrotracer.pslr_setting_status) ?: settings.astrotracer.value ? "on" : "off", get_hardwired_setting_bool_info(settings.astrotracer));
     char *astrotracer_timer_sec = malloc(32);
     sprintf(astrotracer_timer_sec, "%d s", settings.astrotracer_timer_sec.value);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s%s\n", "astrotracer timer sec", get_special_setting_info(settings.astrotracer_timer_sec.pslr_setting_status) ?: astrotracer_timer_sec, get_hardwired_setting_uint16_info(settings.astrotracer_timer_sec));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "astrotracer timer sec", get_special_setting_info(settings.astrotracer_timer_sec.pslr_setting_status) ?: astrotracer_timer_sec, get_hardwired_setting_uint16_info(settings.astrotracer_timer_sec));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "horizon correction", get_special_setting_info(settings.horizon_correction.pslr_setting_status) ?: settings.horizon_correction.value ? "on" : "off", get_hardwired_setting_bool_info(settings.horizon_correction));
     return strbuffer;
 }
@@ -1804,7 +1804,7 @@ static int read_result(FDTYPE fd, uint8_t *buf, uint32_t n) {
 
 char *copyright() {
     char *ret = malloc(sizeof(char)*1024);
-    sprintf(ret, "Copyright (C) 2011-2018 Andras Salamon\n\
+    sprintf(ret, "Copyright (C) 2011-2019 Andras Salamon\n\
 \n\
 Based on:\n\
 pslr-shoot (C) 2009 Ramiro Barreiro\n\
