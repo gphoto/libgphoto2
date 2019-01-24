@@ -7582,7 +7582,7 @@ msgstr "PTP ejerforhold 0x%04x"
 
 #: camlibs/ptp2/config.c:8914 camlibs/ptp2/config.c:9005
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr "Beklager, egenskaben for »%s« / 0x%04x er pt skrivebeskyttet."
 
 #: camlibs/ptp2/config.c:8920

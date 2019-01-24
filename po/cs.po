@@ -6644,7 +6644,7 @@ msgstr "PTP vlastnost 0x%04x"
 
 #: camlibs/ptp2/config.c:5967 camlibs/ptp2/config.c:6040
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr "Vlastnost „%s“ / 0x%04x lze nyní pouze číst."
 
 #: camlibs/ptp2/config.c:5973 camlibs/ptp2/config.c:5994

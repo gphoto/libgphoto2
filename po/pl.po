@@ -7688,7 +7688,7 @@ msgstr "Ustawienie PTP 0x%04x"
 
 #: camlibs/ptp2/config.c:9037 camlibs/ptp2/config.c:9128
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr "Niestety właściwość '%s' / 0x%04x jest aktualnie tylko do odczytu."
 
 #: camlibs/ptp2/config.c:9043

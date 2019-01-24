@@ -8938,7 +8938,7 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:7970 camlibs/ptp2/config.c:8061
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr ""
 
 #: camlibs/ptp2/config.c:7976

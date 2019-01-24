@@ -7693,7 +7693,7 @@ msgstr "Властивість PTP 0x%04x"
 
 #: camlibs/ptp2/config.c:9037 camlibs/ptp2/config.c:9128
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr "Вибачте, зараз можливе лише читання властивості «%s» / 0x%04x."
 
 #: camlibs/ptp2/config.c:9043

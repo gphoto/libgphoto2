@@ -7047,7 +7047,7 @@ msgstr "Proprietà PTP 0x%04x"
 
 #: camlibs/ptp2/config.c:7147 camlibs/ptp2/config.c:7218
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr "Spiacenti, la proprietà '%s' / 0x%04x è di sola lettura."
 
 #: camlibs/ptp2/config.c:7153
