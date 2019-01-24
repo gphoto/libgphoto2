@@ -5433,7 +5433,7 @@ msgstr "PTP プロパティ 0x%04x"
 
 #: camlibs/ptp2/config.c:3845 camlibs/ptp2/config.c:3906
 #, c-format
-msgid "Sorry, the property '%s' / 0x%04x is currently ready-only."
+msgid "Sorry, the property '%s' / 0x%04x is currently read-only."
 msgstr ""
 
 #: camlibs/ptp2/config.c:3851 camlibs/ptp2/config.c:3941
