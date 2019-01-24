@@ -1003,6 +1003,9 @@ static struct {
 	/* https://sourceforge.net/p/libmtp/bugs/1310/ */
 	{"Sony:DSC-HX60V (MTP)",      0x054c, 0x08ad, 0},
 
+	/* https://github.com/gphoto/libgphoto2/issues/355 */
+	{"Sony:DSC-WX350 (MTP)",      0x054c, 0x08b0, 0},
+
 	/* Sascha Peilicke at SUSE */
 	{"Sony:Alpha-A6000 (MTP)",    0x054c, 0x08b7, 0},
 
