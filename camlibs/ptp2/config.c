@@ -9162,7 +9162,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
 					} else {
-						gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently ready-only."), _(cursub->label), cursub->propid);
+						gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently read-only."), _(cursub->label), cursub->propid);
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
@@ -9253,7 +9253,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		if (ret != PTP_RC_OK)
 			continue;
 		if (dpd.GetSet != PTP_DPGS_GetSet) {
-			gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently ready-only."), _(label), propid);
+			gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently read-only."), _(label), propid);
 			return GP_ERROR_NOT_SUPPORTED;
 		}
 
