@@ -5680,7 +5680,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					return GP_OK;
 				}
 				case PTP_EC_CANON_ShutterButtonPressed0:
-				case PTP_EC_CANON_ShutterButtonPressed1:
+				/*case PTP_EC_CANON_ShutterButtonPressed1: This seems to be sent without a press on S3 IS, likely some other event reason */
 				{
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					ret = camera_canon_capture (camera, GP_CAPTURE_IMAGE, path, context);
