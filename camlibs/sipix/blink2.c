@@ -363,6 +363,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	ret = gp_port_usb_msg_read( camera->port, BLINK2_DELETE_ALL, 0x03, 0, buf, 1);
 	if (ret < GP_OK)
 		return ret;
+	if (ret < 1) return GP_ERROR_IO_READ;
         return GP_OK;
 }
 
@@ -381,10 +382,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	ret = gp_port_usb_msg_read( camera->port, BLINK2_INIT_CAPTURE, 0x03, 0, buf, 1);
 	if (ret < GP_OK)
 		return ret;
+	if (ret < 1) return GP_ERROR_IO_READ;
 	do {
 		ret = gp_port_usb_msg_read( camera->port, BLINK2_CHECK_CAPTURE_FINISH, 0x03, 0, buf, 1);
 		if (ret < GP_OK)
 			return ret;
+		if (ret < 1) return GP_ERROR_IO_READ;
 		sleep(1);
 	} while (buf[0] == 0x00);
 
@@ -460,8 +463,10 @@ camera_init (Camera *camera, GPContext *context)
 	ret = gp_port_usb_msg_read( camera->port, BLINK2_GET_FIRMWARE_ID, 0x03, 0, buf, 6);
 	if (ret < GP_OK)
 		return ret;
+	if (ret < 6) return GP_ERROR_IO_READ;
 	ret = gp_port_usb_msg_read( camera->port, 0x04, 0x03, 0, buf, 1);
 	if (ret < GP_OK)
 		return ret;
+	if (ret < 1) return GP_ERROR_IO_READ;
 	return GP_OK;
 }
