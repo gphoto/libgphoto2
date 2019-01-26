@@ -1942,6 +1942,7 @@ vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 			fwrite(cam->inbulk, 1, toread, cam->fuzzf);
 			/* fallthrough */
 		} else {
+#ifdef FUZZ_PTP
 			/* for reading fuzzer data */
 			if (cam->fuzzpending) {
 				toread = cam->fuzzpending;
@@ -1968,6 +1969,12 @@ vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 
 				hasread += 4; /* readd size */
 			}
+#else
+			/* just return a blob of data in generic fuzzing */
+			hasread = fread (data, 1, bytes, cam->fuzzf);
+			if (!hasread && feof(cam->fuzzf))
+				return GP_ERROR_IO_READ;
+#endif
 #if 0
 			for (i=0;i<toread;i++)
 				data[i] ^= cam->inbulk[i];

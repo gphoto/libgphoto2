@@ -22,6 +22,8 @@
 #ifndef __VCAMERA_H__
 #define __VCAMERA_H__
 
+#define FUZZ_PTP
+
 #include <stdio.h>
 
 typedef struct ptpcontainer {
@@ -47,6 +49,8 @@ typedef struct vcamera {
 	int (*read)(struct vcamera*,  int ep, unsigned char *data, int bytes);
 	int (*readint)(struct vcamera*,  unsigned char *data, int bytes, int timeout);
 	int (*write)(struct vcamera*, int ep, const unsigned char *data, int bytes);
+
+	unsigned short	vendor, product;	/* for generic fuzzing */
 
 	vcameratype	type;
 	unsigned char	*inbulk;

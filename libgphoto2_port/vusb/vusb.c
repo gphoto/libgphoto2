@@ -269,7 +269,11 @@ gp_port_vusb_msg_read_lib(GPPort *port, int request, int value, int index,
 static int
 gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 {
+#ifdef FUZZ_PTP
 	if ((idvendor == 0x04b0) && (idproduct == 0x0437)) { /* Nikon D750 */
+#else
+	if ((idvendor == 0x0851) && (idproduct == 0x1542)) { /* sipix blink */
+#endif
                 port->settings.usb.config	= 1;
                 port->settings.usb.interface	= 1;
                 port->settings.usb.altsetting	= 1;
@@ -289,6 +293,7 @@ gp_port_vusb_find_device_by_class_lib(GPPort *port, int class, int subclass, int
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%02x,0x%02x,0x%02x)", class, subclass, protocol);
 
+#ifdef FUZZ_PTP
 	if ((class == 6) && (subclass == 1) && (protocol == 1)) {
                 port->settings.usb.config	= 1;
                 port->settings.usb.interface	= 1;
@@ -301,6 +306,7 @@ gp_port_vusb_find_device_by_class_lib(GPPort *port, int class, int subclass, int
 		return GP_OK;
 	}
         return GP_ERROR_IO_USB_FIND;
+#endif
 }
 
 
