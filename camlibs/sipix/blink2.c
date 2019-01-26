@@ -62,8 +62,9 @@ blink2_getnumpics(
     int ret;
     
     ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, buf, 2);
-    if (ret<GP_OK)
+    if (ret < GP_OK)
 	return ret;
+    if (ret < 2) return GP_ERROR_IO_READ;
     *numpics = (buf[0]<<8) | buf[1];
     return GP_OK;
 }
