@@ -2022,7 +2022,11 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 		}
 #endif
 	} else {
-		ptp_unpack_DPD(params, data, devicepropertydesc, size);
+		if (!ptp_unpack_DPD(params, data, devicepropertydesc, size)) {
+			ptp_debug(params,"failed to unpack DPD of propcode 0x%04x, likely corrupted?", propcode);
+			free (data);
+			return PTP_RC_InvalidDevicePropFormat;
+		}
 	}
 	free(data);
 	return ret;
