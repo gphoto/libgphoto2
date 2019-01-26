@@ -940,7 +940,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			(reply[2] << 8)	|
 			(reply[3] << 16)|
 			(reply[4] << 24);
-		ret = gp_filesystem_set_info_noop(fs, "/", info, context);
+		ret = gp_filesystem_set_info_noop(fs, "/", fn, info, context);
 		if (ret != GP_OK)
 			return ret;
 	}
