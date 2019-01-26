@@ -3875,7 +3875,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 		return PTP_RC_OK;
 	}
 
-	return PTP_RC_OK;
+	return PTP_RC_OperationNotSupported;
 }
 
 /**
