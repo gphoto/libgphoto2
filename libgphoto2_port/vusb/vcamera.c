@@ -2074,6 +2074,8 @@ vcam_readint(vcamera*cam, unsigned char *data, int bytes, int timeout) {
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		usleep (timeout*1000);
 #endif
+		if (cam->fuzzf && feof(cam->fuzzf))
+			return GP_ERROR_IO;
 		return GP_ERROR_TIMEOUT;
 	}
 	gettimeofday (&now, NULL);
