@@ -712,6 +712,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_ANDROID_EndEditObject			0x95C5
 
 /* Leica opcodes, from Lightroom tether plugin */
+/* also from:
+ * https://alexhude.github.io/2019/01/24/hacking-leica-m240.html */
 #define PTP_OC_LEICA_SetCameraSettings			0x9001
 #define PTP_OC_LEICA_GetCameraSettings			0x9002
 #define PTP_OC_LEICA_GetLensParameter			0x9003
@@ -728,6 +730,36 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_OpenLESession			0x9005
 #define PTP_OC_LEICA_CloseLESession			0x9006
 #define PTP_OC_LEICA_RequestObjectTransferReady		0x9007
+#define PTP_OC_LEICA_GetGeoTrackingData			0x9008
+#define PTP_OC_LEICA_OpenDebugSession			0x900a
+#define PTP_OC_LEICA_CloseDebugSession			0x900b
+#define PTP_OC_LEICA_GetDebugBuffer			0x900c
+#define PTP_OC_LEICA_DebugCommandString			0x900d
+#define PTP_OC_LEICA_GetDebugRoute			0x900e
+#define PTP_OC_LEICA_SetIPTCData			0x900f
+#define PTP_OC_LEICA_GetIPTCData			0x9010
+#define PTP_OC_LEICA_Get3DAxisData			0x9020
+#define PTP_OC_LEICA_OpenLiveViewSession		0x9030
+#define PTP_OC_LEICA_CloseLiveViewSession		0x9031
+#define PTP_OC_LEICA_OpenProductionSession		0x9100
+#define PTP_OC_LEICA_CloseProductionSession		0x9101
+#define PTP_OC_LEICA_UpdateFirmware			0x9102
+#define PTP_OC_LEICA_OpenOSDSession			0x9103
+#define PTP_OC_LEICA_CloseOSDSession			0x9104
+#define PTP_OC_LEICA_GetOSDData				0x9105
+#define PTP_OC_LEICA_GetFirmwareStruct			0x9106
+#define PTP_OC_LEICA_GetDebugMenu			0x910b
+#define PTP_OC_LEICA_SetDebugMenu			0x910c
+#define PTP_OC_LEICA_OdinMessage			0x910d
+#define PTP_OC_LEICA_GetDebugObjectHandles		0x910e
+#define PTP_OC_LEICA_GetDebugObject			0x910f
+#define PTP_OC_LEICA_DeleteDebugObject			0x9110
+#define PTP_OC_LEICA_GetDebugObjectInfo			0x9111
+#define PTP_OC_LEICA_WriteDebugObject			0x9112
+#define PTP_OC_LEICA_CreateDebugObject			0x9113
+#define PTP_OC_LEICA_Calibrate3DAxis			0x9114
+#define PTP_OC_LEICA_MagneticCalibration		0x9115
+#define PTP_OC_LEICA_GetViewFinderData			0x9116
 
 #define PTP_OC_PARROT_GetSunshineValues		0x9201
 #define PTP_OC_PARROT_GetTemperatureValues	0x9202
