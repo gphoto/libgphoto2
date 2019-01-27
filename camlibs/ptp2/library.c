@@ -6637,6 +6637,7 @@ retry:
     for (i = 0; i < params->nrofobjects; i++) {
 	PTPObject	*ob;
 	uint16_t	ret;
+	uint32_t	oid;
 
 	/* not our parent -> next */
 	C_PTP_REP (ptp_object_want (params, params->objects[i].oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob));
@@ -6650,13 +6651,14 @@ retry:
 	if ((hasgetstorageids && (ob->oi.StorageID != storage)))
 		continue;
 
-	ret = ptp_object_want (params, ob->oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+	oid = ob->oid; /* ob might change or even become invalid in the function below */
+	ret = ptp_object_want (params, oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 	if (ret != PTP_RC_OK) {
 		/* we might raced another delete or ongoing addition, seen on a D810 */
 		if (ret == PTP_RC_InvalidObjectHandle) {
-			GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", ob->oid);
+			GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", oid);
 			/* remove it for now, we will readd it later if we see it again. */
-			ptp_remove_object_from_cache(params, ob->oid);
+			ptp_remove_object_from_cache(params, oid);
 			continue;
 		}
 		C_PTP_REP (ret);
