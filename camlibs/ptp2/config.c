@@ -2484,30 +2484,37 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("RAW + Large Fine JPEG"),		0x0403, 0 },
 	{ N_("mRAW + Large Fine JPEG"),		0x1403, 0 },
 	{ N_("sRAW + Large Fine JPEG"),		0x2403, 0 },
+	{ N_("cRAW + Large Fine JPEG"),		0x0303, 0 },
 	{ N_("RAW + Medium Fine JPEG"),		0x0413, 0 },
 	{ N_("mRAW + Medium Fine JPEG"),	0x1413, 0 },
 	{ N_("sRAW + Medium Fine JPEG"),	0x2413, 0 },
+	{ N_("cRAW + Medium Fine JPEG"),	0x0313, 0 },
 	{ N_("RAW + Small Fine JPEG"),		0x0423, 0 },
 	{ N_("RAW + Small Fine JPEG"),		0x04d3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Small Fine JPEG"),		0x1423, 0 },
 	{ N_("mRAW + Small Fine JPEG"),		0x14d3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Small Fine JPEG"),		0x2423, 0 },
 	{ N_("sRAW + Small Fine JPEG"),		0x24d3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("cRAW + Small Fine JPEG"),		0x03d3, 0 },
 	{ N_("RAW + Large Normal JPEG"),	0x0402, 0 },
 	{ N_("mRAW + Large Normal JPEG"),	0x1402, 0 },
 	{ N_("sRAW + Large Normal JPEG"),	0x2402, 0 },
+	{ N_("cRAW + Large Normal JPEG"),	0x0302, 0 },
 	{ N_("RAW + Medium Normal JPEG"),	0x0412, 0 },
 	{ N_("mRAW + Medium Normal JPEG"),	0x1412, 0 },
 	{ N_("sRAW + Medium Normal JPEG"),	0x2412, 0 },
+	{ N_("cRAW + Medium Normal JPEG"),	0x0312, 0 },
 	{ N_("RAW + Small Normal JPEG"),	0x0422, 0 },
 	{ N_("RAW + Small Normal JPEG"),	0x04d2, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Small Normal JPEG"),	0x1422, 0 },
 	{ N_("mRAW + Small Normal JPEG"),	0x14d2, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Small Normal JPEG"),	0x2422, 0 },
 	{ N_("sRAW + Small Normal JPEG"),	0x24d2, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("cRAW + Small Normal JPEG"),	0x03d2, 0 },
 	{ N_("RAW + Smaller JPEG"),		0x04e3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Smaller JPEG"),		0x14e3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Smaller JPEG"),		0x24e3, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("cRAW + Smaller JPEG"),		0x03e3, 0 }, /*Canon EOS M50*/
 	{ N_("RAW + Tiny JPEG"),		0x04f3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("mRAW + Tiny JPEG"),		0x14f3, 0 }, /*Canon EOS 5D Mark III*/
 	{ N_("sRAW + Tiny JPEG"),		0x24f3, 0 }, /*Canon EOS 5D Mark III*/
