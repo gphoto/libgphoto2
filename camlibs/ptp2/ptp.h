@@ -1199,6 +1199,7 @@ typedef struct _PTPObjectFilesystemInfo PTPObjectFilesystemInfo;
 #define PTP_OFC_CANON_CRW3			0xb103
 #define PTP_OFC_CANON_MOV			0xb104
 #define PTP_OFC_CANON_MOV2			0xb105
+#define PTP_OFC_CANON_CR3			0xb108
 /* CHDK specific raw mode */
 #define PTP_OFC_CANON_CHDK_CRW			0xb1ff
 /* Sony */
