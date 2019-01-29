@@ -2170,6 +2170,7 @@ static struct deviceproptableu8 canon_eos_picturestyle[] = {
 	{ N_("Faithful"),	0x85, 0 },
 	{ N_("Monochrome"),	0x86, 0 },
 	{ N_("Auto"),		0x87, 0 }, /*Canon EOS 5D Mark III*/
+	{ N_("Fine detail"),	0x88, 0 },
 	{ N_("User defined 1"),	0x21, 0 },
 	{ N_("User defined 2"),	0x22, 0 },
 	{ N_("User defined 3"),	0x23, 0 },
@@ -2554,6 +2555,7 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Continuous high speed"),	0x0004, 0 },
 	{ N_("Continuous low speed"),	0x0005, 0 },
 	{ N_("Single: Silent shooting"),0x0006, 0 },
+	{ N_("Continuous timer"),	0x0007, 0 },
 	{ N_("Timer 10 sec"),		0x0010, 0 },
 	{ N_("Timer 2 sec"),		0x0011, 0 },
 	{ N_("Super high speed continuous shooting"),		0x0012, 0 },
