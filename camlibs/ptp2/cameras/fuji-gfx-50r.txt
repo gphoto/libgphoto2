@@ -1,0 +1,226 @@
+Camera summary:
+Manufacturer: FUJIFILM
+Model: GFX 50R
+  Version: 1.00
+  Serial Number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: Defined Type JPEG Unknown(b103)
+Display Formats: Defined Type, JPEG, Unknown(b103), TIFF
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Still
+	VolumeLabel: 159353438363118121299A01011146B
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: 259353438363118121299A01011146B
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001): error 200a on query.
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'8256x6192',
+	'8256x5504',
+	'8256x4640',
+	'6192x6192',
+	'8256x3048',
+	'7744x6192',
+	'7232x6192',
+	'4000x3000',
+	'4000x2664',
+	'4000x2248',
+	'2992x2992',
+	'4000x1480',
+	'3744x3000',
+	'3504x3000',
+	'6768x4512'
+	] value: '8256x6192'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,8,32769,32770,32771,32774,32775,32776,32777,32778] value: 32775
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,32769,32770] value: 32769
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Multi-spot (3)
+Flash Mode(0x500c): error 200a on query.
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [50,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,102400,-1,-2,-3] value: ISO 400 (400)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20190130T112800'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [10000,2000,0] value: 0.0s (0)
+Sharpness(0x5015):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Burst Number(0x5018): error 200a on query.
+Burst Interval(0x5019): error 200a on query.
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771] value: 32769
+Property 0xd001:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] value: 1
+Property 0xd002: error 200a on query.
+Property 0xd003: error 200a on query.
+Property 0xd004: error 200a on query.
+Property 0xd005: error 200a on query.
+Property 0xd007:(readwrite) (type=0x4) Enumeration [65535,100,200,400] value: 100
+Property 0xd008:(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Property 0xd009: error 200a on query.
+Property 0xd00a:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd00b:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+Property 0xd00c:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+Property 0xd00d: error 200a on query.
+Property 0xd00e: error 200a on query.
+Property 0xd00f: error 200a on query.
+Property 0xd010: error 200a on query.
+Property 0xd011: error 200a on query.
+Property 0xd012: error 200a on query.
+Property 0xd013: error 200a on query.
+Property 0xd014: error 200a on query.
+Property 0xd015: error 200a on query.
+Property 0xd016: error 200a on query.
+Color Temperature(0xd017):(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 5000
+Quality(0xd018):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 4
+Property 0xd019: error 200a on query.
+Property 0xd01a: error 200a on query.
+Property 0xd01b:(readwrite) (type=0x4) Enumeration [1,2,4,5,6,7,8,9,10] value: 1
+Property 0xd01c:(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+Property 0xd100:(readwrite) (type=0xffff) ''
+Property 0xd101: error 200a on query.
+Property 0xd102: error 200a on query.
+Property 0xd103: error 200a on query.
+Property 0xd104: error 200a on query.
+Property 0xd105: error 200a on query.
+Property 0xd106:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd107: error 200a on query.
+Property 0xd108: error 200a on query.
+Property 0xd109: error 200a on query.
+Property 0xd10a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10c: error 200a on query.
+Property 0xd10d: error 200a on query.
+Property 0xd10e: error 200a on query.
+Property 0xd10f: error 200a on query.
+Property 0xd110: error 200a on query.
+Property 0xd111: error 200a on query.
+Property 0xd112: error 200a on query.
+Property 0xd113: error 200a on query.
+Property 0xd114: error 200a on query.
+Property 0xd115: error 200a on query.
+Property 0xd116: error 200a on query.
+Property 0xd117: error 200a on query.
+Property 0xd118: error 200a on query.
+Property 0xd119: error 200a on query.
+Property 0xd11a: error 200a on query.
+Property 0xd11b: error 200a on query.
+Property 0xd11c: error 200a on query.
+Property 0xd11d: error 200a on query.
+Property 0xd11e: error 200a on query.
+Property 0xd11f: error 200a on query.
+Property 0xd120: error 200a on query.
+Property 0xd121: error 200a on query.
+Property 0xd122: error 200a on query.
+Property 0xd123: error 200a on query.
+Property 0xd124: error 200a on query.
+Property 0xd125: error 200a on query.
+Property 0xd126: error 200a on query.
+Property 0xd127: error 200a on query.
+Property 0xd128: error 200a on query.
+Property 0xd129: error 200a on query.
+Property 0xd12a: error 200a on query.
+Property 0xd12b: error 200a on query.
+Property 0xd12c: error 200a on query.
+Property 0xd12d: error 200a on query.
+Property 0xd12e: error 200a on query.
+Property 0xd12f: error 200a on query.
+Property 0xd130: error 200a on query.
+Property 0xd131: error 200a on query.
+Property 0xd132: error 200a on query.
+Property 0xd133: error 200a on query.
+Property 0xd134: error 200a on query.
+Property 0xd135: error 200a on query.
+Property 0xd136:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd137: error 200a on query.
+Property 0xd138: error 200a on query.
+Property 0xd139: error 200a on query.
+Property 0xd13a: error 200a on query.
+Property 0xd13b: error 200a on query.
+Property 0xd13c: error 200a on query.
+Property 0xd13d: error 200a on query.
+Property 0xd13e: error 200a on query.
+Property 0xd13f: error 200a on query.
+Property 0xd140: error 200a on query.
+Property 0xd141: error 200a on query.
+Property 0xd142: error 200a on query.
+Property 0xd143: error 200a on query.
+Property 0xd144: error 200a on query.
+Property 0xd145:(readwrite) (type=0xffff) '0000'
+Property 0xd146: error 200a on query.
+Property 0xd147: error 200a on query.
+Property 0xd148: error 200a on query.
+Property 0xd149: error 200a on query.
+Property 0xd14a: error 200a on query.
+Property 0xd14b: error 200a on query.
+Property 0xd14c: error 200a on query.
+Property 0xd14d: error 200a on query.
+Property 0xd14e: error 200a on query.
+Property 0xd14f: error 200a on query.
+Property 0xd150: error 200a on query.
+Property 0xd151: error 200a on query.
+Property 0xd152: error 200a on query.
+Property 0xd153:(read only) (type=0x4) 256
+Property 0xd154:(read only) (type=0x6) 7274496
+Property 0xd155:(read only) (type=0x6) 0
+Property 0xd157: error 200a on query.
+Property 0xd158: error 200a on query.
+Property 0xd159: error 200a on query.
+Property 0xd15a: error 200a on query.
+Property 0xd15b: error 200a on query.
+Property 0xd15c: error 200a on query.
+Property 0xd15d: error 200a on query.
+Property 0xd15e: error 200a on query.
+Property 0xd15f: error 200a on query.
+Property 0xd160: error 200a on query.
+Property 0xd161: error 200a on query.
+Property 0xd200: error 200a on query.
+Property 0xd201:(readwrite) (type=0x4) Enumeration [4] value: 4
+Property 0xd202: error 200a on query.
+Property 0xd203: error 200a on query.
+Property 0xd204: error 200a on query.
+Property 0xd205: error 200a on query.
+Property 0xd206: error 200a on query.
+Property 0xd207:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,40960,6,36864,2,37120,1,37632,5,14] value: 772
+Property 0xd209:(read only) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd20a: error 200a on query.
+Property 0xd20b:(readwrite) (type=0xffff) ''
+Property 0xd20c:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 4
+Property 0xd20d:(read only) (type=0xffff) '0,0,0,0,0,0,0,0'
+Property 0xd20e:(read only) (type=0x4) Range [0 - 1, step 1] value: 6
+Property 0xd20f: error 200a on query.
+Property 0xd210: error 200a on query.
+Property 0xd211:(read only) (type=0x4) Range [0 - 65535, step 1] value: 257
+Property 0xd212: error 201b on query.
+Property 0xd213: error 200a on query.
+Property 0xd214: error 200a on query.
+Property 0xd215:(readwrite) (type=0xffff) ''
+Property 0xd216:(readwrite) (type=0xffff) ''
+Property 0xd217: error 200a on query.
+Property 0xd218: error 200a on query.
+Property 0xd219: error 200a on query.
+Property 0xd21a: error 200a on query.
+Property 0xd21b: error 200a on query.
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd407:(read only) (type=0x6) 1
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [244,307,387,488,615,775,976,1230,1550,1953,2460,3100,3906,4921,6200,7812,9843,12401,15625,19686,24803,31250,39372,49606,62500,78745,99212,125000,157490,198425,250000,314980,396850,500000,629960,793700,1000000,1259921,1587401,2000000,2519842,3174802,4000000,5039684,6349604,8000000,10079368,12699208,16000000,20158736,25398416,32000000,40317473,50796833,64000000,64000030,64000060,64000090,64000120,64000150,64000180,4294967295] value: 0.62 sec (62500)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [120,140,160,180,200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/2.8 (280)
+Property 0xd38c:(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+Property 0xd171:(readwrite) (type=0x3) Enumeration [0,0,0,0,0,0] value: 0
+Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
+
