@@ -2315,25 +2315,26 @@ static struct deviceproptableu16 canon_selftimer[] = {
 };
 GENERIC16TABLE(Canon_SelfTimer,canon_selftimer)
 
-/* FIXME: Canon EOS 5D Mark III has more enumerations. Need to determine
- * what they mean.
- */
-/* actually it is a flag value, 1 = TFT, 2 = PC */
+/* actually it is a flag value, 1 = TFT, 2 = PC, 4 = MOBILE, 8 = MOBILE2 */
 static struct deviceproptableu16 canon_eos_cameraoutput[] = {
 	{ N_("Off"),		0, 0 }, /*On 5DM3, LCD/TFT is off, mirror down and optical view finder enabled */
 	{ N_("TFT"),		1, 0 },
 	{ N_("PC"), 		2, 0 },
 	{ N_("TFT + PC"), 	3, 0 },
-	/*The below show up as possible on Canon 5D MIII, but unknown what exactly they are */
-	{ N_("Setting 4"),	4, 0 },
-	{ N_("Setting 5"),	5, 0 }, /*5DM3 - Appears to be dup of enum: 1. Probably something else is also enabled. */
-	{ N_("Setting 6"),	6, 0 }, /*5DM3 - Appears to be dup of enum: 2. */
-	{ N_("Setting 7"),	7, 0 }, /*5DM3 - Appears to be dup of enum: 3. */
+	{ N_("MOBILE"),		4, 0 },
+	{ N_("TFT + MOBILE"),	5, 0 },
+	{ N_("PC + MOBILE"),	6, 0 },
+	{ N_("TFT + PC + MOBILE"), 7, 0 },
+	{ N_("MOBILE2"),	8, 0 },
+	{ N_("TFT + MOBILE2"),	9, 0 },
+	{ N_("PC + MOBILE2"),	10, 0 },
+	{ N_("TFT + PC + MOBILE2"), 11, 0 },
 };
 GENERIC16TABLE(Canon_EOS_CameraOutput,canon_eos_cameraoutput)
 
 static struct deviceproptableu16 canon_eos_evfrecordtarget[] = {
 	{ N_("None"),		0, 0 },
+	{ N_("SDRAM"),		3, 0 },
 	{ N_("Card"),		4, 0 },
 };
 GENERIC16TABLE(Canon_EOS_EVFRecordTarget,canon_eos_evfrecordtarget)
@@ -4778,6 +4779,7 @@ static struct deviceproptableu8 canon_eos_whitebalance[] = {
 	{ N_("Custom WB 3"),	16, 0 },
 	{ N_("Custom WB 4"),	18, 0 },
 	{ N_("Custom WB 5"),	19, 0 },
+	{ N_("AWB White"),	23, 0 },
 };
 GENERIC8TABLE(Canon_EOS_WhiteBalance,canon_eos_whitebalance)
 
