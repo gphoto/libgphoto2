@@ -469,16 +469,20 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditMode	0x915C /* 1 arg */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+#define PTP_OC_CANON_EOS_NotifyAutoTransferStatus	0x916E
+#define PTP_OC_CANON_EOS_GetReducedObject	0x916F
 #define PTP_OC_CANON_EOS_GetObjectInfo64	0x9170	/* 1 arg: oid */
 #define PTP_OC_CANON_EOS_GetObject64		0x9171	/* 1 arg: oid */
 #define PTP_OC_CANON_EOS_GetPartialObject64	0x9172	/* args: oid, offset, maxbyte */
 #define PTP_OC_CANON_EOS_GetObjectInfoEx64	0x9173	/* 2 args: storageid, oid  ? */
 #define PTP_OC_CANON_EOS_GetPartialObjectEX64	0x9174	/* args: oid, offset 64bit, maxbyte */
 #define PTP_OC_CANON_EOS_CreateHandle64		0x9175
+#define PTP_OC_CANON_EOS_NotifySaveComplete	0x9177
 #define PTP_OC_CANON_EOS_NotifyEstimateNumberofImport		0x9182 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifyNumberofImported	0x9183 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer	0x9184 /* 4 args: filesizelow, filesizehigh, downloadsizelow, downloadsizehigh */
 #define PTP_OC_CANON_EOS_NotifyFinish		0x9185 /* 1 arg: reason */
+#define PTP_OC_CANON_EOS_GetObjectURL		0x91AB
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
 #define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8 /* 1 arg: errorcode */
@@ -1009,8 +1013,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_ObjectInfoChangedEx64		0xc1a8
 #define PTP_EC_CANON_EOS_RequestObjectTransfer64	0xc1a9
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP64	0xc1ab
+#define PTP_EC_CANON_EOS_RequestObjectTransferInfoEx64	0xc1ac
+#define PTP_EC_CANON_EOS_RequestObjectTransferMA64	0xc1ad
 #define PTP_EC_CANON_EOS_ImportError			0xc1af
 #define PTP_EC_CANON_EOS_BlePairing			0xc1b0
+#define PTP_EC_CANON_EOS_RequestAutoSendImages		0xc1b1
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
 /* Nikon extension Event Codes */
