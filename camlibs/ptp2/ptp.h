@@ -1747,6 +1747,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_ImageFormatExtHD	0xD123	/* file setting exthd */
 #define PTP_DPC_CANON_EOS_RefocusState		0xD124
 #define PTP_DPC_CANON_EOS_CameraNickname	0xD125
+#define PTP_DPC_CANON_EOS_ConnectStatus		0xD127
+#define PTP_DPC_CANON_EOS_LV_AF_EyeDetect	0xD12C
+#define PTP_DPC_CANON_EOS_AutoTransMobile	0xD12D
+#define PTP_DPC_CANON_EOS_URLSupportFormat	0xD12E
 #define PTP_DPC_CANON_EOS_SpecialAcc		0xD12F
 #define PTP_DPC_CANON_EOS_CompressionS		0xD130
 #define PTP_DPC_CANON_EOS_CompressionM1		0xD131
@@ -1797,6 +1801,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet1	0xD163
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet2	0xD164
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet3	0xD165
+#define PTP_DPC_CANON_EOS_ShutterReleaseCounter	0xD167
 #define PTP_DPC_CANON_EOS_AvailableImageSize	0xD168
 #define PTP_DPC_CANON_EOS_ErrorHistory		0xD169
 #define PTP_DPC_CANON_EOS_LensExchangeHistory	0xD16A
@@ -1891,6 +1896,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_MovieParam2		0xD1CA
 #define PTP_DPC_CANON_EOS_StroboSettingExpComposition		0xD1CB
 #define PTP_DPC_CANON_EOS_MovieParam3		0xD1CC
+#define PTP_DPC_CANON_EOS_MovieParam4		0xD1CD
 #define PTP_DPC_CANON_EOS_LVMedicalRotate	0xD1CF
 #define PTP_DPC_CANON_EOS_Artist		0xD1d0
 #define PTP_DPC_CANON_EOS_Copyright		0xD1d1
