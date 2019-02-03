@@ -6924,7 +6924,7 @@ ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 	{PTP_OC_CANON_EOS_GetCTGInfo,"PTP_OC_CANON_EOS_GetCTGInfo"},
 	{PTP_OC_CANON_EOS_GetLensAdjust,"PTP_OC_CANON_EOS_GetLensAdjust"},
 	{PTP_OC_CANON_EOS_SetLensAdjust,"PTP_OC_CANON_EOS_SetLensAdjust"},
-	{PTP_OC_CANON_EOS_GetMusicInfo,"PTP_OC_CANON_EOS_GetMusicInfo"},
+	{PTP_OC_CANON_EOS_ReadyToSendMusic,"PTP_OC_CANON_EOS_ReadyToSendMusic"},
 	{PTP_OC_CANON_EOS_CreateHandle,"PTP_OC_CANON_EOS_CreateHandle"},
 	{PTP_OC_CANON_EOS_SendPartialObjectEx,"PTP_OC_CANON_EOS_SendPartialObjectEx"},
 	{PTP_OC_CANON_EOS_EndSendPartialObjectEx,"PTP_OC_CANON_EOS_EndSendPartialObjectEx"},

@@ -427,7 +427,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_GetCTGInfo		0x9135
 #define PTP_OC_CANON_EOS_GetLensAdjust		0x9136
 #define PTP_OC_CANON_EOS_SetLensAdjust		0x9137
-#define PTP_OC_CANON_EOS_GetMusicInfo		0x9138
+#define PTP_OC_CANON_EOS_ReadyToSendMusic	0x9138
 /* 3 paramaeters, no data, OFC, size, unknown */
 #define PTP_OC_CANON_EOS_CreateHandle		0x9139
 #define PTP_OC_CANON_EOS_SendPartialObjectEx	0x913A
@@ -469,6 +469,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditMode	0x915C /* 1 arg */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+#define PTP_OC_CANON_EOS_SetImageRecoveryDataEx	0x916B
+#define PTP_OC_CANON_EOS_GetImageRecoveryListEx	0x916C
 #define PTP_OC_CANON_EOS_NotifyAutoTransferStatus	0x916E
 #define PTP_OC_CANON_EOS_GetReducedObject	0x916F
 #define PTP_OC_CANON_EOS_GetObjectInfo64	0x9170	/* 1 arg: oid */
@@ -3236,6 +3238,18 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  *
  **/
 #define ptp_canon_eos_keepdeviceon(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_KeepDeviceOn,0)
+
+/**
+ * ptp_canon_eos_popupflash:
+ *
+ * This operation pops up the builtin flash of the Canon EOS.
+ * 
+ * params:      PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_canon_eos_popupflash(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_PopupBuiltinFlash,0)
 /**
  * ptp_canon_initiatecaptureinmemory:
  * 
