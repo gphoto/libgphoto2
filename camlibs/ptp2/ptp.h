@@ -309,7 +309,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 */
 
 #define PTP_OC_CANON_GetWebServiceData		0x9069 /* no args */
-#define PTP_OC_CANON_SetWebServiceData		0x906B
+#define PTP_OC_CANON_SetWebServiceData		0x906A
+#define PTP_OC_CANON_DeleteWebServiceData	0x906B
 #define PTP_OC_CANON_GetRootCertificateSpec	0x906C /* no args */
 /*
 0000  12 00 00 00 02 00 6c 90-1a 00 00 00 00 01 6c 30  ......l.......l0
@@ -320,9 +321,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_SetRootCertificateData	0x906F
 #define PTP_OC_CANON_GetGpsMobilelinkObjectInfo	0x9075 /* 2 args: utcstart, utcend */
 #define PTP_OC_CANON_SendGpsTagInfo		0x9076 /* 1 arg: oid */
-#define PTP_OC_CANON_GetTrancecodeApproxSize	0x9077 /* 1 arg: oid? */
-#define PTP_OC_CANON_RequestTrancecodeStart	0x9078 /* 1 arg: oid? */
-#define PTP_OC_CANON_RequestTrancecodeCancel	0x9079 /* 1 arg: oid? */
+#define PTP_OC_CANON_GetTranscodeApproxSize	0x9077 /* 1 arg: oid? */
+#define PTP_OC_CANON_RequestTranscodeStart	0x9078 /* 1 arg: oid? */
+#define PTP_OC_CANON_RequestTranscodeCancel	0x9079 /* 1 arg: oid? */
 
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
@@ -1014,6 +1015,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_ObjectAddedEx64		0xc1a7
 #define PTP_EC_CANON_EOS_ObjectInfoChangedEx64		0xc1a8
 #define PTP_EC_CANON_EOS_RequestObjectTransfer64	0xc1a9
+#define PTP_EC_CANON_EOS_RequestObjectTransferDT64	0xc1aa
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP64	0xc1ab
 #define PTP_EC_CANON_EOS_RequestObjectTransferInfoEx64	0xc1ac
 #define PTP_EC_CANON_EOS_RequestObjectTransferMA64	0xc1ad
