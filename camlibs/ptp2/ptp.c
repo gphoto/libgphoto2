@@ -495,6 +495,19 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 		return PTP_ERROR_IO;
 }
 
+uint16_t
+ptp_canon_eos_905f (PTPParams* params, uint32_t x)
+{
+	PTPContainer	ptp;
+	unsigned char	*data = NULL;
+	unsigned int	size;
+
+	PTP_CNT_INIT(ptp, 0x905f, x);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	free (data);
+	return PTP_RC_OK;
+}
+
 #ifdef HAVE_LIBXML2
 static int
 traverse_tree (PTPParams *params, int depth, xmlNodePtr node)
@@ -2692,9 +2705,9 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 		if (changed) ptp_objects_sort (params);
 		return PTP_RC_OK;
 	}
+fallback:
 #endif
 
-fallback:
 	ptp_debug (params, "Listing ... ");
 	if (handle == 0) xhandle = PTP_HANDLER_SPECIAL; /* 0 would mean all */
 	ret = ptp_getobjecthandles (params, storage, 0, xhandle, &handles);
