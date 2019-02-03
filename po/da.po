@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2-2.5.21\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2018-12-06 09:27+0100\n"
-"PO-Revision-Date: 2019-01-13 19:16+0200\n"
+"PO-Revision-Date: 2019-02-13 19:16+0200\n"
 "Last-Translator: joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -1645,11 +1645,11 @@ msgid ""
 "  configured manually or set to automatic mode.\n"
 "* Image quality is currently lower than it could be.\n"
 msgstr ""
-"* Billeduheld eller problemer med kommunikation\n"
+"* Billedfejl eller problemer med kommunikation\n"
 "  skyldes ofte ringe batteriniveau.\n"
-"* Billeder optaget eksternt til kameraet, lagres i\n"
-"  midlertidig RAM, og ikke på hukommelseskortet.\n"
-"* Eksponeringskontrol ved optagelse af billeder, kan\n"
+"* Billeder optaget eksternt til kameraet lagres i\n"
+"  midlertidig RAM og ikke på hukommelseskortet.\n"
+"* Eksponeringskontrol ved optagelse af billeder kan\n"
 "  konfigureres manuelt, eller sættes til automatisk tilstand.\n"
 "* Billedkvaliteten er i øjeblikket lavere end den kunne være.\n"
 
@@ -5037,11 +5037,11 @@ msgstr "Forsinket fjernbetjening"
 
 #: camlibs/ptp2/config.c:3473
 msgid "Quiet Release"
-msgstr "Lydløs fjernbetjening"
+msgstr "Lydløs udløser"
 
 #: camlibs/ptp2/config.c:3474
 msgid "Continuous Quiet Release"
-msgstr "Fortsættende lydløs fjernbetjening"
+msgstr "Løbende lydløs udløser"
 
 #: camlibs/ptp2/config.c:3477
 msgid "Selftimer 2s"
