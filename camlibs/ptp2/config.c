@@ -7480,6 +7480,27 @@ _put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Canon_EOS_PopupFlash(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_PopupFlash(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	GPContext *context = ((PTPData *) params->data)->context;
+
+	C_PTP_REP (ptp_canon_eos_popupflash (params));
+	return GP_OK;
+}
+
+static int
 _get_Nikon_FastFS(CONFIG_GET_ARGS) {
 	int val;
 	char buf[1024];
@@ -8167,6 +8188,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
+	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
 	{ N_("Drive Nikon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_AfDrive,               _get_Nikon_AFDrive,             _put_Nikon_AFDrive },
 	{ N_("Drive Canon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DoAf,              _get_Canon_EOS_AFDrive,         _put_Canon_EOS_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_MfDrive,               _get_Nikon_MFDrive,             _put_Nikon_MFDrive },
