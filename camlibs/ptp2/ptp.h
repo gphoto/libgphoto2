@@ -325,6 +325,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_RequestTranscodeStart	0x9078 /* 1 arg: oid? */
 #define PTP_OC_CANON_RequestTranscodeCancel	0x9079 /* 1 arg: oid? */
 
+#define PTP_OC_CANON_SetRemoteShootingMode	0x9086
+
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
 /* 9102: 1 arg (0)
@@ -486,12 +488,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer	0x9184 /* 4 args: filesizelow, filesizehigh, downloadsizelow, downloadsizehigh */
 #define PTP_OC_CANON_EOS_NotifyFinish		0x9185 /* 1 arg: reason */
 #define PTP_OC_CANON_EOS_GetObjectURL		0x91AB
+#define PTP_OC_CANON_EOS_SetFELock		0x91B9
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
 #define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8 /* 1 arg: errorcode */
 #define PTP_OC_CANON_EOS_AdapterTransferProgress		0x91E9
-#define PTP_OC_CANON_EOS_TransferComplete2	0x91F0
-#define PTP_OC_CANON_EOS_CancelTransfer2	0x91F1
+#define PTP_OC_CANON_EOS_TransferCompleteFTP	0x91F0
+#define PTP_OC_CANON_EOS_CancelTransferFTP	0x91F1
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
 
@@ -980,6 +983,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* Canon EOS events */
 #define PTP_EC_CANON_EOS_RequestGetEvent		0xc101
+#define PTP_EC_CANON_EOS_RequestCancelTransferMA	0xc180
 #define PTP_EC_CANON_EOS_ObjectAddedEx			0xc181
 #define PTP_EC_CANON_EOS_ObjectRemoved			0xc182
 #define PTP_EC_CANON_EOS_RequestGetObjectInfoEx		0xc183
@@ -1022,6 +1026,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_ImportError			0xc1af
 #define PTP_EC_CANON_EOS_BlePairing			0xc1b0
 #define PTP_EC_CANON_EOS_RequestAutoSendImages		0xc1b1
+#define PTP_EC_CANON_EOS_RequestTranscodedBlockTransfer	0xc1b2
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
 /* Nikon extension Event Codes */
@@ -1747,7 +1752,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_ImageFormatExtHD	0xD123	/* file setting exthd */
 #define PTP_DPC_CANON_EOS_RefocusState		0xD124
 #define PTP_DPC_CANON_EOS_CameraNickname	0xD125
+#define PTP_DPC_CANON_EOS_StroboSettingExpCompositionControl	0xD126
 #define PTP_DPC_CANON_EOS_ConnectStatus		0xD127
+#define PTP_DPC_CANON_EOS_LensBarrelStatus	0xD128
+#define PTP_DPC_CANON_EOS_SilentShutterSetting	0xD129
 #define PTP_DPC_CANON_EOS_LV_AF_EyeDetect	0xD12C
 #define PTP_DPC_CANON_EOS_AutoTransMobile	0xD12D
 #define PTP_DPC_CANON_EOS_URLSupportFormat	0xD12E
@@ -1801,6 +1809,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet1	0xD163
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet2	0xD164
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet3	0xD165
+#define PTP_DPC_CANON_EOS_MovieAVModeFine	0xD166
 #define PTP_DPC_CANON_EOS_ShutterReleaseCounter	0xD167
 #define PTP_DPC_CANON_EOS_AvailableImageSize	0xD168
 #define PTP_DPC_CANON_EOS_ErrorHistory		0xD169
@@ -1914,6 +1923,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_LensID		0xD1dd
 #define PTP_DPC_CANON_EOS_LCDBrightness		0xD1de
 #define PTP_DPC_CANON_EOS_CADarkBright		0xD1df
+
+#define PTP_DPC_CANON_EOS_FocusShiftSetting	0xD208
 
 /* Nikon extension device property codes */
 #define PTP_DPC_NIKON_ShootingBank			0xD010

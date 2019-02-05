@@ -6969,8 +6969,8 @@ ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 	{PTP_OC_CANON_EOS_GetAEData,"PTP_OC_CANON_EOS_GetAEData"},
 	{PTP_OC_CANON_EOS_NotifyNetworkError,"PTP_OC_CANON_EOS_NotifyNetworkError"},
 	{PTP_OC_CANON_EOS_AdapterTransferProgress,"PTP_OC_CANON_EOS_AdapterTransferProgress"},
-	{PTP_OC_CANON_EOS_TransferComplete2,"PTP_OC_CANON_EOS_TransferComplete2"},
-	{PTP_OC_CANON_EOS_CancelTransfer2,"PTP_OC_CANON_EOS_CancelTransfer2"},
+	{PTP_OC_CANON_EOS_TransferCompleteFTP,"PTP_OC_CANON_EOS_TransferCompleteFTP"},
+	{PTP_OC_CANON_EOS_CancelTransferFTP,"PTP_OC_CANON_EOS_CancelTransferFTP"},
 	{PTP_OC_CANON_EOS_FAPIMessageTX,"PTP_OC_CANON_EOS_FAPIMessageTX"},
 	{PTP_OC_CANON_EOS_FAPIMessageRX,"PTP_OC_CANON_EOS_FAPIMessageRX"},
 	{PTP_OC_CANON_EOS_SetImageRecoveryData,"PTP_OC_CANON_EOS_SetImageRecoveryData"},
@@ -6999,6 +6999,8 @@ ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 	{PTP_OC_CANON_EOS_GetReducedObject,"PTP_OC_CANON_EOS_GetReducedObject"},
 	{PTP_OC_CANON_EOS_NotifySaveComplete,"PTP_OC_CANON_EOS_NotifySaveComplete"},
 	{PTP_OC_CANON_EOS_GetObjectURL,"PTP_OC_CANON_EOS_GetObjectURL"},
+	{PTP_OC_CANON_SetRemoteShootingMode,"PTP_OC_CANON_SetRemoteShootingMode"},
+	{PTP_OC_CANON_EOS_SetFELock,"PTP_OC_CANON_EOS_SetFELock"},
 };
 
 ptp_opcode_trans_t ptp_opcode_sony_trans[] = {
