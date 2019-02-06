@@ -5741,6 +5741,9 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_ISO, N_("ISO")},				/* 0xD21E */
 		{PTP_DPC_SONY_Movie, N_("Movie")},			/* 0xD2C8 */
 		{PTP_DPC_SONY_StillImage, N_("Still Image")},		/* 0xD2C7 */
+		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
+		{PTP_DPC_SONY_AutoFocus, N_("Autofocus")},
+		{PTP_DPC_SONY_Capture, N_("Capture")},
 		{0,NULL}
         };
 
