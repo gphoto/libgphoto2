@@ -381,8 +381,10 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	if (is_canon_eos_m(params)) {
 		int mode = 0x15;	/* default for EOS M and newer Powershot SX */
 
-		if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
-		C_PTP (ptp_canon_eos_setremotemode(params, mode));
+        if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
+        /* G7 X seems to crashe when an extra setremote is done*/
+        if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X"))
+            C_PTP (ptp_canon_eos_setremotemode(params, mode));
 	} else {
 		C_PTP (ptp_canon_eos_setremotemode(params, 1));
 	}
@@ -541,7 +543,9 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 
 	/* just in case we had autofocus running */
-	CR (ptp_canon_eos_afcancel(params));
+    /* This and other focus setting are not supported by Canon G7X, the support detection doesn't seem to work */
+    if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X"))
+        CR (ptp_canon_eos_afcancel(params));
 
 	if (is_canon_eos_m (params)) {
 		PTPPropertyValue    ct_val;
@@ -558,7 +562,9 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Drain the rest set of the event data */
 	C_PTP (ptp_check_eos_events (params));
-	C_PTP (ptp_canon_eos_setremotemode(params, 0));
+    /* G7 X seems to crashe when an extra setremote is done*/
+    if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X"))
+        C_PTP (ptp_canon_eos_setremotemode(params, 0));
 	C_PTP (ptp_canon_eos_seteventmode(params, 0));
 	params->eos_captureenabled = 0;
 	return GP_OK;

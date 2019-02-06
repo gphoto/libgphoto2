@@ -2038,6 +2038,9 @@ static struct {
 	/* pravsripad@gmail.com */
 	{"Canon:PowerShot SX520 HS",		0x04a9, 0x329b, PTPBUG_DELETE_SENDS_EVENT},
 
+    /* sparkycoladev@gmail.com, PID from CHDK Wiki at http://chdk.wikia.com/wiki/P-ID_(Table) */
+    {"Canon:PowerShot G7 X",			0x04a9, 0x329d, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Marcus Meissner <marcus@jet.franken.de> */
 	{"Canon:EOS M10",			0x04a9, 0x32a0, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -2059,7 +2062,7 @@ static struct {
 	{"Canon:EOS 5DS R",			0x04a9, 0x32af, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* Erwin.Segerer@gmx.de */
-	{"Canon:PowerShot G5X",			0x04a9, 0x32b3, PTP_CAP|PTP_CAP_PREVIEW},
+    {"Canon:PowerShot G5X",			0x04a9, 0x32b3, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Barney Livingston <barney.livingston@lobsterpictures.tv> */
 	{"Canon:EOS 1300D",			0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
@@ -2823,24 +2826,30 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			memset (&dpd,0,sizeof(dpd));
 
 			/* do not set it everytime, it will cause delays */
-			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFMode, &dpd);
-			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u16 != 1)) {
-				/* 0 means off, 1 means on */
-				val.u16 = 1;
-				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFMode, &val, PTP_DTC_UINT16);
-				/* in movie mode we get busy, but can proceed */
-				if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
-					C_PTP_MSG (ret, "setval of evf enable to 1 failed (curval is %d)!", dpd.CurrentValue.u16);
-			}
+            /* G7X doesn't seem to support PTP_DPC_CANON_EOS_EVFMode or at least setting it at this point crashes it */
+            if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X")) {
+                ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFMode, &dpd);
+                if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u16 != 1)) {
+                    /* 0 means off, 1 means on */
+                    val.u16 = 1;
+                    ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFMode, &val, PTP_DTC_UINT16);
+                    /* in movie mode we get busy, but can proceed */
+                    if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
+                        C_PTP_MSG (ret, "setval of evf enable to 1 failed (curval is %d)!", dpd.CurrentValue.u16);
+                }
+            }
 			ptp_free_devicepropdesc (&dpd);
 			/* do not set it everytime, it will cause delays */
-			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
-			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
-				/* 2 means PC, 1 means TFT */
-				val.u32 = 2;
-				C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32),
-					   "setval of evf outputmode to 2 failed (curval is %d)!", dpd.CurrentValue.u32);
-			}
+            /* G7X doesn't seem to support PTP_DPC_CANON_EOS_EVFMode or at least setting it at this point crashes it */
+            if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X")) {
+                ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
+                if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
+                    /* 2 means PC, 1 means TFT */
+                    val.u32 = 2;
+                    C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32),
+                           "setval of evf outputmode to 2 failed (curval is %d)!", dpd.CurrentValue.u32);
+                }
+            }
 			ptp_free_devicepropdesc (&dpd);
 
 			/* Otherwise the camera will auto-shutdown */
@@ -8450,6 +8459,8 @@ camera_init (Camera *camera, GPContext *context)
 				/* according to reporter only needed in config.c part 
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
 				*/
+                if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X")) mode = 0x11;
+
 				C_PTP (ptp_canon_eos_setremotemode(params, mode));
 				/* Setting remote mode changes device info on EOS M2,
 				   so have to reget it */

@@ -436,7 +436,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetCTGInfo		0x913C
 #define PTP_OC_CANON_EOS_SetRequestOLCInfoGroup	0x913D
 #define PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel	0x913E /* 1 arg: onoff? */
-/* 3 args, 0x21201020, 0x110, 0x1000000 (potentially reverse order) */
+/* 3 args, 0x21201020, 0, 0x1000000 (potentially reverse order) */
 #define PTP_OC_CANON_EOS_GetCameraSupport	0x913F
 #define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args, objectid, rating? */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopStart	0x9141 /* 2 args: 1 type, 1 object? */
