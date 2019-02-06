@@ -5386,6 +5386,12 @@ static struct deviceproptableu8 compressionsetting[] = {
 };
 GENERIC8TABLE(CompressionSetting,compressionsetting)
 
+static struct deviceproptableu8 sony_sensorcrop[] = {
+	{ N_("Off"),	0x01, 0 },
+	{ N_("On"),	0x02, 0 },
+};
+GENERIC8TABLE(Sony_SensorCrop,sony_sensorcrop)
+
 /* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
 static int
 _put_Sony_CompressionSetting(CONFIG_PUT_ARGS) {
@@ -8515,6 +8521,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Reverse Indicators"),             "reverseindicators",        PTP_DPC_NIKON_IndicatorDisp,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Auto Distortion Control"),        "autodistortioncontrol",    PTP_DPC_NIKON_AutoDistortionControl,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Video Mode"),                     "videomode",                PTP_DPC_NIKON_VideoMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_VideoMode,               _put_Nikon_VideoMode },
+	{ N_("Sensor Crop"),                    "sensorcrop",               PTP_DPC_SONY_SensorCrop,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SensorCrop,               _put_Sony_SensorCrop },
 
 	{ 0,0,0,0,0,0,0 },
 };
