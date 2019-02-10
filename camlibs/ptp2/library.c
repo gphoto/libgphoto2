@@ -997,6 +997,9 @@ static struct {
 	/* Anja Stock at SUSE */
 	{"Sony:DSC-RX10M3 (Control)",  	0x054c, 0x079d, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* jackden@gmail.com */
+	{"Sony:DSC-RX100M6 (MTP)",  0x054c, 0x0830, 0},
+
 	/* https://sourceforge.net/p/libmtp/support-requests/246/ */
 	{"Sony:DSC-HX400V (MTP)",      0x054c, 0x08ac, 0},
 
@@ -1075,6 +1078,9 @@ static struct {
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:Alpha-A7r III (PC Control)",	0x054c, 0x0c33, PTP_CAP|PTP_CAP_PREVIEW}, /* FIXME: crosscheck */
 	{"Sony:Alpha-A7 III (PC Control)",	0x054c, 0x0c34, PTP_CAP|PTP_CAP_PREVIEW}, /* FIXME: crosscheck */
+
+	/* jackden@gmail.com */
+	{"Sony:DSC-RX100M6 (PC Control)",  	0x054c, 0x0c38, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Mikael Ståldal <mikael@staldal.nu> */
 	{"Sony:DSC-RX100M5A (MTP)",		0x054c, 0x0cb1, 0},
