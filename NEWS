@@ -1,5 +1,8 @@
 libgphoto2 2.5.22.1 development
 
+ptp2:
+* Sony capture stability and speed improvements
+
 translations:
 * updated danish
 
