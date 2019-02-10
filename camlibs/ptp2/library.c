@@ -4199,8 +4199,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	do {
 		/* break if we got it from above focus wait already for some reason, seen on A6000 */
 		if (newobject) break;
-#if 0
+#if 1
 		/* needed on older cameras like the a58, check for events ... */
+		/* This would be unsafe if we get an out-of-order event with no objects present, but
+		 * we drained all events above */
 		C_PTP (ptp_check_event_queue (params));
 		if (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
