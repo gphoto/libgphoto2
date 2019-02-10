@@ -901,6 +901,7 @@ static struct {
 	/* Fernando Santoro <fernando.lopezjr@gmail.com> */
 	{"Sony:DSC-A100 (PTP mode)",  0x054c, 0x02c0, 0},
 	/* Sam Tseng <samtz1223@gmail.com> */
+	/* this seems not to have a seperate control mode id, see https://github.com/gphoto/libgphoto2/issues/288 */
 	{"Sony:DSC-A900 (PTP mode)",  0x054c, 0x02e7, PTP_CAP},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
