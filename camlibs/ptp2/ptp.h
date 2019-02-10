@@ -2839,6 +2839,9 @@ struct _PTPParams {
 	PTPContainer	*events;
 	int		nrofevents;
 
+	/* Capture count for SDRAM capture style images */
+	unsigned int		capcnt;
+
 	/* live view enabled */
 	int			inliveview;
 
