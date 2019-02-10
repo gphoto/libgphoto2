@@ -1042,6 +1042,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/343  */
 	{"Sony:Alpha-A7III (Control)",  0x054c, 0x096f, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Adrian Schroeter */
+	{"Sony:ILCE-7R M2 (MTP)",        	0x054c, 0x09e7, 0},
+
 	/* https://sourceforge.net/p/gphoto/feature-requests/472/ */
 	{"Sony:DSC-HX90V (MTP)",        	0x054c, 0x09e8, 0},
 
@@ -2703,9 +2706,12 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			break;
 		case PTP_VENDOR_SONY:
+#if 0
+			/* if we call this, the camera shuts down on close in MTP mode */
 			if (ptp_operation_issupported(params, 0x9280)) {
 				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
 			}
+#endif
 			break;
 		case PTP_VENDOR_FUJI:
 			CR (camera_unprepare_capture (camera, context));
