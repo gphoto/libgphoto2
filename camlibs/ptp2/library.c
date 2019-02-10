@@ -4216,8 +4216,17 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
 
 		/* if prop 0xd215 > 0x8000, the object in RAM is available at location 0xffffc001 */
-		if (dpd.CurrentValue.u16 > 0x8000) {
-			GP_LOG_D ("SONY ObjectInMemory count change seen, ending wait");
+		/* This variable also turns to 1 , but downloading then will crash the firmware
+		 * we seem to need to wait for 0x8000 */
+		if (dpd.CurrentValue.u16 >= 0x8000) {
+			GP_LOG_D ("SONY ObjectInMemory count change to 0x%x seen, ending wait", dpd.CurrentValue.u16);
+			newobject = 0xffffc001;
+			if (dpd.CurrentValue.u16 == 0x8001) {
+				/* Also synthesize a capture complete event, if its just 1 image. */
+				event.Code = PTP_EC_CaptureComplete;
+				event.Nparam = 0;
+				ptp_add_event (params, &event);
+			}
 			break;
 		}
 
@@ -5872,7 +5881,7 @@ downloadnow:
 			C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
 			GP_LOG_D ("DEBUG== 0xd215 after capture = %d", dpd.CurrentValue.u16);
 
-			/* if prop 0xd215 > 0x8000, the object in RAM is available at location 0xffffc001 */
+			/* if prop 0xd215 is above 0x8000, the object in RAM is available at location 0xffffc001 */
 			if (dpd.CurrentValue.u16 > 0x8000) {
 				GP_LOG_D ("SONY ObjectInMemory count change seen, retrieving file");
 
@@ -5918,6 +5927,13 @@ downloadnow:
 				*eventdata = path;
 				/* We have now handed over the file, disclaim responsibility by unref. */
 				gp_file_unref (file);
+
+				/* Synthesize a capture complete event, if this was the last image. */
+				if (dpd.CurrentValue.u16 == 0x8001) {
+					event.Code = PTP_EC_CaptureComplete;
+					event.Nparam = 0;
+					ptp_add_event (params, &event);
+				}
 				return GP_OK;
 			}
 
@@ -5966,8 +5982,9 @@ handleregular:
 	}
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) {
 		switch (event.Code) {
-		/* We are handling this in the above sony case. events might
-		 * come to early and retrieving the image might reboot the camera. */
+		/* We are handling this in the above Sony case. events might
+		 * come to early (or too late, as we handled it above)
+		 * and retrieving the image will crash the camera. */
 		case PTP_EC_Sony_ObjectAdded: {
 #if 0
 			PTPObjectInfo	oi;
