@@ -798,7 +798,7 @@ _put_Generic##bits##Table(CONFIG_PUT_ARGS, struct deviceproptable##bits * tbl, i
  \
 	CR (gp_widget_get_value (widget, &value)); \
 	for (i=0;i<tblsize;i++) { \
-		if (!strcmp(_(tbl[i].label),value) && \
+		if ((!strcmp(_(tbl[i].label),value) || !strcmp(tbl[i].label,value)) && \
 		    ((tbl[i].vendor_id == 0) || (tbl[i].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)) \
 		) { \
 			bits##val = tbl[i].value; \
@@ -1811,6 +1811,17 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 GENERIC16TABLE(Canon_EOS_AutoExposureMode,canon_eos_autoexposuremode)
 
 static struct deviceproptableu32 canon_eos_alomode[] = {
+	{ N_("Standard"),				0x10000, 0 },
+	{ N_("Standard (disabled in manual exposure)"),	0x00000, 0 },
+	{ N_("Low"),					0x10101, 0 },
+	{ N_("Low (disabled in manual exposure)"),	0x00101, 0 },
+	{ N_("Off"),					0x10303, 0 },
+	{ N_("Off (disabled in manual exposure)"),	0x00303, 0 },
+	{ N_("High"),					0x10202, 0 },
+	{ N_("High (disabled in manual exposure)"),	0x00202, 0 },
+	{ N_("x1"),	0x1, 0 },
+	{ N_("x2"),	0x2, 0 },
+	{ N_("x3"),	0x3, 0 },
 };
 GENERIC32TABLE(Canon_EOS_AloMode,canon_eos_alomode)
 
