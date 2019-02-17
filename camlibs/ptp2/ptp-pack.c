@@ -2266,6 +2266,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_OLCInfoVersion:
 				case PTP_DPC_CANON_EOS_PowerZoomPosition:
 				case PTP_DPC_CANON_EOS_PowerZoomSpeed:
+				case PTP_DPC_CANON_EOS_BuiltinStroboMode:
+				case PTP_DPC_CANON_EOS_StroboETTL2Metering:
+				case PTP_DPC_CANON_EOS_ColorTemperature:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
@@ -2337,7 +2340,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					xdata += 4;
 					break;
 				/* yet unknown 32bit props */
-				case PTP_DPC_CANON_EOS_ColorTemperature:
 				case PTP_DPC_CANON_EOS_WftStatus:
 				case PTP_DPC_CANON_EOS_LensStatus:
 				case PTP_DPC_CANON_EOS_CardExtension:
@@ -2355,6 +2357,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
 				case PTP_DPC_CANON_EOS_AloMode:
 				case PTP_DPC_CANON_EOS_Brightness:
+				case PTP_DPC_CANON_EOS_GPSLogCtrl:
+				case PTP_DPC_CANON_EOS_GPSDeviceActive:
 					dpd->DataType = PTP_DTC_UINT32;
 					ptp_debug (params, "event %d: Unknown EOS property %04x, datasize is %d, using uint32", i ,proptype, size-PTP_ece_Prop_Val_Data);
 					if ((size-PTP_ece_Prop_Val_Data) % sizeof(uint32_t) != 0)
