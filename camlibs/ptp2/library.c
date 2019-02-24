@@ -5021,8 +5021,9 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 					) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
 							GP_LOG_D("focusinfo prop content: %s", dpd.CurrentValue.str);
-							foundfocusinfo = 1;
-							/* FIXME: detect no focus? */
+							if (!strstr(dpd.CurrentValue.str,"select={}")) /* select={} means "no focus yet" */
+								foundfocusinfo = 1;
+							ptp_free_devicepropdesc (&dpd);
 						}
 					}
 				}
@@ -5621,6 +5622,16 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY:
 					*eventtype = GP_EVENT_UNKNOWN;
+					if (PTP_DPC_CANON_EOS_FocusInfoEx == entry.u.propid) {
+						PTPDevicePropDesc	dpd;
+
+						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
+							C_MEM (*eventdata = malloc(strlen("FocusInfo ")+strlen(dpd.CurrentValue.str)+1));
+							sprintf (*eventdata, "FocusInfo %s", dpd.CurrentValue.str);
+							ptp_free_devicepropdesc (&dpd);
+							return GP_OK;
+						}
+					}
 					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
 					sprintf (*eventdata, "PTP Property %04x changed", entry.u.propid);
 					return GP_OK;
