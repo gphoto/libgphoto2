@@ -2038,8 +2038,8 @@ static struct {
 	/* pravsripad@gmail.com */
 	{"Canon:PowerShot SX520 HS",		0x04a9, 0x329b, PTPBUG_DELETE_SENDS_EVENT},
 
-    /* sparkycoladev@gmail.com, PID from CHDK Wiki at http://chdk.wikia.com/wiki/P-ID_(Table) */
-    {"Canon:PowerShot G7 X",			0x04a9, 0x329d, PTP_CAP|PTP_CAP_PREVIEW},
+    /* sparkycoladev@gmail.com */
+    {"Canon:PowerShot G7 X",			0x04a9, 0x329d, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* Marcus Meissner <marcus@jet.franken.de> */
 	{"Canon:EOS M10",			0x04a9, 0x32a0, PTP_CAP|PTP_CAP_PREVIEW},
