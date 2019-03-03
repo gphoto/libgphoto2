@@ -2038,7 +2038,7 @@ static struct {
 	/* pravsripad@gmail.com */
 	{"Canon:PowerShot SX520 HS",		0x04a9, 0x329b, PTPBUG_DELETE_SENDS_EVENT},
 
-    /* sparkycoladev@gmail.com */
+    /* sparkycoladev@gmail.com   */
     {"Canon:PowerShot G7 X",			0x04a9, 0x329d, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* Marcus Meissner <marcus@jet.franken.de> */
@@ -2681,7 +2681,7 @@ camera_exit (Camera *camera, GPContext *context)
 					}
 					camera->pl->checkevents = 0;
 				}
-				if (params->inliveview)
+                if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
 					ptp_canon_eos_end_viewfinder (params);
 				camera_unprepare_capture (camera, context);
 			}
@@ -2840,7 +2840,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
             }
 			ptp_free_devicepropdesc (&dpd);
 			/* do not set it everytime, it will cause delays */
-            /* G7X doesn't seem to support PTP_DPC_CANON_EOS_EVFMode or at least setting it at this point crashes it */
+            /* G7X doesn't seem to support PTP_DPC_CANON_EOS_EVFOutputDevice or at least setting it at this point crashes it */
             if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X")) {
                 ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
                 if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u32 != 2)) {
