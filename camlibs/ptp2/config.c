@@ -541,7 +541,8 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams		*params = &camera->pl->params;
 
 	/* just in case we had autofocus running */
-	CR (ptp_canon_eos_afcancel(params));
+	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_AfCancel))
+		CR (ptp_canon_eos_afcancel(params));
 
 	if (is_canon_eos_m (params)) {
 		PTPPropertyValue    ct_val;
@@ -6373,10 +6374,10 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 		}
 	}
 	if (val)
-		xval.u32 = 2;
+		xval.u16 = 2;
 	else
-		xval.u32 = 0;
-	C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT32),
+		xval.u16 = 0;
+	C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT16),
 		   "ptp2_eos_viewfinder enable", "setval of evf outputmode to %d failed", xval.u32);
 	return GP_OK;
 }
