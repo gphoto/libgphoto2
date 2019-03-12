@@ -2128,6 +2128,9 @@ static struct {
 	/* Jasem Mutlaq <mutlaqja@ikarustech.com> */
 	{"Canon:EOS 4000D",			0x04a9, 0x32d9, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Christian Muehlhaeuser <muesli@gmail.com> */
+	{"Canon:EOS 2000D",			0x04a9, 0x32e1, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
