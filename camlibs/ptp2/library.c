@@ -1903,6 +1903,8 @@ static struct {
 	{"Canon:EOS 600D",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
 	/* us alias from Andre Crone <andre@elysia.nl> */
 	{"Canon:Rebel T3i",			0x04a9, 0x3218, PTP_CAP|PTP_CAP_PREVIEW},
+    /* Jasem Mutlaq <mutlaqja@ikarustech.com> */
+    {"Canon:EOS Rebel T6",		0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Brian L Murphy <brian.l.murphy@gmail.com> */
 	{"Canon:EOS 1D X",			0x04a9, 0x3219, PTP_CAP|PTP_CAP_PREVIEW},
