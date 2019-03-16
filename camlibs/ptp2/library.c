@@ -2038,7 +2038,7 @@ static struct {
 	/* pravsripad@gmail.com */
 	{"Canon:PowerShot SX520 HS",		0x04a9, 0x329b, PTPBUG_DELETE_SENDS_EVENT},
 
-    /* sparkycoladev@gmail.com   */
+    /* sparkycoladev@gmail.com */
     {"Canon:PowerShot G7 X",			0x04a9, 0x329d, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* Marcus Meissner <marcus@jet.franken.de> */
@@ -3747,7 +3747,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		gp_context_idle (context);
 	} while (waiting_for_timeout (&back_off_wait, capture_start, EOS_CAPTURE_TIMEOUT));
 
-	if (newobject == 0)
+    if (newobject == 0)
 		return GP_ERROR;
 	GP_LOG_D ("object has OFC 0x%x", oi.ObjectFormat);
 
@@ -5085,8 +5085,13 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			ptp_check_eos_events (params);
 			/* NB: no error is returned in case of button == 7, which means
 			 * the timer is still working, but no AF fail has been reported */
-			if (button < 4)
-				return GP_ERROR;
+            if (button < 4){
+                if(!(strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X") && button == 0)){
+                    //button=0 seems to be no error on G7 X, at least there are no apparent issues
+                    gp_context_error (context, ("button error Canon EOS M button=%d"),button);
+                    return GP_ERROR;
+                }
+            }
 		}
 	} else {
 		C_PTP_REP_MSG (ptp_canon_eos_capture (params, &result),
