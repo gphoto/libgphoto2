@@ -545,7 +545,8 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* just in case we had autofocus running */
     /* This and other focus setting are not supported by Canon G7X, the support detection doesn't seem to work */
     if (strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X"))
-        CR (ptp_canon_eos_afcancel(params));
+        if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_AfCancel))
+            CR (ptp_canon_eos_afcancel(params));
 
 	if (is_canon_eos_m (params)) {
 		PTPPropertyValue    ct_val;
