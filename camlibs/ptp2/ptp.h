@@ -18,7 +18,7 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
- */
+ */ 
 
 #ifndef __PTP_H__
 #define __PTP_H__
@@ -3830,6 +3830,8 @@ uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)
 uint16_t ptp_olympus_omd_capture (PTPParams* params);
+uint16_t ptp_olympus_omd_bulbstart (PTPParams* params);
+uint16_t ptp_olympus_omd_bulbend (PTPParams* params);
 uint16_t ptp_olympus_init_pc_mode (PTPParams* params);
 uint16_t ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsigned int *size);
 

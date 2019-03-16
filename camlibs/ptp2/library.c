@@ -1,4 +1,4 @@
-/* library.c
+﻿/* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2019 Marcus Meissner <marcus@jet.franken.de>
@@ -19,7 +19,7 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
- */
+ */ 
 
 #define _DEFAULT_SOURCE
 #include "config.h"
@@ -2074,8 +2074,6 @@ static struct {
 
 	/* Barney Livingston <barney.livingston@lobsterpictures.tv> */
 	{"Canon:EOS 1300D",			0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
-    /* Rebel T6 is the same camera. Jasem Mutlaq <mutlaqja@ikarustech.com> */
-    {"Canon:EOS Rebel T6",		0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Jim Howard <jh.xsnrg@gmail.com> */
 	{"Canon:EOS M5",			0x04a9, 0x32bb, PTP_CAP|PTP_CAP_PREVIEW},
@@ -2575,6 +2573,10 @@ camera_abilities (CameraAbilitiesList *list)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
 			/* Sony Alpha are also trigger capture capable */
 			if (	models[i].usb_vendor == 0x54c)
+				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+
+			/* Olympus test  trigger capture capable */
+			if (	models[i].usb_vendor == 0x7b4)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
 #if 0
 			/* SX 100 IS ... works in sdram, not in card mode */
@@ -5984,7 +5986,102 @@ sonyout:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
+	//Modif BF
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD)
+	 {
+		do {
+			C_PTP_REP (ptp_check_event (params));
 
+			while (ptp_get_one_event(params, &event)) {
+				switch (event.Code) {
+				case 0xc002:
+				case PTP_EC_ObjectAdded:
+					newobject = event.Param1;
+					goto downloadomdfile;
+				case 0xc003:
+#if 0
+				{ /* we seem to receive the event when ready ... not sure if this is the right trigger, as it has unrelated parameters */
+					CameraFile	*file;
+					unsigned char	*data = NULL;
+					unsigned int	size = 0;
+					CameraFileInfo	info;
+					int		ret;
+
+					C_PTP_REP (ptp_olympus_sdram_image(params, &data, &size));
+
+					gp_file_new (&file);
+					gp_file_set_data_and_size (file, (char*)data, size);
+
+					sprintf(path->folder, "/store_deadbeef");
+					sprintf(path->name, "capt%04d.jpg", params->capcnt++);
+
+					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+					if (ret != GP_OK) {
+						gp_file_free (file);
+						return ret;
+					}
+					memset(&info, 0, sizeof(info));
+					/* We also get the fs info for free, so just set it */
+					info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+					strcpy (info.file.type, GP_MIME_JPEG);
+					info.file.size		= size;
+					info.file.mtime		= time(NULL);
+
+					gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+					return GP_OK;
+				}
+#endif
+				default:
+					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+					break;
+				}
+			}
+		}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 0.5 seconds after busy is no longer signaled */
+	downloadomdfile:
+
+		path->name[0]='\0';
+		path->folder[0]='\0';
+
+		if (newobject != 0) {
+			PTPObject	*ob;
+
+			C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
+			strcpy  (path->name,  ob->oi.Filename);
+			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+			get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+			/* delete last / or we get confused later. */
+			path->folder[ strlen(path->folder)-1 ] = '\0';
+
+			CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
+
+			/* we also get the fs info for free, so just set it */
+			CameraFileInfo info;
+			info.file.fields = GP_FILE_INFO_TYPE |
+					GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+					GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+			strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
+			info.file.width		= ob->oi.ImagePixWidth;
+			info.file.height	= ob->oi.ImagePixHeight;
+			info.file.size		= ob->oi.ObjectCompressedSize;
+			info.file.mtime		= time(NULL);
+
+			info.preview.fields = GP_FILE_INFO_TYPE |
+					GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+					GP_FILE_INFO_SIZE;
+			strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
+			info.preview.width	= ob->oi.ThumbPixWidth;
+			info.preview.height	= ob->oi.ThumbPixHeight;
+			info.preview.size	= ob->oi.ThumbCompressedSize;
+			GP_LOG_D ("setting fileinfo in fs");
+			return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+		}
+	}
 	/* Wait for the whole timeout period */
 	CR (gp_port_get_timeout (camera->port, &oldtimeout));
 	CR (gp_port_set_timeout (camera->port, timeout));
