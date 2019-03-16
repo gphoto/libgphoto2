@@ -19,7 +19,7 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
- */ 
+ */
 
 #define _DEFAULT_SOURCE
 #include "config.h"
@@ -4592,7 +4592,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 	do {
 		C_PTP_REP (ptp_check_event (params));
 
-		while (ptp_get_one_event(params, &event)) {
+		while (ptp_get_one_event(params, &event)) {			
 			switch (event.Code) {
 			case 0xc002:
 			case PTP_EC_ObjectAdded:
@@ -4636,6 +4636,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 				return GP_OK;
 			}
 #endif
+			
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				break;
@@ -5987,68 +5988,33 @@ sonyout:
 		return GP_OK;
 	}
 	//Modif BF
-	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD)
+	if 	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) 
 	 {
+
 		do {
 			C_PTP_REP (ptp_check_event (params));
 
 			while (ptp_get_one_event(params, &event)) {
+				GP_LOG_D ("received event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				switch (event.Code) {
-				case 0xc002:
+				case 0xC002:
 				case PTP_EC_ObjectAdded:
 					newobject = event.Param1;
 					goto downloadomdfile;
-				case 0xc003:
-#if 0
-				{ /* we seem to receive the event when ready ... not sure if this is the right trigger, as it has unrelated parameters */
-					CameraFile	*file;
-					unsigned char	*data = NULL;
-					unsigned int	size = 0;
-					CameraFileInfo	info;
-					int		ret;
-
-					C_PTP_REP (ptp_olympus_sdram_image(params, &data, &size));
-
-					gp_file_new (&file);
-					gp_file_set_data_and_size (file, (char*)data, size);
-
-					sprintf(path->folder, "/store_deadbeef");
-					sprintf(path->name, "capt%04d.jpg", params->capcnt++);
-
-					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-					if (ret != GP_OK) {
-						gp_file_free (file);
-						return ret;
-					}
-					ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-					if (ret != GP_OK) {
-						gp_file_free (file);
-						return ret;
-					}
-					memset(&info, 0, sizeof(info));
-					/* We also get the fs info for free, so just set it */
-					info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-					strcpy (info.file.type, GP_MIME_JPEG);
-					info.file.size		= size;
-					info.file.mtime		= time(NULL);
-
-					gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
-					return GP_OK;
-				}
-#endif
 				default:
 					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 					break;
 				}
 			}
 		}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 0.5 seconds after busy is no longer signaled */
-	downloadomdfile:
-
+	
+downloadomdfile:
+		C_MEM (path = malloc(sizeof(CameraFilePath)));
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
 		if (newobject != 0) {
-			PTPObject	*ob;
+			PTPObject	*ob = NULL;
 
 			C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
@@ -6079,6 +6045,8 @@ sonyout:
 			info.preview.height	= ob->oi.ThumbPixHeight;
 			info.preview.size	= ob->oi.ThumbCompressedSize;
 			GP_LOG_D ("setting fileinfo in fs");
+			*eventtype = GP_EVENT_FILE_ADDED;
+			*eventdata = path;
 			return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 		}
 	}
