@@ -5086,7 +5086,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			/* NB: no error is returned in case of button == 7, which means
 			 * the timer is still working, but no AF fail has been reported */
             if (button < 4){
-                if(!(strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X") && button == 0)){
+                if(strcmp(params->deviceinfo.Model,"Canon PowerShot G7 X") && button == 0){
                     //button=0 seems to be no error on G7 X, at least there are no apparent issues
                     gp_context_error (context, ("button error Canon EOS M button=%d"),button);
                     return GP_ERROR;
