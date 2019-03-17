@@ -98,7 +98,7 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 			if ((prop & 0xf000) == 0x1000) /* generic property */
 				return 1;
 			if (camera->pl->params.deviceinfo.VendorExtensionID==vendor)
-				return 1;				
+				return 1;
 		}
 	}
 	return 0;
