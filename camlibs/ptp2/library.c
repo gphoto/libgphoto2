@@ -2849,7 +2849,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 			/* do not set it everytime, it will cause delays */
 			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFMode, &dpd);
-			if ((ret != PTP_RC_OK) || (dpd.CurrentValue.u16 != 1)) {
+			if ((ret == PTP_RC_OK) && (dpd.CurrentValue.u16 != 1)) {
 				/* 0 means off, 1 means on */
 				val.u16 = 1;
 				ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFMode, &val, PTP_DTC_UINT16);
