@@ -4635,7 +4635,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 				gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 				return GP_OK;
 			}
-#endif			
+#endif
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				break;
