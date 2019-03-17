@@ -1,4 +1,4 @@
-﻿/* library.c 
+﻿/* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2019 Marcus Meissner <marcus@jet.franken.de>
