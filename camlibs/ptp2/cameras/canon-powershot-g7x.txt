@@ -1,0 +1,359 @@
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot G7 X
+  Version: 1-14.0.1.0
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS Wave, JPEG, Defined Type, Unknown(b103), Unknown(b982), Unknown(b105), Unknown(bf01)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, Canon EOS Capture 2
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: SD
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 64005144576 (61040 MB)
+	Free Space (Bytes): 52043284480 (49632 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 3
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 262144
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 262144
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3] value: 2% (2)
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Warning Level 0 (4)
+UNIX Time(0xd034):(readwrite) (type=0x6) 1549385802
+Type of Slideshow(0xd047):(read only) (type=0x4) 0
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Model ID(0xd049):(read only) (type=0x6) 58195968
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot G7 X'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0] 
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 0
+Property 0xd051: error 201b on query.
+Property 0xd052:(read only) (type=0x2) 0
+Property 0xd053: error 201b on query.
+Property 0xd054: error 201b on query.
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot G7 X'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 0
+Property 0xd055:(readwrite) (type=0x2) 0
+Property 0xd056:(readwrite) (type=0x2) 0
+Property 0xd106:(readwrite) (type=0x2) 0
+Property 0xd1b0:(readwrite) (type=0x2) 0
+Property 0xd111: error 201b on query.
+Property 0xd112: error 201b on query.
+
+/main/actions/viewfinder                                                       
+Label: Canon EOS Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+Choice: 5 Immediate
+Choice: 6 Press 1
+Choice: 7 Press 2
+Choice: 8 Press 3
+Choice: 9 Release 1
+Choice: 10 Release 2
+Choice: 11 Release 3
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1549406458
+Printable: Tue 05 Feb 2019 23:40:58 CET
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/ownername
+Label: Owner Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/capture
+Label: Capture
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Canon Inc.
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Canon PowerShot G7 X
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 1-14.0.1.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: None
+END
+/main/status/model
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot G7 X
+END
+/main/status/model
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: 58195968
+END
+/main/status/firmwareversion
+Label: Firmware Version
+Readonly: 1
+Type: TEXT
+Current: 1.0.0.0
+END
+/main/status/Battery Level
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 3%
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 0
+Type: TEXT
+Current: 8921
+END
+/main/capturesettings/zoom
+Label: Zoom
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d045
+Label: Event Emulate Mode
+Readonly: 0
+Type: MENU
+Current: 9
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d04a
+Label: PTP Property 0xd04a
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d02e
+Label: Size of Output Data from Camera
+Readonly: 1
+Type: TEXT
+Current: 262144
+END
+/main/other/d02f
+Label: Size of Input Data to Camera
+Readonly: 1
+Type: TEXT
+Current: 262144
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d002
+Label: Battery Type
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+END
+/main/other/d003
+Label: Battery Mode
+Readonly: 1
+Type: MENU
+Current: 4
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d034
+Label: UNIX Time
+Readonly: 0
+Type: TEXT
+Current: 1549410058
+END
+/main/other/d047
+Label: Type of Slideshow
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d046
+Label: DPOF Version
+Readonly: 1
+Type: TEXT
+Current: 257
+END
+/main/other/d030
+Label: Remote API Version
+Readonly: 1
+Type: TEXT
+Current: 256
+END
+/main/other/d049
+Label: Model ID
+Readonly: 1
+Type: TEXT
+Current: 58195968
+END
+/main/other/d032
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot G7 X
+END
+/main/other/d033
+Label: Camera Owner
+Readonly: 0
+Type: TEXT
+Current: (null)
+END
+/main/other/d031
+Label: Firmware Version
+Readonly: 1
+Type: TEXT
+Current: 16777216
+END
+/main/other/d050
+Label: PTP Property 0xd050
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d052
+Label: PTP Property 0xd052
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d402
+Label: PTP Property 0xd402
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot G7 X
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d055
+Label: PTP Property 0xd055
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d056
+Label: PTP Property 0xd056
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d106
+Label: PTP Property 0xd106
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/d1b0
+Label: PTP Property 0xd1b0
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+
+
