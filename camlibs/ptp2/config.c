@@ -2460,7 +2460,54 @@ _put_Olympus_ISO(CONFIG_PUT_ARGS)
 	}
 	return GP_ERROR;
 }
-//Modif BF
+//Modif BF Add OMD Drive Mode Widget
+static int
+_get_Olympus_OMD_DriveMode(CONFIG_GET_ARGS) {
+	int i;
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+		char	buf[20];
+
+		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u16);
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0x033d) { strcpy(buf,_("Simple")); }
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0x0303) { strcpy(buf,_("Simple Silence")); }
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget,buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Olympus_OMD_DriveMode(CONFIG_PUT_ARGS)
+{
+	char *value;
+	unsigned int	u;
+
+	CR (gp_widget_get_value(widget, &value));
+	if (!strcmp(value,_("Simple"))) {
+		propval->u16 = 0x033d;
+		return GP_OK;
+	}
+	if (!strcmp(value,_("Simple Silence"))) {
+		propval->u16 = 0x0303;
+		return GP_OK;
+	}
+
+	if (sscanf(value, "%ud", &u)) {
+		propval->u16 = u;
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+//Modif BF Add OMD Bulb Widget
 static int
 _get_Olympus_OMD_Bulb(CONFIG_GET_ARGS) {
 	int val;
@@ -3808,11 +3855,11 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 			sprintf(buf,_("Bulb"));
 			goto choicefound;
 		}
-		// if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffe) {
-		// 	sprintf(buf,_("Composite"));
-		// 	goto choicefound;
-		// }
-		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffd) {
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffa) {
+		 	sprintf(buf,_("Composite"));
+		 	goto choicefound;
+		 }
+		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffb) {
 			sprintf(buf,_("Time"));
 			goto choicefound;
 		}
@@ -3820,10 +3867,11 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
 		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
 
-		if (((y % 10) == 0) && ((x % 10) == 0)) {
+		//Modif BF Try get to correct values
+		if (x > 1 && y > 1) {
 			y /= 10;
 			x /= 10;
-		}
+		}    
 		if (y == 1) { /* x/1 */
 			sprintf (buf, "%d", x);
 		} else {
@@ -3864,15 +3912,14 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 		propval->u32 = 0xfffffffc;
 		return GP_OK;
 	}
-	// if (!strcmp(value_str,_("x 200"))) {
-	// 	propval->u32 = 0xfffffffe;
-	// 	return GP_OK;
-	// }
+	if (!strcmp(value_str,_("Composite"))) {
+	 	propval->u32 = 0xfffffffa;
+	 	return GP_OK;
+	 }
 	if (!strcmp(value_str,_("Time"))) {
-		propval->u32 = 0xfffffffd;
+		propval->u32 = 0xfffffffb;
 		return GP_OK;
 	}
-
 
 	if (strchr(value_str, '/')) {
 		if (2 != sscanf (value_str, "%d/%d", &x, &y))
@@ -3880,8 +3927,11 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 	} else {
 		if (!sscanf (value_str, "%d", &x))
 			return GP_ERROR;
-		y = 1;
+			//Modif BF Try get to correct values
+		y = 10;
+		x *=10;
 	}
+	
 	propval->u32 = (x<<16) | y;
 	return GP_OK;
 }
@@ -8201,6 +8251,8 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
 	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
+	//Modif BF
+	{ N_("Drive Mode"),              "drivemode",           PTP_DPC_OLYMPUS_OMD_DriveMode,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT8,  _get_Olympus_OMD_DriveMode,       _put_Olympus_OMD_DriveMode },
 	{ 0,0,0,0,0,0,0 },
 };
 
