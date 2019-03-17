@@ -2521,7 +2521,7 @@ _get_Olympus_OMD_Bulb(CONFIG_GET_ARGS) {
 	return (GP_OK);
 }
 
-//Modif Berylius:
+//Modif Berylius: Add OMD Bulb Widget
 static int
 _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 {
@@ -3852,7 +3852,7 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 /* Olympus values*/
-//Modif Berylius:
+//Modif Berylius: Add text values for special mode
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffc) {
 			sprintf(buf,_("Bulb"));
 			goto choicefound;
@@ -3908,7 +3908,7 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 	gp_widget_get_value (widget, &value_str);
 
 /* Olympus values*/
-//Modif Berylius:
+//Modif Berylius: Add text values for special mode
 	if (!strcmp(value_str,_("Bulb"))) {
 		propval->u32 = 0xfffffffc;
 		return GP_OK;
@@ -8099,7 +8099,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             PTP_DPC_SONY_StillImage,PTP_VENDOR_SONY,   0,               _get_Sony_Bulb,                 _put_Sony_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },	
-	//Modif Berylius:
+	//Modif Berylius: Add Buld Widget
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_OC_OLYMPUS_OMD_Capture,      _get_Olympus_OMD_Bulb,                _put_Olympus_OMD_Bulb },	
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
 	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
@@ -8252,8 +8252,8 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
 	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
-	//Modif Berylius:
-	{ N_("Drive Mode"),              "drivemode",           PTP_DPC_OLYMPUS_OMD_DriveMode,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT8,  _get_Olympus_OMD_DriveMode,       _put_Olympus_OMD_DriveMode },
+	// Modif Berylius: Add Drivemode (work in progress)
+	//{ N_("Drive Mode"),              "drivemode",           PTP_DPC_OLYMPUS_OMD_DriveMode,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT8,  _get_Olympus_OMD_DriveMode,       _put_Olympus_OMD_DriveMode },
 	{ 0,0,0,0,0,0,0 },
 };
 

@@ -5987,7 +5987,7 @@ sonyout:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
-	//Modif Berylius:
+	//Modif Berylius: Add Olympus new image event and download image
 	if 	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) 
 	 {
 
