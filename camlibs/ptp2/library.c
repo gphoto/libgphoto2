@@ -1,4 +1,4 @@
-﻿/* library.c
+﻿/* library.c 
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
  * Copyright (C) 2003-2019 Marcus Meissner <marcus@jet.franken.de>
@@ -4592,7 +4592,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 	do {
 		C_PTP_REP (ptp_check_event (params));
 
-		while (ptp_get_one_event(params, &event)) {			
+		while (ptp_get_one_event(params, &event)) {
 			switch (event.Code) {
 			case 0xc002:
 			case PTP_EC_ObjectAdded:
@@ -4635,8 +4635,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 				gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 				return GP_OK;
 			}
-#endif
-			
+#endif			
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				break;
