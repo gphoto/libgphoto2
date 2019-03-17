@@ -888,7 +888,7 @@ ptp_olympus_omd_capture (PTPParams* params)
  *
  * Return values: Some PTP_RC_* code.
  **/
-//Modif BF
+//Modif Berylius: Add Olympus Buld Start function
 uint16_t
 ptp_olympus_omd_bulbstart (PTPParams* params)
 {
@@ -910,7 +910,7 @@ ptp_olympus_omd_bulbstart (PTPParams* params)
  *
  * Return values: Some PTP_RC_* code.
  **/
-//Modif BF
+//Modif Berylius: Add Olympus Buld End function
 uint16_t
 ptp_olympus_omd_bulbend (PTPParams* params)
 {

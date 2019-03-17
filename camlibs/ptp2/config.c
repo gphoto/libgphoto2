@@ -2460,7 +2460,8 @@ _put_Olympus_ISO(CONFIG_PUT_ARGS)
 	}
 	return GP_ERROR;
 }
-//Modif BF Add OMD Drive Mode Widget
+//Modif Berylius: Add OMD Drive Mode Widget
+/* Work in progress
 static int
 _get_Olympus_OMD_DriveMode(CONFIG_GET_ARGS) {
 	int i;
@@ -2507,7 +2508,8 @@ _put_Olympus_OMD_DriveMode(CONFIG_PUT_ARGS)
 	}
 	return GP_ERROR;
 }
-//Modif BF Add OMD Bulb Widget
+*/
+//Modif Berylius: Add OMD Bulb Widget
 static int
 _get_Olympus_OMD_Bulb(CONFIG_GET_ARGS) {
 	int val;
@@ -2519,7 +2521,7 @@ _get_Olympus_OMD_Bulb(CONFIG_GET_ARGS) {
 	return (GP_OK);
 }
 
-//Modif BF
+//Modif Berylius:
 static int
 _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 {
@@ -3850,7 +3852,7 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
 /* Olympus values*/
-//Modif BF
+//Modif Berylius:
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffc) {
 			sprintf(buf,_("Bulb"));
 			goto choicefound;
@@ -3866,12 +3868,11 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 
 		x = dpd->FORM.Enum.SupportedValue[i].u32>>16;
 		y = dpd->FORM.Enum.SupportedValue[i].u32&0xffff;
-
-		//Modif BF Try get to correct values
-		if (x > 1 && y > 1) {
+		
+		if (((y % 10) == 0) && ((x % 10) == 0)) {
 			y /= 10;
 			x /= 10;
-		}    
+		}
 		if (y == 1) { /* x/1 */
 			sprintf (buf, "%d", x);
 		} else {
@@ -3907,7 +3908,7 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 	gp_widget_get_value (widget, &value_str);
 
 /* Olympus values*/
-//Modif BF
+//Modif Berylius:
 	if (!strcmp(value_str,_("Bulb"))) {
 		propval->u32 = 0xfffffffc;
 		return GP_OK;
@@ -3923,11 +3924,11 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 	if (strchr(value_str, '/')) {
 		if (2 != sscanf (value_str, "%d/%d", &x, &y))
-			return GP_ERROR;
+			return GP_ERROR;		
 	} else {
 		if (!sscanf (value_str, "%d", &x))
 			return GP_ERROR;
-			//Modif BF Try get to correct values
+			//Modif Berylius: Try get to correct values
 		y = 10;
 		x *=10;
 	}
@@ -8098,7 +8099,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             PTP_DPC_SONY_StillImage,PTP_VENDOR_SONY,   0,               _get_Sony_Bulb,                 _put_Sony_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },	
-	//Modif BF
+	//Modif Berylius:
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_OC_OLYMPUS_OMD_Capture,      _get_Olympus_OMD_Bulb,                _put_Olympus_OMD_Bulb },	
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
 	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
@@ -8251,7 +8252,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
 	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
-	//Modif BF
+	//Modif Berylius:
 	{ N_("Drive Mode"),              "drivemode",           PTP_DPC_OLYMPUS_OMD_DriveMode,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT8,  _get_Olympus_OMD_DriveMode,       _put_Olympus_OMD_DriveMode },
 	{ 0,0,0,0,0,0,0 },
 };

@@ -5987,7 +5987,7 @@ sonyout:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
-	//Modif BF
+	//Modif Berylius:
 	if 	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) 
 	 {
 
