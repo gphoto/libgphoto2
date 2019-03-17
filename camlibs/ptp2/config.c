@@ -3924,7 +3924,7 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 	if (strchr(value_str, '/')) {
 		if (2 != sscanf (value_str, "%d/%d", &x, &y))
-			return GP_ERROR;		
+			return GP_ERROR;
 	} else {
 		if (!sscanf (value_str, "%d", &x))
 			return GP_ERROR;
