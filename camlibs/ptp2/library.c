@@ -2700,7 +2700,7 @@ camera_exit (Camera *camera, GPContext *context)
 					}
 					camera->pl->checkevents = 0;
 				}
-				if (params->inliveview)
+				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
 					ptp_canon_eos_end_viewfinder (params);
 				camera_unprepare_capture (camera, context);
 			}
