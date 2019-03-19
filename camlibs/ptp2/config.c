@@ -2460,56 +2460,7 @@ _put_Olympus_ISO(CONFIG_PUT_ARGS)
 	}
 	return GP_ERROR;
 }
-//Modif Berylius: Add OMD Drive Mode Widget
-/* Work in progress
-static int
-_get_Olympus_OMD_DriveMode(CONFIG_GET_ARGS) {
-	int i;
 
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return GP_ERROR;
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return GP_ERROR;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
-
-		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u16);
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0x033d) { strcpy(buf,_("Simple")); }
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0x0303) { strcpy(buf,_("Simple Silence")); }
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget,buf);
-	}
-	return GP_OK;
-}
-
-static int
-_put_Olympus_OMD_DriveMode(CONFIG_PUT_ARGS)
-{
-	char *value;
-	unsigned int	u;
-
-	CR (gp_widget_get_value(widget, &value));
-	if (!strcmp(value,_("Simple"))) {
-		propval->u16 = 0x033d;
-		return GP_OK;
-	}
-	if (!strcmp(value,_("Simple Silence"))) {
-		propval->u16 = 0x0303;
-		return GP_OK;
-	}
-
-	if (sscanf(value, "%ud", &u)) {
-		propval->u16 = u;
-		return GP_OK;
-	}
-	return GP_ERROR;
-}
-*/
-//Modif Berylius: Add OMD Bulb Widget
 static int
 _get_Olympus_OMD_Bulb(CONFIG_GET_ARGS) {
 	int val;
@@ -2521,7 +2472,6 @@ _get_Olympus_OMD_Bulb(CONFIG_GET_ARGS) {
 	return (GP_OK);
 }
 
-//Modif Berylius: Add OMD Bulb Widget
 static int
 _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 {
@@ -3851,8 +3801,6 @@ _get_Olympus_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-/* Olympus values*/
-//Modif Berylius: Add text values for special mode
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0xfffffffc) {
 			sprintf(buf,_("Bulb"));
 			goto choicefound;
@@ -3907,8 +3855,6 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 	gp_widget_get_value (widget, &value_str);
 
-/* Olympus values*/
-//Modif Berylius: Add text values for special mode
 	if (!strcmp(value_str,_("Bulb"))) {
 		propval->u32 = 0xfffffffc;
 		return GP_OK;
@@ -3927,8 +3873,7 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 			return GP_ERROR;
 	} else {
 		if (!sscanf (value_str, "%d", &x))
-			return GP_ERROR;
-			//Modif Berylius: Try get to correct values
+			return GP_ERROR;			
 		y = 10;
 		x *=10;
 	}
@@ -8099,7 +8044,6 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             PTP_DPC_SONY_StillImage,PTP_VENDOR_SONY,   0,               _get_Sony_Bulb,                 _put_Sony_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },	
-	//Modif Berylius: Add Buld Widget
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_OC_OLYMPUS_OMD_Capture,      _get_Olympus_OMD_Bulb,                _put_Olympus_OMD_Bulb },	
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
 	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
