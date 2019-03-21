@@ -3799,7 +3799,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 			if (xsize > BLOBSIZE)
 				xsize = BLOBSIZE;
-			C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &ximage));
+			C_PTP_REP (ptp_getpartialobject (params, newobject, offset, xsize, &ximage, &xsize));
 			gp_file_append (file, (char*)ximage, xsize);
 			free (ximage);
 			offset += xsize;
@@ -5536,7 +5536,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 							if (xsize > BLOBSIZE)
 								xsize = BLOBSIZE;
-							C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, offset, xsize, &yimage));
+							C_PTP_REP (ptp_getpartialobject (params, newobject, offset, xsize, &yimage, &xsize));
 							gp_file_append (file, (char*)yimage, xsize);
 							free (yimage);
 							offset += xsize;
@@ -7589,29 +7589,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return mtp_get_playlist (camera, file, oid, context);
 
 		size=ob->oi.ObjectCompressedSize;
-/* EOS software uses 1MB blobs */
 #define BLOBSIZE 5*1024*1024
-		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-			(ptp_operation_issupported(params,PTP_OC_CANON_EOS_GetPartialObject)) &&
-			(size > BLOBSIZE)
-		) {
-				unsigned char	*ximage = NULL;
-				uint32_t 	offset = 0;
-
-				while (offset < size) {
-					uint32_t	xsize = size - offset;
-
-					if (xsize > BLOBSIZE)
-						xsize = BLOBSIZE;
-					C_PTP_REP (ptp_canon_eos_getpartialobject (params, oid, offset, xsize, &ximage));
-					gp_file_append (file, (char*)ximage, xsize);
-					free (ximage);
-					ximage = NULL;
-					offset += xsize;
-				}
-				goto done;
-		}
 		/* We also need this for Nikon D850 and very big RAWs (>40 MB) */
+		/* Try the generic method first, EOS R does not like the second for some reason */
 		if (	(ptp_operation_issupported(params,PTP_OC_GetPartialObject)) &&
 			(size > BLOBSIZE)
 		) {
@@ -7629,6 +7609,27 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					free (ximage);
 					ximage = NULL;
 					offset += xlen;
+				}
+				goto done;
+		}
+		/* EOS software uses 1MB blobs, we try 5MB */
+		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+			(ptp_operation_issupported(params,PTP_OC_CANON_EOS_GetPartialObject)) &&
+			(size > BLOBSIZE)
+		) {
+				unsigned char	*ximage = NULL;
+				uint32_t 	offset = 0;
+
+				while (offset < size) {
+					uint32_t	xsize = size - offset;
+
+					if (xsize > BLOBSIZE)
+						xsize = BLOBSIZE;
+					C_PTP_REP (ptp_getpartialobject (params, oid, offset, xsize, &ximage, &xsize));
+					gp_file_append (file, (char*)ximage, xsize);
+					free (ximage);
+					ximage = NULL;
+					offset += xsize;
 				}
 				goto done;
 		}
