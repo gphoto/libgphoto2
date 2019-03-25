@@ -3788,7 +3788,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 	GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
 
-#define BLOBSIZE 5*1024*1024
+#define BLOBSIZE 1*1024*1024
+	/* the EOS R does not like 5MB, but likes 1MB */
 	/* Trying to read this in 1 block might be the cause of crashes of newer EOS */
 	{
 		uint32_t	offset = 0;
@@ -5525,7 +5526,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)entry.u.object.oi.ObjectCompressedSize);
 
-#define BLOBSIZE 5*1024*1024
+#define BLOBSIZE 1*1024*1024
 					/* Trying to read this in 1 block might be the cause of crashes of newer EOS */
 					{
 						uint32_t	offset = 0;
@@ -7589,7 +7590,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return mtp_get_playlist (camera, file, oid, context);
 
 		size=ob->oi.ObjectCompressedSize;
-#define BLOBSIZE 5*1024*1024
+#define BLOBSIZE 1*1024*1024
 		/* We also need this for Nikon D850 and very big RAWs (>40 MB) */
 		/* Try the generic method first, EOS R does not like the second for some reason */
 		if (	(ptp_operation_issupported(params,PTP_OC_GetPartialObject)) &&
@@ -7612,7 +7613,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				}
 				goto done;
 		}
-		/* EOS software uses 1MB blobs, we try 5MB */
+		/* EOS software uses 1MB blobs, use that too... EOS R does not like 5MB blobs */
 		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 			(ptp_operation_issupported(params,PTP_OC_CANON_EOS_GetPartialObject)) &&
 			(size > BLOBSIZE)
