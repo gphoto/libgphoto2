@@ -6407,10 +6407,11 @@ _put_Canon_RemoteMode(CONFIG_PUT_ARGS) {
 static int
 _get_Canon_EOS_ViewFinder(CONFIG_GET_ARGS) {
 	int val;
+	PTPParams		*params = &(camera->pl->params);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	val = 2;	/* always changed, unless we can find out the state ... */
+	val = params->inliveview;	/* try returning live view mode */
 	gp_widget_set_value  (*widget, &val);
 	return GP_OK;
 }
