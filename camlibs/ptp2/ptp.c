@@ -880,6 +880,46 @@ ptp_olympus_omd_capture (PTPParams* params)
 	free (buffer);
 	return ret;
 }
+/**
+ * ptp_olympus_bulbstart:
+ * params:	PTPParams*
+ *
+ * Starts Olympus Bulb capture.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_olympus_omd_bulbstart (PTPParams* params)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x3); // initiate capture
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
+	if ((ptp.Nparam >= 1) && ((ptp.Param1 & 0x7000) == 0x2000))
+		return ptp.Param1;
+	return PTP_RC_OK;
+}
+
+
+/**
+ * ptp_olympus_bulbend:
+ * params:	PTPParams*
+ *
+ * Stops Olympus Bulb capture.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_olympus_omd_bulbend (PTPParams* params)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x6); // initiate capture
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
+	if ((ptp.Nparam >= 1) && ((ptp.Param1 & 0x7000) == 0x2000))
+		return ptp.Param1;
+	return PTP_RC_OK;
+}
 
 uint16_t
 ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
