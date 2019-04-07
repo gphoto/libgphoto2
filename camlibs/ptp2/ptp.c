@@ -4085,6 +4085,30 @@ ptp_nikon_get_preview_image (PTPParams* params, unsigned char **xdata, unsigned 
 }
 
 /**
+ * ptp_canon_eos_get_remotemode:
+ *
+ * This command gets the EOS remote mode.
+ *
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_canon_eos_getremotemode (PTPParams* params, uint32_t *mode)
+{
+	PTPContainer	ptp;
+
+        PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetRemoteMode);
+
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
+	*mode = 0;
+	if (ptp.Nparam > 0)
+		*mode = ptp.Param1;
+	return PTP_RC_OK;
+}
+
+/**
  * ptp_canon_eos_get_viewfinder_image:
  *
  * This command gets a Viewfinder image from newer Nikons DSLRs.
