@@ -1055,7 +1055,7 @@ static struct {
 	{"Sony:Alpha-A7r II (Control)",		0x054c, 0x0a6b, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl> */
-	{"Sony:DSC-RX100M4",          		0x054c, 0x0a6d, 0},
+	{"Sony:DSC-RX100M4",          		0x054c, 0x0a6d, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Andre Crone <andre@elysia.nl>, adjusted */
 	{"Sony:Alpha-A7S II (Control)",		0x054c,0x0a71, PTP_CAP},
