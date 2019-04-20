@@ -1181,6 +1181,8 @@ static struct {
 	{"Nikon:Coolpix S60 (PTP mode)",  0x04b0, 0x0171, 0},
 	/* Mike Strickland <livinwell@georgianatives.net> */
 	{"Nikon:Coolpix P90 (PTP mode)",  0x04b0, 0x0173, 0},
+	/* https://github.com/gphoto/gphoto2/issues/214 */
+	{"Nikon:Coolpix L100 (PTP mode)", 0x04b0, 0x0174, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* Christoph Muehlmann <c.muehlmann@nagnag.de> */
 	{"Nikon:Coolpix S220 (PTP mode)", 0x04b0, 0x0177, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 	/* */
