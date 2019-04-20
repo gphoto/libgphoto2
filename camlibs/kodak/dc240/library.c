@@ -738,7 +738,15 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
     free(p2);
 
     /* Don't expect to have a fully useful buffer. */
-    gp_file_get_data_and_size (file, &fdata, &fsize);
+    ret = gp_file_get_data_and_size (file, &fdata, &fsize);
+    if (ret < 0) {
+	gp_file_free (file);
+        return ret;
+    }
+    if (size < 1) {
+	gp_file_free (file);
+        return GP_ERROR;
+    }
 
     /* numbers in DC 240 are Big-Endian. */
     /* Conversion below should be endian neutral. */
