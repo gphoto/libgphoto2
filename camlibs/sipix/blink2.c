@@ -178,6 +178,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		end = 	(xbuf[8*i+13] << 16) |
 			(xbuf[8*i+14] <<  8) |
 			(xbuf[8*i+15]);
+
+		if (end < start)
+			return GP_ERROR_IO_READ;
+
 		addrs[i].start = start;
 		addrs[i].len = (end-start)/4;
 		addrs[i].type = xbuf[8*(i+1)];
