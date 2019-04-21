@@ -77,6 +77,10 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, unsigned int *len)
 		*buffer = malloc(*len + 1 + 0x800);
 	else
 		*buffer = realloc(*buffer, *len + 1 + 0x800);
+	if (!*buffer) {
+		gp_log(GP_LOG_ERROR, "g3" ,"malloc failed, size %d too large?\n", *len+1+0x800);
+		return GP_ERROR_NO_MEMORY;
+	}
 	tocopy = *len;
 	if (tocopy > 0x800-8) tocopy = 0x800-8;
 	memcpy(*buffer, xbuf+8, tocopy);
