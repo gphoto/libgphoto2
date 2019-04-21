@@ -743,7 +743,7 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
 	gp_file_free (file);
         return ret;
     }
-    if (size < 1) {
+    if ((size < 1) || !fdata) {
 	gp_file_free (file);
         return GP_ERROR;
     }
