@@ -50,10 +50,11 @@
  */
 
 static int
-g3_channel_read(GPPort *port, int *channel, char **buffer, int *len)
+g3_channel_read(GPPort *port, int *channel, char **buffer, unsigned int *len)
 {
 	unsigned char xbuf[0x800];
-	int tocopy, ret, curlen;
+	unsigned int tocopy, curlen;
+	int ret;
 
 	ret = gp_port_read(port, (char *)xbuf, 0x800);
 	if (ret < GP_OK) { 
@@ -184,7 +185,8 @@ g3_channel_write(GPPort *port, int channel, char *buffer, int len)
 
 static int
 g3_ftp_command_and_reply(GPPort *port, char *cmd, char **reply) {
-	int ret, channel, len;
+	int ret, channel;
+	unsigned int len;
 	char *realcmd, *s;
 
 	realcmd = malloc(strlen(cmd)+2+1);strcpy(realcmd, cmd);strcat(realcmd, "\r\n");
@@ -344,7 +346,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	char *buf = NULL, *reply = NULL, *cmd =NULL, *msg = NULL;
-	int ret, channel, bytes, seek, len;
+	unsigned int len, bytes, seek;
+	int ret, channel;
 
 	ret = g3_cwd_command (camera->port, folder);
 	if (ret < GP_OK) goto out;
@@ -702,7 +705,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 	char *buf = NULL, *reply = NULL;
 	char *cmd = NULL;
-	int ret = GP_OK, channel, len, rlen;
+	unsigned int len, rlen;
+	int ret = GP_OK, channel;
 
 	if (!strcmp("/",folder)) {
 		/* Lets hope they dont invent other names. */
@@ -789,7 +793,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	free(cmd); cmd = NULL;
 	if (ret < GP_OK) goto out;
 	if (buf[0] == '1') { /* 1xx means another reply follows */
-		int n = 0, channel, len, rlen;
+		int n = 0, channel;
+		unsigned int len, rlen;
 		ret = g3_channel_read(camera->port, &channel, &buf, &len); /* data. */
 		if (ret < GP_OK) goto out;
 		ret = g3_channel_read(camera->port, &channel, &reply, &rlen); /* next reply  */
