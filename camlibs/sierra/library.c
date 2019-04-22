@@ -644,6 +644,10 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		 * data, and 2 for the checksum.
 		 */
 		length = packet[2] + (packet[3] * 256) + 6;
+		if (length > SIERRA_PACKET_SIZE) {
+			GP_DEBUG ("Packet too long (%d)!", length);
+			return GP_ERROR_IO;
+		}
 
 		/* 
 		 * Read until the end of the packet is reached
