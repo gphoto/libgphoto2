@@ -200,8 +200,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 		char *convline,*convline2,*rawline;
 		unsigned char	*jpegdata;
-		unsigned int start, len, pitch;
-		int curread;
+		unsigned int curread, start, len, pitch;
 		struct jpeg_decompress_struct	dinfo;
 		struct jpeg_source_mgr		xjsm;
 		struct jpeg_error_mgr		jerr;
@@ -213,6 +212,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         		gp_file_set_mime_type (file, GP_MIME_JPEG);
 		start = addrs[image_no].start;
 		len = addrs[image_no].len;
+
+		if (len >= UINT_MAX / 8) {
+			result = GP_ERROR_NO_MEMORY;
+			break;
+		}
 		jpegdata = (unsigned char*)malloc (len*8);
 		if (!jpegdata) {
 			result = GP_ERROR_NO_MEMORY;
@@ -235,7 +239,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		curread  = 0;
 		do {
 			int res;
-			res = gp_port_read (camera->port, (char*)(jpegdata+curread), len );
+			res = gp_port_read (camera->port, (char*)(jpegdata+curread), len-curread );
 			if (res < GP_OK) {
 				result = GP_OK;
 				break;
