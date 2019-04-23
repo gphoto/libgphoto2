@@ -244,6 +244,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				result = GP_OK;
 				break;
 			}
+			if (!res) break;
 			curread += res;
 		} while (curread<=len);
 
