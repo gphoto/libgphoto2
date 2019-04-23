@@ -22,7 +22,7 @@
 #ifndef __VCAMERA_H__
 #define __VCAMERA_H__
 
-#define FUZZ_PTP
+#undef FUZZ_PTP
 
 #include <stdio.h>
 

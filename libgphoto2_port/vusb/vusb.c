@@ -272,7 +272,36 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 #ifdef FUZZ_PTP
 	if ((idvendor == 0x04b0) && (idproduct == 0x0437)) { /* Nikon D750 */
 #else
-	if ((idvendor == 0x0851) && (idproduct == 0x1542)) { /* sipix blink */
+	GPPortInfo info;
+	char	*path, *s;
+	static unsigned short vendor, product;
+	int	fd;
+
+	static char *lastpath = NULL;
+
+	gp_port_get_info (port, &info);
+	gp_port_info_get_path (info, &path);
+
+	if (!lastpath || strcmp(path, lastpath)) {
+		gp_log(GP_LOG_DEBUG,__FUNCTION__,"(path=%s)", path); 
+		if (lastpath) {
+			free(lastpath);
+		}
+		lastpath = strdup(path);
+
+		s = strchr(path, ':')+1;
+		fd = open(s, O_RDONLY);
+		vendor = product = 0;
+		if (fd != -1) {
+			if (-1 == read( fd, &vendor, 2))
+				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read vendor"); 
+			if (-1 == read( fd, &product, 2))
+				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read product"); 
+			close(fd);
+		}
+	}
+
+	if ((idvendor == vendor) && (idproduct == product)) {
 #endif
                 port->settings.usb.config	= 1;
                 port->settings.usb.interface	= 1;
@@ -284,7 +313,7 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
                 port->settings.usb.maxpacketsize = 512;
 		return GP_OK;
 	}
-	/* gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct); */
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct); 
         return GP_ERROR_IO_USB_FIND;
 }
 
@@ -305,8 +334,8 @@ gp_port_vusb_find_device_by_class_lib(GPPort *port, int class, int subclass, int
                 port->settings.usb.maxpacketsize = 512;
 		return GP_OK;
 	}
-        return GP_ERROR_IO_USB_FIND;
 #endif
+        return GP_ERROR_IO_USB_FIND;
 }
 
 

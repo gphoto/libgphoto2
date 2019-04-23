@@ -1815,6 +1815,11 @@ static int vcam_open(vcamera* cam, const char *port) {
 			cam->fuzzmode = FUZZMODE_PROTOCOL;
 		} else {
 			cam->fuzzf = fopen(s+1,"rb");
+#ifndef FUZZ_PTP
+			/* first 4 byte are vendor and product USB id */
+			if (cam->fuzzf)
+				fseek (cam->fuzzf, 4, SEEK_SET);
+#endif
 			cam->fuzzpending = 0;
 			cam->fuzzmode = FUZZMODE_NORMAL;
 		}
