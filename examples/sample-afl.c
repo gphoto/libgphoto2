@@ -131,14 +131,20 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 int main(int argc, char **argv) {
 	Camera		*camera = NULL;
-	int		ret, storagecnt;
+	int		count, ret, storagecnt;
 	CameraStorageInformation	*storageinfo;
+	GPPortInfo	gpinfo;
+	GPPortInfoList	*gpinfolist;
 	GPContext	*context;
 	CameraWidget	*rootwidget;
 	char		buf[200];
-	CameraText	summary;
-	CameraFile	*file;
-	CameraFilePath	path;
+	const char	*name;
+	CameraText		summary;
+	CameraFile		*file;
+	CameraFilePath		path;
+	CameraList		*list;
+	CameraAbilitiesList      *abilities = NULL;
+
 
         gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
@@ -150,9 +156,33 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr,"setting path %s.\n", buf);
 
-	ret = sample_open_camera (&camera, "USB PTP Class Camera", buf, context);
+	gp_port_info_list_new (&gpinfolist);
+	ret = gp_port_info_list_load (gpinfolist);
+	if (ret < GP_OK) return ret;
+
+	ret = gp_port_info_list_lookup_path (gpinfolist, buf);
+	if (ret < GP_OK) return ret;
+
+        /* Detect all the cameras that can be autodetected... */
+        ret = gp_list_new (&list);
+        if (ret < GP_OK) return 1;
+
+	/* Load all the camera drivers we have... */
+	ret = gp_abilities_list_new (&abilities);
+	if (ret < GP_OK) return ret;
+	ret = gp_abilities_list_load (abilities, context);
+	if (ret < GP_OK) return ret;
+	ret = gp_abilities_list_detect (abilities, gpinfolist, list, context);
+	if (ret < GP_OK) return ret;
+
+	fprintf(stderr, "detect list has count %d\n", gp_list_count(list));
+
+	ret = gp_list_get_name(list, 0, &name);
+	if (ret < GP_OK) goto out;
+
+	ret = sample_open_camera (&camera, name, buf, context);
         if (ret < GP_OK) {
-		fprintf(stderr,"camera %s not found.\n", buf);
+		fprintf(stderr,"camera %s at %s not found.\n", name, buf);
 		goto out;
 	}
 
