@@ -313,6 +313,11 @@ int tiger_get_file_list(CameraPrivateLibrary *dev) {
        if (ret < 0) {
           goto list_files_error;
        }
+       if (ret < buflen) {
+          GP_DEBUG("Read only %i instead of %i!", buflen, ret);
+          ret=GP_ERROR_NO_MEMORY;
+          goto list_files_error;
+       }
        
  
        if (dev->file_list) free(dev->file_list);

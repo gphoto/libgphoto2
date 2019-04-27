@@ -152,7 +152,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
                    unsigned char **data, unsigned int *size,
                    unsigned int *type)
 {
-	unsigned int data_size;
+	unsigned int data_size, alloc_size;
 	int r;
 	uint8_t *buf = NULL;
 
@@ -166,7 +166,10 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
 	 * bytes long. The first 0x200 bytes of the data appear to be
 	 * garbage, they are overwritten by the header. */
 	*size = data_size + 623 - 0x200;
-	if (!(buf = malloc (*size)))
+
+	alloc_size = *size;
+	if (alloc_size < 623) alloc_size = 623;
+	if (!(buf = malloc (alloc_size)))
 		return GP_ERROR_NO_MEMORY;
 
 	/* Read the data into the buffer overlapping the header area by
