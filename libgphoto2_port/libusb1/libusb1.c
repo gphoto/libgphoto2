@@ -213,6 +213,11 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_list_append (list, info); /* do not check return value, it might be -1 */
 
 	nrofdevs = libusb_get_device_list (ctx, &devs);
+	if (!nrofdevs) {
+		libusb_exit (ctx); /* should free all stuff above */
+		goto nodevices;
+	}
+
 	C_MEM (descs = calloc (nrofdevs, sizeof(descs[0])));
 	for (i=0;i<nrofdevs;i++)
 		LOG_ON_LIBUSB_E (libusb_get_device_descriptor(devs[i], &descs[i]));
@@ -323,6 +328,7 @@ gp_port_library_list (GPPortInfoList *list)
 	libusb_exit (ctx); /* should free all stuff above */
 	free (descs);
 
+nodevices:
 	/* This will only be added if no other device was ever added.
 	 * Users doing "usb:" usage will enter the regular expression matcher case. */
 	if (nrofdevices == 0) {
