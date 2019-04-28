@@ -207,11 +207,16 @@ int pccam600_init(GPPort *port, GPContext *context){
   gp_port_set_timeout(port,200000);
   CHECK(gp_port_usb_msg_read(port,0x08,0x00,0x1000,(char*)response,0x4));
   nr_of_blocks = response[2]*256+response[1];
+
+  if (nr_of_blocks == 0) {
+    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),64,nr_of_blocks); 
+    return GP_ERROR;
+  }
+
   nr_of_blocks = 512 / nr_of_blocks;
   gp_log(GP_LOG_DEBUG,"pccam600 library: init","nr_of_blocks %d",nr_of_blocks);
-  if (nr_of_blocks == 0){
-    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),
-		 64,nr_of_blocks); 
+  if (nr_of_blocks == 0) {
+    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),64,nr_of_blocks); 
     return GP_ERROR;
   }
   gp_port_set_timeout(port,500);
