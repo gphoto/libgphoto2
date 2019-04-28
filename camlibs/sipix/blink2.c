@@ -194,6 +194,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(addrs);
                 return image_no;
 	}
+	if (image_no >= numpics) {
+		free(addrs);
+		gp_log(GP_LOG_DEBUG, "blink2","image %d requested, but only %d pics on camera?", image_no, numpics);
+                return GP_ERROR;
+	}
         switch (type) {
         case GP_FILE_TYPE_NORMAL:
 #ifdef HAVE_LIBJPEG
