@@ -190,6 +190,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("width is %i\n", w);
 	h = jl2005a_get_pic_height(camera->port);
 	GP_DEBUG ("height is %i\n", h);
+
+	/* sanity check against bad usb devices */
+	if ((w ==0) || (w > 1024) || (h == 0) || (h > 1024)) return GP_ERROR;
+
 	/* Image data to be downloaded contains header and footer bytes */
 	data = malloc (b+14);
 	if (!data) return GP_ERROR_NO_MEMORY;
