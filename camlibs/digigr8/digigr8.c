@@ -76,7 +76,7 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 
 		for (j=0; j<i; j+=16) {
 			if ((!catalog[j]) || (catalog[j] == 0x64)) {
-				memmove(catalog+j, catalog+j+16, i+16-j);
+				memmove(catalog+j, catalog+j+16, i-j);
 				priv->nb_entries -- ;
 			}
 		}
