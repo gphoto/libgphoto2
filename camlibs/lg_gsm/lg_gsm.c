@@ -205,11 +205,11 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, int size, int n)
 
 int lg_gsm_list_files (GPPort *port, CameraList *list) 
 {
-	int num_pics;
+	unsigned int num_pics;
 	int i;	
 
 	char oknok[6];
-	char photonumber[22];
+	unsigned char photonumber[22];
 	char photolist[142000]; /* max_photos * 142 */
 	char name[44];
 	char value[88];
@@ -232,7 +232,7 @@ int lg_gsm_list_files (GPPort *port, CameraList *list)
 	/* lsphoto : write 0x04000800000040000000ffffffff */
 	MSGWRITE(port, 0x13, 0xe, 0x0, "", 0);
 	WRITE(port, list_all_photo, 0xe);
-	READ(port, photonumber, 0x16);
+	READ(port, (char*)photonumber, 0x16);
 
 	num_pics=photonumber[20]+256*photonumber[21];
 
