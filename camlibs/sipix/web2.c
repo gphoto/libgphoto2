@@ -152,6 +152,7 @@ web2_get_file_info(GPPort *port, GPContext *context, char *name, int *filesize) 
     /* flip filename bytes to be in correct order */
     for (i=2;i<16;i++)
 	name[i-2] = cmdbuf[i^1];
+    name[14] = 0;
     *filesize =	(cmdbuf[18]      ) | (cmdbuf[19] <<  8) | \
 		(cmdbuf[20] << 16) | (cmdbuf[21] << 24);
     /* 22-25 unused? */
