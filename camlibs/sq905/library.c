@@ -331,6 +331,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		case 320: h = 240; break;
 		default:  h = 288; break;
 		}
+		if (!comp_ratio) {
+			sq_rewind(camera->port, camera->pl);
+			return GP_ERROR;
+		}
 		b = nb_frames * w * h / comp_ratio;
 		do_preprocess = 1;
 		if (camera->pl->last_fetched_data) break;
