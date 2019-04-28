@@ -251,7 +251,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	size = strlen ((char *)ppm);
 	ptr = ppm + size;
 	size = size + (w * h * 3);
-	GP_DEBUG ("size = %i\n", size);
+	GP_DEBUG ("size = %i, w = %d, h = %d\n", size, w,h );
 	gp_ahd_decode (p_data, w , h, ptr, BAYER_TILE_BGGR);
 
 	free(p_data);
