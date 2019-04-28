@@ -122,6 +122,8 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 {
 	unsigned char *to_read;
 	int maxdl = 0xfa00;
+	int ret;
+
 	to_read=data;
 	jl2005a_read_info_byte(port, 7);
 	/* Always 0x80. Purpose unknown */
@@ -146,11 +148,15 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 	/* Switch the inep over to 0x81. */ 
 	set_usb_in_endpoint	(camera, 0x81); 
 	while (size > maxdl) {
-		gp_port_read(port, (char *)to_read, maxdl);
+		ret = gp_port_read(port, (char *)to_read, maxdl);
+		if (ret < GP_OK) return ret;
+		if (ret == 0) return GP_ERROR;
 		to_read += maxdl;
 		size -= maxdl;
 	}
-	gp_port_read(port, (char *)to_read, size);
+	ret = gp_port_read(port, (char *)to_read, size);
+	if (ret < GP_OK) return ret;
+	if (ret < size) return GP_ERROR;
 	/* Switch the inep back to 0x84. */ 
 	set_usb_in_endpoint	(camera, 0x84);
 	return GP_OK;
