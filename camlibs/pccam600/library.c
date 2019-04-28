@@ -125,6 +125,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
       for (i = offset; i <= 512-32; i=i+32)
 	{
 	  memcpy(file_entry,&(buffer)[i],32);
+	  file_entry->name[8] = 0;
 	  /*Fileentry valid? */
 	  if( !((file_entry->state & 0x02) != 2)  && 
 	      !((file_entry->state & 0x08) == 8) )
