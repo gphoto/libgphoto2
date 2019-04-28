@@ -181,7 +181,8 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	char *raw, *ppm;
 	unsigned char gtable[256];
 	char *ptr;
-	int size = 0, n = 0;
+	unsigned int size = 0;
+	int n = 0;
 	int width, height;
 	struct jamcam_file *jc_file;
 

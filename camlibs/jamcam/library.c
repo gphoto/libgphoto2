@@ -70,7 +70,7 @@ static int jamcam_set_int_at_pos( unsigned char *buf, int pos, int value ) {
 	buf[pos + 2] = ( value >> 16 ) & 0xff;
 	buf[pos + 3] = ( value >> 24 ) & 0xff;
 
-	return( value );
+	return value;
 }
 
 static unsigned int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
@@ -81,10 +81,10 @@ static unsigned int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
 	ret += buf[pos + 2] * 256 * 256;
 	ret += buf[pos + 3] * 256 * 256 * 256;
 
-	return( ret );
+	return ret;
 }
 
-static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
+static int jamcam_set_usb_mem_pointer( Camera *camera, unsigned int position ) {
 	char reply[8];
 
 	GP_DEBUG ("* jamcam_set_usb_mem_pointer");
@@ -103,7 +103,7 @@ static int jamcam_set_usb_mem_pointer( Camera *camera, int position ) {
 		0,
 		reply, 8 );
 
-	return( GP_OK );
+	return GP_OK;
 }
 
 
@@ -113,8 +113,8 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 	unsigned char reply[512];
 	unsigned int position = 0x40000000;
 	unsigned int data_incr;
-	int width;
-	int height;
+	unsigned int width;
+	unsigned int height;
 
 	GP_DEBUG ("* jamcam_mmc_card_file_count");
 
@@ -398,12 +398,12 @@ static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 	if ( res == GP_OK ) {
 		GP_DEBUG ("  * returning OK");
 	}
-	return( res );
+	return res;
 }
 
 int jamcam_request_image( Camera *camera, CameraFile *file,
-		char *buf, int *len, int number, GPContext *context ) {
-	int position;
+		char *buf, unsigned int *len, int number, GPContext *context ) {
+	unsigned int position;
 	int result;
 	unsigned char *tmp_buf;
 
@@ -424,9 +424,11 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 			0x0000,
 			NULL, 0 );
 	}
-	
-	result = jamcam_fetch_memory( camera, file, tmp_buf, position,
-		jamcam_files[number].data_incr, context );
+	if (jamcam_files[number].data_incr <= 640*480*3)
+		result = jamcam_fetch_memory( camera, file, tmp_buf, position,
+			jamcam_files[number].data_incr, context );
+	else
+		result = GP_ERROR;
 
 	/* this seems to reset the camera to a sane status */
 	if ( camera->port->type == GP_PORT_USB ) {
@@ -439,11 +441,12 @@ int jamcam_request_image( Camera *camera, CameraFile *file,
 
 	if ( result == GP_OK ) {
 		*len = jamcam_files[number].width * jamcam_files[number].height;
-		memcpy( buf, tmp_buf + 0x10, *len );
+		if (*len < 640*480*3)
+			memcpy( buf, tmp_buf + 0x10, *len );
 	}
 	free (tmp_buf);
 
-	return( result );
+	return result;
 }
 
 struct jamcam_file *jamcam_file_info(Camera *camera, int number)
@@ -453,14 +456,14 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number)
 }
 
 int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
-		char *buf, int *len, int number, GPContext *context ) {
+		char *buf, unsigned int *len, int number, GPContext *context ) {
 	unsigned char line[2048];
 	char packet[16];
-	int position;
+	unsigned int position;
 	int x, y;
 	int res = GP_OK;
 	char *ptr;
-	int bytes_to_read;
+	unsigned int bytes_to_read;
 	unsigned int id;
 
 	GP_DEBUG ("* jamcam_request_thumbnail");
@@ -492,6 +495,11 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 			/* just read one row of data at a time */
 			bytes_to_read = jamcam_files[number].width;
 		}
+	}
+
+	if (bytes_to_read > sizeof(line)) {
+		res = GP_ERROR;
+		goto resetcam;
 	}
 
 	/* fetch thumbnail lines and build the thumbnail */
@@ -529,6 +537,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 	}
 	gp_context_progress_stop (context, id);
 
+resetcam:
 	/* this seems to reset the camera to a sane status */
 	if ( camera->port->type == GP_PORT_USB ) {
 		gp_port_usb_msg_write( camera->port,
@@ -538,7 +547,7 @@ int jamcam_request_thumbnail( Camera *camera, CameraFile *file,
 			NULL, 0 );
 	}
 
-	return( res );
+	return res;
 }
 
 static int jamcam_write_packet (Camera *camera, unsigned char *packet, int length) {
