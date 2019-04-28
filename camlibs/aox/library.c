@@ -198,6 +198,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	len = aox_get_picture_size (camera->port, num_lo_pics, 
 						num_hi_pics, n, k);
+	if (len < GP_OK) return len;
+
 	GP_DEBUG("len = %i\n", len);
 	data = malloc(len);
 	if (!data) {
