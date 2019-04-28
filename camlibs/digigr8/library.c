@@ -197,7 +197,8 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	int status = GP_OK;
 	Camera *camera = user_data;
-	int w, h, b;
+	unsigned int b;
+	int w, h;
 	int k, next;
 	unsigned char comp_ratio;
 	unsigned char lighting;
@@ -246,7 +247,10 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 		camera->pl->last_fetched_entry = k;
 		return GP_OK;
 	}
-	data = malloc (w*h);
+	if (b > w*h) {
+		GP_DEBUG("need %d bytes, supposed to read only %d", w*h, b);
+	}
+	data = malloc (b);
 	if(!data) return GP_ERROR_NO_MEMORY;
 
 	GP_DEBUG("Fetch entry %i\n", k);

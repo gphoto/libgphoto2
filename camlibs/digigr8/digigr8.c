@@ -94,7 +94,7 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 }
 
 
-int
+unsigned int
 digi_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 {
 	switch (priv->catalog[16*entry]) {
@@ -115,7 +115,7 @@ digi_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 	}
 }
 
-int
+unsigned int
 digi_get_data_size (CameraPrivateLibrary *priv, int entry)
 {
 	return ((priv->catalog[16*entry + 6] <<16) 
@@ -123,7 +123,7 @@ digi_get_data_size (CameraPrivateLibrary *priv, int entry)
 		| (priv->catalog[16*entry + 4] ) );
 }
 
-int
+unsigned int
 digi_get_picture_width (CameraPrivateLibrary *priv, int entry)
 {
 	switch (priv->catalog[16*entry]) {  
@@ -177,20 +177,22 @@ digi_reset (GPPort *port)
 
 
 int
-digi_read_picture_data (GPPort *port, unsigned char *data, int size, int n )
+digi_read_picture_data (GPPort *port, unsigned char *data, unsigned int size, int n )
 {
+	unsigned int remainder = size % 0x8000;
+	unsigned int offset = 0;
+	int ret;
 
-
-	int remainder = size % 0x8000;
-	int offset = 0;
 	if (!n) {
 		SQWRITE (port, 0x0c, 0x30, 0x00, NULL, 0); 
 	}	
 	while ((offset + 0x8000 < size)) {
-		gp_port_read (port, (char *)data + offset, 0x8000);
-			offset = offset + 0x8000;
+		ret = gp_port_read (port, (char *)data + offset, 0x8000);
+		if (ret < GP_OK) return ret;
+		offset = offset + 0x8000;
 	}
-	gp_port_read (port, (char *)data + offset, remainder);
+	ret = gp_port_read (port, (char *)data + offset, remainder);
+	if (ret < GP_OK) return ret;
 
 	return GP_OK;
 } 
