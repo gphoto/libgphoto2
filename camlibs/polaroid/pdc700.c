@@ -233,6 +233,10 @@ pdc700_read (Camera *camera, unsigned char *cmd,
 		return (GP_ERROR_CORRUPTED_DATA);
 	}
 	*b_len = (header[2] << 8) | header [1];
+	if (*b_len > 2048) {
+		GP_DEBUG ("length %d too large", *b_len);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	/* Read the remaining bytes */
 	CR (gp_port_read (camera->port, (char *)b, *b_len));
