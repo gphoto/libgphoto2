@@ -95,9 +95,11 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	char firmware[20];
 	char firmware_version[20];
-	memcpy(firmware,&camera->pl->info[0],20);
-	memcpy(firmware_version,&camera->pl->info[20],20);
 
+	memcpy(firmware,&camera->pl->info[0],20);
+	firmware[19] = 0;
+	memcpy(firmware_version,&camera->pl->info[20],20);
+	firmware_version[19] = 0;
 
 	sprintf (summary->text,_("Your USB camera seems to be a LG GSM.\n"
 			"Firmware: %s\n"

@@ -66,6 +66,7 @@ int lg_gsm_init (GPPort *port, Model *model, Info *info)
 
 	/* This information, too. */
 	memcpy (info, &firmware[6], 40);
+	info[39] = 0;
 
 	GP_DEBUG("info = %s\n", info);
 	/*GP_DEBUG("info[20] = 0x%x\n", firmware[26]);*/
@@ -234,6 +235,9 @@ int lg_gsm_list_files (GPPort *port, CameraList *list)
 	READ(port, photonumber, 0x16);
 
 	num_pics=photonumber[20]+256*photonumber[21];
+
+	GP_DEBUG ("num_pics = %d\n", num_pics);
+	if (num_pics > 1000) return GP_ERROR;
 
 	/* increase timeout to 20s */
 	/*port->timeout=20000;*/
