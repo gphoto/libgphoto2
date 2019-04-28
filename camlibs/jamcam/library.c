@@ -61,7 +61,7 @@ static int jamcam_mmc_card_size = 0;
 static int jamcam_read_packet (Camera *camera, unsigned char *packet, int length);
 static int jamcam_write_packet (Camera *camera, unsigned char *packet, int length);
 static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
-		unsigned char *data, int start, int length, GPContext *context);
+		unsigned char *data, unsigned int start, unsigned int length, GPContext *context);
 static int jamcam_query_mmc_card (Camera *camera);
 
 static int jamcam_set_int_at_pos( unsigned char *buf, int pos, int value ) {
@@ -73,7 +73,7 @@ static int jamcam_set_int_at_pos( unsigned char *buf, int pos, int value ) {
 	return( value );
 }
 
-static int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
+static unsigned int jamcam_get_int_at_pos( unsigned char *buf, int pos ) {
 	int ret = 0;
 
 	ret += buf[pos + 0];
@@ -112,7 +112,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 	unsigned char buf[16];
 	unsigned char reply[512];
 	unsigned int position = 0x40000000;
-	int data_incr;
+	unsigned int data_incr;
 	int width;
 	int height;
 
@@ -318,14 +318,14 @@ int jamcam_file_count (Camera *camera) {
 }
 
 static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
-		unsigned char *data, int start, int length, GPContext *context) {
+		unsigned char *data, unsigned int start, unsigned int length, GPContext *context) {
 	unsigned char tmp_buf[16];
 	unsigned char packet[16];
-	int new_start;
-	int new_end;
-	int bytes_read = 0;
-	int bytes_to_read;
-	int bytes_left = length;
+	unsigned int new_start;
+	unsigned int new_end;
+	unsigned int bytes_read = 0;
+	unsigned int bytes_to_read;
+	unsigned int bytes_left = length;
 	int res = GP_OK;
 	unsigned int id = 0;
 
