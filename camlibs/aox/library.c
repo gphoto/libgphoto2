@@ -220,6 +220,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		}
 		if (w == 640) {
+
+			if (len < 0x98 + w*h) {
+				GP_DEBUG("len %d is less than expected %d\n", len, 0x98+w*h);
+				return GP_ERROR;
+			}
+
 			/* Stripping useless header */
 			p_data = data + 0x98;
 			/* Picture is mirror-imaged.*/
