@@ -1,0 +1,79 @@
+Old to be obsoleted:
+
+serial only:
+	adc65	- added in 2005, might have been outdated even then.	
+		256x256 pixels
+	barbie	- is from 2000
+	casio	- last functional change 2005
+	dimera	- last functional change in 2003
+	fuji	- last functional change 2002
+	jd11	- is from 2001
+	kodak_dc120  - last bugreport from 2006
+	kodak_dc210  - last report from 2005
+	kodak_dc3200 - last functional change 2002
+	konica_qm150 - last functional change 2003 (not even googlable)
+	konica		- from 2001
+	largan_lmini	- last functional change 2004
+	minolta_dimage	- last functional change 2007
+	panasonic_coolshot - last reports in 2002
+	panasonic_dc1000 - last reports in 2002
+	panasonic_dc1580 - last reports in 2002
+	panasonic_l859 - last reports in 2002
+	polaroid_pdc320 - old serial, last change in 2003
+	ricoh		- from 2003
+	samsung		- last changes in 2002
+	sonydscf1	- 1997 camera
+	sonydscf55	- 1999 camera, changes from 2002
+
+aox		- last functional change 2008
+			up to 640x480
+agfa_cl20	- last functional change 2004
+clicksmart310	- last functional change 2006
+digita		- last cameras released in 2001
+enigma13	- last functional change in 2004
+gsmart300	- last functional change 2004
+hp215		- last functional changes 2005
+iclick		- last functional change 2004
+jamcam		- last functional change 2002
+kodak_dc240	- last report from 2004
+kodak_ez200	- last changes in 2007 by me
+lg_gsm		- last functional change 2005
+mustek		- last changes in 2002, ported from gphoto 0
+pccam300	- last functional change 2004
+pccam600	- last functional change 2004
+polaroid_pdc640	- last report from 2005
+polaroid_pdc700 - last work around 2004
+ricoh_g3	- last reports from 2005
+sipix_blink	- was never working well i think
+sipix_blink2	- last functional change 2003
+sipix_web2	- last functional change 2002
+smal		- last functional change 2003
+soundvision	- last functional changes in 2003
+spca50x		- last additions in 2004
+stv0674		- last functional changes from 2002
+stv0680		- last functional changes from 2003
+sx330z		- last functional changes from 2003
+toshiba_pdrm11	- last functional changes from 2003
+
+
+
+Keep perhaps:
+
+digigr8		- functional changes in 2012
+jl2005a		- last functional change 2010
+jl2005c		- last functional change 2012
+mars		- last functional change 2010
+sonix		- last functional changes in 2008
+sq905		- last functional change 2010
+topfield	- last changes in 2008, (HD recorder, might still be in use)
+tp6801		- last changes in 2011
+
+Keep:
+
+ax203		- last functional change 2014
+canon		- still has known users
+directory	- generic directory driver
+pentax		- pentax slr
+ptp2		- PTP
+sierra		- still has users, also some cameras
+st2205		- changes in 2014
