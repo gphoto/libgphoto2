@@ -6,6 +6,29 @@ ptp2:
 translations:
 * updated danish
 
+all:
+* The camlibs for cameras (and driver) older than 15 years have been
+  default disabled for installation, to speed up libgphoto2 startup
+  and also reduce attack surface against malicious USB devices.
+
+  See OUTDATED.txt in git for notes.
+
+  You can reenable them using:
+
+	./configure --with-camlibs=all,outdated
+
+  or by the camlib driver name (sample: jd11):
+
+	./configure --with-camlibs=all,jd11
+
+  To get the lists of all camera libraries use:
+
+	./configure --help
+
+  If you still have an old camera using one of these camlibs in active
+  use, please report this to the devteam so we can reenable it per
+  default.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.22 release
 

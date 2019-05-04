@@ -25,8 +25,6 @@ serial only:
 	sonydscf1	- 1997 camera
 	sonydscf55	- 1999 camera, changes from 2002
 
-aox		- last functional change 2008
-			up to 640x480
 agfa_cl20	- last functional change 2004
 clicksmart310	- last functional change 2006
 digita		- last cameras released in 2001
@@ -56,24 +54,21 @@ sx330z		- last functional changes from 2003
 toshiba_pdrm11	- last functional changes from 2003
 
 
+Keep:
 
-Keep perhaps:
-
+aox		- last functional change 2008
+ax203		- last functional change 2014
+canon		- still has known users, active 2019
 digigr8		- functional changes in 2012
+directory	- generic directory driver, keep
 jl2005a		- last functional change 2010
 jl2005c		- last functional change 2012
 mars		- last functional change 2010
+pentax		- pentax slr, active 2019
+ptp2		- PTP, active
+sierra		- still has users, also some cameras
 sonix		- last functional changes in 2008
 sq905		- last functional change 2010
+st2205		- changes in 2014
 topfield	- last changes in 2008, (HD recorder, might still be in use)
 tp6801		- last changes in 2011
-
-Keep:
-
-ax203		- last functional change 2014
-canon		- still has known users
-directory	- generic directory driver
-pentax		- pentax slr
-ptp2		- PTP
-sierra		- still has users, also some cameras
-st2205		- changes in 2014
