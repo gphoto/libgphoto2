@@ -129,6 +129,7 @@ else
 		INSTALL_THESE_CAMLIBS_BASE="$INSTALL_THESE_CAMLIBS_BASE m4_strip(gp_camlibs_outdated)"
 		camlibs="$(echo "$camlibs" | sed 's/outdated[,]*//')"
 	fi
+
 	# camlibs=$(echo $camlibs | sed 's/,/ /g')
 	IFS_save="$IFS"
 	IFS=",$IFS"
@@ -137,9 +138,9 @@ else
 	for camlib in ${camlibs}; do
 		IFS="$IFS_save"
 		found=false
-		for from_all_camlib in ${ALL_DEFAULT_CAMLIBS}; do
+		for from_all_camlib in ${ALL_DEFINED_CAMLIBS}; do
 			if test "$camlib" = "$from_all_camlib"; then
-				if test "x$BUILD_THESE_CAMLIBS_BASE" = "x"; then
+				if test "x$INSTALL_THESE_CAMLIBS_BASE" = "x"; then
 					INSTALL_THESE_CAMLIBS_BASE="$camlib"
 				else
 					INSTALL_THESE_CAMLIBS_BASE="$INSTALL_THESE_CAMLIBS_BASE $camlib"
@@ -165,7 +166,7 @@ else
 	IFS="$IFS_save"
 	AC_MSG_RESULT([$camlibs])
 	GP_CAMLIBS_WARNING
-	AC_DEFINE_UNQUOTED([INCOMPLETE_CAMLIB_SET], ["$BUILD_THESE_CAMLIBS_BASE"], 
+	AC_DEFINE_UNQUOTED([INCOMPLETE_CAMLIB_SET], ["$INSTALL_THESE_CAMLIBS_BASE"], 
                            [Whether the set of camlibs built is incomplete])
 fi
 BUILD_THESE_CAMLIBS=""
