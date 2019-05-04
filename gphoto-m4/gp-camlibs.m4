@@ -29,6 +29,7 @@ AC_BEFORE([$0],[GP_CAMLIB])dnl
 m4_define_default([gp_camlib_srcdir], [camlibs])dnl
 m4_define_default([gp_camlibs], [])dnl
 m4_define_default([gp_camlibs_unlisted], [])dnl
+m4_define_default([gp_camlibs_outdated], [])dnl
 ])dnl
 dnl
 dnl ####################################################################
@@ -39,13 +40,18 @@ AC_BEFORE([$0],[GP_CAMLIBS_DEFINE])dnl
 m4_if([$2],[unlisted],[dnl
 # $0($1,$2)
 m4_append([gp_camlibs_unlisted], [$1], [ ])dnl
-],[$#],[1],[dnl
+],
+[$2],[outdated],[dnl
+# $0($1,$2)
+m4_append([gp_camlibs_outdated], [$1], [ ])dnl
+],
+[$#],[1],[dnl
 # $0($1)
 m4_append([gp_camlibs], [$1], [ ])dnl
 ],[dnl
 m4_errprint(__file__:__line__:[ Error:
 *** Illegal parameter 2 to $0: `$2'
-*** Valid values are: undefined or [unlisted]
+*** Valid values are: undefined, [unlisted] or [outdated]
 ])dnl
 m4_exit(1)dnl
 ])dnl
@@ -95,24 +101,33 @@ AC_ARG_WITH([camlibs],[AS_HELP_STRING(
 	[Compile camera drivers (camlibs) in <list>. ]dnl
 	[Drivers may be separated with commas. ]dnl
 	[CAUTION: DRIVER NAMES AND CAMERA NAMES MAY DIFFER. ]dnl
-	['all' is the default and compiles all camlibs. ]dnl
-	[Possible camlibs are: ]dnl
-	m4_strip(gp_camlibs))],
+	['all' is the default and compiles all camlibs, ]dnl
+	['outdated' compiles additional camlibs for very old cameras. ]dnl
+	[Possible camlibs to specify are: ]dnl
+	m4_strip(gp_camlibs)
+	[Camlibs for very old (>10 years) cameras: ]dnl
+	m4_strip(gp_camlibs_outdated))]dnl
+,
 	[camlibs="$withval"],
 	[camlibs="all"])dnl
 dnl
-ALL_DEFINED_CAMLIBS="m4_strip(gp_camlibs) m4_strip(gp_camlibs_unlisted)"
+ALL_DEFINED_CAMLIBS="m4_strip(gp_camlibs) m4_strip(gp_camlibs_outdated) m4_strip(gp_camlibs_unlisted)"
 ALL_DEFAULT_CAMLIBS="m4_strip(gp_camlibs)"
 BUILD_THESE_CAMLIBS_BASE=""
+INSTALL_THESE_CAMLIBS_BASE=""
 if test "$camlibs" = "all"; then
-	BUILD_THESE_CAMLIBS_BASE="$ALL_DEFAULT_CAMLIBS"
+	INSTALL_THESE_CAMLIBS_BASE="$ALL_DEFAULT_CAMLIBS"
 	AC_MSG_RESULT([all])
 else
 	# If the string starts with "all,", we start with the default list
 	# and add the explicitly defined ones later
 	if echo "$camlibs" | grep "^all," > /dev/null; then
-		BUILD_THESE_CAMLIBS_BASE="$ALL_DEFAULT_CAMLIBS"
+		INSTALL_THESE_CAMLIBS_BASE="$ALL_DEFAULT_CAMLIBS"
 		camlibs="$(echo "$camlibs" | sed 's/^all,//')"
+	fi
+	if echo "$camlibs" | grep "outdated" > /dev/null; then
+		INSTALL_THESE_CAMLIBS_BASE="$INSTALL_THESE_CAMLIBS_BASE m4_strip(gp_camlibs_outdated)"
+		camlibs="$(echo "$camlibs" | sed 's/outdated[,]*//')"
 	fi
 	# camlibs=$(echo $camlibs | sed 's/,/ /g')
 	IFS_save="$IFS"
@@ -122,12 +137,12 @@ else
 	for camlib in ${camlibs}; do
 		IFS="$IFS_save"
 		found=false
-		for from_all_camlib in ${ALL_DEFINED_CAMLIBS}; do
+		for from_all_camlib in ${ALL_DEFAULT_CAMLIBS}; do
 			if test "$camlib" = "$from_all_camlib"; then
 				if test "x$BUILD_THESE_CAMLIBS_BASE" = "x"; then
-					BUILD_THESE_CAMLIBS_BASE="$camlib"
+					INSTALL_THESE_CAMLIBS_BASE="$camlib"
 				else
-					BUILD_THESE_CAMLIBS_BASE="$BUILD_THESE_CAMLIBS_BASE $camlib"
+					INSTALL_THESE_CAMLIBS_BASE="$INSTALL_THESE_CAMLIBS_BASE $camlib"
 				fi
 				found=:
 				break
@@ -137,9 +152,9 @@ else
 			AC_MSG_ERROR([Unknown camlib $camlib!])		
 		fi
 	done
-        if test "x$BUILD_THESE_CAMLIBS_BASE" = "xcanon" ; then
+        if test "x$INSTALL_THESE_CAMLIBS_BASE" = "xcanon" ; then
 		# Gentoo mode... if user just said "canon", add "ptp2" ... should save support requests.
-		BUILD_THESE_CAMLIBS_BASE="$BUILD_THESE_CAMLIBS_BASE ptp2"
+		INSTALL_THESE_CAMLIBS_BASE="$INSTALL_THESE_CAMLIBS_BASE ptp2"
 		camlibs="$camlibs ptp2"
 		AC_MSG_WARN([
 		"You have just selected the old canon driver. However most current Canons\n"
@@ -154,11 +169,18 @@ else
                            [Whether the set of camlibs built is incomplete])
 fi
 BUILD_THESE_CAMLIBS=""
-for f in $BUILD_THESE_CAMLIBS_BASE
+for f in $ALL_DEFINED_CAMLIBS
 do
     BUILD_THESE_CAMLIBS="${BUILD_THESE_CAMLIBS}${BUILD_THESE_CAMLIBS+ }${f}.la"
 done
+
+INSTALL_THESE_CAMLIBS=""
+for f in $INSTALL_THESE_CAMLIBS_BASE
+do
+    INSTALL_THESE_CAMLIBS="${INSTALL_THESE_CAMLIBS}${INSTALL_THESE_CAMLIBS+ }${f}.la"
+done
 AC_SUBST([BUILD_THESE_CAMLIBS])
+AC_SUBST([INSTALL_THESE_CAMLIBS])
 AC_SUBST([ALL_DEFINED_CAMLIBS])
 AC_SUBST([ALL_DEFAULT_CAMLIBS])
 ])dnl

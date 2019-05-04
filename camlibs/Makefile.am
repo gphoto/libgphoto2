@@ -39,7 +39,7 @@ EXTRA_LTLIBRARIES =
 # all camlibs have -rpath set explicitly in foobar_la_LDFLAGS.
 # You're probably best off by using the camlib_* variables defined
 # below.
-camlib_LTLIBRARIES = $(BUILD_THESE_CAMLIBS)
+camlib_LTLIBRARIES = $(INSTALL_THESE_CAMLIBS)
 
 
 ########################################################################
