@@ -371,6 +371,9 @@
    *   that time it will not respond. Thus GUI programs work fine.
    * - Seems also to be used with Galaxy Nexus debug mode and on
    *   US markets for some weird reason.
+   * - has a weird USB bug if it reads exactly 512byte (usb 2 packetsize) 
+   *   the device will hang. this is one of the reasons we need to disable
+   *   DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST as it can hit this size :/
    *
    * From: Ignacio Martínez <ignacio.martinezrivera@yahoo.es> and others
    * From Harrison Metzger <harrisonmetz@gmail.com>
@@ -387,8 +390,8 @@
       DEVICE_FLAG_FLAC_IS_UNKNOWN },
   { "Samsung", 0x04e8,
       "Galaxy models (MTP)", 0x6860,
-      /*DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |*/
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_LONG_TIMEOUT |
       DEVICE_FLAG_PROPLIST_OVERRIDES_OI |
@@ -1021,6 +1024,8 @@
   { "Archos", 0x0e79, "70 Cobalt", 0x15ba, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "50c", 0x2008, DEVICE_FLAGS_ANDROID_BUGS },
   { "Archos", 0x0e79, "C40", 0x31ab, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1824/ */
+  { "Archos", 0x0e79, "50b", 0x31bd, DEVICE_FLAGS_ANDROID_BUGS },
   /* via libmtp-discuss Tonton <to.tonton@gmail.com> */
   { "Archos", 0x0e79, "Helium 45B", 0x31d8, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1393/ */
@@ -1255,9 +1260,9 @@
   { "Nokia", 0x0421, "X2 Dual Sim", 0x0708, DEVICE_FLAG_NONE },
 
   /* https://sourceforge.net/p/libmtp/bugs/1711/ */
-  { "Nokia", 0x2e04, "6", 0xc025, DEVICE_FLAG_NONE },
+  { "Nokia", 0x2e04, "6", 0xc025, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1783/ */
-  { "Nokia", 0x2e04, "6.1", 0xc026, DEVICE_FLAG_NONE },
+  { "Nokia", 0x2e04, "6.1", 0xc026, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Qualcomm
@@ -1943,6 +1948,9 @@
   /* https://sourceforge.net/p/libmtp/support-requests/252/ */
   { "SONY", 0x0fce, "XPeria XZ1 Compact", 0x01f4,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/feature-requests/281/ */
+  { "SONY", 0x0fce, "XPeria L2", 0x01f6,
+      DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact", 0x01f7,
       DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/bugs/1804/ */
@@ -2082,6 +2090,8 @@
   { "SONY", 0x0fce, "XPeria XZ1 MTP+CDROM", 0x41f3,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ1 Compact MTP+CDROM", 0x41f4,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria L2 MTP+CDROM", 0x41f6,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact MTP+CDROM", 0x41f7,
       DEVICE_FLAG_NONE },
@@ -2240,6 +2250,8 @@
   { "SONY", 0x0fce, "XPeria XZ1 ADB", 0x51f3,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XZ1 Compact MTP+ADB", 0x51f4,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria L2 MTP+ADB", 0x51f6,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact MTP+ADB", 0x51f7,
       DEVICE_FLAG_NONE },
@@ -2445,6 +2457,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by anonymous Sourceforge user
   { "Google Inc (for Asus)", 0x18d1, "TF101 Transformer", 0x4e0f,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1837/ */
+  { "Google Inc (for Samsung)", 0x18d1, "Nexus One (MTP)", 0x4e12,
       DEVICE_FLAGS_ANDROID_BUGS },
   // 0x4e21 (Nexus S) is a USB Mass Storage device.
   { "Google Inc (for Samsung)", 0x18d1, "Nexus S (MTP)", 0x4e25,
@@ -2879,6 +2894,9 @@
   /* https://sourceforge.net/p/libmtp/support-requests/186/ */
   { "Lenovo", 0x17ef, "Yoga Tablet 2 - 1050F", 0x77a4,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1828/ */
+  { "Lenovo", 0x17ef, "Yoga Tablet 2", 0x77a5,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/168/ */
   { "Lenovo", 0x17ef, "Yoga Tablet 2 Pro", 0x77b1,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -2981,6 +2999,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/262/ */
   { "Lenovo", 0x17ef, "Tab4 10", 0x7ac5,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1831/ */
+  { "Lenovo", 0x17ef, "Tab4 10 (2nd ID)", 0x7bc7,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1736/ */
   { "Lenovo", 0x17ef, "P1060X", 0x9039,
@@ -3365,6 +3386,12 @@
   /* https://sourceforge.net/p/libmtp/bugs/1776/ */
   { "Amazon", 0x1949, "Kindle Fire 7 (2nd ID)", 0x0271,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/21 */
+  { "Amazon", 0x1949, "Kindle Fire 8 HD (2nd ID)", 0x0331,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/279/ */
+  { "Amazon", 0x1949, "Kindle Fire Tablet 10 HD", 0x0281,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Fire Phone", 0x0800,
       DEVICE_FLAGS_ANDROID_BUGS },
 
@@ -3386,6 +3413,15 @@
   { "Various", 0x2207, "Viewpia DR/bq Kepler", 0x0001,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "YiFang", 0x2207, "BQ Tesla", 0x0006,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://bugs.debian.org/917259 */
+  { "Various", 0x2207, "Onyx Boox Max 2", 0x000b,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1833/ */
+  { "Onyx", 0x2207, "Boox Max 2 Pro", 0x000c,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1834/ */
+  { "Onyx", 0x2207, "Boox Note", 0x000d,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1354/ */
   { "Various", 0x2207, "Viewpia DR/bq Kepler Debugging", 0x0011,
@@ -3512,6 +3548,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Alcatel", 0x1bbb, "6030a", 0x0168,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/276/ */
+  { "Alcatel", 0x1bbb, "A405DL", 0x901b,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Alcatel/Bouygues", 0x1bbb, "BS472", 0x904d,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1304/ */
@@ -3618,17 +3657,13 @@
   /*
    * Garmin
    */
-  { "Garmin", 0x091e, "Monterra", 0x2585,
-      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Monterra", 0x2585, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1779/ */
-  { "Garmin", 0x091e, "Forerunner 645 Music", 0x4b48,
-      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Forerunner 645 Music", 0x4b48, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/15 */
-  { "Garmin", 0x091e, "Fenix 5S Plus", 0x4b54,
-      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Fenix 5/5S/5X Plus", 0x4b54, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/271/ */
-  { "Garmin", 0x091e, "Vivoactive 3", 0x4bac,
-      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Vivoactive 3", 0x4bac, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Wacom
@@ -3664,6 +3699,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/224/ */
   { "bq", 0x2a47, "Aquaris X5 (MTP)", 0x3003,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/284/ */
+  { "bq", 0x2a47, "Aquaris X2 (MTP)", 0x4ee1,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1311/ */
   { "bq", 0x2a47, "Aquarius E5-4G", 0x7f10,
@@ -3904,6 +3942,8 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1764/ */
   { "O&P Innovations" , 0x0746, "XDP-100R", 0xa003, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/278/ */
+  { "Pioneer" , 0x0746, "XDP-300R", 0xa023, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1786/ */
   { "Niteto" , 0x16c0, "ADF-Drive", 0x0489, DEVICE_FLAGS_ANDROID_BUGS },
@@ -3913,10 +3953,16 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1786/ */
   { "Longcheer" , 0x1c9e, "D", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1822/ */
+  { "vtevch" , 0x0f88, "Storio Max XL 2.0", 0x0684, DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * Other strange stuff.
    */
   { "Isabella", 0x0b20, "Her Prototype", 0xddee, DEVICE_FLAG_NONE },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1817/ */
+  { "Nox", 0x1e0a, "A1", 0x1001, DEVICE_FLAG_NONE },
 
   /* qemu 3.0.0 hw/usb/dev-mtp.c */
   { "QEMU", 0x46f4, "Virtual MTP", 0x0004, DEVICE_FLAG_NONE }
