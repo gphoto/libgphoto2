@@ -25,7 +25,7 @@ compiler:
 
 script:
  - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f
-   which gcc || which clang || true
+ - which gcc || which clang || true
  - ./configure --enable-vusb && make && make check && sudo make install && examples/sample-afl && make clean
  - ./configure --enable-vusb --with-camlibs=all,outdated,jd11 && make && make check && sudo make install && examples/sample-afl && make clean
 
