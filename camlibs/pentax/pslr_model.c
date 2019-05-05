@@ -1,6 +1,6 @@
 /*
     pkTriggerCord
-    Copyright (C) 2011-2018 Andras Salamon <andras.salamon@melda.info>
+    Copyright (C) 2011-2019 Andras Salamon <andras.salamon@melda.info>
     Remote control of Pentax DSLR cameras.
 
     Support for K200D added by Jens Dreyer <jens.dreyer@udo.edu> 04/2011
@@ -73,7 +73,7 @@ static void ipslr_status_diff(uint8_t *buf) {
 }
 
 static
-uint16_t get_uint16_be(uint8_t *buf) {
+uint16_t get_uint16_be(const uint8_t *buf) {
     uint16_t res;
     res = buf[0] << 8 | buf[1];
     return res;
@@ -93,7 +93,7 @@ int32_t get_int32_be(uint8_t *buf) {
 }
 
 static
-uint16_t get_uint16_le(uint8_t *buf) {
+uint16_t get_uint16_le(const uint8_t *buf) {
     uint16_t res;
     res = buf[1] << 8 | buf[0];
     return res;
@@ -422,7 +422,7 @@ void ipslr_status_parse_kx(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x198]);
     status->zoom.denom = get_uint32_be(&buf[0x19C]);
     status->focus = get_int32_be(&buf[0x1A0]);
-    status->lens_id1 = (get_uint32_be( &buf[0x188])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x188]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x194]);
     // selected_af_point: cannot find the field, 0xc8 is always zero
 }
@@ -441,7 +441,7 @@ void ipslr_status_parse_kr(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x19C]);
     status->zoom.denom = get_uint32_be(&buf[0x1A0]);
     status->focus = get_int32_be(&buf[0x1A4]);
-    status->lens_id1 = (get_uint32_be( &buf[0x18C])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x18C]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x198]);
 }
 
@@ -457,7 +457,7 @@ void ipslr_status_parse_k5(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x1A0]);
     status->zoom.denom = get_uint32_be(&buf[0x1A4]);
     status->focus = get_int32_be(&buf[0x1A8]); // ?
-    status->lens_id1 = (get_uint32_be( &buf[0x190])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x19C]);
 
 // TODO: check these fields
@@ -480,7 +480,7 @@ void ipslr_status_parse_k30(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x1A0]);
     status->zoom.denom = 100;
     status->focus = get_int32_be(&buf[0x1A8]); // ?
-    status->lens_id1 = (get_uint32_be( &buf[0x190])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x19C]);
 }
 
@@ -501,7 +501,7 @@ void ipslr_status_parse_k01(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x1A0]); // - good for K01
     status->zoom.denom = 100; // good for K-01
     status->focus = get_int32_be(&buf[0x1A8]); // ? - good for K01
-    status->lens_id1 = (get_uint32_be( &buf[0x190])) & 0x0F; // - good for K01
+    status->lens_id1 = get_uint32_be(&buf[0x190]) & 0x0F; // - good for K01
     status->lens_id2 = get_uint32_be( &buf[0x19C]); // - good for K01
 }
 
@@ -517,7 +517,7 @@ void ipslr_status_parse_k50(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x1A0]);
     status->zoom.denom = get_uint32_be(&buf[0x1A4]);
     //    status->focus = get_int32_be(&buf[0x1A8]); // ?
-    status->lens_id1 = (get_uint32_be( &buf[0x190])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x19C]);
 }
 
@@ -533,7 +533,7 @@ void ipslr_status_parse_k500(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x1A0]);
     status->zoom.denom = get_uint32_be(&buf[0x1A4]);
     //    status->focus = get_int32_be(&buf[0x1A8]); // ?
-    status->lens_id1 = (get_uint32_be( &buf[0x190])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x19C]);
     // cannot read max_shutter_speed from status buffer, hardwire the values here
     status->max_shutter_speed.nom = 1;
@@ -551,7 +551,7 @@ void ipslr_status_parse_km(ipslr_handle_t *p, pslr_status *status) {
     ipslr_status_parse_common( p, status, -4);
     status->zoom.nom = get_uint32_be(&buf[0x180]);
     status->zoom.denom = get_uint32_be(&buf[0x184]);
-    status->lens_id1 = (get_uint32_be( &buf[0x170])) & 0x0F;
+    status->lens_id1 = get_uint32_be(&buf[0x170]) & 0x0F;
     status->lens_id2 = get_uint32_be( &buf[0x17c]);
 // TODO
 // status.focused = getInt32(statusBuf, 0x164);
@@ -571,7 +571,7 @@ void ipslr_status_parse_k3(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_le(&buf[0x1A0]);
     status->zoom.denom = get_uint32_le(&buf[0x1A4]);
     status->focus = get_int32_le(&buf[0x1A8]);
-    status->lens_id1 = (get_uint32_le( &buf[0x190])) & 0x0F;
+    status->lens_id1 = get_uint32_le(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_le( &buf[0x19C]);
 }
 
@@ -588,7 +588,7 @@ void ipslr_status_parse_ks1(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_le(&buf[0x1A0]);
     status->zoom.denom = get_uint32_le(&buf[0x1A4]);
     status->focus = get_int32_le(&buf[0x1A8]);
-    status->lens_id1 = (get_uint32_le( &buf[0x190])) & 0x0F;
+    status->lens_id1 = get_uint32_le(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_le( &buf[0x19C]);
 }
 
@@ -633,7 +633,7 @@ void ipslr_status_parse_k1(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_le(&buf[0x1A4]);
     status->zoom.denom = get_uint32_le(&buf[0x1A8]);
 //    status->focus = get_int32_le(&buf[0x1A8]);
-    status->lens_id1 = (get_uint32_le( &buf[0x194])) & 0x0F;
+    status->lens_id1 = get_uint32_le(&buf[0x194]) & 0x0F;
     status->lens_id2 = get_uint32_le( &buf[0x1A0]);
 }
 
@@ -702,7 +702,7 @@ void ipslr_status_parse_k70(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_le(&buf[0x1A4]);
     status->zoom.denom = get_uint32_le(&buf[0x1A8]);
 //    status->focus = get_int32_le(&buf[0x1A8]);
-    status->lens_id1 = (get_uint32_le( &buf[0x194])) & 0x0F;
+    status->lens_id1 = get_uint32_le(&buf[0x194]) & 0x0F;
     status->lens_id2 = get_uint32_le( &buf[0x1A0]);
     status->shake_reduction = get_uint32_le(&buf[0xe4]);
 }
@@ -865,6 +865,43 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
     return ret;
 }
 
+pslr_bool_setting ipslr_settings_parse_bool(const uint8_t *buf, const pslr_setting_def_t *def) {
+    pslr_bool_setting bool_setting;
+    if (def->value != NULL) {
+        bool_setting = (pslr_bool_setting) {
+            PSLR_SETTING_STATUS_HARDWIRED, strcmp("false", def->value) == 0 ? false : true
+        };
+    } else if (def->address != 0) {
+        uint8_t target = strcmp(def->type, "boolean!") == 0 ? 0 : 1;
+        bool_setting = (pslr_bool_setting) {
+            PSLR_SETTING_STATUS_READ, buf[def->address] == target
+        };
+    } else {
+        bool_setting = (pslr_bool_setting) {
+            PSLR_SETTING_STATUS_NA, false
+        };
+    }
+    return bool_setting;
+}
+
+pslr_uint16_setting ipslr_settings_parse_uint16(const uint8_t *buf, const pslr_setting_def_t *def) {
+    pslr_uint16_setting uint16_setting;
+    if (def->value != NULL) {
+        uint16_setting = (pslr_uint16_setting) {
+            PSLR_SETTING_STATUS_HARDWIRED, atoi(def->value)
+        };
+    } else if (def->address != 0) {
+        uint16_setting = (pslr_uint16_setting) {
+            PSLR_SETTING_STATUS_READ, get_uint16_be(&buf[def->address])
+        };
+    } else {
+        uint16_setting = (pslr_uint16_setting) {
+            PSLR_SETTING_STATUS_NA, 0
+        };
+    }
+    return uint16_setting;
+}
+
 void ipslr_settings_parser_json(const char *cameraid, ipslr_handle_t *p, pslr_settings *settings) {
     uint8_t *buf = p->settings_buffer;
     memset(settings, 0, sizeof (*settings));
@@ -875,58 +912,33 @@ void ipslr_settings_parser_json(const char *cameraid, ipslr_handle_t *p, pslr_se
     while (def_index < def_num) {
         pslr_bool_setting bool_setting;
         pslr_uint16_setting uint16_setting;
-        if (strncmp(defs[def_index].type, "boolean", 7)==0) {
-            if (defs[def_index].value!=NULL) {
-                bool_setting = (pslr_bool_setting) {
-                    PSLR_SETTING_STATUS_HARDWIRED, strcmp("false", defs[def_index].value)==0 ? false : true
-                };
-            } else if (defs[def_index].address!=0) {
-                uint8_t target = strcmp(defs[def_index].type, "boolean!")==0 ? 0 : 1;
-                bool_setting = (pslr_bool_setting) {
-                    PSLR_SETTING_STATUS_READ, buf[defs[def_index].address] == target
-                };
-            } else {
-                bool_setting = (pslr_bool_setting) {
-                    PSLR_SETTING_STATUS_HARDWIRED, false
-                };
-            }
-        } else if (strcmp(defs[def_index].type, "uint16")==0) {
-            if (defs[def_index].value!=NULL) {
-                uint16_setting = (pslr_uint16_setting) {
-                    PSLR_SETTING_STATUS_HARDWIRED, strcmp("false", defs[def_index].value)==0 ? false : true
-                };
-            } else if (defs[def_index].address!=0) {
-                uint16_setting = (pslr_uint16_setting) {
-                    PSLR_SETTING_STATUS_READ, get_uint16_be(&buf[defs[def_index].address])
-                };
-            } else {
-                uint16_setting = (pslr_uint16_setting) {
-                    PSLR_SETTING_STATUS_NA, 0
-                };
-            }
+        pslr_setting_def_t def = defs[def_index];
+        if (strncmp(def.type, "boolean", 7) == 0) {
+            bool_setting = ipslr_settings_parse_bool(buf, &def);
+        } else if (strcmp(def.type, "uint16") == 0) {
+            uint16_setting = ipslr_settings_parse_uint16(buf, &def);
         } else {
-            fprintf(stderr, "Invalid json type: %s\n", defs[def_index].type);
+            fprintf(stderr, "Invalid json type: %s\n", def.type);
         }
-        if (strcmp(defs[def_index].name, "bulb_mode_press_press")==0) {
+        if (strcmp(def.name, "bulb_mode_press_press") == 0) {
             settings->bulb_mode_press_press = bool_setting;
-        } else if (strcmp(defs[def_index].name, "one_push_bracketing")==0) {
+        } else if (strcmp(def.name, "one_push_bracketing") == 0) {
             settings->one_push_bracketing = bool_setting;
-        } else if (strcmp(defs[def_index].name, "bulb_timer")==0) {
+        } else if (strcmp(def.name, "bulb_timer") == 0) {
             settings->bulb_timer = bool_setting;
-        } else if (strcmp(defs[def_index].name, "bulb_timer_sec")==0) {
+        } else if (strcmp(def.name, "bulb_timer_sec") == 0) {
             settings->bulb_timer_sec = uint16_setting;
-        } else if (strcmp(defs[def_index].name, "using_aperture_ring")==0) {
+        } else if (strcmp(def.name, "using_aperture_ring") == 0) {
             settings->using_aperture_ring = bool_setting;
-        } else if (strcmp(defs[def_index].name, "shake_reduction")==0) {
+        } else if (strcmp(def.name, "shake_reduction") == 0) {
             settings->shake_reduction = bool_setting;
-        } else if (strcmp(defs[def_index].name, "astrotracer")==0) {
+        } else if (strcmp(def.name, "astrotracer") == 0) {
             settings->astrotracer = bool_setting;
-        } else if (strcmp(defs[def_index].name, "astrotracer_timer_sec")==0) {
+        } else if (strcmp(def.name, "astrotracer_timer_sec") == 0) {
             settings->astrotracer_timer_sec = uint16_setting;
-        } else if (strcmp(defs[def_index].name, "horizon_correction")==0) {
+        } else if (strcmp(def.name, "horizon_correction") == 0) {
             settings->horizon_correction = bool_setting;
         }
-
         ++def_index;
     }
 }
@@ -966,7 +978,7 @@ ipslr_model_info_t camera_models[] = {
     { 0x13092, "K-1",         false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
     { 0x13240, "K-1 II",      false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
     { 0x13222, "K-70",        false, false, true,  true,  true,  true,  456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_AUTO, true,  11, ipslr_status_parse_k70},
-    { 0x1322c, "KP",          false, false, true,  true,  false, true,  0,   3, {24, 14, 6, 2}, 9, 6000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_AUTO, true,  27, NULL}
+    { 0x1322c, "KP",          false, false, true,  true,  false, true,  456,   3, {24, 14, 6, 2}, 9, 6000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_AUTO, true,  27, ipslr_status_parse_k70}
 };
 
 ipslr_model_info_t *find_model_by_id( uint32_t id ) {

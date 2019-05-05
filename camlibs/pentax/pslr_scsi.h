@@ -1,6 +1,6 @@
 /*
     pkTriggerCord
-    Copyright (C) 2011-2018 Andras Salamon <andras.salamon@melda.info>
+    Copyright (C) 2011-2019 Andras Salamon <andras.salamon@melda.info>
     Remote control of Pentax DSLR cameras.
 
     based on:
@@ -47,6 +47,15 @@ extern void write_debug( const char* message, ... );
 #endif
 #endif
 
+#define CHECK(x) do {							\
+	int __r;							\
+	__r = (x);							\
+	if (__r != PSLR_OK) {						\
+		fprintf(stderr, "%s:%d:%s failed: %d\n", __FILE__, __LINE__, #x, __r); \
+		return __r;						\
+	}								\
+} while (0)
+
 typedef enum {
     PSLR_OK = 0,
     PSLR_DEVICE_ERROR,
@@ -72,11 +81,11 @@ int scsi_read(FDTYPE sg_fd, uint8_t *cmd, uint32_t cmdLen,
 int scsi_write(FDTYPE sg_fd, uint8_t *cmd, uint32_t cmdLen,
                uint8_t *buf, uint32_t bufLen);
 
-char **get_drives(int *driveNum);
+char **get_drives(int *drive_num);
 
-pslr_result get_drive_info(char* driveName, FDTYPE* hDevice,
-                           char* vendorId, int vendorIdSizeMax,
-                           char* productId, int productIdSizeMax);
+pslr_result get_drive_info(char* drive_name, FDTYPE* device,
+                           char* vendor_id, int vendor_id_size_max,
+                           char* product_id, int product_id_size_max);
 
-void close_drive(FDTYPE *hDevice);
+void close_drive(FDTYPE *device);
 #endif

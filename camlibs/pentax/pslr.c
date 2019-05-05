@@ -57,15 +57,6 @@
 #define BLOCK_RETRY 3 /* Number of retries, since we can occasionally
                        * get SCSI errors when downloading data */
 
-#define CHECK(x) do {                           \
-        int __r;                                \
-        __r = (x);                                                      \
-        if (__r != PSLR_OK) {                                           \
-            fprintf(stderr, "%s:%d:%s failed: %d\n", __FILE__, __LINE__, #x, __r); \
-            return __r;                                                 \
-        }                                                               \
-    } while (0)
-
 void sleep_sec(double sec) {
     int i;
     for (i=0; i<floor(sec); ++i) {
