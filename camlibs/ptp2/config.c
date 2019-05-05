@@ -20,6 +20,7 @@
 #define _DEFAULT_SOURCE
 #include "config.h"
 
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
