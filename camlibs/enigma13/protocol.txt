@@ -110,7 +110,7 @@ SIZE_TO_READ_ = (REAL_SIZE_FROM_TOC / ALIGNEMENT) * ALIGNEMENT
 
 
 - If the image is on FLASH, alignement is 0x2000
-- If the image is on SmartMedia card, alignement is 0x4000
+- If the image is on SmartMedia card, alignment is 0x4000
 
 
 

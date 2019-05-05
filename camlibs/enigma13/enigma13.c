@@ -258,10 +258,10 @@ static int enigma13_download_img(Camera *camera, char *toc, int index, char **im
 		retbuf, 0x01));
 	if (retbuf[0]==0x20){
 		align=ENIGMA13_BLK_CARD_ALIGN;
-		gp_log(GP_LOG_DEBUG, "enigma13"," Image from card, alignement is set to %d bytes ",align);
+		gp_log(GP_LOG_DEBUG, "enigma13"," Image from card, alignment is set to %d bytes ",align);
 	} else if (retbuf[0]==0x10){
 		align=ENIGMA13_BLK_FLASH_ALIGN;
-		gp_log(GP_LOG_DEBUG, "enigma13"," Image from flash, alignement is set to %d bytes",align);
+		gp_log(GP_LOG_DEBUG, "enigma13"," Image from flash, alignment is set to %d bytes",align);
 	} else {
 		return GP_ERROR;
 	}
