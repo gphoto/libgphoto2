@@ -497,7 +497,7 @@ GP_CAMLIB([jl2005a])dnl
 GP_CAMLIB([jl2005c])dnl
 GP_CAMLIB([kodak_dc120],[outdated])dnl
 GP_CAMLIB([kodak_dc210],[outdated])dnl
-GP_CAMLIB([kodak_dc240],[outdated])dnl
+GP_CAMLIB([kodak_dc240])dnl
 GP_CAMLIB([kodak_dc3200],[outdated])dnl
 GP_CAMLIB([kodak_ez200],[outdated])dnl
 GP_CAMLIB([konica],[outdated])dnl

@@ -33,7 +33,6 @@ gsmart300	- last functional change 2004
 hp215		- last functional changes 2005
 iclick		- last functional change 2004
 jamcam		- last functional change 2002
-kodak_dc240	- last report from 2004
 kodak_ez200	- last changes in 2007 by me
 lg_gsm		- last functional change 2005
 mustek		- last changes in 2002, ported from gphoto 0
@@ -72,3 +71,6 @@ sq905		- last functional change 2010
 st2205		- changes in 2014
 topfield	- last changes in 2008, (HD recorder, might still be in use)
 tp6801		- last changes in 2011
+
+kodak_dc240	- last report from 2004
+	Reply from a user in 5.2019 its in active use.
