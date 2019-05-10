@@ -1,0 +1,425 @@
+
+Kamerazusammenfassung:
+Hersteller: FUJIFILM
+Modell: X-T30
+  Version: 1.00
+  Seriennummer: nnnnnnnnnnnnnnnnnnnEFnnnnnnnnD
+Vendor Extension ID: 0x6 (1.0)
+Beschreibung der Vendor Extension: fujifilm.co.jp: 1.0; 
+
+Aufnahmeformate: Defined Type JPEG Unknown(b103)
+Anzeigeformate: Defined Type, JPEG, Unknown(b103)
+Unterstützte MTP Object Properties:
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Fähigkeiten des Geräts:
+	Dateien Download, Löschen von Dateien, kein Hochladen von Dateien
+	Generische Bild Aufnahme, Offene Aufnahme, Kein Vendor spezifischer Aufnahmemodus
+
+Informationen über Speichermedium:
+store_10000001:
+	Beschreibung des Speichergeräts: Still
+	Label des Speichergerätes: 15935353533341903079EF33021133D
+	Speichertyp: Eingebauter Speicher
+	Typ des Dateisystems: Generisch hierarchischer Modus
+	Zugriffsmöglichkeiten: Nur Lesen und Löschen
+	Maximale Kapazität: 18446744073709551615 (17592186044415 MB)
+	Freier Platz (Bytes): 18446744073709551615 (17592186044415 MB)
+	Freier Speicher (Bilder): -1
+store_10000002:
+	Beschreibung des Speichergeräts: Live
+	Label des Speichergerätes: 25935353533341903079EF33021133D
+	Speichertyp: Eingebauter Speicher
+	Typ des Dateisystems: Generisch hierarchischer Modus
+	Zugriffsmöglichkeiten: Nur Lesen und Löschen
+	Maximale Kapazität: 18446744073709551615 (17592186044415 MB)
+	Freier Platz (Bytes): 18446744073709551615 (17592186044415 MB)
+	Freier Speicher (Bilder): -1
+
+Properties des Geräts:
+Batterie Ladezustand(0x5001):PTP Fehler 200a beim Abfragen
+Bildgröße(0x5003):PTP Fehler 200a beim Abfragen
+Weißabgleich(0x5005):PTP Fehler 200a beim Abfragen
+Fokusmodus(0x500a):PTP Fehler 200a beim Abfragen
+Belichtungsmessmodus(0x500b):PTP Fehler 200a beim Abfragen
+Blitzmodus(0x500c):PTP Fehler 200a beim Abfragen
+Belichtungsprogrammmodus(0x500e):PTP Fehler 200a beim Abfragen
+Belichtungsindex (ISO-Filmempfindlichkeit)(0x500f):PTP Fehler 200a beim Abfragen
+Datum und Zeit(0x5011):PTP Fehler 200a beim Abfragen
+Aufnahmeverzögerung(0x5012):PTP Fehler 200a beim Abfragen
+Schärfe(0x5015):PTP Fehler 200a beim Abfragen
+Bildzahl im Burstmodus(0x5018):PTP Fehler 200a beim Abfragen
+Burst Abstand(0x5019):PTP Fehler 200a beim Abfragen
+Entfernungs Messungs Modus(0x501c):PTP Fehler 200a beim Abfragen
+Property 0xd001:PTP Fehler 200a beim Abfragen
+Property 0xd002:PTP Fehler 200a beim Abfragen
+Property 0xd003:PTP Fehler 200a beim Abfragen
+Property 0xd004:PTP Fehler 200a beim Abfragen
+Property 0xd005:PTP Fehler 200a beim Abfragen
+Property 0xd007:PTP Fehler 200a beim Abfragen
+Property 0xd008:PTP Fehler 200a beim Abfragen
+Property 0xd009:PTP Fehler 200a beim Abfragen
+Property 0xd00a:PTP Fehler 200a beim Abfragen
+Property 0xd00b:PTP Fehler 200a beim Abfragen
+Property 0xd00c:PTP Fehler 200a beim Abfragen
+Property 0xd00d:PTP Fehler 200a beim Abfragen
+Property 0xd00e:PTP Fehler 200a beim Abfragen
+Property 0xd00f:PTP Fehler 200a beim Abfragen
+Property 0xd010:PTP Fehler 200a beim Abfragen
+Property 0xd011:PTP Fehler 200a beim Abfragen
+Property 0xd012:PTP Fehler 200a beim Abfragen
+Property 0xd013:PTP Fehler 200a beim Abfragen
+Property 0xd014:PTP Fehler 200a beim Abfragen
+Property 0xd015:PTP Fehler 200a beim Abfragen
+Property 0xd016:PTP Fehler 200a beim Abfragen
+Property 0xd017:PTP Fehler 200a beim Abfragen
+Property 0xd018:PTP Fehler 200a beim Abfragen
+Property 0xd019:PTP Fehler 200a beim Abfragen
+Property 0xd01a:PTP Fehler 200a beim Abfragen
+Property 0xd01b:PTP Fehler 200a beim Abfragen
+Property 0xd01c:PTP Fehler 200a beim Abfragen
+Property 0xd100:PTP Fehler 200a beim Abfragen
+Sichere Zeit(0xd101):PTP Fehler 200a beim Abfragen
+Geräte Zertifikat(0xd102):PTP Fehler 200a beim Abfragen
+Revokationsinformation(0xd103):PTP Fehler 200a beim Abfragen
+Property 0xd104:PTP Fehler 200a beim Abfragen
+Property 0xd105:PTP Fehler 200a beim Abfragen
+Property 0xd106:PTP Fehler 200a beim Abfragen
+Property 0xd107:PTP Fehler 200a beim Abfragen
+Property 0xd108:PTP Fehler 200a beim Abfragen
+Property 0xd109:PTP Fehler 200a beim Abfragen
+Property 0xd10a:PTP Fehler 200a beim Abfragen
+Property 0xd10b:PTP Fehler 200a beim Abfragen
+Property 0xd10c:PTP Fehler 200a beim Abfragen
+Property 0xd10d:PTP Fehler 200a beim Abfragen
+Property 0xd10e:PTP Fehler 200a beim Abfragen
+Property 0xd10f:PTP Fehler 200a beim Abfragen
+Property 0xd110:PTP Fehler 200a beim Abfragen
+Property 0xd111:PTP Fehler 200a beim Abfragen
+Property 0xd112:PTP Fehler 200a beim Abfragen
+Property 0xd113:PTP Fehler 200a beim Abfragen
+Property 0xd114:PTP Fehler 200a beim Abfragen
+Property 0xd115:PTP Fehler 200a beim Abfragen
+Property 0xd116:PTP Fehler 200a beim Abfragen
+Property 0xd117:PTP Fehler 200a beim Abfragen
+Property 0xd118:PTP Fehler 200a beim Abfragen
+Property 0xd119:PTP Fehler 200a beim Abfragen
+Property 0xd11a:PTP Fehler 200a beim Abfragen
+Property 0xd11b:PTP Fehler 200a beim Abfragen
+Property 0xd11c:PTP Fehler 200a beim Abfragen
+Property 0xd11d:PTP Fehler 200a beim Abfragen
+Property 0xd11e:PTP Fehler 200a beim Abfragen
+Property 0xd11f:PTP Fehler 200a beim Abfragen
+Property 0xd120:PTP Fehler 200a beim Abfragen
+Property 0xd121:PTP Fehler 200a beim Abfragen
+Property 0xd122:PTP Fehler 200a beim Abfragen
+Property 0xd123:PTP Fehler 200a beim Abfragen
+Property 0xd124:PTP Fehler 200a beim Abfragen
+Property 0xd125:PTP Fehler 200a beim Abfragen
+Property 0xd126:PTP Fehler 200a beim Abfragen
+Property 0xd127:PTP Fehler 200a beim Abfragen
+Property 0xd128:PTP Fehler 200a beim Abfragen
+Property 0xd129:PTP Fehler 200a beim Abfragen
+Property 0xd12a:PTP Fehler 200a beim Abfragen
+Property 0xd12b:PTP Fehler 200a beim Abfragen
+Property 0xd12c:PTP Fehler 200a beim Abfragen
+Property 0xd12d:PTP Fehler 200a beim Abfragen
+Property 0xd12e:PTP Fehler 200a beim Abfragen
+Property 0xd12f:PTP Fehler 200a beim Abfragen
+Property 0xd130:PTP Fehler 200a beim Abfragen
+PlaysForSure ID(0xd131):PTP Fehler 200a beim Abfragen
+Property 0xd132:PTP Fehler 200a beim Abfragen
+Property 0xd133:PTP Fehler 200a beim Abfragen
+Property 0xd134:PTP Fehler 200a beim Abfragen
+Property 0xd135:PTP Fehler 200a beim Abfragen
+Property 0xd136:PTP Fehler 200a beim Abfragen
+Property 0xd137:PTP Fehler 200a beim Abfragen
+Property 0xd138:PTP Fehler 200a beim Abfragen
+Property 0xd139:PTP Fehler 200a beim Abfragen
+Property 0xd13a:PTP Fehler 200a beim Abfragen
+Property 0xd13b:PTP Fehler 200a beim Abfragen
+Property 0xd13c:PTP Fehler 200a beim Abfragen
+Property 0xd13d:PTP Fehler 200a beim Abfragen
+Property 0xd13e:PTP Fehler 200a beim Abfragen
+Property 0xd13f:PTP Fehler 200a beim Abfragen
+Property 0xd140:PTP Fehler 200a beim Abfragen
+Property 0xd141:PTP Fehler 200a beim Abfragen
+Property 0xd142:PTP Fehler 200a beim Abfragen
+Property 0xd143:PTP Fehler 200a beim Abfragen
+Property 0xd144:PTP Fehler 200a beim Abfragen
+Property 0xd145:PTP Fehler 200a beim Abfragen
+Property 0xd146:PTP Fehler 200a beim Abfragen
+Property 0xd147:PTP Fehler 200a beim Abfragen
+Property 0xd148:PTP Fehler 200a beim Abfragen
+Property 0xd149:PTP Fehler 200a beim Abfragen
+Property 0xd14a:PTP Fehler 200a beim Abfragen
+Property 0xd14b:PTP Fehler 200a beim Abfragen
+Property 0xd14c:PTP Fehler 200a beim Abfragen
+Property 0xd14d:PTP Fehler 200a beim Abfragen
+Property 0xd14e:PTP Fehler 200a beim Abfragen
+Property 0xd14f:PTP Fehler 200a beim Abfragen
+Property 0xd150:PTP Fehler 200a beim Abfragen
+Property 0xd151:PTP Fehler 200a beim Abfragen
+Property 0xd152:PTP Fehler 200a beim Abfragen
+Property 0xd153:PTP Fehler 200a beim Abfragen
+Property 0xd154:PTP Fehler 200a beim Abfragen
+Property 0xd155:PTP Fehler 200a beim Abfragen
+Property 0xd157:PTP Fehler 200a beim Abfragen
+Property 0xd158:PTP Fehler 200a beim Abfragen
+Property 0xd159:PTP Fehler 200a beim Abfragen
+Property 0xd15a:PTP Fehler 200a beim Abfragen
+Property 0xd15b:PTP Fehler 200a beim Abfragen
+Property 0xd15c:PTP Fehler 200a beim Abfragen
+Property 0xd15d:PTP Fehler 200a beim Abfragen
+Property 0xd15e:PTP Fehler 200a beim Abfragen
+Property 0xd15f:PTP Fehler 200a beim Abfragen
+Property 0xd160:PTP Fehler 200a beim Abfragen
+Property 0xd161:PTP Fehler 200a beim Abfragen
+Property 0xd200:PTP Fehler 200a beim Abfragen
+Property 0xd201: nicht ausgelesen.
+Property 0xd202:PTP Fehler 200a beim Abfragen
+Property 0xd203:PTP Fehler 200a beim Abfragen
+Property 0xd204:PTP Fehler 200a beim Abfragen
+Property 0xd205:PTP Fehler 200a beim Abfragen
+Property 0xd206:PTP Fehler 200a beim Abfragen
+Property 0xd207:PTP Fehler 200a beim Abfragen
+Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,40960,6,36864,2,37120,1,37376,64,37632,5] value: 772
+Property 0xd209:PTP Fehler 200a beim Abfragen
+Property 0xd20a:PTP Fehler 200a beim Abfragen
+Property 0xd20b:(readwrite) (type=0xffff) ''
+Property 0xd20c:PTP Fehler 200a beim Abfragen
+Property 0xd20d:PTP Fehler 200a beim Abfragen
+Property 0xd20e:PTP Fehler 200a beim Abfragen
+Property 0xd20f:PTP Fehler 200a beim Abfragen
+Property 0xd210:PTP Fehler 200a beim Abfragen
+Property 0xd211:PTP Fehler 200a beim Abfragen
+Property 0xd212:PTP Fehler 201b beim Abfragen
+Property 0xd213:PTP Fehler 200a beim Abfragen
+Property 0xd214:PTP Fehler 200a beim Abfragen
+Property 0xd215:PTP Fehler 200a beim Abfragen
+Property 0xd216:PTP Fehler 200a beim Abfragen
+Property 0xd217:PTP Fehler 200a beim Abfragen
+Property 0xd218:PTP Fehler 200a beim Abfragen
+Property 0xd219:PTP Fehler 200a beim Abfragen
+Property 0xd21a:PTP Fehler 200a beim Abfragen
+Property 0xd21b:PTP Fehler 200a beim Abfragen
+Session Initiator Information(0xd406):(readwrite) (type=0xffff) ''
+Angenommener Gerätetyp(0xd407):(read only) (type=0x6) 1
+
+
+Device info:
+Manufacturer: FUJIFILM
+  Model: X-T30
+  device version: 1.00
+  serial number: 'nnnnnnnnnnnnnnnnnnnEFnnnnnnnnD'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: fujifilm.co.jp: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1018 (Terminate open capture)
+  0x101b (Get partial object)
+  0x101c (Initiate open capture)
+  0x900c (Unknown PTP_OC)
+  0x900d (Unknown PTP_OC)
+  0x901d (Unknown PTP_OC)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9805 (Get object property list)
+Events Supported:
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x400d (CaptureComplete)
+  0xc006 (Unknown Event)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5003 (Image Size)
+  0x5005 (White Balance)
+  0x500a (Focus Mode)
+  0x500b (Exposure Metering Mode)
+  0x500c (Flash Mode)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5011 (Date & Time)
+  0x5012 (Pre-Capture Delay)
+  0x5015 (Sharpness)
+  0x5018 (Burst Number)
+  0x5019 (Burst Interval)
+  0x501c (Focus Metering Mode)
+  0xd001 (Unknown DPC code)
+  0xd002 (Unknown DPC code)
+  0xd003 (Unknown DPC code)
+  0xd004 (Unknown DPC code)
+  0xd005 (Unknown DPC code)
+  0xd007 (Unknown DPC code)
+  0xd008 (Unknown DPC code)
+  0xd009 (Unknown DPC code)
+  0xd00a (Unknown DPC code)
+  0xd00b (Unknown DPC code)
+  0xd00c (Unknown DPC code)
+  0xd00d (Unknown DPC code)
+  0xd00e (Unknown DPC code)
+  0xd00f (Unknown DPC code)
+  0xd010 (Unknown DPC code)
+  0xd011 (Unknown DPC code)
+  0xd012 (Unknown DPC code)
+  0xd013 (Unknown DPC code)
+  0xd014 (Unknown DPC code)
+  0xd015 (Unknown DPC code)
+  0xd016 (Unknown DPC code)
+  0xd017 (Unknown DPC code)
+  0xd018 (Unknown DPC code)
+  0xd019 (Unknown DPC code)
+  0xd01a (Unknown DPC code)
+  0xd01b (Unknown DPC code)
+  0xd01c (Unknown DPC code)
+  0xd100 (Unknown DPC code)
+  0xd101 (Secure Time)
+  0xd102 (Device Certificate)
+  0xd103 (Revocation Info)
+  0xd104 (Unknown DPC code)
+  0xd105 (Unknown DPC code)
+  0xd106 (Unknown DPC code)
+  0xd107 (Unknown DPC code)
+  0xd108 (Unknown DPC code)
+  0xd109 (Unknown DPC code)
+  0xd10a (Unknown DPC code)
+  0xd10b (Unknown DPC code)
+  0xd10c (Unknown DPC code)
+  0xd10d (Unknown DPC code)
+  0xd10e (Unknown DPC code)
+  0xd10f (Unknown DPC code)
+  0xd110 (Unknown DPC code)
+  0xd111 (Unknown DPC code)
+  0xd112 (Unknown DPC code)
+  0xd113 (Unknown DPC code)
+  0xd114 (Unknown DPC code)
+  0xd115 (Unknown DPC code)
+  0xd116 (Unknown DPC code)
+  0xd117 (Unknown DPC code)
+  0xd118 (Unknown DPC code)
+  0xd119 (Unknown DPC code)
+  0xd11a (Unknown DPC code)
+  0xd11b (Unknown DPC code)
+  0xd11c (Unknown DPC code)
+  0xd11d (Unknown DPC code)
+  0xd11e (Unknown DPC code)
+  0xd11f (Unknown DPC code)
+  0xd120 (Unknown DPC code)
+  0xd121 (Unknown DPC code)
+  0xd122 (Unknown DPC code)
+  0xd123 (Unknown DPC code)
+  0xd124 (Unknown DPC code)
+  0xd125 (Unknown DPC code)
+  0xd126 (Unknown DPC code)
+  0xd127 (Unknown DPC code)
+  0xd128 (Unknown DPC code)
+  0xd129 (Unknown DPC code)
+  0xd12a (Unknown DPC code)
+  0xd12b (Unknown DPC code)
+  0xd12c (Unknown DPC code)
+  0xd12d (Unknown DPC code)
+  0xd12e (Unknown DPC code)
+  0xd12f (Unknown DPC code)
+  0xd130 (Unknown DPC code)
+  0xd131 (PlaysForSure ID)
+  0xd132 (Unknown DPC code)
+  0xd133 (Unknown DPC code)
+  0xd134 (Unknown DPC code)
+  0xd135 (Unknown DPC code)
+  0xd136 (Unknown DPC code)
+  0xd137 (Unknown DPC code)
+  0xd138 (Unknown DPC code)
+  0xd139 (Unknown DPC code)
+  0xd13a (Unknown DPC code)
+  0xd13b (Unknown DPC code)
+  0xd13c (Unknown DPC code)
+  0xd13d (Unknown DPC code)
+  0xd13e (Unknown DPC code)
+  0xd13f (Unknown DPC code)
+  0xd140 (Unknown DPC code)
+  0xd141 (Unknown DPC code)
+  0xd142 (Unknown DPC code)
+  0xd143 (Unknown DPC code)
+  0xd144 (Unknown DPC code)
+  0xd145 (Unknown DPC code)
+  0xd146 (Unknown DPC code)
+  0xd147 (Unknown DPC code)
+  0xd148 (Unknown DPC code)
+  0xd149 (Unknown DPC code)
+  0xd14a (Unknown DPC code)
+  0xd14b (Unknown DPC code)
+  0xd14c (Unknown DPC code)
+  0xd14d (Unknown DPC code)
+  0xd14e (Unknown DPC code)
+  0xd14f (Unknown DPC code)
+  0xd150 (Unknown DPC code)
+  0xd151 (Unknown DPC code)
+  0xd152 (Unknown DPC code)
+  0xd153 (Unknown DPC code)
+  0xd154 (Unknown DPC code)
+  0xd155 (Unknown DPC code)
+  0xd157 (Unknown DPC code)
+  0xd158 (Unknown DPC code)
+  0xd159 (Unknown DPC code)
+  0xd15a (Unknown DPC code)
+  0xd15b (Unknown DPC code)
+  0xd15c (Unknown DPC code)
+  0xd15d (Unknown DPC code)
+  0xd15e (Unknown DPC code)
+  0xd15f (Unknown DPC code)
+  0xd160 (Unknown DPC code)
+  0xd161 (Unknown DPC code)
+  0xd200 (Unknown DPC code)
+  0xd201 (Unknown DPC code)
+  0xd202 (Unknown DPC code)
+  0xd203 (Unknown DPC code)
+  0xd204 (Unknown DPC code)
+  0xd205 (Unknown DPC code)
+  0xd206 (Unknown DPC code)
+  0xd207 (Unknown DPC code)
+  0xd208 (Unknown DPC code)
+  0xd209 (Unknown DPC code)
+  0xd20a (Unknown DPC code)
+  0xd20b (Unknown DPC code)
+  0xd20c (Unknown DPC code)
+  0xd20d (Unknown DPC code)
+  0xd20e (Unknown DPC code)
+  0xd20f (Unknown DPC code)
+  0xd210 (Unknown DPC code)
+  0xd211 (Unknown DPC code)
+  0xd212 (Unknown DPC code)
+  0xd213 (Unknown DPC code)
+  0xd214 (Unknown DPC code)
+  0xd215 (Unknown DPC code)
+  0xd216 (Unknown DPC code)
+  0xd217 (Unknown DPC code)
+  0xd218 (Unknown DPC code)
+  0xd219 (Unknown DPC code)
+  0xd21a (Unknown DPC code)
+  0xd21b (Unknown DPC code)
+  0xd406 (Session Initiator Info)
+  0xd407 (Perceived Device Type)
