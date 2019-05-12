@@ -247,7 +247,9 @@ int lg_gsm_list_files (GPPort *port, CameraList *list)
 	for (i = 0; i < num_pics; i++){
 		/* sprintf( name, "lg_gsm_pic%03i.jpg", i ); */
 		memcpy(name,&photolist[6+142*i],44);
+		name[43] = 0;
 		memcpy(value,&photolist[50+142*i],80);
+		value[80] = 0;
 		gp_list_append(list, name, value);
 	}
 	/* restore timeout to 5s */
