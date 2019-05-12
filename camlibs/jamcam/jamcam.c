@@ -239,6 +239,12 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			"%d %d\n"
 			"255\n", jc_file->width, jc_file->height );
 
+		if ((jc_file->width > 640) || (jc_file->height > 480)) {
+			free (raw);
+			free (ppm);
+			return GP_ERROR;
+		}
+
 		ptr = ppm + strlen( ppm );
 
 		size = strlen( ppm ) + ( jc_file->width * jc_file->height * 3 );
