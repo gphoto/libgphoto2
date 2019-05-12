@@ -89,6 +89,8 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, unsigned int *len)
 		int toread = 0x800;
 		if (toread + curlen > *len + 1 + 0x800)
 			toread = *len + 1 + 0x800 - curlen;
+		if (toread <= 0)
+			break;
 
 		ret = gp_port_read(port, *buffer + curlen, toread);
 		if (ret < GP_OK) {
