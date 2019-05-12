@@ -62,6 +62,7 @@ free_files (CameraPrivateLibrary *pl)
 			if(pl->files[i].thumb) free (pl->files[i].thumb);
 		}
 		free(pl->files);
+		pl->files = NULL;
 	}
 }
 
