@@ -4174,42 +4174,47 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
-	/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
-	 * get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
-	 */
+	/* Check if we are in manual focus to skip the wait for focus */
+	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
+	if (dpd.CurrentValue.u8 == 2) {
 
-	GP_LOG_D ("holding down shutterbutton");
-	event_start = time_now();
-	do {
-		/* needed on older cameras like the a58, check for events ... */
-		C_PTP (ptp_check_event (params));
-		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-			if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
-				(event.Param1 == PTP_DPC_SONY_FocusFound)
-			) {
-				GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
+		/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
+		* get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
+		*/
+
+		GP_LOG_D ("holding down shutterbutton");
+		event_start = time_now();
+		do {
+			/* needed on older cameras like the a58, check for events ... */
+			C_PTP (ptp_check_event (params));
+			if (ptp_get_one_event(params, &event)) {
+				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
+					(event.Param1 == PTP_DPC_SONY_FocusFound)
+				) {
+					GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
+					break;
+				}
+				if (event.Code == PTP_EC_Sony_ObjectAdded) {
+					newobject = event.Param1;
+					GP_LOG_D ("SONY ObjectAdded received, ending wait");
+					break;
+				}
+			}
+
+			/* Alternative code in case we miss the event */
+
+			C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+			C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
+			GP_LOG_D ("DEBUG== 0xd213 after shutter press = %d", dpd.CurrentValue.u8);
+			/* if prop 0xd213 = 2 or 3 (for rx0), the focus seems to be achieved */
+			if (dpd.CurrentValue.u8 == 2 || dpd.CurrentValue.u8 == 3) {
+				GP_LOG_D ("SONY Property change seen, 0xd213... ending press");
 				break;
 			}
-			if (event.Code == PTP_EC_Sony_ObjectAdded) {
-				newobject = event.Param1;
-				GP_LOG_D ("SONY ObjectAdded received, ending wait");
-				break;
-			}
-		}
 
-		/* Alternative code in case we miss the event */
-
-		C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
-		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
-		GP_LOG_D ("DEBUG== 0xd213 after shutter press = %d", dpd.CurrentValue.u8);
-		/* if prop 0xd213 = 2, the focus seems to be achieved */
-		if (dpd.CurrentValue.u8 == 2) {
-			GP_LOG_D ("SONY Property change seen, 0xd213... ending press");
-			break;
-		}
-
-	} while (time_since (event_start) < 1000);
+		} while (time_since (event_start) < 1000);
+	}
 	GP_LOG_D ("releasing shutterbutton");
 
 	/* release full-press */
@@ -5371,37 +5376,41 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		propval.u16 = 2;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
 
-		/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
-		 * get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
-		 */
+		/* Wait for focus only in automatic focus mode */
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
+		if (dpd.CurrentValue.u8 == 2) {
 
-		GP_LOG_D ("holding down shutterbutton");
-		event_start = time_now();
-		do {
-			/* needed on older cameras like the a58, check for events ... */
-			C_PTP (ptp_check_event (params));
-			if (ptp_get_one_event(params, &event)) {
-				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-				if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
-					(event.Param1 == PTP_DPC_SONY_FocusFound)
-				) {
-					GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
+			/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
+			* get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
+			*/
+
+			GP_LOG_D ("holding down shutterbutton");
+			event_start = time_now();
+			do {
+				/* needed on older cameras like the a58, check for events ... */
+				C_PTP (ptp_check_event (params));
+				if (ptp_get_one_event(params, &event)) {
+					GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+					if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
+						(event.Param1 == PTP_DPC_SONY_FocusFound)
+					) {
+						GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
+						break;
+					}
+				}
+
+				/* Alternative code in case we miss the event */
+
+				C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+				C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
+				GP_LOG_D ("DEBUG== 0xd213 after shutter press = %d", dpd.CurrentValue.u8);
+				/* if prop 0xd213 = 2 or 3 (for rx0), the focus seems to be achieved */
+				if (dpd.CurrentValue.u8 == 2 || dpd.CurrentValue.u8 == 3) {
+					GP_LOG_D ("SONY Property change seen, 0xd213... ending press");
 					break;
 				}
-			}
-
-			/* Alternative code in case we miss the event */
-
-			C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
-			C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
-			GP_LOG_D ("DEBUG== 0xd213 after shutter press = %d", dpd.CurrentValue.u8);
-			/* if prop 0xd213 = 2, the focus seems to be achieved */
-			if (dpd.CurrentValue.u8 == 2) {
-				GP_LOG_D ("SONY Property change seen, 0xd213... ending press");
-				break;
-			}
-
-		} while (time_since (event_start) < 1000);
+			} while (time_since (event_start) < 1000);
+		}
 		GP_LOG_D ("releasing shutterbutton");
 
 		/* release full-press */
