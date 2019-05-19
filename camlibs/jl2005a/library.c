@@ -228,6 +228,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			compressed = 1;
 			h = 288;
 		}
+
+	/* sanity check the sizes, as the ahd bayer algorithm does not like very small height / width */
+	if ((h < 72) || (w < 176)) {
+		status = GP_ERROR;
+		goto end;
+	}
 	p_data = malloc( w*h );
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
