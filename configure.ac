@@ -504,6 +504,7 @@ GP_CAMLIB([konica],[outdated])dnl
 GP_CAMLIB([konica_qm150],[outdated])dnl
 GP_CAMLIB([largan],[outdated])dnl
 GP_CAMLIB([lg_gsm],[outdated])dnl
+GP_CAMLIB([lumix])dnl
 GP_CAMLIB([mars])dnl
 GP_CAMLIB([dimagev])dnl
 GP_CAMLIB([mustek],[outdated])dnl

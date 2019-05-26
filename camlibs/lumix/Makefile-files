@@ -1,0 +1,12 @@
+# -*- Makefile -*-
+
+EXTRA_DIST += lumix/README.lumix lumix/ChangeLog
+
+noinst_DATA += lumix/README.lumix
+EXTRA_LTLIBRARIES += lumix.la
+
+lumix_la_SOURCES = lumix/lumix.c
+lumix_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS)
+lumix_la_LDFLAGS = $(camlib_ldflags)
+lumix_la_DEPENDENCIES = $(camlib_dependencies)
+lumix_la_LIBADD = $(camlib_libadd)

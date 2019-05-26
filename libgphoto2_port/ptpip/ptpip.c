@@ -185,6 +185,18 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_set_path (info, "^ptpip:");
 	gp_port_info_list_append (list, info); /* do not check return */
 
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_TCP);
+	gp_port_info_set_name (info, _("TCP Connection"));
+	gp_port_info_set_path (info, "tcp:");
+	CHECK (gp_port_info_list_append (list, info));
+
+	/* Generic matcher so you can pass any IP address */
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_TCP);
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^tcp:");
+	gp_port_info_list_append (list, info); /* do not check return */
 #ifdef HAVE_MDNS_BONJOUR
 	ret = DNSServiceBrowse (
 		&sd,
