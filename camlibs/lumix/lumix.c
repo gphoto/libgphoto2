@@ -881,7 +881,7 @@ CameraAbilities a;
 memset(&a, 0, sizeof(a));
 strcpy(a.model, "Panasonic:LumixGSeries");
 a.status = GP_DRIVER_STATUS_EXPERIMENTAL;
-a.port     =  GP_PORT_PTPIP;
+a.port     =  GP_PORT_TCP;
 a.speed[0] = 0;
 a.operations        = 	GP_CAPTURE_IMAGE| GP_OPERATION_CAPTURE_VIDEO| GP_OPERATION_CONFIG;
 a.file_operations   = GP_FILE_OPERATION_PREVIEW  ; 
