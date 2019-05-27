@@ -1,5 +1,6 @@
 /** \file lumix.c
  *
+ * \author Copyright 2019 Robert Hasson <robert_hasson@yahoo.com>
  * \author Copyright 2019 Marcus Meissner <marcus@jet.franken.de>
  *
  * \par
