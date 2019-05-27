@@ -331,10 +331,15 @@ static char* loadCmd (Camera *camera,char* cmd) {
 	char URL[100];
 	//xmlDoc *doc = NULL;
 	//xmlNode *root_element = NULL;
+	GPPortInfo      info;
+	char *xpath;
 
 	curl = curl_easy_init();
 
-	snprintf( URL,100, "http://%s/cam.cgi%s",CAMERAIP, cmd);
+	gp_port_get_info (camera->port, &info);
+	gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
+	snprintf( URL,100, "http://%s/cam.cgi%s", xpath+4, cmd);
+	GP_LOG_D("cam url is %s", URL);
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
 	//curl_easy_setopt(curl, CURLOPT_READ, URL);
 	if (!stream) { 
@@ -446,8 +451,8 @@ static char*  NumberPix(Camera *camera) {
 /*utility function to creat a SOAP envelope for the lumix cam */  
 static char*
 SoapEnvelop(int start, int num){
-	static char  Envelop[500];
-	snprintf(Envelop,500, "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"xmlns:pana=\"urn:schemas-panasonic-com:pana\"><ObjectID>0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>*</Filter><StartingIndex> %d </StartingIndex><RequestedCount>%d</RequestedCount><SortCriteria></SortCriteria><pana:X_FromCP>LumixLink2.0</pana:X_FromCP></u:Browse></s:Body></s:Envelope>",start,num);
+	static char  Envelop[1000];
+	snprintf(Envelop,1000, "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"xmlns:pana=\"urn:schemas-panasonic-com:pana\"><ObjectID>0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>*</Filter><StartingIndex> %d </StartingIndex><RequestedCount>%d</RequestedCount><SortCriteria></SortCriteria><pana:X_FromCP>LumixLink2.0</pana:X_FromCP></u:Browse></s:Body></s:Envelope>",start,num);
 
 	return Envelop;
 }
@@ -464,13 +469,18 @@ static char*  GetPix(Camera *camera,int num) {
 	curl = curl_easy_init();
 	CURLcode res;
 	struct curl_slist *list = NULL;
+	GPPortInfo      info;
+	char *xpath;
 
 	list = curl_slist_append(list, "soapaction");
 	list = curl_slist_append(list, "Content-Type: text/xml; charset=\"utf-8\"");
 	list = curl_slist_append(list, "urn:schemas-upnp-org:service:ContentDirectory:1#Browse:");	
 
 	char URL[1000];
-	snprintf( URL,1000, "http://%s/cam.cgi%s",CAMERAIP, CDS_Control);
+	gp_port_get_info (camera->port, &info);
+	gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
+	snprintf( URL,1000, "http://%s/cam.cgi%s",xpath+4, CDS_Control);
+	GP_LOG_D("camera url is %s", URL);
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
 	//curl_easy_setopt(curl, CURLOPT_READ, URL);
 	curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
