@@ -1,4 +1,6 @@
-libgphoto2 2.5.23 development
+libgphoto2 2.5.23.1 development
+------------------------------------------------------------------------------
+libgphoto2 2.5.23 release
 
 ptp2:
 * Sony capture stability and speed improvements
