@@ -140,6 +140,8 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 				jamcam_files[jamcam_count].height = height;
 				jamcam_files[jamcam_count].data_incr = data_incr;
 
+				if (jamcam_count+1 >= sizeof(jamcam_files)/sizeof(jamcam_files[0]))
+					break;
 				jamcam_count++;
 
 				position += data_incr;
@@ -185,6 +187,8 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 				jamcam_files[jamcam_count].width = width;
 				jamcam_files[jamcam_count].height = height;
 				jamcam_files[jamcam_count].data_incr = data_incr;
+				if (jamcam_count+1 >= sizeof(jamcam_files)/sizeof(jamcam_files[0]))
+					break;
 				jamcam_count++;
 
 				position += data_incr;
@@ -255,6 +259,8 @@ int jamcam_file_count (Camera *camera) {
 				jamcam_files[jamcam_count].width = width;
 				jamcam_files[jamcam_count].height = height;
 				jamcam_files[jamcam_count].data_incr = data_incr;
+				if (jamcam_count+1 >= sizeof(jamcam_files)/sizeof(jamcam_files[0]))
+					break;
 
 				jamcam_count++;
 
@@ -291,6 +297,8 @@ int jamcam_file_count (Camera *camera) {
 				jamcam_files[jamcam_count].width = width;
 				jamcam_files[jamcam_count].height = height;
 				jamcam_files[jamcam_count].data_incr = data_incr;
+				if (jamcam_count+1 >= sizeof(jamcam_files)/sizeof(jamcam_files[0]))
+					break;
 				jamcam_count++;
 
 				position += data_incr;
