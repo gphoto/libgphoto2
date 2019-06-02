@@ -1,19 +1,24 @@
-libgphoto2 2.5.22.1 development
+libgphoto2 2.5.23 development
 
 ptp2:
 * Sony capture stability and speed improvements
-* Canon EOS capture stability improvements
+* Canon EOS capture stability improvements, reduce partial read blobs from 5MB to 1MB
+* Canon EOS M image format unpacking adjustments
 * Olympus OMD: bulb capture added, trigger capture capable
 * Panasonic GH5: added manualfocusdrive, capturetarget
 * Canon PowerShot X work ... trying to support / improve stability of capture
+* PTP string packing adjusted to standard (empty and null strings)
 * New ids added:
   * Sony Alpha A68, RX100M6, DSC-WX350
   * Nikon Coolpix L100
   * Canon PowerShot G7X, G9X Mark II
   * Canon Rebel T6, EOS 2000D
-  * Fuji X-A2, GFX 50R
+  * Fuji X-A2, GFX 50R, XT-30
   * Ricoh WG-M2
+* libmtp ids synced.
 
+pentax:
+* synced smaller parts with pktriggercord
 
 translations:
 * updated danish
