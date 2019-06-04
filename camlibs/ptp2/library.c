@@ -2097,6 +2097,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/316 */
 	{"Canon:SX 720HS",			0x04a9, 0x32c2, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Sagufta Kapadia <sagufta.kapadia@gmail.com> */
+	{"Canon:SX 620HS",			0x04a9, 0x32c3, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://github.com/gphoto/libgphoto2/issues/235 */
 	{"Canon:EOS M6",			0x04a9, 0x32c5, PTP_CAP|PTP_CAP_PREVIEW},
 
