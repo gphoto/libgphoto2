@@ -45,17 +45,18 @@
 static int 
 m_read (GPPort *port, char *data, int size) 
 {
-	gp_port_write(port, "\x21", 1);
-    	gp_port_read(port, data, 16); 	
-	return GP_OK;
+	int ret;
+	ret = gp_port_write(port, "\x21", 1);
+	if (ret < GP_OK) return ret;
+
+    	return gp_port_read(port, data, 16);
 }
 
 static int 
 m_command (GPPort *port, char *command, int size, char *response) 
 {
 	gp_port_write(port, command, size);
-    	m_read(port, response, 16); 	
-	return GP_OK;
+    	return m_read(port, response, 16);
 }
 
 static int mars_routine (Info *info, GPPort *port, char param, int n);
@@ -347,7 +348,8 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	gp_port_write(port, address2, 2);	
 	/* Moving the memory cursor to the given address? */
 	while (( c[0] != 0xa) ) {	
-    	m_read(port, c, 16); 	
+    		if (m_read(port, c, 16) < 16)
+			break;
 	}
 	
 	m_command(port, address3, 2, c);
