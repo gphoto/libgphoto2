@@ -719,6 +719,10 @@ spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 		CHECK (spca50x_get_FATs (lib, dramtype));
 
 		index = lib->files[lib->num_files_on_sdram - 1].fat_end;
+		if (index >= lib->num_fats) {
+			gp_log(GP_LOG_ERROR, "spca50x", "%d exceeds num_fats %d", index, lib->num_fats);
+			return GP_ERROR;
+		}
 		p = lib->fats + SPCA50X_FAT_PAGE_SIZE * index;
 		/* p now points to the fat of the last image of the last file */
 
@@ -906,6 +910,8 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 		 * gets its own fat table with a sequence number at p[18]. */
 		if ((type == 0x80) || (type == 0x03 && (p[18] != 0x00))) {
 			/* continuation of an avi */
+			if (!file_index)
+				return GP_ERROR;
 			lib->files[file_index - 1].fat_end = index;
 		} else {
 			/* its an image */
