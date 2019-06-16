@@ -152,7 +152,9 @@ spca50x_reset (CameraPrivateLibrary * lib)
  			CHECK (spca50x_pd_enable (lib));
 		}
 	}
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	usleep(200000);
+#endif
 	return GP_OK;
 }
 
@@ -189,10 +191,14 @@ yuv2rgb (uint32_t y, uint32_t u, uint32_t v, uint32_t *_r, uint32_t *_g, uint32_
 int
 spca50x_capture (CameraPrivateLibrary * lib)
 {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	sleep (2);
+#endif
         CHECK (gp_port_usb_msg_write
 		(lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	sleep (3);
+#endif
 	return GP_OK;
 }
 

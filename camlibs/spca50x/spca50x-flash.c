@@ -73,7 +73,9 @@ spca50x_flash_wait_for_ready(CameraPrivateLibrary *pl)
 	int timeout = 30;
 	uint8_t ready = 0;
 	while (timeout--) {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep(1);
+#endif
 		if (pl->bridge == BRIDGE_SPCA500) {
 			CHECK (gp_port_usb_msg_read (pl->gpdev,
 							0x00, 0x0000, 0x0101,
@@ -100,8 +102,11 @@ spca500_flash_84D_wait_while_busy(CameraPrivateLibrary *pl)
 {
 	int timeout = 30;
 	uint8_t ready = 0;
+
 	while (timeout--) {
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep(1);
+#endif
 	CHECK (gp_port_usb_msg_read (pl->gpdev,
 					0x00, 0x0000, 0x0100,
 					(char*)&ready, 0x01));
@@ -316,7 +321,9 @@ spca500_flash_capture (CameraPrivateLibrary *pl)
 
 		/* wait until the camera is not busy any more */
 		/* spca50x_flash_wait_for_ready doesn't work here */
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep(3);
+#endif
 		
 		/* invalidate TOC/info cache */
 		pl->dirty_flash = 1;
@@ -805,6 +812,9 @@ spca50x_flash_get_file (CameraPrivateLibrary *lib, GPContext *context,
 
 	if (lib->fw_rev != 1 && thumbnail)
 		return GP_ERROR_NOT_SUPPORTED;
+
+	if (!lib->flash_toc)
+		return GP_ERROR;
 
 	if (thumbnail) {
 		p = lib->flash_toc + (index*2+1) * 32;

@@ -116,7 +116,9 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		uint8_t lower, upper;
 
 		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x5, 0, 0, NULL, 0));
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep (1);
+#endif
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0xe15,
 				 (char *) & lib->num_files_on_sdram, 1));
@@ -125,7 +127,9 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		/*  get fatscount */
 		CHECK (gp_port_usb_msg_write
 				(lib->gpdev, 0x05, 0x0000, 0x0008, NULL, 0));
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep (1);
+#endif
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0x0e19,
 				 (char *)&lower, 1));
@@ -165,7 +169,9 @@ spca50x_sdram_delete_file (CameraPrivateLibrary * lib, unsigned int index)
 
 	CHECK (gp_port_usb_msg_write
 	       (lib->gpdev, 0x06, fat_index, 0x0007, NULL, 0));
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	sleep (1);
+#endif
 
 	/* Reread fats the next time it is accessed */
 	lib->dirty_sdram = 1;
@@ -184,7 +190,9 @@ spca50x_sdram_delete_all (CameraPrivateLibrary * lib)
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x02, 0x0000, 0x0005, NULL, 0));
 	}
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	sleep (3);
+#endif
 
 	/* Reread fats the next time it is accessed */
 	lib->dirty_sdram = 1;
@@ -272,7 +280,9 @@ spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 			free (mybuf);
 			return ret;
 		}
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep (1);
+#endif
 		ret = gp_port_read (lib->gpdev, (char *)mybuf, size);
 		if (ret < GP_OK) {
 			free (mybuf);
@@ -627,7 +637,9 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 			free (mybuf);
 			return ret;
 		}
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep (1);
+#endif
 		ret = gp_port_read (lib->gpdev, (char *)mybuf, size);
 		if (ret < GP_OK) {
 			free (mybuf);
@@ -870,7 +882,9 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 		spca50x_reset (lib);
 		CHECK (gp_port_usb_msg_write
 		       (lib->gpdev, 0x05, 0x00, 0x07, NULL, 0));
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep (1);
+#endif
 		CHECK (gp_port_read
 		       (lib->gpdev, (char *)lib->fats,
 			lib->num_fats * SPCA50X_FAT_PAGE_SIZE));
@@ -880,6 +894,11 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	index = 0;
 
 	while (index < lib->num_fats) {
+		if (file_index >= lib->num_files_on_sdram) {
+			free (lib->fats); lib->fats = NULL;
+			free (lib->files); lib->files = NULL;
+			return GP_ERROR;
+		}
 
 		type = p[0];
 		/* While the spca504a indicates start of avi as 0x08 and cont.
