@@ -31,6 +31,7 @@
 #include "config.h"
 #include "bayer.h"
 
+#include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-result.h>
 
 static const int tile_colours[8][4] = {
@@ -78,6 +79,7 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 	int colour, bayer;
 	unsigned char *ptr = input;
 
+	gp_log (GP_LOG_DEBUG, "bayer", "w=%d, h=%d\n", w, h);
 	switch (tile) {
 
 		case BAYER_TILE_RGGB:
@@ -147,6 +149,8 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 	int x, y, bayer;
 	int p0, p1, p2;
 	int value, div ;
+
+	if (w < 2 || h < 2) return GP_ERROR;
 
 	switch (tile) {
 	default:
