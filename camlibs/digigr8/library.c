@@ -247,8 +247,9 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 		camera->pl->last_fetched_entry = k;
 		return GP_OK;
 	}
-	if (b > w*h) {
+	if (b < w*h) {
 		GP_DEBUG("need %d bytes, supposed to read only %d", w*h, b);
+		return GP_ERROR;
 	}
 	data = malloc (b);
 	if(!data) return GP_ERROR_NO_MEMORY;
@@ -300,6 +301,7 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 		digi_decompress (p_data, data, w, h);
 	} else
 		memcpy(p_data, data, w * h);
+	GP_DEBUG("w %d, h %d, size %d", w, h, size);
 	gp_ahd_decode(p_data, w , h , ptr, BAYER_TILE_BGGR);
 	free(p_data);
 	digi_postprocess(w, h, ptr);
