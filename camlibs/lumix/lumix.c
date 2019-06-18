@@ -29,6 +29,10 @@
 #include <stdio.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <stdlib.h>
+#include <libxml/xmlmemory.h>
+#include <libxml/xmlreader.h>
+
 
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -38,6 +42,7 @@
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
+
 
 #define GP_MODULE "lumix"
 
@@ -87,8 +92,8 @@ char* CDS_Control  = ":60606/Server0/CDS_control";
 char* STARTSTREAM  = "cam.cgi?mode=startstream&value=49199";
 char* CAMERAIP = "192.168.1.24"; //placeholder until there is a better way to discover the IP from the network and via PTPIP
 int buflen = 10000;
-static char Buffer[10000-1]; 
-int ReadoutMode = 0; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
+char Buffer[10000-1]; 
+int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
 char* cameraShutterSpeed = "B"; // //placeholder to store the value of the shutterspeed set in camera; "B" is for bulb.
 int captureDuration = 10; //placeholder to store the value of the bulb shot this should be taken as input. note that my primary goal is in fact to perform bulb captures. but this should be extended for sure to take Shutter Speed capture as set in camera 
 
@@ -119,7 +124,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 }
 
 
-int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
+//int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
 
 static int camera_about (Camera *camera, CameraText *about, GPContext *context);
 
@@ -311,41 +316,96 @@ camera_id (CameraText *id)
 	return GP_OK;
 }
 
-/*size_t read_callback(char *buffer, size_t size, size_t nitems, void *userdata);*/
+size_t read_data(void *ptr, size_t size, size_t nmeb, void *stream);
 
-static size_t
-read_callback(void *ptr, size_t size, size_t nmemb, void *stream) {
-	curl_off_t nread;
-	/* in real-world cases, this would probably get this data differently
-	   as this fread() stuff is exactly what the library already would do
-	   by default internally */ 
-	size_t retcode = fread(ptr, size, nmemb, stream);
-	nread = (curl_off_t)retcode;
-	return retcode;
+size_t read_data(void *ptr, size_t size, size_t nmeb, void *stream)
+{
+    return fread(ptr,size,nmeb,stream);
 }
 
-static char* loadCmd (Camera *camera,char* cmd) {
-        CURL *curl;
+char *replaceWord(const char *s, const char *oldW, 
+                                 const char *newW) 
+{ 
+    char *result; 
+    int i, cnt = 0; 
+    int newWlen = strlen(newW); 
+    int oldWlen = strlen(oldW); 
+  
+    // Counting the number of times old word 
+    // occur in the string 
+    for (i = 0; s[i] != '\0'; i++) 
+    { 
+        if (strstr(&s[i], oldW) == &s[i]) 
+        { 
+            cnt++; 
+  
+            // Jumping to index after the old word. 
+            i += oldWlen - 1; 
+        } 
+    } 
+  
+    // Making new string of enough length 
+    result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1); 
+  
+    i = 0; 
+    while (*s) 
+    { 
+        // compare the substring with the result 
+        if (strstr(s, oldW) == s) 
+        { 
+            strcpy(&result[i], newW); 
+            i += newWlen; 
+            s += oldWlen; 
+        } 
+        else
+            result[i++] = *s++; 
+    } 
+  
+    result[i] = '\0'; 
+    return result; 
+} 
+
+
+size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp);
+ 
+size_t write_callback(char *contents, size_t size, size_t nmemb, void *userp)
+{
+
+	size_t realsize = size * nmemb;
+	if (Buffer[0]=='\0') {
+		memcpy(Buffer,contents,realsize);
+	} 
+	else {
+				memcpy(strchr(Buffer,'\0'),contents,realsize);
+	}
+	
+	return realsize;
+	
+}
+
+
+char* loadCmd (Camera *camera,char* cmd) {
+    CURL *curl;
 	CURLcode res;
 	int  stream = strcmp (cmd, STARTSTREAM);
 	char URL[100];
-	//xmlDoc *doc = NULL;
-	//xmlNode *root_element = NULL;
+	
 	GPPortInfo      info;
 	char *xpath;
-
+	
 	curl = curl_easy_init();
-
+	memset(Buffer,'\0',buflen-1);
 	gp_port_get_info (camera->port, &info);
 	gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
-	snprintf( URL,100, "http://%s/cam.cgi%s", xpath+4, cmd);
+	snprintf( URL,100, "http://%s/%s", xpath+4, cmd);
 	GP_LOG_D("cam url is %s", URL);
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
-	//curl_easy_setopt(curl, CURLOPT_READ, URL);
-	if (!stream) { 
-		curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
-		curl_easy_setopt(curl, CURLOPT_READDATA, camera);
+	
+	if (stream!=0) { 
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, Buffer);
 	} 
+
 	res = curl_easy_perform(curl);
 	if(res != CURLE_OK) {
 		fprintf(stderr, "curl_easy_perform() failed: %s\n",
@@ -355,10 +415,17 @@ static char* loadCmd (Camera *camera,char* cmd) {
 		/* read the XML that is now in Buffer*/ 
 	}
 	curl_easy_cleanup(curl);
-	if (!stream) {
+
+
+	if (stream != 0) {
+		if (strcmp(cmd,PLAYMODE)==0) {
+		}
 		return Buffer;
+
+				
 	} else {
 		return NULL;
+
 	} // TO DO the idea would be to return the socket to the actual video stream here....
 }
 
@@ -378,6 +445,13 @@ static void Set_Speed(Camera *camera,const char* SpeedValue) {
 	sprintf(buf, "?mode=setsetting&type=shtrspeed&value=%s",SpeedValue);
 	loadCmd(camera,buf);
 }
+
+static void Set_quality(Camera *camera,const char* Quality) {
+	char buf[200];
+	sprintf(buf,"%s%s", QUALITY,Quality);
+	loadCmd(camera,buf);
+}
+
 
 static void startStream(Camera *camera) {
 	loadCmd(camera,"?mode=startstream&value=49199");
@@ -427,11 +501,27 @@ this is the XML sample to be parsed by the function below   NumberPix()
 
 
 */
-static char*  NumberPix(Camera *camera) {
-	xmlChar *key;
-	xmlDocPtr doc = xmlParseDoc((unsigned char*)loadCmd(camera,NUMPIX));
+int strend(const char *s, const char *t)
+{
+    size_t ls = strlen(s); // find length of s
+    size_t lt = strlen(t); // find length of t
+    if (ls >= lt)  // check if t can fit in s
+    {
+        // point s to where t should start and compare the strings from there
+        return (0 == memcmp(t, s + (ls - lt), lt));
+    }
+    return 0; // t was longer than s
+}
+
+
+char*  NumberPix(Camera *camera) {
+	xmlChar *keyz ;
+	char *temp = loadCmd(camera,NUMPIX);
+	xmlDocPtr doc = xmlParseDoc((unsigned char*) temp);
 	xmlNodePtr cur = NULL; 
 	cur = xmlDocGetRootElement(doc);   
+//	GP_LOG_D("NumberPix Decode current root node is %s \n", doc);
+
 	if (cur == NULL) {
 		fprintf(stderr,"empty document\n");
 		xmlFreeDoc(doc);
@@ -439,20 +529,21 @@ static char*  NumberPix(Camera *camera) {
 	}
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL) {
+	//	GP_LOG_D("NumberPix Decode current node is %s \n", (char*)cur);
 		if ((!xmlStrcmp(cur->name, (const xmlChar *)"content_number"))){
-			key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			return (char*) key;
-		}
+			keyz = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
+			}
 		cur = cur->next;
 	}
-	return "";	
+	GP_LOG_D("NumberPix Found is %s \n", (char *) keyz);
+	return strdup((char *) keyz);	
 }
 
 /*utility function to creat a SOAP envelope for the lumix cam */  
 static char*
 SoapEnvelop(int start, int num){
 	static char  Envelop[1000];
-	snprintf(Envelop,1000, "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"xmlns:pana=\"urn:schemas-panasonic-com:pana\"><ObjectID>0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>*</Filter><StartingIndex> %d </StartingIndex><RequestedCount>%d</RequestedCount><SortCriteria></SortCriteria><pana:X_FromCP>LumixLink2.0</pana:X_FromCP></u:Browse></s:Body></s:Envelope>",start,num);
+	snprintf(Envelop,1000, "<?xml version=\"1.0\" encoding=\"utf-8\"?><s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\"><s:Body><u:Browse xmlns:u=\"urn:schemas-upnp-org:service:ContentDirectory:1\"xmlns:pana=\"urn:schemas-panasonic-com:pana\"><ObjectID>0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>*</Filter><StartingIndex>%d</StartingIndex><RequestedCount>%d</RequestedCount><SortCriteria></SortCriteria><pana:X_FromCP>LumixLink2.0</pana:X_FromCP></u:Browse></s:Body></s:Envelope>",start,num);
 
 	return Envelop;
 }
@@ -464,7 +555,11 @@ static char*  GetPix(Camera *camera,int num) {
 	loadCmd(camera,PLAYMODE);
 	int Start  = 0; 
 	long NumPix  = strtol(NumberPix(camera), NULL, 10);
+	//GP_LOG_D("NumPix is %d \n", NumPix);
+
 	char* SoapMsg = SoapEnvelop((NumPix - num)> 0?(NumPix - num):0, num);
+	//GP_LOG_D("SoapMsg is %s \n", SoapMsg);
+	
 	CURL *curl;
 	curl = curl_easy_init();
 	CURLcode res;
@@ -472,33 +567,39 @@ static char*  GetPix(Camera *camera,int num) {
 	GPPortInfo      info;
 	char *xpath;
 
-	list = curl_slist_append(list, "soapaction");
+	list = curl_slist_append(list, "SOAPaction: urn:schemas-upnp-org:service:ContentDirectory:1#Browse");
 	list = curl_slist_append(list, "Content-Type: text/xml; charset=\"utf-8\"");
-	list = curl_slist_append(list, "urn:schemas-upnp-org:service:ContentDirectory:1#Browse:");	
-
+	list = curl_slist_append(list, "Accept: text/xml");
+	
 	char URL[1000];
+	memset(Buffer,'\0',buflen-1);
 	gp_port_get_info (camera->port, &info);
 	gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
-	snprintf( URL,1000, "http://%s/cam.cgi%s",xpath+4, CDS_Control);
-	GP_LOG_D("camera url is %s", URL);
+	snprintf( URL,1000, "http://%s%s",xpath+4, CDS_Control);
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
-	//curl_easy_setopt(curl, CURLOPT_READ, URL);
-	curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
-	curl_easy_setopt(curl, CURLOPT_READDATA, Buffer);
+	
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+	
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, Buffer);
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+	curl_easy_setopt(curl, CURLOPT_POST,1);
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long) strlen(SoapMsg));
+	
+
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, SoapMsg);
+	GP_LOG_D("camera url is %s", URL);
+	
 	res = curl_easy_perform(curl);
 	if(res != CURLE_OK) {
-	fprintf(stderr, "curl_easy_perform() failed: %s\n",
-	curl_easy_strerror(res));
+		fprintf(stderr, "curl_easy_perform() failed: %s\n",
+		curl_easy_strerror(res));
 	}	
 	else {
-	/* read the XML that is now in Buffer*/ 
-
-	}
+		/* read the XML that is now in Buffer*/ 
+		strcpy(Buffer,replaceWord(replaceWord(replaceWord(replaceWord(replaceWord(Buffer,"&amp;", "&"),"&apos;", "'"), "&quot;", "\""), "&lt;", "<"),"&gt;", ">"));
+		}
 	curl_easy_cleanup(curl);
 	return Buffer;
-
 }
 
 /**
@@ -517,7 +618,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 
 static int
 waitBulb(Camera *camera, long Duration ) {
-	sleep(Duration * 1000); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
+	sleep(Duration); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
 	loadCmd(camera,SHUTTERSTOP);
 	return TRUE;
 }
@@ -527,7 +628,39 @@ static size_t dl_write(void *buffer, size_t size, size_t nmemb, void *stream)
 	return fwrite(buffer, size, nmemb, (FILE*)stream); 
 }
 
+char* processNode(xmlTextReaderPtr reader) {
 
+	char* ret =""; 
+	char* lookupImgtag="";
+	
+	switch (ReadoutMode) {
+	case 0 : //'jpg
+	lookupImgtag = "CAM_RAW_JPG";
+	break; 
+	case 1 :// 'raw
+	lookupImgtag = "CAM_RAW";
+	break;
+	case 2  ://'thumb
+	lookupImgtag = "CAM_LRGTN";
+	break;
+	} 
+
+    const xmlChar *name, *value;
+
+    name = xmlTextReaderConstName(reader);
+    if (name == NULL)
+	name = BAD_CAST "--";
+	if (xmlTextReaderNodeType(reader) == 1) {  // Element
+		while (xmlTextReaderMoveToNextAttribute(reader)){
+			if (strend(xmlTextReaderConstValue(reader),lookupImgtag)) { 
+				xmlTextReaderRead(reader);
+				ret = xmlTextReaderConstValue(reader);
+				printf("the image file is %s\n" ,ret);
+			}
+		}
+    }
+    return ret;
+}
 
 /*
 
@@ -584,105 +717,86 @@ case RAW:
 </s:Envelope>
 
 */
-static char* ReadImageFromCamera(Camera *camera) {
-	xmlDocPtr Pictures =xmlParseDoc((xmlChar*)GetPix(camera,1));                  //the XML with all the results from the camea
-	xmlNodePtr    PictureList = NULL;                    //the list of picture items extratec
-	xmlNode 	*Picture, *cur;                  		//a singlepicture item
-	cur = xmlDocGetRootElement(Pictures);   
-	char *Images[250]; 					//the array of the urls in the camera
-	long nRead[250]; 
-	int  j = -1;
+static CameraFilePath * ReadImageFromCamera(Camera *camera) {
+	char *Images; 					//the array of the urls in the camera
+	long nRead; 
 	int SendStatus  = -1; 
 	int length  = 0; 
 
-	PictureList = xmlFirstElementChild(xmlFirstElementChild(xmlFirstElementChild(xmlFirstElementChild(Pictures->last))))->children ;//items
-	//xmlFirstElementChild
-	//PictureList = Pictures.LastChild.FirstChild.FirstChild.FirstChild.FirstChild.ChildNodes 'items
-
 	loadCmd(camera,PLAYMODE);             //   'making sure the camera is in Playmode
-
-	Picture = PictureList->xmlChildrenNode;
-	while (Picture != NULL) {
-		//			if ((!xmlStrcmp(cur->name, (const xmlChar *)"content_number"))){
-		//				key = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-		//				return (char*) key;
-		//				}
-
-		// Else 'JPG or Thumbnails
-		char*  lookuptag; 
-		int  lookupNum; 
-		char* xmlimageName;
-
-		if (ReadoutMode == 0) { 
-			lookuptag = "DO" ;//full JPG
-			lookupNum = 3;
-			xmlimageName = (char*)Picture->children->next->next->name;
-		} else {
-			lookuptag = "DL" ; //large thumbnail
-			lookupNum = 5;
-			xmlimageName = (char*)Picture->children->next->next->next->next->name;
-		}
-
-
-		if ((strstr(xmlimageName,"JPG")&& strstr(xmlimageName, lookuptag))||strstr(xmlimageName,"RAW")) {
-			//  If Picture.ChildNodes(lookupNum).InnerText.Contains(".JPG") And Picture.ChildNodes(lookupNum).InnerText.Contains(lookuptag) Then
-			j = j + 1;
-			Images[j] = strdup(xmlimageName);
-			nRead[j] = 0;
-			CURL* imageUrl;
-			imageUrl = curl_easy_init();
-			CURLcode res;
-			double bytesread = 0;
-			FILE* imageFile;  	
-			char filename[100];
-			char* tempPath = "C:\\"; 
-			long http_response;
-			int ret_val=0;
-
-			while (ret_val!=2) {
-				snprintf(filename,100,"%s%s",tempPath,Images[j][strlen(Images[j])- 13]);
-				imageFile = fopen(filename,"ab");
-				GP_DEBUG("reading stream %s  position %ld", Images[j],  nRead[j]);
-
-				curl_easy_setopt(imageUrl, CURLOPT_URL, Images[j]);
-				curl_easy_setopt(imageUrl,CURLOPT_TCP_KEEPALIVE,1L);
-				curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPIDLE, 120L);
-				curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPINTVL, 60L);
-				curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, dl_write);
-				//curl_easy_setopt(imageUrl, CURLOPT_PROGRESSFUNCTION, dl_progress);
-				//curl_easy_setopt(imageUrl, CURLOPT_NOPROGRESS, 0);
-
-				if (nRead[j]) {
-					curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead[j]);
-					GetPix(camera,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
-					GP_DEBUG("continuing the read where it stopped %s  position %ld", Images[j],  nRead[j]);
-				}
-				curl_easy_setopt(imageUrl, CURLOPT_WRITEDATA, imageFile);
-
-				res = curl_easy_perform(imageUrl);
-				if(res != CURLE_OK) {
-					double x;
-					curl_easy_getinfo(imageUrl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &x);
-					nRead[j] = x;
-					fprintf(stderr, "curl_easy_perform() failed: %s\n",
-					curl_easy_strerror(res));
-					GP_DEBUG("error in reading stream %s  position %ld", Images[j],  nRead[j]);
-
-					curl_easy_getinfo(imageUrl, CURLINFO_RESPONSE_CODE, &http_response);
-
-					GP_DEBUG("CURLINFO_RESPONSE_CODE:%ld\n", http_response);
-				} else {
-					GP_DEBUG("read the whole file");
-					ret_val=2;
-				}
-			}
-			curl_easy_cleanup(imageUrl);
-			fclose(imageFile);
-			return strdup(filename);
-		}
-		Picture = Picture->next;
+	char* xmlimageName;
+	xmlDocPtr doc; /* the resulting document tree */
+	int ret;
+	LIBXML_TEST_VERSION
+		
+	char* imageURL="";
+	xmlTextReaderPtr reader;
+	reader = xmlReaderForDoc(GetPix(camera,1), NULL,"noname.xml",
+        XML_PARSE_DTDATTR |  /* default DTD attributes */
+		XML_PARSE_NOENT); 
+	ret = xmlTextReaderRead(reader);
+	while (ret == 1) {
+			imageURL =processNode(reader); 
+            if (imageURL !="")
+				break; 
+            ret = xmlTextReaderRead(reader);
 	}
-	return NULL;
+
+	GP_DEBUG("the image URL is  %s\n",imageURL); 
+	Images = strdup(imageURL);
+	nRead = 0;
+	CURL* imageUrl;
+	imageUrl = curl_easy_init();
+	CURLcode res;
+	double bytesread = 0;
+	FILE* imageFile;  	
+	char filename[100];
+	char* tempPath = "./"; 
+	long http_response;
+	int ret_val=0;
+	memset(Buffer,'\0',buflen-1);
+	while (ret_val!=2) {
+		snprintf(filename,100,"%s%s",tempPath,&Images[strlen(Images)- 13]);
+		imageFile = fopen(filename,"ab");
+		GP_DEBUG("reading stream %s  position %ld", Images,  nRead);
+
+		curl_easy_setopt(imageUrl, CURLOPT_URL, Images);
+		//curl_easy_setopt(imageUrl,CURLOPT_TCP_KEEPALIVE,1L);
+		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPIDLE, 120L);
+		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPINTVL, 60L);
+		//curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, dl_write);
+
+		if (nRead) {
+			curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead);
+			GetPix(camera,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
+			GP_DEBUG("continuing the read where it stopped %s  position %ld", Images,  nRead);
+		}
+		curl_easy_setopt(imageUrl, CURLOPT_WRITEDATA, imageFile);
+
+		res = curl_easy_perform(imageUrl);
+
+		if(res != CURLE_OK) {
+
+			//double x;
+			//curl_easy_getinfo(imageUrl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &x);
+			//nRead = x;
+			fseek(imageFile, 0, SEEK_END); // seek to end of file
+			nRead= ftell(imageFile); // get current file pointer	
+
+			fprintf(stderr, "curl_easy_perform() failed: %s\n",
+			curl_easy_strerror(res));
+			GP_DEBUG("error in reading stream %s  position %ld", Images,  nRead);
+			curl_easy_getinfo(imageUrl, CURLINFO_RESPONSE_CODE, &http_response);
+			GP_DEBUG("CURLINFO_RESPONSE_CODE:%ld\n", http_response);
+		} else {
+			GP_DEBUG("read the whole file");
+			ret_val=2;
+		}
+	}
+	curl_easy_cleanup(imageUrl);
+	fclose(imageFile);
+	return (CameraFilePath *) strdup(filename);
+
 }
 
 
@@ -694,11 +808,12 @@ static char* ReadImageFromCamera(Camera *camera) {
 */
 int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
 int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context){
-	loadCmd(camera,"capture"); //we should really multithread so as to not block while waiting
-	if (!strcmp(cameraShutterSpeed, "B")) {  
+	loadCmd(camera,SHUTTERSTART); //we should really multithread so as to not block while waiting
+	sleep(4);
+	if (strcmp(cameraShutterSpeed, "B")!=0) {  
 		waitBulb(camera,captureDuration);//trying captureDuration sec to start before we know how to make a bulb capture of x sec .... 
 	}
-	path = ReadImageFromCamera(camera);
+	path =  ReadImageFromCamera(camera);
 	return GP_OK;
 }
 
@@ -866,7 +981,6 @@ printf("%s\n",buffer );
 return 0; 
 
 
-
 }
 return GP_OK;
 }
@@ -961,8 +1075,9 @@ camera_init (Camera *camera, GPContext *context)
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-	if (loadCmd(camera,PLAYMODE))
+	if (loadCmd(camera,RECMODE)!= NULL){
+		Set_quality(camera,"raw_fine");
 		return GP_OK;
-	else
+	} else
 		return GP_ERROR_IO;
 }
