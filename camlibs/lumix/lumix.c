@@ -423,7 +423,7 @@ static void switchToRecMode(Camera *camera) {
 
 static void Set_ISO(Camera *camera,const char * ISOValue) {
 	char buf[200];
-	sprintf(buf, "?mode==setsetting&type=iso&value=%s",ISOValue);
+	sprintf(buf, "?mode=setsetting&type=iso&value=%s",ISOValue);
 	loadCmd(camera,buf);
 }
 
@@ -435,6 +435,11 @@ Get_Clock(Camera *camera) {
 static char*
 Get_ShutterSpeed(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
+}
+
+static char*
+Get_Focal(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=focal");
 }
 
 static char*
@@ -892,6 +897,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_TEXT, _("Shutterspeed"), &widget);
 	gp_widget_set_name (widget, "shutterspeed");
 	gp_widget_set_value (widget, Get_ShutterSpeed(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Focal Length"), &widget);
+	gp_widget_set_name (widget, "focal");
+	gp_widget_set_value (widget, Get_Focal(camera));
 	gp_widget_append (section, widget);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Autofocus Mode"), &widget);
