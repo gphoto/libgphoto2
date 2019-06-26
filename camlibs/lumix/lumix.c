@@ -257,17 +257,19 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
  *
  * This function is a CameraFilesystem method.
  */
-int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data, GPContext *context);
-int
+static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
+	int	i;
 
-	int	numpix =  NumberPix(camera);
-
+	for (i=0;i<camera->pl->numpics;i++) {
+		if (camera->pl->pics[i].url_large) {
+			char	*s = strrchr(camera->pl->pics[i].url_large, '/')+1;
+			gp_list_append (list, s, NULL);
+		}
+	}
 	return GP_OK;
 }
 
@@ -313,48 +315,6 @@ camera_id (CameraText *id)
 
 	return GP_OK;
 }
-
-static char *replaceWord(const char *s, const char *oldW, 
-                                 const char *newW) 
-{ 
-    char *result; 
-    int i, cnt = 0; 
-    int newWlen = strlen(newW); 
-    int oldWlen = strlen(oldW); 
-  
-    // Counting the number of times old word 
-    // occur in the string 
-    for (i = 0; s[i] != '\0'; i++) 
-    { 
-        if (strstr(&s[i], oldW) == &s[i]) 
-        { 
-            cnt++; 
-  
-            // Jumping to index after the old word. 
-            i += oldWlen - 1; 
-        } 
-    } 
-  
-    // Making new string of enough length 
-    result = (char *)malloc(i + cnt * (newWlen - oldWlen) + 1); 
-  
-    i = 0; 
-    while (*s) 
-    { 
-        // compare the substring with the result 
-        if (strstr(s, oldW) == s) 
-        { 
-            strcpy(&result[i], newW); 
-            i += newWlen; 
-            s += oldWlen; 
-        } 
-        else
-            result[i++] = *s++; 
-    } 
-  
-    result[i] = '\0'; 
-    return result; 
-} 
 
 static size_t
 write_callback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -868,11 +828,9 @@ GetPix(Camera *camera,int num) {
 			if (strstr((char*)attrcontent,"DLNA.ORG_PN=JPEG_MED")) {
 				camera->pl->pics[i].url_thumb = strdup((char*)xmlNodeGetContent(child));
 			}
-
 			child = child->next;
 		}
         } while ((next = xmlNextElementSibling (next)));
-
 	return strdup((char*)xchar);
 }
 
