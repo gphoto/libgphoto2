@@ -934,13 +934,6 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	return GP_OK;
 }
 
-static int
-waitBulb(Camera *camera, long Duration ) {
-	sleep(Duration); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
-	loadCmd(camera,SHUTTERSTOP);
-	return TRUE;
-}
-
 static char*
 processNode(xmlTextReaderPtr reader) {
 	char* ret =""; 
@@ -1171,10 +1164,12 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
 int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context){
 	loadCmd(camera,SHUTTERSTART); //we should really multithread so as to not block while waiting
-	sleep(4);
+
 	if (strcmp(cameraShutterSpeed, "B")!=0) {  
-		waitBulb(camera,captureDuration);//trying captureDuration sec to start before we know how to make a bulb capture of x sec .... 
+		sleep(captureDuration); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
 	}
+
+	loadCmd(camera,SHUTTERSTOP);
 	return ReadImageFromCamera(camera, path, context);
 }
 
