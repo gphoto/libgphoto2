@@ -25,6 +25,7 @@
 #include "config.h"
 
 #include <string.h>
+#include <errno.h>
 #include <curl/curl.h>
 #include <stdio.h>
 #include <libxml/parser.h>
@@ -96,6 +97,7 @@ char* cameraShutterSpeed = "B"; // //placeholder to store the value of the shutt
 int captureDuration = 10; //placeholder to store the value of the bulb shot this should be taken as input. note that my primary goal is in fact to perform bulb captures. but this should be extended for sure to take Shutter Speed capture as set in camera 
 
 static int NumberPix(Camera *camera);
+static char* loadCmd (Camera *camera,char* cmd);
 
 typedef struct {
 	char   *data;
@@ -114,6 +116,8 @@ struct _CameraPrivateLibrary {
 
 	int		numpics;
 	LumixPicture	*pics;
+
+	int		liveview;
 };
 
 
@@ -136,7 +140,67 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	return GP_OK;
+	int			sock = 0, valread;
+	struct sockaddr_in	serv_addr;
+	unsigned char		buffer[65536];
+	GPPortInfo      	info;
+	char			*xpath;
+	int			i, start, end, tries;
+
+	loadCmd (camera, RECMODE);
+
+	if (!camera->pl->liveview) {
+		loadCmd(camera,"cam.cgi?mode=startstream&value=49199");
+		camera->pl->liveview = 1;
+		if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+			GP_LOG_E("\n Socket creation error \n");
+			return GP_ERROR;
+		}
+
+		gp_port_get_info (camera->port, &info);
+		gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
+
+		memset(&serv_addr, 0, sizeof(serv_addr));
+
+		serv_addr.sin_family = AF_INET;
+		serv_addr.sin_port = htons(49199);
+		serv_addr.sin_addr.s_addr = 0;
+
+		if (bind(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+			GP_LOG_E("bind Failed: %d", errno);
+			return GP_ERROR;
+		}
+	} else {
+		/* this reminds the camera we are still doing it */
+		loadCmd(camera,"cam.cgi?mode=getstate");
+	}
+	tries = 3;
+	while (tries--) {
+		valread = recv ( sock , buffer, sizeof(buffer), 0);
+		if (valread == -1) {
+			GP_LOG_E("recv failed: %d", errno);
+			return GP_ERROR;
+		}
+
+		GP_LOG_DATA(buffer,valread,"read from udp port");
+
+		if (valread == 0)
+			continue;
+
+		start = end = -1;
+		for (i = 0; i<valread-1; i++) {
+			if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd8)) {
+				start = i;
+			}
+			if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd9)) {
+				end = i;
+			}
+		}
+		//GP_LOG_DATA(buffer+start,end-start,"read from udp port");
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		return gp_file_append (file, buffer+start, end-start);
+	}
+	return GP_ERROR;
 }
 
 
@@ -471,11 +535,8 @@ Set_quality(Camera *camera,const char* Quality) {
 }
 
 
-static void startStream(Camera *camera) {
-	loadCmd(camera,"?mode=startstream&value=49199");
-}
-
-static void shotPicture(Camera *camera) {
+static void
+shotPicture(Camera *camera) {
 	loadCmd(camera,"?mode=camcmd&value=capture");
 }
 
@@ -1306,109 +1367,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 
 	return gp_file_set_data_and_size (file, lmb.data, lmb.size);
 
-#if 0
-	/*
-	* Get the file from the camera. Use gp_file_set_mime_type,
-	* gp_file_set_data_and_size, etc.
-	*/
-
-	if (type == GP_FILE_TYPE_PREVIEW) {
-
-		loadCmd (camera,STARTSTREAM);
-		//need to do stuff here to get the UDP stream back from the camera as per other 
-		//("http://" & CameraIP.Text & "/cam.cgi?mode=setsetting&type=liveviewsize&value=vga"
-		/*
-		' UDP-Protokoll einstellen
-			Winsock1.Close 'Winsock1 ->Microsoft Winsock control in VB
-			Winsock1.Protocol = sckUDPProtocol
-			' Port, der überwacht werden soll
-			nPort = 49199 
-			' Eigene IP ermitteln
-			sOwnIP = Winsock1.LocalIP
-
-		' Port an die IP "binden"
-Winsock1.Bind nPort, sOwnIP
-
-'geht nur im 'recmode'
-txtStatus.Text = Inet1.OpenURL("http://" & CameraIP.Text & "/cam.cgi?mode=camcmd&value=recmode") 'Inet1 ->Microsoft Inet control
-
-txtStatus.Text = Inet1.OpenURL("http://" & CameraIP.Text & "/cam.cgi?mode=startstream&value=49199")
-
-Timer1.Enabled = True 'damit der Datenfluß nicht abbricht
-
-txtStatus.Text = Inet1.OpenURL("http://" & CameraIP.Text & "/cam.cgi?mode=setsetting_ &type=liveviewsize&value=vga")
-
-...
-
-Private Sub Winsock1_DataArrival(ByVal bytesTotal As Long)
-Dim sData As String
-Dim bArray As Variant
-
-On Error Resume Next
-
-'im Stream werden ganze Bilder übertragen 'Header ist 167 Byte, Rest - JPG
-'Das JPEG-Bild beginnt also bei Byte 168 (Lumix GX7)
-
-Winsock1.GetData sData, vbString
-
-sData = Mid(sData, 168)
-
-bArray = sData
-
-ImageBox1.ReadBinary2 bArray 'ImageBox1 ist the csxImage OCX
-
-End Sub
-
-Private Sub Timer1_Timer()
-Dim dummy As Variant
-
-If CameraIP.Text > "" Then
-
-If Not Inet2.StillExecuting Then
-dummy = Inet2.OpenURL("http://" & CameraIP.Text & "/cam.cgi?mode=startstream_ &value=49199")
-'Inet2 ->Microsoft Inet control
-End If
-
-End If
-
-End Sub
-*/ 
-struct sockaddr_in address; 
-int sock = 0, valread; 
-struct sockaddr_in serv_addr; 
-char *hello = "Hello from client"; 
-char buffer[1024] = {0}; 
-if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) 
-{ 
-printf("\n Socket creation error \n"); 
-return -1; 
-} 
-
-memset(&serv_addr, '0', sizeof(serv_addr)); 
-
-serv_addr.sin_family = AF_INET; 
-serv_addr.sin_port = htons(49199); 
-
-// Convert IPv4 and IPv6 addresses from text to binary form 
-if(inet_pton(AF_INET, CAMERAIP, &serv_addr.sin_addr)<=0) 
-{ 
-printf("\nInvalid address/ Address not supported \n"); 
-return -1; 
-} 
-
-if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
-{ 
-printf("\nConnection Failed \n"); 
-return -1; 
-} 
-valread = read( sock , buffer, 1024); 
-printf("%s\n",buffer ); 
-return 0; 
-
-
-}
-return GP_OK;
-#endif
 }
 
 
