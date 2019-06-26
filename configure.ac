@@ -282,6 +282,13 @@ GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
 )
 GP_CONFIG_MSG([XML support for Olympus E series],[${have_LIBXML2}])
 
+GP_CHECK_LIBRARY([LIBCURL],[libcurl],[>= 7.1],
+		[curl/curl.h],[curl_easy_init],[],[],
+                [default-on],
+		[https://www.curl.org]
+)
+GP_CONFIG_MSG([CURL support for Lumix Wifi],[${have_LIBCURL}])
+
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
 dnl they call it "gdlib" ... confusing.
