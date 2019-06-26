@@ -438,7 +438,7 @@ Get_ShutterSpeed(Camera *camera) {
 }
 
 static char*
-Get_Focal(Camera *camera) {
+Get_Aperture(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getsetting&type=focal");
 }
 
@@ -899,9 +899,9 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_ShutterSpeed(camera));
 	gp_widget_append (section, widget);
 
-	gp_widget_new (GP_WIDGET_TEXT, _("Focal Length"), &widget);
-	gp_widget_set_name (widget, "focal");
-	gp_widget_set_value (widget, Get_Focal(camera));
+	gp_widget_new (GP_WIDGET_TEXT, _("Aperture"), &widget);
+	gp_widget_set_name (widget, "aperture");
+	gp_widget_set_value (widget, Get_Aperture(camera));
 	gp_widget_append (section, widget);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Autofocus Mode"), &widget);
