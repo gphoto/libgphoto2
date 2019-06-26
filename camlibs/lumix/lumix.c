@@ -88,7 +88,6 @@ char* AFMODE  = "cam.cgi?mode=camcmd&value=afmode";
 char* SHUTTERSTART  = "cam.cgi?mode=camcmd&value=capture";
 char* SHUTTERSTOP = "cam.cgi?mode=camcmd&value=capture_cancel";
 char* SETAPERTURE  = "cam.cgi?mode=setsetting&type=focal&value=";
-char* QUALITY = "cam.cgi?mode=setsetting&type=quality&value=";
 char* CDS_Control  = ":60606/Server0/CDS_control";
 char* STARTSTREAM  = "cam.cgi?mode=startstream&value=49199";
 char* CAMERAIP = "192.168.1.24"; //placeholder until there is a better way to discover the IP from the network and via PTPIP
@@ -433,6 +432,11 @@ Get_Clock(Camera *camera) {
 }
 
 static char*
+Get_ISO(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=iso");
+}
+
+static char*
 Get_ShutterSpeed(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
 }
@@ -494,9 +498,15 @@ static void Set_Speed(Camera *camera,const char* SpeedValue) {
 	loadCmd(camera,buf);
 }
 
-static void Set_quality(Camera *camera,const char* Quality) {
+static char*
+Get_Quality(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=quality");
+}
+
+static void
+Set_quality(Camera *camera,const char* Quality) {
 	char buf[200];
-	sprintf(buf,"%s%s", QUALITY,Quality);
+	sprintf(buf,"cam.cgi?mode=setsetting&type=quality&value=%s", Quality);
 	loadCmd(camera,buf);
 }
 
@@ -899,10 +909,21 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_ShutterSpeed(camera));
 	gp_widget_append (section, widget);
 
+	gp_widget_new (GP_WIDGET_TEXT, _("Quality"), &widget);
+	gp_widget_set_name (widget, "quality");
+	gp_widget_set_value (widget, Get_Quality(camera));
+	gp_widget_append (section, widget);
+
 	gp_widget_new (GP_WIDGET_TEXT, _("Aperture"), &widget);
 	gp_widget_set_name (widget, "aperture");
 	gp_widget_set_value (widget, Get_Aperture(camera));
 	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("ISO"), &widget);
+	gp_widget_set_name (widget, "iso");
+	gp_widget_set_value (widget, Get_ISO(camera));
+	gp_widget_append (section, widget);
+
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Autofocus Mode"), &widget);
 	gp_widget_set_name (widget, "afmode");
@@ -962,12 +983,8 @@ waitBulb(Camera *camera, long Duration ) {
 	return TRUE;
 }
 
-static size_t dl_write(void *buffer, size_t size, size_t nmemb, void *stream)
-{    
-	return fwrite(buffer, size, nmemb, (FILE*)stream); 
-}
-
-static char* processNode(xmlTextReaderPtr reader) {
+static char*
+processNode(xmlTextReaderPtr reader) {
 	char* ret =""; 
 	char* lookupImgtag="";
 
@@ -1236,7 +1253,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 */
 int  camera_about (Camera *camera, CameraText *about, GPContext *context);
 int camera_about (Camera *camera, CameraText *about, GPContext *context) {
-	strcpy (about->text, _("Library Name\n"
+	strcpy (about->text, _("Lumix WiFi Library\n"
 	"Robert Hasson <robert_hasson@yahoo.com>\n"
 	"Connects to Lumix Cameras over Wifi.\n"
 	"using the http GET commands."));
