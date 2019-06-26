@@ -1096,7 +1096,7 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	long			nRead;
 	LumixMemoryBuffer	lmb;
 
-	loadCmd(camera,PLAYMODE);		//   'making sure the camera is in Playmode
+	loadCmd(camera,PLAYMODE);	//   'making sure the camera is in Playmode
 	char* xmlimageName;
 	xmlDocPtr doc; /* the resulting document tree */
 	int ret;
@@ -1235,12 +1235,83 @@ int camera_about (Camera *camera, CameraText *about, GPContext *context) {
 *
 * This function is a CameraFilesystem method.
 */
-int
-get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,CameraFileType type, CameraFile *file, void *data, GPContext *context);
-int get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *data, GPContext *context)
+static int
+get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
-	Camera *camera = data;
+	Camera		*camera = data;
+	int		i;
+	CURLcode	res;
+	CURL		*imageUrl;
+	double		bytesread = 0;
+	long		http_response;
+	int		ret_val = 0;
+	long			nRead;
+	LumixMemoryBuffer	lmb;
+	const char	*url;
 
+	for (i=0;i<camera->pl->numpics;i++) {
+		char *s;
+		if (!camera->pl->pics[i].url_large) continue;
+
+		s = strrchr(camera->pl->pics[i].url_large,'/')+1;
+
+		if (!strcmp(s,filename)) break;
+	}
+	if (i == camera->pl->numpics) /* not found */
+		return GP_ERROR;
+
+	url = camera->pl->pics[i].url_large;
+	switch (type) {
+	case GP_FILE_TYPE_PREVIEW:
+		if (camera->pl->pics[i].url_thumb)
+			url = camera->pl->pics[i].url_thumb;
+		break;
+	case GP_FILE_TYPE_NORMAL:
+	default:
+		/* just use regular url */
+		break;
+	}
+
+	loadCmd(camera,PLAYMODE);
+
+	imageUrl = curl_easy_init();
+
+	while (ret_val != 2) {
+		GP_DEBUG("reading stream %s position %ld", url, nRead);
+
+		curl_easy_setopt(imageUrl, CURLOPT_URL, url);
+		//curl_easy_setopt(imageUrl,CURLOPT_TCP_KEEPALIVE,1L);
+		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPIDLE, 120L);
+		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPINTVL, 60L);
+
+		if (nRead) {
+			curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead);
+			GetPix(camera,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
+			GP_DEBUG("continuing the read where it stopped %s  position %ld", url,  nRead);
+		}
+		lmb.size = 0;
+		lmb.data = malloc(0);
+		curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, write_callback);
+		curl_easy_setopt(imageUrl, CURLOPT_WRITEDATA, &lmb);
+
+		res = curl_easy_perform(imageUrl);
+
+		if (res != CURLE_OK) {
+			GP_LOG_E("curl_easy_perform() failed: %s", curl_easy_strerror(res));
+			GP_DEBUG("error in reading stream %s  position %ld", url,  nRead);
+			curl_easy_getinfo(imageUrl, CURLINFO_RESPONSE_CODE, &http_response);
+			GP_DEBUG("CURLINFO_RESPONSE_CODE:%ld\n", http_response);
+			return GP_ERROR_IO;
+		} else {
+			GP_DEBUG("read the whole file");
+			ret_val=2;
+		}
+	}
+	curl_easy_cleanup(imageUrl);
+
+	return gp_file_set_data_and_size (file, lmb.data, lmb.size);
+
+#if 0
 	/*
 	* Get the file from the camera. Use gp_file_set_mime_type,
 	* gp_file_set_data_and_size, etc.
@@ -1342,6 +1413,7 @@ return 0;
 
 }
 return GP_OK;
+#endif
 }
 
 
