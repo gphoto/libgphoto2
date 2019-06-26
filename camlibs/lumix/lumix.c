@@ -433,6 +433,11 @@ Get_Clock(Camera *camera) {
 }
 
 static char*
+Get_ShutterSpeed(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
+}
+
+static char*
 Get_AFMode(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getsetting&type=afmode");
 }
@@ -882,6 +887,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_TEXT, _("Clock"), &widget);
 	gp_widget_set_name (widget, "clock");
 	gp_widget_set_value (widget, Get_Clock(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Shutterspeed"), &widget);
+	gp_widget_set_name (widget, "shutterspeed");
+	gp_widget_set_value (widget, Get_ShutterSpeed(camera));
 	gp_widget_append (section, widget);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Autofocus Mode"), &widget);
