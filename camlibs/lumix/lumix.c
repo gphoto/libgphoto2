@@ -84,6 +84,7 @@
 char* NUMPIX  = "cam.cgi?mode=get_content_info";
 char* RECMODE  = "cam.cgi?mode=camcmd&value=recmode";
 char* PLAYMODE  = "cam.cgi?mode=camcmd&value=playmode";
+char* AFMODE  = "cam.cgi?mode=camcmd&value=afmode";
 char* SHUTTERSTART  = "cam.cgi?mode=camcmd&value=capture";
 char* SHUTTERSTOP = "cam.cgi?mode=camcmd&value=capture_cancel";
 char* SETAPERTURE  = "cam.cgi?mode=setsetting&type=focal&value=";
@@ -128,6 +129,7 @@ int camera_config_get (Camera *camera, CameraWidget **window, GPContext *context
 static int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
+
 	return GP_OK;
 }
 
@@ -363,8 +365,10 @@ write_callback(char *contents, size_t size, size_t nmemb, void *userp)
 	LumixMemoryBuffer	*lmb = userp;
 
 	oldsize = lmb->size;
-	lmb->data = realloc(lmb->data, lmb->size+realsize);
+	/* 1 additionaly byte for 0x00 */
+	lmb->data = realloc(lmb->data, lmb->size+realsize+1);
 	lmb->size += realsize;
+	lmb->data[lmb->size] = 0x00;
 
 	GP_LOG_DATA(contents, realsize, "lumix read from url");
 
@@ -391,12 +395,10 @@ loadCmd (Camera *camera,char* cmd) {
 
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
 
-	if (stream!=0) {
-		lmb.size = 0;
-		lmb.data = malloc(0);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &lmb);
-	}
+	lmb.size = 0;
+	lmb.data = malloc(0);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &lmb);
 
 	res = curl_easy_perform(curl);
 	if(res != CURLE_OK) {
@@ -410,13 +412,9 @@ loadCmd (Camera *camera,char* cmd) {
 	}
 	curl_easy_cleanup(curl);
 
-	if (stream != 0) {
-		if (strcmp(cmd,PLAYMODE)==0) {
-		}
-		return lmb.data;
-	} else {
-		return NULL;
-	} // TO DO the idea would be to return the socket to the actual video stream here....
+	if (strcmp(cmd,PLAYMODE)==0) {
+	}
+	return lmb.data;
 }
 
 static void switchToRecMode(Camera *camera) {
@@ -428,6 +426,57 @@ static void Set_ISO(Camera *camera,const char * ISOValue) {
 	sprintf(buf, "?mode==setsetting&type=iso&value=%s",ISOValue);
 	loadCmd(camera,buf);
 }
+
+static char*
+Get_Clock(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=clock");
+}
+
+static char*
+Get_AFMode(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=afmode");
+}
+
+static char*
+Get_FocusMode(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=focusmode");
+}
+
+static char*
+Get_MFAssist(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=mf_asst");
+}
+
+static char*
+Get_MFAssist_Mag(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=mf_asst_mag");
+}
+
+static char*
+Get_ExTeleConv(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getsetting&type=ex_tele_conv");
+}
+
+static char*
+Get_Capability(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getinfo&type=capability");
+}
+
+static char*
+Get_Lens(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getinfo&type=lens");
+}
+
+static char*
+Get_AllMenu(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getinfo&type=allmenu");
+}
+
+static char*
+Get_CurMenu(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=getinfo&type=curmenu");
+}
+
 
 static void Set_Speed(Camera *camera,const char* SpeedValue) {
 	char buf[200];
@@ -818,6 +867,71 @@ int camera_config_get (Camera *camera, CameraWidget **window, GPContext *context
 int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
+        CameraWidget *widget,*section;
+        int ret;
+
+	loadCmd (camera, RECMODE);
+
+        gp_widget_new (GP_WIDGET_WINDOW, _("Lumix Configuration"), window);
+        gp_widget_set_name (*window, "config");
+
+	gp_widget_new (GP_WIDGET_SECTION, _("Camera Settings"), &section);
+	gp_widget_set_name (section, "settings");
+	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Clock"), &widget);
+	gp_widget_set_name (widget, "clock");
+	gp_widget_set_value (widget, Get_Clock(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Autofocus Mode"), &widget);
+	gp_widget_set_name (widget, "afmode");
+	gp_widget_set_value (widget, Get_AFMode(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Focus Mode"), &widget);
+	gp_widget_set_name (widget, "focusmode");
+	gp_widget_set_value (widget, Get_FocusMode(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("MF Assist"), &widget);
+	gp_widget_set_name (widget, "mf_assist");
+	gp_widget_set_value (widget, Get_MFAssist(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("MF Assist Mag"), &widget);
+	gp_widget_set_name (widget, "mf_assist_mag");
+	gp_widget_set_value (widget, Get_MFAssist_Mag(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Ex Teleconv"), &widget);
+	gp_widget_set_name (widget, "ex_tele_conv");
+	gp_widget_set_value (widget, Get_ExTeleConv(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Lens"), &widget);
+	gp_widget_set_name (widget, "lens");
+	gp_widget_set_value (widget, Get_Lens(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Capability"), &widget);
+	gp_widget_set_name (widget, "capability");
+	gp_widget_set_value (widget, Get_Capability(camera));
+	gp_widget_append (section, widget);
+
+#if 0
+	/* lots of stuff */
+	gp_widget_new (GP_WIDGET_TEXT, _("All Menu"), &widget);
+	gp_widget_set_name (widget, "allmenu");
+	gp_widget_set_value (widget, Get_AllMenu(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Cur Menu"), &widget);
+	gp_widget_set_name (widget, "curmenu");
+	gp_widget_set_value (widget, Get_CurMenu(camera));
+	gp_widget_append (section, widget);
+#endif
+
 	return GP_OK;
 }
 
@@ -1310,7 +1424,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-	if (loadCmd(camera,RECMODE)!= NULL) {
+	if (loadCmd(camera,RECMODE) != NULL) {
 		int numpix;
 
 		Set_quality(camera,"raw_fine");
