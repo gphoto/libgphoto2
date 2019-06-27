@@ -8,7 +8,7 @@ env:
  - EXTRALIBS="gettext"
  - EXTRALIBS="gettext libusb-dev"
  - EXTRALIBS="gettext libusb-1.0-0-dev libgd2-xpm-dev"
- - EXTRALIBS="gettext libusb-1.0-0-dev libgd2-xpm-dev libcurl-dev"
+ - EXTRALIBS="gettext libusb-1.0-0-dev libgd2-xpm-dev libcurl4-openssl-dev"
 
 # Note: Keep the sudo commands in .travis.yml - they do not work from
 #       a helper shell script.
