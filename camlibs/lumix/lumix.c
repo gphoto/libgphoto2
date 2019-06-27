@@ -82,16 +82,12 @@
 #  define N_(String) (String)
 #endif
 
-char* NUMPIX  = "cam.cgi?mode=get_content_info";
 char* RECMODE  = "cam.cgi?mode=camcmd&value=recmode";
 char* PLAYMODE  = "cam.cgi?mode=camcmd&value=playmode";
-char* AFMODE  = "cam.cgi?mode=camcmd&value=afmode";
 char* SHUTTERSTART  = "cam.cgi?mode=camcmd&value=capture";
 char* SHUTTERSTOP = "cam.cgi?mode=camcmd&value=capture_cancel";
 char* SETAPERTURE  = "cam.cgi?mode=setsetting&type=focal&value=";
 char* CDS_Control  = ":60606/Server0/CDS_control";
-char* STARTSTREAM  = "cam.cgi?mode=startstream&value=49199";
-char* CAMERAIP = "192.168.1.24"; //placeholder until there is a better way to discover the IP from the network and via PTPIP
 int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
 char* cameraShutterSpeed = "B"; // //placeholder to store the value of the shutterspeed set in camera; "B" is for bulb.
 int captureDuration = 10; //placeholder to store the value of the bulb shot this should be taken as input. note that my primary goal is in fact to perform bulb captures. but this should be extended for sure to take Shutter Speed capture as set in camera 
@@ -189,7 +185,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			return GP_ERROR;
 		}
 
-		GP_LOG_DATA(buffer,valread,"read from udp port");
+		GP_LOG_DATA((char*)buffer,valread,"read from udp port");
 
 		if (valread == 0)
 			continue;
@@ -205,11 +201,10 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		//GP_LOG_DATA(buffer+start,end-start,"read from udp port");
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		return gp_file_append (file, buffer+start, end-start);
+		return gp_file_append (file, (char*)buffer+start, end-start);
 	}
 	return GP_ERROR;
 }
-
 
 //int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
 
@@ -411,7 +406,6 @@ static char*
 loadCmd (Camera *camera,char* cmd) {
 	CURL		*curl;
 	CURLcode	res;
-	int		stream = strcmp (cmd, STARTSTREAM);
 	char		URL[100];
 	GPPortInfo      info;
 	char		*xpath;
@@ -441,9 +435,6 @@ loadCmd (Camera *camera,char* cmd) {
 		/* <?xml version="1.0" encoding="UTF-8"?> <camrply><result>ok</result></camrply> */
 	}
 	curl_easy_cleanup(curl);
-
-	if (strcmp(cmd,PLAYMODE)==0) {
-	}
 	return lmb.data;
 }
 
@@ -602,12 +593,12 @@ strend(const char *s, const char *t)
 
 static int
 NumberPix(Camera *camera) {
-	xmlChar *keyz = NULL;
-	int	numpics = 0;
+	xmlChar		*keyz = NULL;
+	int		numpics = 0;
+	char		*temp = loadCmd(camera,"cam.cgi?mode=get_content_info");
+	xmlDocPtr	doc = xmlParseDoc((unsigned char*) temp);
+	xmlNodePtr	cur = NULL; 
 
-	char *temp = loadCmd(camera,NUMPIX);
-	xmlDocPtr doc = xmlParseDoc((unsigned char*) temp);
-	xmlNodePtr cur = NULL; 
 	cur = xmlDocGetRootElement(doc);   
 	/*GP_LOG_D("NumberPix Decode current root node is %s \n", doc); */
 
@@ -1009,13 +1000,13 @@ processNode(xmlTextReaderPtr reader) {
 
 	switch (ReadoutMode) {
 	case 0 : //'jpg
-	lookupImgtag = "CAM_RAW_JPG";
+		lookupImgtag = "CAM_RAW_JPG";
 	break; 
 	case 1 :// 'raw
-	lookupImgtag = "CAM_RAW";
+		lookupImgtag = "CAM_RAW";
 	break;
 	case 2  ://'thumb
-	lookupImgtag = "CAM_LRGTN";
+		lookupImgtag = "CAM_LRGTN";
 	break;
 	}
 
