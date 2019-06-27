@@ -118,12 +118,17 @@ struct _CameraPrivateLibrary {
 	LumixPicture	*pics;
 
 	int		liveview;
+	int		udpsocket;
 };
 
 
 static int
 camera_exit (Camera *camera, GPContext *context) 
 {
+	if (camera->pl->udpsocket > 0) {
+		close (camera->pl->udpsocket);
+		camera->pl->udpsocket = 0;
+	}
 	return GP_OK;
 }
 
@@ -140,7 +145,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	int			sock = 0, valread;
+	int			valread;
 	struct sockaddr_in	serv_addr;
 	unsigned char		buffer[65536];
 	GPPortInfo      	info;
@@ -152,23 +157,25 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	if (!camera->pl->liveview) {
 		loadCmd(camera,"cam.cgi?mode=startstream&value=49199");
 		camera->pl->liveview = 1;
-		if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-			GP_LOG_E("\n Socket creation error \n");
-			return GP_ERROR;
-		}
+		if (camera->pl->udpsocket <= 0) {
+			if ((camera->pl->udpsocket = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+				GP_LOG_E("\n Socket creation error \n");
+				return GP_ERROR;
+			}
 
-		gp_port_get_info (camera->port, &info);
-		gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
+			gp_port_get_info (camera->port, &info);
+			gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
 
-		memset(&serv_addr, 0, sizeof(serv_addr));
+			memset(&serv_addr, 0, sizeof(serv_addr));
 
-		serv_addr.sin_family = AF_INET;
-		serv_addr.sin_port = htons(49199);
-		serv_addr.sin_addr.s_addr = 0;
+			serv_addr.sin_family = AF_INET;
+			serv_addr.sin_port = htons(49199);
+			serv_addr.sin_addr.s_addr = 0;
 
-		if (bind(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-			GP_LOG_E("bind Failed: %d", errno);
-			return GP_ERROR;
+			if (bind(camera->pl->udpsocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+				GP_LOG_E("bind Failed: %d", errno);
+				return GP_ERROR;
+			}
 		}
 	} else {
 		/* this reminds the camera we are still doing it */
@@ -176,7 +183,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	}
 	tries = 3;
 	while (tries--) {
-		valread = recv ( sock , buffer, sizeof(buffer), 0);
+		valread = recv ( camera->pl->udpsocket, buffer, sizeof(buffer), 0);
 		if (valread == -1) {
 			GP_LOG_E("recv failed: %d", errno);
 			return GP_ERROR;
@@ -193,7 +200,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				start = i;
 			}
 			if ((buffer[i] == 0xff) && (buffer[i+1] == 0xd9)) {
-				end = i;
+				end = i+2;
 			}
 		}
 		//GP_LOG_DATA(buffer+start,end-start,"read from udp port");
