@@ -289,6 +289,8 @@ GP_CHECK_LIBRARY([LIBCURL],[libcurl],[>= 7.1],
 )
 GP_CONFIG_MSG([CURL support for Lumix Wifi],[${have_LIBCURL}])
 
+AM_CONDITIONAL([BUILD_LUMIX], [test -n "$have_LIBCURL" && test "X$have_LIBCURL" != "Xno" && test -n "$have_LIBXML2" && test "X$have_LIBXML2" != "Xno"])
+
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
 dnl they call it "gdlib" ... confusing.
