@@ -131,14 +131,6 @@ camera_exit (Camera *camera, GPContext *context)
 }
 
 static int
-camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
-{
-
-	return GP_OK;
-}
-
-
-static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	int			valread;
@@ -1032,6 +1024,15 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_Lens(camera));
 	gp_widget_append (section, widget);
 
+	gp_widget_new (GP_WIDGET_RADIO, _("Zoom"), &widget);
+	gp_widget_set_name (widget, "zoom");
+	gp_widget_set_value (widget, "none");
+	gp_widget_add_choice (widget, "wide-fast");
+	gp_widget_add_choice (widget, "wide-normal");
+	gp_widget_add_choice (widget, "tele-normal");
+	gp_widget_add_choice (widget, "tele-fast");
+	gp_widget_append (section, widget);
+
 #if 0
 	gp_widget_new (GP_WIDGET_TEXT, _("Capability"), &widget);
 	gp_widget_set_name (widget, "capability");
@@ -1052,6 +1053,26 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 
 	return GP_OK;
 }
+
+static int
+camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
+{
+	CameraWidget	*widget;
+	char *val;
+
+	if (gp_widget_get_child_by_label(window, "zoom", &widget) && 
+	   gp_widget_changed (widget)
+	) {
+		char buf[30];
+		gp_widget_get_value (widget, &val);
+
+		sprintf(buf,"cam.cgi?mode=camcmd&value=%s", val);
+		loadCmd(camera,buf);
+	}
+	return GP_OK;
+}
+
+
 
 static char*
 processNode(xmlTextReaderPtr reader) {
@@ -1419,7 +1440,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 		/* FIXME trick wont work anymore with new buffering code -Marcus */
 		if (nRead) {
 			curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead);
-			GetPix(camera,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
+			GetPixRange(camera,NumberPix(camera)-1,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
 			GP_DEBUG("continuing the read where it stopped %s  position %ld", url,  nRead);
 		}
 #endif
