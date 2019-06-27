@@ -102,6 +102,8 @@ typedef struct {
 
 typedef struct {
 	char	*id;
+	char	*url_raw;
+	char	*url_movie;
 	char	*url_large;
 	char	*url_medium;
 	char	*url_thumb;
@@ -127,8 +129,6 @@ camera_exit (Camera *camera, GPContext *context)
 	}
 	return GP_OK;
 }
-
-int camera_config_get (Camera *camera, CameraWidget **window, GPContext *context);
 
 static int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
@@ -331,9 +331,20 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int	i;
 
 	for (i=0;i<camera->pl->numpics;i++) {
+		if (camera->pl->pics[i].url_raw) {
+			char	*s = strrchr(camera->pl->pics[i].url_raw, '/')+1;
+			gp_list_append (list, s, NULL);
+			continue;
+		}
 		if (camera->pl->pics[i].url_large) {
 			char	*s = strrchr(camera->pl->pics[i].url_large, '/')+1;
 			gp_list_append (list, s, NULL);
+			continue;
+		}
+		if (camera->pl->pics[i].url_movie) {
+			char	*s = strrchr(camera->pl->pics[i].url_movie, '/')+1;
+			gp_list_append (list, s, NULL);
+			continue;
 		}
 	}
 	return GP_OK;
@@ -668,12 +679,14 @@ traverse_tree (int depth, xmlNodePtr node)
 /*
  * retrieves the XML doc with the last num pictures avail in the camera.
  */
+
 static char*
-GetPix(Camera *camera,int num) {
+GetPixRange(Camera *camera, int start, int num) {
 	long		NumPix;
+	int		numreadint;
         xmlDocPtr       docin, docin2;
-        xmlNodePtr      docroot, docroot2, output, next;
-	xmlChar 	*xchar;
+        xmlNodePtr      docroot, docroot2, output, output2, next;
+	xmlChar 	*xchar, *numread;
 	char*		SoapMsg;
 	CURL 		*curl;
 	CURLcode	res;
@@ -694,202 +707,250 @@ GetPix(Camera *camera,int num) {
 		camera->pl->numpics = NumPix;
 	}
 
-	SoapMsg = SoapEnvelop((NumPix - num)> 0?(NumPix - num):0, num);
-	//GP_LOG_D("SoapMsg is %s \n", SoapMsg);
+	while (num > 0) {
+		SoapMsg = SoapEnvelop(start, num);
+		//GP_LOG_D("SoapMsg is %s \n", SoapMsg);
 
-	curl = curl_easy_init();
+		curl = curl_easy_init();
 
-	list = curl_slist_append(list, "SOAPaction: urn:schemas-upnp-org:service:ContentDirectory:1#Browse");
-	list = curl_slist_append(list, "Content-Type: text/xml; charset=\"utf-8\"");
-	list = curl_slist_append(list, "Accept: text/xml");
+		list = curl_slist_append(list, "SOAPaction: urn:schemas-upnp-org:service:ContentDirectory:1#Browse");
+		list = curl_slist_append(list, "Content-Type: text/xml; charset=\"utf-8\"");
+		list = curl_slist_append(list, "Accept: text/xml");
 
-	gp_port_get_info (camera->port, &info);
-	gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
-	snprintf( URL, 1000, "http://%s%s",xpath+4, CDS_Control);
-	curl_easy_setopt(curl, CURLOPT_URL, URL);
+		gp_port_get_info (camera->port, &info);
+		gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
+		snprintf( URL, 1000, "http://%s%s",xpath+4, CDS_Control);
+		curl_easy_setopt(curl, CURLOPT_URL, URL);
 
-	lmb.size = 0;
-	lmb.data = malloc(0);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &lmb);
+		lmb.size = 0;
+		lmb.data = malloc(0);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &lmb);
 
-	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
-	curl_easy_setopt(curl, CURLOPT_POST,1);
-	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long) strlen(SoapMsg));
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
+		curl_easy_setopt(curl, CURLOPT_POST,1);
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long) strlen(SoapMsg));
 
-	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, SoapMsg);
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, SoapMsg);
 
-	GP_LOG_D("camera url is %s", URL);
-	GP_LOG_D("posting %s", SoapMsg);
+		GP_LOG_D("camera url is %s", URL);
+		GP_LOG_D("posting %s", SoapMsg);
 
-	res = curl_easy_perform(curl);
-	if(res != CURLE_OK) {
-		fprintf(stderr, "curl_easy_perform() failed: %s\n",
-		curl_easy_strerror(res));
+		res = curl_easy_perform(curl);
+		if(res != CURLE_OK) {
+			fprintf(stderr, "curl_easy_perform() failed: %s\n",
+			curl_easy_strerror(res));
+			curl_easy_cleanup(curl);
+			return NULL;
+		}
 		curl_easy_cleanup(curl);
-		return NULL;
-	}
-	curl_easy_cleanup(curl);
 
-        docin = xmlReadMemory (lmb.data, lmb.size, "http://gphoto.org/", "utf-8", 0);
-	if (!docin) return NULL;
-        docroot = xmlDocGetRootElement (docin);
-	if (!docroot) {
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	if (strcmp((char*)docroot->name,"Envelope")) {
-		GP_LOG_E("root node is '%s', expected 'Envelope'", docroot->name);
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	output = xmlFirstElementChild (docroot);
-	if (strcmp((char*)output->name,"Body")) {
-		GP_LOG_E("second level node is %s, expected Body", docroot->name);
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	output = xmlFirstElementChild (output);
-	if (strcmp((char*)output->name,"BrowseResponse")) {
-		GP_LOG_E("third level node is %s, expected BrowseResponse", docroot->name);
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	output = xmlFirstElementChild (output);
-	if (strcmp((char*)output->name,"Result")) {
-		GP_LOG_E("fourth level node is %s, expected Result", docroot->name);
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	xchar = xmlNodeGetContent (output);
-	GP_LOG_D("content of %s is %s", output->name, xchar);
-/* 
-
-<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/">
-	<item id="1030822" parentID="0" restricted="0">
-		<dc:title>103-0822</dc:title>
-		<upnp:writeStatus>WRITABLE</upnp:writeStatus>
-		<upnp:class name="imageItem">object.item.imageItem</upnp:class>
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_LRG;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_ORG">
-			http://192.168.54.1:50001/DO1030822.JPG
-		</res>
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN">
-			http://192.168.54.1:50001/DT1030822.JPG
-		</res>
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN">
-			http://192.168.54.1:50001/DL1030822.JPG
-		</res>
-	</item>
-</DIDL-Lite>
-
-*/
-        docin2 = xmlReadMemory ((char*)xchar, strlen((char*)xchar), "http://gphoto.org/", "utf-8", 0);
-	if (!docin2) return NULL;
-        docroot2 = xmlDocGetRootElement (docin2);
-	if (!docroot) {
-		xmlFreeDoc (docin2);
-		return NULL;
-	}
-	if (strcmp((char*)docroot2->name,"DIDL-Lite")) {
-		GP_LOG_E("expected DIDL-Lite, got %s", docroot->name);
-		xmlFreeDoc (docin2);
-		return NULL;
-	}
-	output = xmlFirstElementChild (docroot2);
-	if (strcmp((char*)output->name,"item")) {
-		GP_LOG_E("expected item, got %s", output->name);
-		xmlFreeDoc (docin2);
-		return NULL;
-	}
-/*
-	<item id="1030822" parentID="0" restricted="0">
-		<dc:title>103-0822</dc:title>
-		<upnp:writeStatus>WRITABLE</upnp:writeStatus>
-		<upnp:class name="imageItem">object.item.imageItem</upnp:class>
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_LRG;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_ORG">
-			http://192.168.54.1:50001/DO1030822.JPG
-		</res>
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN">
-			http://192.168.54.1:50001/DT1030822.JPG
-		</res>
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN">
-			http://192.168.54.1:50001/DL1030822.JPG
-		</res>
-	</item>
-*/
-	next = output;
-	do {
-		char	*id = NULL;
-		int	i;
-		xmlNode	*child;
-		xmlAttr *attr = next->properties;
-
-		GP_LOG_D("got %s", next->name);
-
-		while (attr) {
-			GP_LOG_D("\t attribute %s", attr->name);
-			GP_LOG_D("\t attribute content %s", xmlNodeGetContent(attr->children));
-
-			if (!strcmp((char*)attr->name, "id")) {
-				id = (char*)xmlNodeGetContent(attr->children);
-				break;
-			}
-			attr = attr->next;
+		docin = xmlReadMemory (lmb.data, lmb.size, "http://gphoto.org/", "utf-8", 0);
+		if (!docin) return NULL;
+		docroot = xmlDocGetRootElement (docin);
+		if (!docroot) {
+			xmlFreeDoc (docin);
+			return NULL;
 		}
-		/* look if we have the id */
-		for (i=0;i<camera->pl->numpics;i++)
-			if (camera->pl->pics[i].id && !strcmp(camera->pl->pics[i].id, id))
-				break;
-		if (i<camera->pl->numpics) {
-			GP_LOG_D("already read id %s, is element %d\n", id, i);
-			continue;
+		if (strcmp((char*)docroot->name,"Envelope")) {
+			GP_LOG_E("root node is '%s', expected 'Envelope'", docroot->name);
+			xmlFreeDoc (docin);
+			return NULL;
 		}
-		for (i=0;i<camera->pl->numpics;i++)
-			if (!camera->pl->pics[i].id)
-				break;
-		if (i==camera->pl->numpics) {
-			GP_LOG_D("no free slot found for id %s\n", id);
-			continue;
+		output = xmlFirstElementChild (docroot);
+		if (strcmp((char*)output->name,"Body")) {
+			GP_LOG_E("second level node is %s, expected Body", docroot->name);
+			xmlFreeDoc (docin);
+			return NULL;
 		}
-		camera->pl->pics[i].id = strdup(id);
-		child = next->children;
+		output = xmlFirstElementChild (output);
+		if (strcmp((char*)output->name,"BrowseResponse")) {
+			GP_LOG_E("third level node is %s, expected BrowseResponse", docroot->name);
+			xmlFreeDoc (docin);
+			return NULL;
+		}
+		output = xmlFirstElementChild (output);
+		if (strcmp((char*)output->name,"Result")) {
+			GP_LOG_E("fourth level node is %s, expected Result", docroot->name);
+			xmlFreeDoc (docin);
+			return NULL;
+		}
+		xchar = xmlNodeGetContent (output);
+		GP_LOG_D("content of %s is %s", output->name, xchar);
+	/* 
 
-	/*
-		<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN">
-			http://192.168.54.1:50001/DL1030822.JPG
-		</res>
+	<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/">
+		<item id="1030822" parentID="0" restricted="0">
+			<dc:title>103-0822</dc:title>
+			<upnp:writeStatus>WRITABLE</upnp:writeStatus>
+			<upnp:class name="imageItem">object.item.imageItem</upnp:class>
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_LRG;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_ORG">
+				http://192.168.54.1:50001/DO1030822.JPG
+			</res>
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN">
+				http://192.168.54.1:50001/DT1030822.JPG
+			</res>
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN">
+				http://192.168.54.1:50001/DL1030822.JPG
+			</res>
+		</item>
+	</DIDL-Lite>
+
 	*/
-		while (child) {
-			xmlAttr *attr;
-			xmlChar	*attrcontent;
+		docin2 = xmlReadMemory ((char*)xchar, strlen((char*)xchar), "http://gphoto.org/", "utf-8", 0);
+		if (!docin2) return NULL;
+		docroot2 = xmlDocGetRootElement (docin2);
+		if (!docroot) {
+			xmlFreeDoc (docin2);
+			return NULL;
+		}
+		if (strcmp((char*)docroot2->name,"DIDL-Lite")) {
+			GP_LOG_E("expected DIDL-Lite, got %s", docroot2->name);
+			xmlFreeDoc (docin2);
+			return NULL;
+		}
+		output2 = xmlFirstElementChild (docroot2);
+		if (strcmp((char*)output2->name,"item")) {
+			GP_LOG_E("expected item, got %s", output2->name);
+			xmlFreeDoc (docin2);
+			return NULL;
+		}
+	/*
+		<item id="1030822" parentID="0" restricted="0">
+			<dc:title>103-0822</dc:title>
+			<upnp:writeStatus>WRITABLE</upnp:writeStatus>
+			<upnp:class name="imageItem">object.item.imageItem</upnp:class>
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_LRG;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_ORG">
+				http://192.168.54.1:50001/DO1030822.JPG
+			</res>
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN">
+				http://192.168.54.1:50001/DT1030822.JPG
+			</res>
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN">
+				http://192.168.54.1:50001/DL1030822.JPG
+			</res>
+		</item>
 
-			if (strcmp((char*)child->name,"res")) {
-				GP_LOG_D("skipping %s", child->name);
-				child = child->next;
+we have:
+Picture:
+	http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_LRG;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_ORG
+	http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN
+	http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN
+
+Movie:
+	http-get:*:application/octet-stream:DLNA.ORG_OP=01;PANASONIC.COM_PN=CAM_AVC_MP4_HP_2160_30P_AAC
+	http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN
+	content is http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_SM;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN
+
+Raw:
+	http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW_JPG
+	http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_TN
+	http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN
+	http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW
+
+	*/
+		next = output2;
+		do {
+			char	*id = NULL;
+			int	i;
+			xmlNode	*child;
+			xmlAttr *attr = next->properties;
+
+			GP_LOG_D("got %s", next->name);
+
+			while (attr) {
+				GP_LOG_D("\t attribute %s", attr->name);
+				GP_LOG_D("\t attribute content %s", xmlNodeGetContent(attr->children));
+
+				if (!strcmp((char*)attr->name, "id")) {
+					id = (char*)xmlNodeGetContent(attr->children);
+					break;
+				}
+				attr = attr->next;
+			}
+			/* look if we have the id */
+			for (i=0;i<camera->pl->numpics;i++)
+				if (camera->pl->pics[i].id && !strcmp(camera->pl->pics[i].id, id))
+					break;
+			if (i<camera->pl->numpics) {
+				GP_LOG_D("already read id %s, is element %d\n", id, i);
 				continue;
 			}
-			attr = child->properties;
+			for (i=0;i<camera->pl->numpics;i++)
+				if (!camera->pl->pics[i].id)
+					break;
+			if (i==camera->pl->numpics) {
+				GP_LOG_D("no free slot found for id %s\n", id);
+				continue;
+			}
+			camera->pl->pics[i].id = strdup(id);
+			child = next->children;
 
-			if (strcmp((char*)attr->name,"protocolInfo")) {
-				GP_LOG_D("expected attribute protocolInfo, got %s", attr->name);
-			}
-			attrcontent = xmlNodeGetContent(attr->children);
-			GP_LOG_D("\t\tattribute content is %s", attrcontent);
+		/*
+			<res protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_OP=01;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00900000000000000000000000000000;PANASONIC.COM_PN=CAM_LRGTN">
+				http://192.168.54.1:50001/DL1030822.JPG
+			</res>
+		*/
+			while (child) {
+				xmlAttr *attr;
+				xmlChar	*attrcontent;
 
-			GP_LOG_D("\t child content %s", xmlNodeGetContent(child));
+				if (strcmp((char*)child->name,"res")) {
+					GP_LOG_D("skipping %s", child->name);
+					child = child->next;
+					continue;
+				}
+				attr = child->properties;
 
-			if (strstr((char*)attrcontent,"DLNA.ORG_PN=JPEG_LRG")) {
-				camera->pl->pics[i].url_large = strdup((char*)xmlNodeGetContent(child));
+				if (strcmp((char*)attr->name,"protocolInfo")) {
+					GP_LOG_D("expected attribute protocolInfo, got %s", attr->name);
+				}
+				attrcontent = xmlNodeGetContent(attr->children);
+				GP_LOG_D("\t\tattribute content is %s", attrcontent);
+
+				GP_LOG_D("\t child content %s", xmlNodeGetContent(child));
+
+				/* FIXME: perhaps shorten match? */
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_AVC_MP4_HP_2160_30P_AAC")) {
+					camera->pl->pics[i].url_movie = strdup((char*)xmlNodeGetContent(child));
+				}
+				// http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW
+				// but not
+				// http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW_JPG
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_RAW") && 
+				    !strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_RAW_JPG")
+				) {
+					camera->pl->pics[i].url_raw = strdup((char*)xmlNodeGetContent(child));
+				}
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_ORG")) {
+					camera->pl->pics[i].url_large = strdup((char*)xmlNodeGetContent(child));
+				}
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_LRGTN")) {
+					camera->pl->pics[i].url_medium = strdup((char*)xmlNodeGetContent(child));
+				}
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_TN")) {
+					camera->pl->pics[i].url_thumb = strdup((char*)xmlNodeGetContent(child));
+				}
+				child = child->next;
 			}
-			if (strstr((char*)attrcontent,"DLNA.ORG_PN=JPEG_TN")) {
-				camera->pl->pics[i].url_medium = strdup((char*)xmlNodeGetContent(child));
-			}
-			if (strstr((char*)attrcontent,"DLNA.ORG_PN=JPEG_MED")) {
-				camera->pl->pics[i].url_thumb = strdup((char*)xmlNodeGetContent(child));
-			}
-			child = child->next;
+		} while ((next = xmlNextElementSibling (next)));
+
+
+		output = xmlNextElementSibling (output);
+		if (strcmp((char*)output->name,"NumberReturned")) {
+			GP_LOG_E("fourth level node is %s, expected NumberReturned", output->name);
+			xmlFreeDoc (docin);
+			return NULL;
 		}
-        } while ((next = xmlNextElementSibling (next)));
+		numread = xmlNodeGetContent (output);
+		GP_LOG_D("content of %s is %s", output->name, numread);
+
+		numreadint = 1;
+		sscanf((char*)numread,"%d", &numreadint);
+
+		start += numreadint;
+		num -= numreadint;
+	}
 	return strdup((char*)xchar);
 }
 
@@ -900,8 +961,7 @@ GetPix(Camera *camera,int num) {
 *  TO DO  - - i started to include some items to set the quality (raw and raw+jpg) as well as dictionary for ISO and shutter speed 
 *  mostly every thing is still to do
 */
-int camera_config_get (Camera *camera, CameraWidget **window, GPContext *context);
-int
+static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
         CameraWidget *widget,*section;
@@ -972,13 +1032,13 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_Lens(camera));
 	gp_widget_append (section, widget);
 
+#if 0
 	gp_widget_new (GP_WIDGET_TEXT, _("Capability"), &widget);
 	gp_widget_set_name (widget, "capability");
 	gp_widget_set_value (widget, Get_Capability(camera));
 	gp_widget_append (section, widget);
 
-#if 0
-	/* lots of stuff */
+	/* lots of stuff ... lets see if we can use it */
 	gp_widget_new (GP_WIDGET_TEXT, _("All Menu"), &widget);
 	gp_widget_set_name (widget, "allmenu");
 	gp_widget_set_value (widget, Get_AllMenu(camera));
@@ -1147,16 +1207,14 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	char			*image;
 	long			nRead;
 	LumixMemoryBuffer	lmb;
+	char			*xmlimageName;
+	xmlDocPtr		doc; /* the resulting document tree */
+	int			ret;
+	char			* imageURL="";
+	xmlTextReaderPtr	reader;
 
 	loadCmd(camera,PLAYMODE);	//   'making sure the camera is in Playmode
-	char* xmlimageName;
-	xmlDocPtr doc; /* the resulting document tree */
-	int ret;
-	LIBXML_TEST_VERSION
-
-	char* imageURL="";
-	xmlTextReaderPtr reader;
-	reader = xmlReaderForDoc((xmlChar*)GetPix(camera,1), NULL,"noname.xml", XML_PARSE_DTDATTR |  /* default DTD attributes */ XML_PARSE_NOENT); 
+	reader = xmlReaderForDoc((xmlChar*)GetPixRange(camera,NumberPix(camera)-1,1), NULL,"noname.xml", XML_PARSE_DTDATTR |  /* default DTD attributes */ XML_PARSE_NOENT); 
 	ret = xmlTextReaderRead(reader);
 	while (ret == 1) {
 	    imageURL = processNode(reader); 
@@ -1185,11 +1243,14 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPIDLE, 120L);
 		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPINTVL, 60L);
 
+#if 0
+		/* FIXME trick wont work anymore with new buffering code -Marcus */
 		if (nRead) {
 			curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead);
 			GetPix(camera,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
 			GP_DEBUG("continuing the read where it stopped %s  position %ld", image,  nRead);
 		}
+#endif
 		lmb.size = 0;
 		lmb.data = malloc(0);
 		curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, write_callback);
@@ -1305,16 +1366,32 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 
 	for (i=0;i<camera->pl->numpics;i++) {
 		char *s;
-		if (!camera->pl->pics[i].url_large) continue;
 
-		s = strrchr(camera->pl->pics[i].url_large,'/')+1;
-
-		if (!strcmp(s,filename)) break;
+		if (camera->pl->pics[i].url_movie) {
+			s = strrchr(camera->pl->pics[i].url_movie,'/')+1;
+			if (!strcmp(s,filename)) {
+				url = camera->pl->pics[i].url_movie;
+				break;
+			}
+		}
+		if (camera->pl->pics[i].url_raw) {
+			s = strrchr(camera->pl->pics[i].url_raw,'/')+1;
+			if (!strcmp(s,filename)) {
+				url = camera->pl->pics[i].url_raw;
+				break;
+			}
+		}
+		if (camera->pl->pics[i].url_large) {
+			s = strrchr(camera->pl->pics[i].url_large,'/')+1;
+			if (!strcmp(s,filename)) {
+				url = camera->pl->pics[i].url_large;
+				break;
+			}
+		}
 	}
 	if (i == camera->pl->numpics) /* not found */
 		return GP_ERROR;
 
-	url = camera->pl->pics[i].url_large;
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 		if (camera->pl->pics[i].url_thumb)
@@ -1338,11 +1415,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPIDLE, 120L);
 		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPINTVL, 60L);
 
+#if 1
+		/* FIXME trick wont work anymore with new buffering code -Marcus */
 		if (nRead) {
 			curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead);
 			GetPix(camera,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
 			GP_DEBUG("continuing the read where it stopped %s  position %ld", url,  nRead);
 		}
+#endif
 		lmb.size = 0;
 		lmb.data = malloc(0);
 		curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, write_callback);
@@ -1364,7 +1444,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 	curl_easy_cleanup(imageUrl);
 
 	return gp_file_set_data_and_size (file, lmb.data, lmb.size);
-
 }
 
 
@@ -1395,7 +1474,7 @@ CameraFilesystemFuncs fsfuncs = {
 	.folder_list_func = folder_list_func,
 //	.get_info_func = get_info_func,
 //	.set_info_func = set_info_func,
-.get_file_func = get_file_func, // maybe this works for liveview preview
+	.get_file_func = get_file_func,
 //	.del_file_func = delete_file_func,
 //	.put_file_func = put_file_func,
 //	.delete_all_func = delete_all_func,
@@ -1430,6 +1509,8 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->manual               = camera_manual;
 	camera->functions->about                = camera_about;
 
+	LIBXML_TEST_VERSION
+
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	ret = gp_port_get_info (camera->port, &info);
@@ -1450,7 +1531,7 @@ camera_init (Camera *camera, GPContext *context)
 		loadCmd(camera,PLAYMODE);             //   'making sure the camera is in Playmode
 
 		numpix = NumberPix(camera);
-		GetPix(camera,numpix);
+		GetPixRange(camera,0,numpix);
 
 		return GP_OK;
 	} else
