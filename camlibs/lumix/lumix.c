@@ -1161,9 +1161,19 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_append (section, widget);
 
 
-	gp_widget_new (GP_WIDGET_TEXT, _("ISO"), &widget);
+	gp_widget_new (GP_WIDGET_RADIO, _("ISO"), &widget);
 	gp_widget_set_name (widget, "iso");
 	gp_widget_set_value (widget, Get_ISO(camera));
+	gp_widget_add_choice (widget, "auto");
+	gp_widget_add_choice (widget, "80");
+	gp_widget_add_choice (widget, "100");
+	gp_widget_add_choice (widget, "200");
+	gp_widget_add_choice (widget, "400");
+	gp_widget_add_choice (widget, "800");
+	gp_widget_add_choice (widget, "1600");
+	gp_widget_add_choice (widget, "3200");
+	gp_widget_add_choice (widget, "6400");
+	gp_widget_add_choice (widget, "12800");
 	gp_widget_append (section, widget);
 
 
@@ -1269,6 +1279,14 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
 			return ret;
 		sprintf(buf,"cam.cgi?mode=setsetting&type=focal&value=%s", val);
+		loadCmd(camera,buf);
+	}
+	if ((GP_OK == gp_widget_get_child_by_name(window, "iso", &widget)) && gp_widget_changed (widget)) {
+		char buf[50];
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+		sprintf(buf,"cam.cgi?mode=setsetting&type=iso&value=%s", val);
 		loadCmd(camera,buf);
 	}
 	return GP_OK;
