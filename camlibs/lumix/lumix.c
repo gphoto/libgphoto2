@@ -454,11 +454,6 @@ static void Set_ISO(Camera *camera,const char * ISOValue) {
 }
 
 static char*
-Get_Clock(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=clock");
-}
-
-static char*
 generic_setting_getter(Camera *camera, char *type) {
 	char		*result, *s;
         xmlDocPtr       docin;
@@ -507,6 +502,16 @@ generic_setting_getter(Camera *camera, char *type) {
 	GP_LOG_D("%s content %s", type, s);
 	xmlFreeDoc (docin);
 	return strdup(s);
+}
+
+static char*
+Get_Clock(Camera *camera) {
+	return generic_setting_getter(camera,"clock");
+}
+
+static char*
+Get_Video_Quality(Camera *camera) {
+	return generic_setting_getter(camera,"videoquality");
 }
 
 static char*
@@ -1132,6 +1137,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_TEXT, _("Quality"), &widget);
 	gp_widget_set_name (widget, "quality");
 	gp_widget_set_value (widget, Get_Quality(camera));
+	gp_widget_append (section, widget);
+
+	gp_widget_new (GP_WIDGET_TEXT, _("Video Quality"), &widget);
+	gp_widget_set_name (widget, "videoquality");
+	gp_widget_set_value (widget, Get_Video_Quality(camera));
 	gp_widget_append (section, widget);
 
 
