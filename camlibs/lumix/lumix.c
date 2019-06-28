@@ -82,8 +82,6 @@
 #  define N_(String) (String)
 #endif
 
-char* SHUTTERSTART  = "cam.cgi?mode=camcmd&value=capture";
-char* SHUTTERSTOP = "cam.cgi?mode=camcmd&value=capture_cancel";
 char* CDS_Control  = ":60606/Server0/CDS_control";
 int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
 char* cameraShutterSpeed = "B"; // //placeholder to store the value of the shutterspeed set in camera; "B" is for bulb.
@@ -467,39 +465,98 @@ Get_ISO(Camera *camera) {
 
 static char*
 Get_ShutterSpeed(Camera *camera) {
-	char	*result, *s;
-	char	shutterspeed[20];
+	char		*result, *s;
+        xmlDocPtr       docin;
+        xmlNodePtr      docroot, output;
+	xmlAttr		*attr;
 
 	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
+	docin = xmlReadMemory (result, strlen(result), "http://gphoto.org/", "utf-8", 0);
 	/*<?xml version="1.0" encoding="UTF-8"?>
 	 * <camrply><result>ok</result><settingvalue shtrspeed="2560/256"></settingvalue></camrply>
 	 */
-	if (!strstr(result,"<result>ok</result>"))
-		return NULL;
 
-	s = strstr(result, "<settingvalue shtrspeed=");
-	if (!s) return NULL;
-	if (sscanf(s,"<settingvalue shtrspeed=\"%s\">", shutterspeed) != 1)
+	if (!docin) return NULL;
+	docroot = xmlDocGetRootElement (docin);
+	if (!docroot) {
+		xmlFreeDoc (docin);
 		return NULL;
-	return strdup(shutterspeed);
+	}
+	if (strcmp((char*)docroot->name,"camrply")) {
+		GP_LOG_E ("docroot name unexpected %s", docroot->name);
+		return NULL;
+	}
+	output = docroot->children;
+	if (strcmp((char*)output->name, "result")) {
+		GP_LOG_E ("node name expected 'result', got %s", output->name);
+		return NULL;
+	}
+	if (strcmp((char*)xmlNodeGetContent (output),"ok")) {
+		GP_LOG_E ("result was not 'ok', got %s", (char*)xmlNodeGetContent (output));
+		return NULL;
+	}
+	output = xmlNextElementSibling (output);
+	if (strcmp((char*)output->name, "settingvalue")) {
+		GP_LOG_E ("node name expected 'settingvalue', got %s", output->name);
+		return NULL;
+	}
+	attr = output->properties;
+	if (strcmp((char*)attr->name, "shtrspeed")) {
+		GP_LOG_E ("attr name expected 'shtrspeed', got %s", output->name);
+		return NULL;
+	}
+	s = (char*)xmlNodeGetContent (attr->children);
+	GP_LOG_D("focal content %s", s);
+	xmlFreeDoc (docin);
+	return strdup(s);
 }
 
 static char*
 Get_Aperture(Camera *camera) {
-	char	aperture[20];
-	char	*result, *s;
+	char		*result, *s;
+        xmlDocPtr       docin;
+        xmlNodePtr      docroot, output;
+	xmlAttr		*attr;
 
 	/* <?xml version="1.0" encoding="UTF-8"?>
 	 * <camrply><result>ok</result><settingvalue focal="1366/256"></settingvalue></camrply>
 	 */
 	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=focal");
-	if (!strstr(result,"<result>ok</result>"))
+	docin = xmlReadMemory (result, strlen(result), "http://gphoto.org/", "utf-8", 0);
+
+	if (!docin) return NULL;
+	docroot = xmlDocGetRootElement (docin);
+	if (!docroot) {
+		xmlFreeDoc (docin);
 		return NULL;
-	s = strstr(result, "<settingvalue focal=");
-	if (!s) return NULL;
-	if (sscanf(s,"<settingvalue focal=\"%s\">", aperture) != 2)
+	}
+	if (strcmp((char*)docroot->name,"camrply")) {
+		GP_LOG_E ("docroot name unexpected %s", docroot->name);
 		return NULL;
-	return strdup(aperture);
+	}
+	output = docroot->children;
+	if (strcmp((char*)output->name, "result")) {
+		GP_LOG_E ("node name expected 'result', got %s", output->name);
+		return NULL;
+	}
+	if (strcmp((char*)xmlNodeGetContent (output),"ok")) {
+		GP_LOG_E ("result was not 'ok', got %s", (char*)xmlNodeGetContent (output));
+		return NULL;
+	}
+	output = xmlNextElementSibling (output);
+	if (strcmp((char*)output->name, "settingvalue")) {
+		GP_LOG_E ("node name expected 'settingvalue', got %s", output->name);
+		return NULL;
+	}
+	attr = output->properties;
+	if (strcmp((char*)attr->name, "focal")) {
+		GP_LOG_E ("attr name expected 'focal', got %s", output->name);
+		return NULL;
+	}
+	s = (char*)xmlNodeGetContent (attr->children);
+	GP_LOG_D("focal content %s", s);
+	xmlFreeDoc (docin);
+	return strdup(s);
 }
 
 static char*
@@ -647,7 +704,6 @@ NumberPix(Camera *camera) {
 	xmlNodePtr	cur = NULL; 
 
 	cur = xmlDocGetRootElement(doc);   
-	/*GP_LOG_D("NumberPix Decode current root node is %s \n", doc); */
 
 	if (cur == NULL) {
 		GP_LOG_E("empty xml result document");
@@ -696,39 +752,9 @@ SoapEnvelop(int start, int num){
 	return Envelop;
 }
 
-static int
-traverse_tree (int depth, xmlNodePtr node)
-{
-        xmlNodePtr      next;
-        xmlChar         *xchar;
-        int             n;
-        char            *xx;
-
-
-        if (!node) return 0;
-        xx = malloc (depth * 4 + 1);
-        memset (xx, ' ', depth*4);
-        xx[depth*4] = 0;
-
-        n = xmlChildElementCount (node);
-
-        next = node;
-        do {
-                fprintf(stderr,"%snode %s\n", xx,next->name);
-                fprintf(stderr,"%selements %d\n", xx,n);
-                xchar = xmlNodeGetContent (next);
-                fprintf(stderr,"%scontent %s\n", xx,xchar);
-                traverse_tree (depth+1,xmlFirstElementChild (next));
-        } while ((next = xmlNextElementSibling (next)));
-        free (xx);
-        return 1;
-}
-
-
 /*
  * retrieves the XML doc with the last num pictures avail in the camera.
  */
-
 static char*
 GetPixRange(Camera *camera, int start, int num) {
 	long		NumPix;
@@ -1536,6 +1562,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 		if (ret == GP_ERROR_CAMERA_BUSY)
 			sleep(1);
 	} while ((ret == GP_ERROR_CAMERA_BUSY) && (tries--));
+
 	if (ret < GP_OK)
 		return ret;
 
