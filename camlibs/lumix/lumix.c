@@ -459,129 +459,103 @@ Get_Clock(Camera *camera) {
 }
 
 static char*
+generic_setting_getter(Camera *camera, char *type) {
+	char		*result, *s;
+        xmlDocPtr       docin;
+        xmlNodePtr      docroot, output;
+	xmlAttr		*attr;
+	char		url[50];
+
+	sprintf(url,"cam.cgi?mode=getsetting&type=%s", type);
+	result = loadCmd(camera, url);
+	docin = xmlReadMemory (result, strlen(result), "http://gphoto.org/", "utf-8", 0);
+
+	/*<?xml version="1.0" encoding="UTF-8"?>
+	 * <camrply><result>ok</result><settingvalue TYPE="CONTENT"></settingvalue></camrply>
+	 */
+
+	if (!docin) return NULL;
+	docroot = xmlDocGetRootElement (docin);
+	if (!docroot) {
+		xmlFreeDoc (docin);
+		return NULL;
+	}
+	if (strcmp((char*)docroot->name,"camrply")) {
+		GP_LOG_E ("docroot name unexpected %s", docroot->name);
+		return NULL;
+	}
+	output = docroot->children;
+	if (strcmp((char*)output->name, "result")) {
+		GP_LOG_E ("node name expected 'result', got %s", output->name);
+		return NULL;
+	}
+	if (strcmp((char*)xmlNodeGetContent (output),"ok")) {
+		GP_LOG_E ("result was not 'ok', got %s", (char*)xmlNodeGetContent (output));
+		return NULL;
+	}
+	output = xmlNextElementSibling (output);
+	if (strcmp((char*)output->name, "settingvalue")) {
+		GP_LOG_E ("node name expected 'settingvalue', got %s", output->name);
+		return NULL;
+	}
+	attr = output->properties;
+	if (strcmp((char*)attr->name, type)) {
+		GP_LOG_E ("attr name expected '%s', got %s", type, output->name);
+		return NULL;
+	}
+	s = (char*)xmlNodeGetContent (attr->children);
+	GP_LOG_D("%s content %s", type, s);
+	xmlFreeDoc (docin);
+	return strdup(s);
+}
+
+static char*
 Get_ISO(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=iso");
+	/* <?xml version="1.0" encoding="UTF-8"?>
+	 * <camrply><result>ok</result><settingvalue iso="auto"></settingvalue></camrply>
+	 */
+	return generic_setting_getter(camera,"iso");
 }
 
 static char*
 Get_ShutterSpeed(Camera *camera) {
-	char		*result, *s;
-        xmlDocPtr       docin;
-        xmlNodePtr      docroot, output;
-	xmlAttr		*attr;
-
-	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
-	docin = xmlReadMemory (result, strlen(result), "http://gphoto.org/", "utf-8", 0);
 	/*<?xml version="1.0" encoding="UTF-8"?>
 	 * <camrply><result>ok</result><settingvalue shtrspeed="2560/256"></settingvalue></camrply>
 	 */
-
-	if (!docin) return NULL;
-	docroot = xmlDocGetRootElement (docin);
-	if (!docroot) {
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	if (strcmp((char*)docroot->name,"camrply")) {
-		GP_LOG_E ("docroot name unexpected %s", docroot->name);
-		return NULL;
-	}
-	output = docroot->children;
-	if (strcmp((char*)output->name, "result")) {
-		GP_LOG_E ("node name expected 'result', got %s", output->name);
-		return NULL;
-	}
-	if (strcmp((char*)xmlNodeGetContent (output),"ok")) {
-		GP_LOG_E ("result was not 'ok', got %s", (char*)xmlNodeGetContent (output));
-		return NULL;
-	}
-	output = xmlNextElementSibling (output);
-	if (strcmp((char*)output->name, "settingvalue")) {
-		GP_LOG_E ("node name expected 'settingvalue', got %s", output->name);
-		return NULL;
-	}
-	attr = output->properties;
-	if (strcmp((char*)attr->name, "shtrspeed")) {
-		GP_LOG_E ("attr name expected 'shtrspeed', got %s", output->name);
-		return NULL;
-	}
-	s = (char*)xmlNodeGetContent (attr->children);
-	GP_LOG_D("focal content %s", s);
-	xmlFreeDoc (docin);
-	return strdup(s);
+	return generic_setting_getter(camera, "shtrspeed");
 }
 
 static char*
 Get_Aperture(Camera *camera) {
-	char		*result, *s;
-        xmlDocPtr       docin;
-        xmlNodePtr      docroot, output;
-	xmlAttr		*attr;
-
 	/* <?xml version="1.0" encoding="UTF-8"?>
 	 * <camrply><result>ok</result><settingvalue focal="1366/256"></settingvalue></camrply>
 	 */
-	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=focal");
-	docin = xmlReadMemory (result, strlen(result), "http://gphoto.org/", "utf-8", 0);
-
-	if (!docin) return NULL;
-	docroot = xmlDocGetRootElement (docin);
-	if (!docroot) {
-		xmlFreeDoc (docin);
-		return NULL;
-	}
-	if (strcmp((char*)docroot->name,"camrply")) {
-		GP_LOG_E ("docroot name unexpected %s", docroot->name);
-		return NULL;
-	}
-	output = docroot->children;
-	if (strcmp((char*)output->name, "result")) {
-		GP_LOG_E ("node name expected 'result', got %s", output->name);
-		return NULL;
-	}
-	if (strcmp((char*)xmlNodeGetContent (output),"ok")) {
-		GP_LOG_E ("result was not 'ok', got %s", (char*)xmlNodeGetContent (output));
-		return NULL;
-	}
-	output = xmlNextElementSibling (output);
-	if (strcmp((char*)output->name, "settingvalue")) {
-		GP_LOG_E ("node name expected 'settingvalue', got %s", output->name);
-		return NULL;
-	}
-	attr = output->properties;
-	if (strcmp((char*)attr->name, "focal")) {
-		GP_LOG_E ("attr name expected 'focal', got %s", output->name);
-		return NULL;
-	}
-	s = (char*)xmlNodeGetContent (attr->children);
-	GP_LOG_D("focal content %s", s);
-	xmlFreeDoc (docin);
-	return strdup(s);
+	return generic_setting_getter(camera, "focal");
 }
 
 static char*
 Get_AFMode(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=afmode");
+	return generic_setting_getter(camera,"afmode");
 }
 
 static char*
 Get_FocusMode(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=focusmode");
+	return generic_setting_getter(camera,"focusmode");
 }
 
 static char*
 Get_MFAssist(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=mf_asst");
+	return generic_setting_getter(camera,"mf_asst");
 }
 
 static char*
 Get_MFAssist_Mag(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=mf_asst_mag");
+	return generic_setting_getter(camera,"mf_asst_mag");
 }
 
 static char*
 Get_ExTeleConv(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=ex_tele_conv");
+	return generic_setting_getter(camera,"ex_tele_conv");
 }
 
 static char*
@@ -613,7 +587,7 @@ static void Set_ShutterSpeed(Camera *camera,const char* SpeedValue) {
 
 static char*
 Get_Quality(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=quality");
+	return generic_setting_getter(camera,"quality");
 }
 
 static void
@@ -1030,8 +1004,8 @@ Raw:
 }
 
 static struct shuttermap {
-	char	*speed;
 	char	*cameraspeed;
+	char	*speed;
 } shutterspeeds[] = {
 	{"3072/256","4000"},
 	{"2987/256","3200"},
@@ -1092,8 +1066,8 @@ static struct shuttermap {
 };
 
 static struct aperturemap {
-	char	*aperture;
 	char	*cameraaperture;
+	char	*aperture;
 } apertures[] = {
 	{"392/256","1.7"},
 	{"427/256","1.8"},
