@@ -82,8 +82,6 @@
 #  define N_(String) (String)
 #endif
 
-char* RECMODE  = "cam.cgi?mode=camcmd&value=recmode";
-char* PLAYMODE  = "cam.cgi?mode=camcmd&value=playmode";
 char* SHUTTERSTART  = "cam.cgi?mode=camcmd&value=capture";
 char* SHUTTERSTOP = "cam.cgi?mode=camcmd&value=capture_cancel";
 char* CDS_Control  = ":60606/Server0/CDS_control";
@@ -93,6 +91,8 @@ int captureDuration = 10; //placeholder to store the value of the bulb shot this
 
 static int NumberPix(Camera *camera);
 static char* loadCmd (Camera *camera,char* cmd);
+static char* switchToRecMode(Camera *camera);
+static char* switchToPlayMode(Camera *camera);
 
 typedef struct {
 	char   *data;
@@ -139,7 +139,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	char			*xpath;
 	int			i, start, end, tries;
 
-	loadCmd (camera, RECMODE);
+	switchToRecMode (camera);
 
 	if (!camera->pl->liveview) {
 		loadCmd(camera,"cam.cgi?mode=startstream&value=49199");
@@ -196,8 +196,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	}
 	return GP_ERROR;
 }
-
-//int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
 
 static int camera_about (Camera *camera, CameraText *about, GPContext *context);
 
@@ -440,9 +438,16 @@ loadCmd (Camera *camera,char* cmd) {
 	return lmb.data;
 }
 
-static void switchToRecMode(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=recmode");
+static char*
+switchToRecMode(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=camcmd&value=recmode");
 }
+
+static char*
+switchToPlayMode(Camera *camera) {
+	return loadCmd(camera,"cam.cgi?mode=camcmd&value=playmode");
+}
+
 
 static void Set_ISO(Camera *camera,const char * ISOValue) {
 	char buf[200];
@@ -463,7 +468,6 @@ Get_ISO(Camera *camera) {
 static char*
 Get_ShutterSpeed(Camera *camera) {
 	char	*result, *s;
-	int	nom, div;
 	char	shutterspeed[20];
 
 	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
@@ -475,19 +479,13 @@ Get_ShutterSpeed(Camera *camera) {
 
 	s = strstr(result, "<settingvalue shtrspeed=");
 	if (!s) return NULL;
-	if (sscanf(s,"<settingvalue shtrspeed=\"%d/%d\">", &nom, &div) != 2)
+	if (sscanf(s,"<settingvalue shtrspeed=\"%s\">", shutterspeed) != 1)
 		return NULL;
-
-	if (0 == (nom*10/div)%10)
-		sprintf(shutterspeed,"%d", nom/div);
-	else
-		sprintf(shutterspeed,"%d/%d", nom, div);
 	return strdup(shutterspeed);
 }
 
 static char*
 Get_Aperture(Camera *camera) {
-	int	nom, div;
 	char	aperture[20];
 	char	*result, *s;
 
@@ -499,12 +497,8 @@ Get_Aperture(Camera *camera) {
 		return NULL;
 	s = strstr(result, "<settingvalue focal=");
 	if (!s) return NULL;
-	if (sscanf(s,"<settingvalue focal=\"%d/%d\">", &nom, &div) != 2)
+	if (sscanf(s,"<settingvalue focal=\"%s\">", aperture) != 2)
 		return NULL;
-	if (0 == (nom*10/div)%10)
-		sprintf(aperture,"%d", nom/div);
-	else
-		sprintf(aperture,"%d.%d", nom/div, (nom*10/div)%10);
 	return strdup(aperture);
 }
 
@@ -573,41 +567,54 @@ Set_quality(Camera *camera,const char* Quality) {
 }
 
 
-static void
-shotPicture(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=capture");
+static int
+startCapture(Camera *camera) {
+	char *result;
+
+	result = loadCmd(camera,"cam.cgi?mode=camcmd&value=capture");
+
+	if (strstr(result,"<result>ok</result>")) return GP_OK;
+	if (strstr(result,"<result>err_busy</result>")) return GP_ERROR_CAMERA_BUSY;
+	return GP_ERROR;
 }
 
-static void stopCapture(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=capture_cancel");
+static int
+stopCapture(Camera *camera) {
+	char	*result;
+
+	result = loadCmd(camera,"cam.cgi?mode=camcmd&value=capture_cancel");
+
+	if (strstr(result,"<result>ok</result>")) return GP_OK;
+	if (strstr(result,"<result>err_busy</result>")) return GP_ERROR_CAMERA_BUSY;
+	return GP_ERROR;
 }
 
 static void startMovie(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=video_recstart");
+	loadCmd(camera,"cam.cgi?mode=camcmd&value=video_recstart");
 }
 
 static void stopMovie(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=video_recstop");
+	loadCmd(camera,"cam.cgi?mode=camcmd&value=video_recstop");
 }
 
 static void zoomIn(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=tele-fast");
+	loadCmd(camera,"cam.cgi?mode=camcmd&value=tele-fast");
 }
 
 static void zoomOut(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=wide-fast");
+	loadCmd(camera,"cam.cgi?mode=camcmd&value=wide-fast");
 }
 
 static void zoomStop(Camera *camera) {
-	loadCmd(camera,"?mode=camcmd&value=zoomstop");
+	loadCmd(camera,"cam.cgi?mode=camcmd&value=zoomstop");
 }
 
 static void focusIn(Camera *camera) {
-	loadCmd(camera,"?mode=camctrl&type=focus&value=tele-fast");
+	loadCmd(camera,"cam.cgi?mode=camctrl&type=focus&value=tele-fast");
 }
 
 static void focusOut(Camera *camera) {
-	loadCmd(camera,"?mode=camctrl&type=focus&value=wide-fast");
+	loadCmd(camera,"cam.cgi?mode=camctrl&type=focus&value=wide-fast");
 }
 
 /*
@@ -643,10 +650,23 @@ NumberPix(Camera *camera) {
 	/*GP_LOG_D("NumberPix Decode current root node is %s \n", doc); */
 
 	if (cur == NULL) {
-		fprintf(stderr,"empty document\n");
+		GP_LOG_E("empty xml result document");
 		xmlFreeDoc(doc);
 		return GP_ERROR;
 	}
+	/*
+	 * busy mode:
+	 <?xml version="1.0" encoding="UTF-8"?> <camrply><result>err_busy</result></camrply>
+
+	 * regular return:
+	 <?xml version="1.0" encoding="UTF-8"?>
+	 <camrply><result>ok</result><current_position>2</current_position><total_content_number>651</total_content_number><content_number>651</content_number></camrply>
+	 */
+	if (strstr(temp, "<result>err_busy</result>")) {
+		xmlFreeDoc(doc);
+		return GP_ERROR_CAMERA_BUSY;
+	}
+
 	cur = cur->xmlChildrenNode;
 	while (cur != NULL) {
 		/*GP_LOG_D("NumberPix Decode current node is %s \n", (char*)cur);*/
@@ -660,7 +680,7 @@ NumberPix(Camera *camera) {
 		xmlFreeDoc(doc);
 		return GP_ERROR;
 	}
-	GP_LOG_D("NumberPix Found is %s \n", (char *) keyz);
+	GP_LOG_D("NumberPix Found is %s", (char *) keyz);
 	numpics = strtol((char*)keyz, NULL, 10);
 
 	xmlFreeDoc(doc);
@@ -725,7 +745,7 @@ GetPixRange(Camera *camera, int start, int num) {
 	LumixMemoryBuffer	lmb;
 	char		URL[1000];
 
-	loadCmd(camera,PLAYMODE);
+	switchToPlayMode (camera);
 	NumPix  = NumberPix(camera);
 	//GP_LOG_D("NumPix is %d \n", NumPix);
 	if (NumPix < GP_OK) return NULL;
@@ -983,21 +1003,103 @@ Raw:
 	return strdup((char*)xchar);
 }
 
-/**
-* Get the full configuration tree of the camera.
-*
-* This function is a method of the Camera object.
-*  TO DO  - - i started to include some items to set the quality (raw and raw+jpg) as well as dictionary for ISO and shutter speed 
-*  mostly every thing is still to do
-*/
+static struct shuttermap {
+	char	*speed;
+	char	*cameraspeed;
+} shutterspeeds[] = {
+	{"3072/256","4000"},
+	{"2987/256","3200"},
+	{"2902/256","2500"},
+	{"2816/256","2000"},
+	{"2731/256","1600"},
+	{"2646/256","1300"},
+	{"2560/256","1000"},
+	{"2475/256","800"},
+	{"2390/256","640"},
+	{"2304/256","500"},
+	{"2219/256","400"},
+	{"2134/256","320"},
+	{"2048/256","250"},
+	{"1963/256","200"},
+	{"1878/256","160"},
+	{"1792/256","125"},
+	{"1707/256","100"},
+	{"1622/256","80"},
+	{"1536/256","60"},
+	{"1451/256","50"},
+	{"1366/256","40"},
+	{"1280/256","30"},
+	{"1195/256","25"},
+	{"1110/256","20"},
+	{"1024/256","15"},
+	{"939/256","13"},
+	{"854/256","10"},
+	{"768/256","8"},
+	{"683/256","6"},
+	{"598/256","5"},
+	{"512/256","4"},
+	{"427/256","3.2"},
+	{"342/256","2.5"},
+	{"256/256","2"},
+	{"171/256","1.6"},
+	{"86/256","1.3"},
+	{"0/256","1"},
+	{"-85/256","1.3s"},
+	{"-170/256","1.6s"},
+	{"-256/256","2s"},
+	{"-341/256","2.5s"},
+	{"-426/256","3.2s"},
+	{"-512/256","4s"},
+	{"-682/256","5s"},
+	{"-768/256","6s"},
+	{"-853/256","8s"},
+	{"-938/256","10s"},
+	{"-1024/256","13s"},
+	{"-1109/256","15s"},
+	{"-1194/256","20s"},
+	{"-1280/256","25s"},
+	{"-1365/256","30s"},
+	{"-1450/256","40s"},
+	{"-1536/256","50s"},
+	{"16384/256","60s"},
+	{"256/256","B"},
+};
+
+static struct aperturemap {
+	char	*aperture;
+	char	*cameraaperture;
+} apertures[] = {
+	{"392/256","1.7"},
+	{"427/256","1.8"},
+	{"512/256","2"},
+	{"598/256","2.2"},
+	{"683/256","2.5"},
+	{"768/256","2.8"},
+	{"854/256","3.2"},
+	{"938/256","3.5"},
+	{"1024/256","4"},
+	{"1110/256","4.5"},
+	{"1195/256","5"},
+	{"1280/256","5.6"},
+	{"1366/256","6.3"},
+	{"1451/256","7.1"},
+	{"1536/256","8"},
+	{"1622/256","9"},
+	{"1707/256","10"},
+	{"1792/256","11"},
+	{"1878/256","13"},
+	{"1963/256","14"},
+	{"2048/256","16"},
+};
+
 static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
 {
-        CameraWidget *widget,*section;
-        int ret;
-	char	*val;
+        CameraWidget	*widget,*section;
+        int		ret, i, valset;
+	char		*val, *curval;
 
-	loadCmd (camera, RECMODE);
+	switchToRecMode (camera);
 
         gp_widget_new (GP_WIDGET_WINDOW, _("Lumix Configuration"), window);
         gp_widget_set_name (*window, "config");
@@ -1011,10 +1113,20 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_Clock(camera));
 	gp_widget_append (section, widget);
 
+
 	val = Get_ShutterSpeed(camera);
-	gp_widget_new (GP_WIDGET_TEXT, _("Shutterspeed"), &widget);
+	if (!val) val = "unknown";
+	gp_widget_new (GP_WIDGET_RADIO, _("Shutterspeed"), &widget);
 	gp_widget_set_name (widget, "shutterspeed");
-	gp_widget_set_value (widget, val?val:"unknown");
+	valset = 0;
+	for (i=0;i<sizeof(shutterspeeds)/sizeof(shutterspeeds[0]);i++) {
+		gp_widget_add_choice (widget, shutterspeeds[i].speed);
+		if (!strcmp(val, shutterspeeds[i].cameraspeed)) {
+			valset = 1;
+			gp_widget_set_value (widget, shutterspeeds[i].speed);
+		}
+	}
+	if (!valset) gp_widget_set_value (widget, val);
 	gp_widget_append (section, widget);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Quality"), &widget);
@@ -1024,10 +1136,20 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 
 
 	val = Get_Aperture(camera);
-	gp_widget_new (GP_WIDGET_TEXT, _("Aperture"), &widget);
+	if (!val) val = "unknown";
+	gp_widget_new (GP_WIDGET_RADIO, _("Aperture"), &widget);
 	gp_widget_set_name (widget, "aperture");
-	gp_widget_set_value (widget, val?val:"unknown");
+	valset = 0;
+	for (i=0;i<sizeof(apertures)/sizeof(apertures[0]);i++) {
+		gp_widget_add_choice (widget, apertures[i].aperture);
+		if (!strcmp(val, apertures[i].cameraaperture)) {
+			valset = 1;
+			gp_widget_set_value (widget, apertures[i].aperture);
+		}
+	}
+	if (!valset) gp_widget_set_value (widget, val);
 	gp_widget_append (section, widget);
+
 
 	gp_widget_new (GP_WIDGET_TEXT, _("ISO"), &widget);
 	gp_widget_set_name (widget, "iso");
@@ -1304,7 +1426,8 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	char			* imageURL="";
 	xmlTextReaderPtr	reader;
 
-	loadCmd(camera,PLAYMODE);	//   'making sure the camera is in Playmode
+	switchToPlayMode (camera);
+
 	reader = xmlReaderForDoc((xmlChar*)GetPixRange(camera,NumberPix(camera)-1,1), NULL,"noname.xml", XML_PARSE_DTDATTR |  /* default DTD attributes */ XML_PARSE_NOENT); 
 	ret = xmlTextReaderRead(reader);
 	while (ret == 1) {
@@ -1372,16 +1495,63 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 *
 * This function is a method of the Camera object.
 */
-int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context);
-int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context){
-	loadCmd(camera,SHUTTERSTART); //we should really multithread so as to not block while waiting
+static int
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
+	int	ret, tries, before, after;
+	char	*s, *url;
+
+
+	tries = 10;
+	do {
+		ret = NumberPix(camera);
+		if (ret == GP_ERROR_CAMERA_BUSY)
+			sleep(1);
+	} while ((ret == GP_ERROR_CAMERA_BUSY) && (tries--));
+
+	if (ret < GP_OK)
+		return ret;
+
+	before = ret;
+	GP_LOG_D("numberpix before=%d", ret);
+
+	switchToRecMode (camera);
+
+	sleep(2);
+
+	ret = startCapture (camera);
+	if (ret != GP_OK)
+		return ret;
+
 
 	if (strcmp(cameraShutterSpeed, "B")!=0) {  
 		sleep(captureDuration); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
+	} else {
+		sleep(3);
 	}
+	stopCapture(camera);
 
-	loadCmd(camera,SHUTTERSTOP);
-	return ReadImageFromCamera(camera, path, context);
+	tries = 10;
+	do {
+		ret = NumberPix(camera);
+		if (ret == GP_ERROR_CAMERA_BUSY)
+			sleep(1);
+	} while ((ret == GP_ERROR_CAMERA_BUSY) && (tries--));
+	if (ret < GP_OK)
+		return ret;
+
+	after = ret;
+	GP_LOG_D("numberpix after=%d", ret);
+
+	if (after > before)
+		GetPixRange(camera,before,after-before);
+	/* handle case where we have more than one picture, otherwise we just take one */
+	url = "unknown";
+	if (camera->pl->pics[after].url_large) url = camera->pl->pics[after].url_large;
+	if (camera->pl->pics[after].url_raw) url = camera->pl->pics[after].url_raw;
+	s = strrchr(url,'/')+1;
+	strcpy(path->name, s);
+	strcpy(path->folder, "/");
+	return GP_OK;
 }
 
 /**
@@ -1494,7 +1664,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 		break;
 	}
 
-	loadCmd(camera,PLAYMODE);
+	switchToPlayMode (camera);
 
 	imageUrl = curl_easy_init();
 
@@ -1614,16 +1784,15 @@ camera_init (Camera *camera, GPContext *context)
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-	if (loadCmd(camera,RECMODE) != NULL) {
+	if (switchToRecMode (camera) != NULL) {
 		int numpix;
 
 		Set_quality(camera,"raw_fine");
 
-		loadCmd(camera,PLAYMODE);             //   'making sure the camera is in Playmode
+		switchToPlayMode (camera);
 
 		numpix = NumberPix(camera);
 		GetPixRange(camera,0,numpix);
-
 		return GP_OK;
 	} else
 		return GP_ERROR_IO;
