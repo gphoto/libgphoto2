@@ -86,7 +86,6 @@ char* RECMODE  = "cam.cgi?mode=camcmd&value=recmode";
 char* PLAYMODE  = "cam.cgi?mode=camcmd&value=playmode";
 char* SHUTTERSTART  = "cam.cgi?mode=camcmd&value=capture";
 char* SHUTTERSTOP = "cam.cgi?mode=camcmd&value=capture_cancel";
-char* SETAPERTURE  = "cam.cgi?mode=setsetting&type=focal&value=";
 char* CDS_Control  = ":60606/Server0/CDS_control";
 int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
 char* cameraShutterSpeed = "B"; // //placeholder to store the value of the shutterspeed set in camera; "B" is for bulb.
@@ -463,12 +462,50 @@ Get_ISO(Camera *camera) {
 
 static char*
 Get_ShutterSpeed(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
+	char	*result, *s;
+	int	nom, div;
+	char	shutterspeed[20];
+
+	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=shtrspeed");
+	/*<?xml version="1.0" encoding="UTF-8"?>
+	 * <camrply><result>ok</result><settingvalue shtrspeed="2560/256"></settingvalue></camrply>
+	 */
+	if (!strstr(result,"<result>ok</result>"))
+		return NULL;
+
+	s = strstr(result, "<settingvalue shtrspeed=");
+	if (!s) return NULL;
+	if (sscanf(s,"<settingvalue shtrspeed=\"%d/%d\">", &nom, &div) != 2)
+		return NULL;
+
+	if (0 == (nom*10/div)%10)
+		sprintf(shutterspeed,"%d", nom/div);
+	else
+		sprintf(shutterspeed,"%d/%d", nom, div);
+	return strdup(shutterspeed);
 }
 
 static char*
 Get_Aperture(Camera *camera) {
-	return loadCmd(camera,"cam.cgi?mode=getsetting&type=focal");
+	int	nom, div;
+	char	aperture[20];
+	char	*result, *s;
+
+	/* <?xml version="1.0" encoding="UTF-8"?>
+	 * <camrply><result>ok</result><settingvalue focal="1366/256"></settingvalue></camrply>
+	 */
+	result = loadCmd(camera,"cam.cgi?mode=getsetting&type=focal");
+	if (!strstr(result,"<result>ok</result>"))
+		return NULL;
+	s = strstr(result, "<settingvalue focal=");
+	if (!s) return NULL;
+	if (sscanf(s,"<settingvalue focal=\"%d/%d\">", &nom, &div) != 2)
+		return NULL;
+	if (0 == (nom*10/div)%10)
+		sprintf(aperture,"%d", nom/div);
+	else
+		sprintf(aperture,"%d.%d", nom/div, (nom*10/div)%10);
+	return strdup(aperture);
 }
 
 static char*
@@ -517,7 +554,7 @@ Get_CurMenu(Camera *camera) {
 }
 
 
-static void Set_Speed(Camera *camera,const char* SpeedValue) {
+static void Set_ShutterSpeed(Camera *camera,const char* SpeedValue) {
 	char buf[200];
 	sprintf(buf, "?mode=setsetting&type=shtrspeed&value=%s",SpeedValue);
 	loadCmd(camera,buf);
@@ -909,7 +946,7 @@ Raw:
 				// http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW
 				// but not
 				// http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW_JPG
-				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_RAW") && 
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_RAW") &&
 				    !strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_RAW_JPG")
 				) {
 					camera->pl->pics[i].url_raw = strdup((char*)xmlNodeGetContent(child));
@@ -958,6 +995,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
         CameraWidget *widget,*section;
         int ret;
+	char	*val;
 
 	loadCmd (camera, RECMODE);
 
@@ -973,9 +1011,10 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_Clock(camera));
 	gp_widget_append (section, widget);
 
+	val = Get_ShutterSpeed(camera);
 	gp_widget_new (GP_WIDGET_TEXT, _("Shutterspeed"), &widget);
 	gp_widget_set_name (widget, "shutterspeed");
-	gp_widget_set_value (widget, Get_ShutterSpeed(camera));
+	gp_widget_set_value (widget, val?val:"unknown");
 	gp_widget_append (section, widget);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Quality"), &widget);
@@ -983,9 +1022,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_Quality(camera));
 	gp_widget_append (section, widget);
 
+
+	val = Get_Aperture(camera);
 	gp_widget_new (GP_WIDGET_TEXT, _("Aperture"), &widget);
 	gp_widget_set_name (widget, "aperture");
-	gp_widget_set_value (widget, Get_Aperture(camera));
+	gp_widget_set_value (widget, val?val:"unknown");
 	gp_widget_append (section, widget);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("ISO"), &widget);
@@ -1031,6 +1072,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_add_choice (widget, "wide-normal");
 	gp_widget_add_choice (widget, "tele-normal");
 	gp_widget_add_choice (widget, "tele-fast");
+	gp_widget_add_choice (widget, "stop");
 	gp_widget_append (section, widget);
 
 #if 0
@@ -1058,13 +1100,43 @@ static int
 camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
 {
 	CameraWidget	*widget;
-	char *val;
+	char		*val;
+	int		ret;
 
 	if ((GP_OK == gp_widget_get_child_by_name(window, "zoom", &widget)) && gp_widget_changed (widget)) {
 		char buf[30];
-		gp_widget_get_value (widget, &val);
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+
+		/* all valid values */
+		if (	strcmp(val, "wide-fast")	&&
+			strcmp(val, "wide-normal")	&&
+			strcmp(val, "tele-normal")	&&
+			strcmp(val, "tele-fast")	&&
+			strcmp(val, "stop")
+		)
+			return GP_ERROR_BAD_PARAMETERS;
+
+		if (!strcmp(val, "stop"))
+			val = "zoomstop";
 
 		sprintf(buf,"cam.cgi?mode=camcmd&value=%s", val);
+		loadCmd(camera,buf);
+	}
+
+	if ((GP_OK == gp_widget_get_child_by_name(window, "shutterspeed", &widget)) && gp_widget_changed (widget)) {
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+		Set_ShutterSpeed(camera,val);
+	}
+
+	if ((GP_OK == gp_widget_get_child_by_name(window, "aperture", &widget)) && gp_widget_changed (widget)) {
+		char buf[50];
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+		sprintf(buf,"cam.cgi?mode=setsetting&type=focal&value=%s", val);
 		loadCmd(camera,buf);
 	}
 	return GP_OK;
