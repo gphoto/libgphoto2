@@ -1060,9 +1060,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 	CameraWidget	*widget;
 	char *val;
 
-	if (gp_widget_get_child_by_label(window, "zoom", &widget) && 
-	   gp_widget_changed (widget)
-	) {
+	if ((GP_OK == gp_widget_get_child_by_name(window, "zoom", &widget)) && gp_widget_changed (widget)) {
 		char buf[30];
 		gp_widget_get_value (widget, &val);
 
