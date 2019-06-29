@@ -1243,10 +1243,10 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget	*widget;
 	char		*val;
-	int		ret;
+	char		buf[50];
+	int		i, ret;
 
 	if ((GP_OK == gp_widget_get_child_by_name(window, "zoom", &widget)) && gp_widget_changed (widget)) {
-		char buf[30];
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
 			return ret;
 
@@ -1267,18 +1267,33 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 	}
 
 	if ((GP_OK == gp_widget_get_child_by_name(window, "shutterspeed", &widget)) && gp_widget_changed (widget)) {
+		char *cameraspeed = NULL;
 
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
 			return ret;
-		Set_ShutterSpeed(camera,val);
+		for (i=0;i<sizeof(shutterspeeds)/sizeof(shutterspeeds[0]);i++) {
+			if (!strcmp(val, shutterspeeds[i].speed)) {
+				cameraspeed = shutterspeeds[i].cameraspeed;
+				break;
+			}
+		}
+		if (!cameraspeed) cameraspeed = val;
+		Set_ShutterSpeed (camera, cameraspeed);
 	}
 
 	if ((GP_OK == gp_widget_get_child_by_name(window, "aperture", &widget)) && gp_widget_changed (widget)) {
-		char buf[50];
+		char *cameraaperture = NULL;
 
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
 			return ret;
-		sprintf(buf,"cam.cgi?mode=setsetting&type=focal&value=%s", val);
+		for (i=0;i<sizeof(apertures)/sizeof(apertures[0]);i++) {
+			if (!strcmp(val, apertures[i].aperture)) {
+				cameraaperture = apertures[i].cameraaperture;
+				break;
+			}
+		}
+		if (!cameraaperture) cameraaperture = val;
+		sprintf(buf,"cam.cgi?mode=setsetting&type=focal&value=%s", cameraaperture);
 		loadCmd(camera,buf);
 	}
 	if ((GP_OK == gp_widget_get_child_by_name(window, "iso", &widget)) && gp_widget_changed (widget)) {
