@@ -134,7 +134,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	struct sockaddr_in	serv_addr;
 	unsigned char		buffer[65536];
 	GPPortInfo      	info;
-	char			*xpath;
 	int			i, start, end, tries;
 
 	switchToRecMode (camera);
@@ -149,7 +148,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			}
 
 			gp_port_get_info (camera->port, &info);
-			gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
 
 			memset(&serv_addr, 0, sizeof(serv_addr));
 
@@ -411,8 +409,8 @@ loadCmd (Camera *camera,char* cmd) {
 
 	curl = curl_easy_init();
 	gp_port_get_info (camera->port, &info);
-	gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
-	snprintf( URL,100, "http://%s/%s", xpath+4, cmd);
+	gp_port_info_get_path (info, &xpath); /* xpath now contains ip:192.168.1.1 */
+	snprintf( URL,100, "http://%s/%s", xpath+strlen("ip:"), cmd);
 	GP_LOG_D("cam url is %s", URL);
 
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
@@ -772,8 +770,8 @@ GetPixRange(Camera *camera, int start, int num) {
 		list = curl_slist_append(list, "Accept: text/xml");
 
 		gp_port_get_info (camera->port, &info);
-		gp_port_info_get_path (info, &xpath); /* xpath now contains tcp:192.168.1.1 */
-		snprintf( URL, 1000, "http://%s%s",xpath+4, CDS_Control);
+		gp_port_info_get_path (info, &xpath); /* xpath now contains ip:192.168.1.1 */
+		snprintf( URL, 1000, "http://%s%s",xpath+strlen("ip:"), CDS_Control);
 		curl_easy_setopt(curl, CURLOPT_URL, URL);
 
 		lmb.size = 0;
@@ -1758,7 +1756,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	memset(&a, 0, sizeof(a));
 	strcpy(a.model, "Panasonic:LumixGSeries");
 	a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
-	a.port		= GP_PORT_TCP;
+	a.port		= GP_PORT_IP;
 	a.operations	= GP_CAPTURE_IMAGE| GP_OPERATION_CAPTURE_VIDEO | GP_OPERATION_CONFIG;
 	a.file_operations = GP_FILE_OPERATION_PREVIEW  ; 
 	/* it should be possible to browse and DL images the files using the ReadImageFromCamera() function but for now lets keep it simple*/ 
@@ -1799,7 +1797,6 @@ int
 camera_init (Camera *camera, GPContext *context) 
 {
 	GPPortInfo      info;
-	char            *xpath;
 	int		ret;
 
 	camera->pl = calloc(sizeof(CameraPrivateLibrary),1);
@@ -1823,9 +1820,6 @@ camera_init (Camera *camera, GPContext *context)
 		GP_LOG_E ("Failed to get port info?");
 		return ret;
 	}
-	gp_port_info_get_path (info, &xpath);
-	/* xpath now contains tcp:192.168.1.1 */
-
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	if (switchToRecMode (camera) != NULL) {

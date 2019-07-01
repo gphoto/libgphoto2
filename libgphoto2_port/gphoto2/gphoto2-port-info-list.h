@@ -39,7 +39,7 @@ typedef enum {
 	GP_PORT_PTPIP       = 1 << 4,	/**< \brief PTP/IP port. */
 	GP_PORT_USB_DISK_DIRECT = 1 << 5, /**< \brief Direct IO to an usb mass storage device. */
 	GP_PORT_USB_SCSI    = 1 << 6,	/**< \brief USB Mass Storage raw SCSI port. */
-	GP_PORT_TCP         = 1 << 7	/**< \brief generic TCP port. */
+	GP_PORT_IP          = 1 << 7	/**< \brief generic IP address port. */
 } GPPortType;
 
 /**
