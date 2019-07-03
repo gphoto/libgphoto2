@@ -3516,7 +3516,10 @@ capturetriggered:
 
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 
-	C_PTP_REP (nikon_wait_busy (params, 100, 20000)); /* lets wait 20 seconds */
+	/* Exclude nikon_wait_busy on Nikon Z 6 in silent mode */
+	if (params->deviceinfo.Model && (strcmp(params->deviceinfo.Model,"Z 6") != 0)) {
+		C_PTP_REP (nikon_wait_busy (params, 100, 20000)); /* lets wait 20 seconds */
+	} 
 
 	newobject = 0xffff0001;
 	done = 0; tries = 100;
