@@ -542,6 +542,11 @@ Get_AFMode(Camera *camera) {
 }
 
 static char*
+Get_LiveViewSize(Camera *camera) {
+	return generic_setting_getter(camera,"liveviewsize");
+}
+
+static char*
 Get_FocusMode(Camera *camera) {
 	return generic_setting_getter(camera,"focusmode");
 }
@@ -1180,6 +1185,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_AFMode(camera));
 	gp_widget_append (section, widget);
 
+	gp_widget_new (GP_WIDGET_TEXT, _("Liveview Size"), &widget);
+	gp_widget_set_name (widget, "liveviewsize");
+	gp_widget_set_value (widget, Get_LiveViewSize(camera));
+	gp_widget_append (section, widget);
+
 	gp_widget_new (GP_WIDGET_TEXT, _("Focus Mode"), &widget);
 	gp_widget_set_name (widget, "focusmode");
 	gp_widget_set_value (widget, Get_FocusMode(camera));
@@ -1300,6 +1310,14 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
 			return ret;
 		sprintf(buf,"cam.cgi?mode=setsetting&type=iso&value=%s", val);
+		loadCmd(camera,buf);
+	}
+	if ((GP_OK == gp_widget_get_child_by_name(window, "liveviewsize", &widget)) && gp_widget_changed (widget)) {
+		char buf[50];
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+		sprintf(buf,"cam.cgi?mode=setsetting&type=liveviewsize&value=%s", val);
 		loadCmd(camera,buf);
 	}
 	return GP_OK;
