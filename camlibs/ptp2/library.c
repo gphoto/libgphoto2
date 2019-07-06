@@ -630,8 +630,11 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 
 	do {
 		res = ptp_nikon_device_ready(params);
-		if (res != PTP_RC_DeviceBusy)
+		if (res != PTP_RC_DeviceBusy) {
+			if (res == 0xa201)	/* seems to mean something like "not relevant" ... will repeat forever */
+				return PTP_RC_OK;
 			return res;
+		}
 		if (waitms) usleep(waitms*1000)/*wait a bit*/;
 	} while (tries--);
 	return res;
@@ -5214,7 +5217,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		PTPPropertyValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
-		C_PTP_REP (nikon_wait_busy (params, 100, 2000)); /* lets wait 1 second */
+		C_PTP_REP (nikon_wait_busy (params, 100, 2000)); /* lets wait 2 seconds */
 		C_PTP_REP (ptp_check_event (params));
 
 		if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
