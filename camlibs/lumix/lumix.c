@@ -547,6 +547,11 @@ Get_LiveViewSize(Camera *camera) {
 }
 
 static char*
+Get_DeviceName(Camera *camera) {
+	return generic_setting_getter(camera,"device_name");
+}
+
+static char*
 Get_FocusMode(Camera *camera) {
 	return generic_setting_getter(camera,"focusmode");
 }
@@ -1190,6 +1195,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_set_value (widget, Get_LiveViewSize(camera));
 	gp_widget_append (section, widget);
 
+	gp_widget_new (GP_WIDGET_TEXT, _("Device Name"), &widget);
+	gp_widget_set_name (widget, "devicename");
+	gp_widget_set_value (widget, Get_DeviceName(camera));
+	gp_widget_append (section, widget);
+
 	gp_widget_new (GP_WIDGET_TEXT, _("Focus Mode"), &widget);
 	gp_widget_set_name (widget, "focusmode");
 	gp_widget_set_value (widget, Get_FocusMode(camera));
@@ -1318,6 +1328,14 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
 			return ret;
 		sprintf(buf,"cam.cgi?mode=setsetting&type=liveviewsize&value=%s", val);
+		loadCmd(camera,buf);
+	}
+	if ((GP_OK == gp_widget_get_child_by_name(window, "devicename", &widget)) && gp_widget_changed (widget)) {
+		char buf[50];
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+		sprintf(buf,"cam.cgi?mode=setsetting&type=device_name&value=%s", val);
 		loadCmd(camera,buf);
 	}
 	return GP_OK;
@@ -1839,6 +1857,13 @@ camera_init (Camera *camera, GPContext *context)
 		return ret;
 	}
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
+
+/*
+	startup code might need:
+
+	loadCmd(camera,"cam.cgi?mode=accctrl&type=req_acc&value=4D454930-0100-1000-8001-020D0090325B&value2=GT-I9300");
+	loadCmd(camera,"cam.cgi?mode=setsetting&type=device_name&value=GT-I9300");
+*/
 
 	if (switchToRecMode (camera) != NULL) {
 		int numpix;
