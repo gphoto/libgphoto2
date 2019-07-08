@@ -765,7 +765,7 @@ GetPixRange(Camera *camera, int start, int num) {
 
 	if (camera->pl->numpics < NumPix) {
 		camera->pl->pics = realloc(camera->pl->pics,NumPix * sizeof(camera->pl->pics[0]));
-		memset(camera->pl->pics+camera->pl->numpics, 0, NumPix * sizeof(camera->pl->pics[0]));
+		memset(camera->pl->pics+camera->pl->numpics, 0, (NumPix - camera->pl->numpics) * sizeof(camera->pl->pics[0]));
 		camera->pl->numpics = NumPix;
 	}
 
@@ -1020,6 +1020,9 @@ static struct shuttermap {
 	char	*cameraspeed;
 	char	*speed;
 } shutterspeeds[] = {
+	{"3328/256","8000"},
+	{"3243/256","6400"},
+	{"3158/256","5000"},
 	{"3072/256","4000"},
 	{"2987/256","3200"},
 	{"2902/256","2500"},
