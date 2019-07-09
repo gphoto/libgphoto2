@@ -1187,6 +1187,11 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_add_choice (widget, "12800");
 	gp_widget_append (section, widget);
 
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Bulb"), &widget);
+	gp_widget_set_name (widget, "bulb");
+	gp_widget_set_value (widget, 2);
+	gp_widget_append (section, widget);
+
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Autofocus Mode"), &widget);
 	gp_widget_set_name (widget, "afmode");
@@ -1340,6 +1345,20 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 			return ret;
 		sprintf(buf,"cam.cgi?mode=setsetting&type=device_name&value=%s", val);
 		loadCmd(camera,buf);
+	}
+	if ((GP_OK == gp_widget_get_child_by_name(window, "bulb", &widget)) && gp_widget_changed (widget)) {
+		int	val;
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+
+		if (val) {
+			ret = startCapture (camera);
+			if (ret != GP_OK)
+				return ret;
+		} else {
+			stopCapture(camera);
+		}
 	}
 	return GP_OK;
 }
