@@ -1187,9 +1187,16 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_add_choice (widget, "12800");
 	gp_widget_append (section, widget);
 
+	valset = 2;
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Bulb"), &widget);
 	gp_widget_set_name (widget, "bulb");
-	gp_widget_set_value (widget, 2);
+	gp_widget_set_value (widget, &valset);
+	gp_widget_append (section, widget);
+
+	valset = 2;
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Movie"), &widget);
+	gp_widget_set_name (widget, "movie");
+	gp_widget_set_value (widget, &valset);
 	gp_widget_append (section, widget);
 
 
@@ -1358,6 +1365,18 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 				return ret;
 		} else {
 			stopCapture(camera);
+		}
+	}
+	if ((GP_OK == gp_widget_get_child_by_name(window, "movie", &widget)) && gp_widget_changed (widget)) {
+		int	val;
+
+		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
+			return ret;
+
+		if (val) {
+			startMovie (camera);
+		} else {
+			stopMovie(camera);
 		}
 	}
 	return GP_OK;
