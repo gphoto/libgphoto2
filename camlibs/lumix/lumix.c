@@ -594,7 +594,7 @@ Get_CurMenu(Camera *camera) {
 
 static void Set_ShutterSpeed(Camera *camera,const char* SpeedValue) {
 	char buf[200];
-	sprintf(buf, "?mode=setsetting&type=shtrspeed&value=%s",SpeedValue);
+	sprintf(buf, "cam.cgi?mode=setsetting&type=shtrspeed&value=%s",SpeedValue);
 	loadCmd(camera,buf);
 }
 
