@@ -1665,8 +1665,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 		GetPixRange(camera,before,after-before);
 	/* handle case where we have more than one picture, otherwise we just take one */
 	url = "unknown";
-	if (camera->pl->pics[after].url_large) url = camera->pl->pics[after].url_large;
-	if (camera->pl->pics[after].url_raw) url = camera->pl->pics[after].url_raw;
+	if (camera->pl->pics[after-1].url_large) url = camera->pl->pics[after-1].url_large;
+	if (camera->pl->pics[after-1].url_raw) url = camera->pl->pics[after-1].url_raw;
 	s = strrchr(url,'/')+1;
 	strcpy(path->name, s);
 	strcpy(path->folder, "/");
