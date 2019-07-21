@@ -1220,8 +1220,6 @@ static struct {
 
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix L820  (PTP mode)",0x04b0, 0x0192, PTP_CAP},
-	/* dougvj@gmail.com */
-	{"Nikon:Coolpix L810  (PTP mode)",0x04b0, 0x032f, PTP_CAP},
 	/* https://sourceforge.net/p/gphoto/feature-requests/429/ */
 	{"Nikon:Coolpix S9500 (PTP mode)",0x04b0, 0x0193, PTP_CAP},
 
@@ -1313,6 +1311,9 @@ static struct {
 	{"Nikon:Coolpix S6300 (PTP mode)",0x04b0, 0x032c, PTP_CAP},
 	/* sakax <sakamotox@gmail.com> */
 	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP},
+
+	/* dougvj@gmail.com */
+	{"Nikon:Coolpix L810  (PTP mode)",0x04b0, 0x032f, PTP_CAP},
 
 	/* Borja Latorre <borja.latorre@csic.es> */
 	{"Nikon:Coolpix S3200",		  0x04b0, 0x0334, PTP_CAP},
