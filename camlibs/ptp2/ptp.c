@@ -5840,6 +5840,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
 		{PTP_DPC_SONY_AutoFocus, N_("Autofocus")},
 		{PTP_DPC_SONY_Capture, N_("Capture")},
+		{PTP_DPC_WhiteBalance, N_("White Balance")},		/* 0x5005 */
 		{0,NULL}
         };
 
