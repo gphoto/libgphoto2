@@ -3084,6 +3084,7 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Hand-held Twilight"),		0x8016, PTP_VENDOR_SONY},
 	{ N_("Night Portrait"),			0x8017, PTP_VENDOR_SONY},
 	{ N_("Picture Effect"),			0x8070, PTP_VENDOR_SONY},
+	{ N_("S&Q"),				0x8084, PTP_VENDOR_SONY}, /* on A7III */
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
@@ -3335,6 +3336,8 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Selftimer 5s 5 Pictures"),0x800d, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s 3 Pictures"),0x800e, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s 5 Pictures"),0x800f, PTP_VENDOR_SONY},
+	{ N_("Continuous Hi+ Speed"),   0x8010, PTP_VENDOR_SONY}, /* A7III */
+	{ N_("Continuous Med Speed"),   0x8015, PTP_VENDOR_SONY}, /* A7III */
 
 	{ N_("Bracketing C 0.3 Steps 3 Pictures"),	0x8337, PTP_VENDOR_SONY},
 	{ N_("Bracketing C 0.3 Steps 5 Pictures"),	0x8537, PTP_VENDOR_SONY},
@@ -3522,6 +3525,13 @@ static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("ESP"),		0x8001, PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Spot+Highlights"),0x8011, PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Spot+Shadows"),	0x8012, PTP_VENDOR_GP_OLYMPUS_OMD },
+	/* next ones taken from A7III */
+	{ N_("Multi"),			0x8001, PTP_VENDOR_SONY },
+	{ N_("Center"),			0x8002, PTP_VENDOR_SONY },
+	{ N_("Entire Screen Avg."),	0x8003, PTP_VENDOR_SONY },
+	{ N_("Spot Standard"),		0x8004, PTP_VENDOR_SONY },
+	{ N_("Spot Large"),		0x8005, PTP_VENDOR_SONY },
+	{ N_("Highlight"),		0x8006, PTP_VENDOR_SONY },
 };
 GENERIC16TABLE(ExposureMetering,exposure_metering)
 
@@ -4010,6 +4020,17 @@ static struct sonyshutter {
 	{1,2500},
 	{1,3200},
 	{1,4000},
+	/* A7 series */
+	{1,5000},
+	{1,6400},
+	{1,8000},
+	/* A9, some RX series cameras */
+	{1,10000},
+	{1,12500},
+	{1,16000},
+	{1,20000},
+	{1,25000},
+	{1,32000},
 };
 
 static int
@@ -5229,11 +5250,13 @@ static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
 
-	{ N_("Standard"),	0x02, PTP_VENDOR_SONY },
-	{ N_("Fine"),		0x03, PTP_VENDOR_SONY },
-	{ N_("Extra Fine"),	0x04, PTP_VENDOR_SONY },
-	{ N_("RAW"),		0x10, PTP_VENDOR_SONY },
-	{ N_("RAW+JPEG"),	0x13, PTP_VENDOR_SONY },
+	{ N_("Standard"),		0x02, PTP_VENDOR_SONY },
+	{ N_("Fine"),			0x03, PTP_VENDOR_SONY },
+	{ N_("Extra Fine"),		0x04, PTP_VENDOR_SONY },
+	{ N_("RAW"),			0x10, PTP_VENDOR_SONY },
+	{ N_("RAW+JPEG (Std)"),		0x12, PTP_VENDOR_SONY },
+	{ N_("RAW+JPEG (Fine)"),	0x13, PTP_VENDOR_SONY },
+	{ N_("RAW+JPEG (X.Fine)"),	0x14, PTP_VENDOR_SONY },
 };
 GENERIC8TABLE(CompressionSetting,compressionsetting)
 
