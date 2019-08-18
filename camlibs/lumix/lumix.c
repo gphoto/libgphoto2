@@ -139,6 +139,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	switchToRecMode (camera);
 
 	if (!camera->pl->liveview) {
+		switchToRecMode(camera);
+		loadCmd(camera,"cam.cgi?mode=setsetting&type=liveviewsize&value=vga");
 		loadCmd(camera,"cam.cgi?mode=startstream&value=49199");
 		camera->pl->liveview = 1;
 		if (camera->pl->udpsocket <= 0) {
@@ -165,6 +167,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		loadCmd(camera,"cam.cgi?mode=getstate");
 	}
 	tries = 3;
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+	gp_file_adjust_name_for_mime_type(file);
 	while (tries--) {
 		valread = recv ( camera->pl->udpsocket, buffer, sizeof(buffer), 0);
 		if (valread == -1) {
@@ -187,7 +191,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			}
 		}
 		//GP_LOG_DATA(buffer+start,end-start,"read from udp port");
-		gp_file_set_mime_type (file, GP_MIME_JPEG);
 		return gp_file_append (file, (char*)buffer+start, end-start);
 	}
 	return GP_ERROR;
@@ -764,7 +767,11 @@ GetPixRange(Camera *camera, int start, int num) {
 	if (NumPix < GP_OK) return NULL;
 
 	if (camera->pl->numpics < NumPix) {
-		camera->pl->pics = realloc(camera->pl->pics,NumPix * sizeof(camera->pl->pics[0]));
+		LumixPicture	*newpics;
+		newpics = realloc(camera->pl->pics,NumPix * sizeof(camera->pl->pics[0]));
+		if (!newpics)
+			return NULL;
+		camera->pl->pics = newpics;
 		memset(camera->pl->pics+camera->pl->numpics, 0, (NumPix - camera->pl->numpics) * sizeof(camera->pl->pics[0]));
 		camera->pl->numpics = NumPix;
 	}
@@ -975,6 +982,8 @@ Raw:
 				/* FIXME: perhaps shorten match? */
 				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_AVC_MP4_HP_2160_30P_AAC")) {
 					camera->pl->pics[i].url_movie = strdup((char*)xmlNodeGetContent(child));
+					GP_DEBUG("the %d movie should be %s",i, camera->pl->pics[i].url_movie);
+
 				}
 				// http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW
 				// but not
@@ -983,15 +992,19 @@ Raw:
 				    !strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_RAW_JPG")
 				) {
 					camera->pl->pics[i].url_raw = strdup((char*)xmlNodeGetContent(child));
+					GP_DEBUG("the %d raw should be %s",i, camera->pl->pics[i].url_movie);
 				}
 				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_ORG")) {
 					camera->pl->pics[i].url_large = strdup((char*)xmlNodeGetContent(child));
+					GP_DEBUG("the %d large should be %s",i, camera->pl->pics[i].url_movie);
 				}
 				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_LRGTN")) {
 					camera->pl->pics[i].url_medium = strdup((char*)xmlNodeGetContent(child));
+					GP_DEBUG("the %d medium should be %s",i, camera->pl->pics[i].url_movie);
 				}
 				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_TN")) {
 					camera->pl->pics[i].url_thumb = strdup((char*)xmlNodeGetContent(child));
+					GP_DEBUG("the %d thumb should be %s",i, camera->pl->pics[i].url_movie);
 				}
 				child = child->next;
 			}
@@ -1065,19 +1078,19 @@ static struct shuttermap {
 	{"-256/256","2s"},
 	{"-341/256","2.5s"},
 	{"-426/256","3.2s"},
-	{"-512/256","4s"},
-	{"-682/256","5s"},
-	{"-768/256","6s"},
-	{"-853/256","8s"},
-	{"-938/256","10s"},
-	{"-1024/256","13s"},
-	{"-1109/256","15s"},
-	{"-1194/256","20s"},
-	{"-1280/256","25s"},
-	{"-1365/256","30s"},
-	{"-1450/256","40s"},
-	{"-1536/256","50s"},
-	{"16384/256","60s"},
+	{"-512/256","5s"},
+	{"-682/256","6s"},
+	{"-768/256","8s"},
+	{"-853/256","10s"},
+	{"-938/256","13s"},
+	{"-1024/256","15s"},
+	{"-1109/256","20s"},
+	{"-1194/256","25s"},
+	{"-1280/256","30s"},
+	{"-1365/256","40s"},
+	{"-1450/256","50s"},
+	{"-1536/256","60s"},
+	{"16384/256","B"},
 	{"256/256","B"},
 };
 
@@ -1615,9 +1628,33 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 */
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
-	int	ret, tries, before, after;
-	char	*s, *url;
+	int	ret, i, tries, before, after,valset=0, sspeed;
+	char	*s, *url,shutterspeed[20]={0},temp[20]={0};
+	long	mils;
+	char	*val, loadReturn[20]={0};
+	unsigned int usValueReturn;
+	struct timespec ts;
 
+	val = Get_ShutterSpeed(camera);
+	GP_DEBUG("val is %s", val);
+	strncpy(loadReturn,val,strlen(val)-4);
+	GP_DEBUG("loadReturn is %s", loadReturn);
+	usValueReturn = atoi(loadReturn);
+	GP_DEBUG("usValueReturn is %d", usValueReturn);
+	memset(shutterspeed,'\0',strlen(shutterspeed));
+
+	if (usValueReturn!= 16384)
+		sprintf(val,"%d/256",(signed short) usValueReturn);
+	for (i=0;i<sizeof(shutterspeeds)/sizeof(shutterspeeds[0]);i++) {
+		if (!strcmp(val, shutterspeeds[i].cameraspeed)) {
+			valset = 1;
+			strcpy(shutterspeed,shutterspeeds[i].speed);
+			break;
+		}
+	}
+	GP_DEBUG("shutterspeed is %s", shutterspeed);
+
+	switchToPlayMode (camera);
 
 	tries = 10;
 	do {
@@ -1634,19 +1671,29 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 
 	switchToRecMode (camera);
 
-	sleep(2);
-
 	ret = startCapture (camera);
 	if (ret != GP_OK)
 		return ret;
 
-
-	if (strcmp(cameraShutterSpeed, "B")!=0) {  
-		sleep(captureDuration); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
+	if (strcmp(shutterspeed, "B")!=0) {  
+		mils = captureDuration*1000;
 	} else {
-		sleep(3);
+		if (strstr(shutterspeed,"s")){
+			strncpy (temp,shutterspeed,strlen(shutterspeed)-1);
+			mils = atoi(temp)*1000;
+		} else {
+			mils = 1000/atof(shutterspeed);
+		}
 	}
-	stopCapture(camera);
+	GP_DEBUG("shutterspeed is %s and milliseconds are %ld\n", shutterspeed,mils);
+	ts.tv_sec = mils / 1000;
+	ts.tv_nsec = (mils % 1000) * 1000000;
+	nanosleep(&ts, NULL);
+
+	if (!strcmp(shutterspeed, "B"))
+		stopCapture(camera);
+
+	switchToPlayMode (camera);
 
 	tries = 10;
 	do {
@@ -1734,16 +1781,17 @@ static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
 	Camera		*camera = data;
-	int		i;
+	int		i, tries;
 	CURLcode	res;
 	CURL		*imageUrl;
 	double		bytesread = 0;
 	long		http_response;
 	int		ret_val = 0;
-	long			nRead;
+	long		nRead = 0;
 	LumixMemoryBuffer	lmb;
 	const char	*url;
 
+	gp_file_set_mime_type(file, GP_MIME_JPEG);
 	for (i=0;i<camera->pl->numpics;i++) {
 		char *s;
 
@@ -1751,6 +1799,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 			s = strrchr(camera->pl->pics[i].url_movie,'/')+1;
 			if (!strcmp(s,filename)) {
 				url = camera->pl->pics[i].url_movie;
+				gp_file_set_mime_type(file, GP_MIME_AVI);
 				break;
 			}
 		}
@@ -1758,6 +1807,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 			s = strrchr(camera->pl->pics[i].url_raw,'/')+1;
 			if (!strcmp(s,filename)) {
 				url = camera->pl->pics[i].url_raw;
+				gp_file_set_mime_type(file, GP_MIME_RW2);
 				break;
 			}
 		}
@@ -1769,8 +1819,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 			}
 		}
 	}
+
 	if (i == camera->pl->numpics) /* not found */
 		return GP_ERROR;
+
+	gp_file_adjust_name_for_mime_type(file);
 
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
@@ -1789,24 +1842,33 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 
 	while (ret_val != 2) {
 		GP_DEBUG("reading stream %s position %ld", url, nRead);
-
-		curl_easy_setopt(imageUrl, CURLOPT_URL, url);
-		//curl_easy_setopt(imageUrl,CURLOPT_TCP_KEEPALIVE,1L);
-		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPIDLE, 120L);
-		//curl_easy_setopt(imageUrl, CURLOPT_TCP_KEEPINTVL, 60L);
-
-#if 1
-		/* FIXME trick wont work anymore with new buffering code -Marcus */
-		if (nRead) {
-			curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM, nRead);
-			GetPixRange(camera,NumberPix(camera)-1,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
-			GP_DEBUG("continuing the read where it stopped %s  position %ld", url,  nRead);
-		}
-#endif
 		lmb.size = 0;
 		lmb.data = malloc(0);
+
+		curl_easy_setopt(imageUrl, CURLOPT_URL, url);
+
+		if (nRead) {
+			int ret;
+
+			curl_easy_cleanup(imageUrl);
+			tries = 4;
+			do {
+				switchToPlayMode (camera);
+				ret = NumberPix(camera);
+				if (ret == GP_ERROR_CAMERA_BUSY)
+					sleep(1);
+			} while ((ret == GP_ERROR_CAMERA_BUSY) && (tries--));
+
+			GetPixRange(camera,NumberPix(camera)-1,1);//'if the file not found happened then this trick is to get the camera in a readmode again and making sure it remembers the filename
+			GP_DEBUG("continuing the read where it stopped %s  position %ld", url,  (long) nRead);
+
+		}
+		imageUrl = curl_easy_init();
+		curl_easy_setopt(imageUrl, CURLOPT_URL, url);
+
 		curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, write_callback);
 		curl_easy_setopt(imageUrl, CURLOPT_WRITEDATA, &lmb);
+		curl_easy_setopt(imageUrl, CURLOPT_RESUME_FROM,nRead);
 
 		res = curl_easy_perform(imageUrl);
 
@@ -1815,15 +1877,24 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 			GP_DEBUG("error in reading stream %s  position %ld", url,  nRead);
 			curl_easy_getinfo(imageUrl, CURLINFO_RESPONSE_CODE, &http_response);
 			GP_DEBUG("CURLINFO_RESPONSE_CODE:%ld\n", http_response);
-			return GP_ERROR_IO;
+			if ( res == CURLE_PARTIAL_FILE) {
+				nRead += lmb.size-1;	/* FIXME; really -1 ? lmb.size might be correct? */
+				GP_DEBUG("retrying to read %s at %ld", url, nRead);
+				curl_easy_getinfo(imageUrl, CURLINFO_RESPONSE_CODE, &http_response);
+				gp_file_append(file, lmb.data,nRead);
+			} else {
+                        	return GP_ERROR_IO;
+			}
 		} else {
 			GP_DEBUG("read the whole file");
+			gp_file_append(file, lmb.data,lmb.size);
+			free (lmb.data);
+			lmb.data = NULL;
 			ret_val=2;
 		}
 	}
 	curl_easy_cleanup(imageUrl);
-
-	return gp_file_set_data_and_size (file, lmb.data, lmb.size);
+	return GP_OK;
 }
 
 
