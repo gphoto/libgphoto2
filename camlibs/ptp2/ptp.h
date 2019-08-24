@@ -491,10 +491,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetFELock		0x91B9
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
+#define PTP_OC_CANON_EOS_SendHostInfo		0x91E4 /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
 #define PTP_OC_CANON_EOS_NotifyNetworkError	0x91E8 /* 1 arg: errorcode */
 #define PTP_OC_CANON_EOS_AdapterTransferProgress		0x91E9
 #define PTP_OC_CANON_EOS_TransferCompleteFTP	0x91F0
 #define PTP_OC_CANON_EOS_CancelTransferFTP	0x91F1
+#define PTP_OC_CANON_EOS_NotifyBtStatus		0x91F9 /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
+#define PTP_OC_CANON_EOS_SetAdapterBatteryReport		0x91FD /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
 
