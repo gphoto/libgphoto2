@@ -1675,7 +1675,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 	if (ret != GP_OK)
 		return ret;
 
-	if (strcmp(shutterspeed, "B")!=0) {  
+	if (!strcmp(shutterspeed, "B")) {
 		mils = captureDuration*1000;
 	} else {
 		if (strstr(shutterspeed,"s")){
