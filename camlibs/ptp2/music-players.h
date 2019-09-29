@@ -646,6 +646,9 @@
   /* Richard Waterbeek <richard@fotobakje.nl> on libmtp-discuss */
   { "Acer", 0x0502, "Liquid Liquid Z6E", 0x3938,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1838/ */
+  { "Acer", 0x0502, "Iconia One 10 B3-A40 ", 0x394b,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * SanDisk
@@ -1671,6 +1674,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1688/ */
   { "Sony", 0x054c, "NWZ-E384", 0x0882,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
+  /* hartmut001@users.sourceforge.net */
+  { "Sony", 0x054c, "NW-A45 Walkman", 0x0c71,
+      DEVICE_FLAGS_SONY_NWZ_BUGS },
   { "Sony", 0x054c, "DCR-SR75", 0x1294,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
 
@@ -1953,6 +1959,9 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact", 0x01f7,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/support-requests/285/ */
+  { "SONY", 0x0fce, "XPeria XA2 Ultra", 0x01f8,
+      DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/bugs/1804/ */
   { "SONY", 0x0fce, "Xperia XZ2 Compact Dual Sim", 0x01f9,
       DEVICE_FLAG_NONE },
@@ -2094,6 +2103,8 @@
   { "SONY", 0x0fce, "XPeria L2 MTP+CDROM", 0x41f6,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact MTP+CDROM", 0x41f7,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XA2 Ultra MTP+CDROM", 0x41f8,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia XZ2 Compact Dual Sim MTP+CDROM", 0x41f9,
       DEVICE_FLAG_NONE },
@@ -2255,6 +2266,8 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria XA2 Compact MTP+ADB", 0x51f7,
       DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "XPeria XA2 Ultra MTP+ADB", 0x51f8,
+      DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia XZ2 Compact Dual Sim MTP+ADB", 0x51f9,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia XZ2 (H8266) MTP+ADB", 0x51fa,
@@ -2338,6 +2351,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1477/ */
   { "Motorola", 0x22b8, "Moto Maxx (XT1225)", 0x2ea4,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1841/ */
+  { "Motorola", 0x22b8, "Moto Z2 (XT1789)", 0x2e81,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/189/ */
   { "Motorola", 0x22b8, "MB632", 0x2dff,
@@ -2871,6 +2887,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1122/ */
   { "Lenovo", 0x17ef, "S930", 0x7718,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/discussion/535190/ */
+  { "Lenovo", 0x17ef, "A5500-H", 0x772a,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1250/ */
   { "Lenovo", 0x17ef, "A5500-F", 0x772b,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3110,8 +3129,11 @@
   /* https://sourceforge.net/p/libmtp/bugs/1398/ */
   { "HTC", 0x0bb4, "Spreadtrum SH57MYZ03342 (MTP)", 0x05e3,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1840/ */
+  { "HTC", 0x0bb4, "Desire 626G (MTP)", 0x05f0,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* reported by Mikkel Oscar Lyderik <mikkeloscar@gmail.com> */
-  { "HTC", 0x0bb4, "HTC Desire 510 (MTP+ADB)", 0x05fd,
+  { "HTC", 0x0bb4, "Desire 510 (MTP+ADB)", 0x05fd,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1221/ */
   { "HTC", 0x0bb4, "One M8 Google Play Edition (MTP+ADB)", 0x060b,
@@ -3386,6 +3408,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1776/ */
   { "Amazon", 0x1949, "Kindle Fire 7 (2nd ID)", 0x0271,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1845/ */
+  { "Amazon", 0x1949, "Kindle Fire Kids", 0x0272,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/21 */
   { "Amazon", 0x1949, "Kindle Fire 8 HD (2nd ID)", 0x0331,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3625,6 +3650,8 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/234/ */
   { "DOODGE", 0x0e8d, "X6pro", 0x200a,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/289/ */
+  { "Jinga", 0x0e8d, "PassPluss", 0x2012, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/79/ */
   { "MediaTek Inc", 0x0e8d, "Elephone P8000", 0x201d,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3726,6 +3753,8 @@
   { "Prestigio", 0x29e4, "5504 DUO ", 0x1203, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/141/ */
   { "Prestigio", 0x29e4, "3405 DUO ", 0x3201, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/support-requests/287/ */
+  { "Prestigio", 0x29e4, "Multipad Color 8", 0xb001, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/148/ */
   { "Prestigio", 0x29e4, "Multipad Color 7.0", 0xb003, DEVICE_FLAGS_ANDROID_BUGS },
 
@@ -3792,6 +3821,9 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1720/ */
   { "Wileyfox", 0x2970, "Spark Plus", 0x2008, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/feature-requests/289/ */
+  { "Wileyfox", 0x2970, "Spark", 0x201d, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/feature-requests/146/ */
   { "Wileyfox", 0x2970, "Swift", 0x2281, DEVICE_FLAGS_ANDROID_BUGS },
@@ -3920,6 +3952,8 @@
   { "TP-Link" , 0x2357, "Neffos Y5 (MTP)", 0x0328, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/240/ */
   { "TP-Link" , 0x2357, "Neffos X1 (MTP)", 0x033c, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1844/ */
+  { "TP-Link" , 0x2357, "Neffos Y5s (MTP)", 0x038c, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1570/ */
   { "Recon Instruments" , 0x2523, "Jet", 0xd209, DEVICE_FLAGS_ANDROID_BUGS },
@@ -3956,6 +3990,10 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1822/ */
   { "vtevch" , 0x0f88, "Storio Max XL 2.0", 0x0684, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1846/ */
+  { "Netronix" , 0x1f85, "E60QH2", 0x6a12 , DEVICE_FLAGS_ANDROID_BUGS },
+
   /*
    * Other strange stuff.
    */
