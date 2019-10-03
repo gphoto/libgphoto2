@@ -2172,6 +2172,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/316 */
 	{"Canon:PowerShot SX740 HS",		0x04a9, 0x32e4, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/*Marc Wetli <wetli@egoshooting.com> */
+	{"Canon:EOS M6 Mark II",		0x04a9, 0x32e7, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Roland Förg <roland.foerg@arcor.de> */
 	{"Canon:EOS 250D",			0x04a9, 0x32e9, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -8615,6 +8618,8 @@ camera_init (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
 			if (is_canon_eos_m(params)) {
 				int mode = 0x15;	/* default for EOS M and newer Powershot SX */
+
+				if (!strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II")) mode = 0x1;
 
 				/* according to reporter only needed in config.c part 
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
