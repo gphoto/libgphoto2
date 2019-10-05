@@ -2298,6 +2298,8 @@ static struct {
 	{"Fuji:Fujifilm X-T20",			0x04cb, 0x02d4, 0},
 	/* Рустем Валиев <rustvt@gmail.com> */
 	{"Fuji:Fujifilm X-A5",			0x04cb, 0x02d5, 0},
+	/* Daniel Queen <dqueen510@gmail.com> */
+	{"Fuji:Fujifilm X-Xe3",			0x04cb, 0x02d6, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/283 */
 	{"Fuji:Fujifilm X-H1",			0x04cb, 0x02d7, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Seth Cohen <forwardthinking.llc@gmail.com> */
