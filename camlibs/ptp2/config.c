@@ -351,7 +351,9 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 			 */
 
+			LOG_ON_PTP_E (ptp_canon_eos_setuilock (params));
 			ret = ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001);
+			LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
 			/* not so bad if its just busy, would also fail later. */
 			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 			C_PTP (ret);
@@ -453,7 +455,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	C_PTP (ptp_check_eos_events (params));
 	params->eos_captureenabled = 1;
 
-	if (is_canon_eos_m (params)) {
+	if (is_canon_eos_m (params) && 0) {
 		PTPPropertyValue    ct_val;
 
 		GP_LOG_D ("EOS M detected");
@@ -557,7 +559,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
 	if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_ResetUILock))
-		C_PTP (ptp_canon_eos_resetuilock (params));
+		LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
 
 	/* Drain the rest set of the event data */
 	C_PTP (ptp_check_eos_events (params));
