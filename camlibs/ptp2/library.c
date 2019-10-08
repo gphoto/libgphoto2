@@ -8628,7 +8628,6 @@ camera_init (Camera *camera, GPContext *context)
 				int mode = 0x15;	/* default for EOS M and newer Powershot SX */
 
 				if (!strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II")) mode = 0x1;
-				if (!strcmp(params->deviceinfo.Model,"Canon EOS M10")) mode = 0x1;
 
 				/* according to reporter only needed in config.c part 
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
