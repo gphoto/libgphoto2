@@ -1037,6 +1037,9 @@ static struct {
 	/* https://sourceforge.net/p/gphoto/feature-requests/456/ */
 	{"Sony:Alpha-A7S (MTP)",      0x054c, 0x08e2, 0},
 
+	/* David Farrier <farrier@iglou.com> */
+	{"Sony:RX100M3 (MTP)",        0x054c, 0x08e3, 0},
+
 	/* Markus Oertel */
 	{"Sony:Alpha-A5100 (MTP)",    0x054c, 0x08e7, 0},
 
@@ -8625,6 +8628,7 @@ camera_init (Camera *camera, GPContext *context)
 				int mode = 0x15;	/* default for EOS M and newer Powershot SX */
 
 				if (!strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II")) mode = 0x1;
+				if (!strcmp(params->deviceinfo.Model,"Canon EOS M10")) mode = 0x1;
 
 				/* according to reporter only needed in config.c part 
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
