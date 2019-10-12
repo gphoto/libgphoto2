@@ -107,6 +107,7 @@ run_test ()
 		case GP_PORT_USB_SCSI:    port_type_str = "USBSCSI"; break;
 		case GP_PORT_DISK:   port_type_str = "DISK"; break;
 		case GP_PORT_PTPIP:  port_type_str = "PTPIP"; break;
+		case GP_PORT_IP:     port_type_str = "IP"; break;
 		default:             port_type_str = "UNKNOWN"; return 3; break;
 		}
 		printf ("No:    %d\n"
