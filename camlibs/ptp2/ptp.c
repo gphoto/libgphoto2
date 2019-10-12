@@ -4975,7 +4975,7 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 			{
 				param = dtoh16a(&data[2 + 6 * i]);
 				value = dtoh32a(&data[2 + 6 * i + 2]);
-				*events[i] = param;
+				(*events)[i] = param;
 				ptp_debug(params, "param: %02x, value: %d ", param, value);
 			}
 		}
@@ -5814,6 +5814,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_FUJI_Quality, N_("AE Lock")},				/* 0xD213 */
 		{PTP_DPC_FUJI_Quality, N_("Aperture")},				/* 0xD218 */
 		{PTP_DPC_FUJI_Quality, N_("Shutter Speed")},			/* 0xD219 */
+		{PTP_DPC_FUJI_FocusPoint, N_("Focus Point")},			/* 0xD347 */
 		{0,NULL}
         };
 

@@ -2231,6 +2231,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_Copyright				0xD215
 #define PTP_DPC_FUJI_Aperture				0xD218
 #define PTP_DPC_FUJI_ShutterSpeed			0xD219
+#define PTP_DPC_FUJI_FocusPoint			    0xD347
 
 /* Microsoft/MTP specific */
 #define PTP_DPC_MTP_SecureTime				0xD101
