@@ -134,6 +134,7 @@ typedef struct {
     pslr_bool_setting astrotracer;
     pslr_uint16_setting astrotracer_timer_sec;
     pslr_bool_setting horizon_correction;
+    pslr_bool_setting remote_bulb_mode_press_press;
 } pslr_settings;
 
 typedef struct {

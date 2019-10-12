@@ -614,6 +614,7 @@ char *collect_settings_info( pslr_handle_t h, pslr_settings settings ) {
     char *bulb_timer_sec = malloc(32);
     sprintf(bulb_timer_sec, "%d s", settings.bulb_timer_sec.value);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "bulb timer sec", get_special_setting_info(settings.bulb_timer_sec.pslr_setting_status) ?: bulb_timer_sec, get_hardwired_setting_uint16_info(settings.bulb_timer_sec));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "remote bulb mode", get_special_setting_info(settings.remote_bulb_mode_press_press.pslr_setting_status) ?: settings.remote_bulb_mode_press_press.value ? "press-press" : "press-hold", get_hardwired_setting_bool_info(settings.remote_bulb_mode_press_press));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "using aperture ring", get_special_setting_info(settings.using_aperture_ring.pslr_setting_status) ?: settings.using_aperture_ring.value ? "on" : "off", get_hardwired_setting_bool_info(settings.using_aperture_ring));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "shake reduction", get_special_setting_info(settings.shake_reduction.pslr_setting_status) ?: settings.shake_reduction.value ? "on" : "off", get_hardwired_setting_bool_info(settings.shake_reduction));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "astrotracer", get_special_setting_info(settings.astrotracer.pslr_setting_status) ?: settings.astrotracer.value ? "on" : "off", get_hardwired_setting_bool_info(settings.astrotracer));

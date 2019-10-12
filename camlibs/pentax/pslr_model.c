@@ -922,6 +922,8 @@ void ipslr_settings_parser_json(const char *cameraid, ipslr_handle_t *p, pslr_se
         }
         if (strcmp(def.name, "bulb_mode_press_press") == 0) {
             settings->bulb_mode_press_press = bool_setting;
+        } else if (strcmp(def.name, "remote_bulb_mode_press_press") == 0) {
+            settings->remote_bulb_mode_press_press = bool_setting;
         } else if (strcmp(def.name, "one_push_bracketing") == 0) {
             settings->one_push_bracketing = bool_setting;
         } else if (strcmp(def.name, "bulb_timer") == 0) {

@@ -166,7 +166,7 @@
 {7, 243, "smc PENTAX-DA 70mm F2.4 Limited"},
 {7, 244, "smc PENTAX-DA 21mm F3.2 AL Limited"},
 {8, 0, "Sigma 50-150mm F2.8 II APO EX DC HSM"},
-{8, 3, "Sigma AF 18-125mm F3.5-5.6 DC"},
+{8, 3, "Sigma 18-125mm F3.8-5.6 DC HSM"},
 {8, 4, "Sigma 50mm F1.4 EX DG HSM"},
 {8, 7, "Sigma 24-70mm F2.8 IF EX DG HSM"},
 {8, 8, "Sigma 18-250mm F3.5-6.3 DC OS HSM"},
