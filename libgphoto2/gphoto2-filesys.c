@@ -633,6 +633,10 @@ gp_filesystem_reset (CameraFilesystem *fs)
 	GP_LOG_D ("resetting filesystem");
 	CR (gp_filesystem_lru_clear (fs));
 	CR (delete_all_folders (fs, "/", NULL));
+
+	/* the recurse delete will not delete the files in /, only in subdirs */
+	delete_all_files (fs, fs->rootfolder);
+
 	if (fs->rootfolder) {
 		fs->rootfolder->files_dirty = 1;
 		fs->rootfolder->folders_dirty = 1;
