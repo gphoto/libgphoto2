@@ -488,6 +488,11 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 			if (!have_prop (camera, PTP_VENDOR_FUJI, 0xd207))
 				return GP_OK;
 
+			/* timelapse does:
+			 * d38c -> 1	(PC Mode)
+			 * d207 -> 2	(USB control)
+			 */
+
 			propval.u16 = 0x0002;
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
 			return GP_OK;
