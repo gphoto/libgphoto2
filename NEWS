@@ -1,4 +1,18 @@
 libgphoto2 2.5.23.1 development
+
+lumix:
+
+* New WIFI Lumix camera driver, using curl and libxml2.
+
+  Lots of abilities supported already, just capture is not working :/
+
+ptp2:
+
+
+all:
+
+* fixed some fuzzer issues
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.23 release
 
