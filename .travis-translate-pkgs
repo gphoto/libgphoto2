@@ -8,6 +8,7 @@ ubuntu2osx() {
 	gettext)       echo "gettext" ;;
 	libusb-dev)       echo "libusb-compat" ;;
 	libusb-1.0-0-dev) echo "" ;;	# libusb1 default installed on MacOSX currently, formerly was libusb
+	libcurl4-openssl-dev) echo "" ;;	# perhaps defualt installed, lets check
 	libgd2-xpm-dev)   echo "gd" ;;
 	*)
 	    echo "Error: Unknown package name: '$1'" >&2
