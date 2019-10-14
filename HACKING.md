@@ -24,6 +24,40 @@ We prefer patches against the current git master very much over
 patches against old released versions, but these are also welcome :-)
 
 
+Source Repository Directory Structure
+=====================================
+
+The source repository structure as of libgphoto2-2.5.23 (2019-10):
+
+  * [`libgphoto2_port/gphoto2/*.h`](libgphoto2_port/gphoto2/)
+
+    The header files with the interface to `libgphoto2_port`.
+
+  * [`libgphoto2_port/libgphoto2_port/*.[ch]`](libgphoto2_port/libgphoto2_port/)
+
+    Implementation of the `libgphoto2_port` library used internally by
+    `libgphoto2`.
+
+  * [`libgphoto2_port/{disk,libusb1,ptpip,serial,usb,usbdiskdirect,usbscsi,vusb}/*.[ch]`](libgphoto2_port/)
+
+    The port driver code for the `iolibs`. Dynamically loaded by `libgphoto2_port`.
+
+  * [`libgphoto2/*.[ch]`](libgphoto2/)
+
+    The source code of the actual `libgphoto2` library.
+
+  * [`gphoto2/*.h`](gphoto2/)
+
+    The header files with the interface to `libgphoto2`.
+
+  * [`camlibs/<CAMLIB>/*.[ch]`](camlibs/)
+
+    The camera drivers (`camlibs`). Dynamically loaded by `libgphoto2`.
+
+The buildsystem is based on automake, i.e. `configure.ac`,
+`Makefile.am` and `Makefile-files` have their standard functions.
+
+
 Source Files
 ============
 
