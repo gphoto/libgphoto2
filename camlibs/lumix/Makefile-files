@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-EXTRA_DIST += lumix/README.lumix lumix/ChangeLog
+EXTRA_DIST += lumix/README.lumix
 
 noinst_DATA += lumix/README.lumix
 if BUILD_LUMIX
