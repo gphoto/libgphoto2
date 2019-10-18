@@ -493,6 +493,8 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 			 * d207 -> 2	(USB control)
 			 */
 
+			propval.u16 = 0x0001;
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd38c, &propval, PTP_DTC_UINT16));
 			propval.u16 = 0x0002;
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd207, &propval, PTP_DTC_UINT16));
 			return GP_OK;
