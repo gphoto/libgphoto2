@@ -2317,6 +2317,8 @@ static struct {
 	{"Fuji:GFX 50 R",			0x04cb, 0x02dc, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Stefan Weiberg at SUSE */
 	{"Fuji:Fujifilm X-T3",			0x04cb, 0x02dd, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/gphoto2/issues/256 */
+	{"Fuji:Fujifilm GFX100",		0x04cb, 0x02de, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Bruno Filho at SUSE (currently not working with cpature, but shows variables) */
 	{"Fuji:Fujifilm X-T30",			0x04cb, 0x02e3, 0 /*PTP_CAP|PTP_CAP_PREVIEW*/},
 

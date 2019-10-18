@@ -1,0 +1,896 @@
+Camera summary:
+Manufacturer: FUJIFILM
+Model: GFX 100
+  Version: 1.00
+  Serial Number: nnnnnnnnnnnnnnnnnnAnnnnnnnnnnF
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: Defined Type JPEG Unknown(b103)
+Display Formats: Defined Type, JPEG, Unknown(b103), TIFF
+Supported MTP Object Properties:
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	Unknown(b103)/b103: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	TIFF/380d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Still
+	VolumeLabel: 1593535303732190603A470201102AF
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (4294967295 MB)
+	Free Space (Bytes): 18446744073709551615 (4294967295 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: 2593535303732190603A470201102AF
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (4294967295 MB)
+	Free Space (Bytes): 18446744073709551615 (4294967295 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001): error 200a on query.
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'4000x2664',
+	'4000x2248',
+	'2992x2992',
+	'8256x5504',
+	'8256x4640',
+	'6192x6192',
+	'11648x7768',
+	'11648x6552',
+	'8736x8736',
+	'4000x3000',
+	'4000x1480',
+	'3744x3000',
+	'3504x3000',
+	'11648x8736',
+	'11648x4304',
+	'10928x8736',
+	'10192x8736',
+	'8256x6192',
+	'8256x3048',
+	'7744x6192',
+	'7232x6192',
+	'9552x6368'
+	] value: '11648x8736'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,8,32769,32770,32771,32774,32775,32776,32777,32778] value: Automatic (2)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,32769,32770] value: 32769
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Center-spot (4)
+Flash Mode(0x500c): error 200a on query.
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: A (3)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,-1,-2,-3] value: ISO -3 (-3)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20191014T174000'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [10000,2000,0] value: 0.0s (0)
+Sharpness(0x5015):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 30
+Burst Number(0x5018): error 200a on query.
+Burst Interval(0x5019): error 200a on query.
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771] value: 32770
+Property 0xd001:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] value: 3
+Property 0xd002: error 200a on query.
+Property 0xd003: error 200a on query.
+Property 0xd004: error 200a on query.
+Property 0xd005: error 200a on query.
+Property 0xd007:(readwrite) (type=0x4) Enumeration [65535,100,200,400] value: 65535
+Property 0xd008:(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Property 0xd009: error 200a on query.
+Property 0xd00a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd00b:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: -3
+Property 0xd00c:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 4
+Property 0xd00d: error 200a on query.
+Property 0xd00e: error 200a on query.
+Property 0xd00f: error 200a on query.
+Property 0xd010: error 200a on query.
+Property 0xd011: error 200a on query.
+Property 0xd012: error 200a on query.
+Property 0xd013: error 200a on query.
+Property 0xd014: error 200a on query.
+Property 0xd015: error 200a on query.
+Property 0xd016: error 200a on query.
+Property 0xd017:(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 2500
+Property 0xd018:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 6
+Property 0xd019: error 200a on query.
+Property 0xd01a: error 200a on query.
+Property 0xd01b:(readwrite) (type=0x4) Enumeration [1,2,4,5,6,7,8,9,10,11,12] value: 1
+Property 0xd01c:(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+Property 0xd100:(readwrite) (type=0xffff) ''
+Secure Time(0xd101): error 200a on query.
+Device Certificate(0xd102): error 200a on query.
+Revocation Info(0xd103): error 200a on query.
+Property 0xd104:(readwrite) (type=0x3) Range [-90 - 90, step 10] value: 0
+Property 0xd105: error 200a on query.
+Property 0xd106:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd107: error 200a on query.
+Property 0xd108: error 200a on query.
+Property 0xd109: error 200a on query.
+Property 0xd10a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10c: error 200a on query.
+Property 0xd10d: error 200a on query.
+Property 0xd10e: error 200a on query.
+Property 0xd10f: error 200a on query.
+Property 0xd110: error 200a on query.
+Property 0xd111: error 200a on query.
+Property 0xd112: error 200a on query.
+Property 0xd113: error 200a on query.
+Property 0xd114: error 200a on query.
+Property 0xd115: error 200a on query.
+Property 0xd116: error 200a on query.
+Property 0xd117: error 200a on query.
+Property 0xd118: error 200a on query.
+Property 0xd119: error 200a on query.
+Property 0xd11a: error 200a on query.
+Property 0xd11b: error 200a on query.
+Property 0xd11c: error 200a on query.
+Property 0xd11d: error 200a on query.
+Property 0xd11e: error 200a on query.
+Property 0xd11f: error 200a on query.
+Property 0xd120: error 200a on query.
+Property 0xd121: error 200a on query.
+Property 0xd122: error 200a on query.
+Property 0xd123: error 200a on query.
+Property 0xd124: error 200a on query.
+Property 0xd125: error 200a on query.
+Property 0xd126: error 200a on query.
+Property 0xd127: error 200a on query.
+Property 0xd128: error 200a on query.
+Property 0xd129: error 200a on query.
+Property 0xd12a: error 200a on query.
+Property 0xd12b: error 200a on query.
+Property 0xd12c: error 200a on query.
+Property 0xd12d: error 200a on query.
+Property 0xd12e: error 200a on query.
+Property 0xd12f: error 200a on query.
+Property 0xd130: error 200a on query.
+PlaysForSure ID(0xd131): error 200a on query.
+Property 0xd132: error 200a on query.
+Property 0xd133: error 200a on query.
+Property 0xd134: error 200a on query.
+Property 0xd135: error 200a on query.
+Property 0xd136:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd137: error 200a on query.
+Property 0xd138: error 200a on query.
+Property 0xd139: error 200a on query.
+Property 0xd13a: error 200a on query.
+Property 0xd13b: error 200a on query.
+Property 0xd13c: error 200a on query.
+Property 0xd13d: error 200a on query.
+Property 0xd13e: error 200a on query.
+Property 0xd13f: error 200a on query.
+Property 0xd140: error 200a on query.
+Property 0xd141: error 200a on query.
+Property 0xd142: error 200a on query.
+Property 0xd143: error 200a on query.
+Property 0xd144: error 200a on query.
+Property 0xd145:(readwrite) (type=0xffff) '0000'
+Property 0xd146: error 200a on query.
+Property 0xd147: error 200a on query.
+Property 0xd148: error 200a on query.
+Property 0xd149: error 200a on query.
+Property 0xd14a: error 200a on query.
+Property 0xd14b: error 200a on query.
+Property 0xd14c: error 200a on query.
+Property 0xd14d: error 200a on query.
+Property 0xd14e: error 200a on query.
+Property 0xd14f: error 200a on query.
+Property 0xd150: error 200a on query.
+Property 0xd151: error 200a on query.
+Property 0xd152: error 200a on query.
+Property 0xd153:(read only) (type=0x4) 256
+Property 0xd154:(read only) (type=0x6) 67436544
+Property 0xd155:(read only) (type=0x6) 0
+Property 0xd157: error 200a on query.
+Property 0xd158: error 200a on query.
+Property 0xd159: error 200a on query.
+Property 0xd15a: error 200a on query.
+Property 0xd15b: error 200a on query.
+Property 0xd15c: error 200a on query.
+Property 0xd15d: error 200a on query.
+Property 0xd15e: error 200a on query.
+Property 0xd15f: error 200a on query.
+Property 0xd160: error 200a on query.
+Property 0xd161: error 200a on query.
+Property 0xd200: error 200a on query.
+Property 0xd201: not read out.
+Property 0xd202: error 200a on query.
+Property 0xd203: error 200a on query.
+Property 0xd204: error 200a on query.
+Property 0xd205: error 200a on query.
+Property 0xd206: error 200a on query.
+Property 0xd207:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,32768,40960,6,36864,2,37120,1,37632,5,14,37376] value: 772
+Property 0xd209:(read only) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd20a:(read only) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd20b:(readwrite) (type=0xffff) ''
+Property 0xd20c:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 4
+Property 0xd20d:(read only) (type=0xffff) '0,16,42796800,9,0,16,52638720,9'
+Property 0xd20e:(read only) (type=0x4) Range [0 - 1, step 1] value: 16
+Property 0xd20f: error 200a on query.
+Property 0xd210: error 200a on query.
+Property 0xd211:(read only) (type=0x4) Range [0 - 65535, step 1] value: 257
+Property 0xd212:(read only) (type=0x0) Undefined
+Property 0xd213: error 200a on query.
+Property 0xd214: error 200a on query.
+Property 0xd215:(readwrite) (type=0xffff) 'COPYRIGHT'
+Property 0xd216:(readwrite) (type=0xffff) ''
+Property 0xd217: error 200a on query.
+Property 0xd218: error 200a on query.
+Property 0xd219: error 200a on query.
+Property 0xd21a: error 200a on query.
+Property 0xd21b: error 200a on query.
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1571046180
+Printable: Mon 14 Oct 2019 05:43:00 PM CST
+Help: Use 'now' as the current time when setting.
+
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: nnnnnnnnnnnnnnnnnnAnnnnnnnnnAF
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: FUJIFILM
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: GFX 100
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: fujifilm.co.jp: 1.0; 
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: 11648x8736
+Choice: 0 4000x2664
+Choice: 1 4000x2248
+Choice: 2 2992x2992
+Choice: 3 8256x5504
+Choice: 4 8256x4640
+Choice: 5 6192x6192
+Choice: 6 11648x7768
+Choice: 7 11648x6552
+Choice: 8 8736x8736
+Choice: 9 4000x3000
+Choice: 10 4000x1480
+Choice: 11 3744x3000
+Choice: 12 3504x3000
+Choice: 13 11648x8736
+Choice: 14 11648x4304
+Choice: 15 10928x8736
+Choice: 16 10192x8736
+Choice: 17 8256x6192
+Choice: 18 8256x3048
+Choice: 19 7744x6192
+Choice: 20 7232x6192
+Choice: 21 9552x6368
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Tungsten
+Choice: 3 Unknown value 0008
+Choice: 4 Unknown value 8001
+Choice: 5 Unknown value 8002
+Choice: 6 Unknown value 8003
+Choice: 7 Unknown value 8006
+Choice: 8 Unknown value 8007
+Choice: 9 Unknown value 8008
+Choice: 10 Unknown value 8009
+Choice: 11 Unknown value 800a
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: Unknown value 8001
+Choice: 0 Manual
+Choice: 1 Unknown value 8001
+Choice: 2 Unknown value 8002
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 0
+Type: RADIO
+Current: A
+Choice: 0 M
+Choice: 1 A
+Choice: 2 S
+Choice: 3 Action
+END
+/main/capturesettings/focusmetermode
+Label: Focus Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Unknown value 8002
+Choice: 0 Unknown value 8001
+Choice: 1 Unknown value 8002
+Choice: 2 Unknown value 8003
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Center Spot
+Choice: 0 Average
+Choice: 1 Center Weighted
+Choice: 2 Multi Spot
+Choice: 3 Center Spot
+END
+/main/capturesettings/capturedelay
+Label: Capture Delay
+Readonly: 0
+Type: RADIO
+Current: 0.000s
+Choice: 0 10.000s
+Choice: 1 2.000s
+Choice: 2 0.000s
+END
+/main/other/5003
+Label: Image Size
+Readonly: 0
+Type: MENU
+Current: 11648x8736
+Choice: 0 4000x2664
+Choice: 1 4000x2248
+Choice: 2 2992x2992
+Choice: 3 8256x5504
+Choice: 4 8256x4640
+Choice: 5 6192x6192
+Choice: 6 11648x7768
+Choice: 7 11648x6552
+Choice: 8 8736x8736
+Choice: 9 4000x3000
+Choice: 10 4000x1480
+Choice: 11 3744x3000
+Choice: 12 3504x3000
+Choice: 13 11648x8736
+Choice: 14 11648x4304
+Choice: 15 10928x8736
+Choice: 16 10192x8736
+Choice: 17 8256x6192
+Choice: 18 8256x3048
+Choice: 19 7744x6192
+Choice: 20 7232x6192
+Choice: 21 9552x6368
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 6
+Choice: 3 8
+Choice: 4 32769
+Choice: 5 32770
+Choice: 6 32771
+Choice: 7 32774
+Choice: 8 32775
+Choice: 9 32776
+Choice: 10 32777
+Choice: 11 32778
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 1
+Choice: 1 32769
+Choice: 2 32770
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 3
+Choice: 2 4
+Choice: 3 6
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: -3
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 -1
+Choice: 23 -2
+Choice: 24 -3
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20191014T174300
+END
+/main/other/5012
+Label: Pre-Capture Delay
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 10000
+Choice: 1 2000
+Choice: 2 0
+END
+/main/other/5015
+Label: Sharpness
+Readonly: 0
+Type: RANGE
+Current: 30
+Bottom: -40
+Top: 40
+Step: 10
+END
+/main/other/501c
+Label: Focus Metering Mode
+Readonly: 0
+Type: MENU
+Current: 32770
+Choice: 0 32769
+Choice: 1 32770
+Choice: 2 32771
+END
+/main/other/d001
+Label: PTP Property 0xd001
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+END
+/main/other/d007
+Label: PTP Property 0xd007
+Readonly: 0
+Type: MENU
+Current: 65535
+Choice: 0 65535
+Choice: 1 100
+Choice: 2 200
+Choice: 3 400
+END
+/main/other/d008
+Label: PTP Property 0xd008
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -40
+Top: 40
+Step: 10
+END
+/main/other/d00a
+Label: PTP Property 0xd00a
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d00b
+Label: PTP Property 0xd00b
+Readonly: 0
+Type: MENU
+Current: -3
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+END
+/main/other/d00c
+Label: PTP Property 0xd00c
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+END
+/main/other/d017
+Label: PTP Property 0xd017
+Readonly: 0
+Type: MENU
+Current: 2500
+Choice: 0 2500
+Choice: 1 2550
+Choice: 2 2650
+Choice: 3 2700
+Choice: 4 2800
+Choice: 5 2850
+Choice: 6 2950
+Choice: 7 3000
+Choice: 8 3100
+Choice: 9 3200
+Choice: 10 3300
+Choice: 11 3400
+Choice: 12 3600
+Choice: 13 3700
+Choice: 14 3800
+Choice: 15 4000
+Choice: 16 4200
+Choice: 17 4300
+Choice: 18 4500
+Choice: 19 4800
+Choice: 20 5000
+Choice: 21 5300
+Choice: 22 5600
+Choice: 23 5900
+Choice: 24 6300
+Choice: 25 6700
+Choice: 26 7100
+Choice: 27 7700
+Choice: 28 8300
+Choice: 29 9100
+Choice: 30 10000
+END
+/main/other/d018
+Label: PTP Property 0xd018
+Readonly: 0
+Type: MENU
+Current: 6
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d01b
+Label: PTP Property 0xd01b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 4
+Choice: 3 5
+Choice: 4 6
+Choice: 5 7
+Choice: 6 8
+Choice: 7 9
+Choice: 8 10
+Choice: 9 11
+Choice: 10 12
+END
+/main/other/d01c
+Label: PTP Property 0xd01c
+Readonly: 0
+Type: MENU
+Current: 8192
+Choice: 0 0
+Choice: 1 4096
+Choice: 2 8192
+Choice: 3 12288
+Choice: 4 16384
+Choice: 5 20480
+Choice: 6 24576
+Choice: 7 28672
+Choice: 8 32768
+END
+/main/other/d100
+Label: PTP Property 0xd100
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d104
+Label: PTP Property 0xd104
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -90
+Top: 90
+Step: 10
+END
+/main/other/d106
+Label: PTP Property 0xd106
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d10a
+Label: PTP Property 0xd10a
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d10b
+Label: PTP Property 0xd10b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d136
+Label: PTP Property 0xd136
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d145
+Label: PTP Property 0xd145
+Readonly: 0
+Type: TEXT
+Current: 0000
+END
+/main/other/d153
+Label: PTP Property 0xd153
+Readonly: 1
+Type: TEXT
+Current: 256
+END
+/main/other/d154
+Label: PTP Property 0xd154
+Readonly: 1
+Type: TEXT
+Current: 67436544
+END
+/main/other/d155
+Label: PTP Property 0xd155
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d201
+Label: PTP Property 0xd201
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 4
+END
+/main/other/d207
+Label: PTP Property 0xd207
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d208
+Label: PTP Property 0xd208
+Readonly: 0
+Type: MENU
+Current: 772
+Choice: 0 260
+Choice: 1 512
+Choice: 2 4
+Choice: 3 772
+Choice: 4 1280
+Choice: 5 12
+Choice: 6 32768
+Choice: 7 40960
+Choice: 8 6
+Choice: 9 36864
+Choice: 10 2
+Choice: 11 37120
+Choice: 12 1
+Choice: 13 37632
+Choice: 14 5
+Choice: 15 14
+Choice: 16 37376
+END
+/main/other/d209
+Label: PTP Property 0xd209
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d20a
+Label: PTP Property 0xd20a
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d20b
+Label: PTP Property 0xd20b
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d20c
+Label: PTP Property 0xd20c
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d20d
+Label: PTP Property 0xd20d
+Readonly: 1
+Type: TEXT
+Current: 0,16,42796800,9,0,16,52638720,9
+END
+/main/other/d20e
+Label: PTP Property 0xd20e
+Readonly: 1
+Type: MENU
+Current: 16
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d211
+Label: PTP Property 0xd211
+Readonly: 1
+Type: RANGE
+Current: 257
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d212
+Label: PTP Property 0xd212
+Readonly: 1
+Type: TEXT
+Current: (null)
+END
+/main/other/d215
+Label: PTP Property 0xd215
+Readonly: 0
+Type: TEXT
+Current: COPYRIGHT
+END
+/main/other/d216
+Label: PTP Property 0xd216
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d406
+Label: Session Initiator Info
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
