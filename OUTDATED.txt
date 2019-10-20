@@ -74,3 +74,4 @@ tp6801		- last changes in 2011
 
 kodak_dc240	- last report from 2004
 	Reply from a user in 5.2019 its in active use.
+ricoh_g3	- report in 2019 https://github.com/gphoto/libgphoto2/issues/454

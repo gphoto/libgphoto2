@@ -529,7 +529,7 @@ GP_CAMLIB([polaroid_pdc640],[outdated])dnl
 GP_CAMLIB([polaroid_pdc700],[outdated])dnl
 GP_CAMLIB([ptp2])dnl
 GP_CAMLIB([ricoh],[outdated])dnl
-GP_CAMLIB([ricoh_g3],[outdated])dnl
+GP_CAMLIB([ricoh_g3])dnl
 GP_CAMLIB([samsung],[outdated])dnl
 GP_CAMLIB([sierra])dnl
 GP_CAMLIB([sipix_blink], [unlisted])dnl did not find out the correct decompressor, unfinished
