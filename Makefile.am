@@ -80,6 +80,31 @@ install-camlibs:
 
 
 ########################################################################
+# Convenience shortcuts to update the *.po translation files in both
+# po/ subdirs at once and to reset the *.po translation files to "git
+# HEAD" in both po/ subdirs at once.
+
+PO_SUBDIRS =
+PO_SUBDIRS += libgphoto2_port/po
+PO_SUBDIRS += po
+
+# Run "git checkout *.po" in all po/ subdirs
+# which is quite useful after "make dist" to clean up "git status".
+.PHONY: git-checkout-po
+git-checkout-po:
+	set -e; cd "$(top_srcdir)" && if test -d .git; then \
+		for d in $(PO_SUBDIRS); do \
+			(cd "$$d" && git checkout *.po); \
+		done; \
+	fi
+
+# Run "make update-po" in all po/ subdirs
+.PHONY: update-po
+update-po:
+	@for d in $(PO_SUBDIRS); do (cd "$$d" && $(MAKE) $(AM_MAKEFLAGS) update-po)  || exit 1; done
+
+
+########################################################################
 # The following default options for aclocal and automake
 # are required in the top level Makefile.am for the automatic 
 # re-building of the build system files.
