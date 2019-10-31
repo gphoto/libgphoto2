@@ -15,12 +15,12 @@ clean-local:
 	cp $< $@
 
 rpm: Makefile package.spec
-	$(MAKE) clean
+	$(MAKE) $(AM_MAKEFLAGS) clean
 	mkdir -p BUILD SPECS SOURCES SRPMS
 	for arch in i386 i486 i586 i686 alpha noarch; do \
 		mkdir -p "RPMS/$${arch}"; \
 	done
-	$(MAKE) SOURCES/@PACKAGE@-@VERSION@.tar.gz SPECS/@PACKAGE@-@VERSION@.spec
+	$(MAKE) $(AM_MAKEFLAGS) SOURCES/@PACKAGE@-@VERSION@.tar.gz SPECS/@PACKAGE@-@VERSION@.spec
 	@RPMBUILD@ --define "_topdir $$(pwd)" -ba SPECS/@PACKAGE@-@VERSION@.spec
 
 SOURCES/@PACKAGE@-@VERSION@.tar.gz: $(top_srcdir)/@PACKAGE@-@VERSION@.tar.gz

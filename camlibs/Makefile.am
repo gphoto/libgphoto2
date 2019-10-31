@@ -156,7 +156,7 @@ all-local: Makefile
 # Usage: make CAMLIBS="canon.la ptp2.la" install-camlibs
 
 install-camlibs:
-	$(MAKE) BUILD_THESE_CAMLIBS="$(CAMLIBS)" install-camlibLTLIBRARIES
+	$(MAKE) $(AM_MAKEFLAGS) BUILD_THESE_CAMLIBS="$(CAMLIBS)" install-camlibLTLIBRARIES
 
 
 ########################################################################

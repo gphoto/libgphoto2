@@ -45,7 +45,7 @@ clean-local:
 	rm -f *.s *.i
 
 $(top_builddir)/packaging/generic/print-camera-list:
-	cd $(top_builddir)/packaging/generic && $(MAKE) print-camera-list
+	cd $(top_builddir)/packaging/generic && $(MAKE) $(AM_MAKEFLAGS) print-camera-list
 
 include $(top_srcdir)/installcheck.mk
 

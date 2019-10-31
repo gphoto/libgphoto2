@@ -76,7 +76,7 @@ source-code-check:
 # Usage: make CAMLIBS="canon.la ptp2.la" install-camlibs
 
 install-camlibs:
-	cd camlibs && $(MAKE) CAMLIBS="$(CAMLIBS)" install-camlibs
+	cd camlibs && $(MAKE) $(AM_MAKEFLAGS) CAMLIBS="$(CAMLIBS)" install-camlibs
 
 
 ########################################################################
@@ -95,8 +95,8 @@ if ENABLE_RPM
 
 # create RPM packages
 rpm: Makefile
-	$(MAKE) dist
-	$(MAKE) -C packaging/rpm rpm
+	$(MAKE) $(AM_MAKEFLAGS) dist
+	cd packaging/rpm && $(MAKE) $(AM_MAKEFLAGS) rpm
 	@echo "The RPM packages should now be found in packaging/rpm/RPMS"
 
 else
