@@ -23,7 +23,7 @@ rpm: Makefile package.spec
 	$(MAKE) $(AM_MAKEFLAGS) SOURCES/@PACKAGE@-@VERSION@.tar.gz SPECS/@PACKAGE@-@VERSION@.spec
 	@RPMBUILD@ --define "_topdir $$(pwd)" -ba SPECS/@PACKAGE@-@VERSION@.spec
 
-SOURCES/@PACKAGE@-@VERSION@.tar.gz: $(top_srcdir)/@PACKAGE@-@VERSION@.tar.gz
+SOURCES/@PACKAGE@-@VERSION@.tar.gz: $(top_builddir)/@PACKAGE@-@VERSION@.tar.gz
 	ln -f $< $@
 
 SPECS/@PACKAGE@-@VERSION@.spec: package.spec
