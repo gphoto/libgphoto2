@@ -75,7 +75,7 @@ frontends, which are available seperately.
 
 
 ########################################################################
-# Building and installing the beast into %{buildroot}
+# Building and installing the beast into %%{buildroot}
 ########################################################################
 
 ####################################
