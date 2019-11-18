@@ -3,6 +3,11 @@ language: c
 os:
  - linux
  - osx
+arch:
+  - x86_64
+  - s390x
+  - ppc64le
+  - aarch64
 
 env:
  - EXTRALIBS="gettext"
