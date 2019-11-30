@@ -1334,7 +1334,7 @@ static struct {
 	/* Mdasoh Kyaeppd at IRC */
 	{"Nikon:Coolpix S6300 (PTP mode)",0x04b0, 0x032c, PTP_CAP},
 	/* sakax <sakamotox@gmail.com> */
-	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP},
+	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 	/* dougvj@gmail.com */
 	{"Nikon:Coolpix L810  (PTP mode)",0x04b0, 0x032f, PTP_CAP},
