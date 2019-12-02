@@ -4238,7 +4238,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	/* Check if we are in manual focus to skip the wait for focus */
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
-	if (dpd.CurrentValue.u16 == 2) {
+	if (dpd.CurrentValue.u16 != 1) { /* 1 is Manual .. no need to wait there for focusing */
 
 		/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
 		* get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
@@ -5442,8 +5442,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		/* Wait for focus only in automatic focus mode */
 		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
-		if (dpd.CurrentValue.u16 == 2) {
-
+		if (dpd.CurrentValue.u16 != 1) { /* 1 is Manual .. no need to wait there for focusing */
 			/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
 			* get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
 			*/
