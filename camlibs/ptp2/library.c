@@ -2089,6 +2089,9 @@ static struct {
 	/* sparkycoladev@gmail.com */
 	{"Canon:PowerShot G7 X",		0x04a9, 0x329d, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
+	/* Sascha Wolff <sascha.wolff1@gmail.com> */
+	{"Canon:PowerShot SX530 HS",		0x04a9, 0x329f, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
+
 	/* Marcus Meissner <marcus@jet.franken.de> */
 	{"Canon:EOS M10",			0x04a9, 0x32a0, PTP_CAP|PTP_CAP_PREVIEW},
 
