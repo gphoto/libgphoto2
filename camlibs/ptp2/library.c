@@ -1014,11 +1014,20 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/70 */
 	{"Sony:Alpha-A6300 (Control)",0x054c, 0x079c, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Anja Stock at SUSE */
+	{"Sony:DSC-RX10M3 (Control)",  	0x054c, 0x079d, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Elijah Parker <mail@timelapseplus.com> */
 	{"Sony:Alpha-A99 M2 (Control)", 0x054c, 0x079e, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* Anja Stock at SUSE */
-	{"Sony:DSC-RX10M3 (Control)",  	0x054c, 0x079d, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Elijah Parker <mail@timelapseplus.com> */
+	{"Sony:DSC-RX100V (Control)", 0x054c, 0x07a3, PTP_CAP},
+
+	/* Elijah Parker <mail@timelapseplus.com> */
+	{"Sony:Alpha-A6500 (Control)", 0x054c, 0x07a4, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Elijah Parker <mail@timelapseplus.com> */
+	{"Sony:Alpha-A5000 (Control)", 0x054c, 0x07c6, PTP_CAP},
 
 	/* jackden@gmail.com */
 	{"Sony:DSC-RX100M6 (MTP)",  0x054c, 0x0830, 0},
@@ -1056,6 +1065,9 @@ static struct {
 
 	/* Nick Clarke <nick.clarke@gmail.com> */
 	{"Sony:Alpha-A77 M2 (Control)", 0x054c, 0x0953, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Elijah Parker <mail@timelapseplus.com> */
+	{"Sony:Alpha-A7s (Control)", 0x054c, 0x0954, PTP_CAP},
 
 	/* Markus Oertel */
 	/* Preview confirmed by Adrian Schroeter, preview might need the firmware getting updated */
@@ -1105,6 +1117,7 @@ static struct {
 	{"Sony:DSC-RX0 (PC Control)",		0x054c, 0x0c32, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Elijah Parker, mail@timelapseplus.com */
+	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	{"Sony:Alpha-A7r III (PC Control)",	0x054c, 0x0c33, PTP_CAP|PTP_CAP_PREVIEW}, /* FIXME: crosscheck */
 	{"Sony:Alpha-A7 III (PC Control)",	0x054c, 0x0c34, PTP_CAP|PTP_CAP_PREVIEW}, /* FIXME: crosscheck */
 
@@ -1119,9 +1132,9 @@ static struct {
 	{"Sony:DSC-RX100M5A (MTP)",		0x054c, 0x0cb1, 0},
 	{"Sony:DSC-RX100M5A (PC Control)",	0x054c, 0x0cb2, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* https://github.com/gphoto/libgphoto2/issues/230 */
 	/* Elijah Parker, mail@timelapseplus.com */
-	{"Sony:Alpha-A7R III (Control)", 0x054c,0x0c33, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:DSC-A7r IV (Control)",		0x054c, 0x0ccc, PTP_CAP|PTP_CAP_PREVIEW},
+
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
