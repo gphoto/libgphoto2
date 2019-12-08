@@ -2443,6 +2443,8 @@ static struct {
 	{"GoPro:HERO6 Black",			0x2672, 0x0037, 0},
 	/* https://sourceforge.net/p/libmtp/feature-requests/284/ */
 	{"GoPro:HERO7 Black",			0x2672, 0x0047, 0},
+	/* https://sourceforge.net/p/libmtp/bugs/1858/ */
+	{"GoPro:HERO8 Black",			0x2672, 0x0049, 0},
 #endif
 };
 
