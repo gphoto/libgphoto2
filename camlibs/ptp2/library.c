@@ -999,12 +999,6 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/190 */
 	{"Sony:Alpha-A6500",	      0x054c, 0x0784, 0},
 
-	/* hanes442@icloud.com */
-	{"Sony:DSC-RX100M5 (Control)",0x054c, 0x07a3, PTP_CAP},
-
-	/* https://github.com/gphoto/libgphoto2/issues/190 */
-	{"Sony:Alpha-A6500 (Control)",0x054c, 0x07a4, PTP_CAP|PTP_CAP_PREVIEW},
-
 	/* bertrand.chambon@free.fr */
 	{"Sony:Alpha-A68 (Control)",  0x054c, 0x079b, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1019,8 +1013,12 @@ static struct {
 
 	/* Elijah Parker <mail@timelapseplus.com> */
 	{"Sony:DSC-RX100V (Control)", 0x054c, 0x07a3, PTP_CAP},
+	/* hanes442@icloud.com */
+	{"Sony:DSC-RX100M5 (Control)",0x054c, 0x07a3, PTP_CAP},
+
 
 	/* Elijah Parker <mail@timelapseplus.com> */
+	/* https://github.com/gphoto/libgphoto2/issues/190 */
 	{"Sony:Alpha-A6500 (Control)", 0x054c, 0x07a4, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Elijah Parker <mail@timelapseplus.com> */
