@@ -1005,9 +1005,6 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/190 */
 	{"Sony:Alpha-A6500 (Control)",0x054c, 0x07a4, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
-	{"Sony:Alpha-A5000 (Control)",0x054c, 0x07c6, PTP_CAP},
-
 	/* bertrand.chambon@free.fr */
 	{"Sony:Alpha-A68 (Control)",  0x054c, 0x079b, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1027,6 +1024,7 @@ static struct {
 	{"Sony:Alpha-A6500 (Control)", 0x054c, 0x07a4, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Elijah Parker <mail@timelapseplus.com> */
+	/* https://sourceforge.net/p/gphoto/support-requests/127/ */
 	{"Sony:Alpha-A5000 (Control)", 0x054c, 0x07c6, PTP_CAP},
 
 	/* jackden@gmail.com */
