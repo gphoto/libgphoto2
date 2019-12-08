@@ -455,7 +455,10 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	C_PTP (ptp_check_eos_events (params));
 	params->eos_captureenabled = 1;
 
-	if (is_canon_eos_m (params) && 0) {
+	/* run this only on EOS M, not on PowerShot SX */
+	/* FIXME: needs more testing :/ */
+	if (is_canon_eos_m (params) && strstr(params->deviceinfo.Model,"EOS")) {
+		/* This code is needed on EOS m3 at least. might not be needed on others ... mess :/ */
 		PTPPropertyValue    ct_val;
 
 		GP_LOG_D ("EOS M detected");
