@@ -568,6 +568,7 @@ pdc640_deltadecode (int width, int height, unsigned char **rawdata, int *rawsize
 
 	GP_DEBUG ("pdc640_deltacode ()");
 
+	if (width < 2) return GP_ERROR_CORRUPTED_DATA; /* invalid, we implicitly assume it to be 2 or higher in the decoder */
 	/* Create a buffer to store RGB data in */
 	size = width * height;
 	data = malloc (size * sizeof (char));
