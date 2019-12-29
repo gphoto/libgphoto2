@@ -580,7 +580,7 @@ spca50x_process_thumbnail (CameraPrivateLibrary *lib,	/*  context */
 
 	yuv_p = buf;
 	rgb_p = tmp + hdrlen;
-	while (yuv_p < buf + file_size) {
+	while ((yuv_p < buf + file_size) && (rgb_p < tmp + hdrlen + w*h*3)) {
 		uint32_t u, v, y, y2;
 		uint32_t r, g, b;
 
