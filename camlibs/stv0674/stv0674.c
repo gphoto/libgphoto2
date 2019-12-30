@@ -107,6 +107,10 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	GP_DEBUG("file count returned %d\n",result);
 	return result;
     }
+    if (count > 10000) { /* arbitrary limit to avoid resource exhaustion by malicious USB */
+	GP_DEBUG("count %d is over 10000 arbitrary limit. Increase if needed.\n", count); 
+	return GP_ERROR_CORRUPTED_DATA;
+    }
 
     GP_DEBUG("count is %x\n",count);
 
