@@ -36,6 +36,11 @@
 
 #define GP_MODULE "jl2005c"
 
+/* do not sleep during fuzzing */
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define usleep(x)
+#endif
+
 int
 jl2005c_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 {
