@@ -216,6 +216,10 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
        free(buffer);
        return ret;
     }
+    if (ret < buflen) {
+	free (buffer);
+	return GP_ERROR_CORRUPTED_DATA;
+    }
 
     if (dev->file_list) free(dev->file_list);
 
