@@ -698,7 +698,7 @@ pdc640_getpic (Camera *camera, int n, int thumbnail, int justraw,
 	CHECK_RESULT (pdc640_transmit_pic (camera->port, cmd, width, thumbnail,
 					*data, *size));
 
-	if (thumbnail || (compression_type == 0 )) {
+	if (thumbnail || ((compression_type & 3) == 0 )) {
 		/* Process uncompressed data */
 		CHECK_RESULT (pdc640_processtn (width, height,
 						data, *size));
