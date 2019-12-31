@@ -69,10 +69,12 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, unsigned int *len)
 
 	*channel = xbuf[1];
 	*len = xbuf[4] + (xbuf[5]<<8) + (xbuf[6]<<16) + (xbuf[7]<<24);
+	if (*len >= 0xffffffff-0x800-1) return GP_ERROR_CORRUPTED_DATA;
 	/* Safety buffer of 0x800 ... we can only read in 0x800 chunks, 
 	 * otherwise the communication gets hickups. However *len might be
 	 * less.
 	 */
+	gp_log(GP_LOG_DEBUG, "g3" ,"length %u\n", *len);
 	if (!*buffer)
 		*buffer = malloc(*len + 1 + 0x800);
 	else
