@@ -443,6 +443,11 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 			start_of_frame = avi;
 
 			/* jpeg starts here */
+			if ((data - mybuf) + frame_size > size) {
+				free (mybuf);
+				GP_DEBUG("BAD: accessing more than we read (%d vs total %d)", (data-mybuf)+frame_size , size);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
 			create_jpeg_from_data (avi, data, qIndex, frame_width,
 					       frame_height, 0x22, frame_size,
 					       &length, 1, 0);
