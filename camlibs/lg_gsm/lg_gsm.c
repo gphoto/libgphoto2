@@ -116,7 +116,7 @@ unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic)
 	return size;
 }
 
-int lg_gsm_read_picture_data (GPPort *port, char *data, int size, int n) 
+int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, unsigned int n) 
 {
 	char listphotos[] = "\x04\x0\x08\x0\x0\x0\x40\x0\x0\x0\x0\x0\x0\x0";
 
@@ -127,6 +127,7 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, int size, int n)
 	char block[50000];
 	char oknok[6];
 
+	unsigned int size;
 	int pos=0;
 	int block_size=50000;
 	int header_size=8;
@@ -158,10 +159,14 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, int size, int n)
 	/* then read 142 */
 	READ(port, photodesc, 142);
 	size = (int)photodesc[138] + (int)photodesc[139]*0x100 + (int)photodesc[140]*0x10000+(int)photodesc[141]*0x1000000;
-	GP_DEBUG(" size of picture %i is 0x%x\n", n, size);
+	GP_DEBUG(" size of picture %i is 0x%x", n, size);
 	/* max. 1280x960x24bits ? */
 	if ( (size >= 0x384000 ) ) {
 		return GP_ERROR;
+	}
+	if (datasize < size) {
+		GP_DEBUG("size of picture %u, previous read %u", datasize, size);
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	memcpy(getphoto, &get_photo_cmd[0], 10);
@@ -180,6 +185,7 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, int size, int n)
 	for (i = 1 ; i <= nb_blocks ; i++)
 	{
 		remain = size - pos;
+		GP_DEBUG ("size %d, pos %d, remain %d, block_size %d, header_size %d", size, pos, remain, block_size, header_size);
 		if (remain >= block_size - header_size)
 		{
 			READ(port, block, block_size);

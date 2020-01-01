@@ -139,7 +139,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
         int k;
 	char *data;
-	int len;
+	unsigned int len;
 
 	k = gp_filesystem_number(camera->fs, "/", filename, context);
 
