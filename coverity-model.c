@@ -6,6 +6,7 @@ typedef unsigned int uint32_t;
 typedef unsigned long long uint64_t;
 
 typedef void *PTPParams;
+typedef void *PTPContainer;
 
 uint16_t htod16p (PTPParams *params, uint16_t var) { __coverity_tainted_data_return__(); }
 uint16_t dtoh16p (PTPParams *params, uint16_t var) { __coverity_tainted_data_return__(); }
