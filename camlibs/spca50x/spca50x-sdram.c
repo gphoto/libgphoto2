@@ -931,6 +931,9 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 					  ++lib->num_movies);
 				lib->files[file_index].mime_type =
 					SPCA50X_FILE_TYPE_AVI;
+			} else {
+				gp_log(GP_LOG_ERROR, "spca50x", "type %d unhandled - error", type);
+				return GP_ERROR;
 			}
 			lib->files[file_index].fat = p;
 			lib->files[file_index].fat_start = index;
