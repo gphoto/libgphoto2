@@ -872,8 +872,8 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 		lib->files = NULL;
 	}
 
-	lib->fats = malloc (lib->num_fats * SPCA50X_FAT_PAGE_SIZE);
-	lib->files = malloc (lib->num_files_on_sdram * sizeof (struct SPCA50xFile));
+	lib->fats = calloc (lib->num_fats , SPCA50X_FAT_PAGE_SIZE);
+	lib->files = calloc (lib->num_files_on_sdram , sizeof (struct SPCA50xFile));
 
 	p = lib->fats;
 	if (lib->bridge == BRIDGE_SPCA504) {

@@ -196,7 +196,7 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 		/* Now, create the files info buffer */
 		free_files(pl);
 		/* NOTE: using calloc to ensure new block is "empty" */
-		pl->files = calloc (1, *filecount * sizeof (struct SPCA50xFile));
+		pl->files = calloc (*filecount , sizeof (struct SPCA50xFile));
 		if (!pl->files)
 			return GP_ERROR_NO_MEMORY;
 	} else { /* all other cams with flash... */
