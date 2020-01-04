@@ -239,9 +239,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		status =  GP_ERROR_NO_MEMORY;
 		goto end;
 	}
-	if (compressed)
+	if (compressed) {
+		/* compressed seems to mean half the lines */
+		if (w/2*h > b+14) {
+			status = GP_ERROR_CORRUPTED_DATA;
+			goto end;
+		}
 		jl2005a_decompress (image_start, p_data, w, h);
-	else {
+	} else {
 		if (w*h > b+14) {
 			status = GP_ERROR_CORRUPTED_DATA;
 			goto end;
