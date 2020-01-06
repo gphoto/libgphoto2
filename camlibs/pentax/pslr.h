@@ -72,7 +72,7 @@ user_file_format_t *get_file_format_t( user_file_format uff );
 
 // OFF-AUTO: Off-Auto-Aperture
 typedef enum {
-    PSLR_EXPOSURE_MODE_P = 0 ,
+    PSLR_EXPOSURE_MODE_P = 0,
     PSLR_EXPOSURE_MODE_GREEN = 1,
 //    PSLR_EXPOSURE_MODE_HYP = 2,
 //    PSLR_EXPOSURE_MODE_AUTO_PICT = 1,

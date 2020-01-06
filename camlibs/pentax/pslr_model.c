@@ -968,7 +968,7 @@ ipslr_model_info_t camera_models[] = {
     { 0x1309c, "K-3II",       false, false, true,  true,  false, true,  452,  4, {24, 14, 6, 2}, 9, 8000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS,    true,  27, ipslr_status_parse_k3},
     { 0x12fca, "K-500",       false, true,  true,  false, false, false, 452,  3, {16, 12, 8, 5}, 9, 6000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, true,  11, ipslr_status_parse_k500},
     // only limited support from here
-    { 0x12994, "*ist D",      true,  true,  true,  false, false, false, 0,   3, {6, 4, 2}, 3, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_NONE  , false, 11, NULL}, // buffersize: 264
+    { 0x12994, "*ist D",      true,  true,  true,  false, false, false, 0,   3, {6, 4, 2}, 3, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_NONE,   false, 11, NULL},   // buffersize: 264
     { 0x12b60, "*ist DS2",    true,  true,  true,  false, false, false, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, false, 11, NULL},
     { 0x12b1a, "*ist DL",     true,  true,  true,  false, false, false, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, false, 11, NULL},
     { 0x12b80, "GX-1L",       true,  true,  true,  false, false, false, 0,   3, {6, 4, 2}, 5, 4000, 200, 3200, 200, 3200, PSLR_JPEG_IMAGE_TONE_BRIGHT, false, 11, NULL},
