@@ -1,13 +1,9 @@
 # -*- Makefile -*-
 
 EXTRA_DIST += lumix/README.lumix
-
 noinst_DATA += lumix/README.lumix
-if BUILD_LUMIX
+
 EXTRA_LTLIBRARIES += lumix.la
-else
-EXTRA_DIST += lumix/lumix.c
-endif
 
 lumix_la_SOURCES = lumix/lumix.c
 lumix_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) $(LIBXML2_CFLAGS) $(LIBCURL_CFLAGS)

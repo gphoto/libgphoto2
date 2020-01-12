@@ -24,15 +24,20 @@
  */
 #include "config.h"
 
+
 #include <string.h>
 #include <errno.h>
-#include <curl/curl.h>
+#ifdef HAVE_LIBCURL
+# include <curl/curl.h>
+#endif
 #include <stdio.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <stdlib.h>
-#include <libxml/xmlmemory.h>
-#include <libxml/xmlreader.h>
+#ifdef HAVE_LIBXML2
+# include <libxml/parser.h>
+# include <libxml/tree.h>
+# include <libxml/xmlmemory.h>
+# include <libxml/xmlreader.h>
+#endif
 
 
 #include <sys/socket.h>
@@ -81,6 +86,8 @@
 #  define _(String) (String)
 #  define N_(String) (String)
 #endif
+
+#if defined(HAVE_LIBCURL) && defined(HAVE_LIBXML2)
 
 char* CDS_Control  = ":60606/Server0/CDS_control";
 int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
@@ -369,14 +376,6 @@ storage_info_func (CameraFilesystem *fs,
  */
 /**********************************************************************/
 
-
-int
-camera_id (CameraText *id) 
-{
-	strcpy(id->text, "Lumix Wifi");
-
-	return GP_OK;
-}
 
 static size_t
 write_callback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -1918,4 +1917,26 @@ camera_init (Camera *camera, GPContext *context)
 		return GP_OK;
 	} else
 		return GP_ERROR_IO;
+}
+
+#else
+/* no XML2 or no CURL -> no camera here */
+int
+camera_init (Camera *camera, GPContext *context) 
+{
+	return GP_OK;
+}
+
+int camera_abilities (CameraAbilitiesList *list)
+{
+	return GP_OK;
+}
+#endif
+
+int
+camera_id (CameraText *id) 
+{
+	strcpy(id->text, "Lumix Wifi");
+
+	return GP_OK;
 }
