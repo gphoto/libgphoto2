@@ -19,7 +19,7 @@
 #
 # Building the camlibs itself is defined in the Makefile-files
 # included below.
-SUBDIRS = . canon/doc konica/localization
+SUBDIRS = .
 
 
 ########################################################################
