@@ -44,24 +44,21 @@
 static int
 SONIX_READ (GPPort *port, char *data) 
 {
-	gp_port_usb_msg_interface_read(port, 0, 1, 0, data, 1);
-	return GP_OK;
+	return gp_port_usb_msg_interface_read(port, 0, 1, 0, data, 1);
 }
 
 /* This reads a 4-byte response to a command */
 static int
 SONIX_READ4 (GPPort *port, char *data) 
 {
-	gp_port_usb_msg_interface_read(port, 0, 4, 0, data, 4);
-	return GP_OK;
+	return gp_port_usb_msg_interface_read(port, 0, 4, 0, data, 4);
 }
 
 /* A command to the camera is a 6-byte string, and this sends it. */
 static int
 SONIX_COMMAND (GPPort *port, char *command) 
 {
-	gp_port_usb_msg_interface_write(port, 8, 2, 0, command ,6);	
-	return GP_OK;
+	return gp_port_usb_msg_interface_write(port, 8, 2, 0, command ,6);	
 }
 
 
@@ -88,7 +85,8 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 		i = 0;
 		
 		while ((unsigned)status > 0)  {
-			SONIX_READ(port, &status);
+			if (SONIX_READ(port, &status) < GP_OK)
+				break;
 			i++;
 			if (i==1000) break;
 		}
@@ -97,8 +95,10 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	SONIX_COMMAND ( port, c);
 
 
-	while (status !=2)
-		SONIX_READ(port, &status);	
+	while (status !=2) {
+		if (SONIX_READ(port, &status) < GP_OK)
+			break;
+	}
 		
 	/* FIXME(Marcus): was indented at above level, unclear if it is needed this way ... */
 	SONIX_READ(port, &status);
@@ -117,7 +117,8 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 
 	while (!reading[1]&&!reading[2]&&!reading[3]) {
 		c[0]=0x16; 
-		SONIX_COMMAND ( port, c );
+		if (SONIX_COMMAND ( port, c ) < GP_OK)
+			break;
 		/*
 		 * For the Vivicam 3350b this always gives
 		 * 96 0a 76 07. This is apparently the firmware version. 
@@ -129,7 +130,8 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 		 * Spy Camera 70137 it is 96 01 31 09.  Since the cameras
 		 * have different abilities, we ought to distinguish. 
 		 */
-		SONIX_READ4 (port, (char *)reading);
+		if (SONIX_READ4 (port, (char *)reading) < GP_OK)
+			break;
 	}
 	GP_DEBUG("%02x %02x %02x %02x\n", reading[0], reading[1],
 		 reading[2], reading[3]);
