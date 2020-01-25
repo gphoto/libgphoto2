@@ -1268,6 +1268,8 @@
   { "Nokia", 0x2e04, "6", 0xc025, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1783/ */
   { "Nokia", 0x2e04, "6.1", 0xc026, DEVICE_FLAGS_ANDROID_BUGS },
+  /* ndim from gphoto */
+  { "Nokia", 0x2e04, "6.2", 0xc02a, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Qualcomm
@@ -3742,6 +3744,7 @@
   { "Garmin", 0x091e, "Venu", 0x4c9a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1852/ */
   { "Garmin", 0x091e, "Fenix 6", 0x4cda, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Fenix 6 Sapphire", 0x4cdb, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Wacom
