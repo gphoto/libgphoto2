@@ -114,6 +114,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
+		camera->pl = NULL;
 		return ret;
 	}
 	if (!camera->pl->num_pics) 
@@ -168,6 +169,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
+		camera->pl = NULL;
 		return ret;
 	}
 	if(!camera->pl->num_pics) {
@@ -211,6 +213,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
+		camera->pl = NULL;
 		return ret;
 	}
 	if(!camera->pl->num_pics) {
@@ -463,6 +466,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
+		camera->pl = NULL;
 		return ret;
 	}
 	sonix_delete_all_pics (camera->port);
@@ -480,6 +484,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
+		camera->pl = NULL;
 		return ret;
 	}
 	if (camera->pl->fwversion[1] == 0x0a)
@@ -505,6 +510,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
+		camera->pl = NULL;
 		return ret;
 	}
 	if (!(camera->pl->can_do_capture)) {
