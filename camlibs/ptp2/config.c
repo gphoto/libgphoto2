@@ -5254,6 +5254,24 @@ static struct deviceproptableu8 nikon_d850_compression[] = {
 };
 GENERIC8TABLE(Nikon_D850_Compression,nikon_d850_compression)
 
+static struct deviceproptableu8 nikon_d7500_compression[] = {
+	{ N_("JPEG Basic"),  0x00, PTP_VENDOR_NIKON },
+	{ N_("JPEG Basic*"), 0x01, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal"), 0x02, PTP_VENDOR_NIKON },
+	{ N_("JPEG Normal*"),   0x03, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine"),   0x04, PTP_VENDOR_NIKON },
+	{ N_("JPEG Fine*"),   0x05, PTP_VENDOR_NIKON },
+	{ N_("TIFF"),   0x06, PTP_VENDOR_NIKON },
+	{ N_("NEF(RAW)"),   0x07, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic"),   0x08, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic*"),   0x09, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal"),   0x0A, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal*"),   0x0B, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),   0x0C, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine*"),   0x0D, PTP_VENDOR_NIKON },
+};
+GENERIC8TABLE(Nikon_D7500_Compression,nikon_d7500_compression)
+
 static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("JPEG Basic"),	0x00, PTP_VENDOR_NIKON },
 	{ N_("JPEG Normal"),	0x01, PTP_VENDOR_NIKON },
@@ -5262,7 +5280,6 @@ static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
 	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
-
 	{ N_("Standard"),		0x02, PTP_VENDOR_SONY },
 	{ N_("Fine"),			0x03, PTP_VENDOR_SONY },
 	{ N_("Extra Fine"),		0x04, PTP_VENDOR_SONY },
@@ -8495,6 +8512,11 @@ static struct submenu nikon_d850_capture_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+static struct submenu nikon_d7500_capture_settings[] = {
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7500_Compression, _put_Nikon_D7500_Compression },
+	{ 0,0,0,0,0,0,0 },
+};
+
 static struct submenu nikon_z6_capture_settings[] = {
 	{ N_("Image Quality"),          	"imagequality",		PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
 	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_Nikon_D850_FocusMetering },
@@ -8601,6 +8623,7 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0414, nikon_d40_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0441, nikon_d850_capture_settings,    NULL,   NULL },
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0440, nikon_d7500_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0442, nikon_z6_capture_settings,      NULL,   NULL },	/* Z7 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0443, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0,      nikon_generic_capture_settings, NULL,   NULL },
