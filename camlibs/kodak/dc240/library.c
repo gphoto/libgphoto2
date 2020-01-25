@@ -60,6 +60,10 @@
 
 #define GP_MODULE "dc240"
 
+/* do not sleep during fuzzing */
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define usleep(x)
+#endif
 
 /* legacy from dc240.h */
 /*
@@ -165,10 +169,13 @@ write_again:
 
     /* Read in the response from the camera if requested */
     while (read_response) {
-        if (gp_port_read(camera->port, in, 1) >= GP_OK) {
+	int ret;
+        if ((ret=gp_port_read(camera->port, in, 1)) >= GP_OK) {
             /* On error, read again */
 	    read_response = 0;
+            break;
 	}
+        if (ret == GP_ERROR_IO_READ) return ret; /* e.g. device detached? */
     }
 
     return GP_OK;
