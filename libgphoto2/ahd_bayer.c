@@ -581,8 +581,10 @@ int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 			for (i=-1; i < 2;i++) {
 				for (k=0; k < 3;k++) {
 					j=i+x+w*k; 
-					homo_ch[x]+=homo_h[j];
-					homo_cv[x]+=homo_v[j];
+					if ((j >= 0) && ( j < w*3)) {
+						homo_ch[x]+=homo_h[j];
+						homo_cv[x]+=homo_v[j];
+					}
 				}
 			}
 			for (color=0; color < 3; color++) {
