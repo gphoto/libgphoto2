@@ -465,7 +465,10 @@ static int dc240_get_file_size (Camera *camera, const char *folder, const char *
     if (dc240_packet_exchange(camera, f, p1, p2, &size, 256, context) < 0)
         size = 0;
     else {
-	gp_file_get_data_and_size (f, (const char**)&fdata, &fsize);
+	int ret;
+	ret = gp_file_get_data_and_size (f, (const char**)&fdata, &fsize);
+	if (ret < GP_OK) return ret;
+	if (!fdata || (fsize < 4)) return GP_ERROR;
         size = (fdata[offset]   << 24) |
                (fdata[offset+1] << 16) |
                (fdata[offset+2] << 8 ) |
@@ -805,7 +808,7 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
         thumb = 1;
         /* no break on purpose */
     case DC240_ACTION_IMAGE:
-        if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < 0) {
+        if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < GP_OK) {
             retval = GP_ERROR;
             break;
         }
