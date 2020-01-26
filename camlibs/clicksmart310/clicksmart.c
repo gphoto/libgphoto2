@@ -165,7 +165,7 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	remainder = size%0x200;
 
 	GP_DEBUG("size:  %x, remainder: %x\n", size, remainder);
-	*data = calloc(size,1);
+	*data = calloc(size + 0x100,1);
 	if (!*data) return GP_ERROR;
 	/* Download the data */
 	while (offset < size-remainder) {
