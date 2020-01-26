@@ -2,16 +2,18 @@ libgphoto2 2.5.23.1 development
 
 lumix:
 
-* New WIFI Lumix camera driver, using curl and libxml2.
+* New WIFI Lumix camera driver was added, using curl and libxml2.
 
-  Lots of abilities supported already, just capture is not working :/
-  Needs libxml2 and libcurl to be built.
+  Lots of abilities supported already, also capture preview.
+  However capture itself is not yet working :/
+  This driver needs libxml2 and libcurl to be built.
 
 ptp2:
 * Canon EOS: lock/unlock ui before more operations
 * Canon Powershot SX / EOS M: some setup adjustments to make powershot sx work better
 * Nikon Keymission 170: try override opcodes to allow capture
 * Nikon DSLR: fixed a regression where 5 seconds was longer image capture shutterspeed
+* Sony: adjusted manualfocusing not to autofocus
 * bugfixes
 * New ids added:
   * Sony Alpha RX100V, A7s, RX0 II,
@@ -23,7 +25,7 @@ ptp2:
 
 all:
 
-* fixed some fuzzer issues, mostly in "outdated" drivers.
+* fixed some issues found by AFL fuzzing, mostly in "outdated" drivers.
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.23 release
