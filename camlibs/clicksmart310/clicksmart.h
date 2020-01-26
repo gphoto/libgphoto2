@@ -35,7 +35,7 @@ struct _CameraPrivateLibrary {
 int clicksmart_init             (GPPort *port, CameraPrivateLibrary *priv);
 int clicksmart_get_res_setting  (CameraPrivateLibrary *priv, int n);
 int clicksmart_read_pic_data 	(CameraPrivateLibrary *priv,
-					GPPort *port, unsigned char *data, 
+					GPPort *port, unsigned char **data,
 							    int n);
 int clicksmart_delete_all_pics  (GPPort *port);
 
