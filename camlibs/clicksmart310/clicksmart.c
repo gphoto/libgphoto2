@@ -86,9 +86,9 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	CLICKSMART_READ_STATUS (port, &c);
 	gp_port_usb_msg_interface_write(port, 6, 0, 9, NULL, 0);
 	while (c != 1) {
-		if (GP_OK > CLICKSMART_READ_STATUS (port, &c)) {
-			return GP_ERROR_IO;
-		}
+		int r;
+		if ((r = CLICKSMART_READ_STATUS (port, &c)) < GP_OK)
+			return r;
 	}
 	buffer = malloc(0x200);
 	if (!buffer) {
