@@ -14,7 +14,9 @@ libgphoto2 only processes images to provide standard formats. For JPEG
 images the libexif library is used for extraction of EXIF data.
 
 Callers of the library can be assumed trusted, also input coming into
-the library is considered trusted.
+the library via API calls is considered trusted.
+
+Data coming from port drivers (USB, serial, IP, etc) is considered untrusted.
 
 Historically the primary development goals was "make it work", without
 security in mind.
