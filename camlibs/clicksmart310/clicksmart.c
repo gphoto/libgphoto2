@@ -149,7 +149,9 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	gp_port_usb_msg_interface_write(port, 6, 0x1fff - n, 1, NULL, 0);
 	c = 0;
 	while (c != 1){
-	  CLICKSMART_READ_STATUS (port, &c);
+	  int r;
+	  if ((r = CLICKSMART_READ_STATUS (port, &c)) < GP_OK)
+		return r;
 	}
 	/* Get the size of the data and calculate the size to download, which
 	 * is the next multiple of 0x100. Only for the hi-res photos is the 
