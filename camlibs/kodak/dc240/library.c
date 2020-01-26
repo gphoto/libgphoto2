@@ -760,6 +760,11 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
     num_of_entries = be16atoh(&fdata [0]) + 1;
     total_size = 2 + (num_of_entries * 20);
     GP_DEBUG ("number of file entries : %d, size = %ld", num_of_entries, fsize);
+    if (total_size > fsize) {
+        GP_DEBUG ("total_size %d > fsize %ld", total_size, fsize);
+	gp_file_free (file);
+        return GP_ERROR;
+    }
     for (x = 2; x < total_size; x += 20) {
         if ((fdata[x] != '.') && (attrib == (unsigned char)fdata[x+11]))  {
             /* Files have attrib 0x00, Folders have attrib 0x10 */
