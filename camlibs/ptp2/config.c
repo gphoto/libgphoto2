@@ -5261,13 +5261,13 @@ static struct deviceproptableu8 nikon_d7500_compression[] = {
 	{ N_("JPEG Normal*"),   0x03, PTP_VENDOR_NIKON },
 	{ N_("JPEG Fine"),   0x04, PTP_VENDOR_NIKON },
 	{ N_("JPEG Fine*"),   0x05, PTP_VENDOR_NIKON },
-	{ N_("NEF (Raw)"),   0x06, PTP_VENDOR_NIKON },
-	{ N_("NEF+Basic"),   0x07, PTP_VENDOR_NIKON },
-	{ N_("NEF+Basic*"),   0x08, PTP_VENDOR_NIKON },
-	{ N_("NEF+Normal"),   0x09, PTP_VENDOR_NIKON },
-	{ N_("NEF+Normal*"),   0x0A, PTP_VENDOR_NIKON },
-	{ N_("NEF+Fine"),   0x0B, PTP_VENDOR_NIKON },
-	{ N_("NEF+Fine*"),   0x0C, PTP_VENDOR_NIKON },
+	{ N_("NEF (Raw)"),   0x07, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic"),   0x08, PTP_VENDOR_NIKON },
+	{ N_("NEF+Basic*"),   0x09, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal"),   0x0A, PTP_VENDOR_NIKON },
+	{ N_("NEF+Normal*"),   0x0B, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine"),   0x0C, PTP_VENDOR_NIKON },
+	{ N_("NEF+Fine*"),   0x0D, PTP_VENDOR_NIKON },
 };
 GENERIC8TABLE(Nikon_D7500_Compression,nikon_d7500_compression)
 
@@ -8513,7 +8513,7 @@ static struct submenu nikon_d850_capture_settings[] = {
 };
 
 static struct submenu nikon_d7500_capture_settings[] = {
-	{ N_("Image Quality"),          	"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7500_Compression,       _put_Nikon_D7500_Compression },	
+	{ N_("Image Quality"),          	"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7500_Compression,       _put_Nikon_7500_Compression },
 	{ 0,0,0,0,0,0,0 },
 };
 
