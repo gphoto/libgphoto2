@@ -1514,6 +1514,10 @@ static struct {
 
 	/* Marcus Meissner */
 	{"Nikon:Z6",                	  0x04b0, 0x0443, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Daniel Baertschi <daniel@avisec.ch> */
+	{"Nikon:Z50",                	  0x04b0, 0x0444, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Schreiber, Steve via Gphoto-devel */
 	{"Nikon:DSC D3500",		  0x04b0, 0x0445, PTP_CAP|PTP_CAP_PREVIEW},
 
