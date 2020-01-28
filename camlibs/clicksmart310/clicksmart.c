@@ -53,8 +53,7 @@ CLICKSMART_READ (GPPort *port, int index, char *data)
 static int 
 CLICKSMART_READ_STATUS (GPPort *port, char *data) 
 {		
-	gp_port_usb_msg_interface_read(port, 0, 0, CS_CH_READY, data, 1);
-	return GP_OK;
+	return gp_port_usb_msg_interface_read(port, 0, 0, CS_CH_READY, data, 1);
 }
 
 int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
@@ -86,8 +85,11 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	
 	CLICKSMART_READ_STATUS (port, &c);
 	gp_port_usb_msg_interface_write(port, 6, 0, 9, NULL, 0);
-	while (c != 1)
-		CLICKSMART_READ_STATUS (port, &c);
+	while (c != 1) {
+		int r;
+		if ((r = CLICKSMART_READ_STATUS (port, &c)) < GP_OK)
+			return r;
+	}
 	buffer = malloc(0x200);
 	if (!buffer) {
 		free (temp_catalog);
@@ -131,7 +133,7 @@ int clicksmart_get_res_setting (CameraPrivateLibrary *priv, int n)
 
 int 
 clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port, 
-					unsigned char *data, int n) 
+					unsigned char **data, int n) 
 {
 	int offset=0;
 	char c;
@@ -147,7 +149,9 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	gp_port_usb_msg_interface_write(port, 6, 0x1fff - n, 1, NULL, 0);
 	c = 0;
 	while (c != 1){
-	  CLICKSMART_READ_STATUS (port, &c);
+	  int r;
+	  if ((r = CLICKSMART_READ_STATUS (port, &c)) < GP_OK)
+		return r;
 	}
 	/* Get the size of the data and calculate the size to download, which
 	 * is the next multiple of 0x100. Only for the hi-res photos is the 
@@ -161,17 +165,20 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	remainder = size%0x200;
 
 	GP_DEBUG("size:  %x, remainder: %x\n", size, remainder);
+	*data = calloc(size + 0x100,1);
+	if (!*data) return GP_ERROR;
 	/* Download the data */
 	while (offset < size-remainder) {
 	  GP_DEBUG("offset: %x\n", offset);
-	  gp_port_read(port, (char *)data + offset, 0x200);
+	  if (gp_port_read(port, (char *)*data + offset, 0x200) < GP_OK)
+		break;
 	  offset = offset + 0x200;
 	}
 
 	remainder=((remainder+0xff)/0x100)*0x100;
 	GP_DEBUG("Second remainder: %x\n", remainder);
 	if (remainder) 
-		gp_port_read(port, (char *)data + offset, remainder);
+		gp_port_read(port, (char *)*data + offset, remainder);
 
 	gp_port_usb_msg_interface_read(port, 0, 0, CS_READCLOSE, &c, 1);
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);
@@ -183,7 +190,7 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	 */
 	
 	if (priv->catalog[16*n]) {
-		while ( data[size-1] == 0)
+		while ( (*data)[size-1] == 0)
 			size--;
 	}
 	return size;

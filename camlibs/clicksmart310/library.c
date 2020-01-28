@@ -195,12 +195,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR;		
 	}
 
-	data = malloc (w*h);
-	if(!data)
-		return GP_ERROR_NO_MEMORY;
+	data = NULL;
 
 	GP_DEBUG("Fetch entry %i\n", k);
-	b = clicksmart_read_pic_data (camera->pl, camera->port, data, k);
+	b = clicksmart_read_pic_data (camera->pl, camera->port, &data, k);
 
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
 		gp_file_set_mime_type (file, GP_MIME_RAW);

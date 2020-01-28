@@ -60,6 +60,10 @@
 
 #define GP_MODULE "dc240"
 
+/* do not sleep during fuzzing */
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define usleep(x)
+#endif
 
 /* legacy from dc240.h */
 /*
@@ -165,10 +169,13 @@ write_again:
 
     /* Read in the response from the camera if requested */
     while (read_response) {
-        if (gp_port_read(camera->port, in, 1) >= GP_OK) {
+	int ret;
+        if ((ret=gp_port_read(camera->port, in, 1)) >= GP_OK) {
             /* On error, read again */
 	    read_response = 0;
+            break;
 	}
+        if (ret == GP_ERROR_IO_READ) return ret; /* e.g. device detached? */
     }
 
     return GP_OK;
@@ -458,7 +465,10 @@ static int dc240_get_file_size (Camera *camera, const char *folder, const char *
     if (dc240_packet_exchange(camera, f, p1, p2, &size, 256, context) < 0)
         size = 0;
     else {
-	gp_file_get_data_and_size (f, (const char**)&fdata, &fsize);
+	int ret;
+	ret = gp_file_get_data_and_size (f, (const char**)&fdata, &fsize);
+	if (ret < GP_OK) return ret;
+	if (!fdata || (fsize < 4)) return GP_ERROR;
         size = (fdata[offset]   << 24) |
                (fdata[offset+1] << 16) |
                (fdata[offset+2] << 8 ) |
@@ -753,6 +763,11 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
     num_of_entries = be16atoh(&fdata [0]) + 1;
     total_size = 2 + (num_of_entries * 20);
     GP_DEBUG ("number of file entries : %d, size = %ld", num_of_entries, fsize);
+    if (total_size > fsize) {
+        GP_DEBUG ("total_size %d > fsize %ld", total_size, fsize);
+	gp_file_free (file);
+        return GP_ERROR;
+    }
     for (x = 2; x < total_size; x += 20) {
         if ((fdata[x] != '.') && (attrib == (unsigned char)fdata[x+11]))  {
             /* Files have attrib 0x00, Folders have attrib 0x10 */
@@ -793,7 +808,7 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
         thumb = 1;
         /* no break on purpose */
     case DC240_ACTION_IMAGE:
-        if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < 0) {
+        if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < GP_OK) {
             retval = GP_ERROR;
             break;
         }

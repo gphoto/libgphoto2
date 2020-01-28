@@ -95,7 +95,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 		printf ("Could not get file.\n");
 		return ret;
 	}
-	gp_file_free (file);
+	gp_file_unref (file);
 	/* get preview */
 	gp_file_new (&file);
 	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_PREVIEW, file, context);
@@ -104,7 +104,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 		printf ("Could not get file preview.\n");
 		return ret;
 	}
-	gp_file_free (file);
+	gp_file_unref (file);
 	/* get exif */
 	gp_file_new (&file);
 	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_EXIF, file, context);
@@ -113,7 +113,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 		printf ("Could not get file preview.\n");
 		return ret;
 	}
-	gp_file_free (file);
+	gp_file_unref (file);
 	/* Trigger the ptp things */
 	gp_file_new (&file);
 	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_METADATA, file, context);
@@ -122,7 +122,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 		printf ("Could not get file metadata.\n");
 		return ret;
 	}
-	gp_file_free (file);
+	gp_file_unref (file);
 	if (foundfile) *foundfile = 1;
 	gp_list_free (list);
 	return GP_OK;

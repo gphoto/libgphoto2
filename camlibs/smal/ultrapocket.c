@@ -169,7 +169,7 @@ getpicture_logitech_pd(Camera *camera, GPContext *context, unsigned char **rd, c
     unsigned char *rawdata;
     int            ptc,pc,id;
 
-    memcpy(command+3, filename, 11); /* the id of the image to transfer */
+    strncpy(command+3, filename, 11); /* the id of the image to transfer */
 
     CHECK_RESULT(ultrapocket_command(port, 1, command, 0x10));
 

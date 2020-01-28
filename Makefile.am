@@ -6,7 +6,7 @@
 bin_SCRIPTS = gphoto2-config
 
 EXTRA_DIST = MAINTAINERS TESTERS installcheck.mk
-EXTRA_DIST += HACKING.md
+EXTRA_DIST += HACKING.md SECURITY.md
 
 # Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
 SUBDIRS = @subdirs@ libgphoto2 camlibs tests examples po packaging doc gphoto-m4

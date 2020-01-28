@@ -5279,7 +5279,6 @@ static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
 	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
-
 	{ N_("Standard"),		0x02, PTP_VENDOR_SONY },
 	{ N_("Fine"),			0x03, PTP_VENDOR_SONY },
 	{ N_("Extra Fine"),		0x04, PTP_VENDOR_SONY },
@@ -8513,7 +8512,7 @@ static struct submenu nikon_d850_capture_settings[] = {
 };
 
 static struct submenu nikon_d7500_capture_settings[] = {
-	{ N_("Image Quality"),          	"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7500_Compression,       _put_Nikon_7500_Compression },
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7500_Compression, _put_Nikon_D7500_Compression },
 	{ 0,0,0,0,0,0,0 },
 };
 
