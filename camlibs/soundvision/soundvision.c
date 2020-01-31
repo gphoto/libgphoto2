@@ -322,6 +322,7 @@ static int camera_summary(Camera *camera, CameraText *summary,
 
     char revision[9];
    
+    revision[0]=0;
     soundvision_reset(camera->pl,revision,NULL);
    
     if (camera->pl->device_type==SOUNDVISION_TIGERFASTFLICKS) {
