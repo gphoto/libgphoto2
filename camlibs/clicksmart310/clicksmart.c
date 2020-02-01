@@ -161,6 +161,8 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	size=(priv->catalog[16*n + 12] * 0x100)+(priv->catalog[16*n + 11]);
 	if (size == 0)	/* for lo-res photos the above calculation gives 0 */
 	  size = (priv->catalog[16*n + 5] * 0x100);
+	if (size == 0)	/* this means data corruption */
+          return GP_ERROR;
 
 	remainder = size%0x200;
 
