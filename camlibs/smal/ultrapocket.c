@@ -35,6 +35,10 @@
 #include "ultrapocket.h"
 #include "smal.h"
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define sleep(x) 
+#endif
+
 #define GP_MODULE "Smal Ultrapocket"
 
 #include <locale.h>
