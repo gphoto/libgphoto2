@@ -2443,6 +2443,8 @@ static struct {
 	{"GoPro:HERO6 Black",			0x2672, 0x0037, 0},
 	/* Rasmus Larsson <larsson.rasmus@gmail.com> */
 	{"GoPro:HERO7 White",			0x2672, 0x0042, 0},
+	/* Marcus Meissner */
+	{"GoPro:HERO7 Silver",			0x2672, 0x0043, 0},
 	/* https://sourceforge.net/p/libmtp/feature-requests/284/ */
 	{"GoPro:HERO7 Black",			0x2672, 0x0047, 0},
 	/* https://sourceforge.net/p/libmtp/bugs/1858/ */
