@@ -226,6 +226,7 @@ spca50x_get_image (CameraPrivateLibrary * lib, uint8_t ** buf,
 	int omit_escape = 0;
 
 	p = g_file->fat;
+	if (!p) return GP_ERROR;
 
 	/* get the position in memory where the image is */
 	start = (p[1] & 0xff) + (p[2] & 0xff) * 0x100;

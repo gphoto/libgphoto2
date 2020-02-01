@@ -330,7 +330,10 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 			CHECK (spca50x_sdram_get_info (camera->pl));
 
 		for (i = 0; i < camera->pl->num_files_on_sdram; i++) {
-			strncpy (temp_file, camera->pl->files[i].name, 12);
+			if (camera->pl->files[i].name)
+				strncpy (temp_file, camera->pl->files[i].name, 12);
+			else
+				strcpy (temp_file, "BAD.BAD");
 			temp_file[12] = 0;
 			gp_list_append (list, temp_file, NULL);
 		}
