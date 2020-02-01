@@ -30,6 +30,11 @@
 #define	GP_MODULE	"pdrm11"
 #define	ETIMEDOUT	110
 
+/* do not sleep during fuzzing */
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+# define usleep(x)
+#endif
+
 static int pdrm11_select_file(GPPort *port, uint16_t file);
 
 int pdrm11_init(GPPort *port)
