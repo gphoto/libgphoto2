@@ -7621,9 +7621,13 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 			ob->oi.ParentObject = 0;
 
 		/* Apple iOS X does that for the root folder. */
-		if (ob->oi.ParentObject == ob->oi.StorageID) {
-			ptp_debug (params, "parent %08x of %s has same id as storage id. rewriting to 0.", ob->oi.ParentObject, ob->oi.Filename);
-			ob->oi.ParentObject = 0;
+		if ((ob->oi.ParentObject == ob->oi.StorageID)) {
+			PTPObject *parentob;
+
+			if (ptp_object_find (params, ob->oi.ParentObject, &parentob) != PTP_RC_OK) {
+				ptp_debug (params, "parent %08x of %s has same id as storage id. and no object found ... rewriting to 0.", ob->oi.ParentObject, ob->oi.Filename);
+				ob->oi.ParentObject = 0;
+			}
 		}
 
 		/* Read out the canon special flags */

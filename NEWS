@@ -15,6 +15,7 @@ ptp2:
 * Nikon DSLR: fixed a regression where 5 seconds was longer image capture shutterspeed
 * Sony: adjusted manualfocusing not to autofocus
 * bugfixes
+* GoPro: fixed files not appearing
 * New ids added:
   * Sony Alpha RX100V, A7s, RX0 II,
   * Nikon Z50, Coolpix L810, KeyMission 170
