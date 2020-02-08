@@ -511,7 +511,7 @@ pdc640_processtn (int width, int height, unsigned char **data, int size) {
 	int y;
 
 	/* Sanity checks */
-	if ((data == NULL) || (size < width * height))
+	if ((data == NULL) || (size  / width < height))
 		return (GP_ERROR_CORRUPTED_DATA);
 
 	/* Allocate a new buffer */
