@@ -97,7 +97,8 @@ spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index,
 					 SPCA50X_FAT_PAGE_SIZE, p));
 			break;
 		default:
-			break;
+			gp_log(GP_LOG_ERROR, "spca50x", "spca50x_sdram_get_fat_page: dramtype %d unhandled", dramtype);
+			return GP_ERROR;
 	}
 
 	return GP_OK;
