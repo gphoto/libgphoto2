@@ -57,6 +57,10 @@
 #  define N_(String) (String)
 #endif
 
+#ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+#define sleep(x)
+#endif
+
 #define GP_MODULE "gsmart300"
 static int gsmart300_download_data (CameraPrivateLibrary * lib,
 		int data_type, uint16_t index, unsigned int size,
