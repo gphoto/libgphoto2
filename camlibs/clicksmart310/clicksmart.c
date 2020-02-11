@@ -192,7 +192,7 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	 */
 	
 	if (priv->catalog[16*n]) {
-		while ( (*data)[size-1] == 0)
+		while ((size > 1) && (*data)[size-1] == 0)
 			size--;
 	}
 	return size;
