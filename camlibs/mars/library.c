@@ -233,10 +233,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Now increase b from "actual size" to _downloaded_ size. */
 	b = ((b+ 0x1b0)/0x2000 + 1) * 0x2000;
 
-	data = malloc (b);
+	if (w*h > b) {
+		GP_DEBUG ("w=%d, h=%d, w*h=%d, bytes read=%d\n", w,h,w*h,b); 
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
+	data = calloc (b,1);
 	if (!data) return GP_ERROR_NO_MEMORY;
-    	memset (data, 0, b);
-	GP_DEBUG ("buffersize= %i = 0x%x butes\n", b,b); 
+
+	GP_DEBUG ("buffersize= %i = 0x%x bytes\n", b,b); 
 
 	mars_read_picture_data (camera, camera->pl->info, 
 					    camera->port, (char *)data, b, k);
@@ -290,10 +295,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_OK;
 	}
 
-	p_data = malloc (w * h);
+	p_data = calloc (w,h);
 	if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
-	memset (p_data, 0, w * h);
-		
+
+
 	if (compressed) {
 		mars_decompress (data + 12, p_data, w, h);
 	}
