@@ -146,6 +146,11 @@ gsmart300_request_file (CameraPrivateLibrary * lib, CameraFile *file,
 
 	file_size = data_size + GSMART_JPG_DEFAULT_HEADER_LENGTH + 1024 * 10;
 
+	if (flash_size < data_size) {
+		GP_DEBUG("flash_size %d is smaller than data_size %d\n", flash_size, data_size);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
 	/* slurp in the image */
 	mybuf = malloc (flash_size);
 	if (!mybuf)
