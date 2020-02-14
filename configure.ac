@@ -670,14 +670,15 @@ dnl with ac_file set to the filename.
 ])
 AC_OUTPUT
 
-if test "x$CDPATH" != "x"
-then
-        echo
-        echo "***********************************************************"
-        echo "* You have CDPATH set. You may have to run \"unset CDPATH\" *"
-        echo "* before running \"make dist\" or \"make rpm\".               *"
-        echo "***********************************************************"
-fi
+AS_IF([test "x$CDPATH" != "x"], [dnl
+  AC_MSG_WARN([
+
+    #=========================================================#
+    # You have CDPATH set. You may have to run "unset CDPATH" #
+    # before running "make dist" or "make rpm".               #
+    #=========================================================#
+])
+])dnl
 
 GP_CONFIG_OUTPUT
 
@@ -690,11 +691,12 @@ else
    GP_CAMLIBS_WARNING
 fi
 
-echo "Please check whether the configuration I detected matches what you
-would like to have. E.g. make sure that USB support is there if you
-intend to use USB cameras with $PACKAGE_NAME.
+cat<<_GP_EOF
+Please check whether the configuration I have detected matches what
+you would like to have. E.g. make sure that USB support is there if
+you intend to use USB cameras with ${PACKAGE_NAME}.
 
 Please also check that PKG_CONFIG_PATH contains
-    ${pkgconfigdir} 
+    ${pkgconfigdir}
 before compiling any libgphoto2 frontend.
-"
+_GP_EOF
