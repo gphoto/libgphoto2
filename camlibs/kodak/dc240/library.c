@@ -708,16 +708,21 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *contex
     retval = dc240_packet_exchange(camera, file, p, NULL, &size, 256, context);
 
     if (retval == GP_OK) {
-	gp_file_get_data_and_size (file, &fdata, &fsize);
+	retval = gp_file_get_data_and_size (file, &fdata, &fsize);
+	if (retval != GP_OK) goto exit; 
 	if (fsize != 256) {
 	    GP_DEBUG ("wrong status packet size ! Size is %ld", fsize);
+	    retval = GP_ERROR;
+	    goto exit;
 	}
 	if (fdata [0] != 0x01) { /* see 2.6 for why 0x01 */
 	    GP_DEBUG ("not a status table. Is %d", fdata [0]);
+	    retval = GP_ERROR;
+	    goto exit;
 	}
 	dc240_load_status_data_to_table ((uint8_t *)fdata, table);
     }
-
+exit:
     gp_file_free(file);
     free (p);
 
