@@ -380,11 +380,11 @@ gsmart300_get_FATs (CameraPrivateLibrary * lib)
 
 	if (lib->fats)
 		free (lib->fats);
-	lib->fats = malloc ((lib->num_files) * FLASH_PAGE_SIZE_300);
+	lib->fats = calloc (lib->num_files,FLASH_PAGE_SIZE_300);
 
 	if (lib->files)
 		free (lib->files);
-	lib->files = malloc (lib->num_files * sizeof (struct GsmartFile));
+	lib->files = calloc (lib->num_files,sizeof (struct GsmartFile));
 
 	p = lib->fats;
 

@@ -247,6 +247,7 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 		CHECK (gsmart300_get_info (camera->pl));
 
 	for (i = 0; i < camera->pl->num_files; i++) {
+		if (!camera->pl->files[i].name) continue; /* had a bad directory entry */
 		strncpy (temp_file, camera->pl->files[i].name, 12);
 		temp_file[12] = 0;
 		gp_list_append (list, temp_file, NULL);
