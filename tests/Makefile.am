@@ -34,6 +34,17 @@ test_endian_LDADD = \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
 
+
+noinst_PROGRAMS += print-libgphoto2-version
+print_libgphoto2_version_SOURCE = print-libgphoto2-version.c
+print_libgphoto2_version_LDADD =
+print_libgphoto2_version_LDADD += $(top_builddir)/libgphoto2/libgphoto2.la
+print_libgphoto2_version_LDADD += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la
+print_libgphoto2_version_LDADD += $(LIBLTDL)
+print_libgphoto2_version_LDADD += $(LIBEXIF_LIBS)
+print_libgphoto2_version_LDADD += $(INTLLIBS)
+
+
 noinst_PROGRAMS += test-gphoto2
 test_gphoto2_SOURCE = test-gphoto2.c
 test_gphoto2_LDADD = \
