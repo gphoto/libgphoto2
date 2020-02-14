@@ -71,6 +71,7 @@ include dimera/Makefile-files
 include directory/Makefile-files
 include enigma13/Makefile-files
 include fuji/Makefile-files
+include gopro/Makefile-files
 include gsmart300/Makefile-files
 include hp215/Makefile-files
 include iclick/Makefile-files

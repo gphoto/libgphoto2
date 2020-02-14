@@ -497,6 +497,7 @@ GP_CAMLIB([dimera3500],[outdated])dnl
 GP_CAMLIB([directory])dnl
 GP_CAMLIB([enigma13],[outdated])dnl
 GP_CAMLIB([fuji],[outdated])dnl
+GP_CAMLIB([gopro])dnl
 GP_CAMLIB([gsmart300],[outdated])dnl
 GP_CAMLIB([hp215],[outdated])dnl
 GP_CAMLIB([iclick],[outdated])dnl

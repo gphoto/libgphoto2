@@ -1,0 +1,12 @@
+# -*- Makefile -*-
+
+EXTRA_DIST += gopro/README.gopro
+noinst_DATA += gopro/README.gopro
+
+EXTRA_LTLIBRARIES += gopro.la
+
+gopro_la_SOURCES = gopro/gopro.c
+gopro_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) $(LIBCURL_CFLAGS)
+gopro_la_LDFLAGS = $(camlib_ldflags)
+gopro_la_DEPENDENCIES = $(camlib_dependencies)
+gopro_la_LIBADD = $(camlib_libadd) $(LIBCURL_LIBS)
