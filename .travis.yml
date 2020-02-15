@@ -25,9 +25,9 @@ compiler:
 script:
  - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f
  - date; ls -l configure
- - ./configure --enable-vusb && make && make check && sudo PATH=$PATH make install && examples/sample-afl && make clean
+ - ./configure --enable-vusb && make && if make check; then :; else cat libgphoto2_port/test/test-suite.log test/test-suite.log; false; fi && sudo PATH=$PATH make install && examples/sample-afl && make clean
  - date; ls -l configure
- - ./configure --enable-vusb --with-camlibs=all,outdated,jd11 && make && make check && sudo PATH=$PATH make install && examples/sample-afl && make clean
+ - ./configure --enable-vusb --with-camlibs=all,outdated,jd11 && make && if make check; then :; else cat libgphoto2_port/test/test-suite.log test/test-suite.log; false; fi && sudo PATH=$PATH make install && examples/sample-afl && make clean
 
 notifications:
   email:
