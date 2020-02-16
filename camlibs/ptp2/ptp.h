@@ -2369,14 +2369,29 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_SensorCrop				0xD219
 #define PTP_DPC_SONY_PictureEffect			0xD21B
 #define PTP_DPC_SONY_ABFilter				0xD21C
-#define PTP_DPC_SONY_ISO				0xD21E /* ? */
+#define PTP_DPC_SONY_ISO				0xD21E	/* ? */
+#define PTP_DPC_SONY_StillImageStoreDestination		0xD222  /* (type=0x4) Enumeration [1,17,16] value: 17 */
+/* guessed DPC_SONY_DateTimeSettings 0xD223  error on query */
+/* guessed DPC_SONY_FocusArea 0xD22C  (type=0x4) Enumeration [1,2,3,257,258,259,260,513,514,515,516,517,518,519,261,520] value: 1 */
+/* guessed DPC_SONY_LiveDisplayEffect 0xD231 (type=0x2) Enumeration [1,2] value: 1 */
+/* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
+/* guessed DPC_SONY_JpegQuality 0xD252 */
+/* guessed DPC_SONY_PriorityKeySettings 0xD25A */
 #define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */
 /* also seen: D2C3 D2C4 */
+/* AEL - d2c3
+ * FEL - d2c9
+ * AFL - d2c4
+ * AWBL - d2d9
+ */
 /* semi control opcodes */
 #define PTP_DPC_SONY_Movie				0xD2C8 /* ? */
 #define PTP_DPC_SONY_StillImage				0xD2C7 /* ? */
 
+#define PTP_DPC_SONY_NearFar				0xD2D1
+
+#define PTP_DPC_SONY_AF_Area_Position			0xD2DC
 
 
 /* Casio EX-F1 */

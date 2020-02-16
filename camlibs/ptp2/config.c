@@ -6934,7 +6934,7 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 		else if(val <= 6.0) xpropval.u16 = 6;
 		else if(val <= 7.0) xpropval.u16 = 7;
 		else xpropval.u16 = 0;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d1, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_NearFar, &xpropval, PTP_DTC_UINT16));
 	} else {
 		xpropval.u16 = 1;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
@@ -7574,6 +7574,13 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 	}
 	return GP_OK;
 }
+
+static struct deviceproptableu16 sony_capturetarget[] = {
+	{ "sdram",		0x0001, 0 },
+	{ "card",		0x0010, 0 },
+	{ "card+sdram",		0x0011, 0 },
+};
+GENERIC16TABLE(Sony_CaptureTarget,sony_capturetarget)
 
 static struct {
 	char	*name;
@@ -8286,6 +8293,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Autofocus"),		"autofocus",    0,  PTP_VENDOR_NIKON,   0,  _get_Autofocus,         _put_Autofocus },
 	{ N_("Capture Target"),		"capturetarget",0,  PTP_VENDOR_CANON,   0,  _get_CaptureTarget,     _put_CaptureTarget },
 	{ N_("Capture Target"),		"capturetarget",0,  PTP_VENDOR_PANASONIC,0, _get_CaptureTarget,     _put_CaptureTarget },
+	{ N_("Capture Target"),		"capturetarget",PTP_DPC_SONY_StillImageStoreDestination,  PTP_VENDOR_SONY,0, _get_Sony_CaptureTarget,     _put_Sony_CaptureTarget },
 	{ N_("CHDK"),     		"chdk",		PTP_OC_CHDK,  PTP_VENDOR_CANON,   0,  _get_CHDK,     _put_CHDK },
 	{ N_("Capture"),		"capture",	0,  PTP_VENDOR_CANON,   0,  _get_Canon_CaptureMode, _put_Canon_CaptureMode },
 	{ N_("Remote Mode"),		"remotemode",	PTP_OC_CANON_EOS_SetRemoteMode,  PTP_VENDOR_CANON,   0,  _get_Canon_RemoteMode, _put_Canon_RemoteMode },
