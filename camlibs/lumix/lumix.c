@@ -27,17 +27,13 @@
 
 #include <string.h>
 #include <errno.h>
-#ifdef HAVE_LIBCURL
-# include <curl/curl.h>
-#endif
+#include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef HAVE_LIBXML2
-# include <libxml/parser.h>
-# include <libxml/tree.h>
-# include <libxml/xmlmemory.h>
-# include <libxml/xmlreader.h>
-#endif
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <libxml/xmlmemory.h>
+#include <libxml/xmlreader.h>
 
 
 #include <sys/socket.h>
@@ -87,7 +83,6 @@
 #  define N_(String) (String)
 #endif
 
-#if defined(HAVE_LIBCURL) && defined(HAVE_LIBXML2)
 
 char* CDS_Control  = ":60606/Server0/CDS_control";
 int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
@@ -1919,19 +1914,6 @@ camera_init (Camera *camera, GPContext *context)
 		return GP_ERROR_IO;
 }
 
-#else
-/* no XML2 or no CURL -> no camera here */
-int
-camera_init (Camera *camera, GPContext *context) 
-{
-	return GP_OK;
-}
-
-int camera_abilities (CameraAbilitiesList *list)
-{
-	return GP_OK;
-}
-#endif
 
 int
 camera_id (CameraText *id) 

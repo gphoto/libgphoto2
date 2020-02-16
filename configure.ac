@@ -1,5 +1,5 @@
 dnl Process this file with autoreconf to produce a configure script.
-AC_PREREQ(2.59)
+AC_PREREQ(2.62)
 
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
@@ -255,6 +255,13 @@ AC_CHECK_LIB(m, sqrt)
 
 
 dnl ---------------------------------------------------------------------------
+dnl test GP_SET_ macros from gp-set.m4
+dnl ---------------------------------------------------------------------------
+dnl GP_SET_TESTSUITE
+dnl AC_MSG_ERROR([gp-set.m4 testsuite done.])
+
+
+dnl ---------------------------------------------------------------------------
 dnl check for libjpeg
 dnl ---------------------------------------------------------------------------
 LIBJPEG=""
@@ -289,7 +296,11 @@ GP_CHECK_LIBRARY([LIBCURL],[libcurl],[>= 7.1],
 )
 GP_CONFIG_MSG([CURL support for Lumix Wifi],[${have_LIBCURL}])
 
-AM_CONDITIONAL([BUILD_LUMIX], [test -n "$have_LIBCURL" && test "X$have_LIBCURL" != "Xno" && test -n "$have_LIBXML2" && test "X$have_LIBXML2" != "Xno"])
+AM_CONDITIONAL([HAVE_LIBCURL],
+               [test -n "$have_LIBCURL" && test "X$have_LIBCURL" != "Xno"])
+AM_CONDITIONAL([HAVE_LIBXML2],
+               [test -n "$have_LIBXML2" && test "X$have_LIBXML2" != "Xno"])
+
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
@@ -476,13 +487,15 @@ AM_CPPFLAGS="$AM_CPPFLAGS -DCAMLIBS=\\\"\$(camlibdir)\\\""
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers (camlibs)
 dnl ---------------------------------------------------------------------------
-dnl * See m4m/gp-camlibs.m4 for usage details, e.g. for marking camlibs as
+dnl * See gp-camlibs.m4 for usage details, e.g. for marking camlibs as
 dnl   unlisted.
 dnl * Please add new camlibs in alphabetical order.
 dnl * Selective build:
 dnl   $ make -C camlibs canon.la ptp2.la
+dnl   or
+dnl   $ make -C camlibs GP_CAMLIB_SET="canon.la ptp2.la"
 dnl * Selective install:
-dnl   $ make CAMLIBS="canon.la ptp2.la" install-camlibs
+dnl   $ make GP_CAMLIB_SET="canon.la ptp2.la" install-camlibs
 GP_CAMLIB([adc65],[outdated])dnl very old serial camera
 GP_CAMLIB([agfa_cl20],[outdated])dnl
 GP_CAMLIB([aox],[outdated])dnl
@@ -513,7 +526,11 @@ GP_CAMLIB([konica],[outdated])dnl
 GP_CAMLIB([konica_qm150],[outdated])dnl
 GP_CAMLIB([largan],[outdated])dnl
 GP_CAMLIB([lg_gsm],[outdated])dnl
+AM_COND_IF([HAVE_LIBCURL], [dnl
+AM_COND_IF([HAVE_LIBXML2], [dnl
 GP_CAMLIB([lumix])dnl
+])
+])
 GP_CAMLIB([mars])dnl
 GP_CAMLIB([dimagev])dnl
 GP_CAMLIB([mustek],[outdated])dnl
@@ -552,7 +569,6 @@ GP_CAMLIB([toshiba_pdrm11],[outdated])dnl
 GP_CAMLIB([tp6801])dnl
 dnl
 GP_CAMLIBS_DEFINE()dnl
-GP_CONFIG_MSG([Camlibs],[${camlibs}])
 
 
 dnl --------------------------------------------------------------------
@@ -626,10 +642,18 @@ if test -d "$srcdir/libgphoto2_port"; then
 	AC_CONFIG_SUBDIRS([libgphoto2_port])
 else
 	AC_MSG_ERROR([
-*** Hey, where have you hidden my libgphoto2_port?
-*** I needed that!
+******************************************************
+*** Hey, where have you hidden my libgphoto2_port? ***
+*** I needed that!                                 ***
+******************************************************
 ])
 fi
+
+
+# ---------------------------------------------------------------------------
+# clean up
+# ---------------------------------------------------------------------------
+GP_SET_CLEAN_FILES
 
 
 # ---------------------------------------------------------------------------
@@ -662,11 +686,13 @@ doc/api/Makefile
 ],[
 dnl This relies on this code being called for each of the above files
 dnl with ac_file set to the filename.
-	if echo "$ac_file" | grep '.sh$' > /dev/null; then
-		if test -f "$ac_file"; then
-			chmod +x "$ac_file"
-		fi
+case "$ac_file" in #(
+*.sh)
+	if test -f "$ac_file"; then
+		chmod +x "$ac_file"
 	fi
+	;;
+esac
 ])
 AC_OUTPUT
 
@@ -685,11 +711,7 @@ GP_CONFIG_OUTPUT
 dnl Catch the Gentoo folks about to shoot themselves in the foot.
 dnl Just enabling "foo" often does not make a camera made by
 dnl manufacturer "Foo" work.
-if test "x$camlibs" = "xall"; then
-   :
-else
-   GP_CAMLIBS_WARNING
-fi
+GP_CAMLIBS_CONDITIONAL_WARNING
 
 cat<<_GP_EOF
 Please check whether the configuration I have detected matches what

@@ -34,12 +34,23 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *shrt[] =
 		{
 			PACKAGE_VERSION,
-#ifdef INCOMPLETE_CAMLIB_SET
-			"INCOMPLETE CAMLIB SET ("
-			INCOMPLETE_CAMLIB_SET
+#if GP_CAMLIB_SET_IS_NONSTANDARD
+			"NON-STANDARD CAMLIB SET"
+			" ("
+			GP_CAMLIB_SET
+#ifdef GP_CAMLIB_SET_SKIPPING
+			" SKIPPING "
+			GP_CAMLIB_SET_SKIPPING
+#endif
 			")",
 #else
-			"all camlibs",
+			"standard camlibs"
+#ifdef GP_CAMLIB_SET_SKIPPING
+			" (SKIPPING "
+			GP_CAMLIB_SET_SKIPPING
+			")"
+#endif
+			,
 #endif
 #ifdef HAVE_CC
 			HAVE_CC,
@@ -61,12 +72,30 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *verb[] =
 		{
 			PACKAGE_VERSION,
-#ifdef INCOMPLETE_CAMLIB_SET
-			"INCOMPLETE CAMLIB SET ("
-			INCOMPLETE_CAMLIB_SET
+#if GP_CAMLIB_SET_IS_NONSTANDARD
+			"NON-STANDARD CAMLIB SET"
+#ifdef GP_CAMLIB_SET_SKIPPING
+			" SKIPPING SOME"
+#endif
+			" ("
+			GP_CAMLIB_SET
+#ifdef GP_CAMLIB_SET_SKIPPING
+			" SKIPPING "
+			GP_CAMLIB_SET_SKIPPING
+#endif
 			")",
 #else
-			"all camlibs",
+			"standard camlib set"
+#ifdef GP_CAMLIB_SET_SKIPPING
+			" SKIPPING SOME"
+#endif
+			" ("
+			GP_CAMLIB_SET
+#ifdef GP_CAMLIB_SET_SKIPPING
+			" SKIPPING "
+			GP_CAMLIB_SET_SKIPPING
+#endif
+			")",
 #endif
 #ifdef HAVE_CC
 			HAVE_CC " (C compiler used)",
