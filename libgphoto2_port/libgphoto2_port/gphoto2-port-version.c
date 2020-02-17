@@ -41,6 +41,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 #else
 			"no ltdl",
 #endif
+#ifdef HAVE_LIBEXIF
+			"EXIF",
+#else
+			"no EXIF",
+#endif
 #if defined(HAVE_LIBUSB) || defined(HAVE_LIBUSB1) || defined(HAVE_LIBUSB_WIN32)
 			"USB",
 #else
@@ -77,6 +82,11 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 			"ltdl (for portable loading of iolibs)",
 #else
 			"no ltdl (for portable loading of iolibs)",
+#endif
+#ifdef HAVE_LIBEXIF
+			"EXIF (for vusb)",
+#else
+			"no EXIF (for vusb)",
 #endif
 #ifdef HAVE_LIBUSB_WIN32
 			"USB (libusb-win32, for USB cameras)",
