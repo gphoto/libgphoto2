@@ -23,7 +23,7 @@ compiler:
  - gcc
 
 script:
- - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f
+ - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f && sleep 2
  - date; ls -l configure
  - ./configure --enable-vusb && make && if make check; then :; else cat libgphoto2_port/test/test-suite.log test/test-suite.log; false; fi && sudo PATH=$PATH make install && examples/sample-afl && make clean
  - date; ls -l configure
