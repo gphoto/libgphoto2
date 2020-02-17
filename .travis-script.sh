@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# Usage:
+#   sh .travis-script.sh <BUILD_ID> [--args-to-configure...]
+#
 
 buildid="${1:?"need buildid"}"
 
@@ -7,16 +11,19 @@ ls -l configure
 
 shift
 
-properdir="$(pwd)"
-
-mkdir "_build-${buildid}"
-
 set -e
 set -x
 
-cd "_build-${buildid}"
+abs_topsrcdir="$(pwd)"
+rel_prefixdir="_root-${buildid}"
+abs_prefixdir="${abs_topsrcdir}/${rel_prefixdir}"
+rel_builddir="_build-${buildid}"
 
-if ../configure --prefix="$(cd ".." && pwd)/_root-${buildid}" "$@"
+mkdir "${rel_builddir}"
+cd    "${rel_builddir}"
+
+
+if ../configure --prefix="$abs_prefixdir" "$@"
 then
     echo "Configure successful."
 else
@@ -52,8 +59,8 @@ make install
 
 examples/sample-afl
 
-cd "$properdir"
+cd "$abs_topsrcdir"
 
-find "_root-${buildid}" -type f | sort
+find "${rel_prefixdir}" -type f | sort
 
-# (cd "_build-${buildid}" && make uninstall clean)
+# (cd "${rel_builddir}" && make uninstall clean)
