@@ -20,6 +20,7 @@ dnl before determining the string length. However, the only relevant
 dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
 AM_INIT_AUTOMAKE([-Wall foreign 1.9 dist-bzip2 check-news subdir-objects])
 
+GP_INIT
 
 # Use the silent-rules feature when possible.
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
