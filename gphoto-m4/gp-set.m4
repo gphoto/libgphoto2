@@ -245,6 +245,7 @@ dnl ######################################################################
 AC_DEFUN([GP_SET_ADD_ALL], [dnl
 AC_REQUIRE([_GP_SET_INIT])dnl
 _GP_SET_CHECK([$1])dnl
+m4_pattern_allow([_GPEOF])dnl
 cat>>"_GP_SET_FILENAME([$1])"<<_GP_EOF
 m4_foreach([myvar], [m4_shift($@)], [dnl
 myvar
