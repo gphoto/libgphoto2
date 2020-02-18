@@ -11,17 +11,31 @@ ls -l configure
 
 shift
 
-set -e
 set -x
 
 abs_topsrcdir="$(pwd)"
+
 rel_prefixdir="_root-${buildid}"
 abs_prefixdir="${abs_topsrcdir}/${rel_prefixdir}"
+
 rel_builddir="_build-${buildid}"
+
+cc --version
+c++ --version
+gcc --version
+g++ --version
+clang --version
+clang++ --version
+
+echo "CC=\"${CC}\""
+echo "CXX=\"${CXX}\""
+test "x$CC"  != "x" && "$CC"  --version
+test "x$CXX" != "x" && "$CXX" --version
+
+set -e
 
 mkdir "${rel_builddir}"
 cd    "${rel_builddir}"
-
 
 if ../configure SLEEP=no --prefix="$abs_prefixdir" "$@"
 then
