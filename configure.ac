@@ -713,7 +713,8 @@ dnl Just enabling "foo" often does not make a camera made by
 dnl manufacturer "Foo" work.
 GP_CAMLIBS_CONDITIONAL_WARNING
 
-cat<<_GP_EOF
+m4_pattern_allow([_GPEOF])dnl
+cat<<_GPEOF
 Please check whether the configuration I have detected matches what
 you would like to have. E.g. make sure that USB support is there if
 you intend to use USB cameras with ${PACKAGE_NAME}.
@@ -721,4 +722,4 @@ you intend to use USB cameras with ${PACKAGE_NAME}.
 Please also check that PKG_CONFIG_PATH contains
     ${pkgconfigdir}
 before compiling any libgphoto2 frontend.
-_GP_EOF
+_GPEOF
