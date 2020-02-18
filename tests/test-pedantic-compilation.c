@@ -17,10 +17,16 @@
 
 #include <stdio.h>
 
+#ifdef __STDC_VERSION__
 unsigned long stdc_version = __STDC_VERSION__;
+#endif
 
 int main()
 {
+#ifdef __STDC_VERSION__
   printf("stdc_version = %lu\n", stdc_version);
+#else
+  printf("stdc_version = undefined\n");
+#endif
   return 0;
 }
