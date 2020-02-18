@@ -83,6 +83,33 @@ dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
 dnl sequence seems to get mixed up.
 SED=${SED-sed}
 
+
+dnl If CXX is neither unset nor empty nor "no", presume we can compile
+dnl C++ sources. A C++ compiler is not required for libgphoto2 itself,
+dnl but is useful to make sure that the libgphoto2 header files
+dnl compile when included into C++ source files.
+AM_CONDITIONAL([HAVE_CXX], [test "x$CXX" != "x" && test "x$CXX" != "xno"])
+
+
+dnl --------------------------------------------------------------------
+dnl Determine the most pedantic compiler flags we can can find for both
+dnl C and C++, so that we can test that the libgphoto2 headers compile
+dnl with those flags.
+dnl --------------------------------------------------------------------
+GP_PEDANTIC_COMPILER_FLAGS([C90],   [C],   [-std=c90])
+GP_PEDANTIC_COMPILER_FLAGS([C99],   [C],   [-std=c99])
+GP_PEDANTIC_COMPILER_FLAGS([C11],   [C],   [-std=c11])
+dnl
+GP_PEDANTIC_COMPILER_FLAGS([CXX98], [C++], [-std=c++98])
+GP_PEDANTIC_COMPILER_FLAGS([CXX11], [C++], [-std=c++11])
+GP_PEDANTIC_COMPILER_FLAGS([CXX14], [C++], [-std=c++14])
+GP_PEDANTIC_COMPILER_FLAGS([CXX17], [C++], [-std=c++17])
+
+
+dnl Every compile example after here will be using the C language
+AC_LANG([C])
+
+
 dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
@@ -629,10 +656,6 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 ])
 CPPFLAGS="$CPPFLAGS_save"
 ],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
-
-
-dnl FIXME: Is this accurate?
-AM_CONDITIONAL([HAVE_CXX], [test -n "$CXX" && test "X$CXX" != "Xno"])
 
 
 dnl ---------------------------------------------------------------------------
