@@ -341,17 +341,17 @@ x
 GP_EOF
 AC_MSG_CHECKING([whether comm -23 works])
 AS_IF([${COMM} -23 confset_a.txt confset_b.txt > confset_diff_23.txt], [dnl
-  AS_IF([${CMP} confset_diff_23.txt confset_res_23.txt > /dev/null 2>&1], [dnl
-    AC_MSG_RESULT([yes])
-    rm -f confset_a.txt confset_b.txt confset_diff_23.txt confset_res_23.txt
-  ], [dnl
-    AC_MSG_RESULT([no (wrong result)])
-    AC_MSG_ERROR([comm -23 must work for GP_SET difference calculations])
-  ])
 ], [dnl
   AC_MSG_RESULT([no (does not run)])
-  AC_MSG_ERROR([comm -23 must work for GP_SET difference calculations])
+  AC_MSG_ERROR([comm -23 must work for GP_SET_* difference calculations])
 ])
+AS_IF([${CMP} confset_diff_23.txt confset_res_23.txt > /dev/null 2>&1], [dnl
+], [dnl
+  AC_MSG_RESULT([no (wrong result)])
+  AC_MSG_ERROR([comm -23 must work for GP_SET_* difference calculations])
+])
+AC_MSG_RESULT([yes])
+rm -f confset_a.txt confset_b.txt confset_diff_23.txt confset_res_23.txt
 dnl This functions uses the shell builtin 'shift', so it needs to store
 dnl the original $1 and $2 in local variables.
 gp_set_shfn_difference ()
