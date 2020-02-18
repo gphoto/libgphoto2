@@ -78,7 +78,6 @@ dnl _GP_CAMLIBS_INIT
 dnl   Called internally when required.
 dnl ####################################################################
 AC_DEFUN_ONCE([_GP_CAMLIBS_INIT],[dnl
-dnl # BEGIN $0($@)
 AC_BEFORE([$0],[GP_CAMLIB])dnl
 AC_REQUIRE([AC_PROG_GREP])dnl
 AC_REQUIRE([AC_PROG_SED])dnl
@@ -95,7 +94,6 @@ m4_foreach_w([var], [everything standard unlisted outdated], [dnl
 GP_SET_DEFINE([camlib-set-standard])dnl
 GP_SET_DEFINE([camlib-set-unlisted])dnl
 GP_SET_DEFINE([camlib-set-outdated])dnl
-dnl # END $0($@)
 ])dnl
 dnl
 dnl
@@ -107,7 +105,6 @@ dnl   the "outdated" set of camlibs, respectively.
 dnl ####################################################################
 m4_pattern_forbid([GP_CAMLIB])dnl
 AC_DEFUN([GP_CAMLIB],[dnl
-dnl # BEGIN $0($@)
 AC_REQUIRE([_GP_CAMLIBS_INIT])dnl
 AC_BEFORE([$0],[GP_CAMLIBS_DEFINE])dnl
 m4_case([$#],[2],[dnl
@@ -132,7 +129,6 @@ m4_set_add([gp_m4s_camlib_set_everything], [$1], [], [dnl
 m4_errprintn(__file__:__line__:[Duplicate declaration of camlib $1])dnl
 m4_exit(1)dnl
 ])dnl
-dnl # END $0($@)
 ])dnl AC_DEFUN GP_CAMLIB
 dnl
 dnl
@@ -179,7 +175,6 @@ dnl   Determine the set of camlibs to build from the --with-camlibs
 dnl   parameter, and set the build variables accordingly.
 dnl ####################################################################
 AC_DEFUN([GP_CAMLIBS_DEFINE],[dnl
-# BEGIN $0($@)
 AC_REQUIRE([_GP_CAMLIBS_INIT])dnl
 AC_REQUIRE([GP_PROG_EXPR])dnl
 
@@ -476,8 +471,6 @@ AC_SUBST([GP_CAMLIB_SET])
 m4_pattern_allow([GP_CAMLIB_SET_EVERYTHING])dnl
 AC_SUBST([GP_CAMLIB_SET_EVERYTHING],
          ["m4_set_contents([gp_m4s_camlib_set_everything], [ ])"])
-
-# END $0($@)
 ])dnl
 dnl
 dnl

@@ -653,7 +653,6 @@ dnl
 dnl   Should be mostly useful while debugging gp-set.m4 itself.
 dnl ######################################################################
 AC_DEFUN([GP_SET_TESTSUITE], [dnl
-# BEGIN $0
 _GP_SET_INIT
 
 GP_SET_DEFINE([foo])
@@ -742,7 +741,6 @@ GP_SET_FOREACH([foobar], [gp_set_var], [echo "  * ELEMENT ${gp_set_var}"])dnl
 AS_ECHO(["Moo."])
 
 GP_SET_DUMP_ALL
-# END $0
 ])dnl
 dnl
 dnl
