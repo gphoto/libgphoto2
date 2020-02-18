@@ -65,7 +65,13 @@ dnl ####################################################################
 m4_pattern_forbid([GP_PROG_SLEEP])dnl
 AC_DEFUN_ONCE([GP_PROG_SLEEP],[dnl
 AC_ARG_VAR([SLEEP], [sleep delay command])dnl
-AC_PATH_PROG([SLEEP], [sleep])dnl
+AC_MSG_CHECKING([whether to sleep])
+AS_VAR_IF([SLEEP], [no], [dnl
+  AC_MSG_RESULT([no])
+], [dnl
+  AC_MSG_RESULT([yes])
+  AC_PATH_PROG([SLEEP], [sleep])dnl
+])dnl
 ])dnl
 dnl
 dnl

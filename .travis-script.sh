@@ -22,9 +22,8 @@ rel_builddir="_build-${buildid}"
 mkdir "${rel_builddir}"
 cd    "${rel_builddir}"
 
-SLEEP="$(which true)"
 
-if ../configure SLEEP="$SLEEP" --prefix="$abs_prefixdir" "$@"
+if ../configure SLEEP=no --prefix="$abs_prefixdir" "$@"
 then
     echo "Configure successful."
 else
