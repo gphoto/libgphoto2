@@ -99,11 +99,10 @@ dnl Determine the most pedantic compiler flags we can can find for both
 dnl C and C++, so that we can test that the libgphoto2 headers compile
 dnl with those flags.
 dnl --------------------------------------------------------------------
-GP_CHECK_PEDANTIC_COMPILER_FLAGS([ANSIC],   [C],   [-ansi])
+GP_CHECK_PEDANTIC_COMPILER_FLAGS([C90],     [C],   [-std=c90])
 GP_CHECK_PEDANTIC_COMPILER_FLAGS([C99],     [C],   [-std=c99])
 GP_CHECK_PEDANTIC_COMPILER_FLAGS([C11],     [C],   [-std=c11])
 dnl
-GP_CHECK_PEDANTIC_COMPILER_FLAGS([ANSICXX], [C++], [-ansi])
 GP_CHECK_PEDANTIC_COMPILER_FLAGS([CXX98],   [C++], [-std=c++98])
 GP_CHECK_PEDANTIC_COMPILER_FLAGS([CXX11],   [C++], [-std=c++11])
 GP_CHECK_PEDANTIC_COMPILER_FLAGS([CXX14],   [C++], [-std=c++14])

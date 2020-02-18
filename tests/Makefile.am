@@ -151,14 +151,14 @@ generic_pedantic_cppflags =
 generic_pedantic_cppflags += -I$(top_srcdir)/libgphoto2_port
 generic_pedantic_cppflags += -I$(top_srcdir)
 
-if GP_HAVE_PEDANTIC_FLAGS_ANSIC
-TESTS                       += test-pedantic-ansic
-check_PROGRAMS              += test-pedantic-ansic
-test_pedantic_ansic_SOURCES  = test-pedantic-compilation.c
-test_pedantic_ansic_CPPFLAGS = $(generic_pedantic_cppflags)
-test_pedantic_ansic_CFLAGS   = $(GP_PEDANTIC_CFLAGS_ANSIC)
-test_pedantic_ansic_LDADD    =
-test_pedantic_ansic_LDFLAGS  =
+if GP_HAVE_PEDANTIC_FLAGS_C90
+TESTS                     += test-pedantic-c90
+check_PROGRAMS            += test-pedantic-c90
+test_pedantic_c90_SOURCES  = test-pedantic-compilation.c
+test_pedantic_c90_CPPFLAGS = $(generic_pedantic_cppflags)
+test_pedantic_c90_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C90)
+test_pedantic_c90_LDADD    =
+test_pedantic_c90_LDFLAGS  =
 endif
 
 if GP_HAVE_PEDANTIC_FLAGS_C99
@@ -179,20 +179,6 @@ test_pedantic_c11_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_c11_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C11)
 test_pedantic_c11_LDADD    =
 test_pedantic_c11_LDFLAGS  =
-endif
-
-if GP_HAVE_PEDANTIC_FLAGS_ANSICXX
-if HAVE_CXX
-TESTS                         += test-pedantic-ansicxx
-check_PROGRAMS                += test-pedantic-ansicxx
-else
-EXTRA_PROGRAMS                += test-pedantic-ansicxx
-endif
-test_pedantic_ansicxx_SOURCES  = test-pedantic-compilation.cxx
-test_pedantic_ansicxx_CPPFLAGS = $(generic_pedantic_cppflags)
-test_pedantic_ansicxx_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_ANSICXX)
-test_pedantic_ansicxx_LDADD    =
-test_pedantic_ansicxx_LDFLAGS  =
 endif
 
 if GP_HAVE_PEDANTIC_FLAGS_CXX98
