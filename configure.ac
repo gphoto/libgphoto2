@@ -72,6 +72,11 @@ dnl ---------------------------------------------------------------------------
 dnl Checks for programs.
 dnl ---------------------------------------------------------------------------
 
+AC_MSG_CHECKING([for unchanged CC])
+AC_MSG_RESULT(["$CC"])
+AC_MSG_CHECKING([for unchanged CXX])
+AC_MSG_RESULT(["$CXX"])
+
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_CXX
