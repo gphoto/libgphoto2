@@ -2,8 +2,6 @@ dnl ####################################################################
 dnl GP_CHECK_PEDANTIC_COMPILER_FLAGS & Co.
 dnl ####################################################################
 dnl
-m4_pattern_forbid([_GP_])dnl
-dnl
 dnl
 dnl ####################################################################
 dnl _GP_CONDITIONAL_COMPILE_FLAGS(FLAG_VAR, FLAGS)
@@ -86,6 +84,9 @@ dnl   $1 Depending on the language, CFLAGS or CXXFLAGS
 dnl   $2 The variable/conditional component the caller wants us to use
 dnl   $3 The -std= argument (such as -std=c++98 or -std=c99)
 dnl ####################################################################
+m4_pattern_allow([GP_PEDANTIC_CFLAGS_])dnl
+m4_pattern_allow([GP_PEDANTIC_CXXFLAGS_])dnl
+m4_pattern_allow([GP_HAVE_PEDANTIC_FLAGS_])dnl
 AC_DEFUN([_GP_CHECK_PEDANTIC_COMPILER_FLAGS], [dnl
 # BEGIN $0($@)
 gp_compiler_flags_saved_$1="[$]$1"

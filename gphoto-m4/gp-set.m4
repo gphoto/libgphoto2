@@ -101,14 +101,6 @@ dnl FIXME: Do we need to stop using shell functions?
 dnl
 dnl
 dnl ######################################################################
-dnl Try catching unexpanded macros in the output.
-dnl ######################################################################
-m4_pattern_forbid([GP_SET_])dnl
-m4_pattern_forbid([_GP_SET_])dnl
-m4_pattern_allow([GP_SET_EOF])dnl
-dnl
-dnl
-dnl ######################################################################
 dnl _GP_SET_INIT
 dnl   Called internally before any set operation.
 dnl ######################################################################
@@ -245,12 +237,11 @@ dnl ######################################################################
 AC_DEFUN([GP_SET_ADD_ALL], [dnl
 AC_REQUIRE([_GP_SET_INIT])dnl
 _GP_SET_CHECK([$1])dnl
-m4_pattern_allow([_GPEOF])dnl
-cat>>"_GP_SET_FILENAME([$1])"<<_GP_EOF
+cat>>"_GP_SET_FILENAME([$1])"<<_GPEOF
 m4_foreach([myvar], [m4_shift($@)], [dnl
 myvar
 ])dnl
-_GP_EOF
+_GPEOF
 ])dnl
 dnl
 dnl
@@ -328,17 +319,18 @@ AC_REQUIRE([_GP_SET_INIT])dnl
 AC_REQUIRE([_GP_SET_CHECK_INIT])dnl
 AC_REQUIRE([_GP_SET_CANONICALIZE_INIT])dnl
 AC_REQUIRE([GP_PROG_COMM])dnl
-cat>confset_a.txt<<GP_EOF
+cat>confset_a.txt<<_GPEOF
 x
 y
-GP_EOF
-cat>confset_b.txt<<GP_EOF
+_GPEOF
+cat>confset_b.txt<<_GPEOF
 y
 z
-GP_EOF
-cat>confset_res_23.txt<<GP_EOF
+_GPEOF
+cat>confset_res_23.txt<<_GPEOF
 x
-GP_EOF
+_GPEOF
+m4_pattern_allow([GP_SET_*])dnl
 AC_MSG_CHECKING([whether comm -23 works])
 AS_IF([${COMM} -23 confset_a.txt confset_b.txt > confset_diff_23.txt], [dnl
 ], [dnl

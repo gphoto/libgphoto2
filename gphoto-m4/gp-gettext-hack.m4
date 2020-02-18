@@ -30,13 +30,14 @@ AC_SUBST([GETTEXT_PACKAGE])
 sed_cmds="s|^DOMAIN.*|DOMAIN = ${GETTEXT_PACKAGE}|"
 m4_if([$2],[],[],[sed_cmds="${sed_cmds};s|^COPYRIGHT_HOLDER.*|COPYRIGHT_HOLDER = $2|"])
 m4_ifval([$3],[
+m4_pattern_allow([GP_GETTEXT_HACK])dnl
 if test -n "$PACKAGE_BUGREPORT"; then
    sed_mb="${PACKAGE_BUGREPORT}"
 else
    AC_MSG_ERROR([
 *** Your configure.{ac,in} is wrong.
 *** Either define PACKAGE_BUGREPORT (by using the 4-parameter AC INIT syntax)
-*** or give [GP_GETTEXT_HACK] the third parameter.
+*** or give GP_GETTEXT_HACK the third parameter.
 ***
 ])
 fi
