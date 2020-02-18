@@ -654,7 +654,7 @@ dnl
 dnl   Should be mostly useful while debugging gp-set.m4 itself.
 dnl ######################################################################
 AC_DEFUN([GP_SET_TESTSUITE], [dnl
-_GP_SET_INIT
+AC_REQUIRE([_GP_SET_INIT])dnl
 
 GP_SET_DEFINE([foo])
 GP_SET_DEFINE([bar])
