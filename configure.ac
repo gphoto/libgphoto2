@@ -78,9 +78,11 @@ AC_PROG_INSTALL
 AM_PROG_CC_C_O
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
+
 dnl Something with the sequences is not quite alright yet.
 dnl SED is supposed to be set in AC_LIBTOOL_SETUP, but the
 dnl sequence seems to get mixed up.
+m4_ifdef([AC_PROG_SED], [AC_PROG_SED])
 SED=${SED-sed}
 
 dnl ---------------------------------------------------------------------------
