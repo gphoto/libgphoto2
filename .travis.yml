@@ -16,6 +16,14 @@ compiler:
  - clang
  - gcc
 
+# On OSX, 'gcc' is an alias for 'clang' anyway, and finding/installing
+# a gcc would be a bit of extra work with uncertain benefits. So on
+# OSX, we only do the 'clang' builds.
+jobs:
+  exclude:
+  - os: osx
+    compiler: gcc
+
 # Note: Keep the sudo commands in .travis.yml - they do not work from
 #       a helper shell script.
 before_install:
