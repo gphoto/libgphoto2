@@ -12,6 +12,10 @@ env:
  - EXTRALIBS="gettext libusb-1.0-0-dev libgd2-xpm-dev"
  - EXTRALIBS="gettext libusb-1.0-0-dev libgd2-xpm-dev libcurl4-openssl-dev"
 
+compiler:
+ - clang
+ - gcc
+
 # Note: Keep the sudo commands in .travis.yml - they do not work from
 #       a helper shell script.
 before_install:
@@ -21,10 +25,6 @@ before_install:
  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y $(sh .travis-translate-pkgs $EXTRALIBS); fi
  - automake --version
  - autoconf --version
-
-compiler:
- - clang
- - gcc
 
 script:
  - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f && sleep 2
