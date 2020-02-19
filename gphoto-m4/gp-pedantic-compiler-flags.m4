@@ -2,8 +2,6 @@ dnl ####################################################################
 dnl GP_PEDANTIC_COMPILER_FLAGS & Co.
 dnl ####################################################################
 dnl
-m4_pattern_forbid([_GP_])dnl
-dnl
 dnl
 dnl ####################################################################
 dnl _GP_CONDITIONAL_COMPILE_FLAGS(FLAG_VAR, FLAGS)
