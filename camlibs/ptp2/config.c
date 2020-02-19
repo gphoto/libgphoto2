@@ -6696,11 +6696,13 @@ _put_Generic_OPCode(CONFIG_PUT_ARGS)
 
 	if (!sscanf(val,"0x%x", &opcode))
 		return GP_ERROR_BAD_PARAMETERS;
+	GP_LOG_D ("opcode 0x%x", opcode);
 	nparams = 0; x = val;
 	while ((x = strchr(x,',')) && (nparams<5)) {
 		x++;
 		if (!sscanf(x,"0x%x", &xparams[nparams]))
 			return GP_ERROR_BAD_PARAMETERS;
+		GP_LOG_D ("param %d 0x%x", nparams, xparams[nparams]);
 		nparams++;
 	}
 	ptp.Code = opcode;
