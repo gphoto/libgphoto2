@@ -413,8 +413,8 @@ ultrapocket_reset(Camera *camera)
    gp_port_info_set_path (newpi, val);
    gp_port_info_get_type (oldpi, &porttype);
    gp_port_info_set_type (newpi, porttype);
-   gp_port_info_get_library_filename (oldpi, &val);
-   gp_port_info_set_library_filename (newpi, val);
+   /*gp_port_info_get_library_filename (oldpi, &val);
+   gp_port_info_set_library_filename (newpi, val);*/
 
    CHECK_RESULT(gp_port_free(port));
    CHECK_RESULT(gp_port_new(&port));
