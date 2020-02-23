@@ -1,32 +1,48 @@
-libgphoto2 2.5.23.1 development
-
-lumix:
-
-* New WIFI Lumix camera driver was added, using curl and libxml2.
-
-  Lots of abilities supported already, also capture preview.
-  However capture itself is not yet working :/
-  This driver needs libxml2 and libcurl to be built.
+libgphoto2 2.5.24 release
 
 ptp2:
+* GoPro: fixed all images not visible bug
 * Canon EOS: lock/unlock ui before more operations
 * Canon Powershot SX / EOS M: some setup adjustments to make powershot sx work better
 * Nikon Keymission 170: try override opcodes to allow capture
 * Nikon DSLR: fixed a regression where 5 seconds was longer image capture shutterspeed
 * Sony: adjusted manualfocusing not to autofocus
+* Fuji: access ISO config
+* Sony: fixed manual focusing
+* Sony: specify capturetarget on camera, available on current 2019/2020 Sony
 * bugfixes
-* GoPro: fixed files not appearing
 * New ids added:
   * Sony Alpha RX100V, A7s, RX0 II,
   * Nikon Z50, Coolpix L810, KeyMission 170
   * Canon PowerShot SX530HS, SX 620HS, 
   * Canon EOS 2000D, 1500D, R2, M6 Mark 2, 250D,
   * Fuji X-A5, X-E3, GFX100
-  * GoPro Hero 7 White, 7 Black, 8 Black
+  * GoPro Hero 7 White, 7 Silver, 7 Black, 8 Black
+
+lumix:
+
+* New WIFI Lumix camera driver was added, using curl and libxml2.
+
+  Lots of abilities supported already, also capture preview.
+  However capture itself is not yet working.
+  This driver needs libxml2 and libcurl to be built.
 
 all:
 
+* Selecting camera libraries has changed a bit.
+
+
+  --camlibs=everything will select all and outdated drivers
+  --camlibs=standard  will select "current day" drivers
+  --camlibs=standard,outdated  will select "current day" and "outdated" drivers
+
+  You can now also use modifiers like +canon or -canon to enable/disable selected camera libraries.
+
+  The default is "standard", same as before.
+
 * fixed some issues found by AFL fuzzing, mostly in "outdated" drivers.
+
+* SECURITY.md: Small document added describing security properties of the library.
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.23 release
