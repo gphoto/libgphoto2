@@ -261,6 +261,7 @@ int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
 	dst += SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH;
 
 	for (i = 0; i < o_size; i++) {
+		if (dst - start >= *size) return GP_ERROR;
 		value = *(src + i) & 0xFF;
 		*(dst) = value;
 		dst++;
