@@ -22,7 +22,7 @@ GP_REF(	[URL_GPHOTO_PROJECT],
 	[gphoto github project page])
 
 GP_REF(	[URL_DIGICAM_LIST],
-	[http://www.teaser.fr/~hfiguiere/linux/digicam.html],
+	[http://gphoto.org/proj/libgphoto2/support.php],
 	[camera list with support status])
 
 GP_REF(	[URL_JPHOTO_HOME],
