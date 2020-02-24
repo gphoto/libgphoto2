@@ -268,6 +268,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 			size = size * 0x100;
 
+			if (size < 128*96*2*4 + 9 + 0x1a0) {
+				GP_DEBUG("size %d smaller than expected %d", size, 128*96*2*4 + 9 + 0x1a0);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+
 			{
 				unsigned int thumb_start = 9 + 0x1a0;
 				unsigned char temp1, temp2, temp3, temp4;
@@ -398,9 +403,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 		size = size * 0x100;
 
+
 		lb = *(result + 0x05);
 		hb = *(result + 0x04);
 		app1len = (unsigned int)(hb * 256) + (unsigned int)(lb);
+
+		if (size < app1len+4) {
+			GP_DEBUG("size %d smaller than expected %d", size, app1len+2);
+			return GP_ERROR_CORRUPTED_DATA;
+		}
+		GP_DEBUG("size %d app1len %d", size, app1len);
 
 		result[3] = 0xe0;
 		result[4] = 0x00;
