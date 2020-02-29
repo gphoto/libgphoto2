@@ -89,6 +89,18 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_set_name (info, "Universal Serial Bus");
 	gp_port_info_set_path (info, "usb:001,001");
 	CHECK (gp_port_info_list_append (list, info));
+
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_USB_SCSI);
+	gp_port_info_set_name (info, "Universal Serial Bus SCSI");
+	gp_port_info_set_path (info, "usbscsi:");
+	CHECK (gp_port_info_list_append (list, info));
+
+	gp_port_info_new (&info);
+	gp_port_info_set_type (info, GP_PORT_USB_DISK_DIRECT);
+	gp_port_info_set_name (info, "Universal Serial Bus Disk");
+	gp_port_info_set_path (info, "usbdisk:");
+	CHECK (gp_port_info_list_append (list, info));
 	return GP_OK;
 }
 
@@ -153,6 +165,21 @@ gp_port_vusb_read(GPPort *port, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	return port->pl->vcamera->read(port->pl->vcamera, 0x81, (unsigned char*)bytes, size);
+}
+
+static int
+gp_port_vusb_send_scsi_cmd (GPPort *port, int to_dev, char *cmd,
+	int cmd_size, char *sense, int sense_size, char *data, int data_size)
+{
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(dev=%d, cmdsize %d, sense_size %d, data_size %d)", to_dev, cmd_size, sense_size, data_size);
+	return port->pl->vcamera->read(port->pl->vcamera, 0x81, (unsigned char*)data, data_size);
+}
+
+static int
+gp_port_vusb_seek (GPPort *port, int offset, int whence)
+{
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(offset %d, whence %d)", offset, whence);
+	return GP_OK;
 }
 
 static int
@@ -368,6 +395,9 @@ gp_port_library_operations (void)
         ops->msg_interface_read		= gp_port_vusb_msg_interface_read_lib;
         ops->msg_class_write  		= gp_port_vusb_msg_class_write_lib;
         ops->msg_class_read   		= gp_port_vusb_msg_class_read_lib;
+        ops->send_scsi_cmd   		= gp_port_vusb_send_scsi_cmd;
+        ops->seek   			= gp_port_vusb_seek;
+
         ops->find_device 		= gp_port_vusb_find_device_lib;
         ops->find_device_by_class	= gp_port_vusb_find_device_by_class_lib;
 	return ops;
