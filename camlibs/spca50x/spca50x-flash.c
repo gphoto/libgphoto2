@@ -57,12 +57,12 @@ static void
 free_files (CameraPrivateLibrary *pl)
 {
 	int i;
-	if (pl->files) {
-		for (i = 0; i < pl->num_files_on_flash; i++){
-			if(pl->files[i].thumb) free (pl->files[i].thumb);
+	if (pl->flash_files) {
+		for (i = 0; i < pl->num_files_on_flash; i++) {
+			if(pl->flash_files[i].thumb) free (pl->flash_files[i].thumb);
 		}
-		free(pl->files);
-		pl->files = NULL;
+		free(pl->flash_files);
+		pl->flash_files = NULL;
 	}
 }
 
@@ -196,8 +196,8 @@ spca50x_flash_get_TOC(CameraPrivateLibrary *pl, int *filecount)
 		/* Now, create the files info buffer */
 		free_files(pl);
 		/* NOTE: using calloc to ensure new block is "empty" */
-		pl->files = calloc (*filecount , sizeof (struct SPCA50xFile));
-		if (!pl->files)
+		pl->flash_files = calloc (*filecount , sizeof (struct SPCA50xFile));
+		if (!pl->flash_files)
 			return GP_ERROR_NO_MEMORY;
 	} else { /* all other cams with flash... */
 		/* read the TOC from the cam */
@@ -397,12 +397,12 @@ spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
 
 	/* First, check if the info. is already buffered in the cam private lib
 	 * We DO NOT want to be fetching the entire thumbnail just to get the file size...*/
-	 if ((pl->dirty_flash == 0) && (pl->files[index].type != 0)){
+	 if ((pl->dirty_flash == 0) && (pl->flash_files[index].type != 0)){
 		 /* This file must have been checked before */
-		*w = pl->files[index].width ;
-		*h = pl->files[index].height ;
-		*t = pl->files[index].type ;
-		*sz = pl->files[index].size ;
+		*w = pl->flash_files[index].width ;
+		*h = pl->flash_files[index].height ;
+		*t = pl->flash_files[index].type ;
+		*sz = pl->flash_files[index].size ;
 		return GP_OK;
 	 } else if (pl->dirty_flash != 0){ /* should never happen, but just in case... */
 		CHECK(spca50x_flash_get_TOC (pl, &i));
@@ -437,9 +437,9 @@ spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
 	{
 		int j;
 		uint8_t * buf;
-		if (pl->files[index].thumb){
-			free (pl->files[index].thumb); /* discard any previous thumbnail data */
-			pl->files[index].thumb = NULL;
+		if (pl->flash_files[index].thumb){
+			free (pl->flash_files[index].thumb); /* discard any previous thumbnail data */
+			pl->flash_files[index].thumb = NULL;
 		}
 		buf = malloc (38 * 256); /* create a new buffer to hold the thumbnail data */
 		if (buf){
@@ -449,12 +449,12 @@ spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
 				CHECK (gp_port_read (pl->gpdev, (char *)&buf[j], 256));
 				j += 256;
 			}
-			pl->files[index].thumb = buf;
+			pl->flash_files[index].thumb = buf;
 		} else { /* couldn't get a buffer - read in the data anyway and discard it */
 			for (i = 0; i < 38; i++) {/* Thumbnails ALWAYS download 38 blocks...*/
 				CHECK (gp_port_read (pl->gpdev, waste, 256));
 			}
-			pl->files[index].thumb = NULL;
+			pl->flash_files[index].thumb = NULL;
 		}
 	} /* end of thumbnail storing loop */
 
@@ -526,10 +526,10 @@ spca500_flash_84D_get_file_info (CameraPrivateLibrary * pl, int index,
 	if (pl->dirty_flash == 0){
 		/* Only update the files cache if it exists, i.e. if dirty is zero */
 		/* We should never get here if dirty is set, however ! */
-		pl->files[index].type = *t;
-		pl->files[index].width = *w;
-		pl->files[index].height = *h;
-		pl->files[index].size = *sz;
+		pl->flash_files[index].type = *t;
+		pl->flash_files[index].width = *w;
+		pl->flash_files[index].height = *h;
+		pl->flash_files[index].size = *sz;
 	}
 
 	return GP_OK;
@@ -617,8 +617,8 @@ spca50x_flash_process_image (CameraPrivateLibrary *pl,	/*  context */
 	uint8_t qIndex = 0, format;
 	int file_size;
 
-	int w = pl->files[index].width;
-	int h = pl->files[index].height;
+	int w = pl->flash_files[index].width;
+	int h = pl->flash_files[index].height;
 
 	/* qindex == 2 seems to be right for all the dsc350 images - so far!!! */
 	qIndex = 2 ; /*  FIXME - what to do about Qtable stuff? */
@@ -670,11 +670,11 @@ spca500_flash_84D_get_file (CameraPrivateLibrary * pl,
 	}
 
 	/* OK, we've decided what type of file it is, now lets upload it... */
-	if ((thumbnail != 0) && (pl->files[index].thumb != NULL)){
+	if ((thumbnail != 0) && (pl->flash_files[index].thumb != NULL)){
 		/* We can cheat here - we already have the thumbnail data in a cache, so don't load it again */
 		blks = 38;
-		buf = pl->files[index].thumb;
-		pl->files[index].thumb = NULL; /* we will release buf, so this pointer must be "emptied" */
+		buf = pl->flash_files[index].thumb;
+		pl->flash_files[index].thumb = NULL; /* we will release buf, so this pointer must be "emptied" */
 	}
 	else {
 		/* We need to download this data from the cam... */

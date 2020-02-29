@@ -72,7 +72,8 @@ struct _CameraPrivateLibrary
 	int size_free;
 	uint8_t *flash_toc;
 	uint8_t *fats;
-	struct SPCA50xFile *files;
+	struct SPCA50xFile *flash_files;
+	struct SPCA50xFile *sdram_files;
 };
 
 #define SPCA50X_SDRAM 0x01

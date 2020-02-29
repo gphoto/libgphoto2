@@ -243,9 +243,13 @@ camera_exit (Camera *camera, GPContext *context)
 			free (camera->pl->fats);
 			camera->pl->fats = NULL;
 		}
-		if (camera->pl->files) {
-			free (camera->pl->files);
-			camera->pl->files = NULL;
+		if (camera->pl->flash_files) {
+			free (camera->pl->flash_files);
+			camera->pl->flash_files = NULL;
+		}
+		if (camera->pl->sdram_files) {
+			free (camera->pl->sdram_files);
+			camera->pl->sdram_files = NULL;
 		}
 		if (camera->pl->flash_toc) {
 			free (camera->pl->flash_toc);
@@ -330,8 +334,8 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 			CHECK (spca50x_sdram_get_info (camera->pl));
 
 		for (i = 0; i < camera->pl->num_files_on_sdram; i++) {
-			if (camera->pl->files[i].name)
-				strncpy (temp_file, camera->pl->files[i].name, 12);
+			if (camera->pl->sdram_files[i].name)
+				strncpy (temp_file, camera->pl->sdram_files[i].name, 12);
 			else
 				strcpy (temp_file, "BAD.BAD");
 			temp_file[12] = 0;
@@ -573,10 +577,9 @@ camera_init (Camera *camera, GPContext *context)
 			break;
 	}
 
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	camera->pl = calloc (sizeof (CameraPrivateLibrary), 1);
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
-	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 	camera->pl->gpdev = camera->port;
 	camera->pl->dirty_sdram = 1;
 	camera->pl->dirty_flash = 1;
