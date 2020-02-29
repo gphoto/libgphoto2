@@ -144,6 +144,11 @@ gsmart300_request_file (CameraPrivateLibrary * lib, CameraFile *file,
 		  + (p[11] & 0xff);
 	qIndex = p[7] & 0x07;
 
+	if (qIndex >= 5) {
+		GP_DEBUG("qIndex %d is larger or equal than 5\n", qIndex);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
 	file_size = data_size + GSMART_JPG_DEFAULT_HEADER_LENGTH + 1024 * 10;
 
 	if (flash_size < data_size) {
