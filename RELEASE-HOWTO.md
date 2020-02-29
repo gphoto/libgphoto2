@@ -131,6 +131,10 @@
    I have just released libgphoto2 2.5.22 ( http://gphoto.org/news/  )
    ... Fixed Canon EOS M and PowerShot SX capture, added Sony Alpha RX0
    and RX100M5A, added Canon EOS R, and some bugfixes.
+
+## change IRC topic of #gphoto in Freenode
+
+   /msg Chanserv topic #gphoto Digital cameras for Linux/UNIX/MacOS | http://gphoto.org/ | just ask | no webcams | newest 2.5.24
  
 ## Make git ready for further development
 
