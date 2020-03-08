@@ -1,0 +1,766 @@
+Camera summary:
+Manufacturer: NIKON
+Model: KeyMission 170
+  Version: KeyMission 170 V1.2
+  Serial Number: 000040003384
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0;
+
+Capture Formats: Undefined Type JPEG
+Display Formats: Undefined Type, Association/Directory, JPEG, Unknown(b982)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: KeyMission 170
+	VolumeLabel: KeyMission 170
+	Storage Type: Builtin RAM
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 63831015424 (60874 MB)
+	Free Space (Bytes): 63601639424 (60655 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 10, step 1] value: 10% (10)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20200308T192916'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd402:(readwrite) (type=0xffff) 'KeyMission 170'
+Property 0xd303:(readwrite) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'UnKnow'
+Property 0xd401:(readwrite) (type=0xffff) 'NIKON'
+Property 0xd319:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd0aa:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd320:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 2
+Property 0xd321:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd304:(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5] value: 0
+Property 0xd348:(readwrite) (type=0x6) Enumeration [50,100,300,600] value: 50
+Property 0xd322:(readwrite) (type=0x6) Enumeration [20,40,60,100,150] value: 60
+Property 0xd323:(readwrite) (type=0x6) Enumeration [50,100,300,600] value: 50
+Property 0xd324:(readwrite) (type=0x6) Enumeration [20,50,100,300,4294967295] value: 50
+Property 0xd349:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Movie Screen Size(0xd0a0):(readwrite) (type=0x4) Enumeration [30,50,60,70,100] value: 70
+Property 0xd325:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd314:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2] value: Single Shot (1)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,5,4097] value: Automatic (2)
+Property 0xd326:(readwrite) (type=0x6) Enumeration [11] value: 11
+Property 0xd328:(readwrite) (type=0x2) Enumeration [0,1,2] value: 0
+Property 0xd329:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd330:(readwrite) (type=0x2) Enumeration [0,1,2] value: 2
+Property 0xd34a:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd34b:(readwrite) (type=0x2) Range [1 - 5, step 1] value: 3
+Property 0xd34c:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 1
+Property 0xd331:(readwrite) (type=0x6) Enumeration [20,50,300,600,3000] value: 300
+Property 0xd34e:(readwrite) (type=0x2) Enumeration [0] value: 0
+Property 0xd332:(readwrite) (type=0x2) Enumeration [0,10,20,30] value: 20
+Property 0xd333:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd34f:(readwrite) (type=0x3) Enumeration [0,1,2,3,4,5,6,7,8,9,10] value: 2
+Property 0xd334:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd335:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd338:(readwrite) (type=0xffff) 'KM170_40003384'
+Property 0xd340:(readwrite) (type=0xffff) 'NikonKeyMission'
+Property 0xd339:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd341:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11] value: 6
+Property 0xd346:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd347:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [2000,1666,1333,1000,666,333,0,-333,-666,-1000,-1333,-1666,-2000] value: 0.0 stops (0)
+Property 0xd350:(readwrite) (type=0x4) Enumeration [0,1,2,3] value: 1
+Property 0xd344:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xdf52:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xdf53:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xdf54:(readwrite) (type=0xffff) ''
+Property 0xdf63:(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+Property 0xdf65:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xdf66:(readwrite) (type=0x6) Enumeration [0,100,300,600,3000] value: 300
+
+Device info:
+Manufacturer: NIKON
+  Model: KeyMission 170
+  device version: KeyMission 170 V1.2
+  serial number: '00004000nnnn'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 100
+Vendor extension description: microsoft.com: 1.0;
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x101b (Get partial object)
+  0x100f (Format storage)
+  0x1010 (Reset device)
+  0x1019 (Move object)
+  0x101a (Copy object)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+  0x9999 (Unknown PTP_OC)
+  0x7701 (Unknown PTP_OC)
+  0x7702 (Unknown PTP_OC)
+  0x9610 (Unknown PTP_OC)
+  0x9f01 (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400b (DeviceReset)
+  0x400c (StorageInfoChanged)
+  0x400d (CaptureComplete)
+  0x400e (UnreportedStatus)
+  0xc002 (Unknown Event)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5011 (Date & Time)
+  0xd407 (Unknown DPC code)
+  0xd402 (Unknown DPC code)
+  0xd303 (Unknown DPC code)
+  0xd406 (Unknown DPC code)
+  0xd401 (Unknown DPC code)
+  0xd319 (Unknown DPC code)
+  0xd0aa (Unknown DPC code)
+  0xd320 (Unknown DPC code)
+  0xd321 (Unknown DPC code)
+  0xd304 (Unknown DPC code)
+  0xd348 (Unknown DPC code)
+  0xd322 (Unknown DPC code)
+  0xd323 (Unknown DPC code)
+  0xd324 (Unknown DPC code)
+  0xd349 (Unknown DPC code)
+  0xd0a0 (Movie Screen Size)
+  0xd325 (Unknown DPC code)
+  0xd314 (Unknown DPC code)
+  0x5013 (Still Capture Mode)
+  0x5005 (White Balance)
+  0xd326 (Unknown DPC code)
+  0xd328 (Unknown DPC code)
+  0xd329 (Unknown DPC code)
+  0xd330 (Unknown DPC code)
+  0xd34a (Unknown DPC code)
+  0xd34b (Unknown DPC code)
+  0xd34c (Unknown DPC code)
+  0xd331 (Unknown DPC code)
+  0xd34e (Unknown DPC code)
+  0xd332 (Unknown DPC code)
+  0xd333 (Unknown DPC code)
+  0xd34f (Unknown DPC code)
+  0xd334 (Unknown DPC code)
+  0xd335 (Unknown DPC code)
+  0xd338 (Unknown DPC code)
+  0xd340 (Unknown DPC code)
+  0xd339 (Unknown DPC code)
+  0xd341 (Unknown DPC code)
+  0xd346 (Unknown DPC code)
+  0xd347 (Unknown DPC code)
+  0x5010 (Exposure Bias Compensation)
+  0xd350 (Unknown DPC code)
+  0xd344 (Unknown DPC code)
+  0xdf52 (Unknown DPC code)
+  0xdf53 (Unknown DPC code)
+  0xdf54 (Unknown DPC code)
+  0xdf63 (Unknown DPC code)
+  0xdf65 (Unknown DPC code)
+  0xdf66 (Unknown DPC code)
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1583692197
+Printable: Sun 08 Mar 2020 07:29:57 PM CET
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/fastfs
+Label: Fast Filesystem
+Readonly: 0
+Type: TOGGLE
+Current: 1
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/autofocus
+Label: Autofocus
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 00004000nnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: NIKON
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: KeyMission 170
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: KeyMission 170 V1.2
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: microsoft.com: 1.0;
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Tungsten
+Choice: 3 Fluorescent
+Choice: 4 Unknown value 1001
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 2
+Choice: 1 1.666
+Choice: 2 1.333
+Choice: 3 1
+Choice: 4 0.666
+Choice: 5 0.333
+Choice: 6 0
+Choice: 7 -0.333
+Choice: 8 -0.666
+Choice: 9 -1
+Choice: 10 -1.333
+Choice: 11 -1.666
+Choice: 12 -2
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Burst
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 10
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20200308T192957
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d402
+Label: PTP Property 0xd402
+Readonly: 0
+Type: TEXT
+Current: KeyMission 170
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 0
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: UnKnow
+END
+/main/other/d401
+Label: PTP Property 0xd401
+Readonly: 0
+Type: TEXT
+Current: NIKON
+END
+/main/other/d319
+Label: PTP Property 0xd319
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0aa
+Label: PTP Property 0xd0aa
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d320
+Label: PTP Property 0xd320
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d321
+Label: PTP Property 0xd321
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d304
+Label: PTP Property 0xd304
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+END
+/main/other/d348
+Label: PTP Property 0xd348
+Readonly: 0
+Type: MENU
+Current: 50
+Choice: 0 50
+Choice: 1 100
+Choice: 2 300
+Choice: 3 600
+END
+/main/other/d322
+Label: PTP Property 0xd322
+Readonly: 0
+Type: MENU
+Current: 60
+Choice: 0 20
+Choice: 1 40
+Choice: 2 60
+Choice: 3 100
+Choice: 4 150
+END
+/main/other/d323
+Label: PTP Property 0xd323
+Readonly: 0
+Type: MENU
+Current: 50
+Choice: 0 50
+Choice: 1 100
+Choice: 2 300
+Choice: 3 600
+END
+/main/other/d324
+Label: PTP Property 0xd324
+Readonly: 0
+Type: MENU
+Current: 50
+Choice: 0 20
+Choice: 1 50
+Choice: 2 100
+Choice: 3 300
+Choice: 4 -1
+END
+/main/other/d349
+Label: PTP Property 0xd349
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0a0
+Label: Movie Screen Size
+Readonly: 0
+Type: MENU
+Current: 70
+Choice: 0 30
+Choice: 1 50
+Choice: 2 60
+Choice: 3 70
+Choice: 4 100
+END
+/main/other/d325
+Label: PTP Property 0xd325
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d314
+Label: PTP Property 0xd314
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 6
+Choice: 3 5
+Choice: 4 4097
+END
+/main/other/d326
+Label: PTP Property 0xd326
+Readonly: 0
+Type: MENU
+Current: 11
+Choice: 0 11
+END
+/main/other/d328
+Label: PTP Property 0xd328
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d329
+Label: PTP Property 0xd329
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d330
+Label: PTP Property 0xd330
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d34a
+Label: PTP Property 0xd34a
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d34b
+Label: PTP Property 0xd34b
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d34c
+Label: PTP Property 0xd34c
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d331
+Label: PTP Property 0xd331
+Readonly: 0
+Type: MENU
+Current: 300
+Choice: 0 20
+Choice: 1 50
+Choice: 2 300
+Choice: 3 600
+Choice: 4 3000
+END
+/main/other/d34e
+Label: PTP Property 0xd34e
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+END
+/main/other/d332
+Label: PTP Property 0xd332
+Readonly: 0
+Type: MENU
+Current: 20
+Choice: 0 0
+Choice: 1 10
+Choice: 2 20
+Choice: 3 30
+END
+/main/other/d333
+Label: PTP Property 0xd333
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d34f
+Label: PTP Property 0xd34f
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+END
+/main/other/d334
+Label: PTP Property 0xd334
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d335
+Label: PTP Property 0xd335
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d338
+Label: PTP Property 0xd338
+Readonly: 0
+Type: TEXT
+Current: KM170_40003384
+END
+/main/other/d340
+Label: PTP Property 0xd340
+Readonly: 0
+Type: TEXT
+Current: NikonKeyMission
+END
+/main/other/d339
+Label: PTP Property 0xd339
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d341
+Label: PTP Property 0xd341
+Readonly: 0
+Type: MENU
+Current: 6
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+END
+/main/other/d346
+Label: PTP Property 0xd346
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d347
+Label: PTP Property 0xd347
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 2000
+Choice: 1 1666
+Choice: 2 1333
+Choice: 3 1000
+Choice: 4 666
+Choice: 5 333
+Choice: 6 0
+Choice: 7 -333
+Choice: 8 -666
+Choice: 9 -1000
+Choice: 10 -1333
+Choice: 11 -1666
+Choice: 12 -2000
+END
+/main/other/d350
+Label: PTP Property 0xd350
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d344
+Label: PTP Property 0xd344
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/df52
+Label: PTP Property 0xdf52
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/df53
+Label: PTP Property 0xdf53
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/df54
+Label: PTP Property 0xdf54
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/df63
+Label: PTP Property 0xdf63
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/df65
+Label: PTP Property 0xdf65
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/df66
+Label: PTP Property 0xdf66
+Readonly: 0
+Type: MENU
+Current: 300
+Choice: 0 0
+Choice: 1 100
+Choice: 2 300
+Choice: 3 600
+Choice: 4 3000
+END
