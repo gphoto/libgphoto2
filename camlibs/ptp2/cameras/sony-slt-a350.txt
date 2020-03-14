@@ -61,3 +61,36 @@ Sorry, your camera does not support generic capture
 ERROR: Could not capture image.
 ERROR: Could not capture.
 *** Error (-6: 'Unsupported operation') ***       
+Device info:
+Manufacturer: Sony Corporation
+  Model: DSLR-A350
+  device version: 1.00
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension version: 0
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x101b (Get partial object)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4007 (ObjectInfoChanged)
+  0x4009 (RequestObjectTransfer)
+Device Properties Supported:
