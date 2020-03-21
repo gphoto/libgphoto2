@@ -5598,6 +5598,13 @@ static struct deviceproptableu8 nikon_menus_and_playback[] = {
 };
 GENERIC8TABLE(Nikon_MenusAndPlayback,nikon_menus_and_playback)
 
+static struct deviceproptableu8 nikon_vignettecorrection[] = {
+	{ N_("High"),		0x0, 0 },
+	{ N_("Normal"),		0x1, 0 },
+	{ N_("Moderate"),	0x2, 0 },
+	{ N_("Off"),		0x3, 0 },
+};
+GENERIC8TABLE(Nikon_VignetteCorrection,nikon_vignettecorrection)
 
 static int
 _get_BurstNumber(CONFIG_GET_ARGS) {
@@ -8517,6 +8524,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Microphone"),                     "microphone",               PTP_DPC_NIKON_MovMicrophone,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_Microphone,              _put_Nikon_Microphone },
 	{ N_("Reverse Indicators"),             "reverseindicators",        PTP_DPC_NIKON_IndicatorDisp,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Auto Distortion Control"),        "autodistortioncontrol",    PTP_DPC_NIKON_AutoDistortionControl,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
+	{ N_("Vignette Correction"),            "vignettecorrection",       PTP_DPC_NIKON_VignetteCtrl,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_VignetteCorrection,      _put_Nikon_VignetteCorrection },
 	{ N_("Video Mode"),                     "videomode",                PTP_DPC_NIKON_VideoMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_VideoMode,               _put_Nikon_VideoMode },
 	{ N_("Sensor Crop"),                    "sensorcrop",               PTP_DPC_SONY_SensorCrop,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SensorCrop,               _put_Sony_SensorCrop },
 
