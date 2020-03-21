@@ -738,7 +738,7 @@ spca500_flash_84D_get_file (CameraPrivateLibrary * pl,
 	sz = (blks * 256) - 1;
 	/* look for the last non-zero byte in the file...
 	 * I hope the file never *really* ends with a zero!*/
-	while (buf[sz] == 0) {
+	while ((buf[sz] == 0)  && (sz>0)) {
 		sz -= 1;
 	}
 	true_len = sz + 1;
