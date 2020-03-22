@@ -267,10 +267,12 @@ int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
 		dst++;
 
 		if (value == 0xFF && !omit_escape) {
+			if (dst - start >= *size) return GP_ERROR;
 			*(dst) = 0x00;
 			dst++;
 		}
 	}
+	if (dst + 2 - start >= *size) return GP_ERROR;
 
 	/* Add end of image marker */
 	*(dst++) = 0xFF;
@@ -278,5 +280,4 @@ int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
 
 	*size = dst - start;
 	return GP_OK;
-
 }
