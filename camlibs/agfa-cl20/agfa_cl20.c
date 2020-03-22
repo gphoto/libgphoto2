@@ -439,7 +439,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	
 		memmove(&result[20],
 		       &result[app1len + 4],
-		       (unsigned int)(size - app1len - 2));
+		       (unsigned int)(size - app1len - 4));
 
 		size = size - app1len + 24;
 
