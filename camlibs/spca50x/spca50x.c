@@ -202,7 +202,7 @@ spca50x_capture (CameraPrivateLibrary * lib)
 	return GP_OK;
 }
 
-void
+int
 create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 		       int h, uint8_t format, int o_size, int *size,
 		       int omit_huffman_table, int omit_escape)
@@ -261,4 +261,5 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 	*(dst++) = 0xD9;
 
 	*size = dst - start;
+	return GP_OK;
 }
