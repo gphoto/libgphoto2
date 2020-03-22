@@ -276,7 +276,7 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
     				if (row > 1) {
         				tlp = outp[-2*width-2];
         				tp  = outp[-2*width];
-        				if (col < width-2)
+        				if (col < width-1)
         					trp = outp[-2*width+2];
     				}
     				if (row < 2) {
