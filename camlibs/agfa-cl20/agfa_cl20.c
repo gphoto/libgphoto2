@@ -413,7 +413,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		hb = *(result + 0x04);
 		app1len = (unsigned int)(hb * 256) + (unsigned int)(lb);
 
-		if (size < app1len+4) {
+		if ((app1len < 4) || (size < app1len+4)) {
 			GP_DEBUG("size %d smaller than expected %d", size, app1len+2);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
