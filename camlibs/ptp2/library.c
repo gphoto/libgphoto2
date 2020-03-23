@@ -497,6 +497,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 					di->OperationsSupported[di->OperationsSupported_len+18] = PTP_OC_NIKON_TerminateCapture;
 					/* probably more */
 					di->OperationsSupported_len += 19;
+
+					C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2)));
+					di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_NIKON_VignetteCtrl;
+					di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_NIKON_AutoDistortionControl;
+					di->DevicePropertiesSupported_len += 2;
 				}
 			}
 		}
