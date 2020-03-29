@@ -128,6 +128,12 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 	return GP_OK;
 }
 
+const char *porttypes[] = {
+	"usb:",
+	"usbscsi:",
+	"usbdiskdirect:",
+	"serial:",
+};
 
 int main(int argc, char **argv) {
 	Camera		*camera = NULL;
@@ -144,122 +150,126 @@ int main(int argc, char **argv) {
 	CameraFilePath		path;
 	CameraList		*list;
 	CameraAbilitiesList      *abilities = NULL;
-
+	int			i;
 
         gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
 	context = sample_create_context (); /* see context.c */
 
-	strcpy(buf,"usb:");
-	if (argc > 1)
-		strcat (buf, argv[1]);
+	for (i=0;i<sizeof(porttypes)/sizeof(porttypes[0]);i++) {
+		strcpy(buf,porttypes[i]);
+		if (argc > 1)
+			strcat (buf, argv[1]);
 
-	fprintf(stderr,"setting path %s.\n", buf);
+		fprintf(stderr,"setting path %s.\n", buf);
 
-	gp_port_info_list_new (&gpinfolist);
-	ret = gp_port_info_list_load (gpinfolist);
-	if (ret < GP_OK) return ret;
+		gp_port_info_list_new (&gpinfolist);
+		ret = gp_port_info_list_load (gpinfolist);
+		if (ret < GP_OK) return ret;
 
-	ret = gp_port_info_list_lookup_path (gpinfolist, buf);
-	if (ret < GP_OK) return ret;
+		ret = gp_port_info_list_lookup_path (gpinfolist, buf);
+		if (ret < GP_OK) return ret;
 
-        /* Detect all the cameras that can be autodetected... */
-        ret = gp_list_new (&list);
-        if (ret < GP_OK) return 1;
+		/* Detect all the cameras that can be autodetected... */
+		ret = gp_list_new (&list);
+		if (ret < GP_OK) return 1;
 
-	/* Load all the camera drivers we have... */
-	ret = gp_abilities_list_new (&abilities);
-	if (ret < GP_OK) return ret;
-	ret = gp_abilities_list_load (abilities, context);
-	if (ret < GP_OK) return ret;
-	ret = gp_abilities_list_detect (abilities, gpinfolist, list, context);
-	if (ret < GP_OK) return ret;
+		/* Load all the camera drivers we have... */
+		ret = gp_abilities_list_new (&abilities);
+		if (ret < GP_OK) return ret;
+		ret = gp_abilities_list_load (abilities, context);
+		if (ret < GP_OK) return ret;
+		ret = gp_abilities_list_detect (abilities, gpinfolist, list, context);
+		if (ret < GP_OK) return ret;
 
-	fprintf(stderr, "detect list has count %d\n", gp_list_count(list));
+		fprintf(stderr, "detect list has count %d\n", gp_list_count(list));
+		if (gp_list_count(list) == 0) continue;
 
-	ret = gp_list_get_name(list, 0, &name);
-	if (ret < GP_OK) goto out;
+		ret = gp_list_get_name(list, 0, &name);
+		if (ret < GP_OK) goto out;
 
-	ret = sample_open_camera (&camera, name, buf, context);
-        if (ret < GP_OK) {
-		fprintf(stderr,"camera %s at %s not found.\n", name, buf);
-		goto out;
-	}
+		ret = sample_open_camera (&camera, name, buf, context);
+		if (ret < GP_OK) {
+			fprintf(stderr,"camera %s at %s not found.\n", name, buf);
+			goto out;
+		}
 
-	ret = gp_camera_init (camera, context);
-	if (ret < GP_OK) {
-		fprintf(stderr,"No camera auto detected.\n");
-		goto out;
-	}
+		ret = gp_camera_init (camera, context);
+		if (ret < GP_OK) {
+			fprintf(stderr,"No camera auto detected.\n");
+			goto out;
+		}
 
-	/* AFL PART STARTS HERE */
+		/* AFL PART STARTS HERE */
 
-	ret = recursive_directory(camera, "/", context, NULL);
-	if (ret < GP_OK) {
-		printf ("Could not recursive list files.\n");
-		goto out;
-	}
+		ret = recursive_directory(camera, "/", context, NULL);
+		if (ret < GP_OK) {
+			printf ("Could not recursive list files.\n");
+			goto out;
+		}
 
-	ret = gp_camera_get_summary (camera, &summary, context);
-	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not get summary.\n");
-		goto out;
-	}
+		ret = gp_camera_get_summary (camera, &summary, context);
+		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+			printf ("Could not get summary.\n");
+			goto out;
+		}
 
-#if 1
-	ret = gp_camera_get_config (camera, &rootwidget, context);
-	if (ret < GP_OK) {
-		fprintf (stderr,"Could not get config.\n");
-		goto out;
-	}
-#endif
-	printf ("OK, %s\n", summary.text);
+	#if 1
+		ret = gp_camera_get_config (camera, &rootwidget, context);
+		if (ret < GP_OK) {
+			fprintf (stderr,"Could not get config.\n");
+			goto out;
+		}
+	#endif
+		printf ("OK, %s\n", summary.text);
 
-	ret = gp_camera_get_storageinfo (camera, &storageinfo, &storagecnt, context);
-	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not get storage info.\n");
-		goto out;
-	}
+		ret = gp_camera_get_storageinfo (camera, &storageinfo, &storagecnt, context);
+		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+			printf ("Could not get storage info.\n");
+			goto out;
+		}
 
 
-	ret = gp_camera_trigger_capture (camera, context);
-	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not trigger capture.\n");
-		goto out;
-	}
+		ret = gp_camera_trigger_capture (camera, context);
+		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+			printf ("Could not trigger capture.\n");
+			goto out;
+		}
 
-	while (1) {
-		CameraEventType evttype;
-		void *data = NULL;
+		while (1) {
+			CameraEventType evttype;
+			void *data = NULL;
 
-		ret = gp_camera_wait_for_event(camera, 1, &evttype, &data, context);
-		if (ret < GP_OK) break;
-		if (data) free (data);
-		if (evttype == GP_EVENT_TIMEOUT) break;
-	}
+			ret = gp_camera_wait_for_event(camera, 1, &evttype, &data, context);
+			if (ret < GP_OK) break;
+			if (data) free (data);
+			if (evttype == GP_EVENT_TIMEOUT) break;
+		}
 
-	gp_file_new (&file);
-	ret = gp_camera_capture_preview (camera, file, context);
-	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+		gp_file_new (&file);
+		ret = gp_camera_capture_preview (camera, file, context);
+		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+			gp_file_free (file);
+			printf ("Could not capture preview.\n");
+			goto out;
+		}
 		gp_file_free (file);
-		printf ("Could not capture preview.\n");
-		goto out;
-	}
-	gp_file_free (file);
 
-#if 0
-	/* this gives endless event check loops occasionaly ... need review how to do this best */
-	ret = gp_camera_capture (camera, GP_CAPTURE_IMAGE, &path, context);
-	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not capture preview.\n");
-		goto out;
-	}
-#endif
+	#if 0
+		/* this gives endless event check loops occasionaly ... need review how to do this best */
+		ret = gp_camera_capture (camera, GP_CAPTURE_IMAGE, &path, context);
+		if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
+			printf ("Could not capture preview.\n");
+			goto out;
+		}
+	#endif
 
-	/* AFL PART ENDS HERE */
-out:
-	gp_camera_exit (camera, context);
+		/* AFL PART ENDS HERE */
+	out:
+		gp_camera_exit (camera, context);
+		gp_camera_free (camera);
+	}
+
 	gp_context_unref (context);
-	gp_camera_free (camera);
 	return 0;
 }
