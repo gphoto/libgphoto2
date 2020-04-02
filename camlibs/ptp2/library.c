@@ -518,14 +518,6 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				free (xprops);
 			}
 		}
-		if ((nikond >= 3200) && (nikond < 3999)) {
-			GP_LOG_D("The D3xxx series hides even deviceprops from us ... adding some...");
-
-			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 2)));
-			di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_NIKON_VignetteCtrl;
-			di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_NIKON_AutoDistortionControl;
-			di->DevicePropertiesSupported_len += 2;
-		}
 
 		/* For nikon 1 j5, they have blanked this space */
 		if (camera->pl->params.device_flags & PTP_NIKON_1) {
