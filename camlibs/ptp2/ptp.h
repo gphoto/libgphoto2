@@ -740,7 +740,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * KeepCameraActive() = (0xe,0)
  */
 #define PTP_OC_LEICA_Release				0x9004
-#define PTP_OC_LEICA_OpenLESession			0x9005
+#define PTP_OC_LEICA_OpenLESession			0x9005	/* one argument, possible 0 is ok? */
 #define PTP_OC_LEICA_CloseLESession			0x9006
 #define PTP_OC_LEICA_RequestObjectTransferReady		0x9007
 #define PTP_OC_LEICA_GetGeoTrackingData			0x9008
@@ -751,6 +751,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_GetDebugRoute			0x900e
 #define PTP_OC_LEICA_SetIPTCData			0x900f
 #define PTP_OC_LEICA_GetIPTCData			0x9010
+#define PTP_OC_LEICA_901c				0x901c /* seen in lr plugin ... */
 #define PTP_OC_LEICA_Get3DAxisData			0x9020
 #define PTP_OC_LEICA_OpenLiveViewSession		0x9030
 #define PTP_OC_LEICA_CloseLiveViewSession		0x9031
@@ -1113,6 +1114,18 @@ struct _PTPStorageInfo {
 	char	*VolumeLabel;
 };
 typedef struct _PTPStorageInfo PTPStorageInfo;
+
+/* PTP Stream Info */
+struct _PTPStreamInfo {
+	uint64_t	DatasetSize;
+	uint64_t	TimeResolution;
+	uint32_t	FrameHeaderSize;
+	uint32_t	FrameMaxSize;
+	uint32_t	PacketHeaderSize;
+	uint32_t	PacketMaxSize;
+	uint32_t	PacketAlignment;
+};
+typedef struct _PTPStreamInfo PTPStreamInfo;
 
 /* PTP objecthandles structure (returned by GetObjectHandles) */
 
@@ -2527,6 +2540,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* 15c00010 GetSetupInfo Error */
 /* 18000010 GetUSBSpeed */
 
+/* Leica */
+#define PTP_DPC_LEICA_ExternalShooting			0xD018
+
 
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
@@ -3103,7 +3119,7 @@ uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
                         uint32_t objectformatcode, uint32_t associationOH,
         		uint64_t *numoifs, PTPObjectFilesystemInfo **oifs);
-
+uint16_t ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si);
 
 
 uint16_t ptp_check_event (PTPParams *params);

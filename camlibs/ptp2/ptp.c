@@ -496,6 +496,24 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 }
 
 uint16_t
+ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si)
+{
+	PTPContainer	ptp;
+	unsigned char	*data = NULL;
+	unsigned int	size;
+	int		ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_GetStreamInfo);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	ret = ptp_unpack_StreamInfo(params, data, si, size);
+	free (data);
+	if (ret)
+		return PTP_RC_OK;
+	else
+		return PTP_ERROR_IO;
+}
+
+uint16_t
 ptp_canon_eos_905f (PTPParams* params, uint32_t x)
 {
 	PTPContainer	ptp;

@@ -3091,3 +3091,18 @@ ptp_unpack_chdk_lv_framebuffer_desc (PTPParams *params, unsigned char* data, lv_
 	fd->margin_right = dtoh32a(&data[off+=4]);
 	fd->margin_bot = dtoh32a(&data[off+=4]);
 }
+
+static inline int
+ptp_unpack_StreamInfo (PTPParams *params, unsigned char *data, PTPStreamInfo *si, unsigned int size) {
+	if (!data) return PTP_RC_GeneralError;
+	if (size < 36) return PTP_RC_GeneralError;
+
+	si->DatasetSize		= dtoh64ap(params,data+0);
+	si->TimeResolution	= dtoh64ap(params,data+8);
+	si->FrameHeaderSize	= dtoh32ap(params,data+16);
+	si->FrameMaxSize	= dtoh32ap(params,data+20);
+	si->PacketHeaderSize	= dtoh32ap(params,data+24);
+	si->PacketMaxSize	= dtoh32ap(params,data+28);
+	si->PacketAlignment	= dtoh32ap(params,data+32);
+	return PTP_RC_OK;
+}
