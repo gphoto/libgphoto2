@@ -2410,6 +2410,9 @@ static struct {
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
 
+	/* Christopher Kao <christopherkao@icloud.com> */
+	{"Leica:SL (Typ 601)",			0x1a98,	0x2041, PTP_CAP},
+
 	/* https://github.com/gphoto/libgphoto2/issues/105 */
 	{"Parrot:Sequoia",			0x19cf,	0x5039, PTP_CAP},
 
