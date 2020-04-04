@@ -6475,6 +6475,22 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	}
 	APPEND_TXT ("\n");
 
+	/* PTP 1.1 streams */
+	if (	ptp_operation_issupported(params,PTP_OC_GetStreamInfo) &&
+		ptp_property_issupported(params, PTP_DPC_SupportedStreams)
+	)  {
+		PTPPropertyValue propval;
+
+		ret = ptp_getdevicepropvalue (params, PTP_DPC_SupportedStreams, &propval, PTP_DTC_UINT32);
+		if (ret == PTP_RC_OK) {
+			APPEND_TXT (_("\nStreams:"));
+			APPEND_TXT ("%08x", propval.u32);
+			if (propval.u32 & (0<<1)) APPEND_TXT (_("Video "));
+			if (propval.u32 & (1<<1)) APPEND_TXT (_("Audio"));
+			APPEND_TXT ("\n");
+		}
+	}
+
 	if (is_mtp_capable (camera) &&
 	    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 	) {
