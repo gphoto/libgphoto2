@@ -2806,6 +2806,13 @@ camera_exit (Camera *camera, GPContext *context)
 		case PTP_VENDOR_FUJI:
 			CR (camera_unprepare_capture (camera, context));
 			break;
+		case PTP_VENDOR_GP_OLYMPUS_OMD: {
+			PTPPropertyValue propval;
+
+			propval.u16 = 0;
+			CR (ptp_setdevicepropvalue (params, 0xD052, &propval, PTP_DTC_UINT16));
+			break;
+		}
 		}
 
 		if (camera->pl->checkevents)
