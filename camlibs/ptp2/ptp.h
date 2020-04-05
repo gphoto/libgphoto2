@@ -729,7 +729,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * https://alexhude.github.io/2019/01/24/hacking-leica-m240.html */
 #define PTP_OC_LEICA_SetCameraSettings			0x9001
 #define PTP_OC_LEICA_GetCameraSettings			0x9002
-#define PTP_OC_LEICA_GetLensParameter			0x9003
+#define PTP_OC_LEICA_GetLensParameter			0x9003	/* lrplugin */
 /* probably 2 arguments.
  * generic: releaseStage, stepSize
  * Release(releasestage) = (releasestage,0)
@@ -739,9 +739,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * AutofocusPush() = (1,0) ... same as AEStart?
  * KeepCameraActive() = (0xe,0)
  */
-#define PTP_OC_LEICA_Release				0x9004
-#define PTP_OC_LEICA_OpenLESession			0x9005	/* one argument, possible 0 is ok? */
-#define PTP_OC_LEICA_CloseLESession			0x9006
+#define PTP_OC_LEICA_LEReleaseStages			0x9004	/* lrplugin seeing 1 (push af control), 2 (release af control), 0x0c (continuos start), 0x0d (continuos end) as potential arguments */
+#define PTP_OC_LEICA_LEOpenSession			0x9005	/* lrplugin one argument, possible 0 is ok? */
+#define PTP_OC_LEICA_LECloseSession			0x9006	/* lrplugin */
 #define PTP_OC_LEICA_RequestObjectTransferReady		0x9007
 #define PTP_OC_LEICA_GetGeoTrackingData			0x9008
 #define PTP_OC_LEICA_OpenDebugSession			0x900a
@@ -751,10 +751,20 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_GetDebugRoute			0x900e
 #define PTP_OC_LEICA_SetIPTCData			0x900f
 #define PTP_OC_LEICA_GetIPTCData			0x9010
-#define PTP_OC_LEICA_901c				0x901c /* seen in lr plugin ... */
+#define PTP_OC_LEICA_LEControlAutoFocus			0x9016	/* lr plugin */
+#define PTP_OC_LEICA_LEControlBulbExposure		0x9019	/* seen in lr plugin ... similar to 9004 and 901a release/press shutter */
+#define PTP_OC_LEICA_LEControlContinuousExposure	0x901a	/* seen in lr plugin ... similar to 9004 and 9019 release/press shutter */
+#define PTP_OC_LEICA_901b				0x901b	/* seen in lr plugin ... related to release not listed in debugprint */
+#define PTP_OC_LEICA_LEControlPhotoLiveView		0x901c	/* seen in lr plugin ... */
+#define PTP_OC_LEICA_LEKeepSessionActive		0x901d	/* seen in lr plugin ... */
 #define PTP_OC_LEICA_Get3DAxisData			0x9020
+#define PTP_OC_LEICA_LESetZoomMode			0x9021	/* lr plugin */
+#define PTP_OC_LEICA_LESetFocusCrossPosition		0x9022	/* lr plugin */
+#define PTP_OC_LEICA_LESetDisplayWindowPosition		0x9024	/* lr plugin */
 #define PTP_OC_LEICA_OpenLiveViewSession		0x9030
 #define PTP_OC_LEICA_CloseLiveViewSession		0x9031
+#define PTP_OC_LEICA_LESetDateTime			0x9036	/* lr plugin */
+#define PTP_OC_LEICA_GetObjectPropListPaginated		0x9037
 #define PTP_OC_LEICA_OpenProductionSession		0x9100
 #define PTP_OC_LEICA_CloseProductionSession		0x9101
 #define PTP_OC_LEICA_UpdateFirmware			0x9102
@@ -2542,6 +2552,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 /* Leica */
 #define PTP_DPC_LEICA_ExternalShooting			0xD018
+/* d040 */
+/* d60e */
+/* d610 */
 
 
 /* MTP specific Object Properties */
