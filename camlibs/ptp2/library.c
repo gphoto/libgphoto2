@@ -274,6 +274,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		C_PTP (ptp_getdeviceinfo (params, di));
 		return GP_OK;
 	}
+
+	if (    (di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_product == 0x1a98)
+	) {
+		di->VendorExtensionID = PTP_VENDOR_GP_LEICA;
+	}
+
 	/* XML style Olympus E series control. internal deviceInfos is encoded in XML. */
 	if (	di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
 		(params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
@@ -2813,6 +2821,11 @@ camera_exit (Camera *camera, GPContext *context)
 			CR (ptp_setdevicepropvalue (params, 0xD052, &propval, PTP_DTC_UINT16));
 			break;
 		}
+		case PTP_VENDOR_GP_LEICA:
+			if (ptp_operation_issupported(params, PTP_OC_LEICA_LECloseSession)) {
+				C_PTP (ptp_leica_leclosesession (params));
+			}
+			break;
 		}
 
 		if (camera->pl->checkevents)
@@ -8743,6 +8756,16 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	case PTP_VENDOR_FUJI:
 		CR (camera_prepare_capture (camera, context));
+		break;
+	case PTP_VENDOR_GP_LEICA:
+		if (ptp_operation_issupported(params, PTP_OC_LEICA_LEOpenSession)) {
+			PTPDeviceInfo	pdi;
+
+			C_PTP (ptp_leica_leopensession (params, 0));
+			C_PTP_REP (ptp_getdeviceinfo (params, &pdi));
+			CR (fixup_cached_deviceinfo (camera, &pdi));
+			print_debug_deviceinfo(params, &params->deviceinfo);
+		}
 		break;
 	default:
 		break;

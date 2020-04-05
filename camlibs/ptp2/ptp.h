@@ -183,6 +183,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* gphoto overrides */
 #define PTP_VENDOR_GP_OLYMPUS          0x0000fffe
 #define PTP_VENDOR_GP_OLYMPUS_OMD      0x0000fffd
+#define PTP_VENDOR_GP_LEICA            0x0000fffc
 
 
 /* Operation Codes */
@@ -2553,6 +2554,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* Leica */
 #define PTP_DPC_LEICA_ExternalShooting			0xD018
 /* d040 */
+/* d60c */
 /* d60e */
 /* d610 */
 
@@ -3887,6 +3889,9 @@ uint16_t ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsig
 
 
 #define ptp_panasonic_capture(params) ptp_generic_no_data(params,PTP_OC_PANASONIC_InitiateCapture,1,0x3000011)
+
+#define ptp_leica_leopensession(params,session) ptp_generic_no_data(params,PTP_OC_LEICA_LEOpenSession,1,session)
+#define ptp_leica_leclosesession(params) ptp_generic_no_data(params,PTP_OC_LEICA_LECloseSession,0)
 
 #ifdef __cplusplus
 }
