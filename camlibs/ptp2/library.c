@@ -6492,9 +6492,33 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		if (ret == PTP_RC_OK) {
 			APPEND_TXT (_("\nStreams:"));
 			APPEND_TXT ("%08x", propval.u32);
-			if (propval.u32 & (0<<1)) APPEND_TXT (_("Video "));
-			if (propval.u32 & (1<<1)) APPEND_TXT (_("Audio"));
 			APPEND_TXT ("\n");
+			for (i=0;i<31;i++) {
+				PTPStreamInfo streaminfo;
+
+				if ((1<<i) & propval.u32) {
+					switch (i) {
+					case 0: APPEND_TXT (_("Video"));
+						break;
+					case 1: APPEND_TXT (_("Audio"));
+						break;
+					default: APPEND_TXT ("%d", i);
+						break;
+					}
+					ret = ptp_getstreaminfo (params, i, &streaminfo);
+					if (ret == PTP_RC_OK) {
+						APPEND_TXT( ": dss: %lud, timeres: %lud, fhsize: %d, fmxsize: %d, phsize: %d, pmsize: %d, palign: %d\n",
+							streaminfo.DatasetSize,
+							streaminfo.TimeResolution,
+							streaminfo.FrameHeaderSize,
+							streaminfo.FrameMaxSize,
+							streaminfo.PacketHeaderSize,
+							streaminfo.PacketMaxSize,
+							streaminfo.PacketAlignment
+						);
+					} else APPEND_TXT (": error 0x%04x on getstreaminfo\n", ret);
+				}
+			}
 		}
 	}
 
