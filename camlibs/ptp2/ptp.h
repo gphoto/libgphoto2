@@ -728,7 +728,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Leica opcodes, from Lightroom tether plugin */
 /* also from:
  * https://alexhude.github.io/2019/01/24/hacking-leica-m240.html */
-#define PTP_OC_LEICA_SetCameraSettings			0x9001
+#define PTP_OC_LEICA_SetCameraSettings			0x9001 	/* image shuttle */
 #define PTP_OC_LEICA_GetCameraSettings			0x9002
 #define PTP_OC_LEICA_GetLensParameter			0x9003	/* lrplugin */
 /* probably 2 arguments.
@@ -758,6 +758,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_901b				0x901b	/* seen in lr plugin ... related to release not listed in debugprint */
 #define PTP_OC_LEICA_LEControlPhotoLiveView		0x901c	/* seen in lr plugin ... */
 #define PTP_OC_LEICA_LEKeepSessionActive		0x901d	/* seen in lr plugin ... */
+#define PTP_OC_LEICA_LEMoveLens				0x901e	/* seen in image shuttle ... 1? arg */
 #define PTP_OC_LEICA_Get3DAxisData			0x9020
 #define PTP_OC_LEICA_LESetZoomMode			0x9021	/* lr plugin */
 #define PTP_OC_LEICA_LESetFocusCrossPosition		0x9022	/* lr plugin */
