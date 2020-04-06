@@ -1,0 +1,28 @@
+Device info:
+Manufacturer: Sony Corporation
+  Model: Sony Digital Still Camera
+  device version: (null)
+  serial number: '(null)'
+Vendor extension ID: 0x00000000
+Vendor extension version: 0
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1001 (Get device info)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x101b (Get partial object)
+Events Supported:
+  0x4009
+  0x4004
+  0x4005
