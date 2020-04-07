@@ -1,3 +1,69 @@
+
+Camera summary:
+Manufacturer: LEICA
+Model: LEICA SL (Typ 601)
+  Version: 3.7
+  Serial Number: 0000000000000000000000000nnnnnnn
+Vendor Extension ID: 0x6 (1.0)
+
+Capture Formats: 
+Display Formats: Association/Directory, DPOF, Apple Quicktime, Defined Type, TIFF EP, JPEG
+
+Streams:00020001
+	Video: dss: 36d, timeres: 33333333d, fhsize: 8, fmxsize: 1048558, phsize: 6, pmsize: 1048576, palign: 1
+	17: dss: 36d, timeres: 33333333d, fhsize: 8, fmxsize: 1048558, phsize: 6, pmsize: 1048576, palign: 1
+
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc05/AssociationType dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	TIFF EP/3802: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: SD1
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 64139296768 (61168 MB)
+	Free Space (Bytes): 60632465408 (57823 MB)
+	Free Space (Images): 0
+store_00020001:
+	StorageDescription: SD2
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 63831015424 (60874 MB)
+	Free Space (Bytes): 63828262912 (60871 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 75% (75)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 0
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [0,1,2] value: 0
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [0,1,2] value: Average (1)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [2,3,4,1,512,513] value: A (3)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x6) Enumeration [0,50,100,200,400,800,1600,3200,6400,12500,25000,50000] value: ISO 0 (0)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-3000,-2667,-2500,-2333,-2000,-1667,-1500,-1333,-1000,-667,-500,-333,0,333,500,667,1000,1333,1500,1667,2000,2333,2500,2667,3000] value: 0.0 stops (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [0,5,6,7,3,4,2,8] value: 0
+Contrast(0x5014):(readwrite) (type=0x2) Enumeration [0,3,1,4,2] value: 1
+Sharpness(0x5015):(readwrite) (type=0x2) Enumeration [0,3,1,4,2] value: 1
+Supported Streams(0x5020):(read only) (type=0x6) Range [0 - 983041, step 1] value: 131073
+Enabled Streams(0x5021):(readwrite) (type=0x6) Range [0 - 983041, step 1] value: 0
+Video Format(0x5022):(read only) (type=0x6) Enumeration [1196444237] value: 1196444237
+Video Resolution(0x5023): error 201b on query.
+Video Framerate(0x5025):(read only) (type=0x6) Enumeration [25000,30000] value: 30000
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) '(null)'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
 Device info:
 Manufacturer: LEICA
   Model: LEICA SL (Typ 601)
