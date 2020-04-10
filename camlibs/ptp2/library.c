@@ -2898,6 +2898,22 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 }
 
 static int
+camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *context) {
+	PTPParams		*params = &camera->pl->params;
+	PTPPropertyValue	propval;
+	PTPStreamInfo		sinfo;
+
+	C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_EnabledStreams, &propval, PTP_DTC_UINT32));
+	if (!(propval.u32 & 1)) {	/* video enabled already ? */
+		propval.u32 = 1;
+		C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_EnabledStreams, &propval, PTP_DTC_UINT32));
+	}
+	C_PTP (ptp_getstreaminfo (params, 1, &sinfo));
+
+	return GP_OK;
+}
+
+static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
 	unsigned char	*data = NULL, *jpgStartPtr = NULL, *jpgEndPtr = NULL;
@@ -3391,6 +3407,17 @@ enable_liveview:
 	}
 	default:
 		break;
+	}
+	/* Check if we can do PTP 1.1 stream method */
+	if (	ptp_operation_issupported(params,PTP_OC_GetStreamInfo) &&
+		ptp_property_issupported(params, PTP_DPC_SupportedStreams)
+	)  {
+		PTPPropertyValue propval;
+
+		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_SupportedStreams, &propval, PTP_DTC_UINT32));
+		if (propval.u32 & 1) /* camera does Video streams */
+			return camera_capture_stream_preview (camera, file, context);
+		/* fallthrough */
 	}
 	return GP_ERROR_NOT_SUPPORTED;
 }
