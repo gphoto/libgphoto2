@@ -763,6 +763,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_LESetZoomMode			0x9021	/* lr plugin */
 #define PTP_OC_LEICA_LESetFocusCrossPosition		0x9022	/* lr plugin */
 #define PTP_OC_LEICA_LESetDisplayWindowPosition		0x9024	/* lr plugin */
+#define PTP_OC_LEICA_LEGetStreamData			0x9025	/* lr plugin */
 #define PTP_OC_LEICA_OpenLiveViewSession		0x9030
 #define PTP_OC_LEICA_CloseLiveViewSession		0x9031
 #define PTP_OC_LEICA_LESetDateTime			0x9036	/* lr plugin */
