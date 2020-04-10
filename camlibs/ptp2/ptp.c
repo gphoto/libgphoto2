@@ -6026,8 +6026,10 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_CaptureDelay, 0, 0.001, 0.0, "%.1fs"},		/* 5012 */
 		{PTP_DPC_DigitalZoom, 0, 0.1, 0.0, "%.1f"},		/* 5016 */
 		{PTP_DPC_BurstInterval, 0, 0.001, 0.0, "%.1fs"},	/* 5019 */
+		{PTP_DPC_TimelapseInterval, 0, 0.0001, 0.0, "%.1fs"},	/* 5019 */
 		{PTP_DPC_SupportedStreams, 0, 0, 0, "0x%x"},		/* 5020 */
 		{PTP_DPC_EnabledStreams, 0, 0, 0, "0x%x"},		/* 5021 */
+		{PTP_DPC_VideoFrameRate, 0, 0, 0.0000001, "%.1f s/f"},	/* 5021 */
 
 		/* Nikon device properties */
 		{PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, 0.08333, 0.0, N_("%.1f stops")},/* D10A */
@@ -6110,6 +6112,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32784, N_("Single Area")},
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32785, N_("Closest Subject")},
 		{PTP_DPC_FocusMeteringMode, PTP_VENDOR_NIKON, 32786, N_("Group Dynamic")},
+
+		{PTP_DPC_VideoFormat, 0, 0x47504a4d, "MJPG"},	/* 5022 */
 
 
 		/* Nikon specific device properties */
@@ -7172,6 +7176,59 @@ ptp_opcode_trans_t ptp_opcode_parrot_trans[] = {
 	{PTP_OC_PARROT_SendFirmwareUpdate,"PTP_OC_PARROT_SendFirmwareUpdate"},
 };
 
+ptp_opcode_trans_t ptp_opcode_leica_trans[] = {
+	{PTP_OC_LEICA_SetCameraSettings,"PTP_OC_LEICA_SetCameraSettings"},
+	{PTP_OC_LEICA_GetCameraSettings,"PTP_OC_LEICA_GetCameraSettings"},
+	{PTP_OC_LEICA_GetLensParameter,"PTP_OC_LEICA_GetLensParameter"},
+	{PTP_OC_LEICA_LEReleaseStages,"PTP_OC_LEICA_LEReleaseStages"},
+	{PTP_OC_LEICA_LEOpenSession,"PTP_OC_LEICA_LEOpenSession"},
+	{PTP_OC_LEICA_LECloseSession,"PTP_OC_LEICA_LECloseSession"},
+	{PTP_OC_LEICA_RequestObjectTransferReady,"PTP_OC_LEICA_RequestObjectTransferReady"},
+	{PTP_OC_LEICA_GetGeoTrackingData,"PTP_OC_LEICA_GetGeoTrackingData"},
+	{PTP_OC_LEICA_OpenDebugSession,"PTP_OC_LEICA_OpenDebugSession"},
+	{PTP_OC_LEICA_CloseDebugSession,"PTP_OC_LEICA_CloseDebugSession"},
+	{PTP_OC_LEICA_GetDebugBuffer,"PTP_OC_LEICA_GetDebugBuffer"},
+	{PTP_OC_LEICA_DebugCommandString,"PTP_OC_LEICA_DebugCommandString"},
+	{PTP_OC_LEICA_GetDebugRoute,"PTP_OC_LEICA_GetDebugRoute"},
+	{PTP_OC_LEICA_SetIPTCData,"PTP_OC_LEICA_SetIPTCData"},
+	{PTP_OC_LEICA_GetIPTCData,"PTP_OC_LEICA_GetIPTCData"},
+	{PTP_OC_LEICA_LEControlAutoFocus,"PTP_OC_LEICA_LEControlAutoFocus"},
+	{PTP_OC_LEICA_LEControlBulbExposure,"PTP_OC_LEICA_LEControlBulbExposure"},
+	{PTP_OC_LEICA_LEControlContinuousExposure,"PTP_OC_LEICA_LEControlContinuousExposure"},
+	{PTP_OC_LEICA_901b,"PTP_OC_LEICA_901b"},
+	{PTP_OC_LEICA_LEControlPhotoLiveView,"PTP_OC_LEICA_LEControlPhotoLiveView"},
+	{PTP_OC_LEICA_LEKeepSessionActive,"PTP_OC_LEICA_LEKeepSessionActive"},
+	{PTP_OC_LEICA_LEMoveLens,"PTP_OC_LEICA_LEMoveLens"},
+	{PTP_OC_LEICA_Get3DAxisData,"PTP_OC_LEICA_Get3DAxisData"},
+	{PTP_OC_LEICA_LESetZoomMode,"PTP_OC_LEICA_LESetZoomMode"},
+	{PTP_OC_LEICA_LESetFocusCrossPosition,"PTP_OC_LEICA_LESetFocusCrossPosition"},
+	{PTP_OC_LEICA_LESetDisplayWindowPosition,"PTP_OC_LEICA_LESetDisplayWindowPosition"},
+	{PTP_OC_LEICA_LEGetStreamData,"PTP_OC_LEICA_LEGetStreamData"},
+	{PTP_OC_LEICA_OpenLiveViewSession,"PTP_OC_LEICA_OpenLiveViewSession"},
+	{PTP_OC_LEICA_CloseLiveViewSession,"PTP_OC_LEICA_CloseLiveViewSession"},
+	{PTP_OC_LEICA_LESetDateTime,"PTP_OC_LEICA_LESetDateTime"},
+	{PTP_OC_LEICA_GetObjectPropListPaginated,"PTP_OC_LEICA_GetObjectPropListPaginated"},
+	{PTP_OC_LEICA_OpenProductionSession,"PTP_OC_LEICA_OpenProductionSession"},
+	{PTP_OC_LEICA_CloseProductionSession,"PTP_OC_LEICA_CloseProductionSession"},
+	{PTP_OC_LEICA_UpdateFirmware,"PTP_OC_LEICA_UpdateFirmware"},
+	{PTP_OC_LEICA_OpenOSDSession,"PTP_OC_LEICA_OpenOSDSession"},
+	{PTP_OC_LEICA_CloseOSDSession,"PTP_OC_LEICA_CloseOSDSession"},
+	{PTP_OC_LEICA_GetOSDData,"PTP_OC_LEICA_GetOSDData"},
+	{PTP_OC_LEICA_GetFirmwareStruct,"PTP_OC_LEICA_GetFirmwareStruct"},
+	{PTP_OC_LEICA_GetDebugMenu,"PTP_OC_LEICA_GetDebugMenu"},
+	{PTP_OC_LEICA_SetDebugMenu,"PTP_OC_LEICA_SetDebugMenu"},
+	{PTP_OC_LEICA_OdinMessage,"PTP_OC_LEICA_OdinMessage"},
+	{PTP_OC_LEICA_GetDebugObjectHandles,"PTP_OC_LEICA_GetDebugObjectHandles"},
+	{PTP_OC_LEICA_GetDebugObject,"PTP_OC_LEICA_GetDebugObject"},
+	{PTP_OC_LEICA_DeleteDebugObject,"PTP_OC_LEICA_DeleteDebugObject"},
+	{PTP_OC_LEICA_GetDebugObjectInfo,"PTP_OC_LEICA_GetDebugObjectInfo"},
+	{PTP_OC_LEICA_WriteDebugObject,"PTP_OC_LEICA_WriteDebugObject"},
+	{PTP_OC_LEICA_CreateDebugObject,"PTP_OC_LEICA_CreateDebugObject"},
+	{PTP_OC_LEICA_Calibrate3DAxis,"PTP_OC_LEICA_Calibrate3DAxis"},
+	{PTP_OC_LEICA_MagneticCalibration,"PTP_OC_LEICA_MagneticCalibration"},
+	{PTP_OC_LEICA_GetViewFinderData,"PTP_OC_LEICA_GetViewFinderData"},
+};
+
 const char*
 ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 {
@@ -7195,6 +7252,7 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 	case PTP_VENDOR_CANON:	RETURN_NAME_FROM_TABLE(ptp_opcode_canon_trans, opcode);
 	case PTP_VENDOR_SONY:	RETURN_NAME_FROM_TABLE(ptp_opcode_sony_trans, opcode);
 	case PTP_VENDOR_PARROT:	RETURN_NAME_FROM_TABLE(ptp_opcode_parrot_trans, opcode);
+	case PTP_VENDOR_GP_LEICA:	RETURN_NAME_FROM_TABLE(ptp_opcode_leica_trans, opcode);
 	default:
 		break;
 	}
