@@ -2902,6 +2902,8 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
 	PTPStreamInfo		sinfo;
+	unsigned char		*data;
+	unsigned int		size;
 
 	C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_EnabledStreams, &propval, PTP_DTC_UINT32));
 	if (!(propval.u32 & 1)) {	/* video enabled already ? */
@@ -2910,7 +2912,21 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 	}
 	C_PTP (ptp_getstreaminfo (params, 1, &sinfo));
 
-	return GP_OK;
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_LEICA) &&
+		(ptp_operation_issupported(params, PTP_OC_LEICA_LEGetStreamData))
+	) {
+		C_PTP (ptp_leica_getstreamdata (params, &data, &size));
+		gp_file_append (file, data, size);
+		free (data);
+		return GP_OK;
+	}
+	if (ptp_operation_issupported(params, PTP_OC_GetStream)) {
+		C_PTP (ptp_getstream (params, &data, &size));
+		gp_file_append (file, data, size);
+		free (data);
+		return GP_OK;
+	}
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 static int
@@ -8788,7 +8804,7 @@ camera_init (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_LEICA_LEOpenSession)) {
 			PTPDeviceInfo	pdi;
 
-			C_PTP (ptp_leica_leopensession (params, 0));
+			C_PTP (ptp_leica_leopensession (params, 0));	/* arguments might not be complete */
 			C_PTP_REP (ptp_getdeviceinfo (params, &pdi));
 			CR (fixup_cached_deviceinfo (camera, &pdi));
 			print_debug_deviceinfo(params, &params->deviceinfo);

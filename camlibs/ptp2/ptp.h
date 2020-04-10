@@ -3137,6 +3137,7 @@ uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
                         uint32_t objectformatcode, uint32_t associationOH,
         		uint64_t *numoifs, PTPObjectFilesystemInfo **oifs);
 uint16_t ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si);
+uint16_t ptp_getstream (PTPParams* params, unsigned char **data, unsigned int *size);
 
 
 uint16_t ptp_check_event (PTPParams *params);
@@ -3894,6 +3895,7 @@ uint16_t ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsig
 
 #define ptp_leica_leopensession(params,session) ptp_generic_no_data(params,PTP_OC_LEICA_LEOpenSession,1,session)
 #define ptp_leica_leclosesession(params) ptp_generic_no_data(params,PTP_OC_LEICA_LECloseSession,0)
+uint16_t ptp_leica_getstreamdata (PTPParams* params, unsigned char **data, unsigned int *size);
 
 #ifdef __cplusplus
 }

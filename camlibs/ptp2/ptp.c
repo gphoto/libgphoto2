@@ -514,6 +514,26 @@ ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si)
 }
 
 uint16_t
+ptp_getstream (PTPParams *params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_GetStream);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_leica_getstreamdata (PTPParams *params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer	ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_LEICA_LEGetStreamData);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
+	return PTP_RC_OK;
+}
+
+uint16_t
 ptp_canon_eos_905f (PTPParams* params, uint32_t x)
 {
 	PTPContainer	ptp;
