@@ -1084,9 +1084,30 @@ _get_INT(CONFIG_GET_ARGS) {
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
 		return GP_ERROR;
 	}
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	} else {
+		gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	}
 	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_value (*widget,value);
+
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		int i;
+
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++) {
+			switch (dpd->DataType) {
+			case PTP_DTC_UINT32:	sprintf (value, "%u", dpd->FORM.Enum.SupportedValue[i].u32 ); break;
+			case PTP_DTC_INT32:	sprintf (value, "%d", dpd->FORM.Enum.SupportedValue[i].i32 ); break;
+			case PTP_DTC_UINT16:	sprintf (value, "%u", dpd->FORM.Enum.SupportedValue[i].u16 ); break;
+			case PTP_DTC_INT16:	sprintf (value, "%d", dpd->FORM.Enum.SupportedValue[i].i16 ); break;
+			case PTP_DTC_UINT8:	sprintf (value, "%u", dpd->FORM.Enum.SupportedValue[i].u8  ); break;
+			case PTP_DTC_INT8:	sprintf (value, "%d", dpd->FORM.Enum.SupportedValue[i].i8  ); break;
+			default: sprintf (value,_("unexpected datatype %i"),dpd->DataType); return GP_ERROR;
+			}
+			gp_widget_add_choice (*widget,value);
+		}
+	}
 	return GP_OK;
 }
 
