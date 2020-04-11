@@ -1060,25 +1060,26 @@ _put_Range_UINT8(CONFIG_PUT_ARGS) {
 static int
 _get_INT(CONFIG_GET_ARGS) {
 	char value[64];
+	float	rvalue = 0;
 
 	switch (dpd->DataType) {
 	case PTP_DTC_UINT32:
-		sprintf (value, "%u", dpd->CurrentValue.u32 );
+		sprintf (value, "%u", dpd->CurrentValue.u32 ); rvalue = dpd->CurrentValue.u32;
 		break;
 	case PTP_DTC_INT32:
-		sprintf (value, "%d", dpd->CurrentValue.i32 );
+		sprintf (value, "%d", dpd->CurrentValue.i32 ); rvalue = dpd->CurrentValue.i32;
 		break;
 	case PTP_DTC_UINT16:
-		sprintf (value, "%u", dpd->CurrentValue.u16 );
+		sprintf (value, "%u", dpd->CurrentValue.u16 ); rvalue = dpd->CurrentValue.u16;
 		break;
 	case PTP_DTC_INT16:
-		sprintf (value, "%d", dpd->CurrentValue.i16 );
+		sprintf (value, "%d", dpd->CurrentValue.i16 ); rvalue = dpd->CurrentValue.i16;
 		break;
 	case PTP_DTC_UINT8:
-		sprintf (value, "%u", dpd->CurrentValue.u8 );
+		sprintf (value, "%u", dpd->CurrentValue.u8 ); rvalue = dpd->CurrentValue.u8;
 		break;
 	case PTP_DTC_INT8:
-		sprintf (value, "%d", dpd->CurrentValue.i8 );
+		sprintf (value, "%d", dpd->CurrentValue.i8 ); rvalue = dpd->CurrentValue.i8;
 		break;
 	default:
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
@@ -1086,11 +1087,19 @@ _get_INT(CONFIG_GET_ARGS) {
 	}
 	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
 		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget, menu->name);
+		gp_widget_set_value (*widget, value); /* text */
 	} else {
-		gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+		if (dpd->FormFlag == PTP_DPFF_Range) {
+			gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+			gp_widget_set_name (*widget, menu->name);
+			gp_widget_set_value (*widget, &rvalue); /* float */
+		} else {
+			gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+			gp_widget_set_name (*widget, menu->name);
+			gp_widget_set_value (*widget, value); /* text */
+		}
 	}
-	gp_widget_set_name (*widget, menu->name);
-	gp_widget_set_value (*widget,value);
 
 	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
 		int i;
@@ -1108,50 +1117,80 @@ _get_INT(CONFIG_GET_ARGS) {
 			gp_widget_add_choice (*widget,value);
 		}
 	}
+	if (dpd->FormFlag == PTP_DPFF_Range) {
+		float b = 0, t = 0, s = 0;
+
+#define X(type,u) case type: b = (float)dpd->FORM.Range.MinimumValue.u; t = (float)dpd->FORM.Range.MaximumValue.u; s = (float)dpd->FORM.Range.StepSize.u; break;
+		switch (dpd->DataType) {
+		X(PTP_DTC_UINT32,u32)
+		X(PTP_DTC_INT32,i32)
+		X(PTP_DTC_UINT16,u16)
+		X(PTP_DTC_INT16,i16)
+		X(PTP_DTC_UINT8,u8)
+		X(PTP_DTC_INT8,i8)
+		}
+#undef X
+		gp_widget_set_range (*widget, b, t, s);
+	}
 	return GP_OK;
 }
 
 static int
 _put_INT(CONFIG_PUT_ARGS) {
-	char *value;
-	unsigned int u;
-	int i;
+	if (dpd->FormFlag == PTP_DPFF_Range) {
+		float f;
 
-	CR (gp_widget_get_value(widget, &value));
+		CR (gp_widget_get_value(widget, &f));
+		switch (dpd->DataType) {
+		case PTP_DTC_UINT32:	propval->u32 = f; break;
+		case PTP_DTC_INT32:	propval->i32 = f; break;
+		case PTP_DTC_UINT16:	propval->u16 = f; break;
+		case PTP_DTC_INT16:	propval->i16 = f; break;
+		case PTP_DTC_UINT8:	propval->u8 = f; break;
+		case PTP_DTC_INT8:	propval->i8 = f; break;
+		}
+		return GP_OK;
+	} else {
+		char *value;
+		unsigned int u;
+		int i;
 
-	switch (dpd->DataType) {
-	case PTP_DTC_UINT32:
-	case PTP_DTC_UINT16:
-	case PTP_DTC_UINT8:
-		C_PARAMS (1 == sscanf (value, "%u", &u ));
-		break;
-	case PTP_DTC_INT32:
-	case PTP_DTC_INT16:
-	case PTP_DTC_INT8:
-		C_PARAMS (1 == sscanf (value, "%d", &i ));
-		break;
-	default:
-		return GP_ERROR;
-	}
-	switch (dpd->DataType) {
-	case PTP_DTC_UINT32:
-		propval->u32 = u;
-		break;
-	case PTP_DTC_INT32:
-		propval->i32 = i;
-		break;
-	case PTP_DTC_UINT16:
-		propval->u16 = u;
-		break;
-	case PTP_DTC_INT16:
-		propval->i16 = i;
-		break;
-	case PTP_DTC_UINT8:
-		propval->u8 = u;
-		break;
-	case PTP_DTC_INT8:
-		propval->i8 = i;
-		break;
+		CR (gp_widget_get_value(widget, &value));
+
+		switch (dpd->DataType) {
+		case PTP_DTC_UINT32:
+		case PTP_DTC_UINT16:
+		case PTP_DTC_UINT8:
+			C_PARAMS (1 == sscanf (value, "%u", &u ));
+			break;
+		case PTP_DTC_INT32:
+		case PTP_DTC_INT16:
+		case PTP_DTC_INT8:
+			C_PARAMS (1 == sscanf (value, "%d", &i ));
+			break;
+		default:
+			return GP_ERROR;
+		}
+		switch (dpd->DataType) {
+		case PTP_DTC_UINT32:
+			propval->u32 = u;
+			break;
+		case PTP_DTC_INT32:
+			propval->i32 = i;
+			break;
+		case PTP_DTC_UINT16:
+			propval->u16 = u;
+			break;
+		case PTP_DTC_INT16:
+			propval->i16 = i;
+			break;
+		case PTP_DTC_UINT8:
+			propval->u8 = u;
+			break;
+		case PTP_DTC_INT8:
+			propval->i8 = i;
+			break;
+		}
 	}
 	return GP_OK;
 }
@@ -2966,6 +3005,71 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	GP_LOG_D ("value %s is %f, closest match was %d",value,val,xval);
 	propval->u32 = xval;
 	return (GP_OK);
+}
+
+static int
+_get_Video_Framerate(CONFIG_GET_ARGS) {
+	char		buf[20];
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		/* value will be set below */
+	} else {
+		if (dpd->FormFlag == PTP_DPFF_Range) {
+			gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+			float val = dpd->CurrentValue.u32 / 1000000.0;
+			gp_widget_set_value (*widget, &val);
+		} else {
+			gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+			sprintf (buf, "%0.4f", (1.0*dpd->CurrentValue.u32) / 1000000.0);
+			gp_widget_set_value (*widget, buf);
+		}
+	}
+
+	gp_widget_set_name (*widget, menu->name);
+
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		int		i;
+
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			sprintf (buf,"%0.4f", (1.0*dpd->FORM.Enum.SupportedValue[i].u32)/1000000.0);
+			gp_widget_add_choice (*widget,buf);
+			if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
+				gp_widget_set_value (*widget,buf);
+		}
+	}
+	if (dpd->FormFlag == PTP_DPFF_Range) {
+		float b, t, s;
+
+		b = (1.0*dpd->FORM.Range.MinimumValue.u32) / 1000000.0;
+		t = (1.0*dpd->FORM.Range.MaximumValue.u32) / 1000000.0;
+		s = (1.0*dpd->FORM.Range.StepSize.u32) / 1000000.0;
+		gp_widget_set_range (*widget, b, t, s);
+	}
+	return GP_OK;
+}
+
+static int
+_put_Video_Framerate(CONFIG_PUT_ARGS)
+{
+	float		val;
+	char		*value;
+
+	if (dpd->FormFlag == PTP_DPFF_Range) {
+		CR (gp_widget_get_value (widget, &val));
+	} else {
+		CR (gp_widget_get_value (widget, &value));
+
+		if (!sscanf(value,_("%f"),&val)) {
+			GP_LOG_E ("failed to parse: %s", value);
+			return GP_ERROR;
+		}
+	}
+	propval->u32 = val * 1000000;
+	return GP_OK;
 }
 
 static int
@@ -8418,6 +8522,13 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
 	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
 	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Video Framerate"),        "videoframerate",       PTP_DPC_VideoFrameRate,                 0,                  PTP_DTC_UINT32, _get_Video_Framerate,           _put_Video_Framerate },
+	{ N_("Video Contrast"),         "videocontrast",        PTP_DPC_VideoContrast,                  0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Video Brightness"),       "videobrightness",      PTP_DPC_VideoBrightness,                0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Audio Bitrate"),          "audiobitrate",         PTP_DPC_AudioBitrate,                   0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Audio Sampling Rate"),    "audiosamplingrate",    PTP_DPC_AudioSamplingRate,              0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Audio Bit per Sample"),   "audiobitpersample",    PTP_DPC_AudioBitPerSample,              0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Audio Volume"),           "audiovolume",          PTP_DPC_AudioVolume,                    0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ 0,0,0,0,0,0,0 },
 };
 
