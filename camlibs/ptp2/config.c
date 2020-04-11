@@ -965,6 +965,22 @@ _get_STR(CONFIG_GET_ARGS) {
 }
 
 static int
+_get_STR_ENUMList (CONFIG_GET_ARGS) {
+	int j;
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_STR)
+		return GP_ERROR;
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++)
+		gp_widget_add_choice (*widget,dpd->FORM.Enum.SupportedValue[j].str);
+	gp_widget_set_value (*widget,dpd->CurrentValue.str);
+	return GP_OK;
+}
+
+static int
 _put_STR(CONFIG_PUT_ARGS) {
 	const char *string;
 
@@ -1412,32 +1428,6 @@ static struct deviceproptableu16 fuji_releasemode[] = {
 	{ N_("Mup Mirror up"),		5,	PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(Fuji_ReleaseMode,fuji_releasemode)
-
-static int
-_get_ImageSize(CONFIG_GET_ARGS) {
-	int j;
-
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return(GP_ERROR);
-	if (dpd->DataType != PTP_DTC_STR)
-		return(GP_ERROR);
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	for (j=0;j<dpd->FORM.Enum.NumberOfValues; j++) {
-		gp_widget_add_choice (*widget,dpd->FORM.Enum.SupportedValue[j].str);
-	}
-	gp_widget_set_value (*widget,dpd->CurrentValue.str);
-	return GP_OK;
-}
-
-static int
-_put_ImageSize(CONFIG_PUT_ARGS) {
-	char *value;
-
-	CR (gp_widget_get_value(widget, &value));
-	C_MEM (propval->str = strdup (value));
-	return(GP_OK);
-}
 
 static int
 _get_ExpCompensation(CONFIG_GET_ARGS) {
@@ -3698,6 +3688,60 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 		}
 	}
 	propval->u32 = newval;
+	return GP_OK;
+}
+
+static int
+_get_VideoFormat(CONFIG_GET_ARGS) {
+	int i, valset = 0;
+	char buf[200];
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	/* We use FOURCC values, which should be 4 characters always */
+
+	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+		sprintf (buf, "%c%c%c%c",
+			(dpd->FORM.Enum.SupportedValue[i].u32     )  & 0xff,
+			(dpd->FORM.Enum.SupportedValue[i].u32 >> 8)  & 0xff,
+			(dpd->FORM.Enum.SupportedValue[i].u32 >> 16) & 0xff,
+			(dpd->FORM.Enum.SupportedValue[i].u32 >> 24) & 0xff
+		);
+		gp_widget_add_choice (*widget,buf);
+		if (dpd->CurrentValue.u32 == dpd->FORM.Enum.SupportedValue[i].u32) {
+			gp_widget_set_value (*widget, buf);
+			valset = 1;
+		}
+	}
+	if (!valset) {
+		sprintf (buf, "%c%c%c%c",
+			(dpd->CurrentValue.u32     )  & 0xff,
+			(dpd->CurrentValue.u32 >> 8)  & 0xff,
+			(dpd->CurrentValue.u32 >> 16) & 0xff,
+			(dpd->CurrentValue.u32 >> 24) & 0xff
+		);
+		sprintf (buf, _("%d mm"), dpd->CurrentValue.u16);
+		gp_widget_set_value (*widget, buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_VideoFormat(CONFIG_PUT_ARGS) {
+	const unsigned char *value_str;
+
+	CR (gp_widget_get_value (widget, &value_str));
+	if (strlen((char*)value_str) < 4)
+		return GP_ERROR_BAD_PARAMETERS;
+	/* we could check if we have it in the ENUM */
+	propval->u32 = value_str[0] | (value_str[1] << 8) | (value_str[2] << 16) | (value_str[3] << 24);
 	return GP_OK;
 }
 
@@ -8320,7 +8364,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_FUJI_Quality,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ImageFormat,          _put_Fuji_ImageFormat },
 	{ N_("Image Format"),           "imageformat",          0,					PTP_VENDOR_PANASONIC,PTP_DTC_UINT16, _get_Panasonic_ImageFormat,    _put_Panasonic_ImageFormat },
 	{ N_("Image Format Ext HD"),    "imageformatexthd",     PTP_DPC_CANON_EOS_ImageFormatExtHD,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
-	{ N_("Image Size"),             "imagesize",            PTP_DPC_ImageSize,                      0,                  PTP_DTC_STR,    _get_ImageSize,                 _put_ImageSize },
+	{ N_("Image Size"),             "imagesize",            PTP_DPC_ImageSize,                      0,                  PTP_DTC_STR,    _get_STR_ENUMList,              _put_STR },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_NIKON_1_ImageSize,              PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon1_ImageSize,          _put_Nikon1_ImageSize },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_SONY_ImageSize,                 PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ImageSize,            _put_Sony_ImageSize },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_CANON_ImageSize,                PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Size,                _put_Canon_Size },
@@ -8350,6 +8394,9 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
 	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
+	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
+	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
+	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ 0,0,0,0,0,0,0 },
 };
 
