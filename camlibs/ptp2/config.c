@@ -7760,6 +7760,50 @@ static struct deviceproptableu16 sony_capturetarget[] = {
 };
 GENERIC16TABLE(Sony_CaptureTarget,sony_capturetarget)
 
+static struct deviceproptableu32 audio_format[] = {
+	{ "PCM",		0x0001, 0 },
+	{ "ADPCM",		0x0002, 0 },
+	{ "IEEE float",		0x0003, 0 },
+	{ "VSELP",		0x0004, 0 },
+	{ "IBM CVSD",		0x0005, 0 },
+	{ "a-Law",		0x0006, 0 },
+	{ "u-Law",		0x0007, 0 },
+	{ "DTS",		0x0008, 0 },
+	{ "DRM",		0x0009, 0 },
+	{ "OKI-ADPCM",		0x0010, 0 },
+	{ "IMA-ADPCM",		0x0011, 0 },
+	{ "Mediaspace ADPCM",	0x0012, 0 },
+	{ "Sierra ADPCM",	0x0013, 0 },
+	{ "G723 ADPCM",		0x0014, 0 },
+	{ "DIGISTD",		0x0015, 0 },
+	{ "DIGIFIX",		0x0016, 0 },
+	{ "Dolby AC2",		0x0030, 0 },
+	{ "GSM 610",		0x0031, 0 },
+	{ "Rockwell ADPCM",	0x003b, 0 },
+	{ "Rockwell DIGITALK",	0x003c, 0 },
+	{ "G721 ADPCM",		0x0040, 0 },
+	{ "G728 CELP",		0x0041, 0 },
+	{ "MPEG",		0x0050, 0 },
+	{ "RT24",		0x0052, 0 },
+	{ "PAC",		0x0053, 0 },
+	{ "MP3",		0x0055, 0 },
+	{ "G726 ADPCM",		0x0064, 0 },
+	{ "G722 ADPCM",		0x0065, 0 },
+	{ "IBM u-Law",		0x0101, 0 },
+	{ "IBM a-Law",		0x0102, 0 },
+	{ "IBM ADPCM",		0x0103, 0 },
+	{ "Ogg Vorbis 1",	0x674f, 0 },
+	{ "Ogg Vorbis 1 PLUS",	0x676f, 0 },
+	{ "Ogg Vorbis 2",	0x6750, 0 },
+	{ "Ogg Vorbis 2 PLUS",	0x6770, 0 },
+	{ "Ogg Vorbis 3",	0x6751, 0 },
+	{ "Ogg Vorbis 3 PLUS",	0x6771, 0 },
+	{ "Ogg Vorbis 3 PLUS",	0x6771, 0 },
+	/* Development 0xffff */
+	/* Reserved 0xffff...  */
+};
+GENERIC32TABLE(Audio_Format,audio_format)
+
 static struct {
 	char	*name;
 	char	*label;
@@ -8525,6 +8569,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Video Framerate"),        "videoframerate",       PTP_DPC_VideoFrameRate,                 0,                  PTP_DTC_UINT32, _get_Video_Framerate,           _put_Video_Framerate },
 	{ N_("Video Contrast"),         "videocontrast",        PTP_DPC_VideoContrast,                  0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Video Brightness"),       "videobrightness",      PTP_DPC_VideoBrightness,                0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Audio Format"),           "audioformat",          PTP_DPC_AudioFormat,                    0,                  PTP_DTC_UINT32, _get_Audio_Format,              _put_Audio_Format },
 	{ N_("Audio Bitrate"),          "audiobitrate",         PTP_DPC_AudioBitrate,                   0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Audio Sampling Rate"),    "audiosamplingrate",    PTP_DPC_AudioSamplingRate,              0,                  PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Audio Bit per Sample"),   "audiobitpersample",    PTP_DPC_AudioBitPerSample,              0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
