@@ -5776,34 +5776,6 @@ static struct deviceproptableu8 nikon_vignettecorrection[] = {
 GENERIC8TABLE(Nikon_VignetteCorrection,nikon_vignettecorrection)
 
 static int
-_get_BurstNumber(CONFIG_GET_ARGS) {
-	float value_float , start=0.0, end=0.0, step=0.0;
-
-	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	start = dpd->FORM.Range.MinimumValue.u16;
-	end = dpd->FORM.Range.MaximumValue.u16;
-	step = dpd->FORM.Range.StepSize.u16;
-	gp_widget_set_range (*widget, start, end, step);
-	value_float = dpd->CurrentValue.u16;
-	gp_widget_set_value (*widget, &value_float);
-	return (GP_OK);
-}
-
-static int
-_put_BurstNumber(CONFIG_PUT_ARGS) {
-	float val;
-
-	CR (gp_widget_get_value(widget, &val));
-	propval->u16 = val;
-	return GP_OK;
-}
-
-static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
 	unsigned char value_float , start, end;
 	char	buffer[20];
@@ -8702,8 +8674,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("EV Step"),                        "evstep",                   PTP_DPC_NIKON_EVStep,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_EVStep,                  _put_Nikon_EVStep },
 	{ N_("Bracket Set"),                    "bracketset",               PTP_DPC_NIKON_BracketSet,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketSet,              _put_Nikon_BracketSet },
 	{ N_("Bracket Order"),                  "bracketorder",             PTP_DPC_NIKON_BracketOrder,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketOrder,            _put_Nikon_BracketOrder },
-	{ N_("Burst Number"),                   "burstnumber",              PTP_DPC_BurstNumber,                    0,                  PTP_DTC_UINT16, _get_BurstNumber,                   _put_BurstNumber },
-	{ N_("Burst Interval"),                 "burstinterval",            PTP_DPC_BurstNumber,                    0,                  PTP_DTC_UINT16, _get_Milliseconds,                  _put_Milliseconds },
+	{ N_("Burst Number"),                   "burstnumber",              PTP_DPC_BurstNumber,                    0,                  PTP_DTC_UINT16, _get_INT,                           _put_INT },
+	{ N_("Burst Interval"),                 "burstinterval",            PTP_DPC_BurstInterval,                  0,                  PTP_DTC_UINT16, _get_Milliseconds,                  _put_Milliseconds },
 	{ N_("Maximum Shots"),                  "maximumshots",             PTP_DPC_NIKON_MaximumShots,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_INT,                           _put_None },
 
 	/* Newer Nikons have UINT8 ranges */
