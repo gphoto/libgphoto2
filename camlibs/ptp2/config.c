@@ -2442,43 +2442,6 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
 
 static int
-_get_ISO(CONFIG_GET_ARGS) {
-	int i;
-
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return (GP_ERROR);
-	if (dpd->DataType != PTP_DTC_UINT16)
-		return (GP_ERROR);
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
-
-		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u16);
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget,buf);
-	}
-	return (GP_OK);
-}
-
-static int
-_put_ISO(CONFIG_PUT_ARGS)
-{
-	char *value;
-	unsigned int	u;
-
-	CR (gp_widget_get_value(widget, &value));
-
-	if (sscanf(value, "%ud", &u)) {
-		propval->u16 = u;
-		return GP_OK;
-	}
-	return GP_ERROR;
-}
-
-static int
 _get_Olympus_ISO(CONFIG_GET_ARGS) {
 	int i;
 
@@ -2556,91 +2519,6 @@ _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 		C_PTP_REP (ptp_olympus_omd_bulbend (params));
 	}
 	return GP_OK;
-}
-
-static int
-_get_ISO32(CONFIG_GET_ARGS) {
-	int i;
-
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return GP_ERROR;
-	if (dpd->DataType != PTP_DTC_UINT32)
-		return GP_ERROR;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
-
-		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32);
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32)
-			gp_widget_set_value (*widget,buf);
-	}
-	return GP_OK;
-}
-
-static int
-_put_ISO32(CONFIG_PUT_ARGS)
-{
-	char *value;
-	unsigned int	u;
-
-	CR (gp_widget_get_value(widget, &value));
-
-	if (sscanf(value, "%ud", &u)) {
-		propval->u32 = u;
-		return GP_OK;
-	}
-	return GP_ERROR;
-}
-
-static int
-_get_Fuji_ISO(CONFIG_GET_ARGS) {
-	int i;
-
-	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
-		return GP_ERROR;
-	if (dpd->DataType != PTP_DTC_INT32 && /* most camera return INT32 */
-		dpd->DataType != PTP_DTC_UINT16)  /* ensure compatibility with UINT16 */
-		return GP_ERROR;
-
-	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
-	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
-
-		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].i32);
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].i32 == dpd->CurrentValue.i32)
-			gp_widget_set_value (*widget,buf);
-	}
-	return GP_OK;
-}
-
-static int
-_put_Fuji_ISO(CONFIG_PUT_ARGS)
-{
-	char *value;
-
-	CR (gp_widget_get_value(widget, &value));
-
-	/* most camera return INT32 */
-	if (dpd->DataType == PTP_DTC_INT32) {
-		int i;
-		if (sscanf(value, "%d", &i)) {
-			propval->i32 = i;
-			return GP_OK;
-		}
-	/* ensure compatibility with UINT16 */
-	} else if (dpd->DataType == PTP_DTC_UINT16) {
-		unsigned int u;
-		if (sscanf(value, "%d", &u)) {
-			propval->u16 = u;
-			return GP_OK;
-		}
-	}
-	return GP_ERROR;
 }
 
 static int
@@ -8510,9 +8388,9 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_SONY_ImageSize,                 PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ImageSize,            _put_Sony_ImageSize },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_CANON_ImageSize,                PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Size,                _put_Canon_Size },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_ISOSpeed,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
-	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  PTP_VENDOR_FUJI,    PTP_DTC_INT32,  _get_Fuji_ISO,                  _put_Fuji_ISO },
-	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  0,                  PTP_DTC_UINT16, _get_ISO,                       _put_ISO },
-	{ N_("Movie ISO Speed"),        "movieiso",             PTP_DPC_NIKON_MovieISO,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_ISO32,                     _put_ISO32 },
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  PTP_VENDOR_FUJI,    PTP_DTC_INT32,  _get_INT,                       _put_INT },
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_ExposureIndex,                  0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Movie ISO Speed"),        "movieiso",             PTP_DPC_NIKON_MovieISO,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
