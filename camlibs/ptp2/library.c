@@ -277,7 +277,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 	if (    (di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_product == 0x1a98)
+		(a.usb_vendor == 0x1a98)
 	) {
 		di->VendorExtensionID = PTP_VENDOR_GP_LEICA;
 	}
