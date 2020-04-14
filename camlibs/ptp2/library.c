@@ -2915,17 +2915,47 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_LEICA) &&
 		(ptp_operation_issupported(params, PTP_OC_LEICA_LEGetStreamData))
 	) {
+		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_VideoFormat, &propval, PTP_DTC_UINT32));
+
 		C_PTP (ptp_leica_getstreamdata (params, &data, &size));
-		gp_file_append (file, data, size);
+		if (propval.u32 == 0x47504a4d) { /* MJPG */
+			unsigned char	*jpgStartPtr;
+
+			/* look for the JPEG SOI marker (0xFFD8) in data */
+			jpgStartPtr = (unsigned char*)memchr(data, 0xff, size);
+			while(jpgStartPtr && ((jpgStartPtr+1) < (data + size))) {
+				if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
+					break;
+				} else { /* go on looking (starting at next byte) */
+					jpgStartPtr++;
+					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+				}
+			}
+			if(!jpgStartPtr) { /* no SOI -> no JPEG */
+				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
+				return GP_ERROR;
+			}
+
+			/* assume ff d9 is at the end for now */
+			gp_file_append (file, (char*)jpgStartPtr, size - (jpgStartPtr - data));
+			gp_file_set_mime_type (file, GP_MIME_JPEG);
+			gp_file_set_name (file, "preview.jpg");
+		} else {
+			gp_file_append (file, (char*)data, size);
+		}
+		gp_file_set_mtime (file, time(NULL));
 		free (data);
+		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
 	if (ptp_operation_issupported(params, PTP_OC_GetStream)) {
 		C_PTP (ptp_getstream (params, &data, &size));
-		gp_file_append (file, data, size);
+		gp_file_append (file, (char*)data, size);
 		free (data);
+		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
+	SET_CONTEXT_P(params, NULL);
 	return GP_ERROR_NOT_SUPPORTED;
 }
 
