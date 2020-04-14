@@ -455,27 +455,19 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (params->deviceinfo.Model && (sscanf(params->deviceinfo.Model,"D%d", &nikond)))
 		{
 			if ((nikond >= 3000) && (nikond < 3199)) {
-				GP_LOG_D("The D3xxx series hides commands from us ... adding all D3000 ones");
+				GP_LOG_D("The D3xxx series hides commands from us ... ");
+				/* Most commands we guessed do not work (anymore). One user searched for those, remove the ones we do not have.
+				 * https://github.com/gphoto/libgphoto2/issues/140
+				 */
 				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
-					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 15)));
-					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
-					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_CheckEvent;
-					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_Capture;
-					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_AfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_SetControlMode;
-					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_DeviceReady;
-					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
-					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
-
-					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_GetPreviewImg;
-					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_StartLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_EndLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_GetLiveViewImg;
-					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_MfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_ChangeAfArea;
-					di->OperationsSupported[di->OperationsSupported_len+14] = PTP_OC_NIKON_AfDriveCancel;
-					/* only opcodes up to 9206 ... I think. */
-					di->OperationsSupported_len += 15;
+					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
+					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_AfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_DeviceReady;
+					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_GetPreviewImg;
+					di->OperationsSupported[di->OperationsSupported_len+3] = PTP_OC_NIKON_MfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+4] = PTP_OC_NIKON_ChangeAfArea;
+					di->OperationsSupported[di->OperationsSupported_len+5] = PTP_OC_NIKON_AfDriveCancel;
+					di->OperationsSupported_len += 6;
 				}
 			}
 			if ((nikond >= 3200) && (nikond < 3999)) {
@@ -2419,7 +2411,7 @@ static struct {
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
 
 	/* Christopher Kao <christopherkao@icloud.com> */
-	{"Leica:SL (Typ 601)",			0x1a98,	0x2041, PTP_CAP},
+	{"Leica:SL (Typ 601)",			0x1a98,	0x2041, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://github.com/gphoto/libgphoto2/issues/105 */
 	{"Parrot:Sequoia",			0x19cf,	0x5039, PTP_CAP},
@@ -2915,6 +2907,22 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_LEICA) &&
 		(ptp_operation_issupported(params, PTP_OC_LEICA_LEGetStreamData))
 	) {
+		/* ptp header + header before ff d8 
+		0000  58 1c 00 00 02 00 25 90-0b 00 00 00 02 01 00 00  X.....%.........
+		0010  46 1c 00 00 00 00 3e 1c-00 00 00 00 b4 00 00 00  F.....>.........
+		0020  01 00 00 00 04 00 00 00-d4 30 00 00 02 00 00 00  .........0......
+		0030  04 00 00 00 d4 30 00 00-03 00 00 00 04 00 00 00  .....0..........
+		0040  53 06 00 00 04 00 00 00-40 00 00 00 00 00 00 00  S.......@.......
+		0050  00 00 00 00 00 00 00 00-00 00 00 00 70 17 00 00  ............p...
+		0060  a0 0f 00 00 00 00 00 00-00 00 00 00 70 17 00 00  ............p...
+		0070  a0 0f 00 00 00 00 00 00-00 00 00 00 70 17 00 00  ............p...
+		0080  a0 0f 00 00 fe ff ff ff-fe ff ff ff 05 00 00 00  ................
+		0090  04 00 00 00 00 00 00 00-06 00 00 00 10 00 00 00  ................
+		00a0  00 00 00 00 00 00 00 00-00 00 00 00 00 00 00 00  ................
+		00b0  07 00 00 00 04 00 00 00-00 00 00 00 00 00 00 00  ................
+		00c0  ff d8
+		*/
+
 		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_VideoFormat, &propval, PTP_DTC_UINT32));
 
 		C_PTP (ptp_leica_getstreamdata (params, &data, &size));
