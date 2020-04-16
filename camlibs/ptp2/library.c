@@ -454,7 +454,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		}
 		if (params->deviceinfo.Model && (sscanf(params->deviceinfo.Model,"D%d", &nikond)))
 		{
-			if ((nikond >= 3000) && (nikond < 3199)) {
+			if ((nikond >= 3000) && (nikond < 3099)) {
 				GP_LOG_D("The D3xxx series hides commands from us ... ");
 				/* Most commands we guessed do not work (anymore). One user searched for those, remove the ones we do not have.
 				 * https://github.com/gphoto/libgphoto2/issues/140
@@ -468,6 +468,26 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 					di->OperationsSupported[di->OperationsSupported_len+4] = PTP_OC_NIKON_ChangeAfArea;
 					di->OperationsSupported[di->OperationsSupported_len+5] = PTP_OC_NIKON_AfDriveCancel;
 					di->OperationsSupported_len += 6;
+				}
+			}
+			if ((nikond >= 3100) && (nikond < 3199)) {
+				GP_LOG_D("The D3xxx series hides commands from us ... ");
+				/* Most commands we guessed do not work (anymore). One user searched for those, remove the ones we do not have.
+				 * https://github.com/gphoto/libgphoto2/issues/140
+				 * added liveview back ... lets see
+				 */
+				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
+					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
+					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_AfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_DeviceReady;
+					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_GetPreviewImg;
+					di->OperationsSupported[di->OperationsSupported_len+3] = PTP_OC_NIKON_MfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+4] = PTP_OC_NIKON_ChangeAfArea;
+					di->OperationsSupported[di->OperationsSupported_len+5] = PTP_OC_NIKON_AfDriveCancel;
+					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_StartLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+7] = PTP_OC_NIKON_EndLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+8] = PTP_OC_NIKON_GetLiveViewImg;
+					di->OperationsSupported_len += 9;
 				}
 			}
 			if ((nikond >= 3200) && (nikond < 3999)) {
