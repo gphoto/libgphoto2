@@ -1,7 +1,7 @@
 Device info:
 Manufacturer: Nikon Corporation
-  Model: D3000
-  device version: V1.00
+  Model: D3100
+  device version: V1.01
   serial number: 'nnnnnnn'
 Vendor extension ID: 0x0000000a
 Vendor extension version: 100
@@ -9,29 +9,29 @@ Vendor extension description: microsoft.com: 1.0
 Functional Mode: 0x0000
 PTP Standard Version: 100
 Supported operations:
-  0x1001
-  0x1002
-  0x1003
-  0x1004
-  0x1005
-  0x1006
-  0x1007
-  0x1008
-  0x1009
-  0x100a
-  0x100b
-  0x100c
-  0x100d
-  0x100e
-  0x100f
-  0x1014
-  0x1015
-  0x1016
-  0x101b
-  0x9801
-  0x9802
-  0x9803
-  0x9805
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
 Events Supported:
   0x4001
   0x4002
@@ -61,6 +61,7 @@ Device Properties Supported:
   0x5013
   0x5018
   0x501c
+  0xd303
   0xd406
   0xd407
 
