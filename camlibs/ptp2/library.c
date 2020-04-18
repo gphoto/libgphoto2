@@ -5448,7 +5448,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				return translate_ptp_result (ret);
 		} while (ret == PTP_RC_DeviceBusy);
 
-		C_PTP_REP (nikon_wait_busy (params, 100, 200*000)); /* lets wait 200 seconds */
+		C_PTP_REP (nikon_wait_busy (params, 100, 200*1000)); /* lets wait 200 seconds */
 		return GP_OK;
 	}
 
