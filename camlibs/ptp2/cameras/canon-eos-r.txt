@@ -3009,36 +3009,43 @@ event 262: unknown EOS event c1f6
     11: 00
 olcinfoversion is 17
 event 263: EOS event OLCInfoChanged (size 92)
-    0: 58
+    0: 58	size
     1: 00
     2: 00
     3: 00
-    4: ff
+
+    4: ff	mask
     5: 1f
     6: 00
     7: 00
-    8: 01
+
+    8: 01	button	(2)
     9: 04
-    10: 01
+
+    10: 01	shutterspeed 
     11: 01
     12: a0
     13: 0c
     14: 00
     15: 0c
     16: 00
-    17: 01
+
+    17: 01	aperture
     18: 01
     19: 50
     20: 28
     21: 38
     22: 00
-    23: 01
+
+    23: 01	iso
     24: 01
     25: 00
     26: 68
-    27: 6d
+
+    27: 6d	perhaps still iso
     28: 28
-    29: 04
+
+    29: 04	....
     30: 01
     31: 05
     32: f6

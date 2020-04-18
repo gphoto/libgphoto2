@@ -2467,6 +2467,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 		 * 70D:		8
 		 * 5Dsr:	b
 		 * 200D: 	f
+		 * EOS R:	11
 		 */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
@@ -2515,6 +2516,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* this seesm to be the shutter speed record */
 				/* EOS 200D seems to have 7 bytes here, sample:
 				 * 7 bytes: 01 03 98 10 00 70 00 
+				 * EOS R also 7 bytes
+				 * 7 bytes: 01 01 a0 0c 00 0c 00
 				 */
 				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
@@ -2525,7 +2528,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				/* hack to differ between older EOS and EOS 200D newer */
 				switch (olcver) {
 				case 0xf:
-					curoff += 7;	/* f (200D), 8 (M10) */
+				case 0x11:
+					curoff += 7;	/* f (200D), 8 (M10) ???, 11 is EOS R */
 					break;
 				case 0x7:
 				case 0x8: /* EOS 70D */
@@ -2551,7 +2555,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
 				if (olcver >= 0xf) {
-					curoff += 6;	/* f */
+					curoff += 6;	/* f, 11 */
 				} else {
 					curoff += 5;	/* 7, 8, b */
 				}
