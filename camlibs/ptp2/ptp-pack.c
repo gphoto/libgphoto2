@@ -2537,7 +2537,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					curoff += 6;	/* 7 , b (5ds) */
 					break;
 				default:
-					curoff += 6;
+					if (olcver >= 0xf)
+						curoff += 7;
+					else
+						curoff += 6;
 					break;
 				}
 				i++;
