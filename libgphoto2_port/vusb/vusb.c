@@ -78,11 +78,11 @@ gp_port_library_list (GPPortInfoList *list)
 
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 
-        CHECK (gp_port_info_new (&info));
-        gp_port_info_set_type (info, GP_PORT_USB);
-        gp_port_info_set_name (info, "");
-        gp_port_info_set_path (info, "^usb:");
-        gp_port_info_list_append (list, info); /* do not check, might be -1 */
+	CHECK (gp_port_info_new (&info));
+	gp_port_info_set_type (info, GP_PORT_USB);
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^usb:");
+	gp_port_info_list_append (list, info); /* do not check, might be -1 */
 
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB);
@@ -92,14 +92,14 @@ gp_port_library_list (GPPortInfoList *list)
 
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB_SCSI);
-	gp_port_info_set_name (info, "Universal Serial Bus SCSI");
-	gp_port_info_set_path (info, "usbscsi:");
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^usbscsi:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB_DISK_DIRECT);
-	gp_port_info_set_name (info, "Universal Serial Bus Disk");
-	gp_port_info_set_path (info, "usbdisk:");
+	gp_port_info_set_name (info, "");
+	gp_port_info_set_path (info, "^usbdisk:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	gp_port_info_new (&info);
