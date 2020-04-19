@@ -99,7 +99,7 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_new (&info);
 	gp_port_info_set_type (info, GP_PORT_USB_DISK_DIRECT);
 	gp_port_info_set_name (info, "");
-	gp_port_info_set_path (info, "^usbdisk:");
+	gp_port_info_set_path (info, "^usbdiskdirect:");
 	CHECK (gp_port_info_list_append (list, info));
 
 	gp_port_info_new (&info);
