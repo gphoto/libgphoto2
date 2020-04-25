@@ -511,14 +511,14 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_SetProfileData	0x9009
 #define PTP_OC_NIKON_AdvancedTransfer	0x9010
 #define PTP_OC_NIKON_GetFileInfoInBlock	0x9011
-#define PTP_OC_NIKON_Capture		0x90C0	/* 1 param,   no data */
+#define PTP_OC_NIKON_InitiateCaptureRecInSdram		0x90C0	/* 1 param,   no data */
 #define PTP_OC_NIKON_AfDrive		0x90C1	/* no params, no data */
-#define PTP_OC_NIKON_SetControlMode	0x90C2	/* 1 param,  no data */
-#define PTP_OC_NIKON_DelImageSDRAM	0x90C3	/* 1 param,  no data */
+#define PTP_OC_NIKON_ChangeCameraMode	0x90C2	/* 1 param,  no data */
+#define PTP_OC_NIKON_DelImageSDRAM	0x90C3	/* 1 param (0x0: all, others: cancel this image) ,  no data */
 #define PTP_OC_NIKON_GetLargeThumb	0x90C4
 #define PTP_OC_NIKON_CurveDownload	0x90C5	/* 1 param,   data in */
 #define PTP_OC_NIKON_CurveUpload	0x90C6	/* 1 param,   data out */
-#define PTP_OC_NIKON_CheckEvent		0x90C7	/* no params, data in */
+#define PTP_OC_NIKON_GetEvent		0x90C7	/* no params, data in */
 #define PTP_OC_NIKON_DeviceReady	0x90C8	/* no params, no data */
 #define PTP_OC_NIKON_SetPreWBData	0x90C9	/* 3 params,  data out */
 #define PTP_OC_NIKON_GetVendorPropCodes	0x90CA	/* 0 params, data in */
@@ -548,10 +548,36 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_EndMovieRec		0x920b	/* no params, no data */
 
 #define PTP_OC_NIKON_TerminateCapture		0x920c	/* 2 params */
+#define PTP_OC_NIKON_GetFhdPicture		0x920f	/* param: objecthandle. returns (at most) 1920x1028 picture */
 
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
-#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, data in */
+#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, p1: object handle, p2: 32bit transfer size, p3: terminate after transfer. DATA in, Reuslt: r1: 32bit number sent, r2: before offset low 32bit , r3: before offset high 32bit */
+#define PTP_OC_NIKON_StartSpotWb		0x9402
+#define PTP_OC_NIKON_EndSpotWb			0x9403
+#define PTP_OC_NIKON_ChangeSpotWbArea		0x9404
+#define PTP_OC_NIKON_MeasureSpotWb		0x9405
+#define PTP_OC_NIKON_EndSpotWbResultDisp	0x9406
+#define PTP_OC_NIKON_CancelImagesInSDRAM	0x940c
+#define PTP_OC_NIKON_GetSBHandles		0x9414
+#define PTP_OC_NIKON_GetSBAttrDesc		0x9415
+#define PTP_OC_NIKON_GetSBAttrValue		0x9416
+#define PTP_OC_NIKON_SetSBAttrValue		0x9417
+#define PTP_OC_NIKON_GetSBGroupAttrDesc		0x9418
+#define PTP_OC_NIKON_GetSBGroupAttrValue	0x9419
+#define PTP_OC_NIKON_SetSBGroupAttrValue	0x941a
+#define PTP_OC_NIKON_TestFlash			0x941b
+#define PTP_OC_NIKON_GetEventEx			0x941c	/* can do multiparameter events, compared to GetEvent */
+#define PTP_OC_NIKON_MirrorUpCancel		0x941d
+#define PTP_OC_NIKON_SaveCameraSetting		0x9420
+#define PTP_OC_NIKON_GetObjectSize		0x9421	/* param: objecthandle, returns 64bit objectsize as DATA */
+#define PTP_OC_NIKON_GetLiveViewCompressedSize	0x9423
+#define PTP_OC_NIKON_StartTracking		0x9424
+#define PTP_OC_NIKON_EndTracking		0x9425
+#define PTP_OC_NIKON_ChangeAELock		0x9426
+#define PTP_OC_NIKON_GetLiveViewImageEx		0x9428
+#define PTP_OC_NIKON_GetPartialObjectEx		0x9431	/* p1: objecthandle, p2: offset lower 32bit, p3: offset higher 32bit, p4: maxsize lower 32bit, p5: maxsize upper 32bit, response is r1: lower 32bit, r2: higher 32bit */
+#define PTP_OC_NIKON_GetManualSettingLensData	0x9432
 
 /* From Nikon V1 Trace */
 #define PTP_OC_NIKON_GetDevicePropEx		0x9504	/* gets device prop data */
@@ -916,7 +942,17 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_NIKON_NotLiveView		0xA00B
 #define PTP_RC_NIKON_MfDriveStepEnd		0xA00C
 #define PTP_RC_NIKON_MfDriveStepInsufficiency	0xA00E
-#define PTP_RC_NIKON_AdvancedTransferCancel	0xA022
+#define PTP_RC_NIKON_NoFullHDPresent		0xA00F
+#define PTP_RC_NIKON_StoreError			0xA021
+#define PTP_RC_NIKON_StoreUnformatted		0xA022	/* from z6 sdk */
+#define PTP_RC_NIKON_AdvancedTransferCancel	0xA022	/* dup from me*/
+#define PTP_RC_NIKON_Bulb_Release_Busy		0xA200
+#define PTP_RC_NIKON_Silent_Release_Busy	0xA201
+#define PTP_RC_NIKON_MovieFrame_Release_Busy	0xA202
+#define PTP_RC_NIKON_Shutter_Speed_Time		0xA204
+#define PTP_RC_NIKON_Waiting_2ndRelease		0xA207
+#define PTP_RC_NIKON_MirrorUpCapture_Already_Start		0xA208
+#define PTP_RC_NIKON_Invalid_SBAttribute_Value	0xA209
 
 /* Canon specific response codes */
 #define PTP_RC_CANON_UNKNOWN_COMMAND		0xA001
@@ -1049,11 +1085,21 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Nikon extension Event Codes */
 
 /* Nikon extension Event Codes */
-#define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101
-#define PTP_EC_Nikon_CaptureCompleteRecInSdram	0xC102
+#define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101	/* e1: objecthandle */
+#define PTP_EC_Nikon_CaptureCompleteRecInSdram	0xC102	/* no args */
 /* Gets 1 parameter, objectid pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
 #define PTP_EC_Nikon_PreviewImageAdded		0xC104
+#define PTP_EC_Nikon_MovieRecordInterrupted	0xC105	/* e1: errocode, e2: recordkind */
+#define PTP_EC_Nikon_MovieRecordComplete	0xC108	/* e1: recordkind */
+#define PTP_EC_Nikon_MovieRecordStarted		0xC10A	/* e1: recordkind */
+#define PTP_EC_Nikon_PictureControlAdjustChanged	0xC10B	/* e1: picctrlitem e2: shootingmode */
+#define PTP_EC_Nikon_LiveViewStateChanged	0xC10C	/* e1: liveview state */
+#define PTP_EC_Nikon_ManualSettingsLensDataChanged	0xC10E	/* e1: lensnr */
+#define PTP_EC_Nikon_SBAdded			0xC120	/* e1: sbhandle */
+#define PTP_EC_Nikon_SBRemoved			0xC121	/* e1: sbhandle */
+#define PTP_EC_Nikon_SBAttrChanged		0xC122	/* e1: sbhandle, e2: attrid */
+#define PTP_EC_Nikon_SBGroupAttrChanged		0xC123	/* e1: sbgroupid, e2: groupattrid */
 
 /* Olympus E series */
 #define PTP_EC_Olympus_PropertyChanged		0xC102
@@ -3505,7 +3551,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  **/
 #define ptp_nikon_deletewifiprofile(params,profilenr) ptp_generic_no_data(params,PTP_OC_NIKON_DeleteProfile,1,profilenr)
 /**
- * ptp_nikon_setcontrolmode:
+ * ptp_nikon_changecameramode:
  *
  * This command can switch the camera to full PC control mode.
  *  
@@ -3515,7 +3561,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * Return values: Some PTP_RC_* code.
  *
  **/
-#define ptp_nikon_setcontrolmode(params,mode) ptp_generic_no_data(params,PTP_OC_NIKON_SetControlMode,1,mode)
+#define ptp_nikon_changecameramode(params,mode) ptp_generic_no_data(params,PTP_OC_NIKON_ChangeCameraMode,1,mode)
 /**
  * ptp_nikon_terminatecapture:
  *
@@ -3650,7 +3696,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * Return values: Some PTP_RC_* code.
  *
  **/
-#define ptp_nikon_capture(params,x) ptp_generic_no_data(params,PTP_OC_NIKON_Capture,1,x)
+#define ptp_nikon_capture(params,x) ptp_generic_no_data(params,PTP_OC_NIKON_InitiateCaptureRecInSdram,1,x)
 
 /**
  * ptp_nikon_capture2:

@@ -6017,14 +6017,14 @@ _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 	char*		val;
 	unsigned int	xval = 0;
 
-	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_SetControlMode))
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_ChangeCameraMode))
 		return GP_ERROR_NOT_SUPPORTED;
 	gp_widget_get_value(widget, &val);
 
 	if (!sscanf(val,"%d",&xval))	
 		return GP_ERROR;
 
-	C_PTP (ptp_nikon_setcontrolmode (&camera->pl->params, xval));
+	C_PTP (ptp_nikon_changecameramode (&camera->pl->params, xval));
 	return GP_OK;
 }
 
@@ -6846,7 +6846,7 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 		PTPPropertyValue propval2;
 		char buf[20];
 
-		C_PTP (ptp_nikon_setcontrolmode (params, 1));
+		C_PTP (ptp_nikon_changecameramode (params, 1));
 		propval2.u16 = 1; /* Exposure Mode to Full Manual */
 		C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_ExposureProgramMode, &propval2, PTP_DTC_UINT16));
 		propval2.u32 = 0xffffffff; /* Exposure Time to bulb */
@@ -8265,7 +8265,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Drive Canon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DoAf,              _get_Canon_EOS_AFDrive,         _put_Canon_EOS_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_MfDrive,               _get_Nikon_MFDrive,             _put_Nikon_MFDrive },
 	{ N_("Set Nikon Autofocus area"),       "changeafarea",     0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeAfArea,          _get_Nikon_ChangeAfArea,        _put_Nikon_ChangeAfArea },
-	{ N_("Set Nikon Control Mode"),         "controlmode",      0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_SetControlMode,        _get_Nikon_ControlMode,         _put_Nikon_ControlMode },
+	{ N_("Set Nikon Control Mode"),         "controlmode",      0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeCameraMode,      _get_Nikon_ControlMode,         _put_Nikon_ControlMode },
 	{ N_("Drive Canon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DriveLens,         _get_Canon_EOS_MFDrive,         _put_Canon_EOS_MFDrive },
 	{ N_("Cancel Canon DSLR Autofocus"),    "cancelautofocus",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_AfCancel,          _get_Canon_EOS_AFCancel,        _put_Canon_EOS_AFCancel },
 	{ N_("Drive Olympus OMD Manual focus"), "manualfocusdrive", 0,  PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_MFDrive,	_get_Olympus_OMD_MFDrive,	_put_Olympus_OMD_MFDrive },

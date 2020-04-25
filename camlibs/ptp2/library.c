@@ -417,7 +417,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			}
 
 			/* The 1 hides some commands from us ... */
-			if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_CheckEvent) &&
+			if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetEvent) &&
 			    !ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)
 			) {
 				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
@@ -440,9 +440,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 10)));
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
-				di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_CheckEvent;
+				di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_GetEvent;
 				di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_AfDrive;
-				di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_SetControlMode;
+				di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_ChangeCameraMode;
 				di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_DeviceReady;
 				di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_StartLiveView;
 				di->OperationsSupported[di->OperationsSupported_len+6] = PTP_OC_NIKON_EndLiveView;
@@ -475,10 +475,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 19)));
 					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
-					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_CheckEvent;
-					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_Capture;
+					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_GetEvent;
+					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
 					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_AfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_SetControlMode;
+					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_ChangeCameraMode;
 					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_DeviceReady;
 					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
 					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
@@ -540,7 +540,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
 			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
-			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_Capture;
+			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInSdram;
 			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
 			di->OperationsSupported_len+=2;
 		}
@@ -634,7 +634,7 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 	do {
 		res = ptp_nikon_device_ready(params);
 		if (res != PTP_RC_DeviceBusy) {
-			if (res == 0xa201)	/* seems to mean something like "not relevant" ... will repeat forever */
+			if (res == PTP_RC_NIKON_Silent_Release_Busy)	/* seems to mean something like "not relevant" ... will repeat forever */
 				return PTP_RC_OK;
 			return res;
 		}
@@ -2793,8 +2793,8 @@ camera_exit (Camera *camera, GPContext *context)
 			params->inliveview = 0;
 
 			/* get the Nikon out of control mode again */
-			if (params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
-				ptp_nikon_setcontrolmode (params, 0);
+			if (params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_ChangeCameraMode)) {
+				ptp_nikon_changecameramode (params, 0);
 				params->controlmode = 0;
 			}
 			break;
@@ -3141,8 +3141,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		SET_CONTEXT_P(params, context);
 
 		/* Nilon V and J seem to like that */
-		if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
-			ret = ptp_nikon_setcontrolmode (params, 1);
+		if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_ChangeCameraMode)) {
+			ret = ptp_nikon_changecameramode (params, 1);
 			/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
 			if (ret != PTP_RC_NIKON_ChangeCameraModeFailed)
 				C_PTP_REP (ret);
@@ -3594,15 +3594,15 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		return GP_ERROR_NOT_SUPPORTED;
 
 	/* Nilon V and J seem to like that */
-	if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)) {
-		ret = ptp_nikon_setcontrolmode (params, 1);
+	if (!params->controlmode && ptp_operation_issupported(params,PTP_OC_NIKON_ChangeCameraMode)) {
+		ret = ptp_nikon_changecameramode (params, 1);
 		/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
 		if (ret != PTP_RC_NIKON_ChangeCameraModeFailed)
 			C_PTP_REP (ret);
 		params->controlmode = 1;
 	}
 
-	if (	!ptp_operation_issupported(params,PTP_OC_NIKON_Capture) &&
+	if (	!ptp_operation_issupported(params,PTP_OC_NIKON_InitiateCaptureRecInSdram) &&
 		!ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM) &&
 		!ptp_operation_issupported(params,PTP_OC_NIKON_InitiateCaptureRecInMedia)
 	) {
@@ -4920,7 +4920,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 	/* 1st gen, 2nd gen nikon capture only go to SDRAM */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		(ptp_operation_issupported(params, PTP_OC_NIKON_Capture) ||
+		(ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInSdram) ||
 		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM)
 	)) {
 		int ret = GP_ERROR_NOT_SUPPORTED;
@@ -5357,9 +5357,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	/* Nilon V and J seem to like that */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
 		!params->controlmode &&
-		ptp_operation_issupported(params,PTP_OC_NIKON_SetControlMode)
+		ptp_operation_issupported(params,PTP_OC_NIKON_ChangeCameraMode)
 	) {
-		ret = ptp_nikon_setcontrolmode (params, 1);
+		ret = ptp_nikon_changecameramode (params, 1);
 		/* FIXME: PTP_RC_NIKON_ChangeCameraModeFailed does not seem to be problematic */
 		if (ret != PTP_RC_NIKON_ChangeCameraModeFailed)
 			C_PTP_REP (ret);
@@ -5423,7 +5423,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 	/* Nikon */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		(ptp_operation_issupported(params, PTP_OC_NIKON_Capture) ||
+		(ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInSdram) ||
 		 ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM) 
 		)
 		&& sdram
@@ -5953,7 +5953,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
+		ptp_operation_issupported(params, PTP_OC_NIKON_GetEvent)
 	) {
 		do {
 			C_PTP_REP (ptp_check_event (params));
@@ -6681,7 +6681,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				APPEND_TXT (_("Canon EOS Capture 2, "));
 			break;
 		case PTP_VENDOR_NIKON:
-			if (ptp_operation_issupported(params, PTP_OC_NIKON_Capture))
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInSdram))
 				APPEND_TXT (_("Nikon Capture 1, "));
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_AfCaptureSDRAM))
 				APPEND_TXT (_("Nikon Capture 2, "));

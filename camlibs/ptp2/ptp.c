@@ -2947,7 +2947,7 @@ ptp_check_event (PTPParams *params)
 	 * The Nikon Coolpix P2 however does not return anything. So if we never get
 	 * events from here, use the ptp "interrupt" method */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_CheckEvent)
+		ptp_operation_issupported(params, PTP_OC_NIKON_GetEvent)
 	) {
 		unsigned int evtcnt = 0, i;
 		PTPContainer *xevent = NULL;
@@ -4193,7 +4193,7 @@ ptp_nikon_check_event (PTPParams* params, PTPContainer** event, unsigned int* ev
 	unsigned char	*data = NULL;
 	unsigned int	size;
 
-	PTP_CNT_INIT(ptp, PTP_OC_NIKON_CheckEvent);
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetEvent);
 	*evtcnt = 0;
 	CHECK_PTP_RC(ptp_transaction (params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	ptp_unpack_Nikon_EC (params, data, size, event, evtcnt);
@@ -6941,14 +6941,14 @@ ptp_opcode_trans_t ptp_opcode_nikon_trans[] = {
 	{PTP_OC_NIKON_SetProfileData,"PTP_OC_NIKON_SetProfileData"},
 	{PTP_OC_NIKON_AdvancedTransfer,"PTP_OC_NIKON_AdvancedTransfer"},
 	{PTP_OC_NIKON_GetFileInfoInBlock,"PTP_OC_NIKON_GetFileInfoInBlock"},
-	{PTP_OC_NIKON_Capture,"PTP_OC_NIKON_Capture"},
+	{PTP_OC_NIKON_InitiateCaptureRecInSdram,"PTP_OC_NIKON_InitiateCaptureRecInSdram"},
 	{PTP_OC_NIKON_AfDrive,"PTP_OC_NIKON_AfDrive"},
-	{PTP_OC_NIKON_SetControlMode,"PTP_OC_NIKON_SetControlMode"},
+	{PTP_OC_NIKON_ChangeCameraMode,"PTP_OC_NIKON_ChangeCameraMode"},
 	{PTP_OC_NIKON_DelImageSDRAM,"PTP_OC_NIKON_DelImageSDRAM"},
 	{PTP_OC_NIKON_GetLargeThumb,"PTP_OC_NIKON_GetLargeThumb"},
 	{PTP_OC_NIKON_CurveDownload,"PTP_OC_NIKON_CurveDownload"},
 	{PTP_OC_NIKON_CurveUpload,"PTP_OC_NIKON_CurveUpload"},
-	{PTP_OC_NIKON_CheckEvent,"PTP_OC_NIKON_CheckEvent"},
+	{PTP_OC_NIKON_GetEvent,"PTP_OC_NIKON_GetEvent"},
 	{PTP_OC_NIKON_DeviceReady,"PTP_OC_NIKON_DeviceReady"},
 	{PTP_OC_NIKON_SetPreWBData,"PTP_OC_NIKON_SetPreWBData"},
 	{PTP_OC_NIKON_GetVendorPropCodes,"PTP_OC_NIKON_GetVendorPropCodes"},
