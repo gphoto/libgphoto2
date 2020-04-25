@@ -1,0 +1,553 @@
+Camera
+summary:                                                               
+Manufacturer: Canon.Inc
+Model: Canon EOS 90D
+  Version: 3-1.1.1
+  Serial Number: fcd07082ac4b6000000e68ce18b6f2c
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave,
+JPEG, CRW, Unknown(b103), Unknown(bf02), Defined Type, Unknown(b104),
+Unknown(b105)
+
+Device Capabilities:
+    File Download, File Deletion, File Upload
+    No Image Capture, No Open Capture, Canon EOS Capture, Canon EOS
+Capture 2
+    Canon Wifi support
+
+Storage Devices Summary:
+store_00020001:
+    StorageDescription: SD
+    VolumeLabel: None
+    Storage Type: Removable RAM (memory card)
+    Filesystemtype: Digital Camera Layout (DCIM)
+    Access Capability: Read-Write
+    Maximum Capability: 62696456192 (59792 MB)
+    Free Space (Bytes): 62271258624 (59386 MB)
+    Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS 90D'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/10.0.18363
+MTPClassDriver/10.0.18362.0'
+Property 0xd303:(read only) (type=0x2) 1
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50]
+value: 78% (78)
+
+user@user-VirtualBox:~$ LANG=C gphoto2 --list-all-config
+/main/actions/syncdatetimeutc                                                 
+
+Label: Synchronize camera date and time with PC
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/uilock
+Label: UI Lock
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Canon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/manualfocusdrive
+Label: Drive Canon DSLR Manual focus
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 Near 1
+Choice: 1 Near 2
+Choice: 2 Near 3
+Choice: 3 None
+Choice: 4 Far 1
+Choice: 5 Far 2
+Choice: 6 Far 3
+END
+/main/actions/cancelautofocus
+Label: Cancel Canon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/eoszoom
+Label: Canon EOS Zoom
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/actions/eoszoomposition
+Label: Canon EOS Zoom Position
+Readonly: 0
+Type: TEXT
+Current: 0,0
+END
+/main/actions/viewfinder
+Label: Canon EOS Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+Choice: 5 Immediate
+Choice: 6 Press 1
+Choice: 7 Press 2
+Choice: 8 Press 3
+Choice: 9 Release 1
+Choice: 10 Release 2
+Choice: 11 Release 3
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetimeutc
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1586847763
+Printable: Di 14 Apr 2020 09:02:43 CEST
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1586847763
+Printable: Di 14 Apr 2020 09:02:43 CEST
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/output
+Label: Camera Output
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 Off
+Choice: 1 TFT
+Choice: 2 PC
+Choice: 3 TFT + PC
+Choice: 4 Setting 4
+Choice: 5 Setting 5
+Choice: 6 Setting 6
+Choice: 7 Setting 7
+Choice: 8 Unknown value 0008
+Choice: 9 Unknown value 0009
+Choice: 10 Unknown value 000a
+Choice: 11 Unknown value 000b
+END
+/main/settings/movierecordtarget
+Label: Recording Destination
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 Card
+Choice: 1 None
+END
+/main/settings/evfmode
+Label: EVF Mode
+Readonly: 0
+Type: RADIO
+Current: 1
+Choice: 0 1
+Choice: 1 0
+END
+/main/settings/ownername
+Label: Owner Name
+Readonly: 0
+Type: TEXT
+Current:
+END
+/main/settings/artist
+Label: Artist
+Readonly: 0
+Type: TEXT
+Current:
+END
+/main/settings/copyright
+Label: Copyright
+Readonly: 0
+Type: TEXT
+Current:
+END
+/main/settings/customfuncex
+Label: Custom Functions Ex
+Readonly: 0
+Type: TEXT
+Current: 20,1,6,14,1,102,1,0,
+END
+/main/settings/focusinfo
+Label: Focus Info
+Readonly: 0
+Type: TEXT
+Current:
+eosversion=2,size=6960x4640,size2=6960x4640,points={{1672,830,297,291},{1266,830,297,291},{578,1021,297,291},{0,1021,297,291},{-578,1021,297,291},{-1266,830,297,291},{-1672,830,297,291},{-2078,830,297,291},{1266,415,297,291},{578,511,297,291},{0,511,297,291},{-578,511,297,291},{-1266,415,297,291},{-1672,415,297,291},{-2078,415,297,291},{2078,830,297,291},{578,0,297,291},{0,0,297,291},{-578,0,297,291},{-1266,0,297,291},{-1672,0,297,291},{-2078,0,297,291},{2078,415,297,291},{1672,415,297,291},{0,-511,297,291},{-578,-511,297,291},{-1266,-415,297,291},{-1672,-415,297,291},{-2078,-415,297,291},{2078,0,297,291},{1672,0,297,291},{1266,0,297,291},{-578,-1021,297,291},{-1266,-830,297,291},{-1672,-830,297,291},{-2078,-830,297,291},{2078,-415,297,291},{1672,-415,297,291},{1266,-415,297,291},{578,-511,297,291},{2078,-830,297,291},{1672,-830,297,291},{1266,-830,297,291},{578,-1021,297,291},{0,-1021,297,291}},select={3,4,5,7,8,15,16,17,18,20,23,34,35,38,40,42,44,},unknown={ffffffffff1f000000000000000000000000000000000000000000000000000000000000ffff}
+END
+/main/settings/focusarea
+Label: Focus Area
+Readonly: 0
+Type: TEXT
+Current: 3127531351
+END
+/main/settings/autopoweroff
+Label: Auto Power Off
+Readonly: 0
+Type: TEXT
+Current: 120
+END
+/main/settings/depthoffield
+Label: Depth of Field
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/capture
+Label: Capture
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: fcd07082ac4b6000000e68ce18b6f2c
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Canon.Inc
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Canon EOS 90D
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 3-1.1.1
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: None
+END
+/main/status/model
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: 2147484727
+END
+/main/status/Battery Level
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 78%
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 0
+Type: TEXT
+Current: 100%
+END
+/main/status/lensname
+Label: Lens Name
+Readonly: 0
+Type: TEXT
+Current: EF-S18-135mm f/3.5-5.6 IS USM
+END
+/main/status/eosserialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 04305100XXXX
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 0
+Type: TEXT
+Current: 5412
+END
+/main/imgsettings/imageformat
+Label: Image Format
+Readonly: 0
+Type: RADIO
+Current: RAW + Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 RAW + Large Fine JPEG
+Choice: 8 RAW + Large Normal JPEG
+Choice: 9 RAW + Medium Fine JPEG
+Choice: 10 RAW + Medium Normal JPEG
+Choice: 11 RAW + Small Fine JPEG
+Choice: 12 RAW + Small Normal JPEG
+Choice: 13 RAW + Smaller JPEG
+Choice: 14 Unknown value 0303
+Choice: 15 Unknown value 0302
+Choice: 16 Unknown value 0313
+Choice: 17 Unknown value 0312
+Choice: 18 Unknown value 03d3
+Choice: 19 Unknown value 03d2
+Choice: 20 Unknown value 03e3
+Choice: 21 RAW
+Choice: 22 Large Fine JPEG
+END
+/main/imgsettings/imageformatsd
+Label: Image Format SD
+Readonly: 0
+Type: RADIO
+Current: RAW + Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 RAW + Large Fine JPEG
+Choice: 8 RAW + Large Normal JPEG
+Choice: 9 RAW + Medium Fine JPEG
+Choice: 10 RAW + Medium Normal JPEG
+Choice: 11 RAW + Small Fine JPEG
+Choice: 12 RAW + Small Normal JPEG
+Choice: 13 RAW + Smaller JPEG
+Choice: 14 Unknown value 0303
+Choice: 15 Unknown value 0302
+Choice: 16 Unknown value 0313
+Choice: 17 Unknown value 0312
+Choice: 18 Unknown value 03d3
+Choice: 19 Unknown value 03d2
+Choice: 20 Unknown value 03e3
+Choice: 21 RAW
+Choice: 22 Large Fine JPEG
+END
+/main/imgsettings/imageformatcf
+Label: Image Format CF
+Readonly: 0
+Type: RADIO
+Current: RAW + Large Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 RAW + Large Fine JPEG
+Choice: 8 RAW + Large Normal JPEG
+Choice: 9 RAW + Medium Fine JPEG
+Choice: 10 RAW + Medium Normal JPEG
+Choice: 11 RAW + Small Fine JPEG
+Choice: 12 RAW + Small Normal JPEG
+Choice: 13 RAW + Smaller JPEG
+Choice: 14 Unknown value 0303
+Choice: 15 Unknown value 0302
+Choice: 16 Unknown value 0313
+Choice: 17 Unknown value 0312
+Choice: 18 Unknown value 03d3
+Choice: 19 Unknown value 03d2
+Choice: 20 Unknown value 03e3
+Choice: 21 RAW
+Choice: 22 Large Fine JPEG
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: TEXT
+Current: 5200
+END
+/main/imgsettings/whitebalancexa
+Label: WhiteBalance X A
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/imgsettings/whitebalancexb
+Label: WhiteBalance X B
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/imgsettings/colorspace
+Label: Color Space
+Readonly: 0
+Type: RADIO
+Current: sRGB
+Choice: 0 sRGB
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: One Shot
+Choice: 0 One Shot
+END
+/main/capturesettings/continuousaf
+Label: Continuous AF
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 Off
+Choice: 1 On
+END
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Readonly: 0
+Type: RADIO
+Current: 3:2
+Choice: 0 3:2
+END
+/main/capturesettings/highisonr
+Label: High ISO Noise Reduction
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 Off
+END
+/main/capturesettings/autoexposuremode
+Label: Canon Auto Exposure Mode
+Readonly: 0
+Type: RADIO
+Current: Landscape
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+END
+/main/capturesettings/drivemode
+Label: Drive Mode
+Readonly: 0
+Type: RADIO
+Current: Single
+Choice: 0 Single
+Choice: 1 Continuous high speed
+Choice: 2 Continuous low speed
+Choice: 3 Single silent
+Choice: 4 Continuous silent
+Choice: 5 Timer 10 sec
+Choice: 6 Timer 2 sec
+Choice: 7 Unknown value 0007
+END
+/main/capturesettings/aperture
+Label: Aperture
+Readonly: 0
+Type: RADIO
+Current: 25
+Choice: 0 25
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 0
+Type: RADIO
+Current: auto
+Choice: 0 auto
+END
+/main/capturesettings/bracketmode
+Label: Bracket Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/capturesettings/aeb
+Label: Auto Exposure Bracketing
+Readonly: 0
+Type: RADIO
+Current: off
+Choice: 0 off
+END
+/main/other/d402
+Label: PTP Property 0xd402
+Readonly: 1
+Type: TEXT
+Current: Canon EOS 90D
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows/10.0.18363 MTPClassDriver/10.0.18362.0
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 78
+Choice: 0 100
+Choice: 1 0
+Choice: 2 75
+Choice: 3 0
+Choice: 4 50
+END

@@ -2191,6 +2191,9 @@ static struct {
 	/* Roland Förg <roland.foerg@arcor.de> */
 	{"Canon:EOS 250D",			0x04a9, 0x32e9, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Matthias <matthias@mail-s.eu> */
+	{"Canon:EOS 90D",			0x04a9, 0x32ea, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
 	{"Konica-Minolta:DiMAGE Z2 (PictBridge mode)", 0x132b, 0x0007, 0},
