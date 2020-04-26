@@ -569,6 +569,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_TestFlash			0x941b
 #define PTP_OC_NIKON_GetEventEx			0x941c	/* can do multiparameter events, compared to GetEvent */
 #define PTP_OC_NIKON_MirrorUpCancel		0x941d
+#define PTP_OC_NIKON_PowerZoomByFocalLength	0x941e
+#define PTP_OC_NIKON_ActiveSelectionControl	0x941f
 #define PTP_OC_NIKON_SaveCameraSetting		0x9420
 #define PTP_OC_NIKON_GetObjectSize		0x9421	/* param: objecthandle, returns 64bit objectsize as DATA */
 #define PTP_OC_NIKON_GetLiveViewCompressedSize	0x9423
@@ -579,8 +581,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetPartialObjectEx		0x9431	/* p1: objecthandle, p2: offset lower 32bit, p3: offset higher 32bit, p4: maxsize lower 32bit, p5: maxsize upper 32bit, response is r1: lower 32bit, r2: higher 32bit */
 #define PTP_OC_NIKON_GetManualSettingLensData	0x9432
 
+
 /* From Nikon V1 Trace */
 #define PTP_OC_NIKON_GetDevicePropEx		0x9504	/* gets device prop data */
+
 
 /* Casio EX-F1 (from http://code.google.com/p/exf1ctrl/ ) */
 #define PTP_OC_CASIO_STILL_START	0x9001
@@ -1096,6 +1100,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_Nikon_PictureControlAdjustChanged	0xC10B	/* e1: picctrlitem e2: shootingmode */
 #define PTP_EC_Nikon_LiveViewStateChanged	0xC10C	/* e1: liveview state */
 #define PTP_EC_Nikon_ManualSettingsLensDataChanged	0xC10E	/* e1: lensnr */
+#define PTP_EC_Nikon_ActiveSelectionInterrupted	0xC112	/* e1: errorcode */
 #define PTP_EC_Nikon_SBAdded			0xC120	/* e1: sbhandle */
 #define PTP_EC_Nikon_SBRemoved			0xC121	/* e1: sbhandle */
 #define PTP_EC_Nikon_SBAttrChanged		0xC122	/* e1: sbhandle, e2: attrid */
@@ -2411,7 +2416,21 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_MovieVignetteControl		0xD23E
 #define PTP_DPC_NIKON_MovieDiffractionCompensation	0xD23F
 #define PTP_DPC_NIKON_UseDeviceStageFlag		0xD303
+#define PTP_DPC_NIKON_MovieCaptureMode			0xD304
+#define PTP_DPC_NIKON_SlowMotionMovieRecordScreenSize	0xD305
+#define PTP_DPC_NIKON_HighSpeedStillCaptureRate		0xD306
+#define PTP_DPC_NIKON_BestMomentCaptureMode		0xD307
+#define PTP_DPC_NIKON_ActiveSelectionFrameSavedDefault	0xD308
+#define PTP_DPC_NIKON_ActiveSelectionCapture40frameOver	0xD309
+#define PTP_DPC_NIKON_ActiveSelectionOnReleaseRecord	0xD310
+#define PTP_DPC_NIKON_ActiveSelectionSelectedPictures	0xD311
+#define PTP_DPC_NIKON_ExposureRemainingInMovie		0xD312
+#define PTP_DPC_NIKON_OpticalVR				0xD313
 #define PTP_DPC_NIKON_ElectronicVR			0xD314
+#define PTP_DPC_NIKON_SilentPhotography			0xD315
+#define PTP_DPC_NIKON_FacePriority			0xD316
+#define PTP_DPC_NIKON_LensTypeNikon1			0xD317
+#define PTP_DPC_NIKON_ISONoiseReduction			0xD318
 
 
 /* Nikon V1 (or WU adapter?) Trace */

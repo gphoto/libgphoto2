@@ -5971,7 +5971,20 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_LiveViewSelector,"LiveViewSelector"},
 		{PTP_DPC_NIKON_MovieShutterSpeed,"MovieShutterSpeed"},
 		{PTP_DPC_NIKON_MovieFNumber,"MovieFNumber"},
-
+		{PTP_DPC_NIKON_MovieCaptureMode,"MovieCaptureMode"},
+		{PTP_DPC_NIKON_SlowMotionMovieRecordScreenSize,"SlowMotionMovieRecordScreenSize"},
+		{PTP_DPC_NIKON_HighSpeedStillCaptureRate,"HighSpeedStillCaptureRate"},
+		{PTP_DPC_NIKON_BestMomentCaptureMode,"BestMomentCaptureMode"},
+		{PTP_DPC_NIKON_ActiveSelectionFrameSavedDefault,"ActiveSelectionFrameSavedDefault"},
+		{PTP_DPC_NIKON_ActiveSelectionCapture40frameOver,"ActiveSelectionCapture40frameOver"},
+		{PTP_DPC_NIKON_ActiveSelectionOnReleaseRecord,"ActiveSelectionOnReleaseRecord"},
+		{PTP_DPC_NIKON_ActiveSelectionSelectedPictures,"ActiveSelectionSelectedPictures"},
+		{PTP_DPC_NIKON_ExposureRemainingInMovie,"ExposureRemainingInMovie"},
+		{PTP_DPC_NIKON_OpticalVR,"OpticalVR"},
+		{PTP_DPC_NIKON_SilentPhotography,"SilentPhotography"},
+		{PTP_DPC_NIKON_FacePriority,"FacePriority"},
+		{PTP_DPC_NIKON_LensTypeNikon1,"LensTypeNikon1"},
+		{PTP_DPC_NIKON_ISONoiseReduction,"ISONoiseReduction"},
 		{0,NULL}
 	};
         struct {
