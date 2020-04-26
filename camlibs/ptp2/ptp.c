@@ -7167,6 +7167,8 @@ ptp_opcode_trans_t ptp_opcode_nikon_trans[] = {
 	{PTP_OC_NIKON_GetLiveViewImageEx,"GetLiveViewImageEx"},
 	{PTP_OC_NIKON_GetPartialObjectEx,"GetPartialObjectEx"},
 	{PTP_OC_NIKON_GetManualSettingLensData,"GetManualSettingLensData"},
+	{PTP_OC_NIKON_PowerZoomByFocalLength,"PowerZoomByFocalLength"},
+	{PTP_OC_NIKON_ActiveSelectionControl,"ActiveSelectionControl"},
 };
 
 ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
