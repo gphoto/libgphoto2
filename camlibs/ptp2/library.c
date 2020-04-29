@@ -3667,7 +3667,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		goto capturetriggered;
 	}
 
-	if (!params->inliveview && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
+	if (!params->inliveview && af && ptp_operation_issupported(params,PTP_OC_NIKON_AfCaptureSDRAM)) {
 		loops = 100;
 		do {
 			ret = ptp_nikon_capture_sdram(params);
@@ -5443,7 +5443,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		}
 
 		do {
-			if (!inliveview && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM))
+			if (!inliveview && af && ptp_operation_issupported (params,PTP_OC_NIKON_AfCaptureSDRAM))
 				ret = ptp_nikon_capture_sdram (params);
 			else
 				ret = ptp_nikon_capture (params, 0xffffffff);
