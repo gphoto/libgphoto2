@@ -5985,6 +5985,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_FacePriority,"FacePriority"},
 		{PTP_DPC_NIKON_LensTypeNikon1,"LensTypeNikon1"},
 		{PTP_DPC_NIKON_ISONoiseReduction,"ISONoiseReduction"},
+		{PTP_DPC_NIKON_MirrorUpStatus,"MirrorUpStatus"},
+		{PTP_DPC_NIKON_MirrorUpReleaseShootingCount,"MirrorUpReleaseShootingCount"},
 		{0,NULL}
 	};
         struct {

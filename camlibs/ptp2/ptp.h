@@ -2358,6 +2358,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ExposureRemaining			0xD1F1
 #define PTP_DPC_NIKON_ActiveSlot			0xD1F2
 #define PTP_DPC_NIKON_ISOAutoShutterCorrectionTime	0xD1F4
+#define PTP_DPC_NIKON_MirrorUpStatus			0xD1F6
+#define PTP_DPC_NIKON_MirrorUpReleaseShootingCount	0xD1F7
 #define PTP_DPC_NIKON_MovieAfAreaMode			0xD1F8
 #define PTP_DPC_NIKON_MovieVibrationReduction		0xD1F9
 #define PTP_DPC_NIKON_MovieFocusMode			0xD1FA

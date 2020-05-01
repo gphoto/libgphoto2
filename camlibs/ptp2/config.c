@@ -8302,6 +8302,8 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_CANON_EOS_BatteryPower,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel,    _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_SONY_BatteryLevel,              PTP_VENDOR_SONY,    PTP_DTC_INT8,   _get_SONY_BatteryLevel,         _put_None },
 	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_NIKON_CameraOrientation,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CameraOrientation,   _put_None },
+	{ N_("Mirror Up Status"),       "mirrorupstatus",   PTP_DPC_NIKON_MirrorUpStatus,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,		_put_None },
+	{ N_("Mirror Up Shooting Count"),"mirrorupshootingcount", PTP_DPC_NIKON_MirrorUpReleaseShootingCount, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_INT,		_put_None },
 	{ N_("Camera Orientation"),     "orientation2",     PTP_DPC_NIKON_AngleLevel,               PTP_VENDOR_NIKON,   PTP_DTC_INT32,  _get_Nikon_AngleLevel,          _put_None },
 	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_CANON_RotationAngle,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_CameraOrientation,   _put_None },
 	{ N_("Flash Open"),             "flashopen",        PTP_DPC_NIKON_FlashOpen,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
