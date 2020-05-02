@@ -2066,14 +2066,14 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
 	{ "bulb",	0x000c,0 },
 	{ "30",		0x0010,0 },
 	{ "25",		0x0013,0 },
-	{ "20",		0x0014,0 }, /* + 1/3 */
+	{ "20.3",	0x0014,0 }, /* + 1/3 */
 	{ "20",		0x0015,0 },
 	{ "15",		0x0018,0 },
 	{ "13",		0x001b,0 },
 	{ "10",		0x001c,0 },
-	{ "10",		0x001d,0 }, /* 10.4 */
+	{ "10.3",	0x001d,0 }, /* 10.4 */
 	{ "8",		0x0020,0 },
-	{ "6",		0x0023,0 }, /* + 1/3 */
+	{ "6.3",	0x0023,0 }, /* + 1/3 */
 	{ "6",		0x0024,0 },
 	{ "5",		0x0025,0 },
 	{ "4",		0x0028,0 },
@@ -2347,6 +2347,9 @@ static struct deviceproptableu16 canon_isospeed[] = {
 	{ "40000",		0x008d, 0 },
 	{ "51200",		0x0090, 0 },
 	{ "102400",		0x0098, 0 },
+	{ "204800",		0x00a0, 0 },
+	{ "409600",		0x00a8, 0 },
+	{ "819200",		0x00b0, 0 },
 	{ N_("Auto"),		0x0000, 0 },
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
@@ -2429,6 +2432,7 @@ GENERIC16TABLE(Canon_EOS_AEB,canon_eos_aeb)
 static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Single"),			0x0000, 0 },
 	{ N_("Continuous"),		0x0001, 0 },
+	{ N_("Video"),			0x0002, 0 },
 	{ N_("Continuous high speed"),	0x0004, 0 },
 	{ N_("Continuous low speed"),	0x0005, 0 },
 	{ N_("Single: Silent shooting"),0x0006, 0 },
@@ -2438,6 +2442,8 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Super high speed continuous shooting"),		0x0012, 0 },
 	{ N_("Single silent"),		0x0013, 0 },
 	{ N_("Continuous silent"),	0x0014, 0 },
+	{ N_("Silent HS continous"),	0x0015, 0 },
+	{ N_("Silent LS continous"),	0x0016, 0 },
 };
 GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
 
@@ -4740,8 +4746,7 @@ static struct deviceproptableu8 canon_whitebalance[] = {
 };
 GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
 
-/* confirmed against EOS 450D - Marcus */
-/* I suspect every EOS uses a different table :( */
+/* check against SDK */
 static struct deviceproptableu8 canon_eos_whitebalance[] = {
 	{ N_("Auto"),		0, 0 },
 	{ N_("Daylight"),	1, 0 },
@@ -4752,13 +4757,16 @@ static struct deviceproptableu8 canon_eos_whitebalance[] = {
 	{ N_("Manual"),		6, 0 },
 	{"Unknown 7",		7, 0 },
 	{ N_("Shadow"),		8, 0 },
-	{ N_("Color Temperature"),9, 0 }, /* from eos 40d / 5D Mark II dump */
-	{ "Unknown 10",		10, 0 },
-	{ "Unknown 11",		11, 0 },
-	{ N_("Custom WB 2"),	15, 0 },
-	{ N_("Custom WB 3"),	16, 0 },
-	{ N_("Custom WB 4"),	18, 0 },
-	{ N_("Custom WB 5"),	19, 0 },
+	{ N_("Color Temperature"),9, 0 },
+	{ N_("Custom Whitebalance: PC-1"),		10, 0 },
+	{ N_("Custom Whitebalance: PC-2"),		11, 0 },
+	{ N_("Custom Whitebalance: PC-3"),		12, 0 },
+	{ N_("Manual 2"),	15, 0 },
+	{ N_("Manual 3"),	16, 0 },
+	{ N_("Manual 4"),	18, 0 },
+	{ N_("Manual 5"),	19, 0 },
+	{ N_("Custom Whitebalance: PC-4"),		20, 0 },
+	{ N_("Custom Whitebalance: PC-5"),		21, 0 },
 	{ N_("AWB White"),	23, 0 },
 };
 GENERIC8TABLE(Canon_EOS_WhiteBalance,canon_eos_whitebalance)
@@ -4852,6 +4860,16 @@ static struct deviceproptableu16 canon_photoeffect[] = {
 };
 GENERIC16TABLE(Canon_PhotoEffect,canon_photoeffect)
 
+
+/* FIXME: actually uint32 in SDK doc? also non-standard type in debuglogs */
+static struct deviceproptableu16 canon_bracketmode[] = {
+	{ N_("AE bracket"),	1, 0 },
+	{ N_("ISO bracket"),	2, 0 },
+	{ N_("WB bracket"),	4, 0 },
+	{ N_("FE bracket"),	8, 0 },
+	{ N_("Bracket off"),	0xffff, 0 },
+};
+GENERIC16TABLE(Canon_BracketMode,canon_bracketmode)
 
 static struct deviceproptableu16 canon_aperture[] = {
 	{ N_("implicit auto"),	0x0, 0 },
@@ -8551,7 +8569,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Exposure Compensation"),    "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation },
 	{ N_("Bracketing"),                     "bracketing",               PTP_DPC_NIKON_Bracketing,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Bracketing"),                     "bracketmode",              PTP_DPC_NIKON_E6ManualModeBracketing,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ManualBracketMode,       _put_Nikon_ManualBracketMode },
-	{ N_("Bracket Mode"),                   "bracketmode",              PTP_DPC_CANON_EOS_BracketMode,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_INT,                           _put_None /*FIXME*/ },
+	{ N_("Bracket Mode"),                   "bracketmode",              PTP_DPC_CANON_EOS_BracketMode,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_BracketMode,             _put_Canon_BracketMode },
 	{ N_("EV Step"),                        "evstep",                   PTP_DPC_NIKON_EVStep,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_EVStep,                  _put_Nikon_EVStep },
 	{ N_("Bracket Set"),                    "bracketset",               PTP_DPC_NIKON_BracketSet,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketSet,              _put_Nikon_BracketSet },
 	{ N_("Bracket Order"),                  "bracketorder",             PTP_DPC_NIKON_BracketOrder,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketOrder,            _put_Nikon_BracketOrder },
