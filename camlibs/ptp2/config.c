@@ -5671,6 +5671,12 @@ static struct deviceproptableu8 nikon_vignettecorrection[] = {
 };
 GENERIC8TABLE(Nikon_VignetteCorrection,nikon_vignettecorrection)
 
+static struct deviceproptableu8 nikon_hdmidatadepth[] = {
+	{ "8",		0x0, 0 },
+	{ "10",		0x1, 0 },
+};
+GENERIC8TABLE(Nikon_HDMIDataDepth,nikon_hdmidatadepth)
+
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
 	unsigned char value_float , start, end;
@@ -8378,6 +8384,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Auto Power Off"),         "autopoweroff",         PTP_DPC_CANON_EOS_AutoPowerOff,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ N_("Depth of Field"),         "depthoffield",         PTP_DPC_CANON_EOS_DepthOfFieldPreview, PTP_VENDOR_CANON,PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Menus and Playback"),     "menusandplayback",     PTP_DPC_NIKON_MenusAndPlayback,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MenusAndPlayback,    _put_Nikon_MenusAndPlayback },
+	{ N_("External Recording Control"),     "externalrecordingcontrol", PTP_DPC_NIKON_ExternalRecordingControl,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,    _put_Nikon_OffOn_UINT8 },
 
 /* virtual */
 	{ N_("Fast Filesystem"),	"fastfs",	0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_FastFS,      _put_Nikon_FastFS },
@@ -8622,6 +8629,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Vignette Correction"),            "vignettecorrection",       PTP_DPC_NIKON_VignetteCtrl,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_VignetteCorrection,      _put_Nikon_VignetteCorrection },
 	{ N_("Video Mode"),                     "videomode",                PTP_DPC_NIKON_VideoMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_VideoMode,               _put_Nikon_VideoMode },
 	{ N_("Sensor Crop"),                    "sensorcrop",               PTP_DPC_SONY_SensorCrop,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SensorCrop,               _put_Sony_SensorCrop },
+	{ N_("HDMI Output Data Depth"),         "hdmioutputdatadepth",      PTP_DPC_NIKON_HDMIOutputDataDepth,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDMIDataDepth,           _put_Nikon_HDMIDataDepth },
 
 	{ 0,0,0,0,0,0,0 },
 };
