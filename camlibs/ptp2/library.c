@@ -3115,6 +3115,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 								GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 								break;
 							}
+							GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
 							GP_LOG_DATA ((char*)xdata, len, "get_viewfinder_image header:");
 							xdata = xdata+len;
 						}
