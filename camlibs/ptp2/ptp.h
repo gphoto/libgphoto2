@@ -475,6 +475,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
 #define PTP_OC_CANON_EOS_SetImageRecoveryDataEx	0x916B
 #define PTP_OC_CANON_EOS_GetImageRecoveryListEx	0x916C
+#define PTP_OC_CANON_EOS_CompleteAutoSendImages	0x916D
 #define PTP_OC_CANON_EOS_NotifyAutoTransferStatus	0x916E
 #define PTP_OC_CANON_EOS_GetReducedObject	0x916F
 #define PTP_OC_CANON_EOS_GetObjectInfo64	0x9170	/* 1 arg: oid */
@@ -484,12 +485,22 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_GetPartialObjectEX64	0x9174	/* args: oid, offset 64bit, maxbyte */
 #define PTP_OC_CANON_EOS_CreateHandle64		0x9175
 #define PTP_OC_CANON_EOS_NotifySaveComplete	0x9177
+#define PTP_OC_CANON_EOS_GetTranscodedBlock	0x9178
+#define PTP_OC_CANON_EOS_TransferCompleteTranscodedBlock	0x9179
 #define PTP_OC_CANON_EOS_NotifyEstimateNumberofImport		0x9182 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifyNumberofImported	0x9183 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer	0x9184 /* 4 args: filesizelow, filesizehigh, downloadsizelow, downloadsizehigh */
 #define PTP_OC_CANON_EOS_NotifyFinish		0x9185 /* 1 arg: reason */
+#define PTP_OC_CANON_EOS_GetWFTData		0x9186
+#define PTP_OC_CANON_EOS_SetWFTData		0x9187
+#define PTP_OC_CANON_EOS_ChangeWFTSettingNumber	0x9188
+#define PTP_OC_CANON_EOS_GetPictureStylePCFlavorParam	0x9189
+#define PTP_OC_CANON_EOS_SetPictureStylePCFlavorParam	0x918A
 #define PTP_OC_CANON_EOS_GetObjectURL		0x91AB
+#define PTP_OC_CANON_EOS_SetCAssistMode		0x91AC
+#define PTP_OC_CANON_EOS_GetCAssistPresetThumb	0x91AD
 #define PTP_OC_CANON_EOS_SetFELock		0x91B9
+#define PTP_OC_CANON_EOS_DeleteWFTSettingNumber	0x91BA
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
 #define PTP_OC_CANON_EOS_GetAEData		0x91BF
 #define PTP_OC_CANON_EOS_SendHostInfo		0x91E4 /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
@@ -1084,6 +1095,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_BlePairing			0xc1b0
 #define PTP_EC_CANON_EOS_RequestAutoSendImages		0xc1b1
 #define PTP_EC_CANON_EOS_RequestTranscodedBlockTransfer	0xc1b2
+#define PTP_EC_CANON_EOS_RequestCAssistImage		0xc1b4
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
 /* Nikon extension Event Codes */
@@ -1890,7 +1902,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet2	0xD164
 #define PTP_DPC_CANON_EOS_PictureStyleExUserSet3	0xD165
 #define PTP_DPC_CANON_EOS_MovieAVModeFine	0xD166
-#define PTP_DPC_CANON_EOS_ShutterReleaseCounter	0xD167
+#define PTP_DPC_CANON_EOS_ShutterReleaseCounter	0xD167	/* perhaps send a requestdeviceprop ex ? */
 #define PTP_DPC_CANON_EOS_AvailableImageSize	0xD168
 #define PTP_DPC_CANON_EOS_ErrorHistory		0xD169
 #define PTP_DPC_CANON_EOS_LensExchangeHistory	0xD16A
@@ -2004,7 +2016,20 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_LCDBrightness		0xD1de
 #define PTP_DPC_CANON_EOS_CADarkBright		0xD1df
 
+#define PTP_DPC_CANON_EOS_CAssistPreset		0xD201
+#define PTP_DPC_CANON_EOS_CAssistBrightness	0xD202
+#define PTP_DPC_CANON_EOS_CAssistContrast	0xD203
+#define PTP_DPC_CANON_EOS_CAssistSaturation	0xD204
+#define PTP_DPC_CANON_EOS_CAssistColorBA	0xD205
+#define PTP_DPC_CANON_EOS_CAssistColorMG	0xD206
+#define PTP_DPC_CANON_EOS_CAssistMonochrome	0xD207
 #define PTP_DPC_CANON_EOS_FocusShiftSetting	0xD208
+#define PTP_DPC_CANON_EOS_MovieSelfTimer	0xD209
+#define PTP_DPC_CANON_EOS_Clarity		0xD20B
+#define PTP_DPC_CANON_EOS_2GHDRSetting		0xD20C
+#define PTP_DPC_CANON_EOS_MovieParam5		0xD20D
+#define PTP_DPC_CANON_EOS_HDRViewAssistModeRec	0xD20E
+#define PTP_DPC_CANON_EOS_PropFinderAFFrame	0xD214
 
 /* Nikon extension device property codes */
 #define PTP_DPC_NIKON_ShootingBank			0xD010
