@@ -2366,6 +2366,8 @@ static struct {
 	{"Pentax:K70 (PTP Mode)",		0x25fb, 0x017d, 0},
 
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/497 */
+	{"Sanyo:VPC-FH1 (PTP mode)",            0x0474, 0x02e5, 0},
 
 	/* from Mike Meyer <mwm@mired.org>. Does not support MTP. */
 	{"Apple:iPhone (PTP mode)",		0x05ac, 0x1290, 0},
