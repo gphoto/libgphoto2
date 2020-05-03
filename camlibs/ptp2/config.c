@@ -5677,6 +5677,14 @@ static struct deviceproptableu8 nikon_hdmidatadepth[] = {
 };
 GENERIC8TABLE(Nikon_HDMIDataDepth,nikon_hdmidatadepth)
 
+static struct deviceproptableu8 nikon_facedetection[] = {
+	{ N_("Off"),				0x0, 0 },
+	{ N_("Face detection"),			0x1, 0 },
+	{ N_("Face and pupil detection"),	0x2, 0 },
+	{ N_("Animal detection"),		0x3, 0 },
+};
+GENERIC8TABLE(Nikon_FaceDetection,nikon_facedetection)
+
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
 	unsigned char value_float , start, end;
@@ -8630,6 +8638,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Video Mode"),                     "videomode",                PTP_DPC_NIKON_VideoMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_VideoMode,               _put_Nikon_VideoMode },
 	{ N_("Sensor Crop"),                    "sensorcrop",               PTP_DPC_SONY_SensorCrop,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SensorCrop,               _put_Sony_SensorCrop },
 	{ N_("HDMI Output Data Depth"),         "hdmioutputdatadepth",      PTP_DPC_NIKON_HDMIOutputDataDepth,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDMIDataDepth,           _put_Nikon_HDMIDataDepth },
+	{ N_("Face Detection"),                 "facedetection",            PTP_DPC_NIKON_FaceDetection,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FaceDetection,           _put_Nikon_FaceDetection },
 
 	{ 0,0,0,0,0,0,0 },
 };
