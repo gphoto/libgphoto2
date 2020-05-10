@@ -4448,6 +4448,7 @@ static struct deviceproptableu8 nikon_liveviewaf[] = {
 	{ N_("Wide-area AF"),		1, 0 },
 	{ N_("Normal-area AF"),		2, 0 },
 	{ N_("Subject-tracking AF"),	3, 0 },
+	{ N_("Spot-area AF"),		4, 0 },
 };
 GENERIC8TABLE(Nikon_LiveViewAFU,nikon_liveviewaf)
 static struct deviceproptablei8 nikon_liveviewafi[] = {
@@ -4455,15 +4456,27 @@ static struct deviceproptablei8 nikon_liveviewafi[] = {
 	{ N_("Wide-area AF"),		1, 0 },
 	{ N_("Normal-area AF"),		2, 0 },
 	{ N_("Subject-tracking AF"),	3, 0 },
+	{ N_("Spot-area AF"),		4, 0 },
 };
 GENERICI8TABLE(Nikon_LiveViewAFI,nikon_liveviewafi)
 
 static struct deviceproptableu8 nikon_liveviewaffocus[] = {
-	{ N_("Single-servo AF"),	0, 0 },
-	{ N_("Full-time-servo AF"),	2, 0 },
-	{ N_("Manual Focus"),		4, 0 },
+	{ N_("Single-servo AF"),		0, 0 },
+	{ N_("Continous-servo AF"),		1, 0 },
+	{ N_("Full-time-servo AF"),		2, 0 },
+	{ N_("Manual Focus (fixed)"),		3, 0 },
+	{ N_("Manual Focus (selection)"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_LiveViewAFFocus,nikon_liveviewaffocus)
+
+static struct deviceproptableu8 nikon_afatliveview[] = {
+	{ N_("Face-Priority AF"),	0, 0 },
+	{ N_("Wide-area AF"),		1, 0 },
+	{ N_("Normal-area AF"),		2, 0 },
+	{ N_("Subject-tracking AF"),	3, 0 },
+	{ N_("Spot-area AF"),		4, 0 },
+};
+GENERIC8TABLE(Nikon_AfAtLiveView,nikon_afatliveview)
 
 static struct deviceproptableu8 nikon_afareaillum[] = {
 	{ N_("Auto"),		0, 0 },
