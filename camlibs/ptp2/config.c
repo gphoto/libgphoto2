@@ -1403,6 +1403,7 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Shade"),			0x8011, PTP_VENDOR_NIKON },
 	{ N_("Color Temperature"),	0x8012, PTP_VENDOR_NIKON },
 	{ N_("Preset"),			0x8013, PTP_VENDOR_NIKON },
+	{ N_("Off"),			0x8014, PTP_VENDOR_NIKON },
 	{ N_("Natural light auto"),	0x8016, PTP_VENDOR_NIKON },
 
 	{ N_("Fluorescent Lamp 1"),	0x8001, PTP_VENDOR_FUJI },
@@ -8622,6 +8623,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View AF Focus"),             "liveviewaffocus",          PTP_DPC_NIKON_LiveViewAFFocus,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewAFFocus,         _put_Nikon_LiveViewAFFocus },
 	{ N_("Live View Exposure Preview"),     "liveviewexposurepreview",  PTP_DPC_NIKON_LiveViewExposurePreview,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Live View Image Zoom Ratio"),     "liveviewimagezoomratio",   PTP_DPC_NIKON_LiveViewImageZoomRatio,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewImageZoomRatio,  _put_Nikon_LiveViewImageZoomRatio },
+	{ N_("Live View White Balance"),        "liveviewwhitebalance",     PTP_DPC_NIKON_LiveViewWhiteBalance,     PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_WhiteBalance,                  _put_WhiteBalance },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Modelling Flash"),                "modelflash",               PTP_DPC_NIKON_E4ModelingFlash,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
