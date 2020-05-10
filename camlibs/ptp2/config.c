@@ -456,8 +456,13 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	params->eos_captureenabled = 1;
 
 	/* run this only on EOS M, not on PowerShot SX */
-	/* FIXME: needs more testing :/ */
-	if (is_canon_eos_m (params) && strstr(params->deviceinfo.Model,"EOS")) {
+	/* I lost track where it is needed.
+	 * Need it:
+	 * + EOS M10
+	 * + PowerShot SX 720HS
+	 * + PowerShot G9x mark II
+	 */
+	if (is_canon_eos_m (params)) {
 		/* This code is needed on EOS m3 at least. might not be needed on others ... mess :/ */
 		PTPPropertyValue    ct_val;
 
