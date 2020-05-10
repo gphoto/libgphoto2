@@ -119,15 +119,17 @@ ez200_get_picture_size (GPPort *port, int n) {
 static int
 ez200_read_data (GPPort *port, char *data, int size) {
 	int MAX_BULK = 0x1000;
+	int	ret;
 
 	/* Read Data by blocks */
 	while(size > 0) {
 		int len = (size>MAX_BULK)?MAX_BULK:size;
-	        gp_port_read  (port, data, len);
+	        ret = gp_port_read  (port, data, len);
+		if (ret < GP_OK) return ret;
 		data += len;
 		size -= len;
 	}
-        return 1;
+        return GP_OK;
 }
 
 static int
@@ -137,8 +139,7 @@ ez200_read_picture_data (GPPort *port, char *data, int size, int n) {
 	memset(c,0,sizeof(c));
 	/* ask picture n transfert */
     	READ(port, PICTURE, n, 1, c, 3);
-        ez200_read_data (port, data, size);
-        return GP_OK;
+        return ez200_read_data (port, data, size);
 }
 
 
@@ -247,7 +248,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
     	Camera *camera = user_data;
-        int n, len;
+        int n, len, ret;
 	char *data, *data_start;
 
 	n = gp_filesystem_number(camera->fs, "/", filename, context);
@@ -264,8 +265,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	data_start = data + (HEADER_SIZE - DATA_HEADER_SIZE);
 	GP_DEBUG("data - data_start : %p %p : %lx",data, data_start, (long) (data_start - data));
 
-    	ez200_read_picture_data   (camera->port, data_start, len, n);
-	ez200_read_picture_header (camera->port, data);
+    	ret = ez200_read_picture_data   (camera->port, data_start, len, n);
+	if (ret < GP_OK) return ret;
+	ret = ez200_read_picture_header (camera->port, data);
+	if (ret < GP_OK) return ret;
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_NORMAL:
@@ -325,7 +328,7 @@ camera_init(Camera *camera, GPContext *context)
 		settings.usb.outep	= 0x03;
 		break;
 	default:
-		return ( GP_ERROR );
+		return GP_ERROR;
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
@@ -338,9 +341,8 @@ camera_init(Camera *camera, GPContext *context)
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-	camera->pl = malloc (sizeof (CameraPrivateLibrary));
+	camera->pl = calloc (sizeof (CameraPrivateLibrary), 1);
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
-	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 
 	/* Connect to the camera */
 	ez200_init (camera->port, &camera->pl->model, camera->pl->info);
