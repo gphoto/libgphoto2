@@ -3721,6 +3721,8 @@ uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 uint16_t ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 uint16_t ptp_nikon_curve_download (PTPParams* params, 
 				unsigned char **data, unsigned int *size);
+uint16_t ptp_nikon_getlargethumb (PTPParams *params, uint32_t handle,
+				unsigned char** object, unsigned int *len);
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
 uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);

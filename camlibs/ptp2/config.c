@@ -7577,6 +7577,39 @@ _put_Nikon_FastFS(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Nikon_Thumbsize(CONFIG_GET_ARGS) {
+	char buf[1024];
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_add_choice (*widget, _("normal"));
+	gp_widget_add_choice (*widget, _("large"));
+	gp_widget_set_name (*widget, menu->name);
+	strcpy(buf,"normal");
+	gp_setting_get("ptp2","thumbsize", buf);
+	gp_widget_set_value  (*widget, N_(buf));
+	return GP_OK;
+}
+
+static int
+_put_Nikon_Thumbsize(CONFIG_PUT_ARGS) {
+	char *buf;
+	PTPParams	*params = &(camera->pl->params);
+	GPContext	*context = ((PTPData *) params->data)->context;
+
+	CR (gp_widget_get_value  (widget, &buf));
+	if (!strcmp(buf,_("normal"))) {
+		gp_setting_set("ptp2","thumbsize","normal");
+		return GP_OK;
+	}
+	if (!strcmp(buf,_("large"))) {
+		gp_setting_set("ptp2","thumbsize","large");
+		return GP_OK;
+	}
+	gp_context_error (context, _("Unknown thumb size value '%s'."), buf);
+	return GP_ERROR;
+}
+
 static struct {
 	char	*name;
 	char	*label;
@@ -8395,6 +8428,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("External Recording Control"),     "externalrecordingcontrol", PTP_DPC_NIKON_ExternalRecordingControl,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,    _put_Nikon_OffOn_UINT8 },
 
 /* virtual */
+	{ N_("Thumb Size"),		"thumbsize",    0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_Thumbsize,   _put_Nikon_Thumbsize },
 	{ N_("Fast Filesystem"),	"fastfs",	0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_FastFS,      _put_Nikon_FastFS },
 	{ N_("Capture Target"),		"capturetarget",0,  PTP_VENDOR_NIKON,   0,  _get_CaptureTarget,     _put_CaptureTarget },
 	{ N_("Autofocus"),		"autofocus",    0,  PTP_VENDOR_NIKON,   0,  _get_Autofocus,         _put_Autofocus },

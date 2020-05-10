@@ -7838,8 +7838,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
-		unsigned char *ximage = NULL;
-		unsigned int xlen;
+		unsigned char	*ximage = NULL;
+		unsigned int	xlen;
+		char		buf[200];
 
 		/* If thumb size is 0, and the ofc is not an image type (0x38xx or 0xb8xx)
 		 * then there is no thumbnail at all... */
@@ -7853,7 +7854,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			((ob->oi.ObjectFormat != PTP_OFC_CANON_CR3))
 		))
 			return GP_ERROR_NOT_SUPPORTED;
-		C_PTP_REP (ptp_getthumb(params, oid, &ximage, &xlen));
+
+		if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON)	&&
+			ptp_operation_issupported(params,PTP_OC_NIKON_GetLargeThumb)	&&
+			(GP_OK == gp_setting_get("ptp2","thumbsize",buf))		&&
+			!strcmp(buf,"large")
+		) {
+			C_PTP_REP (ptp_nikon_getlargethumb(params, oid, &ximage, &xlen));
+		} else {
+			C_PTP_REP (ptp_getthumb(params, oid, &ximage, &xlen));
+		}
+
 		set_mimetype (file, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
 		CR (gp_file_set_data_and_size (file, (char*)ximage, xlen));
 		break;

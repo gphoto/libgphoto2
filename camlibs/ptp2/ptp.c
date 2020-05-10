@@ -1897,6 +1897,26 @@ ptp_getthumb (PTPParams* params, uint32_t handle, unsigned char** object, unsign
 }
 
 /**
+ * ptp_nikon_getlargethumb:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		object			- pointer to data area
+ *
+ * Get a large thumb for object 'handle' from device and store the data in newly
+ * allocated 'object'. This function is Nikon specific.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_nikon_getlargethumb (PTPParams* params, uint32_t handle, unsigned char** object, unsigned int *len)
+{
+	PTPContainer ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetLargeThumb, handle);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, len);
+}
+
+/**
  * ptp_deleteobject:
  * params:	PTPParams*
  *		handle			- object handle
