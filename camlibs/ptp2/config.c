@@ -8413,6 +8413,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Serial Number"),          "eosserialnumber",  PTP_DPC_CANON_EOS_SerialNumber,         PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_CANON_EOS_ShutterCounter,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Available Shots"),        "availableshots",   PTP_DPC_CANON_EOS_AvailableShots,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("Available Shots"),        "availableshots",   PTP_DPC_NIKON_ExposureRemaining,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Focal Length Minimum"),   "minfocallength",   PTP_DPC_NIKON_FocalLengthMin,           PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_FocalLength,         _put_None },
 	{ N_("Focal Length Maximum"),   "maxfocallength",   PTP_DPC_NIKON_FocalLengthMax,           PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_FocalLength,         _put_None },
 	{ N_("Maximum Aperture at Focal Length Minimum"), "apertureatminfocallength", PTP_DPC_NIKON_MaxApAtMinFocalLength, PTP_VENDOR_NIKON, PTP_DTC_UINT16, _get_Nikon_ApertureAtFocalLength, _put_None },
