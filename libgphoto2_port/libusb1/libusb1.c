@@ -944,7 +944,7 @@ gp_libusb1_update (GPPort *port)
 	/* The interface changed. release the old, claim the new ... */
 	if (port->settings.usb.interface != port->pl->interface) {
 		GP_LOG_D ("changing interface %d -> %d", port->pl->interface, port->settings.usb.interface);
-		if (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->pl->interface))) {
+		if ((port->pl->interface != -1) && (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->pl->interface)))) {
 			/* Not a hard error for now. -Marcus */
 		} else {
 			GP_LOG_D ("claiming interface %d", port->settings.usb.interface);
@@ -959,7 +959,7 @@ gp_libusb1_update (GPPort *port)
 		/* This can only be changed with the interface released. 
 		 * This is a hard requirement since 2.6.12.
 		 */
-		if (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->settings.usb.interface))) {
+		if ((port->pl->config != -1) && (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->settings.usb.interface)))) {
 			ifacereleased = FALSE;
 		} else {
 			ifacereleased = TRUE;
