@@ -6679,6 +6679,24 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 		if (LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8)) != PTP_RC_OK)
 			value.u8 = 0;
 
+		if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_NIKON_LiveViewProhibitCondition)) {
+			C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewProhibitCondition, &value, PTP_DTC_UINT32));
+
+			if (value.u32) {
+				/* we could have multiple reasons, but just report the first one. by decreasing order of possibility */
+				if (value.u32 & (1<<8)) { gp_context_error (context, _("Liveview cannot start: Battery exhausted")); return GP_ERROR; }
+				if (value.u32 & (1<<17)){ gp_context_error (context, _("Liveview cannot start: Temperature too high")); return GP_ERROR; }
+				if (value.u32 & (1<<9)) { gp_context_error (context, _("Liveview cannot start: TTL error")); return GP_ERROR; }
+				if (value.u32 & (1<<22)){ gp_context_error (context, _("Liveview cannot start: In Mirror-up operation")); return GP_ERROR; }
+				if (value.u32 & (1<<24)){ gp_context_error (context, _("Liveview cannot start: Lens is retracting")); return GP_ERROR; }
+				if (value.u32 & (1<<5)) { gp_context_error (context, _("Liveview cannot start: Minimum aperture warning")); return GP_ERROR; }
+				if (value.u32 & (1<<15)){ gp_context_error (context, _("Liveview cannot start: Processing of shooting operation")); return GP_ERROR; }
+				if (value.u32 & (1<<2)) { gp_context_error (context, _("Liveview cannot start: Sequence error")); return GP_ERROR; }
+				gp_context_error (context, _("Liveview cannot start: code 0x%08x"), value.u32);
+				return GP_ERROR;
+			}
+		}
+
                 if (!value.u8) {
 			value.u8 = 1;
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
