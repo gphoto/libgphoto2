@@ -6865,6 +6865,26 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 			C_PTP_REP_MSG (nikon_wait_busy(params, 50, 1000),
 				       _("Nikon enable liveview failed"));
 		}
+
+		if (have_prop(camera,PTP_VENDOR_NIKON,PTP_DPC_NIKON_MovRecProhibitCondition)) {
+			value.u32 = 0;
+			LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_MovRecProhibitCondition, &value, PTP_DTC_UINT32));
+			if (value.u32) {
+				if (value.u32 & (1<<14)) { gp_context_error (context, _("Movie recording cannot start: Camera is not in application mode.")); return GP_ERROR; }
+				if (value.u32 & (1<<13)) { gp_context_error (context, _("Movie recording cannot start: Set liveview selector is enabled.")); return GP_ERROR; }
+				if (value.u32 & (1<<12)) { gp_context_error (context, _("Movie recording cannot start: In enlarged liewview.")); return GP_ERROR; }
+				if (value.u32 & (1<<11)) { gp_context_error (context, _("Movie recording cannot start: Card protected.")); return GP_ERROR; }
+				if (value.u32 & (1<<10)) { gp_context_error (context, _("Movie recording cannot start: Already in movie recording.")); return GP_ERROR; }
+				if (value.u32 & (1<< 9)) { gp_context_error (context, _("Movie recording cannot start: Images / movies not yet record in buffer.")); return GP_ERROR; }
+				if (value.u32 & (1<< 3)) { gp_context_error (context, _("Movie recording cannot start: Card full.")); return GP_ERROR; }
+				if (value.u32 & (1<< 2)) { gp_context_error (context, _("Movie recording cannot start: Card not formatted.")); return GP_ERROR; }
+				if (value.u32 & (1<< 1)) { gp_context_error (context, _("Movie recording cannot start: Card error.")); return GP_ERROR; }
+				if (value.u32 & (1<< 0)) { gp_context_error (context, _("Movie recording cannot start: No card.")); return GP_ERROR; }
+				gp_context_error (context, _("Movie recording cannot start: code 0x%08x"), value.u32);
+				return GP_ERROR;
+			}
+		}
+
 		C_PTP_REP (ptp_nikon_startmovie (params));
 	} else
 		C_PTP_REP (ptp_nikon_stopmovie (params));
