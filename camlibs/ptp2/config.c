@@ -4451,6 +4451,16 @@ static struct deviceproptableu8 nikon_liveviewaf[] = {
 	{ N_("Spot-area AF"),		4, 0 },
 };
 GENERIC8TABLE(Nikon_LiveViewAFU,nikon_liveviewaf)
+
+static struct deviceproptableu8 nikon_liveviewimagezoomratio[] = {
+	{ N_("Entire Display"),	0, 0 },
+	{ N_("25%"),		2, 0 },
+	{ N_("50%"),		4, 0 },
+	{ N_("100%"),		6, 0 },
+	{ N_("200%"),		7, 0 },
+};
+GENERIC8TABLE(Nikon_LiveViewImageZoomRatio,nikon_liveviewimagezoomratio)
+
 static struct deviceproptablei8 nikon_liveviewafi[] = {
 	{ N_("Face-priority AF"),	0, 0 },
 	{ N_("Wide-area AF"),		1, 0 },
@@ -4468,15 +4478,6 @@ static struct deviceproptableu8 nikon_liveviewaffocus[] = {
 	{ N_("Manual Focus (selection)"),	4, 0 },
 };
 GENERIC8TABLE(Nikon_LiveViewAFFocus,nikon_liveviewaffocus)
-
-static struct deviceproptableu8 nikon_afatliveview[] = {
-	{ N_("Face-Priority AF"),	0, 0 },
-	{ N_("Wide-area AF"),		1, 0 },
-	{ N_("Normal-area AF"),		2, 0 },
-	{ N_("Subject-tracking AF"),	3, 0 },
-	{ N_("Spot-area AF"),		4, 0 },
-};
-GENERIC8TABLE(Nikon_AfAtLiveView,nikon_afatliveview)
 
 static struct deviceproptableu8 nikon_afareaillum[] = {
 	{ N_("Auto"),		0, 0 },
@@ -8619,6 +8620,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View AF Mode"),              "liveviewafmode",           PTP_DPC_NIKON_LiveViewAFArea,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_LiveViewAFI,             _put_Nikon_LiveViewAFI },
 	{ N_("Live View AF Mode"),              "liveviewafmode",           PTP_DPC_NIKON_LiveViewAFArea,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewAFU,             _put_Nikon_LiveViewAFU },
 	{ N_("Live View AF Focus"),             "liveviewaffocus",          PTP_DPC_NIKON_LiveViewAFFocus,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewAFFocus,         _put_Nikon_LiveViewAFFocus },
+	{ N_("Live View Image Zoom Ratio"),     "liveviewimagezoomratio",   PTP_DPC_NIKON_LiveViewImageZoomRatio,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewImageZoomRatio,  _put_Nikon_LiveViewImageZoomRatio },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Modelling Flash"),                "modelflash",               PTP_DPC_NIKON_E4ModelingFlash,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
