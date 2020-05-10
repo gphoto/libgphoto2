@@ -8620,6 +8620,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View AF Mode"),              "liveviewafmode",           PTP_DPC_NIKON_LiveViewAFArea,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_LiveViewAFI,             _put_Nikon_LiveViewAFI },
 	{ N_("Live View AF Mode"),              "liveviewafmode",           PTP_DPC_NIKON_LiveViewAFArea,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewAFU,             _put_Nikon_LiveViewAFU },
 	{ N_("Live View AF Focus"),             "liveviewaffocus",          PTP_DPC_NIKON_LiveViewAFFocus,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewAFFocus,         _put_Nikon_LiveViewAFFocus },
+	{ N_("Live View Exposure Preview"),     "liveviewexposurepreview",  PTP_DPC_NIKON_LiveViewExposurePreview,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Live View Image Zoom Ratio"),     "liveviewimagezoomratio",   PTP_DPC_NIKON_LiveViewImageZoomRatio,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewImageZoomRatio,  _put_Nikon_LiveViewImageZoomRatio },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
