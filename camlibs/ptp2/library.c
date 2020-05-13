@@ -2327,6 +2327,8 @@ static struct {
 	{"Fuji:Fujifilm GFX100",		0x04cb, 0x02de, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Bruno Filho at SUSE (currently not working with cpature, but shows variables) */
 	{"Fuji:Fujifilm X-T30",			0x04cb, 0x02e3, 0 /*PTP_CAP|PTP_CAP_PREVIEW*/},
+	/* https://github.com/gphoto/libgphoto2/issues/505 */
+	{"Fuji:Fujifilm X-T4",			0x04cb, 0x02e6, PTP_CAP|PTP_CAP_PREVIEW},	/* not fully confirmed */
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
