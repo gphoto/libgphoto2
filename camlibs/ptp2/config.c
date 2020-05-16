@@ -1696,23 +1696,40 @@ _put_Nikon_WBBias(CONFIG_PUT_ARGS)
 	return (GP_OK);
 }
 
+/* This can get type 1 (INT8) , 2 (UINT8) and 4 (UINT16) */
 static int
 _get_Nikon_UWBBias(CONFIG_GET_ARGS) {
 	float	f, t, b, s;
 
-	if (dpd->DataType != PTP_DTC_UINT8)
-		return (GP_ERROR);
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
+		return GP_ERROR;
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
-	f = (float)dpd->CurrentValue.u8;
-	b = (float)dpd->FORM.Range.MinimumValue.u8;
-	t = (float)dpd->FORM.Range.MaximumValue.u8;
-	s = (float)dpd->FORM.Range.StepSize.u8;
+	switch (dpd->DataType) {
+	case PTP_DTC_UINT16:
+		f = (float)dpd->CurrentValue.u16;
+		b = (float)dpd->FORM.Range.MinimumValue.u16;
+		t = (float)dpd->FORM.Range.MaximumValue.u16;
+		s = (float)dpd->FORM.Range.StepSize.u16;
+		break;
+	case PTP_DTC_UINT8:
+		f = (float)dpd->CurrentValue.u8;
+		b = (float)dpd->FORM.Range.MinimumValue.u8;
+		t = (float)dpd->FORM.Range.MaximumValue.u8;
+		s = (float)dpd->FORM.Range.StepSize.u8;
+		break;
+	case PTP_DTC_INT8:
+		f = (float)dpd->CurrentValue.i8;
+		b = (float)dpd->FORM.Range.MinimumValue.i8;
+		t = (float)dpd->FORM.Range.MaximumValue.i8;
+		s = (float)dpd->FORM.Range.StepSize.i8;
+		break;
+	default:
+		return GP_ERROR;
+	}
 	gp_widget_set_range (*widget, b, t, s);
 	gp_widget_set_value (*widget, &f);
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
@@ -1721,8 +1738,20 @@ _put_Nikon_UWBBias(CONFIG_PUT_ARGS)
 	float	f;
 
 	CR (gp_widget_get_value(widget, &f));
-	propval->u8 = (unsigned char)f;
-	return (GP_OK);
+	switch (dpd->DataType) {
+	case PTP_DTC_UINT16:
+		propval->u16 = (unsigned short)f;
+		break;
+	case PTP_DTC_UINT8:
+		propval->u8 = (unsigned char)f;
+		break;
+	case PTP_DTC_INT8:
+		propval->i8 = (char)f;
+		break;
+	default:
+		return GP_ERROR;
+	}
+	return GP_OK;
 }
 
 static int
@@ -5307,7 +5336,7 @@ static struct deviceproptableu8 nikon_d3s_padvpvalue[] = {
 };
 GENERIC8TABLE(Nikon_D3s_PADVPValue,nikon_d3s_padvpvalue)
 
-static struct deviceproptablei8 nikon_d90_activedlighting[] = {
+static struct deviceproptableu8 nikon_d90_activedlighting[] = {
 	{ N_("Extra high"), 0x00,   0 },
 	{ N_("High"),       0x01,   0 },
 	{ N_("Normal"),     0x02,   0 },
@@ -5315,15 +5344,15 @@ static struct deviceproptablei8 nikon_d90_activedlighting[] = {
 	{ N_("Off"),        0x04,   0 },
 	{ N_("Auto"),       0x05,   0 },
 };
-GENERICI8TABLE(Nikon_D90_ActiveDLighting,nikon_d90_activedlighting)
+GENERIC8TABLE(Nikon_D90_ActiveDLighting,nikon_d90_activedlighting)
 
 static struct deviceproptablei8 nikon_d850_activedlighting[] = {
-	{ N_("Auto"), 		0x00,   0 },
-	{ N_("Off"),       	0x01,   0 },
-	{ N_("Low"),     	0x02,   0 },
-	{ N_("Normal"),     0x03,   0 },
-	{ N_("High"),       0x04,   0 },
-	{ N_("Extra high"), 0x05,   0 },
+	{ N_("Auto"),		0x00,   0 },
+	{ N_("Off"),		0x01,   0 },
+	{ N_("Low"),		0x02,   0 },
+	{ N_("Normal"),		0x03,   0 },
+	{ N_("High"),		0x04,   0 },
+	{ N_("Extra high"),	0x05,   0 },
 };
 GENERICI8TABLE(Nikon_D850_ActiveDLighting,nikon_d850_activedlighting)
 
@@ -5466,13 +5495,13 @@ static struct deviceproptableu16 canon_eos_highisonr[] = {
 
 GENERIC16TABLE(Canon_EOS_HighIsoNr,canon_eos_highisonr)
 
-static struct deviceproptablei8 nikon_d90_highisonr[] = {
+static struct deviceproptableu8 nikon_d90_highisonr[] = {
 	{ N_("Off"),	0, 0 },
 	{ N_("Low"),	1, 0 },
 	{ N_("Normal"),	2, 0 },
 	{ N_("High"),	3, 0 },
 };
-GENERICI8TABLE(Nikon_D90_HighISONR,nikon_d90_highisonr)
+GENERIC8TABLE(Nikon_D90_HighISONR,nikon_d90_highisonr)
 
 static struct deviceproptableu8 nikon_1_highisonr[] = {
 	{ N_("On"),	0, 0 },
@@ -8526,6 +8555,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO,                    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ISO,       _put_Olympus_ISO },
 	{ N_("ISO Speed"),              "iso",             	0,         		    		PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,         _put_Panasonic_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
+	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_OLYMPUS_WhiteBalance,           PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_WhiteBalance, _put_Olympus_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_WhiteBalance,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_WhiteBalance,        _put_Canon_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_EOS_WhiteBalance,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_WhiteBalance,    _put_Canon_EOS_WhiteBalance },
@@ -8541,7 +8571,6 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Model"),            "colormodel",           PTP_DPC_NIKON_ColorModel,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorModel,          _put_Nikon_ColorModel },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
-	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
 	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
 	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
@@ -8696,7 +8725,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash White Balance Bias"),       "flashwhitebias",           PTP_DPC_NIKON_WhiteBalanceFlashBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,                 _put_Nikon_UWBBias },
 	{ N_("Cloudy White Balance Bias"),      "cloudywhitebias",          PTP_DPC_NIKON_WhiteBalanceCloudyBias,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,                 _put_Nikon_UWBBias },
 	{ N_("Shady White Balance Bias"),       "shadewhitebias",           PTP_DPC_NIKON_WhiteBalanceShadeBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,                 _put_Nikon_UWBBias },
-	{ N_("Natural light auto White Balance Bias"),	"naturallightautowhitebias",	PTP_DPC_NIKON_WhiteBalanceNaturalLightAutoBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_UWBBias,	_put_Nikon_UWBBias },
+	{ N_("Natural light auto White Balance Bias"),	"naturallightautowhitebias",	PTP_DPC_NIKON_WhiteBalanceNaturalLightAutoBias,    PTP_VENDOR_NIKON,   PTP_DTC_UINT16,  _get_Nikon_UWBBias,	_put_Nikon_UWBBias },
 	/* older Nikons have INT8 ranges */
 	{ N_("Auto White Balance Bias"),        "autowhitebias",            PTP_DPC_NIKON_WhiteBalanceAutoBias,     PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_WBBias,                  _put_Nikon_WBBias },
 	{ N_("Tungsten White Balance Bias"),    "tungstenwhitebias",        PTP_DPC_NIKON_WhiteBalanceTungstenBias, PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_WBBias,                  _put_Nikon_WBBias },
@@ -8778,7 +8807,7 @@ static struct submenu nikon_d40_capture_settings[] = {
 static struct submenu nikon_d850_capture_settings[] = {
 	{ N_("Image Quality"),          	"imagequality",			PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
 	{ N_("Image Rotation Flag"),            "imagerotationflag",    PTP_DPC_NIKON_ImageRotation,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,            _put_Nikon_OffOn_UINT8 },
-	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D850_ActiveDLighting,   _put_Nikon_D850_ActiveDLighting },
+	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,   _get_Nikon_D850_ActiveDLighting,   _put_Nikon_D850_ActiveDLighting },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
 	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },	
 	{ N_("Center Weight Area"),             "centerweightsize",     PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_CenterWeight,      _put_Nikon_D850_CenterWeight },
@@ -8811,16 +8840,15 @@ static struct submenu nikon_d7100_capture_settings[] = {
 	{ N_("Exposure Program"),               "expprogram",           PTP_DPC_ExposureProgramMode,    0,                  PTP_DTC_UINT16, _get_NIKON_D7100_ExposureProgram,   _put_NIKON_D7100_ExposureProgram },
 	{ N_("Minimum Shutter Speed"),          "minimumshutterspeed",  PTP_DPC_NIKON_PADVPMode,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7100_PADVPValue,        _put_Nikon_D7100_PADVPValue },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7100_ShootingSpeed,     _put_Nikon_D7100_ShootingSpeed },
-	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",       PTP_DPC_NIKON_ISOAutoHiLimit,   PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D7100_ISOAutoHiLimit,    _put_Nikon_D7100_ISOAutoHiLimit },
+	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",       PTP_DPC_NIKON_ISOAutoHiLimit,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7100_ISOAutoHiLimit,    _put_Nikon_D7100_ISOAutoHiLimit },
 	{ N_("Flash Sync. Speed"),              "flashsyncspeed",       PTP_DPC_NIKON_FlashSyncSpeed,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7100_FlashSyncSpeed,    _put_Nikon_D7100_FlashSyncSpeed },
 	{ N_("Focus Metering"),                 "focusmetering",        PTP_DPC_FocusMeteringMode,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D7100_FocusMetering,     _put_Nikon_D7100_FocusMetering },
 	{ 0,0,0,0,0,0,0 },
 };
 static struct submenu nikon_d90_capture_settings[] = {
 	{ N_("Minimum Shutter Speed"),          "minimumshutterspeed",  PTP_DPC_NIKON_PADVPMode,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_PADVPValue,      _put_Nikon_D90_PADVPValue },
-	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",       PTP_DPC_NIKON_ISOAutoHiLimit,   PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ISOAutoHiLimit,  _put_Nikon_D90_ISOAutoHiLimit },
-	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
-	{ N_("High ISO Noise Reduction"),       "highisonr",            PTP_DPC_NIKON_NrHighISO,        PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_HighISONR,       _put_Nikon_D90_HighISONR },
+	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",       PTP_DPC_NIKON_ISOAutoHiLimit,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ISOAutoHiLimit,  _put_Nikon_D90_ISOAutoHiLimit },
+	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ActiveDLighting, _put_Nikon_D90_ActiveDLighting },
 	{ N_("Image Quality"),                  "imagequality",         PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_Compression,     _put_Nikon_D90_Compression },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ShootingSpeed,   _put_Nikon_D90_ShootingSpeed },
 	{ 0,0,0,0,0,0,0 },
@@ -8829,7 +8857,7 @@ static struct submenu nikon_d90_capture_settings[] = {
 /* One D3s reporter is Matthias Blaicher */
 static struct submenu nikon_d3s_capture_settings[] = {
 	{ N_("Minimum Shutter Speed"),          "minimumshutterspeed",      PTP_DPC_NIKON_PADVPMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_PADVPValue,              _put_Nikon_D3s_PADVPValue },
-	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",           PTP_DPC_NIKON_ISOAutoHiLimit,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D3s_ISOAutoHiLimit,          _put_Nikon_D3s_ISOAutoHiLimit },
+	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",           PTP_DPC_NIKON_ISOAutoHiLimit,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_ISOAutoHiLimit,          _put_Nikon_D3s_ISOAutoHiLimit },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",            PTP_DPC_NIKON_D1ShootingSpeed,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_ShootingSpeed,           _put_Nikon_D3s_ShootingSpeed },
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh",        PTP_DPC_NIKON_ContinuousSpeedHigh,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_ShootingSpeedHigh,       _put_Nikon_D3s_ShootingSpeedHigh },
 	{ N_("Flash Sync. Speed"),              "flashsyncspeed",           PTP_DPC_NIKON_FlashSyncSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashSyncSpeed,          _put_Nikon_D3s_FlashSyncSpeed },
@@ -8845,8 +8873,7 @@ static struct submenu nikon_d3s_capture_settings[] = {
 	{ N_("AF On Button"),                   "afonbutton",               PTP_DPC_NIKON_NormalAFOn,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_NormalAFOn,              _put_Nikon_D3s_NormalAFOn },
 
 	/* same as D90 */
-	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_NIKON_NrHighISO,                PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_HighISONR,               _put_Nikon_D90_HighISONR },
-	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ActiveDLighting,         _put_Nikon_D90_ActiveDLighting },
+	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ActiveDLighting,         _put_Nikon_D90_ActiveDLighting },
 
 	{ 0,0,0,0,0,0,0 },
 };
@@ -8854,10 +8881,10 @@ static struct submenu nikon_d3s_capture_settings[] = {
 static struct submenu nikon_generic_capture_settings[] = {
 	/* filled in with D90 values */
 	{ N_("Minimum Shutter Speed"),          "minimumshutterspeed",      PTP_DPC_NIKON_PADVPMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_PADVPValue,          _put_Nikon_D90_PADVPValue },
-	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",           PTP_DPC_NIKON_ISOAutoHiLimit,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ISOAutoHiLimit,      _put_Nikon_D90_ISOAutoHiLimit },
-	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_ActiveDLighting,     _put_Nikon_D90_ActiveDLighting },
-	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_NIKON_NrHighISO,                PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_HighISONR,           _put_Nikon_D90_HighISONR },
-	{ N_("Movie High ISO Noise Reduction"), "moviehighisonr",           PTP_DPC_NIKON_MovieNrHighISO,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_D90_HighISONR,           _put_Nikon_D90_HighISONR },
+	{ N_("ISO Auto Hi Limit"),              "isoautohilimit",           PTP_DPC_NIKON_ISOAutoHiLimit,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ISOAutoHiLimit,      _put_Nikon_D90_ISOAutoHiLimit },
+	{ N_("Active D-Lighting"),              "dlighting",                PTP_DPC_NIKON_ActiveDLighting,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ActiveDLighting,     _put_Nikon_D90_ActiveDLighting },
+	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_NIKON_NrHighISO,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_HighISONR,           _put_Nikon_D90_HighISONR },
+	{ N_("Movie High ISO Noise Reduction"), "moviehighisonr",           PTP_DPC_NIKON_MovieNrHighISO,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_HighISONR,           _put_Nikon_D90_HighISONR },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",            PTP_DPC_NIKON_D1ShootingSpeed,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_ShootingSpeed,       _put_Nikon_D90_ShootingSpeed },
 	{ N_("Maximum continuous release"),     "maximumcontinousrelease",  PTP_DPC_NIKON_D2MaximumShots,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Range_UINT8,                   _put_Range_UINT8 },
 	{ N_("Movie Quality"),                  "moviequality",             PTP_DPC_NIKON_MovScreenSize,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MovieQuality,            _put_Nikon_MovieQuality },
