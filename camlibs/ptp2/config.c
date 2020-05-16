@@ -4394,9 +4394,9 @@ _get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
 	float value_float;
 
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
+		return GP_ERROR;
 	if (dpd->DataType != PTP_DTC_INT8)
-		return (GP_ERROR);
+		return GP_ERROR;
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_range (*widget,
@@ -4406,7 +4406,7 @@ _get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
 	);
 	value_float = dpd->CurrentValue.i8/6.0;
 	gp_widget_set_value (*widget, &value_float);
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
@@ -5076,7 +5076,7 @@ static struct deviceproptableu8 nikon_lensid[] = {
 	{"AF-S Nikkor 35mm 1:1.8G DX", 			159, 0},
 	{"Sigma EX 30mm 1:1.4 DC HSM",			248, 0}, /* from mge */
 };
-GENERIC8TABLE(Nikon_LensID,nikon_lensid)
+GENERIC8TABLE(Nikon_LensID,nikon_lensid) /* FIXME: seen UINT8 and UINT16 types now */
 
 static struct deviceproptableu8 nikon_microphone[] = {
 	{N_("Auto sensitivity"),	0, 0},
@@ -8706,7 +8706,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Release without CF card"),        "nocfcardrelease",          PTP_DPC_NIKON_NoCFCard,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Mode Manual Power"),        "flashmodemanualpower",     PTP_DPC_NIKON_FlashModeManualPower,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashModeManualPower,    _put_Nikon_FlashModeManualPower },
 	{ N_("Auto Focus Area"),                "autofocusarea",            PTP_DPC_NIKON_AutofocusArea,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AutofocusArea,           _put_Nikon_AutofocusArea },
-	{ N_("Flash Exposure Compensation"),    "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation },
+	{ N_("Flash Exposure Compensation"),    "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_INT8,   _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation },
 	{ N_("Bracketing"),                     "bracketing",               PTP_DPC_NIKON_Bracketing,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Bracketing"),                     "bracketmode",              PTP_DPC_NIKON_E6ManualModeBracketing,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ManualBracketMode,       _put_Nikon_ManualBracketMode },
 	{ N_("Bracket Mode"),                   "bracketmode",              PTP_DPC_CANON_EOS_BracketMode,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_BracketMode,             _put_Canon_BracketMode },
