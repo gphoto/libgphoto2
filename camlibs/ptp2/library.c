@@ -919,6 +919,8 @@ static struct {
 	{"Sony:DSC-HX5V (PTP mode)",  0x054c, 0x0491, 0},
 	/* tux droid <gnutuxdroid@gmail.com> */
 	{"Sony:SLT-A55 (PTP mode)",   0x054c, 0x04a3, 0},
+	/* em33kay@gmail.com */
+	{"Sony:NEX5 (PTP mode)",      0x054c, 0x04a5, 0},
 	/* http://sourceforge.net/tracker/?func=detail&atid=358874&aid=3515558&group_id=8874 */
 	{"Sony:SLT-A35 (PTP mode)",   0x054c, 0x04a7, 0},
 	/* t.ludewig@gmail.com */

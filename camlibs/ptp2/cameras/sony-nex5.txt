@@ -1,0 +1,61 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: Sony Digital Still Camera
+  Version: (null)
+
+Capture Formats: 
+Display Formats: Script, JPEG
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Only
+	Maximum Capability: 31902400512 (30424 MB)
+	Free Space (Bytes): 24029200384 (22916 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: None
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Sony Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Sony Digital Still Camera
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: None
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: None
+END
