@@ -3038,7 +3038,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			ptp_free_devicepropdesc (&dpd);
 			/* do not set it everytime, it will cause delays */
 			ret = ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &dpd);
-			if ((ret == PTP_RC_OK) && (dpd.CurrentValue.u32 != 2)) {
+			/* see config.c what kind of values we have ... it seems to be a mask. bit 0 is TFT, bit 1 PC, bit 2 MOBILE, bit 3 MOBILE2? */
+			/* so lets see it only if it does not have any bit set (discounted bit 0) */
+			if ((ret == PTP_RC_OK) && ((dpd.CurrentValue.u32 & ~1) == 0)) {
 				/* 2 means PC, 1 means TFT */
 				val.u32 = 2;
 				C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &val, PTP_DTC_UINT32),
