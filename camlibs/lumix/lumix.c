@@ -1893,12 +1893,8 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-/*
-	startup code might need:
-
-	loadCmd(camera,"cam.cgi?mode=accctrl&type=req_acc&value=4D454930-0100-1000-8001-020D0090325B&value2=GT-I9300");
-	loadCmd(camera,"cam.cgi?mode=setsetting&type=device_name&value=GT-I9300");
-*/
+	loadCmd(camera,"cam.cgi?mode=accctrl&type=req_acc&value=0&value2=libgphoto2/lumix");
+	loadCmd(camera,"cam.cgi?mode=setsetting&type=device_name&value=libgphoto2/lumix");
 
 	if (switchToRecMode (camera) != NULL) {
 		int numpix;
