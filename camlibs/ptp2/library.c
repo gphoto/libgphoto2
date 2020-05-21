@@ -6212,7 +6212,7 @@ sonyout:
 		return GP_OK;
 	}
 	if 	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD)
-	 {
+	{
 
 		do {
 			C_PTP_REP (ptp_check_event (params));
@@ -6221,9 +6221,19 @@ sonyout:
 				GP_LOG_D ("received event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				switch (event.Code) {
 				case 0xC002:
+				case PTP_EC_OLYMPUS_ObjectAdded:
 				case PTP_EC_ObjectAdded:
 					newobject = event.Param1;
 					goto downloadomdfile;
+				case PTP_EC_OLYMPUS_CaptureComplete:
+					*eventtype = GP_EVENT_CAPTURE_COMPLETE;
+					*eventdata = NULL;
+					return GP_OK;
+				case PTP_EC_OLYMPUS_PropChanged:
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed to 0x012345678")+1));
+					sprintf (*eventdata, "PTP Property %04x changed to 0x%08x", event.Param1, event.Param2);
+					return GP_OK;
 				default:
 					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 					break;
