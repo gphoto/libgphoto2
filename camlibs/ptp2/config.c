@@ -3383,6 +3383,7 @@ static struct deviceproptableu8 nikon_bracketpattern[] = {
 	{ N_("5 images (normal, 2 unders and 2 overs)"),	5, 0 },
 	{ N_("7 images (normal, 3 unders and 3 overs)"),	6, 0 },
 	{ N_("9 images (normal, 4 unders and 4 overs)"),	7, 0 },
+	{ N_("0 image"),					8, 0 },
 };
 GENERIC8TABLE(Nikon_BracketPattern,nikon_bracketpattern);
 
@@ -3391,6 +3392,7 @@ static struct deviceproptableu8 nikon_adlbracketpattern[] = {
 	{ N_("3 shots (Off -> Low -> User setting)"),			1, 0 },
 	{ N_("4 shots (Off -> Low -> Normal -> High)"),			2, 0 },
 	{ N_("5 shots (Off -> Low -> Normal -> High -> Extra High)"),	3, 0 },
+	{ N_("0 image"),						4, 0 },
 };
 GENERIC8TABLE(Nikon_ADLBracketPattern,nikon_adlbracketpattern);
 
