@@ -1048,12 +1048,12 @@ static struct {
 	/* Nick Clarke <nick.clarke@gmail.com> */
 	{"Sony:Alpha-A77 M2 (Control)", 0x054c, 0x0953, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
+	{"Sony:Alpha-A7S (Control)",    0x054c, 0x0954, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Markus Oertel */
 	/* Preview confirmed by Adrian Schroeter, preview might need the firmware getting updated */
 	{"Sony:Alpha-A5100 (Control)",  0x054c, 0x0957, PTP_CAP|PTP_CAP_PREVIEW},
-
-	/* http://sourceforge.net/p/gphoto/feature-requests/456/ */
-	{"Sony:Alpha-A7S (Control)",    0x054c, 0x0954, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* https://github.com/gphoto/libgphoto2/issues/343  */
 	{"Sony:Alpha-A7III (Control)",  0x054c, 0x096f, PTP_CAP|PTP_CAP_PREVIEW},
