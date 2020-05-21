@@ -4813,6 +4813,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 		while (ptp_get_one_event(params, &event)) {
 			switch (event.Code) {
 			case 0xc002:
+			case PTP_EC_OLYMPUS_ObjectAdded:	/* seen in newer traces, https://github.com/gphoto/gphoto2/issues/310 */
 			case PTP_EC_ObjectAdded:
 				newobject = event.Param1;
 				goto downloadfile;

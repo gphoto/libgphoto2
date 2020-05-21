@@ -1138,6 +1138,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_PANASONIC_ObjectAdded		0xC108
 #define PTP_EC_PANASONIC_ObjectAddedSDRAM	0xC109
 
+#define PTP_EC_OLYMPUS_ObjectAdded		0xC102
+#define PTP_EC_OLYMPUS_PropChanged		0xC108
 
 /* constants for GetObjectHandles */
 #define PTP_GOH_ALL_STORAGE 0xffffffff
