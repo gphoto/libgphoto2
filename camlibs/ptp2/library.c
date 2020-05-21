@@ -1046,9 +1046,6 @@ static struct {
 	/* Nick Clarke <nick.clarke@gmail.com> */
 	{"Sony:Alpha-A77 M2 (Control)", 0x054c, 0x0953, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* Elijah Parker <mail@timelapseplus.com> */
-	{"Sony:Alpha-A7s (Control)", 0x054c, 0x0954, PTP_CAP},
-
 	/* Markus Oertel */
 	/* Preview confirmed by Adrian Schroeter, preview might need the firmware getting updated */
 	{"Sony:Alpha-A5100 (Control)",  0x054c, 0x0957, PTP_CAP|PTP_CAP_PREVIEW},
