@@ -1,4 +1,14 @@
 libgphoto2 2.5.24.1 development
+
+ptp2:
+* liveview support for Leica SL
+* Olympus OMD capture fixes
+* Nikon DSLR/Z:
+  * various improvements to liveview error reporting.
+  * much more properties added
+  * allow downloading of "large thumbnails" instead of "regular thumbnails",
+    can be selected by "thumbsize" gphoto2 local setting.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.24 release
 
