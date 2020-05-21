@@ -6622,6 +6622,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				PTPStreamInfo streaminfo;
 
 				if ((1<<i) & propval.u32) {
+					APPEND_TXT ("\t");
 					switch (i) {
 					case 0: APPEND_TXT (_("Video"));
 						break;
