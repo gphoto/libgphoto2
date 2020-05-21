@@ -3348,6 +3348,28 @@ static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 };
 GENERIC8TABLE(Nikon_HDRHighDynamic,nikon_hdrhighdynamic);
 
+static struct deviceproptableu8 nikon_bracketstep[] = {
+	{ N_("1/3 EV"),	0, 0 },
+	{ N_("1/2 EV"),	1, 0 },
+	{ N_("2/3 EV"),	2, 0 },
+	{ N_("1 EV"),	3, 0 },
+	{ N_("2 EV"),	4, 0 },
+	{ N_("3 EV"),	4, 0 },
+};
+GENERIC8TABLE(Nikon_BracketStep,nikon_bracketstep);
+
+static struct deviceproptableu8 nikon_bracketpattern[] = {
+	{ N_("2 images (normal and under)"),			0, 0 },
+	{ N_("2 images (normal and over)"),			1, 0 },
+	{ N_("3 images (normal and 2 unders)"),			2, 0 },
+	{ N_("3 images (normal and 2 overs)"),			3, 0 },
+	{ N_("3 images (normal, under and over)"),		4, 0 },
+	{ N_("5 images (normal, 2 unders and 2 overs)"),	5, 0 },
+	{ N_("7 images (normal, 3 unders and 3 overs)"),	6, 0 },
+	{ N_("9 images (normal, 4 unders and 4 overs)"),	7, 0 },
+};
+GENERIC8TABLE(Nikon_BracketPattern,nikon_bracketpattern);
+
 static struct deviceproptableu8 nikon_hdrsmoothing[] = {
 	{ N_("Auto"),		3, 0 },
 	{ N_("Low"),		2, 0 },
@@ -8453,12 +8475,14 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_BatteryLevel,                   0,                  PTP_DTC_UINT8,  _get_BatteryLevel,              _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_CANON_EOS_BatteryPower,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel,    _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_SONY_BatteryLevel,              PTP_VENDOR_SONY,    PTP_DTC_INT8,   _get_SONY_BatteryLevel,         _put_None },
-	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_NIKON_CameraOrientation,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CameraOrientation,   _put_None },
 	{ N_("Mirror Up Status"),       "mirrorupstatus",   PTP_DPC_NIKON_MirrorUpStatus,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,		_put_None },
 	{ N_("Mirror Up Shooting Count"),"mirrorupshootingcount", PTP_DPC_NIKON_MirrorUpReleaseShootingCount, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_INT,		_put_None },
-	{ N_("Camera Orientation"),     "orientation2",     PTP_DPC_NIKON_AngleLevel,               PTP_VENDOR_NIKON,   PTP_DTC_INT32,  _get_Nikon_AngleLevel,          _put_None },
+	{ N_("Continuous Shooting Count"),"continousshootingcount", PTP_DPC_NIKON_ContinousShootingCount, PTP_VENDOR_NIKON, PTP_DTC_UINT8,_get_INT,			_put_None },
+	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_NIKON_CameraOrientation,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CameraOrientation,   _put_None },
+	{ N_("Camera Orientation"),     "orientation2",     PTP_DPC_NIKON_AngleLevel,               PTP_VENDOR_NIKON,   PTP_DTC_INT32,  _get_Nikon_AngleLevel,		_put_None },
 	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_CANON_RotationAngle,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_CameraOrientation,   _put_None },
 	{ N_("Flash Open"),             "flashopen",        PTP_DPC_NIKON_FlashOpen,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
+	{ N_("Active Folder"),          "activefolder",     PTP_DPC_NIKON_ActiveFolder,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_INT,         		_put_None },
 	{ N_("Flash Charged"),          "flashcharged",     PTP_DPC_NIKON_FlashCharged,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_NIKON_LensID,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LensID,              _put_None },
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_CANON_EOS_LensName,             PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
@@ -8713,6 +8737,9 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("EV Step"),                        "evstep",                   PTP_DPC_NIKON_EVStep,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_EVStep,                  _put_Nikon_EVStep },
 	{ N_("Bracket Set"),                    "bracketset",               PTP_DPC_NIKON_BracketSet,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketSet,              _put_Nikon_BracketSet },
 	{ N_("Bracket Order"),                  "bracketorder",             PTP_DPC_NIKON_BracketOrder,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketOrder,            _put_Nikon_BracketOrder },
+	{ N_("AE Bracket Step"),                "aebracketstep",            PTP_DPC_NIKON_AutoExposureBracketStep,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketStep,             _put_Nikon_BracketStep },
+	{ N_("AE Bracketing Pattern"),          "aebracketpattern",         PTP_DPC_NIKON_AutoExposureBracketProgram,PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_Nikon_BracketProgram,          _put_Nikon_BracketProgram },
+	{ N_("AE Bracket Count"),               "aebracketcount",           PTP_DPC_NIKON_AutoExposureBracketCount, PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_INT,          		    _put_None },
 	{ N_("Burst Number"),                   "burstnumber",              PTP_DPC_BurstNumber,                    0,                  PTP_DTC_UINT16, _get_INT,                           _put_INT },
 	{ N_("Burst Interval"),                 "burstinterval",            PTP_DPC_BurstInterval,                  0,                  PTP_DTC_UINT16, _get_Milliseconds,                  _put_Milliseconds },
 	{ N_("Maximum Shots"),                  "maximumshots",             PTP_DPC_NIKON_MaximumShots,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_INT,                           _put_None },
