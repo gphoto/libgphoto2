@@ -3348,15 +3348,31 @@ static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 };
 GENERIC8TABLE(Nikon_HDRHighDynamic,nikon_hdrhighdynamic);
 
-static struct deviceproptableu8 nikon_bracketstep[] = {
+static struct deviceproptableu8 nikon_aebracketstep[] = {
 	{ N_("1/3 EV"),	0, 0 },
 	{ N_("1/2 EV"),	1, 0 },
 	{ N_("2/3 EV"),	2, 0 },
 	{ N_("1 EV"),	3, 0 },
 	{ N_("2 EV"),	4, 0 },
-	{ N_("3 EV"),	4, 0 },
+	{ N_("3 EV"),	5, 0 },
 };
-GENERIC8TABLE(Nikon_BracketStep,nikon_bracketstep);
+GENERIC8TABLE(Nikon_AEBracketStep,nikon_aebracketstep);
+
+static struct deviceproptableu8 nikon_wbbracketstep[] = {
+	{ N_("1 EV"),	0, 0 },
+	{ N_("2 EV"),	1, 0 },
+	{ N_("3 EV"),	2, 0 },
+};
+GENERIC8TABLE(Nikon_WBBracketStep,nikon_wbbracketstep);
+
+static struct deviceproptableu8 nikon_adlbracketstep[] = {
+	{ N_("Auto"),		0, 0 },
+	{ N_("Low"),		1, 0 },
+	{ N_("Normal"),		2, 0 },
+	{ N_("High"),		3, 0 },
+	{ N_("Extra high"),	4, 0 },
+};
+GENERIC8TABLE(Nikon_ADLBracketStep,nikon_adlbracketstep);
 
 static struct deviceproptableu8 nikon_bracketpattern[] = {
 	{ N_("2 images (normal and under)"),			0, 0 },
@@ -3369,6 +3385,14 @@ static struct deviceproptableu8 nikon_bracketpattern[] = {
 	{ N_("9 images (normal, 4 unders and 4 overs)"),	7, 0 },
 };
 GENERIC8TABLE(Nikon_BracketPattern,nikon_bracketpattern);
+
+static struct deviceproptableu8 nikon_adlbracketpattern[] = {
+	{ N_("2 shots (Off -> User setting)"),				0, 0 },
+	{ N_("3 shots (Off -> Low -> User setting)"),			1, 0 },
+	{ N_("4 shots (Off -> Low -> Normal -> High)"),			2, 0 },
+	{ N_("5 shots (Off -> Low -> Normal -> High -> Extra High)"),	3, 0 },
+};
+GENERIC8TABLE(Nikon_ADLBracketPattern,nikon_adlbracketpattern);
 
 static struct deviceproptableu8 nikon_hdrsmoothing[] = {
 	{ N_("Auto"),		3, 0 },
@@ -8737,9 +8761,13 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("EV Step"),                        "evstep",                   PTP_DPC_NIKON_EVStep,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_EVStep,                  _put_Nikon_EVStep },
 	{ N_("Bracket Set"),                    "bracketset",               PTP_DPC_NIKON_BracketSet,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketSet,              _put_Nikon_BracketSet },
 	{ N_("Bracket Order"),                  "bracketorder",             PTP_DPC_NIKON_BracketOrder,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketOrder,            _put_Nikon_BracketOrder },
-	{ N_("AE Bracket Step"),                "aebracketstep",            PTP_DPC_NIKON_AutoExposureBracketStep,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketStep,             _put_Nikon_BracketStep },
-	{ N_("AE Bracketing Pattern"),          "aebracketpattern",         PTP_DPC_NIKON_AutoExposureBracketProgram,PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_Nikon_BracketProgram,          _put_Nikon_BracketProgram },
-	{ N_("AE Bracket Count"),               "aebracketcount",           PTP_DPC_NIKON_AutoExposureBracketCount, PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_INT,          		    _put_None },
+	{ N_("AE Bracketing Step"),             "aebracketingstep",         PTP_DPC_NIKON_AutoExposureBracketStep,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AEBracketStep,           _put_Nikon_AEBracketStep },
+	{ N_("WB Bracketing Step"),             "wbbracketingstep",         PTP_DPC_NIKON_WhiteBalanceBracketStep,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_WBBracketStep,           _put_Nikon_WBBracketStep },
+	{ N_("AE Bracketing Pattern"),          "aebracketingpattern",      PTP_DPC_NIKON_AutoExposureBracketProgram,PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_Nikon_BracketPattern,          _put_Nikon_BracketPattern },
+	{ N_("WB Bracketing Pattern"),          "wbbracketingpattern",      PTP_DPC_NIKON_WhiteBalanceBracketProgram,PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_Nikon_BracketPattern,          _put_Nikon_BracketPattern },
+	{ N_("AE Bracketing Count"),            "aebracketingcount",        PTP_DPC_NIKON_AutoExposureBracketCount, PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_INT,          		    _put_None },
+	{ N_("ADL Bracketing Pattern"),         "adlbracketingpattern",     PTP_DPC_NIKON_ADLBracketingPattern,	    PTP_VENDOR_NIKON,	PTP_DTC_UINT8,  _get_Nikon_ADLBracketPattern,       _put_Nikon_ADLBracketPattern },
+	{ N_("ADL Bracketing Step"),            "adlbracketingstep",        PTP_DPC_NIKON_ADLBracketingStep,	    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ADLBracketStep,          _put_Nikon_ADLBracketStep },
 	{ N_("Burst Number"),                   "burstnumber",              PTP_DPC_BurstNumber,                    0,                  PTP_DTC_UINT16, _get_INT,                           _put_INT },
 	{ N_("Burst Interval"),                 "burstinterval",            PTP_DPC_BurstInterval,                  0,                  PTP_DTC_UINT16, _get_Milliseconds,                  _put_Milliseconds },
 	{ N_("Maximum Shots"),                  "maximumshots",             PTP_DPC_NIKON_MaximumShots,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_INT,                           _put_None },
