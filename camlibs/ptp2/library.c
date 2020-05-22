@@ -337,6 +337,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			a.usb_vendor = 0x4a9;
 		if (strstr (di->Manufacturer,"Nikon"))
 			a.usb_vendor = 0x4b0;
+		if (strstr (di->Manufacturer,"FUJIFILM"))
+			a.usb_vendor = 0x4cb;
 	}
 	/* Switch the PTP vendor, so that the vendor specific sets become available. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
