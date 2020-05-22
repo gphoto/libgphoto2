@@ -8818,6 +8818,8 @@ camera_init (Camera *camera, GPContext *context)
 	/* get device info */
 	C_PTP_REP (ptp_getdeviceinfo(params, &params->deviceinfo));
 
+	print_debug_deviceinfo(params, &params->deviceinfo);
+
 	CR (fixup_cached_deviceinfo (camera,&params->deviceinfo));
 
 	print_debug_deviceinfo(params, &params->deviceinfo);
@@ -8854,6 +8856,7 @@ camera_init (Camera *camera, GPContext *context)
 				/* Setting remote mode changes device info on EOS M2,
 				   so have to reget it */
 				C_PTP (ptp_getdeviceinfo(&camera->pl->params, &camera->pl->params.deviceinfo));
+				print_debug_deviceinfo(params, &params->deviceinfo);
 				CR (fixup_cached_deviceinfo (camera, &camera->pl->params.deviceinfo));
 				print_debug_deviceinfo(params, &params->deviceinfo);
 			} else {
