@@ -5459,6 +5459,63 @@ static struct deviceproptableu8 nikon_d3s_padvpvalue[] = {
 };
 GENERIC8TABLE(Nikon_D3s_PADVPValue,nikon_d3s_padvpvalue)
 
+static struct deviceproptableu8 nikon_z6_padvpvalue[] = {
+	{ "1/4000",	0x00, 0 },
+	{ "1/3200",	0x01, 0 },
+	{ "1/2500",	0x02, 0 },
+	{ "1/2000",	0x03, 0 },
+	{ "1/1600",	0x04, 0 },
+	{ "1/1250",	0x05, 0 },
+	{ "1/1000",	0x06, 0 },
+	{ "1/800",	0x07, 0 },
+	{ "1/640",	0x08, 0 },
+	{ "1/500",	0x09, 0 },
+	{ "1/400",	0x0a, 0 },
+	{ "1/320",	0x0b, 0 },
+	{ "1/250",	0x0c, 0 },
+	{ "1/200",	0x0d, 0 },
+	{ "1/160",	0x0e, 0 },
+	{ "1/125",	0x0f, 0 },
+	{ "1/100",	0x10, 0 },
+	{ "1/80",	0x11, 0 },
+	{ "1/60",	0x12, 0 },
+	{ "1/50",	0x13, 0 },
+	{ "1/40",	0x14, 0 },
+	{ "1/30",	0x15, 0 },
+	{ "1/25",	0x16, 0 },
+	{ "1/20",	0x17, 0 },
+	{ "1/15",	0x18, 0 },
+	{ "1/13",	0x19, 0 },
+	{ "1/10",	0x1a, 0 },
+	{ "1/8",	0x1b, 0 },
+	{ "1/6",	0x1c, 0 },
+	{ "1/5",	0x1d, 0 },
+	{ "1/4",	0x1e, 0 },
+	{ "1/3",	0x1f, 0 },
+	{ "1/2.5",	0x20, 0 },
+	{ "1/2",	0x21, 0 },
+	{ "1/1.6",	0x22, 0 },
+	{ "1/1.3",	0x23, 0 },
+	{ "1",		0x24, 0 },
+	{ "1.3",	0x25, 0 },
+	{ "1.6",	0x26, 0 },
+	{ "2",		0x27, 0 },
+	{ "2.5",	0x28, 0 },
+	{ "3",		0x29, 0 },
+	{ "4",		0x2a, 0 },
+	{ "5",		0x2b, 0 },
+	{ "6",		0x2c, 0 },
+	{ "8",		0x2d, 0 },
+	{ "10",		0x2e, 0 },
+	{ "13",		0x2f, 0 },
+	{ "15",		0x30, 0 },
+	{ "20",		0x31, 0 },
+	{ "25",		0x32, 0 },
+	{ "30",		0x33, 0 },
+	{ N_("auto"),	0x34, 0 },
+};
+GENERIC8TABLE(Nikon_Z6_PADVPValue,nikon_z6_padvpvalue)
+
 static struct deviceproptableu8 nikon_d90_activedlighting[] = {
 	{ N_("Extra high"), 0x00,   0 },
 	{ N_("High"),       0x01,   0 },
@@ -8954,8 +9011,9 @@ static struct submenu nikon_d7500_capture_settings[] = {
 };
 
 static struct submenu nikon_z6_capture_settings[] = {
-	{ N_("Image Quality"),          	"imagequality",		PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,       _put_Nikon_D850_Compression },
-	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_Nikon_D850_FocusMetering },
+	{ N_("Image Quality"),          	"imagequality",		PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,	_put_Nikon_D850_Compression },
+	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,	_put_Nikon_D850_FocusMetering },
+	{ N_("Minimum Shutter Speed"),  	"minimumshutterspeed",  PTP_DPC_NIKON_PADVPMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_Z6_PADVPValue,		_put_Nikon_Z6_PADVPValue },
 	{ 0,0,0,0,0,0,0 },
 };
 
