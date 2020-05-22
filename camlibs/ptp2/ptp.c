@@ -5850,6 +5850,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_RawImageSize,"RawImageSize"},
 		{PTP_DPC_NIKON_FlickerReductionSetting,"FlickerReductionSetting"},
 		{PTP_DPC_NIKON_DiffractionCompensatipn,"DiffractionCompensatipn"},
+		{PTP_DPC_NIKON_RemainingExposureTime,"RemainingExposureTime"},
 		{PTP_DPC_NIKON_MovieLogOutput,"MovieLogOutput"},
 		{PTP_DPC_NIKON_MovieAutoDistortion,"MovieAutoDistortion"},
 		{PTP_DPC_NIKON_MovieLogSetting,"MovieLogSetting"},

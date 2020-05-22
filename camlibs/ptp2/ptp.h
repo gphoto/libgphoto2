@@ -2198,6 +2198,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_DiffractionCompensatipn		0xD0BA
 #define PTP_DPC_NIKON_MovieLogOutput			0xD0BB
 #define PTP_DPC_NIKON_MovieAutoDistortion		0xD0BC
+#define PTP_DPC_NIKON_RemainingExposureTime		0xD0BE
 #define PTP_DPC_NIKON_MovieLogSetting			0xD0BF
 #define PTP_DPC_NIKON_Bracketing			0xD0C0
 #define PTP_DPC_NIKON_AutoExposureBracketStep		0xD0C1
