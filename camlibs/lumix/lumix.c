@@ -1869,6 +1869,8 @@ camera_init (Camera *camera, GPContext *context)
 {
 	GPPortInfo      info;
 	int		ret;
+	int		tries;
+	char		*result;
 
 	camera->pl = calloc(sizeof(CameraPrivateLibrary),1);
 
@@ -1893,8 +1895,14 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-	loadCmd(camera,"cam.cgi?mode=accctrl&type=req_acc&value=0&value2=libgphoto2/lumix");
-	loadCmd(camera,"cam.cgi?mode=setsetting&type=device_name&value=libgphoto2/lumix");
+	tries = 3;
+	while (tries--) {
+		result = loadCmd(camera,"cam.cgi?mode=accctrl&type=req_acc&value=0&value2=libgphoto2/lumix");
+		if (strstr(result,"ok,")) {
+			loadCmd(camera,"cam.cgi?mode=setsetting&type=device_name&value=libgphoto2/lumix");
+			break;
+		}
+	}
 
 	if (switchToRecMode (camera) != NULL) {
 		int numpix;
