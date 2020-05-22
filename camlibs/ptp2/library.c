@@ -3876,8 +3876,11 @@ capturetriggered:
 	return GP_OK;
 }
 
-/* 60 seconds timeout in ms ... (for long cycles) */
-#define EOS_CAPTURE_TIMEOUT (60*1000)
+/* 90 seconds timeout in ms ... (for long cycles)
+ * while the max shutterspeed is 30seconds, there is also postprocessing of 30seconds happening
+ * in e.g. https://github.com/gphoto/libgphoto2/issues/503
+ */
+#define EOS_CAPTURE_TIMEOUT (90*1000)
 
 /* This is currently the capture method used by the EOS 400D
  * ... in development.
