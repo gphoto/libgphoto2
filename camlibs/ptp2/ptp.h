@@ -1118,10 +1118,6 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_Nikon_SBAttrChanged		0xC122	/* e1: sbhandle, e2: attrid */
 #define PTP_EC_Nikon_SBGroupAttrChanged		0xC123	/* e1: sbgroupid, e2: groupattrid */
 
-/* Olympus E series */
-#define PTP_EC_Olympus_PropertyChanged		0xC102
-#define PTP_EC_Olympus_CaptureComplete		0xC103
-
 /* Sony */
 #define PTP_EC_Sony_ObjectAdded			0xC201
 #define PTP_EC_Sony_ObjectRemoved		0xC202
@@ -1138,9 +1134,40 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_PANASONIC_ObjectAdded		0xC108
 #define PTP_EC_PANASONIC_ObjectAddedSDRAM	0xC109
 
-#define PTP_EC_OLYMPUS_CaptureComplete		0xC101 /* guessing */
-#define PTP_EC_OLYMPUS_ObjectAdded		0xC102
-#define PTP_EC_OLYMPUS_PropChanged		0xC108
+/* Olympus E series, PTP style in the 2018+ range (e1mark2 etc.) */
+/* From olympus capture tool */
+#define PTP_EC_Olympus_CreateRecView		0xC001
+#define PTP_EC_Olympus_CreateRecView_New	0xC101
+#define PTP_EC_Olympus_ObjectAdded		0xC002
+#define PTP_EC_Olympus_ObjectAdded_New		0xC102
+#define PTP_EC_Olympus_AF_Frame			0xC003
+#define PTP_EC_Olympus_AF_Frame_New		0xC103
+#define PTP_EC_Olympus_DirectStoreImage		0xC004
+#define PTP_EC_Olympus_DirectStoreImage_New	0xC104
+#define PTP_EC_Olympus_ComplateCameraControlOff		0xC005
+#define PTP_EC_Olympus_ComplateCameraControlOff_New	0xC105
+#define PTP_EC_Olympus_AF_Frame_Over_Info	0xC006
+#define PTP_EC_Olympus_AF_Frame_Over_Info_New	0xC106
+#define PTP_EC_Olympus_DevicePropChanged	0xC008
+#define PTP_EC_Olympus_DevicePropChanged_New	0xC108
+#define PTP_EC_Olympus_ImageTransferModeFinish	0xC00C
+#define PTP_EC_Olympus_ImageTransferModeFinish_New	0xC10C
+#define PTP_EC_Olympus_ImageRecordFinish	0xC00D
+#define PTP_EC_Olympus_ImageRecordFinish_New	0xC10D
+#define PTP_EC_Olympus_SlotStatusChange		0xC00E
+#define PTP_EC_Olympus_SlotStatusChange_New	0xC10E
+#define PTP_EC_Olympus_PrioritizeRecord		0xC00F
+#define PTP_EC_Olympus_PrioritizeRecord_New	0xC10F
+#define PTP_EC_Olympus_FailCombiningAfterShooting	0xC010
+#define PTP_EC_Olympus_FailCombiningAfterShooting_New	0xC110
+#define PTP_EC_Olympus_NotifyAFTargetFrame	0xC011
+#define PTP_EC_Olympus_NotifyAFTargetFrame_New	0xC111
+#define PTP_EC_Olympus_RawEditParamChanged	0xC112
+#define PTP_EC_Olympus_OlyNotifyCreateDrawEdit	0xC113
+
+/* Used by the XML based E series driver */
+#define PTP_EC_Olympus_PropertyChanged		0xC102
+#define PTP_EC_Olympus_CaptureComplete		0xC103
 
 /* constants for GetObjectHandles */
 #define PTP_GOH_ALL_STORAGE 0xffffffff

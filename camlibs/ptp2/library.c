@@ -4814,49 +4814,11 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 
 		while (ptp_get_one_event(params, &event)) {
 			switch (event.Code) {
-			case 0xc002:
-			case PTP_EC_OLYMPUS_ObjectAdded:	/* seen in newer traces, https://github.com/gphoto/gphoto2/issues/310 */
+			case PTP_EC_Olympus_ObjectAdded:
+			case PTP_EC_Olympus_ObjectAdded_New:	/* seen in newer traces, https://github.com/gphoto/gphoto2/issues/310 */
 			case PTP_EC_ObjectAdded:
 				newobject = event.Param1;
 				goto downloadfile;
-			case 0xc003:
-#if 0
-			{ /* we seem to receive the event when ready ... not sure if this is the right trigger, as it has unrelated parameters */
-				CameraFile	*file;
-				unsigned char	*data = NULL;
-				unsigned int	size = 0;
-				CameraFileInfo	info;
-				int		ret;
-
-				C_PTP_REP (ptp_olympus_sdram_image(params, &data, &size));
-
-				gp_file_new (&file);
-				gp_file_set_data_and_size (file, (char*)data, size);
-
-				sprintf(path->folder, "/store_deadbeef");
-				sprintf(path->name, "capt%04d.jpg", params->capcnt++);
-
-				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-				if (ret != GP_OK) {
-					gp_file_free (file);
-					return ret;
-				}
-				memset(&info, 0, sizeof(info));
-				/* We also get the fs info for free, so just set it */
-				info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-				strcpy (info.file.type, GP_MIME_JPEG);
-				info.file.size		= size;
-				info.file.mtime		= time(NULL);
-
-				gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
-				return GP_OK;
-			}
-#endif
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				break;
@@ -6222,16 +6184,13 @@ sonyout:
 			while (ptp_get_one_event(params, &event)) {
 				GP_LOG_D ("received event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				switch (event.Code) {
-				case 0xC002:
-				case PTP_EC_OLYMPUS_ObjectAdded:
+				case PTP_EC_Olympus_ObjectAdded:
+				case PTP_EC_Olympus_ObjectAdded_New:
 				case PTP_EC_ObjectAdded:
 					newobject = event.Param1;
 					goto downloadomdfile;
-				case PTP_EC_OLYMPUS_CaptureComplete:
-					*eventtype = GP_EVENT_CAPTURE_COMPLETE;
-					*eventdata = NULL;
-					return GP_OK;
-				case PTP_EC_OLYMPUS_PropChanged:
+				case PTP_EC_Olympus_DevicePropChanged:
+				case PTP_EC_Olympus_DevicePropChanged_New:
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed to 0x012345678")+1));
 					sprintf (*eventdata, "PTP Property %04x changed to 0x%08x", event.Param1, event.Param2);
