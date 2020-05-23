@@ -740,6 +740,44 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_OLYMPUS_OMD_ChangedProperties		0x9486
 #define PTP_OC_OLYMPUS_OMD_MFDrive			0x9487
 #define PTP_OC_OLYMPUS_OMD_SetProperties		0x9489 /* Sends to the device a PTP list of all 16 bit device properties , count 32bit, then 16bit vals */
+/* 948C: Record Video? */
+/* 9482: Set One Touch WB Gain */
+/* 9483: Set / Start Magnifying Live View Point */
+/* 9488: Change Magnifying Live View Area */
+/* 9493: Start Driving Zoom Lens For Direction / Focal Length  / Stop Driving zoom 
+ * start direction: 		x1=1,x2=0,x3= STEPS?, x4=1 or 2 (near / far ? )
+ * start to focallength:	x1=1,x2=3,x3= VALUE? ,x4=4 (potentially more)
+ * stop:  			x1=2,x2=0,x3=0,x4=0
+ * unclear:			x1=4,x2=0,x3=0,x4=0
+ */
+/* 9495: Set / Clear Auto Focus Point? */
+/* 94a0: Set / Clear Auto Exposure Point? */
+/* 94b7 or 94bf: Set Focus Adjust Pulse */
+/* 94A1: Detect One Touch WB Gain */
+/* 94A2: AdjustLevelGauge? */
+/* 94A4: Get Direct Item Buffer */
+/* 94A5: Get Direct Item Info */
+/* 94B7: Get Recording Folder List? */
+/* 94BA / 94a1: Pixel Mapping? */
+/* 94ba: TransferModeStartStop */
+/* 94bb: Get Un Transfer List */
+/* 94bc: GetLocalObject info? */
+/* 94bd: GetLocalObject? */
+/* 94be: delete local object? */
+/* 94c0 / 94b9 : Set Comment String */
+/* 94bf: Set Connect Pc Info? */
+/* 94c0: Get Connect Pc Info? */
+/* 94c1: Clear Connect Pc Info? */
+/* 94c4: Get Camera Af Target Frames? */
+/* 94c3: Start Station Mode */
+/* 94c3: End Station Mode */
+/* 911c: Get Firmware Update Mode? */
+/* 9121: Firmware Check? */
+/* 9122: Get Firmware Status? */
+/* 9123: Firmware Update Initiate? */
+/* 9124: Get Firmware Language? */
+/* 9125: Get Firmware Status? */
+/* 9126: Trans Firmware? */
 
 /* Olympus E series commands */
 
@@ -2653,6 +2691,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_FlashBracket			0xD15C
 #define PTP_DPC_OLYMPUS_ISOBracket			0xD15D
 #define PTP_DPC_OLYMPUS_MyModeStatus			0xD15E
+#define PTP_DPC_OLYMPUS_DateTimeUTC			0xD176 /* check */
 
 /* Sony A900 */
 #define PTP_DPC_SONY_DPCCompensation			0xD200
