@@ -138,9 +138,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	GPPortInfo      	info;
 	int			i, start, end, tries;
 
-	switchToRecMode (camera);
-
 	if (!camera->pl->liveview) {
+		switchToRecMode (camera);
 		loadCmd(camera,"cam.cgi?mode=startstream&value=49199");
 		camera->pl->liveview = 1;
 		if (camera->pl->udpsocket <= 0) {
@@ -970,8 +969,7 @@ Raw:
 
 				GP_LOG_D("\t child content %s", xmlNodeGetContent(child));
 
-				/* FIXME: perhaps shorten match? */
-				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_AVC_MP4_HP_2160_30P_AAC")) {
+				if (strstr((char*)attrcontent,"PANASONIC.COM_PN=CAM_AVC_MP4")) {
 					camera->pl->pics[i].url_movie = strdup((char*)xmlNodeGetContent(child));
 				}
 				// http-get:*:application/octet-stream;PANASONIC.COM_PN=CAM_RAW
@@ -1920,8 +1918,6 @@ camera_init (Camera *camera, GPContext *context)
 
 	if (switchToRecMode (camera) != NULL) {
 		int numpix;
-
-		Set_quality(camera,"raw_fine");
 
 		switchToPlayMode (camera);
 
