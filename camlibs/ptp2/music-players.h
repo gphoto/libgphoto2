@@ -1398,7 +1398,7 @@
   // DEVICE_FLAG_UNLOAD_DRIVER },
   // Reported by Anonymous SourceForge user
   {"TrekStor", 0x1e68, "i.Beat Organix 2.0", 0x0002,
-    DEVICE_FLAG_UNLOAD_DRIVER },
+    DEVICE_FLAG_UNLOAD_DRIVER | DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST },
 
   /* Also Thalia Toline. https://sourceforge.net/p/libmtp/bugs/1156/ */
   {"iRiver", 0x1e68, "Tolino Tab 7", 0x1002,
@@ -2251,7 +2251,7 @@
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia E3 MTP+ADB", 0x51bc,
       DEVICE_FLAG_NONE },
-  { "SONY", 0x0fce, "Xperia Z3 Tablet MTP+ADB", 0x41c0,
+  { "SONY", 0x0fce, "Xperia Z3 Tablet MTP+ADB", 0x51c0,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "XPeria M4 Aqua Dual MTP+ADB", 0x51c4,
       DEVICE_FLAG_NONE },
@@ -3069,8 +3069,14 @@
   /* https://sourceforge.net/p/libmtp/support-requests/262/ */
   { "Lenovo", 0x17ef, "Tab4 10", 0x7ac5,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/296/ */
+  { "Lenovo", 0x17ef, "TB-7304I", 0x7b3c,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1831/ */
   { "Lenovo", 0x17ef, "Tab4 10 (2nd ID)", 0x7bc7,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1873/ */
+  { "Lenovo", 0x17ef, "Tab P10", 0x7bd3,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1736/ */
   { "Lenovo", 0x17ef, "P1060X", 0x9039,
@@ -3476,6 +3482,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Fire Phone", 0x0800,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1876/ */
+  { "Amazon", 0x1949, "Kindle Fire (ID 8)", 0x0c31,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Barnes&Noble
@@ -3753,6 +3762,7 @@
   { "Garmin", 0x091e, "Fenix 5/5S/5X Plus", 0x4b54, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/271/ */
   { "Garmin", 0x091e, "Vivoactive 3", 0x4bac, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Vivoactive 4S", 0x4c98, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1864/ */
   { "Garmin", 0x091e, "Venu", 0x4c9a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1852/ */
@@ -3808,6 +3818,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/269/ */
   { "bq", 0x2a47, "Aquarius U", 0x9039,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1874/ */
+  { "bq", 0x2a47, "Aquarius U (2nd id)", 0x903a,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/231/ */
   { "bq", 0x2a47, "U Plus", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
