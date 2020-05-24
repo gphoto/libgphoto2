@@ -1,28 +1,28 @@
 # Swedish translation of libgphoto2_port
-# Copyright © 2000-2016 Free Software Foundation, Inc.
+# Copyright © 2000, 2002, 2006, 2007, 2015, 2016, 2020 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgphoto2 package.
 # Daniel Nylander <po@danielnylander.se>, 2006, 2007.
 # Andreas Hyden <a.hyden@cyberpoint.se> 2000.
 # Stefan Björnelund <stefanb@Update.UU.SE>, 2002.
 # Sverker Wiberg <sverkerw@update.uu.se>, 2002.
-# Sebastian Rasmussen <sebras@gmail.com>, 2015, 2016.
+# Sebastian Rasmussen <sebras@gmail.com>, 2015, 2016, 2020.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.5.10\n"
+"Project-Id-Version: libgphoto2_port 2.5.23\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-02-22 21:02+0100\n"
-"PO-Revision-Date: 2016-03-24 19:38+0100\n"
+"POT-Creation-Date: 2019-05-04 15:58+0200\n"
+"PO-Revision-Date: 2020-05-17 00:27+0800\n"
 "Last-Translator: Sebastian Rasmussen <sebras@gmail.com>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language-Team: Swedish <tp-sv-list@lists.sourceforge.net>\n"
 "Language: sv\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 2.3\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:411
 msgid "Generic Port"
 msgstr "Allmän port"
 
@@ -127,109 +127,109 @@ msgstr "Operationen ”%s” stöds inte av denna enhet"
 msgid "The port has not yet been initialized"
 msgstr "Porten har ännu inte blivit initierad"
 
-#: libgphoto2_port/gphoto2-port.c:682
+#: libgphoto2_port/gphoto2-port.c:686
 msgid "low"
 msgstr "låg"
 
-#: libgphoto2_port/gphoto2-port.c:683
+#: libgphoto2_port/gphoto2-port.c:687
 msgid "high"
 msgstr "hög"
 
-#: libgphoto2_port/gphoto2-port.c:1211
+#: libgphoto2_port/gphoto2-port.c:1215
 msgid "No error description available"
 msgstr "Ingen felbeskrivning tillgänglig"
 
-#: disk/disk.c:147 disk/disk.c:148 disk/disk.c:224 disk/disk.c:225
-#: disk/disk.c:265 disk/disk.c:288
+#: disk/disk.c:149 disk/disk.c:150 disk/disk.c:228 disk/disk.c:229
+#: disk/disk.c:269 disk/disk.c:292
 #, c-format
 msgid "Media '%s'"
 msgstr "Media ”%s”"
 
-#: serial/unix.c:223
+#: serial/unix.c:230
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Kunde inte låsa enheten ”%s”"
 
-#: serial/unix.c:233 usbdiskdirect/linux.c:95
+#: serial/unix.c:240 usbdiskdirect/linux.c:95
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Enheten ”%s” är låst av pid %d"
 
-#: serial/unix.c:236 usbdiskdirect/linux.c:98
+#: serial/unix.c:243 usbdiskdirect/linux.c:98
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Enheten ”%s” kunde inte låsas (dev_unlock returnerade %d)"
+msgstr "Enheten ”%s” kunde inte låsas (dev_lock returnerade %d)"
 
-#: serial/unix.c:265
+#: serial/unix.c:272
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Enheten ”%s” kunde inte låsas upp."
 
-#: serial/unix.c:277 usbdiskdirect/linux.c:127
+#: serial/unix.c:284 usbdiskdirect/linux.c:127
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Enheten ”%s” kunde inte låsas upp eftersom den är låst av pid %d."
 
-#: serial/unix.c:281 usbdiskdirect/linux.c:131
+#: serial/unix.c:288 usbdiskdirect/linux.c:131
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Enheten ”%s” kunde inte låsas upp (dev_lock returnerade %d)"
+msgstr "Enheten ”%s” kunde inte låsas upp (dev_unlock returnerade %d)"
 
-#: serial/unix.c:339
+#: serial/unix.c:346
 #, c-format
 msgid "Serial Port %i"
 msgstr "Serieport %i"
 
-#: serial/unix.c:352
+#: serial/unix.c:359
 msgid "Serial Port Device"
 msgstr "Serieportsenhet"
 
-#: serial/unix.c:434
+#: serial/unix.c:441
 #, c-format
 msgid "Failed to open '%s' (%s)."
 msgstr "Misslyckades med att öppna ”%s” (%s)."
 
-#: serial/unix.c:454
+#: serial/unix.c:461
 #, c-format
 msgid "Could not close '%s' (%s)."
 msgstr "Kunde inte stänga ”%s” (%s)."
 
-#: serial/unix.c:510
+#: serial/unix.c:517
 #, c-format
 msgid "Could not write to port (%s)"
 msgstr "Kunde inte skriva till porten (%s)"
 
-#: serial/unix.c:587
+#: serial/unix.c:594
 msgid "Parity error."
 msgstr "Paritetsfel."
 
-#: serial/unix.c:591
+#: serial/unix.c:598
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Oväntad paritetsvarsekvens 0xff 0x%02x."
 
-#: serial/unix.c:634
+#: serial/unix.c:641
 #, c-format
 msgid "Unknown pin %i."
 msgstr "Okänd pinne %i."
 
-#: serial/unix.c:656
+#: serial/unix.c:663
 #, c-format
 msgid "Could not get level of pin %i (%s)."
 msgstr "Kunde inte hämta nivån för pinne %i (%s)."
 
-#: serial/unix.c:692
+#: serial/unix.c:699
 #, c-format
 msgid "Could not set level of pin %i to %i (%s)."
 msgstr "Kunde inte ställa in nivån för pinne %i till %i (%s)."
 
 # Hmm
-#: serial/unix.c:719
+#: serial/unix.c:726
 #, c-format
 msgid "Could not flush '%s' (%s)."
 msgstr "Kunde inte tömma ut ”%s” (%s)."
 
-#: serial/unix.c:831
+#: serial/unix.c:838
 #, c-format
 msgid "Could not set the baudrate to %d"
 msgstr "Kunde inte ställa in bithastigheten till %d"
@@ -263,83 +263,83 @@ msgstr "Kunde inte skriva till ”%s” (%m)."
 msgid "Could not read from '%s' (%m)."
 msgstr "Kunde inte läsa från ”%s” (%m)."
 
-#: usb/libusb.c:260 libusb1/libusb1.c:373
+#: usb/libusb.c:264 libusb1/libusb1.c:401
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Kunde inte öppna USB-enhet (%s)."
 
-#: usb/libusb.c:273 libusb1/libusb1.c:382
+#: usb/libusb.c:277 libusb1/libusb1.c:410
 msgid "Camera is already in use."
 msgstr "Kameran används redan."
 
-#: usb/libusb.c:281
+#: usb/libusb.c:285
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
 msgstr "Kunde inte koppla loss kärndrivrutinen ”%s” från kameraenhet."
 
-#: usb/libusb.c:286 libusb1/libusb1.c:397
+#: usb/libusb.c:290 libusb1/libusb1.c:425
 msgid "Could not query kernel driver of device."
 msgstr "Kunde inte fråga kärndrivrutinen efter enheten."
 
-#: usb/libusb.c:295 libusb1/libusb1.c:404
+#: usb/libusb.c:299 libusb1/libusb1.c:432
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Kunde inte göra anspråk på gränssnittet %d (%s). Kontrollera att inget annat program (%s) eller kärnmodul (såsom %s) använder enheten och att du har skriv-/läsrättigheter för enheten."
 
-#: usb/libusb.c:307 libusb1/libusb1.c:415
+#: usb/libusb.c:311 libusb1/libusb1.c:443
 msgid "MacOS PTPCamera service"
 msgstr "MacOS-tjänst för PTPCamera"
 
-#: usb/libusb.c:309 libusb1/libusb1.c:417
+#: usb/libusb.c:313 libusb1/libusb1.c:445
 msgid "unknown libgphoto2 using program"
 msgstr "okänt program som använder libgphoto2"
 
-#: usb/libusb.c:326 libusb1/libusb1.c:484
+#: usb/libusb.c:330 libusb1/libusb1.c:514
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Kunde inte släppa gränssnittet %d (%s)."
 
-#: usb/libusb.c:341 libusb1/libusb1.c:498
+#: usb/libusb.c:345 libusb1/libusb1.c:528
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Kunde inte återställa USB-porten (%s)."
 
-#: usb/libusb.c:371
+#: usb/libusb.c:375
 #, c-format
 msgid "Could not close USB port (%s)."
 msgstr "Kunde inte stänga USB-porten (%s)."
 
-#: usb/libusb.c:632 libusb1/libusb1.c:839
+#: usb/libusb.c:637 libusb1/libusb1.c:971
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Kunde inte ställa in konfiguration %d/%d (%s)"
 
-#: usb/libusb.c:663 libusb1/libusb1.c:868
+#: usb/libusb.c:668 libusb1/libusb1.c:1000
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Kunde inte ställa in alternativinställning från %d till %d (%s)"
 
-#: usb/libusb.c:752 libusb1/libusb1.c:1033
+#: usb/libusb.c:757 libusb1/libusb1.c:1165
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "Den angivna tillverkar- eller produktidentiteten (0x%x,0x%x) är inte giltig."
 
-#: usb/libusb.c:823 usb/libusb.c:909 libusb1/libusb1.c:1002
-#: libusb1/libusb1.c:1094
+#: usb/libusb.c:828 usb/libusb.c:914 libusb1/libusb1.c:1134
+#: libusb1/libusb1.c:1226
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Kunde inte finna USB-enheten (tillverkare 0x%x, produkt 0x%x). Kontrollera att enheten är ansluten till datorn."
 
-#: usb/libusb.c:1202 libusb1/libusb1.c:1383
+#: usb/libusb.c:1207 libusb1/libusb1.c:1515
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Kunde inte finna USB-enheten (klass 0x%x, underklass 0x%x, protokoll 0x%x). Kontrollera att enheten är ansluten till datorn."
 
-#: libusb1/libusb1.c:391
+#: libusb1/libusb1.c:419
 msgid "Could not detach kernel driver of camera device."
 msgstr "Kunde inte koppla loss kärndrivrutinen från kameraenhet."
 
-#: libusb1/libusb1.c:507
+#: libusb1/libusb1.c:537
 msgid "Could not reattach kernel driver of camera device."
 msgstr "Kunde inte återkoppla kärndrivrutinen från kameraenhet."
 
