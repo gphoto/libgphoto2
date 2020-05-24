@@ -289,177 +289,177 @@ Vendor extension description: microsoft.com: 1.0
 Functional Mode: 0x0000
 PTP Standard Version: 100
 Supported operations:
-  0x1001
-  0x1002
-  0x1003
-  0x1004
-  0x1005
-  0x1006
-  0x1007
-  0x1008
-  0x1009
-  0x100a
-  0x100b
-  0x100c
-  0x100d
-  0x100e
-  0x100f
-  0x1014
-  0x1015
-  0x1016
-  0x101b
-  0x90c0
-  0x90c1
-  0x90c2
-  0x90c3
-  0x90c4
-  0x90c7
-  0x90c8
-  0x90c9
-  0x90ca
-  0x90cb
-  0x90cc
-  0x90cd
-  0x90ce
-  0x90cf
-  0x9201
-  0x9202
-  0x9203
-  0x9204
-  0x9205
-  0x9206
-  0x9207
-  0x9209
-  0x920a
-  0x920b
-  0x9801
-  0x9802
-  0x9803
-  0x9805
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x90c0 (PTP_OC_NIKON_Capture)
+  0x90c1 (PTP_OC_NIKON_AfDrive)
+  0x90c2 (PTP_OC_NIKON_SetControlMode)
+  0x90c3 (PTP_OC_NIKON_DelImageSDRAM)
+  0x90c4 (PTP_OC_NIKON_GetLargeThumb)
+  0x90c7 (PTP_OC_NIKON_CheckEvent)
+  0x90c8 (PTP_OC_NIKON_DeviceReady)
+  0x90c9 (PTP_OC_NIKON_SetPreWBData)
+  0x90ca (PTP_OC_NIKON_GetVendorPropCodes)
+  0x90cb (PTP_OC_NIKON_AfCaptureSDRAM)
+  0x90cc (PTP_OC_NIKON_GetPictCtrlData)
+  0x90cd (PTP_OC_NIKON_SetPictCtrlData)
+  0x90ce (PTP_OC_NIKON_DelCstPicCtrl)
+  0x90cf (PTP_OC_NIKON_GetPicCtrlCapability)
+  0x9201 (PTP_OC_NIKON_StartLiveView)
+  0x9202 (PTP_OC_NIKON_EndLiveView)
+  0x9203 (PTP_OC_NIKON_GetLiveViewImg)
+  0x9204 (PTP_OC_NIKON_MfDrive)
+  0x9205 (PTP_OC_NIKON_ChangeAfArea)
+  0x9206 (PTP_OC_NIKON_AfDriveCancel)
+  0x9207 (PTP_OC_NIKON_InitiateCaptureRecInMedia)
+  0x9209 (PTP_OC_NIKON_GetVendorStorageIDs)
+  0x920a (PTP_OC_NIKON_StartMovieRecInCard)
+  0x920b (PTP_OC_NIKON_EndMovieRec)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
 Events Supported:
-  0x4001
-  0x4002
-  0x4003
-  0x4004
-  0x4005
-  0x4006
-  0x4007
-  0x4009
-  0x400a
-  0x400c
-  0x400d
-  0x4008
-  0xc101
-  0xc102
-  0xc104
-  0xc105
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400c (StorageInfoChanged)
+  0x400d (CaptureComplete)
+  0x4008 (DeviceInfoChanged)
+  0xc101 (Unknown Event)
+  0xc102 (Unknown Event)
+  0xc104 (Unknown Event)
+  0xc105 (Unknown Event)
 Device Properties Supported:
-  0x5001
-  0x5003
-  0x5004
-  0x5005
-  0x5007
-  0x5008
-  0x500a
-  0x500b
-  0x500c
-  0x500d
-  0x500e
-  0x500f
-  0x5010
-  0x5011
-  0x5013
-  0x5018
-  0x501c
-  0xd015
-  0xd017
-  0xd303
-  0xd406
-  0xd407
-  0xd018
-  0xd019
-  0xd01a
-  0xd01b
-  0xd01c
-  0xd01d
-  0xd01f
-  0xd025
-  0xd026
-  0xd032
-  0xd036
-  0xd037
-  0xd054
-  0xd056
-  0xd05d
-  0xd061
-  0xd066
-  0xd06b
-  0xd070
-  0xd078
-  0xd08a
-  0xd08f
-  0xd090
-  0xd091
-  0xd092
-  0xd0a0
-  0xd0a2
-  0xd0a4
-  0xd0c0
-  0xd0c1
-  0xd0c2
-  0xd0c3
-  0xd0c4
-  0xd0c5
-  0xd0c6
-  0xd0e0
-  0xd0e1
-  0xd0e2
-  0xd0e3
-  0xd0e4
-  0xd0e5
-  0xd0e6
-  0xd0f8
-  0xd0f9
-  0xd100
-  0xd101
-  0xd102
-  0xd103
-  0xd104
-  0xd105
-  0xd106
-  0xd108
-  0xd109
-  0xd10b
-  0xd10e
-  0xd120
-  0xd121
-  0xd122
-  0xd124
-  0xd125
-  0xd126
-  0xd130
-  0xd131
-  0xd132
-  0xd14e
-  0xd14f
-  0xd161
-  0xd164
-  0xd16a
-  0xd16b
-  0xd16d
-  0xd183
-  0xd1a2
-  0xd1a3
-  0xd1a4
-  0xd1b0
-  0xd1b1
-  0xd1b2
-  0xd1b3
-  0xd1b4
-  0xd1b5
-  0xd1c0
-  0xd1c1
-  0xd1f0
-  0xd1f1
-  0xd200
-  0xd201
+  0x5001 (Battery Level)
+  0x5003 (Image Size)
+  0x5004 (Compression Setting)
+  0x5005 (White Balance)
+  0x5007 (F-Number)
+  0x5008 (Focal Length)
+  0x500a (Focus Mode)
+  0x500b (Exposure Metering Mode)
+  0x500c (Flash Mode)
+  0x500d (Exposure Time)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5010 (Exposure Bias Compensation)
+  0x5011 (Date & Time)
+  0x5013 (Still Capture Mode)
+  0x5018 (Burst Number)
+  0x501c (Focus Metering Mode)
+  0xd015 (Reset Bank 0)
+  0xd017 (Auto White Balance Bias)
+  0xd303 (Unknown DPC code)
+  0xd406 (Unknown DPC code)
+  0xd407 (Unknown DPC code)
+  0xd018 (Tungsten White Balance Bias)
+  0xd019 (Fluorescent White Balance Bias)
+  0xd01a (Daylight White Balance Bias)
+  0xd01b (Flash White Balance Bias)
+  0xd01c (Cloudy White Balance Bias)
+  0xd01d (Shady White Balance Bias)
+  0xd01f (White Balance Preset Number)
+  0xd025 (White Balance Preset Value 0)
+  0xd026 (White Balance Preset Value 1)
+  0xd032 (Color Space)
+  0xd036 (Video Mode)
+  0xd037 (Effect Mode)
+  0xd054 (Auto ISO)
+  0xd056 (Exposure Step)
+  0xd05d (Live View AF Area)
+  0xd061 (Live View AF Focus)
+  0xd066 (Auto Off Timers)
+  0xd06b (Long Exposure Noise Reduction)
+  0xd070 (High ISO noise reduction)
+  0xd078 (Bracket Set)
+  0xd08a (No CF Card Release)
+  0xd08f (Clean Image Sensor)
+  0xd090 (Image Comment String)
+  0xd091 (Image Comment Enable)
+  0xd092 (Image Rotation)
+  0xd0a0 (Movie Screen Size)
+  0xd0a2 (Movie Microphone)
+  0xd0a4 (Unknown DPC code)
+  0xd0c0 (Bracketing Enable)
+  0xd0c1 (Exposure Bracketing Step)
+  0xd0c2 (Exposure Bracketing Program)
+  0xd0c3 (Auto Exposure Bracket Count)
+  0xd0c4 (White Balance Bracket Step)
+  0xd0c5 (White Balance Bracket Program)
+  0xd0c6 (Unknown DPC code)
+  0xd0e0 (Lens ID)
+  0xd0e1 (Lens Sort)
+  0xd0e2 (Lens Type)
+  0xd0e3 (Min. Focal Length)
+  0xd0e4 (Max. Focal Length)
+  0xd0e5 (Max. Aperture at Min. Focal Length)
+  0xd0e6 (Max. Aperture at Max. Focal Length)
+  0xd0f8 (Auto Distortion Control)
+  0xd0f9 (Scene Mode)
+  0xd100 (Nikon Exposure Time)
+  0xd101 (AC Power)
+  0xd102 (Warning Status)
+  0xd103 (Maximum Shots)
+  0xd104 (AF Locked)
+  0xd105 (AE Locked)
+  0xd106 (FV Locked)
+  0xd108 (Active AF Sensor)
+  0xd109 (Flexible Program)
+  0xd10b (Recording Media)
+  0xd10e (Camera Orientation)
+  0xd120 (External Flash Attached)
+  0xd121 (External Flash Status)
+  0xd122 (External Flash Sort)
+  0xd124 (External Flash Compensation)
+  0xd125 (External Flash Mode)
+  0xd126 (Flash Exposure Compensation)
+  0xd130 (HDR Mode)
+  0xd131 (HDR High Dynamic)
+  0xd132 (HDR Smoothing)
+  0xd14e (Active D-Lighting)
+  0xd14f (Flourescent Type)
+  0xd161 (Autofocus Mode)
+  0xd164 (Auto ISO P/A/DVP Setting)
+  0xd16a (ISO Auto)
+  0xd16b (Remote Timeout)
+  0xd16d (Flash Mode Manual Power)
+  0xd183 (ISO Auto High Limit)
+  0xd1a2 (Live View Status)
+  0xd1a3 (Live View Image Zoom Ratio)
+  0xd1a4 (Live View Prohibit Condition)
+  0xd1b0 (Exposure Display Status)
+  0xd1b1 (Exposure Indicate Status)
+  0xd1b2 (Info Display Error Status)
+  0xd1b3 (Exposure Indicate Lightup)
+  0xd1b4 (Unknown DPC code)
+  0xd1b5 (Unknown DPC code)
+  0xd1c0 (Flash Open)
+  0xd1c1 (Flash Charged)
+  0xd1f0 (Unknown DPC code)
+  0xd1f1 (Unknown DPC code)
+  0xd200 (Active Pic Ctrl Item)
+  0xd201 (Change Pic Ctrl Item)
