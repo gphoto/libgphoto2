@@ -1,13 +1,36 @@
 libgphoto2 2.5.24.1 development
 
 ptp2:
-* liveview support for Leica SL
+* Liveview support for Leica SL
+* PTP 1.1 Streaming parameters added. 
 * Olympus OMD capture fixes
 * Nikon DSLR/Z:
   * various improvements to liveview error reporting.
-  * much more properties added
+  * much more properties added, some values added
   * allow downloading of "large thumbnails" instead of "regular thumbnails",
     can be selected by "thumbsize" gphoto2 local setting.
+  * fixes for D3000, D3100 methods
+  * maximum capture wait extended to 1000 seconds (as the D870 has 900 seconds max now)
+* Canon EOS
+  * initialization fixes (if it breaks your EOS M or PowerShot, please report)
+  * liveview enablement fixed
+  * maximum capture wait extended to 90seconds
+  * EOS R shutterspeed , aperture reporting fixed
+* Cameras added to id list:
+  * Sony NEX 5
+  * Canon EOS 90D
+  * Fuji XT-4
+  * Sanyo VPC-FH1
+  * Leica SL Typ 601
+
+lumix:
+* fixed initialisation, might help capture
+
+all:
+* ongoing stability fixes from AFL fuzzing
+
+translation updates:
+* sv
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.24 release
