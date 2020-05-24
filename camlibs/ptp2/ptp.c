@@ -7554,38 +7554,92 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 
 struct {
 	uint16_t code;
+	uint16_t vendor;
 	const char *name;
 } ptp_event_codes[] = {
-	{PTP_EC_Undefined, "Undefined"},
-	{PTP_EC_CancelTransaction, "CancelTransaction"},
-	{PTP_EC_ObjectAdded, "ObjectAdded"},
-	{PTP_EC_ObjectRemoved, "ObjectRemoved"},
-	{PTP_EC_StoreAdded, "StoreAdded"},
-	{PTP_EC_StoreRemoved, "StoreRemoved"},
-	{PTP_EC_DevicePropChanged, "DevicePropChanged"},
-	{PTP_EC_ObjectInfoChanged, "ObjectInfoChanged"},
-	{PTP_EC_DeviceInfoChanged, "DeviceInfoChanged"},
-	{PTP_EC_RequestObjectTransfer, "RequestObjectTransfer"},
-	{PTP_EC_StoreFull, "StoreFull"},
-	{PTP_EC_DeviceReset, "DeviceReset"},
-	{PTP_EC_StorageInfoChanged, "StorageInfoChanged"},
-	{PTP_EC_CaptureComplete, "CaptureComplete"},
-	{PTP_EC_UnreportedStatus, "UnreportedStatus"},
+	{PTP_EC_Undefined, 		0, "Undefined"},
+	{PTP_EC_CancelTransaction,	0, "CancelTransaction"},
+	{PTP_EC_ObjectAdded,		0, "ObjectAdded"},
+	{PTP_EC_ObjectRemoved,		0, "ObjectRemoved"},
+	{PTP_EC_StoreAdded,		0, "StoreAdded"},
+	{PTP_EC_StoreRemoved,		0, "StoreRemoved"},
+	{PTP_EC_DevicePropChanged,	0, "DevicePropChanged"},
+	{PTP_EC_ObjectInfoChanged,	0, "ObjectInfoChanged"},
+	{PTP_EC_DeviceInfoChanged,	0, "DeviceInfoChanged"},
+	{PTP_EC_RequestObjectTransfer,	0, "RequestObjectTransfer"},
+	{PTP_EC_StoreFull,		0, "StoreFull"},
+	{PTP_EC_DeviceReset,		0, "DeviceReset"},
+	{PTP_EC_StorageInfoChanged,	0, "StorageInfoChanged"},
+	{PTP_EC_CaptureComplete,	0, "CaptureComplete"},
+	{PTP_EC_UnreportedStatus,	0, "UnreportedStatus"},
 
-	{PTP_EC_MTP_ObjectPropChanged, "ObjectPropChanged"},
-	{PTP_EC_MTP_ObjectPropDescChanged, "ObjectPropDescChanged"},
-	{PTP_EC_MTP_ObjectReferencesChanged, "ObjectReferencesChanged"},
+	{PTP_EC_MTP_ObjectPropChanged,		0, "ObjectPropChanged"},
+	{PTP_EC_MTP_ObjectPropDescChanged,	0, "ObjectPropDescChanged"},
+	{PTP_EC_MTP_ObjectReferencesChanged,	0, "ObjectReferencesChanged"},
+
+	{PTP_EC_Nikon_ObjectAddedInSDRAM, 		PTP_VENDOR_NIKON, "Nikon_ObjectAddedInSDRAM"},
+	{PTP_EC_Nikon_CaptureCompleteRecInSdram,	PTP_VENDOR_NIKON, "Nikon_CaptureCompleteRecInSdram"},
+	{PTP_EC_Nikon_AdvancedTransfer, 		PTP_VENDOR_NIKON, "Nikon_AdvancedTransfer"},
+	{PTP_EC_Nikon_PreviewImageAdded, 		PTP_VENDOR_NIKON, "Nikon_PreviewImageAdded"},
+	{PTP_EC_Nikon_MovieRecordInterrupted,		PTP_VENDOR_NIKON, "Nikon_MovieRecordInterrupted"},
+	{PTP_EC_Nikon_MovieRecordComplete,		PTP_VENDOR_NIKON, "Nikon_MovieRecordComplete"},
+	{PTP_EC_Nikon_MovieRecordStarted,		PTP_VENDOR_NIKON, "Nikon_MovieRecordStarted"},
+	{PTP_EC_Nikon_PictureControlAdjustChanged,	PTP_VENDOR_NIKON, "Nikon_PictureControlAdjustChanged"},
+	{PTP_EC_Nikon_LiveViewStateChanged,		PTP_VENDOR_NIKON, "Nikon_LiveViewStateChanged"},
+	{PTP_EC_Nikon_ManualSettingsLensDataChanged,	PTP_VENDOR_NIKON, "Nikon_ManualSettingsLensDataChanged"},
+	{PTP_EC_Nikon_ActiveSelectionInterrupted,	PTP_VENDOR_NIKON, "Nikon_ActiveSelectionInterrupted"},
+	{PTP_EC_Nikon_SBAdded,				PTP_VENDOR_NIKON, "Nikon_SBAdded"},
+	{PTP_EC_Nikon_SBRemoved,			PTP_VENDOR_NIKON, "Nikon_SBRemoved"},
+	{PTP_EC_Nikon_SBAttrChanged,			PTP_VENDOR_NIKON, "Nikon_SBAttrChanged"},
+	{PTP_EC_Nikon_SBGroupAttrChanged,		PTP_VENDOR_NIKON, "Nikon_SBGroupAttrChanged"},
+
+	{PTP_EC_Sony_ObjectAdded,			PTP_VENDOR_SONY,  "Sony_ObjectAdded"},
+	{PTP_EC_Sony_ObjectRemoved,			PTP_VENDOR_SONY,  "Sony_ObjectRemoved"},
+	{PTP_EC_Sony_PropertyChanged,			PTP_VENDOR_SONY,  "Sony_PropertyChanged"},
+
+	{PTP_EC_Olympus_CreateRecView,			PTP_VENDOR_GP_OLYMPUS, "Olympus_CreateRecView"},
+	{PTP_EC_Olympus_CreateRecView_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_CreateRecView_New"},
+	{PTP_EC_Olympus_ObjectAdded,			PTP_VENDOR_GP_OLYMPUS, "Olympus_ObjectAdded"},
+	{PTP_EC_Olympus_ObjectAdded_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_ObjectAdded_New"},
+	{PTP_EC_Olympus_AF_Frame,			PTP_VENDOR_GP_OLYMPUS, "Olympus_AF_Frame"},
+	{PTP_EC_Olympus_AF_Frame_New,			PTP_VENDOR_GP_OLYMPUS, "Olympus_AF_Frame_New"},
+	{PTP_EC_Olympus_DirectStoreImage,		PTP_VENDOR_GP_OLYMPUS, "Olympus_DirectStoreImage"},
+	{PTP_EC_Olympus_DirectStoreImage_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_DirectStoreImage_New"},
+	{PTP_EC_Olympus_ComplateCameraControlOff,	PTP_VENDOR_GP_OLYMPUS, "Olympus_ComplateCameraControlOff"},
+	{PTP_EC_Olympus_ComplateCameraControlOff_New,	PTP_VENDOR_GP_OLYMPUS, "Olympus_ComplateCameraControlOff_New"},
+	{PTP_EC_Olympus_AF_Frame_Over_Info,		PTP_VENDOR_GP_OLYMPUS, "Olympus_AF_Frame_Over_Info"},
+	{PTP_EC_Olympus_AF_Frame_Over_Info_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_AF_Frame_Over_Info_New"},
+	{PTP_EC_Olympus_DevicePropChanged,		PTP_VENDOR_GP_OLYMPUS, "Olympus_DevicePropChanged"},
+	{PTP_EC_Olympus_DevicePropChanged_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_DevicePropChanged_New"},
+	{PTP_EC_Olympus_ImageTransferModeFinish,	PTP_VENDOR_GP_OLYMPUS, "Olympus_ImageTransferModeFinish"},
+	{PTP_EC_Olympus_ImageTransferModeFinish_New,	PTP_VENDOR_GP_OLYMPUS, "Olympus_ImageTransferModeFinish_New"},
+	{PTP_EC_Olympus_ImageRecordFinish,		PTP_VENDOR_GP_OLYMPUS, "Olympus_ImageRecordFinish"},
+	{PTP_EC_Olympus_ImageRecordFinish_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_ImageRecordFinish_New"},
+	{PTP_EC_Olympus_SlotStatusChange,		PTP_VENDOR_GP_OLYMPUS, "Olympus_SlotStatusChange"},
+	{PTP_EC_Olympus_SlotStatusChange_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_SlotStatusChange_New"},
+	{PTP_EC_Olympus_PrioritizeRecord,		PTP_VENDOR_GP_OLYMPUS, "Olympus_PrioritizeRecord"},
+	{PTP_EC_Olympus_PrioritizeRecord_New,		PTP_VENDOR_GP_OLYMPUS, "Olympus_PrioritizeRecord_New"},
+	{PTP_EC_Olympus_FailCombiningAfterShooting,	PTP_VENDOR_GP_OLYMPUS, "Olympus_FailCombiningAfterShooting"},
+	{PTP_EC_Olympus_FailCombiningAfterShooting_New,	PTP_VENDOR_GP_OLYMPUS, "Olympus_FailCombiningAfterShooting_New"},
+	{PTP_EC_Olympus_NotifyAFTargetFrame,		PTP_VENDOR_GP_OLYMPUS, "Olympus_NotifyAFTargetFrame"},
+	{PTP_EC_Olympus_NotifyAFTargetFrame_New,	PTP_VENDOR_GP_OLYMPUS, "Olympus_NotifyAFTargetFrame_New"},
+	{PTP_EC_Olympus_RawEditParamChanged,		PTP_VENDOR_GP_OLYMPUS, "Olympus_RawEditParamChanged"},
+	{PTP_EC_Olympus_OlyNotifyCreateDrawEdit,	PTP_VENDOR_GP_OLYMPUS, "Olympus_OlyNotifyCreateDrawEdit"},
+	{PTP_EC_Olympus_PropertyChanged,		PTP_VENDOR_GP_OLYMPUS, "Olympus_PropertyChanged"},
+	{PTP_EC_Olympus_CaptureComplete,		PTP_VENDOR_GP_OLYMPUS, "Olympus_CaptureComplete"},
+
 };
-
 
 const char*
 ptp_get_event_code_name(PTPParams* params, uint16_t event_code)
 {
-	unsigned int i;
+	unsigned int	i;
+	uint16_t	vendor = params->deviceinfo.VendorExtensionID;
+
 	for (i=0; i<sizeof(ptp_event_codes)/sizeof(ptp_event_codes[0]); i++)
-		if (event_code == ptp_event_codes[i].code)
-			return _(ptp_event_codes[i].name);
-	return _("Unknown Event");
+		if ((ptp_event_codes[i].code == event_code) && ((ptp_event_codes[i].vendor == 0) || (ptp_event_codes[i].vendor == vendor)))
+			return ptp_event_codes[i].name;
+	return "Unknown Event";
 }
 
 
