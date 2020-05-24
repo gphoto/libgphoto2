@@ -8938,8 +8938,26 @@ camera_init (Camera *camera, GPContext *context)
 	}
 	/* moved down here in case the filesystem needs to first be initialized as the Olympus app does */
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
+		unsigned int k;
+
 		GP_LOG_D ("Initializing Olympus ... ");
 		ptp_olympus_init_pc_mode(params);
+
+		/* try to refetch the storage ids, set before only has 0x00000001 */
+		if (params->storageids.n) {
+			free (params->storageids.Storage);
+			params->storageids.Storage = NULL;
+			params->storageids.n = 0;
+		}
+
+		C_PTP (ptp_getstorageids(params, &params->storageids));
+
+		/* refetch root */
+		for (k=0;k<params->storageids.n;k++) {
+			if (!(params->storageids.Storage[k] & 0xffff)) continue;
+			if (params->storageids.Storage[k] == 0x80000001) continue;
+			ptp_list_folder (params, params->storageids.Storage[k], PTP_HANDLER_SPECIAL);
+		}
 
 		/*
 		if(params->storageids.n > 0) { // Olympus app gets storage info for first item, so emulating here
@@ -8964,9 +8982,6 @@ camera_init (Camera *camera, GPContext *context)
 		}
 		*/
 	}
-
-
-
 	SET_CONTEXT(camera, NULL);
 	return GP_OK;
 }
