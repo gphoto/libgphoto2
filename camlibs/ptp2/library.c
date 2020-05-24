@@ -7917,6 +7917,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					free (ximage);
 					ximage = NULL;
 					offset += xlen;
+					if (!xlen) {
+						GP_LOG_E ("getpartialobject loop: offset=%d, size is %d, xlen returned is 0?", offset, size);
+						break;
+					}
 				}
 				goto done;
 		}
