@@ -6197,11 +6197,13 @@ sonyout:
 					sprintf (*eventdata, "PTP Property %04x changed to 0x%08x", event.Param1, event.Param2);
 					return GP_OK;
 				default:
-					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
-					break;
+					*eventtype = GP_EVENT_UNKNOWN;
+					C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
+					sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+					return GP_OK;
 				}
 			}
-		}  while (waiting_for_timeout (&back_off_wait, event_start, 65000)); /* wait for 65 seconds after busy is no longer signaled */
+		}  while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
 downloadomdfile:
 		C_MEM (path = malloc(sizeof(CameraFilePath)));
