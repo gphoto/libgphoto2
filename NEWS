@@ -1,4 +1,4 @@
-libgphoto2 2.5.24.1 development
+libgphoto2 2.5.25 release
 
 ptp2:
 * Liveview support for Leica SL
@@ -16,6 +16,7 @@ ptp2:
   * liveview enablement fixed
   * maximum capture wait extended to 90seconds
   * EOS R shutterspeed , aperture reporting fixed
+* various bugfixes
 * Cameras added to id list:
   * Sony NEX 5
   * Canon EOS 90D
