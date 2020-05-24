@@ -1,4 +1,8 @@
 libgphoto2 2.5.25.1 development version
+
+ptp2:
+* olympus omd: fixed the 65 second wait after capture.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.25 release
 
