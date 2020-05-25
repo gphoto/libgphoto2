@@ -113,7 +113,7 @@ Thanks from the spca504_flash README
 ------------------------------------
 This owes everything to the work of Mark Zimmermann <mark@foresthaven.com> whose
 pencamread tool I have simply ported to a gphoto2 camlib. The macam driver by
-Matthias Krauﬂ was also helpfull. All features are theirs, all bugs are mine.
+Matthias Krauﬂ was also helpful. All features are theirs, all bugs are mine.
 
 I dont own a camera of this type, so I had to rely on Armin Janssen
 <unclebenz@foni.net> to tirelessly produce usb snoops, test and give feedback.

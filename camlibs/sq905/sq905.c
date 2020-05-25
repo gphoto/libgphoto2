@@ -88,7 +88,7 @@ sq_init (GPPort *port, CameraPrivateLibrary *priv)
 	sq_read_data(port, catalog, 0x4000); /* We need 16 bytes for each photo. */
 	sq_reset (port);
 
-	/* The first occurence of a zero denotes end of files entries (here clips count as 1 entry) */
+	/* The first occurrence of a zero denotes end of files entries (here clips count as 1 entry) */
 	for (i=0; i<0x4000 && catalog[i]; i+=16) ;
 	priv->nb_entries = i>>4;
 	if (i) {

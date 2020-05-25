@@ -42,7 +42,7 @@ You can select the different menus by pressing the "Menu" button. If a menu cont
    |      | -          | (Range: 300, 310-316)                              |
    | End  | -          | Exit the expert mode                               |
    --------------------------------------------------------------------------
-Start a process (e.g. self test) or store a value by pressing the release button. Values can be selected by pressing "<" or ">". When a process has been sucessfully started or a value stored, the camera will beep.
+Start a process (e.g. self test) or store a value by pressing the release button. Values can be selected by pressing "<" or ">". When a process has been successfully started or a value stored, the camera will beep.
 
 How to exit
 -----------

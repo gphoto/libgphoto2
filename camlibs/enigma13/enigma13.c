@@ -128,8 +128,8 @@ enigma13_flash_delete_all(CameraFilesystem *fs, const char *folder, void *data,
 /*
  * This function waits camera is ready
  *
- * Status: Not sure what it realy does, but the camera replies
- * Can this be some kind of ping for keepalive, or realy a ready status ?
+ * Status: Not sure what it really does, but the camera replies
+ * Can this be some kind of ping for keepalive, or really a ready status ?
  */
 static int enigma13_wait_for_ready(Camera *camera)
 {

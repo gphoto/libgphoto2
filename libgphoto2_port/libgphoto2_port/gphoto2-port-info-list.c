@@ -167,7 +167,7 @@ gp_port_info_list_free (GPPortInfoList *list)
  * Appends an entry to the list. This function is typically called by
  * an io-driver during #gp_port_library_list. If you leave info.name blank,
  * #gp_port_info_list_lookup_path will try to match non-existent paths
- * against info.path and - if successfull - will append this entry to the 
+ * against info.path and - if successful - will append this entry to the 
  * list.
  *
  * \return A gphoto2 error code, or an index into the port list (excluding generic entries).

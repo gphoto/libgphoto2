@@ -13,7 +13,7 @@
 
 	* casio-qv.c:
 	  corrected preview type to PPM
-		do not explictly append filename of captured image to filesystem
+		do not explicitly append filename of captured image to filesystem
 		reset line speed and power down interface on exit
 	* casio-qv-commands.c:
 	  capture works now

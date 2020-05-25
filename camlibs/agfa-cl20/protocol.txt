@@ -92,7 +92,7 @@ That was the setup process. Now the camera should talk to us.
 * got the thumbnail and deleted it. Then I switched the camera
 * off.
 *
-* In further experiemnts we have to try out, where our magic numbers
+* In further experiments we have to try out, where our magic numbers
 * are: Like: How many pictures are on the camera, which one is going
 * to be downloaded...
 *****************************

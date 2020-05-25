@@ -116,7 +116,7 @@ Property 0xd130:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 Property 0xd131:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
 Property 0xd132:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 1
 ISO Auto Time(0xd14e):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 5
-Flourescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
+Fluorescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
 Autofocus Mode(0xd161):(readwrite) (type=0x2) Range [0 - 4, step 1] value: MF (fixed) (3)
 Auto ISO P/A/DVP Setting(0xd164):(readwrite) (type=0x2) Range [0 - 23, step 1] value: 18
 Property 0xd16a:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
@@ -255,7 +255,7 @@ Property 0xd130:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 Property 0xd131:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
 Property 0xd132:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 1
 ISO Auto Time(0xd14e):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 5
-Flourescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
+Fluorescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
 Autofocus Mode(0xd161):(readwrite) (type=0x2) Range [0 - 4, step 1] value: MF (fixed) (3)
 Auto ISO P/A/DVP Setting(0xd164):(readwrite) (type=0x2) Range [0 - 23, step 1] value: 18
 Property 0xd16a:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
@@ -441,7 +441,7 @@ Device Properties Supported:
   0xd131 (HDR High Dynamic)
   0xd132 (HDR Smoothing)
   0xd14e (Active D-Lighting)
-  0xd14f (Flourescent Type)
+  0xd14f (Fluorescent Type)
   0xd161 (Autofocus Mode)
   0xd164 (Auto ISO P/A/DVP Setting)
   0xd16a (ISO Auto)

@@ -1215,7 +1215,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                 /* Shutter Release
                    Can't use normal "canon_int_do_control_command", as
                    we must read the interrupt pipe before the response
-                   comes back for this commmand. */
+                   comes back for this command. */
                 *data = canon_usb_capture_dialogue ( camera, &return_length, &photo_status, context );
                 if ( *data == NULL ) {
                         /* Try to leave camera in a usable state. */
@@ -1604,7 +1604,7 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 /* Shutter Release
                    Can't use normal "canon_int_do_control_command", as
                    we must read the interrupt pipe before the response
-                   comes back for this commmand. */
+                   comes back for this command. */
                 data = canon_usb_capture_dialogue ( camera, &return_length, &photo_status, context );
                 if ( data == NULL ) {
                         /* Try to leave camera in a usable state. */
@@ -3324,7 +3324,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
                                    in this block */
                                 memset (&info, 0, sizeof (info));
 
-                                /* we start with nothing and continously add stuff */
+                                /* we start with nothing and continuously add stuff */
                                 info.file.fields = GP_FILE_INFO_NONE;
 
                                 info.file.mtime = dirent_time;
@@ -3511,7 +3511,7 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, unsi
  *
  * NOTE: Since cameras that do not store the thumbnail in a separate
  * file does not return just the thumbnail but the first 10813 bytes
- * of the image (most oftenly the EXIF header with thumbnail data in
+ * of the image (most often the EXIF header with thumbnail data in
  * it) this must be treated before called a true thumbnail.
  *
  * Returns: result from canon_usb_get_thumbnail()
@@ -3885,7 +3885,7 @@ canon_int_get_info_func (Camera *camera, const char *folder,
                                 /* we're going to fill out the info structure
                                    in this block */
 
-                                /* We start with nothing and continously add stuff */
+                                /* We start with nothing and continuously add stuff */
                                 info->file.fields = GP_FILE_INFO_NONE;
 
                                 info->file.mtime = dirent_time;

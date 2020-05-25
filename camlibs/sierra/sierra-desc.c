@@ -319,7 +319,7 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 		 *
 		 * Currently no need to support any subaction here.
 		 *
-		 * Similiar to the masking above, if we have a register
+		 * Similar to the masking above, if we have a register
 		 * larger than 4 bytes, put the four bytes in the int to
 		 * into the low four bytes of the value we want to set;
 		 * fill the rest with whatever was read from the camera.

@@ -28,9 +28,9 @@
  * Specifies the logging severity level.
  */
 typedef enum {
-	GP_LOG_ERROR = 0,	/**< \brief Log message is an error infomation. */
-	GP_LOG_VERBOSE = 1,	/**< \brief Log message is an verbose debug infomation. */
-	GP_LOG_DEBUG = 2,	/**< \brief Log message is an debug infomation. */
+	GP_LOG_ERROR = 0,	/**< \brief Log message is an error information. */
+	GP_LOG_VERBOSE = 1,	/**< \brief Log message is an verbose debug information. */
+	GP_LOG_DEBUG = 2,	/**< \brief Log message is an debug information. */
 	GP_LOG_DATA = 3		/**< \brief Log message is a data hex dump. */
 } GPLogLevel;
 

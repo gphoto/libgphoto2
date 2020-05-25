@@ -26,7 +26,7 @@
  * The lowest level structs are first, followed by the higher levels.
  *
  * These structures can't be in one single struct, since they are variable
- * length, and each level has a slightly different set of functionallity.
+ * length, and each level has a slightly different set of functionality.
  *
  * Generally, we have a CameraRegisterSetType with pointers to
  * CameraRegisterType registers; each register in turn has pointers to

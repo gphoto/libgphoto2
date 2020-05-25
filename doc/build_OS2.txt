@@ -11,9 +11,9 @@ compile   : gcc version 2.8.1
             http://hobbes.nmsu.edu/cgi-bin/h-browse?sh=1&dir=/pub/os2/dev/emx/v0.9d
 
 libraries : pthreads
-            unfortunatly I don't know whih version I use here but the one from netlabs should be working
+            unfortunately I don't know whih version I use here but the one from netlabs should be working
             ftp://ftp.netlabs.org/pub/pthreads/
 
 make sure the emx\lib directory is added to your lib environment 'SET LIB=x:\EMX\LIB'
-alse the pthreads DLL's and LIB's should be in the EMX tree
+else the pthreads DLL's and LIB's should be in the EMX tree
 

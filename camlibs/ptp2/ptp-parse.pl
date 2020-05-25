@@ -249,7 +249,7 @@ sub xml_handle_end {
 # type == 1 	during send ... print parameters sent to camera
 # type == 3	after response ... print data returned
 #		@bytes - bulk container in response (no data)
-#		@curdata - bulk data if command had seperate datastream
+#		@curdata - bulk data if command had separate datastream
 sub
 dump_ptp_line() {
 	my($type,$code,$bytesref,$curdataref) = @_;

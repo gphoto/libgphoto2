@@ -59,7 +59,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
  * \param w width of the above array
  * \param h height of the above array
  * \param output RGB output array (linear, 3 bytes of R,G,B for every pixel)
- * \param tile how the 2x2 bayer array is layed out
+ * \param tile how the 2x2 bayer array is laid out
  *
  * A regular CCD uses a raster of 2 green, 1 blue and 1 red components to
  * cover a 2x2 pixel area. The camera or the driver then interpolates a
@@ -135,7 +135,7 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
  * \param image the linear RGB array as both input and output
  * \param w width of the above array
  * \param h height of the above array
- * \param tile how the 2x2 bayer array is layed out
+ * \param tile how the 2x2 bayer array is laid out
  *
  * This function interpolates a bayer array which has been pre-expanded
  * by gp_bayer_expand() to an RGB image. It uses various interpolation
@@ -356,7 +356,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
  * \param w width of the above array
  * \param h height of the above array
  * \param output RGB output array (linear, 3 bytes of R,G,B for every pixel)
- * \param tile how the 2x2 bayer array is layed out
+ * \param tile how the 2x2 bayer array is laid out
  *
  * A regular CCD uses a raster of 2 green, 1 blue and 1 red components to
  * cover a 2x2 pixel area. The camera or the driver then interpolates a

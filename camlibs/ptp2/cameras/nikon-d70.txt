@@ -356,7 +356,7 @@ Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 49, step 1] value: 1
 
 Auto White Balance Bias(0xd017):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
 Tungsten White Balance Bias(0xd018):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
-Flourescent White Balance Bias(0xd019):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
+Fluorescent White Balance Bias(0xd019):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
 Daylight White Balance Bias(0xd01a):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
 Flash White Balance Bias(0xd01b):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0
 Cloudy White Balance Bias(0xd01c):(readwrite) (type=0x1) Range [-3 - 3, step 1] value: 0

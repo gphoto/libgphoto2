@@ -75,7 +75,7 @@ static int capture_timeout = USB_TIMEOUT_CAPTURE;
 
 /* below macro makes a copy of fn without leading character ('/'),
  * removes the '/' at the end if present, and calls folder_to_handle()
- * funtion proviging as the first argument the string after the second '/'.
+ * function proviging as the first argument the string after the second '/'.
  * for example if fn is '/store_00010001/DCIM/somefolder/', the macro will
  * call folder_to_handle() with 'DCIM/somefolder' as the very first argument.
  * it's used to omit storage pseudofolder and remove trailing '/'
@@ -909,7 +909,7 @@ static struct {
 	/* Fernando Santoro <fernando.lopezjr@gmail.com> */
 	{"Sony:DSC-A100 (PTP mode)",  0x054c, 0x02c0, 0},
 	/* Sam Tseng <samtz1223@gmail.com> */
-	/* this seems not to have a seperate control mode id, see https://github.com/gphoto/libgphoto2/issues/288 */
+	/* this seems not to have a separate control mode id, see https://github.com/gphoto/libgphoto2/issues/288 */
 	{"Sony:DSC-A900 (PTP mode)",  0x054c, 0x02e7, PTP_CAP},
 	/* new id?! Reported by Ruediger Oertel. */
 	{"Sony:DSC-W200 (PTP mode)",  0x054c, 0x02f8, 0},
@@ -5065,7 +5065,7 @@ fallback:
 	CR (gp_port_set_timeout (camera->port, normal_timeout));
 
 	/* The standard defined way ... wait for some capture related events. */
-	/* The Nikon 1 series emits ObjectAdded occasionaly after
+	/* The Nikon 1 series emits ObjectAdded occasionally after
 	 * the CaptureComplete event, while others do it the other way
 	 * round. Handle that case with some bitmask. */
 	done = 0; tries = 20;
@@ -6908,14 +6908,14 @@ find_child (PTPParams *params,const char *file,uint32_t storage,uint32_t handle,
 		if (ret != PTP_RC_OK) {
 			/* NOTE: the "i" array entry might now be invalid, as object_want can remove objects from the list */
 			GP_LOG_D("failed getting info of oid 0x%08x?", oid);
-			/* could happen if file gets removed inbetween */
+			/* could happen if file gets removed between */
 			continue;
 		}
 		if ((ob->oi.StorageID==storage) && (ob->oi.ParentObject==handle)) {
 			ret = ptp_object_want (params, oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			if (ret != PTP_RC_OK) {
 				GP_LOG_D("failed getting info of oid 0x%08x?", oid);
-				/* could happen if file gets removed inbetween */
+				/* could happen if file gets removed between */
 				/* FIXME: should remove, but then we irritate our list */
 				continue;
 			}
@@ -6984,7 +6984,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     /* compute storage ID value from folder patch */
     folder_to_storage(folder,storage);
 
-    /* Get (parent) folder handle omiting storage pseudofolder */
+    /* Get (parent) folder handle omitting storage pseudofolder */
     find_folder_handle(params,folder,storage,parent);
 
     C_PTP_REP (ptp_list_folder (params, storage, parent));
@@ -7110,7 +7110,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* compute storage ID value from folder path */
 	folder_to_storage (folder,storage);
 
-	/* Get folder handle omiting storage pseudofolder */
+	/* Get folder handle omitting storage pseudofolder */
 	find_folder_handle (params,folder,storage,handler);
 
 	/* list this directory */
@@ -7524,7 +7524,7 @@ mtp_put_playlist(
 
 		/* compute storage ID value from folder patch */
 		folder_to_storage(fn,storage);
-		/* Get file number omiting storage pseudofolder */
+		/* Get file number omitting storage pseudofolder */
 		find_folder_handle(params, fn, storage, objectid);
 		objectid = find_child(params, filename, storage, objectid, NULL);
 		if (objectid != PTP_HANDLER_SPECIAL) {
@@ -7657,7 +7657,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* Get file number omiting storage pseudofolder */
+	/* Get file number omitting storage pseudofolder */
 	find_folder_handle(params, folder, storage, oid);
 	oid = find_child(params, filename, storage, oid, &ob);
 	if (oid == PTP_HANDLER_SPECIAL) {
@@ -7783,7 +7783,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* Get file number omiting storage pseudofolder */
+	/* Get file number omitting storage pseudofolder */
 	find_folder_handle(params, folder, storage, oid);
 	oid = find_child(params, filename, storage, oid, &ob);
 	if (oid == PTP_HANDLER_SPECIAL) {
@@ -8038,7 +8038,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			/* compute storage ID value from folder patch */
 			folder_to_storage(folder,storage);
 
-			/* Get file number omiting storage pseudofolder */
+			/* Get file number omitting storage pseudofolder */
 			find_folder_handle(params, folder, storage, object_id);
 			object_id = find_child(params, filename, storage, object_id, &ob);
 			if (object_id ==PTP_HANDLER_SPECIAL) {
@@ -8054,7 +8054,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
 
-	/* get parent folder id omiting storage pseudofolder */
+	/* get parent folder id omitting storage pseudofolder */
 	find_folder_handle(params,folder,storage,parent);
 
 	/* if you desire to put file to root folder, you have to use
@@ -8147,7 +8147,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	C_PTP_REP (ptp_check_event (params));
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* Get file number omiting storage pseudofolder */
+	/* Get file number omitting storage pseudofolder */
 	find_folder_handle(params, folder, storage, oid);
 	oid = find_child(params, filename, storage, oid, NULL);
 
@@ -8194,7 +8194,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	C_PTP_REP (ptp_check_event (params));
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* Get file number omiting storage pseudofolder */
+	/* Get file number omitting storage pseudofolder */
 	find_folder_handle(params, folder, storage, oid);
 	oid = find_child(params, foldername, storage, oid, NULL);
 	if (oid == PTP_HANDLER_SPECIAL)
@@ -8220,7 +8220,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	camera->pl->checkevents = TRUE;
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* Get file number omiting storage pseudofolder */
+	/* Get file number omitting storage pseudofolder */
 	find_folder_handle(params, folder, storage, object_id);
 	object_id = find_child(params, filename, storage, object_id, &ob);
 	if (object_id == PTP_HANDLER_SPECIAL)
@@ -8264,7 +8264,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* Get file number omiting storage pseudofolder */
+	/* Get file number omitting storage pseudofolder */
 	find_folder_handle(params, folder, storage, oid);
 	oid = find_child(params, filename, storage, oid, &ob);
 	if (oid == PTP_HANDLER_SPECIAL)
@@ -8361,7 +8361,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	/* compute storage ID value from folder patch */
 	folder_to_storage(folder,storage);
-	/* get parent folder id omiting storage pseudofolder */
+	/* get parent folder id omitting storage pseudofolder */
 	find_folder_handle(params,folder,storage,parent);
 
 	/* if you desire to make dir in 'root' folder, you have to use
@@ -8694,12 +8694,12 @@ camera_init (Camera *camera, GPContext *context)
 	XT(normal_timeout,USB_NORMAL_TIMEOUT);
 	XT(capture_timeout,USB_TIMEOUT_CAPTURE);
 
-	/* Choose a shorter timeout on inital setup to avoid
+	/* Choose a shorter timeout on initial setup to avoid
 	 * having the user wait too long.
 	 */
 	if (a.usb_vendor == 0x4a9) { /* CANON */
 		/* our special canon friends get a shorter timeout, sinc ethey
-		 * occasionaly need 2 retries. */
+		 * occasionally need 2 retries. */
 		XT(canon_start_timeout,USB_CANON_START_TIMEOUT);
 		CR (gp_port_set_timeout (camera->port, canon_start_timeout));
 	} else {

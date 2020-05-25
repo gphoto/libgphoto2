@@ -3,7 +3,7 @@
 
 #include <string.h> // one strncmp() is used to do key comparison, and a strlen(key) if no len passed in
 
-// gcc started warning for the init syntax used here, is not helpful so don't generate the spam, supressing the warning is really inconsistently supported across versions
+// gcc started warning for the init syntax used here, is not helpful so don't generate the spam, suppressing the warning is really inconsistently supported across versions
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic push
 #endif

@@ -144,10 +144,10 @@ ptp_error (PTPParams *params, const char *format, ...)
  * bytes, otherwise it's ignored.
  * The data should contain an address of a pointer to data going to be sent
  * or is filled with such a pointer address if data are received depending
- * od dataphase direction (send or received) or is beeing ignored (no
+ * od dataphase direction (send or received) or is being ignored (no
  * dataphase).
  * The memory for a pointer should be preserved by the caller, if data are
- * beeing retreived the appropriate amount of memory is beeing allocated
+ * being retreived the appropriate amount of memory is being allocated
  * (the caller should handle that!).
  *
  * Return values: Some PTP_RC_* code.
@@ -1564,7 +1564,7 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
  *		storage			- StorageID
  *		objectformatcode	- ObjectFormatCode (optional)
  *		associationOH		- ObjectHandle of Association for
- *					  wich a list of children is desired
+ *					  which a list of children is desired
  *					  (optional)
  *		objecthandles		- pointer to structute
  *
@@ -1629,7 +1629,7 @@ ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
  *		storage			- StorageID
  *		objectformatcode	- ObjectFormatCode (optional)
  *		associationOH		- ObjectHandle of Association for
- *					  wich a list of children is desired
+ *					  which a list of children is desired
  *					  (optional)
  *		numobs			- pointer to uint32_t that takes number of objects
  *
@@ -2559,7 +2559,7 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_CheckEvent);
 	*isevent=0;
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (data && size) { /* check if we had a successfull call with data */
+	if (data && size) { /* check if we had a successful call with data */
 		ptp_unpack_EC(params, data, event, size);
 		*isevent=1;
 		free(data);
@@ -5734,7 +5734,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_ActiveDLighting,			/* 0xD14E */
 		 N_("Active D-Lighting")},
 		{PTP_DPC_NIKON_FlourescentType,			/* 0xD14F */
-		 N_("Flourescent Type")},
+		 N_("Fluorescent Type")},
 		{PTP_DPC_NIKON_TuneColourTemperature,		/* 0xD150 */
 		 N_("Tune Colour Temperature")},
 		{PTP_DPC_NIKON_TunePreset0,			/* 0xD151 */

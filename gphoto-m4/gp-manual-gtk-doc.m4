@@ -1,6 +1,6 @@
 dnl ---------------------------------------------------------------------------
 dnl gtk-doc: We use gtk-doc for building our documentation. However, we
-dnl          require the user to explicitely request the build.
+dnl          require the user to explicitly request the build.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN([GP_CHECK_GTK_DOC],
 [

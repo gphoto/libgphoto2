@@ -92,7 +92,7 @@ main(int argc, char **argv) {
 	GPContext *context = sample_create_context();
 
 	printf("Sample photobooth.\n");
-	printf("Continously stores previews in 'preview.jpg'.\n");
+	printf("Continuously stores previews in 'preview.jpg'.\n");
 	printf("kill -USR1 %d to take a capture.\n", getpid());
 	printf("kill -USR2 %d to read the 'config.txt'.\n", getpid());
 	printf("kill -TERM %d to finish.\n", getpid());

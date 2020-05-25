@@ -440,7 +440,7 @@ mesa_black_levels( GPPort *port, uint8_t r[2] )
  *
  * exposure is * 1/50000 seconds.
  *
- * download specifies how, of if thge image is downloaded.
+ * download specifies how, of if the image is downloaded.
  * 0-47		returns one 32 byte (64 pixel) row.
  * 128-223	returns on 64 byte row.
  * 249		returns all odd rows of a hi-res image 1536 bytes.

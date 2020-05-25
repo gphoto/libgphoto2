@@ -30,7 +30,7 @@
  *
  * IMPORTANT: In order to use this mode, the camera must be switched
  * _out_ of "USB Mass Storage" mode and into "USB PC control mode".
- * The images will not be accessable as a mass-storage/disk device in
+ * The images will not be accessible as a mass-storage/disk device in
  * this mode, but you can control the camera, tell it to take pictures
  * and download images using the protocol implemented in sierra.c.
  *

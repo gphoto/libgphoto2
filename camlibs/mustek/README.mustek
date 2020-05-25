@@ -14,7 +14,7 @@ History :
 
 10.01.2000 The Library was ported to the ne iolib. It uses also
            the USB Interfave from Johannes Erdfeld. This makes it
-			  unneccessary to have a special Kernelmodul for the 
+			  unnecessary to have a special Kernelmodul for the 
 			  Mustek.
 			  In camera.h there is added a new entry, so you can select
 			  wether you want to use USB or rs232. This is needed

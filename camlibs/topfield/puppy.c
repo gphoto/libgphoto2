@@ -769,7 +769,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 	fileSize = srcStat.st_size;
 	if(fileSize == 0)
 	{
-		gp_log (GP_LOG_ERROR, "topfield", "ERROR: Source file is empty - not transfering.\n");
+		gp_log (GP_LOG_ERROR, "topfield", "ERROR: Source file is empty - not transferring.\n");
 		result = -ENODATA;
 		goto out;
 	}

@@ -177,7 +177,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* not from standards papers, but from traces: */
 #define PTP_VENDOR_SONY				0x00000011 /* observed in the A900 */
 
-/* Vendor extension ID used for MTP (occasionaly, usualy 6 is used) */
+/* Vendor extension ID used for MTP (occasionally, usually 6 is used) */
 #define PTP_VENDOR_MTP			0xffffffff  
 
 /* gphoto overrides */
@@ -819,7 +819,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * AutofocusPush() = (1,0) ... same as AEStart?
  * KeepCameraActive() = (0xe,0)
  */
-#define PTP_OC_LEICA_LEReleaseStages			0x9004	/* lrplugin seeing 1 (push af control), 2 (release af control), 0x0c (continuos start), 0x0d (continuos end) as potential arguments */
+#define PTP_OC_LEICA_LEReleaseStages			0x9004	/* lrplugin seeing 1 (push af control), 2 (release af control), 0x0c (continuous start), 0x0d (continuous end) as potential arguments */
 #define PTP_OC_LEICA_LEOpenSession			0x9005	/* lrplugin one argument, possible 0 is ok? */
 #define PTP_OC_LEICA_LECloseSession			0x9006	/* lrplugin */
 #define PTP_OC_LEICA_RequestObjectTransferReady		0x9007
@@ -2192,7 +2192,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ImgConfTime			0xD065
 #define PTP_DPC_NIKON_AutoOffTimers			0xD066
 #define PTP_DPC_NIKON_AngleLevel			0xD067
-#define PTP_DPC_NIKON_D1ShootingSpeed			0xD068 /* continous speed low */
+#define PTP_DPC_NIKON_D1ShootingSpeed			0xD068 /* continuous speed low */
 #define PTP_DPC_NIKON_D2MaximumShots			0xD069	/* BurstMaxNumer */
 #define PTP_DPC_NIKON_ExposureDelayMode			0xD06A
 #define PTP_DPC_NIKON_LongExposureNoiseReduction	0xD06B

@@ -46,7 +46,7 @@ structure, but will work on using this do some image enhancement in the future.
 	The hardest part of this project was figuring out the image format and I
 was often led astray by typos and small logic errors while reprogramming that
 portion of the code again and again (and again) due to the number of possible
-pertubations. Two packages were very helpful, netpbm and the Gimp. By using
+perturbations. Two packages were very helpful, netpbm and the Gimp. By using
 rawtopgm (from netpbm) I was able to visually analyze the data. Much better
 than trying to understand hexdumps :) I am inspired to write some kind of tool
 to help with analyzing this sort of data, perhaps interactively testing

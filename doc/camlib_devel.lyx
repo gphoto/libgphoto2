@@ -644,7 +644,7 @@ Camera API
 
 The CAPI provides the full set of functions for doing various tasks with
  the camera.
- All CAPI functions return either GP_OK for succesful execution , or GP_ERROR
+ All CAPI functions return either GP_OK for successful execution , or GP_ERROR
  for a failure of execution
 \layout Standard
 

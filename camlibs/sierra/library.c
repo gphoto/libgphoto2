@@ -232,7 +232,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 
 /**
  * sierra_get_picture_folder:
- * @camera : camera data stucture
+ * @camera : camera data structure
  * @folder : folder name (to be freed by the caller)
  *     
  * Return the name of the folder that stores pictures. It is assumed that
@@ -286,7 +286,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 
 /**
  * sierra_check_battery_capacity:
- * @camera : camera data stucture
+ * @camera : camera data structure
  *     
  * Check if the battery capacity is high enough.
  *
@@ -318,7 +318,7 @@ int sierra_check_battery_capacity (Camera *camera, GPContext *context)
 
 /**
  * sierra_get_memory_left:
- * @camera : camera data stucture
+ * @camera : camera data structure
  * @memory : memory left
  *     
  * Provide the available memory left 
@@ -435,7 +435,7 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 		break;
 	}
 
-	/* Determing packet length */
+	/* Determining packet length */
 	if ((packet[0] == SIERRA_PACKET_COMMAND) ||
 	    (packet[0] == SIERRA_PACKET_DATA) ||
 	    (packet[0] == SIERRA_PACKET_DATA_END)) {
@@ -492,7 +492,7 @@ sierra_write_nak (Camera *camera, GPContext *context)
 
 /**
  * sierra_read_packet:
- * @camera : camera data stucture
+ * @camera : camera data structure
  * @packet : to return the read packet
  *     
  * Read a data packet from the camera.
@@ -1409,7 +1409,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		}
 		/*
 		 * We need to tell the frontend where the new image can be
-		 * found.  Unfortunatelly, we can only figure out the
+		 * found.  Unfortunately, we can only figure out the
 		 * filename. Therefore, reset the CameraFilesystem and let
 		 * it search for the filename.
 		 *

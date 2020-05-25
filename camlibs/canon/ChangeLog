@@ -824,7 +824,7 @@
 
 2002-01-14  Fredrik <fredrik@krixor.xy.org>
 
-	* canon.c, library.c: More carefull buffer size checking in some
+	* canon.c, library.c: More careful buffer size checking in some
 	  places. We should do a real audit of these.
 
 	* library.c: Fixed mkdir and rmdir functions which did not convert
@@ -832,7 +832,7 @@
 
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	* *.[c,h]: Replase last call to gp_camera_set_error (I oversaw one
+	* *.[c,h]: Replaces last call to gp_camera_set_error (I oversaw one
 	  hidden in the header file).
 
 2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
@@ -885,7 +885,7 @@
 
 	* canon.c, library.c: Improve error checking and
 	debug diagnostics when camera does not return the
-	expected ammount of data.
+	expected amount of data.
 
 2002-01-01  Fredrik <fredrik@krixor.xy.org>
 
@@ -1003,7 +1003,7 @@
 	* canon.h: added CANON_MINIMUM_DIRENT_SIZE.
 
 	* canon.c, canon.h:
-	  Exchanged canon_int_list_directorys() with my
+	  Exchanged canon_int_list_directory() with my
 	  rewritten version. At least some hypothetical bugs
 	  fixed, easier to understand and proper error-checking.
 	  This should hopefully not break serial, since this is

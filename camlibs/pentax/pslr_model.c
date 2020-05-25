@@ -757,7 +757,7 @@ void ipslr_status_parse_k200d(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x17c]);
     status->zoom.denom = get_uint32_be(&buf[0x180]);
     status->focus = get_int32_be(&buf[0x184]);
-    // Drive mode: 0=Single shot, 1= Continous Hi, 2= Continous Low or Self timer 12s, 3=Self timer 2s
+    // Drive mode: 0=Single shot, 1= Continuous Hi, 2= Continuous Low or Self timer 12s, 3=Self timer 2s
     // 4= remote, 5= remote 3s delay
 }
 

@@ -68,7 +68,7 @@ int dsc1_retrcmd(Camera *camera);
 
 int dsc1_setbaudrate(Camera *camera, int speed);
 	/* Set baud rate of connection. Part of hand shake procedure 	*/
-	/* Returns GP_OK if succesful and GP_ERROR otherwise.		*/
+	/* Returns GP_OK if successful and GP_ERROR otherwise.		*/
 	
 int dsc1_getmodel(Camera *camera);
 	/* Returns camera (sub)model, DSC1: DC1000, DSC2: DC1580, 	*/

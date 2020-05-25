@@ -1200,7 +1200,7 @@
 
 2002-02-26  Marcus Meissner <marcus@jet.franken.de>
 	
-	* libgphoto2/gphoto-camera.c: do gp_close_port() unconditionaly
+	* libgphoto2/gphoto-camera.c: do gp_close_port() unconditionally
 	  in gp_camera_exit().
 
 2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
@@ -1337,7 +1337,7 @@
 	  for_each_subfolder() did not descend into subfolders of
 	  subfolders when recursive.
 
-	* frontends/command-line/main.c: Be even more carefull in
+	* frontends/command-line/main.c: Be even more careful in
 	  checking the ID passed to the context functions by camera
 	  drivers.
 
@@ -1395,7 +1395,7 @@
 
 	* frontends/command-line/foreach.c: Check return values
 	  of recursive calls to for_each_subfolder(). Fixes bug
-	  where errors was not detected if they occured in
+	  where errors was not detected if they occurred in
 	  subfolders of subfolders when doing recursive actions
 	  (like -P).
 
@@ -2285,7 +2285,7 @@
 
 2001-11-15  Mariusz Woloszyn <emsi@ipartners.pl>
 
-	* camlibs/ptp/: Started PTP support library developement
+	* camlibs/ptp/: Started PTP support library development
 
 2001-11-15  Colin Marquardt  <colin@marquardt-home.de>
 
@@ -2378,7 +2378,7 @@
 
 2001-11-09  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	Patch from Greg Ingram <ingram@symsys.com>, unfortunatelly without
+	Patch from Greg Ingram <ingram@symsys.com>, unfortunately without
 	ChangeLog entry...
 
 	* camlibs/polaroid/pdc700.c: Report lcd state and caption (?) in 
@@ -2955,7 +2955,7 @@
 	and made a new psa50_usb_long_dialogue() that handles these correctly.
 	This should fix a number of problems with those kinds of transfers (I
 	previously fixed this for get_file, now it is fixed for all functions
-	using this). Large directorys filling more than one USB bulk packet
+	using this). Large directories filling more than one USB bulk packet
 	probably never worked before, but should work now.
 
 	* camlibs/canon/canon.c:
@@ -3293,7 +3293,7 @@
 
 2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	* camlibs/polaroid/pdc640.c: Remove non-existant
+	* camlibs/polaroid/pdc640.c: Remove non-existent
 	  GP_ERROR_NO_CAMERA_FOUND.
 
 2001-10-14  Lutz Müller <urc8@rz.uni-karlsruhe.de>
@@ -4650,7 +4650,7 @@
 	camlibs/stv0680/Makefile.am, camlibs/template/Makefile.am: It 
 	adds code in configure.in to detect when '.libs' is not detected 
 	and in this case defined a variable "dotlibs" which is then 
-	substitued in all Makefile.in. This fix a build problem with 
+	substitute in all Makefile.in. This fix a build problem with 
 	newer libtool (1.4)
 
 2001-08-15  Hubert Figuiere  <hfiguiere@teaser.fr>
@@ -4714,7 +4714,7 @@
 2001-08-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/sierra/sierra.c: The C-2100UZ is supported, too.
-	Unfortunatelly, the product id is the same for the C-2100UZ, the
+	Unfortunately, the product id is the same for the C-2100UZ, the
 	C-3000Z, and the C-3030Z. This results in three entries for this camera
 	("gphoto2 --auto-detect"). This has to be fixed somehow, sometime.
 
@@ -4786,7 +4786,7 @@
 
 2000-08-19 11:53  jgangemi
 
-	* frontends/gtk/src/main.c:   - gphoto-backend correctly initalized
+	* frontends/gtk/src/main.c:   - gphoto-backend correctly initialized
 
 2000-08-19 11:52  jgangemi
 
@@ -5137,7 +5137,7 @@
 2000-08-06 06:01  mariusz
 
 	* camlibs/panasonic/: README, dc1000.c, dc1580.c: abilities
-	accomodated to the new API
+	accommodated to the new API
 
 2000-08-05 09:57  mariusz
 
@@ -5824,7 +5824,7 @@
 
 2000-07-19 13:08  scottf
 
-	* libgphoto2/file.c: null terminater the file->data in gp_file_open
+	* libgphoto2/file.c: null terminator the file->data in gp_file_open
 
 2000-07-19 11:35  scottf
 

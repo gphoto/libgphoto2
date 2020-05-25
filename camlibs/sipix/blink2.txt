@@ -81,7 +81,7 @@ Hmm (?) / Resync Routine:
 	control read 0x13, 0x0, 0x00	-> buf[1]
 
 
-Bandwith Allocate(type):
+Bandwidth Allocate(type):
 	320x240: control read 0x14, 0x0, 0x00	-> buf[1]
 	640x480: control read 0x15, 0x0, 0x00	-> buf[1]
 

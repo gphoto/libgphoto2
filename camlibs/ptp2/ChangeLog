@@ -116,7 +116,7 @@
 2009-07-10  Marcus Meissner  <marcus@jet.franken.de>
 
 	* ptp.c,ptp.h: Generic PTP wrapper function (no data, no output)
-	  to avoid coding all generic functions as seperate functions.
+	  to avoid coding all generic functions as separate functions.
 	  Converted all convertable functions to macros.
 
 2009-07-09  Axel Waggershauser  <awagger@web.de>
@@ -305,7 +305,7 @@
 	* library.c: Added Nikon Coolpix L16 , Nikon D700.
 
 	* ptp-unpack.c: Fixed a property handling issue
-	  with empty/non existant strings in the unpacker,
+	  with empty/non existent strings in the unpacker,
 	  triggered by the D700.
 
 	* README.ptp2: Added link to now official MTP 1.0 spec.
@@ -1091,7 +1091,7 @@
 
 2006-04-27  Marcus Meissner  <marcus@jet.franken.de>
 
-	* ptp.c: The iRiver devices occasionaly send a byte more than
+	* ptp.c: The iRiver devices occasionally send a byte more than
 	  we requested which could lead to memory corruption due to 
 	  logic that did not expect that.
 
@@ -1760,7 +1760,7 @@
 2004-05-29 Mariusz Woloszyn
 
 	* library.c: Fixed a small problem that caused objects of undefined
-	type not beeing downloadable. Now they are downloadable if the Thumb
+	type not being downloadable. Now they are downloadable if the Thumb
 	type is known.
 
 2004-05-24  Marcus Meissner  <marcus@jet.franken.de>
@@ -2129,7 +2129,7 @@
 	* Makefile.am: changed driver name to ptp2
 
 2003-01-03 Mariusz Woloszyn
-	* Commited version 2 of libptp2 and ptp driver.
+	* Committed version 2 of libptp2 and ptp driver.
 	  This code is unfinished yet, but it's meant to be transport layer
 	  independent. It fixes a lot of other bugs also.
 

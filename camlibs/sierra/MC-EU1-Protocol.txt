@@ -10,7 +10,7 @@ Speed is set to 19200 bauds
 This protocol use 1 or 4 bytes "packets". 4 bytes packets are used to send command to the coolpix and receive information from it.
 1 byte packet are used as acknowledge (0x86), not acknowledge (0x15), "attention packet" (0xFF). 
 Each byte in these packet is divided in two part, bit 0-6 is the value on 7 bits and bit 7 is the odd parity bit (thanks Mark Roberts !)
-Returned value by the coolpix (in the two or three? last byte) have 0x1C offset, and least signifiant byte is sent first, for example
+Returned value by the coolpix (in the two or three? last byte) have 0x1C offset, and least significant byte is sent first, for example
 the number of picture is :
 
 nb picture = ((byte[2] & 0x7F) - 0x1C) + 100 * ((byte[3] & 0x7F) - 0x1C) 
@@ -72,7 +72,7 @@ Send                             	Receive				Informations
 					0x86
 
 0x9B, 0x01, 0x7F, 0x7F							Release the shutter button,
-									usefull in bulb mode
+									useful in bulb mode
 									
 					0x8F
 					

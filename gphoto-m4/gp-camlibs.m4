@@ -6,7 +6,7 @@ dnl ####################################################################
 dnl
 dnl Redundancy free definition of libgphoto2 camlibs.
 dnl
-dnl Removes the redundany from the camlib lists, and executes
+dnl Removes the redundancy from the camlib lists, and executes
 dnl additional consistency checks on the build system.
 dnl
 dnl Every camlib belongs to one of the following (disjunct) sets of

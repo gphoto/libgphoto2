@@ -43,7 +43,7 @@ Notes on specific functions:
 	More information on the file format can be obtained in the code itself.
 
 	Deleting all images is now implemented correctly. This beats iterating
-	accross all of them, hands down.
+	across all of them, hands down.
 
 	Here are the pinouts for the serial cable:
          _____________     /-----\

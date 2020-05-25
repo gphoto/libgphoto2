@@ -59,7 +59,7 @@ contains:04 00 (there were 4 pics in device)
 Request
 -------
 
-Gets size of specified image, odd in that request is repeated untill
+Gets size of specified image, odd in that request is repeated until
 first byte in returned data changes to 0
 
 The returned size is in "blocks" these are 0x100 bytes long eithr that
@@ -74,7 +74,7 @@ Length = 8
 Result:8bytes
 contains:01 00 00 00 00 00 00 00
 
-untill value changes
+until value changes
 Result:8bytes
 contains:00 00 10 01 00 00 00 00
 
@@ -115,7 +115,7 @@ byte 01: size 0
 request
 -------
 Positions bulk pipe ready to download image
-Again request is repeated untill returned data byte 0 is set to 0
+Again request is repeated until returned data byte 0 is set to 0
 
 bmRequestType=c0 Vendor,device to host
 bRequest = 2
@@ -126,7 +126,7 @@ Length = 6
 Result:6bytes
 contains:01 00 00 00 00 00
 
-untill data changes to:
+until data changes to:
 contains:00 00 00 00 00 00
 
 

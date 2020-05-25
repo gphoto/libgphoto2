@@ -165,7 +165,7 @@ Property 0xd141:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
 Slot 2 Save Mode(0xd148):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
 Raw Bit Mode(0xd149):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
 ISO Auto Time(0xd14e):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 4
-Flourescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
+Fluorescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
 Tune Colour Temperature(0xd150):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 Tune Preset 1(0xd152):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 Tune Preset 2(0xd153):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
@@ -2733,7 +2733,7 @@ Choice: 3 3
 Choice: 4 4
 Choice: 5 5
 /main/other/d14f
-Label: Flourescent Type
+Label: Fluorescent Type
 Type: MENU
 Current: 3
 Choice: 0 0
