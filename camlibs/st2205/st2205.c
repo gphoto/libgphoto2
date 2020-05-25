@@ -870,7 +870,7 @@ st2205_init(Camera *camera)
 	 * -lookup tables directly followed by shuffle tables at 0x8477
 	 * -pictures starting at 0x10000
 	 * -64k of firmware at the end of memory
-	 * Version 2 devices show up as 2 disks, with the second second disk
+	 * Version 2 devices show up as 2 disks, with the second disk
 	 * containing a msdos filesystem with the windows software. These have:
 	 * -1 copy of the "FAT"
 	 * -lookup tables as part of the firmware at memory-end - 0x27b89 bytes

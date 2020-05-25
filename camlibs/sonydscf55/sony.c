@@ -97,7 +97,7 @@ static unsigned char X13Camera[] = { 0, 2, 18 };
 
 
 /*
- * This array contains the expected packet sequence code to to be applied/
+ * This array contains the expected packet sequence code to be applied/
  * checked for.
  */
 static const unsigned char sony_sequence[] =

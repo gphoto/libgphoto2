@@ -97,7 +97,7 @@ AM_CONDITIONAL([HAVE_CXX], [test "x$CXX" != "x" && test "x$CXX" != "xno"])
 
 
 dnl --------------------------------------------------------------------
-dnl Determine the most pedantic compiler flags we can can find for both
+dnl Determine the most pedantic compiler flags we can find for both
 dnl C and C++, so that we can test that the libgphoto2 headers compile
 dnl with those flags.
 dnl --------------------------------------------------------------------
