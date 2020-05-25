@@ -74,7 +74,7 @@ typedef struct {
     visible size in pixels
     describes data within the buffer which contains image data to be displayed
     any offsets within buffer data are added before sending, so the top left
-    pixel is always the first first byte of data.
+    pixel is always the first byte of data.
     width must always be <= buffer_width
     if buffer_width is > width, the additional data should be skipped
     visible_height also defines the number of data rows

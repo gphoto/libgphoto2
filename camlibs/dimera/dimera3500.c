@@ -811,7 +811,7 @@ Dimera_Preview( long *size, Camera *camera, GPContext *context )
 
 	/* Automatic exposure control */
 
-	/* Current picture brightness, where 0 is is dark and 255 is bright */
+	/* Current picture brightness, where 0 is dark and 255 is bright */
 	brightness = exposure_total / (VIEWFIND_SZ / 16);
 
 	GP_DEBUG(

@@ -2528,7 +2528,7 @@ do {
           </listitem>
           <listitem>
             <para>The sequence of messages 0x0a/0x1c; 0x0a/0x1d may be
-              repeated once or twice if the the image captured is the
+              repeated once or twice if the image captured is the
               last one that will fit on the camera's storage
               device.</para>
           </listitem>

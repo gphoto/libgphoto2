@@ -1005,7 +1005,7 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
  *  command, then handle the interrupt pipe here.
  *
  * Returns: a char * that points to the data read from the camera (or
- * NULL on failure), and sets what @return_length points to to the number
+ * NULL on failure), and sets what @return_length points to the number
  * of bytes read. If this function returns NULL, return any photographic
  * failure error codes in what @photo_status points to.
  *
@@ -1334,7 +1334,7 @@ static char *canon_usb_decode_status ( int code ) {
  *
  * Returns: a char * that points to all of the packet data read from
  * the camera (or NULL on failure), and sets what @return_length
- * points to to the number of bytes read.  Note that, unlike this
+ * points to the number of bytes read.  Note that, unlike this
  * function, canon_usb_dialogue() chops off the first 0x50 bytes to
  * generate its output.
  *
@@ -1630,7 +1630,7 @@ canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct, unsigned
  *      returned with GP_OK or some error code.
  *
  * Returns: a char * that points to the data read from the camera (or
- * NULL on failure), and sets what @return_length points to to the number
+ * NULL on failure), and sets what @return_length points to the number
  * of bytes read.
  *
  */

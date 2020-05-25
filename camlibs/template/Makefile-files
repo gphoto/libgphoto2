@@ -6,7 +6,7 @@
 #   * "noinst_DATA" into "camlibdoc_DATA"
 #   * "noinst_LTLIBRARIES" into "EXTRA_LTLIBRARIES"
 #
-# Additionally, you must add add an include line to the Makefile-files
+# Additionally, you must add an include line to the Makefile-files
 # of the new camlib to camlibs/Makefile.am:
 #   * "include my-new-camlib/Makefile-files"
 #

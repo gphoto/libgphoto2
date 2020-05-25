@@ -147,7 +147,7 @@ Appendix A: Platform specific compilation hints
 libgphoto2 has been successfully used on many system.  Some systems
 where it has been reported to successfully compile are listed
 below. Not all, or even any, camera libraries have been tested on
-these systems, so there may be endian other other issues that prevent
+these systems, so there may be endian other issues that prevent
 some camera libraries from working.
 
 Please report any changes to this list to the gphoto developer mailing

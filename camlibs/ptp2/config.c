@@ -2477,8 +2477,8 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 	{ N_("Super high speed continuous shooting"),		0x0012, 0 },
 	{ N_("Single silent"),		0x0013, 0 },
 	{ N_("Continuous silent"),	0x0014, 0 },
-	{ N_("Silent HS continous"),	0x0015, 0 },
-	{ N_("Silent LS continous"),	0x0016, 0 },
+	{ N_("Silent HS continuous"),	0x0015, 0 },
+	{ N_("Silent LS continuous"),	0x0016, 0 },
 };
 GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
 
@@ -4555,7 +4555,7 @@ GENERICI8TABLE(Nikon_LiveViewAFI,nikon_liveviewafi)
 
 static struct deviceproptableu8 nikon_liveviewaffocus[] = {
 	{ N_("Single-servo AF"),		0, 0 },
-	{ N_("Continous-servo AF"),		1, 0 },
+	{ N_("Continuous-servo AF"),		1, 0 },
 	{ N_("Full-time-servo AF"),		2, 0 },
 	{ N_("Manual Focus (fixed)"),		3, 0 },
 	{ N_("Manual Focus (selection)"),	4, 0 },
@@ -7104,7 +7104,7 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 			if (value.u32) {
 				if (value.u32 & (1<<14)) { gp_context_error (context, _("Movie recording cannot start: Camera is not in application mode.")); return GP_ERROR; }
 				if (value.u32 & (1<<13)) { gp_context_error (context, _("Movie recording cannot start: Set liveview selector is enabled.")); return GP_ERROR; }
-				if (value.u32 & (1<<12)) { gp_context_error (context, _("Movie recording cannot start: In enlarged liewview.")); return GP_ERROR; }
+				if (value.u32 & (1<<12)) { gp_context_error (context, _("Movie recording cannot start: In enlarged liveview.")); return GP_ERROR; }
 				if (value.u32 & (1<<11)) { gp_context_error (context, _("Movie recording cannot start: Card protected.")); return GP_ERROR; }
 				if (value.u32 & (1<<10)) { gp_context_error (context, _("Movie recording cannot start: Already in movie recording.")); return GP_ERROR; }
 				if (value.u32 & (1<< 9)) { gp_context_error (context, _("Movie recording cannot start: Images / movies not yet record in buffer.")); return GP_ERROR; }

@@ -1,6 +1,6 @@
 #!/bin/sh
 # "make installcheck" testcase:
-# Compares camera list printed by by print-camera-list and parsed by
+# Compares camera list printed by print-camera-list and parsed by
 #test-ddb with the camera list from gp_abilities_list_load().
 # Fails if differences are found.
 

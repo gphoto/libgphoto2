@@ -2128,7 +2128,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
  * @data: input data table
  * @data_size: table size
  * @jpeg_data: return JPEG data table (NULL if no valid data is found).
- *             To be free by the the caller.
+ *             To be free by the caller.
  * @jpeg_size: return size of the jpeg_data table.
  *
  * Extract JPEG data form the provided input data (looking for the SOI

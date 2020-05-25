@@ -126,7 +126,7 @@ to work.
 
 One known functionality of the camera is not completely supported, though. The
 cameras all support a "continuous shooting" mode, in which the camera shoots
-frames until it it is stopped by a button press or runs out of memory. The OEM
+frames until it is stopped by a button press or runs out of memory. The OEM
 driver software saves the result as an AVI file. Here, the individual frames
 are merely downloaded and saved as individual photos. The intention is to
 support this feature completely, in the future.
