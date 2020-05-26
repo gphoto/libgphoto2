@@ -59,7 +59,7 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 	gp_port_read(port, (char *)catalog, 0x4000); /* We need 16 bytes for each photo. */
 	digi_reset (port);
 
-	/* The first occurence of a zero denotes end of files entries */
+	/* The first occurrence of a zero denotes end of files entries */
 	for (i=0; i<0x4000 && catalog[i]; i+=16);
 	priv->nb_entries = i>>4;
 	catalog_tmp = realloc(catalog, i+16);

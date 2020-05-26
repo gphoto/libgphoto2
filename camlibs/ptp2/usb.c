@@ -449,7 +449,7 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 			ret = translate_gp_result_to_ptp(res);
 			break;
 		} else
-			do_retry = FALSE; /* once we have succesfully read any data, don't try again */
+			do_retry = FALSE; /* once we have successfully read any data, don't try again */
 		ret = handler->putfunc (params, handler->priv, res, data);
 		if (ret != PTP_RC_OK)
 			break;

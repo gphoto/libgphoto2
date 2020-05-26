@@ -75,7 +75,7 @@ typedef struct _rgbgamma {
  *   Influence on the highlights is small; therefore the description
  *   with amplifiaction and gamma seems not very appropriate; a better
  *   correction function would allow to influence the slope for small
- *   and for large values indepentently without incurring loss of
+ *   and for large values independently without incurring loss of
  *   accuracy/information. It should not be hard to construct such a
  *   thing. (Splines or Bézier or Triginometric/Hyperbolic functions
  *   could be used, e.g.)

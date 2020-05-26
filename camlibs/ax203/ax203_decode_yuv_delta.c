@@ -437,7 +437,7 @@ main(int argc, char *argv[])
 		ax203_decode(buf, im->tpixels, width, height);
 		gdImagePng (im, fout);
 	} else {
-		fprintf (stderr, "%s: unkown option: %s\n", argv[0], argv[1]);
+		fprintf (stderr, "%s: unknown option: %s\n", argv[0], argv[1]);
 		ret = 1;
 		goto exit;
 	}

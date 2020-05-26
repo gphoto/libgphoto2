@@ -545,7 +545,7 @@ int dc3200_send_command(Camera *camera, unsigned char *cmd, int cmd_len, unsigne
 
 	while(sends > 0) {
 		reads = READ_RETRIES;
-		/* check that we are acutally sending a command
+		/* check that we are actually sending a command
 		 * and not just waiting for data
 		 */
 		if(cmd != NULL && cmd_len > 0) {

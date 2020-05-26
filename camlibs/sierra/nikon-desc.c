@@ -342,7 +342,7 @@ static const RegisterDescriptorType cp880_reg_33[] = {
  * fix the problem.
  *
  * The use of next and previous should be part of a separate
- * interface, such that a user can continuosly press next or previous to
+ * interface, such that a user can continuously press next or previous to
  * cycle through the images (while the camera is in play mode).
  *
  * Use command 2 (via sierra_sub_action) with action

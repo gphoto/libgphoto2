@@ -30,7 +30,7 @@ S E R I A L   P R O T O C O L
 CASIO's QV-10 serial cable is a level converter. It converts RS-232C 
 voltage levels to QV-10's voltage levels. This voltage converter circuit
 uses the electrical power supplied by the host computer's RS-232C 
-connector. (V+ is CTS, V- is RTS.) To recieve digital data from QV-10, 
+connector. (V+ is CTS, V- is RTS.) To receive digital data from QV-10, 
 set the CTS terminal to ON, RTS terminal to OFF. 
 
 On power-up, QV-10 serial communication speed defaults to 9600baud.  This
@@ -54,7 +54,7 @@ C O M M A N D  L I S T
 
     above the line: data sent to QV-10
     ---------------------------------------
-    below the line: data recieved from QV-10
+    below the line: data received from QV-10
 
 ASCII code values are quoted.
 All other values are hex.
@@ -137,7 +137,7 @@ FORMAT OF [Picture Data]
 
 Comment:
  WW WW: Data Block Size (2 bytes):  (Normally 0x00 0x80, 128 bytes)
-        The data preceeding the endmark(02 00 00 03 FC) is its 
+        The data preceding the endmark(02 00 00 03 FC) is its 
         block size(under 0x00 0x80).
     JJ: Picture data. (Image Area of CAM format) 
         (Please refer to the CAM format information below).
@@ -162,7 +162,7 @@ SEND JPEG FORMAT PICTURE DATA TO QV-10
 
 Comment:
     The return byte 6a is checksum.
-    The return byte ZZ(normaly 06 ?) is unknown.
+    The return byte ZZ(normally 06 ?) is unknown.
     [Picture Data] format is the same as above.
     The procedure of send a 'fine mode(640x480)' picture for QV100 is unknown.
 
@@ -191,7 +191,7 @@ FORMAT OF [PICTURE DATA]
 Comment:
  WW WW: Data block size. (2byte). 
         Normally 0x00 0x80 (128 bytes)
-        The data preceeding the endmark(02 00 00 03 FC) is its 
+        The data preceding the endmark(02 00 00 03 FC) is its 
         block size(under 0x00 0x80).
     TT: Picture data. (YCC format)
     SS: Check sum.
@@ -236,8 +236,8 @@ FORMAT OF [PICTURE DATA]
     
 Comment:
   WW WW: Data block size. (2bytes). 
-         Normaly 0x00 0x80, 128 bytes.
-         The data preceeding the endmark(02 00 00 03 FC) is its 
+         Normally 0x00 0x80, 128 bytes.
+         The data preceding the endmark(02 00 00 03 FC) is its 
          block size(under 0x00 0x80).
      TT: Picture Data. (YCC format)
      SS: Check sum.
@@ -387,7 +387,7 @@ REPORT BATTERY VOLTAGE
 Comment:
       Fetch battery boltage.
     XX: battery voltage.
-        XX/0x10 (devide by 0x10) is an approximate voltage value.
+        XX/0x10 (divide by 0x10) is an approximate voltage value.
     The return byte 83 is checksum.
     (at QV-700/770 this function report another value.)
 
@@ -586,7 +586,7 @@ FORMAT OF [Picture Data]
 
 Comment:
  WW WW: Data Block Size (2 bytes):  (Normally 0x00 0x80, 128 bytes)
-        The data preceeding the endmark(02 00 00 03 FC) is its 
+        The data preceding the endmark(02 00 00 03 FC) is its 
         block size(under 0x00 0x80).
     JJ: Picture data. (JFIF format) 
     SS: Check sum.  Reverse bits of all sum of second byte (after 0x02) 

@@ -50,7 +50,7 @@ This libgphoto2 package contains only the library that digital
 camera applications can use.
 
 Frontend like the command-line utility gphoto2 and other (GUI)
-frontends are available seperately.
+frontends are available separately.
 
 ####################################
 %package devel
@@ -71,7 +71,7 @@ b) for USB mass storage models you must use the driver in the kernel
 
 This libgphoto2-devel package contains the files needed to compile 
 frontends like the command-line utility gphoto2 and other (GUI)
-frontends, which are available seperately.
+frontends, which are available separately.
 
 
 ########################################################################

@@ -19,7 +19,7 @@
 2005-07-11  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* g3.c: Added Ricoh R2 as reported.
-		Added some casts to supress warnings.
+		Added some casts to suppress warnings.
 
 2005-03-21  Marcus Meissner  <marcus@jet.franken.de>
 	

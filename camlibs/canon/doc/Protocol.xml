@@ -460,7 +460,7 @@
 	    <row><entry align="center">&boxv;</entry><entry align="center">&uarr;</entry><entry></entry></row>
 	    <row><entry align="center">&boxv;</entry><entry align="center">&boxv;</entry><entry>00 C0 01</entry></row>
 	    <row><entry namest="col1" nameend="col2" align="center">&lt;CRC&gt;</entry><entry></entry></row>
-	    <row><entry align="center">&boxv;</entry><entry align="center">&boxv;</entry><entry>00 C0 01 12 34  (fictious CRC)</entry></row>
+	    <row><entry align="center">&boxv;</entry><entry align="center">&boxv;</entry><entry>00 C0 01 12 34  (fictitious CRC)</entry></row>
 	    <row><entry namest="col1" nameend="col2" align="center">&lt;Escaping&gt;</entry><entry></entry></row>
 	    <row><entry align="center">&boxv;</entry><entry align="center">&boxv;</entry><entry>00 7E E0 01 12 34</entry></row>
 	    <row><entry namest="col1" nameend="col2" align="center">&lt;Framing&gt;</entry><entry></entry></row>

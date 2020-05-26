@@ -291,7 +291,7 @@ void mdc800_disposeDialog (void)
 
 
 /*****************************************************************************
-	Set Dialog Field / Set Konfiguration from Dialog
+	Set Dialog Field / Set Configuration from Dialog
 ******************************************************************************/
 
 int mdc800_setupDialog (void)

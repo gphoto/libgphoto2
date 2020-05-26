@@ -88,7 +88,7 @@
 
 ### index.php
 
-   Use a entry similar to the current ones. Drop older ones occasionaly.
+   Use a entry similar to the current ones. Drop older ones occasionally.
 
 ### news/index.php
 

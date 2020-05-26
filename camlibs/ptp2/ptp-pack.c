@@ -1785,7 +1785,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 	}
 
 	/* every focuspoint gets 4 (16 bit number possible "-" sign and a x) and a ,*/
-	/* inital things around lets say 100 chars at most. 
+	/* initial things around lets say 100 chars at most. 
 	 * FIXME: check selected when we decode it
 	 */
 	if (size < focus_points_in_struct*8) {

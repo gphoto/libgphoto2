@@ -41,7 +41,7 @@
 #include "mdc800_spec.h"
 
 /*
- * Send a Command to the Camera. It is unimportent wether this
+ * Send a Command to the Camera. It is unimportant wether this
  * is a USB or a RS232 Command. The Function implements an automatic
  * retry of a failed command.
  *

@@ -659,7 +659,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 		return (GP_ERROR);
 	}
 
-	/* Wait image writting in camera's memory */
+	/* Wait image writing in camera's memory */
 	for (i=0; i<=15; i++) {
 		sleep(1);
 		if ((ret = k_ping(camera->port)) == GP_OK)

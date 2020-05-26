@@ -25,7 +25,7 @@
 #define __BAYER_H__
 
 /**
- * \brief how the bayer CCD array is layed out
+ * \brief how the bayer CCD array is laid out
  * 
  * This enumeration defines how the CCD bayer array is laid out.
  */

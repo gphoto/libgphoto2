@@ -155,7 +155,7 @@ static void cfa2ppm
 static void dc210_cmd_init
 (char * cmd, unsigned char command_byte)
 {
-	/* utility procedure to initalize a command string */
+	/* utility procedure to initialize a command string */
 
 	memset (cmd, 0, 8);
 
@@ -1183,7 +1183,7 @@ int dc210_get_status (Camera *camera, dc210_status *status) {
 	char data[DC210_STATUS_SIZE];
 	char cmd[8];
 
-	/* you have to check the battery status explicitely 
+	/* you have to check the battery status explicitly 
 	   before reading the status table*/
 	dc210_check_battery(camera);
 

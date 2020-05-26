@@ -31,7 +31,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
       /* Scan the system for camera drivers */
       #gp_abilities_list_load (list);
 
-      /* Retreive the abilities of a specific model */
+      /* Retrieve the abilities of a specific model */
       n = #gp_abilities_list_lookup_model (list, "HP PhotoSmart C30");
       #gp_abilities_list_get_abilities (list, n, &amp;abilities);
       #gp_abilities_list_free (list);
@@ -111,7 +111,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
   determine what library to load on #gp_camera_set_abilities.
   For retreiving abilities of a specific model, create a
   #CameraAbilitiesList and use #gp_abilities_list_load in order to scan
-  the system for drivers. Then, retreive the #CameraAbilities from this list.
+  the system for drivers. Then, retrieve the #CameraAbilities from this list.
 </para>
 
 @model: 

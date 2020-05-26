@@ -241,7 +241,7 @@ static int dc240_wait_for_completion (Camera *camera) {
 	    break;
 	case GP_ERROR_TIMEOUT:
 	    GP_DEBUG ("GP_ERROR_TIMEOUT\n");
-	    /* in busy state, GP_ERROR_IO_READ can happend */
+	    /* in busy state, GP_ERROR_IO_READ can happened */
 	    break;
 	default:
 	    done = 1;
@@ -277,7 +277,7 @@ static int dc240_wait_for_busy_completion (Camera *camera)
 	    break;
 	case GP_ERROR_IO_READ:
 	case GP_ERROR_TIMEOUT:
-	    /* in busy state, GP_ERROR_IO_READ can happend */
+	    /* in busy state, GP_ERROR_IO_READ can happened */
 	    break;
 	default:
 	    if (*p != DC240_SC_BUSY) {
@@ -625,7 +625,7 @@ const char * dc240_get_memcard_status_str(uint8_t status)
 
 
 /*
-  Feed manually the stucture from data.
+  Feed manually the structure from data.
  */
 static int dc240_load_status_data_to_table (const unsigned char *fdata, DC240StatusTable *table)
 {

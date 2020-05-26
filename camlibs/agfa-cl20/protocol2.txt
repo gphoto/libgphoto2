@@ -21,7 +21,7 @@ http://www.pima.net/standards/it10/PIMA15740/Exif_2-1.PDF
 This is a special format which INCLUDES THUMBNAILS. This means, that the picture and the thmbnail are ONE file.
 So what basicallly happens in the windows driver:
 
-It retrieves the EXIF File complete, for example 173kb. I calcualted it. It fits. I had 685 Bulk Transfers, 256Bytes each, which makes a total of 175360 Bytes --> my picture (Exif=Thumbnail+picture).
+It retrieves the EXIF File complete, for example 173kb. I calculated it. It fits. I had 685 Bulk Transfers, 256Bytes each, which makes a total of 175360 Bytes --> my picture (Exif=Thumbnail+picture).
 The Windows driver then extracts the Thumbnail out of the Exif, saves i as JFIF (JPEG) and displays it in the thumbnail overview.
 
 So, if you have the Exif you automatically have the Thumbnail AND the picture. So there is only one transfer for both.

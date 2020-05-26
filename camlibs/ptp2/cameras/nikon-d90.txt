@@ -236,7 +236,7 @@ Externer Blitz Belichtungskompensation(0xd124):(read only) (type=0x1) Range [-18
 Externer Blitzmodus(0xd125):(read only) (type=0x2) Range [0 - 7, step 1] value: 0
 Blitz Belichtungskompensation(0xd126):(readwrite) (type=0x1) Range [-18 - 6, step 2] value: 0,0 stops (0)
 ISO Auto Time(0xd14e):(readwrite) (type=0x2) Range [0 - 5, step 1] value: 5
-Flourescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
+Fluorescent Type(0xd14f):(readwrite) (type=0x2) Range [0 - 6, step 1] value: 3
 Tune Colour Temperature(0xd150):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 Tune Preset 0(0xd151):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
 Tune Preset 1(0xd152):(readwrite) (type=0x2) Range [0 - 168, step 1] value: 84
@@ -2209,7 +2209,7 @@ Change Pic Ctrl Item(0xd201):(read only) (type=0x4) Enumeration [] value: 0
 	Choice: 4 4
 	Choice: 5 5
 /main/other/d14f
-	Label: Flourescent Type
+	Label: Fluorescent Type
 	Type: MENU
 	Current: 3
 	Choice: 0 0

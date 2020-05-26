@@ -529,7 +529,7 @@
 	* sierra.c (camera_start, camera_init): Send the
 	  initialization sequence only on init. Olympus C-860L
 	  stops communications when receiving an initialization
-	  sequence after some communications have already occured.
+	  sequence after some communications have already occurred.
 	
 	* library.h, library.c (sierra_ping -> sierra_init):
 	  This function isn't really a "ping", since it can be used

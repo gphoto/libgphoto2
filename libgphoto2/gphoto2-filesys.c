@@ -97,7 +97,7 @@ typedef struct _CameraFilesystemFolder {
 
 /**
  * The default number of pictures to keep in the internal cache,
- * can be overriden by settings.
+ * can be overridden by settings.
  */
 #define PICTURES_TO_KEEP	2
 /**

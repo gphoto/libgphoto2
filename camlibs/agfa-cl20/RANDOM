@@ -10,7 +10,7 @@ It does not use an interrupt or anything, but you have to send:
 usb_control_msg( cl20_dev, 0xC1, 0x00, 0x0000, 0x8985, data, 1, 5000);
 	which is:	C1 00 00 00 85 89 00 01
 
-If *data now contains "0", nothing happend.
+If *data now contains "0", nothing happened.
 If *data is now "8", the user is PRESSING the button.
 
 Notice I say "PRESSING" :-) it has no memory, if you miss the moment the

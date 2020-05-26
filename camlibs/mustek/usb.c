@@ -104,7 +104,7 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int
 		{
 			if (!(mdc800_usb_isReady(data)||mdc800_usb_isBusy(data))) {
 			    fprintf(stderr,"got data.\n");
-				/* Data received successfull */
+				/* Data received successfully */
 				return GP_OK;
 			}
 		} else {

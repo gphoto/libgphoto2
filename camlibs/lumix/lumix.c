@@ -380,7 +380,7 @@ write_callback(char *contents, size_t size, size_t nmemb, void *userp)
 	LumixMemoryBuffer	*lmb = userp;
 
 	oldsize = lmb->size;
-	/* 1 additionaly byte for 0x00 */
+	/* 1 additionally byte for 0x00 */
 	lmb->data = realloc(lmb->data, lmb->size+realsize+1);
 	lmb->size += realsize;
 	lmb->data[lmb->size] = 0x00;

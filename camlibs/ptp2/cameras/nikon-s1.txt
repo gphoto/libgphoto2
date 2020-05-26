@@ -219,7 +219,7 @@ Type: RADIO
 Current: Auto
 Choice: 0 Auto
 Choice: 1 Tungsten
-Choice: 2 Flourescent
+Choice: 2 Fluorescent
 Choice: 3 Daylight
 Choice: 4 Flash
 Choice: 5 Cloudy

@@ -122,7 +122,7 @@ TAKE_PREVIEW			= 0xb5,
 	No arguments -> returns data.
 
 	Returns image date (jpeg) in the large reply blob.
-	Occasionaly causes next command to result in NAK.
+	Occasionally causes next command to result in NAK.
 
 
 	SELF_TEST			= 0xb6,

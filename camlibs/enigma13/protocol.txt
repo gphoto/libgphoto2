@@ -87,7 +87,7 @@ USB_WRITE :41 54 01 00 03 00 00 00
                  |     +----------------> 0x03 for thrumbnail, 0x02 for the real photo
                  +----------------------> Image number (01 is the first, NO zero index)
 
-HERE, YOU CAN SLEEP 300 MILISECOND
+HERE, YOU CAN SLEEP 300 MILLISECOND
 
 
 There follows 3 packets with the cam (don't know what they are used for) but i play them.

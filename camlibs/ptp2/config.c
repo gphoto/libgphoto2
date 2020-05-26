@@ -426,7 +426,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		ptp_free_EOS_DI (&x);
 	}
 
-	/* The new EOS occasionaly returned an empty event set ... likely because we are too fast. try again some times. */
+	/* The new EOS occasionally returned an empty event set ... likely because we are too fast. try again some times. */
 	C_PTP (ptp_check_eos_events (params));
 	tries = 10;
 	while (--tries && !have_eos_prop(params,PTP_VENDOR_CANON,PTP_DPC_CANON_EOS_EVFOutputDevice)) {
@@ -1372,7 +1372,7 @@ fallback:										\
 				return GP_ERROR;					\
 			}								\
 		} 									\
-	} while (tries--);/* occasionaly we fail, make an escape path */		\
+	} while (tries--);/* occasionally we fail, make an escape path */		\
 	return GP_OK;									\
 }
 
@@ -3328,7 +3328,7 @@ static struct deviceproptableu8 nikon_1_whitebalance[] = {
 	/* values from a J3 */
 	{ N_("Auto"),			0x00, 0 },
 	{ N_("Tungsten"),		0x01, 0 },
-	{ N_("Flourescent"),		0x02, 0 },
+	{ N_("Fluorescent"),		0x02, 0 },
 	{ N_("Daylight"),		0x03, 0 },
 	{ N_("Flash"),			0x04, 0 },
 	{ N_("Cloudy"),			0x05, 0 },
@@ -4914,7 +4914,7 @@ static struct deviceproptableu8 canon_whitebalance[] = {
 	{ N_("Custom Whitebalance PC-2"),	11, 0 },
 	{ N_("Custom Whitebalance PC-3"),	12, 0 },
 	{ N_("Missing Number"),		13, 0 },
-	/*{ N_("Flourescent H"),		14, 0 }, ... dup? */
+	/*{ N_("Fluorescent H"),		14, 0 }, ... dup? */
 };
 GENERIC8TABLE(Canon_WhiteBalance,canon_whitebalance)
 
@@ -6315,7 +6315,7 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 /* On EOS 7D:
  * 9128 1 0  (half?)
  * 9128 2 0  (full?)
- * paramters: press mode, ? afmode ? SDK seems to suggest 1==NonAF, 0 == AF
+ * parameters: press mode, ? afmode ? SDK seems to suggest 1==NonAF, 0 == AF
  */
 
 static int
@@ -6327,7 +6327,7 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn))
 		return (GP_ERROR_NOT_SUPPORTED);
 
-	/* If someone has set the capture target inbetween */
+	/* If someone has set the capture target between */
 	CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
 	gp_widget_get_value(widget, &val);
@@ -8861,7 +8861,7 @@ static struct submenu capture_settings_menu[] = {
 	/* these cameras also have PTP_DPC_ExposureTime, avoid overlap */
 	{ N_("Shutter Speed 2"),                "shutterspeed2",            PTP_DPC_NIKON_ExposureTime,             PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	{ N_("Movie Shutter Speed 2"),          "movieshutterspeed",        PTP_DPC_NIKON_MovieShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
-	/* olympus uses also a 16 bit/16bit seperation */
+	/* olympus uses also a 16 bit/16bit separation */
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_OLYMPUS_Shutterspeed,           PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },

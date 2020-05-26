@@ -405,7 +405,7 @@ ax203_eeprom_wait_ready(Camera *camera)
 		count = 64;
 		break;
 	case AX3003_FIRMWARE_3_5_x:
-		/* On the ax3003 contineously reading the status word
+		/* On the ax3003 continuously reading the status word
 		   does not work. */
 		count = 1;
 		break;
@@ -585,7 +585,7 @@ ax203_write_mem(Camera *camera, int offset,
 /* This function reads the parameter block from the eeprom and:
    1) checks some hopefully constant bytes to make sure it is not reading
       garbage
-   2) Gets the lcd size from the paramter block (ax203_get_lcd_size seems
+   2) Gets the lcd size from the parameter block (ax203_get_lcd_size seems
       to result in all frames being detected as being 128x128 pixels).
    3) Determines the compression type for v3.4.x frames
    4) Determines the start of the ABFS
@@ -1306,7 +1306,7 @@ ax203_defrag_memory(Camera *camera)
 	ret = ax203_delete_all (camera);
 	if (ret < 0) goto cleanup;
 	
-	/* An last write them back (in one contineous block) */
+	/* An last write them back (in one continuous block) */
 	for (i = 0; i < count; i++) {
 		if (!fileinfo[i].present)
 			continue;
@@ -1499,7 +1499,7 @@ retry:
 
 	if (free >= size) {
 		gp_log (GP_LOG_DEBUG, "ax203",
-			"not enough contineous freespace to add file, "
+			"not enough continuous freespace to add file, "
 			"defragmenting memory");
 		CHECK (ax203_defrag_memory (camera))
 		goto retry;

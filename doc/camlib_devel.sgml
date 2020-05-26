@@ -101,7 +101,7 @@ Cameras like to ping. This is the in the form of an &quot;ACK&quot;&quot;
  up a camera that has gone into power-save mode. It usually starts out the communications,
  as well as confirms each packet in any sort of &quot;mass&quot; transfer. The
  opposite, a &quot;NAK&quot;, is sent to basically say the last packet was not
- received, or an error has occured. Again, this is usually just a single byte
+ received, or an error has occurred. Again, this is usually just a single byte
  as well.
 
 Example:
@@ -388,7 +388,7 @@ Section 3.1 details the purpose of each of these functions, while Section
 Camera API
 <p>
 The CAPI provides the full set of functions for doing various tasks with
- the camera. All CAPI functions return either GP_OK for succesful execution
+ the camera. All CAPI functions return either GP_OK for successful execution
  , or GP_ERROR for a failure of execution
 </p>
 <p>

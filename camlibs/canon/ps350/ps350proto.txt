@@ -589,7 +589,7 @@ Resume communication at chosen speed:
 After this, communication is as described in the next section.
 
 It's not needed to try all speeds. The following sequence has been tried
-succesfully: 1, 2, 3, 4, 5, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65 (but
+successfully: 1, 2, 3, 4, 5, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65 (but
 then 64 and 65 with count=01).
 
 

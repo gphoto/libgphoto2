@@ -472,7 +472,7 @@ typedef u_int32_t uint32_t;
 #endif
 
 #ifdef _STDINT_NEED_INT_MODEL_T
-/* we must guess all the basic types. Apart from byte-adressable system, */
+/* we must guess all the basic types. Apart from byte-addressable system, */
 /* there a few 32-bit-only dsp-systems that we guard with BYTE_MODEL 8-} */
 /* (btw, those nibble-addressable systems are way off, or so we assume) */
 

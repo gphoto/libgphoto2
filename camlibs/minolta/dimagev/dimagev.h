@@ -47,7 +47,7 @@
 
 #define DIMAGEV_VERSION "$Revision$"
 
-/* These are the repsonse codes. */
+/* These are the response codes. */
 #define DIMAGEV_STX 0x02
 #define DIMAGEV_ETX 0x03
 #define DIMAGEV_EOT 0x04

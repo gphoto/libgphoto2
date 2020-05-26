@@ -49,7 +49,7 @@ extern "C" {
  * If you set information via gp_camera_file_set_info() you 
  * need to set those flags. If you retrieve information via
  * gp_camera_file_get_info() you need to check those flags.
- * They are seperate for both "normal" and "preview" parts
+ * They are separate for both "normal" and "preview" parts
  * and are mostly image related.
  */
 typedef enum {

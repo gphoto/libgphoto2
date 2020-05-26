@@ -40,7 +40,7 @@
 
   Commands & Byte field descriptions
   --------------------------------------------------------------
-  These are ones relavent to gPhoto
+  These are ones relevant to gPhoto
 
   * Album #0 is the root folder (directory/album/etc...)
 
