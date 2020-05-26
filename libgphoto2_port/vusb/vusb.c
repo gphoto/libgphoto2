@@ -101,12 +101,6 @@ gp_port_library_list (GPPortInfoList *list)
 	gp_port_info_set_name (info, "");
 	gp_port_info_set_path (info, "^usbdiskdirect:");
 	CHECK (gp_port_info_list_append (list, info));
-
-	gp_port_info_new (&info);
-	gp_port_info_set_type (info, GP_PORT_SERIAL);
-	gp_port_info_set_name (info, "Serial Device");
-	gp_port_info_set_path (info, "serial:");
-	CHECK (gp_port_info_list_append (list, info));
 	return GP_OK;
 }
 
