@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: apt-get install
-      run: sudo apt-get install autopoint
+      run: sudo apt-get install autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev
     - name: autoreconf
       run: autoreconf -i -f
     - name: configure
