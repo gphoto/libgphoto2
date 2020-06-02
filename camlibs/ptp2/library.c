@@ -477,26 +477,25 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 					/* see https://github.com/gphoto/gphoto2/issues/331 and https://github.com/gphoto/gphoto2/issues/332 */
 					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 18)));
-					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
-					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_GetEvent;
-					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
-					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_AfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_ChangeCameraMode;
-					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_DeviceReady;
-					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
-					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
+					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetEvent;
+					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
+					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_AfDrive;
+					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_ChangeCameraMode;
+					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_DeviceReady;
+					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_AfCaptureSDRAM;
+					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_DelImageSDRAM;
 
-					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_GetPreviewImg;
-					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_StartLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_EndLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_GetLiveViewImg;	/* confirmed works */
-					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_ChangeAfArea;
-					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_InitiateCaptureRecInMedia;	/* works to some degree */
-					di->OperationsSupported[di->OperationsSupported_len+14] = PTP_OC_NIKON_AfDriveCancel;
-					di->OperationsSupported[di->OperationsSupported_len+15] = PTP_OC_NIKON_StartMovieRecInCard;
-					di->OperationsSupported[di->OperationsSupported_len+16] = PTP_OC_NIKON_EndMovieRec;
+					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_GetPreviewImg;
+					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_StartLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_EndLiveView;
+					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_GetLiveViewImg;	/* confirmed works */
+					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_ChangeAfArea;
+					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_InitiateCaptureRecInMedia;	/* works to some degree */
+					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_AfDriveCancel;
+					di->OperationsSupported[di->OperationsSupported_len+14] = PTP_OC_NIKON_StartMovieRecInCard;
+					di->OperationsSupported[di->OperationsSupported_len+15] = PTP_OC_NIKON_EndMovieRec;
 					/* probably more */
-					di->OperationsSupported_len += 17;
+					di->OperationsSupported_len += 16;
 
 				}
 			}
