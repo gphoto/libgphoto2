@@ -133,6 +133,9 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
     taken=soundvision_photos_taken(dev);
     taken=soundvision_photos_taken(dev);
     taken=soundvision_photos_taken(dev);
+
+    if (taken > ((1<<31) / 13 ))
+       return GP_ERROR_NO_MEMORY;
     
     buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
                               /* plus trailing NULL */
