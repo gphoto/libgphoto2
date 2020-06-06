@@ -208,7 +208,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			lb = (unsigned char)*(result + 0x05);
 			hb = (unsigned char)*(result + 0x04);
 			app1len = (unsigned int)(hb * 256) + (unsigned int)(lb);
-			if ((app1len < 4) || (app1len > size - 4)) {
+			if ((app1len < 4) || (app1len > size - 4 - 20)) {
 				free (result);
 				GP_DEBUG("app1len %d is larger than size %d", app1len, size);
 				return GP_ERROR_CORRUPTED_DATA;
@@ -236,7 +236,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			       &result[app1len + 4],
 			       (unsigned int)(size - app1len - 4));
 
-			size = size - app1len + 24;
+			size = size - app1len + 20 + 4;
 
 			gp_file_set_mime_type(file, GP_MIME_JPEG);
 			gp_file_append(file, (char*)result, size);
