@@ -1,0 +1,171 @@
+Device info:
+Manufacturer: SAMSUNG Electronics Co. Ltd. 
+  Model: SAMSUNG Digital Camera
+  device version: (null)
+  serial number: 'SAMSUNG Digital Camera-nnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: microsoft.com:1.0; microsoft.com/WMPPD:11.0; microsoft.com/WMPPD:10.0; tizen.org:2.3; 
+Functional Mode: 0x0001
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9810 (Get object references)
+  0x9811 (Set object references)
+  0x9802 (Get object property description)
+  0x9801 (Get object properties supported)
+  0x9803 (Get object property value)
+  0x9804 (Set object property value)
+  0x9805 (Get object property list)
+  0x9806 (Set object property list)
+  0x9201 (Report Added/Deleted Items)
+  0x100a (Get thumbnail)
+  0x1011 (Self test device)
+  0x1017 (Reset device property value)
+  0x1019 (Move object)
+  0x101a (Copy object)
+  0x9808 (Send object property list)
+  0x9202 (Report Acquired Items)
+Events Supported:
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+Device Properties Supported:
+  0xd401 (Synchronization Partner)
+  0xd402 (Friendly Device Name)
+  0xd404 (Unknown DPC code)
+  0xd407 (Perceived Device Type)
+  0xd405 (Device Icon)
+
+Camera summary:
+Manufacturer: SAMSUNG Electronics Co. Ltd. 
+Model: SAMSUNG Digital Camera
+  Version: (null)
+  Serial Number: SAMSUNG Digital Camera-nnnnnnnnn
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: microsoft.com:1.0; microsoft.com/WMPPD:11.0; microsoft.com/WMPPD:10.0; tizen.org:2.3; 
+Functional Mode: 0x0001
+
+Capture Formats: Unknown(0000)
+Display Formats: 3GP, MP4, WMV, Abstract Audio Video Playlist, MS Wave, MS AVI, MPEG, ASF, Abstract Audio Album, JPEG, PNG, GIF, BMP, Undefined Type, MP3, WMA, AAC, FLAC, OGG, Association/Directory
+Supported MTP Object Properties:
+	3GP/b984: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation dc87/Width dc88/Height de93/SampleRate de99/AudioWAVECodec de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds dea1/EncodingProfile dc95/MetaGenre de97/ScanDepth
+	MP4/b982: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation dc87/Width dc88/Height de93/SampleRate de99/AudioWAVECodec de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds dea1/EncodingProfile dc95/MetaGenre de97/ScanDepth
+	WMV/b981: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation dc87/Width dc88/Height de93/SampleRate de99/AudioWAVECodec de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds dea1/EncodingProfile dc95/MetaGenre de97/ScanDepth
+	Abstract Audio Video Playlist/ba05: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation de93/SampleRate de99/AudioWAVECodec
+	MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation dc87/Width dc88/Height de93/SampleRate de99/AudioWAVECodec de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds dea1/EncodingProfile dc95/MetaGenre de97/ScanDepth
+	MPEG/300b: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation dc87/Width dc88/Height de93/SampleRate de99/AudioWAVECodec de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds dea1/EncodingProfile dc95/MetaGenre de97/ScanDepth
+	ASF/300c: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation dc87/Width dc88/Height de93/SampleRate de99/AudioWAVECodec de9b/VideoFourCCCodec de9c/VideoBitRate de9d/FramesPerThousandSeconds dea1/EncodingProfile dc95/MetaGenre de97/ScanDepth
+	Abstract Audio Album/ba03: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc87/Width dc88/Height
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc87/Width dc88/Height
+	PNG/380b: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc87/Width dc88/Height
+	GIF/3807: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc87/Width dc88/Height
+	BMP/3804: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc87/Width dc88/Height
+	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType
+	MP3/3009: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation de93/SampleRate de99/AudioWAVECodec
+	WMA/b901: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation de93/SampleRate de99/AudioWAVECodec
+	AAC/b903: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation de93/SampleRate de99/AudioWAVECodec
+	FLAC/b906: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation de93/SampleRate de99/AudioWAVECodec
+	OGG/b902: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType dc46/Artist dc89/Duration dc8a/Rating dc8b/Track dc8c/Genre dc99/OriginalReleaseDate dc9a/AlbumName dc96/Composer de9a/AudioBitRate de94/NumberOfChannels dc48/Description dc4b/CopyrightInformation de93/SampleRate de99/AudioWAVECodec
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc4f/NonConsumable dc09/DateModified dc08/DateCreated dc44/Name dc05/AssociationType
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020002:
+	StorageDescription: Card
+	VolumeLabel: SAMSUNG Digital Camera-nnnnnnnnn-20002
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Write
+	Maximum Capability: 63247089664 (60317 MB)
+	Free Space (Bytes): 57135595520 (54488 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Synchronization Partner(0xd401):(readwrite) (type=0xffff) Longhorn Sync Engine ('Longhorn Sync Engine')
+Friendly Device Name(0xd402):(read only) (type=0xffff) AP_NX1(99:10:07) ('AP_NX1(99:10:07)')
+Property 0xd404:(read only) (type=0x2) 1
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Device Icon(0xd405): error 2002 on query.
+
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: SAMSUNG Digital Camera-nnnnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: SAMSUNG Electronics Co. Ltd. 
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: SAMSUNG Digital Camera
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: None
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: microsoft.com:1.0; microsoft.com/WMPPD:11.0; microsoft.com/WMPPD:10.0; tizen.org:2.3; 
+END
+/main/other/d401
+Label: Synchronization Partner
+Readonly: 0
+Type: TEXT
+Current: Longhorn Sync Engine
+END
+/main/other/d402
+Label: Friendly Device Name
+Readonly: 1
+Type: TEXT
+Current: AP_NX1(99:10:07)
+END
+/main/other/d404
+Label: PTP Property 0xd404
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
