@@ -929,11 +929,51 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_LiveviewImage		0x9706	/* Get Liveview Data */
 #define PTP_OC_PANASONIC_9707			0x9707	/* 4k6k cutting get stream */
 
+/* Samsung NX:
+ * 9002 send check event
+ * 9003 send get event
+ * 9004 require capture exec
+ * 9005 capture exec
+ * 9006 liveview info
+ * 9007 liveview exec / check get file
+ * 9008 set focus position
+ * 9009 get focus position
+ * 900a reset device
+ * 900b format device
+ * 900d get tick
+ * 900e set tick
+ * 900f set hidden command
+ * 9010 get record status
+ * 9011 file transfer
+ * 9012 set enlarge
+ * 9013 movie complete exec / movie transfer
+ * 9014 set record pause
+ * 9015 set record resume
+ * 9017 set live view
+ * 9018 image transfer
+ * 9019 set imge receive complete
+ * 901a set dev prop value
+ * 901b get dev unique id / get dev mode index / get dev prop desc
+ * 901d get dev unique id
+ * 9020 set live receive complete
+ * 9021 sensor cleaning device
+ * 9022 interval capture stop
+ * 9023 display save mode wakeup
+ * 9024 movie cancel
+ * 9025 get capture count
+ * 9026 control touch af
+ * 9027 get image path
+ * 9028 tracking af stop
+ * 902a connect try ptp/ip
+ * 902b connect confirm ptp/ip
+ * 90fe firmware update
+ */
 
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
 #define PTP_OC_EXTENSION                0x9000
+
 
 /* Response Codes */
 
