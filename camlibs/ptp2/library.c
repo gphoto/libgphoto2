@@ -2213,6 +2213,9 @@ static struct {
 	/*Marc Wetli <wetli@egoshooting.com> */
 	{"Canon:EOS M6 Mark II",		0x04a9, 0x32e7, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* id from timelapse-view */
+	{"Canon:EOS 1D X MarkIII",		0x04a9, 0x32e8, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Roland Förg <roland.foerg@arcor.de> */
 	{"Canon:EOS 250D",			0x04a9, 0x32e9, PTP_CAP|PTP_CAP_PREVIEW},
 
