@@ -408,7 +408,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		 * PTP capture. FIXME: could use flags. */
 		if (params->deviceinfo.Model && (
 			(params->deviceinfo.Model[0]=='J') ||	/* J1 - J3 currently */
-			(params->deviceinfo.Model[0]=='V') ||	/* V1 - V3 currently */
+			/* only have V2 and later ... The V1 does not accept PTP_OC_NIKON_GetVendorPropCodes opcode and hangs */ 
+			((params->deviceinfo.Model[0]=='V') && strcmp(params->deviceinfo.Model,"V1")) ||	/* V2 - V3 currently. */
 			((params->deviceinfo.Model[0]=='S') && strlen(params->deviceinfo.Model) < 3)	/* S1 - S2 currently */
 				/* but not S7000 */
 			)
