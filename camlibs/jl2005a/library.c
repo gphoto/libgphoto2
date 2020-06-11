@@ -212,7 +212,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	/* Now get ready to put the data into a PPM image file. */
 	image_start=data+5;
 	if (w == 176) {
-		for (i=1; i < h; i +=4){
+		for (i=1; i < h-1; i +=4){
 			for (j=1; j< w; j ++){
 				temp=image_start[i*w+j];
 				image_start[i*w+j] = image_start[(i+1)*w+j];
