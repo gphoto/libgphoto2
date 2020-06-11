@@ -3692,7 +3692,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (params->inliveview) af = 0;
 	}
 
-	if (NIKON_1(params)) {
+	if (NIKON_1(params) && ptp_operation_issupported(params,PTP_OC_NIKON_StartLiveView)) { /* V1 does not have startliveview */
 		ret = ptp_nikon_start_liveview (params);
 		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
@@ -5388,8 +5388,8 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		params->controlmode = 1;
 	}
 
-	/* On Nikon 1 series, the liveview must be enabled before capture works */
-	if (NIKON_1(params)) {
+	/* On Nikon 1 series, the liveview must be enabled before capture works ... not on V1 which does not have it. */
+	if (NIKON_1(params) && ptp_operation_issupported(params,PTP_OC_NIKON_StartLiveView)) {
 		ret = ptp_nikon_start_liveview (params);
 		if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 			C_PTP_REP_MSG(ret, _("Failed to enable liveview on a Nikon 1, but it is required for capture"));
