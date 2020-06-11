@@ -3044,7 +3044,6 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			 * enough (would be 0.2 seconds, too short for the mirror up operation.). */
 			/* The EOS 100D takes 1.2 seconds */
 			PTPDevicePropDesc       dpd;
-			int			back_off_wait = 0;
 			struct timeval		event_start;
 
 			SET_CONTEXT_P(params, context);
@@ -3083,6 +3082,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			event_start = time_now();
 			do {
 				unsigned char	*xdata;
+
 				/* Poll for camera events, but just call
 				 * it once and do not drain the queue now */
 				C_PTP (ptp_check_eos_events (params));
@@ -3090,7 +3090,9 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				ret = ptp_canon_eos_get_viewfinder_image (params , &data, &size);
 				if ((ret == 0xa102) || (ret == PTP_RC_DeviceBusy)) { /* means "not there yet" ... so wait */
 					/* wait 3 seconds at most */
-					if (waiting_for_timeout (&back_off_wait, event_start, 3*1000))
+					/*if (waiting_for_timeout (&back_off_wait, event_start, 3*1000))*/
+					/* We do not queue a wait here... this will only reduce framerates */
+					if (time_since (event_start) < 3*1000)
 						continue;
 				}
 				C_PTP_MSG (ret, "get_viewfinder_image failed");
