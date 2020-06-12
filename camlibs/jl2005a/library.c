@@ -192,7 +192,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("height is %i\n", h);
 
 	/* sanity check against bad usb devices */
-	if ((w ==0) || (w > 1024) || (h == 0) || (h > 1024)) return GP_ERROR_CORRUPTED_DATA;
+	if ((w ==0) || (w > 1024) || (h == 0) || (h > 1024)) {
+		GP_DEBUG ("width / height not within sensible range");
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+
+	if (b < w*h+5) {
+		GP_DEBUG ("b is %i, while w*h+5 is %i\n", b, w*h+5);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	/* Image data to be downloaded contains header and footer bytes */
 	data = malloc (b+14);
