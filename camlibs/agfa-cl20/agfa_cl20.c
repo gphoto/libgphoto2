@@ -187,7 +187,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (resolution == 1) {
 			char dummy;
 
-			result = calloc(size, 0x100);
+			result = calloc((size + 1), 0x100);
 			ptr = result;
 				
 			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
@@ -388,7 +388,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
 		
-		result = calloc(size, 0x100);
+		result = calloc((size+1), 0x100);
 		ptr = result;
 				
 		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
