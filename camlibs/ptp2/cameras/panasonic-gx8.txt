@@ -1,0 +1,678 @@
+Resumen de la cámara:
+Manufacturer: Panasonic
+Modelo: DMC-GX8
+  Versión: 2.2
+  Número serial: 000000000000000000XERnnnnnnnnnn
+ID de Extensión Proveedor: 0x6 (1.0)
+
+Formatos de Captura: 
+Formatos de Pantalla:  Association/Directory, DPOF, Apple Quicktime, Defined Type, JPEG
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc05/AssociationType dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	Apple Quicktime/300d: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Capacidades del Dispositivo:
+	Descargar fichero, Borrado del Fichero, No File Upload
+	Captura de Imagen Generérica, Abrir Captura, Captura sin proveedor especificado
+
+Resumen de Almacenaje de Dispositivos:
+store_00010001:
+	AlmacenamientoDescripto: Ninguno
+	EtiquetadoVolumen: Ninguno
+	Tipo de Almacenaje: RAM retirable (tarj. memoria)
+	Tipo sistema de fichero: Digital Camera Layout (DCIM)
+	Acceso Capacidad: Lectura-Escritura
+	Capacidad Máxima: 63831015424 (60874 MB)
+	Espacio libre (bytes): 58852638720 (56126 Mb)
+	Espacio Libre (Imágenes): 0
+
+Resumen Propietario del Dispositivo:
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) 'Windows/6.2.9200 MTPClassDriver/6.2.9200.16384'
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Número-F(0x5007):(readwrite) (type=0x4) Enumeration [3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3500,3200,2900,2500,2200,2000,1800,1600,1400,1300,1100,1000,900,800,710,630,560,500,450,400,350,320,280,250,220,200,180,160,140,120,110,100,3500,3500,3500,3500,3500] value: f/3,5 (350)
+Modo del enfoque(0x500a):(read only) (type=0x4) Enumeration [2,53253,53252,1] value: Automatic (2)
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [4294967295,600000,500000,400000,300000,250000,200000,150000,130000,100000,80000,60000,50000,40000,32000,25000,20000,16000,13000,10000,7692,6250,5000,4000,3125,2500,2000,1666,1250,1000,769,666,500,400,333,250,200,166,125,100,80,62,50,40,31,25,20,15,12,10,7,6,5,4,3,2,2,1,1,40,40,40] value: 0,0025 sec (250)
+Modo de Programa de Exposición(0x500e):(read only) (type=0x4) Enumeration [2,3,4,1,53256,53256,53257,53257,53257,53257,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253,53253] value: A (3)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [65535,53249,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600] value: ISO 65535 (65535)
+Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [0,1,2,0,53252,53253] value: Single Shot (1)
+Property 0xd001:(readwrite) (type=0x6) Enumeration [4294967295,2147543648,2147533648,2147523648,2147513648,2147508648,2147503648,2147498648,2147496648,2147493648,2147491648,2147489648,2147488648,2147487648,2147486848,2147486148,2147485648,2147485248,2147484948,2147484648,1300,1600,2000,2500,3200,4000,5000,6000,8000,10000,13000,15000,20000,25000,30000,40000,50000,60000,80000,100000,125000,160000,200000,250000,320000,400000,500000,640000,800000,1000000,1300000,1600000,2000000,2500000,3200000,4000000,5000000,6400000,8000000,10000000,13000000,16000000] value: 40000
+Property 0xd002:(read only) (type=0x4) Enumeration [1,2] value: 2
+Nivel de Batería(0x5001):(read only) (type=0x2) Range [0 - 100, step 10] value: 50% (50)
+
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Número de Serie
+Readonly: 0
+Type: TEXT
+Current: 000000000000000000XERnnnnnnnnnn
+END
+/main/status/manufacturer
+Label: Fabricante de Cámara
+Readonly: 0
+Type: TEXT
+Current: Panasonic
+END
+/main/status/cameramodel
+Label: Modelo de Cámara
+Readonly: 0
+Type: TEXT
+Current: DMC-GX8
+END
+/main/status/deviceversion
+Label: Versión del Dispositivo
+Readonly: 0
+Type: TEXT
+Current: 2.2
+END
+/main/status/vendorextension
+Label: Extensión de Proveedor
+Readonly: 0
+Type: TEXT
+Current: Ninguno
+END
+/main/status/batterylevel
+Label: Nivel de Batería
+Readonly: 1
+Type: TEXT
+Current: 50%
+END
+/main/imgsettings/iso
+Label: Velocidad ISO
+Readonly: 0
+Type: RADIO
+Current: 65535
+Choice: 0 65535
+Choice: 1 53249
+Choice: 2 100
+Choice: 3 125
+Choice: 4 160
+Choice: 5 200
+Choice: 6 250
+Choice: 7 320
+Choice: 8 400
+Choice: 9 500
+Choice: 10 640
+Choice: 11 800
+Choice: 12 1000
+Choice: 13 1250
+Choice: 14 1600
+Choice: 15 2000
+Choice: 16 2500
+Choice: 17 3200
+Choice: 18 4000
+Choice: 19 5000
+Choice: 20 6400
+Choice: 21 8000
+Choice: 22 10000
+Choice: 23 12800
+Choice: 24 16000
+Choice: 25 20000
+Choice: 26 25600
+END
+/main/capturesettings/f-number
+Label: Número-F
+Readonly: 0
+Type: RADIO
+Current: f/3,5
+Choice: 0 f/35
+Choice: 1 f/35
+Choice: 2 f/35
+Choice: 3 f/35
+Choice: 4 f/35
+Choice: 5 f/35
+Choice: 6 f/35
+Choice: 7 f/35
+Choice: 8 f/35
+Choice: 9 f/35
+Choice: 10 f/35
+Choice: 11 f/35
+Choice: 12 f/32
+Choice: 13 f/29
+Choice: 14 f/25
+Choice: 15 f/22
+Choice: 16 f/20
+Choice: 17 f/18
+Choice: 18 f/16
+Choice: 19 f/14
+Choice: 20 f/13
+Choice: 21 f/11
+Choice: 22 f/10
+Choice: 23 f/9
+Choice: 24 f/8
+Choice: 25 f/7,1
+Choice: 26 f/6,3
+Choice: 27 f/5,6
+Choice: 28 f/5
+Choice: 29 f/4,5
+Choice: 30 f/4
+Choice: 31 f/3,5
+Choice: 32 f/3,2
+Choice: 33 f/2,8
+Choice: 34 f/2,5
+Choice: 35 f/2,2
+Choice: 36 f/2
+Choice: 37 f/1,8
+Choice: 38 f/1,6
+Choice: 39 f/1,4
+Choice: 40 f/1,2
+Choice: 41 f/1,1
+Choice: 42 f/1
+Choice: 43 f/35
+Choice: 44 f/35
+Choice: 45 f/35
+Choice: 46 f/35
+Choice: 47 f/35
+END
+/main/capturesettings/focusmode
+Label: Modo del enfoque
+Readonly: 1
+Type: RADIO
+Current: Automático
+Choice: 0 Automático
+Choice: 1 Valor d005 desconocido
+Choice: 2 Valor d004 desconocido
+Choice: 3 Manual
+END
+/main/capturesettings/expprogram
+Label: Programa de Exposición
+Readonly: 1
+Type: RADIO
+Current: A
+Choice: 0 P
+Choice: 1 A
+Choice: 2 S
+Choice: 3 M
+Choice: 4 Valor d008 desconocido
+Choice: 5 Valor d008 desconocido
+Choice: 6 Valor d009 desconocido
+Choice: 7 Valor d009 desconocido
+Choice: 8 Valor d009 desconocido
+Choice: 9 Valor d009 desconocido
+Choice: 10 Valor d005 desconocido
+Choice: 11 Valor d005 desconocido
+Choice: 12 Valor d005 desconocido
+Choice: 13 Valor d005 desconocido
+Choice: 14 Valor d005 desconocido
+Choice: 15 Valor d005 desconocido
+Choice: 16 Valor d005 desconocido
+Choice: 17 Valor d005 desconocido
+Choice: 18 Valor d005 desconocido
+Choice: 19 Valor d005 desconocido
+Choice: 20 Valor d005 desconocido
+Choice: 21 Valor d005 desconocido
+Choice: 22 Valor d005 desconocido
+Choice: 23 Valor d005 desconocido
+Choice: 24 Valor d005 desconocido
+Choice: 25 Valor d005 desconocido
+Choice: 26 Valor d005 desconocido
+Choice: 27 Valor d005 desconocido
+Choice: 28 Valor d005 desconocido
+Choice: 29 Valor d005 desconocido
+Choice: 30 Valor d005 desconocido
+Choice: 31 Valor d005 desconocido
+Choice: 32 Valor d005 desconocido
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 1
+Type: RADIO
+Current: Single Shot
+Choice: 0 Valor 0000 desconocido
+Choice: 1 Single Shot
+Choice: 2 Burst
+Choice: 3 Valor 0000 desconocido
+Choice: 4 Valor d004 desconocido
+Choice: 5 Valor d005 desconocido
+END
+/main/capturesettings/shutterspeed
+Label: Velocidad Obturador
+Readonly: 0
+Type: RADIO
+Current: 0,0250s
+Choice: 0 429496,7295s
+Choice: 1 60,0000s
+Choice: 2 50,0000s
+Choice: 3 40,0000s
+Choice: 4 30,0000s
+Choice: 5 25,0000s
+Choice: 6 20,0000s
+Choice: 7 15,0000s
+Choice: 8 13,0000s
+Choice: 9 10,0000s
+Choice: 10 8,0000s
+Choice: 11 6,0000s
+Choice: 12 5,0000s
+Choice: 13 4,0000s
+Choice: 14 3,2000s
+Choice: 15 2,5000s
+Choice: 16 2,0000s
+Choice: 17 1,6000s
+Choice: 18 1,3000s
+Choice: 19 1,0000s
+Choice: 20 0,7692s
+Choice: 21 0,6250s
+Choice: 22 0,5000s
+Choice: 23 0,4000s
+Choice: 24 0,3125s
+Choice: 25 0,2500s
+Choice: 26 0,2000s
+Choice: 27 0,1666s
+Choice: 28 0,1250s
+Choice: 29 0,1000s
+Choice: 30 0,0769s
+Choice: 31 0,0666s
+Choice: 32 0,0500s
+Choice: 33 0,0400s
+Choice: 34 0,0333s
+Choice: 35 0,0250s
+Choice: 36 0,0200s
+Choice: 37 0,0166s
+Choice: 38 0,0125s
+Choice: 39 0,0100s
+Choice: 40 0,0080s
+Choice: 41 0,0062s
+Choice: 42 0,0050s
+Choice: 43 0,0040s
+Choice: 44 0,0031s
+Choice: 45 0,0025s
+Choice: 46 0,0020s
+Choice: 47 0,0015s
+Choice: 48 0,0012s
+Choice: 49 0,0010s
+Choice: 50 0,0007s
+Choice: 51 0,0006s
+Choice: 52 0,0005s
+Choice: 53 0,0004s
+Choice: 54 0,0003s
+Choice: 55 0,0002s
+Choice: 56 0,0002s
+Choice: 57 0,0001s
+Choice: 58 0,0001s
+Choice: 59 0,0040s
+Choice: 60 0,0040s
+Choice: 61 0,0040s
+END
+/main/other/d406
+Label: Session Initiator Info
+Readonly: 0
+Type: TEXT
+Current: Windows/6.2.9200 MTPClassDriver/6.2.9200.16384
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/5007
+Label: Número-F
+Readonly: 0
+Type: MENU
+Current: 350
+Choice: 0 3500
+Choice: 1 3500
+Choice: 2 3500
+Choice: 3 3500
+Choice: 4 3500
+Choice: 5 3500
+Choice: 6 3500
+Choice: 7 3500
+Choice: 8 3500
+Choice: 9 3500
+Choice: 10 3500
+Choice: 11 3500
+Choice: 12 3200
+Choice: 13 2900
+Choice: 14 2500
+Choice: 15 2200
+Choice: 16 2000
+Choice: 17 1800
+Choice: 18 1600
+Choice: 19 1400
+Choice: 20 1300
+Choice: 21 1100
+Choice: 22 1000
+Choice: 23 900
+Choice: 24 800
+Choice: 25 710
+Choice: 26 630
+Choice: 27 560
+Choice: 28 500
+Choice: 29 450
+Choice: 30 400
+Choice: 31 350
+Choice: 32 320
+Choice: 33 280
+Choice: 34 250
+Choice: 35 220
+Choice: 36 200
+Choice: 37 180
+Choice: 38 160
+Choice: 39 140
+Choice: 40 120
+Choice: 41 110
+Choice: 42 100
+Choice: 43 3500
+Choice: 44 3500
+Choice: 45 3500
+Choice: 46 3500
+Choice: 47 3500
+END
+/main/other/500a
+Label: Modo del enfoque
+Readonly: 1
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 53253
+Choice: 2 53252
+Choice: 3 1
+END
+/main/other/500d
+Label: Exposure Time
+Readonly: 0
+Type: MENU
+Current: 250
+Choice: 0 -1
+Choice: 1 600000
+Choice: 2 500000
+Choice: 3 400000
+Choice: 4 300000
+Choice: 5 250000
+Choice: 6 200000
+Choice: 7 150000
+Choice: 8 130000
+Choice: 9 100000
+Choice: 10 80000
+Choice: 11 60000
+Choice: 12 50000
+Choice: 13 40000
+Choice: 14 32000
+Choice: 15 25000
+Choice: 16 20000
+Choice: 17 16000
+Choice: 18 13000
+Choice: 19 10000
+Choice: 20 7692
+Choice: 21 6250
+Choice: 22 5000
+Choice: 23 4000
+Choice: 24 3125
+Choice: 25 2500
+Choice: 26 2000
+Choice: 27 1666
+Choice: 28 1250
+Choice: 29 1000
+Choice: 30 769
+Choice: 31 666
+Choice: 32 500
+Choice: 33 400
+Choice: 34 333
+Choice: 35 250
+Choice: 36 200
+Choice: 37 166
+Choice: 38 125
+Choice: 39 100
+Choice: 40 80
+Choice: 41 62
+Choice: 42 50
+Choice: 43 40
+Choice: 44 31
+Choice: 45 25
+Choice: 46 20
+Choice: 47 15
+Choice: 48 12
+Choice: 49 10
+Choice: 50 7
+Choice: 51 6
+Choice: 52 5
+Choice: 53 4
+Choice: 54 3
+Choice: 55 2
+Choice: 56 2
+Choice: 57 1
+Choice: 58 1
+Choice: 59 40
+Choice: 60 40
+Choice: 61 40
+END
+/main/other/500e
+Label: Modo de Programa de Exposición
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 1
+Choice: 4 53256
+Choice: 5 53256
+Choice: 6 53257
+Choice: 7 53257
+Choice: 8 53257
+Choice: 9 53257
+Choice: 10 53253
+Choice: 11 53253
+Choice: 12 53253
+Choice: 13 53253
+Choice: 14 53253
+Choice: 15 53253
+Choice: 16 53253
+Choice: 17 53253
+Choice: 18 53253
+Choice: 19 53253
+Choice: 20 53253
+Choice: 21 53253
+Choice: 22 53253
+Choice: 23 53253
+Choice: 24 53253
+Choice: 25 53253
+Choice: 26 53253
+Choice: 27 53253
+Choice: 28 53253
+Choice: 29 53253
+Choice: 30 53253
+Choice: 31 53253
+Choice: 32 53253
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: 65535
+Choice: 0 65535
+Choice: 1 53249
+Choice: 2 100
+Choice: 3 125
+Choice: 4 160
+Choice: 5 200
+Choice: 6 250
+Choice: 7 320
+Choice: 8 400
+Choice: 9 500
+Choice: 10 640
+Choice: 11 800
+Choice: 12 1000
+Choice: 13 1250
+Choice: 14 1600
+Choice: 15 2000
+Choice: 16 2500
+Choice: 17 3200
+Choice: 18 4000
+Choice: 19 5000
+Choice: 20 6400
+Choice: 21 8000
+Choice: 22 10000
+Choice: 23 12800
+Choice: 24 16000
+Choice: 25 20000
+Choice: 26 25600
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 0
+Choice: 4 53252
+Choice: 5 53253
+END
+/main/other/d001
+Label: PTP Property 0xd001
+Readonly: 0
+Type: MENU
+Current: 40000
+Choice: 0 -1
+Choice: 1 -2147423648
+Choice: 2 -2147433648
+Choice: 3 -2147443648
+Choice: 4 -2147453648
+Choice: 5 -2147458648
+Choice: 6 -2147463648
+Choice: 7 -2147468648
+Choice: 8 -2147470648
+Choice: 9 -2147473648
+Choice: 10 -2147475648
+Choice: 11 -2147477648
+Choice: 12 -2147478648
+Choice: 13 -2147479648
+Choice: 14 -2147480448
+Choice: 15 -2147481148
+Choice: 16 -2147481648
+Choice: 17 -2147482048
+Choice: 18 -2147482348
+Choice: 19 -2147482648
+Choice: 20 1300
+Choice: 21 1600
+Choice: 22 2000
+Choice: 23 2500
+Choice: 24 3200
+Choice: 25 4000
+Choice: 26 5000
+Choice: 27 6000
+Choice: 28 8000
+Choice: 29 10000
+Choice: 30 13000
+Choice: 31 15000
+Choice: 32 20000
+Choice: 33 25000
+Choice: 34 30000
+Choice: 35 40000
+Choice: 36 50000
+Choice: 37 60000
+Choice: 38 80000
+Choice: 39 100000
+Choice: 40 125000
+Choice: 41 160000
+Choice: 42 200000
+Choice: 43 250000
+Choice: 44 320000
+Choice: 45 400000
+Choice: 46 500000
+Choice: 47 640000
+Choice: 48 800000
+Choice: 49 1000000
+Choice: 50 1300000
+Choice: 51 1600000
+Choice: 52 2000000
+Choice: 53 2500000
+Choice: 54 3200000
+Choice: 55 4000000
+Choice: 56 5000000
+Choice: 57 6400000
+Choice: 58 8000000
+Choice: 59 10000000
+Choice: 60 13000000
+Choice: 61 16000000
+END
+/main/other/d002
+Label: PTP Property 0xd002
+Readonly: 1
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/5001
+Label: Nivel de Batería
+Readonly: 1
+Type: RANGE
+Current: 50
+Bottom: 0
+Top: 100
+Step: 10
+END
+
+Device info:
+Manufacturer: Panasonic
+  Model: DMC-GX8
+  device version: 2.2
+  serial number: '000000000000000000XERnnnnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x101c (Initiate open capture)
+  0x1018 (Terminate open capture)
+  0x100f (Format storage)
+  0x1010 (Reset device)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9805 (Get object property list)
+Events Supported:
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4002 (ObjectAdded)
+  0x400d (CaptureComplete)
+  0x4006 (DevicePropChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400c (StorageInfoChanged)
+Device Properties Supported:
+  0xd406 (Session Initiator Info)
+  0xd407 (Perceived Device Type)
+  0x5007 (F-Number)
+  0x500a (Focus Mode)
+  0x500d (Exposure Time)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5013 (Still Capture Mode)
+  0xd001 (Unknown DPC code)
+  0xd002 (Unknown DPC code)
+  0x5001 (Battery Level)

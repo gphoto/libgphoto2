@@ -1531,6 +1531,9 @@ static struct {
 	/* Schreiber, Steve via Gphoto-devel */
 	{"Nikon:DSC D3500",		  0x04b0, 0x0445, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* timelapse-VIEW */
+	{"Nikon:DSC D780",		  0x04b0, 0x0446, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
@@ -1567,6 +1570,8 @@ static struct {
 	{"Panasonic:Lumix FZ5",           0x04da, 0x2372, 0},
 #endif
 
+	/* so the GX8 reports the same USB ids as others, but has capture support. See debuglog. */
+	{"Panasonic:DMC-GX8",             0x04da, 0x2374, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Panasonic:DMC-FZ20",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ45",            0x04da, 0x2374, 0},
 	{"Panasonic:DMC-FZ38",            0x04da, 0x2374, 0},
