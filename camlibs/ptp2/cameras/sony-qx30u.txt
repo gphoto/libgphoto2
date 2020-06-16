@@ -1,0 +1,55 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: DSC-QX30U
+  Version: 3.00
+  Serial Number: 00000000000000004205000003202433
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: Association/Directory, MPEG, JPEG, Unknown(b982), Unknown(b301), Undefined Type, ARW, Unknown(b310)
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 00000000000000004205000003202433
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Sony Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: DSC-QX30U
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 3.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: Sony PTP Extensions
+END
