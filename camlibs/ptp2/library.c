@@ -1117,6 +1117,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/343 */
 	{"Sony:Alpha-A7 III (MTP mode)",	0x054c,0x0c03, 0},
 
+	/* andreas@harth.org */
+	{"Sony:ZV-1", 				0x054c,0x0c1b, 0},
+
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:Alpha-A9 (Control)",     	0x054c, 0x0c2a, PTP_CAP|PTP_CAP_PREVIEW},
 
