@@ -1136,6 +1136,9 @@ static struct {
 	/* jackden@gmail.com */
 	{"Sony:DSC-RX100M6 (PC Control)",  	0x054c, 0x0c38, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* andreas@harth.org */
+	{"Sony:ZV-1 (PC Control)",		0x054c,0x0c44, PTP_CAP},
+
 	/* https://github.com/gphoto/libgphoto2/issues/419 */
 	{"Sony:DSC RX0 II (PC Control)",	0x054c, 0x0ca6, PTP_CAP|PTP_CAP_PREVIEW},
 	/* orbital sailor <gamerdude1080@hotmail.com> */
