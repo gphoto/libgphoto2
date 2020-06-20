@@ -1337,6 +1337,15 @@ fallback:										\
 			time(&end);							\
 		} while (end-start <= 3);						\
 											\
+		if (propval.u8 == 0x01 && dpd.CurrentValue.bits > value) {		\
+			GP_LOG_D ("We overshooted value, maybe not exact match possible. Break!");	\
+			break;								\
+		}									\
+		if (propval.u8 == 0xff && dpd.CurrentValue.bits < value) {		\
+			GP_LOG_D ("We overshooted value, maybe not exact match possible. Break!");	\
+			break;								\
+		}									\
+											\
 		if (dpd.CurrentValue.bits == value) {					\
 			GP_LOG_D ("Value matched!");					\
 			break;								\
@@ -4274,9 +4283,9 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 
 static int
 _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
-	int			x,y,a,b;
+	int			x,y,a,b,direction;
 	const char		*val;
-	float 			old,new;
+	float 			old,new,current;
 	PTPPropertyValue	value;
 	uint32_t		new32, origval;
 	PTPParams		*params = &(camera->pl->params);
@@ -4307,14 +4316,21 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		new32 = (x<<16)|y;
 	}
 	new = ((float)x)/(float)y;
+	
+	if (old > new) {
+		value.u8 = 0x01;
+		direction = 1;
+	}
+	else {
+		value.u8 = 0xff;
+		direction = -1;
+	}
+		
 	do {
 		origval = dpd->CurrentValue.u32;
 		if (old == new)
 			break;
-		if (old > new)
-			value.u8 = 0x01;
-		else
-			value.u8 = 0xff;
+			
 		a = dpd->CurrentValue.u32>>16;
 		b = dpd->CurrentValue.u32&0xffff;
 		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterSpeed, &value, PTP_DTC_UINT8 ));
@@ -4333,6 +4349,8 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			}
 			a = dpd->CurrentValue.u32>>16;
 			b = dpd->CurrentValue.u32&0xffff;
+			current = ((float)a)/((float)b);
+			
 			if ((a*y != 0) && (a*y == b*x)) {
 				GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
 				break;
@@ -4347,6 +4365,15 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 			time(&end);
 		} while (end-start <= 3);
+		
+		if (direction > 0 && current <= new) {
+			GP_LOG_D ("Overshooted value, maybe choice not available!");
+			break;
+		}
+		if (direction < 0 && current >= new) {
+			GP_LOG_D ("Overshooted value, maybe choice not available!");
+			break;
+		}
 
 		if (dpd->CurrentValue.u32 == new32) {
 			GP_LOG_D ("Value matched!");
