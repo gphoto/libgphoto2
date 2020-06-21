@@ -2757,6 +2757,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
 /* guessed DPC_SONY_JpegQuality 0xD252 */
 /* guessed DPC_SONY_PriorityKeySettings 0xD25A */
+#define PTP_DPC_SONY_ExposureCompensation		0xD224	/* ? */
 #define PTP_DPC_SONY_ISO2				0xD226	/* ? */
 #define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */
