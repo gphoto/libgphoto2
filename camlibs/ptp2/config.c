@@ -94,6 +94,7 @@ have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
 	}
 	if ((prop & 0x7000) == 0x1000) { /* commands */
 		for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
+
 			if (prop != camera->pl->params.deviceinfo.OperationsSupported[i])
 				continue;
 			if ((prop & 0xf000) == 0x1000) /* generic property */
@@ -1283,7 +1284,7 @@ fallback:										\
 	do {										\
 		origval = dpd.CurrentValue.bits;					\
 		/* if it is a ENUM, the camera will walk through the ENUM */		\
-		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {		\
+		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration) && dpd.FORM.Enum.NumberOfValues) {		\
 			int i, posorig = -1, posnew = -1;				\
 											\
 			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
@@ -2571,6 +2572,88 @@ _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 	return GP_OK;
 }
 
+/* The list a recent Sony camera would return ... values might not be there in some. */
+static uint32_t sony_iso_table[] = {
+	0x00ffffffU,
+	25,
+	100,
+	125,
+	160,
+	200,
+	250,
+	320,
+	400,
+	500,
+	640,
+	800,
+	1000,
+	1250,
+	1600,
+	2000,
+	2500,
+	3200,
+	4000,
+	5000,
+	6400,
+	8000,
+	10000,
+	12800,
+	16000,
+	20000,
+	25600,
+	32000,
+	40000,
+	51200,
+	64000,
+	80000,
+	102400,
+	128000,
+	160000,
+	204800,
+	256000,
+	320000,
+	409600,
+	       0x01ffffffU,
+	25    |0xff000000,
+	100   |0xff000000,
+	125   |0xff000000,
+	160   |0xff000000,
+	200   |0xff000000,
+	250   |0xff000000,
+	320   |0xff000000,
+	400   |0xff000000,
+	500   |0xff000000,
+	640   |0xff000000,
+	800   |0xff000000,
+	1000  |0xff000000,
+	1250  |0xff000000,
+	1600  |0xff000000,
+	2000  |0xff000000,
+	2500  |0xff000000,
+	3200  |0xff000000,
+	4000  |0xff000000,
+	5000  |0xff000000,
+	6400  |0xff000000,
+	8000  |0xff000000,
+	10000 |0xff000000,
+	12800 |0xff000000,
+	16000 |0xff000000,
+	20000 |0xff000000,
+	25600 |0xff000000,
+	32000 |0xff000000,
+	40000 |0xff000000,
+	51200 |0xff000000,
+	64000 |0xff000000,
+	80000 |0xff000000,
+	102400|0xff000000,
+	128000|0xff000000,
+	160000|0xff000000,
+	204800|0xff000000,
+	256000|0xff000000,
+	320000|0xff000000,
+	409600|0xff000000,
+};
+
 static int
 _get_Sony_ISO(CONFIG_GET_ARGS) {
 	int	i,isset=0;
@@ -2583,22 +2666,44 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x00ffffffU) {
-			sprintf(buf,_("Auto ISO"));
-		} else if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x01ffffffU) {
-			sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
-		} else {
-			if (dpd->FORM.Enum.SupportedValue[i].u32 & 0xff000000) {
-				sprintf(buf,_("%d Multi Frame Noise Reduction"),dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff);
+
+	if (dpd->FORM.Enum.NumberOfValues) {
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
+			if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x00ffffffU) {
+				sprintf(buf,_("Auto ISO"));
+			} else if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x01ffffffU) {
+				sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
 			} else {
-				sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32);
+				if (dpd->FORM.Enum.SupportedValue[i].u32 & 0xff000000) {
+					sprintf(buf,_("%d Multi Frame Noise Reduction"),dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff);
+				} else {
+					sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32);
+				}
+			}
+			gp_widget_add_choice (*widget,buf);
+			if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32) {
+				isset=1;
+				gp_widget_set_value (*widget,buf);
 			}
 		}
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32) {
-			isset=1;
-			gp_widget_set_value (*widget,buf);
+	} else {
+		for (i=0;i<sizeof(sony_iso_table)/sizeof(sony_iso_table[0]); i++) {
+			if (sony_iso_table[i] == 0x00ffffffU) {
+				sprintf(buf,_("Auto ISO"));
+			} else if (sony_iso_table[i] == 0x01ffffffU) {
+				sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
+			} else {
+				if (sony_iso_table[i] & 0xff000000) {
+					sprintf(buf,_("%d Multi Frame Noise Reduction"),sony_iso_table[i] & 0xffff);
+				} else {
+					sprintf(buf,"%d",sony_iso_table[i]);
+				}
+			}
+			gp_widget_add_choice (*widget,buf);
+			if (sony_iso_table[i] == dpd->CurrentValue.u32) {
+				isset=1;
+				gp_widget_set_value (*widget,buf);
+			}
 		}
 	}
 	if (!isset) {
