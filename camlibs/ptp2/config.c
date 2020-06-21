@@ -4448,13 +4448,14 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
 			C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed, dpd));
 
+			a = dpd->CurrentValue.u32>>16;
+			b = dpd->CurrentValue.u32&0xffff;
+			current = ((float)a)/((float)b);
+
 			if (dpd->CurrentValue.u32 == new32) {
 				GP_LOG_D ("Value matched!");
 				break;
 			}
-			a = dpd->CurrentValue.u32>>16;
-			b = dpd->CurrentValue.u32&0xffff;
-			current = ((float)a)/((float)b);
 			
 			if ((a*y != 0) && (a*y == b*x)) {
 				GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
