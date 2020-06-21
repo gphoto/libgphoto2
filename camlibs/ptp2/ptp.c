@@ -6126,6 +6126,10 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_AutoFocus, N_("Autofocus")},
 		{PTP_DPC_SONY_Capture, N_("Capture")},
 		{PTP_DPC_WhiteBalance, N_("White Balance")},		/* 0x5005 */
+		{PTP_DPC_SONY_Zoom, N_("Zoom")},
+		{PTP_DPC_SONY_StillImageStoreDestination, N_("Capture Target")},
+		{PTP_DPC_SONY_NearFar, N_("Near Far")},
+		{PTP_DPC_SONY_AF_Area_Position, N_("AF Area Position")},
 		{0,NULL}
         };
 

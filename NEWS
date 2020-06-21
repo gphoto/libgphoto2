@@ -4,6 +4,8 @@ ptp2:
 * olympus omd: fixed the 65 second wait after capture.
 * Canon EOS:
   * better framerate for preview capture
+* Sony:
+  * correct shutterspeed, iso and exposurebias decoding for Sony A7r4 and other new models
 
 translations:
 
