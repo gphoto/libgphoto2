@@ -6117,6 +6117,8 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_PictureEffect, N_("Picture Effect")},	/* 0xD21B */
 		{PTP_DPC_SONY_ABFilter, N_("AB Filter")},		/* 0xD21C */
 		{PTP_DPC_SONY_ISO, N_("ISO")},				/* 0xD21E */
+		{PTP_DPC_SONY_ExposureCompensation, N_("Exposure Bias Compensation")},	/* 0xD224 */
+		{PTP_DPC_SONY_ISO2, N_("ISO")},			/* 0xD226 */
 		{PTP_DPC_SONY_Movie, N_("Movie")},			/* 0xD2C8 */
 		{PTP_DPC_SONY_StillImage, N_("Still Image")},		/* 0xD2C7 */
 		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
