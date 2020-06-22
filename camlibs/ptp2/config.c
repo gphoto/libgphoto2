@@ -4285,7 +4285,7 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 
 static int
 _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
-	int			x,y,a,b,direction,num_items,position_current,position_new;
+	int			x,y,a,b,direction,position_current,position_new;
 	const char		*val;
 	float 			old,new,current;
 	PTPPropertyValue	value;
@@ -4293,8 +4293,6 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	PTPParams		*params = &(camera->pl->params);
 	GPContext 		*context = ((PTPData *) params->data)->context;
 	time_t			start,end;
-	
-	num_items = sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);
 
 	CR (gp_widget_get_value (widget, &val));
 
