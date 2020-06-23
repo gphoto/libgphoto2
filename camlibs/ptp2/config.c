@@ -4285,7 +4285,7 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 
 static int
 _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
-	int			x,y,a,b,direction;
+	int			x,y,a,b,direction,position_current,position_new;
 	const char		*val;
 	float 			old,new,current;
 	PTPPropertyValue	value;
@@ -4303,6 +4303,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		y = dpd->CurrentValue.u32&0xffff;
 	}
 	old = ((float)x)/(float)y;
+	current = old;
 
 	if (!strcmp(val,_("Bulb"))) {
 		new32 = 0;
@@ -4327,11 +4328,49 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		value.u8 = 0xff;
 		direction = -1;
 	}
+	
+	if (direction == 1) {	
+		for (unsigned int i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+			a = sony_shuttertable[i].dividend;
+			b = sony_shuttertable[i].divisor;
+			position_new = i;
+			if (new >= ((float)a)/(float)b) {
+				break;
+			}
+		}
+	}
+	else {
+		for (unsigned int i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i>=0;i--) {
+			a = sony_shuttertable[i].dividend;
+			b = sony_shuttertable[i].divisor;
+			position_new = i;
+			if (new <= ((float)a)/(float)b) {
+				break;
+			}
+		}
+	}
 		
 	do {
 		origval = dpd->CurrentValue.u32;
 		if (old == new)
 			break;
+		
+		for (unsigned int i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+			a = sony_shuttertable[i].dividend;
+			b = sony_shuttertable[i].divisor;
+			position_current = i;
+			if (current >= ((float)a)/(float)b) {
+				break;
+			}
+		}
+		
+		// Calculating jump width 
+		if (direction > 0) {
+			value.u8 = 0x00 + position_new - position_current;
+		}
+		else {
+			value.u8 = 0x100 + position_new - position_current;
+		}
 			
 		a = dpd->CurrentValue.u32>>16;
 		b = dpd->CurrentValue.u32&0xffff;
@@ -4345,14 +4384,13 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
 			C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed, dpd));
 
-			a = dpd->CurrentValue.u32>>16;
-			b = dpd->CurrentValue.u32&0xffff;
-			current = ((float)a)/((float)b);
-
 			if (dpd->CurrentValue.u32 == new32) {
 				GP_LOG_D ("Value matched!");
 				break;
 			}
+			a = dpd->CurrentValue.u32>>16;
+			b = dpd->CurrentValue.u32&0xffff;
+			current = ((float)a)/((float)b);
 			
 			if ((a*y != 0) && (a*y == b*x)) {
 				GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
