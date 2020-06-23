@@ -1303,9 +1303,9 @@ fallback:										\
 			if (posnew == posorig)						\
 				break;							\
 			if (posnew > posorig)						\
-				propval.u8 = 0x01;					\
+				propval.u8 = posnew-posorig;				\
 			else								\
-				propval.u8 = 0xff;					\
+				propval.u8 = 0x100-(posorig-posnew);			\
 		} else {								\
 			if (value == origval)						\
 				break;							\
