@@ -3,9 +3,17 @@ libgphoto2 2.5.25.1 development version
 ptp2:
 * olympus omd: fixed the 65 second wait after capture.
 * Canon EOS:
-  * better framerate for preview capture
+  * better framerate for preview capture due to adjusted wait logic
+* Nikon 
+  * D3000, D3100, and D3200 "static opcode list" reduced after reports what works and what not
 * Sony:
+  * some bugfixes in property settings
   * correct shutterspeed, iso and exposurebias decoding for Sony A7r4 and other new models
+* Cameras added to id list: 
+  * Sony QX30U, ZV-1, 
+  * Nikon D780
+  * Panasonic GMC-GX8
+  * Canon EOS 1D X Mark III
 
 translations:
 
