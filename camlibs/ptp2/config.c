@@ -1554,7 +1554,7 @@ _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 
 	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
 	if (ret != GP_OK) return ret;
-	return _put_sony_value_i16 (&camera->pl->params, PTP_DPC_ExposureBiasCompensation, propval->i16, 0);
+	return _put_sony_value_i16 (&camera->pl->params, dpd->DevicePropertyCode, propval->i16, 0);
 }
 
 static int
@@ -2645,7 +2645,7 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 
 setiso:
 	propval->u32 = u;
-	return _put_sony_value_u32(params, PTP_DPC_SONY_ISO, u, 1);
+	return _put_sony_value_u32(params, dpd->DevicePropertyCode, u, 1);
 }
 
 static int
@@ -4374,7 +4374,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			
 		a = dpd->CurrentValue.u32>>16;
 		b = dpd->CurrentValue.u32&0xffff;
-		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterSpeed, &value, PTP_DTC_UINT8 ));
+		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, dpd->DevicePropertyCode, &value, PTP_DTC_UINT8 ));
 
 		GP_LOG_D ("shutterspeed value is (0x%x vs target 0x%x)", origval, new32);
 
@@ -4382,7 +4382,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		time(&start);
 		do {
 			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));
-			C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed, dpd));
+			C_PTP_REP (ptp_generic_getdevicepropdesc (params, dpd->DevicePropertyCode, dpd));
 
 			if (dpd->CurrentValue.u32 == new32) {
 				GP_LOG_D ("Value matched!");
