@@ -138,7 +138,8 @@ the following:
 
 [gphoto project home page]: http://www.gphoto.org/
 [gphoto github project page]: https://github.com/gphoto
-[camera list with support status]: http://www.teaser.fr/~hfiguiere/linux/digicam.html
+[gphoto camera list]: http://gphoto.org/proj/libgphoto2/support.php
+[gphoto camera remote control list and doc]: http://gphoto.org/doc/remote/
 [jphoto home page]: http://jphoto.sourceforge.net/
 [information about using USB mass storage]: http://www.linux-usb.org/USB-guide/x498.html
 [gphoto development mailing list]: gphoto-devel@lists.sourceforge.net
