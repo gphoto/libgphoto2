@@ -1548,6 +1548,7 @@ _put_ExpCompensation(CONFIG_PUT_ARGS) {
 	return GP_OK ;
 }
 
+/* old method, uses stepping */
 static int
 _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 	int ret;
@@ -1556,6 +1557,17 @@ _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 	if (ret != GP_OK) return ret;
 	return _put_sony_value_i16 (&camera->pl->params, dpd->DevicePropertyCode, propval->i16, 0);
 }
+
+/* new method, can set directly */
+static int
+_put_Sony_ExpCompensation2(CONFIG_PUT_ARGS) {
+	int ret;
+
+	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
+	if (ret != GP_OK) return ret;
+	return translate_ptp_result (ptp_sony_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_INT16));
+}
+
 
 static int
 _get_Olympus_ExpCompensation(CONFIG_GET_ARGS) {
@@ -2620,6 +2632,7 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
+/* old method, using stepping */
 static int
 _put_Sony_ISO(CONFIG_PUT_ARGS)
 {
@@ -2645,7 +2658,38 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 
 setiso:
 	propval->u32 = u;
+
 	return _put_sony_value_u32(params, dpd->DevicePropertyCode, u, 1);
+}
+
+/* new method, can just set the value via setcontroldevicea */
+static int
+_put_Sony_ISO2(CONFIG_PUT_ARGS)
+{
+	char 		*value;
+	uint32_t	u;
+	PTPParams	*params = &(camera->pl->params);
+
+	CR (gp_widget_get_value(widget, &value));
+	if (!strcmp(value,_("Auto ISO"))) {
+		u = 0x00ffffff;
+		goto setiso;
+	}
+	if (!strcmp(value,_("Auto ISO Multi Frame Noise Reduction"))) {
+		u = 0x01ffffff;
+		goto setiso;
+	}
+
+	if (!sscanf(value, "%ud", &u))
+		return GP_ERROR;
+
+	if (strstr(value,_("Multi Frame Noise Reduction")))
+		u |= 0x1000000;
+
+setiso:
+	propval->u32 = u;
+
+	return translate_ptp_result (ptp_sony_setdevicecontrolvaluea(params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT32));
 }
 
 static int
@@ -4243,17 +4287,35 @@ static struct sonyshutter {
 
 static int
 _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
-	int x,y;
-	char buf[20];
+	int			x,y;
+	char			buf[20];
+	PTPParams		*params = &(camera->pl->params);
+	GPContext 		*context = ((PTPData *) params->data)->context;
 
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return GP_ERROR;
 
+	if (have_prop (camera, PTP_VENDOR_SONY, PTP_DPC_SONY_ShutterSpeed2))
+		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed2, dpd));
+
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
+	/* new style has an ENUM again */
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
-		GP_LOG_E("there is a enum, support it! ... report to gphoto-devel list!\n");
+		unsigned int i;
+
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++) {
+			x = dpd->FORM.Enum.SupportedValue[i].u32 >> 16;
+			y = dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff;
+
+			if (y == 1)
+				sprintf (buf, "%d",x);
+			else
+				sprintf (buf, "%d/%d",x,y);
+			gp_widget_add_choice (*widget, buf);
+		}
+		gp_widget_add_choice (*widget, _("Bulb"));
 	} else {
 		unsigned int i;
 		/* use our static table */
@@ -4318,6 +4380,13 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		}
 		new32 = (x<<16)|y;
 	}
+	/* new style */
+	if (have_prop (camera, PTP_VENDOR_SONY, PTP_DPC_SONY_ShutterSpeed2)) {
+		propval->u32 = new32;
+		return translate_ptp_result (ptp_sony_setdevicecontrolvaluea(params, PTP_DPC_SONY_ShutterSpeed2, propval, PTP_DTC_UINT32));
+	}
+	/* old style uses stepping */
+
 	new = ((float)x)/(float)y;
 	
 	if (old > new) {
@@ -4432,7 +4501,6 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	propval->u32 = new;
 	return GP_OK;
 }
-
 
 static int
 _get_Nikon_FocalLength(CONFIG_GET_ARGS) {
@@ -8801,7 +8869,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Movie ISO Speed"),        "movieiso",             PTP_DPC_NIKON_MovieISO,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	/* these 2 iso will overwrite and conflicht with each other... the older Sony do not have d226, so it should pick the next entry ... */
-	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO2,                      PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO2,                      PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO2 },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO,                    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ISO,       _put_Olympus_ISO },
@@ -8850,7 +8918,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Self Timer"),                     "selftimer",                PTP_DPC_CANON_SelfTime,                 PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_SelfTimer,               _put_Canon_SelfTimer },
 	{ N_("Assist Light"),                   "assistlight",              PTP_DPC_NIKON_AFAssist,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_OLYMPUS_ExposureCompensation,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ExpCompensation,_put_Olympus_ExpCompensation },
-	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_SONY_ExposureCompensation,      PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation },
+	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_SONY_ExposureCompensation,      PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation2 },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       0,                  PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
