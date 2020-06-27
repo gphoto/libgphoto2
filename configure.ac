@@ -540,6 +540,7 @@ GP_CAMLIB([digigr8])dnl
 GP_CAMLIB([digita],[outdated])dnl
 GP_CAMLIB([dimera3500],[outdated])dnl
 GP_CAMLIB([directory])dnl
+GP_CAMLIB([docupen])dnl
 GP_CAMLIB([enigma13],[outdated])dnl
 GP_CAMLIB([fuji],[outdated])dnl
 GP_CAMLIB([gsmart300],[outdated])dnl
