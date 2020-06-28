@@ -3333,7 +3333,7 @@ enable_liveview:
 				break;
 			if (ret != PTP_RC_AccessDenied) /* we get those when we are too fast */
 				C_PTP (ret);
-			usleep(10*1000);
+			usleep(20*1000);
 		} while (tries--);
 
 		/* look for the JPEG SOI marker (0xFFD8) in data */
