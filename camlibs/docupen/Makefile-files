@@ -1,0 +1,14 @@
+# -*- Makefile -*-
+
+EXTRA_DIST += docupen/ChangeLog
+
+EXTRA_DIST  += docupen/README.docupen
+camlibdoc_DATA += docupen/README.docupen
+
+EXTRA_LTLIBRARIES += docupen.la
+
+docupen_la_SOURCES = docupen/docupen.c docupen/cache.c docupen/huffman.c docupen/image.c docupen/calibration.c docupen/docupen.h docupen/huffman.h
+docupen_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) @LIBGD_CFLAGS@
+docupen_la_LDFLAGS = $(camlib_ldflags)
+docupen_la_DEPENDENCIES = $(camlib_dependencies)
+docupen_la_LIBADD = $(camlib_libadd) @LIBGD_LIBS@

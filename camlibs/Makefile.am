@@ -93,6 +93,7 @@ include digigr8/Makefile-files
 include digita/Makefile-files
 include dimera/Makefile-files
 include directory/Makefile-files
+include docupen/Makefile-files
 include enigma13/Makefile-files
 include fuji/Makefile-files
 include gsmart300/Makefile-files
