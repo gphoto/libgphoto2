@@ -2,8 +2,8 @@
 
 EXTRA_DIST += docupen/ChangeLog
 
-EXTRA_DIST  += docupen/README.docupen
-camlibdoc_DATA += docupen/README.docupen
+#EXTRA_DIST  += docupen/README.docupen
+#camlibdoc_DATA += docupen/README.docupen
 
 EXTRA_LTLIBRARIES += docupen.la
 
