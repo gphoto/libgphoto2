@@ -2,7 +2,7 @@ Camera summary:
 Manufacturer: Sony Corporation
 Model: DSC-QX30U
   Version: 3.00
-  Serial Number: 00000000000000004205000003202433
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
 Vendor Extension ID: 0x11 (1.0)
 Vendor Extension Description: Sony PTP Extensions
 
@@ -53,3 +53,41 @@ Readonly: 0
 Type: TEXT
 Current: Sony PTP Extensions
 END
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: DSC-QX30U
+  device version: 3.00
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000011
+Vendor extension version: 100
+Vendor extension description: Sony PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x101b (Get partial object)
+  0x967d (Unknown PTP_OC)
+  0x96f1 (Unknown PTP_OC)
+  0x96f5 (Unknown PTP_OC)
+  0x96f6 (Unknown PTP_OC)
+  0x96f8 (Unknown PTP_OC)
+  0x96fa (Unknown PTP_OC)
+  0x96fd (Unknown PTP_OC)
+  0x96fe (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+Events Supported:
+  0xc204 (Unknown Event)
+Device Properties Supported:
