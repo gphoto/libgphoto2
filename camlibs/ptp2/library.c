@@ -3321,7 +3321,7 @@ enable_liveview:
 	case PTP_VENDOR_SONY: {
 		uint32_t	preview_object = 0xffffc002; /* this is where the liveview image is accessed */
 		unsigned char	*ximage = NULL;
-		int		tries = 20;
+		int		tries = 50;
 
 #if 0
 		/* this times out, with 0.3 seconds wait ... bad */
