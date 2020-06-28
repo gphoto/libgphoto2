@@ -135,13 +135,14 @@ the following:
     output if it is small. If it is more than a few kilobytes, please
     don't post the complete debug output on the list.
 
+## Links
 
-[gphoto project home page]: http://www.gphoto.org/
-[gphoto github project page]: https://github.com/gphoto
-[gphoto camera list]: http://gphoto.org/proj/libgphoto2/support.php
-[gphoto camera remote control list and doc]: http://gphoto.org/doc/remote/
-[jphoto home page]: http://jphoto.sourceforge.net/
-[information about using USB mass storage]: http://www.linux-usb.org/USB-guide/x498.html
-[gphoto development mailing list]: gphoto-devel@lists.sourceforge.net
-[gphoto user mailing list]: gphoto-user@lists.sourceforge.net
-[gphoto translation mailing list]: gphoto-translation@lists.sourceforge.net
+* [gphoto project home page](http://www.gphoto.org/)
+* [gphoto github project page](https://github.com/gphoto)
+* [gphoto camera list](http://gphoto.org/proj/libgphoto2/support.php)
+* [gphoto camera remote control list and doc](http://gphoto.org/doc/remote/)
+* [jphoto home page](http://jphoto.sourceforge.net/)
+* [Information about using USB mass storage](http://www.linux-usb.org/USB-guide/x498.html)
+* [gphoto development mailing list](mailto:gphoto-devel@lists.sourceforge.net)
+* [gphoto user mailing list](mailto:gphoto-user@lists.sourceforge.net)
+* [gphoto translation mailing list](mailto:gphoto-translation@lists.sourceforge.net)
