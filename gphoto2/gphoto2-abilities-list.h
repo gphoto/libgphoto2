@@ -184,6 +184,8 @@ int gp_abilities_list_lookup_model (CameraAbilitiesList *list,
 int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 				     CameraAbilities *abilities);
 
+void gp_abilities_list_set_camlibs_override (const char *dir);
+
 const char *gp_message_codeset (const char *);
 
 

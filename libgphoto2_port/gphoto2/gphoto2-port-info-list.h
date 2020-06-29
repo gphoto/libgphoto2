@@ -92,6 +92,8 @@ int gp_port_info_list_lookup_name (GPPortInfoList *list, const char *name);
 
 int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
 
+void gp_port_info_list_set_iolibs_override (const char *dir);
+
 const char *gp_port_message_codeset (const char*);
 
 /**
