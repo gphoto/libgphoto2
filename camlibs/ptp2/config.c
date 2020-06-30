@@ -6966,8 +6966,8 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 	else
 		xval.u16 = 0;
 	C_PTP_MSG (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &xval, PTP_DTC_UINT16),
-		   "ptp2_eos_viewfinder enable", "setval of evf outputmode to %d failed", xval.u32);
-	return GP_OK;
+		   "ptp2_eos_viewfinder enable: failed to set evf outputmode to %d", xval.u16);
+        return GP_OK;
 }
 
 static int
