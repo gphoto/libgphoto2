@@ -3287,6 +3287,9 @@ struct _PTPParams {
 	int			event90c7works;
 	int			deletesdramfails;
 
+	/* PTP: Sony specific */
+	struct timeval		starttime;
+
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;
 	uint8_t		wifi_profiles_number;

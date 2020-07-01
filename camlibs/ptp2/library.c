@@ -628,6 +628,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->OperationsSupported_len += opcodes;
 			free (xprops);
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 3, 0, 0));
+
+			/* remember for sony zv-1 hack */
+			params->starttime = time_now();
 		}
 	}
 #if 0 /* Marcus: not regular ptp properties, not queryable via getdevicepropertyvalue */
@@ -4405,6 +4408,25 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPDevicePropDesc	dpd;
 	struct timeval	event_start;
 
+	if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model, "ZV-1")) {
+		/* For some as yet unknown reason the ZV-1 needs around 3 seconds startup time
+		 * to be able to capture. I looked for various trigger events or property changes
+		 * but nothing worked except waiting. */
+		while (time_since (params->starttime) < 2500) {
+			/* drain the queue first */
+			if (ptp_get_one_event(params, &event)) {
+				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				continue;
+			}
+			/* wait for events and poll property data */
+			C_PTP (ptp_check_event (params));
+
+			C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+		}
+	}
+
+	/* regular code */
+
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
 	GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
@@ -4415,7 +4437,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (dpd.CurrentValue.u8 == 0x13) {
 		GP_LOG_D ("expecting raw+jpeg capture");
 	}
-
 	/* half-press */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
