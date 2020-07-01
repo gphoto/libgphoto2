@@ -2757,13 +2757,16 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
 /* guessed DPC_SONY_JpegQuality 0xD252 */
 /* guessed DPC_SONY_PriorityKeySettings 0xD25A */
+/* d255 reserved 5 */
+/* d254 reserved 4 */
 #define PTP_DPC_SONY_ExposureCompensation		0xD224
 #define PTP_DPC_SONY_ISO2				0xD226
 #define PTP_DPC_SONY_ShutterSpeed2			0xD229
 #define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */
-/* also seen: D2C3 D2C4 */
-/* AEL - d2c3
+/* D2DB (2) , D2D3 (2) , D2C8 (2) also seen in Camera Remote related to D2C2 */
+/* S1 ?
+ * AEL - d2c3
  * FEL - d2c9
  * AFL - d2c4
  * AWBL - d2d9
@@ -2773,6 +2776,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_StillImage				0xD2C7 /* ? */
 
 #define PTP_DPC_SONY_NearFar				0xD2D1
+/*#define PTP_DPC_SONY_AutoFocus				0xD2D2 something related */
 
 #define PTP_DPC_SONY_AF_Area_Position			0xD2DC
 
