@@ -3331,12 +3331,21 @@ enable_liveview:
 		ptp_check_event (params); 	/* will stall for some reason */
 #endif
 		do {
+			PTPObjectInfo oi;
+
+			/* This state can persist for up to 1 second on the ZV-1 */
+			ret = ptp_getobjectinfo(params, preview_object, &oi);
+			if (ret == PTP_RC_InvalidObjectHandle) {
+				usleep(50*1000);
+				continue;
+			}
+
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
 				break;
 			if (ret != PTP_RC_AccessDenied) /* we get those when we are too fast */
 				C_PTP (ret);
-			usleep(10*1000);
+			usleep(20*1000);
 		} while (tries--);
 
 		/* look for the JPEG SOI marker (0xFFD8) in data */
