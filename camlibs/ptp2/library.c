@@ -2326,6 +2326,8 @@ static struct {
 	{"Fuji:FinePix HS30EXR",		0x04cb, 0x0271, 0},
 	/* Marcel Bonnet <marcelbonnet@gmail.com> */
 	{"Fuji:FinePix S2980",			0x04cb, 0x027d, 0},
+	/* Michael Martin <mischel88@web.de> */
+	{"Fuji:FinePix X-E1",			0x04cb, 0x0283, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix XF1",			0x04cb, 0x0288, 0},
 	/* Steve Dahl <dahl@goshawk.com> */
