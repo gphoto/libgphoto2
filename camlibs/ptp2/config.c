@@ -4355,6 +4355,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	PTPParams		*params = &(camera->pl->params);
 	GPContext 		*context = ((PTPData *) params->data)->context;
 	time_t			start,end;
+	unsigned int		i;
 
 	CR (gp_widget_get_value (widget, &val));
 
@@ -4399,23 +4400,20 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	}
 	
 	if (direction == 1) {	
-		for (unsigned int i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_new = i;
-			if (new >= ((float)a)/(float)b) {
+			if (new >= ((float)a)/(float)b)
 				break;
-			}
 		}
-	}
-	else {
-		for (unsigned int i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i>=0;i--) {
+	} else {
+		for (i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i>=0;i--) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_new = i;
-			if (new <= ((float)a)/(float)b) {
+			if (new <= ((float)a)/(float)b)
 				break;
-			}
 		}
 	}
 		
@@ -4423,23 +4421,20 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		origval = dpd->CurrentValue.u32;
 		if (old == new)
 			break;
-		
-		for (unsigned int i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+
+		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_current = i;
-			if (current >= ((float)a)/(float)b) {
+			if (current >= ((float)a)/(float)b)
 				break;
-			}
 		}
 		
 		// Calculating jump width 
-		if (direction > 0) {
+		if (direction > 0)
 			value.u8 = 0x00 + position_new - position_current;
-		}
-		else {
+		else
 			value.u8 = 0x100 + position_new - position_current;
-		}
 			
 		a = dpd->CurrentValue.u32>>16;
 		b = dpd->CurrentValue.u32&0xffff;
