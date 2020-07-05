@@ -76,14 +76,16 @@ Supported operations:
   0x1009 (Get object)
   0x100a (Get thumbnail)
   0x101b (Get partial object)
+
   0x967d (Unknown PTP_OC)
   0x96f1 (Unknown PTP_OC)
   0x96f5 (Unknown PTP_OC)
-  0x96f6 (Unknown PTP_OC)
-  0x96f8 (Unknown PTP_OC)
-  0x96fa (Unknown PTP_OC)
-  0x96fd (Unknown PTP_OC)
-  0x96fe (Unknown PTP_OC)
+  0x96f6 (Unknown PTP_OC)	qx_getallpropertydata
+  0x96f8 (Unknown PTP_OC)	qx_setpropval
+  0x96fa (Unknown PTP_OC)	(setpropval direct?)
+  0x96fd (Unknown PTP_OC)	qx_getproperties
+  0x96fe (Unknown PTP_OC)	qx_connect
+
   0x9801 (Unknown PTP_OC)
   0x9802 (Unknown PTP_OC)
   0x9803 (Unknown PTP_OC)
