@@ -3374,6 +3374,7 @@ enable_liveview:
 		return GP_OK;
 	}
 	case PTP_VENDOR_SONY: {
+		/* same for Alpha series and QX */
 		uint32_t	preview_object = 0xffffc002; /* this is where the liveview image is accessed */
 		unsigned char	*ximage = NULL;
 		int		tries = 50;
