@@ -80,11 +80,11 @@
  * (64 bytes).
  *
  * This behaviour is most probably a workaround due to the fact
- * that the hardware USB slave controller in the device cannot
- * handle zero writes at all, and the usage of the USB 1.1
- * endpoint size is due to the fact that the device will "gear
- * down" on a USB 1.1 hub, and since 64 bytes is a multiple of
- * 512 bytes, it will work with USB 1.1 and USB 2.0 alike.
+ * that the USB controller in the device cannot handle zero writes
+ * at all, and the usage of the USB 1.1 endpoint size is due to the
+ * fact that the device will "gear down" on a USB 1.1 hub, and since
+ * 64 bytes is a multiple of 512 bytes, it will work with USB 1.1 and
+ * USB 2.0 alike.
  */
 #define DEVICE_FLAG_NO_ZERO_READS 0x00000008
 /**
