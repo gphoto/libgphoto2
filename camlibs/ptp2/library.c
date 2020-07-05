@@ -598,7 +598,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				case 0x1000: opcodes++; break;
 				case 0x4000: events++; break;
 				case 0x5000: propcodes++; break;
-				default: 
+				default:
 					GP_LOG_E ("ptp_sony_get_vendorpropcodes() unknown opcode %x", xprops[i]);
 					break;
 				}
@@ -619,7 +619,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				case 0x5000:
 					di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i];
 					break;
-				default: 
+				default:
 					break;
 				}
 			}
@@ -631,6 +631,53 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 			/* remember for sony zv-1 hack */
 			params->starttime = time_now();
+		}
+		/* Sony QX */
+		if (ptp_operation_issupported(&camera->pl->params, 0x96fe)) {
+			int opcodes = 0, propcodes = 0, events = 0, j,k,l;
+			uint16_t  	*xprops;
+			unsigned int	xsize;
+
+			C_PTP (ptp_sony_qx_connect (&camera->pl->params,1, 0xda01, 0xda01));
+			C_PTP (ptp_sony_qx_connect (&camera->pl->params,1, 0xda01, 0xda01));
+
+			C_PTP (ptp_sony_qx_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
+
+			for (i=0;i<xsize;i++) {
+				switch (xprops[i] & 0x7000) {
+				case 0x1000: opcodes++; break;
+				case 0x4000: events++; break;
+				case 0x5000: propcodes++; break;
+				default:
+					GP_LOG_E ("ptp_qx_sony_get_vendorpropcodes() unknown opcode %x", xprops[i]);
+					break;
+				}
+			}
+			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + propcodes)));
+			C_MEM (di->OperationsSupported       = realloc(di->OperationsSupported,      sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + opcodes)));
+			C_MEM (di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events)));
+			j = 0; k = 0; l = 0;
+			for (i=0;i<xsize;i++) {
+				GP_LOG_D ("sony code: %x", xprops[i]);
+				switch (xprops[i] & 0x7000) {
+				case 0x1000:
+					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
+					break;
+				case 0x4000:
+					di->EventsSupported[(l++)+di->EventsSupported_len] = xprops[i];
+					break;
+				case 0x5000:
+					di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i];
+					break;
+				default:
+					break;
+				}
+			}
+			di->DevicePropertiesSupported_len += propcodes;
+			di->EventsSupported_len += events;
+			di->OperationsSupported_len += opcodes;
+			free (xprops);
+			C_PTP (ptp_sony_qx_connect (&camera->pl->params, 3, 0xda01, 0xda01));
 		}
 	}
 #if 0 /* Marcus: not regular ptp properties, not queryable via getdevicepropertyvalue */
@@ -1107,7 +1154,7 @@ static struct {
 	{"Sony:Alpha-A7S II (Control)",		0x054c,0x0a71, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* brandonlampert@gmail.com */
-	{"Sony:DSC-QX30U",			0x054c,0x0a77, 0},
+	{"Sony:DSC-QX30U",			0x054c,0x0a77, PTP_CAP_PREVIEW},
 
 	/* Demo7up <demo7up@gmail.com> */
 	{"Sony:UMC-R10C",			0x054c,0x0a79, 0},
@@ -8923,7 +8970,8 @@ camera_init (Camera *camera, GPContext *context)
 		 */
 		if (	ptp_operation_issupported(params, 0x9280)	&&
 			!strstr(params->deviceinfo.Model,"HX")		&&
-			!strstr(params->deviceinfo.Model,"NEX")
+			!strstr(params->deviceinfo.Model,"NEX")		&&
+			!strstr(params->deviceinfo.Model,"QX")
 		) {
 #if 0
 			C_PTP (ptp_sony_9280(params, 0x1,0,1,0,0));

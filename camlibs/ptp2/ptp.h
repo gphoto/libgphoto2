@@ -652,6 +652,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* get all device property data at once */
 #define PTP_OC_SONY_GetAllDevicePropData	0x9209	/* gets a 4126 byte blob of device props ?*/
 
+#define PTP_OC_SONY_QX_Connect			0x96fe
+#define PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo	0x96fd
+#define PTP_OC_SONY_QX_GetAllDevicePropData	0x96f6
+
 /* Microsoft / MTP extension codes */
 
 #define PTP_OC_MTP_GetObjectPropsSupported	0x9801
@@ -3848,10 +3852,13 @@ uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
 uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);
 
 uint16_t ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
+uint16_t ptp_sony_qx_connect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3);
 uint16_t ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
+uint16_t ptp_sony_qx_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 uint16_t ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_sony_getalldevicepropdesc (PTPParams* params);
+uint16_t ptp_sony_qx_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,

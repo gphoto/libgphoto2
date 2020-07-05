@@ -3696,11 +3696,34 @@ ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 	free (data);
 	return PTP_RC_OK;
 }
+
+/**
+ * ptp_sony_qx_connect:
+ *
+ * This changes modes of the camera
+ *  
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_sony_qx_connect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
+{
+	PTPContainer	ptp;
+	unsigned char	*data = NULL;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_QX_Connect, p1, p2, p3);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
+	free (data);
+	return PTP_RC_OK;
+}
+
 /**
  * ptp_sony_get_vendorpropcodes:
  *
  * This command downloads the vendor specific property codes.
- *  
+ *
  * params:	PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3748,6 +3771,46 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 }
 
 uint16_t
+ptp_sony_qx_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size)
+{
+	PTPContainer	ptp;
+	unsigned char	*xdata = NULL;
+	unsigned int 	xsize, psize1 = 0, psize2 = 0;
+	uint16_t	*props1 = NULL,*props2 = NULL;
+
+	*props = NULL;
+	*size = 0;
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo, 0xc8 /* unclear */);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
+	if (xsize == 0) {
+		ptp_debug (params, "No special operations sent?");
+		return PTP_RC_OK;
+	}
+
+	psize1 = ptp_unpack_uint16_t_array (params, xdata+2, 0, xsize, &props1);
+	ptp_debug (params, "xsize %d, got size %d\n", xsize, psize1*2 + 2 + 4);
+	if (psize1*2 + 2 + 4 < xsize) {
+		psize2 = ptp_unpack_uint16_t_array(params,xdata+2+psize1*2+4, 0, xsize, &props2);
+	}
+	*props = calloc(psize1+psize2, sizeof(uint16_t));
+	if (!*props) {
+		ptp_debug (params, "oom during malloc?");
+		free (props1);
+		free (props2);
+		free (xdata);
+		return PTP_RC_OK;
+	}
+	*size = psize1+psize2;
+	memcpy (*props, props1, psize1*sizeof(uint16_t));
+	memcpy ((*props)+psize1, props2, psize2*sizeof(uint16_t));
+	free (props1);
+	free (props2);
+	free (xdata);
+	return PTP_RC_OK;
+}
+
+
+uint16_t
 ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode, PTPDevicePropDesc *dpd)
 {
 	PTPContainer	ptp;
@@ -3764,8 +3827,8 @@ ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode, PTPDevicePropD
 	return ret;
 }
 
-uint16_t
-ptp_sony_getalldevicepropdesc (PTPParams* params)
+static uint16_t
+_ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 {
 	PTPContainer		ptp;
 	unsigned char		*data = NULL, *dpddata;
@@ -3870,6 +3933,16 @@ ptp_sony_getalldevicepropdesc (PTPParams* params)
 }
 
 uint16_t
+ptp_sony_getalldevicepropdesc (PTPParams* params) {
+	return _ptp_sony_getalldevicepropdesc (params, PTP_OC_SONY_GetAllDevicePropData);
+}
+
+uint16_t
+ptp_sony_qx_getalldevicepropdesc (PTPParams* params) {
+	return _ptp_sony_getalldevicepropdesc (params, PTP_OC_SONY_QX_GetAllDevicePropData);
+}
+
+uint16_t
 ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
 			PTPPropertyValue *value, uint16_t datatype)
 {
@@ -3945,9 +4018,9 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
  * This command gets a propertydesc.
  * If a vendor specific property desc query is available, it uses that.
  * If not, it falls back to the generic PTP getdevicepropdesc.
- *  
+ *
  * params:	PTPParams*
- *      uint16_t propcode 
+ *      uint16_t propcode
  *      PTPDevicePropDesc *dpd
  *
  * Return values: Some PTP_RC_* code.
@@ -4025,9 +4098,9 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
  * ptp_generic_setdevicepropvalue:
  *
  * This command sets a property value, device specific.
- *  
+ *
  * params:	PTPParams*
- *      uint16_t propcode 
+ *      uint16_t propcode
  *      PTPDevicePropertyValue *value
  *      uint16_t datatype
  *
@@ -4060,7 +4133,7 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
  * ptp_nikon_get_vendorpropcodes:
  *
  * This command downloads the vendor specific property codes.
- *  
+ *
  * params:	PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -4092,7 +4165,7 @@ ptp_nikon_getfileinfoinblock ( PTPParams* params,
 	PTPContainer ptp;
 
 	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetFileInfoInBlock, p1, p2, p3);
-	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
 /**
