@@ -652,9 +652,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* get all device property data at once */
 #define PTP_OC_SONY_GetAllDevicePropData	0x9209	/* gets a 4126 byte blob of device props ?*/
 
-#define PTP_OC_SONY_QX_Connect			0x96fe
-#define PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo	0x96fd
 #define PTP_OC_SONY_QX_GetAllDevicePropData	0x96f6
+#define PTP_OC_SONY_QX_SetControlDeviceB	0x96f8
+#define PTP_OC_SONY_QX_SetControlDeviceA	0x96fa
+#define PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo	0x96fd
+#define PTP_OC_SONY_QX_Connect			0x96fe
 
 /* Microsoft / MTP extension codes */
 
@@ -3863,7 +3865,11 @@ uint16_t ptp_sony_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_qx_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
+uint16_t ptp_sony_qx_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
+                        	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
+                        	PTPPropertyValue* value, uint16_t datatype);
+uint16_t ptp_sony_qx_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_9280 (PTPParams* params, uint32_t additional, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint8_t x, uint8_t y);
 uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);

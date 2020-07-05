@@ -3959,6 +3959,22 @@ ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
 }
 
 uint16_t
+ptp_sony_qx_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
+			PTPPropertyValue *value, uint16_t datatype)
+{
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned char	*data;
+	uint32_t	size;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_QX_SetControlDeviceA, propcode);
+	size = ptp_pack_DPV(params, value, &data, datatype);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	free(data);
+	return ret;
+}
+
+uint16_t
 ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 			PTPPropertyValue *value, uint16_t datatype)
 {
@@ -3973,6 +3989,23 @@ ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 	free(data);
 	return ret;
 }
+
+uint16_t
+ptp_sony_qx_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
+			PTPPropertyValue *value, uint16_t datatype)
+{
+	PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned char	*data;
+	uint32_t	size;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_QX_SetControlDeviceB, propcode);
+	size = ptp_pack_DPV(params, value, &data , datatype);
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	free(data);
+	return ret;
+}
+
 
 uint16_t
 ptp_sony_9280 (PTPParams* params, uint32_t param1,
@@ -4057,6 +4090,23 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 		ptp_operation_issupported(params, PTP_OC_SONY_GetAllDevicePropData)
 	) {
 		CHECK_PTP_RC(ptp_sony_getalldevicepropdesc (params));
+
+		for (i=0;i<params->nrofdeviceproperties;i++)
+			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+				break;
+		if (i == params->nrofdeviceproperties) {
+			ptp_debug (params, "property 0x%04x not found?\n", propcode);
+			return PTP_RC_GeneralError;
+		}
+		time(&now);
+		params->deviceproperties[i].timestamp = now;
+		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+		return PTP_RC_OK;
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_QX_GetAllDevicePropData)
+	) {
+		CHECK_PTP_RC(ptp_sony_qx_getalldevicepropdesc (params));
 
 		for (i=0;i<params->nrofdeviceproperties;i++)
 			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)

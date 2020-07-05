@@ -81,8 +81,8 @@ Supported operations:
   0x96f1 (Unknown PTP_OC)
   0x96f5 (Unknown PTP_OC)
   0x96f6 (Unknown PTP_OC)	qx_getallpropertydata
-  0x96f8 (Unknown PTP_OC)	qx_setpropval
-  0x96fa (Unknown PTP_OC)	(setpropval direct?)
+  0x96f8 (Unknown PTP_OC)	qx_setpropvalB
+  0x96fa (Unknown PTP_OC)	qx_setpropvalA
   0x96fd (Unknown PTP_OC)	qx_getproperties
   0x96fe (Unknown PTP_OC)	qx_connect
 
