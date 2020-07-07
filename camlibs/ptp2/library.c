@@ -407,9 +407,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		/* Nikon V* and J* advertise the new Nikon stuff, but only do the generic
 		 * PTP capture. FIXME: could use flags. */
 		if (params->deviceinfo.Model && (
-			(params->deviceinfo.Model[0]=='J') ||	/* J1 - J3 currently */
-			/* only have V2 and later ... The V1 does not accept PTP_OC_NIKON_GetVendorPropCodes opcode and hangs */ 
-			((params->deviceinfo.Model[0]=='V') && strcmp(params->deviceinfo.Model,"V1")) ||	/* V2 - V3 currently. */
+			(params->deviceinfo.Model[0]=='J') ||
+			(params->deviceinfo.Model[0]=='V') ||
 			((params->deviceinfo.Model[0]=='S') && strlen(params->deviceinfo.Model) < 3)	/* S1 - S2 currently */
 				/* but not S7000 */
 			)
@@ -419,23 +418,33 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
 
-			/* The 1 hides some commands from us ... */
-			if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetEvent) &&
-			    !ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)
-			) {
-				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
-				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
-				di->OperationsSupported_len++;
 
-				/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
-				/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
-				if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
-					 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
+			/* filter out the older models that do not support the getvendorprop / getevent codes
+			 * J1, J2 (J3 and J5 works) see https://github.com/gphoto/libgphoto2/issues/539
+			 * V1 reported not working  see https://github.com/gphoto/gphoto2/issues/336
+			 */
+			if (	strcmp(params->deviceinfo.Model,"J1") &&
+				strcmp(params->deviceinfo.Model,"J2") &&
+				strcmp(params->deviceinfo.Model,"V1")
+			) {
+				/* The 1 hides some commands from us ... */
+				if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetEvent) &&
+				    !ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)
 				) {
-					di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
+					di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 					di->OperationsSupported_len++;
+
+					/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
+					/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
+					if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
+						 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
+					) {
+						di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+						di->OperationsSupported_len++;
+					}
+					/* probably more */
 				}
-				/* probably more */
 			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
