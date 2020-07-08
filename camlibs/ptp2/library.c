@@ -3967,7 +3967,7 @@ capturetriggered:
 				ret = ptp_deleteobject (params, newobject, 0);
 				if (ret != PTP_RC_OK) {
 					GP_LOG_E ("deleteobject(%x) failed: %x", newobject, ret);
-					if (ret == PTP_RC_InvalidObjectHandle)
+					if ((ret == PTP_RC_InvalidObjectHandle)  || (ret == PTP_RC_StoreNotAvailable))
 						params->deletesdramfails = 1;
 					else
 						ret = ptp_nikon_delete_sdram_image (params, newobject);
