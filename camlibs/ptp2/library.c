@@ -2295,6 +2295,8 @@ static struct {
 
 	/* Matthias <matthias@mail-s.eu> */
 	{"Canon:EOS 90D",			0x04a9, 0x32ea, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/gphoto2/issues/347 */
+	{"Canon:PowerShot SX70 HS",		0x04a9, 0x32ee, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
