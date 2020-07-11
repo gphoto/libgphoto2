@@ -7202,11 +7202,10 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 	PTPParams *params = &(camera->pl->params);
 	int val, ret;
 	GPContext *context = ((PTPData *) params->data)->context;
+	PTPPropertyValue	value;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		PTPPropertyValue	value;
-
 		if (have_prop(camera,PTP_VENDOR_NIKON,PTP_DPC_NIKON_ApplicationMode)) {
 			value.u8 = 0;
 			C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
@@ -7249,8 +7248,18 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 		}
 
 		C_PTP_REP (ptp_nikon_startmovie (params));
-	} else
+	} else {
 		C_PTP_REP (ptp_nikon_stopmovie (params));
+		/* switch Application Mode off again, otherwise we cannot get to the filesystem */
+		if (have_prop(camera,PTP_VENDOR_NIKON,PTP_DPC_NIKON_ApplicationMode)) {
+			value.u8 = 1;
+			C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
+			if (value.u8 != 0) {
+				value.u8 = 0;
+				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
+			}
+		}
+	}
 	return GP_OK;
 }
 
