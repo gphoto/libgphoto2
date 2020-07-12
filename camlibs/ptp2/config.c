@@ -9160,6 +9160,12 @@ static struct submenu nikon_d7500_capture_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* D500 has the same list as the D90 */
+static struct submenu nikon_d500_capture_settings[] = {
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_Compression, _put_Nikon_D90_Compression },
+	{ 0,0,0,0,0,0,0 },
+};
+
 static struct submenu nikon_z6_capture_settings[] = {
 	{ N_("Image Quality"),          	"imagequality",		PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,	_put_Nikon_D850_Compression },
 	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,	_put_Nikon_D850_FocusMetering },
@@ -9260,6 +9266,7 @@ static struct menu menus[] = {
 
 
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0421, nikon_d90_capture_settings,     NULL,   NULL },
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x043c, nikon_d500_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0426, nikon_d3s_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0429, nikon_d5100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
