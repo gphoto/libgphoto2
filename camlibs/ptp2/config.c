@@ -9270,7 +9270,6 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x043c, nikon_d500_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0426, nikon_d3s_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0429, nikon_d5100_capture_settings,   NULL,   NULL },
-	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0428, nikon_d7000_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0440, nikon_d7500_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0414, nikon_d40_capture_settings,     NULL,   NULL },
