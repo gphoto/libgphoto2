@@ -6161,6 +6161,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		uint16_t dpc;
 		const char *txt;
         } ptp_device_properties_FUJI[] = {
+		{PTP_DPC_FUJI_FilmSimulation, N_("Film Simulation")},	/* 0xD001 */
 		{PTP_DPC_FUJI_ColorTemperature, N_("Color Temperature")},	/* 0xD017 */
 		{PTP_DPC_FUJI_Quality, N_("Quality")},				/* 0xD018 */
 		{PTP_DPC_FUJI_Quality, N_("Release Mode")},			/* 0xD201 */

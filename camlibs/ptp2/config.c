@@ -1505,6 +1505,28 @@ static struct deviceproptableu16 fuji_releasemode[] = {
 };
 GENERIC16TABLE(Fuji_ReleaseMode,fuji_releasemode)
 
+static struct deviceproptableu16 fuji_filmsimulation[] = {
+	{ N_("PROVIA/Standard"),            1,	PTP_VENDOR_FUJI },
+	{ N_("Velvia/Vivid"),               2,	PTP_VENDOR_FUJI },
+	{ N_("ASTIA/Soft"),                 3,	PTP_VENDOR_FUJI },
+	{ N_("PRO Neg.Hi"),                 4,	PTP_VENDOR_FUJI },
+	{ N_("PRO Neg.Std"),                5,	PTP_VENDOR_FUJI },
+	{ N_("Black & White"),              6,	PTP_VENDOR_FUJI },
+	{ N_("Black & White+Ye Filter"),    7,	PTP_VENDOR_FUJI },
+	{ N_("Black & White+R Filter"),     8,	PTP_VENDOR_FUJI },
+	{ N_("Black & White+G Filter"),     9,	PTP_VENDOR_FUJI },
+	{ N_("Sepia"),                      10,	PTP_VENDOR_FUJI },
+	{ N_("Classic Chrome"),             11,	PTP_VENDOR_FUJI },
+	{ N_("ACROS"),                      12,	PTP_VENDOR_FUJI },
+	{ N_("ACROS+Ye Filter"),            13,	PTP_VENDOR_FUJI },
+	{ N_("ACROS+R Filter,"),            14,	PTP_VENDOR_FUJI },
+	{ N_("ACROS+G Filter"),             15,	PTP_VENDOR_FUJI },
+	{ N_("ETERNA/Cinema"),              16,	PTP_VENDOR_FUJI },
+	{ N_("Classic Neg"),                17,	PTP_VENDOR_FUJI },
+	{ N_("ETERNA BLEACH BYPASS"),       18,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_FilmSimulation,fuji_filmsimulation)
+
 static int
 _get_ExpCompensation(CONFIG_GET_ARGS) {
 	int j;
@@ -8863,6 +8885,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_FUJI_Quality,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ImageFormat,          _put_Fuji_ImageFormat },
 	{ N_("Image Format"),           "imageformat",          0,					PTP_VENDOR_PANASONIC,PTP_DTC_UINT16, _get_Panasonic_ImageFormat,    _put_Panasonic_ImageFormat },
 	{ N_("Image Format Ext HD"),    "imageformatexthd",     PTP_DPC_CANON_EOS_ImageFormatExtHD,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
+	{ N_("Film Simulation"),        "filmsimulation",       PTP_DPC_FUJI_FilmSimulation,            PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_FilmSimulation,       _put_Fuji_FilmSimulation },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_ImageSize,                      0,                  PTP_DTC_STR,    _get_STR_ENUMList,              _put_STR },
 	{ N_("Raw Image Size"),         "rawimagesize",         PTP_DPC_NIKON_RawImageSize,             PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR_ENUMList,              _put_STR },
 	{ N_("Image Size"),             "imagesize",            PTP_DPC_NIKON_1_ImageSize,              PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon1_ImageSize,          _put_Nikon1_ImageSize },
