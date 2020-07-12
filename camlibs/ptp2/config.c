@@ -5752,6 +5752,7 @@ static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("NEF+Basic"),	0x05, PTP_VENDOR_NIKON },
 	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
+
 	{ N_("Standard"),		0x02, PTP_VENDOR_SONY },
 	{ N_("Fine"),			0x03, PTP_VENDOR_SONY },
 	{ N_("Extra Fine"),		0x04, PTP_VENDOR_SONY },
@@ -9160,9 +9161,9 @@ static struct submenu nikon_d7500_capture_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
-/* D500 has the same list as the D90 */
+/* D500 has the same list as the D850 */
 static struct submenu nikon_d500_capture_settings[] = {
-	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D90_Compression, _put_Nikon_D90_Compression },
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D850_Compression, _put_Nikon_D850_Compression },
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -9269,6 +9270,7 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x043c, nikon_d500_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0426, nikon_d3s_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0429, nikon_d5100_capture_settings,   NULL,   NULL },
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0428, nikon_d7000_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0440, nikon_d7500_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0414, nikon_d40_capture_settings,     NULL,   NULL },
