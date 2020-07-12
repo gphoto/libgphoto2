@@ -25,27 +25,36 @@ Supported operations:
   0x1015 (Get device property value)
   0x1016 (Set device property value)
   0x101b (Get partial object)
-  0x9012 (Unknown PTP_OC)
-  0x9013 (Unknown PTP_OC)
-  0x9014 (Unknown PTP_OC)
-  0x9015 (Unknown PTP_OC)
-  0x9016 (Unknown PTP_OC)
-  0x9017 (Unknown PTP_OC)
-  0x9018 (Unknown PTP_OC)
-  0x9019 (Unknown PTP_OC)
-  0x901b (Unknown PTP_OC)
-  0x901c (Unknown PTP_OC)
-  0x9022 (Unknown PTP_OC)
-  0x9023 (Unknown PTP_OC)
-  0x9024 (Unknown PTP_OC)
-  0x9027 (Unknown PTP_OC)
-  0x9028 (Unknown PTP_OC)
-  0x9029 (Unknown PTP_OC)
-  0x902a (Unknown PTP_OC)
-  0x902b (Unknown PTP_OC)
-  0x902c (Unknown PTP_OC)
-  0x902d (Unknown PTP_OC)
-  0x902f (Unknown PTP_OC)
+(0x9010 			getcamconfig)
+(0x9011 			getcamstatus)
+  0x9012 (Unknown PTP_OC)	getdatagroup1
+  0x9013 (Unknown PTP_OC)	getdatagroup2
+  0x9014 (Unknown PTP_OC)	getdatagroup3
+  0x9015 (Unknown PTP_OC)	getcapturestatus
+  0x9016 (Unknown PTP_OC)	setdatagroup1
+  0x9017 (Unknown PTP_OC)	setdatagroup2
+  0x9018 (Unknown PTP_OC)	setdatagroup3
+  0x9019 (Unknown PTP_OC)	clockadjust
+(  0x901a			getcansetinfo)
+  0x901b (Unknown PTP_OC)	snap
+  0x901c (Unknown PTP_OC)	clearimagedbsingle
+(  0x901d 			clearimagedball)
+(  0x9020			getpictfileinfo)
+(  0x9021			getpartialpictfile)
+  0x9022 (Unknown PTP_OC)	getbigpartialpictfile
+  0x9023 (Unknown PTP_OC)	getdatagroup4
+  0x9024 (Unknown PTP_OC)	setdatagroup4
+( 0x9025			getcansetinfo2)
+( 0x9026			getcansetinfo3)
+  0x9027 (Unknown PTP_OC)	getdatagroup5
+  0x9028 (Unknown PTP_OC)	setdatagroup5
+  0x9029 (Unknown PTP_OC)	getdatagroup6
+  0x902a (Unknown PTP_OC)	setdatagroup6
+  0x902b (Unknown PTP_OC)	getcamviewframe
+  0x902c (Unknown PTP_OC)	getcamstatus2
+  0x902d (Unknown PTP_OC)	getpictfileinfo2
+( 0x902e			getcansetinfo4)
+  0x902f (Unknown PTP_OC)	closeapplication
   0x9030 (Unknown PTP_OC)
   0x9031 (Unknown PTP_OC)
   0x9032 (Unknown PTP_OC)
