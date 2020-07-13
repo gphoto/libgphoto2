@@ -2606,6 +2606,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_1_MovQuality			0xF01C
 
 /* Fuji specific */
+
+#define PTP_DPC_FUJI_FilmSimulation			0xD001
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
