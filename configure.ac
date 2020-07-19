@@ -259,13 +259,14 @@ AC_SYS_LARGEFILE
 
 AC_MSG_CHECKING([for asm .symver support])
 AC_COMPILE_IFELSE([dnl
-	AC_LANG_PROGRAM([[]],[[
-		int f1() { }
-		int f2() { }
+	AC_LANG_PROGRAM([[
+		void f1(void);
+		void f1() {}
+		void f2(void);
+		void f2() {}
 		asm(".symver f1, f@VER1");
 		asm(".symver f2, f@@VER2");
-		int main(int argc, char **argv) { }
-	]])dnl
+	]],[])dnl
 ],[
 	AC_DEFINE([HAVE_ASM_SYMVERS],1,[Define if there is asm .symver support.])
 	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2.ver"
