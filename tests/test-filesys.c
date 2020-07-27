@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -55,9 +55,9 @@ error_func (GPContext __unused__ *context, const char *str, void __unused__ *dat
 }
 
 static int
-set_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, 
+set_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 	       const char __unused__ *file,
-	       CameraFileInfo __unused__ info, void __unused__ *data, 
+	       CameraFileInfo __unused__ info, void __unused__ *data,
 	       GPContext __unused__ *context)
 {
 	printf ("  -> The camera will set the file info here.\n");
@@ -66,7 +66,7 @@ set_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 }
 
 static int
-get_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, 
+get_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 	       const char *file,
 	       CameraFileInfo *info, void __unused__ *data, GPContext __unused__ *context)
 {
@@ -78,7 +78,7 @@ get_info_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder,
 }
 
 static int
-file_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+file_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 		CameraList *list,
 		void __unused__ *data, GPContext __unused__ *context)
 {
@@ -97,11 +97,11 @@ file_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 }
 
 static int
-folder_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+folder_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 		  CameraList *list,
 		  void __unused__ *data, GPContext __unused__ *context)
 {
-	printf ("### -> The camera will list the folders in '%s' here.\n", 
+	printf ("### -> The camera will list the folders in '%s' here.\n",
 		folder);
 
 	if (!strcmp (folder, "/")) {
@@ -122,7 +122,7 @@ folder_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 }
 
 static int
-delete_file_func (CameraFilesystem __unused__ *fs, const char *folder, 
+delete_file_func (CameraFilesystem __unused__ *fs, const char *folder,
 		  const char *file,
 		  void __unused__ *data, GPContext __unused__ *context)
 {

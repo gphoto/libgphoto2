@@ -1,16 +1,16 @@
 /*
  * Jenoptik JD11 Camera Driver
  * Copyright 1999-2001 Marcus Meissner <marcus@jet.franken.de>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -43,13 +43,13 @@
 
 #include "serial.h"
 
-int camera_id (CameraText *id) 
+int camera_id (CameraText *id)
 {
 	strcpy(id->text, "JD11");
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) 
+int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -102,7 +102,7 @@ int camera_abilities (CameraAbilitiesList *list)
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data, GPContext *context) 
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = (Camera*)data;
 
@@ -153,23 +153,23 @@ delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
     return jd11_erase_all(camera->port);
 }
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy(manual->text, 
+	strcpy(manual->text,
 	_(
 	"The JD11 camera works rather well with this driver.\n"
 	"An RS232 interface @ 115 kbit is required for image transfer.\n"
 	"The driver allows you to get\n\n"
 	"   - thumbnails (64x48 PGM format)\n"
 	"   - full images (640x480 PPM format)\n"
-	)); 
+	));
 
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, 
+	strcpy (about->text,
 		_("JD11\n"
 		"Marcus Meissner <marcus@jet.franken.de>\n"
 		"Driver for the Jenoptik JD11 camera.\n"
@@ -178,7 +178,7 @@ static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 static int camera_config_get (Camera *camera, CameraWidget **window,
-			      GPContext *context) 
+			      GPContext *context)
 {
 	CameraWidget *widget,*section;
 	float value_float,red,green,blue;
@@ -231,7 +231,7 @@ static int camera_config_get (Camera *camera, CameraWidget **window,
 }
 
 static int camera_config_set (Camera *camera, CameraWidget *window,
-			      GPContext *context) 
+			      GPContext *context)
 {
 	float f,red,green,blue;
 	CameraWidget *widget,*section;
@@ -282,7 +282,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.delete_all_func = delete_all_func,
 };
 
-int camera_init (Camera *camera, GPContext *context) 
+int camera_init (Camera *camera, GPContext *context)
 {
         gp_port_settings settings;
 

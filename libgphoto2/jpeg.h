@@ -1,5 +1,5 @@
 /** \file
- * 
+ *
  * \author This code was written by Nathan Stenzel for gphoto
  *
  * \note

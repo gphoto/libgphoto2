@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -41,7 +41,7 @@
 #    define N_(String) gettext_noop (String)
 #  else
 #    define N_(String) (String)
-#  endif 
+#  endif
 #else
 #  define textdomain(String) (String)
 #  define gettext(String) (String)
@@ -143,23 +143,23 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	CR (n = gp_filesystem_number (fs, folder, filename, context));
 	n++;
-	
+
 	info->audio.fields = GP_FILE_INFO_NONE; 	/* no info anbout audio files */
-	
+
 	info->preview.width = 80;
 	info->preview.height = 60;
-	info->preview.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT; 
-	
+	info->preview.fields = GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
+
 	CR (ricoh_get_pic_name (camera, context, n, &name));
 	CR (ricoh_get_pic_date (camera, context, n, &info->file.mtime));
 	CR (ricoh_get_pic_size (camera, context, n, &info->file.size));
 	strcpy (info->file.type, GP_MIME_EXIF);
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME
 		| GP_FILE_INFO_TYPE;
-	
+
 	return (GP_OK);
 }
-					 
+
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
@@ -183,7 +183,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CR (ricoh_get_pic (camera, context, n,
 				   RICOH_FILE_TYPE_PREVIEW, &data, &size));
 		gp_file_set_mime_type (file, GP_MIME_TIFF);
-		break;		
+		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -547,11 +547,11 @@ camera_init (Camera *camera, GPContext *context)
 		CR (gp_port_set_settings (camera->port, settings));
 
 		/*
-		 * Note that ricoh_connect can only be called to 
+		 * Note that ricoh_connect can only be called to
 		 * initialize the connection at 2400 bps. At other
 		 * speeds, a different function needs to be used.
 		 */
-		result = (speeds[i].rspeed == RICOH_SPEED_2400) ? 
+		result = (speeds[i].rspeed == RICOH_SPEED_2400) ?
 				ricoh_connect (camera, NULL, &model) :
 				ricoh_get_mode (camera, NULL, NULL);
 		if (result == GP_OK)
@@ -591,7 +591,7 @@ camera_init (Camera *camera, GPContext *context)
 	camera->functions->set_config = camera_set_config;
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	/*
-	 * Remember the model. It could be that there hasn't been the 
+	 * Remember the model. It could be that there hasn't been the
 	 * need to call ricoh_connect. Then we don't have a model. Should
 	 * we disconnect and reconnect in this case?
 	 */

@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -32,23 +32,23 @@
 
 #include "jl2005a.h"
 
-#define GP_MODULE "jl2005a" 
+#define GP_MODULE "jl2005a"
 
-int 
-jl2005a_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv) 
+int
+jl2005a_init (Camera *camera, GPPort *port, CameraPrivateLibrary *priv)
 {
 	GP_DEBUG("Running jl2005a_init\n");
 
 	jl2005a_shortquery(port, 0x0d); 	/* Supposed to get 0x08 */
 	jl2005a_shortquery(port, 0x1c);		/* Supposed to get 0x01 */
 	jl2005a_shortquery(port, 0x20);		/* Supposed to get 0x04 */
-	gp_port_write (port, "\xab\x00", 2); 
-	gp_port_write (port, "\xa1\x02", 2); 
 	gp_port_write (port, "\xab\x00", 2);
-	gp_port_write (port, "\xa2\x02", 2); 
+	gp_port_write (port, "\xa1\x02", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa2\x02", 2);
 	jl2005a_shortquery(port, 0x1d);		/* 1 if camera is full, else 0 */
-	gp_port_write (port, "\xab\x00", 2); 
-	gp_port_write (port, "\xa1\x00", 2); 
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa1\x00", 2);
 	priv->nb_entries = jl2005a_shortquery(port, 0x0a)&0xff;
 	/* Number of pix returned here */
 	GP_DEBUG("%d entries in the camera\n", priv->nb_entries);
@@ -79,7 +79,7 @@ jl2005a_get_pic_data_size (GPPort *port, int n)
 	if (size == 0x3100)
 		size += 0x80;
 	GP_DEBUG("size = 0x%x\n", size);
-	return (size); 
+	return (size);
 }
 
 int
@@ -91,7 +91,7 @@ jl2005a_get_pic_width (GPPort *port)
 	width = (response&0xff);
 	response = (jl2005a_read_info_byte(port, 4) )&0xff;
 	width = ((response&0xff) << 8)|width;
-	return (width); 
+	return (width);
 }
 
 int
@@ -102,23 +102,23 @@ jl2005a_get_pic_height (GPPort *port)
 	response = (jl2005a_read_info_byte(port, 5) )&0xff;
 	height = (response&0xff);
 	response = (jl2005a_read_info_byte(port, 6) )&0xff;
-	height = ((response&0xff)<< 8)|height;	
+	height = ((response&0xff)<< 8)|height;
 	return (height);
 }
 
-int 
-set_usb_in_endpoint	(Camera *camera, int inep) 
+int
+set_usb_in_endpoint	(Camera *camera, int inep)
 {
 	GPPortSettings settings;
 	gp_port_get_settings ( camera ->port, &settings);
 	settings.usb.inep = inep;
 	GP_DEBUG("inep reset to %02X\n", inep);
 	return gp_port_set_settings ( camera ->port, settings);
-}	
+}
 
-int 
-jl2005a_read_picture_data (Camera *camera, GPPort *port, 
-					unsigned char *data, unsigned int size) 
+int
+jl2005a_read_picture_data (Camera *camera, GPPort *port,
+					unsigned char *data, unsigned int size)
 {
 	unsigned char *to_read;
 	int maxdl = 0xfa00;
@@ -132,9 +132,9 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 	 * frame in a clip, is 0x01 if it is any clip frame after the initial
 	 * one, and is zero if what is to be downloaded is a standalone photo.
 	 * If clips will in the future be processed as AVI files, then there is
-	 * not any information to know how many frames are present, prior to 
+	 * not any information to know how many frames are present, prior to
 	 * downloading them. There is only a starting point and an indicator
-	 * for each frame. 
+	 * for each frame.
 	 */
         gp_port_write (port, "\xab\x00", 2);
         gp_port_write (port, "\xa1\x04", 2);
@@ -145,8 +145,8 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
         gp_port_write (port, "\xab\x00", 2);
         gp_port_write (port, "\xa2\x08", 2);
 
-	/* Switch the inep over to 0x81. */ 
-	set_usb_in_endpoint	(camera, 0x81); 
+	/* Switch the inep over to 0x81. */
+	set_usb_in_endpoint	(camera, 0x81);
 	while (size > maxdl) {
 		ret = gp_port_read(port, (char *)to_read, maxdl);
 		if (ret < GP_OK) return ret;
@@ -157,7 +157,7 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 	ret = gp_port_read(port, (char *)to_read, size);
 	if (ret < GP_OK) return ret;
 	if (ret < size) return GP_ERROR;
-	/* Switch the inep back to 0x84. */ 
+	/* Switch the inep back to 0x84. */
 	set_usb_in_endpoint	(camera, 0x84);
 	return GP_OK;
 }
@@ -165,18 +165,18 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 int
 jl2005a_reset (Camera *camera, GPPort *port)
 {
-	int i; 
+	int i;
 	gp_port_write (port,"\xab\x00" , 2);
 	gp_port_write (port, "\xa1\x00", 2);
 	gp_port_write (port, "\xab\x00", 2);
 	gp_port_write (port, "\xa2\x02", 2);
-	for (i=0; i < 4; i++) 
+	for (i=0; i < 4; i++)
 		jl2005a_shortquery(port, 0x1d);
 	/* Supposed to get something like 0x01, 0x01, 0x01, 0x00 */
     	return GP_OK;
 }
 
-int jl2005a_read_info_byte(GPPort *port, int n) 
+int jl2005a_read_info_byte(GPPort *port, int n)
 {
 	char response;
 	char command[2];
@@ -227,7 +227,7 @@ int jl2005a_decompress (unsigned char *inp, unsigned char *outp, int width,
 						outp[(4*i+5)*width+j])/2;
 		}
 	}
-	if (width == 176) 
+	if (width == 176)
 		memmove(outp+6*width, outp, (height-6)*width);
 
 	return 0;

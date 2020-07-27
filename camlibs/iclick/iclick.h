@@ -1,23 +1,23 @@
 /*
  * iclick.c
  *
- * Here, the functions which are needed to get data from the camera.  
+ * Here, the functions which are needed to get data from the camera.
  *
- * Copyright (c) 2004 Theodore Kilgore <kilgota@auburn.edu>, 
+ * Copyright (c) 2004 Theodore Kilgore <kilgota@auburn.edu>,
  * Stephen Pollei <stephen_pollei@comcast.net>.
- * Camera library support under libgphoto2.1.1 for camera(s) 
- * with chipset from Service & Quality Technologies, Taiwan. 
- * The chip supported by this driver is presumed to be the SQ915.  
+ * Camera library support under libgphoto2.1.1 for camera(s)
+ * with chipset from Service & Quality Technologies, Taiwan.
+ * The chip supported by this driver is presumed to be the SQ915.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * Licensed under GNU Lesser General Public License, as part of Gphoto
- * camera support project. For a copy of the license, see the file 
+ * camera support project. For a copy of the license, see the file
  * COPYING in the main source tree of libgphoto2.
- */    
+ */
 
 
 
@@ -30,8 +30,8 @@
  * A 'clip' is an autoshoot clip.
  * A 'frame' is a single a picture out of a clip.
  * An 'entry' corresponds to a line listed in the camera's configuration data,
- * part of which is a rudimentary allocation table (the 'catalog'). 
- * An entry, therefore, may be either a picture or a clip. 
+ * part of which is a rudimentary allocation table (the 'catalog').
+ * An entry, therefore, may be either a picture or a clip.
  * We reserve the word 'file' for the user fetchable file,
  * that is, a picture or a frame.
  */

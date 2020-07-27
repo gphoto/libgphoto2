@@ -1,5 +1,5 @@
 /* compile with gcc -Wall -o sample-photobooth -lgphoto2 sample-photobooth.c
- * 
+ *
  */
 
 #include <stdlib.h>

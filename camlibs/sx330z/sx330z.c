@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -78,22 +78,22 @@ sx330z_fill_toc_page(uint8_t *buf, struct traveler_toc_page *toc)
  * SX330z initialization
  *  (not really an initialization, but lets check if we have contact )
  */
-int 
+int
 sx330z_init(Camera *camera, GPContext *context)
 {
 /* struct traveler_ack ack;*/
  uint8_t trxbuf[0x10];
  int ret;
  ret = gp_port_usb_msg_read(camera->port, USB_REQ_RESERVED, SX330Z_REQUEST_INIT, 0, (char *)trxbuf, 0x10);
- if (ret != 0x10) return(GP_ERROR); /* more specific about error ? */  
- return(GP_OK); 
+ if (ret != 0x10) return(GP_ERROR); /* more specific about error ? */
+ return(GP_OK);
 } /* sx330z_init */
 
 
 /*
- * Read block described by req 
+ * Read block described by req
  */
-static int 
+static int
 sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, uint8_t *buf)
 {
  int ret;
@@ -108,7 +108,7 @@ sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, 
   if (ret != req->size)return(GP_ERROR_IO_READ);
  /* 3. read Ack */
  ret = gp_port_read(camera->port, (char *)trxbuf, 0x10);
-  if (ret != 0x10) return(GP_ERROR); 
+  if (ret != 0x10) return(GP_ERROR);
  /* FIXME : Security check ???*/
  return(GP_OK);
 } /* read block */
@@ -117,7 +117,7 @@ sx330z_read_block(Camera *camera, GPContext *context, struct traveler_req *req, 
 /*
  * Get TOC size
  */
-int 
+int
 sx330z_get_toc_num_pages(Camera *camera, GPContext *context, int32_t *pages)
 {
  struct traveler_ack ack;
@@ -136,35 +136,35 @@ sx330z_get_toc_num_pages(Camera *camera, GPContext *context, int32_t *pages)
  if (ack.size == 0x200) (*pages)--;
  if ((ack.size > 0x200)&&
     (((ack.size - 0xc) % 0x200) == 0)) (*pages)--;
-  
+
  return(GP_OK);
 } /* get toc size */
 
 /*
- * Get TOC 
- * Read a single TOC page 
+ * Get TOC
+ * Read a single TOC page
  * specified by "page"
  */
-int 
+int
 sx330z_get_toc_page(Camera *camera, GPContext *context, struct traveler_toc_page *TOC, int page)
 {
  int ret;
  struct traveler_req req;
  uint8_t tocbuf[0x200];
- 
+
  req.always1 = 1;
- req.requesttype = SX330Z_REQUEST_TOC;	/* 0x03 */ 
+ req.requesttype = SX330Z_REQUEST_TOC;	/* 0x03 */
  req.offset = 0x200 * page;			/* offset */
  req.timestamp = 0x123;			/* ? */
  req.size = 0x200;			/* 512 Bytes / tocpage*/
  req.data = 0;				/* ? */
  memset(req.filename, 0, 12);		/* ? */
- 
+
  ret=sx330z_read_block(camera,context,&req,tocbuf);
  if (ret<0) return(ret);
- 
+
  sx330z_fill_toc_page(tocbuf,TOC); /* convert */
- 
+
  /*  TOC sanity check   */
  if ((TOC->numEntries < 0) || (TOC->numEntries > 25)) return(GP_ERROR_CORRUPTED_DATA);
  return(GP_OK);
@@ -172,10 +172,10 @@ sx330z_get_toc_page(Camera *camera, GPContext *context, struct traveler_toc_page
 
 
 /*
- *  get data 
- * could be  Image / Thumbnail 
+ *  get data
+ * could be  Image / Thumbnail
  */
-int 
+int
 sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
    		 char **data, unsigned long int *size, int thumbnail)
 {
@@ -185,16 +185,16 @@ sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
  int found;
  int tocpages, tcnt, ecnt;
  struct traveler_toc_page toc;
- int id;/* progress ? */ 
+ int id;/* progress ? */
  pages = 0;
  found = 0;
  memcpy(req.filename, filename, 12);
- 
- if (thumbnail == SX_THUMBNAIL) 
+
+ if (thumbnail == SX_THUMBNAIL)
  {
   if (camera->pl->usb_product == USB_PRODUCT_MD9700)
     pages = 7; /* first 28k only*/
-   else  
+   else
     pages = 5; /* first 20k only */
   req.filename[0] = 'T';		/* 'T'humbnail indicator ?*/
   id = gp_context_progress_start(context, 0x1000 * pages, "Thumbnail %.4s _", &filename[4]);
@@ -222,8 +222,8 @@ sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
   pages = *size / 0x1000;
   id = gp_context_progress_start(context, *size, "Picture %.4s _", &filename[4]);
  } /* real image */
-  
- *size = 4096 * pages; 
+
+ *size = 4096 * pages;
  *data = malloc(*size);
  dptr = (uint8_t *)*data;
  /* load all parts */
@@ -238,7 +238,7 @@ sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
   gp_context_progress_update(context, id, (cnt + 1) * 0x1000);
   sx330z_read_block(camera,context,&req,dptr);  /* read data */
   dptr += 4096;
- }/* download imageparts */     
+ }/* download imageparts */
  gp_context_progress_stop(context,id);
  return(GP_OK);
 } /* sx330z_get_data */
@@ -246,9 +246,9 @@ sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
 
 
 /*
- *  delete file 
+ *  delete file
  */
-int 
+int
 sx330z_delete_file(Camera *camera, GPContext *context, const char *filename)
 {
  struct traveler_req req;
@@ -274,7 +274,7 @@ sx330z_delete_file(Camera *camera, GPContext *context, const char *filename)
  ret = gp_port_usb_msg_read(camera->port,
 	USB_REQ_RESERVED, SX330Z_REQUEST_DELETE, 0, (char *)trxbuf, 0x10);
  if (ret != 0x10) return(GP_ERROR);
- 
+
  gp_context_progress_stop(context, id);					/* stop context */
  return(GP_OK);
 } /* sx330z delete file */

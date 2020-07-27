@@ -1,5 +1,5 @@
 /* SCSI commands to USB Mass storage devices port library for Linux
- * 
+ *
  *   Copyright (c) 2010-2012 Hans de Goede <hdegoede@redhat.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -72,7 +72,7 @@
 #    define N_(String) gettext_noop (String)
 #  else
 #    define N_(String) (String)
-#  endif 
+#  endif
 #else
 #  define textdomain(String) (String)
 #  define gettext(String) (String)
@@ -90,7 +90,7 @@ struct _GPPortPrivateLibrary {
 };
 
 GPPortType
-gp_port_library_type () 
+gp_port_library_type ()
 {
 	return GP_PORT_USB_SCSI;
 }
@@ -167,7 +167,7 @@ gp_port_usbscsi_resolve_symlink (const char *link)
 	return path;
 }
 
-static int 
+static int
 gp_port_usbscsi_get_usb_id (const char *sg,
 	unsigned short *vendor_id, unsigned short *product_id)
 {

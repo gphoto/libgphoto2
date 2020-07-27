@@ -155,7 +155,7 @@ out:
 
 /*
  * This enables/disables the specific canon capture mode.
- * 
+ *
  * For non canons this is not required, and will just return
  * with an error (but without negative effects).
  */

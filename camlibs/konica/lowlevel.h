@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -30,7 +30,7 @@ int l_init (GPPort *, GPContext *);
 /*
  * Some comments on the structure of send_buffer, image_buffer,
  * and receive_buffer:
- * 
+ *
  * send_buffer:	The first two bytes are low order and high
  * 		byte of the command, followed by at least two
  *		more bytes. The number of sent bytes has to be

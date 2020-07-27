@@ -58,14 +58,14 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-/* IDENTIFY_INIT_TIMEOUT: the starting timeout (in milliseconds) 
+/* IDENTIFY_INIT_TIMEOUT: the starting timeout (in milliseconds)
  * to wait for the camera to respond to an "identify camera" request.
  * This timeout is doubled for each retry */
 /* It was originally 10, but this made the communication fail, so
  * bump up to 100. */
 #define IDENTIFY_INIT_TIMEOUT 100
 
-/* IDENTIFY_MAX_ATTEMPTS: how many "identify camera" requests to send 
+/* IDENTIFY_MAX_ATTEMPTS: how many "identify camera" requests to send
  * to the camera, until we give up for lack of response. */
 #define IDENTIFY_MAX_ATTEMPTS 5
 
@@ -379,7 +379,7 @@ canon_usb_camera_init (Camera *camera, GPContext *context)
 				else
 					GP_DEBUG ("canon_usb_camera_init() "
 						  "Step #5 of initialization failed! (returned %i, expected %i) "
-						  "Camera might still work though. Continuing.", 
+						  "Camera might still work though. Continuing.",
 						  i, 4);
 			}
                 }
@@ -460,10 +460,10 @@ int
 canon_usb_init (Camera *camera, GPContext *context)
 {
         /* unsigned char buffer[0x44]; */
-        int res, id_retry, i, camstat; 
+        int res, id_retry, i, camstat;
         /* int read_bytes; */
 	int orig_mstimeout = -1;
-	int id_mstimeout = IDENTIFY_INIT_TIMEOUT; /* separate timeout for 
+	int id_mstimeout = IDENTIFY_INIT_TIMEOUT; /* separate timeout for
 						     identify camera */
 
         GP_DEBUG ("Initializing the (USB) camera.");
@@ -480,7 +480,7 @@ canon_usb_init (Camera *camera, GPContext *context)
         if ( camstat < 0 )
                 return camstat;
 
-	/* Save the original timeout value and set up the initial 
+	/* Save the original timeout value and set up the initial
 	   identify camera timeout value */
 	gp_port_get_timeout (camera->port, &orig_mstimeout);
 	gp_port_set_timeout (camera->port, id_mstimeout);
@@ -533,7 +533,7 @@ canon_usb_init (Camera *camera, GPContext *context)
                 GP_DEBUG ( "canon_usb_init: camera uses newer protocol, so we get camera abilities" );
                 c_res = canon_usb_dialogue (camera,
                                             CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
-                                            &bytes_read, NULL, 0); 
+                                            &bytes_read, NULL, 0);
 
                 if ( c_res == NULL ) {
                         GP_DEBUG ( "canon_usb_init: \"get picture abilities\" failed; continuing anyway." );
@@ -565,7 +565,7 @@ canon_usb_init (Camera *camera, GPContext *context)
                 if (res != GP_OK) {
                         gp_context_error (context, _("Camera not ready, get_battery failed: %s"),
                                           gp_result_as_string (res));
-                        return res; 
+                        return res;
                 }
 
         }
@@ -692,7 +692,7 @@ canon_usb_lock_keys (Camera *camera, GPContext *context)
 
 		c_res = canon_usb_dialogue (camera,
 					    CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
-					    &bytes_read, NULL, 0); 
+					    &bytes_read, NULL, 0);
 
 		if ( c_res == NULL ) {
 			GP_DEBUG ( "canon_usb_lock_keys: \"get picture abilities\" failed; continuing anyway." );
@@ -784,7 +784,7 @@ canon_usb_unlock_keys (Camera *camera, GPContext *context)
                 }
                 else {
                         /* Your camera model does not need unlocking, cannot do unlocking or
-                         * we don't know how to unlock its keys. 
+                         * we don't know how to unlock its keys.
                          */
                         GP_DEBUG ("canon_usb_unlock_keys: Key unlocking not implemented for this camera model. "
                                   "If unlocking works when using the Windows software with your camera, "
@@ -1033,7 +1033,7 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
 
         GP_DEBUG ("canon_usb_capture_dialogue()");
 
-	*photo_status = 0; /* This should only be checked by the caller 
+	*photo_status = 0; /* This should only be checked by the caller
 			      if canon_usb_capture_dialogue() returns null */
 
         /* Build payload for command, which contains subfunction code */
@@ -1083,7 +1083,7 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
 		GP_DEBUG ( "canon_usb_capture_dialogue: Issuing unknown command 0x22 for class 6 camera." );
                 buffer = canon_usb_dialogue ( camera,
 					      CANON_USB_FUNCTION_20D_UNKNOWN_2,
-					      return_length, payload, 4 ); 
+					      return_length, payload, 4 );
 
                 if ( buffer == NULL )
                         GP_DEBUG ( "canon_usb_capture_dialogue: Unknown command 0x22 returned null buffer; continuing anyway." );
@@ -1154,7 +1154,7 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
 			/* (only for RAW + JPEG modes) */
 			GP_DEBUG ( "canon_usb_capture_dialogue: "
 				   "secondary image descriptor received");
-			
+
 			camera->pl->image_b_length = le32atoh ( buf2+0x11 );
 			camera->pl->image_b_key = le32atoh ( buf2+0x0c );
 
@@ -1642,13 +1642,13 @@ canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned int 
 
 	buffer = canon_usb_dialogue_full (camera, canon_funct, return_length,
 					  payload, payload_length);
-	
+
 	/* Remove the packet header from the response */
 	if (return_length)
 		*return_length = *return_length - 0x50;
-	if (buffer) 
+	if (buffer)
 		return buffer + 0x50;
-	else 
+	else
 		return NULL;
 }
 
@@ -1983,7 +1983,7 @@ canon_usb_get_captured_image (Camera *camera, const int key, unsigned char **dat
  * Gets the just-captured image from a USB-connected Canon
  * camera. This function must be called soon after an image capture,
  * and needs the image key returned by canon_usb_capture_dialogue().
- * This function is only used for "secondary images," e.g., the JPEGs 
+ * This function is only used for "secondary images," e.g., the JPEGs
  * downloaded when the camera's capture image format mode is set to "RAW + JPEG"
  *
  * Returns: gphoto2 error code, length in @length, and image data in @data.
@@ -2186,7 +2186,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
  * @destname: name file should have on camera
  * @destpath: pathname for directory to put file
  * @context: context for error reporting
- * 
+ *
  * Uploads file to USB camera
  *
  * Bugs:
@@ -2196,9 +2196,9 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
  * s10sh (http://www.kyuzz.org/antirez/s10sh.html) has the same problem.
  * The problem only appears when USB deinitialisation and initialisation
  * is performed between uploads. You can call this function more than
- * once with big files during one session without encountering the problem 
+ * once with big files during one session without encountering the problem
  * described. <kramm@quiss.org>
- * 
+ *
  * Returns: gphoto2 error code
  *
  */
@@ -2215,7 +2215,7 @@ canon_usb_put_file (Camera __unused__ *camera, CameraFile __unused__ *file,
 #else /* else ifdef CANON_EXPERIMENTAL_UPLOAD */
 
 int
-canon_usb_put_file (Camera *camera, CameraFile *file, 
+canon_usb_put_file (Camera *camera, CameraFile *file,
 		    const char *xfilename, const char *destname, const char *destpath,
                     GPContext *context)
 {
@@ -2342,7 +2342,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 		/* Max length of data block */
 		htole32a ( packet+0x58, len2 );
 
-		strcpy(&packet[0x5c], filename); 
+		strcpy(&packet[0x5c], filename);
 		memcpy(&packet[0x5c+filename_len+1], &data[offs], len2);
 
 		status = gp_port_write (camera->port, packet, len1+0x40);
@@ -2443,7 +2443,7 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
          *
          * the 0x00 before dirname means 'no recursion'
          * NOTE: the first 0x00 after dirname is the NULL byte terminating
-         * the string, so payload_length is strlen(dirname) + 4 
+         * the string, so payload_length is strlen(dirname) + 4
          */
         if (strlen (path) + 4 > sizeof (payload)) {
                 GP_DEBUG ("canon_usb_get_dirents: "
@@ -2514,7 +2514,7 @@ canon_usb_list_all_dirs (Camera *camera, unsigned char **dirent_data,
          * the 0x0f before dirname means 'recurse to level 15', which
          * should get all the directories on the camera.
          * NOTE: the first 0x00 after dirname is the NULL byte terminating
-         * the string, so payload_length is strlen(dirname) + 4 
+         * the string, so payload_length is strlen(dirname) + 4
          */
         if (strlen (disk_name) + 4 > sizeof (payload)) {
                 GP_DEBUG ("canon_usb_list_all_dirs: "
@@ -2611,9 +2611,9 @@ canon_usb_identify (Camera *camera, GPContext *context)
          * the colon/space problem. (FIXME)
          */
         for (i = 0; models[i].id_str != NULL; i++) {
-                if (models[i].usb_vendor 
+                if (models[i].usb_vendor
                     && models[i].usb_product
-                    && (a.usb_vendor  == models[i].usb_vendor) 
+                    && (a.usb_vendor  == models[i].usb_vendor)
                     && (a.usb_product == models[i].usb_product)) {
                         GP_DEBUG ("canon_usb_identify: USB ID match 0x%04x:0x%04x (model name \"%s\")",
                                   models[i].usb_vendor, models[i].usb_product, models[i].id_str);

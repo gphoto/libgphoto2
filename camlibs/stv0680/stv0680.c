@@ -1,17 +1,17 @@
 /*
  * STV0680 Vision Camera Chipset Driver
- * Copyright 2000 Adam Harrison <adam@antispin.org> 
- * 
+ * Copyright 2000 Adam Harrison <adam@antispin.org>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -58,7 +58,7 @@ static const struct camera_to_usb {
 
 	/* You can search in google for them, using either:
 	 * 	AAA 80 CIF
-	 * or 
+	 * or
 	 * 	AAA 26 VGA
 	 * It has been rebranded and rereleased dozens of times.
 	 */
@@ -95,9 +95,9 @@ static const struct camera_to_usb {
       	{ "DigitalDream:la ronde",   0x0553, 0x0202, 0 },
 	/* https://sf.net/tracker/index.php?func=detail&aid=1000498&group_id=8874&atid=358874 */
 	{ "DigitalDream:l'espion XS", 0x1183, 0x0001, 0 },
-	
 
-	/* reported by jerry white */ 
+
+	/* reported by jerry white */
 	{ "Argus:DC-1500",		0x0553, 0x0202, 1 },
 	/* reported by Philippe Libat <philippe@mandrakesoft.com>,
 	 * serial only. */
@@ -126,14 +126,14 @@ static const struct camera_to_usb {
 	{ "Creative:Go Mini",		0x041e, 0x4007, 1 }
 };
 
-int camera_id (CameraText *id) 
+int camera_id (CameraText *id)
 {
 	strcpy(id->text, "STV0680");
 
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) 
+int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 	unsigned int i;
@@ -156,7 +156,7 @@ int camera_abilities (CameraAbilitiesList *list)
 			a.status = GP_DRIVER_STATUS_PRODUCTION;
 			a.port     |= GP_PORT_USB;
 			a.operations |= GP_OPERATION_CAPTURE_PREVIEW;
-			a.usb_vendor  = camera_to_usb[i].idVendor;		
+			a.usb_vendor  = camera_to_usb[i].idVendor;
 			a.usb_product = camera_to_usb[i].idProduct;
 		}
 		if (camera_to_usb[i].serial) {
@@ -170,8 +170,8 @@ int camera_abilities (CameraAbilitiesList *list)
 	return (GP_OK);
 }
 
-static int file_list_func (CameraFilesystem *fs, const char *folder, 
-			   CameraList *list, void *data, GPContext *context) 
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int count, result;
@@ -198,7 +198,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	if(image_no < 0)
 		return image_no;
 
-	gp_file_set_mime_type (file, GP_MIME_PNM); 
+	gp_file_set_mime_type (file, GP_MIME_PNM);
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		result = stv0680_get_image (camera->port, image_no, file);
@@ -253,20 +253,20 @@ static int camera_capture_preview (Camera *camera, CameraFile *file, GPContext *
 	if (result < 0)
 		return result;
 
-	gp_file_set_mime_type (file, GP_MIME_PNM); 
+	gp_file_set_mime_type (file, GP_MIME_PNM);
 	gp_file_set_data_and_size (file, data, size);
 	return (GP_OK);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	stv0680_summary(camera->port,summary->text);
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, 
+	strcpy (about->text,
 		_("STV0680\n"
 		"Adam Harrison <adam@antispin.org>\n"
 		"Driver for cameras using the STV0680 processor ASIC.\n"
@@ -346,7 +346,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.storage_info_func = storage_info_func
 };
 
-int camera_init (Camera *camera, GPContext *context) 
+int camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 
@@ -358,7 +358,7 @@ int camera_init (Camera *camera, GPContext *context)
 
 	gp_port_get_settings(camera->port, &settings);
 	switch(camera->port->type) {
-	case GP_PORT_SERIAL:		
+	case GP_PORT_SERIAL:
         	gp_port_set_timeout(camera->port, 1000);
 		settings.serial.speed = 115200;
         	settings.serial.bits = 8;

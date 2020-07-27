@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -70,7 +70,7 @@ web2_command(
 	fprintf(stderr,"\n");
     }
 #endif
-    if (ret>=GP_OK) 
+    if (ret>=GP_OK)
 	ret=GP_OK;
     return ret;
 }
@@ -192,7 +192,7 @@ web2_getpicture(GPPort *port, GPContext *context, CameraFile *file)
 	if (toread!=ret)
 	    break;
 	if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-	    /* We need to read the rest too or the communication is in 
+	    /* We need to read the rest too or the communication is in
 	     * an undefined state. */
 	    wascanceled = 1;
 	}
@@ -253,7 +253,7 @@ web2_getnumpics(
     *x1 = cmdbuf[0] | (cmdbuf[1] << 8); /* unclear */
     *numpics = cmdbuf[2] | (cmdbuf[3] << 8);
     *x3 = cmdbuf[4] | (cmdbuf[5] << 8); /* unclear */
-    
+
     /* sometimes looks like mem, sometimes it doesn't */
     *freemem = cmdbuf[6] | (cmdbuf[7] << 8) | (cmdbuf[8] << 16) | (cmdbuf[9] << 24);
     return GP_OK;
@@ -425,7 +425,7 @@ _cmd_26(GPPort *port, GPContext *context, int x) {
 		    cmdbuf[2*i+0] = xshort[i] & 0xff;
 		    cmdbuf[2*i+1] = (xshort[i] >> 8) & 0xff;
 		}
-		return web2_command(port, 1, 0x26, 0x10, 0, cmdbuf, 6); 
+		return web2_command(port, 1, 0x26, 0x10, 0, cmdbuf, 6);
     case 1:	xshort[0] = 364; /* 16c */
 	    	xshort[1] = 256; /* 100 */
 	    	xshort[2] = 596; /* 254 */
@@ -471,14 +471,14 @@ _cmd_fb(GPPort *port, GPContext *context, int *y) {
 #endif
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "SiPix Web2");
 	return (GP_OK);
 }
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -502,7 +502,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
     	return web2_exit(camera->port, context);
 }
@@ -631,7 +631,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	return (GP_OK);
 }
 
-/* 
+/*
  * This function makes sure that the <index in folder> is <picture index in
  * camera>. Even delete should keep that relation.
  */
@@ -687,7 +687,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
         camera->functions->exit                 = camera_exit;
         camera->functions->about                = camera_about;

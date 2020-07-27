@@ -283,7 +283,7 @@ get_camera_model(Camera *camera, SonyModel *model)
 {
 	CameraAbilities a;
 	int rc;
-	
+
 	rc = gp_camera_get_abilities (camera, &a);
 	if (rc == GP_OK) {
 		int i;
@@ -314,7 +314,7 @@ int
 camera_init(Camera * camera, GPContext *context)
 {
 	int rc;
-	SonyModel model; 
+	SonyModel model;
 
 	rc = get_camera_model(camera, &model);
 	if (rc != GP_OK)

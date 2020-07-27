@@ -47,7 +47,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 	GP_DEBUG( "dimagev_get_picture::file_number is %d", file_number);
 
 	/* Maybe check if it exists? Check the file type? */
-	
+
 	/* First make the command packet. */
 	command_buffer[0] = 0x04;
 	command_buffer[1] = (unsigned char)( file_number / 256 );
@@ -66,7 +66,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	free(p);
 
 	switch ( char_buffer ) {
@@ -94,7 +94,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		free(p);
 		return GP_ERROR_NO_MEMORY;
 	}
-		
+
 	free(p);
 
 	total_packets = (int) r->buffer[0];
@@ -118,7 +118,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			free(data);
 			return GP_ERROR_IO;
 		}
-	
+
 		if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 			/*
 			GP_DEBUG( "dimagev_get_picture::unable to read packet");
@@ -146,7 +146,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 			free(p);
 			return GP_ERROR_NO_MEMORY;
 		}
-		
+
 		free(p);
 
 		memcpy(&( data[ ( size + 1) ] ), r->buffer, (size_t) r->length );
@@ -169,7 +169,7 @@ int dimagev_get_picture(dimagev_t *dimagev, int file_number, CameraFile *file) {
 		free(data);
 		return GP_ERROR_IO;
 	}
-		
+
 	switch ( char_buffer ) {
 		case DIMAGEV_ACK:
 			break;
@@ -226,7 +226,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	free(p);
 
 	switch ( char_buffer ) {
@@ -254,7 +254,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		free(p);
 		return GP_ERROR_NO_MEMORY;
 	}
-		
+
 	free(p);
 
 	/* Unlike normal images, we are guaranteed 9600 bytes *exactly*. */
@@ -279,7 +279,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 			free(ycrcb_data);
 			return GP_ERROR_IO;
 		}
-	
+
 		if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 			GP_DEBUG( "dimagev_get_thumbnail::unable to read packet");
 			free(ycrcb_data);
@@ -292,7 +292,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 			free(ycrcb_data);
 			return GP_ERROR_NO_MEMORY;
 		}
-		
+
 		free(p);
 
 		memcpy(&( ycrcb_data[ ( size + 1) ] ), r->buffer, (size_t) r->length );
@@ -317,7 +317,7 @@ int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file)
 		free(ycrcb_data);
 		return GP_ERROR_IO;
 	}
-		
+
 	switch ( char_buffer ) {
 		case DIMAGEV_ACK:
 			break;

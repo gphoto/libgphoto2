@@ -145,7 +145,7 @@ typedef enum {
  * @PKT_LEN_MSB: Offset in packet to most-significant byte of packet length.
  * @PKT_HDR_LEN: Length of complete header.
  *
- * Offsets to bytes in a serial packet header. 
+ * Offsets to bytes in a serial packet header.
  *
  */
 typedef enum {
@@ -182,7 +182,7 @@ typedef enum {
 } canonPacketType;
 
 
- 
+
 /* #define PKT_NACK        255 */
 /* #define PKTACK_NACK     0x01 */
 /* #define PKT_UPLOAD_EOT  3 */

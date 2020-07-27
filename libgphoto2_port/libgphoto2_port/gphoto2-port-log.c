@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -48,9 +48,9 @@
 #endif
 
 #ifndef DISABLE_DEBUGGING
-/** 
+/**
  * \brief Internal logging function entry.
- * 
+ *
  * Internal structure to remember the logging functions.
  * Use gp_log_add_func() and gp_log_remove_func() to access it.
  */
@@ -150,7 +150,7 @@ gp_log_remove_func (int id)
 }
 
 /**
- * Width of offset field in characters. Note that HEXDUMP_COMPLETE_LINE 
+ * Width of offset field in characters. Note that HEXDUMP_COMPLETE_LINE
  * needs to be changed when this value is changed.
  */
 #define HEXDUMP_OFFSET_WIDTH 4
@@ -175,7 +175,7 @@ gp_log_remove_func (int id)
 
 /**
  * We are lazy and do our typing only once. Please note that you have
- * to add/remove some lines when increasing/decreasing the values of 
+ * to add/remove some lines when increasing/decreasing the values of
  * HEXDUMP_BLOCK_DISTANCE and/or HEXDUMP_OFFSET_WIDTH.
  */
 #define HEXDUMP_COMPLETE_LINE {\
@@ -293,7 +293,7 @@ exit:
  * \param args the va_list corresponding to format
  *
  * Logs a message at the given log level. You would normally use this
- * function to log as yet unformatted strings. 
+ * function to log as yet unformatted strings.
  **/
 void
 gp_logv (GPLogLevel level, const char *domain, const char *format,
@@ -416,11 +416,11 @@ gp_log_with_source_location(GPLogLevel level, const char *file, int line, const 
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 
-/** 
+/**
  * \brief (Internal) translate a enumeration code to a string
  */
 const char *
-gpi_enum_to_string(unsigned int _enum, 
+gpi_enum_to_string(unsigned int _enum,
 		   const StringFlagItem *map)
 {
 	int i;
@@ -433,7 +433,7 @@ gpi_enum_to_string(unsigned int _enum,
 	return NULL;
 }
 
-/** 
+/**
  * \brief (Internal) translate a string to an enumeration code
  */
 int
@@ -452,7 +452,7 @@ gpi_string_to_enum(const char *str,
 }
 
 void
-gpi_flags_to_string_list(unsigned int flags, 
+gpi_flags_to_string_list(unsigned int flags,
 			 const StringFlagItem *map,
 			 string_item_func func, void *data)
 {
@@ -462,13 +462,13 @@ gpi_flags_to_string_list(unsigned int flags,
 			func(map[i].str, data);
 			break;
 		} else if (0 != (flags & map[i].flag)) {
-			func(map[i].str, data);      
+			func(map[i].str, data);
 		}
 	}
 }
 
-unsigned int 
-gpi_string_to_flag(const char *str, 
+unsigned int
+gpi_string_to_flag(const char *str,
 	       const StringFlagItem *map)
 {
 	int i;
@@ -480,8 +480,8 @@ gpi_string_to_flag(const char *str,
   return 0;
 }
 
-int 
-gpi_string_or_to_flags(const char *str, 
+int
+gpi_string_or_to_flags(const char *str,
 		       unsigned int *flags,
 		       const StringFlagItem *map)
 {
@@ -501,7 +501,7 @@ gpi_string_or_to_flags(const char *str,
 }
 
 unsigned int
-gpi_string_list_to_flags(const char *str[], 
+gpi_string_list_to_flags(const char *str[],
 		     const StringFlagItem *map)
 {
 	int i;

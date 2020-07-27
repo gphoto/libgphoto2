@@ -98,7 +98,7 @@ static int dsc2_sendcmd(Camera *camera, uint8_t cmd, long int data, uint8_t sequ
 /* dsc2_retrcmd - retrieve command and its data from DSC */
 
 static int dsc2_retrcmd(Camera *camera) {
-        
+
         int     result = GP_ERROR;
         int     s;
 
@@ -126,7 +126,7 @@ static int dsc2_retrcmd(Camera *camera) {
 /* dsc2_connect - try hand shake with camera and establish connection */
 
 static int dsc2_connect(Camera *camera, int speed) {
-        
+
         DEBUG_PRINT_MEDIUM(("Connecting camera with speed: %i.", speed));
 
         if (dsc1_setbaudrate(camera, speed) != GP_OK)
@@ -151,7 +151,7 @@ static int dsc2_connect(Camera *camera, int speed) {
 /* dsc2_disconnect - reset camera, free buffers and close files */
 
 static int dsc2_disconnect(Camera *camera) {
-        
+
         DEBUG_PRINT_MEDIUM(("Disconnecting the camera."));
 
         if (dsc2_sendcmd(camera, DSC2_CMD_RESET, 0, 0) != GP_OK)
@@ -171,7 +171,7 @@ static int dsc2_disconnect(Camera *camera) {
 /* dsc2_getindex - retrieve the number of images stored in camera memory */
 
 static int dsc2_getindex(Camera *camera) {
-        
+
         int     result = GP_ERROR;
 
         DEBUG_PRINT_MEDIUM(("Retrieving the number of images."));
@@ -197,7 +197,7 @@ static int dsc2_getindex(Camera *camera) {
 /* dsc2_delete - delete image #index from camera memory */
 
 static int dsc2_delete(Camera *camera, int index) {
-        
+
         DEBUG_PRINT_MEDIUM(("Deleting image: %i.", index));
 
         if (index < 1)
@@ -218,7 +218,7 @@ static int dsc2_delete(Camera *camera, int index) {
 /* dsc2_selectimage - select image to download, return its size */
 
 static int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
-        
+
         int     size = 0;
 
         DEBUG_PRINT_MEDIUM(("Selecting image: %i, thumbnail: %i.", index, thumbnail));
@@ -252,7 +252,7 @@ static int dsc2_selectimage(Camera *camera, int index, int thumbnail) {
 /* gp_port_readimageblock - read #block block (1024 bytes) of an image into buf */
 
 static int dsc2_readimageblock(Camera *camera, int block, char *buffer) {
-        
+
         DEBUG_PRINT_MEDIUM(("Reading image block: %i.", block));
 
         if (dsc2_sendcmd(camera, DSC2_CMD_GET_DATA, block, block) != GP_OK)
@@ -372,7 +372,7 @@ static int dsc2_writeimageblock(Camera *camera, int block, char *buffer, int siz
 
 #if 0
 static int dsc2_writeimage(Camera *camera, char *buffer, int size) {
-        
+
         int     blocks, blocksize, i;
 
         DEBUG_PRINT_MEDIUM(("Writing an image of size: %i.", size));
@@ -402,7 +402,7 @@ static int dsc2_writeimage(Camera *camera, char *buffer, int size) {
 
 #if 0
 static int dsc2_preview(Camera *camera, int index) {
-        
+
         if (index < 1)
                 RETURN_ERROR(EDSCBADNUM);
                 /* bad image number */
@@ -423,21 +423,21 @@ static int dsc2_preview(Camera *camera, int index) {
 /* Library interface functions */
 
 int camera_id (CameraText *id) {
-        
+
         strcpy(id->text, "panasonic-dc1580");
 
         return (GP_OK);
 }
 
 int camera_abilities (CameraAbilitiesList *list) {
-        
+
         CameraAbilities a;
         char    *models[] = {
                         "Panasonic:DC1580",
                         "Nikon:CoolPix 600",
                         NULL };
         int     i = 0, result;
-        
+
         while (models[i]) {
 		memset(&a, 0, sizeof(a));
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
@@ -450,7 +450,7 @@ int camera_abilities (CameraAbilitiesList *list) {
                 a.speed[4]     = 115200;
                 a.speed[5]     = 0;
                 a.operations        = 	GP_OPERATION_NONE;
-                a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+                a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 					GP_FILE_OPERATION_PREVIEW;
                 a.folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE;
 
@@ -478,9 +478,9 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
         Camera  *camera = data;
         int     count, result;
-        
+
 	CHECK (count = dsc2_getindex(camera));
-        
+
         CHECK (gp_list_populate(list, DSC_FILENAMEFMT, count));
 
         return GP_OK;
@@ -555,7 +555,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 static int put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			  CameraFileType type, CameraFile *file, void *user_data,
 			  GPContext *context) {
-        
+
 	Camera *camera = user_data;
         int             blocks, blocksize, i, result;
 	const char      *data;
@@ -575,7 +575,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
         if (size > DSC_MAXIMAGESIZE) {
                 gp_context_message (context, _("File size is %ld bytes. "
 				   "The size of the largest file possible to "
-				   "upload is: %i bytes."), size, 
+				   "upload is: %i bytes."), size,
 				   DSC_MAXIMAGESIZE);
                 return GP_ERROR;
         }
@@ -589,8 +589,8 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
                 blocksize = size - i*DSC_BLOCKSIZE;
                 if (DSC_BLOCKSIZE < blocksize)
                         blocksize = DSC_BLOCKSIZE;
-		result = dsc2_writeimageblock(camera, i, 
-					       (char*)&data[i*DSC_BLOCKSIZE], 
+		result = dsc2_writeimageblock(camera, i,
+					       (char*)&data[i*DSC_BLOCKSIZE],
 					       blocksize);
 		if (result != GP_OK)
 			return result;
@@ -606,7 +606,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data,
 			     GPContext *context) {
-        
+
 	Camera *camera = data;
         int     index, result;
 
@@ -619,7 +619,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
         return dsc2_delete(camera, index);
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
         strcpy(about->text,
                         _("Panasonic DC1580 gPhoto2 library\n"
@@ -638,7 +638,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.del_file_func = delete_file_func,
 };
 
-int camera_init (Camera *camera, GPContext *context) 
+int camera_init (Camera *camera, GPContext *context)
 {
         GPPortSettings settings;
         int result, selected_speed;

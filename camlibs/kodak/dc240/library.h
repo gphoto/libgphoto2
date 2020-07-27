@@ -71,7 +71,7 @@ typedef struct {
     uint8_t ipChainDisable; /* 81 */ /* ????? what does that mean reserved on DC280 */
     uint8_t imageIncomplete; /* 82 */
     uint8_t timerMode; /* 83 */
-    
+
     uint16_t year; /* 88-89 BE */
     uint8_t month; /* 90 */
     uint8_t day; /* 91 */
@@ -79,7 +79,7 @@ typedef struct {
     uint8_t minute; /* 93 */
     uint8_t second; /* 94 */
     uint8_t tenmSec; /* 95 */
-    
+
     uint8_t strobeMode; /* 97 */
     uint16_t exposureComp; /* 98-99 BE see note */
     uint8_t aeMode; /* 100 */
@@ -87,7 +87,7 @@ typedef struct {
     uint8_t afMode; /* 102 */
     uint8_t awbMode; /* 103 */
     uint32_t zoomMag; /* 104-107 BE see doc */
-    
+
     uint8_t exposureMode; /* 129 */
 
     uint8_t sharpControl; /* 131 */

@@ -73,29 +73,29 @@ typedef struct {
 } dc210_card_status;
 
 typedef struct {
-	char                    camera_type_id;   
-	char                    firmwareMajor;    
-	char                    firmwareMinor;  
-	char                    battery;     	
-	char                    acstatus;       
-	long int                time;	        
-	dc210_zoom_type         zoom;     	
-	char                    flash_charged;	
-	dc210_compression_type  compression_type; 
+	char                    camera_type_id;
+	char                    firmwareMajor;
+	char                    firmwareMinor;
+	char                    battery;
+	char                    acstatus;
+	long int                time;
+	dc210_zoom_type         zoom;
+	char                    flash_charged;
+	dc210_compression_type  compression_type;
         signed char             exp_compensation;
 	dc210_flash_type        flash;
 	char                    preflash;
-	dc210_resolution_type   resolution;		
-        dc210_file_type_type    file_type;		
-	int                     totalPicturesTaken;     
-	int                     totalFlashesFired;      
-	int                     numPicturesInCamera;    
+	dc210_resolution_type   resolution;
+        dc210_file_type_type    file_type;
+	int                     totalPicturesTaken;
+	int                     totalFlashesFired;
+	int                     numPicturesInCamera;
 	dc210_card_status       card_status;
-	int                     remainingLow;           
-	int                     remainingMedium;        
-	int                     remainingHigh;          
+	int                     remainingLow;
+	int                     remainingMedium;
+	int                     remainingHigh;
 	int                     card_space;
-	char                    album_name[12];         
+	char                    album_name[12];
 } dc210_status;
 
 typedef struct {
@@ -193,7 +193,7 @@ typedef struct {
 #define DC210_ILLEGAL_PACKET        0xE3
 #define DC210_CANCEL		    0xE4
 #define DC210_BUSY                  0xF0
-  
+
 /* initialization */
 int dc210_init_port (Camera *camera);
 

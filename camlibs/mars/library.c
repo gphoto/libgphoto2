@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -68,11 +68,11 @@ static const struct {
 	{"Precision Mini, Model HA513A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Digital camera, CD302N", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 	{"INNOVAGE Mini Digital, CD302N", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
-	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f}, 
-	{"Argus DC-1620", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
+	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"Argus DC-1620", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f},
 	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
  	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
-	{"ION digital camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f}, 
+	{"ION digital camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f},
 	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
 	{"Pixart Gemini Keychain Camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
 	{"Sakar Digital no. 56379 Spyshot", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
@@ -92,7 +92,7 @@ camera_id (CameraText *id)
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;    
+    	int i;
     	CameraAbilities a;
 
     	for (i = 0; models[i].name; i++) {
@@ -108,8 +108,8 @@ camera_abilities (CameraAbilitiesList *list)
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
        		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_PREVIEW 
-					| GP_FILE_OPERATION_RAW; 
+       		a.file_operations   = GP_FILE_OPERATION_PREVIEW
+					| GP_FILE_OPERATION_RAW;
        		gp_abilities_list_append (list, a);
     	}
     	return GP_OK;
@@ -124,25 +124,25 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		"Mars MR97310 camera.\nThere is %i photo in it.\n",
     		"Mars MR97310 camera.\nThere are %i photos in it.\n",
 		num_pics), num_pics
-	);  
+	);
     	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy(manual->text, 
+	strcpy(manual->text,
 	_(
         "This driver supports cameras with Mars MR97310 chip (and direct\n"
         "equivalents ??Pixart PACx07?\?).\n"
 	"These cameras do not support deletion of photos, nor uploading\n"
 	"of data.\n"
-	"Decoding of compressed photos may or may not work well\n" 
+	"Decoding of compressed photos may or may not work well\n"
 	"and does not work equally well for all supported cameras.\n"
 	"Photo data processing for Argus QuickClix is NOT SUPPORTED.\n"
 	"If present on the camera, video clip frames are downloaded \n"
 	"as consecutive still photos.\n"
 	"For further details please consult libgphoto2/camlibs/README.\n"
-	)); 
+	));
 
 	return (GP_OK);
 }
@@ -161,7 +161,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data; 
+        Camera *camera = data;
 	int i = 0, n;
 	char name[30];
 
@@ -169,7 +169,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	for (i=0; i < n; i++) {
 		if ((camera->pl->info[8*i]&0x0f) == 1) {
 			sprintf (name, "mr%03isnd.wav", i+1);
-		} else 
+		} else
 			sprintf (name, "mr%03ipic.ppm", i+1);
 	    	gp_list_append (list, name, NULL);
     	}
@@ -191,9 +191,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data; 
+    	Camera *camera = user_data;
   	int w=0, h = 0, b = 0, k;
-    	unsigned char *data; 
+    	unsigned char *data;
     	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
 	unsigned char gtable[256], photo_code, res_code, compressed;
@@ -209,11 +209,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 
     	/* Get the number of the photo on the camera */
-	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+	k = gp_filesystem_number (camera->fs, "/", filename, context);
     	/* Determine the resolution setting from the PAT table */
 	photo_code = camera->pl->info[8*k];
 	res_code = photo_code & 0x0f;
-	/* Compression presence or absence is seen here, and is given again 
+	/* Compression presence or absence is seen here, and is given again
 	 * by the camera, in the header of raw data for each photo.
 	 */
     	compressed = (photo_code >> 4) & 2;
@@ -223,31 +223,31 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case 2: w = 352; h = 288; break;
 	case 6: w = 320; h = 240; break;
 	case 8: w = 640; h = 480; break;
-	default:  w = 640; h = 480; 
+	default:  w = 640; h = 480;
 	}
-	
-	GP_DEBUG ("height is %i\n", h); 		
-    
+
+	GP_DEBUG ("height is %i\n", h);
+
 	b = mars_get_pic_data_size(camera->pl->info, k);
 	raw_size = b;
 	/* Now increase b from "actual size" to _downloaded_ size. */
 	b = ((b+ 0x1b0)/0x2000 + 1) * 0x2000;
 
 	if (w*h > b) {
-		GP_DEBUG ("w=%d, h=%d, w*h=%d, bytes read=%d\n", w,h,w*h,b); 
+		GP_DEBUG ("w=%d, h=%d, w*h=%d, bytes read=%d\n", w,h,w*h,b);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	data = calloc (b,1);
 	if (!data) return GP_ERROR_NO_MEMORY;
 
-	GP_DEBUG ("buffersize= %i = 0x%x bytes\n", b,b); 
+	GP_DEBUG ("buffersize= %i = 0x%x bytes\n", b,b);
 
-	mars_read_picture_data (camera, camera->pl->info, 
+	mars_read_picture_data (camera, camera->pl->info,
 					    camera->port, (char *)data, b, k);
 	/* The first 128 bytes are junk, so we toss them.*/
 	memmove(data, data+128, b - 128);
-	if (audio) {	
+	if (audio) {
 		p_data = malloc (raw_size+256);
 		if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
 		memset (p_data, 0, raw_size+256);
@@ -271,7 +271,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		p_data[40] = (raw_size)&0xff;
 		p_data[41] = ((raw_size)>>8)&0xff;
 		p_data[42] = ((raw_size)>>16)&0xff;
-		p_data[43] = ((raw_size)>>24)&0xff;		
+		p_data[43] = ((raw_size)>>24)&0xff;
 		memcpy (p_data+44, data, raw_size);
 		gp_file_set_mime_type(file, GP_MIME_WAV);
 		gp_file_set_data_and_size(file, (char *)p_data , raw_size+44);
@@ -281,14 +281,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (GP_FILE_TYPE_RAW == type) {
 
 		/* We keep the SOF marker. Actual data starts at byte 12.
-		 * Byte 6, upper nibble, is a code for compression mode. We 
+		 * Byte 6, upper nibble, is a code for compression mode. We
 		 * use the lower nibble to store the resolution code.
 		 * Then it is possible to know "everything" from a raw file.
-		 * Purpose of the info in bytes 7 thru 11 is currently unknown. 
+		 * Purpose of the info in bytes 7 thru 11 is currently unknown.
 		 * A "raw" audio file will also have the WAV header prepended.
-		 * So do nothing to an audio file. 
+		 * So do nothing to an audio file.
 		 */
-		if (!audio) 
+		if (!audio)
 			data[6] = (data[6] | res_code);
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_set_data_and_size(file, (char *)data , raw_size );
@@ -303,7 +303,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		mars_decompress (data + 12, p_data, w, h);
 	}
 	else memcpy (p_data, data + 12, w*h);
-	gamma_factor = sqrt((float)data[7]/100.); 
+	gamma_factor = sqrt((float)data[7]/100.);
 	if (gamma_factor <= .60)
 		gamma_factor = .60;
 	free(data);
@@ -318,7 +318,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		"# CREATOR: gphoto2, Mars library\n"
 		"%d %d\n"
 		"255\n", w, h);
-	ptr = ppm + strlen ((char *)ppm);	
+	ptr = ppm + strlen ((char *)ppm);
 	size = strlen ((char *)ppm) + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
 	gp_ahd_decode (p_data, w , h , ptr, BAYER_TILE_RGGB);
@@ -364,10 +364,10 @@ camera_init(Camera *camera, GPContext *context)
 	camera->functions->summary      = camera_summary;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    = camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
@@ -386,10 +386,10 @@ camera_init(Camera *camera, GPContext *context)
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	GP_DEBUG("interface = %i\n", settings.usb.interface);
-	GP_DEBUG("inep = %x\n", settings.usb.inep);	
+	GP_DEBUG("inep = %x\n", settings.usb.inep);
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
         /* Tell the CameraFilesystem where to get lists from */

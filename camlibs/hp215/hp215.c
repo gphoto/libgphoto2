@@ -16,7 +16,7 @@
  *                                                                           *
  *  You should have received a copy of the GNU Library General Public        *
  *  License along with this program; see the file COPYING.LIB.  If not,      *
- *  write to the 
+ *  write to the
  *  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  *  Boston, MA  02110-1301  USA
  *                                                                           *
@@ -414,7 +414,7 @@ hp_get_timeDate_cam (Camera *cam, char *txtbuffer, size_t txtbuffersize)
 		gp_log (GP_LOG_ERROR, "hp215", "too short reply block, %d bytes", msglen);
 		return GP_ERROR_IO;
 	}
-	
+
 	memcpy (datebuf, msg, 15);
 	gp_log (GP_LOG_DEBUG, "hp215", "0f: %02x", msg[0x0f] & 0x7f);
 	gp_log (GP_LOG_DEBUG, "hp215", "10: %02x", msg[0x10] & 0x7f);
@@ -602,7 +602,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 0000  80 80 80 85 86 85-84 84 30 31 2f 30 32 2f  ..........01/02/
 0010  30 30 20 31 34 3a 34 38-00 80 81 80 80 80 80 81  00 14:48........
 0020  88 89 84 81 80 80 80 80-80 81 00 00 00 00 00 00  ................
-0030  00 00 00 00 00 00      -                         ......          
+0030  00 00 00 00 00 00      -                         ......
  */
 	xmsg = msg;
 	ret = decode_u32(&xmsg, &msglen, &val);
@@ -704,7 +704,7 @@ get_shoot_mode_table (Camera *camera) {
 	if (ret < GP_OK) return ret;
 	ret = decode_u32(&xmsg, &msglen, &val3);
 	if (ret < GP_OK) return ret;
-	
+
 	gp_log (GP_LOG_DEBUG, "hp215", "shootmode table 0x%08x, 0x%08x, 0x%08x", val1, val2, val3);
 
 	cnt = val1+val2;

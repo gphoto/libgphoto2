@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -70,7 +70,7 @@ typedef enum {									/* Value (get/set):	*/
  */
 typedef int (* CameraWidgetCallback) (Camera *, CameraWidget *, GPContext *);
 
-int 	gp_widget_new 	(CameraWidgetType type, const char *label, 
+int 	gp_widget_new 	(CameraWidgetType type, const char *label,
 		         CameraWidget **widget);
 int    	gp_widget_free 	(CameraWidget *widget);
 int     gp_widget_ref   (CameraWidget *widget);
@@ -80,14 +80,14 @@ int	gp_widget_append	(CameraWidget *widget, CameraWidget *child);
 int 	gp_widget_prepend	(CameraWidget *widget, CameraWidget *child);
 
 int 	gp_widget_count_children     (CameraWidget *widget);
-int	gp_widget_get_child	     (CameraWidget *widget, int child_number, 
+int	gp_widget_get_child	     (CameraWidget *widget, int child_number,
 				      CameraWidget **child);
 
 /* Retrieve Widgets */
 int	gp_widget_get_child_by_label (CameraWidget *widget,
 				      const char *label,
 				      CameraWidget **child);
-int	gp_widget_get_child_by_id    (CameraWidget *widget, int id, 
+int	gp_widget_get_child_by_id    (CameraWidget *widget, int id,
 				      CameraWidget **child);
 int	gp_widget_get_child_by_name  (CameraWidget *widget,
                                       const char *name,
@@ -110,14 +110,14 @@ int	gp_widget_get_id	(CameraWidget *widget, int *id);
 int	gp_widget_get_type	(CameraWidget *widget, CameraWidgetType *type);
 int	gp_widget_get_label	(CameraWidget *widget, const char **label);
 
-int	gp_widget_set_range	(CameraWidget *range, 
+int	gp_widget_set_range	(CameraWidget *range,
 				 float  low, float  high, float  increment);
-int	gp_widget_get_range	(CameraWidget *range, 
+int	gp_widget_get_range	(CameraWidget *range,
 				 float *min, float *max, float *increment);
 
 int	gp_widget_add_choice     (CameraWidget *widget, const char *choice);
 int	gp_widget_count_choices  (CameraWidget *widget);
-int	gp_widget_get_choice     (CameraWidget *widget, int choice_number, 
+int	gp_widget_get_choice     (CameraWidget *widget, int choice_number,
                                   const char **choice);
 
 int	gp_widget_changed        (CameraWidget *widget);

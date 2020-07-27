@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -820,7 +820,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			if (foo != valid_resolutions[i])
 				resolution = i;
 		}
-	
+
 		if (resolution == -1) {
 			gp_log (GP_LOG_ERROR, "pentax", "Could not decode image size %s", sval);
 		} else {
@@ -974,7 +974,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	pslr_disconnect (&camera->pl->pslr);
 	free (camera->pl);
@@ -996,7 +996,7 @@ pslr_result get_drive_info(char* driveName, FDTYPE* hDevice,
 
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	CameraPrivateLibrary	*cpl;
 

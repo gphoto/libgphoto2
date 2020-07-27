@@ -11,10 +11,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -35,7 +35,7 @@ extern "C" {
  *
  * A Camera object represents a specific instance of a (physical of
  * virtual) camera attached to the system.
- * 
+ *
  * The abilities of this type of camera are stored in a CameraAbility
  * object.
  *
@@ -58,7 +58,7 @@ typedef struct _Camera Camera;
 extern "C" {
 #endif /* __cplusplus */
 
-/** 
+/**
  * \brief CameraText structure used in various functions.
  *
  * A text structure containing translated text returned
@@ -69,7 +69,7 @@ typedef struct {
 	char text [32 * 1024]; /**< \brief Character string containing the translated text. */
 } CameraText;
 
-/** 
+/**
  * \brief A structure created by the capture operation.
  *
  * A structure containing the folder and filename of an object
@@ -112,7 +112,7 @@ typedef enum {
 /**
  * \name Camera object member functions
  *
- * These functions must be implemented by a camlib and the camlib's 
+ * These functions must be implemented by a camlib and the camlib's
  * camera_init() function will add them to a Camera object.
  *
  * @{
@@ -133,7 +133,7 @@ typedef enum {
  * Implement this function if you need to any of this stuff, otherwise leave
  * it out.
  *
- * \returns a gphoto error code 
+ * \returns a gphoto error code
  */
 typedef int (*CameraExitFunc)      (Camera *camera, GPContext *context);
 
@@ -172,7 +172,7 @@ typedef int (*CameraGetConfigFunc) (Camera *camera, CameraWidget **widget,
  * frontend, which then renders it, allows user input and sends it back
  * via the #CameraSetConfigFunc function to have the driver configure itself
  * or the camera.
- * 
+ *
  * This specific function retrieves one specific named entry, and not the full
  * tree to allow for querying specific settings faster.
  *
@@ -196,7 +196,7 @@ typedef int (*CameraGetSingleConfigFunc) (Camera *camera, const char *name, Came
  * frontend, which then renders it, allows user input and sends it back
  * via the #CameraSetConfigFunc function to have the driver configure itself
  * or the camera.
- * 
+ *
  * This specific function retrieves all the available configuration values in a flat list.
  *
  * This is different than the GetConfigFunc, which returns a configuration tree.
@@ -210,14 +210,14 @@ typedef int (*CameraListConfigFunc) (Camera *camera, CameraList *list, GPContext
 /**
  * \brief Set the configuration in the camera
  *
- * \param camera the current camera 
+ * \param camera the current camera
  * \param widget the configuration widget tree that was changed
  * \param context the active #GPContext
  *
  * This function is called in the driver after the configuration is set.
  * It is called directly after setting the value and might called multiple
  * times (or never) after just one #CameraGetConfigFunc.
- * 
+ *
  * \returns a gphoto error code
  */
 typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget,
@@ -225,13 +225,13 @@ typedef int (*CameraSetConfigFunc) (Camera *camera, CameraWidget  *widget,
 /**
  * \brief Set a single configuration variable in the camera
  *
- * \param camera the current camera 
+ * \param camera the current camera
  * \param name the widget to set
  * \param widget the configuration widget tree that was changed
  * \param context the active #GPContext
  *
  * This function is called in the driver after the configuration value is set.
- * 
+ *
  * \returns a gphoto error code
  */
 typedef int (*CameraSetSingleConfigFunc) (Camera *camera, const char *name, CameraWidget  *widget,
@@ -263,8 +263,8 @@ typedef int (*CameraWaitForEvent)  (Camera *camera, int timeout,
  * be initialized before or reset the after each access from
  * libgphoto2.
  *
- * For example, you would probably set the speed to the highest one 
- * right before downloading an image, and reset it to the default speed 
+ * For example, you would probably set the speed to the highest one
+ * right before downloading an image, and reset it to the default speed
  * afterwards so that other programs will not be affected by this speed
  * change.
  */
@@ -340,7 +340,7 @@ struct _Camera {
 int gp_camera_new               (Camera **camera);
 
 
-/** \name Preparing initialization 
+/** \name Preparing initialization
  * @{
  */
 int gp_camera_set_abilities     (Camera *camera, CameraAbilities  abilities);
@@ -365,19 +365,19 @@ int gp_camera_get_port_speed    (Camera *camera);
 /**@}*/
 
 
-/** \name Initialization 
- * @{ 
+/** \name Initialization
+ * @{
  */
 int gp_camera_autodetect 	 (CameraList *list, GPContext *context);
 int gp_camera_init               (Camera *camera, GPContext *context);
 int gp_camera_exit               (Camera *camera, GPContext *context);
 
 /**@}*/
- 
 
 
-/** \name Operations on cameras 
- * @{ 
+
+/** \name Operations on cameras
+ * @{
  */
 int gp_camera_ref   		 (Camera *camera);
 int gp_camera_unref 		 (Camera *camera);
@@ -414,12 +414,12 @@ int gp_camera_get_storageinfo    (Camera *camera, CameraStorageInformation**,
 /**@}*/
 
 
-/** \name Operations on folders 
+/** \name Operations on folders
  * @{
  */
-int gp_camera_folder_list_files   (Camera *camera, const char *folder, 
+int gp_camera_folder_list_files   (Camera *camera, const char *folder,
 				   CameraList *list, GPContext *context);
-int gp_camera_folder_list_folders (Camera *camera, const char *folder, 
+int gp_camera_folder_list_folders (Camera *camera, const char *folder,
 				   CameraList *list, GPContext *context);
 int gp_camera_folder_delete_all   (Camera *camera, const char *folder,
 				   GPContext *context);
@@ -434,29 +434,29 @@ int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
 /**@}*/
 
 
-/** \name Operations on files 
+/** \name Operations on files
  * @{
  */
-int gp_camera_file_get_info 	(Camera *camera, const char *folder, 
+int gp_camera_file_get_info 	(Camera *camera, const char *folder,
 				 const char *file, CameraFileInfo *info,
 				 GPContext *context);
-int gp_camera_file_set_info 	(Camera *camera, const char *folder, 
+int gp_camera_file_set_info 	(Camera *camera, const char *folder,
 				 const char *file, CameraFileInfo info,
 				 GPContext *context);
-int gp_camera_file_get		(Camera *camera, const char *folder, 
+int gp_camera_file_get		(Camera *camera, const char *folder,
 				 const char *file, CameraFileType type,
 				 CameraFile *camera_file, GPContext *context);
 int gp_camera_file_read		(Camera *camera, const char *folder, const char *file,
-		    		 CameraFileType type, 
+		    		 CameraFileType type,
 		    		 uint64_t offset, char *buf, uint64_t *size,
 		    		 GPContext *context);
-int gp_camera_file_delete     	(Camera *camera, const char *folder, 
+int gp_camera_file_delete     	(Camera *camera, const char *folder,
 				 const char *file, GPContext *context);
 /**@}*/
 
 
 /**
- * \name Some cameras need 'keep-alive-messages'. 
+ * \name Some cameras need 'keep-alive-messages'.
  * @{
  */
 typedef int          (* CameraTimeoutFunc)      (Camera *camera,

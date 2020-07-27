@@ -16,7 +16,7 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  *
- * Simplified and modified by Kevin Sisson <kjsisson@bellsouth.net> for use 
+ * Simplified and modified by Kevin Sisson <kjsisson@bellsouth.net> for use
  * in the pencam program, December, 2001
  *
  * Integrated into gphoto2 by Marcus Meissner <marcus@jet.franken.de>, Dec 2001
@@ -25,7 +25,7 @@
 #include <string.h>
 #include "saturate.h"
 
-/* FIXME: should be variable, and user configurable. Which is problematic in 
+/* FIXME: should be variable, and user configurable. Which is problematic in
  * gphoto2 :/ */
 #define HUE_DATA        40
 #define LIGHTNESS_DATA  40
@@ -163,12 +163,12 @@ static void gimp_hls_to_rgb (int *hue, int *lightness, int *saturation)
 static void hue_saturation_initialize (HueSaturationDialog *hsd)
 {
   int i;
-  
+
   for (i = 0; i < 7; i++)
     {
       hsd->hue[i] = 0.0;
       hsd->lightness[i] = 0.0;
-      hsd->saturation[i] = (double) (hsd->saturation_data)/2;  
+      hsd->saturation[i] = (double) (hsd->saturation_data)/2;
     }
 }
 
@@ -294,9 +294,9 @@ void stv680_hue_saturation(
 	  d[BLUE_PIX] = b;
 
 	  s += 3;   /* bytes/pixel = 3  */
-	  d += 3;  
+	  d += 3;
 	}
-      src += 3*width; 
+      src += 3*width;
       dest += 3*width;
     }
 }

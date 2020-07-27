@@ -13,7 +13,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the 
+   along with this program; if not, write to the
    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
@@ -43,7 +43,7 @@
    only saw that when I drew the schematic. There are quite a few
    programs available that calculate this CRC, but I didn't understand
    most of them, so I wrote my own version for some experiments. (And most
-   implementations that I've seen didn't have a clear copyright...) 
+   implementations that I've seen didn't have a clear copyright...)
 
    I implemented the 16-stage shift register in a `long' variable
    that is shifted and XOR'd when necessary.

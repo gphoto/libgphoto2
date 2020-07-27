@@ -50,14 +50,14 @@
 dimagev_packet *dimagev_make_packet(const unsigned char *const buffer, unsigned int length, unsigned int seq) {
 	unsigned int i=0, checksum=0;
 	dimagev_packet *p;
-	
+
 	if ( ( p = calloc(1, sizeof(dimagev_packet) ) ) == NULL ) {
 		GP_DEBUG("dimagev_make_packet::unable to allocate packet");
 		return NULL;
 	}
 
 	p->length = length + 7;
-	
+
 	p->buffer[0] = DIMAGEV_STX;
 	p->buffer[1] = seq & 0x000000ff;
 	p->buffer[2] = ( p->length & 0x0000ff00) >> 8;
@@ -73,7 +73,7 @@ dimagev_packet *dimagev_make_packet(const unsigned char *const buffer, unsigned 
 	p->buffer[(p->length - 3)] = (unsigned char) ((checksum & 0x0000ff00) >> 8 );
 	p->buffer[(p->length - 2)] = (unsigned char) ( checksum & 0x000000ff );
 	p->buffer[(p->length - 1)] = (unsigned char) DIMAGEV_ETX;
-	
+
 	return p;
 }
 
@@ -149,14 +149,14 @@ dimagev_packet *dimagev_read_packet(dimagev_t *dimagev) {
 	if ( dimagev_verify_packet(p) < GP_OK ) {
 		GP_DEBUG( "dimagev_read_packet::got an invalid packet - will try to send NAK");
 		free(p);
-		
+
 		/* Send a NAK */
 		char_buffer = DIMAGEV_NAK;
 		if ( gp_port_write(dimagev->dev, (char *)&char_buffer, 1) < GP_OK ) {
 			GP_DEBUG( "dimagev_read_packet::unable to send NAK");
 			return NULL;
 		}
-		
+
 		/* Who likes recursion? */
 		return dimagev_read_packet(dimagev);
 

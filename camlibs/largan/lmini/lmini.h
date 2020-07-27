@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -49,7 +49,7 @@ void largan_pict_free (largan_pict_info *);
 
 int largan_open (Camera * camera);
 int largan_get_num_pict (Camera * camera);
-int largan_get_pict (Camera * camera, largan_pict_type type, 
+int largan_get_pict (Camera * camera, largan_pict_type type,
 		uint8_t index, largan_pict_info * pict);
 int largan_erase (Camera *camera, int all);
 int largan_capture (Camera *camera);

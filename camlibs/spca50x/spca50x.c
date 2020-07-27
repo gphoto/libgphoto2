@@ -78,7 +78,7 @@ spca50x_detect_storage_type (CameraPrivateLibrary *lib)
 	for (i=0;i<3;i++)
 	{
 		buf[i] = 0;  /* if no data returned, assume no capability */
-		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000, 
+		CHECK (gp_port_usb_msg_read (lib->gpdev, 0x28, 0x0000,
 					i, (char *)&buf[i], 0x01));
 	}
 

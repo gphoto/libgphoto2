@@ -9,16 +9,16 @@
 	and distributed under the terms of the gPhoto project license,  COPYING.
 	By continuing to use, modify, or distribute  this file you indicate that
 	you have read the license, understand and accept it fully.
-	
+
 	THIS  SOFTWARE IS PROVIDED AS IS AND COME WITH NO WARRANTY  OF ANY KIND,
 	EITHER  EXPRESSED OR IMPLIED.  IN NO EVENT WILL THE COPYRIGHT  HOLDER BE
 	LIABLE FOR ANY DAMAGES RESULTING FROM THE USE OF THIS SOFTWARE.
 
 	Note:
-	
+
 	This header contains common  typedefs,  constants and utility  functions
 	for Panasonic DC1000 and DC1580 cameras.
-*/	
+*/
 
 #include <stdio.h>
 #include <errno.h>
@@ -34,7 +34,7 @@ typedef enum {
 	fine		= 1,
 	superfine	= 2
 } dsc_quality_t;
-	
+
 struct _CameraPrivateLibrary {
 	char			*buf;
 	int			size;
@@ -48,7 +48,7 @@ struct _CameraPrivateLibrary {
 
 #define DSC_PAUSE	4 /* seconds to wait for camera to redraw screen */
 
-#define DSC_FULLIMAGE	0 
+#define DSC_FULLIMAGE	0
 #define DSC_THUMBNAIL	1
 
 #define EDSCSERRNO     -1 /* see errno value */
@@ -69,14 +69,14 @@ int dsc1_retrcmd(Camera *camera);
 int dsc1_setbaudrate(Camera *camera, int speed);
 	/* Set baud rate of connection. Part of hand shake procedure 	*/
 	/* Returns GP_OK if successful and GP_ERROR otherwise.		*/
-	
+
 int dsc1_getmodel(Camera *camera);
 	/* Returns camera (sub)model, DSC1: DC1000, DSC2: DC1580, 	*/
 	/* 0: unknown, or GP_ERROR. Part of hand shake procedure. 	*/
 
 void dsc_dumpmem(void *buf, int size);
 	/* Print size bytes of memory at the buf pointer.		*/
-		
+
 const char *dsc_strerror(int error);
 	/* Convert error numbers into readable messages. 		*/
 
@@ -104,7 +104,7 @@ void dsc_errorprint(int error, char *file, int line);
         dsc_errorprint(ERROR, __FILE__, __LINE__); \
         return GP_ERROR; \
         }
-        
+
 #define CHECK(OPERATION) \
         if ((result = OPERATION) < 0) { \
                 dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__); \

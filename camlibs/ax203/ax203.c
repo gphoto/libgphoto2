@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -80,7 +80,7 @@ static const struct eeprom_info {
 	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1 },
 	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1 },
 
-	{ "Nantronics N25S80", 0xd51430d5, 1048576, 1 },                                                                                                                                     
+	{ "Nantronics N25S80", 0xd51430d5, 1048576, 1 },
 
 	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 0 },
 
@@ -268,9 +268,9 @@ ax203_set_time_and_date(Camera *camera, struct tm *t)
 	char cmd_buffer[16];
 
 	memset (cmd_buffer, 0, sizeof (cmd_buffer));
-	
+
 	cmd_buffer[0] = AX203_SET_TIME;
-	
+
 	cmd_buffer[5] = t->tm_year % 100;
 
 	switch (camera->pl->frame_version) {
@@ -319,12 +319,12 @@ static int
 ax203_eeprom_read(Camera *camera, int address, char *buf, int buf_size)
 {
 	char cmd[4];
-    
+
 	cmd[0] = SPI_EEPROM_READ;
 	cmd[1] = (address >> 16) & 0xff;
 	cmd[2] = (address >> 8) & 0xff;
 	cmd[3] = (address) & 0xff;
-		    
+
 	return ax203_send_eeprom_cmd (camera, 0, cmd, sizeof(cmd), buf,
 				      buf_size, 0);
 }
@@ -339,7 +339,7 @@ ax203_eeprom_program_page(Camera *camera, int address, char *buf, int buf_size,
 	cmd[1] = (address >> 16) & 0xff;
 	cmd[2] = (address >> 8) & 0xff;
 	cmd[3] = (address) & 0xff;
-		    
+
 	return ax203_send_eeprom_cmd (camera, 1, cmd, sizeof(cmd), buf,
 				      buf_size, extra_arg);
 }
@@ -372,7 +372,7 @@ ax203_eeprom_erase_4k_sector(Camera *camera, int address)
 	cmd[1] = (address >> 16) & 0xff;
 	cmd[2] = (address >> 8) & 0xff;
 	cmd[3] = (address) & 0xff;
-		    
+
 	return ax203_send_eeprom_cmd (camera, 1, cmd, sizeof(cmd), NULL, 0, 0);
 }
 
@@ -385,7 +385,7 @@ ax203_eeprom_erase_64k_sector(Camera *camera, int address)
 	cmd[1] = (address >> 16) & 0xff;
 	cmd[2] = (address >> 8) & 0xff;
 	cmd[3] = (address) & 0xff;
-		    
+
 	return ax203_send_eeprom_cmd (camera, 1, cmd, sizeof(cmd), NULL, 0, 0);
 }
 
@@ -782,7 +782,7 @@ ax203_filesize(Camera *camera)
 		return 0;
 	}
 	/* Never reached */
-	return GP_ERROR_NOT_SUPPORTED;	
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 static int
@@ -800,7 +800,7 @@ ax203_max_filecount(Camera *camera)
 			sizeof(struct ax3003_v3_5_x_raw_fileinfo);
 	}
 	/* Never reached */
-	return GP_ERROR_NOT_SUPPORTED;	
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 static int
@@ -905,7 +905,7 @@ int ax206_read_v3_5_x_fileinfo(Camera *camera, int idx,
 	fileinfo->address = le32toh (raw.address);
 	fileinfo->size    = le16toh (raw.size);
 
-	return GP_OK;	
+	return GP_OK;
 }
 
 static
@@ -1039,7 +1039,7 @@ int ax203_read_fileinfo(Camera *camera, int idx,
 		return ax3003_read_v3_5_x_fileinfo (camera, idx, fileinfo);
 	}
 	/* Never reached */
-	return GP_ERROR_NOT_SUPPORTED;	
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 static
@@ -1057,14 +1057,14 @@ int ax203_write_fileinfo(Camera *camera, int idx,
 		return ax3003_write_v3_5_x_fileinfo (camera, idx, fileinfo);
 	}
 	/* Never reached */
-	return GP_ERROR_NOT_SUPPORTED;	
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int
 ax203_file_present(Camera *camera, int idx)
 {
 	struct ax203_fileinfo fileinfo;
-	
+
 	CHECK (ax203_read_fileinfo (camera, idx, &fileinfo))
 
 	return fileinfo.present;
@@ -1102,7 +1102,7 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 			if (!camera->pl->jdec)
 				return GP_ERROR_NO_MEMORY;
 		}
-		
+
 		/* Hack for width / heights which are not a multiple of 16 */
 		if (camera->pl->width % 16 || camera->pl->height % 16) {
 			width  = (camera->pl->width  + 15) & ~15;
@@ -1305,7 +1305,7 @@ ax203_defrag_memory(Camera *camera)
 	/* Delete all pictures from the frame */
 	ret = ax203_delete_all (camera);
 	if (ret < 0) goto cleanup;
-	
+
 	/* An last write them back (in one continuous block) */
 	for (i = 0; i < count; i++) {
 		if (!fileinfo[i].present)
@@ -1771,7 +1771,7 @@ ax203_open_device(Camera *camera)
 		if (ax203_eeprom_info[i].id == id)
 			break;
 	}
-	
+
 	if (!ax203_eeprom_info[i].name) {
 		gp_log (GP_LOG_ERROR, "ax203", "unknown eeprom id: %08x", id);
 		return GP_ERROR_MODEL_NOT_FOUND;

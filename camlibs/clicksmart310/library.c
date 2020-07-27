@@ -151,7 +151,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
         Camera *camera = data;
 	int n;
 	GP_DEBUG ("List files in %s\n", folder);
-    	n = camera->pl->num_pics;	
+    	n = camera->pl->num_pics;
 	gp_list_populate(list, "cs%03i.jpeg", n);
 	return GP_OK;
 }
@@ -172,7 +172,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Get the entry number of the photo on the camera */
     	k = gp_filesystem_number (camera->fs, "/", filename, context);
-    	
+
 	if (GP_FILE_TYPE_EXIF==type) return GP_ERROR_FILE_EXISTS;
 
 	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL !=type && GP_FILE_TYPE_PREVIEW!=type)
@@ -192,7 +192,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		jpeg_format = JPEG_QCIF_FORMAT;
 		break;
 	default:  GP_DEBUG ( "Unknown resolution setting %i\n", res);
-		return GP_ERROR;		
+		return GP_ERROR;
 	}
 
 	data = NULL;
@@ -205,16 +205,16 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	        gp_file_set_data_and_size (file, (char *)data, b);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->num_pics) {
-	    		clicksmart_reset (camera->port);	
+	    		clicksmart_reset (camera->port);
 		}
 		return GP_OK;
 	}
-		
-	GP_DEBUG ("size = %i\n", b);	
+
+	GP_DEBUG ("size = %i\n", b);
 
 	/* It looks as though o_size = b */
 	/* It seems that qIndex is byte7, which is always 3, so I use that. */
-	
+
 	file_size = b + 589 + 1024 * 10;
 
 	jpeg_out = malloc(file_size);

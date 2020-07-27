@@ -7,17 +7,17 @@
 	and distributed under the terms of the gPhoto project license,  COPYING.
 	By continuing to use, modify, or distribute  this file you indicate that
 	you have read the license, understand and accept it fully.
-	
+
 	THIS  SOFTWARE IS PROVIDED AS IS AND COME WITH NO WARRANTY  OF ANY KIND,
 	EITHER  EXPRESSED OR IMPLIED.  IN NO EVENT WILL THE COPYRIGHT  HOLDER BE
 	LIABLE FOR ANY DAMAGES RESULTING FROM THE USE OF THIS SOFTWARE.
 
 	Note:
-	
+
 	This is a Panasonic PV/NV-DC1000 camera gPhoto library source code.
-	
-*/	
- 
+
+*/
+
 #include "config.h"
 
 #include <stdlib.h>
@@ -58,77 +58,77 @@
 /* dsc1_connect - try hand shake with camera and establish connection */
 
 static int dsc1_connect(Camera *camera, int speed) {
-	
+
 	uint8_t	data = 0;
-	
+
 	DEBUG_PRINT_MEDIUM(("Connecting a camera."));
-		
+
 	if (dsc1_setbaudrate(camera, speed) != GP_OK)
 		return GP_ERROR;
-	
+
 	if (dsc1_getmodel(camera) != DSC1)
 		RETURN_ERROR(EDSCBADDSC);
 		/* bad camera model */
-	
+
 	dsc1_sendcmd(camera, DSC1_CMD_CONNECT, &data, 1);
-	
-	if (dsc1_retrcmd(camera) != DSC1_RSP_OK) 
+
+	if (dsc1_retrcmd(camera) != DSC1_RSP_OK)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
 
 	DEBUG_PRINT_MEDIUM(("Camera connected successfully."));
-	
-	return GP_OK;	
+
+	return GP_OK;
 }
 
 /* dsc1_disconnect - reset camera, free buffers and close files */
 
 static int dsc1_disconnect(Camera *camera) {
-	
+
 	DEBUG_PRINT_MEDIUM(("Disconnecting the camera."));
-	
+
 	if (dsc1_sendcmd(camera, DSC1_CMD_RESET, NULL, 0) != GP_OK)
 		return GP_ERROR;
-	
-	if (dsc1_retrcmd(camera) != DSC1_RSP_OK) 
+
+	if (dsc1_retrcmd(camera) != DSC1_RSP_OK)
 		RETURN_ERROR(EDSCBADRSP)
-		/* bad response */	
-	else 
+		/* bad response */
+	else
 		sleep(DSC_PAUSE); /* let camera to redraw its screen */
-	
+
 	DEBUG_PRINT_MEDIUM(("Camera disconnected."));
-	
+
 	return GP_OK;
 }
 
 /* dsc1_getindex - retrieve the number of images stored in camera memory */
 
 static int dsc1_getindex(Camera *camera) {
-	
+
 	int	result = GP_ERROR;
 
 	DEBUG_PRINT_MEDIUM(("Retrieving the number of images."));
-		
+
 	if (dsc1_sendcmd(camera, DSC1_CMD_GET_INDEX, NULL, 0) != GP_OK)
 		return GP_ERROR;
-	
+
 	if (dsc1_retrcmd(camera) == DSC1_RSP_INDEX)
 		result = camera->pl->size / 2;
 	else
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
-	
+
 	DEBUG_PRINT_MEDIUM(("Number of images: %i", result));
-	
+
 	return result;
 }
 
 /* dsc1_delete - delete image #index from camera memory */
 
 static int dsc1_delete(Camera *camera, uint8_t index) {
-	
+
 	DEBUG_PRINT_MEDIUM(("Deleting image: %i.", index));
-		
+
 	if (index < 1)
 		RETURN_ERROR(EDSCBADNUM);
 		/* bad image number */
@@ -143,16 +143,16 @@ static int dsc1_delete(Camera *camera, uint8_t index) {
 	DEBUG_PRINT_MEDIUM(("Image: %i deleted.", index));
 
 	return GP_OK;
-}	
-	
+}
+
 /* dsc1_selectimage - select image to download, return its size */
 
 static int dsc1_selectimage(Camera *camera, uint8_t index)
 {
         int	size = 0;
-	
-	DEBUG_PRINT_MEDIUM(("Selecting image: %i.", index));	
-	
+
+	DEBUG_PRINT_MEDIUM(("Selecting image: %i.", index));
+
 	if (index < 1)
 		RETURN_ERROR(EDSCBADNUM);
 		/* bad image number */
@@ -163,7 +163,7 @@ static int dsc1_selectimage(Camera *camera, uint8_t index)
 	if (dsc1_retrcmd(camera) != DSC1_RSP_IMGSIZE)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
-	
+
 	if (camera->pl->size != 4)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
@@ -171,8 +171,8 @@ static int dsc1_selectimage(Camera *camera, uint8_t index)
 	size =	(uint32_t)camera->pl->buf[3] |
 		((uint8_t)camera->pl->buf[2] << 8) |
 		((uint8_t)camera->pl->buf[1] << 16) |
-		((uint8_t)camera->pl->buf[0] << 24);		
-	
+		((uint8_t)camera->pl->buf[0] << 24);
+
 	DEBUG_PRINT_MEDIUM(("Selected image: %i, size: %i.", index, size));
 
 	return size;
@@ -181,26 +181,26 @@ static int dsc1_selectimage(Camera *camera, uint8_t index)
 /* gp_port_readimageblock - read #block block (1024 bytes) of an image into buf */
 
 static int dsc1_readimageblock(Camera *camera, int block, char *buffer) {
-	
+
 	char	buf[2];
-	
+
 	DEBUG_PRINT_MEDIUM(("Reading image block: %i.", block));
 
 	buf[0] = (uint8_t)(block >> 8);
 	buf[1] = (uint8_t)block;
-	
+
 	if (dsc1_sendcmd(camera, DSC1_CMD_GET_DATA, buf, 2) != GP_OK)
 		return GP_ERROR;
-	
+
 	if (dsc1_retrcmd(camera) != DSC1_RSP_DATA)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
 
 	if (buffer)
 		memcpy(buffer, camera->pl->buf, camera->pl->size);
-	
+
 	DEBUG_PRINT_MEDIUM(("Block: %i read in.", block));
-	
+
 	return camera->pl->size;
 }
 
@@ -212,15 +212,15 @@ static char *dsc1_readimage(Camera *camera, int index, int *size) {
 	char	*buffer = NULL;
 
 	DEBUG_PRINT_MEDIUM(("Reading image: %i.", index));
-		
+
 	if ((*size = dsc1_selectimage(camera, index)) < 0)
 		return NULL;
-	
+
 	if (!(buffer = (char*)malloc(*size))) {
 		DEBUG_PRINT_MEDIUM(("Failed to allocate memory for image data."));
 		return NULL;
 	}
-	
+
 	for (i = 0, s = 0; s < *size; i++) {
 		if ((rsize = dsc1_readimageblock(camera, i, &buffer[s])) == GP_ERROR) {
 			DEBUG_PRINT_MEDIUM(("Error during image transfer."));
@@ -231,7 +231,7 @@ static char *dsc1_readimage(Camera *camera, int index, int *size) {
 	}
 
 	DEBUG_PRINT_MEDIUM(("Image: %i read in.", index));
-	
+
 	return buffer;
 }
 #endif
@@ -239,11 +239,11 @@ static char *dsc1_readimage(Camera *camera, int index, int *size) {
 /* dsc1_setimageres - set image resolution based on its size, used on upload to camera */
 
 static int dsc1_setimageres(Camera *camera, int size) {
-	
+
 	dsc_quality_t	res;
-	
-	DEBUG_PRINT_MEDIUM(("Setting image resolution, image size: %i.", size));	
-	
+
+	DEBUG_PRINT_MEDIUM(("Setting image resolution, image size: %i.", size));
+
 	if (size < 65536)
 		res = normal;
 	else if (size < 196608)
@@ -257,7 +257,7 @@ static int dsc1_setimageres(Camera *camera, int size) {
 	if (dsc1_retrcmd(camera) != DSC1_RSP_OK)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
-		
+
 	DEBUG_PRINT_MEDIUM(("Image resolution set to: %i", res));
 
 	return GP_OK;
@@ -274,9 +274,9 @@ static int dsc1_writeimageblock(Camera *camera, int block, char *buffer, int siz
 	if (dsc1_retrcmd(camera) != DSC1_RSP_OK)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
-		
+
 	DEBUG_PRINT_MEDIUM(("Block: %i of size: %i written.", block, size));
-	
+
 	return GP_OK;
 }
 
@@ -287,24 +287,24 @@ static int dsc1_writeimage(Camera *camera, char *buffer, int size)
 	int	blocks, blocksize, i;
 
 	DEBUG_PRINT_MEDIUM(("Writing an image of size: %i.", size));
-		
+
 	if ((dsc1_setimageres(camera, size)) != GP_OK)
 		return GP_ERROR;
-	
+
 	blocks = (size - 1)/DSC_BLOCKSIZE + 1;
-			
+
 	for (i = 0; i < blocks; i++) {
 		blocksize = size - i*DSC_BLOCKSIZE;
-		if (DSC_BLOCKSIZE < blocksize) 
+		if (DSC_BLOCKSIZE < blocksize)
 			blocksize = DSC_BLOCKSIZE;
 		if (dsc1_writeimageblock(camera, i, &buffer[i*DSC_BLOCKSIZE], blocksize) != GP_OK) {
 			DEBUG_PRINT_MEDIUM(("Error during image transfer."));
 			return GP_ERROR;
 		}
 	}
-	
+
 	DEBUG_PRINT_MEDIUM(("Image written successfully."));
-	
+
 	return GP_OK;
 }
 #endif
@@ -320,11 +320,11 @@ static int dsc1_preview(Camera *camera, int index)
 
 	if (dsc1_sendcmd(camera, DSC1_CMD_PREVIEW, &index, 1) != GP_OK)
 		return GP_ERROR;
-	
+
 	if (dsc1_retrcmd(camera) != DSC1_RSP_OK)
 		RETURN_ERROR(EDSCBADRSP);
 		/* bad response */
-	
+
 	return GP_OK;
 }
 #endif
@@ -352,9 +352,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.speed[0] 	= 9600;
 	a.speed[1] 	= 19200;
 	a.speed[2] 	= 38400;
-	a.speed[3] 	= 57600;			
-	a.speed[4] 	= 115200;	
-	a.speed[5] 	= 0;	
+	a.speed[3] 	= 57600;
+	a.speed[4] 	= 115200;
+	a.speed[5] 	= 0;
 	a.operations        = GP_OPERATION_NONE;
 	a.file_operations   = GP_FILE_OPERATION_DELETE;
 	a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE;
@@ -379,14 +379,14 @@ static int camera_exit (Camera *camera, GPContext *context) {
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data, GPContext *context) 
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int 	count;
-	
+
 	if ((count = dsc1_getindex (camera)) == GP_ERROR)
 		return GP_ERROR;
-	
+
 	gp_list_populate (list, DSC_FILENAMEFMT, count);
 
 	return GP_OK;
@@ -394,7 +394,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data, GPContext *context) 
+			  CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int	index, size, rsize, i, s;
@@ -407,17 +407,17 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	/* index is the 0-based image number on the camera */
 	index = gp_filesystem_number (camera->fs, folder, filename, context);
-	if (index < 0) 
+	if (index < 0)
 		return (index);
 
 	if ((size = dsc1_selectimage(camera, index + 1)) < 0)
 		return (GP_ERROR);
-	
+
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 	id = gp_context_progress_start (context, size, _("Getting data..."));
 	for (i = 0, s = 0; s < size; i++) {
-		if ((rsize = dsc1_readimageblock(camera, i, NULL)) == GP_ERROR) 
+		if ((rsize = dsc1_readimageblock(camera, i, NULL)) == GP_ERROR)
 			return GP_ERROR;
 		s += rsize;
 		gp_file_append (file, camera->pl->buf, camera->pl->size);
@@ -426,13 +426,13 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 			return (GP_ERROR_CANCEL);
 	}
 	gp_context_progress_stop (context, id);
-	
+
 	return GP_OK;
 }
 
 static int put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			  CameraFileType type, CameraFile *file, void *user_data,
-			  GPContext *context) 
+			  GPContext *context)
 {
 	Camera *camera = user_data;
 	int	blocks, blocksize, i;
@@ -440,38 +440,38 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
 	const char *data;
 	unsigned long int size;
 	unsigned int id;
-	
-	gp_context_status(context, _("Uploading image: %s."), name);	
-	
+
+	gp_context_status(context, _("Uploading image: %s."), name);
+
 /*	We can not figure out file type, at least by now.
 
 	if (strcmp(file->type, "image/jpg") != 0) {
 		dsc_print_message(camera, "JPEG image format allowed only.");
-		return GP_ERROR;		
+		return GP_ERROR;
 	}
-*/	
+*/
 	gp_file_get_data_and_size (file, &data, &size);
 	if (size > DSC_MAXIMAGESIZE) {
 		gp_context_message (context, _("File size is %ld bytes. "
 				   "The size of the largest file possible to "
-				   "upload is: %i bytes."), size, 
+				   "upload is: %i bytes."), size,
 				   DSC_MAXIMAGESIZE);
-		return GP_ERROR;		
+		return GP_ERROR;
 	}
 
 	result = dsc1_setimageres (camera, size);
 	if (result != GP_OK)
 		return (result);
-	
+
 	blocks = (size - 1)/DSC_BLOCKSIZE + 1;
 
 	id = gp_context_progress_start (context, blocks, _("Uploading..."));
 	for (i = 0; i < blocks; i++) {
 		blocksize = size - i*DSC_BLOCKSIZE;
-		if (DSC_BLOCKSIZE < blocksize) 
+		if (DSC_BLOCKSIZE < blocksize)
 			blocksize = DSC_BLOCKSIZE;
-		result = dsc1_writeimageblock (camera, i, 
-					       (char*)&data[i*DSC_BLOCKSIZE], 
+		result = dsc1_writeimageblock (camera, i,
+					       (char*)&data[i*DSC_BLOCKSIZE],
 					       blocksize);
 		if (result != GP_OK)
 			return (result);
@@ -487,7 +487,7 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
 
 static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data,
-			     GPContext *context) 
+			     GPContext *context)
 {
 	Camera *camera = data;
 	int	index, result;
@@ -502,7 +502,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	return dsc1_delete(camera, index);
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy(about->text,
 			_("Panasonic DC1000 gPhoto library\n"

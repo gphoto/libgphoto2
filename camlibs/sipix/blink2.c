@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -60,7 +60,7 @@ blink2_getnumpics(
 ) {
     unsigned char buf[2];
     int ret;
-    
+
     ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, (char*)buf, 2);
     if (ret < GP_OK)
 	return ret;
@@ -321,7 +321,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		unsigned int start, len;
 		int curread;
 		memset( buf, 0, sizeof(buf));
-		
+
 		if (addrs[image_no].type)
         		gp_file_set_mime_type (file, GP_MIME_AVI);
 		else
@@ -388,7 +388,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	int ret;
 	unsigned int oldnumpics, numpics;
 	char buf[1];
-	
+
 	ret = blink2_getnumpics (camera->port, context, &oldnumpics);
 	if (ret < GP_OK)
 		return ret;
@@ -417,7 +417,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -445,7 +445,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "SiPix Blink2");
 	return (GP_OK);
@@ -458,7 +458,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	char buf[6];
 	int ret;

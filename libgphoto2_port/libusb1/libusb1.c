@@ -10,10 +10,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -243,7 +243,7 @@ gp_port_library_list (GPPortInfoList *list)
 			}
 			for (i1 = 0; i1 < config->bNumInterfaces; i1++)
 				for (i2 = 0; i2 < config->interface[i1].num_altsetting; i2++) {
-					const struct libusb_interface_descriptor *intf = &config->interface[i1].altsetting[i2]; 
+					const struct libusb_interface_descriptor *intf = &config->interface[i1].altsetting[i2];
 					if (	(intf->bInterfaceClass == LIBUSB_CLASS_HID)	||
 						(intf->bInterfaceClass == LIBUSB_CLASS_PRINTER)	||
 						(intf->bInterfaceClass == LIBUSB_CLASS_COMM)	||
@@ -259,7 +259,7 @@ gp_port_library_list (GPPortInfoList *list)
 			continue;
 		/* Note: We do not skip USB storage. Some devices can support both,
 		 * and the Ricoh erronously reports it.
-		 */ 
+		 */
 		nrofdevices++;
 	}
 
@@ -269,7 +269,7 @@ gp_port_library_list (GPPortInfoList *list)
 	 */
 	/* We never want to return just "usb:" ... also return "usb:XXX,YYY", and
 	 * let upper layers filter out the usb: */
-	if (nrofdevices <= 1) 
+	if (nrofdevices <= 1)
 		return (GP_OK);
 #endif
 
@@ -298,7 +298,7 @@ gp_port_library_list (GPPortInfoList *list)
 			}
 			for (i1 = 0; i1 < config->bNumInterfaces; i1++)
 				for (i2 = 0; i2 < config->interface[i1].num_altsetting; i2++) {
-					const struct libusb_interface_descriptor *intf = &config->interface[i1].altsetting[i2]; 
+					const struct libusb_interface_descriptor *intf = &config->interface[i1].altsetting[i2];
 					if (	(intf->bInterfaceClass == LIBUSB_CLASS_HID)	||
 						(intf->bInterfaceClass == LIBUSB_CLASS_PRINTER)	||
 						(intf->bInterfaceClass == LIBUSB_CLASS_COMM))
@@ -312,7 +312,7 @@ gp_port_library_list (GPPortInfoList *list)
 			continue;
 		/* Note: We do not skip USB storage. Some devices can support both,
 		 * and the Ricoh erronously reports it.
-		 */ 
+		 */
 		C_GP (gp_port_info_new (&info));
 		gp_port_info_set_type (info, GP_PORT_USB);
 		gp_port_info_set_name (info, "Universal Serial Bus");
@@ -848,12 +848,12 @@ gp_libusb1_msg_read_lib(GPPort *port, int request, int value, int index,
 					GP_ERROR_IO_READ);
 }
 
-/* The next two functions support the nonstandard request types 0x41 (write) 
- * and 0xc1 (read), which are occasionally needed. 
+/* The next two functions support the nonstandard request types 0x41 (write)
+ * and 0xc1 (read), which are occasionally needed.
  */
 
 static int
-gp_libusb1_msg_interface_write_lib(GPPort *port, int request, 
+gp_libusb1_msg_interface_write_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
 	return gp_libusb1_msg (port, request, value, index, bytes, size,
@@ -863,7 +863,7 @@ gp_libusb1_msg_interface_write_lib(GPPort *port, int request,
 
 
 static int
-gp_libusb1_msg_interface_read_lib(GPPort *port, int request, 
+gp_libusb1_msg_interface_read_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
 	return gp_libusb1_msg (port, request, value, index, bytes, size,
@@ -872,12 +872,12 @@ gp_libusb1_msg_interface_read_lib(GPPort *port, int request,
 }
 
 
-/* The next two functions support the nonstandard request types 0x21 (write) 
- * and 0xa1 (read), which are occasionally needed. 
+/* The next two functions support the nonstandard request types 0x21 (write)
+ * and 0xa1 (read), which are occasionally needed.
  */
 
 static int
-gp_libusb1_msg_class_write_lib(GPPort *port, int request, 
+gp_libusb1_msg_class_write_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
 	return gp_libusb1_msg (port, request, value, index, bytes, size,
@@ -887,7 +887,7 @@ gp_libusb1_msg_class_write_lib(GPPort *port, int request,
 
 
 static int
-gp_libusb1_msg_class_read_lib(GPPort *port, int request, 
+gp_libusb1_msg_class_read_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
 	return gp_libusb1_msg (port, request, value, index, bytes, size,
@@ -956,7 +956,7 @@ gp_libusb1_update (GPPort *port)
 	}
 	if (port->settings.usb.config != port->pl->config) {
 		GP_LOG_D ("changing config %d -> %d", port->pl->config, port->settings.usb.config);
-		/* This can only be changed with the interface released. 
+		/* This can only be changed with the interface released.
 		 * This is a hard requirement since 2.6.12.
 		 */
 		if ((port->pl->config != -1) && (LOG_ON_LIBUSB_E (libusb_release_interface (port->pl->dh, port->settings.usb.interface)))) {
@@ -972,7 +972,7 @@ gp_libusb1_update (GPPort *port)
 					   port->settings.usb.interface,
 					   port->settings.usb.config,
 					   strerror(saved_errno));
-			return GP_ERROR_IO_UPDATE;	
+			return GP_ERROR_IO_UPDATE;
 #endif
 			GP_LOG_E ("setting configuration from %d to %d failed, but continuing...", port->pl->config, port->settings.usb.config);
 		}
@@ -1261,7 +1261,7 @@ gp_libusb1_match_mtp_device(struct libusb_device *dev,int *configno, int *interf
 				xifaces++;
 
 				for (k = 0; k < dev->config[i].interface[j].num_altsetting; k++) {
-					struct usb_interface_descriptor *intf = &dev->config[i].interface[j].altsetting[k]; 
+					struct usb_interface_descriptor *intf = &dev->config[i].interface[j].altsetting[k];
 					if (	(intf->bInterfaceClass == LIBUSB_CLASS_HID)	||
 						(intf->bInterfaceClass == LIBUSB_CLASS_PRINTER)	||
 						(intf->bInterfaceClass == LIBUSB_CLASS_AUDIO)	||
@@ -1282,8 +1282,8 @@ gp_libusb1_match_mtp_device(struct libusb_device *dev,int *configno, int *interf
 		return 0;
 
 	/*
-	 * Loop over the device configurations and interfaces. Nokia MTP-capable 
-	 * handsets (possibly others) typically have the string "MTP" in their 
+	 * Loop over the device configurations and interfaces. Nokia MTP-capable
+	 * handsets (possibly others) typically have the string "MTP" in their
 	 * MTP interface descriptions, that's how they can be detected, before
 	 * we try the more esoteric "OS descriptors" (below).
 	 */
@@ -1295,9 +1295,9 @@ gp_libusb1_match_mtp_device(struct libusb_device *dev,int *configno, int *interf
 				int k;
 				for (k = 0; k < dev->config[i].interface[j].num_altsetting; k++) {
 					buf[0] = '\0';
-					ret = usb_get_string_simple(devh, 
-						dev->config[i].interface[j].altsetting[k].iInterface, 
-						(char *) buf, 
+					ret = usb_get_string_simple(devh,
+						dev->config[i].interface[j].altsetting[k].iInterface,
+						(char *) buf,
 						1024);
 					if (ret < 3)
 						continue;

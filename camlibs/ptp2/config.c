@@ -486,7 +486,7 @@ int
 camera_prepare_capture (Camera *camera, GPContext *context)
 {
 	PTPParams		*params = &camera->pl->params;
-	
+
 	GP_LOG_D ("prepare_capture");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_FUJI:
@@ -1013,7 +1013,7 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 static int
 _get_Range_INT8(CONFIG_GET_ARGS) {
 	float CurrentValue;
-	
+
 	if (dpd->FormFlag != PTP_DPFF_Range)
 		return (GP_ERROR_NOT_SUPPORTED);
 	if (dpd->DataType != PTP_DTC_INT8)
@@ -1039,7 +1039,7 @@ _put_Range_INT8(CONFIG_PUT_ARGS) {
 static int
 _get_Range_UINT8(CONFIG_GET_ARGS) {
 	float CurrentValue;
-	
+
 	if (dpd->FormFlag != PTP_DPFF_Range)
 		return (GP_ERROR_NOT_SUPPORTED);
 	if (dpd->DataType != PTP_DTC_UINT8)
@@ -1894,7 +1894,7 @@ _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
 		char *val;
 		int ival;
-		
+
 		CR (gp_widget_get_value(widget, &val));
 		sscanf (val, "%d", &ival);
 		propval->i8 = ival;
@@ -3643,7 +3643,7 @@ static struct deviceproptableu16 nikon_d850_focus_metering[] = {
 	{ N_("Dynamic-area AF (72 points)"),0x8013, PTP_VENDOR_NIKON},
 	{ N_("Dynamic-area AF (153 points)"),	0x8014, PTP_VENDOR_NIKON},
 	{ N_("Group-area AF"),	0x8015, PTP_VENDOR_NIKON},
-	{ N_("Dynamic-area AF (9 points)"),	0x8016, PTP_VENDOR_NIKON},	
+	{ N_("Dynamic-area AF (9 points)"),	0x8016, PTP_VENDOR_NIKON},
 
 	{ N_("Pinpoint AF"),		0x8017, PTP_VENDOR_NIKON}, /* on Z */
 	{ N_("Wide-area AF (S)"),	0x8018, PTP_VENDOR_NIKON}, /* on Z */
@@ -3772,7 +3772,7 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Slow sync"),				0x8004, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain with slow sync"),		0x8005, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain sync"),			0x8006, PTP_VENDOR_FUJI},
-	
+
 	{ N_("Rear Curtain Sync"),			0x8003, PTP_VENDOR_SONY},
 	{ N_("Wireless Sync"),				0x8004, PTP_VENDOR_SONY},
 	{ N_("Slow Sync"),				0x8032, PTP_VENDOR_SONY},
@@ -4411,7 +4411,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	/* old style uses stepping */
 
 	new = ((float)x)/(float)y;
-	
+
 	if (old > new) {
 		value.u8 = 0x01;
 		direction = 1;
@@ -4420,8 +4420,8 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		value.u8 = 0xff;
 		direction = -1;
 	}
-	
-	if (direction == 1) {	
+
+	if (direction == 1) {
 		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
@@ -4438,7 +4438,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 				break;
 		}
 	}
-		
+
 	do {
 		origval = dpd->CurrentValue.u32;
 		if (old == new)
@@ -4451,13 +4451,13 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			if (current >= ((float)a)/(float)b)
 				break;
 		}
-		
-		// Calculating jump width 
+
+		// Calculating jump width
 		if (direction > 0)
 			value.u8 = 0x00 + position_new - position_current;
 		else
 			value.u8 = 0x100 + position_new - position_current;
-			
+
 		a = dpd->CurrentValue.u32>>16;
 		b = dpd->CurrentValue.u32&0xffff;
 		C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, dpd->DevicePropertyCode, &value, PTP_DTC_UINT8 ));
@@ -4477,7 +4477,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			a = dpd->CurrentValue.u32>>16;
 			b = dpd->CurrentValue.u32&0xffff;
 			current = ((float)a)/((float)b);
-			
+
 			if ((a*y != 0) && (a*y == b*x)) {
 				GP_LOG_D ("Value matched via math(tm) %d/%d == %d/%d!",x,y,a,b);
 				break;
@@ -4492,7 +4492,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 
 			time(&end);
 		} while (end-start <= 3);
-		
+
 		if (direction > 0 && current <= new) {
 			GP_LOG_D ("Overshooted value, maybe choice not available!");
 			break;
@@ -5374,16 +5374,16 @@ static struct deviceproptableu8 nikon_d850_moviequality[] = {
  	{"3840x2160; 30p",	0, 0},
 	{"3840x2160; 25p",	1, 0},
 	{"3840x2160; 24p",	2, 0},
-	
+
  	{"1920x1080; 60p",	3, 0},
 	{"1920x1080; 50p",	4, 0},
 	{"1920x1080; 30p",	5, 0},
 	{"1920x1080; 25p",	6, 0},
 	{"1920x1080; 24p",	7, 0},
-	
+
 	{"1280x720; 60p",	8, 0},
 	{"1280x720; 50p",	9, 0},
-	
+
 	{"1920x1080; 30p x4 (slow-mo)", 10, 0},
 	{"1920x1080; 25p x4 (slow-mo)",	11, 0},
 	{"1920x1080; 24p x5 (slow-mo)",	12, 0},
@@ -6436,7 +6436,7 @@ _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 		return GP_ERROR_NOT_SUPPORTED;
 	gp_widget_get_value(widget, &val);
 
-	if (!sscanf(val,"%d",&xval))	
+	if (!sscanf(val,"%d",&xval))
 		return GP_ERROR;
 
 	C_PTP (ptp_nikon_changecameramode (&camera->pl->params, xval));
@@ -6781,7 +6781,7 @@ _put_Canon_CHDK_Script(CONFIG_PUT_ARGS) {
 	int		script_id;
 	unsigned int	status;
 	int		luastatus;
-	
+
 	CR (gp_widget_get_value(widget, &script));
 
 //  Nafraf: Working on this!!!
@@ -7405,7 +7405,7 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 
 	if(val != 0.0) {
-		/* value 2 seems to set it to autofocusmode. see issue https://github.com/gphoto/libgphoto2/issues/434  
+		/* value 2 seems to set it to autofocusmode. see issue https://github.com/gphoto/libgphoto2/issues/434
 		xpropval.u16 = 2;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
 		*/
@@ -8262,7 +8262,7 @@ _put_nikon_list_wifi_profiles (CONFIG_PUT_ARGS)
 	}
 
 	/* FIXME: deleted entry still exists, rebuild tree if deleted = 1 ? */
-	
+
 	return GP_OK;
 }
 
@@ -8321,7 +8321,7 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 			          params->wifi_profiles[i].device_type);
 			gp_widget_set_value(child2, buffer);
 			gp_widget_append(child, child2);
-			
+
 			gp_widget_new (GP_WIDGET_TEXT, "Dates", &child2);
 			snprintf (buffer, 4096,
 				_("Creation date: %s, Last usage date: %s"),
@@ -8343,7 +8343,7 @@ _get_nikon_list_wifi_profiles (CONFIG_GET_ARGS)
 static int
 _get_nikon_wifi_profile_prop(CONFIG_GET_ARGS) {
 	char buffer[1024];
-	
+
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_setting_get("ptp2_wifi",menu->name,buffer);
@@ -8364,7 +8364,7 @@ static int
 _get_nikon_wifi_profile_channel(CONFIG_GET_ARGS) {
 	char buffer[1024];
 	float val;
-	
+
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_setting_get("ptp2_wifi", menu->name, buffer);
@@ -8373,7 +8373,7 @@ _get_nikon_wifi_profile_channel(CONFIG_GET_ARGS) {
 	if (!val)
 		val = 1.0;
 	gp_widget_set_value(*widget, &val);
-	
+
 	return (GP_OK);
 }
 
@@ -8402,18 +8402,18 @@ _get_nikon_wifi_profile_encryption(CONFIG_GET_ARGS) {
 	char buffer[1024];
 	int i;
 	int val;
-	
+
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_setting_get("ptp2_wifi", menu->name, buffer);
 	val = atoi(buffer);
-	
+
 	for (i = 0; encryption_values[i]; i++) {
 		gp_widget_add_choice(*widget, _(encryption_values[i]));
 		if (i == val)
 			gp_widget_set_value(*widget, _(encryption_values[i]));
 	}
-	
+
 	return (GP_OK);
 }
 
@@ -8447,18 +8447,18 @@ _get_nikon_wifi_profile_accessmode(CONFIG_GET_ARGS) {
 	char buffer[1024];
 	int i;
 	int val;
-	
+
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_setting_get("ptp2_wifi", menu->name, buffer);
 	val = atoi(buffer);
-	
+
 	for (i = 0; accessmode_values[i]; i++) {
 		gp_widget_add_choice(*widget, _(accessmode_values[i]));
 		if (i == val)
 			gp_widget_set_value(*widget, _(accessmode_values[i]));
 	}
-	
+
 	return (GP_OK);
 }
 
@@ -8550,7 +8550,7 @@ _put_nikon_wifi_profile_write(CONFIG_PUT_ARGS) {
 		/* Encryption */
 		gp_setting_get("ptp2_wifi","encryption",buffer);
 		profile.encryption = atoi(buffer);
-		
+
 		if (profile.encryption != 0) {
 			gp_setting_get("ptp2_wifi","key",buffer);
 			i = 0;
@@ -8595,7 +8595,7 @@ _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 {
 	int submenuno, ret;
 	CameraWidget *subwidget;
-	
+
 	gp_widget_new (GP_WIDGET_SECTION, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
@@ -8606,7 +8606,7 @@ _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 		if (ret == GP_OK)
 			gp_widget_append (*widget, subwidget);
 	}
-	
+
 	return GP_OK;
 }
 
@@ -8615,7 +8615,7 @@ _put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
 {
 	int submenuno, ret;
 	CameraWidget *subwidget;
-	
+
 	for (submenuno = 0; create_wifi_profile_submenu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = create_wifi_profile_submenu+submenuno;
 
@@ -8674,7 +8674,7 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 {
 	int submenuno, ret;
 	CameraWidget *subwidget;
-	
+
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
 		struct submenu *cursub = wifi_profiles_menu+submenuno;
 
@@ -9173,7 +9173,7 @@ static struct submenu nikon_d850_capture_settings[] = {
 	{ N_("Image Rotation Flag"),            "imagerotationflag",    PTP_DPC_NIKON_ImageRotation,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,            _put_Nikon_OffOn_UINT8 },
 	{ N_("Active D-Lighting"),              "dlighting",            PTP_DPC_NIKON_ActiveDLighting,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,   _get_Nikon_D850_ActiveDLighting,   _put_Nikon_D850_ActiveDLighting },
 	{ N_("Continuous Shooting Speed Slow"), "shootingspeed",        PTP_DPC_NIKON_D1ShootingSpeed,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_ShootingSpeed,     _put_Nikon_D850_ShootingSpeed },
-	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },	
+	{ N_("Movie Resolution"),               "moviequality",         PTP_DPC_NIKON_MovScreenSize,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_MovieQuality,      _put_Nikon_D850_MovieQuality },
 	{ N_("Center Weight Area"),             "centerweightsize",     PTP_DPC_NIKON_CenterWeightArea, PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_CenterWeight,      _put_Nikon_D850_CenterWeight },
 	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,     _put_Nikon_D850_FocusMetering },
 	{ 0,0,0,0,0,0,0 },
@@ -9296,7 +9296,7 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0440, nikon_d7500_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0414, nikon_d40_capture_settings,     NULL,   NULL },
-	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0441, nikon_d850_capture_settings,    NULL,   NULL },	
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0441, nikon_d850_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0442, nikon_z6_capture_settings,      NULL,   NULL },	/* Z7 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0443, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0,      nikon_generic_capture_settings, NULL,   NULL },

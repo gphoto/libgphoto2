@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -41,7 +41,7 @@ int pdrm11_init(GPPort *port)
 {
 	unsigned char buf[20];
 	int timeout = 50;
-	
+
 	gp_port_set_timeout(port,1000);
 
 	/* exactly what windows driver does */
@@ -60,7 +60,7 @@ int pdrm11_init(GPPort *port)
 		GP_DEBUG("PDRM11_CMD_ZERO: %x %x", buf[0], buf[1]);
 		return(GP_ERROR);
 	}
-		
+
 
 	/* wait til the camera is ready */
 	do {
@@ -71,7 +71,7 @@ int pdrm11_init(GPPort *port)
 		if( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_READY, 0, (char *)buf, 4) == -ETIMEDOUT )
 			timeout = 0;
 	} while( !((buf[3] == 0x25) && (buf[0] == 1)) && timeout );
-	
+
 	/* what good is this? */
 	usleep(400000);
 
@@ -97,7 +97,7 @@ int pdrm11_get_filenames(GPPort *port, CameraList *list)
 	numPics = le16atoh(&buf[2]) + (le16atoh(&buf[0]) * 1024);
 	GP_DEBUG("found %d pictures", numPics);
 
-	
+
 
 	for(i=1;  i<numPics+1;  i++) {
 		CHECK( pdrm11_select_file(port, i) );
@@ -126,7 +126,7 @@ static int pdrm11_select_file(GPPort *port, uint16_t file)
 
 	uint16_t picNum = htole16(file);
 	uint16_t file_type;
-	
+
 	/* byte 4 of PDRM11_CMD_GET_INFO determines if the file is a jpeg or tiff */
 	CHECK(gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_INFO, file, buf, 8));
 	file_type = htole16(buf[4]);
@@ -148,7 +148,7 @@ static int pdrm11_ping(GPPort *port)
 #endif
 
 
-int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType type, 
+int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType type,
 			CameraFile *file, GPPort *port, uint16_t picNum)
 {
 	uint32_t size = 0;
@@ -160,7 +160,7 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	int ret;
 	int file_type;
 
-		
+
 	gp_port_set_timeout(port,10000);
 	CHECK( pdrm11_select_file(port, picNum) );
 
@@ -170,9 +170,9 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 
 		CHECK( gp_port_usb_msg_read(port, 0x01, PDRM11_CMD_GET_THUMBSIZE, picNum, (char *)buf, 14) );
 		thumbsize = le16atoh( &buf[8] );
-		
+
 		/* add 1 to file size only for jpeg thumbnails */
-		if(file_type == 1) { 
+		if(file_type == 1) {
 			GP_DEBUG("thumbnail file_type: %s.", "jpeg");
 			size = (uint32_t)thumbsize + 1;
 		} else if(file_type == 2) {
@@ -225,7 +225,7 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 			image[i+1] = temp;
 		}
 	}
-	
+
 
 	gp_file_set_mime_type(file, GP_MIME_JPEG);
 	gp_file_set_data_and_size(file, (char *)image, size);

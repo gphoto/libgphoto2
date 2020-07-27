@@ -1,16 +1,16 @@
 /*
  * Jenopt JD11 Camera Driver
- * Copyright 1999-2001 Marcus Meissner <marcus@jet.franken.de> 
- * 
+ * Copyright 1999-2001 Marcus Meissner <marcus@jet.franken.de>
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -273,7 +273,7 @@ static void cmd_TestFLASH(GPPort *port) {
 	fprintf(stderr,"TestFLASH: xcmd = %x.\n",xcmd);
 }
 
-/* some kind of selftest  ... shuts the shutters, beeps... only stops by 
+/* some kind of selftest  ... shuts the shutters, beeps... only stops by
  * powercycle. */
 static void cmd_79(GPPort *port) {
 	unsigned short xcmd;
@@ -351,7 +351,7 @@ jd11_erase_all(GPPort *port) {
 }
 
 /* This function reads all thumbnails at once and initializes the whole
- * camera filesystem. This can be done, because finding out how much 
+ * camera filesystem. This can be done, because finding out how much
  * pictures are on the camera is done by reading the whole preview picture
  * stream anyway.
  * And since the file infos are static mostly, why not just set them too at
@@ -401,7 +401,7 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 	unsigned char thumb[64*48];
 	int y;
 	CameraFileInfo	info;
-	
+
 	ret = gp_file_new(&file);
 	if (ret!=GP_OK) {
 	    free(indexbuf);
@@ -437,14 +437,14 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
-			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
 	strcpy(info.file.type,GP_MIME_PNM);
 	info.file.width		= 640;
 	info.file.height	= 480;
 	info.file.size		= 640*480*3+strlen(IMGHEADER);
 	info.preview.fields = GP_FILE_INFO_TYPE |
-			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT | 
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE;
 	strcpy(info.preview.type,GP_MIME_PGM);
 	info.preview.width	= 64;

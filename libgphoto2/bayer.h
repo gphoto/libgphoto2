@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -26,7 +26,7 @@
 
 /**
  * \brief how the bayer CCD array is laid out
- * 
+ *
  * This enumeration defines how the CCD bayer array is laid out.
  */
 typedef enum {
@@ -47,9 +47,9 @@ int gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
 int gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile);
 /*
  * The following two functions use an alternative procedure called Adaptive
- * Homogeneity-directed demosaicing instead of the standard bilinear 
- * interpolation with basic edge-detection method used in the previous two 
- * functions. To use or test this method of Bayer interpolation, just use 
+ * Homogeneity-directed demosaicing instead of the standard bilinear
+ * interpolation with basic edge-detection method used in the previous two
+ * functions. To use or test this method of Bayer interpolation, just use
  * gp_ahd_decode() in the same way and in the same place as gp_bayer_decode()
  * is used.
  */

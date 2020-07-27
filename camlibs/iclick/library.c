@@ -111,7 +111,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy(manual->text, 	
+	strcpy(manual->text,
 	_(
 	"Information regarding cameras with ID 0x2770:0x9153.\n\n"
 	"We do not recommend the use of a GUI program to access\n"

@@ -114,7 +114,7 @@ int dimagev_get_camera_status(dimagev_t *dimagev) {
 		free(p);
 		return GP_ERROR;
 	}
-	
+
 	free(p);
 
 	if ( ( dimagev->status = dimagev_import_camera_status(raw->buffer) ) == NULL ) {
@@ -136,7 +136,7 @@ dimagev_status_t *dimagev_import_camera_status(unsigned char *raw_data) {
 	if ( raw_data == NULL ) {
 		return NULL;
 	}
-	
+
 	if ( ( processed_data = malloc(sizeof(dimagev_status_t)) ) == NULL ) {
 		return NULL;
 	}

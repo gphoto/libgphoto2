@@ -6,10 +6,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -61,12 +61,12 @@
 #define CR(res) { int r=(res);if (r<0) return (r);}
 
 /*
- * supported cameras : 
+ * supported cameras :
  * - Traveler SX330z (Aldi cam)
  * - Other SX330z / SX3300z Models ?
  *   please report if you have others that are working
  */
- 
+
 static const struct
 {
  char *model;
@@ -90,9 +90,9 @@ static const struct
 
 
 /*
- * camera abilities 
+ * camera abilities
  */
-int 
+int
 camera_abilities (CameraAbilitiesList *list)
 {
  int i;
@@ -110,7 +110,7 @@ camera_abilities (CameraAbilitiesList *list)
   a.file_operations = GP_FILE_OPERATION_PREVIEW|
      			GP_FILE_OPERATION_DELETE|
                         GP_FILE_OPERATION_EXIF;
-  a.folder_operations = GP_FOLDER_OPERATION_NONE; 
+  a.folder_operations = GP_FOLDER_OPERATION_NONE;
   CR(gp_abilities_list_append(list,a));
  } /* all models... */
  return(GP_OK);
@@ -120,9 +120,9 @@ camera_abilities (CameraAbilitiesList *list)
 
 
 /*
- *	file list function 
+ *	file list function
  */
-static int 
+static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
@@ -132,7 +132,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	int pcnt,ecnt;		/* pagecounter, entrycounter*/
 	struct traveler_toc_page toc;
 	int id;
- 
+
 	/* get number of TOC pages */
 	CR (sx330z_get_toc_num_pages (camera, context, &tpages));
 	/* Read the TOC pages */
@@ -152,7 +152,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			info.file.size = toc.entries[ecnt].size;
 			info.file.permissions = GP_FILE_PERM_READ |
 						GP_FILE_PERM_DELETE;
-			strcpy (info.file.type,GP_MIME_JPEG); 
+			strcpy (info.file.type,GP_MIME_JPEG);
 			sprintf (fn, "%.12s", toc.entries[ecnt].name);
 
 			/*
@@ -167,14 +167,14 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);
 	}
-	
+
 	gp_context_progress_stop (context, id);
 
 	return (GP_OK);
 }
 
 
-static int 
+static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
@@ -182,7 +182,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = user_data;
 	char *data = NULL;
 	unsigned long int size = 0;
- 
+
 	switch (type) {
 	case GP_FILE_TYPE_EXIF:
 		gp_file_set_mime_type (file, GP_MIME_RAW);
@@ -200,7 +200,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	gp_file_set_data_and_size (file, data, size);
-	
+
 	return (GP_OK);
 }
 
@@ -208,7 +208,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 /*
  * 	Delete file function (working ..)
  */
-static int 
+static int
 del_file_func(CameraFilesystem *fs,const char *folder,const char *filename,
    	void *user_data,GPContext *context)
 {
@@ -221,9 +221,9 @@ del_file_func(CameraFilesystem *fs,const char *folder,const char *filename,
 
 
 /*
- * Camera ID 
+ * Camera ID
  */
-int 
+int
 camera_id(CameraText *id)
 {
  strcpy(id->text,"Traveler SX330z");
@@ -234,9 +234,9 @@ camera_id(CameraText *id)
 
 
 /*
- * Camera about 
+ * Camera about
  */
-static int 
+static int
 camera_about(Camera *camera,CameraText *about,GPContext *context)
 {
  strcpy(about->text,_("(Traveler) SX330z Library (And other Aldi-cams).\n"
@@ -251,7 +251,7 @@ camera_about(Camera *camera,CameraText *about,GPContext *context)
  * camera_exit
  * release allocated memory
  */
-int 
+int
 camera_exit(Camera *camera, GPContext *context)
 {
  if (camera->pl)
@@ -269,15 +269,15 @@ static CameraFilesystemFuncs fsfuncs = {
 /*
  * OK, lets get serious !
  */
-int 
+int
 camera_init(Camera *camera,GPContext *context)
 {
  GPPortSettings settings;
  CameraAbilities abilities;
  /* try to contact the camera ...*/
  /*CR(gp_port_get_settings(camera->port,&settings));*/
- 
- camera->functions->about=camera_about; 
+
+ camera->functions->about=camera_about;
  camera->functions->exit=camera_exit;
  gp_port_get_settings(camera->port,&settings);
  if (camera->port->type!=GP_PORT_USB)
@@ -287,12 +287,12 @@ camera_init(Camera *camera,GPContext *context)
  }
 /* GP_DEBUG("camera_init : in = %x",camera->port->settings.usb.inep);*/
  CR(gp_port_set_settings(camera->port,settings));
- CR(gp_port_set_timeout(camera->port,TIMEOUT)); 
+ CR(gp_port_set_timeout(camera->port,TIMEOUT));
 
  CR(gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera));
- 
+
  camera->pl=malloc(sizeof(CameraPrivateLibrary));
- if (!camera->pl) 
+ if (!camera->pl)
    return(GP_ERROR_NO_MEMORY);
 
  CR(gp_camera_get_abilities(camera, &abilities));

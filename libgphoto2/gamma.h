@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -25,7 +25,7 @@
 #define __GAMMA_H__
 
 int gp_gamma_fill_table     (unsigned char *table, double g);
-int gp_gamma_correct_single (unsigned char *table, unsigned char *data, 
+int gp_gamma_correct_single (unsigned char *table, unsigned char *data,
 			     unsigned int data_size);
 
 #endif /* __GAMMA_H__ */

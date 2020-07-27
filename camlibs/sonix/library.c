@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -58,17 +58,17 @@ static const struct {
 	unsigned short idProduct;
 } models[] = {
 	{"DC31VC", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8000},
-	{"Wild Planet Digital Spy Camera 70137", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	{"Wild Planet Digital Spy Camera 70137", GP_DRIVER_STATUS_EXPERIMENTAL,
 	    0x0c45, 0x8001},
-	{"Sakar Digital Keychain 11199", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	{"Sakar Digital Keychain 11199", GP_DRIVER_STATUS_EXPERIMENTAL,
 	    0x0c45, 0x8003},
-	{"Sakar Digital no, 6637x", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	{"Sakar Digital no, 6637x", GP_DRIVER_STATUS_EXPERIMENTAL,
 	    0x0c45, 0x8003},
-	{"Sakar Digital no, 67480", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	{"Sakar Digital no, 67480", GP_DRIVER_STATUS_EXPERIMENTAL,
 	    0x0c45, 0x8003},
 	{"Mini Shotz ms-350", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x8008},
 	{"Vivitar Vivicam3350B", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x800a},
-	{"Genius Smart 300, version 2", GP_DRIVER_STATUS_EXPERIMENTAL, 
+	{"Genius Smart 300, version 2", GP_DRIVER_STATUS_EXPERIMENTAL,
 	    0x0458, 0x7005},
  	{NULL,0,0,0}
 };
@@ -76,14 +76,14 @@ static const struct {
 int
 camera_id (CameraText *id)
 {
-	strcpy (id->text, "Vivitar ViviCam3350B"); 
+	strcpy (id->text, "Vivitar ViviCam3350B");
 	return GP_OK;
 }
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-	int i;    
+	int i;
 	CameraAbilities a;
 
 	for (i = 0; models[i].name; i++) {
@@ -110,14 +110,14 @@ static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	int ret = 0;
-	if(!camera->pl->sonix_init_done) 
+	if(!camera->pl->sonix_init_done)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
 		camera->pl = NULL;
 		return ret;
 	}
-	if (!camera->pl->num_pics) 
+	if (!camera->pl->num_pics)
 		sonix_exit(camera->port);
 	sprintf (summary->text,ngettext(
 		"Sonix camera.\nThere is %i photo in it.\n",
@@ -127,9 +127,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy(manual->text, 
+	strcpy(manual->text,
 	_(
 	"This driver supports some cameras that use the Sonix sn9c2028 chip.\n"
 	"The following operations are supported:\n"
@@ -140,9 +140,9 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 	"   - image capture to camera (		ditto		)\n"
 	"If present on the camera, video clip frames are downloaded \n"
 	"as consecutive still photos or as AVI files, depending on the model.\n"
-	"Thumbnails for AVIs are still photos made from the first frame.\n" 
+	"Thumbnails for AVIs are still photos made from the first frame.\n"
 	"A single image cannot be deleted unless it is the last one.\n"
-	)); 
+	));
 	return (GP_OK);
 }
 
@@ -160,12 +160,12 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data; 
+        Camera *camera = data;
 	int i = 0;
 	char name[16];
 	int(avitype);
 	int ret = 0;
-	if(!camera->pl->sonix_init_done) 
+	if(!camera->pl->sonix_init_done)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
@@ -181,7 +181,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (avitype) {
 			snprintf (name, 16, "sonix%03i.avi", i+1);
 			avitype = 0;
-		} else 
+		} else
 			snprintf (name, 16, "sonix%03i.ppm", i+1);
 		gp_list_append (list, name, NULL);
 	}
@@ -192,9 +192,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CameraFileType type, CameraFile *file, void *user_data,
 		GPContext *context)
 {
-	Camera *camera = user_data; 
+	Camera *camera = user_data;
 	int w, h = 0, buffersize = 0, i, k, rawsize = 0;
-	unsigned char *data = NULL; 
+	unsigned char *data = NULL;
 	unsigned char  *ppm, *ptr, *avi=NULL, *frame_data = NULL;
 	unsigned char *p_data = NULL, *p_buf = NULL;
 	unsigned int numframes = 0;
@@ -209,7 +209,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int ret = 0;
 
 	GP_DEBUG ("Downloading pictures!\n");
-	if(!camera->pl->sonix_init_done) 
+	if(!camera->pl->sonix_init_done)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
@@ -223,13 +223,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	CAM_OFFSET = camera->pl->offset;
 	POST_CODE = camera->pl->post;
 	/* Get the number of the photo on the camera */
-	k = gp_filesystem_number (camera->fs, "/", filename, context); 
+	k = gp_filesystem_number (camera->fs, "/", filename, context);
 	if (k < GP_OK) return k;
 	/* Cheap camera. No EXIF data. Quick! Kill this before it multiplies! */
-	if(type == GP_FILE_TYPE_EXIF) 
+	if(type == GP_FILE_TYPE_EXIF)
 		return GP_ERROR_FILE_EXISTS;
 	i = camera->pl->size_code[k];
-	switch (i) { 
+	switch (i) {
 	case 0: w=352; h = 288; break;
 	case 9: avitype = 1;		/* multiframe */
 	case 1: w=176; h = 144; break;
@@ -237,7 +237,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case 2: w=640; h = 480; break;
 	case 0x0b: avitype = 1;		/* multiframe */
 	case 3: w=320; h = 240; break;
-	default:  GP_DEBUG ("Size code unknown\n"); 
+	default:  GP_DEBUG ("Size code unknown\n");
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	GP_DEBUG( "avitype is %d\n", avitype);
@@ -246,9 +246,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (rawsize < GP_OK)
 		return rawsize;
 	GP_DEBUG("rawsize = 0x%x = %i\n", rawsize, rawsize);
-	if(rawsize%0x40) 
+	if(rawsize%0x40)
 		buffersize = rawsize - (rawsize%0x40) + 0x40;
-	else 
+	else
 		buffersize = rawsize;
 	data = calloc (buffersize+64, 1);
 	if (!data) return GP_ERROR_NO_MEMORY;
@@ -256,7 +256,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch(type) {
 	case GP_FILE_TYPE_NORMAL:
-		/* count end of frame markers to know the number of 
+		/* count end of frame markers to know the number of
 		 *frames and the size and starting offset of each */
 		endpoint = 0;
 		numframes = 0;
@@ -269,8 +269,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					(p_buf[endpoint-10]==0x00) &&
 					(p_buf[endpoint-9]==0xc4) &&
 					(p_buf[endpoint-8]==0xc4) ) &&
-					(endpoint < buffersize +64 
-						    - bytes_used)) 
+					(endpoint < buffersize +64
+						    - bytes_used))
 				endpoint ++ ;
 			if ( !((p_buf[endpoint-12]==0xff) &&
 					(p_buf[endpoint-11]==0xff) &&
@@ -285,7 +285,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 						p_buf[endpoint-5]);
 				compressed=p_buf[endpoint-5]&1;
 			}
-			framestart[numframes+1] = 
+			framestart[numframes+1] =
 				framestart[numframes] + endpoint;
 			p_buf += endpoint;
 			bytes_used += endpoint;
@@ -337,7 +337,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				return GP_ERROR_NO_MEMORY;
 			}
 			GP_DEBUG("avi hdr written\n");
-			gp_file_append(file, (char *)avi, 
+			gp_file_append(file, (char *)avi,
 					SAKAR_AVI_HEADER_LENGTH);
 			free(avi);
 			GP_DEBUG("avi hdr put away\n");
@@ -354,21 +354,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				offset = 0x40*(framestart[i]/0x40)+0x40;
 				if (offset == framestart[i] + 0x40)
 					offset -= 0x40;
-				GP_DEBUG("framestart[%i] = 0x%x\n", i, 
+				GP_DEBUG("framestart[%i] = 0x%x\n", i,
 						framestart[i]);
 				GP_DEBUG("offset = 0x%x\n", offset);
 				switch (POST_CODE) {
 				case DECOMP|REVERSE:
-					sonix_decode (frame_data, 
-					data+offset+CAM_OFFSET, w, h); 
+					sonix_decode (frame_data,
+					data+offset+CAM_OFFSET, w, h);
 					sonix_cols_reverse(frame_data, w, h);
                                         gp_ahd_decode(frame_data, w, h, ptr+
                                             SAKAR_AVI_FRAME_HEADER_LENGTH,
                                                             BAYER_TILE_GBRG);
 					break;
 				case DECOMP:
-					sonix_decode (frame_data, 
-					data+offset+CAM_OFFSET, w, h); 
+					sonix_decode (frame_data,
+					data+offset+CAM_OFFSET, w, h);
 					sonix_rows_reverse(frame_data, w, h);
                                         gp_ahd_decode(frame_data, w, h, ptr+
                                             SAKAR_AVI_FRAME_HEADER_LENGTH,
@@ -382,10 +382,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
                                             SAKAR_AVI_FRAME_HEADER_LENGTH,
                                                             BAYER_TILE_GRBG);
 				}
-				white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH, 
+				white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH,
 						w * h, 1.2);
-				gp_file_append(file, (char *)ptr, 
-				    3*frame_size+ 
+				gp_file_append(file, (char *)ptr,
+				    3*frame_size+
 						SAKAR_AVI_FRAME_HEADER_LENGTH);
 				GP_DEBUG("Done with frame number %i\n",i+1);
 			}
@@ -400,9 +400,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			camera->pl->sonix_init_done = 1;
 			sonix_exit(camera->port);
 		}
-		/* For an AVI file, we make a PPM thumbnail of the 
-		 * first frame. Otherwise, still photos are processed 
-		 * here, and also the thumbnails for them. 
+		/* For an AVI file, we make a PPM thumbnail of the
+		 * first frame. Otherwise, still photos are processed
+		 * here, and also the thumbnails for them.
 		 */
 		p_data = malloc (w * h);
 		if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
@@ -443,7 +443,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_set_data_and_size (file, (char *)ppm, size);
 		free (data);
 		return GP_OK;
-	case GP_FILE_TYPE_RAW: 
+	case GP_FILE_TYPE_RAW:
 		gp_file_set_mime_type(file, GP_MIME_RAW);
 		gp_file_append( file, (char *)data, rawsize);
 		free(data);
@@ -452,17 +452,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		free(data);
 		return	GP_ERROR_NOT_SUPPORTED;
-	}	
+	}
         return GP_OK;
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data, 
-		GPContext *context) 
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
+		GPContext *context)
 {
 	Camera *camera = data;
 	int ret = 0;
-	if(!camera->pl->sonix_init_done) 
+	if(!camera->pl->sonix_init_done)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
@@ -480,7 +480,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 	int k;
 	int ret = 0;
-	if(!camera->pl->sonix_init_done) 
+	if(!camera->pl->sonix_init_done)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
@@ -506,7 +506,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 {
 	int ret = 0, n;
 	char name[30];
-	if(!camera->pl->sonix_init_done) 
+	if(!camera->pl->sonix_init_done)
 		ret = sonix_init(camera->port, camera->pl);
 	if ( ret != GP_OK) {
 		free(camera->pl);
@@ -558,7 +558,7 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	ret = gp_camera_get_abilities(camera,&abilities);
-	if (ret < 0) return ret;	
+	if (ret < 0) return ret;
 	GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
 
 	/* First, set up all the function pointers */
@@ -567,10 +567,10 @@ camera_init(Camera *camera, GPContext *context)
 	camera->functions->summary	= camera_summary;
 	camera->functions->about	= camera_about;
 	camera->functions->exit		= camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
@@ -587,7 +587,7 @@ camera_init(Camera *camera, GPContext *context)
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	GP_DEBUG("interface = %i\n", settings.usb.interface);
 	GP_DEBUG("inep = %x\n", settings.usb.inep);
@@ -606,9 +606,9 @@ camera_init(Camera *camera, GPContext *context)
 	camera->pl->post = 0;
 	GP_DEBUG("post code is 0x%x\n", camera->pl->post);
 	/* Connect to the camera only if something is actually being done,
-	 * because otherwise the Sakar Digital Keychain camera is put into 
-	 * some kind of excited mode when gtkam is run, and will not leave 
-	 * this mode even after gtkam is exited. 
+	 * because otherwise the Sakar Digital Keychain camera is put into
+	 * some kind of excited mode when gtkam is run, and will not leave
+	 * this mode even after gtkam is exited.
 	 */
 	return GP_OK;
 }

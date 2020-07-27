@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -97,7 +97,7 @@ path_basename (const char *pathname)
 	char *result, *tmp;
 	/* remove path part from camlib name */
 	for (result=tmp=(char *)pathname; (*tmp!='\0'); tmp++) {
-		if ((*tmp == gp_system_dir_delim) 
+		if ((*tmp == gp_system_dir_delim)
 		    && (*(tmp+1) != '\0')) {
 			result = tmp+1;
 		}
@@ -115,7 +115,7 @@ typedef enum {
 	/* Text table without headers. */
 	FMT_FLAT_TEXT,
 	/* Text table just of camlibs without headers,
-	 * which will contain duplicate lines! 
+	 * which will contain duplicate lines!
 	 * Treat the output with | sort | uniq to get meaningful results.
 	 */
 	FMT_FLAT_CAMLIBS,
@@ -173,7 +173,7 @@ parse_command_line (const int argc, char *argv[])
 }
 
 
-/** 
+/**
  * Get list of supported cameras, walk through it and create some output.
  */
 int
@@ -215,7 +215,7 @@ main (int argc, char *argv[])
 	}
 
 
-	/* Set output format for file body, 
+	/* Set output format for file body,
 	 * and print opening part of output file. */
 	switch (format) {
 	case FMT_CSV:
@@ -233,7 +233,7 @@ main (int argc, char *argv[])
 			"    <driver-name value=\"%3$s\"/>\n"
 			"  </camera>\n";
 		printf("<?xml version=\"%s\" encoding=\"%s\"?>\n"
-		       "<camera-list camera-count=\"%d\">\n", 
+		       "<camera-list camera-count=\"%d\">\n",
 		       "1.0", "us-ascii", count);
 		break;
 	case FMT_FLAT_CAMLIBS:
@@ -246,7 +246,7 @@ main (int argc, char *argv[])
 	}
 
 	strcpy(lastmodel,"xxx");
-	/* For each camera in the list, add a text snippet to the 
+	/* For each camera in the list, add a text snippet to the
 	 * output file. */
 	for (i = 0; i < count; i++) {
 		CameraAbilities abilities;
@@ -262,7 +262,7 @@ main (int argc, char *argv[])
 
 		switch (format) {
 		case FMT_HEADED_TEXT:
-			if ( ((i%25)== 0) && 
+			if ( ((i%25)== 0) &&
 			     ( (i==0) || ((count-i) > 5) ) ) {
 				print_hline();
 				print_headline();
@@ -282,7 +282,7 @@ main (int argc, char *argv[])
 		}
 
 		printf(fmt_str,
-		       i+1, 
+		       i+1,
 		       camlib_basename,
 		       abilities.id,
 		       abilities.model);
@@ -307,7 +307,7 @@ main (int argc, char *argv[])
 	case FMT_COUNT:
 		break;
 	}
-	
+
 	CHECK (gp_abilities_list_free (al));
 	gp_log_remove_func (logid);
 	return (0);

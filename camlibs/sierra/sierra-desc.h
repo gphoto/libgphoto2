@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -69,7 +69,7 @@ typedef struct {
 
 typedef struct {
 	union {
-		/* 
+		/*
 		 * The register value masked with regs_mask gives the
 		 * register value to compare or use here.  Register values
 		 * are always int, and must be converted to/from float for
@@ -87,7 +87,7 @@ typedef struct {
 				   a stepping of one is used. */
 		CameraWidgetCallback callback; /* GP_WIDGET_BUTTON */
 	} u;
-	/* 
+	/*
 	 * Range uses no name - the name is implicitly the value. XXX Move name
 	 * up into a struct with value.
 	 */
@@ -103,7 +103,7 @@ typedef struct {
 	ValueNameType *regs_value_names;	/* list of reg value/names */
 } RegisterDescriptorType;
 
-/* 
+/*
  * XXX check usage of reg_value, maybe change it to char x[8], and
  * normally type cast its usage.
  */

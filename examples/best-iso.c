@@ -1,4 +1,4 @@
-/* 
+/*
  * This program tries various ISOs for best ISO with a shutterspeed limit
  *
  * compile with: gcc -Wall -o best-iso best-iso.c -lgphoto2 -lgphoto2_port

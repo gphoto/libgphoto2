@@ -38,7 +38,7 @@ int pccam300_get_file_list (GPPort *port, GPContext *context);
 int pccam300_delete_file (GPPort *port, GPContext *context, int index);
 int pccam300_delete_all (GPPort *port, GPContext *context);
 int pccam300_get_file (GPPort *port, GPContext *context, int index,
-		       unsigned char **data, unsigned int *size, 
+		       unsigned char **data, unsigned int *size,
 		       unsigned int *type);
 int pccam300_get_mem_info (GPPort *port, GPContext *context, int *totalmem,
 			   int *freemem);

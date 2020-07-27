@@ -124,7 +124,7 @@ models[] =
 	{"D-Link:DSC 350+", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},
         {"Minton:S-Cam F5", 0x084d, 0x0003,
-	        BRIDGE_SPCA500, SPCA50X_FLASH},	
+	        BRIDGE_SPCA500, SPCA50X_FLASH},
 	{"PureDigital:Ritz Disposable", 0x04fc, 0xffff,
 		BRIDGE_SPCA504B_PD, SPCA50X_FLASH},
 	{NULL, 0, 0, 0, 0}
@@ -612,7 +612,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (camera->pl->fw_rev > 1) {
 		CHECK (spca50x_detect_storage_type (camera->pl));
 	}
-   
+
 	if (cam_has_flash(camera->pl) || cam_has_card(camera->pl) ) {
 		if ((camera->pl->bridge == BRIDGE_SPCA504) ||
 		    (camera->pl->bridge == BRIDGE_SPCA504B_PD))

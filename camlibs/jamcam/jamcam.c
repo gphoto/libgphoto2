@@ -199,7 +199,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 
 	raw = malloc(640*480 * 3);
 	ppm = malloc(640*480 * 3 + 200);
-	
+
 	switch (type) {
 	case GP_FILE_TYPE_PREVIEW:
 

@@ -44,7 +44,7 @@
 
 #define GP_MODULE "dimagev"
 
-int camera_id (CameraText *id) 
+int camera_id (CameraText *id)
 {
 #if defined HAVE_STRNCPY
 	strncpy(id->text, "minolta-dimagev", sizeof(id->text));
@@ -55,7 +55,7 @@ int camera_id (CameraText *id)
 	return GP_OK;
 }
 
-int camera_abilities (CameraAbilitiesList *list) 
+int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -71,9 +71,9 @@ int camera_abilities (CameraAbilitiesList *list)
 	a.speed[1] = 0;
 	a.operations        = 	GP_OPERATION_CAPTURE_IMAGE |
 				GP_OPERATION_CAPTURE_PREVIEW;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 				GP_FILE_OPERATION_PREVIEW;
-	a.folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE | 
+	a.folder_operations = 	GP_FOLDER_OPERATION_PUT_FILE |
 				GP_FOLDER_OPERATION_DELETE_ALL;
 
 	gp_abilities_list_append(list, a);
@@ -81,7 +81,7 @@ int camera_abilities (CameraAbilitiesList *list)
 	return GP_OK;
 }
 
-static int camera_exit (Camera *camera, GPContext *context) 
+static int camera_exit (Camera *camera, GPContext *context)
 {
 	/* Set the camera back into a normal mode. */
 	if (camera->pl) {
@@ -114,8 +114,8 @@ static int camera_exit (Camera *camera, GPContext *context)
 	return GP_OK;
 }
 
-static int file_list_func (CameraFilesystem *fs, const char *folder, 
-			   CameraList *list, void *data, GPContext *context) 
+static int file_list_func (CameraFilesystem *fs, const char *folder,
+			   CameraList *list, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int ret;
@@ -129,13 +129,13 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		GP_DEBUG( "camera_file_list::unable to populate list");
 		return ret;
 	}
-		
+
 	return GP_OK;
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data, GPContext *context) 
+			  CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int file_number=0, result;
@@ -166,9 +166,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return GP_OK;
 }
 
-static int delete_file_func (CameraFilesystem *fs, const char *folder, 
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data,
-			     GPContext *context) 
+			     GPContext *context)
 {
 	Camera *camera = data;
 	int file_number=0;
@@ -180,7 +180,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	return dimagev_delete_picture(camera->pl, (file_number + 1 ));
 }
 
-static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) 
+static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -211,7 +211,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 }
 
 static int put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-			  CameraFileType type, CameraFile *file, void *data, GPContext *context) 
+			  CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -219,14 +219,14 @@ static int put_file_func (CameraFilesystem *fs, const char *folder, const char *
 }
 
 static int delete_all_func (CameraFilesystem *fs, const char *folder,
-			    void *data, GPContext *context) 
+			    void *data, GPContext *context)
 {
 	Camera *camera = data;
 
 	return dimagev_delete_all(camera->pl);
 }
 
-static int camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	int i = 0, count = 0;
 
@@ -408,7 +408,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 			i = snprintf(&(summary->text[count]), sizeof(summary->text) - count, _("Bad value for card status %d"), camera->pl->status->card_status);
 			break;
 	}
-	
+
 	if ( i > 0 ) {
 		count += i;
 	}
@@ -417,7 +417,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 	return GP_OK;
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 #if defined HAVE_SNPRINTF
 	snprintf(about->text, sizeof(about->text),
@@ -437,7 +437,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.delete_all_func = delete_all_func,
 };
 
-int camera_init (Camera *camera, GPContext *context) 
+int camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 

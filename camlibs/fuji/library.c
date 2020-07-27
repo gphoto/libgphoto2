@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -148,7 +148,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 	return (GP_OK);
 }
-		
+
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
@@ -326,7 +326,7 @@ pre_func (Camera *camera, GPContext *context)
 			CR (fuji_set_speed (camera, Speeds[i].speed, context));
 
 			/*
-			 * Change the port's speed and check if the camera is 
+			 * Change the port's speed and check if the camera is
 			 * still there.
 			 */
 			settings.serial.speed = Speeds[i].bit_rate;
@@ -424,7 +424,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		CR (gp_widget_get_value (widget, &id));
 		CR (fuji_id_set (camera, id, context));
 	}
-		
+
 
 	return (GP_OK);
 }
@@ -531,8 +531,8 @@ camera_init (Camera *camera, GPContext *context)
 	CR (pre_func (camera, context));
 	/*
 	 * What commands does this camera support? The question is not
-	 * easy to answer, as "One issue the DS7 has is that the 
-	 * supported command list command is not supported" 
+	 * easy to answer, as "One issue the DS7 has is that the
+	 * supported command list command is not supported"
 	 * (Matt Martin <matt.martin@ieee.org>).
 	 */
 	if (fuji_get_cmds (camera, camera->pl->cmds, context) >= 0) {

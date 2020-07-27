@@ -6,10 +6,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -55,7 +55,7 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
     if (ret < 0) return ret;
     ret=soundvision_send_command(SOUNDVISION_SETPC2,0,dev);
     if (ret < 0) return ret;
-    
+
     /*Not sure if this delay is necessary, but it was used in the windows driver*/
     /*delay(20); */
     sleep(20);
@@ -75,58 +75,58 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path) {
    /* thanks to heathhey3@hotmail.com for sending me the trace */
    /* to implement this */
 int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
-   
-    int32_t ret,temp,taken; 
+
+    int32_t ret,temp,taken;
     uint8_t data[4],*buffer;
     uint32_t size=4,buflen;
-   
+
        /* yes, we do this twice?? */
     taken=soundvision_photos_taken(dev);
     taken=soundvision_photos_taken(dev);
-    
+
     ret = soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;
-     
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-       
+
       /* Some traces show sending other than the file we want deleted? */
     ret=soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
+
+    ret = soundvision_read(dev, data, size);
     if (ret<0) return ret;
-   
+
           /* Check num taken AGAIN */
     taken=soundvision_photos_taken(dev);
-  
+
     ret = soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;
-     
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-    
+
     ret=soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
+
+    ret = soundvision_read(dev, data, size);
     if (ret<0) return ret;
-   
+
         /* Check num taken AGAIN */
     taken=soundvision_photos_taken(dev);
-       
+
     ret=soundvision_send_command(SOUNDVISION_DELETE,0,dev);
     if (ret<0) return ret;
-      
+
         /* read ff 0f ??? */
-    ret = soundvision_read(dev, data, size);        
+    ret = soundvision_read(dev, data, size);
     if (ret<0) return ret;
-   
+
     ret = soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
+
         /* This is the point we notices that in fact a pic is missing */
         /* Why do it 4 times??? Timing?? Who knows */
     taken=soundvision_photos_taken(dev);
@@ -136,11 +136,11 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
 
     if (taken > ((1<<31) / 13 ))
        return GP_ERROR_NO_MEMORY;
-    
+
     buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
                               /* plus trailing NULL */
     buffer = malloc(buflen);
-        
+
     if (!buffer) {
        GP_DEBUG("Could not allocate %i bytes!",
 		       buflen);
@@ -161,20 +161,20 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
 
     if (dev->file_list) free(dev->file_list);
     dev->file_list = (char *)buffer;
-   
+
     ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;
-    
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-   
+
     ret=soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
-    if (ret<0) return ret; 
-   
+
+    ret = soundvision_read(dev, data, size);
+    if (ret<0) return ret;
+
     return GP_OK;
 
 }
@@ -186,22 +186,22 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
     char *buffer;
     int32_t ret, taken, buflen,i;
 
-    
+
     /* It seems we need to do a "reset" packet before reading names?? */
-   
+
     soundvision_reset(dev,NULL,NULL);
-   
+
     if ( (taken=soundvision_photos_taken(dev)) < 0)
        return taken;
-   
+
     dev->num_pictures = taken;
 
-    
+
     buflen = (taken * 13)+1;  /* 12 char filenames and space for each */
                               /* plus trailing NULL */
-    
+
     buffer = malloc(buflen);
-        
+
     if (!buffer) {
        GP_DEBUG("Could not allocate %i bytes!",
 		       buflen);
@@ -233,7 +233,7 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
        free(buffer);
        return (GP_ERROR_NO_MEMORY);
     }
-   
+
     for(i=0;i<taken*13;i++) if (buffer[i]==' ') buffer[i]='\0';
     memcpy(dev->file_list, buffer, taken * 13);
     free(buffer);
@@ -241,26 +241,26 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
 #if 0
     taken=soundvision_photos_taken(dev);
     soundvision_get_thumb_size(dev,dev->file_list);
-#endif 
+#endif
     return GP_OK;
 }
 
 int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
-   
-    int32_t ret,temp; 
-   
+
+    int32_t ret,temp;
+
     ret = soundvision_send_command(SOUNDVISION_GET_PIC,0,dev);
     if (ret<0) return ret;
-     
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-    
+
     ret=soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
+
+    ret = soundvision_read(dev, data, size);
     if (ret<0) return ret;
 
 #if 0
@@ -268,84 +268,84 @@ int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
     ret=soundvision_send_command(SOUNDVISION_DONE_PIC,0,dev);
     if (ret<0) return ret;
 #endif
-   
+
     return GP_OK;
-   
+
 }
 
 int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename) {
- 
+
     int32_t ret,temp;
-    uint32_t size; 
-   
+    uint32_t size;
+
     ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
     if (ret<0) return ret;
-     
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-    
+
     ret=soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, &size, sizeof(size));        
+
+    ret = soundvision_read(dev, &size, sizeof(size));
     if (ret<0) return ret;
-    
+
     return le32toh(size);
-   
+
 }
 
 
 int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename) {
- 
+
     int32_t ret,temp;
-    uint32_t size; 
-   
+    uint32_t size;
+
     ret=soundvision_send_command(SOUNDVISION_GET_THUMB_SIZE,0,dev);
     if (ret<0) return ret;
-     
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-       
+
     ret = soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, &size, sizeof(size));        
+
+    ret = soundvision_read(dev, &size, sizeof(size));
     if (ret<0) return ret;
-    
+
     return le32toh(size);
-   
+
 }
 
 int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size) {
 
-    int32_t ret,temp; 
-   
+    int32_t ret,temp;
+
     ret = soundvision_send_command(SOUNDVISION_GET_THUMB,0,dev);
     if (ret<0) return ret;
-     
+
        /* always returns ff 0f 00 00 ??? */
-    ret = soundvision_read(dev, &temp, sizeof(temp));        
+    ret = soundvision_read(dev, &temp, sizeof(temp));
     if (ret<0) return ret;
-       
+
     ret=soundvision_send_file_command(filename,dev);
     if (ret<0) return ret;
-   
-    ret = soundvision_read(dev, data, size);        
+
+    ret = soundvision_read(dev, data, size);
     if (ret<0) return ret;
 #if 0
            /* Is this needed? */
         soundvision_photos_taken(dev,&ret);
-   
+
         ret=soundvision_send_command(SOUNDVISION_END_OF_THUMB,0,dev);
         if (ret<0) return ret;
-   
-        ret = soundvision_read(dev, temp_string, 8);        
-        if (ret<0) return ret;   
-#endif   
-   
+
+        ret = soundvision_read(dev, temp_string, 8);
+        if (ret<0) return ret;
+#endif
+
     return GP_OK;
-   
+
 }

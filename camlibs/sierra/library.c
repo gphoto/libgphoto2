@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -82,7 +82,7 @@ typedef enum _SierraPacket SierraPacket;
 #define		QUICKSLEEP	5
 
 int sierra_change_folder (Camera *camera, const char *folder, GPContext *context)
-{	
+{
 	int st = 0, i;
 	char target[128];
 
@@ -90,7 +90,7 @@ int sierra_change_folder (Camera *camera, const char *folder, GPContext *context
 	GP_DEBUG ("*** folder: %s", folder);
 
 	/*
-	 * Do not issue the command if the camera doesn't support folders 
+	 * Do not issue the command if the camera doesn't support folders
 	 * or if the folder is the current working folder
 	 */
 	if (!camera->pl->folders || !strcmp (camera->pl->folder, folder))
@@ -117,7 +117,7 @@ int sierra_change_folder (Camera *camera, const char *folder, GPContext *context
 			target[i] = '\0';
 			if (st == i - 1)
 				break;
-			CHECK (sierra_set_string_register (camera, 84, 
+			CHECK (sierra_set_string_register (camera, 84,
 							   target + st, strlen (target + st), context));
 
 			st = i + 1;
@@ -164,7 +164,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 
 	/*
 	 * Get the filename of the first picture. Note that some cameras
-	 * that don't support filenames return 8 blanks instead of 
+	 * that don't support filenames return 8 blanks instead of
 	 * reporting an error. If this is indeed the case, just fill
 	 * the list with dummy entries and return.
 	 */
@@ -217,7 +217,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 		CHECK (sierra_set_int_register (camera, 83, i + 1, context));
 		bsize = 1024;
 		GP_DEBUG ("*** getting name of folder %i", i + 1);
-		CHECK (sierra_get_string_register (camera, 84, 0, 
+		CHECK (sierra_get_string_register (camera, 84, 0,
 						   NULL, (unsigned char *)buf,
 						   &bsize, context));
 
@@ -234,7 +234,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
  * sierra_get_picture_folder:
  * @camera : camera data structure
  * @folder : folder name (to be freed by the caller)
- *     
+ *
  * Return the name of the folder that stores pictures. It is assumed that
  * the camera conforms with the JEIDA standard. Thus, look for the picture
  * folder into the /DCIM directory.
@@ -287,7 +287,7 @@ int sierra_get_picture_folder (Camera *camera, char **folder)
 /**
  * sierra_check_battery_capacity:
  * @camera : camera data structure
- *     
+ *
  * Check if the battery capacity is high enough.
  *
  * Returns: a gphoto2 error code
@@ -320,8 +320,8 @@ int sierra_check_battery_capacity (Camera *camera, GPContext *context)
  * sierra_get_memory_left:
  * @camera : camera data structure
  * @memory : memory left
- *     
- * Provide the available memory left 
+ *
+ * Provide the available memory left
  *
  * Returns: a gphoto2 error code
  */
@@ -374,7 +374,7 @@ sierra_check_connection (Camera *camera, GPContext *context)
 		default:
 
 			/*
-			 * If any error (except timeout) has occurred, 
+			 * If any error (except timeout) has occurred,
 			 * report it.
 			 */
 			CHECK (ret);
@@ -421,7 +421,7 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 	case SIERRA_PACKET_COMMAND:
 		switch (camera->port->type) {
 		case GP_PORT_SERIAL:
-			packet[1] = (camera->pl->first_packet ? 
+			packet[1] = (camera->pl->first_packet ?
 					SUBSIERRA_PACKET_COMMAND_FIRST :
 					SUBSIERRA_PACKET_COMMAND);
 			camera->pl->first_packet = 0;
@@ -451,7 +451,7 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 		for (x = 4; x < length - 2; x++)
 			checksum += (unsigned char)packet[x];
 		packet[length-2] = checksum & 0xff;
-		packet[length-1] = (checksum >> 8) & 0xff; 
+		packet[length-1] = (checksum >> 8) & 0xff;
 	}
 
 	if (camera->pl->flags & SIERRA_WRAP_USB_MASK) {
@@ -468,7 +468,7 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 static int
 sierra_clear_usb_halt(Camera *camera)
 {
-	
+
 	if ( (camera->port->type == GP_PORT_USB) &&
 	     !(camera->pl->flags & SIERRA_WRAP_USB_MASK) &&
 	     !(camera->pl->flags & SIERRA_NO_USB_CLEAR) )
@@ -494,7 +494,7 @@ sierra_write_nak (Camera *camera, GPContext *context)
  * sierra_read_packet:
  * @camera : camera data structure
  * @packet : to return the read packet
- *     
+ *
  * Read a data packet from the camera.
  *
  * Method:
@@ -569,7 +569,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			continue;
 		}
 		if (result == 0) {
-			GP_DEBUG ("Read got 0 bytes.."); 
+			GP_DEBUG ("Read got 0 bytes..");
 			if (++r > 2) {
 				sierra_clear_usb_halt(camera);
 				GP_DEBUG ("Giving up...");
@@ -581,7 +581,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		br = result;
 
 		/*
-		 * If the first read byte is not known, 
+		 * If the first read byte is not known,
 		 * report an error and exit the processing.
 		 */
 		switch (packet[0]) {
@@ -649,7 +649,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			return GP_ERROR_IO;
 		}
 
-		/* 
+		/*
 		 * Read until the end of the packet is reached
 		 * or an error occurred.
 		 */
@@ -698,8 +698,8 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			if ((packet[br - 2] == 0x00) &&
 			    (packet[br - 1] == 0x00))
 				break;
-			
-					
+
+
 			GP_DEBUG ("Checksum wrong (calculated 0x%x, "
 				"found 0x%x)!", c,
 				packet[br - 2] + (packet[br - 1] * 256));
@@ -803,7 +803,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 					"retries."));
 				return GP_ERROR;
 			}
-			
+
 			/*
                          * The camera has ended this session and
                          * reverted the speed back to 19200. Reinitialize
@@ -830,7 +830,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 
 static int
 sierra_build_packet (Camera *camera, char type, char subtype,
-		     int data_length, char *packet) 
+		     int data_length, char *packet)
 {
 	packet[0] = type;
 	switch (type) {
@@ -855,13 +855,13 @@ sierra_build_packet (Camera *camera, char type, char subtype,
 }
 
 static int
-sierra_write_ack (Camera *camera, GPContext *context) 
+sierra_write_ack (Camera *camera, GPContext *context)
 {
 	char buf[4096];
 	int ret;
 
 	GP_DEBUG ("Writing acknowledgement...");
-	
+
 	buf[0] = ACK;
 	ret = sierra_write_packet (camera, buf, context);
 	sierra_clear_usb_halt(camera);
@@ -872,7 +872,7 @@ sierra_write_ack (Camera *camera, GPContext *context)
 }
 
 int
-sierra_init (Camera *camera, GPContext *context) 
+sierra_init (Camera *camera, GPContext *context)
 {
 	unsigned char buf[SIERRA_PACKET_SIZE], packet[4096];
 	int ret, r = 0;
@@ -917,7 +917,7 @@ sierra_init (Camera *camera, GPContext *context)
 		CHECK (ret);
 
 		switch (buf[0]) {
-		case SIERRA_PACKET_NAK: 
+		case SIERRA_PACKET_NAK:
 
 			/* Everything is fine. */
 			return GP_OK;
@@ -950,7 +950,7 @@ static struct {
 };
 
 int
-sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context) 
+sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 {
 	GPPortSettings settings;
 	unsigned int i, bit_rate;
@@ -961,7 +961,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 
 	/*
 	 * Check that the requested speed is valid. We don't want to bug
-	 * the user with our coding errors, therefore if the requested 
+	 * the user with our coding errors, therefore if the requested
 	 * speed is invalid, we use 19200.
 	 */
 	for (i = 0; SierraSpeeds[i].bit_rate; i++)
@@ -1041,7 +1041,7 @@ sierra_action (Camera *camera, SierraAction action, GPContext *context)
 
 int
 sierra_set_int_register (Camera *camera, int reg, int value,
-			 GPContext *context) 
+			 GPContext *context)
 {
 	char p[4096];
 
@@ -1066,7 +1066,7 @@ sierra_set_int_register (Camera *camera, int reg, int value,
 	return GP_OK;
 }
 
-int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context) 
+int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *context)
 {
 	int r = 0;
 	unsigned char p[4096], buf[SIERRA_PACKET_SIZE];
@@ -1076,7 +1076,7 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 	/* Build and send the packet. */
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, (char *)p));
 	p[4] = 0x01;
-	p[5] = reg; 
+	p[5] = reg;
 	CHECK (sierra_write_packet (camera, (char *)p, context));
 
 	while (1) {
@@ -1144,13 +1144,13 @@ int sierra_get_int_register (Camera *camera, int reg, int *value, GPContext *con
 
 int
 sierra_set_string_register (Camera *camera, int reg, const char *s,
-			    long int length, GPContext *context) 
+			    long int length, GPContext *context)
 {
 
 	char packet[4096];
 	char type;
 	long int x=0;
-	int seq=0, size=0; 
+	int seq=0, size=0;
 	int do_percent;
 	unsigned int id = 0;
 
@@ -1210,7 +1210,7 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 	return GP_OK;
 }
 
-int sierra_get_string_register (Camera *camera, int reg, int fnumber, 
+int sierra_get_string_register (Camera *camera, int reg, int fnumber,
                                 CameraFile *file, unsigned char *b,
 				unsigned int *b_len, GPContext *context)
 {
@@ -1239,7 +1239,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 
 	/* Build and send the request */
 	CHECK (sierra_build_packet (camera, SIERRA_PACKET_COMMAND, 0, 2, (char *)p));
-	/* 
+	/*
 	 * If the extended protocol is enabled, use code 0x06 so we can send
 	 * and receive 32k size packages, otherwise code 0x04 is used and
 	 * we have 2k size packages.
@@ -1264,7 +1264,7 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 	do {
 
 		/* Read one packet and retry on timeout. */
-		r = sierra_read_packet (camera, p, context); 
+		r = sierra_read_packet (camera, p, context);
 		if (r == GP_ERROR_TIMEOUT) {
 			if (++retries > RETRIES) {
 				in_function = 0;
@@ -1322,7 +1322,7 @@ sierra_delete_all (Camera *camera, GPContext *context)
 }
 
 int
-sierra_delete (Camera *camera, int picture_number, GPContext *context) 
+sierra_delete (Camera *camera, int picture_number, GPContext *context)
 {
 	/* Tell the camera which picture to delete and execute command. */
 	CHECK (sierra_set_int_register (camera, 4, picture_number, context));
@@ -1332,7 +1332,7 @@ sierra_delete (Camera *camera, int picture_number, GPContext *context)
 }
 
 int
-sierra_end_session (Camera *camera, GPContext *context) 
+sierra_end_session (Camera *camera, GPContext *context)
 {
 	CHECK (sierra_action (camera, SIERRA_ACTION_END, context));
 
@@ -1398,10 +1398,10 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 	CHECK (gp_port_set_timeout (camera->port, timeout));
 
 	if (filepath != NULL) {
-		/* 
+		/*
 		 * After the picture is taken, register 4 is set to the
 		 * current picture.
-		 */ 
+		 */
 		GP_DEBUG ("Getting picture number.");
 		r = sierra_get_int_register (camera, 4, &n, context);
 		if (r == GP_OK) {
@@ -1418,7 +1418,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		 *
 		 * Not that some cameras that don't support filenames will
 		 * return 8 blanks instead of reporting an error.
-		 * 
+		 *
 		 * Some newer cameras (Nikon*) do not return register 4, so
 		 * ignore errors from that.
 		 */

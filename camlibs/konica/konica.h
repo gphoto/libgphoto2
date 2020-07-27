@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -25,7 +25,7 @@
 #include <gphoto2/gphoto2-context.h>
 
 /*
- * The following are the commands that are supported by the 
+ * The following are the commands that are supported by the
  * camera. All other commands will be rejected as unsupported.
  *
  * 0x9200: 	On 'HP PhotoSmart C20', this command seems to
@@ -59,7 +59,7 @@ typedef enum
 	K_SET_PREFERENCE		= 0x90c0,
 	K_RESET_PREFERENCES		= 0x90c1,
 	K_TAKE_PICTURE			= 0x9100,
-	K_PUT_LOCALIZATION_FILE		= 0x9200, 
+	K_PUT_LOCALIZATION_FILE		= 0x9200,
 	K_CANCEL			= 0x9e00
 	/* ?				= 0x9e10, */
 	/* ?				= 0x9e20, */
@@ -183,7 +183,7 @@ typedef enum
 
 typedef enum
 {
-	K_POWER_LEVEL_LOW    = 0x00, 
+	K_POWER_LEVEL_LOW    = 0x00,
 	K_POWER_LEVEL_NORMAL = 0x01,
 	K_POWER_LEVEL_HIGH   = 0x02
 } KPowerLevel;
@@ -271,9 +271,9 @@ int k_format_memory_card (GPPort *, GPContext *);
 int k_take_picture (
 	GPPort *device, GPContext *,
 	int image_id_long,
-	unsigned long *image_id, 
+	unsigned long *image_id,
 	unsigned int *exif_size,
-	unsigned char **information_buffer, 
+	unsigned char **information_buffer,
 	unsigned int *information_buffer_size,
 	int *protected);
 
@@ -352,18 +352,18 @@ int k_get_image_information (
 	GPPort *device, GPContext *,
 	int image_id_long,
 	unsigned long image_number,
-	unsigned long *image_id, 
-	unsigned int *exif_size, 
-	int *protected, 
+	unsigned long *image_id,
+	unsigned int *exif_size,
+	int *protected,
 	unsigned char **information_buffer,
 	unsigned int *information_buffer_size);
 
 int k_get_image (
 	GPPort *device, GPContext *,
 	int image_id_long,
-	unsigned long image_id, 
-	KImageType image_type, 
-	unsigned char **image_buffer, 
+	unsigned long image_id,
+	KImageType image_type,
+	unsigned char **image_buffer,
 	unsigned int *image_buffer_size);
 
 /* Localization */

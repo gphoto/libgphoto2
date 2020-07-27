@@ -8,7 +8,7 @@
  * 	- fix number of picturs detection
  * 	- get rid of the heavy stack usage and use the heap instead
  * 	- fix USB download size
- * 	
+ *
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -70,13 +70,13 @@ static unsigned short to_camera(unsigned short a)
 	unsigned short ret = 0;
 
 	ret = ret + (a / 1000) * 0x1000;
-	a = a % 1000;	
+	a = a % 1000;
 	ret = ret + ((a / 100) * 0x100);
 	a = a % 100;
 	ret = ret + ((a / 10) * 0x10);
 	a = a % 10;
 	ret = ret + a;
-	
+
 	return ret;
 }
 
@@ -90,13 +90,13 @@ static unsigned short from_camera(unsigned short a)
 	unsigned short ret = 0;
 
 	ret = ret + ((a / 0x1000) * 1000);
-	a = a % 0x1000;	
+	a = a % 0x1000;
 	ret = ret + ((a / 0x100) * 100);
 	a = a % 0x100;
 	ret = ret + ((a / 0x10) * 10);
 	a = a % 0x10;
 	ret = ret + a;
-	
+
 	return ret;
 }
 
@@ -162,7 +162,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	unsigned char * result;
 	unsigned char * ptr;
-	
+
 	/* unsigned char last, next; */
 
 	GP_DEBUG(" * get_file_func()");
@@ -182,19 +182,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_port_read(camera->port, (char*)indata, 0x100);
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
-		
+
 		resolution = (unsigned char)indata[ 17 ];
 		if (resolution == 1) {
 			char dummy;
 
 			result = calloc((size + 1), 0x100);
 			ptr = result;
-				
+
 			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
 			gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 			gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000A,NULL,0x0);
-			
+
 			for (j = 0; j < size; j++) {
 		   		gp_port_read(camera->port, (char*)ptr, 0x100);
 				ptr += 0x100;
@@ -254,7 +254,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 			data = (unsigned char *)calloc(size, 0x100);
 			ptr = data;
-			
+
 			gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000B,NULL,0x0);
 			if (size < 100) {
 				for (j = 0; j < size; j++) {
@@ -287,14 +287,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				unsigned int offset = 0;
 
 				result = calloc(1, 128 * 96 * 4 * 4 + 100 );
-				
+
 				memcpy(result, "P3\n128 96\n255\n", 14);
 				offset = offset + 14;
 
 				temp1 = data[ thumb_start + pixel_count ];
 
 				while (pixel_count < (128*96*2)) {
-						
+
 					temp1 = data[ thumb_start + pixel_count ];
 					temp2 = data[ thumb_start + pixel_count + 1 ];
 					temp3 = data[ thumb_start + pixel_count + 2 ];
@@ -345,18 +345,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		break;
 		}
-		
+
 	case GP_FILE_TYPE_RAW: {
 		char dummy;
 		GP_DEBUG(" * REQUEST FOR RAW IMAGE");
-		
+
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x0008,NULL,0x0);
 		gp_port_read(camera->port, (char*)indata, 0x100);
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
 		result = calloc(size, 0x100);
 		ptr = result;
-		
+
 		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
 		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
@@ -387,15 +387,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_port_read(camera->port, (char*)indata, 0x100);
 
 		size = indata[ 5 ] + (indata[ 6 ] * 0xFF) + 3;
-		
+
 		result = calloc((size+1), 0x100);
 		ptr = result;
-				
+
 		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x0521,&dummy,0x0001);
 		gp_port_usb_msg_read(camera->port,0x00,0x0000,0x8000,&dummy,0x0001);
 
 		gp_port_usb_msg_write(camera->port,0x0A,to_camera(n),0x000A,NULL,0x0);
-			
+
 		for (j = 0; j < size; j++) {
 	   		gp_port_read(camera->port, (char*)ptr, 0x100);
 			ptr += 0x100;
@@ -436,7 +436,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		result[17] = 0x01;
 		result[18] = 0x00;
 		result[19] = 0x00;
-	
+
 		memmove(&result[20],
 		       &result[app1len + 4],
 		       (unsigned int)(size - app1len - 4));
@@ -540,7 +540,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	} else {
 		has_compact_flash = 0;
 	}
-		
+
 	if (has_compact_flash == 0) {
 		sprintf( summary->text, _("Camera appears to not be using CompactFlash storage\n"
 						"Unfortunately we do not support that at the moment :-(\n"));
@@ -613,7 +613,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		 * Nevertheless, this is a 0.80 Megapixel camera, no more !!! No matter
 		 * what the marketing says!
 		 */
-			
+
 		info->preview.fields = GP_FILE_INFO_TYPE;
 		strcpy( info->preview.type, GP_MIME_PPM);
 		info->preview.width = 128;

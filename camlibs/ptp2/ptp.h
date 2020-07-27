@@ -99,7 +99,7 @@ struct _PTPUSBBulkContainer {
 			uint32_t param4;
 			uint32_t param5;
 		} params;
-       /* this must be set to the maximum of PTP_USB_BULK_PAYLOAD_LEN_WRITE 
+       /* this must be set to the maximum of PTP_USB_BULK_PAYLOAD_LEN_WRITE
         * and PTP_USB_BULK_PAYLOAD_LEN_READ */
 		unsigned char data[PTP_USB_BULK_PAYLOAD_LEN_READ];
 	} payload;
@@ -178,7 +178,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_VENDOR_SONY				0x00000011 /* observed in the A900 */
 
 /* Vendor extension ID used for MTP (occasionally, usually 6 is used) */
-#define PTP_VENDOR_MTP			0xffffffff  
+#define PTP_VENDOR_MTP			0xffffffff
 
 /* gphoto overrides */
 #define PTP_VENDOR_GP_OLYMPUS          0x0000fffe
@@ -295,7 +295,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetMACAddress		0x9033 /* no args */
 /*
 0000  12 00 00 00 02 00 33 90-1a 00 00 00 2c 9e fc c8  ......3.....,...
-0010  33 e3                  -                         3.              
+0010  33 e3                  -                         3.
  */
 
 /* 9034: 1 param, no parms returned */
@@ -306,7 +306,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_GetWebServiceSpec		0x9068 /* no args */
 /* data returned:
 0000  1e 00 00 00 02 00 68 90-1a 00 00 00 00 01 08 00  ......h.........
-0010  14 00 bc ce 00 00 78 00-78 00 00 14 00 00        ......x.x.....  
+0010  14 00 bc ce 00 00 78 00-78 00 00 14 00 00        ......x.x.....
 */
 
 #define PTP_OC_CANON_GetWebServiceData		0x9069 /* no args */
@@ -355,7 +355,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
     00000030: 00 00 00 30 44 43 49 4d 00 00 00 00 00 00 00 00	DCIM
     00000040: 00 00 00 00 cc c3 01 46
  * 2 respargs: 0x0, 0x3c
- * 
+ *
  * sample2:
  *
     00000000: 18 00 00 00 01 00 09 91 15 00 00 00 01 00 00 00
@@ -377,11 +377,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 /* 910f: no args, no data, 1 response arg (0). */
 #define PTP_OC_CANON_EOS_RemoteRelease		0x910F
-/* Marcus: looks more like "Set DeviceProperty" in the trace. 
+/* Marcus: looks more like "Set DeviceProperty" in the trace.
  *
  * no cmd args
  * data phase (0xc, 0xd11c, 0x1)
- * no resp args 
+ * no resp args
  */
 #define PTP_OC_CANON_EOS_SetDevicePropValueEx	0x9110
 #define PTP_OC_CANON_EOS_GetRemoteMode		0x9113
@@ -632,12 +632,12 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* 9201:
  *  3 params: 1,0,0 ; IN: data 8 bytes all 0
  * or:
- *  3 params: 2,0,0 ; IN: data 8 bytes all 0 
+ *  3 params: 2,0,0 ; IN: data 8 bytes all 0
  * or
  *  3 params: 3,0,0,: IN: data 8 butes all 0
  */
 #define PTP_OC_SONY_SDIOConnect			0x9201
-/* 9202: 1 param, 0xc8; IN data: 
+/* 9202: 1 param, 0xc8; IN data:
  * 16 bit: 0xc8
  * ptp array 32 bit: index, 16 bit values of propcodes  */
 #define PTP_OC_SONY_GetSDIOGetExtDeviceInfo	0x9202
@@ -674,7 +674,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_Skip				0x9820
 
 /*
- * Windows Media Digital Rights Management for Portable Devices 
+ * Windows Media Digital Rights Management for Portable Devices
  * Extension Codes (microsoft.com/WMDRMPD: 10.1)
  */
 #define PTP_OC_MTP_WMDRMPD_GetSecureTimeChallenge	0x9101
@@ -689,10 +689,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_WMDRMPD_SendWMDRMPDCommand	0x910A
 #define PTP_OC_MTP_WMDRMPD_SendWMDRMPDRequest	0x910B
 
-/* 
- * Windows Media Digital Rights Management for Portable Devices 
+/*
+ * Windows Media Digital Rights Management for Portable Devices
  * Extension Codes (microsoft.com/WMDRMPD: 10.1)
- * Below are operations that have no public documented identifier 
+ * Below are operations that have no public documented identifier
  * associated with them "Vendor-defined Command Code"
  */
 #define PTP_OC_MTP_WMDRMPD_SendWMDRMPDAppRequest	0x9212
@@ -703,7 +703,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* ^^^ guess ^^^ */
 
 /*
- * Microsoft Advanced Audio/Video Transfer 
+ * Microsoft Advanced Audio/Video Transfer
  * Extensions (microsoft.com/AAVT: 1.0)
  */
 #define PTP_OC_MTP_AAVT_OpenMediaSession		0x9170
@@ -712,7 +712,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_AAVT_SetCurrentTimePosition		0x9173
 
 /*
- * Windows Media Digital Rights Management for Network Devices 
+ * Windows Media Digital Rights Management for Network Devices
  * Extensions (microsoft.com/WMDRMND: 1.0) MTP/IP?
  */
 #define PTP_OC_MTP_WMDRMND_SendRegistrationRequest	0x9180
@@ -722,8 +722,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_WMDRMND_SendWMDRMNDLicenseRequest	0x9184
 #define PTP_OC_MTP_WMDRMND_GetWMDRMNDLicenseResponse	0x9185
 
-/* 
- * Windows Media Player Portiable Devices 
+/*
+ * Windows Media Player Portiable Devices
  * Extension Codes (microsoft.com/WMPPD: 11.1)
  */
 #define PTP_OC_MTP_WMPPD_ReportAddedDeletedItems	0x9201
@@ -731,7 +731,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_MTP_WMPPD_PlaylistObjectPref		0x9203
 
 /*
- * Undocumented Zune Operation Codes 
+ * Undocumented Zune Operation Codes
  * maybe related to WMPPD extension set?
  */
 #define PTP_OC_MTP_ZUNE_GETUNDEFINED001		        0x9204
@@ -750,7 +750,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* 9482: Set One Touch WB Gain */
 /* 9483: Set / Start Magnifying Live View Point */
 /* 9488: Change Magnifying Live View Area */
-/* 9493: Start Driving Zoom Lens For Direction / Focal Length  / Stop Driving zoom 
+/* 9493: Start Driving Zoom Lens For Direction / Focal Length  / Stop Driving zoom
  * start direction: 		x1=1,x2=0,x3= STEPS?, x4=1 or 2 (near / far ? )
  * start to focallength:	x1=1,x2=3,x3= VALUE? ,x4=4 (potentially more)
  * stop:  			x1=2,x2=0,x3=0,x4=0
@@ -895,7 +895,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* 9104 gets this data:
 0000  24 00 00 00 02 00 04 91-04 00 00 00 01 00 01 00  $...............
 0010  01 00 e1 07 10 00 00 00-00 00 00 00 00 00 00 00  ................
-0020  00 00 00 00            -                         ....            
+0020  00 00 00 00            -                         ....
 */
 
 #define PTP_OC_PANASONIC_9107			0x9107	/* getsize? */
@@ -1083,9 +1083,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_Object_Too_Large		0xA809
 #define PTP_RC_MTP_ObjectProp_Not_Supported	0xA80A
 
-/* Microsoft Advanced Audio/Video Transfer response codes 
+/* Microsoft Advanced Audio/Video Transfer response codes
 (microsoft.com/AAVT 1.0) */
-#define PTP_RC_MTP_Invalid_Media_Session_ID	0xA170	
+#define PTP_RC_MTP_Invalid_Media_Session_ID	0xA170
 #define PTP_RC_MTP_Media_Session_Limit_Reached	0xA171
 #define PTP_RC_MTP_No_More_Data			0xA172
 
@@ -1671,7 +1671,7 @@ struct _PTPNIKONWifiProfile {
 	uint8_t   display_order;
 	char      creation_date[16];
 	char      lastusage_date[16];
-	
+
 	/* Values only valid when writing */
 	uint32_t  ip_address;
 	uint8_t   subnet_mask; /* first zero bit position, e.g. 24 for 255.255.255.0 */
@@ -2790,7 +2790,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 
 /* Casio EX-F1 */
-#define PTP_DPC_CASIO_MONITOR		0xD001 
+#define PTP_DPC_CASIO_MONITOR		0xD001
 #define PTP_DPC_CASIO_STORAGE		0xD002 //Not reported by DeviceInfo?
 #define PTP_DPC_CASIO_UNKNOWN_1		0xD004
 #define PTP_DPC_CASIO_UNKNOWN_2		0xD005
@@ -2872,7 +2872,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 0020  00 08 02 00 00 00 00 00-13 00 00 08 02 00 00 00  ................
 0030  00 00 14 00 00 08 04 00-00 00 00 00 00 00 15 00  ................
 0040  00 08 04 00 00 00 00 00-00 00 16 00 00 08 02 00  ................
-0050  00 00 01 00            -                         ....            
+0050  00 00 01 00            -                         ....
 
 0000  d0 00 00 00 02 00 07 91-04 00 00 00 10 00 00 08  ................
 0010  14 00 00 00 14 00 00 00-01 00 01 00 00 00 00 00  ................
@@ -2891,17 +2891,17 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PANASONIC_08000091			0x08000091 /* SetupFilesConfig_Set_Target */
 /*
 0000  16 00 00 00 02 00 0a 94-04 00 00 00 91 00 00 08  ................
-0010  02 00 00 00 00 00      -                         ......          
+0010  02 00 00 00 00 00      -                         ......
 
 0000  44 00 00 00 02 00 07 91-04 00 00 00 90 00 00 08  D...............
 0010  14 00 00 00 14 00 00 00-01 00 01 00 00 00 00 00  ................
 0020  01 00 00 00 48 00 00 00-91 00 00 08 14 00 00 00  ....H...........
 0030  14 00 00 00 01 00 01 00-00 00 00 00 01 00 00 00  ................
-0040  2c 00 00 00            -                         ,...            
+0040  2c 00 00 00            -                         ,...
  */
 
 #define PTP_DPC_PANASONIC_GetFreeSpaceInImages		0x12000010
-/* 
+/*
 0000  98 00 00 00 02 00 14 94-04 00 00 00 11 00 00 12  ................
 0010  04 00 00 00 4e 00 00 00-12 00 00 12 04 00 00 00  ....N...........
 0020  00 00 00 00 13 00 00 12-02 00 00 00 00 00 14 00  ................
@@ -2911,12 +2911,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 0060  ff ff 00 00 00 00 ff ff-ff ff 00 00 00 00 00 00  ................
 0070  00 00 00 00 00 00 ff ff-ff ff 00 00 00 00 ff ff  ................
 0080  ff ff 00 00 00 00 00 00-00 00 17 00 00 12 06 00  ................
-0090  00 00 00 00 00 00 00 00-                         ........        
+0090  00 00 00 00 00 00 00 00-                         ........
  */
 #define PTP_DPC_PANASONIC_GetBatteryInfo		0x16000010
-/* 
+/*
 0000  1c 00 00 00 02 00 14 94-04 00 00 00 11 00 00 16  ................
-0010  08 00 00 00 4b 00 00 00-4b 00 ff ff              ....K...K...    
+0010  08 00 00 00 4b 00 00 00-4b 00 ff ff              ....K...K...
  */
 #define PTP_DPC_PANASONIC_LensGetMFBar			0x12010040
 /* 15c00010 GetSetupInfo Error */
@@ -3336,7 +3336,7 @@ uint16_t ptp_usb_sendreq	(PTPParams* params, PTPContainer* req, int dataphase);
 uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				 uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
-uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp, 
+uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp,
 	                         PTPDataHandler *handler);
 uint16_t ptp_usb_event_async	(PTPParams *params, PTPEventCbFn cb, void *user_data);
 uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
@@ -3355,7 +3355,7 @@ uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req, int dataphase)
 uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);
-uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp, 
+uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp,
 	                         PTPDataHandler *handler);
 uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
@@ -3367,7 +3367,7 @@ uint16_t ptp_generic_no_data	(PTPParams* params, uint16_t opcode, unsigned int c
 
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 
-uint16_t ptp_transaction_new (PTPParams* params, PTPContainer* ptp, 
+uint16_t ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
                 uint16_t flags, uint64_t sendlen,
                 PTPDataHandler *handler
 );
@@ -3398,7 +3398,7 @@ uint16_t ptp_transaction (PTPParams* params, PTPContainer* ptp,
 /**
  * ptp_resetdevice:
  * params:      PTPParams*
- *              
+ *
  * Uses the built-in function to reset the device
  *
  * Return values: Some PTP_RC_* code.
@@ -3465,7 +3465,7 @@ uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
  * ptp_setobjectprotection:
  * params:      PTPParams*
  *              uint16_t newprot        - object protection flag
- *              
+ *
  * Set protection of object.
  *
  * Return values: Some PTP_RC_* code.
@@ -3481,7 +3481,7 @@ uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint6
  * params:      PTPParams*
  *              storageid               - destination StorageID on Responder
  *              ofc                     - object format code
- * 
+ *
  * Causes device to initiate the capture of one or more new data objects
  * according to its current device properties, storing the data into store
  * indicated by storageid. If storageid is 0x00000000, the object(s) will
@@ -3524,7 +3524,7 @@ int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
 /* Microsoft MTP extensions */
 uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,
 				PTPObjectPropDesc *objectpropertydesc);
-uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc, 
+uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
 				PTPPropertyValue *value, uint16_t datatype);
 uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
 				PTPPropertyValue *value, uint16_t datatype);
@@ -3572,7 +3572,7 @@ uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
 /**
  * ptp_canon_startshootingmode:
  * params:      PTPParams*
- * 
+ *
  * Starts shooting session. It emits a StorageInfoChanged
  * event via the interrupt pipe and pushes the StorageInfoChanged
  * and CANON_CameraModeChange events onto the event stack
@@ -3585,9 +3585,9 @@ uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
 /**
  * ptp_canon_endshootingmode:
  * params:      PTPParams*
- * 
- * This operation is observed after pressing the Disconnect 
- * button on the Remote Capture app. It emits a StorageInfoChanged 
+ *
+ * This operation is observed after pressing the Disconnect
+ * button on the Remote Capture app. It emits a StorageInfoChanged
  * event via the interrupt pipe and pushes the StorageInfoChanged
  * and CANON_CameraModeChange events onto the event stack
  * (see operation PTP_OC_CANON_CheckEvent).
@@ -3599,7 +3599,7 @@ uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
 /**
  * ptp_canon_viewfinderon:
  * params:      PTPParams*
- * 
+ *
  * Prior to start reading viewfinder images, one  must call this operation.
  * Supposedly, this operation affects the value of the CANON_ViewfinderMode
  * property.
@@ -3611,7 +3611,7 @@ uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
 /**
  * ptp_canon_viewfinderoff:
  * params:      PTPParams*
- * 
+ *
  * Before changing the shooting mode, or when one doesn't need to read
  * viewfinder images any more, one must call this operation.
  * Supposedly, this operation affects the value of the CANON_ViewfinderMode
@@ -3628,7 +3628,7 @@ uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
  *                      1 - autoexposure
  *                      2 - autofocus
  *                      4 - autowhitebalance
- * 
+ *
  * Called "Reset AeAfAwb" (auto exposure, focus, white balance)
  *
  * Return values: Some PTP_RC_* code.
@@ -3637,14 +3637,14 @@ uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
 #define PTP_CANON_RESET_AF	0x2
 #define PTP_CANON_RESET_AWB	0x4
 #define ptp_canon_reset_aeafawb(params,flags) ptp_generic_no_data(params,PTP_OC_CANON_DoAeAfAwb,1,flags)
-uint16_t ptp_canon_checkevent (PTPParams* params, 
+uint16_t ptp_canon_checkevent (PTPParams* params,
 				PTPContainer* event, int* isevent);
 /**
  * ptp_canon_focuslock:
  *
  * This operation locks the focus. It is followed by the CANON_GetChanges(?)
- * operation in the log. 
- * It affects the CANON_MacroMode property. 
+ * operation in the log.
+ * It affects the CANON_MacroMode property.
  *
  * params:      PTPParams*
  *
@@ -3656,9 +3656,9 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * ptp_canon_focusunlock:
  *
  * This operation unlocks the focus. It is followed by the CANON_GetChanges(?)
- * operation in the log. 
+ * operation in the log.
  * It sets the CANON_MacroMode property value to 1 (where it occurs in the log).
- * 
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3669,7 +3669,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * ptp_canon_keepdeviceon:
  *
  * This operation sends a "ping" style message to the camera.
- * 
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3680,7 +3680,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * ptp_canon_eos_keepdeviceon:
  *
  * This operation sends a "ping" style message to the camera.
- * 
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3692,7 +3692,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * ptp_canon_eos_popupflash:
  *
  * This operation pops up the builtin flash of the Canon EOS.
- * 
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3701,7 +3701,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
 #define ptp_canon_eos_popupflash(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_PopupBuiltinFlash,0)
 /**
  * ptp_canon_initiatecaptureinmemory:
- * 
+ *
  * This operation starts the image capture according to the current camera
  * settings. When the capture has happened, the camera emits a CaptureComplete
  * event via the interrupt pipe and pushes the CANON_RequestObjectTransfer,
@@ -3721,7 +3721,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * ptp_canon_eos_requestdevicepropvalue:
  *
  * This operation sends a "ping" style message to the camera.
- * 
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3738,17 +3738,17 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
 uint16_t ptp_canon_eos_getremotemode (PTPParams*, uint32_t *);
 uint16_t ptp_canon_eos_capture (PTPParams* params, uint32_t *result);
 uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
-uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle, 
+uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 				uint32_t offset, uint32_t size,
-				uint32_t pos, unsigned char** block, 
+				uint32_t pos, unsigned char** block,
 				uint32_t* readnum);
 uint16_t ptp_canon_getviewfinderimage (PTPParams* params, unsigned char** image,
 				uint32_t* size);
 uint16_t ptp_canon_getchanges (PTPParams* params, uint16_t** props,
-				uint32_t* propnum); 
+				uint32_t* propnum);
 uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				uint32_t p2, uint32_t parenthandle,
-				uint32_t handle, 
+				uint32_t handle,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di);
@@ -3756,7 +3756,7 @@ uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*d
  * ptp_canon_eos_setuilock:
  *
  * This command sets UI lock
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3767,7 +3767,7 @@ uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*d
  * ptp_canon_eos_resetuilock:
  *
  * This command sets UI lock
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3778,7 +3778,7 @@ uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*d
  * ptp_canon_eos_start_viewfinder:
  *
  * This command starts Viewfinder mode of newer Canon DSLRs.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3789,7 +3789,7 @@ uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*d
  * ptp_canon_eos_end_viewfinder:
  *
  * This command ends Viewfinder mode of newer Canon DSLRs.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3827,7 +3827,7 @@ uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* d
 #define ptp_canon_eos_seteventmode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetEventMode,1,p1)
 /**
  * ptp_canon_eos_transfercomplete:
- * 
+ *
  * This ends a direct object transfer from an EOS camera.
  *
  * params:      PTPParams*
@@ -3847,7 +3847,7 @@ uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
-uint16_t ptp_nikon_curve_download (PTPParams* params, 
+uint16_t ptp_nikon_curve_download (PTPParams* params,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getlargethumb (PTPParams *params, uint32_t handle,
 				unsigned char** object, unsigned int *len);
@@ -3877,7 +3877,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_deletewifiprofile:
  *
  * This command deletes a wifi profile.
- *  
+ *
  * params:      PTPParams*
  *      unsigned int profilenr  - profile number
  *
@@ -3889,7 +3889,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_changecameramode:
  *
  * This command can switch the camera to full PC control mode.
- *  
+ *
  * params:      PTPParams*
  *      uint32_t mode - mode
  *
@@ -3901,10 +3901,10 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_terminatecapture:
  *
  * This command appears to terminate a longer capture
- *  
+ *
  * params:      PTPParams*
- *      uint32_t a 
- *      uint32_t b 
+ *      uint32_t a
+ *      uint32_t b
  *
  * Return values: Some PTP_RC_* code.
  *
@@ -3914,7 +3914,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_afdrive:
  *
  * This command runs (drives) the lens autofocus.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3925,7 +3925,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_changeafarea:
  *
  * This command starts movie capture (to card)
- *  
+ *
  * params:      PTPParams*
  * x: x coordinate
  * y: y coordinate
@@ -3938,7 +3938,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_startmovie:
  *
  * This command starts movie capture (to card)
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3949,7 +3949,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_stopmovie:
  *
  * This command stops movie capture (to card)
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3960,7 +3960,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_canon_eos_afdrive:
  *
  * This command runs (drives) the lens autofocus.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3971,7 +3971,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_canon_eos_afcancel:
  *
  * This command cancels the lens autofocus.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -3982,7 +3982,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_canon_eos_zoom:
  *
  * This command runs (drives) the lens autofocus.
- *  
+ *
  * params:      PTPParams*
  * params:      arg1 unknown
  *
@@ -3998,7 +3998,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_mfdrive:
  *
  * This command runs (drives) the lens focus manually.
- *  
+ *
  * params:      PTPParams*
  * flag:        0x1 for (no limit - closest), 0x2 for (closest - no limit)
  * amount:      amount of steps
@@ -4012,7 +4012,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_canon_eos_drivelens:
  *
  * This command runs (drives) the lens focus manually.
- *  
+ *
  * params:      PTPParams*
  * amount:      0x1-0x3 for near range, 0x8001-0x8003 for far range.
  *
@@ -4024,7 +4024,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_capture:
  *
  * This command captures a picture on the Nikon.
- *  
+ *
  * params:      PTPParams*
  *      uint32_t x: unknown parameter. seen to be -1.
  *
@@ -4037,7 +4037,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_capture2:
  *
  * This command captures a picture on the Nikon.
- *  
+ *
  * params:      PTPParams*
  * af: 		autofocus before capture (1 yes , 0 no)
  * target:	sdram 1, card 0
@@ -4052,7 +4052,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_capture_sdram:
  *
  * This command captures a picture on the Nikon.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -4063,7 +4063,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_delete_sdram_image:
  *
  * This command deletes the current SDRAM image
- *  
+ *
  * params:      PTPParams*
  * uint32_t	oid
  *
@@ -4075,7 +4075,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * ptp_nikon_start_liveview:
  *
  * This command starts LiveView mode of newer Nikons DSLRs.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -4088,7 +4088,7 @@ uint16_t ptp_nikon_get_preview_image (PTPParams* params, unsigned char**, unsign
  * ptp_nikon_end_liveview:
  *
  * This command ends LiveView mode of newer Nikons DSLRs.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -4103,7 +4103,7 @@ uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t 
  *
  * This command checks if the device is ready. Used after
  * a capture.
- *  
+ *
  * params:      PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -4193,7 +4193,7 @@ typedef struct tagptp_chdk_videosettings {
 	long bitmap_buffer_width;
 	long bitmap_width;
 	long bitmap_height;
-	unsigned palette[16]; 
+	unsigned palette[16];
 } ptp_chdk_videosettings;
 
 /* Nafraf: Test this!!!*/

@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -59,7 +59,7 @@ rd(int len, char *data) {
 static int
 getmarker(void) {
 	int c;
-	
+
 	c = rb(0);
 	if (c == -1) return -1;
 	if (c!=0xff) return -1;
@@ -70,7 +70,7 @@ getmarker(void) {
 static int
 getlength(void) {
 	int x1,x2;
-	
+
 	x1 = rb(1);
 	if (x1 == -1) return -1;
 	x2 = rb(1);
@@ -143,7 +143,7 @@ main(int argc, char **argv) {
 
 	m = getmarker();
 	if (m != SOI) {
-		fprintf(stderr,":unknown, aborting.\n"); 
+		fprintf(stderr,":unknown, aborting.\n");
 		return 1;
 	}
 	fprintf(stderr,":SOI\n");
@@ -160,7 +160,7 @@ main(int argc, char **argv) {
 		switch (m) {
 		case COM: {
 			char *comment;
-			
+
 			comment = malloc(len - 2 + 1);
 			comment[len-2]='\0';
 			if (-1 == rd(len - 2, comment))

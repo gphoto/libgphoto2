@@ -79,7 +79,7 @@ int camera_id(CameraText *id)
 }
 
 int camera_abilities(CameraAbilitiesList *list)
-{        
+{
   int i;
   CameraAbilities a;
   for(i=0; models[i].name; i++) {
@@ -92,19 +92,19 @@ int camera_abilities(CameraAbilitiesList *list)
     a.usb_product = models[i].idProduct;
     a.operations        = 	GP_OPERATION_NONE;
     a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
-    a.file_operations   =     GP_FILE_OPERATION_DELETE;	
+    a.file_operations   =     GP_FILE_OPERATION_DELETE;
     gp_abilities_list_append(list, a);
   }
   return GP_OK;
 }
-		     
-static int camera_exit(Camera *camera, GPContext *context){  
+
+static int camera_exit(Camera *camera, GPContext *context){
   return pccam600_close(camera->port, context);
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data, GPContext *context){
-  
+
   Camera *camera = data;
   CameraFileInfo info;
   int n,i,nr_of_blocks;
@@ -127,7 +127,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	  memcpy(file_entry,&(buffer)[i],32);
 	  file_entry->name[8] = 0;
 	  /*Fileentry valid? */
-	  if( !((file_entry->state & 0x02) != 2)  && 
+	  if( !((file_entry->state & 0x02) != 2)  &&
 	      !((file_entry->state & 0x08) == 8) )
 	    {
 	      info.file.fields = 0;
@@ -166,7 +166,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	      info.file.size = (file_entry->size[1]*256+
 				file_entry->size[0]) * 256;
 	      info.file.permissions = GP_FILE_PERM_READ | GP_FILE_PERM_DELETE;
-	      info.file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS 
+	      info.file.fields |= GP_FILE_INFO_SIZE | GP_FILE_INFO_PERMISSIONS
 		|GP_FILE_INFO_TYPE;
 	      CHECK(gp_filesystem_set_info_noop(fs, folder, (char *)file_entry->name, info, context));
 	    }
@@ -176,16 +176,16 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
   return GP_OK;
 }
 
-static int camera_get_file (Camera *camera, GPContext *context, int index,  
-			    unsigned char **data, int *size) 
+static int camera_get_file (Camera *camera, GPContext *context, int index,
+			    unsigned char **data, int *size)
 {
   unsigned char buffer[512];
   int nr_of_blocks = 0;
   int n,id,canceled=0;
   int picturebuffersize = 0;
-  int offset = 0;  
+  int offset = 0;
   nr_of_blocks = pccam600_get_file(camera->port,context,index);
-  if (nr_of_blocks < 0) 
+  if (nr_of_blocks < 0)
     return GP_ERROR_FILE_NOT_FOUND;
   picturebuffersize = nr_of_blocks * 512;
   id = gp_context_progress_start(context,nr_of_blocks,_("Downloading file..."));
@@ -210,7 +210,7 @@ static int camera_get_file (Camera *camera, GPContext *context, int index,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data, 
+			  CameraFile *file, void *user_data,
 			  GPContext *context)
 {
   Camera *camera =  user_data;
@@ -235,7 +235,7 @@ static int camera_summary(Camera *camera, CameraText *summary, GPContext *contex
 {
   int totalmem;
   int  freemem;
-  char summary_text[256];  
+  char summary_text[256];
   CHECK(pccam600_get_mem_info(camera->port,context,&totalmem,&freemem));
   snprintf(summary_text,sizeof(summary_text),
   	   (" Total memory is %8d bytes.\n Free memory is  %8d bytes."),
@@ -246,7 +246,7 @@ static int camera_summary(Camera *camera, CameraText *summary, GPContext *contex
 
 static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
-  strcpy(about->text, 
+  strcpy(about->text,
 	 _("Creative PC-CAM600\nAuthor: Peter Kajberg <pbk@odense.kollegienet.dk>\n"));
   return GP_OK;
 }
@@ -274,7 +274,7 @@ int camera_init(Camera *camera, GPContext *context){
   camera->functions->summary      = camera_summary;
   camera->functions->about        = camera_about;
   gp_log (GP_LOG_DEBUG, "pccam", "Initializing the camera\n");
-  switch (camera->port->type) 
+  switch (camera->port->type)
     {
     case GP_PORT_USB:
       CHECK(gp_port_get_settings(camera->port,&settings));
@@ -287,9 +287,9 @@ int camera_init(Camera *camera, GPContext *context){
       break;
     case GP_PORT_SERIAL:
       return GP_ERROR_IO_SUPPORTED_SERIAL;
-    default: 
+    default:
       return GP_ERROR_NOT_SUPPORTED;
-    }    
+    }
   CHECK(pccam600_init(camera->port, context));
   return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }

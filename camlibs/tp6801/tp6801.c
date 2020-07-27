@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -78,7 +78,7 @@ tp6801_set_time_and_date(Camera *camera, struct tm *t)
 	char sense_buffer[32];
 
 	memset (cmd_buffer, 0, sizeof (cmd_buffer));
-	
+
 	cmd_buffer[0] = TP6801_SET_TIME;
 	cmd_buffer[1] = 0x11;
 	cmd_buffer[2] = 0x31;
@@ -323,7 +323,7 @@ int
 tp6801_max_filecount(Camera *camera)
 {
 	int free_mem, size;
-	
+
 	size = tp6801_filesize (camera);
 	free_mem = camera->pl->mem_size - TP6801_PICTURE_OFFSET(0, size);
 	free_mem -= TP6801_CONST_DATA_SIZE;
@@ -691,7 +691,7 @@ tp6801_commit(Camera *camera)
 		camera->pl->page_state[TP6801_PAT_PAGE] |= TP6801_PAGE_DIRTY;
 	}
 
-	/* And commit the block with the PAT */	
+	/* And commit the block with the PAT */
 	CHECK (tp6801_commit_block (camera, 0))
 
 	return GP_OK;

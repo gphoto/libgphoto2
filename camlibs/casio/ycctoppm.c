@@ -64,7 +64,7 @@ int QVycctoppm(const unsigned char *ycc, long int yccSize, int width, int height
   {
     for (x=0; x<width; ++x)
     {
-      L = Y[y * width + x] *  100000; 
+      L = Y[y * width + x] *  100000;
       cb = Cb[(y/RATE_H) * width/ratew + x/ratew];
       if (cb > 127) cb = cb - 256;
       cr = Cr[(y/RATE_H) * width/ratew + x/ratew];

@@ -264,7 +264,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = user_data;
 	int number, filetype;
 
-	CHECK (number = gp_filesystem_number (camera->fs, folder, filename, 
+	CHECK (number = gp_filesystem_number (camera->fs, folder, filename,
 				              context));
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
@@ -285,7 +285,7 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder,
-	       const char *filename, CameraFileInfo *info, void *data, 
+	       const char *filename, CameraFileInfo *info, void *data,
 	       GPContext *context)
 {
 	Camera *camera = data;
@@ -293,13 +293,13 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	struct GsmartFile *file;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, 
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
 				         context));
 
 	CHECK (gsmart300_get_file_info (camera->pl, n, &file));
 
-	info->file.fields = GP_FILE_INFO_TYPE 
-		| GP_FILE_INFO_WIDTH 
+	info->file.fields = GP_FILE_INFO_TYPE
+		| GP_FILE_INFO_WIDTH
 		| GP_FILE_INFO_HEIGHT;
 	if (file->mime_type == GSMART_FILE_TYPE_IMAGE) {
 		strcpy (info->file.type, GP_MIME_JPEG);
@@ -309,8 +309,8 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	info->file.width = file->width;
 	info->file.height = file->height;
 
-	info->preview.fields = GP_FILE_INFO_TYPE 
-		| GP_FILE_INFO_WIDTH 
+	info->preview.fields = GP_FILE_INFO_TYPE
+		| GP_FILE_INFO_WIDTH
 		| GP_FILE_INFO_HEIGHT;
 	strcpy (info->preview.type, GP_MIME_BMP);
 
@@ -325,7 +325,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	int n, c;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, 
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
 				         context));
 	CHECK (c = gp_filesystem_count (camera->fs, folder, context));
 	if (n + 1 != c) {
@@ -333,7 +333,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 		gp_filesystem_name (fs, "/", c - 1, &name, context);
 		gp_context_error (context,
-											_("Your camera only supports deleting " 
+											_("Your camera only supports deleting "
 												"the last file on the camera. In this "
 												"case, this is file '%s'."), name);
 		return (GP_ERROR);
@@ -343,7 +343,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data, 
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 		 GPContext *context)
 {
 	Camera *camera = data;

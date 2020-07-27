@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -63,14 +63,14 @@ run_test ()
 			gp_port_result_as_string (ret));
 		return (1);
 	}
-	
+
 	ret = gp_port_info_list_load (il);
 	if (ret < 0) {
 		printf ("Could not load list of ports: %s\n",
 			gp_port_result_as_string (ret));
 		return (2);
 	}
-	
+
 	count = gp_port_info_list_count (il);
 	if (count < 0) {
 		printf("gp_port_info_list_count error: %d\n", count);

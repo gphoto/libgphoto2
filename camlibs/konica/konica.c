@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -138,7 +138,7 @@ k_check (GPContext *c, const unsigned char *rb)
 			"error that has not yet been discovered. Please "
 			"report the following to %s "
 			"with additional information how you got this error: "
-			"(0x%x,0x%x). Thank you very much!"), 
+			"(0x%x,0x%x). Thank you very much!"),
 			MAIL_GPHOTO_DEVEL, rb[2], rb[3]);
 		return (GP_ERROR);
         }
@@ -775,7 +775,7 @@ k_get_status (GPPort *p, GPContext *c, KStatus *status)
 	CHECK_NULL (status);
 
         CRF (c, l_send_receive (p, c, sb, 6, &rb, &rbs, 0, NULL, NULL), rb);
-	
+
 	status->self_test_result = (rb[5] << 8) | rb[4];
 	status->power_level      = rb[6];
 	status->power_source     = rb[7];
@@ -1285,7 +1285,7 @@ k_localization_data_put (GPPort *p, GPContext *c,
 				 * packets but make sure we don't loop
 				 * forever.
 				 */
-				if (i > 131072) 
+				if (i > 131072)
 					return (GP_ERROR);
 			}
 		}

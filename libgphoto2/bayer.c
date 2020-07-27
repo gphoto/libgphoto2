@@ -68,7 +68,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
  * This function expands the bayer array to 3 times larger bitmap with
  * RGB values copied as-is. Pixels were no sensor was there are 0.
  * The data is supposed to be processed further by for instance gp_bayer_interpolate().
- * 
+ *
  * \return a gphoto error code
  */
 int
@@ -113,7 +113,7 @@ gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
 					bayer = (x&1?0:1) + (y&1?0:2);
 
 					colour = tile_colours[tile][bayer];
-	
+
 					i = (y * w + x) * 3;
 
 					output[i+RED]    = 0;
@@ -251,7 +251,7 @@ gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile)
 }
 /**
  * \brief interpolate one pixel from a bayer 2x2 raster
- * 
+ *
  * For red and blue data, compare the four surrounding values.  If three
  * values are all one side of the mean value, the fourth value is ignored.
  * This will sharpen boundaries. Treatment of green data looks for vertical and
@@ -272,7 +272,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 	int i ;
 	x[0] = x0 ; x[1] = x1 ; x[2] = x2 ; x[3] = x3 ;
 	y[0] = y0 ; y[1] = y1 ; y[2] = y2 ; y[3] = y3 ;
-	
+
 	/* special treatment for green */
 	counter = sum_of_values = 0 ;
 	if(colour == GREEN)
@@ -282,7 +282,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 		 * interpolation procedure. Therefore, we determine whether
 		 * we might have such a line structure.
 		 */
-	  	
+
 		for (i = 0 ; i < 4 ; i++)
 	  	{	if ((x[i] >= 0) && (x[i] < w) && (y[i] >= 0) && (y[i] < h))
 			{
@@ -295,7 +295,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 			}
 	  	}
 		if(counter == 4)
-		{	
+		{
 			/* It is assumed that x0,y0 and x1,y1 are on a
 			 * horizontal line and
 			 * x2,y2 and x3,y3 are on a vertical line
@@ -321,7 +321,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
 		/* if we do not have four points then we proceed as we do for
 		 * blue and red */
 	}
-	
+
 	/* for blue and red */
 	counter = sum_of_values = 0 ;
 	for (i = 0 ; i < 4 ; i++)
@@ -364,7 +364,7 @@ gp_bayer_accrue (unsigned char *image, int w, int h, int x0, int y0,
  *
  * This function expands and interpolates the bayer array to 3 times larger
  * bitmap with RGB values interpolated.
- * 
+ *
  * \return a gphoto error code
  */
 int

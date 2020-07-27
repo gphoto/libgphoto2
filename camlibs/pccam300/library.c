@@ -116,11 +116,11 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 
 	id = gp_context_progress_start (context, filecount,
 			_("Getting file list..."));
-	
+
 	for (i = 0; i < filecount; i++) {
 		/* Get information */
 		gp_file_new (&file);
-	
+
 		ret = pccam300_get_file (camera->port, context, i,
 		                          &buffer, &size, &type);
 		if (ret < GP_OK) {
@@ -155,10 +155,10 @@ file_list_func (CameraFilesystem *fs, const char *folder,
 			gp_file_set_data_and_size (file, (char *)buffer, size);
 		else
 			free (buffer);
-		
+
 		/*
 		 * Append directly to the filesystem instead of to the list,
-		 * because we have additional information. 
+		 * because we have additional information.
 		 * */
 		gp_filesystem_append (camera->fs, folder, fn, context);
 		gp_filesystem_set_info_noop (camera->fs, folder, fn, info, context);

@@ -709,7 +709,7 @@ int dc240_get_status (Camera *camera, DC240StatusTable *table, GPContext *contex
 
     if (retval == GP_OK) {
 	retval = gp_file_get_data_and_size (file, &fdata, &fsize);
-	if (retval != GP_OK) goto exit; 
+	if (retval != GP_OK) goto exit;
 	if (fsize != 256) {
 	    GP_DEBUG ("wrong status packet size ! Size is %ld", fsize);
 	    retval = GP_ERROR;

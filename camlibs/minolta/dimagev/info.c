@@ -93,7 +93,7 @@ int dimagev_get_camera_info(dimagev_t *dimagev) {
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	if ( gp_port_read(dimagev->dev, (char *)&char_buffer, 1) < GP_OK ) {
 		GP_DEBUG( "dimagev_get_camera_info::no response from camera");
 		free(p);

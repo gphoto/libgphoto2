@@ -10,10 +10,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -111,7 +111,7 @@ typedef enum {
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
 
-/** 
+/**
  * \brief Describes the properties of a specific camera.
  *
  * The internals of this structures are used extensively by the
@@ -142,7 +142,7 @@ typedef struct {
         char id [1024];		/**< \brief (Internal) camera ID name */
 
 	GphotoDeviceType 	device_type;	/**< \brief Device type. */
-	/** Reserved space to use in the future w/out changing the 
+	/** Reserved space to use in the future w/out changing the
 	 * struct size */
         int reserved2;		/**< reserved space \internal */
         int reserved3;		/**< reserved space \internal */

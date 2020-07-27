@@ -9,17 +9,17 @@
  * Based on work by:
  * Copyright 1999 Beat Christen <spiff@longstreet.ch>
  * 	for the toshiba gPhoto library.
- *                   
+ *
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -84,7 +84,7 @@
 #    define N_(String) gettext_noop (String)
 #  else
 #    define N_(String) (String)
-#  endif 
+#  endif
 #else
 #  define textdomain(String) (String)
 #  define gettext(String) (String)
@@ -182,7 +182,7 @@
 /* IRIX */
 #if defined(__sgi)
 #define GP_PORT_SERIAL_PREFIX "/dev/ttyd%i"
-#define GP_PORT_SERIAL_RANGE_LOW       1 
+#define GP_PORT_SERIAL_RANGE_LOW       1
 #define GP_PORT_SERIAL_RANGE_HIGH     11
 #endif
 
@@ -210,7 +210,7 @@ struct _GPPortPrivateLibrary {
 static int gp_port_serial_check_speed (GPPort *dev);
 
 GPPortType
-gp_port_library_type () 
+gp_port_library_type ()
 {
         return (GP_PORT_SERIAL);
 }
@@ -231,7 +231,7 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 						  "'%s'"), path);
 		return (GP_ERROR_IO_LOCK);
 	}
-#define __HAVE_LOCKING	
+#define __HAVE_LOCKING
 #elif defined(HAVE_LOCKDEV)
 	pid = dev_lock (path);
 	if (pid) {
@@ -246,14 +246,14 @@ gp_port_serial_lock (GPPort *dev, const char *path)
 		}
 		return (GP_ERROR_IO_LOCK);
 	}
-#define __HAVE_LOCKING	
+#define __HAVE_LOCKING
 #endif
 
 #ifndef __HAVE_LOCKING
 # ifdef __GCC__
-#  warning No locking library found. 
+#  warning No locking library found.
 #  warning You will run into problems if you use
-#  warning gphoto2 with a serial (RS232) camera in 
+#  warning gphoto2 with a serial (RS232) camera in
 #  warning combination with Konqueror (KDE) or Nautilus (GNOME).
 #  warning This will *not* concern USB cameras.
 # endif
@@ -500,7 +500,7 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 
 	len = 0;
         while (len < size) {
-		
+
 		/*
 		 * Make sure we write all data while handling
 		 * the harmless errors
@@ -558,7 +558,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 
 		/* Set timeout value within input loop */
                 timeout.tv_usec = (dev->timeout % 1000) * 1000;
-                timeout.tv_sec = (dev->timeout / 1000); 
+                timeout.tv_sec = (dev->timeout / 1000);
 
 		/* Any data available? */
                 if (!select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
@@ -584,7 +584,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			 * as 0xff 0x00 sequence.
 			 *
 			 * 0xff sent by the camera are escaped as
-			 * 0xff 0xff sequence. 
+			 * 0xff 0xff sequence.
 			 *
 			 * All other 0xff 0xXX sequences are errors.
 			 *
@@ -960,7 +960,7 @@ gp_port_library_operations ()
         ops = malloc (sizeof (GPPortOperations));
 	if (!ops)
 		return (NULL);
-        memset (ops, 0, sizeof (GPPortOperations)); 
+        memset (ops, 0, sizeof (GPPortOperations));
 
         ops->init   = gp_port_serial_init;
         ops->exit   = gp_port_serial_exit;

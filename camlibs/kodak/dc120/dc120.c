@@ -71,7 +71,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.speed[4] = 115200;
 	a.speed[5] = 0;
 	a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 				GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
@@ -81,7 +81,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 }
 
 /** Parses a path for a folder and returns folder number and card */
-static int find_folder( Camera *camera, const char *folder, 
+static int find_folder( Camera *camera, const char *folder,
 			int *from_card, int *folder_nr, GPContext *context)
 {
     CameraList *albums = NULL;
@@ -89,13 +89,13 @@ static int find_folder( Camera *camera, const char *folder,
     int folder_len;
     int i;
     char *dc120_folder_card   = _("CompactFlash Card");
-    
+
     if( folder[0] != '/' ) {
 	return (GP_ERROR);
     }
 
     folder++;
-    
+
     if( folder[0] == '\0') {
 	/* From memory */
 	*from_card = FALSE;
@@ -112,7 +112,7 @@ static int find_folder( Camera *camera, const char *folder,
 	*from_card = FALSE;
 	folder--; /* step back to slash */
     }
-    
+
     if ( (folder[0] == 0) ||
 	 (folder[0] == '/' && folder[1] == 0) ) { /* ok, finished */
 	*folder_nr = 0;
@@ -120,25 +120,25 @@ static int find_folder( Camera *camera, const char *folder,
     }
     else if( folder[0] != '/' )
 	return (GP_ERROR);
-    
+
     folder++; /* remove slash */
-    
+
     /* Have trailing slash */
     folder_len = strlen(folder);
     if (folder[folder_len-1] == '/') {
 	folder_len--;
     }
-    
+
   /* ok, now we have a album. first get all albums */
     if( gp_list_new( &albums ) != (GP_OK) ) {
 	return (GP_ERROR);
     }
-    
+
     if( dc120_get_albums(camera, *from_card, albums, context) != (GP_OK) ) {
 	gp_list_free( albums );
 	return (GP_ERROR);
     }
-    
+
     /* no check if such a album exist */
     for( i = 0; i<gp_list_count( albums ); i++ )
     {
@@ -151,7 +151,7 @@ static int find_folder( Camera *camera, const char *folder,
 	    return (GP_OK);
 	}
     }
-    
+
     /* oh, we did not find the folder. bummer. */
     gp_list_free( albums );
     return (GP_ERROR);
@@ -165,39 +165,39 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
     int folder_nr;
     Camera *camera = data;
     char *dc120_folder_card   = _("CompactFlash Card");
-    
+
     res = find_folder( camera, folder, &from_card, &folder_nr, context);
     if( res != (GP_OK) ) {
 	return res;
     }
-    
+
     if( !from_card && folder_nr==0 ) {
 	gp_list_append(list, dc120_folder_card, NULL);
 	return (dc120_get_albums(camera, from_card, list, context));
-    } 
+    }
     else if( from_card && folder_nr==0 ) {
 	return (dc120_get_albums(camera, from_card, list, context));
-    } 
+    }
     else {
 	return (GP_OK);
     }
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data, GPContext *context) 
+			   CameraList *list, void *data, GPContext *context)
 {
     int res;
     int from_card;
     int folder_nr;
     Camera *camera = data;
-    
+
     res = find_folder( camera, folder, &from_card, &folder_nr, context);
     if( res != (GP_OK) ) {
 	return res;
     }
-    
+
     return dc120_get_filenames(camera, from_card, folder_nr, list, context);
-    
+
     /* Save the order of the pics (wtf: no filename access on dc120???) */
 }
 
@@ -205,7 +205,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_file_action (Camera *camera, int action, CameraFile *file,
 			       const char *folder, const char *filename,
-			       GPContext *context) 
+			       GPContext *context)
 {
 	CameraList *files = NULL;
 	const char* file_name;
@@ -214,27 +214,27 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 	char *dot;
 	int picnum=0;
 	int result = GP_OK;
-	
+
 	/*  first find the file */
 	int from_card;
 	int folder_nr;
-	
+
 	result = find_folder( camera, folder, &from_card, &folder_nr, context );
 	if( result != (GP_OK) ) {
 		return result;
 	}
-	
+
 	result = gp_list_new( &files );
 	if( result != GP_OK ) {
 		goto fail;
 	}
-	
+
 	result = dc120_get_filenames(camera, from_card, folder_nr, files, context);
 	if( result != GP_OK ) {
 		goto fail;
 	}
-	
-	
+
+
 	/* now we have the list, search for the file. */
 	file_nr = -1;
 	for( i = 0; i<gp_list_count( files ); i++ ) {
@@ -245,18 +245,18 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 		}
 	}
 	gp_list_free( files );
-	
-	
+
+
 	if( file_nr == -1 ) { /* not found */
 		return GP_ERROR;
 	}
-	
-	
+
+
 	picnum = gp_filesystem_number(camera->fs, folder, filename, context);
 	if (picnum < 0)
 		return picnum;
-	
-	
+
+
 	if (action == DC120_ACTION_PREVIEW) { /* FIXME: marcus, fix type */
 		dot = strrchr(filename, '.');
 		if( dot && strlen( dot )>3 ) {
@@ -275,7 +275,7 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data, GPContext *context) 
+			  CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -291,14 +291,14 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	}
 }
 
-static int delete_file_func (CameraFilesystem *fs, const char *folder, 
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data,
-			     GPContext *context) 
+			     GPContext *context)
 {
 	Camera *camera = data;
 	int retval;
 
-	retval = camera_file_action (camera, DC120_ACTION_DELETE, NULL, 
+	retval = camera_file_action (camera, DC120_ACTION_DELETE, NULL,
 				     folder, filename, context);
 
 	return (retval);
@@ -327,15 +327,15 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	/* Set the filename */
 	strcpy(path->folder, "/");
 
-	CHECK_RESULT (gp_filesystem_append (camera->fs, 
-					    path->folder, 
+	CHECK_RESULT (gp_filesystem_append (camera->fs,
+					    path->folder,
 					    path->name, context));
         return (GP_OK);
 
 }
 
 static int camera_summary (Camera *camera, CameraText *summary,
-			   GPContext *context) 
+			   GPContext *context)
 {
     static char summary_string[2048] = "";
     char buff[1024];
@@ -344,41 +344,41 @@ static int camera_summary (Camera *camera, CameraText *summary,
     if (dc120_get_status (camera, &status, context))
     {
         strcpy(summary_string,"Kodak DC120\n");
-        
+
         snprintf(buff,1024,"Camera Identification: %s\n",status.camera_id);
         strcat(summary_string,buff);
-        
+
         snprintf(buff,1024,"Camera Type: %d\n",status.camera_type_id);
         strcat(summary_string,buff);
-        
+
         snprintf(buff,1024,"Firmware: %d.%d\n",status.firmware_major,status.firmware_minor);
         strcat(summary_string,buff);
-        
+
         snprintf(buff,1024,"Battery Status: %d\n",status.batteryStatusId);
         strcat(summary_string,buff);
-        
+
         snprintf(buff,1024,"AC Status: %d\n",status.acStatusId);
         strcat(summary_string,buff);
-        
+
         strftime(buff,1024,"Time: %a, %d %b %Y %T\n",localtime((time_t *)&status.time));
         strcat(summary_string,buff);
-        
+
         snprintf(buff,1024,"Total Pictures Taken: %d\n",
 		 status.taken_pict_mem + status.taken_pict_card );
         strcat(summary_string,buff);
-                
+
     }
-    
+
     strcpy(summary->text, summary_string);
-    
+
     return (GP_OK);
 }
 
 
 static int camera_manual (Camera *camera, CameraText *manual,
-			  GPContext *context) 
+			  GPContext *context)
 {
-	strcpy (manual->text, 
+	strcpy (manual->text,
 		_("The Kodak DC120 camera uses the KDC file format "
 		"for storing images. If you want to view the images you "
 		"download from your camera, you will need to download "
@@ -388,9 +388,9 @@ static int camera_manual (Camera *camera, CameraText *manual,
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy(about->text, 
+	strcpy(about->text,
 		_("Kodak DC120 Camera Library\n"
 		"Scott Fritzinger <scottf@gphoto.net>\n"
 		"Camera Library for the Kodak DC120 camera.\n"

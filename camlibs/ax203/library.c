@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -81,7 +81,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.usb_vendor = ax203_devinfo[i].vendor_id;
 		a.usb_product= ax203_devinfo[i].product_id;
 		a.operations = GP_OPERATION_NONE;
-		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE | 
+		a.folder_operations = GP_FOLDER_OPERATION_PUT_FILE |
 				      GP_FOLDER_OPERATION_DELETE_ALL;
 		/* FIXME add support for downloading RAW images */
 		a.file_operations   = GP_FILE_OPERATION_DELETE |
@@ -212,7 +212,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ret = gp_file_set_mime_type (file, GP_MIME_PNG);
 	if (ret < 0) { gdFree (gdpng); return ret; }
 
-	ret = gp_file_set_name (file, filename); 
+	ret = gp_file_set_name (file, filename);
 	if (ret < 0) { gdFree (gdpng); return ret; }
 
 	ret = gp_file_append (file, gdpng, size);
@@ -225,7 +225,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-put_file_func (CameraFilesystem *fs, const char *folder, const char *name, 
+put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	CameraFileType type, CameraFile *file, void *data, GPContext *context)
 {
 #ifdef HAVE_LIBGD
@@ -360,7 +360,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	Camera *camera = data; 
+	Camera *camera = data;
 	int i, count, present;
 	char buf[30];
 
@@ -467,7 +467,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	char buf[2];
 
@@ -483,7 +483,7 @@ camera_exit (Camera *camera, GPContext *context)
 }
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
     	CameraAbilities a;
     	int i, ret;

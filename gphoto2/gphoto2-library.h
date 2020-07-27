@@ -1,6 +1,6 @@
 /** \file
  * \brief Camery driver header.
- * 
+ *
  * \author Copyright 2000 Scott Fritzinger
  *
  * \note
@@ -10,10 +10,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -58,14 +58,14 @@ typedef int (* CameraLibraryAbilitiesFunc) (CameraAbilitiesList *list);
  * \return a gphoto2 error code
  *
  * The camera driver will establish a first connection
- * to the camera and configure the camera variable (i.e. using 
+ * to the camera and configure the camera variable (i.e. using
  * #gp_filesystem_set_list_funcs or #gp_port_get_settings).
  *
  **/
 typedef int (* CameraLibraryInitFunc)      (Camera *camera, GPContext *context);
 
 /*
- * If you want to write a camera library, you need to implement 
+ * If you want to write a camera library, you need to implement
  * the following three functions. Everything else should be declared
  * as static.
  */

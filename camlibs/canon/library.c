@@ -358,7 +358,7 @@ int camera_id (CameraText *id)
  *
  */
 static int
-camera_manual (Camera __unused__ *camera, CameraText *manual, 
+camera_manual (Camera __unused__ *camera, CameraText *manual,
 	       GPContext __unused__ *context)
 {
 	GP_DEBUG ("camera_manual()");
@@ -532,9 +532,9 @@ camera_exit (Camera *camera, GPContext *context)
 {
 	int res = 0;
 
-	if (camera->port->type == GP_PORT_USB) 
+	if (camera->port->type == GP_PORT_USB)
 		canon_usb_unlock_keys (camera, context);
-	
+
 	/* Turn off remote control if enabled (remote control only
 	 * applies to USB cameras, but in case of serial connection
 	 * remote_control should never be seen set here) */
@@ -690,7 +690,7 @@ update_disk_cache (Camera *camera, GPContext *context)
  ****************************************************************************/
 
 static int
-file_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+file_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 		CameraList *list, void *data,
 		GPContext *context)
 {
@@ -701,12 +701,12 @@ file_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
-	return canon_int_list_directory (camera, folder, list, 
+	return canon_int_list_directory (camera, folder, list,
 					 CANON_LIST_FILES, context);
 }
 
 static int
-folder_list_func (CameraFilesystem __unused__ *fs, const char *folder, 
+folder_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 		  CameraList *list, void *data,
 		  GPContext *context)
 {
@@ -717,13 +717,13 @@ folder_list_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (!check_readiness (camera, context))
 		return GP_ERROR;
 
-	return canon_int_list_directory (camera, folder, list, 
+	return canon_int_list_directory (camera, folder, list,
 					 CANON_LIST_FOLDERS, context);
 }
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
-	       CameraFileType type, CameraFile *file, void *user_data, 
+	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
 	Camera *camera = user_data;
@@ -1123,12 +1123,12 @@ storage_info_func (
 	(*sinfos)->access = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
 	return GP_OK;
 }
-	
+
 
 /****************************************************************************/
 
 static int
-camera_about (Camera __unused__ *camera, CameraText *about, 
+camera_about (Camera __unused__ *camera, CameraText *about,
 	      GPContext __unused__ *context)
 {
 	GP_DEBUG ("camera_about()");
@@ -1151,7 +1151,7 @@ camera_about (Camera __unused__ *camera, CameraText *about,
 /****************************************************************************/
 
 static int
-delete_file_func (CameraFilesystem __unused__ *fs, const char *folder, 
+delete_file_func (CameraFilesystem __unused__ *fs, const char *folder,
 		  const char *filename, void *data,
 		  GPContext *context)
 {
@@ -1205,10 +1205,10 @@ delete_file_func (CameraFilesystem __unused__ *fs, const char *folder,
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 /*
  * get from the filesystem the name of the highest numbered picture or directory
- * 
+ *
  */
 static int
-get_last_file (Camera *camera, char *directory, char *destname, 
+get_last_file (Camera *camera, char *directory, char *destname,
 	       GPContext* context, char getdirectory, char*result)
 {
 	CameraFilesystem * fs = camera->fs;
@@ -1218,9 +1218,9 @@ get_last_file (Camera *camera, char *directory, char *destname,
 	GP_DEBUG ("get_last_file()");
 
 	if(directory[1] == ':') {
-	    /* gp_file_list_folder() needs absolute filenames 
+	    /* gp_file_list_folder() needs absolute filenames
 	       starting with '/' */
-	    GP_DEBUG ("get_last_file(): replacing '%c:%c' by '/'", 
+	    GP_DEBUG ("get_last_file(): replacing '%c:%c' by '/'",
 		      directory[0], directory[2]);
 	    sprintf(dir2, "/%s", &directory[3]);
 	    directory = dir2;
@@ -1238,7 +1238,7 @@ get_last_file (Camera *camera, char *directory, char *destname,
 	for(t=0;t<list->count;t++)
 	{
 	    char* name = list->entry[t].name;
-	    if(getdirectory) 
+	    if(getdirectory)
 		GP_DEBUG ("get_last_file(): folder: %s", name);
 	    else
 		GP_DEBUG ("get_last_file(): file: %s", name);
@@ -1251,7 +1251,7 @@ get_last_file (Camera *camera, char *directory, char *destname,
 		continue;
 
 	    /* ...and only for files similar to AUT_[0-9]{4} */
-	    if(!getdirectory && (!isdigit(name[6]) || 
+	    if(!getdirectory && (!isdigit(name[6]) ||
 			         !isdigit(name[7])))
 		continue;
 
@@ -1278,9 +1278,9 @@ get_last_dir (Camera *camera, char *directory, char *destname, GPContext* contex
 }
 
 /*
- * convert a filename to 8.3 format by truncating 
+ * convert a filename to 8.3 format by truncating
  * the basename to 8 and the extension to 3 chars
- * 
+ *
  */
 static void
 convert_filename_to_8_3(const char* filename, char* dest)
@@ -1293,7 +1293,7 @@ convert_filename_to_8_3(const char* filename, char* dest)
     }
     else {
 	int l = c-filename;
-	if(l>8) 
+	if(l>8)
 	    l=8;
 	memcpy(dest, filename, l);
 	dest[l]=0;
@@ -1457,7 +1457,7 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, c
 
 	gp_camera_get_abilities (camera, &a);
 	/* Special case for A50 and Pro 70 */
-	if ((camera->pl->speed > 57600) && 
+	if ((camera->pl->speed > 57600) &&
 	    ((camera->pl->md->model == CANON_CLASS_1)
 	     || (camera->pl->md->model == CANON_CLASS_2))) {
 		gp_context_error (context,
@@ -1550,7 +1550,7 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, c
 
 /* Wait for an event */
 static int
-camera_wait_for_event (Camera *camera, int timeout, CameraEventType *eventtype, void **eventdata, GPContext *context) 
+camera_wait_for_event (Camera *camera, int timeout, CameraEventType *eventtype, void **eventdata, GPContext *context)
 {
 	return canon_int_wait_for_event (camera, timeout, eventtype, eventdata, context);
 }
@@ -1602,9 +1602,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
+
 	/* Set to "Compatibility mode" if not currently set */
-	if (menuval == -1) 
+	if (menuval == -1)
 		gp_widget_set_value (t, _("Compatibility Mode"));
 
 	gp_widget_append (section, t);
@@ -1615,7 +1615,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	/* Necessary for release params: ISO, aperture, etc. */
 	if (!camera->pl->remote_control) {
 		res = canon_int_start_remote_control (camera, context);
-		if (res != GP_OK) 
+		if (res != GP_OK)
 			return -1;
 	}
 
@@ -1642,8 +1642,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown ISO value if the 
+
+	/* Set an unknown ISO value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1696,8 +1696,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown shutter value if the 
+
+	/* Set an unknown shutter value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1736,8 +1736,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown aperture value if the 
+
+	/* Set an unknown aperture value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1763,8 +1763,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown exp bias value if the 
+
+	/* Set an unknown exp bias value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1794,7 +1794,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
+
 	/* Set an unknown imageFormat value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
@@ -1822,8 +1822,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown focus mode value if the 
+
+	/* Set an unknown focus mode value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1850,8 +1850,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown flash value if the 
+
+	/* Set an unknown flash value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -1878,8 +1878,8 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		}
 		i++;
 	}
-	
-	/* Set an unknown beep value if the 
+
+	/* Set an unknown beep value if the
 	 * camera is set to something weird */
 	if (menuval == -1) {
 		gp_widget_add_choice (t, _("Unknown"));
@@ -2013,8 +2013,8 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			}
 			i++;
 		}
-		
-		if (!captureSizeArray[i].label) 
+
+		if (!captureSizeArray[i].label)
 			gp_context_status (context, _("Invalid capture size class setting"));
 
 	}
@@ -2187,7 +2187,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			while (imageFormatStateArray[i].label) {
 				if (strcmp (_(imageFormatStateArray[i].label), wvalue) == 0)
 					break;
-				
+
 				i++;
 			}
 
@@ -2258,7 +2258,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					gp_context_status (context, _("Beep mode changed"));
 				else
 					gp_context_status (context, _("Could not change beep mode"));
-			}		
+			}
 		}
 	}
 
@@ -2279,7 +2279,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 						gp_context_status (context, _("Zoom level changed"));
 					else
 						gp_context_status (context, _("Could not change zoom level"));
-				}		
+				}
 			}
 	}
 
@@ -2339,7 +2339,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 					gp_context_status (context, _("Flash mode changed"));
 				else
 					gp_context_status (context, _("Could not change flash mode"));
-			}		
+			}
 		}
 	}
 
@@ -2388,9 +2388,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 }
 
 static int
-get_info_func (CameraFilesystem __unused__ *fs, const char *folder, 
+get_info_func (CameraFilesystem __unused__ *fs, const char *folder,
 	       const char *filename,
-	       CameraFileInfo * info, 
+	       CameraFileInfo * info,
 	       void __unused__ *data, GPContext __unused__ *context)
 {
 	Camera *camera = data;
@@ -2452,7 +2452,7 @@ make_dir_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (canonpath == NULL)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	r = canon_int_directory_operations (camera, canonpath, 
+	r = canon_int_directory_operations (camera, canonpath,
 					    DIR_CREATE, context);
 	if (r != GP_OK)
 		return (r);
@@ -2494,7 +2494,7 @@ remove_dir_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (canonpath == NULL)
 		return GP_ERROR_BAD_PARAMETERS;
 
-	r = canon_int_directory_operations (camera, canonpath, 
+	r = canon_int_directory_operations (camera, canonpath,
 					    DIR_REMOVE, context);
 	if (r != GP_OK)
 		return (r);

@@ -1,4 +1,4 @@
-/* 
+/*
  */
 
 #include <stdlib.h>
@@ -47,7 +47,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 	        gettimeofday (&curtime, NULL);
 
 		timediff = ((curtime.tv_sec - start.tv_sec)*1000)+((curtime.tv_usec - start.tv_usec)/1000);
-		if (timediff >= waittime) 
+		if (timediff >= waittime)
 			break;
 
 		retval = gp_camera_wait_for_event(camera, waittime - timediff, &evtype, &data, context);
@@ -127,7 +127,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		}
 		if (-1 == lseek(fd, 0, SEEK_SET))
 			perror("lseek");
-		if (-1 == write (fd, buffer, size)) 
+		if (-1 == write (fd, buffer, size))
 			perror("write");
 		close (fd);
 

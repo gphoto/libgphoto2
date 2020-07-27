@@ -460,7 +460,7 @@ camera_init (Camera *camera, GPContext *context)
 
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) return ret; 
+	if (ret < 0) return ret;
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:

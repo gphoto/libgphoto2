@@ -1,5 +1,5 @@
 /*
- * Copyright 1999/2000 by 
+ * Copyright 1999/2000 by
  *     Henning Zabel <henning@uni-paderborn.de>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -16,9 +16,9 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
 /*
- * gphoto driver for the Mustek MDC800 Digital Camera. The driver 
+ * gphoto driver for the Mustek MDC800 Digital Camera. The driver
  * supports rs232 and USB.
  */
 
@@ -57,23 +57,23 @@
 
 struct ConfigValues {
 	GtkWidget *cam_id;
-	
+
 	GtkWidget *image_quality;
-	
+
 	GtkWidget *lcd;
 	GtkObject *lcd_adj;
-	
+
 	GtkWidget *light;
 	GtkWidget *flash;
 	GtkWidget *lcd_on;
 	GtkWidget *source;
 	GtkWidget *exp_mode;
-	
+
 	GtkWidget *baud;
-	
+
 	GtkWidget *save_button, *cancel_button;
 	GtkWidget *dialog;
-	
+
 } mdc800_dialog;
 
 
@@ -96,11 +96,11 @@ GtkWidget* mdc800_createComboBox (char** content,int count)
 {
 	int 	 i=0;
 	GList* list=0;
-	
+
 	GtkWidget* retval=gtk_combo_new ();
 	for (i=0; i<count; i++)
 		list=g_list_append (list, content [i] );
-		
+
 	gtk_widget_show (retval);
 	gtk_combo_set_popdown_strings (GTK_COMBO (retval), list);
 	gtk_entry_set_editable (GTK_ENTRY (GTK_COMBO (retval)->entry),0);
@@ -108,7 +108,7 @@ GtkWidget* mdc800_createComboBox (char** content,int count)
 }
 
 
-/* 
+/*
  * Sets up the item index in StringList list of
  * ComboBox box
  */
@@ -152,21 +152,21 @@ void mdc800_createDialog (void )
 
 	spacer = gtk_vseparator_new();
 	gtk_widget_show(spacer);
-	gtk_table_attach_defaults(GTK_TABLE(table),spacer,2,3,2,22);	
-      
+	gtk_table_attach_defaults(GTK_TABLE(table),spacer,2,3,2,22);
+
 	/* camera id ---------------------- */
 	label = gtk_label_new("Camera ID:");
 	gtk_widget_show(label);
 	mdc800_dialog.cam_id = gtk_label_new ("Mustek MDC800");
 	gtk_widget_show (mdc800_dialog.cam_id);
-	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,0,1);	
+	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,0,1);
 	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.cam_id,1,2,0,1);
 
 	spacer = gtk_hseparator_new();
 	gtk_widget_show(spacer);
 	gtk_table_attach_defaults(GTK_TABLE(table),spacer,0,5,1,2);
 
-	
+
 	/* image quality ---------------------- */
 	label = gtk_label_new("Image Quality:");
 	gtk_widget_show(label);
@@ -186,41 +186,41 @@ void mdc800_createDialog (void )
 	gtk_scale_set_draw_value(GTK_SCALE(mdc800_dialog.lcd), TRUE);
 	gtk_scale_set_digits(GTK_SCALE(mdc800_dialog.lcd), 0);
 	gtk_widget_show(mdc800_dialog.lcd);
-	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,6,7);	
-	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.lcd,1,2,6,7);	
+	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,6,7);
+	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.lcd,1,2,6,7);
 
 
 	/* flash mode ---------------------- */
 	label = gtk_label_new("Flash Mode:");
 	gtk_widget_show(label);
 	mdc800_dialog.flash=mdc800_createComboBox (mdc800_flash_light_string,5);
-	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,3,4);	
+	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,3,4);
 	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.flash,1,2,3,4);
 
-	
+
 	/* light source ---------------------- */
 	label = gtk_label_new("White Balance:");
 	gtk_widget_show(label);
 	mdc800_dialog.light=mdc800_createComboBox (mdc800_wb_string,4);
 	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,4,5);
-	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.light,1,2,4,5);	
+	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.light,1,2,4,5);
 
-	
+
 	/* Set exposure Mode ---------------------- */
 	label = gtk_label_new("Exposure Mode:");
 	gtk_widget_show(label);
 	mdc800_dialog.exp_mode=mdc800_createComboBox (mdc800_exposure_mode_string,2);
 	gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,5,6);
 	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.exp_mode,1,2,5,6);
-	
-	
+
+
 	/* Storage Source ---------------------- */
 	label = gtk_label_new("Storage-Source:");
 	gtk_widget_show(label);
 	mdc800_dialog.source=mdc800_createComboBox (mdc800_storage_source_string,2);
 	gtk_table_attach_defaults(GTK_TABLE(table),label,3,4,2,3);
 	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.source,4,5,2,3);
-	
+
 	spacer = gtk_hseparator_new();
 	gtk_widget_show(spacer);
 	gtk_table_attach_defaults(GTK_TABLE(table),spacer,3,5,3,4);
@@ -230,15 +230,15 @@ void mdc800_createDialog (void )
 	/* Different Options */
 	label = gtk_label_new("Special Options:");
 	gtk_widget_show(label);
-	gtk_table_attach_defaults(GTK_TABLE(table),label,3,4,4,5);	
+	gtk_table_attach_defaults(GTK_TABLE(table),label,3,4,4,5);
 
 
 	/* LCD ON/OFF ---------------------- */
 	mdc800_dialog.lcd_on = gtk_check_button_new_with_label("Turn on LCD");
 	gtk_widget_show(mdc800_dialog.lcd_on);
 	gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.lcd_on,4,5,4,5);
-	
-	
+
+
 	spacer = gtk_hseparator_new();
 	gtk_widget_show(spacer);
 	gtk_table_attach_defaults(GTK_TABLE(table),spacer,3,5,7,8);
@@ -259,7 +259,7 @@ void mdc800_createDialog (void )
 		gtk_table_attach_defaults(GTK_TABLE(table),label,3,4,8,9);
 		gtk_table_attach_defaults(GTK_TABLE(table),mdc800_dialog.baud,4,5,8,9);
 	}
-	
+
 
 	/* done with the widgets */
 
@@ -297,15 +297,15 @@ void mdc800_disposeDialog (void)
 int mdc800_setupDialog (void)
 {
 	int value, tmp;
-	
+
 	if (!mdc800_initialize ())
 	{
 		return -1;
 	}
-	
-	update_status("Receiving Configuration.");	
+
+	update_status("Receiving Configuration.");
 	update_progress (0);
-	
+
 	/* Image Quality */
 	value=mdc800_getImageQuality ();
 	if (value<0)
@@ -318,7 +318,7 @@ int mdc800_setupDialog (void)
 	if (!mdc800_getWBandExposure (&tmp, &value))
 		return -1;
 	gtk_adjustment_set_value(GTK_ADJUSTMENT(mdc800_dialog.lcd_adj), tmp);
-	
+
 	switch (value) {
 		case 1: value=0; break;
 		case 2: value=1; break;
@@ -355,17 +355,17 @@ int mdc800_setupDialog (void)
 		return -1;
 	mdc800_ComboBox_SetEntry (mdc800_dialog.exp_mode, mdc800_exposure_mode_string, value);
 	update_progress (95);
-	
+
 	/* Baudrate */
 	if (!mdc800_io_using_usb) {
 		int speed;
 	        mdc800_getSpeed(camera,&speed);
 		mdc800_ComboBox_SetEntry (mdc800_dialog.baud, mdc800_baud_rate_string, speed);
 	}
-		
+
 	update_progress (100);
 	update_status("Done.");
-	
+
 	update_progress (0);
 	return 0;
 }
@@ -374,8 +374,8 @@ int mdc800_setupDialog (void)
 int mdc800_setupConfig (void)
 {
 	int value;
-	
-	update_status("Writing Configuration.");	
+
+	update_status("Writing Configuration.");
 	update_progress (0);
 
 
@@ -386,8 +386,8 @@ int mdc800_setupConfig (void)
 	if (!mdc800_setImageQuality (value))
 		return -1;
 	update_progress (12);
-	
-	
+
+
 	/* set exposure setting */
 	value= GTK_ADJUSTMENT(mdc800_dialog.lcd_adj)->value;
 	if (!mdc800_setExposure (value))
@@ -423,7 +423,7 @@ int mdc800_setupConfig (void)
 	/* Set LCD ON/OFF... */
 	if (GTK_WIDGET_STATE(mdc800_dialog.lcd_on) == GTK_STATE_ACTIVE)
 	  	mdc800_enableLCD (1);
-	else 
+	else
 	  	mdc800_enableLCD (0);
 	update_progress(62);
 
@@ -432,7 +432,7 @@ int mdc800_setupConfig (void)
 	value = mdc800_ComboBox_GetEntry (mdc800_dialog.source, mdc800_storage_source_string,2);
 	if (value < 0)
 		return -1;
-	update_progress(75);		
+	update_progress(75);
 
 
 	if (!mdc800_setStorageSource (value))
@@ -450,8 +450,8 @@ int mdc800_setupConfig (void)
 	if (!mdc800_setExposureMode (value))
 		return -1;
 	update_progress (95);
-			
-		
+
+
 	/* Change BaudRate */
 	if (!mdc800_io_using_usb)
 	{
@@ -460,7 +460,7 @@ int mdc800_setupConfig (void)
 			return -1;
 		mdc800_changespeed (value);
 	}
-	
+
 	update_progress(100);
 
 	update_status("Done.");

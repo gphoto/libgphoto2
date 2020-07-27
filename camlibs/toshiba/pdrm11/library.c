@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -45,7 +45,7 @@
 #define GP_MODULE "Toshiba"
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "toshiba-pdrm11");
 
@@ -54,7 +54,7 @@ camera_id (CameraText *id)
 
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -66,7 +66,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_vendor = 0x1132;
 	a.usb_product = 0x4337;
 	a.operations        = 	GP_OPERATION_NONE;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 				GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
@@ -77,7 +77,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	return (GP_OK);
 }
@@ -90,7 +90,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	int picNum;
 	Camera *camera = data;
-	
+
 	switch(type){
 	case GP_FILE_TYPE_PREVIEW:
 	case GP_FILE_TYPE_NORMAL:
@@ -140,7 +140,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;

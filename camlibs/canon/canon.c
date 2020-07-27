@@ -468,7 +468,7 @@ filename_to_audio(const char *filename, const char __unused__ *newext)
  * @camera: Camera to work on
  * @filename: the file for which to get the name of the audio annotation
  *
- * The identifier returned is 
+ * The identifier returned is
  *  a) NULL if no audio file exists for this file or an internal error occurred
  *  b) pointer to string with file name of the corresponding thumbnail
  *  c) pointer to filename in case filename is a thumbnail itself
@@ -510,7 +510,7 @@ canon_int_filename2audioname (Camera __unused__ *camera, const char *filename)
  * @camera: Camera to work on
  * @filename: the file to get the name of the thumbnail of
  *
- * The identifier returned is 
+ * The identifier returned is
  *  a) NULL if no thumbnail exists for this file or an internal error occurred
  *  b) pointer to empty string if thumbnail is contained in the file itself
  *  c) pointer to string with file name of the corresponding thumbnail
@@ -659,7 +659,7 @@ canon_int_directory_operations (Camera *camera, const char *path, canonDirFuncti
  *
  * Gets the camera identification string, usually the owner name.
  *
- * This information is then stored in the "camera" structure, which 
+ * This information is then stored in the "camera" structure, which
  * is a global variable for the driver.
  *
  * This function also gets the firmware revision in the camera struct.
@@ -919,12 +919,12 @@ canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b)
                  * response. It also needs an extra zero byte at the
                  * end. */
                 payload[payloadlen++] = 0;
-                msg = canon_usb_dialogue ( camera, 
+                msg = canon_usb_dialogue ( camera,
                                            CANON_USB_FUNCTION_CONTROL_CAMERA_2,
                                            &datalen, payload, payloadlen );
         }
         else
-                msg = canon_usb_dialogue ( camera, 
+                msg = canon_usb_dialogue ( camera,
                                            CANON_USB_FUNCTION_CONTROL_CAMERA,
                                            &datalen, payload, payloadlen );
         if ( msg == NULL  && datalen != 0x1c) {
@@ -948,7 +948,7 @@ canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b)
  * @payload: pointer to the payload data buffer to send to the camera
  * @payloadlen: length of the payload to send to the camera
  * @response_handle: pointer to a pointer where the camera response buffer
- *   address should be stored.  
+ *   address should be stored.
  * @datalen: the length of the response data from the camera
  *
  * Executes a command with arbitrary parameter data that returns data
@@ -962,7 +962,7 @@ canon_int_do_control_command (Camera *camera, unsigned int subcmd, int a, int b)
 static int
 canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
                                        unsigned int payloadlen,
-                                       unsigned char **response_handle, 
+                                       unsigned char **response_handle,
                                        unsigned int *datalen)
 {
         unsigned char *msg;
@@ -974,12 +974,12 @@ canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
                  * response. It also needs an extra zero byte at the
                  * end. */
                 payload[payloadlen++] = 0;
-                msg = canon_usb_dialogue_full ( camera, 
+                msg = canon_usb_dialogue_full ( camera,
                                                 CANON_USB_FUNCTION_CONTROL_CAMERA_2,
                                                 datalen, payload, payloadlen);
         }
         else
-                msg = canon_usb_dialogue_full ( camera, 
+                msg = canon_usb_dialogue_full ( camera,
                                                 CANON_USB_FUNCTION_CONTROL_CAMERA,
                                                 datalen, payload, payloadlen);
 
@@ -1005,10 +1005,10 @@ canon_int_do_control_dialogue_payload (Camera *camera, unsigned char *payload,
  * @a: 32-bit first word of payload (first command parameter)
  * @b: 32-bit second word of payload (second command parameter)
  * @response_handle: pointer to a pointer where the camera response buffer
- *   address should be stored.  
+ *   address should be stored.
  * @datalen: the length of the response data from the camera
  *
- * Executes a remote capture command that returns data from the 
+ * Executes a remote capture command that returns data from the
  * camera, e.g., get release parameters.
  *
  * Returns: gphoto2 status code, camera response data in @response_handle,
@@ -1029,7 +1029,7 @@ canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b
         GP_DEBUG("%s++ with %x, %x", desc, a, b);
 
         status = canon_int_do_control_dialogue_payload (camera, payload,
-                                                        payloadlen, 
+                                                        payloadlen,
                                                         response_handle, datalen);
 
         if ( status < 0 ) {
@@ -1055,14 +1055,14 @@ canon_int_do_control_dialogue (Camera *camera, unsigned int subcmd, int a, int b
  * Returns: gphoto2 status code
  *
  */
-int 
-canon_int_start_remote_control (Camera *camera, GPContext __unused__ *context) 
+int
+canon_int_start_remote_control (Camera *camera, GPContext __unused__ *context)
 {
         int status;
 
         if (camera->pl->remote_control) {
                 GP_DEBUG ("canon_int_start_remote_control: Camera already under remote control");
-                return GP_ERROR; 
+                return GP_ERROR;
         }
 
         /* Init, extends camera lens, puts us in remote capture mode */
@@ -1070,7 +1070,7 @@ canon_int_start_remote_control (Camera *camera, GPContext __unused__ *context)
                                                CANON_USB_CONTROL_INIT, 0, 0);
 
 
-        if (status == GP_OK) 
+        if (status == GP_OK)
                 camera->pl->remote_control = 1;
 
         return status;
@@ -1088,8 +1088,8 @@ canon_int_start_remote_control (Camera *camera, GPContext __unused__ *context)
  * Returns: gphoto2 status code
  *
  */
-int 
-canon_int_end_remote_control (Camera *camera, GPContext __unused__ *context) 
+int
+canon_int_end_remote_control (Camera *camera, GPContext __unused__ *context)
 {
         int status;
 
@@ -1103,7 +1103,7 @@ canon_int_end_remote_control (Camera *camera, GPContext __unused__ *context)
                                                CANON_USB_CONTROL_EXIT, 0, 0);
 
 
-        if (status == GP_OK) 
+        if (status == GP_OK)
                 camera->pl->remote_control = 0;
 
         return status;
@@ -1138,14 +1138,14 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
         unsigned int b_length_orig = 0;
         unsigned int *b_length = &b_length_orig;
         unsigned char *b_data_orig = NULL;
-        unsigned char **b_data = &b_data_orig; 
+        unsigned char **b_data = &b_data_orig;
 
         int photo_status;
 
         /* Should we download the thumbnail, or the full image ? */
-        if (camera->pl->capture_size == CAPTURE_FULL_IMAGE) 
+        if (camera->pl->capture_size == CAPTURE_FULL_IMAGE)
                 transfermode = REMOTE_CAPTURE_FULL_TO_PC;
-        else 
+        else
                 transfermode = REMOTE_CAPTURE_THUMB_TO_PC;
 
         switch (camera->port->type) {
@@ -1156,14 +1156,14 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
 
                 camera->pl->image_b_key = 0x0;
                 camera->pl->image_b_length = 0x0;
-                
+
                 /*
                  * Send a sequence of CONTROL_CAMERA commands.
                  */
 
                 if (!camera->pl->remote_control) {
                         gp_port_set_timeout (camera->port, 15000);
-                        
+
                         status = canon_int_start_remote_control (camera, context);
                         if ( status < 0 )
                                 return status;
@@ -1221,12 +1221,12 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                         /* Try to leave camera in a usable state. */
                         canon_int_end_remote_control (camera, context);
 
-                        /* XXX It would be nice if we had a way to 
+                        /* XXX It would be nice if we had a way to
                            decode the camera error state for the caller
-                           application.  For example, 
+                           application.  For example,
                            photo_status == 0x01 seems to mean
                            "autofocus failure" on the EOS 5D. */
-                        if (photo_status != 0) 
+                        if (photo_status != 0)
                                 return GP_ERROR_CAMERA_ERROR;
                         else
                                 return GP_ERROR_OS_FAILURE;
@@ -1234,7 +1234,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                 }
 
                 if (transfermode == REMOTE_CAPTURE_FULL_TO_PC) {
-                        
+
                         /* Download the image. */
                         if ( camera->pl->image_length > 0 ) {
                                 status = canon_usb_get_captured_image ( camera, camera->pl->image_key, data, length, context );
@@ -1244,7 +1244,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                                         return status;
                                 }
                         }
-                        
+
                         /* Download the secondary image, if one exists */
                         if ( camera->pl->image_b_length > 0 ) {
                                 status = canon_usb_get_captured_secondary_image ( camera, camera->pl->image_b_key, b_data, b_length, context );
@@ -1253,15 +1253,15 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                                                    " secondary image download failed, status= %i", status );
                                         return status;
                                 }
-                                
+
                                 /* Get rid of it */
-                                /* XXX maybe this should be changed in the future 
+                                /* XXX maybe this should be changed in the future
                                  * to do something else with it */
                                 free(b_data_orig);
                         }
-                        
+
                 } else if (transfermode == REMOTE_CAPTURE_THUMB_TO_PC) {
-                        
+
                         /* Download the thumbnail image. */
                         if ( camera->pl->thumb_length > 0 ) {
                                 status = canon_usb_get_captured_thumbnail ( camera, camera->pl->image_key, data, length, context );
@@ -1271,9 +1271,9 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
                                         return status;
                                 }
                         }
-                        
+
                 }
-                
+
                 break;
         case GP_PORT_SERIAL:
                 return GP_ERROR_NOT_SUPPORTED;
@@ -1473,9 +1473,9 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
         int photo_status;
 
         /* Should we save the thumbnail, or the full image ? */
-        if (camera->pl->capture_size == CAPTURE_THUMB) 
+        if (camera->pl->capture_size == CAPTURE_THUMB)
                 transfermode = REMOTE_CAPTURE_THUMB_TO_DRIVE;
-        else 
+        else
                 transfermode = REMOTE_CAPTURE_FULL_TO_DRIVE;
 
         switch (camera->port->type) {
@@ -1611,14 +1611,14 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                         canon_int_end_remote_control (camera, context);
 
 			free ( initial_state );
-                        /* XXX It would be nice if we had a way to 
+                        /* XXX It would be nice if we had a way to
                            decode the camera error state for the caller
-                           application.  For example, 
+                           application.  For example,
                            photo_status == 0x01 seems to mean
                            "autofocus failure" on the EOS 5D. */
-                        if (photo_status != 0) 
+                        if (photo_status != 0)
                                 return GP_ERROR_CAMERA_ERROR;
-                        else 
+                        else
                                 return GP_ERROR_OS_FAILURE;
 
                 }
@@ -1720,8 +1720,8 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
  *
  * Reads the camera's release parameters (ISO, aperture, shutter speed, etc)
  *
- * Right now this has only been tested on an EOS 5D via USB. 
- * Note that the camera must be under USB control via 
+ * Right now this has only been tested on an EOS 5D via USB.
+ * Note that the camera must be under USB control via
  * canon_int_start_remote_control() before calling this function.
  *
  * Returns: gphoto2 error code
@@ -1737,7 +1737,7 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 
         GP_DEBUG ("canon_int_get_release_params()");
 
-        /* canon_int_start_remote_control() must be called before 
+        /* canon_int_start_remote_control() must be called before
            this function */
         if (!camera->pl->remote_control) {
                 GP_DEBUG ("canon_int_get_release_params: Camera not under USB control");
@@ -1770,36 +1770,36 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         }
 
 
-        /* 
-         * 0x5c is the offset to the camera parameters in the 
-         * get release params response data 
+        /*
+         * 0x5c is the offset to the camera parameters in the
+         * get release params response data
          */
-        memcpy(camera->pl->release_params, response + 0x5c, 
+        memcpy(camera->pl->release_params, response + 0x5c,
                sizeof(camera->pl->release_params));
 
 	for (i=0;i<sizeof(camera->pl->release_params);i++) {
 		GP_DEBUG("canon_int_get_release_params: [%d] = 0x%02x", i, camera->pl->release_params[i]);
 	}
 
-        GP_DEBUG ("canon_int_get_release_params: shutter speed = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: shutter speed = 0x%02x",
                   camera->pl->release_params[SHUTTERSPEED_INDEX]);
 
-        GP_DEBUG ("canon_int_get_release_params: aperture = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: aperture = 0x%02x",
                   camera->pl->release_params[APERTURE_INDEX]);
 
-        GP_DEBUG ("canon_int_get_release_params: iso = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: iso = 0x%02x",
                   camera->pl->release_params[ISO_INDEX]);
 
-        GP_DEBUG ("canon_int_get_release_params: focus mode = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: focus mode = 0x%02x",
                   camera->pl->release_params[FOCUS_MODE_INDEX]);
 
-        GP_DEBUG ("canon_int_get_release_params: beep mode = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: beep mode = 0x%02x",
                   camera->pl->release_params[BEEP_INDEX]);
 
-        GP_DEBUG ("canon_int_get_release_params: flash mode = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: flash mode = 0x%02x",
                   camera->pl->release_params[FLASH_INDEX]);
 
-        GP_DEBUG ("canon_int_get_release_params: exposurebias = 0x%02x", 
+        GP_DEBUG ("canon_int_get_release_params: exposurebias = 0x%02x",
                   camera->pl->release_params[EXPOSUREBIAS_INDEX]);
 
         GP_DEBUG ("canon_int_get_release_params: shooting mode = 0x%02x",
@@ -1809,13 +1809,13 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
         camera->pl->secondary_image = 0;
 	/* Based on the image format settings in the release params,
 	   determine whether we expect one or two images to be returned
-	   by the camera. 
-           I am not sure if this will work correctly for non-EOS 5D 
+	   by the camera.
+           I am not sure if this will work correctly for non-EOS 5D
            cameras - I would appreciate testing feedback from other
-           Canon camera users.  To test try capturing an image 
-           to the host computer in a single format (e.g., RAW or Large Fine 
-           JPEG).  Also try capturing an image when the camera is set to 
-           a dual format, e.g., RAW + Large Fine JPEG. Note that currently, we 
+           Canon camera users.  To test try capturing an image
+           to the host computer in a single format (e.g., RAW or Large Fine
+           JPEG).  Also try capturing an image when the camera is set to
+           a dual format, e.g., RAW + Large Fine JPEG. Note that currently, we
            only save the primary image to disk.
            Thanks - <paul@booyaka.com>
         */
@@ -1829,7 +1829,7 @@ canon_int_get_release_params (Camera *camera, GPContext *context)
 /**
  * canon_int_set_shutter_speed
  * @camera: camera to work with
- * @shutter_speed: shutter speed - use one of the defines such as 
+ * @shutter_speed: shutter speed - use one of the defines such as
  *                 SHUTTER_SPEED_1_15 for 1/15th of a second, etc.
  * @context: context for error reporting
  *
@@ -1848,51 +1848,51 @@ canon_int_set_shutter_speed (Camera *camera, canonShutterSpeedState shutter_spee
                   shutter_speed);
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
 
 
         /* Modify the shutter speed */
-        
+
         /* XXX must test for valid shutter speeds here */
         camera->pl->release_params[SHUTTERSPEED_INDEX] = shutter_speed;
-        
+
         /* Upload the shutter speed to the camera */
         status = canon_int_set_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         /* Make sure the camera changed it! */
-        
+
         status = canon_int_get_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         if (camera->pl->release_params[SHUTTERSPEED_INDEX] != shutter_speed) {
                 GP_DEBUG ("canon_int_set_shutter_speed: Could not set shutter "
-                          "speed to 0x%02x (camera returned 0x%02x)", 
-                          shutter_speed, 
+                          "speed to 0x%02x (camera returned 0x%02x)",
+                          shutter_speed,
                           camera->pl->release_params[SHUTTERSPEED_INDEX]);
                 return GP_ERROR_NOT_SUPPORTED;
         } else {
                 GP_DEBUG ("canon_int_set_shutter_speed: shutter speed change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_shutter_speed() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 
 /**
  * canon_int_set_beep
  * @camera: camera to work with
- * @beep_mode: beep mode - use one of the defines such as 
+ * @beep_mode: beep mode - use one of the defines such as
  *                 BEEP_ON for turning on the beep when the camera sets the focus.
  * @context: context for error reporting
  *
@@ -1911,49 +1911,49 @@ canon_int_set_beep (Camera *camera, canonBeepMode beep_mode,
                   beep_mode);
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
 
         /* Modify the beep mode */
-        
+
         /* XXX must test for valid shutter speeds here */
         camera->pl->release_params[BEEP_INDEX] = beep_mode;
-        
+
         /* Upload the beep mode to the camera */
         status = canon_int_set_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         /* Make sure the camera changed it! */
-        
+
         status = canon_int_get_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         if (camera->pl->release_params[BEEP_INDEX] != beep_mode) {
                 GP_DEBUG ("canon_int_set_beep: Could not set beep "
-                          "mode to 0x%02x (camera returned 0x%02x)", 
+                          "mode to 0x%02x (camera returned 0x%02x)",
                           beep_mode,
                           camera->pl->release_params[BEEP_INDEX]);
                 return GP_ERROR_NOT_SUPPORTED;
         } else {
                 GP_DEBUG ("canon_int_set_beep: beep mode change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_beep() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 /**
  * canon_int_set_flash
  * @camera: camera to work with
- * @flash_mode: flash mode - use one of the defines such as 
+ * @flash_mode: flash mode - use one of the defines such as
  *                 FLASH_MODE_OFF for turning off the flash.
  * @context: context for error reporting
  *
@@ -1972,43 +1972,43 @@ canon_int_set_flash (Camera *camera, canonFlashMode flash_mode,
                   flash_mode);
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
 
         /* Modify the beep mode */
-        
+
         /* XXX must test for valid flash mode here */
         camera->pl->release_params[FLASH_INDEX] = flash_mode;
-        
+
         /* Upload the flash mode to the camera */
         status = canon_int_set_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         /* Make sure the camera changed it! */
-        
+
         status = canon_int_get_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         if (camera->pl->release_params[FLASH_INDEX] != flash_mode) {
                 GP_DEBUG ("canon_int_set_flash: Could not set flash "
-                          "mode to 0x%02x (camera returned 0x%02x)", 
+                          "mode to 0x%02x (camera returned 0x%02x)",
                           flash_mode,
                           camera->pl->release_params[FLASH_INDEX]);
                 return GP_ERROR_NOT_SUPPORTED;
         } else {
                 GP_DEBUG ("canon_int_set_flash: flash mode change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_flash() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 
@@ -2031,15 +2031,15 @@ canon_int_set_zoom (Camera *camera, unsigned char zoom_level,
 
         GP_DEBUG ("canon_int_set_zoom() called for zoom 0x%02x",
                   zoom_level);
-        
+
         status = canon_int_do_control_command( camera, CANON_USB_CONTROL_SET_ZOOM_POS, 0x04, zoom_level );
 
         if (status < 0)
                 return status;
-                
+
         GP_DEBUG ("canon_int_set_zoom() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 
@@ -2124,7 +2124,7 @@ canon_int_get_zoom (Camera *camera,
  */
 int
 canon_int_set_image_format (Camera *camera, unsigned char res_byte1,
-                          unsigned char res_byte2, unsigned char res_byte3,  
+                          unsigned char res_byte2, unsigned char res_byte3,
                           GPContext *context)
 {
         int status;
@@ -2132,45 +2132,45 @@ canon_int_set_image_format (Camera *camera, unsigned char res_byte1,
         GP_DEBUG ("canon_int_set_image_format() called");
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
-        
+
         /* Modify the image format */
 
         camera->pl->release_params[IMAGE_FORMAT_1_INDEX] = res_byte1;
         camera->pl->release_params[IMAGE_FORMAT_2_INDEX] = res_byte2;
         camera->pl->release_params[IMAGE_FORMAT_3_INDEX] = res_byte3;
 
-        
+
 		/* Upload the image_format to the camera */
         status = canon_int_set_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
-        
-        /* It seems to take the camera body a while to change this parameter 
-           when all three res_bytes are changed at once.  
+
+        /* It seems to take the camera body a while to change this parameter
+           when all three res_bytes are changed at once.
            So, give the camera a chance to catch up.
-           3750 us was occasionally too short, but 5000 us seems to 
+           3750 us was occasionally too short, but 5000 us seems to
            work well. */
         usleep(5000);
 
         /* Make sure the camera changed it! */
 
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
-                
+
         if (camera->pl->release_params[IMAGE_FORMAT_1_INDEX] != res_byte1 ||
             camera->pl->release_params[IMAGE_FORMAT_2_INDEX] != res_byte2 ||
             camera->pl->release_params[IMAGE_FORMAT_3_INDEX] != res_byte3) {
             GP_DEBUG ("canon_int_set_image_format: Could not set image format "
-                          "to 0x%02x 0x%02x 0x%02x (camera returned 0x%02x 0x%02x 0x%02x)", 
-                          res_byte1, res_byte2, res_byte3, 
+                          "to 0x%02x 0x%02x 0x%02x (camera returned 0x%02x 0x%02x 0x%02x)",
+                          res_byte1, res_byte2, res_byte3,
                           camera->pl->release_params[IMAGE_FORMAT_1_INDEX],
                           camera->pl->release_params[IMAGE_FORMAT_2_INDEX],
                           camera->pl->release_params[IMAGE_FORMAT_3_INDEX]);
@@ -2178,17 +2178,17 @@ canon_int_set_image_format (Camera *camera, unsigned char res_byte1,
         } else {
             GP_DEBUG ("canon_int_set_image_format: image_format change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_image_format() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 
 /**
  * canon_int_set_iso
  * @camera: camera to work with
- * @iso: ISO - use one of the defines such as ISO_400, etc. 
+ * @iso: ISO - use one of the defines such as ISO_400, etc.
  * @context: context for error reporting
  *
  * Sets the camera's ISO speed.  Only tested for EOS 5D via USB.
@@ -2205,41 +2205,41 @@ canon_int_set_iso (Camera *camera, canonIsoState iso,
         GP_DEBUG ("canon_int_set_iso() called for ISO 0x%02x", iso);
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
 
         /* Modify the ISO */
-        
+
         camera->pl->release_params[ISO_INDEX] = iso;
-        
+
         /* Upload the ISO to the camera */
         status = canon_int_set_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
-        
+
         /* Make sure the camera changed it! */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
-        
+
         if (camera->pl->release_params[ISO_INDEX] != iso) {
                 GP_DEBUG ("canon_int_set_iso: Could not set ISO "
-                          "to 0x%02x (camera returned 0x%02x)", 
+                          "to 0x%02x (camera returned 0x%02x)",
                           iso, camera->pl->release_params[ISO_INDEX]);
                 return GP_ERROR_CORRUPTED_DATA;
         } else {
                 GP_DEBUG ("canon_int_set_iso: ISO change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_iso() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 
@@ -2292,7 +2292,7 @@ canon_int_set_shooting_mode (Camera *camera, unsigned char shooting_mode,
 /**
  * canon_int_set_aperture
  * @camera: camera to work with
- * @aperture: use one of the defines such as APERTURE_F5_6, etc. 
+ * @aperture: use one of the defines such as APERTURE_F5_6, etc.
  * @context: context for error reporting
  *
  * Sets the camera's aperture.  Only tested for EOS 5D via USB.
@@ -2310,42 +2310,42 @@ canon_int_set_aperture (Camera *camera, canonApertureState aperture,
                   aperture);
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
 
         /* Modify the aperture */
-        
+
         camera->pl->release_params[APERTURE_INDEX] = aperture;
-        
+
         /* Upload the aperture to the camera */
         status = canon_int_set_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         /* Make sure the camera changed it! */
-        
+
         status = canon_int_get_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         if (camera->pl->release_params[APERTURE_INDEX] != aperture) {
                 GP_DEBUG ("canon_int_set_aperture: Could not set aperture "
-                          "to 0x%02x (camera returned 0x%02x)", 
-                          aperture, 
+                          "to 0x%02x (camera returned 0x%02x)",
+                          aperture,
                           camera->pl->release_params[APERTURE_INDEX]);
                 return GP_ERROR_CORRUPTED_DATA;
         } else {
                 GP_DEBUG ("canon_int_set_aperture: aperture change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_aperture() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 
@@ -2383,25 +2383,25 @@ canon_int_set_exposurebias (Camera *camera, unsigned char expbias,
                 return status;
         if (camera->pl->release_params[EXPOSUREBIAS_INDEX] != expbias) {
                 GP_DEBUG ("canon_int_set_exposurebias: Could not set exposure bias "
-                          "to 0x%02x (camera returned 0x%02x)", 
-                          expbias, 
+                          "to 0x%02x (camera returned 0x%02x)",
+                          expbias,
                           camera->pl->release_params[EXPOSUREBIAS_INDEX]);
                 return GP_ERROR_CORRUPTED_DATA;
         } else {
                 GP_DEBUG ("canon_int_set_exposurebias: expbias change verified");
         }
         GP_DEBUG ("canon_int_set_exposurebias() finished successfully");
-        return GP_OK;        
+        return GP_OK;
 }
 
 
 /**
  * canon_int_set_focus_mode
  * @camera: camera to work with
- * @focus_mode: use one of the defines such as AUTO_FOCUS_AI_SERVO, etc. 
+ * @focus_mode: use one of the defines such as AUTO_FOCUS_AI_SERVO, etc.
  * @context: context for error reporting
  *
- * Sets the camera's focus mode.  Note that the selection of focus modes is 
+ * Sets the camera's focus mode.  Note that the selection of focus modes is
  * limited by the AF/MF switch on the lens body.  In particular, this function
  * is only useful for switching between the various autofocus modes while the
  * lens focus switch is set to 'AF'.  Only tested for EOS 5D via USB.
@@ -2419,43 +2419,43 @@ canon_int_set_focus_mode (Camera *camera, canonFocusModeState focus_mode,
                   focus_mode);
 
         /* Get the current camera settings */
-        
+
         status = canon_int_get_release_params (camera, context);
-        
+
         if (status < 0)
                 return status;
 
 
         /* Modify the focus mode */
-        
+
         camera->pl->release_params[FOCUS_MODE_INDEX] = focus_mode;
-        
+
         /* Upload the focus mode to the camera */
         status = canon_int_set_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         /* Make sure the camera changed it! */
-        
+
         status = canon_int_get_release_params (camera, context);
 
         if (status < 0)
                 return status;
-        
+
         if (camera->pl->release_params[FOCUS_MODE_INDEX] != focus_mode) {
                 GP_DEBUG ("canon_int_set_focus_mode: Could not set focus_mode "
-                          "to 0x%02x (camera returned 0x%02x)", 
-                          focus_mode, 
+                          "to 0x%02x (camera returned 0x%02x)",
+                          focus_mode,
                           camera->pl->release_params[FOCUS_MODE_INDEX]);
                 return GP_ERROR_CORRUPTED_DATA;
         } else {
                 GP_DEBUG ("canon_int_set_focus_mode: focus_mode change verified");
         }
-        
+
         GP_DEBUG ("canon_int_set_focus_mode() finished successfully");
 
-        return GP_OK;        
+        return GP_OK;
 }
 
 /**
@@ -2481,29 +2481,29 @@ canon_int_set_release_params (Camera *camera, GPContext *context)
 
         if (!camera->pl->remote_control) {
                 GP_DEBUG ("canon_int_set_release_params: Camera not under USB control");
-                return GP_ERROR; 
+                return GP_ERROR;
         }
 
         memset(payload, 0, sizeof(payload));
 
         switch (camera->port->type) {
             case GP_PORT_USB:
-                    /* This is what we need for Canon class 6 cameras - 
+                    /* This is what we need for Canon class 6 cameras -
                        not sure what it is for previous protocols */
-                    payload[0x0] = CANON_USB_CONTROL_SET_ZOOM_POS; 
+                    payload[0x0] = CANON_USB_CONTROL_SET_ZOOM_POS;
                     payload[0x4] = 0x30;
 
                     /* Copy the release parameter block from the camera state
                      * structure into the payload.  The 0x08 is the byte offset
                      * into the payload where the release parameters start.
                      */
-                    memcpy(payload + 0x08, camera->pl->release_params, 
-                           sizeof(camera->pl->release_params)); 
+                    memcpy(payload + 0x08, camera->pl->release_params,
+                           sizeof(camera->pl->release_params));
 
                     payloadlen = RELEASE_PARAMS_LEN + 0x08;
 
                     status = canon_int_do_control_dialogue_payload (camera, payload, payloadlen, &msg, &len);
-                    
+
                     if ( msg == NULL )
                             return GP_ERROR_CORRUPTED_DATA;
 
@@ -2516,12 +2516,12 @@ canon_int_set_release_params (Camera *camera, GPContext *context)
                     status = canon_int_do_control_dialogue (camera,
                                                             CANON_USB_CONTROL_GET_PARAMS,
                                                             0x00, 0, &trash_handle, &trash_int);
-                        
+
 
                     if ( status < 0 )
                             return GP_ERROR;
 
-                    
+
                     status = canon_int_do_control_dialogue_payload (camera, payload, payloadlen, &msg, &len);
 
                     if ( msg == NULL )
@@ -2922,12 +2922,12 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
                         "(expected %i got %i)", 0x0c, len);
                 return GP_ERROR_CORRUPTED_DATA;
         }
-        
+
         /* Capacity and available are not NULL as verified above.
         * But cap and ava are only set for the USB case, so we have to check for that.
         * If you know the logic better, feel free to improve it. */
         switch (camera->port->type) {
-                case GP_PORT_USB:                         
+                case GP_PORT_USB:
                         *capacity = cap;
                         *available = ava;
                         GP_DEBUG ("canon_int_get_disk_name_info: "
@@ -3100,7 +3100,7 @@ debug_fileinfo (CameraFileInfo * info)
  * Implicitly assumes that uint8_t[] is a char[] for strings.
  *
  * A few notes about listing files and camera->pl->list_all_files:
- * 
+ *
  *   If camera->pl->list_all_files is false (intended default), then
  *   we list only "primary files" or ("main" files). Those are files
  *   like image files or movie files which the user explicitly created
@@ -3604,7 +3604,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir, GPCont
                         else if ( le32atoh ( msg ) != 0 ) {
                                 GP_DEBUG ( "canon_int_delete_file: "
                                            "non-zero return code 0x%x from camera. "
-                                           "Possibly tried to delete a nonexistent file.", 
+                                           "Possibly tried to delete a nonexistent file.",
                                            le32atoh ( msg ) );
                                 return GP_ERROR_FILE_NOT_FOUND;
                         }

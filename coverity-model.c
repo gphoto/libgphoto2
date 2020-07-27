@@ -61,7 +61,7 @@ void gp_log_data (const char *domain, const char *data, unsigned int size, const
 }
 
 uint16_t
-ptp_transaction (PTPParams* params, PTPContainer* ptp, 
+ptp_transaction (PTPParams* params, PTPContainer* ptp,
                 uint16_t flags, uint64_t sendlen,
                 unsigned char **data, unsigned int *recvlen) {
 	if ((flags & 0xff) == 0x2) {

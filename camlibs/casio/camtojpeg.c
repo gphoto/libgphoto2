@@ -62,16 +62,16 @@ int QVcamtojpeg(const unsigned char *cam, long int camSize, unsigned char **jpeg
     +sizeof(sos_v)+vsize
     +sizeof(eoi)
   ));
-  
+
   dst=*jpeg;
   memcpy(dst,soi,sizeof(soi));     dst+=sizeof(soi);
   memcpy(dst,app0,sizeof(app0));   dst+=sizeof(app0);
 
   cam+=8;
-  
+
   memcpy(dst,dqt0,sizeof(dqt0));   dst+=sizeof(dqt0);
   memcpy(dst,cam,64);              dst+=64;            cam+=64;
-  
+
   memcpy(dst,dqt1,sizeof(dqt1));   dst+=sizeof(dqt1);
   memcpy(dst,cam,64);              dst+=64;            cam+=64;
 
@@ -80,7 +80,7 @@ int QVcamtojpeg(const unsigned char *cam, long int camSize, unsigned char **jpeg
 
   memcpy(dst,sos_y,sizeof(sos_y)); dst+=sizeof(sos_y);
   memcpy(dst,cam,ysize);           dst+=ysize;         cam+=ysize;
-  
+
   memcpy(dst,sos_u,sizeof(sos_u)); dst+=sizeof(sos_u);
   memcpy(dst,cam,usize);           dst+=usize;         cam+=usize;
 
@@ -97,7 +97,7 @@ int QVfinecamtojpeg(const unsigned char *cam, long int camSize, unsigned char **
   int size;
   static const unsigned char c[1] = { 1 };
   unsigned char *dst;
-  
+
   size = u32(cam + 4);
 
   *jpeg=malloc(*jpegSize=
@@ -123,7 +123,7 @@ int QVfinecamtojpeg(const unsigned char *cam, long int camSize, unsigned char **
 
   memcpy(dst,sof_f,sizeof(sof_f)); dst+=sizeof(sof_f);
   memcpy(dst,dht_f,sizeof(dht_f)); dst+=sizeof(dht_f);
-  
+
   memcpy(dst,sos_f,sizeof(sos_f)); dst+=sizeof(sos_f);
   memcpy(dst,cam,size);            dst+=size;          cam+=size;
 

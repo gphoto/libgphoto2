@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -210,7 +210,7 @@ gp_port_library_list (GPPortInfoList *list)
 	/* We need to make it a non-blocking query */
 	fd = DNSServiceRefSockFD(sd);
 	if (fd != -1) {
-		FD_ZERO (&infds); FD_SET (fd, &infds); 
+		FD_ZERO (&infds); FD_SET (fd, &infds);
 		tv.tv_sec = 0; tv.tv_usec = 1;
 		/* If we have input, we can try to process a result */
 		if (1 == select (fd+1, &infds, NULL, NULL, &tv))

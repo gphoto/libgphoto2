@@ -390,7 +390,7 @@ lookup_folder (
 			char		*copy = strdup (foldername);
 			int		ret;
 			/*
-			 * The parent folder is dirty. List the folders in the parent 
+			 * The parent folder is dirty. List the folders in the parent
 			 * folder to make it clean.
 			 */
 			/* the character _before_ curpt is a /, overwrite it temporary with \0 */
@@ -788,7 +788,7 @@ recursive_fs_dump (CameraFilesystemFolder *folder, int depth) {
 		GP_LOG_D ("%*s    %s", depth, " ", xfile->name);
 		xfile = xfile->next;
 	}
-	
+
 	f = folder->folders;
 	while (f) {
 		recursive_fs_dump (f, depth+4);
@@ -1239,7 +1239,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 		CameraList	*list;
 		int		ret;
 		/*
-		 * The owning folder is dirty. List the folders in it 
+		 * The owning folder is dirty. List the folders in it
 		 * to make it clean.
 		 */
 		GP_LOG_D ("Folder %s is dirty. "
@@ -1750,18 +1750,18 @@ gp_filesystem_get_file (CameraFilesystem *fs, const char *folder,
  * \param type the type of the file
  * \param offset the offset where the data starts
  * \param buf the targetbuffer where the data will be put
- * \param size the size to read and that was read into the buffer 
+ * \param size the size to read and that was read into the buffer
  * \param context a #GPContext
  *
  * Downloads the file called filename from the folder using the
  * read_file_func if such a function has been previously supplied. If the
  * file has been previously downloaded, the file is retrieved from cache.
- * 
+ *
  * The file is read partially into the passed buffer. The read starts
  * at offset on the device and goes for at most size bytes.
  * Reading over the end of the file might give errors, so get the maximum
  * file size via an info function before.
- * 
+ *
  * \return a gphoto2 error code.
  **/
 int
