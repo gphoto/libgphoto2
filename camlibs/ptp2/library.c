@@ -1202,6 +1202,8 @@ static struct {
 	{"Sony:DSC RX0 II (PC Control)",	0x054c, 0x0ca6, PTP_CAP|PTP_CAP_PREVIEW},
 	/* orbital sailor <gamerdude1080@hotmail.com> */
 	{"Sony:ILCE-6400 (PC Control)",		0x054c, 0x0caa, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Elias Asikainen <elias.asikainen@sulzerschmid.ch> */
+	{"Sony:DSC-RX100M7 (PC Control)",	0x054c, 0x0cae, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Mikael Ståldal <mikael@staldal.nu> */
 	{"Sony:DSC-RX100M5A (MTP)",		0x054c, 0x0cb1, 0},
 	{"Sony:DSC-RX100M5A (PC Control)",	0x054c, 0x0cb2, PTP_CAP|PTP_CAP_PREVIEW},
